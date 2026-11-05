@@ -488,9 +488,11 @@ const htmlInnerRanges = (nodePath) => {
 	const count = nodePath.fieldCount(Field.attributes);
 	for (let index = 0; index < count; index++) {
 		const attribute = nodePath.field(index, Field.attributes);
-		const [nameStart, nameEnd] = /** @type {[number, number]} */ (
-			nodePath.rangeOf(Part.name, attribute)
-		);
+		const name = nodePath.rangeOf(Part.name, attribute);
+		// The copy `<selectedcontent>` mirrors of an option's content carries
+		// the option's attributes without a source of their own.
+		if (name === null) continue;
+		const [nameStart, nameEnd] = name;
 		if (nameStart < start || nameStart >= tagEnd) continue;
 		inner.push(["attribute name", nameStart, nameEnd]);
 		const value = nodePath.rangeOf(Part.value, attribute);

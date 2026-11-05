@@ -611,6 +611,13 @@ exports[`HTML syntax — fixtures prints source-processor-minify-serialization-e
 
 exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-plaintext-never-emits-a {"mode":"minify"} 1`] = `"<plaintext>foo"`;
 
+exports[`HTML syntax — fixtures prints source-processor-mode-html-walks-without-printing-when-none-is-asked-for {"mode":"minify","source":"in.txt"} 1`] = `
+"<div class=a>
+  <p>x</p>
+</div>
+"
+`;
+
 exports[`HTML syntax — fixtures prints source-processor-one-print-at-a-time-refuses-a-parse-a-visitor-starts-while-the {"mode":"minify"} 1`] = `"<p> x "`;
 
 exports[`HTML syntax — fixtures prints source-processor-optional-end-tags-read-the-output-keeps-a-caption-whitespace {"mode":"minify"} 1`] = `"<table><caption>x</caption> </table>"`;

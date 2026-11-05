@@ -112,7 +112,7 @@ describe("SourceProcessor — one print at a time", () => {
 						}
 					})
 				)
-				.process("<p>x</p>", { mode: "minify" })
+				.process(fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints"), { mode: "minify" })
 		).toThrow(/already running/);
 	});
 });
@@ -134,16 +134,16 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 		}).code;
 
 	it("writes a style attribute whose declarations all drop as bare", () => {
-		expect(minify('<p style=" ; ">x</p>')).toBe("<p style>x");
-		expect(minify('<p style="/* c */">x</p>')).toBe("<p style>x");
+		expect(minify(fixture("html", "source-processor-merging-adjacent-style-writes-a-style-attribute-whose"))).toBe("<p style>x");
+		expect(minify(fixture("html", "source-processor-merging-adjacent-style-writes-a-style-attribute-whose-2"))).toBe("<p style>x");
 		// Spelled with a reference, the list is minified from its decoded text.
-		expect(minify('<p style="&#59;">x</p>')).toBe("<p style>x");
-		expect(minify('<p style="color:red">x</p>')).toBe("<p style=color:red>x");
+		expect(minify(fixture("html", "source-processor-merging-adjacent-style-writes-a-style-attribute-whose-3"))).toBe("<p style>x");
+		expect(minify(fixture("html", "source-processor-merging-adjacent-style-writes-a-style-attribute-whose-4"))).toBe("<p style=color:red>x");
 	});
 
 	it("folds a run into one element", () => {
 		expect(
-			minify("<style>a{color:red}</style><style>b{color:#00f}</style>")
+			minify(fixture("html", "source-processor-merging-adjacent-style-folds-a-run-into-one-element"))
 		).toBe("<style>a{color:red}b{color:#00f}</style>");
 	});
 
@@ -169,7 +169,7 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 	it("still absorbs into a sheet whose own `@import` leads", () => {
 		expect(
 			minify(
-				"<style>@import url(x.css);a{color:red}</style><style>b{color:#00f}</style>"
+				fixture("html", "source-processor-merging-adjacent-style-still-absorbs-into-a-sheet-whose-own")
 			)
 		).toBe("<style>@import url(x.css);a{color:red}b{color:#00f}</style>");
 	});
@@ -180,7 +180,7 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 		const open = fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-ending-inside-a-comment");
 		expect(minify(open)).toBe("<style>a{color:red}b{color:#00f}</style>");
 		expect(
-			minify("<style>a{color:red}/*x*/</style><style>b{color:#00f}</style>")
+			minify(fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-ending-inside-a-comment-2"))
 		).toBe("<style>a{color:red}b{color:#00f}</style>");
 	});
 
@@ -189,11 +189,11 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 		expect(minify(open)).toBe('<style>a{content:"x"}b{color:#00f}</style>');
 		// A newline ends a bad string, so this one is over where the sheet is.
 		expect(
-			minify('<style>a{content:"x\n}</style><style>b{color:#00f}</style>')
+			minify(fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-ending-inside-a-string-2"))
 		).toBe('<style>a{content:"x\n}b{color:#00f}</style>');
 		// An escaped quote is a character of the string, not its end.
 		expect(
-			minify('<style>a{content:"x\\"y"}</style><style>b{color:#00f}</style>')
+			minify(fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-ending-inside-a-string-3"))
 		).toBe("<style>a{content:'x\"y'}b{color:#00f}</style>");
 	});
 
@@ -205,7 +205,7 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 			// where it ends a bad string before the next sheet is joined.
 			expect(minify(html)).toBe(
 				minify(
-					'<style>a{content:"x\n;color:blue}</style><style>b{color:red}</style>'
+					fixture("html", "source-processor-merging-adjacent-style-keeps-the-next-sheet-after-a-string-2")
 				)
 			);
 		}
@@ -215,7 +215,7 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 		// Were the quote not escaped it would open a string running to the end; as
 		// it is, the escape starts a rule the sheet does not finish, closed with `{}`.
 		expect(
-			minify('<style>a{color:red}\\"</style><style>b{color:#00f}</style>')
+			minify(fixture("html", "source-processor-merging-adjacent-style-reads-an-escape-outside-a-string-as-one"))
 		).toBe("<style>a{color:red}b{color:#00f}</style>");
 	});
 
@@ -257,7 +257,7 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 		const once = minify(fixture("html", "source-processor-merging-adjacent-style-joins-a-blank-sheet-as-nothing"));
 		expect(once).toBe("<style>b{color:red}</style>");
 		expect(minify(once)).toBe(once);
-		expect(minify("<style> </style><style>  </style>")).toBe(
+		expect(minify(fixture("html", "source-processor-merging-adjacent-style-joins-a-blank-sheet-as-nothing-3"))).toBe(
 			"<style>   </style>"
 		);
 	});
@@ -280,7 +280,7 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 
 	it("declines a run parted by text", () => {
 		expect(
-			minify("<body><style>a{color:red}</style>x<style>b{color:#00f}</style>")
+			minify(fixture("html", "source-processor-merging-adjacent-style-declines-a-run-parted-by-text"))
 		).toBe(
 			"<body><style>a{color:red}</style>x<style>b{color:#00f}</style></body>"
 		);
@@ -306,11 +306,11 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 			).toBe(`<style>${printed}c{color:#00f}</style>`);
 		}
 		// A lone backslash would escape whatever followed, so nothing is joined.
-		expect(minify("<style>a\\</style><style>c{color:#00f}</style>")).toBe(
+		expect(minify(fixture("html", "source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-21"))).toBe(
 			"<style></style><style>c{color:#00f}</style>"
 		);
 		expect(
-			minify('<style>a{b:"x\\</style><style>c{color:#00f}</style>')
+			minify(fixture("html", "source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-22"))
 		).toContain("</style><style>c{color:#00f}</style>");
 	});
 
@@ -326,14 +326,14 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 				removeEmptyElements: true,
 				renderEmbeddedSource: builtinEmbeddedRenderer()
 			}).code;
-		expect(emptying("<style>a{}</style><style>b{color:red}</style>")).toBe(
+		expect(emptying(fixture("html", "source-processor-merging-adjacent-style-drops-a-run-s-first-element-only-where"))).toBe(
 			"<style>b{color:red}</style>"
 		);
-		expect(emptying("<style>a{}</style><style>b{}</style>")).toBe("");
+		expect(emptying(fixture("html", "source-processor-merging-adjacent-style-drops-a-run-s-first-element-only-where-2"))).toBe("");
 		expect(
-			emptying("<style>a{}</style><style>@import url(x.css);</style>")
+			emptying(fixture("html", "source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-7"))
 		).toBe("<style>@import url(x.css);</style>");
-		expect(emptying('<style>a{}</style><style>b{c:"d</style>')).toBe(
+		expect(emptying(fixture("html", "source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-6"))).toBe(
 			'<style>b{c:"d"}</style>'
 		);
 		// A sheet printed open is not joined, so it prints in its own element.
@@ -350,7 +350,7 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 		// Unjoined, each sheet is judged alone.
 		expect(
 			new SourceProcessor().process(
-				"<style>a{}</style><style>b{color:red}</style>",
+				fixture("html", "source-processor-merging-adjacent-style-drops-a-run-s-first-element-only-where"),
 				{
 					mode: "minify",
 					removeEmptyElements: true,
@@ -468,7 +468,7 @@ describe("SourceProcessor — merging adjacent <script>", () => {
 	it("declines anything but whitespace between them", () => {
 		expect(
 			scriptCount(
-				"<script>a()</script><style>a{color:red}</style><script>b()</script>"
+				fixture("html", "source-processor-merging-adjacent-script-declines-anything-but-whitespace-3")
 			)
 		).toBe(2);
 	});
@@ -515,7 +515,7 @@ describe("SourceProcessor — merging adjacent <script>", () => {
 			).toBe(2);
 		}
 		expect(
-			scriptCount("<script>a()</script><script>\uFEFF#!/x\nb()</script>")
+			scriptCount(fixture("html", "source-processor-merging-adjacent-script-declines-a-body-that-opens-a-script-of-22"))
 		).toBe(2);
 	});
 
@@ -548,7 +548,7 @@ describe("SourceProcessor — merging adjacent <script>", () => {
 	it("keeps no state between two documents", () => {
 		const processor = new SourceProcessor();
 		expect(
-			processor.process("<script>a()</script><script>b()</script>", {
+			processor.process(fixture("html", "source-processor-merging-adjacent-script-folds-a-run-into-one-element"), {
 				mode: "minify",
 				mergeScripts: true
 			}).code
@@ -904,8 +904,8 @@ describe("SourceProcessor — enumerated attribute values", () => {
 	it("leaves a case-sensitive value alone", () => {
 		// `<ol type>` is two keywords that differ only in case, so it is not in
 		// the table at all; `id` / `class` are not enumerated.
-		expect(minify('<ol type="A"><li>x</ol>')).toContain("type=A");
-		expect(minify('<div id="MyId" class="MyClass">')).toContain(
+		expect(minify(fixture("html", "source-processor-enumerated-attribute-values-leaves-a-case-sensitive-value-alone"))).toContain("type=A");
+		expect(minify(fixture("html", "source-processor-enumerated-attribute-values-leaves-a-case-sensitive-value-alone-2"))).toContain(
 			"id=MyId class=MyClass"
 		);
 	});
@@ -914,13 +914,13 @@ describe("SourceProcessor — enumerated attribute values", () => {
 		// `target` / `formtarget`, `<area shape>` and `<textarea wrap>` are
 		// enumerated, but their IDL members reflect what was written rather than
 		// the canonical keyword, so a script reading one back would see the fold.
-		expect(minify('<a target="_TOP" href=x>l</a>')).toContain("target=_TOP");
-		expect(minify('<form target="_BLANK">')).toContain("target=_BLANK");
-		expect(minify('<button formtarget="_SELF">b</button>')).toContain(
+		expect(minify(fixture("html", "source-processor-enumerated-attribute-values-leaves-a-keyword-the-engine"))).toContain("target=_TOP");
+		expect(minify(fixture("html", "source-processor-enumerated-attribute-values-leaves-a-keyword-the-engine-2"))).toContain("target=_BLANK");
+		expect(minify(fixture("html", "source-processor-enumerated-attribute-values-leaves-a-keyword-the-engine-3"))).toContain(
 			"formtarget=_SELF"
 		);
-		expect(minify('<map><area shape="RECT"></map>')).toContain("shape=RECT");
-		expect(minify('<textarea wrap="SOFT"></textarea>')).toContain("wrap=SOFT");
+		expect(minify(fixture("html", "source-processor-enumerated-attribute-values-leaves-a-keyword-the-engine-4"))).toContain("shape=RECT");
+		expect(minify(fixture("html", "source-processor-enumerated-attribute-values-leaves-a-keyword-the-engine-5"))).toContain("wrap=SOFT");
 	});
 });
 
@@ -996,10 +996,10 @@ describe("SourceProcessor — an enumerated value naming no keyword", () => {
 	it("keeps one the element states no default for", () => {
 		// `<img decoding>` is enumerated but has no entry to fall to, and
 		// `<area shape>` has one but reflects whatever was written.
-		expect(minify('<img decoding="ZzCustomZz" alt="a">')).toContain(
+		expect(minify(fixture("html", "source-processor-an-enumerated-value-naming-no-keyword-keeps-one-the-element"))).toContain(
 			"decoding=ZzCustomZz"
 		);
-		expect(minify('<map><area shape="ZzCustomZz"></map>')).toContain(
+		expect(minify(fixture("html", "source-processor-an-enumerated-value-naming-no-keyword-keeps-one-the-element-2"))).toContain(
 			"shape=ZzCustomZz"
 		);
 	});
@@ -1031,7 +1031,7 @@ describe("SourceProcessor — removeImpliedTags", () => {
 		// A comment there goes further out than a head element does: the modes put
 		// it in the element above the body, so it leaves the body altogether.
 		expect(
-			new SourceProcessor().process("<tr><!--c--><p>x", {
+			new SourceProcessor().process(fixture("html", "source-processor-remove-implied-tags-materializes-an-implied-tag-whose-content-2"), {
 				mode: "minify",
 				removeImpliedTags: true,
 				transforms: { comments: /c/ }
@@ -1103,7 +1103,7 @@ describe("SourceProcessor — attribute quote spelling", () => {
 			"<style type=text/css>.a{color:red}</style>"
 		);
 		// A type that names something else is still left alone.
-		expect(css('<style type="text/foo">.a {  color : red ; }</style>')).toBe(
+		expect(css(fixture("html", "source-processor-attribute-quote-spelling-reads-a-style-type-by-what-it-decodes-2"))).toBe(
 			"<style type=text/foo>.a {  color : red ; }</style>"
 		);
 	});
@@ -1117,7 +1117,7 @@ describe("SourceProcessor — attribute quote spelling", () => {
 		// One it keeps is still a difference.
 		expect(
 			once(
-				"<style media=screen>.a{color:red}</style><style>.b{color:blue}</style>",
+				fixture("html", "source-processor-attribute-quote-spelling-merges-across-an-attribute-the-print-3"),
 				{
 					...drops,
 					mergeStyles: true
@@ -1125,7 +1125,7 @@ describe("SourceProcessor — attribute quote spelling", () => {
 			)
 		).toContain("</style><style>");
 		expect(
-			once("<script type=module>var a=1</script><script>var b=2</script>", {
+			once(fixture("html", "source-processor-attribute-quote-spelling-merges-across-an-attribute-the-print-4"), {
 				...drops,
 				mergeScripts: true
 			})
@@ -1140,13 +1140,13 @@ describe("SourceProcessor — attribute quote spelling", () => {
 				mode: "minify",
 				transforms: { normalizeAttributeQuotes: false }
 			}).code;
-		expect(frozen('<a href="&#x20;/a&#x20;">y</a>')).toContain('href="/a"');
-		expect(frozen('<input type="&#x54;&#x45;&#x58;&#x54;">')).toContain(
+		expect(frozen(fixture("html", "source-processor-attribute-quote-spelling-rewrites-a-referenced-value-with-the"))).toContain('href="/a"');
+		expect(frozen(fixture("html", "source-processor-attribute-quote-spelling-rewrites-a-referenced-value-with-the-2"))).toContain(
 			'type="text"'
 		);
 		// The `&` a decoded URL holds is written out bare: `y=` is no reference,
 		// and an attribute would not read one there even if it were.
-		expect(frozen('<a href="&#x20;/a?x=1&amp;y=2&#x20;">y</a>')).toContain(
+		expect(frozen(fixture("html", "source-processor-attribute-quote-spelling-rewrites-a-referenced-value-with-the-3"))).toContain(
 			'href="/a?x=1&y=2"'
 		);
 	});
@@ -1175,7 +1175,7 @@ describe("SourceProcessor — a duplicate attribute name", () => {
 
 	it("preserves source attribute names on a template tag", () => {
 		expect(
-			minify('<INPUT TYPE="TEXT"{% if isRequired %} required{% endif %}>')
+			minify(fixture("html", "source-processor-a-duplicate-attribute-name-preserves-source-attribute-names-on"))
 		).toMatchSnapshot();
 	});
 
@@ -1192,8 +1192,8 @@ describe("SourceProcessor — token list values", () => {
 		new SourceProcessor().process(html, { mode: "minify" }).code;
 
 	it("collapses the separators of every list", () => {
-		expect(minify('<div class="a \n b">x</div>')).toContain('class="a b"');
-		expect(minify('<a href=x ping="/p1 \n /p2">l</a>')).toContain(
+		expect(minify(fixture("html", "source-processor-token-list-values-collapses-the-separators-of-every-list"))).toContain('class="a b"');
+		expect(minify(fixture("html", "source-processor-token-list-values-collapses-the-separators-of-every-list-2"))).toContain(
 			'ping="/p1 /p2"'
 		);
 	});
@@ -1201,24 +1201,24 @@ describe("SourceProcessor — token list values", () => {
 	it("trims a list whose separators are otherwise already collapsed", () => {
 		// Padding at either end is all the rewriting these need — the scan that
 		// decides whether a list is already collapsed has to see it.
-		expect(minify('<div class="a b ">x</div>')).toContain('class="a b"');
-		expect(minify('<div class=" a b">x</div>')).toContain('class="a b"');
-		expect(minify('<div class="ab ">x</div>')).toContain("class=ab");
+		expect(minify(fixture("html", "source-processor-token-list-values-trims-a-list-whose-separators-are-otherwise"))).toContain('class="a b"');
+		expect(minify(fixture("html", "source-processor-token-list-values-trims-a-list-whose-separators-are-otherwise-2"))).toContain('class="a b"');
+		expect(minify(fixture("html", "source-processor-token-list-values-trims-a-list-whose-separators-are-otherwise-3"))).toContain("class=ab");
 	});
 
 	it("drops a repeated token only where the DOM folds it away", () => {
 		// `class` / `rel` reflect a `DOMTokenList`, which is an ordered set.
-		expect(minify('<div class="a b a">x</div>')).toContain('class="a b"');
-		expect(minify('<link rel="preload preload" href=x>')).toContain(
+		expect(minify(fixture("html", "source-processor-token-list-values-drops-a-repeated-token-only-where-the-dom"))).toContain('class="a b"');
+		expect(minify(fixture("html", "source-processor-token-list-values-drops-a-repeated-token-only-where-the-dom-2"))).toContain(
 			"rel=preload"
 		);
 		// `ping` is read back as written and sends one request per token; the
 		// other two reflect no token list either.
-		expect(minify('<a href=x ping="/p /p">l</a>')).toContain('ping="/p /p"');
-		expect(minify('<table><tr><td headers="h h">c</table>')).toContain(
+		expect(minify(fixture("html", "source-processor-token-list-values-drops-a-repeated-token-only-where-the-dom-3"))).toContain('ping="/p /p"');
+		expect(minify(fixture("html", "source-processor-token-list-values-drops-a-repeated-token-only-where-the-dom-4"))).toContain(
 			'headers="h h"'
 		);
-		expect(minify('<div accesskey="k k">x</div>')).toContain('accesskey="k k"');
+		expect(minify(fixture("html", "source-processor-token-list-values-drops-a-repeated-token-only-where-the-dom-5"))).toContain('accesskey="k k"');
 	});
 
 	it("reads a list holding a foreign delimiter as text, not as a set", () => {
@@ -1232,7 +1232,7 @@ describe("SourceProcessor — token list values", () => {
 			expect(minify(`<link ${list} href=x>`)).toContain(list);
 		}
 		// The separators between them still collapse: that keeps every token.
-		expect(minify('<div class="btn{%  if  x  %}">y</div>')).toContain(
+		expect(minify(fixture("html", "source-processor-token-list-values-reads-a-list-holding-a-foreign-delimiter-as-4"))).toContain(
 			'class="btn{% if x %}"'
 		);
 	});
@@ -1285,7 +1285,7 @@ describe("SourceProcessor — sortAttributes / sortTokenLists", () => {
 
 	it("leaves foreign content alone, where a name is not case-folded", () => {
 		expect(
-			minify('<svg><rect zz="1" aa="2"/></svg>', { sortAttributes: true })
+			minify(fixture("html", "source-processor-sort-attributes-sort-token-lists-leaves-foreign-content-alone"), { sortAttributes: true })
 		).toContain("zz=1 aa=2");
 	});
 
@@ -1377,7 +1377,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		});
 
 		await expect(
-			processor.processAsync("<p>x</p>", {
+			processor.processAsync(fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints"), {
 				mode: "minify",
 				renderEmbeddedSource: () => undefined
 			})
@@ -1385,7 +1385,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 		explode = false;
 
-		expect(processor.process("<p>y</p>", { mode: "minify" }).code).toBe("<p>y");
+		expect(processor.process(fixture("html", "source-processor-render-embedded-source-is-usable-again-after-a-deferred-print"), { mode: "minify" }).code).toBe("<p>y");
 	});
 
 	it("keeps `srcdoc` off the deferred path when the caller says so", () => {
@@ -1542,12 +1542,12 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 			'<p style="  color : #ff0000 ; margin : 0px  ">x'
 		);
 		expect(declined.code).toBe(
-			minify('<p style="  color : #ff0000 ; margin : 0px  ">x</p>')
+			minify(fixture("html", "source-processor-render-embedded-source-offers-a-style-attribute-to-a-deferring"))
 		);
 		// Webpack's own renderer, put behind a declining one, is what answers.
 		expect(
 			minify(
-				'<p style="  color : #ff0000 ; margin : 0px  ">x</p>',
+				fixture("html", "source-processor-render-embedded-source-offers-a-style-attribute-to-a-deferring"),
 				builtinEmbeddedRenderer()
 			)
 		).toBe("<p style=color:red;margin:0>x");
@@ -1555,7 +1555,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 	it("writes a deferred `style` attribute back in whatever shape its answer needs", async () => {
 		expect(
-			(await deferred('<p style="  color : red  ">x</p>', () => "color:red"))
+			(await deferred(fixture("html", "source-processor-render-embedded-source-writes-a-deferred-style-attribute-back"), () => "color:red"))
 				.code
 		).toBe("<p style=color:red>x");
 		// Only a foreign element's `/>` reads whether a value left the tag ending
@@ -1563,7 +1563,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		expect(
 			(
 				await deferred(
-					'<p style="  color : red  ">x</p>',
+					fixture("html", "source-processor-render-embedded-source-writes-a-deferred-style-attribute-back"),
 					() => 'content:"a b"'
 				)
 			).code
@@ -1574,35 +1574,35 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		// Webpack's own renderer composes a block-contents list the way the CSS
 		// printer composes a rule's block: longhands merge into their shorthand.
 		const own = builtinEmbeddedRenderer();
-		expect(minify('<p style="top:0;right:0;bottom:0;left:0">x</p>', own)).toBe(
+		expect(minify(fixture("html", "source-processor-render-embedded-source-gives-a-style-attribute-the-transforms-a"), own)).toBe(
 			"<p style=inset:0>x"
 		);
 		expect(
 			minify(
-				'<p style="margin-top:1px;margin-right:1px;margin-bottom:1px;margin-left:1px">x</p>',
+				fixture("html", "source-processor-render-embedded-source-gives-a-style-attribute-the-transforms-a-2"),
 				own
 			)
 		).toBe("<p style=margin:1px>x");
 		// Foreign content is the same declaration list.
 		expect(
 			minify(
-				'<svg><rect style="padding-top:0;padding-right:0;padding-bottom:0;padding-left:0"/></svg>',
+				fixture("html", "source-processor-render-embedded-source-gives-a-style-attribute-the-transforms-a-3"),
 				own
 			)
 		).toBe("<svg><rect style=padding:0 /></svg>");
 		// Nothing opened a block, so a `}` closes none: it is a parse error whose
 		// bad declaration runs to the next `;` — two properties, so both survive it.
-		expect(minify('<p style="color:red;};background:blue">x</p>', own)).toBe(
+		expect(minify(fixture("html", "source-processor-render-embedded-source-gives-a-style-attribute-the-transforms-a-4"), own)).toBe(
 			"<p style=color:red;background:blue>x"
 		);
 		// No `;` after it, so the bad declaration runs to the end.
 		expect(
-			minify('<p style="background:red;}background:blue">x</p>', own)
+			minify(fixture("html", "source-processor-render-embedded-source-gives-a-style-attribute-the-transforms-a-5"), own)
 		).toBe("<p style=background:red>x");
 		// Inside a value it is a token like any other, leaving a declaration a
 		// browser drops — so it is handed back exactly as written.
 		expect(
-			minify('<p style="background:red};background:blue">x</p>', own)
+			minify(fixture("html", "source-processor-render-embedded-source-gives-a-style-attribute-the-transforms-a-6"), own)
 		).toBe("<p style=background:red};background:blue>x");
 	});
 
@@ -1618,7 +1618,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		const own = builtinEmbeddedRenderer();
 		expect(minify(html, own)).toBe("<p style='content:\"x\";color:red'>y");
 		// Foreign content too: SVG and MathML `style` is the same declaration list.
-		expect(minify('<svg><rect style="fill : &quot;a&quot;"/></svg>', own)).toBe(
+		expect(minify(fixture("html", "source-processor-render-embedded-source-minifies-and-offers-a-style-attribute-2"), own)).toBe(
 			"<svg><rect style='fill:\"a\"'/></svg>"
 		);
 	});
@@ -1626,7 +1626,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	it("offers an inline `<style>`, a `style` attribute and a `<script>`", () => {
 		expect(
 			offered(
-				'<p style="color : red">x</p><style>.a { color : red }</style><script>var a = 1</script>'
+				fixture("html", "source-processor-render-embedded-source-offers-an-inline-style-a-style-attribute")
 			)
 		).toEqual([
 			// The attribute is CSS too — `as` is what says it is a block's contents
@@ -1640,24 +1640,24 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	it("offers a classic script as the production it is", () => {
 		// Every classic spelling is the same production, and the value is matched
 		// the way the parser matched it — trimmed, and ASCII case-insensitively.
-		expect(offered("<script>var a = 1</script>")).toEqual([
+		expect(offered(fixture("html", "source-processor-render-embedded-source-offers-a-classic-script-as-the"))).toEqual([
 			["javascript", "script", "var a = 1"]
 		]);
 		expect(
-			offered('<script type="text/javascript">var a = 1</script>')
+			offered(fixture("html", "source-processor-inline-script-type-drops-a-redundant-type-spelled-with-a"))
 		).toEqual([["javascript", "script", "var a = 1"]]);
 		expect(
-			offered('<script type="  TEXT/JavaScript  ">var a = 1</script>')
+			offered(fixture("html", "source-processor-render-embedded-source-offers-a-classic-script-as-the-2"))
 		).toEqual([["javascript", "script", "var a = 1"]]);
 	});
 
 	it("offers a module script as the module production", () => {
 		// The goal symbol is not readable off the body: this one parses under
 		// both, and only the element says which it is.
-		expect(offered('<script type="module">var a = 1</script>')).toEqual([
+		expect(offered(fixture("html", "source-processor-render-embedded-source-offers-a-module-script-as-the-module"))).toEqual([
 			["javascript", "module", "var a = 1"]
 		]);
-		expect(offered('<script type="  MODULE  ">import "x"</script>')).toEqual([
+		expect(offered(fixture("html", "source-processor-render-embedded-source-offers-a-module-script-as-the-module-2"))).toEqual([
 			["javascript", "module", 'import "x"']
 		]);
 	});
@@ -1665,7 +1665,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	it("offers a run of both, each under its own production", () => {
 		expect(
 			offered(
-				'<script>a()</script><script type="module">import "x"</script><script>b()</script>'
+				fixture("html", "source-processor-render-embedded-source-offers-a-run-of-both-each-under-its-own")
 			)
 		).toEqual([
 			["javascript", "script", "a()"],
@@ -1725,7 +1725,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	it("offers a handler no JavaScript production could hold", () => {
 		// The printer reads none of it: what parses is the renderer's business,
 		// exactly as it is for an inline `<script>`.
-		expect(offered('<button onclick="var = broken(">x</button>')).toEqual([
+		expect(offered(fixture("html", "source-processor-render-embedded-source-offers-a-handler-no-java-script"))).toEqual([
 			["javascript", "event-handler", "var = broken("]
 		]);
 	});
@@ -1733,12 +1733,12 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	it("offers a handler only where the name is one on that element", () => {
 		// `onunload` is a handler on `<body>` and text a script may read anywhere
 		// else, so only one of these two holds JavaScript.
-		expect(offered('<div onunload="a( 1 )">x</div>')).toEqual([]);
-		expect(offered('<body onunload="a( 1 )">x</body>')).toEqual([
+		expect(offered(fixture("html", "source-processor-render-embedded-source-offers-a-handler-only-where-the-name-is"))).toEqual([]);
+		expect(offered(fixture("html", "source-processor-render-embedded-source-offers-a-handler-only-where-the-name-is-2"))).toEqual([
 			["javascript", "event-handler", "a( 1 )"]
 		]);
 		// Foreign content carries the global ones too.
-		expect(offered('<svg><circle onclick="f( 1 )"/></svg>')[0]).toEqual([
+		expect(offered(fixture("html", "source-processor-render-embedded-source-offers-a-handler-only-where-the-name-is-3"))[0]).toEqual([
 			"javascript",
 			"event-handler",
 			"f( 1 )"
@@ -1749,21 +1749,21 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		// A reference spelling whitespace stays as written, so nothing is offered
 		// for it either — writing it out would make the attribute read as empty.
 		expect(
-			offered('<button onclick="  " onmouseover="" onfocus="&#32;">x</button>')
+			offered(fixture("html", "source-processor-render-embedded-source-never-offers-an-empty-handler"))
 		).toEqual([]);
 	});
 
 	it("keeps a minified handler through the print's own re-parse", () => {
 		// The adoption agency makes this print verify itself by re-parsing, which
 		// reads a renderer's answer as a value the print got wrong unless told.
-		expect(minify('<p>1<b>2<i onclick="f( 1 )">3</b>4</i>5</p>', squeeze)).toBe(
+		expect(minify(fixture("html", "source-processor-render-embedded-source-keeps-a-minified-handler-through-the"), squeeze)).toBe(
 			'<p>1<b>2<i onclick=f(1)>3</i></b><i onclick="f( 1 )">4</i>5'
 		);
 	});
 
 	it("offers every handler the document holds", () => {
 		expect(
-			offered('<p onclick="f( 1 )">a</p><p onclick="f( 1 )">b</p>')
+			offered(fixture("html", "source-processor-render-embedded-source-offers-every-handler-the-document-holds"))
 		).toEqual([
 			["javascript", "event-handler", "f( 1 )"],
 			["javascript", "event-handler", "f( 1 )"]
@@ -1783,14 +1783,14 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 	it("quotes a handler answer that needs it", () => {
 		expect(
-			minify('<button onclick="f( &quot;a&quot; )">x</button>', squeeze)
+			minify(fixture("html", "source-processor-render-embedded-source-quotes-a-handler-answer-that-needs-it"), squeeze)
 		).toBe("<button onclick='f(\"a\")'>x</button>");
 	});
 
 	it("keeps a handler the renderer answered longer than the source", () => {
 		// A minifier ends a statement it was handed without one, so the shortest
 		// handlers come back a byte longer than they were written.
-		expect(minify('<p onclick="x">a</p>', () => "x;")).toBe("<p onclick=x>a");
+		expect(minify(fixture("html", "source-processor-render-embedded-source-keeps-a-handler-the-renderer-answered"), () => "x;")).toBe("<p onclick=x>a");
 	});
 
 	it("leaves a handler alone where the renderer declines it", () => {
@@ -1806,7 +1806,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 	it("answers a handler on a deferred print, `/>`-spelled tag included", async () => {
 		expect(
-			await deferred('<button onclick="  foo( 1 , 2 )  ">x</button>', squeeze)
+			await deferred(fixture("html", "source-processor-render-embedded-source-offers-an-event-handler-attribute-and"), squeeze)
 		).toEqual({
 			code: "<button onclick=foo(1,2)>x</button>",
 			offered: [["javascript", "event-handler", "  foo( 1 , 2 )  "]]
@@ -1814,12 +1814,12 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		// A foreign `/>` reads back whether the last value ended unquoted, which an
 		// answer that has not arrived cannot decide: the source's quoting stands.
 		expect(
-			(await deferred('<svg><circle onclick="f( 1 )"/></svg>', squeeze)).code
+			(await deferred(fixture("html", "source-processor-render-embedded-source-offers-a-handler-only-where-the-name-is-3"), squeeze)).code
 		).toBe('<svg><circle onclick="f(1)"/></svg>');
 		// There the answer is written only where it is shorter than the source: the
 		// quoting is already decided, so an equal one would only be a rewrite.
 		expect(
-			(await deferred('<svg><circle onclick="f(1)"/></svg>', squeeze)).code
+			(await deferred(fixture("html", "source-processor-render-embedded-source-answers-a-handler-on-a-deferred-print"), squeeze)).code
 		).toBe('<svg><circle onclick="f(1)"/></svg>');
 	});
 
@@ -1918,7 +1918,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	it("keeps the parameters a `data:` URL was written with", () => {
 		expect(
 			minify(
-				'<a href="data:application/json;charset=utf-8,{ &quot;a&quot; : 1 }">x</a>',
+				fixture("html", "source-processor-render-embedded-source-keeps-the-parameters-a-data-url-was"),
 				compactJson
 			)
 		).toBe("<a href='data:application/json;charset=utf-8,{\"a\":1}'>x</a>");
@@ -1935,7 +1935,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	it("answers a `data:` payload on a deferred print", async () => {
 		expect(
 			await deferred(
-				"<object data='data:application/json,{ \"a\" : 1 }'></object>",
+				fixture("html", "source-processor-render-embedded-source-answers-a-data-payload-on-a-deferred"),
 				compactJson
 			)
 		).toEqual({
@@ -1996,7 +1996,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	it("offers a JSON `<script>` as json, by type and by `+json` subtype", () => {
 		expect(
 			offered(
-				'<script type="application/json">{ "a": 1 }</script><script type="application/ld+json">{ "b": 2 }</script>'
+				fixture("html", "source-processor-render-embedded-source-offers-a-json-script-as-json-by-type-and")
 			)
 		).toEqual([
 			["json", "stylesheet", '{ "a": 1 }'],
@@ -2007,7 +2007,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	it("replaces the built-in CSS and JSON minifiers", () => {
 		expect(
 			minify(
-				'<style>.a { color : red }</style><script type="application/json">{ "a" : 1 }</script>',
+				fixture("html", "source-processor-render-embedded-source-replaces-the-built-in-css-and-json"),
 				(source) => source.toUpperCase()
 			)
 		).toBe(
@@ -2022,7 +2022,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 	it("keeps the body when the renderer throws", () => {
 		expect(
-			minify("<style>.a{color:red}</style>", () => {
+			minify(fixture("html", "source-processor-render-embedded-source-keeps-the-body-when-the-renderer-throws"), () => {
 				throw new Error("nope");
 			})
 		).toBe("<style>.a{color:red}</style>");
@@ -2030,18 +2030,18 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 	it("writes a `style` attribute back as its renderer answered", () => {
 		expect(
-			minify('<p style="  color : red ;  ">x</p>', () => "color:red")
+			minify(fixture("html", "source-processor-render-embedded-source-writes-a-style-attribute-back-as-its"), () => "color:red")
 		).toBe("<p style=color:red>x");
 		// Whatever it answers is quoted and escaped to stay one attribute, so a
 		// renderer cannot spell its way out of the value.
 		expect(
-			minify('<p style="  color : red ;  ">x</p>', () => 'content:"a" b')
+			minify(fixture("html", "source-processor-render-embedded-source-writes-a-style-attribute-back-as-its"), () => 'content:"a" b')
 		).toBe("<p style='content:\"a\" b'>x");
 	});
 
 	it("never offers an empty body", () => {
 		expect(
-			offered('<style> </style><script></script><p style=" "></p>')
+			offered(fixture("html", "source-processor-render-embedded-source-never-offers-an-empty-body"))
 		).toEqual([]);
 	});
 
@@ -2050,7 +2050,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		// something else, but `style` is a declaration list exactly like HTML's.
 		expect(
 			offered(
-				'<svg viewBox="0 0 2 2"><style>.s { fill : red }</style><rect style="fill : red"/><script>var b = 2</script></svg>'
+				fixture("html", "source-processor-render-embedded-source-offers-what-an-inline-svg-nests-its")
 			)
 		).toEqual([
 			["css", "stylesheet", ".s { fill : red }"],
@@ -2061,7 +2061,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 			[
 				"svg",
 				"foreign-element",
-				'<svg viewBox="0 0 2 2"><style>.s { fill : red }</style><rect style="fill : red"/><script>var b = 2</script></svg>'
+				fixture("html", "source-processor-render-embedded-source-offers-what-an-inline-svg-nests-its")
 			]
 		]);
 	});
@@ -2070,13 +2070,13 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		// A tag the source spells `/>` is serialized twice — once by the streaming
 		// walk, once by the printer — and a renderer must not see it twice.
 		expect(
-			offered('<svg viewBox="0 0 2 2"><rect style="fill : red"/></svg>')
+			offered(fixture("html", "source-processor-render-embedded-source-offers-each-body-exactly-once-including"))
 		).toEqual([
 			["css", "block-contents", "fill : red"],
 			[
 				"svg",
 				"foreign-element",
-				'<svg viewBox="0 0 2 2"><rect style="fill : red"/></svg>'
+				fixture("html", "source-processor-render-embedded-source-offers-each-body-exactly-once-including")
 			]
 		]);
 	});
@@ -2103,7 +2103,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	});
 
 	it("offers a self-closing `<svg>`", () => {
-		expect(offered("<svg/>")).toEqual([["svg", "foreign-element", "<svg/>"]]);
+		expect(offered(fixture("html", "source-processor-render-embedded-source-offers-a-self-closing-svg"))).toEqual([["svg", "foreign-element", fixture("html", "source-processor-render-embedded-source-offers-a-self-closing-svg")]]);
 	});
 
 	it("keeps a map the renderer attached to an inline `<style>` / `<script>`", () => {
@@ -2131,7 +2131,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		// answers is still written as one well-formed value.
 		expect(
 			minify(
-				'<p style="  color : red ;  ">x</p>',
+				fixture("html", "source-processor-render-embedded-source-writes-a-style-attribute-back-as-its"),
 				(s) => `${s}/*# sourceMappingURL=data:application/json;base64,e30= */`
 			)
 		).toBe(
@@ -2141,13 +2141,13 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 	it("offers the document an `<iframe srcdoc>` holds, decoded", () => {
 		expect(
-			offered('<iframe srcdoc="&lt;p&gt;   hello   &lt;/p&gt;"></iframe>')
+			offered(fixture("html", "source-processor-render-embedded-source-offers-the-document-an-iframe-srcdoc"))
 		).toEqual([["html", "srcdoc", "<p>   hello   </p>"]]);
 		// Empty carries no document, and a foreign-content `<iframe>` is an SVG
 		// element that happens to share the name.
-		expect(offered('<iframe srcdoc=""></iframe>')).toEqual([]);
+		expect(offered(fixture("html", "source-processor-render-embedded-source-offers-the-document-an-iframe-srcdoc-2"))).toEqual([]);
 		expect(
-			offered('<svg><iframe srcdoc="&lt;p&gt;x&lt;/p&gt;"/></svg>')
+			offered(fixture("html", "source-processor-render-embedded-source-offers-the-document-an-iframe-srcdoc-3"))
 		).toEqual([
 			["svg", "foreign-element", '<svg><iframe srcdoc="<p>x</p>"/></svg>']
 		]);
@@ -2189,7 +2189,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	it("does not offer a non-CSS `<style>` or a data-block `<script>`", () => {
 		expect(
 			offered(
-				'<style type="text/plain">raw</style><script type="text/template">raw</script>'
+				fixture("html", "source-processor-render-embedded-source-does-not-offer-a-non-css-style-or-a-data")
 			)
 		).toEqual([]);
 	});
@@ -2198,7 +2198,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		// An unquoted value carries no delimiter to keep, so the answer alone
 		// decides one — and it needs quotes whatever it holds.
 		expect(
-			minify("<p><iframe srcdoc=&lt;p&gt;a></iframe>", () => '<p a="b">')
+			minify(fixture("html", "source-processor-render-embedded-source-quotes-a-bare-srcdoc-a-synchronous"), () => '<p a="b">')
 		).toBe("<p><iframe srcdoc='<p a=\"b\">'></iframe>");
 	});
 });
@@ -2259,17 +2259,17 @@ describe("SourceProcessor — inline CSS honors the target's abilities", () => {
 
 	it("keeps a lowered list however the source spelled it", () => {
 		const lowered = '<p style="background:#00c3ff;background:hwb(194 0% 0%)">x';
-		expect(minifyLegacy('<p style="background: hwb(194 0% 0%)">x')).toBe(
+		expect(minifyLegacy(fixture("html", "source-processor-inline-css-honors-the-target-s-abilities-keeps-a-lowered-list"))).toBe(
 			lowered
 		);
-		expect(minifyLegacy('<p style="background&#x3a; hwb(194 0% 0%)">x')).toBe(
+		expect(minifyLegacy(fixture("html", "source-processor-inline-css-honors-the-target-s-abilities-keeps-a-lowered-list-2"))).toBe(
 			lowered
 		);
 	});
 
 	it("keeps a lowered list that holds both quotes", () => {
 		expect(
-			minifyLegacy(`<p style="content:'\\''; background: hwb(194 0% 0%)">x`)
+			minifyLegacy(fixture("html", "source-processor-inline-css-honors-the-target-s-abilities-keeps-a-lowered-list-3"))
 		).toBe(
 			`<p style="content:'\\'';background:#00c3ff;background:hwb(194 0% 0%)">x`
 		);
@@ -2278,7 +2278,7 @@ describe("SourceProcessor — inline CSS honors the target's abilities", () => {
 	it("keeps the source's delimiter for a lowered list where quotes are frozen", () => {
 		expect(
 			new SourceProcessor().process(
-				"<p style='background&#x3a; hwb(194 0% 0%)'>x",
+				fixture("html", "source-processor-inline-css-honors-the-target-s-abilities-keeps-the-source-s"),
 				{
 					mode: "minify",
 					transforms: { normalizeAttributeQuotes: false },
@@ -2294,7 +2294,7 @@ describe("SourceProcessor — inline CSS honors the target's abilities", () => {
 		const plain = minifyLegacy(fixture("html", "source-processor-inline-css-honors-the-target-s-abilities-writes-a-list-the-same"));
 		expect(plain).toBe(`<p style="content:'\\'';color:red">x`);
 		expect(
-			minifyLegacy(`<p style="content:&#39;\\&#39;&#39;;color:red">x`)
+			minifyLegacy(fixture("html", "source-processor-inline-css-honors-the-target-s-abilities-writes-a-list-the-same-2"))
 		).toBe(plain);
 	});
 });
@@ -2312,10 +2312,10 @@ describe("htmlMinify — assets webpack only passes through", () => {
 		// A nested document takes the asynchronous pass, which the synchronous
 		// built-in cannot answer for.
 		expect(
-			await min('<iframe src="data:text/html,<p>a<!-- c --></p>"></iframe>')
+			await min(fixture("html", "html-minify-assets-webpack-only-passes-through-minifies-an-html-data-url-an"))
 		).toBe('<iframe src="data:text/html,<p>a"></iframe>');
 		expect(
-			await min("<a href='data:application/json,{ \"a\" : 1 }'>x</a>")
+			await min(fixture("html", "html-minify-assets-webpack-only-passes-through-minifies-an-html-data-url-an-3"))
 		).toBe("<a href='data:application/json,{\"a\":1}'>x</a>");
 	});
 
@@ -2355,7 +2355,7 @@ describe("htmlMinify — assets webpack only passes through", () => {
 		it("minifies a body that reads alike where the comment sits", async () => {
 			expect(
 				await conditional(
-					'<!--[if lt IE 9]><script src="h.js"></script><link rel="stylesheet"  href="a.css"><![endif]-->'
+					fixture("html", "html-minify-assets-webpack-only-passes-through-minify-conditional-comments-3")
 				)
 			).toBe(
 				"<!--[if lt IE 9]><script src=h.js></script><link rel=stylesheet href=a.css><![endif]-->"
@@ -2377,7 +2377,7 @@ describe("htmlMinify — assets webpack only passes through", () => {
 
 		it("keeps the end tags what follows the comment reads", async () => {
 			expect(
-				await conditional('<!--[if IE]><p  class="a" >a</p><![endif]--><span>b</span>')
+				await conditional(fixture("html", "html-minify-assets-webpack-only-passes-through-minify-conditional-comments-keeps-8"))
 			).toBe("<!--[if IE]><p class=a>a</p><![endif]--><span>b</span>");
 		});
 
@@ -2406,9 +2406,9 @@ describe("htmlMinify — assets webpack only passes through", () => {
 
 		it("leaves a comment that only starts like one, and a plain one, to the document", async () => {
 			expect(
-				await conditional("<p>a</p><!--[if IE]> no end --><!-- plain -->")
+				await conditional(fixture("html", "html-minify-assets-webpack-only-passes-through-minify-conditional-comments"))
 			).toBe("<p>a</p><!--[if IE]> no end -->");
-			expect(await conditional("<p>a</p>")).toBe("<p>a");
+			expect(await conditional(fixture("html", "html-minify-assets-webpack-only-passes-through-minify-conditional-comments-2"))).toBe("<p>a");
 		});
 	});
 
@@ -2427,67 +2427,67 @@ describe("htmlMinify — assets webpack only passes through", () => {
 		// `<?php … ?>` is a bogus comment per §13.2.5.42, so the inert-comment rule
 		// would delete the whole directive from a copied template.
 		expect(
-			await min("<?php echo $t; ?>\n<html><body><p>a</p></body></html>")
+			await min(fixture("html", "html-minify-assets-webpack-only-passes-through-keeps-server-side-template-tags"))
 		).toBe("<?php echo $t; ?><body><p>a</body></html>");
-		expect(await min("<html><body><!-- inert --><p>a</p></body></html>")).toBe(
+		expect(await min(fixture("html", "html-minify-assets-webpack-only-passes-through-keeps-server-side-template-tags-2"))).toBe(
 			"<body><p>a</body></html>"
 		);
 	});
 
 	it("keeps text-level template placeholders unescaped", async () => {
 		// Escaping these to `&lt;%= t %&gt;` breaks the server-side render.
-		expect(await min("<div>   <%= t %>   </div>")).toBe(
+		expect(await min(fixture("html", "html-minify-assets-webpack-only-passes-through-keeps-text-level-template"))).toBe(
 			"<div>   <%= t %>   </div>"
 		);
-		expect(await min("<div>{{ t }}</div>")).toBe("<div>{{ t }}</div>");
+		expect(await min(fixture("html", "html-minify-assets-webpack-only-passes-through-keeps-text-level-template-2"))).toBe("<div>{{ t }}</div>");
 	});
 
 	it("still escapes text that would re-parse as markup", async () => {
 		// `a &lt;b&gt;c` decodes to `a <b>c`; emitting the `<` raw would build a
 		// real `<b>` element, so that one stays escaped. A bare `>` is only ever a
 		// character in text.
-		expect(await min("<p>a &lt;b&gt;c")).toBe("<p>a &lt;b>c");
-		expect(await min("<p>a&amp;b")).toBe("<p>a&amp;b");
+		expect(await min(fixture("html", "html-minify-assets-webpack-only-passes-through-still-escapes-text-that-would-re"))).toBe("<p>a &lt;b>c");
+		expect(await min(fixture("html", "html-minify-assets-webpack-only-passes-through-still-escapes-text-that-would-re-2"))).toBe("<p>a&amp;b");
 		// Foster-parented text merges into one node whose range no longer covers
 		// its data — the source slice would drop the `c`.
-		expect(await min("<table>a<tr><td>b</td></tr>c</table>")).toBe(
+		expect(await min(fixture("html", "html-minify-assets-webpack-only-passes-through-still-escapes-text-that-would-re-3"))).toBe(
 			"ac<table><tr><td>b</table>"
 		);
 		// A trailing `<` has to stay escaped: dropping a comment after it would
 		// let it fuse with the next sibling into a tag.
-		expect(await min("<p>a<</p>")).toBe("<p>a&lt;");
-		expect(await min("<p>a<<!--c--></p>")).toBe("<p>a&lt;");
+		expect(await min(fixture("html", "html-minify-assets-webpack-only-passes-through-still-escapes-text-that-would-re-4"))).toBe("<p>a&lt;");
+		expect(await min(fixture("html", "html-minify-assets-webpack-only-passes-through-still-escapes-text-that-would-re-5"))).toBe("<p>a&lt;");
 	});
 
 	it("keeps template expressions containing ampersands", async () => {
 		// `&&` is everywhere in EJS/PHP conditionals; escaping it to `&amp;&amp;`
 		// breaks the server-side render just as escaping `<` does.
-		expect(await min("<div><%= a && b %></div>")).toBe(
+		expect(await min(fixture("html", "html-minify-assets-webpack-only-passes-through-keeps-template-expressions"))).toBe(
 			"<div><%= a && b %></div>"
 		);
-		expect(await min("<div><% if (a && b) { %>x<% } %></div>")).toBe(
+		expect(await min(fixture("html", "html-minify-assets-webpack-only-passes-through-keeps-template-expressions-2"))).toBe(
 			"<div><% if (a && b) { %>x<% } %></div>"
 		);
-		expect(await min("<p>a & b")).toBe("<p>a & b");
-		expect(await min("<p>a &foo; b")).toBe("<p>a &foo; b");
+		expect(await min(fixture("html", "html-minify-assets-webpack-only-passes-through-keeps-template-expressions-3"))).toBe("<p>a & b");
+		expect(await min(fixture("html", "html-minify-assets-webpack-only-passes-through-keeps-template-expressions-4"))).toBe("<p>a &foo; b");
 	});
 
 	it("escapes a character reference left open at the end", async () => {
 		// The next sibling could complete it (`a &am` + `p;`) once a comment
 		// between them is dropped, so only a closed tail passes through.
-		expect(await min("<p>a &</p>")).toBe("<p>a &amp;");
-		expect(await min("<p>a &am</p>")).toBe("<p>a &amp;am");
-		expect(await min("<p>a &am<!--c-->p;</p>")).toBe("<p>a &amp;amp;");
+		expect(await min(fixture("html", "html-minify-assets-webpack-only-passes-through-escapes-a-character-reference"))).toBe("<p>a &amp;");
+		expect(await min(fixture("html", "html-minify-assets-webpack-only-passes-through-escapes-a-character-reference-2"))).toBe("<p>a &amp;am");
+		expect(await min(fixture("html", "html-minify-assets-webpack-only-passes-through-escapes-a-character-reference-3"))).toBe("<p>a &amp;amp;");
 	});
 
 	it("keeps the body of literal-text elements raw", async () => {
 		// `script` / `style` bodies are not markup, so `<` must not be escaped —
 		// `a &lt; b` would change what the script does. A `<style>` body is still
 		// run through the CSS minifier, which is not an escaping pass.
-		expect(await min("<script>if (a < b) { x(); }</script>")).toBe(
+		expect(await min(fixture("html", "html-minify-assets-webpack-only-passes-through-keeps-the-body-of-literal-text"))).toBe(
 			"<script>if (a < b) { x(); }</script>"
 		);
-		expect(await min("<style>.a[x='<'] { color: red }</style>")).toBe(
+		expect(await min(fixture("html", "html-minify-assets-webpack-only-passes-through-keeps-the-body-of-literal-text-2"))).toBe(
 			'<style>.a[x="<"]{color:red}</style>'
 		);
 	});
@@ -2507,7 +2507,7 @@ describe("htmlMinify — embedded bodies with no renderer", () => {
 		// this one webpack minifies itself, as in a document of its own.
 		expect(
 			await min(
-				'<p><iframe srcdoc="&lt;!-- x --&gt;&lt;p&gt;a&lt;/p&gt;"></iframe>'
+				fixture("html", "html-minify-embedded-bodies-with-no-renderer-minifies-the-document-an-iframe")
 			)
 		).toBe('<p><iframe srcdoc="<p>a"></iframe>');
 	});
@@ -2515,7 +2515,7 @@ describe("htmlMinify — embedded bodies with no renderer", () => {
 	it("reaches a `srcdoc` the source wrote bare", async () => {
 		// An unquoted value holds a document too, and gets quotes back: a space
 		// or a `>` in the minified text would otherwise end the attribute.
-		expect(await min("<p><iframe srcdoc=&lt;p&gt;a&lt;/p&gt;></iframe>")).toBe(
+		expect(await min(fixture("html", "html-minify-embedded-bodies-with-no-renderer-reaches-a-srcdoc-the-source-wrote"))).toBe(
 			'<p><iframe srcdoc="<p>a"></iframe>'
 		);
 	});
@@ -2524,7 +2524,7 @@ describe("htmlMinify — embedded bodies with no renderer", () => {
 		// An `<iframe>` in SVG is an SVG element that shares the name, and its
 		// `srcdoc` is not the HTML attribute.
 		expect(
-			await min('<p><svg><iframe srcdoc="&lt;!-- k --&gt;"></iframe></svg>')
+			await min(fixture("html", "html-minify-embedded-bodies-with-no-renderer-leaves-a-srcdoc-in-foreign-content"))
 		).toBe('<p><svg><iframe srcdoc="<!-- k -->"></iframe></svg>');
 	});
 });
@@ -3140,7 +3140,7 @@ describe("SourceProcessor — reusing work across a print", () => {
 		// The same raw value twice, which is what webpack's own renderer keys its
 		// memo on — a value that merely minifies to the same text is another entry.
 		expect(
-			minify('<p style="color: #ff0000"><b style="color: #ff0000">', {
+			minify(fixture("html", "source-processor-reusing-work-across-a-print-minifies-a-repeated-style-attribute"), {
 				renderEmbeddedSource: builtinEmbeddedRenderer()
 			})
 		).toBe("<p style=color:red><b style=color:red></b>");
@@ -3189,9 +3189,9 @@ describe("SourceProcessor — reusing work across a print", () => {
 	it("reads back the name it was given, whatever the memo holds", () => {
 		// These three take the same memo slot — it is keyed by first character and
 		// length — so each is handed the one before it and must reject it.
-		expect(deepestTagName("<body><my-widget>")).toBe("my-widget");
-		expect(deepestTagName("<body><my-gadget>")).toBe("my-gadget");
-		expect(deepestTagName("<body><MY-WIDGET>")).toBe("my-widget");
+		expect(deepestTagName(fixture("html", "source-processor-reusing-work-across-a-print-reads-back-the-name-it-was-given"))).toBe("my-widget");
+		expect(deepestTagName(fixture("html", "source-processor-reusing-work-across-a-print-reads-back-the-name-it-was-given-2"))).toBe("my-gadget");
+		expect(deepestTagName(fixture("html", "source-processor-reusing-work-across-a-print-reads-back-the-name-it-was-given-3"))).toBe("my-widget");
 	});
 
 	it("reads back every name of a document that dirties the whole memo", () => {
@@ -3221,14 +3221,14 @@ describe("SourceProcessor — reusing work across a print", () => {
 		expect(names[3]).toBe("x-a");
 		expect(names[names.length - 1]).toBe(`x-${"a".repeat(SLOTS)}`);
 		// A second parse must not be handed anything the first left in a slot.
-		expect(deepestTagName("<body><my-widget>")).toBe("my-widget");
+		expect(deepestTagName(fixture("html", "source-processor-reusing-work-across-a-print-reads-back-the-name-it-was-given"))).toBe("my-widget");
 	});
 
 	it("hands out one shared string for a known name", () => {
 		// What lets the memo keep a known name across parses: the entry is this
 		// constant, not a slice of the document that asked for it.
-		const first = deepestTagName("<body><section>");
-		const second = deepestTagName("<body><SECTION>");
+		const first = deepestTagName(fixture("html", "source-processor-reusing-work-across-a-print-hands-out-one-shared-string-for-a"));
+		const second = deepestTagName(fixture("html", "source-processor-reusing-work-across-a-print-hands-out-one-shared-string-for-a-2"));
 		expect(second).toBe("section");
 		expect(second).toBe(first);
 	});
@@ -3274,7 +3274,7 @@ describe("htmlMinify — the delimiter an answered `srcdoc` is written with", ()
 		// Nothing to escape either way, so the shorter document is the one that
 		// does not rewrite the delimiter it was already spelled with.
 		expect(
-			await min("<p><iframe srcdoc='&lt;p&gt;a'></iframe>", () => "<p>b")
+			await min(fixture("html", "html-minify-the-delimiter-an-answered-srcdoc-is-written-with-keeps-the-source-s"), () => "<p>b")
 		).toBe("<p><iframe srcdoc='<p>b'></iframe>");
 		expect(await min(SOURCE, () => "<p>b")).toBe(
 			'<p><iframe srcdoc="<p>b"></iframe>'
@@ -3285,7 +3285,7 @@ describe("htmlMinify — the delimiter an answered `srcdoc` is written with", ()
 		// An unquoted value carries no delimiter to keep, so the answer's own
 		// content is all there is to go on.
 		expect(
-			await min("<p><iframe srcdoc=&lt;p&gt;a></iframe>", () => '<p a="b">')
+			await min(fixture("html", "source-processor-render-embedded-source-quotes-a-bare-srcdoc-a-synchronous"), () => '<p a="b">')
 		).toBe("<p><iframe srcdoc='<p a=\"b\">'></iframe>");
 	});
 
@@ -3296,7 +3296,7 @@ describe("htmlMinify — the delimiter an answered `srcdoc` is written with", ()
 			'<p><iframe srcdoc="&lt;p&gt;a"></iframe>'
 		);
 		expect(
-			await min("<p><iframe srcdoc=&lt;p&gt;a></iframe>", () =>
+			await min(fixture("html", "source-processor-render-embedded-source-quotes-a-bare-srcdoc-a-synchronous"), () =>
 				Promise.resolve(undefined)
 			)
 		).toBe("<p><iframe srcdoc=&lt;p&gt;a></iframe>");
@@ -3322,13 +3322,13 @@ describe("htmlMinify — an answered `style` attribute that changes its quoting"
 		// The built-in's text is quoted and the answer is bare. Only a foreign
 		// `/>` reads that difference, so an html element takes the answer.
 		expect(
-			await min('<p style="margin: 0 auto">x</p>', () => "color:red")
+			await min(fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-an-answer"), () => "color:red")
 		).toBe("<p style=color:red>x");
 	});
 
 	it("keeps an answer that now needs quotes", async () => {
 		expect(
-			await min('<p style="color: red">x</p>', () => "margin:0 auto")
+			await min(fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-an-answer-2"), () => "margin:0 auto")
 		).toBe('<p style="margin:0 auto">x');
 	});
 
@@ -3337,7 +3337,7 @@ describe("htmlMinify — an answered `style` attribute that changes its quoting"
 		// the payload minified the whole value fits unquoted.
 		expect(
 			await min(
-				"<p style=\"background:url('data:text/css,  .q  {  color : red  }  ')\">x</p>",
+				fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-minifies-a-data"),
 				() => "background:url(data:text/css,.q{color:red})"
 			)
 		).toBe("<p style=background:url(data:text/css,.q{color:red})>x");
@@ -3347,13 +3347,13 @@ describe("htmlMinify — an answered `style` attribute that changes its quoting"
 		// Whether a space must precede a foreign `/>` is decided when the tag
 		// closes, too early to wait for the answer, so the source's spelling stands.
 		expect(
-			await min("<svg><rect style=color:red /></svg>", (source, info) =>
+			await min(fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-declines-an"), (source, info) =>
 				info.type === "css" ? "margin:0 auto" : undefined
 			)
 		).toBe("<svg><rect style=color:red /></svg>");
 		// An answer that keeps the tag ending as the source had it is taken.
 		expect(
-			await min('<svg><rect style="color: red" /></svg>', (source, info) =>
+			await min(fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-declines-an-2"), (source, info) =>
 				info.type === "css" ? "margin:0 auto" : undefined
 			)
 		).toBe('<svg><rect style="margin:0 auto"/></svg>');
@@ -3390,14 +3390,14 @@ describe("htmlMinify — the function an event handler is asked about", () => {
 	});
 
 	it("writes the answer back", async () => {
-		expect(await min('<p onclick="  f( 1 )  ">x</p>', () => "f(1)")).toBe(
+		expect(await min(fixture("html", "html-minify-the-function-an-event-handler-is-asked-about-asks-about-the-body-it"), () => "f(1)")).toBe(
 			"<p onclick=f(1)>x"
 		);
 	});
 
 	it("carries a `return` through, which is what a handler body may hold", async () => {
 		expect(
-			await min('<form onsubmit="return  false"><input></form>', (source) => {
+			await min(fixture("html", "source-processor-render-embedded-source-offers-a-handler-whose-top-level-is-a"), (source) => {
 				expect(source).toBe("return  false");
 				return "return!1";
 			})
@@ -3405,7 +3405,7 @@ describe("htmlMinify — the function an event handler is asked about", () => {
 	});
 
 	it("keeps the handler where the renderer declines", async () => {
-		expect(await min('<p onclick="f( 1 )">x</p>', () => undefined)).toBe(
+		expect(await min(fixture("html", "html-minify-the-function-an-event-handler-is-asked-about-keeps-the-handler-where"), () => undefined)).toBe(
 			'<p onclick="f( 1 )">x'
 		);
 	});
@@ -3650,13 +3650,13 @@ describe("SourceProcessor — attribute rewrites as switches", () => {
 		// spelling stood here until the answer was read for what it says.
 		expect(
 			await deferredStyle(
-				'<p style="color:  #ff0000 ;">x</p>',
+				fixture("html", "source-processor-attribute-rewrites-as-switches-keeps-a-style-attribute-a"),
 				(source) => source
 			)
 		).toBe('<p style="color:  #ff0000 ;">x');
 		expect(
 			await deferredStyle(
-				'<p style="color:  #ff0000 ;" id=q>x</p>',
+				fixture("html", "source-processor-attribute-rewrites-as-switches-keeps-one-a-deferred-renderer"),
 				(source) => source
 			)
 		).toBe('<p style="color:  #ff0000 ;" id=q>x');
@@ -3665,13 +3665,13 @@ describe("SourceProcessor — attribute rewrites as switches", () => {
 	it("takes what a deferred renderer answers, longer or not", async () => {
 		expect(
 			await deferredStyle(
-				'<p style="color:  #ff0000 ;">x</p>',
+				fixture("html", "source-processor-attribute-rewrites-as-switches-keeps-a-style-attribute-a"),
 				() => "color:blue"
 			)
 		).toBe("<p style=color:blue>x");
 		expect(
 			await deferredStyle(
-				'<p style="color:  #ff0000 ;">x</p>',
+				fixture("html", "source-processor-attribute-rewrites-as-switches-keeps-a-style-attribute-a"),
 				() => "color:rgb(255 0 0)"
 			)
 		).toBe('<p style="color:rgb(255 0 0)">x');
@@ -3713,13 +3713,13 @@ describe("SourceProcessor — attribute rewrites as switches", () => {
 
 	it("keeps a shortest list no renderer answers for", async () => {
 		expect(
-			await deferredStyle('<p style="margin:0 auto">x</p>', () => undefined)
+			await deferredStyle(fixture("html", "source-processor-attribute-rewrites-as-switches-offers-a-list-already-at-its"), () => undefined)
 		).toBe('<p style="margin:0 auto">x');
 	});
 
 	it("keeps one a deferred renderer declines as written", async () => {
 		expect(
-			await deferredStyle('<p style="color:  #ff0000 ;">x</p>', () => undefined)
+			await deferredStyle(fixture("html", "source-processor-attribute-rewrites-as-switches-keeps-a-style-attribute-a"), () => undefined)
 		).toBe('<p style="color:  #ff0000 ;">x');
 	});
 
@@ -4244,7 +4244,7 @@ describe("SourceProcessor — printing what re-parses to the same tree", () => {
 			expect(log).toEqual(["-doc"]);
 			expect(
 				skipping(
-					"<a><b/></a>",
+					fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-a-print-that-skips-3"),
 					{ xml: true, mode: "minify" },
 					NodeType.Document
 				).code
@@ -4329,7 +4329,7 @@ describe("SourceProcessor — attribute values the minifier rewrites", () => {
 	it("drops an empty attribute only on an element that defines it", () => {
 		// A style the renderer reads as nothing is empty too, however it is spelled.
 		expect(
-			minify("<p style='&#x20;'>x<p style='a:b&#59;'>y", {
+			minify(fixture("html", "source-processor-attribute-values-the-minifier-rewrites-drops-an-empty-attribute-2"), {
 				removeEmptyAttributes: true,
 				renderEmbeddedSource: R
 			})
@@ -4338,16 +4338,16 @@ describe("SourceProcessor — attribute values the minifier rewrites", () => {
 
 	it("leaves a body as written where the answer is no text", () => {
 		expect(
-			minify("<style>a { color : red }</style><p style='a : b'>x", {
+			minify(fixture("html", "source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written"), {
 				embeddedAnswers: () => undefined
 			})
 		).toBe("<style>a { color : red }</style><p style='a : b'>x");
 		expect(
-			minify("<p style='a : b'>x<svg/>", {
+			minify(fixture("html", "source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written-2"), {
 				renderEmbeddedSource: () => undefined
 			})
 		).toBe("<p style='a : b'>x<svg/>");
-		expect(minify("<p style='a : b'>x", { renderEmbeddedSource: R })).toBe(
+		expect(minify(fixture("html", "source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written-3"), { renderEmbeddedSource: R })).toBe(
 			"<p style=a:b>x"
 		);
 	});
@@ -4368,7 +4368,7 @@ describe("SourceProcessor — runs merged into one", () => {
 	it("folds a style into the one before only across whitespace and equal attributes", () => {
 		expect(
 			minify(
-				"<p><style>a{color:red}</style> <style>b{color:red}</style>x<style>c{color:red}</style>y<style>d{color:red}</style>",
+				fixture("html", "source-processor-runs-merged-into-one-folds-a-style-into-the-one-before-only"),
 				{ mergeStyles: true, renderEmbeddedSource: R }
 			)
 		).toBe(
@@ -4376,7 +4376,7 @@ describe("SourceProcessor — runs merged into one", () => {
 		);
 		expect(
 			minify(
-				"<p><style media=print>a{color:red}</style><style media=print>b{color:red}</style><style media=screen>c{color:red}</style><style title=x>d{color:red}</style>",
+				fixture("html", "source-processor-runs-merged-into-one-folds-a-style-into-the-one-before-only-2"),
 				{ mergeStyles: true, renderEmbeddedSource: R }
 			)
 		).toBe(
@@ -4385,7 +4385,7 @@ describe("SourceProcessor — runs merged into one", () => {
 		// Composed rather than streamed, a template's content folds the same way.
 		expect(
 			minify(
-				"<template><style>a{color:red}</style><style>b{color:red}</style></template>",
+				fixture("html", "source-processor-runs-merged-into-one-folds-a-style-into-the-one-before-only-3"),
 				{ mergeStyles: true, renderEmbeddedSource: R }
 			)
 		).toBe("<template><style>a,b{color:red}</style></template>");
@@ -4415,7 +4415,7 @@ describe("SourceProcessor — the markup generators", () => {
 		expect(escapeText("plain")).toBe("plain");
 		expect(escapeText(text)).toBe("a &amp; b &lt; c &gt; d&nbsp;e&#10;f&#13;g");
 		expect(tree(`<p>${escapeText(text)}`)).toBe(
-			tree("<p>a &amp; b &lt; c &gt; d&nbsp;e&#10;f&#13;g")
+			tree(fixture("html", "source-processor-the-markup-generators-escapes-text-so-that-it-reads-back-as"))
 		);
 	});
 
@@ -4830,7 +4830,7 @@ describe("SourceProcessor — the streamed walk", () => {
 		const names = [];
 		new SourceProcessor()
 			.use({ [NodeType.Element]: (path) => names.push(path.name()) })
-			.process("<a><b/></a>", { xml: true });
+			.process(fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-a-print-that-skips-3"), { xml: true });
 		expect(names).toEqual(["a", "b"]);
 	});
 });
@@ -4912,53 +4912,53 @@ describe("SourceProcessor — what minifying cannot turn into markup", () => {
 	it.each([
 		[
 			"a list item's last child its parent's end tag no longer closes",
-			"<!doctype html><ul><li><dd>x</dd></li><li>y</li></ul>",
-			"<!doctype html><ul><li><dd>x</dd><li>y</ul>"
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-list"),
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-list-2")
 		],
 		[
 			"a last child under a parent of its own name",
-			"<!doctype html><div><rt>a<rt>b</rt></rt>c</div>",
-			"<!doctype html><div><rt>a<rt>b</rt></rt>c</div>"
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-last"),
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-last")
 		],
 		[
 			"a list item's child an `<option>` outside a `select` leaves open",
-			"<!doctype html><div><option><dd>a</dd></option><option>b</option></div>",
-			"<!doctype html><div><option><dd>a</dd><option>b</div>"
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-list-3"),
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-list-4")
 		],
 		[
 			"an `<optgroup>` no `select` closes",
-			"<!doctype html><div><optgroup>a</optgroup><optgroup>b</optgroup></div>",
-			"<!doctype html><div><optgroup>a</optgroup><optgroup>b</div>"
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-an"),
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-an-2")
 		],
 		[
 			"a bare name before a name opening with `=`",
-			'<!doctype html><p class="" =">" title="a">x</p>',
-			'<!doctype html><p class="" =">" title="a">x'
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare"),
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare-2")
 		],
 		[
 			"a name opening with `=` after the tag name or an unquoted value",
-			"<!doctype html><p =x a=b =c>",
-			"<!doctype html><p =x a=b =c>"
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-name"),
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-name")
 		],
 		[
 			"a bare name before a name opening with `=`, in a rebuilt clone",
-			'<!doctype html><b x="" =y><p>a</b>b',
-			'<!doctype html><b x="" =y></b><p><b x="" =y>a</b>b'
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare-3"),
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare-4")
 		],
 		[
 			"a bare name ending in a quote, in a tag printed verbatim",
-			"<!doctype html><script a'=\"\"type=\"text/plain\" {{x}} {{x}}>x</script>",
-			"<!doctype html><script a'=\"\"type=text/plain {{x}} {{x}}>x</script>"
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare-5"),
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare-6")
 		],
 		[
 			"an HTML element's `/>`, which closes nothing",
-			'<!doctype html><textarea/></textarea><p title="</textarea><img>">',
-			'<!doctype html><textarea></textarea><p title="</textarea><img>">'
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-an-3"),
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-an-4")
 		],
 		[
 			"a dropped duplicate's `/` the tag ends with",
-			"<!doctype html><math a a=/>x",
-			"<!doctype html><math a>x</math>"
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a"),
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-2")
 		]
 	])("keeps the tree of %s", (_name, source, expected) => {
 		const printed = minify(source);
@@ -4984,7 +4984,7 @@ describe("SourceProcessor — what minifying cannot turn into markup", () => {
 		});
 		// No missing-doctype error either: a srcdoc document may leave it out.
 		expect(errors).toEqual([]);
-		expect(tree("<p><table></table>", { srcdoc: true })).toBe(
+		expect(tree(fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-parses-an-iframe-srcdoc"), { srcdoc: true })).toBe(
 			"| <html>\n|   <head>\n|   <body>\n|     <p>\n|     <table>"
 		);
 		const { code } = await htmlMinify({
@@ -4995,7 +4995,7 @@ describe("SourceProcessor — what minifying cannot turn into markup", () => {
 
 	it("does not take a placeholder a character reference spells for its own", async () => {
 		const page =
-			'<iframe srcdoc="<b>q</b>"></iframe><style>a{b:c}</style><p title="\u0000&#48;:0\u0000">t</p>';
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-does-not-take-a");
 		const { code } = await htmlMinify({ "page.html": page });
 		expect(code).toBe(
 			'<iframe srcdoc="<b>q</b>"></iframe><style>a{b:c}</style><p title=\u00000:0\u0000>t'
@@ -5004,7 +5004,7 @@ describe("SourceProcessor — what minifying cannot turn into markup", () => {
 
 	it("keeps a `<style>` body as written where the answer would close it", () => {
 		const printed = new SourceProcessor().process(
-			"<style>a { b: c }</style><p>x</p>",
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-a-style-body-as"),
 			{
 				mode: "minify",
 				renderEmbeddedSource: () => "a{b:'</style><b>x</b>'}"
@@ -5014,7 +5014,7 @@ describe("SourceProcessor — what minifying cannot turn into markup", () => {
 		// Where the end tag falls decides, not how many the answer spells.
 		expect(
 			new SourceProcessor().process(
-				'<script>/* </style> */f("<\\/script><b>")</script><p>x</p>',
+				fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-a-style-body-as-2"),
 				{
 					mode: "minify",
 					renderEmbeddedSource: () => 'f("</script><b>")'
@@ -5043,7 +5043,7 @@ describe("SourceProcessor — what minifying cannot turn into markup", () => {
 		).toBe('<script type=application/json>{ "a" : "</noscript>" }</script>');
 		// `</styles` ends nothing, so that answer is printed.
 		expect(
-			new SourceProcessor().process("<style>a { b: c }</style>", {
+			new SourceProcessor().process(fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-a-style-body-as-3"), {
 				mode: "minify",
 				renderEmbeddedSource: () => "a{b:'</styles'}"
 			}).code
@@ -5052,7 +5052,7 @@ describe("SourceProcessor — what minifying cannot turn into markup", () => {
 
 	it("keeps a conditional comment's body as written where its print would end the comment", async () => {
 		const page =
-			'<!--[if IE]><p title="--&gt;&lt;b&gt;x&lt;/b&gt;">x</p><![endif]-->';
+			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-a-conditional");
 		const { code } = await htmlMinify({ "page.html": page }, undefined, {
 			minifyConditionalComments: true
 		});

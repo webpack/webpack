@@ -2,7 +2,7 @@
 
 const { fixture } = require("../../helpers/fixture");
 
-// cspell:ignore apos scrip
+// cspell:ignore apos scrip fffd
 // cspell:ignore selectedcontent mtext mglyph colgroups viewbox definitionurl
 // cspell:ignore Silmaril basefont bgsound framesets isindex
 // cspell:ignore malignmark menuitem noembed noframes optgroup reparent spacer
@@ -83,7 +83,7 @@ describe("HtmlSyntax — the facade", () => {
 		const processor = new syntax.SourceProcessor();
 		processor.process(fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints"));
 		expect(processor._printer).toBeUndefined();
-		expect(processor.process("<p>x</p>", { mode: "minify" }).code).toBe("<p>x");
+		expect(processor.process(fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints"), { mode: "minify" }).code).toBe("<p>x");
 		expect(typeof processor._printer).toBe("function");
 	});
 });
@@ -99,7 +99,7 @@ describe("parseHtml", () => {
 	});
 
 	it("should parse a simple element into the body", () => {
-		const nodes = body("<div></div>");
+		const nodes = body(fixture("html", "parse-html-should-parse-a-simple-element-into-the-body"));
 		expect(nodes).toHaveLength(1);
 		expect(nodes[0].type).toBe(NodeType.Element);
 		expect(nodes[0].tagName).toBe("div");
@@ -107,7 +107,7 @@ describe("parseHtml", () => {
 	});
 
 	it("should parse nested elements", () => {
-		const div = body("<div><span>hello</span></div>")[0];
+		const div = body(fixture("html", "parse-html-should-parse-nested-elements"))[0];
 		const span = /** @type {MatElement} */ (div.children[0]);
 		expect(span.tagName).toBe("span");
 		expect(span.children[0].type).toBe(NodeType.Text);
@@ -115,7 +115,7 @@ describe("parseHtml", () => {
 	});
 
 	it("should parse void elements", () => {
-		const nodes = body('<img src="test.png"><br>');
+		const nodes = body(fixture("html", "parse-html-should-parse-void-elements"));
 		expect(nodes).toHaveLength(2);
 		expect(nodes[0].tagName).toBe("img");
 		expect(nodes[0].selfClosing).toBe(true);
@@ -124,40 +124,40 @@ describe("parseHtml", () => {
 	});
 
 	it("should keep attribute values raw with source offsets", () => {
-		const a = body('<a href="test.html" class="link">click</a>')[0];
+		const a = body(fixture("html", "parse-html-should-keep-attribute-values-raw-with-source-offsets"))[0];
 		expect(a.attributes).toHaveLength(2);
 		expect(a.attributes[0].name).toBe("href");
 		expect(a.attributes[0].value).toBe("test.html");
 		// Raw (undecoded) value preserved; consumers re-resolve from it.
-		const raw = body('<a href="a&amp;b">x</a>')[0];
+		const raw = body(fixture("html", "parse-html-should-keep-attribute-values-raw-with-source-offsets-2"))[0];
 		expect(raw.attributes[0].value).toBe("a&amp;b");
 		// Offsets line up with the source.
-		const src = '<a href="test.html">x</a>';
+		const src = fixture("html", "parse-html-should-keep-attribute-values-raw-with-source-offsets-3");
 		const link = body(src)[0];
 		const attr = link.attributes[0];
 		expect(src.slice(attr.valueStart, attr.valueEnd)).toBe("test.html");
 	});
 
 	it("should parse comments", () => {
-		const ast = parseHtml("<!-- hello -->");
+		const ast = parseHtml(fixture("html", "parse-html-should-parse-comments"));
 		expect(ast.children[0].type).toBe(NodeType.Comment);
 		expect(/** @type {MatComment} */ (ast.children[0]).data).toBe(" hello ");
 	});
 
 	it("should parse doctype", () => {
-		const ast = parseHtml("<!DOCTYPE html><html></html>");
+		const ast = parseHtml(fixture("html", "parse-html-should-parse-doctype"));
 		expect(ast.children[0].type).toBe(NodeType.Doctype);
 		expect(/** @type {MatDoctype} */ (ast.children[0]).name).toBe("html");
 	});
 
 	it("should handle self-closing tags", () => {
-		const nodes = body("<input/>");
+		const nodes = body(fixture("html", "parse-html-should-handle-self-closing-tags"));
 		expect(nodes[0].tagName).toBe("input");
 		expect(nodes[0].selfClosing).toBe(true);
 	});
 
 	it("should auto-close <p> when a block element opens", () => {
-		const nodes = body("<p>one<div>two</div>");
+		const nodes = body(fixture("html", "parse-html-should-auto-close-p-when-a-block-element-opens"));
 		expect(nodes).toHaveLength(2);
 		expect(nodes[0].tagName).toBe("p");
 		expect(/** @type {MatText} */ (nodes[0].children[0]).data).toBe("one");
@@ -165,7 +165,7 @@ describe("parseHtml", () => {
 	});
 
 	it("should auto-close same-name elements like <li>", () => {
-		const ul = body("<ul><li>one<li>two</ul>")[0];
+		const ul = body(fixture("html", "parse-html-should-auto-close-same-name-elements-like-li"))[0];
 		expect(ul.children).toHaveLength(2);
 		expect(
 			/** @type {MatText} */ (
@@ -180,14 +180,14 @@ describe("parseHtml", () => {
 	});
 
 	it("should replace NULL with U+FFFD in raw text", () => {
-		const script = find("<script>a\u0000b</script>", "script");
+		const script = find(fixture("html", "parse-html-should-replace-null-with-u-fffd-in-raw-text"), "script");
 		expect(
 			/** @type {MatText} */ (/** @type {unknown} */ (script.children[0])).data
 		).toBe("a\uFFFDb");
 	});
 
 	it("should drop NULL from ordinary text", () => {
-		const nodes = body("a\u0000b");
+		const nodes = body(fixture("html", "parse-html-should-drop-null-from-ordinary-text"));
 		expect(
 			/** @type {MatText} */ (/** @type {unknown} */ (nodes[0])).data
 		).toBe("ab");
@@ -196,7 +196,7 @@ describe("parseHtml", () => {
 	it("should merge adjacent text nodes", () => {
 		// Foster-parenting the table's text next to the leading text exercises
 		// the adjacent-text-node merge.
-		const nodes = body("Text<table>Misplaced</table>");
+		const nodes = body(fixture("html", "parse-html-should-merge-adjacent-text-nodes"));
 		expect(nodes[0].type).toBe(NodeType.Text);
 		expect(
 			/** @type {MatText} */ (/** @type {unknown} */ (nodes[0])).data
@@ -205,7 +205,7 @@ describe("parseHtml", () => {
 	});
 
 	it("should detect SVG namespace and adjust foreign tag names", () => {
-		const svg = body("<svg><lineargradient></lineargradient></svg>")[0];
+		const svg = body(fixture("html", "parse-html-should-detect-svg-namespace-and-adjust-foreign-tag-names"))[0];
 		expect(svg.namespace).toBe(Namespace.SVG);
 		// SVG tag-name case is corrected per the foreign adjustment table.
 		expect(/** @type {MatElement} */ (svg.children[0]).tagName).toBe(
@@ -215,14 +215,14 @@ describe("parseHtml", () => {
 	});
 
 	it("should not resolve prototype-named SVG tags and attributes through the adjustment tables", () => {
-		const svg = body('<svg><constructor toString="x"></constructor></svg>')[0];
+		const svg = body(fixture("html", "parse-html-should-not-resolve-prototype-named-svg-tags-and-attributes-through"))[0];
 		const el = /** @type {MatElement} */ (svg.children[0]);
 		expect(el.tagName).toBe("constructor");
 		expect(el.attributes[0].name).toBe("tostring");
 	});
 
 	it("should detect MathML namespace", () => {
-		const math = body("<math><mi>x</mi></math>")[0];
+		const math = body(fixture("html", "parse-html-should-detect-math-ml-namespace"))[0];
 		expect(math.namespace).toBe(Namespace.MathML);
 		expect(/** @type {MatElement} */ (math.children[0]).namespace).toBe(
 			Namespace.MathML
@@ -231,7 +231,7 @@ describe("parseHtml", () => {
 
 	it("should route head and body content to the right place", () => {
 		const src =
-			'<!DOCTYPE html><html><head><meta charset="utf-8"><title>T</title></head><body><h1>Hi</h1></body></html>';
+			fixture("html", "parse-html-should-route-head-and-body-content-to-the-right-place");
 		expect(child(head(src), "meta").tagName).toBe("meta");
 		expect(child(head(src), "title").tagName).toBe("title");
 		expect(child(body(src), "h1").tagName).toBe("h1");
@@ -244,13 +244,13 @@ describe("parseHtml", () => {
 	});
 
 	it("should handle valueless attributes", () => {
-		const input = body("<input disabled>")[0];
+		const input = body(fixture("html", "parse-html-should-handle-valueless-attributes"))[0];
 		expect(input.attributes[0].name).toBe("disabled");
 		expect(input.attributes[0].value).toBe("");
 	});
 
 	it("should handle all attribute quote styles", () => {
-		const input = body("<input a=\"1\" b='2' c=3 disabled>")[0];
+		const input = body(fixture("html", "parse-html-should-handle-all-attribute-quote-styles"))[0];
 		expect(input.attributes.map((attr) => attr.value)).toEqual([
 			"1",
 			"2",
@@ -260,7 +260,7 @@ describe("parseHtml", () => {
 	});
 
 	it("should construct the table structure with implied tbody/tr", () => {
-		const table = body("<table><tr><td>a<td>b</tr></table>")[0];
+		const table = body(fixture("html", "parse-html-should-construct-the-table-structure-with-implied-tbody-tr"))[0];
 		const tbody = /** @type {MatElement} */ (table.children[0]);
 		expect(tbody.tagName).toBe("tbody");
 		const tr = /** @type {MatElement} */ (tbody.children[0]);
@@ -271,13 +271,13 @@ describe("parseHtml", () => {
 
 	it("should treat SVG foreignObject/desc as HTML integration points", () => {
 		const svg = body(
-			"<svg><foreignObject><div>html</div></foreignObject></svg>"
+			fixture("html", "parse-html-should-treat-svg-foreign-object-desc-as-html-integration-points")
 		)[0];
 		const fo = /** @type {MatElement} */ (svg.children[0]);
 		expect(fo.namespace).toBe(Namespace.SVG);
 		expect(/** @type {MatElement} */ (fo.children[0]).namespace).toBe(Namespace.HTML);
 		const desc = /** @type {MatElement} */ (
-			body("<svg><desc><div>x</div></desc></svg>")[0].children[0]
+			body(fixture("html", "parse-html-should-treat-svg-foreign-object-desc-as-html-integration-points-2"))[0].children[0]
 		);
 		expect(/** @type {MatElement} */ (desc.children[0]).namespace).toBe(
 			Namespace.HTML
@@ -285,7 +285,7 @@ describe("parseHtml", () => {
 	});
 
 	it("should keep CDATA text in foreign content", () => {
-		const svg = body("<svg><![CDATA[foo]]></svg>")[0];
+		const svg = body(fixture("html", "parse-html-should-keep-cdata-text-in-foreign-content"))[0];
 		expect(svg.children[0].type).toBe(NodeType.Text);
 		expect(/** @type {MatText} */ (svg.children[0]).data).toBe("foo");
 	});
@@ -293,7 +293,7 @@ describe("parseHtml", () => {
 	it("should treat bogus comments as comments", () => {
 		// A leading bogus comment is inserted into the document before <html>.
 		// `1bogus` is no processing instruction target, so the `<?` stays bogus.
-		const ast = parseHtml("<?1bogus comment>");
+		const ast = parseHtml(fixture("html", "parse-html-should-treat-bogus-comments-as-comments"));
 		expect(ast.children[0].type).toBe(NodeType.Comment);
 		expect(/** @type {MatComment} */ (ast.children[0]).data).toBe(
 			"?1bogus comment"
@@ -313,27 +313,27 @@ describe("parseHtml", () => {
 			expect(node.type).toBe(NodeType.ProcessingInstruction);
 			return /** @type {MatProcessingInstruction} */ (node);
 		};
-		expect(pi("<?target data?>")).toMatchObject({
+		expect(pi(fixture("html", "parse-html-should-parse-a-bogus-comment-with-a-valid-target-as-a-processing"))).toMatchObject({
 			target: "target",
 			data: "data"
 		});
 		// `>` closes one as well, and `_`, digits and `-` are target characters.
-		expect(pi("<?_t-1 data>")).toMatchObject({ target: "_t-1", data: "data" });
+		expect(pi(fixture("html", "parse-html-should-parse-a-bogus-comment-with-a-valid-target-as-a-processing-2"))).toMatchObject({ target: "_t-1", data: "data" });
 		// A `?` is data unless the `>` follows it, and the target may end on one.
-		expect(pi("<?t a?b?>")).toMatchObject({ target: "t", data: "a?b" });
-		expect(pi("<?t ? ?>")).toMatchObject({ target: "t", data: "? " });
-		expect(pi("<?t?>")).toMatchObject({ target: "t", data: "" });
-		expect(pi("<?t \u0000?>")).toMatchObject({ target: "t", data: "\uFFFD" });
+		expect(pi(fixture("html", "parse-html-should-parse-a-bogus-comment-with-a-valid-target-as-a-processing-3"))).toMatchObject({ target: "t", data: "a?b" });
+		expect(pi(fixture("html", "parse-html-should-parse-a-bogus-comment-with-a-valid-target-as-a-processing-4"))).toMatchObject({ target: "t", data: "? " });
+		expect(pi(fixture("html", "parse-html-should-parse-a-bogus-comment-with-a-valid-target-as-a-processing-5"))).toMatchObject({ target: "t", data: "" });
+		expect(pi(fixture("html", "parse-html-should-parse-a-bogus-comment-with-a-valid-target-as-a-processing-6"))).toMatchObject({ target: "t", data: "\uFFFD" });
 	});
 
 	it("should insert a processing instruction where a comment would go", () => {
 		const head = /** @type {MatElement} */ (
-			/** @type {MatElement} */ (parseHtml("<head><?t 1?>").children[0])
+			/** @type {MatElement} */ (parseHtml(fixture("html", "parse-html-should-insert-a-processing-instruction-where-a-comment-would-go")).children[0])
 				.children[0]
 		);
 		expect(head.children[0].type).toBe(NodeType.ProcessingInstruction);
 		const body = /** @type {MatElement} */ (
-			/** @type {MatElement} */ (parseHtml("<body><?t 1?><span>").children[0])
+			/** @type {MatElement} */ (parseHtml(fixture("html", "parse-html-should-insert-a-processing-instruction-where-a-comment-would-go-2")).children[0])
 				.children[1]
 		);
 		expect(body.children[0].type).toBe(NodeType.ProcessingInstruction);
@@ -342,25 +342,25 @@ describe("parseHtml", () => {
 
 	it("should keep a reserved or malformed target a bogus comment", () => {
 		for (const source of [
-			"<?xml version?>",
-			"<?XML-stylesheet href?>",
-			"<?1st?>",
-			"<?t$x?>",
-			"<?>"
+			fixture("html", "parse-html-should-keep-a-reserved-or-malformed-target-a-bogus-comment"),
+			fixture("html", "parse-html-should-keep-a-reserved-or-malformed-target-a-bogus-comment-2"),
+			fixture("html", "parse-html-should-keep-a-reserved-or-malformed-target-a-bogus-comment-3"),
+			fixture("html", "parse-html-should-keep-a-reserved-or-malformed-target-a-bogus-comment-4"),
+			fixture("html", "parse-html-should-keep-a-reserved-or-malformed-target-a-bogus-comment-5")
 		]) {
 			expect(parseHtml(source).children[0].type).toBe(NodeType.Comment);
 		}
 		// Reserved targets are judged before EOF, so this one stays a comment.
-		expect(parseHtml("<?xml version").children[0].type).toBe(NodeType.Comment);
+		expect(parseHtml(fixture("html", "parse-html-should-keep-a-reserved-or-malformed-target-a-bogus-comment-6")).children[0].type).toBe(NodeType.Comment);
 	});
 
 	it("should drop a processing instruction cut short by EOF", () => {
 		// Every state EOF can land in: open, target, after target, data.
 		for (const source of [
-			"<body>x<?",
-			"<body>x<?t",
-			"<body>x<?t ",
-			"<body>x<?t data"
+			fixture("html", "parse-html-should-drop-a-processing-instruction-cut-short-by-eof"),
+			fixture("html", "parse-html-should-drop-a-processing-instruction-cut-short-by-eof-2"),
+			fixture("html", "parse-html-should-drop-a-processing-instruction-cut-short-by-eof-3"),
+			fixture("html", "parse-html-should-drop-a-processing-instruction-cut-short-by-eof-4")
 		]) {
 			const body = /** @type {MatElement} */ (
 				/** @type {MatElement} */ (parseHtml(source).children[0]).children[1]
@@ -371,7 +371,7 @@ describe("parseHtml", () => {
 	});
 
 	it("should parse raw-text elements without decoding entities", () => {
-		const script = find("<script>var a = 1 < 2 &amp; 3;</script>", "script");
+		const script = find(fixture("html", "parse-html-should-parse-raw-text-elements-without-decoding-entities"), "script");
 		expect(script.children[0].type).toBe(NodeType.Text);
 		expect(/** @type {MatText} */ (script.children[0]).data).toBe(
 			"var a = 1 < 2 &amp; 3;"
@@ -379,7 +379,7 @@ describe("parseHtml", () => {
 	});
 
 	it("should set tagEnd, nameEnd and start used by the consumer", () => {
-		const src = "<script>x</script>";
+		const src = fixture("html", "parse-html-should-set-tag-end-name-end-and-start-used-by-the-consumer");
 		const script = find(src, "script");
 		expect(script.start).toBe(0);
 		expect(script.tagEnd).toBe(8); // after "<script>"
@@ -387,7 +387,7 @@ describe("parseHtml", () => {
 	});
 
 	it("should update end offsets when an element is closed", () => {
-		const src = "<div><span>text</div>";
+		const src = fixture("html", "parse-html-should-update-end-offsets-when-an-element-is-closed");
 		const div = body(src)[0];
 		const span = /** @type {MatElement} */ (div.children[0]);
 		expect(div.end).toBe(src.length);
@@ -396,7 +396,7 @@ describe("parseHtml", () => {
 	});
 
 	it("should end an implicitly closed element where its content ends", () => {
-		const src = "<p>one<p>two<ul><li>a<li>b</ul><br>";
+		const src = fixture("html", "parse-html-should-end-an-implicitly-closed-element-where-its-content-ends");
 		const nodes = body(src);
 		const spans = nodes.map((n) =>
 			src.slice(/** @type {MatElement} */ (n).start, /** @type {MatElement} */ (n).end)
@@ -409,7 +409,7 @@ describe("parseHtml", () => {
 	});
 
 	it("should keep whitespace the closed element holds inside its range", () => {
-		const src = "<table><colgroup> x</table>";
+		const src = fixture("html", "parse-html-should-keep-whitespace-the-closed-element-holds-inside-its-range");
 		// The `x` is foster-parented before the table; the space stays in colgroup.
 		const table = /** @type {MatElement} */ (body(src)[1]);
 		const colgroup = /** @type {MatElement} */ (table.children[0]);
@@ -418,7 +418,7 @@ describe("parseHtml", () => {
 
 	it("should foster-parent misplaced content out of tables", () => {
 		const nodes = body(
-			"<table><div>Misplaced</div><tr><td>OK</td></tr></table>"
+			fixture("html", "parse-html-should-foster-parent-misplaced-content-out-of-tables")
 		);
 		expect(nodes[0].tagName).toBe("div");
 		expect(/** @type {MatText} */ (nodes[0].children[0]).data).toBe(
@@ -432,7 +432,7 @@ describe("parseHtml", () => {
 			// `<b>1<p>2</b>3</p>`: per WHATWG the <p> (furthest block) is relocated
 			// to the common ancestor (body); the original <b> keeps only "1" and a
 			// <b> clone wraps the content that stayed inside <p>.
-			const nodes = body("<b>1<p>2</b>3</p>");
+			const nodes = body(fixture("html", "parse-html-adoption-agency-algorithm-should-move-the-furthest-block-to-the"));
 			expect(nodes.map((n) => n.tagName)).toEqual(["b", "p"]);
 			expect(
 				nodes[0].children.map((n) => /** @type {MatText} */ (n).data)
@@ -450,7 +450,7 @@ describe("parseHtml", () => {
 		it("closes the <a> it found for a nested <a>, not the outermost one", () => {
 			// The inner `<a>`s sit below the cell's marker; the outer one stays open
 			// past the table, so the text after it is still inside it.
-			const [outer] = body("<a>1<table><td><a>2<a>3</td></table>4");
+			const [outer] = body(fixture("html", "parse-html-adoption-agency-algorithm-closes-the-a-it-found-for-a-nested-a-not"));
 			expect(outer.tagName).toBe("a");
 			expect(
 				/** @type {MatText} */ (outer.children[outer.children.length - 1]).data
@@ -458,7 +458,7 @@ describe("parseHtml", () => {
 		});
 
 		it("should reconstruct active formatting elements", () => {
-			const nodes = body("<p>1<b>2</p>3</b>");
+			const nodes = body(fixture("html", "parse-html-adoption-agency-algorithm-should-reconstruct-active-formatting"));
 			expect(nodes[0].tagName).toBe("p");
 			expect(/** @type {MatElement} */ (nodes[0].children[1]).tagName).toBe(
 				"b"
@@ -473,18 +473,18 @@ describe("parseHtml", () => {
 		it.each([
 			[
 				"a marker stands between them",
-				"<em><select></select></em><x>",
+				fixture("html", "parse-html-adoption-agency-algorithm-reads-a-formatting-end-tag-as-any-other"),
 				["em", "x"]
 			],
 			[
 				"a second select closed it",
-				"<em><select><select></select></em><x>",
+				fixture("html", "parse-html-adoption-agency-algorithm-reads-a-formatting-end-tag-as-any-other-2"),
 				["em", "x"]
 			],
-			["an input closed it", "<em><select><input></em><x>", ["em", "x"]],
+			["an input closed it", fixture("html", "parse-html-adoption-agency-algorithm-reads-a-formatting-end-tag-as-any-other-3"), ["em", "x"]],
 			[
 				"Noah's Ark dropped it",
-				"<b><b><b><b></b></b></b><i></b><x>",
+				fixture("html", "parse-html-adoption-agency-algorithm-reads-a-formatting-end-tag-as-any-other-4"),
 				["b", "i"]
 			]
 		])(
@@ -500,22 +500,22 @@ describe("parseHtml", () => {
 		it.each([
 			[
 				"attaches to its host",
-				"<a href=#x><div><template shadowrootmode=open><slot></slot></template></a>",
+				fixture("html", "parse-html-adoption-agency-algorithm-leaves-a-declarative-shadow-root-where-it"),
 				["template", "a"]
 			],
 			[
 				"cannot attach to that host",
-				"<a href=#x><li><template shadowrootmode=open><slot></slot></template></a>",
+				fixture("html", "parse-html-adoption-agency-algorithm-leaves-a-declarative-shadow-root-where-it-2"),
 				["a"]
 			],
 			[
 				"names no mode it knows",
-				"<a href=#x><div><template shadowrootmode=bogus><slot></slot></template></a>",
+				fixture("html", "parse-html-adoption-agency-algorithm-leaves-a-declarative-shadow-root-where-it-3"),
 				["a"]
 			],
 			[
 				"is the second on one host",
-				"<a href=#x><div><template shadowrootmode=open></template><template shadowrootmode=open></template></a>",
+				fixture("html", "parse-html-adoption-agency-algorithm-leaves-a-declarative-shadow-root-where-it-4"),
 				["template", "a"]
 			]
 		])("leaves a declarative shadow root where it %s", (_name, src, shape) => {
@@ -529,7 +529,7 @@ describe("parseHtml", () => {
 		// `<template shadowrootmode>` is written against a host that cannot take it.
 		it("keeps a shadow-root template outside the HTML namespace as content", () => {
 			const nodes = body(
-				"<a href=#x><svg><foreignObject><template shadowrootmode=open></template></foreignObject></svg></a>"
+				fixture("html", "parse-html-adoption-agency-algorithm-keeps-a-shadow-root-template-outside-the")
 			);
 			/**
 			 * @param {MatElement} node an element
@@ -546,7 +546,7 @@ describe("parseHtml", () => {
 		});
 
 		it("should apply Noah's Ark limit of three formatting elements", () => {
-			const nodes = body("<b><b><b><b></b></b></b></b>");
+			const nodes = body(fixture("html", "parse-html-adoption-agency-algorithm-should-apply-noah-s-ark-limit-of-three"));
 			expect(nodes).toHaveLength(1);
 		});
 
@@ -574,7 +574,7 @@ describe("parseHtml", () => {
 		it("should count equal attributes toward Noah's Ark", () => {
 			expect(
 				reconstructedDepth(
-					"<p><b class=x><b class=x><b class=x><b class=x>1</p><p>2"
+					fixture("html", "parse-html-adoption-agency-algorithm-should-count-equal-attributes-toward-noah-s")
 				)
 			).toBe(3);
 		});
@@ -582,7 +582,7 @@ describe("parseHtml", () => {
 		it("should not count differing attribute values toward Noah's Ark", () => {
 			expect(
 				reconstructedDepth(
-					"<p><b class=x><b class=y><b class=z><b class=w>1</p><p>2"
+					fixture("html", "parse-html-adoption-agency-algorithm-should-not-count-differing-attribute-values")
 				)
 			).toBe(4);
 		});
@@ -590,7 +590,7 @@ describe("parseHtml", () => {
 		it("should not count attribute values of differing length toward Noah's Ark", () => {
 			expect(
 				reconstructedDepth(
-					"<p><b class=x><b class=xx><b class=x><b class=x>1</p><p>2"
+					fixture("html", "parse-html-adoption-agency-algorithm-should-not-count-attribute-values-of")
 				)
 			).toBe(4);
 		});
@@ -600,7 +600,7 @@ describe("parseHtml", () => {
 			// this takes the resolved-value comparison instead of the range one.
 			expect(
 				reconstructedDepth(
-					"<p><b hidden><b hidden><b hidden><b hidden>1</p><p>2"
+					fixture("html", "parse-html-adoption-agency-algorithm-should-count-equal-valueless-attributes")
 				)
 			).toBe(3);
 		});
@@ -608,7 +608,7 @@ describe("parseHtml", () => {
 		it("should close an open <a> when another start tag opens", () => {
 			// The "in body" <a> rule runs the algorithm for the open <a> and drops it
 			// from both the formatting list and the stack, so the two are siblings.
-			const nodes = body("<a href=1>1<a href=2>2");
+			const nodes = body(fixture("html", "parse-html-adoption-agency-algorithm-should-close-an-open-a-when-another-start"));
 			expect(nodes.map((n) => n.tagName)).toEqual(["a", "a"]);
 			expect(nodes[1].children).toHaveLength(1);
 		});
@@ -616,7 +616,7 @@ describe("parseHtml", () => {
 		it("should drop an open <a> the algorithm could not reach", () => {
 			// The <table> is a scope boundary, so the algorithm leaves the outer <a>
 			// in the formatting list and the <a> rule has to remove it itself.
-			const nodes = body("<a href=1><table><a href=2>");
+			const nodes = body(fixture("html", "parse-html-adoption-agency-algorithm-should-drop-an-open-a-the-algorithm-could"));
 			expect(nodes.map((n) => n.tagName)).toEqual(["a"]);
 			expect(
 				/** @type {MatElement[]} */ (nodes[0].children).map((n) => n.tagName)
@@ -627,16 +627,16 @@ describe("parseHtml", () => {
 			// Five formatting elements between <b> and the furthest block take the
 			// algorithm's inner loop past three, which drops the deepest entries
 			// from the formatting list rather than reopening them inside <p>.
-			const nodes = body("<b><i><u><s><em><p>x</b>y");
+			const nodes = body(fixture("html", "parse-html-adoption-agency-algorithm-should-drop-formatting-elements-past-the"));
 			expect(nodes.map((n) => n.tagName)).toEqual(["b", "u"]);
-			const p = find("<b><i><u><s><em><p>x</b>y", "p");
+			const p = find(fixture("html", "parse-html-adoption-agency-algorithm-should-drop-formatting-elements-past-the"), "p");
 			expect(/** @type {MatElement} */ (p.children[0]).tagName).toBe("b");
 		});
 
 		it("should not duplicate an attribute span when a formatting element is cloned", () => {
 			// The <a> is reopened around <div> by the algorithm; the clone must not
 			// reuse the original's href span, or the parser emits two dependencies.
-			const nodes = body("<a href=x.png><div>y</a>");
+			const nodes = body(fixture("html", "parse-html-adoption-agency-algorithm-should-not-duplicate-an-attribute-span-when"));
 			/** @type {string[]} */
 			const spans = [];
 			/** @param {MatNode} node node to collect from */
@@ -655,7 +655,7 @@ describe("parseHtml", () => {
 	});
 
 	it("should auto-close and close <dd>/<dt>", () => {
-		const dl = body("<dl><dd>a</dd><dt>b</dt></dl>")[0];
+		const dl = body(fixture("html", "parse-html-should-auto-close-and-close-dd-dt"))[0];
 		expect(dl.tagName).toBe("dl");
 		expect(
 			dl.children.map((c) => /** @type {MatElement} */ (c).tagName)
@@ -676,20 +676,20 @@ describe("parseHtml", () => {
 		// A 4.01-Transitional public id (no system id) selects quirks mode, where
 		// `<table>` does NOT close an open `<p>`.
 		const quirks = body(
-			'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><p>x<table></table>'
+			fixture("html", "parse-html-should-keep-table-inside-p-in-quirks-mode-transitional-doctype")
 		);
 		expect(quirks).toHaveLength(1);
 		expect(quirks[0].tagName).toBe("p");
 		expect(child(quirks[0].children, "table")).toBeDefined();
 
 		// No-quirks: `<table>` closes the `<p>` so they are siblings.
-		const standard = body("<!DOCTYPE html><p>x<table></table>");
+		const standard = body(fixture("html", "parse-html-should-keep-table-inside-p-in-quirks-mode-transitional-doctype-2"));
 		expect(standard.map((n) => n.tagName)).toEqual(["p", "table"]);
 	});
 
 	it("should mirror the selected <option> into <selectedcontent>", () => {
 		const select = body(
-			"<select><button><selectedcontent></button><option><span id=x>Y</span>"
+			fixture("html", "parse-html-should-mirror-the-selected-option-into-selectedcontent")
 		)[0];
 		const selectedcontent = child(
 			child(select.children, "button").children,
@@ -707,7 +707,7 @@ describe("parseHtml", () => {
 
 	it("clones <template> content when mirroring into <selectedcontent>", () => {
 		const select = body(
-			"<select><button><selectedcontent></button><option><template><p>x</p></template>"
+			fixture("html", "parse-html-clones-template-content-when-mirroring-into-selectedcontent")
 		)[0];
 		const selectedcontent = child(
 			child(select.children, "button").children,
@@ -723,7 +723,7 @@ describe("parseHtml", () => {
 
 	it("mirrors nothing written inside the <option> itself", () => {
 		const select = body(
-			"<select><button><selectedcontent></button><option>x<selectedcontent>"
+			fixture("html", "parse-html-mirrors-nothing-written-inside-the-option-itself")
 		)[0];
 		// The option is what mirroring reads, so a `<selectedcontent>` written
 		// there stays as authored while the button's takes the clone.
@@ -744,7 +744,7 @@ describe("parseHtml", () => {
 
 	it("mirrors a <select> carried into the clone", () => {
 		const select = body(
-			"<select><button><selectedcontent></button><option><template><select><button><selectedcontent></button><option>n</select></template>"
+			fixture("html", "parse-html-mirrors-a-select-carried-into-the-clone")
 		)[0];
 		const fragment = /** @type {MatFragment} */ (
 			/** @type {MatElement} */ (
@@ -764,7 +764,7 @@ describe("parseHtml", () => {
 
 	it("should mirror the last selected <option> into <selectedcontent>", () => {
 		const select = body(
-			"<select><button><selectedcontent></button><option>A<option selected>B"
+			fixture("html", "parse-html-should-mirror-the-last-selected-option-into-selectedcontent")
 		)[0];
 		const selectedcontent = child(
 			child(select.children, "button").children,
@@ -777,7 +777,7 @@ describe("parseHtml", () => {
 		// Context is a `table`, so there is no `<table>` on the open stack: stray
 		// character data is fostered to the fragment root, beside the table rows.
 		const root = /** @type {MatElement} */ (
-			parseHtml("<tr><td>a</td></tr>x", "table").children[0]
+			parseHtml(fixture("html", "parse-html-foster-parents-stray-text-in-a-table-fragment-context"), "table").children[0]
 		);
 		const texts = root.children
 			.filter((c) => c.type === NodeType.Text)
@@ -791,7 +791,7 @@ describe("parseHtml — parseError", () => {
 	it("forwards the option to the tokenizer", () => {
 		/** @type {[string, string][]} */
 		const errors = [];
-		parseHtmlRefs("<!DOCTYPE html><br foo=><p></x>", 0, {
+		parseHtmlRefs(fixture("html", "parse-html-parse-error-forwards-the-option-to-the-tokenizer"), 0, {
 			parseError: (input, code, start, end) => {
 				errors.push([code, input.slice(start, end)]);
 			}
@@ -804,79 +804,79 @@ describe("parseHtml — parseError", () => {
 
 	it.each([
 		["x", undefined, ["expected-doctype-but-got-chars"]],
-		["<p>", undefined, ["expected-doctype-but-got-start-tag"]],
-		["</p>", undefined, ["expected-doctype-but-got-end-tag", "unexpected-end-tag-before-html"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-p"), undefined, ["expected-doctype-but-got-start-tag"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-p-2"), undefined, ["expected-doctype-but-got-end-tag", "unexpected-end-tag-before-html"]],
 		["", undefined, ["expected-doctype-but-got-eof"]],
-		["<!DOCTYPE html5>", undefined, ["unknown-doctype"]],
-		["<!DOCTYPE html PUBLIC \"x\">", undefined, ["unknown-doctype"]],
-		["<!DOCTYPE html SYSTEM \"x\">", undefined, ["unknown-doctype"]],
-		["<!DOCTYPE html SYSTEM \"about:legacy-compat\">", undefined, []],
-		["<!DOCTYPE html><!DOCTYPE html>", undefined, ["unexpected-doctype"]],
-		["<!DOCTYPE html><html><!DOCTYPE html></x>", undefined, ["unexpected-doctype", "end-tag-after-implied-root"]],
-		["<!DOCTYPE html><head><!DOCTYPE html><head></x>", undefined, ["unexpected-doctype", "two-heads-are-not-better-than-one", "unexpected-end-tag"]],
-		["<!DOCTYPE html><head></template>", undefined, ["unexpected-end-tag"]],
-		["<!DOCTYPE html><head><template><div></template>", undefined, ["end-tag-too-early"]],
-		["<!DOCTYPE html><head><noscript><!DOCTYPE html><head></x>x", undefined, ["unexpected-doctype", "unexpected-start-tag", "unexpected-end-tag", "char-in-head-noscript"]],
-		["<!DOCTYPE html><head><noscript></br>", undefined, ["unexpected-inhead-noscript-tag", "unexpected-end-tag-treated-as"]],
-		["<!DOCTYPE html><head><noscript>", undefined, ["eof-in-head-noscript"]],
-		["<!DOCTYPE html><head></head><!DOCTYPE html><title></title><head></x>", undefined, ["unexpected-doctype", "unexpected-start-tag-out-of-my-head", "unexpected-start-tag", "unexpected-end-tag"]],
-		["<!DOCTYPE html><body><!DOCTYPE html><html><body><frameset>", undefined, ["unexpected-doctype", "non-html-root", "unexpected-start-tag", "unexpected-start-tag"]],
-		["<!DOCTYPE html><h1><h2>", undefined, ["unexpected-start-tag", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><form><form>", undefined, ["unexpected-start-tag", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><li><b><li>", undefined, ["end-tag-too-early"]],
-		["<!DOCTYPE html><dd><b><dt>", undefined, ["end-tag-too-early"]],
-		["<!DOCTYPE html><button><button>", undefined, ["unexpected-start-tag-implies-end-tag", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><a><a>", undefined, ["unexpected-start-tag-implies-end-tag", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><nobr><nobr>", undefined, ["unexpected-start-tag-implies-end-tag", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><select><input>", undefined, ["unexpected-input-in-select"]],
-		["<!DOCTYPE html><select><option><b><hr>", undefined, ["unexpected-start-tag", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><select><option><b><option>", undefined, ["unexpected-start-tag-implies-end-tag", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><image>", undefined, ["unexpected-start-tag-treated-as"]],
-		["<!DOCTYPE html><select><select>", undefined, ["unexpected-select-in-select"]],
-		["<!DOCTYPE html><ruby><b><rb><span><rt>", undefined, ["unexpected-start-tag", "unexpected-start-tag", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><caption><col><frame><head><tbody>", undefined, ["unexpected-start-tag-ignored", "unexpected-start-tag-ignored", "unexpected-start-tag-ignored", "unexpected-start-tag-ignored", "unexpected-start-tag-ignored"]],
-		["<!DOCTYPE html><div>\u0000x", undefined, ["unexpected-null-character", "invalid-codepoint", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><p><li><dd>", undefined, []],
-		["<!DOCTYPE html></select><select><b></select>", undefined, ["unexpected-end-tag-before-html", "end-tag-too-early"]],
-		["<!DOCTYPE html></body><b></body>", undefined, ["unexpected-start-tag-after-body", "expected-one-end-tag-but-got-another"]],
-		["<!DOCTYPE html></div><div><b></div>", undefined, ["unexpected-end-tag-before-html", "end-tag-too-early"]],
-		["<!DOCTYPE html></form><form><b></form>", undefined, ["unexpected-end-tag-before-html", "end-tag-too-early-ignored", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><template></form><form><b></form></template>", undefined, ["unexpected-end-tag", "end-tag-too-early-ignored"]],
-		["<!DOCTYPE html></p><p><b></p>", undefined, ["unexpected-end-tag-before-html", "unexpected-end-tag"]],
-		["<!DOCTYPE html></li><li><b></li>", undefined, ["unexpected-end-tag-before-html", "end-tag-too-early"]],
-		["<!DOCTYPE html></dd><dd><b></dd>", undefined, ["unexpected-end-tag-before-html", "end-tag-too-early"]],
-		["<!DOCTYPE html></h1><h1><b></h2>", undefined, ["unexpected-end-tag-before-html", "end-tag-too-early"]],
-		["<!DOCTYPE html></object><object><b></object>", undefined, ["unexpected-end-tag-before-html", "end-tag-too-early"]],
-		["<!DOCTYPE html></br>", undefined, ["unexpected-end-tag-treated-as"]],
-		["<!DOCTYPE html><b></i></div><span><div></span>", undefined, ["unexpected-end-tag", "unexpected-end-tag", "unexpected-end-tag", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><b><div></b>", undefined, ["adoption-agency-1.3", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><b><table></b>", undefined, ["unexpected-end-tag-implies-table-voodoo", "adoption-agency-4.4", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><a><table><td><a><table></table><a></tr><a></table>", undefined, ["unexpected-cell-in-table-body", "unexpected-start-tag-implies-end-tag", "unexpected-cell-end-tag", "unexpected-start-tag-implies-table-voodoo", "unexpected-start-tag-implies-end-tag", "adoption-agency-4.4"]],
-		["<!DOCTYPE html><script>", undefined, ["expected-named-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><script></script x", undefined, ["eof-in-tag", "expected-named-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><script></S", undefined, ["expected-named-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><script><!--<a", undefined, ["eof-in-script-html-comment-like-text", "expected-named-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><script><!--</", undefined, ["eof-in-script-html-comment-like-text", "expected-named-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><script><!--</script", undefined, ["eof-in-script-html-comment-like-text", "expected-named-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html5"), undefined, ["unknown-doctype"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-public-x"), undefined, ["unknown-doctype"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-system-x"), undefined, ["unknown-doctype"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-system-about"), undefined, []],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-doctype-html"), undefined, ["unexpected-doctype"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-html-doctype"), undefined, ["unexpected-doctype", "end-tag-after-implied-root"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-head-doctype"), undefined, ["unexpected-doctype", "two-heads-are-not-better-than-one", "unexpected-end-tag"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-head-template"), undefined, ["unexpected-end-tag"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-head-template-2"), undefined, ["end-tag-too-early"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-head-noscript"), undefined, ["unexpected-doctype", "unexpected-start-tag", "unexpected-end-tag", "char-in-head-noscript"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-head-noscript-2"), undefined, ["unexpected-inhead-noscript-tag", "unexpected-end-tag-treated-as"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-head-noscript-3"), undefined, ["eof-in-head-noscript"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-head-head"), undefined, ["unexpected-doctype", "unexpected-start-tag-out-of-my-head", "unexpected-start-tag", "unexpected-end-tag"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-body-doctype"), undefined, ["unexpected-doctype", "non-html-root", "unexpected-start-tag", "unexpected-start-tag"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-h1-h2"), undefined, ["unexpected-start-tag", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-form-form"), undefined, ["unexpected-start-tag", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-li-b-li"), undefined, ["end-tag-too-early"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-dd-b-dt"), undefined, ["end-tag-too-early"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-button-button"), undefined, ["unexpected-start-tag-implies-end-tag", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-a-a"), undefined, ["unexpected-start-tag-implies-end-tag", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-nobr-nobr"), undefined, ["unexpected-start-tag-implies-end-tag", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-select-input"), undefined, ["unexpected-input-in-select"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-select-option-b"), undefined, ["unexpected-start-tag", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-select-option-b-2"), undefined, ["unexpected-start-tag-implies-end-tag", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-image"), undefined, ["unexpected-start-tag-treated-as"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-select-select"), undefined, ["unexpected-select-in-select"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-ruby-b-rb-span"), undefined, ["unexpected-start-tag", "unexpected-start-tag", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-caption-col"), undefined, ["unexpected-start-tag-ignored", "unexpected-start-tag-ignored", "unexpected-start-tag-ignored", "unexpected-start-tag-ignored", "unexpected-start-tag-ignored"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-div-u0000x"), undefined, ["unexpected-null-character", "invalid-codepoint", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-p-li-dd"), undefined, []],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-select-select-b"), undefined, ["unexpected-end-tag-before-html", "end-tag-too-early"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-body-b-body"), undefined, ["unexpected-start-tag-after-body", "expected-one-end-tag-but-got-another"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-div-div-b-div"), undefined, ["unexpected-end-tag-before-html", "end-tag-too-early"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-form-form-b"), undefined, ["unexpected-end-tag-before-html", "end-tag-too-early-ignored", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-template-form"), undefined, ["unexpected-end-tag", "end-tag-too-early-ignored"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-p-p-b-p"), undefined, ["unexpected-end-tag-before-html", "unexpected-end-tag"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-li-li-b-li"), undefined, ["unexpected-end-tag-before-html", "end-tag-too-early"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-dd-dd-b-dd"), undefined, ["unexpected-end-tag-before-html", "end-tag-too-early"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-h1-h1-b-h2"), undefined, ["unexpected-end-tag-before-html", "end-tag-too-early"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-object-object-b"), undefined, ["unexpected-end-tag-before-html", "end-tag-too-early"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-br"), undefined, ["unexpected-end-tag-treated-as"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-b-i-div-span"), undefined, ["unexpected-end-tag", "unexpected-end-tag", "unexpected-end-tag", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-b-div-b"), undefined, ["adoption-agency-1.3", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-b-table-b"), undefined, ["unexpected-end-tag-implies-table-voodoo", "adoption-agency-4.4", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-a-table-td-a"), undefined, ["unexpected-cell-in-table-body", "unexpected-start-tag-implies-end-tag", "unexpected-cell-end-tag", "unexpected-start-tag-implies-table-voodoo", "unexpected-start-tag-implies-end-tag", "adoption-agency-4.4"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-script"), undefined, ["expected-named-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-script-script-x"), undefined, ["eof-in-tag", "expected-named-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-script-s"), undefined, ["expected-named-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-script-a"), undefined, ["eof-in-script-html-comment-like-text", "expected-named-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-script-2"), undefined, ["eof-in-script-html-comment-like-text", "expected-named-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-script-script"), undefined, ["eof-in-script-html-comment-like-text", "expected-named-closing-tag-but-got-eof"]],
 		[fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-b-test"), undefined, ["eof-in-tag", "expected-doctype-but-got-eof"]],
-		["<!DOCTYPE html><table><!DOCTYPE html><table></table></table>", undefined, ["unexpected-doctype", "unexpected-start-tag-implies-end-tag", "unexpected-end-tag"]],
-		["<!DOCTYPE html><table><input type=hidden><form><form>", undefined, ["unexpected-hidden-input-in-table", "unexpected-form-in-table", "unexpected-form-in-table", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><table><tr><b>x y</b>", undefined, ["unexpected-start-tag-implies-table-voodoo", "unexpected-character-implies-table-voodoo", "unexpected-character-implies-table-voodoo", "unexpected-character-implies-table-voodoo", "unexpected-end-tag-implies-table-voodoo", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><table>\u0000 x<tr>", undefined, ["unexpected-null-character", "invalid-codepoint", "unexpected-character-implies-table-voodoo", "unexpected-character-implies-table-voodoo", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><table><caption></caption></caption>", undefined, ["unexpected-end-tag", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><table><caption><b></caption>", undefined, ["expected-one-end-tag-but-got-another", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><template><caption></caption></caption><caption></body><col>",
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-table-doctype"), undefined, ["unexpected-doctype", "unexpected-start-tag-implies-end-tag", "unexpected-end-tag"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-table-input"), undefined, ["unexpected-hidden-input-in-table", "unexpected-form-in-table", "unexpected-form-in-table", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-table-tr-b-x-y"), undefined, ["unexpected-start-tag-implies-table-voodoo", "unexpected-character-implies-table-voodoo", "unexpected-character-implies-table-voodoo", "unexpected-character-implies-table-voodoo", "unexpected-end-tag-implies-table-voodoo", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-table-u0000-x"), undefined, ["unexpected-null-character", "invalid-codepoint", "unexpected-character-implies-table-voodoo", "unexpected-character-implies-table-voodoo", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-table-caption"), undefined, ["unexpected-end-tag", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-table-caption-b"), undefined, ["expected-one-end-tag-but-got-another", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-template"),
 			undefined,
 			["unexpected-end-tag", "unexpected-end-tag", "eof-in-template"]
 		],
-		["<col></caption>", "caption", ["unexpected-start-tag", "unexpected-end-tag"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-col-caption"), "caption", ["unexpected-start-tag", "unexpected-end-tag"]],
 		[
-			"<!DOCTYPE html><p><b></p></b>",
+			fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-p-b-p-b"),
 			undefined,
 			["unexpected-end-tag", "adoption-agency-1.2"]
 		],
 		[
-			"<!DOCTYPE html><div>&amp;\u0000",
+			fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-div-amp-u0000"),
 			undefined,
 			[
 				"unexpected-null-character",
@@ -885,39 +885,39 @@ describe("parseHtml — parseError", () => {
 			]
 		],
 		[
-			"<!DOCTYPE html><template><col></x>",
+			fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-template-col-x"),
 			undefined,
 			["unexpected-end-tag", "eof-in-template"]
 		],
 		[
-			"<!DOCTYPE html><body></body></x>",
+			fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-body-body-x"),
 			undefined,
 			["unexpected-end-tag-after-body", "unexpected-end-tag"]
 		],
 		[
-			"<!DOCTYPE html><body></body>x",
+			fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-body-body-x-2"),
 			undefined,
 			["unexpected-char-after-body"]
 		],
-		["<!DOCTYPE html><table><colgroup><!DOCTYPE html></col>x", undefined, ["unexpected-doctype", "no-end-tag", "unexpected-character-implies-table-voodoo", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><template><col> x<b></colgroup>", undefined, ["unexpected-char-in-column-group", "unexpected-start-tag", "unexpected-end-tag", "eof-in-template"]],
-		["<!DOCTYPE html><table><tbody><td></thead></body>", undefined, ["unexpected-cell-in-table-body", "unexpected-end-tag", "unexpected-end-tag", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><table><tbody></thead></body>", undefined, ["unexpected-end-tag-in-table-body", "unexpected-end-tag-in-table-body", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><template><tr></tr><caption></table></template>", undefined, ["unexpected-start-tag", "unexpected-end-tag"]],
-		["<!DOCTYPE html><template><td></td></tr><caption></table></template>", undefined, ["unexpected-end-tag", "unexpected-start-tag", "unexpected-end-tag"]],
-		["<!DOCTYPE html><table><tr></thead></td>", undefined, ["unexpected-end-tag", "unexpected-end-tag-in-table-row", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><table><tr><td><b></td><td></table></td></caption>", undefined, ["unexpected-cell-end-tag", "unexpected-end-tag", "unexpected-end-tag"]],
-		["<!DOCTYPE html><table><tr><td></tr><td><b></tr>", undefined, ["unexpected-cell-in-table-body", "unexpected-cell-end-tag", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><template></x>", undefined, ["unexpected-end-tag", "eof-in-template"]],
-		["<!DOCTYPE html><body></body><!DOCTYPE html><b></b>x</html>", undefined, ["unexpected-doctype", "unexpected-start-tag-after-body"]],
-		["<!DOCTYPE html><body></body></html><p></p>x", undefined, ["expected-eof-but-got-start-tag"]],
-		["<!DOCTYPE html><html><body></html>x", undefined, ["expected-eof-but-got-char"]],
-		["<!DOCTYPE html><frameset><!DOCTYPE html>x <b></b></frameset></frameset>", undefined, ["unexpected-doctype", "unexpected-char-in-frameset", "unexpected-start-tag-in-frameset", "unexpected-end-tag-in-frameset", "unexpected-end-tag-after-frameset"]],
-		["<!DOCTYPE html><frameset>", undefined, ["eof-in-frameset"]],
-		["<!DOCTYPE html><frameset></frameset><!DOCTYPE html>x <b>", undefined, ["unexpected-doctype", "unexpected-char-after-frameset", "unexpected-start-tag-after-frameset"]],
-		["<!DOCTYPE html><frameset></frameset></html>x <b></b>", undefined, ["expected-eof-but-got-char", "expected-eof-but-got-start-tag", "expected-eof-but-got-end-tag"]],
-		["<!DOCTYPE html><svg><!DOCTYPE html>\u0000<b></svg><svg></p>", undefined, ["unexpected-doctype", "unexpected-null-character", "invalid-codepoint", "unexpected-html-element-in-foreign-content", "unexpected-end-tag", "unexpected-html-element-in-foreign-content", "unexpected-end-tag", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><svg><g></x>",
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-table-colgroup"), undefined, ["unexpected-doctype", "no-end-tag", "unexpected-character-implies-table-voodoo", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-template-col-x-2"), undefined, ["unexpected-char-in-column-group", "unexpected-start-tag", "unexpected-end-tag", "eof-in-template"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-table-tbody-td"), undefined, ["unexpected-cell-in-table-body", "unexpected-end-tag", "unexpected-end-tag", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-table-tbody"), undefined, ["unexpected-end-tag-in-table-body", "unexpected-end-tag-in-table-body", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-template-tr-tr"), undefined, ["unexpected-start-tag", "unexpected-end-tag"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-template-td-td"), undefined, ["unexpected-end-tag", "unexpected-start-tag", "unexpected-end-tag"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-table-tr-thead"), undefined, ["unexpected-end-tag", "unexpected-end-tag-in-table-row", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-table-tr-td-b"), undefined, ["unexpected-cell-end-tag", "unexpected-end-tag", "unexpected-end-tag"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-table-tr-td-tr"), undefined, ["unexpected-cell-in-table-body", "unexpected-cell-end-tag", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-template-x"), undefined, ["unexpected-end-tag", "eof-in-template"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-body-body"), undefined, ["unexpected-doctype", "unexpected-start-tag-after-body"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-body-body-html"), undefined, ["expected-eof-but-got-start-tag"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-html-body-html"), undefined, ["expected-eof-but-got-char"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset"), undefined, ["unexpected-doctype", "unexpected-char-in-frameset", "unexpected-start-tag-in-frameset", "unexpected-end-tag-in-frameset", "unexpected-end-tag-after-frameset"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-2"), undefined, ["eof-in-frameset"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-3"), undefined, ["unexpected-doctype", "unexpected-char-after-frameset", "unexpected-start-tag-after-frameset"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-4"), undefined, ["expected-eof-but-got-char", "expected-eof-but-got-start-tag", "expected-eof-but-got-end-tag"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-svg-doctype"), undefined, ["unexpected-doctype", "unexpected-null-character", "invalid-codepoint", "unexpected-html-element-in-foreign-content", "unexpected-end-tag", "unexpected-html-element-in-foreign-content", "unexpected-end-tag", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-svg-g-x"),
 			undefined,
 			[
 				"unexpected-end-tag",
@@ -925,11 +925,11 @@ describe("parseHtml — parseError", () => {
 				"expected-closing-tag-but-got-eof"
 			]
 		],
-		["<!DOCTYPE html><div/><br/><svg/><math/><svg><g/></svg>", undefined, ["non-void-html-element-start-tag-with-trailing-solidus", "expected-closing-tag-but-got-eof"]],
-		["<!DOCTYPE html><frameset><frame/></frameset>", undefined, []],
-		["<!DOCTYPE html><body><frame/>", undefined, ["unexpected-start-tag-ignored", "non-void-html-element-start-tag-with-trailing-solidus"]],
-		["</frameset>x", "frameset", ["unexpected-frameset-in-frameset-innerhtml", "unexpected-char-in-frameset"]],
-		["<body></body></html>", "html", ["unexpected-end-tag-after-body-innerhtml"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-div-br-svg-math"), undefined, ["non-void-html-element-start-tag-with-trailing-solidus", "expected-closing-tag-but-got-eof"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-frame"), undefined, []],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-body-frame"), undefined, ["unexpected-start-tag-ignored", "non-void-html-element-start-tag-with-trailing-solidus"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-frameset-x"), "frameset", ["unexpected-frameset-in-frameset-innerhtml", "unexpected-char-in-frameset"]],
+		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-body-body-html"), "html", ["unexpected-end-tag-after-body-innerhtml"]],
 	])("reports the tree's errors in %j", (source, fragmentContext, codes) => {
 		/** @type {string[]} */
 		const reported = [];
@@ -1041,7 +1041,7 @@ const { NodeType } = require("../../../lib/html/syntax-parser");
 
 describe("parseHtml — insertion-mode edge cases", () => {
 	it("merges foster-parented text runs before a table", () => {
-		const nodes = body("<table>x<tr></tr>y</table>");
+		const nodes = body(fixture("html", "parse-html-insertion-mode-edge-cases-merges-foster-parented-text-runs-before-a"));
 		// Both stray runs are fostered before the table and merged into one node.
 		expect(
 			/** @type {MatText} */ (/** @type {unknown} */ (nodes[0])).data
@@ -1052,29 +1052,29 @@ describe("parseHtml — insertion-mode edge cases", () => {
 	it("does not read raw text for a tag the frameset modes ignore", () => {
 		// §13.2.6.4.10 hands only `noframes` to the head rules; every other tag is
 		// ignored, and an ignored one never switches the tokenizer.
-		const frameset = find("<frameset><textarea><frame></textarea>", "frameset");
+		const frameset = find(fixture("html", "parse-html-insertion-mode-edge-cases-does-not-read-raw-text-for-a-tag-the"), "frameset");
 		expect(/** @type {MatElement} */ (frameset.children[0]).tagName).toBe(
 			"frame"
 		);
 		// `noframes` keeps its raw text, so the `<frame>` inside it is not one.
-		const noframes = find("<frameset><noframes><frame></noframes>", "noframes");
+		const noframes = find(fixture("html", "parse-html-insertion-mode-edge-cases-does-not-read-raw-text-for-a-tag-the-2"), "noframes");
 		expect(noframes.children[0].type).toBe(NodeType.Text);
 	});
 
 	it("keeps end tags and comments under foreign rules inside <svg>", () => {
-		const svg = find("<svg><circle></circle><!--c--></svg>", "svg");
+		const svg = find(fixture("html", "parse-html-insertion-mode-edge-cases-keeps-end-tags-and-comments-under-foreign"), "svg");
 		expect(/** @type {MatElement} */ (svg.children[0]).tagName).toBe("circle");
 		expect(svg.children[1].type).toBe(NodeType.Comment);
 	});
 
 	it("ignores stray end tags before head", () => {
-		const nodes = body("</div><p>x</p>");
+		const nodes = body(fixture("html", "parse-html-insertion-mode-edge-cases-ignores-stray-end-tags-before-head"));
 		expect(/** @type {MatElement} */ (nodes[0]).tagName).toBe("p");
 	});
 
 	it("handles <noscript> in head with comments, whitespace, and stray tags", () => {
 		const noscript = find(
-			"<head><noscript><!--c--> <link></div><head></noscript></head>",
+			fixture("html", "parse-html-insertion-mode-edge-cases-handles-noscript-in-head-with-comments"),
 			"noscript"
 		);
 		expect(noscript.children[0].type).toBe(NodeType.Comment);
@@ -1088,34 +1088,34 @@ describe("parseHtml — insertion-mode edge cases", () => {
 	it("pops <noscript> in head on non-passthrough content", () => {
 		// <span> is not allowed in head-noscript: noscript is popped and the
 		// span lands in the body.
-		const nodes = body("<head><noscript><span>x</span></noscript></head>");
+		const nodes = body(fixture("html", "parse-html-insertion-mode-edge-cases-pops-noscript-in-head-on-non-passthrough"));
 		expect(/** @type {MatElement} */ (nodes[0]).tagName).toBe("span");
 	});
 
 	it("keeps comments between </head> and <body>", () => {
-		const root = html("<head></head><!--c--><body>x</body>");
+		const root = html(fixture("html", "parse-html-insertion-mode-edge-cases-keeps-comments-between-head-and-body"));
 		expect(root.children.some((c) => c.type === NodeType.Comment)).toBe(true);
 	});
 
 	it("re-dispatches EOF inside an unterminated <template>", () => {
-		const template = find("<template>x", "template");
+		const template = find(fixture("html", "parse-html-insertion-mode-edge-cases-re-dispatches-eof-inside-an-unterminated"), "template");
 		expect(template.templateContent).toBeDefined();
 	});
 
 	it("keeps comments inside <table>", () => {
-		const table = find("<table><!--c--></table>", "table");
+		const table = find(fixture("html", "parse-html-insertion-mode-edge-cases-keeps-comments-inside-table"), "table");
 		expect(table.children[0].type).toBe(NodeType.Comment);
 	});
 
 	it("closes <caption> via </caption>, </table>, and row triggers", () => {
-		const t1 = find("<table><caption>a</caption></table>", "table");
+		const t1 = find(fixture("html", "parse-html-insertion-mode-edge-cases-closes-caption-via-caption-table-and-row"), "table");
 		expect(/** @type {MatElement} */ (t1.children[0]).tagName).toBe("caption");
 		// A <tr> start while in caption closes the caption first.
-		const t2 = find("<table><caption>a<tr><td>b</table>", "table");
+		const t2 = find(fixture("html", "parse-html-insertion-mode-edge-cases-closes-caption-via-caption-table-and-row-2"), "table");
 		expect(/** @type {MatElement} */ (t2.children[0]).tagName).toBe("caption");
 		expect(child(t2.children, "tbody")).toBeDefined();
 		// Ignored stray ends inside caption.
-		const t3 = find("<table><caption>a</td></tbody>b</table>", "table");
+		const t3 = find(fixture("html", "parse-html-insertion-mode-edge-cases-closes-caption-via-caption-table-and-row-3"), "table");
 		expect(
 			/** @type {MatText} */ (
 				/** @type {MatElement} */ (t3.children[0]).children[0]
@@ -1125,7 +1125,7 @@ describe("parseHtml — insertion-mode edge cases", () => {
 
 	it("parses <colgroup> with cols, comments, and implicit close", () => {
 		const table = find(
-			"<table><colgroup><!--c--><col span='2'></col></colgroup><tr><td>x</table>",
+			fixture("html", "parse-html-insertion-mode-edge-cases-parses-colgroup-with-cols-comments-and"),
 			"table"
 		);
 		const colgroup = child(table.children, "colgroup");
@@ -1136,27 +1136,27 @@ describe("parseHtml — insertion-mode edge cases", () => {
 		// Implicit close: a row start while in colgroup pops it.
 		expect(child(table.children, "tbody")).toBeDefined();
 		// Character data pops colgroup back to table (fostered out).
-		const t2 = find("<table><colgroup>x</table>", "table");
+		const t2 = find(fixture("html", "parse-html-insertion-mode-edge-cases-parses-colgroup-with-cols-comments-and-2"), "table");
 		expect(child(t2.children, "colgroup")).toBeDefined();
 	});
 
 	it("closes a row via </tbody> and ignores stray cell ends in a row", () => {
-		const table = find("<table><tbody><tr><td>a</td></tbody></table>", "table");
+		const table = find(fixture("html", "parse-html-insertion-mode-edge-cases-closes-a-row-via-tbody-and-ignores-stray"), "table");
 		const tbody = child(table.children, "tbody");
 		expect(child(child(tbody.children, "tr").children, "td")).toBeDefined();
 		// ROW_IGNORED_ENDS: a stray </td> directly in row mode is dropped.
-		const t2 = find("<table><tr></td><td>b</td></tr></table>", "table");
+		const t2 = find(fixture("html", "parse-html-insertion-mode-edge-cases-closes-a-row-via-tbody-and-ignores-stray-2"), "table");
 		expect(
 			child(child(child(t2.children, "tbody").children, "tr").children, "td")
 		).toBeDefined();
 	});
 
 	it("handles content after </html> (after-after-body)", () => {
-		const ast = parseHtml("<p>a</p></html><!--c-->z");
+		const ast = parseHtml(fixture("html", "parse-html-insertion-mode-edge-cases-handles-content-after-html-after-after-body"));
 		// Comment after </html> attaches to the document.
 		expect(ast.children.some((c) => c.type === NodeType.Comment)).toBe(true);
 		// Non-whitespace text re-enters the body.
-		const texts = body("<p>a</p></html>z");
+		const texts = body(fixture("html", "parse-html-insertion-mode-edge-cases-handles-content-after-html-after-after-body-2"));
 		expect(
 			/** @type {MatText} */ (/** @type {MatElement} */ (texts[0]).children[0])
 				.data
@@ -1165,7 +1165,7 @@ describe("parseHtml — insertion-mode edge cases", () => {
 
 	it("parses nested frameset elements, frames, and noframes", () => {
 		const src =
-			"<frameset cols='50%,50%'> <!--c--><frame src='a'><frameset><frame></frameset></frameset> <!--d--></html> <!--e--><noframes>n</noframes>";
+			fixture("html", "parse-html-insertion-mode-edge-cases-parses-nested-frameset-elements-frames-and");
 		const root = html(src);
 		const frameset = child(root.children, "frameset");
 		expect(frameset).toBeDefined();
@@ -1181,13 +1181,13 @@ describe("parseHtml — insertion-mode edge cases", () => {
 	});
 
 	it("ignores </frameset> at the root frameset and html start in frameset", () => {
-		const src = "<frameset></frameset></frameset><html lang='x'>";
+		const src = fixture("html", "parse-html-insertion-mode-edge-cases-ignores-frameset-at-the-root-frameset-and");
 		expect(child(html(src).children, "frameset")).toBeDefined();
 	});
 
 	it("mirrors the selected option from an <optgroup> into <selectedcontent>", () => {
 		const select = body(
-			"<select><button><selectedcontent></selectedcontent></button><optgroup><option selected>B</optgroup></select>"
+			fixture("html", "parse-html-insertion-mode-edge-cases-mirrors-the-selected-option-from-an")
 		)[0];
 		const selectedcontent = child(
 			child(select.children, "button").children,
@@ -1202,21 +1202,21 @@ describe("parseHtml — stray doctype and <html> re-dispatch", () => {
 		// A stray doctype is dropped and a repeated <html> merges new
 		// attributes in colgroup / table / noscript / frameset modes.
 		const t = find(
-			"<table><colgroup><!DOCTYPE html></col><template></template><col></colgroup></table>",
+			fixture("html", "parse-html-stray-doctype-and-html-re-dispatch-ignores-a-mid-document-doctype-and"),
 			"table"
 		);
 		expect(child(child(t.children, "colgroup").children, "col")).toBeDefined();
-		expect(find("<table><colgroup>", "colgroup")).toBeDefined();
+		expect(find(fixture("html", "parse-html-stray-doctype-and-html-re-dispatch-ignores-a-mid-document-doctype-and-2"), "colgroup")).toBeDefined();
 		expect(
-			find("<head><noscript><!DOCTYPE html></noscript>", "noscript")
+			find(fixture("html", "parse-html-stray-doctype-and-html-re-dispatch-ignores-a-mid-document-doctype-and-3"), "noscript")
 		).toBeDefined();
-		const t2 = find("<table><!DOCTYPE html><tr><td>x</table>", "table");
+		const t2 = find(fixture("html", "parse-html-stray-doctype-and-html-re-dispatch-ignores-a-mid-document-doctype-and-4"), "table");
 		expect(child(t2.children, "tbody")).toBeDefined();
 	});
 
 	it("handles stray doctype and <html> around frameset content", () => {
 		const root = html(
-			"<frameset><!DOCTYPE html><html lang='a'><frame></frameset><!DOCTYPE html><html lang='b'></html><!DOCTYPE html><html lang='c'>"
+			fixture("html", "parse-html-stray-doctype-and-html-re-dispatch-handles-stray-doctype-and-html")
 		);
 		expect(child(root.children, "frameset")).toBeDefined();
 		// The stray <html> start tags merged their attributes into the root.
@@ -1224,7 +1224,7 @@ describe("parseHtml — stray doctype and <html> re-dispatch", () => {
 	});
 
 	it("merges stray <html> after </html> (after-after-body)", () => {
-		const root = html("<p>x</p></html><html lang='z'>");
+		const root = html(fixture("html", "parse-html-stray-doctype-and-html-re-dispatch-merges-stray-html-after-html-after"));
 		expect(root.attributes.some((a) => a.name === "lang")).toBe(true);
 	});
 });
@@ -1236,40 +1236,40 @@ describe("parseHtml — skip options preserve element structure", () => {
 	// A spread of construction edge cases: foster parenting, adoption agency,
 	// select/table/ruby scoping, foreign content, raw-text elements, quirks.
 	const cases = [
-		"<!DOCTYPE html><html><head><title>t</title></head><body>hi</body></html>",
-		"<table>foo<td>bar</td></table>",
-		"a<table>b</table>c",
-		"text<table><tbody><tr>cell<td>real</table>after",
-		"<p>a<b>b<i>c</p>d</i>e",
-		"<b>1<p>2</b>3",
-		"<a>1<a>2<a>3",
-		"<select>x<option>y</option>z</select>",
-		"<ruby>base<rt>anno</rt></ruby>",
-		"<div><table>txt<svg><foreignObject><div>x</div></foreignObject></svg></table></div>",
-		"<math><mtext>t<mglyph>g</math>after",
-		"<script>var a = 1 < 2 && '</x>';</script><style>.a{color:red}</style>",
-		"<pre>\nkeep</pre><textarea>\nx</textarea>",
-		"<!-- c1 --><p>x<!-- c2 --></p><!-- c3 -->",
-		"<frameset>x<frame></frameset>",
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable"),
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-2"),
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-3"),
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-4"),
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-5"),
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-6"),
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-7"),
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-8"),
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-9"),
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-10"),
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-11"),
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-12"),
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-13"),
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-14"),
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-15"),
 		// Foreign-content CDATA becomes character data (dropped as prose).
-		"<svg><![CDATA[cdata text]]><rect/></svg>",
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-16"),
 		// No doctype → quirks mode; skip.doctype must not change that.
-		"<table><tr><td>quirks</td></tr></table>",
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-17"),
 		// Entities/whitespace in prose text (whitespace routing in head/table).
-		"  <html>  <head>  </head>  <body> a &amp; b &#60; c </body> </html>",
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-18"),
 		// Escapable raw-text bodies + a title in head.
-		"<title>page &amp; more</title><textarea>form\ntext</textarea>",
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-19"),
 		// Button scope + implied end tags.
-		"<button><p>x</button>y",
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-20"),
 		// Comment-only document.
-		"<!-- only a comment -->",
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-21"),
 		// `skip.text` whitespace fast-path fallbacks: whitespace-producing
 		// character references, CR normalization, and NUL must still route text
 		// exactly (these decide foster-parenting / framesetOk).
-		"<table>&#32;&#9;<td>a</td></table>",
-		"<div>&#32;&#32;</div>plain  text",
-		"a<table>\r\n  <tr><td>b\0c</td></tr></table>d",
-		"<pre>\r\nkeep</pre>"
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-22"),
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-23"),
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-24"),
+		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-25")
 	];
 
 	/**
@@ -1326,7 +1326,7 @@ describe("parseHtml — skip options preserve element structure", () => {
 	});
 
 	it("skip.text drops every text node; raw-text bodies stay readable via contentEnd", () => {
-		const src = "<p>prose</p><script>var x=1;</script>";
+		const src = fixture("html", "parse-html-skip-options-preserve-element-structure-skip-text-drops-every-text");
 		const doc = parseHtml(src, undefined, { text: true });
 		/** @type {MatText[]} */
 		const texts = [];
@@ -1353,7 +1353,7 @@ describe("parseHtml — skip options preserve element structure", () => {
 	});
 
 	it("skip.comments drops comment nodes; skip.doctype drops the doctype node", () => {
-		const src = "<!DOCTYPE html><!-- c --><p></p>";
+		const src = fixture("html", "parse-html-skip-options-preserve-element-structure-skip-comments-drops-comment");
 		const count = (
 			/** @type {MatDocument} */ doc,
 			/** @type {number} */ type
@@ -1382,7 +1382,7 @@ describe("parseHtml — skip options preserve element structure", () => {
 		// script/style (raw text) + textarea/title (escapable raw text): each body
 		// is the element's raw value, recorded as [tagEnd, contentEnd] — no Text node.
 		const src =
-			"<title>ti</title><style>.s{}</style></head><body>prose<script>sc</script><textarea>ta</textarea>";
+			fixture("html", "parse-html-skip-options-preserve-element-structure-skip-text-records-every-raw");
 		const doc = parseHtml(src, undefined, { text: true });
 		/** @type {Record<string, string>} */
 		const bodies = {};
@@ -1411,7 +1411,7 @@ describe("parseHtml — skip options preserve element structure", () => {
 		// SVG <style>/<script> stay in the SVG namespace and their bodies are plain
 		// text; HtmlParser extracts them regardless of namespace, so contentEnd must
 		// be recorded here too.
-		const src = "<svg><style>.a{}</style><script>x()</script></svg>";
+		const src = fixture("html", "parse-html-skip-options-preserve-element-structure-skip-text-records-content-end");
 		const doc = parseHtml(src, undefined, { text: true });
 		/** @type {Record<string, string>} */
 		const bodies = {};
@@ -1434,10 +1434,10 @@ describe("parseHtml — skip options preserve element structure", () => {
 		// still leave the element tree (and offsets) identical.
 		/** @type {[string, string][]} */
 		const fragments = [
-			["<td>a</td><tr><td>b", "table"],
-			["<li>x<li>y", "ul"],
-			["text<b>bold</b>", "div"],
-			["<rect/>text", "svg"]
+			[fixture("html", "parse-html-skip-options-preserve-element-structure-skip-options-preserve-element"), "table"],
+			[fixture("html", "parse-html-skip-options-preserve-element-structure-skip-options-preserve-element-2"), "ul"],
+			[fixture("html", "parse-html-skip-options-preserve-element-structure-skip-options-preserve-element-3"), "div"],
+			[fixture("html", "parse-html-skip-options-preserve-element-structure-skip-options-preserve-element-4"), "svg"]
 		];
 		for (const [src, ctx] of fragments) {
 			const base = elementSignature(parseHtml(src, ctx));
@@ -1477,7 +1477,7 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 		const nodes = body(src);
 		expect(nodes).toHaveLength(70000);
 		expect(nodes[69999].attributes[0].value).toBe("69999");
-		const small = body('<b class="c">x</b>');
+		const small = body(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-re-shrinks-the-columns"));
 		expect(small).toHaveLength(1);
 		expect(small[0].attributes[0].value).toBe("c");
 	});
@@ -1490,20 +1490,20 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 		expect(nodes[0]).toEqual(
 			expect.objectContaining({ tagName: "p", children: [expect.any(Object)] })
 		);
-		expect(body("<b>y</b>")[0]).toEqual(
+		expect(body(fixture("html", "source-processor-the-streamed-walk-ends-a-walk-a-visitor-stopped-and-fires-its"))[0]).toEqual(
 			expect.objectContaining({ tagName: "b" })
 		);
 	});
 
 	it("merges texts left adjacent by a skipped comment", () => {
-		const nodes = bodyOf("a<!--c-->b", { comments: true });
+		const nodes = bodyOf(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-merges-texts-left-adjacent"), { comments: true });
 		expect(nodes).toEqual([
 			expect.objectContaining({ type: NodeType.Text, data: "ab" })
 		]);
 	});
 
 	it("foster-parents text inside <template> containing a table", () => {
-		const template = head("<template><table>x</table></template>")[0];
+		const template = head(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-foster-parents-text-inside"))[0];
 		const content = /** @type {MatFragment} */ (template.templateContent);
 		expect(content.children.map((c) => c.type)).toEqual([
 			NodeType.Text,
@@ -1513,7 +1513,7 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	});
 
 	it("splits leading whitespace out of a <colgroup>", () => {
-		const table = child(bodyOf("<table><colgroup> x<col>"), "table");
+		const table = child(bodyOf(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-splits-leading-whitespace")), "table");
 		// "x" pops the colgroup (fostered before the table); <col> reopens one.
 		const colgroups = table.children.filter(
 			(c) => c.type === NodeType.Element && c.tagName === "colgroup"
@@ -1526,31 +1526,31 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 
 	it("closes a <colgroup> on its end tag and on anything-else", () => {
 		const t1 = child(
-			bodyOf("<table><colgroup><col></colgroup><tr><td>x"),
+			bodyOf(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-closes-a-colgroup-on-its")),
 			"table"
 		);
 		expect(child(t1.children, "colgroup")).toBeDefined();
 		expect(child(t1.children, "tbody")).toBeDefined();
-		const t2 = child(bodyOf("<table><colgroup><tbody><tr><td>x"), "table");
+		const t2 = child(bodyOf(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-closes-a-colgroup-on-its-2")), "table");
 		expect(child(t2.children, "tbody")).toBeDefined();
 	});
 
 	it("ends what is open around an option only inside a select", () => {
 		// §"in body": in select scope `<option>` implies end tags but `<optgroup>`,
 		// `<hr>` implies all; outside one only an open `<option>` gives way.
-		const inSelect = child(bodyOf("<select><p><option>"), "select");
+		const inSelect = child(bodyOf(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-ends-what-is-open-around-an")), "select");
 		expect(
 			inSelect.children
 				.filter((c) => c.type === NodeType.Element)
 				.map((c) => /** @type {MatElement} */ (c).tagName)
 		).toEqual(["p", "option"]);
 		// An `<optgroup>` is kept by an `<option>` and ended by an `<hr>`.
-		const grouped = child(bodyOf("<select><optgroup><option>"), "select");
+		const grouped = child(bodyOf(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-ends-what-is-open-around-an-2")), "select");
 		expect(
 			/** @type {MatElement} */ (child(grouped.children, "optgroup")).children
 		).toHaveLength(1);
 		// No select in scope: the option keeps the `<hr>` written inside it.
-		const loose = child(bodyOf("<div><option>o<hr>"), "div");
+		const loose = child(bodyOf(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-ends-what-is-open-around-an-3")), "div");
 		const option = child(loose.children, "option");
 		expect(
 			option.children.some(
@@ -1560,7 +1560,7 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 			)
 		).toBe(true);
 		// `<li>` is implied-end-tag material too, so the `<hr>` ends it as well.
-		const separated = child(bodyOf("<select><li><hr>"), "select");
+		const separated = child(bodyOf(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-ends-what-is-open-around-an-4")), "select");
 		expect(
 			separated.children
 				.filter((c) => c.type === NodeType.Element)
@@ -1570,7 +1570,7 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 
 	it("moves an <hr> out of option/optgroup context in <select>", () => {
 		const select = child(
-			bodyOf("<select><option>a<optgroup><option>b<hr><option>c"),
+			bodyOf(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-moves-an-hr-out-of-option")),
 			"select"
 		);
 		const tags = select.children
@@ -1582,7 +1582,7 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	it("keeps <selectedcontent> content when the select has no options", () => {
 		const select = child(
 			bodyOf(
-				"<select><button><selectedcontent>x</selectedcontent></button></select>"
+				fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-keeps-selectedcontent")
 			),
 			"select"
 		);
@@ -1598,7 +1598,7 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	it("mirrors the last selected option found inside an <optgroup>", () => {
 		const select = child(
 			bodyOf(
-				"<select><button><selectedcontent></selectedcontent></button><optgroup> <option>A<option selected>B</optgroup></select>"
+				fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-mirrors-the-last-selected")
 			),
 			"select"
 		);
@@ -1613,7 +1613,7 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 		// Four identical <b class="x"> in the active formatting list: only three
 		// survive, so the reconstruction in the second <p> nests three <b>.
 		const src =
-			'<p>1<b class="x"><b class="x"><b class="x"><b class="x">2</p><p>3';
+			fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-applies-the-noah-s-ark");
 		const paragraphs = bodyOf(src).filter(
 			(c) => c.type === NodeType.Element && c.tagName === "p"
 		);
@@ -1633,7 +1633,7 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	});
 
 	it("clones attributes when the adoption agency splits a formatting element", () => {
-		const p = find('<b class="x">1<p>2</b>3', "p");
+		const p = find(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-clones-attributes-when-the"), "p");
 		const clone = child(p.children, "b");
 		expect(clone.attributes).toEqual([
 			expect.objectContaining({ name: "class", value: "x" })
@@ -1642,7 +1642,7 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 
 	it("treats <annotation-xml encoding=text/html> as an integration point", () => {
 		const ax = find(
-			'<math><annotation-xml encoding="text/html"><div>x</div></annotation-xml></math>',
+			fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-treats-annotation-xml"),
 			"annotation-xml"
 		);
 		const div = child(ax.children, "div");
@@ -1650,26 +1650,26 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	});
 
 	it("adjusts SVG and MathML attribute names", () => {
-		const svg = find('<svg viewbox="0 0 1 1" xlink:href="#a"/>', "svg");
+		const svg = find(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-adjusts-svg-and-math-ml"), "svg");
 		const byName = new Map(svg.attributes.map((a) => [a.name, a]));
 		expect(byName.has("viewBox")).toBe(true);
 		const xlink = /** @type {HtmlAttribute} */ (byName.get("xlink:href"));
 		expect(xlink.serializedName).toBe("xlink href");
-		const math = find('<math definitionurl="u">', "math");
+		const math = find(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-adjusts-svg-and-math-ml-2"), "math");
 		expect(math.attributes[0].name).toBe("definitionURL");
 	});
 
 	it("breaks a <font> with a color attribute out of foreign content", () => {
-		const nodes = bodyOf('<svg><font color="red">x');
+		const nodes = bodyOf(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-breaks-a-font-with-a-color"));
 		const font = child(nodes, "font");
 		expect(font.namespace).toBe(Namespace.HTML);
 		// Without a breakout attribute the font stays inside the svg.
-		const svg = child(bodyOf("<svg><font other=1>x"), "svg");
+		const svg = child(bodyOf(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-breaks-a-font-with-a-color-2")), "svg");
 		expect(child(svg.children, "font").namespace).toBe(Namespace.SVG);
 	});
 
 	it("merges attributes of a repeated <body> tag", () => {
-		const doc = parseHtml('<body class="a"><body id="b" class="c">x');
+		const doc = parseHtml(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-merges-attributes-of-a"));
 		const bodyEl = child(child(doc.children, "html").children, "body");
 		const byName = new Map(bodyEl.attributes.map((a) => [a.name, a.value]));
 		expect(byName.get("class")).toBe("a");
@@ -1680,7 +1680,7 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 		// An implied body (opened by <div>) leaves frameset-ok set, so the
 		// <frameset> detaches it; an explicit <body> tag would clear the flag.
 		const doc = parseHtml(
-			'<div><frameset rows="1"> <frameset cols="2"><frame></frameset></frameset>'
+			fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-replaces-an-empty-body-with")
 		);
 		const htmlEl = child(doc.children, "html");
 		expect(child(htmlEl.children, "body")).toBeUndefined();
@@ -1690,7 +1690,7 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	});
 
 	it("closes an open <dd> when a <dt> starts", () => {
-		const dl = child(bodyOf("<dl><dd>a<dt>b</dl>"), "dl");
+		const dl = child(bodyOf(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-closes-an-open-dd-when-a-dt")), "dl");
 		const items = dl.children
 			.filter((c) => c.type === NodeType.Element)
 			.map((c) => /** @type {MatElement} */ (c).tagName);
@@ -1698,7 +1698,7 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	});
 
 	it("closes an open <a> when a new <a> starts", () => {
-		const nodes = bodyOf('<a href="1">x<a href="2">y');
+		const nodes = bodyOf(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-closes-an-open-a-when-a-new"));
 		const anchors = nodes.filter(
 			(c) => c.type === NodeType.Element && c.tagName === "a"
 		);
@@ -1706,7 +1706,7 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	});
 
 	it("closes an open <button> when a new <button> starts", () => {
-		const nodes = bodyOf("<button>a<button>b");
+		const nodes = bodyOf(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-closes-an-open-button-when"));
 		const buttons = nodes.filter(
 			(c) => c.type === NodeType.Element && c.tagName === "button"
 		);
@@ -1714,21 +1714,21 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	});
 
 	it("closes an open heading when a new heading starts", () => {
-		const tags = bodyOf("<h1>a<h2>b")
+		const tags = bodyOf(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-closes-an-open-heading-when"))
 			.filter((c) => c.type === NodeType.Element)
 			.map((c) => /** @type {MatElement} */ (c).tagName);
 		expect(tags).toEqual(["h1", "h2"]);
 	});
 
 	it("</form> closes the form even with open descendants", () => {
-		const form = child(bodyOf("<form><div>x</form>y<input>"), "form");
+		const form = child(bodyOf(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-form-closes-the-form-even")), "form");
 		// The stray input after </form> lands in the div (still open), not the form.
 		expect(child(child(form.children, "div").children, "input")).toBeDefined();
 	});
 
 	it("keeps <input type=hidden> inside a table", () => {
 		const table = child(
-			bodyOf('<table><input type="hidden"><input type="text"></table>'),
+			bodyOf(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-keeps-input-type-hidden")),
 			"table"
 		);
 		const hidden = child(table.children, "input");
@@ -1736,18 +1736,18 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	});
 
 	it("attaches comments after </body> to the <html> element", () => {
-		const htmlEl = child(parseHtml("x</body><!--c-->").children, "html");
+		const htmlEl = child(parseHtml(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-attaches-comments-after")).children, "html");
 		expect(htmlEl.children.map((c) => c.type)).toContain(NodeType.Comment);
 	});
 
 	it("parses text in a foreign fragment context", () => {
-		const doc = parseHtmlRefs("x<div>y", 0, { fragmentContext: "svg" });
+		const doc = parseHtmlRefs(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-parses-text-in-a-foreign"), 0, { fragmentContext: "svg" });
 		const root = A.child(0, doc);
 		expect(A.type(A.child(0, root))).toBe(NodeType.Text);
 	});
 
 	it("runs the adoption agency in a table-row fragment context", () => {
-		const doc = parseHtml("<b>x<tr>y</b>z", "tr");
+		const doc = parseHtml(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-runs-the-adoption-agency-in"), "tr");
 		const root = child(doc.children, "html");
 		expect(
 			/** @type {MatText} */ (child(root.children, "b").children[0]).data
@@ -2071,7 +2071,7 @@ describe("SourceProcessor — streamed walk offsets", () => {
 						}
 					})
 				)
-				.process("<p>x</p>")
+				.process(fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints"))
 		).toThrow(/already running/);
 	});
 });
@@ -2080,7 +2080,7 @@ describe("parseHtml — path accessor completeness", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 
 	it("exposes a doctype's identifier ranges through the accessors", () => {
-		const source = '<!DOCTYPE html PUBLIC "p" "s"><p>x';
+		const source = fixture("html", "parse-html-path-accessor-completeness-exposes-a-doctype-s-identifier-ranges");
 		const doctype = A.child(0, parseHtmlRefs(source, 0));
 		expect(A.type(doctype)).toBe(NodeType.Doctype);
 		expect(A.rangeOf(Part.publicId, doctype)).toEqual([23, 24]);
@@ -2218,7 +2218,7 @@ describe("parseHtml — path accessor completeness", () => {
 	});
 
 	it("reads each part of an element, with an end tag, without one and parser-inserted", () => {
-		const doc = parseHtmlRefs("<table><tr><td>x</table><div a=1>y</div>");
+		const doc = parseHtmlRefs(fixture("html", "parse-html-path-accessor-completeness-reads-each-part-of-an-element-with-an-end"));
 		/** @type {Record<string, string>} */
 		const parts = {};
 		/** @param {number} n node */
@@ -2252,9 +2252,9 @@ describe("parseHtml — path accessor completeness", () => {
 
 	it("names a processing instruction by its target, empty or not", () => {
 		for (const [source, target, xml] of /** @type {[string, string, boolean][]} */ ([
-			["<?x y?>", "x", false],
+			[fixture("html", "parse-html-path-accessor-completeness-names-a-processing-instruction-by-its"), "x", false],
 			// HTML reads this as a bogus comment, XML as a target-less instruction
-			["<? y?><r/>", "", true]
+			[fixture("html", "parse-html-path-accessor-completeness-names-a-processing-instruction-by-its-2"), "", true]
 		])) {
 			const pi = A.child(0, parseHtmlRefs(source, 0, { xml }));
 			expect([A.type(pi), A.name(pi), A.value(pi)]).toEqual([
@@ -2336,99 +2336,99 @@ describe("parseHtml — path accessor completeness", () => {
 
 describe("parseSrcset", () => {
 	it("should return a single candidate with byte offsets", () => {
-		expect(parseSrcset("a.png")).toEqual([["a.png", 0, 5]]);
+		expect(parseSrcset(fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5]]);
 	});
 
 	it("should accept width, density and height descriptors", () => {
-		expect(parseSrcset("a.png 480w")).toEqual([["a.png", 0, 5]]);
-		expect(parseSrcset("a.png 2x")).toEqual([["a.png", 0, 5]]);
-		expect(parseSrcset("a.png 480w 2h")).toEqual([["a.png", 0, 5]]);
+		expect(parseSrcset(fixture("html", "parse-srcset-should-accept-width-density-and-height-descriptors"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5]]);
+		expect(parseSrcset(fixture("html", "parse-srcset-should-accept-width-density-and-height-descriptors-2"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5]]);
+		expect(parseSrcset(fixture("html", "parse-srcset-should-accept-width-density-and-height-descriptors-3"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5]]);
 	});
 
 	it("should parse several comma-separated candidates", () => {
-		expect(parseSrcset("a.png 480w, b.png 800w")).toEqual([
-			["a.png", 0, 5],
+		expect(parseSrcset(fixture("html", "parse-srcset-should-parse-several-comma-separated-candidates"))).toEqual([
+			[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5],
 			["b.png", 12, 17]
 		]);
 	});
 
 	it("should accept a url that ends in a trailing comma", () => {
-		expect(parseSrcset("a.png,")).toEqual([["a.png", 0, 5]]);
+		expect(parseSrcset(fixture("html", "parse-srcset-should-accept-a-url-that-ends-in-a-trailing-comma"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5]]);
 	});
 
 	it("should throw on a zero width descriptor", () => {
-		expect(() => parseSrcset("a.png 0w")).toThrow(/Invalid srcset descriptor/);
+		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-a-zero-width-descriptor"))).toThrow(/Invalid srcset descriptor/);
 	});
 
 	it("should throw on a negative density descriptor", () => {
-		expect(() => parseSrcset("a.png -1x")).toThrow(/Invalid srcset descriptor/);
+		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-a-negative-density-descriptor"))).toThrow(/Invalid srcset descriptor/);
 	});
 
 	it("should throw on a descriptor after a zero density descriptor", () => {
-		expect(parseSrcset("a.png 0x")).toEqual([["a.png", 0, 5]]);
-		expect(() => parseSrcset("a.png 0x 1x")).toThrow(
+		expect(parseSrcset(fixture("html", "parse-srcset-should-throw-on-a-descriptor-after-a-zero-density-descriptor"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5]]);
+		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-a-descriptor-after-a-zero-density-descriptor-2"))).toThrow(
 			/Invalid srcset descriptor/
 		);
-		expect(() => parseSrcset("a.png 0x 1w")).toThrow(
+		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-a-descriptor-after-a-zero-density-descriptor-3"))).toThrow(
 			/Invalid srcset descriptor/
 		);
-		expect(() => parseSrcset("a.png 0x 1h")).toThrow(
+		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-a-descriptor-after-a-zero-density-descriptor-4"))).toThrow(
 			/Invalid srcset descriptor/
 		);
 	});
 
 	it("should throw on conflicting descriptors", () => {
-		expect(() => parseSrcset("a.png 480w 2x")).toThrow(
+		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-conflicting-descriptors"))).toThrow(
 			/Invalid srcset descriptor/
 		);
 	});
 
 	it("should throw on an unrecognized descriptor", () => {
-		expect(() => parseSrcset("a.png foo")).toThrow(/Invalid srcset descriptor/);
+		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-an-unrecognized-descriptor"))).toThrow(/Invalid srcset descriptor/);
 	});
 
 	it("should throw on duplicate or conflicting typed descriptors", () => {
-		expect(() => parseSrcset("a.png 1w 2w")).toThrow(/Invalid srcset/);
-		expect(() => parseSrcset("a.png 0h")).toThrow(/Invalid srcset/);
-		expect(() => parseSrcset("a.png 2x 1h")).toThrow(/Invalid srcset/);
+		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-duplicate-or-conflicting-typed-descriptors"))).toThrow(/Invalid srcset/);
+		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-duplicate-or-conflicting-typed-descriptors-2"))).toThrow(/Invalid srcset/);
+		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-duplicate-or-conflicting-typed-descriptors-3"))).toThrow(/Invalid srcset/);
 	});
 
 	it("should traverse the in-parens descriptor state", () => {
-		expect(() => parseSrcset("a.png (min-width:1px)x")).toThrow(
+		expect(() => parseSrcset(fixture("html", "parse-srcset-should-traverse-the-in-parens-descriptor-state"))).toThrow(
 			/Invalid srcset descriptor/
 		);
 		// a parenthesized descriptor that runs to EOF
-		expect(() => parseSrcset("a.png (foo")).toThrow(/Invalid srcset/);
+		expect(() => parseSrcset(fixture("html", "parse-srcset-should-traverse-the-in-parens-descriptor-state-2"))).toThrow(/Invalid srcset/);
 	});
 
 	it("should end an empty descriptor list at a comma after the url", () => {
-		expect(parseSrcset("a.png ,b.png")).toEqual([
-			["a.png", 0, 5],
+		expect(parseSrcset(fixture("html", "parse-srcset-should-end-an-empty-descriptor-list-at-a-comma-after-the-url"))).toEqual([
+			[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5],
 			["b.png", 7, 12]
 		]);
 	});
 
 	it("should keep a parenthesized run inside a started descriptor", () => {
-		expect(() => parseSrcset("a.png 1x(2)")).toThrow(
+		expect(() => parseSrcset(fixture("html", "parse-srcset-should-keep-a-parenthesized-run-inside-a-started-descriptor"))).toThrow(
 			"Invalid srcset descriptor found in 'a.png 1x(2)' at '1x(2)'"
 		);
 	});
 
 	it("should stay after a descriptor across a whitespace run", () => {
-		expect(parseSrcset("a.png 1x  , b.png")).toEqual([
-			["a.png", 0, 5],
+		expect(parseSrcset(fixture("html", "parse-srcset-should-stay-after-a-descriptor-across-a-whitespace-run"))).toEqual([
+			[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5],
 			["b.png", 12, 17]
 		]);
 	});
 
 	it("should handle whitespace between a descriptor and EOF", () => {
-		expect(parseSrcset("a.png 1w ")).toEqual([["a.png", 0, 5]]);
+		expect(parseSrcset(fixture("html", "parse-srcset-should-handle-whitespace-between-a-descriptor-and-eof"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5]]);
 		// a second descriptor after the inter-descriptor whitespace
-		expect(() => parseSrcset("a.png 1w x2")).toThrow(/Invalid srcset/);
+		expect(() => parseSrcset(fixture("html", "parse-srcset-should-handle-whitespace-between-a-descriptor-and-eof-2"))).toThrow(/Invalid srcset/);
 	});
 
 	it("should throw when there are no image candidate strings", () => {
-		expect(() => parseSrcset("   ")).toThrow(
+		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-when-there-are-no-image-candidate-strings"))).toThrow(
 			/Must contain one or more image candidate strings/
 		);
 	});
@@ -2439,20 +2439,20 @@ describe("parseSrc", () => {
 	const DEL = String.fromCharCode(0x7f);
 
 	it("should trim ASCII whitespace and keep offsets", () => {
-		expect(parseSrc("  a.png  ")).toEqual([["a.png", 2, 7]]);
+		expect(parseSrc(fixture("html", "parse-src-should-trim-ascii-whitespace-and-keep-offsets"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 2, 7]]);
 	});
 
 	it("should trim a surrounding U+00A0 no-break space", () => {
-		expect(parseSrc(`${NBSP}a.png${NBSP}`)).toEqual([["a.png", 1, 6]]);
+		expect(parseSrc(`${NBSP}a.png${NBSP}`)).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 1, 6]]);
 	});
 
 	it("should strip ignorable control characters from the value", () => {
-		expect(parseSrc(`a${DEL}.png`)).toEqual([["a.png", 0, 6]]);
+		expect(parseSrc(`a${DEL}.png`)).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 6]]);
 	});
 
 	it("should throw on empty and whitespace-only input", () => {
 		expect(() => parseSrc("")).toThrow(/Must be non-empty/);
-		expect(() => parseSrc("   ")).toThrow(/Must be non-empty/);
+		expect(() => parseSrc(fixture("html", "parse-srcset-should-throw-when-there-are-no-image-candidate-strings"))).toThrow(/Must be non-empty/);
 	});
 
 	it("should throw when only ignorable characters remain", () => {
@@ -2463,26 +2463,26 @@ describe("parseSrc", () => {
 describe("parseMsapplicationTask", () => {
 	it("should extract the icon-uri value with offsets", () => {
 		expect(
-			parseMsapplicationTask("name=n;action-uri=http://x;icon-uri=icon.png")
+			parseMsapplicationTask(fixture("html", "parse-msapplication-task-should-extract-the-icon-uri-value-with-offsets"))
 		).toEqual([["icon.png", 36, 44]]);
 	});
 
 	it("should return nothing when there is no icon-uri", () => {
-		expect(parseMsapplicationTask("name=n;action-uri=http://x")).toEqual([]);
+		expect(parseMsapplicationTask(fixture("html", "parse-msapplication-task-should-return-nothing-when-there-is-no-icon-uri"))).toEqual([]);
 	});
 
 	it("should return nothing for an empty icon-uri value", () => {
-		expect(parseMsapplicationTask("icon-uri=   ")).toEqual([]);
+		expect(parseMsapplicationTask(fixture("html", "parse-msapplication-task-should-return-nothing-for-an-empty-icon-uri-value"))).toEqual([]);
 	});
 
 	it("should skip a part without a key", () => {
-		expect(parseMsapplicationTask("x;icon-uri=a.png")).toEqual([
-			["a.png", 11, 16]
+		expect(parseMsapplicationTask(fixture("html", "parse-msapplication-task-should-skip-a-part-without-a-key"))).toEqual([
+			[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 11, 16]
 		]);
 	});
 
 	it("should trim whitespace around the icon-uri value", () => {
-		expect(parseMsapplicationTask("name=n;icon-uri= icon.png ;x=y")).toEqual([
+		expect(parseMsapplicationTask(fixture("html", "parse-msapplication-task-should-trim-whitespace-around-the-icon-uri-value"))).toEqual([
 			["icon.png", 17, 25]
 		]);
 	});
@@ -2490,34 +2490,34 @@ describe("parseMsapplicationTask", () => {
 
 describe("parseCssUrls", () => {
 	it("should extract an unquoted url() reference from a presentation attribute", () => {
-		expect(parseCssUrls("fill:url(a.png)")).toEqual([["a.png", 9, 14]]);
+		expect(parseCssUrls(fixture("html", "parse-css-urls-should-extract-an-unquoted-url-reference-from-a-presentation"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 9, 14]]);
 	});
 
 	it("should extract a quoted url() reference", () => {
-		expect(parseCssUrls('fill:url("a.png")')).toEqual([["a.png", 10, 15]]);
-		expect(parseCssUrls("fill:url('a.png')")).toEqual([["a.png", 10, 15]]);
+		expect(parseCssUrls(fixture("html", "parse-css-urls-should-extract-a-quoted-url-reference"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 10, 15]]);
+		expect(parseCssUrls(fixture("html", "parse-css-urls-should-extract-a-quoted-url-reference-2"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 10, 15]]);
 	});
 
 	it("should return nothing when the value carries no url()", () => {
-		expect(parseCssUrls("fill:red")).toEqual([]);
+		expect(parseCssUrls(fixture("html", "parse-css-urls-should-return-nothing-when-the-value-carries-no-url"))).toEqual([]);
 	});
 
 	it("should skip a url() whose string is cut by a newline", () => {
 		// the bad string ends at the newline; scanning goes on after it
-		expect(parseCssUrls('mask:url("a\n"x") url(b.png)')).toEqual([
+		expect(parseCssUrls(fixture("html", "parse-css-urls-should-skip-a-url-whose-string-is-cut-by-a-newline"))).toEqual([
 			["b.png", 21, 26]
 		]);
 	});
 
 	it("should take an unterminated url() string up to EOF", () => {
-		expect(parseCssUrls('mask:url("a.png')).toEqual([["a.png", 10, 15]]);
+		expect(parseCssUrls(fixture("html", "parse-css-urls-should-take-an-unterminated-url-string-up-to-eof"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 10, 15]]);
 	});
 
 	it("should skip an empty url(), quoted or not", () => {
-		expect(parseCssUrls("mask:url()")).toEqual([]);
-		expect(parseCssUrls('mask:url("")')).toEqual([]);
-		expect(parseCssUrls("mask:url( '' ) url(a.png)")).toEqual([
-			["a.png", 19, 24]
+		expect(parseCssUrls(fixture("html", "parse-css-urls-should-skip-an-empty-url-quoted-or-not"))).toEqual([]);
+		expect(parseCssUrls(fixture("html", "parse-css-urls-should-skip-an-empty-url-quoted-or-not-2"))).toEqual([]);
+		expect(parseCssUrls(fixture("html", "parse-css-urls-should-skip-an-empty-url-quoted-or-not-3"))).toEqual([
+			[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 19, 24]
 		]);
 	});
 });
@@ -2581,13 +2581,13 @@ describe("parseHtml — quirks and foreign-content arcs", () => {
 	it("treats MathML and SVG integration points as their own scopes", () => {
 		// `<mi>` is MathML-special, so `<p>` breaks all the way out of `<math>`.
 		expect(
-			body("<math><mi>a</mi><p>b</p></math>").map((n) => n.tagName)
+			body(fixture("html", "parse-html-quirks-and-foreign-content-arcs-treats-math-ml-and-svg-integration")).map((n) => n.tagName)
 		).toEqual(["math", "p"]);
 		// `<desc>` is an SVG HTML-integration point, so `<p>` nests inside it.
-		const svg = body("<svg><desc><p>b</p></desc></svg>")[0];
+		const svg = body(fixture("html", "parse-html-quirks-and-foreign-content-arcs-treats-math-ml-and-svg-integration-2"))[0];
 		expect(child(child(svg.children, "desc").children, "p")).toBeDefined();
 		// `<g>` is neither, so `<p>` breaks out again.
-		expect(body("<svg><g><p>b</p></g></svg>").map((n) => n.tagName)).toEqual([
+		expect(body(fixture("html", "parse-html-quirks-and-foreign-content-arcs-treats-math-ml-and-svg-integration-3")).map((n) => n.tagName)).toEqual([
 			"svg",
 			"p"
 		]);
@@ -2617,12 +2617,12 @@ describe("parseHtml — quirks and foreign-content arcs", () => {
 		// "Any other end tag" walks the stack of open elements and gives up at the
 		// first special one — which can be a MathML or SVG element, not only HTML.
 		const math = body(
-			'<math><annotation-xml encoding="text/html"><b>x</foo>y</b></annotation-xml></math>'
+			fixture("html", "parse-html-quirks-and-foreign-content-arcs-stops-an-unmatched-end-tag-at-a")
 		)[0];
 		const b = child(child(math.children, "annotation-xml").children, "b");
 		expect(/** @type {MatText} */ (b.children[0]).data).toBe("xy");
 
-		const svg = body("<svg><desc><b>x</foo>y</b></desc></svg>")[0];
+		const svg = body(fixture("html", "parse-html-quirks-and-foreign-content-arcs-stops-an-unmatched-end-tag-at-a-2"))[0];
 		const svgB = child(child(svg.children, "desc").children, "b");
 		expect(/** @type {MatText} */ (svgB.children[0]).data).toBe("xy");
 	});
@@ -2643,12 +2643,12 @@ describe("parseHtml — quirks and foreign-content arcs", () => {
 			return depth;
 		};
 		// Four identical entries: the earliest is dropped from the list.
-		expect(reconstructed("<p><b x=1><b x=1><b x=1><b x=1>t</p>after")).toBe(3);
+		expect(reconstructed(fixture("html", "parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to"))).toBe(3);
 		// A differing attribute count, and a differing value, both break the match.
-		expect(reconstructed("<p><b x=1><b x=1 y=2><b x=1><b x=1>t</p>after")).toBe(
+		expect(reconstructed(fixture("html", "parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to-2"))).toBe(
 			4
 		);
-		expect(reconstructed("<p><b x=1><b x=2><b x=1><b x=1>t</p>after")).toBe(4);
+		expect(reconstructed(fixture("html", "parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to-3"))).toBe(4);
 	});
 
 	it("grows the node columns past the initial estimate", () => {
@@ -2686,7 +2686,7 @@ const treeOf = (source, fragmentContext) => {
 const CASES = [
 	[
 		"fosters an adoption-agency reparent out of a table",
-		"<!doctype html><table><td><table><i>a<div>b<b>c</i>d",
+		fixture("html", "parse-html-insertion-modes-fosters-an-adoption-agency-reparent-out-of-a-table"),
 		undefined
 	],
 	[
@@ -2696,40 +2696,40 @@ const CASES = [
 	],
 	[
 		"nests framesets and switches to after-frameset",
-		"<frame></frame></frame><frameset><frame><frameset><frame></frameset><noframes></frameset><noframes>",
+		fixture("html", "parse-html-insertion-modes-nests-framesets-and-switches-to-after-frameset"),
 		undefined
 	],
 	["closes a foreign element by its own end tag", fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-g-path-x"), "svg path"],
-	["opens a template with no body yet", "<head></head><template>", undefined],
+	["opens a template with no body yet", fixture("html", "parse-html-insertion-modes-opens-a-template-with-no-body-yet"), undefined],
 	[
 		"re-nests a badly nested table, font and anchor",
-		"<TABLE>\n<TR>\n<CENTER><CENTER><TD></TD></TR><TR>\n<FONT>\n<TABLE><tr></tr></TABLE>\n</P>\n<a></font><font></a>\nThis page contains an insanely badly-nested tag sequence.",
+		fixture("html", "parse-html-insertion-modes-re-nests-a-badly-nested-table-font-and-anchor"),
 		undefined
 	],
 	[
 		"parses a template fragment with a form in it",
-		'<template><form><input name="q"></form><div>second</div></template>',
+		fixture("html", "parse-html-insertion-modes-parses-a-template-fragment-with-a-form-in-it"),
 		"template"
 	],
 	[
 		"breaks a paragraph out of foreign content",
-		"<!doctype html><p><math></p>a",
+		fixture("html", "parse-html-insertion-modes-breaks-a-paragraph-out-of-foreign-content"),
 		undefined
 	],
 	[
 		"ignores a second form in a table",
-		"<!doctype html><table><form><form>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-second-form-in-a-table"),
 		undefined
 	],
-	["closes an implied tbody from a cell", "<table><td></tbody>A", undefined],
+	["closes an implied tbody from a cell", fixture("html", "parse-html-insertion-modes-closes-an-implied-tbody-from-a-cell"), undefined],
 	[
 		"ends a template inside a table body",
-		"<table><tbody><template></tbody></template>",
+		fixture("html", "parse-html-insertion-modes-ends-a-template-inside-a-table-body"),
 		undefined
 	],
 	[
 		"pops a select and a template out of a cell",
-		"<body><table><tr><td><select><template>Foo</template><caption>A</table>",
+		fixture("html", "parse-html-insertion-modes-pops-a-select-and-a-template-out-of-a-cell"),
 		undefined
 	],
 	[
@@ -2739,40 +2739,40 @@ const CASES = [
 	],
 	[
 		"foster-parents text out of a column group",
-		"<table><colgroup> foo</colgroup></table>",
+		fixture("html", "parse-html-insertion-modes-foster-parents-text-out-of-a-column-group"),
 		undefined
 	],
 	[
 		"breaks out of MathML text integration points",
-		"<b></b><mglyph/><i></i><malignmark/><u></u><ms/>X",
+		fixture("html", "parse-html-insertion-modes-breaks-out-of-math-ml-text-integration-points"),
 		"math ms"
 	],
 	[
 		"handles a break and a comment in head noscript",
-		"<head><noscript></br><!--foo--></noscript>",
+		fixture("html", "parse-html-insertion-modes-handles-a-break-and-a-comment-in-head-noscript"),
 		undefined
 	],
 	[
 		"implies the end of a ruby base",
-		"<html><ruby>a<rb>b<rb></ruby></html>",
+		fixture("html", "parse-html-insertion-modes-implies-the-end-of-a-ruby-base"),
 		undefined
 	],
 	[
 		"appends a comment after the body to the html element",
-		"<!doctype html><html></p><!--foo-->",
+		fixture("html", "parse-html-insertion-modes-appends-a-comment-after-the-body-to-the-html-element"),
 		undefined
 	],
 	[
 		"opens a column group inside a template",
-		"<body><template><col><colgroup>",
+		fixture("html", "parse-html-insertion-modes-opens-a-column-group-inside-a-template"),
 		undefined
 	],
-	["reads a textarea fragment as text", "direct textarea content", "textarea"],
-	["ends a caption fragment", "</caption><div>", "caption"],
-	["ends a frameset fragment", "</frameset><frame>", "frameset"],
+	["reads a textarea fragment as text", fixture("html", "parse-html-insertion-modes-reads-a-textarea-fragment-as-text"), "textarea"],
+	["ends a caption fragment", fixture("html", "parse-html-insertion-modes-ends-a-caption-fragment"), "caption"],
+	["ends a frameset fragment", fixture("html", "parse-html-insertion-modes-ends-a-frameset-fragment"), "frameset"],
 	[
 		"foster-parents a formatting element out of a table",
-		"<table><a>1<td>2</td>3</table>",
+		fixture("html", "parse-html-insertion-modes-foster-parents-a-formatting-element-out-of-a-table"),
 		undefined
 	],
 	[
@@ -2787,33 +2787,33 @@ const CASES = [
 	],
 	[
 		"ignores a doctype inside a column group",
-		"<table><colgroup><!DOCTYPE html></colgroup></table>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-doctype-inside-a-column-group"),
 		undefined
 	],
 	[
 		"ignores a doctype in foreign content",
-		"<svg><!DOCTYPE html></svg>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-doctype-in-foreign-content"),
 		undefined
 	],
-	["parses a body start tag in an SVG desc fragment", "<body>X", "svg desc"],
+	["parses a body start tag in an SVG desc fragment", fixture("html", "parse-html-insertion-modes-parses-a-body-start-tag-in-an-svg-desc-fragment"), "svg desc"],
 	[
 		"ignores a stray menuitem end tag",
-		"<!DOCTYPE html><head></menuitem>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-stray-menuitem-end-tag"),
 		undefined
 	],
 	[
 		"ignores the end tags a cell has no arc for",
-		"<table><td></body></caption></col></colgroup></html>foo",
+		fixture("html", "parse-html-insertion-modes-ignores-the-end-tags-a-cell-has-no-arc-for"),
 		undefined
 	],
 	[
 		"ignores a template end tag with no template open",
-		"<div></template></div>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-template-end-tag-with-no-template-open"),
 		undefined
 	],
 	[
 		"opens a row inside a template",
-		"<body><template><tr><div></div></tr></template>",
+		fixture("html", "parse-html-insertion-modes-opens-a-row-inside-a-template"),
 		undefined
 	],
 	[
@@ -2823,32 +2823,32 @@ const CASES = [
 	],
 	[
 		"leaves annotation-xml when its SVG child closes",
-		"<math><annotation-xml><svg></svg></annotation-xml><mi>",
+		fixture("html", "parse-html-insertion-modes-leaves-annotation-xml-when-its-svg-child-closes"),
 		undefined
 	],
 	[
 		"reads noframes text after the frameset closed",
-		"<!doctype html><frameset></frameset><noframes>abc",
+		fixture("html", "parse-html-insertion-modes-reads-noframes-text-after-the-frameset-closed"),
 		undefined
 	],
 	[
 		"closes an optgroup when the next one opens",
-		"<!DOCTYPE html><select><optgroup><option><optgroup>",
+		fixture("html", "parse-html-insertion-modes-closes-an-optgroup-when-the-next-one-opens"),
 		undefined
 	],
 	[
 		"reopens a form once the table that held it closed",
-		"<!doctype html><table><form></table><form>",
+		fixture("html", "parse-html-insertion-modes-reopens-a-form-once-the-table-that-held-it-closed"),
 		undefined
 	],
 	[
 		"ignores a plaintext end tag in a plaintext fragment",
-		"</plaintext>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-plaintext-end-tag-in-a-plaintext-fragment"),
 		"plaintext"
 	],
 	[
 		"ignores the end tags a table body has no arc for",
-		"<table><tbody></body></caption></col></colgroup></html></td></th></tr>",
+		fixture("html", "parse-html-insertion-modes-ignores-the-end-tags-a-table-body-has-no-arc-for"),
 		undefined
 	],
 	["drops an input from a select fragment", fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-input"), "select"],
@@ -2857,73 +2857,73 @@ const CASES = [
 	// its own arc in every insertion mode, and each one is a separate ignore.
 	[
 		"ignores a second doctype before html",
-		"<!DOCTYPE html><!DOCTYPE html>",
+		fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-doctype-html"),
 		undefined
 	],
-	["ignores a doctype before head", "<html><!DOCTYPE html>", undefined],
+	["ignores a doctype before head", fixture("html", "parse-html-insertion-modes-ignores-a-doctype-before-head"), undefined],
 	[
 		"ignores a doctype in head",
-		"<html><head><!DOCTYPE html></head>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-doctype-in-head"),
 		undefined
 	],
 	[
 		"ignores a doctype after head",
-		"<html><head></head><!DOCTYPE html>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-doctype-after-head"),
 		undefined
 	],
 	[
 		"ignores a doctype after the body",
-		"<body></body><!DOCTYPE html>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-doctype-after-the-body"),
 		undefined
 	],
 	[
 		"ignores a doctype after after the body",
-		"<html><body></body></html><!DOCTYPE html>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-doctype-after-after-the-body"),
 		undefined
 	],
 	[
 		"merges a repeated html start tag before head",
-		"<!DOCTYPE html><html><html abc:def=gh><xyz:abc></xyz:abc>",
+		fixture("html", "parse-html-insertion-modes-merges-a-repeated-html-start-tag-before-head"),
 		undefined
 	],
 	[
 		"merges a repeated html start tag in head",
-		"<!DOCTYPE html><head><html id=x>",
+		fixture("html", "parse-html-insertion-modes-merges-a-repeated-html-start-tag-in-head"),
 		undefined
 	],
 	[
 		"merges a repeated html start tag after head",
-		"<!doctype html><html a=b><head></head><html c=d>",
+		fixture("html", "parse-html-insertion-modes-merges-a-repeated-html-start-tag-after-head"),
 		undefined
 	],
 	[
 		"merges a repeated html start tag after the body",
-		'<!DOCTYPE html>X</body><html id="x">',
+		fixture("html", "parse-html-insertion-modes-merges-a-repeated-html-start-tag-after-the-body"),
 		undefined
 	],
 	[
 		"merges a repeated html start tag in head noscript",
-		'<head><noscript><html class="foo"><!--foo--></noscript>',
+		fixture("html", "parse-html-insertion-modes-merges-a-repeated-html-start-tag-in-head-noscript"),
 		undefined
 	],
 	[
 		"treats an html start tag in a column group as in-body",
-		"<table><colgroup><html></colgroup></table>",
+		fixture("html", "parse-html-insertion-modes-treats-an-html-start-tag-in-a-column-group-as-in-body"),
 		undefined
 	],
 	[
 		"ignores a repeated head start tag after head",
-		"<html><head></head><template></template><head>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-repeated-head-start-tag-after-head"),
 		undefined
 	],
 	[
 		"ignores a repeated head end tag in head",
-		"<!DOCTYPE html><HTML><META><HEAD></HEAD></HTML>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-repeated-head-end-tag-in-head"),
 		undefined
 	],
 	[
 		"ignores a paragraph end tag after head",
-		"<!doctype html><head></head></p><!--foo-->",
+		fixture("html", "parse-html-insertion-modes-ignores-a-paragraph-end-tag-after-head"),
 		undefined
 	],
 	[
@@ -2931,81 +2931,81 @@ const CASES = [
 		fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-body-a-b"),
 		undefined
 	],
-	["ends the body from an html fragment", "<body></body></html>", "html"],
+	["ends the body from an html fragment", fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-body-body-html"), "html"],
 
 	// NUL handling and text insertion.
-	["drops a NUL before a frameset", "<html>\0<frameset></frameset>", undefined],
+	["drops a NUL before a frameset", fixture("html", "parse-html-insertion-modes-drops-a-nul-before-a-frameset"), undefined],
 	[
 		"keeps a frameset out once text arrived",
-		"<html>a\0a<frameset></frameset>",
+		fixture("html", "parse-html-insertion-modes-keeps-a-frameset-out-once-text-arrived"),
 		undefined
 	],
 	[
 		"foster-parents text between two formatting elements",
-		"<!doctype html>a<i>b<table>c<b>d</i>e</b>f",
+		fixture("html", "parse-html-insertion-modes-foster-parents-text-between-two-formatting-elements"),
 		undefined
 	],
 	[
 		"strips the newline a pre element starts with",
-		"<!DOCTYPE html><html><head></head><body><pre>\n</pre></body></html>",
+		fixture("html", "parse-html-insertion-modes-strips-the-newline-a-pre-element-starts-with"),
 		undefined
 	],
 
 	// Table-related modes reached through a template or a fragment.
 	[
 		"ignores a table end tag inside a template",
-		"<body><template><thead></thead></table><tbody></tbody></template></body>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-table-end-tag-inside-a-template"),
 		undefined
 	],
 	[
 		"ignores a row end tag inside a template",
-		"<body><template><td></td></tr><td></td></template>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-row-end-tag-inside-a-template"),
 		undefined
 	],
 	[
 		"ignores a row end tag inside a template cell",
-		"<body><table><template><td></tr><div></template></table>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-row-end-tag-inside-a-template-cell"),
 		undefined
 	],
 	[
 		"ignores a column group end tag inside a template",
-		"<body><template><col></colgroup>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-column-group-end-tag-inside-a-template"),
 		undefined
 	],
 	[
 		"ends a column group on text inside a template",
-		"<body><template><col>Hello",
+		fixture("html", "parse-html-insertion-modes-ends-a-column-group-on-text-inside-a-template"),
 		undefined
 	],
 	[
 		"closes a cell on a mismatched th end tag",
-		"<table><tr><td></th>",
+		fixture("html", "parse-html-insertion-modes-closes-a-cell-on-a-mismatched-th-end-tag"),
 		undefined
 	],
 	[
 		"ignores table-section end tags in a row fragment",
-		"</tbody></tfoot></thead><td>",
+		fixture("html", "parse-html-insertion-modes-ignores-table-section-end-tags-in-a-row-fragment"),
 		"tr"
 	],
 	[
 		"ignores a thead end tag in a table body",
-		"<table><tbody></thead>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-thead-end-tag-in-a-table-body"),
 		undefined
 	],
-	["opens an implied tbody in a table fragment", "<table><tr>", "table"],
+	["opens an implied tbody in a table fragment", fixture("html", "parse-html-insertion-modes-opens-an-implied-tbody-in-a-table-fragment"), "table"],
 	[
 		"clears a table body context across nested tables",
-		"<a><table><td><a><table></table><a></tr><a></table><b>X</b>C<a>Y",
+		fixture("html", "parse-html-insertion-modes-clears-a-table-body-context-across-nested-tables"),
 		undefined
 	],
 	[
 		"runs thorough implied end tags for a template in a table",
-		"<table><thead><template><td></template></table>",
+		fixture("html", "parse-html-insertion-modes-runs-thorough-implied-end-tags-for-a-template-in-a"),
 		undefined
 	],
 
 	// Foreign content and scope boundaries.
-	["ignores a foreign end tag with no match", "</path>X", "svg path"],
+	["ignores a foreign end tag with no match", fixture("html", "parse-html-insertion-modes-ignores-a-foreign-end-tag-with-no-match"), "svg path"],
 	[
 		"ignores a frameset start tag in an SVG desc fragment",
 		fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-frameset-x"),
@@ -3013,7 +3013,7 @@ const CASES = [
 	],
 	[
 		"ignores a tbody start tag inside MathML in a thead fragment",
-		"<math><thead><mo><tbody>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-tbody-start-tag-inside-math-ml-in-a-thead"),
 		"thead"
 	],
 	["closes a div across an SVG element", fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-div-svg"), undefined],
@@ -3026,52 +3026,52 @@ const CASES = [
 	// Arcs the corpus does not reach at all.
 	[
 		"ignores a second form end tag inside a template",
-		"<template><form></form></form></template>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-second-form-end-tag-inside-a-template"),
 		undefined
 	],
 	[
 		"drops a table cell holding nothing but a NUL",
-		"<table>\0</table>",
+		fixture("html", "parse-html-insertion-modes-drops-a-table-cell-holding-nothing-but-a-nul"),
 		undefined
 	],
 	[
 		"ignores a template end tag after head",
-		"<head></head></template>",
+		fixture("html", "parse-html-insertion-modes-ignores-a-template-end-tag-after-head"),
 		undefined
 	],
 	[
 		"keeps a paragraph open around a table in quirks mode from a doctype naming no html",
-		"<!DOCTYPE potato><p><table>",
+		fixture("html", "parse-html-insertion-modes-keeps-a-paragraph-open-around-a-table-in-quirks-mode"),
 		undefined
 	],
 	[
 		"ignores a form end tag whose form the table already closed",
-		"<table><form></table></form>x",
+		fixture("html", "parse-html-insertion-modes-ignores-a-form-end-tag-whose-form-the-table-already"),
 		undefined
 	],
 	[
 		"drops a formatting end tag a marker hides nothing behind",
-		"<applet></b>x",
+		fixture("html", "parse-html-insertion-modes-drops-a-formatting-end-tag-a-marker-hides-nothing"),
 		undefined
 	],
 	[
 		"drops a formatting end tag a marker on a marker hides",
-		"<applet><marquee></b>x",
+		fixture("html", "parse-html-insertion-modes-drops-a-formatting-end-tag-a-marker-on-a-marker-hides"),
 		undefined
 	],
 	[
 		"drops a formatting end tag naming another element below the marker",
-		"<i><applet></b>x",
+		fixture("html", "parse-html-insertion-modes-drops-a-formatting-end-tag-naming-another-element"),
 		undefined
 	],
 	[
 		"drops the formatting entry whose element an end tag already closed",
-		"<p id=a><b><p id=b></b>TEST",
+		fixture("html", "parse-html-insertion-modes-drops-the-formatting-entry-whose-element-an-end-tag"),
 		undefined
 	],
 	[
 		"keeps the bookmark when the inner loop removes entries above it",
-		"<b><em><x><y><z><aside></b></em>",
+		fixture("html", "parse-html-insertion-modes-keeps-the-bookmark-when-the-inner-loop-removes"),
 		undefined
 	],
 	[
@@ -3081,117 +3081,117 @@ const CASES = [
 	],
 	[
 		"drops whitespace before the html element",
-		"<!DOCTYPE html> <html>",
+		fixture("html", "parse-html-insertion-modes-drops-whitespace-before-the-html-element"),
 		undefined
 	],
 	[
 		"keeps whitespace in a head noscript",
-		"<head><noscript> </noscript>",
+		fixture("html", "parse-html-insertion-modes-keeps-whitespace-in-a-head-noscript"),
 		undefined
 	],
 	[
 		"reopens a nested form under an implied end tag in a template",
-		"<template><form><li><form>",
+		fixture("html", "parse-html-insertion-modes-reopens-a-nested-form-under-an-implied-end-tag-in-a"),
 		undefined
 	],
 	[
 		"leaves a list item a special element shields open",
-		"<li>a<section><li>b",
+		fixture("html", "parse-html-insertion-modes-leaves-a-list-item-a-special-element-shields-open"),
 		undefined
 	],
 	[
 		"walks past an ordinary element to the definition list item",
-		"<foo>1<dd>2</foo>",
+		fixture("html", "parse-html-insertion-modes-walks-past-an-ordinary-element-to-the-definition-list"),
 		undefined
 	],
 	[
 		"walks past a foreign element below a special one for a definition item",
-		"<svg><foreignObject><dd>",
+		fixture("html", "parse-html-insertion-modes-walks-past-a-foreign-element-below-a-special-one-for"),
 		undefined
 	],
 	[
 		"leaves a definition item a special element shields open",
-		"<dd>a<section><dt>b",
+		fixture("html", "parse-html-insertion-modes-leaves-a-definition-item-a-special-element-shields"),
 		undefined
 	],
 	[
 		"opens a link where a marker hides no other",
-		"<applet><a>x",
+		fixture("html", "parse-html-insertion-modes-opens-a-link-where-a-marker-hides-no-other"),
 		undefined
 	],
 	[
 		"closes a nobr with the adoption agency",
-		"<nobr>1<nobr>2",
+		fixture("html", "parse-html-insertion-modes-closes-a-nobr-with-the-adoption-agency"),
 		undefined
 	],
 	[
 		"keeps frameset-ok after a hidden input",
-		"<input type=hidden><frameset>",
+		fixture("html", "parse-html-insertion-modes-keeps-frameset-ok-after-a-hidden-input"),
 		undefined
 	],
 	[
 		"inserts a param as a void element",
-		"<param>A",
+		fixture("html", "parse-html-insertion-modes-inserts-a-param-as-a-void-element"),
 		undefined
 	],
 	[
 		"reads an image start tag as img",
-		"<p><image></p>",
+		fixture("html", "parse-html-insertion-modes-reads-an-image-start-tag-as-img"),
 		undefined
 	],
 	[
 		"reads xmp, iframe and noembed content as raw text",
-		"<xmp><b></xmp><iframe><b></iframe><noembed><b></noembed>x",
+		fixture("html", "parse-html-insertion-modes-reads-xmp-iframe-and-noembed-content-as-raw-text"),
 		undefined
 	],
 	[
 		"closes an option outside a select at the next option",
-		"<option>a<option>b",
+		fixture("html", "parse-html-insertion-modes-closes-an-option-outside-a-select-at-the-next-option"),
 		undefined
 	],
 	[
 		"inserts ruby parts outside a ruby",
-		"<rb>a<rtc>b<rp>c<rt>d",
+		fixture("html", "parse-html-insertion-modes-inserts-ruby-parts-outside-a-ruby"),
 		undefined
 	],
 	[
 		"closes a list item at its end tag",
-		"<ul><li>A</li>B</ul>",
+		fixture("html", "parse-html-insertion-modes-closes-a-list-item-at-its-end-tag"),
 		undefined
 	],
 	[
 		"ignores a sarcasm end tag",
-		"<div></sarcasm>x",
+		fixture("html", "parse-html-insertion-modes-ignores-a-sarcasm-end-tag"),
 		undefined
 	],
 	[
 		"closes a marquee at its end tag",
-		"<marquee>a</marquee>b",
+		fixture("html", "parse-html-insertion-modes-closes-a-marquee-at-its-end-tag"),
 		undefined
 	],
 	[
 		"keeps an end tag cut off by the end of the file as script text",
-		"<script></S",
+		fixture("html", "parse-html-insertion-modes-keeps-an-end-tag-cut-off-by-the-end-of-the-file-as"),
 		undefined
 	],
 	[
 		"keeps an end tag cut off by the end of the file as title text",
-		"<title>a</title",
+		fixture("html", "parse-html-insertion-modes-keeps-an-end-tag-cut-off-by-the-end-of-the-file-as-2"),
 		undefined
 	],
 	[
 		"goes back to the body for content after the body",
-		"</body>x",
+		fixture("html", "parse-html-insertion-modes-goes-back-to-the-body-for-content-after-the-body"),
 		undefined
 	],
 	[
 		"drops text after the frameset that is not whitespace",
-		"<frameset></frameset>x",
+		fixture("html", "parse-html-insertion-modes-drops-text-after-the-frameset-that-is-not-whitespace"),
 		undefined
 	],
 	[
 		"keeps whitespace after the html end tag in the body",
-		"</html> <head>",
+		fixture("html", "parse-html-insertion-modes-keeps-whitespace-after-the-html-end-tag-in-the-body"),
 		undefined
 	],
 	[
@@ -3201,7 +3201,7 @@ const CASES = [
 	],
 	[
 		"takes a declarative shadow root on a custom element",
-		"<x-y>a<template shadowrootmode=open></template>b",
+		fixture("html", "parse-html-insertion-modes-takes-a-declarative-shadow-root-on-a-custom-element"),
 		undefined
 	]
 ];
@@ -3219,7 +3219,7 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 		// The engine takes the shadow root's template out of the tree, so "a" and
 		// "b" are one text node there; the clone the adoption agency makes takes it.
 		expect(
-			treeOf('<b><div>a<template shadowrootmode="open"></template>b</b>')
+			treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-merges-the-texts-a-declarative"))
 		).toBe(
 			[
 				"| <html>",
@@ -3238,7 +3238,7 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 
 	it("fosters text past foreign elements on the stack", () => {
 		expect(
-			treeOf("<svg><foreignObject><table>x</table></foreignObject></svg>")
+			treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-fosters-text-past-foreign"))
 		).toBe(
 			[
 				"| <html>",
@@ -3253,7 +3253,7 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 	});
 
 	it("ignores a DOCTYPE in foreign content", () => {
-		expect(treeOf("<svg><!DOCTYPE html><g/></svg>")).toBe(
+		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-ignores-a-doctype-in-foreign"))).toBe(
 			[
 				"| <html>",
 				"|   <head>",
@@ -3266,9 +3266,9 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 
 	it("keeps frameset-ok across whitespace and NUL in foreign content", () => {
 		const frameset = ["| <html>", "|   <head>", "|   <frameset>"].join("\n");
-		expect(treeOf("<svg> </svg><frameset>")).toBe(frameset);
-		expect(treeOf("<svg>\0</svg><frameset>")).toBe(frameset);
-		expect(treeOf("<svg>x</svg><frameset>")).toBe(
+		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-keeps-frameset-ok-across"))).toBe(frameset);
+		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-keeps-frameset-ok-across-2"))).toBe(frameset);
+		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-keeps-frameset-ok-across-3"))).toBe(
 			[
 				"| <html>",
 				"|   <head>",
@@ -3281,7 +3281,7 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 
 	it("inserts the whitespace among characters a column group without a colgroup ignores", () => {
 		// Each character is its own token, so only the non-whitespace ones go.
-		expect(treeOf("<template><col>a b<col></template>")).toBe(
+		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-inserts-the-whitespace-among"))).toBe(
 			[
 				"| <html>",
 				"|   <head>",
@@ -3293,16 +3293,16 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 				"|   <body>"
 			].join("\n")
 		);
-		expect(treeOf("a b\tc", "colgroup")).toBe('| " \t"');
+		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-inserts-the-whitespace-among-2"), "colgroup")).toBe('| " \t"');
 	});
 
 	it("leaves the tokenizer in the data state after a tag the column group ignored", () => {
 		// The ignored start tag never runs the RCDATA / RAWTEXT switch, so what
 		// follows is markup: a comment, and an element the mode ignores too.
-		expect(treeOf("<textarea><!--c-->  <bgsound>", "colgroup")).toBe(
+		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-leaves-the-tokenizer-in-the"), "colgroup")).toBe(
 			["| <!-- c -->", '| "  "'].join("\n")
 		);
-		expect(treeOf("<template><col><style>x</style> <col></template>")).toBe(
+		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-leaves-the-tokenizer-in-the-2"))).toBe(
 			[
 				"| <html>",
 				"|   <head>",
@@ -3324,28 +3324,28 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 				expect.objectContaining({ type: NodeType.Text, data: "a&amp;b<p>" })
 			]);
 		}
-		expect(treeOf("x<plaintext>&amp;", "tbody")).toBe(
+		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references"), "tbody")).toBe(
 			['| "x"', "| <plaintext>", '|   "&amp;"'].join("\n")
 		);
 	});
 
 	it("reads the whole input as the text of a raw-text fragment context", () => {
 		// No start tag opened the context, so no end tag is appropriate to it.
-		expect(treeOf("a\0</textarea>\0<b>&amp;", "textarea")).toBe(
+		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the"), "textarea")).toBe(
 			'| "a�</textarea>�<b>&"'
 		);
-		expect(treeOf("a</style><b>&amp;\r\n", "style")).toBe(
+		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-2"), "style")).toBe(
 			'| "a</style><b>&amp;\n"'
 		);
-		expect(treeOf("</script><!--<b>", "script")).toBe('| "</script><!--<b>"');
-		expect(treeOf("</title", "title")).toBe('| "</title"');
-		const doc = parseHtmlRefs("</noscript><b>x", 0, {
+		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-3"), "script")).toBe('| "</script><!--<b>"');
+		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-4"), "title")).toBe('| "</title"');
+		const doc = parseHtmlRefs(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-5"), 0, {
 			fragmentContext: "noscript",
 			scripting: true
 		});
 		expect(serializeHtmlTree(A.child(0, doc))).toBe('| "</noscript><b>x"');
 		// a foreign context's title is markup, and so is what follows
-		expect(treeOf("</title><b>", "svg title")).toBe("| <b>");
+		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-6"), "svg title")).toBe("| <b>");
 	});
 
 	it("clears the whole name memo once a document filled every slot", () => {
@@ -3354,8 +3354,8 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 		for (let n = 1; n <= 512; n++) src += `<${"z".repeat(n)}>`;
 		expect(find(src, "z".repeat(512)).tagName).toBe("z".repeat(512));
 		// the next parse reads every name afresh
-		expect(body("<zz><Zz>").map((n) => n.tagName)).toEqual(["zz"]);
-		expect(find("<ZZZ><zzz>", "zzz").children[0]).toEqual(
+		expect(body(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-clears-the-whole-name-memo")).map((n) => n.tagName)).toEqual(["zz"]);
+		expect(find(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-clears-the-whole-name-memo-2"), "zzz").children[0]).toEqual(
 			expect.objectContaining({ tagName: "zzz" })
 		);
 	});
@@ -3363,7 +3363,7 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 	it("leaves the link below a marker open when a later one is closed", () => {
 		// The rule removes the `a` it found after the last marker, not the first
 		// one in the list: the outer link is another scope's and stays open.
-		expect(treeOf("<a>1<marquee><a>2<a>3</marquee>4")).toBe(
+		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-leaves-the-link-below-a-marker"))).toBe(
 			[
 				"| <html>",
 				"|   <head>",
@@ -3383,7 +3383,7 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 	it("keeps the whitespace before other text in a head noscript", () => {
 		// Each character is its own token: the newline is the head rules', and
 		// only the `x` pops the noscript.
-		expect(treeOf("<head><noscript><!--c-->\nx")).toBe(
+		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-keeps-the-whitespace-before"))).toBe(
 			[
 				"| <html>",
 				"|   <head>",
@@ -3400,13 +3400,13 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 	it("keeps every form in template contents, a template fragment's too", () => {
 		// The form element pointer is not used while parsing template contents
 		// (§13.2.4.4), which a template fragment context is as well.
-		expect(treeOf("<form><form>", "template")).toBe(
+		expect(treeOf(fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-form-form"), "template")).toBe(
 			["| <form>", "|   <form>"].join("\n")
 		);
-		expect(treeOf("<table><form><form>", "template")).toBe(
+		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-keeps-every-form-in-template"), "template")).toBe(
 			["| <table>", "|   <form>", "|   <form>"].join("\n")
 		);
-		expect(treeOf("<template><table><form><form>")).toBe(
+		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-keeps-every-form-in-template-2"))).toBe(
 			[
 				"| <html>",
 				"|   <head>",
@@ -3421,7 +3421,7 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 	});
 
 	it("reads a noscript in the body as raw text when scripting", () => {
-		const doc = parseHtmlRefs("<body><noscript><b>x</noscript>y", 0, {
+		const doc = parseHtmlRefs(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-reads-a-noscript-in-the-body"), 0, {
 			scripting: true
 		});
 		expect(serializeHtmlTree(doc)).toBe(

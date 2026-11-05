@@ -7234,3 +7234,7 @@ exports[`CSS syntax — fixtures prints source-processor-merge-distant-rules-rea
 exports[`CSS syntax — fixtures prints source-processor-merge-distant-rules-reads-a-shorthand-between-through-the {"mode":"minify","mergeDistantRules":true} 1`] = `".a{border-top-width:0}.b{border:1px solid red}.c{border-top-width:0}"`;
 
 exports[`CSS syntax — fixtures prints source-processor-merge-distant-rules-reads-all-between-as-declaring-everything {"mode":"minify","mergeDistantRules":true} 1`] = `".a{color:red}.b{all:unset}.c{color:red}"`;
+
+exports[`CSS syntax — fixtures prints source-processor-merging-adjacent-style-writes-a-style-attribute-whose-2 {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — fixtures prints source-processor-mode-css-walks-without-printing-when-none-is-asked-for {"mode":"minify","source":"in.txt"} 1`] = `"a{color:red}"`;

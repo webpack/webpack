@@ -358,7 +358,7 @@ describe("CssSyntax — block streaming", () => {
 		// which `null` (the block-less at-rules) would deny.
 		expect(body(`@media screen{${BIG}}`)).toEqual([0, 0]);
 		expect(body(`@media screen{${SMALL}}`)).toEqual([0, 4]);
-		expect(body("@import url(x);")).toEqual([null, null]);
+		expect(body(fixture("css", "css-syntax-block-streaming-reads-a-streamed-rule-s-body-as-an-empty-block-not-as"))).toEqual([null, null]);
 	});
 
 	it("honours skipChildren() and recurseBlocks on a streamed rule", () => {
@@ -590,7 +590,7 @@ describe("CssSyntax — minify token-boundary safety", () => {
 			// The escape's own terminator is no longer needed once `y` follows it
 			// inside the token, but the separator the comment stood for is.
 			[fixture("css", "css-syntax-minify-token-boundary-safety-separates-every-junction-that-would-read-6"), "a{b:x \\40y}"],
-			["a{b:\\40/**/x}", "a{b:\\40  x}"],
+			[fixture("css", "css-syntax-minify-token-boundary-safety-separates-every-junction-that-would-read-10"), "a{b:\\40  x}"],
 			// Non-ASCII is an ident code point, so these would join into one ident.
 			[fixture("css", "css-syntax-minify-token-boundary-safety-separates-every-junction-that-would-read-7"), "a{b:\u00E9 \u00E9}"],
 			// `<!` and `->` guard an accidental CDO / CDC.
@@ -681,13 +681,13 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		const open = mapped(fixture("css", "css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-41"));
 		expect(open.code).toBe("a{color:red}b{--x:f(g");
 		expect(open.map.mappings).toBe(
-			mapped("a{color:red}\nb{--x:f( g)}").map.mappings
+			mapped(fixture("css", "css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-42")).map.mappings
 		);
 	});
 
 	it("consumes a CRLF pair as one escape terminator", () => {
 		// An escape that has to stay keeps its whole CRLF terminator.
-		expect(min(".\\31\r\nabc{color:red}")).toBe(".\\31\r\nabc{color:red}");
+		expect(min(fixture("css", "css-syntax-minify-token-boundary-safety-consumes-a-crlf-pair-as-one-escape-8"))).toBe(".\\31\r\nabc{color:red}");
 	});
 
 	it("parts a value the escape before it already ate the separator for", () => {
@@ -699,7 +699,7 @@ describe("CssSyntax — minify token-boundary safety", () => {
 			expect(out).toBe(`a{b:\\${digits}\n c}`);
 		}
 		// A CRLF terminator is one terminator, so it needs the one separator too.
-		expect(min("a{b:\\31\r\n\tc}")).toBe("a{b:\\31\r\n c}");
+		expect(min(fixture("css", "css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-7"))).toBe("a{b:\\31\r\n c}");
 	});
 });
 
@@ -717,7 +717,7 @@ describe("CssSyntax — minify keeps input the grammar rejects", () => {
 		const rule = A.field(
 			0,
 			Field.rules,
-			parseAStylesheet("a{*zoom:1;color:red}")
+			parseAStylesheet(fixture("css", "css-syntax-minify-keeps-input-the-grammar-rejects-never-materializes-rejected"))
 		);
 		expect(A.fieldCount(Field.declarations, rule)).toBe(1);
 		expect(A.fieldCount(Field.rules, rule)).toBe(0);
@@ -751,7 +751,7 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 				if (path.within(NodeType.Declaration)) throw new Error("boom");
 			}
 		});
-		expect(() => processor.process("a{color:red}")).toThrow("boom");
+		expect(() => processor.process(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"))).toThrow("boom");
 	});
 });
 
@@ -923,7 +923,7 @@ describe("CssSyntax — minify transforms, in-process", () => {
 
 	it("keeps url() quotes a url-token could not carry", () => {
 		// A control code point, and an already-unquoted url.
-		expect(min('a{background:url("a\u0001b.png")}')).toBe(
+		expect(min(fixture("css", "css-syntax-minify-transforms-in-process-keeps-url-quotes-a-url-token-could-not-4"))).toBe(
 			'a{background:url("a\u0001b.png")}'
 		);
 	});
@@ -1038,7 +1038,7 @@ describe("CssSyntax — the per-transform switches", () => {
 
 		// A `g` flag would carry an index from one comment to the next.
 		it("matches a global pattern from the start each time", () => {
-			expect(min("a{b:c}/*k1*/d{e:f}/*k2*/", { comments: /k\d/g })).toBe(
+			expect(min(fixture("css", "css-syntax-the-per-transform-switches-comments-matches-a-global-pattern-from-the"), { comments: /k\d/g })).toBe(
 				"a{b:c}/*k1*/d{e:f}/*k2*/"
 			);
 		});
@@ -1056,7 +1056,7 @@ describe("CssSyntax — print modes", () => {
 		new SourceProcessor().process(src, { mode }).code;
 
 	it("prints nothing unless output is asked for", () => {
-		expect(new SourceProcessor().process(".a{color:red}")).toBeUndefined();
+		expect(new SourceProcessor().process(fixture("css", "css-syntax-print-modes-prints-nothing-unless-output-is-asked-for"))).toBeUndefined();
 	});
 
 	it("beautifies to something that minifies back the same", () => {
@@ -1745,7 +1745,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 							if (++seen === 2) throw new Error("thrown mid-parse");
 						}
 					})
-					.process(".held{left:0}.threw{left:0}", { mode: "minify" })
+					.process(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-sibling-rules-printing-95"), { mode: "minify" })
 			).toThrow("thrown mid-parse");
 		});
 	});
@@ -2332,17 +2332,17 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 	});
 
 	it("names the language its media type carries, and declines an unknown one", () => {
-		expect(offered('.a{background:url("data:text/css,a{color:red}")}')).toEqual(
-			[["css", "a{color:red}"]]
+		expect(offered(fixture("css", "source-processor-render-embedded-source-over-a-data-url-names-the-language-its"))).toEqual(
+			[["css", fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14")]]
 		);
 		expect(
-			offered('.a{background:url("data:application/json,{\\"a\\":1}")}')
+			offered(fixture("css", "source-processor-render-embedded-source-over-a-data-url-names-the-language-its-2"))
 		).toEqual([["json", '{"a":1}']]);
 		// An image webpack has no notion of is never decoded.
 		expect(
-			offered('.a{background:url("data:image/png;base64,iVBORw0KGgo=")}')
+			offered(fixture("css", "source-processor-render-embedded-source-over-a-data-url-names-the-language-its-3"))
 		).toEqual([]);
-		expect(offered('.a{background:url("./img.png")}')).toEqual([]);
+		expect(offered(fixture("css", "source-processor-render-embedded-source-over-a-data-url-names-the-language-its-4"))).toEqual([]);
 	});
 
 	it("offers every language `EMBEDDED_LANGUAGES` names, and prints each answer", () => {
@@ -2628,12 +2628,12 @@ describe("CssSyntax minify — light-dark()", () => {
 	it("says which half a rule setting `color-scheme` takes", () => {
 		// `only` narrows how the scheme is chosen, and `normal` is the light one.
 		expect(
-			minifyFor("html{color-scheme:only dark}a{color:light-dark(red,blue)}", [
+			minifyFor(fixture("css", "css-syntax-minify-light-dark-says-which-half-a-rule-setting-color-scheme-takes-3"), [
 				"chrome 100"
 			])
 		).toContain("--webpack-light:;--webpack-dark:initial");
 		expect(
-			minifyFor("html{color-scheme:normal}a{color:light-dark(red,blue)}", [
+			minifyFor(fixture("css", "css-syntax-minify-light-dark-says-which-half-a-rule-setting-color-scheme-takes-4"), [
 				"chrome 100"
 			])
 		).toContain("--webpack-light:initial;--webpack-dark:}");
@@ -2652,7 +2652,7 @@ describe("CssSyntax minify — a slot holding its own initial", () => {
 		// Taking the thickness out would bring the rest of the declaration back to
 		// life on an engine that drops it whole, where the author wrote nothing.
 		expect(
-			minifyFor("a{text-decoration:none solid}", ["chrome 50"])
+			minifyFor(fixture("css", "css-syntax-minify-a-slot-holding-its-own-initial-keeps-a-text-decoration-a-slot"), ["chrome 50"])
 		).not.toContain("text-decoration:none}");
 	});
 
@@ -2676,7 +2676,7 @@ describe("CssSyntax minify — nesting the target cannot read", () => {
 		);
 		// Hoisted, the copies share one query, and a rule with none keeps its own.
 		const nested = minifyFor(
-			"a{&:fullscreen{color-scheme:light dark}&:hover{color-scheme:light dark}}b{color:light-dark(red,blue)}",
+			fixture("css", "css-syntax-minify-nesting-the-target-cannot-read-gives-each-prefix-copy-the-4"),
 			["safari 15"]
 		);
 		expect(nested).toBe(
@@ -3050,14 +3050,14 @@ describe("SourceProcessor — mergeDistantRules", () => {
 		}).code;
 
 	it("merges where the rule between touches nothing the block does", () => {
-		expect(minify(".a{color:red}.b{margin:0}.c{color:red}", true)).toContain(
+		expect(minify(fixture("css", "source-processor-merge-distant-rules-gives-an-earlier-rule-the-selectors-of-a"), true)).toContain(
 			".a,.c"
 		);
 	});
 
 	it("does not write a selector the list already carries", () => {
 		expect(
-			minify(".a{color:red}.b{margin:0}.c{color:red}.a{color:red}", true)
+			minify(fixture("css", "source-processor-merge-distant-rules-does-not-write-a-selector-the-list-already"), true)
 		).not.toMatch(/\.a[^{]*,\.a/);
 	});
 
@@ -3406,7 +3406,7 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 			const css = fixture("css", "css-syntax-minify-what-a-comparison-with-other-minifiers-found-for-a-target-7");
 			expect(
 				minifyFor(
-					"a{background-image:-webkit-linear-gradient(red,#ffffff26);background-image:linear-gradient(red,#ffffff26)}",
+					fixture("css", "css-syntax-minify-what-a-comparison-with-other-minifiers-found-for-a-target-8"),
 					["safari 9"]
 				)
 			).toContain("-webkit-linear-gradient");
@@ -3489,7 +3489,7 @@ describe("CssSyntax minify — what a modern target makes dead", () => {
 		// Safari 15 reads a style only through the prefixed spelling.
 		expect(
 			minifyFor(
-				"a{text-decoration:underline dotted;-webkit-text-decoration:underline dotted}",
+				fixture("css", "css-syntax-minify-what-a-modern-target-makes-dead-takes-out-a-text-decoration-2"),
 				["safari 15"]
 			)
 		).toContain("-webkit-text-decoration:underline dotted");
@@ -3848,7 +3848,7 @@ describe("CssSyntax — skipChildren() and stop() while printing", () => {
 						throw new Error("visitor");
 					}
 				})
-				.process("a{b:c}", { mode: "minify" })
+				.process(fixture("css", "css-syntax-nesting-and-error-recovery-rethrows-what-else-fails-a-parse-as-it-is"), { mode: "minify" })
 		).toThrow("visitor");
 	});
 });
@@ -3878,7 +3878,7 @@ describe("CssSyntax — the options a print reads", () => {
 		const skip = { selectorPrelude: true, atRulePrelude: true };
 		processor.process(fixture("css", "css-syntax-the-options-a-print-reads-reads-a-prelude-skip-on-a-walk-and-ignores"), { skip });
 		expect(seen).toHaveLength(1);
-		expect(processor.process("a b{c:d}", { mode: "minify", skip }).code).toBe(
+		expect(processor.process(fixture("css", "css-syntax-the-options-a-print-reads-reads-a-prelude-skip-on-a-walk-and-ignores-2"), { mode: "minify", skip }).code).toBe(
 			"a b{c:d}"
 		);
 	});
@@ -4253,7 +4253,7 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 
 	it("removes a node, in an enter visitor too", () => {
 		expect(
-			print("a{color:red;top:0}", {
+			print(fixture("css", "css-syntax-source-processor-replacing-a-node-removes-a-node-in-an-enter-visitor"), {
 				[NodeType.Declaration]: {
 					enter: (path) => {
 						if (path.name() === "color") path.remove();
@@ -4265,7 +4265,7 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 
 	it("prints what holds a replacement without the rewrites, and the rest with them", () => {
 		expect(
-			print("a{margin:0;margin-top:#f00}b{margin:0;margin-top:1px}", {
+			print(fixture("css", "css-syntax-source-processor-replacing-a-node-prints-what-holds-a-replacement"), {
 				[NodeType.Hash]: (path) => path.replace("1px")
 			})
 		).toBe("a{margin:0;margin-top:1px}b{margin:1px 0 0}");
@@ -4290,7 +4290,7 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 	it("leaves a comment and what follows it as written", () => {
 		// A comment is read from the token stream, not printed as a node.
 		expect(
-			print("/*! x */a{color:red}b{top:0}", {
+			print(fixture("css", "css-syntax-source-processor-replacing-a-node-leaves-a-comment-and-what-follows"), {
 				[NodeType.Comment]: (path) => path.replace("/*y*/")
 			})
 		).toBe("/*! x */a{color:red}b{top:0}");
@@ -4322,23 +4322,23 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 	it("prints a replacement in a custom property's value, the rest as written", () => {
 		/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
 		const visitors = { [NodeType.Hash]: (path) => path.replace("blue") };
-		expect(print("a{--x: foo  #f00 bar(#f00) ;color:#f00}", visitors)).toBe(
+		expect(print(fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-replacement-in-a-custom"), visitors)).toBe(
 			"a{--x:foo  blue bar(blue);color:blue}"
 		);
 		expect(
-			print("a{--x: foo  #f00 bar(#f00) }", visitors, "beautify")
+			print(fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-replacement-in-a-custom-2"), visitors, "beautify")
 		).toBe("a {\n--x: foo  blue bar(blue);\n}");
 		// A comma and whitespace print as written too.
 		expect(
-			print("a{--x: a, b c;b:x}", {
+			print(fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-replacement-in-a-custom-3"), {
 				[NodeType.Comma]: (path) => path.replace(" / "),
 				[NodeType.Whitespace]: (path) => path.remove()
 			})
 		).toBe("a{--x:a / bc;b:x}");
 		// A string the input ran out in is closed, so the `}` stays outside it.
-		expect(print('a{--x:#f00 "open', visitors)).toBe('a{--x:blue "open"}');
+		expect(print(fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-replacement-in-a-custom-4"), visitors)).toBe('a{--x:blue "open"}');
 		// Only a value holding an edit is printed as written.
-		expect(print("a{--x: a  b;--y: c  #f00}", visitors)).toBe(
+		expect(print(fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-replacement-in-a-custom-5"), visitors)).toBe(
 			"a{--x:a b;--y:c  blue}"
 		);
 	});
@@ -4351,7 +4351,7 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 				if (path.name() === "color") path.replace("fill:red");
 			}
 		};
-		expect(print("a{color:#f00;top:0}b{x:#f00}", visitors)).toBe(
+		expect(print(fixture("css", "css-syntax-printing-what-a-visitor-replaced-or-removed-prints-a-replaced-node"), visitors)).toBe(
 			"a{fill:red;top:0}b{x:blue}"
 		);
 	});

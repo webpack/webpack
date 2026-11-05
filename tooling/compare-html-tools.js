@@ -1366,7 +1366,7 @@ const invariantFixtures = () => {
 };
 
 // Why each unit-test input under `test/fixtures/html/` is owed nothing.
-// cspell:ignore namespaceurl importurl
+// cspell:ignore namespaceurl importurl utton
 const UNIT_INPUT_SELECT =
 	"a customizable `<select>` reads its content by the in-body rules; parse5 8 predates customizable selects and drops or moves it";
 const UNIT_INPUT_SHADOW =
@@ -1385,6 +1385,10 @@ const UNIT_INPUT_SORT =
 	"the attributes of an `<html>` the first pass merges in are sorted only on a second pass; same attributes";
 const UNIT_INPUT_TEMPLATE =
 	"a template marker written escaped stays escaped so minifying never turns it into markup, and one written as such stays as written, so its spelling shows in the output";
+const UNIT_INPUT_FORM =
+	"parser.unittest.js pins this reading of a `<form>` in a template's table, which keeps every form; parse5 8 reads it otherwise";
+const UNIT_INPUT_FRAMESET_TEXT =
+	"webpack's tree holds the whitespace text after `</frameset>` (`parseHtml` and the walk's `value()` both read it); the comparison's walk-built tree loses it, a gap in the comparison rather than the parser";
 const UNIT_INPUT_TAGS =
 	"a second pass writes an implied or omitted tag differently from the first; both outputs read to the same tree";
 const TEMPLATE_DELIMITER_REFERENCES =
@@ -1416,7 +1420,9 @@ const EXPECTED = [
 		contains: '<html:a href="#x">, tool nothing',
 		source: [
 			"html/declarative-shadow-root/page.html",
-			"html/parser-decoded-attribute-values/page.html"
+			"html/parser-decoded-attribute-values/page.html",
+			"parse-html-adoption-agency-algorithm-leaves-a-declarative-shadow-root-where-it-4",
+			"parse-html-adoption-agency-algorithm-leaves-a-declarative-shadow-root-where-it"
 		],
 		why: "a declarative shadow root attaches to its host, so the `</a>` after it reconstructs no formatting element around it; parse5 8 predates declarative shadow roots, so the `<a>` lands elsewhere"
 	},
@@ -1425,7 +1431,9 @@ const EXPECTED = [
 		contains: 'nothing, tool <html:a href="#x">',
 		source: [
 			"html/declarative-shadow-root/page.html",
-			"html/parser-decoded-attribute-values/page.html"
+			"html/parser-decoded-attribute-values/page.html",
+			"parse-html-adoption-agency-algorithm-leaves-a-declarative-shadow-root-where-it-4",
+			"parse-html-adoption-agency-algorithm-leaves-a-declarative-shadow-root-where-it"
 		],
 		why: "a declarative shadow root attaches to its host, so the `</a>` after it reconstructs no formatting element around it; parse5 8 predates declarative shadow roots, so the `<a>` lands elsewhere"
 	},
@@ -1457,8 +1465,11 @@ const EXPECTED = [
 	{
 		relation: "agreement",
 		contains: "p[1]: parse5",
-		source:
+		source: [
 			'Doctype <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "">',
+			"parse-html-tree-construction-edge-cases-so-a-columns-ends-what-is-open-around-an",
+			"source-processor-what-minifying-cannot-turn-into-markup-does-not-take-a"
+		],
 		why: "a system identifier that is the empty string counts as missing, so this doctype sets quirks mode and the `<table>` stays inside the `<p>` (§13.2.6.4.1); parse5 8 predates that wording and sets limited-quirks mode"
 	},
 	{
@@ -1468,6 +1479,270 @@ const EXPECTED = [
 		why: "the value carries both quotes, so one stays a character reference whichever delimiter is picked, and the printer echoes the spelling the source wrote rather than normalizing it — `&#34;` is a byte under `&quot;`, which is the difference reported. Writing `&#34;` everywhere was measured and refused: over the fixtures and wpt's `html/` documents it saves 5 raw bytes and costs 5 gzip, and a re-encoding has to win compressed. No build reads this: `htmlMinify` hands every `style` to the CSS minifier, and that round trip writes `&quot;` for either spelling"
 	},
 	// The inputs the unit tests feed the parser, under `test/fixtures/html/`.
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/option[1]: parse5 </option>, tool <html:b>",
+		source: [
+			"parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-select-option-b-2",
+			"parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-select-option-b"
+		],
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/option[1]: parse5 (scripting) </option>, tool <html:b>",
+		source: [
+			"parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-select-option-b-2",
+			"parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-select-option-b"
+		],
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "idempotence",
+		contains: "</html>\n      -> ",
+		source: "parse-html-insertion-modes-drops-a-nul-before-a-frameset",
+		why: UNIT_INPUT_TAGS
+	},
+	{
+		relation: "idempotence",
+		contains: "a & b < c\n      -> a & b < c",
+		source:
+			"parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-18",
+		why: UNIT_INPUT_TAGS
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/head[1]/template[1]/table[1]/form[1]: parse5 nothing, tool <html:form>",
+		source:
+			"parse-html-arcs-the-conformance-corpus-leaves-out-keeps-every-form-in-template-2",
+		why: UNIT_INPUT_FORM
+	},
+	{
+		relation: "agreement",
+		contains: '/html[1]/body[1]/div[1]/b[1]: parse5 text "b", tool <html:b>',
+		source:
+			"parse-html-arcs-the-conformance-corpus-leaves-out-merges-the-texts-a-declarative",
+		why: UNIT_INPUT_SHADOW
+	},
+	{
+		relation: "agreement",
+		contains:
+			'…utton[1]/selectedcontent[1]/template[1]/select[1]/option[1]: parse5 nothing, tool text "n"',
+		source: "parse-html-mirrors-a-select-carried-into-the-clone",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"…body[1]/select[1]/option[1]/template[1]/select[1]/button[1]: parse5 nothing, tool <html:button>",
+		source: "parse-html-mirrors-a-select-carried-into-the-clone",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/option[1]/selectedcontent[1]: parse5 nothing, tool <html:selectedcontent>",
+		source: "parse-html-mirrors-nothing-written-inside-the-option-itself",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains: '/html[1]: parse5 text " ", tool nothing',
+		source:
+			"parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-4",
+		why: UNIT_INPUT_FRAMESET_TEXT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/option[1]/b[1]/option[1]: parse5 nothing, tool </option>",
+		source:
+			"parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-select-option-b-2",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/option[1]/b[1]: parse5 nothing, tool </b>",
+		source:
+			"parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-select-option-b",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains: "/html[1]/body[1]/select[1]/b[1]: parse5 nothing, tool <html:b>",
+		source:
+			"parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-select-select-b",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			'/html[1]/body[1]/select[1]/option[1]/span[1]: parse5 nothing, tool <html:span id="x">',
+		source: "parse-html-should-mirror-the-selected-option-into-selectedcontent",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/option[1]/span[1]: parse5 nothing, tool </span>",
+		source: "parse-html-should-mirror-the-selected-option-into-selectedcontent",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains: '/: parse5 comment "?t �?", tool comment "?t \\u0000?"',
+		source:
+			"parse-html-should-parse-a-bogus-comment-with-a-valid-target-as-a-processing-6",
+		why: UNIT_INPUT_NUL
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/li[1]: parse5 nothing, tool <html:li>",
+		source:
+			"parse-html-tree-construction-edge-cases-so-a-columns-ends-what-is-open-around-an-4",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/button[1]/selectedcontent[1]: parse5 nothing, tool </selectedcontent>",
+		source:
+			"parse-html-tree-construction-edge-cases-so-a-columns-keeps-selectedcontent",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/head[1]/template[1]/table[1]/form[1]: parse5 (scripting) nothing, tool <html:form>",
+		source:
+			"parse-html-arcs-the-conformance-corpus-leaves-out-keeps-every-form-in-template-2",
+		why: UNIT_INPUT_FORM
+	},
+	{
+		relation: "agreement",
+		contains:
+			'/html[1]/body[1]/div[1]/b[1]: parse5 (scripting) text "b", tool <html:b>',
+		source:
+			"parse-html-arcs-the-conformance-corpus-leaves-out-merges-the-texts-a-declarative",
+		why: UNIT_INPUT_SHADOW
+	},
+	{
+		relation: "agreement",
+		contains:
+			'…utton[1]/selectedcontent[1]/template[1]/select[1]/option[1]: parse5 (scripting) nothing, tool text "n"',
+		source: "parse-html-mirrors-a-select-carried-into-the-clone",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"…body[1]/select[1]/option[1]/template[1]/select[1]/button[1]: parse5 (scripting) nothing, tool <html:button>",
+		source: "parse-html-mirrors-a-select-carried-into-the-clone",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/option[1]/selectedcontent[1]: parse5 (scripting) nothing, tool <html:selectedcontent>",
+		source: "parse-html-mirrors-nothing-written-inside-the-option-itself",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains: '/html[1]: parse5 (scripting) text " ", tool nothing',
+		source:
+			"parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-4",
+		why: UNIT_INPUT_FRAMESET_TEXT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/option[1]/b[1]/option[1]: parse5 (scripting) nothing, tool </option>",
+		source:
+			"parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-select-option-b-2",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/option[1]/b[1]: parse5 (scripting) nothing, tool </b>",
+		source:
+			"parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-select-option-b",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/b[1]: parse5 (scripting) nothing, tool <html:b>",
+		source:
+			"parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-select-select-b",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			'/html[1]/body[1]/select[1]/option[1]/span[1]: parse5 (scripting) nothing, tool <html:span id="x">',
+		source: "parse-html-should-mirror-the-selected-option-into-selectedcontent",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/option[1]/span[1]: parse5 (scripting) nothing, tool </span>",
+		source: "parse-html-should-mirror-the-selected-option-into-selectedcontent",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			'/: parse5 (scripting) comment "?t �?", tool comment "?t \\u0000?"',
+		source:
+			"parse-html-should-parse-a-bogus-comment-with-a-valid-target-as-a-processing-6",
+		why: UNIT_INPUT_NUL
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/li[1]: parse5 (scripting) nothing, tool <html:li>",
+		source:
+			"parse-html-tree-construction-edge-cases-so-a-columns-ends-what-is-open-around-an-4",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/button[1]/selectedcontent[1]: parse5 (scripting) nothing, tool </selectedcontent>",
+		source:
+			"parse-html-tree-construction-edge-cases-so-a-columns-keeps-selectedcontent",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "slices",
+		contains:
+			"Element:b[4,7) Element:td[0,12)\n      -> Element:b[4,12) Element:td[0,12)",
+		source:
+			"parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-table-tr-td-tr",
+		why: UNIT_INPUT_SLICE
+	},
+	{
+		relation: "meaning",
+		contains: "a b </body> </html>  ->  ab </body> </html>",
+		source:
+			"parse-html-tree-construction-edge-cases-so-a-columns-merges-texts-left-adjacent",
+		why: UNIT_INPUT_MEANING
+	},
+	{
+		relation: "meaning",
+		contains: "a b  ->  ab",
+		source:
+			"parse-html-tree-construction-edge-cases-so-a-columns-merges-texts-left-adjacent",
+		why: UNIT_INPUT_MEANING
+	},
 	{
 		relation: "respelling quote-double",
 		contains: " title=",
@@ -1692,8 +1967,17 @@ const EXPECTED = [
 		relation: "agreement",
 		contains:
 			"/html[1]/body[1]/select[1]/button[1]: parse5 nothing, tool <html:button>",
-		source:
+		source: [
 			"source-processor-remove-empty-elements-reads-the-output-keeps-select-button",
+			"parse-html-clones-template-content-when-mirroring-into-selectedcontent",
+			"parse-html-insertion-mode-edge-cases-mirrors-the-selected-option-from-an",
+			"parse-html-mirrors-a-select-carried-into-the-clone",
+			"parse-html-mirrors-nothing-written-inside-the-option-itself",
+			"parse-html-should-mirror-the-last-selected-option-into-selectedcontent",
+			"parse-html-should-mirror-the-selected-option-into-selectedcontent",
+			"parse-html-tree-construction-edge-cases-so-a-columns-keeps-selectedcontent",
+			"parse-html-tree-construction-edge-cases-so-a-columns-mirrors-the-last-selected"
+		],
 		why: UNIT_INPUT_SELECT
 	},
 	{
@@ -1707,8 +1991,10 @@ const EXPECTED = [
 	{
 		relation: "agreement",
 		contains: "/html[1]/body[1]/div[1]/b[1]: parse5 <html:b>, tool nothing",
-		source:
+		source: [
 			"source-processor-tree-construction-the-printer-reads-back-prints-a-shadow-root-2",
+			"parse-html-arcs-the-conformance-corpus-leaves-out-merges-the-texts-a-declarative"
+		],
 		why: UNIT_INPUT_SHADOW
 	},
 	{
@@ -1824,8 +2110,17 @@ const EXPECTED = [
 		relation: "agreement",
 		contains:
 			"/html[1]/body[1]/select[1]/button[1]: parse5 (scripting) nothing, tool <html:button>",
-		source:
+		source: [
 			"source-processor-remove-empty-elements-reads-the-output-keeps-select-button",
+			"parse-html-clones-template-content-when-mirroring-into-selectedcontent",
+			"parse-html-insertion-mode-edge-cases-mirrors-the-selected-option-from-an",
+			"parse-html-mirrors-a-select-carried-into-the-clone",
+			"parse-html-mirrors-nothing-written-inside-the-option-itself",
+			"parse-html-should-mirror-the-last-selected-option-into-selectedcontent",
+			"parse-html-should-mirror-the-selected-option-into-selectedcontent",
+			"parse-html-tree-construction-edge-cases-so-a-columns-keeps-selectedcontent",
+			"parse-html-tree-construction-edge-cases-so-a-columns-mirrors-the-last-selected"
+		],
 		why: UNIT_INPUT_SELECT
 	},
 	{
@@ -1840,8 +2135,10 @@ const EXPECTED = [
 		relation: "agreement",
 		contains:
 			"/html[1]/body[1]/div[1]/b[1]: parse5 (scripting) <html:b>, tool nothing",
-		source:
+		source: [
 			"source-processor-tree-construction-the-printer-reads-back-prints-a-shadow-root-2",
+			"parse-html-arcs-the-conformance-corpus-leaves-out-merges-the-texts-a-declarative"
+		],
 		why: UNIT_INPUT_SHADOW
 	},
 	{
@@ -1896,8 +2193,11 @@ const EXPECTED = [
 		relation: "slices",
 		contains:
 			"Element:table[7,22) Element:a[4,25) Element:a[22,25) Element:td[0,30)\n      -> Element:table[7,22) Element:a[4,25) Element:a[22,30) Element:td[0,30)",
-		source:
+		source: [
 			"source-processor-tree-construction-corpus-round-trips-beautify-prints-a-table-td",
+			"parse-html-insertion-modes-clears-a-table-body-context-across-nested-tables",
+			"parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-a-table-td-a"
+		],
 		why: UNIT_INPUT_SLICE
 	},
 	{

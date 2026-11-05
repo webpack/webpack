@@ -736,7 +736,7 @@ const CSS_RESPELLINGS = [
 ];
 
 // What an invalid or unterminated unit-test input is written back as.
-// cspell:ignore widt conten onten idth rint
+// cspell:ignore widt conten onten idth rint olor
 const WRITTEN_AS_AUTHORED =
 	"a declaration, selector or block that is invalid or left open, which the printer writes back as authored, escape included";
 
@@ -748,16 +748,7 @@ const EXPECTED = [
 	{
 		relation: "respelling escape",
 		contains: "-> \\7a ",
-		source: [
-			"test/configCases/css/minimize",
-			"Tachyons 4",
-			"compare-css-tools-agreeing-with-css-tree-drops-an-ie-hack-the-spec-drops-and",
-			"css-syntax-minify-keeps-input-the-grammar-rejects-keeps-a-declaration-neither",
-			"css-syntax-minify-keeps-input-the-grammar-rejects-keeps-a-declaration-neither-2",
-			"css-syntax-minify-keeps-input-the-grammar-rejects-keeps-a-declaration-neither-3",
-			"css-syntax-minify-keeps-input-the-grammar-rejects-trims-to-the-rejected-input",
-			"css-syntax-minify-the-value-transforms-rejection-paths-a-rule-an-identical-later"
-		],
+		source: ["test/configCases/css/minimize","Tachyons 4","compare-css-tools-agreeing-with-css-tree-drops-an-ie-hack-the-spec-drops-and","css-syntax-minify-keeps-input-the-grammar-rejects-keeps-a-declaration-neither","css-syntax-minify-keeps-input-the-grammar-rejects-keeps-a-declaration-neither-2","css-syntax-minify-keeps-input-the-grammar-rejects-keeps-a-declaration-neither-3","css-syntax-minify-keeps-input-the-grammar-rejects-trims-to-the-rejected-input","css-syntax-minify-the-value-transforms-rejection-paths-a-rule-an-identical-later","css-syntax-minify-keeps-input-the-grammar-rejects-never-materializes-rejected"],
 		why: "`*zoom: 1` is no declaration but the star hack an engine drops, which the printer writes back as authored, escape included"
 	},
 	{
@@ -845,15 +836,14 @@ const EXPECTED = [
 	// The inputs the unit tests feed the printer, under `test/fixtures/css/`.
 	{
 		relation: "respelling escape",
+		contains: "    color\n      -> \\63 olor",
+		source: "css-syntax-nesting-and-error-recovery-drops-bad-declarations-but-keeps-the",
+		why: WRITTEN_AS_AUTHORED
+	},
+	{
+		relation: "respelling escape",
 		contains: "    foo\n      -> \\66 oo",
-		source: [
-			"css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-reads-a-b-x-1-foo-the",
-			"css-syntax-minify-keeps-input-the-grammar-rejects-keeps-rejected-input-in-a",
-			"css-syntax-minify-what-a-modern-target-makes-dead-reads-the-later-rule-s-values-3",
-			"css-syntax-what-a-minifying-print-reads-off-the-parse-keeps-input-a-nested-block",
-			"css-syntax-what-a-minifying-print-reads-off-the-parse-keeps-input-a-nested-block-2",
-			"css-syntax-what-a-minifying-print-reads-off-the-parse-keeps-input-a-nested-block-5"
-		],
+		source: ["css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-reads-a-b-x-1-foo-the","css-syntax-minify-keeps-input-the-grammar-rejects-keeps-rejected-input-in-a","css-syntax-minify-what-a-modern-target-makes-dead-reads-the-later-rule-s-values-3","css-syntax-what-a-minifying-print-reads-off-the-parse-keeps-input-a-nested-block","css-syntax-what-a-minifying-print-reads-off-the-parse-keeps-input-a-nested-block-2","css-syntax-what-a-minifying-print-reads-off-the-parse-keeps-input-a-nested-block-5","css-syntax-nesting-and-error-recovery-recovers-from-malformed-nested-rules-and-2"],
 		why: WRITTEN_AS_AUTHORED
 	},
 	{
@@ -907,11 +897,7 @@ const EXPECTED = [
 	{
 		relation: "respelling escape",
 		contains: "    b\n      -> \\62",
-		source: [
-			"css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-47",
-			"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-5",
-			"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-6"
-		],
+		source: ["css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-47","css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-5","css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-6","css-syntax-5-parsing-algorithms-peeks-past-comments-for-a-declaration-s-colon-2","css-syntax-5-parsing-algorithms-peeks-past-comments-for-a-declaration-s-colon-3","css-syntax-5-parsing-algorithms-reads-a-nested-name-with-an-escaped-name-as-a-3"],
 		why: WRITTEN_AS_AUTHORED
 	},
 	{
@@ -983,13 +969,7 @@ const EXPECTED = [
 	{
 		relation: "respelling escape",
 		contains: "    a\n      -> \\61",
-		source: [
-			"css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-30",
-			"css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-31",
-			"css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-32",
-			"css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-33",
-			"css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-39"
-		],
+		source: ["css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-30","css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-31","css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-32","css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-33","css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-39","css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-10","css-syntax-nesting-and-error-recovery-recovers-from-malformed-nested-rules-and","css-syntax-parse-error-callback-reports-x-a-b-c","css-syntax-parse-error-callback-reports-x-a"],
 		why: WRITTEN_AS_AUTHORED
 	},
 	{
