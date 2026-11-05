@@ -5,8 +5,7 @@ module.exports = {
 		return ["./inner/main.js"];
 	},
 	moduleScope(scope) {
-		// `<embed id="importScripts">` in browsers where embed and object
-		// elements are callable, so `typeof` reports "function" like a worker's
+		// a window with an `importScripts` function is still a window
 		scope.window.importScripts = Object.assign(() => {}, { tagName: "EMBED" });
 	}
 };

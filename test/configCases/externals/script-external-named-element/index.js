@@ -3,7 +3,7 @@
 const tick = () => new Promise(resolve => setTimeout(resolve, 0));
 
 it("should load the script external even when a named element has its global name", async () => {
-	// `<div id="myGlobal">` in the page, see `test.config.js`
+	// see `test.config.js`
 	expect(typeof myGlobal).toBe("object");
 	expect(Object.prototype.hasOwnProperty.call(window, "myGlobal")).toBe(
 		false
@@ -41,9 +41,8 @@ it("should load a namespaced script external when its namespace is not defined y
 	});
 });
 
-it("should load a namespaced script external even when a form has the namespace name", async () => {
-	// `<form id="myForm"><input name="lib"></form>` in the page, see
-	// `test.config.js`: the control is an own property of the form
+it("should load a namespaced script external when its namespace is not an own property of the global", async () => {
+	// see `test.config.js`
 	expect(Object.prototype.hasOwnProperty.call(myForm, "lib")).toBe(true);
 	expect(Object.prototype.hasOwnProperty.call(window, "myForm")).toBe(
 		false
