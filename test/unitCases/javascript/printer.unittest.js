@@ -556,7 +556,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(o){ var a = {}.x + g(); var b = (class{}).y || g(); var c = (function(){})() ? g() : 1; var d = (function(){}(), g()); var e = function(){}`t${g()}`; var h = {}.p++; var i = ++o.p; var j = new X(g()); var k = (o.q = g()); }",
 				{},
-				"function f(a){({}).x+g();(class{}).y||g();(function(){})()?g():1;([],g());(function(){})`t${g()}`;({}).p++;++a.p;new X(g());a.q=g()}"
+				"function f(a){({}).x+g();(class{}).y||g();(function(){})()?g():1;g();(function(){})`t${g()}`;({}).p++;++a.p;new X(g());a.q=g()}"
 			],
 			// A function moved to its read prints in parentheses where it would not read as a value.
 			[
@@ -845,7 +845,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"async function f(p){ var a = g(); h(p, 1, this, a); var b = g(); new K(p, b); var c = g(); i(await c); var d = g(); j(p + d); var e = g(); k(p[e]); var m = g(); l([p, , m]); var n = g(); o({ x: p, y: n }); var q = g(); r((p, q)) }",
 				{},
-				"async function f(a){h(a,1,this,g()),new K(a,g()),i(await g()),j(a+g()),k(a[g()]),l([a,,g()]),o({x:a,y:g()}),r((a,g()))}"
+				"async function f(a){h(a,1,this,g()),new K(a,g()),i(await g()),j(a+g()),k(a[g()]),l([a,,g()]),o({x:a,y:g()}),r(g())}"
 			],
 			// But not past a spread, shorthand, computed key, getter or template part before it, an optional member, a global the value sets, a name something writes, nor where `eval` may read it.
 			[
@@ -1127,11 +1127,13 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(a){var b=a&&c;return b?1:2}", {}, "function f(a){return a&&c?1:2}"],
 			["function f(a){var b=-a;return b?1:2}", {}, "function f(a){return-a?1:2}"],
 			// A sequence a declarator set prints bare where a `return`, `throw` or sequence reads it.
-			["function f(a){var b=(a,1);g(b)}", {}, "function f(a){g((a,1))}"],
-			["function f(a){var b=(a,1);return b}", {}, "function f(a){return a,1}"],
-			["function f(a){var b=(a,1);throw b}", {}, "function f(a){throw a,1}"],
-			["function f(a){var b=(a,1);return b,2}", {}, "function f(a){return a,1,2}"],
-			["function f(a){var b=(a,1);return b.x}", {}, "function f(a){return(a,1).x}"],
+			["function f(a){var b=(a(),1);g(b)}", {}, "function f(a){g((a(),1))}"],
+			["function f(a){var b=(a,1);return b}", {}, "function f(a){return 1}"],
+			// One item left of it printed bare, so a `return` takes it whole.
+			["function f(a,c,d){var b=(a,(c+1)*(d+1));return b}", {}, "function f(a,c,n){return(c+1)*(n+1)}"],
+			["function f(a){var b=(a,1);throw b}", {}, "function f(a){throw 1}"],
+			["function f(a){var b=(a,1);return b,2}", {}, "function f(a){return 1,2}"],
+			["function f(a){var b=(a,1);return b.x}", {}, "function f(a){return(1).x}"],
 			// A test known to be pure goes with the branch it never takes.
 			["function f(){if((0))g()}", {}, "function f(){}"],
 			["function f(){if(0&&x())g()}", {}, "function f(){}"],
@@ -1174,6 +1176,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// `-Infinity` prints `-1/0` where a division reads as one value there.
 			["function f(){return-Infinity}", {}, "function f(){return-1/0}"],
 			["function f(a){return[a/-Infinity,-Infinity/a,(-Infinity).x]}", {}, "function f(n){return[n/-(1/0),-(1/0)/n,(-(1/0)).x]}"],
+			// A sequence left one item where any expression stands bare drops its parentheses, but where it names a function.
+			["x=(3,6);let y=(2,a[b]);f((1,2),...(0,c));z=[(1,()=>1)];w={a:(1,b?c:d),[(1,e)]:1,b:(1,()=>1),c:(1,class{})};v=`${(1,a)}`;u=(1,()=>1);for(var t=(1,a in b);;);", {}, "x=6;let y=a[b];f(2,...c),z=[()=>1],w={a:b?c:d,[e]:1,b:(1,()=>1),c:(1,class{})},v=`${a}`,u=(1,()=>1);for(var t=(1,a in b);;);"],
 			// A number too big for a double is no name: a binding named `Infinity` does not read it.
 			["function f(Infinity){eval(\"\");return[1e500,-1e500,1e500.x,2*1e500]}", {}, "function f(Infinity){eval(\"\");return[1/0,-1/0,(1/0).x,2*(1/0)]}"],
 			// A body printing nothing is `;`, and an `if` with one only runs its test.
