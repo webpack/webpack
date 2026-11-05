@@ -1,0 +1,3 @@
+p::after {
+	content: "</style><b>bold</b>";
+}

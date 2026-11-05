@@ -13133,6 +13133,11 @@ declare interface HtmlParseOptions {
 	scripting?: boolean;
 
 	/**
+	 * parse as an `<iframe srcdoc>` document, which is never in quirks mode whatever its doctype says
+	 */
+	srcdoc?: boolean;
+
+	/**
 	 * optional callback for each parse error of the tokenizer, as `HtmlTokenCallbacks#parseError` receives it, and of tree construction, named as html5lib names them since WHATWG names only one; those are `"warning"`
 	 */
 	parseError?: (
@@ -13327,6 +13332,16 @@ declare interface HtmlProcessOptions {
 	 * parse as XML instead of applying the HTML tree-construction rules
 	 */
 	xml?: boolean;
+
+	/**
+	 * parse as an `<iframe srcdoc>` document, which is never in quirks mode (see `parseHtml`)
+	 */
+	srcdoc?: boolean;
+
+	/**
+	 * parse a `noscript` as raw text, as a browser with scripting on does (see `parseHtml`); a print always does
+	 */
+	scripting?: boolean;
 
 	/**
 	 * optional callback for each parse error of the source, as `parseHtml` reports it

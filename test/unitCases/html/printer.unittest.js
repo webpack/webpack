@@ -3334,7 +3334,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	it("offers the document an `<iframe srcdoc>` holds, decoded", () => {
 		expect(
 			offered('<iframe srcdoc="&lt;p&gt;   hello   &lt;/p&gt;"></iframe>')
-		).toEqual([["html", "stylesheet", "<p>   hello   </p>"]]);
+		).toEqual([["html", "srcdoc", "<p>   hello   </p>"]]);
 		// Empty carries no document, and a foreign-content `<iframe>` is an SVG
 		// element that happens to share the name.
 		expect(offered('<iframe srcdoc=""></iframe>')).toEqual([]);
@@ -3815,7 +3815,7 @@ describe("htmlMinify — one document reaching every embedded site", () => {
 		});
 
 		// Every site, once each: the `style=""` as the block-contents production
-		// it is, and one `html` per `<iframe srcdoc>`.
+		// it is, and one `html/srcdoc` per `<iframe srcdoc>`.
 		expect(offered).toEqual([
 			"css",
 			"json",
@@ -3823,8 +3823,8 @@ describe("htmlMinify — one document reaching every embedded site", () => {
 			"css/block-contents",
 			"javascript/event-handler",
 			"svg/foreign-element",
-			"html",
-			"html"
+			"html/srcdoc",
+			"html/srcdoc"
 		]);
 		expect(code).toMatchSnapshot();
 	});
@@ -4357,7 +4357,8 @@ describe("SourceProcessor — printing in pieces", () => {
 		// `/>` only closes the tag in foreign content; in HTML it is ignored, and
 		// whether the end tag is needed hangs on what ends up inside.
 		expect(minify("<div/>x</div>")).toBe("<div>x</div>");
-		expect(minify("<div/></div>")).toBe("<div>");
+		// The `</div>` stays: an empty element's `/` closes nothing either.
+		expect(minify("<div/></div>")).toBe("<div></div>");
 		expect(minify("<svg><path/><circle/></svg>")).toBe(
 			"<svg><path/><circle/></svg>"
 		);
@@ -6995,5 +6996,138 @@ describe("SourceProcessor — a foreign stylesheet answered later", () => {
 			}
 		);
 		expect(code).toBe("<svg><style>a&lt;b{}</style></svg><style>a<b{}</style>");
+	});
+});
+
+describe("SourceProcessor — what minifying cannot turn into markup", () => {
+	const { SourceProcessor } = require("../../../lib/html/syntax");
+	const htmlMinify = require("../../../lib/html/htmlMinify");
+
+	/**
+	 * @param {string} html input markup
+	 * @param {object=} options parse options
+	 * @returns {string} its tree, as html5lib writes one
+	 */
+	const tree = (html, options) =>
+		serializeHtmlTree(parseHtmlRefs(html, 0, options));
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, { mode: "minify" }).code;
+
+	it.each([
+		[
+			"a list item's last child its parent's end tag no longer closes",
+			"<!doctype html><ul><li><dd>x</dd></li><li>y</li></ul>",
+			"<!doctype html><ul><li><dd>x</dd><li>y</ul>"
+		],
+		[
+			"a last child under a parent of its own name",
+			"<!doctype html><div><rt>a<rt>b</rt></rt>c</div>",
+			"<!doctype html><div><rt>a<rt>b</rt></rt>c</div>"
+		],
+		[
+			"a list item's child an `<option>` outside a `select` leaves open",
+			"<!doctype html><div><option><dd>a</dd></option><option>b</option></div>",
+			"<!doctype html><div><option><dd>a</dd><option>b</div>"
+		],
+		[
+			"an `<optgroup>` no `select` closes",
+			"<!doctype html><div><optgroup>a</optgroup><optgroup>b</optgroup></div>",
+			"<!doctype html><div><optgroup>a</optgroup><optgroup>b</div>"
+		],
+		[
+			"a bare name before a name opening with `=`",
+			'<!doctype html><p class="" =">" title="a">x</p>',
+			'<!doctype html><p class="" =">" title="a">x'
+		],
+		[
+			"a name opening with `=` after the tag name or an unquoted value",
+			"<!doctype html><p =x a=b =c>",
+			"<!doctype html><p =x a=b =c>"
+		],
+		[
+			"a bare name before a name opening with `=`, in a rebuilt clone",
+			'<!doctype html><b x="" =y><p>a</b>b',
+			'<!doctype html><b x="" =y></b><p><b x="" =y>a</b>b'
+		],
+		[
+			"a bare name ending in a quote, in a tag printed verbatim",
+			"<!doctype html><script a'=\"\"type=\"text/plain\" {{x}} {{x}}>x</script>",
+			"<!doctype html><script a'=\"\"type=text/plain {{x}} {{x}}>x</script>"
+		],
+		[
+			"an HTML element's `/>`, which closes nothing",
+			'<!doctype html><textarea/></textarea><p title="</textarea><img>">',
+			'<!doctype html><textarea></textarea><p title="</textarea><img>">'
+		],
+		[
+			"a dropped duplicate's `/` the tag ends with",
+			"<!doctype html><math a a=/>x",
+			"<!doctype html><math a>x</math>"
+		]
+	])("keeps the tree of %s", (_name, source, expected) => {
+		const printed = minify(source);
+		expect(printed).toBe(expected);
+		expect(tree(printed)).toBe(tree(source));
+	});
+
+	it("keeps a list item's `</p>`-free last child light", () => {
+		expect(
+			minify("<!doctype html><ul><li><p>a</p></li><li><p>b</p></li></ul>")
+		).toBe("<!doctype html><ul><li><p>a<li><p>b</ul>");
+	});
+
+	it("keeps a template delimiter the source escaped a reference", () => {
+		expect(
+			minify(
+				'<!doctype html><p>&lt;%= a %&gt;</p><a title="&lt;%= b %&gt;" rel="&lt;?php c ?&gt;">x</a>'
+			)
+		).toBe(
+			'<!doctype html><p>&lt;%= a %></p><a title="&lt;%= b %>" rel="&lt;?php c ?>">x</a>'
+		);
+	});
+
+	it("parses an `<iframe srcdoc>` document in no-quirks mode", async () => {
+		// A `<table>` closes the `<p>`, which only quirks mode keeps open.
+		expect(tree("<p><table></table>", { srcdoc: true })).toBe(
+			"| <html>\n|   <head>\n|   <body>\n|     <p>\n|     <table>"
+		);
+		const { code } = await htmlMinify({
+			"page.html": '<iframe srcdoc="<p><table></table></p>"></iframe>'
+		});
+		expect(code).toBe('<iframe srcdoc="<p><table></table><p>"></iframe>');
+	});
+
+	it("does not take a placeholder a character reference spells for its own", async () => {
+		const page =
+			'<iframe srcdoc="<b>q</b>"></iframe><style>a{b:c}</style><p title="\u0000&#48;:0\u0000">t</p>';
+		const { code } = await htmlMinify({ "page.html": page });
+		expect(code).toBe(
+			'<iframe srcdoc="<b>q</b>"></iframe><style>a{b:c}</style><p title=\u00000:0\u0000>t'
+		);
+	});
+
+	it("keeps a `<style>` body as written where the answer would close it", () => {
+		const printed = new SourceProcessor().process(
+			"<style>a { b: c }</style><p>x</p>",
+			{
+				mode: "minify",
+				renderEmbeddedSource: () => "a{b:'</style><b>x</b>'}"
+			}
+		).code;
+		expect(printed).toBe("<style>a { b: c }</style><p>x");
+	});
+
+	it("keeps a conditional comment's body as written where its print would end the comment", async () => {
+		const page =
+			'<!--[if IE]><p title="--&gt;&lt;b&gt;x&lt;/b&gt;">x</p><![endif]-->';
+		const { code } = await htmlMinify({ "page.html": page }, undefined, {
+			minifyConditionalComments: true
+		});
+		expect(code).toBe(page);
 	});
 });
