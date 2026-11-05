@@ -9,7 +9,7 @@ require("../helpers/warmup-webpack");
  * @property {string} name suite name
  * @property {import("../../").FileCacheOptions=} cache filesystem cache options
  * @property {string[]=} categories the only categories to run, every one when unset
- * @property {boolean=} pathWalk whether JavaScript parsers walk the program by node id (internal switch)
+ * @property {boolean=} pathWalk whether JavaScript parsers walk the program by node id (internal switch), their default when unset
  */
 /**
  * @typedef {object} TestConfig
@@ -93,12 +93,12 @@ const createLogger = (appendTarget, appendErrors) => ({
 });
 
 /**
- * Turns on the internal switch walking the program by node id in every
+ * Sets the internal switch walking the program by node id in every
  * JavaScript parser of a build.
- * @param {import("../../").Compiler} compiler the compiler
- * @returns {void}
+ * @param {boolean} walkPath whether the parsers walk by node id
+ * @returns {(compiler: import("../../").Compiler) => void} the plugin
  */
-const enablePathWalk = (compiler) => {
+const setPathWalk = (walkPath) => (compiler) => {
 	compiler.hooks.normalModuleFactory.tap("PathWalk", (normalModuleFactory) => {
 		for (const type of /** @type {const} */ ([
 			"javascript/auto",
@@ -107,7 +107,7 @@ const enablePathWalk = (compiler) => {
 		])) {
 			normalModuleFactory.hooks.parser.for(type).tap("PathWalk", (parser) => {
 				// internal, so absent from the public types
-				Object.assign(parser, { _walkPath: true });
+				Object.assign(parser, { _walkPath: walkPath });
 			});
 		}
 	});
@@ -264,10 +264,10 @@ const describeCases = (config) => {
 									options.infrastructureLogging = {};
 								}
 								options.infrastructureLogging.progress = false;
-								if (config.pathWalk) {
+								if (config.pathWalk !== undefined) {
 									options.plugins = [
 										...(options.plugins || []),
-										enablePathWalk
+										setPathWalk(config.pathWalk)
 									];
 								}
 								if (!options.snapshot) options.snapshot = {};

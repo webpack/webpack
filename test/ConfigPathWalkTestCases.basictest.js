@@ -2,10 +2,10 @@
 
 const { describeCases } = require("./templates/ConfigTestCases");
 
-// The parsing cases again, the program walked by node id: the internal switch
-// the walk moves behind until it is the only walk.
+// The parsing cases again, every node walked as its ESTree object: the walk
+// the internal switch turns back to, which the id walk falls back to per node.
 describeCases({
 	name: "ConfigPathWalkTestCases",
 	categories: ["parsing"],
-	pathWalk: true
+	pathWalk: false
 });

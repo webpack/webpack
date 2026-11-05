@@ -17281,7 +17281,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 			| UpdateExpression
 			| YieldExpression
 			| Super,
-		...args: [number] | Parameters<H["call"]>
+		...args: [number, ...HookArgument[]] | Parameters<H["call"]>
 	): undefined | ReturnType<H["call"]>;
 
 	/**
@@ -17329,7 +17329,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 			  ) => ReturnType<H["call"]>),
 		defined:
 			undefined | ((result?: string) => undefined | ReturnType<H["call"]>),
-		...args: [number] | Parameters<H["call"]>
+		...args: [number, ...HookArgument[]] | Parameters<H["call"]>
 	): undefined | ReturnType<H["call"]>;
 
 	/**
@@ -17338,7 +17338,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	callHooksForName<H extends { call(...args: HookArgument[]): HookArgument }>(
 		hookMap: HookMap<H>,
 		name: string,
-		...args: [number] | Parameters<H["call"]>
+		...args: [number, ...HookArgument[]] | Parameters<H["call"]>
 	): undefined | ReturnType<H["call"]>;
 
 	/**
@@ -17347,7 +17347,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	callHooksForInfo<H extends { call(...args: HookArgument[]): HookArgument }>(
 		hookMap: HookMap<H>,
 		info: ExportedVariableInfo,
-		...args: [number] | Parameters<H["call"]>
+		...args: [number, ...HookArgument[]] | Parameters<H["call"]>
 	): undefined | ReturnType<H["call"]>;
 
 	/**
@@ -17361,7 +17361,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		fallback: undefined | ((name: string) => undefined | ReturnType<H["call"]>),
 		defined:
 			undefined | ((result?: string) => undefined | ReturnType<H["call"]>),
-		...args: [number] | Parameters<H["call"]>
+		...args: [number, ...HookArgument[]] | Parameters<H["call"]>
 	): undefined | ReturnType<H["call"]>;
 
 	/**
@@ -17375,7 +17375,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		fallback:
 			undefined | ((value: string) => undefined | ReturnType<H["call"]>),
 		defined: undefined | (() => ReturnType<H["call"]>),
-		...args: [number] | Parameters<H["call"]>
+		...args: [number, ...HookArgument[]] | Parameters<H["call"]>
 	): undefined | ReturnType<H["call"]>;
 
 	/**
