@@ -1465,7 +1465,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function g(){const a=[1,2];x=a[0];f({[a[1]]:1})}", {}, "function g(){x=1,f({[2]:1})}"],
 			["for(;;){if(b)/*c*/continue;y()}", { format: { comments: "all" } }, "for(;;){if(b)/*c*/continue;y()}"],
 			// An exit ending its function's, loop's or label's body goes, but in a `finally`, of an outer loop or before more.
-			["for(x of y){if(false){a();continue}else;b();continue}function f(){if(x)return;if(y)return}function g(){try{a();return}catch(e){b();return}}function h(){try{a()}finally{return}}function i(){l:{a();break l}}l:for(;;){a();continue l}x:for(;;)for(;;){a();continue x}function j(){if(a){b();return}else{c();return}}function k(){if(a()){return}else{return}}function m(){return void 0}do{a()}while(true);for(;;){a();break}function n(){for(;;){a();return}}function*o(){a();return}", {}, "for(x of y)b();function f(){if(x||y)return}function g(){try{a()}catch(n){b()}}function h(){try{a()}finally{return}}function i(){n:a()}for(;;)a();n:for(;;)for(;;){a();continue n}function j(){a?b():c()}function k(){a()}function m(){}for(;;){a()}for(;;){a();break}function n(){for(;;){a();return}}function*o(){a()}"],
+			["for(x of y){if(false){a();continue}else;b();continue}function f(){if(x)return;if(y)return}function g(){try{a();return}catch(e){b();return}}function h(){try{a()}finally{return}}function i(){l:{a();break l}}l:for(;;){a();continue l}x:for(;;)for(;;){a();continue x}function j(){if(a){b();return}else{c();return}}function k(){if(a()){return}else{return}}function m(){return void 0}do{a()}while(true);for(;;){a();break}function n(){for(;;){a();return}}function*o(){a();return}", {}, "for(x of y)b();function f(){if(x||y)return}function g(){try{a()}catch(n){b()}}function h(){try{a()}finally{return}}function i(){n:a()}for(;;)a();n:for(;;)for(;;){a();continue n}function j(){a?b():c()}function k(){a()}function m(){}for(;;)a();for(;;){a();break}function n(){for(;;){a();return}}function*o(){a()}"],
 			// An empty `try` runs no `catch`, its `finally` printing in its place; a loop test known goes, true or false.
 			["try{}catch(e){foo()}a();try{}finally{foo();x()}b();try{}catch(e){foo()}finally{bar()}try{}finally{}try{}catch(e){var v}function f(){g();try{}finally{if(a)b()}c()}if(x)try{}finally{y()}try{}finally{let q=f();g(q,q)}for(;true;)foo();for(var i=0;!0;i++)k();while(0)g();for(;false;i++)h();for(;0;)var w=0", {}, "a();foo(),x();b();bar();try{}catch(f){var v}function f(){g();if(a)b();c()}if(x)try{}finally{y()}{let r=f();g(r,r)}for(;;)foo();for(var i=0;;i++)k();for(;0;)var w=0;"],
 			// A `let` or `const` printing only its one value scopes no name: its braces go; two values or a name read keep them.
@@ -1615,7 +1615,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// terser's `switches` of one case and a `default`: `if…else` after a `break`, the other after where one falls into it, in a list, its block keeping braces.
 			["switch(a){case 1:b();break;default:c()}switch(a){case 1:b();default:c()}switch(a){default:c();break;case 1:b()}switch(a){default:c();case 1:b()}switch(a){default:b();break;case 1:}switch(a){case 1:break;default:b()}switch(a){case 1:b();break;default:if(y)z()}w();switch(a){case 1:if(y)z();break;default:w()}switch(a){case 1:{let q=g();f(q,q)}break;default:h()}switch(a){case 1:f();if(x)break;g();break;default:h()}for(;;)switch(a){case 1:f();break;default:g()}if(x){switch(a){case 1:f();default:g()}}else h();switch(a){/*! c */case 1:b();break;default:c()}switch(b()){case 1:c();break;default:d()}switch(a){case f():c();break;default:d()}", {}, "if(a===1)b();else c();if(a===1)b();c();if(a===1)b();else c();if(a!==1)c();b();if(a!==1)b();if(a!==1)b();if(a===1)b();else if(y)z();w();if(a===1){if(y)z()}else w();if(a===1){{let a=g();f(a,a)}}else h();switch(a){case 1:f();if(x)break;g();break;default:h()}for(;;)switch(a){case 1:f();break;default:g()}if(x){if(a===1)f();g()}else h();switch(a){/*! c */case 1:b();break;default:c()}if(b()===1)c();else d();if(a===f())c();else d();"],
 			// terser's `loops`: `do` forever is `for(;;)`, and a body running once with nothing leaving it early runs where the loop was, but not labeled.
-			["do{c()}while(!0);do{d();e()}while(0);f();do{if(x)break;d()}while(0);do{let q=g();h(q,q)}while(0);l:do{d()}while(0);if(a)do{d();e()}while(0);else f();do;while(0);do{switch(a){case 1:b()}}while(0);do{(function(){for(k in o)break})()}while(0)", {}, "for(;;){c()}d(),e();f();do{if(x)break;d()}while(0);{let e=g();h(e,e)}do{d()}while(0);if(a){d(),e()}else f();do{if(a===1)b()}while(0);!function(){for(k in o)break}();"],
+			["do{c()}while(!0);do{d();e()}while(0);f();do{if(x)break;d()}while(0);do{let q=g();h(q,q)}while(0);l:do{d()}while(0);if(a)do{d();e()}while(0);else f();do;while(0);do{switch(a){case 1:b()}}while(0);do{(function(){for(k in o)break})()}while(0)", {}, "for(;;)c();d(),e();f();do{if(x)break;d()}while(0);{let e=g();h(e,e)}do{d()}while(0);if(a){d(),e()}else f();do{if(a===1)b()}while(0);!function(){for(k in o)break}();"],
 			// terser's `dead_code` of a loop whose body is a `break`: what sets it up and its test run once, and one running nothing goes from its list.
 			["for(;;)break;for(a();;)break;for(;b();)break;for(c();d();)break;for(;;e())break;for(f();;g())break;for(;h();i())break;for(j();k();l())break;while(x())break;while(x()){break}if(a)while(x())break;else y();for(var i=0;x;)break;l:while(x())break;for((a in b);c;)break;for(;function(){}();)break", {}, "a();b();c(),d();f();h();j(),k();x();x();if(a)x();else y();for(var i=0;x;)break;while(x())break;(a in b),c;"],
 			// terser's `evaluate`: `!` of an object made running nothing is `!1`, `delete` of what is no reference `!0` and of the global `undefined` or `NaN` `!1`, but a write in it stays.
@@ -5249,6 +5249,17 @@ describe("one-pass minify of statement sequences", () => {
 		const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
 		expect(code).toBe(
 			'function x(){return console.log("x"),7}console.log(2,x(),/a/,[x()]&&3,4,[],5);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should print a `do` loop forever as `for(;;)` with its body unbraced", () => {
+		// A body leaving the loop, or a test not known, keeps the `do`'s braces.
+		const source =
+			'var n=0;function c(){if(++n>3)throw n}try{do{c()}while(1)}catch(e){console.log(e)}n=0;try{do{c();c()}while(!0)}catch(e){console.log(e)}n=0;try{if(n<1)do{if(c())c()}while(1);else c()}catch(e){console.log(e)}n=0;do{c();if(n>1)break}while(1);do{c()}while(n<2);console.log(n);function g(){do{}while(1);do{break}while(1);do{c()}while(/*! k */1)}';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
+		expect(code).toBe(
+			"var n=0;function c(){if(++n>3)throw n}try{for(;;)c()}catch(o){console.log(o)}n=0;try{for(;;)c(),c()}catch(o){console.log(o)}n=0;try{if(n<1)for(;;){if(c())c()}else c()}catch(o){console.log(o)}n=0;for(;;){c();if(n>1)break}do{c()}while(n<2);console.log(n);function g(){for(;;);do{c()}while(/*! k */1)}"
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
