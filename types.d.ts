@@ -4947,7 +4947,7 @@ declare interface Configuration {
 	/**
 	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
-	amd?: false | JsonObjectFs;
+	amd?: false | { [index: string]: any };
 
 	/**
 	 * Report the first error as a hard error instead of tolerating it.
@@ -17755,7 +17755,7 @@ declare interface JavascriptParserOptions {
 	/**
 	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
-	amd?: false | JsonObjectFs;
+	amd?: false | { [index: string]: any };
 
 	/**
 	 * Set .name to "default" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.
@@ -36004,7 +36004,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
-	amd?: false | JsonObjectFs;
+	amd?: false | { [index: string]: any };
 
 	/**
 	 * Report the first error as a hard error instead of tolerating it.
