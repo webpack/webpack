@@ -1701,6 +1701,14 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// One newer than `builtinsEcma` folds only once it reaches the built-in's edition.
 			["x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)]", {}, "x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)];"],
 			["x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)]", { compress: { toplevel: false, builtinsEcma: 2020 } }, "x=[\" ab\",-1,\"xx\"];"],
+			// ECMAScript 5 reads no binary or octal string, which the build's engine would.
+			["x=[Number(\"0b1\"),Math.abs(\" 0O7\"),Number(\"0x1\")]", { compress: { toplevel: false, builtinsEcma: 5 } }, "x=[Number(\"0b1\"),Math.abs(\" 0O7\"),1];"],
+			["x=[Number(\"0b1\"),Math.abs(\" 0O7\")]", { compress: { toplevel: false, builtinsEcma: 2015 } }, "x=[1,7];"],
+			["x=[Number(+\"0b1\"),-\"0o7\",\"0b1\"*1,\"0b1\"===\"0b1\",typeof \"0b1\",!\"0b1\"]", { compress: { toplevel: false, builtinsEcma: 5 } }, "x=[Number(+\"0b1\"),-\"0o7\",\"0b1\"*1,!0,\"string\",!1];"],
+			["x=[Number(+\"0b1\"),-\"0o7\",\"0b1\"*1]", { compress: { toplevel: false, builtinsEcma: 2015 } }, "x=[1,-7,1];"],
+			// Not given, it is the compressor's `ecma`: an engine running that syntax has the built-ins too.
+			["x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)]", { compress: { toplevel: false, ecma: 2015 } }, "x=[\"ab\".padStart(3),-1,\"xx\"];"],
+			["x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)]", { compress: { toplevel: false, ecma: 2020, builtinsEcma: 5 } }, "x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)];"],
 			["x=[\"a\".repeat(99),(1).toPrecision(22),(1.5).toPrecision(2),(1).toFixed(20)]", { compress: { toplevel: false, builtinsEcma: 2020 } }, "x=[\"a\".repeat(99),1..toPrecision(22),\"1.5\",1..toFixed(20)];"],
 			// It stays a call where an engine may answer otherwise, throws, answers no finite primitive or runs code.
 			["x=[\"\u00c4\".toLowerCase(),decodeURI(\"%\"),parseFloat(\"x\"),Math.max(),\"a\".repeat(99),\"ab\".concat(g()),1.5.toString(2),(1).toFixed(30),parseInt(\"\u180e1\"),\"ab\".concat(\"c\").length,1..toFixed(1)]", {}, "x=[\"\u00c4\".toLowerCase(),decodeURI(\"%\"),parseFloat(\"x\"),Math.max(),\"a\".repeat(99),\"ab\".concat(g()),1.5.toString(2),1..toFixed(30),parseInt(\"\u180e1\"),\"abc\".length,\"1.0\"];"],
@@ -1728,7 +1736,27 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["Math.sqrt(2);x=[Math.ceil(Math.sqrt(2)),(1e20).toString(36),(35).toString(36)]", {}, "x=[2,1e20.toString(36),\"z\"];"],
 			// An unread built-in call that can't throw or run code goes: terser's `builtins_pure` tables, edition-gated, with converted arguments checked.
 			["Date();new Array(4);String({a:1,b:[2]});Number([1]);Boolean(function(){});new Error(\"m\");Math.max(1,\"2\");Date.now();Object.isFrozen({});Object.isFrozen();new Math.abs(1);new Date.now;x=1", {}, "Object.isFrozen(),new Math.abs(1),new Date.now,x=1;"],
-			["Array(-1);new Array(2**32);Array(a);String({toString(){return f()}});String({valueOf:f});String({__proto__:p});String({[k]:1});String({...o});String(1n);Error(\"m\",{get cause(){f()}});Error(\"m\",{cause:1});Math.abs(a);Math.random();x=1", {}, "Array(-1),Array(2**32),Array(a),String({toString(){return f()}}),String({valueOf:f}),String({__proto__:p}),String({[k]:1}),String({...o}),String(1n),Error(\"m\",{get cause(){f()}}),Math.abs(a),Math.random(),x=1;"],
+			["Array(-1);new Array(2**32);Array(a);String({toString(){return f()}});String({valueOf:f});String({__proto__:p});String({[k]:1});String({...o});String(1n);Error(\"m\",{get cause(){f()}});Error(\"m\",{cause:1});Math.abs(a);Math.random();x=1", {}, "Array(-1),Array(2**32),Array(a),String({toString(){return f()}}),String({valueOf:f}),String({__proto__:p}),String({[k]:1}),String({...o}),String(1n),Error(\"m\",{get cause(){f()}}),Math.abs(a),x=1;"],
+			// `Math.random` nothing reads is unobservable, and `NaN` and `Infinity` convert as numbers.
+			["Math.abs(Math.random());Math.abs(-NaN);Math.min(0,-Infinity,NaN);Math.abs(-1n);x=1", {}, "Math.abs(-1n),x=1;"],
+			["Math.abs(Math.random());Math.random=g;Math.random();x=1", {}, "Math.abs(Math.random()),Math.random=g,Math.random(),x=1;"],
+			["function h(NaN,Infinity){Math.abs(-NaN);Math.abs(Infinity)}", {}, "function h(a,n){Math.abs(-a),Math.abs(n)}"],
+			// A `concat` of an array literal joins the array literals and constants it leads with.
+			["x=[[1,2].concat(1).concat(2,[\"a\"]),[].concat([],[3],[]),[].concat(1,y),[].concat(1,...y),[].concat(),[1].concat(2).length,[].concat(1).concat([2,3]).join(\"-\")];[1].concat(2)", {}, "x=[[1,2,1,2,\"a\"],[3],[1].concat(y),[1].concat(...y),[],[1,2].length,\"1-2-3\"],[1,2];"],
+			// A hole reads the prototypes, an argument may be an array, and a comment stays in place.
+			["x=[[1,,2].concat(3),[1].concat([,2]),[1].concat([...a]),[...a].concat(1),[f()].concat(g(),[h()]),[1].concat(y).concat(2),[1].concat(/*! c */2),[1]?.concat(2),[1].concat?.(2),[1][\"concat\"](2),[1].concat(y).join()]", {}, "x=[[1,,2].concat(3),[1].concat([,2]),[1].concat([...a]),[...a].concat(1),[f()].concat(g(),[h()]),[1].concat(y).concat(2),[1].concat(/*! c */2),[1].concat(2),[1].concat?.(2),[1].concat(2),[1].concat(y).join()];"],
+			["x=[[g()].concat(1).join(),[1].concat([g()]).join(),[1].concat((g(),2)).join(),[1].concat(void 0,null).join()]", {}, "x=[[g(),1].join(),[1,g()].join(),[1].concat((g(),2)).join(),\"1,,\"];"],
+			// A spread of a literal after what joins prints its items.
+			["x=[[1].concat(y,...[2,3]),[1].concat(y,...[],z),[1].concat(...[2],y)]", {}, "x=[[1].concat(y,2,3),[1].concat(y,z),[1].concat(2,y)];"],
+			["Array.prototype.concat=f;x=[1].concat(2)", {}, "Array.prototype.concat=f,x=[1].concat(2);"],
+			["Reflect.defineProperty(Array.prototype,\"concat\",d);Reflect.set(Math,\"abs\",f);x=[[1].concat(2),Math.abs(-1)]", {}, "Reflect.defineProperty(Array.prototype,\"concat\",d),Reflect.set(Math,\"abs\",f),x=[[1].concat(2),Math.abs(-1)];"],
+			["Reflect.get(Math,\"max\");x=[[1].concat(2),Math.max(1,2)]", {}, "Reflect.get(Math,\"max\"),x=[[1,2],2];"],
+			["Reflect[\"set\"](Math,\"sign\",f);Object[\"assign\"](Number,o);x=[Math.sign(1),Number.isNaN(1)]", {}, "Reflect.set(Math,\"sign\",f),Object.assign(Number,o),x=[Math.sign(1),Number.isNaN(1)];"],
+			["Reflect[\"get\"](Math,\"abs\");Object[1](Math);x=Math.abs(-1)", {}, "Reflect.get(Math,\"abs\"),Object[1](Math),x=1;"],
+			["Reflect.deleteProperty(Array.prototype,\"concat\");Reflect.setPrototypeOf(Math,p);x=[[1].concat(2),Math.sign(1)]", {}, "Reflect.deleteProperty(Array.prototype,\"concat\"),Reflect.setPrototypeOf(Math,p),x=[[1].concat(2),Math.sign(1)];"],
+			["Array.prototype[Symbol.isConcatSpreadable]=!1;x=[1].concat([2])", {}, "Array.prototype[Symbol.isConcatSpreadable]=!1,x=[1].concat([2]);"],
+			["Object.prototype[Symbol.isConcatSpreadable]=!1;x=[1].concat([2])", {}, "Object.prototype[Symbol.isConcatSpreadable]=!1,x=[1].concat([2]);"],
+			["Array[Symbol.species]=g;Array.prototype.constructor=h;x=[1].concat(2)", {}, "Array[Symbol.species]=g,Array.prototype.constructor=h,x=[1].concat(2);"],
 			["new Set;new Map([[1,2]]);new Map([1]);new Map(a);new WeakSet([1]);new WeakMap([[1,1]]);Symbol();new Symbol;BigInt(1);Object.isFrozen(1);Object.keys(42);Number.isNaN(1);x=1", { compress: { toplevel: false, builtinsEcma: 2020 } }, "new Map([1]),new Map(a),new WeakSet([1]),new WeakMap([[1,1]]),new Symbol,BigInt(1),Object.keys(42),x=1;"],
 			["new Promise(function(){g()});new Proxy(1,{});new WeakRef(1);new Iterator;new AggregateError(1);RegExp(\"(\");decodeURI(\"%\");new parseInt;Int8Array(1);Uint8Array(1);new Int8Array([1,2]);new Int8Array([1n]);new ArrayBuffer(8);new TypeError;Error(\"a\");escape(\"a\");parseInt(\"a\");x=1", { compress: { toplevel: false, builtinsEcma: 2026, unsafe: true } }, "new Promise(function(){g()}),new Proxy(1,{}),new WeakRef(1),new Iterator,AggregateError(1),RegExp(\"(\"),decodeURI(\"%\"),new parseInt,Int8Array(1),Uint8Array(1),new Int8Array([1n]),x=1;"],
 			["new WeakSet;new WeakSet([{},[],function(){},()=>{}]);new WeakSet([1]);new WeakSet([,{}]);new WeakMap([[{},1],[[]]]);new WeakMap([[1,1]]);new WeakMap([[]]);new WeakMap([1]);new WeakMap([,]);new Map([[1],[]]);new Map([,]);new Map(\"ab\");new Set([1]);JSON.stringify(1);x=1", { compress: { toplevel: false, builtinsEcma: 2020, unsafe: true } }, "new WeakSet([1]),new WeakSet([,{}]),new WeakMap([[1,1]]),new WeakMap([[]]),new WeakMap([1]),new WeakMap([,]),new Map([,]),new Map(\"ab\"),JSON.stringify(1),x=1;"],
@@ -2292,6 +2320,36 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{ compress: { unused: false }, mangle: false }
 			).code
 		).toContain('a="abc y"');
+	});
+
+	it("should fold the conversions `Boolean`, `Number` and `String`", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(source, {
+				compress: { toplevel: false },
+				mangle: false,
+				format: { comments: "some" }
+			}).code;
+		for (const [source, expected] of [
+			// On constants each answers its value; `Number(undefined)` answers no finite one.
+			[
+				'a=[Boolean(),Number(),Number(-123),Number(!1),Number(null),String("x"),String(1),Number(" 0x1f "),Number(void 0),Number({})]',
+				'a=[!1,0,-123,0,0,"x","1",31,Number(void 0),Number({})];'
+			],
+			// `Boolean(x)` is `!!x`, or `x` where that is a boolean already.
+			[
+				"a=Boolean(b);f(Boolean(!b));x={k:Boolean(b?c>0:c<0)};y=[Boolean((b|+c)!==0)];function g(){return Boolean(b in c)}var z=Boolean(b?!0:!1);Boolean(b?1:!1);u=[Boolean(c?true:false),Boolean(delete b.c),Boolean((b>1))]",
+				"a=!!b,f(!b),x={k:b?c>0:c<0},y=[(b|+c)!==0];function g(){return b in c}var z=!!b;b?1:!1,u=[!!c,delete b.c,b>1];"
+			],
+			// Anywhere else, with no lone argument, spread, optional, replaced or shadowed, it stays.
+			[
+				"a=Boolean(b)?1:2;c=Boolean(b).x;d=Boolean(b)+1;e=Boolean(b,c);g=Boolean(...b);h=Boolean?.(b);k=Boolean((b,c));Boolean({}.x);l=new Boolean(b);m=Boolean(b)(1);n=Boolean(/*! k */b)",
+				"a=Boolean(b)?1:2,c=Boolean(b).x,d=Boolean(b)+1,e=Boolean(b,c),g=Boolean(...b),h=Boolean?.(b),k=Boolean((b,c)),l=new Boolean(b),m=Boolean(b)(1),n=Boolean(/*! k */b);"
+			],
+			["function f(Boolean,Number){a=[Boolean(b),Number(1)]}", "function f(Boolean,Number){a=[Boolean(b),Number(1)]}"],
+			["Boolean=f;Number=g;a=[Boolean(b),Number(1)]", "Boolean=f,Number=g,a=[Boolean(b),Number(1)];"]
+		]) {
+			expect(print(source)).toBe(expected);
+		}
 	});
 
 	it("should print the value an object literal holds at a known key", () => {
