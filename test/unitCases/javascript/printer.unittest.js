@@ -5468,6 +5468,17 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should print the global `undefined` read as an object, callee or tag as `(void 0)`", () => {
+		// One a scope declares, or `delete` reads, stays.
+		const source =
+			'try{x=undefined.a}catch(e){console.log(e.name)}try{undefined[0]}catch(e){console.log(e.name)}try{undefined()}catch(e){console.log(e.name)}try{new undefined}catch(e){console.log(e.name)}try{undefined`t`}catch(e){console.log(e.name)}console.log(delete undefined);(function(undefined){console.log(undefined.a)})({a:1})';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			"try{x=(void 0).a}catch(e){console.log(e.name)}try{(void 0)[0]}catch(e){console.log(e.name)}try{(void 0)()}catch(e){console.log(e.name)}try{new(void 0)}catch(e){console.log(e.name)}try{(void 0)`t`}catch(e){console.log(e.name)}console.log(!1),function(){console.log({a:1}.a)}();"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
