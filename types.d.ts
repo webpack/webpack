@@ -949,6 +949,25 @@ declare interface BasenameCacheEntry {
  * field readable. This shrinks instances from 224 to 144 bytes on V8.
  */
 declare abstract class BasicEvaluatedExpression {
+	quasis?: BasicEvaluatedExpression[];
+	parts?: BasicEvaluatedExpression[];
+	items?: BasicEvaluatedExpression[];
+	options?: BasicEvaluatedExpression[];
+	prefix?: null | BasicEvaluatedExpression;
+	postfix?: null | BasicEvaluatedExpression;
+	wrappedInnerExpressions?: BasicEvaluatedExpression[];
+
+	/**
+	 * Served lazily from the attached expression when not set explicitly:
+	 * `evaluateExpression`'s plain results share the expression's range, and
+	 * most evaluations never read it, so the node's range array is only
+	 * materialized on demand.
+	 */
+	range?: [number, number];
+
+	/**
+	 * The expression evaluated, its object made from its node on first read.
+	 */
 	expression?:
 		| Program
 		| ImportDeclaration
@@ -1024,21 +1043,6 @@ declare abstract class BasicEvaluatedExpression {
 		| ArrayPattern
 		| RestElement
 		| AssignmentPattern;
-	quasis?: BasicEvaluatedExpression[];
-	parts?: BasicEvaluatedExpression[];
-	items?: BasicEvaluatedExpression[];
-	options?: BasicEvaluatedExpression[];
-	prefix?: null | BasicEvaluatedExpression;
-	postfix?: null | BasicEvaluatedExpression;
-	wrappedInnerExpressions?: BasicEvaluatedExpression[];
-
-	/**
-	 * Served lazily from the attached expression when not set explicitly:
-	 * `evaluateExpression`'s plain results share the expression's range, and
-	 * most evaluations never read it, so the node's range array is only
-	 * materialized on demand.
-	 */
-	range?: [number, number];
 	type: number;
 	truthy: boolean;
 	falsy: boolean;
@@ -1284,6 +1288,11 @@ declare abstract class BasicEvaluatedExpression {
 			| RestElement
 			| AssignmentPattern
 	): BasicEvaluatedExpression;
+
+	/**
+	 * Set the expression by its node, made an object only when read.
+	 */
+	setNode(reader: NodeObjectReader, node: number): BasicEvaluatedExpression;
 }
 type BeforeContextResolveData = ContextResolveData & ContextOptions;
 
@@ -15521,6 +15530,12 @@ declare abstract class JavascriptNodePath {
 	within(type: number): boolean;
 	type(n?: number): number;
 	range(n?: number): [number, number];
+
+	/**
+	 * The node's ESTree object, made the first time it is asked for: what a tap
+	 * not reading the path, and an evaluated expression, take.
+	 */
+	object(n?: number): NodeEstreeIndex;
 	start(n?: number): number;
 	end(n?: number): number;
 
@@ -17260,7 +17275,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 			| UpdateExpression
 			| YieldExpression
 			| Super,
-		...args: Parameters<H["call"]>
+		...args: [number] | Parameters<H["call"]>
 	): undefined | ReturnType<H["call"]>;
 
 	/**
@@ -17308,7 +17323,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 			  ) => ReturnType<H["call"]>),
 		defined:
 			undefined | ((result?: string) => undefined | ReturnType<H["call"]>),
-		...args: Parameters<H["call"]>
+		...args: [number] | Parameters<H["call"]>
 	): undefined | ReturnType<H["call"]>;
 
 	/**
@@ -17317,7 +17332,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	callHooksForName<H extends { call(...args: HookArgument[]): HookArgument }>(
 		hookMap: HookMap<H>,
 		name: string,
-		...args: Parameters<H["call"]>
+		...args: [number] | Parameters<H["call"]>
 	): undefined | ReturnType<H["call"]>;
 
 	/**
@@ -17326,7 +17341,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	callHooksForInfo<H extends { call(...args: HookArgument[]): HookArgument }>(
 		hookMap: HookMap<H>,
 		info: ExportedVariableInfo,
-		...args: Parameters<H["call"]>
+		...args: [number] | Parameters<H["call"]>
 	): undefined | ReturnType<H["call"]>;
 
 	/**
@@ -17340,7 +17355,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		fallback: undefined | ((name: string) => undefined | ReturnType<H["call"]>),
 		defined:
 			undefined | ((result?: string) => undefined | ReturnType<H["call"]>),
-		...args: Parameters<H["call"]>
+		...args: [number] | Parameters<H["call"]>
 	): undefined | ReturnType<H["call"]>;
 
 	/**
@@ -17354,7 +17369,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		fallback:
 			undefined | ((value: string) => undefined | ReturnType<H["call"]>),
 		defined: undefined | (() => ReturnType<H["call"]>),
-		...args: Parameters<H["call"]>
+		...args: [number] | Parameters<H["call"]>
 	): undefined | ReturnType<H["call"]>;
 
 	/**
@@ -17550,6 +17565,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	 */
 	evaluateExpression(
 		expression:
+			| number
 			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
@@ -22930,6 +22946,15 @@ declare interface NodeLike {
 	loc?: null | SourceLocation;
 	sourceFile?: string;
 	range?: [number, number];
+}
+
+/**
+ * what a node evaluated by id is read through
+ */
+declare interface NodeObjectReader {
+	start(node: number): number;
+	end(node: number): number;
+	object(node: number): NodeEstreeIndex;
 }
 
 /**
