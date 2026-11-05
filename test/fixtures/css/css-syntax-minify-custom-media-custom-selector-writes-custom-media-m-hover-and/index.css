@@ -1,0 +1,1 @@
+@custom-media --m (hover) and/**/(color);@media (--m) and (c:3){a{color:red}}

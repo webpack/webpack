@@ -1,0 +1,1 @@
+@custom-media --m (width>1px);@media (--m){a{color:red}}@custom-media --m (width>2px);

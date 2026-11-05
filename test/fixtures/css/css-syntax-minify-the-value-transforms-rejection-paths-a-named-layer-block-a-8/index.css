@@ -1,0 +1,1 @@
+@layer a.b{.p{c:1}.chk{cursor:not-allowed;opacity:.2}}@layer a.b.c{.q{c:2}}@layer a.b{.rad{cursor:not-allowed;opacity:.2}.r{c:3}}

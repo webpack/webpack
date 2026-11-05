@@ -1041,6 +1041,10 @@ const wantedStage = filterFrom("STAGE");
 // thousands of stylesheets are a corpus of their own rather than a default run.
 const SKIPPED_FIXTURE_DIRS = new Set(["js", "node_modules", "wpt"]);
 
+// The inputs the unit tests feed the parser, one directory each: held to the
+// printer's own relations, never to another parser's reading of them.
+const UNIT_INPUT_RE = /^test\/fixtures\/css\/[^/]+\/index\.css$/;
+
 const wantedRelation = filterFrom("RELATION");
 const wantedPreset = filterFrom("PRESET");
 
@@ -1185,7 +1189,7 @@ const invariants = (write) => {
 			return cssTreeTree;
 		},
 		tree: webpackTree,
-		corpus,
+		corpus: corpus.filter(([label]) => !UNIT_INPUT_RE.test(label)),
 		expected: EXPECTED,
 		missing: _missingFixtures
 	});

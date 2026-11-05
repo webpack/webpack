@@ -1,0 +1,1 @@
+.a{color:var(--webpack-light,#fff)var(--webpack-dark,#000)}.b{color-scheme:light dark;--webpack-light:red;--webpack-light:initial;--webpack-dark:}@media (prefers-color-scheme:dark){.b{--webpack-light:;--webpack-dark:initial}}:where(:root){--webpack-light:initial;--webpack-dark:}

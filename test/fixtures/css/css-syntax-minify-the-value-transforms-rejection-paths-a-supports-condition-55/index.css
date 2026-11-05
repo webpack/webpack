@@ -1,0 +1,1 @@
+@supports (display: grid) or ( not ( display: flex ) ){a{color:red}}

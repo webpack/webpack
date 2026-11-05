@@ -1,0 +1,7 @@
+@supports (a:b) {
+.a {
+&:hover {
+color: red;
+}
+}
+}

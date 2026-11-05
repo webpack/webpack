@@ -1,0 +1,1 @@
+@layer base{.a{width:calc(var(--w)*2)}}

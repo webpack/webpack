@@ -52,3 +52,4 @@ bin/* eol=lf
 *.css eol=lf
 *.html eol=lf
 **/*webpack.lock.data/** -text
+test/fixtures/css/*/index.css -text
