@@ -20,7 +20,7 @@ chunk (runtime: main) 628.js (id hint: vendors) X bytes <{792}> ={60}= ={263}= =
   ./node_modules/x.js X bytes [built] [code generated]
 chunk (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{263}< >{476}< >{628}< >{869}< [entry] [rendered]
   > ./ main
-  runtime modules X KiB 9 modules
+  runtime modules X KiB 8 modules
   ./index.js X bytes [built] [code generated]
 chunk (runtime: main) async-c.js (async-c) X bytes <{792}> ={476}= ={628}= [rendered]
   > ./c ./index.js 3:0-47

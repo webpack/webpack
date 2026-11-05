@@ -11,7 +11,7 @@ exports[`StatsTestCases runtime-specific-used-exports should print correct stats
   asset production-dx_js.js X bytes [emitted]
   asset production-c.js X bytes [emitted] (name: c)
   chunk (runtime: a) production-a.js (a) X bytes (javascript) X KiB (runtime) [entry] [rendered]
-    runtime modules X KiB 9 modules
+    runtime modules X KiB 8 modules
     cacheable modules X bytes
       ./a.js X bytes [built] [code generated]
         [no exports used]
@@ -24,7 +24,7 @@ exports[`StatsTestCases runtime-specific-used-exports should print correct stats
       ./reexport.js X bytes [dependent] [built] [code generated]
         [only some exports used: x]
   chunk (runtime: b) production-b.js (b) X bytes (javascript) X KiB (runtime) [entry] [rendered]
-    runtime modules X KiB 9 modules
+    runtime modules X KiB 8 modules
     cacheable modules X bytes
       ./b.js X bytes [built] [code generated]
         [no exports used]
@@ -59,7 +59,7 @@ exports[`StatsTestCases runtime-specific-used-exports should print correct stats
     ./dz.js X bytes [built] [code generated]
     ./module.js?chunk X bytes [dependent] [built] [code generated]
       [only some exports used: identity, w, x, z]
-  runtime modules X KiB 18 modules
+  runtime modules X KiB 16 modules
   cacheable modules X KiB
     ./a.js X bytes [built] [code generated]
       [no exports used]
@@ -92,7 +92,7 @@ development:
   asset development-dz_js.js X KiB [emitted]
   asset development-c.js X KiB [emitted] (name: c)
   chunk (runtime: a) development-a.js (a) X bytes (javascript) X KiB (runtime) [entry] [rendered]
-    runtime modules X KiB 9 modules
+    runtime modules X KiB 8 modules
     cacheable modules X bytes
       ./a.js X bytes [built] [code generated]
         [used exports unknown]
@@ -105,7 +105,7 @@ development:
       ./reexport.js X bytes [dependent] [built] [code generated]
         [used exports unknown]
   chunk (runtime: b) development-b.js (b) X bytes (javascript) X KiB (runtime) [entry] [rendered]
-    runtime modules X KiB 9 modules
+    runtime modules X KiB 8 modules
     cacheable modules X bytes
       ./b.js X bytes [built] [code generated]
         [used exports unknown]
@@ -140,7 +140,7 @@ development:
       [used exports unknown]
     ./module.js?chunk X bytes [dependent] [built] [code generated]
       [used exports unknown]
-  runtime modules X KiB 18 modules
+  runtime modules X KiB 16 modules
   cacheable modules X KiB
     ./a.js X bytes [built] [code generated]
       [used exports unknown]
@@ -177,7 +177,7 @@ global:
   asset global-dz_js.js X bytes [emitted]
   asset global-c.js X bytes [emitted] (name: c)
   chunk (runtime: a) global-a.js (a) X bytes (javascript) X KiB (runtime) [entry] [rendered]
-    runtime modules X KiB 9 modules
+    runtime modules X KiB 8 modules
     cacheable modules X bytes
       ./a.js X bytes [built] [code generated]
         [no exports used]
@@ -190,7 +190,7 @@ global:
       ./reexport.js X bytes [dependent] [built] [code generated]
         [only some exports used: x, y]
   chunk (runtime: b) global-b.js (b) X bytes (javascript) X KiB (runtime) [entry] [rendered]
-    runtime modules X KiB 9 modules
+    runtime modules X KiB 8 modules
     cacheable modules X bytes
       ./b.js X bytes [built] [code generated]
         [no exports used]
@@ -221,7 +221,7 @@ global:
     ./dz.js X bytes [built] [code generated]
     ./module.js?chunk X bytes [dependent] [built] [code generated]
       [only some exports used: identity, w, x, y, z]
-  runtime modules X KiB 18 modules
+  runtime modules X KiB 16 modules
   cacheable modules X KiB
     ./a.js X bytes [built] [code generated]
       [no exports used]

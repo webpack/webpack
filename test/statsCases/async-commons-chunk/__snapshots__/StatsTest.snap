@@ -8,7 +8,7 @@ exports[`StatsTestCases async-commons-chunk should print correct stats for async
   ./a.js X bytes [built] [code generated]
 chunk (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) >{670}< >{899}< >{964}< [entry] [rendered]
   > ./ main
-  runtime modules X KiB 7 modules
+  runtime modules X KiB 6 modules
   ./index.js X bytes [built] [code generated]
 chunk (runtime: main) 899.js X bytes <{792}> ={670}= [rendered]
   > ./a ./b ./index.js 9:1-13:3

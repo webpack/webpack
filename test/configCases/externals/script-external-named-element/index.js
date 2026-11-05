@@ -32,3 +32,40 @@ it("should load the script external even when a named element has its global nam
 	const external = await promise;
 	expect(external.loaded).toBe(true);
 });
+
+it("should load a namespaced script external when its namespace is not defined yet", async () => {
+	const promise = import("myNamespacedExternal");
+	await tick();
+
+	const script = document.head._children.find(
+		child => child.nodeName === "SCRIPT" && child.src.endsWith("namespaced.js")
+	);
+	expect(script).toBeDefined();
+	script.onload({ type: "load", target: script });
+	await expect(promise).rejects.toMatchObject({
+		name: "ScriptExternalLoadError"
+	});
+});
+
+it("should load a namespaced script external even when a form has the namespace name", async () => {
+	// `<form id="myForm"><input name="lib"></form>` in the page: the control
+	// is an own property of the form, but the form isn't one of the global object
+	const form = { lib: document.createElement("input") };
+	Object.setPrototypeOf(globalThis, { myForm: form });
+	expect(Object.prototype.hasOwnProperty.call(myForm, "lib")).toBe(true);
+
+	const promise = import("myFormExternal");
+	await tick();
+
+	// the form's control must not count as the already loaded script
+	const script = document.head._children.find(
+		child => child.nodeName === "SCRIPT" && child.src.endsWith("form.js")
+	);
+	expect(script).toBeDefined();
+
+	globalThis.myForm = { lib: { loaded: true } };
+	script.onload({ type: "load", target: script });
+
+	const external = await promise;
+	expect(external.loaded).toBe(true);
+});

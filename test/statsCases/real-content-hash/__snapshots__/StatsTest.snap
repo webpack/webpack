@@ -14,7 +14,7 @@ exports[`StatsTestCases real-content-hash should print correct stats for real-co
   Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes 1 auxiliary asset
   Entrypoint a X bytes = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js
   Entrypoint b X bytes = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js
-  runtime modules X KiB 8 modules
+  runtime modules X KiB 7 modules
   orphan modules X bytes [orphan] 1 module
   cacheable modules X bytes (javascript) X KiB (asset)
     javascript modules X bytes
@@ -41,7 +41,7 @@ b-normal:
   Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes 1 auxiliary asset
   Entrypoint a X bytes = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js
   Entrypoint b X bytes = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js
-  runtime modules X KiB 8 modules
+  runtime modules X KiB 7 modules
   orphan modules X bytes [orphan] 1 module
   cacheable modules X bytes (javascript) X KiB (asset)
     javascript modules X bytes
@@ -72,7 +72,7 @@ a-source-map:
   Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes 3 auxiliary assets
   Entrypoint a X bytes (X bytes) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
   Entrypoint b X bytes (X bytes) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
-  runtime modules X KiB 8 modules
+  runtime modules X KiB 7 modules
   orphan modules X bytes [orphan] 1 module
   cacheable modules X bytes (javascript) X KiB (asset)
     javascript modules X bytes
@@ -103,7 +103,7 @@ b-source-map:
   Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes 3 auxiliary assets
   Entrypoint a X bytes (X bytes) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
   Entrypoint b X bytes (X bytes) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
-  runtime modules X KiB 8 modules
+  runtime modules X KiB 7 modules
   orphan modules X bytes [orphan] 1 module
   cacheable modules X bytes (javascript) X KiB (asset)
     javascript modules X bytes

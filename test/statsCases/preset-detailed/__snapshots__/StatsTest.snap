@@ -31,9 +31,6 @@ runtime modules X KiB
   webpack/runtime/get javascript chunk filename X bytes {792} [code generated]
     [no exports]
     [used exports unknown]
-  webpack/runtime/global X bytes {792} [code generated]
-    [no exports]
-    [used exports unknown]
   webpack/runtime/hasOwnProperty shorthand X bytes {792} [code generated]
     [no exports]
     [used exports unknown]
@@ -82,7 +79,7 @@ LOG from LogTestPlugin
 LOG from webpack.Compilation
     5 modules hashed, 0 from cache (0.83 variants per module in average)
     100% code generated (5 generated, 0 from cache)
-    100% code generated (7 generated, 0 from cache)
+    100% code generated (6 generated, 0 from cache)
 + 24 hidden lines
 
 LOG from webpack.FlagDependencyExportsPlugin

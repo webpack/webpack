@@ -5,7 +5,7 @@ exports[`StatsTestCases import-context-filter should print correct stats for imp
 asset 0.js X bytes [emitted]
 asset 717.js X bytes [emitted]
 asset 776.js X bytes [emitted]
-runtime modules X KiB 9 modules
+runtime modules X KiB 8 modules
 built modules X bytes [built]
   modules by path ./templates/*.js X bytes
     ./templates/bar.js X bytes [optional] [built] [code generated]

@@ -14,7 +14,7 @@ chunk (runtime: main) default/async-c-1.js (async-c-1) (id hint: vendors) X byte
   ./node_modules/c.js X bytes [built] [code generated]
 chunk (runtime: main) default/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{263}< >{511}< [entry] [rendered]
   > ./ main
-  runtime modules X KiB 9 modules
+  runtime modules X KiB 8 modules
   ./index.js X bytes [built] [code generated]
 webpack x.x.x compiled successfully"
 `;

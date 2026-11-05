@@ -4,7 +4,7 @@ exports[`StatsTestCases module-federation-custom-exposed-module-name should prin
 "asset container_bundle.js X KiB [emitted] (name: container)
 asset custom-entry_bundle.js X bytes [emitted] (name: custom-entry)
 asset main_bundle.js X bytes [emitted] (name: main)
-runtime modules X KiB 9 modules
+runtime modules X KiB 8 modules
 built modules X bytes [built]
   ./index.js X bytes [built] [code generated]
   container entry X bytes [built] [code generated]
