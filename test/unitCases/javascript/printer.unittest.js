@@ -1477,6 +1477,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A known test or left side folding to a reference a call, tag, `typeof` or `delete` reads keeps it a value with `0,`; a name called bare or `new` needs none.
 			["(true&&x.y)();(1?x[y]:2)``;f(typeof(1?x:2),delete(0?1:x.y));(0||x?.y)();(1?eval:2)(s);(1?x:2)();new(1?x.y:2);(c?x.y:2)();(null??x.y)()", {}, "(0,x.y)(),(0,x[y])``,f(typeof(0,x),delete(0,x.y)),(0,x?.y)(),(0,eval)(s),x(),new x.y,(c?x.y:2)(),(0,x.y)();"],
 			["x=[(1&&(0,f.g))(),(1&&(1&&f.g))``,typeof(1&&(1&&f)),delete(1?(0,f.g):2),(1&&(1&&g))(),(1&&(1&&eval))(1),new(1&&(a?f:f))]", {}, "x=[((0,f.g))(),(0,f.g)``,typeof(0,f),delete((0,f.g)),(g)(),(0,eval)(1),new((a?f:f))];"],
+			["for(;;){if(x)break;else{function f(){}}}for(;;){if(y){function g(){}}else break}", {}, "for(;!x;){function f(){}}for(;y;){function g(){}}"],
+			["foo();bar();for(;i<1;)g();x=(a in b);for(;i<1;)g();x=1;for(;0;)g();y=1;for(;i<1;)g();z=function(){a in b};for(;i<1;)g()", {}, "foo();for(bar();i<1;)g();x=a in b;for(;i<1;)g();x=1;for(y=1;i<1;)g();for(z=function(){a in b};i<1;)g();"],
+			["function f(){var t=g();var e,h=0;for(;h<1;++h)e=k(e);return t+e+t}", {}, "function f(){var e=g(),r,t=0;for(;t<1;++t)r=k(r);return e+r+e}"],
 			["if(t)`${a()}${b()}`;else c();if(u)`${a()}${1}`;else c();(function(){if(t)return;`${a()}${b()}`})();(function(){if(u)return;`${a()}${1}`})()", {}, "t?(`${a()}`,`${b()}`):c(),u?`${a()}`:c(),t||(`${a()}`,`${b()}`),u||`${a()}`;"],
 			["Object.create({},null);Object.create({},\"ab\");Object.create({},void 0);Object.create({},1)", {}, "Object.create({},null),Object.create({},\"ab\"),Object.create({},1);"],
 			["(class{#x;static{#x in 1}});(class{#y;static{#y in {}}});(class{#z;static{#z in o}})", {}, "(class{#s;static{#s in 1}});(class{#c;static{#c in o}});"],
@@ -1674,7 +1677,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["var a=0;for(;c<b;c++)use();if(x){var d;for(d in b)use()}class C{static{var e=0;for(;c<b;c++)use()}}use(C)", {}, "for(var a=0;c<b;c++)use();if(x)for(var d in b)use();class C{static{for(;c<b;c++)use()}}use(C);"],
 			["var a=0;for(;c<b;c++)use()", { compress: { toplevel: true } }, "for(;c<b;c++)use();"],
 			["function f(){var a=0;/* c */for(;a<9;a++)use(a)}function h(){var a=0;for(;a<9;a++)use(a)}", { format: { comments: "all" } }, "function f(){var a=0;/* c */for(;a<9;a++)use(a)}function h(){for(var a=0;a<9;a++)use(a)}"],
-			["function f(){var a=\"x\"in o;for(;;a++)use(a)}function h(){a=\"x\"in o;for(;;)use()}", {}, "function f(){for(var n=(\"x\"in o);;n++)use(n)}function h(){for((a=\"x\"in o);;)use()}"],
+			["function f(){var a=\"x\"in o;for(;;a++)use(a)}function h(){a=\"x\"in o;for(;;)use()}", {}, "function f(){for(var n=(\"x\"in o);;n++)use(n)}function h(){a=\"x\"in o;for(;;)use()}"],
 			// A `var` whose declarators print their values apart is several statements: a loop keeps its braces, and no bare `var` joins it.
 			["function f(){for(let i=0;i<3;i++){var v=i,w=g(i)}}function k(){var b=2,a=f();use(b);var c;use(c=1,c)}", {}, "function f(){for(let i=0;i<3;i++){i;g(i)}}function k(){f();use(2);var i;use(i=1,i)}"],
 			// terser's `a|(b|c)` as `a|b|c`, for `|`, `&` and `^` alone.
