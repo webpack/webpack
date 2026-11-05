@@ -1545,7 +1545,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["([a]);([foo()]);[4,...c,a];({a:foo()});({foo:{foo:foo()}});({[bar()]:foo()});({a:1,b:g(),c:h()});x=[a(),b()];({a(){},b:g()});({get a(){},b:g()});[,a(),,b()];({b});x=({a:f()},1);({a:function(){}()}.x)", {}, "a,foo(),[...c,a],foo(),foo();({[bar()]:foo()});g(),h(),x=[a(),b()],g();({get a(){},b:g()});a(),b(),b,x=(f(),1);"],
 			["x==null&&y", {"ecma": 2019}, "x==null&&y;"],
 			["void {a:g()}.b;typeof function(){return g()}().x;delete {a:g()}.b.c()", {}, "({a:g()}.b),g().x,({a:g()}.b.c());"],
-			["x==null&&y;x!=null||y;a==null&&(a=b);null==x&&g();o.y!=null||(o={},o.y=3);x===null&&y;x==null&&(y||z);z=x==null&&y;f()==null&&y;x==null&&!y;x==null&&new Y;x==null&&a+b", {"ecma": 2020}, "x??y,x??y,a??(a=b),x??g(),o.y??(o={},o.y=3),x===null&&y,x==null&&(y||z),z=x==null&&y,f()==null&&y,x??!y,x??new Y,x??a+b;"],
+			["x==null&&y;x!=null||y;a==null&&(a=b);null==x&&g();o.y!=null||(o={},o.y=3);x===null&&y;x==null&&(y||z);z=x==null&&y;f()==null&&y;x==null&&!y;x==null&&new Y;x==null&&a+b", {"ecma": 2020}, "x??y,x??y,a??(a=b),x??g(),o.y??(o={},o.y=3),x===null&&y,x==null&&(y||z),z=x==null&&y,f()==null&&y,x??y,x??new Y,x??a+b;"],
 			// An operand of `&&` or `||` whose truth alone is read is read for its truth too; a strict equality nobody reads runs only its sides.
 			["v=!(a||!0);v=!(a&&!1);if(!!a||!!b)throw 0;x=a||!0;if(a&&(b?!0:c))d();if(a&&(x&&!0))f();x=a??!0;if(a??!!b)g();if(!0)h();while(!1)k()", {}, "v=!(a||1),v=!(a&&0);if(a||b)throw 0;x=a||!0;if(a&&(b||c))d();if(a&&x)f();x=a??!0;if(a??!!b)g();h();"],
 			// esbuild's `!!(!b&&c)` as `!(b||!c)`, where shorter; a logical folding to a unary takes no parentheses under `!`, and `!!` of a boolean goes.
