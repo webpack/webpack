@@ -99,8 +99,9 @@ interface](https://webpack.js.org/plugins/). Most of the features
 within webpack itself use this plugin interface. This makes webpack very
 **flexible**.
 
-Webpack can generate HTML pages and extract CSS files itself, both experimental —
-see what that covers, and what still needs a plugin, for
+Webpack can generate HTML pages and extract CSS files itself — on by default since
+5.109.0, though still under `experiments`. See what that covers, and what still
+needs a plugin, for
 [CSS](https://webpack.js.org/guides/native-css/#whats-built-in) and
 [HTML](https://webpack.js.org/guides/native-html/#whats-built-in).
 
@@ -135,8 +136,9 @@ or are automatically applied via regex from your webpack configuration.
 
 JavaScript, JSON and [assets](https://webpack.js.org/guides/asset-modules/) need no
 loader, and [CSS](https://webpack.js.org/guides/native-css/#whats-built-in) and
-[HTML](https://webpack.js.org/guides/native-html/#whats-built-in) have experimental
-built-in support — but preprocessors and template engines keep their loaders.
+[HTML](https://webpack.js.org/guides/native-html/#whats-built-in) have built-in
+support, so `css-loader`, `style-loader` and `html-loader` are no longer needed —
+but preprocessors and template engines keep their loaders.
 
 #### JSON
 
