@@ -1847,9 +1847,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["x=[-a===0,a===0,(a|b)===2,`a${b}`===c,-a===-1,(b+=1)===1,+a===b]", {}, "x=[-a===0,a===0,(a|b)===2,`a${b}`===c,-a===-1,(b+=1)===1,+a===b];"],
 			// The built-in `Array` makes the array its literal does: a lone number is a length, a few holes printing shorter.
 			["x=[new Array,Array(),Array(0),Array(1),Array(5),Array(\"a\"),Array(7n),Array(a,b),Array(...a,\"b\"),Array(Array(1,\"2\")),new Array(a,...b,c),Array(...[1,2]),Array(1,2).length]", {}, "x=[[],[],[],[,],[,,,,,],[\"a\"],[7n],[a,b],[...a,\"b\"],[[1,\"2\"]],[a,...b,c],[1,2],[1,2].length];"],
+			["x=[Array(-0),new Array(-0),Array(-1),Array(...[3],...[]),Array(...[],2),Array(...[-0]),Array(...[6]),Array(...[1.5]),Array(...[3],...a),Array(...[/*! c */3])]", {}, "x=[[],[],Array(-1),[,,,],[,,],[],Array(6),Array(1.5),Array(3,...a),Array(...[/*! c */3])];"],
 			["x=[Array(`a${b}`),Array({}),Array([]),Array(function(){}),Array(()=>1),Array(class{}),Array(null),Array(true),Array(!0),Array(/a/)]", {}, "x=[[`a${b}`],[{}],[[]],[function(){}],[()=>1],[class{}],[null],[!0],Array(!0),[/a/]];"],
 			// A lone argument that may be a number, a length printing longer, or a spread that may pass one alone stays a call.
-			["x=[Array(6),Array(1.5),Array(-1),Array(a),Array(...a),Array(...a,b),Array(3,...[]),Array?.(1,2),Array(Array?.(a)),new(Array(1,2))]", {}, "x=[Array(6),Array(1.5),Array(-1),Array(a),Array(...a),Array(...a,b),Array(3),Array?.(1,2),Array(Array?.(a)),new([1,2])];"],
+			["x=[Array(6),Array(1.5),Array(-1),Array(a),Array(...a),Array(...a,b),Array(3,...[]),Array?.(1,2),Array(Array?.(a)),new(Array(1,2))]", {}, "x=[Array(6),Array(1.5),Array(-1),Array(a),Array(...a),Array(...a,b),[,,,],Array?.(1,2),Array(Array?.(a)),new([1,2])];"],
 			["var Array;x=[Array(1,2),Array()]", {}, "var Array;x=[Array(1,2),Array()];"],
 			["window.Array=f;x=[Array(1,2),Array(0)]", {}, "window.Array=f,x=[Array(1,2),Array(0)];"],
 			["x=Array(1,2/*c*/);y=Array/*c*/(1,2)", { format: { comments: "all" } }, "x=Array(1,2/*c*/),y=Array/*c*/(1,2);"],
