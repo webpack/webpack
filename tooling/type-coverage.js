@@ -336,6 +336,18 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 		};
 
 		/**
+		 * Tells whether a declaration file is the platform's own: TypeScript's
+		 * built-in lib or Node.js's `@types/node`. The `any` they write in their
+		 * signatures, such as a stream's `chunk: any`, is theirs; other
+		 * dependencies, such as tapable, still count.
+		 * @param {ts.SourceFile} sourceFile the declaration's file
+		 * @returns {boolean} true when the platform declares it
+		 */
+		const isPlatformFile = (sourceFile) =>
+			program.isSourceFileDefaultLibrary(sourceFile) ||
+			/[\\/]node_modules[\\/]@types[\\/]node[\\/]/.test(sourceFile.fileName);
+
+		/**
 		 * Tells whether an identifier names a member of TypeScript's built-in lib
 		 * whose own signature carries the `any`, such as the replacer of
 		 * `String#replace` or the `thisArg?: any` of `Array#map`. A receiver typed
@@ -352,7 +364,7 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 				!declarations ||
 				declarations.length === 0 ||
 				!declarations.every((declaration) =>
-					program.isSourceFileDefaultLibrary(declaration.getSourceFile())
+					isPlatformFile(declaration.getSourceFile())
 				)
 			) {
 				return false;
@@ -417,7 +429,7 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 			if (
 				!declaration ||
 				!ts.isFunctionLike(declaration) ||
-				!program.isSourceFileDefaultLibrary(declaration.getSourceFile()) ||
+				!isPlatformFile(declaration.getSourceFile()) ||
 				isGeneric(declaration) ||
 				!declaration.type
 			) {
@@ -447,7 +459,7 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 				declarations &&
 				declarations.length > 0 &&
 				declarations.every((declaration) =>
-					program.isSourceFileDefaultLibrary(declaration.getSourceFile())
+					isPlatformFile(declaration.getSourceFile())
 				)
 			);
 		};
@@ -1340,7 +1352,7 @@ for (const column of COLUMNS) {
 	}
 }
 report +=
-	"\n`any` counts `EXPECTED_ANY`, a written `any` and the `any` TypeScript infers where no type is written, such as `const map = new Map()` or `const list = []`. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the identifiers whose type is or holds `any`, wherever it comes from; the `any` TypeScript's built-in lib writes in its own signatures, such as the replacer of `String#replace`, is left out, and so is the open fallback beside declared fields, such as `KnownBuildInfo & Record<string, any>`, though reading a key no field declares is counted.\n";
+	"\n`any` counts `EXPECTED_ANY`, a written `any` and the `any` TypeScript infers where no type is written, such as `const map = new Map()` or `const list = []`. `unknown` counts a written `unknown`; `ThrownValue`, the `unknown` a `throw` or a rejected promise hands on, is left out. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the identifiers whose type is or holds `any`, wherever it comes from; the `any` TypeScript's built-in lib and Node.js's `@types/node` write in their own signatures, such as the replacer of `String#replace` or a stream's `chunk`, is left out, and so is the open fallback beside declared fields, such as `KnownBuildInfo & Record<string, any>`, though reading a key no field declares is counted.\n";
 if (base && !baseCountsFile) {
 	report +=
 		"\nThe base's inferred `any` and untyped identifiers were not counted, as `--base-counts` was not given.\n";

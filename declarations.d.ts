@@ -1,6 +1,9 @@
 type EXPECTED_ANY = any;
 type EXPECTED_FUNCTION = Function;
 type EXPECTED_OBJECT = object;
+// What a `throw` or a rejected promise hands on: any value can be thrown, so
+// `unknown` is its real type and the coverage report leaves it out.
+type ThrownValue = unknown;
 
 // Set only when webpack itself runs bundled by webpack.
 declare const __webpack_require__:
