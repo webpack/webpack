@@ -5694,6 +5694,16 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should keep `undefined` the value of a call of a function whose `return` prints as a statement", () => {
+		const source =
+			"(function(){var l=[];function t(){return void l.push(1)}function u(){return function(){l.push(2)}()}console.log(t(),u(),l.length)})()";
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			"!function(){var l=[];console.log(function(){l.push(1)}(),function(){l.push(2)}(),l.length)}();"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
