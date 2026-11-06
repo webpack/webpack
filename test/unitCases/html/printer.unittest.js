@@ -3622,6 +3622,10 @@ describe("htmlMinify export", () => {
 		expect(htmlMinify.formatBanner("see a.LICENSE.txt")).toBe(
 			"<!-- see a.LICENSE.txt -->"
 		);
+		// A filename spelling `-->` or `--!>` must not end the comment early.
+		expect(htmlMinify.formatBanner("see p-->x--!>y--->z.LICENSE.txt")).toBe(
+			"<!-- see p- ->x- -!>y-- ->z.LICENSE.txt -->"
+		);
 		expect(htmlMinify.getBannerPosition()).toBe("end");
 	});
 
