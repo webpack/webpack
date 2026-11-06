@@ -93,6 +93,17 @@ it("hashes an inlined <script> body into script-src", () => {
 	expect(policy).toContain(sha("sha256", scriptBody));
 });
 
+it("keeps the page's options when realContentHash renames a hashed page", () => {
+	const names = fs
+		.readdirSync(__dirname)
+		.filter((name) => /^hashed-name\.[0-9a-f]+\.html$/.test(name));
+	expect(names).toHaveLength(1);
+	const html = readHtml(names[0]);
+	expect(html).not.toContain("__WEBPACK_HTML_INLINE__");
+	const [policy] = cspMeta(html);
+	expect(policy).toContain(sha("sha256", bodyOf(html, "script")));
+});
+
 it("prepends the CSP meta on a fragment with no <head>", () => {
 	const html = readHtml("fragment.html");
 	const [policy] = cspMeta(html);
