@@ -18129,7 +18129,7 @@ exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-th
 
 exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-19 prints {"mode":"minify"} 1`] = `
 "<template><tbody><tr> 
- <tr></tbody><area><p></p></template>"
+ <tr></tbody><area><p></template>"
 `;
 
 exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-20 parses 1`] = `
@@ -20282,6 +20282,22 @@ exports[`HTML syntax — fixtures source-processor-remove-implied-tags-invents-n
 `;
 
 exports[`HTML syntax — fixtures source-processor-remove-implied-tags-invents-no-html-for-a-source-that-spelled prints {"mode":"minify"} 1`] = `"<p>a"`;
+
+exports[`HTML syntax — fixtures source-processor-remove-implied-tags-keeps-a-body-start-tag-whitespace-prints-after parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\" \\"
+|     <option>
+|       <li>
+|     <table>
+|       <tbody>
+|         <tr>"
+`;
+
+exports[`HTML syntax — fixtures source-processor-remove-implied-tags-keeps-a-body-start-tag-whitespace-prints-after prints {"mode":"minify","collapseWhitespace":"all","removeImpliedTags":"all"} 1`] = `"<body> <table><tr><option><li>"`;
+
+exports[`HTML syntax — fixtures source-processor-remove-implied-tags-keeps-a-body-start-tag-whitespace-prints-after prints {"mode":"minify"} 1`] = `"<body> <table><tr><option><li>"`;
 
 exports[`HTML syntax — fixtures source-processor-remove-implied-tags-keeps-a-html-that-carries-an-attribute parses 1`] = `
 "| <html>

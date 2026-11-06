@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": "<body>\n      ->",
-		"why": "a second pass writes an implied or omitted tag differently from the first; both outputs read to the same tree"
-	}
-]
