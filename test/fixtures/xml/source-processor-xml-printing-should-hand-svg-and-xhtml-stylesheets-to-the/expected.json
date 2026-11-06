@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "{ b : c }</style> <style type=\"text/less\">@c: red; .b { fill: @c }</s\n      -> {b:c}</style> <style type=\"text/less\">@c: red; .b { fill: @c }</style>",
+		"why": "a `<style>` holding a comment the print drops is minified only once a first pass has dropped the comment and left one text node"
+	},
+	{
+		"relation": "idempotence",
+		"contains": "{ b : c }</style></svg>\n      -> {b:c}</style></svg>",
+		"why": "a `<style>` holding a comment the print drops is minified only once a first pass has dropped the comment and left one text node"
+	}
+]

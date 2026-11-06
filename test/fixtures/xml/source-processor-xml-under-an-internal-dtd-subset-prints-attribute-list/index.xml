@@ -1,0 +1,1 @@
+<!DOCTYPE d [<!ATTLIST d><!ATTLIST d a NMTOKENS "  x  y " b CDATA #FIXED "q" c (u|v) #IMPLIED n NOTATION (p) "p" e ID #REQUIRED><!ATTLIST d a CDATA "z" f NMTOKEN 'w'>]><d a=" 1  2 " c="u"/>

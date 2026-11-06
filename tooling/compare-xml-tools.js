@@ -912,6 +912,10 @@ const TREE_READERS = new Map(
 	])
 );
 
+// The inputs the unit tests read, one directory each: `xml/fixtures.unittest.js`
+// holds every one of them to these relations, with its own known differences.
+const UNIT_INPUT_RE = /^test\/fixtures\/xml\/[^/]+\/index\.xml$/;
+
 // What the last sweep did not find, read by the report and by the gate.
 /** @type {string[]} */
 let _missingFixtures = [];
@@ -930,10 +934,9 @@ const invariantFixtures = () => {
 			extension,
 			SKIPPED_FIXTURE_DIRS
 		)) {
-			out.push([
-				path.relative(ROOT, file).replace(/\\/g, "/"),
-				fs.readFileSync(file, "utf8")
-			]);
+			const label = path.relative(ROOT, file).replace(/\\/g, "/");
+			if (UNIT_INPUT_RE.test(label)) continue;
+			out.push([label, fs.readFileSync(file, "utf8")]);
 		}
 	}
 	out.push(["Editor-exported SVG (DTD entities)", EDITOR_SVG]);
