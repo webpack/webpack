@@ -674,6 +674,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A call of a function running expression statements before its `return` prints them and the value as one sequence.
 			["var await,yield;async function a(){function b(){await=1}b()}a();async function c(){(function(){await=2})();x=function(){return await}()}c();function*d(){(function(){yield=1})()}d().next();g(await,yield)", { compress: { toplevel: true } }, "var await,yield;(async function(){(function(){await=1})()})();(async function(){!function(){await=2}(),x=function(){return await}()})();(function*(){!function(){yield=1}()})().next();g(await,yield);"],
 			["function f(){g(this);return 1}x=f();function h(){g(arguments);return 1}y=h();function k(){g(new.target);return 1}z=k();function m(){g(m);return 1}w=m()", { compress: { toplevel: true } }, "x=function(){return g(this),1}(),y=function(){return g(arguments),1}(),z=function(){return g(new.target),1}();function m(){return g(m),1}w=m();"],
+			["a=``.length;b=`abc`[1];c=\"abc\"[3];d=\"a\"[1];e=+void 0;f=void 0*2;g=void 0+void 0;h=void 0|0;i=void 0<1;j=void 0==null;k=void f()+1", { compress: {} }, "a=0,b=\"b\",c=void 0,d=\"a\"[1],e=NaN,f=NaN,g=NaN,h=0,i=!1,j=null==null,k=void f()+1;"],
 			["var a=f();function k(){a;return g()}x=k();var b=f();function m(){b;return function(){}}m()()", { compress: { toplevel: true } }, "f();x=g();f();(function(){})();"],
 			["function f(){g();return 1}x=f();function k(){h();return{a:1}}y=k().a;function m(){q();return 2}a(),m(),b()", { compress: { toplevel: true } }, "x=(g(),1),y=(h(),{a:1}).a,a(),q(),b();"],
 			// One moved into `export default` stays a value, as a declaration would be set before the module runs.
@@ -1209,7 +1210,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["x=[false.toString(b),new true,new false(1),true.x,undefined.x];y=()=>undefined;class A{u=undefined;static v=undefined}", {}, "x=[(!1).toString(b),new(!0),new(!1)(1),true.x,(void 0).x],y=()=>void 0;class A{u=void 0;static v=void 0}"],
 			// A string's index reads its code unit, and its `concat` prints as a template, its constants
 			// as text, but where one converted after evaluating another could tell.
-			["x=[\"abc\"[1],\"abc\"[\"1\"],\"abc\"[5],\"abc\"[\"01\"],\"\\ud83d\\ude00\"[1],\"abc\"[1]()]", {}, "x=[\"b\",\"b\",\"abc\"[5],\"abc\"[\"01\"],\"\\ude00\",\"abc\"[1]()];"],
+			["x=[\"abc\"[1],\"abc\"[\"1\"],\"abc\"[5],\"abc\"[\"01\"],\"\\ud83d\\ude00\"[1],\"abc\"[1]()]", {}, "x=[\"b\",\"b\",void 0,\"abc\"[\"01\"],\"\\ude00\",\"abc\"[1]()];"],
 			["y=\"translate(\".concat(o.x,\", \").concat(o.y,\")\");z=[\"\".concat(a,1,!0,null),`a${b}`.concat(c),\"a\".concat(b,c),\"a\".concat(...b),a.concat(b),\"a\".concat?.(b)]", { ecma: 2020 }, "y=`translate(${o.x}, ${o.y})`,z=[`${a}1truenull`,`a${b}${c}`,`a`.concat(b,c),`a`.concat(...b),a.concat(b),`a`.concat?.(b)];"],
 			["String.prototype.concat=f;x=\"a\".concat(b)", {}, "String.prototype.concat=f,x=\"a\".concat(b);"],
 			// What reading throws no more than `typeof` compares to `void 0`, but a name no declaration binds.
@@ -5405,7 +5406,7 @@ describe("one-pass minify of statement sequences", () => {
 			'console.log(typeof void 0,typeof undefined,typeof void 0<"u",typeof undefined=="undefined");function f(undefined){return typeof undefined}console.log(f(1),typeof void console.log(2),!void 0,-undefined?3:4)';
 		const { code } = minifyOnePass(source, { compress: {} });
 		expect(code).toBe(
-			'console.log("undefined","undefined",!1,!0);function f(e){return typeof e}console.log(f(1),typeof void console.log(2),!void 0,-void 0?3:4);'
+			'console.log("undefined","undefined",!1,!0);function f(e){return typeof e}console.log(f(1),typeof void console.log(2),!void 0,4);'
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
@@ -5416,7 +5417,7 @@ describe("one-pass minify of statement sequences", () => {
 			'console.log("1234"[0]+1,"ab"[1],"ab"[2],"ab"[-1],"ab"[1.5],"ab"[1-1],"ab"[(console.log(0),1)],delete"ab"[0])';
 		const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
 		expect(code).toBe(
-			'console.log("11","b","ab"[2],"ab"[-1],"ab"[1.5],"a","ab"[console.log(0),1],delete"ab"[0]);'
+			'console.log("11","b",void 0,"ab"[-1],"ab"[1.5],"a","ab"[console.log(0),1],delete"ab"[0]);'
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
