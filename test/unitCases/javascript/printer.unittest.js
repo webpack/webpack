@@ -1666,7 +1666,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["a instanceof b===false;delete x!=true;x=(a instanceof b)===false", {}, "a instanceof b,delete x,x=!(a instanceof b);"],
 			["f((a&2)==0);f(0===(a&4));f((a&4)!=0);(a&2)==0,g();x=2+((a&2)==0);x=[(a^2)==0]", {}, "f(!(a&2)),f(!(a&4)),f((a&4)!=0),a&2,g(),x=2+((a&2)==0),x=[!(a^2)];"],
 			// A `return` of what is `undefined` anyway ending a function prints what it runs, but not nested, after an `if` or as an arrow's body.
-			["function f(){return void foo()}function g(){b;return a,void 0}function h(){if(x)return void g();else k()}function i(){return void function(){g()}()}function j(){return void {a:g()}.a}function k(){if(x)return void g();return void h()}function l(){return g(),void 0}f=()=>{return void g()};f=()=>{h();return void g()};class C{m(){return void g()}}", { mangle: false }, "function f(){foo()}function g(){b,a}function h(){if(x)return void g();k()}function i(){(function(){g()}())}function j(){({a:g()}.a)}function k(){return x?void g():void h()}function l(){g()}f=()=>void g(),f=()=>(h(),void g());class C{m(){g()}}"],
+			["function f(){return void foo()}function g(){b;return a,void 0}function h(){if(x)return void g();else k()}function i(){return void function(){g()}()}function j(){return void {a:g()}.a}function k(){if(x)return void g();return void h()}function l(){return g(),void 0}f=()=>{return void g()};f=()=>{h();return void g()};class C{m(){return void g()}}", { mangle: false }, "function f(){foo()}function g(){b,a}function h(){if(x)return void g();k()}function i(){g()}function j(){({a:g()}.a)}function k(){return x?void g():void h()}function l(){g()}f=()=>void g(),f=()=>(h(),void g());class C{m(){g()}}"],
 			// A test or branch `?:` parenthesized keeps its parentheses as an operand of `&&` or `||`.
 			["x=f?!1:(g(),!0);x=f?(g(),v):!0;x=(f=a===b)?!1:v;x=(f=a===b)?v:!0;x=(f?l:r)?!1:v;x=(a,b)?!1:(c,d)", {}, "x=!f&&(g(),!0),x=!f||(g(),v),x=!(f=a===b)&&v,x=!(f=a===b)||v,x=!(f?l:r)&&v,x=!(a,b)&&(c,d);"],
 			// `x!=null?x:y` is `x??y` where `y` stands bare after `??`, and `x!=null?x.y:void 0` is `x?.y`, wherever read.
@@ -5679,6 +5679,17 @@ describe("one-pass minify of statement sequences", () => {
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
 		expect(code).toBe(
 			'function C(){this.v=1}function x(){return console.log("x"),C}function*y(){return new(yield x())}function g(){return new(x())(1).v}function h(){return new(x()).prototype.constructor}function k(){var t=C;return new C(x(),t)}var it=y();it.next(),console.log(it.next(C).value.v,g(),h().v,k().v);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should print a `return` ending a function of a call returning nothing as the call", () => {
+		// A function returning a value, an arrow's value or an async one stays returned.
+		const source =
+			'function h(){console.log("h")}function f(){return function(){h()}()}function g(){return function(){h();return}()}function k(){return function(){return 1}()}function m(){return(()=>1)()}function n(){return async function(){h()}()}function p(){return function(){h();(function(){return 2})()}()}console.log(f(),g(),k(),m(),typeof n(),p())';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'function h(){console.log("h")}function f(){h()}function g(){(function(){h()}())}function k(){return 1}function m(){return 1}function n(){return async function(){h()}()}function p(){h()}console.log(f(),g(),k(),m(),typeof n(),p());'
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
