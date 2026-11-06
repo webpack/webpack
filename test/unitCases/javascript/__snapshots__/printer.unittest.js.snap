@@ -172,9 +172,9 @@ x=class{},x=class extends B{},x=class{}.name;export default class s{}
 
 export default class{}
 
-function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1,(yield a).b,(yield a)(),(yield a)?b:c,-(yield a),yield(a,b),yield yield a,a=yield,f(yield a),\`\${yield}\`,(yield)\`x\`}
+function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1,(yield a).b,(yield a)(),(yield a)?b:c,-(yield a),a,yield b,yield yield a,a=yield,f(yield a),\`\${yield}\`,(yield)\`x\`}
 
-async function f(){await a,await(a?b:c),await(a,b),await a.b,await f(),await-a,await 1,await await a,await{},await(()=>1),await new A,await(this),await(a+b),await(\`x\`),(await a).b,(await a)(),(await a)**b,-await a,(await a)\`x\`,await(a?.b),await(a=b),await(import(\\"x\\"))}
+async function f(){await a,await(a?b:c),a,await b,await a.b,await f(),await-a,await 1,await await a,await{},await(()=>1),await new A,await(this),await(a+b),await(\`x\`),(await a).b,(await a)(),(await a)**b,-await a,(await a)\`x\`,await(a?.b),await(a=b),await(import(\\"x\\"))}
 
 async,async(),async(a),x=async function(){},x=async function*(){};
 
@@ -431,9 +431,9 @@ x=class{},x=class extends B{},x=class{}.name;export default class s{}
 
 export default class{}
 
-function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1,(yield a).b,(yield a)(),(yield a)?b:c,-(yield a),yield(a,b),yield yield a,a=yield,f(yield a),\`\${yield}\`,(yield)\`x\`}
+function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1,(yield a).b,(yield a)(),(yield a)?b:c,-(yield a),a,yield b,yield yield a,a=yield,f(yield a),\`\${yield}\`,(yield)\`x\`}
 
-async function f(){await a,await(a?b:c),await(a,b),await a.b,await f(),await-a,await 1,await await a,await{},await(()=>1),await new A,await(this),await(a+b),await(\`x\`),(await a).b,(await a)(),(await a)**b,-await a,(await a)\`x\`,await(a?.b),await(a=b),await(import(\\"x\\"))}
+async function f(){await a,await(a?b:c),a,await b,await a.b,await f(),await-a,await 1,await await a,await{},await(()=>1),await new A,await(this),await(a+b),await(\`x\`),(await a).b,(await a)(),(await a)**b,-await a,(await a)\`x\`,await(a?.b),await(a=b),await(import(\\"x\\"))}
 
 async,async(),async(a),x=async function(){},x=async function*(){};
 
@@ -684,9 +684,9 @@ x=class{},x=class extends B{},x=class{}.name;export default class s{}
 
 export default class{}
 
-function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1,(yield a).b,(yield a)(),(yield a)?b:c,-(yield a),yield(a,b),yield yield a,a=yield,f(yield a),\`\${yield}\`,(yield)\`x\`}
+function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1,(yield a).b,(yield a)(),(yield a)?b:c,-(yield a),a,yield b,yield yield a,a=yield,f(yield a),\`\${yield}\`,(yield)\`x\`}
 
-async function f(){await a,await(a?b:c),await(a,b),await a.b,await f(),await-a,await 1,await await a,await{},await(()=>1),await new A,await(this),await(a+b),await(\`x\`),(await a).b,(await a)(),(await a)**b,-await a,(await a)\`x\`,await(a?.b),await(a=b),await(import(\\"x\\"))}
+async function f(){await a,await(a?b:c),a,await b,await a.b,await f(),await-a,await 1,await await a,await{},await(()=>1),await new A,await(this),await(a+b),await(\`x\`),(await a).b,(await a)(),(await a)**b,-await a,(await a)\`x\`,await(a?.b),await(a=b),await(import(\\"x\\"))}
 
 async,async(),async(a),x=async function(){},x=async function*(){};
 
@@ -943,9 +943,9 @@ x=class{},x=class extends B{},x=class{}.name;export default class A{}
 
 export default class{}
 
-function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1,(yield a).b,(yield a)(),(yield a)?b:c,-(yield a),yield(a,b),yield yield a,a=yield,f(yield a),\`\${yield}\`,(yield)\`x\`}
+function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1,(yield a).b,(yield a)(),(yield a)?b:c,-(yield a),a,yield b,yield yield a,a=yield,f(yield a),\`\${yield}\`,(yield)\`x\`}
 
-async function f(){await a,await(a?b:c),await(a,b),await a.b,await f(),await-a,await 1,await await a,await{},await(()=>1),await new A,await(this),await(a+b),await(\`x\`),(await a).b,(await a)(),(await a)**b,-await a,(await a)\`x\`,await(a?.b),await(a=b),await(import('x'))}
+async function f(){await a,await(a?b:c),a,await b,await a.b,await f(),await-a,await 1,await await a,await{},await(()=>1),await new A,await(this),await(a+b),await(\`x\`),(await a).b,(await a)(),(await a)**b,-await a,(await a)\`x\`,await(a?.b),await(a=b),await(import('x'))}
 
 async,async(),async(a),x=async function(){},x=async function*(){};
 
@@ -1400,10 +1400,10 @@ export default class s{}
 export default class{}
 
 /* p */
-function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1,(yield a).b,(yield a)(),(yield a)?b:c,-(yield a),yield(a,b),yield yield a,a=yield,f(yield a),\`\${yield}\`,(yield)\`x\`}
+function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1,(yield a).b,(yield a)(),(yield a)?b:c,-(yield a),a,yield b,yield yield a,a=yield,f(yield a),\`\${yield}\`,(yield)\`x\`}
 
 /* p */
-async function f(){await a,await(a?b:c),await(a,b),await a.b,await f(),await-a,await 1,await await a,await{},await(()=>1),await new A,await(this),await(a+b),await(\`x\`),(await a).b,(await a)(),(await a)**b,-(await a),(await a)\`x\`,await(a?.b),await(a=b),await(import(\\"x\\"))}
+async function f(){await a,await(a?b:c),a,await b,await a.b,await f(),await-a,await 1,await await a,await{},await(()=>1),await new A,await(this),await(a+b),await(\`x\`),(await a).b,(await a)(),(await a)**b,-(await a),(await a)\`x\`,await(a?.b),await(a=b),await(import(\\"x\\"))}
 
 /* p */
 async,async(),async(a),x=async function(){},x=async function*(){}
