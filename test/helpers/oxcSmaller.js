@@ -2065,10 +2065,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `arrow` tests cover",
-		[
-			"terser compress: arrow/issue_485_crashing_1530",
-			"terser compress: arrow/ternary_precedence"
-		]
+		["terser compress: arrow/issue_485_crashing_1530"]
 	],
 	[
 		"oxc goes further than webpack on what terser's `expansions` tests cover",

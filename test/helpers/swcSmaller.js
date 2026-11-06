@@ -666,6 +666,7 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: issue-368/collapse",
 			"terser compress: issue-1833/iife_do",
+			"terser compress: issue-597/NaN_and_Infinity_must_have_parens",
 			"swc minifier: fixture/issues/9238/input.js",
 			"swc minifier: fixture/issues/9460/strict-mode/input.js",
 			"swc minifier: fixture/issues/stylis/1/input.js",
