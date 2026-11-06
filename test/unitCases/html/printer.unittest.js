@@ -1091,11 +1091,13 @@ describe("SourceProcessor — removeRedundantAttributes and script charset", () 
 			"<!-- <meta charset=utf-8>",
 			"<!doctype <meta charset=utf-8>",
 			"<?x <meta charset=utf-8>",
-			"<?x <meta charset=utf-8"
+			"<?x <meta charset=utf-8",
+			'</div x="><meta charset=utf-8>'
 		]) {
 			expect(declaresUtf8(html)).toBe(false);
 		}
 		expect(declaresUtf8('<!-->x<meta charset="utf-8">')).toBe(true);
+		expect(declaresUtf8('</ x><meta charset="utf-8">')).toBe(true);
 	});
 
 	it("keeps a charset naming another encoding", () => {
