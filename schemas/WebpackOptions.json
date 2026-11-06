@@ -690,6 +690,9 @@
         "publicPath": {
           "$ref": "#/definitions/PublicPath"
         },
+        "publicPathFunction": {
+          "$ref": "#/definitions/PublicPathFunction"
+        },
         "runtime": {
           "$ref": "#/definitions/EntryRuntime"
         },
@@ -748,6 +751,9 @@
         },
         "publicPath": {
           "$ref": "#/definitions/PublicPath"
+        },
+        "publicPathFunction": {
+          "$ref": "#/definitions/PublicPathFunction"
         },
         "runtime": {
           "$ref": "#/definitions/EntryRuntime"

@@ -1151,6 +1151,10 @@ export interface EntryDescription {
 	 */
 	publicPath?: PublicPath;
 	/**
+	 * Function name/definition to map file path. Default: "__webpackager_res__"
+	 */
+	publicPathFunction?: PublicPathFunction;
+	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
 	runtime?: EntryRuntime;
@@ -3045,6 +3049,10 @@ export interface EntryDescriptionNormalized {
 	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: PublicPath;
+	/**
+	 * Function name/definition to map file path. Default: "__webpackager_res__"
+	 */
+	publicPathFunction?: PublicPathFunction;
 	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
