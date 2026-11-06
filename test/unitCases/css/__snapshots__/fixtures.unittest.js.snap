@@ -1800,6 +1800,10 @@ exports[`CSS syntax — fixtures css-syntax-minify-a-name-escaping-a-code-point-
 
 exports[`CSS syntax — fixtures css-syntax-minify-a-name-escaping-a-code-point-no-identifier-holds-keeps-two prints {"mode":"minify"} 1`] = `"a{--b:\\\\40  x}"`;
 
+exports[`CSS syntax — fixtures css-syntax-minify-a-nested-rule-written-again-later-joins-nothing-first parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"p\\"]],[[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]],[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"width\\"],\\":\\",[\\"dimension\\",\\".5\\",0.5,\\"number\\",\\"px\\"]],[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"q\\"]],[[\\"ident\\",\\"x\\"],[\\"{}\\",[\\"ident\\",\\"y\\"],\\":\\",[\\"ident\\",\\"z\\"]],[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]],[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"width\\"],\\":\\",[\\"dimension\\",\\".5\\",0.5,\\"number\\",\\"px\\"]],[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"r\\"]],[[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"x\\"],[\\"{}\\",[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]],[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"d\\"],\\":\\",[\\"ident\\",\\"e\\"]],[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"x\\"],[\\"{}\\",[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-a-nested-rule-written-again-later-joins-nothing-first prints {"mode":"minify"} 1`] = `".p{a{width:.5px;b:c}}.q{x{y:z}a{width:.5px;b:c}}.r{a{d:e}@media x{a{b:c}}}"`;
+
 exports[`CSS syntax — fixtures css-syntax-minify-a-nested-selector-opening-on-a-combinator-keeps-the-space-in parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[\\"|\\",\\"|\\",[\\"ident\\",\\"b\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-a-nested-selector-opening-on-a-combinator-keeps-the-space-in prints {"mode":"minify","environment":{"browsers":["chrome 100"]}} 1`] = `"a ||b{top:0}"`;
@@ -4120,7 +4124,7 @@ exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-un
 
 exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-19 parses 1`] = `"[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"x\\"]],[[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"margin\\"],\\":\\",[\\"ident\\",\\"auto\\"]],[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]],[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"content\\"],\\":\\",[\\"string\\",\\"it's\\"]],[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]]]]"`;
 
-exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-19 prints {"mode":"minify"} 1`] = `"@layer x{a{margin:auto;b:c;content:\\"it's\\"}a{b:c}}"`;
+exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-19 prints {"mode":"minify"} 1`] = `"@layer x{a{content:\\"it's\\";margin:auto;b:c}}"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-19 prints {"transforms":{"mergeRules":false},"mergeDistantRules":true,"mode":"minify"} 1`] = `"@layer x{a{margin:auto}a{content:\\"it's\\"}a{b:c}}"`;
 
@@ -4196,7 +4200,7 @@ exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-un
 
 exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-32 parses 1`] = `"[[\\"at-rule\\",\\"scope\\",[\\" \\",[\\"()\\",\\".\\",[\\"ident\\",\\"x\\"]]],[[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]],\\"$\\",[\\"{}\\",[\\"ident\\",\\"ne\\"]],[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]]]]"`;
 
-exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-32 prints {"mergeDistantRules":true,"mode":"minify"} 1`] = `"@scope(.x){a{b:c}\${ne}}"`;
+exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-32 prints {"mergeDistantRules":true,"mode":"minify"} 1`] = `"@scope(.x){\${ne}a{b:c}}"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-32 prints {"mode":"minify"} 1`] = `"@scope(.x){\${ne}a{b:c}}"`;
 
@@ -4324,7 +4328,7 @@ exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-un
 
 exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-56 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"dimension\\",\\"0.50\\",0.5,\\"number\\",\\"pa\\"],[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]],[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]],[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"width\\"],\\":\\",[\\"dimension\\",\\"0.50\\",0.5,\\"number\\",\\"px\\"]],[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]]]]"`;
 
-exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-56 prints {"mode":"minify"} 1`] = `"a{b:c;width:0.50pa{b:c}a{width:.5px}a{b:c}}"`;
+exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-56 prints {"mode":"minify"} 1`] = `"a{b:c;width:0.50pa{b:c}a{width:.5px;b:c}}"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-57 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"],\\" \\",[\\"ident\\",\\"c\\"]],[]],[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b:c\\"]]]]"`;
 
@@ -4470,7 +4474,7 @@ exports[`CSS syntax — fixtures css-syntax-minify-input-that-once-threw-prints-
 
 exports[`CSS syntax — fixtures css-syntax-minify-input-that-once-threw-prints-a-rule-whose-value-holds-a-block-3 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]]],[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]]]"`;
 
-exports[`CSS syntax — fixtures css-syntax-minify-input-that-once-threw-prints-a-rule-whose-value-holds-a-block-3 prints {"mode":"minify","as":"block-contents"} 1`] = `"a{b:c;b:{b:c}}a{b:c}"`;
+exports[`CSS syntax — fixtures css-syntax-minify-input-that-once-threw-prints-a-rule-whose-value-holds-a-block-3 prints {"mode":"minify","as":"block-contents"} 1`] = `"a{b:{b:c}}a{b:c}"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-input-that-once-threw-prints-a-rule-whose-value-holds-a-block-3 prints {"mode":"minify"} 1`] = `"a{b:c;b:{b:c}}a{b:c}"`;
 
@@ -20602,7 +20606,7 @@ exports[`CSS syntax — fixtures source-processor-merge-distant-rules-inside-a-b
 
 exports[`CSS syntax — fixtures source-processor-merge-distant-rules-inside-a-block-takes-a-repeat-of-the-same parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"screen\\"]],[\\".\\",[\\"ident\\",\\"aaaaaaaa\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"],\\";\\",[\\"ident\\",\\"background\\"],\\":\\",[\\"ident\\",\\"blue\\"]],\\".\\",[\\"ident\\",\\"bbbbbbbb\\"],[\\"{}\\",[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]],\\".\\",[\\"ident\\",\\"aaaaaaaa\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"],\\";\\",[\\"ident\\",\\"background\\"],\\":\\",[\\"ident\\",\\"blue\\"]]]]]"`;
 
-exports[`CSS syntax — fixtures source-processor-merge-distant-rules-inside-a-block-takes-a-repeat-of-the-same prints {"mode":"minify","mergeDistantRules":true} 1`] = `"@media screen{.aaaaaaaa{color:red;background:blue}.bbbbbbbb{margin:0}}"`;
+exports[`CSS syntax — fixtures source-processor-merge-distant-rules-inside-a-block-takes-a-repeat-of-the-same prints {"mode":"minify","mergeDistantRules":true} 1`] = `"@media screen{.bbbbbbbb{margin:0}.aaaaaaaa{color:red;background:blue}}"`;
 
 exports[`CSS syntax — fixtures source-processor-merge-distant-rules-inside-a-block-takes-a-repeat-of-the-same prints {"mode":"minify"} 1`] = `"@media screen{.bbbbbbbb{margin:0}.aaaaaaaa{color:red;background:blue}}"`;
 
