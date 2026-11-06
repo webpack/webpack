@@ -21,3 +21,7 @@ it("should keep the whole file name in a hashed filename", () => {
 it("should hand a filename function the path as written", () => {
 	expect(read("callback/logo!dark.png")).toBe("bang");
 });
+
+it("should hand a filename function the chunk name as written", () => {
+	expect(read("named/original.png")).toBe("first");
+});

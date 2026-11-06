@@ -14,6 +14,12 @@ module.exports = {
 				from: "images/logo*.png",
 				to: "callback",
 				filename: ({ filename }) => filename
+			},
+			{
+				from: "images/photo*.png",
+				to: "named",
+				filename: ({ chunk }) =>
+					`${chunk && chunk.name === "photo#1" ? "original" : "other"}.png`
 			}
 		]
 	}
