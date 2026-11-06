@@ -1512,8 +1512,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){if(x){let a=f(),b=g()}else h();for(;;){let q=f();g(q,q)}}", {}, "function f(){if(x){f();g()}else h();for(;;){let e=f();g(e,e)}}"],
 			// What runs nothing before a name called or an unread `typeof` reads goes, and before a member is `0`, but before `eval` or in `with`.
 			["(0,foo)();(0,foo)``;(0,foo)?.();(!0,a.b)();(1,2,a.b)();(0,a.b)();(0,eval)();typeof(0,foo);(x(),foo)``;(function(){},foo)``;(x(),a.b)()", {}, "foo(),foo``,foo?.(),(0,a.b)(),(0,a.b)(),(0,a.b)(),(0,eval)(),foo,(x(),foo)``,foo``,(x(),a.b)();"],
+			// esbuild's `-(a,b)` as `a,-b`, and `yield` or `await` alike, where a sequence stands bare, but where its first value would open the statement as a block.
+			["-(a(),b);~(a(),b,c);+(a(),1);-(a(),-b);x=-(a(),b);-({[f()]:0},g());async function h(){await(c(),d);await(c(),d+e)}function*k(){yield(c(),d);yield*(c(),d)}", {}, "a(),-b,a(),b,~c,a(),+1,a(),-(-b),x=-(a(),b),-({[f()]:0},g());async function h(){c(),await d,c(),await(d+e)}function*k(){c(),yield d,c(),yield*d}"],
 			// `typeof` reads a declared name or a member bare alike, but an undeclared name throws read as a value.
 			["function f(o){return[typeof(0,o),typeof(0,o.x),typeof(0,u),typeof(g(),o)]}", {}, "function f(o){return[typeof o,typeof o.x,typeof(0,u),typeof(g(),o)]}"],
+			["function f(){let a=u;return typeof a}function g(){let a=o;return typeof a}", {}, "function f(){return typeof(0,u)}function g(){return typeof(0,o)}"],
 			// What follows a `try` whose block and `catch` both leave never runs.
 			["function f(){try{return g()}catch{return h()}i()}function k(){try{return g()}finally{h()}i()}function m(){try{return g()}catch{h()}i()}", {}, "function f(){try{return g()}catch{return h()}}function k(){try{return g()}finally{h()}}function m(){try{return g()}catch{h()}i()}"],
 			["with(o)(0,foo)()", {}, "with(o)(0,foo)();"],
@@ -1567,8 +1570,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// terser's `!t&&e` as `t||e` nobody reads, and `(!a||b==c)&&d` as `a&&b!=c||d` where its operands take the negation in for less; an `||` it puts right of `&&` takes parentheses.
 			["!a&&b();!a||b();!(a<b)&&c();!(a??b)&&c();!a||b||c();!(a,b)&&c();x=!a&&b()", {}, "a||b(),a&&b(),a<b||c(),(a??b)||c(),!a||b||c(),(a,b)||c(),x=!a&&b();"],
 			["(!a||b===c)&&d();(!a||!b)&&c();(a||b===c)&&d();(!a&&!b)||c();(!a||b===c)&&(d(),e());(!a||!b)&&(c||d());!a||(b||c());x=(!a||b===c)&&d()", {}, "a&&b!==c||d(),a&&b||c(),!a&&b!==c||d(),!a&&!b||c(),a&&b!==c||(d(),e()),a&&b||(c||d()),a&&(b||c()),x=(!a||b===c)&&d();"],
-			// terser's `t?a=x:a=y` as `a=t?x:y`; another operator, or a member, wants the test pure, as the target is read first.
-			["function f(o,t){x?y=3:y=4;z=x?a=1:a=2;x?a=1:b=2;t?o.b=1:o.b=2;x?o.b=1:o.b=2;t?a+=1:a+=2;x?a+=1:a+=2}", {}, "function f(o,t){y=x?3:4,z=a=x?1:2,x?a=1:b=2,o.b=t?1:2,x?o.b=1:o.b=2,a+=t?1:2,x?a+=1:a+=2}"],
+			// terser's `t?a=x:a=y` as `a=t?x:y`; a member wants the test pure, and another operator a declared name, as the target is read first and a getter may run.
+			["function f(o,t,a){x?y=3:y=4;z=x?b=1:b=2;x?b=1:c=2;t?o.b=1:o.b=2;x?o.b=1:o.b=2;t?a+=1:a+=2;x?a+=1:a+=2;t?b+=1:b+=2;t?o.b+=1:o.b+=2}", {}, "function f(o,t,a){y=x?3:4,z=b=x?1:2,x?b=1:c=2,o.b=t?1:2,x?o.b=1:o.b=2,a+=t?1:2,x?a+=1:a+=2,t?b+=1:b+=2,t?o.b+=1:o.b+=2}"],
 			// `if`s throwing alike print as one testing either.
 			["function f(){if(x)throw 1;if(y)throw 1;if(z)throw 1;g()}if(a)throw c;if(b)throw d", {}, "function f(){if(x||y||z)throw 1;g()}if(a)throw c;if(b)throw d;"],
 			["x=!!(!b&&/*c*/c);y=!!(/*k*/!b&&c)", { format: { comments: "all" } }, "x=!!(!b&&/*c*/c),y=!!(/*k*/!b&&c);"],
@@ -1782,6 +1785,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// `Array.of` is the array literal of what it is passed, but where a write replaces it, a binding takes the name or a chain may skip it.
 			["x=[Array.of(\"a\",\"b\"),Array.of(),Array.of(...a,1),Array?.of(1)];function f(Array){return Array.of(1)}", {}, "x=[[\"a\",\"b\"],[],[...a,1],Array?.of(1)];function f(r){return r.of(1)}"],
 			["Array.of=f;x=Array.of(1)", {}, "Array.of=f,x=Array.of(1);"],
+			["x=[Array.of(...[1,2]),Array.of(0,...[1,2],3)]", {}, "x=[[1,2],[0,1,2,3]];"],
 			["with(o)x=+\"a\";function f(NaN){return+\"a\"}", {}, "with(o)x=+\"a\";function f(a){return+\"a\"}"],
 			["var NaN;x=+\"a\"", { compress: { toplevel: false } }, "var NaN;x=+\"a\";"],
 			["x=+\"a\";eval(\"\")", {}, "x=+\"a\",eval(\"\");"],
