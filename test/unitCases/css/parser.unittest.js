@@ -684,6 +684,42 @@ describe("CssSyntax — SourceProcessor", () => {
 			).toBe("a,b{margin:1px 0 0}");
 		});
 
+		it("minifies a declaration's lone value token as its replacement spells it", () => {
+			/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
+			const once = {
+				[NodeType.Hash]: (path) => {
+					if (path.value() === "ffffff") path.replaceWith("#ff0000");
+				}
+			};
+			expect(print("a{color:#ffffff}", once)).toBe("a{color:red}");
+			expect(print("a{color:#ffffff red}", once)).toBe("a{color:red red}");
+			expect(
+				print("a{margin:0px}", {
+					[NodeType.Dimension]: (path) => {
+						if (path.name() === "px") path.replaceWith("0em");
+					}
+				})
+			).toBe("a{margin:0}");
+		});
+
+		it("walks and prints every replacement once its node ids outgrow the marks", () => {
+			for (const css of ["a{color:#ffffff}", "a{color:#ffffff red}"]) {
+				for (let times = 1; times <= 40; times++) {
+					let visits = 0;
+					const code = print(css, {
+						[NodeType.Hash]: (path) => {
+							if (++visits <= times) path.replaceWith("#ff0000");
+						}
+					});
+					// Each replacement is visited once more, so one visit past `times`.
+					expect(visits).toBe(times + 1);
+					expect(code).toBe(
+						css.includes(" red") ? "a{color:red red}" : "a{color:red}"
+					);
+				}
+			}
+		});
+
 		it("composes a style attribute's declarations as they printed", () => {
 			const result = new SourceProcessor()
 				.use({
