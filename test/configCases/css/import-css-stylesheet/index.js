@@ -1,5 +1,6 @@
 import sheet from "./basic.css" with { type: "css" };
 import sheetAssert from "./basic.css" assert { type: "css" };
+import otherSheet from "./other-style.txt" with { type: "css" };
 
 it("should import CSS as CSSStyleSheet with 'with' syntax", () => {
 	expect(sheet).toBeInstanceOf(CSSStyleSheet);
@@ -55,4 +56,12 @@ it("should handle CSS nesting in CSSStyleSheet", () => {
 	const nestedRule = rules.find(rule => rule.cssText.includes("& .child"));
 	expect(nestedRule).toBeDefined();
 	expect(nestedRule.cssText).toContain("color: green");
+});
+
+it("should parse a file of another extension as CSS with 'with' syntax", () => {
+	expect(otherSheet).toBeInstanceOf(CSSStyleSheet);
+	const rules = Array.from(otherSheet.cssRules);
+	const otherRule = rules.find(rule => rule.selectorText === ".other");
+	expect(otherRule).toBeDefined();
+	expect(otherRule.style.color).toBe("green");
 });
