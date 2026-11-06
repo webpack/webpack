@@ -3498,6 +3498,20 @@ describe("htmlMinify — an answered `style` attribute that changes its quoting"
 			)
 		).toBe("<a onclick=foo(1) data-x=MARK>x</a>");
 	});
+
+	it("keeps an answered attribute written right after `/`", async () => {
+		expect(
+			await min(fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-an-attribute"), () => undefined)
+		).toBe("<div style=color:red>x</div>");
+		expect(
+			await min(fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-an-attribute-2"), () => undefined)
+		).toBe('<iframe srcdoc="<p>a"></iframe>');
+		expect(
+			await min(fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-an-attribute-3"), (source, info) =>
+				info.type === "javascript" ? "foo(1)" : undefined
+			)
+		).toBe("<button onclick=foo(1)>x</button>");
+	});
 });
 
 describe("htmlMinify — the function an event handler is asked about", () => {

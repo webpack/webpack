@@ -782,6 +782,38 @@ exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-c
 
 exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-an-answer-2 prints {"mode":"minify"} 1`] = `"<p style=\\"color: red\\">x"`;
 
+exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-an-attribute parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       style=\\"color: red\\"
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-an-attribute prints {"mode":"minify"} 1`] = `"<div/style=\\"color: red\\">x</div>"`;
+
+exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-an-attribute-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <iframe>
+|       srcdoc=\\"<p>a</p>\\""
+`;
+
+exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-an-attribute-2 prints {"mode":"minify"} 1`] = `"<iframe/srcdoc=\\"<p>a</p>\\"></iframe>"`;
+
+exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-an-attribute-3 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <button>
+|       onclick=\\"foo( 1 )\\"
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-an-attribute-3 prints {"mode":"minify"} 1`] = `"<button/onclick=\\"foo( 1 )\\">x</button>"`;
+
 exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-minifies-a-data parses 1`] = `
 "| <html>
 |   <head>
