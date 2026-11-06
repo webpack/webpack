@@ -30572,8 +30572,15 @@ declare abstract class RuntimeTemplate {
 
 	/**
 	 * Reads a node builtin via `process.getBuiltinModule()`, guarded to stay falsy off node so universal `["node", "web"]` bundles don't crash (also falsy on node <22.3).
+	 * The `process` guard is dropped on a node platform, the `typeof` check where the target has the getter.
 	 */
 	getBuiltinModule(request: string, access?: string): string;
+
+	/**
+	 * Pieces of a `Promise` with node's `fs.readFile` in reach, for ESM output that has no `require`.
+	 * The getter reads `fs` synchronously where the target has it; otherwise `import()` loads it.
+	 */
+	nodeReadFilePromise(): { open: string; readFile: string; close: string };
 
 	/**
 	 * Renders a `then` callback calling `fn` with `args`. An arrow keeps the `this`

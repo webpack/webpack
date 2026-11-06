@@ -6,7 +6,7 @@ const source = fs.readFileSync(path.join(outputPath, "bundle0.mjs"), "utf-8");
 
 // Built dynamically so the asserted phrase never appears verbatim in this file,
 // which is itself embedded into the bundle being inspected.
-const ext = (name) => `createRequire_require(${JSON.stringify(name)})`;
+const ext = (name) => `getBuiltinModule(${JSON.stringify(name)})`;
 const prefixed = (name) => `${"node"}:${name}`;
 
 it("should resolve the node built-ins at runtime", () => {
