@@ -5634,6 +5634,17 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should parenthesize a fold or element read keeping an infinity, which prints as a division", () => {
+		const source =
+			"console.log((Infinity||3).toString(),(Infinity||a||3).toFixed(),(1?Number.NEGATIVE_INFINITY:2).toString(),new(0||(1&&Infinity)),(0||(1&&1e400)).x,[Infinity][0].toFixed(),{a:Infinity}.a.toFixed(),typeof[Infinity][0],2/[Infinity][0],[Infinity][0])";
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'console.log((1/0).toString(),(1/0).toFixed(),(-1/0).toString(),new(1/0),(1/0).x,[1/0][0].toFixed(),{a:1/0}.a.toFixed(),"number",0,1/0);'
+		);
+		expect(() => acorn.parse(code, { ecmaVersion: "latest" })).not.toThrow();
+		expect(runProgram(`var a;${code}`)).toBe(runProgram(`var a;${source}`));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
