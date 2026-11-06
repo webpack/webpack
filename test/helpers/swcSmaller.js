@@ -743,6 +743,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/conditional_1",
 			"terser compress: collapse_vars/issue_2436_4",
 			"terser compress: collapse_vars/issue_2436_8",
+			"terser compress: collapse_vars/issue_2436_14",
 			"terser compress: collapse_vars/recursive_function_replacement",
 			"terser compress: collapse_vars/cascade_conditional",
 			"terser compress: collapse_vars/cascade_if_1",
