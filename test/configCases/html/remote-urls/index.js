@@ -12,9 +12,9 @@ it("should keep absolute remote URLs as written", () => {
 });
 
 it("should re-encode character references in remote URLs", () => {
-	// `&amp;copy=2` is decoded to `&copy=2` when the page is parsed; written back
-	// bare, the browser would read `©=2`. A decoded `&quot;` would end the value.
-	expect(fragment).toContain('src="https://example.com/q.png?a=1&amp;copy=2"');
+	// `&amp;copy;` is decoded to `&copy;` when the page is parsed; written back
+	// bare, the browser would read `©`. A decoded `&quot;` would end the value.
+	expect(fragment).toContain('src="https://example.com/q.png?a=1&amp;copy;=2"');
 	expect(fragment).toContain(
 		'src="https://example.com/quote.png?q=&quot;x&quot;"'
 	);
