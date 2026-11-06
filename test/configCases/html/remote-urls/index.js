@@ -11,6 +11,15 @@ it("should keep absolute remote URLs as written", () => {
 	expect(fragment).toContain('src="//cdn.example.com/protocol-relative.png"');
 });
 
+it("should re-encode character references in remote URLs", () => {
+	// `&amp;copy=2` is decoded to `&copy=2` when the page is parsed; written back
+	// bare, the browser would read `©=2`. A decoded `&quot;` would end the value.
+	expect(fragment).toContain('src="https://example.com/q.png?a=1&amp;copy=2"');
+	expect(fragment).toContain(
+		'src="https://example.com/quote.png?q=&quot;x&quot;"'
+	);
+});
+
 it("should still bundle local URLs next to remote ones", () => {
 	expect(fragment).toMatch(/<img src="image\.png" alt="local">/);
 	expect(fragment).toMatch(/remote-1x\.png 1x, image\.png 2x/);

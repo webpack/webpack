@@ -100,8 +100,10 @@ within webpack itself use this plugin interface. This makes webpack very
 **flexible**.
 
 Webpack generates HTML pages and extracts CSS files itself — stable and on by
-default since 5.109.0, with no configuration, replacing the deprecated
-`html-webpack-plugin` and `mini-css-extract-plugin`. See what that covers for
+default since 5.109.0, replacing the deprecated `html-webpack-plugin` and
+`mini-css-extract-plugin`. Point an entry at an `.html` file, or set
+`output.html: true` to generate a page for a JavaScript entry. See what that
+covers for
 [CSS](https://webpack.js.org/guides/native-css/#whats-built-in) and
 [HTML](https://webpack.js.org/guides/native-html/#whats-built-in).
 
