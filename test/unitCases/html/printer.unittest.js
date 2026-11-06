@@ -1040,6 +1040,7 @@ describe("SourceProcessor — removeRedundantAttributes and script charset", () 
 			'<meta http-equiv="content-type" content="text/html"><meta charset="utf-8">',
 			"<meta http-equiv='Content-Type' content='text/html; charset=utf-8' content='x'>",
 			'<meta name="a>b" charset="utf-8">',
+			'<?x <meta charset=gbk>?><p a="1">x</p> a < b <meta charset="utf-8">',
 			'<meta http-equiv="content-type" http-equiv="x" content="text/html; charset=utf-8">'
 		]) {
 			expect(
@@ -1068,6 +1069,8 @@ describe("SourceProcessor — removeRedundantAttributes and script charset", () 
 			`<!doctype html><head><meta name="x" content="charset=utf-8"><title>t</title>${SCRIPT}`,
 			`<!doctype html><head><meta http-equiv="refresh" content="0; charset=utf-8"><title>t</title>${SCRIPT}`,
 			`<!doctype html><head><meta name="x" content="<meta charset=utf-8>"><title>t</title>${SCRIPT}`,
+			`<!doctype html><div title="<meta charset=utf-8>"></div><title>t</title>${SCRIPT}`,
+			`<!doctype html><div title='x' data-a="<meta charset=utf-8>"><title>t</title>${SCRIPT}`,
 			`<!doctype html><head><meta http-equiv="x" http-equiv="content-type" content="text/html; charset=utf-8"><title>t</title>${SCRIPT}`,
 			`<!doctype html><!-- <meta charset="utf-8"> --><title>t</title>${SCRIPT}`,
 			`<!doctype html><title>t</title><style>${"a{}".repeat(400)}</style><meta charset="utf-8">${SCRIPT}`,
@@ -1078,6 +1081,21 @@ describe("SourceProcessor — removeRedundantAttributes and script charset", () 
 				'<script charset=utf-8 src=a.js></script>'
 			);
 		}
+	});
+
+	it("reads nothing past a tag, comment or declaration left open", () => {
+		const { declaresUtf8 } = require("../../../lib/html/syntax-parser");
+
+		for (const html of [
+			'<div title="<meta charset=utf-8>',
+			"<!-- <meta charset=utf-8>",
+			"<!doctype <meta charset=utf-8>",
+			"<?x <meta charset=utf-8>",
+			"<?x <meta charset=utf-8"
+		]) {
+			expect(declaresUtf8(html)).toBe(false);
+		}
+		expect(declaresUtf8('<!-->x<meta charset="utf-8">')).toBe(true);
 	});
 
 	it("keeps a charset naming another encoding", () => {
