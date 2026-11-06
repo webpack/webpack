@@ -622,6 +622,10 @@ export type WebassemblyModuleFilename = string;
  */
 export type WorkerPublicPath = string;
 /**
+ * Worker public path function. Much like the public path function, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPathFunction. Don't set this option unless your worker scripts are located at a different path from your other script files.
+ */
+export type WorkerPublicPathFunction = string;
+/**
  * The number of parallel processed modules in the compilation.
  */
 export type Parallelism = number;
@@ -2274,6 +2278,10 @@ export interface Output {
 	 */
 	workerPublicPath?: WorkerPublicPath;
 	/**
+	 * Worker public path function. Much like the public path function, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPathFunction. Don't set this option unless your worker scripts are located at a different path from your other script files.
+	 */
+	workerPublicPathFunction?: WorkerPublicPath;
+	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	workerWasmLoading?: WasmLoading;
@@ -3625,6 +3633,10 @@ export interface OutputNormalized {
 	 * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
 	 */
 	workerPublicPath?: WorkerPublicPath;
+	/**
+	 * Worker public path function. Much like the public path function, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPathFunction. Don't set this option unless your worker scripts are located at a different path from your other script files.
+	 */
+	workerPublicPathFunction?: WorkerPublicPath;
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */

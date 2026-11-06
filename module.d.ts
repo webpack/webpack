@@ -184,6 +184,7 @@ interface ImportMeta {
 
 declare const __resourceQuery: string;
 declare var __webpack_public_path__: string;
+declare var __webpack_public_path_function__: string;
 declare var __webpack_nonce__: string;
 declare const __webpack_chunkname__: string;
 declare var __webpack_base_uri__: string;

@@ -3497,6 +3497,9 @@
         "workerPublicPath": {
           "$ref": "#/definitions/WorkerPublicPath"
         },
+        "workerPublicPathFunction": {
+          "$ref": "#/definitions/WorkerPublicPathFunction"
+        },
         "workerWasmLoading": {
           "$ref": "#/definitions/WasmLoading"
         }
@@ -3665,6 +3668,9 @@
         },
         "workerPublicPath": {
           "$ref": "#/definitions/WorkerPublicPath"
+        },
+        "workerPublicPathFunction": {
+          "$ref": "#/definitions/WorkerPublicPathFunction"
         },
         "workerWasmLoading": {
           "$ref": "#/definitions/WasmLoading"
@@ -5624,6 +5630,10 @@
     },
     "WorkerPublicPath": {
       "description": "Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.",
+      "type": "string"
+    },
+    "WorkerPublicPathFunction": {
+      "description": "Worker public path function. Much like the public path function, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPathFunction. Don't set this option unless your worker scripts are located at a different path from your other script files.",
       "type": "string"
     }
   },
