@@ -803,7 +803,7 @@ const reportable = (differences, limit = 10) =>
 		? [
 				...differences.slice(0, limit),
 				`…and ${differences.length - limit} more`
-			]
+		  ]
 		: differences;
 
 /**
@@ -859,7 +859,9 @@ const cutDifference = (source, options) => {
 			return [
 				{
 					relation: "acorn",
-					what: `a cut program throws ${/** @type {Error} */ (error).name}, not a SyntaxError`,
+					what: `a cut program throws ${
+						/** @type {Error} */ (error).name
+					}, not a SyntaxError`,
 					repro: `    …${oneLine(source.slice(-60), 60)}`
 				}
 			];
@@ -905,6 +907,13 @@ const EXPECTED = [
 		relation: "idempotence",
 		contains: "(e,t,n))?",
 		source: "Vue 3 (production)",
+		presets: ["default"],
+		why: "an `if` printing as `?:` parenthesizes a test opening with a function where the reprint parenthesizes the function alone, the same size"
+	},
+	{
+		relation: "idempotence",
+		contains: "(t))?",
+		source: "Vue 3 (ESM)",
 		presets: ["default"],
 		why: "an `if` printing as `?:` parenthesizes a test opening with a function where the reprint parenthesizes the function alone, the same size"
 	},
@@ -1307,14 +1316,14 @@ const header = (stage) =>
 	stage === "parse"
 		? `  ${"parse".padEnd(22)}${"ms".padStart(8)}${"cpu".padStart(
 				7
-			)}${"peak".padStart(9)}   agrees with acorn\n`
+		  )}${"peak".padStart(9)}   agrees with acorn\n`
 		: `  ${stage.padEnd(22)}${"out".padStart(10)}${"gzip".padStart(
 				9
-			)}${"saved".padStart(8)}${"brotli".padStart(9)}${"zstd".padStart(
+		  )}${"saved".padStart(8)}${"brotli".padStart(9)}${"zstd".padStart(
 				9
-			)}${"ms".padStart(7)}${"cpu".padStart(6)}${"peak".padStart(
+		  )}${"ms".padStart(7)}${"cpu".padStart(6)}${"peak".padStart(
 				8
-			)}${"2nd".padStart(7)}   round-trip\n`;
+		  )}${"2nd".padStart(7)}   round-trip\n`;
 
 const main = async () => {
 	// Before the install: the relations are webpack's own, so they answer
@@ -1355,7 +1364,9 @@ const main = async () => {
 				if ("error" in result) {
 					// A tool rejecting the source outright is a comparison result too.
 					process.stdout.write(
-						`  ${tool.name.padEnd(22)} ${result.timedOut ? "" : "rejects it: "}${result.error}\n`
+						`  ${tool.name.padEnd(22)} ${
+							result.timedOut ? "" : "rejects it: "
+						}${result.error}\n`
 					);
 					continue;
 				}
