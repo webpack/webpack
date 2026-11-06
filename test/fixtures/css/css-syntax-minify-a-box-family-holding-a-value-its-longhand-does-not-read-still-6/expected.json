@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": "red red;border-color:color(display-p3 1 0 0)red red}\n      -> ;border-color:color(display-p3 1 0 0)red red}",
-		"why": "the legacy fallback is written after the box shorthand is folded, so `red red red` folds to `red` on a second pass; both say the same"
-	}
-]
