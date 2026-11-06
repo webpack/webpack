@@ -1034,6 +1034,60 @@ exports[`HTML syntax — fixtures html-minify-assets-webpack-only-passes-through
 
 exports[`HTML syntax — fixtures html-minify-assets-webpack-only-passes-through-minify-conditional-comments-5 prints {"mode":"minify"} 1`] = `"<!--[if lt IE 9]><script src=h.js></script><link rel=stylesheet href=a.css><![endif]-->"`;
 
+exports[`HTML syntax — fixtures html-minify-assets-webpack-only-passes-through-minify-conditional-comments-6 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <!-- [if IE]><i  class=\\"y\\">2</i><![endif] -->
+|     <table>
+|       <!-- [if IE]><b  class=\\"x\\">1</b><![endif] -->
+|       <tbody>
+|         <tr>
+|           <td>
+|             title=\\"t\\"
+|             \\"c\\"
+|     <p>
+|       title=\\"x\\"
+|       \\"kept\\""
+`;
+
+exports[`HTML syntax — fixtures html-minify-assets-webpack-only-passes-through-minify-conditional-comments-6 prints {"mode":"minify"} 1`] = `"<div><!--[if IE]><i  class=\\"y\\">2</i><![endif]--></div><table><!--[if IE]><b  class=\\"x\\">1</b><![endif]--><tr><td title=t>c</table><p title=x>kept"`;
+
+exports[`HTML syntax — fixtures html-minify-assets-webpack-only-passes-through-minify-conditional-comments-7 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"a\\"
+|     <p>
+|       <!-- [if IE]><i  class=\\"y\\">2</i><![endif] -->
+|     <p>
+|       title=\\"x\\"
+|       \\"kept\\"
+|   <!-- [if IE]><b  class=\\"x\\">1</b><![endif] -->"
+`;
+
+exports[`HTML syntax — fixtures html-minify-assets-webpack-only-passes-through-minify-conditional-comments-7 prints {"mode":"minify"} 1`] = `"<body><p>a<p><!--[if IE]><i  class=\\"y\\">2</i><![endif]--><p title=x>kept</body><!--[if IE]><b  class=\\"x\\">1</b><![endif]-->"`;
+
+exports[`HTML syntax — fixtures html-minify-assets-webpack-only-passes-through-minify-conditional-comments-8 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <button>
+|         <selectedcontent>
+|           <!-- [if IE]><b  class=\\"x\\">1</b><![endif] -->
+|       <option>
+|         selected=\\"\\"
+|         <!-- [if IE]><b  class=\\"x\\">1</b><![endif] -->
+|     <p>
+|       title=\\"x\\"
+|       \\"kept\\""
+`;
+
+exports[`HTML syntax — fixtures html-minify-assets-webpack-only-passes-through-minify-conditional-comments-8 prints {"mode":"minify"} 1`] = `"<select><button><selectedcontent></selectedcontent></button><option selected><!--[if IE]><b  class=\\"x\\">1</b><![endif]--></select><p title=x>kept"`;
+
 exports[`HTML syntax — fixtures html-minify-assets-webpack-only-passes-through-minify-conditional-comments-keeps parses 1`] = `
 "| <html>
 |   <head>
@@ -21610,6 +21664,144 @@ exports[`HTML syntax — fixtures source-processor-the-dropped-duplicate-flag-is
 `;
 
 exports[`HTML syntax — fixtures source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-a-start-tag prints {"mode":"minify"} 1`] = `"<br>"`;
+
+exports[`HTML syntax — fixtures source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <pre>
+|       \\"
+keep\\""
+`;
+
+exports[`HTML syntax — fixtures source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j prints {"mode":"beautify"} 1`] = `
+"<pre>
+
+keep</pre>"
+`;
+
+exports[`HTML syntax — fixtures source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j prints {"mode":"minify"} 1`] = `
+"<pre>
+
+keep</pre>"
+`;
+
+exports[`HTML syntax — fixtures source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <textarea>
+|       \\"
+x\\""
+`;
+
+exports[`HTML syntax — fixtures source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j-2 prints {"mode":"minify"} 1`] = `
+"<textarea>
+
+x</textarea>"
+`;
+
+exports[`HTML syntax — fixtures source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j-3 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <listing>
+|       \\"
+x\\""
+`;
+
+exports[`HTML syntax — fixtures source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j-3 prints {"mode":"minify"} 1`] = `
+"<listing>
+
+x</listing>"
+`;
+
+exports[`HTML syntax — fixtures source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j-4 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <pre>
+|       <!--  c  -->
+|       \\"
+x\\""
+`;
+
+exports[`HTML syntax — fixtures source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j-4 prints {"mode":"beautify"} 1`] = `
+"<pre><!-- c -->
+x</pre>"
+`;
+
+exports[`HTML syntax — fixtures source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j-4 prints {"mode":"minify"} 1`] = `
+"<pre>
+
+x</pre>"
+`;
+
+exports[`HTML syntax — fixtures source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j-5 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <pre>
+|       <b>
+|         \\"
+x\\""
+`;
+
+exports[`HTML syntax — fixtures source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j-5 prints {"mode":"minify"} 1`] = `
+"<pre><b>
+x</b></pre>"
+`;
+
+exports[`HTML syntax — fixtures source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j-6 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <pre>
+|       <b>
+|       \\"
+x\\""
+`;
+
+exports[`HTML syntax — fixtures source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j-6 prints {"mode":"minify"} 1`] = `
+"<pre><b></b>
+x</pre>"
+`;
+
+exports[`HTML syntax — fixtures source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j-7 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <pre>
+|       <pre>
+|         \\"
+x\\""
+`;
+
+exports[`HTML syntax — fixtures source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j-7 prints {"mode":"minify"} 1`] = `
+"<pre><pre>
+
+x</pre></pre>"
+`;
+
+exports[`HTML syntax — fixtures source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j-8 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <pre>
+|       \\"
+x\\"
+|       <table>
+|         <tbody>
+|           <tr>
+|             <td>
+|               \\"y\\""
+`;
+
+exports[`HTML syntax — fixtures source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j-8 prints {"mode":"minify"} 1`] = `
+"<pre>
+
+x<table><td>y</table></pre>"
+`;
 
 exports[`HTML syntax — fixtures source-processor-the-markup-generators-escapes-text-so-that-it-reads-back-as parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <p>\\\\n|       \\\\\\"a & b < c > d e\\\\nf\\\\rg\\\\\\"\\""`;
 

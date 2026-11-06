@@ -2384,17 +2384,17 @@ describe("htmlMinify — assets webpack only passes through", () => {
 		it.each([
 			[
 				"a block moved out of a table before the comment the table holds",
-				'<table><!--[if IE]><b  class="x">1</b><![endif]--><div><!--[if IE]><i  class="y">2</i><![endif]--></div><tr><td title="t">c</td></tr></table><p title="x">kept</p>',
+				fixture("html", "html-minify-assets-webpack-only-passes-through-minify-conditional-comments-6"),
 				"<div><!--[if IE]><i class=y>2</i><![endif]--></div><table><!--[if IE]><b class=x>1</b><![endif]--><tr><td title=t>c</table><p title=x>kept"
 			],
 			[
 				"a comment after `</body>` with body content following it",
-				'<body><p>a</p></body><!--[if IE]><b  class="x">1</b><![endif]--><p><!--[if IE]><i  class="y">2</i><![endif]--></p><p title="x">kept</p>',
+				fixture("html", "html-minify-assets-webpack-only-passes-through-minify-conditional-comments-7"),
 				"<body><p>a<p><!--[if IE]><i class=y>2</i><![endif]--><p title=x>kept</body><!--[if IE]><b class=x>1</b><![endif]-->"
 			],
 			[
 				"an option `<selectedcontent>` copies",
-				'<select><button><selectedcontent></selectedcontent></button><option selected><!--[if IE]><b  class="x">1</b><![endif]--></option></select><p title="x">kept</p>',
+				fixture("html", "html-minify-assets-webpack-only-passes-through-minify-conditional-comments-8"),
 				"<select><button><selectedcontent></selectedcontent></button><option selected><!--[if IE]><b class=x>1</b><![endif]--></select><p title=x>kept"
 			]
 		])("minifies each body in place for %s", async (_, page, expected) => {
@@ -2758,6 +2758,37 @@ describe("SourceProcessor — print modes", () => {
 				print(source, "minify")
 			);
 		}
+	});
+});
+
+describe("SourceProcessor — the leading newline of `<pre>`", () => {
+	const { SourceProcessor } = require("../../../lib/html/syntax");
+
+	// Run in a heap far smaller than a copy of every subtree would take, which a
+	// per-element read of the composed children's first character used to make.
+	it.each([
+		["<pre>", "<pre>", "</pre>"],
+		["<svg> under a renderer", "<svg><g>", "</g></svg>"]
+	])("prints %s nested 20000 deep in a small heap", (_, open, close) => {
+		const script = `
+			const { SourceProcessor } = require(${JSON.stringify(
+				require.resolve("../../../lib/html/syntax")
+			)});
+			const source = ${JSON.stringify(open)}.repeat(20000) + "x" +
+				${JSON.stringify(close)}.repeat(20000);
+			const { code } = new SourceProcessor().process(source, {
+				mode: "minify",
+				renderEmbeddedSource: () => undefined
+			});
+			process.stdout.write(String(code === source));
+		`;
+		expect(
+			execFileSync(
+				process.execPath,
+				["--max-old-space-size=128", "-e", script],
+				{ encoding: "utf8", stdio: "pipe" }
+			)
+		).toBe("true");
 	});
 });
 

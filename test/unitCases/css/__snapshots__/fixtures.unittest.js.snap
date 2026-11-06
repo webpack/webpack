@@ -344,7 +344,7 @@ exports[`CSS syntax — fixtures css-syntax-a-block-of-declarations-written-agai
 
 exports[`CSS syntax — fixtures css-syntax-a-block-of-declarations-written-again-joins-rules-under-one-selector-2 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"margin-top\\"],\\":\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"],\\";\\",[\\"ident\\",\\"margin-right\\"],\\":\\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"px\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"margin-bottom\\"],\\":\\",[\\"dimension\\",\\"3\\",3,\\"integer\\",\\"px\\"],\\";\\",[\\"ident\\",\\"margin-left\\"],\\":\\",[\\"dimension\\",\\"4\\",4,\\"integer\\",\\"px\\"],\\";\\",[\\"ident\\",\\"background\\"],\\":\\",[\\"url\\",\\"./x'y.png\\"]]]]"`;
 
-exports[`CSS syntax — fixtures css-syntax-a-block-of-declarations-written-again-joins-rules-under-one-selector-2 prints {"mode":"minify"} 1`] = `".a{background:url(./x\\\\'y.png);margin-bottom:3px;margin-left:4px;margin-top:1px;margin-right:2px}"`;
+exports[`CSS syntax — fixtures css-syntax-a-block-of-declarations-written-again-joins-rules-under-one-selector-2 prints {"mode":"minify"} 1`] = `".a{background:url(./x\\\\'y.png);margin:1px 2px 3px 4px}"`;
 
 exports[`CSS syntax — fixtures css-syntax-a-block-of-declarations-written-again-joins-rules-under-one-selector-3 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"content\\"],\\":\\",[\\"string\\",\\"\\\\\\"'\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
 
@@ -4460,6 +4460,50 @@ exports[`CSS syntax — fixtures css-syntax-minify-input-that-once-threw-prints-
 exports[`CSS syntax — fixtures css-syntax-minify-input-that-once-threw-prints-a-rule-whose-value-holds-a-block-3 prints {"mode":"minify","as":"block-contents"} 1`] = `"a{b:c;b:{b:c}}a{b:c}"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-input-that-once-threw-prints-a-rule-whose-value-holds-a-block-3 prints {"mode":"minify"} 1`] = `"a{b:c;b:{b:c}}a{b:c}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-a-block-whose parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"position\\"],\\":\\",[\\"ident\\",\\"relative\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"display\\"],\\":\\",[\\"ident\\",\\"block\\"],\\";\\",[\\"ident\\",\\"content\\"],\\":\\",[\\"error\\",\\"bad-string\\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-a-block-whose prints {"mode":"minify"} 1`] = `
+".a{content:\\"x
+;display:block;position:relative}"
+`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-a-block-whose-2 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"margin-top\\"],\\":\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"],\\";\\",[\\"ident\\",\\"margin-right\\"],\\":\\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"px\\"],\\";\\",[\\"ident\\",\\"margin-bottom\\"],\\":\\",[\\"dimension\\",\\"3\\",3,\\"integer\\",\\"px\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"margin-left\\"],\\":\\",[\\"dimension\\",\\"4\\",4,\\"integer\\",\\"px\\"],\\";\\",[\\"ident\\",\\"z\\"],\\":\\",[\\"error\\",\\"bad-string\\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-a-block-whose-2 prints {"mode":"minify"} 1`] = `
+".a{margin:1px 2px 3px 4px;z:\\"x
+}"
+`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"margin\\"],\\":\\",[\\"ident\\",\\"a\\\\\\"\\"],\\" \\",[\\"string\\",\\";color:red}.b{x:1;y:\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every prints {"mode":"minify","transforms":{"reorderDeclarations":false}} 1`] = `".a{margin:a\\\\\\"\\";color:red}.b{x:1;y:\\";top:0}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every prints {"mode":"minify"} 1`] = `".a{margin:a\\\\\\"\\";color:red}.b{x:1;y:\\";top:0}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every-2 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"url\\",\\"./img'img.png\\"],\\";\\",[\\"ident\\",\\"content\\"],\\":\\",[\\"string\\",\\";color:red}.b{x:1;y:\\\\\\"\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every-2 prints {"mode":"minify","transforms":{"reorderDeclarations":false}} 1`] = `".a{background:url(./img\\\\'img.png);content:';color:red}.b{x:1;y:\\"';top:0}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every-2 prints {"mode":"minify"} 1`] = `".a{content:';color:red}.b{x:1;y:\\"';background:url(./img\\\\'img.png);top:0}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every-3 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"margin\\"],\\":\\",[\\"url\\",\\"a\\\\\\"b\\"],\\" \\",[\\"string\\",\\";color:red}.b{x:1;y:\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every-3 prints {"mode":"minify","transforms":{"reorderDeclarations":false}} 1`] = `".a{margin:url(a\\\\\\"b)\\";color:red}.b{x:1;y:\\";top:0}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every-3 prints {"mode":"minify"} 1`] = `".a{margin:url(a\\\\\\"b)\\";color:red}.b{x:1;y:\\";top:0}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every-4 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"url\\",\\"a{b.png\\"],\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"],\\";\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every-4 prints {"mode":"minify","transforms":{"reorderDeclarations":false}} 1`] = `".a{background:url(a{b.png);color:red;top:1px}.a{top:0}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every-4 prints {"mode":"minify"} 1`] = `".a{color:red;background:url(a{b.png);top:1px}.a{top:0}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every-5 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"grid-area\\"],\\":\\",[\\"ident\\",\\"a;b\\"],\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every-5 prints {"mode":"minify","transforms":{"reorderDeclarations":false}} 1`] = `".a{grid-area:a\\\\;b;color:red;top:0}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every-5 prints {"mode":"minify"} 1`] = `".a{color:red;grid-area:a\\\\;b;top:0}"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-keeps-input-the-grammar-rejects-drops-the-source-mapping-url parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"v\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]"`;
 
@@ -19831,6 +19875,10 @@ exports[`CSS syntax — fixtures css-syntax-token-value-decoding-finds-namespace
 exports[`CSS syntax — fixtures css-syntax-token-value-decoding-finds-namespace-under-any-spelling-before-the-4 parses 1`] = `"[[\\"at-rule\\",\\"NAMESPACE\\",[\\" \\",[\\"ident\\",\\"x\\"]],null],[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"x\\"]],[]]]"`;
 
 exports[`CSS syntax — fixtures css-syntax-token-value-decoding-finds-namespace-under-any-spelling-before-the-4 prints {"mode":"minify"} 1`] = `"@namespace x;@media x{}"`;
+
+exports[`CSS syntax — fixtures css-syntax-token-value-decoding-finds-namespace-under-any-spelling-before-the-5 parses 1`] = `"[[\\"at-rule\\",\\"a@namespace\\",[\\" \\",[\\"ident\\",\\"x\\"]],null],[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"x\\"]],[]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-token-value-decoding-finds-namespace-under-any-spelling-before-the-5 prints {"mode":"minify"} 1`] = `"@a\\\\@namespace x;@media x{}"`;
 
 exports[`CSS syntax — fixtures css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7 parses 1`] = `"[]"`;
 

@@ -3433,6 +3433,57 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 	});
 });
 
+describe("CssSyntax minify — joining rules whose values hold escapes", () => {
+	/**
+	 * @param {string} css source text
+	 * @returns {string[]} each declaration's name, string and url, sorted
+	 */
+	const pieces = (css) => {
+		/** @type {string[]} */
+		const out = [];
+		/**
+		 * @param {string} kind what the piece is
+		 * @returns {(path: import("../../../lib/css/syntax-parser").CssPath) => void} visitor collecting it
+		 */
+		const collect = (kind) => (path) => {
+			out.push(
+				`${kind}:${kind === "declaration" ? path.name() : path.value()}`
+			);
+		};
+		new SourceProcessor()
+			.use({
+				[NodeType.Declaration]: collect("declaration"),
+				[NodeType.String]: collect("text"),
+				[NodeType.Url]: collect("text")
+			})
+			.process(css);
+		return out.sort();
+	};
+
+	it.each([
+		"css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every",
+		"css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every-2",
+		"css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every-3",
+		"css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every-4",
+		"css-syntax-minify-joining-rules-whose-values-hold-escapes-joins-s-keeping-every-5"
+	])("joins %s keeping every string whole", (name) => {
+		const css = fixture("css", name);
+		/**
+		 * @param {boolean} reorderDeclarations whether declarations may move
+		 * @returns {string} the minified output
+		 */
+		const minify = (reorderDeclarations) =>
+			/** @type {{ code: string }} */ (
+				new SourceProcessor().process(css, {
+					mode: "minify",
+					transforms: { reorderDeclarations }
+				})
+			).code;
+		expect(pieces(minify(false))).toEqual(pieces(css));
+		expect(pieces(minify(true))).toEqual(pieces(css));
+	});
+});
+
 describe("CssSyntax minify — the same rewrite in every context", () => {
 	const modern = ["chrome 130", "firefox 130", "safari 18"];
 	const bodies = [

@@ -1754,6 +1754,36 @@ describe("CssSyntax — token value decoding", () => {
 		expect(A.name(rule)).toBe("foo�");
 	});
 
+	it("scans escaped at-signs in linear time", () => {
+		/**
+		 * @param {number} length number of escaped at-signs
+		 * @returns {number} character reads while processing them
+		 */
+		const reads = (length) => {
+			const src = `.a{color:red}${"\\@".repeat(length)}`;
+			const original = String.prototype.charCodeAt;
+			let count = 0;
+			/**
+			 * @this {string}
+			 * @param {number} index position read
+			 * @returns {number} the code unit there
+			 */
+			// eslint-disable-next-line no-extend-native
+			String.prototype.charCodeAt = function charCodeAt(index) {
+				count++;
+				return original.call(this, index);
+			};
+			try {
+				new SourceProcessor().process(src);
+			} finally {
+				// eslint-disable-next-line no-extend-native
+				String.prototype.charCodeAt = original;
+			}
+			return count;
+		};
+		// Linear work reads about four times as much for four times the input.
+		expect(reads(2000) / reads(500)).toBeLessThan(6);
+	});
 });
 
 describe("CssSyntax — path reads on every node kind", () => {

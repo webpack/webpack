@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": "-bottom:3px;margin-left:4px;margin-top:1px;margin-right:2px}\n      -> :1px 2px 3px 4px}",
-		"why": "the four longhands meet only once their rules are joined, after the longhand merge ran, so the second pass merges them; meaning unchanged"
-	}
-]
