@@ -793,6 +793,30 @@ exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-c
 
 exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-minifies-a-data prints {"mode":"minify"} 1`] = `"<p style=\\"background:url('data:text/css,  .q  {  color : red  }  ')\\">x"`;
 
+exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-separates-the-next parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       data-x=\\"MARK\\"
+|       style=\\"color: red\\"
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-separates-the-next prints {"mode":"minify"} 1`] = `"<p style=\\"color: red\\"/data-x=MARK>x"`;
+
+exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-separates-the-next-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <a>
+|       data-x=\\"MARK\\"
+|       onclick=\\"foo( 1 )\\"
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-separates-the-next-2 prints {"mode":"minify"} 1`] = `"<a onclick=\\"foo( 1 )\\"/data-x=MARK>x</a>"`;
+
 exports[`HTML syntax — fixtures html-minify-assets-webpack-only-passes-through-drops-the-comments-some-names-as parses 1`] = `
 "| <!--  keep  -->
 | <html>

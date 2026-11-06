@@ -3485,6 +3485,19 @@ describe("htmlMinify — an answered `style` attribute that changes its quoting"
 			)
 		).toBe('<svg><rect style="margin:0 auto"/></svg>');
 	});
+
+	it("keeps an attribute after `/` apart from an answer that ends unquoted", async () => {
+		// The separator is written before the answer arrives: a `/` after a bare
+		// value would join the next attribute into it.
+		expect(
+			await min(fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-separates-the-next"), () => "color:red")
+		).toBe("<p style=color:red data-x=MARK>x");
+		expect(
+			await min(fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-separates-the-next-2"), (source, info) =>
+				info.type === "javascript" ? "foo(1)" : undefined
+			)
+		).toBe("<a onclick=foo(1) data-x=MARK>x</a>");
+	});
 });
 
 describe("htmlMinify — the function an event handler is asked about", () => {
