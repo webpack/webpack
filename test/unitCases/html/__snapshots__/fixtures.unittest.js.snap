@@ -23600,6 +23600,19 @@ exports[`HTML syntax — fixtures source-processor-what-minifying-cannot-turn-in
 
 exports[`HTML syntax — fixtures source-processor-what-minifying-cannot-turn-into-markup-keeps-a-list-item-s-p prints {"mode":"minify"} 1`] = `"<!doctype html><ul><li><p>a<li><p>b</ul>"`;
 
+exports[`HTML syntax — fixtures source-processor-what-minifying-cannot-turn-into-markup-keeps-a-script-body-as parses 1`] = `
+"| <html>
+|   <head>
+|     <script>
+|       \\"x=\\"<!-\\"+\\"-<scr\\"+\\"ipt>\\"\\"
+|   <body>
+|     <p>
+|       data-x=\\"MARK\\"
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — fixtures source-processor-what-minifying-cannot-turn-into-markup-keeps-a-script-body-as prints {"mode":"minify"} 1`] = `"<script>x=\\"<!-\\"+\\"-<scr\\"+\\"ipt>\\"</script><p data-x=MARK>x"`;
+
 exports[`HTML syntax — fixtures source-processor-what-minifying-cannot-turn-into-markup-keeps-a-style-body-as parses 1`] = `
 "| <html>
 |   <head>

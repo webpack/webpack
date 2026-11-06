@@ -5202,6 +5202,13 @@ describe("SourceProcessor — what minifying cannot turn into markup", () => {
 				renderEmbeddedSource: () => "a{b:'</styles'}"
 			}).code
 		).toBe("<style>a{b:'</styles'}</style>");
+		// No end tag, but `<!--<script>` keeps a script body open past its own.
+		expect(
+			new SourceProcessor().process(
+				fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-a-script-body-as"),
+				{ mode: "minify", renderEmbeddedSource: () => 'x="<!--<script>"' }
+			).code
+		).toBe('<script>x="<!-"+"-<scr"+"ipt>"</script><p data-x=MARK>x');
 	});
 
 	it("keeps a conditional comment's body as written where its print would end the comment", async () => {
