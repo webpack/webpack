@@ -15477,6 +15477,80 @@ declare interface JavascriptParseOptions {
 	importPhases?: boolean;
 
 	/**
+	 * whether the code is strict whatever it says
+	 */
+	strict?: boolean;
+
+	/**
+	 * whether reserved words may name things, `"never"` not even a property
+	 */
+	allowReserved?: boolean | "never";
+
+	/**
+	 * whether module syntax may sit anywhere
+	 */
+	allowImportExportEverywhere?: boolean;
+
+	/**
+	 * whether `await` may sit outside a function, at a module's top level by default
+	 */
+	allowAwaitOutsideFunction?: boolean;
+
+	/**
+	 * whether `super` may sit outside a method
+	 */
+	allowSuperOutsideMethod?: boolean;
+
+	/**
+	 * whether a leading `#!` line is skipped, by default except in an event handler
+	 */
+	allowHashBang?: boolean;
+
+	/**
+	 * whether private names must be declared, as they must by default
+	 */
+	checkPrivateFields?: boolean;
+
+	/**
+	 * whether parentheses become `ParenthesizedExpression` nodes
+	 */
+	preserveParens?: boolean;
+
+	/**
+	 * where tokens are reported
+	 */
+	onToken?: Token[] | ((token: Token) => void);
+
+	/**
+	 * the parser itself at each token
+	 */
+	onTokenRead?: (parser: SyntaxParser) => void;
+
+	/**
+	 * where comments are reported, as acorn reports them
+	 */
+	onComment?:
+		| ((
+				isBlock: boolean,
+				text: string,
+				start: number,
+				end: number,
+				startLoc?: null | Position,
+				endLoc?: null | Position
+		  ) => void)
+		| CollectedComment[];
+
+	/**
+	 * called where a semicolon was inserted
+	 */
+	onInsertedSemicolon?: (lastTokEnd: number) => void;
+
+	/**
+	 * called at a trailing comma
+	 */
+	onTrailingComma?: (lastTokEnd: number) => void;
+
+	/**
 	 * whether to build ESTree objects, the program returned, rather than the `SyntaxTree` `A` reads
 	 */
 	estree?: boolean;

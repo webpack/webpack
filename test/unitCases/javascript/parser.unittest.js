@@ -6196,6 +6196,130 @@ describe("parseProgram", () => {
 		expect(typeof parseProgram("import defer * as d from 'e';")).toBe("number");
 	});
 
+	it("reads every grammar option into the tree as acorn reads it", () => {
+		/** @typedef {Pick<import("acorn").Options, "strict" | "allowReserved" | "allowHashBang" | "allowImportExportEverywhere" | "allowAwaitOutsideFunction" | "allowSuperOutsideMethod" | "checkPrivateFields">} GrammarOptions */
+		/** @type {[string, "script" | "module", GrammarOptions, GrammarOptions][]} */
+		const cases = [
+			["with (a) {}", "script", { strict: true }, { strict: false }],
+			["a.class", "script", { allowReserved: "never" }, { allowReserved: true }],
+			["var enum = 1", "script", { allowReserved: false }, { allowReserved: true }],
+			["#!x\n1", "script", { allowHashBang: false }, { allowHashBang: true }],
+			[
+				"{ import a from 'a' }",
+				"module",
+				{ allowImportExportEverywhere: true },
+				{ allowImportExportEverywhere: false }
+			],
+			[
+				"await a",
+				"script",
+				{ allowAwaitOutsideFunction: true },
+				{ allowAwaitOutsideFunction: false }
+			],
+			[
+				"super.a",
+				"script",
+				{ allowSuperOutsideMethod: true },
+				{ allowSuperOutsideMethod: false }
+			],
+			[
+				"class A { m() { this.#x } }",
+				"script",
+				{ checkPrivateFields: false },
+				{ checkPrivateFields: true }
+			]
+		];
+		/**
+		 * @param {() => unknown} parse the parse
+		 * @returns {string} its outcome: `ok`, or the error it throws
+		 */
+		const outcome = (parse) => {
+			try {
+				parse();
+				return "ok";
+			} catch (error) {
+				return /** @type {Error} */ (error).message;
+			}
+		};
+		for (const [code, sourceType, on, off] of cases) {
+			const results = [on, off].map((options) => [
+				outcome(() => parseProgram(code, 0, { sourceType, ...options })),
+				outcome(() =>
+					acorn.parse(code, { ...options, ecmaVersion: "latest", sourceType })
+				)
+			]);
+			// each case is one the option decides, and the tree reads it as acorn
+			expect([code, results[0][1] === results[1][1]]).toEqual([code, false]);
+			expect([code, results[0][0], results[1][0]]).toEqual([
+				code,
+				results[0][1],
+				results[1][1]
+			]);
+		}
+		const tree = parseProgram("(a)", 0, {
+			sourceType: "script",
+			preserveParens: true
+		});
+		expect(A.type(A.field(0, Field.expression, A.field(0, Field.body, tree)))).toBe(
+			NodeType.ParenthesizedExpression
+		);
+	});
+
+	it("reports tokens and the parse's events into the tree as acorn does", () => {
+		const code = "/* c */ a + b\nc = [1,]; /x/g";
+		/** @type {unknown[]} */
+		const tokens = [];
+		/** @type {unknown[]} */
+		const events = [];
+		let read = 0;
+		/** @type {import("acorn").Options} */
+		const callbacks = {
+			ecmaVersion: "latest",
+			onToken: (token) => tokens.push([token.type.label, token.start, token.end]),
+			onComment: (block, text, start) => events.push(["comment", text, start]),
+			onInsertedSemicolon: (end) => events.push(["semicolon", end]),
+			onTrailingComma: (end) => events.push(["comma", end])
+		};
+		parseProgram(code, 0, {
+			.../** @type {import("../../../lib/javascript/syntax-parser").JavascriptParseOptions} */ (
+				/** @type {unknown} */ (callbacks)
+			),
+			sourceType: "script",
+			onTokenRead: () => read++
+		});
+		const tree = [tokens.splice(0), events.splice(0)];
+		acorn.parse(code, { ...callbacks, sourceType: "script" });
+		expect(tokens.length).toBeGreaterThan(0);
+		expect(tree).toEqual([tokens, events]);
+		expect(read).toBe(tokens.length);
+	});
+
+	it("collects comments and reports them to `onComment` in one parse", () => {
+		for (const estree of [false, true]) {
+			/** @type {import("../../../lib/javascript/syntax-parser").CollectedComment[]} */
+			const comments = [];
+			/** @type {unknown[]} */
+			const reported = [];
+			parseProgram("#!x\n/* a */ b; // c", 0, {
+				sourceType: "script",
+				estree,
+				comments,
+				onComment: (block, text, start, end) =>
+					reported.push([block, text, start, end])
+			});
+			expect(comments.map((comment) => comment.value)).toEqual([
+				"x",
+				" a ",
+				" c"
+			]);
+			expect(reported).toEqual([
+				[false, "x", 0, 3],
+				[true, " a ", 4, 11],
+				[false, " c", 15, 19]
+			]);
+		}
+	});
+
 	it("refuses an ESTree parse a visitor starts, as a tree parse", () => {
 		expect(() =>
 			new SourceProcessor()
