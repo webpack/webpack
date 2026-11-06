@@ -3070,6 +3070,27 @@ exports[`CSS syntax — fixtures css-syntax-minify-custom-media-custom-selector-
 
 exports[`CSS syntax — fixtures css-syntax-minify-custom-media-custom-selector-writes-the-query-wherever-a prints {"mode":"minify"} 1`] = `"@custom-media --m (width>400px);@media (--m){a{color:red}}"`;
 
+exports[`CSS syntax — fixtures css-syntax-minify-custom-property-keeps-the-newline-that-ends-a-bad-string parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"--x\\"],\\":\\",[\\"error\\",\\"bad-string\\"],\\" \\",\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-custom-property-keeps-the-newline-that-ends-a-bad-string prints {"mode":"minify"} 1`] = `
+"a{--x:\\"abc
+;color:red}b{c:d}"
+`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-custom-property-keeps-the-newline-that-ends-a-bad-string-2 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"--x\\"],\\":\\",[\\"function\\",\\"f\\",[\\"error\\",\\"bad-string\\"],\\" \\",[\\"ident\\",\\"y\\"]],\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-custom-property-keeps-the-newline-that-ends-a-bad-string-2 prints {"mode":"minify"} 1`] = `
+"a{--x:f(\\"abc
+ y);color:red}b{c:d}"
+`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-custom-property-keeps-the-newline-that-ends-a-bad-string-3 parses 1`] = `"[[\\"at-rule\\",\\"property\\",[\\" \\",[\\"ident\\",\\"--x\\"]],[[\\"ident\\",\\"syntax\\"],\\":\\",[\\"string\\",\\"*\\"],\\";\\",[\\"ident\\",\\"inherits\\"],\\":\\",[\\"ident\\",\\"false\\"],\\";\\",[\\"ident\\",\\"initial-value\\"],\\":\\",[\\"error\\",\\"bad-string\\"],\\" \\",\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-custom-property-keeps-the-newline-that-ends-a-bad-string-3 prints {"mode":"minify"} 1`] = `
+"@property --x{syntax:\\"*\\";inherits:false;initial-value:\\"a
+;color:red}b{c:d}"
+`;
+
 exports[`CSS syntax — fixtures css-syntax-minify-custom-property-left-open-by-a-lone-backslash-closes parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"--v\\"],\\":\\",[\\"()\\",[\\"ident\\",\\"x\\"],\\" \\",[\\"ident\\",\\"y�\\"]]]]]"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-custom-property-left-open-by-a-lone-backslash-closes prints {"mode":"minify"} 1`] = `"a{--v:(x y�)}"`;

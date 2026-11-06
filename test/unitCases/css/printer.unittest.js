@@ -4434,4 +4434,12 @@ describe("CssSyntax minify — output that reads back as its source", () => {
 		expect(min(fixture("css", "css-syntax-minify-math-keeps-the-space-between-a-slash-and-a-star"))).toBe("a{width:calc(10px/ *2)}b{c:d}");
 		expect(min(fixture("css", "css-syntax-minify-math-keeps-the-space-between-a-slash-and-a-star-2"))).toBe("@media (width:calc(10px/ *2)){a{b:c}}");
 	});
+
+	it("keeps the newline that ends a bad string in a custom property", () => {
+		expect(min(fixture("css", "css-syntax-minify-custom-property-keeps-the-newline-that-ends-a-bad-string"))).toBe('a{--x:"abc\n;color:red}b{c:d}');
+		expect(min(fixture("css", "css-syntax-minify-custom-property-keeps-the-newline-that-ends-a-bad-string-2"))).toBe('a{--x:f("abc\n y);color:red}b{c:d}');
+		expect(min(fixture("css", "css-syntax-minify-custom-property-keeps-the-newline-that-ends-a-bad-string-3"))).toBe(
+			'@property --x{syntax:"*";inherits:false;initial-value:"a\n;color:red}b{c:d}'
+		);
+	});
 });
