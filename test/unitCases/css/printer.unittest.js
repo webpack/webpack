@@ -4450,4 +4450,8 @@ describe("CssSyntax minify — output that reads back as its source", () => {
 		// An escaped backslash escapes nothing after it.
 		expect(min(fixture("css", "css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-4"))).toBe(".a\\\\,.b{c:d}");
 	});
+
+	it("keeps a `grid-template-areas` row ending on an escaped space", () => {
+		expect(min(fixture("css", "css-syntax-minify-grid-template-areas-keeps-an-escaped-trailing-space"))).toBe('a{grid-template-areas:"a b\\ "}c{d:e}');
+	});
 });

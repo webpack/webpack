@@ -4049,6 +4049,10 @@ exports[`CSS syntax — fixtures css-syntax-minify-grid-longhands-merged-beside-
 
 exports[`CSS syntax — fixtures css-syntax-minify-grid-longhands-merged-beside-others-prints-a-margin-top-1px-2 prints {"mode":"minify"} 1`] = `"a{grid-row:1/2;grid-template:\\"a\\"1px/2px;margin:1px}"`;
 
+exports[`CSS syntax — fixtures css-syntax-minify-grid-template-areas-keeps-an-escaped-trailing-space parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"grid-template-areas\\"],\\":\\",[\\"string\\",\\"a b \\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"c\\"]],[[\\"ident\\",\\"d\\"],\\":\\",[\\"ident\\",\\"e\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-grid-template-areas-keeps-an-escaped-trailing-space prints {"mode":"minify"} 1`] = `"a{grid-template-areas:\\"a b\\\\ \\"}c{d:e}"`;
+
 exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"--x\\"],\\":\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"],\\" \\",[\\"()\\"]]]]"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints prints {"environment":{"browsers":["chrome 130"]},"mode":"minify"} 1`] = `".a{--x:1px (/*!k*"`;
