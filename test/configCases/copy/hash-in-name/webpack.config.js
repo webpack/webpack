@@ -9,6 +9,11 @@ module.exports = {
 				from: "images/*.png",
 				to: "hashed",
 				filename: "[name]-[contenthash:8][ext]"
+			},
+			{
+				from: "images/logo*.png",
+				to: "callback",
+				filename: ({ filename }) => filename
 			}
 		]
 	}
