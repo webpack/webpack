@@ -833,10 +833,12 @@ const FOLDED_BUILT_INS = {
 		"substr",
 		"substring",
 		"toLowerCase",
+		"toString",
 		"toUpperCase",
 		"trim",
 		"trimEnd",
-		"trimStart"
+		"trimStart",
+		"valueOf"
 	],
 	Array: ["of"],
 	"Array.prototype": ["concat", "join"]
@@ -1012,10 +1014,8 @@ const UNFOLDED_BUILT_INS = {
 		"String.prototype.strike",
 		"String.prototype.sub",
 		"String.prototype.sup",
-		"String.prototype.toString",
 		"String.prototype.trimLeft",
 		"String.prototype.trimRight",
-		"String.prototype.valueOf",
 		"Array.Array",
 		"Array.from",
 		"Array.fromAsync",

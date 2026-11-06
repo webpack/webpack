@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Minify JavaScript dead branches, string indexes, array holes and braces shorter.
+Minify JavaScript dead branches, conditions, NaN, string indexes, holes and braces shorter.
