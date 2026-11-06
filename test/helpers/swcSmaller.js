@@ -495,7 +495,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/side_effects_assign",
 			"terser compress: reduce_vars/immutable",
 			"terser compress: reduce_vars/issue_1814_1",
-			"terser compress: reduce_vars/method_2",
 			"terser compress: reduce_vars/obj_arg_1",
 			"terser compress: reduce_vars/func_arg_1",
 			"terser compress: reduce_vars/func_arg_2",
@@ -971,8 +970,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: issue-281/negate_iife_issue_1073",
 			"terser compress: issue-281/issue_1288_side_effects",
 			"terser compress: issue-281/issue_1595_3",
-			"terser compress: issue-281/wrap_iife",
-			"terser compress: issue-281/wrap_iife_in_return_call"
+			"terser compress: issue-281/wrap_iife"
 		]
 	],
 	[
@@ -1127,11 +1125,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		'swc folds arithmetic and concatenation of literals (`"1"+"2"`, `1+""`, `5+3`) that terser leaves as written',
-		[
-			"terser compress: concat-strings/concat_7",
-			"terser compress: concat-strings/concat_8",
-			"terser compress: dead-code/collapse_vars_misc1"
-		]
+		["terser compress: dead-code/collapse_vars_misc1"]
 	],
 	[
 		"swc goes further than webpack on what terser's `arrays` tests cover",
@@ -1221,10 +1215,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: issue-269/issue_269_1",
 			"terser compress: issue-269/strings_concat"
 		]
-	],
-	[
-		"swc goes further than webpack on what terser's `yield` tests cover",
-		["terser compress: yield/issue_2689"]
 	],
 	[
 		"swc goes further than webpack on what swc's `fixture/member_expr` tests cover",
