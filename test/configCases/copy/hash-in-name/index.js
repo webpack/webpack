@@ -8,3 +8,10 @@ it("should keep the whole file name when it holds a '#'", () => {
 	expect(read("out/plain.png")).toBe("plain");
 	expect(fs.existsSync(path.resolve(__dirname, "out/photo"))).toBe(false);
 });
+
+it("should keep the whole file name in a hashed filename", () => {
+	const names = fs.readdirSync(path.resolve(__dirname, "hashed")).sort();
+	expect(names).toHaveLength(2);
+	expect(names[0]).toMatch(/^photo_1-[0-9a-f]{8}\.png$/);
+	expect(names[1]).toMatch(/^plain-[0-9a-f]{8}\.png$/);
+});

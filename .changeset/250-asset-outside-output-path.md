@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-With `futureDefaults`, skip assets outside `output.path`; keep `#` in copies.
+`futureDefaults` skips assets outside `output.path`; copies map `#` to `_`.
