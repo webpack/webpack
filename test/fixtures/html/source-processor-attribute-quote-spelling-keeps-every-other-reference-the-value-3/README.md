@@ -1,7 +1,5 @@
 keeps every other reference the value spells
 
-`&amp;quot;` is the text `&quot;`, not a quote, so it stays escaped, and
+`&amp;quot;` is the text `&quot;`, not a quote, so it stays escaped. U+00A0
 
-`&#10;` still needs a reference under either delimiter. U+00A0 does not:
-
-the minifier writes the character it names.
+and a newline need none: the minifier writes the character each names.

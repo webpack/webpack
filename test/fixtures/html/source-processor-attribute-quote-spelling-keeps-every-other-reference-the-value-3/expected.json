@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "respelling quote-single",
-		"contains": "<img alt=\"line&#10;br &quot;q&quot;\">  ->  <img alt='line&#10;br \"q\"'>\n    <img alt='line br \"q\"'>  ->  <img alt='line br \"q\"'>",
-		"why": "the printer keeps the `&#10;` the source wrote in an attribute value rather than writing a raw newline; both read the same"
-	}
-]

@@ -7582,7 +7582,10 @@ exports[`HTML syntax — fixtures source-processor-attribute-quote-spelling-keep
 br \\"q\\"\\""
 `;
 
-exports[`HTML syntax — fixtures source-processor-attribute-quote-spelling-keeps-every-other-reference-the-value-3 prints {"mode":"minify"} 1`] = `"<img alt='line&#10;br \\"q\\"'>"`;
+exports[`HTML syntax — fixtures source-processor-attribute-quote-spelling-keeps-every-other-reference-the-value-3 prints {"mode":"minify"} 1`] = `
+"<img alt='line
+br \\"q\\"'>"
+`;
 
 exports[`HTML syntax — fixtures source-processor-attribute-quote-spelling-leaves-an-implied-tag-out-on-the-first parses 1`] = `
 "| <html>
@@ -8121,6 +8124,14 @@ exports[`HTML syntax — fixtures source-processor-attribute-rewrites-as-switche
 exports[`HTML syntax — fixtures source-processor-attribute-rewrites-as-switches-trims-the-whitespace-around-a-2 prints {"mode":"minify","transforms":{"normalizeUrlAttributes":false}} 1`] = `"<a href=\\"  /a  \\">x</a>"`;
 
 exports[`HTML syntax — fixtures source-processor-attribute-rewrites-as-switches-trims-the-whitespace-around-a-2 prints {"mode":"minify"} 1`] = `"<a href=/a>x</a>"`;
+
+exports[`HTML syntax — fixtures source-processor-attribute-values-a-reference-name-only-an-attribute-reads-as-text parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <div>\\\\n|       a=\\\\\\"ZZ&gt=YY\\\\\\"\\\\n|       b=\\\\\\"ZZ&gtYY\\\\\\"\\\\n|       c=\\\\\\"ZZ&gt;=\\\\\\"\\\\n|       d=\\\\\\"ZZ&gt\\\\\\"\\\\n|       e=\\\\\\"a&not=\\\\\\"\\\\n|       f=\\\\\\"a&notin;=\\\\\\"\\\\n|       g=\\\\\\"line\\\\nbr\\\\\\"\\\\n|       h=\\\\\\"a\\\\rb\\\\\\"\\\\n|       i=\\\\\\"R&D=1\\\\\\"\\\\n|     \\\\\\"\\\\n\\\\\\"\\""`;
+
+exports[`HTML syntax — fixtures source-processor-attribute-values-a-reference-name-only-an-attribute-reads-as-text prints {"mode":"minify"} 1`] = `
+"<div a=\\"ZZ&gt=YY\\" b=ZZ&gtYY c=\\"ZZ&amp;gt;=\\" d=ZZ&amp;gt e=\\"a&not=\\" f=\\"a&amp;notin;=\\" g=\\"line
+br\\" h=a&#13;b i=\\"R&D=1\\"></div>
+"
+`;
 
 exports[`HTML syntax — fixtures source-processor-attribute-values-the-minifier-rewrites-drops-an-empty-attribute parses 1`] = `
 "| <html>
