@@ -24,7 +24,7 @@ exports.y = function (a, b) {
 (module) {
 
 module.exports = {
-	add: function (a, b) {
+	W: function (a, b) {
 		return a + b;
 	}
 };
@@ -90,7 +90,7 @@ exports.l = function (a, b) {
 
 it(\\"should compute through annotated and plain module instantiations\\", () => {
 	expect((0,_pure__WEBPACK_IMPORTED_MODULE_0__/* .mul */ .l)(6, 7)).toBe(42);
-	expect(_pure_object__WEBPACK_IMPORTED_MODULE_1__.add(40, 2)).toBe(42);
+	expect(_pure_object__WEBPACK_IMPORTED_MODULE_1__/* .add */ .W(40, 2)).toBe(42);
 	expect((0,_impure__WEBPACK_IMPORTED_MODULE_2__/* .div */ .y)(84, 2)).toBe(42);
 	expect(global.cjsEsmOutputImpure).toBe(1);
 	delete global.cjsEsmOutputImpure;
@@ -123,7 +123,7 @@ exports.y = function (a, b) {
 (module) {
 
 module.exports = {
-	add: function (a, b) {
+	W: function (a, b) {
 		return a + b;
 	}
 };
@@ -189,7 +189,7 @@ exports.l = function (a, b) {
 
 it(\\"should compute through annotated and plain module instantiations\\", () => {
 	expect((0,_pure__WEBPACK_IMPORTED_MODULE_0__/* .mul */ .l)(6, 7)).toBe(42);
-	expect(_pure_object__WEBPACK_IMPORTED_MODULE_1__.add(40, 2)).toBe(42);
+	expect(_pure_object__WEBPACK_IMPORTED_MODULE_1__/* .add */ .W(40, 2)).toBe(42);
 	expect((0,_impure__WEBPACK_IMPORTED_MODULE_2__/* .div */ .y)(84, 2)).toBe(42);
 	expect(global.cjsEsmOutputImpure).toBe(1);
 	delete global.cjsEsmOutputImpure;
@@ -222,7 +222,7 @@ exports.y = function (a, b) {
 (module) {
 
 module.exports = {
-	add: function (a, b) {
+	W: function (a, b) {
 		return a + b;
 	}
 };
@@ -288,7 +288,7 @@ exports.l = function (a, b) {
 
 it(\\"should compute through annotated and plain module instantiations\\", () => {
 	expect((0,_pure__WEBPACK_IMPORTED_MODULE_0__/* .mul */ .l)(6, 7)).toBe(42);
-	expect(_pure_object__WEBPACK_IMPORTED_MODULE_1__.add(40, 2)).toBe(42);
+	expect(_pure_object__WEBPACK_IMPORTED_MODULE_1__/* .add */ .W(40, 2)).toBe(42);
 	expect((0,_impure__WEBPACK_IMPORTED_MODULE_2__/* .div */ .y)(84, 2)).toBe(42);
 	expect(global.cjsEsmOutputImpure).toBe(1);
 	delete global.cjsEsmOutputImpure;
@@ -321,7 +321,7 @@ exports.y = function (a, b) {
 (module) {
 
 module.exports = {
-	add: function (a, b) {
+	W: function (a, b) {
 		return a + b;
 	}
 };
@@ -387,7 +387,7 @@ exports.l = function (a, b) {
 
 it(\\"should compute through annotated and plain module instantiations\\", () => {
 	expect((0,_pure__WEBPACK_IMPORTED_MODULE_0__/* .mul */ .l)(6, 7)).toBe(42);
-	expect(_pure_object__WEBPACK_IMPORTED_MODULE_1__.add(40, 2)).toBe(42);
+	expect(_pure_object__WEBPACK_IMPORTED_MODULE_1__/* .add */ .W(40, 2)).toBe(42);
 	expect((0,_impure__WEBPACK_IMPORTED_MODULE_2__/* .div */ .y)(84, 2)).toBe(42);
 	expect(global.cjsEsmOutputImpure).toBe(1);
 	delete global.cjsEsmOutputImpure;

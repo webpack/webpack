@@ -5465,7 +5465,7 @@ declare abstract class ContextDependency extends Dependency {
 }
 type ContextDependencyOptions = ContextOptions & { request: string };
 declare abstract class ContextElementDependency extends ModuleDependency {
-	referencedExports?: null | string[][];
+	referencedExports?: null | (string[] | ReferencedCall)[];
 	attributes?: ImportAttributes;
 	phase: ImportPhaseType;
 
@@ -5577,7 +5577,7 @@ declare interface ContextOptions {
 	/**
 	 * exports referenced from modules (won't be mangled)
 	 */
-	referencedExports?: null | string[][];
+	referencedExports?: null | (string[] | ReferencedCall)[];
 	layer?: null | string;
 	attributes?: ImportAttributes;
 	phase?: 0 | 1 | 2;
@@ -14444,7 +14444,7 @@ declare interface ImportModuleOptions {
 }
 type ImportPhaseType = 0 | 1 | 2;
 declare interface ImportSettings {
-	references: string[][];
+	references: (string[] | ReferencedCall)[];
 	expression: ImportExpressionJavascriptParser;
 }
 type ImportSource =
@@ -28480,6 +28480,17 @@ declare abstract class Reference {
 	resolved?: Variable;
 }
 type ReferenceableItem = string | object;
+declare interface ReferencedCall {
+	/**
+	 * member path of the called method
+	 */
+	names: string[];
+
+	/**
+	 * whether the call observes its receiver through this
+	 */
+	namespaceObjectAsContext: boolean;
+}
 
 /**
  * Defines the referenced export type used by this module.
