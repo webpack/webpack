@@ -90,7 +90,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:1796",
 			"oxc minifier: peephole/esbuild.rs:2307",
 			"oxc minifier: peephole/esbuild.rs:252",
-			"oxc minifier: peephole/esbuild.rs:145",
 			"oxc minifier: peephole/esbuild.rs:148",
 			"oxc minifier: peephole/esbuild.rs:157",
 			"oxc minifier: peephole/esbuild.rs:158",
@@ -179,7 +178,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:924",
 			"oxc minifier: peephole/esbuild.rs:926",
 			"oxc minifier: peephole/esbuild.rs:927",
-			"oxc minifier: peephole/esbuild.rs:943",
 			"oxc minifier: peephole/esbuild.rs:999",
 			"oxc minifier: peephole/esbuild.rs:1000",
 			"oxc minifier: peephole/esbuild.rs:1001",
@@ -325,7 +323,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/collapse_vars_side_effects_2",
 			"terser compress: concat-strings/concat_1",
 			"terser compress: conditionals/ifs_6",
-			"terser compress: evaluate/or",
 			"terser compress: evaluate/unsafe_array",
 			"terser compress: export/name_cache_import_star_as_name_from_module",
 			"terser compress: new/new_statements_3",
@@ -334,7 +331,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: ascii/ascii_only_true",
 			"terser compress: ascii/ascii_only_false",
 			"terser compress: collapse_vars/collapse_vars_while",
-			"terser compress: collapse_vars/cascade_statement",
 			"terser compress: collapse_vars/cond_branch_2",
 			"terser compress: collapse_vars/issue_2914_1",
 			"terser compress: collapse_vars/issue_2914_2",
@@ -373,14 +369,12 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: benches-full/three.js",
 			"swc minifier: benches-full/victory.js",
 			"swc minifier: benches-full/vue.js",
-			"swc minifier: fixture/collapse-vars/cascade-statement/execution/input.js",
 			"swc minifier: fixture/issues/12182/callee-safety/nested-values/input.js",
 			"swc minifier: fixture/issues/12189/input.js",
 			"swc minifier: fixture/issues/12215/input.js",
 			"swc minifier: fixture/issues/12218/leading-argument/input.js",
 			"swc minifier: fixture/issues/12565/while_body/input.js",
 			"swc minifier: fixture/issues/firebase-core/1/input.js",
-			"swc minifier: fixture/issues/react-autowhatever/1/input.js",
 			"swc minifier: fixture/next/43208/static/chunks/pages/index-e1d69965f0f167c9/input.js",
 			"swc minifier: fixture/next/56408/input.js",
 			"swc minifier: fixture/next/66237/input.js",
@@ -432,9 +426,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:222",
 			"oxc minifier: peephole/esbuild.rs:705",
 			"oxc minifier: peephole/esbuild.rs:707",
-			"oxc minifier: peephole/esbuild.rs:940",
-			"oxc minifier: peephole/esbuild.rs:941",
-			"oxc minifier: peephole/esbuild.rs:942",
 			"oxc minifier: peephole/esbuild.rs:1016",
 			"oxc minifier: peephole/esbuild.rs:1519",
 			"oxc minifier: peephole/esbuild.rs:1520",
@@ -566,7 +557,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/5846/input.js",
 			"swc minifier: fixture/issues/6192/1/input.js",
 			"swc minifier: fixture/issues/6422/3/input.js",
-			"swc minifier: fixture/issues/6509/input.js",
 			"swc minifier: fixture/issues/7004/input.js",
 			"swc minifier: fixture/issues/7241/input.js",
 			"swc minifier: fixture/issues/7575/1/input.js",
@@ -784,7 +774,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_harmony_issue_2794_6",
 			"swc exec: terser_labels_labels_3",
 			"swc exec: terser_issue_1770_mangle_props",
-			"swc exec: terser_reduce_vars_recursive_inlining_1",
 			"swc exec: terser_reduce_vars_issue_2420_2",
 			"swc exec: terser_reduce_vars_side_effects_assign",
 			"swc exec: terser_reduce_vars_issue_1670_1",
@@ -883,6 +872,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"deflate's header: the program is no longer raw, yet gzips 1 to 3 bytes bigger, as the Huffman codes deflate writes for a small program cost more or less with which characters it holds (an operand's side, `let` or `const`, `NaN` or `0/0`, a backtick or a quote); measured corpus-wide, no fixed spelling rule wins, each one making about as many programs bigger as smaller",
 		[
+			"terser compress: harmony/array_literal_with_spread_3b",
 			"oxc minifier: peephole/replace_known_methods.rs:1082",
 			"oxc minifier: peephole/inline_single_use_variable.rs:580",
 			"terser compress: collapse_vars/collapse_vars_if",
@@ -903,7 +893,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/var_assign_5",
 			"terser compress: return_undefined/return_void",
 			"terser compress: sequences/make_sequences_3",
-			"swc minifier: fixture/issues/10746/input.js",
 			"swc minifier: fixture/issues/12195/nested-spread/input.js",
 			"swc minifier: fixture/issues/12195/spread/input.js",
 			"swc minifier: fixture/issues/6279/1/input.js",
@@ -983,7 +972,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/dead_code_elimination.rs:955",
 			"oxc minifier: peephole/dead_code_elimination.rs:990",
 			"oxc minifier: peephole/dead_code_elimination.rs:1068",
-			"oxc minifier: peephole/dead_code_elimination.rs:1097",
 			"oxc minifier: peephole/dead_code_elimination.rs:560",
 			"oxc minifier: peephole/dead_code_elimination.rs:561"
 		]
@@ -991,7 +979,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what oxc's `peephole/minimize_conditional_expression.rs` tests cover",
 		[
-			"oxc minifier: peephole/minimize_conditional_expression.rs:10",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:12",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:16",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:37",
@@ -1104,7 +1091,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/issue_2497",
 			"terser compress: collapse_vars/may_throw_1",
 			"terser compress: collapse_vars/may_throw_2",
-			"terser compress: collapse_vars/cascade_conditional",
 			"terser compress: collapse_vars/cascade_if_1",
 			"terser compress: collapse_vars/unsafe_builtin",
 			"terser compress: collapse_vars/cond_branch_1",
@@ -1130,10 +1116,8 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/immutable",
 			"terser compress: reduce_vars/issue_1814_1",
 			"terser compress: reduce_vars/issue_1814_2",
-			"terser compress: reduce_vars/boolean_binary_assign",
 			"terser compress: reduce_vars/cond_assign",
 			"terser compress: reduce_vars/issue_2420_2",
-			"terser compress: reduce_vars/recursive_inlining_1",
 			"terser compress: reduce_vars/recursive_inlining_2",
 			"terser compress: reduce_vars/recursive_inlining_4",
 			"terser compress: reduce_vars/issue_2455",
@@ -1179,15 +1163,12 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/issue_2420_3",
 			"terser compress: reduce_vars/issue_581",
 			"swc minifier: fixture/issues/10281/input.js",
-			"swc minifier: fixture/issues/11512/input.js",
 			"swc minifier: fixture/issues/11684/with-scope/input.js",
 			"swc minifier: fixture/issues/12200/2/input.js",
-			"swc minifier: fixture/issues/9610/input.js",
 			"swc minifier: fixture/projects/underscore/7/input.js",
 			"swc exec: terser_hoist_props_issue_3046",
 			"swc exec: terser_reduce_vars_issue_2420_3",
 			"oxc minifier: peephole/dead_code_elimination.rs:1015",
-			"oxc minifier: peephole/inline_single_use_variable.rs:369",
 			"oxc minifier: peephole/minimize_exit_points.rs:444",
 			"oxc minifier: peephole/minimize_statements.rs:129",
 			"oxc minifier: peephole/minimize_statements.rs:133",
@@ -1232,7 +1213,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what terser's `drop-unused` tests cover",
 		[
-			"terser compress: drop-unused/unused_circular_references_1",
 			"terser compress: drop-unused/iife",
 			"terser compress: drop-unused/issue_1709",
 			"terser compress: drop-unused/issue_1715_4",
@@ -1269,8 +1249,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_unused_declaration.rs:323",
 			"oxc minifier: peephole/remove_unused_declaration.rs:572",
 			"oxc minifier: peephole/remove_unused_declaration.rs:578",
-			"oxc minifier: peephole/remove_unused_declaration.rs:787",
-			"oxc minifier: peephole/remove_unused_declaration.rs:816",
 			"oxc minifier: peephole/remove_unused_declaration.rs:892",
 			"oxc minifier: peephole/remove_unused_declaration.rs:1015",
 			"oxc minifier: peephole/remove_unused_declaration.rs:1016",
@@ -1902,10 +1880,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `transform` tests cover",
-		[
-			"terser compress: transform/if_else_empty",
-			"terser compress: transform/while_if_break"
-		]
+		["terser compress: transform/while_if_break"]
 	],
 	[
 		"oxc drops an unread deferred or source-phase import, assuming its load cannot fail, where webpack keeps it as oxc's `invalid_import_side_effects` does, since it still fetches and links its module",
@@ -2065,10 +2040,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `arrow` tests cover",
-		[
-			"terser compress: arrow/issue_485_crashing_1530",
-			"terser compress: arrow/ternary_precedence"
-		]
+		["terser compress: arrow/issue_485_crashing_1530"]
 	],
 	[
 		"oxc goes further than webpack on what terser's `expansions` tests cover",

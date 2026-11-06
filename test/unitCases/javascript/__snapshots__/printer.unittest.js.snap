@@ -142,7 +142,7 @@ a< /script/.test(b),a</x/,f(/a/,/script/);
 
 
 
-a,(()=>a),a,-(()=>a),(()=>a)?b:c,a+(()=>b),f(()=>a),(a=()=>b);
+a,a,-(()=>a),b,a+(()=>b),f(()=>a),(a=()=>b);
 
 (a,b)?c:d,f((a,b)),(a,b),(a,b),a[b,c],(a,b).c,a,b,x=2;var v=2;for(a,b;c,d;e,f);for(x of(a,b));for(x in a,b);a,b;
 
@@ -401,7 +401,7 @@ a< /script/.test(b),a</x/,f(/a/,/script/);
 
 
 
-a,(()=>a),a,-(()=>a),(()=>a)?b:c,a+(()=>b),f(()=>a),(a=()=>b);
+a,a,-(()=>a),b,a+(()=>b),f(()=>a),(a=()=>b);
 
 (a,b)?c:d,f((a,b)),(a,b),(a,b),a[b,c],(a,b).c,a,b,x=2;var v=2;for(a,b;c,d;e,f);for(x of(a,b));for(x in a,b);a,b;
 
@@ -654,7 +654,7 @@ a< /script/.test(b),a</x/,f(/a/,/script/);
 
 
 
-a,(()=>a),a,-(()=>a),(()=>a)?b:c,a+(()=>b),f(()=>a),(a=()=>b);
+a,a,-(()=>a),b,a+(()=>b),f(()=>a),(a=()=>b);
 
 (a,b)?c:d,f((a,b)),(a,b),(a,b),a[b,c],(a,b).c,a,b,x=2;var v=2;for(a,b;c,d;e,f);for(x of(a,b));for(x in a,b);a,b;
 
@@ -913,7 +913,7 @@ a< /script/.test(b),a</x/,f(/a/,/script/);
 
 
 
-a,(()=>a),a,-(()=>a),(()=>a)?b:c,a+(()=>b),f(()=>a),(a=()=>b);
+a,a,-(()=>a),b,a+(()=>b),f(()=>a),(a=()=>b);
 
 (a,b)?c:d,f((a,b)),(a,b),(a,b),a[b,c],(a,b).c,a,b,x=2;var v=2;for(a,b;c,d;e,f);for(x of(a,b));for(x in a,b);a,b;
 
@@ -1323,7 +1323,7 @@ a.b\`x\`,a[b]\`x\`,(a+b)\`x\`,(a=b)\`x\`,(new A)\`x\`,a()\`x\`
 
 
 /* p */
-a,(()=>a),a,-(()=>a),(()=>a)?b:c,a+(()=>b),f((()=>a)),(a=()=>b)
+a,a,-(()=>a),b,a+(()=>b),f((()=>a)),(a=()=>b)
 
 
 /* p */

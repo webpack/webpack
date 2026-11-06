@@ -261,11 +261,11 @@ PRINTED_SOURCES.push(
 describe("JavaScript minifier printing a SyntaxTree", () => {
 	it("should mangle and print in one walk where it compresses in one pass", () => {
 		const printed = minifyOnePass(
-			"function foo(longName, other) { var local = longName + other; return local * 2; } foo(1, 2); class A { #field = 1; read() { return this.#field } static #hidden() {} } print(new A().read());",
+			"function foo(longName, other) { var local = longName + other; return local * 2; } foo(1, 2); foo(3, 4); class A { #field = 1; read() { return this.#field } static #hidden() {} } print(new A().read());",
 			{ compress: {}, mangle: {}, toplevel: true }
 		);
 		expect(printed.code).toBe(
-			"function e(e,o){return(e+o)*2}e(1,2);class o{#e=1;read(){return this.#e}}print((new o).read());"
+			"function o(o,e){return(o+e)*2}o(1,2),o(3,4);class e{#o=1;read(){return this.#o}}print((new e).read());"
 		);
 	});
 
@@ -376,7 +376,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				'/** doc */ var A = "[object Array]"; /** doc */ var B = 200, C = 1, D = "d"; function f(o){ var a = 1; function g(){ return a } var b = g; const K = 2; if (o) { var u = 1; h(K, K) } return [o.t == A, A, B, B.x, C, {C}, D, new Error("e"), new Map()] } function k(){ g(V); var V = 2; } f(k)',
 				{ compress: { toplevel: true } },
-				'var A="[object Array]",B=200;function f(r){if(r)h(2,2);return[r.t==A,A,B,B.x,1,{C:1},"d",Error("e"),new Map]}function k(){g(r);var r=2}f(k);'
+				'var A="[object Array]",B=200;(function(r){if(r)h(2,2);return[r.t==A,A,B,B.x,1,{C:1},"d",Error("e"),new Map]})(function(){g(r);var r=2});'
 			],
 			// A read where the value would print otherwise keeps the name, and so
 			// does a value no literal of a name's length prints the same.
@@ -664,6 +664,23 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{ format: { comments: /keep/ } },
 				"function f(){var n=/* keep */function(){};h(n)}function i(){g(1)}"
 			],
+			// A function moved into one moving to its call prints in parentheses where that call opens a statement, and stays where a name declared there shadows one it reads.
+			["function f(){function bar(k){console.log(k)}function foo(x){return bar(x)}function baz(a){foo(a)}baz(42);baz(1)}", {}, "function f(){function o(o){(function(o){console.log(o)}(o))}o(42),o(1)}"],
+			["(function(){function $(same_name){console.log(same_name);a()}function a(){return b()}function b(){same_name()}$()})()", { compress: { toplevel: true }, mangle: false }, "!function(){function b(){same_name()}(function(same_name){console.log(same_name),b()})()}();"],
+			// An exported name declared again without `export` stays exported, and two functions reading each other stay a cycle that goes.
+			["export var f;var f=0;function d1(){console.log(f);d2()}function d2(){d1()}f=1", { module: true }, "export var f;var f=0;f=1;"],
+			// One moved into `export default` stays a value, as a declaration would be set before the module runs.
+			["function f(b){return b+1}export default f;", { module: true }, "export default(function(f){return f+1});"],
+			// An arrow takes no parentheses there; a call reduced to an operation keeps its own.
+			["const B=()=>\"b\"+v;export default B;", { module: true }, "export default()=>\"b\"+v;"],
+			["export function h(e){function M(){return 1/3}return e/M()}", { module: true }, "export function h(n){return n/(1/3)}"],
+			["export function h(e){function M(x){return x,x+1}return e*M(0)}", { module: true }, "export function h(n){return n*(0,1)}"],
+			// A logical whose left side decides it runs nothing of its right, so `undefined.a` there goes, though alone it stays.
+			["var Q=void 0&&(void 0).x||function(){return 1};g(Q);x=(0&&undefined.a)||f;x=(1||undefined.a)&&f;undefined.a", {}, "var Q=function(){return 1};g(Q),x=f,x=f,(void 0).a;"],
+			// A top-level function moves to its one read where `toplevel` drops top-level names, but no `topRetain` is given.
+			["function c(){return 1}function p(){console.log(c())}p();function u(){return 2}console.log(u(),u())", { compress: { toplevel: true }, mangle: { toplevel: true } }, "(function(){console.log(1)})();function n(){return 2}console.log(n(),n());"],
+			["function c(){return 1}console.log(c())", {}, "function c(){return 1}console.log(c());"],
+			["function c(){return 1}console.log(c())", { compress: { toplevel: true, top_retain: ["c"] }, mangle: { toplevel: true } }, "function c(){return 1}console.log(c());"],
 			// A function moved to its one read.
 			[
 				"function f(){ var g = function(){ return 1 }; h(g) + 1 } function i(){ var k = () => {}; h(k) }",
@@ -928,7 +945,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(a, b, c) { for (const t of a) { if (t < 1) continue; if (t > 9) { continue } g(t) } if (a) return; if (b = c, b) return; if (a ?? b) return; if (c) break_(); g() }",
 				{},
-				"function f(t,f,n){for(let f of t){if(f<1||f>9)continue;g(f)}if(t||(f=n,f)||(t??f))return;if(n)break_();g()}"
+				"function f(t,f,n){for(let f of t){if(f<1||f>9)continue;g(f)}if(t||(f=n)||(t??f))return;if(n)break_();g()}"
 			],
 			// A conditional `dead_code` folds keeps the assignment of the branch it prints.
 			[
@@ -1514,6 +1531,13 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["(0,foo)();(0,foo)``;(0,foo)?.();(!0,a.b)();(1,2,a.b)();(0,a.b)();(0,eval)();typeof(0,foo);(x(),foo)``;(function(){},foo)``;(x(),a.b)()", {}, "foo(),foo``,foo?.(),(0,a.b)(),(0,a.b)(),(0,a.b)(),(0,eval)(),foo,(x(),foo)``,foo``,(x(),a.b)();"],
 			// esbuild's `-(a,b)` as `a,-b`, and `yield` or `await` alike, where a sequence stands bare, but where its first value would open the statement as a block.
 			["-(a(),b);~(a(),b,c);+(a(),1);-(a(),-b);x=-(a(),b);-({[f()]:0},g());async function h(){await(c(),d);await(c(),d+e)}function*k(){yield(c(),d);yield*(c(),d)}", {}, "a(),-b,a(),b,~c,a(),+1,a(),-(-b),x=-(a(),b),-({[f()]:0},g());async function h(){c(),await d,c(),await(d+e)}function*k(){c(),yield d,c(),yield*d}"],
+			// terser's `(a=x(),a)` as `a=x()` for a declared name no `with` reaches.
+			["function f(a,b){(a=x(),a)?a++:b();return c(),a=x(),a}function g(a){with(o)return a=x(),a}function h(){return u=x(),u}", {}, "function f(n,u){return(n=x())?n++:u(),c(),n=x()}function g(a){with(o)return a=x(),a}function h(){return u=x(),u}"],
+			["x=function f(){return(f=1,f)}", {}, "x=function f(){return f=1,f};"],
+			// A fold keeping an infinity prints it as a division, which a member read parenthesizes.
+			["x=((Infinity)||a||3).toString();y=(1?Infinity:a).b", {}, "x=(1/0).toString(),y=(1/0).b;"],
+			// Alone, it takes only the parentheses an assignment takes.
+			["function f(a){g((a=x(),a));return(a=y(),a).b+(a=z(),a)}", {}, "function f(a){g(a=x());return(a=y()).b+(a=z())}"],
 			// `typeof` reads a declared name or a member bare alike, but an undeclared name throws read as a value.
 			["function f(o){return[typeof(0,o),typeof(0,o.x),typeof(0,u),typeof(g(),o)]}", {}, "function f(o){return[typeof o,typeof o.x,typeof(0,u),typeof(g(),o)]}"],
 			["function f(){let a=u;return typeof a}function g(){let a=o;return typeof a}", {}, "function f(){return typeof(0,u)}function g(){return typeof(0,o)}"],
@@ -1522,7 +1546,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["with(o)(0,foo)()", {}, "with(o)(0,foo)();"],
 			// A known test or left side folding to a reference a call, tag, `typeof` or `delete` reads keeps it a value with `0,`; a name called bare or `new` needs none.
 			["(true&&x.y)();(1?x[y]:2)``;f(typeof(1?x:2),delete(0?1:x.y));(0||x?.y)();(1?eval:2)(s);(1?x:2)();new(1?x.y:2);(c?x.y:2)();(null??x.y)()", {}, "(0,x.y)(),(0,x[y])``,f(typeof(0,x),delete(0,x.y)),(0,x?.y)(),(0,eval)(s),x(),new x.y,(c?x.y:2)(),(0,x.y)();"],
-			["x=[(1&&(0,f.g))(),(1&&(1&&f.g))``,typeof(1&&(1&&f)),delete(1?(0,f.g):2),(1&&(1&&g))(),(1&&(1&&eval))(1),new(1&&(a?f:f))]", {}, "x=[((0,f.g))(),(0,f.g)``,typeof(0,f),delete((0,f.g)),(g)(),(0,eval)(1),new((a?f:f))];"],
+			["x=[(1&&(0,f.g))(),(1&&(1&&f.g))``,typeof(1&&(1&&f)),delete(1?(0,f.g):2),(1&&(1&&g))(),(1&&(1&&eval))(1),new(1&&(a?f:f))]", {}, "x=[((0,f.g))(),(0,f.g)``,typeof(0,f),delete((0,f.g)),g(),(0,eval)(1),new((a?f:f))];"],
 			["for(;;){if(x)break;else{function f(){}}}for(;;){if(y){function g(){}}else break}", {}, "for(;!x;){function f(){}}for(;y;){function g(){}}"],
 			["foo();bar();for(;i<1;)g();x=(a in b);for(;i<1;)g();x=1;for(;0;)g();y=1;for(;i<1;)g();z=function(){a in b};for(;i<1;)g()", {}, "foo();for(bar();i<1;)g();x=a in b;for(;i<1;)g();x=1;for(y=1;i<1;)g();for(z=function(){a in b};i<1;)g();"],
 			["function f(){var t=g();var e,h=0;for(;h<1;++h)e=k(e);return t+e+t}", {}, "function f(){var e=g(),r,t=0;for(;t<1;++t)r=k(r);return e+r+e}"],
@@ -3139,7 +3163,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(
 			print("g(V.toString(),-V,typeof V);", { global_defs: { V: -1 } })
 		).toBe('g((-1).toString(),1,"number");');
-		expect(print("g(1/V);", { global_defs: { V: -0 } })).toBe("g(1/(-0));");
+		expect(print("g(a/V);", { global_defs: { V: -0 } })).toBe("g(a/(-0));");
 		// `top_retain` keeps the top-level names it lists, a pattern or a test keeps.
 		const top = "var foo=1,bar=2;";
 		expect(print(top, { toplevel: true })).toBe("");
@@ -3773,11 +3797,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 	it("should keep the names a global pattern keeps, however often it is asked", () => {
 		const pattern = /keep/g;
 		const { code } = minifyOnePass(
-			"function keepMe(){} function keepToo(){} function dropMe(){} g(keepMe, keepToo, dropMe)",
+			"function keepMe(){} function keepToo(){} function dropMe(){} g(keepMe, keepToo, dropMe); g(keepMe, keepToo, dropMe)",
 			{ compress: {}, mangle: { keep_fnames: pattern }, keep_fnames: pattern, toplevel: true }
 		);
 		expect(code).toBe(
-			"function keepMe(){}function keepToo(){}function e(){}g(keepMe,keepToo,e);"
+			"function keepMe(){}function keepToo(){}function e(){}g(keepMe,keepToo,e),g(keepMe,keepToo,e);"
 		);
 		expect(pattern.lastIndex).toBe(0);
 	});
@@ -5442,14 +5466,14 @@ describe("one-pass minify of statement sequences", () => {
 		).toBe("var[x=void 0]=[];");
 	});
 
-	it("should read a hole of an array literal at a known index as `void 0`", () => {
-		// Running something, out of range, not an integer, holding a comment,
-		// spread, or read off, it stays.
+	it("should read a hole of an array literal, or an index past its end, as `void 0`", () => {
+		// Running something, negative, not an integer, holding a comment,
+		// spread, read off, or past the end no longer than `void 0`, it stays.
 		const source =
-			"var a=[];function y(){}console.log([1,2,,3][2],[1,,2][1+0],[,y()][0],[,1][5],[,1][-1],[,1][0.5],[,/*! c */1][0],[,...a][0]);try{[,][0].x}catch(e){console.log(e.name)}";
+			"var a=[];function y(){}console.log([1,2,,3][2],[1,,2][1+0],[,y()][0],[,1][5],[10,20][2],[][1],[1][5],[y(),1][2],[,1][-1],[,1][0.5],[,/*! c */1][0],[,...a][0],[1,...a][3]);try{[,][0].x}catch(e){console.log(e.name)}";
 		const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
 		expect(code).toBe(
-			"var a=[];function y(){}console.log(void 0,void 0,[,y()][0],[,1][5],[,1][-1],[,1][.5],[,/*! c */1][0],[,...a][0]);try{[,][0].x}catch(o){console.log(o.name)}"
+			"var a=[];function y(){}console.log(void 0,void 0,[,y()][0],void 0,void 0,[][1],[1][5],[y(),1][2],[,1][-1],[,1][.5],[,/*! c */1][0],[,...a][0],[1,...a][3]);try{[,][0].x}catch(o){console.log(o.name)}"
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
@@ -5495,6 +5519,117 @@ describe("one-pass minify of statement sequences", () => {
 		const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
 		expect(code).toBe(
 			'var qux;function f(){var o,a,e,f,r;return[typeof o,a,e,f,r].join()}if(0){function h(){}var j}console.log(typeof j);var k;function u(){var o;return o}console.log(typeof qux,f(),typeof k,u());'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should print a logical read for its truth as its left side where its right side keeps that truth", () => {
+		// A right side of the other truth, `??` of a truthy one, one running something or
+		// holding a comment, or a value read stay.
+		const source =
+			'function t(u){var r=[];if(u||0)r.push(1);if(u&&"s")r.push(2);if(u??!1)r.push(3);if(u??void 0)r.push(4);if(u??null)r.push(5);while(u??"")break;if(u||1)r.push(6);if(u??1)r.push(7);if(u&&f())r.push(8);if(u??/*! k */void 0)r.push(9);r.push(u||0);return r.join()}function f(){return 1}console.log(t(0),t(""),t(null),t(void 0),t(2),t("x"))';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'function t(u){var r=[];if(u)r.push(1);if(u)r.push(2);if(u)r.push(3);if(u)r.push(4);if(u)r.push(5);if(u||1)r.push(6);if(u??1)r.push(7);if(u&&f())r.push(8);if(u??/*! k */void 0)r.push(9);return r.push(u||0),r.join()}function f(){return 1}console.log(t(0),t(""),t(null),t(void 0),t(2),t("x"));'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should print `false` where no unary may stand as `(!1)`, and `true` constructed as `(!0)`", () => {
+		// `true` read as an object or called is as long either way.
+		const source =
+			'try{new true}catch(e){console.log(e.name)}try{new false}catch(e){console.log(e.name)}console.log(false.a,true.a,false**2,[false][0]);try{false()}catch(e){console.log(e.name)}try{false`t`}catch(e){console.log(e.name)}';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			"try{new(!0)}catch(e){console.log(e.name)}try{new(!1)}catch(e){console.log(e.name)}console.log((!1).a,true.a,0,!1);try{(!1)()}catch(e){console.log(e.name)}try{(!1)`t`}catch(e){console.log(e.name)}"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should print the global `undefined` read as an object, callee or tag as `(void 0)`", () => {
+		// One a scope declares, or `delete` reads, stays.
+		const source =
+			'try{x=undefined.a}catch(e){console.log(e.name)}try{undefined[0]}catch(e){console.log(e.name)}try{undefined()}catch(e){console.log(e.name)}try{new undefined}catch(e){console.log(e.name)}try{undefined`t`}catch(e){console.log(e.name)}console.log(delete undefined);(function(undefined){console.log(undefined.a)})({a:1})';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			"try{x=(void 0).a}catch(e){console.log(e.name)}try{(void 0)[0]}catch(e){console.log(e.name)}try{(void 0)()}catch(e){console.log(e.name)}try{new(void 0)}catch(e){console.log(e.name)}try{(void 0)`t`}catch(e){console.log(e.name)}console.log(!1),function(){console.log({a:1}.a)}();"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should keep a property read of the global `undefined`, which throws", () => {
+		const source = "console.log(1);undefined.a;console.log(2)";
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe("console.log(1),(void 0).a,console.log(2);");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should print a literal infinity as `1/0`, which a scope binding `Infinity` keeps", () => {
+		const source =
+			'(function(Infinity){eval("");console.log(1e400,-1e400,1e400+"",{1e400:1}[1/0],{[1e400]:2}[1/0],delete 1e400,new class{[1e400]=1e400}[1/0])})(5)';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'!function(Infinity){eval(""),console.log(1/0,-1/0,1/0+"",{Infinity:1}[1/0],{[1/0]:2}[1/0],delete(1/0),new class{[1/0]=1/0}[1/0])}(5);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+		expect(
+			minifyOnePass(source, { compress: false, mangle: false }).code
+		).not.toContain("log(Infinity");
+	});
+
+	it("should print an infinity or `NaN` beautified as the division it reads back as", () => {
+		const { SourceProcessor } = require("../../../lib/javascript/syntax");
+		const beautify = (
+			/** @type {string} */ code,
+			/** @type {false | Record<string, never>} */ compress
+		) =>
+			/** @type {{ code: string }} */ (
+				new SourceProcessor().process(code, { mode: "beautify", compress })
+			).code;
+		const source = 'x=[1e400,-1e400,a/1e400,{[1e400]:1},Infinity,2*"a",3/0*2];';
+		const once = beautify(source, false);
+		expect(once).toBe(
+			'x = [ 1 / 0, -1 / 0, a / (1 / 0), {[1 / 0]: 1}, Infinity, 2 * "a", 3 / 0 * 2 ];'
+		);
+		expect(beautify(once, false)).toBe(once);
+		const compressed = beautify(source, {});
+		expect(compressed).toBe(
+			"x = [ 1 / 0, -1 / 0, a / (1 / 0), {[1 / 0]: 1}, 1 / 0, NaN, 1 / 0 ];"
+		);
+		expect(beautify(compressed, false)).toBe(compressed);
+	});
+
+	it("should print a binary expression folding to an infinity or `NaN` as `1/0`, `-1/0` or `NaN`", () => {
+		// A division needs the parentheses its place gave the expression; `**` binds tighter. `NaN` prints as the global's name, `0/0` only where `with`, `eval` or a binding may take it.
+		const source =
+			'var a=2;console.log(123456789/0,2/0,3/0*2,-1e300*1e10,1*"a","a"*2+1,a/(2/0),a-(-2/0),-(2/0),(2/0).toFixed(),2**2e3,a**(2/0),f()/0,a/(3/0*2),a-(-3/0*2),-(3/0*2),(3/0*2).toFixed(),a**(3/0*2))';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'var a=2;console.log(1/0,2/0,1/0,-1/0,NaN,NaN,a/(2/0),a- -2/0,-(2/0),(2/0).toFixed(),2**2e3,a**(2/0),f()/0,a/(1/0),a- -1/0,-(1/0),(1/0).toFixed(),a**(1/0));'
+		);
+		expect(runProgram(`function f(){return 1}${code}`)).toBe(
+			runProgram(`function f(){return 1}${source}`)
+		);
+	});
+
+	it("should fold a conditional whose test is an array, object or function made in place", () => {
+		// A test running something keeps what it runs.
+		const source =
+			'function x(){console.log("x");return 7}console.log({}?1:2,[]?3:x(),function(){}?4:5,(()=>1)?x():6,[x()]?7:8,/a/?9:x())';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'function x(){return console.log("x"),7}console.log(1,3,4,x(),([x()],7),9);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should print a fold whose kept side folds again without parentheses", () => {
+		// A member called keeps no `this`, and what `new` calls keeps its own.
+		const source =
+			'var o={f(){console.log(this===o)}};function f(){console.log("f")}(0||(1&&f))();(1?(0?o:f):o)();(0||(1&&o)).f();(0||(1&&o.f))();new(0||(1&&f))';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'var o={f(){console.log(this===o)}};function f(){console.log("f")}f(),f(),o.f(),(0,o.f)(),new f;'
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});

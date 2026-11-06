@@ -859,7 +859,9 @@ const cutDifference = (source, options) => {
 			return [
 				{
 					relation: "acorn",
-					what: `a cut program throws ${/** @type {Error} */ (error).name}, not a SyntaxError`,
+					what: `a cut program throws ${
+						/** @type {Error} */ (error).name
+					}, not a SyntaxError`,
 					repro: `    …${oneLine(source.slice(-60), 60)}`
 				}
 			];
@@ -905,6 +907,21 @@ const EXPECTED = [
 		relation: "idempotence",
 		contains: "(e,t,n))?",
 		source: "Vue 3 (production)",
+		presets: ["default"],
+		why: "an `if` printing as `?:` parenthesizes a test opening with a function where the reprint parenthesizes the function alone, the same size"
+	},
+	{
+		relation: "idempotence",
+		contains: "(1)}",
+		source:
+			"test/configCases/concatenate-modules/top-level-declarations-library-conflict/module.js",
+		presets: ["default"],
+		why: "a call printing as what its function returns keeps the parentheses that value takes unfolded, which the reprint reads as the constant it folded to"
+	},
+	{
+		relation: "idempotence",
+		contains: "(t))?",
+		source: "Vue 3 (ESM)",
 		presets: ["default"],
 		why: "an `if` printing as `?:` parenthesizes a test opening with a function where the reprint parenthesizes the function alone, the same size"
 	},
@@ -1355,7 +1372,9 @@ const main = async () => {
 				if ("error" in result) {
 					// A tool rejecting the source outright is a comparison result too.
 					process.stdout.write(
-						`  ${tool.name.padEnd(22)} ${result.timedOut ? "" : "rejects it: "}${result.error}\n`
+						`  ${tool.name.padEnd(22)} ${
+							result.timedOut ? "" : "rejects it: "
+						}${result.error}\n`
 					);
 					continue;
 				}

@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Inline more functions and values, and merge imports and exports, when minifying.
+Inline and fold more, and merge imports and exports, when minifying.
