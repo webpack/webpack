@@ -1534,6 +1534,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// terser's `(a=x(),a)` as `a=x()` for a declared name no `with` reaches.
 			["function f(a,b){(a=x(),a)?a++:b();return c(),a=x(),a}function g(a){with(o)return a=x(),a}function h(){return u=x(),u}", {}, "function f(n,u){return(n=x())?n++:u(),c(),n=x()}function g(a){with(o)return a=x(),a}function h(){return u=x(),u}"],
 			["x=function f(){return(f=1,f)}", {}, "x=function f(){return f=1,f};"],
+			// A fold keeping an infinity prints it as a division, which a member read parenthesizes.
+			["x=((Infinity)||a||3).toString();y=(1?Infinity:a).b", {}, "x=(1/0).toString(),y=(1/0).b;"],
 			// Alone, it takes only the parentheses an assignment takes.
 			["function f(a){g((a=x(),a));return(a=y(),a).b+(a=z(),a)}", {}, "function f(a){g(a=x());return(a=y()).b+(a=z())}"],
 			// `typeof` reads a declared name or a member bare alike, but an undeclared name throws read as a value.
