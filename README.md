@@ -99,9 +99,9 @@ interface](https://webpack.js.org/plugins/). Most of the features
 within webpack itself use this plugin interface. This makes webpack very
 **flexible**.
 
-Webpack can generate HTML pages and extract CSS files itself — on by default since
-5.109.0, though still under `experiments`. See what that covers, and what still
-needs a plugin, for
+Webpack generates HTML pages and extracts CSS files itself — stable and on by
+default since 5.109.0, with no configuration, replacing the deprecated
+`html-webpack-plugin` and `mini-css-extract-plugin`. See what that covers for
 [CSS](https://webpack.js.org/guides/native-css/#whats-built-in) and
 [HTML](https://webpack.js.org/guides/native-html/#whats-built-in).
 
