@@ -669,6 +669,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["(function(){function $(same_name){console.log(same_name);a()}function a(){return b()}function b(){same_name()}$()})()", { compress: { toplevel: true }, mangle: false }, "!function(){function b(){same_name()}(function(same_name){console.log(same_name),b()})()}();"],
 			// An exported name declared again without `export` stays exported, and two functions reading each other stay a cycle that goes.
 			["export var f;var f=0;function d1(){console.log(f);d2()}function d2(){d1()}f=1", { module: true }, "export var f;var f=0;f=1;"],
+			// A function moved to a call nothing reads prints its statements there, unless it reads `this` or its value is read.
+			["let a;function f(){a=\"1\";g(a)}f();function h(){g(this)}h();function k(){g()}x=k()", { compress: { toplevel: true } }, "let a;a=\"1\",g(a);(function(){g(this)})();x=function(){g()}();"],
+			// A call of a function running expression statements before its `return` prints them and the value as one sequence.
+			["function f(){g();return 1}x=f();function k(){h();return{a:1}}y=k().a;function m(){q();return 2}a(),m(),b()", { compress: { toplevel: true } }, "x=(g(),1),y=(h(),{a:1}).a,a(),function(){return q(),2}(),b();"],
 			// One moved into `export default` stays a value, as a declaration would be set before the module runs.
 			["function f(b){return b+1}export default f;", { module: true }, "export default(function(f){return f+1});"],
 			// An arrow takes no parentheses there; a call reduced to an operation keeps its own.
@@ -678,7 +682,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A logical whose left side decides it runs nothing of its right, so `undefined.a` there goes, though alone it stays.
 			["var Q=void 0&&(void 0).x||function(){return 1};g(Q);x=(0&&undefined.a)||f;x=(1||undefined.a)&&f;undefined.a", {}, "var Q=function(){return 1};g(Q),x=f,x=f,(void 0).a;"],
 			// A top-level function moves to its one read where `toplevel` drops top-level names, but no `topRetain` is given.
-			["function c(){return 1}function p(){console.log(c())}p();function u(){return 2}console.log(u(),u())", { compress: { toplevel: true }, mangle: { toplevel: true } }, "(function(){console.log(1)})();function n(){return 2}console.log(n(),n());"],
+			["function c(){return 1}function p(){console.log(c())}p();function u(){return 2}console.log(u(),u())", { compress: { toplevel: true }, mangle: { toplevel: true } }, "console.log(1);function n(){return 2}console.log(n(),n());"],
 			["function c(){return 1}console.log(c())", {}, "function c(){return 1}console.log(c());"],
 			["function c(){return 1}console.log(c())", { compress: { toplevel: true, top_retain: ["c"] }, mangle: { toplevel: true } }, "function c(){return 1}console.log(c());"],
 			// A function moved to its one read.
@@ -969,7 +973,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(t) { t.e = a; function c() { h(); return g(1) } function a() { return c() } return t }",
 				{},
-				"function f(n){n.e=t;function t(){return function(){return h(),g(1)}()}return n}"
+				"function f(n){n.e=t;function t(){return h(),g(1)}return n}"
 			],
 			// One printed first inside another printed first prints where that one does.
 			[
@@ -1307,7 +1311,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A statement printing nothing between guards keeps them apart.
 			["function f(a,b){void function(){0}();if(a)return;if(b)g()}", {}, "function f(f,i){if(!f&&i)g()}"],
 			// A function no longer moving to its one read keeps its call.
-			["function f(){d();function c(){x()}function d(){c()}}", {}, "function f(){n();function n(){(function(){x()})()}}"],
+			["function f(){d();function c(){x()}function d(){c()}}", {}, "function f(){n();function n(){x()}}"],
 			// A sum is no boolean, so `a ? x : false` stays.
 			["function f(a,b){return a+b?x:!1}", {}, "function f(n,a){return n+a?x:!1}"],
 			// A `!` test keeps the parentheses of what a folded or called test prints as where they are its own.
@@ -1320,7 +1324,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(x,g){if(x){void function(){0}();g();g()}}", {}, "function f(f,i){if(f)i(),i()}"],
 			["f=b=>{void function(){0}();g();return b}", {}, "f=n=>(g(),n);"],
 			// A statement after the first that printed its own parentheses keeps the body's braces.
-			["function k(a,p){function A(x,y){x.push(1);x.push(2)}if(p){a.push(3);A(a,p)}return a}", {}, "function k(p,u){if(u){p.push(3);(function(p,u){p.push(1),p.push(2)})(p)}return p}"],
+			["function k(a,p){function A(x,y){x.push(this);x.push(2)}if(p){a.push(3);A(a,p)}return a}", {}, "function k(p,u){if(u){p.push(3);(function(p,u){p.push(this),p.push(2)})(p)}return p}"],
+			["function k(a,p){function A(x,y){x.push(1);x.push(2)}if(p){a.push(3);A(a,p)}return a}", {}, "function k(p,u){if(u)p.push(3),p.push(1),p.push(2);return p}"],
 			["f=x=>{a();({}).b=x;return 1}", {}, "f=r=>{a();({}).b=r;return 1};"],
 			// An object opening an optional chain a statement opens with keeps its parentheses.
 			["if({m(){}}?.m())a();else b()", {}, "({m(){}}.m())?a():b();"],
@@ -1514,7 +1519,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["l:for(;;){if(b){x();continue l}y()}for(;;){if(b){x();/*c*/continue}y()}for(;;){if(b){if(c)x();continue}y()}for(;;){if(b){x();continue}function q(){}q()}for(;;){if(b){x();continue}y();y()}function f(){if(1){x();return}y()}function g(a){if(a){x();return 1}y()}for(;;){if(b){continue}y()}", { format: { comments: "all" } }, "for(;;){if(b){x();continue}y()}for(;;){if(b){x();/*c*/continue}y()}for(;;){if(b){if(c)x();continue}y()}for(;;){if(b){x();continue}function q(){}q()}for(;;){if(b){x();continue}y(),y()}function f(){x()}function g(n){if(n)return x(),1;y()}for(;;)if(!b)y();"],
 			["for(;;){if(b){x();continue}y()}function f(a){if(a){x();return}/*c*/y()}function g(a){if(a){x();return}if(a){x();return}}", { format: { comments: "all" } }, "for(;;)if(b)x();else y();function f(n){if(n){x();return}/*c*/y()}function g(n){if(n)x();else if(n)x()}"],
 			["function f(a){if(a){x();throw e}y()}for(;;){if(b){x();break}y()}function g(a){if(a){0;return}y()}function h(a){if(a){x();return}0}for(;;){if(b){x();continue}let q=y()}", {}, "function f(f){if(f){x();throw e}y()}for(;;){if(b){x();break}y()}function g(f){if(!f)y()}function h(f){if(f)x()}for(;;){if(b){x();continue}y()}"],
-			["function g(){var a=[1,2];f(a[0],a[1])}function n(){let a=[1,\"s\",!0,null];f(a[1]+a[0],a[2],a[3].x,typeof a[0],a[2]?3:4)}function s(){var a=[\"a long string\"];f(a[0],a[0],a[0])}function t(){g();const a=[1];function g(){f(a[0])}}function v(){var a=[1];return function(){return a[0]}}", {}, "function g(){f(1,2)}function n(){f(\"s1\",!0,null.x,\"number\",3)}function s(){var a=[\"a long string\"];f(a[0],a[0],a[0])}function t(){(function(){f(a[0])})();let a=[1]}function v(){var a=[1];return function(){return a[0]}}"],
+			["function g(){var a=[1,2];f(a[0],a[1])}function n(){let a=[1,\"s\",!0,null];f(a[1]+a[0],a[2],a[3].x,typeof a[0],a[2]?3:4)}function s(){var a=[\"a long string\"];f(a[0],a[0],a[0])}function t(){g();const a=[1];function g(){f(a[0])}}function v(){var a=[1];return function(){return a[0]}}", {}, "function g(){f(1,2)}function n(){f(\"s1\",!0,null.x,\"number\",3)}function s(){var a=[\"a long string\"];f(a[0],a[0],a[0])}function t(){f(a[0]);let a=[1]}function v(){var a=[1];return function(){return a[0]}}"],
 			// Each array stays: a write, a delete, a call, an unknown or missing index, an element not a constant.
 			["function z(){const a=[1,2];f(a[0]);f(delete a[0])} function z2(){const a=[1,2];f(a[0]);({x:a[1]}={})} function z3(){const a=[1,2];for(a[0] of b);} function z4(){const a=[1,2];f(a?.[0],a[1])} function z5(){const a=[1,2];f(a[0],a[2])} function z6(){const a=[1,2];f(a[0],a[\"0\"])} function z7(){const a=[1,2];f(a[0],a[0.5])} function z8(){const a=[1,2];f(a[0],a[1]`x`)} function z9(){const a=[1,2];f(a[0],new a[1])} function y2(){const a=[1,2];f(a[0]);[a[1]]=b} function y3(){const a=[1,2];f(a[0]);a[1]++} function y5(){const a=[1,2];f(a[0],a[1]())} function y6(){const a=[1,x];f(a[0],a[1])} function y7(){const a=[1,-1];f(a[0],a[1])} function y8(){const a=[];f(a[0],a[1])} function y9(){const a=[1,,2];f(a[0],a[1])} function w1(){const a=[1,2];f(a[-1],a[0])} function w2(){const a=[1,2];f(a[0],a.length)} function w4(){const a=[1,2];f(a[0],a[i])} function w5(){const a=[1,2];f(a[0]);a[0]=1}", {}, "function z(){let n=[1,2];f(n[0]),f(delete n[0])}function z2(){let n=[1,2];f(n[0]),({x:n[1]}={})}function z3(){let n=[1,2];for(n[0]of b);}function z4(){let n=[1,2];f(n?.[0],n[1])}function z5(){let n=[1,2];f(n[0],n[2])}function z6(){let n=[1,2];f(n[0],n[0])}function z7(){let n=[1,2];f(n[0],n[.5])}function z8(){let n=[1,2];f(n[0],n[1]`x`)}function z9(){let n=[1,2];f(n[0],new n[1])}function y2(){let n=[1,2];f(n[0]),[n[1]]=b}function y3(){let n=[1,2];f(n[0]),n[1]++}function y5(){let n=[1,2];f(n[0],n[1]())}function y6(){let n=[1,x];f(n[0],n[1])}function y7(){let n=[1,-1];f(n[0],n[1])}function y8(){let n=[];f(n[0],n[1])}function y9(){let n=[1,,2];f(n[0],n[1])}function w1(){let n=[1,2];f(n[-1],n[0])}function w2(){let n=[1,2];f(n[0],n.length)}function w4(){let n=[1,2];f(n[0],n[i])}function w5(){let n=[1,2];f(n[0]),n[0]=1}"],
 			["function w3(){const a=[1,/*c*/2];f(a[0],a[1])}", { format: { comments: "all" } }, "function w3(){let a=[1,/*c*/2];f(a[0],a[1])}"],
@@ -1689,7 +1694,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A `for` start running nothing goes.
 			["for(0;c;)f();for(a.b,1;c;)f();for(/*! c */0;;);", {}, "for(;c;)f();for(a.b;c;)f();for(/*! c */0;;);"],
 			// A function called whose value or last `return` runs nothing runs nothing, but not past a directive or a `return` before the end.
-			["(x=>x+1)(1);((x,y)=>x+y)(1,2);(x=>{return x+1})(1);(()=>{return})();(function(){return 1})();x=(()=>2)();(()=>{return g()})();x=function(){f();return 1}();(function(){\"use strict\";return 1})();(function(){return;g()})()", {}, "x=2,g(),x=function(){return f(),1}(),function(){\"use strict\";return}(),function(){}();"],
+			["(x=>x+1)(1);((x,y)=>x+y)(1,2);(x=>{return x+1})(1);(()=>{return})();(function(){return 1})();x=(()=>2)();(()=>{return g()})();x=function(){f();return 1}();(function(){\"use strict\";return 1})();(function(){return;g()})()", {}, "x=2,g(),x=(f(),1),function(){\"use strict\";return}(),function(){}();"],
 			// A call `pure_funcs` names keeps what its arguments run in it.
 			["debug(g());/*@__PURE__*/f(g())", { compress: { pure_funcs: ["debug"] } }, "debug(g()),g();"],
 			// Nobody reading `&&`, `||` or `??`, a right side running nothing goes.
@@ -3506,7 +3511,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"export function a(v){let s,k=function(x){s=x;g(x)};v.forEach(x=>{s=x});v.forEach(k)}export function b(r){const w=()=>{p=r};w();let p;w()}export function c(r){function w(){p=r}let p;w()}export function d(v){let s;v.forEach(x=>{s=x});return()=>s}"
 			)
 		).toBe(
-			"export function a(t){t.forEach(t=>{}),t.forEach(function(t){g(t)})}export function b(t){let n=()=>{o=t};n();let o;n()}export function c(t){let n;(function(){n=t})()}export function d(t){let n;t.forEach(t=>{n=t});return()=>n}"
+			"export function a(t){t.forEach(t=>{}),t.forEach(function(t){g(t)})}export function b(t){let n=()=>{o=t};n();let o;n()}export function c(t){let n;n=t}export function d(t){let n;t.forEach(t=>{n=t});return()=>n}"
 		);
 		// A value running nothing moves past what runs nothing, not past what may.
 		expect(
@@ -4797,7 +4802,7 @@ describe("one-pass minify of what may run before it is set", () => {
 			["function f(){/*#__NO_SIDE_EFFECTS__*/var s=function(){};eval(\"s=g\");s()}", "function f(){var s=function(){};eval(\"s=g\"),s()}"],
 			["function f(o){/*#__NO_SIDE_EFFECTS__*/var s=function(){};with(o)s()}", "function f(o){var s=function(){};with(o)s()}"],
 			// A function declared there may be called before the name is set.
-			["function f(){try{i()}catch(e){return 1}/*#__NO_SIDE_EFFECTS__*/var s=()=>{};function i(){s()}}", "function f(){try{(function(){s()})()}catch(e){return 1}var s=()=>{}}"],
+			["function f(){try{i()}catch(e){return 1}/*#__NO_SIDE_EFFECTS__*/var s=()=>{};function i(){s()}}", "function f(){try{s()}catch(e){return 1}var s=()=>{}}"],
 			["function f(x){if(x){/*#__NO_SIDE_EFFECTS__*/var s=()=>{}}s()}", "function f(x){if(x)var s=()=>{};s()}"],
 			["function f(){try{return g()}catch(e){return 0}let x=1;function g(){return x}}", "function f(){try{return x}catch(e){return 0}let x=1}"],
 			["function f(){try{return g()}catch(e){return 0}let x=1;function g(){return x+x}}", "function f(){try{return x+x}catch(e){return 0}let x=1}"],
