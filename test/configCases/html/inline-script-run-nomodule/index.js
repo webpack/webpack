@@ -5,21 +5,25 @@ const page = require("./page.html");
 
 const pageContent = typeof page === "string" ? page : "";
 
-const tags = pageContent.match(/<script\b[^>]*><\/script[^>]*>/gi) || [];
+/** @type {{ file: string, nomodule: boolean }[]} */
+const scripts = [];
+const SRC = /src="([^"]+\.js)"( nomodule)?/g;
+let match;
+while ((match = SRC.exec(pageContent)) !== null) {
+	scripts.push({ file: match[1], nomodule: match[2] !== undefined });
+}
 
-const readTag = (tag) =>
-	fs.readFileSync(
-		path.resolve(__dirname, /src="([^"]+)"/.exec(tag)[1]),
-		"utf-8"
-	);
+const read = (file) =>
+	fs.readFileSync(path.resolve(__dirname, file), "utf-8");
 
 it("should keep a nomodule script out of the classic run", () => {
-	// Each tag keeps its own chunk, in source order.
-	expect(tags).toHaveLength(3);
-	expect(tags[1]).toMatch(/\bnomodule\b/);
-	expect(tags[0]).not.toMatch(/\bnomodule\b/);
-	expect(tags[2]).not.toMatch(/\bnomodule\b/);
-	const [a, b, c] = tags.map(readTag);
+	// Each script keeps its own chunk, in source order.
+	expect(scripts.map((script) => script.nomodule)).toEqual([
+		false,
+		true,
+		false
+	]);
+	const [a, b, c] = scripts.map((script) => read(script.file));
 	expect(a).toContain("MARK_A");
 	expect(a).not.toContain("MARK_B");
 	expect(b).toContain("MARK_B");
