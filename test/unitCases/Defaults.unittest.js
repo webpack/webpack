@@ -173,6 +173,9 @@ describe("snapshots", () => {
 		  },
 		  "externalsType": "var",
 		  "ignoreWarnings": undefined,
+		  "incremental": Object {
+		    "buildModuleGraph": true,
+		  },
 		  "infrastructureLogging": Object {
 		    "progress": false,
 		  },
@@ -6713,4 +6716,34 @@ describe("cache.buildDependencies.defaultWebpack", () => {
 			}
 		]);
 	});
+});
+
+describe("incremental", () => {
+	/** @type {Configuration["mode"][]} */
+	const modes = [undefined, "development", "production", "none"];
+
+	it.each(modes)("enables graph reuse by default in mode %s", (mode) => {
+		const { getNormalizedWebpackOptions, applyWebpackOptionsDefaults } =
+			require("webpack").config;
+		const options = getNormalizedWebpackOptions({ mode, cache: false });
+		applyWebpackOptionsDefaults(options);
+		expect(options.incremental).toEqual({ buildModuleGraph: true });
+		expect(options.cache).toBe(false);
+	});
+
+	it.each([false, { buildModuleGraph: false }])(
+		"preserves disabled graph reuse with %j",
+		(incremental) => {
+			const { getNormalizedWebpackOptions, applyWebpackOptionsDefaults } =
+				require("webpack").config;
+			const options = getNormalizedWebpackOptions({
+				mode: "development",
+				incremental,
+				cache: true
+			});
+			applyWebpackOptionsDefaults(options);
+			expect(options.incremental).toEqual({ buildModuleGraph: false });
+			expect(options.cache).toMatchObject({ type: "memory" });
+		}
+	);
 });

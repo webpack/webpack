@@ -1473,6 +1473,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "incremental": Object {
+    "configs": Array [
+      Object {
+        "description": "Reuse unaffected module graph state between watch compilations of the same compiler. Enabled by default, independently of \`cache\`.",
+        "multiple": false,
+        "path": "incremental",
+        "type": "boolean",
+      },
+    ],
+    "description": "Reuse unaffected module graph state between watch compilations of the same compiler. Enabled by default, independently of \`cache\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "incremental-build-module-graph": Object {
+    "configs": Array [
+      Object {
+        "description": "Reuse the module graph between watch compilations. Defaults to true.",
+        "multiple": false,
+        "path": "incremental.buildModuleGraph",
+        "type": "boolean",
+      },
+    ],
+    "description": "Reuse the module graph between watch compilations. Defaults to true.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "infrastructure-logging-append-only": Object {
     "configs": Array [
       Object {

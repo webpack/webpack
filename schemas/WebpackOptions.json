@@ -2863,6 +2863,18 @@
       },
       "added": "5.109.0"
     },
+    "IncrementalOptions": {
+      "description": "Options for reusing intermediate results between watch compilations.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "buildModuleGraph": {
+          "description": "Reuse the module graph between watch compilations. Defaults to true.",
+          "type": "boolean"
+        }
+      },
+      "added": "5.113.0"
+    },
     "InfrastructureLogging": {
       "description": "Options for infrastructure level logging.",
       "type": "object",
@@ -8288,6 +8300,14 @@
         "ignoreWarnings": {
           "$ref": "#/definitions/IgnoreWarningsNormalized"
         },
+        "incremental": {
+          "description": "Reuse unaffected module graph state between watch compilations of the same compiler. Enabled by default, independently of `cache`.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/IncrementalOptions"
+            }
+          ]
+        },
         "infrastructureLogging": {
           "$ref": "#/definitions/InfrastructureLogging"
         },
@@ -8362,6 +8382,7 @@
         "experiments",
         "externals",
         "externalsPresets",
+        "incremental",
         "infrastructureLogging",
         "module",
         "node",
@@ -8454,6 +8475,18 @@
     },
     "ignoreWarnings": {
       "$ref": "#/definitions/IgnoreWarnings"
+    },
+    "incremental": {
+      "description": "Reuse unaffected module graph state between watch compilations of the same compiler. Enabled by default, independently of `cache`.",
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "$ref": "#/definitions/IncrementalOptions"
+        }
+      ],
+      "added": "5.113.0"
     },
     "infrastructureLogging": {
       "$ref": "#/definitions/InfrastructureLogging"
