@@ -89,12 +89,7 @@ module.exports = [
 			rules: [
 				{
 					test: /\.jpg$/,
-					type: "asset/source",
-					generator: {
-						dataUrl: {
-							mimetype: "text/plain"
-						}
-					}
+					type: "asset/source"
 				}
 			]
 		}
