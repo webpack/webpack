@@ -323,7 +323,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/collapse_vars_side_effects_2",
 			"terser compress: concat-strings/concat_1",
 			"terser compress: conditionals/ifs_6",
-			"terser compress: evaluate/or",
 			"terser compress: evaluate/unsafe_array",
 			"terser compress: export/name_cache_import_star_as_name_from_module",
 			"terser compress: new/new_statements_3",
@@ -775,7 +774,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_harmony_issue_2794_6",
 			"swc exec: terser_labels_labels_3",
 			"swc exec: terser_issue_1770_mangle_props",
-			"swc exec: terser_reduce_vars_recursive_inlining_1",
 			"swc exec: terser_reduce_vars_issue_2420_2",
 			"swc exec: terser_reduce_vars_side_effects_assign",
 			"swc exec: terser_reduce_vars_issue_1670_1",
@@ -974,7 +972,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/dead_code_elimination.rs:955",
 			"oxc minifier: peephole/dead_code_elimination.rs:990",
 			"oxc minifier: peephole/dead_code_elimination.rs:1068",
-			"oxc minifier: peephole/dead_code_elimination.rs:1097",
 			"oxc minifier: peephole/dead_code_elimination.rs:560",
 			"oxc minifier: peephole/dead_code_elimination.rs:561"
 		]
@@ -982,7 +979,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what oxc's `peephole/minimize_conditional_expression.rs` tests cover",
 		[
-			"oxc minifier: peephole/minimize_conditional_expression.rs:10",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:12",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:16",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:37",
@@ -1120,10 +1116,8 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/immutable",
 			"terser compress: reduce_vars/issue_1814_1",
 			"terser compress: reduce_vars/issue_1814_2",
-			"terser compress: reduce_vars/boolean_binary_assign",
 			"terser compress: reduce_vars/cond_assign",
 			"terser compress: reduce_vars/issue_2420_2",
-			"terser compress: reduce_vars/recursive_inlining_1",
 			"terser compress: reduce_vars/recursive_inlining_2",
 			"terser compress: reduce_vars/recursive_inlining_4",
 			"terser compress: reduce_vars/issue_2455",
@@ -1219,7 +1213,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what terser's `drop-unused` tests cover",
 		[
-			"terser compress: drop-unused/unused_circular_references_1",
 			"terser compress: drop-unused/iife",
 			"terser compress: drop-unused/issue_1709",
 			"terser compress: drop-unused/issue_1715_4",
@@ -1256,8 +1249,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_unused_declaration.rs:323",
 			"oxc minifier: peephole/remove_unused_declaration.rs:572",
 			"oxc minifier: peephole/remove_unused_declaration.rs:578",
-			"oxc minifier: peephole/remove_unused_declaration.rs:787",
-			"oxc minifier: peephole/remove_unused_declaration.rs:816",
 			"oxc minifier: peephole/remove_unused_declaration.rs:892",
 			"oxc minifier: peephole/remove_unused_declaration.rs:1015",
 			"oxc minifier: peephole/remove_unused_declaration.rs:1016",
