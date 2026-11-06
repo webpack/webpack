@@ -1889,9 +1889,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `transform` tests cover",
-		[
-			"terser compress: transform/while_if_break"
-		]
+		["terser compress: transform/while_if_break"]
 	],
 	[
 		"oxc drops an unread deferred or source-phase import, assuming its load cannot fail, where webpack keeps it as oxc's `invalid_import_side_effects` does, since it still fetches and links its module",

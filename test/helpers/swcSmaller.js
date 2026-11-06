@@ -1088,8 +1088,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc goes further than webpack on what terser's `issue-1833` tests cover",
-		[
-		]
+		[]
 	],
 	[
 		"swc goes further than webpack on what terser's `properties` tests cover",
