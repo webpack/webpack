@@ -98,14 +98,14 @@ const COLD = [
 	["loading", "loading="],
 	["is", " is="],
 	["exportparts", "exportparts"],
-	["col", "<col "],
-	["nomodule", "nomodule"]
+	["col", "<col "]
 ];
 
 // What the printer branches on that the corpus does carry, but thinly — kept
 // here so a fixture rewrite cannot quietly drop the whole class.
 const THIN = [
 	["dialog", "<dialog"],
+	["nomodule", "nomodule"],
 	["picture", "<picture"],
 	["ruby", "<ruby"],
 	["progress", "<progress"],
