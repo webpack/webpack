@@ -1,1 +1,1 @@
-module.exports = "new";
+module.exports = "intermediate";
