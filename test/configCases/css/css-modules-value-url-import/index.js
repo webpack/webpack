@@ -81,6 +81,13 @@ it("should resolve a @value that is a url() where it is used", () => {
 		expect(match[1]).toMatch(/^[0-9a-f]+\.png$/);
 	}
 	expect(rules).not.toContain("shape.png");
+	// Neither a url() a backslash-newline makes bad nor a value that is more than
+	// one url() gets a dependency; each is left as written.
+	for (const name of ["uses-bad-url", "uses-not-one-url"]) {
+		expect(rules).toMatch(
+			new RegExp(`\\.${urlValue[name]} \\{\\n\\tbackground-image: url\\(\\./img/`)
+		);
+	}
 	// Nothing of the removed `@value` rules is left before the first rule.
 	expect(rules).not.toMatch(/^\s*(?:url\()?[0-9a-f]+\.png\)?\s*$/m);
 });
