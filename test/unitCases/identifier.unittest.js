@@ -449,4 +449,42 @@ describe("util/identifier", () => {
 			}
 		});
 	});
+	describe("isOutsideDirectory", () => {
+		/** @type {[string, boolean][]} */
+		const cases = [
+			["", false],
+			["file.js", false],
+			["nested/file.js", false],
+			["..x/file.js", false],
+			["..", true],
+			["../file.js", true],
+			["..\\file.js", true],
+			["/file.js", true],
+			["C:\\file.js", true]
+		];
+
+		for (const [value, expected] of cases) {
+			it(`should return ${expected} for ${JSON.stringify(value)}`, () => {
+				expect(identifierUtil.isOutsideDirectory(value)).toBe(expected);
+			});
+		}
+	});
+	describe("escapeResourcePath", () => {
+		for (const value of [
+			"images/plain.png",
+			"images/photo#1.png",
+			"images/photo?1.png",
+			"data:image.png",
+			"a!b.png"
+		]) {
+			it(`should keep ${JSON.stringify(value)} whole as a path`, () => {
+				const parsed = identifierUtil.parseResource(
+					identifierUtil.escapeResourcePath(value)
+				);
+				expect(parsed.path).toBe(value);
+				expect(parsed.query).toBe("");
+				expect(parsed.fragment).toBe("");
+			});
+		}
+	});
 });
