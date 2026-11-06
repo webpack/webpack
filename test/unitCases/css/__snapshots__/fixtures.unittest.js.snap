@@ -4670,6 +4670,12 @@ exports[`CSS syntax — fixtures css-syntax-minify-light-dark-writes-the-default
 
 exports[`CSS syntax — fixtures css-syntax-minify-light-dark-writes-the-defaults-only-where-it-wrote-a-pair prints {"mode":"minify"} 1`] = `"html{color-scheme:dark}"`;
 
+exports[`CSS syntax — fixtures css-syntax-minify-lowering-a-rule-nested-in-one-with-an-empty-prelude parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"print\\"]],[[\\"{}\\",[\\"ident\\",\\"y\\"],\\" \\",[\\"ident\\",\\"z\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]],[\\"qualified rule\\",[[\\"ident\\",\\"x\\"]],[]],[\\"qualified rule\\",[],[[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-lowering-a-rule-nested-in-one-with-an-empty-prelude prints {"mode":"minify","environment":{"browsers":["chrome 100","firefox 100","safari 15.4"]}} 1`] = `"@media print{y z{color:red}}a{color:blue}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-lowering-a-rule-nested-in-one-with-an-empty-prelude prints {"mode":"minify"} 1`] = `"@media print{{y z{color:red}}}{a{color:blue}}"`;
+
 exports[`CSS syntax — fixtures css-syntax-minify-lowering-a-spelling-the-target-cannot-read-leaves-a-comparison parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"()\\",[\\"ident\\",\\"width\\"],\\">\\",[\\"dimension\\",\\"480\\",480,\\"integer\\",\\"px\\"]]],[[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]]"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-lowering-a-spelling-the-target-cannot-read-leaves-a-comparison prints {"mode":"minify","environment":{"browsers":["chrome 100"]}} 1`] = `"@media (width>480px){a{color:red}}"`;
