@@ -5678,9 +5678,16 @@ describe("one-pass minify of statement sequences", () => {
 			'function C(){this.v=1}function x(){console.log("x");return C}function*y(){var t=yield x();return new t}function g(){var t=x();return new t(1).v}function h(){var t=x();return new t.prototype.constructor}function k(){var t=C;return new C(x(),t)}var it=y();it.next();console.log(it.next(C).value.v,g(),h().v,k().v)';
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
 		expect(code).toBe(
-			'function C(){this.v=1}function x(){return console.log("x"),C}function*y(){return new(yield x())}function g(){return new(x())(1).v}function h(){return new(x()).prototype.constructor}function k(){var t=C;return new C(x(),t)}var it=y();it.next(),console.log(it.next(C).value.v,g(),h().v,k().v);'
+			'function C(){this.v=1}function x(){return console.log("x"),C}function*y(){return new(yield x())}function g(){return new(x())(1).v}function h(){var t=x();return new t.prototype.constructor}function k(){var t=C;return new C(x(),t)}var it=y();it.next(),console.log(it.next(C).value.v,g(),h().v,k().v);'
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
+		// Printed again, the output reads the same.
+		const again = minifyOnePass(code, { compress: false, mangle: false }).code;
+		expect(again).toBe(code);
+		const made = "function m(){var t=class{};return new t}";
+		expect(minifyOnePass(made, { compress: {}, mangle: false }).code).toBe(
+			"function m(){return new class{}}"
+		);
 	});
 
 	it("should print a `return` ending a function of a call returning nothing as the call", () => {
