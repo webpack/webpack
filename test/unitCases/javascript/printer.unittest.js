@@ -5559,6 +5559,28 @@ describe("one-pass minify of statement sequences", () => {
 		).not.toContain("log(Infinity");
 	});
 
+	it("should print an infinity or `NaN` beautified as the division it reads back as", () => {
+		const { SourceProcessor } = require("../../../lib/javascript/syntax");
+		const beautify = (
+			/** @type {string} */ code,
+			/** @type {false | Record<string, never>} */ compress
+		) =>
+			/** @type {{ code: string }} */ (
+				new SourceProcessor().process(code, { mode: "beautify", compress })
+			).code;
+		const source = 'x=[1e400,-1e400,a/1e400,{[1e400]:1},Infinity,2*"a",3/0*2];';
+		const once = beautify(source, false);
+		expect(once).toBe(
+			'x = [ 1 / 0, -1 / 0, a / (1 / 0), {[1 / 0]: 1}, Infinity, 2 * "a", 3 / 0 * 2 ];'
+		);
+		expect(beautify(once, false)).toBe(once);
+		const compressed = beautify(source, {});
+		expect(compressed).toBe(
+			"x = [ 1 / 0, -1 / 0, a / (1 / 0), {[1 / 0]: 1}, 1 / 0, 0 / 0, 1 / 0 ];"
+		);
+		expect(beautify(compressed, false)).toBe(compressed);
+	});
+
 	it("should print a binary expression folding to an infinity or `NaN` as `1/0`, `-1/0` or `0/0`", () => {
 		// A division needs the parentheses its place gave the expression; `**` binds tighter.
 		const source =
