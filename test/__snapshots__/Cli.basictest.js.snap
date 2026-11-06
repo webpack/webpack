@@ -1105,6 +1105,45 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-threads": Object {
+    "configs": Array [
+      Object {
+        "description": "Run CPU-heavy passes, such as minimization, on worker threads webpack keeps for the whole compiler.",
+        "multiple": false,
+        "path": "experiments.threads",
+        "type": "boolean",
+      },
+    ],
+    "description": "Run CPU-heavy passes, such as minimization, on worker threads webpack keeps for the whole compiler.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "experiments-threads-max": Object {
+    "configs": Array [
+      Object {
+        "description": "Number of worker threads. Defaults to one less than the number of CPUs; \`0\` runs every pass that uses them on the main thread.",
+        "multiple": false,
+        "path": "experiments.threads.max",
+        "type": "number",
+      },
+    ],
+    "description": "Number of worker threads. Defaults to one less than the number of CPUs; \`0\` runs every pass that uses them on the main thread.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "experiments-threads-passes-minimize": Object {
+    "configs": Array [
+      Object {
+        "description": "Minimize on the worker threads. \`false\` leaves the minimizer to its own pool, sized by its \`parallel\` option. Defaults to \`true\`.",
+        "multiple": false,
+        "path": "experiments.threads.passes.minimize",
+        "type": "boolean",
+      },
+    ],
+    "description": "Minimize on the worker threads. \`false\` leaves the minimizer to its own pool, sized by its \`parallel\` option. Defaults to \`true\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "experiments-typescript": Object {
     "configs": Array [
       Object {

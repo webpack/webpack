@@ -1300,6 +1300,31 @@ declare interface BindCache<T> {
 declare interface BindCacheResultFn<T> {
 	(value: string): T;
 }
+
+/**
+ * Scheduling fixed for every call made through one bound function.
+ */
+declare interface BindOptions<Args extends unknown[]> {
+	/**
+	 * calls in flight per thread; `1` unless the function awaits I/O
+	 */
+	concurrency?: number;
+
+	/**
+	 * re-dispatches after a thread crash; `0` unless the function's side effects may replay
+	 */
+	retries?: number;
+
+	/**
+	 * calls with the same key go to the thread that last served it, so state it keeps per key is reused
+	 */
+	workerKey?: (args: Args) => string;
+
+	/**
+	 * run on the main thread regardless of the farm
+	 */
+	inline?: boolean;
+}
 declare interface Bootstrap {
 	header: string[];
 	beforeStartup: string[];
@@ -1768,6 +1793,22 @@ declare interface CallExpressionInfo {
 	getMembers: () => string[];
 	getMembersOptionals: () => boolean[];
 	getMemberRanges: () => [number, number][];
+}
+declare interface CallOptions {
+	/**
+	 * handed over instead of copied; only buffers the caller allocated whole
+	 */
+	transfer?: ArrayBuffer[];
+
+	/**
+	 * rejects a queued call at once; a running call finishes and its result is dropped
+	 */
+	signal?: AbortSignal;
+
+	/**
+	 * run this call on the main thread
+	 */
+	inline?: boolean;
 }
 
 /**
@@ -7746,8 +7787,8 @@ declare interface DecodedEntitiesWithMap {
 	map?: number[];
 }
 type DecodedSegment =
-	| [number, number, number, number]
 	| [number]
+	| [number, number, number, number]
 	| [number, number, number, number, number];
 type DecodedSourceMap = Omit<RawSourceMap, "mappings"> & {
 	mappings: DecodedSegment[][];
@@ -7923,12 +7964,12 @@ declare abstract class DependenciesBlock {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_4): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_3): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 }
 
 /**
@@ -8124,12 +8165,12 @@ declare class Dependency {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_4): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_3): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 	module: void;
 	get disconnect(): void;
 
@@ -9391,6 +9432,12 @@ type EncodingOptionResolver =
 	| "binary"
 	| "hex"
 	| ObjectEncodingOptionsResolver;
+declare interface EndOptions {
+	/**
+	 * terminate instead of waiting for in-flight calls
+	 */
+	force?: boolean;
+}
 
 /**
  * Defines the entry data type used by this module.
@@ -10198,6 +10245,13 @@ declare interface Experiments {
 	syncWebAssembly?: boolean;
 
 	/**
+	 * Run CPU-heavy passes, such as minimization, on worker threads webpack keeps for the whole compiler.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	threads?: boolean | ThreadsOptions;
+
+	/**
 	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
 	 * @since 5.107.0
 	 * @experimental
@@ -10285,6 +10339,13 @@ declare interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	syncWebAssembly?: boolean;
+
+	/**
+	 * Run CPU-heavy passes, such as minimization, on worker threads webpack keeps for the whole compiler.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	threads?: false | ThreadsOptions;
 
 	/**
 	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
@@ -11382,6 +11443,63 @@ declare interface FallbackCacheGroup {
 	maxInitialSize: SplitChunksSizes;
 	automaticNameDelimiter: string;
 }
+declare interface FarmOptions {
+	/**
+	 * upper bound of threads; `0` runs every call inline
+	 */
+	max: number;
+
+	/**
+	 * threads kept alive through `idleTimeout`
+	 */
+	min: number;
+
+	/**
+	 * milliseconds an idle thread survives; an idle thread is released at once so the process can exit without `end`
+	 */
+	idleTimeout: number;
+
+	/**
+	 * clone arguments and results on the inline path the way the remote path does
+	 */
+	strictClone: boolean;
+}
+declare interface FarmStats {
+	/**
+	 * live threads
+	 */
+	workers: number;
+
+	/**
+	 * threads with nothing in flight
+	 */
+	idle: number;
+
+	/**
+	 * calls waiting for a thread
+	 */
+	queued: number;
+
+	/**
+	 * calls in flight, remote and inline
+	 */
+	running: number;
+
+	/**
+	 * calls settled since the farm was created
+	 */
+	completed: number;
+
+	/**
+	 * threads started since the farm was created
+	 */
+	spawned: number;
+
+	/**
+	 * threads that exited with a call in flight
+	 */
+	crashed: number;
+}
 
 /**
  * Enables asynchronous WebAssembly loading through `fetch` for environments
@@ -12435,6 +12553,17 @@ declare interface HMRJavascriptParserHooks {
 	hotAcceptWithoutCallback: SyncBailHook<[CallExpression, string[]], void>;
 }
 declare const HOISTED_DECLARATIONS: unique symbol;
+
+/**
+ * A token for a function one side exposed to the other. It carries only the id and the owner, since a function cannot cross a port; the function stays in the owner's registry.
+ */
+declare abstract class Handle {
+	kind: string;
+	id: number;
+	workerId?: number;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_2): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_1): void;
+}
 
 /**
  * Defines the handle module creation options type used by this module.
@@ -14599,12 +14728,12 @@ declare class InitFragment<GenerateContext> {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(context: ObjectSerializerContextObjectMiddlewareObject_4): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_3): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 
 	/**
 	 * Adds the provided source to the init fragment.
@@ -14657,7 +14786,7 @@ declare abstract class InlinedValue {
 	render(comment: string): string;
 	equals(other: InlinedValue): boolean;
 	serialize(context: ObjectSerializerContextObjectMiddlewareObject_1): void;
-	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_4): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_5): void;
 }
 type InlinedValueKind = "string" | "number" | "boolean" | "undefined" | "null";
 declare interface InnerGraphUtils {
@@ -19167,7 +19296,7 @@ declare class LazySet<T> {
 	 * serialization stream.
 	 */
 	serialize(
-		__0: ObjectSerializerContextObjectMiddlewareObject_4<(number | T)[]>
+		__0: ObjectSerializerContextObjectMiddlewareObject_5<(number | T)[]>
 	): void;
 
 	/**
@@ -19179,7 +19308,7 @@ declare class LazySet<T> {
 	 * Restores a `LazySet` from serialized item data.
 	 */
 	static deserialize<T>(
-		__0: ObjectDeserializerContextObjectMiddlewareObject_3<(number | T)[]>
+		__0: ObjectDeserializerContextObjectMiddlewareObject_4<(number | T)[]>
 	): LazySet<T>;
 }
 
@@ -19800,12 +19929,12 @@ declare abstract class LocalModule {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(context: ObjectSerializerContextObjectMiddlewareObject_2): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_3): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_1): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_2): void;
 }
 
 /**
@@ -22321,6 +22450,21 @@ declare interface ModuleSettings {
 	 */
 	sideEffects?: boolean;
 }
+
+/**
+ * A function addressed by the absolute path of a CommonJS module and the name of its export. The receiving side requires the module on first use and keeps it.
+ */
+declare interface ModuleTarget {
+	/**
+	 * absolute path of the module
+	 */
+	module: string;
+
+	/**
+	 * name of the export to call
+	 */
+	method: string;
+}
 declare abstract class ModuleTemplate {
 	type: string;
 	hooks: Readonly<{
@@ -23189,7 +23333,7 @@ declare class NormalModule extends Module {
 		needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
 	};
 	static deserialize(
-		context: ObjectDeserializerContextObjectMiddlewareObject_3
+		context: ObjectDeserializerContextObjectMiddlewareObject_4
 	): NormalModule;
 	static KINDS: Set<
 		| "html"
@@ -23943,13 +24087,26 @@ declare interface ObjectConfiguration {
  * re-types the same context to `Tail<T>` so successive reads stay positional.
  */
 declare interface ObjectDeserializerContextObjectMiddlewareObject_1 {
-	read: () => string;
-	rest: ObjectDeserializerContextObjectMiddlewareObject_3<[number, boolean]>;
+	read: () => ComplexSerializableType;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_4<
+		ReadonlyArray<ComplexSerializableType>
+	>;
 	setCircularReference: (value: ReferenceableItem) => void;
 }
-declare namespace ObjectDeserializerContextObjectMiddlewareObject_2 {
+
+/**
+ * Defines the object deserializer context type used by this module.
+ * `T` is the tuple of values read in order: `read` returns the head, and `rest`
+ * re-types the same context to `Tail<T>` so successive reads stay positional.
+ */
+declare interface ObjectDeserializerContextObjectMiddlewareObject_2 {
+	read: () => string;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_4<[number, boolean]>;
+	setCircularReference: (value: ReferenceableItem) => void;
+}
+declare namespace ObjectDeserializerContextObjectMiddlewareObject_3 {
 	export let read: () => any;
-	export let rest: ObjectDeserializerContextObjectMiddlewareObject_3<
+	export let rest: ObjectDeserializerContextObjectMiddlewareObject_4<
 		ReadonlyArray<any>
 	>;
 	export let setCircularReference: (value: ReferenceableItem) => void;
@@ -23960,11 +24117,11 @@ declare namespace ObjectDeserializerContextObjectMiddlewareObject_2 {
  * `T` is the tuple of values read in order: `read` returns the head, and `rest`
  * re-types the same context to `Tail<T>` so successive reads stay positional.
  */
-declare interface ObjectDeserializerContextObjectMiddlewareObject_3<
+declare interface ObjectDeserializerContextObjectMiddlewareObject_4<
 	T = ReadonlyArray<ComplexSerializableType>
 > {
 	read: () => Head<T>;
-	rest: ObjectDeserializerContextObjectMiddlewareObject_3<Tail<T>>;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_4<Tail<T>>;
 	setCircularReference: (value: ReferenceableItem) => void;
 }
 
@@ -23973,9 +24130,9 @@ declare interface ObjectDeserializerContextObjectMiddlewareObject_3<
  * `T` is the tuple of values read in order: `read` returns the head, and `rest`
  * re-types the same context to `Tail<T>` so successive reads stay positional.
  */
-declare interface ObjectDeserializerContextObjectMiddlewareObject_4 {
+declare interface ObjectDeserializerContextObjectMiddlewareObject_5 {
 	read: () => InlinedValueKind;
-	rest: ObjectDeserializerContextObjectMiddlewareObject_3<
+	rest: ObjectDeserializerContextObjectMiddlewareObject_4<
 		[undefined | null | string | number | boolean]
 	>;
 	setCircularReference: (value: ReferenceableItem) => void;
@@ -24027,12 +24184,12 @@ declare interface ObjectEncodingOptionsResolver {
 declare interface ObjectSerializer<T extends object = object> {
 	serialize(
 		value: T,
-		context: ObjectSerializerContextObjectMiddlewareObject_4<
+		context: ObjectSerializerContextObjectMiddlewareObject_5<
 			ReadonlyArray<ComplexSerializableType>
 		>
 	): void;
 	deserialize(
-		context: ObjectDeserializerContextObjectMiddlewareObject_3<
+		context: ObjectDeserializerContextObjectMiddlewareObject_4<
 			ReadonlyArray<ComplexSerializableType>
 		>
 	): object;
@@ -24045,7 +24202,7 @@ declare interface ObjectSerializer<T extends object = object> {
 declare interface ObjectSerializerContextObjectMiddlewareObject_1 {
 	write: (
 		value: InlinedValueKind
-	) => ObjectSerializerContextObjectMiddlewareObject_4<
+	) => ObjectSerializerContextObjectMiddlewareObject_5<
 		[undefined | null | string | number | boolean]
 	>;
 	setCircularReference: (value: ReferenceableItem) => void;
@@ -24069,8 +24226,10 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_1 {
  */
 declare interface ObjectSerializerContextObjectMiddlewareObject_2 {
 	write: (
-		value: string
-	) => ObjectSerializerContextObjectMiddlewareObject_4<[number, boolean]>;
+		value: ComplexSerializableType
+	) => ObjectSerializerContextObjectMiddlewareObject_5<
+		ReadonlyArray<ComplexSerializableType>
+	>;
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
@@ -24085,10 +24244,33 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_2 {
 		LazyOptions
 	>;
 }
-declare namespace ObjectSerializerContextObjectMiddlewareObject_3 {
+
+/**
+ * Defines the object serializer context type used by this module.
+ * `T` is the tuple of values written in order; each `write` consumes the head.
+ */
+declare interface ObjectSerializerContextObjectMiddlewareObject_3 {
+	write: (
+		value: string
+	) => ObjectSerializerContextObjectMiddlewareObject_5<[number, boolean]>;
+	setCircularReference: (value: ReferenceableItem) => void;
+	snapshot: () => ObjectSerializerSnapshot;
+	rollback: (snapshot: ObjectSerializerSnapshot) => void;
+	writeLazy?: (item: ComplexSerializableType) => void;
+	writeSeparate?: <T>(
+		item: T | (() => T | Promise<T>),
+		obj?: LazyOptions
+	) => LazyFunction<
+		T,
+		PrimitiveSerializableType[],
+		SerializerMiddleware,
+		LazyOptions
+	>;
+}
+declare namespace ObjectSerializerContextObjectMiddlewareObject_4 {
 	export let write: (
 		value?: any
-	) => ObjectSerializerContextObjectMiddlewareObject_4<ReadonlyArray<any>>;
+	) => ObjectSerializerContextObjectMiddlewareObject_5<ReadonlyArray<any>>;
 	export let setCircularReference: (value: ReferenceableItem) => void;
 	export let snapshot: () => ObjectSerializerSnapshot;
 	export let rollback: (snapshot: ObjectSerializerSnapshot) => void;
@@ -24110,12 +24292,12 @@ declare namespace ObjectSerializerContextObjectMiddlewareObject_3 {
  * Defines the object serializer context type used by this module.
  * `T` is the tuple of values written in order; each `write` consumes the head.
  */
-declare interface ObjectSerializerContextObjectMiddlewareObject_4<
+declare interface ObjectSerializerContextObjectMiddlewareObject_5<
 	T = ReadonlyArray<ComplexSerializableType>
 > {
 	write: (
 		value: Head<T>
-	) => ObjectSerializerContextObjectMiddlewareObject_4<Tail<T>>;
+	) => ObjectSerializerContextObjectMiddlewareObject_5<Tail<T>>;
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
@@ -24135,10 +24317,10 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_4<
  * Defines the object serializer context type used by this module.
  * `T` is the tuple of values written in order; each `write` consumes the head.
  */
-declare interface ObjectSerializerContextObjectMiddlewareObject_5 {
+declare interface ObjectSerializerContextObjectMiddlewareObject_6 {
 	write: (
 		value: RestoreProvidedDataExports[]
-	) => ObjectSerializerContextObjectMiddlewareObject_4<
+	) => ObjectSerializerContextObjectMiddlewareObject_5<
 		[undefined | null | boolean, undefined | boolean, boolean]
 	>;
 	setCircularReference: (value: ReferenceableItem) => void;
@@ -28663,6 +28845,9 @@ declare abstract class RegExpValidationState {
 	eat(ch: number, forceU?: boolean): boolean;
 	eatChars(chs: number[], forceU?: boolean): boolean;
 }
+declare interface RemoteFunction<Args extends unknown[], Result> {
+	(args: Args, options?: CallOptions): Promise<Result>;
+}
 type Remotes = RemotesObject | RemotesBranch1Item[];
 type RemotesBranch1Item = string | RemotesObject;
 
@@ -29631,7 +29816,7 @@ declare abstract class RestoreProvidedData {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(context: ObjectSerializerContextObjectMiddlewareObject_5): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_6): void;
 }
 
 /**
@@ -31522,6 +31707,12 @@ declare interface SetIterator<T> extends IteratorObject<T, undefined> {
 	[Symbol.iterator](): SetIterator<T>;
 	[Symbol.dispose](): void;
 }
+declare interface ShareOptions {
+	/**
+	 * `"clone"` unless the value's class is registered with `makeSerializable`
+	 */
+	encoding?: "webpack" | "clone";
+}
 declare class SharePlugin {
 	/**
 	 * Creates an instance of SharePlugin.
@@ -31622,6 +31813,17 @@ declare interface SharedObject {
 	[index: string]: SharedObjectValue;
 }
 type SharedObjectValue = string | SharedConfig;
+declare interface SharedReference {
+	/**
+	 * what a call passes in its arguments; threads look the value up by it
+	 */
+	ref: number;
+
+	/**
+	 * forgets the value everywhere it was pushed
+	 */
+	dispose: () => Promise<void>;
+}
 declare class SideEffectsFlagPlugin {
 	/**
 	 * Creates an instance of SideEffectsFlagPlugin.
@@ -31779,7 +31981,7 @@ declare abstract class Snapshot {
 	 * then each field the flags say is present.
 	 */
 	serialize(
-		__0: ObjectSerializerContextObjectMiddlewareObject_4<
+		__0: ObjectSerializerContextObjectMiddlewareObject_5<
 			ReadonlyArray<SnapshotStreamValue>
 		>
 	): void;
@@ -31788,7 +31990,7 @@ declare abstract class Snapshot {
 	 * Restores this instance from the provided deserializer context.
 	 */
 	deserialize(
-		__0: ObjectDeserializerContextObjectMiddlewareObject_3<
+		__0: ObjectDeserializerContextObjectMiddlewareObject_4<
 			ReadonlyArray<SnapshotStreamValue>
 		>
 	): void;
@@ -32617,7 +32819,7 @@ declare abstract class StackedMap<K, V> {
  */
 declare interface StarListDeserializerContext {
 	read: () => ESMExportImportedSpecifierDependency[];
-	rest: ObjectDeserializerContextObjectMiddlewareObject_3<[]>;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_4<[]>;
 	setCircularReference: (value: ReferenceableItem) => void;
 }
 
@@ -32628,7 +32830,7 @@ declare interface StarListDeserializerContext {
 declare interface StarListSerializerContext {
 	write: (
 		value: ESMExportImportedSpecifierDependency[]
-	) => ObjectSerializerContextObjectMiddlewareObject_4<[]>;
+	) => ObjectSerializerContextObjectMiddlewareObject_5<[]>;
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
@@ -34904,6 +35106,31 @@ declare interface TerserMangleAliases {
 }
 
 /**
+ * Options for running CPU-heavy passes on the worker threads webpack keeps for a compiler.
+ */
+declare interface ThreadsOptions {
+	/**
+	 * Number of worker threads. Defaults to one less than the number of CPUs; `0` runs every pass that uses them on the main thread.
+	 */
+	max?: number;
+
+	/**
+	 * Which passes run on the worker threads.
+	 */
+	passes?: ThreadsPassesOptions;
+}
+
+/**
+ * Which passes run on the worker threads.
+ */
+declare interface ThreadsPassesOptions {
+	/**
+	 * Minimize on the worker threads. `false` leaves the minimizer to its own pool, sized by its `parallel` option. Defaults to `true`.
+	 */
+	minimize?: boolean;
+}
+
+/**
  * Defines the timestamp and hash type used by this module.
  */
 declare interface TimestampAndHash {
@@ -36024,12 +36251,12 @@ declare class WebpackError extends Error {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_4): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_3): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 
 	/**
 	 * Whether an error is a webpack error rather than any other thrown value.
@@ -36484,6 +36711,61 @@ declare interface WithOptions {
 	withOptions: (
 		options: Partial<ResolveOptionsWithDependencyType>
 	) => ResolverWithOptions;
+}
+
+/**
+ * A pool of threads any module can be run on, with calls in both directions and values shared once. Without `worker_threads`, or with `max: 0`, every call runs inline through the same path.
+ */
+declare abstract class WorkerFarm {
+	options: FarmOptions;
+	hooks: Readonly<{
+		workerSpawned: SyncHook<[number]>;
+		workerExited: SyncHook<[number, number]>;
+		log: SyncHook<[string, LogTypeEnum, unknown[]]>;
+	}>;
+
+	/**
+	 * Binds a target to a function that dispatches each call to the farm. The options fix the scheduling for every call made through it.
+	 */
+	bind<Args extends unknown[], Result>(
+		target: ModuleTarget,
+		options?: BindOptions<Args>
+	): RemoteFunction<Args, Result>;
+
+	/**
+	 * One-off form of `bind`.
+	 */
+	run(
+		target: ModuleTarget,
+		args: unknown[],
+		options?: BindOptions<unknown[]> & CallOptions
+	): Promise<unknown>;
+
+	/**
+	 * Registers a value to be pushed to each thread once and referred to by number afterwards.
+	 */
+	share(value: unknown, options?: ShareOptions): SharedReference;
+
+	/**
+	 * Exposes a main-thread function to threads as a handle they can call.
+	 */
+	expose(fn: (...args: any[]) => unknown): Handle;
+
+	/**
+	 * Runs a target on every live thread and on the inline module, for cache invalidation.
+	 */
+	broadcast(target: ModuleTarget, args: unknown[]): Promise<void>;
+
+	/**
+	 * Spawns up to `max` threads and preloads the modules in each, so thread start overlaps other work.
+	 */
+	warmup(modules: string[]): Promise<void>;
+	get stats(): FarmStats;
+
+	/**
+	 * Ends the farm; waits for in-flight calls unless forced.
+	 */
+	end(options?: EndOptions): Promise<void>;
 }
 
 /**
@@ -40503,6 +40785,10 @@ declare namespace exports {
 		export namespace typescript {
 			export { TypeScriptPlugin };
 		}
+		export const getWorkerFarm: (
+			compiler: Compiler,
+			pass: "minimize"
+		) => undefined | WorkerFarm;
 	}
 	export type RuleSetUseFunction = (data: EffectData) =>
 		| string
@@ -40617,9 +40903,9 @@ declare namespace exports {
 		argv: Record<string, any>
 	) => MaybePromise<Configuration | MultiConfiguration>;
 	export type ObjectSerializerContext =
-		typeof ObjectSerializerContextObjectMiddlewareObject_3;
+		typeof ObjectSerializerContextObjectMiddlewareObject_4;
 	export type ObjectDeserializerContext =
-		typeof ObjectDeserializerContextObjectMiddlewareObject_2;
+		typeof ObjectDeserializerContextObjectMiddlewareObject_3;
 	export {
 		/** Resolves every module of the last build eagerly. @deprecated use `prefetch.AutomaticPrefetchPlugin` — TODO in the next major release: remove */ AutomaticPrefetchPlugin,
 		AsyncDependenciesBlock,

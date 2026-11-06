@@ -1360,6 +1360,12 @@ export interface Experiments {
 	 */
 	syncWebAssembly?: boolean;
 	/**
+	 * Run CPU-heavy passes, such as minimization, on worker threads webpack keeps for the whole compiler.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	threads?: boolean | ThreadsOptions;
+	/**
 	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
 	 * @since 5.107.0
 	 * @experimental
@@ -1446,6 +1452,12 @@ export interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	syncWebAssembly?: boolean;
+	/**
+	 * Run CPU-heavy passes, such as minimization, on worker threads webpack keeps for the whole compiler.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	threads?: false | ThreadsOptions;
 	/**
 	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
 	 * @since 5.107.0
@@ -5968,6 +5980,30 @@ export type Target =
 	| NonEmptyString;
 
 /**
+ * Options for running CPU-heavy passes on the worker threads webpack keeps for a compiler.
+ */
+export interface ThreadsOptions {
+	/**
+	 * Number of worker threads. Defaults to one less than the number of CPUs; `0` runs every pass that uses them on the main thread.
+	 */
+	max?: NonNegativeNumber;
+	/**
+	 * Which passes run on the worker threads.
+	 */
+	passes?: ThreadsPassesOptions;
+}
+
+/**
+ * Which passes run on the worker threads.
+ */
+export interface ThreadsPassesOptions {
+	/**
+	 * Minimize on the worker threads. `false` leaves the minimizer to its own pool, sized by its `parallel` option. Defaults to `true`.
+	 */
+	minimize?: boolean;
+}
+
+/**
  * Use a Trusted Types policy to create urls for chunks.
  */
 export interface TrustedTypes {
@@ -6265,6 +6301,7 @@ export interface WebpackOptionsNormalized {
 	 * Environment to build for. An array of environments to build for all of them when possible.
 	 */
 	target?: Target;
+
 	/**
 	 * Enable validation of webpack configuration. Defaults to true in development mode. In production mode, defaults to true unless futureDefaults is enabled, then defaults to false.
 	 */
@@ -6453,6 +6490,7 @@ export interface WebpackOptions {
 	 * Environment to build for. An array of environments to build for all of them when possible.
 	 */
 	target?: Target;
+
 	/**
 	 * Enable validation of webpack configuration. Defaults to true in development mode. In production mode, defaults to true unless futureDefaults is enabled, then defaults to false.
 	 */
