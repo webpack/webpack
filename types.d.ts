@@ -18478,6 +18478,11 @@ declare interface KnownExternalModuleBuildInfo {
 	 * true when emitting an ESM external (`output.module`)
 	 */
 	javascriptModule?: boolean;
+
+	/**
+	 * true when a node core module is read through `process.getBuiltinModule()`
+	 */
+	builtinGetter?: boolean;
 }
 declare interface KnownHooks {
 	/**
