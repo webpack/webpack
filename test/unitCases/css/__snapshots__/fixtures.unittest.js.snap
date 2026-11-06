@@ -106,6 +106,14 @@ exports[`CSS syntax — fixtures css-minify-export-a-caller-s-render-embedded-so
 
 exports[`CSS syntax — fixtures css-minify-export-a-caller-s-render-embedded-source-prints-what-it-answers-and prints {"mode":"minify"} 1`] = `".a{background:url(data:image/svg+xml,<svg></svg>)}.b{background:url(\\"data:text/css,a { color : red }\\")}"`;
 
+exports[`CSS syntax — fixtures css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies parses 1`] = `"[[\\"at-rule\\",\\"charset\\",[\\" \\",[\\"string\\",\\"utf-8\\"]],null],[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"url\\",[\\"string\\",\\"data:image/svg+xml,<svg>é</svg>\\"]]]]]"`;
+
+exports[`CSS syntax — fixtures css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies prints {"mode":"minify"} 1`] = `"a{background:url(data:image/svg+xml,<svg>é</svg>)}"`;
+
+exports[`CSS syntax — fixtures css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies-2 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"url\\",[\\"string\\",\\"data:image/svg+xml,<svg>x</svg>\\"]]]]]"`;
+
+exports[`CSS syntax — fixtures css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies-2 prints {"mode":"minify"} 1`] = `"a{background:url(data:image/svg+xml,<svg>x</svg>)}"`;
+
 exports[`CSS syntax — fixtures css-minify-export-extract-comments-hands-a-predicate-the-comment-s-text-line-and parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"b\\"]],[]]]"`;
 
 exports[`CSS syntax — fixtures css-minify-export-extract-comments-hands-a-predicate-the-comment-s-text-line-and prints {"mode":"minify"} 1`] = `"/*! a */"`;

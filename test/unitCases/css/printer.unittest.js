@@ -4464,4 +4464,21 @@ describe("CssSyntax minify — output that reads back as its source", () => {
 		expect(min(fixture("css", "css-syntax-minify-selector-list-keeps-a-part-starting-with-an-at-sign-in-place"))).toBe("b,@media screen{a{color:red}}");
 		expect(min(fixture("css", "css-syntax-minify-selector-list-keeps-a-part-starting-with-an-at-sign-in-place-2"))).toBe('z,@import "x";a{b:c}');
 	});
+
+	it("keeps `@charset` for a non-ASCII answer an asynchronous renderer gives", async () => {
+		const cssMinify = require("../../../lib/css/cssMinify");
+
+		const svg = await cssMinify({ "a.css": fixture("css", "css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies") }, undefined, { svg: true });
+		expect(svg.code).toBe('@charset "UTF-8";a{background:url(data:image/svg+xml,<svg>é</svg>)}');
+		const source = fixture("css", "css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies-2");
+		const answered = await cssMinify({ "a.css": source }, undefined, {
+			renderEmbeddedSource: async () => "<svg>é</svg>"
+		});
+		expect(answered.code).toBe('@charset "UTF-8";a{background:url(data:image/svg+xml,<svg>é</svg>)}');
+		// An ASCII answer still needs none.
+		const ascii = await cssMinify({ "a.css": source }, undefined, {
+			renderEmbeddedSource: async () => "<svg>y</svg>"
+		});
+		expect(ascii.code).toBe("a{background:url(data:image/svg+xml,<svg>y</svg>)}");
+	});
 });
