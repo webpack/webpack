@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  "The universal target can't load the Node.js built-in module \\"fs\\" on every platform: it is read with process.getBuiltinModule(), so it is false on Node.js without it.
+Set a Node.js version that has process.getBuiltinModule() in 'target' (20.16+ on 20.x, or 22.3+), e.g. [\\"node22.3\\", \\"web\\"].",
+  "The universal target can't load the Node.js built-in module \\"os\\" on every platform: it is read with process.getBuiltinModule(), so it is false on Node.js without it.
+Set a Node.js version that has process.getBuiltinModule() in 'target' (20.16+ on 20.x, or 22.3+), e.g. [\\"node22.3\\", \\"web\\"].",
+  "The universal target can't load the Node.js built-in module \\"path\\" on every platform: it is read with process.getBuiltinModule(), so it is false on Node.js without it.
+Set a Node.js version that has process.getBuiltinModule() in 'target' (20.16+ on 20.x, or 22.3+), e.g. [\\"node22.3\\", \\"web\\"].",
+]
+`;
