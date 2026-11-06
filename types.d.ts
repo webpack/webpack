@@ -30577,7 +30577,7 @@ declare abstract class RuntimeTemplate {
 
 	/**
 	 * Reads a node builtin via `process.getBuiltinModule()`, guarded to stay falsy off node so universal `["node", "web"]` bundles don't crash (also falsy on node <22.3).
-	 * The `process` guard is dropped on a node platform, the `typeof` check where the target has the getter.
+	 * Both guards are dropped only on a node platform with the getter; off it a browser `process` shim may lack the getter.
 	 */
 	getBuiltinModule(request: string, access?: string): string;
 

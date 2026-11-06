@@ -34,12 +34,7 @@ it("should not statically import or set up `createRequire` (would crash in brows
 	expect(header).not.toContain("createRequire");
 });
 
-it("should resolve the builtin getter based on node support", () => {
-	if (__STATS_I__ === 0) {
-		// node version known to expose `process.getBuiltinModule()` -> call it directly
-		expect(source).toContain(external(processGuard));
-	} else {
-		// unknown/old node -> `typeof`-guarded getter (no `require`; falsy on node <22.3)
-		expect(source).toContain(external(processGuard + getterGuard));
-	}
+it("should keep both getter guards on a universal target", () => {
+	// even with the getter known, a browser `process` shim may lack it
+	expect(source).toContain(external(processGuard + getterGuard));
 });

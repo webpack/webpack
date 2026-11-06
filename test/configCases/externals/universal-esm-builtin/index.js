@@ -29,3 +29,22 @@ it("should statically import the builtin only when the getter is unknown", () =>
 		expect(header).toMatch(staticImport);
 	}
 });
+
+it("should yield false against a browser `process` shim without the getter", () => {
+	if (isBrowser || __STATS_I__ !== 0) return;
+	const source = readFileSync(
+		require("path").join(
+			__STATS__.children[__STATS_I__].outputPath,
+			`bundle${__STATS_I__}.mjs`
+		),
+		"utf-8"
+	);
+	const line = source
+		.split("\n")
+		.find((l) => l.includes(`${"getBuiltinModule"}("node:fs")`) && l.includes("="));
+	const expression = line.slice(line.indexOf("=") + 1).replace(/;\s*$/, "");
+	// eslint-disable-next-line no-new-func
+	const evaluate = new Function("process", `return ${expression};`);
+	expect(evaluate({ env: {} })).toBe(false);
+	expect(evaluate(process)).toBe(require("fs"));
+});
