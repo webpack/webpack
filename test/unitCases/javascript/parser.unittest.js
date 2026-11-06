@@ -6196,22 +6196,41 @@ describe("parseProgram", () => {
 		expect(typeof parseProgram("import defer * as d from 'e';")).toBe("number");
 	});
 
-	it("reads every grammar option into the tree as the ESTree parse does", () => {
-		/** @type {[import("../../../lib/javascript/syntax-parser").JavascriptParseOptions, string][]} */
+	it("reads every grammar option into the tree as acorn reads it", () => {
+		/** @type {[string, "script" | "module", Record<string, unknown>, Record<string, unknown>][]} */
 		const cases = [
-			[{ sourceType: "script", strict: true }, "with (a) {}"],
-			[{ sourceType: "script", allowReserved: "never" }, "a.class"],
-			[{ sourceType: "script", allowReserved: false }, "var enum = 1"],
-			[{ sourceType: "script", allowHashBang: false }, "#!x\n1"],
-			[{ sourceType: "module", allowImportExportEverywhere: true }, "{ import a from 'a' }"],
-			[{ sourceType: "module", allowAwaitOutsideFunction: false }, "await a"],
-			[{ sourceType: "script", allowSuperOutsideMethod: true }, "super.a"],
-			[{ sourceType: "script", checkPrivateFields: false }, "class A { m() { this.#x } }"],
-			[{ sourceType: "script", preserveParens: true }, "(a)"]
+			["with (a) {}", "script", { strict: true }, { strict: false }],
+			["a.class", "script", { allowReserved: "never" }, { allowReserved: true }],
+			["var enum = 1", "script", { allowReserved: false }, { allowReserved: true }],
+			["#!x\n1", "script", { allowHashBang: false }, { allowHashBang: true }],
+			[
+				"{ import a from 'a' }",
+				"module",
+				{ allowImportExportEverywhere: true },
+				{ allowImportExportEverywhere: false }
+			],
+			[
+				"await a",
+				"script",
+				{ allowAwaitOutsideFunction: true },
+				{ allowAwaitOutsideFunction: false }
+			],
+			[
+				"super.a",
+				"script",
+				{ allowSuperOutsideMethod: true },
+				{ allowSuperOutsideMethod: false }
+			],
+			[
+				"class A { m() { this.#x } }",
+				"script",
+				{ checkPrivateFields: false },
+				{ checkPrivateFields: true }
+			]
 		];
 		/**
 		 * @param {() => unknown} parse the parse
-		 * @returns {string} its outcome: the error, or the program's node count
+		 * @returns {string} its outcome: `ok`, or the error it throws
 		 */
 		const outcome = (parse) => {
 			try {
@@ -6221,13 +6240,23 @@ describe("parseProgram", () => {
 				return /** @type {Error} */ (error).message;
 			}
 		};
-		for (const [options, code] of cases) {
-			const estree = outcome(() =>
-				parseProgram(code, 0, { ...options, estree: true })
-			);
-			expect([options, outcome(() => parseProgram(code, 0, options))]).toEqual([
-				options,
-				estree
+		for (const [code, sourceType, on, off] of cases) {
+			const results = [on, off].map((options) => [
+				outcome(() => parseProgram(code, 0, { sourceType, ...options })),
+				outcome(() =>
+					acorn.parse(code, {
+						ecmaVersion: "latest",
+						sourceType,
+						.../** @type {import("acorn").Options} */ (options)
+					})
+				)
+			]);
+			// each case is one the option decides, and the tree reads it as acorn
+			expect([code, results[0][1] === results[1][1]]).toEqual([code, false]);
+			expect([code, results[0][0], results[1][0]]).toEqual([
+				code,
+				results[0][1],
+				results[1][1]
 			]);
 		}
 		const tree = parseProgram("(a)", 0, {
@@ -6241,32 +6270,31 @@ describe("parseProgram", () => {
 
 	it("reports tokens and the parse's events into the tree as acorn does", () => {
 		const code = "/* c */ a + b\nc = [1,]; /x/g";
-		/**
-		 * @param {boolean} estree whether to build ESTree objects
-		 * @returns {unknown[]} what each callback saw
-		 */
-		const report = (estree) => {
-			/** @type {import("../../../lib/javascript/syntax-parser").Token[]} */
-			const tokens = [];
-			/** @type {unknown[]} */
-			const events = [];
-			parseProgram(code, 0, {
-				sourceType: "script",
-				estree,
-				onToken: tokens,
-				onTokenRead: (parser) => events.push(["read", parser.start]),
-				onComment: (block, text, start) => events.push(["comment", text, start]),
-				onInsertedSemicolon: (end) => events.push(["semicolon", end]),
-				onTrailingComma: (end) => events.push(["comma", end])
-			});
-			return [
-				tokens.map((token) => [token.type.label, token.start, token.end]),
-				events
-			];
+		/** @type {unknown[]} */
+		const tokens = [];
+		/** @type {unknown[]} */
+		const events = [];
+		let read = 0;
+		/** @type {import("acorn").Options} */
+		const callbacks = {
+			ecmaVersion: "latest",
+			onToken: (token) => tokens.push([token.type.label, token.start, token.end]),
+			onComment: (block, text, start) => events.push(["comment", text, start]),
+			onInsertedSemicolon: (end) => events.push(["semicolon", end]),
+			onTrailingComma: (end) => events.push(["comma", end])
 		};
-		const tree = report(false);
-		expect(/** @type {unknown[]} */ (tree[0]).length).toBeGreaterThan(0);
-		expect(tree).toEqual(report(true));
+		parseProgram(code, 0, {
+			.../** @type {import("../../../lib/javascript/syntax-parser").JavascriptParseOptions} */ (
+				/** @type {unknown} */ (callbacks)
+			),
+			sourceType: "script",
+			onTokenRead: () => read++
+		});
+		const tree = [tokens.splice(0), events.splice(0)];
+		acorn.parse(code, { ...callbacks, sourceType: "script" });
+		expect(tokens.length).toBeGreaterThan(0);
+		expect(tree).toEqual([tokens, events]);
+		expect(read).toBe(tokens.length);
 	});
 
 	it("collects comments and reports them to `onComment` in one parse", () => {
