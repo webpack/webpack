@@ -1,5 +1,6 @@
 @value quotedUrl: url("./img/shape.png");
 @value bareUrl: url(./img/shape.png);
+@value spacedUrl: url( ./img/shape.png	);
 @value escapedUrl: url(./img/sh\61 pe.png);
 @value badUrl: url(./img/sh\
 ape.png);
@@ -23,4 +24,8 @@ ape.png);
 
 .uses-not-one-url {
 	background-image: notOneUrl;
+}
+
+.uses-spaced-url {
+	background-image: spacedUrl;
 }
