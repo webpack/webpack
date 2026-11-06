@@ -5,7 +5,7 @@ const page = require("./page.html");
 
 const pageContent = typeof page === "string" ? page : "";
 
-const tags = pageContent.match(/<script[^>]*><\/script>/g) || [];
+const tags = pageContent.match(/<script[^>]*><\/script[^>]*>/g) || [];
 
 const readTag = (tag) =>
 	fs.readFileSync(
