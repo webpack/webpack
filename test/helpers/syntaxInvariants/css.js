@@ -1045,12 +1045,6 @@ const EXPECTED = [
 	},
 	{
 		relation: "idempotence",
-		contains: "-> :1px 2px 3px 4px}",
-		source: "joins-rules-under-one-selector",
-		why: "the four longhands meet only once their rules are joined, after the longhand merge ran, so the second pass merges them; meaning unchanged"
-	},
-	{
-		relation: "idempotence",
 		contains: "-moz-placeholder",
 		source: "a-prefixed-twin-taken-back-drops",
 		why: "lowered nesting writes the `-moz-` copies after the twins were compared, so a second pass drops the copies a later twin covers"

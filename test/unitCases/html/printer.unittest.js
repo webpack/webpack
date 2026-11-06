@@ -3573,6 +3573,29 @@ describe("htmlMinify — assets webpack only passes through", () => {
 			).toBe("<!--[if IE]><p class=a>a</p><![endif]--><span>b</span>");
 		});
 
+		it.each([
+			[
+				"a block moved out of a table before the comment the table holds",
+				'<table><!--[if IE]><b  class="x">1</b><![endif]--><div><!--[if IE]><i  class="y">2</i><![endif]--></div><tr><td title="t">c</td></tr></table><p title="x">kept</p>',
+				"<div><!--[if IE]><i class=y>2</i><![endif]--></div><table><!--[if IE]><b class=x>1</b><![endif]--><tr><td title=t>c</table><p title=x>kept"
+			],
+			[
+				"a comment after `</body>` with body content following it",
+				'<body><p>a</p></body><!--[if IE]><b  class="x">1</b><![endif]--><p><!--[if IE]><i  class="y">2</i><![endif]--></p><p title="x">kept</p>',
+				"<body><p>a<p><!--[if IE]><i class=y>2</i><![endif]--><p title=x>kept</body><!--[if IE]><b class=x>1</b><![endif]-->"
+			],
+			[
+				"an option `<selectedcontent>` copies",
+				'<select><button><selectedcontent></selectedcontent></button><option selected><!--[if IE]><b  class="x">1</b><![endif]--></option></select><p title="x">kept</p>',
+				"<select><button><selectedcontent></selectedcontent></button><option selected><!--[if IE]><b class=x>1</b><![endif]--></select><p title=x>kept"
+			]
+		])("minifies each body in place for %s", async (_, page, expected) => {
+			const code = await conditional(page);
+
+			expect(code).toBe(expected);
+			expect(code).toContain("<p title=x>kept");
+		});
+
 		it("leaves a comment that only starts like one, and a plain one, to the document", async () => {
 			expect(
 				await conditional("<p>a</p><!--[if IE]> no end --><!-- plain -->")
@@ -4274,6 +4297,60 @@ describe("SourceProcessor — print modes", () => {
 				print(source, "minify")
 			);
 		}
+	});
+});
+
+describe("SourceProcessor — the leading newline of `<pre>`", () => {
+	const { SourceProcessor } = require("../../../lib/html/syntax");
+
+	it.each([
+		["minify", "<pre>\n\nkeep</pre>", "<pre>\n\nkeep</pre>"],
+		["beautify", "<pre>\n\nkeep</pre>", "<pre>\n\nkeep</pre>"],
+		["minify", "<textarea>\n\nx</textarea>", "<textarea>\n\nx</textarea>"],
+		["minify", "<listing>\n\nx</listing>", "<listing>\n\nx</listing>"],
+		// The dropped comment leaves the text first, so its newline is doubled.
+		["minify", "<pre><!-- c -->\nx</pre>", "<pre>\n\nx</pre>"],
+		["beautify", "<pre><!-- c -->\nx</pre>", "<pre><!-- c -->\nx</pre>"],
+		["minify", "<pre><b>\nx</b></pre>", "<pre><b>\nx</b></pre>"],
+		["minify", "<pre><b></b>\nx</pre>", "<pre><b></b>\nx</pre>"],
+		["minify", "<pre>\n<pre>\n\nx</pre></pre>", "<pre><pre>\n\nx</pre></pre>"],
+		[
+			"minify",
+			"<pre><table>\nx<td>y</table></pre>",
+			"<pre>\n\nx<table><td>y</table></pre>"
+		]
+	])("in %s mode prints %j as %j", (mode, source, expected) => {
+		const { code } = new SourceProcessor().process(source, {
+			mode: /** @type {"minify" | "beautify"} */ (mode)
+		});
+		expect(code).toBe(expected);
+	});
+
+	// Run in a heap far smaller than a copy of every subtree would take, which a
+	// per-element read of the composed children's first character used to make.
+	it.each([
+		["<pre>", "<pre>", "</pre>"],
+		["<svg> under a renderer", "<svg><g>", "</g></svg>"]
+	])("prints %s nested 20000 deep in a small heap", (_, open, close) => {
+		const script = `
+			const { SourceProcessor } = require(${JSON.stringify(
+				require.resolve("../../../lib/html/syntax")
+			)});
+			const source = ${JSON.stringify(open)}.repeat(20000) + "x" +
+				${JSON.stringify(close)}.repeat(20000);
+			const { code } = new SourceProcessor().process(source, {
+				mode: "minify",
+				renderEmbeddedSource: () => undefined
+			});
+			process.stdout.write(String(code === source));
+		`;
+		expect(
+			execFileSync(
+				process.execPath,
+				["--max-old-space-size=128", "-e", script],
+				{ encoding: "utf8", stdio: "pipe" }
+			)
+		).toBe("true");
 	});
 });
 
