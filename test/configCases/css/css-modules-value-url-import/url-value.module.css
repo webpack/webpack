@@ -1,0 +1,10 @@
+@value quotedUrl: url("./img/shape.png");
+@value bareUrl: url(./img/shape.png);
+
+.uses-quoted-url {
+	background-image: quotedUrl;
+}
+
+.uses-bare-url {
+	background-image: bareUrl;
+}

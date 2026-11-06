@@ -1,5 +1,6 @@
 import * as style from "./style.module.css";
 import * as importedViaValue from "./imported-via-value.module.css";
+import * as urlValue from "./url-value.module.css";
 
 const fs = __non_webpack_require__("fs");
 const path = __non_webpack_require__("path");
@@ -60,4 +61,22 @@ it("should warn (and not crash) when an imported @value is used as @import URL o
 	// the build emits warnings (asserted via warnings.js) but the rest of the
 	// module still parses successfully and exports its classes.
 	expect(importedViaValue["uses-external-bg"]).toMatch(/uses-external-bg$/);
+});
+
+it("should resolve a @value that is a url() where it is used", () => {
+	const cssContent = fs.readFileSync(
+		path.join(__dirname, "bundle0.css"),
+		"utf-8"
+	);
+	const rules = cssContent.slice(cssContent.indexOf("url-value.module.css"));
+	for (const name of ["uses-quoted-url", "uses-bare-url"]) {
+		const match = new RegExp(
+			`(?:^|\\n)\\.${urlValue[name]} \\{\\n\\tbackground-image: url\\(([^)]+)\\);`
+		).exec(rules);
+		expect(match).not.toBeNull();
+		expect(match[1]).toMatch(/^[0-9a-f]+\.png$/);
+	}
+	expect(rules).not.toContain("shape.png");
+	// Nothing of the removed `@value` rules is left before the first rule.
+	expect(rules).not.toMatch(/^\s*(?:url\()?[0-9a-f]+\.png\)?\s*$/m);
 });
