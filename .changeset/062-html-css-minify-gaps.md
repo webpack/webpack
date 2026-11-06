@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Minify a newline and an `&` that starts no reference in an HTML attribute value to their shorter literal spelling.
+Minify HTML and CSS on the first pass to what a second pass would print: shorter attribute newlines, `&` and escape terminators, sorted rebuilt tags, joined `<style>` runs and settled `<html>` and `<body>` tags.
