@@ -1014,6 +1014,101 @@ describe("SourceProcessor — an enumerated value naming no keyword", () => {
 	});
 });
 
+describe("SourceProcessor — removeRedundantAttributes and script charset", () => {
+	const { SourceProcessor } = require("../../../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, {
+			mode: "minify",
+			removeRedundantAttributes: "smart"
+		}).code;
+
+	const SCRIPT = '<script charset="utf-8" src="a.js"></script>';
+
+	it("drops it on a page that declares UTF-8", () => {
+		for (const head of [
+			'<meta charset="utf-8">',
+			"<meta charset=UTF8>",
+			'<meta http-equiv="Content-Type" content="text/html; charset=utf-8">',
+			'<meta charset="&#85;TF-8">',
+			"<meta charset='utf-8'>",
+			'<meta itemprop charset="utf-8" charset="gbk">',
+			'<meta http-equiv="content-type" content="text/html"><meta charset="utf-8">',
+			"<meta http-equiv='Content-Type' content='text/html; charset=utf-8' content='x'>",
+			'<meta name="a>b" charset="utf-8">',
+			'<?x <meta charset=gbk>?><p a="1">x</p> a < b <meta charset="utf-8">',
+			'<meta http-equiv="content-type" http-equiv="x" content="text/html; charset=utf-8">'
+		]) {
+			expect(
+				minify(`<!doctype html><head>${head}<title>t</title>${SCRIPT}`)
+			).toContain("<script src=a.js></script>");
+		}
+		expect(minify(`\uFEFF<!doctype html><title>t</title>${SCRIPT}`)).toContain(
+			"<script src=a.js></script>"
+		);
+		// The limit is in bytes: 400 `é` and 200 emoji are 800 bytes each, so
+		// both leave the `<meta>` inside it.
+		for (const title of ["é".repeat(400), "\u{1F600}".repeat(200)]) {
+			expect(
+				minify(
+					`<!doctype html><title>${title}</title><meta charset="utf-8">${SCRIPT}`
+				)
+			).toContain("<script src=a.js></script>");
+		}
+	});
+
+	it("keeps it where the encoding of the page is not declared as UTF-8", () => {
+		for (const html of [
+			`<!doctype html><title>t</title>${SCRIPT}`,
+			`<!doctype html><head><meta charset="gbk"><title>t</title>${SCRIPT}`,
+			`<!doctype html><head><meta charset="gbk"><meta charset="utf-8"><title>t</title>${SCRIPT}`,
+			`<!doctype html><head><meta name="x" content="charset=utf-8"><title>t</title>${SCRIPT}`,
+			`<!doctype html><head><meta http-equiv="refresh" content="0; charset=utf-8"><title>t</title>${SCRIPT}`,
+			`<!doctype html><head><meta name="x" content="<meta charset=utf-8>"><title>t</title>${SCRIPT}`,
+			`<!doctype html><div title="<meta charset=utf-8>"></div><title>t</title>${SCRIPT}`,
+			`<!doctype html><div title='x' data-a="<meta charset=utf-8>"><title>t</title>${SCRIPT}`,
+			`<!doctype html><head><meta http-equiv="x" http-equiv="content-type" content="text/html; charset=utf-8"><title>t</title>${SCRIPT}`,
+			`<!doctype html><!-- <meta charset="utf-8"> --><title>t</title>${SCRIPT}`,
+			`<!doctype html><title>t</title><style>${"a{}".repeat(400)}</style><meta charset="utf-8">${SCRIPT}`,
+			`<!doctype html><title>${"价".repeat(400)}</title><meta charset="utf-8">${SCRIPT}`,
+			SCRIPT
+		]) {
+			expect(minify(html)).toContain(
+				'<script charset=utf-8 src=a.js></script>'
+			);
+		}
+	});
+
+	it("reads nothing past a tag, comment or declaration left open", () => {
+		const { declaresUtf8 } = require("../../../lib/html/syntax-parser");
+
+		for (const html of [
+			'<div title="<meta charset=utf-8>',
+			"<!-- <meta charset=utf-8>",
+			"<!doctype <meta charset=utf-8>",
+			"<?x <meta charset=utf-8>",
+			"<?x <meta charset=utf-8",
+			'</div x="><meta charset=utf-8>'
+		]) {
+			expect(declaresUtf8(html)).toBe(false);
+		}
+		expect(declaresUtf8('<!-->x<meta charset="utf-8">')).toBe(true);
+		expect(declaresUtf8('</ x><meta charset="utf-8">')).toBe(true);
+	});
+
+	it("keeps a charset naming another encoding", () => {
+		expect(
+			minify(
+				'<!doctype html><meta charset="utf-8"><script charset="gbk" src="a.js"></script>'
+			)
+		).toContain("<script charset=gbk src=a.js></script>");
+	});
+});
+
 describe("SourceProcessor — removeImpliedTags", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 

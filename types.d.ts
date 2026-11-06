@@ -24600,7 +24600,7 @@ declare interface OptimizationMinimizeHtml {
 	removeOptionalTags?: boolean;
 
 	/**
-	 * Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one `getAttribute` and every attribute selector read differently, whichever tier dropped it. `true` (or `"smart"`) drops only markers on elements that render nothing — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>`, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — so no rule that styles the page stops applying, which is what `@swc/html` does by default. `"all"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.
+	 * Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one `getAttribute` and every attribute selector read differently, whichever tier dropped it. `true` (or `"smart"`) drops only markers on elements that render nothing — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>` on a page that declares UTF-8, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — so no rule that styles the page stops applying, which is what `@swc/html` does by default. `"all"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.
 	 * @since 5.110.0
 	 */
 	removeRedundantAttributes?: boolean | "all" | "smart";
@@ -39595,6 +39595,7 @@ declare namespace exports {
 					export let attributes: 1;
 					export let content: 2;
 				}
+				export let declaresUtf8: (input: string) => boolean;
 				export namespace Flag {
 					export let mathml: 1;
 					export let svg: 2;
