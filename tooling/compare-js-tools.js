@@ -912,7 +912,7 @@ const EXPECTED = [
 	},
 	{
 		relation: "idempotence",
-		contains: "+(1)",
+		contains: "(1)}",
 		source:
 			"test/configCases/concatenate-modules/top-level-declarations-library-conflict/module.js",
 		presets: ["default"],
