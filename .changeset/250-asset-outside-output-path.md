@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-With `experiments.futureDefaults`, report assets named outside `output.path`.
+With `futureDefaults`, skip assets outside `output.path`; keep `#` in copies.
