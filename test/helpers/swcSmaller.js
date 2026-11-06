@@ -38,17 +38,14 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/10054/for/input.js",
 			"swc minifier: fixture/issues/10054/if/input.js",
 			"swc minifier: fixture/issues/10178/input.js",
-			"swc minifier: fixture/issues/10250/input.js",
 			"swc minifier: fixture/issues/10328/input.js",
 			"swc minifier: fixture/issues/10425/input.js",
-			"swc minifier: fixture/issues/10466/input.js",
 			"swc minifier: fixture/issues/10473/input.js",
 			"swc minifier: fixture/issues/10630/input.js",
 			"swc minifier: fixture/issues/10721/input.js",
 			"swc minifier: fixture/issues/10746/input.js",
 			"swc minifier: fixture/issues/10816/input.js",
 			"swc minifier: fixture/issues/10849/input.js",
-			"swc minifier: fixture/issues/10859/input.js",
 			"swc minifier: fixture/issues/10981/input.js",
 			"swc minifier: fixture/issues/10986/input.js",
 			"swc minifier: fixture/issues/11007/input.js",
@@ -188,7 +185,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/8806/input.js",
 			"swc minifier: fixture/issues/8841/input.js",
 			"swc minifier: fixture/issues/8844/input.js",
-			"swc minifier: fixture/issues/8886/input.js",
 			"swc minifier: fixture/issues/8919/input.js",
 			"swc minifier: fixture/issues/8924/input.js",
 			"swc minifier: fixture/issues/8953/input.js",
@@ -369,8 +365,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: functions/issue_1841_2",
 			"terser compress: functions/issue_2620_1",
 			"terser compress: functions/issue_2620_4",
-			"terser compress: functions/issue_2647_2",
-			"terser compress: functions/issue_2647_3",
 			"terser compress: functions/issue_2842",
 			"terser compress: harmony/issue_2794_4",
 			"terser compress: identity/inline_identity_dont_lose_this_when_arg",
@@ -416,7 +410,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: sequences/iife",
 			"terser compress: sequences/unsafe_undefined",
 			"terser compress: switch/if_else7",
-			"terser compress: template-string/sequence_1",
 			"terser compress: transform/if_else_empty",
 			"terser compress: try-catch/catch_destructuring_with_sequence",
 			"terser compress: typeof/issue_2728_4"
@@ -434,7 +427,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: conditionals/cond_7_1",
 			"terser compress: conditionals/ifs_3_should_warn",
 			"terser compress: const/issue_1396",
-			"terser compress: evaluate/or",
 			"terser compress: harmony/shorthand_keywords",
 			"terser compress: issue-1704/mangle_catch_redef_3",
 			"terser compress: loops/issue_186_beautify_braces",
@@ -445,33 +437,26 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: destructuring/issue_t111_1",
 			"terser compress: destructuring/issue_t111_3",
 			"terser compress: evaluate/pow_with_number_constants",
-			"terser compress: evaluate/unsafe_constant",
 			"terser compress: evaluate/issue_1760_1",
 			"terser compress: evaluate/issue_1760_2",
 			"terser compress: functions/issue_2476",
 			"terser compress: global_defs/mixed",
-			"terser compress: issue-597/beautify_off_2",
-			"terser compress: issue-597/beautify_on_2",
 			"terser compress: loops/keep_collapse_const_in_own_block_scope_2",
-			"terser compress: new/new_with_rewritten_true_value",
 			"terser compress: reduce_vars/escaped_prop_3",
 			"terser compress: reduce_vars/issue_2450_5",
 			"terser compress: reduce_vars/issue_2496",
 			"terser compress: reduce_vars/escape_yield",
-			"terser compress: reduce_vars/issue_2669",
 			"swc minifier: fixture/issues/10938/input.js",
 			"swc minifier: fixture/issues/12182/callee-safety/nested-values/input.js",
 			"swc minifier: fixture/issues/12195/nested-spread/input.js",
 			"swc minifier: fixture/issues/12195/spread/input.js",
 			"swc minifier: fixture/issues/12565/while_body/input.js",
-			"swc minifier: fixture/issues/5684/input.js",
 			"swc minifier: fixture/issues/7591/input.js",
 			"swc minifier: fixture/issues/8228/input.js",
 			"swc minifier: fixture/issues/8923/input.js",
 			"swc minifier: fixture/issues/drop-console-value-refs/input.js",
 			"swc minifier: fixture/issues/unused-let-initialization/input.js",
 			"swc minifier: fixture/next/react-pdf-renderer/input.js",
-			"swc minifier: fixture/projects/angular/1/input.js",
 			"swc minifier: fixture/projects/underscore/18/input.js",
 			"swc minifier: full/size/40a586d8ac72ba5686c4b250184acfa11620d814/input.js",
 			"swc minifier: pass-1/issue-6123/1/input.js",
@@ -518,7 +503,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/2044/full/input.js",
 			"swc minifier: fixture/issues/5588/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/side-effects/input.js",
-			"swc minifier: fixture/next/41527/1/input.js",
 			"swc minifier: fixture/projects/mootools/.11/input.js",
 			"swc minifier: fixture/terser/issue-2535-2/2-1/input.js",
 			"swc minifier: fixture/terser/issue-2535-2/3-1/input.js",
@@ -527,15 +511,12 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/react/hooks/1/input.js",
 			"swc minifier: fixture/projects/jquery/20/input.js",
 			"swc minifier: fixture/terser/issue-2435-1/2/input.js",
-			"swc minifier: fixture/terser/issue-2535-2/1/input.js",
-			"swc minifier: fixture/terser/issue-2535-2/4/input.js"
+			"swc minifier: fixture/terser/issue-2535-2/1/input.js"
 		]
 	],
 	[
 		"swc goes further than webpack on what terser's `reduce_vars` tests cover",
 		[
-			"terser compress: reduce_vars/defun_inline_1",
-			"terser compress: reduce_vars/defun_inline_3",
 			"terser compress: reduce_vars/defun_call",
 			"terser compress: reduce_vars/issue_1670_6",
 			"terser compress: reduce_vars/redefine_arguments_2",
@@ -625,7 +606,6 @@ const SWC_SMALLER_BY_REASON = [
 		"swc goes further than webpack on what terser's `switch` tests cover",
 		[
 			"terser compress: switch/constant_switch_5",
-			"terser compress: switch/constant_switch_6",
 			"terser compress: switch/issue_1663",
 			"terser compress: switch/if_else5",
 			"terser compress: switch/if_else6",
@@ -685,6 +665,7 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"deflate's header: the program is no longer raw, yet gzips 1 to 3 bytes bigger, as the Huffman codes deflate writes for a small program cost more or less with which characters it holds (an operand's side, `let` or `const`, `NaN` or `0/0`); measured corpus-wide, no fixed spelling rule wins, each one making about as many programs bigger as smaller",
 		[
+			"terser compress: issue-368/collapse",
 			"terser compress: issue-1833/iife_do",
 			"swc minifier: fixture/issues/9238/input.js",
 			"swc minifier: fixture/issues/9460/strict-mode/input.js",
@@ -732,7 +713,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: drop-unused/unused_circular_references_1",
 			"terser compress: drop-unused/drop_fargs",
 			"terser compress: drop-unused/iife",
-			"terser compress: drop-unused/assign_binding",
 			"terser compress: drop-unused/issue_1656",
 			"terser compress: drop-unused/issue_1709",
 			"terser compress: drop-unused/issue_2136_2",
@@ -788,12 +768,10 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/chakra/input.js",
 			"swc minifier: fixture/next/feedback-1/reduced/1/input.js",
 			"swc minifier: fixture/next/feedback-3/579-dcac359116b2707c/input.js",
-			"swc minifier: fixture/next/feedback-util-promisify/chunks/pages/_app-72ad41192608e93a/input.js",
 			"swc minifier: fixture/next/joda/input.js",
 			"swc minifier: fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js",
 			"swc minifier: fixture/next/styled-components/1/input.js",
 			"swc minifier: fixture/next/swc-4559/input.js",
-			"swc minifier: fixture/next/syncfusion/933-e9f9a6bf671b96fc/input.js",
 			"swc minifier: fixture/next/target-es2015/static/chunks/main-04b5934c26266542/input.js"
 		]
 	],
@@ -814,8 +792,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: evaluate/array_slice_index",
 			"terser compress: evaluate/string_charCodeAt",
 			"terser compress: evaluate/issue_2231_3",
-			"terser compress: evaluate/issue_2535_2",
-			"terser compress: evaluate/issue_2535_3",
 			"terser compress: evaluate/string_case",
 			"terser compress: evaluate/issue_2919",
 			"terser compress: evaluate/issue_2926_2"
@@ -902,7 +878,6 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: loops/drop_if_break_4",
 			"terser compress: loops/drop_if_else_break_4",
-			"terser compress: loops/evaluate",
 			"terser compress: loops/issue_1648",
 			"terser compress: loops/issue_2740_1",
 			"terser compress: loops/issue_2740_2"
@@ -926,7 +901,6 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"swc minifier: pass-1/1/input.js",
 			"swc minifier: pass-1/3/input.js",
-			"swc minifier: pass-1/6/input.js",
 			"swc minifier: pass-1/7/input.js",
 			"swc minifier: pass-1/8/input.js",
 			"swc minifier: pass-1/9/1/input.js",
@@ -940,13 +914,10 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"swc minifier: fixture/issues/2926/1/input.js",
 			"swc minifier: fixture/projects/mootools/8/input.js",
-			"terser compress: collapse_vars/boolean_binary_1",
-			"terser compress: collapse_vars/boolean_binary_2",
 			"terser compress: issue-1673/side_effects_else",
 			"terser compress: issue-640/cond_5",
 			"terser compress: issue-640/conditional",
-			"terser compress: reduce_vars/cond_assign",
-			"terser compress: reduce_vars/issue_2774"
+			"terser compress: reduce_vars/cond_assign"
 		]
 	],
 	[
@@ -1002,11 +973,11 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `object` tests cover",
 		[
+			"terser compress: object/prop_arrows_to_concise_method_various",
 			"terser compress: object/convert_computed_props_to_regular_ones",
 			"terser compress: object/computed_property_names_side_effects",
 			"terser compress: object/prop_arrow_to_concise_method",
 			"terser compress: object/concise_method_to_prop_arrow",
-			"terser compress: object/prop_arrows_to_concise_method_various",
 			"terser compress: object/issue_2554_1",
 			"terser compress: object/issue_2554_2",
 			"terser compress: object/issue_2554_3"
@@ -1027,11 +998,8 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `dead-code` tests cover",
 		[
-			"terser compress: dead-code/dead_code_block_decls_die",
-			"terser compress: dead-code/try_catch_finally",
-			"terser compress: dead-code/issue_2383_1",
-			"terser compress: dead-code/issue_2383_2",
 			"terser compress: dead-code/issue_2383_3",
+			"terser compress: dead-code/try_catch_finally",
 			"terser compress: dead-code/collapse_vars_assignment",
 			"terser compress: dead-code/throw_assignment"
 		]
@@ -1175,8 +1143,7 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: properties/evaluate_array_length",
 			"terser compress: properties/evaluate_string_length",
-			"terser compress: properties/lhs_prop_2",
-			"terser compress: properties/array_hole"
+			"terser compress: properties/lhs_prop_2"
 		]
 	],
 	[
@@ -1278,10 +1245,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc goes further than webpack on what terser's `if_return` tests cover",
-		[
-			"terser compress: if_return/if_return_6",
-			"terser compress: if_return/issue_1089"
-		]
+		["terser compress: if_return/if_return_6"]
 	],
 	[
 		"swc goes further than webpack on what terser's `issue-1639` tests cover",
