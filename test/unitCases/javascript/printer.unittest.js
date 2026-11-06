@@ -1674,7 +1674,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["a instanceof b===false;delete x!=true;x=(a instanceof b)===false", {}, "a instanceof b,delete x,x=!(a instanceof b);"],
 			["f((a&2)==0);f(0===(a&4));f((a&4)!=0);(a&2)==0,g();x=2+((a&2)==0);x=[(a^2)==0]", {}, "f(!(a&2)),f(!(a&4)),f((a&4)!=0),a&2,g(),x=2+((a&2)==0),x=[!(a^2)];"],
 			// A `return` of what is `undefined` anyway ending a function prints what it runs, but not nested, after an `if` or as an arrow's body.
-			["function f(){return void foo()}function g(){b;return a,void 0}function h(){if(x)return void g();else k()}function i(){return void function(){g()}()}function j(){return void {a:g()}.a}function k(){if(x)return void g();return void h()}function l(){return g(),void 0}f=()=>{return void g()};f=()=>{h();return void g()};class C{m(){return void g()}}", { mangle: false }, "function f(){foo()}function g(){b,a}function h(){if(x)return void g();k()}function i(){(function(){g()}())}function j(){({a:g()}.a)}function k(){return x?void g():void h()}function l(){g()}f=()=>void g(),f=()=>(h(),void g());class C{m(){g()}}"],
+			["function f(){return void foo()}function g(){b;return a,void 0}function h(){if(x)return void g();else k()}function i(){return void function(){g()}()}function j(){return void {a:g()}.a}function k(){if(x)return void g();return void h()}function l(){return g(),void 0}f=()=>{return void g()};f=()=>{h();return void g()};class C{m(){return void g()}}", { mangle: false }, "function f(){foo()}function g(){b,a}function h(){if(x)return void g();k()}function i(){g()}function j(){({a:g()}.a)}function k(){return x?void g():void h()}function l(){g()}f=()=>void g(),f=()=>(h(),void g());class C{m(){g()}}"],
 			// A test or branch `?:` parenthesized keeps its parentheses as an operand of `&&` or `||`.
 			["x=f?!1:(g(),!0);x=f?(g(),v):!0;x=(f=a===b)?!1:v;x=(f=a===b)?v:!0;x=(f?l:r)?!1:v;x=(a,b)?!1:(c,d)", {}, "x=!f&&(g(),!0),x=!f||(g(),v),x=!(f=a===b)&&v,x=!(f=a===b)||v,x=!(f?l:r)&&v,x=!(a,b)&&(c,d);"],
 			// `x!=null?x:y` is `x??y` where `y` stands bare after `??`, and `x!=null?x.y:void 0` is `x?.y`, wherever read.
@@ -1875,7 +1875,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["new Promise(function(){g()});new Proxy(1,{});new WeakRef(1);new Iterator;new AggregateError(1);RegExp(\"(\");decodeURI(\"%\");new parseInt;Int8Array(1);Uint8Array(1);new Int8Array([1,2]);new Int8Array([1n]);new ArrayBuffer(8);new TypeError;Error(\"a\");escape(\"a\");parseInt(\"a\");x=1", { compress: { toplevel: false, builtinsEcma: 2026, unsafe: true } }, "new Promise(function(){g()}),new Proxy(1,{}),new WeakRef(1),new Iterator,AggregateError(1),RegExp(\"(\"),decodeURI(\"%\"),new parseInt,Int8Array(1),Uint8Array(1),new Int8Array([1n]),x=1;"],
 			["new WeakSet;new WeakSet([{},[],function(){},()=>{}]);new WeakSet([1]);new WeakSet([,{}]);new WeakMap([[{},1],[[]]]);new WeakMap([[1,1]]);new WeakMap([[]]);new WeakMap([1]);new WeakMap([,]);new Map([[1],[]]);new Map([,]);new Map(\"ab\");new Set([1]);JSON.stringify(1);x=1", { compress: { toplevel: false, builtinsEcma: 2020, unsafe: true } }, "new WeakSet([1]),new WeakSet([,{}]),new WeakMap([[1,1]]),new WeakMap([[]]),new WeakMap([1]),new WeakMap([,]),new Map([,]),new Map(\"ab\"),JSON.stringify(1),x=1;"],
 			["Object.keys(42);Object.keys(null);Object.create({},{a:1});Reflect.ownKeys(1);RegExp.escape(1);String.fromCodePoint(-1);decodeURI(\"a\");x=1", { compress: { toplevel: false, unsafe: true, builtinsEcma: 2026 } }, "Object.keys(null),Object.create({},{a:1}),Reflect.ownKeys(1),RegExp.escape(1),String.fromCodePoint(-1),x=1;"],
-			["Math.abs=f;Math.abs(1);function g(Date){Date()}Array.isArray=h;Array.isArray(1);Array=k;new Array(1);x=1", {}, "Math.abs=f,Math.abs(1);function g(a){a()}Array.isArray=h,Array.isArray(1),Array=k,new Array(1),x=1;"],
+			["Math.abs=f;Math.abs(1);function g(Date){Date()}Array.isArray=h;Array.isArray(1);Array=k;new Array(1);x=1", {}, "Math.abs=f,Math.abs(1);function g(a){a()}Array.isArray=h,Array.isArray(1),new(Array=k)(1),x=1;"],
 			["Object.keys=f;Object.keys({});var o=Object;o.isFrozen=g;Object.isFrozen({});Object.assign(Date,h);Date.now();Array.isArray(1);x=1", { compress: { toplevel: false, unsafe: true, builtinsEcma: 2020 } }, "Object.keys=f,Object.keys({});var o=Object;o.isFrozen=g,Object.isFrozen({}),Object.assign(Date,h),Date.now(),x=1;"],
 			["Math.abs?.(1);Math?.abs(1);Math[\"abs\"](1);a.Math.abs(1);Math.abs.call(1);x=1", {}, "Math.abs?.(1),Math?.abs(1),Math.abs(1),a.Math.abs(1),Math.abs.call(1),x=1;"],
 			// A call that stays one where the dropped `var` keeps it stays one where its value is read too.
@@ -5618,6 +5618,11 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(`function f(){return 1}${code}`)).toBe(
 			runProgram(`function f(){return 1}${source}`)
 		);
+		// Where a scope binds `NaN`, it prints as the division.
+		const shadowed = '(function(NaN){eval("");console.log(1*"a",NaN)})(5)';
+		expect(
+			minifyOnePass(shadowed, { compress: {}, mangle: false }).code
+		).toBe('!function(NaN){eval(""),console.log(0/0,NaN)}(5);');
 	});
 
 	it("should fold a conditional whose test is an array, object or function made in place", () => {
@@ -5638,6 +5643,78 @@ describe("one-pass minify of statement sequences", () => {
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
 		expect(code).toBe(
 			'var o={f(){console.log(this===o)}};function f(){console.log("f")}f(),f(),o.f(),(0,o.f)(),new f;'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should parenthesize a fold or element read keeping an infinity, which prints as a division", () => {
+		const source =
+			"console.log((Infinity||3).toString(),(Infinity||a||3).toFixed(),(1?Number.NEGATIVE_INFINITY:2).toString(),new(0||(1&&Infinity)),(0||(1&&1e400)).x,[Infinity][0].toFixed(),{a:Infinity}.a.toFixed(),typeof[Infinity][0],2/[Infinity][0],[Infinity][0])";
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'console.log((1/0).toString(),(1/0).toFixed(),(-1/0).toString(),new(1/0),(1/0).x,[1/0][0].toFixed(),{a:1/0}.a.toFixed(),"number",0,1/0);'
+		);
+		expect(() => acorn.parse(code, { ecmaVersion: "latest" })).not.toThrow();
+		expect(runProgram(`var a;${code}`)).toBe(runProgram(`var a;${source}`));
+	});
+
+	it("should read the length and constant elements of an array spreading array literals", () => {
+		// A spread of anything else, an element running something, or one not constant stays.
+		const source =
+			'var a=[1];function y(){return 7}console.log([10,...[],20,...[30,40],50]["length"],[10,...[],20,...[30,40],50][3],[...[],10,20][1],[...[10,...["s"]]][1],[...[10,20]][5],[10,...a][1],[...[y()],2][1],[...[y()]][0],[...[10,20]].length)';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'var a=[1];function y(){return 7}console.log(5,40,20,"s",void 0,[10,...a][1],[y(),2][1],[y()][0],2);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should print an empty string added to an assignment giving a string as the assignment", () => {
+		// Read as a test, called or added again, it keeps the parentheses it needs.
+		const source =
+			'var x=1,y;console.log(""+(x+="foo"),(y="a")+"",x);console.log((""+(x+="b"))?1:2,1+(""+(x+="c")),x)';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'var x=1,y;console.log(x+="foo",y="a",x),console.log((x+="b")?1:2,1+(""+(x+="c")),x);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should fold a value into the callee `new` constructs, which it evaluates first", () => {
+		// What `new` reads after something that may run code stays apart.
+		const source =
+			'function C(){this.v=1}function x(){console.log("x");return C}function*y(){var t=yield x();return new t}function g(){var t=x();return new t(1).v}function h(){var t=x();return new t.prototype.constructor}function k(){var t=C;return new C(x(),t)}var it=y();it.next();console.log(it.next(C).value.v,g(),h().v,k().v)';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'function C(){this.v=1}function x(){return console.log("x"),C}function*y(){return new(yield x())}function g(){return new(x())(1).v}function h(){var t=x();return new t.prototype.constructor}function k(){var t=C;return new C(x(),t)}var it=y();it.next(),console.log(it.next(C).value.v,g(),h().v,k().v);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+		// Printed again, the output reads the same.
+		const again = minifyOnePass(code, { compress: false, mangle: false }).code;
+		expect(again).toBe(code);
+		const made = "function m(){var t=class{};return new t}";
+		expect(minifyOnePass(made, { compress: {}, mangle: false }).code).toBe(
+			"function m(){return new class{}}"
+		);
+	});
+
+	it("should print a `return` ending a function of a call returning nothing as the call", () => {
+		// A function returning a value, an arrow's value or an async one stays returned.
+		const source =
+			'function h(){console.log("h")}function f(){return function(){h()}()}function g(){return function(){h();return}()}function k(){return function(){return 1}()}function m(){return(()=>1)()}function n(){return async function(){h()}()}function p(){return function(){h();(function(){return 2})()}()}console.log(f(),g(),k(),m(),typeof n(),p())';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'function h(){console.log("h")}function f(){h()}function g(){(function(){h()}())}function k(){return 1}function m(){return 1}function n(){return async function(){h()}()}function p(){h()}console.log(f(),g(),k(),m(),typeof n(),p());'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should keep `undefined` the value of a call of a function whose `return` prints as a statement", () => {
+		const source =
+			"(function(){var l=[];function t(){return void l.push(1)}function u(){return function(){l.push(2)}()}console.log(t(),u(),l.length)})()";
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			"!function(){var l=[];console.log(function(){l.push(1)}(),function(){l.push(2)}(),l.length)}();"
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});

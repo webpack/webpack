@@ -1312,8 +1312,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc writes a variable's value at its one read and drops the variable, as oxc's `peephole/inline_single_use_variable.rs` tests show",
 		[
 			"oxc minifier: peephole/inline_single_use_variable.rs:282",
-			"oxc minifier: peephole/inline_single_use_variable.rs:163",
-			"oxc minifier: peephole/inline_single_use_variable.rs:167",
 			"oxc minifier: peephole/inline_single_use_variable.rs:222",
 			"oxc minifier: peephole/inline_single_use_variable.rs:226",
 			"oxc minifier: peephole/inline_single_use_variable.rs:230",
@@ -1931,8 +1929,7 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc goes further than webpack on what terser's `yield` tests cover",
 		[
 			"terser compress: yield/generators_yield_assign",
-			"terser compress: yield/yield_statements",
-			"terser compress: yield/issue_2689"
+			"terser compress: yield/yield_statements"
 		]
 	],
 	[
@@ -2162,13 +2159,6 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"terser compress: class-properties/class_expression_properties_side_effects",
 			"terser compress: class-properties/same_name_public_private"
-		]
-	],
-	[
-		"oxc goes further than webpack on what terser's `concat-strings` tests cover",
-		[
-			"terser compress: concat-strings/concat_7",
-			"terser compress: concat-strings/concat_8"
 		]
 	],
 	[
