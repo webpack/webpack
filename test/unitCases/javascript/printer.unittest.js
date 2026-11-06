@@ -672,6 +672,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A function moved to a call nothing reads prints its statements there, unless it reads `this` or its value is read.
 			["let a;function f(){a=\"1\";g(a)}f();function h(){g(this)}h();function k(){g()}x=k()", { compress: { toplevel: true } }, "let a;a=\"1\",g(a);(function(){g(this)})();x=function(){g()}();"],
 			// A call of a function running expression statements before its `return` prints them and the value as one sequence.
+			["var a=f();function k(){a;return g()}x=k();var b=f();function m(){b;return function(){}}m()()", { compress: { toplevel: true } }, "f();x=g();f();(function(){})();"],
 			["function f(){g();return 1}x=f();function k(){h();return{a:1}}y=k().a;function m(){q();return 2}a(),m(),b()", { compress: { toplevel: true } }, "x=(g(),1),y=(h(),{a:1}).a,a(),function(){return q(),2}(),b();"],
 			// One moved into `export default` stays a value, as a declaration would be set before the module runs.
 			["function f(b){return b+1}export default f;", { module: true }, "export default(function(f){return f+1});"],
