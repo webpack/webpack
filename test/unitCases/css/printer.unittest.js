@@ -4421,3 +4421,17 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 	});
 });
 
+
+describe("CssSyntax minify — output that reads back as its source", () => {
+	/**
+	 * @param {string} src css source
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src) =>
+		new SourceProcessor().process(src, { mode: "minify" }).code;
+
+	it("keeps the space between a math function's `/` and `*`", () => {
+		expect(min(fixture("css", "css-syntax-minify-math-keeps-the-space-between-a-slash-and-a-star"))).toBe("a{width:calc(10px/ *2)}b{c:d}");
+		expect(min(fixture("css", "css-syntax-minify-math-keeps-the-space-between-a-slash-and-a-star-2"))).toBe("@media (width:calc(10px/ *2)){a{b:c}}");
+	});
+});

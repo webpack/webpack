@@ -4998,6 +4998,14 @@ exports[`CSS syntax — fixtures css-syntax-minify-math-and-numbers-past-what-a-
 
 exports[`CSS syntax — fixtures css-syntax-minify-math-and-numbers-past-what-a-double-says-exactly-leaves-two-2 prints {"mode":"minify"} 1`] = `"a{width:calc(1px**2)}"`;
 
+exports[`CSS syntax — fixtures css-syntax-minify-math-keeps-the-space-between-a-slash-and-a-star parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"dimension\\",\\"10\\",10,\\"integer\\",\\"px\\"],\\" \\",\\"/\\",\\" \\",\\"*\\",[\\"number\\",\\"2\\",2,\\"integer\\"]]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-math-keeps-the-space-between-a-slash-and-a-star prints {"mode":"minify"} 1`] = `"a{width:calc(10px/ *2)}b{c:d}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-math-keeps-the-space-between-a-slash-and-a-star-2 parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"()\\",[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"dimension\\",\\"10\\",10,\\"integer\\",\\"px\\"],\\" \\",\\"/\\",\\" \\",\\"*\\",[\\"number\\",\\"2\\",2,\\"integer\\"]]]],[[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-math-keeps-the-space-between-a-slash-and-a-star-2 prints {"mode":"minify"} 1`] = `"@media (width:calc(10px/ *2)){a{b:c}}"`;
+
 exports[`CSS syntax — fixtures css-syntax-minify-nesting-lowered-against-the-declarations-after-it-lowers-past parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"],\\";\\",\\".\\",[\\"ident\\",\\"b\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]],\\".\\",[\\"ident\\",\\"b\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]],[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"green\\"]]]]"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-nesting-lowered-against-the-declarations-after-it-lowers-past prints {"mode":"minify","environment":{"browsers":["chrome 100"]}} 1`] = `".a{color:red;.b{color:blue}color:green}"`;
