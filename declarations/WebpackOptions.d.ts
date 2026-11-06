@@ -140,6 +140,10 @@ export type UmdNamedDefine = boolean;
  */
 export type PublicPath = "auto" | RawPublicPath;
 /**
+ * Function name/definition to map file path.
+ */
+export type PublicPathFunction = string;
+/**
  * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
  */
 export type RawPublicPath =
@@ -2214,6 +2218,10 @@ export interface Output {
 	 */
 	publicPath?: PublicPath;
 	/**
+	 * Function name/definition to map file path. Default: "__webpackager_res__"
+	 */
+	publicPathFunction?: PublicPathFunction;
+	/**
 	 * This option enables loading async chunks via a custom script type, such as script type="module".
 	 */
 	scriptType?: ScriptType;
@@ -3561,6 +3569,10 @@ export interface OutputNormalized {
 	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: PublicPath;
+	/**
+	 * Function name/definition to map file path. Default: "__webpackager_res__"
+	 */
+	publicPathFunction?: PublicPathFunction;
 	/**
 	 * This option enables loading async chunks via a custom script type, such as script type="module".
 	 */

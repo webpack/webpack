@@ -3432,6 +3432,9 @@
         "publicPath": {
           "$ref": "#/definitions/PublicPath"
         },
+        "publicPathFunction": {
+          "$ref": "#/definitions/PublicPathFunction"
+        },
         "scriptType": {
           "$ref": "#/definitions/ScriptType"
         },
@@ -3621,6 +3624,9 @@
         "publicPath": {
           "$ref": "#/definitions/PublicPath"
         },
+        "publicPathFunction": {
+          "$ref": "#/definitions/PublicPathFunction"
+        },
         "scriptType": {
           "$ref": "#/definitions/ScriptType"
         },
@@ -3794,6 +3800,10 @@
           "$ref": "#/definitions/RawPublicPath"
         }
       ]
+    },
+    "PublicPathFunction": {
+      "description": "Function name/definition to map file path.",
+      "type": "string"
     },
     "RawPublicPath": {
       "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
