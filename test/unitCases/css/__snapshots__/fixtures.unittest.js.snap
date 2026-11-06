@@ -6108,6 +6108,14 @@ exports[`CSS syntax — fixtures css-syntax-minify-selector-keeps-the-space-afte
 
 exports[`CSS syntax — fixtures css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-4 prints {"mode":"minify"} 1`] = `".a\\\\\\\\,.b{c:d}"`;
 
+exports[`CSS syntax — fixtures css-syntax-minify-selector-list-keeps-a-part-starting-with-an-at-sign-in-place parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"b\\"],\\",\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"screen\\"]],[[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-list-keeps-a-part-starting-with-an-at-sign-in-place prints {"mode":"minify"} 1`] = `"b,@media screen{a{color:red}}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-list-keeps-a-part-starting-with-an-at-sign-in-place-2 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"z\\"],\\",\\",[\\"at-keyword\\",\\"import\\"],\\" \\",[\\"string\\",\\"x\\"],\\";\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-list-keeps-a-part-starting-with-an-at-sign-in-place-2 prints {"mode":"minify"} 1`] = `"z,@import \\"x\\";a{b:c}"`;
+
 exports[`CSS syntax — fixtures css-syntax-minify-the-declaration-a-lowered-shorthand-kills-keeps-an-earlier parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"text-decoration-line\\"],\\":\\",[\\"ident\\",\\"underline\\"],\\";\\",[\\"ident\\",\\"text-decoration\\"],\\":\\",[\\"ident\\",\\"underline\\"],\\" \\",[\\"ident\\",\\"dotted\\"]]]]"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-the-declaration-a-lowered-shorthand-kills-keeps-an-earlier prints {"mode":"minify","environment":{"browsers":["safari 15"]}} 1`] = `"a{text-decoration-line:underline;text-decoration:underline;text-decoration-style:dotted}"`;

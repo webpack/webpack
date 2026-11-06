@@ -4459,4 +4459,9 @@ describe("CssSyntax minify — output that reads back as its source", () => {
 		expect(min(fixture("css", "css-syntax-minify-layer-reads-an-escaped-brace-as-part-of-the-name"))).toBe("@layer a\\{b{x{c:d}}@layer a\\{b.c{y{e:f}}");
 		expect(min(fixture("css", "css-syntax-minify-layer-reads-an-escaped-brace-as-part-of-the-name-2"))).toBe("@layer a\\{b{x{c:d}y{e:f}}");
 	});
+
+	it("does not sort a selector starting with `@` to the front of a list", () => {
+		expect(min(fixture("css", "css-syntax-minify-selector-list-keeps-a-part-starting-with-an-at-sign-in-place"))).toBe("b,@media screen{a{color:red}}");
+		expect(min(fixture("css", "css-syntax-minify-selector-list-keeps-a-part-starting-with-an-at-sign-in-place-2"))).toBe('z,@import "x";a{b:c}');
+	});
 });
