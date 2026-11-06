@@ -13,7 +13,7 @@ const effects = {
 	symlinkSync: fs.symlinkSync
 };
 
-const root = process.cwd();
+
 const nodeModulesFolder = path.resolve(root, "node_modules");
 const webpackDependencyFolder = path.resolve(root, "node_modules/webpack");
 
