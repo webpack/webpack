@@ -140,10 +140,6 @@ export type UmdNamedDefine = boolean;
  */
 export type PublicPath = "auto" | RawPublicPath;
 /**
- * Function name/definition to map file path.
- */
-export type PublicPathFunction = string;
-/**
  * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
  */
 export type RawPublicPath =
@@ -152,6 +148,10 @@ export type RawPublicPath =
 			pathData: import("../lib/Compilation").PathData,
 			assetInfo?: import("../lib/Compilation").AssetInfo
 	  ) => string);
+/**
+ * Function name/definition to map file path.
+ */
+export type PublicPathFunction = string;
 /**
  * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
  */
@@ -1155,7 +1155,7 @@ export interface EntryDescription {
 	 */
 	publicPath?: PublicPath;
 	/**
-	 * Function name/definition to map file path. Default: "__webpackager_res__"
+	 * Function name/definition to map file path.
 	 */
 	publicPathFunction?: PublicPathFunction;
 	/**
@@ -2226,7 +2226,7 @@ export interface Output {
 	 */
 	publicPath?: PublicPath;
 	/**
-	 * Function name/definition to map file path. Default: "__webpackager_res__"
+	 * Function name/definition to map file path.
 	 */
 	publicPathFunction?: PublicPathFunction;
 	/**
@@ -2280,7 +2280,7 @@ export interface Output {
 	/**
 	 * Worker public path function. Much like the public path function, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPathFunction. Don't set this option unless your worker scripts are located at a different path from your other script files.
 	 */
-	workerPublicPathFunction?: WorkerPublicPath;
+	workerPublicPathFunction?: WorkerPublicPathFunction;
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
@@ -3058,7 +3058,7 @@ export interface EntryDescriptionNormalized {
 	 */
 	publicPath?: PublicPath;
 	/**
-	 * Function name/definition to map file path. Default: "__webpackager_res__"
+	 * Function name/definition to map file path.
 	 */
 	publicPathFunction?: PublicPathFunction;
 	/**
@@ -3586,7 +3586,7 @@ export interface OutputNormalized {
 	 */
 	publicPath?: PublicPath;
 	/**
-	 * Function name/definition to map file path. Default: "__webpackager_res__"
+	 * Function name/definition to map file path.
 	 */
 	publicPathFunction?: PublicPathFunction;
 	/**
@@ -3636,7 +3636,7 @@ export interface OutputNormalized {
 	/**
 	 * Worker public path function. Much like the public path function, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPathFunction. Don't set this option unless your worker scripts are located at a different path from your other script files.
 	 */
-	workerPublicPathFunction?: WorkerPublicPath;
+	workerPublicPathFunction?: WorkerPublicPathFunction;
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */

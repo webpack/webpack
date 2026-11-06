@@ -3826,6 +3826,11 @@ declare interface EntryDescription {
 	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
+	 * Function name/definition to map file path.
+	 */
+	publicPathFunction?: string;
+
+	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
 	runtime?: string | false;
@@ -3884,6 +3889,11 @@ declare interface EntryDescriptionNormalized {
 	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
+	 * Function name/definition to map file path.
+	 */
+	publicPathFunction?: string;
 
 	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
@@ -10211,6 +10221,11 @@ declare interface Output {
 	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
+	 * Function name/definition to map file path.
+	 */
+	publicPathFunction?: string;
+
+	/**
 	 * This option enables loading async chunks via a custom script type, such as script type="module".
 	 */
 	scriptType?: false | "module" | "text/javascript";
@@ -10269,6 +10284,11 @@ declare interface Output {
 	 * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
 	 */
 	workerPublicPath?: string;
+
+	/**
+	 * Worker public path function. Much like the public path function, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPathFunction. Don't set this option unless your worker scripts are located at a different path from your other script files.
+	 */
+	workerPublicPathFunction?: string;
 
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
@@ -10500,6 +10520,11 @@ declare interface OutputNormalized {
 	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
+	 * Function name/definition to map file path.
+	 */
+	publicPathFunction?: string;
+
+	/**
 	 * This option enables loading async chunks via a custom script type, such as script type="module".
 	 */
 	scriptType?: false | "module" | "text/javascript";
@@ -10553,6 +10578,11 @@ declare interface OutputNormalized {
 	 * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
 	 */
 	workerPublicPath?: string;
+
+	/**
+	 * Worker public path function. Much like the public path function, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPathFunction. Don't set this option unless your worker scripts are located at a different path from your other script files.
+	 */
+	workerPublicPathFunction?: string;
 
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
@@ -15381,6 +15411,8 @@ declare namespace exports {
 		export let moduleId: "module.id";
 		export let moduleLoaded: "module.loaded";
 		export let publicPath: "__webpack_require__.p";
+		export let publicPathFunction: "__webpack_require__.P";
+		export let workerPublicPathFunction: "__webpack_require__.W";
 		export let entryModuleId: "__webpack_require__.s";
 		export let moduleCache: "__webpack_require__.c";
 		export let moduleFactories: "__webpack_require__.m";
