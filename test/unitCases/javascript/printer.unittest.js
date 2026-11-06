@@ -674,6 +674,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// An arrow takes no parentheses there, and a call reduced to a number none right of an operator.
 			["const B=()=>\"b\"+v;export default B;", { module: true }, "export default()=>\"b\"+v;"],
 			["let e=40;e++;function M(x){return x+1}function N(x){return -x}export function g(){return[e*M(2),e-N(1)]}", { module: true }, "let e=40;e++;export function g(){return[e*3,e- -1]}"],
+			["export function h(e){function M(x){return x,x+1}return e*M(0)}", { module: true }, "export function h(n){return n*(0,1)}"],
 			// A logical whose left side decides it runs nothing of its right, so `undefined.a` there goes, though alone it stays.
 			["var Q=void 0&&(void 0).x||function(){return 1};g(Q);x=(0&&undefined.a)||f;x=(1||undefined.a)&&f;undefined.a", {}, "var Q=function(){return 1};g(Q),x=f,x=f,(void 0).a;"],
 			// A top-level function moves to its one read where `toplevel` drops top-level names, but no `topRetain` is given.
