@@ -1306,6 +1306,8 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc writes a variable's value at its one read and drops the variable, as oxc's `peephole/inline_single_use_variable.rs` tests show",
 		[
 			"oxc minifier: peephole/inline_single_use_variable.rs:282",
+			"oxc minifier: peephole/inline_single_use_variable.rs:163",
+			"oxc minifier: peephole/inline_single_use_variable.rs:167",
 			"oxc minifier: peephole/inline_single_use_variable.rs:222",
 			"oxc minifier: peephole/inline_single_use_variable.rs:226",
 			"oxc minifier: peephole/inline_single_use_variable.rs:230",

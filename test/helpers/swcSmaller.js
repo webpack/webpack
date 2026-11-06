@@ -953,7 +953,8 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: issue-281/negate_iife_issue_1073",
 			"terser compress: issue-281/issue_1288_side_effects",
 			"terser compress: issue-281/issue_1595_3",
-			"terser compress: issue-281/wrap_iife"
+			"terser compress: issue-281/wrap_iife",
+			"terser compress: issue-281/wrap_iife_in_return_call"
 		]
 	],
 	[
