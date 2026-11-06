@@ -5661,6 +5661,17 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should print an empty string added to an assignment giving a string as the assignment", () => {
+		// Read as a test, called or added again, it keeps the parentheses it needs.
+		const source =
+			'var x=1,y;console.log(""+(x+="foo"),(y="a")+"",x);console.log((""+(x+="b"))?1:2,1+(""+(x+="c")),x)';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'var x=1,y;console.log(x+="foo",y="a",x),console.log((x+="b")?1:2,1+(""+(x+="c")),x);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
