@@ -1,0 +1,148 @@
+# Worker pool
+
+`lib/util/worker/` runs CPU-heavy plugin work on `worker_threads`. One pool per compiler root owns the threads, and `compiler.worker(workerPath)` binds a module to the pool. A thread is not tied to one module or one call.
+
+This file is the spec. When code and spec disagree, fix one of them in the same commit.
+
+## Goals
+
+- One set of threads per compiler, reused across calls.
+- Any CommonJS module can be a target; no per-plugin thread script.
+- The public API stays stateless: a call carries everything it needs, and any thread may run any call.
+- The same code runs inline on the main thread when threads are unavailable or unwanted.
+- Loader threads use the same pool; they add a private RPC context on top of it.
+
+## Non-goals
+
+- Threading the JavaScript parser, code generation or the module graph.
+- Shared references and function handles in the public API.
+- Pre-empting a running call. `end()` only rejects queued calls and terminates after a deadline.
+
+## Terms
+
+| Term        | Meaning                                                                                          |
+| ----------- | ------------------------------------------------------------------------------------------------ |
+| pool        | A `WorkerPool` on the main thread. Owns the queue and up to `max` threads.                       |
+| thread      | One `worker_threads.Worker` running `WorkerChild.js`. The pool's record of it is a `PoolWorker`. |
+| child       | The `WorkerChild` inside a thread. Loads modules and answers calls.                              |
+| call        | One request with a module, method and arguments; settled by one response.                        |
+| worker      | What `compiler.worker(workerPath)` returns: a module bound to the pool.                          |
+| inline path | Running the method on the main thread instead of a thread.                                       |
+
+## Files
+
+| File             | Holds                                                                          |
+| ---------------- | ------------------------------------------------------------------------------ |
+| `WorkerPool.js`  | `WorkerPool`, `createWorkerFactory`, the queue, scheduling, lifecycle, inline. |
+| `Worker.js`      | `Worker`: the module-bound facade.                                             |
+| `WorkerChild.js` | The thread entry. Never loaded on the main thread.                             |
+| `protocol.js`    | Message typedefs, `WORKER_DATA_KIND`, `encodeError` / `decodeError`.           |
+
+## Public API
+
+```js
+const worker = compiler.worker(require.resolve("./worker"));
+// Worker | undefined
+
+if (worker !== undefined) {
+	await worker.run("minify", options);
+	await worker.warmup(4);
+	await worker.release();
+}
+```
+
+| Member                        | Behavior                                                                                                      |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `compiler.worker(workerPath)` | Absolute path or `file:` URL, required. Returns the facade, or `undefined` when `experiments.threads` is off. |
+| `worker.run(method, ...args)` | One call.                                                                                                     |
+| `worker.warmup(workers?)`     | Spawns up to `workers` threads and preloads this module; defaults to the pool's `max`.                        |
+| `worker.release()`            | Terminates idle threads. Calls in flight finish, then their threads retire; the pool stays usable.            |
+
+No `bind`, no `end`, no handles, no shared references.
+
+`compiler.worker` is a `Compiler` method:
+
+- the factory is created once per `compiler.root`;
+- child compilers return the root's facade;
+- `compiler.close()` sets a closed flag and taps `shutdown` to end the pool;
+- after close, a factory that was never created returns `undefined`, and one that was created returns the same ended facade, whose calls reject.
+
+## Worker module contract
+
+A target module is CommonJS. Each export called through the pool has the shape `(...args) => result | Promise<result>`.
+
+- Arguments and results cross by structured clone: no functions, no class prototypes, no symbols.
+- Each thread caches the module with `require`. Module-level caches may exist, but a result must not depend on which calls ran before it.
+- Any call may run on any thread.
+- Errors cross as `EncodedError` (`name`, `message`, `stack`, own enumerable `fields`). `decodeError` rebuilds a plain `Error`.
+
+## Protocol
+
+| Direction     | Message     | Fields                           |
+| ------------- | ----------- | -------------------------------- |
+| main → thread | `preload`   | `id`, `modules`                  |
+| thread → main | `preloaded` | `id`, `ok`, `error?`             |
+| main → thread | `call`      | `id`, `module`, `method`, `args` |
+| thread → main | `response`  | `id`, `ok`, `value` or `error`   |
+| main → thread | `close`     | none                             |
+
+Ordering rules:
+
+- The port delivers in order, so a `preload` posted before a `call` is seen first.
+- The child requires modules on first use; a `call` does not wait for `preloaded`.
+- A call whose response cannot be posted falls back to an error response carrying the clone failure.
+
+## Scheduling
+
+- One FIFO queue. `_dispatch` runs after every enqueue, settle and exit.
+- Each thread runs one call at a time.
+- Among idle threads, the pool takes the first from its idle list. If none can take the call and fewer than `max` threads live, it spawns one.
+- When a call settles, its thread goes idle and dispatch continues.
+- On exit, the thread is removed. Its in-flight call rejects with `Worker <id> exited with code <code> during <method>`. The next queued call spawns a replacement.
+- A synchronous `postMessage` failure rejects that call; the thread stays usable.
+
+## Lifecycle
+
+- Spawn lazily from dispatch or `warmup`.
+- An idle thread is released with `unref()` at once, so an idle pool never keeps the process alive, and starts an `idleTimeout` timer (itself released with `unref()`). When it fires and the thread is still idle, the thread is terminated.
+- Posting a call clears the timer and `ref()`s the thread.
+- `release()` terminates idle threads; a busy thread is retired once its call settles.
+- `end()` is idempotent:
+  - sets the ending flag and rejects queued calls;
+  - `ref()`s every thread and closes idle ones;
+  - waits for in-flight calls, with a 1 second deadline after which the remaining threads are terminated;
+  - resolves when every thread exited; in-flight calls reject through the normal exit path.
+- `end()` always resolves, so `compiler.close()` still reaches `cache.shutdown`.
+- `compiler.hooks.shutdown` ends the pool. Consumers never call `end()`.
+
+## Inline path
+
+A call runs inline when `max === 0` or `worker_threads` is unavailable.
+
+Inline requires the module on the main thread, caches it, and calls the method. With `strictClone`, arguments and results go through `v8.serialize` / `v8.deserialize`, which approximates structured clone for the values tests cover; it does not model `MessagePort` or transfer. The compiler passes `strictClone: false`.
+
+## Configuration
+
+```js
+module.exports = {
+	experiments: {
+		threads: {
+			max: 4
+		}
+	}
+};
+```
+
+| Value             | Effect                                       |
+| ----------------- | -------------------------------------------- |
+| `false` (default) | No pool; `compiler.worker` is `undefined`.   |
+| `true`            | `{ max: cores - 1 }`.                        |
+| `max: n`          | `Math.floor(n)`; `0` runs every call inline. |
+
+`cores` is `os.availableParallelism()` when available, else `os.cpus().length`; the result is clamped to at least 0. `idleTimeout` is fixed at 30 seconds.
+
+## First consumer
+
+`minimizer-webpack-plugin` today builds a `jest-worker` pool per compilation. With the pool it binds `dist/minify.js` once per compiler, calls `run("minify", options)` or `run("transform", serialized)`, and warms up only the threads its asset count needs. That change lands in the plugin's repository; webpack only exposes `compiler.worker`.
+
+Source maps were measured and rejected for the farm: shipping an asset's `Source` tree to a thread costs more on the main thread than composing its map in place. Work fits the pool when its compute per byte of input is high.

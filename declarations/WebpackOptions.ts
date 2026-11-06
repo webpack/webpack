@@ -1360,7 +1360,7 @@ export interface Experiments {
 	 */
 	syncWebAssembly?: boolean;
 	/**
-	 * Run CPU-heavy passes, such as minimization, on worker threads webpack keeps for the whole compiler.
+	 * Run CPU-heavy plugin work, such as minimization, on worker threads webpack keeps for the whole compiler.
 	 * @since 5.113.0
 	 * @experimental
 	 */
@@ -1453,7 +1453,7 @@ export interface ExperimentsNormalized {
 	 */
 	syncWebAssembly?: boolean;
 	/**
-	 * Run CPU-heavy passes, such as minimization, on worker threads webpack keeps for the whole compiler.
+	 * Run CPU-heavy plugin work, such as minimization, on worker threads webpack keeps for the whole compiler.
 	 * @since 5.113.0
 	 * @experimental
 	 */
@@ -5980,27 +5980,13 @@ export type Target =
 	| NonEmptyString;
 
 /**
- * Options for running CPU-heavy passes on the worker threads webpack keeps for a compiler.
+ * Options for running CPU-heavy plugin work on the worker threads webpack keeps for a compiler.
  */
 export interface ThreadsOptions {
 	/**
-	 * Number of worker threads. Defaults to one less than the number of CPUs; `0` runs every pass that uses them on the main thread.
+	 * Number of worker threads. Defaults to one less than the number of CPUs; `0` runs the work on the main thread.
 	 */
 	max?: NonNegativeNumber;
-	/**
-	 * Which passes run on the worker threads.
-	 */
-	passes?: ThreadsPassesOptions;
-}
-
-/**
- * Which passes run on the worker threads.
- */
-export interface ThreadsPassesOptions {
-	/**
-	 * Minimize on the worker threads. `false` leaves the minimizer to its own pool, sized by its `parallel` option. Defaults to `true`.
-	 */
-	minimize?: boolean;
 }
 
 /**
