@@ -120,6 +120,7 @@ module.exports = [
 						"__webpack_require__",
 						"__webpack_public_path__",
 						"__webpack_public_path_function__",
+						"__webpack_worker_public_path_function__",
 						"__webpack_base_uri__",
 						"__webpack_modules__",
 						"__webpack_chunk_load__",
