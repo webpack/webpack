@@ -1,6 +1,6 @@
 import "./style.css";
-import fs from "fs";
-import path from "path";
+// `fs` and `path` come from the runner (`moduleScope` in `test.config.js`):
+// bundling them would make this universal build warn.
 import { CSS_FILENAME_HELPER, CSS_FILENAME_MODULE } from "./needles.js";
 
 // Targeting node turns a stylesheet into a javascript module, so no chunk is
