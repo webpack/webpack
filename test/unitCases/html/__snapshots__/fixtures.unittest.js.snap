@@ -14286,13 +14286,13 @@ exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-declin
 |     <style>
 |       \\"a{color:red}\\"
 |     <style>
-|       \\"@\\\\6e \\\\61 \\\\6d \\\\65 \\\\73 \\\\70 \\\\61 \\\\63 \\\\65 url(x);p{color:red}\\"
+|       \\"@\\\\6e \\\\61 \\\\6d \\\\65 \\\\73 \\\\70 \\\\61 \\\\63 \\\\65  url(x);p{color:red}\\"
 |   <body>"
 `;
 
-exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-3 prints {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{color:red}</style><style>@\\\\6e \\\\61 \\\\6d \\\\65 \\\\73 \\\\70 \\\\61 \\\\63 \\\\65 url(x);p{color:red}</style>"`;
+exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-3 prints {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{color:red}</style><style>@\\\\6e \\\\61 \\\\6d \\\\65 \\\\73 \\\\70 \\\\61 \\\\63 \\\\65  url(x);p{color:red}</style>"`;
 
-exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-3 prints {"mode":"minify"} 1`] = `"<style>a{color:red}</style><style>@\\\\6e \\\\61 \\\\6d \\\\65 \\\\73 \\\\70 \\\\61 \\\\63 \\\\65 url(x);p{color:red}</style>"`;
+exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-3 prints {"mode":"minify"} 1`] = `"<style>a{color:red}</style><style>@\\\\6e \\\\61 \\\\6d \\\\65 \\\\73 \\\\70 \\\\61 \\\\63 \\\\65  url(x);p{color:red}</style>"`;
 
 exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-4 parses 1`] = `
 "| <html>
@@ -14300,27 +14300,27 @@ exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-declin
 |     <style>
 |       \\"a{color:red}\\"
 |     <style>
-|       \\"@\\\\69 \\\\6d \\\\70 \\\\6f \\\\72 \\\\74 url(x.css);p{color:red}\\"
+|       \\"@\\\\69 \\\\6d \\\\70 \\\\6f \\\\72 \\\\74  url(x.css);p{color:red}\\"
 |   <body>"
 `;
 
-exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-4 prints {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{color:red}</style><style>@\\\\69 \\\\6d \\\\70 \\\\6f \\\\72 \\\\74 url(x.css);p{color:red}</style>"`;
+exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-4 prints {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{color:red}</style><style>@\\\\69 \\\\6d \\\\70 \\\\6f \\\\72 \\\\74  url(x.css);p{color:red}</style>"`;
 
-exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-4 prints {"mode":"minify"} 1`] = `"<style>a{color:red}</style><style>@\\\\69 \\\\6d \\\\70 \\\\6f \\\\72 \\\\74 url(x.css);p{color:red}</style>"`;
+exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-4 prints {"mode":"minify"} 1`] = `"<style>a{color:red}</style><style>@\\\\69 \\\\6d \\\\70 \\\\6f \\\\72 \\\\74  url(x.css);p{color:red}</style>"`;
 
 exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-5 parses 1`] = `
 "| <html>
 |   <head>
 |     <style>
-|       \\"@\\\\6e \\\\61 \\\\6d \\\\65 \\\\73 \\\\70 \\\\61 \\\\63 \\\\65 url(x);\\"
+|       \\"@\\\\6e \\\\61 \\\\6d \\\\65 \\\\73 \\\\70 \\\\61 \\\\63 \\\\65  url(x);\\"
 |     <style>
 |       \\"p{color:red}\\"
 |   <body>"
 `;
 
-exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-5 prints {"mode":"minify","mergeStyles":true} 1`] = `"<style>@\\\\6e \\\\61 \\\\6d \\\\65 \\\\73 \\\\70 \\\\61 \\\\63 \\\\65 url(x);</style><style>p{color:red}</style>"`;
+exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-5 prints {"mode":"minify","mergeStyles":true} 1`] = `"<style>@\\\\6e \\\\61 \\\\6d \\\\65 \\\\73 \\\\70 \\\\61 \\\\63 \\\\65  url(x);</style><style>p{color:red}</style>"`;
 
-exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-5 prints {"mode":"minify"} 1`] = `"<style>@\\\\6e \\\\61 \\\\6d \\\\65 \\\\73 \\\\70 \\\\61 \\\\63 \\\\65 url(x);</style><style>p{color:red}</style>"`;
+exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-5 prints {"mode":"minify"} 1`] = `"<style>@\\\\6e \\\\61 \\\\6d \\\\65 \\\\73 \\\\70 \\\\61 \\\\63 \\\\65  url(x);</style><style>p{color:red}</style>"`;
 
 exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-drops-a-run-s-first-element-only-where parses 1`] = `
 "| <html>
@@ -14391,6 +14391,22 @@ exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-joins-
 `;
 
 exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-joins-a-blank-sheet-as-nothing-3 prints {"mode":"minify"} 1`] = `"<style> </style><style>  </style>"`;
+
+exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-joins-a-sheet-whose-escaped-name-runs-on parses 1`] = `
+"| <html>
+|   <head>
+|     <style>
+|       \\"a{color:red}\\"
+|     <style>
+|       \\"@\\\\6e \\\\61 \\\\6d \\\\65 \\\\73 \\\\70 \\\\61 \\\\63 \\\\65 url(x);p{color:red}\\"
+|     <style>
+|       \\"@\\\\69 \\\\6d \\\\70 \\\\6f \\\\72 \\\\74 url(x.css);b{color:red}\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-joins-a-sheet-whose-escaped-name-runs-on prints {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{color:red}@\\\\6e \\\\61 \\\\6d \\\\65 \\\\73 \\\\70 \\\\61 \\\\63 \\\\65 url(x);p{color:red}@\\\\69 \\\\6d \\\\70 \\\\6f \\\\72 \\\\74 url(x.css);b{color:red}</style>"`;
+
+exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-joins-a-sheet-whose-escaped-name-runs-on prints {"mode":"minify"} 1`] = `"<style>a{color:red}</style><style>@\\\\6e \\\\61 \\\\6d \\\\65 \\\\73 \\\\70 \\\\61 \\\\63 \\\\65 url(x);p{color:red}</style><style>@\\\\69 \\\\6d \\\\70 \\\\6f \\\\72 \\\\74 url(x.css);b{color:red}</style>"`;
 
 exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-keeps-every-element-minified-unless parses 1`] = `
 "| <html>
@@ -14807,6 +14823,63 @@ exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-reads-
 `;
 
 exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-reads-an-escape-outside-a-string-as-one prints {"mode":"minify"} 1`] = `"<style>a{color:red}\\\\\\"</style><style>b{color:#00f}</style>"`;
+
+exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-reads-each-sheet-s-escapes-and-end parses 1`] = `
+"| <html>
+|   <head>
+|     <style>
+|       \\"a{}\\"
+|     <style>
+|       \\"@\\\\0 namespace x;b{color:red}\\"
+|   <body>
+|     <p>
+|       \\"1\\"
+|       <style>
+|         \\"c{color:red}\\"
+|       <style>
+|         \\"@na\\\\me\\\\space x;d{color:red}\\"
+|     <p>
+|       \\"2\\"
+|       <style>
+|         \\"e{color:red}\\"
+|       <style>
+|         \\"@\\\\6e\\\\
+amespace x;f{color:red}\\"
+|     <p>
+|       \\"3\\"
+|       <style>
+|         \\"g{--v:(x\\"
+|       <style>
+|         \\"h{color:red}\\"
+|     <p>
+|       \\"4\\"
+|       <style>
+|         \\"i{--v:(x\\\\\\"
+|       <style>
+|         \\"j{color:red}\\"
+|     <p>
+|       \\"5\\"
+|       <style>
+|         \\"k{color:red}\\\\\\"
+|       <style>
+|         \\"l{color:red}\\"
+|     <p>
+|       \\"6\\"
+|       <style>
+|         \\"m{color:red}url(x\\\\\\"
+|       <style>
+|         \\"n{color:red}\\""
+`;
+
+exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-reads-each-sheet-s-escapes-and-end prints {"mode":"minify","mergeStyles":true} 1`] = `
+"<style>a{}@\\\\0 namespace x;b{color:red}</style><p>1<style>c{color:red}</style><style>@na\\\\me\\\\space x;d{color:red}</style><p>2<style>e{color:red}@\\\\6e\\\\
+amespace x;f{color:red}</style><p>3<style>g{--v:(x</style><style>h{color:red}</style><p>4<style>i{--v:(x\\\\</style><style>j{color:red}</style><p>5<style>k{color:red}�{}l{color:red}</style><p>6<style>m{color:red}url(x�){}n{color:red}</style>"
+`;
+
+exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-reads-each-sheet-s-escapes-and-end prints {"mode":"minify"} 1`] = `
+"<style>a{}</style><style>@\\\\0 namespace x;b{color:red}</style><p>1<style>c{color:red}</style><style>@na\\\\me\\\\space x;d{color:red}</style><p>2<style>e{color:red}</style><style>@\\\\6e\\\\
+amespace x;f{color:red}</style><p>3<style>g{--v:(x</style><style>h{color:red}</style><p>4<style>i{--v:(x\\\\</style><style>j{color:red}</style><p>5<style>k{color:red}\\\\</style><style>l{color:red}</style><p>6<style>m{color:red}url(x\\\\</style><style>n{color:red}</style>"
+`;
 
 exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-reads-the-attributes-each-sheet-will parses 1`] = `
 "| <html>

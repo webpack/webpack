@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": "</style><style>c{color:#00f}</style>\n      -> c{color:#00f}</style>",
-		"why": "adjacent `<style>` elements the first pass leaves apart are joined only on a second pass; the sheets say the same"
-	}
-]

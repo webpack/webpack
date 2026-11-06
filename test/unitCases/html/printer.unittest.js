@@ -305,13 +305,14 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 				minify(`<style>${sheet}</style><style>c{color:#00f}</style>`)
 			).toBe(`<style>${printed}c{color:#00f}</style>`);
 		}
-		// A lone backslash would escape whatever followed, so nothing is joined.
+		// A lone backslash is closed as end of input reads it: U+FFFD outside a
+		// string, nothing inside one.
 		expect(minify(fixture("html", "source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-21"))).toBe(
-			"<style></style><style>c{color:#00f}</style>"
+			"<style>c{color:#00f}</style>"
 		);
 		expect(
 			minify(fixture("html", "source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-22"))
-		).toContain("</style><style>c{color:#00f}</style>");
+		).toBe('<style>a{b:"x"}c{color:#00f}</style>');
 	});
 
 	it("drops a run's first element only where every sheet in it prints nothing", () => {

@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": "</style><style>@namespaceurl (x);p{color:red}</style>\n      -> @namespaceurl (x);p{color:red}</style>",
-		"why": "adjacent `<style>` elements the first pass leaves apart are joined only on a second pass; the sheets say the same"
-	}
-]

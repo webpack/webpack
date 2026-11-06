@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "</style><style>j{color:red}</style><p>5<style>k,l{color:red}</style><p\n      -> j{color:red}</style><p>5<style>k,l{color:red}</style><p>6<style>m,n{co",
+		"why": "the CSS minifier closes a custom property's value left open where the sheet ends on a lone backslash, though it keeps one open without it, so a second pass joins a sheet the first kept apart"
+	}
+]
