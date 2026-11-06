@@ -106,6 +106,14 @@ exports[`CSS syntax — fixtures css-minify-export-a-caller-s-render-embedded-so
 
 exports[`CSS syntax — fixtures css-minify-export-a-caller-s-render-embedded-source-prints-what-it-answers-and prints {"mode":"minify"} 1`] = `".a{background:url(data:image/svg+xml,<svg></svg>)}.b{background:url(\\"data:text/css,a { color : red }\\")}"`;
 
+exports[`CSS syntax — fixtures css-minify-export-closes-a-custom-property-the-input-ran-out-in-before-a-banner parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"--x\\"],\\":\\",[\\"string\\",\\"foo\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-minify-export-closes-a-custom-property-the-input-ran-out-in-before-a-banner prints {"mode":"minify"} 1`] = `"/*! keep */.b{--x:\\"foo"`;
+
+exports[`CSS syntax — fixtures css-minify-export-closes-a-custom-property-the-input-ran-out-in-before-a-banner-2 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"--x\\"],\\":\\",[\\"{}\\",[\\"ident\\",\\"foo\\"]]]]]"`;
+
+exports[`CSS syntax — fixtures css-minify-export-closes-a-custom-property-the-input-ran-out-in-before-a-banner-2 prints {"mode":"minify"} 1`] = `"/*! keep */.b{--x:{foo"`;
+
 exports[`CSS syntax — fixtures css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies parses 1`] = `"[[\\"at-rule\\",\\"charset\\",[\\" \\",[\\"string\\",\\"utf-8\\"]],null],[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"url\\",[\\"string\\",\\"data:image/svg+xml,<svg>é</svg>\\"]]]]]"`;
 
 exports[`CSS syntax — fixtures css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies prints {"mode":"minify"} 1`] = `"a{background:url(data:image/svg+xml,<svg>é</svg>)}"`;

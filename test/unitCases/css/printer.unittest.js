@@ -4481,4 +4481,22 @@ describe("CssSyntax minify — output that reads back as its source", () => {
 		});
 		expect(ascii.code).toBe("a{background:url(data:image/svg+xml,<svg>y</svg>)}");
 	});
+
+	it("closes a custom property the input ran out in where a banner follows", async () => {
+		const cssMinify = require("../../../lib/css/cssMinify");
+
+		/**
+		 * @param {string} name the fixture
+		 * @returns {Promise<string>} the output, the banner the plugin appends included
+		 */
+		const withBanner = async (name) => {
+			const result = await cssMinify({ "a.css": fixture("css", name) }, undefined, {}, true);
+			expect(result.extractedComments).toEqual(["/*! keep */"]);
+			return `${result.code}/*! banner */`;
+		};
+		expect(await withBanner("css-minify-export-closes-a-custom-property-the-input-ran-out-in-before-a-banner")).toBe('.b{--x:"foo"}/*! banner */');
+		expect(await withBanner("css-minify-export-closes-a-custom-property-the-input-ran-out-in-before-a-banner-2")).toBe(".b{--x:{foo}}/*! banner */");
+		// With no banner to follow, it stays open as the engine keeps it.
+		expect(min(fixture("css", "css-minify-export-closes-a-custom-property-the-input-ran-out-in-before-a-banner"))).toBe('/*! keep */.b{--x:"foo');
+	});
 });

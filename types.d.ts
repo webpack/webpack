@@ -7258,6 +7258,11 @@ declare interface CssPrintOptions {
 	 * give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block being moved does for an element it can match — a condition between counting for what its own rules declare
 	 */
 	mergeDistantRules?: boolean;
+
+	/**
+	 * close a custom property's value the input ran out in, which is otherwise left open as the engine keeps it, for output that text is appended to (as a minimizer's banner is). Only read while printing
+	 */
+	closeAtEnd?: boolean;
 }
 declare interface CssProcessOptions {
 	/**
@@ -7373,6 +7378,11 @@ declare interface CssProcessOptions {
 	 * collects what `renderEmbeddedSource` would be offered instead of offering it, for a caller whose renderer is asynchronous: the print leaves a marker for each and `finish` puts the answers in their place, so one parse serves both. Takes precedence over `renderEmbeddedSource`
 	 */
 	deferEmbeddedSource?: DeferredEmbeddedSource[];
+
+	/**
+	 * close a custom property's value the input ran out in, which is otherwise left open as the engine keeps it, for output that text is appended to (as a minimizer's banner is). Only read while printing
+	 */
+	closeAtEnd?: boolean;
 
 	/**
 	 * what a print before this one was answered for each offer, which `processAsync` passes where an answer overturned a choice made without it: whether `@charset` is written is decided with them
