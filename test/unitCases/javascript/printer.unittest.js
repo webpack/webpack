@@ -1867,7 +1867,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["new Promise(function(){g()});new Proxy(1,{});new WeakRef(1);new Iterator;new AggregateError(1);RegExp(\"(\");decodeURI(\"%\");new parseInt;Int8Array(1);Uint8Array(1);new Int8Array([1,2]);new Int8Array([1n]);new ArrayBuffer(8);new TypeError;Error(\"a\");escape(\"a\");parseInt(\"a\");x=1", { compress: { toplevel: false, builtinsEcma: 2026, unsafe: true } }, "new Promise(function(){g()}),new Proxy(1,{}),new WeakRef(1),new Iterator,AggregateError(1),RegExp(\"(\"),decodeURI(\"%\"),new parseInt,Int8Array(1),Uint8Array(1),new Int8Array([1n]),x=1;"],
 			["new WeakSet;new WeakSet([{},[],function(){},()=>{}]);new WeakSet([1]);new WeakSet([,{}]);new WeakMap([[{},1],[[]]]);new WeakMap([[1,1]]);new WeakMap([[]]);new WeakMap([1]);new WeakMap([,]);new Map([[1],[]]);new Map([,]);new Map(\"ab\");new Set([1]);JSON.stringify(1);x=1", { compress: { toplevel: false, builtinsEcma: 2020, unsafe: true } }, "new WeakSet([1]),new WeakSet([,{}]),new WeakMap([[1,1]]),new WeakMap([[]]),new WeakMap([1]),new WeakMap([,]),new Map([,]),new Map(\"ab\"),JSON.stringify(1),x=1;"],
 			["Object.keys(42);Object.keys(null);Object.create({},{a:1});Reflect.ownKeys(1);RegExp.escape(1);String.fromCodePoint(-1);decodeURI(\"a\");x=1", { compress: { toplevel: false, unsafe: true, builtinsEcma: 2026 } }, "Object.keys(null),Object.create({},{a:1}),Reflect.ownKeys(1),RegExp.escape(1),String.fromCodePoint(-1),x=1;"],
-			["Math.abs=f;Math.abs(1);function g(Date){Date()}Array.isArray=h;Array.isArray(1);Array=k;new Array(1);x=1", {}, "Math.abs=f,Math.abs(1);function g(a){a()}Array.isArray=h,Array.isArray(1),Array=k,new Array(1),x=1;"],
+			["Math.abs=f;Math.abs(1);function g(Date){Date()}Array.isArray=h;Array.isArray(1);Array=k;new Array(1);x=1", {}, "Math.abs=f,Math.abs(1);function g(a){a()}Array.isArray=h,Array.isArray(1),new(Array=k)(1),x=1;"],
 			["Object.keys=f;Object.keys({});var o=Object;o.isFrozen=g;Object.isFrozen({});Object.assign(Date,h);Date.now();Array.isArray(1);x=1", { compress: { toplevel: false, unsafe: true, builtinsEcma: 2020 } }, "Object.keys=f,Object.keys({});var o=Object;o.isFrozen=g,Object.isFrozen({}),Object.assign(Date,h),Date.now(),x=1;"],
 			["Math.abs?.(1);Math?.abs(1);Math[\"abs\"](1);a.Math.abs(1);Math.abs.call(1);x=1", {}, "Math.abs?.(1),Math?.abs(1),Math.abs(1),a.Math.abs(1),Math.abs.call(1),x=1;"],
 			// A call that stays one where the dropped `var` keeps it stays one where its value is read too.
@@ -5668,6 +5668,17 @@ describe("one-pass minify of statement sequences", () => {
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
 		expect(code).toBe(
 			'var x=1,y;console.log(x+="foo",y="a",x),console.log((x+="b")?1:2,1+(""+(x+="c")),x);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should fold a value into the callee `new` constructs, which it evaluates first", () => {
+		// What `new` reads after something that may run code stays apart.
+		const source =
+			'function C(){this.v=1}function x(){console.log("x");return C}function*y(){var t=yield x();return new t}function g(){var t=x();return new t(1).v}function h(){var t=x();return new t.prototype.constructor}function k(){var t=C;return new C(x(),t)}var it=y();it.next();console.log(it.next(C).value.v,g(),h().v,k().v)';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'function C(){this.v=1}function x(){return console.log("x"),C}function*y(){return new(yield x())}function g(){return new(x())(1).v}function h(){return new(x()).prototype.constructor}function k(){var t=C;return new C(x(),t)}var it=y();it.next(),console.log(it.next(C).value.v,g(),h().v,k().v);'
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
