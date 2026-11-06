@@ -45,3 +45,6 @@
 	grid-template: "nav-bar main-area" 1fr / auto;
 }
 .shorthand-nav { grid-area: nav-bar }
+
+/* An escaped `.` stays escaped in the whole scoped name, suffix included. */
+.dotted-head { grid-area: x\.y }

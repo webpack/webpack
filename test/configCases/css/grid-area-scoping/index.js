@@ -84,6 +84,11 @@ it("should bind an area named by the grid shorthand", () => {
 	expect(gridAreaOf(styles["shorthand-nav"])).toBe(styles["nav-bar"]);
 });
 
+it("should keep an escape in the suffix of a scoped area name", () => {
+	expect(styles["x.y"]).toBe("_x.y-x.y");
+	expect(gridAreaOf(styles["dotted-head"])).toBe("_x\\.y-x\\.y");
+});
+
 it("should emit the stylesheet", () => {
 	expect(css()).toMatchSnapshot();
 });

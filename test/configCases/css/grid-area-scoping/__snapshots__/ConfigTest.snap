@@ -52,6 +52,9 @@ exports[`ConfigTestCases css grid-area-scoping exported tests should emit the st
 }
 ._shorthand-nav { grid-area: _nav-bar-nav-bar }
 
+/* An escaped \`.\` stays escaped in the whole scoped name, suffix included. */
+._dotted-head { grid-area: _x\\\\.y-x\\\\.y }
+
 
 /*# sourceMappingURL=bundle0.css.map*/"
 `;
