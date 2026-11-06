@@ -9,9 +9,11 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const LOADER_OUTPUT = ["changed", "by", "loader"].join(" ");
 
 it("should run inline loaders named in an HTML URL", () => {
-	const images = [...page.matchAll(/<img src="([^"]+)" alt="">/g)].map(
-		(match) => match[1]
-	);
+	const images = [];
+	const imageRegExp = /<img src="([^"]+)" alt="">/g;
+	for (let match; (match = imageRegExp.exec(page)) !== null; ) {
+		images.push(match[1]);
+	}
 	expect(images).toHaveLength(2);
 	const [loaded, plain] = images.map((file) =>
 		fs.readFileSync(path.resolve(here, file), "utf-8")

@@ -1033,7 +1033,12 @@ describe("SourceProcessor — removeRedundantAttributes and script charset", () 
 		for (const head of [
 			'<meta charset="utf-8">',
 			"<meta charset=UTF8>",
-			'<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'
+			'<meta http-equiv="Content-Type" content="text/html; charset=utf-8">',
+			'<meta charset="&#85;TF-8">',
+			"<meta charset='utf-8'>",
+			'<meta itemprop charset="utf-8" charset="gbk">',
+			'<meta http-equiv="content-type" content="text/html"><meta charset="utf-8">',
+			"<meta http-equiv='Content-Type' content='text/html; charset=utf-8' content='x'>"
 		]) {
 			expect(
 				minify(`<!doctype html><head>${head}<title>t</title>${SCRIPT}`)
@@ -1057,6 +1062,9 @@ describe("SourceProcessor — removeRedundantAttributes and script charset", () 
 		for (const html of [
 			`<!doctype html><title>t</title>${SCRIPT}`,
 			`<!doctype html><head><meta charset="gbk"><title>t</title>${SCRIPT}`,
+			`<!doctype html><head><meta charset="gbk"><meta charset="utf-8"><title>t</title>${SCRIPT}`,
+			`<!doctype html><head><meta name="x" content="charset=utf-8"><title>t</title>${SCRIPT}`,
+			`<!doctype html><head><meta http-equiv="refresh" content="0; charset=utf-8"><title>t</title>${SCRIPT}`,
 			`<!doctype html><!-- <meta charset="utf-8"> --><title>t</title>${SCRIPT}`,
 			`<!doctype html><title>t</title><style>${"a{}".repeat(400)}</style><meta charset="utf-8">${SCRIPT}`,
 			`<!doctype html><title>${"价".repeat(400)}</title><meta charset="utf-8">${SCRIPT}`,
