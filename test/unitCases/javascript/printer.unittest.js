@@ -664,6 +664,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{ format: { comments: /keep/ } },
 				"function f(){var n=/* keep */function(){};h(n)}function i(){g(1)}"
 			],
+			// A function moved into one moving to its call prints in parentheses where that call opens a statement, and stays where a name declared there shadows one it reads.
+			["function f(){function bar(k){console.log(k)}function foo(x){return bar(x)}function baz(a){foo(a)}baz(42);baz(1)}", {}, "function f(){function o(o){(function(o){console.log(o)}(o))}o(42),o(1)}"],
+			["(function(){function $(same_name){console.log(same_name);a()}function a(){return b()}function b(){same_name()}$()})()", { compress: { toplevel: true }, mangle: false }, "!function(){function b(){same_name()}(function(same_name){console.log(same_name),b()})()}();"],
 			// A top-level function moves to its one read where `toplevel` drops top-level names, but no `topRetain` is given.
 			["function c(){return 1}function p(){console.log(c())}p();function u(){return 2}console.log(u(),u())", { compress: { toplevel: true }, mangle: { toplevel: true } }, "(function(){console.log(1)})();function n(){return 2}console.log(n(),n());"],
 			["function c(){return 1}console.log(c())", {}, "function c(){return 1}console.log(c());"],
