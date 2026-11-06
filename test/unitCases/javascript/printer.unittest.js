@@ -669,6 +669,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["(function(){function $(same_name){console.log(same_name);a()}function a(){return b()}function b(){same_name()}$()})()", { compress: { toplevel: true }, mangle: false }, "!function(){function b(){same_name()}(function(same_name){console.log(same_name),b()})()}();"],
 			// An exported name declared again without `export` stays exported, and two functions reading each other stay a cycle that goes.
 			["export var f;var f=0;function d1(){console.log(f);d2()}function d2(){d1()}f=1", { module: true }, "export var f;var f=0;f=1;"],
+			// A logical whose left side decides it runs nothing of its right, so `undefined.a` there goes, though alone it stays.
+			["var Q=void 0&&(void 0).x||function(){return 1};g(Q);x=(0&&undefined.a)||f;x=(1||undefined.a)&&f;undefined.a", {}, "var Q=function(){return 1};g(Q),x=f,x=f,(void 0).a;"],
 			// A top-level function moves to its one read where `toplevel` drops top-level names, but no `topRetain` is given.
 			["function c(){return 1}function p(){console.log(c())}p();function u(){return 2}console.log(u(),u())", { compress: { toplevel: true }, mangle: { toplevel: true } }, "(function(){console.log(1)})();function n(){return 2}console.log(n(),n());"],
 			["function c(){return 1}console.log(c())", {}, "function c(){return 1}console.log(c());"],
