@@ -11873,8 +11873,14 @@ declare class Generator<TModule extends NormalModule = NormalModule> {
 		requestShortener?: RequestShortener
 	): string;
 }
+
+/**
+ * Generator options as a module holds them: `binary` is read for every module
+ * type, the rest belongs to the generator of the module's type.
+ */
 declare interface GeneratorOptions {
 	[index: string]: any;
+	binary?: boolean;
 }
 type GeneratorOptionsByModuleType = GeneratorOptionsByModuleTypeKnown &
 	GeneratorOptionsByModuleTypeUnknown;
