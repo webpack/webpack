@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `parseErrors`, `parseProgram`, and CommonJS and event handler `sourceType`.
+Add `parseErrors`, `parseProgram` with acorn's options, and more source types.

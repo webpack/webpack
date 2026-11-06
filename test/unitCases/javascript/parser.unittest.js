@@ -6196,6 +6196,79 @@ describe("parseProgram", () => {
 		expect(typeof parseProgram("import defer * as d from 'e';")).toBe("number");
 	});
 
+	it("reads every grammar option into the tree as the ESTree parse does", () => {
+		/** @type {[import("../../../lib/javascript/syntax-parser").JavascriptParseOptions, string][]} */
+		const cases = [
+			[{ sourceType: "script", strict: true }, "with (a) {}"],
+			[{ sourceType: "script", allowReserved: "never" }, "a.class"],
+			[{ sourceType: "script", allowReserved: false }, "var enum = 1"],
+			[{ sourceType: "script", allowHashBang: false }, "#!x\n1"],
+			[{ sourceType: "module", allowImportExportEverywhere: true }, "{ import a from 'a' }"],
+			[{ sourceType: "module", allowAwaitOutsideFunction: false }, "await a"],
+			[{ sourceType: "script", allowSuperOutsideMethod: true }, "super.a"],
+			[{ sourceType: "script", checkPrivateFields: false }, "class A { m() { this.#x } }"],
+			[{ sourceType: "script", preserveParens: true }, "(a)"]
+		];
+		/**
+		 * @param {() => unknown} parse the parse
+		 * @returns {string} its outcome: the error, or the program's node count
+		 */
+		const outcome = (parse) => {
+			try {
+				parse();
+				return "ok";
+			} catch (error) {
+				return /** @type {Error} */ (error).message;
+			}
+		};
+		for (const [options, code] of cases) {
+			const estree = outcome(() =>
+				parseProgram(code, 0, { ...options, estree: true })
+			);
+			expect([options, outcome(() => parseProgram(code, 0, options))]).toEqual([
+				options,
+				estree
+			]);
+		}
+		const tree = parseProgram("(a)", 0, {
+			sourceType: "script",
+			preserveParens: true
+		});
+		expect(A.type(A.field(0, Field.expression, A.field(0, Field.body, tree)))).toBe(
+			NodeType.ParenthesizedExpression
+		);
+	});
+
+	it("reports tokens and the parse's events into the tree as acorn does", () => {
+		const code = "/* c */ a + b\nc = [1,]; /x/g";
+		/**
+		 * @param {boolean} estree whether to build ESTree objects
+		 * @returns {unknown[]} what each callback saw
+		 */
+		const report = (estree) => {
+			/** @type {import("../../../lib/javascript/syntax-parser").Token[]} */
+			const tokens = [];
+			/** @type {unknown[]} */
+			const events = [];
+			parseProgram(code, 0, {
+				sourceType: "script",
+				estree,
+				onToken: tokens,
+				onTokenRead: (parser) => events.push(["read", parser.start]),
+				onComment: (block, text, start) => events.push(["comment", text, start]),
+				onInsertedSemicolon: (end) => events.push(["semicolon", end]),
+				onTrailingComma: (end) => events.push(["comma", end])
+			});
+			return [
+				tokens.map((token) => [token.type.label, token.start, token.end]),
+				events
+			];
+		};
+		const tree = report(false);
+		expect(/** @type {unknown[]} */ (tree[0]).length).toBeGreaterThan(0);
+		expect(tree).toEqual(report(true));
+	});
+
 	it("refuses an ESTree parse a visitor starts, as a tree parse", () => {
 		expect(() =>
 			new SourceProcessor()
