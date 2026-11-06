@@ -5610,6 +5610,11 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(`function f(){return 1}${code}`)).toBe(
 			runProgram(`function f(){return 1}${source}`)
 		);
+		// Where a scope binds `NaN`, it prints as the division.
+		const shadowed = '(function(NaN){eval("");console.log(1*"a",NaN)})(5)';
+		expect(
+			minifyOnePass(shadowed, { compress: {}, mangle: false }).code
+		).toBe('!function(NaN){eval(""),console.log(0/0,NaN)}(5);');
 	});
 
 	it("should fold a conditional whose test is an array, object or function made in place", () => {
