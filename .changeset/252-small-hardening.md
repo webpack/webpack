@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep scripts decoded as UTF-8 when `charset` or `type="module"` is dropped.
+Keep scripts decoded as UTF-8, and run inline loaders in HTML URLs again.
