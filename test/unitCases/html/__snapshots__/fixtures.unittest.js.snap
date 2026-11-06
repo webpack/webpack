@@ -21547,6 +21547,27 @@ exports[`HTML syntax — fixtures source-processor-sort-attributes-sort-token-li
 
 exports[`HTML syntax — fixtures source-processor-sort-attributes-sort-token-lists-sorts-an-element-s-attributes prints {"mode":"minify"} 1`] = `"<div zz=1 aa=2 mm=3>x</div>"`;
 
+exports[`HTML syntax — fixtures source-processor-sort-attributes-writes-a-merged-html-tag-in-sorted-order parses 1`] = `
+"| <html>
+|   a=\\"1\\"
+|   b=\\"2\\"
+|   c=\\"3\\"
+|   <head>
+|   <body>
+|     <p>
+|       \\"x\\"
+|       <b>
+|         class=\\"1\\"
+|         id=\\"2\\"
+|       <table>
+|         <tbody>
+|           <tr>"
+`;
+
+exports[`HTML syntax — fixtures source-processor-sort-attributes-writes-a-merged-html-tag-in-sorted-order prints {"mode":"minify","sortAttributes":true} 1`] = `"<html a=1 b=2 c=3><p>x<b class=1 id=2></b><table><tr></table></html>"`;
+
+exports[`HTML syntax — fixtures source-processor-sort-attributes-writes-a-merged-html-tag-in-sorted-order prints {"mode":"minify"} 1`] = `"<html c=3 b=2 a=1><p>x<b id=2 class=1></b><table><tr></table></html>"`;
+
 exports[`HTML syntax — fixtures source-processor-stop-ends-an-html-walk-and-the-next-parse-starts-afresh parses 1`] = `
 "| <html>
 |   <head>

@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": "<html b=2 a=1>\n      -> <html a=1 b=2>",
-		"why": "the attributes of an `<html>` the first pass merges in are sorted only on a second pass; same attributes"
-	}
-]
