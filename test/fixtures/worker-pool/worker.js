@@ -40,3 +40,22 @@ module.exports.sleep = (ms) =>
 module.exports.returnFunction = () => () => {};
 
 module.exports.echo = (...args) => args;
+
+module.exports.rpcAdd = (context, a, b) => context.callMain("add", [a, b]);
+
+module.exports.rpcCloneFail = (context) => context.callMain("echo", [() => {}]);
+
+module.exports.rpcNoWaitCloneFail = (context) => {
+	context.callMainNoWait("echo", [() => {}]);
+	return "sent";
+};
+
+module.exports.rpcPending = (context) => {
+	context.callMain("never", []).catch(() => {});
+	return "pending";
+};
+
+module.exports.rpcHold = (context) => {
+	context.callMain("never", []).catch(() => {});
+	return new Promise(() => {});
+};

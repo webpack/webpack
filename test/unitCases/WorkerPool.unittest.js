@@ -125,6 +125,47 @@ describe("WorkerPool", () => {
 			await inline.release();
 		});
 
+		it("does not create a pool after close when none was used", async () => {
+			const webpack = require("../../lib/webpack");
+			const compiler = webpack({
+				entry: "data:text/javascript,1",
+				experiments: { threads: true }
+			});
+
+			await new Promise((resolve, reject) => {
+				compiler.close((err) => (err ? reject(err) : resolve(undefined)));
+			});
+
+			expect(WorkerPool.getWorkerPool(compiler)).toBeUndefined();
+		});
+
+		it("does not end the root pool when a child compiler closes", async () => {
+			const webpack = require("../../lib/webpack");
+			const compiler = webpack({
+				entry: "data:text/javascript,1",
+				experiments: { threads: true }
+			});
+			const worker = /** @type {import("../../lib/util/worker/Worker")} */ (
+				compiler.worker(TARGET)
+			);
+			const compilation = compiler.newCompilation(compiler.newCompilationParams());
+			const child = compiler.createChildCompiler(
+				compilation,
+				"child",
+				0,
+				{},
+				[]
+			);
+
+			await new Promise((resolve, reject) => {
+				child.close((err) => (err ? reject(err) : resolve(undefined)));
+			});
+			expect(await worker.run("add", 1, 2)).toBe(3);
+			await new Promise((resolve, reject) => {
+				compiler.close((err) => (err ? reject(err) : resolve(undefined)));
+			});
+		});
+
 		it("keeps the factory after close and refuses new work", async () => {
 			const webpack = require("../../lib/webpack");
 			const compiler = webpack({
@@ -222,6 +263,37 @@ describe("WorkerPool", () => {
 			expect(await pool.run(TARGET, "add", [1, 2])).toBe(3);
 		});
 
+		it("keeps the pool usable after releasing during a call", async () => {
+			const pool = createThreadPool({ max: 1 });
+			const running = pool.run(TARGET, "sleep", [50]);
+			await pool.release();
+			await running;
+			expect(await pool.run(TARGET, "add", [1, 2])).toBe(3);
+		});
+
+		it("uses the loader timeout after a loader job", async () => {
+			const pool = createThreadPool({
+				max: 1,
+				idleTimeout: 5000,
+				loaderIdleTimeout: 20
+			});
+			await pool.runJob(TARGET, "add", [1, 2], {
+				rpc: () => undefined
+			});
+			await new Promise((resolve) => {
+				setTimeout(resolve, 100);
+			});
+			expect(pool.stats.workers).toBe(0);
+		});
+
+		it("waits for an inline call before ending", async () => {
+			const pool = createPool({ max: 0 });
+			const running = pool.run(TARGET, "sleep", [50]);
+			await pool.end();
+			expect(await running).toBe(50);
+			expect(pool.stats.workers).toBe(0);
+		});
+
 		it("rejects a warmup whose module throws", async () => {
 			const pool = createThreadPool({ max: 1 });
 			await expect(pool.warmup([BROKEN], 1)).rejects.toThrow("broken module");
@@ -253,7 +325,10 @@ describe("WorkerPool", () => {
 	});
 
 	describeThreads("WorkerChild", () => {
-		it("answers preload and call messages over a port", async () => {
+		/**
+		 * @returns {{ child: EXPECTED_ANY, port2: EXPECTED_ANY, next: () => Promise<EXPECTED_ANY> }} a started child
+		 */
+		const createChild = () => {
 			const { MessageChannel } = require("worker_threads");
 			const WorkerChild = require("../../lib/util/worker/WorkerChild");
 			const { port1, port2 } = new MessageChannel();
@@ -276,7 +351,23 @@ describe("WorkerPool", () => {
 							waiting.push(resolve);
 						});
 
-			new WorkerChild(port1, 7).start();
+			const child = new WorkerChild(port1, 7);
+			child.start();
+			return { child, port2, next };
+		};
+
+		/**
+		 * @param {EXPECTED_ANY} port2 the main side of the port
+		 * @returns {Promise<void>} settled when the port closed
+		 */
+		const closed = (port2) =>
+			new Promise((resolve) => {
+				port2.once("close", resolve);
+			});
+
+		it("answers preload and call messages over a port", async () => {
+			const { port2, next } = createChild();
+
 			port2.postMessage({ type: "preload", id: 1, modules: [TARGET] });
 			expect(await next()).toEqual({ type: "preloaded", id: 1, ok: true });
 			port2.postMessage({
@@ -294,9 +385,123 @@ describe("WorkerPool", () => {
 				value: 3
 			});
 			port2.postMessage({ type: "close" });
-			await new Promise((resolve) => {
-				port2.once("close", resolve);
+			await closed(port2);
+		});
+
+		it("routes rpc calls to the main thread", async () => {
+			const { port2, next } = createChild();
+
+			port2.postMessage({
+				type: "job",
+				id: 2,
+				module: TARGET,
+				method: "rpcAdd",
+				args: [2, 3],
+				rpc: true
 			});
+			const rpc = await next();
+			expect(rpc).toMatchObject({
+				type: "rpc",
+				jobId: 2,
+				method: "add",
+				args: [2, 3]
+			});
+			port2.postMessage({
+				type: "rpc-result",
+				jobId: 2,
+				callId: rpc.callId,
+				ok: true,
+				value: 5
+			});
+			expect(await next()).toEqual({
+				type: "response",
+				id: 2,
+				ok: true,
+				value: 5
+			});
+			port2.postMessage({ type: "close" });
+			await closed(port2);
+		});
+
+		it("drops a pending rpc when its arguments cannot be cloned", async () => {
+			const { child, port2, next } = createChild();
+
+			port2.postMessage({
+				type: "job",
+				id: 2,
+				module: TARGET,
+				method: "rpcCloneFail",
+				args: [],
+				rpc: true
+			});
+			const response = await next();
+			expect(response).toMatchObject({ type: "response", id: 2, ok: false });
+			expect(response.error.message).toMatch(/could not be cloned/);
+			expect(child._rpc.size).toBe(0);
+			port2.postMessage({ type: "close" });
+			await closed(port2);
+		});
+
+		it("does not throw from a fire-and-forget rpc with cloned arguments", async () => {
+			const { child, port2, next } = createChild();
+
+			port2.postMessage({
+				type: "job",
+				id: 2,
+				module: TARGET,
+				method: "rpcNoWaitCloneFail",
+				args: [],
+				rpc: true
+			});
+			expect(await next()).toEqual({
+				type: "response",
+				id: 2,
+				ok: true,
+				value: "sent"
+			});
+			expect(child._rpc.size).toBe(0);
+			port2.postMessage({ type: "close" });
+			await closed(port2);
+		});
+
+		it("rejects pending rpc calls when the job finishes", async () => {
+			const { child, port2, next } = createChild();
+
+			port2.postMessage({
+				type: "job",
+				id: 2,
+				module: TARGET,
+				method: "rpcPending",
+				args: [],
+				rpc: true
+			});
+			expect(await next()).toMatchObject({ type: "rpc", jobId: 2 });
+			expect(await next()).toEqual({
+				type: "response",
+				id: 2,
+				ok: true,
+				value: "pending"
+			});
+			expect(child._rpc.size).toBe(0);
+			port2.postMessage({ type: "close" });
+			await closed(port2);
+		});
+
+		it("rejects pending rpc calls when the port closes", async () => {
+			const { child, port2, next } = createChild();
+
+			port2.postMessage({
+				type: "job",
+				id: 2,
+				module: TARGET,
+				method: "rpcHold",
+				args: [],
+				rpc: true
+			});
+			expect(await next()).toMatchObject({ type: "rpc", jobId: 2 });
+			child.close();
+			expect(child._rpc.size).toBe(0);
+			await closed(port2);
 		});
 	});
 });

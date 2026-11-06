@@ -64,8 +64,10 @@ thread-loader is a pitch loader: it borrows `loader-runner`'s pitch/normal order
 - `this.emitFile`
 - loader APIs injected by main-thread plugins
 - a custom `inputFileSystem` / memfs
+- a `readResource` hook for the module's initial resource (the worker reads it from disk; source maps use the main-thread hook)
 - functions or symbols inside loader options
 - the full `this._compilation` / `this._compiler`
+- `compilation.hooks.assetPath` rewrites, and path placeholders the snapshot does not carry; `this._compilation.getPath` covers the common name/hash/contenthash forms
 - `this._module`
 
 `this.emitFile` throws a clear error. Options that cannot be structured-cloned make the module fall back to the main thread before any loader runs.
@@ -108,6 +110,7 @@ While a loader job runs, the worker may send `rpc` messages:
 ## Process model
 
 - `worker_threads`, not child processes.
+- While a loader job has `loadModule` or `importModule` in flight, other modules in the same compilation run their loaders on the main thread. This avoids a worker waiting on a build that waits on a worker, and lowers parallelism during nested builds.
 - A native addon or a loader that changes process-global state is outside the guarantee; such loaders should stay on the main thread or use the external thread-loader package.
 - A worker crash rejects the module build with the worker id and exit code.
 

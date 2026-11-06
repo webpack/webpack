@@ -64,7 +64,7 @@ No `bind`, no `end`, no handles, no shared references.
 
 - the factory is created once per `compiler.root`;
 - child compilers return the root's facade;
-- `compiler.close()` sets a closed flag and taps `shutdown` to end the pool;
+- `compiler.close()` sets a closed flag and ends the pool before `shutdown`;
 - after close, a factory that was never created returns `undefined`, and one that was created returns the same ended facade, whose calls reject.
 
 ## Worker module contract
@@ -78,25 +78,27 @@ A target module is CommonJS. Each export called through the pool has the shape `
 
 ## Protocol
 
-| Direction     | Message     | Fields                           |
-| ------------- | ----------- | -------------------------------- |
-| main → thread | `preload`   | `id`, `modules`                  |
-| thread → main | `preloaded` | `id`, `ok`, `error?`             |
-| main → thread | `call`      | `id`, `module`, `method`, `args` |
-| thread → main | `response`  | `id`, `ok`, `value` or `error`   |
-| main → thread | `close`     | none                             |
+| Direction     | Message     | Fields                                  |
+| ------------- | ----------- | --------------------------------------- |
+| main → thread | `preload`   | `id`, `modules`                         |
+| thread → main | `preloaded` | `id`, `ok`, `error?`                    |
+| main → thread | `job`       | `id`, `module`, `method`, `args`, `rpc` |
+| thread → main | `response`  | `id`, `ok`, `value` or `error`          |
+| main → thread | `close`     | none                                    |
 
 Ordering rules:
 
-- The port delivers in order, so a `preload` posted before a `call` is seen first.
-- The child requires modules on first use; a `call` does not wait for `preloaded`.
-- A call whose response cannot be posted falls back to an error response carrying the clone failure.
+- The port delivers in order, so a `preload` posted before a `job` is seen first.
+- The child requires modules on first use; a `job` does not wait for `preloaded`.
+- A job whose response cannot be posted falls back to an error response carrying the clone failure.
+- A loader job (`rpc: true`) may send `rpc` messages; the main thread answers with `rpc-result`.
 
 ## Scheduling
 
 - One FIFO queue. `_dispatch` runs after every enqueue, settle and exit.
-- Each thread runs one call at a time.
-- Among idle threads, the pool takes the first from its idle list. If none can take the call and fewer than `max` threads live, it spawns one.
+- Each thread runs one plain call at a time, or up to `loaders.parallelJobs` loader jobs.
+- Among idle threads, the pool takes the last from its idle list (LIFO). If none can take the call and fewer than `max` threads live, it spawns one.
+- A queued plain call keeps the head of the queue: when every thread is busy, later loader jobs wait even if a thread still has loader capacity. This is head-of-line blocking; one FIFO queue trades loader throughput for strict call order.
 - When a call settles, its thread goes idle and dispatch continues.
 - On exit, the thread is removed. Its in-flight call rejects with `Worker <id> exited with code <code> during <method>`. The next queued call spawns a replacement.
 - A synchronous `postMessage` failure rejects that call; the thread stays usable.
@@ -112,14 +114,14 @@ Ordering rules:
   - `ref()`s every thread and closes idle ones;
   - waits for in-flight calls, with a 1 second deadline after which the remaining threads are terminated;
   - resolves when every thread exited; in-flight calls reject through the normal exit path.
-- `end()` always resolves, so `compiler.close()` still reaches `cache.shutdown`.
-- `compiler.hooks.shutdown` ends the pool. Consumers never call `end()`.
+- `end()` resolves after every thread exited. Inline calls cannot be terminated, so an inline task that never settles also delays `end()`.
+- `compiler.close()` ends the pool. Consumers never call `end()`.
 
 ## Inline path
 
 A call runs inline when `max === 0` or `worker_threads` is unavailable.
 
-Inline requires the module on the main thread, caches it, and calls the method. With `strictClone`, arguments and results go through `v8.serialize` / `v8.deserialize`, which approximates structured clone for the values tests cover; it does not model `MessagePort` or transfer. The compiler passes `strictClone: false`.
+Inline requires the module on the main thread, caches it, and calls the method. With `strictClone`, arguments and results go through `v8.serialize` / `v8.deserialize`, which approximates structured clone for the values tests cover; it does not model `MessagePort` or transfer. The compiler passes `strictClone: true`, so inline calls reject values the thread path cannot clone. Loader jobs are unaffected: a loader chain that cannot run in a worker falls back to `runLocal`.
 
 ## Configuration
 
@@ -127,7 +129,11 @@ Inline requires the module on the main thread, caches it, and calls the method. 
 module.exports = {
 	experiments: {
 		threads: {
-			max: 4
+			max: 4,
+			loaders: {
+				parallelJobs: 20,
+				poolTimeout: 500
+			}
 		}
 	}
 };
@@ -139,7 +145,7 @@ module.exports = {
 | `true`            | `{ max: cores - 1 }`.                        |
 | `max: n`          | `Math.floor(n)`; `0` runs every call inline. |
 
-`cores` is `os.availableParallelism()` when available, else `os.cpus().length`; the result is clamped to at least 0. `idleTimeout` is fixed at 30 seconds.
+`cores` is `os.availableParallelism()` when available, else `os.cpus().length`; the result is clamped to at least 0. `max` is shared with loader threads. Plain calls keep an idle thread for 30 seconds; loader jobs use `loaders.poolTimeout` (default 500 ms).
 
 ## First consumer
 

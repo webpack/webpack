@@ -10,6 +10,38 @@ module.exports = function (source) {
 
 	const options = this.getOptions();
 	const callback = this.async();
+	const context = this.context || this.rootContext;
+	const contextified = this.utils.contextify(context, this.resourcePath);
+	const absolutified = this.utils.absolutify(context, "./value.js");
+	const path = /** @type {EXPECTED_ANY} */ (
+		this._compilation
+	).getPath("[name]_[contenthash]", {
+		filename: "style.module.css",
+		contentHash: "abc",
+		chunk: {
+			name: "style",
+			id: "style",
+			hash: "chunk",
+			contentHash: { css: "abc" }
+		}
+	});
+	const contentPath = /** @type {EXPECTED_ANY} */ (
+		this._compilation
+	).getPath("[contenthash]", {
+		contentHashType: "css",
+		chunk: { contentHash: { css: "abc" } }
+	});
+	const digestPath = /** @type {EXPECTED_ANY} */ (this._compilation).getPath(
+		"[hash:base64]",
+		{ hash: "0123456789abcdef0123456789abcdef" }
+	);
+	const digestLengthPath = /** @type {EXPECTED_ANY} */ (
+		this._compilation
+	).getPath("[hash:base64:8]", { hash: "0123456789abcdef0123456789abcdef" });
+	const fullHashPath = /** @type {EXPECTED_ANY} */ (this._compilation).getPath(
+		"[fullhash:base64]",
+		{ fullHash: "0123456789abcdef0123456789abcdef" }
+	);
 
 	if (!options.pattern.test("worker")) {
 		callback(new Error("loader options did not survive the worker"));
@@ -45,7 +77,9 @@ module.exports = function (source) {
 						`module.exports = ${JSON.stringify(
 							`worker:${options.value}:${raw(
 								/** @type {string | Buffer} */ (loaded)
-							).includes("loaded")}:${imported}`
+							).includes("loaded")}:${imported}:${typeof contextified}:${absolutified.endsWith(
+								"value.js"
+							)}:${path}:${contentPath}:${digestPath}:${digestLengthPath}:${fullHashPath}`
 						)};`
 					);
 				}, 10);
