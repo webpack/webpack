@@ -18478,6 +18478,11 @@ declare interface KnownExternalModuleBuildInfo {
 	 * true when emitting an ESM external (`output.module`)
 	 */
 	javascriptModule?: boolean;
+
+	/**
+	 * true when a node core module is read through `process.getBuiltinModule()`
+	 */
+	builtinGetter?: boolean;
 }
 declare interface KnownHooks {
 	/**
@@ -30572,8 +30577,15 @@ declare abstract class RuntimeTemplate {
 
 	/**
 	 * Reads a node builtin via `process.getBuiltinModule()`, guarded to stay falsy off node so universal `["node", "web"]` bundles don't crash (also falsy on node <22.3).
+	 * Both guards are dropped only on a node platform with the getter; off it a browser `process` shim may lack the getter.
 	 */
 	getBuiltinModule(request: string, access?: string): string;
+
+	/**
+	 * Pieces of a `Promise` with node's `fs.readFile` in reach, for ESM output that has no `require`.
+	 * The getter reads `fs` synchronously where the target has it; otherwise `import()` loads it.
+	 */
+	nodeReadFilePromise(): { open: string; readFile: string; close: string };
 
 	/**
 	 * Renders a `then` callback calling `fn` with `args`. An arrow keeps the `this`
