@@ -436,7 +436,7 @@ describe("XmlSyntax — parsing", () => {
 			NodeType.Text
 		]);
 		const x = /** @type {MatElement} */ (root.children[1]);
-		expect(x).toMatchObject({ tagName: "x", start: 65, end: 70 });
+		expect(x).toMatchObject({ tagName: "x", start: 66, end: 69 });
 		expect(decodeXmlAttribute(x.attributes[0].value)).toBe("1");
 		expect(root.children[0]).toMatchObject({ data: "a(" });
 		expect(root.children[2]).toMatchObject({ data: ")b" });
