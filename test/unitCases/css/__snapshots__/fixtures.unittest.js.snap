@@ -3066,6 +3066,10 @@ exports[`CSS syntax — fixtures css-syntax-minify-custom-media-custom-selector-
 
 exports[`CSS syntax — fixtures css-syntax-minify-custom-media-custom-selector-writes-the-query-wherever-a prints {"mode":"minify"} 1`] = `"@custom-media --m (width>400px);@media (--m){a{color:red}}"`;
 
+exports[`CSS syntax — fixtures css-syntax-minify-custom-property-left-open-by-a-lone-backslash-closes parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"--v\\"],\\":\\",[\\"()\\",[\\"ident\\",\\"x\\"],\\" \\",[\\"ident\\",\\"y�\\"]]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-custom-property-left-open-by-a-lone-backslash-closes prints {"mode":"minify"} 1`] = `"a{--v:(x y�)}"`;
+
 exports[`CSS syntax — fixtures css-syntax-minify-custom-selector-keeps-a-selector-name-apart-from-a-custom parses 1`] = `"[[\\"at-rule\\",\\"custom-selector\\",[\\" \\",\\":\\",[\\"ident\\",\\"--m\\"],\\" \\",[\\"ident\\",\\"h1\\"]],null],[\\"at-rule\\",\\"custom-media\\",[\\" \\",[\\"ident\\",\\"--m\\"],\\" \\",[\\"()\\",[\\"ident\\",\\"x\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]],null],[\\"at-rule\\",\\"media\\",[\\" \\",[\\"()\\",[\\"ident\\",\\"--m\\"]]],[\\":\\",[\\"ident\\",\\"--m\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]]"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-custom-selector-keeps-a-selector-name-apart-from-a-custom prints {"mode":"minify","environment":{"browsers":["chrome 120"]},"transforms":{"customMedia":true,"customSelectors":true}} 1`] = `"@media (x:1){:is(h1){color:red}}"`;

@@ -14873,7 +14873,7 @@ amespace x;f{color:red}\\"
 
 exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-reads-each-sheet-s-escapes-and-end prints {"mode":"minify","mergeStyles":true} 1`] = `
 "<style>a{}@\\\\0 namespace x;b{color:red}</style><p>1<style>c{color:red}</style><style>@na\\\\me\\\\space x;d{color:red}</style><p>2<style>e{color:red}@\\\\6e\\\\
-amespace x;f{color:red}</style><p>3<style>g{--v:(x</style><style>h{color:red}</style><p>4<style>i{--v:(x\\\\</style><style>j{color:red}</style><p>5<style>k{color:red}�{}l{color:red}</style><p>6<style>m{color:red}url(x�){}n{color:red}</style>"
+amespace x;f{color:red}</style><p>3<style>g{--v:(x</style><style>h{color:red}</style><p>4<style>i{--v:(x�)}j{color:red}</style><p>5<style>k{color:red}�{}l{color:red}</style><p>6<style>m{color:red}url(x�){}n{color:red}</style>"
 `;
 
 exports[`HTML syntax — fixtures source-processor-merging-adjacent-style-reads-each-sheet-s-escapes-and-end prints {"mode":"minify"} 1`] = `
