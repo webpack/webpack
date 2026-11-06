@@ -625,8 +625,7 @@ exports[`CSS syntax — fixtures css-syntax-beautifying-the-parsing-corpus-shoul
 
 exports[`CSS syntax — fixtures css-syntax-beautifying-the-parsing-corpus-should-beautify-newline-windows-css prints {"mode":"minify"} 1`] = `
 "a:before{content:\\"A really long \\\\
-awesome string\\";color:#0f0;a24:\\\\123456
- B;test:url(./img.png);test:url()}"
+awesome string\\";color:#0f0;a24:\\\\123456  B;test:url(./img.png);test:url()}"
 `;
 
 exports[`CSS syntax — fixtures css-syntax-beautifying-the-parsing-corpus-should-beautify-number-css parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"div\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"10\\",10,\\"integer\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"+10\\",10,\\"integer\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"-10\\",-10,\\"integer\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"0.1\\",0.1,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"+0.1\\",0.1,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"-0.1\\",-0.1,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"-.1\\",-0.1,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"+.1\\",0.1,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"10\\",10,\\"integer\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\".10\\",0.1,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"12.34\\",12.34,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"0.1\\",0.1,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1.0\\",1,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"0.0\\",0,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"+0.0\\",0,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"-0.0\\",0,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\".0\\",0,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1.200000\\",1.2,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1.2e2\\",120,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1e2\\",100,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\".2e2\\",20,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1.2E2\\",120,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1.2e+2\\",120,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1.2e-2\\",0.012,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"-1\\",-1,\\"integer\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"-1.2\\",-1.2,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\".2\\",0.2,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"-.2\\",-0.2,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"+.2\\",0.2,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"-1.2e3\\",-1200,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1.75\\",1.75,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"+1.75\\",1.75,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1e0\\",1,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1e1\\",10,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1e+1\\",10,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1e-1\\",0.1,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1e-10\\",1e-10,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1\\",1,\\"integer\\"],[\\"number\\",\\"+2\\",2,\\"integer\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1\\",1,\\"integer\\"],[\\"number\\",\\"-2\\",-2,\\"integer\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"4.01\\",4.01,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"-456.8\\",-456.8,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\".60\\",0.6,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\".0060\\",0.006,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"10e3\\",10000,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"-3.4e-2\\",-0.034,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"0.5600000000\\",0.56,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"10e6\\",10000000,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"10000000\\",10000000,\\"integer\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"0.0\\",0,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"-0.0\\",0,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"+0.0\\",0,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1e1\\",10,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1e2\\",100,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1e3\\",1000,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"1e4\\",10000,\\"number\\"],\\";\\",\\" \\",[\\"ident\\",\\"property\\"],\\":\\",\\" \\",[\\"number\\",\\"100.1e-6\\",0.0001001,\\"number\\"],\\";\\",\\" \\"]]]"`;
@@ -14488,7 +14487,7 @@ exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-consume
 
 exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-consumes-a-crlf-pair-as-one-escape-8 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"1abc\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]"`;
 
-exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-consumes-a-crlf-pair-as-one-escape-8 prints {"mode":"minify"} 1`] = `"\\".\\\\\\\\31\\\\r\\\\nabc{color:red}\\""`;
+exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-consumes-a-crlf-pair-as-one-escape-8 prints {"mode":"minify"} 1`] = `".\\\\31 abc{color:red}"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-does-not-separate-tokens-that-cannot parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"],\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]]]"`;
 
@@ -15006,49 +15005,31 @@ exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a
 
 exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"�\\"],\\" \\",[\\"ident\\",\\"c\\"]]]]"`;
 
-exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it prints {"mode":"minify"} 1`] = `
-"a{b:\\\\123456
- c}"
-`;
+exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it prints {"mode":"minify"} 1`] = `"a{b:\\\\123456  c}"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-2 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"�\\"],\\" \\",[\\"ident\\",\\"c\\"]]]]"`;
 
-exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-2 prints {"mode":"minify"} 1`] = `
-"a{b:\\\\123456
- c}"
-`;
+exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-2 prints {"mode":"minify"} 1`] = `"a{b:\\\\123456  c}"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-3 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"𒍅\\"],\\" \\",[\\"ident\\",\\"c\\"]]]]"`;
 
-exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-3 prints {"mode":"minify"} 1`] = `
-"a{b:\\\\12345
- c}"
-`;
+exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-3 prints {"mode":"minify"} 1`] = `"a{b:\\\\12345  c}"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-4 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"𒍅\\"],\\" \\",[\\"ident\\",\\"c\\"]]]]"`;
 
-exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-4 prints {"mode":"minify"} 1`] = `
-"a{b:\\\\12345
- c}"
-`;
+exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-4 prints {"mode":"minify"} 1`] = `"a{b:\\\\12345  c}"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-5 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"\\\\u0004\\"],\\" \\",[\\"ident\\",\\"c\\"]]]]"`;
 
-exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-5 prints {"mode":"minify"} 1`] = `
-"a{b:\\\\4
- c}"
-`;
+exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-5 prints {"mode":"minify"} 1`] = `"a{b:\\\\4  c}"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-6 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"\\\\u0004\\"],\\" \\",[\\"ident\\",\\"c\\"]]]]"`;
 
-exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-6 prints {"mode":"minify"} 1`] = `
-"a{b:\\\\4
- c}"
-`;
+exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-6 prints {"mode":"minify"} 1`] = `"a{b:\\\\4  c}"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-7 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"1\\"],\\" \\",[\\"ident\\",\\"c\\"]]]]"`;
 
-exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-7 prints {"mode":"minify"} 1`] = `"\\"a{b:\\\\\\\\31\\\\r\\\\n c}\\""`;
+exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-7 prints {"mode":"minify"} 1`] = `"a{b:\\\\31  c}"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-8 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"A\\"],\\" \\",[\\"ident\\",\\"c\\"]]]]"`;
 

@@ -686,8 +686,8 @@ describe("CssSyntax — minify token-boundary safety", () => {
 	});
 
 	it("consumes a CRLF pair as one escape terminator", () => {
-		// An escape that has to stay keeps its whole CRLF terminator.
-		expect(min(fixture("css", "css-syntax-minify-token-boundary-safety-consumes-a-crlf-pair-as-one-escape-8"))).toBe(".\\31\r\nabc{color:red}");
+		// An escape that has to stay writes its whole CRLF terminator as one space.
+		expect(min(fixture("css", "css-syntax-minify-token-boundary-safety-consumes-a-crlf-pair-as-one-escape-8"))).toBe(".\\31 abc{color:red}");
 	});
 
 	it("parts a value the escape before it already ate the separator for", () => {
@@ -696,10 +696,10 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		for (const digits of ["123456", "12345", "4"]) {
 			const src = `a{b:\\${digits}\n\tc}`;
 			const out = min(src);
-			expect(out).toBe(`a{b:\\${digits}\n c}`);
+			expect(out).toBe(`a{b:\\${digits}  c}`);
 		}
 		// A CRLF terminator is one terminator, so it needs the one separator too.
-		expect(min(fixture("css", "css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-7"))).toBe("a{b:\\31\r\n c}");
+		expect(min(fixture("css", "css-syntax-minify-token-boundary-safety-parts-a-value-the-escape-before-it-7"))).toBe("a{b:\\31  c}");
 	});
 });
 
