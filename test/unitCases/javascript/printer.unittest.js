@@ -261,11 +261,11 @@ PRINTED_SOURCES.push(
 describe("JavaScript minifier printing a SyntaxTree", () => {
 	it("should mangle and print in one walk where it compresses in one pass", () => {
 		const printed = minifyOnePass(
-			"function foo(longName, other) { var local = longName + other; return local * 2; } foo(1, 2); class A { #field = 1; read() { return this.#field } static #hidden() {} } print(new A().read());",
+			"function foo(longName, other) { var local = longName + other; return local * 2; } foo(1, 2); foo(3, 4); class A { #field = 1; read() { return this.#field } static #hidden() {} } print(new A().read());",
 			{ compress: {}, mangle: {}, toplevel: true }
 		);
 		expect(printed.code).toBe(
-			"function e(e,o){return(e+o)*2}e(1,2);class o{#e=1;read(){return this.#e}}print((new o).read());"
+			"function o(o,e){return(o+e)*2}o(1,2),o(3,4);class e{#o=1;read(){return this.#o}}print((new e).read());"
 		);
 	});
 
@@ -376,7 +376,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				'/** doc */ var A = "[object Array]"; /** doc */ var B = 200, C = 1, D = "d"; function f(o){ var a = 1; function g(){ return a } var b = g; const K = 2; if (o) { var u = 1; h(K, K) } return [o.t == A, A, B, B.x, C, {C}, D, new Error("e"), new Map()] } function k(){ g(V); var V = 2; } f(k)',
 				{ compress: { toplevel: true } },
-				'var A="[object Array]",B=200;function f(r){if(r)h(2,2);return[r.t==A,A,B,B.x,1,{C:1},"d",Error("e"),new Map]}function k(){g(r);var r=2}f(k);'
+				'var A="[object Array]",B=200;(function(r){if(r)h(2,2);return[r.t==A,A,B,B.x,1,{C:1},"d",Error("e"),new Map]})(function(){g(r);var r=2});'
 			],
 			// A read where the value would print otherwise keeps the name, and so
 			// does a value no literal of a name's length prints the same.
@@ -664,6 +664,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{ format: { comments: /keep/ } },
 				"function f(){var n=/* keep */function(){};h(n)}function i(){g(1)}"
 			],
+			// A top-level function moves to its one read where `toplevel` drops top-level names, but no `topRetain` is given.
+			["function c(){return 1}function p(){console.log(c())}p();function u(){return 2}console.log(u(),u())", { compress: { toplevel: true }, mangle: { toplevel: true } }, "(function(){console.log(1)})();function n(){return 2}console.log(n(),n());"],
+			["function c(){return 1}console.log(c())", {}, "function c(){return 1}console.log(c());"],
+			["function c(){return 1}console.log(c())", { compress: { toplevel: true, top_retain: ["c"] }, mangle: { toplevel: true } }, "function c(){return 1}console.log(c());"],
 			// A function moved to its one read.
 			[
 				"function f(){ var g = function(){ return 1 }; h(g) + 1 } function i(){ var k = () => {}; h(k) }",
@@ -928,7 +932,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(a, b, c) { for (const t of a) { if (t < 1) continue; if (t > 9) { continue } g(t) } if (a) return; if (b = c, b) return; if (a ?? b) return; if (c) break_(); g() }",
 				{},
-				"function f(t,f,n){for(let f of t){if(f<1||f>9)continue;g(f)}if(t||(f=n,f)||(t??f))return;if(n)break_();g()}"
+				"function f(t,f,n){for(let f of t){if(f<1||f>9)continue;g(f)}if(t||(f=n)||(t??f))return;if(n)break_();g()}"
 			],
 			// A conditional `dead_code` folds keeps the assignment of the branch it prints.
 			[
@@ -1514,6 +1518,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["(0,foo)();(0,foo)``;(0,foo)?.();(!0,a.b)();(1,2,a.b)();(0,a.b)();(0,eval)();typeof(0,foo);(x(),foo)``;(function(){},foo)``;(x(),a.b)()", {}, "foo(),foo``,foo?.(),(0,a.b)(),(0,a.b)(),(0,a.b)(),(0,eval)(),foo,(x(),foo)``,foo``,(x(),a.b)();"],
 			// esbuild's `-(a,b)` as `a,-b`, and `yield` or `await` alike, where a sequence stands bare, but where its first value would open the statement as a block.
 			["-(a(),b);~(a(),b,c);+(a(),1);-(a(),-b);x=-(a(),b);-({[f()]:0},g());async function h(){await(c(),d);await(c(),d+e)}function*k(){yield(c(),d);yield*(c(),d)}", {}, "a(),-b,a(),b,~c,a(),+1,a(),-(-b),x=-(a(),b),-({[f()]:0},g());async function h(){c(),await d,c(),await(d+e)}function*k(){c(),yield d,c(),yield*d}"],
+			// terser's `(a=x(),a)` as `a=x()` for a declared name no `with` reaches.
+			["function f(a,b){(a=x(),a)?a++:b();return c(),a=x(),a}function g(a){with(o)return a=x(),a}function h(){return u=x(),u}", {}, "function f(n,u){return(n=x())?n++:u(),c(),n=x()}function g(a){with(o)return a=x(),a}function h(){return u=x(),u}"],
 			// `typeof` reads a declared name or a member bare alike, but an undeclared name throws read as a value.
 			["function f(o){return[typeof(0,o),typeof(0,o.x),typeof(0,u),typeof(g(),o)]}", {}, "function f(o){return[typeof o,typeof o.x,typeof(0,u),typeof(g(),o)]}"],
 			["function f(){let a=u;return typeof a}function g(){let a=o;return typeof a}", {}, "function f(){return typeof(0,u)}function g(){return typeof(0,o)}"],
@@ -3773,11 +3779,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 	it("should keep the names a global pattern keeps, however often it is asked", () => {
 		const pattern = /keep/g;
 		const { code } = minifyOnePass(
-			"function keepMe(){} function keepToo(){} function dropMe(){} g(keepMe, keepToo, dropMe)",
+			"function keepMe(){} function keepToo(){} function dropMe(){} g(keepMe, keepToo, dropMe); g(keepMe, keepToo, dropMe)",
 			{ compress: {}, mangle: { keep_fnames: pattern }, keep_fnames: pattern, toplevel: true }
 		);
 		expect(code).toBe(
-			"function keepMe(){}function keepToo(){}function e(){}g(keepMe,keepToo,e);"
+			"function keepMe(){}function keepToo(){}function e(){}g(keepMe,keepToo,e),g(keepMe,keepToo,e);"
 		);
 		expect(pattern.lastIndex).toBe(0);
 	});
