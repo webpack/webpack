@@ -2,9 +2,9 @@
 
 exports[`ConfigTestCases html minimize-end-of-input minimize-end-of-input should compile 1`] = `
 Object {
-  "bogus-comment.html": "<!doctype html><body><p>a bogus comment the input ends inside<?xml version=\\"1></body></html>",
-  "comment-closing-bracket.html": "<!doctype html><body><div>a conditional comment the input ends inside, on a > of its own<!--[if IE]>--></div></body></html>",
-  "comment.html": "<!doctype html><body><p>a conditional comment the input ends inside<!--[if IE 8]><p>x--></body></html>",
+  "bogus-comment.html": "<!doctype html><body><p>a bogus comment the input ends inside<?xml version=\\"1></body>",
+  "comment-closing-bracket.html": "<!doctype html><body><div>a conditional comment the input ends inside, on a > of its own<!--[if IE]>--></div></body>",
+  "comment.html": "<!doctype html><body><p>a conditional comment the input ends inside<!--[if IE 8]><p>x--></body>",
   "css.html": "<!doctype html><title>css</title><div style=--x:lab(50%>a custom property left inside a function</div>
 <div style=--x:[>inside a block</div>
 <div style=--x:f(g(x>inside two</div>
@@ -18,8 +18,8 @@ Object {
 <style>.b{&:is()}</style>
 <style>.c{color:red}</style>
 ",
-  "end-tag-br.html": "<!doctype html><body><div>an end tag the input ends inside</div></body></html>",
-  "end-tag-p.html": "<!doctype html><body><div>an end tag the input ends inside</div></body></html>",
-  "style-body.html": "<!doctype html><body><style>.a{--x:lab(50%</style></body></html>",
+  "end-tag-br.html": "<!doctype html><body><div>an end tag the input ends inside</div></body>",
+  "end-tag-p.html": "<!doctype html><body><div>an end tag the input ends inside</div></body>",
+  "style-body.html": "<!doctype html><body><style>.a{--x:lab(50%</style></body>",
 }
 `;

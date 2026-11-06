@@ -1,0 +1,7 @@
+[
+	{
+		"mode": "minify",
+		"mergeStyles": true,
+		"mergeScripts": true
+	}
+]

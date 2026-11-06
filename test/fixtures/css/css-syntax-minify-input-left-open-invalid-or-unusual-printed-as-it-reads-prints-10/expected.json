@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "respelling escape",
+		"contains": "eal\n      -> \\65 al",
+		"why": "a declaration, selector or block that is invalid or left open, which the printer writes back as authored, escape included"
+	}
+]

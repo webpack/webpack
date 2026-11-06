@@ -1,0 +1,11 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"chrome 60"
+			]
+		},
+		"mergeDistantRules": true,
+		"mode": "minify"
+	}
+]

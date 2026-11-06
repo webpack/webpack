@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {
+			"normalizeNumericAttributes": false
+		}
+	},
+	{
+		"mode": "minify"
+	}
+]

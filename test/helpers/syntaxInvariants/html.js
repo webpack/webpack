@@ -253,9 +253,12 @@ const hasControl = (value) => {
 /**
  * @param {string} value a decoded value
  * @param {string} delimiter the delimiter it will be written in
- * @returns {string} the value as that delimiter's contents
+ * @returns {string | null} the value as that delimiter's contents, or null for one holding a CR
  */
 const escapeQuoted = (value, delimiter) => {
+	// A CR here is one the source wrote, which reads as LF, or one a reference
+	// spelled, which stays: nothing tells the two apart.
+	if (value.includes("\r")) return null;
 	const escaped = value.replace(AMPERSAND, "&amp;");
 	return delimiter === '"'
 		? escaped.replace(QUOTATION_MARK, "&#34;")
@@ -301,11 +304,17 @@ const asReferences = (value) => {
 const RESPELLINGS = [
 	{
 		name: "quote-double",
-		write: (site) => `${site.name}="${escapeQuoted(site.value, '"')}"`
+		write: (site) => {
+			const escaped = escapeQuoted(site.value, '"');
+			return escaped === null ? null : `${site.name}="${escaped}"`;
+		}
 	},
 	{
 		name: "quote-single",
-		write: (site) => `${site.name}='${escapeQuoted(site.value, "'")}'`
+		write: (site) => {
+			const escaped = escapeQuoted(site.value, "'");
+			return escaped === null ? null : `${site.name}='${escaped}'`;
+		}
 	},
 	{
 		name: "unquote",
@@ -488,9 +497,11 @@ const htmlInnerRanges = (nodePath) => {
 	const count = nodePath.fieldCount(Field.attributes);
 	for (let index = 0; index < count; index++) {
 		const attribute = nodePath.field(index, Field.attributes);
-		const [nameStart, nameEnd] = /** @type {[number, number]} */ (
-			nodePath.rangeOf(Part.name, attribute)
-		);
+		const name = nodePath.rangeOf(Part.name, attribute);
+		// The copy `<selectedcontent>` mirrors of an option's content carries
+		// the option's attributes without a source of their own.
+		if (name === null) continue;
+		const [nameStart, nameEnd] = name;
 		if (nameStart < start || nameStart >= tagEnd) continue;
 		inner.push(["attribute name", nameStart, nameEnd]);
 		const value = nodePath.rangeOf(Part.value, attribute);

@@ -1,0 +1,18 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"safari 15"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"safari 16"
+			]
+		}
+	}
+]

@@ -8,5 +8,5 @@ exports[`ConfigTestCases html marquee-scope marquee-scope should compile 1`] = `
 <marquee><table><tr><td>cell
 
 
-</table></marquee></body></html>"
+</table></marquee></body>"
 `;

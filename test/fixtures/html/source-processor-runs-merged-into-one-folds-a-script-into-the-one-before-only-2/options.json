@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"mergeScripts": true,
+		"transforms": {
+			"comments": true
+		}
+	}
+]

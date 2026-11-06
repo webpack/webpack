@@ -2577,6 +2577,8 @@ describe("a color rewrite paints as the color it replaced", () => {
 				"a{color:red}}}",
 				"a{content:'\\'",
 				"@namespace url(http://www.w3.org/2000/svg);",
+				"@\\6e \\61 \\6d \\65 \\73 \\70 \\61 \\63 \\65  url(http://www.w3.org/2000/svg);",
+				// One space ends the last escape, so `url` runs on into the name.
 				"@\\6e \\61 \\6d \\65 \\73 \\70 \\61 \\63 \\65 url(http://www.w3.org/2000/svg);"
 			];
 			// A custom property's value is kept open as the input left it, and a
@@ -2585,7 +2587,7 @@ describe("a color rewrite paints as the color it replaced", () => {
 				".a{--x:f(",
 				".a{--x:{",
 				"@namespace url(http://www.w3.org/2000/svg);",
-				"@\\6e \\61 \\6d \\65 \\73 \\70 \\61 \\63 \\65 url(http://www.w3.org/2000/svg);"
+				"@\\6e \\61 \\6d \\65 \\73 \\70 \\61 \\63 \\65  url(http://www.w3.org/2000/svg);"
 			]);
 			const seconds = [
 				"b{color:#00f}",

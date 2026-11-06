@@ -1,0 +1,96 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 120"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 130",
+				"chrome 40"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 40",
+				"firefox 40"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 40",
+				"op_mini all"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 40"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"firefox 40"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"firefox 50"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"ie 11"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"ios_saf 15.0-15.1"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"safari 17"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"safari TP"
+			]
+		}
+	},
+	{
+		"mode": "minify"
+	}
+]

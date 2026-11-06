@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"rewriteCustomProperties": true
+	},
+	{
+		"mode": "minify"
+	}
+]

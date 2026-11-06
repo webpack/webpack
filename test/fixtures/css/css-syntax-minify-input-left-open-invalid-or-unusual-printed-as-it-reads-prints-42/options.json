@@ -1,0 +1,12 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"firefox 120"
+			]
+		},
+		"mergeDistantRules": true,
+		"convertApproximateColors": true,
+		"mode": "minify"
+	}
+]

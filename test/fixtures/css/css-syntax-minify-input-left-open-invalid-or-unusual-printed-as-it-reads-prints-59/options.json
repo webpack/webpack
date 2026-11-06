@@ -1,0 +1,10 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"ie 9"
+			]
+		},
+		"mode": "minify"
+	}
+]

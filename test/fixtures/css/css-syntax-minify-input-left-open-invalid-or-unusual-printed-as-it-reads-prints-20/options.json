@@ -1,0 +1,11 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"opera 12"
+			]
+		},
+		"mergeDistantRules": true,
+		"mode": "minify"
+	}
+]

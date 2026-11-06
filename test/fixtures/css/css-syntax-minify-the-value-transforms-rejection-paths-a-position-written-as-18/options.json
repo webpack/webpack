@@ -1,0 +1,21 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 140"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"opera 12"
+			]
+		}
+	},
+	{
+		"mode": "minify"
+	}
+]

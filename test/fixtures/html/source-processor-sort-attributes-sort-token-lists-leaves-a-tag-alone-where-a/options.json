@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"sortAttributes": true
+	},
+	{
+		"mode": "minify"
+	}
+]

@@ -1,0 +1,17 @@
+[
+	{
+		"mode": "minify",
+		"declareCharset": false
+	},
+	{
+		"mode": "minify",
+		"declareCharset": true,
+		"transforms": {
+			"rewriteEscapes": false
+		}
+	},
+	{
+		"mode": "minify",
+		"declareCharset": true
+	}
+]

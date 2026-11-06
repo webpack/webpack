@@ -735,11 +735,6 @@ const CSS_RESPELLINGS = [
 	}
 ];
 
-// What an invalid or unterminated unit-test input is written back as.
-// cspell:ignore widt conten onten idth rint
-const WRITTEN_AS_AUTHORED =
-	"a declaration, selector or block that is invalid or left open, which the printer writes back as authored, escape included";
-
 // A divergence the printer has not answered for yet, with what it is. Read by
 // the report and the gate: an entry matching nothing is itself a finding, so
 // the fix retires its entry rather than leaving it to rot.
@@ -748,25 +743,13 @@ const EXPECTED = [
 	{
 		relation: "respelling escape",
 		contains: "-> \\7a ",
-		source: [
-			"test/configCases/css/minimize",
-			"Tachyons 4",
-			"compare-css-tools-agreeing-with-css-tree-drops-an-ie-hack-the-spec-drops-and",
-			"css-syntax-minify-keeps-input-the-grammar-rejects-keeps-a-declaration-neither",
-			"css-syntax-minify-keeps-input-the-grammar-rejects-keeps-a-declaration-neither-2",
-			"css-syntax-minify-keeps-input-the-grammar-rejects-keeps-a-declaration-neither-3",
-			"css-syntax-minify-keeps-input-the-grammar-rejects-trims-to-the-rejected-input",
-			"css-syntax-minify-the-value-transforms-rejection-paths-a-rule-an-identical-later"
-		],
+		source: ["test/configCases/css/minimize","Tachyons 4"],
 		why: "`*zoom: 1` is no declaration but the star hack an engine drops, which the printer writes back as authored, escape included"
 	},
 	{
 		relation: "respelling escape",
 		contains: "-> \\76 ",
-		source: [
-			"parsing/cases/declaration.css",
-			"css-syntax-beautifying-the-parsing-corpus-should-beautify-declaration-css"
-		],
+		source: "parsing/cases/declaration.css",
 		why: "`prop: {value}{value}` is no declaration: it reparses as a rule whose selector `prop:` is invalid, which the printer writes back as authored"
 	},
 	{
@@ -842,237 +825,6 @@ const EXPECTED = [
 		source: "css/escape-at-end-of-input.css",
 		why: "a `\\` the input ends after is a valid escape (§4.3.8) of EOF, U+FFFD in the at-rule's name (§4.3.7); css-tree reads it as its prelude"
 	},
-	// The inputs the unit tests feed the printer, under `test/fixtures/css/`.
-	{
-		relation: "respelling escape",
-		contains: "    foo\n      -> \\66 oo",
-		source: [
-			"css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-reads-a-b-x-1-foo-the",
-			"css-syntax-minify-keeps-input-the-grammar-rejects-keeps-rejected-input-in-a",
-			"css-syntax-minify-what-a-modern-target-makes-dead-reads-the-later-rule-s-values-3",
-			"css-syntax-what-a-minifying-print-reads-off-the-parse-keeps-input-a-nested-block",
-			"css-syntax-what-a-minifying-print-reads-off-the-parse-keeps-input-a-nested-block-2",
-			"css-syntax-what-a-minifying-print-reads-off-the-parse-keeps-input-a-nested-block-5"
-		],
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    eal\n      -> \\65 al",
-		source: "css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-10",
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    y\n      -> \\79",
-		source: [
-			"css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-11",
-			"css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-24",
-			"css-syntax-print-modes-closes-a-comment-the-source-left-open-before-writing",
-			"css-syntax-print-modes-closes-a-comment-the-source-left-open-before-writing-2",
-			"css-syntax-print-modes-closes-a-comment-the-source-left-open-before-writing-3",
-			"css-syntax-print-modes-closes-a-comment-the-source-left-open-before-writing-4"
-		],
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    M\n      -> \\4d",
-		source: "css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-12",
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    @media print { a { b : c } a { ! x } a { ! x } a { b : c } }\n      -> @media \\70 rint { \\61 { \\62 : \\63 } \\61 { ! \\78 } \\61 { ! \\78 } \\61 { \\62 :…",
-		source: "css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-25",
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    x\n      -> \\78",
-		source: [
-			"css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-27",
-			"css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-49",
-			"css-syntax-print-modes-closes-a-comment-the-source-left-open-before-writing-5",
-			"css-syntax-print-modes-closes-a-comment-the-source-left-open-before-writing-6"
-		],
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    ne\n      -> \\6e e",
-		source: "css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-32",
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    b\n      -> \\62",
-		source: [
-			"css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-47",
-			"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-5",
-			"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-6"
-		],
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    a { b : c } a { ! x } a { ! x } a { b : c }\n      -> \\61 { \\62 : \\63 } \\61 { ! \\78 } \\61 { ! \\78 } \\61 { \\62 : \\63 }",
-		source: "css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-50",
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    widt\n      -> \\77 idt",
-		source: "css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-55",
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    b\\:c\n      -> \\62 \\:c",
-		source: "css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-57",
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    BORDER-RAD\n      -> \\42 ORDER-RAD",
-		source: [
-			"css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-59",
-			"css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-60"
-		],
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    conten\n      -> \\63 onten",
-		source: "css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-61",
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    a { width & : .5px } a { width : .5px } a { width & : .5px } a { width : .5…\n      -> \\61 { \\77 idth & : .5px } \\61 { \\77 idth : .5px } \\61 { \\77 idth & : .5px }…",
-		source: "css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-70",
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling leading-zero",
-		contains: "    .5px\n      -> 0.5px",
-		source: "css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-70",
-		why: "`width&:` is no declaration and `.a+.5m` no selector, so the number in either is written back as authored"
-	},
-	{
-		relation: "respelling escape",
-		contains: "    b\\:1\n      -> \\62 \\:1",
-		source: "css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-8",
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    top\n      -> \\74 op",
-		source: [
-			"css-syntax-minify-the-value-transforms-rejection-paths-a-declaration-a-later-one-23",
-			"css-syntax-minify-the-value-transforms-rejection-paths-a-declaration-a-later-one-24"
-		],
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    \\31 abc\n      -> \\31 \\61 bc",
-		source: "css-syntax-minify-token-boundary-safety-consumes-a-crlf-pair-as-one-escape-8",
-		why: "`\\31` stays escaped and keeps its CRLF terminator as authored, where a space would be a byte shorter; both end the escape (§3.3)"
-	},
-	{
-		relation: "respelling escape",
-		contains: "    a\n      -> \\61",
-		source: [
-			"css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-30",
-			"css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-31",
-			"css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-32",
-			"css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-33",
-			"css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-39"
-		],
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling leading-zero",
-		contains: "    +.5m\n      -> +0.5m",
-		source: "css-syntax-minify-token-boundary-safety-parts-a-selector-s-tokens-with-a-comment-7",
-		why: "`width&:` is no declaration and `.a+.5m` no selector, so the number in either is written back as authored"
-	},
-	{
-		relation: "respelling escape",
-		contains: "    over\n      -> \\6f ver",
-		source: "css-syntax-minify-what-a-printed-rule-can-still-hit-continued-prints-a-x-1-a-x-2",
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    foo\\\\\n      -> \\66 oo\\\\",
-		source: "css-syntax-what-a-minifying-print-reads-off-the-parse-keeps-input-a-nested-block-3",
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    foo\\\n      -> \\66 oo\\",
-		source: [
-			"css-syntax-what-a-minifying-print-reads-off-the-parse-keeps-input-a-nested-block-4",
-			"css-syntax-what-a-minifying-print-reads-off-the-parse-keeps-input-a-nested-block-6"
-		],
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    st0\n      -> \\73 t0",
-		source: [
-			"the-xml-tool-comparison-should-minify-the-editor-exported-svg-to-a-document-3",
-			"the-xml-tool-comparison-should-minify-the-editor-exported-svg-to-a-document-4"
-		],
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "respelling escape",
-		contains: "    s\n      -> \\73",
-		source: [
-			"the-xml-tool-comparison-should-print-every-cut-of-the-built-fixtures-as-its-own-3",
-			"the-xml-tool-comparison-should-print-every-cut-of-the-built-fixtures-as-its-own-4"
-		],
-		why: WRITTEN_AS_AUTHORED
-	},
-	{
-		relation: "idempotence",
-		contains: "border-color:color(display-p3 1 0 0)red red}",
-		source: "box-family-holding-a-value-its-longhand-does-not-read",
-		why: "the legacy fallback is written after the box shorthand is folded, so `red red red` folds to `red` on a second pass; both say the same"
-	},
-	{
-		relation: "idempotence",
-		contains: "-moz-placeholder",
-		source: "a-prefixed-twin-taken-back-drops",
-		why: "lowered nesting writes the `-moz-` copies after the twins were compared, so a second pass drops the copies a later twin covers"
-	},
-	{
-		relation: "idempotence",
-		contains: "red;color:green",
-		source: "nesting-lowered-against-the-declarations-after-it",
-		why: "the two `color` declarations meet only once the rule between them is lowered, so the overridden one goes on a second pass"
-	},
-	{
-		relation: "idempotence",
-		contains: "@media x{.a{color:red}",
-		source: "rejection-paths-what-a-wider-corpus-found",
-		why: "`.a{color:red}` is joined into the next `@media x` block before the identical rule after it is seen, so a second pass drops it as dead"
-	},
-	{
-		relation: "idempotence",
-		contains: "}a{b:c}}",
-		source: "input-left-open-invalid-or-unusual-printed-as-it-reads",
-		why: "input left open: the rules after the unterminated value are siblings only once a first pass closed it, and a second joins them"
-	},
-	{
-		relation: "idempotence",
-		contains: "{@layer x{}} :is(",
-		source: "input-left-open-invalid-or-unusual-printed-as-it-reads",
-		why: "input left open: the space before a selector after an unclosed block goes only once a first pass closed the block"
-	}
 ];
 
 /**

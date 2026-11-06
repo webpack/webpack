@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"unusedSymbols": [
+			"foo",
+			"fade-in",
+			"--color"
+		]
+	}
+]

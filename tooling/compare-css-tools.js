@@ -1041,8 +1041,8 @@ const wantedStage = filterFrom("STAGE");
 // thousands of stylesheets are a corpus of their own rather than a default run.
 const SKIPPED_FIXTURE_DIRS = new Set(["js", "node_modules", "wpt"]);
 
-// The inputs the unit tests feed the parser, one directory each: held to the
-// printer's own relations, never to another parser's reading of them.
+// The inputs the unit tests read, one directory each: `css/fixtures.unittest.js`
+// holds every one of them to these relations, with its own known differences.
 const UNIT_INPUT_RE = /^test\/fixtures\/css\/[^/]+\/index\.css$/;
 
 const wantedRelation = filterFrom("RELATION");
@@ -1148,10 +1148,9 @@ const invariantFixtures = () => {
 		".css",
 		SKIPPED_FIXTURE_DIRS
 	)) {
-		out.push([
-			path.relative(ROOT, file).replace(/\\/g, "/"),
-			fs.readFileSync(file, "utf8")
-		]);
+		const label = path.relative(ROOT, file).replace(/\\/g, "/");
+		if (UNIT_INPUT_RE.test(label)) continue;
+		out.push([label, fs.readFileSync(file, "utf8")]);
 	}
 	// Written rather than installed: what ships repeats what ships, and these are
 	// the constructs it does not.
@@ -1189,7 +1188,7 @@ const invariants = (write) => {
 			return cssTreeTree;
 		},
 		tree: webpackTree,
-		corpus: corpus.filter(([label]) => !UNIT_INPUT_RE.test(label)),
+		corpus,
 		expected: EXPECTED,
 		missing: _missingFixtures
 	});

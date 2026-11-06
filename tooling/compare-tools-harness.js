@@ -1146,7 +1146,26 @@ const collectFiles = (dir, extension, skipped) => {
 	 * @returns {void}
 	 */
 	const walk = (current) => {
-		for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+		/** @type {fs.Dirent[] | undefined} */
+		let entries;
+		while (entries === undefined) {
+			try {
+				entries = fs.readdirSync(current, { withFileTypes: true });
+			} catch (err) {
+				const { code, path: missing } = /** @type {NodeJS.ErrnoException} */ (
+					err
+				);
+				if (code !== "ENOENT" || missing === undefined) throw err;
+				// A test running beside the sweep may remove a scratch directory after
+				// the listing that named it, or a child this listing stats; a child gone
+				// is read past by listing again, and only the root has to be there.
+				if (missing === current) {
+					if (current === dir) throw err;
+					return;
+				}
+			}
+		}
+		for (const entry of entries) {
 			if (entry.isDirectory()) {
 				// A test running beside the sweep may delete its scratch one mid-walk.
 				if (skipped.has(entry.name) || entry.name.startsWith("temp-")) {

@@ -1,0 +1,43 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 100"
+			]
+		},
+		"transforms": {
+			"colorFallbacks": false
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 100"
+			]
+		},
+		"transforms": {
+			"shortenColors": false
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 100"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 130"
+			]
+		}
+	},
+	{
+		"mode": "minify"
+	}
+]
