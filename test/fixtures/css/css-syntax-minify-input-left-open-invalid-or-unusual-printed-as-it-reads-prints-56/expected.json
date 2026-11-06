@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": "}a{b:c}}\n      -> ;b:c}}",
-		"why": "input left open: the rules after the unterminated value are siblings only once a first pass closed it, and a second joins them"
-	}
-]
