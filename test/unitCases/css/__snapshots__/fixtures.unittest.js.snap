@@ -6080,6 +6080,22 @@ exports[`CSS syntax — fixtures css-syntax-minify-rewrite-escapes-writes-a-name
 
 exports[`CSS syntax — fixtures css-syntax-minify-rewrite-escapes-writes-a-name-the-shortest-way-wherever-its-9 prints {"mode":"minify"} 1`] = `"a{color:--red}"`;
 
+exports[`CSS syntax — fixtures css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a,\\"],\\" \\",\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma prints {"mode":"minify"} 1`] = `".a\\\\, .b{c:d}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-2 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a>\\"],\\" \\",\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-2 prints {"mode":"minify"} 1`] = `".a\\\\> .b{c:d}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-3 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c,\\"],\\" \\",[\\"ident\\",\\"d\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-3 prints {"mode":"minify"} 1`] = `"a{b:c\\\\, d}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-4 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\\\\\\\\\"],\\",\\",\\" \\",\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-4 prints {"mode":"minify"} 1`] = `".a\\\\\\\\,.b{c:d}"`;
+
 exports[`CSS syntax — fixtures css-syntax-minify-the-declaration-a-lowered-shorthand-kills-keeps-an-earlier parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"text-decoration-line\\"],\\":\\",[\\"ident\\",\\"underline\\"],\\";\\",[\\"ident\\",\\"text-decoration\\"],\\":\\",[\\"ident\\",\\"underline\\"],\\" \\",[\\"ident\\",\\"dotted\\"]]]]"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-the-declaration-a-lowered-shorthand-kills-keeps-an-earlier prints {"mode":"minify","environment":{"browsers":["safari 15"]}} 1`] = `"a{text-decoration-line:underline;text-decoration:underline;text-decoration-style:dotted}"`;

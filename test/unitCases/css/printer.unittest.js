@@ -4442,4 +4442,12 @@ describe("CssSyntax minify — output that reads back as its source", () => {
 			'@property --x{syntax:"*";inherits:false;initial-value:"a\n;color:red}b{c:d}'
 		);
 	});
+
+	it("keeps the space after an escaped comma or combinator", () => {
+		expect(min(fixture("css", "css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma"))).toBe(".a\\, .b{c:d}");
+		expect(min(fixture("css", "css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-2"))).toBe(".a\\> .b{c:d}");
+		expect(min(fixture("css", "css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-3"))).toBe("a{b:c\\, d}");
+		// An escaped backslash escapes nothing after it.
+		expect(min(fixture("css", "css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-4"))).toBe(".a\\\\,.b{c:d}");
+	});
 });
