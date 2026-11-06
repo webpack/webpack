@@ -1,0 +1,3 @@
+a:fullscreen{color:red}a:-webkit-full-screen{color:red}
+b:fullscreen{color:red}b:-webkit-full-screen{color:blue}
+c:fullscreen{color-scheme:light dark}c:-webkit-full-screen{color-scheme:light dark}d{color:light-dark(red,blue)}
