@@ -1,0 +1,1 @@
+<!DOCTYPE d [<!ATTLIST d a NMTOKEN " x "><!ATTLIST e b NMTOKEN " y ">]><d a=" 1 "><e/><e b=" 2 "/></d>

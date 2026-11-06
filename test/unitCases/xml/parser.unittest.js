@@ -1,5 +1,7 @@
 "use strict";
 
+const { fixture } = require("../../helpers/fixture");
+
 // cspell:ignore apos selectedcontent viewbox
 
 /** @import { MatDocument, MatElement, MatNode, MatProcessingInstruction, MatText } from "../../helpers/materializeHtmlTree" */
@@ -32,7 +34,7 @@ describe("XmlSyntax — parsing", () => {
 	it("should leave out errors in an entity's replacement text", () => {
 		const parseError = jest.fn();
 		parseHtmlRefs(
-			'<!DOCTYPE root [<!ENTITY value "<child">]><root>&value;</root>',
+			fixture("xml", "xml-syntax-parsing-should-leave-out-errors-in-an-entity-s-replacement-text"),
 			0,
 			{ xml: true, parseError }
 		);
@@ -42,19 +44,19 @@ describe("XmlSyntax — parsing", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 
 	it("should reuse attribute sorting without HTML normalization", () => {
-		const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:x="urn:test" viewBox="0 0 1 1"><g z="1" x:href="#shape" Z="2" class="b a"/><path z="3"/></svg>';
+		const source = fixture("xml", "xml-syntax-parsing-should-reuse-attribute-sorting-without-html-normalization");
 		const processor = new SourceProcessor();
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), sortAttributes: true };
 		const once = processor.process(source, options).code;
 		expect(once).toBe('<svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg" xmlns:x="urn:test"><g z="1" Z="2" class="b a" x:href="#shape"/><path z="3"/></svg>');
 		expect(processor.process(once, options).code).toBe(once);
 		expect(processor.process(source, { ...options, sortAttributes: false }).code).toBe(source);
-		expect(processor.process('<Root z="1" A="2"/>', options).code).toBe('<Root A="2" z="1"/>');
-		expect(processor.process('<Root z="1" A="2"/>', { xml: true, mode: "beautify", sortAttributes: true }).code).toBe('<Root z="1" A="2"/>');
+		expect(processor.process(fixture("xml", "xml-syntax-parsing-should-reuse-attribute-sorting-without-html-normalization-2"), options).code).toBe('<Root A="2" z="1"/>');
+		expect(processor.process(fixture("xml", "xml-syntax-parsing-should-reuse-attribute-sorting-without-html-normalization-2"), { xml: true, mode: "beautify", sortAttributes: true }).code).toBe('<Root z="1" A="2"/>');
 	});
 
 	it("should rank only explicit XML attributes and preserve DTD defaults", () => {
-		const source = '<!DOCTYPE root [<!ATTLIST item z CDATA "default" b CDATA "default">]><root><item z="explicit" a="1"/><item/><item/><other a="2"/></root>';
+		const source = fixture("xml", "xml-syntax-parsing-should-rank-only-explicit-xml-attributes-and-preserve-dtd");
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), sortAttributes: true };
 		const processor = new SourceProcessor();
 		const once = processor.process(source, options).code;
@@ -63,7 +65,7 @@ describe("XmlSyntax — parsing", () => {
 	});
 
 	it("should expose XML attribute values through the shared path", () => {
-		const source = '<!DOCTYPE Root [<!ENTITY value "declared">]><Root value="&value;\t&amp;&#x80;&nbsp;"/>';
+		const source = fixture("xml", "xml-syntax-parsing-should-expose-xml-attribute-values-through-the-shared-path");
 		const document = parseHtmlRefs(source, 0, { xml: true });
 		const root = A.child(1, document);
 		const attribute = A.fieldNamed(Field.attributes, "value", root);
@@ -77,7 +79,7 @@ describe("XmlSyntax — parsing", () => {
 		const document = parseHtmlRefs(source, 0, { xml: true });
 		const attribute = A.fieldNamed(Field.attributes, "value", A.child(1, document));
 		for (let i = 0; i < 4; i++) expect(A.value(attribute) === value).toBe(true);
-		const next = parseHtmlRefs('<root value="next"/>', 0, { xml: true });
+		const next = parseHtmlRefs(fixture("xml", "xml-syntax-parsing-should-decode-an-xml-attribute-only-once-per-parse"), 0, { xml: true });
 		expect(A.value(A.fieldNamed(Field.attributes, "value", A.child(0, next)))).toBe("next");
 	});
 
@@ -100,14 +102,14 @@ describe("XmlSyntax — parsing", () => {
 	});
 
 	it("should expose case-sensitive XML content and end-tag ranges", () => {
-		const source = "<Root>x</Root>";
+		const source = fixture("xml", "xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges");
 		const document = parseHtmlRefs(source, 0, { xml: true });
 		const root = A.child(0, document);
 		expect(A.rangeOf(Part.content, root)).toEqual([6, 7]);
 		expect(A.rangeOf(Part.endTag, root)).toEqual([7, 14]);
-		const unclosed = parseHtmlRefs("<root>x</ROOT>", 0, { xml: true });
+		const unclosed = parseHtmlRefs(fixture("xml", "xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges-2"), 0, { xml: true });
 		expect(A.rangeOf(Part.endTag, A.child(0, unclosed))).toBeNull();
-		const skipped = parseHtmlRefs("<style>x</style>", 0, {
+		const skipped = parseHtmlRefs(fixture("xml", "xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges-3"), 0, {
 			xml: true,
 			skip: { text: true }
 		});
@@ -115,7 +117,7 @@ describe("XmlSyntax — parsing", () => {
 	});
 
 	it("should expose XML doctype identifier ranges", () => {
-		const source = '<!DOCTYPE Root PUBLIC "public" "system"><Root/>';
+		const source = fixture("xml", "xml-syntax-parsing-should-expose-xml-doctype-identifier-ranges");
 		const document = parseHtmlRefs(source, 0, { xml: true });
 		const doctype = A.child(0, document);
 		expect(A.rangeOf(Part.publicId, doctype)).toEqual([23, 29]);
@@ -123,7 +125,7 @@ describe("XmlSyntax — parsing", () => {
 	});
 
 	it("should normalize XML comment line endings", () => {
-		const document = parseHtmlRefs("<root><!--a\r\nb\rc--></root>", 0, {
+		const document = parseHtmlRefs(fixture("xml", "xml-syntax-parsing-should-normalize-xml-comment-line-endings"), 0, {
 			xml: true
 		});
 		const comment = A.child(0, A.child(0, document));
@@ -142,7 +144,7 @@ describe("XmlSyntax — parsing", () => {
 	});
 
 	it("should not synthesize the HTML document scaffold", () => {
-		const document = parseXml("<root/>");
+		const document = parseXml(fixture("xml", "xml-syntax-parsing-should-not-synthesize-the-html-document-scaffold"));
 		expect(document.children).toHaveLength(1);
 		expect(document.children[0]).toMatchObject({
 			type: NodeType.Element,
@@ -152,27 +154,27 @@ describe("XmlSyntax — parsing", () => {
 	});
 
 	it("should read what the input ran out in as far as it goes", () => {
-		const [root] = parseXml("<r>a<!FOO b").children;
+		const [root] = parseXml(fixture("xml", "xml-syntax-parsing-should-read-what-the-input-ran-out-in-as-far-as-it-goes")).children;
 		expect(/** @type {MatElement} */ (root).children).toMatchObject([
 			{ type: NodeType.Text, data: "a" },
 			{ type: NodeType.Comment, data: "FOO b" }
 		]);
-		expect(parseXml('<!DOCTYPE r [<!ENTITY a "x">').children).toMatchObject(
+		expect(parseXml(fixture("xml", "xml-syntax-parsing-should-read-what-the-input-ran-out-in-as-far-as-it-goes-2")).children).toMatchObject(
 			[{ type: NodeType.Doctype, name: "r" }]
 		);
 	});
 
 	it("should replace a NUL in text and read a bare attribute an entity holds", () => {
 		const [text] = /** @type {MatElement} */ (
-			parseXml("<r>a\0b</r>").children[0]
+			parseXml(fixture("xml", "xml-syntax-parsing-should-replace-a-nul-in-text-and-read-a-bare-attribute-an")).children[0]
 		).children;
 		expect(text).toMatchObject({ type: NodeType.Text, data: "a\uFFFDb" });
 		const [cdata] = /** @type {MatElement} */ (
-			parseXml("<r><![CDATA[a\0b]]></r>").children[0]
+			parseXml(fixture("xml", "xml-syntax-parsing-should-replace-a-nul-in-text-and-read-a-bare-attribute-an-2")).children[0]
 		).children;
 		expect(cdata).toMatchObject({ type: NodeType.Text, data: "a\uFFFDb" });
 		const [, root] = parseXml(
-			'<!DOCTYPE r [<!ENTITY e "<x a/>">]><r>&e;</r>'
+			fixture("xml", "xml-syntax-parsing-should-replace-a-nul-in-text-and-read-a-bare-attribute-an-3")
 		).children;
 		const [x] = /** @type {MatElement} */ (root).children;
 		expect(
@@ -185,7 +187,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should preserve case-sensitive element and attribute names", () => {
 		const root = /** @type {MatElement} */ (
-			parseXml('<Root ID="upper" id="lower"><Child/></Root>').children[0]
+			parseXml(fixture("xml", "xml-syntax-parsing-should-preserve-case-sensitive-element-and-attribute-names")).children[0]
 		);
 		expect(root.tagName).toBe("Root");
 		expect(root.attributes.map(({ name, value }) => [name, value])).toEqual([
@@ -199,7 +201,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should distinguish empty-element syntax from an explicit end tag", () => {
 		const root = /** @type {MatElement} */ (
-			parseXml("<root><empty/><paired></paired></root>").children[0]
+			parseXml(fixture("xml", "xml-syntax-parsing-should-distinguish-empty-element-syntax-from-an-explicit-end")).children[0]
 		);
 		expect(
 			root.children.map((node) => ({
@@ -214,7 +216,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should not apply the HTML void-element list", () => {
 		const root = /** @type {MatElement} */ (
-			parseXml("<root><br><child/></br><img></img></root>").children[0]
+			parseXml(fixture("xml", "xml-syntax-parsing-should-not-apply-the-html-void-element-list")).children[0]
 		);
 		const br = /** @type {MatElement} */ (root.children[0]);
 		const img = /** @type {MatElement} */ (root.children[1]);
@@ -226,7 +228,7 @@ describe("XmlSyntax — parsing", () => {
 	it("should not apply HTML paragraph, list, or table repairs", () => {
 		const root = /** @type {MatElement} */ (
 			parseXml(
-				"<root><p><div/></p><ul><li><li/></li></ul><table><span/></table></root>"
+				fixture("xml", "xml-syntax-parsing-should-not-apply-html-paragraph-list-or-table-repairs")
 			).children[0]
 		);
 		const paragraph = /** @type {MatElement} */ (root.children[0]);
@@ -247,7 +249,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should keep markup inside names that are raw text in HTML", () => {
 		const root = /** @type {MatElement} */ (
-			parseXml("<root><script><dependency/></script><style><rule/></style></root>")
+			parseXml(fixture("xml", "xml-syntax-parsing-should-keep-markup-inside-names-that-are-raw-text-in-html"))
 				.children[0]
 		);
 		expect(
@@ -259,7 +261,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should parse XML declarations and processing instructions", () => {
 		const document = parseXml(
-			'<?xml version="1.0" encoding="UTF-8"?><?build mode="fast"?><root/><?done?>'
+			fixture("xml", "xml-syntax-parsing-should-parse-xml-declarations-and-processing-instructions")
 		);
 		expect(
 			document.children
@@ -277,7 +279,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should keep comments and read CDATA as character data", () => {
 		const root = /** @type {MatElement} */ (
-			parseXml("<root><!-- note --><![CDATA[<child>&value;]]></root>")
+			parseXml(fixture("xml", "xml-syntax-parsing-should-keep-comments-and-read-cdata-as-character-data"))
 				.children[0]
 		);
 		expect(root.children[0]).toMatchObject({
@@ -293,7 +295,7 @@ describe("XmlSyntax — parsing", () => {
 	it("should preserve qualified names", () => {
 		const root = /** @type {MatElement} */ (
 			parseXml(
-				'<feed xmlns:x="urn:example"><x:entry x:kind="test"/></feed>'
+				fixture("xml", "xml-syntax-parsing-should-preserve-qualified-names")
 			).children[0]
 		);
 		const entry = /** @type {MatElement} */ (root.children[0]);
@@ -306,7 +308,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should preserve the document type name and identifiers", () => {
 		const document = parseXml(
-			'<!DOCTYPE Root PUBLIC "-//EXAMPLE//DTD ROOT 1.0//EN" "root.dtd"><Root/>'
+			fixture("xml", "xml-syntax-parsing-should-preserve-the-document-type-name-and-identifiers")
 		);
 		expect(document.children[0]).toMatchObject({
 			type: NodeType.Doctype,
@@ -318,7 +320,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should decode predefined and numeric character references in text", () => {
 		const root = /** @type {MatElement} */ (
-			parseXml("<root>&lt;&gt;&amp;&quot;&apos;&#65;&#x42;</root>")
+			parseXml(fixture("xml", "xml-syntax-parsing-should-decode-predefined-and-numeric-character-references-in"))
 				.children[0]
 		);
 		expect(root.children[0]).toMatchObject({
@@ -329,7 +331,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should require a lowercase hexadecimal marker", () => {
 		const root = /** @type {MatElement} */ (
-			parseXml("<root>&#x4A;&#X4A;</root>").children[0]
+			parseXml(fixture("xml", "xml-syntax-parsing-should-require-a-lowercase-hexadecimal-marker")).children[0]
 		);
 		expect(root.children[0]).toMatchObject({
 			type: NodeType.Text,
@@ -339,7 +341,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should not decode HTML-only or differently-cased entity names", () => {
 		const root = /** @type {MatElement} */ (
-			parseXml("<root>&nbsp;&AMP;&amp;</root>").children[0]
+			parseXml(fixture("xml", "xml-syntax-parsing-should-not-decode-html-only-or-differently-cased-entity-names")).children[0]
 		);
 		expect(root.children[0]).toMatchObject({
 			type: NodeType.Text,
@@ -350,7 +352,7 @@ describe("XmlSyntax — parsing", () => {
 	it("should not apply selectedcontent HTML behavior", () => {
 		const root = /** @type {MatElement} */ (
 			parseXml(
-				"<root><select><option selected=\"\"><span/></option><selectedcontent/></select></root>"
+				fixture("xml", "xml-syntax-parsing-should-not-apply-selectedcontent-html-behavior")
 			).children[0]
 		);
 		const select = /** @type {MatElement} */ (root.children[0]);
@@ -365,7 +367,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should honor AST skip options without changing XML structure", () => {
 		const root = /** @type {MatElement} */ (
-			parseXml("<root>text<!-- comment --><child/></root>", {
+			parseXml(fixture("xml", "xml-syntax-parsing-should-honor-ast-skip-options-without-changing-xml-structure"), {
 				text: true,
 				comments: true
 			}).children[0]
@@ -379,7 +381,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should close misnested elements at the end tag naming an open one", () => {
 		const root = /** @type {MatElement} */ (
-			parseXml("<root><a><b>x</a><c/></stray></root>").children[0]
+			parseXml(fixture("xml", "xml-syntax-parsing-should-close-misnested-elements-at-the-end-tag-naming-an-open")).children[0]
 		);
 		expect(
 			root.children.map((node) => /** @type {MatElement} */ (node).tagName)
@@ -390,7 +392,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should keep a `>` quoted in the internal subset inside the DOCTYPE", () => {
 		const document = parseXml(
-			'<!DOCTYPE r [<!ENTITY gt2 "a>b"><!-- ]> --><?pi ]>?>]><r>&gt2;</r>'
+			fixture("xml", "xml-syntax-parsing-should-keep-a-quoted-in-the-internal-subset-inside-the")
 		);
 		expect(document.children.map((node) => node.type)).toEqual([
 			NodeType.Doctype,
@@ -403,7 +405,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should expand the internal entities the DTD declares", () => {
 		const document = parseXml(
-			'<!DOCTYPE svg [<!ENTITY ns "http://www.w3.org/2000/svg"><!ENTITY both "&ns; &#38;amp; &undeclared;"><!ENTITY ns "second">]><svg xmlns="&ns;">&both;</svg>'
+			fixture("xml", "xml-syntax-parsing-should-expand-the-internal-entities-the-dtd-declares")
 		);
 		const svg = /** @type {MatElement} */ (document.children[1]);
 		expect(decodeXmlAttribute(svg.attributes[0].value)).toBe(
@@ -418,7 +420,7 @@ describe("XmlSyntax — parsing", () => {
 	it("should not read a parameter entity or what is declared after one", () => {
 		const root = /** @type {MatElement} */ (
 			parseXml(
-				'<!DOCTYPE r [<!ENTITY % p "x"><!ENTITY a "A">%p;<!ENTITY b "B">]><r>&a;&b;</r>'
+				fixture("xml", "xml-syntax-parsing-should-not-read-a-parameter-entity-or-what-is-declared-after")
 			).children[1]
 		);
 		expect(root.children[0]).toMatchObject({ data: "A&b;" });
@@ -426,7 +428,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should tokenize an entity whose replacement text is markup", () => {
 		const source =
-			'<!DOCTYPE r [<!ENTITY e "<x a=\'1\'>t</x>"><!ENTITY w "(&e;)">]><r>a&w;b</r>';
+			fixture("xml", "xml-syntax-parsing-should-tokenize-an-entity-whose-replacement-text-is-markup");
 		const root = /** @type {MatElement} */ (parseXml(source).children[1]);
 		expect(root.children.map((node) => node.type)).toEqual([
 			NodeType.Text,
@@ -438,16 +440,11 @@ describe("XmlSyntax — parsing", () => {
 		expect(decodeXmlAttribute(x.attributes[0].value)).toBe("1");
 		expect(root.children[0]).toMatchObject({ data: "a(" });
 		expect(root.children[2]).toMatchObject({ data: ")b" });
-		// No reference can be rebuilt from the elements, so it prints as written.
-		expect(
-			new SourceProcessor().process(source, { xml: true, mode: "minify" })
-				.code
-		).toBe(source);
 	});
 
 	it("should keep the rest of the document after an entity ending inside a tag", () => {
 		const root = /** @type {MatElement} */ (
-			parseXml('<!DOCTYPE r [<!ENTITY e "<x">]><r>&e;<y/><z/></r>')
+			parseXml(fixture("xml", "xml-syntax-parsing-should-keep-the-rest-of-the-document-after-an-entity-ending"))
 				.children[1]
 		);
 		expect(
@@ -458,7 +455,7 @@ describe("XmlSyntax — parsing", () => {
 	it("should leave a recursive or exponential entity unexpanded", () => {
 		const recursive = /** @type {MatElement} */ (
 			parseXml(
-				'<!DOCTYPE r [<!ENTITY a "&b;"><!ENTITY b "&a;">]><r>&a;</r>'
+				fixture("xml", "xml-syntax-parsing-should-leave-a-recursive-or-exponential-entity-unexpanded")
 			).children[1]
 		);
 		expect(recursive.children[0]).toMatchObject({ data: "&a;" });
@@ -483,7 +480,7 @@ describe("XmlSyntax — parsing", () => {
 	it("should normalize attribute values as §3.3.3 does", () => {
 		const root = /** @type {MatElement} */ (
 			parseXml(
-				'<!DOCTYPE r [<!ATTLIST r t NMTOKENS #IMPLIED c CDATA #IMPLIED>]><r t="  a \r\n b  " c=" a\r\n\tb&#10;&#9;c "/>'
+				fixture("xml", "xml-syntax-parsing-should-normalize-attribute-values-as-3-3-3-does")
 			).children[1]
 		);
 		expect(
@@ -499,7 +496,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should supply the defaults the DTD declares", () => {
 		const document = parseXml(
-			"<!DOCTYPE r [<!ATTLIST r a CDATA 'one' b ( x | y ) #FIXED ' y ' c CDATA #REQUIRED a CDATA 'two'><!ATTLIST e f CDATA 'g'>]><r a='mine'><e/></r>"
+			fixture("xml", "xml-syntax-parsing-should-supply-the-defaults-the-dtd-declares")
 		);
 		const root = /** @type {MatElement} */ (document.children[1]);
 		expect(
@@ -521,7 +518,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should read what follows a PI target as its data", () => {
 		const document = parseXml(
-			"<?xml-stylesheet href='a.css' media=\"a>b\"?><?target.v1\r\n two\r\n lines ?><r/>"
+			fixture("xml", "xml-syntax-parsing-should-read-what-follows-a-pi-target-as-its-data")
 		);
 		expect(
 			document.children.slice(0, 2).map((node) => ({
@@ -536,7 +533,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should read malformed markup the way a lenient reader does", () => {
 		const document = parseXml(
-			'<r a=unquoted b c="x" / d="y">1 < 2 &amp; <3<!ELEMENT e ANY><t x="1"<u/></r><![CDATA[never closed'
+			fixture("xml", "xml-syntax-parsing-should-read-malformed-markup-the-way-a-lenient-reader-does")
 		);
 		const root = /** @type {MatElement} */ (document.children[0]);
 		expect(
@@ -565,29 +562,29 @@ describe("XmlSyntax — parsing", () => {
 		 * @returns {MatNode[]} the document's children
 		 */
 		const nodes = (source) => parseXml(source).children;
-		expect(nodes('<!DOCTYPE r SYSTEM "r.dtd"><r/>')[0]).toMatchObject({
+		expect(nodes(fixture("xml", "xml-syntax-parsing-should-read-every-shape-a-doctype-declaration-takes"))[0]).toMatchObject({
 			name: "r",
 			publicId: null,
 			systemId: "r.dtd"
 		});
-		expect(nodes("<!DOCTYPE r PUBLIC 'p'><r/>")[0]).toMatchObject({
+		expect(nodes(fixture("xml", "xml-syntax-parsing-should-read-every-shape-a-doctype-declaration-takes-2"))[0]).toMatchObject({
 			publicId: "p",
 			systemId: null
 		});
-		expect(nodes("<!DOCTYPE><r/>")[0]).toMatchObject({ name: "" });
+		expect(nodes(fixture("xml", "xml-syntax-parsing-should-read-every-shape-a-doctype-declaration-takes-3"))[0]).toMatchObject({ name: "" });
 		const subset =
-			"<!DOCTYPE r [ <!-- ] --> <?pi ]?> <!ENTITY q ']>'> <!ENTITY % p 'x'> <!ENTITY ext SYSTEM 'e.xml'> <!ELEMENT r ANY> ]><r>&q;&ext;</r>";
+			fixture("xml", "xml-syntax-parsing-should-read-every-shape-a-doctype-declaration-takes-4");
 		expect(
 			/** @type {MatElement} */ (nodes(subset)[1]).children[0]
 		).toMatchObject({ data: "]>&ext;" });
 		// The input ends inside the subset, a literal, or a comment in it.
 		for (const source of [
-			"<!DOCTYPE r [<!ENTITY a 'x'>",
-			"<!DOCTYPE r [<!ENTITY a 'x",
-			"<!DOCTYPE r [<!-- open",
-			"<!DOCTYPE r [<?open",
-			"<!DOCTYPE r [<!ELEMENT r 'open",
-			'<!DOCTYPE r "open'
+			fixture("xml", "xml-syntax-parsing-should-read-every-shape-a-doctype-declaration-takes-5"),
+			fixture("xml", "xml-syntax-parsing-should-read-every-shape-a-doctype-declaration-takes-6"),
+			fixture("xml", "xml-syntax-parsing-should-read-every-shape-a-doctype-declaration-takes-7"),
+			fixture("xml", "xml-syntax-parsing-should-read-every-shape-a-doctype-declaration-takes-8"),
+			fixture("xml", "xml-syntax-parsing-should-read-every-shape-a-doctype-declaration-takes-9"),
+			fixture("xml", "xml-syntax-parsing-should-read-every-shape-a-doctype-declaration-takes-10")
 		]) {
 			expect(nodes(source)).toMatchObject([{ type: NodeType.Doctype }]);
 		}
@@ -596,7 +593,7 @@ describe("XmlSyntax — parsing", () => {
 	it("should read every shape an attribute-list declaration takes", () => {
 		const root = /** @type {MatElement} */ (
 			parseXml(
-				"<!DOCTYPE r [<!ATTLIST r n NOTATION (a|b) 'a' e (x | y) 'y' i ID #IMPLIED f CDATA #FIXED \"f\" t NMTOKEN ' t '><!ATTLIST q><!ATTLIST r broken (open]><r i=' 1 '/>"
+				fixture("xml", "xml-syntax-parsing-should-read-every-shape-an-attribute-list-declaration-takes")
 			).children[1]
 		);
 		expect(
@@ -613,12 +610,12 @@ describe("XmlSyntax — parsing", () => {
 		]);
 		// A literal left open runs to the end of the input, subset and all.
 		expect(
-			parseXml("<!DOCTYPE r [<!ATTLIST r a CDATA 'open]><r/>").children
+			parseXml(fixture("xml", "xml-syntax-parsing-should-read-every-shape-an-attribute-list-declaration-takes-2")).children
 		).toMatchObject([{ type: NodeType.Doctype }]);
 	});
 
 	it("should drop a tag, instruction or end tag the input ends inside", () => {
-		for (const source of ["<r>x<y a='1'", "<r>x<?pi data", "<r>x</r"]) {
+		for (const source of [fixture("xml", "xml-syntax-parsing-should-drop-a-tag-instruction-or-end-tag-the-input-ends"), fixture("xml", "xml-syntax-parsing-should-drop-a-tag-instruction-or-end-tag-the-input-ends-2"), fixture("xml", "xml-syntax-parsing-should-drop-a-tag-instruction-or-end-tag-the-input-ends-3")]) {
 			const root = /** @type {MatElement} */ (parseXml(source).children[0]);
 			expect(root.children).toEqual([
 				expect.objectContaining({ type: NodeType.Text, data: "x" })
@@ -628,7 +625,7 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should replace a character XML does not allow", () => {
 		const root = /** @type {MatElement} */ (
-			parseXml("<r>&#0;&#xD800;&#x1F600;&#12;a\0b</r>").children[0]
+			parseXml(fixture("xml", "xml-syntax-parsing-should-replace-a-character-xml-does-not-allow")).children[0]
 		);
 		expect(root.children[0]).toMatchObject({
 			data: "��\u{1F600}�a�b"
@@ -639,7 +636,7 @@ describe("XmlSyntax — parsing", () => {
 		/** @type {string[]} */
 		const log = [];
 		tokenizeXml(
-			'x<!DOCTYPE d PUBLIC "p" \'s\' [<!ENTITY e "]">]><a k="v"/><!--c--><?p d?></a>y',
+			fixture("xml", "xml-syntax-parsing-should-report-xml-tokens-through-the-tokenizer-callbacks"),
 			0,
 			{
 				text: (input, start, end) => log.push(`text ${input.slice(start, end)}`),
@@ -667,6 +664,6 @@ describe("XmlSyntax — parsing", () => {
 			"close a",
 			"text y"
 		]);
-		expect(tokenizeXml("<a>")).toBe(3);
+		expect(tokenizeXml(fixture("xml", "xml-syntax-parsing-should-report-xml-tokens-through-the-tokenizer-callbacks-2"))).toBe(3);
 	});
 });

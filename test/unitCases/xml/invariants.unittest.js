@@ -1,5 +1,7 @@
 "use strict";
 
+const { fixture } = require("../../helpers/fixture");
+
 const { invariantFindings } = require("../../helpers/syntaxInvariants");
 const syntax = require("../../helpers/syntaxInvariants/xml");
 
@@ -8,7 +10,7 @@ const syntax = require("../../helpers/syntaxInvariants/xml");
 // comparison scripts' own question.
 /** @type {[string, string][]} */
 const SOURCES = [
-	["a document", "<?xml version=\"1.0\"?><root a=\"1\"><child>text</child><!-- c --><empty/></root>"]
+	["a document", fixture("xml", "xml-syntax-invariants-holds-every-relation-over-its-sources")]
 ];
 
 describe("XML syntax — invariants", () => {

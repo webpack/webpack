@@ -1,5 +1,7 @@
 "use strict";
 
+const { fixture } = require("../../helpers/fixture");
+
 const { A, Quote, tokenizeXml } = require("../../../lib/html/syntax-parser");
 
 describe("tokenizeXml", () => {
@@ -93,7 +95,7 @@ describe("tokenizeXml", () => {
 	};
 
 	it("emits text, tags and attributes of a well-formed document", () => {
-		expect(xml(`a<b c="1" d='2' e = "3"\tf\n=\r'4'/>t</b>`)).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-emits-text-tags-and-attributes-of-a-well-formed-document"))).toEqual([
 			["text", "a"],
 			["attr", "c", "1", Quote.Double],
 			["attr", "d", "2", Quote.Single],
@@ -107,7 +109,7 @@ describe("tokenizeXml", () => {
 	});
 
 	it("reads names that start with a letter, `_`, `:` or a non-ASCII character", () => {
-		expect(xml("<é:ü _x='1' :y='2'><A/><_/><:n></:n></é:ü>")).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-reads-names-that-start-with-a-letter-or-a-non-ascii-character"))).toEqual([
 			["attr", "_x", "1", Quote.Single],
 			["attr", ":y", "2", Quote.Single],
 			["open", "<é:ü _x='1' :y='2'>", "é:ü", false],
@@ -122,56 +124,56 @@ describe("tokenizeXml", () => {
 
 	it("ends a name at every delimiter the markup around it uses", () => {
 		// Whitespace, `>`, `/`, `=`, `<`, quotes, `[` and `?` each end the name.
-		expect(xml(`<a\tb=c"d'e[f?g/>`)).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-ends-a-name-at-every-delimiter-the-markup-around-it-uses"))).toEqual([
 			["attr", "b", "c\"d'e[f?g/", Quote.None],
-			["open", `<a\tb=c"d'e[f?g/>`, "a", false],
+			["open", fixture("xml", "tokenize-xml-ends-a-name-at-every-delimiter-the-markup-around-it-uses"), "a", false],
 			["end", 16]
 		]);
-		expect(xml(`<a b"c'd[e?f>`)).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-ends-a-name-at-every-delimiter-the-markup-around-it-uses-2"))).toEqual([
 			["attr", "b", null, Quote.None],
 			["attr", "c", null, Quote.None],
 			["attr", "d", null, Quote.None],
 			["attr", "e", null, Quote.None],
 			["attr", "f", null, Quote.None],
-			["open", `<a b"c'd[e?f>`, "a", false],
+			["open", fixture("xml", "tokenize-xml-ends-a-name-at-every-delimiter-the-markup-around-it-uses-2"), "a", false],
 			["end", 13]
 		]);
 	});
 
 	it("leaves a `<` that opens no markup in the text", () => {
 		// Neither a digit, a space, a `/` without a name nor EOF can open a tag.
-		expect(xml("a < b <1 </ > <")).toEqual([
-			["text", "a < b <1 </ > <"],
+		expect(xml(fixture("xml", "tokenize-xml-leaves-a-that-opens-no-markup-in-the-text"))).toEqual([
+			["text", fixture("xml", "tokenize-xml-leaves-a-that-opens-no-markup-in-the-text")],
 			["end", 15]
 		]);
 	});
 
 	it("reads unquoted and empty attribute values", () => {
-		expect(xml("<a b=c d=>")).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-reads-unquoted-and-empty-attribute-values"))).toEqual([
 			["attr", "b", "c", Quote.None],
 			["attr", "d", "", Quote.None],
-			["open", "<a b=c d=>", "a", false],
+			["open", fixture("xml", "tokenize-xml-reads-unquoted-and-empty-attribute-values"), "a", false],
 			["end", 10]
 		]);
 		// An unquoted value runs to EOF when nothing ends it.
-		expect(xml("<a b=c")).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-reads-unquoted-and-empty-attribute-values-2"))).toEqual([
 			["attr", "b", "c", Quote.None],
 			["error", "eof-in-tag", "error"],
-			["open", "<a b=c", "a", false],
+			["open", fixture("xml", "tokenize-xml-reads-unquoted-and-empty-attribute-values-2"), "a", false],
 			["end", 6]
 		]);
 	});
 
 	it("skips a stray `/`, quote or `=` inside a start tag", () => {
-		expect(xml(`<a / "=b>`)).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-skips-a-stray-quote-or-inside-a-start-tag"))).toEqual([
 			["attr", "b", null, Quote.None],
-			["open", `<a / "=b>`, "a", false],
+			["open", fixture("xml", "tokenize-xml-skips-a-stray-quote-or-inside-a-start-tag"), "a", false],
 			["end", 9]
 		]);
 	});
 
 	it("ends a start tag at a `<`, which opens markup of its own", () => {
-		expect(xml("<a <b>")).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-ends-a-start-tag-at-a-which-opens-markup-of-its-own"))).toEqual([
 			["open", "<a ", "a", false],
 			["open", "<b>", "b", false],
 			["end", 6]
@@ -179,30 +181,30 @@ describe("tokenizeXml", () => {
 	});
 
 	it("reports `eof-in-tag` for a start tag cut off by EOF", () => {
-		expect(xml("<a b")).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-reports-eof-in-tag-for-a-start-tag-cut-off-by-eof"))).toEqual([
 			["attr", "b", null, Quote.None],
 			["error", "eof-in-tag", "error"],
-			["open", "<a b", "a", false],
+			["open", fixture("xml", "tokenize-xml-reports-eof-in-tag-for-a-start-tag-cut-off-by-eof"), "a", false],
 			["end", 4]
 		]);
 		// An unclosed quoted value runs to EOF.
-		expect(xml('<a b="x')).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-reports-eof-in-tag-for-a-start-tag-cut-off-by-eof-2"))).toEqual([
 			["attr", "b", "x", Quote.Double],
 			["error", "eof-in-tag", "error"],
-			["open", '<a b="x', "a", false],
+			["open", fixture("xml", "tokenize-xml-reports-eof-in-tag-for-a-start-tag-cut-off-by-eof-2"), "a", false],
 			["end", 7]
 		]);
 	});
 
 	it("drops an end tag cut off by EOF", () => {
-		expect(xml("x</a")).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-drops-an-end-tag-cut-off-by-eof"))).toEqual([
 			["text", "x"],
 			["end", 4]
 		]);
 	});
 
 	it("emits comments, CDATA sections and declarations through `comment`", () => {
-		expect(xml("a<!--c--><![CDATA[<d>]]><!ELEMENT e>")).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-emits-comments-cdata-sections-and-declarations-through-comment"))).toEqual([
 			["text", "a"],
 			["comment", "<!--c-->", "c"],
 			["comment", "<![CDATA[<d>]]>", "<d>"],
@@ -213,17 +215,17 @@ describe("tokenizeXml", () => {
 	});
 
 	it("runs an unterminated comment, CDATA section or declaration to EOF", () => {
-		expect(xml("a<!-- c")).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-runs-an-unterminated-comment-cdata-section-or-declaration-to-eof"))).toEqual([
 			["text", "a"],
 			["comment", "<!-- c", " c"],
 			["end", 7]
 		]);
-		expect(xml("a<![CDATA[<c>")).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-runs-an-unterminated-comment-cdata-section-or-declaration-to-eof-2"))).toEqual([
 			["text", "a"],
 			["comment", "<![CDATA[<c>", "<c>"],
 			["end", 13]
 		]);
-		expect(xml("a<!ELEMENT")).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-runs-an-unterminated-comment-cdata-section-or-declaration-to-eof-3"))).toEqual([
 			["text", "a"],
 			["comment", "<!ELEMENT", "ELEMENT"],
 			["end", 10]
@@ -231,13 +233,13 @@ describe("tokenizeXml", () => {
 	});
 
 	it("emits a processing instruction through `comment` and drops an unterminated one", () => {
-		expect(xml("a<?pi data?>b")).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-emits-a-processing-instruction-through-comment-and-drops-an"))).toEqual([
 			["text", "a"],
 			["comment", "<?pi data?>", "pi data"],
 			["text", "b"],
 			["end", 13]
 		]);
-		expect(xml("a<?pi data")).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-emits-a-processing-instruction-through-comment-and-drops-an-2"))).toEqual([
 			["text", "a"],
 			["end", 10]
 		]);
@@ -258,25 +260,25 @@ describe("tokenizeXml", () => {
 			],
 			["end", 80]
 		]);
-		expect(xml("<!DOCTYPE r SYSTEM 's'>")).toEqual([
-			["doctype", "<!DOCTYPE r SYSTEM 's'>", "r", null, "s", false, null],
+		expect(xml(fixture("xml", "tokenize-xml-reads-a-doctype-with-external-ids-and-an-internal-subset"))).toEqual([
+			["doctype", fixture("xml", "tokenize-xml-reads-a-doctype-with-external-ids-and-an-internal-subset"), "r", null, "s", false, null],
 			["end", 23]
 		]);
 	});
 
 	it("reads a malformed DOCTYPE leniently", () => {
 		// The keyword matches in any case; a missing name or literal is absent.
-		expect(xml("<!doctype>")).toEqual([
-			["doctype", "<!doctype>", null, null, null, false, null],
+		expect(xml(fixture("xml", "tokenize-xml-reads-a-malformed-doctype-leniently"))).toEqual([
+			["doctype", fixture("xml", "tokenize-xml-reads-a-malformed-doctype-leniently"), null, null, null, false, null],
 			["end", 10]
 		]);
-		expect(xml("<!DOCTYPE r PUBLIC>")).toEqual([
-			["doctype", "<!DOCTYPE r PUBLIC>", "r", null, null, false, null],
+		expect(xml(fixture("xml", "tokenize-xml-reads-a-malformed-doctype-leniently-2"))).toEqual([
+			["doctype", fixture("xml", "tokenize-xml-reads-a-malformed-doctype-leniently-2"), "r", null, null, false, null],
 			["end", 19]
 		]);
 		// Unterminated literals and subsets run to EOF.
-		expect(xml('<!DOCTYPE r "s')).toEqual([
-			["doctype", '<!DOCTYPE r "s', "r", null, "s", false, null],
+		expect(xml(fixture("xml", "tokenize-xml-reads-a-malformed-doctype-leniently-3"))).toEqual([
+			["doctype", fixture("xml", "tokenize-xml-reads-a-malformed-doctype-leniently-3"), "r", null, "s", false, null],
 			["end", 14]
 		]);
 		for (const subset of [" x", ' "x', " 'x", " <!-- x", " <? x"]) {
@@ -288,7 +290,7 @@ describe("tokenizeXml", () => {
 	});
 
 	it("reports a NUL anywhere past the start once, before any token", () => {
-		expect(xml("<a>\0</a>")).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-reports-a-nul-anywhere-past-the-start-once-before-any-token"))).toEqual([
 			["error", "unexpected-null-character", "warning"],
 			["open", "<a>", "a", false],
 			["text", "\0"],
@@ -296,7 +298,7 @@ describe("tokenizeXml", () => {
 			["end", 8]
 		]);
 		// A NUL before the start offset is not scanned.
-		expect(xml("\0<a/>", 1)).toEqual([
+		expect(xml(fixture("xml", "tokenize-xml-reports-a-nul-anywhere-past-the-start-once-before-any-token-2"), 1)).toEqual([
 			["open", "<a/>", "a", true],
 			["end", 5]
 		]);
@@ -304,7 +306,7 @@ describe("tokenizeXml", () => {
 
 	it("advances over markup whose callback is missing", () => {
 		const source =
-			"a<!--c-->b<![CDATA[d]]>e<!X>f<?g?>h<!DOCTYPE i>j<k l='m'/>n</k>o<q>r<s<t>u<p";
+			fixture("xml", "tokenize-xml-advances-over-markup-whose-callback-is-missing");
 		/** @type {string[]} */
 		const texts = [];
 		expect(

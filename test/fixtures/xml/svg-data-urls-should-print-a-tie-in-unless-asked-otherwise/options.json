@@ -1,0 +1,11 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"xmlQuote": "'"
+	},
+	{
+		"xml": true,
+		"mode": "minify"
+	}
+]

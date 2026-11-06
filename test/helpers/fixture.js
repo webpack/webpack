@@ -10,7 +10,7 @@ const cache = new Map();
 
 /**
  * One unit-test input, kept once under `test/fixtures/<lang>/<name>/index.<lang>`.
- * @param {"css" | "html"} lang the language the input is written in
+ * @param {"css" | "html" | "xml"} lang the language the input is written in
  * @param {string} name the fixture directory
  * @returns {string} the input
  */
@@ -36,7 +36,7 @@ const fixture = (lang, name) => {
  * @typedef {object} FixtureEntry
  * @property {string} name the fixture directory
  * @property {string} source its input
- * @property {{ mode: "minify" | "beautify" }[]} options the option sets it is printed under, minifying with the defaults first
+ * @property {{ mode: "minify" | "beautify", xml?: boolean }[]} options the option sets it is printed under, minifying with the defaults first
  * @property {KnownDifference[]} expected what its `expected.json` lets it break
  */
 
@@ -49,17 +49,21 @@ const readList = (file) =>
 
 /**
  * Every fixture of a language with what the runner asks of it.
- * @param {"css" | "html"} lang the language
+ * @param {"css" | "html" | "xml"} lang the language
  * @returns {FixtureEntry[]} one entry per fixture, by name
  */
 const fixtures = (lang) => {
 	/** @type {FixtureEntry[]} */
 	const entries = [];
 	const dir = path.join(FIXTURES, lang);
+	// XML prints through the HTML printer, so its defaults name the dialect.
+	/** @type {{ mode: "minify" | "beautify", xml?: boolean }} */
+	const first =
+		lang === "xml" ? { xml: true, mode: "minify" } : { mode: "minify" };
 	for (const name of fs.readdirSync(dir).sort()) {
 		if (!fs.existsSync(path.join(dir, name, `index.${lang}`))) continue;
-		/** @type {Map<string, { mode: "minify" | "beautify" }>} */
-		const options = new Map([['{"mode":"minify"}', { mode: "minify" }]]);
+		/** @type {Map<string, { mode: "minify" | "beautify", xml?: boolean }>} */
+		const options = new Map([[JSON.stringify(first), first]]);
 		for (const one of readList(path.join(dir, name, "options.json"))) {
 			options.set(JSON.stringify(one), one);
 		}

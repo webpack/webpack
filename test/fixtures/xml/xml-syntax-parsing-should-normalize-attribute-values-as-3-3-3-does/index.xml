@@ -1,0 +1,3 @@
+<!DOCTYPE r [<!ATTLIST r t NMTOKENS #IMPLIED c CDATA #IMPLIED>]><r t="  a 
+ b  " c=" a
+	b&#10;&#9;c "/>

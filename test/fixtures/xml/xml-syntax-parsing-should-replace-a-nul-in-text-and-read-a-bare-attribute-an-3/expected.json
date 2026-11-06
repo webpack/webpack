@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "spans",
+		"contains": "[0,-39) not inside [0,3)",
+		"why": "markup an internal-subset entity expands to has no source text of its own, so its nodes carry offsets the span check reads as outside their node and over the siblings before them"
+	}
+]
