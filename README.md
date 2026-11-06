@@ -103,8 +103,9 @@ Webpack generates HTML pages and extracts CSS files itself — stable and on by
 default since 5.109.0, replacing the deprecated `html-webpack-plugin` and
 `mini-css-extract-plugin`. Point an entry at an `.html` file, or set
 `output.html: true` to generate a page for a JavaScript entry (if a rule of your
-own already handles `.html` files, also set `experiments.html: true`). See what
-that covers for
+own already handles `.html` files, also set `experiments.html: true`; that
+also resolves an ESM import without an extension, such as `./page`, to `page.html`
+before `page.js`). See what that covers for
 [CSS](https://webpack.js.org/guides/native-css/#whats-built-in) and
 [HTML](https://webpack.js.org/guides/native-html/#whats-built-in).
 
