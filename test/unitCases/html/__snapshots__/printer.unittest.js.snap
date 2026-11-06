@@ -88,7 +88,7 @@ exports[`SourceProcessor — tree construction the printer reads back prints an 
 
 exports[`SourceProcessor — tree construction the printer reads back prints an end tag form in template content 1`] = `"<template><div>x</div></template>"`;
 
-exports[`SourceProcessor — tree construction the printer reads back prints an implied tbody kept in template content 1`] = `"<template><table><tbody><tr><td>x</td></tr></table></template>"`;
+exports[`SourceProcessor — tree construction the printer reads back prints an implied tbody kept in template content 1`] = `"<template><table><tbody><tr><td>x</td></tr></tbody></table></template>"`;
 
 exports[`SourceProcessor — tree construction the printer reads back prints an input the table fosters 1`] = `"<input name=x type=text><table></table>"`;
 

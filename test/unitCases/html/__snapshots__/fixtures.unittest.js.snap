@@ -2623,7 +2623,7 @@ exports[`HTML syntax — fixtures parse-html-insertion-modes-appends-a-comment-a
 |   <body>"
 `;
 
-exports[`HTML syntax — fixtures parse-html-insertion-modes-appends-a-comment-after-the-body-to-the-html-element prints {"mode":"minify"} 1`] = `"<!doctype html></html>"`;
+exports[`HTML syntax — fixtures parse-html-insertion-modes-appends-a-comment-after-the-body-to-the-html-element prints {"mode":"minify"} 1`] = `"<!doctype html>"`;
 
 exports[`HTML syntax — fixtures parse-html-insertion-modes-breaks-a-paragraph-out-of-foreign-content parses 1`] = `
 "| <!DOCTYPE html>
@@ -2798,7 +2798,7 @@ exports[`HTML syntax — fixtures parse-html-insertion-modes-drops-a-nul-before-
 |   <frameset>"
 `;
 
-exports[`HTML syntax — fixtures parse-html-insertion-modes-drops-a-nul-before-a-frameset prints {"mode":"minify"} 1`] = `"<frameset></frameset></html>"`;
+exports[`HTML syntax — fixtures parse-html-insertion-modes-drops-a-nul-before-a-frameset prints {"mode":"minify"} 1`] = `"<frameset></frameset>"`;
 
 exports[`HTML syntax — fixtures parse-html-insertion-modes-drops-a-table-cell-holding-nothing-but-a-nul parses 1`] = `
 "| <html>
@@ -2838,7 +2838,7 @@ exports[`HTML syntax — fixtures parse-html-insertion-modes-drops-whitespace-be
 |   <body>"
 `;
 
-exports[`HTML syntax — fixtures parse-html-insertion-modes-drops-whitespace-before-the-html-element prints {"mode":"minify"} 1`] = `"<!doctype html></html>"`;
+exports[`HTML syntax — fixtures parse-html-insertion-modes-drops-whitespace-before-the-html-element prints {"mode":"minify"} 1`] = `"<!doctype html>"`;
 
 exports[`HTML syntax — fixtures parse-html-insertion-modes-ends-a-caption-fragment parses 1`] = `
 "| <html>
@@ -2993,7 +2993,7 @@ exports[`HTML syntax — fixtures parse-html-insertion-modes-ignores-a-doctype-a
 |   <body>"
 `;
 
-exports[`HTML syntax — fixtures parse-html-insertion-modes-ignores-a-doctype-after-head prints {"mode":"minify"} 1`] = `"<head></head></html>"`;
+exports[`HTML syntax — fixtures parse-html-insertion-modes-ignores-a-doctype-after-head prints {"mode":"minify"} 1`] = `"<head></head>"`;
 
 exports[`HTML syntax — fixtures parse-html-insertion-modes-ignores-a-doctype-after-the-body parses 1`] = `
 "| <html>
@@ -3009,7 +3009,7 @@ exports[`HTML syntax — fixtures parse-html-insertion-modes-ignores-a-doctype-b
 |   <body>"
 `;
 
-exports[`HTML syntax — fixtures parse-html-insertion-modes-ignores-a-doctype-before-head prints {"mode":"minify"} 1`] = `"</html>"`;
+exports[`HTML syntax — fixtures parse-html-insertion-modes-ignores-a-doctype-before-head prints {"mode":"minify"} 1`] = `""`;
 
 exports[`HTML syntax — fixtures parse-html-insertion-modes-ignores-a-doctype-in-foreign-content parses 1`] = `
 "| <html>
@@ -3026,7 +3026,7 @@ exports[`HTML syntax — fixtures parse-html-insertion-modes-ignores-a-doctype-i
 |   <body>"
 `;
 
-exports[`HTML syntax — fixtures parse-html-insertion-modes-ignores-a-doctype-in-head prints {"mode":"minify"} 1`] = `"<head></head></html>"`;
+exports[`HTML syntax — fixtures parse-html-insertion-modes-ignores-a-doctype-in-head prints {"mode":"minify"} 1`] = `"<head></head>"`;
 
 exports[`HTML syntax — fixtures parse-html-insertion-modes-ignores-a-doctype-inside-a-column-group parses 1`] = `
 "| <html>
@@ -3094,7 +3094,7 @@ exports[`HTML syntax — fixtures parse-html-insertion-modes-ignores-a-repeated-
 |   <body>"
 `;
 
-exports[`HTML syntax — fixtures parse-html-insertion-modes-ignores-a-repeated-head-start-tag-after-head prints {"mode":"minify"} 1`] = `"<head><template></template></head></html>"`;
+exports[`HTML syntax — fixtures parse-html-insertion-modes-ignores-a-repeated-head-start-tag-after-head prints {"mode":"minify"} 1`] = `"<head><template></template></head>"`;
 
 exports[`HTML syntax — fixtures parse-html-insertion-modes-ignores-a-row-end-tag-inside-a-template parses 1`] = `
 "| <html>
@@ -3289,7 +3289,7 @@ exports[`HTML syntax — fixtures parse-html-insertion-modes-keeps-a-frameset-ou
 |     \\"aa\\""
 `;
 
-exports[`HTML syntax — fixtures parse-html-insertion-modes-keeps-a-frameset-out-once-text-arrived prints {"mode":"minify"} 1`] = `"aa</html>"`;
+exports[`HTML syntax — fixtures parse-html-insertion-modes-keeps-a-frameset-out-once-text-arrived prints {"mode":"minify"} 1`] = `"aa"`;
 
 exports[`HTML syntax — fixtures parse-html-insertion-modes-keeps-a-paragraph-open-around-a-table-in-quirks-mode parses 1`] = `
 "| <!DOCTYPE potato>
@@ -4247,7 +4247,7 @@ exports[`HTML syntax — fixtures parse-html-parse-error-reports-the-tree-s-erro
 |   <body>"
 `;
 
-exports[`HTML syntax — fixtures parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-html-doctype prints {"mode":"minify"} 1`] = `"<!doctype html></html>"`;
+exports[`HTML syntax — fixtures parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-html-doctype prints {"mode":"minify"} 1`] = `"<!doctype html>"`;
 
 exports[`HTML syntax — fixtures parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-image parses 1`] = `
 "| <!DOCTYPE html>
@@ -16933,7 +16933,7 @@ exports[`HTML syntax — fixtures source-processor-printing-in-pieces-drops-an-o
 |   <body>"
 `;
 
-exports[`HTML syntax — fixtures source-processor-printing-in-pieces-drops-an-omitted-tag-that-nothing-printed prints {"mode":"minify"} 1`] = `"<body></body></html>"`;
+exports[`HTML syntax — fixtures source-processor-printing-in-pieces-drops-an-omitted-tag-that-nothing-printed prints {"mode":"minify"} 1`] = `"<body></body>"`;
 
 exports[`HTML syntax — fixtures source-processor-printing-in-pieces-drops-an-omitted-tag-that-nothing-printed-2 parses 1`] = `
 "| <html>
@@ -17780,7 +17780,7 @@ exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-th
 |   <body>"
 `;
 
-exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-fragment-keeps-the-2 prints {"mode":"minify"} 1`] = `"<head></head><body></body></html>"`;
+exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-fragment-keeps-the-2 prints {"mode":"minify"} 1`] = `"<head></head><body></body>"`;
 
 exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-fragment-leaves-out parses 1`] = `
 "| <html>
@@ -17999,7 +17999,7 @@ exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-th
 |       <li>"
 `;
 
-exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-8 prints {"mode":"minify"} 1`] = `"<body><noscript><li></html></noscript>"`;
+exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-8 prints {"mode":"minify"} 1`] = `"<body><noscript><li></html></noscript></body>"`;
 
 exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-9 parses 1`] = `
 "| <html>
@@ -18110,7 +18110,7 @@ exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-th
 |       <i>"
 `;
 
-exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-18 prints {"mode":"minify"} 1`] = `"<body><noscript><i></noscript>"`;
+exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-18 prints {"mode":"minify"} 1`] = `"<body><noscript><i></noscript></body>"`;
 
 exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-19 parses 1`] = `
 "| <html>
@@ -18139,7 +18139,7 @@ exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-th
 |   <body>"
 `;
 
-exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-20 prints {"mode":"minify"} 1`] = `"<head></head></html>"`;
+exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-20 prints {"mode":"minify"} 1`] = `"<head></head>"`;
 
 exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-21 parses 1`] = `
 "| <html>
@@ -20340,7 +20340,7 @@ exports[`HTML syntax — fixtures source-processor-remove-implied-tags-looks-pas
 
 exports[`HTML syntax — fixtures source-processor-remove-implied-tags-looks-past-a-comment-it-is-about-to-drop prints {"mode":"minify","removeImpliedTags":"all"} 1`] = `"<title>t</title>x"`;
 
-exports[`HTML syntax — fixtures source-processor-remove-implied-tags-looks-past-a-comment-it-is-about-to-drop prints {"mode":"minify"} 1`] = `"<head><title>t</title></head><body>x</body></html>"`;
+exports[`HTML syntax — fixtures source-processor-remove-implied-tags-looks-past-a-comment-it-is-about-to-drop prints {"mode":"minify"} 1`] = `"<head><title>t</title></head><body>x</body>"`;
 
 exports[`HTML syntax — fixtures source-processor-remove-implied-tags-looks-past-a-comment-it-is-about-to-drop-2 parses 1`] = `
 "| <html>
@@ -20354,7 +20354,7 @@ exports[`HTML syntax — fixtures source-processor-remove-implied-tags-looks-pas
 
 exports[`HTML syntax — fixtures source-processor-remove-implied-tags-looks-past-a-comment-it-is-about-to-drop-2 prints {"mode":"minify","removeImpliedTags":"all"} 1`] = `"<title>t</title></head><!--[if IE]>i<![endif]-->x"`;
 
-exports[`HTML syntax — fixtures source-processor-remove-implied-tags-looks-past-a-comment-it-is-about-to-drop-2 prints {"mode":"minify"} 1`] = `"<head><title>t</title></head><!--[if IE]>i<![endif]-->x</html>"`;
+exports[`HTML syntax — fixtures source-processor-remove-implied-tags-looks-past-a-comment-it-is-about-to-drop-2 prints {"mode":"minify"} 1`] = `"<head><title>t</title></head><!--[if IE]>i<![endif]-->x"`;
 
 exports[`HTML syntax — fixtures source-processor-remove-implied-tags-materializes-an-implied-tag-whose-content parses 1`] = `
 "| <html>
@@ -20366,7 +20366,7 @@ exports[`HTML syntax — fixtures source-processor-remove-implied-tags-materiali
 
 exports[`HTML syntax — fixtures source-processor-remove-implied-tags-materializes-an-implied-tag-whose-content prints {"mode":"minify","removeImpliedTags":true} 1`] = `"<body><style>a{color:red}</style>"`;
 
-exports[`HTML syntax — fixtures source-processor-remove-implied-tags-materializes-an-implied-tag-whose-content prints {"mode":"minify"} 1`] = `"<body><style>a{color:red}</style>"`;
+exports[`HTML syntax — fixtures source-processor-remove-implied-tags-materializes-an-implied-tag-whose-content prints {"mode":"minify"} 1`] = `"<body><style>a{color:red}</style></body>"`;
 
 exports[`HTML syntax — fixtures source-processor-remove-implied-tags-materializes-an-implied-tag-whose-content-2 parses 1`] = `
 "| <html>
@@ -21759,7 +21759,7 @@ exports[`HTML syntax — fixtures source-processor-streamed-walk-recycling-mater
 |       \\"x\\""
 `;
 
-exports[`HTML syntax — fixtures source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as prints {"mode":"minify"} 1`] = `"<body><style>a{color:red}</style><p>x"`;
+exports[`HTML syntax — fixtures source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as prints {"mode":"minify"} 1`] = `"<body><style>a{color:red}</style><p>x</body>"`;
 
 exports[`HTML syntax — fixtures source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-a-start-tag parses 1`] = `
 "| <html>
@@ -23013,7 +23013,7 @@ exports[`HTML syntax — fixtures source-processor-tree-construction-corpus-roun
 "<body>
 <p><font size=7>First paragraph.</font></p><font size=7>
 <p>Second paragraph.</p></font>
-<b></b><p><b><i>Bold and Italic</i></b><i> Italic</i></body></html>"
+<b></b><p><b><i>Bold and Italic</i></b><i> Italic</i></body>"
 `;
 
 exports[`HTML syntax — fixtures source-processor-tree-construction-corpus-round-trips-minify-prints-math-tbody parses 1`] = `
