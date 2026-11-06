@@ -7,6 +7,11 @@ module.exports = {
 		util: "util"
 	},
 	externalsType: "module-import",
+	// `util` only stands in for any `module` external; on this unversioned
+	// universal target it warns that a browser can't load a static builtin import
+	ignoreWarnings: [
+		/universal target can't load the Node\.js built-in module "util"/
+	],
 	experiments: {
 		lazyCompilation: {
 			entries: false

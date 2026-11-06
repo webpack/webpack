@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+// `fs` and `path` come from the runner (`moduleScope` in `test.config.js`):
+// bundling them would make this universal build warn.
 
 // One of every reference analyzable output writes out.
 export const chunk = () => import("./mods/a.js");

@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+// `fs` and `path` come from the runner (`moduleScope` in `test.config.js`):
+// bundling them would make this universal build warn.
 
 export const asset = new URL("./thing.txt", import.meta.url);
 export const hinted = new URL(/* webpackPreload: true */ "./hint.png", import.meta.url);

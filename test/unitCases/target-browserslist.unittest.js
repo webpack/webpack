@@ -145,6 +145,48 @@ describe("browserslist target", () => {
 		});
 	});
 
+	// `process.getBuiltinModule()` shipped in 22.3 and was backported to 20.16, never to 21
+	describe("nodeBuiltinModuleGetter", () => {
+		const { getTargetProperties } = require("../../lib/config/target");
+
+		it.each([
+			["node 20.15.0", false],
+			["node 20.16.0", true],
+			["node 21.7.0", false],
+			["node 22.2.0", false],
+			["node 22.3.0", true]
+		])("browserslist %s -> %s", (query, expected) => {
+			expect(resolve([query]).nodeBuiltinModuleGetter).toBe(expected);
+		});
+
+		it.each([
+			[["node 20.16.0", "chrome 120"], true],
+			[["node 22.3.0", "chrome 120"], true],
+			[["node 18.0.0", "chrome 120"], false],
+			[["chrome 120"], false]
+		])("reads only the node entries of %j -> %s", (query, expected) => {
+			expect(resolve(query).nodeBuiltinModuleGetter).toBe(expected);
+		});
+
+		it("rejects a mixed query that includes node 21", () => {
+			expect(
+				resolve(["node 20.16.0", "node 21.7.0"]).nodeBuiltinModuleGetter
+			).toBe(false);
+		});
+
+		it.each([
+			["node20.15", false],
+			["node20.16", true],
+			["node21.7", false],
+			["node22.2", false],
+			["node22.3", true]
+		])("target %s -> %s", (target, expected) => {
+			expect(
+				getTargetProperties(target, __dirname).nodeBuiltinModuleGetter
+			).toBe(expected);
+		});
+	});
+
 	describe("load", () => {
 		const context = path.join(
 			__dirname,
