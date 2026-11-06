@@ -6269,6 +6269,32 @@ describe("parseProgram", () => {
 		expect(tree).toEqual(report(true));
 	});
 
+	it("collects comments and reports them to `onComment` in one parse", () => {
+		for (const estree of [false, true]) {
+			/** @type {import("../../../lib/javascript/syntax-parser").CollectedComment[]} */
+			const comments = [];
+			/** @type {unknown[]} */
+			const reported = [];
+			parseProgram("#!x\n/* a */ b; // c", 0, {
+				sourceType: "script",
+				estree,
+				comments,
+				onComment: (block, text, start, end) =>
+					reported.push([block, text, start, end])
+			});
+			expect(comments.map((comment) => comment.value)).toEqual([
+				"x",
+				" a ",
+				" c"
+			]);
+			expect(reported).toEqual([
+				[false, "x", 0, 3],
+				[true, " a ", 4, 11],
+				[false, " c", 15, 19]
+			]);
+		}
+	});
+
 	it("refuses an ESTree parse a visitor starts, as a tree parse", () => {
 		expect(() =>
 			new SourceProcessor()
