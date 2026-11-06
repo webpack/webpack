@@ -69,7 +69,11 @@ it("should resolve a @value that is a url() where it is used", () => {
 		"utf-8"
 	);
 	const rules = cssContent.slice(cssContent.indexOf("url-value.module.css"));
-	for (const name of ["uses-quoted-url", "uses-bare-url"]) {
+	for (const name of [
+		"uses-quoted-url",
+		"uses-bare-url",
+		"uses-escaped-url"
+	]) {
 		const match = new RegExp(
 			`(?:^|\\n)\\.${urlValue[name]} \\{\\n\\tbackground-image: url\\(([^)]+)\\);`
 		).exec(rules);

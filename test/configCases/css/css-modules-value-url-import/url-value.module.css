@@ -1,5 +1,6 @@
 @value quotedUrl: url("./img/shape.png");
 @value bareUrl: url(./img/shape.png);
+@value escapedUrl: url(./img/sh\61 pe.png);
 
 .uses-quoted-url {
 	background-image: quotedUrl;
@@ -7,4 +8,8 @@
 
 .uses-bare-url {
 	background-image: bareUrl;
+}
+
+.uses-escaped-url {
+	background-image: escapedUrl;
 }
