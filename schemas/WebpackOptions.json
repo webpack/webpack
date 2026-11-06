@@ -4541,7 +4541,6 @@
       "description": "What the XML minimizer does. The stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers.",
       "type": "object",
       "additionalProperties": false,
-      "experimental": true,
       "properties": {
         "sortAttributes": {
           "description": "Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.",
@@ -4549,6 +4548,7 @@
           "added": "5.112.0"
         }
       },
+      "experimental": true,
       "added": "5.112.0"
     },
     "OptimizationNormalized": {
@@ -7215,6 +7215,12 @@
             }
           ]
         },
+        "threads": {
+          "description": "Run this rule's loader chain in a worker thread when `experiments.threads` is on. The supported loader APIs are the ones thread-loader supports; a loader using `emitFile` or a plugin-provided loader API must run on the main thread.",
+          "type": "boolean",
+          "experimental": true,
+          "added": "5.113.0"
+        },
         "type": {
           "description": "Module type to use for the module.",
           "type": "string"
@@ -8047,11 +8053,31 @@
         }
       ]
     },
+    "ThreadsLoadersOptions": {
+      "description": "Options for running loaders on the worker threads.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "parallelJobs": {
+          "description": "Number of loader jobs a thread runs at once. Defaults to `20`; the CPU part still runs one at a time.",
+          "type": "number",
+          "minimum": 0
+        },
+        "poolTimeout": {
+          "description": "Milliseconds an idle thread survives after a loader job. Defaults to `500`.",
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
     "ThreadsOptions": {
       "description": "Options for running CPU-heavy plugin work on the worker threads webpack keeps for a compiler.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "loaders": {
+          "$ref": "#/definitions/ThreadsLoadersOptions"
+        },
         "max": {
           "description": "Number of worker threads. Defaults to one less than the number of CPUs; `0` runs the work on the main thread.",
           "type": "number",

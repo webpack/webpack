@@ -18,6 +18,12 @@ module.exports.fail = () => {
 	throw error;
 };
 
+module.exports.failWithFunction = () => {
+	const error = new Error("boom");
+	error.fn = () => {};
+	throw error;
+};
+
 module.exports.throwString = () => {
 	throw "not an error";
 };

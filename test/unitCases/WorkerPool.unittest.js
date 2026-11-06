@@ -179,6 +179,9 @@ describe("WorkerPool", () => {
 			);
 			expect(error.message).toBe("boom");
 			expect(error.code).toBe("E_BOOM");
+			await expect(pool.run(TARGET, "failWithFunction", [])).rejects.toThrow(
+				"boom"
+			);
 			await expect(pool.run(TARGET, "throwString", [])).rejects.toThrow(
 				"not an error"
 			);
@@ -277,11 +280,12 @@ describe("WorkerPool", () => {
 			port2.postMessage({ type: "preload", id: 1, modules: [TARGET] });
 			expect(await next()).toEqual({ type: "preloaded", id: 1, ok: true });
 			port2.postMessage({
-				type: "call",
+				type: "job",
 				id: 2,
 				module: TARGET,
 				method: "add",
-				args: [1, 2]
+				args: [1, 2],
+				rpc: false
 			});
 			expect(await next()).toEqual({
 				type: "response",

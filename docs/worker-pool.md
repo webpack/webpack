@@ -146,3 +146,5 @@ module.exports = {
 `minimizer-webpack-plugin` today builds a `jest-worker` pool per compilation. With the pool it binds `dist/minify.js` once per compiler, calls `run("minify", options)` or `run("transform", serialized)`, and warms up only the threads its asset count needs. That change lands in the plugin's repository; webpack only exposes `compiler.worker`.
 
 Source maps were measured and rejected for the farm: shipping an asset's `Source` tree to a thread costs more on the main thread than composing its map in place. Work fits the pool when its compute per byte of input is high.
+
+Loader threads share the same pool. Their contract is in [Loader threads](./loader-threads.md).

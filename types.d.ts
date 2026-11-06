@@ -22339,6 +22339,13 @@ declare interface ModuleSettings {
 	 * Flags a module as with or without side effects.
 	 */
 	sideEffects?: boolean;
+
+	/**
+	 * Run this rule's loader chain in a worker thread when `experiments.threads` is on. The supported loader APIs are the ones thread-loader supports; a loader using `emitFile` or a plugin-provided loader API must run on the main thread.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	threads?: boolean;
 }
 declare abstract class ModuleTemplate {
 	type: string;
@@ -23102,6 +23109,7 @@ declare class NormalModule extends Module {
 	matchResource?: string;
 	loaders: LoaderItem[];
 	extractSourceMap: boolean;
+	threads: boolean;
 	hot: boolean;
 	error: null | Error;
 	getResource(): null | string;
@@ -23375,6 +23383,11 @@ declare interface NormalModuleCreateData<T extends string = string> {
 	 * enable/disable extracting source map
 	 */
 	extractSourceMap: boolean;
+
+	/**
+	 * run this module's loader chain in a worker thread
+	 */
+	threads?: boolean;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
@@ -30031,6 +30044,13 @@ declare interface RuleSetRule {
 		| RuleSetConditionAbsolute[];
 
 	/**
+	 * Run this rule's loader chain in a worker thread when `experiments.threads` is on. The supported loader APIs are the ones thread-loader supports; a loader using `emitFile` or a plugin-provided loader API must run on the main thread.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	threads?: boolean;
+
+	/**
 	 * Module type to use for the module.
 	 */
 	type?: string;
@@ -34923,9 +34943,29 @@ declare interface TerserMangleAliases {
 }
 
 /**
+ * Options for running loaders on the worker threads.
+ */
+declare interface ThreadsLoadersOptions {
+	/**
+	 * Number of loader jobs a thread runs at once. Defaults to `20`; the CPU part still runs one at a time.
+	 */
+	parallelJobs?: number;
+
+	/**
+	 * Milliseconds an idle thread survives after a loader job. Defaults to `500`.
+	 */
+	poolTimeout?: number;
+}
+
+/**
  * Options for running CPU-heavy plugin work on the worker threads webpack keeps for a compiler.
  */
 declare interface ThreadsOptions {
+	/**
+	 * Options for running loaders on the worker threads.
+	 */
+	loaders?: ThreadsLoadersOptions;
+
 	/**
 	 * Number of worker threads. Defaults to one less than the number of CPUs; `0` runs the work on the main thread.
 	 */

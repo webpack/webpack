@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `experiments.threads` and `compiler.worker(workerPath)`, a compiler-owned worker thread pool for CPU-heavy plugin work.
+Add `experiments.threads`, `compiler.worker(workerPath)`, and built-in loader threads (`module.rules[].threads`) sharing one compiler-owned worker pool.

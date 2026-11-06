@@ -5394,6 +5394,12 @@ export interface RuleSetRule {
 	 */
 	test?: RuleSetConditionOrConditionsAbsolute;
 	/**
+	 * Run this rule's loader chain in a worker thread when `experiments.threads` is on. The supported loader APIs are the ones thread-loader supports; a loader using `emitFile` or a plugin-provided loader API must run on the main thread.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	threads?: boolean;
+	/**
 	 * Module type to use for the module.
 	 */
 	type?: string;
@@ -5980,9 +5986,27 @@ export type Target =
 	| NonEmptyString;
 
 /**
+ * Options for running loaders on the worker threads.
+ */
+export interface ThreadsLoadersOptions {
+	/**
+	 * Number of loader jobs a thread runs at once. Defaults to `20`; the CPU part still runs one at a time.
+	 */
+	parallelJobs?: NonNegativeNumber;
+	/**
+	 * Milliseconds an idle thread survives after a loader job. Defaults to `500`.
+	 */
+	poolTimeout?: NonNegativeNumber;
+}
+
+/**
  * Options for running CPU-heavy plugin work on the worker threads webpack keeps for a compiler.
  */
 export interface ThreadsOptions {
+	/**
+	 * Options for running loaders on the worker threads.
+	 */
+	loaders?: ThreadsLoadersOptions;
 	/**
 	 * Number of worker threads. Defaults to one less than the number of CPUs; `0` runs the work on the main thread.
 	 */
