@@ -5,8 +5,8 @@ exports[`ConfigTestCases html script-type-unquoted exported tests should strip a
 <html>
 <head><title>script-type-unquoted</title></head>
 <body>
-<script src=\\"entry.js\\"></script>
-<script src=\\"other.js\\"></script>
+<script charset=\\"utf-8\\" src=\\"entry.js\\"></script>
+<script charset=\\"utf-8\\" src=\\"other.js\\"></script>
 </body>
 </html>
 "
