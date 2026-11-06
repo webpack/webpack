@@ -3102,6 +3102,11 @@ declare interface ChunkRenderContextCssModulesPlugin {
 	 * content
 	 */
 	moduleSourceContent: Source;
+
+	/**
+	 * another module of the chunk comes after this one
+	 */
+	followed?: boolean;
 }
 
 /**
@@ -18559,6 +18564,11 @@ declare interface KnownCssModuleBuildInfo {
 	 * charset at-rule
 	 */
 	charset?: string;
+
+	/**
+	 * the source ends inside a comment, string or block
+	 */
+	openAtEnd?: true;
 }
 
 /**
@@ -21283,6 +21293,11 @@ declare interface ModuleFactoryCacheEntry {
 	 * - The compilation hash
 	 */
 	hash?: string;
+
+	/**
+	 * - whether an end left open was closed
+	 */
+	closed: boolean;
 
 	/**
 	 * - The inheritance chain
