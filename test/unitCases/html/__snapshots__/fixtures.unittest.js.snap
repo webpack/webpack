@@ -760,6 +760,29 @@ exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-c
 
 exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-declines-an-2 prints {"mode":"minify"} 1`] = `"<svg><rect style=\\"color: red\\"/></svg>"`;
 
+exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-a-name-opening parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       =x=\\"\\"
+|       style=\\"color: red\\"
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-a-name-opening prints {"mode":"minify"} 1`] = `"<p style=\\"color: red\\" =x>x"`;
+
+exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-a-name-opening-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <iframe>
+|       =x=\\"\\"
+|       srcdoc=\\"<p>a</p>\\""
+`;
+
+exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-a-name-opening-2 prints {"mode":"minify"} 1`] = `"<iframe srcdoc=\\"<p>a</p>\\" =x></iframe>"`;
+
 exports[`HTML syntax — fixtures html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-an-answer parses 1`] = `
 "| <html>
 |   <head>

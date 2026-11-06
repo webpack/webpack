@@ -3512,6 +3512,16 @@ describe("htmlMinify — an answered `style` attribute that changes its quoting"
 			)
 		).toBe("<button onclick=foo(1)>x</button>");
 	});
+
+	it("keeps a name opening with `=` apart from an answered attribute", async () => {
+		// Written before the answer arrives: `=""` would join an unquoted value,
+		// and a space alone would give a bare name the next name as its value.
+		const page = fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-a-name-opening");
+		expect(await min(page, () => "color:red")).toBe("<p style=color:red /=x>x");
+		expect(
+			await min(fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-a-name-opening-2"), () => "")
+		).toBe("<iframe srcdoc /=x></iframe>");
+	});
 });
 
 describe("htmlMinify — the function an event handler is asked about", () => {
