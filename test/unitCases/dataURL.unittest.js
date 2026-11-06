@@ -165,6 +165,27 @@ describe("decodeDataURIPayload", () => {
 		).toBeNull();
 	});
 
+	it("should decline a payload in a charset other than UTF-8", () => {
+		/**
+		 * @param {string} uri the URI
+		 * @returns {string | null} its decoded payload
+		 */
+		const decode = (uri) =>
+			decodeDataURIPayload(
+				/** @type {NonNullable<ReturnType<typeof parseDataURI>>} */ (
+					parseDataURI(uri)
+				)
+			);
+		// `a{color:red}`, read as ISO-2022-JP rather than UTF-8
+		expect(
+			decode("data:text/css;charset=iso-2022-jp;base64,YXtjb2xvcjpyZWR9")
+		).toBeNull();
+		expect(decode("data:text/css;charset=utf-16,a{color:red}")).toBeNull();
+		expect(decode("data:text/css;charset=utf-8;base64,YXtjb2xvcjpyZWR9")).toBe(
+			"a{color:red}"
+		);
+	});
+
 	it("should decode base64 that round-trips", () => {
 		const parsed = /** @type {NonNullable<ReturnType<typeof parseDataURI>>} */ (
 			parseDataURI("data:text/css;base64,YXtjb2xvcjpyZWR9")
