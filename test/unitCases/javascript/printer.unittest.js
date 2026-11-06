@@ -5576,18 +5576,18 @@ describe("one-pass minify of statement sequences", () => {
 		expect(beautify(once, false)).toBe(once);
 		const compressed = beautify(source, {});
 		expect(compressed).toBe(
-			"x = [ 1 / 0, -1 / 0, a / (1 / 0), {[1 / 0]: 1}, 1 / 0, 0 / 0, 1 / 0 ];"
+			"x = [ 1 / 0, -1 / 0, a / (1 / 0), {[1 / 0]: 1}, 1 / 0, NaN, 1 / 0 ];"
 		);
 		expect(beautify(compressed, false)).toBe(compressed);
 	});
 
-	it("should print a binary expression folding to an infinity or `NaN` as `1/0`, `-1/0` or `0/0`", () => {
-		// A division needs the parentheses its place gave the expression; `**` binds tighter.
+	it("should print a binary expression folding to an infinity or `NaN` as `1/0`, `-1/0` or `NaN`", () => {
+		// A division needs the parentheses its place gave the expression; `**` binds tighter. `NaN` prints as the global's name, `0/0` only where `with`, `eval` or a binding may take it.
 		const source =
 			'var a=2;console.log(123456789/0,2/0,3/0*2,-1e300*1e10,1*"a","a"*2+1,a/(2/0),a-(-2/0),-(2/0),(2/0).toFixed(),2**2e3,a**(2/0),f()/0,a/(3/0*2),a-(-3/0*2),-(3/0*2),(3/0*2).toFixed(),a**(3/0*2))';
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
 		expect(code).toBe(
-			'var a=2;console.log(1/0,2/0,1/0,-1/0,0/0,0/0,a/(2/0),a- -2/0,-(2/0),(2/0).toFixed(),2**2e3,a**(2/0),f()/0,a/(1/0),a- -1/0,-(1/0),(1/0).toFixed(),a**(1/0));'
+			'var a=2;console.log(1/0,2/0,1/0,-1/0,NaN,NaN,a/(2/0),a- -2/0,-(2/0),(2/0).toFixed(),2**2e3,a**(2/0),f()/0,a/(1/0),a- -1/0,-(1/0),(1/0).toFixed(),a**(1/0));'
 		);
 		expect(runProgram(`function f(){return 1}${code}`)).toBe(
 			runProgram(`function f(){return 1}${source}`)
