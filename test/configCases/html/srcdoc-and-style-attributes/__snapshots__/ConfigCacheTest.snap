@@ -13,7 +13,7 @@ exports[`ConfigCacheTestCases html srcdoc-and-style-attributes exported tests if
 <iframe srcdoc=\\"<div style=&quot;background: url(handled-pixel.png)&quot;>styled</div>\\"></iframe>
 <iframe srcdoc='<img src=&quot;handled-pixel.png&quot;>'></iframe>
 <iframe srcdoc=\\"<link rel=&quot;icon&quot; href=&quot;handled-pixel.png&quot;>\\"></iframe>
-<iframe srcdoc=\\"<img src=&quot;handled-pixel.png&quot;><img src=&quot;data:,&quot;><img src=&quot;data:,&quot;>\\"></iframe>
+<iframe srcdoc=\\"<img src=&quot;handled-pixel.png&quot;><img src=&quot;https://cdn.test/x.png&quot;><img src=&quot;//cdn.test/y.png&quot;>\\"></iframe>
 <iframe srcdoc=\\"<iframe srcdoc=&quot;<img src=&amp;quot;handled-pixel.png&amp;quot;>&quot;>\\"></iframe>
 <iframe srcdoc=\\"<!DOCTYPE html><html><head><link rel=&quot;icon&quot; href=&quot;handled-pixel.png&quot;></head><body><img src=&quot;handled-other.png&quot;></body></html>\\"></iframe>
 <iframe srcdoc=\\"<!-- lead --> <!DOCTYPE html> <!-- mid --> <html><body><img src=&quot;handled-pixel.png&quot;></body></html> <!-- trail -->\\"></iframe>
