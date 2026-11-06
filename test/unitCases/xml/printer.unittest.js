@@ -229,6 +229,35 @@ describe("SourceProcessor — XML printing", () => {
 		).toMatchSnapshot();
 	});
 
+	it("should read a stylesheet across the comments it drops", () => {
+		const {
+			builtinEmbeddedRenderer
+		} = require("../../../lib/html/builtinEmbeddedRenderer");
+		const document = fixture(
+			"xml",
+			"source-processor-xml-printing-reads-a-style-sheet-across-the-comments-it-drops"
+		);
+		expect(
+			/** @type {{ code: string }} */ (
+				new SourceProcessor().process(document, {
+					xml: true,
+					mode: "minify",
+					renderEmbeddedSource: builtinEmbeddedRenderer()
+				})
+			).code
+		).toBe(
+			[
+				'<svg xmlns="http://www.w3.org/2000/svg">',
+				"<style>a{b:c}d{e:f}g>h{i:j}</style>",
+				'<style>a { b : c }<!--#include virtual="x" -->d { e : f }</style>',
+				"<style>a { b : c }<g/>d { e : f }</style>",
+				"<style>  </style>",
+				'<style type="text/less">a { b : c }d { e : f }</style>',
+				"</svg>"
+			].join("\n")
+		);
+	});
+
 	it("should self-close a stylesheet the renderer minifies away", () => {
 		const {
 			builtinEmbeddedRenderer
