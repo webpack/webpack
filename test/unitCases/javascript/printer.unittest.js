@@ -675,7 +675,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["var await,yield;async function a(){function b(){await=1}b()}a();async function c(){(function(){await=2})();x=function(){return await}()}c();function*d(){(function(){yield=1})()}d().next();g(await,yield)", { compress: { toplevel: true } }, "var await,yield;(async function(){(function(){await=1})()})();(async function(){!function(){await=2}(),x=function(){return await}()})();(function*(){!function(){yield=1}()})().next();g(await,yield);"],
 			["function f(){g(this);return 1}x=f();function h(){g(arguments);return 1}y=h();function k(){g(new.target);return 1}z=k();function m(){g(m);return 1}w=m()", { compress: { toplevel: true } }, "x=function(){return g(this),1}(),y=function(){return g(arguments),1}(),z=function(){return g(new.target),1}();function m(){return g(m),1}w=m();"],
 			["var a=f();function k(){a;return g()}x=k();var b=f();function m(){b;return function(){}}m()()", { compress: { toplevel: true } }, "f();x=g();f();(function(){})();"],
-			["function f(){g();return 1}x=f();function k(){h();return{a:1}}y=k().a;function m(){q();return 2}a(),m(),b()", { compress: { toplevel: true } }, "x=(g(),1),y=(h(),{a:1}).a,a(),function(){return q(),2}(),b();"],
+			["function f(){g();return 1}x=f();function k(){h();return{a:1}}y=k().a;function m(){q();return 2}a(),m(),b()", { compress: { toplevel: true } }, "x=(g(),1),y=(h(),{a:1}).a,a(),q(),b();"],
 			// One moved into `export default` stays a value, as a declaration would be set before the module runs.
 			["function f(b){return b+1}export default f;", { module: true }, "export default(function(f){return f+1});"],
 			// An arrow takes no parentheses there; a call reduced to an operation keeps its own.
@@ -3455,7 +3455,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"(function(){try{throw 1}finally{return 2}})();x=(function(){try{g()}finally{return 2}})();(function(){if(g())return 1;for(;;)h()})();(async function(){g();return 1})();(function(){g();return h()})();a(),(()=>{g();return 2})(),b();(function*(){return 1})().next()"
 			)
 		).toBe(
-			"!function(){try{throw 1}finally{return}}(),x=function(){try{g()}finally{return 2}}(),function(){if(g())return;for(;;)h()}(),async function(){return g(),1}(),function(){return g(),h()}(),a(),(()=>{g()})(),b();(function*(){return 1})().next();"
+			"!function(){try{throw 1}finally{return}}(),x=function(){try{g()}finally{return 2}}(),function(){if(g())return;for(;;)h()}(),async function(){return g(),1}(),g(),h(),a(),g(),b();(function*(){return 1})().next();"
 		);
 		// A method's value is the method's, read whatever the call around its class.
 		expect(
@@ -5154,7 +5154,7 @@ describe("one-pass minify of statement sequences", () => {
 		).toBe("function f(){a();/*c*/return b}");
 		// A `return` whose value goes unread prints bare, which nothing joins.
 		expect(print("(function(){if(c)return;a();return 1})()", {})).toBe(
-			"!function(){if(!c){a();return}}();"
+			"c||a();"
 		);
 		// What prints nothing after the `return` ends the arrow's body too.
 		expect(print("f(()=>{a();if(t)return 1;return 2;var z})", {})).toBe(
@@ -5704,7 +5704,7 @@ describe("one-pass minify of statement sequences", () => {
 			'function h(){console.log("h")}function f(){return function(){h()}()}function g(){return function(){h();return}()}function k(){return function(){return 1}()}function m(){return(()=>1)()}function n(){return async function(){h()}()}function p(){return function(){h();(function(){return 2})()}()}console.log(f(),g(),k(),m(),typeof n(),p())';
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
 		expect(code).toBe(
-			'function h(){console.log("h")}function f(){h()}function g(){(function(){h()}())}function k(){return 1}function m(){return 1}function n(){return async function(){h()}()}function p(){h()}console.log(f(),g(),k(),m(),typeof n(),p());'
+			'function h(){console.log("h")}function f(){h()}function g(){h()}function k(){return 1}function m(){return 1}function n(){return async function(){h()}()}function p(){h()}console.log(f(),g(),k(),m(),typeof n(),p());'
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
