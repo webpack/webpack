@@ -13,8 +13,8 @@ module.exports = {
 			path.join(options.output.path, "page.html"),
 			"utf8"
 		);
-		// The default drops the type/language/charset markers no selector or
-		// script can observe, and keeps every attribute one can.
+		// The default drops the type/language markers no selector or script can
+		// observe, and keeps every attribute one can.
 		expect(page).toMatchSnapshot();
 		expect(page).toContain("<input type=text");
 		expect(page).toContain("<form method=get");
@@ -26,6 +26,9 @@ module.exports = {
 		// A marker goes whether or not the source quoted its value.
 		expect(page).toContain("<style>c{color:red}</style>");
 		expect(page).toContain("<link rel=stylesheet href=u.css>");
-		expect(page).toContain("<script src=u.js></script>");
+		// A script's charset decides how it is decoded on a page that isn't
+		// UTF-8, and the page's own encoding is not known here.
+		expect(page).toContain("<script charset=utf-8 src=u.js></script>");
+		expect(page).toContain("<script charset=utf-8 src=z.js></script>");
 	}
 };

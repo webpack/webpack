@@ -1645,15 +1645,12 @@ const PARSER_TABLES = [
 	[
 		"REDUNDANT_TYPE_ATTRIBUTES",
 		"byElement",
-		'element -> attribute -> the value that states the element\'s own default, for `removeRedundantAttributes: "smart"` (the default). Grouped by element so the printer gates on one lookup for an element no entry names, which is nearly every attribute it prints. Only markers on elements that render nothing, so no rule that styles the page stops applying — unlike `input[type=text]`, which is why that tier is separate. A `querySelector` naming one of these can still tell it went. `media` defaults to `all`, and a `<script charset>` matching the document encoding is obsolete and ignored. Matched ASCII-case-insensitively, unlike `@swc/html`, which lowercases `type` but not `media` / `charset`. `<script type>` is not here — its redundant values are `JAVASCRIPT_SCRIPT_TYPES` minus the empty and `module` spellings, which mean something.',
+		'element -> attribute -> the value that states the element\'s own default, for `removeRedundantAttributes: "smart"` (the default). Grouped by element so the printer gates on one lookup for an element no entry names, which is nearly every attribute it prints. Only markers on elements that render nothing, so no rule that styles the page stops applying — unlike `input[type=text]`, which is why that tier is separate. A `querySelector` naming one of these can still tell it went. `media` defaults to `all`. `<script charset>` is not here: it decides how a classic script is decoded, so the printer drops a UTF-8 one only on a document that declares UTF-8 itself. Matched ASCII-case-insensitively, unlike `@swc/html`, which lowercases `type` but not `media`. `<script type>` is not here — its redundant values are `JAVASCRIPT_SCRIPT_TYPES` minus the empty and `module` spellings, which mean something.',
 		[
 			["style type", "text/css"],
 			["link type", "text/css"],
 			["link media", "all"],
-			["script language", "javascript"],
-			// The attribute value the spec spells, not a Node encoding identifier.
-			// eslint-disable-next-line unicorn/text-encoding-identifier-case
-			["script charset", "utf-8"]
+			["script language", "javascript"]
 		]
 	],
 	[
@@ -1903,15 +1900,7 @@ const parserTable = ([name, kind, doc, items]) => {
 						: kind === "array"
 							? "string[]"
 							: "Record<string, string>";
-	// The `charset` value is an attribute spelling, not a Node encoding id.
-	const encoded = value.includes('"utf-8"');
-	const open = encoded
-		? "/* eslint-disable unicorn/text-encoding-identifier-case */\n"
-		: "";
-	const close = encoded
-		? "/* eslint-enable unicorn/text-encoding-identifier-case */\n"
-		: "";
-	return `/**\n * ${doc}\n * @type {${type}}\n */\n${open}const ${name} = ${value};\n${close}`;
+	return `/**\n * ${doc}\n * @type {${type}}\n */\nconst ${name} = ${value};\n`;
 };
 
 // WHY: The §13.1.2.4 optional-tag conditions and the value grammars below are prose
