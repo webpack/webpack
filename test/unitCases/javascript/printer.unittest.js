@@ -1527,6 +1527,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["-(a(),b);~(a(),b,c);+(a(),1);-(a(),-b);x=-(a(),b);-({[f()]:0},g());async function h(){await(c(),d);await(c(),d+e)}function*k(){yield(c(),d);yield*(c(),d)}", {}, "a(),-b,a(),b,~c,a(),+1,a(),-(-b),x=-(a(),b),-({[f()]:0},g());async function h(){c(),await d,c(),await(d+e)}function*k(){c(),yield d,c(),yield*d}"],
 			// terser's `(a=x(),a)` as `a=x()` for a declared name no `with` reaches.
 			["function f(a,b){(a=x(),a)?a++:b();return c(),a=x(),a}function g(a){with(o)return a=x(),a}function h(){return u=x(),u}", {}, "function f(n,u){return(n=x())?n++:u(),c(),n=x()}function g(a){with(o)return a=x(),a}function h(){return u=x(),u}"],
+			// Alone, it takes only the parentheses an assignment takes.
+			["function f(a){g((a=x(),a));return(a=y(),a).b+(a=z(),a)}", {}, "function f(a){g(a=x());return(a=y()).b+(a=z())}"],
 			// `typeof` reads a declared name or a member bare alike, but an undeclared name throws read as a value.
 			["function f(o){return[typeof(0,o),typeof(0,o.x),typeof(0,u),typeof(g(),o)]}", {}, "function f(o){return[typeof o,typeof o.x,typeof(0,u),typeof(g(),o)]}"],
 			["function f(){let a=u;return typeof a}function g(){let a=o;return typeof a}", {}, "function f(){return typeof(0,u)}function g(){return typeof(0,o)}"],
