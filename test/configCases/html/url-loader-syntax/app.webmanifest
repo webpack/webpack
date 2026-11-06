@@ -1,0 +1,7 @@
+{
+	"name": "App",
+	"icons": [
+		{ "src": "!./changer.js!./icon.svg", "sizes": "any" },
+		{ "src": "./icon.svg", "sizes": "any" }
+	]
+}

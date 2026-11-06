@@ -28,6 +28,16 @@ describe("Template", () => {
 		);
 	});
 
+	it("should keep comment text on one line and the comment open", () => {
+		expect(Template.toComment("a*/b\nc")).toBe("/*! a* /b\\nc */");
+		expect(Template.toNormalComment("a\r\nb\u2028c\u2029d")).toBe(
+			"/* a\\r\\nb\\u2028c\\u2029d */"
+		);
+		expect(Template.toNormalComment("./a.js")).toBe("/* ./a.js */");
+		expect(Template.toNormalComment("")).toBe("");
+		expect(Template.toLineComment("a*/b\nc")).toBe("// a*/b\\nc");
+	});
+
 	it("should strip JSDoc types from runtime function content but keep other comments", () => {
 		const content = Template.getFunctionContent({
 			toString: () =>
