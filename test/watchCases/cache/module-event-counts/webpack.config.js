@@ -32,23 +32,23 @@ module.exports = {
 						path.basename(/** @type {NormalModule} */ (module).resource),
 						names
 					]);
-					expect(actual.sort()).toEqual(
-						["index.js", "plain.js", "prefetched.js", "steady.js", "value.js"]
-							.filter(
-								(name) => name !== "steady.js" || currentWatchStep.step !== "3"
-							)
-							.map((name) => [
-								name,
-								[
-									rebuilding &&
-									name !== "value.js" &&
-									!(name === "index.js" && currentWatchStep.step === "3") &&
-									!(name === "prefetched.js" && currentWatchStep.step === "2")
-										? "stillValidModule"
-										: "succeedModule"
-								]
-							])
-					);
+					const expected = [...compilation.modules].map((module) => {
+						const name = path.basename(
+							/** @type {NormalModule} */ (module).resource
+						);
+						const built = compilation.builtModules.has(module);
+						if (
+							rebuilding &&
+							name !== "value.js" &&
+							!(name === "index.js" && currentWatchStep.step === "3") &&
+							!(name === "prefetched.js" && currentWatchStep.step === "2")
+						) {
+							expect(built).toBe(false);
+						}
+						// One watch step can produce multiple compilations.
+						return [name, [built ? "succeedModule" : "stillValidModule"]];
+					});
+					expect(actual.sort()).toEqual(expected.sort());
 				});
 			});
 			compiler.hooks.finishMake.tapAsync(

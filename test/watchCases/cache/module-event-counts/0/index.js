@@ -7,3 +7,7 @@ it("should retain unchanged modules while rebuilding their importer", () => {
 	expect(plain).toBe(0);
 	expect(steady).toBe("steady");
 });
+
+it("should report module events once on an extra rebuild", (done) => {
+	COMPILER.watching.invalidate(done);
+});
