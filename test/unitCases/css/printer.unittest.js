@@ -4454,4 +4454,9 @@ describe("CssSyntax minify — output that reads back as its source", () => {
 	it("keeps a `grid-template-areas` row ending on an escaped space", () => {
 		expect(min(fixture("css", "css-syntax-minify-grid-template-areas-keeps-an-escaped-trailing-space"))).toBe('a{grid-template-areas:"a b\\ "}c{d:e}');
 	});
+
+	it("reads an escaped `{` in a layer name as part of the name", () => {
+		expect(min(fixture("css", "css-syntax-minify-layer-reads-an-escaped-brace-as-part-of-the-name"))).toBe("@layer a\\{b{x{c:d}}@layer a\\{b.c{y{e:f}}");
+		expect(min(fixture("css", "css-syntax-minify-layer-reads-an-escaped-brace-as-part-of-the-name-2"))).toBe("@layer a\\{b{x{c:d}y{e:f}}");
+	});
 });

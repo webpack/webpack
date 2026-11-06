@@ -4587,6 +4587,14 @@ exports[`CSS syntax — fixtures css-syntax-minify-keeps-input-the-grammar-rejec
 
 exports[`CSS syntax — fixtures css-syntax-minify-keeps-input-the-grammar-rejects-trims-to-the-rejected-input-2 prints {"mode":"minify"} 1`] = `"a{color:red}"`;
 
+exports[`CSS syntax — fixtures css-syntax-minify-layer-reads-an-escaped-brace-as-part-of-the-name parses 1`] = `"[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a{b\\"]],[[\\"ident\\",\\"x\\"],[\\"{}\\",[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a{b\\"],\\".\\",[\\"ident\\",\\"c\\"]],[[\\"ident\\",\\"y\\"],[\\"{}\\",[\\"ident\\",\\"e\\"],\\":\\",[\\"ident\\",\\"f\\"]]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-layer-reads-an-escaped-brace-as-part-of-the-name prints {"mode":"minify"} 1`] = `"@layer a\\\\{b{x{c:d}}@layer a\\\\{b.c{y{e:f}}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-layer-reads-an-escaped-brace-as-part-of-the-name-2 parses 1`] = `"[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a{b\\"]],[[\\"ident\\",\\"x\\"],[\\"{}\\",[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a{b\\"]],[[\\"ident\\",\\"y\\"],[\\"{}\\",[\\"ident\\",\\"e\\"],\\":\\",[\\"ident\\",\\"f\\"]]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-layer-reads-an-escaped-brace-as-part-of-the-name-2 prints {"mode":"minify"} 1`] = `"@layer a\\\\{b{x{c:d}y{e:f}}"`;
+
 exports[`CSS syntax — fixtures css-syntax-minify-layered-and-positional-spellings-a-a-x-1 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a{\\"],\\",\\",\\".\\",[\\"ident\\",\\"a[\\"]],[[\\"ident\\",\\"x\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]]]"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-layered-and-positional-spellings-a-a-x-1 prints {"mode":"minify"} 1`] = `".a\\\\[,.a\\\\{{x:1}"`;
