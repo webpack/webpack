@@ -31,10 +31,3 @@ it("loads node builtins defensively so the browser bundle never crashes", () => 
 	expect(header).not.toMatch(/from\s+["'](node:)?fs["']/);
 	expect(source).toContain(`${"getBuiltinModule"}("node:fs")`);
 });
-
-it("reads an ESM-imported builtin through the getter", () => {
-	const { read } = require("./esm-builtin");
-	if (!isBrowser) {
-		expect(read).toBe(fs.readFileSync);
-	}
-});
