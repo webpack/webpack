@@ -106,7 +106,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:1796",
 			"oxc minifier: peephole/esbuild.rs:2307",
 			"oxc minifier: peephole/esbuild.rs:252",
-			"oxc minifier: peephole/esbuild.rs:145",
 			"oxc minifier: peephole/esbuild.rs:148",
 			"oxc minifier: peephole/esbuild.rs:157",
 			"oxc minifier: peephole/esbuild.rs:158",
@@ -204,7 +203,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:924",
 			"oxc minifier: peephole/esbuild.rs:926",
 			"oxc minifier: peephole/esbuild.rs:927",
-			"oxc minifier: peephole/esbuild.rs:943",
 			"oxc minifier: peephole/esbuild.rs:999",
 			"oxc minifier: peephole/esbuild.rs:1000",
 			"oxc minifier: peephole/esbuild.rs:1001",
@@ -479,9 +477,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:222",
 			"oxc minifier: peephole/esbuild.rs:705",
 			"oxc minifier: peephole/esbuild.rs:707",
-			"oxc minifier: peephole/esbuild.rs:940",
-			"oxc minifier: peephole/esbuild.rs:941",
-			"oxc minifier: peephole/esbuild.rs:942",
 			"oxc minifier: peephole/esbuild.rs:1016",
 			"oxc minifier: peephole/esbuild.rs:1519",
 			"oxc minifier: peephole/esbuild.rs:1520",
@@ -955,6 +950,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"deflate's header: the program is no longer raw, yet gzips 1 to 3 bytes bigger, as the Huffman codes deflate writes for a small program cost more or less with which characters it holds (an operand's side, `let` or `const`, `NaN` or `0/0`, a backtick or a quote); measured corpus-wide, no fixed spelling rule wins, each one making about as many programs bigger as smaller",
 		[
+			"terser compress: harmony/array_literal_with_spread_3b",
 			"oxc minifier: peephole/replace_known_methods.rs:1082",
 			"oxc minifier: peephole/inline_single_use_variable.rs:580",
 			"terser compress: collapse_vars/collapse_vars_if",
@@ -1981,10 +1977,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `transform` tests cover",
-		[
-			"terser compress: transform/if_else_empty",
-			"terser compress: transform/while_if_break"
-		]
+		["terser compress: transform/while_if_break"]
 	],
 	[
 		"oxc drops an unread deferred or source-phase import, assuming its load cannot fail, where webpack keeps it as oxc's `invalid_import_side_effects` does, since it still fetches and links its module",

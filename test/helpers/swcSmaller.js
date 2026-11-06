@@ -410,7 +410,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: sequences/iife",
 			"terser compress: sequences/unsafe_undefined",
 			"terser compress: switch/if_else7",
-			"terser compress: transform/if_else_empty",
 			"terser compress: try-catch/catch_destructuring_with_sequence",
 			"terser compress: typeof/issue_2728_4"
 		]
@@ -438,7 +437,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: destructuring/issue_t111_3",
 			"terser compress: evaluate/pow_with_number_constants",
 			"terser compress: evaluate/issue_1760_1",
-			"terser compress: evaluate/issue_1760_2",
 			"terser compress: functions/issue_2476",
 			"terser compress: global_defs/mixed",
 			"terser compress: loops/keep_collapse_const_in_own_block_scope_2",
