@@ -5650,6 +5650,17 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(`var a;${code}`)).toBe(runProgram(`var a;${source}`));
 	});
 
+	it("should read the length and constant elements of an array spreading array literals", () => {
+		// A spread of anything else, an element running something, or one not constant stays.
+		const source =
+			'var a=[1];function y(){return 7}console.log([10,...[],20,...[30,40],50]["length"],[10,...[],20,...[30,40],50][3],[...[],10,20][1],[...[10,...["s"]]][1],[...[10,20]][5],[10,...a][1],[...[y()],2][1],[...[y()]][0],[...[10,20]].length)';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'var a=[1];function y(){return 7}console.log(5,40,20,"s",void 0,[10,...a][1],[y(),2][1],[y()][0],2);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
