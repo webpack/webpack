@@ -870,7 +870,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: issue_6279_2",
 			"oxc minifier: peephole/dead_code_elimination.rs:920",
 			"oxc minifier: peephole/fold_constants.rs:1380",
-			"oxc minifier: peephole/inline.rs:320",
 			"oxc minifier: peephole/inline.rs:647",
 			"oxc minifier: peephole/minimize_conditions.rs:138",
 			"oxc minifier: peephole/minimize_exit_points.rs:183",
@@ -1001,7 +1000,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: ie8/dont_screw_try_catch_undefined",
 			"terser compress: reduce_vars/unsafe_evaluate_object_1",
 			"terser compress: reduce_vars/escaped_prop_3",
-			"terser compress: reduce_vars/issue_2423_6",
 			"terser compress: reduce_vars/escape_await",
 			"swc minifier: fixture/issues/2044/full/input.js",
 			"swc minifier: fixture/issues/4386/1/input.js",
@@ -1010,7 +1008,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/46887/input.js",
 			"swc minifier: fixture/projects/jquery/9/input.js",
 			"swc minifier: fixture/projects/next/extra/if_return/2/input.js",
-			"swc exec: terser_reduce_vars_issue_2423_6",
 			"swc exec: terser_reduce_vars_escaped_prop_3",
 			"swc exec: issues_2011_2",
 			"swc exec: plotly_1",
@@ -1052,7 +1049,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/cond_branch_switch",
 			"terser compress: collapse_vars/issue_2873_1",
 			"terser compress: collapse_vars/issue_2931",
-			"terser compress: collapse_vars/collapse_rhs_boolean_2",
 			"terser compress: collapse_vars/issue_1562"
 		]
 	],
