@@ -5590,6 +5590,17 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(`var a;${code}`)).toBe(runProgram(`var a;${source}`));
 	});
 
+	it("should read `undefined&&x` as running nothing, `x` never read", () => {
+		// TypeScript's helpers, `this` at a module's top level written `undefined`.
+		const source =
+			"var e=(undefined&&undefined.__extends)||function(){return 1},d=(void 0&&(void 0).d)||2,k=(undefined||undefined.k)||3;console.log(e(),d,k)";
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			"var e=function(){return 1},d=2,k=(void 0).k||3;console.log(e(),d,k);"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
