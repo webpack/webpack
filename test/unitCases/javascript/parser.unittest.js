@@ -6197,7 +6197,8 @@ describe("parseProgram", () => {
 	});
 
 	it("reads every grammar option into the tree as acorn reads it", () => {
-		/** @type {[string, "script" | "module", Record<string, unknown>, Record<string, unknown>][]} */
+		/** @typedef {Pick<import("acorn").Options, "strict" | "allowReserved" | "allowHashBang" | "allowImportExportEverywhere" | "allowAwaitOutsideFunction" | "allowSuperOutsideMethod" | "checkPrivateFields">} GrammarOptions */
+		/** @type {[string, "script" | "module", GrammarOptions, GrammarOptions][]} */
 		const cases = [
 			["with (a) {}", "script", { strict: true }, { strict: false }],
 			["a.class", "script", { allowReserved: "never" }, { allowReserved: true }],
@@ -6244,11 +6245,7 @@ describe("parseProgram", () => {
 			const results = [on, off].map((options) => [
 				outcome(() => parseProgram(code, 0, { sourceType, ...options })),
 				outcome(() =>
-					acorn.parse(code, {
-						ecmaVersion: "latest",
-						sourceType,
-						.../** @type {import("acorn").Options} */ (options)
-					})
+					acorn.parse(code, { ...options, ecmaVersion: "latest", sourceType })
 				)
 			]);
 			// each case is one the option decides, and the tree reads it as acorn
