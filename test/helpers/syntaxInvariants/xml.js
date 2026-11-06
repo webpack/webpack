@@ -590,9 +590,9 @@ const runDigest = (runs, at, origin) => {
 };
 
 // Where a slice is read back: inside an element, after the document's own
-// DOCTYPE, so what its internal subset declares still resolves.
+// DOCTYPE, so what its internal subset declares still resolves. Nothing follows
+// it, so a slice the input ended inside ends there as the document did.
 const SLICE_WRAPPER_OPEN = "<_>";
-const SLICE_WRAPPER_CLOSE = "</_>";
 
 /**
  * Hold each node's own source to the node it came from: the bytes between its
@@ -634,9 +634,7 @@ const xmlSlices = (xml) => {
 			said,
 			reparse: () => {
 				const prefix = `${doctype}${SLICE_WRAPPER_OPEN}`;
-				const again = xmlNodeRuns(
-					`${prefix}${text}${SLICE_WRAPPER_CLOSE}`
-				).runs;
+				const again = xmlNodeRuns(`${prefix}${text}`).runs;
 				const want = again.findIndex(
 					(one) =>
 						one.what === node.what &&
