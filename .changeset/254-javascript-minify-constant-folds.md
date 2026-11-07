@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Run `compress.passes` and fold more calls and constants when minifying.
+Fold more calls and constants when minifying JavaScript.

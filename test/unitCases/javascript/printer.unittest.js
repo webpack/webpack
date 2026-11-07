@@ -3727,36 +3727,6 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		}
 	});
 
-	it("should run the passes `compress.passes` asks for, each on what the one before printed", () => {
-		const { SourceProcessor } = require("../../../lib/javascript/syntax");
-		const source =
-			fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-run-the-passes-compress-passes-asks-for");
-		const print = (/** @type {number} */ passes) =>
-			new SourceProcessor().process(source, {
-				mode: "minify",
-				compress: { toplevel: true, passes },
-				mangle: false
-			}).code;
-		expect(print(1)).toBe('"use strict";(function(){console.log("hi")})();');
-		expect(print(2)).toBe('"use strict";console.log("hi");');
-		// A pass printing what it was given ends them.
-		expect(print(10)).toBe(print(2));
-		// What wraps the output prints once, and the map reads the source.
-		const wrapped = new SourceProcessor().process(source, {
-			mode: "minify",
-			compress: { toplevel: true, passes: 2 },
-			mangle: false,
-			wrap: "lib",
-			format: { preamble: "/*p*/" },
-			source: "a.js",
-			content: source
-		});
-		expect(wrapped.code.split("/*p*/")).toHaveLength(2);
-		expect(wrapped.code.split("lib")).toHaveLength(4);
-		expect(wrapped.map.sources).toEqual(["a.js"]);
-		expect(wrapped.map.sourcesContent).toEqual([source]);
-	});
-
 	it("should wrap or enclose the source, mapping what it printed of it", () => {
 		const options = { compress: {}, mangle: {} };
 		const { SourceProcessor } = require("../../../lib/javascript/syntax");
