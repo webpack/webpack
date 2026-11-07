@@ -95,15 +95,19 @@ describe("WorkerPool", () => {
 	});
 
 	describe("compiler.worker", () => {
-		it("returns undefined while experiments.threads is off", async () => {
+		it("throws while experiments.threads is off", async () => {
 			const webpack = require("../../lib/webpack");
 			const compiler = webpack({ entry: "data:text/javascript,1" });
 
-			expect(compiler.worker(TARGET)).toBeUndefined();
+			expect(() => compiler.worker(TARGET)).toThrow(
+				/experiments\.threads option/
+			);
 			await new Promise((resolve, reject) => {
 				compiler.close((err) => (err ? reject(err) : resolve(undefined)));
 			});
-			expect(compiler.worker(TARGET)).toBeUndefined();
+			expect(() => compiler.worker(TARGET)).toThrow(
+				/experiments\.threads option/
+			);
 		});
 
 		it("returns one facade per path and follows the pool max", async () => {
@@ -116,7 +120,7 @@ describe("WorkerPool", () => {
 
 			/**
 			 * @param {import("../../declarations/WebpackOptions").Experiments["threads"]} threads options
-			 * @returns {import("../../lib/worker/Worker") | undefined} the facade
+			 * @returns {import("../../lib/worker/Worker")} the facade
 			 */
 			const workerFor = (threads) => {
 				const compiler = webpack({
@@ -126,22 +130,16 @@ describe("WorkerPool", () => {
 				return compiler.worker(TARGET);
 			};
 
-			const defaults = /** @type {import("../../lib/worker/Worker")} */ (
-				workerFor(true)
-			);
+			const defaults = workerFor(true);
 			expect(defaults).toBeInstanceOf(Worker);
 			expect(defaults._pool.options.max).toBe(Math.max(cpus - 1, 0));
 			await defaults._pool.end();
 
-			const two = /** @type {import("../../lib/worker/Worker")} */ (
-				workerFor({ max: 2.5 })
-			);
+			const two = workerFor({ max: 2.5 });
 			expect(two._pool.options.max).toBe(2);
 			await two._pool.end();
 
-			const inline = /** @type {import("../../lib/worker/Worker")} */ (
-				workerFor({ max: 0 })
-			);
+			const inline = workerFor({ max: 0 });
 			expect(await inline.run("info")).toEqual({
 				threadId: 0,
 				isMainThread: true
@@ -160,6 +158,7 @@ describe("WorkerPool", () => {
 				compiler.close((err) => (err ? reject(err) : resolve(undefined)));
 			});
 
+			expect(() => compiler.worker(TARGET)).toThrow(/after compiler\.close/);
 			expect(WorkerPool.getWorkerPool(compiler)).toBeUndefined();
 		});
 
@@ -169,9 +168,7 @@ describe("WorkerPool", () => {
 				entry: "data:text/javascript,1",
 				experiments: { threads: true }
 			});
-			const worker = /** @type {import("../../lib/worker/Worker")} */ (
-				compiler.worker(TARGET)
-			);
+			const worker = compiler.worker(TARGET);
 			const compilation = compiler.newCompilation(compiler.newCompilationParams());
 			const child = compiler.createChildCompiler(
 				compilation,
@@ -197,9 +194,7 @@ describe("WorkerPool", () => {
 				entry: "data:text/javascript,1",
 				experiments: { threads: true }
 			});
-			const worker = /** @type {import("../../lib/worker/Worker")} */ (
-				compiler.worker(TARGET)
-			);
+			const worker = compiler.worker(TARGET);
 
 			await new Promise((resolve, reject) => {
 				compiler.close((err) => (err ? reject(err) : resolve(undefined)));

@@ -42,18 +42,15 @@ This file is the spec. When code and spec disagree, fix one of them in the same 
 
 ```js
 const worker = compiler.worker(require.resolve("./worker"));
-// Worker | undefined
 
-if (worker !== undefined) {
-	await worker.run("minify", options);
-	await worker.warmup(4);
-	await worker.release();
-}
+await worker.run("minify", options);
+await worker.warmup(4);
+await worker.release();
 ```
 
 | Member                        | Behavior                                                                                                                   |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `compiler.worker(workerPath)` | Absolute path or `file:` URL, required. Returns the facade, or `undefined` when `experiments.threads` is off.              |
+| `compiler.worker(workerPath)` | Absolute path or `file:` URL, required. Returns the facade; throws when `experiments.threads` is off.                      |
 | `worker.run(method, ...args)` | One call.                                                                                                                  |
 | `worker.warmup(workers?)`     | Spawns up to `workers` threads and preloads this module; defaults to the pool's `max`. Existing threads are preloaded too. |
 | `worker.release()`            | Terminates idle threads in the shared pool. Calls in flight finish, then their threads retire; the pool stays usable.      |
@@ -65,7 +62,7 @@ No `bind`, no `end`, no handles, no shared references. `release()` affects the s
 - the factory is created once per `compiler.root`;
 - child compilers return the root's facade;
 - `compiler.close()` sets a closed flag and ends the pool before `shutdown`;
-- after close, a factory that was never created returns `undefined`, and one that was created returns the same ended facade, whose calls reject.
+- after close, a factory that was never created throws, and one that was created returns the same ended facade, whose calls reject.
 
 ## Worker module contract
 
@@ -145,7 +142,7 @@ module.exports = {
 
 | Value             | Effect                                       |
 | ----------------- | -------------------------------------------- |
-| `false` (default) | No pool; `compiler.worker` is `undefined`.   |
+| `false` (default) | No pool; `compiler.worker` throws.           |
 | `true`            | `{ max: cores - 1 }`.                        |
 | `max: n`          | `Math.floor(n)`; `0` runs every call inline. |
 

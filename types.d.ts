@@ -4657,11 +4657,11 @@ declare class Compiler {
 	compile(callback: CallbackWebpackFunction_2<Compilation, void>): void;
 
 	/**
-	 * Returns a worker bound to `workerPath`, or `undefined` when `experiments.threads` is off. The pool behind it is shared by the compiler and ended on close.
+	 * Returns a worker bound to `workerPath`. The pool behind it is shared by the compiler and ended on close.
 	 * @since 5.113.0
 	 * @experimental
 	 */
-	worker(workerPath: string | URL): undefined | Worker;
+	worker(workerPath: string | URL): Worker;
 
 	/**
 	 * Processes the provided error callback.
