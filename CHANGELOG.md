@@ -1,5 +1,313 @@
 # webpack
 
+## 5.113.0
+
+### Minor Changes
+
+- Treat pure CommonJS exports and `require()` of pure modules as side-effect free. (by [@hai-x](https://github.com/hai-x) in [#21937](https://github.com/webpack/webpack/pull/21937))
+
+- Add `compilation.hooks.chunkHashDependencies` for chunks naming other chunks. (by [@alexander-akait](https://github.com/alexander-akait) in [#22810](https://github.com/webpack/webpack/pull/22810))
+
+- Add a `sourceTest` condition to `use` items; match `/g` regexps reliably. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#23029](https://github.com/webpack/webpack/pull/23029))
+
+- Add an `updateManifest` HMR hook so plugins add their own hot update data. (by [@alexander-akait](https://github.com/alexander-akait) in [#23008](https://github.com/webpack/webpack/pull/23008))
+
+- Restore deep import paths Module Federation loads and expose its helpers. (by [@alexander-akait](https://github.com/alexander-akait) in [#22934](https://github.com/webpack/webpack/pull/22934))
+
+- Load Node.js builtins in ESM output through `process.getBuiltinModule()`, warning where a universal target can't. (by [@alexander-akait](https://github.com/alexander-akait) in [#23162](https://github.com/webpack/webpack/pull/23162))
+
+- Make the `MultiCompiler` `done` hook async; its sync `call` is deprecated. (by [@alexander-akait](https://github.com/alexander-akait) in [#23023](https://github.com/webpack/webpack/pull/23023))
+
+- Add a faster JavaScript `SourceProcessor` and drop `printer.load()`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22815](https://github.com/webpack/webpack/pull/22815))
+
+- Add `parseErrors`, `parseProgram` with acorn's options, and more source types. (by [@alexander-akait](https://github.com/alexander-akait) in [#22881](https://github.com/webpack/webpack/pull/22881))
+
+- Type a `<style lang>` or `<script lang>` body as its language's files. (by [@alexander-akait](https://github.com/alexander-akait) in [#22940](https://github.com/webpack/webpack/pull/22940))
+
+- Add an experimental `programTree` parser hook reading the program as a flat tree. (by [@alexander-akait](https://github.com/alexander-akait) in [#23079](https://github.com/webpack/webpack/pull/23079))
+
+- Let CSS visitors replace nodes and read value ranges, and minify CSS faster. (by [@alexander-akait](https://github.com/alexander-akait) in [#22886](https://github.com/webpack/webpack/pull/22886))
+
+- Drop unread call arguments and fold `Object.keys` and `.length` when minifying. (by [@alexander-akait](https://github.com/alexander-akait) in [#22871](https://github.com/webpack/webpack/pull/22871))
+
+- Fix `delete (null ?? x)`, and drop unused catch bindings when minifying. (by [@alexander-akait](https://github.com/alexander-akait) in [#22878](https://github.com/webpack/webpack/pull/22878))
+
+- Merge branches spelling a key with and without quotes, drop the values an unread function called in place returns, write computed `NaN` and `null` keys as names, and drop `new` before `RegExp` of a BigInt when minifying. (by [@aryanraj45](https://github.com/aryanraj45) in [#22914](https://github.com/webpack/webpack/pull/22914))
+
+- Fold known `switch`es and literals, and drop unread classes and more dead code. (by [@alexander-akait](https://github.com/alexander-akait) in [#22897](https://github.com/webpack/webpack/pull/22897))
+
+- Inline more calls, fold more, and merge imports and exports, when minifying. (by [@alexander-akait](https://github.com/alexander-akait) in [#22909](https://github.com/webpack/webpack/pull/22909))
+
+- Fold a value into what an `await` or `yield` hands over, and a function or object assigned to a name read once into that read, when minifying. (by [@aryanraj45](https://github.com/aryanraj45) in [#22920](https://github.com/webpack/webpack/pull/22920))
+
+- Fold more values, tests and loop declarations when minifying. (by [@alexander-akait](https://github.com/alexander-akait) in [#22919](https://github.com/webpack/webpack/pull/22919))
+
+- Fold a pure call's value past another pure call when minifying. (by [@aryanraj45](https://github.com/aryanraj45) in [#22927](https://github.com/webpack/webpack/pull/22927))
+
+- Write strings as templates when minifying where every one can be. (by [@alexander-akait](https://github.com/alexander-akait) in [#22923](https://github.com/webpack/webpack/pull/22923))
+
+- Minify JavaScript in one `SourceProcessor` run, with source maps and beautify. (by [@alexander-akait](https://github.com/alexander-akait) in [#22995](https://github.com/webpack/webpack/pull/22995))
+
+- Honor `pure_funcs`, `drop_console`, `global_defs`, `top_retain`, `unused` and `inline` in minify. (by [@alexander-akait](https://github.com/alexander-akait) in [#23042](https://github.com/webpack/webpack/pull/23042))
+
+- Accept a function returning the schema, the name and data path of the errors and a check precompiled with `schema-utils precompile` in `this.getOptions(schema, configuration, check)`, as `compiler.validate` does, and let both take the check in the configuration's place. (by [@alexander-akait](https://github.com/alexander-akait) in [#22745](https://github.com/webpack/webpack/pull/22745))
+
+- Accept camelCase JavaScript minify option names, keeping terser's as aliases. (by [@alexander-akait](https://github.com/alexander-akait) in [#23052](https://github.com/webpack/webpack/pull/23052))
+
+### Patch Changes
+
+- Fix inner graph dropping initializers that reference undeclared identifiers. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#23187](https://github.com/webpack/webpack/pull/23187))
+
+- Keep an outer `<a>` open when a nested `<a>` in a table cell closes another. (by [@alexander-akait](https://github.com/alexander-akait) in [#22881](https://github.com/webpack/webpack/pull/22881))
+
+- Decode HTML asset URLs, fix `<base href>` and remote stylesheets, apply entry `html` options to pages. (by [@alexander-akait](https://github.com/alexander-akait) in [#22917](https://github.com/webpack/webpack/pull/22917))
+
+- Fix loading WebAssembly from runtime chunks emitted in subdirectories. (by [@bjohansebas](https://github.com/bjohansebas) in [#22916](https://github.com/webpack/webpack/pull/22916))
+
+- Fix `output.html.inline` output, custom license banners included, and keep embedded code a minifier fails on. (by [@alexander-akait](https://github.com/alexander-akait) in [#22992](https://github.com/webpack/webpack/pull/22992))
+
+- Skip work for activated lazy barrels and preserve unused nested imports. (by [@alexander-akait](https://github.com/alexander-akait) in [#22930](https://github.com/webpack/webpack/pull/22930))
+
+- Honor an explicit zero stage in `BannerPlugin`. (by [@Eshiv-Pandey](https://github.com/Eshiv-Pandey) in [#23092](https://github.com/webpack/webpack/pull/23092))
+
+- Preserve optional chains when renaming CommonJS export self-references. (by [@bjohansebas](https://github.com/bjohansebas) in [#22883](https://github.com/webpack/webpack/pull/22883))
+
+- Fix builds failing when a CommonJS module re-exports an ES module in a cycle. (by [@zerotohero3](https://github.com/zerotohero3) in [#23090](https://github.com/webpack/webpack/pull/23090))
+
+- Preserve stylesheet attributes and disabled state, and drop removed chunks' styles, during hot updates. (by [@bjohansebas](https://github.com/bjohansebas) in [#22911](https://github.com/webpack/webpack/pull/22911))
+
+- Preserve request order when collecting asynchronous CSS on the server. (by [@bjohansebas](https://github.com/bjohansebas) in [#22913](https://github.com/webpack/webpack/pull/22913))
+
+- Make external module identifiers independent of resolution order. (by [@bjohansebas](https://github.com/bjohansebas) in [#22891](https://github.com/webpack/webpack/pull/22891))
+
+- Deduplicate identical synthetic module graph reasons. (by [@bjohansebas](https://github.com/bjohansebas) in [#23095](https://github.com/webpack/webpack/pull/23095))
+
+- Preserve URL objects when resolving dynamic asset requests. (by [@bjohansebas](https://github.com/bjohansebas) in [#22884](https://github.com/webpack/webpack/pull/22884))
+
+- Remove `sourceMappingURL` comments with `extractSourceMap` even when `devtool` is off. (by [@alexander-akait](https://github.com/alexander-akait) in [#23011](https://github.com/webpack/webpack/pull/23011))
+
+- Fix HMR when an update needs a chunk the client has not loaded, including ES module output. (by [@alexander-akait](https://github.com/alexander-akait) in [#22971](https://github.com/webpack/webpack/pull/22971))
+
+- Create workers from an imported call listed as `fn() from module` in `worker`. (by [@alexander-akait](https://github.com/alexander-akait) in [#23127](https://github.com/webpack/webpack/pull/23127))
+
+- Replace `?` and `#` in chunk names, ids and asset names in filenames with `_`. (by [@bjohansebas](https://github.com/bjohansebas) in [#22885](https://github.com/webpack/webpack/pull/22885))
+
+- Keep `MultiCompiler` watching usable when a child compiler is already running. (by [@alexander-akait](https://github.com/alexander-akait) in [#23041](https://github.com/webpack/webpack/pull/23041))
+
+- Keep `compilation.namedChunks` pointing to existing chunks after chunks are merged or removed. (by [@hai-x](https://github.com/hai-x) in [#22954](https://github.com/webpack/webpack/pull/22954))
+
+- Reset the chunk graph when sealing a compilation again. (by [@bjohansebas](https://github.com/bjohansebas) in [#22888](https://github.com/webpack/webpack/pull/22888))
+
+- Fix source map hashes for `file` fields and local `file:///` sources. (by [@alexander-akait](https://github.com/alexander-akait) in [#22941](https://github.com/webpack/webpack/pull/22941))
+
+- Preserve falsy default exports from SystemJS externals. (by [@alexander-akait](https://github.com/alexander-akait) in [#23179](https://github.com/webpack/webpack/pull/23179))
+
+- Fix WebAssembly filenames using the full hash in universal builds or next to a digest. (by [@bjohansebas](https://github.com/bjohansebas) in [#22912](https://github.com/webpack/webpack/pull/22912))
+
+- Avoid unused external warnings for aliases sharing the same module. (by [@bjohansebas](https://github.com/bjohansebas) in [#22893](https://github.com/webpack/webpack/pull/22893))
+
+- Keep HMR from aborting when a change only moves modules between the chunks an `import()` loads. (by [@alexander-akait](https://github.com/alexander-akait) in [#22982](https://github.com/webpack/webpack/pull/22982))
+
+- Keep one namespace object for an ES module both imported and required. (by [@alexander-akait](https://github.com/alexander-akait) in [#23101](https://github.com/webpack/webpack/pull/23101))
+
+- Track called members when determining which imported exports to retain. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#23155](https://github.com/webpack/webpack/pull/23155))
+
+- Fix HMR for loading or newer-build chunks and siblings, and manifest errors. (by [@alexander-akait](https://github.com/alexander-akait) in [#22984](https://github.com/webpack/webpack/pull/22984))
+
+- Load the stylesheet of a new chunk joining a loaded group on HMR update. (by [@alexander-akait](https://github.com/alexander-akait) in [#22985](https://github.com/webpack/webpack/pull/22985))
+
+- Fix HMR cache, CSS order, rejected accepts, over-fetching and custom chunk ids. (by [@alexander-akait](https://github.com/alexander-akait) in [#22993](https://github.com/webpack/webpack/pull/22993))
+
+- Concatenate a long import cycle without overflowing the call stack. (by [@alexander-akait](https://github.com/alexander-akait) in [#22947](https://github.com/webpack/webpack/pull/22947))
+
+- Keep named chunk ids off `Object.prototype` keys such as `toString`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22993](https://github.com/webpack/webpack/pull/22993))
+
+- Honor an empty `ManifestPlugin` prefix. (by [@Eshiv-Pandey](https://github.com/Eshiv-Pandey) in [#23091](https://github.com/webpack/webpack/pull/23091))
+
+- Hold function keys of memory caches weakly so their entries can be collected. (by [@alexander-akait](https://github.com/alexander-akait) in [#23127](https://github.com/webpack/webpack/pull/23127))
+
+- Shorten a CSS number only to digits every engine lays out at the same pixel. (by [@dependabot](https://github.com/apps/dependabot) in [#23053](https://github.com/webpack/webpack/pull/23053))
+
+- Keep the space before an SVG `data:` URL the CSS minifier rewrites. (by [@lazerg](https://github.com/lazerg) in [#22880](https://github.com/webpack/webpack/pull/22880))
+
+- Scope CSS module rules after an `@layer` statement or a nested bare `:global`. (by [@alexander-akait](https://github.com/alexander-akait) in [#23114](https://github.com/webpack/webpack/pull/23114))
+
+- Keep an escaped `:` in a CSS custom property name when dropping unused ones. (by [@alexander-akait](https://github.com/alexander-akait) in [#23038](https://github.com/webpack/webpack/pull/23038))
+
+- Fix CSS, HTML and JavaScript parser divergences their own tests found. (by [@alexander-akait](https://github.com/alexander-akait) in [#22889](https://github.com/webpack/webpack/pull/22889))
+
+- Keep the runtime a `require.ensure` callback needs when its block has no chunk. (by [@hai-x](https://github.com/hai-x) in [#21937](https://github.com/webpack/webpack/pull/21937))
+
+- Fix CSS, HTML and JavaScript tokenizer divergences from their specs. (by [@alexander-akait](https://github.com/alexander-akait) in [#22872](https://github.com/webpack/webpack/pull/22872))
+
+- Keep minified XML well-formed: close a cut-off CDATA, escape a bare `&`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22850](https://github.com/webpack/webpack/pull/22850))
+
+- Minify HTML and CSS on the first pass to what a second pass would print: shorter attribute newlines, `&` and escape terminators, sorted rebuilt tags, joined `<style>` runs and settled `<html>` and `<body>` tags. (by [@alexander-akait](https://github.com/alexander-akait) in [#23147](https://github.com/webpack/webpack/pull/23147))
+
+- Fix `ManifestPlugin` crashing when `output.hashDigestLength` is greater than 32. (by [@alexander-akait](https://github.com/alexander-akait) in [#23086](https://github.com/webpack/webpack/pull/23086))
+
+- Minify CSS on the first pass to what a second pass would print: drop a declaration an empty or repeated nested rule stood beside, a lowered `-moz-` copy a twin covers, and the sides a box color fallback implies. (by [@alexander-akait](https://github.com/alexander-akait) in [#23167](https://github.com/webpack/webpack/pull/23167))
+
+- Fix `if` and conditional dead-code elimination picking the wrong branch when the folded test is `NaN`, e.g. `if (0 / 0) { a } else { b }` keeping `a`. (by [@NUAAwqy](https://github.com/NUAAwqy) in [#23104](https://github.com/webpack/webpack/pull/23104))
+
+- Minify CSS on the first pass to what a second pass would print: take back a prefix copy a later twin writes again, close a custom property a lone backslash ended, and join or drop nested rules a repeat or an empty prelude left apart. (by [@alexander-akait](https://github.com/alexander-akait) in [#23172](https://github.com/webpack/webpack/pull/23172))
+
+- Stop the parser printing errors for BigInt operations that throw at runtime. (by [@alexander-akait](https://github.com/alexander-akait) in [#23113](https://github.com/webpack/webpack/pull/23113))
+
+- Fix CSS, HTML and JavaScript minifier output bugs found by coverage and sweeps. (by [@alexander-akait](https://github.com/alexander-akait) in [#22903](https://github.com/webpack/webpack/pull/22903))
+
+- Write `new (0, a.b)` as `new a.b`, keep `a ? !1 : (b = 1)` where `!a && (b = 1)` is longer, and end a function with `if (a) return a` for `return a || void 0` when minifying. (by [@aryanraj45](https://github.com/aryanraj45) in [#22955](https://github.com/webpack/webpack/pull/22955))
+
+- Fold conditionals, returns and values further in the one-pass JavaScript minifier. (by [@alexander-akait](https://github.com/alexander-akait) in [#22949](https://github.com/webpack/webpack/pull/22949))
+
+- Drop unread `let` writes from closures created after the declaration. (by [@aryanraj45](https://github.com/aryanraj45) in [#22960](https://github.com/webpack/webpack/pull/22960))
+
+- Minify statements into sequences; fold known `switch`, spread, unary values. (by [@alexander-akait](https://github.com/alexander-akait) in [#23071](https://github.com/webpack/webpack/pull/23071))
+
+- Drop unread calls to functions `#__NO_SIDE_EFFECTS__` marks when minifying. (by [@aryanraj45](https://github.com/aryanraj45) in [#23057](https://github.com/webpack/webpack/pull/23057))
+
+- Inline simple function calls in the one-pass JavaScript minifier. (by [@alexander-akait](https://github.com/alexander-akait) in [#22956](https://github.com/webpack/webpack/pull/22956))
+
+- Speed up HMR rebuilds and shrink the HMR runtime. (by [@alexander-akait](https://github.com/alexander-akait) in [#23000](https://github.com/webpack/webpack/pull/23000))
+
+- Inline one-use calls in literals and fold `let` reads after their declaration. (by [@aryanraj45](https://github.com/aryanraj45) in [#22987](https://github.com/webpack/webpack/pull/22987))
+
+- Merge equal exits and shared assignments in the one-pass JavaScript minifier. (by [@alexander-akait](https://github.com/alexander-akait) in [#22957](https://github.com/webpack/webpack/pull/22957))
+
+- Fix `require.main` in one-module bundles and a hoisted top-level `var exports`. (by [@hai-x](https://github.com/hai-x) in [#21937](https://github.com/webpack/webpack/pull/21937))
+
+- Emit shorter runtime code for chunk loading, CSS, interop and module federation. (by [@alexander-akait](https://github.com/alexander-akait) in [#22921](https://github.com/webpack/webpack/pull/22921))
+
+- Keep every tag of a conditional comment's body when minifying it. (by [@alexander-akait](https://github.com/alexander-akait) in [#22936](https://github.com/webpack/webpack/pull/22936))
+
+- Fix `!!!x` and writes `arguments` reads in the one-pass JavaScript minifier. (by [@alexander-akait](https://github.com/alexander-akait) in [#22958](https://github.com/webpack/webpack/pull/22958))
+
+- Give back as written an event handler the JavaScript minifier prints as nothing. (by [@alexander-akait](https://github.com/alexander-akait) in [#22940](https://github.com/webpack/webpack/pull/22940))
+
+- Inline single-use functions, literals and string joins, and print once, in the one-pass minifier. (by [@alexander-akait](https://github.com/alexander-akait) in [#22969](https://github.com/webpack/webpack/pull/22969))
+
+- Fold the `var` guard TypeScript writes for an enum when minifying. (by [@aryanraj45](https://github.com/aryanraj45) in [#23001](https://github.com/webpack/webpack/pull/23001))
+
+- Drop unused `RegExp`s and split long string arrays in the one-pass minifier. (by [@alexander-akait](https://github.com/alexander-akait) in [#22990](https://github.com/webpack/webpack/pull/22990))
+
+- Compress JavaScript smaller and correctly in one pass, with or without mangling. (by [@alexander-akait](https://github.com/alexander-akait) in [#23014](https://github.com/webpack/webpack/pull/23014))
+
+- Move an assignment into its call past names its new functions redeclare. (by [@aryanraj45](https://github.com/aryanraj45) in [#23013](https://github.com/webpack/webpack/pull/23013))
+
+- Pass the default minifiers as functions so cold builds stay fast. (by [@alexander-akait](https://github.com/alexander-akait) in [#23056](https://github.com/webpack/webpack/pull/23056))
+
+- Speed up externals matching, including the built-in modules of node targets. (by [@alexander-akait](https://github.com/alexander-akait) in [#22933](https://github.com/webpack/webpack/pull/22933))
+
+- Open the `ProfilingPlugin` profiler's session on the inspector it is given. (by [@alexander-akait](https://github.com/alexander-akait) in [#22953](https://github.com/webpack/webpack/pull/22953))
+
+- Keep a strict ES module importer's interop for lazily compiled modules. (by [@alexander-akait](https://github.com/alexander-akait) in [#23049](https://github.com/webpack/webpack/pull/23049))
+
+- Fix the types of `replaceDuplicates`' comparator and the terminal color functions. (by [@alexander-akait](https://github.com/alexander-akait) in [#23047](https://github.com/webpack/webpack/pull/23047))
+
+- Type memo cache callbacks by the cache keys they are given. (by [@alexander-akait](https://github.com/alexander-akait) in [#23054](https://github.com/webpack/webpack/pull/23054))
+
+- Type the serializer contexts and the minifiers' input source maps. (by [@alexander-akait](https://github.com/alexander-akait) in [#23059](https://github.com/webpack/webpack/pull/23059))
+
+- Skip a loader that `resolveLoader.alias` maps to `false` instead of crashing. (by [@alexander-akait](https://github.com/alexander-akait) in [#23066](https://github.com/webpack/webpack/pull/23066))
+
+- Recompute a module's memo cache when an unsafe-cached dependency misses. (by [@alexander-akait](https://github.com/alexander-akait) in [#23069](https://github.com/webpack/webpack/pull/23069))
+
+- Stop an `id="importScripts"` element from changing the automatic public path. (by [@avivkeller](https://github.com/avivkeller) in [`c08d56f`](https://github.com/webpack/webpack/commit/c08d56f09451f0ca351081581f012556602d6158))
+
+- Start the bundle even when a page element has the chunk loading global as `id`. (by [@avivkeller](https://github.com/avivkeller) in [`bc8c2be`](https://github.com/webpack/webpack/commit/bc8c2be2d3c5d01c972fb38f1aed876b45cacdf9))
+
+- Stop the HTML minifier and generator from turning escaped text into markup. (by [@alexander-akait](https://github.com/alexander-akait) in [#23148](https://github.com/webpack/webpack/pull/23148))
+
+- Ignore unknown keys in requests to the lazy compilation backend. (by [@avivkeller](https://github.com/avivkeller) in [`ea9fd2f`](https://github.com/webpack/webpack/commit/ea9fd2ff17be104f3b11f7bb751d58f9ba40a135))
+
+- Load a script external even when a page element has its global name. (by [@avivkeller](https://github.com/avivkeller) in [`f6366b0`](https://github.com/webpack/webpack/commit/f6366b0bc2afbf1f5494f33e81f2bd0588b802cc))
+
+- Fix generated code around semicolons, await, replacements and file names. (by [@alexander-akait](https://github.com/alexander-akait) in [#23149](https://github.com/webpack/webpack/pull/23149))
+
+- Keep ESM namespace keys sorted when mixing const and getter exports. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#23186](https://github.com/webpack/webpack/pull/23186))
+
+- Detect the public path, script externals and Trusted Types more reliably. (by [@alexander-akait](https://github.com/alexander-akait) in [#23145](https://github.com/webpack/webpack/pull/23145))
+
+- Let plugins type their build info, stats fields, code generation data and tags. (by [@alexander-akait](https://github.com/alexander-akait) in [#22999](https://github.com/webpack/webpack/pull/22999))
+
+- Type memo cache entries by key and fix published type signatures. (by [@alexander-akait](https://github.com/alexander-akait) in [#23016](https://github.com/webpack/webpack/pull/23016))
+
+- Call back with the cached value on a hit in both cache facade `provide` methods. (by [@alexander-akait](https://github.com/alexander-akait) in [#23032](https://github.com/webpack/webpack/pull/23032))
+
+- Require `minimizer-webpack-plugin` 5.14 for exact source map columns. (by [@alexander-akait](https://github.com/alexander-akait) in [#23022](https://github.com/webpack/webpack/pull/23022))
+
+- Keep a comment by a folded `if` test or dropped `new` from ending a `return`. (by [@alexander-akait](https://github.com/alexander-akait) in [#23037](https://github.com/webpack/webpack/pull/23037))
+
+- Print shorter minified JavaScript in more of the cases terser shortens. (by [@alexander-akait](https://github.com/alexander-akait) in [#23058](https://github.com/webpack/webpack/pull/23058))
+
+- Keep minified code that `eval`, `with` or early calls change, or a `!` of `!!` around an operation; read `output`. (by [@alexander-akait](https://github.com/alexander-akait) in [#23070](https://github.com/webpack/webpack/pull/23070))
+
+- Drop unread trailing arguments and write compound assignments when minifying. (by [@alexander-akait](https://github.com/alexander-akait) in [#23075](https://github.com/webpack/webpack/pull/23075))
+
+- Type more cache serializers by position instead of with `any`. (by [@alexander-akait](https://github.com/alexander-akait) in [#23072](https://github.com/webpack/webpack/pull/23072))
+
+- Fold more known `switch`es, `delete` of globals and `-0` in minified JavaScript. (by [@aryanraj45](https://github.com/aryanraj45) in [#23130](https://github.com/webpack/webpack/pull/23130))
+
+- Drop unused labels and loops that only `break`, and fold `typeof undefined`. (by [@aryanraj45](https://github.com/aryanraj45) in [#23131](https://github.com/webpack/webpack/pull/23131))
+
+- Replace TypeScript error suppressions with real types. (by [@alexander-akait](https://github.com/alexander-akait) in [#23078](https://github.com/webpack/webpack/pull/23078))
+
+- Minify unread catch bindings, bare blocks, `a?a:b` and one-case `switch`. (by [@alexander-akait](https://github.com/alexander-akait) in [#23087](https://github.com/webpack/webpack/pull/23087))
+
+- Minify more conditionals, loop exits, dead code and unread values in one pass. (by [@alexander-akait](https://github.com/alexander-akait) in [#23099](https://github.com/webpack/webpack/pull/23099))
+
+- Accept `fs` typed by `@types/node` 26 in the input file system types. (by [@alexander-akait](https://github.com/alexander-akait) in [#23100](https://github.com/webpack/webpack/pull/23100))
+
+- Evaluate built-in calls on constants when minifying JavaScript. (by [@alexander-akait](https://github.com/alexander-akait) in [#23110](https://github.com/webpack/webpack/pull/23110))
+
+- Type rule effect values and let `Profiler` run without an inspector. (by [@alexander-akait](https://github.com/alexander-akait) in [#23102](https://github.com/webpack/webpack/pull/23102))
+
+- Type serializer contexts, lazy values and internal helpers without `any`. (by [@alexander-akait](https://github.com/alexander-akait) in [#23111](https://github.com/webpack/webpack/pull/23111))
+
+- Drop pure built-in calls and keep `0` tests boolean when minifying JavaScript. (by [@alexander-akait](https://github.com/alexander-akait) in [#23116](https://github.com/webpack/webpack/pull/23116))
+
+- Type the CSS hot update manifest, profiler traces and stats hooks without `any`. (by [@alexander-akait](https://github.com/alexander-akait) in [#23115](https://github.com/webpack/webpack/pull/23115))
+
+- Fix four CSS minifier outputs that changed what a stylesheet says. (by [@alexander-akait](https://github.com/alexander-akait) in [#23121](https://github.com/webpack/webpack/pull/23121))
+
+- Fold arrays, BigInt literals and empty strings added to strings when minifying. (by [@alexander-akait](https://github.com/alexander-akait) in [#23128](https://github.com/webpack/webpack/pull/23128))
+
+- Write a prefixed CSS rule's nested rules and scheme toggles under each copy. (by [@alexander-akait](https://github.com/alexander-akait) in [#23129](https://github.com/webpack/webpack/pull/23129))
+
+- Fold conversions, and assume built-ins of the ecma the minifier writes. (by [@alexander-akait](https://github.com/alexander-akait) in [#23133](https://github.com/webpack/webpack/pull/23133))
+
+- Drop more unread and dead code, and print shorter conditions when minifying. (by [@alexander-akait](https://github.com/alexander-akait) in [#23142](https://github.com/webpack/webpack/pull/23142))
+
+- Keep remote URLs in HTML as written instead of replacing them with `data:,`. (by [@alexander-akait](https://github.com/alexander-akait) in [#23168](https://github.com/webpack/webpack/pull/23168))
+
+- Type `output.html.manifest` objects and the `resolve.unsafeCache` map. (by [@alexander-akait](https://github.com/alexander-akait) in [#23146](https://github.com/webpack/webpack/pull/23146))
+
+- Minify JavaScript built-in calls and comparisons to shorter equivalent forms. (by [@alexander-akait](https://github.com/alexander-akait) in [#23137](https://github.com/webpack/webpack/pull/23137))
+
+- Report no result from `runWithDependencies` instead of nested empty arrays. (by [@alexander-akait](https://github.com/alexander-akait) in [#23150](https://github.com/webpack/webpack/pull/23150))
+
+- Declare the `binary` field on `NormalModule` generator options. (by [@alexander-akait](https://github.com/alexander-akait) in [#23157](https://github.com/webpack/webpack/pull/23157))
+
+- Handle bad package.json values and deep JSON, and keep builds fast on odd input. (by [@alexander-akait](https://github.com/alexander-akait) in [#23151](https://github.com/webpack/webpack/pull/23151))
+
+- Minify JavaScript dead branches, conditions, NaN, string indexes, holes and braces shorter. (by [@alexander-akait](https://github.com/alexander-akait) in [#23152](https://github.com/webpack/webpack/pull/23152))
+
+- Keep names in generated comments and URLs from being read as code or loaders. (by [@alexander-akait](https://github.com/alexander-akait) in [#23153](https://github.com/webpack/webpack/pull/23153))
+
+- `futureDefaults` skips assets outside `output.path`; copies map `#` to `_`. (by [@alexander-akait](https://github.com/alexander-akait) in [#23158](https://github.com/webpack/webpack/pull/23158))
+
+- Fold spread reads, `new` callees, tail calls, `undefined` in arithmetic and string reads past the end, and inline more unread calls, when minifying JavaScript. (by [@alexander-akait](https://github.com/alexander-akait) in [#23178](https://github.com/webpack/webpack/pull/23178))
+
+- Follow namespace re-export chains to the end, so builds match on every run. (by [@alexander-akait](https://github.com/alexander-akait) in [#23161](https://github.com/webpack/webpack/pull/23161))
+
+- Keep scripts decoded as UTF-8, and run inline loaders in HTML URLs again. (by [@alexander-akait](https://github.com/alexander-akait) in [#23170](https://github.com/webpack/webpack/pull/23170))
+
+- The XML minifier now minifies a `<style>` sheet that a dropped comment splits on the first pass, and reports each node an internal-subset entity expands to at its own reference. (by [@alexander-akait](https://github.com/alexander-akait) in [#23177](https://github.com/webpack/webpack/pull/23177))
+
+- Keep minified and built HTML and CSS reading as their source: attributes, script and style bodies, escapes, `url()` strings, `@charset` and values left open at the end of the input are kept, and a file imported `with { type: "css" }` is parsed as CSS. (by [@alexander-akait](https://github.com/alexander-akait) in [#23180](https://github.com/webpack/webpack/pull/23180))
+
+- Keep the sign of `-0` when inlining exported constants. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#23185](https://github.com/webpack/webpack/pull/23185))
+
 ## 5.112.2
 
 ### Patch Changes
