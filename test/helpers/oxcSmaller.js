@@ -76,9 +76,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/replace_known_methods.rs:1063",
 			"oxc minifier: peephole/replace_known_methods.rs:1067",
 			"oxc minifier: peephole/replace_known_methods.rs:1205",
-			"oxc minifier: peephole/replace_known_methods.rs:1206",
-			"oxc minifier: peephole/replace_known_methods.rs:1209",
-			"oxc minifier: peephole/replace_known_methods.rs:1221"
+			"oxc minifier: peephole/replace_known_methods.rs:1206"
 		]
 	],
 	[
@@ -105,12 +103,9 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:223",
 			"oxc minifier: peephole/esbuild.rs:224",
 			"oxc minifier: peephole/esbuild.rs:233",
-			"oxc minifier: peephole/esbuild.rs:238",
-			"oxc minifier: peephole/esbuild.rs:239",
 			"oxc minifier: peephole/esbuild.rs:243",
 			"oxc minifier: peephole/esbuild.rs:310",
 			"oxc minifier: peephole/esbuild.rs:311",
-			"oxc minifier: peephole/esbuild.rs:362",
 			"oxc minifier: peephole/esbuild.rs:376",
 			"oxc minifier: peephole/esbuild.rs:382",
 			"oxc minifier: peephole/esbuild.rs:424",
@@ -223,8 +218,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:1884",
 			"oxc minifier: peephole/esbuild.rs:1984",
 			"oxc minifier: peephole/esbuild.rs:2272",
-			"oxc minifier: peephole/esbuild.rs:2434",
-			"oxc minifier: peephole/esbuild.rs:372"
+			"oxc minifier: peephole/esbuild.rs:2434"
 		]
 	],
 	[
@@ -1931,8 +1925,7 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc goes further than webpack on what terser's `yield` tests cover",
 		[
 			"terser compress: yield/generators_yield_assign",
-			"terser compress: yield/yield_statements",
-			"terser compress: yield/issue_2689"
+			"terser compress: yield/yield_statements"
 		]
 	],
 	[
@@ -2162,13 +2155,6 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"terser compress: class-properties/class_expression_properties_side_effects",
 			"terser compress: class-properties/same_name_public_private"
-		]
-	],
-	[
-		"oxc goes further than webpack on what terser's `concat-strings` tests cover",
-		[
-			"terser compress: concat-strings/concat_7",
-			"terser compress: concat-strings/concat_8"
 		]
 	],
 	[
