@@ -43,28 +43,40 @@ module.exports = {
 						const sharedStarted = new Promise((resolve) => {
 							notifyShared = resolve;
 						});
-						compiler.webpack.NormalModule.getCompilationHooks(
-							compilation
-						).loader.tap("PendingImportModule", (context) => {
+						const normalModuleHooks =
+							compiler.webpack.NormalModule.getCompilationHooks(compilation);
+						normalModuleHooks.loader.tap("PendingImportModule", (context) => {
 							/** @type {BarrierLoaderContext} */ (context).waitForShared =
 								() => sharedStarted;
 						});
+						/**
+						 * @param {import("webpack").Module} module completed or retained module
+						 * @returns {void}
+						 */
+						const releaseForConsumer = (module) => {
+							if (
+								module.nameForCondition() !==
+								path.join(compiler.context, "consumer.generated")
+							) {
+								return;
+							}
+							consumerFinished = true;
+							if (releaseShared) {
+								setImmediate(releaseShared);
+								releaseShared = undefined;
+							}
+						};
+						// Retained modules can validate their snapshots without entering buildQueue.
+						normalModuleHooks.needBuild.tapAsync(
+							"PendingImportModule",
+							(module, context, callback) => {
+								releaseForConsumer(module);
+								callback();
+							}
+						);
 						compilation.buildQueue.hooks.result.tap(
 							"PendingImportModule",
-							(module) => {
-								if (
-									module.nameForCondition() !==
-									path.join(compiler.context, "consumer.generated")
-								) {
-									return;
-								}
-								// A partial watch notification can reuse the consumer from cache.
-								consumerFinished = true;
-								if (releaseShared) {
-									setImmediate(releaseShared);
-									releaseShared = undefined;
-								}
-							}
+							releaseForConsumer
 						);
 						compilation.buildQueue.hooks.beforeStart.tapAsync(
 							"PendingImportModule",
