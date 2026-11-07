@@ -125,6 +125,7 @@ While a loader job runs, the worker may send `rpc` messages:
 
 | File                             | Holds                                            |
 | -------------------------------- | ------------------------------------------------ |
+| `lib/loaders/loaderLocalJob.js`  | main-thread execution, the default path          |
 | `lib/loaders/loaderThreadJob.js` | main-thread dispatch and RPC bridge              |
 | `lib/loaders/loader.worker.js`   | `loader-runner` + the worker-side loader context |
 | `lib/worker/WorkerChild.js`      | RPC context and job dispatch                     |
