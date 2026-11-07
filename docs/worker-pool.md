@@ -73,6 +73,8 @@ A target module is CommonJS. Each export called through the pool has the shape `
 
 - Arguments and results cross by structured clone: no functions, no class prototypes, no symbols.
 - Each thread caches the module with `require`. Module-level caches may exist, but a result must not depend on which calls ran before it.
+- A failed load stays failed on that thread for the pool's lifetime; a transient filesystem error is not retried.
+- A call whose arguments cannot be cloned rejects with `WorkerJobCloneError` before its thread runs.
 - Any call may run on any thread.
 - Errors cross as `EncodedError` (`name`, `message`, `stack`, own enumerable `fields`). `decodeError` rebuilds a plain `Error`.
 

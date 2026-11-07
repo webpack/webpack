@@ -70,6 +70,13 @@ describe("WorkerPool", () => {
 			expect(await pool.run(TARGET, "echo", [fn])).toEqual([fn]);
 		});
 
+		it("rejects an invalid method instead of throwing", async () => {
+			const pool = createPool({ max: 0 });
+			const worker = new Worker(pool, TARGET);
+			await expect(worker.run("")).rejects.toThrow(TypeError);
+			await pool.end();
+		});
+
 		it("falls back for non-finite options", async () => {
 			const pool = new WorkerPool({
 				max: NaN,
@@ -177,6 +184,7 @@ describe("WorkerPool", () => {
 			await new Promise((resolve, reject) => {
 				child.close((err) => (err ? reject(err) : resolve(undefined)));
 			});
+			expect(child.worker(TARGET)).toBe(worker);
 			expect(await worker.run("add", 1, 2)).toBe(3);
 			await new Promise((resolve, reject) => {
 				compiler.close((err) => (err ? reject(err) : resolve(undefined)));
