@@ -5733,6 +5733,17 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should drop a function expression's name its own scope declares again", () => {
+		// One the body reads, a block's own `let` or a default parameter reads keeps it.
+		const source =
+			"console.log(function x(){var x=1;return x}(),function y(){const y=2;return y}(),function z(){function z(){}return typeof z}(),function p(p){return p}(5),function q(){{let q=1}return typeof q}(),typeof function r(a=r){var r;return a}())";
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'console.log(function(){var x=1;return x}(),function(){const y=2;return y}(),function(){function z(){}return typeof z}(),function(p){return p}(5),function q(){return typeof q}(),typeof function r(a=r){var r;return a}());'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
