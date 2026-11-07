@@ -4661,7 +4661,7 @@ declare class Compiler {
 	 * @since 5.113.0
 	 * @experimental
 	 */
-	worker(workerPath: string | URL): Worker;
+	worker(workerPath: string | URL, options?: WorkerOptions): Worker;
 
 	/**
 	 * Processes the provided error callback.
@@ -36581,6 +36581,13 @@ declare abstract class Worker {
 	 * Releases the shared pool's idle threads. Calls in flight finish; the pool stays usable.
 	 */
 	release(): Promise<void>;
+}
+
+/**
+ * Options for `compiler.worker()`. No fields are supported yet; future fields reuse the jest-worker or thread-loader name when the purpose matches.
+ */
+declare interface WorkerOptions {
+	[index: string]: never;
 }
 
 /**

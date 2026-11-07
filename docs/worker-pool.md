@@ -1,6 +1,6 @@
 # Worker pool
 
-`lib/worker/` runs CPU-heavy plugin work on `worker_threads`. One pool per compiler root owns the threads, and `compiler.worker(workerPath)` binds a module to the pool. A thread is not tied to one module or one call.
+`lib/worker/` runs CPU-heavy plugin work on `worker_threads`. One pool per compiler root owns the threads, and `compiler.worker(workerPath, options)` binds a module to the pool. A thread is not tied to one module or one call.
 
 This file is the spec. When code and spec disagree, fix one of them in the same commit.
 
@@ -26,7 +26,7 @@ This file is the spec. When code and spec disagree, fix one of them in the same 
 | thread      | One `worker_threads.Worker` running `WorkerChild.js`. The pool's record of it is a `PoolWorker`. |
 | child       | The `WorkerChild` inside a thread. Loads modules and answers calls.                              |
 | call        | One request with a module, method and arguments; settled by one response.                        |
-| worker      | What `compiler.worker(workerPath)` returns: a module bound to the pool.                          |
+| worker      | What `compiler.worker(workerPath, options)` returns: a module bound to the pool.                 |
 | inline path | Running the method on the main thread instead of a thread.                                       |
 
 ## Files
@@ -48,14 +48,18 @@ await worker.warmup(4);
 await worker.release();
 ```
 
-| Member                        | Behavior                                                                                                                   |
-| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `compiler.worker(workerPath)` | Absolute path or `file:` URL, required. Returns the facade; throws when `experiments.threads` is off.                      |
-| `worker.run(method, ...args)` | One call.                                                                                                                  |
-| `worker.warmup(workers?)`     | Spawns up to `workers` threads and preloads this module; defaults to the pool's `max`. Existing threads are preloaded too. |
-| `worker.release()`            | Terminates idle threads in the shared pool. Calls in flight finish, then their threads retire; the pool stays usable.      |
+| Member                                  | Behavior                                                                                                                   |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `compiler.worker(workerPath, options?)` | Absolute path or `file:` URL, required. Returns the facade; throws when `experiments.threads` is off.                      |
+| `worker.run(method, ...args)`           | One call.                                                                                                                  |
+| `worker.warmup(workers?)`               | Spawns up to `workers` threads and preloads this module; defaults to the pool's `max`. Existing threads are preloaded too. |
+| `worker.release()`                      | Terminates idle threads in the shared pool. Calls in flight finish, then their threads retire; the pool stays usable.      |
 
 No `bind`, no `end`, no handles, no shared references. `release()` affects the shared pool, including threads another consumer warmed up.
+
+Coming from thread-loader or jest-worker: `threads.max` is their `workers` / `numWorkers`, `loaders.parallelJobs` is `workerParallelJobs`, and `loaders.poolTimeout` is `poolTimeout`. The facade has no `end()`: `release()` retires idle threads and leaves the pool usable, while `compiler.close()` is what ends it.
+
+`options` is reserved: it must be an object without fields today, and any field throws. When fields ship, they reuse the `jest-worker` or `thread-loader` name for the same purpose; pool-wide settings stay in `experiments.threads`.
 
 `compiler.worker` is a `Compiler` method:
 

@@ -81,13 +81,13 @@ describe("WorkerPool", () => {
 			const pool = new WorkerPool({
 				max: NaN,
 				idleTimeout: Infinity,
-				loaderIdleTimeout: NaN,
+				loaderPoolTimeout: NaN,
 				loaderParallelJobs: NaN
 			});
 			expect(pool.options).toMatchObject({
 				max: 0,
 				idleTimeout: 30000,
-				loaderIdleTimeout: 500,
+				loaderPoolTimeout: 500,
 				loaderParallelJobs: 20
 			});
 			await pool.end();
@@ -145,6 +145,20 @@ describe("WorkerPool", () => {
 				isMainThread: true
 			});
 			await inline.release();
+		});
+
+		it("accepts the reserved options argument", async () => {
+			const webpack = require("../../lib/webpack");
+			const compiler = webpack({
+				entry: "data:text/javascript,1",
+				experiments: { threads: true }
+			});
+
+			const worker = compiler.worker(TARGET, {});
+
+			expect(worker).toBeInstanceOf(Worker);
+			expect(await worker.run("add", 1, 2)).toBe(3);
+			await worker._pool.end();
 		});
 
 		it("does not create a pool after close when none was used", async () => {
@@ -347,7 +361,7 @@ describe("WorkerPool", () => {
 			const pool = createThreadPool({
 				max: 1,
 				idleTimeout: 5000,
-				loaderIdleTimeout: 20
+				loaderPoolTimeout: 20
 			});
 			await pool.runJob(TARGET, "add", [1, 2], {
 				rpc: () => undefined
