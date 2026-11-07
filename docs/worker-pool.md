@@ -20,14 +20,15 @@ This file is the spec. When code and spec disagree, fix one of them in the same 
 
 ## Terms
 
-| Term        | Meaning                                                                                          |
-| ----------- | ------------------------------------------------------------------------------------------------ |
-| pool        | A `WorkerPool` on the main thread. Owns the queue and up to `max` threads.                       |
-| thread      | One `worker_threads.Worker` running `WorkerChild.js`. The pool's record of it is a `PoolWorker`. |
-| child       | The `WorkerChild` inside a thread. Loads modules and answers calls.                              |
-| call        | One request with a module, method and arguments; settled by one response.                        |
-| worker      | What `compiler.worker(workerPath, options)` returns: a module bound to the pool.                 |
-| inline path | Running the method on the main thread instead of a thread.                                       |
+| Term        | Meaning                                                                                                             |
+| ----------- | ------------------------------------------------------------------------------------------------------------------- |
+| pool        | A `WorkerPool` on the main thread. Owns the queue and up to `max` threads.                                          |
+| thread      | One `worker_threads.Worker` running `WorkerChild.js`. The pool's record of it is a `PoolWorker`.                    |
+| child       | The `WorkerChild` inside a thread. Loads modules and answers calls.                                                 |
+| call        | One request with a module, method and arguments; settled by one response.                                           |
+| job         | The protocol message carrying one call to a thread (`JobMessage`); the pool bookkeeping calls the same unit a call. |
+| worker      | What `compiler.worker(workerPath, options)` returns: a module bound to the pool.                                    |
+| inline path | Running the method on the main thread instead of a thread.                                                          |
 
 ## Files
 
@@ -55,6 +56,8 @@ await worker.release();
 | `worker.warmup(workers?)`               | Spawns up to `workers` threads and preloads this module; defaults to the pool's `max`. Existing threads are preloaded too. |
 | `worker.release()`                      | Terminates idle threads in the shared pool. Calls in flight finish, then their threads retire; the pool stays usable.      |
 
+`workerPath` may be followed by a reserved `options` argument: no field is used yet, so passing one is accepted and ignored.
+
 No `bind`, no `end`, no handles, no shared references. `release()` affects the shared pool, including threads another consumer warmed up.
 
 Coming from thread-loader or jest-worker: `threads.max` is their `workers` / `numWorkers`, `loaders.parallelJobs` is `workerParallelJobs`, and `loaders.poolTimeout` is `poolTimeout`. The facade has no `end()`: `release()` retires idle threads and leaves the pool usable, while `compiler.close()` is what ends it.
@@ -65,6 +68,7 @@ Coming from thread-loader or jest-worker: `threads.max` is their `workers` / `nu
 
 - the factory is created once per `compiler.root`;
 - child compilers return the root's facade;
+- each compiler of a `MultiCompiler` is its own root, so every config gets its own pool;
 - `compiler.close()` sets a closed flag and ends the pool before `shutdown`;
 - after close, a factory that was never created throws, and one that was created returns the same ended facade, whose calls reject.
 

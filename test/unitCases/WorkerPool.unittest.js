@@ -148,7 +148,7 @@ describe("WorkerPool", () => {
 			await inline.release();
 		});
 
-		it("accepts the reserved options argument", async () => {
+		it("accepts the reserved options argument and types the module exports", async () => {
 			const webpack = require("../../lib/webpack");
 			const compiler = webpack({
 				entry: "data:text/javascript,1",
@@ -159,6 +159,13 @@ describe("WorkerPool", () => {
 
 			expect(worker).toBeInstanceOf(Worker);
 			expect(await worker.run("add", 1, 2)).toBe(3);
+
+			// the facade can name the module's exports for checked calls
+			const typed =
+				/** @type {import("../../lib/worker/Worker")<{ add: (a: number, b: number) => number }>} */ (
+					worker
+				);
+			expect(await typed.run("add", 1, 2)).toBe(3);
 			await worker._pool.end();
 		});
 

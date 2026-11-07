@@ -4661,7 +4661,10 @@ declare class Compiler {
 	 * @since 5.113.0
 	 * @experimental
 	 */
-	worker(workerPath: string | URL, options?: WorkerOptions): Worker;
+	worker<M extends WorkerModule = WorkerDefaultModule>(
+		workerPath: string | URL,
+		options?: WorkerOptions
+	): Worker<M>;
 
 	/**
 	 * Processes the provided error callback.
@@ -36566,11 +36569,14 @@ declare interface WithOptions {
  * @since 5.113.0
  * @experimental
  */
-declare abstract class Worker {
+declare abstract class Worker<M extends WorkerModule = WorkerDefaultModule> {
 	/**
 	 * Calls one export of the module.
 	 */
-	run<T>(method: string, ...args: unknown[]): Promise<T>;
+	run<K extends string>(
+		method: K,
+		...args: Parameters<M[K]>
+	): Promise<ReturnType<M[K]>>;
 
 	/**
 	 * Spawns up to `workers` threads and preloads this module in each.
@@ -36581,6 +36587,21 @@ declare abstract class Worker {
 	 * Releases the shared pool's idle threads. Calls in flight finish; the pool stays usable.
 	 */
 	release(): Promise<void>;
+}
+
+/**
+ * Untyped facade: every method takes and returns `unknown`.
+ */
+declare interface WorkerDefaultModule {
+	[index: string]: (...args: unknown[]) => unknown;
+}
+
+/**
+ * Constraint for a worker module: `never[]` accepts any function signature
+ * under contravariance, so a module with typed exports satisfies it.
+ */
+declare interface WorkerModule {
+	[index: string]: (...args: never[]) => unknown;
 }
 
 /**
