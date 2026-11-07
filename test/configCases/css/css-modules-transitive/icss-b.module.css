@@ -1,0 +1,7 @@
+:import("./icss-c.module.css") {
+	_tone: tone;
+}
+
+:export {
+	tone: _tone;
+}
