@@ -31,6 +31,10 @@ module.exports.throwString = () => {
 	throw "not an error";
 };
 
+module.exports.throwPlain = () => {
+	throw { message: "plain", code: 7 };
+};
+
 module.exports.crash = () => {
 	process.exit(3);
 };

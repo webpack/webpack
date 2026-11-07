@@ -1,10 +1,4 @@
 "use strict";
 
-module.exports = () => {
-	try {
-		require("worker_threads");
-		return true;
-	} catch (_err) {
-		return false;
-	}
-};
+module.exports = () =>
+	require("../../../../lib/worker/WorkerPool").isThreadingAvailable();

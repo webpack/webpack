@@ -109,6 +109,12 @@ describe("WorkerPool", () => {
 			await pool.end();
 		});
 
+		it("defaults missing arguments to none", async () => {
+			const pool = createPool({ max: 0 });
+			expect(await pool.run(TARGET, "echo")).toEqual([]);
+			await pool.end();
+		});
+
 		it("wraps an inline clone failure like the remote path", async () => {
 			const WorkerJobCloneError = require("../../lib/errors/WorkerJobCloneError");
 			const pool = createPool({ max: 0 });
@@ -206,6 +212,29 @@ describe("WorkerPool", () => {
 				}>} */ (worker);
 			expect(await typedAsync.run("addAsync", 1, 2)).toBe(3);
 			await worker._pool.end();
+		});
+
+		it("runs shutdown once when close is called twice", async () => {
+			const webpack = require("../../lib/webpack");
+			const compiler = webpack({
+				entry: "data:text/javascript,1",
+				experiments: { threads: true }
+			});
+			let shutdowns = 0;
+			compiler.hooks.shutdown.tap("test", () => {
+				shutdowns++;
+			});
+			const worker = compiler.worker(TARGET);
+			await worker.run("add", 1, 2);
+			await Promise.all([
+				new Promise((resolve, reject) => {
+					compiler.close((err) => (err ? reject(err) : resolve(undefined)));
+				}),
+				new Promise((resolve, reject) => {
+					compiler.close((err) => (err ? reject(err) : resolve(undefined)));
+				})
+			]);
+			expect(shutdowns).toBe(1);
 		});
 
 		it("rejects a relative path and accepts a file URL", async () => {
@@ -470,6 +499,26 @@ describe("WorkerPool", () => {
 			expect(perThread.size).toBe(4);
 			for (const count of perThread.values()) expect(count).toBe(3);
 			await pool.end();
+		});
+
+		it("rejects a non-Error throw the same way inline and on a thread", async () => {
+			const inline = createPool({ max: 0 });
+			const remote = createThreadPool();
+			const inlineError = await inline
+				.run(TARGET, "throwPlain", [])
+				.catch((/** @type {ThrownValue} */ error) => error);
+			const remoteError = await remote
+				.run(TARGET, "throwPlain", [])
+				.catch((/** @type {ThrownValue} */ error) => error);
+			for (const error of [inlineError, remoteError]) {
+				const plain = /** @type {Error & { code?: number }} */ (error);
+				expect(plain).toBeInstanceOf(Error);
+				expect(plain.message).toBe("plain");
+				expect(plain.name).toBe("Error");
+				expect(plain.code).toBe(7);
+			}
+			await inline.end();
+			await remote.end();
 		});
 
 		it("treats a non-finite warmup count as the pool max", async () => {

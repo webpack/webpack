@@ -119,7 +119,7 @@ While a loader job runs, the worker may send `rpc` messages:
 
 ## Cache
 
-`NormalModule.identifier()` distinguishes `threads: true` from the main-thread path, so the two never share a module cache entry. `getUnsafeCacheData()` carries the flag too.
+`NormalModule.identifier()` distinguishes `threads: true` from the main-thread path, so the two never share a module cache entry. `getUnsafeCacheData()` carries the flag too. Enabling `threads` on a rule therefore changes that module's identifier, and with it deterministic module ids and long-term cache entries.
 
 ## Files
 
