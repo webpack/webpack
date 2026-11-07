@@ -677,7 +677,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: drop-unused/drop_fargs",
 			"terser compress: drop-unused/iife",
 			"terser compress: drop-unused/issue_1656",
-			"terser compress: drop-unused/issue_1709",
 			"terser compress: drop-unused/issue_2136_2",
 			"terser compress: drop-unused/issue_2136_3",
 			"terser compress: drop-unused/issue_t161_top_retain_1",
@@ -1006,7 +1005,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc follows a variable's value through its reassignments and folds the result to a constant",
 		[
-			"terser compress: collapse_vars/issue_2313_2",
 			"terser compress: dead-code/issue_2860_1",
 			"terser compress: reduce_vars/issue_1670_1",
 			"terser compress: reduce_vars/issue_1670_3",
