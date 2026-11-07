@@ -1,0 +1,9 @@
+.a {
+	background: url("./img.png" crossorigin(anonymous));
+}
+.b {
+	background: url("./img.png" /* note */);
+}
+.c {
+	background: url("./img.png");
+}

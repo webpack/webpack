@@ -1,0 +1,6 @@
+@import url("./c.css") layer(y) supports(display: grid) print };
+@import url("./d.css") screen, print };
+
+.a {
+	color: red;
+}

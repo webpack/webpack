@@ -4421,3 +4421,82 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 	});
 });
 
+
+describe("CssSyntax minify — output that reads back as its source", () => {
+	/**
+	 * @param {string} src css source
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src) =>
+		new SourceProcessor().process(src, { mode: "minify" }).code;
+
+	it("keeps the space between a math function's `/` and `*`", () => {
+		expect(min(fixture("css", "css-syntax-minify-math-keeps-the-space-between-a-slash-and-a-star"))).toBe("a{width:calc(10px/ *2)}b{c:d}");
+		expect(min(fixture("css", "css-syntax-minify-math-keeps-the-space-between-a-slash-and-a-star-2"))).toBe("@media (width:calc(10px/ *2)){a{b:c}}");
+	});
+
+	it("keeps the newline that ends a bad string in a custom property", () => {
+		expect(min(fixture("css", "css-syntax-minify-custom-property-keeps-the-newline-that-ends-a-bad-string"))).toBe('a{--x:"abc\n;color:red}b{c:d}');
+		expect(min(fixture("css", "css-syntax-minify-custom-property-keeps-the-newline-that-ends-a-bad-string-2"))).toBe('a{--x:f("abc\n y);color:red}b{c:d}');
+		expect(min(fixture("css", "css-syntax-minify-custom-property-keeps-the-newline-that-ends-a-bad-string-3"))).toBe(
+			'@property --x{syntax:"*";inherits:false;initial-value:"a\n;color:red}b{c:d}'
+		);
+	});
+
+	it("keeps the space after an escaped comma or combinator", () => {
+		expect(min(fixture("css", "css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma"))).toBe(".a\\, .b{c:d}");
+		expect(min(fixture("css", "css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-2"))).toBe(".a\\> .b{c:d}");
+		expect(min(fixture("css", "css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-3"))).toBe("a{b:c\\, d}");
+		// An escaped backslash escapes nothing after it.
+		expect(min(fixture("css", "css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-4"))).toBe(".a\\\\,.b{c:d}");
+	});
+
+	it("keeps a `grid-template-areas` row ending on an escaped space", () => {
+		expect(min(fixture("css", "css-syntax-minify-grid-template-areas-keeps-an-escaped-trailing-space"))).toBe('a{grid-template-areas:"a b\\ "}c{d:e}');
+	});
+
+	it("reads an escaped `{` in a layer name as part of the name", () => {
+		expect(min(fixture("css", "css-syntax-minify-layer-reads-an-escaped-brace-as-part-of-the-name"))).toBe("@layer a\\{b{x{c:d}}@layer a\\{b.c{y{e:f}}");
+		expect(min(fixture("css", "css-syntax-minify-layer-reads-an-escaped-brace-as-part-of-the-name-2"))).toBe("@layer a\\{b{x{c:d}y{e:f}}");
+	});
+
+	it("does not sort a selector starting with `@` to the front of a list", () => {
+		expect(min(fixture("css", "css-syntax-minify-selector-list-keeps-a-part-starting-with-an-at-sign-in-place"))).toBe("b,@media screen{a{color:red}}");
+		expect(min(fixture("css", "css-syntax-minify-selector-list-keeps-a-part-starting-with-an-at-sign-in-place-2"))).toBe('z,@import "x";a{b:c}');
+	});
+
+	it("keeps `@charset` for a non-ASCII answer an asynchronous renderer gives", async () => {
+		const cssMinify = require("../../../lib/css/cssMinify");
+
+		const svg = await cssMinify({ "a.css": fixture("css", "css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies") }, undefined, { svg: true });
+		expect(svg.code).toBe('@charset "UTF-8";a{background:url(data:image/svg+xml,<svg>é</svg>)}');
+		const source = fixture("css", "css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies-2");
+		const answered = await cssMinify({ "a.css": source }, undefined, {
+			renderEmbeddedSource: async () => "<svg>é</svg>"
+		});
+		expect(answered.code).toBe('@charset "UTF-8";a{background:url(data:image/svg+xml,<svg>é</svg>)}');
+		// An ASCII answer still needs none.
+		const ascii = await cssMinify({ "a.css": source }, undefined, {
+			renderEmbeddedSource: async () => "<svg>y</svg>"
+		});
+		expect(ascii.code).toBe("a{background:url(data:image/svg+xml,<svg>y</svg>)}");
+	});
+
+	it("closes a custom property the input ran out in where a banner follows", async () => {
+		const cssMinify = require("../../../lib/css/cssMinify");
+
+		/**
+		 * @param {string} name the fixture
+		 * @returns {Promise<string>} the output, the banner the plugin appends included
+		 */
+		const withBanner = async (name) => {
+			const result = await cssMinify({ "a.css": fixture("css", name) }, undefined, {}, true);
+			expect(result.extractedComments).toEqual(["/*! keep */"]);
+			return `${result.code}/*! banner */`;
+		};
+		expect(await withBanner("css-minify-export-closes-a-custom-property-the-input-ran-out-in-before-a-banner")).toBe('.b{--x:"foo"}/*! banner */');
+		expect(await withBanner("css-minify-export-closes-a-custom-property-the-input-ran-out-in-before-a-banner-2")).toBe(".b{--x:{foo}}/*! banner */");
+		// With no banner to follow, it stays open as the engine keeps it.
+		expect(min(fixture("css", "css-minify-export-closes-a-custom-property-the-input-ran-out-in-before-a-banner"))).toBe('/*! keep */.b{--x:"foo');
+	});
+});

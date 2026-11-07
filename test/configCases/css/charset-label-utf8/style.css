@@ -1,0 +1,5 @@
+@charset "iso-8859-15";
+
+.a::before {
+	content: "\00e9";
+}

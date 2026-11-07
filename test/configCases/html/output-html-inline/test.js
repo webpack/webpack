@@ -81,6 +81,14 @@ it("<!-- webpackInline: true --> inlines the tag without output.html.inline", ()
 	expect(scripts[0]).toMatch(/console\.log/);
 });
 
+it("<!-- webpackInline: true --> drops the body of the inlined <script src>", () => {
+	const html = readHtml("magic-body.html");
+	const scripts = inlineScripts(html);
+	expect(scripts).toHaveLength(1);
+	expect(scripts[0]).toMatch(/console\.log/);
+	expect(html).not.toContain("MARK_BODY");
+});
+
 it("a malformed magic comment resets a pending webpackInline directive", () => {
 	// `<!-- webpackInline: true -->` then a malformed comment then the script:
 	// the malformed comment must clear the pending inline, so the script stays external.

@@ -3485,6 +3485,43 @@ describe("htmlMinify — an answered `style` attribute that changes its quoting"
 			)
 		).toBe('<svg><rect style="margin:0 auto"/></svg>');
 	});
+
+	it("keeps an attribute after `/` apart from an answer that ends unquoted", async () => {
+		// The separator is written before the answer arrives: a `/` after a bare
+		// value would join the next attribute into it.
+		expect(
+			await min(fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-separates-the-next"), () => "color:red")
+		).toBe("<p style=color:red data-x=MARK>x");
+		expect(
+			await min(fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-separates-the-next-2"), (source, info) =>
+				info.type === "javascript" ? "foo(1)" : undefined
+			)
+		).toBe("<a onclick=foo(1) data-x=MARK>x</a>");
+	});
+
+	it("keeps an answered attribute written right after `/`", async () => {
+		expect(
+			await min(fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-an-attribute"), () => undefined)
+		).toBe("<div style=color:red>x</div>");
+		expect(
+			await min(fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-an-attribute-2"), () => undefined)
+		).toBe('<iframe srcdoc="<p>a"></iframe>');
+		expect(
+			await min(fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-an-attribute-3"), (source, info) =>
+				info.type === "javascript" ? "foo(1)" : undefined
+			)
+		).toBe("<button onclick=foo(1)>x</button>");
+	});
+
+	it("keeps a name opening with `=` apart from an answered attribute", async () => {
+		// Written before the answer arrives: `=""` would join an unquoted value,
+		// and a space alone would give a bare name the next name as its value.
+		const page = fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-a-name-opening");
+		expect(await min(page, () => "color:red")).toBe("<p style=color:red /=x>x");
+		expect(
+			await min(fixture("html", "html-minify-an-answered-style-attribute-that-changes-its-quoting-keeps-a-name-opening-2"), () => "")
+		).toBe("<iframe srcdoc /=x></iframe>");
+	});
 });
 
 describe("htmlMinify — the function an event handler is asked about", () => {
@@ -3594,6 +3631,10 @@ describe("htmlMinify export", () => {
 
 		expect(htmlMinify.formatBanner("see a.LICENSE.txt")).toBe(
 			"<!-- see a.LICENSE.txt -->"
+		);
+		// A filename spelling `-->` or `--!>` must not end the comment early.
+		expect(htmlMinify.formatBanner("see p-->x--!>y--->z.LICENSE.txt")).toBe(
+			"<!-- see p- ->x- -!>y-- ->z.LICENSE.txt -->"
 		);
 		expect(htmlMinify.getBannerPosition()).toBe("end");
 	});
@@ -5175,6 +5216,13 @@ describe("SourceProcessor — what minifying cannot turn into markup", () => {
 				renderEmbeddedSource: () => "a{b:'</styles'}"
 			}).code
 		).toBe("<style>a{b:'</styles'}</style>");
+		// No end tag, but `<!--<script>` keeps a script body open past its own.
+		expect(
+			new SourceProcessor().process(
+				fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-a-script-body-as"),
+				{ mode: "minify", renderEmbeddedSource: () => 'x="<!--<script>"' }
+			).code
+		).toBe('<script>x="<!-"+"-<scr"+"ipt>"</script><p data-x=MARK>x');
 	});
 
 	it("keeps a conditional comment's body as written where its print would end the comment", async () => {

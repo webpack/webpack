@@ -106,6 +106,22 @@ exports[`CSS syntax — fixtures css-minify-export-a-caller-s-render-embedded-so
 
 exports[`CSS syntax — fixtures css-minify-export-a-caller-s-render-embedded-source-prints-what-it-answers-and prints {"mode":"minify"} 1`] = `".a{background:url(data:image/svg+xml,<svg></svg>)}.b{background:url(\\"data:text/css,a { color : red }\\")}"`;
 
+exports[`CSS syntax — fixtures css-minify-export-closes-a-custom-property-the-input-ran-out-in-before-a-banner parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"--x\\"],\\":\\",[\\"string\\",\\"foo\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-minify-export-closes-a-custom-property-the-input-ran-out-in-before-a-banner prints {"mode":"minify"} 1`] = `"/*! keep */.b{--x:\\"foo"`;
+
+exports[`CSS syntax — fixtures css-minify-export-closes-a-custom-property-the-input-ran-out-in-before-a-banner-2 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"--x\\"],\\":\\",[\\"{}\\",[\\"ident\\",\\"foo\\"]]]]]"`;
+
+exports[`CSS syntax — fixtures css-minify-export-closes-a-custom-property-the-input-ran-out-in-before-a-banner-2 prints {"mode":"minify"} 1`] = `"/*! keep */.b{--x:{foo"`;
+
+exports[`CSS syntax — fixtures css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies parses 1`] = `"[[\\"at-rule\\",\\"charset\\",[\\" \\",[\\"string\\",\\"utf-8\\"]],null],[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"url\\",[\\"string\\",\\"data:image/svg+xml,<svg>é</svg>\\"]]]]]"`;
+
+exports[`CSS syntax — fixtures css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies prints {"mode":"minify"} 1`] = `"a{background:url(data:image/svg+xml,<svg>é</svg>)}"`;
+
+exports[`CSS syntax — fixtures css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies-2 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"url\\",[\\"string\\",\\"data:image/svg+xml,<svg>x</svg>\\"]]]]]"`;
+
+exports[`CSS syntax — fixtures css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies-2 prints {"mode":"minify"} 1`] = `"a{background:url(data:image/svg+xml,<svg>x</svg>)}"`;
+
 exports[`CSS syntax — fixtures css-minify-export-extract-comments-hands-a-predicate-the-comment-s-text-line-and parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"b\\"]],[]]]"`;
 
 exports[`CSS syntax — fixtures css-minify-export-extract-comments-hands-a-predicate-the-comment-s-text-line-and prints {"mode":"minify"} 1`] = `"/*! a */"`;
@@ -3070,6 +3086,27 @@ exports[`CSS syntax — fixtures css-syntax-minify-custom-media-custom-selector-
 
 exports[`CSS syntax — fixtures css-syntax-minify-custom-media-custom-selector-writes-the-query-wherever-a prints {"mode":"minify"} 1`] = `"@custom-media --m (width>400px);@media (--m){a{color:red}}"`;
 
+exports[`CSS syntax — fixtures css-syntax-minify-custom-property-keeps-the-newline-that-ends-a-bad-string parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"--x\\"],\\":\\",[\\"error\\",\\"bad-string\\"],\\" \\",\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-custom-property-keeps-the-newline-that-ends-a-bad-string prints {"mode":"minify"} 1`] = `
+"a{--x:\\"abc
+;color:red}b{c:d}"
+`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-custom-property-keeps-the-newline-that-ends-a-bad-string-2 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"--x\\"],\\":\\",[\\"function\\",\\"f\\",[\\"error\\",\\"bad-string\\"],\\" \\",[\\"ident\\",\\"y\\"]],\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-custom-property-keeps-the-newline-that-ends-a-bad-string-2 prints {"mode":"minify"} 1`] = `
+"a{--x:f(\\"abc
+ y);color:red}b{c:d}"
+`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-custom-property-keeps-the-newline-that-ends-a-bad-string-3 parses 1`] = `"[[\\"at-rule\\",\\"property\\",[\\" \\",[\\"ident\\",\\"--x\\"]],[[\\"ident\\",\\"syntax\\"],\\":\\",[\\"string\\",\\"*\\"],\\";\\",[\\"ident\\",\\"inherits\\"],\\":\\",[\\"ident\\",\\"false\\"],\\";\\",[\\"ident\\",\\"initial-value\\"],\\":\\",[\\"error\\",\\"bad-string\\"],\\" \\",\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-custom-property-keeps-the-newline-that-ends-a-bad-string-3 prints {"mode":"minify"} 1`] = `
+"@property --x{syntax:\\"*\\";inherits:false;initial-value:\\"a
+;color:red}b{c:d}"
+`;
+
 exports[`CSS syntax — fixtures css-syntax-minify-custom-property-left-open-by-a-lone-backslash-closes parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"--v\\"],\\":\\",[\\"()\\",[\\"ident\\",\\"x\\"],\\" \\",[\\"ident\\",\\"y�\\"]]]]]"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-custom-property-left-open-by-a-lone-backslash-closes prints {"mode":"minify"} 1`] = `"a{--v:(x y�)}"`;
@@ -4028,6 +4065,10 @@ exports[`CSS syntax — fixtures css-syntax-minify-grid-longhands-merged-beside-
 
 exports[`CSS syntax — fixtures css-syntax-minify-grid-longhands-merged-beside-others-prints-a-margin-top-1px-2 prints {"mode":"minify"} 1`] = `"a{grid-row:1/2;grid-template:\\"a\\"1px/2px;margin:1px}"`;
 
+exports[`CSS syntax — fixtures css-syntax-minify-grid-template-areas-keeps-an-escaped-trailing-space parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"grid-template-areas\\"],\\":\\",[\\"string\\",\\"a b \\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"c\\"]],[[\\"ident\\",\\"d\\"],\\":\\",[\\"ident\\",\\"e\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-grid-template-areas-keeps-an-escaped-trailing-space prints {"mode":"minify"} 1`] = `"a{grid-template-areas:\\"a b\\\\ \\"}c{d:e}"`;
+
 exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"--x\\"],\\":\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"],\\" \\",[\\"()\\"]]]]"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints prints {"environment":{"browsers":["chrome 130"]},"mode":"minify"} 1`] = `".a{--x:1px (/*!k*"`;
@@ -4562,6 +4603,14 @@ exports[`CSS syntax — fixtures css-syntax-minify-keeps-input-the-grammar-rejec
 
 exports[`CSS syntax — fixtures css-syntax-minify-keeps-input-the-grammar-rejects-trims-to-the-rejected-input-2 prints {"mode":"minify"} 1`] = `"a{color:red}"`;
 
+exports[`CSS syntax — fixtures css-syntax-minify-layer-reads-an-escaped-brace-as-part-of-the-name parses 1`] = `"[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a{b\\"]],[[\\"ident\\",\\"x\\"],[\\"{}\\",[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a{b\\"],\\".\\",[\\"ident\\",\\"c\\"]],[[\\"ident\\",\\"y\\"],[\\"{}\\",[\\"ident\\",\\"e\\"],\\":\\",[\\"ident\\",\\"f\\"]]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-layer-reads-an-escaped-brace-as-part-of-the-name prints {"mode":"minify"} 1`] = `"@layer a\\\\{b{x{c:d}}@layer a\\\\{b.c{y{e:f}}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-layer-reads-an-escaped-brace-as-part-of-the-name-2 parses 1`] = `"[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a{b\\"]],[[\\"ident\\",\\"x\\"],[\\"{}\\",[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a{b\\"]],[[\\"ident\\",\\"y\\"],[\\"{}\\",[\\"ident\\",\\"e\\"],\\":\\",[\\"ident\\",\\"f\\"]]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-layer-reads-an-escaped-brace-as-part-of-the-name-2 prints {"mode":"minify"} 1`] = `"@layer a\\\\{b{x{c:d}y{e:f}}"`;
+
 exports[`CSS syntax — fixtures css-syntax-minify-layered-and-positional-spellings-a-a-x-1 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a{\\"],\\",\\",\\".\\",[\\"ident\\",\\"a[\\"]],[[\\"ident\\",\\"x\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]]]"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-layered-and-positional-spellings-a-a-x-1 prints {"mode":"minify"} 1`] = `".a\\\\[,.a\\\\{{x:1}"`;
@@ -4997,6 +5046,14 @@ exports[`CSS syntax — fixtures css-syntax-minify-math-and-numbers-past-what-a-
 exports[`CSS syntax — fixtures css-syntax-minify-math-and-numbers-past-what-a-double-says-exactly-leaves-two-2 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"],\\"*\\",\\"*\\",[\\"number\\",\\"2\\",2,\\"integer\\"]]]]]"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-math-and-numbers-past-what-a-double-says-exactly-leaves-two-2 prints {"mode":"minify"} 1`] = `"a{width:calc(1px**2)}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-math-keeps-the-space-between-a-slash-and-a-star parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"dimension\\",\\"10\\",10,\\"integer\\",\\"px\\"],\\" \\",\\"/\\",\\" \\",\\"*\\",[\\"number\\",\\"2\\",2,\\"integer\\"]]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-math-keeps-the-space-between-a-slash-and-a-star prints {"mode":"minify"} 1`] = `"a{width:calc(10px/ *2)}b{c:d}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-math-keeps-the-space-between-a-slash-and-a-star-2 parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"()\\",[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"dimension\\",\\"10\\",10,\\"integer\\",\\"px\\"],\\" \\",\\"/\\",\\" \\",\\"*\\",[\\"number\\",\\"2\\",2,\\"integer\\"]]]],[[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-math-keeps-the-space-between-a-slash-and-a-star-2 prints {"mode":"minify"} 1`] = `"@media (width:calc(10px/ *2)){a{b:c}}"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-nesting-lowered-against-the-declarations-after-it-lowers-past parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"],\\";\\",\\".\\",[\\"ident\\",\\"b\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]],\\".\\",[\\"ident\\",\\"b\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]],[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"green\\"]]]]"`;
 
@@ -6050,6 +6107,30 @@ exports[`CSS syntax — fixtures css-syntax-minify-rewrite-escapes-writes-a-name
 exports[`CSS syntax — fixtures css-syntax-minify-rewrite-escapes-writes-a-name-the-shortest-way-wherever-its-9 prints {"mode":"minify","environment":{"browsers":["chrome 120"]}} 1`] = `"a{color:--red}"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-rewrite-escapes-writes-a-name-the-shortest-way-wherever-its-9 prints {"mode":"minify"} 1`] = `"a{color:--red}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a,\\"],\\" \\",\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma prints {"mode":"minify"} 1`] = `".a\\\\, .b{c:d}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-2 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a>\\"],\\" \\",\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-2 prints {"mode":"minify"} 1`] = `".a\\\\> .b{c:d}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-3 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c,\\"],\\" \\",[\\"ident\\",\\"d\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-3 prints {"mode":"minify"} 1`] = `"a{b:c\\\\, d}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-4 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\\\\\\\\\"],\\",\\",\\" \\",\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-keeps-the-space-after-an-escaped-comma-4 prints {"mode":"minify"} 1`] = `".a\\\\\\\\,.b{c:d}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-list-keeps-a-part-starting-with-an-at-sign-in-place parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"b\\"],\\",\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"screen\\"]],[[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-list-keeps-a-part-starting-with-an-at-sign-in-place prints {"mode":"minify"} 1`] = `"b,@media screen{a{color:red}}"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-list-keeps-a-part-starting-with-an-at-sign-in-place-2 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"z\\"],\\",\\",[\\"at-keyword\\",\\"import\\"],\\" \\",[\\"string\\",\\"x\\"],\\";\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]]]"`;
+
+exports[`CSS syntax — fixtures css-syntax-minify-selector-list-keeps-a-part-starting-with-an-at-sign-in-place-2 prints {"mode":"minify"} 1`] = `"z,@import \\"x\\";a{b:c}"`;
 
 exports[`CSS syntax — fixtures css-syntax-minify-the-declaration-a-lowered-shorthand-kills-keeps-an-earlier parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"text-decoration-line\\"],\\":\\",[\\"ident\\",\\"underline\\"],\\";\\",[\\"ident\\",\\"text-decoration\\"],\\":\\",[\\"ident\\",\\"underline\\"],\\" \\",[\\"ident\\",\\"dotted\\"]]]]"`;
 
