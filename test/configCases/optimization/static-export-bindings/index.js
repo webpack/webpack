@@ -88,9 +88,18 @@ it("should use getter for multi-level re-export chain", () => {
 	expect(reexportChain.chainedLiteral).toBe("literal");
 });
 
-it("should bind own const as value in mixed module", () => {
-	expectValueDescriptor(reexportMixed, "ownConst");
+it("should bind own const as getter when a re-export key sorts after it", () => {
+	// A value descriptor registers at the end of the module, after the re-export
+	// getters at the start, which would break the namespace's sorted key order
+	expectGetterDescriptor(reexportMixed, "ownConst");
 	expect(reexportMixed.ownConst).toBe("own");
+	expect(Object.keys(reexportMixed)).toEqual([
+		"ownConst",
+		"reConst",
+		"reCounter",
+		"reFn",
+		"reIncrement"
+	]);
 });
 
 it("should keep re-exported values in mixed module", () => {
