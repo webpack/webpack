@@ -1,1 +1,1 @@
-var a = 1; a.toString();
+var a = 1; a.toLocaleString();

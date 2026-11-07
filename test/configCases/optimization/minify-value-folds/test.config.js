@@ -11,7 +11,7 @@ module.exports = {
 		);
 		expect(code).toContain("{(void 0).a}");
 		expect(code).toContain("(void 0)()");
-		expect(code).toContain("(!1).toString(),throws(()=>new(!0))");
+		expect(code).toContain('"false",throws(()=>new(!0))');
 		expect(code).toContain(
 			'if(u)log.push("or");if(u)log.push("and");if(u)log.push("nullish")'
 		);

@@ -12089,6 +12089,7 @@ declare interface GetOptionsMethod<OptionsType> {
 }
 type GivenCompressOptions = Omit<Partial<any>, "globalDefs"> & {
 	globalDefs?: false | object;
+	passes?: number;
 } & TerserCompressAliases;
 
 /**
@@ -38498,6 +38499,22 @@ declare namespace exports {
 				};
 			}
 			export namespace printer {
+				export let laterPasses: (
+					options: JavascriptReadOptions &
+						Omit<
+							MinifyOptions,
+							"sourceType" | "format" | "output" | "sourceMap"
+						> & { mode?: string }
+				) =>
+					| undefined
+					| {
+							passes: number;
+							options: JavascriptReadOptions &
+								Omit<
+									MinifyOptions,
+									"sourceType" | "format" | "output" | "sourceMap"
+								> & { mode: "minify" };
+					  };
 				export let prepareMinify: (
 					text: string,
 					options: JavascriptProcessOptions

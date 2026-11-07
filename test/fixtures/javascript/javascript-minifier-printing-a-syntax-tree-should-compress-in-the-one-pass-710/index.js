@@ -1,0 +1,1 @@
+!function(){let r=(console.log(1),1);console.log(r,r)}()

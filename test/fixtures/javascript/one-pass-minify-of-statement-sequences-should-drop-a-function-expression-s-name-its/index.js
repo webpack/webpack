@@ -1,0 +1,1 @@
+console.log(function x(){var x=1;return x}(),function y(){const y=2;return y}(),function z(){function z(){}return typeof z}(),function p(p){return p}(5),function q(){{let q=1}return typeof q}(),typeof function r(a=r){var r;return a}())
