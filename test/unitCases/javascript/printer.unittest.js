@@ -5838,6 +5838,17 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should print an `if` holding an `if` with a branch alike as one `?:` of joined tests", () => {
+		// Branches unlike stay nested; an assignment test takes its parentheses.
+		const source =
+			'var l=[];function t(v){l.push(v);return v}function f(a,b){if(t(a)){if(t(b))l.push("c");else l.push("d")}else l.push("d");if(t(a))l.push("c");else if(t(b))l.push("c");else l.push("d");if(t(a)){if(t(b))l.push("c");else l.push("d")}else l.push("e");var x;if(t(a)){if(x=t(b))l.push("c");else l.push("d")}else l.push("d")}f(1,0);f(0,1);console.log(l.join())';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'var l=[];function t(v){return l.push(v),v}function f(a,b){t(a)&&t(b)?l.push("c"):l.push("d"),t(a)||t(b)?l.push("c"):l.push("d"),t(a)?t(b)?l.push("c"):l.push("d"):l.push("e"),t(a)&&t(b)?l.push("c"):l.push("d")}f(1,0),f(0,1),console.log(l.join());'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
