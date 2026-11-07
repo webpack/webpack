@@ -10,6 +10,8 @@
 @value impAuto, impSpan, impHero from "./lib.css";
 @value locAuto: auto;
 @value area as region-start from "./lib.css";
+@value areaAlias: area;
+@value autoAlias: impAuto;
 
 .use-area { grid-area: area }
 .use-area-lines { grid-column: area-start / area-end }
@@ -36,3 +38,7 @@
 
 /* `region-start-end` is the `-end` line of the imported `region-start`. */
 .use-alias-line { grid-row: region-start-end }
+
+/* A local alias of an import selects what the import does. */
+.use-local-alias { grid-area: areaAlias; grid-row: areaAlias-start }
+.use-local-alias-keyword { grid-area: autoAlias }

@@ -11,5 +11,7 @@ module.exports = [
 	/Conflicting CSS module export "missing": already declared as @value at line 8:0, redeclared as grid identifier/,
 	/Conflicting CSS module export "impHero": already declared as @value at line 10:0, redeclared as grid identifier/,
 	/Conflicting CSS module export "impAuto": already declared as @value at line 10:0, redeclared as grid identifier/,
-	/Conflicting CSS module export "impSpan": already declared as @value at line 10:0, redeclared as grid identifier/
+	/Conflicting CSS module export "impSpan": already declared as @value at line 10:0, redeclared as grid identifier/,
+	/Conflicting CSS module export "areaAlias": already declared as @value at line 13:0, redeclared as grid identifier/,
+	/Conflicting CSS module export "autoAlias": already declared as @value at line 14:0, redeclared as grid identifier/
 ];

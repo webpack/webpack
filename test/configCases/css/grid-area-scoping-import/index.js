@@ -75,3 +75,11 @@ it("should follow the longest imported prefix of a line name", () => {
 		`${lib.area}-end`
 	);
 });
+
+it("should resolve a local alias of an import as the import", () => {
+	expect(valueOf(styles["use-local-alias"], "grid-area")).toBe(lib.area);
+	expect(valueOf(styles["use-local-alias"], "grid-row")).toBe(
+		`${lib.area}-start`
+	);
+	expect(valueOf(styles["use-local-alias-keyword"], "grid-area")).toBe("auto");
+});
