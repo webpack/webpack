@@ -19,3 +19,11 @@ it("encodes the space and the percent sign of a file in its manifest url", () =>
 		"/static/sub dir/a b%41.js"
 	);
 });
+
+it("keeps the query of a file as written in its manifest url", async () => {
+	const { file } = await import(/* webpackChunkName: "a b%41" */ "./value");
+	expect(file).toBe("/static/asset dir/file.txt?v=%2F");
+	expect(manifest["./value.js"]).toContain(
+		"/static/asset%20dir/file.txt?v=%2F"
+	);
+});

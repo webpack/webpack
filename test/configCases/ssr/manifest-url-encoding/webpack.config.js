@@ -8,7 +8,11 @@ module.exports = {
 	target: "node",
 	output: {
 		publicPath: "/static/",
-		chunkFilename: "sub dir/[name].js"
+		chunkFilename: "sub dir/[name].js",
+		assetModuleFilename: "asset dir/[name][ext]?v=%2F"
+	},
+	module: {
+		rules: [{ test: /\.txt$/, type: "asset/resource" }]
 	},
 	optimization: {
 		minimize: false,
