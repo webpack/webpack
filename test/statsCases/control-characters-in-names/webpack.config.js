@@ -8,6 +8,8 @@ module.exports = {
 		assets: true,
 		chunks: true,
 		chunkOrigins: true,
+		chunkRelations: true,
+		ids: true,
 		modules: true,
 		reasons: true,
 		colors: true
