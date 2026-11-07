@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep implicit `-start` / `-end` grid line names paired with their scoped area.
+Pair scoped grid areas with their implicit `-start` / `-end` lines, imports included.

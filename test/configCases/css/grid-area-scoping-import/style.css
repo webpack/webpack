@@ -1,0 +1,21 @@
+/* Each name below selects an area or line `lib.css` declares, so it scopes
+   there; the implicit `-start` / `-end` pairing holds across the import. */
+@value area, line from "./lib.css";
+@value area-start as areaStart from "./lib.css";
+@value area as alias from "./lib.css";
+@value zone from "./reexport.css";
+
+.use-area { grid-area: area }
+.use-area-lines { grid-column: area-start / area-end }
+.use-imported-line { grid-column: areaStart }
+.use-line-area { grid-area: line }
+.use-line { grid-row: line-start }
+.use-alias { grid-area: alias; grid-row: alias-start / alias-end }
+.use-chain { grid-area: zone; grid-row: zone-start / zone-end }
+
+/* A lines-only `tail-end` still declares area `tail`; a name with no import
+   scopes here, and an import nothing declares stays as written. */
+@value tail, missing from "./lib.css";
+.use-tail { grid-area: tail }
+.use-local { grid-area: local; grid-row: local-start }
+.use-missing { grid-area: missing }
