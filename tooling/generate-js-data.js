@@ -806,6 +806,7 @@ const FOLDED_BUILT_INS = {
 		"parseFloat",
 		"parseInt"
 	],
+	"Boolean.prototype": ["toString", "valueOf"],
 	"Number.prototype": [
 		"toExponential",
 		"toFixed",
@@ -993,6 +994,7 @@ const UNFOLDED_BUILT_INS = {
 		"String.prototype.split"
 	],
 	"called as a conversion, which the printer folds by its global name": [
+		"Boolean.Boolean",
 		"Number.Number",
 		"String.String"
 	],
@@ -1067,7 +1069,7 @@ const collectBuiltInMembers = () => {
 	for (const key of Object.keys(builtins)) {
 		if (/^[a-z]/.test(key)) members.set(key, builtins[key].__compat);
 	}
-	for (const owner of ["Math", "Number", "String", "Array"]) {
+	for (const owner of ["Math", "Boolean", "Number", "String", "Array"]) {
 		for (const key of Object.keys(builtins[owner])) {
 			if (key === "__compat") continue;
 			const compat = builtins[owner][key].__compat;

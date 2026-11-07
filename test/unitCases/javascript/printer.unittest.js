@@ -331,7 +331,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"f(true, false); x = true.toString(); y = true ** b; z = b ** true; w = { a: false }; t = typeof true; new true; true`x`; v = a(true)(false)",
 				{},
-				"f(!0,!1),x=true.toString(),y=true**b,z=b**!0,w={a:!1},t=typeof!0,new(!0),true`x`,v=a(!0)(!1);"
+				"f(!0,!1),x=\"true\",y=true**b,z=b**!0,w={a:!1},t=typeof!0,new(!0),true`x`,v=a(!0)(!1);"
 			],
 			// `undefined` is `void 0` where it reads the global, not where it is bound or written.
 			[
@@ -677,6 +677,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["a=\"\"*(x=\"s\");b=\"\"-(x+=\"s\");function f(){var t=import(\"x\");return new t}console.log(function(){return void g()}())", { compress: {} }, "a=\"\"*(x=\"s\"),b=\"\"-(x+=\"s\");function f(){return new(import(\"x\"))}console.log(void g());"],
 			["a=[Infinity][0]/x;b=[Infinity][0]**x;c=-[Infinity][0];d=[Infinity][0]?.toFixed();e=x/[Infinity][0]", { compress: {} }, "a=[1/0][0]/x,b=[1/0][0]**x,c=-[1/0][0],d=[1/0][0]?.toFixed(),e=x/[1/0][0];"],
 			["a=``.length;b=`abc`[1];c=\"abc\"[3];d=\"a\"[1];e=+void 0;f=void 0*2;g=void 0+void 0;h=void 0|0;i=void 0<1;j=void 0==null;k=void f()+1", { compress: {} }, "a=0,b=\"b\",c=void 0,d=\"a\"[1],e=NaN,f=NaN,g=NaN,h=0,i=!1,j=null==null,k=void f()+1;"],
+			["a=false.toString();b=NaN.toString();c=(1/0).toString();d=Number(void 0);e=String.fromCharCode(void 0);f=[1,,,]+\"\";g=`${1n}`", { compress: {} }, "a=\"false\",b=\"NaN\",c=\"Infinity\",d=NaN,e=\"\\0\",f=\"1,,\",g=\"1\";"],
 			["var a=f();function k(){a;return g()}x=k();var b=f();function m(){b;return function(){}}m()()", { compress: { toplevel: true } }, "f();x=g();f();(function(){})();"],
 			["function f(){g();return 1}x=f();function k(){h();return{a:1}}y=k().a;function m(){q();return 2}a(),m(),b()", { compress: { toplevel: true } }, "x=(g(),1),y=(h(),{a:1}).a,a(),q(),b();"],
 			// One moved into `export default` stays a value, as a declaration would be set before the module runs.
@@ -2393,8 +2394,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["[]+0", '"0"'],
 			["[1,null,2]+\"\"", '"1,,2"'],
 			["[1,undefined,2]+\"\"", '"1,,2"'],
-			// A hole reads the prototypes at its index.
-			["[1,,2]+\"\"", '[1,,2]+""'],
+			// A hole joins as nothing, as a read past one folds to `undefined`.
+			["[1,,2]+\"\"", '"1,,2"'],
 			["[-0,true]+\"\"", '"0,true"'],
 			["\"\"+123n", '"123"'],
 			["1n+[]", '"1"'],
@@ -2503,7 +2504,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// On constants each answers its value; `Number(undefined)` answers no finite one.
 			[
 				'a=[Boolean(),Number(),Number(-123),Number(!1),Number(null),String("x"),String(1),Number(" 0x1f "),Number(void 0),Number({})]',
-				'a=[!1,0,-123,0,0,"x","1",31,Number(void 0),Number({})];'
+				'a=[!1,0,-123,0,0,"x","1",31,NaN,Number({})];'
 			],
 			// `Boolean(x)` is `!!x`, or `x` where that is a boolean already.
 			[
@@ -2965,7 +2966,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			minifyOnePass(source, { compress: {}, mangle: true, module: true }).code;
 		for (const [source, expected] of [
 			// A name printing as a number takes a `.` before a member's.
-			["var a = 1; a.toString();", "1..toString();"],
+			["var a = 1; a.toLocaleString();", "1..toLocaleString();"],
 			["var a = /1/; a.test(1);", "/1/.test(1);"],
 			// A folded `await` or `new` without arguments takes no parentheses.
 			[
@@ -3172,8 +3173,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		);
 		// A number a sign or point would join to what is around it is grouped.
 		expect(
-			print("g(V.toString(),-V,typeof V);", { global_defs: { V: -1 } })
-		).toBe('g((-1).toString(),1,"number");');
+			print("g(V.toLocaleString(),-V,typeof V);", { global_defs: { V: -1 } })
+		).toBe('g((-1).toLocaleString(),1,"number");');
 		expect(print("g(a/V);", { global_defs: { V: -0 } })).toBe("g(a/(-0));");
 		// `top_retain` keeps the top-level names it lists, a pattern or a test keeps.
 		const top = "var foo=1,bar=2;";
@@ -5613,10 +5614,10 @@ describe("one-pass minify of statement sequences", () => {
 	it("should print a binary expression folding to an infinity or `NaN` as `1/0`, `-1/0` or `NaN`", () => {
 		// A division needs the parentheses its place gave the expression; `**` binds tighter. `NaN` prints as the global's name, `0/0` only where `with`, `eval` or a binding may take it.
 		const source =
-			'var a=2;console.log(123456789/0,2/0,3/0*2,-1e300*1e10,1*"a","a"*2+1,a/(2/0),a-(-2/0),-(2/0),(2/0).toFixed(),2**2e3,a**(2/0),f()/0,a/(3/0*2),a-(-3/0*2),-(3/0*2),(3/0*2).toFixed(),a**(3/0*2))';
+			'var a=2;console.log(123456789/0,2/0,3/0*2,-1e300*1e10,1*"a","a"*2+1,a/(2/0),a-(-2/0),-(2/0),(2/0).toLocaleString(),2**2e3,a**(2/0),f()/0,a/(3/0*2),a-(-3/0*2),-(3/0*2),(3/0*2).toLocaleString(),a**(3/0*2))';
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
 		expect(code).toBe(
-			'var a=2;console.log(1/0,2/0,1/0,-1/0,NaN,NaN,a/(2/0),a- -2/0,-(2/0),(2/0).toFixed(),2**2e3,a**(2/0),f()/0,a/(1/0),a- -1/0,-(1/0),(1/0).toFixed(),a**(1/0));'
+			'var a=2;console.log(1/0,2/0,1/0,-1/0,NaN,NaN,a/(2/0),a- -2/0,-(2/0),(2/0).toLocaleString(),2**2e3,a**(2/0),f()/0,a/(1/0),a- -1/0,-(1/0),(1/0).toLocaleString(),a**(1/0));'
 		);
 		expect(runProgram(`function f(){return 1}${code}`)).toBe(
 			runProgram(`function f(){return 1}${source}`)
