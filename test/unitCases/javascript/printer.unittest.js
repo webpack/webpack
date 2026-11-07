@@ -5827,6 +5827,17 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should print an `if` calling one local name in both branches as one call", () => {
+		// A test running something or calls differing twice stay.
+		const source =
+			'function f(d,c){if(c){d(1,"a")}else{d(2,"a")}if(c)d(1);else d(2);if(c)g(1);else g(2);if(h())d(1);else d(2);if(c)d(1,1);else d(2,2)}function g(v){console.log("g",v)}function h(){return 0}f(function(v,w){console.log(v,w)},1)';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'function f(d,c){d(c?1:2,"a"),d(c?1:2),g(c?1:2),h()?d(1):d(2),c?d(1,1):d(2,2)}function g(v){console.log("g",v)}function h(){return 0}f(function(v,w){console.log(v,w)},1);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
