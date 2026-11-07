@@ -62,7 +62,7 @@ No `bind`, no `end`, no handles, no shared references. `release()` affects the s
 
 Coming from thread-loader or jest-worker: `threads.max` is their `workers` / `numWorkers`, `loaders.parallelJobs` is `workerParallelJobs`, and `loaders.poolTimeout` is `poolTimeout`. The facade has no `end()`: `release()` retires idle threads and leaves the pool usable, while `compiler.close()` is what ends it.
 
-`options` is reserved: it must be an object without fields today, and any field throws. When fields ship, they reuse the `jest-worker` or `thread-loader` name for the same purpose; pool-wide settings stay in `experiments.threads`.
+When `options` fields ship, they reuse the `jest-worker` or `thread-loader` name for the same purpose; pool-wide settings stay in `experiments.threads`.
 
 `compiler.worker` is a `Compiler` method:
 

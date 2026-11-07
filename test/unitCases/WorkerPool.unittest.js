@@ -22,6 +22,19 @@ const createPool = (options) =>
 		...options
 	});
 
+/**
+ * Waits until `condition` holds, so a slow runner does not fail a timeout test.
+ * @param {() => boolean} condition test
+ * @returns {Promise<void>} resolved once it holds
+ */
+const waitFor = async (condition) => {
+	for (let i = 0; i < 300; i++) {
+		if (condition()) return;
+		await new Promise((resolve) => setTimeout(resolve, 10));
+	}
+	throw new Error("condition not met");
+};
+
 const describeThreads = WorkerPool.isThreadingAvailable()
 	? describe
 	: describe.skip;
@@ -95,6 +108,24 @@ describe("WorkerPool", () => {
 			});
 			await pool.end();
 		});
+
+		it("wraps an inline clone failure like the remote path", async () => {
+			const WorkerJobCloneError = require("../../lib/errors/WorkerJobCloneError");
+			const pool = createPool({ max: 0 });
+
+			const argsError = await pool
+				.run(TARGET, "add", [() => {}, 1])
+				.catch((/** @type {unknown} */ error) => error);
+			expect(argsError).toBeInstanceOf(WorkerJobCloneError);
+
+			const resultError = await pool
+				.run(TARGET, "returnFunction", [])
+				.catch((/** @type {unknown} */ error) => error);
+			expect(resultError).not.toBeInstanceOf(WorkerJobCloneError);
+			expect(/** @type {{ message?: string }} */ (resultError).message).toMatch(
+				/clone/i
+			);
+		});
 	});
 
 	describe("compiler.worker", () => {
@@ -167,6 +198,22 @@ describe("WorkerPool", () => {
 				);
 			expect(await typed.run("add", 1, 2)).toBe(3);
 			await worker._pool.end();
+		});
+
+		it("rejects a relative path and accepts a file URL", async () => {
+			const { pathToFileURL } = require("url");
+			const webpack = require("../../lib/webpack");
+			const compiler = webpack({
+				entry: "data:text/javascript,1",
+				experiments: { threads: true }
+			});
+
+			expect(() => compiler.worker("relative/worker.js")).toThrow(
+				/must be absolute/
+			);
+			const byUrl = compiler.worker(pathToFileURL(TARGET));
+			expect(compiler.worker(TARGET)).toBe(byUrl);
+			await byUrl._pool.end();
 		});
 
 		it("does not create a pool after close when none was used", async () => {
@@ -295,10 +342,7 @@ describe("WorkerPool", () => {
 			expect(pool.stats.workers).toBe(2);
 			expect(pool.stats.idle).toBe(2);
 
-			await new Promise((resolve) => {
-				setTimeout(resolve, 100);
-			});
-			expect(pool.stats.workers).toBe(0);
+			await waitFor(() => pool.stats.workers === 0);
 
 			await pool.warmup([TARGET], 1);
 			expect(pool.stats.workers).toBe(1);
@@ -374,10 +418,7 @@ describe("WorkerPool", () => {
 			await pool.runJob(TARGET, "add", [1, 2], {
 				rpc: () => undefined
 			});
-			await new Promise((resolve) => {
-				setTimeout(resolve, 100);
-			});
-			expect(pool.stats.workers).toBe(0);
+			await waitFor(() => pool.stats.workers === 0);
 		});
 
 		it("waits for an inline call before ending", async () => {
@@ -401,6 +442,49 @@ describe("WorkerPool", () => {
 			);
 			expect(pool.stats.crashed).toBe(1);
 			expect(await pool.run(TARGET, "add", [1, 2])).toBe(3);
+		});
+
+		it("spawns up to max for concurrent loader jobs", async () => {
+			const pool = createThreadPool({ max: 4 });
+			const jobs = [];
+			for (let i = 0; i < 4; i++) {
+				jobs.push(
+					pool.runJob(TARGET, "info", [], { rpc: () => undefined })
+				);
+			}
+			const infos = await Promise.all(jobs);
+			const threadIds = new Set(
+				infos.map((/** @type {EXPECTED_ANY} */ info) => info.threadId)
+			);
+			expect(threadIds.size).toBe(4);
+			await pool.end();
+		});
+
+		it("treats a non-finite warmup count as the pool max", async () => {
+			const pool = createThreadPool({ max: 2 });
+			await pool.warmup([TARGET], NaN);
+			expect(pool.stats.workers).toBe(2);
+			await pool.end();
+		});
+
+		it("spawns a replacement while workers are exiting", async () => {
+			const pool = createThreadPool({ max: 1 });
+			await pool.warmup([TARGET], 1);
+			const releasing = pool.release();
+			await pool.warmup([TARGET], 1);
+			await releasing;
+			expect(pool.stats.workers).toBe(1);
+			await pool.end();
+		});
+
+		it("rejects queued calls when ending", async () => {
+			const pool = createThreadPool({ max: 1 });
+			const running = pool.run(TARGET, "sleep", [50]);
+			const queued = pool.run(TARGET, "add", [1, 2]);
+			const ending = pool.end();
+			await expect(queued).rejects.toThrow(/The worker pool is ending/);
+			await ending;
+			expect(await running).toBe(50);
 		});
 
 		it("ends gracefully or forcefully", async () => {

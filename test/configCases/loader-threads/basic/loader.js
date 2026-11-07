@@ -10,7 +10,17 @@ module.exports = function (source) {
 	}
 
 	const options = this.getOptions();
+	const { customValue } = /** @type {{ customValue?: number }} */ (
+		/** @type {unknown} */ (this)
+	);
 	const callback = this.async();
+
+	if (customValue !== 42) {
+		callback(
+			new Error("compiler.options.loader did not reach the worker loader")
+		);
+		return;
+	}
 	const context = this.context || this.rootContext;
 	const contextified = this.utils.contextify(context, this.resourcePath);
 	const absolutified = this.utils.absolutify(context, "./value.js");
@@ -93,7 +103,7 @@ module.exports = function (source) {
 								/** @type {string | Buffer} */ (loaded)
 							).includes("loaded")}:${imported}:${typeof contextified}:${absolutified.endsWith(
 								"value.js"
-							)}:${path}:${contentPath}:${digestPath}:${digestLengthPath}:${fullHashPath}:${moduleIdPath}:${digestFromBase64}`
+							)}:${path}:${contentPath}:${digestPath}:${digestLengthPath}:${fullHashPath}:${moduleIdPath}:${digestFromBase64}:${customValue}`
 						)};`
 					);
 				}, 10);
