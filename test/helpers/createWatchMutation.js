@@ -12,7 +12,7 @@ const vm = require("vm");
  * @typedef {object} WatchMutation
  * @property {string} name fault being introduced
  * @property {"graph" | "comparison"} detector expected failure
- * @property {"_rebuild" | "removePreRebuildConnections"} method method to replace on each watch compilation
+ * @property {"_checkNeedBuild" | "canReuseDependencies" | "removePreRebuildConnections"} method method to replace on each watch compilation
  * @property {string} before unique source fragment
  * @property {string} after replacement that calls recordMutation when the fault is reached
  */

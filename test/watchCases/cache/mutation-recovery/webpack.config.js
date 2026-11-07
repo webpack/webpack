@@ -18,9 +18,11 @@ module.exports = () => ({
 		createWatchMutation({
 			name: "missing error recovery",
 			detector: "comparison",
-			method: "_rebuild",
-			before: "if (this.errorModules.size > 0) {",
-			after: "if (this.errorModules.size > 0 && (recordMutation(), false)) {"
+			method: "canReuseDependencies",
+			before: "canReuseDependencies(module) {",
+			after:
+				"canReuseDependencies(module) {\n" +
+				"if (this.errorModules.has(module)) { recordMutation(); return true; }"
 		})
 	]
 });
