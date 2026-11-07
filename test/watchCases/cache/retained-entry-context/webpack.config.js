@@ -26,13 +26,19 @@ module.exports = [false, true].map((concatenateModules, index) => ({
 			compiler.hooks.make.tapAsync(
 				"RetainedEntryContext",
 				(compilation, callback) => {
+					const layer =
+						currentWatchStep.step === "3"
+							? "first"
+							: currentWatchStep.step === "4"
+								? "second"
+								: undefined;
 					compilation.addEntry(
 						path.join(
 							compiler.context,
 							currentWatchStep.step === "1" ? "b" : "a"
 						),
 						dependency,
-						options,
+						{ ...options, layer },
 						(error) => callback(error)
 					);
 				}
@@ -56,6 +62,9 @@ module.exports = [false, true].map((concatenateModules, index) => ({
 				expect(compilation.entries.get("main")).toHaveProperty("dependencies", [
 					dependency
 				]);
+				for (const module of compilation.modules) {
+					expect(module.layer).toBe(entries[0].layer);
+				}
 			});
 		}
 	]
