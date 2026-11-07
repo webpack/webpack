@@ -39,10 +39,10 @@ describe("WorkerPool", () => {
 				`${TARGET} has no export named missing`
 			);
 			await expect(pool.run(TARGET, "add", [() => {}, 1])).rejects.toThrow(
-				/could not be cloned/
+				/could not be cloned|can not be cloned/
 			);
 			await expect(pool.run(TARGET, "returnFunction", [])).rejects.toThrow(
-				/could not be cloned/
+				/could not be cloned|can not be cloned/
 			);
 
 			const error = /** @type {Error & { code?: string }} */ (
@@ -249,10 +249,10 @@ describe("WorkerPool", () => {
 				"not an error"
 			);
 			await expect(pool.run(TARGET, "returnFunction", [])).rejects.toThrow(
-				/could not be cloned/
+				/could not be cloned|can not be cloned/
 			);
 			await expect(pool.run(TARGET, "add", [() => {}, 1])).rejects.toThrow(
-				/could not be cloned/
+				/could not be cloned|can not be cloned/
 			);
 			expect(await pool.run(TARGET, "add", [2, 3])).toBe(5);
 		});
@@ -508,7 +508,7 @@ describe("WorkerPool", () => {
 			});
 			const response = await next();
 			expect(response).toMatchObject({ type: "response", id: 2, ok: false });
-			expect(response.error.message).toMatch(/could not be cloned/);
+			expect(response.error.message).toMatch(/could not be cloned|can not be cloned/);
 			expect(child._rpc.size).toBe(0);
 			port2.postMessage({ type: "close" });
 			await closed(port2);
