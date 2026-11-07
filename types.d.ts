@@ -5097,6 +5097,12 @@ declare interface Configuration {
 	)[];
 
 	/**
+	 * Reuse unaffected module graph state between watch compilations of the same compiler. Enabled by default, independently of `cache`.
+	 * @since 5.113.0
+	 */
+	incremental?: boolean | IncrementalOptions;
+
+	/**
 	 * Options for infrastructure level logging.
 	 */
 	infrastructureLogging?: InfrastructureLogging;
@@ -12489,6 +12495,11 @@ declare interface HandleModuleCreationOptions {
 	 * check the cycle dependencies of the created module
 	 */
 	checkCycle?: boolean;
+
+	/**
+	 * dependencies are persisted from the previous compilation (incremental re-factorize), not freshly minted seeds
+	 */
+	reusedDependencies?: boolean;
 }
 declare class Hash {
 	constructor();
@@ -14512,6 +14523,17 @@ declare interface ImportSettings {
 type ImportSource =
 	undefined | null | string | SimpleLiteral | RegExpLiteral | BigIntLiteral;
 type Imported = true | [string, string][];
+
+/**
+ * Options for reusing intermediate results between watch compilations.
+ * @since 5.113.0
+ */
+declare interface IncrementalOptions {
+	/**
+	 * Reuse the module graph between watch compilations. Defaults to true.
+	 */
+	buildModuleGraph?: boolean;
+}
 
 /**
  * a map made of sections, each a map of its own, or its JSON
@@ -36271,6 +36293,11 @@ declare interface WebpackOptionsNormalized {
 	 * Ignore specific warnings.
 	 */
 	ignoreWarnings?: ((warning: Error, compilation: Compilation) => boolean)[];
+
+	/**
+	 * Reuse unaffected module graph state between watch compilations of the same compiler. Enabled by default, independently of `cache`.
+	 */
+	incremental: IncrementalOptions;
 
 	/**
 	 * Options for infrastructure level logging.

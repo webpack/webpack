@@ -21,6 +21,8 @@ Consider updating `examples/` and running `yarn build:examples` after adding or 
 
 **`normalization.js`** canonicalizes the user's config shape (shorthand → full form); **`defaults.js`** fills values (often mode/target-dependent). Edit whichever matches.
 
+For module graph reuse between watch compilations, see [incremental rebuilds](incremental.md).
+
 ## Documentation keywords
 
 **Documentation keywords are written as JSDoc tags**, and the schema states what they say:
