@@ -393,6 +393,7 @@ describe("snapshots", () => {
 		    "webassemblyModuleFilename": "[hash].module.wasm",
 		    "workerChunkLoading": "import-scripts",
 		    "workerPublicPath": "",
+		    "workerPublicPathFunction": undefined,
 		    "workerWasmLoading": "fetch",
 		  },
 		  "parallelism": 100,
