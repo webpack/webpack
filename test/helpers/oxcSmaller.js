@@ -788,6 +788,8 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"deflate's header: the program is no longer raw, yet gzips 1 to 3 bytes bigger, as the Huffman codes deflate writes for a small program cost more or less with which characters it holds (an operand's side, `let` or `const`, `NaN` or `0/0`, a backtick or a quote); measured corpus-wide, no fixed spelling rule wins, each one making about as many programs bigger as smaller",
 		[
+			"terser compress: issue-597/beautify_off_1",
+			"terser compress: issue-597/beautify_on_1",
 			"terser compress: harmony/array_literal_with_spread_3b",
 			"oxc minifier: peephole/replace_known_methods.rs:1082",
 			"oxc minifier: peephole/inline_single_use_variable.rs:580",
