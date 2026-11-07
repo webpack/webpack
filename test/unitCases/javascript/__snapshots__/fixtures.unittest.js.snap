@@ -3320,6 +3320,21 @@ exports[`JavaScript syntax — fixtures javascript-minifier-printing-a-syntax-tr
 
 exports[`JavaScript syntax — fixtures javascript-minifier-printing-a-syntax-tree-should-keep-a-comment-before-a-value-5 prints {"mode":"minify"} 1`] = `"function h(c){if(c){return 1}else{return 2}}console.log(h(0),h(1));"`;
 
+exports[`JavaScript syntax — fixtures javascript-minifier-printing-a-syntax-tree-should-keep-a-comment-on-its-own-line parses 1`] = `"Program[0,90](body=[ExpressionStatement[0,4](expression=CallExpression[0,3](callee=Identifier[0,1](name=\\"f\\") arguments=[] optional=false)),ExpressionStatement[14,18](expression=CallExpression[14,17](callee=Identifier[14,15](name=\\"g\\") arguments=[] optional=false)),ExpressionStatement[28,32](expression=CallExpression[28,31](callee=Identifier[28,29](name=\\"h\\") arguments=[] optional=false)),BlockStatement[33,38](body=[EmptyStatement[35,36]()]),FunctionDeclaration[39,73](id=Identifier[48,49](name=\\"k\\") expression=false generator=false async=false params=[] body=BlockStatement[52,73](body=[ReturnStatement[63,71](argument=Literal[70,71](value=1 raw=\\"1\\"))])),ExpressionStatement[74,78](expression=CallExpression[74,77](callee=Identifier[74,75](name=\\"k\\") arguments=[] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — fixtures javascript-minifier-printing-a-syntax-tree-should-keep-a-comment-on-its-own-line prints {"mode":"beautify"} 1`] = `
+"f();
+g();
+h();
+{}
+function k() {
+return 1;
+}
+k();"
+`;
+
+exports[`JavaScript syntax — fixtures javascript-minifier-printing-a-syntax-tree-should-keep-a-comment-on-its-own-line prints {"mode":"minify"} 1`] = `"f();g();h();{}function k(){return 1}k();"`;
+
 exports[`JavaScript syntax — fixtures javascript-minifier-printing-a-syntax-tree-should-keep-a-let-read-before-its parses 1`] = `"Program[0,87](body=[FunctionDeclaration[0,79](id=Identifier[9,10](name=\\"f\\") expression=false generator=false async=false params=[] body=BlockStatement[12,79](body=[TryStatement[14,49](block=BlockStatement[18,36](body=[ExpressionStatement[20,34](expression=CallExpression[20,34](callee=Identifier[20,21](name=\\"g\\") arguments=[ArrowFunctionExpression[22,33](id=null expression=true generator=false async=false params=[] body=Identifier[28,33](name=\\"later\\"))] optional=false))]) handler=CatchClause[37,49](param=Identifier[44,45](name=\\"e\\") body=BlockStatement[47,49](body=[])) finalizer=null),VariableDeclaration[50,64](declarations=[VariableDeclarator[54,63](id=Identifier[54,59](name=\\"later\\") init=Literal[62,63](value=1 raw=\\"1\\"))] kind=\\"let\\"),ReturnStatement[65,77](argument=Identifier[72,77](name=\\"later\\"))])),ExpressionStatement[80,87](expression=CallExpression[80,87](callee=Identifier[80,82](name=\\"it\\") arguments=[CallExpression[83,86](callee=Identifier[83,84](name=\\"f\\") arguments=[] optional=false)] optional=false))] sourceType=\\"module\\")"`;
 
 exports[`JavaScript syntax — fixtures javascript-minifier-printing-a-syntax-tree-should-keep-a-let-read-before-its prints {"mode":"minify"} 1`] = `"function f(){try{g(()=>later)}catch(e){}let later=1;return later}it(f());"`;

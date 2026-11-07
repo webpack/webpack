@@ -35150,6 +35150,11 @@ declare interface TokenTable {
 	commentBreaks: (comment: number) => boolean;
 
 	/**
+	 * whether a line break comes between a block comment and the next token
+	 */
+	commentBreaksAfter: (comment: number) => boolean;
+
+	/**
 	 * records whether one does
 	 */
 	setCommentBreaks: (comment: number, broke: boolean) => void;
