@@ -1360,6 +1360,12 @@ export interface Experiments {
 	 */
 	syncWebAssembly?: boolean;
 	/**
+	 * Run CPU-heavy plugin work, such as minimization, on worker threads webpack keeps for the whole compiler.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	threads?: boolean | ThreadsOptions;
+	/**
 	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
 	 * @since 5.107.0
 	 * @experimental
@@ -1446,6 +1452,12 @@ export interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	syncWebAssembly?: boolean;
+	/**
+	 * Run CPU-heavy plugin work, such as minimization, on worker threads webpack keeps for the whole compiler.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	threads?: false | ThreadsOptions;
 	/**
 	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
 	 * @since 5.107.0
@@ -5382,6 +5394,12 @@ export interface RuleSetRule {
 	 */
 	test?: RuleSetConditionOrConditionsAbsolute;
 	/**
+	 * Run this rule's loader chain in a worker thread when `experiments.threads` is on. The supported loader APIs are the ones thread-loader supports; a loader using `emitFile` or a plugin-provided loader API must run on the main thread.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	threads?: boolean;
+	/**
 	 * Module type to use for the module.
 	 */
 	type?: string;
@@ -5966,6 +5984,38 @@ export type Target =
 	| /** @minItems 1 */ Array</** Specific environment, runtime, or syntax. */ NonEmptyString>
 	| false
 	| NonEmptyString;
+
+/**
+ * Options for running loaders on the worker threads.
+ */
+export interface ThreadsLoadersOptions {
+	/**
+	 * Number of loader jobs a thread runs at once. Defaults to `20`; the CPU part still runs one at a time.
+	 * @since 5.113.0
+	 */
+	parallelJobs?: PositiveNumber;
+	/**
+	 * Milliseconds an idle thread survives after a loader job. Defaults to `500`.
+	 * @since 5.113.0
+	 */
+	poolTimeout?: NonNegativeNumber;
+}
+
+/**
+ * Options for running CPU-heavy plugin work on the worker threads webpack keeps for a compiler.
+ */
+export interface ThreadsOptions {
+	/**
+	 * Options for running loaders on the worker threads.
+	 * @since 5.113.0
+	 */
+	loaders?: ThreadsLoadersOptions;
+	/**
+	 * Number of worker threads. Defaults to one less than the number of CPUs; `0` runs the work on the main thread.
+	 * @since 5.113.0
+	 */
+	max?: NonNegativeNumber;
+}
 
 /**
  * Use a Trusted Types policy to create urls for chunks.
