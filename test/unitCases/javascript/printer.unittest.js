@@ -3987,14 +3987,14 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 	it("should keep a comment before a value from breaking the line after `return` or `throw`", () => {
 		const all = { compress: {}, mangle: true, format: { comments: "all" } };
 		for (const [source, expected] of [
-			// An `if` printing as `return t?a:b` parenthesizes a test comments precede.
+			// An `if` printing as `return t?a:b` takes its test's comments before `return`.
 			[
 				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-a-comment-before-a-value"),
-				"function h(e){return(//c\ne)?1:2}console.log(h(0),h(1));"
+				"function h(e){//c\nreturn e?1:2}console.log(h(0),h(1));"
 			],
 			[
 				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-a-comment-before-a-value-2"),
-				"function h(c){return(\n/*c\n*/\nc.x)?c:2}console.log(h({x:1}).x,h({}));"
+				"function h(c){\n/*c\n*/\nreturn c.x?c:2}console.log(h({x:1}).x,h({}));"
 			],
 			// A `new` printing as a call opens with its callee, whose comments go first.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-a-comment-before-a-value-3"), '//c\nthrow Error("x");'],
