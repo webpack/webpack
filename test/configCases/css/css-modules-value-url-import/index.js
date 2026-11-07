@@ -1,6 +1,7 @@
 import * as style from "./style.module.css";
 import * as importedViaValue from "./imported-via-value.module.css";
 import * as urlValue from "./url-value.module.css";
+import * as unusedUrlValue from "./unused-url-value.module.css";
 
 const fs = __non_webpack_require__("fs");
 const path = __non_webpack_require__("path");
@@ -92,4 +93,18 @@ it("should resolve a @value that is a url() where it is used", () => {
 	);
 	// Nothing of the removed `@value` rules is left before the first rule.
 	expect(rules).not.toMatch(/^\s*(?:url\()?[0-9a-f]+\.png\)?\s*$/m);
+});
+
+it("should drop an unused @value url() without touching the next rule", () => {
+	const cssContent = fs.readFileSync(
+		path.join(__dirname, "bundle0.css"),
+		"utf-8"
+	);
+	const start = cssContent.indexOf("unused-url-value.module.css");
+	const ruleStart = cssContent.indexOf(`.${unusedUrlValue.a} {`, start);
+	expect(start).not.toBe(-1);
+	expect(ruleStart).not.toBe(-1);
+	// The removed `@value` leaves nothing between the module header and `.a`.
+	expect(cssContent.slice(start, ruleStart)).not.toContain("url(");
+	expect(cssContent.slice(start, ruleStart)).not.toContain(".png");
 });
