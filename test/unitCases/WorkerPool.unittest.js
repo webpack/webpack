@@ -330,6 +330,16 @@ describe("WorkerPool", () => {
 			expect(pool.stats.workers).toBe(0);
 		});
 
+		it("falls back for a non-finite parallelJobs", async () => {
+			const pool = createThreadPool({ max: 1, loaderParallelJobs: 1 });
+			const result = pool.runJob(TARGET, "rpcAdd", [2, 3], {
+				parallelJobs: NaN,
+				rpc: (method, args) => pool.run(TARGET, method, args)
+			});
+
+			await expect(result).resolves.toBe(5);
+		});
+
 		it("keeps the pool usable after releasing during a call", async () => {
 			const pool = createThreadPool({ max: 1 });
 			const running = pool.run(TARGET, "sleep", [50]);

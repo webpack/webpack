@@ -65,8 +65,8 @@ thread-loader is a pitch loader: it borrows `loader-runner`'s pitch/normal order
 
 - `this.emitFile`
 - loader APIs injected by main-thread plugins
-- a custom `inputFileSystem` / memfs
-- a `readResource` hook for the module's initial resource (the worker reads it from disk; source maps use the main-thread hook)
+- a custom `inputFileSystem` / memfs (the module falls back to the main thread)
+- a `readResource` hook for the module's initial resource (the module falls back to the main thread; source maps use the main-thread hook)
 - functions or symbols inside loader options
 - the full `this._compilation` / `this._compiler`
 - `compilation.hooks.assetPath` rewrites, and path placeholders the snapshot does not carry; `this._compilation.getPath` covers the common name/hash/contenthash forms

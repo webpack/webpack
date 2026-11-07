@@ -58,7 +58,7 @@ if (worker !== undefined) {
 | `worker.warmup(workers?)`     | Spawns up to `workers` threads and preloads this module; defaults to the pool's `max`. Existing threads are preloaded too. |
 | `worker.release()`            | Terminates idle threads in the shared pool. Calls in flight finish, then their threads retire; the pool stays usable.      |
 
-No `bind`, no `end`, no handles, no shared references.
+No `bind`, no `end`, no handles, no shared references. `release()` affects the shared pool, including threads another consumer warmed up.
 
 `compiler.worker` is a `Compiler` method:
 
