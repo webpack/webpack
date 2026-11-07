@@ -1,0 +1,15 @@
+.w {
+	color: blue;
+}
+
+.x {
+	composes: w;
+}
+
+.y {
+	composes: x;
+}
+
+.z {
+	composes: y;
+}

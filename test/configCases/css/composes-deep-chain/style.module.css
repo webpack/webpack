@@ -1,0 +1,19 @@
+.d {
+	color: red;
+}
+
+.c {
+	composes: d;
+}
+
+.b {
+	composes: c;
+}
+
+.a {
+	composes: b;
+}
+
+.e {
+	composes: z from "./other.module.css";
+}
