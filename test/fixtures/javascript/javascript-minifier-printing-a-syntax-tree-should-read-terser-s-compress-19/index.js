@@ -1,1 +1,1 @@
-g(V.toString(),-V,typeof V);
+g(V.toLocaleString(),-V,typeof V);

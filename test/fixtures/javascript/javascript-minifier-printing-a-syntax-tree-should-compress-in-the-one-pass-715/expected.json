@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "[k()])===1?x():y();\n      -> )[k()]===1?x():y();",
+		"why": "an object a call printed as its function's value opens the statement with prints in parentheses around the member read, which a second pass, reading the object alone, puts around the object, the same size"
+	}
+]

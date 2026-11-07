@@ -177,7 +177,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/issue_1595_3",
 			"terser compress: reduce_vars/issue_1670_2",
 			"terser compress: reduce_vars/issue_1670_4",
-			"terser compress: reduce_vars/issue_1670_5",
 			"terser compress: reduce_vars/issue_1814_2",
 			"terser compress: reduce_vars/issue_2450_4",
 			"terser compress: reduce_vars/issue_2799_1",
@@ -191,7 +190,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/toplevel_on_loops_1",
 			"terser compress: reduce_vars/toplevel_on_loops_2",
 			"terser compress: reduce_vars/unsafe_evaluate_object_1",
-			"terser compress: reduce_vars/var_assign_1",
 			"terser compress: reduce_vars/var_assign_2",
 			"terser compress: reduce_vars/var_assign_3",
 			"terser compress: reduce_vars/var_assign_5",
@@ -300,7 +298,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/issue_1670_6",
 			"terser compress: reduce_vars/redefine_farg_3",
 			"terser compress: reduce_vars/side_effects_assign",
-			"terser compress: reduce_vars/immutable",
 			"terser compress: reduce_vars/issue_1814_1",
 			"terser compress: reduce_vars/obj_arg_1",
 			"terser compress: reduce_vars/func_arg_1",
@@ -543,7 +540,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: sequences/lift_sequences_2",
 			"terser compress: sequences/lift_sequences_5",
 			"terser compress: sequences/lift_sequences_6",
-			"swc minifier: fixture/issues/12617/input.js",
 			"swc minifier: fixture/issues/10630/input.js",
 			"swc minifier: fixture/issues/10807/input.js",
 			"swc minifier: fixture/issues/12190/input.js",
@@ -576,7 +572,6 @@ const SWC_SMALLER_BY_REASON = [
 		"deflate's header: the program is no longer raw, yet gzips 1 to 3 bytes bigger, as the Huffman codes deflate writes for a small program cost more or less with which characters it holds (an operand's side, `let` or `const`, `NaN` or `0/0`); measured corpus-wide, no fixed spelling rule wins, each one making about as many programs bigger as smaller",
 		[
 			"terser compress: issue-368/collapse",
-			"terser compress: issue-597/NaN_and_Infinity_must_have_parens",
 			"swc minifier: fixture/issues/9238/input.js",
 			"swc minifier: fixture/issues/9460/strict-mode/input.js",
 			"swc minifier: fixture/issues/stylis/1/input.js",
@@ -625,7 +620,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: drop-unused/drop_fargs",
 			"terser compress: drop-unused/iife",
 			"terser compress: drop-unused/issue_1656",
-			"terser compress: drop-unused/issue_1709",
 			"terser compress: drop-unused/issue_2136_2",
 			"terser compress: drop-unused/issue_2136_3",
 			"terser compress: drop-unused/issue_t161_top_retain_1",
@@ -1057,8 +1051,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: harmony/object_spread_unsafe",
 			"terser compress: harmony/array_literal_with_spread_3a",
 			"terser compress: harmony/issue_2794_3",
-			"terser compress: harmony/issue_2794_5",
-			"terser compress: harmony/inline_arrow_using_arguments"
+			"terser compress: harmony/issue_2794_5"
 		]
 	],
 	[
@@ -1151,7 +1144,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/9650/input.js",
 			"swc minifier: fixture/issues/10041/input.js",
 			"swc minifier: fixture/issues/12545/fn_rest_loop/input.js",
-			"swc minifier: fixture/issues/2257/full/input.js",
 			"swc minifier: fixture/issues/4386/2/input.js",
 			"swc minifier: fixture/issues/9504/input.js",
 			"swc minifier: fixture/issues/moment/1/input.js",
