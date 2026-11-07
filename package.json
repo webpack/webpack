@@ -152,7 +152,7 @@
     "minimizer-webpack-plugin": "^5.14.0",
     "schema-utils": "^4.8.2",
     "tapable": "^2.3.0",
-    "watchpack": "^2.6.3",
+    "watchpack": "^2.6.4",
     "webpack-sources": "^3.7.0"
   },
   "devDependencies": {
