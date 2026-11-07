@@ -236,7 +236,7 @@ describe("WorkerPool", () => {
 			});
 
 			expect(() => compiler.worker(TARGET)).toThrow(/after compiler\.close/);
-			expect(WorkerPool.getWorkerPool(compiler)).toBeUndefined();
+			expect(compiler._getWorkerPool()).toBeUndefined();
 		});
 
 		it("does not end the root pool when a child compiler closes", async () => {
