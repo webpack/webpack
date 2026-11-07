@@ -4,3 +4,10 @@ it("should be able to set the public path globally", function() {
 	expect(__webpack_public_path__).toBe("ok");
 	__webpack_public_path__ = org;
 });
+
+it("should be able to set the public path function globally", function() {
+	var org = __webpack_public_path_function__;
+	require("./file");
+	expect(__webpack_public_path_function__).toBe("ok");
+	__webpack_public_path_function__ = org;
+});
