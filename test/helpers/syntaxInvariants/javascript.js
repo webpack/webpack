@@ -5,7 +5,7 @@
 
 "use strict";
 
-const { tokenizer: acornTokenizer } = require("acorn");
+const { parse: acornParse } = require("acorn");
 const { parse: webpackParse } = require("../../../lib/javascript/syntax-parser");
 const { wantedRespelling } = require("../../../tooling/compare-tools-harness");
 const {
@@ -477,14 +477,18 @@ const printerFor = (minifySync, options, module) => {
  * @returns {{ label: string, value: string, start: number, end: number }[] | null} its tokens, or null where acorn refuses it
  */
 const tokensOf = (code, module) => {
+	/** @type {import("acorn").Token[]} */
+	const tokens = [];
 	try {
-		return [
-			...acornTokenizer(code, {
-				ecmaVersion: "latest",
-				sourceType: module ? "module" : "script",
-				allowHashBang: true
-			})
-		].map((token) => ({
+		// Read off a parse: the tokenizer alone takes a regexp after `yield`
+		// or a class for a division.
+		acornParse(code, {
+			ecmaVersion: "latest",
+			sourceType: module ? "module" : "script",
+			allowHashBang: true,
+			onToken: tokens
+		});
+		return tokens.map((token) => ({
 			label: token.type.label,
 			// acorn's types leave out the `value` every token carries.
 			value: String(
