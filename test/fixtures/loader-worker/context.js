@@ -3,16 +3,21 @@
 /** @type {import("../../../").LoaderDefinition} */
 module.exports = function () {
 	const callback = this.async();
+	const options = this.getOptions();
 	const hash = this.utils.createHash("md4");
 	hash.update("x");
 	const digest = hash.digest("hex");
+	const defaultHash = this.utils.createHash();
+	defaultHash.update("y");
 	const contextified = this.utils.contextify(this.context, this.resourcePath);
 	const absolutified = this.utils.absolutify(this.context, "./value.js");
-	const path = /** @type {import("../../../").Compilation} */ (
+	const compilation = /** @type {import("../../../").Compilation} */ (
 		this._compilation
-	).getPath("[name]", {
+	);
+	const path = compilation.getPath("[name]", {
 		chunk: { name: "chunk", id: "chunk", hash: "hash" }
 	});
+	const emptyPath = compilation.getPath("[name]");
 	this.addBuildDependency(__filename);
 	let emitFileError;
 	try {
@@ -33,7 +38,10 @@ module.exports = function () {
 							path,
 							emitFileError.includes("not supported"),
 							String(resolved).endsWith("value.js"),
-							String(imported)
+							String(imported),
+							emptyPath.length,
+							defaultHash.digest("hex").length,
+							Object.keys(options).length
 						].join(":")
 					);
 				},

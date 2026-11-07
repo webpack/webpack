@@ -152,11 +152,19 @@ describe("loader.worker", () => {
 			calls.filter(([method]) => method === "logger").map(([, args]) => args)
 		).toEqual([
 			["loader-thread-test", "info", ["worker info"], 0],
-			["loader-thread-test/child", "warn", ["worker child"], 0]
+			["loader-thread-test/child", "warn", ["worker child"], 0],
+			["loader-thread-test", "log", ["cached"], 0],
+			["webpack", "info", ["default logger"], 0],
+			["webpack/function-child", "warn", ["worker fn child"], 0]
 		]);
 		expect(
 			calls.filter(([method]) => method === "getLogger").map(([, args]) => args[0])
-		).toEqual(["loader-thread-test", "loader-thread-test/child"]);
+		).toEqual([
+			"loader-thread-test",
+			"loader-thread-test/child",
+			"webpack",
+			"webpack/function-child"
+		]);
 	});
 
 	it("forwards warnings and errors with the loader index", async () => {
@@ -187,7 +195,7 @@ describe("loader.worker", () => {
 		const { context } = createContext({
 			resolve: () => RESOURCE,
 			getResolve: () => RESOURCE,
-			loadModule: () => ["loaded", undefined],
+			loadModule: () => [new Uint8Array(Buffer.from("loaded")), undefined],
 			importModule: () => "imported"
 		});
 		const result = await runLoaders(
@@ -198,6 +206,49 @@ describe("loader.worker", () => {
 		);
 
 		expect(firstValue(result)).toBe("true:true:loaded:imported:42");
+	});
+
+	it("rejects resolve, loadModule and importModule bridges", async () => {
+		const { context } = createContext({
+			resolve: () => {
+				throw new Error("resolve failed");
+			},
+			importModule: (args) => {
+				if (String(args[0]).includes("missing")) {
+					throw new Error("import failed");
+				}
+				return "imported";
+			},
+			loadModule: () => {
+				throw new Error("load failed");
+			},
+			getResolve: () => {
+				throw new Error("resolve failed");
+			}
+		});
+		const result = await runLoaders(
+			context,
+			createData({
+				loaders: [
+					{ loader: path.join(FIXTURE, "rpc-errors.js"), options: undefined }
+				]
+			})
+		);
+
+		expect(firstValue(result)).toBe("imported:resolve failed");
+	});
+
+	it("rejects when the initial resource cannot be read", async () => {
+		const { context } = createContext();
+		await expect(
+			runLoaders(
+				context,
+				createData({
+					resource: path.join(FIXTURE, "nope.js"),
+					resourcePath: path.join(FIXTURE, "nope.js")
+				})
+			)
+		).rejects.toThrow(/ENOENT/);
 	});
 
 	it("rejects with the worker prefix when a loader throws", async () => {
@@ -242,7 +293,7 @@ describe("loader.worker", () => {
 			})
 		);
 
-		expect(firstValue(result)).toBe("32:string:true:chunk:true:true:value");
+		expect(firstValue(result)).toBe("32:string:true:chunk:true:true:value:6:32:0");
 		expect(result.buildDependencies).toContain(
 			path.join(FIXTURE, "context.js")
 		);
@@ -287,6 +338,24 @@ describe("loader.worker", () => {
 		if (result.result === undefined) throw new Error("no loader result");
 		const map = /** @type {{ version?: number }} */ (result.result[1]);
 		expect(map.version).toBe(3);
+
+		const { context: stringBridge } = createContext({
+			readResource: () => sourceMap
+		});
+		const stringResult = await runLoaders(
+			stringBridge,
+			createData({
+				resource: MAP_RESOURCE,
+				resourcePath: MAP_RESOURCE,
+				extractSourceMap: true,
+				useSourceMap: true
+			})
+		);
+		if (stringResult.result === undefined) throw new Error("no loader result");
+		const stringMap = /** @type {{ version?: number }} */ (
+			stringResult.result[1]
+		);
+		expect(stringMap.version).toBe(3);
 	});
 
 	it("warns with the main-thread prefix when a source map cannot be read", async () => {

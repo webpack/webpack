@@ -109,9 +109,39 @@ describe("WorkerPool", () => {
 			await pool.end();
 		});
 
+		it("runs rpc jobs and non-Error throws inline", async () => {
+			const pool = createPool({ max: 0 });
+			expect(
+				await pool.runJob(TARGET, "rpcAdd", [2, 3], {
+					rpc: (method, args) =>
+						method === "add"
+							? /** @type {number} */ (args[0]) +
+								/** @type {number} */ (args[1])
+							: undefined
+				})
+			).toBe(5);
+			expect(
+				await pool.runJob(TARGET, "rpcNoWaitCloneFail", [], {
+					rpc: () => undefined
+				})
+			).toBe("sent");
+			const stringError = await pool
+				.run(TARGET, "throwString", [])
+				.catch((/** @type {ThrownValue} */ error) => error);
+			expect(/** @type {Error} */ (stringError).message).toMatch(/not an error/);
+			const plainError = await pool
+				.run(TARGET, "failWithFunction", [])
+				.catch((/** @type {ThrownValue} */ error) => error);
+			expect(
+				/** @type {Error & { code?: string }} */ (plainError).code
+			).toBe("E_BOOM");
+			await pool.end();
+		});
+
 		it("defaults missing arguments to none", async () => {
 			const pool = createPool({ max: 0 });
 			expect(await pool.run(TARGET, "echo")).toEqual([]);
+			expect(await pool.runJob(TARGET, "echo")).toEqual([]);
 			await pool.end();
 		});
 
@@ -173,6 +203,7 @@ describe("WorkerPool", () => {
 			const defaults = workerFor(true);
 			expect(defaults).toBeInstanceOf(Worker);
 			expect(defaults._pool.options.max).toBe(Math.max(cpus - 1, 0));
+			await defaults.warmup(1);
 			await defaults._pool.end();
 
 			const two = workerFor({ max: 2.5 });
@@ -234,6 +265,9 @@ describe("WorkerPool", () => {
 					compiler.close((err) => (err ? reject(err) : resolve(undefined)));
 				})
 			]);
+			await new Promise((resolve, reject) => {
+				compiler.close((err) => (err ? reject(err) : resolve(undefined)));
+			});
 			expect(shutdowns).toBe(1);
 		});
 
@@ -481,6 +515,29 @@ describe("WorkerPool", () => {
 			expect(await pool.run(TARGET, "add", [1, 2])).toBe(3);
 		});
 
+		it("rejects a missing export on a thread", async () => {
+			const pool = createThreadPool({ max: 1 });
+			await expect(pool.run(TARGET, "missing", [])).rejects.toThrow(
+				/has no export named missing/
+			);
+			await pool.end();
+		});
+
+		it("queues a loader job behind a plain call on the last thread", async () => {
+			const pool = createThreadPool({ max: 1 });
+			const plain = pool.run(TARGET, "sleep", [50]);
+			const loader = pool.runJob(TARGET, "rpcAdd", [2, 3], {
+				rpc: (method, args) =>
+					method === "add"
+						? /** @type {number} */ (args[0]) +
+							/** @type {number} */ (args[1])
+						: undefined
+			});
+			expect(await plain).toBe(50);
+			expect(await loader).toBe(5);
+			await pool.end();
+		});
+
 		it("spreads concurrent loader jobs over the pool", async () => {
 			const pool = createThreadPool({ max: 4 });
 			const jobs = [];
@@ -519,6 +576,23 @@ describe("WorkerPool", () => {
 			}
 			await inline.end();
 			await remote.end();
+		});
+
+		it("rejects warmup while ending or when a module cannot load", async () => {
+			const pool = createThreadPool({ max: 1 });
+			const ending = pool.end();
+			await expect(pool.warmup([TARGET])).rejects.toThrow(
+				/The worker pool is ending/
+			);
+			await ending;
+
+			const failing = createThreadPool({ max: 1 });
+			await expect(
+				failing.warmup([
+					path.join(__dirname, "../fixtures/worker-pool/missing.js")
+				])
+			).rejects.toThrow(/Cannot find module/);
+			await failing.end();
 		});
 
 		it("treats a non-finite warmup count as the pool max", async () => {
