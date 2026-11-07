@@ -5827,6 +5827,23 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should parenthesize the side a known left side leaves where it opens a statement with a function or object", () => {
+		const source = fixture("javascript", "one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			"var x;(function(){console.log(1)}).call();({f(){console.log(2)}}).f();x=function(){return 4}.call(),console.log(x);"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+		// An `if` printing its test as a statement wraps it whole.
+		expect(
+			minifyOnePass(fixture("javascript", "one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left-3"), { compress: {} }).code
+		).toBe("(function(){console.log(3)}());");
+		// A parenthesized one prints its own parentheses only.
+		expect(
+			minifyOnePass(fixture("javascript", "one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left-2"), { compress: {} }).code
+		).toBe("(function(){}).call();({}).y();");
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
