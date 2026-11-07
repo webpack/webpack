@@ -41,7 +41,7 @@ thread-loader is a pitch loader: it borrows `loader-runner`'s pitch/normal order
 
 ## Worker side
 
-`LoaderWorker.js` runs `loader-runner` with a context equivalent to thread-loader's:
+`loader.worker.js` runs `loader-runner` with a context equivalent to thread-loader's:
 
 - `this.async()` / `this.callback()`
 - `this.getOptions(schema)`
@@ -126,7 +126,7 @@ While a loader job runs, the worker may send `rpc` messages:
 | File                             | Holds                                            |
 | -------------------------------- | ------------------------------------------------ |
 | `lib/loaders/loaderThreadJob.js` | main-thread dispatch and RPC bridge              |
-| `lib/loaders/LoaderWorker.js`    | `loader-runner` + the worker-side loader context |
+| `lib/loaders/loader.worker.js`   | `loader-runner` + the worker-side loader context |
 | `lib/worker/WorkerChild.js`      | RPC context and job dispatch                     |
 | `lib/worker/WorkerPool.js`       | loader jobs beside plain calls                   |
 | `lib/module/NormalModule.js`     | rule flag, `_doBuild` dispatch, cache key        |

@@ -1,14 +1,14 @@
 "use strict";
 
 const path = require("path");
-const { runLoaders } = require("../../lib/loaders/LoaderWorker");
+const { runLoaders } = require("../../lib/loaders/loader.worker");
 
 const FIXTURE = path.resolve(__dirname, "../fixtures/loader-worker");
 const RESOURCE = path.join(FIXTURE, "value.js");
 const MAP_RESOURCE = path.join(FIXTURE, "with-map.js");
 
-/** @typedef {import("../../lib/loaders/LoaderWorker").LoaderWorkerData} LoaderWorkerData */
-/** @typedef {import("../../lib/loaders/LoaderWorker").LoaderContext} LoaderContext */
+/** @typedef {import("../../lib/loaders/loader.worker").LoaderWorkerData} LoaderWorkerData */
+/** @typedef {import("../../lib/loaders/loader.worker").LoaderContext} LoaderContext */
 
 /**
  * @param {Partial<LoaderWorkerData>=} overrides data overrides
@@ -91,7 +91,7 @@ const firstCall = (calls, method) => {
 	return call === undefined ? undefined : call[1];
 };
 
-describe("LoaderWorker", () => {
+describe("loader.worker", () => {
 	it("runs a loader chain and applies compiler.options.loader", async () => {
 		const { context } = createContext();
 		const result = await runLoaders(
