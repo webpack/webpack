@@ -51,12 +51,12 @@ if (worker !== undefined) {
 }
 ```
 
-| Member                        | Behavior                                                                                                      |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `compiler.worker(workerPath)` | Absolute path or `file:` URL, required. Returns the facade, or `undefined` when `experiments.threads` is off. |
-| `worker.run(method, ...args)` | One call.                                                                                                     |
-| `worker.warmup(workers?)`     | Spawns up to `workers` threads and preloads this module; defaults to the pool's `max`.                        |
-| `worker.release()`            | Terminates idle threads. Calls in flight finish, then their threads retire; the pool stays usable.            |
+| Member                        | Behavior                                                                                                                   |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `compiler.worker(workerPath)` | Absolute path or `file:` URL, required. Returns the facade, or `undefined` when `experiments.threads` is off.              |
+| `worker.run(method, ...args)` | One call.                                                                                                                  |
+| `worker.warmup(workers?)`     | Spawns up to `workers` threads and preloads this module; defaults to the pool's `max`. Existing threads are preloaded too. |
+| `worker.release()`            | Terminates idle threads in the shared pool. Calls in flight finish, then their threads retire; the pool stays usable.      |
 
 No `bind`, no `end`, no handles, no shared references.
 
@@ -95,7 +95,7 @@ Ordering rules:
 
 ## Scheduling
 
-- One FIFO queue. `_dispatch` runs after every enqueue, settle and exit.
+- One FIFO queue. `_dispatch` runs after every enqueue, settle, preload completion and exit.
 - Each thread runs one plain call at a time, or up to `loaders.parallelJobs` loader jobs.
 - Among idle threads, the pool takes the last from its idle list (LIFO). If none can take the call and fewer than `max` threads live, it spawns one.
 - A queued plain call keeps the head of the queue: when every thread is busy, later loader jobs wait even if a thread still has loader capacity. This is head-of-line blocking; one FIFO queue trades loader throughput for strict call order.
@@ -106,9 +106,11 @@ Ordering rules:
 ## Lifecycle
 
 - Spawn lazily from dispatch or `warmup`.
-- An idle thread is released with `unref()` at once, so an idle pool never keeps the process alive, and starts an `idleTimeout` timer (itself released with `unref()`). When it fires and the thread is still idle, the thread is terminated.
+- An idle thread is released with `unref()` at once, so an idle pool never keeps the process alive, and starts an `idleTimeout` timer (itself released with `unref()`). A pending preload keeps the thread referenced and delays that timer.
+- When it fires and the thread is still idle, the thread is terminated.
 - Posting a call clears the timer and `ref()`s the thread.
-- `release()` terminates idle threads; a busy thread or one with a pending preload is retired once it settles.
+- `release()` terminates idle threads and resolves after their threads exited; a busy thread or one with a pending preload is retired once it settles.
+- `end()` closes a thread only when it has no calls and no preloads; a pending preload finishes or is rejected by the deadline.
 - `end()` is idempotent:
   - sets the ending flag and rejects queued calls;
   - `ref()`s every thread and closes idle ones;

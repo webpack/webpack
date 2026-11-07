@@ -30,9 +30,9 @@ module.exports = {
 ```
 
 - `experiments.threads` must be on; otherwise the rule flag is ignored and the chain runs on the main thread.
-- `threads: true` on any matching rule runs the module's whole loader chain in a worker.
+- `threads: true` on a matching rule runs the module's whole loader chain in a worker; a later matching rule can override it with `threads: false`.
 - `max` is shared with `compiler.worker`.
-- `loaders.parallelJobs` is how many loader jobs one thread may run at once; the CPU part still runs one at a time.
+- `loaders.parallelJobs` is how many loader jobs one thread may run at once (minimum `1`); the CPU part still runs one at a time.
 - `loaders.poolTimeout` is how long an idle thread survives after a loader job.
 
 ## Why the whole chain
@@ -72,7 +72,7 @@ thread-loader is a pitch loader: it borrows `loader-runner`'s pitch/normal order
 - `compilation.hooks.assetPath` rewrites, and path placeholders the snapshot does not carry; `this._compilation.getPath` covers the common name/hash/contenthash forms
 - `this._module`
 
-`this.emitFile` throws a clear error. Options that cannot be structured-cloned make the module fall back to the main thread before any loader runs.
+`this.emitFile` throws a clear error. If the job itself cannot be structured-cloned, the module falls back to the main thread before any loader starts; a loader result that cannot be cloned fails the build instead of running the chain twice.
 
 ## Main thread
 
@@ -102,6 +102,7 @@ While a loader job runs, the worker may send `rpc` messages:
 | `getResolve`   | `loaderContext.getResolve`   |
 | `loadModule`   | `loaderContext.loadModule`   |
 | `importModule` | `loaderContext.importModule` |
+| `readResource` | `hooks.readResource`         |
 | `emitWarning`  | `loaderContext.emitWarning`  |
 | `emitError`    | `loaderContext.emitError`    |
 | `getLogger`    | `loaderContext.getLogger`    |

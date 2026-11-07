@@ -4658,6 +4658,8 @@ declare class Compiler {
 
 	/**
 	 * Returns a worker bound to `workerPath`, or `undefined` when `experiments.threads` is off. The pool behind it is shared by the compiler and ended on close.
+	 * @since 5.113.0
+	 * @experimental
 	 */
 	worker(workerPath: string | URL): undefined | Worker;
 
@@ -36561,6 +36563,8 @@ declare interface WithOptions {
 
 /**
  * A module path bound to the compiler's worker pool. Calls run on a thread when available, inline otherwise.
+ * @since 5.113.0
+ * @experimental
  */
 declare abstract class Worker {
 	/**
@@ -36574,7 +36578,7 @@ declare abstract class Worker {
 	warmup(workers?: number): Promise<void>;
 
 	/**
-	 * Releases idle threads. Calls in flight finish; the pool stays usable.
+	 * Releases the shared pool's idle threads. Calls in flight finish; the pool stays usable.
 	 */
 	release(): Promise<void>;
 }

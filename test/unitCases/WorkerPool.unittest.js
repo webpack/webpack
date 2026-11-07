@@ -69,6 +69,22 @@ describe("WorkerPool", () => {
 			const fn = () => 1;
 			expect(await pool.run(TARGET, "echo", [fn])).toEqual([fn]);
 		});
+
+		it("falls back for non-finite options", async () => {
+			const pool = new WorkerPool({
+				max: NaN,
+				idleTimeout: Infinity,
+				loaderIdleTimeout: NaN,
+				loaderParallelJobs: NaN
+			});
+			expect(pool.options).toMatchObject({
+				max: 0,
+				idleTimeout: 30000,
+				loaderIdleTimeout: 500,
+				loaderParallelJobs: 20
+			});
+			await pool.end();
+		});
 	});
 
 	describe("compiler.worker", () => {
@@ -221,9 +237,11 @@ describe("WorkerPool", () => {
 			);
 			expect(error.message).toBe("boom");
 			expect(error.code).toBe("E_BOOM");
-			await expect(pool.run(TARGET, "failWithFunction", [])).rejects.toThrow(
-				"boom"
+			const partial = /** @type {Error & { code?: string }} */ (
+				await pool.run(TARGET, "failWithFunction", []).catch((err) => err)
 			);
+			expect(partial.message).toBe("boom");
+			expect(partial.code).toBe("E_BOOM");
 			await expect(pool.run(TARGET, "throwString", [])).rejects.toThrow(
 				"not an error"
 			);
@@ -274,10 +292,33 @@ describe("WorkerPool", () => {
 			const pool = createThreadPool({ max: 1, idleTimeout: 5000 });
 			const preloading = pool.warmup([SLOW], 1);
 			await pool.release();
+			expect(pool.stats.workers).toBe(0);
 			await preloading;
-			await new Promise((resolve) => {
-				setTimeout(resolve, 50);
+		});
+
+		it("runs a queued call while a loader job waits on the main thread", async () => {
+			const pool = createThreadPool({ max: 1, loaderParallelJobs: 1 });
+			const result = pool.runJob(TARGET, "rpcAdd", [2, 3], {
+				parallelJobs: 1,
+				rpc: (method, args) => pool.run(TARGET, method, args)
 			});
+
+			await expect(result).resolves.toBe(5);
+		});
+
+		it("dispatches a call queued while warming up", async () => {
+			const pool = createThreadPool({ max: 1 });
+			const warming = pool.warmup([SLOW], 1);
+			const result = pool.run(TARGET, "add", [1, 2]);
+			expect(await result).toBe(3);
+			await warming;
+		});
+
+		it("waits for a preload before ending", async () => {
+			const pool = createThreadPool({ max: 1 });
+			const preloading = pool.warmup([SLOW], 1);
+			await pool.end();
+			await expect(preloading).resolves.toBeUndefined();
 			expect(pool.stats.workers).toBe(0);
 		});
 

@@ -20,6 +20,7 @@ module.exports.fail = () => {
 
 module.exports.failWithFunction = () => {
 	const error = new Error("boom");
+	error.code = "E_BOOM";
 	error.fn = () => {};
 	throw error;
 };
