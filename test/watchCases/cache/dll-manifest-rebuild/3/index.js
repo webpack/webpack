@@ -8,11 +8,11 @@ const probe = JSON.parse(
 	)
 );
 
-it("should rebuild DelegatedModule when only the DLL manifest buildMeta changes", () => {
+it("should rebuild DelegatedModule when the DLL manifest changes", () => {
 	expect(value).toBe("dll-default");
 	expect(added).toBe("dll-added");
 });
 
-it("should build DelegatedModule for the changed buildMeta", () => {
+it("should build DelegatedModule for the changed manifest metadata", () => {
 	expect(probe).toEqual({ built: 1, reused: 0 });
 });
