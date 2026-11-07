@@ -25,6 +25,8 @@ const treeText = (value) => {
 	const fields = [];
 	for (const key of Object.keys(node)) {
 		if (["type", "start", "end", "loc", "range"].includes(key)) continue;
+		// A regexp's value is null where this Node.js can't build it; `regex` says it.
+		if (key === "value" && node.regex !== undefined) continue;
 		fields.push(`${key}=${treeText(node[key])}`);
 	}
 	return `${node.type}[${node.start},${node.end}](${fields.join(" ")})`;
