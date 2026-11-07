@@ -207,9 +207,10 @@ const _relative = (origin, start, end) => `[${start - origin},${end - origin})`;
  * @param {(visit: (node: SpanNode) => void) => void} options.walk hands every node over, each after its parent
  * @param {boolean} options.contains whether a node's range must sit inside its parent's
  * @param {boolean} options.siblings whether two siblings' ranges may not overlap
+ * @param {((start: number, end: number) => boolean)=} options.shared whether two siblings may both read this range, which one piece of source built them from
  * @returns {Report[]} what the ranges broke
  */
-const spans = ({ length, walk, contains, siblings }) => {
+const spans = ({ length, walk, contains, siblings, shared }) => {
 	/** @type {Report[]} */
 	const reports = [];
 	/**
@@ -239,7 +240,13 @@ const spans = ({ length, walk, contains, siblings }) => {
 				`${_relative(parent.start, start, end)} not inside ${_relative(parent.start, parent.start, parent.end)}`
 			);
 		}
-		if (placed && siblings && after !== -1 && start < after) {
+		if (
+			placed &&
+			siblings &&
+			after !== -1 &&
+			start < after &&
+			(shared === undefined || !shared(start, Math.min(after, end)))
+		) {
 			report(
 				`overlaps an earlier sibling (${what})`,
 				`${_relative(start, start, end)} starts ${after - start} before that sibling ended`

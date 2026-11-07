@@ -436,10 +436,35 @@ describe("XmlSyntax — parsing", () => {
 			NodeType.Text
 		]);
 		const x = /** @type {MatElement} */ (root.children[1]);
-		expect(x).toMatchObject({ tagName: "x", start: 65, end: 70 });
+		expect(x).toMatchObject({ tagName: "x", start: 66, end: 69 });
 		expect(decodeXmlAttribute(x.attributes[0].value)).toBe("1");
 		expect(root.children[0]).toMatchObject({ data: "a(" });
 		expect(root.children[2]).toMatchObject({ data: ")b" });
+	});
+
+	it("should report what an entity expands to at its reference past folded CRLFs", () => {
+		const source = fixture(
+			"xml",
+			"xml-syntax-parsing-reports-what-an-entity-expands-to-at-its-reference"
+		);
+		const root = /** @type {MatElement} */ (parseXml(source).children[1]);
+		const elements = root.children.filter(
+			(node) => node.type === NodeType.Element
+		);
+		const body = source.indexOf("<r>");
+		const first = source.indexOf("&e;", body);
+		const nested = source.indexOf("&w;", body);
+		const last = source.lastIndexOf("&e;");
+		expect(elements).toMatchObject([
+			{ tagName: "x", start: first, end: first + 3 },
+			{ tagName: "x", start: nested, end: nested + 3 },
+			{ tagName: "x", start: last, end: last + 3 }
+		]);
+		expect(root.children[0]).toMatchObject({
+			data: "a\nb\n",
+			start: source.indexOf("a\r\n"),
+			end: first
+		});
 	});
 
 	it("should keep the rest of the document after an entity ending inside a tag", () => {

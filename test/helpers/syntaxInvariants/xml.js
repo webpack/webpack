@@ -455,9 +455,14 @@ const idempotenceRepro = (minify, minified, at) => {
  */
 const xmlInnerRanges = (nodePath) => {
 	if (nodePath.type() !== NodeType.Element) return undefined;
-	const start = nodePath.start();
 	/** @type {[string, number, number][]} */
-	const inner = [["opening tag", start, nodePath.endOf(Part.startTag)]];
+	const inner = [
+		[
+			"opening tag",
+			nodePath.startOf(Part.startTag),
+			nodePath.endOf(Part.startTag)
+		]
+	];
 	for (const attribute of _attributeList(nodePath.node)) {
 		if (attribute.nameStart === -1) continue;
 		inner.push(["attribute name", attribute.nameStart, attribute.nameEnd]);
@@ -466,10 +471,29 @@ const xmlInnerRanges = (nodePath) => {
 	return inner;
 };
 
+const ENTITY_REFERENCE_STICKY = /&[^#&;\s][^&;\s]*;/y;
+
+/**
+ * @param {string} xml a document
+ * @param {number} start where a range starts
+ * @param {number} end where it ends
+ * @returns {boolean} whether one entity reference holds the whole range
+ */
+const insideReference = (xml, start, end) => {
+	const at = xml.lastIndexOf("&", start);
+	if (at === -1) return false;
+	ENTITY_REFERENCE_STICKY.lastIndex = at;
+	return (
+		ENTITY_REFERENCE_STICKY.test(xml) &&
+		ENTITY_REFERENCE_STICKY.lastIndex >= end
+	);
+};
+
 /**
  * Hold the parser's ranges to what they claim about the document: XML owes all
  * of it — nesting is the grammar, so a node sits inside its parent and after
- * its earlier siblings.
+ * its earlier siblings. Every node one entity reference expands to sits at that
+ * reference, so siblings may share that range and nothing else.
  * @param {string} xml a document
  * @returns {Report[]} what the ranges broke
  */
@@ -478,6 +502,7 @@ const xmlSpans = (xml) =>
 		length: xml.length,
 		contains: true,
 		siblings: true,
+		shared: (start, end) => insideReference(xml, start, end),
 		walk: pathSpanWalk({
 			length: xml.length,
 			run: (enter, exit) => {
@@ -565,9 +590,9 @@ const runDigest = (runs, at, origin) => {
 };
 
 // Where a slice is read back: inside an element, after the document's own
-// DOCTYPE, so what its internal subset declares still resolves.
+// DOCTYPE, so what its internal subset declares still resolves. Nothing follows
+// it, so a slice the input ended inside ends there as the document did.
 const SLICE_WRAPPER_OPEN = "<_>";
-const SLICE_WRAPPER_CLOSE = "</_>";
 
 /**
  * Hold each node's own source to the node it came from: the bytes between its
@@ -609,9 +634,7 @@ const xmlSlices = (xml) => {
 			said,
 			reparse: () => {
 				const prefix = `${doctype}${SLICE_WRAPPER_OPEN}`;
-				const again = xmlNodeRuns(
-					`${prefix}${text}${SLICE_WRAPPER_CLOSE}`
-				).runs;
+				const again = xmlNodeRuns(`${prefix}${text}`).runs;
 				const want = again.findIndex(
 					(one) =>
 						one.what === node.what &&
