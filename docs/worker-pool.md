@@ -1,6 +1,6 @@
 # Worker pool
 
-`lib/util/worker/` runs CPU-heavy plugin work on `worker_threads`. One pool per compiler root owns the threads, and `compiler.worker(workerPath)` binds a module to the pool. A thread is not tied to one module or one call.
+`lib/worker/` runs CPU-heavy plugin work on `worker_threads`. One pool per compiler root owns the threads, and `compiler.worker(workerPath)` binds a module to the pool. A thread is not tied to one module or one call.
 
 This file is the spec. When code and spec disagree, fix one of them in the same commit.
 

@@ -123,12 +123,13 @@ While a loader job runs, the worker may send `rpc` messages:
 
 ## Files
 
-| File                              | Holds                                            |
-| --------------------------------- | ------------------------------------------------ |
-| `lib/util/worker/LoaderWorker.js` | `loader-runner` + the worker-side loader context |
-| `lib/util/worker/WorkerChild.js`  | RPC context and job dispatch                     |
-| `lib/util/worker/WorkerPool.js`   | loader jobs beside plain calls                   |
-| `lib/module/NormalModule.js`      | rule flag, `_doBuild` dispatch, cache key        |
+| File                             | Holds                                            |
+| -------------------------------- | ------------------------------------------------ |
+| `lib/loaders/loaderThreadJob.js` | main-thread dispatch and RPC bridge              |
+| `lib/loaders/LoaderWorker.js`    | `loader-runner` + the worker-side loader context |
+| `lib/worker/WorkerChild.js`      | RPC context and job dispatch                     |
+| `lib/worker/WorkerPool.js`       | loader jobs beside plain calls                   |
+| `lib/module/NormalModule.js`     | rule flag, `_doBuild` dispatch, cache key        |
 
 ## Tests
 

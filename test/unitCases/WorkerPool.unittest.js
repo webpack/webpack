@@ -1,14 +1,14 @@
 "use strict";
 
 const path = require("path");
-const Worker = require("../../lib/util/worker/Worker");
-const WorkerPool = require("../../lib/util/worker/WorkerPool");
+const Worker = require("../../lib/worker/Worker");
+const WorkerPool = require("../../lib/worker/WorkerPool");
 
 const TARGET = path.resolve(__dirname, "../fixtures/worker-pool/worker.js");
 const BROKEN = path.resolve(__dirname, "../fixtures/worker-pool/broken.js");
 const SLOW = path.resolve(__dirname, "../fixtures/worker-pool/slow.js");
 
-/** @typedef {import("../../lib/util/worker/WorkerPool").WorkerPoolOptions} WorkerPoolOptions */
+/** @typedef {import("../../lib/worker/WorkerPool").WorkerPoolOptions} WorkerPoolOptions */
 
 /**
  * @param {Partial<WorkerPoolOptions>=} options overrides
@@ -116,7 +116,7 @@ describe("WorkerPool", () => {
 
 			/**
 			 * @param {import("../../declarations/WebpackOptions").Experiments["threads"]} threads options
-			 * @returns {import("../../lib/util/worker/Worker") | undefined} the facade
+			 * @returns {import("../../lib/worker/Worker") | undefined} the facade
 			 */
 			const workerFor = (threads) => {
 				const compiler = webpack({
@@ -126,20 +126,20 @@ describe("WorkerPool", () => {
 				return compiler.worker(TARGET);
 			};
 
-			const defaults = /** @type {import("../../lib/util/worker/Worker")} */ (
+			const defaults = /** @type {import("../../lib/worker/Worker")} */ (
 				workerFor(true)
 			);
 			expect(defaults).toBeInstanceOf(Worker);
 			expect(defaults._pool.options.max).toBe(Math.max(cpus - 1, 0));
 			await defaults._pool.end();
 
-			const two = /** @type {import("../../lib/util/worker/Worker")} */ (
+			const two = /** @type {import("../../lib/worker/Worker")} */ (
 				workerFor({ max: 2.5 })
 			);
 			expect(two._pool.options.max).toBe(2);
 			await two._pool.end();
 
-			const inline = /** @type {import("../../lib/util/worker/Worker")} */ (
+			const inline = /** @type {import("../../lib/worker/Worker")} */ (
 				workerFor({ max: 0 })
 			);
 			expect(await inline.run("info")).toEqual({
@@ -169,7 +169,7 @@ describe("WorkerPool", () => {
 				entry: "data:text/javascript,1",
 				experiments: { threads: true }
 			});
-			const worker = /** @type {import("../../lib/util/worker/Worker")} */ (
+			const worker = /** @type {import("../../lib/worker/Worker")} */ (
 				compiler.worker(TARGET)
 			);
 			const compilation = compiler.newCompilation(compiler.newCompilationParams());
@@ -197,7 +197,7 @@ describe("WorkerPool", () => {
 				entry: "data:text/javascript,1",
 				experiments: { threads: true }
 			});
-			const worker = /** @type {import("../../lib/util/worker/Worker")} */ (
+			const worker = /** @type {import("../../lib/worker/Worker")} */ (
 				compiler.worker(TARGET)
 			);
 
@@ -407,7 +407,7 @@ describe("WorkerPool", () => {
 		 */
 		const createChild = () => {
 			const { MessageChannel } = require("worker_threads");
-			const WorkerChild = require("../../lib/util/worker/WorkerChild");
+			const WorkerChild = require("../../lib/worker/WorkerChild");
 			const { port1, port2 } = new MessageChannel();
 			/** @type {EXPECTED_ANY[]} */
 			const received = [];
