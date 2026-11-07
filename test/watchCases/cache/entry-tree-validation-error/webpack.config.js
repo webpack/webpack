@@ -8,7 +8,8 @@ module.exports = {
 	cache: { type: "memory" },
 	bail: true,
 	module: {
-		rules: [{ test: /barrel\.js$/, sideEffects: false }]
+		unsafeCache: true,
+		rules: [{ test: /(?:barrel|inner)\.js$/, sideEffects: false }]
 	},
 	optimization: {
 		providedExports: true,
