@@ -115,12 +115,12 @@ describe("WorkerPool", () => {
 
 			const argsError = await pool
 				.run(TARGET, "add", [() => {}, 1])
-				.catch((/** @type {unknown} */ error) => error);
+				.catch((/** @type {ThrownValue} */ error) => error);
 			expect(argsError).toBeInstanceOf(WorkerJobCloneError);
 
 			const resultError = await pool
 				.run(TARGET, "returnFunction", [])
-				.catch((/** @type {unknown} */ error) => error);
+				.catch((/** @type {ThrownValue} */ error) => error);
 			expect(resultError).not.toBeInstanceOf(WorkerJobCloneError);
 			expect(/** @type {{ message?: string }} */ (resultError).message).toMatch(
 				/clone/i
