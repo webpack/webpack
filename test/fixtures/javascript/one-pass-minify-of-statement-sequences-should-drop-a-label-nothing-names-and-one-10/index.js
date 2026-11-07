@@ -1,0 +1,1 @@
+function f(){L:"use strict";return this}console.log(typeof f())

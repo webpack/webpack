@@ -1,0 +1,1 @@
+(a(),b)**c;(a(),b[c])+d;(a(),b=1)+d;(a(),b)?.c+d;(a(),undefined)**d;y=(a(),b)+c;if(x)(a(),b)+c;else d()

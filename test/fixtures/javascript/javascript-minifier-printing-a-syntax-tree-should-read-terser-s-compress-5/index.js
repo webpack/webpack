@@ -1,0 +1,1 @@
+console.log(1);console.warn(2);g();

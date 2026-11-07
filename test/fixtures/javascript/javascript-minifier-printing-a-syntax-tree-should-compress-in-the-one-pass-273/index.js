@@ -1,0 +1,1 @@
+function f(a){if(a)return;switch(a){case 1:g()}}

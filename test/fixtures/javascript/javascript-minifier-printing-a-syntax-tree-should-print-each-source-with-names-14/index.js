@@ -1,0 +1,1 @@
+let x = `a${b}c${`d${e}`}`; tag`x\u{41}${y}\n`; new (a.b().c)(); new (a().b); (function(){})(); (()=>{})(); !function(){}();

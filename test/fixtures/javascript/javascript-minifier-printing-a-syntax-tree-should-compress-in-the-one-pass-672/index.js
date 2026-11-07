@@ -1,0 +1,1 @@
+Object.assign(Math,o);function q(a=Number){}var s=String;x=[Math.abs(-1),Number.isNaN(1),"a".concat("b")]

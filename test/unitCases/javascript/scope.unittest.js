@@ -1,5 +1,7 @@
 "use strict";
 
+const { fixture } = require("../../helpers/fixture");
+
 /*
 	MIT License http://www.opensource.org/licenses/mit-license.php
 */
@@ -204,7 +206,7 @@ const freeNames = (analysis) =>
 describe("ScopeAnalyzer", () => {
 	describe("the scope tree the analyser always builds", () => {
 		it("is a module scope under an empty global scope", () => {
-			const { globalScope, moduleScope, scopes, ast } = analyze("var a;");
+			const { globalScope, moduleScope, scopes, ast } = analyze(fixture("javascript", "scope-analyzer-the-scope-tree-the-analyser-always-builds-is-a-module-scope-under"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
 			expect(globalScope.variables).toHaveLength(0);
@@ -223,11 +225,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/arguments.test.js
 	describe("arguments", () => {
 		it("arguments are correctly materialized", () => {
-			const { scopes } = analyze(`
-				(function () {
-					arguments;
-				}());
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-arguments-arguments-are-correctly-materialized"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 
@@ -242,13 +240,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/catch-scope.test.js
 	describe("catch", () => {
 		it("creates scope", () => {
-			const { scopes } = analyze(`
-				(function () {
-					try {
-					} catch (e) {
-					}
-				}());
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-catch-creates-scope"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -272,14 +264,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("param can be a pattern", () => {
-			const { scopes } = analyze(`
-				(function () {
-					const default_id = 0;
-					try {
-					} catch ({ message, id = default_id, args: [arg1, arg2] }) {
-					}
-				}());
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-catch-param-can-be-a-pattern"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -307,13 +292,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-arrow-function-expression.test.js
 	describe("ES6 arrow function expression", () => {
 		it("materialize scope for arrow function expression", () => {
-			const { scopes } = analyze(`
-				var arrow = () => {
-					let i = 0;
-					var j = 20;
-					console.log(i);
-				}
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-arrow-function-expression-materialize-scope-for-arrow"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 			expect(varNames(scopes[1])).toEqual(["arrow"]);
@@ -327,7 +306,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("generate bindings for parameters", () => {
-			const { scopes } = analyze("var arrow = (a, b, c, d) => {}");
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-arrow-function-expression-generate-bindings-for-parameters"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 
@@ -338,7 +317,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("works with no body", () => {
-			const { scopes } = analyze("var arrow = a => a;");
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-arrow-function-expression-works-with-no-body"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 
@@ -353,12 +332,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-block-scope.test.js
 	describe("ES6 block scope", () => {
 		it("let is materialized in ES6 block scope", () => {
-			const { scopes } = analyze(`
-				{
-					let i = 20;
-					i;
-				}
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-block-scope-let-is-materialized-in-es6-block-scope"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "block"]);
 			expect(scopes[1].variables).toHaveLength(0);
@@ -370,13 +344,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("function declaration is materialized in ES6 block scope", () => {
-			const { scopes } = analyze(`
-				{
-					function test() {
-					}
-					test();
-				}
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-block-scope-function-declaration-is-materialized-in-es6-block"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -392,14 +360,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("let is not hoistable#1", () => {
-			const { scopes } = analyze(`
-				var i = 42; (1)
-				{
-					i;  // (2) ReferenceError at runtime.
-					let i = 20;  // (2)
-					i;  // (2)
-				}
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-block-scope-let-is-not-hoistable-1"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "block"]);
 
@@ -418,23 +379,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("let is not hoistable#2", () => {
-			const { scopes } = analyze(`
-				(function () {
-					var i = 42; // (1)
-					i;  // (1)
-					{
-						i;  // (3)
-						{
-							i;  // (2)
-							let i = 20;  // (2)
-							i;  // (2)
-						}
-						let i = 30;  // (3)
-						i;  // (3)
-					}
-					i;  // (1)
-				}());
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-block-scope-let-is-not-hoistable-2"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -473,16 +418,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-catch.test.js
 	describe("ES6 catch", () => {
 		it("takes binding pattern", () => {
-			const { scopes } = analyze(`
-				try {
-				} catch ({ a, b, c, d }) {
-					let e = 20;
-					a;
-					b;
-					c;
-					d;
-				}
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-catch-takes-binding-pattern"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -507,13 +443,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-class.test.js
 	describe("ES6 class", () => {
 		it("declaration name creates class scope", () => {
-			const { scopes } = analyze(`
-				class Derived extends Base {
-					constructor() {
-					}
-				}
-				new Derived();
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-declaration-name-creates-class-scope"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -541,12 +471,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("expression name creates class scope#1", () => {
-			const { scopes } = analyze(`
-				(class Derived extends Base {
-					constructor() {
-					}
-				});
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-expression-name-creates-class-scope-1"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -565,12 +490,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("expression name creates class scope#2", () => {
-			const { scopes } = analyze(`
-				(class extends Base {
-					constructor() {
-					}
-				});
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-expression-name-creates-class-scope-2"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -588,18 +508,7 @@ describe("ScopeAnalyzer", () => {
 
 		// cspell:ignore yuyushiki
 		it("computed property key may refer variables", () => {
-			const { scopes } = analyze(`
-				(function () {
-					var yuyushiki = 42;
-					(class {
-						[yuyushiki]() {
-						}
-
-						[yuyushiki + 40]() {
-						}
-					});
-				}());
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-computed-property-key-may-refer-variables"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -627,7 +536,7 @@ describe("ScopeAnalyzer", () => {
 
 		// https://github.com/eslint/eslint-scope/issues/59
 		it("class heritage may refer class name in class expressions #1", () => {
-			const { scopes } = analyze("const A = class A extends A {}");
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-class-heritage-may-refer-class-name-in-class"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "class"]);
 
@@ -654,10 +563,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class heritage may refer class name in class expressions #2", () => {
-			const { scopes } = analyze(`
-				let foo;
-				(class C extends (foo = C, class {}) {});
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-class-heritage-may-refer-class-name-in-class-2"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -688,11 +594,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class heritage may refer class name in class declarations", () => {
-			const { scopes } = analyze(`
-				let foo;
-				class C extends (foo = C, class {}) {}
-				new C();
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-class-heritage-may-refer-class-name-in-class-3"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -725,7 +627,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("inner scopes in the class heritage of a class expression are nested in the class scope", () => {
-			const { scopes } = analyze("(class extends function () {} {})");
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-inner-scopes-in-the-class-heritage-of-a-class"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -738,7 +640,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("inner scopes in the class heritage of a class declaration are nested in the class scope", () => {
-			const { scopes } = analyze("class C extends function () {} {}");
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-inner-scopes-in-the-class-heritage-of-a-class-2"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -751,14 +653,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("regression #49", () => {
-			const { scopes } = analyze(`
-				class Shoe {
-					constructor() {
-						//Shoe.x = true;
-					}
-				}
-				let shoe = new Shoe();
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-regression-49"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -1033,11 +928,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-destructuring-assignments.test.js
 	describe("ES6 destructuring assignments", () => {
 		it("pattern in var in ForInStatement", () => {
-			const analysis = analyze(`
-				(function () {
-					for (var [a, b, c] in array);
-				}());
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-pattern-in-var-in-for-in-statement"));
 			const { scopes } = analysis;
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
@@ -1054,11 +945,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("pattern in let in ForInStatement", () => {
-			const analysis = analyze(`
-				(function () {
-					for (let [a, b, c] in array);
-				}());
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-pattern-in-let-in-for-in-statement"));
 			const { scopes } = analysis;
 
 			expect(scopeTypes(scopes)).toEqual([
@@ -1080,11 +967,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("pattern with default values in var in ForInStatement", () => {
-			const analysis = analyze(`
-				(function () {
-					for (var [a, b, c = d] in array);
-				}());
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-pattern-with-default-values-in-var"));
 			const { scopes } = analysis;
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
@@ -1100,11 +983,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("pattern with default values in let in ForInStatement", () => {
-			const analysis = analyze(`
-				(function () {
-					for (let [a, b, c = d] in array);
-				}());
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-pattern-with-default-values-in-let"));
 			const { scopes } = analysis;
 
 			expect(scopeTypes(scopes)).toEqual([
@@ -1129,11 +1008,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("pattern with nested default values in var in ForInStatement", () => {
-			const analysis = analyze(`
-				(function () {
-					for (var [a, [b, c = d] = e] in array);
-				}());
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-pattern-with-nested-default-values"));
 			const { scopes } = analysis;
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
@@ -1156,11 +1031,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("pattern with nested default values in let in ForInStatement", () => {
-			const analysis = analyze(`
-				(function () {
-					for (let [a, [b, c = d] = e] in array);
-				}());
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-pattern-with-nested-default-values-2"));
 			const { scopes } = analysis;
 
 			expect(scopeTypes(scopes)).toEqual([
@@ -1188,12 +1059,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("pattern with default values in var in ForInStatement (separate declarations)", () => {
-			const analysis = analyze(`
-				(function () {
-					var a, b, c;
-					for ([a, b, c = d] in array);
-				}());
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-pattern-with-default-values-in-var-2"));
 			const { scopes } = analysis;
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
@@ -1210,12 +1076,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("pattern with default values in var in ForInStatement (separate declarations and with MemberExpression)", () => {
-			const analysis = analyze(`
-				(function () {
-					var obj;
-					for ([obj.a, obj.b, obj.c = d] in array);
-				}());
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-pattern-with-default-values-in-var-3"));
 			const { scopes } = analysis;
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
@@ -1231,11 +1092,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("an ArrayPattern in var", () => {
-			const analysis = analyze(`
-				(function () {
-					var [a, b, c] = array;
-				}());
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-an-array-pattern-in-var"));
 			const { scopes } = analysis;
 
 			expect(freeNames(analysis)).toEqual(["array"]);
@@ -1250,11 +1107,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("a SpreadElement in var", () => {
-			let analysis = analyze(`
-				(function () {
-					var [a, b, ...rest] = array;
-				}());
-			`);
+			let analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-a-spread-element-in-var"));
 
 			expect(freeNames(analysis)).toEqual(["array"]);
 			expect(varNames(analysis.scopes[2])).toEqual([
@@ -1265,11 +1118,7 @@ describe("ScopeAnalyzer", () => {
 			]);
 			expect(refNames(analysis.scopes[2])).toEqual(["a", "b", "rest", "array"]);
 
-			analysis = analyze(`
-				(function () {
-					var [a, b, ...[c, d, ...rest]] = array;
-				}());
-			`);
+			analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-a-spread-element-in-var-2"));
 
 			expect(freeNames(analysis)).toEqual(["array"]);
 			expect(varNames(analysis.scopes[2])).toEqual([
@@ -1291,17 +1140,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("an ObjectPattern in var", () => {
-			const analysis = analyze(`
-				(function () {
-					var {
-						shorthand,
-						key: value,
-						hello: {
-							world
-						}
-					} = object;
-				}());
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-an-object-pattern-in-var"));
 			const scope = analysis.scopes[2];
 
 			expect(freeNames(analysis)).toEqual(["object"]);
@@ -1323,17 +1162,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("complex pattern in var", () => {
-			const analysis = analyze(`
-				(function () {
-					var {
-						shorthand,
-						key: [ a, b, c, d, e ],
-						hello: {
-							world
-						}
-					} = object;
-				}());
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-complex-pattern-in-var"));
 			const scope = analysis.scopes[2];
 
 			expect(freeNames(analysis)).toEqual(["object"]);
@@ -1360,11 +1189,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("an ArrayPattern in AssignmentExpression", () => {
-			const analysis = analyze(`
-				(function () {
-					[a, b, c] = array;
-				}());
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-an-array-pattern-in-assignment"));
 			const scope = analysis.scopes[2];
 
 			expect(freeNames(analysis)).toEqual(["a", "b", "c", "array"]);
@@ -1376,12 +1201,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("an ArrayPattern with MemberExpression in AssignmentExpression", () => {
-			const analysis = analyze(`
-				(function () {
-					var obj;
-					[obj.a, obj.b, obj.c] = array;
-				}());
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-an-array-pattern-with-member"));
 			const scope = analysis.scopes[2];
 
 			expect(freeNames(analysis)).toEqual(["array"]);
@@ -1393,21 +1213,13 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("a SpreadElement in AssignmentExpression", () => {
-			let analysis = analyze(`
-				(function () {
-					[a, b, ...rest] = array;
-				}());
-			`);
+			let analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-a-spread-element-in-assignment"));
 
 			expect(freeNames(analysis)).toEqual(["a", "b", "rest", "array"]);
 			expect(varNames(analysis.scopes[2])).toEqual(["arguments"]);
 			expect(refNames(analysis.scopes[2])).toEqual(["a", "b", "rest", "array"]);
 
-			analysis = analyze(`
-				(function () {
-					[a, b, ...[c, d, ...rest]] = array;
-				}());
-			`);
+			analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-a-spread-element-in-assignment-2"));
 
 			expect(freeNames(analysis)).toEqual([
 				"a",
@@ -1429,28 +1241,14 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("a SpreadElement with MemberExpression in AssignmentExpression", () => {
-			const analysis = analyze(`
-				(function () {
-					[a, b, ...obj.rest] = array;
-				}());
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-a-spread-element-with-member"));
 
 			expect(freeNames(analysis)).toEqual(["a", "b", "obj", "array"]);
 			expect(refNames(analysis.scopes[2])).toEqual(["a", "b", "obj", "array"]);
 		});
 
 		it("an ObjectPattern in AssignmentExpression", () => {
-			const analysis = analyze(`
-				(function () {
-					({
-						shorthand,
-						key: value,
-						hello: {
-							world
-						}
-					} = object);
-				}());
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-an-object-pattern-in-assignment"));
 
 			expect(freeNames(analysis)).toEqual([
 				"shorthand",
@@ -1468,17 +1266,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("complex pattern in AssignmentExpression", () => {
-			const analysis = analyze(`
-				(function () {
-					({
-						shorthand,
-						key: [ a, b, c, d, e ],
-						hello: {
-							world
-						}
-					} = object);
-				}());
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-complex-pattern-in-assignment"));
 
 			expect(freeNames(analysis)).toEqual([
 				"shorthand",
@@ -1504,10 +1292,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("an ArrayPattern in parameters", () => {
-			const analysis = analyze(`
-				(function ([a, b, c]) {
-				}(array));
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-an-array-pattern-in-parameters"));
 
 			expect(freeNames(analysis)).toEqual(["array"]);
 			expect(refNames(analysis.moduleScope)).toEqual(["array"]);
@@ -1521,10 +1306,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("a SpreadElement in parameters", () => {
-			const analysis = analyze(`
-				(function ([a, b, ...rest], ...rest2) {
-				}(array));
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-a-spread-element-in-parameters"));
 
 			expect(freeNames(analysis)).toEqual(["array"]);
 			expect(refNames(analysis.moduleScope)).toEqual(["array"]);
@@ -1539,16 +1321,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("an ObjectPattern in parameters", () => {
-			const analysis = analyze(`
-				(function ({
-						shorthand,
-						key: value,
-						hello: {
-							world
-						}
-					}) {
-				}(object));
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-an-object-pattern-in-parameters"));
 
 			expect(freeNames(analysis)).toEqual(["object"]);
 			expect(refNames(analysis.moduleScope)).toEqual(["object"]);
@@ -1562,16 +1335,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("complex pattern in parameters", () => {
-			const analysis = analyze(`
-				(function ({
-						shorthand,
-						key: [ a, b, c, d, e ],
-						hello: {
-							world
-						}
-					}) {
-				}(object));
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-complex-pattern-in-parameters"));
 
 			expect(freeNames(analysis)).toEqual(["object"]);
 			expect(varNames(analysis.scopes[2])).toEqual([
@@ -1588,11 +1352,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("default values and patterns in var", () => {
-			const { scopes } = analyze(`
-				(function () {
-					var [a, b, c, d = 20 ] = array;
-				}());
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-default-values-and-patterns-in-var"));
 			const scope = scopes[2];
 
 			expect(varNames(scope)).toEqual(["arguments", "a", "b", "c", "d"]);
@@ -1607,11 +1367,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("default values containing references and patterns in var", () => {
-			const { scopes } = analyze(`
-				(function () {
-					var [a, b, c, d = e ] = array;
-				}());
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-default-values-containing"));
 			const scope = scopes[2];
 
 			expect(varNames(scope)).toEqual(["arguments", "a", "b", "c", "d"]);
@@ -1627,11 +1383,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("nested default values containing references and patterns in var", () => {
-			const { scopes } = analyze(`
-				(function () {
-					var [a, b, [c, d = e] = f ] = array;
-				}());
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-nested-default-values-containing"));
 			const scope = scopes[2];
 
 			expect(varNames(scope)).toEqual(["arguments", "a", "b", "c", "d"]);
@@ -1653,7 +1405,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-export.test.js
 	describe("export declaration", () => {
 		it("should create variable bindings", () => {
-			const { scopes, moduleScope } = analyze("export var v;");
+			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-export-declaration-should-create-variable-bindings"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
 			expect(varNames(moduleScope)).toEqual(["v"]);
@@ -1661,7 +1413,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should create function declaration bindings", () => {
-			const { scopes, moduleScope } = analyze("export default function f(){};");
+			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-export-declaration-should-create-function-declaration-bindings"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 			expect(varNames(moduleScope)).toEqual(["f"]);
@@ -1670,7 +1422,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should export function expression", () => {
-			const { scopes, moduleScope } = analyze("export default function(){};");
+			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-export-declaration-should-export-function-expression"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 			expect(moduleScope.variables).toHaveLength(0);
@@ -1680,7 +1432,7 @@ describe("ScopeAnalyzer", () => {
 
 		it("should export an anonymous class", () => {
 			const { scopes, moduleScope } = analyze(
-				"export default class extends Base {};"
+				fixture("javascript", "scope-analyzer-export-declaration-should-export-an-anonymous-class")
 			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "class"]);
@@ -1690,7 +1442,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should export literal", () => {
-			const { scopes, moduleScope } = analyze("export default 42;");
+			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-export-declaration-should-export-literal"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
 			expect(moduleScope.variables).toHaveLength(0);
@@ -1698,7 +1450,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should refer exported references#1", () => {
-			const { scopes, moduleScope } = analyze("const x = 1; export {x};");
+			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-export-declaration-should-refer-exported-references-1"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
 			expect(varNames(moduleScope)).toEqual(["x"]);
@@ -1709,7 +1461,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should refer exported references#2", () => {
-			const { scopes, moduleScope } = analyze("const v = 1; export {v as x};");
+			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-export-declaration-should-refer-exported-references-2"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
 			expect(varNames(moduleScope)).toEqual(["v"]);
@@ -1717,7 +1469,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should not refer exported references from other source#1", () => {
-			const analysis = analyze('export {x} from "mod";');
+			const analysis = analyze(fixture("javascript", "scope-analyzer-export-declaration-should-not-refer-exported-references-from"));
 
 			expect(scopeTypes(analysis.scopes)).toEqual(["global", "module"]);
 			expect(analysis.moduleScope.variables).toHaveLength(0);
@@ -1726,7 +1478,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should not refer exported references from other source#2", () => {
-			const analysis = analyze('export {v as x} from "mod";');
+			const analysis = analyze(fixture("javascript", "scope-analyzer-export-declaration-should-not-refer-exported-references-from-2"));
 
 			expect(analysis.moduleScope.variables).toHaveLength(0);
 			expect(refs(analysis.moduleScope)).toHaveLength(0);
@@ -1734,7 +1486,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should not refer exported references from other source#3", () => {
-			const analysis = analyze('export * from "mod";');
+			const analysis = analyze(fixture("javascript", "scope-analyzer-export-declaration-should-not-refer-exported-references-from-3"));
 
 			expect(analysis.moduleScope.variables).toHaveLength(0);
 			expect(refs(analysis.moduleScope)).toHaveLength(0);
@@ -1745,7 +1497,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/export-star-as-ns-from-source.test.js
 	describe("export * as ns from 'source'", () => {
 		it("should not have any variables or references", () => {
-			const analysis = analyze("export * as ns from 'source'");
+			const analysis = analyze(fixture("javascript", "scope-analyzer-export-as-ns-from-source-should-not-have-any-variables-or"));
 
 			expect(scopeTypes(analysis.scopes)).toEqual(["global", "module"]);
 			for (const scope of analysis.scopes) {
@@ -1759,7 +1511,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-import.test.js
 	describe("import declaration", () => {
 		it("should import names from source", () => {
-			const { scopes, moduleScope } = analyze('import v from "mod";');
+			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-import-declaration-should-import-names-from-source"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
 			expect(varNames(moduleScope)).toEqual(["v"]);
@@ -1767,21 +1519,21 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should import namespaces", () => {
-			const { moduleScope } = analyze('import * as ns from "mod";');
+			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-import-declaration-should-import-namespaces"));
 
 			expect(varNames(moduleScope)).toEqual(["ns"]);
 			expect(refs(moduleScope)).toHaveLength(0);
 		});
 
 		it("should import insided names#1", () => {
-			const { moduleScope } = analyze('import {x} from "mod";');
+			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-import-declaration-should-import-insided-names-1"));
 
 			expect(varNames(moduleScope)).toEqual(["x"]);
 			expect(refs(moduleScope)).toHaveLength(0);
 		});
 
 		it("should import insided names#2", () => {
-			const { moduleScope } = analyze('import {x as v} from "mod";');
+			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-import-declaration-should-import-insided-names-2"));
 
 			expect(varNames(moduleScope)).toEqual(["v"]);
 			expect(refs(moduleScope)).toHaveLength(0);
@@ -1791,14 +1543,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-iteration-scope.test.js
 	describe("ES6 iteration scope", () => {
 		it("let materialize iteration scope for ForInStatement#1", () => {
-			const { scopes } = analyze(`
-				(function () {
-					let i = 20;
-					for (let i in i) {
-						console.log(i);
-					}
-				}());
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-iteration-scope-let-materialize-iteration-scope-for-for-in"));
 
 			// the loop body declares nothing, so it gets no scope of its own
 			expect(scopeTypes(scopes)).toEqual([
@@ -1825,14 +1570,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("let materialize iteration scope for ForInStatement#2", () => {
-			const { scopes } = analyze(`
-				(function () {
-					let i = 20;
-					for (let { i, j, k } in i) {
-						console.log(i);
-					}
-				}());
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-iteration-scope-let-materialize-iteration-scope-for-for-in-2"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -1860,15 +1598,7 @@ describe("ScopeAnalyzer", () => {
 
 		// cspell:ignore okok
 		it("let materialize iteration scope for ForStatement#2", () => {
-			const { scopes } = analyze(`
-				(function () {
-					let i = 20;
-					let obj = {};
-					for (let { i, j, k } = obj; i < okok; ++i) {
-						console.log(i, j, k);
-					}
-				}());
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-iteration-scope-let-materialize-iteration-scope-for-for"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -1912,13 +1642,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-new-target.test.js
 	describe("ES6 new.target", () => {
 		it("should not make references of new.target", () => {
-			const { scopes } = analyze(`
-				class A {
-					constructor() {
-						new.target;
-					}
-				}
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-new-target-should-not-make-references-of-new-target"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -1938,11 +1662,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-object.test.js
 	describe("ES6 object", () => {
 		it("method definition", () => {
-			const { scopes } = analyze(`
-				({
-					constructor() {
-					}
-				})`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-object-method-definition"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 
@@ -1954,18 +1674,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("computed property key may refer variables", () => {
-			const { scopes } = analyze(`
-				(function () {
-					var yuyushiki = 42;
-					({
-						[yuyushiki]() {
-						},
-
-						[yuyushiki + 40]() {
-						}
-					})
-				}());
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-object-computed-property-key-may-refer-variables"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -1988,11 +1697,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-rest-args.test.js
 	describe("ES6 rest arguments", () => {
 		it("materialize rest argument in scope", () => {
-			const { scopes, moduleScope } = analyze(`
-				function foo(...bar) {
-					return bar;
-				}
-			`);
+			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-es6-rest-arguments-materialize-rest-argument-in-scope"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 			expect(varNames(moduleScope)).toEqual(["foo"]);
@@ -2009,17 +1714,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-super.test.js
 	describe("ES6 super", () => {
 		it("is not handled as reference", () => {
-			const { scopes, moduleScope } = analyze(`
-				class Foo extends Bar {
-					constructor() {
-						super();
-					}
-
-					method() {
-						super.method();
-					}
-				}
-			`);
+			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-es6-super-is-not-handled-as-reference"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -2047,18 +1742,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-switch.test.js
 	describe("ES6 switch", () => {
 		it("materialize scope", () => {
-			const { scopes, moduleScope } = analyze(`
-				switch (ok) {
-					case hello:
-						let i = 20;
-						i;
-						break;
-
-					default:
-						let test = 30;
-						test;
-				}
-			`);
+			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-es6-switch-materialize-scope"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "switch"]);
 			expect(moduleScope.variables).toHaveLength(0);
@@ -2075,14 +1759,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-template-literal.test.js
 	describe("ES6 template literal", () => {
 		it("refer variables", () => {
-			const { scopes } = analyze(`
-				(function () {
-					let i, j, k;
-					function testing() { }
-					let template = testing\`testing \${i} and \${j}\`
-					return template;
-				}());
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-template-literal-refer-variables"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -2114,10 +1791,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/function-expression-name.test.js
 	describe("function name", () => {
 		it("should create its special scope", () => {
-			const { scopes, moduleScope } = analyze(`
-				(function name() {
-				}());
-			`);
+			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-function-name-should-create-its-special-scope"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -2143,7 +1817,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/global-increment.test.js
 	describe("global increment", () => {
 		it("makes one reference", () => {
-			const analysis = analyze("b++;");
+			const analysis = analyze(fixture("javascript", "scope-analyzer-global-increment-makes-one-reference"));
 
 			expect(scopeTypes(analysis.scopes)).toEqual(["global", "module"]);
 			expect(analysis.moduleScope.variables).toHaveLength(0);
@@ -2156,7 +1830,7 @@ describe("ScopeAnalyzer", () => {
 	describe("label", () => {
 		it("should not create variables", () => {
 			const { scopes, moduleScope } = analyze(
-				"function bar() { q: for(;;) { break q; } }"
+				fixture("javascript", "scope-analyzer-label-should-not-create-variables")
 			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
@@ -2170,14 +1844,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should count child node references", () => {
-			const analysis = analyze(`
-				var foo = 5;
-
-				label: while (true) {
-				  console.log(foo);
-				  break;
-				}
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-label-should-count-child-node-references"));
 			const { moduleScope } = analysis;
 
 			expect(varNames(moduleScope)).toEqual(["foo"]);
@@ -2190,13 +1857,7 @@ describe("ScopeAnalyzer", () => {
 	describe("with", () => {
 		it("creates scope", () => {
 			const analysis = analyze(
-				`
-				(function () {
-					with (obj) {
-						testing;
-					}
-				}());
-			`,
+				fixture("javascript", "scope-analyzer-with-creates-scope"),
 				"script"
 			);
 			const { scopes } = analysis;
@@ -2227,7 +1888,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/class-fields.test.js
 	describe("class fields", () => {
 		it("class C { f = g }", () => {
-			const { moduleScope } = analyze("class C { f = g }");
+			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-class-fields-class-c-f-g"));
 			const classScope = moduleScope.childScopes[0];
 
 			expect(moduleScope.childScopes).toHaveLength(1);
@@ -2253,7 +1914,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class C { f }", () => {
-			const { moduleScope } = analyze("class C { f }");
+			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-class-fields-class-c-f"));
 			const classScope = moduleScope.childScopes[0];
 
 			expect(classScope.type).toBe("class");
@@ -2265,7 +1926,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class C { #f = g }", () => {
-			const { moduleScope } = analyze("class C { #f = g }");
+			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-class-fields-class-c-f-g-2"));
 			const classScope = moduleScope.childScopes[0];
 
 			expect(classScope.type).toBe("class");
@@ -2281,7 +1942,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class C { [fname] }", () => {
-			const { moduleScope } = analyze("class C { [fname] }");
+			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-class-fields-class-c-fname"));
 			const classScope = moduleScope.childScopes[0];
 
 			expect(classScope.type).toBe("class");
@@ -2290,7 +1951,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class C { [fname] = value }", () => {
-			const { moduleScope } = analyze("class C { [fname] = value }");
+			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-class-fields-class-c-fname-value"));
 			const classScope = moduleScope.childScopes[0];
 
 			expect(classScope.type).toBe("class");
@@ -2308,7 +1969,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class C { #f = g; e = this.#f }", () => {
-			const { moduleScope } = analyze("class C { #f = g; e = this.#f }");
+			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-class-fields-class-c-f-g-e-this-f"));
 			const classScope = moduleScope.childScopes[0];
 
 			expect(classScope.type).toBe("class");
@@ -2330,7 +1991,7 @@ describe("ScopeAnalyzer", () => {
 	describe("class static blocks", () => {
 		it("class C { static { var a; let b; const c = 1; function d(){} class e {} } }", () => {
 			const { ast, moduleScope } = analyze(
-				"class C { static { var a; let b; const c = 1; function d(){} class e {} } }"
+				fixture("javascript", "scope-analyzer-class-static-blocks-class-c-static-var-a-let-b-const-c-1-function")
 			);
 
 			expect(varNames(moduleScope)).toEqual(["C"]);
@@ -2376,7 +2037,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class C { static { function f(){} f(); } }", () => {
-			const analysis = analyze("class C { static { function f(){} f(); } }");
+			const analysis = analyze(fixture("javascript", "scope-analyzer-class-static-blocks-class-c-static-function-f-f"));
 			const { moduleScope } = analysis;
 
 			expect(refs(moduleScope)).toHaveLength(0);
@@ -2403,7 +2064,7 @@ describe("ScopeAnalyzer", () => {
 
 		it("class C { static { a = 1; if (this.x) { var a; } } }", () => {
 			const analysis = analyze(
-				"class C { static { a = 1; if (this.x) { var a; } } }"
+				fixture("javascript", "scope-analyzer-class-static-blocks-class-c-static-a-1-if-this-x-var-a")
 			);
 			const { moduleScope } = analysis;
 
@@ -2431,7 +2092,7 @@ describe("ScopeAnalyzer", () => {
 
 		it("class C { static { if (this.x) { var a; a = 1; } } }", () => {
 			const analysis = analyze(
-				"class C { static { if (this.x) { var a; a = 1; } } }"
+				fixture("javascript", "scope-analyzer-class-static-blocks-class-c-static-if-this-x-var-a-a-1")
 			);
 			const { moduleScope } = analysis;
 
@@ -2453,7 +2114,7 @@ describe("ScopeAnalyzer", () => {
 
 		it("class C { static { const { a } = this.foo; if (this.bar) { const b = a + 1; this.baz(b); } } }", () => {
 			const analysis = analyze(
-				"class C { static { const { a } = this.foo; if (this.bar) { const b = a + 1; this.baz(b); } } }"
+				fixture("javascript", "scope-analyzer-class-static-blocks-class-c-static-const-a-this-foo-if-this-bar")
 			);
 			const { moduleScope } = analysis;
 
@@ -2487,7 +2148,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class C { static { C.x; } }", () => {
-			const analysis = analyze("class C { static { C.x; } }");
+			const analysis = analyze(fixture("javascript", "scope-analyzer-class-static-blocks-class-c-static-c-x"));
 			const { moduleScope } = analysis;
 
 			expect(refs(moduleScope)).toHaveLength(0);
@@ -2513,7 +2174,7 @@ describe("ScopeAnalyzer", () => {
 
 		it("let a; class C { static { lbl: { this.b = a } } }", () => {
 			const analysis = analyze(
-				"let a; class C { static { lbl: { this.b = a } } }"
+				fixture("javascript", "scope-analyzer-class-static-blocks-let-a-class-c-static-lbl-this-b-a")
 			);
 			const { moduleScope } = analysis;
 
@@ -2537,7 +2198,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class C { static { a; } }", () => {
-			const analysis = analyze("class C { static { a; } }");
+			const analysis = analyze(fixture("javascript", "scope-analyzer-class-static-blocks-class-c-static-a"));
 			const { moduleScope } = analysis;
 			const staticBlockScope = moduleScope.childScopes[0].childScopes[0];
 
@@ -2550,7 +2211,7 @@ describe("ScopeAnalyzer", () => {
 
 		it("let a; class C { static { let a; a; } static { a; let a; } }", () => {
 			const { moduleScope } = analyze(
-				"let a; class C { static { let a; a; } static { a; let a; } }"
+				fixture("javascript", "scope-analyzer-class-static-blocks-let-a-class-c-static-let-a-a-static-a-let-a")
 			);
 
 			expect(moduleScope.getBinding("a")).toBe(moduleScope.variables[0]);
@@ -2601,7 +2262,7 @@ describe("ScopeAnalyzer", () => {
 
 		it("let a; class C { [a]; static { let a; } [a]; static { function a(){} } [a]; static { var a; } [a]; }", () => {
 			const { moduleScope } = analyze(
-				"let a; class C { [a]; static { let a; } [a]; static { function a(){} } [a]; static { var a; } [a]; }"
+				fixture("javascript", "scope-analyzer-class-static-blocks-let-a-class-c-a-static-let-a-a-static")
 			);
 
 			expect(moduleScope.getBinding("a")).toBe(moduleScope.variables[0]);
@@ -2636,7 +2297,7 @@ describe("ScopeAnalyzer", () => {
 	describe("import attributes", () => {
 		it('const type = "json"; import pkg from "./package.json" with { type: "json" };', () => {
 			const { ast, globalScope, moduleScope } = analyze(
-				'const type = "json"; import pkg from "./package.json" with { type: "json" };'
+				fixture("javascript", "scope-analyzer-import-attributes-const-type-json-import-pkg-from-package-json")
 			);
 
 			expect(globalScope.variables).toHaveLength(0);
@@ -2654,7 +2315,7 @@ describe("ScopeAnalyzer", () => {
 
 		it('const type = "json"; export * from "./package.json" with { type: "json" };', () => {
 			const { moduleScope } = analyze(
-				'const type = "json"; export * from "./package.json" with { type: "json" };'
+				fixture("javascript", "scope-analyzer-import-attributes-const-type-json-export-from-package-json-with")
 			);
 
 			expect(moduleScope.childScopes).toHaveLength(0);
@@ -2664,7 +2325,7 @@ describe("ScopeAnalyzer", () => {
 
 		it('const type = "json"; export { default } from "./package.json" with { type: "json" };', () => {
 			const { moduleScope } = analyze(
-				'const type = "json"; export { default } from "./package.json" with { type: "json" };'
+				fixture("javascript", "scope-analyzer-import-attributes-const-type-json-export-default-from-package")
 			);
 
 			expect(moduleScope.childScopes).toHaveLength(0);
@@ -2674,7 +2335,7 @@ describe("ScopeAnalyzer", () => {
 
 		it('const type = "json"; import("./package.json", { with: { type } });', () => {
 			const { ast, moduleScope } = analyze(
-				'const type = "json"; import("./package.json", { with: { type } });'
+				fixture("javascript", "scope-analyzer-import-attributes-const-type-json-import-package-json-with-type")
 			);
 
 			expect(moduleScope.childScopes).toHaveLength(0);
@@ -2696,12 +2357,7 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/using-scope.test.js
 	describe("`using` and `await using` block scope", () => {
 		it("`using` in block scope", () => {
-			const { scopes } = analyze(`
-				{
-					using i = 42;
-					i;
-				}
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-using-and-await-using-block-scope-using-in-block-scope"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "block"]);
 			expect(scopes[1].variables).toHaveLength(0);
@@ -2716,14 +2372,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("`await using` in block scope", () => {
-			const { scopes } = analyze(`
-				async function fn() {
-					{
-						await using i = 42;
-						i;
-					}
-				}
-			`);
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-using-and-await-using-block-scope-await-using-in-block-scope"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -2745,9 +2394,9 @@ describe("ScopeAnalyzer", () => {
 	describe("references", () => {
 		/** @type {[string, string][]} */
 		const declarations = [
-			["let", "let a = 0;"],
-			["const", "const a = 0;"],
-			["var", "var a = 0;"]
+			["let", fixture("javascript", "scope-analyzer-references-the-reference-to-a-let-declaration-in-the-module-scope")],
+			["const", fixture("javascript", "scope-analyzer-references-the-reference-to-a-const-declaration-in-the-module")],
+			["var", fixture("javascript", "scope-analyzer-references-the-reference-to-a-var-declaration-in-the-module-scope")]
 		];
 
 		for (const [kind, code] of declarations) {
@@ -2770,30 +2419,15 @@ describe("ScopeAnalyzer", () => {
 		const inFunctions = [
 			[
 				"let",
-				`
-					let a = 0;
-					function foo() {
-						let b = a;
-					}
-				`
+				fixture("javascript", "scope-analyzer-references-the-reference-to-a-let-declaration-inside-a-function")
 			],
 			[
 				"const",
-				`
-					const a = 0;
-					function foo() {
-						const b = a;
-					}
-				`
+				fixture("javascript", "scope-analyzer-references-the-reference-to-a-const-declaration-inside-a-function")
 			],
 			[
 				"var",
-				`
-					var a = 0;
-					function foo() {
-						var b = a;
-					}
-				`
+				fixture("javascript", "scope-analyzer-references-the-reference-to-a-var-declaration-inside-a-function")
 			]
 		];
 
@@ -2816,11 +2450,7 @@ describe("ScopeAnalyzer", () => {
 		}
 
 		it("the reference in a default parameter resolves", () => {
-			const { scopes, moduleScope } = analyze(`
-				let a = 0;
-				function foo(b = a) {
-				}
-			`);
+			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-references-the-reference-in-a-default-parameter-resolves"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 
@@ -2832,10 +2462,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("the reference to a `function` declaration resolves", () => {
-			const { scopes, moduleScope } = analyze(`
-				function a() {}
-				a();
-			`);
+			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-references-the-reference-to-a-function-declaration-resolves"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 			expect(varNames(moduleScope)).toEqual(["a"]);
@@ -2844,12 +2471,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("the reference to a `function` declaration inside a function resolves", () => {
-			const { scopes, moduleScope } = analyze(`
-				function a() {}
-				function foo() {
-					let b = a();
-				}
-			`);
+			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-references-the-reference-to-a-function-declaration-inside-a"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -2866,10 +2488,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("the reference to a `class` declaration resolves", () => {
-			const { scopes, moduleScope } = analyze(`
-				class A {}
-				let b = new A();
-			`);
+			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-references-the-reference-to-a-class-declaration-resolves"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "class"]);
 			expect(varNames(moduleScope)).toEqual(["A", "b"]);
@@ -2878,12 +2497,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("the reference to a `class` declaration inside a function resolves", () => {
-			const { scopes, moduleScope } = analyze(`
-				class A {}
-				function foo() {
-					let b = new A();
-				}
-			`);
+			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-references-the-reference-to-a-class-declaration-inside-a-function"));
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -2903,25 +2517,11 @@ describe("ScopeAnalyzer", () => {
 		const inNestedFunctions = [
 			[
 				"let",
-				`
-					function foo() {
-						let a = 0;
-						function bar() {
-							let b = a;
-						}
-					}
-				`
+				fixture("javascript", "scope-analyzer-references-the-reference-to-a-let-declaration-in-a-nested")
 			],
 			[
 				"var",
-				`
-					function foo() {
-						var a = 0;
-						function bar() {
-							var b = a;
-						}
-					}
-				`
+				fixture("javascript", "scope-analyzer-references-the-reference-to-a-var-declaration-in-a-nested")
 			]
 		];
 
@@ -2945,9 +2545,9 @@ describe("ScopeAnalyzer", () => {
 		}
 
 		for (const code of [
-			"let [a] = [1];",
-			"let {a} = {a: 1};",
-			"let {a: {a}} = {a: {a: 1}};"
+			fixture("javascript", "scope-analyzer-references-let-a-1-the-reference-should-be-resolved"),
+			fixture("javascript", "scope-analyzer-references-let-a-a-1-the-reference-should-be-resolved"),
+			fixture("javascript", "scope-analyzer-references-let-a-a-a-a-1-the-reference-should-be-resolved")
 		]) {
 			it(`"${code}", the reference should be resolved.`, () => {
 				const { scopes, moduleScope } = analyze(code);
@@ -2966,48 +2566,48 @@ describe("ScopeAnalyzer", () => {
 
 		// every binding form that writes to `a`; all of them resolve
 		for (const code of [
-			"var a = 0;",
-			"let a = 0;",
-			"const a = 0;",
-			"var [a] = [];",
-			"let [a] = [];",
-			"const [a] = [];",
-			"var [a = 1] = [];",
-			"let [a = 1] = [];",
-			"const [a = 1] = [];",
-			"var {a} = {};",
-			"let {a} = {};",
-			"const {a} = {};",
-			"var {b: a} = {};",
-			"let {b: a} = {};",
-			"const {b: a} = {};",
-			"var {b: a = 0} = {};",
-			"let {b: a = 0} = {};",
-			"const {b: a = 0} = {};",
-			"for (var a in []);",
-			"for (let a in []);",
-			"for (var [a] in []);",
-			"for (let [a] in []);",
-			"for (var [a = 0] in []);",
-			"for (let [a = 0] in []);",
-			"for (var {a} in []);",
-			"for (let {a} in []);",
-			"for (var {a = 0} in []);",
-			"for (let {a = 0} in []);",
-			"new function(a = 0) {}",
-			"new function([a = 0] = []) {}",
-			"new function({b: a = 0} = {}) {}",
-			"let a; a = 0;",
-			"let a; [a] = [];",
-			"let a; [a = 1] = [];",
-			"let a; ({a} = {});",
-			"let a; ({b: a} = {});",
-			"let a; ({b: a = 0} = {});",
-			"let a; for (a in []);",
-			"let a; for ([a] in []);",
-			"let a; for ([a = 0] in []);",
-			"let a; for ({a} in []);",
-			"let a; for ({a = 0} in []);"
+			fixture("javascript", "scope-analyzer-references-the-reference-to-a-var-declaration-in-the-module-scope"),
+			fixture("javascript", "scope-analyzer-references-the-reference-to-a-let-declaration-in-the-module-scope"),
+			fixture("javascript", "scope-analyzer-references-the-reference-to-a-const-declaration-in-the-module"),
+			fixture("javascript", "scope-analyzer-references-var-a-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-let-a-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-const-a-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-var-a-1-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-let-a-1-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-const-a-1-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-var-a-every-reference-resolves-to-a-2"),
+			fixture("javascript", "scope-analyzer-references-let-a-every-reference-resolves-to-a-2"),
+			fixture("javascript", "scope-analyzer-references-const-a-every-reference-resolves-to-a-2"),
+			fixture("javascript", "scope-analyzer-references-var-b-a-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-let-b-a-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-const-b-a-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-var-b-a-0-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-let-b-a-0-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-const-b-a-0-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-for-var-a-in-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-for-let-a-in-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-for-var-a-in-every-reference-resolves-to-a-2"),
+			fixture("javascript", "scope-analyzer-references-for-let-a-in-every-reference-resolves-to-a-2"),
+			fixture("javascript", "scope-analyzer-references-for-var-a-0-in-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-for-let-a-0-in-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-for-var-a-in-every-reference-resolves-to-a-3"),
+			fixture("javascript", "scope-analyzer-references-for-let-a-in-every-reference-resolves-to-a-3"),
+			fixture("javascript", "scope-analyzer-references-for-var-a-0-in-every-reference-resolves-to-a-2"),
+			fixture("javascript", "scope-analyzer-references-for-let-a-0-in-every-reference-resolves-to-a-2"),
+			fixture("javascript", "scope-analyzer-references-new-function-a-0-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-new-function-a-0-every-reference-resolves-to-a-2"),
+			fixture("javascript", "scope-analyzer-references-new-function-b-a-0-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-let-a-a-0-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-let-a-a-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-let-a-a-1-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-let-a-a-every-reference-resolves-to-a-2"),
+			fixture("javascript", "scope-analyzer-references-let-a-b-a-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-let-a-b-a-0-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-let-a-for-a-in-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-let-a-for-a-in-every-reference-resolves-to-a-2"),
+			fixture("javascript", "scope-analyzer-references-let-a-for-a-0-in-every-reference-resolves-to-a"),
+			fixture("javascript", "scope-analyzer-references-let-a-for-a-in-every-reference-resolves-to-a-3"),
+			fixture("javascript", "scope-analyzer-references-let-a-for-a-0-in-every-reference-resolves-to-a-2")
 		]) {
 			it(`"${code}", every reference resolves to \`a\``, () => {
 				const { scopes } = analyze(code);
@@ -3027,20 +2627,20 @@ describe("ScopeAnalyzer", () => {
 
 		// reads of `a`, wherever they sit, resolve back to the one binding
 		for (const code of [
-			"let a; let b = a;",
-			"let a; let [b] = a;",
-			"let a; let [b = a] = [];",
-			"let a; for (var b in a);",
-			"let a; for (var [b = a] in []);",
-			"let a; for (let b in a);",
-			"let a; for (let [b = a] in []);",
-			"let a,b; b = a;",
-			"let a,b; [b] = a;",
-			"let a,b; [b = a] = [];",
-			"let a,b; for (b in a);",
-			"let a,b; for ([b = a] in []);",
-			"let a; a.foo = 0;",
-			"let a,b; b = a.foo;"
+			fixture("javascript", "scope-analyzer-references-let-a-let-b-a-the-references-to-a-resolve-to-its"),
+			fixture("javascript", "scope-analyzer-references-let-a-let-b-a-the-references-to-a-resolve-to-its-2"),
+			fixture("javascript", "scope-analyzer-references-let-a-let-b-a-the-references-to-a-resolve-to-its-3"),
+			fixture("javascript", "scope-analyzer-references-let-a-for-var-b-in-a-the-references-to-a-resolve-to"),
+			fixture("javascript", "scope-analyzer-references-let-a-for-var-b-a-in-the-references-to-a-resolve-to"),
+			fixture("javascript", "scope-analyzer-references-let-a-for-let-b-in-a-the-references-to-a-resolve-to"),
+			fixture("javascript", "scope-analyzer-references-let-a-for-let-b-a-in-the-references-to-a-resolve-to"),
+			fixture("javascript", "scope-analyzer-references-let-a-b-b-a-the-references-to-a-resolve-to-its-binding"),
+			fixture("javascript", "scope-analyzer-references-let-a-b-b-a-the-references-to-a-resolve-to-its-binding-2"),
+			fixture("javascript", "scope-analyzer-references-let-a-b-b-a-the-references-to-a-resolve-to-its-binding-3"),
+			fixture("javascript", "scope-analyzer-references-let-a-b-for-b-in-a-the-references-to-a-resolve-to-its"),
+			fixture("javascript", "scope-analyzer-references-let-a-b-for-b-a-in-the-references-to-a-resolve-to-its"),
+			fixture("javascript", "scope-analyzer-references-let-a-a-foo-0-the-references-to-a-resolve-to-its"),
+			fixture("javascript", "scope-analyzer-references-let-a-b-b-a-foo-the-references-to-a-resolve-to-its")
 		]) {
 			it(`"${code}", the references to \`a\` resolve to its binding`, () => {
 				const { moduleScope } = analyze(code);
@@ -3061,10 +2661,7 @@ describe("ScopeAnalyzer", () => {
 	// list of free references the analyser keeps
 	describe("free references", () => {
 		it("assignments in the module scope", () => {
-			const analysis = analyze(`
-				var x = 20;
-				x = 300;
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-free-references-assignments-in-the-module-scope"));
 
 			expect(varNames(analysis.moduleScope)).toEqual(["x"]);
 			expect(analysis.moduleScope.variables[0].references).toHaveLength(2);
@@ -3072,21 +2669,14 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("assignments in the module scope without definition", () => {
-			const analysis = analyze(`
-				x = 300;
-				x = 300;
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-free-references-assignments-in-the-module-scope-without"));
 
 			expect(analysis.moduleScope.variables).toHaveLength(0);
 			expect(freeNames(analysis)).toEqual(["x", "x"]);
 		});
 
 		it("assignment leaks", () => {
-			const analysis = analyze(`
-				function outer() {
-					x = 20;
-				}
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-free-references-assignment-leaks"));
 
 			expect(analysis.scopes.map(varNames)).toEqual([
 				[],
@@ -3097,14 +2687,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("assignment doesn't leak", () => {
-			const analysis = analyze(`
-				function outer() {
-					function inner() {
-						x = 20;
-					}
-					var x;
-				}
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-free-references-assignment-does-not-leak"));
 
 			expect(analysis.scopes.map(varNames)).toEqual([
 				[],
@@ -3116,10 +2699,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("for-in-statement leaks", () => {
-			const analysis = analyze(`
-				function outer() {
-					for (x in y) { }
-				}`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-free-references-for-in-statement-leaks"));
 
 			expect(analysis.scopes.map(varNames)).toEqual([
 				[],
@@ -3130,14 +2710,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("for-in-statement doesn't leak", () => {
-			const analysis = analyze(`
-				function outer() {
-					function inner() {
-						for (x in y) { }
-					}
-					var x;
-				}
-			`);
+			const analysis = analyze(fixture("javascript", "scope-analyzer-free-references-for-in-statement-does-not-leak"));
 
 			expect(analysis.scopes.map(varNames)).toEqual([
 				[],
@@ -3153,7 +2726,7 @@ describe("ScopeAnalyzer", () => {
 	// is the analyser's only behaviour for a node type it does not know
 	describe("unknown node types", () => {
 		it("keeps walking a node type it does not know", () => {
-			const ast = parse("var foo = bar(baz);");
+			const ast = parse(fixture("javascript", "scope-analyzer-unknown-node-types-keeps-walking-a-node-type-it-does-not-know"));
 
 			/** @type {EXPECTED_ANY} */ (ast.body[0]).declarations[0].init.type =
 				"SpecialCallExpression";
@@ -3166,12 +2739,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("resolves references found under an unknown node type", () => {
-			const ast = parse(`
-				let a;
-				function foo() {
-					return bar(a);
-				}
-			`);
+			const ast = parse(fixture("javascript", "scope-analyzer-unknown-node-types-resolves-references-found-under-an-unknown"));
 
 			/** @type {EXPECTED_ANY} */ (ast.body[1]).body.body[0].argument.type =
 				"SpecialCallExpression";
@@ -3203,10 +2771,7 @@ describe("ScopeAnalyzer", () => {
 
 		it("collects the references of a module-scope binding", () => {
 			const { moduleScope } = analyzeScope(
-				parse(`
-					let a = 0;
-					function f() { return a + a; }
-				`)
+				parse(fixture("javascript", "scope-analyzer-what-a-binding-collects-by-default-collects-the-references-of-a"))
 			);
 
 			expect(collected(moduleScope)).toEqual({ a: 3, f: 0 });
@@ -3216,10 +2781,7 @@ describe("ScopeAnalyzer", () => {
 			// the class name is bound twice, and `getAllReferences` reads the
 			// inner binding through `moduleScope.childScopes`
 			const { moduleScope } = analyzeScope(
-				parse(`
-					class C { m() { return C; } }
-					C;
-				`)
+				parse(fixture("javascript", "scope-analyzer-what-a-binding-collects-by-default-collects-the-references-of-a-2"))
 			);
 			const classScope = moduleScope.childScopes[0];
 
@@ -3227,15 +2789,7 @@ describe("ScopeAnalyzer", () => {
 			expect(collected(classScope)).toEqual({ C: 1 });
 		});
 
-		const nested = `
-			function f() {
-				function g() {
-					let b = 0;
-					return b + b;
-				}
-				return g;
-			}
-		`;
+		const nested = fixture("javascript", "scope-analyzer-what-a-binding-collects-by-default-resolves-a-deeper-reference");
 
 		it("resolves a deeper reference without collecting it", () => {
 			const analysis = analyzeScope(parse(nested));
@@ -3255,14 +2809,14 @@ describe("ScopeAnalyzer", () => {
 
 	describe("scopes a block only when it declares something", () => {
 		it("gives a block with a lexical declaration a scope", () => {
-			const { scopes } = analyze("{ let a; a; }");
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-scopes-a-block-only-when-it-declares-something-gives-a-block-with"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "block"]);
 			expect(varNames(scopes[2])).toEqual(["a"]);
 		});
 
 		it("gives a block holding only `var` no scope of its own", () => {
-			const { scopes, moduleScope } = analyze("{ var a; a; }");
+			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-scopes-a-block-only-when-it-declares-something-gives-a-block"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
 			expect(varNames(moduleScope)).toEqual(["a"]);
@@ -3270,20 +2824,20 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("gives a switch with a lexical declaration a scope", () => {
-			const { scopes } = analyze("switch (x) { case 1: let a; a; }");
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-scopes-a-block-only-when-it-declares-something-gives-a-switch"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "switch"]);
 			expect(varNames(scopes[2])).toEqual(["a"]);
 		});
 
 		it("gives a switch that declares nothing no scope", () => {
-			const { scopes } = analyze("switch (x) { case 1: y; }");
+			const { scopes } = analyze(fixture("javascript", "scope-analyzer-scopes-a-block-only-when-it-declares-something-gives-a-switch-2"));
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
 		});
 
 		it("scopes a block whose statement type it does not know", () => {
-			const ast = parse("{ x; }");
+			const ast = parse(fixture("javascript", "scope-analyzer-scopes-a-block-only-when-it-declares-something-scopes-a-block"));
 			const block = /** @type {EXPECTED_ANY} */ (ast.body[0]);
 
 			block.body[0].type = "SpecialDeclaration";
@@ -3329,7 +2883,7 @@ describe("ScopeAnalyzer", () => {
 
 	describe("a binding declared more than once", () => {
 		it("keeps every declaring identifier", () => {
-			const { moduleScope } = analyze("var a; var a; a;");
+			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-a-binding-declared-more-than-once-keeps-every-declaring"));
 			const a = moduleScope.variables[0];
 
 			expect(varNames(moduleScope)).toEqual(["a"]);
@@ -3339,7 +2893,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("keeps a parameter and the `var` of the same name together", () => {
-			const { moduleScope } = analyze("function f(a) { var a; return a; }");
+			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-a-binding-declared-more-than-once-keeps-a-parameter-and-the-var"));
 			const functionScope = moduleScope.childScopes[0];
 			const a =
 				/** @type {import("../../../lib/javascript/ScopeAnalyzer").Variable} */ (
@@ -3353,19 +2907,19 @@ describe("ScopeAnalyzer", () => {
 
 	describe("branches of a conditional", () => {
 		it("visits the alternate of an if statement", () => {
-			const analysis = analyze("if (a) { b } else { c }");
+			const analysis = analyze(fixture("javascript", "scope-analyzer-branches-of-a-conditional-visits-the-alternate-of-an-if-statement"));
 
 			expect(freeNames(analysis)).toEqual(["a", "b", "c"]);
 		});
 
 		it("visits every arm of a ternary", () => {
-			const analysis = analyze("a ? b : c;");
+			const analysis = analyze(fixture("javascript", "webpack-parser-owned-operator-scanner-should-scan-conditional-and-before-a-digit-3"));
 
 			expect(freeNames(analysis)).toEqual(["a", "b", "c"]);
 		});
 
 		it("handles an if statement with no alternate", () => {
-			const analysis = analyze("if (a) { b }");
+			const analysis = analyze(fixture("javascript", "scope-analyzer-branches-of-a-conditional-handles-an-if-statement-with-no"));
 
 			expect(freeNames(analysis)).toEqual(["a", "b"]);
 		});
@@ -3375,7 +2929,7 @@ describe("ScopeAnalyzer", () => {
 		// acorn emits a pattern for every destructuring target, so these arms
 		// need the tree a parser reporting expressions would hand over
 		it("binds through an array reported as an expression", () => {
-			const ast = parse("[[a]] = b;");
+			const ast = parse(fixture("javascript", "scope-analyzer-assignment-targets-a-parser-may-report-as-expressions-binds"));
 			const outer = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression.left;
 
 			outer.elements[0].type = "ArrayExpression";
@@ -3386,7 +2940,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("binds through an object reported as an expression", () => {
-			const ast = parse("[{ a }] = b;");
+			const ast = parse(fixture("javascript", "scope-analyzer-assignment-targets-a-parser-may-report-as-expressions-binds-2"));
 			const outer = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression.left;
 
 			outer.elements[0].type = "ObjectExpression";
@@ -3397,7 +2951,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("binds through a default reported as an assignment", () => {
-			const ast = parse("[a = 1] = b;");
+			const ast = parse(fixture("javascript", "scope-analyzer-assignment-targets-a-parser-may-report-as-expressions-binds-3"));
 			const outer = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression.left;
 
 			outer.elements[0].type = "AssignmentExpression";
@@ -3410,7 +2964,7 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("visits a pattern element whose type it does not know", () => {
-			const ast = parse("[a] = b;");
+			const ast = parse(fixture("javascript", "scope-analyzer-assignment-targets-a-parser-may-report-as-expressions-visits-a"));
 			const outer = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression.left;
 
 			outer.elements[0] = {
@@ -3429,7 +2983,7 @@ describe("ScopeAnalyzer", () => {
 
 	describe("reading and writing the same binding", () => {
 		it("records one reference for a compound assignment", () => {
-			const { moduleScope } = analyze("let x = 0; x += 1;");
+			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-reading-and-writing-the-same-binding-records-one-reference-for-a"));
 			const x = moduleScope.variables[0];
 
 			expect(x.references).toHaveLength(2);
@@ -3437,26 +2991,26 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("records one reference for an update expression", () => {
-			const { moduleScope } = analyze("let x = 0; x++;");
+			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-reading-and-writing-the-same-binding-records-one-reference-for-an"));
 			const x = moduleScope.variables[0];
 
 			expect(x.references).toHaveLength(2);
 		});
 
 		it("walks a compound assignment to a member expression", () => {
-			const analysis = analyze("a.b += c;");
+			const analysis = analyze(fixture("javascript", "scope-analyzer-reading-and-writing-the-same-binding-walks-a-compound-assignment"));
 
 			expect(freeNames(analysis)).toEqual(["a", "c"]);
 		});
 
 		it("walks an update expression on a member expression", () => {
-			const analysis = analyze("a.b++;");
+			const analysis = analyze(fixture("javascript", "scope-analyzer-reading-and-writing-the-same-binding-walks-an-update-expression"));
 
 			expect(freeNames(analysis)).toEqual(["a"]);
 		});
 
 		it("walks a compound assignment reported against a pattern", () => {
-			const ast = parse("[a] = b;");
+			const ast = parse(fixture("javascript", "scope-analyzer-assignment-targets-a-parser-may-report-as-expressions-visits-a"));
 			const assignment = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression;
 
 			// no parser emits this, but the walker must not drop the target
@@ -3482,21 +3036,21 @@ describe("ScopeAnalyzer", () => {
 				);
 
 		it("records the identifier of a shorthand in an object expression", () => {
-			expect(shorthandNames("const a = 1; ({ a, b: a, [a]: a });")).toEqual([
+			expect(shorthandNames(fixture("javascript", "scope-analyzer-shorthand-properties-records-the-identifier-of-a-shorthand-in-an"))).toEqual([
 				"a"
 			]);
 		});
 
 		it("records the identifier of a shorthand in a pattern", () => {
-			expect(shorthandNames("const { a, b: c } = x;")).toEqual(["a"]);
+			expect(shorthandNames(fixture("javascript", "scope-analyzer-shorthand-properties-records-the-identifier-of-a-shorthand-in-a"))).toEqual(["a"]);
 		});
 
 		it("records the bound identifier of a shorthand with a default", () => {
-			expect(shorthandNames("const { a = 1 } = x;")).toEqual(["a"]);
+			expect(shorthandNames(fixture("javascript", "scope-analyzer-shorthand-properties-records-the-bound-identifier-of-a-shorthand"))).toEqual(["a"]);
 		});
 
 		it("records nothing for a method or a getter", () => {
-			expect(shorthandNames("({ a() {}, get b() {}, set c(v) {} });")).toEqual(
+			expect(shorthandNames(fixture("javascript", "scope-analyzer-shorthand-properties-records-nothing-for-a-method-or-a-getter"))).toEqual(
 				[]
 			);
 		});
@@ -3504,7 +3058,7 @@ describe("ScopeAnalyzer", () => {
 
 	describe("an unknown node with a non-computed key", () => {
 		it("does not read the key as a reference", () => {
-			const ast = parse("({ a: b });");
+			const ast = parse(fixture("javascript", "scope-analyzer-an-unknown-node-with-a-non-computed-key-does-not-read-the-key-as"));
 			const property = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression
 				.properties[0];
 
@@ -3752,7 +3306,7 @@ const CASES = {
 		"a var for loop head": "for (var i = 0; i < n; i++) i;",
 		"a while and a do-while body":
 			"while (a) { let b = a; } do { let c; } while (c);",
-		"a with body": ["with (obj) { a; }", "script"],
+		"a with body": [fixture("javascript", "scope-analyzer-matches-eslint-scope-scope-kinds-a-with-body"), "script"],
 		"a named function expression": "(function foo() { return foo; });",
 		"a named function expression shadowing its own name":
 			"(function foo() { var foo; return foo; });",
@@ -3780,12 +3334,12 @@ const CASES = {
 		"a function declaration is block scoped":
 			"{ function test() {} test(); } test();",
 		"a function declaration in a sloppy-mode if": [
-			"if (a) function f() {}",
+			fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-57"),
 			"script"
 		],
 		"a var redeclared in a nested block": "var a; { var a; } a;",
 		"a var and a function declaration under one name": [
-			"var a; function a() {} a;",
+			fixture("javascript", "scope-analyzer-matches-eslint-scope-bindings-and-hoisting-a-var-and-a-function"),
 			"script"
 		],
 		"a function declaration hoisted over a var in its body":

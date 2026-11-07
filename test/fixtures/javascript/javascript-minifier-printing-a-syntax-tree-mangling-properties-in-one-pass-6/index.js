@@ -1,0 +1,1 @@
+var o = { toString() { return "custom"; }, valueOf() { return 42; }, length: 3, zLen: 4, innerHTML: 5 }; var base = { zInherited: 1 }; var p = { __proto__: base, zOwn: 2 }; console.log(String(o), o + 1, o.length, o.zLen, o.innerHTML, [1, 2].map(function (v) { return v * 2; }).join(), p.zInherited, p.zOwn, Object.getPrototypeOf(p) === base);

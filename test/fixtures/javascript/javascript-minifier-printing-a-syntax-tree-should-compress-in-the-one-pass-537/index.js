@@ -1,0 +1,1 @@
+!(x===undefined);!(typeof x()==="undefined");x===void 0;a()===b;a===b();f(a===b,c());g(),a()!==b(),h();x==void 0;({}).a===b();({}).a===b

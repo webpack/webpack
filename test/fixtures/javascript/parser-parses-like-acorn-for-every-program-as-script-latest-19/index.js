@@ -1,0 +1,1 @@
+function f() { 'use\x20strict'; with (a) {} }

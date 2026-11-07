@@ -1,0 +1,1 @@
+(function(NaN){eval("");console.log(1*"a",NaN)})(5)

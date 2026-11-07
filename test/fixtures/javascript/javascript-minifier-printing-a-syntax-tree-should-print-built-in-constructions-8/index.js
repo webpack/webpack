@@ -1,0 +1,1 @@
+window.Array=f;x=[Array(1,2),Array(0)]

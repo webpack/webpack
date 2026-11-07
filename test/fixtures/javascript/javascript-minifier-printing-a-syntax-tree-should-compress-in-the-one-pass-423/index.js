@@ -1,0 +1,1 @@
+function f(){do{x();continue}while(a)}

@@ -1,0 +1,1 @@
+function f(a){if(a)return;while(a)g()}

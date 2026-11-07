@@ -1,0 +1,1 @@
+var{c=void 0,d=1}={},[x=void 0]=[];function f(a=void 0,{b=void 0}={}){return[a,b]}console.log(c,d,x,f.length,f())

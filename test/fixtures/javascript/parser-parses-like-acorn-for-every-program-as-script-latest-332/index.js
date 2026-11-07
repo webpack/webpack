@@ -1,0 +1,1 @@
+x = { m() { function f() { super.x } } }

@@ -1,0 +1,1 @@
+function f(x,y){return[!!x?!0:y,!!x?y:!1,!!x?!0:!1]}

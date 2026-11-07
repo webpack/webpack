@@ -1,0 +1,1 @@
+class A extends B { constructor() { super(); } static #p = 1; get g() { return A.#p; } static {} }

@@ -1,0 +1,1 @@
+function f(x){with(o)x=x+1;h(x)}

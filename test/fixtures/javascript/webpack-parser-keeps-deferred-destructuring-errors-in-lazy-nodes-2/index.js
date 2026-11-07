@@ -1,0 +1,1 @@
+({ __proto__: a, __proto__: b, c: d });

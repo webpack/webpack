@@ -1,0 +1,1 @@
+function f(){if(c){switch(d){case 1:if(a)b()}}else e()}

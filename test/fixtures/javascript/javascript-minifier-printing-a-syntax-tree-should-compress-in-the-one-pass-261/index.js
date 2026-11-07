@@ -1,0 +1,1 @@
+function f(a,r){return[(0,a).x(r),(0,a.b).c,(1,2).x,(0,let).x]}

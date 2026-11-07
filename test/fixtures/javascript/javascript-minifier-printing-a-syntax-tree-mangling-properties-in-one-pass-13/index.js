@@ -1,0 +1,1 @@
+function f({ zKey, zOther = 1 }, zLast) { return { zKey, zOther, zLast }; } sink(f({ zKey: 1 }, 2).zLast);

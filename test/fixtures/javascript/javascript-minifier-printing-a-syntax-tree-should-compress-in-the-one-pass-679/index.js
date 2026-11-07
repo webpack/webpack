@@ -1,0 +1,1 @@
+Array(-1);new Array(2**32);Array(a);String({toString(){return f()}});String({valueOf:f});String({__proto__:p});String({[k]:1});String({...o});String(1n);Error("m",{get cause(){f()}});Error("m",{cause:1});Math.abs(a);Math.random();x=1

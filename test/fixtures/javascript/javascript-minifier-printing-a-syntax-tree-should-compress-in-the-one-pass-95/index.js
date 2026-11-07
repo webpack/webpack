@@ -1,0 +1,1 @@
+function f(){ var a = g(), b = h(), c = k(); use(a, c) }

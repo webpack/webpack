@@ -1,0 +1,1 @@
+(function () {} / 2); if (a) function f() {} /re/

@@ -1,0 +1,1 @@
+Array.prototype.toString=f;+[]

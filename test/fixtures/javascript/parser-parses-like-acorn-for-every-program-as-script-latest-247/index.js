@@ -1,0 +1,1 @@
+for (var a = 1 of b) {}

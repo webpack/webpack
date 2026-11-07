@@ -1,0 +1,1 @@
+function f(){{l:function q(){}}g(typeof q)}

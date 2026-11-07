@@ -1,0 +1,1 @@
+export function q(x,o){return x?o.read():o.read()}

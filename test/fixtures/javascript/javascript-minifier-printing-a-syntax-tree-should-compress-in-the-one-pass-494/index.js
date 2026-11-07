@@ -1,0 +1,1 @@
+function f(){let a=u;return typeof a}function g(){let a=o;return typeof a}

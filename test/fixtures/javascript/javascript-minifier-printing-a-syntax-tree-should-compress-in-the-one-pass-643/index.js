@@ -1,0 +1,1 @@
+x=[parseInt("12"),isNaN("a"),Math.max(1,2),String.fromCharCode(65),"Ab".toLowerCase(),(12).toString(16),"ab".concat("c").toUpperCase()];if(isNaN(1))f()

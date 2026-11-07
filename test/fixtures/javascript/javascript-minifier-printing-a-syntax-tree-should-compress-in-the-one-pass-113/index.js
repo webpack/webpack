@@ -1,0 +1,1 @@
+function f(a){ "use strict"; 1, 2; Math.PI; a; "x" + 1; a.b; g; /*! c */ 3; try { window } catch (e) {} }

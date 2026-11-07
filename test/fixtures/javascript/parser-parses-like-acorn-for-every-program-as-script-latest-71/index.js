@@ -1,0 +1,1 @@
+async () => { for await (x of y) {} }

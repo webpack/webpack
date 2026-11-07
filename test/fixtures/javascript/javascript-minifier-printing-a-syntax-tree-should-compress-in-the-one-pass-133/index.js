@@ -1,0 +1,1 @@
+function f(c) { var a = 0, b = 0; true ? a = 1 : a = 2; c ? (0 ? b = 1 : b = 2) : b = 3; return [a, b] }

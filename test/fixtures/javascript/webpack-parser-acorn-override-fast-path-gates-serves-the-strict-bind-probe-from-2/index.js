@@ -1,0 +1,1 @@
+"use strict"; customBad = 1;

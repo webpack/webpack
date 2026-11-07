@@ -1,0 +1,1 @@
+function h(x){const K="a long string the printer keeps";return[`a${x}`+K,K,K]}

@@ -1,0 +1,1 @@
+console.log(Object.keys(/*c*/{a:1}).join(), Object.keys({a:1}/*d*/).length)

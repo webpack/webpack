@@ -1,0 +1,1 @@
+u(); function u() { return g() }

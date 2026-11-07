@@ -1,0 +1,1 @@
+function g() { var a = f(); var b = a } function h() { var x; x = f(); var b = x }

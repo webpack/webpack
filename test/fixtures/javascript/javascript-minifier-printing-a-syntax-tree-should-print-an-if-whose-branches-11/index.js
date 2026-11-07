@@ -1,0 +1,1 @@
+if(function(){h()}())g();else g()

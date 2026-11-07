@@ -1,0 +1,1 @@
+Object(),new Object,new Object({}),new Object(...[1])

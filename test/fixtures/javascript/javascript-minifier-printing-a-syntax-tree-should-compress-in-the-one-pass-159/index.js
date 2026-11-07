@@ -1,0 +1,1 @@
+function f(){ const t = 1; if (t) { a(); b() } else c(); if (!t) d(); else { e(); g() } if (t) h() }

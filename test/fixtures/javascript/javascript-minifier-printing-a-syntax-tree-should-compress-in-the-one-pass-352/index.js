@@ -1,0 +1,1 @@
+function f(){(function(o){g(o)})([1]);(function(p){g(p)})([2])}

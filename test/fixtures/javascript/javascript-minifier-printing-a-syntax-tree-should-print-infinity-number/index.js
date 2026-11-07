@@ -1,0 +1,1 @@
+console.log(Infinity, Number.POSITIVE_INFINITY, -Number.NEGATIVE_INFINITY, Infinity(), new Number.NEGATIVE_INFINITY, delete Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY(), Infinity``)

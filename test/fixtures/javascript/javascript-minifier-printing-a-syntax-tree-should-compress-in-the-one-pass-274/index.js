@@ -1,0 +1,1 @@
+function f(a){if(a)return;try{g()}catch(e){}}

@@ -1,0 +1,1 @@
+console.log(Object.keys([1,2]).join(), Object.keys('ab').join(), Object.keys(5).length)

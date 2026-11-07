@@ -1,0 +1,1 @@
+import defer * as ns from './x.js'; console.log(ns)

@@ -1,0 +1,1 @@
+result = (function () { var n = 4; function h() { var a = 1, b = 2; try { null.x } catch (err) { return typeof err + a + b + n } } return h() })();

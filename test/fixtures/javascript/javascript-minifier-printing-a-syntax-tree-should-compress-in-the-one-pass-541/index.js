@@ -1,0 +1,1 @@
+for(;;)if(1){var x=1;y(x)}else{var z}for(;;)if(1){let q=f();y(q,q)}else{var w}for(;;)if(1){}else{var u}for(;;)if(1)a();else{var t}

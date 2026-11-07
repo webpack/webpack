@@ -1,0 +1,1 @@
+with(o)x=a!=null?a:b

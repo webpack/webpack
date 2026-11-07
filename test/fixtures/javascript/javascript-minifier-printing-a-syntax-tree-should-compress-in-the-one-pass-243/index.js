@@ -1,0 +1,1 @@
+function f(n){if(!n)return 2;return g(n)}

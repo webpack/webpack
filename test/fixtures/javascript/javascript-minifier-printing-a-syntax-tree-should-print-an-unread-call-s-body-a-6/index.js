@@ -1,0 +1,1 @@
+var a, b; console.log(0 || ([a] = [1]), a, 1 && ({b} = {b:2}), b)

@@ -1,0 +1,1 @@
+function g(){ using x = f(); } g();

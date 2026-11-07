@@ -1,0 +1,1 @@
+export function run(f){"use strict";f=eval;return f("this")}export function t(f){g();f=missing;return typeof f}export function d(){g();x=1;return x;let x}

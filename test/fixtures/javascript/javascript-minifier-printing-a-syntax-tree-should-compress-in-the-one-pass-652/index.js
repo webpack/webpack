@@ -1,0 +1,1 @@
+x=["Ä".toLowerCase(),decodeURI("%"),Math.max(),"a".repeat(99),"ab".concat(g()),1.5.toString(2),(1).toFixed(30),parseInt("᠎1"),"ab".concat("c").length,1..toFixed(1)]

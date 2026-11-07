@@ -1,0 +1,1 @@
+var top = 1; let t2 = 2; export function e() {} function unusedTop() {} var ex = 1; export { ex }

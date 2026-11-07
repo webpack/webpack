@@ -1,0 +1,1 @@
+L:for(var i=0;i<3;i++){M:for(var j=0;j<3;j++){if(j==1)continue L;if(i==2)break L;console.log(i,j)}}

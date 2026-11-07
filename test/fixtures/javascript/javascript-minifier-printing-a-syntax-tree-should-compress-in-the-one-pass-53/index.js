@@ -1,0 +1,1 @@
+function f(H){ var x; x = g(); H(...x) }

@@ -1,0 +1,1 @@
+var \u0061bc = 1; var \u{62} = 2; var ℮ = 3; var \u{1d4d1} = 4; var ゛ = 5;

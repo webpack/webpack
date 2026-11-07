@@ -1,0 +1,1 @@
+function m(){var t=class{};return new t}

@@ -1,0 +1,1 @@
+x=[Array(6),Array(1.5),Array(-1),Array(a),Array(...a),Array(...a,b),Array(3,...[]),Array?.(1,2),Array(Array?.(a)),new(Array(1,2))]

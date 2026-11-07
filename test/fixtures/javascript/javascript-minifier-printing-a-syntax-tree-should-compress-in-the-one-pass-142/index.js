@@ -1,0 +1,1 @@
+function f(b, c) { var j = "(?:" + b + "|" + c + ")", re = j + "?"; return [re + re, b + 1 + "a " + true, (b + "a") + 1] }

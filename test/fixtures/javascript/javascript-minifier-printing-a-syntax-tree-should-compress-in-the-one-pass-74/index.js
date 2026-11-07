@@ -1,0 +1,1 @@
+a=""*(x="s");b=""-(x+="s");function f(){var t=import("x");return new t}console.log(function(){return void g()}())

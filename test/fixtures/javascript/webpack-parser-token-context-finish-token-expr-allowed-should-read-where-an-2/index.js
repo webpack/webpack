@@ -1,0 +1,1 @@
+if (a) /re/.test(b);

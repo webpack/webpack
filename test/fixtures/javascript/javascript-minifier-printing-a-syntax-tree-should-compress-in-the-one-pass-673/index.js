@@ -1,0 +1,1 @@
+Object.setPrototypeOf(Number.prototype,p);g(Math,[String],{a:Number});Object.keys(Math);Object[k](Math);x=[Math.abs(-1),(1).toFixed(1),"a".concat("b")]

@@ -1,0 +1,1 @@
+var k = {}; t(function () { ({ get [k]() {} }); });

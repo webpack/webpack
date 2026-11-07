@@ -1,0 +1,1 @@
+function f(o){ const [, a] = o, { b } = o; const [c] = o; c = 1; return a + b + c }

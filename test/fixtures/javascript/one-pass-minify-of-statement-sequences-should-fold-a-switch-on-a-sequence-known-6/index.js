@@ -1,0 +1,1 @@
+function s(w,x,y){switch(w(),42){case x():y()}}

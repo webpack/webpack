@@ -1,0 +1,1 @@
+(a, b) => a + b; a => { return a }; async (a) => await a; async a => a; () => {};

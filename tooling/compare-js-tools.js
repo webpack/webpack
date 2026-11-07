@@ -952,6 +952,10 @@ const wantedPreset = filterFrom("PRESET");
 
 const wantedRelation = filterFrom("RELATION");
 
+// The inputs the unit tests read, one directory each: `javascript/fixtures.unittest.js`
+// holds every one of them to these relations, with its own known differences.
+const UNIT_INPUT_RE = /^test\/fixtures\/javascript\/[^/]+\/index\.js$/;
+
 // What the last sweep did not find, read by the report and by the gate.
 /** @type {string[]} */
 let _missingFixtures = [];
@@ -970,11 +974,9 @@ const invariantFixtures = () => {
 		".js",
 		SKIPPED_FIXTURE_DIRS
 	)) {
-		out.push([
-			path.relative(ROOT, file).replace(/\\/g, "/"),
-			fs.readFileSync(file, "utf8"),
-			undefined
-		]);
+		const label = path.relative(ROOT, file).replace(/\\/g, "/");
+		if (UNIT_INPUT_RE.test(label)) continue;
+		out.push([label, fs.readFileSync(file, "utf8"), undefined]);
 	}
 	// Every production in every edition, under the options acorn tests it with:
 	// the corpus is recorded from acorn's own suite, so a range the parser gets

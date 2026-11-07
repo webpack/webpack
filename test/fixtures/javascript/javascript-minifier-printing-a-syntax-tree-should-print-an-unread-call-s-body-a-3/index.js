@@ -1,0 +1,1 @@
+function h(){g();var v=1;function g(){console.log(v)}console.log(v)}h()

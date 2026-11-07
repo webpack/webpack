@@ -1,0 +1,1 @@
+switch (a) { case 1: b(); default: c() } switch (x) {} try { a } catch { b } finally { c }

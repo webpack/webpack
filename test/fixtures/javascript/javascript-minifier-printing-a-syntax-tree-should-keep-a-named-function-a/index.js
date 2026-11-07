@@ -1,0 +1,1 @@
+result = (function f() { return class { static value = eval("typeof f") } })().value;

@@ -1,0 +1,1 @@
+function f(){(function(o){if(0)g(o)})([1])}

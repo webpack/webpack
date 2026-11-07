@@ -1,0 +1,1 @@
+function f(){if(x)throw 1;if(y)throw 1;if(z)throw 1;g()}if(a)throw c;if(b)throw d

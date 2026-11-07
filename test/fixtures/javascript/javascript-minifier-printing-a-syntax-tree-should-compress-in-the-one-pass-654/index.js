@@ -1,0 +1,1 @@
+x=[Array.of("a","b"),Array.of(),Array.of(...a,1),Array?.of(1)];function f(Array){return Array.of(1)}

@@ -1,0 +1,1 @@
+x=[new Array,Array(),Array(0),Array(1),Array(5),Array("a"),Array(7n),Array(a,b),Array(...a,"b"),Array(Array(1,"2")),new Array(a,...b,c),Array(...[1,2]),Array(1,2).length]

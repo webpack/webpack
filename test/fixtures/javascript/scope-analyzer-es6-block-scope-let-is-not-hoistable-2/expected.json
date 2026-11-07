@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": ";\n      ->",
+		"why": "a first pass leaves an empty statement where a block it rewrote was, and only a second pass drops it"
+	}
+]

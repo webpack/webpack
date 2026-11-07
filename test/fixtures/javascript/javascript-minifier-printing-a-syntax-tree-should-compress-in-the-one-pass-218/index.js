@@ -1,0 +1,1 @@
+function m(){const e=2;e=1;return 3}

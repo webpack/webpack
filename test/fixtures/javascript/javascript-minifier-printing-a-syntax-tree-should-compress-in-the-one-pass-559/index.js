@@ -1,0 +1,1 @@
+for(;;){if(x)break;else({}).a=1;z()}for(;;){if(x)break;else{y();q()}z()}for(;;){if(x)break;else/*k*/y();z()}

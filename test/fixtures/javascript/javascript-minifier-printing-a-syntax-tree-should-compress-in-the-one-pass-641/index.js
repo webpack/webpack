@@ -1,0 +1,1 @@
+async function*g(){return void 0}async function*h(){x();return void 0}function k(){x();return void 0}

@@ -1,0 +1,1 @@
+function f(){switch(1){/*! keep */case 1:a()}}f()

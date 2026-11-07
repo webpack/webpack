@@ -1,0 +1,1 @@
+var await,yield;async function a(){function b(){await=1}b()}a();async function c(){(function(){await=2})();x=function(){return await}()}c();function*d(){(function(){yield=1})()}d().next();g(await,yield)

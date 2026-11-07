@@ -1,0 +1,1 @@
+function f(t){if(t/*! c */)g();else g()}

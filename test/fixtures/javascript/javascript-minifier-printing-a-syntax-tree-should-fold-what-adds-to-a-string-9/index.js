@@ -1,0 +1,1 @@
+a=typeof c+[1?/*! keep */null:null]

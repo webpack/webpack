@@ -1,0 +1,1 @@
+var o = { zFooBar: 1, zBazQux: 2 }; console.log(o.zFooBar, o.zBazQux);

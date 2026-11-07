@@ -1,0 +1,1 @@
+function f(y){(function(x){if(x)return;if(g(x))return 3})(y)}

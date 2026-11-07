@@ -1,0 +1,1 @@
+function f(x){switch(x){case 1:g()}return x}

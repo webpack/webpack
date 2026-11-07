@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "(y=1):c,x=a&&b&&d||c,f((a||b,c)),x=(a||b,c).y,a||(f()),c,(a||b,c)``,x=\n      -> y=1:c,x=a&&b&&d||c,f((a||b,c)),x=(a||b,c).y,a||f(),c,(a||b,c)``,x=((a,",
+		"why": "a first pass keeps parentheses around an expression it rewrote, and only a second pass drops them"
+	},
+	{
+		"relation": "idempotence",
+		"contains": "(y=1):c,x=a&&b&&d||c,f((a||b,c)),x=(a||b,c).y,a||(f()),c,(a||b,c)``;\n      -> y=1:c,x=a&&b&&d||c,f((a||b,c)),x=(a||b,c).y,a||f(),c,(a||b,c)``;",
+		"why": "a first pass keeps parentheses around an expression it rewrote, and only a second pass drops them"
+	}
+]

@@ -1,0 +1,1 @@
+export const f = (a, b, c = (x ? false : !!b.d)) => g(a, b, c);

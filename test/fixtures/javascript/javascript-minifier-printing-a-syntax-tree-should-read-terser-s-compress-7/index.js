@@ -1,0 +1,1 @@
+var console=k;console.log(1);

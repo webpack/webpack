@@ -1,0 +1,1 @@
+x = typeof { __proto__: 1, __proto__: 2 };

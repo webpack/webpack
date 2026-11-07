@@ -1,0 +1,1 @@
+a < /script/.test(b); a < /x/; f(/a/, /script/);

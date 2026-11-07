@@ -1,0 +1,1 @@
+function f(){var a="x"in o;for(;;a++)use(a)}function h(){a="x"in o;for(;;)use()}

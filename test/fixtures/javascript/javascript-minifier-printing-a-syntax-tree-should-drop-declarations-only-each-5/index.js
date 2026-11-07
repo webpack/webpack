@@ -1,0 +1,1 @@
+(function(){class A{static{h()}} class B{[h()](){}} g()})()

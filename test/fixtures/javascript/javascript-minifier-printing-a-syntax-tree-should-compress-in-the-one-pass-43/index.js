@@ -1,0 +1,1 @@
+function f(){ const t = true, u = false, n = null; return [t, t, t, u, u, u, !t, n, n, n, n] }

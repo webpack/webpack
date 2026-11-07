@@ -1,0 +1,1 @@
+function f(z){var q=z.p;function g(a,b){return a}return[g(x,q),g(y,2)]}

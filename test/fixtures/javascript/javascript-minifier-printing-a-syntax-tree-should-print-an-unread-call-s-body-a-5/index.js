@@ -1,0 +1,1 @@
+console.log([1][0].toString(), [this][0] === this, [function(){return 2}()][0].toFixed())

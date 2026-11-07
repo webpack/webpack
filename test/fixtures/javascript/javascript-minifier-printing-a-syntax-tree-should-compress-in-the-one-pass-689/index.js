@@ -1,0 +1,1 @@
+Reflect.get(Math,"max");x=[[1].concat(2),Math.max(1,2)]

@@ -1,0 +1,1 @@
+(function(){var a=f();console.info(a);g()})()

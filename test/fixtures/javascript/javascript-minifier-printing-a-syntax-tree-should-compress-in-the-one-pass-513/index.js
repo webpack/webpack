@@ -1,0 +1,1 @@
+for(;;){/*c*/if(x)break;y()}class S{/*k*/static{}}

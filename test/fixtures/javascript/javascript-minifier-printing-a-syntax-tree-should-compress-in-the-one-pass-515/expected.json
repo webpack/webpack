@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "()=>{})),x(+y),x(y<z),x(a??b),x=a&&b&&c&&d&&e,x=a||b||c||d||e,x=a??b??\n      -> )=>{}),x(+y),x(y<z),x(a??b),x=a&&b&&c&&d&&e,x=a||b||c||d||e,x=a??b??c?",
+		"why": "a first pass keeps parentheses around an expression it rewrote, and only a second pass drops them"
+	}
+]

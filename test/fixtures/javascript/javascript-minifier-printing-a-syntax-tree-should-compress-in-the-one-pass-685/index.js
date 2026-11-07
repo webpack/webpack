@@ -1,0 +1,1 @@
+x=[[g()].concat(1).join(),[1].concat([g()]).join(),[1].concat((g(),2)).join(),[1].concat(void 0,null).join()]

@@ -1,0 +1,1 @@
+console.log(Object.keys({...{a:1}}).join(), Object.keys({get a(){return 1}}).join(), Object.keys({a(){}}).join())

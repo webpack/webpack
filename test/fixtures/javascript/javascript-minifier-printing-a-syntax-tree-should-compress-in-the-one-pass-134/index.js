@@ -1,0 +1,1 @@
+var t; if (a === 1) t = "x"; else t = "y"; function f(a) { if (a) X = 1; else X = 2; l: { for (;;) { if (a) break l; if (!a) break l; g() } } }

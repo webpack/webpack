@@ -1,0 +1,1 @@
+switch(x()){default:g();break;/*! c */h()}

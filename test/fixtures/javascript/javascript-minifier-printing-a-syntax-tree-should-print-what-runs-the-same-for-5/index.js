@@ -1,0 +1,1 @@
+let count=0;function invoke(){count+=1}function id(v){return v}(/* @__PURE__ */ id(invoke))();(/* @__PURE__ */ id(invoke)).call();console.log(count)

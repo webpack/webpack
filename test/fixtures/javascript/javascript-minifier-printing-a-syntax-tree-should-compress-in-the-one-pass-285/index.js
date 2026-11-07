@@ -1,0 +1,1 @@
+f=x=>{a();return b};g((0,a).b)

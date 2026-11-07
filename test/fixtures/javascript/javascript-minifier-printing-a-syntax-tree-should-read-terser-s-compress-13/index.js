@@ -1,0 +1,1 @@
+if(DEBUG)x();g(VERSION,O);

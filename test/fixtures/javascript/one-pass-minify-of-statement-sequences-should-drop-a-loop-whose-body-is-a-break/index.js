@@ -1,0 +1,1 @@
+function f(a){for(;;){break}while(1)break;for(;a;f())break;g()}

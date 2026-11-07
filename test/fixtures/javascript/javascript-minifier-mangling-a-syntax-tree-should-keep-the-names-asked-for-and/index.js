@@ -1,0 +1,1 @@
+function outer(){ function inner(){} function other(){} class K {} class L {} var keepFn = function(){}, dropFn = () => 1, named = function n(){}, [d] = [], u; let KCls = class {}, LCls = class {}, M = class N {}, y = 1; return [inner, other, K, L, keepFn, dropFn, named, d, u, KCls, LCls, M, y] } outer()

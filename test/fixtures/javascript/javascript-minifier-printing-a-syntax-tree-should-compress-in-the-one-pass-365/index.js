@@ -1,0 +1,1 @@
+function f(e,t,x){e.name=e.name+(t-1);x=x*(a+b);x=x+(c?1:2);x=x+(y=2);x=x|(a||b);x=x+(a*b);x=x+(a,b);x=x+(f||g)(1);x=x+/*k*/(a-b);h(x)}function*g(x){x=x+(yield);h(x)}

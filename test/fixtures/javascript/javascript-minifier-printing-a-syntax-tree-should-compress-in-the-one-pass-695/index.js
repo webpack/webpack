@@ -1,0 +1,1 @@
+Array[Symbol.species]=g;Array.prototype.constructor=h;x=[1].concat(2)

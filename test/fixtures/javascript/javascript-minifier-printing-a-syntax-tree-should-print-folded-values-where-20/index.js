@@ -1,0 +1,1 @@
+export function f(){ const c = (n, U) => g(n, U); return c("file", h) }

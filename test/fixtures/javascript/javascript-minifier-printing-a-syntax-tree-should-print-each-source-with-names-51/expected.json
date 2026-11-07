@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "(function() {}) + 1;/*! c */ /*! d */ /*! e */(function() {} || o).toS\n      -> (function() {}) + 1;/*! c */ /*! d */ /*! e */ (function() {} || o).t",
+		"why": "beautifying spaces a kept comment differently once a first pass has moved it, so a second pass moves the spaces around it"
+	}
+]

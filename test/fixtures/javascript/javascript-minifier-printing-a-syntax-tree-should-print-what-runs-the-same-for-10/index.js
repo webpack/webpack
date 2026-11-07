@@ -1,0 +1,1 @@
+!function(){var p=function(o){return isS(o)?1:2};function isO(v){return v>1}function isS(v){return v&&isO(v)}console.log(p(0),p(3))}()

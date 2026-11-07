@@ -1,0 +1,1 @@
+function f(c,d){if(d)k();else if(c())g(),h();else g(),h()}

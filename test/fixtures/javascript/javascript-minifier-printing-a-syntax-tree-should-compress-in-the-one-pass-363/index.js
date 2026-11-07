@@ -1,0 +1,1 @@
+function f(x){x=x>>>g();h(x)}

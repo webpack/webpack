@@ -1,0 +1,1 @@
+var v = 5; value = v; return value == null ? undefined : v

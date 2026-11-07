@@ -1,0 +1,1 @@
+Object.prototype.hasOwnProperty,Array.prototype.slice,String.prototype.trim

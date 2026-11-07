@@ -1,0 +1,1 @@
+var o = { /*@__MANGLE_PROP__*/ zMarked: 1, zUnmarked: 2, _zUnder: 3 }; Object.defineProperty(o, "zDefined", { value: 4, enumerable: true }); console.log(o.zMarked, o.zUnmarked, o._zUnder, o["_zUnder"], o.zDefined, "zDefined" in o);

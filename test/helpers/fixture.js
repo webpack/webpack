@@ -5,17 +5,26 @@ const path = require("path");
 
 const FIXTURES = path.join(__dirname, "..", "fixtures");
 
+/** @typedef {"css" | "html" | "javascript" | "xml"} FixtureLanguage */
+
 /** @type {Map<string, string>} */
 const cache = new Map();
 
 /**
- * One unit-test input, kept once under `test/fixtures/<lang>/<name>/index.<lang>`.
- * @param {"css" | "html" | "xml"} lang the language the input is written in
+ * @param {FixtureLanguage} lang a fixture language
+ * @returns {string} the file name its inputs are kept under
+ */
+const indexFile = (lang) =>
+	lang === "javascript" ? "index.js" : `index.${lang}`;
+
+/**
+ * One unit-test input, kept once under `test/fixtures/<lang>/<name>/`.
+ * @param {FixtureLanguage} lang the language the input is written in
  * @param {string} name the fixture directory
  * @returns {string} the input
  */
 const fixture = (lang, name) => {
-	const file = path.join(FIXTURES, lang, name, `index.${lang}`);
+	const file = path.join(FIXTURES, lang, name, indexFile(lang));
 	let source = cache.get(file);
 	if (source === undefined) {
 		source = fs.readFileSync(file, "utf8");
@@ -49,7 +58,7 @@ const readList = (file) =>
 
 /**
  * Every fixture of a language with what the runner asks of it.
- * @param {"css" | "html" | "xml"} lang the language
+ * @param {FixtureLanguage} lang the language
  * @returns {FixtureEntry[]} one entry per fixture, by name
  */
 const fixtures = (lang) => {
@@ -61,7 +70,7 @@ const fixtures = (lang) => {
 	const first =
 		lang === "xml" ? { xml: true, mode: "minify" } : { mode: "minify" };
 	for (const name of fs.readdirSync(dir).sort()) {
-		if (!fs.existsSync(path.join(dir, name, `index.${lang}`))) continue;
+		if (!fs.existsSync(path.join(dir, name, indexFile(lang)))) continue;
 		/** @type {Map<string, { mode: "minify" | "beautify", xml?: boolean }>} */
 		const options = new Map([[JSON.stringify(first), first]]);
 		for (const one of readList(path.join(dir, name, "options.json"))) {

@@ -1,0 +1,1 @@
+var a=0;for(;c<b;c++)use();if(x){var d;for(d in b)use()}class C{static{var e=0;for(;c<b;c++)use()}}use(C)

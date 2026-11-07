@@ -1,0 +1,1 @@
+'use strict'; class A {} class A {}

@@ -1,0 +1,1 @@
+!function(){var a="\\.";var w="[^"+a+"]";var d=/(W)/.source.replace("W",w);var t=new RegExp(""+"^"+d+n+"$");g(t,w,a)}()

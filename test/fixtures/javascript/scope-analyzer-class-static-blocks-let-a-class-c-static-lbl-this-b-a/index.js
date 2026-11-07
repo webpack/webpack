@@ -1,0 +1,1 @@
+let a; class C { static { lbl: { this.b = a } } }

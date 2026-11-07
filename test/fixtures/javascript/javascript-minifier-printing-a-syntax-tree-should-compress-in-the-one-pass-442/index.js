@@ -1,0 +1,1 @@
+function f(){l:switch(d){case 1:x();break l}}
