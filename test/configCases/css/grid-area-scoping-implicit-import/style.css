@@ -1,0 +1,9 @@
+/* Each import names what `lib.css` only implies: a line of an area it
+   declares, or the area its lines declare. */
+@value area-start as areaStart from "./lib.css";
+@value line from "./lib.css";
+@value tail from "./lib.css";
+
+.use-area-start { grid-column: areaStart }
+.use-line { grid-area: line; grid-row: line-start }
+.use-tail { grid-area: tail }
