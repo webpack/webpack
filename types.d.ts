@@ -36575,8 +36575,8 @@ declare abstract class Worker<M extends WorkerModule = WorkerDefaultModule> {
 	 */
 	run<K extends string>(
 		method: K,
-		...args: Parameters<M[K]>
-	): Promise<ReturnType<M[K]>>;
+		...args: Parameters<Extract<M[K], (...args: never[]) => unknown>>
+	): Promise<Awaited<ReturnType<Extract<M[K], (...args: never[]) => unknown>>>>;
 
 	/**
 	 * Spawns up to `workers` threads and preloads this module in each.
@@ -36597,11 +36597,11 @@ declare interface WorkerDefaultModule {
 }
 
 /**
- * Constraint for a worker module: `never[]` accepts any function signature
- * under contravariance, so a module with typed exports satisfies it.
+ * Constraint for a worker module: any exports. Only the ones a caller runs
+ * need to be functions.
  */
 declare interface WorkerModule {
-	[index: string]: (...args: never[]) => unknown;
+	[index: string]: unknown;
 }
 
 /**

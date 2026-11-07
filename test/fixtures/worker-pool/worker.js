@@ -2,6 +2,8 @@
 
 module.exports.add = (a, b) => a + b;
 
+module.exports.addAsync = async (a, b) => a + b;
+
 module.exports.info = () => {
 	try {
 		const { threadId, isMainThread } = require("worker_threads");

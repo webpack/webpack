@@ -314,6 +314,8 @@ describe("LoaderWorker", () => {
 		expect(/** @type {{ message: string }} */ (warning[0]).message).toMatch(
 			/^Failed to parse source map\./
 		);
+		// no loader owns this warning; the main thread adds it module-level
+		expect(warning.length).toBe(1);
 		expect(firstValue(result)).toContain("sourceMappingURL");
 	});
 });

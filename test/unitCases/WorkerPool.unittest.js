@@ -197,6 +197,14 @@ describe("WorkerPool", () => {
 					worker
 				);
 			expect(await typed.run("add", 1, 2)).toBe(3);
+
+			// exports may include constants; async methods unwrap their promise
+			const typedAsync =
+				/** @type {import("../../lib/worker/Worker")<{
+					version: string,
+					addAsync: (a: number, b: number) => Promise<number>
+				}>} */ (worker);
+			expect(await typedAsync.run("addAsync", 1, 2)).toBe(3);
 			await worker._pool.end();
 		});
 
@@ -444,19 +452,23 @@ describe("WorkerPool", () => {
 			expect(await pool.run(TARGET, "add", [1, 2])).toBe(3);
 		});
 
-		it("spawns up to max for concurrent loader jobs", async () => {
+		it("spreads concurrent loader jobs over the pool", async () => {
 			const pool = createThreadPool({ max: 4 });
 			const jobs = [];
-			for (let i = 0; i < 4; i++) {
+			for (let i = 0; i < 12; i++) {
 				jobs.push(
 					pool.runJob(TARGET, "info", [], { rpc: () => undefined })
 				);
 			}
 			const infos = await Promise.all(jobs);
-			const threadIds = new Set(
-				infos.map((/** @type {EXPECTED_ANY} */ info) => info.threadId)
-			);
-			expect(threadIds.size).toBe(4);
+			/** @type {Map<number, number>} */
+			const perThread = new Map();
+			for (const info of infos) {
+				const { threadId } = /** @type {{ threadId: number }} */ (info);
+				perThread.set(threadId, (perThread.get(threadId) || 0) + 1);
+			}
+			expect(perThread.size).toBe(4);
+			for (const count of perThread.values()) expect(count).toBe(3);
 			await pool.end();
 		});
 
