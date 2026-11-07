@@ -1,0 +1,7 @@
+.m5 {
+	color: green;
+}
+
+.m4 {
+	composes: m5;
+}

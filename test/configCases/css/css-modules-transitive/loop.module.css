@@ -1,0 +1,3 @@
+.loop-other {
+	composes: loop from "./composes.module.css";
+}

@@ -10,13 +10,12 @@ module.exports = {
 	module: {
 		parser: {
 			"css/auto": {
-				namedExports: true
+				namedExports: false
 			}
 		},
 		generator: {
 			"css/auto": {
-				localIdentName: "[local]",
-				exportsOnly: true
+				localIdentName: "[local]"
 			}
 		}
 	}
