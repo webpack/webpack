@@ -1,0 +1,1 @@
+const f = async (a, b = 1) => a + b; async(1, 2);

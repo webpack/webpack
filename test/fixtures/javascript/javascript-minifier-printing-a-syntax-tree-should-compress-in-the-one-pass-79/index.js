@@ -1,0 +1,1 @@
+function f(b){return b+1}export default f;

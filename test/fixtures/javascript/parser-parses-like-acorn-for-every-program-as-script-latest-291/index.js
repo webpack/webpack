@@ -1,0 +1,1 @@
+class A { #a; m() { #a in this; #a in #a in this; 1 + #a in this } }

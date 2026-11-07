@@ -1,0 +1,1 @@
+do{c()}while(!0);do{d();e()}while(0);f();do{if(x)break;d()}while(0);do{let q=g();h(q,q)}while(0);l:do{d()}while(0);if(a)do{d();e()}while(0);else f();do;while(0);do{switch(a){case 1:b()}}while(0);do{(function(){for(k in o)break})()}while(0)

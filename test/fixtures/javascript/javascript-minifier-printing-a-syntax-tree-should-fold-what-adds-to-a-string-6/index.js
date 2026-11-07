@@ -1,0 +1,1 @@
+const A=Array;A.prototype.join=()=>"x";a=[1]+""

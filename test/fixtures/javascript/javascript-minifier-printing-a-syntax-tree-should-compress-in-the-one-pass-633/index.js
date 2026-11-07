@@ -1,0 +1,1 @@
+function f(){for(let i=0;i<3;i++){var v=i,w=g(i)}}function k(){var b=2,a=f();use(b);var c;use(c=1,c)}

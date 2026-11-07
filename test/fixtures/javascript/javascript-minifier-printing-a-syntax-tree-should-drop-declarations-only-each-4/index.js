@@ -1,0 +1,1 @@
+(function(){function a(){return b()} function b(){return a()} g(a)})()

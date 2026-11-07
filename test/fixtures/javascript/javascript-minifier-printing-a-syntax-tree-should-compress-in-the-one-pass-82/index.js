@@ -1,0 +1,1 @@
+export function h(e){function M(x){return x,x+1}return e*M(0)}

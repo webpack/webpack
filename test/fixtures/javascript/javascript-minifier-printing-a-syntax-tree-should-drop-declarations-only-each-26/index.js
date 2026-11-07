@@ -1,0 +1,1 @@
+(function(){function a(){} /*! keep */ g()})()

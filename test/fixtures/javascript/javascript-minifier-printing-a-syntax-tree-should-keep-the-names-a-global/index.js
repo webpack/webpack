@@ -1,0 +1,1 @@
+function keepMe(){} function keepToo(){} function dropMe(){} g(keepMe, keepToo, dropMe); g(keepMe, keepToo, dropMe)

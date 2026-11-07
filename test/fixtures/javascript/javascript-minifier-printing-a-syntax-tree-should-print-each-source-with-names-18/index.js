@@ -1,0 +1,1 @@
+label: for(;;) { continue label; break label } lbl: ; do x(); while (y); with (o) p;

@@ -1,0 +1,1 @@
+new WeakMap;Object.keys(1);x=1

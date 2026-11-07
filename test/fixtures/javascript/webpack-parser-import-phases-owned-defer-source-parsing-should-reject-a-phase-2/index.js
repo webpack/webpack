@@ -1,0 +1,1 @@
+const y = new import.defer("x");

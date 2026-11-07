@@ -1,0 +1,1 @@
+x = async function () {} / 2; async function f() {} /re/

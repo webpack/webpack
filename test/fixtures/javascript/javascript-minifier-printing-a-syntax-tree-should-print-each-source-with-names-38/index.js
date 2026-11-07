@@ -1,0 +1,1 @@
+import("a", (b, c)); new (import("a")); new A(import("a"));

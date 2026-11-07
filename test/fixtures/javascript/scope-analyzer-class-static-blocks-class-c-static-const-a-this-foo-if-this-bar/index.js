@@ -1,0 +1,1 @@
+class C { static { const { a } = this.foo; if (this.bar) { const b = a + 1; this.baz(b); } } }

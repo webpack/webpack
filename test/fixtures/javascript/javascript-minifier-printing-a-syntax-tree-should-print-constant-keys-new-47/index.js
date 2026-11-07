@@ -1,0 +1,1 @@
+export function f(r){var h;h=x=>x+1;r.add([h])}export function g(r){var a,b;b=r();return[a,b]}export function h(){var h;h=h||1;return h}export function k(r){let a;a=r();switch(r){case 1:var c;c=r();r(c,c)}return[a,a]}

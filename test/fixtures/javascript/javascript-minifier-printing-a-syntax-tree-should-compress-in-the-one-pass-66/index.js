@@ -1,0 +1,1 @@
+function f(){ var m = function(){} /* keep */; h(m) }

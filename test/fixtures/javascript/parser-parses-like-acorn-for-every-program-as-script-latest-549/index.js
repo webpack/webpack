@@ -1,0 +1,1 @@
+a: { continue a; }

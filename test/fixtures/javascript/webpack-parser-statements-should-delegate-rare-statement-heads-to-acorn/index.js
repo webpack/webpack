@@ -1,0 +1,1 @@
+do ; while (a); switch (b) { default: } try { throw 1; } catch { } with (c) d(); debugger; ;

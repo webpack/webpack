@@ -1,0 +1,1 @@
+delete Number.prototype.toFixed;Math.round++;[String.prototype.trim]=[f];for(Math.ceil in o);x=[(1).toFixed(1),Math.round(1.5)," a".trim(),Math.ceil(1.5),Math.floor(1.5)]

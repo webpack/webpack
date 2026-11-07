@@ -1,0 +1,1 @@
+do{foo();break}while(0);do{break}while(!new Date());do{foo();break}while(x());if(a)do{f();g();break}while(x);else h();for(;;)do{break}while(x);do{let q=f(),r=g();h(q,r,q,r);break}while(x);do{a={};break}while(x);do{for(;;){}break}while(x);do{if(a)break;f();break}while(x)

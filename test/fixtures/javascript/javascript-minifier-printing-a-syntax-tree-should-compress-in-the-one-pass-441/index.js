@@ -1,0 +1,1 @@
+function f(){for(;;){switch(d){case 1:continue}}}

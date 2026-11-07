@@ -1,0 +1,1 @@
+function f(a){ if (0) { a = function(){ var z } } return a }

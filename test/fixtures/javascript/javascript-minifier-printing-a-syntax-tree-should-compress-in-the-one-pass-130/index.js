@@ -1,0 +1,1 @@
+function f(a, b) { a = 2; return [((x) => x + 1)(a), ((x) => () => x)(b), (function () { return this })(), (function n() { return n })(), (async () => 1)(), ((x) => x)(b, b), (() => 1)?.()] }

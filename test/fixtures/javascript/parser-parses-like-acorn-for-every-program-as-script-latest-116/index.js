@@ -1,0 +1,1 @@
+'use strict'; eval = 1; arguments = 2; var eval;

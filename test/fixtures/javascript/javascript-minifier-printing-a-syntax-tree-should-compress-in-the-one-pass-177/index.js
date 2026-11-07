@@ -1,0 +1,1 @@
+function f(a){var c={}.x;var b=c+1;b,g()}

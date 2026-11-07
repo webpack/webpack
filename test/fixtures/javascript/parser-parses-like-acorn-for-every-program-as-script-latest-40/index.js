@@ -1,0 +1,1 @@
+x = !a; x = ~a; x = +a; x = -a; x = typeof a; x = void a; x = delete a.b; x = ++a; x = a--;

@@ -1,0 +1,1 @@
+function f(o,p){var x=p;x.f(x)}

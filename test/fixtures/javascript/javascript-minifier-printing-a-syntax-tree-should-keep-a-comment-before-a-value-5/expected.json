@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "return(//@license e)?1:2}console.log(e(0),e(1));\n      -> //@license return e?1:2}console.log(e(0),e(1));",
+		"why": "a first pass leaves a kept `//@license` comment where the condition it sat in was, and only a second pass moves it"
+	}
+]

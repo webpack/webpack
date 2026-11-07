@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "return a = 1; /*! c */return a.b.c(); /*! d */return a, b/*! e */; ret\n      -> return a = 1; /*! c */ return a.b.c(); /*! d */ return a, b/*! e */;",
+		"why": "beautifying spaces a kept comment differently once a first pass has moved it, so a second pass moves the spaces around it"
+	}
+]

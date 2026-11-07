@@ -1,0 +1,1 @@
+"u"<typeof x||x

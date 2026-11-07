@@ -1,0 +1,1 @@
+function f(){g();{h();k()}m()}

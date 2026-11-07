@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "} { a(); } if (a) b(); else c();\n      -> } { a(); } if (a) b(); else c();",
+		"why": "beautifying spaces a kept comment differently once a first pass has moved it, so a second pass moves the spaces around it"
+	}
+]

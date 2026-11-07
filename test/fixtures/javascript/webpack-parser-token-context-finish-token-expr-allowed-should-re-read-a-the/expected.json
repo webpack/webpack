@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "respelling name-escape",
+		"contains": "g\n      -> \\u0067",
+		"why": "the check's own token scan reads the `/` after `yield` as division, so it escapes the regexp's `g` flag as if it were a name"
+	}
+]

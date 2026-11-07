@@ -1,0 +1,1 @@
+for (x of /re/g); yield / 2; typeof /re/; a => /re/

@@ -1,0 +1,1 @@
+function f(v){if(v)({}).a();else({}).a()}

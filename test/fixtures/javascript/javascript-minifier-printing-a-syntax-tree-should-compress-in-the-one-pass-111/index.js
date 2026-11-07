@@ -1,0 +1,1 @@
+function f(o){ const T = 1, N = null; g(T && o.f, T || o, N ?? o, T ?? o); delete (T && o.x); (T && o.f)(); T && function(){}(); g(T || h(/*! c */ 2)) }

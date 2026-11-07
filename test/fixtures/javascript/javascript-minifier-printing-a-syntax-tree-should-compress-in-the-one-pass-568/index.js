@@ -1,0 +1,1 @@
+while(a&&b){if(delete x.a){}else{break}f()}while(a){if(c);else break;f()}for(;;){if(c){/*! k */}else break;f()}while(a){if(c){var q}else break;f()}for(;;){if(x){}else break}

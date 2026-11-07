@@ -1,0 +1,1 @@
+var k = "zDyn"; var o = { ["zLit"]: 1, [k]: 2, ["zA" + "zB"]: 3 }; o.zLit2 = o["zLit"]; function pick(c) { return o[c ? "zLit" : "zLit2"]; } console.log(o.zLit, o.zLit2, o.zAzB, o["zA" + "zB"], pick(true), pick(false), o?.["zLit"], globalThis.zGlobal);

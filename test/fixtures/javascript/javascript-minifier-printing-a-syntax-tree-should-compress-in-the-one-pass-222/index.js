@@ -1,0 +1,1 @@
+x=[false.toString(b),new true,new false(1),true.x,undefined.x];y=()=>undefined;class A{u=undefined;static v=undefined}

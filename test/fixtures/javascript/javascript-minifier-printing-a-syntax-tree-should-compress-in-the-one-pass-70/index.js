@@ -1,0 +1,1 @@
+export var f;var f=0;function d1(){console.log(f);d2()}function d2(){d1()}f=1

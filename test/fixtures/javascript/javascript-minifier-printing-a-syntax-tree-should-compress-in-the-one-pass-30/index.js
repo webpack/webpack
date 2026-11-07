@@ -1,0 +1,1 @@
+function f(){ var a = undefined; return 1 } f()

@@ -1,0 +1,1 @@
+Boolean(obj),new Boolean(f())

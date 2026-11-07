@@ -1,0 +1,1 @@
+Array.prototype[Symbol.iterator]=f;new Set([1])

@@ -1,0 +1,1 @@
+`a\${b`;"use strict";var t=function(){return this}();console.log(typeof t)

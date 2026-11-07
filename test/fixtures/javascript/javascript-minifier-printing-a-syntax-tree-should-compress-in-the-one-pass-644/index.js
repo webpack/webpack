@@ -1,0 +1,1 @@
+x=[Math.min(-1,2),Math.min(-1,2).x,-Math.abs(-3),Math.min(-1,2)()]

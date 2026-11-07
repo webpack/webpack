@@ -1,0 +1,1 @@
+f(!\u0049nfinity,typeof \u004eaN)

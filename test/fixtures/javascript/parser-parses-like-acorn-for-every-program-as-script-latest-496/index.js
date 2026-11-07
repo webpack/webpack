@@ -1,0 +1,1 @@
+async function f() { await using = 1; }

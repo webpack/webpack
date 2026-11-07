@@ -1,0 +1,1 @@
+(function(){function f(){return g()}h(f())})()

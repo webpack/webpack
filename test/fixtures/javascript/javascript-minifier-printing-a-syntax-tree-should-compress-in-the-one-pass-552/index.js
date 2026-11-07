@@ -1,0 +1,1 @@
+function g(a){(a,function(){h(this)})(),x=(a,function(){})(),new(a,function(){})(1),new(a,class{})}

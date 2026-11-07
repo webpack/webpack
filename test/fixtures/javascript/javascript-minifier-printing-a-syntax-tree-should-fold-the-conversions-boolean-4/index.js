@@ -1,0 +1,1 @@
+function f(Boolean,Number){a=[Boolean(b),Number(1)]}

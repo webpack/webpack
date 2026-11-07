@@ -1,0 +1,1 @@
+L:for(var i=0;i<3;i++)switch(i){case 1:break L;default:console.log(i)}

@@ -1,0 +1,1 @@
+function f(a){return[a?x:!0,a?x:!1]}

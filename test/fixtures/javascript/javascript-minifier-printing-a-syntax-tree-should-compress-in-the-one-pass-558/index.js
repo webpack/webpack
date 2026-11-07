@@ -1,0 +1,1 @@
+for(;;){if(x)break;else y();z()}for(;;){if(x)y();else break;z()}while(1){if(x)break;else y()}

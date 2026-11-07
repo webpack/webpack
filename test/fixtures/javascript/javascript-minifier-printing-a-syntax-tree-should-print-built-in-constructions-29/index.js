@@ -1,0 +1,1 @@
+new(c?o.f:o.f)(1);(c?o.f:o.g)(1);(c?a+b:a+b)(1);x=c?o.f:o.f

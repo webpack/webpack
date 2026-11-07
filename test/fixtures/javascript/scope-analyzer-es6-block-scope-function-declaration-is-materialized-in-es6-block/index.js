@@ -1,0 +1,7 @@
+
+				{
+					function test() {
+					}
+					test();
+				}
+			

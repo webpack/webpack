@@ -1,0 +1,1 @@
+switch(foo){case"bar":bar();break;case"moo":case moo:case"baz":break}switch(a){case 1:b();break;case 2:c();break;case 3:}switch(a){case 1:b();break;default:break;case g():}switch(a){case 1:b();break;/*! c */case g():}

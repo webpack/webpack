@@ -1,0 +1,1 @@
+function f(){ var a = 1; g(a) /* keep */ }

@@ -1,0 +1,1 @@
+export function f(r){var h;h=r();g(h,h)}

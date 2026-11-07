@@ -1,0 +1,1 @@
+Array.prototype.toString=()=>"!";a=[1,2]+"";b=typeof c+[]

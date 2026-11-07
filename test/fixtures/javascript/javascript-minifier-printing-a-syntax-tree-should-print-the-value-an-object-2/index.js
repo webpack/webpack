@@ -1,0 +1,1 @@
+(function(){console.log(f());var k="a";function f(){var v={[k]:1}.a;g(v);return v+v}function g(){}})()

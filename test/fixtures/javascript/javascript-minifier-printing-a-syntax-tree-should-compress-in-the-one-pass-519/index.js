@@ -1,0 +1,1 @@
+if(foo())debugger;if(x)debugger;else foo();label:debugger;for(;;)debugger;if(x);else foo();if(x){}else{foo();bar()}if(a==b);else c();if(p){if(x);else foo()}else q();if(x);else if(y)z();void x;void f();x=(void g(),1);function q(){let x=1;void x;if(x);h()}

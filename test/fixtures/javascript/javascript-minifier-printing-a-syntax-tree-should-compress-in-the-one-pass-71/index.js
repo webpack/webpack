@@ -1,0 +1,1 @@
+let a;function f(){a="1";g(a)}f();function h(){g(this)}h();function k(){g()}x=k()

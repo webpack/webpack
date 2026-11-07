@@ -1,0 +1,1 @@
+result = (function () { var e = 'outer'; function q() { try { throw 'in' } catch (e) { return e } } return q() + e })();

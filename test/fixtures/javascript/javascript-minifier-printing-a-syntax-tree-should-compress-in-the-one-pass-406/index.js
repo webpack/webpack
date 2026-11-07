@@ -1,0 +1,1 @@
+function f(){a:{g();break a}h()}

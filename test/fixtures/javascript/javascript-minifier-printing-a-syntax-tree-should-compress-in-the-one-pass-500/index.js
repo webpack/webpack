@@ -1,0 +1,1 @@
+foo();bar();for(;i<1;)g();x=(a in b);for(;i<1;)g();x=1;for(;0;)g();y=1;for(;i<1;)g();z=function(){a in b};for(;i<1;)g()

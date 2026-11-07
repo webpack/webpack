@@ -1,0 +1,1 @@
+(function(){function $(same_name){console.log(same_name);a()}function a(){return b()}function b(){same_name()}$()})()

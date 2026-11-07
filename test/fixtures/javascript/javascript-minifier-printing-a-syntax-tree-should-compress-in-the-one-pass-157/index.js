@@ -1,0 +1,1 @@
+function m(b) { var dot = "\\.", slash = "\\/", end = `(?:${slash}|$)`; return { dot, end, ends: b + end } }

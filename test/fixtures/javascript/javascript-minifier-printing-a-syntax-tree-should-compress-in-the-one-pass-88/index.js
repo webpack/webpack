@@ -1,0 +1,1 @@
+function f(){ var a = /*#__PURE__*/ g(), b = /*@__PURE__*/ new C(1), c = /*#__PURE__*/ g(h()), d = g(); }

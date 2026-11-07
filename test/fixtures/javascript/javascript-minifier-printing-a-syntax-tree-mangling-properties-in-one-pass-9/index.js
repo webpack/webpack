@@ -1,0 +1,1 @@
+var o = {}; Object.defineProperty(o, "zDef", { value: 1 }); Object["defineProperty"](o, "zIdx", { value: 2 }); console.defineProperty = function () {}; console.defineProperty(o, "zNot"); Object?.defineProperty(o, "zOpt", { value: 3 }); (async function () { return (await o).zDef; })(); console.log(o.zDef, o.zIdx, o.zOpt, o["zIdx"], o?.zIdx, o[0 ? "zDef" : "zIdx"]);

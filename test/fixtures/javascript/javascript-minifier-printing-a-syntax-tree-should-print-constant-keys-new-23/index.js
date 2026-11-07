@@ -1,0 +1,1 @@
+(()=>{class K{a(){return 1}get b(){return 2}static c(){return 3}}g(K,{m(){return 4},get n(){return 5}})})()

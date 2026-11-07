@@ -1,0 +1,1 @@
+console.log(typeof void 0,typeof undefined,typeof void 0<"u",typeof undefined=="undefined");function f(undefined){return typeof undefined}console.log(f(1),typeof void console.log(2),!void 0,-undefined?3:4)

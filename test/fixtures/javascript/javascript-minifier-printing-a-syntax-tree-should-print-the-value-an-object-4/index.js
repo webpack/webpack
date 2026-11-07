@@ -1,0 +1,1 @@
+(function(){console.log(f());var k="a";function f(){if({[k]:1}.a)return 2;return 3}})()

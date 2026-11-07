@@ -1,0 +1,1 @@
+function f(){ var m = /* keep */ function(){}; h(m) } function i(){ /* keep */ var n = 1; g(n) }

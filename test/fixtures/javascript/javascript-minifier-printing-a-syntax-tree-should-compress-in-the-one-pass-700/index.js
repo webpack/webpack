@@ -1,0 +1,1 @@
+new WeakSet;new WeakSet([{},[],function(){},()=>{}]);new WeakSet([1]);new WeakSet([,{}]);new WeakMap([[{},1],[[]]]);new WeakMap([[1,1]]);new WeakMap([[]]);new WeakMap([1]);new WeakMap([,]);new Map([[1],[]]);new Map([,]);new Map("ab");new Set([1]);JSON.stringify(1);x=1

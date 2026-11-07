@@ -1,0 +1,1 @@
+const k = 1; print(a + 1, `${k}`, o[c])

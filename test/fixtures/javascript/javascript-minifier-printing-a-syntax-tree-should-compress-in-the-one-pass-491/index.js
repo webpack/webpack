@@ -1,0 +1,1 @@
+x=((Infinity)||a||3).toString();y=(1?Infinity:a).b

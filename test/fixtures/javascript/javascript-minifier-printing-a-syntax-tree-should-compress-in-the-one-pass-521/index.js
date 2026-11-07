@@ -1,0 +1,1 @@
+"use strict";export function foo(){"use strict";g()}

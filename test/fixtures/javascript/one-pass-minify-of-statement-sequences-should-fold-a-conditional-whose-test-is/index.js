@@ -1,0 +1,1 @@
+function x(){console.log("x");return 7}console.log({}?1:2,[]?3:x(),function(){}?4:5,(()=>1)?x():6,[x()]?7:8,/a/?9:x())

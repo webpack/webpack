@@ -1,0 +1,1 @@
+function f(){switch(1){case 1:"use "+"strict";g()}return this}

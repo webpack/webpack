@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "g();\n      -> g();",
+		"why": "a first pass leaves a byte a second pass drops"
+	}
+]

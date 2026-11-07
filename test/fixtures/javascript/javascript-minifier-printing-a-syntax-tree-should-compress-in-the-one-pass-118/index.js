@@ -1,0 +1,1 @@
+async function f(p){ var a = g(); h(p, 1, this, a); var b = g(); new K(p, b); var c = g(); i(await c); var d = g(); j(p + d); var e = g(); k(p[e]); var m = g(); l([p, , m]); var n = g(); o({ x: p, y: n }); var q = g(); r((p, q)) }

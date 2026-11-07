@@ -1,0 +1,1 @@
+function f(){for(;;){if(xx)continue;yy();zz()}}

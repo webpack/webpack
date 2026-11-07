@@ -1,0 +1,1 @@
+new function({b: a = 0} = {}) {}

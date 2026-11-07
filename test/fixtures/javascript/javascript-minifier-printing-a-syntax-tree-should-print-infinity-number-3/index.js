@@ -1,0 +1,1 @@
+try{Number.POSITIVE_INFINITY()}catch(e){console.log(e.name)}try{new Number.NEGATIVE_INFINITY}catch(e){console.log(e.name)}console.log(Number.POSITIVE_INFINITY.toString(), -Number.NEGATIVE_INFINITY)

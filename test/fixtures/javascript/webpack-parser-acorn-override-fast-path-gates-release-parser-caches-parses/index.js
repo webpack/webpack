@@ -1,0 +1,1 @@
+const value = 123; export function repeatedName(repeatedParameter) { return repeatedParameter + value + 0.5; }

@@ -1,0 +1,1 @@
+x=()=>{function nested(){}nested()};y=()=>{var n=function(){};n();g()};function f(){function n(){}if(a){n()}else b()}function k(){function n(){}h(n(g()))}

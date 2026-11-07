@@ -1,0 +1,1 @@
+var o = read(); Object.defineProperty(o); sink(o.zKey);

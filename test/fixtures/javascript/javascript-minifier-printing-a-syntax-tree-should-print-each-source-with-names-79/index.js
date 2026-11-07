@@ -1,0 +1,1 @@
+class A extends B { [function () {}]() {} static [function () {}]() {} #m() {} static #x = 1; get #y() {} set #y(v) {} static async *[k]() {} a = 1; static b; [k] = 1; 'x' = 1; #p = 1; static { a } static() {} get() {} set() {} async() {} m() { super.x(); this.#x; this?.#x; #x in this } constructor() { super() } }

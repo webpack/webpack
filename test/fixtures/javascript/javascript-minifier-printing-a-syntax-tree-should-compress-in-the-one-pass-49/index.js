@@ -1,0 +1,1 @@
+function f(){ var g = function(){}; (g || h)(); var k = function(){}; k ? 1 : 2; var m = function(){}; m`t`; var p = class{}; (p, 1); var q = {}; q.r++; }

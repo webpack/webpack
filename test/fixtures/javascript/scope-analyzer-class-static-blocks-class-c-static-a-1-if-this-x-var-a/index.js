@@ -1,0 +1,1 @@
+class C { static { a = 1; if (this.x) { var a; } } }

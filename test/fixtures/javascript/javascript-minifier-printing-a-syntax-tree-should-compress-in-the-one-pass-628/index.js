@@ -1,0 +1,1 @@
+function f(){var b=use();use(b);var a;for(a in c)use(a)}function g(){var b=use();use(b);var a=0;for(;a<9;a++)use(a)}function h(){var b=use();use(b);use();for(;;)use()}function k(){var [a]=use();for(;;a++)use(a)}

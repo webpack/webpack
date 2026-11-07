@@ -1,5 +1,7 @@
 "use strict";
 
+const { fixture } = require("../../helpers/fixture");
+
 const { invariantFindings } = require("../../helpers/syntaxInvariants");
 const syntax = require("../../helpers/syntaxInvariants/javascript");
 
@@ -8,8 +10,8 @@ const syntax = require("../../helpers/syntaxInvariants/javascript");
 // comparison scripts' own question.
 /** @type {[string, string][]} */
 const SOURCES = [
-	["a module", "const a = 1;\nfunction f(b) {\n\treturn a + b;\n}\nexport default f;\n"],
-	["a script", "var x = { a: 1, \"b\": [2, 3] };\nif (x.a) console.log(x.b);\n"]
+	["a module", fixture("javascript", "javascript-syntax-invariants-holds-every-relation-over-its-sources")],
+	["a script", fixture("javascript", "javascript-syntax-invariants-holds-every-relation-over-its-sources-2")]
 ];
 
 describe("JavaScript syntax — invariants", () => {

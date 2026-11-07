@@ -1,0 +1,1 @@
+export class C{#a(){}m(){class D{f(o){return o.#a}}return D}}

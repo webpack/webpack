@@ -1,0 +1,1 @@
+function t(a, b) { try { a() } catch (e) { b(e) } var c = b; return c }

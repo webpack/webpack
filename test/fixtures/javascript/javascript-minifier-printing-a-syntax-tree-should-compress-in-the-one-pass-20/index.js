@@ -1,0 +1,1 @@
+function f(a, b){ var MAX = 4294967295, IDX = MAX - 1, S = "a" + "b", T = S + "c", B = !0, U = typeof x + "y"; let x = void 0; var w = undefined; w = 1; var v = function n(){}, c = class C {}, d = function e(){ return e }; g(a === null || a === void 0, b !== void 0 && b !== null, a == undefined, IDX, T, T.length, B, B.x, x, w, v, c, d, U, typeof a === "s"); return }

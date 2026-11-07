@@ -1,0 +1,1 @@
+function f(n){if(!n){return a,b}return c}

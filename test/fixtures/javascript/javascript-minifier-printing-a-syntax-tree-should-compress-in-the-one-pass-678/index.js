@@ -1,0 +1,1 @@
+Date();new Array(4);String({a:1,b:[2]});Number([1]);Boolean(function(){});new Error("m");Math.max(1,"2");Date.now();Object.isFrozen({});Object.isFrozen();new Math.abs(1);new Date.now;x=1

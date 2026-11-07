@@ -1,0 +1,1 @@
+async function g(){ await using x = f(); } g();

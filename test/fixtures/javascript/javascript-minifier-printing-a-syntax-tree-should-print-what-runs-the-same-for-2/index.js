@@ -1,0 +1,1 @@
+console.log(typeof function c(){c=6;return c}(),function c(){c=6;return typeof c}())

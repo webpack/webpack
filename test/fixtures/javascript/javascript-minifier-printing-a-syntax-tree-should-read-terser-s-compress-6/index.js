@@ -1,0 +1,1 @@
+console[m](1);c.console.log(1);

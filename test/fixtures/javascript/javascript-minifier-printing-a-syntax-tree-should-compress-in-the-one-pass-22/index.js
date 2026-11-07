@@ -1,0 +1,1 @@
+function f(){ function m(){ return [A, B.x, C] } g(); var A = 1, B = 2, C = 3; y = C; return m } function h(){ var r = D; var D = 4; function k(){ return D } return [r, k] } function j(){ x = 1; var E = 5, F = 6; function q(){ return [E, (F).x, F] } return q }

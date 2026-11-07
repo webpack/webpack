@@ -1,0 +1,1 @@
+function f({ zFirst, zSecond: renamed, zThird = 3, ...rest }) { return [zFirst, renamed, zThird, rest.zFourth]; } const { zFirst, zSecond } = { zFirst: 1, zSecond: 2 }; let a, b; ({ zA: a, zB: b = 5 } = { zA: 7 }); console.log(f({ zFirst: 1, zSecond: 2, zFourth: 4 }).join(), zFirst, zSecond, a, b);

@@ -1,0 +1,1 @@
+function f(){const x=2;function g(){return x}return g()}

@@ -1,0 +1,1 @@
+function f(){a:for(;;){switch(d){case 1:break a}g()}}

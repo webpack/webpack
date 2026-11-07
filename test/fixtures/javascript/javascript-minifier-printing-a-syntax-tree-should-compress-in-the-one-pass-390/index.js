@@ -1,0 +1,1 @@
+function f(o,b){return o.a?o.a:b}

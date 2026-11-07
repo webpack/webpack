@@ -1,0 +1,1 @@
+a: while (1) { b: { break a; } }

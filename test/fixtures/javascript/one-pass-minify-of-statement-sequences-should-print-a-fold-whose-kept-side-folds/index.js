@@ -1,0 +1,1 @@
+var o={f(){console.log(this===o)}};function f(){console.log("f")}(0||(1&&f))();(1?(0?o:f):o)();(0||(1&&o)).f();(0||(1&&o.f))();new(0||(1&&f))

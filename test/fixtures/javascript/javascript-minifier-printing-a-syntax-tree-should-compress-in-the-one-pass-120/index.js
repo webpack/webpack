@@ -1,0 +1,1 @@
+function f(){ let a = g(), b = h(a), c = i(b), d; j(c, d) }

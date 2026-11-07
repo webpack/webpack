@@ -1,0 +1,1 @@
+export function f(o){var e;o.a();e=o.test;e()}export class C extends B{#x;#m(){}}

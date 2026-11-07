@@ -1,0 +1,1 @@
+function f(a,b){(a=x(),a)?a++:b();return c(),a=x(),a}function g(a){with(o)return a=x(),a}function h(){return u=x(),u}

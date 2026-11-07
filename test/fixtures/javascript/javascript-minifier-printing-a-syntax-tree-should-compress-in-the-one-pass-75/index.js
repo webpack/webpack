@@ -1,0 +1,1 @@
+a=[Infinity][0]/x;b=[Infinity][0]**x;c=-[Infinity][0];d=[Infinity][0]?.toFixed();e=x/[Infinity][0]

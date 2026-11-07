@@ -1,0 +1,1 @@
+function f(){ var a = g(); var b = a } function h(){ var a = g(); var b = a; return b } function i(){ var m = function(){}; var n = m } function j(){ const k = 1; var p = k }

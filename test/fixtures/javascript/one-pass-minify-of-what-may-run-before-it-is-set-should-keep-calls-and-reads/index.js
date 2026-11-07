@@ -1,0 +1,1 @@
+function f(){/*#__NO_SIDE_EFFECTS__*/var s=function(){};eval("s=g");s()}

@@ -1,0 +1,1 @@
+class A extends (a, b) {} class B extends (a ? b : c) {} class C extends B.c {} class D extends class {} {} class E extends function () {} {} class F {} class G extends (a = b) {} class H extends a() {} class I extends (-a) {}

@@ -1,0 +1,1 @@
+x = function () {} / 2; function f() {} /re/

@@ -1,0 +1,1 @@
+(function(){for(;;)g()})();(function(){for(;;)g()})(),h();h(),(function(){for(;;)g()})()

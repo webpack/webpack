@@ -1,0 +1,1 @@
+console.log(Object.keys({[1+1]:1, [-1]:2, [f()]:3}).join());function f(){return 'q'}

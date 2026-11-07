@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "(0,f.g))(),(0,f.g)``,typeof(0,f),delete((0,f.g)),g(),(0,eval)(1),new((\n      -> 0,f.g)(),(0,f.g)``,typeof(0,f),delete(0,f.g),g(),(0,eval)(1),new(a?f:f",
+		"why": "a first pass keeps parentheses around an expression it rewrote, and only a second pass drops them"
+	}
+]

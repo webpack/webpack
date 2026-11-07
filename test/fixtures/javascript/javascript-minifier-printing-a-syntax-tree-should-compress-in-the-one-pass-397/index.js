@@ -1,0 +1,1 @@
+function f(){{var y=g()}h(y)}

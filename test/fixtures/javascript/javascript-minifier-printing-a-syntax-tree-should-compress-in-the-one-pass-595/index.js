@@ -1,0 +1,1 @@
+x=![1,2];x=!/foo/;x=!0;x=!"";x=!{};x=![f()];x=delete(1/0);x=delete void 0;x=delete undefined;x=delete NaN;x=delete(0,a);x=delete 1;x=delete a.b;x=delete(a);x=delete a?.b;x=delete f();if(delete 1)g();var b;x=delete(b=NaN)

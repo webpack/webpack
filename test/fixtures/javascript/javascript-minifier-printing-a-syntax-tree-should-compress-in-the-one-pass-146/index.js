@@ -1,0 +1,1 @@
+(function () { u(); function u() { console.log(g()) } })()

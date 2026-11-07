@@ -1,0 +1,1 @@
+const a = g(), b = 1; const { x, y: [z = 1, ...r] } = a; const c = 1; c = 2; const d = 1; d++; const e = 1; [e] = []; const k = 1; ({ k } = {}); const m = 1; for (m of a); export const ex = 1; for (const i of a) g(i, x, z, r, b, c, d, e, k, m); while (true) g(); while (/*! t */ true) g(); while (a) g()

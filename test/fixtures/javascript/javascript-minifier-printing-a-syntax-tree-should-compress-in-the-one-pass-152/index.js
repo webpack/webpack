@@ -1,0 +1,1 @@
+function f(y) { var h = function (x) { return x.a }; return [((x) => x)(/*! a */ y), (function () { /*! b */ return y })(), h(/*! c */ y)] }

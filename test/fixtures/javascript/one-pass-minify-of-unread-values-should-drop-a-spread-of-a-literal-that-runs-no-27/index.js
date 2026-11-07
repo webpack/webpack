@@ -1,0 +1,1 @@
+String.prototype[Symbol.iterator]=f;[..."s"]

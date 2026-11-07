@@ -1,0 +1,1 @@
+a=Boolean(b);f(Boolean(!b));x={k:Boolean(b?c>0:c<0)};y=[Boolean((b|+c)!==0)];function g(){return Boolean(b in c)}var z=Boolean(b?!0:!1);Boolean(b?1:!1);u=[Boolean(c?true:false),Boolean(delete b.c),Boolean((b>1))]

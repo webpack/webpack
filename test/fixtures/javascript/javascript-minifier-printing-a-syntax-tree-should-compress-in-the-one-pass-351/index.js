@@ -1,0 +1,1 @@
+function f(){(function(o){class A{x=o}g(new A,new A)})([1])}

@@ -1,0 +1,1 @@
+function f(a){return[a/-Infinity,-Infinity/a,(-Infinity).x]}

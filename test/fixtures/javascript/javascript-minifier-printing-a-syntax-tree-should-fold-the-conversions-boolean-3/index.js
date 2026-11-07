@@ -1,0 +1,1 @@
+a=Boolean(b)?1:2;c=Boolean(b).x;d=Boolean(b)+1;e=Boolean(b,c);g=Boolean(...b);h=Boolean?.(b);k=Boolean((b,c));Boolean({}.x);l=new Boolean(b);m=Boolean(b)(1);n=Boolean(/*! k */b)

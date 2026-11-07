@@ -1,0 +1,1 @@
+function g(s){return!function(s){return s.a&&s.b}(s)?a():b()}

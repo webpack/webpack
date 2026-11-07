@@ -1,0 +1,1 @@
+function f(a,o){if(a)return;for(var k of o)g(k)}

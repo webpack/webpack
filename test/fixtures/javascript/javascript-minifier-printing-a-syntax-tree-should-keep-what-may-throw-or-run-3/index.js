@@ -1,0 +1,1 @@
+var y = {}; t(function () { 0 == y; y < 1; y === 1; null == y; });

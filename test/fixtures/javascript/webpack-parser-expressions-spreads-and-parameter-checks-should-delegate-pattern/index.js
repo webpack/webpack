@@ -1,0 +1,1 @@
+function f({ a }, [b], c = 1, ...rest) { return a + b + c; }

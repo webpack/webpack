@@ -1,0 +1,1 @@
+if(0){let foo=6;const bar=12;class Baz{}var qux;(()=>{var z})()}function f(){if(0){var a=g(),{b,c:[,d=g()],...e}=g();for(var i in g());var a}return[typeof a,b,d,e,i].join()}if(0){function h(){}var j}if(1)console.log(typeof j);else var k;function u(){if(0){var gone}if(0){var dead,read}return read}console.log(typeof qux,f(),typeof k,u())

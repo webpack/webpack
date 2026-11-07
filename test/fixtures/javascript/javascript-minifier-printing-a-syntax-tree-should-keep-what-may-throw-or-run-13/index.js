@@ -1,0 +1,1 @@
+async function* g() { return undefined; } async function h() { return void 0; } t(g, h);

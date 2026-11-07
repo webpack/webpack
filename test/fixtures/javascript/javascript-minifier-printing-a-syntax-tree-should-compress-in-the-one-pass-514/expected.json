@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "(function(){g()}()==x),!(function(){g()}()==x),x[0],x[-123],x[\"-0\"],x[\n      -> function(){g()}()==x,!(function(){g()}()==x),x[0],x[-123],x[\"-0\"],x[\"0",
+		"why": "a first pass keeps parentheses around an expression it rewrote, and only a second pass drops them"
+	}
+]

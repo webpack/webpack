@@ -1,0 +1,1 @@
+var a = 1; var b = 2, c; var [d] = e; let x = 1; let y = 2; const z = 3; var w; /* note */ var q; f(a, b, c, d, x, y, z, w, q)

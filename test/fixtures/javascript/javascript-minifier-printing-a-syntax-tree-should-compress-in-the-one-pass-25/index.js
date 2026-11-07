@@ -1,0 +1,1 @@
+function u(){ g(); var z = "z1", w = "w2", v = "v3"; function k(){ return w } h(function(){ return z }, function(){ function inner(){ return v } return inner }); return k } function f(o){ function a(e){ return e + o } const b = function(){ return this }, c = () => this; return [function(x){ return a(x) }, function(){ return b() }, function(){ return c() }] }

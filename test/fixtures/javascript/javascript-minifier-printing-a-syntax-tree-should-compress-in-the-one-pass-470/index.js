@@ -1,0 +1,1 @@
+function f(n,b=n?!0:!0){return n?!1:!1}

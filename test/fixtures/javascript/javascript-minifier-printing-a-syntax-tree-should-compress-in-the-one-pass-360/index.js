@@ -1,0 +1,1 @@
+function f(){while(x)g()}

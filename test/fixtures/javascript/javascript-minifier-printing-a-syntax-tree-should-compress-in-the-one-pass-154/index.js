@@ -1,0 +1,1 @@
+(function () { var x = 7; function h(k) { return k() } function f(a) { var g = function () { return x }; return h(g) + a } g(f(3)) })(); (function () { function h(k) { return k + 1 } function f(a) { var c = 5; return h(c) + a } g(f(3)) })(); (function () { function h(k) { return k.v } function f(a) { var c = { v: 5 }; return h(c) + a } g(f(3)) })()

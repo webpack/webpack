@@ -1,0 +1,1 @@
+export class C{#a(){}m(o){return #a in o}}

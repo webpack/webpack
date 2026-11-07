@@ -1,0 +1,1 @@
+var o={get(){return this===o}};function h(t){const y=t.get;return y()}console.log(h(o))

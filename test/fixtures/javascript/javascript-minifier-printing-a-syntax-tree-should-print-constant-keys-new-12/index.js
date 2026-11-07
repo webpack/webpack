@@ -1,0 +1,1 @@
+export class C{#a(){return 1}m(){return eval("this.#a()")}}

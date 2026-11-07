@@ -1,0 +1,1 @@
+function f(x){let t=1;switch(x){case t:let t=2;return t}}

@@ -1,0 +1,1 @@
+var zKey = read(); var { zOther } = zKey; sink({ zKey, zOther });

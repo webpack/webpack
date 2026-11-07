@@ -1,0 +1,1 @@
+function w3(){const a=[1,/*c*/2];f(a[0],a[1])}
