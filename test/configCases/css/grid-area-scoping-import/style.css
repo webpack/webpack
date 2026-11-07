@@ -1,0 +1,44 @@
+/* Each name below selects an area or line `lib.css` declares, so it scopes
+   there; the implicit `-start` / `-end` pairing holds across the import. */
+@value area from "./lib.css";
+@value area as alias from "./lib.css";
+@value line-start from "./lib.css";
+@value line-start as lineStart from "./lib.css";
+@value zone from "./reexport.css";
+@value missing from "./lib.css";
+@value primary from "./lib.css";
+@value impAuto, impSpan, impHero from "./lib.css";
+@value locAuto: auto;
+@value area as region-start from "./lib.css";
+@value areaAlias: area;
+@value autoAlias: impAuto;
+
+.use-area { grid-area: area }
+.use-area-lines { grid-column: area-start / area-end }
+.use-line { grid-row: line-start }
+.use-line-alias { grid-row: lineStart }
+.use-alias { grid-area: alias; grid-row: alias-start / alias-end }
+.use-chain { grid-area: zone; grid-row: zone-start / zone-end }
+
+/* A name no import selects scopes here; an import nothing declares stays as
+   written. */
+.use-local { grid-area: local; grid-row: local-start }
+.use-missing { grid-area: missing }
+
+/* `primary-start` is not the `@value primary`, which names no grid area, so
+   it is a line of its own. */
+.use-plain-line { grid-row: primary-start }
+
+/* A plain `@value` inlines as if written here: a name scopes here, a keyword
+   or a non-name stays text. */
+.use-imported-name { grid-area: impHero }
+.use-imported-keyword { grid-area: impAuto }
+.use-imported-text { grid-row: impSpan }
+.use-local-keyword { grid-area: locAuto }
+
+/* `region-start-end` is the `-end` line of the imported `region-start`. */
+.use-alias-line { grid-row: region-start-end }
+
+/* A local alias of an import selects what the import does. */
+.use-local-alias { grid-area: areaAlias; grid-row: areaAlias-start }
+.use-local-alias-keyword { grid-area: autoAlias }

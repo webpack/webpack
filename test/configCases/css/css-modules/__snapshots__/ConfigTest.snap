@@ -2650,10 +2650,10 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	/* 1. Use repeat, auto-fit, and minmax for responsive columns.
 		 Columns will be at least 150px wide, growing to fill available space (1fr).
 		 Lines are named 'col-start' and 'col-end' for each track repetition. */
-	grid-template-columns: repeat(auto-fit, [my-app-style_module_css-col-start-col-start] minmax(150px, 1fr) [my-app-style_module_css-col-end-col-end]);
+	grid-template-columns: repeat(auto-fit, [my-app-style_module_css-col-col-start] minmax(150px, 1fr) [my-app-style_module_css-col-col-end]);
 
 	/* 2. Define explicit row heights and name key row lines. */
-	grid-template-rows: [my-app-style_module_css-header-start-header-start] 100px [my-app-style_module_css-header-end-header-end my-app-style_module_css-content-start-content-start] auto [my-app-style_module_css-content-end-content-end];
+	grid-template-rows: [my-app-style_module_css-header-header-start] 100px [my-app-style_module_css-header-header-end my-app-style_module_css-content-content-start] auto [my-app-style_module_css-content-content-end];
 
 	/* 3. Add gaps for spacing */
 	gap: 20px;
@@ -2663,36 +2663,36 @@ p:not(#my-app-style_module_css-main-paragraph) {
 }
 
 .my-app-style_module_css-class {
-	grid-template-columns: repeat(auto-fit, [my-app-style_module_css-col-start-col-start] minmax(150px, 1fr) [my-app-style_module_css-col-end-col-end]);
+	grid-template-columns: repeat(auto-fit, [my-app-style_module_css-col-col-start] minmax(150px, 1fr) [my-app-style_module_css-col-col-end]);
 }
 
 .my-app-style_module_css-wrapper {
 	display: grid;
-	grid-template-columns: [my-app-style_module_css-main-start-main-start] 1fr [my-app-style_module_css-content-start-content-start] 1fr [my-app-style_module_css-content-end-content-end] 1fr [my-app-style_module_css-main-end-main-end];
-	grid-template-rows: [my-app-style_module_css-main-start-main-start] 100px [my-app-style_module_css-content-start-content-start] 100px [my-app-style_module_css-content-end-content-end] 100px [my-app-style_module_css-main-end-main-end];
+	grid-template-columns: [my-app-style_module_css-main-main-start] 1fr [my-app-style_module_css-content-content-start] 1fr [my-app-style_module_css-content-content-end] 1fr [my-app-style_module_css-main-main-end];
+	grid-template-rows: [my-app-style_module_css-main-main-start] 100px [my-app-style_module_css-content-content-start] 100px [my-app-style_module_css-content-content-end] 100px [my-app-style_module_css-main-main-end];
 }
 
 .my-app-style_module_css-box1 {
-	grid-column-start: my-app-style_module_css-main-start-main-start;
-	grid-row-start: my-app-style_module_css-main-start-main-start;
-	grid-row-end: my-app-style_module_css-main-end-main-end;
+	grid-column-start: my-app-style_module_css-main-main-start;
+	grid-row-start: my-app-style_module_css-main-main-start;
+	grid-row-end: my-app-style_module_css-main-main-end;
 }
 
 .my-app-style_module_css-box2 {
-	grid-column-start: my-app-style_module_css-content-end-content-end;
-	grid-row-start: my-app-style_module_css-main-start-main-start;
-	grid-row-end: my-app-style_module_css-content-end-content-end;
+	grid-column-start: my-app-style_module_css-content-content-end;
+	grid-row-start: my-app-style_module_css-main-main-start;
+	grid-row-end: my-app-style_module_css-content-content-end;
 }
 
 .my-app-style_module_css-box3 {
-	grid-column-start: my-app-style_module_css-content-start-content-start;
-	grid-row-start: my-app-style_module_css-main-start-main-start;
+	grid-column-start: my-app-style_module_css-content-content-start;
+	grid-row-start: my-app-style_module_css-main-main-start;
 }
 
 .my-app-style_module_css-box4 {
-	grid-column-start: my-app-style_module_css-content-start-content-start;
-	grid-column-end: my-app-style_module_css-main-end-main-end;
-	grid-row-start: my-app-style_module_css-content-end-content-end;
+	grid-column-start: my-app-style_module_css-content-content-start;
+	grid-column-end: my-app-style_module_css-main-main-end;
+	grid-row-start: my-app-style_module_css-content-content-end;
 }
 
 .my-app-style_module_css-wrapper {
@@ -2723,8 +2723,8 @@ p:not(#my-app-style_module_css-main-paragraph) {
 
 .my-app-style_module_css-wrapper > div.my-app-style_module_css-overlay {
 	z-index: 10;
-	grid-column: my-app-style_module_css-main-start-main-start / my-app-style_module_css-main-end-main-end;
-	grid-row: my-app-style_module_css-hd-start-hd-start / my-app-style_module_css-ft-end-ft-end;
+	grid-column: my-app-style_module_css-main-main-start / my-app-style_module_css-main-main-end;
+	grid-row: my-app-style_module_css-hd-hd-start / my-app-style_module_css-ft-ft-end;
 	border: 4px solid rgb(92 148 13);
 	background-color: rgb(92 148 13 / 40%);
 	color: rgb(92 148 13);
@@ -2733,27 +2733,27 @@ p:not(#my-app-style_module_css-main-paragraph) {
 
 .my-app-style_module_css-wrapper {
 	display: grid;
-	grid-template-columns: repeat(12, [my-app-style_module_css-col-start-col-start] 1fr);
+	grid-template-columns: repeat(12, [my-app-style_module_css-col-col-start] 1fr);
 }
 
 .my-app-style_module_css-item1to5 {
-	grid-column: my-app-style_module_css-col-start-col-start / my-app-style_module_css-col-start-col-start 5;
+	grid-column: my-app-style_module_css-col-col-start / my-app-style_module_css-col-col-start 5;
 }
 
 .my-app-style_module_css-item7to9 {
-	grid-column: my-app-style_module_css-col-start-col-start 7 / span 3;
+	grid-column: my-app-style_module_css-col-col-start 7 / span 3;
 }
 
 .my-app-style_module_css-wrapper {
-	grid-template-columns: repeat(4, [my-app-style_module_css-col1-start-col1-start] 1fr [my-app-style_module_css-col2-start-col2-start] 3fr);
+	grid-template-columns: repeat(4, [my-app-style_module_css-col1-col1-start] 1fr [my-app-style_module_css-col2-col2-start] 3fr);
 }
 
 .my-app-style_module_css-wrapper {
-	grid-template-columns: repeat(4, [my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end]);
+	grid-template-columns: repeat(4, [my-app-style_module_css-col-col-start] 1fr [my-app-style_module_css-col-col-end]);
 }
 
 .my-app-style_module_css-wrapper {
-	grid-template-columns: [my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end];
+	grid-template-columns: [my-app-style_module_css-col-col-start] 1fr [my-app-style_module_css-col-col-end my-app-style_module_css-col-col-start] 1fr [my-app-style_module_css-col-col-end my-app-style_module_css-col-col-start] 1fr [my-app-style_module_css-col-col-end my-app-style_module_css-col-col-start] 1fr [my-app-style_module_css-col-col-end];
 }
 
 .my-app-style_module_css-important {
@@ -2767,7 +2767,7 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	container: my-app-style_module_css-sticky-heading / inline-size !important;
 	container-name: my-app-style_module_css-tall !important;
 
-	grid-column: my-app-style_module_css-col-start-col-start / my-app-style_module_css-col-start-col-start 5 !important;
+	grid-column: my-app-style_module_css-col-col-start / my-app-style_module_css-col-col-start 5 !important;
 	grid-area: my-app-style_module_css-some-grid-area-some-grid-area !important;
 
 	list-style-type: my-app-style_module_css-extend-thumbs !important;
@@ -10982,10 +10982,10 @@ p:not(#dBVRDQ) {
 	/* 1. Use repeat, auto-fit, and minmax for responsive columns.
 		 Columns will be at least 150px wide, growing to fill available space (1fr).
 		 Lines are named 'col-start' and 'col-end' for each track repetition. */
-	grid-template-columns: repeat(auto-fit, [_1Yrglr-col-start] minmax(150px, 1fr) [UIbRwt-col-end]);
+	grid-template-columns: repeat(auto-fit, [zipwf3-col-start] minmax(150px, 1fr) [zipwf3-col-end]);
 
 	/* 2. Define explicit row heights and name key row lines. */
-	grid-template-rows: [Zfi6tA-header-start] 100px [TFOL0g-header-end RA1tbr-content-start] auto [q_keew-content-end];
+	grid-template-rows: [Zq4Bgu-header-start] 100px [Zq4Bgu-header-end evvjkJ-content-start] auto [evvjkJ-content-end];
 
 	/* 3. Add gaps for spacing */
 	gap: 20px;
@@ -10995,36 +10995,36 @@ p:not(#dBVRDQ) {
 }
 
 .Vx2ADA {
-	grid-template-columns: repeat(auto-fit, [_1Yrglr-col-start] minmax(150px, 1fr) [UIbRwt-col-end]);
+	grid-template-columns: repeat(auto-fit, [zipwf3-col-start] minmax(150px, 1fr) [zipwf3-col-end]);
 }
 
 .EDnegT {
 	display: grid;
-	grid-template-columns: [rRCri6-main-start] 1fr [RA1tbr-content-start] 1fr [q_keew-content-end] 1fr [xGMSmb-main-end];
-	grid-template-rows: [rRCri6-main-start] 100px [RA1tbr-content-start] 100px [q_keew-content-end] 100px [xGMSmb-main-end];
+	grid-template-columns: [X982uk-main-start] 1fr [evvjkJ-content-start] 1fr [evvjkJ-content-end] 1fr [X982uk-main-end];
+	grid-template-rows: [X982uk-main-start] 100px [evvjkJ-content-start] 100px [evvjkJ-content-end] 100px [X982uk-main-end];
 }
 
 .E_Xs87 {
-	grid-column-start: rRCri6-main-start;
-	grid-row-start: rRCri6-main-start;
-	grid-row-end: xGMSmb-main-end;
+	grid-column-start: X982uk-main-start;
+	grid-row-start: X982uk-main-start;
+	grid-row-end: X982uk-main-end;
 }
 
 .lG966Z {
-	grid-column-start: q_keew-content-end;
-	grid-row-start: rRCri6-main-start;
-	grid-row-end: q_keew-content-end;
+	grid-column-start: evvjkJ-content-end;
+	grid-row-start: X982uk-main-start;
+	grid-row-end: evvjkJ-content-end;
 }
 
 .AyxbM3 {
-	grid-column-start: RA1tbr-content-start;
-	grid-row-start: rRCri6-main-start;
+	grid-column-start: evvjkJ-content-start;
+	grid-row-start: X982uk-main-start;
 }
 
 .sEMgMA {
-	grid-column-start: RA1tbr-content-start;
-	grid-column-end: xGMSmb-main-end;
-	grid-row-start: q_keew-content-end;
+	grid-column-start: evvjkJ-content-start;
+	grid-column-end: X982uk-main-end;
+	grid-row-start: evvjkJ-content-end;
 }
 
 .EDnegT {
@@ -11055,8 +11055,8 @@ p:not(#dBVRDQ) {
 
 .EDnegT > div.xdTdxz {
 	z-index: 10;
-	grid-column: rRCri6-main-start / xGMSmb-main-end;
-	grid-row: wJdD_6-hd-start / -CSZqj-ft-end;
+	grid-column: X982uk-main-start / X982uk-main-end;
+	grid-row: mtsh_D-hd-start / nMcK39-ft-end;
 	border: 4px solid rgb(92 148 13);
 	background-color: rgb(92 148 13 / 40%);
 	color: rgb(92 148 13);
@@ -11065,27 +11065,27 @@ p:not(#dBVRDQ) {
 
 .EDnegT {
 	display: grid;
-	grid-template-columns: repeat(12, [_1Yrglr-col-start] 1fr);
+	grid-template-columns: repeat(12, [zipwf3-col-start] 1fr);
 }
 
 .dBiT79 {
-	grid-column: _1Yrglr-col-start / _1Yrglr-col-start 5;
+	grid-column: zipwf3-col-start / zipwf3-col-start 5;
 }
 
 ._7kAI1c {
-	grid-column: _1Yrglr-col-start 7 / span 3;
+	grid-column: zipwf3-col-start 7 / span 3;
 }
 
 .EDnegT {
-	grid-template-columns: repeat(4, [TzgowJ-col1-start] 1fr [dQggyi-col2-start] 3fr);
+	grid-template-columns: repeat(4, [_1B5Qtc-col1-start] 1fr [rnNlcV-col2-start] 3fr);
 }
 
 .EDnegT {
-	grid-template-columns: repeat(4, [_1Yrglr-col-start] 1fr [UIbRwt-col-end]);
+	grid-template-columns: repeat(4, [zipwf3-col-start] 1fr [zipwf3-col-end]);
 }
 
 .EDnegT {
-	grid-template-columns: [_1Yrglr-col-start] 1fr [UIbRwt-col-end _1Yrglr-col-start] 1fr [UIbRwt-col-end _1Yrglr-col-start] 1fr [UIbRwt-col-end _1Yrglr-col-start] 1fr [UIbRwt-col-end];
+	grid-template-columns: [zipwf3-col-start] 1fr [zipwf3-col-end zipwf3-col-start] 1fr [zipwf3-col-end zipwf3-col-start] 1fr [zipwf3-col-end zipwf3-col-start] 1fr [zipwf3-col-end];
 }
 
 .nCG28w {
@@ -11099,7 +11099,7 @@ p:not(#dBVRDQ) {
 	container: _5unArO / inline-size !important;
 	container-name: _16PWt_ !important;
 
-	grid-column: _1Yrglr-col-start / _1Yrglr-col-start 5 !important;
+	grid-column: zipwf3-col-start / zipwf3-col-start 5 !important;
 	grid-area: -UptLF-some-grid-area !important;
 
 	list-style-type: YZsmDI !important;
