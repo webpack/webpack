@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": "(r++)**2}\n      -> r++**2}",
-		"why": "a first pass keeps parentheses around an expression it rewrote, and only a second pass drops them"
-	}
-]
