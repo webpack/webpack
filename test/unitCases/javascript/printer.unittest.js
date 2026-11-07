@@ -3698,6 +3698,116 @@ describe("one-pass minify of statement sequences", () => {
 			minifyOnePass(fixture("javascript", "one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left-4"), { compress: {} }).code
 		).toBe("(function(){/*!keep*/return 1});({a:/*!k*/1});");
 	});
+
+	it("should open a statement with the branch a folded conditional keeps, unparenthesized", () => {
+		// A member read off the kept branch stays unparenthesized too.
+		const source = fixture("javascript", "one-pass-minify-of-statement-sequences-should-open-a-statement-with-the-branch-a");
+		const { code: code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe("x.r();");
+		expect(runProgram(code)).toBe(runProgram(source));
+		const source2 = fixture("javascript", "one-pass-minify-of-statement-sequences-should-open-a-statement-with-the-branch-a-2");
+		const { code: code2 } = minifyOnePass(source2, { compress: {}, mangle: false });
+		expect(code2).toBe("x;");
+		expect(runProgram(code2)).toBe(runProgram(source2));
+	});
+
+	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
+		// A branch reading a member or calling stays.
+		const source =
+			fixture("javascript", "one-pass-minify-of-statement-sequences-should-fold-a-delete-of-a-conditional");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
+		expect(code).toBe(
+			'var o={p:1};function y(){console.log("y")}console.log(!0,!0,!0,delete(0,o.p),o.p,delete y());'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should fold a `delete` of the global `undefined`, `NaN` or `Infinity` to `false`", () => {
+		const cases = [
+			[fixture("javascript", "one-pass-minify-of-statement-sequences-should-fold-a-delete-of-the-global"), "console.log(!1,!1,!1);"],
+			// A parameter of the name, or a `with` that may hold one, is not the global.
+			[fixture("javascript", "one-pass-minify-of-statement-sequences-should-fold-a-delete-of-the-global-2"), "function f(e){return delete e}console.log(f());"],
+			[fixture("javascript", "one-pass-minify-of-statement-sequences-should-fold-a-delete-of-the-global-3"), "var o={NaN:1};with(o)console.log(delete NaN);"]
+		];
+		for (const [source, expected] of cases) {
+			const { code } = minifyOnePass(source, { compress: {} });
+			expect(code).toBe(expected);
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+	});
+
+	it("should fold an optional chain starting on `null` or `undefined` to `undefined`", () => {
+		// Nothing past the start runs; a start that runs code, a parameter named `undefined`, a first link read plainly or a chain `**` or a member reads stays.
+		for (const [source, expected] of [
+			[
+				fixture("javascript", "one-pass-minify-of-statement-sequences-should-fold-an-optional-chain-starting-on"),
+				"var n=0;function f(){return n++,1}console.log(void 0,void 0,void 0,typeof void 0,void 0),console.log(n);"
+			],
+			[
+				fixture("javascript", "one-pass-minify-of-statement-sequences-should-fold-an-optional-chain-starting-on-2"),
+				"function f(n){return n?.a}var o={a:{b:1}};console.log(f({a:2}),(void console.log(3))?.a,null?.a**2,o?.a.b);"
+			]
+		]) {
+			const { code } = minifyOnePass(source, {
+				compress: { toplevel: false },
+				mangle: { toplevel: false }
+			});
+			expect(code).toBe(expected);
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+		expect(
+			minifyOnePass(fixture("javascript", "one-pass-minify-of-statement-sequences-should-fold-an-optional-chain-starting-on-3"), {
+				compress: { toplevel: false }
+			}).code
+		).toBe("x=(null?.a).b,y=null.a?.b;");
+		expect(
+			minifyOnePass(fixture("javascript", "one-pass-minify-of-statement-sequences-should-fold-an-optional-chain-starting-on-4"), { format: { comments: "all" } }).code
+		).toBe("x=/* c */null?.a;");
+	});
+
+	it("should read `?.` after what is never nullish as `.`", () => {
+		expect(
+			minifyOnePass(
+				fixture("javascript", "one-pass-minify-of-statement-sequences-should-read-after-what-is-never-nullish"),
+				{ compress: { toplevel: false }, mangle: { toplevel: false } }
+			).code
+		).toBe(
+			"function t(n){return[(n(),{}).b,[1].x,void 0,void 0,`a`.length,(1+a).b,(-a).b,(void a)?.b,function(){}(),(n(),a)?.b]}"
+		);
+	});
+});
+
+describe("one-pass minify options", () => {
+	it("should read the options given without `compress` or `mangle`, compressing and mangling nothing", () => {
+		const { SourceProcessor } = require("../../../lib/javascript/syntax");
+		const print = (
+			/** @type {string} */ source,
+			/** @type {import("../../../lib/javascript/syntax-parser").JavascriptProcessOptions} */ options
+		) =>
+			/** @type {{ code: string }} */ (
+				new SourceProcessor().process(source, { mode: "minify", ...options })
+			).code;
+		expect(print(fixture("javascript", "one-pass-minify-options-should-read-the-options-given-without-compress-or-mangle"), {})).toBe("var x=1;f(x);");
+		expect(
+			print(fixture("javascript", "one-pass-minify-options-should-read-the-options-given-without-compress-or-mangle"), { format: { comments: "some" } })
+		).toBe("/*! a */var x=1;f(x);");
+		expect(print(fixture("javascript", "one-pass-minify-options-should-read-the-options-given-without-compress-or-mangle-2"), { toplevel: true })).toBe(
+			"var x=1;f(x);"
+		);
+		expect(print(fixture("javascript", "javascript-source-processor-printing-should-refuse-a-walk-a-visitor-starts"), { wrap: "W" })).toBe(
+			'(function(exports){f()})(typeof W=="undefined"?W={}:W);'
+		);
+	});
+
+	it("should read `output` as terser's older name for `format`, never beside it", () => {
+		expect(
+			minifyOnePass(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-snake-case-5"), { compress: {}, output: { ascii_only: true } })
+				.code
+		).toBe('g("\\xe9");');
+		expect(() =>
+			minifyOnePass(fixture("javascript", "parse-program-returns-the-program-s-node-read-through-a-until-the-next-parse-2"), { compress: {}, format: {}, output: {} })
+		).toThrow("only one of them");
+	});
 });
 
 describe("one-pass minify of side effects and dead code, second round", () => {
