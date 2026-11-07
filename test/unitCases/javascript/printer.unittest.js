@@ -686,6 +686,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-714"), { compress: {} }, "a();function k(){b();{let n=f();g(n,n)}return 1}for(;;)(()=>{let n=f();g(n,n)})();async function q(){!function(){let n=f();await=n,g(n)}()}"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-715"), { compress: {} }, "function f(c){if(c===1){if(a()!==2)e()}else e()}({a:1}[k()])===1?x():y();"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-716"), { compress: {} }, "a=\"false\",b=\"NaN\",c=\"Infinity\",d=NaN,e=\"\\0\",f=\"1,,\",g=\"1\";"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-717"), { compress: {} }, "function k(){return!function(){x()}()}function f(n){return n?1:function(){for(;;)g()}()}function m(){for(;;)x()}"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-77"), { compress: { toplevel: true } }, "f();x=g();f();(function(){})();"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-78"), { compress: { toplevel: true } }, "x=(g(),1),y=(h(),{a:1}).a,a(),q(),b();"],
 			// One moved into `export default` stays a value, as a declaration would be set before the module runs.
