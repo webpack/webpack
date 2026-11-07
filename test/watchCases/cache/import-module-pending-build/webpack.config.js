@@ -24,9 +24,13 @@ module.exports = {
 			 * @returns {void}
 			 */
 			apply(compiler) {
+				/** @type {import("webpack").ModuleGraph | undefined} */
+				let previousGraph;
 				compiler.hooks.thisCompilation.tap(
 					"PendingImportModule",
 					(compilation) => {
+						const reused = previousGraph === compilation.moduleGraph;
+						previousGraph = compilation.moduleGraph;
 						if (
 							!compiler.watchMode ||
 							currentWatchStep.step === "0" ||
@@ -34,6 +38,7 @@ module.exports = {
 						) {
 							return;
 						}
+						expect(reused).toBe(true);
 						let consumerFinished = false;
 						/** @type {(() => void) | undefined} */
 						let releaseShared;

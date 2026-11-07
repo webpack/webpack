@@ -13,7 +13,9 @@ module.exports = () => ({
 		createWatchMutation({
 			name: "ignored invalidation",
 			detector: "comparison",
-			fault: "invalidation"
+			method: "_rebuild",
+			before: "if (need) {",
+			after: "if (need && (recordMutation(), false)) {"
 		})
 	]
 });

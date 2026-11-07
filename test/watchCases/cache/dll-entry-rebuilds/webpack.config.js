@@ -22,13 +22,25 @@ module.exports = {
 				banner: 'module.exports("./index.js");'
 			}).apply(compiler);
 
+			/** @type {import("webpack").ModuleGraph | undefined} */
+			let previousGraph;
+			/** @type {Map<string | undefined, import("webpack").Dependency>} */
+			let previousEntries = new Map();
 			compiler.hooks.compilation.tap("CheckDllEntries", (compilation) => {
+				const reused = previousGraph === compilation.moduleGraph;
+				const retainedEntries = previousEntries;
+				previousGraph = compilation.moduleGraph;
+				previousEntries = new Map();
 				/** @type {(string | undefined)[]} */
 				const entries = [];
 				compilation.hooks.succeedEntry.tap(
 					"CheckDllEntries",
 					(dependency, options) => {
 						expect(dependency.type).toBe("dll entry");
+						if (reused) {
+							expect(dependency).toBe(retainedEntries.get(options.name));
+						}
+						previousEntries.set(options.name, dependency);
 						entries.push(options.name);
 					}
 				);

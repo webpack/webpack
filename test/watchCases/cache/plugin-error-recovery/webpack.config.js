@@ -1,12 +1,12 @@
 "use strict";
 
+const assert = require("assert");
 const path = require("path");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
 /** @type {import("webpack").Configuration} */
 module.exports = {
 	mode: "production",
-	bail: true,
 	devtool: false,
 	cache: { type: "filesystem" },
 	output: { pathinfo: false },
@@ -41,9 +41,7 @@ module.exports = {
 					return;
 				}
 				expect(failures).toBe(step - 1);
-				expect(rebuiltBranches).toBe(
-					hook === "make" || hook === "needBuild" ? 0 : 1
-				);
+				expect(rebuiltBranches).toBe(hook === "needBuild" ? 0 : 1);
 				failures++;
 				return new Error(`Injected plugin failure in ${hook}`);
 			};
@@ -95,9 +93,19 @@ module.exports = {
 					fail("afterSeal")
 				);
 			});
-			compiler.hooks.make.tap({ name: "PluginFailure", stage: -Infinity }, () =>
-				fail("make")
-			);
+			compiler.hooks.make.tapAsync("PluginFailure", (compilation, callback) => {
+				if (!compiler.watchMode || currentWatchStep.step !== "1" || failures) {
+					return callback();
+				}
+				const module = [...compilation.modules].find(
+					(candidate) =>
+						candidate.identifier() === path.join(compiler.context, "branch.js")
+				);
+				assert(module);
+				compilation.rebuildModule(module, (error) =>
+					callback(error || takeError("make"))
+				);
+			});
 			for (const hook of /** @type {const} */ ([
 				"finishMake",
 				"afterCompile",
