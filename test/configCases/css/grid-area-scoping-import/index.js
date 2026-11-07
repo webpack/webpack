@@ -54,3 +54,9 @@ it("should leave an import nothing declares unscoped", () => {
 		/^(lib|style)_/
 	);
 });
+
+it("should not route a line through an imported value that is no grid name", () => {
+	expect(valueOf(styles["use-plain-line"], "grid-row")).toBe(
+		"style_primary-primary-start"
+	);
+});

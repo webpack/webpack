@@ -6,6 +6,7 @@
 @value line-start as lineStart from "./lib.css";
 @value zone from "./reexport.css";
 @value missing from "./lib.css";
+@value primary from "./lib.css";
 
 .use-area { grid-area: area }
 .use-area-lines { grid-column: area-start / area-end }
@@ -18,3 +19,7 @@
    written. */
 .use-local { grid-area: local; grid-row: local-start }
 .use-missing { grid-area: missing }
+
+/* `primary-start` is not the `@value primary`, which names no grid area, so
+   it is a line of its own. */
+.use-plain-line { grid-row: primary-start }
