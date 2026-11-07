@@ -14,8 +14,8 @@ module.exports = () => ({
 			name: "ignored invalidation",
 			detector: "comparison",
 			method: "_rebuild",
-			before: "if (need) {",
-			after: "if (need && (recordMutation(), false)) {"
+			before: "if (need) changed.push(module);",
+			after: "if (need && (recordMutation(), false)) changed.push(module);"
 		})
 	]
 });
