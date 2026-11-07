@@ -1,1 +1,3 @@
-export default 1;
+import c from "./c.js";
+
+export default c;
