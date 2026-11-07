@@ -34,3 +34,7 @@ it("should preserve same-kind duplicate exports without warning", () => {
 	expect(styles["dup-container"]).toBe("dup-container");
 	expect(styles["dup-counter"]).toBe("dup-counter");
 });
+
+it("should not treat a local() custom property usage as a declaration", () => {
+	expect(styles["usage-vs-class"]).toMatch(/usage-vs-class$/);
+});
