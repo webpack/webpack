@@ -69,3 +69,9 @@ it("should inline an imported plain value and scope it where it is used", () => 
 	expect(valueOf(styles["use-imported-text"], "grid-row")).toBe("span 2");
 	expect(valueOf(styles["use-local-keyword"], "grid-area")).toBe("auto");
 });
+
+it("should follow the longest imported prefix of a line name", () => {
+	expect(valueOf(styles["use-alias-line"], "grid-row")).toBe(
+		`${lib.area}-end`
+	);
+});

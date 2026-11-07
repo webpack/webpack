@@ -9,6 +9,7 @@
 @value primary from "./lib.css";
 @value impAuto, impSpan, impHero from "./lib.css";
 @value locAuto: auto;
+@value area as region-start from "./lib.css";
 
 .use-area { grid-area: area }
 .use-area-lines { grid-column: area-start / area-end }
@@ -32,3 +33,6 @@
 .use-imported-keyword { grid-area: impAuto }
 .use-imported-text { grid-row: impSpan }
 .use-local-keyword { grid-area: locAuto }
+
+/* `region-start-end` is the `-end` line of the imported `region-start`. */
+.use-alias-line { grid-row: region-start-end }
