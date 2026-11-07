@@ -2,12 +2,11 @@
 
 // A grid name used through a `@value` exports both under one key.
 module.exports = [
-	/Conflicting CSS module export "area": already declared as @value at line 3:0, redeclared as grid identifier/,
-	/Conflicting CSS module export "areaStart": already declared as @value at line 4:0, redeclared as grid identifier/,
-	/Conflicting CSS module export "line": already declared as @value at line 3:0, redeclared as grid identifier/,
-	/Conflicting CSS module export "alias": already declared as @value at line 5:0, redeclared as grid identifier/,
-	/Conflicting CSS module export "zone": already declared as @value at line 6:0, redeclared as grid identifier/,
 	/Referenced name "missing" in "\.\/lib\.css" not found/,
-	/Conflicting CSS module export "tail": already declared as @value at line 18:0, redeclared as grid identifier/,
-	/Conflicting CSS module export "missing": already declared as @value at line 18:0, redeclared as grid identifier/
+	/Conflicting CSS module export "area": already declared as @value at line 3:0, redeclared as grid identifier/,
+	/Conflicting CSS module export "line-start": already declared as @value at line 5:0, redeclared as grid identifier/,
+	/Conflicting CSS module export "lineStart": already declared as @value at line 6:0, redeclared as grid identifier/,
+	/Conflicting CSS module export "alias": already declared as @value at line 4:0, redeclared as grid identifier/,
+	/Conflicting CSS module export "zone": already declared as @value at line 7:0, redeclared as grid identifier/,
+	/Conflicting CSS module export "missing": already declared as @value at line 8:0, redeclared as grid identifier/
 ];

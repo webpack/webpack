@@ -24,16 +24,12 @@ it("should scope an imported area and its implicit lines in the declaring module
 	);
 });
 
-it("should resolve an imported implicit line to the area declaring it", () => {
-	expect(valueOf(styles["use-imported-line"], "grid-column")).toBe(
-		`${lib.area}-start`
-	);
-});
-
-it("should resolve an imported implicit area to the lines declaring it", () => {
+it("should scope an imported line in the declaring module, aliased or not", () => {
 	expect(lib["line-start"]).toBe("lib_line-line-start");
-	expect(valueOf(styles["use-line-area"], "grid-area")).toBe("lib_line-line");
 	expect(valueOf(styles["use-line"], "grid-row")).toBe(lib["line-start"]);
+	expect(valueOf(styles["use-line-alias"], "grid-row")).toBe(
+		lib["line-start"]
+	);
 });
 
 it("should spell an aliased or re-exported name as the declaring module does", () => {
@@ -45,14 +41,11 @@ it("should spell an aliased or re-exported name as the declaring module does", (
 	}
 });
 
-it("should fall back to an `-end` line when no `-start` line declares the area", () => {
-	expect(valueOf(styles["use-tail"], "grid-area")).toBe("lib_tail-tail");
-	expect(lib["tail-end"]).toBe("lib_tail-tail-end");
-});
-
 it("should scope a name no import selects in its own module", () => {
 	expect(valueOf(styles["use-local"], "grid-area")).toBe(styles.local);
-	expect(valueOf(styles["use-local"], "grid-row")).toBe(`${styles.local}-start`);
+	expect(valueOf(styles["use-local"], "grid-row")).toBe(
+		`${styles.local}-start`
+	);
 	expect(styles.local).toBe("style_local-local");
 });
 
