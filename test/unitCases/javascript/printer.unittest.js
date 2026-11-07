@@ -5744,6 +5744,16 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should print a number an unread assignment sets bare where no member read takes it", () => {
+		const source =
+			"function f(c){var a,b;if(c)return(a=2)+(b=3)}function g(){var a;return(a=2).toFixed()}function h(){var a;return 1-(a=2)}console.log(f(1),g(),h())";
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			"function f(c){if(c)return 2+3}function g(){return(2).toFixed()}function h(){return 1-2}console.log(f(1),g(),h());"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
