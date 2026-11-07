@@ -5733,6 +5733,17 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should drop an `if` branch that is a statement running nothing", () => {
+		// One beside a `break` a loop's test takes in stays the loop's body.
+		const source =
+			'function b(){console.log("b");return 1}function c(){console.log("c")}function k(a){if(a)typeof x;if(b())1;else 2;if(a)1;else c();for(;;)if(a)1;else break}k(0)';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'function b(){return console.log("b"),1}function c(){console.log("c")}function k(a){b();if(!a)c();for(;a;)1}k(0);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
