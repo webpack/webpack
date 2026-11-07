@@ -5722,6 +5722,17 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should print an `if` assigning opposite booleans as the test negated", () => {
+		// A test giving a boolean prints bare, any other under `!!`; a sequence stays.
+		const source =
+			"var a,b;function f(c){if(c){a=true}else{a=false}return a}function g(c){if(c)a=!1;else a=!0;return a}function h(c){if(c<1)a=!0;else a=!1;return a}function k(c){if(b=c,c)a=!0;else a=!1;return a}function m(c){if(c)a=!0;else b=!1;return a}console.log(f(2),g(2),h(2),k(0),m(0))";
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			"var a,b;function f(c){return a=!!c,a}function g(c){return a=!c,a}function h(c){return a=c<1,a}function k(c){return a=(b=c,c)?!0:!1,a}function m(c){return c?a=!0:b=!1,a}console.log(f(2),g(2),h(2),k(0),m(0));"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
