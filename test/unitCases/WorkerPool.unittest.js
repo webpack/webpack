@@ -32,8 +32,11 @@ describe("WorkerPool", () => {
 			const pool = createPool({ max: 0 });
 
 			expect(await pool.run(TARGET, "add", [1, 2])).toBe(3);
+			const { threadId, isMainThread } = require("worker_threads");
 			const info = await pool.run(TARGET, "info", []);
-			expect(info).toEqual({ threadId: 0, isMainThread: true });
+			// inline work runs on the caller's thread; under the Bun test
+			// runner that thread is a jest worker, so compare, do not assume 0.
+			expect(info).toEqual({ threadId, isMainThread });
 
 			await expect(pool.run(TARGET, "missing", [])).rejects.toThrow(
 				`${TARGET} has no export named missing`
@@ -140,10 +143,8 @@ describe("WorkerPool", () => {
 			await two._pool.end();
 
 			const inline = workerFor({ max: 0 });
-			expect(await inline.run("info")).toEqual({
-				threadId: 0,
-				isMainThread: true
-			});
+			const { threadId, isMainThread } = require("worker_threads");
+			expect(await inline.run("info")).toEqual({ threadId, isMainThread });
 			await inline.release();
 		});
 
