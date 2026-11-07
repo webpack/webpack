@@ -26,6 +26,8 @@ module.exports = [false, true].map((concatenateModules, index) => ({
 			compiler.hooks.make.tapAsync(
 				"RetainedEntryContext",
 				(compilation, callback) => {
+					dependency.request =
+						currentWatchStep.step === "6" ? "./other.js" : "./index.js";
 					const layer =
 						currentWatchStep.step === "3"
 							? "first"
@@ -44,8 +46,8 @@ module.exports = [false, true].map((concatenateModules, index) => ({
 				}
 			);
 			compiler.hooks.finishMake.tap("RetainedEntryContext", (compilation) => {
-				const entryPaths = ["a", "b"].map((directory) =>
-					path.join(compiler.context, directory, "index.js")
+				const entryPaths = ["a/index.js", "b/index.js", "a/other.js"].map(
+					(file) => path.join(compiler.context, file)
 				);
 				const entries = [...compilation.modules].filter(
 					(module) =>
@@ -57,7 +59,13 @@ module.exports = [false, true].map((concatenateModules, index) => ({
 				expect(entries).toHaveLength(1);
 				expect(entries[0]).toHaveProperty(
 					"resource",
-					entryPaths[currentWatchStep.step === "1" ? 1 : 0]
+					entryPaths[
+						currentWatchStep.step === "1"
+							? 1
+							: currentWatchStep.step === "6"
+								? 2
+								: 0
+					]
 				);
 				expect(compilation.entries.get("main")).toHaveProperty("dependencies", [
 					dependency
