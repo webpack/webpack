@@ -7091,6 +7091,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-public-path-function": Object {
+    "configs": Array [
+      Object {
+        "description": "Function name/definition to map file path.",
+        "multiple": false,
+        "path": "output.publicPathFunction",
+        "type": "string",
+      },
+    ],
+    "description": "Function name/definition to map file path.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-script-type": Object {
     "configs": Array [
       Object {
@@ -7317,6 +7330,19 @@ Object {
       },
     ],
     "description": "Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-worker-public-path-function": Object {
+    "configs": Array [
+      Object {
+        "description": "Worker public path function. Much like the public path function, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPathFunction. Don't set this option unless your worker scripts are located at a different path from your other script files.",
+        "multiple": false,
+        "path": "output.workerPublicPathFunction",
+        "type": "string",
+      },
+    ],
+    "description": "Worker public path function. Much like the public path function, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPathFunction. Don't set this option unless your worker scripts are located at a different path from your other script files.",
     "multiple": false,
     "simpleType": "string",
   },
