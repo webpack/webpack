@@ -24,7 +24,7 @@ module.exports = function (source) {
 	const context = this.context || this.rootContext;
 	const contextified = this.utils.contextify(context, this.resourcePath);
 	const absolutified = this.utils.absolutify(context, "./value.js");
-	const path = /** @type {EXPECTED_ANY} */ (
+	const path = /** @type {import("../../../../").Compilation} */ (
 		this._compilation
 	).getPath("[name]_[contenthash]", {
 		filename: "style.module.css",
@@ -36,31 +36,31 @@ module.exports = function (source) {
 			contentHash: { css: "abc" }
 		}
 	});
-	const contentPath = /** @type {EXPECTED_ANY} */ (
+	const contentPath = /** @type {import("../../../../").Compilation} */ (
 		this._compilation
 	).getPath("[contenthash]", {
 		contentHashType: "css",
-		chunk: { contentHash: { css: "abc" } }
+		chunk: { id: "style", hash: "chunk", contentHash: { css: "abc" } }
 	});
-	const digestPath = /** @type {EXPECTED_ANY} */ (this._compilation).getPath(
+	const digestPath = /** @type {import("../../../../").Compilation} */ (this._compilation).getPath(
 		"[hash:base64]",
 		{ hash: "0123456789abcdef0123456789abcdef" }
 	);
-	const digestLengthPath = /** @type {EXPECTED_ANY} */ (
+	const digestLengthPath = /** @type {import("../../../../").Compilation} */ (
 		this._compilation
 	).getPath("[hash:base64:8]", { hash: "0123456789abcdef0123456789abcdef" });
-	const fullHashPath = /** @type {EXPECTED_ANY} */ (this._compilation).getPath(
+	const fullHashPath = /** @type {import("../../../../").Compilation} */ (this._compilation).getPath(
 		"[fullhash:base64]",
 		{
 			hash: "0123456789abcdef0123456789abcdef",
 			fullHash: "0123456789abcdef0123456789abcdef"
 		}
 	);
-	const moduleIdPath = /** @type {EXPECTED_ANY} */ (this._compilation).getPath(
+	const moduleIdPath = /** @type {import("../../../../").Compilation} */ (this._compilation).getPath(
 		"[moduleid]",
 		{ module: { id: 7, hash: "module" } }
 	);
-	const digestFromBase64 = /** @type {EXPECTED_ANY} */ (
+	const digestFromBase64 = /** @type {import("../../../../").Compilation} */ (
 		this._compilation
 	).getPath("[hash:hex]", {
 		hash: "ASNFZ4mrze8BI0VniavN7w==",

@@ -8,12 +8,11 @@ module.exports = function () {
 	const digest = hash.digest("hex");
 	const contextified = this.utils.contextify(this.context, this.resourcePath);
 	const absolutified = this.utils.absolutify(this.context, "./value.js");
-	const path = /** @type {EXPECTED_ANY} */ (this._compilation).getPath(
-		"[name]",
-		{
-			chunk: { name: "chunk" }
-		}
-	);
+	const path = /** @type {import("../../../").Compilation} */ (
+		this._compilation
+	).getPath("[name]", {
+		chunk: { name: "chunk", id: "chunk", hash: "hash" }
+	});
 	this.addBuildDependency(__filename);
 	let emitFileError;
 	try {

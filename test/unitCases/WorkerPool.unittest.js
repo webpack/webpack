@@ -516,27 +516,37 @@ describe("WorkerPool", () => {
 
 	describeThreads("WorkerChild", () => {
 		/**
-		 * @returns {{ child: EXPECTED_ANY, port2: EXPECTED_ANY, next: () => Promise<EXPECTED_ANY> }} a started child
+		 * @typedef {import("../../lib/worker/WorkerChild")} WorkerChild
+		 * @typedef {import("worker_threads").MessagePort} MessagePort
+		 * @typedef {import("../../lib/worker/protocol").WorkerToMainMessage} WorkerToMainMessage
+		 * @typedef {import("../../lib/worker/protocol").RpcMessage} RpcMessage
+		 * @typedef {import("../../lib/worker/protocol").ErrorResponseMessage} ErrorResponseMessage
+		 */
+
+		/**
+		 * @returns {{ child: WorkerChild, port2: MessagePort, next: () => Promise<WorkerToMainMessage> }} a started child
 		 */
 		const createChild = () => {
 			const { MessageChannel } = require("worker_threads");
 			const WorkerChild = require("../../lib/worker/WorkerChild");
 			const { port1, port2 } = new MessageChannel();
-			/** @type {EXPECTED_ANY[]} */
+			/** @type {WorkerToMainMessage[]} */
 			const received = [];
-			/** @type {((message: EXPECTED_ANY) => void)[]} */
+			/** @type {((message: WorkerToMainMessage) => void)[]} */
 			const waiting = [];
-			port2.on("message", (message) => {
+			port2.on("message", (/** @type {WorkerToMainMessage} */ message) => {
 				const resolve = waiting.shift();
 				if (resolve) resolve(message);
 				else received.push(message);
 			});
 			/**
-			 * @returns {Promise<EXPECTED_ANY>} the next message
+			 * @returns {Promise<WorkerToMainMessage>} the next message
 			 */
 			const next = () =>
 				received.length > 0
-					? Promise.resolve(received.shift())
+					? Promise.resolve(
+							/** @type {WorkerToMainMessage} */ (received.shift())
+						)
 					: new Promise((resolve) => {
 							waiting.push(resolve);
 						});
@@ -547,7 +557,7 @@ describe("WorkerPool", () => {
 		};
 
 		/**
-		 * @param {EXPECTED_ANY} port2 the main side of the port
+		 * @param {MessagePort} port2 the main side of the port
 		 * @returns {Promise<void>} settled when the port closed
 		 */
 		const closed = (port2) =>
@@ -589,7 +599,7 @@ describe("WorkerPool", () => {
 				args: [2, 3],
 				rpc: true
 			});
-			const rpc = await next();
+			const rpc = /** @type {RpcMessage} */ (await next());
 			expect(rpc).toMatchObject({
 				type: "rpc",
 				jobId: 2,
@@ -624,7 +634,7 @@ describe("WorkerPool", () => {
 				args: [],
 				rpc: true
 			});
-			const response = await next();
+			const response = /** @type {ErrorResponseMessage} */ (await next());
 			expect(response).toMatchObject({ type: "response", id: 2, ok: false });
 			expect(response.error.message).toMatch(/could not be cloned|can not be cloned/);
 			expect(child._rpc.size).toBe(0);
