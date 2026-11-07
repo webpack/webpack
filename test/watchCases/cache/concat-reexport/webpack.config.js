@@ -6,7 +6,7 @@ const currentWatchStep = require("../../../helpers/currentWatchStep");
 module.exports = [false, true].map((cache, index) => ({
 	mode: "development",
 	cache: cache ? { type: "memory" } : false,
-	output: { filename: `bundle${index}.js` },
+	output: { filename: `bundle${index}.js`, clean: false },
 	optimization: {
 		concatenateModules: true
 	},
