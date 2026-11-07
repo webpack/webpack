@@ -1,5 +1,6 @@
 "use strict";
 
+const assert = require("assert");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
 /** @type {import("webpack").Configuration} */
@@ -24,12 +25,17 @@ module.exports = {
 						"shared",
 						"last"
 					][step];
-					if (step === 2 || step === 3) {
+					if (step === 6) {
+						compilation.addModuleTree(
+							{ context: compiler.context, dependency },
+							(error) => callback(error)
+						);
+					} else if (step === 2 || step === 3) {
 						compilation.addInclude(
 							compiler.context,
 							dependency,
 							{ name },
-							callback
+							(error) => callback(error)
 						);
 					} else {
 						compilation.addEntry(
@@ -42,7 +48,7 @@ module.exports = {
 									compiler.context,
 									dependency,
 									{ name: "second" },
-									callback
+									(error) => callback(error)
 								);
 							}
 						);
@@ -57,13 +63,15 @@ module.exports = {
 					["third"],
 					[],
 					["shared", "second"],
-					["last"]
+					["last"],
+					[]
 				][step];
 				expect([...compilation.entries.keys()].sort()).toEqual(
 					["bundle", ...names].sort()
 				);
 				for (const name of names) {
 					const entry = compilation.entries.get(name);
+					assert(entry);
 					expect(entry.dependencies).toEqual(step === 2 ? [] : [dependency]);
 					expect(entry.includeDependencies).toEqual(
 						step === 2 ? [dependency] : []
@@ -72,7 +80,9 @@ module.exports = {
 				expect(compilation.globalEntry.includeDependencies).toEqual(
 					step === 3 ? [dependency] : []
 				);
-				expect(compilation.moduleGraph.getModule(dependency)).toBeDefined();
+				const module = compilation.moduleGraph.getModule(dependency);
+				assert(module);
+				expect(compilation.modules.has(module)).toBe(true);
 			});
 		}
 	]
