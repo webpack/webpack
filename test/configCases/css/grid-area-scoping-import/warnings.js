@@ -8,5 +8,8 @@ module.exports = [
 	/Conflicting CSS module export "lineStart": already declared as @value at line 6:0, redeclared as grid identifier/,
 	/Conflicting CSS module export "alias": already declared as @value at line 4:0, redeclared as grid identifier/,
 	/Conflicting CSS module export "zone": already declared as @value at line 7:0, redeclared as grid identifier/,
-	/Conflicting CSS module export "missing": already declared as @value at line 8:0, redeclared as grid identifier/
+	/Conflicting CSS module export "missing": already declared as @value at line 8:0, redeclared as grid identifier/,
+	/Conflicting CSS module export "impHero": already declared as @value at line 10:0, redeclared as grid identifier/,
+	/Conflicting CSS module export "impAuto": already declared as @value at line 10:0, redeclared as grid identifier/,
+	/Conflicting CSS module export "impSpan": already declared as @value at line 10:0, redeclared as grid identifier/
 ];

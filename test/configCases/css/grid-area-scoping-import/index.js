@@ -60,3 +60,12 @@ it("should not route a line through an imported value that is no grid name", () 
 		"style_primary-primary-start"
 	);
 });
+
+it("should inline an imported plain value and scope it where it is used", () => {
+	expect(valueOf(styles["use-imported-name"], "grid-area")).toBe(
+		"style_hero-hero"
+	);
+	expect(valueOf(styles["use-imported-keyword"], "grid-area")).toBe("auto");
+	expect(valueOf(styles["use-imported-text"], "grid-row")).toBe("span 2");
+	expect(valueOf(styles["use-local-keyword"], "grid-area")).toBe("auto");
+});
