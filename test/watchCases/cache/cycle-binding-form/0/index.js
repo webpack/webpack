@@ -8,10 +8,9 @@ for (const [file, load, value] of [
 ]) {
 	it(`should define ${file}'s exports as the cycles around it ask`, () => {
 		const module = load();
-		// getters are defined up front by name, values after the module ran
-		expect(Object.keys(module)).toEqual(
-			cycle ? [value, "keys"].sort() : ["keys", value]
-		);
+		// A non-circular module's value export falls back to a getter when a
+		// getter key sorts after it, so the keys stay sorted in every step
+		expect(Object.keys(module)).toEqual([value, "keys"].sort());
 		expect(module.keys()).toEqual(cycle ? [value, "keys"].sort() : null);
 	});
 }
