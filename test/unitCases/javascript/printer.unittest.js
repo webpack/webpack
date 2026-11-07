@@ -4042,6 +4042,15 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe(
 			"f();\n/*! a */\ng();\n/*! b */\nh();\n{}\nfunction k() {\n/*! c */\nreturn 1;\n}\nk();\nf();/*! e */ /*! f */\ng();\n/*! d */"
 		);
+		// A `\r\n` inside the comment moves nothing: its line still ends.
+		for (const source of ["f();\n/*! a\n b */\ng();", "f(); /*! a\n b */\ng();"]) {
+			expect(
+				minifyOnePass(source.replace(/\n/g, "\r\n"), {
+					compress: {},
+					mangle: false
+				}).code
+			).toBe("f();\n/*! a\n b */\ng();");
+		}
 	});
 
 	it("should keep a comment before a value from breaking the line after `return` or `throw`", () => {
