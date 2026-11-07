@@ -89,8 +89,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:2307",
 			"oxc minifier: peephole/esbuild.rs:252",
 			"oxc minifier: peephole/esbuild.rs:148",
-			"oxc minifier: peephole/esbuild.rs:157",
-			"oxc minifier: peephole/esbuild.rs:158",
 			"oxc minifier: peephole/esbuild.rs:159",
 			"oxc minifier: peephole/esbuild.rs:168",
 			"oxc minifier: peephole/esbuild.rs:169",
@@ -328,7 +326,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/cond_branch_2",
 			"terser compress: collapse_vars/issue_2914_1",
 			"terser compress: collapse_vars/issue_2914_2",
-			"terser compress: collapse_vars/collapse_rhs_lhs_2",
 			"terser compress: drop-unused/delete_assign_1",
 			"terser compress: drop-unused/delete_assign_2",
 			"terser compress: drop-unused/issue_1838",
@@ -352,8 +349,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: sequences/make_sequences_2",
 			"terser compress: template-string/template_string_nested",
 			"terser compress: typeof/typeof_evaluation",
-			"terser compress: typeof/issue_2728_1",
-			"terser compress: typeof/issue_2728_5",
 			"terser compress: unicode/issue_3271",
 			"swc minifier: benches-full/d3.js",
 			"swc minifier: benches-full/echarts.js",
@@ -414,7 +409,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: ecmascript/value_type.rs:163",
 			"oxc minifier: ecmascript/value_type.rs:167",
 			"oxc minifier: ecmascript/value_type.rs:169",
-			"oxc minifier: mangler/mod.rs:247",
 			"oxc minifier: peephole/dead_code_elimination.rs:664",
 			"oxc minifier: peephole/esbuild.rs:202",
 			"oxc minifier: peephole/esbuild.rs:222",
@@ -708,7 +702,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_drop_unused_issue_t161_top_retain_15",
 			"swc exec: terser_drop_unused_issue_1709",
 			"swc exec: terser_drop_unused_issue_1968",
-			"swc exec: terser_drop_unused_issue_1715_4",
 			"swc exec: terser_pure_getters_impure_getter_2",
 			"swc exec: terser_pure_getters_issue_2838",
 			"swc exec: terser_template_string_regex_2",
@@ -1163,7 +1156,6 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"terser compress: drop-unused/iife",
 			"terser compress: drop-unused/issue_1709",
-			"terser compress: drop-unused/issue_1715_4",
 			"terser compress: drop-unused/issue_1830_1",
 			"terser compress: drop-unused/issue_1968",
 			"terser compress: drop-unused/issue_t161_top_retain_13",
@@ -1436,9 +1428,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: conditionals/cond_5",
 			"terser compress: conditionals/cond_7",
 			"terser compress: conditionals/cond_7_1",
-			"terser compress: conditionals/cond_8",
-			"terser compress: conditionals/cond_8b",
-			"terser compress: conditionals/cond_8c",
 			"terser compress: conditionals/issue_1154",
 			"terser compress: conditionals/issue_2535_1",
 			"terser compress: conditionals/issue_2535_2",
@@ -1917,8 +1906,7 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc goes further than webpack on what terser's `typeof` tests cover",
 		[
 			"terser compress: typeof/issue_250_1",
-			"terser compress: typeof/typeof_in_boolean_context",
-			"terser compress: typeof/duplicate_lambda_arg_name"
+			"terser compress: typeof/typeof_in_boolean_context"
 		]
 	],
 	[
