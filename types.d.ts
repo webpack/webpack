@@ -34948,11 +34948,13 @@ declare interface TerserMangleAliases {
 declare interface ThreadsLoadersOptions {
 	/**
 	 * Number of loader jobs a thread runs at once. Defaults to `20`; the CPU part still runs one at a time.
+	 * @since 5.113.0
 	 */
 	parallelJobs?: number;
 
 	/**
 	 * Milliseconds an idle thread survives after a loader job. Defaults to `500`.
+	 * @since 5.113.0
 	 */
 	poolTimeout?: number;
 }
@@ -34963,11 +34965,13 @@ declare interface ThreadsLoadersOptions {
 declare interface ThreadsOptions {
 	/**
 	 * Options for running loaders on the worker threads.
+	 * @since 5.113.0
 	 */
 	loaders?: ThreadsLoadersOptions;
 
 	/**
 	 * Number of worker threads. Defaults to one less than the number of CPUs; `0` runs the work on the main thread.
+	 * @since 5.113.0
 	 */
 	max?: number;
 }

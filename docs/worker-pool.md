@@ -108,7 +108,7 @@ Ordering rules:
 - Spawn lazily from dispatch or `warmup`.
 - An idle thread is released with `unref()` at once, so an idle pool never keeps the process alive, and starts an `idleTimeout` timer (itself released with `unref()`). When it fires and the thread is still idle, the thread is terminated.
 - Posting a call clears the timer and `ref()`s the thread.
-- `release()` terminates idle threads; a busy thread is retired once its call settles.
+- `release()` terminates idle threads; a busy thread or one with a pending preload is retired once it settles.
 - `end()` is idempotent:
   - sets the ending flag and rejects queued calls;
   - `ref()`s every thread and closes idle ones;

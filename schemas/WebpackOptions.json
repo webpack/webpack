@@ -8061,12 +8061,14 @@
         "parallelJobs": {
           "description": "Number of loader jobs a thread runs at once. Defaults to `20`; the CPU part still runs one at a time.",
           "type": "number",
-          "minimum": 0
+          "minimum": 1,
+          "added": "5.113.0"
         },
         "poolTimeout": {
           "description": "Milliseconds an idle thread survives after a loader job. Defaults to `500`.",
           "type": "number",
-          "minimum": 0
+          "minimum": 0,
+          "added": "5.113.0"
         }
       }
     },
@@ -8081,7 +8083,8 @@
         "max": {
           "description": "Number of worker threads. Defaults to one less than the number of CPUs; `0` runs the work on the main thread.",
           "type": "number",
-          "minimum": 0
+          "minimum": 0,
+          "added": "5.113.0"
         }
       }
     },

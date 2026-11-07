@@ -40,8 +40,21 @@ module.exports = function (source) {
 	).getPath("[hash:base64:8]", { hash: "0123456789abcdef0123456789abcdef" });
 	const fullHashPath = /** @type {EXPECTED_ANY} */ (this._compilation).getPath(
 		"[fullhash:base64]",
-		{ fullHash: "0123456789abcdef0123456789abcdef" }
+		{
+			hash: "0123456789abcdef0123456789abcdef",
+			fullHash: "0123456789abcdef0123456789abcdef"
+		}
 	);
+	const moduleIdPath = /** @type {EXPECTED_ANY} */ (this._compilation).getPath(
+		"[moduleid]",
+		{ module: { id: 7, hash: "module" } }
+	);
+	const digestFromBase64 = /** @type {EXPECTED_ANY} */ (
+		this._compilation
+	).getPath("[hash:hex]", {
+		hash: "ASNFZ4mrze8BI0VniavN7w==",
+		hashDigest: "base64"
+	});
 
 	if (!options.pattern.test("worker")) {
 		callback(new Error("loader options did not survive the worker"));
@@ -79,7 +92,7 @@ module.exports = function (source) {
 								/** @type {string | Buffer} */ (loaded)
 							).includes("loaded")}:${imported}:${typeof contextified}:${absolutified.endsWith(
 								"value.js"
-							)}:${path}:${contentPath}:${digestPath}:${digestLengthPath}:${fullHashPath}`
+							)}:${path}:${contentPath}:${digestPath}:${digestLengthPath}:${fullHashPath}:${moduleIdPath}:${digestFromBase64}`
 						)};`
 					);
 				}, 10);

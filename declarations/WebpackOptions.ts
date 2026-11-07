@@ -5991,10 +5991,12 @@ export type Target =
 export interface ThreadsLoadersOptions {
 	/**
 	 * Number of loader jobs a thread runs at once. Defaults to `20`; the CPU part still runs one at a time.
+	 * @since 5.113.0
 	 */
-	parallelJobs?: NonNegativeNumber;
+	parallelJobs?: PositiveNumber;
 	/**
 	 * Milliseconds an idle thread survives after a loader job. Defaults to `500`.
+	 * @since 5.113.0
 	 */
 	poolTimeout?: NonNegativeNumber;
 }
@@ -6005,10 +6007,12 @@ export interface ThreadsLoadersOptions {
 export interface ThreadsOptions {
 	/**
 	 * Options for running loaders on the worker threads.
+	 * @since 5.113.0
 	 */
 	loaders?: ThreadsLoadersOptions;
 	/**
 	 * Number of worker threads. Defaults to one less than the number of CPUs; `0` runs the work on the main thread.
+	 * @since 5.113.0
 	 */
 	max?: NonNegativeNumber;
 }
@@ -6311,7 +6315,6 @@ export interface WebpackOptionsNormalized {
 	 * Environment to build for. An array of environments to build for all of them when possible.
 	 */
 	target?: Target;
-
 	/**
 	 * Enable validation of webpack configuration. Defaults to true in development mode. In production mode, defaults to true unless futureDefaults is enabled, then defaults to false.
 	 */
@@ -6500,7 +6503,6 @@ export interface WebpackOptions {
 	 * Environment to build for. An array of environments to build for all of them when possible.
 	 */
 	target?: Target;
-
 	/**
 	 * Enable validation of webpack configuration. Defaults to true in development mode. In production mode, defaults to true unless futureDefaults is enabled, then defaults to false.
 	 */

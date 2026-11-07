@@ -6,6 +6,7 @@ const WorkerPool = require("../../lib/util/worker/WorkerPool");
 
 const TARGET = path.resolve(__dirname, "../fixtures/worker-pool/worker.js");
 const BROKEN = path.resolve(__dirname, "../fixtures/worker-pool/broken.js");
+const SLOW = path.resolve(__dirname, "../fixtures/worker-pool/slow.js");
 
 /** @typedef {import("../../lib/util/worker/WorkerPool").WorkerPoolOptions} WorkerPoolOptions */
 
@@ -261,6 +262,23 @@ describe("WorkerPool", () => {
 			await pool.release();
 			expect(pool.stats.workers).toBe(0);
 			expect(await pool.run(TARGET, "add", [1, 2])).toBe(3);
+		});
+
+		it("does not preload with a zero target", async () => {
+			const pool = createThreadPool({ max: 1 });
+			await pool.warmup([SLOW], 0);
+			expect(pool.stats.workers).toBe(0);
+		});
+
+		it("retires a released worker when its preload settles", async () => {
+			const pool = createThreadPool({ max: 1, idleTimeout: 5000 });
+			const preloading = pool.warmup([SLOW], 1);
+			await pool.release();
+			await preloading;
+			await new Promise((resolve) => {
+				setTimeout(resolve, 50);
+			});
+			expect(pool.stats.workers).toBe(0);
 		});
 
 		it("keeps the pool usable after releasing during a call", async () => {

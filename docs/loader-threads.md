@@ -59,6 +59,8 @@ thread-loader is a pitch loader: it borrows `loader-runner`'s pitch/normal order
 - `this.options.context`
 - `this.webpack === true`
 
+`this.exec()` is available only in a worker job, like thread-loader. The main-thread fallback does not provide it, and `loadModule` does not pass back its fourth `module` argument.
+
 ### Not supported
 
 - `this.emitFile`
