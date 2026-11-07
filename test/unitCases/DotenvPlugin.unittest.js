@@ -163,6 +163,20 @@ describe("DotenvPlugin expansion", () => {
 		expectSameAsReference(withPrefix(values));
 	});
 
+	it.each([
+		["escaped references", { B: "\\$@C", C: "\\$@B", CYCLE: "x$@B" }],
+		["a `$&` pattern", { A: "$&", B: "$@A" }],
+		["a default that holds its own template", { A: "${@MISSING:-$&}" }]
+	])("stops a cycle of %s before the step budget", (_name, values) => {
+		const parsed = withPrefix(values);
+		const processEnv = /** @type {Env} */ ({ ...process.env });
+		expect(referenceExpand(parsed, processEnv, 10000)).toBeNull();
+		// the step budget throws "takes more than … steps" instead
+		expect(() => expandWithPlugin(parsed)).toThrow(
+			/never finishes: it repeats/
+		);
+	});
+
 	it("expands generated values like dotenv-expand", () => {
 		// a fixed seed keeps the corpus the same on every run
 		let seed = 1;
