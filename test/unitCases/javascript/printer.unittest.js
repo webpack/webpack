@@ -4285,7 +4285,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 	it("should print a part a node prints as without the parentheses it took as that node's operand", () => {
 		const source = fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-kept-part-as-its-place-takes");
 		const expected =
-			"const s=(g(),h());g(),h(),g(),h(),a,b,f([a]=[1],({b:b}={b:2}),([c]=[1])),x=a?y=1:c,x=(a||f(),c),g``,(a,b)``,(x={}.y)(()=>{}),a=- -b;a in b,c;x=!a&&b in c,x=a<b&&c;if(!b&&c)f();a(),- -b;({a:g()}).b;({a:g()}).b.c();({m(){}}).m()?a():b();(function(){g()})()==x;x=function(){g()}()==x,a=c;function k(i){return i++**2}function n(){return 1..a}x=new[1,2],x=new function(z){this.b=1}(1),k(1),n(),x={k:a=1,[b=1]:1},x=a?c:(f(1)(2),c);if(x=a?c:(g()+1,c)){({}).a?b():c();y()}x=new F(1);";
+			"const s=(g(),h());g(),h(),g(),h(),a,b,f([a]=[1],({b:b}={b:2}),([c]=[1])),x=a?y=1:c,x=(a||f(),c),g``,(a,b)``,(x={}.y)(()=>{}),a=- -b;a in b,c;x=!a&&b in c,x=a<b&&c;if(!b&&c)f();a(),- -b;({a:g()}).b;({a:g()}).b.c();({m(){}}).m()?a():b();(function(){g()})()==x;x=function(){g()}()==x,a=c;function k(i){return i++**2}function n(){return 1..a}x=new[1,2],x=new function(){this.b=1},k(1),n(),x={k:a=1,[b=1]:1},x=a?c:(f(1)(2),c);if(x=a?c:(g()+1,c)){({}).a?b():c();y()}x=new F(1);";
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(
 			expected
 		);
@@ -6795,6 +6795,22 @@ describe("one-pass minify of functions read once, family A", () => {
 		const source = fixture("javascript", "one-pass-inline-a-6");
 		const { code } = minifyOnePass(source, options);
 		expect(code).toBe("(function(){}).b;console.log(`done`);");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should drop an unread parameter passed a constant where every parameter goes", () => {
+		const source = fixture("javascript", "one-pass-inline-a-7");
+		const { code } = minifyOnePass(source, options);
+		expect(code).toBe("console.log(9);");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should keep an unread parameter passed a constant beside one passed a name", () => {
+		const source = fixture("javascript", "one-pass-inline-a-8");
+		const { code } = minifyOnePass(source, options);
+		expect(code).toBe(
+			"function f(x){!function(a,b){console.log(b)}(3,x)}f([1]),f([2]);"
+		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 });
