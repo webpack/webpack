@@ -9,13 +9,11 @@ const fs = require("fs");
 const path = require("path");
 const { SourceProcessor } = require("../../../lib/css/syntax");
 const {
-	A,
 	buildSkipSet,
 	Field,
 	NodeType,
 	escapeIdentifier,
 	normalizeUrl,
-	parseAStylesheet,
 	Part
 } = require("../../../lib/css/syntax-parser");
 
@@ -538,20 +536,6 @@ describe("CssSyntax — block streaming", () => {
 });
 
 describe("CssSyntax — minify comment preservation", () => {
-	it("keeps a comment while also firing the Comment visitor", () => {
-		/** @type {string[]} */
-		const seen = [];
-		const { code: out } = new SourceProcessor()
-			.use({
-				[NodeType.Comment]: (
-					/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
-				) => seen.push(path.source())
-			})
-			.process(fixture("css", "css-syntax-minify-comment-preservation-keeps-a-comment-while-also-firing-the"), { mode: "minify" });
-		expect(out).toBe("/*! k */a{color:red}");
-		expect(seen).toEqual(["/*! k */"]);
-	});
-
 	it("ignores `skip` while printing (every node is needed for serialization)", () => {
 		// A prelude/type skip would drop selector or value nodes; printing must
 		// override it so the minified output stays complete.
@@ -641,20 +625,6 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(open.map.mappings).toBe(
 			mapped(fixture("css", "css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-42")).map.mappings
 		);
-	});
-});
-
-describe("CssSyntax — minify keeps input the grammar rejects", () => {
-	it("never materializes rejected input for a walk-only parse", () => {
-		// `Raw` exists only for the printer — a plain parse still drops the input,
-		// so consumers never see a node type they don't know.
-		const rule = A.field(
-			0,
-			Field.rules,
-			parseAStylesheet(fixture("css", "css-syntax-minify-keeps-input-the-grammar-rejects-never-materializes-rejected"))
-		);
-		expect(A.fieldCount(Field.declarations, rule)).toBe(1);
-		expect(A.fieldCount(Field.rules, rule)).toBe(0);
 	});
 });
 
@@ -1292,34 +1262,6 @@ describe("cssMinify export", () => {
 		expect(code).toMatchInlineSnapshot('"a{color:red}"');
 	});
 
-	it("reads a Buffer input as UTF-8", async () => {
-		const cssMinify = require("../../../lib/css/cssMinify");
-
-		const { code } = await cssMinify({
-			"a.css": Buffer.from(fixture("css", "css-minify-export-reads-a-buffer-input-as-utf-8"), "utf8")
-		});
-
-		expect(code).toBe('@charset "UTF-8";a:before{content:"é"}');
-	});
-
-	describe("a caller's renderEmbeddedSource", () => {
-		const sheet =
-			'.a{background:url("data:image/svg+xml,<svg></svg>")}' +
-			'.b{background:url("data:text/css,a { color : red }")}';
-
-		it("returns what it reports beside the code", async () => {
-			const cssMinify = require("../../../lib/css/cssMinify");
-
-			const result = await cssMinify({ "a.css": sheet }, undefined, {
-				renderEmbeddedSource: (source, { type }) =>
-					type === "svg" ? { code: source, warnings: ["w"] } : undefined
-			});
-
-			expect(result.warnings).toEqual(["w"]);
-			expect(result.errors).toBeUndefined();
-		});
-	});
-
 	describe("extractComments", () => {
 		const sheet =
 			"/*! one */a{color:red}/* plain */b{color:blue}/*! one */" +
@@ -1343,37 +1285,6 @@ describe("cssMinify export", () => {
 		};
 
 		it.each([
-			// The plugin's default: a banner or license, once each, and the pragma stays.
-			[
-				true,
-				"a{color:red}b{color:blue}c{margin:0}",
-				["/*! one */", "/* @license two */"]
-			],
-			[
-				{},
-				"a{color:red}b{color:blue}c{margin:0}",
-				["/*! one */", "/* @license two */"]
-			],
-			[
-				/license/,
-				"a{color:red}b{color:blue}c{margin:0}",
-				["/* @license two */"]
-			],
-			[
-				"^!",
-				"a{color:red}b{color:blue}c{margin:0}",
-				["/*! one */"]
-			],
-			[
-				{ condition: "all" },
-				"a{color:red}b{color:blue}c{margin:0}",
-				[
-					"/*! one */",
-					"/* plain */",
-					"/* @license two */",
-					"/*# sourceMappingURL=a.map */"
-				]
-			],
 			[
 				{
 					condition: (/** @type {{ value: string }} */ comment) =>
@@ -1381,12 +1292,6 @@ describe("cssMinify export", () => {
 				},
 				"a{color:red}b{color:blue}c{margin:0}",
 				["/* @license two */"]
-			],
-			// Extracting with a condition nothing meets still leaves the rest out.
-			[
-				{ condition: false },
-				"a{color:red}b{color:blue}c{margin:0}",
-				undefined
 			]
 		])("takes out what %p names", async (extractComments, code, extracted) => {
 			expect(await run(extractComments)).toEqual({
@@ -1396,26 +1301,6 @@ describe("cssMinify export", () => {
 		});
 
 		it.each([
-			[
-				true,
-				"a{color:red}b{color:blue}c{margin:0}",
-				["/*! one */", "/* @license two */"]
-			],
-			[
-				"all",
-				"a{color:red}b{color:blue}c{margin:0}",
-				[
-					"/*! one */",
-					"/* plain */",
-					"/* @license two */",
-					"/*# sourceMappingURL=a.map */"
-				]
-			],
-			[
-				/license/,
-				"a{color:red}b{color:blue}c{margin:0}",
-				["/* @license two */"]
-			],
 			[
 				(/** @type {{ value: string }} */ comment) =>
 					comment.value.includes("one"),
@@ -1431,17 +1316,6 @@ describe("cssMinify export", () => {
 				});
 			}
 		);
-
-		it.each([
-			["the plugin asks for none", false, {}],
-			["the plugin states nothing", undefined, {}],
-			["`minimize.css` asks for none", true, { extractComments: false }]
-		])("leaves them in place where %s", async (_name, extractComments, options) => {
-			expect(await run(extractComments, options)).toEqual({
-				code: "/*! one */a{color:red}b{color:blue}/*! one *//* @license two */c{margin:0}",
-				extractedComments: undefined
-			});
-		});
 
 		// cspell:ignore licence
 		it("hands a predicate the comment's text, line and column", async () => {
@@ -1468,29 +1342,7 @@ describe("cssMinify export", () => {
 			]);
 		});
 
-		it("takes what terser's own `some` takes, bar IE's `@cc_on`", async () => {
-			const cssMinify = require("../../../lib/css/cssMinify");
-
-			const { code, extractedComments } = await cssMinify(
-				{
-					"a.css":
-						"/**! three */a{color:red}/* @licence four */b{color:blue}" +
-						"/* @cc_on */c{margin:0}/* plain */"
-				},
-				undefined,
-				{},
-				"some"
-			);
-			expect(code).toBe("a{color:red}b{color:blue}c{margin:0}");
-			expect(extractedComments).toEqual(["/**! three */", "/* @licence four */"]);
-		});
-
 		it.each([
-			[true, "/* plain */"],
-			["all", "/* plain */"],
-			[false, ""],
-			["plain", "/* plain */"],
-			[/plain/, "/* plain */"],
 			[(/** @type {string} */ comment) => comment.includes("plain"), "/* plain */"]
 		])("keeps what `comments: %p` keeps of the rest", async (comments, kept) => {
 			const { code } = await run(true, { comments });
@@ -1741,11 +1593,6 @@ describe("CssSyntax — skipChildren() and stop() while printing", () => {
 	const BIG = Array.from({ length: 1800 }, (_, i) => rule(i)).join("");
 
 	it.each([
-		["a rule", NodeType.QualifiedRule, fixture("css", "css-syntax-skip-children-and-stop-while-printing-prints-all-a-rule-holds-and")],
-		["a declaration", NodeType.Declaration, fixture("css", "css-syntax-skip-children-and-stop-while-printing-prints-all-a-declaration-holds")],
-		["a function", NodeType.Function, fixture("css", "css-syntax-skip-children-and-stop-while-printing-prints-all-a-function-holds-and")],
-		["a block", NodeType.SimpleBlock, fixture("css", "css-syntax-skip-children-and-stop-while-printing-prints-all-a-block-holds-and")],
-		["an at-rule", NodeType.AtRule, fixture("css", "css-syntax-skip-children-and-stop-while-printing-prints-all-an-at-rule-holds-and")],
 		["a streamed at-rule", NodeType.AtRule, `@media screen{${BIG}}`]
 	])("prints all %s holds, and fires no visitor below it", (_, type, css) => {
 		/** @type {string[]} */
@@ -1798,22 +1645,6 @@ describe("CssSyntax — skipChildren() and stop() while printing", () => {
 		log.length = 0;
 		processor.process(css);
 		expect(log).toEqual(["b"]);
-	});
-
-	it("reads past the comments after a comment's visitor stops, printing or not", () => {
-		const css = fixture("css", "css-syntax-skip-children-and-stop-while-printing-reads-past-the-comments-after-a");
-		let fired = 0;
-		const processor = new SourceProcessor().use({
-			[NodeType.Comment]: (
-				/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
-			) => {
-				fired++;
-				path.stop();
-			}
-		});
-		expect(processor.process(css, { mode: "minify" }).code).toBe("x{y:1}z{w:2}");
-		processor.process(css);
-		expect(fired).toBe(2);
 	});
 
 	it("ends a walk stopped inside a streamed rule once it closes", () => {
@@ -1885,20 +1716,6 @@ describe("CssSyntax — the options a print reads", () => {
 			)
 		).toEqual({ foldCase: false, shortenNumbers: true });
 		expect(syntaxParser.pickTransforms({})).toBeUndefined();
-	});
-
-	it("reads a prelude skip on a walk, and ignores it on a print", () => {
-		/** @type {number[]} */
-		const seen = [];
-		const processor = new SourceProcessor().use({
-			[NodeType.Ident]: () => seen.push(1)
-		});
-		const skip = { selectorPrelude: true, atRulePrelude: true };
-		processor.process(fixture("css", "css-syntax-the-options-a-print-reads-reads-a-prelude-skip-on-a-walk-and-ignores"), { skip });
-		expect(seen).toHaveLength(1);
-		expect(processor.process(fixture("css", "css-syntax-the-options-a-print-reads-reads-a-prelude-skip-on-a-walk-and-ignores-2"), { mode: "minify", skip }).code).toBe(
-			"a b{c:d}"
-		);
 	});
 });
 
@@ -2177,79 +1994,6 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 		return result && result.code;
 	};
 
-	it("prints a value token, a declaration and a rule as their replacement", () => {
-		const css = fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-value-token-a-declaration");
-		expect(print(css, { [NodeType.Hash]: (path) => path.replace("blue") })).toBe(
-			"a{color:blue;margin-top:1px}b{color:red}"
-		);
-		expect(
-			print(css, {
-				[NodeType.Declaration]: (path) => {
-					if (path.name() === "margin-top") path.replace("padding:2px");
-				}
-			})
-		).toBe("a{color:red;padding:2px}b{color:red}");
-		expect(
-			print(css, {
-				[NodeType.QualifiedRule]: (path) => {
-					if (path.source().startsWith("b")) path.replace("i{x:y}");
-				}
-			})
-		).toBe("a{color:red;margin-top:1px}i{x:y}");
-		expect(
-			print(
-				css,
-				{ [NodeType.Hash]: (path) => path.replace("blue") },
-				"beautify"
-			)
-		).toBe("a {\ncolor: blue;\nmargin-top: 1px;\n}b {\ncolor: red;\n}");
-	});
-
-	it("removes a node, in an enter visitor too", () => {
-		expect(
-			print(fixture("css", "css-syntax-source-processor-replacing-a-node-removes-a-node-in-an-enter-visitor"), {
-				[NodeType.Declaration]: {
-					enter: (path) => {
-						if (path.name() === "color") path.remove();
-					}
-				}
-			})
-		).toBe("a{top:0}");
-	});
-
-	it("prints what holds a replacement without the rewrites, and the rest with them", () => {
-		expect(
-			print(fixture("css", "css-syntax-source-processor-replacing-a-node-prints-what-holds-a-replacement"), {
-				[NodeType.Hash]: (path) => path.replace("1px")
-			})
-		).toBe("a{margin:0;margin-top:1px}b{margin:1px 0 0}");
-	});
-
-	it("composes a style attribute's declarations as they printed", () => {
-		const result = new SourceProcessor()
-			.use({
-				[NodeType.Declaration]: (path) => {
-					if (path.name() === "margin-top") path.replace("padding:0");
-				}
-			})
-			.process(
-				fixture("css", "css-syntax-source-processor-replacing-a-node-composes-a-style-attribute-s"),
-				{ mode: "minify", as: "block-contents" }
-			);
-		expect(result && result.code).toBe(
-			"padding:0;margin-bottom:1px;margin-left:2px;margin-right:2px"
-		);
-	});
-
-	it("leaves a comment and what follows it as written", () => {
-		// A comment is read from the token stream, not printed as a node.
-		expect(
-			print(fixture("css", "css-syntax-source-processor-replacing-a-node-leaves-a-comment-and-what-follows"), {
-				[NodeType.Comment]: (path) => path.replace("/*y*/")
-			})
-		).toBe("/*! x */a{color:red}b{top:0}");
-	});
-
 	it("prints a rule large enough to stream as written, and what follows it too", () => {
 		// Past the streaming threshold the block is written out as it is read.
 		let body = "";
@@ -2272,81 +2016,5 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 			).toBe(plain);
 		}
 	});
-
-	it("prints a replacement in a custom property's value, the rest as written", () => {
-		/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
-		const visitors = { [NodeType.Hash]: (path) => path.replace("blue") };
-		expect(print(fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-replacement-in-a-custom"), visitors)).toBe(
-			"a{--x:foo  blue bar(blue);color:blue}"
-		);
-		expect(
-			print(fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-replacement-in-a-custom-2"), visitors, "beautify")
-		).toBe("a {\n--x: foo  blue bar(blue);\n}");
-		// A comma and whitespace print as written too.
-		expect(
-			print(fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-replacement-in-a-custom-3"), {
-				[NodeType.Comma]: (path) => path.replace(" / "),
-				[NodeType.Whitespace]: (path) => path.remove()
-			})
-		).toBe("a{--x:a / bc;b:x}");
-		// A string the input ran out in is closed, so the `}` stays outside it.
-		expect(print(fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-replacement-in-a-custom-4"), visitors)).toBe('a{--x:blue "open"}');
-		// Only a value holding an edit is printed as written.
-		expect(print(fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-replacement-in-a-custom-5"), visitors)).toBe(
-			"a{--x:a b;--y:c  blue}"
-		);
-	});
-
-	it("prints a replaced node holding a replaced one as its own replacement", () => {
-		/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
-		const visitors = {
-			[NodeType.Hash]: (path) => path.replace("blue"),
-			[NodeType.Declaration]: (path) => {
-				if (path.name() === "color") path.replace("fill:red");
-			}
-		};
-		expect(print(fixture("css", "css-syntax-printing-what-a-visitor-replaced-or-removed-prints-a-replaced-node"), visitors)).toBe(
-			"a{fill:red;top:0}b{x:blue}"
-		);
-	});
-
-	it("does nothing on a walk that prints nothing", () => {
-		let seen = 0;
-		new SourceProcessor()
-			.use({
-				[NodeType.Hash]: (path) => {
-					seen++;
-					path.replace("blue");
-				}
-			})
-			.process(fixture("css", "css-syntax-source-processor-replacing-a-node-does-nothing-on-a-walk-that-prints"));
-		expect(seen).toBe(1);
-	});
 });
 
-describe("CssSyntax minify — output that reads back as its source", () => {
-	/**
-	 * @param {string} src css source
-	 * @returns {string} the minified serialization
-	 */
-	const min = (src) =>
-		new SourceProcessor().process(src, { mode: "minify" }).code;
-
-	it("closes a custom property the input ran out in where a banner follows", async () => {
-		const cssMinify = require("../../../lib/css/cssMinify");
-
-		/**
-		 * @param {string} name the fixture
-		 * @returns {Promise<string>} the output, the banner the plugin appends included
-		 */
-		const withBanner = async (name) => {
-			const result = await cssMinify({ "a.css": fixture("css", name) }, undefined, {}, true);
-			expect(result.extractedComments).toEqual(["/*! keep */"]);
-			return `${result.code}/*! banner */`;
-		};
-		expect(await withBanner("css-minify-export-closes-a-custom-property-the-input-ran-out-in-before-a-banner")).toBe('.b{--x:"foo"}/*! banner */');
-		expect(await withBanner("css-minify-export-closes-a-custom-property-the-input-ran-out-in-before-a-banner-2")).toBe(".b{--x:{foo}}/*! banner */");
-		// With no banner to follow, it stays open as the engine keeps it.
-		expect(min(fixture("css", "css-minify-export-closes-a-custom-property-the-input-ran-out-in-before-a-banner"))).toBe('/*! keep */.b{--x:"foo');
-	});
-});

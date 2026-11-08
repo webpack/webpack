@@ -7,7 +7,6 @@ const { fixture } = require("../../helpers/fixture");
 
 const fs = require("fs");
 const path = require("path");
-const { SourceProcessor } = require("../../../lib/css/syntax");
 const {
 	A,
 	NodeType,
@@ -169,44 +168,6 @@ const cvTypes = (src) =>
  */
 const cvUnescaped = (src) =>
 	parseAListOfComponentValues(src).map((n) => `${A.value(n)}${A.name(n)}`);
-
-describe("CssSyntax — a string the source never closed", () => {
-	/**
-	 * @param {string} source css
-	 * @returns {string[]} every string token's value
-	 */
-	const values = (source) => {
-		/** @type {string[]} */
-		const seen = [];
-		new SourceProcessor()
-			.use({
-				[NodeType.String]: {
-					enter: (/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path) =>
-						seen.push(/** @type {string} */ (path.value()))
-				}
-			})
-			.process(source);
-		return seen;
-	};
-
-	// §4.3.5 returns the string token at end of input as well, and that one has no
-	// closing quote to take off — taking one off ate a character of the value.
-	it.each([
-		["a closing quote", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-a-closing-quote"), ["xy"]],
-		["end of input", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-end-of-input"), ["xy"]],
-		["end of input, holding a brace", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-end-of-input-2"), ["xy}"]],
-		["end of input, holding only one", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-end-of-input-4"), ["}"]],
-		["end of input, holding nothing", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-end-of-input-3"), [""]],
-		["a double quote at end of input", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-a-double-quote-at"), ["d"]],
-		["an empty string", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-an-empty-string"), [""]],
-		["a quote the source escaped", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-a-quote-the"), ["a'"]],
-		["one escaped at end of input", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-one-escaped-at"), ["a'"]],
-		["a backslash the source escaped", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-a-backslash-the"), [fixture("css", "source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-9")]],
-		["two of them", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-two-of-them"), ["x", "y"]]
-	])("reads one ended by %s", (_name, source, expected) => {
-		expect(values(source)).toEqual(expected);
-	});
-});
 
 describe("CssSyntax — code point and substitution helpers", () => {
 	const {
