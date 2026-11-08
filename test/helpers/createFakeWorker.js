@@ -73,6 +73,7 @@ Object.defineProperty(self, "location", {
 const urlToPath = url => {
   if (/^file:/i.test(url)) return fileURLToPath(url);
 	if (url.startsWith("https://test.cases/path/")) url = url.slice(24);
+	try { url = decodeURIComponent(url); } catch (_err) {}
 	return path.resolve(${JSON.stringify(outputDirectory)}, \`./\${url}\`);
 };
 self.importScripts = url => {

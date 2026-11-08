@@ -33,6 +33,19 @@ const getSubPath = (path) => {
 const isRelativePath = (path) => /^\.\.?\//.test(path);
 
 /**
+ * Decodes the percent escapes of a URL path, as a server does before reading the file.
+ * @param {string} url url or url path
+ * @returns {string} the decoded url, or the url as written when it is malformed
+ */
+const decodeUrlPath = (url) => {
+	try {
+		return decodeURIComponent(url);
+	} catch (_err) {
+		return url;
+	}
+};
+
+/**
  * @param {string} url url
  * @param {string} outputDirectory outputDirectory
  * @returns {string} absolute path
@@ -40,7 +53,7 @@ const isRelativePath = (path) => /^\.\.?\//.test(path);
 const urlToPath = (url, outputDirectory) => {
 	if (url.startsWith("https://test.cases/path/")) url = url.slice(24);
 	else if (url.startsWith("https://test.cases/")) url = url.slice(19);
-	return path.resolve(outputDirectory, `./${url}`);
+	return path.resolve(outputDirectory, `./${decodeUrlPath(url)}`);
 };
 
 /**
@@ -50,7 +63,7 @@ const urlToPath = (url, outputDirectory) => {
 const urlToRelativePath = (url) => {
 	if (url.startsWith("https://test.cases/path/")) url = url.slice(24);
 	else if (url.startsWith("https://test.cases/")) url = url.slice(19);
-	return `./${url}`;
+	return `./${decodeUrlPath(url)}`;
 };
 
 /**
@@ -75,6 +88,7 @@ module.exports = {
 	getNodeVersion,
 	getSubPath,
 	isRelativePath,
+	decodeUrlPath,
 	urlToPath,
 	urlToRelativePath
 };
