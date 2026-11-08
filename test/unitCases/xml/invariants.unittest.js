@@ -3,11 +3,13 @@
 const { SourceProcessor, parser } = require("../../../lib/html/syntax");
 const { A, parseHtml } = require("../../../lib/html/syntax-parser");
 const {
+	declaresPrint,
 	fixtures,
 	printOptions,
 	readPrint,
 	readRun,
 	snapshotText,
+	treeLines,
 	unexplained,
 	walkLine
 } = require("../../helpers/fixture");
@@ -18,7 +20,7 @@ const syntax = require("../../helpers/syntaxInvariants/xml");
 
 /** @typedef {import("../../../lib/html/syntax-parser").ParseErrorSeverity} ParseErrorSeverity */
 /** @typedef {import("../../helpers/fixture").ParseEntry} ParseEntry */
-/** @typedef {import("../../helpers/fixture").AsyncPrinter} AsyncPrinter */
+/** @typedef {import("../../helpers/fixture").Printers} Printers */
 
 /**
  * @param {string} kind the token kind, or the severity of a parse error
@@ -46,12 +48,13 @@ const QUOTE_TEXT = {
  * Every callback the public XML tokenizer makes, in call order, as one line:
  * each token's kind and offset ranges, then the offset it returns.
  * @param {string} source a document
+ * @param {number=} pos where it starts reading
  * @returns {string} the token line
  */
-const tokenLine = (source) => {
+const tokenLine = (source, pos = 0) => {
 	/** @type {string[]} */
 	const out = [];
-	const end = parser.tokenizeXml(source, 0, {
+	const end = parser.tokenizeXml(source, pos, {
 		text: (input, start, end) => {
 			out.push(tokenText("text", [start, end]));
 			return end;
@@ -130,43 +133,56 @@ const tokenLine = (source) => {
  */
 const ENTRIES = {
 	parseHtml: {
-		read: (source, options) => {
+		positions: true,
+		trees: true,
+		read: (source, options, log, { pos, fields }) => {
 			/** @type {string[]} */
 			const errors = [];
-			const document = parseHtml(source, 0, {
+			const document = parseHtml(source, pos, {
 				...options,
 				xml: true,
 				parseError: (input, code, start, end, severity) => {
 					errors.push(tokenText(severity, [start, end], `:${code}`));
 				}
 			});
-			return [
+			const values = [
 				JSON.stringify(A.children(document).map(materialize)),
 				errors.join(" ")
 			];
+			if (fields !== undefined) {
+				values.push(treeLines(parser, [document], fields));
+			}
+			return values;
 		}
 	},
-	tokenizeXml: { read: (source) => [tokenLine(source)] },
+	tokenizeXml: {
+		positions: true,
+		read: (source, options, log, { pos }) => [tokenLine(source, pos)]
+	},
 	SourceProcessor: {
-		read: (source, options) => [
-			walkLine(SourceProcessor, parser.NodeType, source, {
-				...options,
-				xml: true
-			})
+		walks: true,
+		read: (source, options, log, { visit }) => [
+			walkLine(
+				SourceProcessor,
+				parser,
+				source,
+				{ ...options, xml: true },
+				visit
+			)
 		]
 	}
 };
 
-
 /**
- * The asynchronous printers a print set's `"print"` may name.
- * @type {Record<string, AsyncPrinter>}
+ * The printers a print set's `print` may name.
+ * @type {Printers}
  */
 const PRINTERS = {
-	processAsync: (source, options) =>
-		new SourceProcessor().processAsync(source, options),
-	xmlMinify: (source, options) =>
-		require("../../../lib/html/xmlMinify")({ "index.xml": source }, undefined, options)
+	Processor: SourceProcessor,
+	enums: parser,
+	minimizer: "xmlMinify",
+	load: () => require("../../../lib/html/xmlMinify"),
+	asset: "index.xml"
 };
 
 // Every input the XML tests read is a fixture, and each one is read, printed
@@ -174,7 +190,7 @@ const PRINTERS = {
 // code.
 describe("XML syntax — invariants", () => {
 	const all = fixtures("xml");
-	for (const { name, source, options, parses, expected } of all) {
+	for (const { name, dir, source, options, parses, expected } of all) {
 		describe(name, () => {
 			it("tokenizes", () => {
 				expect(tokenLine(source)).toMatchSnapshot();
@@ -199,8 +215,8 @@ describe("XML syntax — invariants", () => {
 			it.each(options.map((one) => [JSON.stringify(one), one]))(
 				"prints %s",
 				async (_title, one) => {
-					if (/** @type {{ print?: string }} */ (one).print !== undefined) {
-						for (const value of await readPrint(PRINTERS, source, one)) {
+					if (declaresPrint(one)) {
+						for (const value of await readPrint(PRINTERS, dir, source, one)) {
 							expect(value).toMatchSnapshot();
 						}
 						return;

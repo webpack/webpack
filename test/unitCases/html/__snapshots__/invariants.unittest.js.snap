@@ -2473,6 +2473,14 @@ exports[`HTML syntax — invariants html-syntax-the-facade-holds-no-printer-unti
 
 exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"SourceProcessor","options":{"skip":{"text":true}}} 1`] = `"Document[0,0] Element(html)[0,0] Element(head)[0,0] /Element Element(body)[0,0] Element(p)[0,27] /Element Element(style)[27,52] /Element Comment[52,63] /Comment /Element /Element /Document"`;
 
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"SourceProcessor","visit":{"types":["Element"],"fields":["name","index","parent"],"exit":false,"at":[{"type":"Element","name":"style","do":"stop"}]}} 1`] = `
+"Element[0,0] name=\\"html\\" index=0 parent=\\"Document\\"
+Element[0,0] name=\\"head\\" index=0 parent=\\"Element\\"
+Element[0,0] name=\\"body\\" index=1 parent=\\"Element\\"
+Element[0,27] name=\\"p\\" index=0 parent=\\"Element\\"
+Element[27,52] name=\\"style\\" index=1 parent=\\"Element\\" !stop"
+`;
+
 exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"tokenize","options":{"fragmentContext":"title","isForeign":true},"visit":true} 1`] = `"text[0,63] end=63"`;
 
 exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"tokenize","options":{"fragmentContext":"title","isForeign":true},"visit":true} 2`] = `"vetoesContentMode(title)=false"`;
@@ -2487,6 +2495,27 @@ exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-re
 `;
 
 exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"options":{"fragmentContext":"td","skip":{"comments":true}}} 2`] = `""`;
+
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"pos":27,"fields":["name","range","fieldCount:attributes","sourceOf:startTag"]} 1`] = `
+"| <html>
+|   <head>
+|     <style>
+|       \\"a { b: c }\\"
+|     <!-- keep -->
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"pos":27,"fields":["name","range","fieldCount:attributes","sourceOf:startTag"]} 2`] = `"warning[27,34]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"pos":27,"fields":["name","range","fieldCount:attributes","sourceOf:startTag"]} 3`] = `
+"Document[0,0] name=\\"\\" range=[0,0] fieldCount:attributes=0 sourceOf:startTag=null
+  Element[0,0] name=\\"html\\" range=[0,0] fieldCount:attributes=0 sourceOf:startTag=null
+    Element[0,0] name=\\"head\\" range=[0,0] fieldCount:attributes=0 sourceOf:startTag=null
+      Element[27,52] name=\\"style\\" range=[27,52] fieldCount:attributes=0 sourceOf:startTag=\\"<style>\\"
+        Text[34,44] name=\\"\\" range=[34,44] fieldCount:attributes=0 sourceOf:startTag=null
+      Comment[52,63] name=\\"\\" range=[52,63] fieldCount:attributes=0 sourceOf:startTag=null
+    Element[0,0] name=\\"body\\" range=[0,0] fieldCount:attributes=0 sourceOf:startTag=null"
+`;
 
 exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses 1`] = `
 "| <html>
@@ -2510,7 +2539,26 @@ exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-re
 
 exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","transforms":{"comments":{"regexp":"keep"}}} 1`] = `"<p style=\\"color: red\\">x</p><style>a { b: c }</style><!--keep-->"`;
 
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","visit":{"types":["Element"],"fields":["name"],"at":[{"type":"Element","name":"p","do":"skipChildren"}]}} 1`] = `"<p style=\\"color: red\\">x</p><style>a { b: c }</style>"`;
+
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","visit":{"types":["Element"],"fields":["name"],"at":[{"type":"Element","name":"p","do":"skipChildren"}]}} 2`] = `
+"Element[0,0] name=\\"html\\"
+Element[0,0] name=\\"head\\"
+/Element
+Element[0,0] name=\\"body\\"
+Element[0,27] name=\\"p\\" !skipChildren
+/Element
+Element[27,52] name=\\"style\\"
+/Element
+/Element
+/Element"
+`;
+
 exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify"} 1`] = `"<p style=\\"color: red\\">x</p><style>a { b: c }</style>"`;
+
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"print":"htmlMinify","minimizer":{"extractComments":true}} 1`] = `"<p style=color:red>x</p><style>a{b:c}</style>"`;
+
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"print":"htmlMinify","minimizer":{"extractComments":true}} 2`] = `"{}"`;
 
 exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"print":"htmlMinify","renderEmbeddedSource":{"name":"answers","options":{"css":"b{c:d}"},"async":true}} 1`] = `"<p style=b{c:d}>x</p><style>b{c:d}</style>"`;
 

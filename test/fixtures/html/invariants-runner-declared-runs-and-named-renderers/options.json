@@ -24,5 +24,29 @@
 			},
 			"async": true
 		}
+	},
+	{
+		"mode": "minify",
+		"visit": {
+			"types": [
+				"Element"
+			],
+			"fields": [
+				"name"
+			],
+			"at": [
+				{
+					"type": "Element",
+					"name": "p",
+					"do": "skipChildren"
+				}
+			]
+		}
+	},
+	{
+		"print": "htmlMinify",
+		"minimizer": {
+			"extractComments": true
+		}
 	}
 ]

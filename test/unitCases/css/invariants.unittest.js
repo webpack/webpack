@@ -2,6 +2,7 @@
 
 const { SourceProcessor, parser } = require("../../../lib/css/syntax");
 const {
+	buildSkipSet,
 	parseABlocksContents,
 	parseACommaSeparatedListOfComponentValues,
 	parseAComponentValue,
@@ -12,11 +13,14 @@ const {
 	parseAStylesheetsContents
 } = require("../../../lib/css/syntax-parser");
 const {
+	declaresPrint,
+	enumValue,
 	fixtures,
 	printOptions,
 	readPrint,
 	readRun,
 	snapshotText,
+	treeLines,
 	unexplained,
 	walkLine
 } = require("../../helpers/fixture");
@@ -34,7 +38,7 @@ const syntax = require("../../helpers/syntaxInvariants/css");
 /** @typedef {import("../../../lib/css/syntax-parser").MutableToken} MutableToken */
 /** @typedef {import("../../../lib/css/syntax-parser").CssParseOptions} CssParseOptions */
 /** @typedef {import("../../helpers/fixture").ParseEntry} ParseEntry */
-/** @typedef {import("../../helpers/fixture").AsyncPrinter} AsyncPrinter */
+/** @typedef {import("../../helpers/fixture").Printers} Printers */
 
 /**
  * @param {string} kind the token kind, or the severity of a parse error
@@ -95,19 +99,46 @@ const tokenLine = (source) => {
 };
 
 /**
+ * Process or parse options with `skip.types` written as `NodeType` names, as
+ * the skip set `buildSkipSet` builds from them.
+ * @param {Record<string, EXPECTED_ANY>} options the run's options
+ * @returns {Record<string, EXPECTED_ANY>} them with the set in place
+ */
+const skipOptions = (options) => {
+	const { skip } = options;
+	if (skip === undefined || skip.types === undefined) return options;
+	const types = /** @type {string[]} */ (skip.types).map((name) =>
+		enumValue(parser.NodeType, name, "NodeType")
+	);
+	return { ...options, skip: { ...skip, types: buildSkipSet(types) } };
+};
+
+/**
+ * @template T
+ * @typedef {object} CssEntryParts
+ * @property {(source: string, pos: number, options: CssParseOptions) => T} parse the call
+ * @property {(result: T, source: string) => unknown} serialize its result in css-parsing-tests' JSON form
+ * @property {(result: T) => number[]} roots the nodes it returned, which `fields` reads from
+ */
+
+/**
  * A `parseA*` entry point's read: its result in css-parsing-tests' JSON form,
- * then its parse errors; under `visit`, each comment token it reads is logged.
- * @param {(source: string, options: CssParseOptions) => unknown} read the call, answering its result in that form
+ * then its parse errors; under `visit`, each comment token it reads is logged,
+ * and under `fields`, each node it returned, before the JSON form reads again.
+ * @template T
+ * @param {CssEntryParts<T>} parts how to call it and read what it returns
  * @returns {ParseEntry} the entry
  */
-const parseEntry = (read) => ({
+const parseEntry = ({ parse, serialize, roots }) => ({
 	records: true,
-	read: (source, options, log) => {
+	positions: true,
+	trees: true,
+	read: (source, options, log, { pos, fields }) => {
 		/** @type {string[]} */
 		const errors = [];
 		/** @type {CssParseOptions} */
 		const given = {
-			...options,
+			...skipOptions(options),
 			parseError: (input, code, start, end, severity) => {
 				errors.push(tokenText(severity, [start, end], `:${code}`));
 			}
@@ -118,13 +149,32 @@ const parseEntry = (read) => ({
 				return end;
 			};
 		}
-		const result = read(source, given);
-		return [
-			result === undefined ? "undefined" : JSON.stringify(result),
+		const result = parse(source, pos, given);
+		const tree =
+			fields === undefined || result === undefined
+				? undefined
+				: treeLines(parser, roots(result), fields);
+		const values = [
+			result === undefined
+				? "undefined"
+				: JSON.stringify(serialize(result, source)),
 			errors.join(" ")
 		];
+		if (fields !== undefined) values.push(tree === undefined ? "" : tree);
+		return values;
 	}
 });
+
+/**
+ * @param {number} node a node
+ * @returns {number[]} it, as the one root
+ */
+const asRoot = (node) => [node];
+/**
+ * @param {number[]} nodes nodes
+ * @returns {number[]} them
+ */
+const asRoots = (nodes) => nodes;
 
 /**
  * The public entry points a fixture's `parse.json` may name, the document
@@ -132,64 +182,87 @@ const parseEntry = (read) => ({
  * @type {Record<string, ParseEntry>}
  */
 const ENTRIES = {
-	parseAStylesheet: parseEntry((source, options) =>
-		serializeStylesheet(parseAStylesheet(source, 0, options), source)
-	),
-	parseAStylesheetsContents: parseEntry((source, options) =>
-		serializeRules(parseAStylesheetsContents(source, 0, options), source)
-	),
-	parseABlocksContents: parseEntry((source, options) => {
-		const { decls, rules } = parseABlocksContents(source, 0, options);
-		// Declarations first: reading the rules parses their blocks again.
-		const declarations = decls.map(serializeDeclaration);
-		return { decls: declarations, rules: serializeRules(rules, source) };
+	parseAStylesheet: parseEntry({
+		parse: (source, pos, options) => parseAStylesheet(source, pos, options),
+		serialize: serializeStylesheet,
+		roots: asRoot
 	}),
-	parseARule: parseEntry((source, options) => {
-		const rule = parseARule(source, 0, options);
-		return rule === undefined ? undefined : serializeRules([rule], source)[0];
+	parseAStylesheetsContents: parseEntry({
+		parse: (source, pos, options) =>
+			parseAStylesheetsContents(source, pos, options),
+		serialize: serializeRules,
+		roots: asRoots
 	}),
-	parseADeclaration: parseEntry((source, options) => {
-		const declaration = parseADeclaration(source, 0, options);
-		return declaration === undefined
-			? undefined
-			: serializeDeclaration(declaration);
+	parseABlocksContents: parseEntry({
+		parse: (source, pos, options) =>
+			parseABlocksContents(source, pos, options),
+		serialize: ({ decls, rules }, source) => {
+			// Declarations first: reading the rules parses their blocks again.
+			const declarations = decls.map(serializeDeclaration);
+			return { decls: declarations, rules: serializeRules(rules, source) };
+		},
+		roots: ({ decls, rules }) => [...decls, ...rules]
 	}),
-	parseAComponentValue: parseEntry((source, options) => {
-		const value = parseAComponentValue(source, 0, options);
-		return value === undefined ? undefined : serializeComponentValue(value);
+	parseARule: parseEntry({
+		parse: (source, pos, options) => parseARule(source, pos, options),
+		serialize: (rule, source) =>
+			rule === undefined ? undefined : serializeRules([rule], source)[0],
+		roots: (rule) => (rule === undefined ? [] : [rule])
 	}),
-	parseAListOfComponentValues: parseEntry((source, options) =>
-		serializeComponentValues(parseAListOfComponentValues(source, 0, options))
-	),
-	parseACommaSeparatedListOfComponentValues: parseEntry((source, options) =>
-		parseACommaSeparatedListOfComponentValues(source, 0, options).map(
-			serializeComponentValues
-		)
-	),
+	parseADeclaration: parseEntry({
+		parse: (source, pos, options) => parseADeclaration(source, pos, options),
+		serialize: (declaration) =>
+			declaration === undefined ? undefined : serializeDeclaration(declaration),
+		roots: (declaration) => (declaration === undefined ? [] : [declaration])
+	}),
+	parseAComponentValue: parseEntry({
+		parse: (source, pos, options) => parseAComponentValue(source, pos, options),
+		serialize: (value) =>
+			value === undefined ? undefined : serializeComponentValue(value),
+		roots: (value) => (value === undefined ? [] : [value])
+	}),
+	parseAListOfComponentValues: parseEntry({
+		parse: (source, pos, options) =>
+			parseAListOfComponentValues(source, pos, options),
+		serialize: serializeComponentValues,
+		roots: asRoots
+	}),
+	parseACommaSeparatedListOfComponentValues: parseEntry({
+		parse: (source, pos, options) =>
+			parseACommaSeparatedListOfComponentValues(source, pos, options),
+		serialize: (groups) => groups.map(serializeComponentValues),
+		roots: (groups) => {
+			/** @type {number[]} */
+			const roots = [];
+			for (const group of groups) roots.push(...group);
+			return roots;
+		}
+	}),
 	SourceProcessor: {
-		read: (source, options) => [
-			walkLine(SourceProcessor, parser.NodeType, source, options)
+		walks: true,
+		read: (source, options, log, { visit }) => [
+			walkLine(SourceProcessor, parser, source, skipOptions(options), visit)
 		]
 	}
 };
 
-
 /**
- * The asynchronous printers a print set's `"print"` may name.
- * @type {Record<string, AsyncPrinter>}
+ * The printers a print set's `print` may name.
+ * @type {Printers}
  */
 const PRINTERS = {
-	processAsync: (source, options) =>
-		new SourceProcessor().processAsync(source, options),
-	cssMinify: (source, options) =>
-		require("../../../lib/css/cssMinify")({ "index.css": source }, undefined, options)
+	Processor: SourceProcessor,
+	enums: parser,
+	minimizer: "cssMinify",
+	load: () => require("../../../lib/css/cssMinify"),
+	asset: "index.css"
 };
 
 // Every input the CSS tests read is a fixture, and each one is read, printed and
 // held to the parser's and printer's own relations; a new fixture needs no code.
 describe("CSS syntax — invariants", () => {
 	const all = fixtures("css");
-	for (const { name, source, options, parses, expected } of all) {
+	for (const { name, dir, source, options, parses, expected } of all) {
 		describe(name, () => {
 			it("tokenizes", () => {
 				expect(tokenLine(source)).toMatchSnapshot();
@@ -213,8 +286,8 @@ describe("CSS syntax — invariants", () => {
 			it.each(options.map((one) => [JSON.stringify(one), one]))(
 				"prints %s",
 				async (_title, one) => {
-					if (/** @type {{ print?: string }} */ (one).print !== undefined) {
-						for (const value of await readPrint(PRINTERS, source, one)) {
+					if (declaresPrint(one)) {
+						for (const value of await readPrint(PRINTERS, dir, source, one)) {
 							expect(value).toMatchSnapshot();
 						}
 						return;

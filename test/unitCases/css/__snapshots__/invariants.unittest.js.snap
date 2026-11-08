@@ -40372,9 +40372,28 @@ exports[`CSS syntax — invariants html-minify-one-document-reaching-every-embed
 
 exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"SourceProcessor","options":{"recurseBlocks":false}} 1`] = `"Comment[59,65] /Comment QualifiedRule[0,66] Ident[0,1] /Ident /QualifiedRule"`;
 
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"SourceProcessor","options":{"skip":{"types":["Whitespace"]}},"visit":{"types":["QualifiedRule","Declaration","Function"],"fields":["name","value","index","parent","childCount","fieldCount:declarations","flag:important","sourceOf:block"],"at":[{"type":"Declaration","do":"skipChildren"}]}} 1`] = `
+"QualifiedRule[0,66] name=\\"\\" value=\\"\\" index=0 parent=null childCount=1 fieldCount:declarations=1 flag:important=false sourceOf:block=\\"{background:url(\\\\\\"data:image/svg+xml,<svg ><g ></g></svg>\\\\\\")/*k1*/}\\"
+Declaration[2,65] name=\\"background\\" value=\\"\\" index=0 parent=\\"QualifiedRule\\" childCount=1 fieldCount:declarations=0 flag:important=false sourceOf:block=null !skipChildren
+/Declaration
+/QualifiedRule"
+`;
+
 exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"parseAComponentValue"} 1`] = `"undefined"`;
 
 exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"parseAListOfComponentValues","pos":2,"fields":["name","value","source","range"]} 1`] = `"[[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"url\\",[\\"string\\",\\"data:image/svg+xml,<svg ><g ></g></svg>\\"]],[\\"error\\",\\"}\\"]]"`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"parseAListOfComponentValues","pos":2,"fields":["name","value","source","range"]} 2`] = `"warning[65,66]:unexpected-right-curly-bracket"`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"parseAListOfComponentValues","pos":2,"fields":["name","value","source","range"]} 3`] = `
+"Ident[2,12] name=\\"\\" value=\\"background\\" source=\\"background\\" range=[2,12]
+Colon[12,13] name=\\"\\" value=\\":\\" source=\\":\\" range=[12,13]
+Function[13,59] name=\\"url\\" value=\\"\\" source=\\"url(\\\\\\"data:image/svg+xml,<svg ><g ></g></svg>\\\\\\")\\" range=[13,59]
+  String[17,58] name=\\"\\" value=\\"data:image/svg+xml,<svg ><g ></g></svg>\\" source=\\"\\\\\\"data:image/svg+xml,<svg ><g ></g></svg>\\\\\\"\\" range=[17,58]
+RightCurlyBracket[65,66] name=\\"\\" value=\\"}\\" source=\\"}\\" range=[65,66]"
+`;
 
 exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"parseARule","visit":true} 1`] = `"[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"url\\",[\\"string\\",\\"data:image/svg+xml,<svg ><g ></g></svg>\\"]]]]"`;
 
@@ -40394,7 +40413,15 @@ exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-ren
 
 exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","transforms":{"comments":{"regexp":"k\\\\d"}}} 1`] = `"a{background:url(\\"data:image/svg+xml,<svg ><g ></g></svg>\\")}/*k1*/"`;
 
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","visit":{"types":["Declaration"],"fields":["name"],"exit":false,"at":[{"type":"Declaration","name":"background","do":"replace","with":"color:red"}]}} 1`] = `"a{color:red}"`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","visit":{"types":["Declaration"],"fields":["name"],"exit":false,"at":[{"type":"Declaration","name":"background","do":"replace","with":"color:red"}]}} 2`] = `"Declaration[2,65] name=\\"background\\" !replace"`;
+
 exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify"} 1`] = `"a{background:url(\\"data:image/svg+xml,<svg ><g ></g></svg>\\")}"`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"print":"cssMinify","minimizer":{"extractComments":{"regexp":"k\\\\d"},"sourceMap":"index.css.map","buffer":true}} 1`] = `"a{background:url(\\"data:image/svg+xml,<svg ><g ></g></svg>\\")}"`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"print":"cssMinify","minimizer":{"extractComments":{"regexp":"k\\\\d"},"sourceMap":"index.css.map","buffer":true}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"index.css\\",\\"sources\\":[\\"index.css\\"],\\"sourcesContent\\":[\\"a{background:url(\\\\\\"data:image/svg+xml,<svg ><g ></g></svg>\\\\\\")/*k1*/}\\"],\\"names\\":[],\\"mappings\\":\\"AAAA\\"},\\"extractedComments\\":[\\"/*k1*/\\"]}"`;
 
 exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"print":"cssMinify","svg":true,"renderEmbeddedSource":{"name":"offers","async":true}} 1`] = `"a{background:url(data:image/svg+xml,<svg><g/></svg>)}"`;
 

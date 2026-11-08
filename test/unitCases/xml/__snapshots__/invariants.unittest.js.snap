@@ -2,7 +2,32 @@
 
 exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"SourceProcessor","options":{"skip":{"comments":true}}} 1`] = `"Document[0,0] Element(svg)[0,47] Element(style)[5,30] Text[12,22] /Text /Element /Element /Document"`;
 
+exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"SourceProcessor","visit":{"fields":["name"],"at":[{"type":"Element","name":"style","do":"skipChildren"}]}} 1`] = `
+"Document[0,0] name=\\"\\"
+Element[0,47] name=\\"svg\\"
+Element[5,30] name=\\"style\\" !skipChildren
+/Element
+Comment[30,41] name=\\"\\"
+/Comment
+/Element
+/Document"
+`;
+
+exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"tokenizeXml","pos":5} 1`] = `"open[5,12|6,11] text[12,22] close[22,30|24,29] comment[30,41|34,38] close[41,47|43,46] end=47"`;
+
 exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"tokenizeXml"} 1`] = `"open[0,5|1,4] open[5,12|6,11] text[12,22] close[22,30|24,29] comment[30,41|34,38] close[41,47|43,46] end=47"`;
+
+exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"fields":["name","childCount"]} 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a { b: c }\\",\\"start\\":12,\\"end\\":22}],\\"selfClosing\\":false,\\"start\\":5,\\"end\\":30,\\"tagEnd\\":12,\\"nameEnd\\":11,\\"contentEnd\\":22},{\\"type\\":5,\\"data\\":\\"keep\\",\\"start\\":30,\\"end\\":41}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":47,\\"tagEnd\\":5,\\"nameEnd\\":4,\\"contentEnd\\":41}]"`;
+
+exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"fields":["name","childCount"]} 2`] = `""`;
+
+exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"fields":["name","childCount"]} 3`] = `
+"Document[0,47] name=\\"\\" childCount=1
+  Element[0,47] name=\\"svg\\" childCount=2
+    Element[5,30] name=\\"style\\" childCount=1
+      Text[12,22] name=\\"\\" childCount=0
+    Comment[30,41] name=\\"\\" childCount=0"
+`;
 
 exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"options":{"skip":{"comments":true}}} 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a { b: c }\\",\\"start\\":12,\\"end\\":22}],\\"selfClosing\\":false,\\"start\\":5,\\"end\\":30,\\"tagEnd\\":12,\\"nameEnd\\":11,\\"contentEnd\\":22}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":47,\\"tagEnd\\":5,\\"nameEnd\\":4,\\"contentEnd\\":41}]"`;
 
@@ -11,6 +36,10 @@ exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-ren
 exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a { b: c }\\",\\"start\\":12,\\"end\\":22}],\\"selfClosing\\":false,\\"start\\":5,\\"end\\":30,\\"tagEnd\\":12,\\"nameEnd\\":11,\\"contentEnd\\":22},{\\"type\\":5,\\"data\\":\\"keep\\",\\"start\\":30,\\"end\\":41}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":47,\\"tagEnd\\":5,\\"nameEnd\\":4,\\"contentEnd\\":41}]"`;
 
 exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses 2`] = `""`;
+
+exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"print":"xmlMinify","minimizer":{"asset":"index.svg"}} 1`] = `"<svg><style>a { b: c }</style></svg>"`;
+
+exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"print":"xmlMinify","minimizer":{"asset":"index.svg"}} 2`] = `"{}"`;
 
 exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"xml":true,"mode":"minify","print":"processAsync","renderEmbeddedSource":{"name":"offers","async":true}} 1`] = `"<svg><style>a { b: c }</style></svg>"`;
 

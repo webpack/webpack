@@ -10,11 +10,13 @@ const {
 } = require("../../../lib/html/syntax-parser");
 const {
 	answerOf,
+	declaresPrint,
 	fixtures,
 	printOptions,
 	readPrint,
 	readRun,
 	snapshotText,
+	treeLines,
 	unexplained,
 	walkLine
 } = require("../../helpers/fixture");
@@ -25,7 +27,7 @@ const syntax = require("../../helpers/syntaxInvariants/html");
 
 /** @typedef {import("../../../lib/html/syntax-parser").HtmlTokenCallbacks} HtmlTokenCallbacks */
 /** @typedef {import("../../helpers/fixture").ParseEntry} ParseEntry */
-/** @typedef {import("../../helpers/fixture").AsyncPrinter} AsyncPrinter */
+/** @typedef {import("../../helpers/fixture").Printers} Printers */
 
 /**
  * @param {string} kind the token kind, or the severity of a parse error
@@ -55,12 +57,13 @@ const QUOTE_TEXT = {
  * callback returns the offset the tokenizer would advance to without it.
  * @param {string} source a document
  * @param {HtmlTokenCallbacks=} options what else the tokenizer is given, such as `fragmentContext`
+ * @param {number=} pos where it starts reading
  * @returns {string} the token line
  */
-const tokenLine = (source, options) => {
+const tokenLine = (source, options, pos = 0) => {
 	/** @type {string[]} */
 	const out = [];
-	const end = parser.tokenize(source, 0, {
+	const end = parser.tokenize(source, pos, {
 		...options,
 		text: (input, start, end) => {
 			out.push(tokenText("text", [start, end]));
@@ -144,23 +147,30 @@ const valueEntry = (read) => ({
  */
 const ENTRIES = {
 	parseHtml: {
-		read: (source, options) => {
+		positions: true,
+		trees: true,
+		read: (source, options, log, { pos, fields }) => {
 			/** @type {string[]} */
 			const errors = [];
-			const document = parseHtml(source, 0, {
+			const document = parseHtml(source, pos, {
 				...options,
 				parseError: (input, code, start, end, severity) => {
 					errors.push(tokenText(severity, [start, end], `:${code}`));
 				}
 			});
-			return [serializeHtmlTree(document), errors.join(" ")];
+			const values = [serializeHtmlTree(document), errors.join(" ")];
+			if (fields !== undefined) {
+				values.push(treeLines(parser, [document], fields));
+			}
+			return values;
 		}
 	},
 	// The tree builder's two questions are JSON booleans, each one's answer;
 	// under `visit` each is asked through a recorder answering it, or false.
 	tokenize: {
 		records: true,
-		read: (source, options, log) => {
+		positions: true,
+		read: (source, options, log, { pos }) => {
 			const { isForeign, vetoesContentMode, ...rest } = options;
 			/** @type {HtmlTokenCallbacks} */
 			const given = rest;
@@ -178,7 +188,7 @@ const ENTRIES = {
 					return answer;
 				};
 			}
-			return [tokenLine(source, given)];
+			return [tokenLine(source, given, pos)];
 		}
 	},
 	parseSrcset: valueEntry(parseSrcset),
@@ -186,22 +196,23 @@ const ENTRIES = {
 	parseCssUrls: valueEntry(parseCssUrls),
 	parseMsapplicationTask: valueEntry(parseMsapplicationTask),
 	SourceProcessor: {
-		read: (source, options) => [
-			walkLine(SourceProcessor, parser.NodeType, source, options)
+		walks: true,
+		read: (source, options, log, { visit }) => [
+			walkLine(SourceProcessor, parser, source, options, visit)
 		]
 	}
 };
 
-
 /**
- * The asynchronous printers a print set's `"print"` may name.
- * @type {Record<string, AsyncPrinter>}
+ * The printers a print set's `print` may name.
+ * @type {Printers}
  */
 const PRINTERS = {
-	processAsync: (source, options) =>
-		new SourceProcessor().processAsync(source, options),
-	htmlMinify: (source, options) =>
-		require("../../../lib/html/htmlMinify")({ "index.html": source }, undefined, options)
+	Processor: SourceProcessor,
+	enums: parser,
+	minimizer: "htmlMinify",
+	load: () => require("../../../lib/html/htmlMinify"),
+	asset: "index.html"
 };
 
 // Every input the HTML tests read is a fixture, and each one is read, printed
@@ -209,7 +220,7 @@ const PRINTERS = {
 // code.
 describe("HTML syntax — invariants", () => {
 	const all = fixtures("html");
-	for (const { name, source, options, parses, expected } of all) {
+	for (const { name, dir, source, options, parses, expected } of all) {
 		describe(name, () => {
 			it("tokenizes", () => {
 				expect(tokenLine(source)).toMatchSnapshot();
@@ -231,8 +242,8 @@ describe("HTML syntax — invariants", () => {
 			it.each(options.map((one) => [JSON.stringify(one), one]))(
 				"prints %s",
 				async (_title, one) => {
-					if (/** @type {{ print?: string }} */ (one).print !== undefined) {
-						for (const value of await readPrint(PRINTERS, source, one)) {
+					if (declaresPrint(one)) {
+						for (const value of await readPrint(PRINTERS, dir, source, one)) {
 							expect(value).toMatchSnapshot();
 						}
 						return;

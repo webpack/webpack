@@ -3,11 +3,13 @@
 const { SourceProcessor, parser } = require("../../../lib/javascript/syntax");
 const {
 	answerOf,
+	declaresPrint,
 	fixtures,
 	printOptions,
 	readPrint,
 	readRun,
 	snapshotText,
+	treeLines,
 	unexplained,
 	walkLine
 } = require("../../helpers/fixture");
@@ -19,7 +21,7 @@ const { behaviorDifference } = require("../../../tooling/compare-js-tools");
 
 /** @typedef {import("../../helpers/syntaxInvariants/relations").Report} Report */
 /** @typedef {import("../../helpers/fixture").ParseEntry} ParseEntry */
-/** @typedef {import("../../helpers/fixture").AsyncPrinter} AsyncPrinter */
+/** @typedef {import("../../helpers/fixture").Printers} Printers */
 /** @typedef {import("../../../lib/javascript/syntax-parser").ParserOptions} ParserOptions */
 
 /**
@@ -149,14 +151,17 @@ const ENTRIES = {
 			)
 		]
 	},
+	// `fields` reads the program's node, from a second parse without `estree`.
 	parseProgram: {
-		read: (source, options) => {
+		positions: true,
+		trees: true,
+		read: (source, options, log, { pos, fields }) => {
 			/** @type {string[]} */
 			const errors = [];
 			const tree = answerOf(() =>
 				treeText(
 					plain(
-						parser.parseProgram(source, 0, {
+						parser.parseProgram(source, pos, {
 							...options,
 							estree: true,
 							parseError: (input, code, start, end, severity) => {
@@ -166,18 +171,30 @@ const ENTRIES = {
 					)
 				)
 			);
-			return [tree, errors.join(" ")];
+			const values = [tree, errors.join(" ")];
+			if (fields !== undefined) {
+				values.push(
+					answerOf(() => {
+						const program = parser.parseProgram(source, pos, options);
+						return program === undefined
+							? "undefined"
+							: treeLines(parser, [/** @type {number} */ (program)], fields);
+					})
+				);
+			}
+			return values;
 		}
 	},
 	parseExpressionAt: {
 		records: true,
-		read: (source, options, log) => [
+		positions: true,
+		read: (source, options, log, { pos }) => [
 			answerOf(() =>
 				treeText(
 					plain(
 						parser.Parser.parseExpressionAt(
 							source,
-							0,
+							pos,
 							recording({ ecmaVersion: "latest", ...options }, log)
 						)
 					)
@@ -187,22 +204,23 @@ const ENTRIES = {
 	},
 	tokenizer: { read: (source, options) => [tokenLine(source, options)] },
 	SourceProcessor: {
-		read: (source, options) => [
-			walkLine(SourceProcessor, parser.NodeType, source, options)
+		walks: true,
+		read: (source, options, log, { visit }) => [
+			walkLine(SourceProcessor, parser, source, options, visit)
 		]
 	}
 };
 
-
 /**
- * The asynchronous printers a print set's `"print"` may name.
- * @type {Record<string, AsyncPrinter>}
+ * The printers a print set's `print` may name.
+ * @type {Printers}
  */
 const PRINTERS = {
-	processAsync: (source, options) =>
-		new SourceProcessor().processAsync(source, options),
-	jsMinify: (source, options) =>
-		require("../../../lib/javascript/jsMinify")({ "index.js": source }, undefined, options)
+	Processor: SourceProcessor,
+	enums: parser,
+	minimizer: "jsMinify",
+	load: () => require("../../../lib/javascript/jsMinify"),
+	asset: "index.js"
 };
 
 // Every input the JavaScript tests read is a fixture, and each one is read,
@@ -210,7 +228,7 @@ const PRINTERS = {
 // needs no code.
 describe("JavaScript syntax — invariants", () => {
 	const all = fixtures("javascript");
-	for (const { name, source, options, behavior, parses, expected } of all) {
+	for (const { name, dir, source, options, behavior, parses, expected } of all) {
 		describe(name, () => {
 			it("tokenizes", () => {
 				expect(
@@ -252,8 +270,8 @@ describe("JavaScript syntax — invariants", () => {
 			it.each(options.map((one) => [JSON.stringify(one), one]))(
 				"prints %s",
 				async (_title, one) => {
-					if (/** @type {{ print?: string }} */ (one).print !== undefined) {
-						for (const value of await readPrint(PRINTERS, source, one)) {
+					if (declaresPrint(one)) {
+						for (const value of await readPrint(PRINTERS, dir, source, one)) {
 							expect(value).toMatchSnapshot();
 						}
 						return;

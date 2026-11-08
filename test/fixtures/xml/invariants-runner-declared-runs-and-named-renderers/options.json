@@ -21,5 +21,11 @@
 			"name": "offers",
 			"async": true
 		}
+	},
+	{
+		"print": "xmlMinify",
+		"minimizer": {
+			"asset": "index.svg"
+		}
 	}
 ]

@@ -82,8 +82,19 @@ Directories come first, in alphabetical order, then the individual files worth t
 - **Purpose**: Stores sample/mock data used in tests.
 - **Usage**: Helps in creating consistent test cases with predefined inputs.
 - **Syntax fixtures**: `fixtures/<css|html|xml|javascript>/<name>/index.<ext>` is one input to `unitCases/<lang>/invariants.unittest.js`, which snapshots its tokens, parse, errors and prints. Beside it, read by `helpers/fixture.js`:
-  - `options.json` — print option sets. `"renderEmbeddedSource": "<name>"` (or `{ "name", "options"?, "async"? }`, `async` answering through a Promise) picks a renderer from `helpers/embeddedRenderers.js`, and `{ "regexp": "<source>", "flags"?: "<flags>" }` stands for a RegExp anywhere in a set. `"print": "<name>"` awaits an asynchronous printer instead of `process`: `processAsync` or the language's minimizer (`cssMinify`, `htmlMinify`, `xmlMinify`, `jsMinify`); its snapshot holds the code (or `throws: …`), then any warnings, errors and extracted comments, then a recording renderer's offers.
-  - `parse.json` — extra calls, each `{ "entry"?, "options"?, "visit"? }`: the public entry point by name (the document parse where absent), its JSON options, and whether its callbacks are logged as one more snapshot entry. Each runner's `ENTRIES` lists its names; an unknown name or key throws.
+  - `options.json` — print option sets. `"renderEmbeddedSource": "<name>"` (or `{ "name", "options"?, "async"? }`, `async` answering through a Promise) picks a renderer from `helpers/embeddedRenderers.js`, and `{ "regexp": "<source>", "flags"?: "<flags>" }` stands for a RegExp anywhere in a set. Three keys send a set through `readPrint`:
+    - `"print": "<name>"` picks the printer: `process` (the default), `processAsync` or the language's minimizer (`cssMinify`, `htmlMinify`, `xmlMinify`, `jsMinify`).
+    - `"visit"` takes a visit spec (below) and fires its visitors during a `process` or `processAsync` print.
+    - `"minimizer": { "extractComments"?, "sourceMap"?, "buffer"?, "asset"? }` sets the minimizer's other arguments: its `extractComments` argument, an input source map read from a file in the fixture's directory, a `Buffer` asset, and the asset's name (`index.<ext>` by default).
+    - The snapshot holds the code (or `throws: …`), then what the minimizer returned beside it: everything, as JSON, under `minimizer`, so an absent list differs from an empty one; otherwise only the non-empty warnings, errors and extracted comments. The `visit` log and a recording renderer's offers come last.
+  - `parse.json` — extra calls, each `{ "entry"?, "options"?, "visit"?, "pos"?, "fields"? }`. Each runner's `ENTRIES` lists the entry names; an unknown name or key, or a key the entry does not take, throws.
+    - `entry` is the public entry point by name; the document parse where absent.
+    - `options` are its JSON options. A CSS `skip.types` lists `NodeType` names, which `buildSkipSet` turns into the skip set.
+    - `pos` is the offset to start reading at.
+    - `"visit": true` logs the entry's callbacks as one more snapshot entry.
+    - `fields` logs reads made through `A` on every node the entry returns, as one more entry.
+    - On `SourceProcessor`, `"visit"` takes a visit spec instead: `{ "types"?, "fields"?, "exit"?, "at"? }`. It names the `NodeType`s to visit, the reads to log on each enter, and whether exits are logged. `at` lists actions, each `{ "type", "on"?, "name"?, "source"? (a prefix), "index"?, "do", "with"? }`, where `do` is `skipChildren`, `stop`, `remove` or `replace` (`with` is the text).
+    - A read is `name`, `value`, `source`, `range`, `loc` or `childCount`; on a path also `index` or `parent`; or `flag:<Flag>`, `fieldCount:<Field>`, or `rangeOf`, `startOf`, `endOf`, `textOf` or `sourceOf` followed by `:<Part>`.
   - `expected.json` — known differences the invariants may report.
 
 ### `harness/`
