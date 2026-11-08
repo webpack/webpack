@@ -1,0 +1,1 @@
+(x&&false)&&y();(x||true)&&y();foo&&false?foo():bar();(!a()||1)&&b();x(),!c()||0,z();(d()===e||1)&&f();true&&(g&&0);function h(){return(i||true)&&j()}

@@ -1,0 +1,1 @@
+var a=Boolean({}),b=Boolean([]),c=Boolean(function(){}),d=Boolean(typeof x),e=Boolean({a:f()});g(Boolean(/a/))

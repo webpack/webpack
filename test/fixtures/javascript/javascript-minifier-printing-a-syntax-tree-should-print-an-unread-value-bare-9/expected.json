@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": ".i()),x=1",
+		"why": "a function a folded `||` leaves opening the statement prints in parentheses around the call, which a second pass, reading the function alone, puts around the function, the same size"
+	}
+]

@@ -1,1 +1,1 @@
-function f(){!function(){}()?a():b()}
+function f(){!function(){g()}()?a():b()}

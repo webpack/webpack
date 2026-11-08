@@ -1,0 +1,1 @@
+if (t) -(a(), b); else c(); if (t) (function () { a(); b() })(); else c(); if (t) x() && 0 ? a() : b(); else c(); if (t) !(a() && b()); else c(); for (;;) { if (t()) { void (a(), b()); continue } c() }

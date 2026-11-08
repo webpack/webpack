@@ -1,0 +1,1 @@
+(function(){var x=1;return x})();(function(){let a=1,b=2;return a+b})();(function(){var p=1;const v={p};return v})();(function(a){return a})(f());g();(function(a){return a})(1);x=(function(){return 1})()
