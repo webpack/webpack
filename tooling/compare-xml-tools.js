@@ -912,7 +912,7 @@ const TREE_READERS = new Map(
 	])
 );
 
-// The inputs the unit tests read, one directory each: `xml/fixtures.unittest.js`
+// The inputs the unit tests read, one directory each: `xml/invariants.unittest.js`
 // holds every one of them to these relations, with its own known differences.
 const UNIT_INPUT_RE = /^test\/fixtures\/xml\/[^/]+\/index\.xml$/;
 
