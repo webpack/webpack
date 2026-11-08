@@ -41,11 +41,14 @@ const fixture = (lang, name) => {
  * @property {string} why the reason, read by whoever meets the entry later
  */
 
+/** @typedef {{ mode: "minify" | "beautify", xml?: boolean }} PrintOptionSet */
+
 /**
  * @typedef {object} FixtureEntry
  * @property {string} name the fixture directory
  * @property {string} source its input
- * @property {{ mode: "minify" | "beautify", xml?: boolean }[]} options the option sets it is printed under, minifying with the defaults first
+ * @property {PrintOptionSet[]} options the option sets it is printed under, minifying with the defaults first
+ * @property {PrintOptionSet[]} behavior those of them whose print runs against the source and must do what it does
  * @property {KnownDifference[]} expected what its `expected.json` lets it break
  */
 
@@ -57,7 +60,9 @@ const readList = (file) =>
 	fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, "utf8")) : [];
 
 /**
- * Every fixture of a language with what the runner asks of it.
+ * Every fixture of a language with what the runner asks of it. Its
+ * `options.json` lists option sets to print it under as well; one marked
+ * `"behavior": true` (marker left out of what the printer gets) also runs.
  * @param {FixtureLanguage} lang the language
  * @returns {FixtureEntry[]} one entry per fixture, by name
  */
@@ -66,20 +71,29 @@ const fixtures = (lang) => {
 	const entries = [];
 	const dir = path.join(FIXTURES, lang);
 	// XML prints through the HTML printer, so its defaults name the dialect.
-	/** @type {{ mode: "minify" | "beautify", xml?: boolean }} */
+	/** @type {PrintOptionSet} */
 	const first =
 		lang === "xml" ? { xml: true, mode: "minify" } : { mode: "minify" };
 	for (const name of fs.readdirSync(dir).sort()) {
 		if (!fs.existsSync(path.join(dir, name, indexFile(lang)))) continue;
-		/** @type {Map<string, { mode: "minify" | "beautify", xml?: boolean }>} */
+		/** @type {Map<string, PrintOptionSet>} */
 		const options = new Map([[JSON.stringify(first), first]]);
-		for (const one of readList(path.join(dir, name, "options.json"))) {
-			options.set(JSON.stringify(one), one);
+		/** @type {Set<PrintOptionSet>} */
+		const behavior = new Set();
+		for (const { behavior: runs, ...one } of readList(
+			path.join(dir, name, "options.json")
+		)) {
+			const key = JSON.stringify(one);
+			if (!options.has(key)) options.set(key, one);
+			if (runs === true) {
+				behavior.add(/** @type {PrintOptionSet} */ (options.get(key)));
+			}
 		}
 		entries.push({
 			name,
 			source: fixture(lang, name),
 			options: [...options.values()],
+			behavior: [...behavior],
 			expected: readList(path.join(dir, name, "expected.json"))
 		});
 	}

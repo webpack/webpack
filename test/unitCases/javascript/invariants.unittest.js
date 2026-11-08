@@ -10,6 +10,9 @@ const { parse, plain } = require("../../helpers/javascriptParse");
 const { invariantFindings } = require("../../helpers/syntaxInvariants");
 const { purityRelation } = require("../../helpers/syntaxInvariants/relations");
 const syntax = require("../../helpers/syntaxInvariants/javascript");
+const { behaviorDifference } = require("../../../tooling/compare-js-tools");
+
+/** @typedef {import("../../helpers/syntaxInvariants/relations").Report} Report */
 
 /**
  * A tree as one line: each node's type and range, then its scalar fields and
@@ -112,7 +115,7 @@ const sourceTypeOf = (source) => {
 // needs no code.
 describe("JavaScript syntax — invariants", () => {
 	const all = fixtures("javascript");
-	for (const { name, source, options, expected } of all) {
+	for (const { name, source, options, behavior, expected } of all) {
 		describe(name, () => {
 			it("tokenizes", () => {
 				expect(tokenLine(source, sourceTypeOf(source))).toMatchSnapshot();
@@ -151,9 +154,37 @@ describe("JavaScript syntax — invariants", () => {
 				}
 			);
 
+			// Opt-in, as running costs a fresh context per run.
+			if (behavior.length > 0) {
+				it.each(behavior.map((one) => [JSON.stringify(one), one]))(
+				"runs as its source when printed %s",
+				(title, one) => {
+					const { code } = /** @type {{ code: string }} */ (
+						new SourceProcessor().process(source, one)
+					);
+					const reports = behaviorDifference(source, code);
+					// A marked fixture that is never run would hold nothing.
+					expect(reports).not.toBeNull();
+					expect(
+						unexplained(
+							/** @type {Report[]} */ (reports).map((report) => ({
+								preset: title,
+								report
+							})),
+							expected.filter((entry) => entry.relation === "behavior")
+						)
+					).toEqual([]);
+				}
+			);
+
+			}
+
 			it("holds its invariants", () => {
 				expect(
-					unexplained(invariantFindings(syntax, [[name, source]]), expected)
+					unexplained(
+						invariantFindings(syntax, [[name, source]]),
+						expected.filter((entry) => entry.relation !== "behavior")
+					)
 				).toEqual([]);
 			});
 		});
