@@ -160,6 +160,30 @@ exports[`XML syntax — invariants source-processor-xml-printing-should-resolve-
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-resolve-a-prefixed-stylesheet-s-namespace tokenizes 1`] = `"attr[7,14|16,42]\\" open[0,44|1,6] open[44,53|45,52] text[53,64] close[64,74|66,73] open[74,81|75,80] text[81,92] close[92,100|94,99] close[100,108|102,107] end=108"`;
 
+exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":5,\\"nameEnd\\":10,\\"valueStart\\":12,\\"valueEnd\\":38}],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a{}\\",\\"start\\":47,\\"end\\":50}],\\"selfClosing\\":false,\\"start\\":40,\\"end\\":58,\\"tagEnd\\":47,\\"nameEnd\\":46,\\"contentEnd\\":50}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":64,\\"tagEnd\\":40,\\"nameEnd\\":4,\\"contentEnd\\":58}]"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer prints {"xml":true,"mode":"minify"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>a{}</style></svg>"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer tokenizes 1`] = `"attr[5,10|12,38]\\" open[0,40|1,4] open[40,47|41,46] text[47,50] close[50,58|52,57] close[58,64|60,63] end=64"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer-2 parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":5,\\"nameEnd\\":10,\\"valueStart\\":12,\\"valueEnd\\":38}],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\".cut\\",\\"start\\":47,\\"end\\":51}],\\"selfClosing\\":false,\\"start\\":40,\\"end\\":51,\\"tagEnd\\":47,\\"nameEnd\\":46,\\"contentEnd\\":51}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":57,\\"tagEnd\\":40,\\"nameEnd\\":4,\\"contentEnd\\":51}]"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer-2 parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer-2 prints {"xml":true,"mode":"minify"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>.cut</style></svg>"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer-2 tokenizes 1`] = `"attr[5,10|12,38]\\" open[0,40|1,4] open[40,47|41,46] text[47,51] close[51,57|53,56] end=57"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer-3 parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":5,\\"nameEnd\\":10,\\"valueStart\\":12,\\"valueEnd\\":38}],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a { b : c }\\",\\"start\\":47,\\"end\\":58}],\\"selfClosing\\":false,\\"start\\":40,\\"end\\":66,\\"tagEnd\\":47,\\"nameEnd\\":46,\\"contentEnd\\":58}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":72,\\"tagEnd\\":40,\\"nameEnd\\":4,\\"contentEnd\\":66}]"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer-3 parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer-3 prints {"xml":true,"mode":"minify"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>a { b : c }</style></svg>"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer-3 tokenizes 1`] = `"attr[5,10|12,38]\\" open[0,40|1,4] open[40,47|41,46] text[47,58] close[58,66|60,65] close[66,72|68,71] end=72"`;
+
 exports[`XML syntax — invariants source-processor-xml-printing-should-write-only-what-the-target-browsers-read parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":5,\\"nameEnd\\":10,\\"valueStart\\":12,\\"valueEnd\\":38}],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"g > .b { fill: rgba(0,0,255,0.5) } @media (min-width: 0px) { .e { fill: red } } .p { user-select: none }\\",\\"start\\":47,\\"end\\":151}],\\"selfClosing\\":false,\\"start\\":40,\\"end\\":159,\\"tagEnd\\":47,\\"nameEnd\\":46,\\"contentEnd\\":151},{\\"type\\":3,\\"tagName\\":\\"rect\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"style\\",\\"value\\":\\"fill: rgba(255,0,0,0.5)\\",\\"nameStart\\":165,\\"nameEnd\\":170,\\"valueStart\\":172,\\"valueEnd\\":195}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":159,\\"end\\":198,\\"tagEnd\\":198,\\"nameEnd\\":164,\\"contentEnd\\":198}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":204,\\"tagEnd\\":40,\\"nameEnd\\":4,\\"contentEnd\\":198}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-write-only-what-the-target-browsers-read parses 2`] = `""`;
@@ -382,6 +406,16 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-an-entity tokenizes 1`] = `"doctype[0,81|10,11|-1,-1|-1,-1|13,79] open[81,84|82,83] text[84,103] close[103,107|105,106] end=107"`;
 
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-past-the-depth parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"d\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":394},{\\"type\\":3,\\"tagName\\":\\"d\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"&e16;\\",\\"start\\":397,\\"end\\":401}],\\"selfClosing\\":false,\\"start\\":394,\\"end\\":405,\\"tagEnd\\":397,\\"nameEnd\\":396,\\"contentEnd\\":401}]"`;
+
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-past-the-depth parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-past-the-depth prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!ENTITY e0 \\"&e1;\\"><!ENTITY e1 \\"&e2;\\"><!ENTITY e2 \\"&e3;\\"><!ENTITY e3 \\"&e4;\\"><!ENTITY e4 \\"&e5;\\"><!ENTITY e5 \\"&e6;\\"><!ENTITY e6 \\"&e7;\\"><!ENTITY e7 \\"&e8;\\"><!ENTITY e8 \\"&e9;\\"><!ENTITY e9 \\"&e10;\\"><!ENTITY e10 \\"&e11;\\"><!ENTITY e11 \\"&e12;\\"><!ENTITY e12 \\"&e13;\\"><!ENTITY e13 \\"&e14;\\"><!ENTITY e14 \\"&e15;\\"><!ENTITY e15 \\"&e16;\\"><!ENTITY e16 \\"&e17;\\"><!ENTITY e17 \\"&e18;\\"><!ENTITY e18 \\"<x/>\\">]><d>&e0;</d>"`;
+
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-past-the-depth prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!ENTITY e0 \\"&e1;\\"><!ENTITY e1 \\"&e2;\\"><!ENTITY e2 \\"&e3;\\"><!ENTITY e3 \\"&e4;\\"><!ENTITY e4 \\"&e5;\\"><!ENTITY e5 \\"&e6;\\"><!ENTITY e6 \\"&e7;\\"><!ENTITY e7 \\"&e8;\\"><!ENTITY e8 \\"&e9;\\"><!ENTITY e9 \\"&e10;\\"><!ENTITY e10 \\"&e11;\\"><!ENTITY e11 \\"&e12;\\"><!ENTITY e12 \\"&e13;\\"><!ENTITY e13 \\"&e14;\\"><!ENTITY e14 \\"&e15;\\"><!ENTITY e15 \\"&e16;\\"><!ENTITY e16 \\"&e17;\\"><!ENTITY e17 \\"&e18;\\"><!ENTITY e18 \\"<x/>\\">]><d>&e0;</d>"`;
+
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-past-the-depth tokenizes 1`] = `"doctype[0,394|10,11|-1,-1|-1,-1|13,392] open[394,397|395,396] text[397,401] close[401,405|403,404] end=405"`;
+
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-with-every-kind parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"d\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":76},{\\"type\\":3,\\"tagName\\":\\"d\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"b\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"x\\",\\"value\\":\\"1\\",\\"nameStart\\":-1,\\"nameEnd\\":-1,\\"valueStart\\":-1,\\"valueEnd\\":-1},{\\"name\\":\\"y\\",\\"value\\":\\"\\",\\"nameStart\\":-1,\\"nameEnd\\":-1,\\"valueStart\\":-1,\\"valueEnd\\":-1}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"t\\",\\"start\\":79,\\"end\\":82}],\\"selfClosing\\":false,\\"start\\":79,\\"end\\":82,\\"tagEnd\\":-1,\\"nameEnd\\":-1,\\"contentEnd\\":-1},{\\"type\\":5,\\"data\\":\\"c\\\\n\\",\\"start\\":79,\\"end\\":82},{\\"type\\":7,\\"target\\":\\"p\\",\\"data\\":\\"q\\",\\"start\\":79,\\"end\\":82},{\\"type\\":4,\\"data\\":\\"z\\",\\"start\\":79,\\"end\\":82}],\\"selfClosing\\":false,\\"start\\":76,\\"end\\":86,\\"tagEnd\\":79,\\"nameEnd\\":78,\\"contentEnd\\":82}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-with-every-kind parses 2`] = `""`;
@@ -508,6 +542,14 @@ exports[`XML syntax — invariants tokenize-xml-advances-over-markup-whose-callb
 
 exports[`XML syntax — invariants tokenize-xml-advances-over-markup-whose-callback-is-missing tokenizes 1`] = `"text[0,1] comment[1,9|5,6] text[9,10] comment[10,23|19,20] text[23,24] comment[24,28|26,27] text[28,29] comment[29,34|31,32] text[34,35] doctype[35,47|45,46|-1,-1|-1,-1|-1,-1] text[47,48] attr[51,52|54,55]' open[48,58|49,50]/ text[58,59] close[59,63|61,62] text[63,64] open[64,67|65,66] text[67,68] open[68,70|69,70] open[70,73|71,72] text[73,74] error[76,76]:eof-in-tag open[74,76|75,76] end=76"`;
 
+exports[`XML syntax — invariants tokenize-xml-advances-over-markup-whose-callback-is-missing-2 parses 1`] = `"[{\\"type\\":5,\\"data\\":\\"c\\",\\"start\\":1,\\"end\\":9},{\\"type\\":5,\\"data\\":\\"d\\",\\"start\\":10,\\"end\\":23},{\\"type\\":5,\\"data\\":\\"X\\",\\"start\\":24,\\"end\\":28},{\\"type\\":7,\\"target\\":\\"g\\",\\"data\\":\\"\\",\\"start\\":29,\\"end\\":34},{\\"type\\":6,\\"name\\":\\"i\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":35,\\"end\\":47},{\\"type\\":3,\\"tagName\\":\\"k\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"l\\",\\"value\\":\\"m\\",\\"nameStart\\":51,\\"nameEnd\\":52,\\"valueStart\\":54,\\"valueEnd\\":55}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":48,\\"end\\":58,\\"tagEnd\\":58,\\"nameEnd\\":50,\\"contentEnd\\":58},{\\"type\\":3,\\"tagName\\":\\"q\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"r\\",\\"start\\":67,\\"end\\":68},{\\"type\\":3,\\"tagName\\":\\"s\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"t\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"u\\",\\"start\\":73,\\"end\\":74}],\\"selfClosing\\":false,\\"start\\":70,\\"end\\":77,\\"tagEnd\\":73,\\"nameEnd\\":72,\\"contentEnd\\":77}],\\"selfClosing\\":false,\\"start\\":68,\\"end\\":77,\\"tagEnd\\":70,\\"nameEnd\\":70,\\"contentEnd\\":77}],\\"selfClosing\\":false,\\"start\\":64,\\"end\\":77,\\"tagEnd\\":67,\\"nameEnd\\":66,\\"contentEnd\\":77}]"`;
+
+exports[`XML syntax — invariants tokenize-xml-advances-over-markup-whose-callback-is-missing-2 parses 2`] = `"warning[0,0]:unexpected-null-character error[77,77]:eof-in-tag"`;
+
+exports[`XML syntax — invariants tokenize-xml-advances-over-markup-whose-callback-is-missing-2 prints {"xml":true,"mode":"minify"} 1`] = `"<?g?><!DOCTYPE i><k l=\\"m\\"/><q>r<s><t>u</t></s></q>"`;
+
+exports[`XML syntax — invariants tokenize-xml-advances-over-markup-whose-callback-is-missing-2 tokenizes 1`] = `"warning[0,0]:unexpected-null-character text[0,1] comment[1,9|5,6] text[9,10] comment[10,23|19,20] text[23,24] comment[24,28|26,27] text[28,29] comment[29,34|31,32] text[34,35] doctype[35,47|45,46|-1,-1|-1,-1|-1,-1] text[47,48] attr[51,52|54,55]' open[48,58|49,50]/ text[58,59] close[59,63|61,62] text[63,64] open[64,67|65,66] text[67,68] open[68,70|69,70] open[70,73|71,72] text[73,74] error[77,77]:eof-in-tag open[74,77|75,77] end=77"`;
+
 exports[`XML syntax — invariants tokenize-xml-drops-an-end-tag-cut-off-by-eof parses 1`] = `"[]"`;
 
 exports[`XML syntax — invariants tokenize-xml-drops-an-end-tag-cut-off-by-eof parses 2`] = `""`;
@@ -588,6 +630,14 @@ exports[`XML syntax — invariants tokenize-xml-reads-a-doctype-with-external-id
 
 exports[`XML syntax — invariants tokenize-xml-reads-a-doctype-with-external-ids-and-an-internal-subset tokenizes 1`] = `"doctype[0,23|10,11|-1,-1|20,21|-1,-1] end=23"`;
 
+exports[`XML syntax — invariants tokenize-xml-reads-a-doctype-with-external-ids-and-an-internal-subset-2 parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"r\\",\\"publicId\\":\\"p\\",\\"systemId\\":\\"s\\",\\"start\\":1,\\"end\\":80}]"`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-doctype-with-external-ids-and-an-internal-subset-2 parses 2`] = `""`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-doctype-with-external-ids-and-an-internal-subset-2 prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE r PUBLIC \\"p\\" 's' [<!ENTITY e \\"]\\"><!ENTITY f ']'><!-- ] --><?pi ]?>] >"`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-doctype-with-external-ids-and-an-internal-subset-2 tokenizes 1`] = `"text[0,1] doctype[1,80|11,12|21,22|25,26|29,77] end=80"`;
+
 exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":10}]"`;
 
 exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently parses 2`] = `""`;
@@ -611,6 +661,46 @@ exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-lenien
 exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-3 prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE r \\"s"`;
 
 exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-3 tokenizes 1`] = `"doctype[0,14|10,11|-1,-1|13,14|-1,-1] end=14"`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-4 parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"r\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":15}]"`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-4 parses 2`] = `""`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-4 prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE r [ x"`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-4 tokenizes 1`] = `"doctype[0,15|10,11|-1,-1|-1,-1|13,15] end=15"`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-5 parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"r\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":16}]"`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-5 parses 2`] = `""`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-5 prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE r [ \\"x"`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-5 tokenizes 1`] = `"doctype[0,16|10,11|-1,-1|-1,-1|13,16] end=16"`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-6 parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"r\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":16}]"`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-6 parses 2`] = `""`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-6 prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE r [ 'x"`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-6 tokenizes 1`] = `"doctype[0,16|10,11|-1,-1|-1,-1|13,16] end=16"`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-7 parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"r\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":20}]"`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-7 parses 2`] = `""`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-7 prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE r [ <!-- x"`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-7 tokenizes 1`] = `"doctype[0,20|10,11|-1,-1|-1,-1|13,20] end=20"`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-8 parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"r\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":18}]"`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-8 parses 2`] = `""`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-8 prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE r [ <? x"`;
+
+exports[`XML syntax — invariants tokenize-xml-reads-a-malformed-doctype-leniently-8 tokenizes 1`] = `"doctype[0,18|10,11|-1,-1|-1,-1|13,18] end=18"`;
 
 exports[`XML syntax — invariants tokenize-xml-reads-names-that-start-with-a-letter-or-a-non-ascii-character parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"é:ü\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"_x\\",\\"value\\":\\"1\\",\\"nameStart\\":5,\\"nameEnd\\":7,\\"valueStart\\":9,\\"valueEnd\\":10},{\\"name\\":\\":y\\",\\"value\\":\\"2\\",\\"nameStart\\":12,\\"nameEnd\\":14,\\"valueStart\\":16,\\"valueEnd\\":17}],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"A\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":19,\\"end\\":23,\\"tagEnd\\":23,\\"nameEnd\\":21,\\"contentEnd\\":23},{\\"type\\":3,\\"tagName\\":\\"_\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":23,\\"end\\":27,\\"tagEnd\\":27,\\"nameEnd\\":25,\\"contentEnd\\":27},{\\"type\\":3,\\"tagName\\":\\":n\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":false,\\"start\\":27,\\"end\\":36,\\"tagEnd\\":31,\\"nameEnd\\":30,\\"contentEnd\\":31}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":42,\\"tagEnd\\":19,\\"nameEnd\\":4,\\"contentEnd\\":36}]"`;
 
@@ -699,6 +789,47 @@ exports[`XML syntax — invariants tokenize-xml-skips-a-stray-quote-or-inside-a-
 exports[`XML syntax — invariants tokenize-xml-skips-a-stray-quote-or-inside-a-start-tag prints {"xml":true,"mode":"minify"} 1`] = `"<a b=\\"\\"/>"`;
 
 exports[`XML syntax — invariants tokenize-xml-skips-a-stray-quote-or-inside-a-start-tag tokenizes 1`] = `"attr[7,8|-1,-1] open[0,9|1,2] end=9"`;
+
+exports[`XML syntax — invariants xml-minify-should-compact-attribute-spacing-and-optionally-sort-attributes parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":6,\\"nameEnd\\":11,\\"valueStart\\":15,\\"valueEnd\\":41},{\\"name\\":\\"viewBox\\",\\"value\\":\\"0 0 1 1\\",\\"serializedName\\":\\"viewBox\\",\\"nameStart\\":43,\\"nameEnd\\":50,\\"valueStart\\":54,\\"valueEnd\\":61}],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"path\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"z\\",\\"value\\":\\"1\\",\\"nameStart\\":69,\\"nameEnd\\":70,\\"valueStart\\":74,\\"valueEnd\\":75},{\\"name\\":\\"style\\",\\"value\\":\\"fill: #ff0000\\",\\"nameStart\\":77,\\"nameEnd\\":82,\\"valueStart\\":86,\\"valueEnd\\":99},{\\"name\\":\\"a\\",\\"value\\":\\"2\\",\\"nameStart\\":101,\\"nameEnd\\":102,\\"valueStart\\":106,\\"valueEnd\\":107}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":63,\\"end\\":111,\\"tagEnd\\":111,\\"nameEnd\\":68,\\"contentEnd\\":111}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":117,\\"tagEnd\\":63,\\"nameEnd\\":4,\\"contentEnd\\":111}]"`;
+
+exports[`XML syntax — invariants xml-minify-should-compact-attribute-spacing-and-optionally-sort-attributes parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-minify-should-compact-attribute-spacing-and-optionally-sort-attributes prints {"xml":true,"mode":"minify","sortAttributes":true} 1`] = `"<svg viewBox=\\"0 0 1 1\\" xmlns=\\"http://www.w3.org/2000/svg\\"><path a=\\"2\\" style=\\"fill: #ff0000\\" z=\\"1\\"/></svg>"`;
+
+exports[`XML syntax — invariants xml-minify-should-compact-attribute-spacing-and-optionally-sort-attributes prints {"xml":true,"mode":"minify"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 1 1\\"><path z=\\"1\\" style=\\"fill: #ff0000\\" a=\\"2\\"/></svg>"`;
+
+exports[`XML syntax — invariants xml-minify-should-compact-attribute-spacing-and-optionally-sort-attributes tokenizes 1`] = `"attr[6,11|15,41]\\" attr[43,50|54,61]\\" open[0,63|1,4] attr[69,70|74,75]\\" attr[77,82|86,99]\\" attr[101,102|106,107]\\" open[63,111|64,68]/ close[111,117|113,116] end=117"`;
+
+exports[`XML syntax — invariants xml-minify-should-hand-the-stylesheets-the-css-minifier-s-options parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":5,\\"nameEnd\\":10,\\"valueStart\\":12,\\"valueEnd\\":38}],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a{width:96px}\\",\\"start\\":47,\\"end\\":60}],\\"selfClosing\\":false,\\"start\\":40,\\"end\\":68,\\"tagEnd\\":47,\\"nameEnd\\":46,\\"contentEnd\\":60}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":74,\\"tagEnd\\":40,\\"nameEnd\\":4,\\"contentEnd\\":68}]"`;
+
+exports[`XML syntax — invariants xml-minify-should-hand-the-stylesheets-the-css-minifier-s-options parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-minify-should-hand-the-stylesheets-the-css-minifier-s-options prints {"xml":true,"mode":"minify"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>a{width:96px}</style></svg>"`;
+
+exports[`XML syntax — invariants xml-minify-should-hand-the-stylesheets-the-css-minifier-s-options tokenizes 1`] = `"attr[5,10|12,38]\\" open[0,40|1,4] open[40,47|41,46] text[47,60] close[60,68|62,67] close[68,74|70,73] end=74"`;
+
+exports[`XML syntax — invariants xml-minify-should-minify-the-document-and-the-stylesheets-it-holds parses 1`] = `"[{\\"type\\":7,\\"target\\":\\"xml\\",\\"data\\":\\"version=\\\\\\"1.0\\\\\\" encoding=\\\\\\"UTF-8\\\\\\"\\",\\"start\\":0,\\"end\\":38},{\\"type\\":5,\\"data\\":\\" an editor's note \\",\\"start\\":39,\\"end\\":64},{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":70,\\"nameEnd\\":75,\\"valueStart\\":77,\\"valueEnd\\":103},{\\"name\\":\\"viewBox\\",\\"value\\":\\"0 0 10 10\\",\\"serializedName\\":\\"viewBox\\",\\"nameStart\\":105,\\"nameEnd\\":112,\\"valueStart\\":114,\\"valueEnd\\":123}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"\\\\n\\\\t\\",\\"start\\":125,\\"end\\":127},{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"\\\\n\\\\t\\\\t.dot { fill: #ff0000; user-select: none; }\\\\n\\\\t\\",\\"start\\":134,\\"end\\":181}],\\"selfClosing\\":false,\\"start\\":127,\\"end\\":189,\\"tagEnd\\":134,\\"nameEnd\\":133,\\"contentEnd\\":181},{\\"type\\":4,\\"data\\":\\"\\\\n\\\\t\\",\\"start\\":189,\\"end\\":191},{\\"type\\":3,\\"tagName\\":\\"circle\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"class\\",\\"value\\":\\"dot\\",\\"nameStart\\":199,\\"nameEnd\\":204,\\"valueStart\\":206,\\"valueEnd\\":209},{\\"name\\":\\"cx\\",\\"value\\":\\"5\\",\\"nameStart\\":211,\\"nameEnd\\":213,\\"valueStart\\":215,\\"valueEnd\\":216},{\\"name\\":\\"cy\\",\\"value\\":\\"5\\",\\"nameStart\\":218,\\"nameEnd\\":220,\\"valueStart\\":222,\\"valueEnd\\":223},{\\"name\\":\\"r\\",\\"value\\":\\"4\\",\\"nameStart\\":225,\\"nameEnd\\":226,\\"valueStart\\":228,\\"valueEnd\\":229},{\\"name\\":\\"style\\",\\"value\\":\\"stroke: #00ff00\\",\\"nameStart\\":231,\\"nameEnd\\":236,\\"valueStart\\":238,\\"valueEnd\\":253}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":191,\\"end\\":257,\\"tagEnd\\":257,\\"nameEnd\\":198,\\"contentEnd\\":257},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":257,\\"end\\":258}],\\"selfClosing\\":false,\\"start\\":65,\\"end\\":264,\\"tagEnd\\":125,\\"nameEnd\\":69,\\"contentEnd\\":258}]"`;
+
+exports[`XML syntax — invariants xml-minify-should-minify-the-document-and-the-stylesheets-it-holds parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-minify-should-minify-the-document-and-the-stylesheets-it-holds prints {"xml":true,"mode":"minify"} 1`] = `
+"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
+	<style>
+		.dot { fill: #ff0000; user-select: none; }
+	</style>
+	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\" style=\\"stroke: #00ff00\\"/>
+</svg>"
+`;
+
+exports[`XML syntax — invariants xml-minify-should-minify-the-document-and-the-stylesheets-it-holds tokenizes 1`] = `"comment[0,38|2,36] text[38,39] comment[39,64|43,61] text[64,65] attr[70,75|77,103]\\" attr[105,112|114,123]\\" open[65,125|66,69] text[125,127] open[127,134|128,133] text[134,181] close[181,189|183,188] text[189,191] attr[199,204|206,209]\\" attr[211,213|215,216]\\" attr[218,220|222,223]\\" attr[225,226|228,229]\\" attr[231,236|238,253]\\" open[191,257|192,198]/ text[257,258] close[258,264|260,263] text[264,265] end=265"`;
+
+exports[`XML syntax — invariants xml-minify-should-read-a-buffer-as-utf-8 parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"a\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"title\\",\\"value\\":\\"café\\",\\"nameStart\\":4,\\"nameEnd\\":9,\\"valueStart\\":11,\\"valueEnd\\":15}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"x\\",\\"start\\":18,\\"end\\":19}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":24,\\"tagEnd\\":18,\\"nameEnd\\":2,\\"contentEnd\\":19}]"`;
+
+exports[`XML syntax — invariants xml-minify-should-read-a-buffer-as-utf-8 parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-minify-should-read-a-buffer-as-utf-8 prints {"xml":true,"mode":"minify"} 1`] = `"<a title=\\"café\\">x</a>"`;
+
+exports[`XML syntax — invariants xml-minify-should-read-a-buffer-as-utf-8 tokenizes 1`] = `"attr[4,9|11,15]' open[0,18|1,2] text[18,19] close[19,24|21,22] end=24"`;
 
 exports[`XML syntax — invariants xml-syntax-invariants-holds-every-relation-over-its-sources parses 1`] = `"[{\\"type\\":7,\\"target\\":\\"xml\\",\\"data\\":\\"version=\\\\\\"1.0\\\\\\"\\",\\"start\\":0,\\"end\\":21},{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"a\\",\\"value\\":\\"1\\",\\"nameStart\\":27,\\"nameEnd\\":28,\\"valueStart\\":30,\\"valueEnd\\":31}],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"child\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"text\\",\\"start\\":40,\\"end\\":44}],\\"selfClosing\\":false,\\"start\\":33,\\"end\\":52,\\"tagEnd\\":40,\\"nameEnd\\":39,\\"contentEnd\\":44},{\\"type\\":5,\\"data\\":\\" c \\",\\"start\\":52,\\"end\\":62},{\\"type\\":3,\\"tagName\\":\\"empty\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":62,\\"end\\":70,\\"tagEnd\\":70,\\"nameEnd\\":68,\\"contentEnd\\":70}],\\"selfClosing\\":false,\\"start\\":21,\\"end\\":77,\\"tagEnd\\":33,\\"nameEnd\\":26,\\"contentEnd\\":70}]"`;
 
@@ -868,6 +999,14 @@ exports[`XML syntax — invariants xml-syntax-parsing-should-leave-a-recursive-o
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-leave-a-recursive-or-exponential-entity-unexpanded tokenizes 1`] = `"doctype[0,49|10,11|-1,-1|-1,-1|13,47] open[49,52|50,51] text[52,55] close[55,59|57,58] end=59"`;
 
+exports[`XML syntax — invariants xml-syntax-parsing-should-leave-a-recursive-or-exponential-entity-unexpanded-2 parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"r\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":535},{\\"type\\":3,\\"tagName\\":\\"r\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"a\\",\\"value\\":\\"&l9;\\",\\"nameStart\\":538,\\"nameEnd\\":539,\\"valueStart\\":541,\\"valueEnd\\":545}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"&l9;\\",\\"start\\":547,\\"end\\":551}],\\"selfClosing\\":false,\\"start\\":535,\\"end\\":555,\\"tagEnd\\":547,\\"nameEnd\\":537,\\"contentEnd\\":551}]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-leave-a-recursive-or-exponential-entity-unexpanded-2 parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-leave-a-recursive-or-exponential-entity-unexpanded-2 prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE r [<!ENTITY l0 \\"0123456789\\"><!ENTITY l1 \\"&l0;&l0;&l0;&l0;&l0;&l0;&l0;&l0;&l0;&l0;\\"><!ENTITY l2 \\"&l1;&l1;&l1;&l1;&l1;&l1;&l1;&l1;&l1;&l1;\\"><!ENTITY l3 \\"&l2;&l2;&l2;&l2;&l2;&l2;&l2;&l2;&l2;&l2;\\"><!ENTITY l4 \\"&l3;&l3;&l3;&l3;&l3;&l3;&l3;&l3;&l3;&l3;\\"><!ENTITY l5 \\"&l4;&l4;&l4;&l4;&l4;&l4;&l4;&l4;&l4;&l4;\\"><!ENTITY l6 \\"&l5;&l5;&l5;&l5;&l5;&l5;&l5;&l5;&l5;&l5;\\"><!ENTITY l7 \\"&l6;&l6;&l6;&l6;&l6;&l6;&l6;&l6;&l6;&l6;\\"><!ENTITY l8 \\"&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l7;\\"><!ENTITY l9 \\"&l8;&l8;&l8;&l8;&l8;&l8;&l8;&l8;&l8;&l8;\\">]><r a=\\"&l9;\\">&l9;</r>"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-leave-a-recursive-or-exponential-entity-unexpanded-2 tokenizes 1`] = `"doctype[0,535|10,11|-1,-1|-1,-1|13,533] attr[538,539|541,545]\\" open[535,547|536,537] text[547,551] close[551,555|553,554] end=555"`;
+
 exports[`XML syntax — invariants xml-syntax-parsing-should-leave-out-errors-in-an-entity-s-replacement-text parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"root\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":42},{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":false,\\"start\\":42,\\"end\\":62,\\"tagEnd\\":48,\\"nameEnd\\":47,\\"contentEnd\\":55}]"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-leave-out-errors-in-an-entity-s-replacement-text parses 2`] = `""`;
@@ -883,6 +1022,54 @@ exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-attribute
 exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-attribute-values-as-3-3-3-does prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE r [<!ATTLIST r t NMTOKENS #IMPLIED c CDATA #IMPLIED>]><r t=\\"a b\\" c=\\" a  b&#10;&#9;c \\"/>"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-attribute-values-as-3-3-3-does tokenizes 1`] = `"doctype[0,64|10,11|-1,-1|-1,-1|13,62] attr[67,68|70,80]\\" attr[82,83|85,102]\\" open[64,105|65,66]/ end=105"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"root\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":63},{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a\\\\rb\\",\\"start\\":69,\\"end\\":76},{\\"type\\":3,\\"tagName\\":\\"child\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":69,\\"end\\":76,\\"tagEnd\\":-1,\\"nameEnd\\":-1,\\"contentEnd\\":-1}],\\"selfClosing\\":false,\\"start\\":63,\\"end\\":83,\\"tagEnd\\":69,\\"nameEnd\\":68,\\"contentEnd\\":76}]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE root [<!ENTITY value \\"<![CDATA[a&#13;b]]><child/>\\">]><root>&value;</root>"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token tokenizes 1`] = `"doctype[0,63|10,14|-1,-1|-1,-1|16,61] open[63,69|64,68] text[69,76] close[76,83|78,82] end=83"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-2 parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"root\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":63},{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a\\\\rb\\",\\"start\\":71,\\"end\\":78},{\\"type\\":3,\\"tagName\\":\\"child\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":71,\\"end\\":78,\\"tagEnd\\":-1,\\"nameEnd\\":-1,\\"contentEnd\\":-1}],\\"selfClosing\\":false,\\"start\\":65,\\"end\\":85,\\"tagEnd\\":71,\\"nameEnd\\":70,\\"contentEnd\\":78}]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-2 parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-2 prints {"xml":true,"mode":"minify"} 1`] = `"\\"<!DOCTYPE root [<!ENTITY value \\\\\\"<![CDATA[a&#13;b]]><child/>\\\\\\">]>\\\\r\\\\n<root>&value;</root>\\""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-2 tokenizes 1`] = `"doctype[0,63|10,14|-1,-1|-1,-1|16,61] text[63,65] open[65,71|66,70] text[71,78] close[78,85|80,84] end=85"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-3 parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"root\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":58},{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":5,\\"data\\":\\"a\\\\nb\\",\\"start\\":64,\\"end\\":71},{\\"type\\":3,\\"tagName\\":\\"child\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":64,\\"end\\":71,\\"tagEnd\\":-1,\\"nameEnd\\":-1,\\"contentEnd\\":-1}],\\"selfClosing\\":false,\\"start\\":58,\\"end\\":78,\\"tagEnd\\":64,\\"nameEnd\\":63,\\"contentEnd\\":71}]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-3 parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-3 prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE root [<!ENTITY value \\"<!--a&#13;b--><child/>\\">]><root>&value;</root>"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-3 tokenizes 1`] = `"doctype[0,58|10,14|-1,-1|-1,-1|16,56] open[58,64|59,63] text[64,71] close[71,78|73,77] end=78"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-4 parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"root\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":58},{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":5,\\"data\\":\\"a\\\\nb\\",\\"start\\":66,\\"end\\":73},{\\"type\\":3,\\"tagName\\":\\"child\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":66,\\"end\\":73,\\"tagEnd\\":-1,\\"nameEnd\\":-1,\\"contentEnd\\":-1}],\\"selfClosing\\":false,\\"start\\":60,\\"end\\":80,\\"tagEnd\\":66,\\"nameEnd\\":65,\\"contentEnd\\":73}]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-4 parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-4 prints {"xml":true,"mode":"minify"} 1`] = `"\\"<!DOCTYPE root [<!ENTITY value \\\\\\"<!--a&#13;b--><child/>\\\\\\">]>\\\\r\\\\n<root>&value;</root>\\""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-4 tokenizes 1`] = `"doctype[0,58|10,14|-1,-1|-1,-1|16,56] text[58,60] open[60,66|61,65] text[66,73] close[73,80|75,79] end=80"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-5 parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"root\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":62},{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":7,\\"target\\":\\"target\\",\\"data\\":\\"a\\\\nb\\",\\"start\\":68,\\"end\\":75},{\\"type\\":3,\\"tagName\\":\\"child\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":68,\\"end\\":75,\\"tagEnd\\":-1,\\"nameEnd\\":-1,\\"contentEnd\\":-1}],\\"selfClosing\\":false,\\"start\\":62,\\"end\\":82,\\"tagEnd\\":68,\\"nameEnd\\":67,\\"contentEnd\\":75}]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-5 parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-5 prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE root [<!ENTITY value \\"<?target a&#13;b?><child/>\\">]><root>&value;</root>"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-5 tokenizes 1`] = `"doctype[0,62|10,14|-1,-1|-1,-1|16,60] open[62,68|63,67] text[68,75] close[75,82|77,81] end=82"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-6 parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"root\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":62},{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":7,\\"target\\":\\"target\\",\\"data\\":\\"a\\\\nb\\",\\"start\\":70,\\"end\\":77},{\\"type\\":3,\\"tagName\\":\\"child\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":70,\\"end\\":77,\\"tagEnd\\":-1,\\"nameEnd\\":-1,\\"contentEnd\\":-1}],\\"selfClosing\\":false,\\"start\\":64,\\"end\\":84,\\"tagEnd\\":70,\\"nameEnd\\":69,\\"contentEnd\\":77}]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-6 parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-6 prints {"xml":true,"mode":"minify"} 1`] = `"\\"<!DOCTYPE root [<!ENTITY value \\\\\\"<?target a&#13;b?><child/>\\\\\\">]>\\\\r\\\\n<root>&value;</root>\\""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token-6 tokenizes 1`] = `"doctype[0,62|10,14|-1,-1|-1,-1|16,60] text[62,64] open[64,70|65,69] text[70,77] close[77,84|79,83] end=84"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-normalize-xml-comment-line-endings parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":5,\\"data\\":\\"a\\\\nb\\\\nc\\",\\"start\\":6,\\"end\\":19}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":26,\\"tagEnd\\":6,\\"nameEnd\\":5,\\"contentEnd\\":19}]"`;
 
@@ -963,6 +1150,22 @@ exports[`XML syntax — invariants xml-syntax-parsing-should-preserve-qualified-
 exports[`XML syntax — invariants xml-syntax-parsing-should-preserve-qualified-names prints {"xml":true,"mode":"minify"} 1`] = `"<feed xmlns:x=\\"urn:example\\"><x:entry x:kind=\\"test\\"/></feed>"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-preserve-qualified-names tokenizes 1`] = `"attr[6,13|15,26]\\" open[0,28|1,5] attr[37,43|45,49]\\" open[28,52|29,36]/ close[52,59|54,58] end=59"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-preserve-referenced-carriage-returns-in-an-xml-markup parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"root\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":51},{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a\\\\rb\\",\\"start\\":57,\\"end\\":64},{\\"type\\":3,\\"tagName\\":\\"child\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":57,\\"end\\":64,\\"tagEnd\\":-1,\\"nameEnd\\":-1,\\"contentEnd\\":-1}],\\"selfClosing\\":false,\\"start\\":51,\\"end\\":71,\\"tagEnd\\":57,\\"nameEnd\\":56,\\"contentEnd\\":64}]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-preserve-referenced-carriage-returns-in-an-xml-markup parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-preserve-referenced-carriage-returns-in-an-xml-markup prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE root [<!ENTITY value \\"a&#13;b<child/>\\">]><root>&value;</root>"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-preserve-referenced-carriage-returns-in-an-xml-markup tokenizes 1`] = `"doctype[0,51|10,14|-1,-1|-1,-1|16,49] open[51,57|52,56] text[57,64] close[64,71|66,70] end=71"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-preserve-referenced-carriage-returns-in-an-xml-markup-2 parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"root\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":51},{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a\\\\rb\\",\\"start\\":59,\\"end\\":66},{\\"type\\":3,\\"tagName\\":\\"child\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":59,\\"end\\":66,\\"tagEnd\\":-1,\\"nameEnd\\":-1,\\"contentEnd\\":-1}],\\"selfClosing\\":false,\\"start\\":53,\\"end\\":73,\\"tagEnd\\":59,\\"nameEnd\\":58,\\"contentEnd\\":66}]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-preserve-referenced-carriage-returns-in-an-xml-markup-2 parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-preserve-referenced-carriage-returns-in-an-xml-markup-2 prints {"xml":true,"mode":"minify"} 1`] = `"\\"<!DOCTYPE root [<!ENTITY value \\\\\\"a&#13;b<child/>\\\\\\">]>\\\\r\\\\n<root>&value;</root>\\""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-preserve-referenced-carriage-returns-in-an-xml-markup-2 tokenizes 1`] = `"doctype[0,51|10,14|-1,-1|-1,-1|16,49] text[51,53] open[53,59|54,58] text[59,66] close[66,73|68,72] end=73"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-preserve-the-document-type-name-and-identifiers parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"Root\\",\\"publicId\\":\\"-//EXAMPLE//DTD ROOT 1.0//EN\\",\\"systemId\\":\\"root.dtd\\",\\"start\\":0,\\"end\\":64},{\\"type\\":3,\\"tagName\\":\\"Root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":64,\\"end\\":71,\\"tagEnd\\":71,\\"nameEnd\\":69,\\"contentEnd\\":71}]"`;
 

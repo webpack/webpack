@@ -247,11 +247,12 @@ describe("tokenizeXml", () => {
 
 	it("reads a DOCTYPE with external IDs and an internal subset", () => {
 		const subset = `<!ENTITY e "]"><!ENTITY f ']'><!-- ] --><?pi ]?>`;
-		expect(xml(`a<!DOCTYPE r PUBLIC "p" 's' [${subset}] >`)).toEqual([
+		const source = fixture("xml", "tokenize-xml-reads-a-doctype-with-external-ids-and-an-internal-subset-2");
+		expect(xml(source)).toEqual([
 			["text", "a"],
 			[
 				"doctype",
-				`<!DOCTYPE r PUBLIC "p" 's' [${subset}] >`,
+				source.slice(1),
 				"r",
 				"p",
 				"s",
@@ -281,10 +282,11 @@ describe("tokenizeXml", () => {
 			["doctype", fixture("xml", "tokenize-xml-reads-a-malformed-doctype-leniently-3"), "r", null, "s", false, null],
 			["end", 14]
 		]);
-		for (const subset of [" x", ' "x', " 'x", " <!-- x", " <? x"]) {
-			expect(xml(`<!DOCTYPE r [${subset}`)).toEqual([
-				["doctype", `<!DOCTYPE r [${subset}`, "r", null, null, false, subset],
-				["end", 13 + subset.length]
+		for (let i = 4; i <= 8; i++) {
+			const source = fixture("xml", `tokenize-xml-reads-a-malformed-doctype-leniently-${i}`);
+			expect(xml(source)).toEqual([
+				["doctype", source, "r", null, null, false, source.slice(13)],
+				["end", source.length]
 			]);
 		}
 	});
@@ -319,7 +321,7 @@ describe("tokenizeXml", () => {
 		).toBe(source.length);
 		expect(texts).toEqual(["a", "b", "e", "f", "h", "j", "n", "o", "r", "u"]);
 		// With no callbacks at all, it still reads to the end.
-		expect(tokenizeXml(`${source}\0`)).toBe(source.length + 1);
+		expect(tokenizeXml(fixture("xml", "tokenize-xml-advances-over-markup-whose-callback-is-missing-2"))).toBe(source.length + 1);
 		/** @type {string[]} */
 		const tags = [];
 		tokenizeXml(source, 0, {

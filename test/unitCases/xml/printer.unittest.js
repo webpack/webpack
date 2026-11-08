@@ -6,15 +6,10 @@ const webpack = require("../../../");
 
 const { xmlMinify } = webpack.html;
 
-const SOURCE = `<?xml version="1.0" encoding="UTF-8"?>
-<!-- an editor's note -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">
-	<style>
-		.dot { fill: #ff0000; user-select: none; }
-	</style>
-	<circle class="dot" cx="5" cy="5" r="4" style="stroke: #00ff00" />
-</svg>
-`;
+const SOURCE = fixture(
+	"xml",
+	"xml-minify-should-minify-the-document-and-the-stylesheets-it-holds"
+);
 
 describe("xmlMinify", () => {
 	it("should minify the document and the stylesheets it holds", async () => {
@@ -45,8 +40,10 @@ describe("xmlMinify", () => {
 	it("should hand the stylesheets the CSS minifier's options", async () => {
 		const { code } = await xmlMinify(
 			{
-				"image.svg":
-					'<svg xmlns="http://www.w3.org/2000/svg"><style>a{width:96px}</style></svg>'
+				"image.svg": fixture(
+					"xml",
+					"xml-minify-should-hand-the-stylesheets-the-css-minifier-s-options"
+				)
 			},
 			undefined,
 			{ css: { convertLengthUnits: true } }
@@ -56,15 +53,19 @@ describe("xmlMinify", () => {
 
 	it("should read a Buffer as UTF-8", async () => {
 		const { code } = await xmlMinify({
-			"data.xml": Buffer.from("<a  title='café' >x</a >")
+			"data.xml": Buffer.from(
+				fixture("xml", "xml-minify-should-read-a-buffer-as-utf-8")
+			)
 		});
 		expect(code).toBe('<a title="café">x</a>');
 	});
 
 	it("should compact attribute spacing and optionally sort attributes", async () => {
 		const input = {
-			"image.svg":
-				'<svg  xmlns = "http://www.w3.org/2000/svg" viewBox = "0 0 1 1"><path z = "1" style = "fill: #ff0000" a = "2" /></svg>'
+			"image.svg": fixture(
+				"xml",
+				"xml-minify-should-compact-attribute-spacing-and-optionally-sort-attributes"
+			)
 		};
 		for (const sortAttributes of [undefined, false, true]) {
 			const { code } = await xmlMinify(input, undefined, { sortAttributes });
@@ -275,13 +276,15 @@ describe("SourceProcessor — XML printing", () => {
 				})
 			).code;
 		const svg = '<svg xmlns="http://www.w3.org/2000/svg">';
+		const name =
+			"source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer";
 		// An empty rule, and a prelude the input ran out in before its block.
-		for (const body of ["<style>a{}</style>", "<style>.cut"]) {
-			const minified = minify(`${svg}${body}</svg>`);
+		for (const suffix of ["", "-2"]) {
+			const minified = minify(fixture("xml", `${name}${suffix}`));
 			expect(minified).toBe(`${svg}<style/></svg>`);
 			expect(minify(minified)).toBe(minified);
 		}
-		expect(minify(`${svg}<style>a { b : c }</style></svg>`)).toBe(
+		expect(minify(fixture("xml", `${name}-3`))).toBe(
 			`${svg}<style>a{b:c}</style></svg>`
 		);
 	});
@@ -451,11 +454,6 @@ describe("SourceProcessor — XML under an internal DTD subset", () => {
 			.replace(/^\| *<!--[\s\S]*?-->$\n?/gm, "")
 			.trimEnd();
 
-	const chain = Array.from(
-		{ length: 18 },
-		(_, i) => `<!ENTITY e${i} "&e${i + 1};">`
-	).join("");
-
 	it.each([
 		// An entity whose replacement is markup builds elements, which no reference
 		// is rebuilt from, so the document prints as written.
@@ -477,7 +475,7 @@ describe("SourceProcessor — XML under an internal DTD subset", () => {
 		],
 		[
 			"markup past the depth searched",
-			`<!DOCTYPE d [${chain}<!ENTITY e18 "<x/>">]><d>&e0;</d>`
+			fixture("xml", "source-processor-xml-under-an-internal-dtd-subset-prints-markup-past-the-depth")
 		],
 		[
 			"text a chain expands to",

@@ -83,19 +83,19 @@ describe("XmlSyntax — parsing", () => {
 		expect(A.value(A.fieldNamed(Field.attributes, "value", A.child(0, next)))).toBe("next");
 	});
 
-	it.each(["", "\r\n"])("should preserve referenced carriage returns in an XML markup entity after %j", (lineEnd) => {
-		const source = `<!DOCTYPE root [<!ENTITY value "a&#13;b<child/>">]>${lineEnd}<root>&value;</root>`;
+	it.each([["", ""], ["\r\n", "-2"]])("should preserve referenced carriage returns in an XML markup entity after %j", (_lineEnd, suffix) => {
+		const source = fixture("xml", `xml-syntax-parsing-should-preserve-referenced-carriage-returns-in-an-xml-markup${suffix}`);
 		const document = parseHtmlRefs(source, 0, { xml: true });
 		expect(A.value(A.child(0, A.child(1, document)))).toBe("a\rb");
 	});
 
 	it.each([
-		["<![CDATA[a&#13;b]]>", "a\rb"],
-		["<!--a&#13;b-->", "a\nb"],
-		["<?target a&#13;b?>", "a\nb"]
-	])("should normalize entity line endings according to the token in %s", (markup, expected) => {
-		for (const lineEnd of ["", "\r\n"]) {
-			const source = `<!DOCTYPE root [<!ENTITY value "${markup}<child/>">]>${lineEnd}<root>&value;</root>`;
+		["<![CDATA[a&#13;b]]>", 1, "a\rb"],
+		["<!--a&#13;b-->", 3, "a\nb"],
+		["<?target a&#13;b?>", 5, "a\nb"]
+	])("should normalize entity line endings according to the token in %s", (_markup, first, expected) => {
+		for (const index of [first, first + 1]) {
+			const source = fixture("xml", `xml-syntax-parsing-should-normalize-entity-line-endings-according-to-the-token${index === 1 ? "" : `-${index}`}`);
 			const document = parseHtmlRefs(source, 0, { xml: true });
 			expect(A.value(A.child(0, A.child(1, document)))).toBe(expected);
 		}
@@ -484,16 +484,17 @@ describe("XmlSyntax — parsing", () => {
 			).children[1]
 		);
 		expect(recursive.children[0]).toMatchObject({ data: "&a;" });
-		let subset = '<!ENTITY l0 "0123456789">';
-		for (let i = 1; i < 10; i++) {
-			subset += `<!ENTITY l${i} "${`&l${i - 1};`.repeat(10)}">`;
-		}
 		const bomb = /** @type {MatElement} */ (
-			parseXml(`<!DOCTYPE r [${subset}]><r a="&l9;">&l9;</r>`).children[1]
+			parseXml(fixture("xml", "xml-syntax-parsing-should-leave-a-recursive-or-exponential-entity-unexpanded-2")).children[1]
 		);
 		const text = /** @type {MatText} */ (bomb.children[0]).data;
 		expect(text.length).toBeLessThan(2 << 20);
 		expect(text).toContain("&l");
+		// Inline, since the tree it builds would be an 18 MB snapshot.
+		let subset = '<!ENTITY l0 "0123456789">';
+		for (let i = 1; i < 10; i++) {
+			subset += `<!ENTITY l${i} "${`&l${i - 1};`.repeat(10)}">`;
+		}
 		const markupBomb = /** @type {MatElement} */ (
 			parseXml(
 				`<!DOCTYPE r [<!ENTITY m "<m/>">${subset.replace('"0123456789"', '"&m;"')}]><r>&l9;</r>`
