@@ -3719,6 +3719,14 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should write a regexp a sequence in a template ends with as the template's text", () => {
+		// A sequence running something first stays.
+		const source = fixture("javascript", "one-pass-minify-of-statement-sequences-should-write-a-regexp-a-sequence-in-a");
+		const { code: code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe("var n=0;console.log(\"2 /b/\",\"a/c/g\",`a${n++,/d/}`,n);");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
