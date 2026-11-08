@@ -884,11 +884,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{ compress: {toplevel: false,dead_code: false} },
 				"function f(f){if(0)x()}"
 			],
-			// A conditional whose test is known prints the branch it picks, after `0,` where a call would read a name or member differently, bare where an unread `delete` or `typeof` goes, but not what opens a statement or drops a comment kept.
+			// A conditional whose test is known prints the branch it picks, after `0,` where a call would read a name or member differently, bare where an unread `delete` or `typeof` goes, an object an arrow returns in parentheses, but not what drops a comment kept.
 			[
 				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-110"),
 				{},
-				"function f(o){g(o),g(2),o.x,(0,o.f)(),(0,o.f)``,u,g(o.f),g(1?o:h(/*! c */2));return()=>1?{}:1}"
+				"function f(o){g(o),g(2),o.x,(0,o.f)(),(0,o.f)``,u,g(o.f),g(1?o:h(/*! c */2));return()=>({})}"
 			],
 			// So does `&&`, `||` or `??` whose left side is known.
 			[
@@ -6888,7 +6888,19 @@ describe("one-pass minify of unused values and side effects, fourth round", () =
 			// An empty function written in place and called gives `undefined` once its arguments ran; a spread or a default stays.
 			[fixture("javascript", "one-pass-unused-d-6"), "var u=(a,void 0),v=(b(),void 0);f((c,void 0)),w=(()=>{})(...d),x=function(a={}){}(e);"],
 			// `if(x)return y;return x` is `return x&&y`, but where `y` binds looser, the name differs, or a call in place prints.
-			[fixture("javascript", "one-pass-unused-d-7"), "function a(x){return x&&42}function b(x){return x&&1}function c(x){return x&&(g(),y)}function d(x){return x?p||q:x}function e(x){return x?42:y}function k(x){return x&&h}function m(x){return x&&void 0}function n(x){return x?function(){g()}():x}"]
+			[fixture("javascript", "one-pass-unused-d-7"), "function a(x){return x&&42}function b(x){return x&&1}function c(x){return x&&(g(),y)}function d(x){return x?p||q:x}function e(x){return x?42:y}function k(x){return x&&h}function m(x){return x&&void 0}function n(x){return x?function(){g()}():x}"],
+			// A known test's branch opening as an object, function or class prints bare, in parentheses first in a statement or an arrow's body; nested in one, it stays.
+			[fixture("javascript", "one-pass-unused-d-8"), "({}).foo=2,x={}.foo,v=function(){return this}(),f(()=>({})),f(()=>(1?{}:1).x),y=1,{}.foo=2,z=class{}.w;"],
+			// `instanceof` of an object made in place, or a primitive, and a constructor every edition defines runs nothing; a name, a `__proto__`, a later built-in or one no constructor may run code or throw.
+			[fixture("javascript", "one-pass-unused-d-9"), "x instanceof Object,{__proto__:p}instanceof Object,[]instanceof Map,[]instanceof Math,[g()]instanceof Object;function f(Object){[]instanceof Object}"],
+			// A function returning `eval` read, not calling it, prints it in place, as no `this` binds; a direct `eval` stays in its function.
+			[fixture("javascript", "one-pass-unused-d-10"), "(0,eval)(x),y=eval,z=(()=>eval(x))();"],
+			// A loop's head runs its first and last parts for their effects alone.
+			[fixture("javascript", "one-pass-unused-d-11"), "for(a&&b!==c||d();e();f&&g!==h||i())j();for(k();e();l,m())j();"],
+			// What `||` runs last nobody reads where it goes unread, but right of `&&`; there a swap drops a `!`, and `??` takes no place beside `||`.
+			[fixture("javascript", "one-pass-unused-d-12"), "u()||a&&b!==c||d(),u()&&(!a||b===c)&&d(),u()||(a!==b||c!==d)&&z(),u()||x==null&&y(),x??y();"],
+			// A chain of one operator left of the other, nobody reading it, negates whole where that is shorter.
+			[fixture("javascript", "one-pass-unused-d-13"), "(a||b||c||d||e)&&f(),a&&b&&c||d()||e(),a&&b!==c&&d||e(),!a&&x&&!c||f(),x=!a&&!b&&!c||f();"]
 		];
 		for (const [source, expected] of cases) {
 			expect(minifyOnePass(source, { compress: { ecma: 2020 }, ecma: 2020, mangle: false }).code).toBe(expected);
