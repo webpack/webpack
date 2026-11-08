@@ -26,8 +26,8 @@ module.exports = {
 				expect(requests.sort()).toEqual(
 					[
 						["./changing", "./index.js", "./stable"],
-						["./changing"],
-						["./added", "./changing"]
+						["./changing", "./stable"],
+						["./added", "./changing", "./stable"]
 					][Number(currentWatchStep.step)]
 				);
 			});
