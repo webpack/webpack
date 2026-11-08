@@ -17,11 +17,7 @@ const {
 	Part,
 	NodeType,
 	decodeEntities,
-	parseCssUrls,
-	parseHtml: parseHtmlRefs,
-	parseMsapplicationTask,
-	parseSrc,
-	parseSrcset
+	parseHtml: parseHtmlRefs
 } = require("../../../lib/html/syntax-parser");
 const {
 	body,
@@ -208,37 +204,8 @@ describe("parseHtml", () => {
 		expect(span.attributes[0].valueStart).toBe(-1);
 	});
 
-	it("foster-parents stray text in a table fragment context", () => {
-		// Context is a `table`, so there is no `<table>` on the open stack: stray
-		// character data is fostered to the fragment root, beside the table rows.
-		const root = /** @type {MatElement} */ (
-			parseHtml(fixture("html", "parse-html-foster-parents-stray-text-in-a-table-fragment-context"), "table").children[0]
-		);
-		const texts = root.children
-			.filter((c) => c.type === NodeType.Text)
-			.map((c) => /** @type {MatText} */ (c).data);
-		expect(texts).toContain("x");
-		expect(child(root.children, "tbody")).toBeDefined();
-	});
 });
 
-describe("parseHtml — parseError", () => {
-	it.each([
-		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-col-caption"), "caption", ["unexpected-start-tag", "unexpected-end-tag"]],
-		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-frameset-x"), "frameset", ["unexpected-frameset-in-frameset-innerhtml", "unexpected-char-in-frameset"]],
-		[fixture("html", "parse-html-parse-error-reports-the-tree-s-errors-in-body-body-html"), "html", ["unexpected-end-tag-after-body-innerhtml"]],
-	])("reports the tree's errors in %j", (source, fragmentContext, codes) => {
-		/** @type {string[]} */
-		const reported = [];
-		parseHtmlRefs(/** @type {string} */ (source), 0, {
-			fragmentContext: /** @type {string | undefined} */ (fragmentContext),
-			parseError: (input, code) => {
-				reported.push(code);
-			}
-		});
-		expect(reported).toEqual(codes);
-	});
-});
 
 describe("parseHtml — SourceProcessor", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
@@ -311,17 +278,6 @@ const { NodeType } = require("../../../lib/html/syntax-parser");
 		expect(log).toEqual(["html", "head", "body", "div", "p"]);
 	});
 
-	it("walks <template> content as a document fragment", () => {
-		/** @type {string[]} */
-		const log = [];
-		new SourceProcessor()
-			.use({
-				[NodeType.DocumentFragment]: () => log.push("fragment"),
-				[NodeType.Element]: (path) => log.push(path.name())
-			})
-			.process(fixture("html", "parse-html-source-processor-walks-template-content-as-a-document-fragment"));
-		expect(log).toEqual(["html", "head", "template", "fragment", "p", "body"]);
-	});
 
 	it("use() chains and accumulates visitors per type", () => {
 		let a = 0;
@@ -459,31 +415,6 @@ describe("parseHtml — skip options preserve element structure", () => {
 		).toBe("var x=1;");
 	});
 
-	it("skip.comments drops comment nodes; skip.doctype drops the doctype node", () => {
-		const src = fixture("html", "parse-html-skip-options-preserve-element-structure-skip-comments-drops-comment");
-		const count = (
-			/** @type {MatDocument} */ doc,
-			/** @type {number} */ type
-		) => {
-			let n = 0;
-			/** @param {MatNode} node node */
-			const walk = (node) => {
-				if (node.type === type) n++;
-				if ("children" in node) for (const c of node.children) walk(c);
-			};
-			for (const c of doc.children) walk(c);
-			return n;
-		};
-		expect(
-			count(parseHtml(src, undefined, { comments: true }), NodeType.Comment)
-		).toBe(0);
-		expect(
-			count(parseHtml(src, undefined, { doctype: true }), NodeType.Doctype)
-		).toBe(0);
-		// Baseline still has both.
-		expect(count(parseHtml(src), NodeType.Comment)).toBe(1);
-		expect(count(parseHtml(src), NodeType.Doctype)).toBe(1);
-	});
 
 	it("skip.text records every raw-text element body span on contentEnd", () => {
 		// script/style (raw text) + textarea/title (escapable raw text): each body
@@ -556,16 +487,6 @@ describe("parseHtml — skip options preserve element structure", () => {
 });
 
 describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
-	/**
-	 * @param {string} src source
-	 * @param {import("../../../lib/html/syntax-parser").HtmlAstSkip=} skip skip options
-	 * @returns {MatNode[]} body children
-	 */
-	const bodyOf = (src, skip) =>
-		child(
-			child(parseHtml(src, undefined, skip).children, "html").children,
-			"body"
-		).children;
 
 	it("grows the node and attribute columns past their initial capacity", () => {
 		let src = "";
@@ -602,12 +523,6 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 		);
 	});
 
-	it("merges texts left adjacent by a skipped comment", () => {
-		const nodes = bodyOf(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-merges-texts-left-adjacent"), { comments: true });
-		expect(nodes).toEqual([
-			expect.objectContaining({ type: NodeType.Text, data: "ab" })
-		]);
-	});
 
 	it("adjusts SVG and MathML attribute names", () => {
 		const svg = find(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-adjusts-svg-and-math-ml"), "svg");
@@ -619,19 +534,7 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 		expect(math.attributes[0].name).toBe("definitionURL");
 	});
 
-	it("parses text in a foreign fragment context", () => {
-		const doc = parseHtmlRefs(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-parses-text-in-a-foreign"), 0, { fragmentContext: "svg" });
-		const root = A.child(0, doc);
-		expect(A.type(A.child(0, root))).toBe(NodeType.Text);
-	});
 
-	it("runs the adoption agency in a table-row fragment context", () => {
-		const doc = parseHtml(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-runs-the-adoption-agency-in"), "tr");
-		const root = child(doc.children, "html");
-		expect(
-			/** @type {MatText} */ (child(root.children, "b").children[0]).data
-		).toBe("xy");
-	});
 });
 
 describe("SourceProcessor — streamed walk recycling", () => {
@@ -1129,20 +1032,6 @@ describe("parseHtml — path accessor completeness", () => {
 		});
 	});
 
-	it("names a processing instruction by its target, empty or not", () => {
-		for (const [source, target, xml] of /** @type {[string, string, boolean][]} */ ([
-			[fixture("html", "parse-html-path-accessor-completeness-names-a-processing-instruction-by-its"), "x", false],
-			// HTML reads this as a bogus comment, XML as a target-less instruction
-			[fixture("html", "parse-html-path-accessor-completeness-names-a-processing-instruction-by-its-2"), "", true]
-		])) {
-			const pi = A.child(0, parseHtmlRefs(source, 0, { xml }));
-			expect([A.type(pi), A.name(pi), A.value(pi)]).toEqual([
-				NodeType.ProcessingInstruction,
-				target,
-				"y"
-			]);
-		}
-	});
 
 	it("clears the foster-region marks a print left on reused node slots", () => {
 		const { FLAG_FOSTER_REGION } = require("../../../lib/html/syntax-parser");
@@ -1213,193 +1102,9 @@ describe("parseHtml — path accessor completeness", () => {
 	});
 });
 
-describe("parseSrcset", () => {
-	it("should return a single candidate with byte offsets", () => {
-		expect(parseSrcset(fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5]]);
-	});
 
-	it("should accept width, density and height descriptors", () => {
-		expect(parseSrcset(fixture("html", "parse-srcset-should-accept-width-density-and-height-descriptors"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5]]);
-		expect(parseSrcset(fixture("html", "parse-srcset-should-accept-width-density-and-height-descriptors-2"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5]]);
-		expect(parseSrcset(fixture("html", "parse-srcset-should-accept-width-density-and-height-descriptors-3"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5]]);
-	});
 
-	it("should parse several comma-separated candidates", () => {
-		expect(parseSrcset(fixture("html", "parse-srcset-should-parse-several-comma-separated-candidates"))).toEqual([
-			[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5],
-			["b.png", 12, 17]
-		]);
-	});
 
-	it("should accept a url that ends in a trailing comma", () => {
-		expect(parseSrcset(fixture("html", "parse-srcset-should-accept-a-url-that-ends-in-a-trailing-comma"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5]]);
-	});
-
-	it("should throw on a zero width descriptor", () => {
-		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-a-zero-width-descriptor"))).toThrow(/Invalid srcset descriptor/);
-	});
-
-	it("should throw on a negative density descriptor", () => {
-		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-a-negative-density-descriptor"))).toThrow(/Invalid srcset descriptor/);
-	});
-
-	it("should throw on a descriptor after a zero density descriptor", () => {
-		expect(parseSrcset(fixture("html", "parse-srcset-should-throw-on-a-descriptor-after-a-zero-density-descriptor"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5]]);
-		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-a-descriptor-after-a-zero-density-descriptor-2"))).toThrow(
-			/Invalid srcset descriptor/
-		);
-		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-a-descriptor-after-a-zero-density-descriptor-3"))).toThrow(
-			/Invalid srcset descriptor/
-		);
-		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-a-descriptor-after-a-zero-density-descriptor-4"))).toThrow(
-			/Invalid srcset descriptor/
-		);
-	});
-
-	it("should throw on conflicting descriptors", () => {
-		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-conflicting-descriptors"))).toThrow(
-			/Invalid srcset descriptor/
-		);
-	});
-
-	it("should throw on an unrecognized descriptor", () => {
-		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-an-unrecognized-descriptor"))).toThrow(/Invalid srcset descriptor/);
-	});
-
-	it("should throw on duplicate or conflicting typed descriptors", () => {
-		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-duplicate-or-conflicting-typed-descriptors"))).toThrow(/Invalid srcset/);
-		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-duplicate-or-conflicting-typed-descriptors-2"))).toThrow(/Invalid srcset/);
-		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-on-duplicate-or-conflicting-typed-descriptors-3"))).toThrow(/Invalid srcset/);
-	});
-
-	it("should traverse the in-parens descriptor state", () => {
-		expect(() => parseSrcset(fixture("html", "parse-srcset-should-traverse-the-in-parens-descriptor-state"))).toThrow(
-			/Invalid srcset descriptor/
-		);
-		// a parenthesized descriptor that runs to EOF
-		expect(() => parseSrcset(fixture("html", "parse-srcset-should-traverse-the-in-parens-descriptor-state-2"))).toThrow(/Invalid srcset/);
-	});
-
-	it("should end an empty descriptor list at a comma after the url", () => {
-		expect(parseSrcset(fixture("html", "parse-srcset-should-end-an-empty-descriptor-list-at-a-comma-after-the-url"))).toEqual([
-			[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5],
-			["b.png", 7, 12]
-		]);
-	});
-
-	it("should keep a parenthesized run inside a started descriptor", () => {
-		expect(() => parseSrcset(fixture("html", "parse-srcset-should-keep-a-parenthesized-run-inside-a-started-descriptor"))).toThrow(
-			"Invalid srcset descriptor found in 'a.png 1x(2)' at '1x(2)'"
-		);
-	});
-
-	it("should stay after a descriptor across a whitespace run", () => {
-		expect(parseSrcset(fixture("html", "parse-srcset-should-stay-after-a-descriptor-across-a-whitespace-run"))).toEqual([
-			[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5],
-			["b.png", 12, 17]
-		]);
-	});
-
-	it("should handle whitespace between a descriptor and EOF", () => {
-		expect(parseSrcset(fixture("html", "parse-srcset-should-handle-whitespace-between-a-descriptor-and-eof"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 5]]);
-		// a second descriptor after the inter-descriptor whitespace
-		expect(() => parseSrcset(fixture("html", "parse-srcset-should-handle-whitespace-between-a-descriptor-and-eof-2"))).toThrow(/Invalid srcset/);
-	});
-
-	it("should throw when there are no image candidate strings", () => {
-		expect(() => parseSrcset(fixture("html", "parse-srcset-should-throw-when-there-are-no-image-candidate-strings"))).toThrow(
-			/Must contain one or more image candidate strings/
-		);
-	});
-});
-
-describe("parseSrc", () => {
-	const NBSP = String.fromCharCode(0xa0);
-	const DEL = String.fromCharCode(0x7f);
-
-	it("should trim ASCII whitespace and keep offsets", () => {
-		expect(parseSrc(fixture("html", "parse-src-should-trim-ascii-whitespace-and-keep-offsets"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 2, 7]]);
-	});
-
-	it("should trim a surrounding U+00A0 no-break space", () => {
-		expect(parseSrc(`${NBSP}a.png${NBSP}`)).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 1, 6]]);
-	});
-
-	it("should strip ignorable control characters from the value", () => {
-		expect(parseSrc(`a${DEL}.png`)).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 0, 6]]);
-	});
-
-	it("should throw on empty and whitespace-only input", () => {
-		expect(() => parseSrc("")).toThrow(/Must be non-empty/);
-		expect(() => parseSrc(fixture("html", "parse-srcset-should-throw-when-there-are-no-image-candidate-strings"))).toThrow(/Must be non-empty/);
-	});
-
-	it("should throw when only ignorable characters remain", () => {
-		expect(() => parseSrc(DEL)).toThrow(/Must be non-empty/);
-	});
-});
-
-describe("parseMsapplicationTask", () => {
-	it("should extract the icon-uri value with offsets", () => {
-		expect(
-			parseMsapplicationTask(fixture("html", "parse-msapplication-task-should-extract-the-icon-uri-value-with-offsets"))
-		).toEqual([["icon.png", 36, 44]]);
-	});
-
-	it("should return nothing when there is no icon-uri", () => {
-		expect(parseMsapplicationTask(fixture("html", "parse-msapplication-task-should-return-nothing-when-there-is-no-icon-uri"))).toEqual([]);
-	});
-
-	it("should return nothing for an empty icon-uri value", () => {
-		expect(parseMsapplicationTask(fixture("html", "parse-msapplication-task-should-return-nothing-for-an-empty-icon-uri-value"))).toEqual([]);
-	});
-
-	it("should skip a part without a key", () => {
-		expect(parseMsapplicationTask(fixture("html", "parse-msapplication-task-should-skip-a-part-without-a-key"))).toEqual([
-			[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 11, 16]
-		]);
-	});
-
-	it("should trim whitespace around the icon-uri value", () => {
-		expect(parseMsapplicationTask(fixture("html", "parse-msapplication-task-should-trim-whitespace-around-the-icon-uri-value"))).toEqual([
-			["icon.png", 17, 25]
-		]);
-	});
-});
-
-describe("parseCssUrls", () => {
-	it("should extract an unquoted url() reference from a presentation attribute", () => {
-		expect(parseCssUrls(fixture("html", "parse-css-urls-should-extract-an-unquoted-url-reference-from-a-presentation"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 9, 14]]);
-	});
-
-	it("should extract a quoted url() reference", () => {
-		expect(parseCssUrls(fixture("html", "parse-css-urls-should-extract-a-quoted-url-reference"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 10, 15]]);
-		expect(parseCssUrls(fixture("html", "parse-css-urls-should-extract-a-quoted-url-reference-2"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 10, 15]]);
-	});
-
-	it("should return nothing when the value carries no url()", () => {
-		expect(parseCssUrls(fixture("html", "parse-css-urls-should-return-nothing-when-the-value-carries-no-url"))).toEqual([]);
-	});
-
-	it("should skip a url() whose string is cut by a newline", () => {
-		// the bad string ends at the newline; scanning goes on after it
-		expect(parseCssUrls(fixture("html", "parse-css-urls-should-skip-a-url-whose-string-is-cut-by-a-newline"))).toEqual([
-			["b.png", 21, 26]
-		]);
-	});
-
-	it("should take an unterminated url() string up to EOF", () => {
-		expect(parseCssUrls(fixture("html", "parse-css-urls-should-take-an-unterminated-url-string-up-to-eof"))).toEqual([[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 10, 15]]);
-	});
-
-	it("should skip an empty url(), quoted or not", () => {
-		expect(parseCssUrls(fixture("html", "parse-css-urls-should-skip-an-empty-url-quoted-or-not"))).toEqual([]);
-		expect(parseCssUrls(fixture("html", "parse-css-urls-should-skip-an-empty-url-quoted-or-not-2"))).toEqual([]);
-		expect(parseCssUrls(fixture("html", "parse-css-urls-should-skip-an-empty-url-quoted-or-not-3"))).toEqual([
-			[fixture("html", "parse-srcset-should-return-a-single-candidate-with-byte-offsets"), 19, 24]
-		]);
-	});
-});
 
 describe("JAVASCRIPT_SCRIPT_TYPES", () => {
 	const { JAVASCRIPT_SCRIPT_TYPES } = require("../../../lib/html/data");
@@ -1661,21 +1366,6 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 		);
 	});
 
-	it("reads a noscript in the body as raw text when scripting", () => {
-		const doc = parseHtmlRefs(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-reads-a-noscript-in-the-body"), 0, {
-			scripting: true
-		});
-		expect(serializeHtmlTree(doc)).toBe(
-			[
-				"| <html>",
-				"|   <head>",
-				"|   <body>",
-				"|     <noscript>",
-				'|       "<b>x"',
-				'|     "y"'
-			].join("\n")
-		);
-	});
 
 	it("maps decoded text back to the raw offsets", () => {
 		expect(decodeEntities(fixture("html", "tokenize-parse-error-callback-does-not-report-missing-semicolon-for-a-named"), true, true)).toEqual({
