@@ -24,6 +24,11 @@ module.exports = {
 					);
 				});
 				compiler.hooks.done.tap("CheckWorkerLogging", (stats) => {
+					for (const module of stats.compilation.modules) {
+						if (module.identifier().includes("threads|")) {
+							throw new Error("threads must not change module identifiers");
+						}
+					}
 					// a cached rebuild does not run the loader, so it logs nothing
 					if (!built) return;
 					const logging = stats.toJson({ logging: "verbose" }).logging || {};

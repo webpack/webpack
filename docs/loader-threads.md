@@ -119,7 +119,7 @@ While a loader job runs, the worker may send `rpc` messages:
 
 ## Cache
 
-`NormalModule.identifier()` distinguishes `threads: true` from the main-thread path, so the two never share a module cache entry. `getUnsafeCacheData()` carries the flag too. Enabling `threads` on a rule therefore changes that module's identifier, and with it deterministic module ids and long-term cache entries.
+`threads: true` does not change `NormalModule.identifier()`: identity stays `type|request|layer`, so deterministic module ids, stats and long-term cache keys are unaffected by the scheduling flag. The flag travels as module data instead (`getUnsafeCacheData()`, serialization), so a restored module keeps its execution mode. The persistent module cache is keyed by the identifier and invalidated by `cache.buildDependencies` like every other option: register the config (webpack-cli does) so switching `threads` invalidates cached modules.
 
 ## Files
 
