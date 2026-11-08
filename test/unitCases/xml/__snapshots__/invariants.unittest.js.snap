@@ -12,6 +12,10 @@ exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-ren
 
 exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses 2`] = `""`;
 
+exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"xml":true,"mode":"minify","print":"processAsync","renderEmbeddedSource":{"name":"offers","async":true}} 1`] = `"<svg><style>a { b: c }</style></svg>"`;
+
+exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"xml":true,"mode":"minify","print":"processAsync","renderEmbeddedSource":{"name":"offers","async":true}} 2`] = `""`;
+
 exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<svg><style>a { b: c }</style></svg>"`;
 
 exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `""`;

@@ -1,8 +1,31 @@
 [
-	{ "mode": "minify", "renderEmbeddedSource": "offers" },
 	{
 		"mode": "minify",
-		"renderEmbeddedSource": { "name": "builtin", "options": { "svg": true } }
+		"renderEmbeddedSource": "offers"
 	},
-	{ "mode": "minify", "transforms": { "comments": { "regexp": "k\\d" } } }
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "builtin",
+			"options": {
+				"svg": true
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": {
+				"regexp": "k\\d"
+			}
+		}
+	},
+	{
+		"print": "cssMinify",
+		"svg": true,
+		"renderEmbeddedSource": {
+			"name": "offers",
+			"async": true
+		}
+	}
 ]

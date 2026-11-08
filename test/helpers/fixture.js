@@ -60,6 +60,12 @@ const fixture = (lang, name) => {
  */
 
 /**
+ * An asynchronous printer a print set's `"print"` names: `processAsync` or the
+ * language's minimizer, given the source as its one asset.
+ * @typedef {(source: string, options: EXPECTED_ANY) => Promise<{ code: string, warnings?: unknown[], errors?: unknown[], extractedComments?: string[] }>} AsyncPrinter
+ */
+
+/**
  * @typedef {object} FixtureEntry
  * @property {string} name the fixture directory
  * @property {string} source its input
@@ -80,8 +86,9 @@ const readList = (file) =>
  * Every fixture of a language with what the runner asks of it. Its
  * `options.json` lists option sets to print it under as well; one marked
  * `"behavior": true` (marker left out of what the printer gets) also runs.
- * A print set names a renderer and a RegExp in JSON (see `printOptions`), and
- * `parse.json` lists `ParseRun`s, each read by `readRun`.
+ * A print set names a renderer and a RegExp in JSON (see `printOptions`) and,
+ * with `"print"`, an asynchronous printer (see `readPrint`); `parse.json`
+ * lists `ParseRun`s, each read by `readRun`.
  * @param {FixtureLanguage} lang the language
  * @returns {FixtureEntry[]} one entry per fixture, by name
  */
@@ -281,11 +288,56 @@ const printOptions = (given) => {
 	return { options, log: records ? log : undefined };
 };
 
+/** @type {["warnings", "errors", "extractedComments"]} */
+const REPORTED = ["warnings", "errors", "extractedComments"];
+
+/**
+ * What a print set with `"print"` snapshots: the code the named printer
+ * resolves to (or what it rejects with), then what it reported beside the
+ * code where it reported anything, then a recording renderer's offers.
+ * @param {Record<string, AsyncPrinter>} printers the language's asynchronous printers
+ * @param {string} source the fixture's input
+ * @param {PrintOptionSet & { print?: string }} set the print set, `print` included
+ * @returns {Promise<string[]>} the values to snapshot, in order
+ */
+const readPrint = async (printers, source, set) => {
+	const { print, ...rest } = set;
+	if (
+		print === undefined ||
+		!Object.prototype.hasOwnProperty.call(printers, print)
+	) {
+		throw new Error(
+			`unknown print "${print}", not one of ${Object.keys(printers).join(", ")}`
+		);
+	}
+	const { options, log } = printOptions(rest);
+	/** @type {string[]} */
+	const values = [];
+	try {
+		const result = await printers[print](source, options);
+		values.push(result.code);
+		/** @type {string[]} */
+		const reported = [];
+		for (const key of REPORTED) {
+			const list = result[key];
+			if (list !== undefined && list.length > 0) {
+				reported.push(`${key}: ${list.map(String).join(" | ")}`);
+			}
+		}
+		if (reported.length > 0) values.push(reported.join("\n"));
+	} catch (err) {
+		values.push(`throws: ${/** @type {Error} */ (err).message}`);
+	}
+	if (log !== undefined) values.push(log.join(" "));
+	return values.map(snapshotText);
+};
+
 module.exports = {
 	answerOf,
 	fixture,
 	fixtures,
 	printOptions,
+	readPrint,
 	readRun,
 	snapshotText,
 	unexplained,

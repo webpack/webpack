@@ -82,7 +82,7 @@ Directories come first, in alphabetical order, then the individual files worth t
 - **Purpose**: Stores sample/mock data used in tests.
 - **Usage**: Helps in creating consistent test cases with predefined inputs.
 - **Syntax fixtures**: `fixtures/<css|html|xml|javascript>/<name>/index.<ext>` is one input to `unitCases/<lang>/invariants.unittest.js`, which snapshots its tokens, parse, errors and prints. Beside it, read by `helpers/fixture.js`:
-  - `options.json` — print option sets. `"renderEmbeddedSource": "<name>"` (or `{ "name", "options" }`) picks a renderer from `helpers/embeddedRenderers.js`, and `{ "regexp": "<source>", "flags"?: "<flags>" }` stands for a RegExp anywhere in a set.
+  - `options.json` — print option sets. `"renderEmbeddedSource": "<name>"` (or `{ "name", "options"?, "async"? }`, `async` answering through a Promise) picks a renderer from `helpers/embeddedRenderers.js`, and `{ "regexp": "<source>", "flags"?: "<flags>" }` stands for a RegExp anywhere in a set. `"print": "<name>"` awaits an asynchronous printer instead of `process`: `processAsync` or the language's minimizer (`cssMinify`, `htmlMinify`, `xmlMinify`, `jsMinify`); its snapshot holds the code (or `throws: …`), then any warnings, errors and extracted comments, then a recording renderer's offers.
   - `parse.json` — extra calls, each `{ "entry"?, "options"?, "visit"? }`: the public entry point by name (the document parse where absent), its JSON options, and whether its callbacks are logged as one more snapshot entry. Each runner's `ENTRIES` lists its names; an unknown name or key throws.
   - `expected.json` — known differences the invariants may report.
 

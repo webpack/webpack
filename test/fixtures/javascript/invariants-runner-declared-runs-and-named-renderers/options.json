@@ -3,6 +3,13 @@
 		"mode": "minify",
 		"compress": {},
 		"mangle": {},
-		"keep_fnames": { "regexp": "^foo$" }
+		"keep_fnames": {
+			"regexp": "^foo$"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"compress": {},
+		"mangle": {}
 	}
 ]

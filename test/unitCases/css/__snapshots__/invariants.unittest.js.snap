@@ -39844,6 +39844,10 @@ exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-ren
 
 exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify"} 1`] = `"a{background:url(\\"data:image/svg+xml,<svg ><g ></g></svg>\\")}"`;
 
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"print":"cssMinify","svg":true,"renderEmbeddedSource":{"name":"offers","async":true}} 1`] = `"a{background:url(data:image/svg+xml,<svg><g/></svg>)}"`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"print":"cssMinify","svg":true,"renderEmbeddedSource":{"name":"offers","async":true}} 2`] = `"svg:\\"<svg ><g ></g></svg>\\""`;
+
 exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,12] colon[12,13] function[13,17] string[17,58] right-parenthesis[58,59] comment[59,65] right-curly-bracket[65,66] end=66"`;
 
 exports[`CSS syntax — invariants parser parses 1`] = `"[]"`;

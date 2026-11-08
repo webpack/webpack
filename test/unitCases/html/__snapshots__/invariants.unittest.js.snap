@@ -2318,6 +2318,8 @@ exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-re
 
 exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify"} 1`] = `"<p style=\\"color: red\\">x</p><style>a { b: c }</style>"`;
 
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"print":"htmlMinify","renderEmbeddedSource":{"name":"answers","options":{"css":"b{c:d}"},"async":true}} 1`] = `"<p style=b{c:d}>x</p><style>b{c:d}</style>"`;
+
 exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers tokenizes 1`] = `"attr[3,8|10,20]\\" open[0,22|1,2] text[22,23] close[23,27|25,26] open[27,34|28,33] text[34,44] close[44,52|46,51] comment[52,63|56,60] end=63"`;
 
 exports[`HTML syntax — invariants output-html-with-a-java-script-entry-should-wrap-the-entry-before-the-first parses 1`] = `

@@ -3,10 +3,12 @@
 /** @typedef {import("../../lib/html/syntax-parser").EmbeddedSourceRenderer} EmbeddedSourceRenderer */
 /** @typedef {import("../../lib/html/builtinEmbeddedRenderer").BuiltinEmbeddedRendererOptions} BuiltinEmbeddedRendererOptions */
 
+/** @typedef {import("../../lib/html/htmlMinify").AsyncEmbeddedSourceRenderer} AsyncEmbeddedSourceRenderer */
+
 /**
  * A renderer a fixture's `options.json` names, since JSON holds no function.
  * @typedef {object} NamedRenderer
- * @property {(options: BuiltinEmbeddedRendererOptions, log: string[]) => EmbeddedSourceRenderer} make builds it from the JSON options the name came with, writing what it is offered to `log` where it records
+ * @property {(options: EXPECTED_ANY, log: string[]) => EmbeddedSourceRenderer} make builds it from the JSON options the name came with, writing what it is offered to `log` where it records
  * @property {boolean=} records whether the print's snapshot also holds `log`
  */
 
@@ -29,6 +31,22 @@ const RENDERERS = {
 	"as-written": { make: () => (source) => source },
 	// Answers every body with nothing.
 	empty: { make: () => () => "" },
+	// Answers what `options` gives for an offer's `type/as` or else its
+	// `type`, a string or `{ code, warnings }`, and declines the rest.
+	answers: {
+		make: (options) => (source, info) => {
+			const key = `${info.type}/${info.as}`;
+			return Object.prototype.hasOwnProperty.call(options, key)
+				? options[key]
+				: options[info.type];
+		}
+	},
+	// Throws on every body offered, as a failing minifier does.
+	throws: {
+		make: () => () => {
+			throw new Error("renderer throws");
+		}
+	},
 	// Declines every body and records each offer's type, `as` and source.
 	offers: {
 		make: (options, log) => (source, info) => {
@@ -41,21 +59,37 @@ const RENDERERS = {
 	}
 };
 
+/** @type {Set<string>} */
+const SPEC_KEYS = new Set(["name", "options", "async"]);
+
 /**
- * @param {string | { name: string, options?: BuiltinEmbeddedRendererOptions }} given a renderer's name, or its name with its options
+ * @param {string | { name: string, options?: BuiltinEmbeddedRendererOptions, async?: boolean }} given a renderer's name, or its name with its options and, under `async`, its answer wrapped in a Promise
  * @param {string[]} log where a recording renderer writes its offers
- * @returns {{ render: EmbeddedSourceRenderer, records: boolean }} the renderer, and whether its log is snapshotted
+ * @returns {{ render: AsyncEmbeddedSourceRenderer, records: boolean }} the renderer, and whether its log is snapshotted
  */
 const namedRenderer = (given, log) => {
-	const { name, options = {} } =
-		typeof given === "string" ? { name: given } : given;
+	const spec = typeof given === "string" ? { name: given } : given;
+	for (const key of Object.keys(spec)) {
+		if (!SPEC_KEYS.has(key)) {
+			throw new Error(`unknown renderEmbeddedSource key "${key}"`);
+		}
+	}
+	const { name, options = {} } = spec;
 	if (!Object.prototype.hasOwnProperty.call(RENDERERS, name)) {
 		throw new Error(
 			`unknown renderEmbeddedSource "${name}", not one of ${Object.keys(RENDERERS).join(", ")}`
 		);
 	}
 	const { make, records = false } = RENDERERS[name];
-	return { render: make(options, log), records };
+	const render = make(options, log);
+	if (spec.async !== true) return { render, records };
+	return {
+		render: (source, info) =>
+			new Promise((resolve) => {
+				resolve(render(source, info));
+			}),
+		records
+	};
 };
 
 module.exports = { RENDERERS, namedRenderer };

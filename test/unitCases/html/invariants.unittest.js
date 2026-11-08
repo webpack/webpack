@@ -12,6 +12,7 @@ const {
 	answerOf,
 	fixtures,
 	printOptions,
+	readPrint,
 	readRun,
 	snapshotText,
 	unexplained,
@@ -24,6 +25,7 @@ const syntax = require("../../helpers/syntaxInvariants/html");
 
 /** @typedef {import("../../../lib/html/syntax-parser").HtmlTokenCallbacks} HtmlTokenCallbacks */
 /** @typedef {import("../../helpers/fixture").ParseEntry} ParseEntry */
+/** @typedef {import("../../helpers/fixture").AsyncPrinter} AsyncPrinter */
 
 /**
  * @param {string} kind the token kind, or the severity of a parse error
@@ -190,6 +192,18 @@ const ENTRIES = {
 	}
 };
 
+
+/**
+ * The asynchronous printers a print set's `"print"` may name.
+ * @type {Record<string, AsyncPrinter>}
+ */
+const PRINTERS = {
+	processAsync: (source, options) =>
+		new SourceProcessor().processAsync(source, options),
+	htmlMinify: (source, options) =>
+		require("../../../lib/html/htmlMinify")({ "index.html": source }, undefined, options)
+};
+
 // Every input the HTML tests read is a fixture, and each one is read, printed
 // and held to the parser's and printer's own relations; a new fixture needs no
 // code.
@@ -216,7 +230,13 @@ describe("HTML syntax — invariants", () => {
 
 			it.each(options.map((one) => [JSON.stringify(one), one]))(
 				"prints %s",
-				(_title, one) => {
+				async (_title, one) => {
+					if (/** @type {{ print?: string }} */ (one).print !== undefined) {
+						for (const value of await readPrint(PRINTERS, source, one)) {
+							expect(value).toMatchSnapshot();
+						}
+						return;
+					}
 					const { options: given, log } = printOptions(one);
 					expect(
 						snapshotText(
