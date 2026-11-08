@@ -1,6 +1,7 @@
 "use strict";
 
 const path = require("path");
+const { decodeUrlPath } = require("../harness/runner/RunnerHelpers");
 
 /** @typedef {{ terminate(): Promise<number> }} LiveWorker */
 
@@ -37,9 +38,12 @@ const createFakeWorker = (
 				? resource
 				: path.resolve(
 						outputDirectory,
-						isBlobURL
-							? /** @type {URL} */ (options.originalURL).pathname.slice(6)
-							: /** @type {URL} */ (resource).pathname.slice(6)
+						// the pathname is a URL path, so its escapes are decoded
+						decodeUrlPath(
+							isBlobURL
+								? /** @type {URL} */ (options.originalURL).pathname.slice(6)
+								: /** @type {URL} */ (resource).pathname.slice(6)
+						)
 					);
 
 			const workerBootstrap = `
