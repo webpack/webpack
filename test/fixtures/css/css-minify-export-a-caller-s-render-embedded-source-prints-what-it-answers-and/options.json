@@ -1,0 +1,25 @@
+[
+	{
+		"print": "cssMinify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"print": "cssMinify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"svg": "<svg id=x/>"
+			}
+		}
+	},
+	{
+		"print": "cssMinify",
+		"svg": true,
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"print": "cssMinify",
+		"svg": true,
+		"renderEmbeddedSource": "decline"
+	}
+]

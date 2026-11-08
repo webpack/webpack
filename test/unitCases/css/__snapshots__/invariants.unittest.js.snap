@@ -208,6 +208,18 @@ exports[`CSS syntax — invariants css-minify-export-a-caller-s-render-embedded-
 
 exports[`CSS syntax — invariants css-minify-export-a-caller-s-render-embedded-source-prints-what-it-answers-and prints {"mode":"minify"} 1`] = `".a{background:url(data:image/svg+xml,<svg></svg>)}.b{background:url(\\"data:text/css,a { color : red }\\")}"`;
 
+exports[`CSS syntax — invariants css-minify-export-a-caller-s-render-embedded-source-prints-what-it-answers-and prints {"print":"cssMinify","renderEmbeddedSource":"offers"} 1`] = `".a{background:url(data:image/svg+xml,<svg></svg>)}.b{background:url(\\"data:text/css,a { color : red }\\")}"`;
+
+exports[`CSS syntax — invariants css-minify-export-a-caller-s-render-embedded-source-prints-what-it-answers-and prints {"print":"cssMinify","renderEmbeddedSource":"offers"} 2`] = `"svg:\\"<svg></svg>\\" css:\\"a { color : red }\\""`;
+
+exports[`CSS syntax — invariants css-minify-export-a-caller-s-render-embedded-source-prints-what-it-answers-and prints {"print":"cssMinify","renderEmbeddedSource":{"name":"answers","options":{"svg":"<svg id=x/>"}}} 1`] = `".a{background:url(data:image/svg+xml,<svg\\\\ id=x/>)}.b{background:url(\\"data:text/css,a { color : red }\\")}"`;
+
+exports[`CSS syntax — invariants css-minify-export-a-caller-s-render-embedded-source-prints-what-it-answers-and prints {"print":"cssMinify","svg":true,"renderEmbeddedSource":"decline"} 1`] = `".a{background:url(data:image/svg+xml,<svg/>)}.b{background:url(\\"data:text/css,a { color : red }\\")}"`;
+
+exports[`CSS syntax — invariants css-minify-export-a-caller-s-render-embedded-source-prints-what-it-answers-and prints {"print":"cssMinify","svg":true,"renderEmbeddedSource":"offers"} 1`] = `".a{background:url(data:image/svg+xml,<svg/>)}.b{background:url(\\"data:text/css,a { color : red }\\")}"`;
+
+exports[`CSS syntax — invariants css-minify-export-a-caller-s-render-embedded-source-prints-what-it-answers-and prints {"print":"cssMinify","svg":true,"renderEmbeddedSource":"offers"} 2`] = `"svg:\\"<svg></svg>\\" css:\\"a { color : red }\\""`;
+
 exports[`CSS syntax — invariants css-minify-export-a-caller-s-render-embedded-source-prints-what-it-answers-and tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,13] colon[13,14] function[14,18] string[18,50] right-parenthesis[50,51] right-curly-bracket[51,52] delim[52,53] ident[53,54] left-curly-bracket[54,55] ident[55,65] colon[65,66] function[66,70] string[70,103] right-parenthesis[103,104] right-curly-bracket[104,105] end=105"`;
 
 exports[`CSS syntax — invariants css-minify-export-closes-a-custom-property-the-input-ran-out-in-before-a-banner parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"--x\\"],\\":\\",[\\"string\\",\\"foo\\"]]]]"`;
@@ -232,6 +244,8 @@ exports[`CSS syntax — invariants css-minify-export-declares-utf-8-for-a-non-as
 
 exports[`CSS syntax — invariants css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies prints {"mode":"minify"} 1`] = `"a{background:url(data:image/svg+xml,<svg>é</svg>)}"`;
 
+exports[`CSS syntax — invariants css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies prints {"print":"cssMinify","svg":true} 1`] = `"@charset \\"UTF-8\\";a{background:url(data:image/svg+xml,<svg>é</svg>)}"`;
+
 exports[`CSS syntax — invariants css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies tokenizes 1`] = `"at-keyword[0,8] whitespace[8,9] string[9,16] semicolon[16,17] ident[17,18] left-curly-bracket[18,19] ident[19,29] colon[29,30] function[30,34] string[34,67] right-parenthesis[67,68] right-curly-bracket[68,69] end=69"`;
 
 exports[`CSS syntax — invariants css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies-2 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"url\\",[\\"string\\",\\"data:image/svg+xml,<svg>x</svg>\\"]]]]]"`;
@@ -239,6 +253,14 @@ exports[`CSS syntax — invariants css-minify-export-declares-utf-8-for-a-non-as
 exports[`CSS syntax — invariants css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies-2 parses 2`] = `""`;
 
 exports[`CSS syntax — invariants css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies-2 prints {"mode":"minify"} 1`] = `"a{background:url(data:image/svg+xml,<svg>x</svg>)}"`;
+
+exports[`CSS syntax — invariants css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies-2 prints {"print":"cssMinify","renderEmbeddedSource":"offers"} 1`] = `"a{background:url(data:image/svg+xml,<svg>x</svg>)}"`;
+
+exports[`CSS syntax — invariants css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies-2 prints {"print":"cssMinify","renderEmbeddedSource":"offers"} 2`] = `"svg:\\"<svg>x</svg>\\""`;
+
+exports[`CSS syntax — invariants css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies-2 prints {"print":"cssMinify","renderEmbeddedSource":{"name":"answers","options":{"svg":"<svg>y</svg>"},"async":true}} 1`] = `"a{background:url(data:image/svg+xml,<svg>y</svg>)}"`;
+
+exports[`CSS syntax — invariants css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies-2 prints {"print":"cssMinify","renderEmbeddedSource":{"name":"answers","options":{"svg":"<svg>é</svg>"},"async":true}} 1`] = `"@charset \\"UTF-8\\";a{background:url(data:image/svg+xml,<svg>é</svg>)}"`;
 
 exports[`CSS syntax — invariants css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies-2 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,12] colon[12,13] function[13,17] string[17,50] right-parenthesis[50,51] right-curly-bracket[51,52] end=52"`;
 
@@ -272,6 +294,10 @@ exports[`CSS syntax — invariants css-minify-export-keeps-the-comments-some-nam
 
 exports[`CSS syntax — invariants css-minify-export-keeps-the-comments-some-names-while-extracting-others prints {"mode":"minify"} 1`] = `"/*! keep */a{b:c}d{e:f}"`;
 
+exports[`CSS syntax — invariants css-minify-export-keeps-the-comments-some-names-while-extracting-others prints {"print":"cssMinify","extractComments":{"regexp":"foo"},"comments":"some"} 1`] = `"/*! keep */a{b:c}d{e:f}"`;
+
+exports[`CSS syntax — invariants css-minify-export-keeps-the-comments-some-names-while-extracting-others prints {"print":"cssMinify","extractComments":{"regexp":"foo"},"comments":"some"} 2`] = `"extractedComments: /* foo */"`;
+
 exports[`CSS syntax — invariants css-minify-export-keeps-the-comments-some-names-while-extracting-others tokenizes 1`] = `"comment[0,11] ident[11,12] left-curly-bracket[12,13] ident[13,14] colon[14,15] ident[15,16] right-curly-bracket[16,17] comment[17,26] ident[26,27] left-curly-bracket[27,28] ident[28,29] colon[29,30] ident[30,31] right-curly-bracket[31,32] comment[32,42] end=42"`;
 
 exports[`CSS syntax — invariants css-minify-export-keeps-the-space-before-an-svg-data-url-it-minifies parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"ident\\",\\"red\\"],\\" \\",[\\"function\\",\\"url\\",[\\"string\\",\\"data:image/svg+xml,<svg></svg>\\"]]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"ident\\",\\"no-repeat\\"],\\" \\",[\\"url\\",\\"data:image/svg+xml,<svg></svg>\\"]]]]"`;
@@ -279,6 +305,8 @@ exports[`CSS syntax — invariants css-minify-export-keeps-the-space-before-an-s
 exports[`CSS syntax — invariants css-minify-export-keeps-the-space-before-an-svg-data-url-it-minifies parses 2`] = `""`;
 
 exports[`CSS syntax — invariants css-minify-export-keeps-the-space-before-an-svg-data-url-it-minifies prints {"mode":"minify"} 1`] = `".a{background:red url(data:image/svg+xml,<svg></svg>)}.b{background:no-repeat url(data:image/svg+xml,<svg></svg>)}"`;
+
+exports[`CSS syntax — invariants css-minify-export-keeps-the-space-before-an-svg-data-url-it-minifies prints {"print":"cssMinify","svg":true} 1`] = `".a{background:red url(data:image/svg+xml,<svg/>)}.b{background:no-repeat url(data:image/svg+xml,<svg/>)}"`;
 
 exports[`CSS syntax — invariants css-minify-export-keeps-the-space-before-an-svg-data-url-it-minifies tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,13] colon[13,14] ident[14,17] whitespace[17,18] function[18,22] string[22,54] right-parenthesis[54,55] right-curly-bracket[55,56] delim[56,57] ident[57,58] left-curly-bracket[58,59] ident[59,69] colon[69,70] ident[70,79] whitespace[79,80] url[80,115|84,114] right-curly-bracket[115,116] end=116"`;
 
@@ -401,6 +429,10 @@ exports[`CSS syntax — invariants css-syntax-5-parsing-algorithms-parse-a-rule-
 exports[`CSS syntax — invariants css-syntax-5-parsing-algorithms-parse-a-rule-reads-a-block-less-at-rule-without-a prints {"mode":"minify"} 1`] = `"@import x;"`;
 
 exports[`CSS syntax — invariants css-syntax-5-parsing-algorithms-parse-a-rule-reads-a-block-less-at-rule-without-a tokenizes 1`] = `"at-keyword[0,7] whitespace[7,8] ident[8,9] semicolon[9,10] end=10"`;
+
+exports[`CSS syntax — invariants css-syntax-5-parsing-algorithms-parse-a-rule-returns-a-syntax-error-for-a-block parses {"entry":"parseARule"} 1`] = `"undefined"`;
+
+exports[`CSS syntax — invariants css-syntax-5-parsing-algorithms-parse-a-rule-returns-a-syntax-error-for-a-block parses {"entry":"parseARule"} 2`] = `"error[6,6]:eof-in-qualified-rule"`;
 
 exports[`CSS syntax — invariants css-syntax-5-parsing-algorithms-parse-a-rule-returns-a-syntax-error-for-a-block parses 1`] = `"[]"`;
 
@@ -793,6 +825,10 @@ exports[`CSS syntax — invariants css-syntax-a-signed-number-printed-after-a-nu
 
 exports[`CSS syntax — invariants css-syntax-a-signed-number-printed-after-a-number-drops-the-space-where-the-sign-2 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,8] colon[8,9] number[9,10] whitespace[10,11] dimension[11,16|14,16] right-curly-bracket[16,17] end=17"`;
 
+exports[`CSS syntax — invariants css-syntax-a-signed-number-printed-after-a-number-drops-the-space-where-the-sign-3 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"number\\",\\"0\\",0,\\"integer\\"],[\\"dimension\\",\\"-2\\",-2,\\"integer\\",\\"px\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-a-signed-number-printed-after-a-number-drops-the-space-where-the-sign-3 parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-a-signed-number-printed-after-a-number-drops-the-space-where-the-sign-3 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-a-signed-number-printed-after-a-number-drops-the-space-where-the-sign-3 parses 2`] = `"error[5,5]:eof-in-qualified-rule"`;
@@ -800,6 +836,10 @@ exports[`CSS syntax — invariants css-syntax-a-signed-number-printed-after-a-nu
 exports[`CSS syntax — invariants css-syntax-a-signed-number-printed-after-a-number-drops-the-space-where-the-sign-3 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-a-signed-number-printed-after-a-number-drops-the-space-where-the-sign-3 tokenizes 1`] = `"number[0,1] dimension[1,5|3,5] end=5"`;
+
+exports[`CSS syntax — invariants css-syntax-a-signed-number-printed-after-a-number-drops-the-space-where-the-sign-4 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"number\\",\\"0\\",0,\\"integer\\"],[\\"dimension\\",\\"-.5\\",-0.5,\\"number\\",\\"px\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-a-signed-number-printed-after-a-number-drops-the-space-where-the-sign-4 parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-a-signed-number-printed-after-a-number-drops-the-space-where-the-sign-4 parses 1`] = `"[]"`;
 
@@ -816,6 +856,10 @@ exports[`CSS syntax — invariants css-syntax-a-signed-number-printed-after-a-nu
 exports[`CSS syntax — invariants css-syntax-a-signed-number-printed-after-a-number-keeps-the-space-where-the-sign prints {"mode":"minify"} 1`] = `"a{margin:0 -a}"`;
 
 exports[`CSS syntax — invariants css-syntax-a-signed-number-printed-after-a-number-keeps-the-space-where-the-sign tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,8] colon[8,9] number[9,10] whitespace[10,11] ident[11,13] right-curly-bracket[13,14] end=14"`;
+
+exports[`CSS syntax — invariants css-syntax-a-signed-number-printed-after-a-number-keeps-the-space-where-the-sign-2 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"dimension\\",\\"0\\",0,\\"integer\\",\\"-a\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-a-signed-number-printed-after-a-number-keeps-the-space-where-the-sign-2 parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-a-signed-number-printed-after-a-number-keeps-the-space-where-the-sign-2 parses 1`] = `"[]"`;
 
@@ -1025,6 +1069,10 @@ exports[`CSS syntax — invariants css-syntax-a-string-the-source-never-closed-r
 
 exports[`CSS syntax — invariants css-syntax-a-string-the-source-never-closed-reads-one-ended-by-two-of-them tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,3] colon[3,4] string[4,7] whitespace[7,8] string[8,11] right-curly-bracket[11,12] end=12"`;
 
+exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-nothing-at-end-of-input-inside-a parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"string\\",\\"ab\\\\\\"\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-nothing-at-end-of-input-inside-a parses {"entry":"parseAListOfComponentValues"} 2`] = `"error[5,5]:eof-in-string"`;
+
 exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-nothing-at-end-of-input-inside-a parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-nothing-at-end-of-input-inside-a parses 2`] = `"error[5,5]:eof-in-string error[5,5]:eof-in-qualified-rule"`;
@@ -1032,6 +1080,10 @@ exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-nam
 exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-nothing-at-end-of-input-inside-a prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-nothing-at-end-of-input-inside-a tokenizes 1`] = `"string[0,5] end=5"`;
+
+exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-the-replacement-character-at-end parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"ident\\",\\"ab�\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-the-replacement-character-at-end parses {"entry":"parseAListOfComponentValues"} 2`] = `"error[2,3]:eof-in-escape"`;
 
 exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-the-replacement-character-at-end parses 1`] = `"[]"`;
 
@@ -1041,6 +1093,10 @@ exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-nam
 
 exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-the-replacement-character-at-end tokenizes 1`] = `"ident[0,3] end=3"`;
 
+exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-the-replacement-character-at-end-2 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"hash\\",\\"ab�\\",\\"id\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-the-replacement-character-at-end-2 parses {"entry":"parseAListOfComponentValues"} 2`] = `"error[3,4]:eof-in-escape"`;
+
 exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-the-replacement-character-at-end-2 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-the-replacement-character-at-end-2 parses 2`] = `"error[3,4]:eof-in-escape error[4,4]:eof-in-qualified-rule"`;
@@ -1048,6 +1104,10 @@ exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-nam
 exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-the-replacement-character-at-end-2 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-the-replacement-character-at-end-2 tokenizes 1`] = `"hash[0,4]# end=4"`;
+
+exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-the-replacement-character-at-end-3 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"at-keyword\\",\\"ab�\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-the-replacement-character-at-end-3 parses {"entry":"parseAListOfComponentValues"} 2`] = `"error[3,4]:eof-in-escape"`;
 
 exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-names-the-replacement-character-at-end-3 parses 1`] = `"[[\\"at-rule\\",\\"ab�\\",[],null]]"`;
 
@@ -1073,6 +1133,10 @@ exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-pri
 
 exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-prints-what-the-escape-names-rather-2 tokenizes 1`] = `"at-keyword[0,11] end=11"`;
 
+exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-reads-an-escape-before-a-continuation parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"string\\",\\"Ab\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-reads-an-escape-before-a-continuation parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-reads-an-escape-before-a-continuation parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-reads-an-escape-before-a-continuation parses 2`] = `"error[8,8]:eof-in-qualified-rule"`;
@@ -1080,6 +1144,10 @@ exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-rea
 exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-reads-an-escape-before-a-continuation prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-reads-an-escape-before-a-continuation tokenizes 1`] = `"string[0,8] end=8"`;
+
+exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-reads-an-escape-before-a-continuation-2 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"string\\",\\"a\\\\\\\\b\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-reads-an-escape-before-a-continuation-2 parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-an-escape-the-input-ran-out-of-reads-an-escape-before-a-continuation-2 parses 1`] = `"[]"`;
 
@@ -2147,6 +2215,14 @@ exports[`CSS syntax — invariants css-syntax-block-streaming-streams-a-block-pa
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one tokenizes 1`] = `"at-keyword[0,6] whitespace[6,7] ident[7,13] left-curly-bracket[13,14] delim[14,15] ident[15,17] delim[17,18] ident[18,20] colon[20,21] ident[21,26] left-curly-bracket[26,27] ident[27,32] colon[32,33] ident[33,36] semicolon[36,37] ident[37,43] colon[43,44] dimension[44,47|45,47] right-curly-bracket[47,48] delim[48,49] ident[49,51] delim[51,52] ident[52,54] colon[54,55] ident[55,60] left-curly-bracket[60,61] ident[61,66] colon[66,67] ident[67,70] semicolon[70,71] ident[71,77] colon[77,78] dimension[78,81|79,81] right-curly-bracket[81,82] delim[82,83] ident[83,85] delim[85,86] ident[86,88] colon[88,89] ident[89,94] left-curly-bracket[94,95] ident[95,100] colon[100,101] ident[101,104] semicolon[104,105] ident[105,111] colon[111,112] dimension[112,115|113,115] right-curly-bracket[115,116] delim[116,117] ident[117,119] delim[119,120] ident[120,122] colon[122,123] ident[123,128] left-curly-bracket[128,129] ident[129,134] colon[134,135] ident[135,138] semicolon[138,139] ident[139,145] colon[145,146] dimension[146,149|147,149] right-curly-bracket[149,150] right-curly-bracket[150,151] end=151"`;
 
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type parses {"entry":"parseAComponentValue"} 1`] = `"[\\"number\\",\\"123\\",123,\\"integer\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type parses {"entry":"parseADeclaration"} 1`] = `"undefined"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type parses {"entry":"parseADeclaration"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type parses 2`] = `"error[3,3]:eof-in-qualified-rule"`;
@@ -2154,6 +2230,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-cla
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type tokenizes 1`] = `"number[0,3] end=3"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-2 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"percentage\\",\\"50\\",50,\\"integer\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-2 parses {"entry":"parseAComponentValue"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-2 parses 1`] = `"[]"`;
 
@@ -2163,6 +2243,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-cla
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-2 tokenizes 1`] = `"percentage[0,3] end=3"`;
 
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-3 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"dimension\\",\\"10\\",10,\\"integer\\",\\"px\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-3 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-3 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-3 parses 2`] = `"error[4,4]:eof-in-qualified-rule"`;
@@ -2170,6 +2254,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-cla
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-3 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-3 tokenizes 1`] = `"dimension[0,4|2,4] end=4"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-4 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"hash\\",\\"id\\",\\"id\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-4 parses {"entry":"parseAComponentValue"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-4 parses 1`] = `"[]"`;
 
@@ -2179,6 +2267,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-cla
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-4 tokenizes 1`] = `"hash[0,3]# end=3"`;
 
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-5 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"string\\",\\"ab\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-5 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-5 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-5 parses 2`] = `"error[4,4]:eof-in-qualified-rule"`;
@@ -2186,6 +2278,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-cla
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-5 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-5 tokenizes 1`] = `"string[0,4] end=4"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-6 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"url\\",\\"a.png\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-6 parses {"entry":"parseAComponentValue"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-6 parses 1`] = `"[]"`;
 
@@ -2195,6 +2291,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-cla
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-6 tokenizes 1`] = `"url[0,10|4,9] end=10"`;
 
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-7 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"function\\",\\"foo\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-7 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-7 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-7 parses 2`] = `"error[6,6]:eof-in-qualified-rule"`;
@@ -2202,6 +2302,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-cla
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-7 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-7 tokenizes 1`] = `"function[0,4] number[4,5] right-parenthesis[5,6] end=6"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-8 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"[]\\",[\\"ident\\",\\"a\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-8 parses {"entry":"parseAComponentValue"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-8 parses 1`] = `"[]"`;
 
@@ -2211,6 +2315,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-cla
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-8 tokenizes 1`] = `"left-square-bracket[0,1] ident[1,2] right-square-bracket[2,3] end=3"`;
 
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-9 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"()\\",[\\"ident\\",\\"a\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-9 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-9 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-9 parses 2`] = `"error[3,3]:eof-in-qualified-rule"`;
@@ -2218,6 +2326,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-cla
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-9 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-9 tokenizes 1`] = `"left-parenthesis[0,1] ident[1,2] right-parenthesis[2,3] end=3"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-10 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"{}\\",[\\"ident\\",\\"a\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-10 parses {"entry":"parseAComponentValue"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-10 parses 1`] = `"[[\\"qualified rule\\",[],[[\\"ident\\",\\"a\\"]]]]"`;
 
@@ -2227,6 +2339,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-cla
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-10 tokenizes 1`] = `"left-curly-bracket[0,1] ident[1,2] right-curly-bracket[2,3] end=3"`;
 
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-11 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"ident\\",\\"foo\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-11 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-11 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-11 parses 2`] = `"error[3,3]:eof-in-qualified-rule"`;
@@ -2234,6 +2350,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-cla
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-11 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-11 tokenizes 1`] = `"ident[0,3] end=3"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-12 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"at-keyword\\",\\"media\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-12 parses {"entry":"parseAComponentValue"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-12 parses 1`] = `"[[\\"at-rule\\",\\"media\\",[],null]]"`;
 
@@ -2243,6 +2363,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-cla
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-12 tokenizes 1`] = `"at-keyword[0,6] end=6"`;
 
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-13 parses {"entry":"parseAComponentValue"} 1`] = `"\\"+\\""`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-13 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-13 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-13 parses 2`] = `"error[1,1]:eof-in-qualified-rule"`;
@@ -2250,6 +2374,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-cla
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-13 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-13 tokenizes 1`] = `"delim[0,1] end=1"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-14 parses {"entry":"parseAComponentValue"} 1`] = `"\\":\\""`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-14 parses {"entry":"parseAComponentValue"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-14 parses 1`] = `"[]"`;
 
@@ -2259,6 +2387,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-cla
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-14 tokenizes 1`] = `"colon[0,1] end=1"`;
 
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-15 parses {"entry":"parseAComponentValue"} 1`] = `"\\",\\""`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-15 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-15 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-15 parses 2`] = `"error[1,1]:eof-in-qualified-rule"`;
@@ -2266,6 +2398,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-cla
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-15 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-15 tokenizes 1`] = `"comma[0,1] end=1"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-16 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"number\\",\\".5\\",0.5,\\"number\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-16 parses {"entry":"parseAComponentValue"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-16 parses 1`] = `"[]"`;
 
@@ -2283,6 +2419,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-dec
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-hash-id-vs-unrestricted-and tokenizes 1`] = `"hash[0,4] end=4"`;
 
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-numeric-token-metadata parses {"entry":"parseAComponentValue"} 1`] = `"[\\"number\\",\\"+1.5\\",1.5,\\"number\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-numeric-token-metadata parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-numeric-token-metadata parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-numeric-token-metadata parses 2`] = `"error[4,4]:eof-in-qualified-rule"`;
@@ -2290,6 +2430,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-dec
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-numeric-token-metadata prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-numeric-token-metadata tokenizes 1`] = `"number[0,4] end=4"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-numeric-token-metadata-2 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"number\\",\\"1e3\\",1000,\\"number\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-numeric-token-metadata-2 parses {"entry":"parseAComponentValue"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-numeric-token-metadata-2 parses 1`] = `"[]"`;
 
@@ -2299,6 +2443,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-dec
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-numeric-token-metadata-2 tokenizes 1`] = `"number[0,3] end=3"`;
 
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-numeric-token-metadata-3 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"number\\",\\"-2\\",-2,\\"integer\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-numeric-token-metadata-3 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-numeric-token-metadata-3 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-numeric-token-metadata-3 parses 2`] = `"error[2,2]:eof-in-qualified-rule"`;
@@ -2306,6 +2454,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-dec
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-numeric-token-metadata-3 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-numeric-token-metadata-3 tokenizes 1`] = `"number[0,2] end=2"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-percentage-and-dimension parses {"entry":"parseAComponentValue"} 1`] = `"[\\"percentage\\",\\"-50\\",-50,\\"integer\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-percentage-and-dimension parses {"entry":"parseAComponentValue"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-percentage-and-dimension parses 1`] = `"[]"`;
 
@@ -2315,6 +2467,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-dec
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-percentage-and-dimension tokenizes 1`] = `"percentage[0,4] end=4"`;
 
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-percentage-and-dimension-2 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"dimension\\",\\"1.5\\",1.5,\\"number\\",\\"EM\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-percentage-and-dimension-2 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-percentage-and-dimension-2 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-percentage-and-dimension-2 parses 2`] = `"error[5,5]:eof-in-qualified-rule"`;
@@ -2322,6 +2478,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-dec
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-percentage-and-dimension-2 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-decodes-percentage-and-dimension-2 tokenizes 1`] = `"dimension[0,5|3,5] end=5"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-exposes-function-name-and-nested parses {"entry":"parseAComponentValue"} 1`] = `"[\\"function\\",\\"calc\\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\" \\",\\"+\\",\\" \\",[\\"number\\",\\"2\\",2,\\"integer\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-exposes-function-name-and-nested parses {"entry":"parseAComponentValue"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-exposes-function-name-and-nested parses 1`] = `"[]"`;
 
@@ -2331,6 +2491,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-exp
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-exposes-function-name-and-nested tokenizes 1`] = `"function[0,5] number[5,6] whitespace[6,7] delim[7,8] whitespace[8,9] number[9,10] right-parenthesis[10,11] end=11"`;
 
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-bad-string-and-bad-url parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"error\\",\\"bad-string\\"],\\" \\",[\\"ident\\",\\"b\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-bad-string-and-bad-url parses {"entry":"parseAListOfComponentValues"} 2`] = `"warning[2,3]:newline-in-string"`;
+
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-bad-string-and-bad-url parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-bad-string-and-bad-url parses 2`] = `"warning[2,3]:newline-in-string error[4,4]:eof-in-qualified-rule"`;
@@ -2338,6 +2502,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-pre
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-bad-string-and-bad-url prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-bad-string-and-bad-url tokenizes 1`] = `"bad-string[0,2] whitespace[2,3] ident[3,4] end=4"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-bad-string-and-bad-url-2 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"error\\",\\"bad-url\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-bad-string-and-bad-url-2 parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-bad-string-and-bad-url-2 parses 1`] = `"[]"`;
 
@@ -2347,6 +2515,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-pre
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-bad-string-and-bad-url-2 tokenizes 1`] = `"bad-url[0,8] end=8"`;
 
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-stray-closers-cdo-and-cdc-as parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"error\\",\\")\\"],[\\"error\\",\\"]\\"],[\\"error\\",\\"}\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-stray-closers-cdo-and-cdc-as parses {"entry":"parseAListOfComponentValues"} 2`] = `"warning[2,3]:unexpected-right-curly-bracket"`;
+
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-stray-closers-cdo-and-cdc-as parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-stray-closers-cdo-and-cdc-as parses 2`] = `"warning[2,3]:unexpected-right-curly-bracket error[3,3]:eof-in-qualified-rule"`;
@@ -2354,6 +2526,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-pre
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-stray-closers-cdo-and-cdc-as prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-stray-closers-cdo-and-cdc-as tokenizes 1`] = `"right-parenthesis[0,1] right-square-bracket[1,2] right-curly-bracket[2,3] end=3"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-stray-closers-cdo-and-cdc-as-2 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[\\"<!--\\",\\"-->\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-stray-closers-cdo-and-cdc-as-2 parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-stray-closers-cdo-and-cdc-as-2 parses 1`] = `"[]"`;
 
@@ -2363,6 +2539,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-pre
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-preserves-stray-closers-cdo-and-cdc-as-2 tokenizes 1`] = `"cdo[0,4] cdc[4,7] end=7"`;
 
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as parses {"entry":"parseAComponentValue"} 1`] = `"[\\"function\\",\\"urm\\",[\\"ident\\",\\"a\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as parses 2`] = `"error[30,30]:eof-in-qualified-rule"`;
@@ -2370,6 +2550,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-rea
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as tokenizes 1`] = `"function[0,28] ident[28,29] right-parenthesis[29,30] end=30"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-2 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"url\\",\\"a.png\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-2 parses {"entry":"parseAComponentValue"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-2 parses 1`] = `"[]"`;
 
@@ -2379,6 +2563,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-rea
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-2 tokenizes 1`] = `"url[0,10|4,9] end=10"`;
 
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-3 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"url\\",\\"a.png\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-3 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-3 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-3 parses 2`] = `"error[13,13]:eof-in-qualified-rule"`;
@@ -2386,6 +2574,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-rea
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-3 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-3 tokenizes 1`] = `"url[0,13|7,12] end=13"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-4 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"url\\",\\"a.png\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-4 parses {"entry":"parseAComponentValue"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-4 parses 1`] = `"[]"`;
 
@@ -2395,6 +2587,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-rea
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-4 tokenizes 1`] = `"url[0,16|10,15] end=16"`;
 
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-5 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"url\\",\\"a.png\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-5 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-5 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-5 parses 2`] = `"error[28,28]:eof-in-qualified-rule"`;
@@ -2403,6 +2599,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-rea
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-5 tokenizes 1`] = `"url[0,28|22,27] end=28"`;
 
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-6 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"url\\",\\"a.png\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-6 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-6 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-6 parses 2`] = `"error[31,31]:eof-in-qualified-rule"`;
@@ -2410,6 +2610,10 @@ exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-rea
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-6 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-6 tokenizes 1`] = `"url[0,31|25,30] end=31"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-7 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"url\\",\\"a.png\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-7 parses {"entry":"parseAComponentValue"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as-7 parses 1`] = `"[]"`;
 
@@ -3077,6 +3281,8 @@ exports[`CSS syntax — invariants css-syntax-minify-a-browserslist-selection-th
 exports[`CSS syntax — invariants css-syntax-minify-a-browserslist-selection-the-tables-do-not-all-answer-keeps prints {"mode":"minify"} 1`] = `"a{user-select:none;color:lab(50% 10 10);display:-webkit-flex;display:flex}::placeholder{color:red}@-webkit-keyframes k{}@keyframes k{}"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-a-browserslist-selection-the-tables-do-not-all-answer-keeps tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,9] colon[9,10] ident[10,22] semicolon[22,23] ident[23,30] colon[30,31] ident[31,35] semicolon[35,36] ident[36,47] colon[47,48] ident[48,52] semicolon[52,53] ident[53,58] colon[58,59] function[59,63] percentage[63,66] whitespace[66,67] number[67,69] whitespace[69,70] number[70,72] right-parenthesis[72,73] right-curly-bracket[73,74] colon[74,75] colon[75,76] ident[76,87] left-curly-bracket[87,88] ident[88,93] colon[93,94] ident[94,97] right-curly-bracket[97,98] at-keyword[98,116] whitespace[116,117] ident[117,118] left-curly-bracket[118,119] right-curly-bracket[119,120] at-keyword[120,130] whitespace[130,131] ident[131,132] left-curly-bracket[132,133] right-curly-bracket[133,134] end=134"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-call-or-a-sub-rule-named-with-an-escape-fires-a-comment parses {"entry":"SourceProcessor"} 1`] = `"Comment[0,5] /Comment QualifiedRule[5,11] Ident[5,6] /Ident Declaration(c)[7,10] Ident[9,10] /Ident /Declaration /QualifiedRule"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-a-call-or-a-sub-rule-named-with-an-escape-fires-a-comment parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]]"`;
 
@@ -7751,6 +7957,8 @@ exports[`CSS syntax — invariants css-syntax-minify-declare-charset-keeps-it-in
 
 exports[`CSS syntax — invariants css-syntax-minify-declare-charset-keeps-it-in-the-declarations-of-a-style prints {"mode":"minify"} 1`] = `""`;
 
+exports[`CSS syntax — invariants css-syntax-minify-declare-charset-keeps-it-in-the-declarations-of-a-style prints {"print":"cssMinify","as":"block-contents"} 1`] = `"content:\\"\\\\1F600\\""`;
+
 exports[`CSS syntax — invariants css-syntax-minify-declare-charset-keeps-it-in-the-declarations-of-a-style tokenizes 1`] = `"ident[0,7] colon[7,8] string[8,16] end=16"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-declare-charset-writes-a-content-01-f600-with-the-character parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"content\\"],\\":\\",[\\"string\\",\\"😀\\"]]]]"`;
@@ -7786,6 +7994,8 @@ exports[`CSS syntax — invariants css-syntax-minify-declare-charset-writes-a-co
 exports[`CSS syntax — invariants css-syntax-minify-declare-charset-writes-a-content-1-f600-with-the-character prints {"mode":"minify","declareCharset":true} 1`] = `"@charset \\"UTF-8\\";a{content:\\"😀\\"}"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-declare-charset-writes-a-content-1-f600-with-the-character prints {"mode":"minify"} 1`] = `"a{content:\\"\\\\1F600\\"}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-declare-charset-writes-a-content-1-f600-with-the-character prints {"print":"cssMinify"} 1`] = `"@charset \\"UTF-8\\";a{content:\\"😀\\"}"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-declare-charset-writes-a-content-1-f600-with-the-character tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,9] colon[9,10] string[10,18] right-curly-bracket[18,19] end=19"`;
 
@@ -9094,6 +9304,22 @@ exports[`CSS syntax — invariants css-syntax-minify-input-left-open-invalid-or-
 exports[`CSS syntax — invariants css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-78 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-78 tokenizes 1`] = `"delim[0,1] end=1"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-79 parses {"entry":"parseACommaSeparatedListOfComponentValues"} 1`] = `"[]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-79 parses {"entry":"parseACommaSeparatedListOfComponentValues"} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-79 parses {"entry":"parseAComponentValue"} 1`] = `"undefined"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-79 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-79 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-79 parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-79 parses {"entry":"parseARule"} 1`] = `"undefined"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-79 parses {"entry":"parseARule"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-minify-input-left-open-invalid-or-unusual-printed-as-it-reads-prints-79 parses 1`] = `"[]"`;
 
@@ -10746,6 +10972,12 @@ exports[`CSS syntax — invariants css-syntax-minify-one-stylesheet-reaching-eve
 
 exports[`CSS syntax — invariants css-syntax-minify-one-stylesheet-reaching-every-embedded-site-offers-each parses 2`] = `""`;
 
+exports[`CSS syntax — invariants css-syntax-minify-one-stylesheet-reaching-every-embedded-site-offers-each prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"@import url(\\"data:text/css,  .inner  {  color : red  ;  }  \\");.svg{background:url(\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'>   <rect/>   </svg>\\")}.html{background:url(\\"data:text/html,<p>   x   </p><p>   y   \\")}.json{background:url('data:application/json,{ \\"a\\" :  1 , \\"b\\" : [ 1 , 2 ] }')}.javascript{background:url(\\"data:text/javascript,var   a   =   1  ;\\")}.svg-base64{background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnPiAgIDxyZWN0Lz4gICA8L3N2Zz4=)}.css-base64{background:url(data:text/css;base64,ICAuaW5uZXIgIHsgIGNvbG9yIDogcmVkICA7ICB9ICA=)}.html-base64{background:url(data:text/html;base64,PHA+ICAgeCAgIDwvcD48cD4gICB5ICAg)}.json-base64{background:url(data:application/json;base64,eyAiYSIgOiAgMSAsICJiIiA6IFsgMSAsIDIgXSB9)}.javascript-base64{background:url(data:text/javascript;base64,dmFyICAgYSAgID0gICAxICA7)}.png{background:url(data:image/png;base64,iVBORw0KGgo=)}.file{background:url(./img.png)}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-one-stylesheet-reaching-every-embedded-site-offers-each prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\"  .inner  {  color : red  ;  }  \\" svg:\\"<svg xmlns='http://www.w3.org/2000/svg'>   <rect/>   </svg>\\" html:\\"<p>   x   </p><p>   y   \\" json:\\"{ \\\\\\"a\\\\\\" :  1 , \\\\\\"b\\\\\\" : [ 1 , 2 ] }\\" javascript:\\"var   a   =   1  ;\\" svg:\\"<svg xmlns='http://www.w3.org/2000/svg'>   <rect/>   </svg>\\" css:\\"  .inner  {  color : red  ;  }  \\" html:\\"<p>   x   </p><p>   y   \\" json:\\"{ \\\\\\"a\\\\\\" :  1 , \\\\\\"b\\\\\\" : [ 1 , 2 ] }\\" javascript:\\"var   a   =   1  ;\\""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-one-stylesheet-reaching-every-embedded-site-offers-each prints {"mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"css":"/*css*/","svg":"/*svg*/","html":"/*html*/","json":"/*json*/","javascript":"/*javascript*/"}}} 1`] = `"@import url(data:text/css,/*css*/);.svg{background:url(data:image/svg+xml,/*svg*/)}.html{background:url(data:text/html,/*html*/)}.json{background:url(data:application/json,/*json*/)}.javascript{background:url(data:text/javascript,/*javascript*/)}.svg-base64{background:url(data:image/svg+xml;base64,LypzdmcqLw==)}.css-base64{background:url(data:text/css;base64,Lypjc3MqLw==)}.html-base64{background:url(data:text/html;base64,LypodG1sKi8=)}.json-base64{background:url(data:application/json;base64,Lypqc29uKi8=)}.javascript-base64{background:url(data:text/javascript;base64,LypqYXZhc2NyaXB0Ki8=)}.png{background:url(data:image/png;base64,iVBORw0KGgo=)}.file{background:url(./img.png)}"`;
+
 exports[`CSS syntax — invariants css-syntax-minify-one-stylesheet-reaching-every-embedded-site-offers-each prints {"mode":"minify"} 1`] = `"@import url(\\"data:text/css,  .inner  {  color : red  ;  }  \\");.svg{background:url(\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'>   <rect/>   </svg>\\")}.html{background:url(\\"data:text/html,<p>   x   </p><p>   y   \\")}.json{background:url('data:application/json,{ \\"a\\" :  1 , \\"b\\" : [ 1 , 2 ] }')}.javascript{background:url(\\"data:text/javascript,var   a   =   1  ;\\")}.svg-base64{background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnPiAgIDxyZWN0Lz4gICA8L3N2Zz4=)}.css-base64{background:url(data:text/css;base64,ICAuaW5uZXIgIHsgIGNvbG9yIDogcmVkICA7ICB9ICA=)}.html-base64{background:url(data:text/html;base64,PHA+ICAgeCAgIDwvcD48cD4gICB5ICAg)}.json-base64{background:url(data:application/json;base64,eyAiYSIgOiAgMSAsICJiIiA6IFsgMSAsIDIgXSB9)}.javascript-base64{background:url(data:text/javascript;base64,dmFyICAgYSAgID0gICAxICA7)}.png{background:url(data:image/png;base64,iVBORw0KGgo=)}.file{background:url(./img.png)}"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-one-stylesheet-reaching-every-embedded-site-offers-each tokenizes 1`] = `"at-keyword[0,7] whitespace[7,8] function[8,12] string[12,60] right-parenthesis[60,61] whitespace[61,62] semicolon[62,63] whitespace[63,65] delim[65,66] ident[66,69] whitespace[69,71] left-curly-bracket[71,72] whitespace[72,73] ident[73,83] whitespace[83,84] colon[84,85] whitespace[85,86] function[86,90] string[90,170] right-parenthesis[170,171] whitespace[171,172] semicolon[172,173] whitespace[173,174] right-curly-bracket[174,175] whitespace[175,176] delim[176,177] ident[177,181] whitespace[181,182] left-curly-bracket[182,183] whitespace[183,184] ident[184,194] whitespace[194,195] colon[195,196] whitespace[196,197] function[197,201] string[201,242] right-parenthesis[242,243] whitespace[243,244] semicolon[244,245] whitespace[245,246] right-curly-bracket[246,247] whitespace[247,248] delim[248,249] ident[249,253] whitespace[253,254] left-curly-bracket[254,255] whitespace[255,256] ident[256,266] whitespace[266,267] colon[267,268] whitespace[268,269] function[269,273] string[273,327] right-parenthesis[327,328] whitespace[328,329] semicolon[329,330] whitespace[330,331] right-curly-bracket[331,332] whitespace[332,333] delim[333,334] ident[334,344] whitespace[344,345] left-curly-bracket[345,346] whitespace[346,347] ident[347,357] whitespace[357,358] colon[358,359] whitespace[359,360] function[360,364] string[364,405] right-parenthesis[405,406] whitespace[406,407] semicolon[407,408] whitespace[408,409] right-curly-bracket[409,410] whitespace[410,412] delim[412,413] ident[413,423] whitespace[423,425] left-curly-bracket[425,426] whitespace[426,427] ident[427,437] whitespace[437,438] colon[438,439] whitespace[439,440] url[440,551|444,550] whitespace[551,552] semicolon[552,553] whitespace[553,554] right-curly-bracket[554,555] whitespace[555,556] delim[556,557] ident[557,567] whitespace[567,569] left-curly-bracket[569,570] whitespace[570,571] ident[571,581] whitespace[581,582] colon[582,583] whitespace[583,584] url[584,654|588,653] whitespace[654,655] semicolon[655,656] whitespace[656,657] right-curly-bracket[657,658] whitespace[658,659] delim[659,660] ident[660,671] whitespace[671,672] left-curly-bracket[672,673] whitespace[673,674] ident[674,684] whitespace[684,685] colon[685,686] whitespace[686,687] url[687,746|691,745] whitespace[746,747] semicolon[747,748] whitespace[748,749] right-curly-bracket[749,750] whitespace[750,751] delim[751,752] ident[752,763] whitespace[763,764] left-curly-bracket[764,765] whitespace[765,766] ident[766,776] whitespace[776,777] colon[777,778] whitespace[778,779] url[779,853|783,852] whitespace[853,854] semicolon[854,855] whitespace[855,856] right-curly-bracket[856,857] whitespace[857,858] delim[858,859] ident[859,876] whitespace[876,877] left-curly-bracket[877,878] whitespace[878,879] ident[879,889] whitespace[889,890] colon[890,891] whitespace[891,892] url[892,949|896,948] whitespace[949,950] semicolon[950,951] whitespace[951,952] right-curly-bracket[952,953] whitespace[953,955] delim[955,956] ident[956,959] whitespace[959,961] left-curly-bracket[961,962] whitespace[962,963] ident[963,973] whitespace[973,974] colon[974,975] whitespace[975,976] function[976,980] string[980,1016] right-parenthesis[1016,1017] whitespace[1017,1018] semicolon[1018,1019] whitespace[1019,1020] right-curly-bracket[1020,1021] whitespace[1021,1022] delim[1022,1023] ident[1023,1027] whitespace[1027,1028] left-curly-bracket[1028,1029] whitespace[1029,1030] ident[1030,1040] whitespace[1040,1041] colon[1041,1042] whitespace[1042,1043] function[1043,1047] string[1047,1058] right-parenthesis[1058,1059] whitespace[1059,1060] semicolon[1060,1061] whitespace[1061,1062] right-curly-bracket[1062,1063] whitespace[1063,1064] end=1064"`;
@@ -10818,7 +11050,19 @@ exports[`CSS syntax — invariants css-syntax-minify-preludes-and-calls-at-their
 
 exports[`CSS syntax — invariants css-syntax-minify-preludes-and-calls-at-their-edges-rebuilds-a-shouted-url parses 2`] = `""`;
 
+exports[`CSS syntax — invariants css-syntax-minify-preludes-and-calls-at-their-edges-rebuilds-a-shouted-url prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `".a{background:url(data:image/svg+xml,<svg>%20%20</svg>)}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-preludes-and-calls-at-their-edges-rebuilds-a-shouted-url prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"svg:\\"<svg>  </svg>\\""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-preludes-and-calls-at-their-edges-rebuilds-a-shouted-url prints {"mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"svg":"<svg/>"}}} 1`] = `".a{background:url(data:image/svg+xml,<svg/>)}"`;
+
 exports[`CSS syntax — invariants css-syntax-minify-preludes-and-calls-at-their-edges-rebuilds-a-shouted-url prints {"mode":"minify"} 1`] = `".a{background:url(data:image/svg+xml,<svg>%20%20</svg>)}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-preludes-and-calls-at-their-edges-rebuilds-a-shouted-url prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":"offers"} 1`] = `".a{background:url(data:image/svg+xml,<svg>%20%20</svg>)}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-preludes-and-calls-at-their-edges-rebuilds-a-shouted-url prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"svg:\\"<svg>  </svg>\\""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-preludes-and-calls-at-their-edges-rebuilds-a-shouted-url prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"svg":"<svg/>"},"async":true}} 1`] = `".a{background:url(data:image/svg+xml,<svg/>)}"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-preludes-and-calls-at-their-edges-rebuilds-a-shouted-url tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,13] colon[13,14] url[14,63|18,62] right-curly-bracket[63,64] end=64"`;
 
@@ -36803,6 +37047,8 @@ exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-treats-
 
 exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-treats-a-declaration-like-prelude-with-a-4 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] whitespace[2,3] ident[3,8] whitespace[8,9] colon[9,10] whitespace[10,11] left-curly-bracket[11,12] ident[12,13] colon[13,14] number[14,15] right-curly-bracket[15,16] whitespace[16,17] right-curly-bracket[17,18] end=18"`;
 
+exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-walks-into-function-and-simple-block parses {"entry":"SourceProcessor"} 1`] = `"QualifiedRule[0,33] Ident[0,1] /Ident Declaration(width)[2,19] Function(calc)[8,19] Number[13,14] /Number Whitespace[14,15] /Whitespace Delim[15,16] /Delim Whitespace[16,17] /Whitespace Number[17,18] /Number /Function /Declaration Declaration(grid)[20,32] SimpleBlock[25,28] Ident[26,27] /Ident /SimpleBlock Whitespace[28,29] /Whitespace Dimension(px)[29,32] /Dimension /Declaration /QualifiedRule"`;
+
 exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-walks-into-function-and-simple-block parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\" \\",\\"+\\",\\" \\",[\\"number\\",\\"2\\",2,\\"integer\\"]],\\";\\",[\\"ident\\",\\"grid\\"],\\":\\",[\\"[]\\",[\\"ident\\",\\"x\\"]],\\" \\",[\\"dimension\\",\\"3\\",3,\\"integer\\",\\"px\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-walks-into-function-and-simple-block parses 2`] = `""`;
@@ -36859,6 +37105,14 @@ exports[`CSS syntax — invariants css-syntax-node-token-reads-names-values-and-
 
 exports[`CSS syntax — invariants css-syntax-node-token-reads-names-values-and-parts-through-a-3 tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,5] colon[5,6] whitespace[6,7] number[7,8] whitespace[8,9] right-curly-bracket[9,10] end=10"`;
 
+exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-blocks-contents-forwards-the-callback parses {"entry":"parseABlocksContents","options":{}} 1`] = `"{\\"decls\\":[[\\"declaration\\",\\"b\\",[[\\"string\\",\\"x\\"]],false]],\\"rules\\":[]}"`;
+
+exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-blocks-contents-forwards-the-callback parses {"entry":"parseABlocksContents","options":{}} 2`] = `"error[4,4]:eof-in-string"`;
+
+exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-blocks-contents-forwards-the-callback parses {"entry":"parseADeclaration","options":{}} 1`] = `"[\\"declaration\\",\\"b\\",[[\\"string\\",\\"x\\"]],false]"`;
+
+exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-blocks-contents-forwards-the-callback parses {"entry":"parseADeclaration","options":{}} 2`] = `"error[4,4]:eof-in-string"`;
+
 exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-blocks-contents-forwards-the-callback parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-blocks-contents-forwards-the-callback parses 2`] = `"error[4,4]:eof-in-string error[4,4]:eof-in-qualified-rule"`;
@@ -36866,6 +37120,10 @@ exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-block
 exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-blocks-contents-forwards-the-callback prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-blocks-contents-forwards-the-callback tokenizes 1`] = `"ident[0,1] colon[1,2] string[2,4] end=4"`;
+
+exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-comma-separated-list-of-component-values parses {"entry":"parseACommaSeparatedListOfComponentValues","options":{}} 1`] = `"[[[\\"ident\\",\\"a\\"]],[[\\"string\\",\\"x\\"]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-comma-separated-list-of-component-values parses {"entry":"parseACommaSeparatedListOfComponentValues","options":{}} 2`] = `"error[4,4]:eof-in-string"`;
 
 exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-comma-separated-list-of-component-values parses 1`] = `"[]"`;
 
@@ -36875,6 +37133,14 @@ exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-comma
 
 exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-comma-separated-list-of-component-values tokenizes 1`] = `"ident[0,1] comma[1,2] string[2,4] end=4"`;
 
+exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-stylesheets-contents-forwards-the parses {"entry":"parseARule","options":{}} 1`] = `"[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"string\\",\\"x\\"]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-stylesheets-contents-forwards-the parses {"entry":"parseARule","options":{}} 2`] = `"error[6,6]:eof-in-string"`;
+
+exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-stylesheets-contents-forwards-the parses {"entry":"parseAStylesheetsContents","options":{}} 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"string\\",\\"x\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-stylesheets-contents-forwards-the parses {"entry":"parseAStylesheetsContents","options":{}} 2`] = `"error[6,6]:eof-in-string"`;
+
 exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-stylesheets-contents-forwards-the parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"string\\",\\"x\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-stylesheets-contents-forwards-the parses 2`] = `"error[6,6]:eof-in-string"`;
@@ -36883,6 +37149,14 @@ exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-style
 
 exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-a-stylesheets-contents-forwards-the tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,3] colon[3,4] string[4,6] end=6"`;
 
+exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-acomponent-value-forwards-the-callback parses {"entry":"parseAComponentValue","options":{}} 1`] = `"[\\"string\\",\\"x\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-acomponent-value-forwards-the-callback parses {"entry":"parseAComponentValue","options":{}} 2`] = `"error[2,2]:eof-in-string"`;
+
+exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-acomponent-value-forwards-the-callback parses {"entry":"parseAListOfComponentValues","options":{}} 1`] = `"[[\\"string\\",\\"x\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-acomponent-value-forwards-the-callback parses {"entry":"parseAListOfComponentValues","options":{}} 2`] = `"error[2,2]:eof-in-string"`;
+
 exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-acomponent-value-forwards-the-callback parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-acomponent-value-forwards-the-callback parses 2`] = `"error[2,2]:eof-in-string error[2,2]:eof-in-qualified-rule"`;
@@ -36890,6 +37164,10 @@ exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-acompon
 exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-acomponent-value-forwards-the-callback prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parse-error-callback-parse-acomponent-value-forwards-the-callback tokenizes 1`] = `"string[0,2] end=2"`;
+
+exports[`CSS syntax — invariants css-syntax-parse-error-callback-reports-a parses {"entry":"parseARule"} 1`] = `"undefined"`;
+
+exports[`CSS syntax — invariants css-syntax-parse-error-callback-reports-a parses {"entry":"parseARule"} 2`] = `"error[1,1]:eof-in-qualified-rule"`;
 
 exports[`CSS syntax — invariants css-syntax-parse-error-callback-reports-a parses 1`] = `"[]"`;
 
@@ -36988,6 +37266,10 @@ exports[`CSS syntax — invariants css-syntax-parse-error-callback-reports-a-b-x
 
 exports[`CSS syntax — invariants css-syntax-parse-error-callback-reports-a-b-x-n tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,3] colon[3,4] bad-string[4,6] whitespace[6,7] right-curly-bracket[7,8] end=8"`;
 
+exports[`CSS syntax — invariants css-syntax-parse-error-callback-reports-a-stray-in-a-list-of-component-values parses {"entry":"parseAListOfComponentValues","options":{}} 1`] = `"[[\\"ident\\",\\"a\\"],[\\"error\\",\\"}\\"],[\\"ident\\",\\"b\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-parse-error-callback-reports-a-stray-in-a-list-of-component-values parses {"entry":"parseAListOfComponentValues","options":{}} 2`] = `"warning[1,2]:unexpected-right-curly-bracket"`;
+
 exports[`CSS syntax — invariants css-syntax-parse-error-callback-reports-a-stray-in-a-list-of-component-values parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-parse-error-callback-reports-a-stray-in-a-list-of-component-values parses 2`] = `"warning[1,2]:unexpected-right-curly-bracket error[3,3]:eof-in-qualified-rule"`;
@@ -37044,6 +37326,10 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-accepts-a-pre-
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-accepts-a-pre-built-token-stream-as-input tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,3] colon[3,4] number[4,5] right-curly-bracket[5,6] end=6"`;
 
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-keeps-a-top-level-block-in-a-custom-property parses {"entry":"parseABlocksContents"} 1`] = `"{\\"decls\\":[[\\"declaration\\",\\"--x\\",[[\\"{}\\",\\" \\",[\\"ident\\",\\"a\\"],\\":\\",\\" \\",[\\"ident\\",\\"b\\"],\\" \\"]],false],[\\"declaration\\",\\"color\\",[[\\"ident\\",\\"red\\"]],false]],\\"rules\\":[]}"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-keeps-a-top-level-block-in-a-custom-property parses {"entry":"parseABlocksContents"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-keeps-a-top-level-block-in-a-custom-property parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-keeps-a-top-level-block-in-a-custom-property parses 2`] = `"error[25,25]:eof-in-qualified-rule"`;
@@ -37051,6 +37337,10 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-keeps-a-top-le
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-keeps-a-top-level-block-in-a-custom-property prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-keeps-a-top-level-block-in-a-custom-property tokenizes 1`] = `"ident[0,3] colon[3,4] whitespace[4,5] left-curly-bracket[5,6] whitespace[6,7] ident[7,8] colon[8,9] whitespace[9,10] ident[10,11] whitespace[11,12] right-curly-bracket[12,13] semicolon[13,14] whitespace[14,15] ident[15,20] colon[20,21] whitespace[21,22] ident[22,25] end=25"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-keeps-the-declaration-after-a-lone-block parses {"entry":"parseABlocksContents"} 1`] = `"{\\"decls\\":[[\\"declaration\\",\\"color\\",[[\\"{}\\",\\" \\",[\\"ident\\",\\"a\\"],\\":\\",\\" \\",[\\"ident\\",\\"b\\"],\\" \\"]],false],[\\"declaration\\",\\"background\\",[[\\"ident\\",\\"red\\"]],false]],\\"rules\\":[]}"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-keeps-the-declaration-after-a-lone-block parses {"entry":"parseABlocksContents"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-keeps-the-declaration-after-a-lone-block parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"color\\"],\\":\\",\\" \\"],[\\" \\",[\\"ident\\",\\"a\\"],\\":\\",\\" \\",[\\"ident\\",\\"b\\"],\\" \\"]]]"`;
 
@@ -37060,6 +37350,10 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-keeps-the-decl
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-keeps-the-declaration-after-a-lone-block tokenizes 1`] = `"ident[0,5] colon[5,6] whitespace[6,7] left-curly-bracket[7,8] whitespace[8,9] ident[9,10] colon[10,11] whitespace[11,12] ident[12,13] whitespace[13,14] right-curly-bracket[14,15] semicolon[15,16] whitespace[16,17] ident[17,27] colon[27,28] whitespace[28,29] ident[29,32] end=32"`;
 
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-blocks-contents-returns-declarations-and parses {"entry":"parseABlocksContents"} 1`] = `"{\\"decls\\":[[\\"declaration\\",\\"color\\",[[\\"ident\\",\\"red\\"]],false]],\\"rules\\":[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"x\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]]]}"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-blocks-contents-returns-declarations-and parses {"entry":"parseABlocksContents"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-blocks-contents-returns-declarations-and parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"],\\";\\",\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"x\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-blocks-contents-returns-declarations-and parses 2`] = `""`;
@@ -37067,6 +37361,10 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-blocks
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-blocks-contents-returns-declarations-and prints {"mode":"minify"} 1`] = `"color:red;.a{x:1}"`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-blocks-contents-returns-declarations-and tokenizes 1`] = `"ident[0,5] colon[5,6] ident[6,9] semicolon[9,10] delim[10,11] ident[11,12] left-curly-bracket[12,13] ident[13,14] colon[14,15] number[15,16] right-curly-bracket[16,17] end=17"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-blocks-contents-returns-declarations-and-2 parses {"entry":"parseABlocksContents"} 1`] = `"{\\"decls\\":[[\\"declaration\\",\\"x\\",[[\\"number\\",\\"1\\",1,\\"integer\\"]],false],[\\"declaration\\",\\"y\\",[[\\"number\\",\\"2\\",2,\\"integer\\"]],false]],\\"rules\\":[]}"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-blocks-contents-returns-declarations-and-2 parses {"entry":"parseABlocksContents"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-blocks-contents-returns-declarations-and-2 parses 1`] = `"[]"`;
 
@@ -37076,6 +37374,10 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-blocks
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-blocks-contents-returns-declarations-and-2 tokenizes 1`] = `"ident[0,1] colon[1,2] number[2,3] semicolon[3,4] ident[4,5] colon[5,6] number[6,7] end=7"`;
 
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-comma-separated-list-of-component-values parses {"entry":"parseACommaSeparatedListOfComponentValues"} 1`] = `"[[[\\"ident\\",\\"a\\"]],[\\" \\",[\\"ident\\",\\"b\\"],\\" \\",[\\"ident\\",\\"c\\"]],[\\" \\",[\\"ident\\",\\"d\\"]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-comma-separated-list-of-component-values parses {"entry":"parseACommaSeparatedListOfComponentValues"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-comma-separated-list-of-component-values parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-comma-separated-list-of-component-values parses 2`] = `"error[9,9]:eof-in-qualified-rule"`;
@@ -37083,6 +37385,14 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-comma-
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-comma-separated-list-of-component-values prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-comma-separated-list-of-component-values tokenizes 1`] = `"ident[0,1] comma[1,2] whitespace[2,3] ident[3,4] whitespace[4,5] ident[5,6] comma[6,7] whitespace[7,8] ident[8,9] end=9"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-component-value-is-strict-about-trailing parses {"entry":"parseAComponentValue"} 1`] = `"undefined"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-component-value-is-strict-about-trailing parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-component-value-is-strict-about-trailing parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"b\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-component-value-is-strict-about-trailing parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-component-value-is-strict-about-trailing parses 1`] = `"[]"`;
 
@@ -37092,6 +37402,10 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-compon
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-component-value-is-strict-about-trailing tokenizes 1`] = `"ident[0,1] whitespace[1,2] ident[2,3] end=3"`;
 
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-component-value-is-strict-about-trailing-2 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"ident\\",\\"a\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-component-value-is-strict-about-trailing-2 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-component-value-is-strict-about-trailing-2 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-component-value-is-strict-about-trailing-2 parses 2`] = `"error[5,5]:eof-in-qualified-rule"`;
@@ -37099,6 +37413,10 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-compon
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-component-value-is-strict-about-trailing-2 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-component-value-is-strict-about-trailing-2 tokenizes 1`] = `"whitespace[0,2] ident[2,3] whitespace[3,5] end=5"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and parses {"entry":"parseADeclaration"} 1`] = `"[\\"declaration\\",\\"color\\",[[\\"ident\\",\\"red\\"]],false]"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and parses {"entry":"parseADeclaration"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and parses 1`] = `"[]"`;
 
@@ -37108,6 +37426,10 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declar
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and tokenizes 1`] = `"ident[0,5] colon[5,6] whitespace[6,7] ident[7,10] end=10"`;
 
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-2 parses {"entry":"parseADeclaration"} 1`] = `"[\\"declaration\\",\\"color\\",[[\\"ident\\",\\"red\\"]],true]"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-2 parses {"entry":"parseADeclaration"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-2 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-2 parses 2`] = `"error[21,21]:eof-in-qualified-rule"`;
@@ -37115,6 +37437,10 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declar
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-2 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-2 tokenizes 1`] = `"ident[0,5] colon[5,6] whitespace[6,7] ident[7,10] whitespace[10,11] delim[11,12] ident[12,21] end=21"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-3 parses {"entry":"parseADeclaration"} 1`] = `"[\\"declaration\\",\\"color\\",[[\\"ident\\",\\"red\\"]],true]"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-3 parses {"entry":"parseADeclaration"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-3 parses 1`] = `"[]"`;
 
@@ -37124,6 +37450,10 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declar
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-3 tokenizes 1`] = `"ident[0,5] colon[5,6] whitespace[6,7] ident[7,10] whitespace[10,11] delim[11,12] ident[12,24] end=24"`;
 
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-4 parses {"entry":"parseADeclaration"} 1`] = `"undefined"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-4 parses {"entry":"parseADeclaration"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-4 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-4 parses 2`] = `"error[9,9]:eof-in-qualified-rule"`;
@@ -37131,6 +37461,10 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declar
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-4 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-4 tokenizes 1`] = `"ident[0,5] whitespace[5,6] ident[6,9] end=9"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-5 parses {"entry":"parseADeclaration"} 1`] = `"undefined"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-5 parses {"entry":"parseADeclaration"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-5 parses 1`] = `"[]"`;
 
@@ -37140,6 +37474,10 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declar
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-5 tokenizes 1`] = `"ident[0,5] end=5"`;
 
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-6 parses {"entry":"parseADeclaration"} 1`] = `"undefined"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-6 parses {"entry":"parseADeclaration"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-6 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-6 parses 2`] = `"warning[3,4]:unexpected-right-curly-bracket error[5,5]:eof-in-qualified-rule"`;
@@ -37147,6 +37485,10 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declar
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-6 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-6 tokenizes 1`] = `"ident[0,1] whitespace[1,2] ident[2,3] right-curly-bracket[3,4] ident[4,5] end=5"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-reads-a-lone-block-as-a-whole parses {"entry":"parseADeclaration"} 1`] = `"[\\"declaration\\",\\"color\\",[[\\"{}\\",\\" \\",[\\"ident\\",\\"a\\"],\\":\\",\\" \\",[\\"ident\\",\\"b\\"],\\" \\"]],false]"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-reads-a-lone-block-as-a-whole parses {"entry":"parseADeclaration"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-reads-a-lone-block-as-a-whole parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"color\\"],\\":\\",\\" \\"],[\\" \\",[\\"ident\\",\\"a\\"],\\":\\",\\" \\",[\\"ident\\",\\"b\\"],\\" \\"]]]"`;
 
@@ -37156,6 +37498,10 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declar
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-reads-a-lone-block-as-a-whole tokenizes 1`] = `"ident[0,5] colon[5,6] whitespace[6,7] left-curly-bracket[7,8] whitespace[8,9] ident[9,10] colon[10,11] whitespace[11,12] ident[12,13] whitespace[13,14] right-curly-bracket[14,15] end=15"`;
 
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-reads-a-lone-block-as-a-whole-2 parses {"entry":"parseADeclaration"} 1`] = `"undefined"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-reads-a-lone-block-as-a-whole-2 parses {"entry":"parseADeclaration"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-reads-a-lone-block-as-a-whole-2 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"color\\"],\\":\\",\\" \\"],[\\" \\",[\\"ident\\",\\"a\\"],\\":\\",\\" \\",[\\"ident\\",\\"b\\"],\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-reads-a-lone-block-as-a-whole-2 parses 2`] = `"error[17,17]:eof-in-qualified-rule"`;
@@ -37163,6 +37509,10 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declar
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-reads-a-lone-block-as-a-whole-2 prints {"mode":"minify"} 1`] = `"color:{a:b}"`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-reads-a-lone-block-as-a-whole-2 tokenizes 1`] = `"ident[0,5] colon[5,6] whitespace[6,7] left-curly-bracket[7,8] whitespace[8,9] ident[9,10] colon[10,11] whitespace[11,12] ident[12,13] whitespace[13,14] right-curly-bracket[14,15] whitespace[15,16] ident[16,17] end=17"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-reads-a-lone-block-as-a-whole-3 parses {"entry":"parseADeclaration"} 1`] = `"undefined"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-reads-a-lone-block-as-a-whole-3 parses {"entry":"parseADeclaration"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-declaration-reads-a-lone-block-as-a-whole-3 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"color\\"],\\":\\",\\" \\"],[\\" \\",[\\"ident\\",\\"a\\"],\\":\\",\\" \\",[\\"ident\\",\\"b\\"],\\" \\"]],[\\"qualified rule\\",[],[\\" \\",[\\"ident\\",\\"c\\"],\\":\\",\\" \\",[\\"ident\\",\\"d\\"],\\" \\"]]]"`;
 
@@ -37188,6 +37538,14 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-rule-p
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-rule-parses-qualified-rules-and-at-rules-2 tokenizes 1`] = `"at-keyword[0,7] whitespace[7,8] string[8,11] semicolon[11,12] end=12"`;
 
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-rule-rejects-empty-input-and-trailing parses {"entry":"parseAComponentValue"} 1`] = `"undefined"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-rule-rejects-empty-input-and-trailing parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-rule-rejects-empty-input-and-trailing parses {"entry":"parseARule"} 1`] = `"undefined"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-rule-rejects-empty-input-and-trailing parses {"entry":"parseARule"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-rule-rejects-empty-input-and-trailing parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-rule-rejects-empty-input-and-trailing parses 2`] = `""`;
@@ -37195,6 +37553,10 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-rule-r
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-rule-rejects-empty-input-and-trailing prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-rule-rejects-empty-input-and-trailing tokenizes 1`] = `"whitespace[0,3] end=3"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-rule-rejects-empty-input-and-trailing-2 parses {"entry":"parseARule"} 1`] = `"undefined"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-rule-rejects-empty-input-and-trailing-2 parses {"entry":"parseARule"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-rule-rejects-empty-input-and-trailing-2 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[]]]"`;
 
@@ -37211,6 +37573,10 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-styles
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-stylesheet-builds-nested-rules-and-a-full prints {"mode":"minify"} 1`] = `"@media screen{.a{color:red}}b{y:2}"`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-stylesheet-builds-nested-rules-and-a-full tokenizes 1`] = `"at-keyword[0,6] whitespace[6,7] ident[7,13] left-curly-bracket[13,14] delim[14,15] ident[15,16] left-curly-bracket[16,17] ident[17,22] colon[22,23] ident[23,26] right-curly-bracket[26,27] right-curly-bracket[27,28] ident[28,29] left-curly-bracket[29,30] ident[30,31] colon[31,32] number[32,33] right-curly-bracket[33,34] end=34"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-stylesheets-contents-discards-top-level parses {"entry":"parseAStylesheetsContents"} 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"x\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-stylesheets-contents-discards-top-level parses {"entry":"parseAStylesheetsContents"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-parse-a-stylesheets-contents-discards-top-level parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"x\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]]]"`;
 
@@ -37284,6 +37650,12 @@ exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-read
 
 exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-reads-a-comment-s-text-closed-or-2 tokenizes 1`] = `"comment[0,2] end=2"`;
 
+exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-reads-an-at-rule-s-name-the-input-ran parses {"entry":"SourceProcessor"} 1`] = `"AtRule(foo�)[0,5] /AtRule"`;
+
+exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-reads-an-at-rule-s-name-the-input-ran parses {"entry":"parseARule"} 1`] = `"[\\"at-rule\\",\\"foo�\\",[],null]"`;
+
+exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-reads-an-at-rule-s-name-the-input-ran parses {"entry":"parseARule"} 2`] = `"error[4,5]:eof-in-escape"`;
+
 exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-reads-an-at-rule-s-name-the-input-ran parses 1`] = `"[[\\"at-rule\\",\\"foo�\\",[],null]]"`;
 
 exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-reads-an-at-rule-s-name-the-input-ran parses 2`] = `"error[4,5]:eof-in-escape"`;
@@ -37340,6 +37712,10 @@ exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-stop
 
 exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-stop-in-a-comment-reads-past-the tokenizes 1`] = `"comment[0,5] ident[5,6] left-curly-bracket[6,7] comment[7,12] ident[12,13] colon[13,14] number[14,15] semicolon[15,16] comment[16,21] right-curly-bracket[21,22] comment[22,27] ident[27,28] left-curly-bracket[28,29] right-curly-bracket[29,30] end=30"`;
 
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"dimension\\",\\"12\\",12,\\"integer\\",\\"�red\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as parses 2`] = `"error[6,6]:eof-in-qualified-rule"`;
@@ -37347,6 +37723,10 @@ exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-lea
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as tokenizes 1`] = `"dimension[0,6|2,6] end=6"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-2 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"url\\",\\"a�b\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-2 parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-2 parses 1`] = `"[]"`;
 
@@ -37371,6 +37751,10 @@ exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-lea
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-4 prints {"mode":"minify"} 1`] = `"@a�b;"`;
 
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-4 tokenizes 1`] = `"at-keyword[0,4] end=4"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-reads-a-nul-as-the-replacement parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"ident\\",\\"a�b\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-reads-a-nul-as-the-replacement parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-reads-a-nul-as-the-replacement parses 1`] = `"[]"`;
 
@@ -37406,6 +37790,10 @@ exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-rea
 
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-reads-one-wherever-the-source-holds-it tokenizes 1`] = `"delim[0,1] ident[1,2] delim[2,3] ident[3,4] left-curly-bracket[4,5] ident[5,10] colon[10,11] ident[11,14] right-curly-bracket[14,15] end=15"`;
 
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-reads-one-wherever-the-source-holds-it-2 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"dimension\\",\\"12\\",12,\\"integer\\",\\"�red\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-reads-one-wherever-the-source-holds-it-2 parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-reads-one-wherever-the-source-holds-it-2 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-reads-one-wherever-the-source-holds-it-2 parses 2`] = `"error[6,6]:eof-in-qualified-rule"`;
@@ -37413,6 +37801,10 @@ exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-rea
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-reads-one-wherever-the-source-holds-it-2 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-reads-one-wherever-the-source-holds-it-2 tokenizes 1`] = `"number[0,2] delim[2,3] ident[3,6] end=6"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-reads-one-wherever-the-source-holds-it-3 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"url\\",\\"a�b\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-reads-one-wherever-the-source-holds-it-3 parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-reads-one-wherever-the-source-holds-it-3 parses 1`] = `"[]"`;
 
@@ -37690,6 +38082,10 @@ exports[`CSS syntax — invariants css-syntax-recurse-blocks-prints-a-supports-b
 
 exports[`CSS syntax — invariants css-syntax-recurse-blocks-prints-a-supports-body-whatever-it-is-set-to tokenizes 1`] = `"at-keyword[0,9] whitespace[9,10] left-parenthesis[10,11] ident[11,12] colon[12,13] ident[13,14] right-parenthesis[14,15] left-curly-bracket[15,16] ident[16,17] left-curly-bracket[17,18] ident[18,21] colon[21,22] number[22,23] right-curly-bracket[23,24] right-curly-bracket[24,25] end=25"`;
 
+exports[`CSS syntax — invariants css-syntax-recurse-blocks-walks-a-layer-holding-both-only-where-asked parses {"entry":"SourceProcessor","options":{"recurseBlocks":false}} 1`] = `"AtRule(layer)[0,21] Whitespace[6,7] /Whitespace Ident[7,8] /Ident /AtRule"`;
+
+exports[`CSS syntax — invariants css-syntax-recurse-blocks-walks-a-layer-holding-both-only-where-asked parses {"entry":"SourceProcessor","options":{"recurseBlocks":true}} 1`] = `"AtRule(layer)[0,21] Whitespace[6,7] /Whitespace Ident[7,8] /Ident QualifiedRule[9,20] Ident[9,10] /Ident QualifiedRule[11,19] Ident[11,12] /Ident Declaration(top)[13,18] Number[17,18] /Number /Declaration /QualifiedRule /QualifiedRule /AtRule"`;
+
 exports[`CSS syntax — invariants css-syntax-recurse-blocks-walks-a-layer-holding-both-only-where-asked parses 1`] = `"[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"d\\"],[\\"{}\\",[\\"ident\\",\\"e\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-recurse-blocks-walks-a-layer-holding-both-only-where-asked parses 2`] = `""`;
@@ -37699,6 +38095,10 @@ exports[`CSS syntax — invariants css-syntax-recurse-blocks-walks-a-layer-holdi
 exports[`CSS syntax — invariants css-syntax-recurse-blocks-walks-a-layer-holding-both-only-where-asked prints {"mode":"minify"} 1`] = `"@layer a{d{e{top:0}}}"`;
 
 exports[`CSS syntax — invariants css-syntax-recurse-blocks-walks-a-layer-holding-both-only-where-asked tokenizes 1`] = `"at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] ident[9,10] left-curly-bracket[10,11] ident[11,12] left-curly-bracket[12,13] ident[13,16] colon[16,17] number[17,18] right-curly-bracket[18,19] right-curly-bracket[19,20] right-curly-bracket[20,21] end=21"`;
+
+exports[`CSS syntax — invariants css-syntax-recurse-blocks-walks-a-nested-rule-only-where-asked parses {"entry":"SourceProcessor","options":{"recurseBlocks":false}} 1`] = `"QualifiedRule[0,16] Ident[0,1] /Ident /QualifiedRule"`;
+
+exports[`CSS syntax — invariants css-syntax-recurse-blocks-walks-a-nested-rule-only-where-asked parses {"entry":"SourceProcessor","options":{"recurseBlocks":true}} 1`] = `"QualifiedRule[0,16] Ident[0,1] /Ident QualifiedRule[2,15] Ident[2,3] /Ident Declaration(color)[4,14] Ident[10,14] /Ident /Declaration /QualifiedRule /QualifiedRule"`;
 
 exports[`CSS syntax — invariants css-syntax-recurse-blocks-walks-a-nested-rule-only-where-asked parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]]]]]"`;
 
@@ -37710,6 +38110,10 @@ exports[`CSS syntax — invariants css-syntax-recurse-blocks-walks-a-nested-rule
 
 exports[`CSS syntax — invariants css-syntax-recurse-blocks-walks-a-nested-rule-only-where-asked tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,3] left-curly-bracket[3,4] ident[4,9] colon[9,10] ident[10,14] right-curly-bracket[14,15] right-curly-bracket[15,16] end=16"`;
 
+exports[`CSS syntax — invariants css-syntax-recurse-blocks-walks-an-at-rule-body-only-where-asked parses {"entry":"SourceProcessor","options":{"recurseBlocks":false}} 1`] = `"AtRule(media)[0,27] Whitespace[6,7] /Whitespace Ident[7,13] /Ident /AtRule"`;
+
+exports[`CSS syntax — invariants css-syntax-recurse-blocks-walks-an-at-rule-body-only-where-asked parses {"entry":"SourceProcessor","options":{"recurseBlocks":true}} 1`] = `"AtRule(media)[0,27] Whitespace[6,7] /Whitespace Ident[7,13] /Ident QualifiedRule[14,26] Ident[14,15] /Ident Declaration(color)[16,25] Ident[22,25] /Ident /Declaration /QualifiedRule /AtRule"`;
+
 exports[`CSS syntax — invariants css-syntax-recurse-blocks-walks-an-at-rule-body-only-where-asked parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"screen\\"]],[[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-recurse-blocks-walks-an-at-rule-body-only-where-asked parses 2`] = `""`;
@@ -37720,6 +38124,10 @@ exports[`CSS syntax — invariants css-syntax-recurse-blocks-walks-an-at-rule-bo
 
 exports[`CSS syntax — invariants css-syntax-recurse-blocks-walks-an-at-rule-body-only-where-asked tokenizes 1`] = `"at-keyword[0,6] whitespace[6,7] ident[7,13] left-curly-bracket[13,14] ident[14,15] left-curly-bracket[15,16] ident[16,21] colon[21,22] ident[22,25] right-curly-bracket[25,26] right-curly-bracket[26,27] end=27"`;
 
+exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-backslash-at-eof-inside-a-url-token parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"url\\",\\"a�\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-backslash-at-eof-inside-a-url-token parses {"entry":"parseAListOfComponentValues"} 2`] = `"error[5,6]:eof-in-escape error[6,6]:eof-in-url"`;
+
 exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-backslash-at-eof-inside-a-url-token parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-backslash-at-eof-inside-a-url-token parses 2`] = `"error[5,6]:eof-in-escape error[6,6]:eof-in-url error[6,6]:eof-in-qualified-rule"`;
@@ -37727,6 +38135,10 @@ exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-bac
 exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-backslash-at-eof-inside-a-url-token prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-backslash-at-eof-inside-a-url-token tokenizes 1`] = `"url[0,6|4,6] end=6"`;
+
+exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-backslash-at-eof-inside-a-url-token-2 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"url\\",\\"�\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-backslash-at-eof-inside-a-url-token-2 parses {"entry":"parseAListOfComponentValues"} 2`] = `"error[4,5]:eof-in-escape error[5,5]:eof-in-url"`;
 
 exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-backslash-at-eof-inside-a-url-token-2 parses 1`] = `"[]"`;
 
@@ -37736,6 +38148,10 @@ exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-bac
 
 exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-backslash-at-eof-inside-a-url-token-2 tokenizes 1`] = `"url[0,5|4,5] end=5"`;
 
+exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-literal-u-0080-ident-start-code-point parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"ident\\",\\"\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-literal-u-0080-ident-start-code-point parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-literal-u-0080-ident-start-code-point parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-literal-u-0080-ident-start-code-point parses 2`] = `"error[1,1]:eof-in-qualified-rule"`;
@@ -37744,6 +38160,10 @@ exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-lit
 
 exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-literal-u-0080-ident-start-code-point tokenizes 1`] = `"ident[0,1] end=1"`;
 
+exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-literal-u-0080-ident-start-code-point-2 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"ident\\",\\"ab\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-literal-u-0080-ident-start-code-point-2 parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-literal-u-0080-ident-start-code-point-2 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-literal-u-0080-ident-start-code-point-2 parses 2`] = `"error[3,3]:eof-in-qualified-rule"`;
@@ -37751,6 +38171,10 @@ exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-lit
 exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-literal-u-0080-ident-start-code-point-2 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-regressions-does-not-hang-on-a-literal-u-0080-ident-start-code-point-2 tokenizes 1`] = `"ident[0,3] end=3"`;
+
+exports[`CSS syntax — invariants css-syntax-regressions-emits-a-string-with-a-trailing-backslash-at-eof parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"string\\",\\"ab\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-regressions-emits-a-string-with-a-trailing-backslash-at-eof parses {"entry":"parseAListOfComponentValues"} 2`] = `"error[4,4]:eof-in-string"`;
 
 exports[`CSS syntax — invariants css-syntax-regressions-emits-a-string-with-a-trailing-backslash-at-eof parses 1`] = `"[]"`;
 
@@ -37783,6 +38207,10 @@ exports[`CSS syntax — invariants css-syntax-regressions-emits-an-unterminated-
 exports[`CSS syntax — invariants css-syntax-regressions-emits-an-unterminated-comment-at-eof-so-token-ranges-2 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-regressions-emits-an-unterminated-comment-at-eof-so-token-ranges-2 tokenizes 1`] = `"comment[0,4] end=4"`;
+
+exports[`CSS syntax — invariants css-syntax-regressions-never-drops-input-bytes-around-a-nul-code-point parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"ident\\",\\"a�b\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-regressions-never-drops-input-bytes-around-a-nul-code-point parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-regressions-never-drops-input-bytes-around-a-nul-code-point parses 1`] = `"[]"`;
 
@@ -38158,6 +38586,8 @@ exports[`CSS syntax — invariants css-syntax-skip-set-css-process-options-skip-
 
 exports[`CSS syntax — invariants css-syntax-skip-set-css-process-options-skip-the-object-backend-parse-2 tokenizes 1`] = `"ident[0,1] colon[1,2] number[2,3] whitespace[3,4] dimension[4,7|5,7] end=7"`;
 
+exports[`CSS syntax — invariants css-syntax-source-processor-as-block-contents-walks-a-block-s-contents-style parses {"entry":"SourceProcessor"} 1`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-source-processor-as-block-contents-walks-a-block-s-contents-style parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-source-processor-as-block-contents-walks-a-block-s-contents-style parses 2`] = `"error[34,34]:eof-in-qualified-rule"`;
@@ -38174,6 +38604,8 @@ exports[`CSS syntax — invariants css-syntax-source-processor-exposes-range-une
 
 exports[`CSS syntax — invariants css-syntax-source-processor-exposes-range-unescaped-type-flags-set-end-set-block tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,11] colon[11,12] whitespace[12,13] number[13,14] semicolon[14,15] whitespace[15,16] ident[16,23] colon[23,24] whitespace[24,25] string[25,28] semicolon[28,29] whitespace[29,30] ident[30,35] colon[35,36] whitespace[36,37] hash[37,41] whitespace[41,42] right-curly-bracket[42,43] end=43"`;
 
+exports[`CSS syntax — invariants css-syntax-source-processor-fires-enter-exit-visitors-in-source-order parses {"entry":"SourceProcessor"} 1`] = `"QualifiedRule[0,22] Ident[0,1] /Ident Declaration(color)[2,11] Ident[8,11] /Ident /Declaration Declaration(width)[12,21] Dimension(px)[18,21] /Dimension /Declaration /QualifiedRule"`;
+
 exports[`CSS syntax — invariants css-syntax-source-processor-fires-enter-exit-visitors-in-source-order parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"],\\";\\",[\\"ident\\",\\"width\\"],\\":\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-source-processor-fires-enter-exit-visitors-in-source-order parses 2`] = `""`;
@@ -38189,6 +38621,10 @@ exports[`CSS syntax — invariants css-syntax-source-processor-re-shrinks-the-so
 exports[`CSS syntax — invariants css-syntax-source-processor-re-shrinks-the-so-a-buffers-after-a-pathologically prints {"mode":"minify"} 1`] = `"a{c:1}"`;
 
 exports[`CSS syntax — invariants css-syntax-source-processor-re-shrinks-the-so-a-buffers-after-a-pathologically tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,3] colon[3,4] number[4,5] right-curly-bracket[5,6] end=6"`;
+
+exports[`CSS syntax — invariants css-syntax-source-processor-recurse-blocks-false-stops-at-top-level-rules parses {"entry":"SourceProcessor","options":{"recurseBlocks":false}} 1`] = `"AtRule(media)[0,24] Whitespace[6,7] /Whitespace Ident[7,8] /Ident /AtRule"`;
+
+exports[`CSS syntax — invariants css-syntax-source-processor-recurse-blocks-false-stops-at-top-level-rules parses {"entry":"SourceProcessor","options":{"recurseBlocks":true}} 1`] = `"AtRule(media)[0,24] Whitespace[6,7] /Whitespace Ident[7,8] /Ident QualifiedRule[9,16] Delim[9,10] /Delim Ident[10,11] /Ident Declaration(c)[12,15] Number[14,15] /Number /Declaration /QualifiedRule QualifiedRule[16,23] Delim[16,17] /Delim Ident[17,18] /Ident Declaration(d)[19,22] Number[21,22] /Number /Declaration /QualifiedRule /AtRule"`;
 
 exports[`CSS syntax — invariants css-syntax-source-processor-recurse-blocks-false-stops-at-top-level-rules parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"x\\"]],[\\".\\",[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"c\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]],\\".\\",[\\"ident\\",\\"b\\"],[\\"{}\\",[\\"ident\\",\\"d\\"],\\":\\",[\\"number\\",\\"2\\",2,\\"integer\\"]]]]]"`;
 
@@ -38301,6 +38737,8 @@ exports[`CSS syntax — invariants css-syntax-source-processor-use-chains-and-ac
 exports[`CSS syntax — invariants css-syntax-source-processor-use-chains-and-accumulates-visitors-per-type prints {"mode":"minify"} 1`] = `"x{a:1}"`;
 
 exports[`CSS syntax — invariants css-syntax-source-processor-use-chains-and-accumulates-visitors-per-type tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,3] colon[3,4] number[4,5] right-curly-bracket[5,6] end=6"`;
+
+exports[`CSS syntax — invariants css-syntax-source-processor-walks-declarations-inside-at-rule-blocks parses {"entry":"SourceProcessor"} 1`] = `"AtRule(font-face)[0,36] Declaration(font-family)[11,24] Ident[23,24] /Ident /Declaration Declaration(src)[25,35] Url[29,35] /Url /Declaration /AtRule"`;
 
 exports[`CSS syntax — invariants css-syntax-source-processor-walks-declarations-inside-at-rule-blocks parses 1`] = `"[[\\"at-rule\\",\\"font-face\\",[],[[\\"ident\\",\\"font-family\\"],\\":\\",[\\"ident\\",\\"x\\"],\\";\\",[\\"ident\\",\\"src\\"],\\":\\",[\\"url\\",\\"y\\"]]]]"`;
 
@@ -38880,6 +39318,8 @@ exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comment
 
 exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-absent-keeps-the-banners prints {"mode":"minify","transforms":{"comments":"some"}} 1`] = `"/*! banner *//* @license L */a{b:c}"`;
 
+exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-absent-keeps-the-banners prints {"mode":"minify","transforms":{"comments":{"regexp":"inert"}}} 1`] = `"/*inert*/a{b:c}"`;
+
 exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-absent-keeps-the-banners prints {"mode":"minify","transforms":{"comments":false}} 1`] = `"a{b:c}"`;
 
 exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-absent-keeps-the-banners prints {"mode":"minify","transforms":{"comments":true}} 1`] = `"/*inert*//*! banner *//* @license L */a{b:c}/*# sourceMappingURL=x.map */"`;
@@ -38894,6 +39334,8 @@ exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comment
 
 exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-matches-a-global-pattern-from-the parses 2`] = `""`;
 
+exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-matches-a-global-pattern-from-the prints {"mode":"minify","transforms":{"comments":{"regexp":"k\\\\d","flags":"g"}}} 1`] = `"a{b:c}/*k1*/d{e:f}/*k2*/"`;
+
 exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-matches-a-global-pattern-from-the prints {"mode":"minify"} 1`] = `"a{b:c}d{e:f}"`;
 
 exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-matches-a-global-pattern-from-the tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,3] colon[3,4] ident[4,5] right-curly-bracket[5,6] comment[6,12] ident[12,13] left-curly-bracket[13,14] ident[14,15] colon[15,16] ident[16,17] right-curly-bracket[17,18] comment[18,24] end=24"`;
@@ -38905,6 +39347,8 @@ exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comment
 exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-source-map-pragma-with-comments prints {"mode":"minify","transforms":{"comments":"all"}} 1`] = `"a{b:c}/*# sourceMappingURL=x.map */"`;
 
 exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-source-map-pragma-with-comments prints {"mode":"minify","transforms":{"comments":"some"}} 1`] = `"a{b:c}"`;
+
+exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-source-map-pragma-with-comments prints {"mode":"minify","transforms":{"comments":{"regexp":"nothing-matches"}}} 1`] = `"a{b:c}"`;
 
 exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-source-map-pragma-with-comments prints {"mode":"minify","transforms":{"comments":false}} 1`] = `"a{b:c}"`;
 
@@ -39067,6 +39511,18 @@ exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-shorten
 exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-writes-a-data-uri-s-escapes-as-the-bytes parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"url\\",[\\"string\\",\\"data:image/svg+xml,%3Csvg%3E%3C/svg%3E\\"]]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-writes-a-data-uri-s-escapes-as-the-bytes parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-writes-a-data-uri-s-escapes-as-the-bytes prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"a{background:url(data:image/svg+xml,<svg></svg>)}"`;
+
+exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-writes-a-data-uri-s-escapes-as-the-bytes prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"svg:\\"<svg></svg>\\""`;
+
+exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-writes-a-data-uri-s-escapes-as-the-bytes prints {"mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"svg":"<svg id=r></svg>"}}} 1`] = `"a{background:url(data:image/svg+xml,<svg\\\\ id=r></svg>)}"`;
+
+exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-writes-a-data-uri-s-escapes-as-the-bytes prints {"mode":"minify","transforms":{"normalizeQuotes":false},"renderEmbeddedSource":"offers"} 1`] = `"a{background:url(\\"data:image/svg+xml,<svg></svg>\\")}"`;
+
+exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-writes-a-data-uri-s-escapes-as-the-bytes prints {"mode":"minify","transforms":{"normalizeQuotes":false},"renderEmbeddedSource":"offers"} 2`] = `"svg:\\"<svg></svg>\\""`;
+
+exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-writes-a-data-uri-s-escapes-as-the-bytes prints {"mode":"minify","transforms":{"normalizeQuotes":false},"renderEmbeddedSource":{"name":"answers","options":{"svg":"<svg id=r></svg>"}}} 1`] = `"a{background:url(\\"data:image/svg+xml,<svg id=r></svg>\\")}"`;
 
 exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-writes-a-data-uri-s-escapes-as-the-bytes prints {"mode":"minify","transforms":{"normalizeQuotes":false}} 1`] = `"a{background:url(\\"data:image/svg+xml,<svg></svg>\\")}"`;
 
@@ -39261,6 +39717,10 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-finds-namespa
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-finds-namespace-under-any-spelling-before-the-5 tokenizes 1`] = `"at-keyword[0,13] whitespace[13,14] ident[14,15] semicolon[15,16] at-keyword[16,22] whitespace[22,23] ident[23,24] left-curly-bracket[24,25] right-curly-bracket[25,26] end=26"`;
 
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"ident\\",\\"a:b\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7 parses 2`] = `"error[4,4]:eof-in-qualified-rule"`;
@@ -39268,6 +39728,10 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-iden
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7 tokenizes 1`] = `"ident[0,4] end=4"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-2 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"ident\\",\\"a:b\\"],\\" \\",[\\"ident\\",\\"c\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-2 parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-2 parses 1`] = `"[]"`;
 
@@ -39277,6 +39741,10 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-iden
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-2 tokenizes 1`] = `"ident[0,4] whitespace[4,5] ident[5,6] end=6"`;
 
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-3 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"ident\\",\\"a\\\\\\\\b\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-3 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-3 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-3 parses 2`] = `"error[4,4]:eof-in-qualified-rule"`;
@@ -39284,6 +39752,10 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-iden
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-3 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-3 tokenizes 1`] = `"ident[0,4] end=4"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-4 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"ident\\",\\"�a\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-4 parses {"entry":"parseAComponentValue"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-4 parses 1`] = `"[]"`;
 
@@ -39293,6 +39765,10 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-iden
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-4 tokenizes 1`] = `"ident[0,4] end=4"`;
 
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-5 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"ident\\",\\"�a\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-5 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-5 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-5 parses 2`] = `"error[7,7]:eof-in-qualified-rule"`;
@@ -39300,6 +39776,10 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-iden
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-5 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-5 tokenizes 1`] = `"ident[0,7] end=7"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-6 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"ident\\",\\"�a\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-6 parses {"entry":"parseAComponentValue"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-6 parses 1`] = `"[]"`;
 
@@ -39309,6 +39789,10 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-iden
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-6 tokenizes 1`] = `"ident[0,9] end=9"`;
 
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-7 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"ident\\",\\"😀a\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-7 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-7 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-7 parses 2`] = `"error[8,8]:eof-in-qualified-rule"`;
@@ -39316,6 +39800,10 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-iden
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-7 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-7 tokenizes 1`] = `"ident[0,8] end=8"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-8 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"ident\\",\\"a\\\\\\\\\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-8 parses {"entry":"parseAComponentValue"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-8 parses 1`] = `"[]"`;
 
@@ -39325,6 +39813,10 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-iden
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-8 tokenizes 1`] = `"ident[0,3] end=3"`;
 
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"string\\",\\"abc\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4 parses 2`] = `"error[8,8]:eof-in-qualified-rule"`;
@@ -39332,6 +39824,14 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-stri
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4 tokenizes 1`] = `"string[0,8] end=8"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-2 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"string\\",\\"a\\\\\\\\b\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-2 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-2 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"string\\",\\"a\\\\\\\\b\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-2 parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-2 parses 1`] = `"[]"`;
 
@@ -39341,6 +39841,10 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-stri
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-2 tokenizes 1`] = `"string[0,6] end=6"`;
 
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-3 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"string\\",\\"a\\\\\\"b\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-3 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-3 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-3 parses 2`] = `"error[6,6]:eof-in-qualified-rule"`;
@@ -39348,6 +39852,14 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-stri
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-3 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-3 tokenizes 1`] = `"string[0,6] end=6"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-4 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"string\\",\\"ab\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-4 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-4 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"string\\",\\"ab\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-4 parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-4 parses 1`] = `"[]"`;
 
@@ -39357,6 +39869,14 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-stri
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-4 tokenizes 1`] = `"string[0,7] end=7"`;
 
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-5 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"string\\",\\"ab\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-5 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-5 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"string\\",\\"ab\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-5 parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-5 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-5 parses 2`] = `"error[6,6]:eof-in-qualified-rule"`;
@@ -39364,6 +39884,14 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-stri
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-5 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-5 tokenizes 1`] = `"string[0,6] end=6"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-6 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"string\\",\\"ab\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-6 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-6 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"string\\",\\"ab\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-6 parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-6 parses 1`] = `"[]"`;
 
@@ -39373,6 +39901,14 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-stri
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-6 tokenizes 1`] = `"string[0,6] end=6"`;
 
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-7 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"string\\",\\"ab\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-7 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-7 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"string\\",\\"ab\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-7 parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
+
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-7 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-7 parses 2`] = `"error[6,6]:eof-in-qualified-rule"`;
@@ -39380,6 +39916,10 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-stri
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-7 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-7 tokenizes 1`] = `"string[0,6] end=6"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-8 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"string\\",\\"ab\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-8 parses {"entry":"parseAComponentValue"} 2`] = `"error[3,3]:eof-in-string"`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-8 parses 1`] = `"[]"`;
 
@@ -39389,6 +39929,10 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-stri
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-8 tokenizes 1`] = `"string[0,3] end=3"`;
 
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-9 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"string\\",\\"a\\\\\\"\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-9 parses {"entry":"parseAComponentValue"} 2`] = `"error[4,4]:eof-in-string"`;
+
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-9 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-9 parses 2`] = `"error[4,4]:eof-in-string error[4,4]:eof-in-qualified-rule"`;
@@ -39397,6 +39941,10 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-stri
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-9 tokenizes 1`] = `"string[0,4] end=4"`;
 
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-10 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"string\\",\\"a\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-10 parses {"entry":"parseAComponentValue"} 2`] = `"error[3,3]:eof-in-string"`;
+
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-10 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-10 parses 2`] = `"error[3,3]:eof-in-string error[3,3]:eof-in-qualified-rule"`;
@@ -39404,6 +39952,10 @@ exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-stri
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-10 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-10 tokenizes 1`] = `"string[0,3] end=3"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-11 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"string\\",\\"a\\\\\\\\\\"]"`;
+
+exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-11 parses {"entry":"parseAComponentValue"} 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-11 parses 1`] = `"[]"`;
 
@@ -41401,6 +41953,10 @@ exports[`CSS syntax — invariants source-processor-merging-adjacent-style-reads
 
 exports[`CSS syntax — invariants source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-8 tokenizes 1`] = `"ident[0,1] left-square-bracket[1,2] ident[2,3] right-square-bracket[3,4] left-curly-bracket[4,5] right-curly-bracket[5,6] ident[6,7] left-curly-bracket[7,8] ident[8,13] colon[13,14] hash[14,18] right-curly-bracket[18,19] end=19"`;
 
+exports[`CSS syntax — invariants source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-9 parses {"entry":"parseAComponentValue"} 1`] = `"[\\"ident\\",\\"a�\\"]"`;
+
+exports[`CSS syntax — invariants source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-9 parses {"entry":"parseAComponentValue"} 2`] = `"error[1,2]:eof-in-escape"`;
+
 exports[`CSS syntax — invariants source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-9 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-9 parses 2`] = `"error[1,2]:eof-in-escape error[2,2]:eof-in-qualified-rule"`;
@@ -41457,6 +42013,10 @@ exports[`CSS syntax — invariants source-processor-merging-adjacent-style-write
 
 exports[`CSS syntax — invariants source-processor-merging-adjacent-style-writes-a-style-attribute-whose-2 tokenizes 1`] = `"comment[0,7] end=7"`;
 
+exports[`CSS syntax — invariants source-processor-merging-adjacent-style-writes-a-style-attribute-whose-3 parses {"entry":"parseAComponentValue"} 1`] = `"\\";\\""`;
+
+exports[`CSS syntax — invariants source-processor-merging-adjacent-style-writes-a-style-attribute-whose-3 parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
 exports[`CSS syntax — invariants source-processor-merging-adjacent-style-writes-a-style-attribute-whose-3 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants source-processor-merging-adjacent-style-writes-a-style-attribute-whose-3 parses 2`] = `"error[1,1]:eof-in-qualified-rule"`;
@@ -41464,6 +42024,10 @@ exports[`CSS syntax — invariants source-processor-merging-adjacent-style-write
 exports[`CSS syntax — invariants source-processor-merging-adjacent-style-writes-a-style-attribute-whose-3 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants source-processor-merging-adjacent-style-writes-a-style-attribute-whose-3 tokenizes 1`] = `"semicolon[0,1] end=1"`;
+
+exports[`CSS syntax — invariants source-processor-merging-adjacent-style-writes-a-style-attribute-whose-4 parses {"entry":"parseAStylesheetsContents"} 1`] = `"[]"`;
+
+exports[`CSS syntax — invariants source-processor-merging-adjacent-style-writes-a-style-attribute-whose-4 parses {"entry":"parseAStylesheetsContents"} 2`] = `"error[9,9]:eof-in-qualified-rule"`;
 
 exports[`CSS syntax — invariants source-processor-merging-adjacent-style-writes-a-style-attribute-whose-4 parses 1`] = `"[]"`;
 
@@ -41615,7 +42179,17 @@ exports[`CSS syntax — invariants source-processor-process-async-over-a-data-ur
 
 exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-offers-nothing-for-a-url-of-two parses 2`] = `""`;
 
+exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-offers-nothing-for-a-url-of-two prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"a{background:url(\\"data:image/svg+xml,<svg/>\\" \\"x\\")}"`;
+
+exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-offers-nothing-for-a-url-of-two prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `""`;
+
 exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-offers-nothing-for-a-url-of-two prints {"mode":"minify"} 1`] = `"a{background:url(\\"data:image/svg+xml,<svg/>\\" \\"x\\")}"`;
+
+exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-offers-nothing-for-a-url-of-two prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"a{background:url(\\"data:image/svg+xml,<svg/>\\" \\"x\\")}"`;
+
+exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-offers-nothing-for-a-url-of-two prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":"offers"} 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-offers-nothing-for-a-url-of-two prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":{"name":"as-written","async":true}} 1`] = `"a{background:url(\\"data:image/svg+xml,<svg/>\\" \\"x\\")}"`;
 
 exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-offers-nothing-for-a-url-of-two tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,12] colon[12,13] function[13,17] string[17,44] whitespace[44,45] string[45,48] right-parenthesis[48,49] right-curly-bracket[49,50] end=50"`;
 
@@ -41623,7 +42197,17 @@ exports[`CSS syntax — invariants source-processor-process-async-over-a-data-ur
 
 exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-offers-nothing-for-a-url-that-is parses 2`] = `""`;
 
+exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-offers-nothing-for-a-url-that-is prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `".a{background:url(\\"data:image/svg+xml,<svg>\\\\\\\\</svg>\\");b:url(x.png)}.b{background:url(x.png)}"`;
+
+exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-offers-nothing-for-a-url-that-is prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `""`;
+
 exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-offers-nothing-for-a-url-that-is prints {"mode":"minify"} 1`] = `".a{background:url(\\"data:image/svg+xml,<svg>\\\\\\\\</svg>\\");b:url(x.png)}.b{background:url(x.png)}"`;
+
+exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-offers-nothing-for-a-url-that-is prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":"offers"} 1`] = `".a{background:url(\\"data:image/svg+xml,<svg>\\\\\\\\</svg>\\");b:url(x.png)}.b{background:url(x.png)}"`;
+
+exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-offers-nothing-for-a-url-that-is prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":"offers"} 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-offers-nothing-for-a-url-that-is prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":{"name":"as-written","async":true}} 1`] = `".a{background:url(\\"data:image/svg+xml,<svg>\\\\\\\\</svg>\\");b:url(x.png)}.b{background:url(x.png)}"`;
 
 exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-offers-nothing-for-a-url-that-is tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,13] colon[13,14] function[14,18] string[18,52] right-parenthesis[52,53] semicolon[53,54] ident[54,55] colon[55,56] function[56,60] string[60,67] right-parenthesis[67,68] right-curly-bracket[68,69] delim[69,70] ident[70,71] left-curly-bracket[71,72] ident[72,82] colon[82,83] url[83,93|87,92] right-curly-bracket[93,94] end=94"`;
 
@@ -41632,6 +42216,14 @@ exports[`CSS syntax — invariants source-processor-process-async-over-a-data-ur
 exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-rebuilds-a-quoted-url-around-the parses 2`] = `""`;
 
 exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-rebuilds-a-quoted-url-around-the prints {"mode":"minify"} 1`] = `".a{background:url(data:image/svg+xml,<svg>%20%20</svg>)}"`;
+
+exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-rebuilds-a-quoted-url-around-the prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":"offers"} 1`] = `".a{background:url(data:image/svg+xml,<svg>%20%20</svg>)}"`;
+
+exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-rebuilds-a-quoted-url-around-the prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"svg:\\"<svg>  </svg>\\""`;
+
+exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-rebuilds-a-quoted-url-around-the prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"svg":"<svg/>"},"async":true}} 1`] = `".a{background:url(data:image/svg+xml,<svg/>)}"`;
+
+exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-rebuilds-a-quoted-url-around-the prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":{"name":"decline","async":true}} 1`] = `".a{background:url(data:image/svg+xml,<svg>%20%20</svg>)}"`;
 
 exports[`CSS syntax — invariants source-processor-process-async-over-a-data-url-rebuilds-a-quoted-url-around-the tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,13] colon[13,14] url[14,63|18,62] right-curly-bracket[63,64] end=64"`;
 
@@ -41713,6 +42305,12 @@ exports[`CSS syntax — invariants source-processor-render-embedded-source-over-
 
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its parses 2`] = `""`;
 
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its prints {"mode":"minify","renderEmbeddedSource":"as-written"} 1`] = `".a{background:url(data:text/css,a{color:red})}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `".a{background:url(data:text/css,a{color:red})}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\"a{color:red}\\""`;
+
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its prints {"mode":"minify"} 1`] = `".a{background:url(data:text/css,a{color:red})}"`;
 
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,13] colon[13,14] function[14,18] string[18,46] right-parenthesis[46,47] right-curly-bracket[47,48] end=48"`;
@@ -41720,6 +42318,12 @@ exports[`CSS syntax — invariants source-processor-render-embedded-source-over-
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its-2 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"url\\",[\\"string\\",\\"data:application/json,{\\\\\\"a\\\\\\":1}\\"]]]]]"`;
 
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its-2 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its-2 prints {"mode":"minify","renderEmbeddedSource":"as-written"} 1`] = `".a{background:url('data:application/json,{\\"a\\":1}')}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its-2 prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `".a{background:url('data:application/json,{\\"a\\":1}')}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its-2 prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"json:\\"{\\\\\\"a\\\\\\":1}\\""`;
 
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its-2 prints {"mode":"minify"} 1`] = `".a{background:url('data:application/json,{\\"a\\":1}')}"`;
 
@@ -41729,6 +42333,12 @@ exports[`CSS syntax — invariants source-processor-render-embedded-source-over-
 
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its-3 parses 2`] = `""`;
 
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its-3 prints {"mode":"minify","renderEmbeddedSource":"as-written"} 1`] = `".a{background:url(data:image/png;base64,iVBORw0KGgo=)}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its-3 prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `".a{background:url(data:image/png;base64,iVBORw0KGgo=)}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its-3 prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `""`;
+
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its-3 prints {"mode":"minify"} 1`] = `".a{background:url(data:image/png;base64,iVBORw0KGgo=)}"`;
 
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its-3 tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,13] colon[13,14] function[14,18] string[18,54] right-parenthesis[54,55] right-curly-bracket[55,56] end=56"`;
@@ -41736,6 +42346,12 @@ exports[`CSS syntax — invariants source-processor-render-embedded-source-over-
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its-4 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"url\\",[\\"string\\",\\"./img.png\\"]]]]]"`;
 
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its-4 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its-4 prints {"mode":"minify","renderEmbeddedSource":"as-written"} 1`] = `".a{background:url(./img.png)}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its-4 prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `".a{background:url(./img.png)}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its-4 prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `""`;
 
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-names-the-language-its-4 prints {"mode":"minify"} 1`] = `".a{background:url(./img.png)}"`;
 
@@ -41745,13 +42361,53 @@ exports[`CSS syntax — invariants source-processor-render-embedded-source-over-
 
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload parses 2`] = `""`;
 
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"mode":"minify","renderEmbeddedSource":"as-written"} 1`] = `".a{background:url(\\"data:image/svg+xml,<svg>  <rect/></svg>\\")}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"mode":"minify","renderEmbeddedSource":"decline"} 1`] = `".a{background:url(\\"data:image/svg+xml,<svg>  <rect/></svg>\\")}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `".a{background:url(\\"data:image/svg+xml,<svg>  <rect/></svg>\\")}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"svg:\\"<svg>  <rect/></svg>\\""`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"mode":"minify","renderEmbeddedSource":"throws"} 1`] = `".a{background:url(\\"data:image/svg+xml,<svg>  <rect/></svg>\\")}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"svg":"<svg viewBox=\\"0 0 2 2\\"/>"}}} 1`] = `".a{background:url(\\"data:image/svg+xml,<svg viewBox=\\\\\\"0 0 2 2\\\\\\"/>\\")}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"svg":"<svg>%#</svg>"}}} 1`] = `".a{background:url(data:image/svg+xml,<svg>%25%23</svg>)}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"svg":"<svg><rect/></svg>"}}} 1`] = `".a{background:url(data:image/svg+xml,<svg><rect/></svg>)}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"svg":42}}} 1`] = `".a{background:url(\\"data:image/svg+xml,<svg>  <rect/></svg>\\")}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"svg":null}}} 1`] = `".a{background:url(\\"data:image/svg+xml,<svg>  <rect/></svg>\\")}"`;
+
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"mode":"minify"} 1`] = `".a{background:url(\\"data:image/svg+xml,<svg>  <rect/></svg>\\")}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":"offers"} 1`] = `".a{background:url(\\"data:image/svg+xml,<svg>  <rect/></svg>\\")}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"svg:\\"<svg>  <rect/></svg>\\""`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"svg":"<svg> <rect/></svg>"},"async":true}} 1`] = `".a{background:url(data:image/svg+xml,<svg>\\\\ <rect/></svg>)}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":{"name":"as-written","async":true}} 1`] = `".a{background:url(\\"data:image/svg+xml,<svg>  <rect/></svg>\\")}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":{"name":"decline","async":true}} 1`] = `".a{background:url(\\"data:image/svg+xml,<svg>  <rect/></svg>\\")}"`;
 
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,13] colon[13,14] function[14,18] string[18,59] right-parenthesis[59,60] right-curly-bracket[60,61] end=61"`;
 
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload-2 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"url\\",\\"data:image/svg+xml;base64,PHN2Zz4gIDxyZWN0Lz48L3N2Zz4=\\"]]]]"`;
 
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload-2 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload-2 prints {"mode":"minify","renderEmbeddedSource":"as-written"} 1`] = `".a{background:url(data:image/svg+xml;base64,PHN2Zz4gIDxyZWN0Lz48L3N2Zz4=)}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload-2 prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `".a{background:url(data:image/svg+xml;base64,PHN2Zz4gIDxyZWN0Lz48L3N2Zz4=)}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload-2 prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"svg:\\"<svg>  <rect/></svg>\\""`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload-2 prints {"mode":"minify","renderEmbeddedSource":"throws"} 1`] = `".a{background:url(data:image/svg+xml;base64,PHN2Zz4gIDxyZWN0Lz48L3N2Zz4=)}"`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload-2 prints {"mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"svg":"<svg><rect/></svg>"}}} 1`] = `".a{background:url(data:image/svg+xml;base64,PHN2Zz48cmVjdC8+PC9zdmc+)}"`;
 
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload-2 prints {"mode":"minify"} 1`] = `".a{background:url(data:image/svg+xml;base64,PHN2Zz4gIDxyZWN0Lz48L3N2Zz4=)}"`;
 

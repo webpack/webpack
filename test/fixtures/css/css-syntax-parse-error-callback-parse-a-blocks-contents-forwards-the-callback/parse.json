@@ -1,0 +1,10 @@
+[
+	{
+		"entry": "parseABlocksContents",
+		"options": {}
+	},
+	{
+		"entry": "parseADeclaration",
+		"options": {}
+	}
+]

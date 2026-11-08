@@ -26,5 +26,13 @@
 		"transforms": {
 			"comments": false
 		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": {
+				"regexp": "nothing-matches"
+			}
+		}
 	}
 ]

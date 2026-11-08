@@ -32,5 +32,13 @@
 		"transforms": {
 			"comments": "banner"
 		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": {
+				"regexp": "inert"
+			}
+		}
 	}
 ]
