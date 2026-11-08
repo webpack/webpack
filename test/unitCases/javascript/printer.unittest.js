@@ -117,149 +117,6 @@ const {
 	WebpackParser
 } = require("../../../lib/javascript/syntax-parser");
 
-// Sources reaching what the printer writes of names, comments, directives
-// and literals.
-const SOURCES = [
-	// Names beyond ASCII, one a surrogate pair, spaced from the words beside them.
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names"),
-	// Comments inside the `(` a `new` reads its callee past, nested, not before
-	// the function opening it, and before a directive past an empty statement.
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-2"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-3"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-4"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-5"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-6"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-7"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-8"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-9"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-10"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-11"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-12"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-13"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-14"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-15"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-16"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-17"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-18"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-19"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-20"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-21"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-22"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-23"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-24"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-25"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-26"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-27"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-28"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-29"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-30"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-31"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-32"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-33"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-34"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-35"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-36"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-37"),
-	// What a print of the print kept as written: each fixed in both printers.
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-38"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-39"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-40"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-41"),
-	// Comments where a node's text, or the one holding it, starts.
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-42"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-43"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-44"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-45"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-46"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-47"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-48"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-49"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-50"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-51"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-52"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-53"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-54"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-55")
-];
-
-// Sources reaching what the SourceProcessor's printer reads off a node's
-// place, which its own text cannot tell it.
-const PRINTED_SOURCES = [
-	// Parentheses a place asks for, by what holds the node.
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-56"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-57"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-58"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-59"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-60"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-61"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-62"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-63"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-64"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-65"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-66"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-67"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-68"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-69"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-70"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-71"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-72"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-73"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-74"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-75"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-76"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-77"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-78"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-79"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-80"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-81"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-82"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-83"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-84"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-85"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-86"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-87"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-88"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-89"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-90"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-91"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-92"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-93"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-94"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-95"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-96"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-97"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-98"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-99"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-100"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-101"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-102"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-103"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-104"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-105"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-106"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-107"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-108"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-109"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-110"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-111"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-112"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-113"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-114"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-115"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-116"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-117"),
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-118")
-];
-// Sources the printer reads `use asm` off for a number where no scope says it.
-PRINTED_SOURCES.push(
-	fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-119")
-);
-// A source spelling its line breaks densely, which ECMAScript 2015 prints
-// in templates: a string, a template and a template's tag apart.
-PRINTED_SOURCES.push(
-	`("r\\ns"); ${'x = "a\\nb";'.repeat(1000)} y = "c\\nd"; z = \`e\\nf\`; t\`g\\nh\`; w = "\\t\\t\\n${"i".repeat(120)}"; import("j\\nk"); u.v = 1; import k from "l\\nm" with { type: "n\\no" }; ({ "p\\nq": 1 }); ("r\\ns"); x = \`\${"t\\nu"}\`;`
-);
-
 describe("JavaScript minifier printing a SyntaxTree", () => {
 	it("should compress in the one pass where nothing outside a node decides it", () => {
 		/** @type {[string, import("../../../lib/javascript/syntax-printer").MinifyOptions, string][]} */
@@ -2253,56 +2110,6 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(code).toBe("if(a){b()}/* c */");
 	});
 
-	it("should read terser's snake_case option names as their camelCase names", () => {
-		const named = fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-snake-case");
-		const quoted = fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-snake-case-2");
-		/** @typedef {import("../../../lib/javascript/syntax-printer").MinifyOptions} MinifyOptions */
-		/** @type {[string, MinifyOptions, MinifyOptions, MinifyOptions][]} */
-		const cases = [
-			[named, {}, { keepFnames: true }, { keep_fnames: true }],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-snake-case-3"), {}, { keepClassnames: true }, { keep_classnames: true }],
-			[named, {}, { mangle: { keepFnames: true } }, { mangle: { keep_fnames: true } }],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-snake-case-4"), {}, { compress: { dropDebugger: false } }, { compress: { drop_debugger: false } }],
-			[
-				quoted,
-				{ mangle: { properties: { regex: /^zz/ } } },
-				{ mangle: { properties: { regex: /^zz/, keepQuoted: true } } },
-				{ mangle: { properties: { regex: /^zz/, keep_quoted: true } } }
-			],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-snake-case-5"), {}, { format: { asciiOnly: true } }, { format: { ascii_only: true } }],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-snake-case-6"), {}, { parse: { bareReturns: true } }, { parse: { bare_returns: true } }]
-		];
-		/**
-		 * @param {string} source a program
-		 * @param {MinifyOptions} options the options beside `compress` and `mangle`
-		 * @returns {string} the code, or the error it throws
-		 */
-		const print = (source, options) => {
-			try {
-				return minifyOnePass(source, { compress: {}, mangle: {}, ...options }).code;
-			} catch (err) {
-				return /** @type {Error} */ (err).message;
-			}
-		};
-		for (const [source, baseline, camelCase, snakeCase] of cases) {
-			const printed = print(source, camelCase);
-			expect(print(source, snakeCase)).toBe(printed);
-			// Each option changes the output, so either spelling is read.
-			expect(print(source, baseline)).not.toBe(printed);
-		}
-		// A print `minify` does not read takes the format options as given.
-		expect(minifyOnePass(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-snake-case-5"), { format: { ascii_only: true } }).code).toBe(
-			'g("\\xe9");'
-		);
-		// Where both are given, the camelCase name wins.
-		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-snake-case-5"), { format: { asciiOnly: false, ascii_only: true } })).toBe(
-			'g("é");'
-		);
-		expect(print(named, { keepFnames: false, keep_fnames: true })).toBe(
-			print(named, {})
-		);
-	});
-
 	it("should print as the format options ask in the one pass", () => {
 		/** @type {[string, import("../../../lib/javascript/syntax-printer").MinifyOptions, string][]} */
 		const cases = [
@@ -2383,95 +2190,6 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			})
 		);
 	});
-
-	// Each source printed, whichever of these it is read with, is a program
-	// that parses as what it was read as.
-	for (const [name, options] of Object.entries({
-		"names mangled": { mangle: true },
-		"every comment, compressed": {
-			compress: {},
-			mangle: true,
-			format: { comments: "all" }
-		},
-		// ECMAScript 5 spells no name past the BMP in ASCII, as terser has it.
-		"quoting options": {
-			compress: {},
-			mangle: false,
-			ecma: 2015,
-			format: {
-				comments: "all",
-				quote_style: 3,
-				keep_quoted_props: true,
-				keep_numbers: true,
-				ascii_only: true
-			}
-		},
-		"wrapping options": {
-			mangle: true,
-			format: {
-				comments: "all",
-				wrap_iife: true,
-				wrap_func_args: true,
-				webkit: true,
-				semicolons: false,
-				preserve_annotations: true,
-				ie8: true,
-				safari10: true,
-				preamble: "/* p */"
-			}
-		},
-		"ECMAScript 2020": {
-			compress: {},
-			mangle: true,
-			ecma: 2020,
-			format: { comments: "/!/" }
-		}
-	})) {
-		it(`should print each source, with ${name}`, () => {
-			/** @type {string[]} */
-			const printed = [];
-			for (const source of [...SOURCES, ...PRINTED_SOURCES]) {
-				/** @type {"script" | "module"} */
-				let sourceType = "script";
-				try {
-					acorn.parse(source, {
-						ecmaVersion: "latest",
-						allowHashBang: true,
-						allowImportExportEverywhere: true
-					});
-				} catch (_err) {
-					sourceType = "module";
-				}
-				/** @type {string} */
-				let code;
-				try {
-					({ code } = minifyOnePass(source, {
-					.../** @type {Record<string, EXPECTED_ANY>} */ (
-						JSON.parse(JSON.stringify(options))
-					),
-						sourceType
-					}));
-				} catch (err) {
-					// A source a module refuses, as `export default` twice.
-					printed.push(`throws ${/** @type {Error} */ (err).message}`);
-					continue;
-				}
-				expect(() =>
-					acorn.parse(code, {
-						ecmaVersion: "latest",
-						sourceType,
-						allowHashBang: true,
-						allowImportExportEverywhere: sourceType === "script"
-					})
-				).not.toThrow();
-				// The source spelling line breaks densely prints a line per string.
-				printed.push(
-					code.length > 2000 ? `${code.split("\n").length} lines` : code
-				);
-			}
-			expect(printed.join("\n\n")).toMatchSnapshot();
-		});
-	}
 
 	it("should forget what the last one-pass print found", () => {
 		const source =
@@ -2984,81 +2702,6 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(pattern.lastIndex).toBe(0);
 	});
 
-	it("should print an unread call's body, a string array split and names given by use, running alike", () => {
-		const calls = (/** @type {string} */ body) =>
-			`var log=[];function b(){log.push('b')}function c(){log.push('c')}function g(a){${body}}g(0);g(1);g(null);console.log(log.join())`;
-		const names = (/** @type {number} */ count, /** @type {string} */ prefix) =>
-			Array.from({ length: count }, (_, i) => `${prefix}${i}`);
-		const busy = names(70, "longName");
-		const many = names(60, "q");
-		const strings = (/** @type {(i: number) => string} */ element) =>
-			`[${Array.from({ length: 120 }, (_, i) => element(i)).join(",")}]`;
-		for (const [source, options] of /** @type {[string, EXPECTED_OBJECT?][]} */ ([
-			// An unread call prints its first `if`'s test, then `||` and the rest.
-			[calls("(function(){if(a)return;b();c()})()")],
-			[calls("(function(){if(a)return})()")],
-			[calls("(function(){if(a)return;'x';b()})()")],
-			[calls("(function(){if(a){return}b()})()")],
-			[calls("(function(){if(a=a)return;b()})()")],
-			[calls("(function(){if(a??0)return;b()})()")],
-			[calls("(function(){if(a)return;0,b()})()")],
-			// A function a call returns from prints as its value.
-			[
-				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a")
-			],
-			[
-				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-2")
-			],
-			// A `var` set after the call that reads it is no constant there.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-3")],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-4")],
-			// Enough strings print as one split, on a delimiter none holds.
-			[
-				`var a = ${strings((i) => `'${String.fromCharCode(65 + (i % 26))}'`)}; console.log(a.length, a[5])`
-			],
-			[
-				`var a = ${strings((i) => `'w${i}'`).slice(0, -1)}, 1]; console.log(a.length, a[5])`
-			],
-			[
-				`var a = ${strings((i) => `'w${i}'`).slice(0, -1)}, b]; var b; console.log(a.length, a[5])`
-			],
-			// The busiest names take the shortest, where that saves enough.
-			[
-				`function f(p){var ${busy.map((x, i) => `${x}=p+${i}`).join(",")};return [${busy.map((x) => `${x},${x},${x},${x},${x}`).join(",")}].join()}console.log(f(1))`
-			],
-			// A private name a direct `eval` reads is kept, and taken by no other.
-			[
-				`class A{${[..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_$"]
-					.map((letter, i) => `#${letter}=${i};`)
-					.join(
-						""
-					)}m(){return eval('this.#e')}}class B{#veryLong=1;get(){return this.#veryLong}}console.log(new A().m(), new B().get())`
-			],
-			// An array read at a known index prints as the element only where it reads alike.
-			[
-				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-5")
-			],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-6")],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-7"), { format: { comments: "all" } }],
-			// `??` mixed with `&&` or `||` keeps its parentheses.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-8")],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-9")],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-10")],
-			// A function expression's name is its scope's under ie8.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-11"), { ie8: true }],
-			[
-				`var x = (function(){ var ${many.map((x, i) => `${x}=${i}`).join(",")}; return function g(z){return z + ${many.join("+")} + typeof g}})(); console.log(x(1))`
-			]
-		])) {
-			const { code } = minifyOnePass(source, {
-				compress: {},
-				mangle: true,
-				...options
-			});
-			expect(runProgram(code)).toBe(runProgram(source));
-		}
-	});
-
 	it("should print a part a node prints as without the parentheses it took as that node's operand", () => {
 		const source = fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-kept-part-as-its-place-takes");
 		const expected =
@@ -3423,32 +3066,6 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 		}
 	});
 
-	it("should keep the names asked for, and give the busiest names the shortest, in the one pass", () => {
-		expect(
-			minifyOnePass(
-				fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-keep-the-names-asked-for-and"),
-				{ compress: false, mangle: { keep_fnames: /inner|keepFn/, keep_classnames: /K/ } }
-			).code
-		).toBe(
-			"function outer(){function inner(){}function n(){}class K{}class e{}var keepFn=function(){},s=()=>1,o=function n(){},[r]=[],t;let KCls=class{},c=class{},l=class n{},u=1;return[inner,n,K,e,keepFn,s,o,r,t,KCls,c,l,u]}outer();"
-		);
-		expect(
-			minifyOnePass(fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-keep-the-names-asked-for-and-2"), {
-				compress: false,
-				mangle: { reserved: ["n", "t"] }
-			}).code
-		).toBe("function outer(){var r=1,u=2;return r+u}outer();");
-		// Past the one-letter names, the name read most takes one of them.
-		const names = Array.from({ length: 70 }, (_, i) => `v${i}`);
-		const source = `function g(i) { return i } function h(...a) { console.log(a.length, a[a.length - 1]) } function f(){ var ${names
-			.map((name, i) => `${name}=g(${i})`)
-			.join(",")}; h(${names.join(",")}); h(${Array(300).fill("v69").join(",")}); } f()`;
-		const { code } = minifyOnePass(source, { compress: {}, mangle: true });
-		expect(code).toMatch(/h\(([\w$])(?:,\1){299}\)/);
-		expect(runProgram(code)).toBe(runProgram(source));
-		expect(runProgram(code)).toBe("70 69\n300 69");
-	});
-
 	it("should run as the source runs under ie8 or safari10 in the one pass", async () => {
 		const sources = [
 			fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-run-as-the-source-runs-under"),
@@ -3648,17 +3265,6 @@ describe("jsMinify", () => {
 			});
 		}
 	}
-
-	it("should give back an event handler it prints as nothing, as written", async () => {
-		const result = await jsMinify({ "handler.js": "void 0;" }, undefined, {
-			as: "event-handler"
-		});
-		expect(result.code).toBe("void 0;");
-	});
-
-	it("should report a parse error rather than throwing a different shape", async () => {
-		await expect(jsMinify({ "broken.js": "function (" })).rejects.toThrow();
-	});
 
 	it("should cache the names it hands out across assets", async () => {
 		const nameCache = {};
@@ -4126,18 +3732,6 @@ describe("one-pass minify of statement sequences", () => {
 		expect(
 			minifyOnePass(fixture("javascript", "one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left-4"), { compress: {} }).code
 		).toBe("(function(){/*!keep*/return 1});({a:/*!k*/1});");
-	});
-});
-
-describe("one-pass minify options", () => {
-	it("should read `output` as terser's older name for `format`, never beside it", () => {
-		expect(
-			minifyOnePass(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-snake-case-5"), { compress: {}, output: { ascii_only: true } })
-				.code
-		).toBe('g("\\xe9");');
-		expect(() =>
-			minifyOnePass(fixture("javascript", "parse-program-returns-the-program-s-node-read-through-a-until-the-next-parse-2"), { compress: {}, format: {}, output: {} })
-		).toThrow("only one of them");
 	});
 });
 

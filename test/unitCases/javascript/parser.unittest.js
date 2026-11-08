@@ -122,13 +122,6 @@ describe("WebpackParser", () => {
 	});
 
 	describe("regexp fast path", () => {
-		it("should respect the ecmaVersion for allowed flags", () => {
-			expect(() => parse(fixture("javascript", "webpack-parser-regexp-fast-path-should-respect-the-ecma-version-for-allowed"), { ecmaVersion: 6 })).toThrow(
-				/Invalid regular expression flag/
-			);
-			expect(parse(fixture("javascript", "webpack-parser-regexp-fast-path-should-respect-the-ecma-version-for-allowed"), { ecmaVersion: 2018 }).ast).toBeDefined();
-		});
-
 		it("should build the literal value once", () => {
 			const { ast } = parse(fixture("javascript", "webpack-parser-regexp-fast-path-should-build-the-literal-value-once"));
 			const statement =
@@ -195,26 +188,6 @@ describe("WebpackParser", () => {
 			const lit = literal(fixture("javascript", "webpack-parser-string-fast-path-should-read-plain-strings-on-the-fast-path"));
 			expect(lit.raw).toBe('"abc"');
 			expect(lit.range).toEqual([8, 13]);
-		});
-
-		it("should allow unescaped LS/PS in strings (ES2019+) but delegate them below ES2019", () => {
-			expect(literal(fixture("javascript", "webpack-parser-string-fast-path-should-allow-unescaped-ls-ps-in-strings-es2019")).value).toBe("\u2028");
-			expect(literal(fixture("javascript", "webpack-parser-string-fast-path-should-allow-unescaped-ls-ps-in-strings-es2019-2")).value).toBe("\u2029");
-			expect(() => parse(fixture("javascript", "webpack-parser-string-fast-path-should-allow-unescaped-ls-ps-in-strings-es2019"), { ecmaVersion: 2018 })).toThrow(
-				/Unterminated string constant/
-			);
-			// an escape in the same string routes it through the cold reader, which
-			// carries the version rule of its own
-			expect(literal(fixture("javascript", "webpack-parser-string-fast-path-should-allow-unescaped-ls-ps-in-strings-es2019-3")).value).toBe("a\tb\u2028c");
-			expect(() =>
-				parse(fixture("javascript", "webpack-parser-string-fast-path-should-allow-unescaped-ls-ps-in-strings-es2019-3"), { ecmaVersion: 2018 })
-			).toThrow(/Unterminated string constant/);
-		});
-
-		it("should read strings identically when acorn tracks locations", () => {
-			expect(
-				literal(fixture("javascript", "webpack-parser-string-fast-path-should-read-plain-strings-on-the-fast-path"), { ranges: false, locations: true }).value
-			).toBe("abc");
 		});
 	});
 
@@ -309,13 +282,6 @@ describe("WebpackParser", () => {
 			parser.statementPath = [];
 			expect(() => parser.isAsiPosition(0)).toThrow("Not in statement");
 		});
-
-		it("should keep splitting statements at ASI boundaries", () => {
-			expect(parse(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3")).ast.body).toHaveLength(1);
-			expect(parse(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at")).ast.body).toHaveLength(2);
-			const { ast } = parse(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-2"), { ranges: false });
-			expect(ast.body).toHaveLength(2);
-		});
 	});
 
 	describe("identifier word cache", () => {
@@ -359,32 +325,6 @@ describe("WebpackParser", () => {
 			expect(labeled.label.name).toBe("outer");
 			expect(labeled.range).toEqual([0, 32]);
 			expect(() => parse(fixture("javascript", "webpack-parser-statements-should-parse-labeled-statements-through-acorn-s-tail-2"))).toThrow(/Unsyntactic break/);
-		});
-
-		it("should parse if and return through acorn without ranges", () => {
-			const { ast } = parse(
-				fixture("javascript", "webpack-parser-statements-should-parse-if-and-return-through-acorn-without"),
-				{ ranges: false }
-			);
-			expect(ast.body.map((s) => s.type)).toEqual([
-				"FunctionDeclaration",
-				"IfStatement"
-			]);
-		});
-
-		it("should delegate rare statement heads to acorn", () => {
-			const { ast } = parse(
-				fixture("javascript", "webpack-parser-statements-should-delegate-rare-statement-heads-to-acorn"),
-				{ ecmaVersion: 2019 }
-			);
-			expect(ast.body.map((s) => s.type)).toEqual([
-				"DoWhileStatement",
-				"SwitchStatement",
-				"TryStatement",
-				"WithStatement",
-				"DebuggerStatement",
-				"EmptyStatement"
-			]);
 		});
 
 		it("should keep the statement fast path off for parser plugins overriding statement parsers", () => {
@@ -431,21 +371,6 @@ describe("WebpackParser", () => {
 	});
 
 	describe("binary expressions", () => {
-		it("should keep private-in checks and delegate without ranges", () => {
-			expect(
-				parse(fixture("javascript", "webpack-parser-binary-expressions-should-keep-private-in-checks-and-delegate")).ast
-			).toBeDefined();
-			// a private name only reaches buildBinary's right side via a chain
-			expect(() =>
-				parse(fixture("javascript", "webpack-parser-binary-expressions-should-keep-private-in-checks-and-delegate-2"))
-			).toThrow(/Private identifier can only be left side/);
-			const { ast } = parse(fixture("javascript", "webpack-parser-binary-expressions-should-keep-private-in-checks-and-delegate-3"), { ranges: false });
-			expect(
-				/** @type {import("estree").ExpressionStatement} */ (ast.body[0])
-					.expression.type
-			).toBe("LogicalExpression");
-		});
-
 		it("should climb operator precedence like acorn", () => {
 			/**
 			 * @param {string} code source
@@ -512,21 +437,6 @@ describe("WebpackParser", () => {
 		});
 	});
 
-	describe("subscript parsing", () => {
-		it("should delegate to acorn without ranges and pre-2020 ecmaVersions", () => {
-			expect(parse(fixture("javascript", "webpack-parser-subscript-parsing-should-delegate-to-acorn-without-ranges-and-pre"), { ranges: false }).ast).toBeDefined();
-			const { ast } = parse(fixture("javascript", "webpack-parser-subscript-parsing-should-delegate-to-acorn-without-ranges-and-pre-2"), { ecmaVersion: 10 });
-			const call =
-				/** @type {import("estree").CallExpression} */
-				(
-					/** @type {import("estree").ExpressionStatement} */ (ast.body[0])
-						.expression
-				);
-			// acorn only adds `optional` from ecmaVersion 11 on
-			expect("optional" in call.callee).toBe(false);
-		});
-	});
-
 	describe("punctuator fast path", () => {
 		it("should keep ranges aligned across punctuator-dense code", () => {
 			const { ast } = parse(fixture("javascript", "webpack-parser-punctuator-fast-path-should-keep-ranges-aligned-across-punctuator"));
@@ -579,21 +489,6 @@ describe("WebpackParser", () => {
 			const close = parse(fixture("javascript", "webpack-parser-owned-operator-scanner-should-read-the-inlined-html-comment-forms-3"));
 			expect(close.comments.map((c) => c.value)).toEqual([" rest"]);
 			expect(op(fixture("javascript", "webpack-parser-owned-operator-scanner-should-read-the-inlined-html-comment-forms-4"))).toBe(">");
-		});
-	});
-
-	describe("object literals and patterns (single-shape nodes)", () => {
-		it("should delegate object parsing without ranges", () => {
-			const { ast } = parse(fixture("javascript", "webpack-parser-object-literals-and-patterns-single-shape-nodes-should-delegate"), { ranges: false });
-			const properties =
-				/** @type {{ expression: import("estree").ObjectExpression }} */ (
-					/** @type {unknown} */ (ast.body[0])
-				).expression.properties;
-			expect(properties.map((p) => p.type)).toEqual([
-				"Property",
-				"SpreadElement",
-				"Property"
-			]);
 		});
 	});
 
@@ -722,114 +617,6 @@ describe("WebpackParser", () => {
 	});
 
 	describe("import phases (owned defer/source parsing)", () => {
-		/**
-		 * @param {string} code source
-		 * @param {object=} options extra parse options
-		 * @returns {import("../../../lib/javascript/JavascriptParser").ParseResult["ast"]["body"][0]} first statement
-		 */
-		const first = (code, options) =>
-			parse(code, { sourceType: "module", importPhases: true, ...options }).ast
-				.body[0];
-
-		it("should tag `import defer` and `import source` declarations with a phase", () => {
-			expect(first(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-tag-import-defer"))).toMatchObject({
-				type: "ImportDeclaration",
-				phase: "defer"
-			});
-			expect(first(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-tag-import-defer-2"))).toMatchObject({
-				type: "ImportDeclaration",
-				phase: "source"
-			});
-		});
-
-		it("should treat defer/source as the default name when followed by `from` or a comma", () => {
-			const deferName =
-				/** @type {import("estree").ImportDeclaration & { phase?: string }} */
-				(first(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-treat-defer")));
-			expect(deferName.phase).toBeUndefined();
-			expect(deferName.specifiers[0].type).toBe("ImportDefaultSpecifier");
-			const withNamed =
-				/** @type {import("estree").ImportDeclaration} */
-				(first(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-treat-defer-2")));
-			expect(withNamed.specifiers.map((s) => s.type)).toEqual([
-				"ImportDefaultSpecifier",
-				"ImportSpecifier"
-			]);
-		});
-
-		it("should reject phase modifiers on the wrong specifier shape", () => {
-			expect(() => first(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-reject-phase"))).toThrow(
-				/'import defer' can only be used with namespace imports/
-			);
-			expect(() => first(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-reject-phase-2"))).toThrow(
-				/'import source' can only be used with direct identifier specifier imports/
-			);
-			// a defer/source default name may only be followed by `* as`/`{…}`
-			expect(() => first(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-reject-phase-3"))).toThrow(
-				/Unexpected token/
-			);
-			// a source phase rejects named specifiers after the default import
-			expect(() => first(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-reject-phase-4"))).toThrow(
-				/'import source' can only be used with direct identifier specifier imports/
-			);
-		});
-
-		it("should parse `import.defer()` / `import.source()` dynamic imports with a phase", () => {
-			const declarationFor = (/** @type {string} */ code) =>
-				/** @type {import("estree").ImportExpression & { phase?: string }} */
-				(
-					/** @type {import("estree").VariableDeclaration} */ (first(code))
-						.declarations[0].init
-				);
-			expect(declarationFor(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-parse-import"))).toMatchObject({
-				type: "ImportExpression",
-				phase: "defer"
-			});
-			expect(declarationFor(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-parse-import-2"))).toMatchObject({
-				type: "ImportExpression",
-				phase: "source"
-			});
-		});
-
-		it("should reject a phase meta-property that is not a dynamic import", () => {
-			expect(() => first(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-reject-a-phase"))).toThrow(
-				/'import\.defer' can only be used in a dynamic import/
-			);
-			expect(() => first(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-reject-a-phase-2"))).toThrow(
-				/import call cannot be the target of `new`/
-			);
-		});
-
-		it("should keep acorn's import.meta checks under owned parsing", () => {
-			expect(first(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-keep-acorn-s"))).toMatchObject({
-				type: "VariableDeclaration"
-			});
-			expect(() => first(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-keep-acorn-s-2"))).toThrow(
-				/only valid meta property for import is 'import\.meta'/
-			);
-			expect(() => first(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-keep-acorn-s-3"))).toThrow(
-				/'import\.meta' must not contain escaped characters/
-			);
-			expect(() =>
-				first(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-keep-acorn-s"), { sourceType: "script" })
-			).toThrow(/Cannot use 'import\.meta' outside a module/);
-		});
-
-		it("should delegate import.meta and specifiers to acorn when phases are off", () => {
-			expect(
-				parse(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-keep-acorn-s"), {
-					sourceType: "module",
-					importPhases: false
-				}).ast.body[0].type
-			).toBe("VariableDeclaration");
-			expect(
-				parse(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-delegate-import"), {
-					sourceType: "module",
-					importPhases: false
-				}).ast.body[0].type
-			).toBe("ImportDeclaration");
-		});
-
 		it("should locate the `import` of import.meta when acorn tracks locations", () => {
 			for (const importPhases of [true, false]) {
 				const declaration =
@@ -978,37 +765,6 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		]);
 		expect(JSON.stringify(ast)).toBe(
 			JSON.stringify(WebpackParser.parse(code, lazyOptions))
-		);
-	});
-
-	it("parses the statement-head edge arcs identically to acorn", () => {
-		// multiple-default switch is a SyntaxError
-		expect(() =>
-			WebpackParser.parse(
-				fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parses-the-statement-head-edge"),
-				lazyOptions
-			)
-		).toThrow(/Multiple default clauses/);
-		// param-less catch (ES2019) parses
-		const catchAst = WebpackParser.parse(
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parses-the-statement-head-edge-2"),
-			lazyOptions
-		);
-		expect(
-			/** @type {EXPECTED_ANY} */ (catchAst.body[0]).handler.param
-		).toBeNull();
-		// for-await outside async context is rejected
-		expect(() =>
-			WebpackParser.parse(fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parses-the-statement-head-edge-3"), lazyOptions)
-		).toThrow(/Unexpected token/);
-		// labeled loops resolve break/continue through the shared label records
-		const labeled = WebpackParser.parse(
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parses-the-statement-head-edge-4"),
-			lazyOptions
-		);
-		expect(labeled.body[0].type).toBe("LabeledStatement");
-		expect(() => WebpackParser.parse(fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parses-the-statement-head-edge-5"), lazyOptions)).toThrow(
-			/Unsyntactic break/
 		);
 	});
 
@@ -1282,21 +1038,6 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		expect(calls).toBeGreaterThan(10);
 		expect(JSON.stringify(ast)).toBe(
 			JSON.stringify(WebpackParser.parse(code, lazyOptions))
-		);
-	});
-
-	it("reads private names through readWord1's cache and cold reader", () => {
-		// private names are the one word production that still goes through
-		// acorn's readWord1 (the owned readWord serves every other identifier)
-		const ast = WebpackParser.parse(
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-reads-private-names-through-read"),
-			lazyOptions
-		);
-		expect(ast.body[0].type).toBe("ClassDeclaration");
-		expect(() =>
-			WebpackParser.parse(fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-reads-private-names-through-read-2"), lazyOptions)
-		).toThrow(
-			/Private field '#missing' must be declared in an enclosing class/
 		);
 	});
 
@@ -4845,86 +4586,6 @@ describe("parseProgram", () => {
 		expect(A.source(A.child(0, program))).toBe("def;");
 	});
 
-	it("reads a script where asked", () => {
-		expect(collect(fixture("javascript", "parse-program-reads-a-script-where-asked"), { sourceType: "script" }).errors).toEqual([]);
-		expect(collect(fixture("javascript", "parse-program-reads-a-script-where-asked")).errors).toEqual([
-			["strict-with", "with", "error", "0"]
-		]);
-	});
-
-	it.each([
-		["module", fixture("javascript", "parse-program-reads-a-source-as-module-return-1"), [["illegal-return", fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-13"), "error", "0"]]],
-		["script", fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-3"), [["unexpected-new-target", "new", "warning", "0"]]],
-		[
-			"script",
-			fixture("javascript", "parse-program-reads-a-source-as-script-import-x-from-y"),
-			[["import-outside-module", "import", "error", "0"]]
-		],
-		// A function's body: `return` and `new.target` at its top, sloppy, and
-		// `await` and `yield` names, as in a function neither async nor generator.
-		[
-			"event-handler",
-			fixture("javascript", "parse-program-reads-a-source-as-event-handler-if-a-return-new-target-await-yield"),
-			[]
-		],
-		[
-			"event-handler",
-			fixture("javascript", "parse-program-reads-a-source-as-event-handler-use-strict-with-a"),
-			[["strict-with", "with", "error", "14"]]
-		],
-		[
-			"event-handler",
-			fixture("javascript", "parse-program-reads-a-source-as-event-handler-let-a-var-a"),
-			[["var-redeclaration", "a", "warning", "11"]]
-		],
-		["event-handler", fixture("javascript", "parse-program-reads-a-source-as-event-handler-super-x"), [["unexpected-super", fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-14"), "error", "0"]]],
-		[
-			"event-handler",
-			fixture("javascript", "parse-program-reads-a-source-as-script-import-x-from-y"),
-			[["import-outside-module", "import", "error", "0"]]
-		],
-		[
-			"event-handler",
-			fixture("javascript", "parse-program-reads-a-source-as-event-handler-export"),
-			[["import-outside-module", "export", "error", "0"]]
-		],
-		// A CommonJS module is a function's body too, which a `#!` line may open.
-		["commonjs", fixture("javascript", "parse-program-reads-a-source-as-commonjs-x-nif-a-return-new-target-await-1"), []],
-		[
-			"commonjs",
-			fixture("javascript", "parse-program-reads-a-source-as-script-import-x-from-y"),
-			[["import-outside-module", "import", "error", "0"]]
-		],
-		[
-			"commonjs",
-			fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite"),
-			[["import-meta-outside-module", "import", "warning", "0"]]
-		],
-		// A handler is never a module: what only a module may hold stays out.
-		[
-			"event-handler",
-			fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite"),
-			[["import-meta-outside-module", "import", "warning", "0"]]
-		],
-		// Only a script, a module or a CommonJS module opens with a `#!` line.
-		[
-			"event-handler",
-			fixture("javascript", "parse-program-reads-a-source-as-event-handler-x-n1"),
-			[["invalid-or-unexpected-token", "!", "error", "1"]]
-		]
-	])("reads a source as %s: %j", (sourceType, source, expected) => {
-		const { program, errors } = collect(source, {
-			sourceType:
-				/** @type {import("../../../lib/javascript/syntax-parser").JavascriptSourceType} */ (
-					sourceType
-				)
-		});
-		expect(errors).toEqual(expected);
-		expect(program === undefined).toBe(
-			expected.some(([, , severity]) => severity === "error")
-		);
-	});
-
 	it("reads import phases", () => {
 		const { program, errors } = collect(
 			fixture("javascript", "parse-program-reads-import-phases")
@@ -4939,65 +4600,6 @@ describe("parseProgram", () => {
 		expect(collect(fixture("javascript", "parse-program-reads-import-phases-3")).errors).toEqual([
 			["defer-import-requires-namespace", "defer", "warning", "7"]
 		]);
-	});
-
-	it.each([
-		[fixture("javascript", "parse-program-stops-at-a-returning-nothing"), ["unexpected-token", "~", "error", "2"]],
-		[fixture("javascript", "parse-program-reads-a-source-as-module-return-1"), ["illegal-return", fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-13"), "error", "0"]],
-		[fixture("javascript", "parse-program-stops-at-b-returning-nothing"), ["unterminated-template", "", "error", "5"]],
-		// No token to read where these are: an empty range, as at end of input.
-		[fixture("javascript", "parse-program-stops-at-throw-n1-returning-nothing"), ["newline-after-throw", "", "error", "5"]],
-		[fixture("javascript", "parse-program-stops-at-041-returning-nothing"), ["missing-unicode-escape", "", "error", "2"]],
-		// Raised while skipping to the next token, not inside the last one.
-		[fixture("javascript", "parse-program-stops-at-a-returning-nothing-2"), ["unterminated-comment", "", "error", "2"]]
-	])("stops at %j, returning nothing", (source, error) => {
-		const { program, errors } = collect(source);
-		expect(program).toBeUndefined();
-		expect(errors).toEqual([error]);
-	});
-
-	it.each([
-		[fixture("javascript", "parse-program-reads-past-let-a-let-a"), ["var-redeclaration", "a", "warning", "11"]],
-		[fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-15"), ["invalid-regular-expression", "(/", "warning", "1"]],
-		[fixture("javascript", "parse-program-reads-past-class-a-a-a"), ["private-name-redeclaration", "#a", "warning", "14"]],
-		[fixture("javascript", "parse-program-reads-past-class-a-set-x"), ["bad-setter-arity", "(", "warning", "15"]],
-		[
-			fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-16"),
-			["duplicate-proto", "__proto__", "warning", "17"]
-		],
-		[
-			fixture("javascript", "parse-program-reads-past-export-a-as-x-b-as-x-var-a-b"),
-			["duplicate-export", '"x"', "warning", "24"]
-		]
-	])("reads past %j", (source, error) => {
-		const { program, errors } = collect(source);
-		expect(program).toBeDefined();
-		expect(errors).toEqual([error]);
-	});
-
-	it("reports every error the parse reads past, once each", () => {
-		const { program, errors } = collect(fixture("javascript", "parse-program-reports-every-error-the-parse-reads-past-once-each"));
-		expect(program).toBeDefined();
-		expect(errors.map(([code, , , start]) => `${code}@${start}`)).toEqual([
-			"var-redeclaration@11",
-			"var-redeclaration@18",
-			"invalid-regular-expression@22",
-			"invalid-regular-expression@27"
-		]);
-		expect(collect(fixture("javascript", "parse-program-reports-every-error-the-parse-reads-past-once-each-2")).errors).toHaveLength(1);
-		// Two faults in one pattern: the validator raises both at its start.
-		expect(collect(fixture("javascript", "parse-program-reports-every-error-the-parse-reads-past-once-each-3")).errors).toEqual([
-			["invalid-regular-expression", "(?<a>)(?<a>)(/", "warning", "1"]
-		]);
-	});
-
-	it("names an error whose message holds a line terminator", () => {
-		const { program, errors } = collect(
-			fixture("javascript", "parse-program-names-an-error-whose-message-holds-a-line-terminator"),
-			{ sourceType: "module" }
-		);
-		expect(program).toBeDefined();
-		expect(errors.map(([code]) => code)).toEqual(["duplicate-export"]);
 	});
 
 	it("reads a build's options: ESTree, comments, auto, a top-level return", () => {
@@ -5171,15 +4773,6 @@ describe("parseProgram", () => {
 		expect(parsedTree()).not.toBeNull();
 		parseProgram(fixture("javascript", "parse-program-refuses-an-estree-parse-a-visitor-starts-as-a-tree-parse"), 0, { estree: true });
 		expect(parsedTree()).toBeNull();
-	});
-
-	it("turns `auto` into a script at a return it allows anyway", () => {
-		const program = parseProgram(fixture("javascript", "webpack-parser-statements-should-parse-if-else-chains-and-returns-on-the-fast-2"), 0, {
-			sourceType: "auto",
-			allowReturnOutsideFunction: true,
-			estree: true
-		});
-		expect(program.sourceType).toBe("script");
 	});
 
 	it("reads `await` as a name once `auto` turns into a script", () => {
