@@ -3840,7 +3840,7 @@ exports[`HTML syntax — invariants parse-html-insertion-mode-edge-cases-does-no
 
 exports[`HTML syntax — invariants parse-html-insertion-mode-edge-cases-does-not-read-raw-text-for-a-tag-the parses 2`] = `"warning[0,10]:expected-doctype-but-got-start-tag warning[10,20]:unexpected-start-tag-in-frameset warning[27,38]:unexpected-end-tag-in-frameset warning[38,38]:eof-in-frameset"`;
 
-exports[`HTML syntax — invariants parse-html-insertion-mode-edge-cases-does-not-read-raw-text-for-a-tag-the prints {"mode":"minify"} 1`] = `"<frameset><frame></frame></frameset>"`;
+exports[`HTML syntax — invariants parse-html-insertion-mode-edge-cases-does-not-read-raw-text-for-a-tag-the prints {"mode":"minify"} 1`] = `"<frameset><frame></frameset>"`;
 
 exports[`HTML syntax — invariants parse-html-insertion-mode-edge-cases-does-not-read-raw-text-for-a-tag-the tokenizes 1`] = `"open[0,10|1,9] open[10,20|11,19] text[20,27] close[27,38|29,37] end=38"`;
 
@@ -4068,7 +4068,7 @@ exports[`HTML syntax — invariants parse-html-insertion-mode-edge-cases-parses-
 
 exports[`HTML syntax — invariants parse-html-insertion-mode-edge-cases-parses-nested-frameset-elements-frames-and parses 2`] = `"warning[0,25]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants parse-html-insertion-mode-edge-cases-parses-nested-frameset-elements-frames-and prints {"mode":"minify"} 1`] = `"<frameset cols=50%,50%> <frame src=a></frame><frameset><frame></frame></frameset></frameset><noframes>n</noframes>"`;
+exports[`HTML syntax — invariants parse-html-insertion-mode-edge-cases-parses-nested-frameset-elements-frames-and prints {"mode":"minify"} 1`] = `"<frameset cols=50%,50%> <frame src=a><frameset><frame></frameset></frameset><noframes>n</noframes></html>"`;
 
 exports[`HTML syntax — invariants parse-html-insertion-mode-edge-cases-parses-nested-frameset-elements-frames-and tokenizes 1`] = `"attr[10,14|16,23]' open[0,25|1,9] text[25,26] comment[26,34|30,31] attr[41,44|46,47]' open[34,49|35,40] open[49,59|50,58] open[59,66|60,65] close[66,77|68,76] close[77,88|79,87] text[88,89] comment[89,97|93,94] close[97,104|99,103] text[104,105] comment[105,113|109,110] open[113,123|114,122] text[123,124] close[124,135|126,134] end=135"`;
 
@@ -5260,7 +5260,7 @@ exports[`HTML syntax — invariants parse-html-insertion-modes-nests-framesets-a
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-nests-framesets-and-switches-to-after-frameset parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag warning[0,7]:unexpected-start-tag-ignored warning[7,15]:unexpected-end-tag warning[15,23]:unexpected-end-tag warning[23,33]:unexpected-start-tag warning[99,99]:expected-named-closing-tag-but-got-eof warning[99,99]:eof-in-frameset"`;
 
-exports[`HTML syntax — invariants parse-html-insertion-modes-nests-framesets-and-switches-to-after-frameset prints {"mode":"minify"} 1`] = `"<frameset><frame></frame><frameset><frame></frame></frameset><noframes></frameset><noframes></noframes></frameset>"`;
+exports[`HTML syntax — invariants parse-html-insertion-modes-nests-framesets-and-switches-to-after-frameset prints {"mode":"minify"} 1`] = `"<frameset><frame><frameset><frame></frameset><noframes></frameset><noframes></noframes></frameset>"`;
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-nests-framesets-and-switches-to-after-frameset tokenizes 1`] = `"open[0,7|1,6] close[7,15|9,14] close[15,23|17,22] open[23,33|24,32] open[33,40|34,39] open[40,50|41,49] open[50,57|51,56] close[57,68|59,67] open[68,78|69,77] text[78,99] end=99"`;
 
@@ -6145,7 +6145,7 @@ exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-er
 
 exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-4 parses 2`] = `"warning[43,44]:expected-eof-but-got-char warning[45,48]:expected-eof-but-got-start-tag warning[48,52]:expected-eof-but-got-end-tag"`;
 
-exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-4 prints {"mode":"minify"} 1`] = `"<!doctype html><frameset></frameset>"`;
+exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-4 prints {"mode":"minify"} 1`] = `"<!doctype html><frameset></frameset></html>"`;
 
 exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-4 tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,25|16,24] close[25,36|27,35] close[36,43|38,42] text[43,45] open[45,48|46,47] close[48,52|50,51] end=52"`;
 
@@ -6159,7 +6159,7 @@ exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-er
 
 exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-frame parses 2`] = `""`;
 
-exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-frame prints {"mode":"minify"} 1`] = `"<!doctype html><frameset><frame></frame></frameset>"`;
+exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-frame prints {"mode":"minify"} 1`] = `"<!doctype html><frameset><frame></frameset>"`;
 
 exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-frame tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,25|16,24] open[25,33|26,31]/ close[33,44|35,43] end=44"`;
 
@@ -11385,7 +11385,7 @@ exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-str
   Element[0,0] range=[0,0] startOf:content=-1 endOf:name=-1 endOf:content=-1 flag:selfClosing=false rangeOf:name=null rangeOf:value=null
     Element[0,0] range=[0,0] startOf:content=-1 endOf:name=-1 endOf:content=-1 flag:selfClosing=false rangeOf:name=null rangeOf:value=null
     Element[0,18] range=[0,18] startOf:content=10 endOf:name=9 endOf:content=18 flag:selfClosing=false rangeOf:name=[1,9] rangeOf:value=null
-      Element[11,18] range=[11,18] startOf:content=18 endOf:name=17 endOf:content=18 flag:selfClosing=false rangeOf:name=[12,17] rangeOf:value=null"
+      Element[11,18] range=[11,18] startOf:content=18 endOf:name=17 endOf:content=18 flag:selfClosing=true rangeOf:name=[12,17] rangeOf:value=null"
 `;
 
 exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-15 parses {"options":{"skip":{"comments":true,"doctype":true}},"fields":["range","startOf:content","endOf:name","endOf:content","flag:selfClosing","rangeOf:name","rangeOf:value"]} 1`] = `
@@ -11402,7 +11402,7 @@ exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-str
   Element[0,0] range=[0,0] startOf:content=-1 endOf:name=-1 endOf:content=-1 flag:selfClosing=false rangeOf:name=null rangeOf:value=null
     Element[0,0] range=[0,0] startOf:content=-1 endOf:name=-1 endOf:content=-1 flag:selfClosing=false rangeOf:name=null rangeOf:value=null
     Element[0,18] range=[0,18] startOf:content=10 endOf:name=9 endOf:content=18 flag:selfClosing=false rangeOf:name=[1,9] rangeOf:value=null
-      Element[11,18] range=[11,18] startOf:content=18 endOf:name=17 endOf:content=18 flag:selfClosing=false rangeOf:name=[12,17] rangeOf:value=null"
+      Element[11,18] range=[11,18] startOf:content=18 endOf:name=17 endOf:content=18 flag:selfClosing=true rangeOf:name=[12,17] rangeOf:value=null"
 `;
 
 exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-15 parses {"options":{"skip":{"comments":true}},"fields":["range","startOf:content","endOf:name","endOf:content","flag:selfClosing","rangeOf:name","rangeOf:value"]} 1`] = `
@@ -11419,7 +11419,7 @@ exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-str
   Element[0,0] range=[0,0] startOf:content=-1 endOf:name=-1 endOf:content=-1 flag:selfClosing=false rangeOf:name=null rangeOf:value=null
     Element[0,0] range=[0,0] startOf:content=-1 endOf:name=-1 endOf:content=-1 flag:selfClosing=false rangeOf:name=null rangeOf:value=null
     Element[0,18] range=[0,18] startOf:content=10 endOf:name=9 endOf:content=18 flag:selfClosing=false rangeOf:name=[1,9] rangeOf:value=null
-      Element[11,18] range=[11,18] startOf:content=18 endOf:name=17 endOf:content=18 flag:selfClosing=false rangeOf:name=[12,17] rangeOf:value=null"
+      Element[11,18] range=[11,18] startOf:content=18 endOf:name=17 endOf:content=18 flag:selfClosing=true rangeOf:name=[12,17] rangeOf:value=null"
 `;
 
 exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-15 parses {"options":{"skip":{"doctype":true}},"fields":["range","startOf:content","endOf:name","endOf:content","flag:selfClosing","rangeOf:name","rangeOf:value"]} 1`] = `
@@ -11436,7 +11436,7 @@ exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-str
   Element[0,0] range=[0,0] startOf:content=-1 endOf:name=-1 endOf:content=-1 flag:selfClosing=false rangeOf:name=null rangeOf:value=null
     Element[0,0] range=[0,0] startOf:content=-1 endOf:name=-1 endOf:content=-1 flag:selfClosing=false rangeOf:name=null rangeOf:value=null
     Element[0,18] range=[0,18] startOf:content=10 endOf:name=9 endOf:content=18 flag:selfClosing=false rangeOf:name=[1,9] rangeOf:value=null
-      Element[11,18] range=[11,18] startOf:content=18 endOf:name=17 endOf:content=18 flag:selfClosing=false rangeOf:name=[12,17] rangeOf:value=null"
+      Element[11,18] range=[11,18] startOf:content=18 endOf:name=17 endOf:content=18 flag:selfClosing=true rangeOf:name=[12,17] rangeOf:value=null"
 `;
 
 exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-15 parses {"options":{"skip":{"text":true,"comments":true,"doctype":true}},"fields":["range","startOf:content","endOf:name","endOf:content","flag:selfClosing","rangeOf:name","rangeOf:value"]} 1`] = `
@@ -11453,7 +11453,7 @@ exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-str
   Element[0,0] range=[0,0] startOf:content=-1 endOf:name=-1 endOf:content=-1 flag:selfClosing=false rangeOf:name=null rangeOf:value=null
     Element[0,0] range=[0,0] startOf:content=-1 endOf:name=-1 endOf:content=-1 flag:selfClosing=false rangeOf:name=null rangeOf:value=null
     Element[0,18] range=[0,18] startOf:content=10 endOf:name=9 endOf:content=18 flag:selfClosing=false rangeOf:name=[1,9] rangeOf:value=null
-      Element[11,18] range=[11,18] startOf:content=18 endOf:name=17 endOf:content=18 flag:selfClosing=false rangeOf:name=[12,17] rangeOf:value=null"
+      Element[11,18] range=[11,18] startOf:content=18 endOf:name=17 endOf:content=18 flag:selfClosing=true rangeOf:name=[12,17] rangeOf:value=null"
 `;
 
 exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-15 parses {"options":{"skip":{"text":true,"comments":true}},"fields":["range","startOf:content","endOf:name","endOf:content","flag:selfClosing","rangeOf:name","rangeOf:value"]} 1`] = `
@@ -11470,7 +11470,7 @@ exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-str
   Element[0,0] range=[0,0] startOf:content=-1 endOf:name=-1 endOf:content=-1 flag:selfClosing=false rangeOf:name=null rangeOf:value=null
     Element[0,0] range=[0,0] startOf:content=-1 endOf:name=-1 endOf:content=-1 flag:selfClosing=false rangeOf:name=null rangeOf:value=null
     Element[0,18] range=[0,18] startOf:content=10 endOf:name=9 endOf:content=18 flag:selfClosing=false rangeOf:name=[1,9] rangeOf:value=null
-      Element[11,18] range=[11,18] startOf:content=18 endOf:name=17 endOf:content=18 flag:selfClosing=false rangeOf:name=[12,17] rangeOf:value=null"
+      Element[11,18] range=[11,18] startOf:content=18 endOf:name=17 endOf:content=18 flag:selfClosing=true rangeOf:name=[12,17] rangeOf:value=null"
 `;
 
 exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-15 parses {"options":{"skip":{"text":true,"doctype":true}},"fields":["range","startOf:content","endOf:name","endOf:content","flag:selfClosing","rangeOf:name","rangeOf:value"]} 1`] = `
@@ -11487,7 +11487,7 @@ exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-str
   Element[0,0] range=[0,0] startOf:content=-1 endOf:name=-1 endOf:content=-1 flag:selfClosing=false rangeOf:name=null rangeOf:value=null
     Element[0,0] range=[0,0] startOf:content=-1 endOf:name=-1 endOf:content=-1 flag:selfClosing=false rangeOf:name=null rangeOf:value=null
     Element[0,18] range=[0,18] startOf:content=10 endOf:name=9 endOf:content=18 flag:selfClosing=false rangeOf:name=[1,9] rangeOf:value=null
-      Element[11,18] range=[11,18] startOf:content=18 endOf:name=17 endOf:content=18 flag:selfClosing=false rangeOf:name=[12,17] rangeOf:value=null"
+      Element[11,18] range=[11,18] startOf:content=18 endOf:name=17 endOf:content=18 flag:selfClosing=true rangeOf:name=[12,17] rangeOf:value=null"
 `;
 
 exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-15 parses {"options":{"skip":{"text":true}},"fields":["range","startOf:content","endOf:name","endOf:content","flag:selfClosing","rangeOf:name","rangeOf:value"]} 1`] = `
@@ -11504,7 +11504,7 @@ exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-str
   Element[0,0] range=[0,0] startOf:content=-1 endOf:name=-1 endOf:content=-1 flag:selfClosing=false rangeOf:name=null rangeOf:value=null
     Element[0,0] range=[0,0] startOf:content=-1 endOf:name=-1 endOf:content=-1 flag:selfClosing=false rangeOf:name=null rangeOf:value=null
     Element[0,18] range=[0,18] startOf:content=10 endOf:name=9 endOf:content=18 flag:selfClosing=false rangeOf:name=[1,9] rangeOf:value=null
-      Element[11,18] range=[11,18] startOf:content=18 endOf:name=17 endOf:content=18 flag:selfClosing=false rangeOf:name=[12,17] rangeOf:value=null"
+      Element[11,18] range=[11,18] startOf:content=18 endOf:name=17 endOf:content=18 flag:selfClosing=true rangeOf:name=[12,17] rangeOf:value=null"
 `;
 
 exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-15 parses 1`] = `
@@ -11516,7 +11516,7 @@ exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-str
 
 exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-15 parses 2`] = `"warning[0,10]:expected-doctype-but-got-start-tag warning[10,11]:unexpected-char-in-frameset"`;
 
-exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-15 prints {"mode":"minify"} 1`] = `"<frameset><frame></frame></frameset>"`;
+exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-15 prints {"mode":"minify"} 1`] = `"<frameset><frame></frameset>"`;
 
 exports[`HTML syntax — invariants parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-15 tokenizes 1`] = `"open[0,10|1,9] text[10,11] open[11,18|12,17] close[18,29|20,28] end=29"`;
 
@@ -13674,7 +13674,7 @@ exports[`HTML syntax — invariants parse-html-stray-doctype-and-html-re-dispatc
 
 exports[`HTML syntax — invariants parse-html-stray-doctype-and-html-re-dispatch-handles-stray-doctype-and-html parses 2`] = `"warning[0,10]:expected-doctype-but-got-start-tag warning[10,25]:unexpected-doctype warning[25,40]:non-html-root warning[58,73]:unexpected-doctype warning[73,88]:non-html-root warning[95,110]:unexpected-doctype warning[110,125]:non-html-root"`;
 
-exports[`HTML syntax — invariants parse-html-stray-doctype-and-html-re-dispatch-handles-stray-doctype-and-html prints {"mode":"minify"} 1`] = `"<html lang=a><frameset><frame></frame></frameset></html>"`;
+exports[`HTML syntax — invariants parse-html-stray-doctype-and-html-re-dispatch-handles-stray-doctype-and-html prints {"mode":"minify"} 1`] = `"<html lang=a><frameset><frame></frameset></html>"`;
 
 exports[`HTML syntax — invariants parse-html-stray-doctype-and-html-re-dispatch-handles-stray-doctype-and-html tokenizes 1`] = `"open[0,10|1,9] doctype[10,25|20,24|-1,-1|-1,-1] attr[31,35|37,38]' open[25,40|26,30] open[40,47|41,46] close[47,58|49,57] doctype[58,73|68,72|-1,-1|-1,-1] attr[79,83|85,86]' open[73,88|74,78] close[88,95|90,94] doctype[95,110|105,109|-1,-1|-1,-1] attr[116,120|122,123]' open[110,125|111,115] end=125"`;
 
@@ -14245,7 +14245,7 @@ exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a
 
 exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-replaces-an-empty-body-with parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag warning[5,24]:unexpected-start-tag"`;
 
-exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-replaces-an-empty-body-with prints {"mode":"minify"} 1`] = `"<frameset rows=1> <frameset cols=2><frame></frame></frameset></frameset>"`;
+exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-replaces-an-empty-body-with prints {"mode":"minify"} 1`] = `"<frameset rows=1> <frameset cols=2><frame></frameset></frameset>"`;
 
 exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-replaces-an-empty-body-with tokenizes 1`] = `"open[0,5|1,4] attr[15,19|21,22]\\" open[5,24|6,14] text[24,25] attr[35,39|41,42]\\" open[25,44|26,34] open[44,51|45,50] close[51,62|53,61] close[62,73|64,72] end=73"`;
 
@@ -15448,6 +15448,41 @@ exports[`HTML syntax — invariants source-processor-a-foreign-stylesheet-answer
 exports[`HTML syntax — invariants source-processor-a-foreign-stylesheet-answered-later-escapes-the-answer-where prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"css":"a<b{}"},"async":true}} 1`] = `"<svg><style>a&lt;b{}</style></svg><style>a<b{}</style>"`;
 
 exports[`HTML syntax — invariants source-processor-a-foreign-stylesheet-answered-later-escapes-the-answer-where tokenizes 1`] = `"open[0,5|1,4] open[5,12|6,11] text[12,23] close[23,31|25,30] close[31,37|33,36] open[37,44|38,43] text[44,55] close[55,63|57,62] end=63"`;
+
+exports[`HTML syntax — invariants source-processor-a-frameset-document-keeps-the-html-end-tag-it-spelled parses 1`] = `
+"| <html>
+|   <head>
+|   <frameset>
+|     <frame>
+|       src=\\"a\\"
+|   \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-a-frameset-document-keeps-the-html-end-tag-it-spelled parses 2`] = `"warning[0,10]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-a-frameset-document-keeps-the-html-end-tag-it-spelled prints {"mode":"minify"} 1`] = `"<frameset><frame src=a></frameset></html>"`;
+
+exports[`HTML syntax — invariants source-processor-a-frameset-document-keeps-the-html-end-tag-it-spelled tokenizes 1`] = `"open[0,10|1,9] attr[17,20|21,22] open[10,23|11,16] close[23,34|25,33] close[34,41|36,40] text[41,42] end=42"`;
+
+exports[`HTML syntax — invariants source-processor-a-frameset-document-prints-no-end-tag-for-an-element-popped-at-once parses 1`] = `
+"| <html>
+|   <head>
+|     <basefont>
+|     <bgsound>
+|   <frameset>
+|     <frame>
+|     <frame>
+|       src=\\"b\\"
+|   \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-a-frameset-document-prints-no-end-tag-for-an-element-popped-at-once parses 2`] = `"warning[0,6]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-a-frameset-document-prints-no-end-tag-for-an-element-popped-at-once prints {"mode":"minify"} 1`] = `"<head><basefont><bgsound></head><frameset><frame><frame src=b></frameset>"`;
+
+exports[`HTML syntax — invariants source-processor-a-frameset-document-prints-no-end-tag-for-an-element-popped-at-once tokenizes 1`] = `"open[0,6|1,5] open[6,16|7,15] open[16,25|17,24] close[25,32|27,31] open[32,42|33,41] open[42,49|43,48] attr[56,59|60,61] open[49,62|50,55] close[62,73|64,72] text[73,74] end=74"`;
 
 exports[`HTML syntax — invariants source-processor-an-empty-value-is-the-bare-name-does-it-in-foreign-content-too parses 1`] = `
 "| <html>
@@ -30273,9 +30308,9 @@ exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-
 
 exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-3 parses 2`] = `"warning[0,6]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-3 prints {"mode":"minify","removeImpliedTags":"all"} 1`] = `"<body><basefont></basefont>A"`;
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-3 prints {"mode":"minify","removeImpliedTags":"all"} 1`] = `"<body><basefont>A"`;
 
-exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-3 prints {"mode":"minify"} 1`] = `"<body><basefont></basefont>A</body>"`;
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-3 prints {"mode":"minify"} 1`] = `"<body><basefont>A</body>"`;
 
 exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-3 tokenizes 1`] = `"open[0,6|1,5] open[6,16|7,15] text[16,17] end=17"`;
 
@@ -30299,9 +30334,9 @@ exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-
 
 exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-4 parses 2`] = `"warning[0,6]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-4 prints {"mode":"minify","removeImpliedTags":"all"} 1`] = `"<body><bgsound></bgsound>A"`;
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-4 prints {"mode":"minify","removeImpliedTags":"all"} 1`] = `"<body><bgsound>A"`;
 
-exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-4 prints {"mode":"minify"} 1`] = `"<body><bgsound></bgsound>A</body>"`;
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-4 prints {"mode":"minify"} 1`] = `"<body><bgsound>A</body>"`;
 
 exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-4 tokenizes 1`] = `"open[0,6|1,5] open[6,15|7,14] text[15,16] end=16"`;
 
@@ -30911,7 +30946,7 @@ exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-
 
 exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-28 parses 2`] = `"warning[0,6]:expected-doctype-but-got-start-tag warning[15,25]:unexpected-end-tag"`;
 
-exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-28 prints {"mode":"minify"} 1`] = `"<body><bgsound></bgsound>A</body>"`;
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-28 prints {"mode":"minify"} 1`] = `"<body><bgsound>A</body>"`;
 
 exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-28 tokenizes 1`] = `"open[0,6|1,5] open[6,15|7,14] close[15,25|17,24] text[25,26] end=26"`;
 
@@ -30935,7 +30970,7 @@ exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-
 
 exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-29 parses 2`] = `"warning[0,6]:expected-doctype-but-got-start-tag warning[16,27]:unexpected-end-tag"`;
 
-exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-29 prints {"mode":"minify"} 1`] = `"<body><basefont></basefont>A</body>"`;
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-29 prints {"mode":"minify"} 1`] = `"<body><basefont>A</body>"`;
 
 exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-29 tokenizes 1`] = `"open[0,6|1,5] open[6,16|7,15] close[16,27|18,26] text[27,28] end=28"`;
 
