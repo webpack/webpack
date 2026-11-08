@@ -6918,4 +6918,11 @@ describe("one-pass minify of unused values and side effects, fourth round", () =
 			expect(minifyOnePass(source, { compress: { ecma: 2020 }, ecma: 2020, mangle: false }).code).toBe(expected);
 		}
 	});
+
+	it("should keep a known branch an `export default` opens with `function` or `class` an expression", () => {
+		const source = fixture("javascript", "one-pass-unused-d-21");
+		expect(minifyOnePass(source, { compress: { ecma: 2020 }, ecma: 2020, mangle: false, module: true }).code).toBe(
+			"export default(function(){});"
+		);
+	});
 });
