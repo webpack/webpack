@@ -1,5 +1,5 @@
 import value from "./value";
-import stable from "./stable";
+import stable from "./stable-parent";
 
 it("should update exports with every cache setting", () => {
 	expect(value).toBe(Number(WATCH_STEP));
