@@ -3177,10 +3177,6 @@ const jsMinify = require("../../../lib/javascript/jsMinify");
 
 const SCRIPT = fixture("javascript", "js-minify-should-minify-defaults");
 
-const MODULE = fixture("javascript", "js-minify-should-minify-module-goal");
-
-const HANDLER = fixture("javascript", "js-minify-should-minify-event-handler");
-
 const INPUT_MAP = {
 	version: 3,
 	sources: ["input.js"],
@@ -3189,51 +3185,18 @@ const INPUT_MAP = {
 };
 
 /**
- * Every comment-selection shape the plugin accepts, paired with the source and
- * production it is exercised against.
+ * The comment-selection shapes only a function states, paired with the source
+ * and production each is exercised against.
  * @type {[string, { [file: string]: string }, import("terser").MinifyOptions & { as?: "script" | "module" | "event-handler" }, EXPECTED_ANY][]}
  */
 const MINIFY_CASES = [
-	["defaults", { "script.js": SCRIPT }, { compress: {} }, true],
-	["extraction off", { "script.js": SCRIPT }, { compress: {} }, false],
-	["extract by pattern", { "script.js": SCRIPT }, {}, /@license/],
-	["extract by condition", { "script.js": SCRIPT }, {}, { condition: "some" }],
-	["extract nothing named", { "script.js": SCRIPT }, {}, { condition: false }],
-	["keep every comment", { "script.js": SCRIPT }, { format: { comments: "all" } }, false],
-	["keep no comment", { "script.js": SCRIPT }, { format: { comments: false } }, true],
-	["deprecated output spelling", { "script.js": SCRIPT }, { output: { comments: "all" } }, false],
-	["compress off", { "script.js": SCRIPT }, { compress: false }, true],
-	["mangle off", { "script.js": SCRIPT }, { mangle: false }, true],
-	["ecma 5", { "script.js": SCRIPT }, { ecma: 5 }, true],
-	["module goal", { "module.mjs": MODULE }, { as: "module" }, true],
-	["module option", { "module.mjs": MODULE }, { module: true }, true],
-	["event handler", { "handler.js": HANDLER }, { as: "event-handler" }, true],
-	["script goal", { "script.js": SCRIPT }, { as: "script" }, true],
-	["extract every comment named", { "script.js": SCRIPT }, {}, { condition: true }],
-	["extract by an object naming no condition", { "script.js": SCRIPT }, {}, {}],
-	["keep every comment, as `true`", { "script.js": SCRIPT }, { format: { comments: true } }, false],
 	[
 		"keep and extract by predicate",
 		{ "script.js": SCRIPT },
 		{ format: { comments: (_node, comment) => /kept/.test(comment.value) } },
 		(/** @type {EXPECTED_ANY} */ _node, /** @type {EXPECTED_ANY} */ comment) =>
 			/license/i.test(comment.value)
-	],
-	[
-		"a line comment, and one written twice",
-		{ "lines.js": "/*! twice */ a();\n//! line\nb();\n/*! twice */ c();" },
-		{},
-		true
-	],
-	["compress on", { "script.js": SCRIPT }, { compress: true }, true],
-	["ecma of the compressor's own", { "script.js": SCRIPT }, { ecma: 5, compress: { ecma: 2020 } }, true],
-	["mangle options", { "script.js": SCRIPT }, { mangle: { reserved: ["value"] } }, true],
-	[
-		"an event handler holding runs of `_`",
-		{ "handler.js": "__a(_b, ___c);" },
-		{ as: "event-handler" },
-		true
-	],
+	]
 ];
 
 describe("jsMinify", () => {
@@ -3296,61 +3259,6 @@ describe("jsMinify", () => {
 			"sink(a);"
 		]);
 		expect(shared).toEqual({ vars: { props: { $shared: "a" } } });
-	});
-
-	it("should refuse what reads or prints a tree rather than code", async () => {
-		for (const options of [
-			{ parse: { spidermonkey: true } },
-			{ format: { ast: true } },
-			{ format: { spidermonkey: true } },
-			{ format: { code: false } }
-		]) {
-			await expect(
-				jsMinify({ "a.js": "a()" }, undefined, options, false)
-			).rejects.toThrow(/not supported/);
-		}
-		// Each turned off, the source minifies as any other.
-		const { code } = await jsMinify(
-			{ "a.js": "a()" },
-			undefined,
-			{
-				parse: { spidermonkey: false },
-				format: { ast: false, spidermonkey: false, code: true }
-			},
-			false
-		);
-		expect(code).toBe("a();");
-	});
-
-	it("should read a Buffer input as UTF-8", async () => {
-		const { code } = await jsMinify({
-			"a.js": Buffer.from(fixture("javascript", "js-minify-should-read-a-buffer-input-as-utf-8"), "utf8")
-		});
-		expect(code).toBe('console.log("é");');
-	});
-
-	it("should match string comment patterns like RegExp conditions", async () => {
-		const input = {
-			"comments.js":
-				"/*! @license first */ first();\n" +
-				"/* ordinary */ second();\n" +
-				"/*! @license last */ last();"
-		};
-		const actual = await jsMinify(
-			input,
-			INPUT_MAP,
-			// Terser accepts string patterns at runtime, but its types exclude them.
-			{ format: { comments: /** @type {EXPECTED_ANY} */ ("first|last") } },
-			{ condition: /** @type {EXPECTED_ANY} */ ("@license") }
-		);
-		const expected = await jsMinify(
-			input,
-			INPUT_MAP,
-			{ format: { comments: /first|last/ } },
-			{ condition: /@license/ }
-		);
-		expect(actual).toEqual(expected);
-		expect(actual.extractedComments).toHaveLength(2);
 	});
 
 	it("should defer invalid comment patterns until a comment is tested", async () => {

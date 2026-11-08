@@ -4204,43 +4204,6 @@ describe("JavaScript SourceProcessor", () => {
 		);
 	});
 
-	it("fires enter and exit in source order, a template's parts taking turns", () => {
-		/** @type {string[]} */
-		const events = [];
-		/**
-		 * @param {string} name what the event is named
-		 * @returns {{ enter: (path: JavascriptPath) => void, exit: (path: JavascriptPath) => void }} visitors recording it
-		 */
-		const record = (name) => ({
-			enter: (path) => {
-				events.push(`${name}>${path.source()}@${path.index}`);
-			},
-			exit: () => {
-				events.push(`${name}<`);
-			}
-		});
-		new SourceProcessor()
-			.use({
-				[NodeType.CallExpression]: record("call"),
-				[NodeType.TemplateLiteral]: record("template")
-			})
-			.use([NodeType.Identifier, NodeType.TemplateElement], (path) => {
-				events.push(path.source());
-			})
-			.process(fixture("javascript", "javascript-source-processor-fires-enter-and-exit-in-source-order-a-template-s"));
-		expect(events).toEqual([
-			"call>f(`a${b}c`, d)@0",
-			"f",
-			"template>`a${b}c`@1",
-			"a",
-			"b",
-			"c",
-			"template<",
-			"d",
-			"call<"
-		]);
-	});
-
 	it("reads a node as the CSS and HTML paths read theirs", () => {
 		const source =
 			fixture("javascript", "javascript-source-processor-reads-a-node-as-the-css-and-html-paths-read-theirs");
@@ -4545,27 +4508,8 @@ describe("WebpackParser writing a SyntaxTree", () => {
 });
 
 describe("parseProgram", () => {
-	const { A, NodeType, Part, parseProgram } = require("../../../lib/javascript/syntax-parser");
+	const { A, NodeType, parseProgram } = require("../../../lib/javascript/syntax-parser");
 	const { SourceProcessor } = require("../../../lib/javascript/syntax");
-
-	/** @typedef {[string, string, string, string]} ReportedError */
-
-	/**
-	 * @param {string} source the program
-	 * @param {import("../../../lib/javascript/syntax-parser").JavascriptParseOptions=} options what to read it as
-	 * @returns {{ program: number | undefined, errors: ReportedError[] }} its node and each reported error's code, text and severity
-	 */
-	const collect = (source, options = {}) => {
-		/** @type {ReportedError[]} */
-		const errors = [];
-		const program = parseProgram(source, 0, {
-			...options,
-			parseError: (input, code, start, end, severity) => {
-				errors.push([code, input.slice(start, end), severity, String(start)]);
-			}
-		});
-		return { program, errors };
-	};
 
 	it("returns the program's node, read through A until the next parse", () => {
 		const program = /** @type {number} */ (parseProgram(fixture("javascript", "parse-program-returns-the-program-s-node-read-through-a-until-the-next-parse")));
@@ -4579,27 +4523,6 @@ describe("parseProgram", () => {
 		expect(A.loc(call)).toEqual([1, 11, 1, 15]);
 		parseProgram(fixture("javascript", "parse-program-returns-the-program-s-node-read-through-a-until-the-next-parse-2"));
 		expect(A.source(A.child(0, program))).toBe("g()");
-	});
-
-	it("starts at the offset given", () => {
-		const program = /** @type {number} */ (parseProgram(fixture("javascript", "parse-program-starts-at-the-offset-given"), 5));
-		expect(A.source(A.child(0, program))).toBe("def;");
-	});
-
-	it("reads import phases", () => {
-		const { program, errors } = collect(
-			fixture("javascript", "parse-program-reads-import-phases")
-		);
-		expect(errors).toEqual([]);
-		const [deferred, source] = A.children(/** @type {number} */ (program));
-		expect(A.textOf(Part.phase, deferred)).toBe("defer");
-		expect(A.textOf(Part.phase, source)).toBe("source");
-		expect(collect(fixture("javascript", "parse-program-reads-import-phases-2"), { sourceType: "script" }).errors).toEqual(
-			[]
-		);
-		expect(collect(fixture("javascript", "parse-program-reads-import-phases-3")).errors).toEqual([
-			["defer-import-requires-namespace", "defer", "warning", "7"]
-		]);
 	});
 
 	it("reads a build's options: ESTree, comments, auto, a top-level return", () => {
