@@ -72,7 +72,7 @@ const { fixture } = require("../../helpers/fixture");
 "use strict";
 
 const analyzeScope = require("../../../lib/javascript/ScopeAnalyzer");
-const { parse: parseProgram } = require("../../../lib/javascript/syntax-parser");
+const { parse: parseProgram } = require("../../../lib/javascript/syntax").parser;
 
 /** @import { Program } from "estree" */
 

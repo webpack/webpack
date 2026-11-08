@@ -113,7 +113,7 @@ const { analyzeMinifierTree } = require("../../../lib/javascript/ScopeAnalyzer")
 const {
 	Field,
 	NodeType,
-	SyntaxTree,
+	_SyntaxTree: SyntaxTree,
 	WebpackParser
 } = require("../../../lib/javascript/syntax-parser");
 

@@ -27,7 +27,7 @@ const os = require("os");
 const path = require("path");
 const acorn = require("acorn");
 const JavascriptParser = require("../../../lib/javascript/JavascriptParser");
-const { parse: webpackParse } = require("../../../lib/javascript/syntax-parser");
+const { parse: webpackParse } = require("../../../lib/javascript/syntax").parser;
 const { parse, plain } = require("../../helpers/javascriptParse");
 const { Parser } = require("../../../lib/javascript/syntax-parser");
 
@@ -1451,7 +1451,7 @@ const PARSERS = [
 			if (!options.syntaxTree) {
 				return webpackParse(code, /** @type {ParserOptions} */ (options));
 			}
-			const { SyntaxTree, WebpackParser } = require(
+			const { _SyntaxTree: SyntaxTree, WebpackParser } = require(
 				"../../../lib/javascript/syntax-parser"
 			);
 			const tree = new SyntaxTree();
@@ -3006,7 +3006,7 @@ describe("Parser", () => {
 	// different paths through its own productions.
 	describe("parses like acorn as the parser a build runs", () => {
 		const {
-			SyntaxTree,
+			_SyntaxTree: SyntaxTree,
 			WebpackParser
 		} = require("../../../lib/javascript/syntax-parser");
 		/**
@@ -3143,7 +3143,7 @@ describe("Parser", () => {
 	// an error and read on, which takes every parser past the checks that throw.
 	describe("parses like acorn with recoverable errors noted", () => {
 		const {
-			SyntaxTree,
+			_SyntaxTree: SyntaxTree,
 			WebpackParser
 		} = require("../../../lib/javascript/syntax-parser");
 		/** @type {[number, string][]} */
@@ -3398,7 +3398,7 @@ describe("Parser", () => {
 
 	it("reads a regexp after await that the tokenizer took for `/=`, unlike acorn", () => {
 		// acorn 8 refuses it; V8 and the spec read `await /=/g` as a regexp
-		const { SyntaxTree, WebpackParser } = require(
+		const { _SyntaxTree: SyntaxTree, WebpackParser } = require(
 			"../../../lib/javascript/syntax-parser"
 		);
 		const source = fixture("javascript", "parser-reads-a-regexp-after-await-that-the-tokenizer-took-for-unlike-acorn");
@@ -3638,7 +3638,7 @@ const {
 	Flag,
 	NodeType,
 	Part,
-	SyntaxTree,
+	_SyntaxTree: SyntaxTree,
 	WebpackParser
 } = require("../../../lib/javascript/syntax-parser");
 
@@ -4316,7 +4316,7 @@ describe("JavaScript SourceProcessor", () => {
 
 describe("WebpackParser writing a SyntaxTree", () => {
 	const {
-		SyntaxTree,
+		_SyntaxTree: SyntaxTree,
 		WebpackParser
 	} = require("../../../lib/javascript/syntax-parser");
 

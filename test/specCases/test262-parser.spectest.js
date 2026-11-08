@@ -7,7 +7,7 @@ const {
 	parse,
 	parseProgram,
 	toEstreeObject
-} = require("../../lib/javascript/syntax-parser");
+} = require("../../lib/javascript/syntax").parser;
 const {
 	firstDifference,
 	reportable

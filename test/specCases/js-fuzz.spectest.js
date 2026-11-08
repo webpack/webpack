@@ -9,11 +9,10 @@
 
 const vm = require("vm");
 const acorn = require("acorn");
-const { SourceProcessor } = require("../../lib/javascript/syntax");
 const {
-	collectCjsRequireSpecifiers,
-	parse
-} = require("../../lib/javascript/syntax-parser");
+	SourceProcessor,
+	parser: { collectCjsRequireSpecifiers, parse }
+} = require("../../lib/javascript/syntax");
 const { decodeMappings } = require("../../lib/util/createMappings");
 const { firstDifference } = require("../../tooling/compare-js-tools");
 const {
