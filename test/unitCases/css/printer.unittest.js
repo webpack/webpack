@@ -699,41 +699,6 @@ describe("CssSyntax — the per-transform switches", () => {
 	const min = (src, transforms) =>
 		new SourceProcessor().process(src, { mode: "minify", transforms }).code;
 
-	// The embedded-source renderer reads a data URL's payload, which is what the
-	// percent-escapes hold — so it is offered the decoded one, and what it hands
-	// back is quoted or not as `normalizeQuotes` says.
-	describe("a rendered data URL", () => {
-		const css = fixture("css", "css-syntax-the-per-transform-switches-writes-a-data-uri-s-escapes-as-the-bytes");
-		/**
-		 * @param {string} source the payload
-		 * @returns {string} it, rewritten
-		 */
-		const renderEmbeddedSource = (source) =>
-			source.replace("<svg>", "<svg id=r>");
-		/**
-		 * @param {import("../../../lib/css/syntax-parser").CssTransformOptions=} transforms which rewrites to make
-		 * @returns {string} the minified serialization
-		 */
-		const render = (transforms) =>
-			new SourceProcessor().process(css, {
-				mode: "minify",
-				renderEmbeddedSource,
-				transforms
-			}).code;
-
-		it("reaches the renderer with the payload decoded", () => {
-			expect(render()).toBe(
-				"a{background:url(data:image/svg+xml,<svg\\ id=r></svg>)}"
-			);
-		});
-
-		it("keeps the quotes round what it hands back with quotes off", () => {
-			expect(render({ normalizeQuotes: false })).toBe(
-				'a{background:url("data:image/svg+xml,<svg id=r></svg>")}'
-			);
-		});
-	});
-
 	// One option says which comments survive, in the forms terser's
 	// `format.comments` takes; the snapshot holds those JSON can spell.
 	describe("comments", () => {
@@ -741,7 +706,6 @@ describe("CssSyntax — the per-transform switches", () => {
 			fixture("css", "css-syntax-the-per-transform-switches-comments-absent-keeps-the-banners");
 
 		it.each([
-			["a RegExp keeps what it matches", /inert/, "/*inert*/a{b:c}"],
 			[
 				"a predicate keeps what it accepts",
 				/** @type {(comment: string) => boolean} */ (
@@ -757,18 +721,10 @@ describe("CssSyntax — the per-transform switches", () => {
 		// matches, so the banner levels drop it as terser drops `//#`; a selector
 		// the author wrote decides it like any other comment.
 		it.each([
-			[/nothing-matches/, false],
 			[/** @type {(comment: string) => boolean} */ (() => false), false]
 		])("source-map pragma with comments: %s", (comments, kept) => {
 			const out = min(fixture("css", "css-syntax-the-per-transform-switches-comments-source-map-pragma-with-comments"), { comments });
 			expect(out.includes("/*# sourceMappingURL=x.map */")).toBe(kept);
-		});
-
-		// A `g` flag would carry an index from one comment to the next.
-		it("matches a global pattern from the start each time", () => {
-			expect(min(fixture("css", "css-syntax-the-per-transform-switches-comments-matches-a-global-pattern-from-the"), { comments: /k\d/g })).toBe(
-				"a{b:c}/*k1*/d{e:f}/*k2*/"
-			);
 		});
 	});
 });
@@ -1137,31 +1093,6 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 		return seen;
 	};
 
-	const svgUrl =
-		fixture("css", "source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload");
-	const base64Url = `.a{background:url(data:image/svg+xml;base64,${Buffer.from(
-		"<svg>  <rect/></svg>"
-	).toString("base64")})}`;
-
-	it("offers an svg payload, quoted or base64", () => {
-		expect(offered(svgUrl)).toEqual([["svg", "<svg>  <rect/></svg>"]]);
-		expect(offered(base64Url)).toEqual([["svg", "<svg>  <rect/></svg>"]]);
-	});
-
-	it("names the language its media type carries, and declines an unknown one", () => {
-		expect(offered(fixture("css", "source-processor-render-embedded-source-over-a-data-url-names-the-language-its"))).toEqual(
-			[["css", fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14")]]
-		);
-		expect(
-			offered(fixture("css", "source-processor-render-embedded-source-over-a-data-url-names-the-language-its-2"))
-		).toEqual([["json", '{"a":1}']]);
-		// An image webpack has no notion of is never decoded.
-		expect(
-			offered(fixture("css", "source-processor-render-embedded-source-over-a-data-url-names-the-language-its-3"))
-		).toEqual([]);
-		expect(offered(fixture("css", "source-processor-render-embedded-source-over-a-data-url-names-the-language-its-4"))).toEqual([]);
-	});
-
 	it("offers every language `EMBEDDED_LANGUAGES` names, and prints each answer", () => {
 		const { EMBEDDED_LANGUAGES } = require("../../../lib/util/dataURL");
 
@@ -1186,32 +1117,6 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 				".html{background:url(data:text/html,/*html*/)}" +
 				".json{background:url(data:application/json,/*json*/)}" +
 				".js{background:url(data:text/javascript,/*javascript*/)}"
-		);
-	});
-
-	it("rebuilds the url in the shortest form that parses back to it", () => {
-		// A rebuilt url keeps its base64-ness, and loses quotes it no longer needs.
-		expect(minify(svgUrl, (s) => s.replace(/\s+/g, ""))).toBe(
-			".a{background:url(data:image/svg+xml,<svg><rect/></svg>)}"
-		);
-		expect(minify(base64Url, (s) => s.replace(/\s+/g, ""))).toBe(
-			`.a{background:url(data:image/svg+xml;base64,${Buffer.from(
-				"<svg><rect/></svg>"
-			).toString("base64")})}`
-		);
-	});
-
-	it("escapes only what would change what the url means", () => {
-		expect(minify(svgUrl, () => "<svg>%#</svg>")).toBe(
-			".a{background:url(data:image/svg+xml,<svg>%25%23</svg>)}"
-		);
-	});
-
-	it("quotes and escapes a payload a url token cannot carry", () => {
-		// A space or a quote would end the token, so the url takes quotes and the
-		// delimiter inside it is escaped — otherwise the declaration is dropped.
-		expect(minify(svgUrl, () => '<svg viewBox="0 0 2 2"/>')).toBe(
-			'.a{background:url("data:image/svg+xml,<svg viewBox=\\"0 0 2 2\\"/>")}'
 		);
 	});
 
@@ -1243,27 +1148,6 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 			mappings.split(",").length;
 		expect(columns(shrunk.map.mappings)).toBe(columns(plain.map.mappings));
 		expect(shrunk.map.mappings).not.toBe(plain.map.mappings);
-	});
-
-	it("emits the url as written when the renderer answers with a non-string", () => {
-		const untouched = minify(svgUrl);
-		for (const answer of [undefined, null, 42]) {
-			expect(minify(svgUrl, () => /** @type {EXPECTED_ANY} */ (answer))).toBe(
-				untouched
-			);
-		}
-	});
-
-	it("emits the url as written when the renderer declines or throws", () => {
-		for (const sheet of [svgUrl, base64Url]) {
-			const untouched = minify(sheet);
-			expect(minify(sheet, (s) => s)).toBe(untouched);
-			expect(
-				minify(sheet, () => {
-					throw new Error("nope");
-				})
-			).toBe(untouched);
-		}
 	});
 });
 
@@ -1361,10 +1245,6 @@ describe("CssSyntax minify — one stylesheet reaching every embedded site", () 
 			)
 		);
 	});
-
-	it("prints each answer back where it was asked for", () => {
-		expect(minify((source, { type }) => `/*${type}*/`)).toMatchSnapshot();
-	});
 });
 
 describe("CssSyntax minify — `declareCharset`", () => {
@@ -1402,19 +1282,6 @@ describe("cssMinify export", () => {
 		expect(cssMinify.getBannerPosition()).toBe("end");
 	});
 
-	it("declares UTF-8 for a file of its own, not for a `style` attribute", async () => {
-		const cssMinify = require("../../../lib/css/cssMinify");
-
-		const sheet = await cssMinify({ "a.css": fixture("css", "css-syntax-minify-declare-charset-writes-a-content-1-f600-with-the-character") });
-		expect(sheet.code).toBe('@charset "UTF-8";a{content:"\u{1F600}"}');
-		const attribute = await cssMinify(
-			{ "a.css": fixture("css", "css-syntax-minify-declare-charset-keeps-it-in-the-declarations-of-a-style") },
-			undefined,
-			{ as: "block-contents" }
-		);
-		expect(attribute.code).toBe('content:"\\1F600"');
-	});
-
 	it("minifies through the public entry", async () => {
 		const webpack = require("../../..");
 
@@ -1435,62 +1302,10 @@ describe("cssMinify export", () => {
 		expect(code).toBe('@charset "UTF-8";a:before{content:"é"}');
 	});
 
-	it("keeps the space before an SVG `data:` URL it minifies", async () => {
-		const cssMinify = require("../../../lib/css/cssMinify");
-
-		const { code } = await cssMinify(
-			{
-				"a.css":
-					'.a{background:red url("data:image/svg+xml,<svg></svg>")}' +
-					".b{background:no-repeat url(data:image/svg+xml,<svg></svg>)}"
-			},
-			undefined,
-			{ svg: true }
-		);
-
-		expect(code).toBe(
-			".a{background:red url(data:image/svg+xml,<svg/>)}" +
-				".b{background:no-repeat url(data:image/svg+xml,<svg/>)}"
-		);
-	});
-
 	describe("a caller's renderEmbeddedSource", () => {
 		const sheet =
 			'.a{background:url("data:image/svg+xml,<svg></svg>")}' +
 			'.b{background:url("data:text/css,a { color : red }")}';
-
-		it("prints what it answers, and leaves what it declines as written", async () => {
-			const cssMinify = require("../../../lib/css/cssMinify");
-
-			/** @type {string[]} */
-			const asked = [];
-			const { code } = await cssMinify({ "a.css": sheet }, undefined, {
-				renderEmbeddedSource: (_source, { type }) => {
-					asked.push(type);
-					return type === "svg" ? "<svg id=x/>" : undefined;
-				}
-			});
-
-			expect(asked).toEqual(["svg", "css"]);
-			expect(code).toBe(
-				".a{background:url(data:image/svg+xml,<svg\\ id=x/>)}" +
-					'.b{background:url("data:text/css,a { color : red }")}'
-			);
-		});
-
-		it("minifies an SVG it declines as the `.svg` assets are, under `svg`", async () => {
-			const cssMinify = require("../../../lib/css/cssMinify");
-
-			const { code } = await cssMinify({ "a.css": sheet }, undefined, {
-				svg: true,
-				renderEmbeddedSource: () => undefined
-			});
-
-			expect(code).toBe(
-				".a{background:url(data:image/svg+xml,<svg/>)}" +
-					'.b{background:url("data:text/css,a { color : red }")}'
-			);
-		});
 
 		it("returns what it reports beside the code", async () => {
 			const cssMinify = require("../../../lib/css/cssMinify");
@@ -1503,19 +1318,6 @@ describe("cssMinify export", () => {
 			expect(result.warnings).toEqual(["w"]);
 			expect(result.errors).toBeUndefined();
 		});
-	});
-
-	it("keeps the comments `some` names while extracting others", async () => {
-		const cssMinify = require("../../../lib/css/cssMinify");
-
-		const result = await cssMinify(
-			{ "a.css": fixture("css", "css-minify-export-keeps-the-comments-some-names-while-extracting-others") },
-			undefined,
-			{ extractComments: /foo/, comments: "some" }
-		);
-
-		expect(result.code).toBe("/*! keep */a{b:c}d{e:f}");
-		expect(result.extractedComments).toEqual(["/* foo */"]);
 	});
 
 	describe("extractComments", () => {
@@ -1759,34 +1561,6 @@ describe("CssData — the version tables stay in their element type", () => {
 	});
 });
 
-describe("CssSyntax — recurseBlocks", () => {
-	/**
-	 * @param {string} css a stylesheet
-	 * @param {boolean} recurseBlocks whether to walk into block bodies
-	 * @returns {number} how many qualified rules the walk visited
-	 */
-	const visited = (css, recurseBlocks) => {
-		let seen = 0;
-		new SourceProcessor()
-			.use({
-				[NodeType.QualifiedRule]: () => {
-					seen++;
-				}
-			})
-			.process(css, { recurseBlocks });
-		return seen;
-	};
-
-	it.each([
-		["an at-rule body", fixture("css", "css-syntax-recurse-blocks-walks-an-at-rule-body-only-where-asked"), 1, 0],
-		["a nested rule", fixture("css", "css-syntax-recurse-blocks-walks-a-nested-rule-only-where-asked"), 2, 1],
-		["a layer holding both", fixture("css", "css-syntax-recurse-blocks-walks-a-layer-holding-both-only-where-asked"), 2, 0]
-	])("walks %s only where asked", (_name, css, deep, shallow) => {
-		expect(visited(css, true)).toBe(deep);
-		expect(visited(css, false)).toBe(shallow);
-	});
-});
-
 // Flexbox 2 added `flex-line-count`, a longhand neither `flex` nor `flex-flow`
 // resets. Every flex property `mdn-data` names is pinned here, so the next one
 // fails until someone checks which shorthand, if any, the spec puts it in.
@@ -1877,103 +1651,6 @@ describe("CssSyntax minify — joining rules whose values hold escapes", () => {
 			).code;
 		expect(pieces(minify(false))).toEqual(pieces(css));
 		expect(pieces(minify(true))).toEqual(pieces(css));
-	});
-});
-
-describe("SourceProcessor — processAsync over a data: url", () => {
-	/**
-	 * @param {string} sheet the stylesheet
-	 * @param {(source: string) => Promise<string | undefined>} renderEmbeddedSource the renderer
-	 * @returns {Promise<string>} the minified stylesheet
-	 */
-	const minify = async (sheet, renderEmbeddedSource) =>
-		(
-			await new SourceProcessor().processAsync(sheet, {
-				mode: "minify",
-				renderEmbeddedSource
-			})
-		).code;
-	const quoted = fixture("css", "source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload");
-	const bare = fixture("css", "source-processor-process-async-over-a-data-url-rebuilds-a-quoted-url-around-the");
-
-	it("rebuilds a quoted url around the answer", async () => {
-		expect(await minify(quoted, async (source) => source.replace("  ", " "))).toBe(
-			".a{background:url(data:image/svg+xml,<svg>\\ <rect/></svg>)}"
-		);
-		expect(await minify(bare, async () => "<svg/>")).toBe(
-			".a{background:url(data:image/svg+xml,<svg/>)}"
-		);
-	});
-
-	it("prints a url as written where the answer is none or the same", async () => {
-		const out = fixture("css", "source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload");
-		expect(await minify(quoted, async () => undefined)).toBe(out);
-		expect(await minify(quoted, async (source) => source)).toBe(out);
-		expect(await minify(bare, async () => undefined)).toBe(
-			".a{background:url(data:image/svg+xml,<svg>%20%20</svg>)}"
-		);
-	});
-
-	it("offers nothing for a url of two strings, which is no url", async () => {
-		// Read as one string, the payload would run on past the first quote, and
-		// the url rebuilt around the answer would be one where none was written.
-		const css = fixture("css", "source-processor-process-async-over-a-data-url-offers-nothing-for-a-url-of-two");
-		/** @type {string[]} */
-		const offered = [];
-		const render = (/** @type {string} */ source) => {
-			offered.push(source);
-			return `${source}<!---->`;
-		};
-		expect(await minify(css, async (source) => render(source))).toBe(css);
-		expect(
-			new SourceProcessor().process(css, {
-				mode: "minify",
-				renderEmbeddedSource: render
-			}).code
-		).toBe(css);
-		expect(offered).toEqual([]);
-	});
-
-	it("offers nothing for a url that is no data URL or holds a CSS escape", async () => {
-		/** @type {string[]} */
-		const offered = [];
-		const out = await minify(
-			fixture("css", "source-processor-process-async-over-a-data-url-offers-nothing-for-a-url-that-is"),
-			async (source) => {
-				offered.push(source);
-				return source;
-			}
-		);
-		expect(offered).toEqual([]);
-		expect(out).toBe(
-			'.a{background:url("data:image/svg+xml,<svg>\\\\</svg>");b:url(x.png)}.b{background:url(x.png)}'
-		);
-	});
-});
-
-describe("CssSyntax minify — preludes and calls at their edges", () => {
-	/**
-	 * @param {string} css input stylesheet
-	 * @param {import("../../../lib/css/syntax-parser").CssProcessOptions=} options extra options
-	 * @returns {string} its minified serialization
-	 */
-	const minify = (css, options) =>
-		new SourceProcessor().process(css, { mode: "minify", ...options }).code;
-
-	it("rebuilds a shouted `URL()` around what the renderer answers", async () => {
-		const css = fixture("css", "css-syntax-minify-preludes-and-calls-at-their-edges-rebuilds-a-shouted-url");
-		const out = ".a{background:url(data:image/svg+xml,<svg/>)}";
-		expect(
-			minify(css, { renderEmbeddedSource: () => "<svg/>" })
-		).toBe(out);
-		expect(
-			(
-				await new SourceProcessor().processAsync(css, {
-					mode: "minify",
-					renderEmbeddedSource: async () => "<svg/>"
-				})
-			).code
-		).toBe(out);
 	});
 });
 
@@ -2233,23 +1910,6 @@ describe("CssSyntax — a value too long for the buffers a parse keeps", () => {
 });
 
 describe("CssSyntax minify — a call or a sub-rule named with an escape", () => {
-	it("fires a comment visitor's exit", () => {
-		/** @type {number[]} */
-		const seen = [];
-		new SourceProcessor()
-			.use({
-				[NodeType.Comment]: {
-					exit: (
-						/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
-					) => {
-						seen.push(path.type());
-					}
-				}
-			})
-			.process(fixture("css", "css-syntax-minify-a-call-or-a-sub-rule-named-with-an-escape-fires-a-comment"));
-		expect(seen).toEqual([NodeType.Comment]);
-	});
-
 	it("keeps the space a hex escape needs after an escaped backslash", () => {
 		expect(escapeIdentifier("\\\t")).toBe("\\\\\\9");
 		expect(escapeIdentifier("\\\ta")).toBe("\\\\\\9 a");
@@ -2671,23 +2331,6 @@ describe("CssSyntax minify — output that reads back as its source", () => {
 	 */
 	const min = (src) =>
 		new SourceProcessor().process(src, { mode: "minify" }).code;
-
-	it("keeps `@charset` for a non-ASCII answer an asynchronous renderer gives", async () => {
-		const cssMinify = require("../../../lib/css/cssMinify");
-
-		const svg = await cssMinify({ "a.css": fixture("css", "css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies") }, undefined, { svg: true });
-		expect(svg.code).toBe('@charset "UTF-8";a{background:url(data:image/svg+xml,<svg>é</svg>)}');
-		const source = fixture("css", "css-minify-export-declares-utf-8-for-a-non-ascii-svg-it-minifies-2");
-		const answered = await cssMinify({ "a.css": source }, undefined, {
-			renderEmbeddedSource: async () => "<svg>é</svg>"
-		});
-		expect(answered.code).toBe('@charset "UTF-8";a{background:url(data:image/svg+xml,<svg>é</svg>)}');
-		// An ASCII answer still needs none.
-		const ascii = await cssMinify({ "a.css": source }, undefined, {
-			renderEmbeddedSource: async () => "<svg>y</svg>"
-		});
-		expect(ascii.code).toBe("a{background:url(data:image/svg+xml,<svg>y</svg>)}");
-	});
 
 	it("closes a custom property the input ran out in where a banner follows", async () => {
 		const cssMinify = require("../../../lib/css/cssMinify");

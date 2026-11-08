@@ -1,0 +1,1 @@
+§5.4.6 step 8 rejects a `{}` block only when the value holds another non-whitespace token beside it. Measured in Chromium: `.a{color:{a:b}}` is a declaration the grammar throws out, `.a{a:hover{color:red}}` a nested rule.

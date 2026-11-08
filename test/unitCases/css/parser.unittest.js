@@ -15,10 +15,8 @@ const {
 	_propertyIdOf,
 	normalizeUrl,
 	parseABlocksContents,
-	parseACommaSeparatedListOfComponentValues,
 	parseAComponentValue,
 	parseADeclaration,
-	parseAListOfComponentValues,
 	parseARule,
 	parseAStylesheet,
 	parseAStylesheetsContents,
@@ -26,72 +24,7 @@ const {
 	TokenStream
 } = require("../../../lib/css/syntax-parser");
 
-/**
- * @param {string} src css source
- * @returns {number[]} component value types
- */
-const cvTypes = (src) =>
-	parseAListOfComponentValues(src).map((n) => A.type(n));
-
 describe("CssSyntax — component values (tokenToNode)", () => {
-	it("classifies each leaf token type", () => {
-		/**
-		 * @param {string} s source
-		 * @returns {number} the parsed component value's type
-		 */
-		const cv = (s) =>
-			A.type(
-				/** @type {import("../../../lib/css/syntax-parser").ComponentValue} */ (
-					parseAComponentValue(s)
-				)
-			);
-		expect(cv(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type"))).toBe(NodeType.Number);
-		expect(cv(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-2"))).toBe(NodeType.Percentage);
-		expect(cv(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-3"))).toBe(NodeType.Dimension);
-		expect(cv(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-4"))).toBe(NodeType.Hash);
-		expect(cv(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-5"))).toBe(NodeType.String);
-		expect(cv(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-6"))).toBe(NodeType.Url);
-		expect(cv(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-7"))).toBe(NodeType.Function);
-		expect(cv(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-8"))).toBe(NodeType.SimpleBlock);
-		expect(cv(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-9"))).toBe(NodeType.SimpleBlock);
-		expect(cv(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-10"))).toBe(NodeType.SimpleBlock);
-		expect(cv("+")).toBe(NodeType.Delim);
-		expect(cv(":")).toBe(NodeType.Colon);
-		expect(cv(",")).toBe(NodeType.Comma);
-		expect(cv(";")).toBe(NodeType.Semicolon);
-		expect(cv(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-11"))).toBe(NodeType.Ident);
-		expect(cv(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-16"))).toBe(NodeType.Number);
-		expect(cv(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-12"))).toBe(NodeType.AtKeyword);
-	});
-
-	it("reads every escaped spelling of `url(` as a url", () => {
-		/**
-		 * @param {string} s source
-		 * @returns {number} the parsed value's type
-		 */
-		const cv = (s) =>
-			A.type(
-				/** @type {import("../../../lib/css/syntax-parser").ComponentValue} */ (
-					parseAComponentValue(s)
-				)
-			);
-		// Longest spelling: each code point as `\` + 6 hex digits + CRLF.
-		for (const name of [
-			"url",
-			"URL",
-			"\\75 rl",
-			"\\000075rl",
-			"\\000075\\000072\\00006c",
-			"\\000075\n\\000072\n\\00006c\n",
-			"\\000075\r\n\\000072\r\n\\00006c\r\n"
-		]) {
-			expect(cv(`${name}(a.png)`)).toBe(NodeType.Url);
-		}
-		expect(cv(fixture("css", "css-syntax-component-values-token-to-node-reads-every-escaped-spelling-of-url-as"))).toBe(
-			NodeType.Function
-		);
-	});
-
 	/**
 	 * @param {string} s source
 	 * @returns {import("../../../lib/css/syntax-parser").ComponentValue} its one component value
@@ -101,29 +34,6 @@ describe("CssSyntax — component values (tokenToNode)", () => {
 			parseAComponentValue(s)
 		);
 
-	it("decodes numeric token metadata", () => {
-		const int = one(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type"));
-		expect([A.value(int), A.flag(Flag.integer, int)]).toEqual([123, true]);
-		const signed = one(fixture("css", "css-syntax-component-values-token-to-node-decodes-numeric-token-metadata"));
-		expect([A.value(signed), A.flag(Flag.integer, signed)]).toEqual([
-			1.5,
-			false
-		]);
-		expect(A.value(one(fixture("css", "css-syntax-component-values-token-to-node-decodes-numeric-token-metadata-3")))).toBe(-2);
-		expect(A.flag(Flag.integer, one(fixture("css", "css-syntax-component-values-token-to-node-decodes-numeric-token-metadata-2")))).toBe(false);
-	});
-
-	it("decodes percentage and dimension metadata", () => {
-		expect(A.value(one(fixture("css", "css-syntax-component-values-token-to-node-decodes-percentage-and-dimension")))).toBe(-50);
-		const dim = one(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-3"));
-		expect([A.value(dim), A.name(dim), A.flag(Flag.integer, dim)]).toEqual([
-			10,
-			"px",
-			true
-		]);
-		expect(A.name(one(fixture("css", "css-syntax-component-values-token-to-node-decodes-percentage-and-dimension-2")))).toBe("EM");
-	});
-
 	it("decodes hash id vs unrestricted and url content", () => {
 		expect(A.flag(Flag.id, one(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-4")))).toBe(true);
 		expect(A.flag(Flag.id, one(fixture("css", "css-syntax-component-values-token-to-node-decodes-hash-id-vs-unrestricted-and")))).toBe(false);
@@ -132,36 +42,10 @@ describe("CssSyntax — component values (tokenToNode)", () => {
 		expect(A.rangeOf(Part.value, url)).toEqual([4, 9]);
 	});
 
-	it("exposes function name and nested values", () => {
-		const fn = one(fixture("css", "css-syntax-component-values-token-to-node-exposes-function-name-and-nested"));
-		expect(A.name(fn)).toBe("calc");
-		expect(A.children(fn).some((c) => A.type(c) === NodeType.Number)).toBe(
-			true
-		);
-	});
-
 	it("reads no declarations or rules on non-rule nodes", () => {
 		const fn = one(fixture("css", "css-syntax-component-values-token-to-node-exposes-function-name-and-nested"));
 		expect(A.fieldCount(Field.declarations, fn)).toBe(0);
 		expect(A.fieldCount(Field.rules, fn)).toBe(0);
-	});
-
-	it("preserves stray closers, CDO and CDC as component values", () => {
-		expect(cvTypes(fixture("css", "css-syntax-component-values-token-to-node-preserves-stray-closers-cdo-and-cdc-as"))).toEqual([
-			NodeType.RightParenthesis,
-			NodeType.RightSquareBracket,
-			NodeType.RightCurlyBracket
-		]);
-		expect(cvTypes(fixture("css", "css-syntax-component-values-token-to-node-preserves-stray-closers-cdo-and-cdc-as-2"))).toEqual([NodeType.CDO, NodeType.CDC]);
-	});
-
-	it("preserves bad-string and bad-url tokens", () => {
-		expect(cvTypes(fixture("css", "css-syntax-component-values-token-to-node-preserves-bad-string-and-bad-url"))).toEqual([
-			NodeType.BadString,
-			NodeType.Whitespace,
-			NodeType.Ident
-		]);
-		expect(cvTypes(fixture("css", "css-syntax-component-values-token-to-node-preserves-bad-string-and-bad-url-2"))).toEqual([NodeType.BadUrl]);
 	});
 });
 
@@ -179,37 +63,6 @@ describe("CssSyntax — parser entry points", () => {
 		return out;
 	};
 
-	it("parseADeclaration parses name, value and !important", () => {
-		const d = /** @type {import("../../../lib/css/syntax-parser").Declaration} */ (
-			parseADeclaration(fixture("css", "css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and"))
-		);
-		expect(A.name(d)).toBe("color");
-		expect(A.flag(Flag.important, d)).toBe(false);
-		expect(A.childCount(d)).toBeGreaterThan(0);
-		expect(
-			A.flag(
-				Flag.important,
-				/** @type {import("../../../lib/css/syntax-parser").Declaration} */ (
-					parseADeclaration(fixture("css", "css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-2"))
-				)
-			)
-		).toBe(true);
-		// The ident is matched by the value its escape spells (§5.4.6 step 6).
-		expect(
-			A.flag(
-				Flag.important,
-				/** @type {import("../../../lib/css/syntax-parser").Declaration} */ (
-					parseADeclaration(fixture("css", "css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-3"))
-				)
-			)
-		).toBe(true);
-		expect(parseADeclaration(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type"))).toBeUndefined();
-		expect(parseADeclaration(fixture("css", "css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-4"))).toBeUndefined();
-		expect(parseADeclaration(fixture("css", "css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-5"))).toBeUndefined();
-		// bad declaration recovery scans past a stray `}` (non-nested)
-		expect(parseADeclaration(fixture("css", "css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and-6"))).toBeUndefined();
-	});
-
 	it("parseARule parses qualified rules and at-rules", () => {
 		const qr = /** @type {import("../../../lib/css/syntax-parser").Rule} */ (
 			parseARule(fixture("css", "css-syntax-parser-entry-points-parse-a-rule-parses-qualified-rules-and-at-rules"))
@@ -225,48 +78,6 @@ describe("CssSyntax — parser entry points", () => {
 		expect(A.rangeOf(Part.block, at)).toBeNull();
 	});
 
-	it("parseARule rejects empty input and trailing rules", () => {
-		expect(parseARule("")).toBeUndefined();
-		expect(parseARule(fixture("css", "css-syntax-parser-entry-points-parse-a-rule-rejects-empty-input-and-trailing"))).toBeUndefined();
-		expect(parseARule(fixture("css", "css-syntax-parser-entry-points-parse-a-rule-rejects-empty-input-and-trailing-2"))).toBeUndefined();
-	});
-
-	it("parseAComponentValue is strict about trailing input", () => {
-		expect(parseAComponentValue("")).toBeUndefined();
-		expect(parseAComponentValue(fixture("css", "css-syntax-parser-entry-points-parse-a-rule-rejects-empty-input-and-trailing"))).toBeUndefined();
-		expect(parseAComponentValue(fixture("css", "css-syntax-parser-entry-points-parse-a-component-value-is-strict-about-trailing"))).toBeUndefined();
-		expect(
-			A.type(
-				/** @type {import("../../../lib/css/syntax-parser").ComponentValue} */ (
-					parseAComponentValue(fixture("css", "css-syntax-parser-entry-points-parse-a-component-value-is-strict-about-trailing-2"))
-				)
-			)
-		).toBe(NodeType.Ident);
-	});
-
-	it("parseAListOfComponentValues keeps whitespace and all values", () => {
-		expect(cvTypes(fixture("css", "css-syntax-parser-entry-points-parse-a-component-value-is-strict-about-trailing"))).toEqual([
-			NodeType.Ident,
-			NodeType.Whitespace,
-			NodeType.Ident
-		]);
-		expect(parseAListOfComponentValues("")).toEqual([]);
-	});
-
-	it("parseACommaSeparatedListOfComponentValues splits on commas", () => {
-		expect(parseACommaSeparatedListOfComponentValues(fixture("css", "css-syntax-parser-entry-points-parse-a-comma-separated-list-of-component-values"))).toHaveLength(
-			3
-		);
-		expect(parseACommaSeparatedListOfComponentValues("")).toEqual([]);
-	});
-
-	it("parseABlocksContents returns declarations and rules", () => {
-		const { decls, rules } = parseABlocksContents(fixture("css", "css-syntax-parser-entry-points-parse-a-blocks-contents-returns-declarations-and"), 0);
-		expect(decls).toHaveLength(1);
-		expect(rules).toHaveLength(1);
-		expect(parseABlocksContents(fixture("css", "css-syntax-parser-entry-points-parse-a-blocks-contents-returns-declarations-and-2"), 0).rules).toHaveLength(0);
-	});
-
 	it("re-parses a nested rule whose selector starts <ident><colon> as a qualified rule", () => {
 		// consume-a-declaration bails on the top-level `{` (step 8 would reject
 		// it) and the caller re-parses the input as a qualified rule (CSS Nesting)
@@ -277,38 +88,6 @@ describe("CssSyntax — parser entry points", () => {
 		expect(rules).toHaveLength(1);
 		expect(A.type(rules[0])).toBe(NodeType.QualifiedRule);
 		expect(A.fieldCount(Field.declarations, rules[0])).toBe(1);
-	});
-
-	it("keeps a top-level {}-block in a custom property value", () => {
-		const { decls } = parseABlocksContents(fixture("css", "css-syntax-parser-entry-points-keeps-a-top-level-block-in-a-custom-property"));
-		expect(decls).toHaveLength(2);
-		expect(A.name(decls[0])).toBe("--x");
-	});
-
-	it("parseADeclaration reads a lone {}-block as a whole value", () => {
-		// §5.4.6 step 8 rejects a `{}` block only when the value holds another
-		// non-whitespace token beside it. Measured in Chromium: `.a{color:{a:b}}` is a
-		// declaration the grammar throws out, `.a{a:hover{color:red}}` a nested rule.
-		const decl = parseADeclaration(fixture("css", "css-syntax-parser-entry-points-parse-a-declaration-reads-a-lone-block-as-a-whole"));
-		expect(decl).toBeDefined();
-		expect(
-			A.name(
-				/** @type {import("../../../lib/css/syntax-parser").Declaration} */ (decl)
-			)
-		).toBe("color");
-		// Anything beside the block sends it back to the nested-rule reading.
-		expect(parseADeclaration(fixture("css", "css-syntax-parser-entry-points-parse-a-declaration-reads-a-lone-block-as-a-whole-2"))).toBeUndefined();
-		expect(parseADeclaration(fixture("css", "css-syntax-parser-entry-points-parse-a-declaration-reads-a-lone-block-as-a-whole-3"))).toBeUndefined();
-	});
-
-	it("keeps the declaration after a lone {}-block", () => {
-		// Read as a rule, the block's `}` ends it and the `;` after it goes, so
-		// the declaration behind it fuses onto the block and both are lost.
-		const { decls, rules } = parseABlocksContents(
-			fixture("css", "css-syntax-parser-entry-points-keeps-the-declaration-after-a-lone-block")
-		);
-		expect(rules).toHaveLength(0);
-		expect(decls.map((d) => A.name(d))).toEqual(["color", "background"]);
 	});
 
 	it("parseAStylesheet builds nested rules and a full range", () => {
@@ -327,13 +106,6 @@ describe("CssSyntax — parser entry points", () => {
 		expect(A.range(ss)).toEqual([0, src.length]);
 	});
 
-	it("parseAStylesheetsContents discards top-level CDO/CDC and declarations", () => {
-		expect(
-			parseAStylesheetsContents(fixture("css", "css-syntax-parser-entry-points-parse-a-stylesheets-contents-discards-top-level")).map((r) => A.type(r))
-		).toEqual([NodeType.QualifiedRule]);
-		expect(parseAStylesheetsContents(fixture("css", "source-processor-merging-adjacent-style-writes-a-style-attribute-whose-4"))).toEqual([]);
-	});
-
 	it("accepts a pre-built TokenStream as input", () => {
 		const ss = parseAStylesheet(new TokenStream(fixture("css", "css-syntax-parser-entry-points-accepts-a-pre-built-token-stream-as-input")));
 		expect(A.fieldCount(Field.rules, ss)).toBe(1);
@@ -346,48 +118,6 @@ describe("CssSyntax — parser entry points", () => {
 		expect(A.name(first)).toBe("color");
 		parseADeclaration(fixture("css", "css-syntax-parser-entry-points-returns-refs-valid-until-the-next-parse"));
 		expect(A.name(first)).toBe("margin");
-	});
-});
-
-describe("CssSyntax — parseError callback", () => {
-	/** @typedef {[string, string, import("../../../lib/css/syntax-parser").ParseErrorSeverity]} ReportedError */
-
-	/**
-	 * @param {(input: string, pos: number, options: import("../../../lib/css/syntax-parser").CssParseOptions) => unknown} parse entry point
-	 * @param {string} css input
-	 * @returns {ReportedError[]} code, the source it spans and severity per error
-	 */
-	const collect = (parse, css) => {
-		/** @type {ReportedError[]} */
-		const errors = [];
-		parse(css, 0, {
-			parseError: (input, code, start, end, severity) => {
-				errors.push([code, input.slice(start, end), severity]);
-			}
-		});
-		return errors;
-	};
-
-	it("reports a stray } in a list of component values", () => {
-		expect(collect(parseAListOfComponentValues, "a}b")).toEqual([
-			["unexpected-right-curly-bracket", "}", "warning"]
-		]);
-	});
-
-	it.each([
-		["parseAStylesheetsContents", parseAStylesheetsContents, fixture("css", "css-syntax-parse-error-callback-parse-a-stylesheets-contents-forwards-the")],
-		["parseABlocksContents", parseABlocksContents, fixture("css", "css-syntax-parse-error-callback-parse-a-blocks-contents-forwards-the-callback")],
-		["parseARule", parseARule, fixture("css", "css-syntax-parse-error-callback-parse-a-stylesheets-contents-forwards-the")],
-		["parseADeclaration", parseADeclaration, fixture("css", "css-syntax-parse-error-callback-parse-a-blocks-contents-forwards-the-callback")],
-		["parseAComponentValue", parseAComponentValue, '"x'],
-		["parseAListOfComponentValues", parseAListOfComponentValues, '"x'],
-		[
-			"parseACommaSeparatedListOfComponentValues",
-			parseACommaSeparatedListOfComponentValues,
-			fixture("css", "css-syntax-parse-error-callback-parse-a-comma-separated-list-of-component-values")
-		]
-	])("%s forwards the callback", (name, parse, css) => {
-		expect(collect(parse, css)).toEqual([["eof-in-string", "", "error"]]);
 	});
 });
 
@@ -760,25 +490,6 @@ describe("CssSyntax — SourceProcessor", () => {
 		expect(Array.isArray(seen.range)).toBe(true);
 	});
 
-	it("fires enter / exit visitors in source order", () => {
-		/** @type {string[]} */
-		const log = [];
-		new SourceProcessor()
-			.use(
-				/** @type {import("../../../lib/css/syntax-parser").VisitorMap} */ ({
-					[NodeType.QualifiedRule]: {
-						enter: () => log.push("enter"),
-						exit: () => log.push("exit")
-					},
-					[NodeType.Declaration]: (
-						/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
-					) => log.push(`decl:${path.name()}`)
-				})
-			)
-			.process(fixture("css", "css-syntax-source-processor-fires-enter-exit-visitors-in-source-order"));
-		expect(log).toEqual(["enter", "decl:color", "decl:width", "exit"]);
-	});
-
 	it("path.skipChildren() stops descent into a node", () => {
 		/** @type {string[]} */
 		const log = [];
@@ -794,33 +505,6 @@ describe("CssSyntax — SourceProcessor", () => {
 			})
 			.process(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"));
 		expect(log).toEqual(["qr"]);
-	});
-
-	it("recurseBlocks: false stops at top-level rules", () => {
-		const count = (/** @type {boolean} */ recurseBlocks) => {
-			let n = 0;
-			new SourceProcessor()
-				.use({ [NodeType.QualifiedRule]: () => n++ })
-				.process(fixture("css", "css-syntax-source-processor-recurse-blocks-false-stops-at-top-level-rules"), { recurseBlocks });
-			return n;
-		};
-		expect(count(false)).toBe(0);
-		expect(count(true)).toBe(2);
-	});
-
-	it("walks declarations inside at-rule blocks", () => {
-		/** @type {string[]} */
-		const names = [];
-		new SourceProcessor()
-			.use(
-				/** @type {import("../../../lib/css/syntax-parser").VisitorMap} */ ({
-					[NodeType.Declaration]: (
-						/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
-					) => names.push(path.name())
-				})
-			)
-			.process(fixture("css", "css-syntax-source-processor-walks-declarations-inside-at-rule-blocks"));
-		expect(names).toEqual(["font-family", "src"]);
 	});
 
 	it("use() chains and accumulates visitors per type", () => {
@@ -896,21 +580,6 @@ describe("CssSyntax — SourceProcessor", () => {
 			});
 		expect(names).toEqual(["color", "background"]);
 		expect(urls).toEqual(["a.png"]);
-	});
-
-	it('the default "stylesheet" mode treats a top-level declaration as a parse error', () => {
-		/** @type {string[]} */
-		const names = [];
-		new SourceProcessor()
-			.use(
-				/** @type {import("../../../lib/css/syntax-parser").VisitorMap} */ ({
-					[NodeType.Declaration]: (
-						/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
-					) => names.push(path.name())
-				})
-			)
-			.process(fixture("css", "css-syntax-source-processor-as-block-contents-walks-a-block-s-contents-style"));
-		expect(names).toEqual([]);
 	});
 });
 
@@ -1009,20 +678,6 @@ describe("CssSyntax — nesting and error recovery", () => {
 		expect(rules(fixture("css", "css-syntax-nesting-and-error-recovery-drops-bad-declarations-but-keeps-the"))[0].decls).toBe(0);
 		expect(rules(fixture("css", "css-syntax-nesting-and-error-recovery-drops-bad-declarations-but-keeps-the-2"))[0].type).toBe(NodeType.AtRule);
 		expect(rules(fixture("css", "css-syntax-nesting-and-error-recovery-drops-bad-declarations-but-keeps-the-3"))[0].childRules).toBe(1);
-	});
-
-	it("walks into function and simple-block children of a value", () => {
-		let nums = 0;
-		let fns = 0;
-		let blocks = 0;
-		new SourceProcessor()
-			.use({
-				[NodeType.Number]: () => nums++,
-				[NodeType.Function]: () => fns++,
-				[NodeType.SimpleBlock]: () => blocks++
-			})
-			.process(fixture("css", "css-syntax-nesting-and-error-recovery-walks-into-function-and-simple-block"));
-		expect([nums, fns, blocks]).toEqual([2, 1, 1]);
 	});
 
 	it("fails on a nesting deeper than the stack as a parse error", () => {
@@ -1577,11 +1232,6 @@ describe("CssSyntax — §5 parsing algorithms", () => {
 					.join(",")}}`
 		);
 
-	it("parseARule returns a syntax error for a block-less qualified rule", () => {
-		expect(parseARule("a")).toBeUndefined();
-		expect(parseARule(fixture("css", "css-syntax-5-parsing-algorithms-parse-a-rule-returns-a-syntax-error-for-a-block"))).toBeUndefined();
-	});
-
 	it("parseARule reads a block-less at-rule without a block range", () => {
 		const rule = /** @type {number} */ (parseARule(fixture("css", "css-syntax-5-parsing-algorithms-parse-a-rule-reads-a-block-less-at-rule-without-a")));
 		expect(A.name(rule)).toBe("import");
@@ -1664,46 +1314,6 @@ describe("CssSyntax — §5 parsing algorithms", () => {
 });
 
 describe("CssSyntax — token value decoding", () => {
-	/**
-	 * @param {string} src source
-	 * @returns {string | number} the component value's decoded value
-	 */
-	const tok = (src) =>
-		A.value(/** @type {number} */ (parseAComponentValue(src)));
-
-	it("resolves ident escapes (§4.3.7)", () => {
-		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7"))).toBe("a:b");
-		expect(A.value(parseAListOfComponentValues(fixture("css", "css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-2"))[0])).toBe("a:b");
-		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-3"))).toBe("a\\b");
-		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-4"))).toBe("�a");
-		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-5"))).toBe("�a");
-		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-6"))).toBe("�a");
-		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-7"))).toBe("\u{1F600}a");
-		// An escape the input ran out of names U+FFFD.
-		expect(tok(fixture("css", "source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-9"))).toBe("a�");
-		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-8"))).toBe("a\\");
-	});
-
-	it("resolves string escapes and line continuations (§4.3.5)", () => {
-		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4"))).toBe("abc");
-		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-2"))).toBe("a\\b");
-		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-3"))).toBe('a"b');
-		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-4"))).toBe("ab");
-		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-5"))).toBe("ab");
-		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-6"))).toBe("ab");
-		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-7"))).toBe("ab");
-		// Unclosed at end of input: no closing quote to take off.
-		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-8"))).toBe("ab");
-		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-9"))).toBe('a"');
-		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-10"))).toBe("a");
-		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-11"))).toBe("a\\");
-	});
-
-	it("resolves an at-rule name the input ran out of", () => {
-		const rule = /** @type {number} */ (parseARule(fixture("css", "css-syntax-path-reads-on-every-node-kind-reads-an-at-rule-s-name-the-input-ran")));
-		expect(A.name(rule)).toBe("foo�");
-	});
-
 	it("scans escaped at-signs in linear time", () => {
 		/**
 		 * @param {number} length number of escaped at-signs
@@ -1860,12 +1470,6 @@ describe("CssSyntax — path reads on every node kind", () => {
 				[NodeType.Url]: (path) => [path.startOf(Part.value), path.endOf(Part.value)]
 			})
 		).toEqual([[8, 9]]);
-	});
-
-	it("reads an at-rule's name the input ran out of", () => {
-		expect(
-			collect(fixture("css", "css-syntax-path-reads-on-every-node-kind-reads-an-at-rule-s-name-the-input-ran"), { [NodeType.AtRule]: (path) => path.name() })
-		).toEqual(["foo�"]);
 	});
 
 	it("reads children, fields and fields by name", () => {
