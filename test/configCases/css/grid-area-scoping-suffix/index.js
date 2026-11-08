@@ -23,3 +23,8 @@ it("should export an imported grid name as its module does", () => {
 	expect(neighbor.side).toBe("side_x-side");
 	expect(styles.side).toBe(neighbor.side);
 });
+
+it("should inline an imported grid name the same way in every position", () => {
+	expect(css()).toContain(`counter-reset: ${neighbor.side} 5`);
+	expect(css()).toContain(`content: counter(${neighbor.side})`);
+});

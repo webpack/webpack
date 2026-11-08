@@ -5,3 +5,9 @@
 .grid { grid-template-areas: "main x\.y" }
 .item { grid-column: main-start / main-end }
 .dotted { grid-area: x\.y }
+
+/* The imported grid name inlines the same way wherever it is used. */
+.counter {
+	counter-reset: side 5;
+	content: counter(side);
+}
