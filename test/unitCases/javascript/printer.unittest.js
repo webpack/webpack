@@ -2163,6 +2163,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{ module: true },
 				"export function a(o){var q=o.x;for(let o=h(q);o;o--)g(o,o)}export function b(o){var q=[o];for(let o=h(q);o;o--)g(o,o)}export function c(o){for(let q=h(e(t));q;q--)g(q,q,o)}export function d(o){for(var q=h(o.x);q;q--)g(q,q)}"
 			],
+			// A literal read only by an `export` list stays declared: the list takes names, not values.
+			[fixture("javascript", "m-collapse-6"), { module: true }, "var c={a:function(){return b()}},e=[b];export{c,e};"],
 			// A literal read too far on stays where it is, the search for the read bounded.
 			[`function f(p){var o=[p];${"g();".repeat(3000)}h(o)}`, { mangle: false }, `function f(p){var o=[p];${"g(),".repeat(3000)}h(o)}`],
 			// A module's or private top level's name read once, by a call reading a global first, prints its value there, as a function's does; a script's stays.
