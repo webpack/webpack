@@ -10,6 +10,8 @@ module.exports = {
 			"utf8"
 		);
 		expect(code).toContain('record(c?1:2,"a")');
+		expect(code).toContain("record((a?b:c)?1:2)");
+		expect(code).toContain("new Constructor((a?b:c)?1:2)");
 		expect(code).toContain("push(a)&&push(b)?");
 		expect(code).toContain("new F(c?1:2)");
 	}
