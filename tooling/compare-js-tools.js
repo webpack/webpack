@@ -924,7 +924,7 @@ const wantedPreset = filterFrom("PRESET");
 
 const wantedRelation = filterFrom("RELATION");
 
-// The inputs the unit tests read, one directory each: `javascript/fixtures.unittest.js`
+// The inputs the unit tests read, one directory each: `javascript/invariants.unittest.js`
 // holds every one of them to these relations, with its own known differences.
 const UNIT_INPUT_RE = /^test\/fixtures\/javascript\/[^/]+\/index\.js$/;
 

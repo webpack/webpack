@@ -1,21 +1,105 @@
 "use strict";
 
-const { fixture } = require("../../helpers/fixture");
-
+const { SourceProcessor } = require("../../../lib/javascript/syntax");
+const {
+	fixtures,
+	snapshotText,
+	unexplained
+} = require("../../helpers/fixture");
+const { parse, plain } = require("../../helpers/javascriptParse");
 const { invariantFindings } = require("../../helpers/syntaxInvariants");
+const { purityRelation } = require("../../helpers/syntaxInvariants/relations");
 const syntax = require("../../helpers/syntaxInvariants/javascript");
 
-// Every source is held to spans, slices, purity, idempotence under each preset,
-// respelling and its cut-short copies; agreement with other parsers is the
-// comparison scripts' own question.
-/** @type {[string, string][]} */
-const SOURCES = [
-	["a module", fixture("javascript", "javascript-syntax-invariants-holds-every-relation-over-its-sources")],
-	["a script", fixture("javascript", "javascript-syntax-invariants-holds-every-relation-over-its-sources-2")]
-];
+/**
+ * A tree as one line: each node's type and range, then its scalar fields and
+ * its children by key, so a snapshot shows the shape without ESTree's bulk.
+ * @param {unknown} value a plain node, a list of them or a scalar
+ * @returns {string} its text
+ */
+const treeText = (value) => {
+	if (Array.isArray(value)) return `[${value.map(treeText).join(",")}]`;
+	if (value === null || typeof value !== "object") return JSON.stringify(value);
+	const node = /** @type {Record<string, unknown>} */ (value);
+	if (typeof node.type !== "string") return JSON.stringify(node);
+	/** @type {string[]} */
+	const fields = [];
+	for (const key of Object.keys(node)) {
+		if (["type", "start", "end", "loc", "range"].includes(key)) continue;
+		// A regexp's value is null where this Node.js can't build it; `regex` says it.
+		if (key === "value" && node.regex !== undefined) continue;
+		fields.push(`${key}=${treeText(node[key])}`);
+	}
+	return `${node.type}[${node.start},${node.end}](${fields.join(" ")})`;
+};
 
+/**
+ * @param {() => string} read what to run
+ * @returns {string} its answer, or the error it throws
+ */
+const answerOf = (read) => {
+	try {
+		return read();
+	} catch (err) {
+		return `throws: ${/** @type {Error} */ (err).message}`;
+	}
+};
+
+// Every input the JavaScript tests read is a fixture, and each one is read,
+// printed and held to the parser's and printer's own relations; a new fixture
+// needs no code.
 describe("JavaScript syntax — invariants", () => {
-	it("holds every relation over its sources", () => {
-		expect(invariantFindings(syntax, SOURCES)).toEqual([]);
+	const all = fixtures("javascript");
+	for (const { name, source, options, expected } of all) {
+		describe(name, () => {
+			it("parses", () => {
+				const goal = syntax.goalFor(source);
+				expect(
+					answerOf(() =>
+						treeText(
+							plain(
+								parse(source, {
+									sourceType: goal === null ? "module" : goal.sourceType
+								}).ast
+							)
+						)
+					)
+				).toMatchSnapshot();
+			});
+
+			it.each(options.map((one) => [JSON.stringify(one), one]))(
+				"prints %s",
+				(_title, one) => {
+					expect(
+						snapshotText(
+							answerOf(
+								() =>
+									/** @type {{ code: string }} */ (
+										new SourceProcessor().process(source, one)
+									).code
+							)
+						)
+					).toMatchSnapshot();
+				}
+			);
+
+			it("holds its invariants", () => {
+				expect(
+					unexplained(invariantFindings(syntax, [[name, source]]), expected)
+				).toEqual([]);
+			});
+		});
+	}
+
+	// Every fixture is read once before any is read again, so state one parse
+	// leaves behind shows as a different answer for the next.
+	it("reads each fixture alike between all the others", () => {
+		const { reports } = purityRelation(
+			all.map(({ name, source }) => ({
+				what: name,
+				digest: () => syntax.digest(source)
+			}))
+		);
+		expect(reports.map((report) => report.repro)).toEqual([]);
 	});
 });
