@@ -2,5 +2,8 @@
 	{
 		"mode": "minify",
 		"removeEmptyElements": true
+	},
+	{
+		"mode": "beautify"
 	}
 ]

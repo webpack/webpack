@@ -881,7 +881,7 @@ describe("SourceProcessor — enumerated attribute values", () => {
 			const tag = element === "*" ? "div" : element;
 			// A cell outside a table is dropped by tree construction, so it needs
 			// somewhere to live before its attributes can be read back.
-			const open = tag === "td" || tag === "th" ? "<table><tr>" : "";
+			const open = tag === "td" || tag === "th" ? fixture("html", "parse-html-insertion-modes-opens-an-implied-tbody-in-a-table-fragment") : "";
 			for (const [attribute, keywords] of Object.entries(attributes)) {
 				for (const keyword of keywords) {
 					const shouted = keyword.toUpperCase();
@@ -1027,7 +1027,7 @@ describe("SourceProcessor — removeRedundantAttributes and script charset", () 
 			removeRedundantAttributes: "smart"
 		}).code;
 
-	const SCRIPT = '<script charset="utf-8" src="a.js"></script>';
+	const SCRIPT = fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-13");
 
 	it("drops it on a page that declares UTF-8", () => {
 		for (const head of [
@@ -1103,7 +1103,7 @@ describe("SourceProcessor — removeRedundantAttributes and script charset", () 
 	it("keeps a charset naming another encoding", () => {
 		expect(
 			minify(
-				'<!doctype html><meta charset="utf-8"><script charset="gbk" src="a.js"></script>'
+				fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-keeps-a-charset")
 			)
 		).toContain("<script charset=gbk src=a.js></script>");
 	});

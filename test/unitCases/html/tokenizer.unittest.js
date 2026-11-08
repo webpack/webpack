@@ -1,15 +1,15 @@
 "use strict";
 
+const { fixture } = require("../../helpers/fixture");
+
 // cspell:ignore apos notpre Elig reconsumes xyzabc zzzunknown codepoint DFFF ampx noncharacter FFFE scrip
 // cspell:ignore scripty
-// cspell:ignore DOCTYPEÐ DOCTYPEİ
+// cspell:ignore DOCTYPEÐ DOCTYPEİ doctypehtml
 // cspell:ignore noembed
 
 /** @import { HtmlNodeRef } from "../../../lib/html/syntax-parser" */
 /** @import { MatText } from "../../helpers/materializeHtmlTree" */
 
-const fs = require("fs");
-const path = require("path");
 const {
 	A,
 	Part,
@@ -30,14 +30,17 @@ const {
 } = require("../../helpers/materializeHtmlTree");
 
 describe("tokenize", () => {
-	const casesPath = path.resolve(__dirname, "../../fixtures/html/parsing/cases");
-	const tests = fs
-		.readdirSync(casesPath)
-		.filter((test) => /\.html$/.test(test))
-		.map((item) => [
-			item,
-			fs.readFileSync(path.resolve(casesPath, item), "utf8")
-		]);
+	const tests = [
+		"attributes",
+		"basic",
+		"character-references",
+		"comments",
+		"nested",
+		"self-closing"
+	].map((item) => [
+		`${item}.html`,
+		fixture("html", `tokenize-should-tokenize-and-roundtrip-${item}-html`)
+	]);
 
 	for (const [name, code] of tests) {
 		it(`should tokenize and roundtrip "${name}"`, () => {
@@ -146,7 +149,7 @@ describe("tokenize", () => {
 	it("should handle plain text with no tags", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		tokenize("hello world", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-plain-text-with-no-tags"), 0, {
 			text: (input, start, end) => {
 				results.push(input.slice(start, end));
 				return end;
@@ -158,7 +161,7 @@ describe("tokenize", () => {
 	it("should detect self-closing tags", () => {
 		/** @type {unknown[]} */
 		const tags = [];
-		tokenize("<br/><img src='x'/>", 0, {
+		tokenize(fixture("html", "tokenize-should-detect-self-closing-tags"), 0, {
 			openTag: (input, start, end, nameStart, nameEnd, selfClosing) => {
 				tags.push([input.slice(nameStart, nameEnd), selfClosing]);
 				return end;
@@ -173,7 +176,7 @@ describe("tokenize", () => {
 	it("should parse boolean attributes", () => {
 		/** @type {unknown[]} */
 		const attrs = [];
-		tokenize('<input disabled required type="text">', 0, {
+		tokenize(fixture("html", "tokenize-should-parse-boolean-attributes"), 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([
 					input.slice(ns, ne),
@@ -194,7 +197,7 @@ describe("tokenize", () => {
 	it("should handle all quote types", () => {
 		/** @type {unknown[]} */
 		const attrs = [];
-		tokenize("<div a=\"1\" b='2' c=3>", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-all-quote-types"), 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([input.slice(ns, ne), input.slice(vs, ve), qt]);
 				if (qt !== Quote.None) return ve + 1;
@@ -211,7 +214,7 @@ describe("tokenize", () => {
 	it("should parse comments", () => {
 		/** @type {unknown[]} */
 		const comments = [];
-		tokenize("before<!-- hi -->after", 0, {
+		tokenize(fixture("html", "tokenize-should-parse-comments"), 0, {
 			comment: (input, start, end) => {
 				comments.push(input.slice(start, end));
 				return end;
@@ -223,7 +226,7 @@ describe("tokenize", () => {
 	it("should handle lone < at EOF", () => {
 		/** @type {unknown[]} */
 		const texts = [];
-		tokenize("hello<", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-lone-at-eof"), 0, {
 			text: (input, start, end) => {
 				texts.push(input.slice(start, end));
 				return end;
@@ -235,7 +238,7 @@ describe("tokenize", () => {
 	it("should parse DOCTYPE as doctype", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		tokenize("<!DOCTYPE html><div>hi</div>", 0, {
+		tokenize(fixture("html", "tokenize-should-parse-doctype-as-doctype"), 0, {
 			doctype: (input, start, end) => {
 				results.push(["doctype", input.slice(start, end)]);
 				return end;
@@ -264,7 +267,7 @@ describe("tokenize", () => {
 	it("should parse DOCTYPE case-insensitively", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		tokenize("<!doctype html><!DoCtYpE html>", 0, {
+		tokenize(fixture("html", "tokenize-should-parse-doctype-case-insensitively"), 0, {
 			doctype: (input, start, end) => {
 				results.push(input.slice(start, end));
 				return end;
@@ -276,7 +279,7 @@ describe("tokenize", () => {
 	it("should handle CDATA sections", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		tokenize("<div><![CDATA[<img src='x'>]]></div>", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-cdata-sections"), 0, {
 			comment: (input, start, end) => {
 				results.push(["comment", input.slice(start, end)]);
 				return end;
@@ -303,7 +306,7 @@ describe("tokenize", () => {
 	it("should handle CDATA sections in foreign content", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		tokenize("<div><![CDATA[<img src='x'>]]></div>", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-cdata-sections"), 0, {
 			isForeign: () => true,
 			comment: (input, start, end) => {
 				results.push(["comment", input.slice(start, end)]);
@@ -329,7 +332,7 @@ describe("tokenize", () => {
 	it("should handle nested brackets in CDATA", () => {
 		/** @type {unknown[]} */
 		const comments = [];
-		tokenize("<![CDATA[a]b]]c]]>", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-nested-brackets-in-cdata"), 0, {
 			comment: (input, start, end) => {
 				comments.push(input.slice(start, end));
 				return end;
@@ -341,7 +344,7 @@ describe("tokenize", () => {
 	it("should handle nested <!-- inside comments", () => {
 		/** @type {unknown[]} */
 		const comments = [];
-		tokenize("<!-- outer <!-- inner -->", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-nested-inside-comments"), 0, {
 			comment: (input, start, end) => {
 				comments.push(input.slice(start, end));
 				return end;
@@ -353,7 +356,7 @@ describe("tokenize", () => {
 	it("should handle EOF in DOCTYPE", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		tokenize("<!DOCTYPE html", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-eof-in-doctype"), 0, {
 			doctype: (input, start, end) => {
 				results.push(input.slice(start, end));
 				return end;
@@ -365,7 +368,7 @@ describe("tokenize", () => {
 	it("should handle EOF in CDATA", () => {
 		/** @type {unknown[]} */
 		const comments = [];
-		tokenize("<![CDATA[unclosed", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-eof-in-cdata"), 0, {
 			comment: (input, start, end) => {
 				comments.push(input.slice(start, end));
 				return end;
@@ -375,7 +378,7 @@ describe("tokenize", () => {
 	});
 
 	it("should roundtrip DOCTYPE + tags + CDATA", () => {
-		const html = "<!DOCTYPE html><html><body><![CDATA[data]]></body></html>";
+		const html = fixture("html", "tokenize-should-roundtrip-doctype-tags-cdata");
 		/** @type {unknown[]} */
 		const parts = [];
 		tokenize(html, 0, {
@@ -406,7 +409,7 @@ describe("tokenize", () => {
 	it("should handle RCDATA for title element", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		tokenize("<title>Hello <b>World</b></title>", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-rcdata-for-title-element"), 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -430,7 +433,7 @@ describe("tokenize", () => {
 	it("should handle RCDATA for textarea element", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		tokenize("<textarea><p>not a tag</p></textarea>", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-rcdata-for-textarea-element"), 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -454,7 +457,7 @@ describe("tokenize", () => {
 	it("should handle RAWTEXT for style element", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		tokenize("<style>.a { color: red; }</style>", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-rawtext-for-style-element"), 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -504,7 +507,7 @@ describe("tokenize", () => {
 	it("should handle script data state", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		tokenize("<script>var x = 1 < 2;</script>", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-script-data-state"), 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -528,7 +531,7 @@ describe("tokenize", () => {
 	it("should handle script data escaped state (<!-- inside script)", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		tokenize("<script><!--- comment --></script>", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-script-data-escaped-state-inside-script"), 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -552,7 +555,7 @@ describe("tokenize", () => {
 	it("should handle script data double escaped state transitions (<script and </script)", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		tokenize("<script><!-- <script> var x = 1; </script> --></script>", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-script-data-double-escaped-state-transitions-script-and"), 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -577,7 +580,7 @@ describe("tokenize", () => {
 		// Regression: tempBuffer in script-data-double-escape-end-state must
 		// accumulate the whole tag name — under a length cap `</scripts>` falsely
 		// matches `script` and leaves the double-escaped state early.
-		const html = "<script><!--<script>x</scripts>y</script>--></script>";
+		const html = fixture("html", "tokenize-should-not-exit-script-data-double-escaped-on-tag-prefixes-longer-than");
 		/** @type {unknown[]} */
 		const results = [];
 		tokenize(html, 0, {
@@ -605,7 +608,7 @@ describe("tokenize", () => {
 		// Regression: a `</script>` emitted straight from SCRIPT_DATA_ESCAPED,
 		// with no `-->` back through SCRIPT_DATA, needs `tagStart` at its `<` —
 		// otherwise `flushText(tagStart)` empties the range and loses the body.
-		const html = "<script><!--<script></script></script>";
+		const html = fixture("html", "tokenize-should-preserve-script-content-when-close-tag-is-reached-from-escaped");
 		/** @type {unknown[]} */
 		const results = [];
 		tokenize(html, 0, {
@@ -632,7 +635,7 @@ describe("tokenize", () => {
 	it("should not match wrong end tag in RCDATA", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		tokenize("<title>text</div></title>", 0, {
+		tokenize(fixture("html", "tokenize-should-not-match-wrong-end-tag-in-rcdata"), 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -656,7 +659,7 @@ describe("tokenize", () => {
 	it("should handle case-insensitive end tags in content modes", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		tokenize("<style>.a{}</STYLE>", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-case-insensitive-end-tags-in-content-modes"), 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -679,7 +682,7 @@ describe("tokenize", () => {
 
 	it("should roundtrip HTML with script and style", () => {
 		const html =
-			"<html><head><style>.a{}</style></head><body><script>var x=1;</script></body></html>";
+			fixture("html", "tokenize-should-roundtrip-html-with-script-and-style");
 		/** @type {unknown[]} */
 		const parts = [];
 		tokenize(html, 0, {
@@ -702,7 +705,7 @@ describe("tokenize", () => {
 	it("should handle PLAINTEXT state", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		tokenize("<div><plaintext><p>ignored</p></div>", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-plaintext-state"), 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -726,7 +729,7 @@ describe("tokenize", () => {
 	it("should handle named character references in text", () => {
 		/** @type {unknown[]} */
 		const parts = [];
-		const html = "<p>Tom &amp; Jerry</p>";
+		const html = fixture("html", "tokenize-should-handle-named-character-references-in-text");
 		tokenize(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
@@ -747,7 +750,7 @@ describe("tokenize", () => {
 	it("should handle named character references in double-quoted attributes", () => {
 		/** @type {unknown[]} */
 		const attrs = [];
-		tokenize('<a href="?a=1&amp;b=2">', 0, {
+		tokenize(fixture("html", "tokenize-should-handle-named-character-references-in-double-quoted-attributes"), 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([input.slice(ns, ne), input.slice(vs, ve)]);
 				if (qt !== Quote.None) return ve + 1;
@@ -760,7 +763,7 @@ describe("tokenize", () => {
 	it("should handle named character references in single-quoted attributes", () => {
 		/** @type {unknown[]} */
 		const attrs = [];
-		tokenize("<a href='?x=1&lt;2'>", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-named-character-references-in-single-quoted-attributes"), 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([input.slice(ns, ne), input.slice(vs, ve)]);
 				if (qt !== Quote.None) return ve + 1;
@@ -773,7 +776,7 @@ describe("tokenize", () => {
 	it("should handle character references in unquoted attributes", () => {
 		/** @type {unknown[]} */
 		const attrs = [];
-		tokenize("<a href=foo&amp;bar>", 0, {
+		tokenize(fixture("html", "tokenize-should-handle-character-references-in-unquoted-attributes"), 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([input.slice(ns, ne), input.slice(vs, ve)]);
 				if (qt !== Quote.None) return ve + 1;
@@ -786,7 +789,7 @@ describe("tokenize", () => {
 	it("should handle decimal numeric character references", () => {
 		/** @type {unknown[]} */
 		const parts = [];
-		const html = "<p>&#65;&#66;&#67;</p>";
+		const html = fixture("html", "tokenize-should-handle-decimal-numeric-character-references");
 		tokenize(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
@@ -807,7 +810,7 @@ describe("tokenize", () => {
 	it("should handle hexadecimal character references", () => {
 		/** @type {unknown[]} */
 		const parts = [];
-		const html = "<p>&#x41;&#X42;</p>";
+		const html = fixture("html", "tokenize-should-handle-hexadecimal-character-references");
 		tokenize(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
@@ -828,7 +831,7 @@ describe("tokenize", () => {
 	it("should handle bare ampersand (not a character reference)", () => {
 		/** @type {unknown[]} */
 		const parts = [];
-		const html = "<p>bare & alone</p>";
+		const html = fixture("html", "tokenize-should-handle-bare-ampersand-not-a-character-reference");
 		tokenize(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
@@ -849,7 +852,7 @@ describe("tokenize", () => {
 	it("should handle unknown named character references", () => {
 		/** @type {unknown[]} */
 		const parts = [];
-		const html = "<p>&unknown;</p>";
+		const html = fixture("html", "tokenize-should-handle-unknown-named-character-references");
 		tokenize(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
@@ -870,7 +873,7 @@ describe("tokenize", () => {
 	it("should handle empty numeric character references (&#; and &#x;)", () => {
 		/** @type {unknown[]} */
 		const parts = [];
-		const html = "<p>&#;&#x;</p>";
+		const html = fixture("html", "tokenize-should-handle-empty-numeric-character-references-and-x");
 		tokenize(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
@@ -966,7 +969,7 @@ describe("tokenize", () => {
 
 		// --- STATE_TAG_OPEN ---
 		it("tAG_OPEN: `<?xml ?>` becomes bogus comment", () => {
-			expect(walk("a<?pi?>b")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-tag-open-xml-becomes-bogus-comment"))).toEqual([
 				["text", "a"],
 				["comment", "<?pi?>"],
 				["text", "b"]
@@ -974,8 +977,8 @@ describe("tokenize", () => {
 		});
 
 		it("tAG_OPEN: `<` followed by non-tag char stays as text (reconsume in DATA)", () => {
-			expect(walk("a< b")).toEqual([["text", "a< b"]]);
-			expect(walk("1<2")).toEqual([["text", "1<2"]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-tag-open-followed-by-non-tag-char-stays"))).toEqual([["text", "a< b"]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-tag-open-followed-by-non-tag-char-stays-2"))).toEqual([["text", "1<2"]]);
 		});
 
 		// --- STATE_END_TAG_OPEN ---
@@ -983,14 +986,14 @@ describe("tokenize", () => {
 			// Per spec this is a parse error and no token is emitted, so it is
 			// dropped rather than left in the text span: a browser renders nothing
 			// for it, and keeping it turns into visible text once re-escaped.
-			expect(walk("a</>b")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-end-tag-open-is-missing-end-tag-name"))).toEqual([
 				["text", "a"],
 				["text", "b"]
 			]);
 		});
 
 		it("eND_TAG_OPEN: `</1foo>` becomes bogus comment", () => {
-			expect(walk("a</1bar>b")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-end-tag-open-1foo-becomes-bogus-comment"))).toEqual([
 				["text", "a"],
 				["comment", "</1bar>"],
 				["text", "b"]
@@ -999,11 +1002,11 @@ describe("tokenize", () => {
 
 		// --- STATE_BEFORE_ATTRIBUTE_NAME ---
 		it("bEFORE_ATTR_NAME: `/` reconsumes in AFTER_ATTR_NAME → self-closing", () => {
-			expect(walk("<br />")).toEqual([["open", "br", true]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-before-attr-name-reconsumes-in-after"))).toEqual([["open", "br", true]]);
 		});
 
 		it("bEFORE_ATTR_NAME: `=` starts attribute name with `=` (per spec)", () => {
-			expect(walk("<a =foo>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-before-attr-name-starts-attribute-name"))).toEqual([
 				["attr", "=foo", null, Quote.None],
 				["open", "a", false]
 			]);
@@ -1011,21 +1014,21 @@ describe("tokenize", () => {
 
 		// --- STATE_AFTER_ATTRIBUTE_NAME ---
 		it("aFTER_ATTR_NAME: space then `/` self-closes", () => {
-			expect(walk("<br foo />")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-attr-name-space-then-self-closes"))).toEqual([
 				["attr", "foo", null, Quote.None],
 				["open", "br", true]
 			]);
 		});
 
 		it("aFTER_ATTR_NAME: space then `=` switches to BEFORE_ATTR_VALUE", () => {
-			expect(walk("<a foo = 'bar'>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-attr-name-space-then-switches-to"))).toEqual([
 				["attr", "foo", "bar", Quote.Single],
 				["open", "a", false]
 			]);
 		});
 
 		it("aFTER_ATTR_NAME: `>` closing on a close tag form `</a foo >`", () => {
-			expect(walk("<a></a foo >")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-attr-name-closing-on-a-close-tag"))).toEqual([
 				["open", "a", false],
 				["attr", "foo", null, Quote.None],
 				["close", "a"]
@@ -1033,7 +1036,7 @@ describe("tokenize", () => {
 		});
 
 		it("aFTER_ATTR_NAME: new attribute begins after whitespace", () => {
-			expect(walk("<a foo bar>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-attr-name-new-attribute-begins"))).toEqual([
 				["attr", "foo", null, Quote.None],
 				["attr", "bar", null, Quote.None],
 				["open", "a", false]
@@ -1042,7 +1045,7 @@ describe("tokenize", () => {
 
 		// --- STATE_BEFORE_ATTRIBUTE_VALUE ---
 		it("bEFORE_ATTR_VALUE: leading whitespace before value is ignored", () => {
-			expect(walk("<a foo=   'bar'>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-before-attr-value-leading-whitespace"))).toEqual([
 				["attr", "foo", "bar", Quote.Single],
 				["open", "a", false]
 			]);
@@ -1052,14 +1055,14 @@ describe("tokenize", () => {
 			// Per spec, `<a foo=>` is a missing-attribute-value parse error and
 			// `foo` is created with the empty string. The walker reports an empty
 			// value range pointing at `>`.
-			expect(walk("<a foo=>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-before-attr-value-after-emits-attribute"))).toEqual([
 				["attr", "foo", "", Quote.None],
 				["open", "a", false]
 			]);
 		});
 
 		it("bEFORE_ATTR_VALUE: `>` after `=` on close tag form", () => {
-			expect(walk("<a></a foo=>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-before-attr-value-after-on-close-tag"))).toEqual([
 				["open", "a", false],
 				["attr", "foo", "", Quote.None],
 				["close", "a"]
@@ -1068,7 +1071,7 @@ describe("tokenize", () => {
 
 		// --- STATE_ATTRIBUTE_VALUE_UNQUOTED ---
 		it("aTTR_VALUE_UNQUOTED: space terminates value", () => {
-			expect(walk("<a foo=bar baz>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-attr-value-unquoted-space-terminates"))).toEqual([
 				["attr", "foo", "bar", Quote.None],
 				["attr", "baz", null, Quote.None],
 				["open", "a", false]
@@ -1076,7 +1079,7 @@ describe("tokenize", () => {
 		});
 
 		it("aTTR_VALUE_UNQUOTED: `>` on close tag form", () => {
-			expect(walk("<a></a foo=bar>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-attr-value-unquoted-on-close-tag-form"))).toEqual([
 				["open", "a", false],
 				["attr", "foo", "bar", Quote.None],
 				["close", "a"]
@@ -1085,14 +1088,14 @@ describe("tokenize", () => {
 
 		// --- STATE_AFTER_ATTRIBUTE_VALUE_QUOTED ---
 		it("aFTER_ATTR_VALUE_QUOTED: `/` self-closes", () => {
-			expect(walk('<br foo="bar"/>')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-attr-value-quoted-self-closes"))).toEqual([
 				["attr", "foo", "bar", Quote.Double],
 				["open", "br", true]
 			]);
 		});
 
 		it("aFTER_ATTR_VALUE_QUOTED: `>` on close tag form", () => {
-			expect(walk('<a></a foo="bar">')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-attr-value-quoted-on-close-tag"))).toEqual([
 				["open", "a", false],
 				["attr", "foo", "bar", Quote.Double],
 				["close", "a"]
@@ -1100,7 +1103,7 @@ describe("tokenize", () => {
 		});
 
 		it("aFTER_ATTR_VALUE_QUOTED: anything else reconsumes (missing-whitespace)", () => {
-			expect(walk('<a foo="x"bar>')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-attr-value-quoted-anything-else"))).toEqual([
 				["attr", "foo", "x", Quote.Double],
 				["attr", "bar", null, Quote.None],
 				["open", "a", false]
@@ -1109,14 +1112,14 @@ describe("tokenize", () => {
 
 		// --- STATE_SELF_CLOSING_START_TAG ---
 		it("sELF_CLOSING: on close-tag form (treated as close, not self-close)", () => {
-			expect(walk("<a></a/>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-self-closing-on-close-tag-form-treated"))).toEqual([
 				["open", "a", false],
 				["close", "a"]
 			]);
 		});
 
 		it("sELF_CLOSING: garbage char reconsumes in BEFORE_ATTR_NAME", () => {
-			expect(walk("<br /foo>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-self-closing-garbage-char-reconsumes-in"))).toEqual([
 				["attr", "foo", null, Quote.None],
 				["open", "br", false]
 			]);
@@ -1124,7 +1127,7 @@ describe("tokenize", () => {
 
 		// --- STATE_MARKUP_DECLARATION_OPEN anything else (bogus comment) ---
 		it("mARKUP_DECLARATION_OPEN: `<!foo>` → bogus comment", () => {
-			expect(walk("a<!foo>b")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-markup-declaration-open-foo-bogus"))).toEqual([
 				["text", "a"],
 				["comment", "<!foo>"],
 				["text", "b"]
@@ -1133,7 +1136,7 @@ describe("tokenize", () => {
 
 		// --- STATE_COMMENT_START ---
 		it("cOMMENT_START: `<!-->` abrupt-closing-of-empty-comment", () => {
-			expect(walk("a<!-->b")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-comment-start-abrupt-closing-of-empty"))).toEqual([
 				["text", "a"],
 				["comment", "<!-->"],
 				["text", "b"]
@@ -1142,7 +1145,7 @@ describe("tokenize", () => {
 
 		// --- STATE_COMMENT_START_DASH ---
 		it("cOMMENT_START_DASH: `<!--->` abrupt-closing-of-empty-comment", () => {
-			expect(walk("a<!--->b")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-comment-start-dash-abrupt-closing-of"))).toEqual([
 				["text", "a"],
 				["comment", "<!--->"],
 				["text", "b"]
@@ -1150,7 +1153,7 @@ describe("tokenize", () => {
 		});
 
 		it("cOMMENT_START_DASH: `<!--- text -->`", () => {
-			expect(walk("a<!--- x -->b")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-comment-start-dash-text"))).toEqual([
 				["text", "a"],
 				["comment", "<!--- x -->"],
 				["text", "b"]
@@ -1159,30 +1162,30 @@ describe("tokenize", () => {
 
 		// --- STATE_COMMENT (with `<` and various) ---
 		it("cOMMENT: `<` enters comment-less-than-sign and back", () => {
-			expect(walk("<!-- a < b -->")).toEqual([["comment", "<!-- a < b -->"]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-comment-enters-comment-less-than-sign"))).toEqual([["comment", "<!-- a < b -->"]]);
 		});
 
 		// --- STATE_COMMENT_END_DASH ---
 		it("cOMMENT_END_DASH: dash then non-dash returns to comment", () => {
-			expect(walk("<!-- a -b -->")).toEqual([["comment", "<!-- a -b -->"]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-comment-end-dash-dash-then-non-dash"))).toEqual([["comment", "<!-- a -b -->"]]);
 		});
 
 		// --- STATE_COMMENT_END ---
 		it("cOMMENT_END: extra `-` stays in comment-end", () => {
-			expect(walk("<!-- a ---->")).toEqual([["comment", "<!-- a ---->"]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-comment-end-extra-stays-in-comment-end"))).toEqual([["comment", "<!-- a ---->"]]);
 		});
 
 		it("cOMMENT_END: anything-else returns to comment", () => {
-			expect(walk("<!-- a --b -->")).toEqual([["comment", "<!-- a --b -->"]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-comment-end-anything-else-returns-to"))).toEqual([["comment", "<!-- a --b -->"]]);
 		});
 
 		// --- STATE_COMMENT_END_BANG ---
 		it("cOMMENT_END_BANG: `--!-` continues as comment-end-dash", () => {
-			expect(walk("<!-- a --!- -->")).toEqual([["comment", "<!-- a --!- -->"]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-comment-end-bang-continues-as-comment"))).toEqual([["comment", "<!-- a --!- -->"]]);
 		});
 
 		it("cOMMENT_END_BANG: `--!>` incorrectly-closed-comment", () => {
-			expect(walk("a<!-- x --!>b")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-comment-end-bang-incorrectly-closed"))).toEqual([
 				["text", "a"],
 				["comment", "<!-- x --!>"],
 				["text", "b"]
@@ -1190,70 +1193,70 @@ describe("tokenize", () => {
 		});
 
 		it("cOMMENT_END_BANG: anything-else returns to comment", () => {
-			expect(walk("<!-- a --!b -->")).toEqual([["comment", "<!-- a --!b -->"]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-comment-end-bang-anything-else-returns"))).toEqual([["comment", "<!-- a --!b -->"]]);
 		});
 
 		// --- STATE_COMMENT_LESS_THAN_SIGN family ---
 		it("cOMMENT_LESS_THAN_SIGN: `<!--<!--->`", () => {
-			expect(walk("<!--<!--->")).toEqual([["comment", "<!--<!--->"]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-comment-less-than-sign"))).toEqual([["comment", "<!--<!--->"]]);
 		});
 
 		it("cOMMENT_LESS_THAN_SIGN: extra `<` stays in less-than-sign", () => {
-			expect(walk("<!-- << -->")).toEqual([["comment", "<!-- << -->"]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-comment-less-than-sign-extra-stays-in"))).toEqual([["comment", "<!-- << -->"]]);
 		});
 
 		it("cOMMENT_LESS_THAN_SIGN_BANG: not followed by `-`", () => {
 			// Need a `<` while already in COMMENT (not COMMENT_START), so put
 			// content before the nested `<!`.
-			expect(walk("<!-- a<!x-->")).toEqual([["comment", "<!-- a<!x-->"]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-comment-less-than-sign-bang-not"))).toEqual([["comment", "<!-- a<!x-->"]]);
 		});
 
 		it("cOMMENT_LESS_THAN_SIGN_BANG_DASH: not followed by `-`", () => {
-			expect(walk("<!-- a<!-x-->")).toEqual([["comment", "<!-- a<!-x-->"]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-comment-less-than-sign-bang-dash-not"))).toEqual([["comment", "<!-- a<!-x-->"]]);
 		});
 
 		it("cOMMENT_LESS_THAN_SIGN_BANG_DASH_DASH: nested comment parse error", () => {
-			expect(walk("<!--<!---->")).toEqual([["comment", "<!--<!---->"]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-comment-less-than-sign-bang-dash-dash"))).toEqual([["comment", "<!--<!---->"]]);
 		});
 
 		// --- STATE_DOCTYPE ---
 		it("dOCTYPE: `<!DOCTYPE>` missing-doctype-name", () => {
-			expect(walk("<!DOCTYPE>")).toEqual([["doctype", "<!DOCTYPE>"]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-doctype-doctype-missing-doctype-name"))).toEqual([["doctype", "<!DOCTYPE>"]]);
 		});
 
 		it("dOCTYPE: `<!DOCTYPEhtml>` missing-whitespace-before-doctype-name", () => {
-			expect(walk("<!DOCTYPEhtml>")).toEqual([["doctype", "<!DOCTYPEhtml>"]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-doctype-doctypehtml-missing-whitespace"))).toEqual([["doctype", "<!DOCTYPEhtml>"]]);
 		});
 
 		// --- STATE_BEFORE_DOCTYPE_NAME ---
 		it("bEFORE_DOCTYPE_NAME: ignores leading whitespace", () => {
-			expect(walk("<!DOCTYPE   html>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-before-doctype-name-ignores-leading"))).toEqual([
 				["doctype", "<!DOCTYPE   html>"]
 			]);
 		});
 
 		it("bEFORE_DOCTYPE_NAME: NULL char", () => {
-			expect(walk("<!DOCTYPE \0name>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-before-doctype-name-null-char"))).toEqual([
 				["doctype", "<!DOCTYPE \0name>"]
 			]);
 		});
 
 		// --- STATE_DOCTYPE_NAME with NULL ---
 		it("dOCTYPE_NAME: NULL char in name", () => {
-			expect(walk("<!DOCTYPE htm\0l>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-doctype-name-null-char-in-name"))).toEqual([
 				["doctype", "<!DOCTYPE htm\0l>"]
 			]);
 		});
 
 		// --- STATE_AFTER_DOCTYPE_NAME ---
 		it("aFTER_DOCTYPE_NAME: trailing whitespace then `>` closes", () => {
-			expect(walk("<!DOCTYPE html  >")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-name-trailing-whitespace"))).toEqual([
 				["doctype", "<!DOCTYPE html  >"]
 			]);
 		});
 
 		it("aFTER_DOCTYPE_NAME: invalid keyword → bogus doctype", () => {
-			expect(walk("<!DOCTYPE html FOO>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-name-invalid-keyword"))).toEqual([
 				["doctype", "<!DOCTYPE html FOO>"]
 			]);
 		});
@@ -1261,32 +1264,32 @@ describe("tokenize", () => {
 		// --- STATE_AFTER_DOCTYPE_PUBLIC_KEYWORD ---
 		it("aFTER_DOCTYPE_PUBLIC_KEYWORD: with whitespace and quoted public id", () => {
 			expect(
-				walk('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">')
+				walk(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-public-keyword-with"))
 			).toEqual([
 				["doctype", '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">']
 			]);
 		});
 
 		it("aFTER_DOCTYPE_PUBLIC_KEYWORD: missing-whitespace then quoted", () => {
-			expect(walk('<!DOCTYPE html PUBLIC"abc">')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-public-keyword-missing"))).toEqual([
 				["doctype", '<!DOCTYPE html PUBLIC"abc">']
 			]);
 		});
 
 		it("aFTER_DOCTYPE_PUBLIC_KEYWORD: missing-whitespace then single-quoted", () => {
-			expect(walk("<!DOCTYPE html PUBLIC'abc'>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-public-keyword-missing-2"))).toEqual([
 				["doctype", "<!DOCTYPE html PUBLIC'abc'>"]
 			]);
 		});
 
 		it("aFTER_DOCTYPE_PUBLIC_KEYWORD: `>` missing-doctype-public-identifier", () => {
-			expect(walk("<!DOCTYPE html PUBLIC>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-public-keyword-missing-3"))).toEqual([
 				["doctype", "<!DOCTYPE html PUBLIC>"]
 			]);
 		});
 
 		it("aFTER_DOCTYPE_PUBLIC_KEYWORD: garbage → bogus doctype", () => {
-			expect(walk("<!DOCTYPE html PUBLICx>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-public-keyword-garbage"))).toEqual([
 				["doctype", "<!DOCTYPE html PUBLICx>"]
 			]);
 		});
@@ -1296,212 +1299,212 @@ describe("tokenize", () => {
 			// First space transitions AFTER_DOCTYPE_PUBLIC_KEYWORD →
 			// BEFORE_DOCTYPE_PUBLIC_IDENTIFIER. Second space is ignored inside
 			// BEFORE_DOCTYPE_PUBLIC_IDENTIFIER itself.
-			expect(walk('<!DOCTYPE html PUBLIC   "abc">')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-before-doctype-public-id-extra"))).toEqual([
 				["doctype", '<!DOCTYPE html PUBLIC   "abc">']
 			]);
 		});
 
 		it("bEFORE_DOCTYPE_PUBLIC_ID: single-quoted public id", () => {
-			expect(walk("<!DOCTYPE html PUBLIC  'abc'>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-before-doctype-public-id-single-quoted"))).toEqual([
 				["doctype", "<!DOCTYPE html PUBLIC  'abc'>"]
 			]);
 		});
 
 		it("bEFORE_DOCTYPE_PUBLIC_ID: `>` missing-doctype-public-identifier", () => {
-			expect(walk("<!DOCTYPE html PUBLIC >")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-before-doctype-public-id-missing"))).toEqual([
 				["doctype", "<!DOCTYPE html PUBLIC >"]
 			]);
 		});
 
 		it("bEFORE_DOCTYPE_PUBLIC_ID: garbage → bogus doctype", () => {
-			expect(walk("<!DOCTYPE html PUBLIC x>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-before-doctype-public-id-garbage-bogus"))).toEqual([
 				["doctype", "<!DOCTYPE html PUBLIC x>"]
 			]);
 		});
 
 		// --- STATE_DOCTYPE_PUBLIC_IDENTIFIER_* ---
 		it("dOCTYPE_PUBLIC_ID_DOUBLE: NULL inside id", () => {
-			expect(walk('<!DOCTYPE html PUBLIC "a\0b">')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-doctype-public-id-double-null-inside-id"))).toEqual([
 				["doctype", '<!DOCTYPE html PUBLIC "a\0b">']
 			]);
 		});
 
 		it("dOCTYPE_PUBLIC_ID_DOUBLE: abrupt `>` closes doctype", () => {
-			expect(walk('<!DOCTYPE html PUBLIC "abc>')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-doctype-public-id-double-abrupt-closes"))).toEqual([
 				["doctype", '<!DOCTYPE html PUBLIC "abc>']
 			]);
 		});
 
 		it("dOCTYPE_PUBLIC_ID_SINGLE: NULL inside id", () => {
-			expect(walk("<!DOCTYPE html PUBLIC 'a\0b'>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-doctype-public-id-single-null-inside-id"))).toEqual([
 				["doctype", "<!DOCTYPE html PUBLIC 'a\0b'>"]
 			]);
 		});
 
 		it("dOCTYPE_PUBLIC_ID_SINGLE: abrupt `>` closes doctype", () => {
-			expect(walk("<!DOCTYPE html PUBLIC 'abc>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-doctype-public-id-single-abrupt-closes"))).toEqual([
 				["doctype", "<!DOCTYPE html PUBLIC 'abc>"]
 			]);
 		});
 
 		// --- STATE_AFTER_DOCTYPE_PUBLIC_IDENTIFIER ---
 		it("aFTER_DOCTYPE_PUBLIC_ID: missing-whitespace-between then system id (double)", () => {
-			expect(walk('<!DOCTYPE html PUBLIC "p""s">')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-public-id-missing"))).toEqual([
 				["doctype", '<!DOCTYPE html PUBLIC "p""s">']
 			]);
 		});
 
 		it("aFTER_DOCTYPE_PUBLIC_ID: missing-whitespace-between then system id (single)", () => {
-			expect(walk("<!DOCTYPE html PUBLIC \"p\"'s'>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-public-id-missing-2"))).toEqual([
 				["doctype", "<!DOCTYPE html PUBLIC \"p\"'s'>"]
 			]);
 		});
 
 		it("aFTER_DOCTYPE_PUBLIC_ID: garbage → bogus doctype", () => {
-			expect(walk('<!DOCTYPE html PUBLIC "p"x>')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-public-id-garbage-bogus"))).toEqual([
 				["doctype", '<!DOCTYPE html PUBLIC "p"x>']
 			]);
 		});
 
 		// --- STATE_BETWEEN_DOCTYPE_PUBLIC_AND_SYSTEM_IDENTIFIERS ---
 		it("bETWEEN_PUBLIC_AND_SYSTEM: extra whitespace is ignored", () => {
-			expect(walk('<!DOCTYPE html PUBLIC "p"   "s">')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-between-public-and-system-extra"))).toEqual([
 				["doctype", '<!DOCTYPE html PUBLIC "p"   "s">']
 			]);
 		});
 
 		it("bETWEEN_PUBLIC_AND_SYSTEM: space then system (double-quoted)", () => {
-			expect(walk('<!DOCTYPE html PUBLIC "p" "s">')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-between-public-and-system-space-then"))).toEqual([
 				["doctype", '<!DOCTYPE html PUBLIC "p" "s">']
 			]);
 		});
 
 		it("bETWEEN_PUBLIC_AND_SYSTEM: space then system (single-quoted)", () => {
-			expect(walk("<!DOCTYPE html PUBLIC 'p' 's'>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-between-public-and-system-space-then-2"))).toEqual([
 				["doctype", "<!DOCTYPE html PUBLIC 'p' 's'>"]
 			]);
 		});
 
 		it("bETWEEN_PUBLIC_AND_SYSTEM: `>` ends doctype", () => {
-			expect(walk('<!DOCTYPE html PUBLIC "p" >')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-between-public-and-system-ends-doctype"))).toEqual([
 				["doctype", '<!DOCTYPE html PUBLIC "p" >']
 			]);
 		});
 
 		it("bETWEEN_PUBLIC_AND_SYSTEM: garbage → bogus doctype", () => {
-			expect(walk('<!DOCTYPE html PUBLIC "p" x>')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-between-public-and-system-garbage-bogus"))).toEqual([
 				["doctype", '<!DOCTYPE html PUBLIC "p" x>']
 			]);
 		});
 
 		// --- STATE_AFTER_DOCTYPE_SYSTEM_KEYWORD ---
 		it("aFTER_DOCTYPE_SYSTEM_KEYWORD: space then double-quoted", () => {
-			expect(walk('<!DOCTYPE html SYSTEM "s">')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-system-keyword-space-then"))).toEqual([
 				["doctype", '<!DOCTYPE html SYSTEM "s">']
 			]);
 		});
 
 		it("aFTER_DOCTYPE_SYSTEM_KEYWORD: missing-whitespace then double-quoted", () => {
-			expect(walk('<!DOCTYPE html SYSTEM"s">')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-system-keyword-missing"))).toEqual([
 				["doctype", '<!DOCTYPE html SYSTEM"s">']
 			]);
 		});
 
 		it("aFTER_DOCTYPE_SYSTEM_KEYWORD: missing-whitespace then single-quoted", () => {
-			expect(walk("<!DOCTYPE html SYSTEM's'>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-system-keyword-missing-2"))).toEqual([
 				["doctype", "<!DOCTYPE html SYSTEM's'>"]
 			]);
 		});
 
 		it("aFTER_DOCTYPE_SYSTEM_KEYWORD: `>` missing-doctype-system-identifier", () => {
-			expect(walk("<!DOCTYPE html SYSTEM>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-system-keyword-missing-3"))).toEqual([
 				["doctype", "<!DOCTYPE html SYSTEM>"]
 			]);
 		});
 
 		it("aFTER_DOCTYPE_SYSTEM_KEYWORD: garbage → bogus doctype", () => {
-			expect(walk("<!DOCTYPE html SYSTEMx>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-system-keyword-garbage"))).toEqual([
 				["doctype", "<!DOCTYPE html SYSTEMx>"]
 			]);
 		});
 
 		// --- STATE_BEFORE_DOCTYPE_SYSTEM_IDENTIFIER ---
 		it("bEFORE_DOCTYPE_SYSTEM_ID: single-quoted system id", () => {
-			expect(walk("<!DOCTYPE html SYSTEM  's'>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-before-doctype-system-id-single-quoted"))).toEqual([
 				["doctype", "<!DOCTYPE html SYSTEM  's'>"]
 			]);
 		});
 
 		it("bEFORE_DOCTYPE_SYSTEM_ID: `>` missing-doctype-system-identifier", () => {
-			expect(walk("<!DOCTYPE html SYSTEM >")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-before-doctype-system-id-missing"))).toEqual([
 				["doctype", "<!DOCTYPE html SYSTEM >"]
 			]);
 		});
 
 		it("bEFORE_DOCTYPE_SYSTEM_ID: garbage → bogus doctype", () => {
-			expect(walk("<!DOCTYPE html SYSTEM x>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-before-doctype-system-id-garbage-bogus"))).toEqual([
 				["doctype", "<!DOCTYPE html SYSTEM x>"]
 			]);
 		});
 
 		// --- STATE_DOCTYPE_SYSTEM_IDENTIFIER_* ---
 		it("dOCTYPE_SYSTEM_ID_DOUBLE: NULL inside id", () => {
-			expect(walk('<!DOCTYPE html SYSTEM "a\0b">')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-doctype-system-id-double-null-inside-id"))).toEqual([
 				["doctype", '<!DOCTYPE html SYSTEM "a\0b">']
 			]);
 		});
 
 		it("dOCTYPE_SYSTEM_ID_DOUBLE: abrupt `>` closes doctype", () => {
-			expect(walk('<!DOCTYPE html SYSTEM "abc>')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-doctype-system-id-double-abrupt-closes"))).toEqual([
 				["doctype", '<!DOCTYPE html SYSTEM "abc>']
 			]);
 		});
 
 		it("dOCTYPE_SYSTEM_ID_SINGLE: NULL inside id", () => {
-			expect(walk("<!DOCTYPE html SYSTEM 'a\0b'>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-doctype-system-id-single-null-inside-id"))).toEqual([
 				["doctype", "<!DOCTYPE html SYSTEM 'a\0b'>"]
 			]);
 		});
 
 		it("dOCTYPE_SYSTEM_ID_SINGLE: abrupt `>` closes doctype", () => {
-			expect(walk("<!DOCTYPE html SYSTEM 'abc>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-doctype-system-id-single-abrupt-closes"))).toEqual([
 				["doctype", "<!DOCTYPE html SYSTEM 'abc>"]
 			]);
 		});
 
 		// --- STATE_AFTER_DOCTYPE_SYSTEM_IDENTIFIER ---
 		it("aFTER_DOCTYPE_SYSTEM_ID: whitespace then `>` closes", () => {
-			expect(walk('<!DOCTYPE html SYSTEM "s"  >')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-system-id-whitespace-then"))).toEqual([
 				["doctype", '<!DOCTYPE html SYSTEM "s"  >']
 			]);
 		});
 
 		it("aFTER_DOCTYPE_SYSTEM_ID: garbage → bogus doctype", () => {
-			expect(walk('<!DOCTYPE html SYSTEM "s" garbage>')).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-system-id-garbage-bogus"))).toEqual([
 				["doctype", '<!DOCTYPE html SYSTEM "s" garbage>']
 			]);
 		});
 
 		// --- STATE_BOGUS_DOCTYPE NULL ---
 		it("bOGUS_DOCTYPE: NULL char is ignored", () => {
-			expect(walk("<!DOCTYPE x bogus\0content>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-bogus-doctype-null-char-is-ignored"))).toEqual([
 				["doctype", "<!DOCTYPE x bogus\0content>"]
 			]);
 		});
 
 		// --- STATE_CDATA_SECTION_BRACKET anything else ---
 		it("cDATA_SECTION_BRACKET: `]x` returns to CDATA section", () => {
-			expect(walk("<![CDATA[a]x]]>")).toEqual([["comment", "<![CDATA[a]x]]>"]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-cdata-section-bracket-x-returns-to"))).toEqual([["comment", "<![CDATA[a]x]]>"]]);
 		});
 
 		// --- STATE_CDATA_SECTION_END with extra `]` ---
 		it("cDATA_SECTION_END: extra `]` stays in CDATA_SECTION_END", () => {
-			expect(walk("<![CDATA[a]]]>")).toEqual([["comment", "<![CDATA[a]]]>"]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-cdata-section-end-extra-stays-in-cdata"))).toEqual([["comment", "<![CDATA[a]]]>"]]);
 		});
 
 		// --- RCDATA end tag non-matching forms ---
 		it("rCDATA_END_TAG_OPEN: non-alpha char emits `</` as text", () => {
-			expect(walk("<title>a</1>b</title>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-rcdata-end-tag-open-non-alpha-char"))).toEqual([
 				["open", "title", false],
 				["text", "a</1>b"],
 				["close", "title"]
@@ -1509,7 +1512,7 @@ describe("tokenize", () => {
 		});
 
 		it("rCDATA_END_TAG_NAME: non-matching space then continues as content", () => {
-			expect(walk("<title>a</div b></title>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-rcdata-end-tag-name-non-matching-space"))).toEqual([
 				["open", "title", false],
 				["text", "a</div b>"],
 				["close", "title"]
@@ -1517,7 +1520,7 @@ describe("tokenize", () => {
 		});
 
 		it("rCDATA_END_TAG_NAME: non-matching `/` then continues as content", () => {
-			expect(walk("<title>a</div/></title>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-rcdata-end-tag-name-non-matching-then"))).toEqual([
 				["open", "title", false],
 				["text", "a</div/>"],
 				["close", "title"]
@@ -1525,7 +1528,7 @@ describe("tokenize", () => {
 		});
 
 		it("rCDATA_END_TAG_NAME: matching with space → attributes", () => {
-			expect(walk("<title>a</title foo>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-rcdata-end-tag-name-matching-with-space"))).toEqual([
 				["open", "title", false],
 				["text", "a"],
 				["attr", "foo", null, Quote.None],
@@ -1534,7 +1537,7 @@ describe("tokenize", () => {
 		});
 
 		it("rCDATA_END_TAG_NAME: matching with `/` → self-closing close tag form", () => {
-			expect(walk("<title>a</title/>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-rcdata-end-tag-name-matching-with-self"))).toEqual([
 				["open", "title", false],
 				["text", "a"],
 				["close", "title"]
@@ -1542,7 +1545,7 @@ describe("tokenize", () => {
 		});
 
 		it("rCDATA_END_TAG_NAME: non-alpha garbage falls through to text", () => {
-			expect(walk("<title>a</title!b</title>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-rcdata-end-tag-name-non-alpha-garbage"))).toEqual([
 				["open", "title", false],
 				["text", "a</title!b"],
 				["close", "title"]
@@ -1551,7 +1554,7 @@ describe("tokenize", () => {
 
 		// --- RAWTEXT end tag non-matching forms ---
 		it("rAWTEXT_LESS_THAN_SIGN: non-`/` returns to RAWTEXT", () => {
-			expect(walk("<style>a<b</style>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-rawtext-less-than-sign-non-returns-to"))).toEqual([
 				["open", "style", false],
 				["text", "a<b"],
 				["close", "style"]
@@ -1559,7 +1562,7 @@ describe("tokenize", () => {
 		});
 
 		it("rAWTEXT_END_TAG_OPEN: non-alpha returns to RAWTEXT", () => {
-			expect(walk("<style>a</1</style>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-rawtext-end-tag-open-non-alpha-returns"))).toEqual([
 				["open", "style", false],
 				["text", "a</1"],
 				["close", "style"]
@@ -1567,7 +1570,7 @@ describe("tokenize", () => {
 		});
 
 		it("rAWTEXT_END_TAG_NAME: non-matching space", () => {
-			expect(walk("<style>a</div ></style>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-rawtext-end-tag-name-non-matching-space"))).toEqual([
 				["open", "style", false],
 				["text", "a</div >"],
 				["close", "style"]
@@ -1575,7 +1578,7 @@ describe("tokenize", () => {
 		});
 
 		it("rAWTEXT_END_TAG_NAME: non-matching `/`", () => {
-			expect(walk("<style>a</div/></style>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-rawtext-end-tag-name-non-matching"))).toEqual([
 				["open", "style", false],
 				["text", "a</div/>"],
 				["close", "style"]
@@ -1583,7 +1586,7 @@ describe("tokenize", () => {
 		});
 
 		it("rAWTEXT_END_TAG_NAME: matching with space → attributes", () => {
-			expect(walk("<style>a</style foo>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-rawtext-end-tag-name-matching-with"))).toEqual([
 				["open", "style", false],
 				["text", "a"],
 				["attr", "foo", null, Quote.None],
@@ -1592,7 +1595,7 @@ describe("tokenize", () => {
 		});
 
 		it("rAWTEXT_END_TAG_NAME: matching with `/`", () => {
-			expect(walk("<style>a</style/>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-rawtext-end-tag-name-matching-with-2"))).toEqual([
 				["open", "style", false],
 				["text", "a"],
 				["close", "style"]
@@ -1600,7 +1603,7 @@ describe("tokenize", () => {
 		});
 
 		it("rAWTEXT_END_TAG_NAME: non-matching `>` is content", () => {
-			expect(walk("<style>a</div></style>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-rawtext-end-tag-name-non-matching-is"))).toEqual([
 				["open", "style", false],
 				["text", "a</div>"],
 				["close", "style"]
@@ -1608,7 +1611,7 @@ describe("tokenize", () => {
 		});
 
 		it("rAWTEXT_END_TAG_NAME: non-alpha garbage", () => {
-			expect(walk("<style>a</style!b</style>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-rawtext-end-tag-name-non-alpha-garbage"))).toEqual([
 				["open", "style", false],
 				["text", "a</style!b"],
 				["close", "style"]
@@ -1617,7 +1620,7 @@ describe("tokenize", () => {
 
 		// --- SCRIPT_DATA end tag non-matching forms ---
 		it("sCRIPT_DATA_END_TAG_OPEN: non-alpha returns to SCRIPT_DATA", () => {
-			expect(walk("<script>a</1</script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-end-tag-open-non-alpha"))).toEqual([
 				["open", "script", false],
 				["text", "a</1"],
 				["close", "script"]
@@ -1625,7 +1628,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_END_TAG_NAME: non-matching space", () => {
-			expect(walk("<script>a</div ></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-end-tag-name-non-matching"))).toEqual([
 				["open", "script", false],
 				["text", "a</div >"],
 				["close", "script"]
@@ -1633,7 +1636,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_END_TAG_NAME: non-matching `/`", () => {
-			expect(walk("<script>a</div/></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-end-tag-name-non-matching-2"))).toEqual([
 				["open", "script", false],
 				["text", "a</div/>"],
 				["close", "script"]
@@ -1641,7 +1644,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_END_TAG_NAME: matching with space → attributes", () => {
-			expect(walk("<script>a</script foo>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-end-tag-name-matching-with"))).toEqual([
 				["open", "script", false],
 				["text", "a"],
 				["attr", "foo", null, Quote.None],
@@ -1650,7 +1653,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_END_TAG_NAME: matching with `/`", () => {
-			expect(walk("<script>a</script/>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-end-tag-name-matching-with-2"))).toEqual([
 				["open", "script", false],
 				["text", "a"],
 				["close", "script"]
@@ -1658,7 +1661,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_END_TAG_NAME: non-matching `>` is content", () => {
-			expect(walk("<script>a</div></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-end-tag-name-non-matching-3"))).toEqual([
 				["open", "script", false],
 				["text", "a</div>"],
 				["close", "script"]
@@ -1666,7 +1669,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_END_TAG_NAME: non-alpha garbage", () => {
-			expect(walk("<script>a</script!b</script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-end-tag-name-non-alpha"))).toEqual([
 				["open", "script", false],
 				["text", "a</script!b"],
 				["close", "script"]
@@ -1675,7 +1678,7 @@ describe("tokenize", () => {
 
 		// --- SCRIPT_DATA escape transitions ---
 		it("sCRIPT_DATA_ESCAPE_START: non-`-` returns to SCRIPT_DATA", () => {
-			expect(walk("<script>a<!b</script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-escape-start-non-returns-to"))).toEqual([
 				["open", "script", false],
 				["text", "a<!b"],
 				["close", "script"]
@@ -1683,7 +1686,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_ESCAPE_START_DASH: non-`-` returns to SCRIPT_DATA", () => {
-			expect(walk("<script>a<!-b</script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-escape-start-dash-non"))).toEqual([
 				["open", "script", false],
 				["text", "a<!-b"],
 				["close", "script"]
@@ -1691,7 +1694,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_ESCAPED: `-` enters dash state", () => {
-			expect(walk("<script><!--a-b--></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-escaped-enters-dash-state"))).toEqual([
 				["open", "script", false],
 				["text", "<!--a-b-->"],
 				["close", "script"]
@@ -1699,7 +1702,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_ESCAPED_DASH: `<` enters less-than-sign state", () => {
-			expect(walk("<script><!-- a -<b --></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-escaped-dash-enters-less"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- a -<b -->"],
 				["close", "script"]
@@ -1707,7 +1710,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_ESCAPED_DASH: anything else returns to escaped", () => {
-			expect(walk("<script><!-- -b --></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-escaped-dash-anything-else"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- -b -->"],
 				["close", "script"]
@@ -1715,7 +1718,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_ESCAPED_LESS_THAN_SIGN: non-alpha non-`/` returns to escaped", () => {
-			expect(walk("<script><!-- <! --></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-escaped-less-than-sign-non"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- <! -->"],
 				["close", "script"]
@@ -1723,7 +1726,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_ESCAPED_END_TAG_OPEN: non-alpha emits `</` as text", () => {
-			expect(walk("<script><!-- </1 --></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-escaped-end-tag-open-non"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- </1 -->"],
 				["close", "script"]
@@ -1731,7 +1734,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_ESCAPED_END_TAG_NAME: non-matching space", () => {
-			expect(walk("<script><!-- </div ></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-escaped-end-tag-name-non"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- </div >"],
 				["close", "script"]
@@ -1739,7 +1742,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_ESCAPED_END_TAG_NAME: non-matching `/`", () => {
-			expect(walk("<script><!-- </div/></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-escaped-end-tag-name-non-2"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- </div/>"],
 				["close", "script"]
@@ -1747,7 +1750,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_ESCAPED_END_TAG_NAME: matching with space → attributes", () => {
-			expect(walk("<script><!-- </script foo>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-escaped-end-tag-name"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- "],
 				["attr", "foo", null, Quote.None],
@@ -1756,7 +1759,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_ESCAPED_END_TAG_NAME: matching with `/`", () => {
-			expect(walk("<script><!-- </script/>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-escaped-end-tag-name-2"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- "],
 				["close", "script"]
@@ -1764,7 +1767,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_ESCAPED_END_TAG_NAME: non-matching `>` is content", () => {
-			expect(walk("<script><!-- </div></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-escaped-end-tag-name-non-3"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- </div>"],
 				["close", "script"]
@@ -1772,7 +1775,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_ESCAPED_END_TAG_NAME: non-alpha garbage", () => {
-			expect(walk("<script><!-- </script!b</script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-escaped-end-tag-name-non-4"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- </script!b"],
 				["close", "script"]
@@ -1780,7 +1783,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_DOUBLE_ESCAPE_START: lower alpha appended; non-match", () => {
-			expect(walk("<script><!-- <scrap></scrap> --></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-double-escape-start-lower"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- <scrap></scrap> -->"],
 				["close", "script"]
@@ -1788,7 +1791,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_DOUBLE_ESCAPE_START: upper alpha (case-insensitive)", () => {
-			expect(walk("<script><!-- <SCRIPT> x </SCRIPT> --></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-double-escape-start-upper"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- <SCRIPT> x </SCRIPT> -->"],
 				["close", "script"]
@@ -1798,7 +1801,7 @@ describe("tokenize", () => {
 		it("sCRIPT_DATA_DOUBLE_ESCAPE_START: anything else returns to escaped", () => {
 			// `<s1` reaches DOUBLE_ESCAPE_START via the `s` alpha, then `1` is the
 			// non-alpha/non-tag-end character that returns to ESCAPED.
-			expect(walk("<script><!-- <s1 --></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-double-escape-start"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- <s1 -->"],
 				["close", "script"]
@@ -1806,7 +1809,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_DOUBLE_ESCAPED: `-` enters dash state", () => {
-			expect(walk("<script><!-- <script> a-b </script> --></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-double-escaped-enters-dash"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- <script> a-b </script> -->"],
 				["close", "script"]
@@ -1815,18 +1818,18 @@ describe("tokenize", () => {
 
 		it("sCRIPT_DATA_DOUBLE_ESCAPED_DASH: cases", () => {
 			expect(
-				walk("<script><!-- <script> a-b-c </script> --></script>")
+				walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-double-escaped-dash-cases"))
 			).toEqual([
 				["open", "script", false],
 				["text", "<!-- <script> a-b-c </script> -->"],
 				["close", "script"]
 			]);
-			expect(walk("<script><!-- <script> -<x </script> --></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-double-escaped-dash-cases-2"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- <script> -<x </script> -->"],
 				["close", "script"]
 			]);
-			expect(walk("<script><!-- <script> -- </script> --></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-double-escaped-dash-cases-3"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- <script> -- </script> -->"],
 				["close", "script"]
@@ -1834,7 +1837,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_DOUBLE_ESCAPED_DASH_DASH: extra `-` stays in dash-dash", () => {
-			expect(walk("<script><!-- <script> ---- </script> --></script>")).toEqual(
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-double-escaped-dash-dash"))).toEqual(
 				[
 					["open", "script", false],
 					["text", "<!-- <script> ---- </script> -->"],
@@ -1844,7 +1847,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_DOUBLE_ESCAPED_DASH_DASH: `<` enters less-than-sign", () => {
-			expect(walk("<script><!-- <script> --<x </script> --></script>")).toEqual(
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-double-escaped-dash-dash-2"))).toEqual(
 				[
 					["open", "script", false],
 					["text", "<!-- <script> --<x </script> -->"],
@@ -1857,7 +1860,7 @@ describe("tokenize", () => {
 			// `-->` inside double-escaped script transitions back to SCRIPT_DATA
 			// state, so a subsequent `</script>` IS a real close tag.
 			expect(
-				walk("<script><!-- <script> --> back </script> --></script>")
+				walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-double-escaped-dash-dash-3"))
 			).toEqual([
 				["open", "script", false],
 				["text", "<!-- <script> --> back "],
@@ -1868,7 +1871,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_DOUBLE_ESCAPED_LESS_THAN_SIGN: non-`/` reconsumes", () => {
-			expect(walk("<script><!-- <script> a<b </script> --></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-double-escaped-less-than"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- <script> a<b </script> -->"],
 				["close", "script"]
@@ -1876,7 +1879,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_DOUBLE_ESCAPE_END: upper alpha case-insensitive", () => {
-			expect(walk("<script><!-- <script> x </SCRIPT> --></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-double-escape-end-upper"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- <script> x </SCRIPT> -->"],
 				["close", "script"]
@@ -1884,7 +1887,7 @@ describe("tokenize", () => {
 		});
 
 		it("sCRIPT_DATA_DOUBLE_ESCAPE_END: anything else returns to double-escaped", () => {
-			expect(walk("<script><!-- <script>x</1y</script>--></script>")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-script-data-double-escape-end-anything"))).toEqual([
 				["open", "script", false],
 				["text", "<!-- <script>x</1y</script>-->"],
 				["close", "script"]
@@ -1893,7 +1896,7 @@ describe("tokenize", () => {
 
 		// --- STATE_CHARACTER_REFERENCE: bare `&` with non-alpha/non-`#` next ---
 		it("cHARACTER_REFERENCE: `&;` reconsumes `;` in DATA (no entity matched)", () => {
-			expect(roundtrip("a&;b")).toBe("a&;b");
+			expect(roundtrip(fixture("html", "tokenize-coverage-state-machine-branches-character-reference-reconsumes-in-data"))).toBe("a&;b");
 		});
 
 		// --- STATE_AMBIGUOUS_AMPERSAND ---
@@ -1901,80 +1904,80 @@ describe("tokenize", () => {
 			// `&xyzabc;` is not in the entity table → NAMED falls through to
 			// AMBIGUOUS_AMPERSAND, which consumes the alphanumeric run and
 			// reconsumes `;` in the return state.
-			expect(roundtrip("a&xyzabc;b")).toBe("a&xyzabc;b");
+			expect(roundtrip(fixture("html", "tokenize-coverage-state-machine-branches-ambiguous-ampersand-alphanumeric-run"))).toBe("a&xyzabc;b");
 		});
 
 		it("aMBIGUOUS_AMPERSAND: alphanumeric run terminated by anything-else", () => {
 			// `.` is neither alphanumeric nor `;`, so AMBIGUOUS_AMPERSAND
 			// reconsumes it in the return state (line 2574 branch).
-			expect(roundtrip("a&xyzabc.b")).toBe("a&xyzabc.b");
+			expect(roundtrip(fixture("html", "tokenize-coverage-state-machine-branches-ambiguous-ampersand-alphanumeric-run-2"))).toBe("a&xyzabc.b");
 		});
 
 		// --- STATE_HEXADECIMAL_CHARACTER_REFERENCE anything else ---
 		it("hEX_CHAR_REF: trailing non-hex without semicolon", () => {
 			// `g` is not a hex digit, so it triggers the missing-semicolon
 			// fallthrough into NUMERIC_CHARACTER_REFERENCE_END.
-			expect(roundtrip("a&#x41g")).toBe("a&#x41g");
+			expect(roundtrip(fixture("html", "tokenize-coverage-state-machine-branches-hex-char-ref-trailing-non-hex-without"))).toBe("a&#x41g");
 		});
 
 		// --- STATE_DECIMAL_CHARACTER_REFERENCE anything else ---
 		it("dEC_CHAR_REF: trailing non-digit without semicolon", () => {
-			expect(roundtrip("a&#65b")).toBe("a&#65b");
+			expect(roundtrip(fixture("html", "tokenize-coverage-state-machine-branches-dec-char-ref-trailing-non-digit-without"))).toBe("a&#65b");
 		});
 
 		// --- EOF in comment / doctype / cdata ---
 		it("eOF: in markup-declaration-open emits comment", () => {
-			expect(walk("a<!")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-eof-in-markup-declaration-open-emits"))).toEqual([
 				["text", "a"],
 				["comment", "<!"]
 			]);
 		});
 
 		it("eOF: in comment-start emits comment", () => {
-			expect(walk("a<!--")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-eof-in-comment-start-emits-comment"))).toEqual([
 				["text", "a"],
 				["comment", "<!--"]
 			]);
 		});
 
 		it("eOF: in comment emits comment", () => {
-			expect(walk("a<!-- x")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-eof-in-comment-emits-comment"))).toEqual([
 				["text", "a"],
 				["comment", "<!-- x"]
 			]);
 		});
 
 		it("eOF: in bogus-comment emits comment", () => {
-			expect(walk("a<!x")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-eof-in-bogus-comment-emits-comment"))).toEqual([
 				["text", "a"],
 				["comment", "<!x"]
 			]);
 		});
 
 		it("eOF: in DOCTYPE emits doctype", () => {
-			expect(walk("<!DOCTYPE")).toEqual([["doctype", "<!DOCTYPE"]]);
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-eof-in-doctype-emits-doctype"))).toEqual([["doctype", "<!DOCTYPE"]]);
 		});
 
 		it("eOF: in bogus-doctype emits doctype", () => {
-			expect(walk("<!DOCTYPE x bogus")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-eof-in-bogus-doctype-emits-doctype"))).toEqual([
 				["doctype", "<!DOCTYPE x bogus"]
 			]);
 		});
 
 		it("eOF: in PLAINTEXT emits text", () => {
-			expect(walk("<plaintext>raw < text")).toEqual([
+			expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-eof-in-plaintext-emits-text"))).toEqual([
 				["open", "plaintext", false],
 				["text", "raw < text"]
 			]);
 		});
 
 		it("eOF: trailing < gets emitted as text", () => {
-			expect(walk("hello<")).toEqual([["text", "hello<"]]);
+			expect(walk(fixture("html", "tokenize-should-handle-lone-at-eof"))).toEqual([["text", "hello<"]]);
 		});
 
 		// --- Callback API surface: default arguments + missing callbacks ---
 		it("default arguments: walks with no pos/callbacks provided", () => {
-			expect(() => tokenize("<a>hello</a>")).not.toThrow();
+			expect(() => tokenize(fixture("html", "tokenize-coverage-state-machine-branches-default-arguments-walks-with-no-pos"))).not.toThrow();
 		});
 
 		it("missing closeTag/comment/doctype callbacks are tolerated", () => {
@@ -1984,7 +1987,7 @@ describe("tokenize", () => {
 			/** @type {unknown[]} */
 			const opens = [];
 			expect(() =>
-				tokenize("<!DOCTYPE html><!-- c --><a>x</a><![CDATA[ y ]]>", 0, {
+				tokenize(fixture("html", "tokenize-coverage-state-machine-branches-missing-close-tag-comment-doctype"), 0, {
 					openTag: (input, start, end) => {
 						opens.push(input.slice(start, end));
 						return end;
@@ -1996,7 +1999,7 @@ describe("tokenize", () => {
 
 		it("missing all callbacks is tolerated", () => {
 			expect(() =>
-				tokenize("<!DOCTYPE html><!-- c --><a>x</a><![CDATA[ y ]]>z", 0, {})
+				tokenize(fixture("html", "tokenize-coverage-state-machine-branches-missing-all-callbacks-is-tolerated"), 0, {})
 			).not.toThrow();
 		});
 
@@ -2006,13 +2009,13 @@ describe("tokenize", () => {
 			// in COMMENT_START, COMMENT_START_DASH, COMMENT_END, COMMENT_END_BANG,
 			// BOGUS_COMMENT, CDATA_SECTION_END, and the EOF handler.
 			const fragments = [
-				"<!-->", // COMMENT_START >
-				"<!--->", // COMMENT_START_DASH >
-				"<!-- ok -->", // COMMENT_END
-				"<!-- ok --!>", // COMMENT_END_BANG
-				"<!bogus>", // BOGUS_COMMENT
-				"<![CDATA[x]]>", // CDATA_SECTION_END
-				"<!-- eof" // EOF inside comment
+				fixture("html", "tokenize-coverage-state-machine-branches-missing-comment-callback-at-every"), // COMMENT_START >
+				fixture("html", "tokenize-coverage-state-machine-branches-missing-comment-callback-at-every-2"), // COMMENT_START_DASH >
+				fixture("html", "tokenize-coverage-state-machine-branches-missing-comment-callback-at-every-3"), // COMMENT_END
+				fixture("html", "tokenize-coverage-state-machine-branches-missing-comment-callback-at-every-4"), // COMMENT_END_BANG
+				fixture("html", "tokenize-coverage-state-machine-branches-missing-comment-callback-at-every-5"), // BOGUS_COMMENT
+				fixture("html", "tokenize-coverage-state-machine-branches-missing-comment-callback-at-every-6"), // CDATA_SECTION_END
+				fixture("html", "tokenize-coverage-state-machine-branches-missing-comment-callback-at-every-7") // EOF inside comment
 			];
 			for (const html of fragments) {
 				expect(() => tokenize(html, 0, {})).not.toThrow();
@@ -2023,22 +2026,22 @@ describe("tokenize", () => {
 			// Exercise the false branch of `if (callbacks.doctype !== undefined)`
 			// across every state that emits a doctype.
 			const fragments = [
-				"<!DOCTYPE>", // BEFORE_DOCTYPE_NAME >
-				"<!DOCTYPE html>", // DOCTYPE_NAME >
-				"<!DOCTYPE html  >", // AFTER_DOCTYPE_NAME >
-				"<!DOCTYPE html PUBLIC>", // AFTER_DOCTYPE_PUBLIC_KEYWORD >
-				"<!DOCTYPE html PUBLIC >", // BEFORE_DOCTYPE_PUBLIC_IDENTIFIER >
-				'<!DOCTYPE html PUBLIC "abc>', // DOCTYPE_PUBLIC_IDENTIFIER_DOUBLE abrupt
-				"<!DOCTYPE html PUBLIC 'abc>", // DOCTYPE_PUBLIC_IDENTIFIER_SINGLE abrupt
-				'<!DOCTYPE html PUBLIC "p">', // AFTER_DOCTYPE_PUBLIC_IDENTIFIER >
-				'<!DOCTYPE html PUBLIC "p" >', // BETWEEN_PUBLIC_AND_SYSTEM >
-				"<!DOCTYPE html SYSTEM>", // AFTER_DOCTYPE_SYSTEM_KEYWORD >
-				"<!DOCTYPE html SYSTEM >", // BEFORE_DOCTYPE_SYSTEM_IDENTIFIER >
-				'<!DOCTYPE html SYSTEM "abc>', // DOCTYPE_SYSTEM_IDENTIFIER_DOUBLE abrupt
-				"<!DOCTYPE html SYSTEM 'abc>", // DOCTYPE_SYSTEM_IDENTIFIER_SINGLE abrupt
-				'<!DOCTYPE html SYSTEM "s" >', // AFTER_DOCTYPE_SYSTEM_IDENTIFIER >
-				"<!DOCTYPE x bogus>", // BOGUS_DOCTYPE >
-				"<!DOCTYPE" // EOF inside doctype
+				fixture("html", "tokenize-coverage-state-machine-branches-doctype-doctype-missing-doctype-name"), // BEFORE_DOCTYPE_NAME >
+				fixture("html", "tokenize-coverage-state-machine-branches-missing-doctype-callback-at-every"), // DOCTYPE_NAME >
+				fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-name-trailing-whitespace"), // AFTER_DOCTYPE_NAME >
+				fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-public-keyword-missing-3"), // AFTER_DOCTYPE_PUBLIC_KEYWORD >
+				fixture("html", "tokenize-coverage-state-machine-branches-before-doctype-public-id-missing"), // BEFORE_DOCTYPE_PUBLIC_IDENTIFIER >
+				fixture("html", "tokenize-coverage-state-machine-branches-doctype-public-id-double-abrupt-closes"), // DOCTYPE_PUBLIC_IDENTIFIER_DOUBLE abrupt
+				fixture("html", "tokenize-coverage-state-machine-branches-doctype-public-id-single-abrupt-closes"), // DOCTYPE_PUBLIC_IDENTIFIER_SINGLE abrupt
+				fixture("html", "tokenize-coverage-state-machine-branches-missing-doctype-callback-at-every-2"), // AFTER_DOCTYPE_PUBLIC_IDENTIFIER >
+				fixture("html", "tokenize-coverage-state-machine-branches-between-public-and-system-ends-doctype"), // BETWEEN_PUBLIC_AND_SYSTEM >
+				fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-system-keyword-missing-3"), // AFTER_DOCTYPE_SYSTEM_KEYWORD >
+				fixture("html", "tokenize-coverage-state-machine-branches-before-doctype-system-id-missing"), // BEFORE_DOCTYPE_SYSTEM_IDENTIFIER >
+				fixture("html", "tokenize-coverage-state-machine-branches-doctype-system-id-double-abrupt-closes"), // DOCTYPE_SYSTEM_IDENTIFIER_DOUBLE abrupt
+				fixture("html", "tokenize-coverage-state-machine-branches-doctype-system-id-single-abrupt-closes"), // DOCTYPE_SYSTEM_IDENTIFIER_SINGLE abrupt
+				fixture("html", "tokenize-coverage-state-machine-branches-missing-doctype-callback-at-every-3"), // AFTER_DOCTYPE_SYSTEM_IDENTIFIER >
+				fixture("html", "tokenize-coverage-state-machine-branches-missing-doctype-callback-at-every-4"), // BOGUS_DOCTYPE >
+				fixture("html", "tokenize-coverage-state-machine-branches-eof-in-doctype-emits-doctype") // EOF inside doctype
 			];
 			for (const html of fragments) {
 				expect(() => tokenize(html, 0, {})).not.toThrow();
@@ -2075,7 +2078,7 @@ describe("tokenize", () => {
 					return end + 1;
 				};
 			tokenize(
-				"<script>x</script>" +
+				fixture("html", "parse-html-should-set-tag-end-name-end-and-start-used-by-the-consumer") +
 					"<a foo>y</a>" +
 					"<b foo=bar>z</b>" +
 					'<c foo="bar">w</c>' +
@@ -2126,46 +2129,46 @@ describe("tokenize", () => {
 		// to the ones that reach a state of their own.
 		describe("attribute spellings", () => {
 			it("reads the common shape", () => {
-				expect(walk('<div a="1" b="2">')).toEqual([
+				expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-attribute-spellings-reads-the-common"))).toEqual([
 					["attr", "a", "1", Quote.Double],
 					["attr", "b", "2", Quote.Double],
 					["open", "div", false]
 				]);
-				expect(roundtrip('<div a="1" b="2">')).toBe('<div a="1" b="2">');
+				expect(roundtrip(fixture("html", "tokenize-coverage-state-machine-branches-attribute-spellings-reads-the-common"))).toBe('<div a="1" b="2">');
 			});
 
 			it("reads a single-quoted value", () => {
-				expect(walk("<div a='1' b='2'>")).toEqual([
+				expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-attribute-spellings-reads-a-single"))).toEqual([
 					["attr", "a", "1", Quote.Single],
 					["attr", "b", "2", Quote.Single],
 					["open", "div", false]
 				]);
-				expect(roundtrip("<div a='1'>")).toBe("<div a='1'>");
+				expect(roundtrip(fixture("html", "tokenize-coverage-state-machine-branches-attribute-spellings-reads-a-single-2"))).toBe("<div a='1'>");
 			});
 
 			it("reads whitespace around `=`", () => {
-				expect(walk('<div a = "1">')).toEqual([
+				expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-attribute-spellings-reads-whitespace"))).toEqual([
 					["attr", "a", "1", Quote.Double],
 					["open", "div", false]
 				]);
-				expect(walk("<div a= '1'>")).toEqual([
+				expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-attribute-spellings-reads-whitespace-2"))).toEqual([
 					["attr", "a", "1", Quote.Single],
 					["open", "div", false]
 				]);
-				expect(roundtrip('<div a = "1">')).toBe('<div a = "1">');
+				expect(roundtrip(fixture("html", "tokenize-coverage-state-machine-branches-attribute-spellings-reads-whitespace"))).toBe('<div a = "1">');
 			});
 
 			it("reads an unquoted value", () => {
-				expect(walk("<div a=1 b=2>")).toEqual([
+				expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-attribute-spellings-reads-an-unquoted"))).toEqual([
 					["attr", "a", "1", Quote.None],
 					["attr", "b", "2", Quote.None],
 					["open", "div", false]
 				]);
-				expect(roundtrip("<div a=1>")).toBe("<div a=1>");
+				expect(roundtrip(fixture("html", "tokenize-coverage-state-machine-branches-attribute-spellings-reads-an-unquoted-2"))).toBe("<div a=1>");
 			});
 
 			it("an empty quoted value stops the scan on the closing quote", () => {
-				expect(walk("<div a=\"\" b=''>")).toEqual([
+				expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-attribute-spellings-an-empty-quoted"))).toEqual([
 					["attr", "a", "", Quote.Double],
 					["attr", "b", "", Quote.Single],
 					["open", "div", false]
@@ -2173,20 +2176,20 @@ describe("tokenize", () => {
 			});
 
 			it("reads a reference inside the value", () => {
-				expect(walk("<div a=\"x&amp;y\" b='x&amp;y'>")).toEqual([
+				expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-attribute-spellings-reads-a-reference"))).toEqual([
 					["attr", "a", "x&amp;y", Quote.Double],
 					["attr", "b", "x&amp;y", Quote.Single],
 					["open", "div", false]
 				]);
 				// A leading `&` keeps the scan at the opening quote.
-				expect(walk('<div a="&amp;">')).toEqual([
+				expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-attribute-spellings-reads-a-reference-2"))).toEqual([
 					["attr", "a", "&amp;", Quote.Double],
 					["open", "div", false]
 				]);
 			});
 
 			it("reads a NUL inside the value", () => {
-				expect(walk("<div a=\"x\0y\" b='x\0y'>")).toEqual([
+				expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-attribute-spellings-reads-a-nul-inside"))).toEqual([
 					["attr", "a", "x\0y", Quote.Double],
 					["attr", "b", "x\0y", Quote.Single],
 					["open", "div", false]
@@ -2196,26 +2199,26 @@ describe("tokenize", () => {
 			it("an unterminated value is recovered by the EOF handler", () => {
 				// No closing quote in the rest of the input, so the scan clamps to
 				// the end and the EOF handler emits what it has.
-				expect(walk('<div a="1')).toEqual([
+				expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-attribute-spellings-an-unterminated"))).toEqual([
 					["attr", "a", "1", Quote.Double],
 					["open", "div", false]
 				]);
-				expect(walk("<div a='1")).toEqual([
+				expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-attribute-spellings-an-unterminated-2"))).toEqual([
 					["attr", "a", "1", Quote.Single],
 					["open", "div", false]
 				]);
-				expect(walk("<div a=")).toEqual([
+				expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-attribute-spellings-an-unterminated-3"))).toEqual([
 					["attr", "a", null, Quote.None],
 					["open", "div", false]
 				]);
-				expect(walk("<div a")).toEqual([
+				expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-attribute-spellings-an-unterminated-4"))).toEqual([
 					["attr", "a", null, Quote.None],
 					["open", "div", false]
 				]);
 			});
 
 			it("reads an error character in the name", () => {
-				expect(walk('<div a"b="1">')).toEqual([
+				expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-attribute-spellings-reads-an-error"))).toEqual([
 					["attr", 'a"b', "1", Quote.Double],
 					["open", "div", false]
 				]);
@@ -2240,14 +2243,14 @@ describe("tokenize", () => {
 		};
 
 		it("reports missing-attribute-value as a warning", () => {
-			const errors = collectErrors("<a foo=>");
+			const errors = collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-before-attr-value-after-emits-attribute"));
 			expect(errors).toEqual([
 				{ code: "missing-attribute-value", slice: ">", severity: "warning" }
 			]);
 		});
 
 		it("reports unexpected-equals-sign-before-attribute-name as a warning", () => {
-			const errors = collectErrors("<a =foo>");
+			const errors = collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-before-attr-name-starts-attribute-name"));
 			expect(errors).toEqual([
 				{
 					code: "unexpected-equals-sign-before-attribute-name",
@@ -2258,7 +2261,7 @@ describe("tokenize", () => {
 		});
 
 		it("reports missing-whitespace-between-attributes as a warning", () => {
-			const errors = collectErrors('<a foo="x"bar>');
+			const errors = collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-after-attr-value-quoted-anything-else"));
 			expect(errors).toEqual([
 				{
 					code: "missing-whitespace-between-attributes",
@@ -2269,14 +2272,14 @@ describe("tokenize", () => {
 		});
 
 		it("reports unexpected-solidus-in-tag as a warning", () => {
-			const errors = collectErrors("<br /foo>");
+			const errors = collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-self-closing-garbage-char-reconsumes-in"));
 			expect(errors).toEqual([
 				{ code: "unexpected-solidus-in-tag", slice: "f", severity: "warning" }
 			]);
 		});
 
 		it("reports missing-end-tag-name as a warning", () => {
-			const errors = collectErrors("a</>b");
+			const errors = collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-end-tag-open-is-missing-end-tag-name"));
 			expect(errors).toEqual([
 				{ code: "missing-end-tag-name", slice: ">", severity: "warning" }
 			]);
@@ -2285,27 +2288,27 @@ describe("tokenize", () => {
 		it("reports no error for a well-formed processing instruction", () => {
 			// The obsolete unexpected-question-mark-instead-of-tag-name is gone: `<?`
 			// opens the processing instruction states (§13.2.5.42-46).
-			expect(collectErrors("a<?pi?>b<?_a-1 x?y>")).toEqual([]);
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-no-error-for-a-well-formed-processing"))).toEqual([]);
 			// A target cut at `?`, `>` or whitespace may spell `xml` inside a longer name.
-			expect(collectErrors("<?xmls?><?xm>")).toEqual([]);
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-no-error-for-a-well-formed-processing-2"))).toEqual([]);
 		});
 
 		it("reports the processing instruction target errors as warnings", () => {
-			expect(collectErrors("<?1>")).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-the-processing-instruction-target-errors"))).toEqual([
 				{
 					code: "invalid-first-character-of-processing-instruction-target",
 					slice: "1",
 					severity: "warning"
 				}
 			]);
-			expect(collectErrors("<?a.b>")).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-the-processing-instruction-target-errors-2"))).toEqual([
 				{
 					code: "invalid-processing-instruction-target",
 					slice: ".",
 					severity: "warning"
 				}
 			]);
-			expect(collectErrors("<?XML a?><?xml-stylesheet>")).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-the-processing-instruction-target-errors-3"))).toEqual([
 				{
 					code: "disallowed-processing-instruction-target",
 					slice: "XML",
@@ -2318,33 +2321,33 @@ describe("tokenize", () => {
 				}
 			]);
 			// A NUL after an invalid target is in the bogus comment that follows.
-			expect(collectErrors("<?\0>").map((e) => e.code)).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-the-processing-instruction-target-errors-4")).map((e) => e.code)).toEqual([
 				"invalid-first-character-of-processing-instruction-target",
 				"unexpected-null-character"
 			]);
 		});
 
 		it("reports eof-in-processing-instruction as an error, after earlier ones", () => {
-			for (const html of ["<?", "<?a", "<?a b?", "<?a>x<?"]) {
+			for (const html of [fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-back-to"), fixture("html", "tokenize-parse-error-callback-reports-eof-in-processing-instruction-as-an-error"), fixture("html", "tokenize-parse-error-callback-reports-eof-in-processing-instruction-as-an-error-2"), fixture("html", "tokenize-parse-error-callback-reports-eof-in-processing-instruction-as-an-error-3")]) {
 				expect(collectErrors(html)).toEqual([
 					{ code: "eof-in-processing-instruction", slice: "", severity: "error" }
 				]);
 			}
 			// An invalid target makes it a bogus comment, which EOF ends silently.
-			expect(collectErrors("<?1").map((e) => e.code)).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-eof-in-processing-instruction-as-an-error-4")).map((e) => e.code)).toEqual([
 				"invalid-first-character-of-processing-instruction-target"
 			]);
-			expect(collectErrors("<?xml ").map((e) => e.code)).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-eof-in-processing-instruction-as-an-error-5")).map((e) => e.code)).toEqual([
 				"disallowed-processing-instruction-target"
 			]);
 			// So does one a `<?` before it does not open.
-			expect(collectErrors("<?a>x</1").map((e) => e.code)).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-eof-in-processing-instruction-as-an-error-6")).map((e) => e.code)).toEqual([
 				"invalid-first-character-of-tag-name"
 			]);
 		});
 
 		it("reports invalid-first-character-of-tag-name as a warning", () => {
-			const errors = collectErrors("a< b");
+			const errors = collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-tag-open-followed-by-non-tag-char-stays"));
 			expect(errors).toEqual([
 				{
 					code: "invalid-first-character-of-tag-name",
@@ -2355,14 +2358,14 @@ describe("tokenize", () => {
 		});
 
 		it("reports incorrectly-opened-comment as a warning (bogus comment)", () => {
-			const errors = collectErrors("a<!foo>b");
+			const errors = collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-markup-declaration-open-foo-bogus"));
 			expect(errors).toEqual([
 				{ code: "incorrectly-opened-comment", slice: "<!", severity: "warning" }
 			]);
 		});
 
 		it("reports abrupt-closing-of-empty-comment as a warning", () => {
-			const errors = collectErrors("<!-->");
+			const errors = collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-missing-comment-callback-at-every"));
 			expect(errors).toEqual([
 				{
 					code: "abrupt-closing-of-empty-comment",
@@ -2373,14 +2376,14 @@ describe("tokenize", () => {
 		});
 
 		it("reports incorrectly-closed-comment as a warning", () => {
-			const errors = collectErrors("<!-- x --!>");
+			const errors = collectErrors(fixture("html", "tokenize-parse-error-callback-reports-incorrectly-closed-comment-as-a-warning"));
 			expect(errors).toEqual([
 				{ code: "incorrectly-closed-comment", slice: ">", severity: "warning" }
 			]);
 		});
 
 		it("reports nested-comment as a warning", () => {
-			const errors = collectErrors("<!--<!---->");
+			const errors = collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-comment-less-than-sign-bang-dash-dash"));
 			expect(errors.find((e) => e.code === "nested-comment")).toEqual({
 				code: "nested-comment",
 				slice: "-",
@@ -2391,18 +2394,18 @@ describe("tokenize", () => {
 		it("does not report nested-comment when followed by `>`", () => {
 			// `<!--<!-->` lands in comment-less-than-sign-bang-dash-dash with `>`
 			// next; the spec says reconsume in comment-end without an error.
-			expect(collectErrors("<!--<!-->")).toEqual([]);
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-does-not-report-nested-comment-when-followed-by"))).toEqual([]);
 		});
 
 		it("reports missing-doctype-name as a warning", () => {
-			const errors = collectErrors("<!DOCTYPE>");
+			const errors = collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-doctype-doctype-missing-doctype-name"));
 			expect(errors).toEqual([
 				{ code: "missing-doctype-name", slice: ">", severity: "warning" }
 			]);
 		});
 
 		it("reports missing-whitespace-before-doctype-name as a warning", () => {
-			const errors = collectErrors("<!DOCTYPEhtml>");
+			const errors = collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-doctype-doctypehtml-missing-whitespace"));
 			expect(errors).toEqual([
 				{
 					code: "missing-whitespace-before-doctype-name",
@@ -2413,7 +2416,7 @@ describe("tokenize", () => {
 		});
 
 		it("reports invalid-character-sequence-after-doctype-name as a warning", () => {
-			const errors = collectErrors("<!DOCTYPE html FOO>");
+			const errors = collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-name-invalid-keyword"));
 			expect(errors).toEqual([
 				{
 					code: "invalid-character-sequence-after-doctype-name",
@@ -2425,35 +2428,35 @@ describe("tokenize", () => {
 
 		it("reports DOCTYPE public/system identifier errors", () => {
 			expect(
-				collectErrors('<!DOCTYPE html PUBLIC"x">').map((e) => e.code)
+				collectErrors(fixture("html", "tokenize-parse-error-callback-reports-doctype-public-system-identifier-errors")).map((e) => e.code)
 			).toContain("missing-whitespace-after-doctype-public-keyword");
 			expect(
-				collectErrors("<!DOCTYPE html PUBLIC>").map((e) => e.code)
+				collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-public-keyword-missing-3")).map((e) => e.code)
 			).toContain("missing-doctype-public-identifier");
 			expect(
-				collectErrors('<!DOCTYPE html PUBLIC "abc>').map((e) => e.code)
+				collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-doctype-public-id-double-abrupt-closes")).map((e) => e.code)
 			).toContain("abrupt-doctype-public-identifier");
 			expect(
-				collectErrors('<!DOCTYPE html PUBLIC "p""s">').map((e) => e.code)
+				collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-public-id-missing")).map((e) => e.code)
 			).toContain(
 				"missing-whitespace-between-doctype-public-and-system-identifiers"
 			);
 			expect(
-				collectErrors('<!DOCTYPE html PUBLIC "p" garbage>').map((e) => e.code)
+				collectErrors(fixture("html", "tokenize-parse-error-callback-reports-doctype-public-system-identifier-errors-2")).map((e) => e.code)
 			).toContain("missing-quote-before-doctype-system-identifier");
 			expect(
-				collectErrors("<!DOCTYPE html SYSTEM>").map((e) => e.code)
+				collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-system-keyword-missing-3")).map((e) => e.code)
 			).toContain("missing-doctype-system-identifier");
 			expect(
-				collectErrors('<!DOCTYPE html SYSTEM "abc>').map((e) => e.code)
+				collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-doctype-system-id-double-abrupt-closes")).map((e) => e.code)
 			).toContain("abrupt-doctype-system-identifier");
 			expect(
-				collectErrors('<!DOCTYPE html SYSTEM "s" garbage>').map((e) => e.code)
+				collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-after-doctype-system-id-garbage-bogus")).map((e) => e.code)
 			).toContain("unexpected-character-after-doctype-system-identifier");
 		});
 
 		it("reports absence-of-digits-in-numeric-character-reference as a warning", () => {
-			const errors = collectErrors("a&#x;b");
+			const errors = collectErrors(fixture("html", "tokenize-parse-error-callback-reports-absence-of-digits-in-numeric-character"));
 			expect(errors).toEqual([
 				{
 					code: "absence-of-digits-in-numeric-character-reference",
@@ -2464,7 +2467,7 @@ describe("tokenize", () => {
 		});
 
 		it("reports missing-semicolon-after-character-reference as a warning", () => {
-			const errors = collectErrors("a&#65b");
+			const errors = collectErrors(fixture("html", "tokenize-coverage-state-machine-branches-dec-char-ref-trailing-non-digit-without"));
 			expect(errors).toEqual([
 				{
 					code: "missing-semicolon-after-character-reference",
@@ -2475,7 +2478,7 @@ describe("tokenize", () => {
 		});
 
 		it("reports unknown-named-character-reference as a warning", () => {
-			const errors = collectErrors("a&zzz;b");
+			const errors = collectErrors(fixture("html", "tokenize-parse-error-callback-reports-unknown-named-character-reference-as-a"));
 			expect(errors).toEqual([
 				{
 					code: "unknown-named-character-reference",
@@ -2488,7 +2491,7 @@ describe("tokenize", () => {
 		it("reports missing-semicolon-after-character-reference for legacy named references", () => {
 			// `&amp` matches the legacy bare-form entity; the missing `;` is a
 			// parse error reported at the character where the `;` was expected.
-			const errors = collectErrors("a&amp b");
+			const errors = collectErrors(fixture("html", "tokenize-parse-error-callback-reports-missing-semicolon-after-character"));
 			expect(errors).toEqual([
 				{
 					code: "missing-semicolon-after-character-reference",
@@ -2499,16 +2502,16 @@ describe("tokenize", () => {
 		});
 
 		it("does not report missing-semicolon for a named reference with a trailing semicolon", () => {
-			expect(collectErrors("a&amp;b")).toEqual([]);
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-does-not-report-missing-semicolon-for-a-named"))).toEqual([]);
 		});
 
 		it("applies the historical attribute rule for legacy named references", () => {
 			// In an attribute value, a bare `&amp` followed by `=` (or an ASCII
 			// alphanumeric) is left undecoded and reports no error.
-			expect(collectErrors('<a href="?x&amp=y">')).toEqual([]);
-			expect(collectErrors('<a href="?x&ampY">')).toEqual([]);
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-applies-the-historical-attribute-rule-for-legacy"))).toEqual([]);
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-applies-the-historical-attribute-rule-for-legacy-2"))).toEqual([]);
 			// In text context the same sequence reports the missing semicolon.
-			expect(collectErrors("&amp=y").map((e) => e.code)).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-applies-the-historical-attribute-rule-for-legacy-3")).map((e) => e.code)).toEqual([
 				"missing-semicolon-after-character-reference"
 			]);
 		});
@@ -2541,13 +2544,13 @@ describe("tokenize", () => {
 			expect(collectErrors("a\0b")).toEqual([
 				{ code: "unexpected-null-character", slice: "\0", severity: "warning" }
 			]);
-			expect(collectErrors("<di\0v>")).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-unexpected-null-character-across-data-tag"))).toEqual([
 				{ code: "unexpected-null-character", slice: "\0", severity: "warning" }
 			]);
-			expect(collectErrors('<a b="x\0y">')).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-unexpected-null-character-across-data-tag-2"))).toEqual([
 				{ code: "unexpected-null-character", slice: "\0", severity: "warning" }
 			]);
-			expect(collectErrors("<!-- a\0b -->")).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-unexpected-null-character-across-data-tag-3"))).toEqual([
 				{ code: "unexpected-null-character", slice: "\0", severity: "warning" }
 			]);
 		});
@@ -2556,36 +2559,36 @@ describe("tokenize", () => {
 			// RCDATA (title/textarea) decodes entities, so an unknown reference
 			// reports unknown-named-character-reference; RAWTEXT (style) does not.
 			expect(
-				collectErrors("<title>&unknown;</title>").map((e) => e.code)
+				collectErrors(fixture("html", "tokenize-parse-error-callback-processes-character-references-in-rcdata-but-not")).map((e) => e.code)
 			).toEqual(["unknown-named-character-reference"]);
-			expect(collectErrors("<style>&unknown;</style>")).toEqual([]);
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-processes-character-references-in-rcdata-but-not-2"))).toEqual([]);
 		});
 
 		it("reports numeric character reference validation errors", () => {
 			// Each error covers the whole reference span and is a warning. The
 			// scanner flags the error but does not substitute U+FFFD itself.
-			expect(collectErrors("a&#0;b")).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-numeric-character-reference-validation"))).toEqual([
 				{
 					code: "null-character-reference",
 					slice: "&#0;",
 					severity: "warning"
 				}
 			]);
-			expect(collectErrors("a&#x110000;b")).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-numeric-character-reference-validation-2"))).toEqual([
 				{
 					code: "character-reference-outside-unicode-range",
 					slice: "&#x110000;",
 					severity: "warning"
 				}
 			]);
-			expect(collectErrors("a&#xD800;b")).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-numeric-character-reference-validation-3"))).toEqual([
 				{
 					code: "surrogate-character-reference",
 					slice: "&#xD800;",
 					severity: "warning"
 				}
 			]);
-			expect(collectErrors("a&#xFFFE;b")).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-numeric-character-reference-validation-4"))).toEqual([
 				{
 					code: "noncharacter-character-reference",
 					slice: "&#xFFFE;",
@@ -2604,35 +2607,35 @@ describe("tokenize", () => {
 				]);
 			}
 			// A valid code point (U+0041 "A") reports nothing.
-			expect(collectErrors("a&#65;b")).toEqual([]);
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-numeric-character-reference-validation-8"))).toEqual([]);
 		});
 
 		it("validates numeric references that end exactly at EOF", () => {
 			// The numeric-reference-end processing must still run when the
 			// reference is the last thing in the input (terminator consumed,
 			// loop exits) — verified against html5lib-tests.
-			expect(collectErrors("&#x0001;").map((e) => e.code)).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-validates-numeric-references-that-end-exactly-at")).map((e) => e.code)).toEqual([
 				"control-character-reference"
 			]);
-			expect(collectErrors("&#0000;").map((e) => e.code)).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-validates-numeric-references-that-end-exactly-at-2")).map((e) => e.code)).toEqual([
 				"null-character-reference"
 			]);
-			expect(collectErrors("&#xD800;").map((e) => e.code)).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-validates-numeric-references-that-end-exactly-at-3")).map((e) => e.code)).toEqual([
 				"surrogate-character-reference"
 			]);
 			// No `;` before EOF: missing-semicolon then the validation error.
-			expect(collectErrors("&#x0").map((e) => e.code)).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-validates-numeric-references-that-end-exactly-at-4")).map((e) => e.code)).toEqual([
 				"missing-semicolon-after-character-reference",
 				"null-character-reference"
 			]);
 			// No digits before EOF.
-			expect(collectErrors("&#").map((e) => e.code)).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-validates-numeric-references-that-end-exactly-at-5")).map((e) => e.code)).toEqual([
 				"absence-of-digits-in-numeric-character-reference"
 			]);
 		});
 
 		it("reports end-tag-with-trailing-solidus for a self-closing end tag", () => {
-			expect(collectErrors("</br/>")).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-end-tag-with-trailing-solidus-for-a-self"))).toEqual([
 				{
 					code: "end-tag-with-trailing-solidus",
 					slice: "</br/>",
@@ -2640,13 +2643,13 @@ describe("tokenize", () => {
 				}
 			]);
 			// A self-closing start tag is not a tokenizer error here.
-			expect(collectErrors("<br/>")).toEqual([]);
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-end-tag-with-trailing-solidus-for-a-self-2"))).toEqual([]);
 		});
 
 		it("does not report eof-in-doctype for EOF in a bogus DOCTYPE", () => {
 			// `x` after the name switches to bogus DOCTYPE; EOF then emits the
 			// token with no eof-in-doctype error (matches the bogus-comment rule).
-			expect(collectErrors("<!DOCTYPE a x").map((e) => e.code)).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-does-not-report-eof-in-doctype-for-eof-in-a-bogus")).map((e) => e.code)).toEqual([
 				"invalid-character-sequence-after-doctype-name"
 			]);
 		});
@@ -2654,7 +2657,7 @@ describe("tokenize", () => {
 		it("reports incorrectly-opened-comment for EOF right after `<!`", () => {
 			// EOF in markup-declaration-open takes the spec's anything-else path
 			// (incorrectly-opened-comment + bogus comment), not eof-in-comment.
-			expect(collectErrors("<!")).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-incorrectly-opened-comment-for-eof-right"))).toEqual([
 				{
 					code: "incorrectly-opened-comment",
 					slice: "<!",
@@ -2667,18 +2670,18 @@ describe("tokenize", () => {
 			// The spec converts CR to LF before tokenizing; a raw CR must behave
 			// as whitespace. `<!DOCTYPE a \r` therefore stays in the after-name
 			// state and only reports eof-in-doctype.
-			expect(collectErrors("<!DOCTYPE a \r").map((e) => e.code)).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-treats-cr-as-whitespace-input-stream-preprocessing")).map((e) => e.code)).toEqual([
 				"eof-in-doctype"
 			]);
 			// CR after a quoted attribute value is whitespace, so no
 			// missing-whitespace-between-attributes is reported.
-			expect(collectErrors("<a a=''\r>")).toEqual([]);
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-treats-cr-as-whitespace-input-stream-preprocessing-2"))).toEqual([]);
 		});
 
 		it("reports unexpected-null-character for NULL in comment-end-dash", () => {
 			// Reaching comment-end-dash then a NULL must reconsume in the comment
 			// state, which flags the NULL.
-			expect(collectErrors("<!-- a-\0b -->")).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-unexpected-null-character-for-null-in"))).toEqual([
 				{ code: "unexpected-null-character", slice: "\0", severity: "warning" }
 			]);
 		});
@@ -2688,7 +2691,7 @@ describe("tokenize", () => {
 			const errors = [];
 			/** @type {string[]} */
 			const opens = [];
-			tokenize('<div class="x', 0, {
+			tokenize(fixture("html", "tokenize-parse-error-callback-reports-eof-in-tag-as-an-error-and-emits-the"), 0, {
 				openTag: (input, start, end, ns, ne) => {
 					opens.push(input.slice(ns, ne));
 					return end;
@@ -2711,7 +2714,7 @@ describe("tokenize", () => {
 			const codes = [];
 			/** @type {string[]} */
 			const closes = [];
-			tokenize("<a></a", 0, {
+			tokenize(fixture("html", "tokenize-parse-error-callback-reports-eof-in-tag-for-a-close-tag-at-eof"), 0, {
 				closeTag: (input, start, end, ns, ne) => {
 					closes.push(input.slice(ns, ne));
 					return end;
@@ -2730,9 +2733,9 @@ describe("tokenize", () => {
 			// state must reset `tagNameEnd`, which still carries the matching open
 			// tag's value — otherwise `emitCloseTag(len)` slices the wrong range.
 			for (const [html, expectedClose] of [
-				["<title>x</tit", "tit"],
-				["<style>x</sty", "sty"],
-				["<script>x</scr", "scr"]
+				[fixture("html", "tokenize-parse-error-callback-reports-eof-in-tag-with-correct-partial-name-in"), "tit"],
+				[fixture("html", "tokenize-parse-error-callback-reports-eof-in-tag-with-correct-partial-name-in-2"), "sty"],
+				[fixture("html", "tokenize-parse-error-callback-reports-eof-in-tag-with-correct-partial-name-in-3"), "scr"]
 			]) {
 				/** @type {string[]} */
 				const closes = [];
@@ -2748,14 +2751,14 @@ describe("tokenize", () => {
 		});
 
 		it("reports eof-in-comment as an error", () => {
-			const errors = collectErrors("<!-- unclosed");
+			const errors = collectErrors(fixture("html", "tokenize-parse-error-callback-reports-eof-in-comment-as-an-error"));
 			expect(errors).toEqual([
 				{ code: "eof-in-comment", slice: "", severity: "error" }
 			]);
 		});
 
 		it("reports eof-in-doctype as an error", () => {
-			const errors = collectErrors("<!DOCTYPE html");
+			const errors = collectErrors(fixture("html", "tokenize-should-handle-eof-in-doctype"));
 			expect(errors).toEqual([
 				{ code: "eof-in-doctype", slice: "", severity: "error" }
 			]);
@@ -2766,7 +2769,7 @@ describe("tokenize", () => {
 			const codes = [];
 			/** @type {[string, string][]} */
 			const attrs = [];
-			tokenize("<div data-x", 0, {
+			tokenize(fixture("html", "tokenize-parse-error-callback-reports-eof-in-tag-inside-attribute-name-and-emits"), 0, {
 				openTag: (input, start, end) => end,
 				attribute: (input, ns, ne, vs, ve) => {
 					attrs.push([
@@ -2789,7 +2792,7 @@ describe("tokenize", () => {
 			// `&amp` mid-attribute-value at EOF: returnState is the attribute
 			// value (double-quoted) state, so the EOF unwinds back to a partial
 			// open tag and emits eof-in-tag.
-			tokenize('<a href="x&amp', 0, {
+			tokenize(fixture("html", "tokenize-parse-error-callback-reports-eof-in-tag-when-eof-lands-inside-an"), 0, {
 				openTag: (input, start, end, ns, ne) => {
 					opens.push(input.slice(ns, ne));
 					return end;
@@ -2819,7 +2822,7 @@ describe("tokenize", () => {
 			const codes = [];
 			/** @type {string[]} */
 			const comments = [];
-			tokenize("<!x", 0, {
+			tokenize(fixture("html", "tokenize-parse-error-callback-does-not-report-eof-in-comment-for-bogus-comments"), 0, {
 				comment: (input, start, end) => {
 					comments.push(input.slice(start, end));
 					return end;
@@ -2834,7 +2837,7 @@ describe("tokenize", () => {
 			// No adjusted current node, so `<![CDATA[` is not a CDATA section but a
 			// cdata-in-html-content bogus comment (§13.2.5.42); `eof-in-cdata` is
 			// covered by the foreign-content path.
-			const errors = collectErrors("<![CDATA[unclosed");
+			const errors = collectErrors(fixture("html", "tokenize-should-handle-eof-in-cdata"));
 			// The bogus comment state emits its token at EOF without a further
 			// parse error, so this is the only one.
 			expect(errors).toEqual([
@@ -2849,7 +2852,7 @@ describe("tokenize", () => {
 		it("reports cdata-in-html-content where isForeign says HTML content", () => {
 			/** @type {string[]} */
 			const out = [];
-			tokenize("<![CDATA[a]]>", 0, {
+			tokenize(fixture("html", "tokenize-parse-error-callback-reports-cdata-in-html-content-where-is-foreign"), 0, {
 				isForeign: () => false,
 				comment: (input, start, end, dataStart, dataEnd) => {
 					out.push(input.slice(dataStart, dataEnd));
@@ -2861,7 +2864,7 @@ describe("tokenize", () => {
 		});
 
 		it("reports eof-in-script-html-comment-like-text as an error", () => {
-			const errors = collectErrors("<script><!-- unclosed");
+			const errors = collectErrors(fixture("html", "tokenize-parse-error-callback-reports-eof-in-script-html-comment-like-text-as-an"));
 			expect(errors).toEqual([
 				{
 					code: "eof-in-script-html-comment-like-text",
@@ -2874,7 +2877,7 @@ describe("tokenize", () => {
 		it("reports eof-in-script-html-comment-like-text from the states that reconsume into it", () => {
 			// Escaped end tag open and double escape start emit what they hold and
 			// reconsume in the escaped state, whose EOF is the error.
-			for (const html of ["<script><!--</", "<script><!--<a", "<script><!--<"]) {
+			for (const html of [fixture("html", "tokenize-parse-error-callback-reports-eof-in-script-html-comment-like-text-from"), fixture("html", "tokenize-parse-error-callback-reports-eof-in-script-html-comment-like-text-from-2"), fixture("html", "tokenize-parse-error-callback-reports-eof-in-script-html-comment-like-text-from-3")]) {
 				expect(collectErrors(html)).toEqual([
 					{
 						code: "eof-in-script-html-comment-like-text",
@@ -2887,21 +2890,21 @@ describe("tokenize", () => {
 
 		it("reports no end-tag-with-attributes for an end tag cut by EOF", () => {
 			// The spec drops the token, so eof-in-tag is its only error.
-			expect(collectErrors("</a b").map((e) => e.code)).toEqual(["eof-in-tag"]);
-			expect(collectErrors("</a b=1 ").map((e) => e.code)).toEqual([
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-no-end-tag-with-attributes-for-an-end-tag")).map((e) => e.code)).toEqual(["eof-in-tag"]);
+			expect(collectErrors(fixture("html", "tokenize-parse-error-callback-reports-no-end-tag-with-attributes-for-an-end-tag-2")).map((e) => e.code)).toEqual([
 				"eof-in-tag"
 			]);
 		});
 
 		it("reports eof-before-tag-name as a warning for lone `<`", () => {
-			const errors = collectErrors("hello<");
+			const errors = collectErrors(fixture("html", "tokenize-should-handle-lone-at-eof"));
 			expect(errors).toEqual([
 				{ code: "eof-before-tag-name", slice: "", severity: "warning" }
 			]);
 		});
 
 		it("reports end-tag-with-attributes as a warning", () => {
-			const errors = collectErrors("<div></div foo>");
+			const errors = collectErrors(fixture("html", "tokenize-parse-error-callback-reports-end-tag-with-attributes-as-a-warning"));
 			expect(errors).toEqual([
 				{
 					code: "end-tag-with-attributes",
@@ -2912,19 +2915,19 @@ describe("tokenize", () => {
 		});
 
 		it("reports end-tag-with-attributes only once per close tag", () => {
-			const errors = collectErrors('<div></div a b c="x">');
+			const errors = collectErrors(fixture("html", "tokenize-parse-error-callback-reports-end-tag-with-attributes-only-once-per"));
 			expect(
 				errors.filter((e) => e.code === "end-tag-with-attributes")
 			).toHaveLength(1);
 		});
 
 		it("does not report end-tag-with-attributes when the close tag has no attributes", () => {
-			expect(collectErrors("<div></div>")).toEqual([]);
+			expect(collectErrors(fixture("html", "parse-html-should-parse-a-simple-element-into-the-body"))).toEqual([]);
 		});
 
 		it("does not report any error for well-formed HTML", () => {
 			expect(
-				collectErrors("<!DOCTYPE html><html><body>hi</body></html>")
+				collectErrors(fixture("html", "tokenize-parse-error-callback-does-not-report-any-error-for-well-formed-html"))
 			).toEqual([]);
 		});
 	});
@@ -3011,7 +3014,7 @@ describe("tokenize", () => {
 		it("should replace NULL and surrogate numeric references with U+FFFD", () => {
 			expect(decodeEntities("&#0;")).toBe("�");
 			expect(decodeEntities("&#x0;")).toBe("�");
-			expect(decodeEntities("&#xD800;")).toBe("�");
+			expect(decodeEntities(fixture("html", "tokenize-parse-error-callback-validates-numeric-references-that-end-exactly-at-3"))).toBe("�");
 			expect(decodeEntities("&#xDFFF;")).toBe("�");
 			expect(decodeEntities("&#55296;")).toBe("�");
 		});
@@ -3066,13 +3069,13 @@ describe("tokenize", () => {
 		});
 
 		it("should map decoded boundaries back to raw offsets", () => {
-			const { text, map } = decodeEntities("a&amp;b", true, true);
+			const { text, map } = decodeEntities(fixture("html", "tokenize-parse-error-callback-does-not-report-missing-semicolon-for-a-named"), true, true);
 			expect(text).toBe("a&b");
 			// Boundaries: `a` 0, decoded `&` starts at raw 1, `b` at raw 6, end 7.
 			expect(map).toEqual([0, 1, 6, 7]);
 			// A decoded span maps to the covering raw span.
 			expect(
-				"a&amp;b".slice(
+				fixture("html", "tokenize-parse-error-callback-does-not-report-missing-semicolon-for-a-named").slice(
 					/** @type {number[]} */ (map)[0],
 					/** @type {number[]} */ (map)[3]
 				)
@@ -3209,59 +3212,59 @@ describe("tokenize — fused state transitions", () => {
 	};
 
 	it("open-tag alpha scan to EOF", () => {
-		expect(walk("<a")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-open-tag-alpha-scan-to-eof"))).toEqual([
 			["error", "eof-in-tag", 2, 2, "error"],
 			["open", "a", false]
 		]);
 	});
 
 	it("open-tag multi-char name to EOF", () => {
-		expect(walk("<abc")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-open-tag-multi-char-name-to-eof"))).toEqual([
 			["error", "eof-in-tag", 4, 4, "error"],
 			["open", "abc", false]
 		]);
 	});
 
 	it("open-tag closed", () => {
-		expect(walk("<a>")).toEqual([["open", "a", false]]);
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-open-tag-closed"))).toEqual([["open", "a", false]]);
 	});
 
 	it("end-tag alpha scan to EOF", () => {
-		expect(walk("</x")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-end-tag-alpha-scan-to-eof"))).toEqual([
 			["error", "eof-in-tag", 3, 3, "error"],
 			["close", "x"]
 		]);
 	});
 
 	it("bare end-tag open at EOF", () => {
-		expect(walk("</")).toEqual([
+		expect(walk(fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-back-to-3"))).toEqual([
 			["error", "eof-before-tag-name", 2, 2, "warning"],
 			["text", "</"]
 		]);
 	});
 
 	it("text then bare end-tag open at EOF", () => {
-		expect(walk("a</")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-text-then-bare-end-tag-open-at-eof"))).toEqual([
 			["error", "eof-before-tag-name", 3, 3, "warning"],
 			["text", "a</"]
 		]);
 	});
 
 	it("missing end tag name", () => {
-		expect(walk("</>")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-missing-end-tag-name"))).toEqual([
 			["error", "missing-end-tag-name", 2, 3, "warning"]
 		]);
 	});
 
 	it("end-tag open non-alpha -> bogus comment", () => {
-		expect(walk("</ x>")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-end-tag-open-non-alpha-bogus-comment"))).toEqual([
 			["error", "invalid-first-character-of-tag-name", 2, 3, "warning"],
 			["comment", "</ x>"]
 		]);
 	});
 
 	it("text ends exactly at tag", () => {
-		expect(walk("ab<i>c")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-text-ends-exactly-at-tag"))).toEqual([
 			["text", "ab"],
 			["open", "i", false],
 			["text", "c"]
@@ -3273,21 +3276,21 @@ describe("tokenize — fused state transitions", () => {
 	});
 
 	it("entity then fused tag", () => {
-		expect(walk("a&amp;b<i>")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-entity-then-fused-tag"))).toEqual([
 			["text", "a&amp;b"],
 			["open", "i", false]
 		]);
 	});
 
 	it("empty double-quoted value", () => {
-		expect(walk('<a b="">')).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-empty-double-quoted-value"))).toEqual([
 			["attr", "b", "", 1],
 			["open", "a", false]
 		]);
 	});
 
 	it("unterminated double-quoted value", () => {
-		expect(walk('<a b="')).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-unterminated-double-quoted-value"))).toEqual([
 			["error", "eof-in-tag", 6, 6, "error"],
 			["attr", "b", "", 1],
 			["open", "a", false]
@@ -3295,14 +3298,14 @@ describe("tokenize — fused state transitions", () => {
 	});
 
 	it("empty single-quoted value", () => {
-		expect(walk("<a b=''>")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-empty-single-quoted-value"))).toEqual([
 			["attr", "b", "", 2],
 			["open", "a", false]
 		]);
 	});
 
 	it("unterminated single-quoted value", () => {
-		expect(walk("<a b='")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-unterminated-single-quoted-value"))).toEqual([
 			["error", "eof-in-tag", 6, 6, "error"],
 			["attr", "b", "", 2],
 			["open", "a", false]
@@ -3310,28 +3313,28 @@ describe("tokenize — fused state transitions", () => {
 	});
 
 	it("plain double-quoted value", () => {
-		expect(walk('<a b="v">')).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-plain-double-quoted-value"))).toEqual([
 			["attr", "b", "v", 1],
 			["open", "a", false]
 		]);
 	});
 
 	it("plain single-quoted value", () => {
-		expect(walk("<a b='v'>")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-plain-single-quoted-value"))).toEqual([
 			["attr", "b", "v", 2],
 			["open", "a", false]
 		]);
 	});
 
 	it("entity in double-quoted value", () => {
-		expect(walk('<a b="&amp;">')).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-entity-in-double-quoted-value"))).toEqual([
 			["attr", "b", "&amp;", 1],
 			["open", "a", false]
 		]);
 	});
 
 	it("entity in single-quoted value", () => {
-		expect(walk("<a b='&amp;'>")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-entity-in-single-quoted-value"))).toEqual([
 			["attr", "b", "&amp;", 2],
 			["open", "a", false]
 		]);
@@ -3339,7 +3342,7 @@ describe("tokenize — fused state transitions", () => {
 
 	// The spec reads a truncated end tag in raw text as text: no parse error.
 	it("script end-tag name truncated", () => {
-		expect(walk("<script>x</scr")).toEqual([
+		expect(walk(fixture("html", "tokenize-parse-error-callback-reports-eof-in-tag-with-correct-partial-name-in-3"))).toEqual([
 			["open", "script", false],
 			["text", "x"],
 			["close", "scr"]
@@ -3347,7 +3350,7 @@ describe("tokenize — fused state transitions", () => {
 	});
 
 	it("rcdata end-tag name truncated", () => {
-		expect(walk("<title>x</tit")).toEqual([
+		expect(walk(fixture("html", "tokenize-parse-error-callback-reports-eof-in-tag-with-correct-partial-name-in"))).toEqual([
 			["open", "title", false],
 			["text", "x"],
 			["close", "tit"]
@@ -3355,7 +3358,7 @@ describe("tokenize — fused state transitions", () => {
 	});
 
 	it("rawtext end-tag name truncated", () => {
-		expect(walk("<style>x</sty")).toEqual([
+		expect(walk(fixture("html", "tokenize-parse-error-callback-reports-eof-in-tag-with-correct-partial-name-in-2"))).toEqual([
 			["open", "style", false],
 			["text", "x"],
 			["close", "sty"]
@@ -3363,7 +3366,7 @@ describe("tokenize — fused state transitions", () => {
 	});
 
 	it("script-escaped end-tag name truncated", () => {
-		expect(walk("<script><!--x</scr")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-script-escaped-end-tag-name-truncated"))).toEqual([
 			["open", "script", false],
 			["error", "eof-in-script-html-comment-like-text", 18, 18, "error"],
 			["text", "<!--x"],
@@ -3372,7 +3375,7 @@ describe("tokenize — fused state transitions", () => {
 	});
 
 	it("script end-tag name overlong", () => {
-		expect(walk("<script>x</scripty>y</script>")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-script-end-tag-name-overlong"))).toEqual([
 			["open", "script", false],
 			["text", "x</scripty>y"],
 			["close", "script"]
@@ -3380,7 +3383,7 @@ describe("tokenize — fused state transitions", () => {
 	});
 
 	it("rcdata fused `<`", () => {
-		expect(walk("<title>a<b</title>")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-rcdata-fused"))).toEqual([
 			["open", "title", false],
 			["text", "a<b"],
 			["close", "title"]
@@ -3388,7 +3391,7 @@ describe("tokenize — fused state transitions", () => {
 	});
 
 	it("rawtext fused `<`", () => {
-		expect(walk("<style>a<b</style>")).toEqual([
+		expect(walk(fixture("html", "tokenize-coverage-state-machine-branches-rawtext-less-than-sign-non-returns-to"))).toEqual([
 			["open", "style", false],
 			["text", "a<b"],
 			["close", "style"]
@@ -3396,7 +3399,7 @@ describe("tokenize — fused state transitions", () => {
 	});
 
 	it("script fused `<`", () => {
-		expect(walk("<script>a<b</script>")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-script-fused"))).toEqual([
 			["open", "script", false],
 			["text", "a<b"],
 			["close", "script"]
@@ -3404,7 +3407,7 @@ describe("tokenize — fused state transitions", () => {
 	});
 
 	it("nUL as attribute-name first char", () => {
-		expect(walk("<a \u0000x>")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-nul-as-attribute-name-first-char"))).toEqual([
 			["error", "unexpected-null-character", 3, 4, "warning"],
 			["attr", "\u0000x", null, 0],
 			["open", "a", false]
@@ -3412,7 +3415,7 @@ describe("tokenize — fused state transitions", () => {
 	});
 
 	it("quote as attribute-name first char", () => {
-		expect(walk('<a "x>')).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-quote-as-attribute-name-first-char"))).toEqual([
 			["error", "unexpected-character-in-attribute-name", 3, 4, "warning"],
 			["attr", '"x', null, 0],
 			["open", "a", false]
@@ -3420,7 +3423,7 @@ describe("tokenize — fused state transitions", () => {
 	});
 
 	it("apostrophe as attribute-name first char", () => {
-		expect(walk("<a 'x>")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-apostrophe-as-attribute-name-first-char"))).toEqual([
 			["error", "unexpected-character-in-attribute-name", 3, 4, "warning"],
 			["attr", "'x", null, 0],
 			["open", "a", false]
@@ -3428,7 +3431,7 @@ describe("tokenize — fused state transitions", () => {
 	});
 
 	it("less-than as attribute-name first char", () => {
-		expect(walk("<a <b>")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-less-than-as-attribute-name-first-char"))).toEqual([
 			["error", "unexpected-character-in-attribute-name", 3, 4, "warning"],
 			["attr", "<b", null, 0],
 			["open", "a", false]
@@ -3436,7 +3439,7 @@ describe("tokenize — fused state transitions", () => {
 	});
 
 	it("plain attribute-name runs", () => {
-		expect(walk("<a bc de>")).toEqual([
+		expect(walk(fixture("html", "tokenize-fused-state-transitions-plain-attribute-name-runs"))).toEqual([
 			["attr", "bc", null, 0],
 			["attr", "de", null, 0],
 			["open", "a", false]
@@ -3483,23 +3486,23 @@ describe("token parts reported by the tokenizer", () => {
 	it("folds only ASCII upper alpha in a DOCTYPE name", () => {
 		// The name states lowercase ASCII upper alpha and append everything else
 		// unchanged, so `String#toLowerCase` is too eager here.
-		expect(doctypeOf("<!DOCTYPE HTML>").name).toBe("html");
-		expect(doctypeOf("<!DOCTYPEÐ>").name).toBe("Ð");
-		expect(doctypeOf("<!DOCTYPEİ>").name).toBe("İ");
+		expect(doctypeOf(fixture("html", "token-parts-reported-by-the-tokenizer-folds-only-ascii-upper-alpha-in-a-doctype")).name).toBe("html");
+		expect(doctypeOf(fixture("html", "token-parts-reported-by-the-tokenizer-folds-only-ascii-upper-alpha-in-a-doctype-2")).name).toBe("Ð");
+		expect(doctypeOf(fixture("html", "token-parts-reported-by-the-tokenizer-folds-only-ascii-upper-alpha-in-a-doctype-3")).name).toBe("İ");
 	});
 
 	it("keeps a DOCTYPE identifier that no closing quote terminates", () => {
-		expect(doctypeOf('<!DOCTYPE html PUBLIC "x')).toEqual({
+		expect(doctypeOf(fixture("html", "token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing"))).toEqual({
 			name: "html",
 			publicId: "x",
 			systemId: null
 		});
-		expect(doctypeOf("<!DOCTYPE html SYSTEM 's")).toEqual({
+		expect(doctypeOf(fixture("html", "token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing-2"))).toEqual({
 			name: "html",
 			publicId: null,
 			systemId: "s"
 		});
-		expect(doctypeOf('<!DOCTYPE html PUBLIC "p" ">x')).toEqual({
+		expect(doctypeOf(fixture("html", "token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing-3"))).toEqual({
 			name: "html",
 			publicId: "p",
 			systemId: ""
@@ -3508,24 +3511,24 @@ describe("token parts reported by the tokenizer", () => {
 
 	it("treats U+000B as part of a DOCTYPE name, not whitespace", () => {
 		// Only tab / LF / FF / space are ASCII whitespace to the tokenizer.
-		expect(doctypeOf("<!DOCTYPE a\v>").name).toBe("a\v");
+		expect(doctypeOf(fixture("html", "token-parts-reported-by-the-tokenizer-treats-u-000b-as-part-of-a-doctype-name")).name).toBe("a\v");
 	});
 
 	it("reports the comment data the comment states accumulated", () => {
 		// Each of these appends characters that are not the ones just consumed,
 		// so trimming delimiters off the token range gets them wrong.
-		expect(commentsOf("<!-")).toEqual(["-"]);
-		expect(commentsOf("<!-- >")).toEqual([" >"]);
-		expect(commentsOf("<!-- ->")).toEqual([" ->"]);
-		expect(commentsOf("<!----!")).toEqual([""]);
-		expect(commentsOf("<!----! >")).toEqual(["--! >"]);
-		expect(commentsOf("<!--a--->")).toEqual(["a-"]);
-		expect(commentsOf("<!--a<!--b-->")).toEqual(["a<!--b"]);
-		expect(commentsOf("<!-- <!--")).toEqual([" <!"]);
+		expect(commentsOf(fixture("html", "token-parts-reported-by-the-tokenizer-reports-the-comment-data-the-comment"))).toEqual(["-"]);
+		expect(commentsOf(fixture("html", "token-parts-reported-by-the-tokenizer-reports-the-comment-data-the-comment-2"))).toEqual([" >"]);
+		expect(commentsOf(fixture("html", "token-parts-reported-by-the-tokenizer-reports-the-comment-data-the-comment-3"))).toEqual([" ->"]);
+		expect(commentsOf(fixture("html", "token-parts-reported-by-the-tokenizer-reports-the-comment-data-the-comment-4"))).toEqual([""]);
+		expect(commentsOf(fixture("html", "token-parts-reported-by-the-tokenizer-reports-the-comment-data-the-comment-5"))).toEqual(["--! >"]);
+		expect(commentsOf(fixture("html", "token-parts-reported-by-the-tokenizer-reports-the-comment-data-the-comment-6"))).toEqual(["a-"]);
+		expect(commentsOf(fixture("html", "token-parts-reported-by-the-tokenizer-reports-the-comment-data-the-comment-7"))).toEqual(["a<!--b"]);
+		expect(commentsOf(fixture("html", "token-parts-reported-by-the-tokenizer-reports-the-comment-data-the-comment-8"))).toEqual([" <!"]);
 		// `-foo--` is no processing instruction target, so this stays a comment.
-		expect(commentsOf("<?-foo-->")).toEqual(["?-foo--"]);
-		expect(commentsOf("</-")).toEqual(["-"]);
-		expect(commentsOf("<![CDATA[foo]]>")).toEqual(["[CDATA[foo]]"]);
+		expect(commentsOf(fixture("html", "token-parts-reported-by-the-tokenizer-reports-the-comment-data-the-comment-9"))).toEqual(["?-foo--"]);
+		expect(commentsOf(fixture("html", "token-parts-reported-by-the-tokenizer-reports-the-comment-data-the-comment-10"))).toEqual(["-"]);
+		expect(commentsOf(fixture("html", "token-parts-reported-by-the-tokenizer-reports-the-comment-data-the-comment-11"))).toEqual(["[CDATA[foo]]"]);
 	});
 });
 
@@ -3585,14 +3588,14 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 	it("seeds the content mode from `fragmentContext`", () => {
 		// A fragment parsed with `<title>` as its context element starts in
 		// RCDATA, so markup inside it is text until that element's end tag.
-		expect(walk("<b>x</b></title>after", { fragmentContext: "title" })).toEqual(
+		expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-seeds-the-content-mode-from-fragment"), { fragmentContext: "title" })).toEqual(
 			[
 				["text", "<b>x</b>"],
 				["close", "title"],
 				["text", "after"]
 			]
 		);
-		expect(walk("<b>x</b></style>after", { fragmentContext: "style" })).toEqual(
+		expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-seeds-the-content-mode-from-fragment-2"), { fragmentContext: "style" })).toEqual(
 			[
 				["text", "<b>x</b>"],
 				["close", "style"],
@@ -3600,18 +3603,18 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 			]
 		);
 		expect(
-			walk("<b>x</b></script>after", { fragmentContext: "script" })
+			walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-seeds-the-content-mode-from-fragment-3"), { fragmentContext: "script" })
 		).toEqual([
 			["text", "<b>x</b>"],
 			["close", "script"],
 			["text", "after"]
 		]);
 		// PLAINTEXT has no end tag at all.
-		expect(walk("<b>x</b>", { fragmentContext: "plaintext" })).toEqual([
+		expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-seeds-the-content-mode-from-fragment-4"), { fragmentContext: "plaintext" })).toEqual([
 			["text", "<b>x</b>"]
 		]);
 		// A context element with no content mode of its own stays in data.
-		expect(walk("<b>x</b>", { fragmentContext: "td" })).toEqual([
+		expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-seeds-the-content-mode-from-fragment-4"), { fragmentContext: "td" })).toEqual([
 			["open", "b"],
 			["text", "x"],
 			["close", "b"]
@@ -3620,7 +3623,7 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 
 	it("seeds a `noscript` context from the scripting flag", () => {
 		expect(
-			walk("<b>x</b></noscript>", {
+			walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-seeds-a-noscript-context-from-the"), {
 				fragmentContext: "noscript",
 				scripting: true
 			})
@@ -3628,7 +3631,7 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 			["text", "<b>x</b>"],
 			["close", "noscript"]
 		]);
-		expect(walk("<b>x</b>", { fragmentContext: "noscript" })).toEqual([
+		expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-seeds-the-content-mode-from-fragment-4"), { fragmentContext: "noscript" })).toEqual([
 			["open", "b"],
 			["text", "x"],
 			["close", "b"]
@@ -3636,15 +3639,15 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 	});
 
 	it("runs a content mode to EOF when no `<` follows", () => {
-		expect(walk("<title>abc")).toEqual([
+		expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-runs-a-content-mode-to-eof-when-no"))).toEqual([
 			["open", "title"],
 			["text", "abc"]
 		]);
-		expect(walk("<style>abc")).toEqual([
+		expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-runs-a-content-mode-to-eof-when-no-2"))).toEqual([
 			["open", "style"],
 			["text", "abc"]
 		]);
-		expect(walk("<script>abc")).toEqual([
+		expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-runs-a-content-mode-to-eof-when-no-3"))).toEqual([
 			["open", "script"],
 			["text", "abc"]
 		]);
@@ -3654,7 +3657,7 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 		const foreign = { isForeign: () => true };
 
 		it("keeps a `]` that does not close the section", () => {
-			expect(walk("<svg><![CDATA[a]b]]c]]>t</svg>", foreign)).toEqual([
+			expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-cdata-sections-in-foreign-content"), foreign)).toEqual([
 				["open", "svg"],
 				["comment", "<![CDATA[a]b]]c]]>"],
 				["text", "t"],
@@ -3663,7 +3666,7 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 		});
 
 		it("closes on the last of a run of `]`", () => {
-			expect(walk("<svg><![CDATA[a]]]>t</svg>", foreign)).toEqual([
+			expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-cdata-sections-in-foreign-content-2"), foreign)).toEqual([
 				["open", "svg"],
 				["comment", "<![CDATA[a]]]>"],
 				["text", "t"],
@@ -3672,11 +3675,11 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 		});
 
 		it("reports eof-in-cdata and emits what was read", () => {
-			expect(walk("<svg><![CDATA[abc", foreign)).toEqual([
+			expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-cdata-sections-in-foreign-content-3"), foreign)).toEqual([
 				["open", "svg"],
 				["comment", "<![CDATA[abc"]
 			]);
-			expect(errorsOf("<svg><![CDATA[abc", foreign)).toEqual([
+			expect(errorsOf(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-cdata-sections-in-foreign-content-3"), foreign)).toEqual([
 				{ code: "eof-in-cdata", slice: "", severity: "error" }
 			]);
 		});
@@ -3764,7 +3767,7 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 	});
 
 	it("seeds RCDATA from a `textarea` fragment context", () => {
-		expect(walk("<b></b></textarea>", { fragmentContext: "textarea" })).toEqual(
+		expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-seeds-rcdata-from-a-textarea-fragment"), { fragmentContext: "textarea" })).toEqual(
 			[
 				["text", "<b></b>"],
 				["close", "textarea"]
@@ -3773,12 +3776,12 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 	});
 
 	it("switches to RAWTEXT after `xmp` and `noframes` start tags", () => {
-		expect(walk("<xmp><b></xmp>")).toEqual([
+		expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-switches-to-rawtext-after-xmp-and"))).toEqual([
 			["open", "xmp"],
 			["text", "<b>"],
 			["close", "xmp"]
 		]);
-		expect(walk("<noframes><b></noframes>")).toEqual([
+		expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-switches-to-rawtext-after-xmp-and-2"))).toEqual([
 			["open", "noframes"],
 			["text", "<b>"],
 			["close", "noframes"]
@@ -3788,7 +3791,7 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 	it("switches the content mode after a self-closing start tag as well", () => {
 		// None of these elements is void, so the tree builder ignores the `/`
 		// and switches the tokenizer as it would for `<title>` (§13.2.6.4.4).
-		expect(walk("<title/><b></title><style/><b></style>")).toEqual([
+		expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-switches-the-content-mode-after-a-self"))).toEqual([
 			["open", "title"],
 			["text", "<b>"],
 			["close", "title"],
@@ -3797,7 +3800,7 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 			["close", "style"]
 		]);
 		// Unless the tree builder vetoes it, as foreign content does.
-		expect(walk("<title/><b>", { vetoesContentMode: () => true })).toEqual([
+		expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-switches-the-content-mode-after-a-self-2"), { vetoesContentMode: () => true })).toEqual([
 			["open", "title"],
 			["open", "b"]
 		]);
@@ -3814,7 +3817,7 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 				["close", name]
 			]);
 		}
-		expect(walk("<fieldset><b></b></fieldset>", { scripting: true })).toEqual([
+		expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-keeps-the-data-state-after-tags-2"), { scripting: true })).toEqual([
 			["open", "fieldset"],
 			["open", "b"],
 			["close", "b"],
@@ -3823,12 +3826,12 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 	});
 
 	it("reads a `noscript` start tag as RAWTEXT only with scripting on", () => {
-		expect(walk("<noscript><b></b></noscript>", { scripting: true })).toEqual([
+		expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-reads-a-noscript-start-tag-as-rawtext"), { scripting: true })).toEqual([
 			["open", "noscript"],
 			["text", "<b></b>"],
 			["close", "noscript"]
 		]);
-		expect(walk("<noscript><b></b></noscript>")).toEqual([
+		expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-reads-a-noscript-start-tag-as-rawtext"))).toEqual([
 			["open", "noscript"],
 			["open", "b"],
 			["close", "b"],
@@ -3843,7 +3846,7 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 			asked.push(name);
 			return true;
 		};
-		expect(walk("<TITLE><b></b></TITLE>", { vetoesContentMode })).toEqual([
+		expect(walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-stays-in-the-data-state-when-vetoes"), { vetoesContentMode })).toEqual([
 			["open", "TITLE"],
 			["open", "b"],
 			["close", "b"],
@@ -3851,7 +3854,7 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 		]);
 		// A fragment context the tree builder vetoes starts in data, too.
 		expect(
-			walk("<b></b>", { fragmentContext: "title", vetoesContentMode })
+			walk(fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-stays-in-the-data-state-when-vetoes-2"), { fragmentContext: "title", vetoesContentMode })
 		).toEqual([
 			["open", "b"],
 			["close", "b"]
@@ -3897,7 +3900,7 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 
 	it("flags numeric references far past U+10FFFF as outside the Unicode range", () => {
 		// The code stops accumulating past the range, so long digit runs cannot overflow.
-		for (const ref of ["&#x110000000;", "&#99999999999;"]) {
+		for (const ref of [fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-flags-numeric-references-far-past-u"), fixture("html", "tokenize-content-modes-cdata-and-nul-arcs-flags-numeric-references-far-past-u-2")]) {
 			expect(walk(ref)).toEqual([["text", ref]]);
 			expect(errorsOf(ref)).toEqual([
 				{

@@ -1881,7 +1881,7 @@ describe("SourceProcessor — streamed walk recycling", () => {
 			.process(
 				`<!DOCTYPE html><html><body>${fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints").repeat(
 					BIG
-				)}<p id="tail">${"a&amp;b".repeat(2000)}</p></body></html>`
+				)}<p id="tail">${fixture("html", "tokenize-parse-error-callback-does-not-report-missing-semicolon-for-a-named").repeat(2000)}</p></body></html>`
 			);
 		expect(text).toHaveLength(BIG + 1);
 		expect(text[text.length - 1]).toHaveLength(2000 * 3);
@@ -2575,7 +2575,7 @@ describe("parseHtml — quirks and foreign-content arcs", () => {
 				'<!DOCTYPE html SYSTEM "http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd">'
 			)
 		).toBe(true);
-		expect(isQuirks("<!DOCTYPE html>")).toBe(false);
+		expect(isQuirks(fixture("html", "tokenize-coverage-state-machine-branches-missing-doctype-callback-at-every"))).toBe(false);
 	});
 
 	it("treats MathML and SVG integration points as their own scopes", () => {
@@ -3437,7 +3437,7 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 	});
 
 	it("maps decoded text back to the raw offsets", () => {
-		expect(decodeEntities("a&amp;b", true, true)).toEqual({
+		expect(decodeEntities(fixture("html", "tokenize-parse-error-callback-does-not-report-missing-semicolon-for-a-named"), true, true)).toEqual({
 			text: "a&b",
 			map: [0, 1, 6, 7]
 		});

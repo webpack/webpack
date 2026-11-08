@@ -5,5 +5,10 @@
 	},
 	{
 		"mode": "minify"
+	},
+	{
+		"mode": "minify",
+		"mergeScripts": true,
+		"deferEmbeddedSource": []
 	}
 ]

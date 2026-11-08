@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "beautify"
+	},
+	{
+		"mode": "minify",
+		"removeImpliedTags": "all",
+		"collapseWhitespace": "all"
+	}
+]

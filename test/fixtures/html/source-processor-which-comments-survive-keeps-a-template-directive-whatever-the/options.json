@@ -1,0 +1,20 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": false
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": "some"
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": "nothing-matches"
+		}
+	}
+]
