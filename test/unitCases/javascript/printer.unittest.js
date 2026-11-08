@@ -5842,6 +5842,10 @@ describe("one-pass minify of statement sequences", () => {
 		expect(
 			minifyOnePass(fixture("javascript", "one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left-2"), { compress: {} }).code
 		).toBe("(function(){}).call();({}).y();");
+		// A left side kept for its truth, holding a comment, opens the statement.
+		expect(
+			minifyOnePass(fixture("javascript", "one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left-4"), { compress: {} }).code
+		).toBe("(function(){/*!keep*/return 1});({a:/*!k*/1});");
 	});
 
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
