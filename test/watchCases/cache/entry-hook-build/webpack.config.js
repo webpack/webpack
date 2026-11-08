@@ -32,6 +32,21 @@ module.exports = [false, true].map((cache, index) => ({
 	},
 	plugins: [
 		(compiler) => {
+			let invalidated = false;
+			/** @type {string | undefined} */
+			let previousSource;
+			// A delayed watch notification can repeat a step without another edit.
+			compiler.hooks.afterCompile.tap("CheckEntryBuild", () => {
+				if (
+					compiler.watchMode &&
+					currentWatchStep.step === "1" &&
+					!invalidated
+				) {
+					invalidated = true;
+					assert(compiler.watching);
+					compiler.watching.invalidate();
+				}
+			});
 			/** @type {WeakMap<import("webpack").Compilation, string[]>} */
 			const observedSources = new WeakMap();
 			const options = { name: "main" };
@@ -87,16 +102,12 @@ module.exports = [false, true].map((cache, index) => ({
 						);
 						expect(sources).toEqual([source, source]);
 						expect(entryBuilds).toBeLessThanOrEqual(1);
-						if (
-							!cache ||
-							!compiler.watchMode ||
-							Number(currentWatchStep.step) < 4 ||
-							currentWatchStep.step === "5"
-						) {
+						if (!cache || !compiler.watchMode || source !== previousSource) {
 							expect(entryBuilds).toBe(1);
 						} else if (currentWatchStep.step === "4") {
 							expect(entryBuilds).toBe(0);
 						}
+						previousSource = source;
 					});
 				}
 			);
