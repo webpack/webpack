@@ -32,12 +32,13 @@ This file is the spec. When code and spec disagree, fix one of them in the same 
 
 ## Files
 
-| File             | Holds                                                                          |
-| ---------------- | ------------------------------------------------------------------------------ |
-| `WorkerPool.js`  | `WorkerPool`, `createWorkerFactory`, the queue, scheduling, lifecycle, inline. |
-| `Worker.js`      | `Worker`: the module-bound facade.                                             |
-| `WorkerChild.js` | The thread entry. Never loaded on the main thread.                             |
-| `protocol.js`    | Message typedefs, `WORKER_DATA_KIND`, `encodeError` / `decodeError`.           |
+| File             | Holds                                                                        |
+| ---------------- | ---------------------------------------------------------------------------- |
+| `WorkerFarm.js`  | The compiler's farm: lazily creates the pool and one facade per module path. |
+| `WorkerPool.js`  | `WorkerPool`, the queue, scheduling, lifecycle and the inline path.          |
+| `Worker.js`      | `Worker`: the module-bound facade.                                           |
+| `WorkerChild.js` | The thread entry. Never loaded on the main thread.                           |
+| `protocol.js`    | Message typedefs, `WORKER_DATA_KIND`, `encodeError` / `decodeError`.         |
 
 ## Public API
 
@@ -66,11 +67,11 @@ When `options` fields ship, they reuse the `jest-worker` or `thread-loader` name
 
 `compiler.worker` is a `Compiler` method:
 
-- the factory is created once per `compiler.root`;
+- the farm is created once per `compiler.root` when `experiments.threads` is on;
 - child compilers return the root's facade;
 - each compiler of a `MultiCompiler` is its own root, so every config gets its own pool;
 - `compiler.close()` sets a closed flag and ends the pool before `shutdown`;
-- after close, a factory that was never created throws, and one that was created returns the same ended facade, whose calls reject.
+- after close, a farm whose pool was never created throws; otherwise the same ended facade is returned, whose calls reject.
 
 ## Worker module contract
 
