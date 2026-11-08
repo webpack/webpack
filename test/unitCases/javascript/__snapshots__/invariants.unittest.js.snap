@@ -10045,8 +10045,6 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-706 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-706 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(){return/(?<a>x)|(?<a>y)/.source}"`;
-
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-706 prints {"mode":"minify"} 1`] = `"function f(){return/(?<a>x)|(?<a>y)/.source}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-706 tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] )[11,12] {[12,13] return[13,19] regexp[19,36]=/(?<a>x)|(?<a>y)/ .[36,37] name[37,43] }[43,44] eof[44,44]"`;
