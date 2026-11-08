@@ -3711,6 +3711,14 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code2)).toBe(runProgram(source2));
 	});
 
+	it("should join a string literal with the one opening the `+` added to it", () => {
+		// One opening with anything else, or two literals not strings, stay.
+		const source = fixture("javascript", "one-pass-minify-of-statement-sequences-should-join-a-string-literal-with-the-one");
+		const { code: code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe("var x=1,o={valueOf(){return 2}};console.log(\"ab\"+x,\"a\"+(\"b\"+x+\"c\"),\"ab\"+o,\"a\"+(x+\"b\"),\"a\"+(1+x),1+(\"b\"+x),\"ab\"+ +x);");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
