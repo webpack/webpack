@@ -25,7 +25,7 @@ it("should scope an imported area and its implicit lines in the declaring module
 });
 
 it("should scope an imported line in the declaring module, aliased or not", () => {
-	expect(lib["line-start"]).toBe("lib_line-line-start");
+	expect(lib["line-start"]).toBe("lib_line-start");
 	expect(valueOf(styles["use-line"], "grid-row")).toBe(lib["line-start"]);
 	expect(valueOf(styles["use-line-alias"], "grid-row")).toBe(
 		lib["line-start"]
@@ -46,7 +46,7 @@ it("should scope a name no import selects in its own module", () => {
 	expect(valueOf(styles["use-local"], "grid-row")).toBe(
 		`${styles.local}-start`
 	);
-	expect(styles.local).toBe("style_local-local");
+	expect(styles.local).toBe("style_local");
 });
 
 it("should leave an import nothing declares unscoped", () => {
@@ -57,13 +57,13 @@ it("should leave an import nothing declares unscoped", () => {
 
 it("should not route a line through an imported value that is no grid name", () => {
 	expect(valueOf(styles["use-plain-line"], "grid-row")).toBe(
-		"style_primary-primary-start"
+		"style_primary-start"
 	);
 });
 
 it("should inline an imported plain value and scope it where it is used", () => {
 	expect(valueOf(styles["use-imported-name"], "grid-area")).toBe(
-		"style_hero-hero"
+		"style_hero"
 	);
 	expect(valueOf(styles["use-imported-keyword"], "grid-area")).toBe("auto");
 	expect(valueOf(styles["use-imported-text"], "grid-row")).toBe("span 2");

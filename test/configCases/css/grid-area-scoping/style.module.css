@@ -46,7 +46,7 @@
 }
 .shorthand-nav { grid-area: nav-bar }
 
-/* An escaped `.` stays escaped in the whole scoped name, suffix included. */
+/* An escaped `.` stays escaped in the scoped name. */
 .dotted-head { grid-area: x\.y }
 
 /* An area `main` defines the implicit lines `main-start` / `main-end`, and
