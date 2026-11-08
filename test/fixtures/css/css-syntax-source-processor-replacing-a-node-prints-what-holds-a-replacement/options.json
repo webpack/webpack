@@ -1,0 +1,18 @@
+[
+	{
+		"mode": "minify",
+		"visit": {
+			"types": [
+				"Hash"
+			],
+			"exit": false,
+			"at": [
+				{
+					"type": "Hash",
+					"do": "replace",
+					"with": "1px"
+				}
+			]
+		}
+	}
+]

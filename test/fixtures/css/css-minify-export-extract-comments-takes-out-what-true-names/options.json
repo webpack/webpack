@@ -1,0 +1,146 @@
+[
+	{
+		"print": "cssMinify",
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": true
+		}
+	},
+	{
+		"print": "cssMinify",
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": {}
+		}
+	},
+	{
+		"print": "cssMinify",
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": {
+				"regexp": "license"
+			}
+		}
+	},
+	{
+		"print": "cssMinify",
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": "^!"
+		}
+	},
+	{
+		"print": "cssMinify",
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": {
+				"condition": "all"
+			}
+		}
+	},
+	{
+		"print": "cssMinify",
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": {
+				"condition": false
+			}
+		}
+	},
+	{
+		"print": "cssMinify",
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": false
+		}
+	},
+	{
+		"print": "cssMinify",
+		"minimizer": {
+			"asset": "a.css"
+		}
+	},
+	{
+		"print": "cssMinify",
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": "some"
+		}
+	},
+	{
+		"print": "cssMinify",
+		"extractComments": true,
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": false
+		}
+	},
+	{
+		"print": "cssMinify",
+		"extractComments": "all",
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": false
+		}
+	},
+	{
+		"print": "cssMinify",
+		"extractComments": {
+			"regexp": "license"
+		},
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": false
+		}
+	},
+	{
+		"print": "cssMinify",
+		"extractComments": false,
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": true
+		}
+	},
+	{
+		"print": "cssMinify",
+		"comments": true,
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": true
+		}
+	},
+	{
+		"print": "cssMinify",
+		"comments": "all",
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": true
+		}
+	},
+	{
+		"print": "cssMinify",
+		"comments": false,
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": true
+		}
+	},
+	{
+		"print": "cssMinify",
+		"comments": "plain",
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": true
+		}
+	},
+	{
+		"print": "cssMinify",
+		"comments": {
+			"regexp": "plain"
+		},
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": true
+		}
+	}
+]

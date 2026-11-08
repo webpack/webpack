@@ -1,0 +1,74 @@
+[
+	{
+		"mode": "minify",
+		"visit": {
+			"types": [
+				"Hash"
+			],
+			"exit": false,
+			"at": [
+				{
+					"type": "Hash",
+					"do": "replace",
+					"with": "blue"
+				}
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"visit": {
+			"types": [
+				"Declaration"
+			],
+			"fields": [
+				"name"
+			],
+			"exit": false,
+			"at": [
+				{
+					"type": "Declaration",
+					"name": "margin-top",
+					"do": "replace",
+					"with": "padding:2px"
+				}
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"visit": {
+			"types": [
+				"QualifiedRule"
+			],
+			"fields": [
+				"source"
+			],
+			"exit": false,
+			"at": [
+				{
+					"type": "QualifiedRule",
+					"source": "b",
+					"do": "replace",
+					"with": "i{x:y}"
+				}
+			]
+		}
+	},
+	{
+		"mode": "beautify",
+		"visit": {
+			"types": [
+				"Hash"
+			],
+			"exit": false,
+			"at": [
+				{
+					"type": "Hash",
+					"do": "replace",
+					"with": "blue"
+				}
+			]
+		}
+	}
+]

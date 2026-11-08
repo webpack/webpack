@@ -1,0 +1,21 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"skip": {
+				"selectorPrelude": true
+			}
+		},
+		"visit": {
+			"types": [
+				"Ident",
+				"Declaration"
+			],
+			"fields": [
+				"name",
+				"value"
+			],
+			"exit": false
+		}
+	}
+]

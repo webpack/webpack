@@ -1,0 +1,14 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"Dimension"
+			],
+			"fields": [
+				"name"
+			],
+			"exit": false
+		}
+	}
+]

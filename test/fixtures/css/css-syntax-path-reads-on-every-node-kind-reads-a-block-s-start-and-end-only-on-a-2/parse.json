@@ -1,0 +1,15 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"Url"
+			],
+			"fields": [
+				"startOf:value",
+				"endOf:value"
+			],
+			"exit": false
+		}
+	}
+]

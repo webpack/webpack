@@ -1,0 +1,9 @@
+[
+	{
+		"print": "cssMinify",
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": true
+		}
+	}
+]

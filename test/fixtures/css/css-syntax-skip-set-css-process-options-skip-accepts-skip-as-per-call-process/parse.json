@@ -1,0 +1,23 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents",
+			"skip": {
+				"types": [
+					"Number"
+				]
+			}
+		},
+		"visit": {
+			"types": [
+				"Number",
+				"Ident"
+			],
+			"fields": [
+				"value"
+			],
+			"exit": false
+		}
+	}
+]

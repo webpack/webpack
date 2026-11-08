@@ -1,0 +1,20 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"AtRule",
+				"Ident",
+				"Hash",
+				"Comment"
+			],
+			"exit": true,
+			"at": [
+				{
+					"type": "AtRule",
+					"do": "skipChildren"
+				}
+			]
+		}
+	}
+]

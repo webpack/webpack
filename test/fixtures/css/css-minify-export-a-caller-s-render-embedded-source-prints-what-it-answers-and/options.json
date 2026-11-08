@@ -21,5 +21,29 @@
 		"print": "cssMinify",
 		"svg": true,
 		"renderEmbeddedSource": "decline"
+	},
+	{
+		"print": "cssMinify",
+		"renderEmbeddedSource": "offers",
+		"minimizer": {
+			"asset": "a.css"
+		}
+	},
+	{
+		"print": "cssMinify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"svg": {
+					"code": "<svg></svg>",
+					"warnings": [
+						"w"
+					]
+				}
+			}
+		},
+		"minimizer": {
+			"asset": "a.css"
+		}
 	}
 ]
