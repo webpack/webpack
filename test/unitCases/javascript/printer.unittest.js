@@ -2175,6 +2175,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "m-guarded-rest-1"), { mangle: false }, "function a(){if(!c)g()}function b(){if(!c)(function(){c}())}"],
 			// A bare `return` the `if(!t)` before it takes as its body stays, ending its function.
 			[fixture("javascript", "m-guarded-rest-2"), { mangle: false }, "(()=>{if(!c)return})(a);function f(){if(!c)return}"],
+			// An `if` printing its test then its kept statements, as the `if(!t)` before it's body or as an `else`, takes braces.
+			[fixture("javascript", "m-guarded-rest-3"), { mangle: false }, "function a(skip){if(!skip){log();{work(),done()}}}function b(skip){if(skip)g();else{log();{work(),done()}}}"],
 			// A body printing nothing is `;`, which the `}` after it keeps.
 			[fixture("javascript", "m-empty-body-1"), { mangle: false }, "function f(){while(a());}function g(){for(x in a);}"]
 		];
