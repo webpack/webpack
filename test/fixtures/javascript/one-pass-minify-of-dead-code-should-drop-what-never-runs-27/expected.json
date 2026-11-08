@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": "(f(`x`,c)):d(),t?f():d();\n      -> f(`x`,c):d(),t?f():d();",
-		"why": "a comma beside a template may sit inside it, so a branch of `?:` keeps parentheses that a second pass, parsing the call, finds it needs not"
-	}
-]

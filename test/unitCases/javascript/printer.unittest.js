@@ -5244,12 +5244,14 @@ describe("one-pass minify of dead code", () => {
 			[fixture("javascript", "one-pass-minify-of-dead-code-should-drop-what-never-runs-25"), "a();"],
 			// A branch of `?:` takes what prints as a sequence in parentheses.
 			[fixture("javascript", "one-pass-minify-of-dead-code-should-drop-what-never-runs-26"), "t?-(a(),b):c(),t?(a(),b()):c(),t?(x(),b()):c(),t?!a()||!b():c();for(;;)t()?(a(),b()):c();"],
-			// A comma in a string is none; one beside a template may be.
+			// A comma in a string, a template, a regular expression or a comment is none.
 			// A loop leaving at once runs its `var` start alone, its `let` only the loop reads going, where its test runs nothing, but not an `in`.
 			[fixture("javascript", "one-pass-minify-of-dead-code-should-drop-what-never-runs-28"), "for(var x=0;x<3;x++)var y=0;for(var i=0;f();i++)break;for(var k=(a in b);0;);"],
 			// A run of `if`s leaving alike, ending its function or loop, runs its tests alone.
 			[fixture("javascript", "one-pass-minify-of-dead-code-should-drop-what-never-runs-29"), "function f(){a||b}function g(){x();a||b||(c=1)}function h(){b}for(;;){x();a||b}"],
-			[fixture("javascript", "one-pass-minify-of-dead-code-should-drop-what-never-runs-27"),"t?f(\"a',\\\"(\",c):d(),t?(f(`x`,c)):d(),t?f():d();"]
+			[fixture("javascript", "one-pass-minify-of-dead-code-should-drop-what-never-runs-27"),"t?f(\"a',\\\"(\",c):d(),t?f(`x`,c):d(),t?f():d();"],
+			// A branch keeps them only where a comma outside them separates values.
+			[fixture("javascript", "one-pass-minify-of-dead-code-should-drop-what-never-runs-33"), "t?f(function(){a(),b(/[(]/)}):d(),t?f(a/b,c,\"(\"):d(),t?f(x.return/2,c):d(),t?(a(`(`),b(/,/)):d(),t?f(function(o){for(let k of o)/[(]/.test(k);return/[(]/.test(o++/2)},...o):d();"]
 		];
 		for (const [source, expected] of cases) {
 			expect(
