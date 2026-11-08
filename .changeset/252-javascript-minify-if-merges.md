@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Merge the calls and tests of `if` branches when minifying JavaScript.
+Merge `if` calls and tests while preserving conditional test grouping.
