@@ -1,0 +1,9 @@
+[
+	{
+		"entry": "tokenize",
+		"options": {
+			"vetoesContentMode": true
+		},
+		"visit": true
+	}
+]

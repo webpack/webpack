@@ -4,5 +4,8 @@
 		"transforms": {
 			"comments": true
 		}
+	},
+	{
+		"mode": "beautify"
 	}
 ]

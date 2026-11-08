@@ -1,0 +1,10 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"skip": {
+				"text": true
+			}
+		}
+	}
+]

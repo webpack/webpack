@@ -1,0 +1,14 @@
+[
+	{
+		"mode": "minify",
+		"mergeStyles": true,
+		"removeRedundantAttributes": true,
+		"renderEmbeddedSource": "builtin"
+	},
+	{
+		"mode": "minify",
+		"mergeStyles": true,
+		"removeRedundantAttributes": false,
+		"renderEmbeddedSource": "builtin"
+	}
+]

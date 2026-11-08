@@ -6,5 +6,8 @@
 		"mode": "minify",
 		"removeImpliedTags": "all",
 		"collapseWhitespace": "all"
+	},
+	{
+		"mode": "minify"
 	}
 ]

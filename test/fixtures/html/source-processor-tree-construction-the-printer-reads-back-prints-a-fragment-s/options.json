@@ -2,5 +2,12 @@
 	{
 		"mode": "beautify",
 		"fragmentContext": "div"
+	},
+	{
+		"mode": "minify",
+		"fragmentContext": "div",
+		"mergeStyles": true,
+		"removeRedundantAttributes": "all",
+		"renderEmbeddedSource": "builtin"
 	}
 ]

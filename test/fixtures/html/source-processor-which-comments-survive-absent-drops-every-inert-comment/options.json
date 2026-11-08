@@ -28,5 +28,17 @@
 		"transforms": {
 			"comments": "@license"
 		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": {
+				"regexp": "^\\s*@license"
+			}
+		}
 	}
 ]

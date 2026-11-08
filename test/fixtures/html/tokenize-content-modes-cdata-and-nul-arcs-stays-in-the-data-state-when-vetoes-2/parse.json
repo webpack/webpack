@@ -1,0 +1,10 @@
+[
+	{
+		"entry": "tokenize",
+		"options": {
+			"fragmentContext": "title",
+			"vetoesContentMode": true
+		},
+		"visit": true
+	}
+]

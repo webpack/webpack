@@ -1,0 +1,13 @@
+[
+	{
+		"mode": "minify",
+		"mergeStyles": true,
+		"removeEmptyElements": true,
+		"renderEmbeddedSource": "builtin"
+	},
+	{
+		"mode": "minify",
+		"removeEmptyElements": true,
+		"renderEmbeddedSource": "builtin"
+	}
+]

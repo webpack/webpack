@@ -4,5 +4,8 @@
 		"transforms": {
 			"removeOptionalTags": false
 		}
+	},
+	{
+		"mode": "beautify"
 	}
 ]

@@ -2,5 +2,11 @@
 	{
 		"mode": "minify",
 		"mergeStyles": true
+	},
+	{
+		"mode": "minify",
+		"mergeStyles": true,
+		"removeEmptyElements": true,
+		"renderEmbeddedSource": "builtin"
 	}
 ]
