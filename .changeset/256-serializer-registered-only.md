@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Restore cached objects only through registered serializers and loaders.
+Deprecate requiring cached classes by request; store packs with broken content.

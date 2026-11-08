@@ -1,6 +1,7 @@
 "use strict";
 
 const path = require("path");
+const deprecationTracking = require("../helpers/deprecationTracking");
 const { Logger } = require("../../lib/logging/Logger");
 const ObjectMiddleware = require("../../lib/serialization/ObjectMiddleware");
 const SerializerMiddleware = require("../../lib/serialization/SerializerMiddleware");
@@ -329,13 +330,17 @@ describe("ObjectMiddleware restoring a request that is not registered", () => {
 			token === "test/ObjectMiddleware.unittest/new" ? request : token
 		);
 
-	it("never loads the request", () => {
+	it("loads the request with a deprecation", () => {
+		const tracker = deprecationTracking.start();
 		expect(() => middleware.deserialize(naming(loadedFlag), context)).toThrow(
 			`No deserializer registered for ${loadedFlag}/Moved`
 		);
+		expect(tracker().map(({ code }) => code)).toEqual([
+			"DEP_WEBPACK_SERIALIZATION_REQUIRE_FROM_CACHE"
+		]);
 		expect(
 			/** @type {EXPECTED_ANY} */ (globalThis).__serializationFixtureLoaded
-		).toBeUndefined();
+		).toBe(true);
 	});
 
 	it("says how to register it", () => {
@@ -353,10 +358,12 @@ describe("ObjectMiddleware restoring a request that is not registered", () => {
 			naming(lateClass)
 		).map((token) => (token === "Moved" ? null : token));
 
+		const tracker = deprecationTracking.start();
 		const [restored] = /** @type {EXPECTED_ANY[]} */ (
 			middleware.deserialize(written, context)
 		);
 
+		expect(tracker()).toEqual([]);
 		expect(restored).toBeInstanceOf(require(lateClass));
 		expect(restored.value).toBe(1);
 	});

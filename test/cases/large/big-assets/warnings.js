@@ -1,9 +1,10 @@
 "use strict";
 
 module.exports = [
-	// loader-runner, jest-worker, minimizer-webpack-plugin/utils.js
+	// ObjectMiddleware, loader-runner, jest-worker, minimizer-webpack-plugin/utils.js
 	// and the two dynamic requires in each jest-worker child the plugin nests
 	// (`threadChild`, and `processChild` since minimizer-webpack-plugin 5.12)
+	/Critical dependency: the request of a dependency is an expression/,
 	/Critical dependency: the request of a dependency is an expression/,
 	/Critical dependency: the request of a dependency is an expression/,
 	/Critical dependency: the request of a dependency is an expression/,
