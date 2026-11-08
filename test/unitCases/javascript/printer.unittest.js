@@ -6746,3 +6746,55 @@ describe("one-pass minify hazards", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 });
+
+describe("one-pass minify of functions read once, family A", () => {
+	const options = { compress: { toplevel: true }, ecma: 2020, mangle: false };
+
+	it("should print a moved function's statements where a `return` calls it, its `var` joining the caller's", () => {
+		const source = fixture("javascript", "one-pass-inline-a-1");
+		const { code } = minifyOnePass(source, options);
+		expect(code).toBe(
+			"[function(){for(var i=0;i<2;i++);console.log(`test`,i)}][0]();"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should keep a moved function called where its `var` would hide a name of the caller", () => {
+		const source = fixture("javascript", "one-pass-inline-a-2");
+		const { code } = minifyOnePass(source, options);
+		expect(code).toBe(
+			"var run=function(i){(function(){for(var i=0;i<2;i++);console.log(`test`,i)})();console.log(i)};run(5),run(6);"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should fold a pure value into a call of a pure member such as `console.log`", () => {
+		const source = fixture("javascript", "one-pass-inline-a-3");
+		const { code } = minifyOnePass(source, options);
+		expect(code).toBe("console.log(Math.random()<1);");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should not fold a value running code past the member it calls, which the value may set", () => {
+		const source = fixture("javascript", "one-pass-inline-a-4");
+		const { code } = minifyOnePass(source, options);
+		expect(code).toBe(
+			"var e=Math.round((console.log=function(){},1));console.log(e);"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should drop a member read of a function declaration read once", () => {
+		const source = fixture("javascript", "one-pass-inline-a-5");
+		const { code } = minifyOnePass(source, options);
+		expect(code).toBe("console.log(`done`);");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should keep a member read of a `var` function read once, which may be read unset", () => {
+		const source = fixture("javascript", "one-pass-inline-a-6");
+		const { code } = minifyOnePass(source, options);
+		expect(code).toBe("(function(){}).b;console.log(`done`);");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+});
