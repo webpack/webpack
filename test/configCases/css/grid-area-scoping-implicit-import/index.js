@@ -24,12 +24,12 @@ it("should resolve an imported implicit line to the area declaring it", () => {
 });
 
 it("should resolve an imported implicit area to the lines declaring it", () => {
-	expect(lib["line-start"]).toBe("lib_line-line-start");
-	expect(valueOf(styles["use-line"], "grid-area")).toBe("lib_line-line");
+	expect(lib["line-start"]).toBe("lib_line-start");
+	expect(valueOf(styles["use-line"], "grid-area")).toBe("lib_line");
 	expect(valueOf(styles["use-line"], "grid-row")).toBe(lib["line-start"]);
 });
 
 it("should fall back to an `-end` line when no `-start` line declares the area", () => {
-	expect(lib["tail-end"]).toBe("lib_tail-tail-end");
-	expect(valueOf(styles["use-tail"], "grid-area")).toBe("lib_tail-tail");
+	expect(lib["tail-end"]).toBe("lib_tail-end");
+	expect(valueOf(styles["use-tail"], "grid-area")).toBe("lib_tail");
 });

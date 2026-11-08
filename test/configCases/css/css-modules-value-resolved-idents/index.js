@@ -73,6 +73,6 @@ it("should keep an imported @value's grid line consistent between the two spelli
 		declarationValue("reference-imported-grid", "grid-row-start")
 	);
 	expect(gridLineName("declare-imported-grid")).toMatch(
-		/style_module_css-imported-grid-line-imported-grid-line$/
+		/style_module_css-imported-grid-line$/
 	);
 });
