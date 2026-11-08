@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fill `[local]` with the written name, pair implicit grid lines, and inline `@value`s.
+Fill `[local]` with the written name, pair grid lines, and inline `@value`s.
