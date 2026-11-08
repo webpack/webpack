@@ -6,9 +6,10 @@ const currentWatchStep = require("../../../helpers/currentWatchStep");
 const caches = [false, true, { type: "filesystem" }];
 
 /** @type {import("webpack").Configuration[]} */
-module.exports = caches.map((cache) => ({
+module.exports = caches.map((cache, index) => ({
 	mode: "development",
 	cache,
+	output: { filename: `bundle${index}.js`, clean: false },
 	parallelism: 1,
 	resolve: { modules: ["packages", "node_modules"] }
 }));
@@ -16,6 +17,7 @@ module.exports = caches.map((cache) => ({
 module.exports.push({
 	mode: "development",
 	entry: {},
+	output: { filename: `bundle${caches.length}.js`, clean: false },
 	parallelism: 1,
 	resolve: { modules: ["packages", "node_modules"] },
 	plugins: [
