@@ -191,6 +191,69 @@ describe("PackFileCacheStrategy cleanup", () => {
 		expect(fs.readdirSync(tempPath)).not.toContain("orphan.pack");
 	});
 
+	it("deletes only files the cache writes", async () => {
+		const fs = require("graceful-fs");
+
+		fs.mkdirSync(tempPath, { recursive: true });
+		const cacheFiles = [
+			"orphan.pack",
+			"orphan.pack_",
+			"orphan.pack.gz",
+			"orphan.pack.br",
+			"orphan.pack.zst",
+			"index.pack.old"
+		];
+		const otherFiles = [
+			"README.md",
+			"notes.txt",
+			".gitkeep",
+			"pack",
+			"orphan.pack.bak",
+			"orphan.packed"
+		];
+		for (const file of [...cacheFiles, ...otherFiles]) {
+			fs.writeFileSync(path.join(tempPath, file), "content");
+		}
+		const oldTime = new Date(Date.now() - 2 * 60 * 60 * 1000);
+		for (const file of [...cacheFiles, ...otherFiles]) {
+			fs.utimesSync(path.join(tempPath, file), oldTime, oldTime);
+		}
+
+		const strategy = createStrategy(fs);
+
+		await strategy._cleanupUnusedFiles(new Set(), new Set());
+		// nothing else is deleted or tracked as unreferenced
+		expect(fs.readdirSync(tempPath).sort()).toEqual([...otherFiles].sort());
+	});
+
+	it("keeps the packs of a cache with another compression in the same directory", async () => {
+		const fs = require("graceful-fs");
+
+		fs.mkdirSync(tempPath, { recursive: true });
+		// a gzip cache shares the directory; a brotli one was used here before
+		const files = [
+			"index.pack.gz",
+			"index.pack.gz.old",
+			"content.pack.gz",
+			"content.pack.br",
+			"orphan.pack"
+		];
+		const oldTime = new Date(Date.now() - 2 * 60 * 60 * 1000);
+		for (const file of files) {
+			fs.writeFileSync(path.join(tempPath, file), "content");
+			fs.utimesSync(path.join(tempPath, file), oldTime, oldTime);
+		}
+
+		const strategy = createStrategy(fs);
+
+		await strategy._cleanupUnusedFiles(new Set(), new Set());
+		expect(fs.readdirSync(tempPath).sort()).toEqual([
+			"content.pack.gz",
+			"index.pack.gz",
+			"index.pack.gz.old"
+		]);
+	});
+
 	it("restarts the grace period when an orphaned name is rewritten", async () => {
 		const fs = require("graceful-fs");
 
