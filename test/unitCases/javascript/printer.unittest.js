@@ -6900,7 +6900,14 @@ describe("one-pass minify of unused values and side effects, fourth round", () =
 			// What `||` runs last nobody reads where it goes unread, but right of `&&`; there a swap drops a `!`, and `??` takes no place beside `||`.
 			[fixture("javascript", "one-pass-unused-d-12"), "u()||a&&b!==c||d(),u()&&(!a||b===c)&&d(),u()||(a!==b||c!==d)&&z(),u()||x==null&&y(),x??y();"],
 			// A chain of one operator left of the other, nobody reading it, negates whole where that is shorter.
-			[fixture("javascript", "one-pass-unused-d-13"), "(a||b||c||d||e)&&f(),a&&b&&c||d()||e(),a&&b!==c&&d||e(),!a&&x&&!c||f(),x=!a&&!b&&!c||f();"]
+			[fixture("javascript", "one-pass-unused-d-13"), "(a||b||c||d||e)&&f(),a&&b&&c||d()||e(),a&&b!==c&&d||e(),!a&&x&&!c||f(),x=!a&&!b&&!c||f();"],
+			// A constructor whose members a write may set, through the global object too, keeps its `instanceof`.
+			[fixture("javascript", "one-pass-unused-d-14"), "globalThis.Object[Symbol.hasInstance]=h,[]instanceof Object;"],
+			[fixture("javascript", "one-pass-unused-d-15"), "Object.defineProperty(Error,Symbol.hasInstance,{value:h}),1 instanceof Error;"],
+			// A known branch opening with `{` as an arrow's body takes parentheses, whatever node it is.
+			[fixture("javascript", "one-pass-unused-d-16"), "f=()=>({}.x),g=()=>({}+1),h=()=>({a:1}),k=()=>a;"],
+			// An empty call's arguments keep their parentheses as a `?:` branch a `return` chain prints.
+			[fixture("javascript", "one-pass-unused-d-17"), "function g(c){return c?(a(),void 0):(b(),void 0)}function k(){a()}"]
 		];
 		for (const [source, expected] of cases) {
 			expect(minifyOnePass(source, { compress: { ecma: 2020 }, ecma: 2020, mangle: false }).code).toBe(expected);
