@@ -6908,6 +6908,7 @@ describe("one-pass minify of unused values and side effects, fourth round", () =
 			// A program that may set a prototype, a proxy's traps then running on `instanceof`, keeps every one.
 			[fixture("javascript", "one-pass-unused-d-18"), "Object.setPrototypeOf(Array.prototype,p),[]instanceof Date,after();"],
 			[fixture("javascript", "one-pass-unused-d-19"), "o.__proto__=p,[]instanceof Date,Array.prototype[k]=q,after();"],
+			[fixture("javascript", "one-pass-unused-d-20"), "globalThis.Object.setPrototypeOf(Array.prototype,p),[]instanceof Date,after();"],
 			// A known branch opening with `{` as an arrow's body takes parentheses, whatever node it is.
 			[fixture("javascript", "one-pass-unused-d-16"), "f=()=>({}.x),g=()=>({}+1),h=()=>({a:1}),k=()=>a;"],
 			// An empty call's arguments keep their parentheses as a `?:` branch a `return` chain prints.
