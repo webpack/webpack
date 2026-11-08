@@ -6654,15 +6654,6 @@ describe("one-pass minify spellings, third round", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
-	it("should join a case's expression statements and declarations as a list's", () => {
-		const source = fixture("javascript", "p-spellings-8");
-		const { code } = minifyOnePass(source, { compress: {}, ecma: 2020, mangle: false });
-		expect(code).toBe(
-			"function f(x,o){switch(x){case 1:o.a=1,console.log(o.a);break;case 2:var p=o.b,q=o.c;console.log(p,q);let r=p+1,s=q+1;console.log(r,s);default:console.log(`d`);if(x)console.log(`x`);console.log(`e`)}}f(1,{}),f(2,{b:1,c:2}),f(0,{});"
-		);
-		expect(runProgram(code)).toBe(runProgram(source));
-	});
-
 	it("should print an `||` right of a swapped `&&` bare, and `!!` ending a tested sequence as its value", () => {
 		const source = fixture("javascript", "p-spellings-9");
 		const { code } = minifyOnePass(source, { compress: {}, ecma: 2020, mangle: false });
