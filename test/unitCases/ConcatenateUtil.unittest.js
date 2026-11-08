@@ -5,7 +5,7 @@
 "use strict";
 
 const analyzeScope = require("../../lib/javascript/ScopeAnalyzer");
-const { parse } = require("../../lib/javascript/syntax").parser;
+const { parse } = require("../../lib/javascript/syntax-parser");
 const {
 	getAllReferences,
 	renameIdentifiers

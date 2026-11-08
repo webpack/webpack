@@ -5,7 +5,7 @@
 // cspell:ignore fghsub notry fghsub notry notry this's ijksub this's ijksub fghsub fghsub notry ijksub ijksub strrring strrring strr strrring strrring strr Sstrrringy strone stronetwo stronetwothree stronetwo stronetwothree stronetwothreefour onetwo onetwo twothree twothree twothree threefour onetwo onetwo threefour threefour fourfive startstrmid igmy igmyi igmya
 const BasicEvaluatedExpression = require("../../lib/javascript/BasicEvaluatedExpression");
 const JavascriptParser = require("../../lib/javascript/JavascriptParser");
-const { parse } = require("../../lib/javascript/syntax").parser;
+const { parse } = require("../../lib/javascript/syntax-parser");
 const {
 	BLOCK_DECLARATIONS,
 	HOISTED_DECLARATIONS,

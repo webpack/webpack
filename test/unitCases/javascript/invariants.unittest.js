@@ -1,6 +1,7 @@
 "use strict";
 
-const { SourceProcessor, parser } = require("../../../lib/javascript/syntax");
+const { SourceProcessor } = require("../../../lib/javascript/syntax");
+const parser = require("../../../lib/javascript/syntax-parser");
 const {
 	answerOf,
 	declaresPrint,

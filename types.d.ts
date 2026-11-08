@@ -760,7 +760,6 @@ declare class AutomaticPrefetchPlugin {
 	apply(compiler: Compiler): void;
 }
 type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
-declare const BLOCK_DECLARATIONS: unique symbol;
 
 /**
  * Defines the backend api type used by this module.
@@ -1011,12 +1010,10 @@ declare abstract class BasicEvaluatedExpression {
 		| MethodDefinition
 		| PropertyDefinition
 		| VariableDeclarator
+		| AssignmentProperty
 		| Property
 		| CatchClause
 		| ClassBody
-		| SwitchCase
-		| TemplateElement
-		| AssignmentProperty
 		| ImportSpecifier
 		| ImportDefaultSpecifier
 		| ImportNamespaceSpecifier
@@ -1024,7 +1021,9 @@ declare abstract class BasicEvaluatedExpression {
 		| ObjectPattern
 		| ArrayPattern
 		| RestElement
-		| AssignmentPattern;
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
 	quasis?: BasicEvaluatedExpression[];
 	parts?: BasicEvaluatedExpression[];
 	items?: BasicEvaluatedExpression[];
@@ -1270,12 +1269,10 @@ declare abstract class BasicEvaluatedExpression {
 			| MethodDefinition
 			| PropertyDefinition
 			| VariableDeclarator
+			| AssignmentProperty
 			| Property
 			| CatchClause
 			| ClassBody
-			| SwitchCase
-			| TemplateElement
-			| AssignmentProperty
 			| ImportSpecifier
 			| ImportDefaultSpecifier
 			| ImportNamespaceSpecifier
@@ -1284,6 +1281,8 @@ declare abstract class BasicEvaluatedExpression {
 			| ArrayPattern
 			| RestElement
 			| AssignmentPattern
+			| SwitchCase
+			| TemplateElement
 	): BasicEvaluatedExpression;
 }
 type BeforeContextResolveData = ContextResolveData & ContextOptions;
@@ -1308,24 +1307,6 @@ declare interface Bootstrap {
 	afterStartup: string[];
 	allowInlineStartup: boolean;
 	exportsAwaited: boolean;
-}
-
-/**
- * Which disjunction branch a named group sits in, so that the same name in two
- * alternatives of one disjunction is allowed and a repeat in one is not.
- */
-declare abstract class BranchID {
-	parent: null | BranchID;
-	base: BranchID;
-	walk: number;
-	taken: null | BranchID;
-
-	/**
-	 * Two branches are separated when some disjunction they both sit under took
-	 * a different alternative for each, so nothing can match both.
-	 */
-	separatedFrom(alt: BranchID): boolean;
-	sibling(): BranchID;
 }
 type BufferEncoding =
 	| "ascii"
@@ -8371,20 +8352,6 @@ declare interface DestructuringAssignmentProperty {
 	 */
 	computed?: boolean;
 }
-
-/**
- * Where a shorthand assignment, trailing comma or parenthesized pattern was
- * seen, so the expression parser can raise once it knows whether it is
- * parsing an expression or a binding pattern.
- */
-declare class DestructuringErrors {
-	constructor();
-	shorthandAssign: number;
-	trailingComma: number;
-	parenthesizedAssign: number;
-	parenthesizedBind: number;
-	doubleProto: number;
-}
 declare class DeterministicChunkIdsPlugin {
 	/**
 	 * Creates an instance of DeterministicChunkIdsPlugin.
@@ -9960,39 +9927,6 @@ declare interface EstreeSource {
 	range?: [number, number];
 }
 type EstreeSourceItem = null | number | EstreeSource;
-
-/**
- * ESTree objects read the way a `SyntaxTree` is, `toEstreeObject`'s way back:
- * an object takes an id when a read first reaches it, and nothing is copied.
- */
-declare class EstreeView {
-	constructor();
-	add(object: NodeEstreeIndex): number;
-	object(node: number): NodeEstreeIndex;
-
-	/**
-	 * Forgets every id, for the next read.
-	 */
-	reset(): void;
-	type(node: number): number;
-	start(node: number): number;
-	name(node: number): string;
-	value(
-		node: number
-	):
-		| undefined
-		| null
-		| string
-		| number
-		| bigint
-		| boolean
-		| RegExp
-		| { cooked?: null | string; raw: string };
-	fieldCount(field: number, node: number): number;
-	field(i: number, field: number, node: number): number;
-	flag(flag: number, node: number): boolean;
-	textOf(part: number, node: number): null | string;
-}
 
 /**
  * Cache validation token whose string representation identifies the build
@@ -12152,11 +12086,6 @@ declare interface GivenFormatOptions {
 	width?: number;
 
 	/**
-	 * whether properties are written in shorthand, undefined until read from `ecma`
-	 */
-	shorthand?: boolean;
-
-	/**
 	 * whether only ASCII is written
 	 */
 	asciiOnly?: boolean;
@@ -12205,6 +12134,11 @@ declare interface GivenFormatOptions {
 	 * whether a shebang is kept
 	 */
 	shebang?: boolean;
+
+	/**
+	 * whether properties are written in shorthand, undefined until read from `ecma`
+	 */
+	shorthand?: boolean;
 
 	/**
 	 * whether the output works around that engine
@@ -12321,9 +12255,6 @@ declare interface GroupConfig<T, R> {
 	getOptions?: (name: string, items: T[]) => GroupOptionsSmartGrouping;
 	createGroup: (key: string, children: T[], items: T[]) => R;
 }
-declare interface GroupNames {
-	[index: string]: true | BranchID[];
-}
 type GroupOptionsAsyncDependenciesBlock = RawChunkGroupOptions & {
 	name?: null | string;
 } & { entryOptions?: EntryOptions } & { circular?: boolean };
@@ -12349,7 +12280,7 @@ type GuardFormula =
 	| ["p", ESMEvaluatedImportSpecifierDependency]
 	| ["?"]
 	| ["!", GuardFormula]
-	| ["||" | "&&" | "??", GuardFormula, GuardFormula];
+	| ["&&" | "||" | "??", GuardFormula, GuardFormula];
 
 /**
  * A guard frame pushed onto `parser.state.guardStack` for the duration of one
@@ -12408,7 +12339,7 @@ declare interface GuardFrame {
 		| ["p", ESMEvaluatedImportSpecifierDependency]
 		| ["?"]
 		| ["!", GuardFormula]
-		| ["||" | "&&" | "??", GuardFormula, GuardFormula];
+		| ["&&" | "||" | "??", GuardFormula, GuardFormula];
 
 	/**
 	 * memoized presence formula (null = no presence atom)
@@ -12419,7 +12350,7 @@ declare interface GuardFrame {
 		| ["p", ESMEvaluatedImportSpecifierDependency]
 		| ["?"]
 		| ["!", GuardFormula]
-		| ["||" | "&&" | "??", GuardFormula, GuardFormula];
+		| ["&&" | "||" | "??", GuardFormula, GuardFormula];
 }
 
 /**
@@ -12464,7 +12395,6 @@ declare interface HMRJavascriptParserHooks {
 	>;
 	hotAcceptWithoutCallback: SyncBailHook<[CallExpression, string[]], void>;
 }
-declare const HOISTED_DECLARATIONS: unique symbol;
 
 /**
  * Defines the handle module creation options type used by this module.
@@ -15581,17 +15511,18 @@ declare interface JavascriptParseOptions {
 	/**
 	 * where tokens are reported
 	 */
-	onToken?: Token[] | ((token: Token) => void);
+	onToken?: ((token: Token) => void) | Token[];
 
 	/**
-	 * the parser itself at each token
+	 * the parser itself at each token, read for the token it has just read
 	 */
-	onTokenRead?: (parser: SyntaxParser) => void;
+	onTokenRead?: (token: TokenRead) => void;
 
 	/**
 	 * where comments are reported, as acorn reports them
 	 */
 	onComment?:
+		| CollectedComment[]
 		| ((
 				isBlock: boolean,
 				text: string,
@@ -15599,8 +15530,7 @@ declare interface JavascriptParseOptions {
 				end: number,
 				startLoc?: null | Position,
 				endLoc?: null | Position
-		  ) => void)
-		| CollectedComment[];
+		  ) => void);
 
 	/**
 	 * called where a semicolon was inserted
@@ -18176,7 +18106,7 @@ type JavascriptParserState = ParserStateBase<BuiltJavascriptModule> &
 	KnownJavascriptParserState;
 type JavascriptParserTag<T = TagData> = symbol & { readonly __tagData?: T };
 type JavascriptProcessOptions = JavascriptReadOptions &
-	Omit<MinifyOptions, "sourceType" | "format" | "output" | "sourceMap">;
+	Omit<MinifyOptions, "format" | "output" | "sourceMap" | "sourceType">;
 
 /**
  * what the JavaScript `SourceProcessor` reads its source as, and prints it with
@@ -18963,10 +18893,9 @@ declare interface KnownUnsafeCacheData {
 	 * resolve options
 	 */
 	resolveOptions?: ResolveOptionsWebpackOptions;
-	parserOptions?: ParserOptionsNormalModule;
+	parserOptions?: ParserOptions;
 	generatorOptions?: GeneratorOptions;
 }
-declare const LEGACY_ASSERT_ATTRIBUTES: unique symbol;
 
 /**
  * Describes the l stat shape.
@@ -19061,25 +18990,6 @@ declare interface LStatSync {
 		path: PathLikeFs,
 		options?: StatSyncOptions
 	): undefined | IStatsFs | IBigIntStatsFs;
-}
-
-/**
- * A label in scope, and what may jump to it.
- */
-declare class Label {
-	constructor(kind: null | string, name?: string, statementStart?: number);
-	kind?: null | string;
-	name?: string;
-	statementStart?: number;
-}
-
-/**
- * a label in scope, as any caller may hold one
- */
-declare interface LabelLike {
-	kind?: null | string;
-	name?: string;
-	statementStart?: number;
 }
 
 /**
@@ -19994,7 +19904,6 @@ declare abstract class Logger {
 }
 declare const MEASURE_END_OPERATION: unique symbol;
 declare const MEASURE_START_OPERATION: unique symbol;
-declare const MODULE_DECLARATIONS: unique symbol;
 
 /**
  * Magic comment options by name; each value is whatever the user's comment evaluates to.
@@ -22781,6 +22690,7 @@ declare class NoEmitOnErrorsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type Node = false | NodeOptions;
 declare class NodeEnvironmentPlugin {
 	/**
 	 * Creates an instance of NodeEnvironmentPlugin.
@@ -22802,93 +22712,6 @@ declare interface NodeEnvironmentPluginOptions {
 	 * infrastructure logging options
 	 */
 	infrastructureLogging: InfrastructureLogging;
-}
-type NodeEstreeIndex =
-	| Program
-	| ImportDeclaration
-	| ExportNamedDeclaration
-	| ExportAllDeclaration
-	| ImportExpressionImport
-	| UnaryExpression
-	| ArrayExpression
-	| ArrowFunctionExpression
-	| AssignmentExpression
-	| AwaitExpression
-	| BinaryExpression
-	| SimpleCallExpression
-	| NewExpression
-	| ChainExpression
-	| ClassExpression
-	| ConditionalExpression
-	| FunctionExpression
-	| Identifier
-	| SimpleLiteral
-	| RegExpLiteral
-	| BigIntLiteral
-	| LogicalExpression
-	| MemberExpression
-	| MetaProperty
-	| ObjectExpression
-	| SequenceExpression
-	| TaggedTemplateExpression
-	| TemplateLiteral
-	| ThisExpression
-	| UpdateExpression
-	| YieldExpression
-	| SpreadElement
-	| PrivateIdentifier
-	| Super
-	| FunctionDeclaration
-	| VariableDeclaration
-	| ClassDeclaration
-	| ExpressionStatement
-	| BlockStatement
-	| StaticBlock
-	| EmptyStatement
-	| DebuggerStatement
-	| WithStatement
-	| ReturnStatement
-	| LabeledStatement
-	| BreakStatement
-	| ContinueStatement
-	| IfStatement
-	| SwitchStatement
-	| ThrowStatement
-	| TryStatement
-	| WhileStatement
-	| DoWhileStatement
-	| ForStatement
-	| ForInStatement
-	| ForOfStatement
-	| ExportDefaultDeclaration
-	| MethodDefinition
-	| PropertyDefinition
-	| VariableDeclarator
-	| Property
-	| CatchClause
-	| ClassBody
-	| SwitchCase
-	| TemplateElement
-	| AssignmentProperty
-	| ImportSpecifier
-	| ImportDefaultSpecifier
-	| ImportNamespaceSpecifier
-	| ExportSpecifier
-	| ObjectPattern
-	| ArrayPattern
-	| RestElement
-	| AssignmentPattern;
-
-/**
- * a node as this parser builds one, whichever fields the options asked for
- */
-declare interface NodeLike {
-	type: string;
-	start: number;
-	end: number;
-	loc?: null | SourceLocation;
-	sourceFile?: string;
-	range?: [number, number];
 }
 
 /**
@@ -23131,7 +22954,6 @@ declare interface NodeTemplatePluginOptions {
 	 */
 	asyncChunkLoading?: boolean;
 }
-type NodeWebpackOptions = false | NodeOptions;
 type NonNullable<T> = T & {};
 declare class NormalModule extends Module {
 	constructor(__0: NormalModuleCreateData<string>);
@@ -23140,7 +22962,7 @@ declare class NormalModule extends Module {
 	rawRequest: string;
 	binary: boolean;
 	parser?: Parser;
-	parserOptions?: ParserOptionsNormalModule;
+	parserOptions?: ParserOptions;
 	generator?: Generator;
 	generatorOptions?: GeneratorOptions;
 	resource: string;
@@ -23368,7 +23190,7 @@ declare interface NormalModuleCreateData<T extends string = string> {
 		Record<"css/module", CssModuleParserOptions> &
 		Record<"css/global", CssModuleParserOptions> &
 		Record<"html", EmptyParserOptions> &
-		Record<string, ParserOptionsNormalModule>)[T];
+		Record<string, ParserOptions>)[T];
 
 	/**
 	 * the generator used
@@ -23493,7 +23315,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					SyncBailHook<[CssModuleParserOptions], CssParser>
 				> &
 				Record<"html", SyncBailHook<[EmptyParserOptions], HtmlParser>> &
-				Record<string, SyncBailHook<[ParserOptionsNormalModule], Parser>>
+				Record<string, SyncBailHook<[ParserOptions], Parser>>
 		>;
 		parser: TypedHookMap<
 			Record<
@@ -23548,7 +23370,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					SyncBailHook<[CssParser, CssModuleParserOptions], void>
 				> &
 				Record<"html", SyncBailHook<[HtmlParser, EmptyParserOptions], void>> &
-				Record<string, SyncBailHook<[Parser, ParserOptionsNormalModule], void>>
+				Record<string, SyncBailHook<[Parser, ParserOptions], void>>
 		>;
 		createGenerator: TypedHookMap<
 			Record<
@@ -23680,7 +23502,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	ruleSet: RuleSet;
 	context: string;
 	fs: InputFileSystem;
-	parserCache: Map<string, WeakMap<ParserOptionsNormalModule, Parser>>;
+	parserCache: Map<string, WeakMap<ParserOptions, Parser>>;
 	generatorCache: Map<string, WeakMap<GeneratorOptions, Generator>>;
 	cleanupForCache(): void;
 
@@ -23717,7 +23539,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	 */
 	getParser<T extends string>(
 		type: T,
-		parserOptions?: ParserOptionsNormalModule
+		parserOptions?: ParserOptions
 	): (Record<"javascript/auto", JavascriptParser> &
 		Record<"javascript/dynamic", JavascriptParser> &
 		Record<"javascript/esm", JavascriptParser> &
@@ -23741,7 +23563,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	 */
 	createParser<T extends string>(
 		type: T,
-		parserOptions?: ParserOptionsNormalModule
+		parserOptions?: ParserOptions
 	): (Record<"javascript/auto", JavascriptParser> &
 		Record<"javascript/dynamic", JavascriptParser> &
 		Record<"javascript/esm", JavascriptParser> &
@@ -25361,136 +25183,6 @@ declare interface OptionsStreamChunks {
 	columns?: boolean;
 	scopes?: boolean;
 }
-
-/**
- * what a caller may ask the parser for
- */
-declare interface OptionsSyntaxParser {
-	/**
-	 * which edition to parse
-	 */
-	ecmaVersion: EcmaVersion;
-
-	/**
-	 * the goal symbol
-	 */
-	sourceType?: "module" | "commonjs" | "script";
-
-	/**
-	 * whether the code is strict whatever it says
-	 */
-	strict?: boolean;
-
-	/**
-	 * called where a semicolon was inserted
-	 */
-	onInsertedSemicolon?: (
-		lastTokEnd: number,
-		lastTokEndLoc?: null | Position
-	) => void;
-
-	/**
-	 * called at a trailing comma
-	 */
-	onTrailingComma?: (
-		lastTokEnd: number,
-		lastTokEndLoc?: null | Position
-	) => void;
-
-	/**
-	 * whether reserved words may name things
-	 */
-	allowReserved?: boolean | "never";
-
-	/**
-	 * whether `return` may sit at the top level
-	 */
-	allowReturnOutsideFunction?: boolean;
-
-	/**
-	 * whether module syntax may sit anywhere
-	 */
-	allowImportExportEverywhere?: boolean;
-
-	/**
-	 * whether `await` may sit outside a function
-	 */
-	allowAwaitOutsideFunction?: boolean;
-
-	/**
-	 * whether `super` may sit outside a method
-	 */
-	allowSuperOutsideMethod?: boolean;
-
-	/**
-	 * whether a leading `#!` line is skipped
-	 */
-	allowHashBang?: boolean;
-
-	/**
-	 * whether private names must be declared
-	 */
-	checkPrivateFields?: boolean;
-
-	/**
-	 * whether nodes carry `loc`
-	 */
-	locations?: boolean;
-
-	/**
-	 * where the first offset falls
-	 */
-	startLocation?: { line: number; column: number };
-
-	/**
-	 * where tokens are reported
-	 */
-	onToken?: ((token: Token) => void) | Token[];
-
-	/**
-	 * the parser itself at each token, for a reader that copies what it needs rather than taking a token of its own
-	 */
-	onTokenRead?: (parser: SyntaxParser) => void;
-
-	/**
-	 * where comments are reported
-	 */
-	onComment?:
-		| ((
-				isBlock: boolean,
-				text: string,
-				start: number,
-				end: number,
-				startLoc?: null | Position,
-				endLoc?: null | Position
-		  ) => void)
-		| CollectedComment[];
-
-	/**
-	 * whether nodes carry `range`
-	 */
-	ranges?: boolean;
-
-	/**
-	 * a program node to append to
-	 */
-	program?: NodeLike;
-
-	/**
-	 * the name errors and locations carry
-	 */
-	sourceFile?: string;
-
-	/**
-	 * the name every node carries
-	 */
-	directSourceFile?: string;
-
-	/**
-	 * whether parentheses become nodes
-	 */
-	preserveParens?: boolean;
-}
 declare interface OriginRecord {
 	module: null | Module;
 	loc: DependencyLocation;
@@ -26483,38 +26175,6 @@ declare interface ParsedDataURI {
 	base64: boolean;
 	payload: string;
 }
-type ParsedExpression =
-	| (ImportExpressionImport & NodeLike)
-	| (UnaryExpression & NodeLike)
-	| (ArrayExpression & NodeLike)
-	| (ArrowFunctionExpression & NodeLike)
-	| (AssignmentExpression & NodeLike)
-	| (AwaitExpression & NodeLike)
-	| (BinaryExpression & NodeLike)
-	| (SimpleCallExpression & NodeLike)
-	| (NewExpression & NodeLike)
-	| (ChainExpression & NodeLike)
-	| (ClassExpression & NodeLike)
-	| (ConditionalExpression & NodeLike)
-	| (FunctionExpression & NodeLike)
-	| (Identifier & NodeLike)
-	| (SimpleLiteral & NodeLike)
-	| (RegExpLiteral & NodeLike)
-	| (BigIntLiteral & NodeLike)
-	| (LogicalExpression & NodeLike)
-	| (MemberExpression & NodeLike)
-	| (MetaProperty & NodeLike)
-	| (ObjectExpression & NodeLike)
-	| (SequenceExpression & NodeLike)
-	| (TaggedTemplateExpression & NodeLike)
-	| (TemplateLiteral & NodeLike)
-	| (ThisExpression & NodeLike)
-	| (UpdateExpression & NodeLike)
-	| (YieldExpression & NodeLike)
-	| (NodeLike & {
-			type: "ParenthesizedExpression";
-			expression: ParsedExpression;
-	  });
 declare interface ParsedIdentifier {
 	/**
 	 * request
@@ -26551,7 +26211,6 @@ declare interface ParsedIdentifier {
 	 */
 	internal: boolean;
 }
-type ParsedProgram = Program & NodeLike;
 
 /**
  * A source `parse.parseTree` read for the tree printer.
@@ -26593,18 +26252,8 @@ declare class Parser<TModule extends NormalModule = NormalModule> {
 		state: ParserState<NormalModule>
 	): ParserState<NormalModule>;
 }
-
-/**
- * An ESTree node, as this parser builds one.
- */
-declare class ParserNode {
-	constructor(parser: SyntaxParser, pos: number, loc?: Position);
-	type: string;
-	start: number;
-	end: number;
-	loc?: ParserSourceLocation;
-	sourceFile?: string;
-	range?: number[];
+declare interface ParserOptions {
+	[index: string]: any;
 }
 type ParserOptionsByModuleType = ParserOptionsByModuleTypeKnown &
 	ParserOptionsByModuleTypeUnknown;
@@ -26695,55 +26344,11 @@ declare interface ParserOptionsByModuleTypeKnown {
 declare interface ParserOptionsByModuleTypeUnknown {
 	[index: string]: { [index: string]: any };
 }
-declare interface ParserOptionsNormalModule {
-	[index: string]: any;
-}
-type ParserOptionsSyntaxParser = Omit<OptionsSyntaxParser, "onComment"> & {
-	onComment?:
-		| CollectedComment[]
-		| ((isBlock: boolean, text: string, start: number, end: number) => void);
-	lazyNodes?: boolean;
-	lazyComments?: CollectedComment[];
-	importPhases?: boolean;
-	moduleFallback?: boolean;
-	syntaxTree?: SyntaxTree;
-};
-
-/**
- * Mirror of acorn's `Position` (line/column pair with its `offset` helper),
- * served by the owned `raise`/`curPosition`.
- * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/locutil.js
- */
-declare class ParserPosition {
-	constructor(line: number, col: number);
-	line: number;
-	column: number;
-	offset(n: number): ParserPosition;
-}
-
-/**
- * One lexical scope, holding the names declared directly in it. Each set is
- * built only once a name goes into it, which most scopes never do.
- */
-declare class ParserScope {
-	constructor(flags: number);
-	flags: number;
-	var?: Set<string>;
-	lexical?: Set<string>;
-	functions?: Set<string>;
-	firstLexical?: string;
-	hoisted?: (number | NodeLike)[];
-}
 
 /**
  * The `loc` a node carries when `options.locations` is on.
  */
-declare class ParserSourceLocation {
-	constructor(
-		p: { sourceFile: null | string },
-		start?: null | PositionLike,
-		end?: null | PositionLike
-	);
+declare abstract class ParserSourceLocation {
 	start?: null | PositionLike;
 	end?: null | PositionLike;
 	source?: string;
@@ -27146,8 +26751,7 @@ declare interface PlatformTargetProperties {
 /**
  * A `{ line, column }` pair, as `options.locations` reports one.
  */
-declare class Position {
-	constructor(line: number, col: number);
+declare abstract class Position {
 	line: number;
 	column: number;
 	offset(n: number): Position;
@@ -28675,44 +28279,6 @@ declare interface ReferencedExport {
 	 */
 	canInline?: boolean;
 }
-
-/**
- * The cursor a regexp literal is validated through.
- */
-declare abstract class RegExpValidationState {
-	parser: SyntaxParser;
-	validFlags: string;
-	unicodeProperties: UnicodePropertyTables;
-	source: string;
-	flags: string;
-	start: number;
-	switchU: boolean;
-	switchV: boolean;
-	switchN: boolean;
-	pos: number;
-	lastIntValue: number;
-	lastStringValue: string;
-	lastAssertionIsQuantifiable: boolean;
-	numCapturingParens: number;
-	maxBackReference: number;
-	groupNames: GroupNames;
-	backReferenceNames: string[];
-	branchID: null | BranchID;
-	reset(start: number, pattern: string, flags: string): void;
-	raise(message: string): void;
-
-	/**
-	 * The code point at an index, joining a surrogate pair where the `u` flag
-	 * asks for code points rather than units.
-	 */
-	at(i: number, forceU?: boolean): number;
-	nextIndex(i: number, forceU?: boolean): number;
-	current(forceU?: boolean): number;
-	lookahead(forceU?: boolean): number;
-	advance(forceU?: boolean): void;
-	eat(ch: number, forceU?: boolean): boolean;
-	eatChars(chs: number[], forceU?: boolean): boolean;
-}
 type Remotes = RemotesObject | RemotesBranch1Item[];
 type RemotesBranch1Item = string | RemotesObject;
 
@@ -29313,137 +28879,11 @@ declare interface ResolvedContextTimestampAndHash {
 /**
  * Defines the resolved options type used by this module.
  */
-declare interface ResolvedOptionsDefaults {
+declare interface ResolvedOptions {
 	/**
 	 * - platform target properties
 	 */
 	platform: false | PlatformTargetProperties;
-}
-
-/**
- * the options once every default is filled in and every alternative spelling is normalized
- */
-declare interface ResolvedOptionsSyntaxParser {
-	/**
-	 * the edition, as the number the parser compares against
-	 */
-	ecmaVersion: number;
-
-	/**
-	 * the goal symbol
-	 */
-	sourceType: "module" | "commonjs" | "script";
-
-	/**
-	 * whether the code is strict whatever it says
-	 */
-	strict: boolean;
-
-	/**
-	 * called where a semicolon was inserted
-	 */
-	onInsertedSemicolon:
-		null | ((lastTokEnd: number, lastTokEndLoc?: null | Position) => void);
-
-	/**
-	 * called at a trailing comma
-	 */
-	onTrailingComma:
-		null | ((lastTokEnd: number, lastTokEndLoc?: null | Position) => void);
-
-	/**
-	 * whether reserved words may name things
-	 */
-	allowReserved: boolean | "never";
-
-	/**
-	 * whether `return` may sit at the top level
-	 */
-	allowReturnOutsideFunction: boolean;
-
-	/**
-	 * whether module syntax may sit anywhere
-	 */
-	allowImportExportEverywhere: boolean;
-
-	/**
-	 * whether `await` may sit outside a function
-	 */
-	allowAwaitOutsideFunction: boolean;
-
-	/**
-	 * whether `super` may sit outside a method
-	 */
-	allowSuperOutsideMethod: boolean;
-
-	/**
-	 * whether a leading `#!` line is skipped
-	 */
-	allowHashBang: boolean;
-
-	/**
-	 * whether private names must be declared
-	 */
-	checkPrivateFields: boolean;
-
-	/**
-	 * whether nodes carry `loc`
-	 */
-	locations: boolean;
-
-	/**
-	 * where the first offset falls
-	 */
-	startLocation: null | { line: number; column: number };
-
-	/**
-	 * where tokens are reported
-	 */
-	onToken: null | ((token: Token) => void);
-
-	/**
-	 * the parser itself at each token
-	 */
-	onTokenRead: null | ((parser: SyntaxParser) => void);
-
-	/**
-	 * where comments are reported
-	 */
-	onComment:
-		| null
-		| ((
-				isBlock: boolean,
-				text: string,
-				start: number,
-				end: number,
-				startLoc?: null | Position,
-				endLoc?: null | Position
-		  ) => void);
-
-	/**
-	 * whether nodes carry `range`
-	 */
-	ranges: boolean;
-
-	/**
-	 * a program node to append to
-	 */
-	program: null | NodeLike;
-
-	/**
-	 * the name errors and locations carry
-	 */
-	sourceFile: null | string;
-
-	/**
-	 * the name every node carries
-	 */
-	directSourceFile: null | string;
-
-	/**
-	 * whether parentheses become nodes
-	 */
-	preserveParens: boolean;
 }
 declare abstract class Resolver {
 	fileSystem: FileSystem;
@@ -29710,16 +29150,16 @@ declare interface RuleCondition {
 			| "dependency"
 			| "resource"
 			| "scheme"
-			| "phase"
-			| "attributes"
 			| "realResource"
 			| "resourceQuery"
 			| "resourceFragment"
+			| "attributes"
 			| "mimetype"
 			| "descriptionData"
 			| "descriptionRelativePath"
 			| "issuer"
-			| "issuerLayer"]
+			| "issuerLayer"
+			| "phase"]
 	) => boolean;
 }
 
@@ -31481,13 +30921,13 @@ type ScopeType =
 	| "function"
 	| "module"
 	| "global"
-	| "catch"
-	| "for"
-	| "switch"
-	| "with"
-	| "class"
 	| "function-expression-name"
 	| "block"
+	| "switch"
+	| "catch"
+	| "with"
+	| "for"
+	| "class"
 	| "class-field-initializer"
 	| "class-static-block";
 
@@ -33918,601 +33358,10 @@ type SyncWasmModuleBuildMeta = exports.KnownBuildMeta &
 	KnownSyncWasmModuleBuildMeta;
 
 /**
- * The ECMAScript parser webpack owns, ported from acorn 8.18.0 so the bundler
- * ships no parser dependency. `WebpackParser` below subclasses it and
- * overrides the hot paths.
- * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/state.js
- */
-declare class SyntaxParser {
-	constructor(
-		options: undefined | null | Partial<OptionsSyntaxParser>,
-		input: string,
-		startPos?: number
-	);
-	options: ResolvedOptionsSyntaxParser;
-	sourceFile: null | string;
-	keywords: RegExp;
-	reservedWords: RegExp;
-	reservedWordsStrict: RegExp;
-	reservedWordsStrictBind: RegExp;
-	input: string;
-	containsEsc: boolean;
-	pos: number;
-	curLine: number;
-	lineStart: number;
-	type: TokenType;
-	value: any;
-	end: number;
-	start: number;
-	endLoc?: Position;
-	startLoc?: Position;
-	lastTokStartLoc?: null | Position;
-	lastTokEndLoc?: null | Position;
-	lastTokEnd: number;
-	lastTokStart: number;
-	context: TokContextLike[];
-	exprAllowed: boolean;
-	inModule: boolean;
-	strict: boolean;
-	potentialArrowAt: number;
-	potentialArrowInForAwait: boolean;
-	awaitIdentPos: number;
-	awaitPos: number;
-	yieldPos: number;
-	labels: LabelLike[];
-	undefinedExports: Record<string, NodeLike>;
-
-	/**
-	 * Set by the parse entry points; a parser that only hands out tokens
-	 * keeps its top-level scope and reads its contexts instead.
-	 */
-	parsing: boolean;
-	scopeStack: ParserScope[];
-	regexpState: null | RegExpValidationState;
-	privateNameStack: any[];
-	get inFunction(): boolean;
-	get inGenerator(): boolean;
-	get inAsync(): boolean;
-	get canAwait(): boolean;
-	get allowReturn(): boolean;
-	get allowSuper(): boolean;
-	get allowDirectSuper(): boolean;
-	get treatFunctionsAsVar(): number | boolean;
-	get allowNewDotTarget(): boolean;
-	get allowUsing(): boolean;
-	get inClassStaticBlock(): boolean;
-
-	/**
-	 * Whether a directive prologue starting at `start` opens with `"use strict"`.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.19.0/acorn/src/parseutil.js
-	 */
-	strictDirective(start: number): boolean;
-	unexpected(pos?: number): never;
-	initialContext(): TokContextLike[];
-	enterScope(flags: number): void;
-	treatFunctionsAsVarInScope(scope: { flags: number }): number | boolean;
-	currentScope(): ParserScope;
-	currentVarScope(): ParserScope;
-	currentThisScope(): ParserScope;
-
-	/**
-	 * Report a parse error, naming where in the source it was found.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/location.js
-	 */
-	raise(pos: number, message: string): never;
-
-	/**
-	 * An error the parse can go on past: `parseProgram` reports it and goes on.
-	 */
-	raiseRecoverable(pos: number, message: string): void;
-	curPosition(): undefined | Position;
-	skipLineComment(startSkip: number): void;
-	parse(): any;
-	eat(type: TokenType): boolean;
-	isContextual(name: string): boolean;
-	eatContextual(name: string): boolean;
-
-	/**
-	 * Turn the host's stack overflow into a parse error, since a deeply nested
-	 * expression is an input the caller can act on rather than a crash.
-	 */
-	catchStackOverflow<T>(f: () => T): T;
-	expectContextual(name: string): void;
-	canInsertSemicolon(): boolean;
-	insertSemicolon(): undefined | boolean;
-	semicolon(): void;
-	afterTrailingComma(
-		tokType: TokenType,
-		notNext?: boolean
-	): undefined | boolean;
-	expect(type: TokenType): void;
-	checkPatternErrors(refDestructuringErrors?: any, isAssign?: boolean): void;
-	checkExpressionErrors(
-		refDestructuringErrors?: any,
-		andThrow?: boolean
-	): undefined | boolean;
-	checkYieldAwaitInDefaultParams(): void;
-	isSimpleAssignTarget(expr?: any): boolean;
-
-	/**
-	 * Read statements until the end of input and wrap them in a `Program`.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/statement.js
-	 */
-	parseTopLevel(node?: any): any;
-
-	/**
-	 * Whether a `let` here opens a lexical declaration rather than naming a
-	 * variable, which needs a look-ahead past the keyword.
-	 */
-	isLet(context?: null | string): boolean;
-
-	/**
-	 * Whether `async` here heads a function declaration, which no line break may
-	 * separate from the `function` keyword.
-	 */
-	isAsyncFunction(): boolean;
-
-	/**
-	 * Whether `using` (or `await using`) here heads a declaration rather than
-	 * naming a variable.
-	 */
-	isUsingKeyword(isAwaitUsing: boolean, isFor?: boolean): boolean;
-	isAwaitUsing(isFor?: boolean): boolean;
-	isUsing(isFor?: boolean): boolean;
-
-	/**
-	 * Read one statement. A statement head that is only a keyword by position —
-	 * `let`, `async`, `using` — is settled by the probes above.
-	 */
-	parseStatement(
-		context?: null | string,
-		topLevel?: boolean,
-		exports?: any
-	): any;
-	parseBreakContinueStatement(node: any, keyword: string): any;
-	parseDebuggerStatement(node?: any): any;
-	parseDoStatement(node?: any): any;
-
-	/**
-	 * Read a `for` head, which is only known to be plain, `in` or `of` once its
-	 * init part has been parsed with `in` held back as an operator.
-	 */
-	parseForStatement(node?: any): any;
-	parseForAfterInit(node: any, init: any, awaitAt: number): any;
-	parseFunctionStatement(
-		node: any,
-		isAsync: boolean,
-		declarationPosition: boolean
-	): any;
-	parseIfStatement(node?: any): any;
-	parseReturnStatement(node?: any): any;
-	parseSwitchStatement(node?: any): any;
-	parseThrowStatement(node?: any): any;
-	parseCatchClauseParam(): any;
-	parseTryStatement(node?: any): any;
-	parseVarStatement(
-		node: any,
-		kind: string,
-		allowMissingInitializer?: boolean
-	): any;
-	parseWhileStatement(node?: any): any;
-	parseWithStatement(node?: any): any;
-	parseEmptyStatement(node?: any): any;
-	parseLabeledStatement(
-		node?: any,
-		maybeName?: any,
-		expr?: any,
-		context?: null | string
-	): any;
-	parseExpressionStatement(node?: any, expr?: any): any;
-	parseBlock(
-		createNewLexicalScope?: boolean,
-		node?: any,
-		exitStrict?: boolean
-	): any;
-	parseFor(node?: any, init?: any): any;
-	parseForIn(node?: any, init?: any): any;
-	parseVar(
-		node: any,
-		isFor: boolean,
-		kind: string,
-		allowMissingInitializer?: boolean
-	): any;
-	parseVarId(decl: any, kind: string): void;
-	parseFunction(
-		node: any,
-		statement: number,
-		allowExpressionBody?: boolean,
-		isAsync?: boolean,
-		forInit?: string | boolean
-	): any;
-	parseFunctionParams(node?: any): void;
-	parseClass(node?: any, isStatement?: string | boolean): any;
-	parseClassElement(constructorAllowsSuper: boolean): any;
-	isClassElementNameStart(): boolean;
-	parseClassElementName(element?: any): void;
-	parseClassMethod(
-		method: any,
-		isGenerator: boolean,
-		isAsync: boolean,
-		allowsDirectSuper: boolean
-	): any;
-	parseClassField(field?: any): any;
-	parseClassStaticBlock(node?: any): any;
-	parseClassId(node?: any, isStatement?: string | boolean): void;
-	parseClassSuper(node?: any): void;
-	enterClassBody(): any;
-	exitClassBody(): void;
-	parseExportAllDeclaration(node?: any, exports?: any): any;
-	parseExport(node?: any, exports?: any): any;
-	parseExportDeclaration(node?: any): any;
-	parseExportDefaultDeclaration(): any;
-	checkExport(exports: any, name: any, pos: number): void;
-	checkPatternExport(exports?: any, pat?: any): void;
-	checkVariableExport(exports: any, declarations: any[]): void;
-	shouldParseExportStatement(): boolean;
-	parseExportSpecifier(exports?: any): any;
-	parseExportSpecifiers(exports?: any): any[];
-	parseImport(node?: any): any;
-	parseImportSpecifier(): any;
-	parseImportDefaultSpecifier(): any;
-	parseImportNamespaceSpecifier(): any;
-	parseImportSpecifiers(): any[];
-	parseWithClause(): any[];
-	parseImportAttribute(): any;
-	parseModuleExportName(): any;
-	adaptDirectivePrologue(statements: any[]): void;
-	isDirectiveCandidate(statement: NodeLike & { expression?: any }): boolean;
-
-	/**
-	 * Rewrite an expression as the binding pattern it turns out to be, which is
-	 * only known once the `=` or `of` after it has been read.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/lval.js
-	 */
-	toAssignable(
-		node?: any,
-		isBinding?: boolean,
-		refDestructuringErrors?: any
-	): any;
-	toAssignableList(exprList: any[], isBinding?: boolean): any[];
-	parseSpread(refDestructuringErrors?: any): any;
-	parseRestBinding(): any;
-	parseBindingAtom(): any;
-	parseBindingList(
-		close: TokenType,
-		allowEmpty: boolean,
-		allowTrailingComma: boolean,
-		allowModifiers?: boolean
-	): any[];
-	parseAssignableListItem(allowModifiers?: boolean): any;
-	parseBindingListItem(param?: any): any;
-	parseMaybeDefault(
-		startPos: number,
-		startLoc?: null | PositionLike,
-		left?: any
-	): any;
-
-	/**
-	 * Check a target that may only be an identifier or member expression, and
-	 * record the binding it introduces.
-	 */
-	checkLValSimple(expr?: any, bindingType?: number, checkClashes?: any): void;
-	checkLValPattern(expr?: any, bindingType?: number, checkClashes?: any): void;
-	checkLValInnerPattern(
-		expr?: any,
-		bindingType?: number,
-		checkClashes?: any
-	): void;
-	curContext(): TokContextLike;
-
-	/**
-	 * Whether a `{` here opens a block rather than an object literal, which the
-	 * token before it decides.
-	 */
-	braceIsBlock(prevType: TokenType): boolean;
-
-	/**
-	 * Whether the enclosing function is a generator. A parse reads its scope: a
-	 * method's `*` pushes no `function` context, which only the tokenizer reads.
-	 * The tokenizer alone enters no function scope, so it reads its contexts.
-	 */
-	inGeneratorContext(): boolean;
-	updateContext(prevType: TokenType): void;
-	overrideContext(tokenCtx: TokContextLike): void;
-	exitScope(): void;
-
-	/**
-	 * Record a name in the scope its binding belongs to, and report a name that
-	 * was already declared there.
-	 */
-	declareName(name: string, bindingType: number, pos: number): void;
-	checkLocalExport(id?: any): void;
-	startNode(): any;
-	startNodeAt(pos: number, loc?: null | PositionLike): any;
-	finishNode(node: any, type: string): any;
-	finishNodeAt(
-		node: any,
-		type: string,
-		pos: number,
-		loc?: null | PositionLike
-	): any;
-	copyNode(node?: any): any;
-
-	/**
-	 * Report a property name that may not be repeated: a getter or setter that
-	 * clashes, and under ES5 a repeated `init` in strict mode.
-	 */
-	checkPropClash(
-		prop?: any,
-		propHash?: any,
-		refDestructuringErrors?: any
-	): void;
-
-	/**
-	 * Read a full expression, including the comma operator.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/expression.js
-	 */
-	parseExpression(
-		forInit?: string | boolean,
-		refDestructuringErrors?: any
-	): any;
-	parseMaybeAssign(
-		forInit?: string | boolean,
-		refDestructuringErrors?: any,
-		afterLeftParse?: any
-	): any;
-	parseMaybeConditional(
-		forInit?: string | boolean,
-		refDestructuringErrors?: any
-	): any;
-	parseExprOps(forInit?: string | boolean, refDestructuringErrors?: any): any;
-
-	/**
-	 * Read binary operators by precedence climbing, stopping where an operator
-	 * binds less tightly than the caller is parsing.
-	 */
-	parseExprOp(
-		left: any,
-		leftStartPos: number,
-		leftStartLoc: undefined | null | PositionLike,
-		minPrec: number,
-		forInit?: string | boolean
-	): any;
-	buildBinary(
-		startPos: number,
-		startLoc: undefined | null | PositionLike,
-		left: any,
-		right: any,
-		op: any,
-		logical: boolean
-	): any;
-	parseMaybeUnary(
-		refDestructuringErrors?: any,
-		sawUnary?: boolean,
-		incDec?: boolean,
-		forInit?: string | boolean
-	): any;
-	parseExprSubscripts(
-		refDestructuringErrors?: any,
-		forInit?: string | boolean
-	): any;
-	parseSubscripts(
-		baseExpr: any,
-		startPos: number,
-		startLoc: undefined | null | PositionLike,
-		noCalls: boolean,
-		forInit?: string | boolean
-	): any;
-	shouldParseAsyncArrow(): boolean;
-	parseSubscriptAsyncArrow(
-		startPos: number,
-		startLoc: undefined | null | PositionLike,
-		exprList: any[],
-		forInit?: string | boolean
-	): any;
-	parseSubscript(
-		baseExpr: any,
-		startPos: number,
-		startLoc: undefined | null | PositionLike,
-		noCalls: boolean,
-		maybeAsyncArrow: boolean,
-		optionalChained: boolean,
-		forInit?: string | boolean
-	): any;
-
-	/**
-	 * Read an expression that no operator binds into: a token that is an
-	 * expression on its own, or one that punctuation encloses.
-	 */
-	parseExprAtom(
-		refDestructuringErrors?: any,
-		forInit?: string | boolean,
-		forNew?: boolean
-	): any;
-	parseExprAtomDefault(): never;
-	parseExprImport(forNew?: boolean): any;
-	parseDynamicImport(node?: any): any;
-	parseImportMeta(node?: any): any;
-	parseLiteral(value?: any): any;
-	parseParenExpression(): any;
-	shouldParseArrow(exprList: any[]): boolean;
-
-	/**
-	 * Read a parenthesized expression, which is only known to be an arrow's
-	 * parameter list once the `=>` after the closing paren is seen.
-	 */
-	parseParenAndDistinguishExpression(
-		canBeArrow: boolean,
-		forInit?: string | boolean
-	): any;
-	parseParenItem(item?: any): any;
-	parseParenArrowList(
-		startPos: number,
-		startLoc: undefined | null | PositionLike,
-		exprList: any[],
-		forInit?: string | boolean
-	): any;
-
-	/**
-	 * Read a `new` expression, whose callee takes subscripts but not a call —
-	 * the argument list belongs to the `new` itself.
-	 */
-	parseNew(): any;
-	parseTemplateElement(opts: { isTagged: boolean }): any;
-	parseTemplate(opts?: { isTagged?: boolean }): any;
-	isAsyncProp(prop?: any): boolean;
-	parseObj(isPattern: boolean, refDestructuringErrors?: any): any;
-	parseProperty(isPattern: boolean, refDestructuringErrors?: any): any;
-	parseGetterSetter(prop?: any): void;
-	parsePropertyValue(
-		prop: any,
-		isPattern: boolean,
-		isGenerator: undefined | boolean,
-		isAsync: undefined | boolean,
-		startPos: undefined | number,
-		startLoc: undefined | null | PositionLike,
-		refDestructuringErrors: any,
-		containsEsc: boolean
-	): void;
-	parsePropertyName(prop?: any): any;
-	initFunction(node?: any): void;
-	parseMethod(
-		isGenerator?: boolean,
-		isAsync?: boolean,
-		allowDirectSuper?: boolean
-	): any;
-	parseArrowExpression(
-		node: any,
-		params: any[],
-		isAsync: boolean,
-		forInit?: string | boolean
-	): any;
-	parseFunctionBody(
-		node?: any,
-		isArrowFunction?: boolean,
-		isMethod?: boolean,
-		forInit?: string | boolean
-	): void;
-
-	/**
-	 * The token after a function body is read in the body's scope, so a `yield`
-	 * there is classified again in the enclosing one.
-	 */
-	rereadYieldContext(): void;
-	isSimpleParamList(params: any[]): boolean;
-	checkParams(node: any, allowDuplicates: boolean): void;
-	parseExprList(
-		close: TokenType,
-		allowTrailingComma: boolean,
-		allowEmpty: boolean,
-		refDestructuringErrors?: any
-	): any[];
-
-	/**
-	 * Report a name that the surrounding code may not use as an identifier.
-	 */
-	checkUnreserved(ref?: any): void;
-	parseIdent(liberal?: boolean): any;
-	parseIdentNode(): any;
-	parsePrivateIdent(): any;
-	parseYield(forInit?: string | boolean): any;
-	parseAwait(forInit?: string | boolean): any;
-
-	/**
-	 * Move past the current token.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/tokenize.js
-	 */
-	next(ignoreEscapeSequenceInKeyword?: boolean): void;
-	getToken(): Token;
-	nextToken(): void;
-	readToken(code: number): void;
-	fullCharCodeAt(pos: number): number;
-	fullCharCodeAtPos(): number;
-	skipBlockComment(): void;
-	skipSpace(): void;
-	finishToken(type: TokenType, value?: any): void;
-	readToken_dot(): void;
-	readToken_slash(): void;
-	readToken_mult_modulo_exp(code: number): void;
-	readToken_pipe_amp(code: number): void;
-	readToken_caret(): void;
-	readToken_plus_min(code: number): void;
-	readToken_lt_gt(code: number): void;
-	readToken_eq_excl(code: number): void;
-	readToken_question(): void;
-	readToken_numberSign(): void;
-	getTokenFromCode(code: number): void;
-	finishOp(type: TokenType, size: number): void;
-
-	/**
-	 * Check a regexp literal's flags.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/regexp.js
-	 */
-	validateRegExpFlags(state: RegExpValidationState): void;
-
-	/**
-	 * Check a regexp literal's pattern, re-reading it once a group name shows
-	 * that the named-capture goal symbol was the right one.
-	 */
-	validateRegExpPattern(state: RegExpValidationState): void;
-	readRegexp(): void;
-
-	/**
-	 * Read digits in the given radix, or `null` where none were there or the
-	 * count did not match what an escape asked for.
-	 */
-	readInt(
-		radix: number,
-		len?: number,
-		maybeLegacyOctalNumericLiteral?: boolean
-	): null | number;
-	readRadixNumber(radix: number): void;
-	readNumber(startsWithDot: boolean): void;
-	readCodePoint(): number;
-	readString(quote: number): void;
-	tryReadTemplateToken(): void;
-	inTemplateElement?: boolean;
-
-	/**
-	 * Report a bad escape, unless it sits in a tagged template, where the raw
-	 * text is still well-formed and only the cooked value is lost.
-	 */
-	invalidStringToken(position: number, message: string): void;
-	readTmplToken(): void;
-	readInvalidTemplateToken(): void;
-	readEscapedChar(inTemplate: boolean): string;
-	readHexChar(len: number): number;
-
-	/**
-	 * Read an identifier's text, recording in `containsEsc` whether any of it
-	 * was written as an escape — which stops it reading as a keyword.
-	 */
-	readWord1(): string;
-	readWord(): void;
-	[Symbol.iterator](): Iterator<Token, Token>;
-	static extend(...plugins: ((parser?: any) => any)[]): any;
-	static parse(
-		input: string,
-		options?: Partial<OptionsSyntaxParser>
-	): ParsedProgram;
-	static parseExpressionAt(
-		input: string,
-		pos: number,
-		options?: Partial<OptionsSyntaxParser>
-	): ParsedExpression;
-	static tokenizer(
-		input: string,
-		options?: Partial<OptionsSyntaxParser>
-	): SyntaxParser;
-}
-
-/**
  * A JavaScript syntax tree held as a struct of arrays: a node is an integer
  * id from 1, `0` is no node, and it reads as the CSS and HTML paths do.
  */
-declare class SyntaxTree {
-	constructor();
-
+declare abstract class SyntaxTree {
 	/**
 	 * Hands the columns back once nothing reads the tree: the next tree reuses
 	 * small ones, and a large one's ArrayBuffers are freed at once, where they
@@ -34667,12 +33516,10 @@ declare class SyntaxTree {
 		| MethodDefinition
 		| PropertyDefinition
 		| VariableDeclarator
+		| AssignmentProperty
 		| Property
 		| CatchClause
 		| ClassBody
-		| SwitchCase
-		| TemplateElement
-		| AssignmentProperty
 		| ImportSpecifier
 		| ImportDefaultSpecifier
 		| ImportNamespaceSpecifier
@@ -34680,7 +33527,9 @@ declare class SyntaxTree {
 		| ObjectPattern
 		| ArrayPattern
 		| RestElement
-		| AssignmentPattern;
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
 	type(node: number): number;
 	start(node: number): number;
 	end(node: number): number;
@@ -34963,46 +33812,25 @@ declare interface TimestampAndHash {
 }
 
 /**
- * A tokenizer context: what kind of brace, paren or template the tokenizer is
- * inside, which decides how the next `/` or `}` reads.
- */
-declare class TokContext {
-	constructor(
-		token: string,
-		isExpr: boolean,
-		preserveSpace?: boolean,
-		override?: (parser?: any) => void,
-		generator?: boolean
-	);
-	token: string;
-	isExpr: boolean;
-	preserveSpace: boolean;
-	override?: (parser?: any) => void;
-	generator: boolean;
-}
-
-/**
- * a tokenizer context, as the owned tokenizer reads one
- */
-declare interface TokContextLike {
-	token: string;
-	isExpr: boolean;
-	preserveSpace?: boolean;
-	override?: (parser: SyntaxParser) => void;
-	generator?: boolean;
-}
-
-/**
  * A token as `options.onToken` receives one.
  */
-declare class Token {
-	constructor(p: SyntaxParser);
+declare abstract class Token {
 	type: TokenType;
 	value: any;
 	start: number;
 	end: number;
 	loc?: ParserSourceLocation;
 	range?: number[];
+}
+
+/**
+ * the token the parser has just read, as `onTokenRead` reads it off the parser
+ */
+declare interface TokenRead {
+	type: TokenType;
+	value: any;
+	start: number;
+	end: number;
 }
 
 /**
@@ -35237,20 +34065,7 @@ declare abstract class TokenTables {
  * re-inspecting the source: whether an expression may follow, its binary
  * precedence, and how it updates the tokenizer's context.
  */
-declare class TokenType {
-	constructor(
-		label: string,
-		conf?: {
-			keyword?: string;
-			beforeExpr?: boolean;
-			startsExpr?: boolean;
-			isLoop?: boolean;
-			isAssign?: boolean;
-			prefix?: boolean;
-			postfix?: boolean;
-			binop?: number;
-		}
-	);
+declare abstract class TokenType {
 	label: string;
 	keyword?: string;
 	beforeExpr: boolean;
@@ -35482,22 +34297,6 @@ type TypedNodePath<TPath, TNode, P extends NodeParts, T, S = unknown> = Omit<
 	): null | string;
 };
 declare const UNDEFINED_MARKER: unique symbol;
-declare interface UnicodePropertyTables {
-	/**
-	 * the binary property names and general category values
-	 */
-	binary: RegExp;
-
-	/**
-	 * the string-valued property names
-	 */
-	binaryOfStrings: RegExp;
-
-	/**
-	 * each non-binary property's values, by property name
-	 */
-	nonBinary: Record<string, RegExp>;
-}
 
 /**
  * Successfully resolved requests by cache key, as enhanced-resolve's unsafe cache holds them.
@@ -36316,7 +35115,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
-	node: NodeWebpackOptions;
+	node: Node;
 
 	/**
 	 * Enables/Disables integrated optimizations.
@@ -36422,11 +35221,11 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 				use: RawDevTool;
 		  }[]
 	>;
-} & { stats: NonNullable<StatsValue> } & {
-	node: NonNullable<NodeWebpackOptions>;
-} & { profile: NonNullable<undefined | boolean> } & { parallelism: number } & {
-	snapshot: SnapshotNormalizedWithDefaults;
-} & { externalsPresets: ExternalsPresetsNormalizedWithDefaults } & {
+} & { stats: NonNullable<StatsValue> } & { node: NonNullable<Node> } & {
+	profile: NonNullable<undefined | boolean>;
+} & { parallelism: number } & { snapshot: SnapshotNormalizedWithDefaults } & {
+	externalsPresets: ExternalsPresetsNormalizedWithDefaults;
+} & {
 	externalsType: NonNullable<
 		| undefined
 		| "import"
@@ -36462,46 +35261,6 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 } & { recordsInputPath: NonNullable<undefined | string | false> } & {
 	recordsOutputPath: NonNullable<undefined | string | false>;
 } & { dotenv: NonNullable<undefined | boolean | DotenvPluginOptions> };
-
-/**
- * webpack's parser: acorn plus lazy `range` (no `loc` at all), Set-based scopes,
- * tokenizer fast paths, import attributes and import phases (with acorn's
- * `!forNew` guard, unlike the former `acorn-import-phases` package).
- */
-declare class WebpackParser extends SyntaxParser {
-	constructor(
-		options: OptionsSyntaxParser & {
-			lazyNodes?: boolean;
-			lazyComments?: CollectedComment[];
-			importPhases?: boolean;
-			moduleFallback?: boolean;
-			syntaxTree?: SyntaxTree;
-		},
-		input: string,
-		startPos?: number
-	);
-	[Symbol.iterator](): Iterator<Token, Token>;
-
-	/**
-	 * Applies parser plugins, keeping the result typed as this parser.
-	 */
-	static extend(
-		...plugins: ((BaseParser: typeof SyntaxParser) => typeof SyntaxParser)[]
-	): typeof WebpackParser;
-	static parse(
-		input: string,
-		options?: Partial<OptionsSyntaxParser>
-	): ParsedProgram;
-	static parseExpressionAt(
-		input: string,
-		pos: number,
-		options?: Partial<OptionsSyntaxParser>
-	): ParsedExpression;
-	static tokenizer(
-		input: string,
-		options?: Partial<OptionsSyntaxParser>
-	): SyntaxParser;
-}
 
 /**
  * Plugin instance.
@@ -37799,7 +36558,7 @@ declare namespace exports {
 		export const applyWebpackOptionsDefaults: (
 			options: WebpackOptionsNormalized,
 			compilerIndex?: number
-		) => ResolvedOptionsDefaults;
+		) => ResolvedOptions;
 		export { PlatformPlugin, WebpackOptionsApply };
 	}
 	export namespace dependencies {
@@ -37846,12 +36605,57 @@ declare namespace exports {
 		}
 		export namespace syntax {
 			export namespace parser {
-				export let BIND_FUNCTION: 3;
-				export let BIND_LEXICAL: 2;
-				export let BIND_NONE: 0;
-				export let BIND_OUTSIDE: 5;
-				export let BIND_SIMPLE_CATCH: 4;
-				export let BIND_VAR: 1;
+				export let A: {
+					state: unknown;
+					get node(): number;
+					get parent(): null | number;
+					get index(): number;
+					/**
+					 * Stops the walk descending into the current node (enter only).
+					 */
+					skipChildren(): void;
+					/**
+					 * Stops the walk: no visitor fires after the current one returns.
+					 */
+					stop(): void;
+					ancestor(level: number): number;
+					within(type: number): boolean;
+					type(n?: number): number;
+					range(n?: number): [number, number];
+					start(n?: number): number;
+					end(n?: number): number;
+					/**
+					 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
+					 */
+					loc(n?: number): [number, number, number, number];
+					source(n?: number, end?: number): string;
+					name(n?: number): string;
+					value(
+						n?: number
+					):
+						| undefined
+						| null
+						| string
+						| number
+						| bigint
+						| boolean
+						| RegExp
+						| { cooked?: null | string; raw: string };
+					childCount(n?: number): number;
+					child(i: number, n?: number): number;
+					children(n?: number): number[];
+					fieldCount(field: number, n?: number): number;
+					field(i: number, field: number, n?: number): number;
+					fieldNamed(field: number, name: string, n?: number): number;
+					flag(flag: number, n?: number): boolean;
+					/**
+					 * A JavaScript node keeps no positions beyond its own.
+					 */
+					rangeOf(part: number, n?: number): null;
+					startOf(part: number, n?: number): number;
+					endOf(part: number, n?: number): number;
+					textOf(part: number, n?: number): null | string;
+				};
 				export let Field: Readonly<{
 					object: 1;
 					property: 2;
@@ -37910,134 +36714,6 @@ declare namespace exports {
 					tail: 1024;
 					await: 2048;
 				}>;
-				export let SCOPE_ARROW: 16;
-				export let SCOPE_ASYNC: 4;
-				export let SCOPE_CLASS_FIELD_INIT: 512;
-				export let SCOPE_CLASS_STATIC_BLOCK: 256;
-				export let SCOPE_DIRECT_SUPER: 128;
-				export let SCOPE_FUNCTION: 2;
-				export let SCOPE_GENERATOR: 8;
-				export let SCOPE_SIMPLE_CATCH: 32;
-				export let SCOPE_SUPER: 64;
-				export let SCOPE_SWITCH: 1024;
-				export let SCOPE_TOP: 1;
-				export let SCOPE_VAR: number;
-				export let codePointToString: (code: number) => string;
-				export namespace defaultOptions {
-					export let ecmaVersion: null;
-					export let sourceType: string;
-					export let strict: boolean;
-					export let onInsertedSemicolon: null;
-					export let onTrailingComma: null;
-					export let allowReserved: null;
-					export let allowReturnOutsideFunction: boolean;
-					export let allowImportExportEverywhere: boolean;
-					export let allowAwaitOutsideFunction: null;
-					export let allowSuperOutsideMethod: null;
-					export let allowHashBang: boolean;
-					export let checkPrivateFields: boolean;
-					export let locations: boolean;
-					export let startLocation: null;
-					export let onToken: null;
-					export let onTokenRead: null;
-					export let onComment: null;
-					export let ranges: boolean;
-					export let program: null;
-					export let sourceFile: null;
-					export let directSourceFile: null;
-					export let preserveParens: boolean;
-				}
-				export let functionFlags: (
-					async: boolean,
-					generator: boolean
-				) => number;
-				export let getLineInfo: (input: string, offset: number) => Position;
-				export let getOptions: (
-					opts?: null | Partial<OptionsSyntaxParser>
-				) => ResolvedOptionsSyntaxParser;
-				export let isIdentifierChar: (
-					code: number,
-					astral?: boolean
-				) => boolean;
-				export let isIdentifierStart: (
-					code: number,
-					astral?: boolean
-				) => boolean;
-				export let isLocalVariableAccess: (node?: any) => boolean;
-				export let isNewLine: (code: number) => boolean;
-				export let isPrivateFieldAccess: (node?: any) => boolean;
-				export let keywordTypes: Record<string, TokenType>;
-				export let lineBreak: RegExp;
-				export let lineBreakG: RegExp;
-				export let nextLineBreak: (
-					code: string,
-					from: number,
-					end?: number
-				) => number;
-				export let nonASCIIwhitespace: RegExp;
-				export let skipWhiteSpace: RegExp;
-				export let stringToNumber: (
-					str: string,
-					isLegacyOctalNumericLiteral: boolean
-				) => number;
-				export namespace tokContexts {
-					export let b_stat: TokContext;
-					export let b_expr: TokContext;
-					export let b_tmpl: TokContext;
-					export let p_stat: TokContext;
-					export let p_expr: TokContext;
-					export let q_tmpl: TokContext;
-					export let f_stat: TokContext;
-					export let f_expr: TokContext;
-					export let f_expr_gen: TokContext;
-					export let f_gen: TokContext;
-				}
-				export namespace tokTypes {
-					export let num: TokenType;
-					export let regexp: TokenType;
-					export let string: TokenType;
-					export let name: TokenType;
-					export let privateId: TokenType;
-					export let eof: TokenType;
-					export let bracketL: TokenType;
-					export let bracketR: TokenType;
-					export let braceL: TokenType;
-					export let braceR: TokenType;
-					export let parenL: TokenType;
-					export let parenR: TokenType;
-					export let comma: TokenType;
-					export let semi: TokenType;
-					export let colon: TokenType;
-					export let dot: TokenType;
-					export let question: TokenType;
-					export let questionDot: TokenType;
-					export let arrow: TokenType;
-					export let template: TokenType;
-					export let invalidTemplate: TokenType;
-					export let ellipsis: TokenType;
-					export let backQuote: TokenType;
-					export let dollarBraceL: TokenType;
-					export let eq: TokenType;
-					export let assign: TokenType;
-					export let incDec: TokenType;
-					export let prefix: TokenType;
-					export let logicalOR: TokenType;
-					export let logicalAND: TokenType;
-					export let bitwiseOR: TokenType;
-					export let bitwiseXOR: TokenType;
-					export let bitwiseAND: TokenType;
-					export let equality: TokenType;
-					export let relational: TokenType;
-					export let bitShift: TokenType;
-					export let plusMin: TokenType;
-					export let modulo: TokenType;
-					export let star: TokenType;
-					export let slash: TokenType;
-					export let starstar: TokenType;
-					export let coalesce: TokenType;
-				}
-				export let wordsRegexp: (words: string) => RegExp;
-				export let MAX_MASKED_INDEX: 30;
 				export let NodeType: Readonly<{
 					Identifier: 1;
 					PrivateIdentifier: 2;
@@ -38121,23 +36797,15 @@ declare namespace exports {
 					sourceType: 5;
 					phase: 6;
 				}>;
-				export let buildLineStarts: (source: string) => number[];
-				export let collectCjsRequireSpecifiers: (source: string) => Set<string>;
-				export let declaresIntoBlock: (statement?: any) => boolean;
-				export let overflowFrom: (mask: number, index: number) => number[];
-				export let hasOctalEscape: (raw: string) => boolean;
-				export let parse: (
-					input: string,
-					options: ParserOptionsSyntaxParser
-				) => Program;
+				export let fromEstreeObject: (
+					program: Program,
+					input: string
+				) => number;
 				export let parseProgram: _functionSyntaxParserFunction_1;
-				export let parsedTree: () => null | SyntaxTree;
-				export let takeParsedTree: () => null | SyntaxTree;
 				export let positionAt: (
 					lineStarts: number[],
 					offset: number
 				) => SourcePosition;
-				export let releaseParserCaches: () => void;
 				export let toEstreeObject: (
 					node: number,
 					fields?: string[]
@@ -38203,12 +36871,10 @@ declare namespace exports {
 					| MethodDefinition
 					| PropertyDefinition
 					| VariableDeclarator
+					| AssignmentProperty
 					| Property
 					| CatchClause
 					| ClassBody
-					| SwitchCase
-					| TemplateElement
-					| AssignmentProperty
 					| ImportSpecifier
 					| ImportDefaultSpecifier
 					| ImportNamespaceSpecifier
@@ -38216,302 +36882,9 @@ declare namespace exports {
 					| ObjectPattern
 					| ArrayPattern
 					| RestElement
-					| AssignmentPattern;
-				export let A: {
-					state: unknown;
-					get node(): number;
-					get parent(): null | number;
-					get index(): number;
-					/**
-					 * Stops the walk descending into the current node (enter only).
-					 */
-					skipChildren(): void;
-					/**
-					 * Stops the walk: no visitor fires after the current one returns.
-					 */
-					stop(): void;
-					ancestor(level: number): number;
-					within(type: number): boolean;
-					type(n?: number): number;
-					range(n?: number): [number, number];
-					start(n?: number): number;
-					end(n?: number): number;
-					/**
-					 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
-					 */
-					loc(n?: number): [number, number, number, number];
-					source(n?: number, end?: number): string;
-					name(n?: number): string;
-					value(
-						n?: number
-					):
-						| undefined
-						| null
-						| string
-						| number
-						| bigint
-						| boolean
-						| RegExp
-						| { cooked?: null | string; raw: string };
-					childCount(n?: number): number;
-					child(i: number, n?: number): number;
-					children(n?: number): number[];
-					fieldCount(field: number, n?: number): number;
-					field(i: number, field: number, n?: number): number;
-					fieldNamed(field: number, name: string, n?: number): number;
-					flag(flag: number, n?: number): boolean;
-					/**
-					 * A JavaScript node keeps no positions beyond its own.
-					 */
-					rangeOf(part: number, n?: number): null;
-					startOf(part: number, n?: number): number;
-					endOf(part: number, n?: number): number;
-					textOf(part: number, n?: number): null | string;
-				};
-				export let grammar: (
-					input: string,
-					visitors: CompiledVisitorBucket<{
-						state: unknown;
-						get node(): number;
-						get parent(): null | number;
-						get index(): number;
-						/**
-						 * Stops the walk descending into the current node (enter only).
-						 */
-						skipChildren(): void;
-						/**
-						 * Stops the walk: no visitor fires after the current one returns.
-						 */
-						stop(): void;
-						ancestor(level: number): number;
-						within(type: number): boolean;
-						type(n?: number): number;
-						range(n?: number): [number, number];
-						start(n?: number): number;
-						end(n?: number): number;
-						/**
-						 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
-						 */
-						loc(n?: number): [number, number, number, number];
-						source(n?: number, end?: number): string;
-						name(n?: number): string;
-						value(
-							n?: number
-						):
-							| undefined
-							| null
-							| string
-							| number
-							| bigint
-							| boolean
-							| RegExp
-							| { cooked?: null | string; raw: string };
-						childCount(n?: number): number;
-						child(i: number, n?: number): number;
-						children(n?: number): number[];
-						fieldCount(field: number, n?: number): number;
-						field(i: number, field: number, n?: number): number;
-						fieldNamed(field: number, name: string, n?: number): number;
-						flag(flag: number, n?: number): boolean;
-						/**
-						 * A JavaScript node keeps no positions beyond its own.
-						 */
-						rangeOf(part: number, n?: number): null;
-						startOf(part: number, n?: number): number;
-						endOf(part: number, n?: number): number;
-						textOf(part: number, n?: number): null | string;
-					}>[],
-					writer:
-						| undefined
-						| PrintContext<
-								{
-									state: unknown;
-									get node(): number;
-									get parent(): null | number;
-									get index(): number;
-									/**
-									 * Stops the walk descending into the current node (enter only).
-									 */
-									skipChildren(): void;
-									/**
-									 * Stops the walk: no visitor fires after the current one returns.
-									 */
-									stop(): void;
-									ancestor(level: number): number;
-									within(type: number): boolean;
-									type(n?: number): number;
-									range(n?: number): [number, number];
-									start(n?: number): number;
-									end(n?: number): number;
-									/**
-									 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
-									 */
-									loc(n?: number): [number, number, number, number];
-									source(n?: number, end?: number): string;
-									name(n?: number): string;
-									value(
-										n?: number
-									):
-										| undefined
-										| null
-										| string
-										| number
-										| bigint
-										| boolean
-										| RegExp
-										| { cooked?: null | string; raw: string };
-									childCount(n?: number): number;
-									child(i: number, n?: number): number;
-									children(n?: number): number[];
-									fieldCount(field: number, n?: number): number;
-									field(i: number, field: number, n?: number): number;
-									fieldNamed(field: number, name: string, n?: number): number;
-									flag(flag: number, n?: number): boolean;
-									/**
-									 * A JavaScript node keeps no positions beyond its own.
-									 */
-									rangeOf(part: number, n?: number): null;
-									startOf(part: number, n?: number): number;
-									endOf(part: number, n?: number): number;
-									textOf(part: number, n?: number): null | string;
-								},
-								number
-						  >,
-					options: JavascriptProcessOptions
-				) => void;
-				export let isWalkingSyntaxTree: () => boolean;
-				export let walkSyntaxTree: (
-					tree: SyntaxTree,
-					program: number,
-					input: string,
-					visitors: CompiledVisitorBucket<{
-						state: unknown;
-						get node(): number;
-						get parent(): null | number;
-						get index(): number;
-						/**
-						 * Stops the walk descending into the current node (enter only).
-						 */
-						skipChildren(): void;
-						/**
-						 * Stops the walk: no visitor fires after the current one returns.
-						 */
-						stop(): void;
-						ancestor(level: number): number;
-						within(type: number): boolean;
-						type(n?: number): number;
-						range(n?: number): [number, number];
-						start(n?: number): number;
-						end(n?: number): number;
-						/**
-						 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
-						 */
-						loc(n?: number): [number, number, number, number];
-						source(n?: number, end?: number): string;
-						name(n?: number): string;
-						value(
-							n?: number
-						):
-							| undefined
-							| null
-							| string
-							| number
-							| bigint
-							| boolean
-							| RegExp
-							| { cooked?: null | string; raw: string };
-						childCount(n?: number): number;
-						child(i: number, n?: number): number;
-						children(n?: number): number[];
-						fieldCount(field: number, n?: number): number;
-						field(i: number, field: number, n?: number): number;
-						fieldNamed(field: number, name: string, n?: number): number;
-						flag(flag: number, n?: number): boolean;
-						/**
-						 * A JavaScript node keeps no positions beyond its own.
-						 */
-						rangeOf(part: number, n?: number): null;
-						startOf(part: number, n?: number): number;
-						endOf(part: number, n?: number): number;
-						textOf(part: number, n?: number): null | string;
-					}>[],
-					writer?: PrintContext<
-						{
-							state: unknown;
-							get node(): number;
-							get parent(): null | number;
-							get index(): number;
-							/**
-							 * Stops the walk descending into the current node (enter only).
-							 */
-							skipChildren(): void;
-							/**
-							 * Stops the walk: no visitor fires after the current one returns.
-							 */
-							stop(): void;
-							ancestor(level: number): number;
-							within(type: number): boolean;
-							type(n?: number): number;
-							range(n?: number): [number, number];
-							start(n?: number): number;
-							end(n?: number): number;
-							/**
-							 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
-							 */
-							loc(n?: number): [number, number, number, number];
-							source(n?: number, end?: number): string;
-							name(n?: number): string;
-							value(
-								n?: number
-							):
-								| undefined
-								| null
-								| string
-								| number
-								| bigint
-								| boolean
-								| RegExp
-								| { cooked?: null | string; raw: string };
-							childCount(n?: number): number;
-							child(i: number, n?: number): number;
-							children(n?: number): number[];
-							fieldCount(field: number, n?: number): number;
-							field(i: number, field: number, n?: number): number;
-							fieldNamed(field: number, name: string, n?: number): number;
-							flag(flag: number, n?: number): boolean;
-							/**
-							 * A JavaScript node keeps no positions beyond its own.
-							 */
-							rangeOf(part: number, n?: number): null;
-							startOf(part: number, n?: number): number;
-							endOf(part: number, n?: number): number;
-							textOf(part: number, n?: number): null | string;
-						},
-						number
-					>,
-					inlined?: Uint8Array
-				) => void;
-				export let printEarlyIn: (early: Map<number, number>) => void;
-				export {
-					DestructuringErrors,
-					Label,
-					ParserNode,
-					SyntaxParser as Parser,
-					Position,
-					ParserScope as Scope,
-					ParserSourceLocation,
-					TokContext,
-					Token,
-					TokenType,
-					BLOCK_DECLARATIONS,
-					HOISTED_DECLARATIONS,
-					MODULE_DECLARATIONS,
-					LEGACY_ASSERT_ATTRIBUTES,
-					ParserPosition,
-					SyntaxTree,
-					WebpackParser,
-					EstreeView
-				};
+					| AssignmentPattern
+					| SwitchCase
+					| TemplateElement;
 			}
 			export namespace printer {
 				export let prepareMinify: (
@@ -38717,12 +37090,10 @@ declare namespace exports {
 				| MethodDefinition
 				| PropertyDefinition
 				| VariableDeclarator
+				| AssignmentProperty
 				| Property
 				| CatchClause
 				| ClassBody
-				| SwitchCase
-				| TemplateElement
-				| AssignmentProperty
 				| ImportSpecifier
 				| ImportDefaultSpecifier
 				| ImportNamespaceSpecifier
@@ -38730,7 +37101,9 @@ declare namespace exports {
 				| ObjectPattern
 				| ArrayPattern
 				| RestElement
-				| AssignmentPattern;
+				| AssignmentPattern
+				| SwitchCase
+				| TemplateElement;
 			export { JavascriptSourceProcessor as SourceProcessor };
 		}
 		export {

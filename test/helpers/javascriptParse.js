@@ -4,7 +4,7 @@
 /** @typedef {import("../../lib/javascript/syntax-parser").ParserOptions} ParserOptions */
 /** @typedef {{ ast: import("estree").Program, comments: CollectedComment[] }} ParseResult */
 
-const { parse: webpackParse } = require("../../lib/javascript/syntax").parser;
+const { parse: webpackParse } = require("../../lib/javascript/syntax-parser");
 
 /**
  * Parse with the options a build hands the parser: ranges alone become lazy

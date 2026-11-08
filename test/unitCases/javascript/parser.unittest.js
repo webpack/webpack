@@ -27,7 +27,7 @@ const os = require("os");
 const path = require("path");
 const acorn = require("acorn");
 const JavascriptParser = require("../../../lib/javascript/JavascriptParser");
-const { parse: webpackParse } = require("../../../lib/javascript/syntax").parser;
+const { parse: webpackParse } = require("../../../lib/javascript/syntax-parser");
 const { parse, plain } = require("../../helpers/javascriptParse");
 const { Parser } = require("../../../lib/javascript/syntax-parser");
 
