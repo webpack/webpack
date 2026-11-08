@@ -1267,8 +1267,13 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-220"), {}, "function f(){return-1/0}"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-221"), {}, "function f(n){return[n/-(1/0),-(1/0)/n,(-(1/0)).x]}"],
 			// `false` read off and a boolean constructed print shorter in parentheses, `undefined`
-			// read off too, and an arrow's body and a class field read the global `undefined` as `void 0`.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-222"), {}, "x=[(!1).toString(b),new(!0),new(!1)(1),true.x,(void 0).x],y=()=>void 0;class A{u=void 0;static v=void 0}"],
+			// read off too, an arrow returning it returns nothing, and a class field reads it as `void 0`.
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-222"), {}, "x=[(!1).toString(b),new(!0),new(!1)(1),true.x,(void 0).x],y=()=>{};class A{u=void 0;static v=void 0}"],
+			// oxc's `()=>void 0` as `()=>{}`, but where the `void` runs something.
+			[fixture("javascript", "one-pass-spelling-b-1"), {}, "x=[()=>{},()=>{},()=>{},d=>{},()=>void f(),()=>g];"],
+			// A run of `|`, `&` or `^` with one operand not constant folds its constants, but where
+			// two operands not constant sit between them, evaluated before converted.
+			[fixture("javascript", "one-pass-spelling-b-2"), {}, "x=[a|3,a&0,a^2,a|7,1|b()|c()|8,a&-2,1|a|b|2,a|1,(a,b)|3];"],
 			// A string's index reads its code unit, and its `concat` prints as a template, its constants
 			// as text, but where one converted after evaluating another could tell.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-223"), {}, "x=[\"b\",\"b\",void 0,\"abc\"[\"01\"],\"\\ude00\",\"abc\"[1]()];"],
