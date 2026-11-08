@@ -12,7 +12,8 @@
 //    REFUSED_BY_REFERENCE or REFUSED_BY_WEBPACK lists why;
 // 2. summed over each corpus, webpack's output must gzip no bigger than terser's;
 // 3. where swc records its own output, webpack's must be no bigger (gzip, then
-//    raw), unless SWC_SMALLER lists why, nor than oxc's unless OXC_SMALLER does;
+//    raw), unless SWC_SMALLER lists why, nor than oxc's unless OXC_SMALLER does
+//    (`rivalSmallerByDesign.js` adds to both what no minifier change closes);
 //    JS_MINIFY_REPORT names a file to tally where it is worse, the same and better.
 
 const { spawnSync } = require("child_process");
@@ -24,9 +25,17 @@ const vm = require("vm");
 const zlib = require("zlib");
 const acorn = require("acorn");
 const { SourceProcessor, printer } = require("../../lib/javascript/syntax");
-const OXC_SMALLER = require("../helpers/oxcSmaller");
-const SWC_SMALLER = require("../helpers/swcSmaller");
+const BY_DESIGN = require("../helpers/rivalSmallerByDesign");
 const { claimInPart, currentPart } = require("../helpers/testParts");
+
+const OXC_SMALLER = {
+	...require("../helpers/oxcSmaller"),
+	...BY_DESIGN.OXC_SMALLER
+};
+const SWC_SMALLER = {
+	...require("../helpers/swcSmaller"),
+	...BY_DESIGN.SWC_SMALLER
+};
 
 /** @typedef {import("terser").MinifyOptions} MinifyOptions */
 /** @typedef {import("../../lib/javascript/syntax-parser").JavascriptProcessOptions} JavascriptProcessOptions */
