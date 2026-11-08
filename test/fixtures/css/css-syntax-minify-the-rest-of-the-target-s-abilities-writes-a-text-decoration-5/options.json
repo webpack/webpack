@@ -6,5 +6,21 @@
 				"chrome 60"
 			]
 		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 56"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 57"
+			]
+		}
 	}
 ]

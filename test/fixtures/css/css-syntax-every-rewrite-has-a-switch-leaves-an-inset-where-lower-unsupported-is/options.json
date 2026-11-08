@@ -17,5 +17,21 @@
 				"chrome 80"
 			]
 		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 86"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 87"
+			]
+		}
 	}
 ]

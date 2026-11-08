@@ -9,5 +9,9 @@
 	},
 	{
 		"mode": "minify"
+	},
+	{
+		"mode": "minify",
+		"recurseBlocks": false
 	}
 ]

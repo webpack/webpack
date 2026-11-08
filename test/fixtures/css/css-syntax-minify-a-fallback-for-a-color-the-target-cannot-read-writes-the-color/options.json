@@ -39,5 +39,21 @@
 	},
 	{
 		"mode": "minify"
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 110"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 111"
+			]
+		}
 	}
 ]

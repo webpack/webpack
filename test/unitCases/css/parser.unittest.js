@@ -58,7 +58,7 @@ describe("CssSyntax — component values (tokenToNode)", () => {
 		expect(cv(",")).toBe(NodeType.Comma);
 		expect(cv(";")).toBe(NodeType.Semicolon);
 		expect(cv(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-11"))).toBe(NodeType.Ident);
-		expect(cv(".5")).toBe(NodeType.Number);
+		expect(cv(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-16"))).toBe(NodeType.Number);
 		expect(cv(fixture("css", "css-syntax-component-values-token-to-node-classifies-each-leaf-token-type-12"))).toBe(NodeType.AtKeyword);
 	});
 
@@ -107,7 +107,7 @@ describe("CssSyntax — component values (tokenToNode)", () => {
 			1.5,
 			false
 		]);
-		expect(A.value(one("-2"))).toBe(-2);
+		expect(A.value(one(fixture("css", "css-syntax-component-values-token-to-node-decodes-numeric-token-metadata-3")))).toBe(-2);
 		expect(A.flag(Flag.integer, one(fixture("css", "css-syntax-component-values-token-to-node-decodes-numeric-token-metadata-2")))).toBe(false);
 	});
 
@@ -333,7 +333,7 @@ describe("CssSyntax — parser entry points", () => {
 	});
 
 	it("accepts a pre-built TokenStream as input", () => {
-		const ss = parseAStylesheet(new TokenStream("a{x:1}"));
+		const ss = parseAStylesheet(new TokenStream(fixture("css", "css-syntax-parser-entry-points-accepts-a-pre-built-token-stream-as-input")));
 		expect(A.fieldCount(Field.rules, ss)).toBe(1);
 	});
 
@@ -432,11 +432,11 @@ describe("CssSyntax — parseError callback", () => {
 		const parseError = jest.fn();
 		parseAStylesheet(fixture("css", "source-processor-merging-adjacent-style-drops-a-run-s-first-element-only-where-4"), 0, { parseError });
 		readToken(
-			'"x',
+			fixture("css", "css-syntax-parse-error-callback-parse-acomponent-value-forwards-the-callback"),
 			0,
 			/** @type {import("../../../lib/css/syntax-parser").MutableToken} */ ({})
 		);
-		parseAStylesheet('"x');
+		parseAStylesheet(fixture("css", "css-syntax-parse-error-callback-parse-acomponent-value-forwards-the-callback"));
 		expect(parseError).not.toHaveBeenCalled();
 	});
 });
@@ -1730,7 +1730,7 @@ describe("CssSyntax — token value decoding", () => {
 		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-6"))).toBe("�a");
 		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-7"))).toBe("\u{1F600}a");
 		// An escape the input ran out of names U+FFFD.
-		expect(tok("a\\")).toBe("a�");
+		expect(tok(fixture("css", "source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-9"))).toBe("a�");
 		expect(tok(fixture("css", "css-syntax-token-value-decoding-resolves-ident-escapes-4-3-7-8"))).toBe("a\\");
 	});
 
@@ -1876,7 +1876,7 @@ describe("CssSyntax — path reads on every node kind", () => {
 				[NodeType.Comment]: read
 			})
 		).toEqual([" a ", "rule", " b"]);
-		expect(collect("/*", { [NodeType.Comment]: read })).toEqual([""]);
+		expect(collect(fixture("css", "css-syntax-path-reads-on-every-node-kind-reads-a-comment-s-text-closed-or-2"), { [NodeType.Comment]: read })).toEqual([""]);
 	});
 
 	it("reads a block's start and end only on a rule that has one", () => {

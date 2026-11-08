@@ -144,7 +144,7 @@ describe("CssSyntax — the token the lexer reuses", () => {
 	});
 
 	it("has every field set before a token is read, and after", () => {
-		const stream = new TokenStream("url(a.png) 1px #ff0");
+		const stream = new TokenStream(fixture("css", "css-syntax-the-token-the-lexer-reuses-has-every-field-set-before-a-token-is-read"));
 		for (const field of FIELDS) {
 			expect(/** @type {EXPECTED_ANY} */ (stream.next())[field]).toBeDefined();
 		}
@@ -503,7 +503,7 @@ describe("CssSyntax — tokens at the end of the input", () => {
 
 	it("reads a lone `@` as a delim and `@` with a name as an at-keyword", () => {
 		expect(tokensOf("@")).toEqual([[TokenType.Delim, 0, 1]]);
-		expect(tokensOf("@a")).toEqual([[TokenType.AtKeyword, 0, 2]]);
+		expect(tokensOf(fixture("css", "css-syntax-tokens-at-the-end-of-the-input-reads-a-lone-as-a-delim-and-with-a-2"))).toEqual([[TokenType.AtKeyword, 0, 2]]);
 	});
 
 	it("runs a bad url the input never closed to the end of the input", () => {
@@ -514,11 +514,11 @@ describe("CssSyntax — tokens at the end of the input", () => {
 
 	it("does not reread the first code point when a `-` ends the input", () => {
 		// §4.3.9: `-` then EOF starts no ident sequence, so the `-` is a delim.
-		expect(tokensOf("1-")).toEqual([
+		expect(tokensOf(fixture("css", "css-syntax-tokens-at-the-end-of-the-input-does-not-reread-the-first-code-point-3"))).toEqual([
 			[TokenType.Number, 0, 1],
 			[TokenType.Delim, 1, 2]
 		]);
-		expect(tokensOf("@-")).toEqual([
+		expect(tokensOf(fixture("css", "css-syntax-tokens-at-the-end-of-the-input-does-not-reread-the-first-code-point-4"))).toEqual([
 			[TokenType.Delim, 0, 1],
 			[TokenType.Delim, 1, 2]
 		]);
@@ -528,7 +528,7 @@ describe("CssSyntax — tokens at the end of the input", () => {
 
 	it("marks a hash of a lone `-` as unrestricted", () => {
 		const out = /** @type {import("../../../lib/css/syntax-parser").MutableToken} */ ({});
-		expect(readToken("#-", 0, out)).toMatchObject({ type: TokenType.Hash, isId: false });
+		expect(readToken(fixture("css", "css-syntax-tokens-at-the-end-of-the-input-marks-a-hash-of-a-lone-as-unrestricted-2"), 0, out)).toMatchObject({ type: TokenType.Hash, isId: false });
 		expect(readToken(fixture("css", "css-syntax-tokens-at-the-end-of-the-input-marks-a-hash-of-a-lone-as-unrestricted"), 0, out)).toMatchObject({ type: TokenType.Hash, isId: true });
 	});
 });
@@ -549,7 +549,7 @@ describe("CssSyntax — the token stream", () => {
 		/** @type {string[]} */
 		const seen = [];
 		const stream = new TokenStream(
-			"/*1*/a/*2*/ b",
+			fixture("css", "css-syntax-the-token-stream-fires-each-comment-once-even-when-a-mark-rewinds"),
 			0,
 			undefined,
 			(input, start, end) => seen.push(input.slice(start, end))
@@ -575,7 +575,7 @@ describe("CssSyntax — the token stream", () => {
 			return _S._openCommentStart;
 		};
 		expect(openCommentOf(fixture("css", "css-syntax-the-token-stream-notes-where-a-comment-the-source-never-closed-opens"))).toBe(2);
-		expect(openCommentOf("/*")).toBe(0);
+		expect(openCommentOf(fixture("css", "css-syntax-path-reads-on-every-node-kind-reads-a-comment-s-text-closed-or-2"))).toBe(0);
 		// `/*/` and `/* **` end in what could close a comment, but not one opened there.
 		expect(openCommentOf(fixture("css", "css-syntax-the-token-stream-notes-where-a-comment-the-source-never-closed-opens-2"))).toBe(1);
 		expect(openCommentOf(fixture("css", "css-syntax-the-token-stream-notes-where-a-comment-the-source-never-closed-opens-3"))).toBe(1);
@@ -584,7 +584,7 @@ describe("CssSyntax — the token stream", () => {
 	});
 
 	it("steps over whitespace without lexing it, unless a token is cached", () => {
-		const stream = new TokenStream(" \t\n\fa b");
+		const stream = new TokenStream(fixture("css", "css-syntax-the-token-stream-steps-over-whitespace-without-lexing-it-unless-a"));
 		stream.skipWhitespace();
 		expect(peek(stream)).toEqual([TokenType.Ident, "a"]);
 		// The cached `a` is still the next token.
@@ -602,24 +602,24 @@ describe("CssSyntax — the token stream", () => {
 			stream.skipPreludeLeaves();
 			return peek(stream);
 		};
-		expect(afterPrelude("a .b{")).toEqual([TokenType.LeftCurlyBracket, "{"]);
+		expect(afterPrelude(fixture("css", "css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be"))).toEqual([TokenType.LeftCurlyBracket, "{"]);
 		// A name running into `(` is lexed with it, as one function or url token.
-		expect(afterPrelude("a b:not(x){}")).toEqual([TokenType.Function, "not("]);
-		expect(afterPrelude("ab(")).toEqual([TokenType.Function, "ab("]);
-		expect(afterPrelude("a url(x) b{")).toEqual([TokenType.Url, "url(x)"]);
-		expect(afterPrelude("a (b)")).toEqual([TokenType.LeftParenthesis, "("]);
-		expect(afterPrelude("abc")).toEqual([TokenType.EOF, ""]);
+		expect(afterPrelude(fixture("css", "css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be-2"))).toEqual([TokenType.Function, "not("]);
+		expect(afterPrelude(fixture("css", "css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be-3"))).toEqual([TokenType.Function, "ab("]);
+		expect(afterPrelude(fixture("css", "css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be-4"))).toEqual([TokenType.Url, "url(x)"]);
+		expect(afterPrelude(fixture("css", "css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be-5"))).toEqual([TokenType.LeftParenthesis, "("]);
+		expect(afterPrelude(fixture("css", "css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be-6"))).toEqual([TokenType.EOF, ""]);
 	});
 
 	it("does not step over a prelude while a token is cached", () => {
-		const stream = new TokenStream("a .b{");
+		const stream = new TokenStream(fixture("css", "css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be"));
 		stream.next();
 		stream.skipPreludeLeaves();
 		expect(peek(stream)).toEqual([TokenType.Ident, "a"]);
 	});
 
 	it("parses on from where an existing stream stands", () => {
-		const stream = new TokenStream("a b c");
+		const stream = new TokenStream(fixture("css", "css-syntax-the-token-stream-parses-on-from-where-an-existing-stream-stands"));
 		stream.consume();
 		expect(cvTypes(/** @type {EXPECTED_ANY} */ (stream))).toEqual([
 			NodeType.Whitespace,

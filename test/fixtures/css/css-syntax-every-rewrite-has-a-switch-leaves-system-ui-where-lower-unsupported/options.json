@@ -28,5 +28,21 @@
 	},
 	{
 		"mode": "minify"
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 55"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 56"
+			]
+		}
 	}
 ]

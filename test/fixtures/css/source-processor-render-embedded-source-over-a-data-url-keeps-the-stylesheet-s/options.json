@@ -1,0 +1,7 @@
+[
+	{
+		"mode": "minify",
+		"source": "s.css",
+		"content": ".a {\n\tcolor : red ;\n}\n.b {\n\tbackground : url(\"data:image/svg+xml,<svg>    <rect/>    </svg>\") ;\n}\n.c {\n\tcolor : blue ;\n}\n"
+	}
+]
