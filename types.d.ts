@@ -3644,7 +3644,7 @@ declare abstract class ColumnarSyntaxTree {
 	 * parent in source order, as the parser writes; a child already written
 	 * stands as its id.
 	 */
-	addEstree(root: EstreeSource): number;
+	addEstree(root: EstreeSource, input?: string): number;
 
 	/**
 	 * The ESTree object of a node of this tree, as `toEstreeObject` builds it
