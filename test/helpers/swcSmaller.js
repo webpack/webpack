@@ -571,7 +571,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"deflate's header: the program is no longer raw, yet gzips 1 to 3 bytes bigger, as the Huffman codes deflate writes for a small program cost more or less with which characters it holds (an operand's side, `let` or `const`, `NaN` or `0/0`); measured corpus-wide, no fixed spelling rule wins, each one making about as many programs bigger as smaller",
 		[
-			"terser compress: expansions/avoid_spread_in_ternary",
 			"terser compress: issue-368/collapse",
 			"swc minifier: fixture/issues/9238/input.js",
 			"swc minifier: fixture/issues/9460/strict-mode/input.js",
