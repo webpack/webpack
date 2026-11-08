@@ -1778,7 +1778,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// terser's `dead_code` of a loop whose body is a `break`: what sets it up and its test run once, and one running nothing goes from its list.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-594"), {}, "a();b();c(),d();f();h();j(),k();x();x();if(a)x();else y();for(var i=0;x;)break;x();a in b,c;"],
 			// terser's `evaluate`: `!` of an object made running nothing is `!1`, `delete` of what is no reference `!0` and of the global `undefined` or `NaN` `!1`, but a write in it stays.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-595"), { compress: { toplevel: true } }, "x=!1,x=!1,x=!0,x=!0,x=!1,x=![f()],x=!0,x=!0,x=!1,x=!1,x=(0,a,!0),x=!0,x=delete a.b,x=delete a,x=delete a?.b,x=delete f();g();var b;x=(b=NaN,!0);"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-595"), { compress: { toplevel: true } }, "x=!1,x=!1,x=!0,x=!0,x=!1,x=![f()],x=!0,x=!0,x=!1,x=!1,x=(0,a,!0),x=!0,x=delete a.b,x=delete a,x=delete a?.b,x=delete f();g();x=!0;"],
 			// A function called prints as what it returns past parameters passed nothing nothing reads, but not one it returns or where `arguments` reads them.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-596"), {}, "console.log(123),console.log(function(n,o,t){return t}()),console.log(function(n){return 6}(a));function q(n){console.log(n)}console.log(function(n){return arguments.length}());"],
 			// A logical expression a known left side folds to a name called prints the name, and `eval`, a member or one `typeof` reads after `0,`.
@@ -1787,7 +1787,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-598"), {}, "x(class{}),x(function(){}),x(1),(0,a.b)(),x={}.y,x=a+1,y=(a,b);"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-599"), {}, "x({}),x((f(),1));({}).x;"],
 			// A function running nothing called runs only its arguments where nobody reads the call.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-600"), {}, "a(),b(),c(),x=function(){}(a());"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-600"), {}, "a(),b(),c(),x=(a(),void 0);"],
 			// A logical folding to an assignment keeps the parentheses that needs under the same operator.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-601"), {}, "a&&(x=1);const T=1;b&&(y=1);"],
 			// A BigInt zero is falsy but strictly unequal to `0`: only `==` and `!=` fold an integer's comparison with it.
@@ -1845,7 +1845,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-631"), { format: { comments: "all" } }, "function f(){var a=0;/* c */for(;a<9;a++)use(a)}function h(){for(var a=0;a<9;a++)use(a)}"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-632"), {}, "function f(){for(var n=(\"x\"in o);;n++)use(n)}function h(){a=\"x\"in o;for(;;)use()}"],
 			// A `var` whose declarators print their values apart is several statements: a loop keeps its braces, and no bare `var` joins it.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-633"), {}, "function f(){for(let i=0;i<3;i++){i;g(i)}}function k(){f();use(2);var i;use(i=1,i)}"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-633"), {}, "function f(){for(let i=0;i<3;i++)g(i)}function k(){f();use(2);var i;use(i=1,i)}"],
 			// terser's `a|(b|c)` as `a|b|c`, for `|`, `&` and `^` alone.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-634"), {}, "x=a|b|c,x=a&b&c,x=a^b^c,x=a|b&c,x=a&(b|c),x=a-(b-c),x=a|b|c|d;"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-635"), { format: { comments: "all" } }, "x=a|(/*k*/b|c);"],
@@ -1971,8 +1971,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-fold-literals-11"), {}, "x=[NaN,NaN,NaN,parseInt(\"1\",4294967298),parseInt(\"1\",3)];"],
 			// A spread object literal's methods print in place, `__proto__()` too; one reading `super`, a getter or `__proto__:` keeps it.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-fold-literals-12"), {}, "x=[{a:a,b(){},c:c},{[b](){}},{d:d,__proto__(){}},{...{e(){return super.x}}},{...{get f(){return 1}}},{...{__proto__:p}}];"],
-			// A call passing nothing to a function written in place, empty and of plain parameters, is `undefined`, which a spread in an object copies nothing of.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-fold-literals-13"), {}, "x=[void 0,void 0,void 0,{a:a,b:b},((a={})=>{})(),(({a:a})=>{})(),(async()=>{})(),(()=>{})(1),[...(()=>{})()]];"],
+			// A call to a function written in place, empty and of plain parameters, is `undefined` once its arguments ran, which a spread in an object copies nothing of.
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-fold-literals-13"), {}, "x=[void 0,void 0,void 0,{a:a,b:b},((a={})=>{})(),(({a:a})=>{})(),(async()=>{})(),void 0,[...(()=>{})()]];"],
 			// `??` of a left side known nullish or not, which runs something, prints as a sequence or its left.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-fold-literals-14"), {}, "x=[(y,1),(y,void z,1),(y,0),(f(),{}),y??1],a=1,f();"],
 			// A conditional of an object test folds, and one folding to a string or number takes no parentheses; one keeping a name stays wrapped for `typeof`.
@@ -3750,7 +3750,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-constant-keys-new-19")
 			)
 		).toBe(
-			"a(),b(),x(),[...a],y(),c?[...a]:d(),z=function(){}(a()),function({a:n}){}(b),function(n=g()){}(b),b;"
+			"a(),b(),x(),[...a],y(),c?[...a]:d(),z=(a(),void 0),function({a:n}){}(b),function(n=g()){}(b),b;"
 		);
 		// Branches printing alike print once, after the test where it runs anything.
 		expect(
@@ -6354,7 +6354,7 @@ describe("one-pass minify of side effects and dead code, second round", () => {
 			// An unread write of a reference prints its value, after `0,` where it is called.
 			[
 				fixture("javascript", "h-unread-reference-write-1"),
-				"function a(){return(0,o.f)()}function b(){return(0,o?.f)``}function c(){return(0,eval)(x)}function d(){return g(o.f)+o.h}function e(){return f()}function h(){let t;return(t=o.f).g}function i(){let t;return typeof(t=x)}function j(){let t;return t=o.f,!0}function k(){var t;return f(t=o.f),function(){return t}}"
+				"function a(){return(0,o.f)()}function b(){return(0,o?.f)``}function c(){return(0,eval)(x)}function d(){return g(o.f)+o.h}function e(){return f()}function h(){let t;return(t=o.f).g}function i(){let t;return typeof(t=x)}function j(){return o.f,!0}function k(){var t;return f(t=o.f),function(){return t}}"
 			]
 		];
 		for (const [source, expected] of cases) {
@@ -6869,5 +6869,29 @@ describe("one-pass minify of functions read once, family A", () => {
 			"let o={__proto__:{b:2},a:1};console.log(o.a,o.b);let p={a:1,get b(){return 2}};console.log(p.a,p.b);"
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
+	});
+});
+
+describe("one-pass minify of unused values and side effects, fourth round", () => {
+	it("should drop what only makes a value nobody reads, keeping what may run code", () => {
+		const cases = [
+			// What is never nullish leaves `??` nothing to run: `||` and `?:` of such values, `??` of one; `&&` may give its left side.
+			[fixture("javascript", "one-pass-unused-d-1"), "a&&b===c,x=a||1,y=a?1:2,z=a??1,w=(a&&1)??g(),v=(a?1:b)??g();"],
+			// A fold's kept operand drops its parentheses where a value stands bare, but a sequence's and an `in` a loop's head reads.
+			[fixture("javascript", "one-pass-unused-d-2"), "x=a?1:2;var y=b?1:2;function f(){return c?1:2}z=(a,1);for(var i=(a in b?1:2);i;)f();"],
+			// A `delete` of a write nobody reads runs the value, then gives `true`; a read name keeps the write.
+			[fixture("javascript", "one-pass-unused-d-3"), "function f(){return o.f,!0}function g(){return(o.f,!0).x}function h(){return!0}function k(){let t;return[(t=o.f,!0),t]}"],
+			// A loop's body running nothing is `;`, a write to a name nobody reads too, a loop's `let` among them; a global read stays.
+			[fixture("javascript", "one-pass-unused-d-4"), "function f(){for(;g(););}for(let j;g();)h();while(g());for(x in y);for(;g();)a;"],
+			// A call marked pure of a function written in place prints its arguments alone; a callee that runs code stays.
+			[fixture("javascript", "one-pass-unused-d-5"), "y,z,a(),y(),z,g()(y),g();"],
+			// An empty function written in place and called gives `undefined` once its arguments ran; a spread or a default stays.
+			[fixture("javascript", "one-pass-unused-d-6"), "var u=(a,void 0),v=(b(),void 0);f((c,void 0)),w=(()=>{})(...d),x=function(a={}){}(e);"],
+			// `if(x)return y;return x` is `return x&&y`, but where `y` binds looser, the name differs, or a call in place prints.
+			[fixture("javascript", "one-pass-unused-d-7"), "function a(x){return x&&42}function b(x){return x&&1}function c(x){return x&&(g(),y)}function d(x){return x?p||q:x}function e(x){return x?42:y}function k(x){return x&&h}function m(x){return x&&void 0}function n(x){return x?function(){g()}():x}"]
+		];
+		for (const [source, expected] of cases) {
+			expect(minifyOnePass(source, { compress: { ecma: 2020 }, ecma: 2020, mangle: false }).code).toBe(expected);
+		}
 	});
 });
