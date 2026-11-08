@@ -1,0 +1,8 @@
+[
+	{
+		"entry": "parseProgram",
+		"options": {
+			"sourceType": "commonjs"
+		}
+	}
+]

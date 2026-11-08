@@ -14,5 +14,10 @@
 		"parse": {
 			"bare_returns": true
 		}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {}
 	}
 ]

@@ -59,5 +59,15 @@
 		"compress": false,
 		"mangle": false,
 		"wrap": "lib"
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": true,
+		"ecma": 2020,
+		"format": {
+			"comments": "/!/"
+		},
+		"sourceType": "script"
 	}
 ]

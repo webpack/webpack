@@ -2,6 +2,7 @@
 	{
 		"mode": "minify",
 		"compress": {},
-		"mangle": true
+		"mangle": true,
+		"behavior": true
 	}
 ]
