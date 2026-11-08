@@ -947,7 +947,6 @@ export interface DotenvPluginOptions {
 
 /**
  * No generator options are supported for this module type.
- * @publishes plugins/EmptyGeneratorOptions
  */
 export type EmptyGeneratorOptions = {};
 

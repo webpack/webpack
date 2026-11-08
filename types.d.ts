@@ -440,7 +440,6 @@ declare abstract class AssetGenerator extends Generator<AssetNormalModule> {
 	publicPath?: string | TemplatePathFn<PathData>;
 	outputPath?: string | TemplatePathFn<PathDataModule>;
 	emit?: boolean;
-	binary?: boolean;
 
 	/**
 	 * Returns mime type.
@@ -11824,12 +11823,6 @@ declare class Generator<TModule extends NormalModule = NormalModule> {
 	 */
 	getTypes(module: TModule): ReadonlySet<string>;
 	getTypesDependOnIncomingConnections(): boolean;
-
-	/**
-	 * Returns whether the module's source is kept as a `Buffer` rather than a string, the way loaders hand it over.
-	 * `undefined` leaves it to the module: a `binary` generator option, else whether the type is under `asset` or `webassembly`.
-	 */
-	isBinary(module: TModule): undefined | boolean;
 
 	/**
 	 * Returns the estimated size for the requested source type.
