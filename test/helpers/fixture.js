@@ -647,12 +647,25 @@ const declaresPrint = (set) =>
 	"print" in set || "visit" in set || "minimizer" in set;
 
 /**
+ * A reported error as its text, or only its name where the engine throws it,
+ * as V8 and JavaScriptCore word those messages differently.
+ * @param {unknown} value what a minimizer reported
+ * @returns {string} its text
+ */
+const reportText = (value) =>
+	value instanceof TypeError ||
+	value instanceof RangeError ||
+	value instanceof ReferenceError
+		? value.name
+		: String(value);
+
+/**
  * @param {string} key a key
  * @param {unknown} value its value
  * @returns {unknown} an Error as its text, everything else as it is
  */
 const errorText = (key, value) =>
-	value instanceof Error ? String(value) : value;
+	value instanceof Error ? reportText(value) : value;
 
 /**
  * What a print set with `print`, `visit` or `minimizer` snapshots: the code,
@@ -734,7 +747,7 @@ const readPrint = async (printers, dir, source, set) => {
 			for (const key of REPORTED) {
 				const list = result[key];
 				if (list !== undefined && list.length > 0) {
-					reported.push(`${key}: ${list.map(String).join(" | ")}`);
+					reported.push(`${key}: ${list.map(reportText).join(" | ")}`);
 				}
 			}
 			if (reported.length > 0) values.push(reported.join("\n"));

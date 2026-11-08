@@ -1231,8 +1231,14 @@ const behaviorOf = (code) => {
 			);
 			if (reason === "ERR_SCRIPT_EXECUTION_TIMEOUT") return null;
 			const kind = typeof name === "string" ? name : typeof error;
+			// JavaScriptCore quotes the failing source text, which a printer may
+			// rewrite, as `(evaluating '…')`; V8 never writes it.
 			const value =
-				typeof message === "string" ? message : isObject ? "" : show(error);
+				typeof message === "string"
+					? message.replace(/ \(evaluating '[\s\S]*'\)$/, "")
+					: isObject
+						? ""
+						: show(error);
 			lines.push(`threw <${kind}>${value ? ` ${value}` : ""}`);
 		} catch (_error) {
 			// A thrown object whose own properties throw when read.

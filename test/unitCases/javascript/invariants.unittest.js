@@ -158,19 +158,18 @@ const ENTRIES = {
 		read: (source, options, log, { pos, fields }) => {
 			/** @type {string[]} */
 			const errors = [];
-			const tree = answerOf(() =>
-				treeText(
-					plain(
-						parser.parseProgram(source, pos, {
-							...options,
-							estree: true,
-							parseError: (input, code, start, end, severity) => {
-								errors.push(`${severity}[${start},${end}]:${code}`);
-							}
-						})
-					)
-				)
-			);
+			const tree = answerOf(() => {
+				const program = parser.parseProgram(source, pos, {
+					...options,
+					estree: true,
+					parseError: (input, code, start, end, severity) => {
+						errors.push(`${severity}[${start},${end}]:${code}`);
+					}
+				});
+				return program === undefined
+					? "undefined"
+					: treeText(plain(program));
+			});
 			const values = [tree, errors.join(" ")];
 			if (fields !== undefined) {
 				values.push(

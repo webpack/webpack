@@ -2079,7 +2079,7 @@ exports[`HTML syntax — invariants html-minify-embedded-code-a-minifier-fails-o
 
 exports[`HTML syntax — invariants html-minify-embedded-code-a-minifier-fails-on-reports-what-webpack-s-own-css prints {"print":"htmlMinify","minimizer":{"asset":"page.html"},"css":{"unusedSymbols":42}} 1`] = `"<style>a { b : c }</style><p style=\\"b : c\\">x</p><script type=application/json>{\\"a\\":1}</script>"`;
 
-exports[`HTML syntax — invariants html-minify-embedded-code-a-minifier-fails-on-reports-what-webpack-s-own-css prints {"print":"htmlMinify","minimizer":{"asset":"page.html"},"css":{"unusedSymbols":42}} 2`] = `"{\\"errors\\":[\\"TypeError: number 42 is not iterable (cannot read property Symbol(Symbol.iterator))\\",\\"TypeError: number 42 is not iterable (cannot read property Symbol(Symbol.iterator))\\"]}"`;
+exports[`HTML syntax — invariants html-minify-embedded-code-a-minifier-fails-on-reports-what-webpack-s-own-css prints {"print":"htmlMinify","minimizer":{"asset":"page.html"},"css":{"unusedSymbols":42}} 2`] = `"{\\"errors\\":[\\"TypeError\\",\\"TypeError\\"]}"`;
 
 exports[`HTML syntax — invariants html-minify-embedded-code-a-minifier-fails-on-reports-what-webpack-s-own-css tokenizes 1`] = `"open[0,7|1,6] text[7,18] close[18,26|20,25] attr[29,34|36,41]\\" open[26,43|27,28] text[43,44] close[44,48|46,47] attr[56,60|61,77] open[48,78|49,55] text[78,89] close[89,98|91,97] end=98"`;
 

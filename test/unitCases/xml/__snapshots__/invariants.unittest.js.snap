@@ -1094,7 +1094,7 @@ exports[`XML syntax — invariants xml-minify-should-minify-the-document-and-the
 </svg>"
 `;
 
-exports[`XML syntax — invariants xml-minify-should-minify-the-document-and-the-stylesheets-it-holds prints {"print":"xmlMinify","css":{"unusedSymbols":42}} 2`] = `"errors: TypeError: number 42 is not iterable (cannot read property Symbol(Symbol.iterator)) | TypeError: number 42 is not iterable (cannot read property Symbol(Symbol.iterator))"`;
+exports[`XML syntax — invariants xml-minify-should-minify-the-document-and-the-stylesheets-it-holds prints {"print":"xmlMinify","css":{"unusedSymbols":42}} 2`] = `"errors: TypeError | TypeError"`;
 
 exports[`XML syntax — invariants xml-minify-should-minify-the-document-and-the-stylesheets-it-holds prints {"print":"xmlMinify","environment":{"browsers":["chrome 50"],"vendorPrefixes":true}} 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
