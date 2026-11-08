@@ -695,7 +695,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-6"), { compress: {} }, "b();if(c);+2n,-d();function*e(){yield f()}x[y],g(),x[z],h(),x[w];"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-7"), { compress: {} }, "foo(),a=b(),x(),c(),y(),d(),0,{}.e();"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-8"), { compress: {} }, "`${a}`,x(),`${b}`,`${c}${d}`,`${e()}`,`${f}`;"],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-9"), { compress: {} }, "(function(){}.i()),x=1,y=(a,1),z=b-1,d,g(),h();"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-9"), { compress: {} }, "(function(){}).i();x=1,y=(a,1),z=b-1,d,g(),h();"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-10"), { compress: {} }, "var a=!0,b=!0,c=!0,d=!0,e=!!{a:f()};g(!0);"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-11"), { compress: {} }, "a++,c(),d(),e(),f(),g(),i(),k();for(;;);"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-12"), { compress: {} }, "f(),g(),e(),{[h]:1};"],
@@ -6229,6 +6229,27 @@ describe("one-pass minify of statement sequences", () => {
 			"function F(v){this.v=v}function f(c){return new F(c?1:2)}function g(c){c?new F(1).v:new F(2).v,new F(c?3:4)}function h(c){return c?new F(1):F(2)}console.log(f(1).v,g(0),typeof h(0));"
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should parenthesize the side a known left side leaves where it opens a statement with a function or object", () => {
+		const source = fixture("javascript", "one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			"var x;(function(){console.log(1)}).call();({f(){console.log(2)}}).f();x=function(){return 4}.call(),console.log(x);"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+		// An `if` printing its test as a statement wraps it whole.
+		expect(
+			minifyOnePass(fixture("javascript", "one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left-3"), { compress: {} }).code
+		).toBe("(function(){console.log(3)}());");
+		// A parenthesized one prints its own parentheses only.
+		expect(
+			minifyOnePass(fixture("javascript", "one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left-2"), { compress: {} }).code
+		).toBe("(function(){}).call();({}).y();");
+		// A left side kept for its truth, holding a comment, opens the statement.
+		expect(
+			minifyOnePass(fixture("javascript", "one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left-4"), { compress: {} }).code
+		).toBe("(function(){/*!keep*/return 1});({a:/*!k*/1});");
 	});
 
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
