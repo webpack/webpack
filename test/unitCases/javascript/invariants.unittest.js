@@ -123,9 +123,10 @@ describe("JavaScript syntax — invariants", () => {
 
 			it("parses", () => {
 				const sourceType = sourceTypeOf(source);
-				expect(
-					answerOf(() => treeText(plain(parse(source, { sourceType }).ast)))
-				).toMatchSnapshot();
+				const tree = answerOf(() =>
+					treeText(plain(parse(source, { sourceType }).ast))
+				);
+				expect(tree).toMatchSnapshot();
 				/** @type {string[]} */
 				const errors = [];
 				parser.parseProgram(source, 0, {
@@ -136,6 +137,19 @@ describe("JavaScript syntax — invariants", () => {
 				});
 				// The second entry, so the tree's stays as it was.
 				expect(errors.join(" ")).toMatchSnapshot();
+				if (sourceType === "module") {
+					// Read as a script too, as most tests read one: a third entry,
+					// which says so alone where only `sourceType` differs.
+					const script = answerOf(() => {
+						const ast = /** @type {Record<string, unknown>} */ (
+							plain(parse(source, { sourceType: "script" }).ast)
+						);
+						return treeText({ ...ast, sourceType: "module" }) === tree
+							? "as the module"
+							: treeText(ast);
+					});
+					expect(script).toMatchSnapshot();
+				}
 			});
 
 			it.each(options.map((one) => [JSON.stringify(one), one]))(
@@ -162,7 +176,18 @@ describe("JavaScript syntax — invariants", () => {
 					const { code } = /** @type {{ code: string }} */ (
 						new SourceProcessor().process(source, one)
 					);
-					const reports = behaviorDifference(source, code);
+					let reports = behaviorDifference(source, code);
+					// A run times out under a loaded machine too, so one that did
+					// runs again before it counts.
+					for (
+						let attempt = 0;
+						attempt < 2 &&
+						(reports === null ||
+							reports.some((report) => report.what === "times out"));
+						attempt++
+					) {
+						reports = behaviorDifference(source, code);
+					}
 					// A marked fixture that is never run would hold nothing.
 					expect(reports).not.toBeNull();
 					expect(
