@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": "({}).y,x=a+1,y=(a,b);\n      -> {}.y,x=a+1,y=(a,b);",
-		"why": "a first pass keeps parentheses around an expression it rewrote, and only a second pass drops them"
-	}
-]

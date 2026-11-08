@@ -905,39 +905,11 @@ const EXPECTED = [
 	},
 	{
 		relation: "idempotence",
-		contains: "(e,t,n))?",
-		source: "Vue 3 (production)",
-		presets: ["default"],
-		why: "an `if` printing as `?:` parenthesizes a test opening with a function where the reprint parenthesizes the function alone, the same size"
-	},
-	{
-		relation: "idempotence",
 		contains: "(1)}",
 		source:
 			"test/configCases/concatenate-modules/top-level-declarations-library-conflict/module.js",
 		presets: ["default"],
 		why: "a call printing as what its function returns keeps the parentheses that value takes unfolded, which the reprint reads as the constant it folded to"
-	},
-	{
-		relation: "idempotence",
-		contains: "(t))?",
-		source: "Vue 3 (ESM)",
-		presets: ["default"],
-		why: "an `if` printing as `?:` parenthesizes a test opening with a function where the reprint parenthesizes the function alone, the same size"
-	},
-	{
-		relation: "idempotence",
-		contains: "(e,e.__alignTo))?",
-		source: "ECharts",
-		presets: ["default"],
-		why: "an `if` printing as `?:` parenthesizes a test opening with a function where the reprint parenthesizes the function alone, the same size"
-	},
-	{
-		relation: "idempotence",
-		contains: "(e)>0",
-		source: "D3",
-		presets: ["default"],
-		why: "an `if` printing as `?:` parenthesizes a test opening with a function where the reprint parenthesizes the function alone, the same size"
 	},
 	{
 		relation: "idempotence",

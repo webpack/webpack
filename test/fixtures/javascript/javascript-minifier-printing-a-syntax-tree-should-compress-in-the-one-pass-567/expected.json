@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": "(g(),h()),(g(),h()),f(function(){g()}());\n      -> g(),h(),g(),h(),f(function(){g()}());",
-		"why": "a first pass keeps parentheses around an expression it rewrote, and only a second pass drops them"
-	}
-]

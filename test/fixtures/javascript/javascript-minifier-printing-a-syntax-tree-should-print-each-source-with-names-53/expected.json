@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": ";;\"\\x01\"; }//! c; \"\\x01\";\n      -> ;;\"\\x01\"; }//! c; \"\\x01\";",
-		"why": "beautifying spaces a kept comment differently once a first pass has moved it, so a second pass moves the spaces around it"
-	}
-]

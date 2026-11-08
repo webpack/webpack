@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": "(a<b)&&c,x=!!a+1,(a+b)&&c(),x=(!a)**2,x=a?1:2;\n      -> a<b&&c,x=!!a+1,a+b&&c(),x=(!a)**2,x=a?1:2;",
-		"why": "a first pass keeps parentheses around an expression it rewrote, and only a second pass drops them"
-	}
-]
