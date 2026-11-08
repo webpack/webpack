@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases control-characters-in-names should print correct stats for control-characters-in-names 1`] = `
+"asset <CLR=32,BOLD>main.js</CLR> X KiB {<CLR=33,BOLD>main</CLR>} <CLR=32,BOLD>[emitted]</CLR> (name: main)
+asset <CLR=32,BOLD>entry/x1b[2mDIM.js</CLR> X KiB {<CLR=33,BOLD>entry/x1b[2mDIM</CLR>} <CLR=32,BOLD>[emitted]</CLR> (name: entry/x1b[2mDIM)
+asset <CLR=32,BOLD>chunk/x1b[1mBOLD.js</CLR> X KiB {<CLR=33,BOLD>chunk/x1b[1mBOLD</CLR>} <CLR=32,BOLD>[emitted]</CLR> (name: chunk/x1b[1mBOLD)
+chunk {<CLR=33,BOLD>chunk/x1b[1mBOLD</CLR>} (runtime: main) <CLR=32,BOLD>chunk/x1b[1mBOLD.js</CLR> (chunk/x1b[1mBOLD) X bytes <{<CLR=33,BOLD>main</CLR>}> <CLR=32,BOLD>[rendered]</CLR>
+  > ./a.js [./index.js] <CLR=BOLD>./index.js</CLR> 3:0-61
+chunk {<CLR=33,BOLD>entry/x1b[2mDIM</CLR>} (runtime: entry/x1b[2mDIM) <CLR=32,BOLD>entry/x1b[2mDIM.js</CLR> (entry/x1b[2mDIM) X bytes (javascript) X bytes (runtime) <CLR=33,BOLD>[entry]</CLR> <CLR=32,BOLD>[rendered]</CLR>
+  > ./c.js <CLR=39,BOLD><CLR=22> entry/x1b[2mDIM
+chunk {<CLR=33,BOLD>main</CLR>} (runtime: main) <CLR=32,BOLD>main.js</CLR> (main) X bytes (javascript) X KiB (runtime) >{<CLR=33,BOLD>chunk/x1b[1mBOLD</CLR>}< <CLR=33,BOLD>[entry]</CLR> <CLR=32,BOLD>[rendered]</CLR>
+  > ./index.js <CLR=39,BOLD><CLR=22> main
+runtime modules X KiB 11 modules
+cacheable modules X bytes
+  <CLR=BOLD>./index.js</CLR> X bytes {<CLR=33,BOLD>main</CLR>} <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+    entry <CLR=36,BOLD>./index.js</CLR> main
+  <CLR=BOLD>./c.js</CLR> X bytes {<CLR=33,BOLD>entry/x1b[2mDIM</CLR>} {<CLR=33,BOLD>main</CLR>} <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+    from origin <CLR=35,BOLD>./a.js</CLR>
+      harmony side effect evaluation <CLR=36,BOLD>./c.js</CLR> [./a.js] 1:0-23
+      harmony import specifier <CLR=36,BOLD>./c.js</CLR> [./a.js] 3:15-16
+    from origin <CLR=35,BOLD>./a.js?\\\\x1b[31mRED/x1b[0m/x0dMARK</CLR>
+      harmony side effect evaluation <CLR=36,BOLD>./c.js</CLR> [./a.js?\\\\x1b[31mRED/x1b[0m/x0dMARK] 1:0-23
+      harmony import specifier <CLR=36,BOLD>./c.js</CLR> [./a.js?\\\\x1b[31mRED/x1b[0m/x0dMARK] 3:15-16
+    entry <CLR=36,BOLD>./c.js</CLR> entry/x1b[2mDIM
+  <CLR=BOLD>./a.js?\\\\x1b[31mRED/x1b[0m/x0dMARK</CLR> X bytes {<CLR=33,BOLD>main</CLR>} <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+    harmony side effect evaluation <CLR=36,BOLD>./a.js?\\\\x1b[31mRED/x1b[0m/x0dMARK</CLR> [./index.js] 1:0-52
+    harmony import specifier <CLR=36,BOLD>./a.js?\\\\x1b[31mRED/x1b[0m/x0dMARK</CLR> [./index.js] 5:12-13
+  <CLR=BOLD>./a.js</CLR> X bytes {<CLR=33,BOLD>chunk/x1b[1mBOLD</CLR>} <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+    import() <CLR=36,BOLD>./a.js</CLR> [./index.js] 3:0-61
+webpack x.x.x compiled <CLR=32,BOLD>successfully</CLR> in X ms"
+`;
