@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const { namedRenderer } = require("./embeddedRenderers");
 
 const FIXTURES = path.join(__dirname, "..", "fixtures");
 
@@ -44,11 +45,27 @@ const fixture = (lang, name) => {
 /** @typedef {{ mode: "minify" | "beautify", xml?: boolean }} PrintOptionSet */
 
 /**
+ * One call a fixture's `parse.json` asks the runner to make and snapshot, on
+ * top of the tokens and parse every fixture gets.
+ * @typedef {object} ParseRun
+ * @property {string=} entry the public entry point, by the name the language's runner lists it under; its document parse where absent
+ * @property {Record<string, EXPECTED_ANY>=} options the JSON options the entry is called with
+ * @property {boolean=} visit whether the callbacks the entry makes are recorded too, as one more entry of one line
+ */
+
+/**
+ * @typedef {object} ParseEntry
+ * @property {(source: string, options: Record<string, EXPECTED_ANY>, log: string[] | undefined) => string[]} read what to snapshot, in order, writing each callback it makes to `log` where it is given one
+ * @property {boolean=} records whether it takes callbacks `visit` records
+ */
+
+/**
  * @typedef {object} FixtureEntry
  * @property {string} name the fixture directory
  * @property {string} source its input
  * @property {PrintOptionSet[]} options the option sets it is printed under, minifying with the defaults first
  * @property {PrintOptionSet[]} behavior those of them whose print runs against the source and must do what it does
+ * @property {ParseRun[]} parses the calls its `parse.json` asks for
  * @property {KnownDifference[]} expected what its `expected.json` lets it break
  */
 
@@ -63,6 +80,8 @@ const readList = (file) =>
  * Every fixture of a language with what the runner asks of it. Its
  * `options.json` lists option sets to print it under as well; one marked
  * `"behavior": true` (marker left out of what the printer gets) also runs.
+ * A print set names a renderer and a RegExp in JSON (see `printOptions`), and
+ * `parse.json` lists `ParseRun`s, each read by `readRun`.
  * @param {FixtureLanguage} lang the language
  * @returns {FixtureEntry[]} one entry per fixture, by name
  */
@@ -94,6 +113,7 @@ const fixtures = (lang) => {
 			source: fixture(lang, name),
 			options: [...options.values()],
 			behavior: [...behavior],
+			parses: readList(path.join(dir, name, "parse.json")),
 			expected: readList(path.join(dir, name, "expected.json"))
 		});
 	}
@@ -143,4 +163,131 @@ const snapshotText = (text) =>
 	// eslint-disable-next-line no-control-regex
 	/[\u0000-\u0008\u000B-\u001F\u007F]/.test(text) ? JSON.stringify(text) : text;
 
-module.exports = { fixture, fixtures, snapshotText, unexplained };
+/**
+ * @param {() => string} read what to run
+ * @returns {string} its answer, or the error it throws
+ */
+const answerOf = (read) => {
+	try {
+		return read();
+	} catch (err) {
+		return `throws: ${/** @type {Error} */ (err).message}`;
+	}
+};
+
+/** @type {Set<string>} */
+const RUN_KEYS = new Set(["entry", "options", "visit"]);
+
+/**
+ * What one `parse.json` run snapshots: what its entry answers, then the
+ * callbacks it made where `visit` asks. A name no entry has throws.
+ * @param {Record<string, ParseEntry>} entries the language's entry points, its document parse first
+ * @param {string} source the fixture's input
+ * @param {ParseRun} run the run
+ * @returns {string[]} the values to snapshot, in order
+ */
+const readRun = (entries, source, run) => {
+	for (const key of Object.keys(run)) {
+		if (!RUN_KEYS.has(key)) throw new Error(`unknown parse.json key "${key}"`);
+	}
+	const { entry = Object.keys(entries)[0], options = {}, visit = false } = run;
+	if (!Object.prototype.hasOwnProperty.call(entries, entry)) {
+		throw new Error(
+			`unknown entry "${entry}", not one of ${Object.keys(entries).join(", ")}`
+		);
+	}
+	const { read, records = false } = entries[entry];
+	if (visit && !records) {
+		throw new Error(`"${entry}" makes no callbacks to visit`);
+	}
+	/** @type {string[] | undefined} */
+	const log = visit ? [] : undefined;
+	const values = read(source, options, log);
+	if (log !== undefined) values.push(log.join(" "));
+	return values.map(snapshotText);
+};
+
+/**
+ * Every visitor call a language's `SourceProcessor` makes, as one line: each
+ * node entered as its type, name and range, and each one left as `/` its type.
+ * @param {new () => { use: (visitors: EXPECTED_ANY) => { process: (source: string, options: EXPECTED_ANY) => unknown } }} Processor the language's `SourceProcessor`
+ * @param {Record<string, number>} nodeTypes its `NodeType`
+ * @param {string} source what to walk
+ * @param {Record<string, EXPECTED_ANY>} options the process options, which print nothing
+ * @returns {string} the visit line
+ */
+const walkLine = (Processor, nodeTypes, source, options) => {
+	/** @type {string[]} */
+	const out = [];
+	/** @type {Record<number, { enter: (path: EXPECTED_ANY) => void, exit: (path: EXPECTED_ANY) => void }>} */
+	const visitors = {};
+	for (const [typeName, type] of Object.entries(nodeTypes)) {
+		visitors[type] = {
+			enter: (path) => {
+				const name = path.name();
+				out.push(
+					`${typeName}${name ? `(${name})` : ""}[${path.start()},${path.end()}]`
+				);
+			},
+			exit: () => {
+				out.push(`/${typeName}`);
+			}
+		};
+	}
+	new Processor().use(visitors).process(source, options);
+	return out.join(" ");
+};
+
+/**
+ * A print set as the printer takes it: a `renderEmbeddedSource` name (or
+ * `{ name, options }`) becomes that renderer of `embeddedRenderers.js`, and
+ * `{ "regexp": source, "flags"?: flags }` anywhere becomes a RegExp.
+ * @param {PrintOptionSet} given the set as its `options.json` holds it
+ * @returns {{ options: PrintOptionSet, log: string[] | undefined }} the options, and what a recording renderer is offered, to snapshot after the print
+ */
+const printOptions = (given) => {
+	/** @type {string[]} */
+	const log = [];
+	let records = false;
+	/**
+	 * @param {unknown} value a JSON value
+	 * @returns {unknown} it with every RegExp and renderer in place
+	 */
+	const revive = (value) => {
+		if (Array.isArray(value)) return value.map(revive);
+		if (value === null || typeof value !== "object") return value;
+		const object = /** @type {Record<string, EXPECTED_ANY>} */ (value);
+		const keys = Object.keys(object);
+		if (
+			typeof object.regexp === "string" &&
+			keys.every((key) => key === "regexp" || key === "flags")
+		) {
+			return new RegExp(object.regexp, object.flags);
+		}
+		/** @type {Record<string, unknown>} */
+		const out = {};
+		for (const key of keys) {
+			if (key === "renderEmbeddedSource") {
+				const renderer = namedRenderer(object[key], log);
+				records = records || renderer.records;
+				out[key] = renderer.render;
+			} else {
+				out[key] = revive(object[key]);
+			}
+		}
+		return out;
+	};
+	const options = /** @type {PrintOptionSet} */ (revive(given));
+	return { options, log: records ? log : undefined };
+};
+
+module.exports = {
+	answerOf,
+	fixture,
+	fixtures,
+	printOptions,
+	readRun,
+	snapshotText,
+	unexplained,
+	walkLine
+};

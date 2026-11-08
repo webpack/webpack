@@ -168,6 +168,32 @@ exports[`JavaScript syntax — invariants acorn-corpus-the-parser-a-build-runs-b
 
 exports[`JavaScript syntax — invariants acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-17 tokenizes 1`] = `"name[0,5] name[6,7] eof[7,7]"`;
 
+exports[`JavaScript syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"SourceProcessor"} 1`] = `"Program[0,44] ExpressionStatement[5,44] AssignmentExpression[5,43] Identifier(x)[5,6] /Identifier FunctionExpression[9,43] Identifier(foo)[18,21] /Identifier Identifier(bar)[22,25] /Identifier BlockStatement[27,43] ReturnStatement[30,41] Identifier(bar)[37,40] /Identifier /ReturnStatement /BlockStatement /FunctionExpression /AssignmentExpression /ExpressionStatement /Program"`;
+
+exports[`JavaScript syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"parseExpressionAt","options":{"ecmaVersion":5}} 1`] = `"AssignmentExpression[5,43](operator=\\"=\\" left=Identifier[5,6](name=\\"x\\") right=FunctionExpression[9,43](id=Identifier[18,21](name=\\"foo\\") params=[Identifier[22,25](name=\\"bar\\")] body=BlockStatement[27,43](body=[ReturnStatement[30,41](argument=Identifier[37,40](name=\\"bar\\"))]) expression=false))"`;
+
+exports[`JavaScript syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"parseProgram","options":{"sourceType":"script"}} 1`] = `"Program[0,44](body=[ExpressionStatement[5,44](expression=AssignmentExpression[5,43](operator=\\"=\\" left=Identifier[5,6](name=\\"x\\") right=FunctionExpression[9,43](id=Identifier[18,21](name=\\"foo\\") expression=false generator=false async=false params=[Identifier[22,25](name=\\"bar\\")] body=BlockStatement[27,43](body=[ReturnStatement[30,41](argument=Identifier[37,40](name=\\"bar\\"))]))))] sourceType=\\"script\\")"`;
+
+exports[`JavaScript syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"parseProgram","options":{"sourceType":"script"}} 2`] = `""`;
+
+exports[`JavaScript syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"tokenizer","options":{"sourceType":"script"}} 1`] = `"line[0,4] name[5,6] =[7,8] function[9,17] name[18,21] ([21,22] name[22,25] )[25,26] {[27,28] return[30,36] name[37,40] ;[40,41] }[42,43] ;[43,44] eof[44,44]"`;
+
+exports[`JavaScript syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"options":{"sourceType":"module"},"visit":true} 1`] = `"Program[0,44](body=[ExpressionStatement[5,44](expression=AssignmentExpression[5,43](operator=\\"=\\" left=Identifier[5,6](name=\\"x\\") right=FunctionExpression[9,43](id=Identifier[18,21](name=\\"foo\\") expression=false generator=false async=false params=[Identifier[22,25](name=\\"bar\\")] body=BlockStatement[27,43](body=[ReturnStatement[30,41](argument=Identifier[37,40](name=\\"bar\\"))]))))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"options":{"sourceType":"module"},"visit":true} 2`] = `"line[0,4] name[5,6] =[7,8] function[9,17] name[18,21] ([21,22] name[22,25] )[25,26] {[27,28] return[30,36] name[37,40] ;[40,41] }[42,43] ;[43,44] eof[44,44]"`;
+
+exports[`JavaScript syntax — invariants invariants-runner-declared-runs-and-named-renderers parses 1`] = `"Program[0,44](body=[ExpressionStatement[5,44](expression=AssignmentExpression[5,43](operator=\\"=\\" left=Identifier[5,6](name=\\"x\\") right=FunctionExpression[9,43](id=Identifier[18,21](name=\\"foo\\") expression=false generator=false async=false params=[Identifier[22,25](name=\\"bar\\")] body=BlockStatement[27,43](body=[ReturnStatement[30,41](argument=Identifier[37,40](name=\\"bar\\"))]))))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants invariants-runner-declared-runs-and-named-renderers parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants invariants-runner-declared-runs-and-named-renderers parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","compress":{},"mangle":{},"keep_fnames":{"regexp":"^foo$"}} 1`] = `"x=function foo(r){return r};"`;
+
+exports[`JavaScript syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify"} 1`] = `"x=function foo(bar){return bar};"`;
+
+exports[`JavaScript syntax — invariants invariants-runner-declared-runs-and-named-renderers tokenizes 1`] = `"line[0,4] name[5,6] =[7,8] function[9,17] name[18,21] ([21,22] name[22,25] )[25,26] {[27,28] return[30,36] name[37,40] ;[40,41] }[42,43] ;[43,44] eof[44,44]"`;
+
 exports[`JavaScript syntax — invariants javascript-minifier-mangling-a-syntax-tree-should-keep-a-loop-s-names-off-its parses 1`] = `"Program[0,109](body=[FunctionDeclaration[0,109](id=Identifier[9,10](name=\\"f\\") expression=false generator=false async=false params=[Identifier[11,12](name=\\"a\\")] body=BlockStatement[14,109](body=[VariableDeclaration[16,26](declarations=[VariableDeclarator[20,25](id=Identifier[20,21](name=\\"s\\") init=Literal[24,25](value=0 raw=\\"0\\"))] kind=\\"var\\"),ForStatement[27,62](init=VariableDeclaration[32,41](declarations=[VariableDeclarator[36,41](id=Identifier[36,37](name=\\"a\\") init=Literal[40,41](value=0 raw=\\"0\\"))] kind=\\"let\\") test=BinaryExpression[43,48](left=Identifier[43,44](name=\\"a\\") operator=\\"<\\" right=Literal[47,48](value=3 raw=\\"3\\")) update=UpdateExpression[50,53](operator=\\"++\\" prefix=false argument=Identifier[50,51](name=\\"a\\")) body=ExpressionStatement[55,62](expression=AssignmentExpression[55,61](operator=\\"+=\\" left=Identifier[55,56](name=\\"s\\") right=Identifier[60,61](name=\\"a\\")))),ForOfStatement[63,94](await=false left=VariableDeclaration[68,75](declarations=[VariableDeclarator[74,75](id=Identifier[74,75](name=\\"k\\") init=null)] kind=\\"const\\") right=ArrayExpression[79,85](elements=[Literal[80,81](value=1 raw=\\"1\\"),Literal[83,84](value=2 raw=\\"2\\")]) body=ExpressionStatement[87,94](expression=AssignmentExpression[87,93](operator=\\"+=\\" left=Identifier[87,88](name=\\"s\\") right=Identifier[92,93](name=\\"k\\")))),ReturnStatement[95,107](argument=BinaryExpression[102,107](left=Identifier[102,103](name=\\"s\\") operator=\\"+\\" right=Identifier[106,107](name=\\"a\\")))]))] sourceType=\\"module\\")"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-mangling-a-syntax-tree-should-keep-a-loop-s-names-off-its parses 2`] = `""`;

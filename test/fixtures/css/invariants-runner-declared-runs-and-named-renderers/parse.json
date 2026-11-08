@@ -1,0 +1,5 @@
+[
+	{ "entry": "parseARule", "visit": true },
+	{ "entry": "parseAComponentValue" },
+	{ "entry": "SourceProcessor", "options": { "recurseBlocks": false } }
+]

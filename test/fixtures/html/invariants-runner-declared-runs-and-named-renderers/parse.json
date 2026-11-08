@@ -1,0 +1,9 @@
+[
+	{ "options": { "fragmentContext": "td", "skip": { "comments": true } } },
+	{
+		"entry": "tokenize",
+		"options": { "fragmentContext": "title", "isForeign": true },
+		"visit": true
+	},
+	{ "entry": "SourceProcessor", "options": { "skip": { "text": true } } }
+]

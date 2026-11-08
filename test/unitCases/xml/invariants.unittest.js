@@ -4,8 +4,11 @@ const { SourceProcessor, parser } = require("../../../lib/html/syntax");
 const { A, parseHtml } = require("../../../lib/html/syntax-parser");
 const {
 	fixtures,
+	printOptions,
+	readRun,
 	snapshotText,
-	unexplained
+	unexplained,
+	walkLine
 } = require("../../helpers/fixture");
 const { materialize } = require("../../helpers/materializeHtmlTree");
 const { invariantFindings } = require("../../helpers/syntaxInvariants");
@@ -13,6 +16,7 @@ const { purityRelation } = require("../../helpers/syntaxInvariants/relations");
 const syntax = require("../../helpers/syntaxInvariants/xml");
 
 /** @typedef {import("../../../lib/html/syntax-parser").ParseErrorSeverity} ParseErrorSeverity */
+/** @typedef {import("../../helpers/fixture").ParseEntry} ParseEntry */
 
 /**
  * @param {string} kind the token kind, or the severity of a parse error
@@ -116,12 +120,47 @@ const tokenLine = (source) => {
 	return out.join(" ");
 };
 
+/**
+ * The public entry points a fixture's `parse.json` may name, the document
+ * parse first, each reading XML; `SourceProcessor` logs its walk's visitors.
+ * None takes a callback the token line does not already log.
+ * @type {Record<string, ParseEntry>}
+ */
+const ENTRIES = {
+	parseHtml: {
+		read: (source, options) => {
+			/** @type {string[]} */
+			const errors = [];
+			const document = parseHtml(source, 0, {
+				...options,
+				xml: true,
+				parseError: (input, code, start, end, severity) => {
+					errors.push(tokenText(severity, [start, end], `:${code}`));
+				}
+			});
+			return [
+				JSON.stringify(A.children(document).map(materialize)),
+				errors.join(" ")
+			];
+		}
+	},
+	tokenizeXml: { read: (source) => [tokenLine(source)] },
+	SourceProcessor: {
+		read: (source, options) => [
+			walkLine(SourceProcessor, parser.NodeType, source, {
+				...options,
+				xml: true
+			})
+		]
+	}
+};
+
 // Every input the XML tests read is a fixture, and each one is read, printed
 // and held to the parser's and printer's own relations; a new fixture needs no
 // code.
 describe("XML syntax — invariants", () => {
 	const all = fixtures("xml");
-	for (const { name, source, options, expected } of all) {
+	for (const { name, source, options, parses, expected } of all) {
 		describe(name, () => {
 			it("tokenizes", () => {
 				expect(tokenLine(source)).toMatchSnapshot();
@@ -146,15 +185,25 @@ describe("XML syntax — invariants", () => {
 			it.each(options.map((one) => [JSON.stringify(one), one]))(
 				"prints %s",
 				(_title, one) => {
+					const { options: given, log } = printOptions(one);
 					expect(
 						snapshotText(
 							/** @type {{ code: string }} */ (
-								new SourceProcessor().process(source, one)
+								new SourceProcessor().process(source, given)
 							).code
 						)
 					).toMatchSnapshot();
+					if (log !== undefined) expect(log.join(" ")).toMatchSnapshot();
 				}
 			);
+
+			for (const run of parses) {
+				it(`parses ${JSON.stringify(run)}`, () => {
+					for (const value of readRun(ENTRIES, source, run)) {
+						expect(value).toMatchSnapshot();
+					}
+				});
+			}
 
 			it("holds its invariants", () => {
 				expect(

@@ -2277,6 +2277,49 @@ exports[`HTML syntax — invariants html-syntax-the-facade-holds-no-printer-unti
 
 exports[`HTML syntax — invariants html-syntax-the-facade-holds-no-printer-until-something-prints tokenizes 1`] = `"open[0,3|1,2] text[3,4] close[4,8|6,7] end=8"`;
 
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"SourceProcessor","options":{"skip":{"text":true}}} 1`] = `"Document[0,0] Element(html)[0,0] Element(head)[0,0] /Element Element(body)[0,0] Element(p)[0,27] /Element Element(style)[27,52] /Element Comment[52,63] /Comment /Element /Element /Document"`;
+
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"tokenize","options":{"fragmentContext":"title","isForeign":true},"visit":true} 1`] = `"text[0,63] end=63"`;
+
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"tokenize","options":{"fragmentContext":"title","isForeign":true},"visit":true} 2`] = `"vetoesContentMode(title)=false"`;
+
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"options":{"fragmentContext":"td","skip":{"comments":true}}} 1`] = `
+"| <html>
+|   <p>
+|     style=\\"color: red\\"
+|     \\"x\\"
+|   <style>
+|     \\"a { b: c }\\""
+`;
+
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"options":{"fragmentContext":"td","skip":{"comments":true}}} 2`] = `""`;
+
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       style=\\"color: red\\"
+|       \\"x\\"
+|     <style>
+|       \\"a { b: c }\\"
+|     <!-- keep -->"
+`;
+
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses 2`] = `"warning[0,22]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","renderEmbeddedSource":"builtin"} 1`] = `"<p style=color:red>x</p><style>a{b:c}</style>"`;
+
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<p style=\\"color: red\\">x</p><style>a { b: c }</style>"`;
+
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/block-contents:\\"color: red\\" css:\\"a { b: c }\\""`;
+
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","transforms":{"comments":{"regexp":"keep"}}} 1`] = `"<p style=\\"color: red\\">x</p><style>a { b: c }</style><!--keep-->"`;
+
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify"} 1`] = `"<p style=\\"color: red\\">x</p><style>a { b: c }</style>"`;
+
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers tokenizes 1`] = `"attr[3,8|10,20]\\" open[0,22|1,2] text[22,23] close[23,27|25,26] open[27,34|28,33] text[34,44] close[44,52|46,51] comment[52,63|56,60] end=63"`;
+
 exports[`HTML syntax — invariants output-html-with-a-java-script-entry-should-wrap-the-entry-before-the-first parses 1`] = `
 "| <!DOCTYPE html>
 | <html>

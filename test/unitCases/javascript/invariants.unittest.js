@@ -2,9 +2,13 @@
 
 const { SourceProcessor, parser } = require("../../../lib/javascript/syntax");
 const {
+	answerOf,
 	fixtures,
+	printOptions,
+	readRun,
 	snapshotText,
-	unexplained
+	unexplained,
+	walkLine
 } = require("../../helpers/fixture");
 const { parse, plain } = require("../../helpers/javascriptParse");
 const { invariantFindings } = require("../../helpers/syntaxInvariants");
@@ -13,6 +17,8 @@ const syntax = require("../../helpers/syntaxInvariants/javascript");
 const { behaviorDifference } = require("../../../tooling/compare-js-tools");
 
 /** @typedef {import("../../helpers/syntaxInvariants/relations").Report} Report */
+/** @typedef {import("../../helpers/fixture").ParseEntry} ParseEntry */
+/** @typedef {import("../../../lib/javascript/syntax-parser").ParserOptions} ParserOptions */
 
 /**
  * A tree as one line: each node's type and range, then its scalar fields and
@@ -37,18 +43,6 @@ const treeText = (value) => {
 };
 
 /**
- * @param {() => string} read what to run
- * @returns {string} its answer, or the error it throws
- */
-const answerOf = (read) => {
-	try {
-		return read();
-	} catch (err) {
-		return `throws: ${/** @type {Error} */ (err).message}`;
-	}
-};
-
-/**
  * @param {unknown} value a token's value
  * @returns {string} it as the token line holds it
  */
@@ -68,16 +62,16 @@ const valueText = (value) => {
  * one line: each one's type label and range, then its value where that is not
  * the text it spans, and the error that stops it.
  * @param {string} source a script or a module
- * @param {"module" | "script"} sourceType the goal it is read under
+ * @param {Partial<ParserOptions>} options what it is read as, over the latest grammar with a hashbang allowed
  * @returns {string} the token line
  */
-const tokenLine = (source, sourceType) => {
+const tokenLine = (source, options) => {
 	/** @type {string[]} */
 	const out = [];
 	const tokenizer = parser.Parser.tokenizer(source, {
 		ecmaVersion: "latest",
-		sourceType,
 		allowHashBang: true,
+		...options,
 		onComment: (block, text, start, end) => {
 			out.push(`${block ? "block" : "line"}[${start},${end}]`);
 		}
@@ -110,15 +104,104 @@ const sourceTypeOf = (source) => {
 	return goal === null ? "module" : goal.sourceType;
 };
 
+/**
+ * @param {Partial<ParserOptions>} options the run's options
+ * @param {string[] | undefined} log where `visit` writes each comment and token read
+ * @returns {Partial<ParserOptions>} them, with recorders for both where there is a log
+ */
+const recording = (options, log) =>
+	log === undefined
+		? options
+		: {
+				...options,
+				onComment: (block, text, start, end) => {
+					log.push(`${block ? "block" : "line"}[${start},${end}]`);
+				},
+				onToken: (token) => {
+					log.push(`${token.type.label}[${token.start},${token.end}]`);
+				}
+			};
+
+/**
+ * The public entry points a fixture's `parse.json` may name, the document
+ * parse first; `SourceProcessor` logs the visitors its walk fires.
+ * @type {Record<string, ParseEntry>}
+ */
+const ENTRIES = {
+	// Over a build's options, as `javascriptParse.js` gives them.
+	parse: {
+		records: true,
+		read: (source, options, log) => [
+			answerOf(() =>
+				treeText(
+					plain(
+						parse(
+							source,
+							recording(
+								log === undefined ? options : { ...options, comments: false },
+								log
+							)
+						).ast
+					)
+				)
+			)
+		]
+	},
+	parseProgram: {
+		read: (source, options) => {
+			/** @type {string[]} */
+			const errors = [];
+			const tree = answerOf(() =>
+				treeText(
+					plain(
+						parser.parseProgram(source, 0, {
+							...options,
+							estree: true,
+							parseError: (input, code, start, end, severity) => {
+								errors.push(`${severity}[${start},${end}]:${code}`);
+							}
+						})
+					)
+				)
+			);
+			return [tree, errors.join(" ")];
+		}
+	},
+	parseExpressionAt: {
+		records: true,
+		read: (source, options, log) => [
+			answerOf(() =>
+				treeText(
+					plain(
+						parser.Parser.parseExpressionAt(
+							source,
+							0,
+							recording({ ecmaVersion: "latest", ...options }, log)
+						)
+					)
+				)
+			)
+		]
+	},
+	tokenizer: { read: (source, options) => [tokenLine(source, options)] },
+	SourceProcessor: {
+		read: (source, options) => [
+			walkLine(SourceProcessor, parser.NodeType, source, options)
+		]
+	}
+};
+
 // Every input the JavaScript tests read is a fixture, and each one is read,
 // printed and held to the parser's and printer's own relations; a new fixture
 // needs no code.
 describe("JavaScript syntax — invariants", () => {
 	const all = fixtures("javascript");
-	for (const { name, source, options, behavior, expected } of all) {
+	for (const { name, source, options, behavior, parses, expected } of all) {
 		describe(name, () => {
 			it("tokenizes", () => {
-				expect(tokenLine(source, sourceTypeOf(source))).toMatchSnapshot();
+				expect(
+					tokenLine(source, { sourceType: sourceTypeOf(source) })
+				).toMatchSnapshot();
 			});
 
 			it("parses", () => {
@@ -155,18 +238,28 @@ describe("JavaScript syntax — invariants", () => {
 			it.each(options.map((one) => [JSON.stringify(one), one]))(
 				"prints %s",
 				(_title, one) => {
+					const { options: given, log } = printOptions(one);
 					expect(
 						snapshotText(
 							answerOf(
 								() =>
 									/** @type {{ code: string }} */ (
-										new SourceProcessor().process(source, one)
+										new SourceProcessor().process(source, given)
 									).code
 							)
 						)
 					).toMatchSnapshot();
+					if (log !== undefined) expect(log.join(" ")).toMatchSnapshot();
 				}
 			);
+
+			for (const run of parses) {
+				it(`parses ${JSON.stringify(run)}`, () => {
+					for (const value of readRun(ENTRIES, source, run)) {
+						expect(value).toMatchSnapshot();
+					}
+				});
+			}
 
 			// Opt-in, as running costs a fresh context per run.
 			if (behavior.length > 0) {
@@ -174,7 +267,7 @@ describe("JavaScript syntax — invariants", () => {
 				"runs as its source when printed %s",
 				(title, one) => {
 					const { code } = /** @type {{ code: string }} */ (
-						new SourceProcessor().process(source, one)
+						new SourceProcessor().process(source, printOptions(one).options)
 					);
 					let reports = behaviorDifference(source, code);
 					// A run times out under a loaded machine too, so one that did

@@ -1,18 +1,38 @@
 "use strict";
 
 const { SourceProcessor, parser } = require("../../../lib/css/syntax");
-const { parseAStylesheet } = require("../../../lib/css/syntax-parser");
+const {
+	parseABlocksContents,
+	parseACommaSeparatedListOfComponentValues,
+	parseAComponentValue,
+	parseADeclaration,
+	parseAListOfComponentValues,
+	parseARule,
+	parseAStylesheet,
+	parseAStylesheetsContents
+} = require("../../../lib/css/syntax-parser");
 const {
 	fixtures,
+	printOptions,
+	readRun,
 	snapshotText,
-	unexplained
+	unexplained,
+	walkLine
 } = require("../../helpers/fixture");
-const { serializeStylesheet } = require("../../helpers/serializeCssTree");
+const {
+	serializeComponentValue,
+	serializeComponentValues,
+	serializeDeclaration,
+	serializeRules,
+	serializeStylesheet
+} = require("../../helpers/serializeCssTree");
 const { invariantFindings } = require("../../helpers/syntaxInvariants");
 const { purityRelation } = require("../../helpers/syntaxInvariants/relations");
 const syntax = require("../../helpers/syntaxInvariants/css");
 
 /** @typedef {import("../../../lib/css/syntax-parser").MutableToken} MutableToken */
+/** @typedef {import("../../../lib/css/syntax-parser").CssParseOptions} CssParseOptions */
+/** @typedef {import("../../helpers/fixture").ParseEntry} ParseEntry */
 
 /**
  * @param {string} kind the token kind, or the severity of a parse error
@@ -72,11 +92,90 @@ const tokenLine = (source) => {
 	return out.join(" ");
 };
 
+/**
+ * A `parseA*` entry point's read: its result in css-parsing-tests' JSON form,
+ * then its parse errors; under `visit`, each comment token it reads is logged.
+ * @param {(source: string, options: CssParseOptions) => unknown} read the call, answering its result in that form
+ * @returns {ParseEntry} the entry
+ */
+const parseEntry = (read) => ({
+	records: true,
+	read: (source, options, log) => {
+		/** @type {string[]} */
+		const errors = [];
+		/** @type {CssParseOptions} */
+		const given = {
+			...options,
+			parseError: (input, code, start, end, severity) => {
+				errors.push(tokenText(severity, [start, end], `:${code}`));
+			}
+		};
+		if (log !== undefined) {
+			given.comment = (input, start, end) => {
+				log.push(tokenText("comment", [start, end]));
+				return end;
+			};
+		}
+		const result = read(source, given);
+		return [
+			result === undefined ? "undefined" : JSON.stringify(result),
+			errors.join(" ")
+		];
+	}
+});
+
+/**
+ * The public entry points a fixture's `parse.json` may name, the document
+ * parse first; `SourceProcessor` logs the visitors its walk fires.
+ * @type {Record<string, ParseEntry>}
+ */
+const ENTRIES = {
+	parseAStylesheet: parseEntry((source, options) =>
+		serializeStylesheet(parseAStylesheet(source, 0, options), source)
+	),
+	parseAStylesheetsContents: parseEntry((source, options) =>
+		serializeRules(parseAStylesheetsContents(source, 0, options), source)
+	),
+	parseABlocksContents: parseEntry((source, options) => {
+		const { decls, rules } = parseABlocksContents(source, 0, options);
+		// Declarations first: reading the rules parses their blocks again.
+		const declarations = decls.map(serializeDeclaration);
+		return { decls: declarations, rules: serializeRules(rules, source) };
+	}),
+	parseARule: parseEntry((source, options) => {
+		const rule = parseARule(source, 0, options);
+		return rule === undefined ? undefined : serializeRules([rule], source)[0];
+	}),
+	parseADeclaration: parseEntry((source, options) => {
+		const declaration = parseADeclaration(source, 0, options);
+		return declaration === undefined
+			? undefined
+			: serializeDeclaration(declaration);
+	}),
+	parseAComponentValue: parseEntry((source, options) => {
+		const value = parseAComponentValue(source, 0, options);
+		return value === undefined ? undefined : serializeComponentValue(value);
+	}),
+	parseAListOfComponentValues: parseEntry((source, options) =>
+		serializeComponentValues(parseAListOfComponentValues(source, 0, options))
+	),
+	parseACommaSeparatedListOfComponentValues: parseEntry((source, options) =>
+		parseACommaSeparatedListOfComponentValues(source, 0, options).map(
+			serializeComponentValues
+		)
+	),
+	SourceProcessor: {
+		read: (source, options) => [
+			walkLine(SourceProcessor, parser.NodeType, source, options)
+		]
+	}
+};
+
 // Every input the CSS tests read is a fixture, and each one is read, printed and
 // held to the parser's and printer's own relations; a new fixture needs no code.
 describe("CSS syntax — invariants", () => {
 	const all = fixtures("css");
-	for (const { name, source, options, expected } of all) {
+	for (const { name, source, options, parses, expected } of all) {
 		describe(name, () => {
 			it("tokenizes", () => {
 				expect(tokenLine(source)).toMatchSnapshot();
@@ -100,15 +199,25 @@ describe("CSS syntax — invariants", () => {
 			it.each(options.map((one) => [JSON.stringify(one), one]))(
 				"prints %s",
 				(_title, one) => {
+					const { options: given, log } = printOptions(one);
 					expect(
 						snapshotText(
 							/** @type {{ code: string }} */ (
-								new SourceProcessor().process(source, one)
+								new SourceProcessor().process(source, given)
 							).code
 						)
 					).toMatchSnapshot();
+					if (log !== undefined) expect(log.join(" ")).toMatchSnapshot();
 				}
 			);
+
+			for (const run of parses) {
+				it(`parses ${JSON.stringify(run)}`, () => {
+					for (const value of readRun(ENTRIES, source, run)) {
+						expect(value).toMatchSnapshot();
+					}
+				});
+			}
 
 			it("holds its invariants", () => {
 				expect(

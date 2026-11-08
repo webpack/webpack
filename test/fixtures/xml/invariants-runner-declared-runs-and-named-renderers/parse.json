@@ -1,0 +1,5 @@
+[
+	{ "options": { "skip": { "comments": true } } },
+	{ "entry": "tokenizeXml" },
+	{ "entry": "SourceProcessor", "options": { "skip": { "comments": true } } }
+]

@@ -1,0 +1,1 @@
+Exercises each channel the XML fixture runner offers beyond the defaults: a `parse.json` run per entry point and a named `renderEmbeddedSource` and `{ "regexp" }` print option; no XML entry takes a callback for `visit` to record.

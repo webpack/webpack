@@ -1,0 +1,4 @@
+[
+	{ "xml": true, "mode": "minify", "renderEmbeddedSource": "offers" },
+	{ "xml": true, "mode": "minify", "transforms": { "comments": { "regexp": "keep" } } }
+]

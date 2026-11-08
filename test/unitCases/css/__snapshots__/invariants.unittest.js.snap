@@ -39818,6 +39818,34 @@ exports[`CSS syntax — invariants html-minify-one-document-reaching-every-embed
 
 exports[`CSS syntax — invariants html-minify-one-document-reaching-every-embedded-site-minifies-with-webpack-s-3 tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,9] whitespace[9,10] colon[10,11] whitespace[11,12] hash[12,19]# whitespace[19,20] right-curly-bracket[20,21] end=21"`;
 
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"SourceProcessor","options":{"recurseBlocks":false}} 1`] = `"Comment[59,65] /Comment QualifiedRule[0,66] Ident[0,1] /Ident /QualifiedRule"`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"parseAComponentValue"} 1`] = `"undefined"`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"parseAComponentValue"} 2`] = `""`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"parseARule","visit":true} 1`] = `"[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"url\\",[\\"string\\",\\"data:image/svg+xml,<svg ><g ></g></svg>\\"]]]]"`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"parseARule","visit":true} 2`] = `""`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"parseARule","visit":true} 3`] = `"comment[59,65]"`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"url\\",[\\"string\\",\\"data:image/svg+xml,<svg ><g ></g></svg>\\"]]]]]"`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers parses 2`] = `""`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"a{background:url(\\"data:image/svg+xml,<svg ><g ></g></svg>\\")}"`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"svg:\\"<svg ><g ></g></svg>\\""`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","renderEmbeddedSource":{"name":"builtin","options":{"svg":true}}} 1`] = `"a{background:url(data:image/svg+xml,<svg><g/></svg>)}"`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","transforms":{"comments":{"regexp":"k\\\\d"}}} 1`] = `"a{background:url(\\"data:image/svg+xml,<svg ><g ></g></svg>\\")}/*k1*/"`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify"} 1`] = `"a{background:url(\\"data:image/svg+xml,<svg ><g ></g></svg>\\")}"`;
+
+exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,12] colon[12,13] function[13,17] string[17,58] right-parenthesis[58,59] comment[59,65] right-curly-bracket[65,66] end=66"`;
+
 exports[`CSS syntax — invariants parser parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants parser parses 2`] = `"error[59,59]:eof-in-qualified-rule"`;

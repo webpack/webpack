@@ -1,0 +1,7 @@
+[
+	{ "options": { "sourceType": "module" }, "visit": true },
+	{ "entry": "parseExpressionAt", "options": { "ecmaVersion": 5 } },
+	{ "entry": "parseProgram", "options": { "sourceType": "script" } },
+	{ "entry": "tokenizer", "options": { "sourceType": "script" } },
+	{ "entry": "SourceProcessor" }
+]

@@ -1,0 +1,8 @@
+[
+	{ "mode": "minify", "renderEmbeddedSource": "offers" },
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": { "name": "builtin", "options": { "svg": true } }
+	},
+	{ "mode": "minify", "transforms": { "comments": { "regexp": "k\\d" } } }
+]
