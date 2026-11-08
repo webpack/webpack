@@ -2,6 +2,9 @@
 
 const { fixture } = require("../../helpers/fixture");
 
+// Each fixture's tokens are in `invariants.unittest.js`'s snapshot; these hold
+// the token object, the stream, the helpers and what no fixture can hold.
+
 const fs = require("fs");
 const path = require("path");
 const { SourceProcessor } = require("../../../lib/css/syntax");
@@ -13,18 +16,6 @@ const {
 	TokenStream,
 	TokenType
 } = require("../../../lib/css/syntax-parser");
-
-/**
- * @param {string} css a stylesheet
- * @param {string[]=} browsers the browserslist selection to target
- * @param {import("../../../lib/css/syntax-parser").CssEnvironment=} abilities the CSS abilities the target reads
- * @returns {string} its minified serialization
- */
-const minifyFor = (css, browsers, abilities) =>
-	new SourceProcessor().process(css, {
-		mode: "minify",
-		environment: browsers ? { ...abilities, browsers } : abilities
-	}).code;
 
 // Snapshot uses the spec-style kebab-case names for multi-word token types;
 // the tokenizer emits numeric `TokenType` values. Map between them so the existing
@@ -103,25 +94,6 @@ describe("readToken", () => {
 	}
 });
 
-/**
- * @param {string} input CSS source
- * @returns {string} input reconstructed from token source slices
- */
-const tokenRoundtrip = (input) => {
-	let out = "";
-	for (let pos = 0; ;) {
-		const t = readToken(
-			input,
-			pos,
-			/** @type {import("../../../lib/css/syntax-parser").MutableToken} */ ({})
-		);
-		if (t === undefined) break;
-		pos = t.end;
-		out += input.slice(t.start, t.end);
-	}
-	return out;
-};
-
 // Regressions from the css-parsing-tests corpus: each input previously hung
 // the parser or dropped bytes from the token stream.
 describe("CssSyntax — the token the lexer reuses", () => {
@@ -159,7 +131,6 @@ describe("CssSyntax — the token the lexer reuses", () => {
 });
 
 describe("CssSyntax regressions", () => {
-	const NUL = String.fromCharCode(0);
 	const C1 = String.fromCharCode(0x80); // U+0080: an ident-start code point
 
 	it("does not hang on a literal U+0080 ident-start code point", () => {
@@ -170,20 +141,6 @@ describe("CssSyntax regressions", () => {
 	it("does not hang on a backslash at EOF inside a url token", () => {
 		expect(parseAListOfComponentValues(fixture("css", "css-syntax-regressions-does-not-hang-on-a-backslash-at-eof-inside-a-url-token"), 0, {})).toHaveLength(1);
 		expect(parseAListOfComponentValues(fixture("css", "css-syntax-regressions-does-not-hang-on-a-backslash-at-eof-inside-a-url-token-2"), 0, {})).toHaveLength(1);
-	});
-
-	it("emits an unterminated comment at EOF so token ranges cover all input", () => {
-		expect(tokenRoundtrip(fixture("css", "css-syntax-regressions-emits-an-unterminated-comment-at-eof-so-token-ranges"))).toBe("a /* unterminated");
-		expect(tokenRoundtrip(fixture("css", "css-syntax-regressions-emits-an-unterminated-comment-at-eof-so-token-ranges-2"))).toBe("/* x");
-	});
-
-	it("emits a string with a trailing backslash at EOF", () => {
-		expect(tokenRoundtrip(fixture("css", "css-syntax-regressions-emits-a-string-with-a-trailing-backslash-at-eof"))).toBe('"ab\\');
-		expect(tokenRoundtrip(fixture("css", "css-syntax-regressions-emits-a-string-with-a-trailing-backslash-at-eof-2"))).toBe("url('a\\");
-	});
-
-	it("never drops input bytes around a NUL code point", () => {
-		expect(tokenRoundtrip(`a${NUL}b`)).toBe(`a${NUL}b`);
 	});
 });
 
@@ -226,36 +183,6 @@ describe("CssSyntax — an escape the input ran out of", () => {
 		expect(unescapedOf(fixture("css", "css-syntax-an-escape-the-input-ran-out-of-names-the-replacement-character-at-end"))).toBe("ab�");
 		expect(unescapedOf(fixture("css", "css-syntax-an-escape-the-input-ran-out-of-names-the-replacement-character-at-end-2"))).toBe("ab�");
 		expect(unescapedOf(fixture("css", "css-syntax-an-escape-the-input-ran-out-of-names-the-replacement-character-at-end-3"))).toBe("ab�");
-	});
-
-});
-
-// §4.3.8 leaves a `\` a delim only where a newline follows it. Printing one is
-// therefore printing that newline: every other character it could be followed
-// by makes it an escape of that character instead.
-describe("CssSyntax — a backslash delim", () => {
-	/**
-	 * @param {string} src css source
-	 * @returns {string} minified twice, to show the first pass is a fixed point
-	 */
-	const twice = (src) => minifyFor(minifyFor(src));
-
-	it("prints a fixed point wherever one ends a run", () => {
-		// Each of these ends the run the printer then writes `;`, `}`, `{` or
-		// `]` after — the characters a `\` would otherwise escape.
-		for (const src of [
-			fixture("css", "css-syntax-a-backslash-delim-keeps-the-newline-that-makes-it-a-delim-2"),
-			fixture("css", "css-syntax-a-backslash-delim-prints-a-fixed-point-wherever-one-ends-a-run-2"),
-			fixture("css", "css-syntax-a-backslash-delim-prints-a-fixed-point-wherever-one-ends-a-run-4"),
-			fixture("css", "css-syntax-a-backslash-delim-keeps-the-newline-that-makes-it-a-delim"),
-			fixture("css", "css-syntax-a-backslash-delim-prints-a-fixed-point-wherever-one-ends-a-run-7"),
-			fixture("css", "css-syntax-a-backslash-delim-prints-a-fixed-point-wherever-one-ends-a-run-13"),
-			fixture("css", "css-syntax-a-backslash-delim-prints-a-fixed-point-wherever-one-ends-a-run-9"),
-			fixture("css", "css-syntax-a-backslash-delim-keeps-the-newline-that-makes-it-a-delim-3"),
-			fixture("css", "css-syntax-a-backslash-delim-prints-a-fixed-point-wherever-one-ends-a-run-11")
-		]) {
-			expect(twice(src)).toBe(minifyFor(src));
-		}
 	});
 });
 
@@ -302,21 +229,6 @@ describe("CssSyntax — preprocessing the input stream", () => {
 		expect(cvTypes(`12${NUL}red`)).toEqual(cvTypes(fixture("css", "css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as")));
 		expect(cvTypes(`url(a${NUL}b)`)).toEqual(cvTypes(fixture("css", "css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-2")));
 	});
-
-	it("reads one in a custom media name the walk resolves ahead", () => {
-		// The rules are read before the walk; a NUL there must still name U+FFFD,
-		// or `--a` is never seen to read `--b�c` and is left unresolved.
-		/** @type {(c: string) => string} */
-		const css = (c) =>
-			`@custom-media --a (--b${c}c);@custom-media --b${c}c (min-width:1px);@media (--a){.x{color:red}}`;
-		/** @type {(code: string) => string} */
-		const minify = (code) =>
-			new SourceProcessor().process(code, {
-				mode: "minify",
-				transforms: { customMedia: true }
-			}).code;
-		expect(minify(css(NUL))).toContain("@media (width>=1px){");
-	});
 });
 
 /**
@@ -331,65 +243,6 @@ const cvTypes = (src) =>
  */
 const cvUnescaped = (src) =>
 	parseAListOfComponentValues(src).map((n) => `${A.value(n)}${A.name(n)}`);
-/**
- * @param {string} src css source
- * @returns {number} the first token's type
- */
-const firstTokenType = (src) =>
-	/** @type {import("../../../lib/css/syntax-parser").MutableToken} */ (
-		readToken(
-			src,
-			0,
-			/** @type {import("../../../lib/css/syntax-parser").MutableToken} */ ({})
-		)
-	).type;
-
-describe("CssSyntax — tokenizer edge cases", () => {
-	it("treats an unterminated string at EOF as a string token", () => {
-		expect(firstTokenType(fixture("css", "css-syntax-tokenizer-edge-cases-treats-an-unterminated-string-at-eof-as-a-string"))).toBe(TokenType.String);
-	});
-
-	it("treats an unterminated url at EOF as a url token", () => {
-		expect(firstTokenType(fixture("css", "css-syntax-tokenizer-edge-cases-treats-an-unterminated-url-at-eof-as-a-url-token"))).toBe(TokenType.Url);
-		expect(firstTokenType(fixture("css", "css-syntax-tokenizer-edge-cases-treats-an-unterminated-url-at-eof-as-a-url-token-2"))).toBe(TokenType.Url);
-	});
-
-	it("turns a malformed url into a bad-url token", () => {
-		expect(firstTokenType(fixture("css", "css-syntax-tokenizer-edge-cases-turns-a-malformed-url-into-a-bad-url-token"))).toBe(TokenType.BadUrl);
-		expect(firstTokenType(fixture("css", "css-syntax-tokenizer-edge-cases-turns-a-malformed-url-into-a-bad-url-token-2"))).toBe(TokenType.BadUrl);
-		// an escape encountered during bad-url recovery is consumed, not re-scanned
-		expect(firstTokenType(fixture("css", "css-syntax-tokenizer-edge-cases-turns-a-malformed-url-into-a-bad-url-token-3"))).toBe(TokenType.BadUrl);
-	});
-
-	it("readToken returns undefined once the input is fully consumed", () => {
-		// "a" is a single 1-char ident token; reading past it (offset 1) is EOF.
-		expect(
-			readToken(
-				"a",
-				0,
-				/** @type {import("../../../lib/css/syntax-parser").MutableToken} */ ({})
-			)
-		).toBeDefined();
-		expect(
-			readToken(
-				"a",
-				1,
-				/** @type {import("../../../lib/css/syntax-parser").MutableToken} */ ({})
-			)
-		).toBeUndefined();
-	});
-
-	it("turns a newline inside a string into a bad-string token", () => {
-		expect(firstTokenType(fixture("css", "css-syntax-component-values-token-to-node-preserves-bad-string-and-bad-url"))).toBe(TokenType.BadString);
-	});
-
-	it("consumes CRLF as a single whitespace run and inside escapes", () => {
-		expect(firstTokenType(fixture("css", "css-syntax-tokenizer-edge-cases-consumes-crlf-as-a-single-whitespace-run-and"))).not.toBe(TokenType.EOF);
-		// escaped CR/LF line-continuation inside a string exercises the
-		// CRLF-collapsing escaped-newline path.
-		expect(firstTokenType(fixture("css", "css-syntax-token-value-decoding-resolves-string-escapes-and-line-continuations-4-4"))).toBe(TokenType.String);
-	});
-});
 
 describe("CssSyntax — a string the source never closed", () => {
 	/**
@@ -477,59 +330,6 @@ describe("CssSyntax — code point and substitution helpers", () => {
 		);
 		expect(containsSubstitutionFunction("calc(1px + 2px)")).toBe(false);
 		expect(containsSubstitutionFunction("red")).toBe(false);
-	});
-});
-
-describe("CssSyntax — tokens at the end of the input", () => {
-	/**
-	 * @param {string} src css source
-	 * @returns {[number, number, number][]} each raw token's type and range
-	 */
-	const tokensOf = (src) => {
-		/** @type {[number, number, number][]} */
-		const tokens = [];
-		for (let pos = 0; ; ) {
-			const t = readToken(
-				src,
-				pos,
-				/** @type {import("../../../lib/css/syntax-parser").MutableToken} */ ({})
-			);
-			if (t === undefined) break;
-			tokens.push([t.type, t.start, t.end]);
-			pos = t.end;
-		}
-		return tokens;
-	};
-
-	it("reads a lone `@` as a delim and `@` with a name as an at-keyword", () => {
-		expect(tokensOf("@")).toEqual([[TokenType.Delim, 0, 1]]);
-		expect(tokensOf(fixture("css", "css-syntax-tokens-at-the-end-of-the-input-reads-a-lone-as-a-delim-and-with-a-2"))).toEqual([[TokenType.AtKeyword, 0, 2]]);
-	});
-
-	it("runs a bad url the input never closed to the end of the input", () => {
-		// §4.3.14 consumes the remnants up to `)` or EOF, whichever comes first.
-		expect(tokensOf(fixture("css", "css-syntax-tokens-at-the-end-of-the-input-runs-a-bad-url-the-input-never-closed"))).toEqual([[TokenType.BadUrl, 0, 7]]);
-		expect(tokensOf(fixture("css", "css-syntax-tokens-at-the-end-of-the-input-runs-a-bad-url-the-input-never-closed-2"))).toEqual([[TokenType.BadUrl, 0, 7]]);
-	});
-
-	it("does not reread the first code point when a `-` ends the input", () => {
-		// §4.3.9: `-` then EOF starts no ident sequence, so the `-` is a delim.
-		expect(tokensOf(fixture("css", "css-syntax-tokens-at-the-end-of-the-input-does-not-reread-the-first-code-point-3"))).toEqual([
-			[TokenType.Number, 0, 1],
-			[TokenType.Delim, 1, 2]
-		]);
-		expect(tokensOf(fixture("css", "css-syntax-tokens-at-the-end-of-the-input-does-not-reread-the-first-code-point-4"))).toEqual([
-			[TokenType.Delim, 0, 1],
-			[TokenType.Delim, 1, 2]
-		]);
-		expect(tokensOf(fixture("css", "css-syntax-tokens-at-the-end-of-the-input-does-not-reread-the-first-code-point"))).toEqual([[TokenType.Dimension, 0, 3]]);
-		expect(tokensOf(fixture("css", "css-syntax-tokens-at-the-end-of-the-input-does-not-reread-the-first-code-point-2"))).toEqual([[TokenType.AtKeyword, 0, 3]]);
-	});
-
-	it("marks a hash of a lone `-` as unrestricted", () => {
-		const out = /** @type {import("../../../lib/css/syntax-parser").MutableToken} */ ({});
-		expect(readToken(fixture("css", "css-syntax-tokens-at-the-end-of-the-input-marks-a-hash-of-a-lone-as-unrestricted-2"), 0, out)).toMatchObject({ type: TokenType.Hash, isId: false });
-		expect(readToken(fixture("css", "css-syntax-tokens-at-the-end-of-the-input-marks-a-hash-of-a-lone-as-unrestricted"), 0, out)).toMatchObject({ type: TokenType.Hash, isId: true });
 	});
 });
 

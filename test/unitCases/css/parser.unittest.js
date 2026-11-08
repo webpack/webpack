@@ -2,6 +2,9 @@
 
 const { fixture } = require("../../helpers/fixture");
 
+// Each fixture's tree and parse errors are in `invariants.unittest.js`'s
+// snapshot; these hold the other entry points, accessors, skips and visitors.
+
 const { SourceProcessor } = require("../../../lib/css/syntax");
 const {
 	A,
@@ -20,7 +23,6 @@ const {
 	parseAStylesheet,
 	parseAStylesheetsContents,
 	Part,
-	readToken,
 	TokenStream
 } = require("../../../lib/css/syntax-parser");
 
@@ -366,49 +368,9 @@ describe("CssSyntax — parseError callback", () => {
 		return errors;
 	};
 
-	it.each([
-		[fixture("css", "css-syntax-parse-error-callback-reports-open"), [["eof-in-comment", "", "error"]]],
-		[fixture("css", "css-syntax-parse-error-callback-reports-a-b-open"), [["eof-in-string", "", "error"]]],
-		[fixture("css", "css-syntax-parse-error-callback-reports-a-b-open-2"), [["eof-in-string", "", "error"]]],
-		[fixture("css", "css-syntax-parse-error-callback-reports-a-b-x-n"), [["newline-in-string", "\n", "warning"]]],
-		[fixture("css", "css-syntax-parse-error-callback-reports-a-b-url-x"), [["eof-in-url", "", "error"]]],
-		[fixture("css", "css-syntax-parse-error-callback-reports-a-b-url-x-2"), [["eof-in-url", "", "error"]]],
-		[fixture("css", "css-syntax-parse-error-callback-reports-a-b-url-x-y"), [["unexpected-character-in-url", '"', "warning"]]],
-		[fixture("css", "css-syntax-parse-error-callback-reports-a-b-url-x-ny"), [["invalid-escape", "\\", "warning"]]],
-		[
-			fixture("css", "css-syntax-parse-error-callback-reports-a-b-url-x-3"),
-			[
-				["eof-in-escape", "\\", "error"],
-				["eof-in-url", "", "error"]
-			]
-		],
-		[fixture("css", "css-syntax-parse-error-callback-reports-a-b-n"), [["invalid-escape", "\\", "warning"]]],
-		["a", [["eof-in-qualified-rule", "", "error"]]],
-		[
-			fixture("css", "css-syntax-parse-error-callback-reports-a-x"),
-			[
-				["eof-in-string", "", "error"],
-				["eof-in-qualified-rule", "", "error"]
-			]
-		],
-		[fixture("css", "css-syntax-parse-error-callback-reports-a-b"), [["unexpected-right-curly-bracket", "}", "warning"]]],
-		[fixture("css", "css-syntax-parse-error-callback-reports-x-a"), [["unexpected-right-curly-bracket", "}", "warning"]]],
-		[fixture("css", "css-syntax-parse-error-callback-reports-x-a-b-c"), [["missing-qualified-rule-block", ";", "warning"]]],
-		[fixture("css", "css-syntax-nesting-and-error-recovery-rethrows-what-else-fails-a-parse-as-it-is"), []]
-	])("reports %j", (css, expected) => {
-		expect(collect(parseAStylesheet, css)).toEqual(expected);
-	});
-
 	it("reports a stray } in a list of component values", () => {
 		expect(collect(parseAListOfComponentValues, "a}b")).toEqual([
 			["unexpected-right-curly-bracket", "}", "warning"]
-		]);
-	});
-
-	it("reports an error once when a backtracked span re-tokenizes", () => {
-		// The declaration fails on its `{}` value and the span re-parses as a rule.
-		expect(collect(parseAStylesheet, '.x{a:"q\n{}}')).toEqual([
-			["newline-in-string", "\n", "warning"]
 		]);
 	});
 
@@ -426,18 +388,6 @@ describe("CssSyntax — parseError callback", () => {
 		]
 	])("%s forwards the callback", (name, parse, css) => {
 		expect(collect(parse, css)).toEqual([["eof-in-string", "", "error"]]);
-	});
-
-	it("stops reporting once the parse returns", () => {
-		const parseError = jest.fn();
-		parseAStylesheet(fixture("css", "source-processor-merging-adjacent-style-drops-a-run-s-first-element-only-where-4"), 0, { parseError });
-		readToken(
-			fixture("css", "css-syntax-parse-error-callback-parse-acomponent-value-forwards-the-callback"),
-			0,
-			/** @type {import("../../../lib/css/syntax-parser").MutableToken} */ ({})
-		);
-		parseAStylesheet(fixture("css", "css-syntax-parse-error-callback-parse-acomponent-value-forwards-the-callback"));
-		expect(parseError).not.toHaveBeenCalled();
 	});
 });
 
@@ -2203,5 +2153,4 @@ describe("CssSyntax — what a minifying print reads off the parse", () => {
 		const css = `a{${"margin-top:1px;margin-right:2px;margin-bottom:3px;margin-left:4px;".repeat(MANY)}}`;
 		expect(minify(css)).toBe("a{margin:1px 2px 3px 4px}");
 	});
-
 });
