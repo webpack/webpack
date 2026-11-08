@@ -1,0 +1,12 @@
+[
+	{
+		"mode": "minify",
+		"compress": false,
+		"mangle": {
+			"reserved": [
+				"n",
+				"t"
+			]
+		}
+	}
+]

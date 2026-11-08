@@ -1,0 +1,12 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"global_defs": {
+				"process.env.NODE_ENV": "production",
+				"env.DEBUG": 0
+			}
+		},
+		"mangle": false
+	}
+]

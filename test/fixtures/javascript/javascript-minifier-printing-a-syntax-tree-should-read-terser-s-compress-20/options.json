@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"global_defs": {
+				"V": 0
+			}
+		},
+		"mangle": false
+	}
+]

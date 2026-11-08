@@ -1,0 +1,1 @@
+/\p{Extended_Pictographic}/u;

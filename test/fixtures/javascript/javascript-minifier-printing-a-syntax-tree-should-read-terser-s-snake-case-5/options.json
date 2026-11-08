@@ -1,0 +1,45 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"format": {
+			"asciiOnly": true
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"format": {
+			"ascii_only": true
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {}
+	},
+	{
+		"mode": "minify",
+		"format": {
+			"ascii_only": true
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"format": {
+			"asciiOnly": false,
+			"ascii_only": true
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"output": {
+			"ascii_only": true
+		}
+	}
+]

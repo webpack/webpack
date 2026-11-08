@@ -64,7 +64,7 @@ describe("WebpackParser", () => {
 					.argument
 			).toBeNull();
 			// a stray closer still pops safely before the parser rejects it
-			expect(() => parse("}")).toThrow(/Unexpected token/);
+			expect(() => parse(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-classify-braces-as-4"))).toThrow(/Unexpected token/);
 		});
 
 		it("should read `/` after a value as division, not a regexp", () => {
@@ -529,10 +529,10 @@ const TOKENIZER_SOURCES = {
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-6"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-7"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-8"),
-		"@",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-11"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-9"),
-		"\u{1F600}",
-		"\u000E",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-12"),
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-13"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-10")
 	],
 	numbers: [
@@ -540,15 +540,15 @@ const TOKENIZER_SOURCES = {
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-2"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-3"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-4"),
-		"0x",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-22"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-5"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-6"),
-		"1_",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-23"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-7"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-8"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-9"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-10"),
-		"1e",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-24"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-11"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-12"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-13"),
@@ -560,7 +560,7 @@ const TOKENIZER_SOURCES = {
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-19"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-20"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-21"),
-		"1."
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-25")
 	],
 	strings: [
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set"),
@@ -603,7 +603,7 @@ const TOKENIZER_SOURCES = {
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-17"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-18"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-19"),
-		"`",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-21"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-20")
 	],
 	regexps: [
@@ -617,7 +617,7 @@ const TOKENIZER_SOURCES = {
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-8"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-9"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-10"),
-		"/a",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-18"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-11"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-12"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-13"),
@@ -640,9 +640,9 @@ const TOKENIZER_SOURCES = {
 		fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-150"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-9"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-10"),
-		"a\u180E",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-13"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-11"),
-		"#!",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-14"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-12")
 	],
 	identifiers: [
@@ -653,7 +653,7 @@ const TOKENIZER_SOURCES = {
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-5"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-6"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-7"),
-		"a\\",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-16"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-8"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-9"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-10"),
@@ -663,9 +663,9 @@ const TOKENIZER_SOURCES = {
 		"\uD835",
 		"\uD835a",
 		"a\uDC00",
-		"\u{1D400}",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-17"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-14"),
-		"#1",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-18"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-15")
 	],
 	keywords: [
@@ -793,7 +793,7 @@ describe("Parser.tokenizer", () => {
 			expect(differences).toEqual([]);
 			// the override is what turns the `/` after `{}` into a division
 			const tokens = /** @type {{ type: { label: string } }[]} */ (
-				parsedTokens(Parser, "x = a ? b : {} / 2", { ecmaVersion: "latest" })
+				parsedTokens(Parser, fixture("javascript", "parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn-5"), { ecmaVersion: "latest" })
 			);
 			expect(tokens.map((token) => token.type.label)).toEqual([
 				"name",

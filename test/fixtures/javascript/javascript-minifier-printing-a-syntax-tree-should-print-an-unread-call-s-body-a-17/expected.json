@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "(n)||o()}g(0)",
+		"why": "the body of an unread call folded into the caller prints in the parentheses it took inside that body; a second pass, reading it in its new place, prints it bare"
+	}
+]

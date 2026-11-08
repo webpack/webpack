@@ -1,0 +1,1 @@
+export function t(){function u(){return 2}return[new function(x){if(x)return{b:9}}(1),new F(g()),u(3)]}

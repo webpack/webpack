@@ -1,0 +1,13 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"safari10": true
+	}
+]

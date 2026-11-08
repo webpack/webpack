@@ -1,0 +1,1 @@
+function f(x,g){return[({b:g(),a:1}).a+1]}

@@ -4,5 +4,10 @@
 		"compress": {},
 		"mangle": false,
 		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"compress": false,
+		"mangle": false
 	}
 ]

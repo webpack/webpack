@@ -1,0 +1,21 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"dropDebugger": false
+		},
+		"mangle": {}
+	},
+	{
+		"mode": "minify",
+		"compress": {
+			"drop_debugger": false
+		},
+		"mangle": {}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {}
+	}
+]

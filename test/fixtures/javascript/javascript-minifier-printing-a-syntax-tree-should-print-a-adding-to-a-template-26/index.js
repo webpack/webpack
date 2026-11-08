@@ -1,0 +1,1 @@
+function f(x,y,g){return[`${`\0`}${`1${x}`}`]}

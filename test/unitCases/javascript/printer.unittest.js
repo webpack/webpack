@@ -2437,10 +2437,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 	});
 
 	it("should refuse an option it does not know, and a module statement off the top level", () => {
-		expect(() => minifyOnePass("x", { mangle: /** @type {EXPECTED_ANY} */ ({ nope: 1 }) })).toThrow(
+		expect(() => minifyOnePass(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"), { mangle: /** @type {EXPECTED_ANY} */ ({ nope: 1 }) })).toThrow(
 			"`nope` is not a supported option"
 		);
-		expect(() => minifyOnePass("x", { format: /** @type {EXPECTED_ANY} */ ({ nope: 1 }) })).toThrow(
+		expect(() => minifyOnePass(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"), { format: /** @type {EXPECTED_ANY} */ ({ nope: 1 }) })).toThrow(
 			"`nope` is not a supported option"
 		);
 		// A script reads module syntax anywhere, which the scopes then refuse.
@@ -4309,18 +4309,18 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(mapped.map.names).toEqual(expect.arrayContaining(["g", "h", "y"]));
 		for (const [input, output, options] of /** @type {[string, string, EXPECTED_OBJECT?][]} */ ([
 			// Where the items before it go, what opens the statement keeps them.
-			["x,void{a:g()}.b", "x,({a:g()}.b);"],
-			["1,!!(function(){g()}()==x)", "(function(){g()}()==x);"],
-			["x={k:0||(()=>1),[0||(()=>1)]:1},y=[0||(()=>1)]", "x={k:()=>1,[(()=>1)]:1},y=[()=>1];"],
-			["x=a?longName:(f(1)(2),longName)", "x=(a||(f(1)(2)),longName);"],
-			["!/*@__PURE__*/(function(){})(g(),h())", "!(g(),h());"],
-			["void /*@__PURE__*/(function(){})(g(),h())", "g(),h();"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as"), "x,({a:g()}.b);"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-2"), "(function(){g()}()==x);"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-3"), "x={k:()=>1,[(()=>1)]:1},y=[()=>1];"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-4"), "x=(a||(f(1)(2)),longName);"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-5"), "!(g(),h());"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-6"), "g(),h();"],
 			[
-				"export function t(){function u(){return 2}return[new function(x){if(x)return{b:9}}(1),new F(g()),u(3)]}",
+				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-7"),
 				"export function t(){return[new function(){return{b:9}},new F(g()),2]}",
 				{ sourceType: "module" }
 			],
-			["{;f()}", "{\nf();\n}", { mode: "beautify", compress: false }]
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-8"), "{\nf();\n}", { mode: "beautify", compress: false }]
 		])) {
 			expect(
 				minifyOnePass(input, { compress: {}, mangle: false, ...options }).code

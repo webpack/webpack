@@ -1,0 +1,1 @@
+function f(x,y,g){return[x<1!==y>2]}

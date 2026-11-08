@@ -1,6 +1,6 @@
 "use strict";
 
-const { fixture } = require("../../helpers/fixture");
+const { fixture, fixtures } = require("../../helpers/fixture");
 
 /** @typedef {{ type: { label: string }, value: unknown, start: number, end: number, loc?: object, range?: [number, number] }} TokenLike */
 /** @typedef {Record<string, EXPECTED_ANY>} Options */
@@ -474,7 +474,7 @@ describe("WebpackParser", () => {
 		});
 
 		it("should keep splitting statements at ASI boundaries", () => {
-			expect(parse("x").ast.body).toHaveLength(1);
+			expect(parse(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3")).ast.body).toHaveLength(1);
 			expect(parse(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at")).ast.body).toHaveLength(2);
 			const { ast } = parse(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-2"), { ranges: false });
 			expect(ast.body).toHaveLength(2);
@@ -2070,8 +2070,8 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 	it("finishes an unmatched closing paren before the parser rejects it", () => {
 		// the token's context hook runs while tokenizing, so the root context is
 		// left expecting an expression and only then does the parser refuse it
-		expect(() => parse(")")).toThrow(/Unexpected token/);
-		expect(() => parse("}")).toThrow(/Unexpected token/);
+		expect(() => parse(fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-finishes-an-unmatched-closing"))).toThrow(/Unexpected token/);
+		expect(() => parse(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-classify-braces-as-4"))).toThrow(/Unexpected token/);
 	});
 
 	it("keeps the delegated tokenizer cold paths reachable with the fast loop off", () => {
@@ -3017,294 +3017,10 @@ describe("acorn corpus recording", () => {
 /** @type {import("acorn").ecmaVersion[]} */
 const ECMA_VERSIONS = [5, 2015, 2017, 2018, 2020, 2022, 2024, 2025, "latest"];
 
-/** @type {[string, string][]} */
-const PATTERNS = [
-	// anchors, assertions and lookaround
-	["^abc$", ""],
-	["\\bword\\B", ""],
-	["(?=a)(?!b)", ""],
-	["(?<=a)(?<!b)", ""],
-	["(?=a)*", ""],
-	["(?=a)*", "u"],
-	["(?<=a)+", ""],
-	["\\b+", ""],
-	["^*", ""],
-	// quantifiers and braces
-	["a*b+c?d{2}e{2,}f{2,3}", ""],
-	["a*?b+?c??d{2}?e{2,}?f{2,3}?", ""],
-	["a{3,2}", ""],
-	["a{", ""],
-	["a{", "u"],
-	["a{1", ""],
-	["a{1", "u"],
-	["a{1,", "u"],
-	["{1}", ""],
-	["{1}", "u"],
-	["}", ""],
-	["}", "u"],
-	["]", ""],
-	["]", "u"],
-	["a**", ""],
-	["a+{2}", ""],
-	["a{99999999999999999999}", ""],
-	["a{4294967295}", "u"],
-	// groups, names and backreferences
-	["(a)(?:b)(?<name>c)\\1\\k<name>", ""],
-	["(?<name>a)(?<name>b)", ""],
-	["(?<name>a)|(?<name>b)", ""],
-	["(?<name>a)|(?<name>b)", "u"],
-	["(?:(?<x>a)|(?<x>b))\\k<x>", "u"],
-	["(?<x>a)(?:(?<x>b))", "u"],
-	["(?<x>a)(?:(?<x>b)|c)", "u"],
-	// a name repeated across nested disjunctions, where the two are separated
-	// only when one alternative of one disjunction rules the other out
-	["(?:(?<x>a)|b)(?:(?<x>c)|d)", "u"],
-	["(?:(?:(?<x>a)|b)|(?:(?<x>c)|d))", "u"],
-	["(?:(?<x>a)|(?:(?<x>b)|c))", "u"],
-	["(?:(?<x>a)|(?:b(?<x>c)))|(?<x>d)", "u"],
-	["(?:(?:(?:(?<x>a))))|(?:(?:(?:(?<x>b))))", "u"],
-	["(?:(?:(?:(?<x>a))))(?:(?:(?:(?<x>b))))", "u"],
-	["(?<n>a)\\k<m>", ""],
-	["(?<n>a)\\k<m>", "u"],
-	["\\k<n>", ""],
-	["\\k<n>", "u"],
-	["\\k", ""],
-	["\\k", "u"],
-	["(?<n>a)\\k", ""],
-	["(?<\\u{1d4d1}>a)", "u"],
-	["(?<\\ud835\\udcd1>a)", ""],
-	["(?<\\u{1d4d1}>a)", ""],
-	["(?<\\u0041>a)", ""],
-	["(?<>a)", ""],
-	["(?<1a>a)", ""],
-	["(?<a>a", ""],
-	["(?<a", ""],
-	["(?<a\\>a)", ""],
-	["(?<$>a)\\k<$>", ""],
-	["(?<_\\u200c>a)", "u"],
-	["(a)\\2", ""],
-	["(a)\\2", "u"],
-	["\\1", ""],
-	["\\1", "u"],
-	["(a)\\1(b)\\2(c)\\3\\10", ""],
-	["(?", ""],
-	["(", ""],
-	[")", ""],
-	["(?i:a)", ""],
-	["(?i:a)", "u"],
-	["(?ims:a)", "v"],
-	["(?-i:a)", "v"],
-	["(?i-m:a)", "v"],
-	["(?i-i:a)", "v"],
-	["(?ii:a)", "v"],
-	["(?-:a)", "v"],
-	["(?g:a)", "v"],
-	["(?i", "v"],
-	["(?i:a", "v"],
-	// character escapes
-	["\\d\\D\\s\\S\\w\\W", ""],
-	["\\cA\\cz", ""],
-	["\\c1", ""],
-	["\\c1", "u"],
-	["\\c", ""],
-	["\\c", "u"],
-	["\\0", ""],
-	["\\0", "u"],
-	["\\01", ""],
-	["\\01", "u"],
-	["\\07", ""],
-	["\\377\\400", ""],
-	["\\8\\9", ""],
-	["\\8", "u"],
-	["\\x41\\x4", ""],
-	["\\x4", "u"],
-	["\\u0041\\u004", ""],
-	["\\u004", "u"],
-	["\\u{41}\\u{1F600}", "u"],
-	["\\u{41}", ""],
-	["\\u{110000}", "u"],
-	["\\u{}", "u"],
-	["\\u{", "u"],
-	["\\ud83d\\ude00", "u"],
-	["\\ud83d", "u"],
-	["\\ud83d\\u0041", "u"],
-	["\\/\\-\\a\\q", ""],
-	["\\-", "u"],
-	["\\a", "u"],
-	["\\$\\^\\*\\+\\?\\.\\(\\)\\[\\]\\{\\}\\|\\\\\\/", "u"],
-	["\\", ""],
-	["\\", "u"],
-	["\\u{1F600}", "v"],
-	// dot and syntax characters
-	["a.b", ""],
-	["a.b", "s"],
-	["*", ""],
-	["+", ""],
-	["?", ""],
-	["|", ""],
-	["a|", ""],
-	["()", ""],
-	["(|)", ""],
-	// character classes
-	["[abc][^abc][a-z][-a][a-][]", ""],
-	["[a-z]", "u"],
-	["[z-a]", ""],
-	["[z-a]", "u"],
-	["[\\d-z]", ""],
-	["[\\d-z]", "u"],
-	["[a-\\d]", ""],
-	["[a-\\d]", "u"],
-	["[\\b]", ""],
-	["[\\-]", ""],
-	["[\\-]", "u"],
-	["[\\c_]", ""],
-	["[\\c_]", "u"],
-	["[\\c1]", ""],
-	["[\\01]", ""],
-	["[\\01]", "u"],
-	["[\\8]", ""],
-	["[\\8]", "u"],
-	["[a", ""],
-	["[a", "u"],
-	["[\\ud83d\\ude00-\\ud83d\\ude4f]", "u"],
-	["[\\ud83d\\ude00-\\ud83d\\ude4f]", ""],
-	["[\\u{1F600}-\\u{1F64F}]", "u"],
-	["[\\x41-\\x5a]", "u"],
-	["[\\w-a]", ""],
-	["[\\w-a]", "u"],
-	["[a-\\w]", "u"],
-	["[\\s-\\d]", ""],
-	// unicode property escapes
-	["\\p{L}\\P{L}", "u"],
-	["\\p{L}", ""],
-	["\\p{Letter}", "u"],
-	["\\p{General_Category=Lu}", "u"],
-	["\\p{gc=Lu}", "u"],
-	["\\p{Script=Greek}", "u"],
-	["\\p{sc=Grek}", "u"],
-	["\\p{Script_Extensions=Latin}", "u"],
-	["\\p{scx=Latn}", "u"],
-	["\\p{Script=Kawi}", "u"],
-	["\\p{Script=Nag_Mundari}", "u"],
-	["\\p{Script=Garay}", "u"],
-	["\\p{Script=Todhri}", "u"],
-	["\\p{Emoji}", "u"],
-	["\\p{Emoji_Presentation}", "u"],
-	["\\p{Extended_Pictographic}", "u"],
-	["\\p{ID_Compat_Math_Start}", "u"],
-	["\\p{Any}\\p{ASCII}\\p{Assigned}", "u"],
-	["\\p{Unknown}", "u"],
-	["\\p{gc=Unknown}", "u"],
-	["\\p{Script=Unknown}", "u"],
-	["\\p{Script=}", "u"],
-	["\\p{=Lu}", "u"],
-	["\\p{}", "u"],
-	["\\p{", "u"],
-	["\\p", "u"],
-	["\\p{L", "u"],
-	["\\p{L=}", "u"],
-	["\\p{Lu=Lu}", "u"],
-	["\\p{Basic_Emoji}", "u"],
-	["\\p{Basic_Emoji}", "v"],
-	["\\p{RGI_Emoji}", "v"],
-	["\\P{RGI_Emoji}", "v"],
-	["[^\\p{RGI_Emoji}]", "v"],
-	["[\\p{RGI_Emoji}]", "v"],
-	["\\p{RGI_Emoji_Flag_Sequence}\\p{Emoji_Keycap_Sequence}", "v"],
-	["[\\p{L}]", "u"],
-	["[\\P{L}]", "u"],
-	["[\\p{L}-a]", "u"],
-	["\\p{L}", "v"],
-	["(?i:\\P{Lu})", "v"],
-	// unicode sets (v flag)
-	["[\\p{L}--[a-z]]", "v"],
-	["[\\p{L}&&\\p{Lu}]", "v"],
-	["[[a-z]--[aeiou]]", "v"],
-	["[[a-z]&&[aeiou]]", "v"],
-	["[[a-z]--[aeiou]--[xyz]]", "v"],
-	["[[a-z]&&[aeiou]&&[a]]", "v"],
-	["[[a-z]--[aeiou]&&[a]]", "v"],
-	["[[a-z]&&[aeiou]--[a]]", "v"],
-	["[a--b]", "v"],
-	["[a&&b]", "v"],
-	["[a-z--b]", "v"],
-	["[[a-z]--b]", "v"],
-	["[\\q{abc|def|}]", "v"],
-	["[\\q{abc}--\\q{abc}]", "v"],
-	["[\\q{a}]", "u"],
-	["[^\\q{ab}]", "v"],
-	["[^\\q{a}]", "v"],
-	["[\\q{ab}]", "v"],
-	["[\\q{a\\u{1F600}}]", "v"],
-	["[\\q{", "v"],
-	["[\\q{a", "v"],
-	["[\\q]", "v"],
-	["[(]", "v"],
-	["[)]", "v"],
-	["[{]", "v"],
-	["[}]", "v"],
-	["[/]", "v"],
-	["[-]", "v"],
-	["[|]", "v"],
-	["[!!]", "v"],
-	["[&]", "v"],
-	["[&&]", "v"],
-	["[a&&&b]", "v"],
-	["[a--]", "v"],
-	["[--a]", "v"],
-	["[a&&]", "v"],
-	["[[a-z]", "v"],
-	["[[a-z]]]", "v"],
-	["[\\&\\-\\!\\#\\%\\,\\:\\;\\<\\=\\>\\@\\`\\~]", "v"],
-	["[\\b\\B]", "v"],
-	["[\\d-a]", "v"],
-	["[a-\\d]", "v"],
-	["[\\w&&\\d]", "v"],
-	["[\\p{L}&&\\q{abc}]", "v"],
-	["[[\\q{abc}]--[\\q{abc}]]", "v"],
-	["[\\p{RGI_Emoji}--\\q{x}]", "v"],
-	["[^[\\p{RGI_Emoji}]]", "v"],
-	["[^[\\q{ab}]]", "v"],
-	["[^[a]&&[\\q{ab}]]", "v"],
-	["[\\u{1F600}-\\u{1F64F}]", "v"],
-	["[z-a]", "v"],
-	["[\\q{z}-a]", "v"],
-	["[a-\\q{z}]", "v"],
-	["\\p{Lowercase}", "v"],
-	// annex B syntax in non-unicode mode
-	["\\c", ""],
-	["[\\c]", ""],
-	["\\c-", ""],
-	["a{,5}", ""],
-	["a{,5}", "u"],
-	["\\p{L}", ""],
-	["(?=a){2}", ""],
-	["(?<=a){2}", ""],
-	["\\1(a)", ""],
-	["\\10", ""],
-	["\\10", "u"],
-	["[\\10]", ""],
-	["\\z\\Z", ""],
-	["\\z", "u"],
-	// whole-literal shapes the tokenizer decides
-	["a\\/b", ""],
-	["[/]", ""],
-	["a", "g"],
-	["a", "gimsuy"],
-	["a", "gimsuyd"],
-	["a", "dgimsvy"],
-	["a", "uv"],
-	["a", "gg"],
-	["a", "x"],
-	["a", "z"],
-	["a", "d"],
-	["a", "s"],
-	["a", "y"],
-	["a", "v"],
-	["a", "u"],
-	["", ""],
-	["(?:)", "g"]
-];
+// Each a regexp literal, as `/pattern/flags;`.
+const PATTERNS = fixtures("javascript")
+	.filter(({ name }) => /^reg-exp-validator-pattern(-\d+)?$/.test(name))
+	.map(({ source }) => source);
 
 /**
  * What a parser makes of a regexp literal: `parsed`, or the error it threw.
@@ -3327,8 +3043,7 @@ describe("RegExpValidator", () => {
 		it(`rejects and accepts the same patterns as acorn at ecmaVersion ${ecmaVersion}`, () => {
 			const differences = [];
 			let rejected = 0;
-			for (const [pattern, flags] of PATTERNS) {
-				const source = `/${pattern}/${flags};`;
+			for (const source of PATTERNS) {
 				const ours = verdictOf(
 					(code, options) => Parser.parse(code, options),
 					source,
@@ -3339,7 +3054,7 @@ describe("RegExpValidator", () => {
 					source,
 					ecmaVersion
 				);
-				if (ours !== theirs) differences.push({ pattern, flags, ours, theirs });
+				if (ours !== theirs) differences.push({ source, ours, theirs });
 				if (theirs !== "parsed") rejected++;
 			}
 			expect(differences).toEqual([]);
@@ -4875,22 +4590,22 @@ describe("Parser", () => {
 		it("normalizes options like acorn", () => {
 			const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
 			try {
-				expect(Parser.parse("x", {}).type).toBe("Program");
-				expect(Parser.parse("y", {}).type).toBe("Program");
+				expect(Parser.parse(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"), {}).type).toBe("Program");
+				expect(Parser.parse(fixture("javascript", "parser-static-entry-points-normalizes-options-like-acorn"), {}).type).toBe("Program");
 				expect(warn).toHaveBeenCalledTimes(1);
 				expect(warn.mock.calls[0][0]).toMatch(/ecmaVersion is required/);
 			} finally {
 				warn.mockRestore();
 			}
 			expect(() =>
-				Parser.parse("x", {
+				Parser.parse(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"), {
 					ecmaVersion: "latest",
 					sourceType: "commonjs",
 					allowAwaitOutsideFunction: true
 				})
 			).toThrow(/allowAwaitOutsideFunction with sourceType: commonjs/);
 			expect(() =>
-				acornPort.Parser.parse("x", {
+				acornPort.Parser.parse(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"), {
 					ecmaVersion: "latest",
 					sourceType: "commonjs",
 					allowAwaitOutsideFunction: true
@@ -4947,7 +4662,7 @@ describe("Parser", () => {
 
 		it("appends to a program node the caller continues", () => {
 			const program = acornPort.Parser.parse("a;", { ecmaVersion: 2020 });
-			const continued = Parser.parse("b;", { ecmaVersion: 2020, program });
+			const continued = Parser.parse(fixture("javascript", "parser-static-entry-points-appends-to-a-program-node-the-caller-continues"), { ecmaVersion: 2020, program });
 			expect(continued).toBe(program);
 			expect(continued.body.map((node) => node.type)).toEqual([
 				"ExpressionStatement",
@@ -5716,7 +5431,7 @@ describe("JavaScript SourceProcessor", () => {
 			}
 		});
 		processor.process(fixture("javascript", "javascript-source-processor-skips-a-node-s-children-stops-and-fires-every"));
-		processor.process("e;");
+		processor.process(fixture("javascript", "javascript-source-processor-skips-a-node-s-children-stops-and-fires-every-2"));
 		expect(names).toEqual(["c", "stop", "e"]);
 	});
 
@@ -5726,13 +5441,13 @@ describe("JavaScript SourceProcessor", () => {
 		const processor = new SourceProcessor().use({
 			[NodeType.WithStatement]: (path) => {
 				types.push(path.type());
-				expect(() => processor.process("x;")).toThrow(/already running/);
+				expect(() => processor.process(fixture("javascript", "javascript-source-processor-reads-a-script-as-a-script-and-refuses-a-walk-inside"))).toThrow(/already running/);
 			}
 		});
 		processor.process(fixture("javascript", "javascript-source-processor-reads-a-script-as-a-script-and-refuses-a-walk"), { sourceType: "script" });
 		expect(types).toEqual([NodeType.WithStatement]);
 		expect(() => processor.process(fixture("javascript", "javascript-source-processor-reads-a-script-as-a-script-and-refuses-a-walk"))).toThrow(SyntaxError);
-		expect(() => processor.process("x;")).not.toThrow();
+		expect(() => processor.process(fixture("javascript", "javascript-source-processor-reads-a-script-as-a-script-and-refuses-a-walk-inside"))).not.toThrow();
 	});
 });
 
@@ -6288,17 +6003,17 @@ describe("parseProgram", () => {
 		expect(() =>
 			new SourceProcessor()
 				.use([NodeType.Identifier], () => {
-					parseProgram("b", 0, { estree: true });
+					parseProgram(fixture("javascript", "parse-program-refuses-an-estree-parse-a-visitor-starts-as-a-tree-parse"), 0, { estree: true });
 				})
-				.process("a", { sourceType: "script" })
+				.process(fixture("javascript", "parse-program-lets-the-last-tree-go-once-an-estree-parse-starts"), { sourceType: "script" })
 		).toThrow("a visitor cannot start another JavaScript parse");
 	});
 
 	it("lets the last tree go once an ESTree parse starts", () => {
 		const { parsedTree } = require("../../../lib/javascript/syntax-parser");
-		parseProgram("a");
+		parseProgram(fixture("javascript", "parse-program-lets-the-last-tree-go-once-an-estree-parse-starts"));
 		expect(parsedTree()).not.toBeNull();
-		parseProgram("b", 0, { estree: true });
+		parseProgram(fixture("javascript", "parse-program-refuses-an-estree-parse-a-visitor-starts-as-a-tree-parse"), 0, { estree: true });
 		expect(parsedTree()).toBeNull();
 	});
 
@@ -6347,7 +6062,7 @@ describe("parseProgram", () => {
 			parseProgram(fixture("javascript", "parse-program-reads-past-let-a-let-a"), 0, {
 				parseError: (input, code) => {
 					codes.push(code);
-					parseProgram("x");
+					parseProgram(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"));
 				}
 			})
 		).toThrow("parseProgram() is running");
@@ -6356,7 +6071,7 @@ describe("parseProgram", () => {
 
 	it("rethrows what is not a syntax error", () => {
 		expect(() =>
-			parseProgram("a", 0, {
+			parseProgram(fixture("javascript", "parse-program-lets-the-last-tree-go-once-an-estree-parse-starts"), 0, {
 				parseError: () => {
 					throw new TypeError("callback");
 				},
@@ -6373,19 +6088,19 @@ describe("parseProgram", () => {
 	});
 
 	it("leaves the parsed tree to a SourceProcessor run, and refuses one inside it", () => {
-		parseProgram("x");
+		parseProgram(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"));
 		/** @type {number[]} */
 		const seen = [];
 		new SourceProcessor()
 			.use({
 				[NodeType.Identifier]: (path) => {
 					seen.push(path.start());
-					expect(() => parseProgram("y")).toThrow(/process\(\) is running/);
+					expect(() => parseProgram(fixture("javascript", "parser-static-entry-points-normalizes-options-like-acorn"))).toThrow(/process\(\) is running/);
 				}
 			})
 			.process(fixture("javascript", "parse-program-leaves-the-parsed-tree-to-a-source-processor-run-and-refuses-one"));
 		expect(seen).toEqual([0, 4]);
-		const program = /** @type {number} */ (parseProgram("z"));
+		const program = /** @type {number} */ (parseProgram(fixture("javascript", "parse-program-leaves-the-parsed-tree-to-a-source-processor-run-and-refuses-one-2")));
 		expect(A.source(program)).toBe("z");
 	});
 });

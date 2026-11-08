@@ -1,0 +1,1 @@
+function f(x,g){return[({get a(){return 1}}).a]}

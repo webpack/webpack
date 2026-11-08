@@ -104,5 +104,17 @@
 			}
 		},
 		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {
+				"keep_quoted": "strict",
+				"cache": {
+					"props": {}
+				}
+			}
+		}
 	}
 ]

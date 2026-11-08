@@ -1,0 +1,1 @@
+function f(b,c){return[(""+typeof b).length]}

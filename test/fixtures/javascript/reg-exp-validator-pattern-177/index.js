@@ -1,0 +1,1 @@
+/\p{Basic_Emoji}/u;
