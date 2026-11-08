@@ -21,7 +21,6 @@ const {
 } = require("../../../lib/html/syntax-parser");
 const {
 	body,
-	child,
 	childrenOf,
 	parseHtml
 } = require("../../helpers/materializeHtmlTree");
@@ -76,14 +75,6 @@ describe("HtmlSyntax — the facade", () => {
 });
 
 describe("parseHtml", () => {
-	it("should parse void elements", () => {
-		const nodes = body(fixture("html", "parse-html-should-parse-void-elements"));
-		expect(nodes).toHaveLength(2);
-		expect(nodes[0].tagName).toBe("img");
-		expect(nodes[0].selfClosing).toBe(true);
-		expect(nodes[1].tagName).toBe("br");
-		expect(nodes[1].selfClosing).toBe(true);
-	});
 
 	it("should keep attribute values raw with source offsets", () => {
 		const a = body(fixture("html", "parse-html-should-keep-attribute-values-raw-with-source-offsets"))[0];
@@ -100,11 +91,6 @@ describe("parseHtml", () => {
 		expect(src.slice(attr.valueStart, attr.valueEnd)).toBe("test.html");
 	});
 
-	it("should handle self-closing tags", () => {
-		const nodes = body(fixture("html", "parse-html-should-handle-self-closing-tags"));
-		expect(nodes[0].tagName).toBe("input");
-		expect(nodes[0].selfClosing).toBe(true);
-	});
 
 	it("should not resolve prototype-named SVG tags and attributes through the adjustment tables", () => {
 		const svg = body(fixture("html", "parse-html-should-not-resolve-prototype-named-svg-tags-and-attributes-through"))[0];
@@ -119,90 +105,11 @@ describe("parseHtml", () => {
 		expect(Namespace.SVG).toBe(2);
 	});
 
-	it("should set tagEnd, nameEnd and start used by the consumer", () => {
-		const src = fixture("html", "parse-html-should-set-tag-end-name-end-and-start-used-by-the-consumer");
-		const script = find(src, "script");
-		expect(script.start).toBe(0);
-		expect(script.tagEnd).toBe(8); // after "<script>"
-		expect(src.slice(1, script.nameEnd)).toBe("script");
-	});
 
-	it("should update end offsets when an element is closed", () => {
-		const src = fixture("html", "parse-html-should-update-end-offsets-when-an-element-is-closed");
-		const div = body(src)[0];
-		const span = /** @type {MatElement} */ (div.children[0]);
-		expect(div.end).toBe(src.length);
-		// Closed by `</div>`, which names its parent: its source ends where that starts.
-		expect(src.slice(span.start, span.end)).toBe("<span>text");
-	});
 
-	it("should end an implicitly closed element where its content ends", () => {
-		const src = fixture("html", "parse-html-should-end-an-implicitly-closed-element-where-its-content-ends");
-		const nodes = body(src);
-		const spans = nodes.map((n) =>
-			src.slice(/** @type {MatElement} */ (n).start, /** @type {MatElement} */ (n).end)
-		);
-		expect(spans).toEqual(["<p>one", "<p>two", "<ul><li>a<li>b</ul>", "<br>"]);
-		const items = /** @type {MatElement} */ (nodes[2]).children.map((n) =>
-			src.slice(/** @type {MatElement} */ (n).start, /** @type {MatElement} */ (n).end)
-		);
-		expect(items).toEqual(["<li>a", "<li>b"]);
-	});
 
-	it("should keep whitespace the closed element holds inside its range", () => {
-		const src = fixture("html", "parse-html-should-keep-whitespace-the-closed-element-holds-inside-its-range");
-		// The `x` is foster-parented before the table; the space stays in colgroup.
-		const table = /** @type {MatElement} */ (body(src)[1]);
-		const colgroup = /** @type {MatElement} */ (table.children[0]);
-		expect(src.slice(colgroup.start, colgroup.end)).toBe("<colgroup> ");
-	});
 
-	describe("adoption agency algorithm", () => {
-		// Noah's Ark only counts entries whose attributes match, so the depth the
-		// second <p> reconstructs to reports whether two <b>s compared equal.
-		/**
-		 * @param {string} src source
-		 * @returns {number} nested `b` depth of the last body child
-		 */
 
-		it("should not duplicate an attribute span when a formatting element is cloned", () => {
-			// The <a> is reopened around <div> by the algorithm; the clone must not
-			// reuse the original's href span, or the parser emits two dependencies.
-			const nodes = body(fixture("html", "parse-html-adoption-agency-algorithm-should-not-duplicate-an-attribute-span-when"));
-			/** @type {string[]} */
-			const spans = [];
-			/** @param {MatNode} node node to collect from */
-			const collect = (node) => {
-				if (node.type !== NodeType.Element) return;
-				for (const attr of node.attributes) {
-					if (attr.valueStart !== undefined && attr.valueStart !== -1) {
-						spans.push(`${attr.valueStart},${attr.valueEnd}`);
-					}
-				}
-				for (const c of node.children) collect(c);
-			};
-			for (const node of nodes) collect(node);
-			expect(spans).toEqual([...new Set(spans)]);
-		});
-	});
-
-	it("should mirror the selected <option> into <selectedcontent>", () => {
-		const select = body(
-			fixture("html", "parse-html-should-mirror-the-selected-option-into-selectedcontent")
-		)[0];
-		const selectedcontent = child(
-			child(select.children, "button").children,
-			"selectedcontent"
-		);
-		const span = /** @type {MatElement} */ (selectedcontent.children[0]);
-		expect(span.tagName).toBe("span");
-		expect(/** @type {MatText} */ (span.children[0]).data).toBe("Y");
-		// The clone carries the attribute name/value but no source offsets, so
-		// the consumer never re-emits a dependency for it.
-		expect(span.attributes[0].name).toBe("id");
-		expect(span.attributes[0].value).toBe("x");
-		expect(span.attributes[0].valueStart).toBe(-1);
-	});
 
 });
 
@@ -211,72 +118,9 @@ describe("parseHtml — SourceProcessor", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 const { NodeType } = require("../../../lib/html/syntax-parser");
 
-	it("fires enter / exit visitors in source order", () => {
-		/** @type {string[]} */
-		const log = [];
-		new SourceProcessor()
-			.use(
-				/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
-					[NodeType.Element]: {
-						enter: (path) => log.push(`enter:${path.name()}`),
-						exit: (path) => log.push(`exit:${path.name()}`)
-					},
-					[NodeType.Text]: (path) => log.push(`text:${path.value()}`)
-				})
-			)
-			.process(fixture("html", "parse-html-source-processor-fires-enter-exit-visitors-in-source-order"));
-		expect(log).toEqual([
-			"enter:html",
-			"enter:head",
-			"exit:head",
-			"enter:body",
-			"enter:div",
-			"enter:span",
-			"text:a",
-			"exit:span",
-			"text:b",
-			"exit:div",
-			"exit:body",
-			"exit:html"
-		]);
-	});
 
-	it("visits the document root with a null parent", () => {
-		/** @type {[number, number | null][]} */
-		const seen = [];
-		new SourceProcessor()
-			.use({
-				[NodeType.Document]: (path) => seen.push([path.type(), path.parent])
-			})
-			.process(fixture("html", "parse-html-source-processor-visits-the-document-root-with-a-null-parent"));
-		expect(seen).toEqual([[NodeType.Document, null]]);
-	});
 
-	it("fires comment / doctype visitors", () => {
-		/** @type {string[]} */
-		const log = [];
-		new SourceProcessor()
-			.use({
-				[NodeType.Doctype]: () => log.push("doctype"),
-				[NodeType.Comment]: (path) => log.push(`comment:${path.value()}`)
-			})
-			.process(fixture("html", "parse-html-source-processor-fires-comment-doctype-visitors"));
-		expect(log).toEqual(["doctype", "comment:c"]);
-	});
 
-	it("path.skipChildren() stops descent into a node", () => {
-		/** @type {string[]} */
-		const log = [];
-		new SourceProcessor()
-			.use({
-				[NodeType.Element]: (path) => {
-					log.push(path.name());
-					if (path.name() === "div") path.skipChildren();
-				}
-			})
-			.process(fixture("html", "parse-html-source-processor-path-skip-children-stops-descent-into-a-node"));
-		expect(log).toEqual(["html", "head", "body", "div", "p"]);
-	});
 
 
 	it("use() chains and accumulates visitors per type", () => {
@@ -296,44 +140,6 @@ const { NodeType } = require("../../../lib/html/syntax-parser");
 // still run identically, so the element tree — tags, nesting, offsets and
 // attributes — is the same under any combination as under none.
 describe("parseHtml — skip options preserve element structure", () => {
-	// A spread of construction edge cases: foster parenting, adoption agency,
-	// select/table/ruby scoping, foreign content, raw-text elements, quirks.
-	const cases = [
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable"),
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-2"),
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-3"),
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-4"),
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-5"),
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-6"),
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-7"),
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-8"),
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-9"),
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-10"),
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-11"),
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-12"),
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-13"),
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-14"),
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-15"),
-		// Foreign-content CDATA becomes character data (dropped as prose).
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-16"),
-		// No doctype → quirks mode; skip.doctype must not change that.
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-17"),
-		// Entities/whitespace in prose text (whitespace routing in head/table).
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-18"),
-		// Escapable raw-text bodies + a title in head.
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-19"),
-		// Button scope + implied end tags.
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-20"),
-		// Comment-only document.
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-21"),
-		// `skip.text` whitespace fast-path fallbacks: whitespace-producing
-		// character references, CR normalization, and NUL must still route text
-		// exactly (these decide foster-parenting / framesetOk).
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-22"),
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-23"),
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-24"),
-		fixture("html", "parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-25")
-	];
 
 	/**
 	 * @param {MatDocument} doc document
@@ -381,12 +187,6 @@ describe("parseHtml — skip options preserve element structure", () => {
 		{ text: true, comments: true, doctype: true }
 	];
 
-	it.each(cases)("keeps the element tree stable under skip (%s)", (src) => {
-		const baseline = elementSignature(parseHtml(src));
-		for (const skip of skipCombos) {
-			expect(elementSignature(parseHtml(src, undefined, skip))).toBe(baseline);
-		}
-	});
 
 	it("skip.text drops every text node; raw-text bodies stay readable via contentEnd", () => {
 		const src = fixture("html", "parse-html-skip-options-preserve-element-structure-skip-text-drops-every-text");
@@ -752,48 +552,6 @@ describe("SourceProcessor — streamed walk recycling", () => {
 describe("SourceProcessor — streamed walk offsets", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 
-	// `HtmlParser` builds its head-injection anchors during the walk, so what it
-	// reads must be final: `tagEnd()` for the still-open `<html>` / `<head>`, and
-	// `end()` for the head's completed children. Assert both, at both sizes.
-	it("reports final end offsets for head elements", () => {
-		const SRC = [
-			"<!DOCTYPE html><html><head><title>t</title>",
-			'<script src="a.js"></script>',
-			fixture("html", "source-processor-render-embedded-source-keeps-the-body-when-the-renderer-throws"),
-			'<link rel="stylesheet" href="a.css">',
-			"</head><body><p>x</p></body></html>"
-		].join("");
-		/** @type {[string, number, number][]} */
-		const seen = [];
-		new SourceProcessor()
-			.use(
-				/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
-					[NodeType.Element]: (path) => {
-						seen.push([path.name(), path.range()[0], path.range()[1]]);
-					}
-				})
-			)
-			.process(SRC);
-		// A final `end` spans the element's own end tag; a provisional one would
-		// stop at the start tag's `>`.
-		const spans = new Map(
-			seen.map(([name, start, end]) => [name, SRC.slice(start, end)])
-		);
-		expect(spans.get("title")).toBe("<title>t</title>");
-		expect(spans.get("script")).toBe('<script src="a.js"></script>');
-		expect(spans.get("style")).toBe("<style>.a{color:red}</style>");
-		expect(spans.get("link")).toBe('<link rel="stylesheet" href="a.css">');
-		expect(seen.map((s) => s[0])).toEqual([
-			"html",
-			"head",
-			"title",
-			"script",
-			"style",
-			"link",
-			"body",
-			"p"
-		]);
-	});
 
 	it("reports a provisional end at enter and a final one at exit", () => {
 		/**

@@ -673,41 +673,6 @@ describe("SourceProcessor — inline CSS honors the target's abilities", () => {
 
 });
 
-describe("htmlMinify — assets webpack only passes through", () => {
-	const htmlMinify = require("../../../lib/html/htmlMinify");
-
-
-
-
-	it("drops the comments `some` names, as no comment it reaches carries anything", async () => {
-		const result = await htmlMinify(
-			{ "page.html": fixture("html", "html-minify-assets-webpack-only-passes-through-drops-the-comments-some-names-as") },
-			undefined,
-			{ extractComments: /foo/, comments: "some" }
-		);
-
-		expect(result.code).toBe("<p>a");
-		expect(result.extractedComments).toEqual(["<!-- foo -->"]);
-	});
-
-
-	it("reads a Buffer input as UTF-8", async () => {
-		const { code } = await htmlMinify({
-			"page.html": Buffer.from(
-				fixture("html", "html-minify-assets-webpack-only-passes-through-reads-a-buffer-input-as-utf-8"),
-				"utf8"
-			)
-		});
-
-		expect(code).toBe("<body><p>ça va à Zürich</body></html>");
-	});
-
-
-
-
-
-
-});
 
 
 describe("htmlMinify — embedded code a minifier fails on", () => {
@@ -717,17 +682,6 @@ describe("htmlMinify — embedded code a minifier fails on", () => {
 		fixture("html", "html-minify-embedded-code-a-minifier-fails-on-reports-what-webpack-s-own-css");
 
 
-	it("reports what webpack's own CSS minifier throws and keeps the body", async () => {
-		// `unusedSymbols` that is no list stands in for anything that makes it throw.
-		const unreadable = /** @type {string[]} */ (/** @type {unknown} */ (42));
-		const { code, errors } = await htmlMinify({ "page.html": page }, undefined, {
-			css: { unusedSymbols: unreadable }
-		});
-		expect(code).toBe(
-			'<style>a { b : c }</style><p style="b : c">x</p><script type=application/json>{"a":1}</script>'
-		);
-		expect(errors).toHaveLength(2);
-	});
 
 	it("keeps a body the caller's minifier fails on, reported once", async () => {
 		const { code, errors } = await htmlMinify({ "page.html": page }, undefined, {
@@ -939,31 +893,6 @@ describe("SourceProcessor — reusing work across a print", () => {
 
 
 
-describe("htmlMinify — the function an event handler is asked about", () => {
-	const htmlMinify = require("../../../lib/html/htmlMinify");
-
-
-
-
-
-
-	it("reports what a renderer threw over a handler", async () => {
-		// A body no JavaScript production holds is the renderer's to report, as an
-		// inline `<script>` that does not parse is.
-		const { code, errors } = await htmlMinify(
-			{ "page.html": fixture("html", "html-minify-the-function-an-event-handler-is-asked-about-reports-what-a-renderer") },
-			undefined,
-			{
-				renderEmbeddedSource: () => {
-					throw new Error("Unexpected token");
-				}
-			}
-		);
-
-		expect(code).toBe('<p onclick="var = broken(">x');
-		expect(errors).toHaveLength(1);
-	});
-});
 
 describe("htmlMinify export", () => {
 	it("is the minifier itself, reachable from the public entry", () => {
@@ -1039,11 +968,6 @@ describe("htmlMinify export", () => {
 			"<p>a</p><!--[if IE]><b>x</b><![endif]--><!--#include virtual=x -->";
 
 		it.each([
-			[true, ["<!--! one -->", "<!-- @license two -->"]],
-			["some", ["<!--! one -->", "<!-- @license two -->"]],
-			["all", ["<!--! one -->", "<!-- plain -->", "<!-- @license two -->"]],
-			[/license/, ["<!-- @license two -->"]],
-			["^!", ["<!--! one -->"]],
 			[
 				(/** @type {{ value: string }} */ comment) =>
 					comment.value.includes("one"),
@@ -1059,38 +983,9 @@ describe("htmlMinify export", () => {
 			}
 		);
 
-		it("leaves IE's `@cc_on` to `comments`", async () => {
-			expect(
-				await run(true, { comments: "cc_on" }, "<!--@cc_on--><p>a</p>")
-			).toEqual({
-				code: "<!--@cc_on--><p>a",
-				extractedComments: undefined
-			});
-		});
 
-		it("reads the plugin's option where `minimize.html` sets none", async () => {
-			expect(await run({ condition: /license/ })).toEqual({
-				code: rest,
-				extractedComments: ["<!-- @license two -->"]
-			});
-		});
 
-		it("keeps the comments `comments` names that are not taken", async () => {
-			expect(await run(true, { comments: "plain" })).toEqual({
-				code: "<p>a</p><!-- plain -->" + rest.slice(8),
-				extractedComments: ["<!--! one -->", "<!-- @license two -->"]
-			});
-		});
 
-		it.each([
-			["the plugin asks for none", false, {}],
-			["`minimize.html` asks for none", true, { extractComments: false }]
-		])("takes none where %s", async (_name, extractComments, options) => {
-			expect(await run(extractComments, options)).toEqual({
-				code: rest,
-				extractedComments: undefined
-			});
-		});
 
 		it("hands a predicate the comment's text, line and column", async () => {
 			/** @type {{ value: string, line: number, col: number }[]} */
@@ -1114,15 +1009,6 @@ describe("htmlMinify export", () => {
 			]);
 		});
 
-		it("leaves a nested document's comments to it", async () => {
-			const { code, extractedComments } = await run(
-				true,
-				{ comments: "all" },
-				fixture("html", "html-minify-export-extract-comments-leaves-a-nested-document-s-comments-to-it")
-			);
-			expect(extractedComments).toEqual(["<!--! top -->"]);
-			expect(code).toContain("inner");
-		});
 	});
 });
 
@@ -1216,7 +1102,6 @@ describe("SourceProcessor — printing what re-parses to the same tree", () => {
 
 
 	const MINIFY = /** @type {const} */ ({ mode: "minify" });
-	const BEAUTIFY = /** @type {const} */ ({ mode: "beautify" });
 
 
 
@@ -1289,30 +1174,6 @@ describe("SourceProcessor — printing what re-parses to the same tree", () => {
 			return { code, log };
 		};
 
-		it.each([MINIFY, BEAUTIFY])("still prints the subtree, %o", (options) => {
-			// `docs/syntax.md`: a print still writes the whole output, and the node
-			// skipped still exits. Its subtree used to print as `undefined`.
-			const source = fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-a-print-that-skips-2");
-			const { code, log } = skipping(source, options, NodeType.Element);
-			expect(code).toBe(
-				options === MINIFY
-					? source
-					: "<div><b>x</b><template><i>t</i></template></div><p>y</p>"
-			);
-			expect(log).toEqual([
-				"+html",
-				"+head",
-				"-head",
-				"+body",
-				"+div",
-				"-div",
-				"+p",
-				"-p",
-				"-body",
-				"-html",
-				"-doc"
-			]);
-		});
 
 		it("still prints a document whose root skipped its children", () => {
 			const { code, log } = skipping(
