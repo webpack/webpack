@@ -487,4 +487,26 @@ describe("util/identifier", () => {
 			});
 		}
 	});
+
+	describe("escapeFilenameForUrl", () => {
+		it("keeps a filename without a percent sign", () => {
+			const filename = "a b.js?v=1#x";
+			expect(identifierUtil.escapeFilenameForUrl(filename)).toBe(filename);
+		});
+
+		it("escapes each percent sign of the path", () => {
+			expect(identifierUtil.escapeFilenameForUrl("dir%41/a%2F.js")).toBe(
+				"dir%2541/a%252F.js"
+			);
+		});
+
+		it("keeps the query and fragment as written", () => {
+			expect(identifierUtil.escapeFilenameForUrl("a%41.js?v=%2F#%41")).toBe(
+				"a%2541.js?v=%2F#%41"
+			);
+			expect(identifierUtil.escapeFilenameForUrl("a%41.js#%41")).toBe(
+				"a%2541.js#%41"
+			);
+		});
+	});
 });
