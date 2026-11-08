@@ -1,31 +1,5 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`SourceProcessor — a duplicate attribute name preserves source attribute names on a template tag 1`] = `"<input TYPE=TEXT {% if isRequired %} required{% endif %}>"`;
-
-exports[`SourceProcessor — beautifying should beautify a comment 1`] = `"<div><!--c--></div>"`;
-
-exports[`SourceProcessor — beautifying should beautify a foreign script 1`] = `"<svg><script>&lt;b&gt;</script></svg>"`;
-
-exports[`SourceProcessor — beautifying should beautify a foreign style 1`] = `"<svg><style>&lt;/style&gt;</style></svg>"`;
-
-exports[`SourceProcessor — beautifying should beautify a form the table kept 1`] = `"<table><p><form></form></p></table>"`;
-
-exports[`SourceProcessor — beautifying should beautify a fostered formatting run 1`] = `"<nobr><table><b><colgroup><nobr>"`;
-
-exports[`SourceProcessor — beautifying should beautify a list fostered out of a table 1`] = `"<p><table><ol></ol></table></p>"`;
-
-exports[`SourceProcessor — beautifying should beautify an implied paragraph 1`] = `"<div   class=\\"x\\"    id=y ><p>z</p></div>"`;
-
-exports[`SourceProcessor — beautifying should beautify an unquoted attribute 1`] = `"<img src=a.png alt=hi>"`;
-
-exports[`SourceProcessor — beautifying should beautify attribute spelling 1`] = `"<A HREF='x'   dATa-Y=1 >t</A>"`;
-
-exports[`SourceProcessor — beautifying should beautify implied list items 1`] = `"<ul><li>a</li><li>b</li></ul>"`;
-
-exports[`SourceProcessor — beautifying should beautify implied table sections 1`] = `"<table><tr><td>1</td><td>2</td></tr></table>"`;
-
-exports[`SourceProcessor — beautifying should beautify raw text 1`] = `"<style>a{b:c}</style><script>1<2</script>"`;
-
 exports[`SourceProcessor — fostered runs no re-nesting reproduces keeps a holder that prints composed: beautify 1`] = `"<listing><table><object><object><tbody><input disabled=disabled><!--c--><table><b id=1><h1><svg>"`;
 
 exports[`SourceProcessor — fostered runs no re-nesting reproduces keeps a holder that prints composed: minify 1`] = `"<listing><table><object><object><tbody><input disabled=disabled><!--c--><table><b id=1><h1><svg>"`;

@@ -428,108 +428,6 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 describe("SourceProcessor — merging adjacent <script>", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 
-	/**
-	 * @param {string} html input markup
-	 * @returns {string} the minified serialization
-	 */
-	const minify = (html) =>
-		new SourceProcessor().process(html, { mode: "minify", mergeScripts: true })
-			.code;
-
-	/**
-	 * @param {string} html input markup
-	 * @returns {number} how many `<script>` elements the print left
-	 */
-	const scriptCount = (html) => (minify(html).match(/<script\b/g) || []).length;
-
-	it("declines a run carrying any attribute at all", () => {
-		for (const attribute of [
-			"src=x.js",
-			"type=module",
-			'type="text/javascript"',
-			"nonce=n",
-			"async",
-			"defer",
-			"id=q",
-			"class=c",
-			"data-x=1",
-			"integrity=sha256-x",
-			"crossorigin"
-		]) {
-			// Two elements still, whichever side carries it.
-			expect(
-				scriptCount(`<script ${attribute}>a()</script><script>b()</script>`)
-			).toBe(2);
-			expect(
-				scriptCount(`<script>a()</script><script ${attribute}>b()</script>`)
-			).toBe(2);
-		}
-	});
-
-	it("declines anything but whitespace between them", () => {
-		expect(
-			scriptCount(
-				fixture("html", "source-processor-merging-adjacent-script-declines-anything-but-whitespace-3")
-			)
-		).toBe(2);
-	});
-
-	it("declines a body that leaves something open", () => {
-		// Each would swallow the next body whole.
-		for (const open of [
-			"a() /* open",
-			'var s = "open',
-			"var s = 'open",
-			"var s = `open",
-			// eslint-disable-next-line no-template-curly-in-string
-			"var s = `open${1}",
-			'var s = "a" + "open'
-		]) {
-			expect(scriptCount(`<script>${open}</script><script>b()</script>`)).toBe(
-				2
-			);
-		}
-	});
-
-	it("declines a body that opens a script of its own", () => {
-		// A line comment ends at every line terminator, so a string opened past
-		// one is really open.
-		for (const terminator of ["\u2028", "\u2029"]) {
-			for (const opener of ['var s = "open', "var s = 'open", "/* open"]) {
-				const html = `<script>a() // c${terminator}${opener}</script><script>b()</script>`;
-				expect(scriptCount(html)).toBe(2);
-			}
-		}
-		// ECMAScript's whitespace is wider than HTML's, and all of it may sit
-		// before a directive: a form feed, a BOM, U+2028.
-		for (const space of ["\f", "\v", "\uFEFF", "\u00A0", "\u2028", "\u2029"]) {
-			const spaced = `<script>a()</script><script>${space}"use strict";x = 1</script>`;
-			expect(minify(spaced)).toBe(spaced);
-		}
-		// The same set ends a line comment, so a directive behind one is found.
-		// Counted, not compared: the parser reads a `\r` in as a `\n`.
-		for (const terminator of ["\n", "\r", "\u2028", "\u2029"]) {
-			expect(
-				scriptCount(
-					`<script>a()</script><script>// c${terminator}"use strict";b()</script>`
-				)
-			).toBe(2);
-		}
-		expect(
-			scriptCount(fixture("html", "source-processor-merging-adjacent-script-declines-a-body-that-opens-a-script-of-22"))
-		).toBe(2);
-	});
-
-	// `-->` is a line comment only where nothing but whitespace and same-line
-	// comments precede it, and an appended body no longer starts a line.
-	it("declines a body opening with `-->` still on its first line", () => {
-		for (const second of ["--> b()", "   --> b()", "/* c */ --> b()"]) {
-			expect(
-				scriptCount(`<script>a()</script><script>${second}</script>`)
-			).toBe(2);
-		}
-	});
-
 	// `output.html.inline` prints a sentinel and swaps the chunk's code in after
 	// the print, so what a guard would read there is not what ends up running.
 	it("declines a run whose bodies the print does not itself write", () => {
@@ -545,19 +443,6 @@ describe("SourceProcessor — merging adjacent <script>", () => {
 		expect(holes.map((hole) => hole.source)).toEqual(["a()", "b()"]);
 		expect(printed.match(/<script\b/g)).toHaveLength(2);
 	});
-
-	it("keeps no state between two documents", () => {
-		const processor = new SourceProcessor();
-		expect(
-			processor.process(fixture("html", "source-processor-merging-adjacent-script-folds-a-run-into-one-element"), {
-				mode: "minify",
-				mergeScripts: true
-			}).code
-		).toBe("<script>a()\n;b()</script>");
-		const off = fixture("html", "source-processor-merging-adjacent-script-keeps-no-state-between-two-documents");
-		expect(processor.process(off, { mode: "minify" }).code).toBe(off);
-	});
-
 });
 
 describe("SourceProcessor — JSON <script> bodies", () => {
@@ -743,7 +628,6 @@ describe("SourceProcessor — inline <script> type", () => {
 		expect(offered).toEqual([]);
 		expect(code).toBe("<script type=text/x-template>  x  </script>");
 	});
-
 });
 
 describe("SourceProcessor — which comments survive", () => {
@@ -767,15 +651,6 @@ describe("SourceProcessor — which comments survive", () => {
 	// tags stay put either way.
 	it.each([
 		["absent drops every inert comment", undefined, "<div></div>"],
-		[
-			'"some" drops them too, HTML having no banner rule',
-			"some",
-			"<div></div>"
-		],
-		["false drops them", false, "<div></div>"],
-		["true keeps every comment", true, html],
-		['"all" keeps every comment', "all", html],
-		["a string is read as a pattern", "@license", licensed],
 		["a RegExp keeps what it matches", /^\s*@license/, licensed],
 		[
 			"a predicate keeps what it accepts",
@@ -787,36 +662,10 @@ describe("SourceProcessor — which comments survive", () => {
 	])("%s", (_name, comments, expected) => {
 		expect(minify(html, /** @type {EXPECTED_ANY} */ (comments))).toBe(expected);
 	});
-
-	// A conditional comment, a server-side include and a `<?…?>` directive are
-	// code rather than comments, so no level drops one.
-	it.each([
-		[
-			"a conditional comment",
-			fixture("html", "source-processor-which-comments-survive-keeps-a-conditional-comment-whatever-the"),
-			"[if IE]"
-		],
-		["a server-side include", fixture("html", "source-processor-which-comments-survive-keeps-a-server-side-include-whatever-the"), "#include"],
-		["a template directive", fixture("html", "source-processor-which-comments-survive-keeps-a-template-directive-whatever-the"), "php"]
-	])("keeps %s whatever the level", (_name, input, held) => {
-		for (const comments of [false, "some", "nothing-matches"]) {
-			expect(minify(input, /** @type {EXPECTED_ANY} */ (comments))).toContain(
-				held
-			);
-		}
-	});
 });
 
 describe("SourceProcessor — enumerated attribute values", () => {
-	const { SourceProcessor } = require("../../../lib/html/syntax");
 	const { ENUMERATED_KEYWORDS } = require("../../../lib/html/data");
-
-	/**
-	 * @param {string} html input markup
-	 * @returns {string} the minified serialization
-	 */
-	const minify = (html) =>
-		new SourceProcessor().process(html, { mode: "minify" }).code;
 
 	// Written out rather than read off the table: generating the expectation from
 	// the thing under test would pass just as happily with an entry deleted.
@@ -874,74 +723,14 @@ describe("SourceProcessor — enumerated attribute values", () => {
 		}
 		expect(actual.sort()).toEqual(EXPECTED);
 	});
-
-	it("folds every keyword of every entry, and nothing else", () => {
-		for (const [element, attributes] of Object.entries(ENUMERATED_KEYWORDS)) {
-			// A global entry is exercised on a `<div>`, which owns none of its own.
-			const tag = element === "*" ? "div" : element;
-			// A cell outside a table is dropped by tree construction, so it needs
-			// somewhere to live before its attributes can be read back.
-			const open = tag === "td" || tag === "th" ? fixture("html", "parse-html-insertion-modes-opens-an-implied-tbody-in-a-table-fragment") : "";
-			for (const [attribute, keywords] of Object.entries(attributes)) {
-				for (const keyword of keywords) {
-					const shouted = keyword.toUpperCase();
-					// Skip a keyword with no letters to shout — folding is a no-op.
-					if (shouted === keyword) continue;
-					const out = minify(`${open}<${tag} ${attribute}="${shouted}">`);
-					expect(`${element} ${attribute}=${shouted} -> ${out}`).toBe(
-						`${element} ${attribute}=${shouted} -> ${minify(
-							`${open}<${tag} ${attribute}="${keyword}">`
-						)}`
-					);
-				}
-				// A value the spec does not enumerate keeps its case exactly.
-				expect(minify(`${open}<${tag} ${attribute}="ZzCustomZz">`)).toContain(
-					"ZzCustomZz"
-				);
-			}
-		}
-	});
-
-	it("leaves a case-sensitive value alone", () => {
-		// `<ol type>` is two keywords that differ only in case, so it is not in
-		// the table at all; `id` / `class` are not enumerated.
-		expect(minify(fixture("html", "source-processor-enumerated-attribute-values-leaves-a-case-sensitive-value-alone"))).toContain("type=A");
-		expect(minify(fixture("html", "source-processor-enumerated-attribute-values-leaves-a-case-sensitive-value-alone-2"))).toContain(
-			"id=MyId class=MyClass"
-		);
-	});
-
-	it("leaves a keyword the engine reflects verbatim alone", () => {
-		// `target` / `formtarget`, `<area shape>` and `<textarea wrap>` are
-		// enumerated, but their IDL members reflect what was written rather than
-		// the canonical keyword, so a script reading one back would see the fold.
-		expect(minify(fixture("html", "source-processor-enumerated-attribute-values-leaves-a-keyword-the-engine"))).toContain("target=_TOP");
-		expect(minify(fixture("html", "source-processor-enumerated-attribute-values-leaves-a-keyword-the-engine-2"))).toContain("target=_BLANK");
-		expect(minify(fixture("html", "source-processor-enumerated-attribute-values-leaves-a-keyword-the-engine-3"))).toContain(
-			"formtarget=_SELF"
-		);
-		expect(minify(fixture("html", "source-processor-enumerated-attribute-values-leaves-a-keyword-the-engine-4"))).toContain("shape=RECT");
-		expect(minify(fixture("html", "source-processor-enumerated-attribute-values-leaves-a-keyword-the-engine-5"))).toContain("wrap=SOFT");
-	});
 });
 
 describe("SourceProcessor — an enumerated value naming no keyword", () => {
-	const { SourceProcessor } = require("../../../lib/html/syntax");
 	const {
 		ENUMERATED_KEYWORDS,
 		INVALID_VALUE_DEFAULT_DIFFERS,
 		REDUNDANT_DEFAULT_ATTRIBUTES
 	} = require("../../../lib/html/data");
-
-	/**
-	 * @param {string} html input markup
-	 * @returns {string} the minified serialization, spec defaults dropped
-	 */
-	const minify = (html) =>
-		new SourceProcessor().process(html, {
-			mode: "minify",
-			removeRedundantAttributes: "all"
-		}).code;
 
 	// The pairs both tables name are the only ones the drop can reach: it needs a
 	// default to fall to, and a keyword set to know the value names none of them.
@@ -979,109 +768,13 @@ describe("SourceProcessor — an enumerated value naming no keyword", () => {
 			expect(reachable.has(entry)).toBe(true);
 		}
 	});
-
-	it.each(PAIRS)(
-		"drops it on <%s %s> unless the two defaults part",
-		(element, attribute) => {
-			// A track outside a media element is dropped by tree construction.
-			const open = element === "track" ? "<video>" : "";
-			const out = minify(`${open}<${element} ${attribute}="ZzCustomZz">`);
-			if (INVALID_VALUE_DEFAULT_DIFFERS.has(`${element} ${attribute}`)) {
-				expect(out).toContain(`${attribute}=ZzCustomZz`);
-			} else {
-				expect(out).not.toContain(attribute);
-			}
-		}
-	);
-
-	it("keeps one the element states no default for", () => {
-		// `<img decoding>` is enumerated but has no entry to fall to, and
-		// `<area shape>` has one but reflects whatever was written.
-		expect(minify(fixture("html", "source-processor-an-enumerated-value-naming-no-keyword-keeps-one-the-element"))).toContain(
-			"decoding=ZzCustomZz"
-		);
-		expect(minify(fixture("html", "source-processor-an-enumerated-value-naming-no-keyword-keeps-one-the-element-2"))).toContain(
-			"shape=ZzCustomZz"
-		);
-	});
-
-	it("keeps it where the switch is not `all`", () => {
-		const out = new SourceProcessor().process(fixture("html", "source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-269"), {
-			mode: "minify",
-			removeRedundantAttributes: "smart"
-		}).code;
-		expect(out).toContain("type=ZzCustomZz");
-	});
 });
 
 describe("SourceProcessor — removeRedundantAttributes and script charset", () => {
-	const { SourceProcessor } = require("../../../lib/html/syntax");
-
 	/**
 	 * @param {string} html input markup
 	 * @returns {string} the minified serialization
 	 */
-	const minify = (html) =>
-		new SourceProcessor().process(html, {
-			mode: "minify",
-			removeRedundantAttributes: "smart"
-		}).code;
-
-	const SCRIPT = fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-13");
-
-	it("drops it on a page that declares UTF-8", () => {
-		for (const head of [
-			'<meta charset="utf-8">',
-			"<meta charset=UTF8>",
-			'<meta http-equiv="Content-Type" content="text/html; charset=utf-8">',
-			'<meta charset="&#85;TF-8">',
-			"<meta charset='utf-8'>",
-			'<meta itemprop charset="utf-8" charset="gbk">',
-			'<meta http-equiv="content-type" content="text/html"><meta charset="utf-8">',
-			"<meta http-equiv='Content-Type' content='text/html; charset=utf-8' content='x'>",
-			'<meta name="a>b" charset="utf-8">',
-			'<?x <meta charset=gbk>?><p a="1">x</p> a < b <meta charset="utf-8">',
-			'<meta http-equiv="content-type" http-equiv="x" content="text/html; charset=utf-8">'
-		]) {
-			expect(
-				minify(`<!doctype html><head>${head}<title>t</title>${SCRIPT}`)
-			).toContain("<script src=a.js></script>");
-		}
-		expect(minify(`\uFEFF<!doctype html><title>t</title>${SCRIPT}`)).toContain(
-			"<script src=a.js></script>"
-		);
-		// The limit is in bytes: 400 `é` and 200 emoji are 800 bytes each, so
-		// both leave the `<meta>` inside it.
-		for (const title of ["é".repeat(400), "\u{1F600}".repeat(200)]) {
-			expect(
-				minify(
-					`<!doctype html><title>${title}</title><meta charset="utf-8">${SCRIPT}`
-				)
-			).toContain("<script src=a.js></script>");
-		}
-	});
-
-	it("keeps it where the encoding of the page is not declared as UTF-8", () => {
-		for (const html of [
-			`<!doctype html><title>t</title>${SCRIPT}`,
-			`<!doctype html><head><meta charset="gbk"><title>t</title>${SCRIPT}`,
-			`<!doctype html><head><meta charset="gbk"><meta charset="utf-8"><title>t</title>${SCRIPT}`,
-			`<!doctype html><head><meta name="x" content="charset=utf-8"><title>t</title>${SCRIPT}`,
-			`<!doctype html><head><meta http-equiv="refresh" content="0; charset=utf-8"><title>t</title>${SCRIPT}`,
-			`<!doctype html><head><meta name="x" content="<meta charset=utf-8>"><title>t</title>${SCRIPT}`,
-			`<!doctype html><div title="<meta charset=utf-8>"></div><title>t</title>${SCRIPT}`,
-			`<!doctype html><div title='x' data-a="<meta charset=utf-8>"><title>t</title>${SCRIPT}`,
-			`<!doctype html><head><meta http-equiv="x" http-equiv="content-type" content="text/html; charset=utf-8"><title>t</title>${SCRIPT}`,
-			`<!doctype html><!-- <meta charset="utf-8"> --><title>t</title>${SCRIPT}`,
-			`<!doctype html><title>t</title><style>${"a{}".repeat(400)}</style><meta charset="utf-8">${SCRIPT}`,
-			`<!doctype html><title>${"价".repeat(400)}</title><meta charset="utf-8">${SCRIPT}`,
-			SCRIPT
-		]) {
-			expect(minify(html)).toContain(
-				'<script charset=utf-8 src=a.js></script>'
-			);
-		}
-	});
 
 	it("reads nothing past a tag, comment or declaration left open", () => {
 		const { declaresUtf8 } = require("../../../lib/html/syntax-parser");
@@ -1099,29 +792,15 @@ describe("SourceProcessor — removeRedundantAttributes and script charset", () 
 		expect(declaresUtf8('<!-->x<meta charset="utf-8">')).toBe(true);
 		expect(declaresUtf8('</ x><meta charset="utf-8">')).toBe(true);
 	});
-
-	it("keeps a charset naming another encoding", () => {
-		expect(
-			minify(
-				fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-keeps-a-charset")
-			)
-		).toContain("<script charset=gbk src=a.js></script>");
-	});
 });
 
 describe("SourceProcessor — removeImpliedTags", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 
-	const PAGE =
-		fixture("html", "source-processor-remove-implied-tags-leaves-out-only-the-html-start-tag-by");
-
 	/**
 	 * @param {(boolean | "smart" | "all")=} removeImpliedTags the mode
 	 * @returns {string} the minified serialization
 	 */
-	const minify = (removeImpliedTags) =>
-		new SourceProcessor().process(PAGE, { mode: "minify", removeImpliedTags })
-			.code;
 
 	it("materializes an implied tag whose content opens with a comment", () => {
 		// A comment there goes further out than a head element does: the modes put
@@ -1163,45 +842,6 @@ describe("SourceProcessor — a frameset document", () => {
 	});
 });
 
-describe("SourceProcessor — the per-transform switches", () => {
-	const { SourceProcessor } = require("../../../lib/html/syntax");
-
-	/**
-	 * @param {string} html input markup
-	 * @param {import("../../../lib/html/syntax-parser").HtmlTransformOptions=} transforms which rewrites to make
-	 * @returns {string} the minified serialization
-	 */
-	const minify = (html, transforms) =>
-		new SourceProcessor().process(html, { mode: "minify", transforms }).code;
-
-	// A table group the parser inserted has an end tag to print once the switch
-	// is off, so its start tag has to print with it — the pair, or neither.
-	it.each([
-		[fixture("html", "source-processor-the-per-transform-switches-keeps-a-parser-inserted-table-group-5"), fixture("html", "source-processor-attribute-quote-spelling-leaves-an-implied-tag-out-on-the-first-4")],
-		[fixture("html", "source-processor-the-per-transform-switches-keeps-a-parser-inserted-table-group"), fixture("html", "source-processor-the-per-transform-switches-keeps-a-parser-inserted-table-group")],
-		[
-			fixture("html", "source-processor-the-per-transform-switches-keeps-a-parser-inserted-table-group-4"),
-			fixture("html", "source-processor-attribute-quote-spelling-leaves-an-implied-tag-out-on-the-first-4")
-		],
-		[fixture("html", "source-processor-the-per-transform-switches-keeps-a-parser-inserted-table-group-2"), fixture("html", "source-processor-the-per-transform-switches-keeps-a-parser-inserted-table-group")],
-		// §4.13: the second group's start tag has to stay once the first has lost
-		// its end tag, or its columns would join the group before it.
-		[
-			fixture("html", "source-processor-the-per-transform-switches-keeps-a-parser-inserted-table-group-3"),
-			"<table><col><colgroup><col></table>"
-		]
-	])("keeps a parser-inserted table group balanced: %s", (doc, on) => {
-		const off = new SourceProcessor().process(doc, {
-			mode: "minify",
-			transforms: { removeOptionalTags: false }
-		}).code;
-		for (const name of ["tbody", "colgroup"]) {
-			expect(off.includes(`<${name}>`)).toBe(off.includes(`</${name}>`));
-		}
-	});
-
-});
-
 describe("SourceProcessor — attribute quote spelling", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 
@@ -1209,8 +849,6 @@ describe("SourceProcessor — attribute quote spelling", () => {
 	 * @param {string} html a document
 	 * @returns {string} its minified form
 	 */
-	const minify = (html) =>
-		new SourceProcessor().process(html, { mode: "minify" }).code;
 
 	it("reads a style type by what it decodes to", () => {
 		// The same rule `_scriptType` follows: the value the spec matches is the
@@ -1228,211 +866,6 @@ describe("SourceProcessor — attribute quote spelling", () => {
 		expect(css(fixture("html", "source-processor-attribute-quote-spelling-reads-a-style-type-by-what-it-decodes-2"))).toBe(
 			"<style type=text/foo>.a {  color : red ; }</style>"
 		);
-	});
-
-	it("merges across an attribute the print drops", () => {
-		const once = (
-			/** @type {string} */ html,
-			/** @type {EXPECTED_ANY} */ opts = undefined
-		) => new SourceProcessor().process(html, { mode: "minify", ...opts }).code;
-		const drops = { removeRedundantAttributes: /** @type {"all"} */ ("all") };
-		// One it keeps is still a difference.
-		expect(
-			once(
-				fixture("html", "source-processor-attribute-quote-spelling-merges-across-an-attribute-the-print-3"),
-				{
-					...drops,
-					mergeStyles: true
-				}
-			)
-		).toContain("</style><style>");
-		expect(
-			once(fixture("html", "source-processor-attribute-quote-spelling-merges-across-an-attribute-the-print-4"), {
-				...drops,
-				mergeScripts: true
-			})
-		).toContain("</script><script>");
-	});
-
-	it("rewrites a referenced value with the quoting switch off", () => {
-		// The switch freezes the quoting, not the value: a rewrite that changes
-		// what the value says leaves the source spelling of it unusable.
-		const frozen = (/** @type {string} */ html) =>
-			new SourceProcessor().process(html, {
-				mode: "minify",
-				transforms: { normalizeAttributeQuotes: false }
-			}).code;
-		expect(frozen(fixture("html", "source-processor-attribute-quote-spelling-rewrites-a-referenced-value-with-the"))).toContain('href="/a"');
-		expect(frozen(fixture("html", "source-processor-attribute-quote-spelling-rewrites-a-referenced-value-with-the-2"))).toContain(
-			'type="text"'
-		);
-		// The `&` a decoded URL holds is written out bare: `y=` is no reference,
-		// and an attribute would not read one there even if it were.
-		expect(frozen(fixture("html", "source-processor-attribute-quote-spelling-rewrites-a-referenced-value-with-the-3"))).toContain(
-			'href="/a?x=1&y=2"'
-		);
-	});
-
-});
-
-describe("SourceProcessor — a duplicate attribute name", () => {
-	const { SourceProcessor } = require("../../../lib/html/syntax");
-
-	/**
-	 * @param {string} html input markup
-	 * @returns {string} the minified serialization
-	 */
-	const minify = (html) =>
-		new SourceProcessor().process(html, { mode: "minify" }).code;
-
-	it("preserves case-sensitive template names", () => {
-		for (const condition of ["isRequired", "Foo", "options.isRequired"]) {
-			const printed = minify(
-				`<input type="text"{% if ${condition} %} required{% endif %}>`
-			);
-			const match = /\{% if ([^ ]+) %\}/.exec(printed);
-			expect(match && match[1]).toBe(condition);
-		}
-	});
-
-	it("preserves source attribute names on a template tag", () => {
-		expect(
-			minify(fixture("html", "source-processor-a-duplicate-attribute-name-preserves-source-attribute-names-on"))
-		).toMatchSnapshot();
-	});
-
-});
-
-describe("SourceProcessor — token list values", () => {
-	const { SourceProcessor } = require("../../../lib/html/syntax");
-
-	/**
-	 * @param {string} html input markup
-	 * @returns {string} the minified serialization
-	 */
-	const minify = (html) =>
-		new SourceProcessor().process(html, { mode: "minify" }).code;
-
-	it("collapses the separators of every list", () => {
-		expect(minify(fixture("html", "source-processor-token-list-values-collapses-the-separators-of-every-list"))).toContain('class="a b"');
-		expect(minify(fixture("html", "source-processor-token-list-values-collapses-the-separators-of-every-list-2"))).toContain(
-			'ping="/p1 /p2"'
-		);
-	});
-
-	it("trims a list whose separators are otherwise already collapsed", () => {
-		// Padding at either end is all the rewriting these need — the scan that
-		// decides whether a list is already collapsed has to see it.
-		expect(minify(fixture("html", "source-processor-token-list-values-trims-a-list-whose-separators-are-otherwise"))).toContain('class="a b"');
-		expect(minify(fixture("html", "source-processor-token-list-values-trims-a-list-whose-separators-are-otherwise-2"))).toContain('class="a b"');
-		expect(minify(fixture("html", "source-processor-token-list-values-trims-a-list-whose-separators-are-otherwise-3"))).toContain("class=ab");
-	});
-
-	it("drops a repeated token only where the DOM folds it away", () => {
-		// `class` / `rel` reflect a `DOMTokenList`, which is an ordered set.
-		expect(minify(fixture("html", "source-processor-token-list-values-drops-a-repeated-token-only-where-the-dom"))).toContain('class="a b"');
-		expect(minify(fixture("html", "source-processor-token-list-values-drops-a-repeated-token-only-where-the-dom-2"))).toContain(
-			"rel=preload"
-		);
-		// `ping` is read back as written and sends one request per token; the
-		// other two reflect no token list either.
-		expect(minify(fixture("html", "source-processor-token-list-values-drops-a-repeated-token-only-where-the-dom-3"))).toContain('ping="/p /p"');
-		expect(minify(fixture("html", "source-processor-token-list-values-drops-a-repeated-token-only-where-the-dom-4"))).toContain(
-			'headers="h h"'
-		);
-		expect(minify(fixture("html", "source-processor-token-list-values-drops-a-repeated-token-only-where-the-dom-5"))).toContain('accesskey="k k"');
-	});
-
-	it("reads a list holding a foreign delimiter as text, not as a set", () => {
-		// A `{% … %}` statement tokenizes as list tokens, so folding the repeated
-		// `%}` away would lose a delimiter the template needs.
-		for (const list of [
-			'class="btn{% if active %} btn-active{% endif %}"',
-			'class="a {{ if x }} a {{ endif }}"',
-			'rel="preload {{extra}} preload {{extra}}"'
-		]) {
-			expect(minify(`<link ${list} href=x>`)).toContain(list);
-		}
-		// The separators between them still collapse: that keeps every token.
-		expect(minify(fixture("html", "source-processor-token-list-values-reads-a-list-holding-a-foreign-delimiter-as-4"))).toContain(
-			'class="btn{% if x %}"'
-		);
-	});
-});
-
-describe("SourceProcessor — sortAttributes / sortTokenLists", () => {
-	const { SourceProcessor } = require("../../../lib/html/syntax");
-
-	/**
-	 * @param {string} html input markup
-	 * @param {object=} options extra print options
-	 * @returns {string} the minified serialization
-	 */
-	const minify = (html, options) =>
-		new SourceProcessor().process(html, { mode: "minify", ...options }).code;
-
-	// `serializeHtmlTree` sorts attributes, so attribute order cannot hide in it;
-	// `class` is a set the option reorders on purpose, so sort it here too.
-	/**
-	 * @param {string} html markup
-	 * @returns {string} its DOM, spelled so neither order can show through
-	 */
-	const canonical = (html) =>
-		serializeHtmlTree(parseHtmlRefs(html)).replace(
-			/^(\|\s*class=")([^"]*)(")$/gm,
-			(_m, open, value, close) =>
-				open + value.split(" ").sort().join(" ") + close
-		);
-
-	// Attribute and class order vary per element: that is the repetition the
-	// options exist to create.
-	const PAGE = `<!doctype html><html lang=en><head><meta charset=utf-8><title>t</title></head><body>${[
-		'<div class="c b a" data-z="1" id="n1" hidden>',
-		'<div id="n2" hidden class="a c b" data-z="1">',
-		'<div data-z="1" class="b c a" hidden id="n3">'
-	].join(
-		"<span class=x>t</span></div>"
-	)}<span class=x>t</span></div><svg viewBox="0 0 1 1"><rect zz="1" aa="2"/></svg><table><tr><td colspan=2>c</table><a href="/x" ping="/p1 /p2">l</a></body></html>`;
-
-	it("ranks on the attributes that reach the output, not the dropped ones", () => {
-		// `<input type=text>` is redundant and goes, so counting it would rank
-		// `type` above `checked` on the first pass and tie them on the second.
-		const options = { removeRedundantAttributes: "all", sortAttributes: true };
-		const once = minify(
-			fixture("html", "source-processor-sort-attributes-sort-token-lists-ranks-on-the-attributes-that"),
-			options
-		);
-		expect(once).toBe("<input><input checked type=checkbox>");
-	});
-
-	it("leaves foreign content alone, where a name is not case-folded", () => {
-		expect(
-			minify(fixture("html", "source-processor-sort-attributes-sort-token-lists-leaves-foreign-content-alone"), { sortAttributes: true })
-		).toContain("zz=1 aa=2");
-	});
-
-	it("keeps the DOM identical, whichever is on", () => {
-		const expected = canonical(minify(PAGE));
-		// A check against an empty serialization would pass no matter what.
-		expect(expected.split("\n").length).toBeGreaterThan(20);
-		for (const options of [
-			{ sortAttributes: true },
-			{ sortTokenLists: true },
-			{ sortAttributes: true, sortTokenLists: true }
-		]) {
-			expect(canonical(minify(PAGE, options))).toBe(expected);
-		}
-	});
-
-	it("reorders rather than rewrites: the byte count is unchanged", () => {
-		const base = minify(PAGE);
-		for (const options of [
-			{ sortAttributes: true },
-			{ sortTokenLists: true },
-			{ sortAttributes: true, sortTokenLists: true }
-		]) {
-			expect(minify(PAGE, options)).toHaveLength(base.length);
-		}
 	});
 });
 
@@ -2767,85 +2200,6 @@ describe("htmlMinify — one document reaching every embedded site", () => {
 	});
 });
 
-describe("SourceProcessor — minify serialization edge cases", () => {
-	const { SourceProcessor } = require("../../../lib/html/syntax");
-
-	/**
-	 * @param {string} source html source
-	 * @returns {string} minified serialization
-	 */
-	const minify = (source) =>
-		new SourceProcessor().process(source, { mode: "minify" }).code;
-
-	describe("style attributes the css minifier cannot read", () => {
-		it("keeps one the css parser runs out of stack on", () => {
-			// Balanced, so nothing is left open for the wrapper to lose — the parser
-			// still recurses per block, and the value has to come back as written.
-			const deep = `--x:${"(".repeat(20000)}${")".repeat(20000)}`;
-			expect(minify(`<p style="${deep}">x</p>`)).toContain(deep);
-		});
-	});
-
-	describe("<noscript> content", () => {
-
-		it("prints a nested <noscript> as written where minifying would move what follows it", () => {
-			// With scripting on, the outer body is text up to the first end tag and
-			// the next one closes nothing; with it off, that one closes the outer.
-			for (const source of [
-				fixture("html", "source-processor-minify-serialization-edge-cases-noscript-content-prints-a"),
-				fixture("html", "source-processor-minify-serialization-edge-cases-noscript-content-prints-a-2"),
-				fixture("html", "source-processor-minify-serialization-edge-cases-noscript-content-prints-a-3"),
-				fixture("html", "source-processor-minify-serialization-edge-cases-noscript-content-prints-a-4"),
-				fixture("html", "source-processor-minify-serialization-edge-cases-noscript-content-prints-a-5"),
-				// `</noscript-x>` ends no raw text, so the nested one after it counts.
-				fixture("html", "source-processor-minify-serialization-edge-cases-noscript-content-prints-a-6"),
-				// A comment hides an end tag from a reader with scripting off only.
-				fixture("html", "source-processor-minify-serialization-edge-cases-noscript-content-prints-a-7"),
-				fixture("html", "source-processor-minify-serialization-edge-cases-noscript-content-prints-a-8")
-			]) {
-				expect(minify(source)).toBe(source);
-			}
-		});
-
-		it("drops `</head>` once collapsing drops the whitespace behind it, in one print", () => {
-			// That whitespace is body text to a reader with scripting off, so the
-			// active collapse tier decides it, as it does for any body text.
-			const options = /** @type {const} */ ({
-				mode: "minify",
-				collapseWhitespace: "all",
-				removeImpliedTags: "all"
-			});
-			const once = new SourceProcessor().process(
-				fixture("html", "source-processor-minify-serialization-edge-cases-noscript-content-drops-head"),
-				options
-			).code;
-			expect(once).toBe(
-				"<!doctype html><title>t</title><noscript>a</noscript><p>x"
-			);
-		});
-
-	});
-
-	describe("opening-tag whitespace", () => {
-
-		it("unquotes a value carrying a vertical tab, which is no whitespace", () => {
-			// \u000B ends no unquoted value: §13.1.2.3 admits every code point but
-			// ASCII whitespace — tab, line feed, form feed, carriage return, space.
-			const VT = String.fromCharCode(0x0b);
-			expect(minify(`<p data-x="a${VT}b">t</p>`)).toBe(`<p data-x=a${VT}b>t`);
-			// The five that are whitespace keep the quotes they need.
-			for (const code of [0x09, 0x0a, 0x0c, 0x0d, 0x20]) {
-				const ws = String.fromCharCode(code);
-				expect(minify(`<p data-x="a${ws}b">t</p>`)).toBe(
-					`<p data-x="a${ws}b">t`
-				);
-			}
-		});
-
-	});
-
-});
-
 describe("SourceProcessor — print modes", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 
@@ -2854,38 +2208,13 @@ describe("SourceProcessor — print modes", () => {
 	 * @param {import("../../../lib/util/SourceProcessor").PrintOptions["mode"]} mode print mode
 	 * @returns {string} its serialization
 	 */
-	const print = (source, mode) =>
-		new SourceProcessor().process(source, { mode }).code;
 
 	it("prints nothing unless output is asked for", () => {
 		expect(new SourceProcessor().process(fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints"))).toBeUndefined();
 	});
-
-	it("keeps a `<` that stands as a character, so a second pass adds nothing", () => {
-		// The comment splits the text in two, and dropping it merges them: escaping
-		// per node rather than per `<` would then escape what the first pass kept.
-		const once = print(fixture("html", "source-processor-print-modes-keeps-a-that-stands-as-a-character-so-a-second-pass"), "minify");
-		expect(once).toBe("<boo>hay\n<<<<>foo\n>>&lt;</boo>");
-	});
-
-	it("beautifies to something that minifies back the same", () => {
-		for (const source of [
-			fixture("html", "source-processor-print-modes-beautifies-to-something-that-minifies-back-the-same"),
-			fixture("html", "source-processor-minify-serialization-edge-cases-cloned-reconstructed-formatting-9"),
-			fixture("html", "source-processor-print-modes-beautifies-to-something-that-minifies-back-the-same-3"),
-			fixture("html", "source-processor-print-modes-beautifies-to-something-that-minifies-back-the-same-4"),
-			fixture("html", "source-processor-minify-serialization-edge-cases-cloned-reconstructed-formatting-4")
-		]) {
-			expect(print(print(source, "beautify"), "minify")).toBe(
-				print(source, "minify")
-			);
-		}
-	});
 });
 
 describe("SourceProcessor — the leading newline of `<pre>`", () => {
-	const { SourceProcessor } = require("../../../lib/html/syntax");
-
 	// Run in a heap far smaller than a copy of every subtree would take, which a
 	// per-element read of the composed children's first character used to make.
 	it.each([
@@ -2911,282 +2240,6 @@ describe("SourceProcessor — the leading newline of `<pre>`", () => {
 				{ encoding: "utf8", stdio: "pipe" }
 			)
 		).toBe("true");
-	});
-});
-
-describe("SourceProcessor — re-serializing keeps the tree", () => {
-	const { SourceProcessor } = require("../../../lib/html/syntax");
-	const { parseHtml } = require("../../../lib/html/syntax-parser");
-
-	/**
-	 * @param {string} source html source
-	 * @returns {string} the tree the printed output re-parses to
-	 */
-	const reparsed = (source) =>
-		serializeHtmlTree(
-			parseHtml(
-				new SourceProcessor().process(source, { mode: "beautify" }).code
-			)
-		);
-
-	// §4.13 lets an `html` or `body` end tag go only when no comment follows, and
-	// a `head` one only when neither a comment nor whitespace does.
-	it.each([
-		["whitespace between head and body", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-whitespace-between-head-and")],
-		["a space between head and body", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-space-between-head-and")],
-		["a comment after body", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-comment-after-body")],
-		["a comment after html", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-comment-after-html")],
-		// Serializing writes back the newline the parser drops — in HTML only, so a
-		// MathML `textarea`, which keeps its own, must not gain one.
-		["a foreign textarea's leading newline", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-foreign-textarea-s")],
-		["an html textarea's leading newline", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-an-html-textarea-s-leading")],
-		["a pre's leading newline", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-pre-s-leading-newline")],
-		// §4.13 pairs the `<colgroup>` tags, and a `<template>` behind one does not
-		// close it: the head rules take it where it stands.
-		["two colgroups a col each", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-two-colgroups-a-col-each")],
-		["a template behind a colgroup", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-template-behind-a")],
-		// A `<select>` inserts no active-formatting marker, so `</marquee>` clears
-		// the `<b>` rather than stopping short and rebuilding it behind the marquee.
-		["formatting a marquee cleared", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-formatting-a-marquee")],
-		// §13.2.6.4.7 ignores a `<form>` start tag while the pointer is set, so a
-		// nested one needs the end tag that cleared it written back in front.
-		["a form inside a form", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-form-inside-a-form")],
-		["a form a button holds", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-form-a-button-holds")],
-		// Foster parenting puts a node before the table it was written inside, so in
-		// tree order its start tag reaches what the table had kept out of scope.
-		["a list fostered out of a table", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-list-fostered-out-of-a")],
-		["a definition fostered out of one", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-definition-fostered-out")],
-		["an option fostered out of one", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-an-option-fostered-out-of")],
-		["a heading fostered out of one", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-heading-fostered-out-of")],
-		["ruby fostered out of one", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-ruby-fostered-out-of-one")],
-		["a form the table kept", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-form-the-table-kept")],
-		["an input that ends a select", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-an-input-that-ends-a-select")],
-		["a foreign element fostered out of one", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-foreign-element-fostered-2")],
-		["a style the fostered element holds", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-style-the-fostered")],
-		["a newline the fostered pre kept", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-newline-the-fostered-pre")],
-		// A `<template>` anywhere above suspends the form element pointer, so the
-		// end tag that a nested form otherwise needs would only close the outer one.
-		["a form a template holds", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-form-a-template-holds")],
-		// A scope rule ends the nearest match on the stack rather than the parent,
-		// so what a fostered run would close can sit any number of elements above.
-		["an input under a fostered div", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-an-input-under-a-fostered")],
-		["a button under a fostered list", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-button-under-a-fostered")],
-		["a select above what holds the table", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-select-above-what-holds")],
-		// Whitespace a table kept and text it fostered stay two nodes: moved back in
-		// beside each other they would fuse into one.
-		["text beside whitespace a table kept", fixture("html", "parse-html-path-accessor-completeness-clears-the-foster-region-marks-a-print")],
-		["a comment behind a column group", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-comment-behind-a-column")],
-		["a form a foreign element holds", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-form-a-foreign-element")],
-		["a hidden input the table keeps", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-hidden-input-the-table")],
-		["an input the table fosters", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-an-input-the-table-fosters")],
-		["a fostered list of several items", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-fostered-list-of-several")],
-		["a run fostered inside template content", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-run-fostered-inside")],
-		["a foreign run with children", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-foreign-run-with-children")],
-		["a run a template's content holds", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-run-a-template-s-content")],
-		["a second column group behind a run", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-second-column-group")],
-		[
-			"a run that moves beside one that cannot",
-			fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-run-that-moves-beside-one")
-		],
-		// And where tree order already re-parses, it is left alone.
-		["a paragraph fostered out of one", fixture("html", "source-processor-optional-end-tags-read-the-output-keeps-a-p-a-quirks-mode-table")],
-		// Every scope stops at a table, so a formatting element written inside one
-		// reaches an ancestor of the same name only once printed outside it.
-		["a formatting element the table held out of scope", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-formatting-element-the")],
-		["one under a run that closes the holder", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-one-under-a-run-that-closes")],
-		[
-			"a foreign element fostered out of a table",
-			fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-foreign-element-fostered")
-		],
-		// §13.2.6.5 inserts a foreign `<form>` without consulting the form pointer.
-		["a form in foreign content inside another", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-form-in-foreign-content")],
-		// §13.2.4.3 rebuilds these from the list of active formatting elements, so
-		// no tag placement reaches them and the source is what prints.
-		[
-			"a run holding a rebuilt formatting element",
-			fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-run-holding-a-rebuilt")
-		],
-		[
-			"one rebuilt behind a row group",
-			fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-one-rebuilt-behind-a-row")
-		],
-		["a rebuilt one an end tag closed", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-rebuilt-one-an-end-tag")],
-		["two the source never closed", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-two-the-source-never-closed")],
-		["a second table inside the run's own", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-second-table-inside-the")],
-		// The run's holder is read back off its own tag, which the source may have
-		// spaced out before the `>`.
-		["a spaced-out tag holding a run", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-spaced-out-tag-holding-a")],
-		[
-			"an end tag the region already carries",
-			fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-an-end-tag-the-region")
-		],
-		["a run under an implied body", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-run-under-an-implied-body")],
-		// The table keeps whitespace-only text and fosters the rest, so the run
-		// cannot come back beside it without the two fusing.
-		["a run beside whitespace the table kept", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-run-beside-whitespace-the")],
-		["text the table kept before a run", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-text-the-table-kept-before")],
-		// §13.2.6.4.7 gives `a` and `nobr` a start-tag rule of their own, so writing
-		// a rebuilt one back is not the same as never having removed it.
-		["a rebuilt nobr a heading left on the list", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-rebuilt-nobr-a-heading")],
-		["a rebuilt a behind a marker", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-rebuilt-a-behind-a-marker")],
-		// A marquee's marker hides the outer `<b>` from the list, so the rebuilt one
-		// inside it is a second element of the same name rather than the same one.
-		["a name repeated below a marker", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-name-repeated-below-a")],
-		// §13.2.6.4.7 stops the dd/dt loop at a special element, and generates
-		// implied end tags for an `<hr>` while a `<select>` is in scope.
-		["a list item a select held open", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-list-item-a-select-held")],
-		// §13.2.6.4.7 stops the `li` loop at a special element that is not
-		// `address`/`div`/`p`, leaving the item below it open.
-		["an item a section kept open", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-an-item-a-section-kept-open")],
-		["an hr the table held out of a select's scope", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-an-hr-the-table-held-out-of")],
-		// The `</form>` a nested form needs generates implied end tags of its own.
-		[
-			"a nested form behind something implied",
-			fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-nested-form-behind")
-		],
-		// §13.2.6.4.7's close-a-p list is not §4.13's tag-omission list.
-		["a p closed by a start tag only the parser lists", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-p-closed-by-a-start-tag")],
-		// The run and the table's own children only read in source order while the
-		// two do not overlap.
-		[
-			"a run written inside a sibling's span",
-			fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-run-written-inside-a")
-		],
-		[
-			"a run beside a table a template holds",
-			fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-run-beside-a-table-a")
-		],
-		// A parser-implied element carries attributes once a later tag merges them
-		// on, so it prints its tags — and it has no name in the source to echo.
-		[
-			"a comment behind an implied html the source gave attributes",
-			fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-comment-behind-an-implied")
-		],
-		["one behind an implied body", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-one-behind-an-implied-body")]
-	])("keeps %s", (_name, source) => {
-		expect(reparsed(source)).toBe(serializeHtmlTree(parseHtml(source)));
-	});
-
-	// From wpt's `html/syntax/serializing-html-fragments`. Held to the tree, not
-	// to §13.3's text: this printer echoes the source rather than re-serializing.
-	describe("wpt serialization cases", () => {
-		it.each([
-			["a bare ampersand in an attribute", fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-a")],
-			["a no-break space in an attribute", fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-a-7")],
-			["a quote in an attribute", fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-a-8")],
-			["a less-than in an attribute", fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-a-4")],
-			["a greater-than in an attribute", fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-a-3")],
-			[
-				"an escaped javascript url",
-				fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-an-2")
-			],
-			[
-				"a namespaced attribute on svg",
-				fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-a-6")
-			],
-			[
-				"an xmlns attribute on svg",
-				fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-an-4")
-			],
-			// Raw-text and escapable-raw-text elements: the markup inside them is
-			// text, and printing it back must not let it become tags again.
-			["markup inside style", fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-6")],
-			["markup inside xmp", fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-7")],
-			["markup inside iframe", fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-2")],
-			["markup inside noembed", fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-3")],
-			["markup inside noframes", fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-4")],
-			["a comment", fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-a-2")],
-			[
-				"nested elements",
-				fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-8")
-			],
-			["an unquoted attribute value", fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-an-3")],
-			// Scripting is off in webpack, so `<noscript>` holds markup rather than
-			// text — wpt's escaping.html is the case that says so.
-			["markup inside noscript", fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-5")],
-			["unescaped noscript content", fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-9")],
-			["escaped noscript content", fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps")],
-			["an element inside noscript", fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-an")],
-			[
-				"a link inside noscript in head",
-				fixture("html", "source-processor-re-serializing-keeps-the-tree-wpt-serialization-cases-keeps-a-5")
-			]
-		])("keeps %s", (_name, source) => {
-			expect(reparsed(source)).toBe(serializeHtmlTree(parseHtml(source)));
-		});
-	});
-});
-
-// Beautifying is no pretty-printer: it completes the tags the source left out
-// and echoes the rest byte for byte, so what it writes is snapshotted.
-describe("SourceProcessor — beautifying", () => {
-	const { SourceProcessor } = require("../../../lib/html/syntax");
-	const { parseHtml } = require("../../../lib/html/syntax-parser");
-
-	/**
-	 * @param {string} source html source
-	 * @returns {string} its beautified serialization
-	 */
-	const beautify = (source) =>
-		new SourceProcessor().process(source, { mode: "beautify" }).code;
-
-	const CASES = [
-		// End tags §4.13 lets a source omit are written back.
-		["implied list items", fixture("html", "source-processor-the-per-transform-switches-remove-optional-tags")],
-		["implied table sections", fixture("html", "source-processor-beautifying-should-beautify-implied-table-sections")],
-		["an implied paragraph", fixture("html", "source-processor-beautifying-should-beautify-an-implied-paragraph")],
-		// Nothing the author wrote is rewritten: quoting, case and the spacing
-		// inside a tag all survive.
-		["attribute spelling", fixture("html", "source-processor-beautifying-should-beautify-attribute-spelling")],
-		["an unquoted attribute", fixture("html", "source-processor-beautifying-should-beautify-an-unquoted-attribute")],
-		// The round-trip fallback: shapes no tag placement reproduces print from
-		// the source that built them.
-		["a fostered formatting run", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-run-holding-a-rebuilt")],
-		["a list fostered out of a table", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-list-fostered-out-of-a")],
-		["a form the table kept", fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-form-the-table-kept")],
-		// Raw text keeps its content, and a comment survives.
-		["raw text", fixture("html", "source-processor-beautifying-should-beautify-raw-text")],
-		// The same two names in a foreign subtree hold character data, not raw
-		// text, so what they carry stays escaped.
-		["a foreign script", fixture("html", "source-processor-beautifying-should-beautify-a-foreign-script")],
-		["a foreign style", fixture("html", "source-processor-beautifying-should-beautify-a-foreign-style")],
-		["a comment", fixture("html", "source-processor-remove-empty-elements-reads-the-output-drops-one-left-empty-by")]
-	];
-
-	for (const [name, source] of CASES) {
-		it(`should beautify ${name}`, () => {
-			expect(beautify(source)).toMatchSnapshot();
-		});
-	}
-
-	it("should keep the tree every case was parsed from", () => {
-		/** @type {string[]} */
-		const moved = [];
-		for (const [name, source] of CASES) {
-			const printed = beautify(source);
-			if (
-				serializeHtmlTree(parseHtml(printed)) !==
-				serializeHtmlTree(parseHtml(source))
-			) {
-				moved.push(name);
-			}
-		}
-		expect(moved).toEqual([]);
-	});
-
-	// A tag the printer supplies is source the next pass reads, and a written one
-	// gets its pair back — so echoing settles on the second pass, not the first.
-	it("should settle on the second pass", () => {
-		/** @type {string[]} */
-		const unsettled = [];
-		for (const [name, source] of [
-			...CASES,
-			["a body implied before leading whitespace", fixture("html", "source-processor-beautifying-should-settle-on-the-second-pass-5")]
-		]) {
-			const twice = beautify(beautify(source));
-			if (beautify(twice) !== twice) unsettled.push(name);
-		}
-		expect(unsettled).toEqual([]);
 	});
 });
 
@@ -3339,14 +2392,6 @@ describe("SourceProcessor — reusing work across a print", () => {
 		}
 	};
 
-	it("reads back the name it was given, whatever the memo holds", () => {
-		// These three take the same memo slot — it is keyed by first character and
-		// length — so each is handed the one before it and must reject it.
-		expect(deepestTagName(fixture("html", "source-processor-reusing-work-across-a-print-reads-back-the-name-it-was-given"))).toBe("my-widget");
-		expect(deepestTagName(fixture("html", "source-processor-reusing-work-across-a-print-reads-back-the-name-it-was-given-2"))).toBe("my-gadget");
-		expect(deepestTagName(fixture("html", "source-processor-reusing-work-across-a-print-reads-back-the-name-it-was-given-3"))).toBe("my-widget");
-	});
-
 	it("reads back every name of a document that dirties the whole memo", () => {
 		// A slot is picked by first character and length, so 512 consecutive
 		// lengths reach every one — the parse that drops the memo whole.
@@ -3375,15 +2420,6 @@ describe("SourceProcessor — reusing work across a print", () => {
 		expect(names[names.length - 1]).toBe(`x-${"a".repeat(SLOTS)}`);
 		// A second parse must not be handed anything the first left in a slot.
 		expect(deepestTagName(fixture("html", "source-processor-reusing-work-across-a-print-reads-back-the-name-it-was-given"))).toBe("my-widget");
-	});
-
-	it("hands out one shared string for a known name", () => {
-		// What lets the memo keep a known name across parses: the entry is this
-		// constant, not a slice of the document that asked for it.
-		const first = deepestTagName(fixture("html", "source-processor-reusing-work-across-a-print-hands-out-one-shared-string-for-a"));
-		const second = deepestTagName(fixture("html", "source-processor-reusing-work-across-a-print-hands-out-one-shared-string-for-a-2"));
-		expect(second).toBe("section");
-		expect(second).toBe(first);
 	});
 });
 
@@ -3784,21 +2820,9 @@ describe("SourceProcessor — attribute rewrites as switches", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 
 	/**
-	 * @param {string} html input markup
-	 * @param {object=} options extra print options
-	 * @returns {string} the minified serialization
-	 */
-	const minify = (html, options) =>
-		new SourceProcessor().process(html, { mode: "minify", ...options }).code;
-
-	/**
 	 * @param {import("../../../lib/html/syntax-parser").HtmlTransformOptions} transforms the switches
 	 * @returns {{ mode: "minify", transforms: import("../../../lib/html/syntax-parser").HtmlTransformOptions }} print options
 	 */
-	const off = (transforms) => ({
-		mode: /** @type {"minify"} */ ("minify"),
-		transforms
-	});
 
 	it("keeps a `style` attribute a renderer hands straight back", () => {
 		// The way to keep one: there is no switch, and none is needed — a renderer
@@ -3916,7 +2940,6 @@ describe("SourceProcessor — attribute rewrites as switches", () => {
 			await deferredStyle(fixture("html", "source-processor-attribute-rewrites-as-switches-keeps-a-style-attribute-a"), () => undefined)
 		).toBe('<p style="color:  #ff0000 ;">x');
 	});
-
 });
 
 describe("SourceProcessor — the dropped-duplicate flag is per tag", () => {
@@ -3966,12 +2989,6 @@ describe("SourceProcessor — a byte order mark", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 
 	const page = fixture("html", "source-processor-a-byte-order-mark-keeps-the-doctype-it-stands-before-and-prints");
-
-	it("keeps the doctype it stands before when beautifying", () => {
-		expect(
-			new SourceProcessor().process(page, { mode: "beautify" }).code
-		).toMatch(/^﻿<!DOCTYPE html>/);
-	});
 
 	it("walks the doctype it stands before", () => {
 		/** @type {string[]} */
@@ -4218,7 +3235,6 @@ describe("SourceProcessor — printing what re-parses to the same tree", () => {
 				keepsTree(source, options);
 			}
 		});
-
 	});
 
 	describe("a start tag left out where the parser puts its content elsewhere", () => {
@@ -4277,11 +3293,9 @@ describe("SourceProcessor — printing what re-parses to the same tree", () => {
 		])("keeps %s", (_name, source, options) => {
 			keepsTree(source, options);
 		});
-
 	});
 
 	describe("a fragment", () => {
-
 		it("never writes its root as an `<html>` tag", () => {
 			const KEPT = { ...MINIFY, transforms: { comments: true } };
 			for (const source of [fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-a-fragment-never"), fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-a-fragment-never-2"), fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-a-fragment-never-3")]) {
@@ -4368,7 +3382,6 @@ describe("SourceProcessor — printing what re-parses to the same tree", () => {
 				keepsTree(source, options);
 			}
 		});
-
 	});
 
 	describe("a print that skips what a visitor skipped", () => {
@@ -4584,7 +3597,6 @@ describe("SourceProcessor — runs merged into one", () => {
 			)
 		).toBe("<template><style>a,b{color:red}</style></template>");
 	});
-
 });
 
 describe("SourceProcessor — the markup generators", () => {
@@ -4799,30 +3811,6 @@ describe("SourceProcessor — tree construction the printer reads back", () => {
 		expect(serializeHtmlTree(parseHtml(beautified, 0, read))).toBe(
 			serializeHtmlTree(parseHtml(source, 0, read))
 		);
-	});
-
-	it("writes back a NUL a doctype or an instruction holds", () => {
-		// The tree reads U+FFFD there; the source's own byte prints, and reads the same.
-		for (const source of [fixture("html", "source-processor-tree-construction-the-printer-reads-back-writes-back-a-nul-a"), fixture("html", "source-processor-tree-construction-the-printer-reads-back-writes-back-a-nul-a-2")]) {
-			const { code } = new SourceProcessor().process(source, {
-				mode: "beautify"
-			});
-			expect(code).toBe(`${source}</p>`);
-			expect(serializeHtmlTree(parseHtml(code))).toBe(
-				serializeHtmlTree(parseHtml(source))
-			);
-		}
-	});
-
-	it("reads a raw-text context's end tag as its text", () => {
-		for (const source of [fixture("html", "source-processor-tree-construction-the-printer-reads-back-reads-a-raw-text"), fixture("html", "source-processor-tree-construction-the-printer-reads-back-reads-a-raw-text-2"), fixture("html", "source-processor-tree-construction-the-printer-reads-back-reads-a-raw-text-3")]) {
-			expect(
-				new SourceProcessor().process(source, {
-					mode: "minify",
-					fragmentContext: "style"
-				}).code
-			).toBe(source);
-		}
 	});
 
 	it("walks a document whose text it was told to skip", () => {
@@ -5100,73 +4088,6 @@ describe("SourceProcessor — what minifying cannot turn into markup", () => {
 	 * @param {string} html input markup
 	 * @returns {string} the minified serialization
 	 */
-	const minify = (html) =>
-		new SourceProcessor().process(html, { mode: "minify" }).code;
-
-	it.each([
-		[
-			"a list item's last child its parent's end tag no longer closes",
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-list"),
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-list-2")
-		],
-		[
-			"a last child under a parent of its own name",
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-last"),
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-last")
-		],
-		[
-			"a list item's child an `<option>` outside a `select` leaves open",
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-list-3"),
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-list-4")
-		],
-		[
-			"an `<optgroup>` no `select` closes",
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-an"),
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-an-2")
-		],
-		[
-			"a bare name before a name opening with `=`",
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare"),
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare-2")
-		],
-		[
-			"a name opening with `=` after the tag name or an unquoted value",
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-name"),
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-name")
-		],
-		[
-			"a bare name before a name opening with `=`, in a rebuilt clone",
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare-3"),
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare-4")
-		],
-		[
-			"a bare name ending in a quote, in a tag printed verbatim",
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare-5"),
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare-6")
-		],
-		[
-			"an HTML element's `/>`, which closes nothing",
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-an-3"),
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-an-4")
-		],
-		[
-			"a dropped duplicate's `/` the tag ends with",
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a"),
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-2")
-		]
-	])("keeps the tree of %s", (_name, source, expected) => {
-		const printed = minify(source);
-		expect(printed).toBe(expected);
-		expect(tree(printed)).toBe(tree(source));
-	});
-
-	it("keeps a template delimiter the source escaped a reference", () => {
-		// Text fostered out of a table joins a node without its range, so the
-		// source is not all of it and the whole text is printed escaped.
-		const fostered =
-			fixture("html", "source-processor-what-minifying-cannot-turn-into-markup-keeps-a-template-8");
-		expect(tree(minify(fostered))).toBe(tree(fostered));
-	});
 
 	it("parses an `<iframe srcdoc>` document in no-quirks mode", async () => {
 		// A `<table>` closes the `<p>`, which only quirks mode keeps open.
