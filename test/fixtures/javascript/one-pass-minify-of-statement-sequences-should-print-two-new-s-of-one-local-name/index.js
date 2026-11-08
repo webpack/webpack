@@ -1,0 +1,1 @@
+function F(v){this.v=v}function f(c){return c?new F(1):new F(2)}function g(c){if(c)new F(1).v;else new F(2).v;if(c)new F(3);else new F(4)}function h(c){return c?new F(1):F(2)}console.log(f(1).v,g(0),typeof h(0))

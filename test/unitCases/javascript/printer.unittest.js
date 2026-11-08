@@ -5829,8 +5829,7 @@ describe("one-pass minify of statement sequences", () => {
 
 	it("should print an `if` calling one local name in both branches as one call", () => {
 		// A test running something or calls differing twice stay.
-		const source =
-			'function f(d,c){if(c){d(1,"a")}else{d(2,"a")}if(c)d(1);else d(2);if(c)g(1);else g(2);if(h())d(1);else d(2);if(c)d(1,1);else d(2,2)}function g(v){console.log("g",v)}function h(){return 0}f(function(v,w){console.log(v,w)},1)';
+		const source = fixture("javascript", "one-pass-minify-of-statement-sequences-should-print-an-if-calling-one-local-name");
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
 		expect(code).toBe(
 			'function f(d,c){d(c?1:2,"a"),d(c?1:2),g(c?1:2),h()?d(1):d(2),c?d(1,1):d(2,2)}function g(v){console.log("g",v)}function h(){return 0}f(function(v,w){console.log(v,w)},1);'
@@ -5840,8 +5839,7 @@ describe("one-pass minify of statement sequences", () => {
 
 	it("should print an `if` holding an `if` with a branch alike as one `?:` of joined tests", () => {
 		// Branches unlike stay nested; an assignment test takes its parentheses.
-		const source =
-			'var l=[];function t(v){l.push(v);return v}function f(a,b){if(t(a)){if(t(b))l.push("c");else l.push("d")}else l.push("d");if(t(a))l.push("c");else if(t(b))l.push("c");else l.push("d");if(t(a)){if(t(b))l.push("c");else l.push("d")}else l.push("e");var x;if(t(a)){if(x=t(b))l.push("c");else l.push("d")}else l.push("d")}f(1,0);f(0,1);console.log(l.join())';
+		const source = fixture("javascript", "one-pass-minify-of-statement-sequences-should-print-an-if-holding-an-if-with-a");
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
 		expect(code).toBe(
 			'var l=[];function t(v){return l.push(v),v}function f(a,b){t(a)&&t(b)?l.push("c"):l.push("d"),t(a)||t(b)?l.push("c"):l.push("d"),t(a)?t(b)?l.push("c"):l.push("d"):l.push("e"),t(a)&&t(b)?l.push("c"):l.push("d")}f(1,0),f(0,1),console.log(l.join());'
@@ -5851,8 +5849,7 @@ describe("one-pass minify of statement sequences", () => {
 
 	it("should print two `new`s of one local name differing in one argument as one", () => {
 		// A call and a `new`, or a member read off each, stay.
-		const source =
-			"function F(v){this.v=v}function f(c){return c?new F(1):new F(2)}function g(c){if(c)new F(1).v;else new F(2).v;if(c)new F(3);else new F(4)}function h(c){return c?new F(1):F(2)}console.log(f(1).v,g(0),typeof h(0))";
+		const source = fixture("javascript", "one-pass-minify-of-statement-sequences-should-print-two-new-s-of-one-local-name");
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
 		expect(code).toBe(
 			"function F(v){this.v=v}function f(c){return new F(c?1:2)}function g(c){c?new F(1).v:new F(2).v,new F(c?3:4)}function h(c){return c?new F(1):F(2)}console.log(f(1).v,g(0),typeof h(0));"
