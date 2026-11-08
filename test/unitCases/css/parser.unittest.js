@@ -14,9 +14,13 @@ const {
 	NodeType,
 	_propertyIdOf,
 	normalizeUrl,
+	parseABlocksContents,
 	parseACommaSeparatedListOfComponentValues,
+	parseAComponentValue,
 	parseADeclaration,
+	parseARule,
 	parseAStylesheet,
+	parseAStylesheetsContents,
 	Part,
 	TokenStream
 } = require("../../../lib/css/syntax-parser");
@@ -24,6 +28,10 @@ const {
 describe("CssSyntax — parser entry points", () => {
 	it("takes the start offset and the options as optional", () => {
 		expect(parseACommaSeparatedListOfComponentValues("a, b")).toHaveLength(2);
+		expect(parseAStylesheetsContents("a{}")).toHaveLength(1);
+		expect(parseABlocksContents("a:b").decls).toHaveLength(1);
+		expect(parseARule("a{}")).toBeDefined();
+		expect(parseAComponentValue("a")).toBeDefined();
 	});
 
 	it("accepts a pre-built TokenStream as input", () => {

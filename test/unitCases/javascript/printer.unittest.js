@@ -3200,6 +3200,11 @@ const MINIFY_CASES = [
 ];
 
 describe("jsMinify", () => {
+	it("takes the minimizer options as optional", async () => {
+		const { code } = await jsMinify({ "a.js": "var a = 1;" }, undefined);
+		expect(code).toBe("var a=1;");
+	});
+
 	for (const [name, input, options, extractComments] of MINIFY_CASES) {
 		for (const withMap of [false, true]) {
 			const label = withMap ? `${name} (with source map)` : name;

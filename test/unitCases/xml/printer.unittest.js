@@ -17,6 +17,11 @@ describe("xmlMinify", () => {
 		expect(xmlMinify.filter("image.svg.gz")).toBe(false);
 		expect(xmlMinify.filter("page.html")).toBe(false);
 	});
+
+	it("takes the minimizer options as optional", async () => {
+		const { code } = await xmlMinify({ "a.svg": "<svg ></svg>" }, undefined);
+		expect(code).toBe("<svg/>");
+	});
 });
 
 describe("SVG data URLs", () => {
