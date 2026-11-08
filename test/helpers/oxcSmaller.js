@@ -1619,6 +1619,13 @@ const OXC_SMALLER_BY_REASON = [
 		["swc minifier: fixture/reduced/2/input.js"]
 	],
 	[
+		"webpack reads `o.p` off `var o={p:1}` as `1` where oxc keeps the object: raw shrinks, yet deflate matches the three functions alike, each keeping its object, better than one left without it",
+		[
+			"terser compress: reduce_vars/unsafe_evaluate_side_effect_free_1",
+			"swc exec: terser_reduce_vars_unsafe_evaluate_side_effect_free_1"
+		]
+	],
+	[
 		'webpack folds `10..toPrecision(1)` to `"1e+1"` where oxc keeps the call: raw shrinks, yet deflate matches the same call repeated with only its literal changing better than the strings it answers',
 		["swc minifier: fixture/issues/6957/exponential/input.js"]
 	],
