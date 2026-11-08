@@ -2170,7 +2170,13 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A module's or private top level's name read once, by a call reading a global first, prints its value there, as a function's does; a script's stays.
 			[fixture("javascript", "m-collapse-1"), { module: true, mangle: false }, "g(z()),h(y());"],
 			[fixture("javascript", "m-collapse-1"), { mangle: false, compress: { toplevel: true } }, "g(z()),h(y());"],
-			[fixture("javascript", "m-collapse-1"), { mangle: false }, "let a=z();g(a);var b=y();h(b);"]
+			[fixture("javascript", "m-collapse-1"), { mangle: false }, "let a=z();g(a);var b=y();h(b);"],
+			// An `if` printing as its test runs takes no `&&` of the `if(!t)` before it.
+			[fixture("javascript", "m-guarded-rest-1"), { mangle: false }, "function a(){if(!c)g()}function b(){if(!c)(function(){c}())}"],
+			// A bare `return` the `if(!t)` before it takes as its body stays, ending its function.
+			[fixture("javascript", "m-guarded-rest-2"), { mangle: false }, "(()=>{if(!c)return})(a);function f(){if(!c)return}"],
+			// A body printing nothing is `;`, which the `}` after it keeps.
+			[fixture("javascript", "m-empty-body-1"), { mangle: false }, "function f(){while(a());}function g(){for(x in a);}"]
 		];
 		for (const [source, options, expected] of cases) {
 			const { code } = minifyOnePass(source, {
