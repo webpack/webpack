@@ -1180,6 +1180,14 @@ const SWC_SMALLER_BY_REASON = [
 		["swc minifier: fixture/issues/8284/input.js"]
 	],
 	[
+		"webpack keeps a call behind a read of a script's global, which a function of another script the call runs may set; swc moves the call past the read",
+		[
+			"terser compress: collapse_vars/var_side_effects_1",
+			"terser compress: collapse_vars/var_side_effects_2",
+			"terser compress: collapse_vars/var_side_effects_3"
+		]
+	],
+	[
 		"swc goes further than webpack on what terser's `class-properties` tests cover",
 		[
 			"terser compress: class-properties/class_expression_properties_side_effects"
