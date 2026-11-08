@@ -6694,3 +6694,20 @@ describe("one-pass minify spellings, third round", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 });
+
+describe("one-pass minify hazards", () => {
+	it("should keep a script's only call where the function's body leaves a `var` it hoists", () => {
+		// Unwrapped, the `var` would be a global another script can set.
+		const source = fixture("javascript", "hz-1");
+		const { code } = minifyOnePass(source, { compress: {}, ecma: 2020, mangle: false });
+		expect(code).toBe("!function(){if(a===void 0)console.log(1);var a}();");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should keep a script's only call where the function's body leaves a `var` a dead branch declares", () => {
+		const source = fixture("javascript", "hz-2");
+		const { code } = minifyOnePass(source, { compress: {}, ecma: 2020, mangle: false });
+		expect(code).toBe("!function(){var a;if(a===void 0)console.log(1)}();");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+});
