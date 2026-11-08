@@ -5528,16 +5528,21 @@ describe("one-pass minify of statement sequences", () => {
 			[fixture("javascript", "one-pass-minify-of-statement-sequences-should-join-expression-statements-and-the-11"), "f(()=>{if(q)y();return a(),b});"],
 			// One taking parentheses at a statement's start only goes bare in the sequence.
 			[fixture("javascript", "one-pass-minify-of-statement-sequences-should-join-expression-statements-and-the-12"), "function f(){return a(),function(){}.call(1),b}"],
+			[fixture("javascript", "one-pass-minify-of-statement-sequences-should-join-expression-statements-and-the-14"), "function f(){return a(),function(){}().x(),b}"],
 			// asm.js reads its statements as written.
 			[fixture("javascript", "one-pass-minify-of-statement-sequences-should-join-expression-statements-and-the-13"), 'function f(){"use asm";return function(n){n=n|0;b=b|0;return n|0}}']
 		];
 		for (const [source, expected] of cases) {
-			expect(
-				minifyOnePass(source, {
-					compress: { toplevel: false },
-					mangle: { toplevel: false }
-				}).code
-			).toBe(expected);
+			for (const map of [undefined, { source: "a.js" }]) {
+				// A source map asked for changes nothing the minify prints.
+				expect(
+					minifyOnePass(source, {
+						compress: { toplevel: false },
+						mangle: { toplevel: false },
+						...map
+					}).code
+				).toBe(expected);
+			}
 		}
 	});
 
