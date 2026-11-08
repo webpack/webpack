@@ -3735,6 +3735,14 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should drop a `|0` an operand of `>>>` takes", () => {
+		// `>>>` converts both sides to integers itself, and throws on a BigInt either way; `>>` keeps it.
+		const source = fixture("javascript", "one-pass-minify-of-statement-sequences-should-drop-a-0-an-operand-of-takes");
+		const { code: code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe("function f(v,s){return[v>>>s,v>>>s,v>>>s,(v|0)>>s,v>>>(s|1)]}console.log(f(-1,0).join(),f(4.7,33).join(),f(\"8\",1).join());");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =

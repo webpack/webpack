@@ -1,0 +1,1 @@
+function f(v,s){return[(v|0)>>>s,v>>>(s|0),(0|v)>>>(0|s),(v|0)>>s,v>>>(s|1)]}console.log(f(-1,0).join(),f(4.7,33).join(),f("8",1).join())
