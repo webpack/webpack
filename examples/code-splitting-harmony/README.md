@@ -327,7 +327,7 @@ module.exports = webpackAsyncContext;
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -376,9 +376,9 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 
 ```
 asset output.js 12.4 KiB [emitted] (name: main)
-asset 140.output.js 284 bytes [emitted]
-asset 197.output.js 284 bytes [emitted]
-asset 414.output.js 276 bytes [emitted]
+asset 140.output.js 323 bytes [emitted]
+asset 197.output.js 323 bytes [emitted]
+asset 414.output.js 315 bytes [emitted]
 chunk (runtime: main) 140.output.js 13 bytes [rendered]
   > ./2 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2
   > ./2.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2.js
@@ -398,9 +398,9 @@ chunk (runtime: main) 414.output.js 11 bytes [rendered]
   ./node_modules/b.js 11 bytes [built] [code generated]
     [used exports unknown]
     import() b ./example.js 3:0-11
-chunk (runtime: main) output.js (main) 414 bytes (javascript) 6.31 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 414 bytes (javascript) 6.34 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 6.31 KiB 9 modules
+  runtime modules 6.34 KiB 9 modules
   dependent modules 171 bytes [dependent] 2 modules
   ./example.js 243 bytes [built] [code generated]
     [no exports]
@@ -412,10 +412,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.84 KiB [emitted] [minimized] (name: main)
-asset 140.output.js 66 bytes [emitted] [minimized]
-asset 197.output.js 66 bytes [emitted] [minimized]
-asset 414.output.js 66 bytes [emitted] [minimized]
+asset output.js 2.88 KiB [emitted] [minimized] (name: main)
+asset 140.output.js 98 bytes [emitted] [minimized]
+asset 197.output.js 98 bytes [emitted] [minimized]
+asset 414.output.js 98 bytes [emitted] [minimized]
 chunk (runtime: main) 140.output.js 13 bytes [rendered]
   > ./2 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2
   > ./2.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2.js
@@ -435,9 +435,9 @@ chunk (runtime: main) 414.output.js 11 bytes [rendered]
   ./node_modules/b.js 11 bytes [built] [code generated]
     [used exports unknown]
     import() b ./example.js 3:0-11
-chunk (runtime: main) output.js (main) 403 bytes (javascript) 6.31 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 403 bytes (javascript) 6.34 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 6.31 KiB 9 modules
+  runtime modules 6.34 KiB 9 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 243 bytes [built] [code generated]
     [no exports]
