@@ -16,6 +16,16 @@ module.exports = () => ({
 	plugins: [
 		(compiler) => {
 			let failed = false;
+			/** @type {import("webpack").ModuleGraphConnection | undefined} */
+			let previousConnection;
+			/** @type {string[]} */
+			let requests;
+			compiler.hooks.normalModuleFactory.tap("CheckLateEntries", (factory) => {
+				requests = [];
+				factory.hooks.beforeResolve.tap("CheckLateEntries", (data) => {
+					requests.push(data.request);
+				});
+			});
 			compiler.hooks.compilation.tap("CheckLateEntries", (compilation) => {
 				/** @type {string[]} */
 				const rebuilt = [];
@@ -23,7 +33,26 @@ module.exports = () => ({
 					rebuilt.push(module.identifier());
 				});
 				compilation.hooks.afterSeal.tap("CheckLateEntries", () => {
-					if (!compiler.watchMode || currentWatchStep.step !== "1") return;
+					if (!compiler.watchMode) return;
+					const app = [...compilation.modules].find(
+						(module) =>
+							module.identifier() === path.join(compiler.context, "app.js")
+					);
+					const connection =
+						app &&
+						[...compilation.moduleGraph.getOutgoingConnections(app)].find(
+							(candidate) =>
+								candidate.module &&
+								candidate.module.identifier() ===
+									path.join(compiler.context, "value.js")
+						);
+					if (currentWatchStep.step === "0") {
+						expect(connection).toBeDefined();
+						previousConnection = connection;
+					}
+					if (currentWatchStep.step !== "1") return;
+					expect(Object.is(connection, previousConnection)).toBe(true);
+					expect(requests).not.toContain("./value.js");
 					for (const filename of ["page.html", "app.js", "value.js"]) {
 						expect(rebuilt).not.toContain(
 							path.join(compiler.context, filename)
