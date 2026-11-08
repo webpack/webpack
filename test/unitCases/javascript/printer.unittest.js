@@ -6710,4 +6710,13 @@ describe("one-pass minify hazards", () => {
 		expect(code).toBe("!function(){var a;if(a===void 0)console.log(1)}();");
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
+
+	it("should not fold a value writing `arguments` past a read of a parameter it aliases", () => {
+		const source = fixture("javascript", "hz-3");
+		const { code } = minifyOnePass(source, { compress: {}, ecma: 2020, mangle: false });
+		expect(code).toBe(
+			"function h(a,v){console.log(a,v)}function f(a){var v=arguments[0]=2;h(a,v)}f(1);function k(a){var v=arguments.length=2;h(a,v)}k(1);"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
 });
