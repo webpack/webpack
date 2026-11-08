@@ -631,6 +631,8 @@ describe("CssSyntax — the token stream", () => {
 });
 
 describe("CssSyntax — name and range helpers", () => {
+	const webpack = require("webpack");
+	const { terminateIdentifier, unescapeIdentifier } = webpack.css.syntax.parser;
 	const {
 		_trimCssWhiteSpace,
 		asciiLowercaseName,
@@ -641,6 +643,24 @@ describe("CssSyntax — name and range helpers", () => {
 		skipEscape,
 		toLowerCaseIfNeeded
 	} = require("../../../lib/css/syntax-parser");
+
+	it.each([
+		["foo", "foo"],
+		["\\31", "\\31 "],
+		["\\000031", "\\000031 "],
+		["\\000031f", "\\000031f"],
+		["\\31 ", "\\31 "],
+		["\\31-start", "\\31-start"],
+		["\\\\31", "\\\\31"],
+		["\\\\\\31", "\\\\\\31 "],
+		["\\--foo", "\\--foo"]
+	])("preserves the separator after %s", (input, expected) => {
+		const terminated = terminateIdentifier(input);
+		expect(terminated).toBe(expected);
+		expect(unescapeIdentifier(`${terminated} next`)).toBe(
+			`${unescapeIdentifier(input)} next`
+		);
+	});
 
 	it("trims only the whitespace CSS skips", () => {
 		expect(_trimCssWhiteSpace(" \t\na\n\f ")).toBe("a");

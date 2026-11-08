@@ -38,6 +38,9 @@ it("should keep grid names short without merging protected prefixes", () => {
 	expect(plain._1).toBe("_1");
 	expect(plain["--foo"]).toBe("--foo");
 	expect(plain["_--foo"]).toBe("_--foo");
+	expect(valueOf(plain.leading, "grid-template-areas")).toBe(
+		'"\\31  _1 \\--foo _--foo"'
+	);
 	expect(valueOf(plain.numeric, "grid-area")).toBe("\\31");
 	expect(valueOf(plain.underscore, "grid-area")).toBe("_1");
 	expect(valueOf(plain.dashed, "grid-area")).toBe("\\--foo");
