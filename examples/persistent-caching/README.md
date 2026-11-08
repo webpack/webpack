@@ -58,14 +58,9 @@ module.exports = config;
 asset output.js 3.67 MiB [emitted] (name: main)
 asset output.css 120 bytes [emitted] (name: main)
 Entrypoint main 3.67 MiB = output.js 3.67 MiB output.css 120 bytes
-chunk (runtime: main) output.js, output.css (main) 2.29 MiB (javascript) 27 bytes (css) 931 bytes (runtime) [entry] [rendered]
+chunk (runtime: main) output.js, output.css (main) 2.29 MiB (javascript) 27 bytes (css) 931 bytes (runtime) [entry]
   > ./example.js main
-  dependent modules 2.29 MiB (javascript) 27 bytes (css) [dependent] 1524 modules
-  runtime modules 931 bytes 6 modules
-  ./example.js 214 bytes [built] [code generated]
-    [no exports]
-    [used exports unknown]
-    entry ./example.js main
+  cached modules 2.29 MiB (javascript) 27 bytes (css) 931 bytes (runtime) [cached] 1531 modules
 webpack X.X.X compiled successfully
 ```
 
@@ -75,18 +70,9 @@ webpack X.X.X compiled successfully
 asset output.js 532 KiB [emitted] [minimized] [big] (name: main) 1 related asset
 asset output.css 20 bytes [emitted] [minimized] (name: main)
 Entrypoint main [big] 532 KiB = output.js 532 KiB output.css 20 bytes
-chunk (runtime: main) output.js, output.css (main) 2.23 MiB (javascript) 27 bytes (css) 1.29 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js, output.css (main) 2.23 MiB (javascript) 27 bytes (css) 1.29 KiB (runtime) [entry]
   > ./example.js main
-  dependent modules 544 KiB [dependent] 29 modules
-  runtime modules 1.29 KiB 7 modules
-  cacheable modules 1.7 MiB (javascript) 27 bytes (css)
-    ./example.js + 1493 modules 1.7 MiB [built] [code generated]
-      [no exports]
-      [no exports used]
-      entry ./example.js main
-    css ./example.css 27 bytes [built] [code generated]
-      [no exports]
-      [no exports used]
+  cached modules 2.23 MiB (javascript) 27 bytes (css) 1.29 KiB (runtime) [cached] 38 modules
 
 WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.

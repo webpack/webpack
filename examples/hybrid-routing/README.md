@@ -93,7 +93,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 # dist/router_js.bundle.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["router_js"],[
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["router_js"],[
 /* 0 */,
 /* 1 */
 /*!*******************!*\
@@ -462,7 +462,7 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -488,7 +488,7 @@ render(__webpack_require__(/*! ./aPage */ 2));
 # dist/aPage.bundle.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["aPage"],{
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["aPage"],{
 
 /***/ 2
 /*!******************!*\
@@ -515,11 +515,11 @@ module.exports = function() {
 ```
 asset pageA.bundle.js 12 KiB [emitted] (name: pageA)
 asset pageB.bundle.js 12 KiB [emitted] (name: pageB)
-asset router_js.bundle.js 2.59 KiB [emitted]
-asset aPage.bundle.js 380 bytes [emitted] (name: aPage)
-asset bPage.bundle.js 380 bytes [emitted] (name: bPage)
-Entrypoint pageA 14.9 KiB = router_js.bundle.js 2.59 KiB aPage.bundle.js 380 bytes pageA.bundle.js 12 KiB
-Entrypoint pageB 14.9 KiB = router_js.bundle.js 2.59 KiB bPage.bundle.js 380 bytes pageB.bundle.js 12 KiB
+asset router_js.bundle.js 2.63 KiB [emitted]
+asset aPage.bundle.js 419 bytes [emitted] (name: aPage)
+asset bPage.bundle.js 419 bytes [emitted] (name: bPage)
+Entrypoint pageA 15 KiB = router_js.bundle.js 2.63 KiB aPage.bundle.js 419 bytes pageA.bundle.js 12 KiB
+Entrypoint pageB 15 KiB = router_js.bundle.js 2.63 KiB bPage.bundle.js 419 bytes pageB.bundle.js 12 KiB
 chunk (runtime: pageA, pageB) aPage.bundle.js (aPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
   > ./aPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./aPage
   > ./aEntry pageA
@@ -538,17 +538,17 @@ chunk (runtime: pageA, pageB) bPage.bundle.js (bPage) 59 bytes [initial] [render
     cjs require ./bPage ./bEntry.js 3:7-25
     cjs self exports reference ./bPage.js 1:0-14
     import() context element ./bPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./bPage
-chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 6.91 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 6.95 KiB (runtime) [entry] [rendered]
   > ./aEntry pageA
   > ./router pageA
-  runtime modules 6.91 KiB 10 modules
+  runtime modules 6.95 KiB 10 modules
   ./aEntry.js 87 bytes [built] [code generated]
     [used exports unknown]
     entry ./aEntry pageA
-chunk (runtime: pageB) pageB.bundle.js (pageB) 87 bytes (javascript) 6.91 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.bundle.js (pageB) 87 bytes (javascript) 6.95 KiB (runtime) [entry] [rendered]
   > ./bEntry pageB
   > ./router pageB
-  runtime modules 6.91 KiB 10 modules
+  runtime modules 6.95 KiB 10 modules
   ./bEntry.js 87 bytes [built] [code generated]
     [used exports unknown]
     entry ./bEntry pageB
@@ -568,13 +568,13 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset pageA.bundle.js 2.64 KiB [emitted] [minimized] (name: pageA)
-asset pageB.bundle.js 2.64 KiB [emitted] [minimized] (name: pageB)
-asset router_js.bundle.js 582 bytes [emitted] [minimized]
-asset aPage.bundle.js 116 bytes [emitted] [minimized] (name: aPage)
-asset bPage.bundle.js 116 bytes [emitted] [minimized] (name: bPage)
-Entrypoint pageA 3.32 KiB = router_js.bundle.js 582 bytes aPage.bundle.js 116 bytes pageA.bundle.js 2.64 KiB
-Entrypoint pageB 3.32 KiB = router_js.bundle.js 582 bytes bPage.bundle.js 116 bytes pageB.bundle.js 2.64 KiB
+asset pageA.bundle.js 2.67 KiB [emitted] [minimized] (name: pageA)
+asset pageB.bundle.js 2.67 KiB [emitted] [minimized] (name: pageB)
+asset router_js.bundle.js 614 bytes [emitted] [minimized]
+asset aPage.bundle.js 148 bytes [emitted] [minimized] (name: aPage)
+asset bPage.bundle.js 148 bytes [emitted] [minimized] (name: bPage)
+Entrypoint pageA 3.42 KiB = router_js.bundle.js 614 bytes aPage.bundle.js 148 bytes pageA.bundle.js 2.67 KiB
+Entrypoint pageB 3.42 KiB = router_js.bundle.js 614 bytes bPage.bundle.js 148 bytes pageB.bundle.js 2.67 KiB
 chunk (runtime: pageA, pageB) aPage.bundle.js (aPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
   > ./aPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./aPage
   > ./aEntry pageA
@@ -593,17 +593,17 @@ chunk (runtime: pageA, pageB) bPage.bundle.js (bPage) 59 bytes [initial] [render
     cjs require ./bPage ./bEntry.js 3:7-25
     cjs self exports reference ./bPage.js 1:0-14
     import() context element ./bPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./bPage
-chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 6.91 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 6.95 KiB (runtime) [entry] [rendered]
   > ./aEntry pageA
   > ./router pageA
-  runtime modules 6.91 KiB 10 modules
+  runtime modules 6.95 KiB 10 modules
   ./aEntry.js 87 bytes [built] [code generated]
     [no exports used]
     entry ./aEntry pageA
-chunk (runtime: pageB) pageB.bundle.js (pageB) 87 bytes (javascript) 6.91 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.bundle.js (pageB) 87 bytes (javascript) 6.95 KiB (runtime) [entry] [rendered]
   > ./bEntry pageB
   > ./router pageB
-  runtime modules 6.91 KiB 10 modules
+  runtime modules 6.95 KiB 10 modules
   ./bEntry.js 87 bytes [built] [code generated]
     [no exports used]
     entry ./bEntry pageB

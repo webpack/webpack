@@ -431,7 +431,7 @@ Keyed by emitted asset, with the entrypoint graph alongside it.
 client:
   assets by path *.js 1.9 MiB
     asset main.js 1.89 MiB [emitted] (name: main)
-    asset page_js.js 1.63 KiB [emitted]
+    asset page_js.js 1.67 KiB [emitted]
   assets by path *.json 2.54 KiB
     asset ssr-manifest.json 2.16 KiB [emitted]
     asset manifest.json 389 bytes [emitted]
@@ -439,10 +439,10 @@ client:
     asset page_js.css 352 bytes [emitted]
     asset main.css 263 bytes [emitted] (name: main)
   Entrypoint main 1.9 MiB = main.js 1.89 MiB main.css 263 bytes
-  chunk (runtime: main) main.js, main.css (main) 1.85 MiB (javascript) 176 bytes (css) 8.86 KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) main.js, main.css (main) 1.85 MiB (javascript) 176 bytes (css) 8.9 KiB (runtime) [entry] [rendered]
     > ./example.js main
     dependent modules 1.85 MiB (javascript) 176 bytes (css) [dependent] 17 modules
-    runtime modules 8.86 KiB 11 modules
+    runtime modules 8.9 KiB 11 modules
     ./example.js 617 bytes [built] [code generated]
       [no exports]
       [used exports unknown]
@@ -485,7 +485,7 @@ server:
 client:
   assets by path *.js 218 KiB
     asset main.js 217 KiB [emitted] [minimized] (name: main) 1 related asset
-    asset page_js-page_css.js 565 bytes [emitted] [minimized]
+    asset page_js-page_css.js 597 bytes [emitted] [minimized]
   assets by path *.json 2.07 KiB
     asset ssr-manifest.json 1.57 KiB [emitted]
     asset manifest.json 510 bytes [emitted]
@@ -493,9 +493,9 @@ client:
     asset main.css 231 bytes [emitted] [minimized] (name: main)
     asset page_js-page_css.css 209 bytes [emitted] [minimized]
   Entrypoint main 217 KiB = main.js 217 KiB main.css 231 bytes
-  chunk (runtime: main) main.js, main.css (main) 650 KiB (javascript) 176 bytes (css) 9.12 KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) main.js, main.css (main) 650 KiB (javascript) 176 bytes (css) 9.16 KiB (runtime) [entry] [rendered]
     > ./example.js main
-    runtime modules 9.12 KiB 11 modules
+    runtime modules 9.16 KiB 11 modules
     dependent modules 18.4 KiB [dependent] 4 modules
     cacheable modules 632 KiB (javascript) 176 bytes (css)
       ./example.js + 8 modules 632 KiB [built] [code generated]
