@@ -2334,7 +2334,7 @@ const collectParseErrorCodes = () => {
 
 	const babelSource = fs.readFileSync(BABEL_PARSER, "utf8");
 
-	const { parse } = require("../lib/javascript/syntax-parser");
+	const { parseProgram } = require("../lib/javascript/syntax-parser");
 
 	const patterns = PARSE_ERRORS.map((entry) =>
 		parseErrorTemplateRegExp(entry.template)
@@ -2363,8 +2363,7 @@ const collectParseErrorCodes = () => {
 		/** @type {{ message: string, pos: number } | undefined} */
 		let raised;
 		try {
-			parse(probe, {
-				ecmaVersion: "latest",
+			parseProgram(probe, 0, {
 				sourceType,
 				importPhases: entry.importPhases === true
 			});

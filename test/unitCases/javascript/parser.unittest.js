@@ -4497,13 +4497,21 @@ describe("WebpackParser writing a SyntaxTree", () => {
 	});
 
 	it("refuses a tree where its productions would be acorn's", () => {
+		/** @type {import("../../../lib/javascript/syntax-parser").ParserPlugin} */
+		const ownIfStatement = (Parser) =>
+			class extends Parser {
+				/**
+				 * @param {import("../../../lib/javascript/syntax-parser").UnfinishedNode} node the statement
+				 * @returns {ReturnType<WebpackParser["parseIfStatement"]>} the statement
+				 */
+				parseIfStatement(node) {
+					return super.parseIfStatement(node);
+				}
+			};
+		const Extended = WebpackParser.extend(ownIfStatement);
 		expect(
-			() =>
-				new WebpackParser(
-					{ ...options, ecmaVersion: 2015, syntaxTree: new SyntaxTree() },
-					"x"
-				)
-		).toThrow(/latest edition only/);
+			() => new Extended({ ...options, syntaxTree: new SyntaxTree() }, "x")
+		).toThrow(/without parser plugins/);
 	});
 });
 

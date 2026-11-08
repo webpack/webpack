@@ -15481,6 +15481,38 @@ declare interface JavascriptParseOptions {
 	sourceType?: "module" | "commonjs" | "auto" | "script" | "event-handler";
 
 	/**
+	 * the edition to read the source as, the latest by default
+	 */
+	ecmaVersion?:
+		| 3
+		| 5
+		| 6
+		| 7
+		| 8
+		| 9
+		| 10
+		| 11
+		| 12
+		| 13
+		| 14
+		| 15
+		| 16
+		| 17
+		| 2015
+		| 2016
+		| 2017
+		| 2018
+		| 2019
+		| 2020
+		| 2021
+		| 2022
+		| 2023
+		| 2024
+		| 2025
+		| 2026
+		| "latest";
+
+	/**
 	 * optional callback for each parse error, with the CSS and HTML parsers' signature and Babel's `reasonCode` kebab-cased as `code`; `severity` is `"error"` for one that stops the parse and `"warning"` for one it reads past; without it, the first error throws, as acorn's does
 	 */
 	parseError?: (
@@ -17844,13 +17876,6 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	 * Whether a definition is a variable rather than a free name or a scope.
 	 */
 	static isVariableInfo(value?: string | VariableInfo | ScopeInfo): boolean;
-
-	/**
-	 * Returns parser.
-	 */
-	static extend(
-		...plugins: ((BaseParser: typeof SyntaxParser) => typeof SyntaxParser)[]
-	): typeof JavascriptParser;
 	static ALLOWED_MEMBER_TYPES_ALL: number;
 	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: number;
 	static ALLOWED_MEMBER_TYPES_EXPRESSION: number;
@@ -26434,24 +26459,9 @@ declare interface ParseOptionsJavascriptParser {
 	allowReturnOutsideFunction?: boolean;
 
 	/**
-	 * internal: serve `range` lazily and skip the parser's location/range tracking
-	 */
-	lazyNodes?: boolean;
-
-	/**
-	 * internal: collect comments here without slicing their text eagerly
-	 */
-	lazyComments?: CommentJavascriptParser[];
-
-	/**
 	 * enable parsing of the import phase proposals (import defer / import source)
 	 */
 	importPhases?: boolean;
-
-	/**
-	 * internal: for `auto`, let the parser downgrade module->script in place instead of re-parsing
-	 */
-	moduleFallback?: boolean;
 }
 
 /**
