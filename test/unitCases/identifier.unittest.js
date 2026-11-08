@@ -509,4 +509,30 @@ describe("util/identifier", () => {
 			);
 		});
 	});
+
+	describe("getAssetFile", () => {
+		/** @type {[string, string | undefined][]} */
+		const cases = [
+			["main.js", "main.js"],
+			["js/main.js", "js/main.js"],
+			["./js/main.js", "js/main.js"],
+			["js\\main.js", "js/main.js"],
+			["main.js?v=1", "main.js"],
+			["main.js#top", "main.js"],
+			["..x/../main.js", "main.js"],
+			["a/..b/../main.js", "a/main.js"],
+			["picture.txt?/..a/../../../file.txt", "picture.txt"],
+			["..x/../../main.js", undefined],
+			["../main.js", undefined],
+			["a/..", undefined],
+			["/main.js", undefined],
+			["C:/main.js", undefined]
+		];
+
+		for (const [asset, expected] of cases) {
+			it(`should map ${JSON.stringify(asset)} to ${JSON.stringify(expected)}`, () => {
+				expect(identifierUtil.getAssetFile(asset)).toBe(expected);
+			});
+		}
+	});
 });
