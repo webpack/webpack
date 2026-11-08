@@ -5,6 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const { fileURLToPath } = require("url");
 const vm = require("vm");
+const { decodeUrlPath } = require("../harness/runner/RunnerHelpers");
 
 // Simulates a worklet: `addModule(url)` evaluates the referenced chunk in one
 // persistent global scope, so the bootstrap blob, split chunks and entry chunk
@@ -18,7 +19,7 @@ module.exports = (
 		} else if (/^file:/i.test(url)) {
 			return fileURLToPath(url);
 		}
-		return path.resolve(outputDirectory, `./${url}`);
+		return path.resolve(outputDirectory, `./${decodeUrlPath(url)}`);
 	};
 
 	const createWorklet = () => {
