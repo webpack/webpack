@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = {
-	findBundle() {
-		return ["./dist/bundle0.js"];
+	findBundle(i, options) {
+		return [`./${options.name}/dist/bundle${i}.js`];
 	}
 };
