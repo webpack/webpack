@@ -1,0 +1,22 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"skip": {
+				"selectorPrelude": true
+			}
+		},
+		"visit": {
+			"types": [
+				"QualifiedRule",
+				"Declaration",
+				"Url"
+			],
+			"fields": [
+				"name",
+				"value"
+			],
+			"exit": false
+		}
+	}
+]

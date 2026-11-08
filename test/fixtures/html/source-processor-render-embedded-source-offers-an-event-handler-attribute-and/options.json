@@ -1,0 +1,35 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "as-written"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"javascript/event-handler": "foo(1,2)"
+			}
+		}
+	},
+	{
+		"print": "processAsync",
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"javascript/event-handler": "foo(1,2)"
+			},
+			"async": true
+		}
+	},
+	{
+		"print": "processAsync",
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	}
+]

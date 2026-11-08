@@ -1,0 +1,20 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": true,
+		"module": false,
+		"toplevel": true,
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"keep_fnames": true
+		},
+		"module": false,
+		"toplevel": true,
+		"behavior": true
+	}
+]

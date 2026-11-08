@@ -1,0 +1,20 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"QualifiedRule",
+				"Ident",
+				"Hash",
+				"Comment"
+			],
+			"exit": true,
+			"at": [
+				{
+					"type": "QualifiedRule",
+					"do": "skipChildren"
+				}
+			]
+		}
+	}
+]

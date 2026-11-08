@@ -1,0 +1,20 @@
+[
+	{
+		"options": {
+			"sourceType": "module",
+			"importPhases": true
+		}
+	},
+	{
+		"options": {
+			"sourceType": "script",
+			"importPhases": true
+		}
+	},
+	{
+		"options": {
+			"sourceType": "module",
+			"importPhases": false
+		}
+	}
+]

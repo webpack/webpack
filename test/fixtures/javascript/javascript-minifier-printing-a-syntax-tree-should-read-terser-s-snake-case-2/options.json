@@ -1,0 +1,37 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {
+				"regex": {
+					"regexp": "^zz"
+				},
+				"keepQuoted": true
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {
+				"regex": {
+					"regexp": "^zz"
+				},
+				"keep_quoted": true
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {
+				"regex": {
+					"regexp": "^zz"
+				}
+			}
+		}
+	}
+]

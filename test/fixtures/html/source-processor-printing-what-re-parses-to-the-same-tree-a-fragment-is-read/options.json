@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "beautify",
+		"fragmentContext": "select"
+	},
+	{
+		"mode": "minify",
+		"fragmentContext": "select"
+	}
+]

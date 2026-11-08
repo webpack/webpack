@@ -1,0 +1,1 @@
+function f(alpha,beta){var \u0064elta=alpha+beta;g(\u0064elta,\u0064elta*7,6,5,4,3,2,1)}g(f)

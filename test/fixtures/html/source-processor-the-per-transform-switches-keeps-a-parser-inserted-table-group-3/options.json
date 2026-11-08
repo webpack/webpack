@@ -1,5 +1,11 @@
 [
 	{
 		"mode": "minify"
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"removeOptionalTags": false
+		}
 	}
 ]

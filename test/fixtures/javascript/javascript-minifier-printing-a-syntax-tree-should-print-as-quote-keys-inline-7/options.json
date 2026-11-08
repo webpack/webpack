@@ -1,0 +1,16 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"reserved": {}
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"reserved": "a"
+		}
+	}
+]

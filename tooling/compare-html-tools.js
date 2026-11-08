@@ -1252,7 +1252,7 @@ const wantedStage = filterFrom("STAGE");
 // thousands of documents are a corpus of their own rather than a default run.
 const SKIPPED_FIXTURE_DIRS = new Set(["js", "node_modules", "wpt"]);
 
-// The inputs the unit tests read, one directory each: `html/fixtures.unittest.js`
+// The inputs the unit tests read, one directory each: `html/invariants.unittest.js`
 // holds every one of them to these relations, with its own known differences.
 const UNIT_INPUT_RE = /^test\/fixtures\/html\/[^/]+\/index\.html$/;
 

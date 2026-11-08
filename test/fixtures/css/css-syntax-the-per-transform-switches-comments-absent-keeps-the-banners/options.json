@@ -1,0 +1,44 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": "some"
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": true
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": "all"
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": false
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": "banner"
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": {
+				"regexp": "inert"
+			}
+		}
+	}
+]

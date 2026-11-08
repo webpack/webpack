@@ -1,0 +1,13 @@
+[
+	{
+		"mode": "beautify",
+		"fragmentContext": "select"
+	},
+	{
+		"mode": "minify",
+		"fragmentContext": "select",
+		"mergeStyles": true,
+		"removeRedundantAttributes": "all",
+		"renderEmbeddedSource": "builtin"
+	}
+]

@@ -1,0 +1,36 @@
+[
+	{
+		"print": "jsMinify",
+		"as": "module",
+		"minimizer": {
+			"extractComments": true,
+			"asset": "module.mjs"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"as": "module",
+		"minimizer": {
+			"extractComments": true,
+			"sourceMap": "input.js.map",
+			"asset": "module.mjs"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"module": true,
+		"minimizer": {
+			"extractComments": true,
+			"asset": "module.mjs"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"module": true,
+		"minimizer": {
+			"extractComments": true,
+			"sourceMap": "input.js.map",
+			"asset": "module.mjs"
+		}
+	}
+]

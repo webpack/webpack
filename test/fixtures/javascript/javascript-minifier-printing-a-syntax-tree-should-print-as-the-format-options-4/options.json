@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"format": {
+			"preserve_annotations": true
+		}
+	}
+]

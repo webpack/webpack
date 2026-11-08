@@ -1,0 +1,57 @@
+[
+	{
+		"print": "jsMinify",
+		"parse": {
+			"spidermonkey": true
+		},
+		"minimizer": {
+			"extractComments": false,
+			"asset": "a.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"format": {
+			"ast": true
+		},
+		"minimizer": {
+			"extractComments": false,
+			"asset": "a.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"format": {
+			"spidermonkey": true
+		},
+		"minimizer": {
+			"extractComments": false,
+			"asset": "a.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"format": {
+			"code": false
+		},
+		"minimizer": {
+			"extractComments": false,
+			"asset": "a.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"parse": {
+			"spidermonkey": false
+		},
+		"format": {
+			"ast": false,
+			"spidermonkey": false,
+			"code": true
+		},
+		"minimizer": {
+			"extractComments": false,
+			"asset": "a.js"
+		}
+	}
+]

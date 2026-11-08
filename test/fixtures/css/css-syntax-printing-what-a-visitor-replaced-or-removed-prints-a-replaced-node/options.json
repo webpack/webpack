@@ -1,0 +1,28 @@
+[
+	{
+		"mode": "minify",
+		"visit": {
+			"types": [
+				"Hash",
+				"Declaration"
+			],
+			"fields": [
+				"name"
+			],
+			"exit": false,
+			"at": [
+				{
+					"type": "Hash",
+					"do": "replace",
+					"with": "blue"
+				},
+				{
+					"type": "Declaration",
+					"name": "color",
+					"do": "replace",
+					"with": "fill:red"
+				}
+			]
+		}
+	}
+]

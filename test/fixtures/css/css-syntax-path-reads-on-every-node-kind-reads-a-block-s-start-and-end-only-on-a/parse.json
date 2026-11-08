@@ -1,0 +1,16 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"AtRule",
+				"QualifiedRule"
+			],
+			"fields": [
+				"startOf:block",
+				"endOf:block"
+			],
+			"exit": false
+		}
+	}
+]

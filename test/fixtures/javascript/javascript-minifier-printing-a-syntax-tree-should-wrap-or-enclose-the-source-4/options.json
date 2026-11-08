@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"compress": false,
+		"mangle": false,
+		"wrap": "lib",
+		"enclose": "window,undefined:window"
+	}
+]

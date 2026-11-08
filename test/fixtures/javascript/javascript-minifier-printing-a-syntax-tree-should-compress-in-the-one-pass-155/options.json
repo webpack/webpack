@@ -1,0 +1,15 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"toplevel": false,
+			"builtins_ecma": 2020
+		},
+		"mangle": {
+			"toplevel": false
+		},
+		"format": {
+			"comments": false
+		}
+	}
+]

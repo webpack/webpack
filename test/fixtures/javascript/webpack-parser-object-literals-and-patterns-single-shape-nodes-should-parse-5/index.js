@@ -1,0 +1,1 @@
+({ m() {}, get g() { return 1; }, set g(v) {}, async af() {}, *gen() {}, [k]: 1, "s": 2, 3: 3, sh, ...sp });

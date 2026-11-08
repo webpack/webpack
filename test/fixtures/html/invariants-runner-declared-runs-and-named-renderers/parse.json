@@ -1,0 +1,56 @@
+[
+	{
+		"options": {
+			"fragmentContext": "td",
+			"skip": {
+				"comments": true
+			}
+		}
+	},
+	{
+		"entry": "tokenize",
+		"options": {
+			"fragmentContext": "title",
+			"isForeign": true
+		},
+		"visit": true
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"skip": {
+				"text": true
+			}
+		}
+	},
+	{
+		"pos": 27,
+		"fields": [
+			"name",
+			"range",
+			"fieldCount:attributes",
+			"sourceOf:startTag"
+		]
+	},
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"Element"
+			],
+			"fields": [
+				"name",
+				"index",
+				"parent"
+			],
+			"exit": false,
+			"at": [
+				{
+					"type": "Element",
+					"name": "style",
+					"do": "stop"
+				}
+			]
+		}
+	}
+]

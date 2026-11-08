@@ -1,0 +1,27 @@
+[
+	{
+		"mode": "minify",
+		"mergeStyles": true,
+		"renderEmbeddedSource": "as-written"
+	},
+	{
+		"mode": "minify",
+		"mergeStyles": true,
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"print": "processAsync",
+		"mode": "minify",
+		"mergeStyles": true,
+		"renderEmbeddedSource": {
+			"name": "as-written",
+			"async": true
+		}
+	},
+	{
+		"print": "processAsync",
+		"mode": "minify",
+		"mergeStyles": true,
+		"renderEmbeddedSource": "offers"
+	}
+]

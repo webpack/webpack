@@ -1,0 +1,1 @@
+Every leaf type appears both at the top level and inside `bar(…)`, so one skipped type proves both the value-list and the function-argument builders drop it, while the declaration and its function survive. Skipping `Function` drops `bar()`'s whole argument subtree.

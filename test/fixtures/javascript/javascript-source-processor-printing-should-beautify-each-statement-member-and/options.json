@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "beautify"
+	},
+	{
+		"mode": "beautify",
+		"compress": {},
+		"mangle": {}
+	}
+]

@@ -1,0 +1,8 @@
+[
+	{
+		"mode": "minify",
+		"format": {
+			"semicolons": false
+		}
+	}
+]

@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"dead_code": false
+		},
+		"mangle": false
+	}
+]

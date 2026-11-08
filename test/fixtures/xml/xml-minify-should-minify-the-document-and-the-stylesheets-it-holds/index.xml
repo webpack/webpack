@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- an editor's note -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">
+	<style>
+		.dot { fill: #ff0000; user-select: none; }
+	</style>
+	<circle class="dot" cx="5" cy="5" r="4" style="stroke: #00ff00" />
+</svg>

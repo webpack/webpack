@@ -1,0 +1,1 @@
+function f(e,t){return !!(!(e+t))}

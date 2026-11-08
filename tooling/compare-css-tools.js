@@ -1041,7 +1041,7 @@ const wantedStage = filterFrom("STAGE");
 // thousands of stylesheets are a corpus of their own rather than a default run.
 const SKIPPED_FIXTURE_DIRS = new Set(["js", "node_modules", "wpt"]);
 
-// The inputs the unit tests read, one directory each: `css/fixtures.unittest.js`
+// The inputs the unit tests read, one directory each: `css/invariants.unittest.js`
 // holds every one of them to these relations, with its own known differences.
 const UNIT_INPUT_RE = /^test\/fixtures\/css\/[^/]+\/index\.css$/;
 

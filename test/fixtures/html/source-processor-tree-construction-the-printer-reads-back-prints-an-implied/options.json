@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {
+			"removeOptionalTags": false
+		}
+	},
+	{
+		"mode": "beautify"
+	}
+]

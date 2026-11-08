@@ -1,0 +1,19 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"Ident"
+			],
+			"fields": [
+				"startOf:block",
+				"endOf:block",
+				"startOf:name",
+				"endOf:name",
+				"startOf:value",
+				"endOf:value"
+			],
+			"exit": false
+		}
+	}
+]

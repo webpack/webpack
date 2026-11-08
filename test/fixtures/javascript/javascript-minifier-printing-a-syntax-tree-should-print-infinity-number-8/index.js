@@ -1,0 +1,1 @@
+function f(b,c,d){return b != false}console.log(f(1,2,3),f(0,'',null),f('1',[],{}))

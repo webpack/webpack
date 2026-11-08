@@ -1,0 +1,12 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"sortAttributes": true
+	},
+	{
+		"xml": true,
+		"mode": "beautify",
+		"sortAttributes": true
+	}
+]

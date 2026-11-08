@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"format": {
+			"comments": "all",
+			"preamble": "/* pre */\r\nline"
+		}
+	}
+]

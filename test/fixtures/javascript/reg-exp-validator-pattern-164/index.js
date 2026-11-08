@@ -1,0 +1,1 @@
+/\p{ID_Compat_Math_Start}/u;

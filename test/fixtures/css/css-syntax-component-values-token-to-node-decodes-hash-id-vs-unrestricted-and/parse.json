@@ -1,0 +1,14 @@
+[
+	{
+		"entry": "parseAComponentValue",
+		"fields": [
+			"name",
+			"value",
+			"flag:id",
+			"fieldCount:declarations",
+			"fieldCount:rules",
+			"rangeOf:name",
+			"rangeOf:value"
+		]
+	}
+]

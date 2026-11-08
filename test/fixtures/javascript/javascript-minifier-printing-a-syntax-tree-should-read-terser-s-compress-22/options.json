@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"toplevel": true,
+			"top_retain": "foo"
+		},
+		"mangle": false
+	}
+]

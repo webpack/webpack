@@ -1,0 +1,10 @@
+[
+	{
+		"print": "htmlMinify",
+		"renderEmbeddedSource": "empty"
+	},
+	{
+		"print": "htmlMinify",
+		"renderEmbeddedSource": "offers"
+	}
+]

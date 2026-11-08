@@ -1,0 +1,1 @@
+/\p{Script=Nag_Mundari}/u;

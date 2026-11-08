@@ -1,0 +1,20 @@
+[
+	{
+		"print": "xmlMinify"
+	},
+	{
+		"print": "xmlMinify",
+		"css": {
+			"unusedSymbols": 42
+		}
+	},
+	{
+		"print": "xmlMinify",
+		"environment": {
+			"browsers": [
+				"chrome 50"
+			],
+			"vendorPrefixes": true
+		}
+	}
+]

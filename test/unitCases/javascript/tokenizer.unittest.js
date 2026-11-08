@@ -22,77 +22,7 @@ const {
 const acornPort = /** @type {ParserExports} */ (/** @type {unknown} */ (acorn));
 
 describe("WebpackParser", () => {
-
 	describe("token context (finishToken exprAllowed)", () => {
-		/**
-		 * @param {string} code source
-		 * @returns {string} the sole expression's node type
-		 */
-		const exprType = (code) => {
-			const statement =
-				/** @type {import("estree").ExpressionStatement} */
-				(parse(code).ast.body[0]);
-			return statement.expression.type;
-		};
-
-		it("should classify braces as blocks or objects like acorn", () => {
-			// colon in block vs object context, nested blocks, function bodies
-			const { ast } = parse(
-				fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-classify-braces-as")
-			);
-			expect(ast.body.map((s) => s.type)).toEqual([
-				"LabeledStatement",
-				"ExpressionStatement",
-				"BlockStatement",
-				"ExpressionStatement"
-			]);
-			// a line terminator after `return` turns the brace into a block
-			const returned =
-				/** @type {import("estree").FunctionDeclaration} */
-				(parse(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-classify-braces-as-2")).ast.body[0]);
-			const ret = /** @type {import("estree").ReturnStatement} */ (
-				returned.body.body[0]
-			);
-			expect(/** @type {import("estree").Node} */ (ret.argument).type).toBe(
-				"ObjectExpression"
-			);
-			const broken =
-				/** @type {import("estree").FunctionDeclaration} */
-				(parse(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-classify-braces-as-3")).ast.body[0]);
-			expect(
-				/** @type {import("estree").ReturnStatement} */ (broken.body.body[0])
-					.argument
-			).toBeNull();
-			// a stray closer still pops safely before the parser rejects it
-			expect(() => parse("}")).toThrow(/Unexpected token/);
-		});
-
-		it("should read `/` after a value as division, not a regexp", () => {
-			// the `else` branch: exprAllowed follows the token type's beforeExpr
-			expect(exprType(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-read-after-a-value"))).toBe("BinaryExpression");
-			expect(exprType(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-read-after-a-value-2"))).toBe("BinaryExpression");
-			expect(exprType(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-read-after-a-value-3"))).toBe("BinaryExpression");
-			expect(exprType(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-read-after-a-value-4"))).toBe("BinaryExpression");
-			expect(exprType(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-read-after-a-value-5"))).toBe("BinaryExpression");
-			expect(exprType(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-read-after-a-value-6"))).toBe("BinaryExpression");
-		});
-
-		it("should read `/` where an expression is allowed as a regexp", () => {
-			// the updateContext branch (parenR pop) and value-position defaults
-			expect(exprType(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-read-where-an"))).toBe("AssignmentExpression");
-			expect(parse(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-read-where-an-2")).ast).toBeDefined();
-			expect(parse(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-read-where-an-3")).ast).toBeDefined();
-			expect(
-				// eslint-disable-next-line no-template-curly-in-string
-				parse(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-read-where-an-4")).ast
-			).toBeDefined();
-		});
-
-		it("should keep `/` after a keyword-valued property name as division", () => {
-			// keyword-after-dot forbids an expression, so the next `/` divides
-			expect(parse(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-keep-after-a")).ast).toBeDefined();
-		});
-
 		it("should re-read a `/=` the tokenizer took for division as a regexp", () => {
 			// `await` and a block's `}` leave the tokenizer guessing division, but
 			// an expression belongs there, so the spec reads a regexp (acorn throws)
@@ -126,52 +56,6 @@ describe("WebpackParser", () => {
 				}
 			}
 		});
-
-		it("should re-allow an expression after `of` and generator `yield`", () => {
-			// the inlined name.updateContext true branches: the `/` lexes a regexp
-			expect(parse(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-re-allow-an")).ast).toBeDefined();
-			expect(parse(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-re-allow-an-2")).ast).toBeDefined();
-		});
-
-		it("should read multi-char `.` and `=` tokens in the owned scanner", () => {
-			// `...`, `==`, `===` and `=>` miss the single-char dispatch fast paths
-			expect(exprType(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-read-multi-char"))).toBe("CallExpression");
-			expect(exprType(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-read-multi-char-2"))).toBe("BinaryExpression");
-			expect(exprType(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-read-multi-char-3"))).toBe("BinaryExpression");
-			expect(exprType(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-read-multi-char-4"))).toBe("ArrowFunctionExpression");
-		});
-	});
-
-	describe("newline-before-token tracking", () => {
-		it("should apply ASI from the flag without a gap scan", () => {
-			expect(parse(fixture("javascript", "webpack-parser-newline-before-token-tracking-should-apply-asi-from-the-flag")).ast.body).toHaveLength(2);
-			expect(() => parse(fixture("javascript", "webpack-parser-newline-before-token-tracking-should-apply-asi-from-the-flag-2"))).toThrow(/Unexpected token/);
-			// postfix `++` on the next line binds to the next statement
-			expect(parse(fixture("javascript", "webpack-parser-newline-before-token-tracking-should-apply-asi-from-the-flag-3")).ast.body).toHaveLength(2);
-		});
-
-		it("should fall back to the gap scan around comments", () => {
-			// line terminator hidden inside a block comment still triggers ASI
-			expect(parse(fixture("javascript", "webpack-parser-newline-before-token-tracking-should-fall-back-to-the-gap-scan")).ast.body).toHaveLength(2);
-			expect(() => parse(fixture("javascript", "webpack-parser-newline-before-token-tracking-should-fall-back-to-the-gap-scan-2"))).toThrow(/Unexpected token/);
-			// unicode whitespace defers to acorn's skipSpace, then the scan
-			expect(parse(fixture("javascript", "webpack-parser-newline-before-token-tracking-should-fall-back-to-the-gap-scan-3")).ast.body).toHaveLength(2);
-			expect(() => parse(fixture("javascript", "webpack-parser-newline-before-token-tracking-should-fall-back-to-the-gap-scan-4"))).toThrow(/Unexpected token/);
-		});
-
-		it("should keep ASI working inside template expression gaps", () => {
-			// tokens after a template chunk come from acorn's tokenizer (flag
-			// unknown), so the scan fallback decides
-			// eslint-disable-next-line no-template-curly-in-string
-			expect(parse(fixture("javascript", "webpack-parser-newline-before-token-tracking-should-keep-asi-working-inside")).ast.body).toHaveLength(1);
-		});
-
-		it("should keep a seen line terminator across unicode whitespace", () => {
-			// LF before a NBSP: the flag stays "yes" through acorn's skipSpace
-			expect(parse(fixture("javascript", "webpack-parser-newline-before-token-tracking-should-keep-a-seen-line-terminator")).ast.body).toHaveLength(2);
-			// unicode whitespace running to eof
-			expect(parse(fixture("javascript", "webpack-parser-newline-before-token-tracking-should-keep-a-seen-line-terminator-2")).ast.body).toHaveLength(1);
-		});
 	});
 
 	describe("tokenizer cold paths (ported from acorn)", () => {
@@ -189,173 +73,12 @@ describe("WebpackParser", () => {
 			);
 		};
 
-		it("should cook hex, unicode and octal string escapes", () => {
-			expect(literal(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-cook-hex-unicode")).value).toBe(
-				"AB\u{1F600}"
-			);
-			// a hex escape routes the whole string cold, so every following escape
-			// is cooked there too, including the CRLF line continuation
-			expect(literal(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-cook-hex-unicode-2")).value).toBe(
-				"A\r\b\f\u000B\n\t"
-			);
-			expect(literal(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-cook-hex-unicode-3")).value).toBe("Az");
-			// an unescaped LS/PS stays valid (ES2019+) even on the cold path
-			const ls = String.fromCharCode(0x2028);
-			expect(literal(`var x = "\\x41${ls}b"`).value).toBe(`A${ls}b`);
-			// an octal escape > 255 drops its last digit, which stays literal
-			expect(literal(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-cook-hex-unicode-4")).value).toBe(" 0");
-			expect(literal(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-cook-hex-unicode-5")).value).toBe("A\u0000");
-		});
-
-		it("should report bad and out-of-range escapes like acorn", () => {
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-report-bad-and-out"))).toThrow(
-				/Bad character escape sequence/
-			);
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-report-bad-and-out-2"))).toThrow(
-				/Code point out of bounds/
-			);
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-report-bad-and-out-3"))).toThrow(
-				/Octal literal in strict mode/
-			);
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-report-bad-and-out-4"))).toThrow(
-				/Invalid escape sequence/
-			);
-			// a bare line terminator after a cold escape is still unterminated
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-report-bad-and-out-5"))).toThrow(
-				/Unterminated string constant/
-			);
-		});
-
-		it("should cook escapes and yield null for invalid template escapes", () => {
-			/**
-			 * @param {string} code source with a template literal
-			 * @returns {string | null | undefined} the first quasi's cooked value
-			 */
-			const cooked = (code) => {
-				const statement =
-					/** @type {import("estree").ExpressionStatement} */
-					(parse(code).ast.body[0]);
-				return /** @type {import("estree").TemplateLiteral} */ (
-					statement.expression
-				).quasis[0].value.cooked;
-			};
-			expect(cooked(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-cook-escapes-and"))).toBe("aABb");
-			// a tagged template keeps an invalid escape with a null cooked value
-			const tagged =
-				/** @type {import("estree").TaggedTemplateExpression} */
-				(
-					/** @type {import("estree").ExpressionStatement} */ (
-						parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-cook-escapes-and-2")).ast.body[0]
-					).expression
-				);
-			expect(tagged.quasi.quasis[0].value.cooked).toBeNull();
-			// an untagged invalid template escape is rejected by the parser
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-cook-escapes-and-3"))).toThrow(
-				/Bad escape sequence in untagged template literal/
-			);
-			// a cold template chunk (escape seen) that never closes is unterminated
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-cook-escapes-and-4"))).toThrow(/Unterminated template/);
-			// input that ends right after a substitution's `}` is a SyntaxError
-			// like acorn's, not a TypeError from the lazy template element
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-cook-escapes-and-5"))).toThrow(
-				/Unterminated template literal \(1:11\)/
-			);
-		});
-
 		it("should read radix integers and bigints", () => {
 			expect(literal(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-radix-integers")).value).toBe(255);
 			expect(literal(fixture("javascript", "webpack-parser-number-fast-path-should-read-radix-exponent-separator-and-bigint-2")).value).toBe(15);
 			expect(literal(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-radix-integers-2")).value).toBe(10);
 			expect(literal(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-radix-integers-3")).value).toBe(BigInt(31));
 			expect(typeof literal(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-radix-integers-4")).value).toBe("bigint");
-		});
-
-		it("should report radix, separator and octal number errors like acorn", () => {
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-report-radix"))).toThrow(/Expected number in radix 16/);
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-report-radix-2"))).toThrow(
-				/Identifier directly after number/
-			);
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-report-radix-3"))).toThrow(
-				/Numeric separator is not allowed at the first of digits/
-			);
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-report-radix-4"))).toThrow(
-				/Numeric separator is not allowed at the last of digits/
-			);
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-report-radix-5"))).toThrow(
-				/Numeric separator must be exactly one underscore/
-			);
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-report-radix-6"))).toThrow(
-				/Numeric separator is not allowed in legacy octal/
-			);
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-report-radix-7"))).toThrow(
-				/Invalid number/
-			);
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-report-radix-8"))).toThrow(
-				/Identifier directly after number/
-			);
-		});
-
-		it("should read legacy octal, exponent and float forms", () => {
-			expect(literal(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-legacy-octal")).value).toBe(511);
-			// an 8 or 9 digit makes a leading-zero literal decimal, not octal
-			expect(literal(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-legacy-octal-2")).value).toBe(778);
-			expect(literal(fixture("javascript", "webpack-parser-number-fast-path-should-read-radix-exponent-separator-and-bigint-4")).value).toBe(1000);
-			expect(literal(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-legacy-octal-3")).value).toBe(0.001);
-			expect(literal(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-legacy-octal-4")).value).toBe(150);
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-legacy-octal-5"))).toThrow(/Invalid number/);
-		});
-
-		it("should read escaped and astral identifiers", () => {
-			/**
-			 * @param {string} code source
-			 * @returns {string} the sole declarator's binding name
-			 */
-			const idName = (code) => {
-				const declaration =
-					/** @type {import("estree").VariableDeclaration} */
-					(parse(code).ast.body[0]);
-				return /** @type {import("estree").Identifier} */ (
-					declaration.declarations[0].id
-				).name;
-			};
-			expect(idName(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-escaped-and"))).toBe("A");
-			expect(idName(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-escaped-and-2"))).toBe("B");
-			// a raw astral identifier advances two code units per character
-			const astral = String.fromCodePoint(0x1d400);
-			expect(idName(`var ${astral} = 1`)).toBe(astral);
-		});
-
-		it("should report identifier escape errors like acorn", () => {
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-report-identifier"))).toThrow(
-				/Expecting Unicode escape sequence/
-			);
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-report-identifier-2"))).toThrow(/Invalid Unicode escape/);
-		});
-
-		it("should read private identifiers and reject stray characters", () => {
-			expect(
-				parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-private")).ast
-			).toBeDefined();
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-private-2"))).toThrow(/Unexpected character/);
-			expect(() => parse(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-private-3"))).toThrow(/Unexpected character/);
-		});
-
-		it("should skip unicode whitespace and comments before a token", () => {
-			// NBSP, ideographic and em spaces and LS around real tokens are consumed
-			expect(literal(`var x =${String.fromCharCode(0xa0)}1`).value).toBe(1);
-			expect(literal(`var x =${String.fromCharCode(0x3000)}1`).value).toBe(1);
-			expect(literal(`var x =${String.fromCharCode(0x2028)}1`).value).toBe(1);
-			expect(
-				literal(`var x =${String.fromCharCode(0x2003)}/* c */1`).value
-			).toBe(1);
-			// a CRLF following unicode whitespace is consumed as one line break
-			expect(literal(`var x =${String.fromCharCode(0xa0)}\r\n1`).value).toBe(1);
-			// unicode whitespace before a `/` that is division, not a comment
-			const em = String.fromCharCode(0x2003);
-			const statement =
-				/** @type {import("estree").ExpressionStatement} */
-				(parse(`x${em}/ y;`).ast.body[0]);
-			expect(statement.expression.type).toBe("BinaryExpression");
 		});
 	});
 });
@@ -529,10 +252,10 @@ const TOKENIZER_SOURCES = {
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-6"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-7"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-8"),
-		"@",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-11"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-9"),
-		"\u{1F600}",
-		"\u000E",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-12"),
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-13"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-10")
 	],
 	numbers: [
@@ -540,15 +263,15 @@ const TOKENIZER_SOURCES = {
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-2"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-3"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-4"),
-		"0x",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-22"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-5"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-6"),
-		"1_",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-23"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-7"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-8"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-9"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-10"),
-		"1e",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-24"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-11"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-12"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-13"),
@@ -560,7 +283,7 @@ const TOKENIZER_SOURCES = {
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-19"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-20"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-21"),
-		"1."
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-25")
 	],
 	strings: [
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set"),
@@ -603,7 +326,7 @@ const TOKENIZER_SOURCES = {
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-17"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-18"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-19"),
-		"`",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-21"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-20")
 	],
 	regexps: [
@@ -617,7 +340,7 @@ const TOKENIZER_SOURCES = {
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-8"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-9"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-10"),
-		"/a",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-18"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-11"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-12"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-13"),
@@ -640,9 +363,9 @@ const TOKENIZER_SOURCES = {
 		fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-150"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-9"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-10"),
-		"a\u180E",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-13"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-11"),
-		"#!",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-14"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-12")
 	],
 	identifiers: [
@@ -653,7 +376,7 @@ const TOKENIZER_SOURCES = {
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-5"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-6"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-7"),
-		"a\\",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-16"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-8"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-9"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-10"),
@@ -663,9 +386,9 @@ const TOKENIZER_SOURCES = {
 		"\uD835",
 		"\uD835a",
 		"a\uDC00",
-		"\u{1D400}",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-17"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-14"),
-		"#1",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-18"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-15")
 	],
 	keywords: [
@@ -793,7 +516,7 @@ describe("Parser.tokenizer", () => {
 			expect(differences).toEqual([]);
 			// the override is what turns the `/` after `{}` into a division
 			const tokens = /** @type {{ type: { label: string } }[]} */ (
-				parsedTokens(Parser, "x = a ? b : {} / 2", { ecmaVersion: "latest" })
+				parsedTokens(Parser, fixture("javascript", "parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn-5"), { ecmaVersion: "latest" })
 			);
 			expect(tokens.map((token) => token.type.label)).toEqual([
 				"name",

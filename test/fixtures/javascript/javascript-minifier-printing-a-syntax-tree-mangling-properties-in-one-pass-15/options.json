@@ -1,0 +1,22 @@
+[
+	{
+		"mode": "minify",
+		"nameCache": {
+			"props": {
+				"props": {
+					"$zFooBar": "x",
+					"$zBazQux": "o"
+				}
+			}
+		},
+		"compress": {},
+		"mangle": {
+			"cache": null,
+			"properties": {
+				"cache": {
+					"props": {}
+				}
+			}
+		}
+	}
+]

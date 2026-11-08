@@ -1,0 +1,7 @@
+[
+	{
+		"mode": "minify",
+		"fragmentContext": "svg path",
+		"removeRedundantAttributes": "all"
+	}
+]

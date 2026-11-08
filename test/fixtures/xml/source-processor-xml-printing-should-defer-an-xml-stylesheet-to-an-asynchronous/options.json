@@ -1,0 +1,20 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"print": "processAsync",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"css": "a<b{}",
+				"css/block-contents": "fill:\"a<b\""
+			},
+			"async": true
+		}
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	}
+]

@@ -1,0 +1,22 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"ie8": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"safari10": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"ie8": true,
+			"safari10": true
+		}
+	}
+]

@@ -1,0 +1,10 @@
+[
+	{
+		"options": {
+			"skip": {
+				"text": true,
+				"comments": true
+			}
+		}
+	}
+]

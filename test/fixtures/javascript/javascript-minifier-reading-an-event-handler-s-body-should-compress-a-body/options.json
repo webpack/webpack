@@ -1,0 +1,8 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"sourceType": "event-handler"
+	}
+]
