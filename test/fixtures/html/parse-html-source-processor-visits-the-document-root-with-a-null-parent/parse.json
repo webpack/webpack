@@ -3,5 +3,17 @@
 		"options": {
 			"srcdoc": true
 		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"Document"
+			],
+			"fields": [
+				"parent"
+			],
+			"exit": false
+		}
 	}
 ]

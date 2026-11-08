@@ -1,0 +1,40 @@
+[
+	{
+		"visit": {
+			"types": [
+				"Document",
+				"Element"
+			],
+			"fields": [
+				"name"
+			],
+			"at": [
+				{
+					"type": "Element",
+					"name": "div",
+					"do": "skipChildren"
+				}
+			]
+		},
+		"mode": "minify"
+	},
+	{
+		"visit": {
+			"types": [
+				"Document",
+				"Element"
+			],
+			"fields": [
+				"name"
+			],
+			"at": [
+				{
+					"type": "Element",
+					"name": "div",
+					"do": "skipChildren"
+				}
+			]
+		},
+		"mode": "beautify"
+	}
+]

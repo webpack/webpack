@@ -1,0 +1,15 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"Element",
+				"Text"
+			],
+			"fields": [
+				"name",
+				"value"
+			]
+		}
+	}
+]

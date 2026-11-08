@@ -1,0 +1,21 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"Element"
+			],
+			"fields": [
+				"name"
+			],
+			"exit": false,
+			"at": [
+				{
+					"type": "Element",
+					"name": "div",
+					"do": "skipChildren"
+				}
+			]
+		}
+	}
+]
