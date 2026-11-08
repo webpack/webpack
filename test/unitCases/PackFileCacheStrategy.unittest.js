@@ -203,6 +203,31 @@ describe("PackFileCacheStrategy", () => {
 			return { strategy, pack };
 		};
 
+		it("warns once for items that fail to restore the same way", async () => {
+			/** @type {string[]} */
+			const messages = [];
+			const { strategy } = createStrategy(
+				{ build: [null, true], resolve: [null, true] },
+				messages
+			);
+			const broken = new Error("No deserializer registered for x/null");
+			let error = broken;
+			strategy._getPack = () => Promise.reject(error);
+
+			await strategy.restore("a", null);
+			await strategy.restore("b", null);
+			error = new Error("unexpected end");
+			await strategy.restore("c", null);
+
+			expect(messages.filter((message) => message.startsWith("warn"))).toEqual([
+				`warn: Restoring failed for a from pack: ${broken}`,
+				"warn: Restoring failed for c from pack: Error: unexpected end"
+			]);
+			expect(messages).toContain(
+				`debug: Restoring failed for b from pack: ${broken}`
+			);
+		});
+
 		it("uses the pack when both snapshots are valid", async () => {
 			/** @type {string[]} */
 			const messages = [];
