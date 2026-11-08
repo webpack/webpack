@@ -3743,6 +3743,18 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should print a template of one substitution as that value added to an empty string under `unsafe`", () => {
+		// `+` converts the value by `valueOf` first, so only `unsafe` takes it; a place `+` binds looser in stays.
+		const source = fixture("javascript", "one-pass-minify-of-statement-sequences-should-print-a-template-of-one");
+		const { code: code } = minifyOnePass(source, { compress: { unsafe: true }, mangle: false });
+		expect(code).toBe("var x=1,y=2,a=\"\"+x,b=[\"\"+x*y,`${x+y}`];console.log(a,b,`${x}`.length);");
+		expect(runProgram(code)).toBe(runProgram(source));
+		const source2 = fixture("javascript", "one-pass-minify-of-statement-sequences-should-print-a-template-of-one-2");
+		const { code: code2 } = minifyOnePass(source2, { compress: {}, mangle: false });
+		expect(code2).toBe("var x=1,a=`${x}`;console.log(a);");
+		expect(runProgram(code2)).toBe(runProgram(source2));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =

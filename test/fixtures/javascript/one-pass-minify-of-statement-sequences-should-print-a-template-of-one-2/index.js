@@ -1,0 +1,1 @@
+var x=1,a=`${x}`;console.log(a)
