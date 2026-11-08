@@ -6,9 +6,10 @@
 "use strict";
 
 // Holds each language's syntax to the unit tests written for it: what its own
-// tokenizer, parser and printer tests, and its minifier's, never run may not
-// grow past `syntax-coverage.json`. Each language runs in a jest process of its
-// own, as tests sharing a worker would lend one another what they ran.
+// tokenizer, parser, printer and fixture-runner tests, and its minifier's,
+// never run may not grow past `syntax-coverage.json`. Each language runs in a
+// jest process of its own, as tests sharing a worker would lend one another
+// what they ran.
 //
 //   node tooling/check-syntax-coverage.js [language…]          # check
 //   node tooling/check-syntax-coverage.js [language…] --write  # rewrite the baseline
@@ -22,12 +23,20 @@ const ROOT = path.resolve(__dirname, "..");
 const BASELINE = path.join(__dirname, "syntax-coverage.json");
 
 /**
+ * The named tests of a directory, and its fixture runner where it has one:
+ * that tokenizes, parses and prints every fixture, so it counts as their own.
  * @param {string} dir the test directory
  * @param {string[]} names its test files' names
  * @returns {string[]} their paths
  */
-const testsIn = (dir, names) =>
-	names.map((name) => `test/unitCases/${dir}/${name}.unittest.js`);
+const testsIn = (dir, names) => {
+	const tests = names.map(
+		(name) => `test/unitCases/${dir}/${name}.unittest.js`
+	);
+	const runner = `test/unitCases/${dir}/invariants.unittest.js`;
+	if (fs.existsSync(path.join(ROOT, runner))) tests.push(runner);
+	return tests;
+};
 
 /** @type {Record<string, { tests: string[], files: string[] }>} */
 const LANGUAGES = {
@@ -199,7 +208,7 @@ if (write) {
 	}
 	if (grown.length > 0) {
 		console.error(
-			`Syntax code its own unit tests never run grew; cover it from the language's tokenizer, parser, printer or minifier test:\n  ${grown.join("\n  ")}`
+			`Syntax code its own unit tests never run grew; cover it with a fixture or from the language's tokenizer, parser, printer or minifier test:\n  ${grown.join("\n  ")}`
 		);
 		process.exitCode = 1;
 	}
