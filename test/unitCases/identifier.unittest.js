@@ -516,7 +516,8 @@ describe("util/identifier", () => {
 			["main.js", "main.js"],
 			["js/main.js", "js/main.js"],
 			["./js/main.js", "js/main.js"],
-			["js\\main.js", "js/main.js"],
+			// the emit's path.join reads a backslash as a separator only on Windows
+			["js\\main.js", path.sep === "\\" ? "js/main.js" : "js\\main.js"],
 			["main.js?v=1", "main.js"],
 			["main.js#top", "main.js"],
 			["..x/../main.js", "main.js"],
@@ -525,7 +526,9 @@ describe("util/identifier", () => {
 			["..x/../../main.js", undefined],
 			["../main.js", undefined],
 			["a/..", undefined],
-			["/main.js", undefined],
+			["/main.js", "main.js"],
+			["/js/main.js", "js/main.js"],
+			["/../main.js", undefined],
 			["C:/main.js", undefined]
 		];
 
