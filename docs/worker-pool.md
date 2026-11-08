@@ -9,7 +9,7 @@ This file is the spec. When code and spec disagree, fix one of them in the same 
 - One set of threads per compiler, reused across calls.
 - Any CommonJS module can be a target; no per-plugin thread script.
 - The public API stays stateless: a call carries everything it needs, and any thread may run any call.
-- The same code runs inline on the main thread when threads are unavailable or unwanted.
+- The same code runs inline on the main thread when a call is not sent to a thread.
 - Loader threads use the same pool; they add a private RPC context on top of it.
 
 ## Non-goals
@@ -32,13 +32,14 @@ This file is the spec. When code and spec disagree, fix one of them in the same 
 
 ## Files
 
-| File             | Holds                                                                        |
-| ---------------- | ---------------------------------------------------------------------------- |
-| `WorkerFarm.js`  | The compiler's farm: lazily creates the pool and one facade per module path. |
-| `WorkerPool.js`  | `WorkerPool`, the queue, scheduling, lifecycle and the inline path.          |
-| `Worker.js`      | `Worker`: the module-bound facade.                                           |
-| `WorkerChild.js` | The thread entry. Never loaded on the main thread.                           |
-| `protocol.js`    | Message typedefs, `WORKER_DATA_KIND`, `encodeError` / `decodeError`.         |
+| File              | Holds                                                                        |
+| ----------------- | ---------------------------------------------------------------------------- |
+| `WorkerPlugin.js` | Sets up the farm for `experiments.threads`; warns without `worker_threads`.  |
+| `WorkerFarm.js`   | The compiler's farm: lazily creates the pool and one facade per module path. |
+| `WorkerPool.js`   | `WorkerPool`, the queue, scheduling, lifecycle and the inline path.          |
+| `Worker.js`       | `Worker`: the module-bound facade.                                           |
+| `WorkerChild.js`  | The thread entry. Never loaded on the main thread.                           |
+| `protocol.js`     | Message typedefs, `WORKER_DATA_KIND`, `encodeError` / `decodeError`.         |
 
 ## Public API
 
@@ -50,12 +51,12 @@ await worker.warmup(4);
 await worker.release();
 ```
 
-| Member                                  | Behavior                                                                                                                   |
-| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `compiler.worker(workerPath, options?)` | Absolute path or `file:` URL, required. Returns the facade; throws when `experiments.threads` is off.                      |
-| `worker.run(method, ...args)`           | One call.                                                                                                                  |
-| `worker.warmup(workers?)`               | Spawns up to `workers` threads and preloads this module; defaults to the pool's `max`. Existing threads are preloaded too. |
-| `worker.release()`                      | Terminates idle threads in the shared pool. Calls in flight finish, then their threads retire; the pool stays usable.      |
+| Member                                  | Behavior                                                                                                                                 |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `compiler.worker(workerPath, options?)` | Absolute path or `file:` URL, required. Returns the facade; throws when `experiments.threads` is off or `worker_threads` is unavailable. |
+| `worker.run(method, ...args)`           | One call.                                                                                                                                |
+| `worker.warmup(workers?)`               | Spawns up to `workers` threads and preloads this module; defaults to the pool's `max`. Existing threads are preloaded too.               |
+| `worker.release()`                      | Terminates idle threads in the shared pool. Calls in flight finish, then their threads retire; the pool stays usable.                    |
 
 `workerPath` may be followed by a reserved `options` argument: no field is used yet, so passing one is accepted and ignored.
 
@@ -131,7 +132,7 @@ Ordering rules:
 
 ## Inline path
 
-A call runs inline when `max === 0` or `worker_threads` is unavailable.
+A call runs inline when `max === 0`, or when a pool is used on a runtime without `worker_threads`.
 
 Inline requires the module on the main thread, caches it, and calls the method. With `strictClone`, arguments and results go through `v8.serialize` / `v8.deserialize`, which approximates structured clone for the values tests cover; it does not model `MessagePort` or transfer. The compiler passes `strictClone: true`, so inline calls reject values the thread path cannot clone. Loader jobs are unaffected: a loader chain that cannot run in a worker falls back to `runLocal`.
 
@@ -157,7 +158,7 @@ module.exports = {
 | `true`            | `{ max: cores - 1 }`.                        |
 | `max: n`          | `Math.floor(n)`; `0` runs every call inline. |
 
-`cores` is `os.availableParallelism()` when available, else `os.cpus().length`; the result is clamped to at least 0. `max` is shared with loader threads. Plain calls keep an idle thread for 30 seconds; loader jobs use `loaders.poolTimeout` (default 500 ms).
+`cores` is `os.availableParallelism()` when available, else `os.cpus().length`; the result is clamped to at least 0. `max` is shared with loader threads. Plain calls keep an idle thread for 30 seconds; loader jobs use `loaders.poolTimeout` (default 500 ms). When `worker_threads` is unavailable, the compiler emits a warning on each compilation and does not create the farm: `compiler.worker()` throws and loader chains run on the main thread.
 
 ## First consumer
 

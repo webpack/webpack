@@ -347,6 +347,42 @@ describe("WorkerPool", () => {
 		});
 	});
 
+	describe("WorkerPlugin", () => {
+		it("warns and leaves the farm unset when the runtime cannot provide threads", async () => {
+			const WorkerPool = require("../../lib/worker/WorkerPool");
+			const isThreadingAvailable = WorkerPool.isThreadingAvailable;
+			WorkerPool.isThreadingAvailable = () => false;
+			try {
+				const webpack = require("../../lib/webpack");
+				const compiler = webpack({
+					entry: "data:text/javascript,1",
+					experiments: { threads: true }
+				});
+				expect(compiler._workerFarm).toBeUndefined();
+				expect(() => compiler.worker(TARGET)).toThrow(
+					/worker_threads support/
+				);
+				const stats = await new Promise((resolve, reject) => {
+					compiler.run((err, stats) => {
+						if (err) return reject(err);
+						if (stats === undefined) return reject(new Error("no stats"));
+						resolve(stats);
+					});
+				});
+				await new Promise((resolve, reject) => {
+					compiler.close((err) => (err ? reject(err) : resolve(undefined)));
+				});
+				expect(
+					stats.compilation.warnings.some((/** @type {Error} */ warning) =>
+						/worker_threads is unavailable/.test(warning.message)
+					)
+				).toBe(true);
+			} finally {
+				WorkerPool.isThreadingAvailable = isThreadingAvailable;
+			}
+		});
+	});
+
 	describeThreads("threads", () => {
 		/** @type {WorkerPool[]} */
 		const pools = [];

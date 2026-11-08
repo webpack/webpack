@@ -55,7 +55,7 @@ This is the canonical repository map. **When you add, rename or remove a top-lev
   - `lib/wasm/` — WebAssembly's async path, plus `EnableWasmLoadingPlugin` and `wasmModuleFilename`, which neither path owns. Both paths' dependencies are `lib/dependencies/wasm/`, since they share `WebAssemblyImportDependency`.
   - `lib/wasm-sync/` — the sync WebAssembly path, kept apart until the next major release removes it.
   - `lib/watch/` — watch mode: the watching handles a compiler returns, and `WatchIgnorePlugin`.
-  - `lib/worker/` — the compiler-owned thread pool behind `compiler.worker` and `module.rules[].threads`: the lazily created `WorkerFarm` per compiler root, the pool's scheduling and lifecycle, and the wire protocol. Generic mechanism only; the loader job running on it is `lib/loaders/`.
+  - `lib/worker/` — the compiler-owned thread pool behind `compiler.worker` and `module.rules[].threads`: `WorkerPlugin` sets up the per-root `WorkerFarm`, which creates the pool and facades lazily; here too are the pool's scheduling and lifecycle and the wire protocol. Generic mechanism only; the loader job running on it is `lib/loaders/`.
 - `hot/` — browser-side HMR runtime (not Node tooling).
 - `bin/` — `webpack` CLI entry point.
 - `tooling/` — repo-internal scripts:
