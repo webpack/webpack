@@ -45,13 +45,13 @@
       "functions": 1
     },
     "lib/javascript/syntax-printer.js": {
-      "statements": 144,
-      "branches": 298,
-      "functions": 1
+      "statements": 233,
+      "branches": 432,
+      "functions": 0
     },
     "lib/javascript/ScopeAnalyzer.js": {
-      "statements": 2,
-      "branches": 13,
+      "statements": 4,
+      "branches": 16,
       "functions": 0
     },
     "lib/javascript/jsMinify.js": {
