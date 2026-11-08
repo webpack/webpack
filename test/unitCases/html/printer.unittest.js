@@ -1137,6 +1137,32 @@ describe("SourceProcessor — removeImpliedTags", () => {
 
 });
 
+describe("SourceProcessor — a frameset document", () => {
+	const { SourceProcessor } = require("../../../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @param {(boolean | "smart" | "all")=} removeImpliedTags the mode
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html, removeImpliedTags) =>
+		new SourceProcessor().process(html, { mode: "minify", removeImpliedTags })
+			.code;
+
+	it("keeps the `</html>` it spelled unless every implied tag goes", () => {
+		const page = fixture("html", "source-processor-a-frameset-document-keeps-the-html-end-tag-it-spelled");
+		expect(minify(page)).toBe("<frameset><frame src=a></frameset></html>");
+		expect(minify(page, "all")).toBe("<frameset><frame src=a></frameset>");
+	});
+
+	it("prints no end tag for an element tree construction pops at once", () => {
+		// §13.3 serializes no end tag for `frame`, `basefont` or `bgsound`.
+		expect(minify(fixture("html", "source-processor-a-frameset-document-prints-no-end-tag-for-an-element-popped-at-once"))).toBe(
+			"<head><basefont><bgsound></head><frameset><frame><frame src=b></frameset>"
+		);
+	});
+});
+
 describe("SourceProcessor — the per-transform switches", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 

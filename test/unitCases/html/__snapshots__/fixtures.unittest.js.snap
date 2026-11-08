@@ -2498,7 +2498,7 @@ exports[`HTML syntax — fixtures parse-html-insertion-mode-edge-cases-does-not-
 |     <frame>"
 `;
 
-exports[`HTML syntax — fixtures parse-html-insertion-mode-edge-cases-does-not-read-raw-text-for-a-tag-the prints {"mode":"minify"} 1`] = `"<frameset><frame></frame></frameset>"`;
+exports[`HTML syntax — fixtures parse-html-insertion-mode-edge-cases-does-not-read-raw-text-for-a-tag-the prints {"mode":"minify"} 1`] = `"<frameset><frame></frameset>"`;
 
 exports[`HTML syntax — fixtures parse-html-insertion-mode-edge-cases-does-not-read-raw-text-for-a-tag-the-2 parses 1`] = `
 "| <html>
@@ -2670,7 +2670,7 @@ exports[`HTML syntax — fixtures parse-html-insertion-mode-edge-cases-parses-ne
 | <!-- e -->"
 `;
 
-exports[`HTML syntax — fixtures parse-html-insertion-mode-edge-cases-parses-nested-frameset-elements-frames-and prints {"mode":"minify"} 1`] = `"<frameset cols=50%,50%> <frame src=a></frame><frameset><frame></frame></frameset></frameset><noframes>n</noframes>"`;
+exports[`HTML syntax — fixtures parse-html-insertion-mode-edge-cases-parses-nested-frameset-elements-frames-and prints {"mode":"minify"} 1`] = `"<frameset cols=50%,50%> <frame src=a><frameset><frame></frameset></frameset><noframes>n</noframes></html>"`;
 
 exports[`HTML syntax — fixtures parse-html-insertion-mode-edge-cases-pops-noscript-in-head-on-non-passthrough parses 1`] = `
 "| <html>
@@ -3546,7 +3546,7 @@ exports[`HTML syntax — fixtures parse-html-insertion-modes-nests-framesets-and
 |       \\"</frameset><noframes>\\""
 `;
 
-exports[`HTML syntax — fixtures parse-html-insertion-modes-nests-framesets-and-switches-to-after-frameset prints {"mode":"minify"} 1`] = `"<frameset><frame></frame><frameset><frame></frame></frameset><noframes></frameset><noframes></noframes></frameset>"`;
+exports[`HTML syntax — fixtures parse-html-insertion-modes-nests-framesets-and-switches-to-after-frameset prints {"mode":"minify"} 1`] = `"<frameset><frame><frameset><frame></frameset><noframes></frameset><noframes></noframes></frameset>"`;
 
 exports[`HTML syntax — fixtures parse-html-insertion-modes-opens-a-column-group-inside-a-template parses 1`] = `
 "| <html>
@@ -4203,7 +4203,7 @@ exports[`HTML syntax — fixtures parse-html-parse-error-reports-the-tree-s-erro
 |   <frameset>"
 `;
 
-exports[`HTML syntax — fixtures parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-4 prints {"mode":"minify"} 1`] = `"<!doctype html><frameset></frameset>"`;
+exports[`HTML syntax — fixtures parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-4 prints {"mode":"minify"} 1`] = `"<!doctype html><frameset></frameset></html>"`;
 
 exports[`HTML syntax — fixtures parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-frame parses 1`] = `
 "| <!DOCTYPE html>
@@ -4213,7 +4213,7 @@ exports[`HTML syntax — fixtures parse-html-parse-error-reports-the-tree-s-erro
 |     <frame>"
 `;
 
-exports[`HTML syntax — fixtures parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-frame prints {"mode":"minify"} 1`] = `"<!doctype html><frameset><frame></frame></frameset>"`;
+exports[`HTML syntax — fixtures parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-frameset-frame prints {"mode":"minify"} 1`] = `"<!doctype html><frameset><frame></frameset>"`;
 
 exports[`HTML syntax — fixtures parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-h1-h1-b-h2 parses 1`] = `
 "| <!DOCTYPE html>
@@ -5929,7 +5929,7 @@ exports[`HTML syntax — fixtures parse-html-skip-options-preserve-element-struc
 |     <frame>"
 `;
 
-exports[`HTML syntax — fixtures parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-15 prints {"mode":"minify"} 1`] = `"<frameset><frame></frame></frameset>"`;
+exports[`HTML syntax — fixtures parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-15 prints {"mode":"minify"} 1`] = `"<frameset><frame></frameset>"`;
 
 exports[`HTML syntax — fixtures parse-html-skip-options-preserve-element-structure-keeps-the-element-tree-stable-16 parses 1`] = `
 "| <html>
@@ -6239,7 +6239,7 @@ exports[`HTML syntax — fixtures parse-html-stray-doctype-and-html-re-dispatch-
 |     <frame>"
 `;
 
-exports[`HTML syntax — fixtures parse-html-stray-doctype-and-html-re-dispatch-handles-stray-doctype-and-html prints {"mode":"minify"} 1`] = `"<html lang=a><frameset><frame></frame></frameset></html>"`;
+exports[`HTML syntax — fixtures parse-html-stray-doctype-and-html-re-dispatch-handles-stray-doctype-and-html prints {"mode":"minify"} 1`] = `"<html lang=a><frameset><frame></frameset></html>"`;
 
 exports[`HTML syntax — fixtures parse-html-stray-doctype-and-html-re-dispatch-ignores-a-mid-document-doctype-and parses 1`] = `
 "| <html>
@@ -6660,7 +6660,7 @@ exports[`HTML syntax — fixtures parse-html-tree-construction-edge-cases-so-a-c
 |       <frame>"
 `;
 
-exports[`HTML syntax — fixtures parse-html-tree-construction-edge-cases-so-a-columns-replaces-an-empty-body-with prints {"mode":"minify"} 1`] = `"<frameset rows=1> <frameset cols=2><frame></frame></frameset></frameset>"`;
+exports[`HTML syntax — fixtures parse-html-tree-construction-edge-cases-so-a-columns-replaces-an-empty-body-with prints {"mode":"minify"} 1`] = `"<frameset rows=1> <frameset cols=2><frame></frameset></frameset>"`;
 
 exports[`HTML syntax — fixtures parse-html-tree-construction-edge-cases-so-a-columns-runs-the-adoption-agency-in parses 1`] = `
 "| <html>
@@ -7475,6 +7475,33 @@ exports[`HTML syntax — fixtures source-processor-a-foreign-stylesheet-answered
 `;
 
 exports[`HTML syntax — fixtures source-processor-a-foreign-stylesheet-answered-later-escapes-the-answer-where prints {"mode":"minify"} 1`] = `"<svg><style>a { b : c }</style></svg><style>d { e : f }</style>"`;
+
+exports[`HTML syntax — fixtures source-processor-a-frameset-document-keeps-the-html-end-tag-it-spelled parses 1`] = `
+"| <html>
+|   <head>
+|   <frameset>
+|     <frame>
+|       src=\\"a\\"
+|   \\"
+\\""
+`;
+
+exports[`HTML syntax — fixtures source-processor-a-frameset-document-keeps-the-html-end-tag-it-spelled prints {"mode":"minify"} 1`] = `"<frameset><frame src=a></frameset></html>"`;
+
+exports[`HTML syntax — fixtures source-processor-a-frameset-document-prints-no-end-tag-for-an-element-popped-at-once parses 1`] = `
+"| <html>
+|   <head>
+|     <basefont>
+|     <bgsound>
+|   <frameset>
+|     <frame>
+|     <frame>
+|       src=\\"b\\"
+|   \\"
+\\""
+`;
+
+exports[`HTML syntax — fixtures source-processor-a-frameset-document-prints-no-end-tag-for-an-element-popped-at-once prints {"mode":"minify"} 1`] = `"<head><basefont><bgsound></head><frameset><frame><frame src=b></frameset>"`;
 
 exports[`HTML syntax — fixtures source-processor-an-empty-value-is-the-bare-name-does-it-in-foreign-content-too parses 1`] = `
 "| <html>
@@ -18021,7 +18048,7 @@ exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-th
 |     \\"A\\""
 `;
 
-exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-3 prints {"mode":"minify"} 1`] = `"<body><basefont></basefont>A</body>"`;
+exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-3 prints {"mode":"minify"} 1`] = `"<body><basefont>A</body>"`;
 
 exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-4 parses 1`] = `
 "| <html>
@@ -18031,7 +18058,7 @@ exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-th
 |     \\"A\\""
 `;
 
-exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-4 prints {"mode":"minify"} 1`] = `"<body><bgsound></bgsound>A</body>"`;
+exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-4 prints {"mode":"minify"} 1`] = `"<body><bgsound>A</body>"`;
 
 exports[`HTML syntax — fixtures source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-5 parses 1`] = `
 "| <html>

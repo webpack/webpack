@@ -1699,6 +1699,31 @@ const PARSER_TABLES = [
 		]
 	],
 	[
+		"NO_END_TAG",
+		"set",
+		"§13.3's elements serialized with no end tag: the void ones and those tree construction pops as soon as it inserts them, so none holds a child.",
+		[
+			"area",
+			"base",
+			"basefont",
+			"bgsound",
+			"br",
+			"col",
+			"embed",
+			"frame",
+			"hr",
+			"img",
+			"input",
+			"keygen",
+			"link",
+			"meta",
+			"param",
+			"source",
+			"track",
+			"wbr"
+		]
+	],
+	[
 		"ACKNOWLEDGED_NON_VOID",
 		"set",
 		"Start tags besides the void elements whose self-closing flag tree construction acknowledges.",
