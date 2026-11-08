@@ -1,5 +1,6 @@
 "use strict";
 
+const path = require("path");
 const { Logger } = require("../../lib/logging/Logger");
 const ObjectMiddleware = require("../../lib/serialization/ObjectMiddleware");
 const SerializerMiddleware = require("../../lib/serialization/SerializerMiddleware");
@@ -305,5 +306,58 @@ describe("ObjectMiddleware.registerLegacyRequest", () => {
 				"Moved"
 			)
 		).toThrow(/is already registered/);
+	});
+});
+
+describe("ObjectMiddleware restoring a request that is not registered", () => {
+	const fixtures = path.resolve(__dirname, "../fixtures/serialization");
+	const loadedFlag = path.join(fixtures, "loaded-flag.js");
+	const lateClass = path.join(fixtures, "late-class.js");
+
+	afterEach(() => {
+		delete (/** @type {EXPECTED_ANY} */ (globalThis).__serializationFixtureLoaded);
+	});
+
+	/**
+	 * @param {string} request request to write in place of the registered one
+	 * @returns {EXPECTED_ANY[]} serialized data naming that request
+	 */
+	const naming = (request) =>
+		/** @type {EXPECTED_ANY[]} */ (
+			middleware.serialize([new Moved(1)], context)
+		).map((token) =>
+			token === "test/ObjectMiddleware.unittest/new" ? request : token
+		);
+
+	it("never loads the request", () => {
+		expect(() => middleware.deserialize(naming(loadedFlag), context)).toThrow(
+			`No deserializer registered for ${loadedFlag}/Moved`
+		);
+		expect(
+			/** @type {EXPECTED_ANY} */ (globalThis).__serializationFixtureLoaded
+		).toBeUndefined();
+	});
+
+	it("says how to register it", () => {
+		expect(() => middleware.deserialize(naming(loadedFlag), context)).toThrow(
+			/registerLoader/
+		);
+	});
+
+	it("restores a class a loader registered for the request", () => {
+		ObjectMiddleware.registerLoader(/[\\/]late-class\.js$/, (request) => {
+			require(request);
+			return true;
+		});
+		const written = /** @type {EXPECTED_ANY[]} */ (
+			naming(lateClass)
+		).map((token) => (token === "Moved" ? null : token));
+
+		const [restored] = /** @type {EXPECTED_ANY[]} */ (
+			middleware.deserialize(written, context)
+		);
+
+		expect(restored).toBeInstanceOf(require(lateClass));
+		expect(restored.value).toBe(1);
 	});
 });
