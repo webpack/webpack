@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Pair grid areas with their implicit `-start` / `-end` lines, shorter after `[local]`, and inline grid `@value`s.
+Preserve distinct shortened grid names, pair implicit lines, and inline `@value`s.

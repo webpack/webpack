@@ -10962,7 +10962,7 @@ p:not(#dBVRDQ) {
 ._3XmJPy {
 	grid-template-rows:
 		[zUFz4T-line-name1] 100px [IJTjHw-line-name2]
-		repeat(auto-fit, [yPPlU6-line-name3 _5sjD27-line-name4] 300px)
+		repeat(auto-fit, [yPPlU6-line-name3 \\\\35sjD27-line-name4] 300px)
 		100px;
 }
 
@@ -10973,7 +10973,7 @@ p:not(#dBVRDQ) {
 .c9md82 {
 	grid-template:
 		[F71VCF-header-top] \\"rWk7j_-a rWk7j_-a rWk7j_-a\\" [mr66Z_-header-bottom]
-		[tsTNVP-main-top] \\"Sa2viG-b Sa2viG-b Sa2viG-b\\" 1fr [_2PB9a0-main-bottom]
+		[tsTNVP-main-top] \\"Sa2viG-b Sa2viG-b Sa2viG-b\\" 1fr [\\\\32PB9a0-main-bottom]
 		/ auto 1fr auto;
 }
 
@@ -11077,7 +11077,7 @@ p:not(#dBVRDQ) {
 }
 
 .EDnegT {
-	grid-template-columns: repeat(4, [_1B5Qtc-col1-start] 1fr [rnNlcV-col2-start] 3fr);
+	grid-template-columns: repeat(4, [\\\\31 B5Qtc-col1-start] 1fr [rnNlcV-col2-start] 3fr);
 }
 
 .EDnegT {
