@@ -7,7 +7,6 @@ const { fixture } = require("../../helpers/fixture");
 const {
 	A,
 	Field,
-	Part,
 	NodeType,
 	decodeXmlAttribute,
 	parseHtml: parseHtmlRefs
@@ -48,29 +47,6 @@ describe("XmlSyntax — parsing", () => {
 		for (let i = 0; i < 4; i++) expect(A.value(attribute) === value).toBe(true);
 		const next = parseHtmlRefs(fixture("xml", "xml-syntax-parsing-should-decode-an-xml-attribute-only-once-per-parse"), 0, { xml: true });
 		expect(A.value(A.fieldNamed(Field.attributes, "value", A.child(0, next)))).toBe("next");
-	});
-
-	it("should expose case-sensitive XML content and end-tag ranges", () => {
-		const source = fixture("xml", "xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges");
-		const document = parseHtmlRefs(source, 0, { xml: true });
-		const root = A.child(0, document);
-		expect(A.rangeOf(Part.content, root)).toEqual([6, 7]);
-		expect(A.rangeOf(Part.endTag, root)).toEqual([7, 14]);
-		const unclosed = parseHtmlRefs(fixture("xml", "xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges-2"), 0, { xml: true });
-		expect(A.rangeOf(Part.endTag, A.child(0, unclosed))).toBeNull();
-		const skipped = parseHtmlRefs(fixture("xml", "xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges-3"), 0, {
-			xml: true,
-			skip: { text: true }
-		});
-		expect(A.rangeOf(Part.content, A.child(0, skipped))).toEqual([7, 8]);
-	});
-
-	it("should expose XML doctype identifier ranges", () => {
-		const source = fixture("xml", "xml-syntax-parsing-should-expose-xml-doctype-identifier-ranges");
-		const document = parseHtmlRefs(source, 0, { xml: true });
-		const doctype = A.child(0, document);
-		expect(A.rangeOf(Part.publicId, doctype)).toEqual([23, 29]);
-		expect(A.rangeOf(Part.systemId, doctype)).toEqual([32, 38]);
 	});
 
 	it("should bound markup detection in deeply nested XML entities", () => {

@@ -1,0 +1,9 @@
+[
+	{
+		"print": "xmlMinify",
+		"minimizer": {
+			"buffer": true,
+			"asset": "data.xml"
+		}
+	}
+]

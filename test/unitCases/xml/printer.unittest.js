@@ -7,15 +7,6 @@ const webpack = require("../../../");
 const { xmlMinify } = webpack.html;
 
 describe("xmlMinify", () => {
-	it("should read a Buffer as UTF-8", async () => {
-		const { code } = await xmlMinify({
-			"data.xml": Buffer.from(
-				fixture("xml", "xml-minify-should-read-a-buffer-as-utf-8")
-			)
-		});
-		expect(code).toBe('<a title="café">x</a>');
-	});
-
 	it("should describe itself to the minimizer plugin", () => {
 		expect(xmlMinify.supportsWorkerThreads()).toBe(true);
 		expect(xmlMinify.getTypes()).toEqual(["xml"]);

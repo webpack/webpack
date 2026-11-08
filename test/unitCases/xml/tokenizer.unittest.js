@@ -4,32 +4,10 @@ const { fixture } = require("../../helpers/fixture");
 
 const { tokenizeXml } = require("../../../lib/html/syntax-parser");
 
-// What the tokenizer emits for each fixture is in `invariants.unittest.js`'s
-// snapshot; these hold what it does past one read from offset 0.
+// What the tokenizer emits for each fixture, from any offset its `parse.json`
+// names, is in `invariants.unittest.js`'s snapshot; this holds what it does
+// with only some callbacks.
 describe("tokenizeXml", () => {
-	it("does not scan a NUL before the offset it starts at", () => {
-		/** @type {(string | boolean)[]} */
-		const seen = [];
-		const end = tokenizeXml(
-			fixture(
-				"xml",
-				"tokenize-xml-reports-a-nul-anywhere-past-the-start-once-before-any-token-2"
-			),
-			1,
-			{
-				parseError: (input, code) => {
-					seen.push(code);
-				},
-				openTag: (input, start, end, nameStart, nameEnd, selfClosing) => {
-					seen.push(input.slice(start, end), selfClosing);
-					return end;
-				}
-			}
-		);
-		expect(seen).toEqual(["<a/>", true]);
-		expect(end).toBe(5);
-	});
-
 	it("advances over markup whose callback is missing", () => {
 		const source =
 			fixture("xml", "tokenize-xml-advances-over-markup-whose-callback-is-missing");

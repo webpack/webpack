@@ -997,6 +997,8 @@ exports[`XML syntax — invariants tokenize-xml-reports-a-nul-anywhere-past-the-
 
 exports[`XML syntax — invariants tokenize-xml-reports-a-nul-anywhere-past-the-start-once-before-any-token tokenizes 1`] = `"warning[0,0]:unexpected-null-character open[0,3|1,2] text[3,4] close[4,8|6,7] end=8"`;
 
+exports[`XML syntax — invariants tokenize-xml-reports-a-nul-anywhere-past-the-start-once-before-any-token-2 parses {"entry":"tokenizeXml","pos":1} 1`] = `"open[1,5|2,3]/ end=5"`;
+
 exports[`XML syntax — invariants tokenize-xml-reports-a-nul-anywhere-past-the-start-once-before-any-token-2 parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"a\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":1,\\"end\\":5,\\"tagEnd\\":5,\\"nameEnd\\":3,\\"contentEnd\\":5}]"`;
 
 exports[`XML syntax — invariants tokenize-xml-reports-a-nul-anywhere-past-the-start-once-before-any-token-2 parses 2`] = `"warning[0,0]:unexpected-null-character"`;
@@ -1123,6 +1125,10 @@ exports[`XML syntax — invariants xml-minify-should-read-a-buffer-as-utf-8 pars
 
 exports[`XML syntax — invariants xml-minify-should-read-a-buffer-as-utf-8 parses 2`] = `""`;
 
+exports[`XML syntax — invariants xml-minify-should-read-a-buffer-as-utf-8 prints {"print":"xmlMinify","minimizer":{"buffer":true,"asset":"data.xml"}} 1`] = `"<a title=\\"café\\">x</a>"`;
+
+exports[`XML syntax — invariants xml-minify-should-read-a-buffer-as-utf-8 prints {"print":"xmlMinify","minimizer":{"buffer":true,"asset":"data.xml"}} 2`] = `"{}"`;
+
 exports[`XML syntax — invariants xml-minify-should-read-a-buffer-as-utf-8 prints {"xml":true,"mode":"minify"} 1`] = `"<a title=\\"café\\">x</a>"`;
 
 exports[`XML syntax — invariants xml-minify-should-read-a-buffer-as-utf-8 tokenizes 1`] = `"attr[4,9|11,15]' open[0,18|1,2] text[18,19] close[19,24|21,22] end=24"`;
@@ -1207,6 +1213,16 @@ exports[`XML syntax — invariants xml-syntax-parsing-should-expand-the-internal
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-expand-the-internal-entities-the-dtd-declares tokenizes 1`] = `"doctype[0,123|10,13|-1,-1|-1,-1|15,121] attr[128,133|135,139]\\" open[123,141|124,127] text[141,147] close[147,153|149,152] end=153"`;
 
+exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges parses {"fields":["rangeOf:content","rangeOf:endTag"]} 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"Root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"x\\",\\"start\\":6,\\"end\\":7}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":14,\\"tagEnd\\":6,\\"nameEnd\\":5,\\"contentEnd\\":7}]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges parses {"fields":["rangeOf:content","rangeOf:endTag"]} 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges parses {"fields":["rangeOf:content","rangeOf:endTag"]} 3`] = `
+"Document[0,14] rangeOf:content=null rangeOf:endTag=null
+  Element[0,14] rangeOf:content=[6,7] rangeOf:endTag=[7,14]
+    Text[6,7] rangeOf:content=null rangeOf:endTag=null"
+`;
+
 exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"Root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"x\\",\\"start\\":6,\\"end\\":7}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":14,\\"tagEnd\\":6,\\"nameEnd\\":5,\\"contentEnd\\":7}]"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges parses 2`] = `""`;
@@ -1215,6 +1231,16 @@ exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensiti
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges tokenizes 1`] = `"open[0,6|1,5] text[6,7] close[7,14|9,13] end=14"`;
 
+exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges-2 parses {"fields":["rangeOf:content","rangeOf:endTag"]} 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"x\\",\\"start\\":6,\\"end\\":7}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":14,\\"tagEnd\\":6,\\"nameEnd\\":5,\\"contentEnd\\":14}]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges-2 parses {"fields":["rangeOf:content","rangeOf:endTag"]} 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges-2 parses {"fields":["rangeOf:content","rangeOf:endTag"]} 3`] = `
+"Document[0,14] rangeOf:content=null rangeOf:endTag=null
+  Element[0,14] rangeOf:content=[6,14] rangeOf:endTag=null
+    Text[6,7] rangeOf:content=null rangeOf:endTag=null"
+`;
+
 exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges-2 parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"x\\",\\"start\\":6,\\"end\\":7}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":14,\\"tagEnd\\":6,\\"nameEnd\\":5,\\"contentEnd\\":14}]"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges-2 parses 2`] = `""`;
@@ -1222,6 +1248,15 @@ exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensiti
 exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges-2 prints {"xml":true,"mode":"minify"} 1`] = `"<root>x</root>"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges-2 tokenizes 1`] = `"open[0,6|1,5] text[6,7] close[7,14|9,13] end=14"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges-3 parses {"options":{"skip":{"text":true}},"fields":["rangeOf:content"]} 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":16,\\"tagEnd\\":7,\\"nameEnd\\":6,\\"contentEnd\\":8}]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges-3 parses {"options":{"skip":{"text":true}},"fields":["rangeOf:content"]} 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges-3 parses {"options":{"skip":{"text":true}},"fields":["rangeOf:content"]} 3`] = `
+"Document[0,16] rangeOf:content=null
+  Element[0,16] rangeOf:content=[7,8]"
+`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-expose-case-sensitive-xml-content-and-end-tag-ranges-3 parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"x\\",\\"start\\":7,\\"end\\":8}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":16,\\"tagEnd\\":7,\\"nameEnd\\":6,\\"contentEnd\\":8}]"`;
 
@@ -1238,6 +1273,16 @@ exports[`XML syntax — invariants xml-syntax-parsing-should-expose-xml-attribut
 exports[`XML syntax — invariants xml-syntax-parsing-should-expose-xml-attribute-values-through-the-shared-path prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE Root [<!ENTITY value \\"declared\\">]><Root value=\\"declared &amp;&amp;nbsp;\\"/>"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-expose-xml-attribute-values-through-the-shared-path tokenizes 1`] = `"doctype[0,44|10,14|-1,-1|-1,-1|16,42] attr[50,55|57,82]\\" open[44,85|45,49]/ end=85"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-expose-xml-doctype-identifier-ranges parses {"fields":["rangeOf:publicId","rangeOf:systemId"]} 1`] = `"[{\\"type\\":6,\\"name\\":\\"Root\\",\\"publicId\\":\\"public\\",\\"systemId\\":\\"system\\",\\"start\\":0,\\"end\\":40},{\\"type\\":3,\\"tagName\\":\\"Root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":40,\\"end\\":47,\\"tagEnd\\":47,\\"nameEnd\\":45,\\"contentEnd\\":47}]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-expose-xml-doctype-identifier-ranges parses {"fields":["rangeOf:publicId","rangeOf:systemId"]} 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-expose-xml-doctype-identifier-ranges parses {"fields":["rangeOf:publicId","rangeOf:systemId"]} 3`] = `
+"Document[0,47] rangeOf:publicId=null rangeOf:systemId=null
+  Doctype[0,40] rangeOf:publicId=[23,29] rangeOf:systemId=[32,38]
+  Element[40,47] rangeOf:publicId=null rangeOf:systemId=null"
+`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-expose-xml-doctype-identifier-ranges parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"Root\\",\\"publicId\\":\\"public\\",\\"systemId\\":\\"system\\",\\"start\\":0,\\"end\\":40},{\\"type\\":3,\\"tagName\\":\\"Root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":40,\\"end\\":47,\\"tagEnd\\":47,\\"nameEnd\\":45,\\"contentEnd\\":47}]"`;
 
