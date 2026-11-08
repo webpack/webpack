@@ -215,6 +215,20 @@ exports[`XML syntax — invariants source-processor-xml-printing-should-write-xm
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-write-xml-back-as-written-when-beautifying parses 2`] = `""`;
 
+exports[`XML syntax — invariants source-processor-xml-printing-should-write-xml-back-as-written-when-beautifying prints {"xml":true,"mode":"beautify"} 1`] = `
+"<?xml version=\\"1.0\\"?><!DOCTYPE svg [ <!ENTITY ns \\"http://www.w3.org/2000/svg\\"> <!ATTLIST svg version CDATA \\"1.1\\"> ]><!-- drawn by hand --><svg xmlns=\\"&ns;\\" viewBox = \\"0 0 10 10\\"  data-q='say \\"hi\\"' data-both=\\"it's &quot;q&quot;\\" data-ws=\\"a
+b&#10;c\\">
+  <title>A &amp; B &gt; C</title>
+  <g><!-- inert --></g>
+  <path d=\\"M0 0L10 10\\" ></path>
+  <br></br>
+  <text>&ns;</text>
+  <style><![CDATA[a > b { fill: red } a < b && c]]></style>
+  <script><![CDATA[x]]></script>
+  <?render mode=\\"fast\\"?>
+</svg>"
+`;
+
 exports[`XML syntax — invariants source-processor-xml-printing-should-write-xml-back-as-written-when-beautifying prints {"xml":true,"mode":"minify"} 1`] = `
 "<?xml version=\\"1.0\\"?><!DOCTYPE svg [ <!ENTITY ns \\"http://www.w3.org/2000/svg\\"> <!ATTLIST svg version CDATA \\"1.1\\"> ]><svg xmlns=\\"&ns;\\" viewBox=\\"0 0 10 10\\" data-q='say \\"hi\\"' data-both='it&apos;s \\"q\\"' data-ws=\\"a b&#10;c\\">
   <title>A &amp; B &gt; C</title>
@@ -234,6 +248,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-default-the-subset parses 2`] = `""`;
 
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-default-the-subset prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!ATTLIST d a CDATA \\"unterminated]><d/>"`;
+
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-default-the-subset prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!ATTLIST d a CDATA \\"unterminated]><d/>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-default-the-subset tokenizes 1`] = `"doctype[0,52|10,11|-1,-1|-1,-1|13,52] end=52"`;
@@ -241,6 +257,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-doctype-the-input parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"d\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":36}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-doctype-the-input parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-doctype-the-input prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!ATTLIST d a CDATA \\"v\\""`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-doctype-the-input prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!ATTLIST d a CDATA \\"v\\""`;
 
@@ -250,6 +268,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-doctype-with-no-name parses 2`] = `""`;
 
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-doctype-with-no-name prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE><d/>"`;
+
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-doctype-with-no-name prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE><d/>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-doctype-with-no-name tokenizes 1`] = `"doctype[0,10|-1,-1|-1,-1|-1,-1|-1,-1] open[10,14|11,12]/ end=14"`;
@@ -257,6 +277,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-public-doctype-back parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"d\\",\\"publicId\\":\\"p\\",\\"systemId\\":\\"s\\",\\"start\\":0,\\"end\\":27},{\\"type\\":3,\\"tagName\\":\\"d\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":27,\\"end\\":31,\\"tagEnd\\":31,\\"nameEnd\\":29,\\"contentEnd\\":31}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-public-doctype-back parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-public-doctype-back prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d PUBLIC \\"p\\" \\"s\\"><d/>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-public-doctype-back prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d PUBLIC \\"p\\" \\"s\\"><d/>"`;
 
@@ -266,6 +288,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-quote-where-a-name parses 2`] = `""`;
 
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-quote-where-a-name prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!ATTLIST d \\"x\\">]><d/>"`;
+
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-quote-where-a-name prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!ATTLIST d \\"x\\">]><d/>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-quote-where-a-name tokenizes 1`] = `"doctype[0,31|10,11|-1,-1|-1,-1|13,29] open[31,35|32,33]/ end=35"`;
@@ -273,6 +297,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-second-doctype-back parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"d\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":30},{\\"type\\":6,\\"name\\":\\"x\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":30,\\"end\\":60},{\\"type\\":3,\\"tagName\\":\\"d\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"1\\",\\"start\\":63,\\"end\\":66}],\\"selfClosing\\":false,\\"start\\":60,\\"end\\":70,\\"tagEnd\\":63,\\"nameEnd\\":62,\\"contentEnd\\":66}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-second-doctype-back parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-second-doctype-back prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!ENTITY e \\"1\\">]><!DOCTYPE x [<!ENTITY e \\"2\\">]><d>&e;</d>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-second-doctype-back prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!ENTITY e \\"1\\">]><!DOCTYPE x [<!ENTITY e \\"2\\">]><d>1</d>"`;
 
@@ -282,6 +308,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-start-tag-an-entity parses 2`] = `""`;
 
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-start-tag-an-entity prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!ENTITY e \\"<b>\\">]><d>&e;</d>"`;
+
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-start-tag-an-entity prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!ENTITY e \\"<b>\\">]><d>&e;</d>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-start-tag-an-entity tokenizes 1`] = `"doctype[0,32|10,11|-1,-1|-1,-1|13,30] open[32,35|33,34] text[35,38] close[38,42|40,41] end=42"`;
@@ -289,6 +317,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-subset-an-entity-runs parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"d\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":43}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-subset-an-entity-runs parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-subset-an-entity-runs prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!ENTITY e \\"unterminated]><d/>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-subset-an-entity-runs prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!ENTITY e \\"unterminated]><d/>"`;
 
@@ -298,6 +328,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-system-doctype-back parses 2`] = `""`;
 
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-system-doctype-back prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d SYSTEM \\"s\\"><d/>"`;
+
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-system-doctype-back prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d SYSTEM \\"s\\"><d/>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-system-doctype-back tokenizes 1`] = `"doctype[0,23|10,11|-1,-1|20,21|-1,-1] open[23,27|24,25]/ end=27"`;
@@ -305,6 +337,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-tag-the-input-ends-in parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"a\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":5,\\"tagEnd\\":3,\\"nameEnd\\":2,\\"contentEnd\\":5}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-tag-the-input-ends-in parses 2`] = `"error[5,5]:eof-in-tag"`;
+
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-tag-the-input-ends-in prints {"xml":true,"mode":"beautify"} 1`] = `"<a></a>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-tag-the-input-ends-in prints {"xml":true,"mode":"minify"} 1`] = `"<a/>"`;
 
@@ -314,6 +348,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-value-already parses 2`] = `""`;
 
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-value-already prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!ATTLIST d a NMTOKENS \\" 1 \\">]><d a=\\"1\\"/>"`;
+
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-value-already prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!ATTLIST d a NMTOKENS \\" 1 \\">]><d a=\\"1\\"/>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-value-already tokenizes 1`] = `"doctype[0,44|10,11|-1,-1|-1,-1|13,42] attr[47,48|50,51]\\" open[44,54|45,46]/ end=54"`;
@@ -321,6 +357,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-value-the-input-ends parses 1`] = `"[]"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-value-the-input-ends parses 2`] = `"error[7,7]:eof-in-tag"`;
+
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-value-the-input-ends prints {"xml":true,"mode":"beautify"} 1`] = `""`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-a-value-the-input-ends prints {"xml":true,"mode":"minify"} 1`] = `""`;
 
@@ -330,6 +368,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-an-attribute-name-that parses 2`] = `""`;
 
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-an-attribute-name-that prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!ATTLIST d 1x CDATA \\"v\\">]><d/>"`;
+
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-an-attribute-name-that prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!ATTLIST d 1x CDATA \\"v\\">]><d/>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-an-attribute-name-that tokenizes 1`] = `"doctype[0,40|10,11|-1,-1|-1,-1|13,38] open[40,44|41,42]/ end=44"`;
@@ -337,6 +377,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-an-entity-declared parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"d\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":71},{\\"type\\":3,\\"tagName\\":\\"d\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"1\\",\\"start\\":74,\\"end\\":77}],\\"selfClosing\\":false,\\"start\\":71,\\"end\\":81,\\"tagEnd\\":74,\\"nameEnd\\":73,\\"contentEnd\\":77}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-an-entity-declared parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-an-entity-declared prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!ENTITY e \\"1\\"><!ENTITY e \\"2\\"><!NOTATION n SYSTEM 'a>b'>]><d>&e;</d>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-an-entity-declared prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!ENTITY e \\"1\\"><!ENTITY e \\"2\\"><!NOTATION n SYSTEM 'a>b'>]><d>1</d>"`;
 
@@ -346,6 +388,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-an-enumeration-the parses 2`] = `""`;
 
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-an-enumeration-the prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!ATTLIST d a (x|y]><d/>"`;
+
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-an-enumeration-the prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!ATTLIST d a (x|y]><d/>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-an-enumeration-the tokenizes 1`] = `"doctype[0,33|10,11|-1,-1|-1,-1|13,31] open[33,37|34,35]/ end=37"`;
@@ -353,6 +397,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-attribute-list parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"d\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":168},{\\"type\\":3,\\"tagName\\":\\"d\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"a\\",\\"value\\":\\"1 2\\",\\"nameStart\\":171,\\"nameEnd\\":172,\\"valueStart\\":174,\\"valueEnd\\":180},{\\"name\\":\\"c\\",\\"value\\":\\"u\\",\\"nameStart\\":182,\\"nameEnd\\":183,\\"valueStart\\":185,\\"valueEnd\\":186},{\\"name\\":\\"b\\",\\"value\\":\\"q\\",\\"nameStart\\":-1,\\"nameEnd\\":-1,\\"valueStart\\":-1,\\"valueEnd\\":-1},{\\"name\\":\\"n\\",\\"value\\":\\"p\\",\\"nameStart\\":-1,\\"nameEnd\\":-1,\\"valueStart\\":-1,\\"valueEnd\\":-1},{\\"name\\":\\"f\\",\\"value\\":\\"w\\",\\"nameStart\\":-1,\\"nameEnd\\":-1,\\"valueStart\\":-1,\\"valueEnd\\":-1}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":168,\\"end\\":189,\\"tagEnd\\":189,\\"nameEnd\\":170,\\"contentEnd\\":189}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-attribute-list parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-attribute-list prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!ATTLIST d><!ATTLIST d a NMTOKENS \\"  x  y \\" b CDATA #FIXED \\"q\\" c (u|v) #IMPLIED n NOTATION (p) \\"p\\" e ID #REQUIRED><!ATTLIST d a CDATA \\"z\\" f NMTOKEN 'w'>]><d a=\\" 1  2 \\" c=\\"u\\"/>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-attribute-list prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!ATTLIST d><!ATTLIST d a NMTOKENS \\"  x  y \\" b CDATA #FIXED \\"q\\" c (u|v) #IMPLIED n NOTATION (p) \\"p\\" e ID #REQUIRED><!ATTLIST d a CDATA \\"z\\" f NMTOKEN 'w'>]><d a=\\"1 2\\" c=\\"u\\"/>"`;
 
@@ -362,6 +408,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-attributes-without-a parses 2`] = `""`;
 
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-attributes-without-a prints {"xml":true,"mode":"beautify"} 1`] = `"<d a b=c d='e'/>"`;
+
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-attributes-without-a prints {"xml":true,"mode":"minify"} 1`] = `"<d a=\\"\\" b=\\"c\\" d=\\"e\\"/>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-attributes-without-a tokenizes 1`] = `"attr[3,4|-1,-1] attr[5,6|7,8] attr[9,10|12,13]' open[0,16|1,2]/ end=16"`;
@@ -369,6 +417,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-carriage-returns-back parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"d\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a\\\\nb\\\\nc\\",\\"start\\":3,\\"end\\":9},{\\"type\\":5,\\"data\\":\\"x\\\\ny\\",\\"start\\":9,\\"end\\":20},{\\"type\\":7,\\"target\\":\\"p\\",\\"data\\":\\"a\\\\nb\\",\\"start\\":20,\\"end\\":30},{\\"type\\":4,\\"data\\":\\"q\\\\nr\\",\\"start\\":30,\\"end\\":46}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":50,\\"tagEnd\\":3,\\"nameEnd\\":2,\\"contentEnd\\":46}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-carriage-returns-back parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-carriage-returns-back prints {"xml":true,"mode":"beautify"} 1`] = `"\\"<d>a\\\\r\\\\nb\\\\rc<!--x\\\\r\\\\ny--><?p a\\\\r\\\\nb?><![CDATA[q\\\\r\\\\nr]]></d>\\""`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-carriage-returns-back prints {"xml":true,"mode":"minify"} 1`] = `"\\"<d>a\\\\nb\\\\nc<?p a\\\\r\\\\nb?>q\\\\nr</d>\\""`;
 
@@ -378,6 +428,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-declarations-for-two parses 2`] = `""`;
 
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-declarations-for-two prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!ATTLIST d a NMTOKEN \\" x \\"><!ATTLIST e b NMTOKEN \\" y \\">]><d a=\\" 1 \\"><e/><e b=\\" 2 \\"/></d>"`;
+
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-declarations-for-two prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!ATTLIST d a NMTOKEN \\" x \\"><!ATTLIST e b NMTOKEN \\" y \\">]><d a=\\"1\\"><e/><e b=\\"2\\"/></d>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-declarations-for-two tokenizes 1`] = `"doctype[0,71|10,11|-1,-1|-1,-1|13,69] attr[74,75|77,80]\\" open[71,82|72,73] open[82,86|83,84]/ attr[89,90|92,95]\\" open[86,98|87,88]/ close[98,102|100,101] end=102"`;
@@ -385,6 +437,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-declarations-past-a parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"d\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":113},{\\"type\\":3,\\"tagName\\":\\"d\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"q&late;\\",\\"start\\":116,\\"end\\":125}],\\"selfClosing\\":false,\\"start\\":113,\\"end\\":129,\\"tagEnd\\":116,\\"nameEnd\\":115,\\"contentEnd\\":125}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-declarations-past-a parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-declarations-past-a prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!-- c --><?pi x?><!ENTITY % p \\"x\\"><!NOTATION n SYSTEM \\"a>b\\"><!ENTITY e 'q'>%p;<!ENTITY late \\"no\\">]><d>&e;&late;</d>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-declarations-past-a prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!-- c --><?pi x?><!ENTITY % p \\"x\\"><!NOTATION n SYSTEM \\"a>b\\"><!ENTITY e 'q'>%p;<!ENTITY late \\"no\\">]><d>&e;&late;</d>"`;
 
@@ -394,6 +448,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-a-reference parses 2`] = `""`;
 
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-a-reference prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!ENTITY a \\"&b;\\"><!ENTITY b \\"x&a;<y/>\\">]><d>&a;</d>"`;
+
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-a-reference prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!ENTITY a \\"&b;\\"><!ENTITY b \\"x&a;<y/>\\">]><d>&a;</d>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-a-reference tokenizes 1`] = `"doctype[0,54|10,11|-1,-1|-1,-1|13,52] open[54,57|55,56] text[57,60] close[60,64|62,63] end=64"`;
@@ -401,6 +457,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-an-entity parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"d\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":81},{\\"type\\":3,\\"tagName\\":\\"d\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a\\",\\"start\\":84,\\"end\\":85},{\\"type\\":3,\\"tagName\\":\\"b\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"x\\",\\"value\\":\\"1\\",\\"nameStart\\":-1,\\"nameEnd\\":-1,\\"valueStart\\":-1,\\"valueEnd\\":-1}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"t\\",\\"start\\":85,\\"end\\":88}],\\"selfClosing\\":false,\\"start\\":85,\\"end\\":88,\\"tagEnd\\":-1,\\"nameEnd\\":-1,\\"contentEnd\\":-1},{\\"type\\":3,\\"tagName\\":\\"i\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":85,\\"end\\":88,\\"tagEnd\\":-1,\\"nameEnd\\":-1,\\"contentEnd\\":-1},{\\"type\\":4,\\"data\\":\\"btxt&nope;&\\",\\"start\\":88,\\"end\\":103}],\\"selfClosing\\":false,\\"start\\":81,\\"end\\":107,\\"tagEnd\\":84,\\"nameEnd\\":83,\\"contentEnd\\":103}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-an-entity parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-an-entity prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!ENTITY e \\"<b x='1'>t</b>&f;\\"><!ENTITY f \\"<i/>\\"><!ENTITY t \\"txt\\">]><d>a&e;b&t;&nope;&#38;</d>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-an-entity prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!ENTITY e \\"<b x='1'>t</b>&f;\\"><!ENTITY f \\"<i/>\\"><!ENTITY t \\"txt\\">]><d>a&e;b&t;&nope;&#38;</d>"`;
 
@@ -420,6 +478,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-with-every-kind parses 2`] = `""`;
 
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-with-every-kind prints {"xml":true,"mode":"beautify"} 1`] = `"\\"<!DOCTYPE d [<!ENTITY e \\\\\\"<b x='1' y>t</b><!--c\\\\r\\\\n--><?p\\\\r\\\\nq?><![CDATA[z]]>\\\\\\">]><d>&e;</d>\\""`;
+
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-with-every-kind prints {"xml":true,"mode":"minify"} 1`] = `"\\"<!DOCTYPE d [<!ENTITY e \\\\\\"<b x='1' y>t</b><!--c\\\\r\\\\n--><?p\\\\r\\\\nq?><![CDATA[z]]>\\\\\\">]><d>&e;</d>\\""`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-markup-with-every-kind tokenizes 1`] = `"doctype[0,76|10,11|-1,-1|-1,-1|13,74] open[76,79|77,78] text[79,82] close[82,86|84,85] end=86"`;
@@ -427,6 +487,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-misnested-end-tags-back parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"a\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"b\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"c\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":false,\\"start\\":6,\\"end\\":9,\\"tagEnd\\":9,\\"nameEnd\\":8,\\"contentEnd\\":9}],\\"selfClosing\\":false,\\"start\\":3,\\"end\\":13,\\"tagEnd\\":6,\\"nameEnd\\":5,\\"contentEnd\\":9},{\\"type\\":4,\\"data\\":\\"x\\",\\"start\\":13,\\"end\\":14}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":18,\\"tagEnd\\":3,\\"nameEnd\\":2,\\"contentEnd\\":14}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-misnested-end-tags-back parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-misnested-end-tags-back prints {"xml":true,"mode":"beautify"} 1`] = `"<a><b><c></c></b>x</a>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-misnested-end-tags-back prints {"xml":true,"mode":"minify"} 1`] = `"<a><b><c/></b>x</a>"`;
 
@@ -446,6 +508,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-nuls-and-a-repeated parses 2`] = `"warning[0,0]:unexpected-null-character"`;
 
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-nuls-and-a-repeated prints {"xml":true,"mode":"beautify"} 1`] = `"\\"<d a=\\\\\\"1\\\\\\" a=\\\\\\"2\\\\\\">\\\\u0000<![CDATA[\\\\u0000]]><!--\\\\u0000--></d>\\""`;
+
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-nuls-and-a-repeated prints {"xml":true,"mode":"minify"} 1`] = `"<d a=\\"1\\">��</d>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-nuls-and-a-repeated tokenizes 1`] = `"warning[0,0]:unexpected-null-character attr[3,4|6,7]\\" attr[9,10|12,13]\\" open[0,15|1,2] text[15,16] comment[16,29|25,26] comment[29,37|33,34] close[37,41|39,40] end=41"`;
@@ -453,6 +517,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-one-a-comment-runs-out parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"d\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":29}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-one-a-comment-runs-out parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-one-a-comment-runs-out prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!-- open ]><d/>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-one-a-comment-runs-out prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!-- open ]><d/>"`;
 
@@ -462,6 +528,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-one-a-declaration-s parses 2`] = `""`;
 
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-one-a-declaration-s prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!ELEMENT d \\"x]><d/>"`;
+
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-one-a-declaration-s prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!ELEMENT d \\"x]><d/>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-one-a-declaration-s tokenizes 1`] = `"doctype[0,33|10,11|-1,-1|-1,-1|13,33] end=33"`;
@@ -470,6 +538,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-one-an-instruction-runs parses 2`] = `""`;
 
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-one-an-instruction-runs prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<?open ]><d/>"`;
+
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-one-an-instruction-runs prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<?open ]><d/>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-one-an-instruction-runs tokenizes 1`] = `"doctype[0,26|10,11|-1,-1|-1,-1|13,26] end=26"`;
@@ -477,6 +547,8 @@ exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-su
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-text-a-chain-expands-to parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"d\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":71},{\\"type\\":3,\\"tagName\\":\\"d\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"plainplain\\",\\"start\\":74,\\"end\\":77}],\\"selfClosing\\":false,\\"start\\":71,\\"end\\":81,\\"tagEnd\\":74,\\"nameEnd\\":73,\\"contentEnd\\":77}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-text-a-chain-expands-to parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-text-a-chain-expands-to prints {"xml":true,"mode":"beautify"} 1`] = `"<!DOCTYPE d [<!ENTITY a \\"&b;&b;\\"><!ENTITY b \\"&c;\\"><!ENTITY c \\"plain\\">]><d>&a;</d>"`;
 
 exports[`XML syntax — invariants source-processor-xml-under-an-internal-dtd-subset-prints-text-a-chain-expands-to prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE d [<!ENTITY a \\"&b;&b;\\"><!ENTITY b \\"&c;\\"><!ENTITY c \\"plain\\">]><d>&a;</d>"`;
 
@@ -1179,6 +1251,8 @@ exports[`XML syntax — invariants xml-syntax-parsing-should-rank-only-explicit-
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-rank-only-explicit-xml-attributes-and-preserve-dtd parses 2`] = `""`;
 
+exports[`XML syntax — invariants xml-syntax-parsing-should-rank-only-explicit-xml-attributes-and-preserve-dtd prints {"xml":true,"mode":"minify","sortAttributes":true} 1`] = `"<!DOCTYPE root [<!ATTLIST item z CDATA \\"default\\" b CDATA \\"default\\">]><root><item a=\\"1\\" z=\\"explicit\\"/><item/><item/><other a=\\"2\\"/></root>"`;
+
 exports[`XML syntax — invariants xml-syntax-parsing-should-rank-only-explicit-xml-attributes-and-preserve-dtd prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE root [<!ATTLIST item z CDATA \\"default\\" b CDATA \\"default\\">]><root><item z=\\"explicit\\" a=\\"1\\"/><item/><item/><other a=\\"2\\"/></root>"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-rank-only-explicit-xml-attributes-and-preserve-dtd tokenizes 1`] = `"doctype[0,69|10,14|-1,-1|-1,-1|16,67] open[69,75|70,74] attr[81,82|84,92]\\" attr[94,95|97,98]\\" open[75,101|76,80]/ open[101,108|102,106]/ open[108,115|109,113]/ attr[122,123|125,126]\\" open[115,129|116,121]/ close[129,136|131,135] end=136"`;
@@ -1371,6 +1445,8 @@ exports[`XML syntax — invariants xml-syntax-parsing-should-reuse-attribute-sor
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-reuse-attribute-sorting-without-html-normalization parses 2`] = `""`;
 
+exports[`XML syntax — invariants xml-syntax-parsing-should-reuse-attribute-sorting-without-html-normalization prints {"xml":true,"mode":"minify","sortAttributes":true} 1`] = `"<svg viewBox=\\"0 0 1 1\\" xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:x=\\"urn:test\\"><g z=\\"1\\" Z=\\"2\\" class=\\"b a\\" x:href=\\"#shape\\"/><path z=\\"3\\"/></svg>"`;
+
 exports[`XML syntax — invariants xml-syntax-parsing-should-reuse-attribute-sorting-without-html-normalization prints {"xml":true,"mode":"minify"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:x=\\"urn:test\\" viewBox=\\"0 0 1 1\\"><g z=\\"1\\" x:href=\\"#shape\\" Z=\\"2\\" class=\\"b a\\"/><path z=\\"3\\"/></svg>"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-reuse-attribute-sorting-without-html-normalization tokenizes 1`] = `"attr[5,10|12,38]\\" attr[40,47|49,57]\\" attr[59,66|68,75]\\" open[0,77|1,4] attr[80,81|83,84]\\" attr[86,92|94,100]\\" attr[102,103|105,106]\\" attr[108,113|115,118]\\" open[77,121|78,79]/ attr[127,128|130,131]\\" open[121,134|122,126]/ close[134,140|136,139] end=140"`;
@@ -1378,6 +1454,10 @@ exports[`XML syntax — invariants xml-syntax-parsing-should-reuse-attribute-sor
 exports[`XML syntax — invariants xml-syntax-parsing-should-reuse-attribute-sorting-without-html-normalization-2 parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"Root\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"z\\",\\"value\\":\\"1\\",\\"nameStart\\":6,\\"nameEnd\\":7,\\"valueStart\\":9,\\"valueEnd\\":10},{\\"name\\":\\"A\\",\\"value\\":\\"2\\",\\"serializedName\\":\\"A\\",\\"nameStart\\":12,\\"nameEnd\\":13,\\"valueStart\\":15,\\"valueEnd\\":16}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":0,\\"end\\":19,\\"tagEnd\\":19,\\"nameEnd\\":5,\\"contentEnd\\":19}]"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-reuse-attribute-sorting-without-html-normalization-2 parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-reuse-attribute-sorting-without-html-normalization-2 prints {"xml":true,"mode":"beautify","sortAttributes":true} 1`] = `"<Root z=\\"1\\" A=\\"2\\"/>"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-reuse-attribute-sorting-without-html-normalization-2 prints {"xml":true,"mode":"minify","sortAttributes":true} 1`] = `"<Root A=\\"2\\" z=\\"1\\"/>"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-reuse-attribute-sorting-without-html-normalization-2 prints {"xml":true,"mode":"minify"} 1`] = `"<Root z=\\"1\\" A=\\"2\\"/>"`;
 
