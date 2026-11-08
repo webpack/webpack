@@ -105,6 +105,8 @@ Ordering rules:
 - One FIFO queue. `_dispatch` runs after every enqueue, settle, preload completion and exit.
 - Each thread runs one plain call at a time, or up to `loaders.parallelJobs` loader jobs.
 - Among idle threads, the pool takes the last from its idle list (LIFO). If none can take the call and fewer than `max` threads live, it spawns one.
+- When every call on a thread waits on the main thread, that thread takes the next job before a new one spawns: it cannot make progress itself.
+- At `max`, a loader job goes to the thread with the fewest running loader jobs, up to its `parallelJobs`. These two loader-aware hooks (`blocked` and `parallelJobs`) are the deliberate price of one queue: split queues would lose the deterministic order above.
 - A queued plain call keeps the head of the queue: when every thread is busy, later loader jobs wait even if a thread still has loader capacity. This is head-of-line blocking; one FIFO queue trades loader throughput for strict call order.
 - When a call settles, its thread goes idle and dispatch continues.
 - On exit, the thread is removed. Its in-flight call rejects with `Worker <id> exited with code <code> during <method>`. The next queued call spawns a replacement.
