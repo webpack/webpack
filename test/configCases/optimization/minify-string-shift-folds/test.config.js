@@ -13,6 +13,6 @@ module.exports = {
 		expect(code).toContain("v>>>s");
 		expect(code).not.toContain("String(");
 		expect(code).toContain("/c/g");
-		expect(code).not.toContain("${/c/g}");
+		expect(code).not.toMatch(/\$\{\/c\/g\}/);
 	}
 };

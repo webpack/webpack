@@ -1838,7 +1838,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A string an unread `+` adds to a string goes, the strings left of it read as strings only; read, the `+` stays.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-fold-literals-21"), {}, "\"\"+b+d,a+\"\"+c,\"\"+b+d,f()+\"\"+g(),a+b+\"\"+d,\"\"+(b+\"c\")+d,x=\"a\"+b+\"c\"+d;"],
 			// What may run code keeps its call, `typeof` or `??`; a reduced call's string is read off once printed.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-fold-literals-22"), {}, "x=[`/d/`,typeof(a===f()),\"a\",1,\"ab\".length,[...a,\"b\"].join(),(y,-a),(y,z)??1,(y,1)];"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-fold-literals-22"), {}, "x=[\"/d/\",typeof(a===f()),\"a\",1,\"ab\".length,[...a,\"b\"].join(),(y,-a),(y,z)??1,(y,1)];"],
 			// A comment at a call's edge keeps it whole.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-fold-literals-23"), {}, "x=[{...(()=>{})()/*! c */},/*! c */\"ab\".charAt(0)];"],
 			// Without `dead_code`, a conditional keeps the parentheses its place gives it.
