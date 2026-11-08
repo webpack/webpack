@@ -1787,7 +1787,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-598"), {}, "x(class{}),x(function(){}),x(1),(0,a.b)(),x={}.y,x=a+1,y=(a,b);"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-599"), {}, "x({}),x((f(),1));({}).x;"],
 			// A function running nothing called runs only its arguments where nobody reads the call.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-600"), {}, "a(),b(),c(),x=(a(),void 0);"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-600"), {}, "a(),b(),c(),x=void a();"],
 			// A logical folding to an assignment keeps the parentheses that needs under the same operator.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-601"), {}, "a&&(x=1);const T=1;b&&(y=1);"],
 			// A BigInt zero is falsy but strictly unequal to `0`: only `==` and `!=` fold an integer's comparison with it.
@@ -3750,7 +3750,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-constant-keys-new-19")
 			)
 		).toBe(
-			"a(),b(),x(),[...a],y(),c?[...a]:d(),z=(a(),void 0),function({a:n}){}(b),function(n=g()){}(b),b;"
+			"a(),b(),x(),[...a],y(),c?[...a]:d(),z=void a(),function({a:n}){}(b),function(n=g()){}(b),b;"
 		);
 		// Branches printing alike print once, after the test where it runs anything.
 		expect(
@@ -6906,8 +6906,8 @@ describe("one-pass minify of unused values and side effects, fourth round", () =
 			[fixture("javascript", "one-pass-unused-d-4"), "function f(){for(;g(););}for(let j;g();)h();while(g());for(x in y);for(;g();)a;"],
 			// A call marked pure of a function written in place prints its arguments alone; a callee that runs code stays.
 			[fixture("javascript", "one-pass-unused-d-5"), "y,z,a(),y(),z,g()(y),g();"],
-			// An empty function written in place and called gives `undefined` once its arguments ran; a spread or a default stays.
-			[fixture("javascript", "one-pass-unused-d-6"), "var u=(a,void 0),v=(b(),void 0);f((c,void 0)),w=(()=>{})(...d),x=function(a={}){}(e);"],
+			// An empty function written in place and called is `void` of its arguments; a spread or a default stays.
+			[fixture("javascript", "one-pass-unused-d-6"), "var u=void a,v=void b();f(void c),w=(()=>{})(...d),x=function(a={}){}(e);"],
 			// `if(x)return y;return x` is `return x&&y`, but where `y` binds looser, the name differs, or a call in place prints.
 			[fixture("javascript", "one-pass-unused-d-7"), "function a(x){return x&&42}function b(x){return x&&1}function c(x){return x&&(g(),y)}function d(x){return x?p||q:x}function e(x){return x?42:y}function k(x){return x&&h}function m(x){return x&&void 0}function n(x){return x?function(){g()}():x}"],
 			// A known test's branch opening as an object, function or class prints bare, in parentheses first in a statement or an arrow's body; nested in one, it stays.
@@ -6932,8 +6932,8 @@ describe("one-pass minify of unused values and side effects, fourth round", () =
 			[fixture("javascript", "one-pass-unused-d-20"), "globalThis.Object.setPrototypeOf(Array.prototype,p),[]instanceof Date,after();"],
 			// A known branch opening with `{` as an arrow's body takes parentheses, whatever node it is.
 			[fixture("javascript", "one-pass-unused-d-16"), "f=()=>({}.x),g=()=>({}+1),h=()=>({a:1}),k=()=>a;"],
-			// An empty call's arguments keep their parentheses as a `?:` branch a `return` chain prints.
-			[fixture("javascript", "one-pass-unused-d-17"), "function g(c){return c?(a(),void 0):(b(),void 0)}function k(){a()}"]
+			// An empty call prints as `void` of its arguments, a `?:` branch a `return` chain prints too.
+			[fixture("javascript", "one-pass-unused-d-17"), "function g(c){return c?void a():void b()}function k(){a()}"]
 		];
 		for (const [source, expected] of cases) {
 			expect(minifyOnePass(source, { compress: { ecma: 2020 }, ecma: 2020, mangle: false }).code).toBe(expected);
