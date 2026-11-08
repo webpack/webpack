@@ -6920,9 +6920,20 @@ describe("one-pass minify of unused values and side effects, fourth round", () =
 	});
 
 	it("should keep a known branch an `export default` opens with `function` or `class` an expression", () => {
-		const source = fixture("javascript", "one-pass-unused-d-21");
-		expect(minifyOnePass(source, { compress: { ecma: 2020 }, ecma: 2020, mangle: false, module: true }).code).toBe(
-			"export default(function(){});"
+		const options = { compress: { ecma: 2020 }, ecma: 2020, mangle: false, module: true };
+		// Bare, an anonymous function would take the name `default`.
+		expect(minifyOnePass(fixture("javascript", "one-pass-unused-d-21"), options).code).toBe(
+			"export default 1?function(){}:null;"
 		);
+		// Only a function itself prints its parentheses as a second pass does.
+		expect(minifyOnePass(fixture("javascript", "one-pass-unused-d-22"), options).code).toBe(
+			"export default 1?function(){}.x:null;"
+		);
+	});
+
+	it("should keep a known branch an anonymous function or class whose place would name it", () => {
+		const source = fixture("javascript", "one-pass-unused-d-23");
+		const { code } = minifyOnePass(source, { compress: { ecma: 2020 }, ecma: 2020, mangle: false });
+		expect(code).toBe("var x=1?function(){}:null;y=1?class{}:null,o={a:1?function(){}:0},g(function(){});");
 	});
 });
