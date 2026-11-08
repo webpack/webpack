@@ -22881,6 +22881,23 @@ exports[`JavaScript syntax — invariants javascript-minifier-reading-an-event-h
 
 exports[`JavaScript syntax — invariants javascript-minifier-reading-an-event-handler-s-body-should-compress-a-body tokenizes 1`] = `"var[0,3] name[4,5] =[6,7] num[8,9] ;[9,10] name[11,16] =[17,18] name[19,20] ;[20,21] return[22,28] name[29,34] ==/!=/===/!==[35,37] null[38,42] ?[43,44] name[45,54] :[55,56] name[57,58] eof[58,58]"`;
 
+exports[`JavaScript syntax — invariants javascript-source-processor-fires-enter-and-exit-in-source-order-a-template-s parses {"entry":"SourceProcessor","visit":{"types":["CallExpression","TemplateLiteral","Identifier","TemplateElement"],"fields":["source","index"]}} 1`] = `
+"CallExpression[0,14] source=\\"f(\`a\${b}c\`, d)\\" index=0
+Identifier[0,1] source=\\"f\\" index=0
+/Identifier
+TemplateLiteral[2,10] source=\\"\`a\${b}c\`\\" index=1
+TemplateElement[3,4] source=\\"a\\" index=0
+/TemplateElement
+Identifier[6,7] source=\\"b\\" index=1
+/Identifier
+TemplateElement[8,9] source=\\"c\\" index=2
+/TemplateElement
+/TemplateLiteral
+Identifier[12,13] source=\\"d\\" index=2
+/Identifier
+/CallExpression"
+`;
+
 exports[`JavaScript syntax — invariants javascript-source-processor-fires-enter-and-exit-in-source-order-a-template-s parses 1`] = `"Program[0,15](body=[ExpressionStatement[0,15](expression=CallExpression[0,14](callee=Identifier[0,1](name=\\"f\\") arguments=[TemplateLiteral[2,10](expressions=[Identifier[6,7](name=\\"b\\")] quasis=[TemplateElement[3,4](value={\\"raw\\":\\"a\\",\\"cooked\\":\\"a\\"} tail=false),TemplateElement[8,9](value={\\"raw\\":\\"c\\",\\"cooked\\":\\"c\\"} tail=true)]),Identifier[12,13](name=\\"d\\")] optional=false))] sourceType=\\"module\\")"`;
 
 exports[`JavaScript syntax — invariants javascript-source-processor-fires-enter-and-exit-in-source-order-a-template-s parses 2`] = `""`;
@@ -23115,6 +23132,66 @@ exports[`JavaScript syntax — invariants js-minify-should-give-back-an-event-ha
 
 exports[`JavaScript syntax — invariants js-minify-should-give-back-an-event-handler-it-prints-as-nothing-as-written tokenizes 1`] = `"void[0,4] num[5,6] ;[6,7] eof[7,7]"`;
 
+exports[`JavaScript syntax — invariants js-minify-should-match-string-comment-patterns-like-reg-exp-conditions parses 1`] = `"Program[0,84](body=[ExpressionStatement[22,30](expression=CallExpression[22,29](callee=Identifier[22,27](name=\\"first\\") arguments=[] optional=false)),ExpressionStatement[46,55](expression=CallExpression[46,54](callee=Identifier[46,52](name=\\"second\\") arguments=[] optional=false)),ExpressionStatement[77,84](expression=CallExpression[77,83](callee=Identifier[77,81](name=\\"last\\") arguments=[] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-match-string-comment-patterns-like-reg-exp-conditions parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants js-minify-should-match-string-comment-patterns-like-reg-exp-conditions parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-match-string-comment-patterns-like-reg-exp-conditions prints {"mode":"minify"} 1`] = `"first();second();last();"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-match-string-comment-patterns-like-reg-exp-conditions prints {"print":"jsMinify","format":{"comments":"first|last"},"minimizer":{"extractComments":{"condition":"@license"},"sourceMap":"input.js.map","asset":"comments.js"}} 1`] = `
+"/*! @license first */first();second();
+/*! @license last */last();"
+`;
+
+exports[`JavaScript syntax — invariants js-minify-should-match-string-comment-patterns-like-reg-exp-conditions prints {"print":"jsMinify","format":{"comments":"first|last"},"minimizer":{"extractComments":{"condition":"@license"},"sourceMap":"input.js.map","asset":"comments.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"comments.js\\",\\"sources\\":[\\"comments.js\\"],\\"sourcesContent\\":[\\"/*! @license first */ first();\\\\n/* ordinary */ second();\\\\n/*! @license last */ last();\\"],\\"names\\":[\\"first\\",\\"second\\",\\"last\\"],\\"mappings\\":\\"AAAA,qBAAsBA,QACPC;oBACMC\\"},\\"extractedComments\\":[\\"/*! @license first */\\",\\"/*! @license last */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-match-string-comment-patterns-like-reg-exp-conditions prints {"print":"jsMinify","format":{"comments":{"regexp":"first|last"}},"minimizer":{"extractComments":{"condition":{"regexp":"@license"}},"sourceMap":"input.js.map","asset":"comments.js"}} 1`] = `
+"/*! @license first */first();second();
+/*! @license last */last();"
+`;
+
+exports[`JavaScript syntax — invariants js-minify-should-match-string-comment-patterns-like-reg-exp-conditions prints {"print":"jsMinify","format":{"comments":{"regexp":"first|last"}},"minimizer":{"extractComments":{"condition":{"regexp":"@license"}},"sourceMap":"input.js.map","asset":"comments.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"comments.js\\",\\"sources\\":[\\"comments.js\\"],\\"sourcesContent\\":[\\"/*! @license first */ first();\\\\n/* ordinary */ second();\\\\n/*! @license last */ last();\\"],\\"names\\":[\\"first\\",\\"second\\",\\"last\\"],\\"mappings\\":\\"AAAA,qBAAsBA,QACPC;oBACMC\\"},\\"extractedComments\\":[\\"/*! @license first */\\",\\"/*! @license last */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-match-string-comment-patterns-like-reg-exp-conditions tokenizes 1`] = `"block[0,21] name[22,27] ([27,28] )[28,29] ;[29,30] block[31,45] name[46,52] ([52,53] )[53,54] ;[54,55] block[56,76] name[77,81] ([81,82] )[82,83] ;[83,84] eof[84,84]"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-a-line-comment-and-one-written-twice parses 1`] = `"Program[0,49](body=[ExpressionStatement[13,17](expression=CallExpression[13,16](callee=Identifier[13,14](name=\\"a\\") arguments=[] optional=false)),ExpressionStatement[27,31](expression=CallExpression[27,30](callee=Identifier[27,28](name=\\"b\\") arguments=[] optional=false)),ExpressionStatement[45,49](expression=CallExpression[45,48](callee=Identifier[45,46](name=\\"c\\") arguments=[] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-a-line-comment-and-one-written-twice parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-a-line-comment-and-one-written-twice parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-a-line-comment-and-one-written-twice prints {"mode":"minify"} 1`] = `"a();b();c();"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-a-line-comment-and-one-written-twice prints {"print":"jsMinify","minimizer":{"extractComments":true,"asset":"lines.js"}} 1`] = `"a(),b(),c();"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-a-line-comment-and-one-written-twice prints {"print":"jsMinify","minimizer":{"extractComments":true,"asset":"lines.js"}} 2`] = `"{\\"extractedComments\\":[\\"/*! twice */\\",\\"//! line\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-a-line-comment-and-one-written-twice prints {"print":"jsMinify","minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"lines.js"}} 1`] = `"a(),b(),c();"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-a-line-comment-and-one-written-twice prints {"print":"jsMinify","minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"lines.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"lines.js\\",\\"sources\\":[\\"lines.js\\"],\\"sourcesContent\\":[\\"/*! twice */ a();\\\\n//! line\\\\nb();\\\\n/*! twice */ c();\\"],\\"names\\":[\\"a\\"],\\"mappings\\":\\"AAAaA\\"},\\"extractedComments\\":[\\"/*! twice */\\",\\"//! line\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-a-line-comment-and-one-written-twice tokenizes 1`] = `"block[0,12] name[13,14] ([14,15] )[15,16] ;[16,17] line[18,26] name[27,28] ([28,29] )[29,30] ;[30,31] block[32,44] name[45,46] ([46,47] )[47,48] ;[48,49] eof[49,49]"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-an-event-handler-holding-runs-of parses 1`] = `"Program[0,14](body=[ExpressionStatement[0,14](expression=CallExpression[0,13](callee=Identifier[0,3](name=\\"__a\\") arguments=[Identifier[4,6](name=\\"_b\\"),Identifier[8,12](name=\\"___c\\")] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-an-event-handler-holding-runs-of parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-an-event-handler-holding-runs-of parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-an-event-handler-holding-runs-of prints {"mode":"minify"} 1`] = `"__a(_b,___c);"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-an-event-handler-holding-runs-of prints {"print":"jsMinify","as":"event-handler","minimizer":{"extractComments":true,"asset":"handler.js"}} 1`] = `"__a(_b,___c)"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-an-event-handler-holding-runs-of prints {"print":"jsMinify","as":"event-handler","minimizer":{"extractComments":true,"asset":"handler.js"}} 2`] = `"{\\"extractedComments\\":[]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-an-event-handler-holding-runs-of prints {"print":"jsMinify","as":"event-handler","minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"handler.js"}} 1`] = `"__a(_b,___c)"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-an-event-handler-holding-runs-of prints {"print":"jsMinify","as":"event-handler","minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"handler.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"handler.js\\",\\"sources\\":[\\"handler.js\\"],\\"sourcesContent\\":[\\"__a(_b, ___c);\\"],\\"names\\":[\\"__a\\",\\"_b\\",\\"___c\\"],\\"mappings\\":\\"AAAAA,IAAIC,GAAIC\\"},\\"extractedComments\\":[]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-an-event-handler-holding-runs-of tokenizes 1`] = `"name[0,3] ([3,4] name[4,6] ,[6,7] name[8,12] )[12,13] ;[13,14] eof[14,14]"`;
+
 exports[`JavaScript syntax — invariants js-minify-should-minify-defaults parses 1`] = `"Program[0,276](body=[ExpressionStatement[49,62](expression=Literal[49,61](value=\\"use strict\\" raw=\\"\\\\\\"use strict\\\\\\"\\") directive=\\"use strict\\"),FunctionDeclaration[63,108](id=Identifier[72,84](name=\\"unusedHelper\\") expression=false generator=false async=false params=[Identifier[85,86](name=\\"a\\"),Identifier[88,89](name=\\"b\\")] body=BlockStatement[91,108](body=[ReturnStatement[93,106](argument=BinaryExpression[100,105](left=Identifier[100,101](name=\\"a\\") operator=\\"+\\" right=Identifier[104,105](name=\\"b\\")))])),ExpressionStatement[109,275](expression=CallExpression[109,274](callee=Identifier[109,113](name=\\"sink\\") arguments=[FunctionExpression[114,273](id=Identifier[123,128](name=\\"outer\\") expression=false generator=false async=false params=[] body=BlockStatement[131,273](body=[VariableDeclaration[134,181](declarations=[VariableDeclarator[138,180](id=Identifier[138,142](name=\\"list\\") init=CallExpression[145,180](callee=MemberExpression[145,158](object=ArrayExpression[145,154](elements=[Literal[146,147](value=1 raw=\\"1\\"),Literal[149,150](value=2 raw=\\"2\\"),Literal[152,153](value=3 raw=\\"3\\")]) property=Identifier[155,158](name=\\"map\\") computed=false optional=false) arguments=[ArrowFunctionExpression[159,179](id=null expression=true generator=false async=false params=[Identifier[160,165](name=\\"value\\")] body=BinaryExpression[170,179](left=Identifier[170,175](name=\\"value\\") operator=\\"+\\" right=Literal[178,179](value=1 raw=\\"1\\")))] optional=false))] kind=\\"let\\"),IfStatement[183,257](test=BinaryExpression[187,202](left=MemberExpression[187,198](object=Identifier[187,191](name=\\"list\\") property=Identifier[192,198](name=\\"length\\") computed=false optional=false) operator=\\">\\" right=Literal[201,202](value=0 raw=\\"0\\")) consequent=BlockStatement[204,226](body=[ExpressionStatement[206,224](expression=CallExpression[206,223](callee=MemberExpression[206,217](object=Identifier[206,213](name=\\"console\\") property=Identifier[214,217](name=\\"log\\") computed=false optional=false) arguments=[Identifier[218,222](name=\\"list\\")] optional=false))]) alternate=BlockStatement[232,257](body=[ExpressionStatement[234,255](expression=CallExpression[234,254](callee=MemberExpression[234,245](object=Identifier[234,241](name=\\"console\\") property=Identifier[242,245](name=\\"log\\") computed=false optional=false) arguments=[Literal[246,253](value=\\"empty\\" raw=\\"\\\\\\"empty\\\\\\"\\")] optional=false))])),ReturnStatement[259,271](argument=Identifier[266,270](name=\\"list\\"))]))] optional=false))] sourceType=\\"module\\")"`;
 
 exports[`JavaScript syntax — invariants js-minify-should-minify-defaults parses 2`] = `""`;
@@ -23122,6 +23199,180 @@ exports[`JavaScript syntax — invariants js-minify-should-minify-defaults parse
 exports[`JavaScript syntax — invariants js-minify-should-minify-defaults parses 3`] = `"as the module"`;
 
 exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"mode":"minify"} 1`] = `"\\"use strict\\";function unusedHelper(a,b){return a+b}sink(function outer(){let list=[1,2,3].map(value=>value+1);if(list.length>0){console.log(list)}else{console.log(\\"empty\\")}return list});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","as":"script","minimizer":{"extractComments":true,"asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","as":"script","minimizer":{"extractComments":true,"asset":"script.js"}} 2`] = `"{\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","as":"script","minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","as":"script","minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"script.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"script.js\\",\\"sources\\":[\\"script.js\\"],\\"sourcesContent\\":[\\"\\\\n/*! @license MIT - keep me */\\\\n// a line comment\\\\n\\\\\\"use strict\\\\\\";\\\\nfunction unusedHelper(a, b) { return a + b; }\\\\nsink(function outer() {\\\\n\\\\tlet list = [1, 2, 3].map((value) => value + 1);\\\\n\\\\tif (list.length > 0) { console.log(list); } else { console.log(\\\\\\"empty\\\\\\"); }\\\\n\\\\treturn list;\\\\n});\\\\n\\"],\\"names\\":[\\"unusedHelper\\",\\"a\\",\\"b\\",\\"sink\\",\\"list\\",\\"value\\"],\\"mappings\\":\\"AAGA,aACA,SAASA,aAAaC,EAAGC,GAAK,OAAOD,EAAIC,EACzCC,KAAK,WACJ,IAAIC,EAAO,CAAC,EAAG,EAAG,OAAQC,GAAUA,EAAQ\\"},\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","compress":{},"minimizer":{"extractComments":false,"asset":"script.js"}} 1`] = `
+"/*! @license MIT - keep me */
+\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
+`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","compress":{},"minimizer":{"extractComments":false,"asset":"script.js"}} 2`] = `"{\\"extractedComments\\":[]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","compress":{},"minimizer":{"extractComments":false,"sourceMap":"input.js.map","asset":"script.js"}} 1`] = `
+"/*! @license MIT - keep me */
+\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
+`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","compress":{},"minimizer":{"extractComments":false,"sourceMap":"input.js.map","asset":"script.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"script.js\\",\\"sources\\":[\\"script.js\\"],\\"sourcesContent\\":[\\"\\\\n/*! @license MIT - keep me */\\\\n// a line comment\\\\n\\\\\\"use strict\\\\\\";\\\\nfunction unusedHelper(a, b) { return a + b; }\\\\nsink(function outer() {\\\\n\\\\tlet list = [1, 2, 3].map((value) => value + 1);\\\\n\\\\tif (list.length > 0) { console.log(list); } else { console.log(\\\\\\"empty\\\\\\"); }\\\\n\\\\treturn list;\\\\n});\\\\n\\"],\\"names\\":[\\"unusedHelper\\",\\"a\\",\\"b\\",\\"sink\\",\\"list\\",\\"value\\"],\\"mappings\\":\\"AAAA;AAGA,aACA,SAASA,aAAaC,EAAGC,GAAK,OAAOD,EAAIC,EACzCC,KAAK,WACJ,IAAIC,EAAO,CAAC,EAAG,EAAG,OAAQC,GAAUA,EAAQ\\"},\\"extractedComments\\":[]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","compress":{},"minimizer":{"extractComments":true,"asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","compress":{},"minimizer":{"extractComments":true,"asset":"script.js"}} 2`] = `"{\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","compress":{},"minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","compress":{},"minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"script.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"script.js\\",\\"sources\\":[\\"script.js\\"],\\"sourcesContent\\":[\\"\\\\n/*! @license MIT - keep me */\\\\n// a line comment\\\\n\\\\\\"use strict\\\\\\";\\\\nfunction unusedHelper(a, b) { return a + b; }\\\\nsink(function outer() {\\\\n\\\\tlet list = [1, 2, 3].map((value) => value + 1);\\\\n\\\\tif (list.length > 0) { console.log(list); } else { console.log(\\\\\\"empty\\\\\\"); }\\\\n\\\\treturn list;\\\\n});\\\\n\\"],\\"names\\":[\\"unusedHelper\\",\\"a\\",\\"b\\",\\"sink\\",\\"list\\",\\"value\\"],\\"mappings\\":\\"AAGA,aACA,SAASA,aAAaC,EAAGC,GAAK,OAAOD,EAAIC,EACzCC,KAAK,WACJ,IAAIC,EAAO,CAAC,EAAG,EAAG,OAAQC,GAAUA,EAAQ\\"},\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","compress":false,"minimizer":{"extractComments":true,"asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function e(){let l=[1,2,3].map(e=>e+1);if(l.length>0){console.log(l)}else{console.log(\\"empty\\")}return l});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","compress":false,"minimizer":{"extractComments":true,"asset":"script.js"}} 2`] = `"{\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","compress":false,"minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function e(){let l=[1,2,3].map(e=>e+1);if(l.length>0){console.log(l)}else{console.log(\\"empty\\")}return l});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","compress":false,"minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"script.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"script.js\\",\\"sources\\":[\\"script.js\\"],\\"sourcesContent\\":[\\"\\\\n/*! @license MIT - keep me */\\\\n// a line comment\\\\n\\\\\\"use strict\\\\\\";\\\\nfunction unusedHelper(a, b) { return a + b; }\\\\nsink(function outer() {\\\\n\\\\tlet list = [1, 2, 3].map((value) => value + 1);\\\\n\\\\tif (list.length > 0) { console.log(list); } else { console.log(\\\\\\"empty\\\\\\"); }\\\\n\\\\treturn list;\\\\n});\\\\n\\"],\\"names\\":[\\"unusedHelper\\",\\"a\\",\\"b\\",\\"sink\\",\\"outer\\",\\"list\\",\\"value\\",\\"console\\"],\\"mappings\\":\\"AAGA,aACA,SAASA,aAAaC,EAAGC,GAAK,OAAOD,EAAIC,EACzCC,KAAK,SAASC,IACb,IAAIC,EAAO,CAAC,EAAG,EAAG,OAAQC,GAAUA,EAAQ,GAC5C,GAAID,SAAc,EAAG,CAAEE,YAAYF,OAAc,CAAEE,YAAY,SAC/D,OAAOF\\"},\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","compress":true,"minimizer":{"extractComments":true,"asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","compress":true,"minimizer":{"extractComments":true,"asset":"script.js"}} 2`] = `"{\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","compress":true,"minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","compress":true,"minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"script.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"script.js\\",\\"sources\\":[\\"script.js\\"],\\"sourcesContent\\":[\\"\\\\n/*! @license MIT - keep me */\\\\n// a line comment\\\\n\\\\\\"use strict\\\\\\";\\\\nfunction unusedHelper(a, b) { return a + b; }\\\\nsink(function outer() {\\\\n\\\\tlet list = [1, 2, 3].map((value) => value + 1);\\\\n\\\\tif (list.length > 0) { console.log(list); } else { console.log(\\\\\\"empty\\\\\\"); }\\\\n\\\\treturn list;\\\\n});\\\\n\\"],\\"names\\":[\\"unusedHelper\\",\\"a\\",\\"b\\",\\"sink\\",\\"list\\",\\"value\\"],\\"mappings\\":\\"AAGA,aACA,SAASA,aAAaC,EAAGC,GAAK,OAAOD,EAAIC,EACzCC,KAAK,WACJ,IAAIC,EAAO,CAAC,EAAG,EAAG,OAAQC,GAAUA,EAAQ\\"},\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","ecma":5,"compress":{"ecma":2020},"minimizer":{"extractComments":true,"asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","ecma":5,"compress":{"ecma":2020},"minimizer":{"extractComments":true,"asset":"script.js"}} 2`] = `"{\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","ecma":5,"compress":{"ecma":2020},"minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","ecma":5,"compress":{"ecma":2020},"minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"script.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"script.js\\",\\"sources\\":[\\"script.js\\"],\\"sourcesContent\\":[\\"\\\\n/*! @license MIT - keep me */\\\\n// a line comment\\\\n\\\\\\"use strict\\\\\\";\\\\nfunction unusedHelper(a, b) { return a + b; }\\\\nsink(function outer() {\\\\n\\\\tlet list = [1, 2, 3].map((value) => value + 1);\\\\n\\\\tif (list.length > 0) { console.log(list); } else { console.log(\\\\\\"empty\\\\\\"); }\\\\n\\\\treturn list;\\\\n});\\\\n\\"],\\"names\\":[\\"unusedHelper\\",\\"a\\",\\"b\\",\\"sink\\",\\"list\\",\\"value\\"],\\"mappings\\":\\"AAGA,aACA,SAASA,aAAaC,EAAGC,GAAK,OAAOD,EAAIC,EACzCC,KAAK,WACJ,IAAIC,EAAO,CAAC,EAAG,EAAG,OAAQC,GAAUA,EAAQ\\"},\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","ecma":5,"minimizer":{"extractComments":true,"asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","ecma":5,"minimizer":{"extractComments":true,"asset":"script.js"}} 2`] = `"{\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","ecma":5,"minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","ecma":5,"minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"script.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"script.js\\",\\"sources\\":[\\"script.js\\"],\\"sourcesContent\\":[\\"\\\\n/*! @license MIT - keep me */\\\\n// a line comment\\\\n\\\\\\"use strict\\\\\\";\\\\nfunction unusedHelper(a, b) { return a + b; }\\\\nsink(function outer() {\\\\n\\\\tlet list = [1, 2, 3].map((value) => value + 1);\\\\n\\\\tif (list.length > 0) { console.log(list); } else { console.log(\\\\\\"empty\\\\\\"); }\\\\n\\\\treturn list;\\\\n});\\\\n\\"],\\"names\\":[\\"unusedHelper\\",\\"a\\",\\"b\\",\\"sink\\",\\"list\\",\\"value\\"],\\"mappings\\":\\"AAGA,aACA,SAASA,aAAaC,EAAGC,GAAK,OAAOD,EAAIC,EACzCC,KAAK,WACJ,IAAIC,EAAO,CAAC,EAAG,EAAG,OAAQC,GAAUA,EAAQ\\"},\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","format":{"comments":"all"},"minimizer":{"extractComments":false,"asset":"script.js"}} 1`] = `
+"/*! @license MIT - keep me */
+// a line comment
+\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
+`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","format":{"comments":"all"},"minimizer":{"extractComments":false,"asset":"script.js"}} 2`] = `"{\\"extractedComments\\":[]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","format":{"comments":"all"},"minimizer":{"extractComments":false,"sourceMap":"input.js.map","asset":"script.js"}} 1`] = `
+"/*! @license MIT - keep me */
+// a line comment
+\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
+`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","format":{"comments":"all"},"minimizer":{"extractComments":false,"sourceMap":"input.js.map","asset":"script.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"script.js\\",\\"sources\\":[\\"script.js\\"],\\"sourcesContent\\":[\\"\\\\n/*! @license MIT - keep me */\\\\n// a line comment\\\\n\\\\\\"use strict\\\\\\";\\\\nfunction unusedHelper(a, b) { return a + b; }\\\\nsink(function outer() {\\\\n\\\\tlet list = [1, 2, 3].map((value) => value + 1);\\\\n\\\\tif (list.length > 0) { console.log(list); } else { console.log(\\\\\\"empty\\\\\\"); }\\\\n\\\\treturn list;\\\\n});\\\\n\\"],\\"names\\":[\\"unusedHelper\\",\\"a\\",\\"b\\",\\"sink\\",\\"list\\",\\"value\\"],\\"mappings\\":\\"AAAA;;AAGA,aACA,SAASA,aAAaC,EAAGC,GAAK,OAAOD,EAAIC,EACzCC,KAAK,WACJ,IAAIC,EAAO,CAAC,EAAG,EAAG,OAAQC,GAAUA,EAAQ\\"},\\"extractedComments\\":[]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","format":{"comments":false},"minimizer":{"extractComments":true,"asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","format":{"comments":false},"minimizer":{"extractComments":true,"asset":"script.js"}} 2`] = `"{\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","format":{"comments":false},"minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","format":{"comments":false},"minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"script.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"script.js\\",\\"sources\\":[\\"script.js\\"],\\"sourcesContent\\":[\\"\\\\n/*! @license MIT - keep me */\\\\n// a line comment\\\\n\\\\\\"use strict\\\\\\";\\\\nfunction unusedHelper(a, b) { return a + b; }\\\\nsink(function outer() {\\\\n\\\\tlet list = [1, 2, 3].map((value) => value + 1);\\\\n\\\\tif (list.length > 0) { console.log(list); } else { console.log(\\\\\\"empty\\\\\\"); }\\\\n\\\\treturn list;\\\\n});\\\\n\\"],\\"names\\":[\\"unusedHelper\\",\\"a\\",\\"b\\",\\"sink\\",\\"list\\",\\"value\\"],\\"mappings\\":\\"AAGA,aACA,SAASA,aAAaC,EAAGC,GAAK,OAAOD,EAAIC,EACzCC,KAAK,WACJ,IAAIC,EAAO,CAAC,EAAG,EAAG,OAAQC,GAAUA,EAAQ\\"},\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","format":{"comments":true},"minimizer":{"extractComments":false,"asset":"script.js"}} 1`] = `
+"/*! @license MIT - keep me */
+// a line comment
+\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
+`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","format":{"comments":true},"minimizer":{"extractComments":false,"asset":"script.js"}} 2`] = `"{\\"extractedComments\\":[]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","format":{"comments":true},"minimizer":{"extractComments":false,"sourceMap":"input.js.map","asset":"script.js"}} 1`] = `
+"/*! @license MIT - keep me */
+// a line comment
+\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
+`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","format":{"comments":true},"minimizer":{"extractComments":false,"sourceMap":"input.js.map","asset":"script.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"script.js\\",\\"sources\\":[\\"script.js\\"],\\"sourcesContent\\":[\\"\\\\n/*! @license MIT - keep me */\\\\n// a line comment\\\\n\\\\\\"use strict\\\\\\";\\\\nfunction unusedHelper(a, b) { return a + b; }\\\\nsink(function outer() {\\\\n\\\\tlet list = [1, 2, 3].map((value) => value + 1);\\\\n\\\\tif (list.length > 0) { console.log(list); } else { console.log(\\\\\\"empty\\\\\\"); }\\\\n\\\\treturn list;\\\\n});\\\\n\\"],\\"names\\":[\\"unusedHelper\\",\\"a\\",\\"b\\",\\"sink\\",\\"list\\",\\"value\\"],\\"mappings\\":\\"AAAA;;AAGA,aACA,SAASA,aAAaC,EAAGC,GAAK,OAAOD,EAAIC,EACzCC,KAAK,WACJ,IAAIC,EAAO,CAAC,EAAG,EAAG,OAAQC,GAAUA,EAAQ\\"},\\"extractedComments\\":[]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","mangle":{"reserved":["value"]},"minimizer":{"extractComments":true,"asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(value=>value+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","mangle":{"reserved":["value"]},"minimizer":{"extractComments":true,"asset":"script.js"}} 2`] = `"{\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","mangle":{"reserved":["value"]},"minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(value=>value+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","mangle":{"reserved":["value"]},"minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"script.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"script.js\\",\\"sources\\":[\\"script.js\\"],\\"sourcesContent\\":[\\"\\\\n/*! @license MIT - keep me */\\\\n// a line comment\\\\n\\\\\\"use strict\\\\\\";\\\\nfunction unusedHelper(a, b) { return a + b; }\\\\nsink(function outer() {\\\\n\\\\tlet list = [1, 2, 3].map((value) => value + 1);\\\\n\\\\tif (list.length > 0) { console.log(list); } else { console.log(\\\\\\"empty\\\\\\"); }\\\\n\\\\treturn list;\\\\n});\\\\n\\"],\\"names\\":[\\"unusedHelper\\",\\"a\\",\\"b\\",\\"sink\\",\\"list\\",\\"value\\"],\\"mappings\\":\\"AAGA,aACA,SAASA,aAAaC,EAAGC,GAAK,OAAOD,EAAIC,EACzCC,KAAK,WACJ,IAAIC,EAAO,CAAC,EAAG,EAAG,OAAQC,OAAUA,MAAQ\\"},\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","mangle":false,"minimizer":{"extractComments":true,"asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(a,b){return a+b}sink(function(){let list=[1,2,3].map(value=>value+1);return list.length>0?console.log(list):console.log(\\"empty\\"),list});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","mangle":false,"minimizer":{"extractComments":true,"asset":"script.js"}} 2`] = `"{\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","mangle":false,"minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(a,b){return a+b}sink(function(){let list=[1,2,3].map(value=>value+1);return list.length>0?console.log(list):console.log(\\"empty\\"),list});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","mangle":false,"minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"script.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"script.js\\",\\"sources\\":[\\"script.js\\"],\\"sourcesContent\\":[\\"\\\\n/*! @license MIT - keep me */\\\\n// a line comment\\\\n\\\\\\"use strict\\\\\\";\\\\nfunction unusedHelper(a, b) { return a + b; }\\\\nsink(function outer() {\\\\n\\\\tlet list = [1, 2, 3].map((value) => value + 1);\\\\n\\\\tif (list.length > 0) { console.log(list); } else { console.log(\\\\\\"empty\\\\\\"); }\\\\n\\\\treturn list;\\\\n});\\\\n\\"],\\"names\\":[\\"unusedHelper\\",\\"a\\",\\"b\\",\\"sink\\",\\"list\\",\\"value\\"],\\"mappings\\":\\"AAGA,aACA,SAASA,aAAaC,EAAGC,GAAK,OAAOD,EAAIC,EACzCC,KAAK,WACJ,IAAIC,KAAO,CAAC,EAAG,EAAG,OAAQC,OAAUA,MAAQ\\"},\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{"condition":"some"},"asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{"condition":"some"},"asset":"script.js"}} 2`] = `"{\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{"condition":"some"},"sourceMap":"input.js.map","asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{"condition":"some"},"sourceMap":"input.js.map","asset":"script.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"script.js\\",\\"sources\\":[\\"script.js\\"],\\"sourcesContent\\":[\\"\\\\n/*! @license MIT - keep me */\\\\n// a line comment\\\\n\\\\\\"use strict\\\\\\";\\\\nfunction unusedHelper(a, b) { return a + b; }\\\\nsink(function outer() {\\\\n\\\\tlet list = [1, 2, 3].map((value) => value + 1);\\\\n\\\\tif (list.length > 0) { console.log(list); } else { console.log(\\\\\\"empty\\\\\\"); }\\\\n\\\\treturn list;\\\\n});\\\\n\\"],\\"names\\":[\\"unusedHelper\\",\\"a\\",\\"b\\",\\"sink\\",\\"list\\",\\"value\\"],\\"mappings\\":\\"AAGA,aACA,SAASA,aAAaC,EAAGC,GAAK,OAAOD,EAAIC,EACzCC,KAAK,WACJ,IAAIC,EAAO,CAAC,EAAG,EAAG,OAAQC,GAAUA,EAAQ\\"},\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{"condition":false},"asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{"condition":false},"asset":"script.js"}} 2`] = `"{\\"extractedComments\\":[]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{"condition":false},"sourceMap":"input.js.map","asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{"condition":false},"sourceMap":"input.js.map","asset":"script.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"script.js\\",\\"sources\\":[\\"script.js\\"],\\"sourcesContent\\":[\\"\\\\n/*! @license MIT - keep me */\\\\n// a line comment\\\\n\\\\\\"use strict\\\\\\";\\\\nfunction unusedHelper(a, b) { return a + b; }\\\\nsink(function outer() {\\\\n\\\\tlet list = [1, 2, 3].map((value) => value + 1);\\\\n\\\\tif (list.length > 0) { console.log(list); } else { console.log(\\\\\\"empty\\\\\\"); }\\\\n\\\\treturn list;\\\\n});\\\\n\\"],\\"names\\":[\\"unusedHelper\\",\\"a\\",\\"b\\",\\"sink\\",\\"list\\",\\"value\\"],\\"mappings\\":\\"AAGA,aACA,SAASA,aAAaC,EAAGC,GAAK,OAAOD,EAAIC,EACzCC,KAAK,WACJ,IAAIC,EAAO,CAAC,EAAG,EAAG,OAAQC,GAAUA,EAAQ\\"},\\"extractedComments\\":[]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{"condition":true},"asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{"condition":true},"asset":"script.js"}} 2`] = `"{\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{"condition":true},"sourceMap":"input.js.map","asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{"condition":true},"sourceMap":"input.js.map","asset":"script.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"script.js\\",\\"sources\\":[\\"script.js\\"],\\"sourcesContent\\":[\\"\\\\n/*! @license MIT - keep me */\\\\n// a line comment\\\\n\\\\\\"use strict\\\\\\";\\\\nfunction unusedHelper(a, b) { return a + b; }\\\\nsink(function outer() {\\\\n\\\\tlet list = [1, 2, 3].map((value) => value + 1);\\\\n\\\\tif (list.length > 0) { console.log(list); } else { console.log(\\\\\\"empty\\\\\\"); }\\\\n\\\\treturn list;\\\\n});\\\\n\\"],\\"names\\":[\\"unusedHelper\\",\\"a\\",\\"b\\",\\"sink\\",\\"list\\",\\"value\\"],\\"mappings\\":\\"AAGA,aACA,SAASA,aAAaC,EAAGC,GAAK,OAAOD,EAAIC,EACzCC,KAAK,WACJ,IAAIC,EAAO,CAAC,EAAG,EAAG,OAAQC,GAAUA,EAAQ\\"},\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{"regexp":"@license"},"asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{"regexp":"@license"},"asset":"script.js"}} 2`] = `"{\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{"regexp":"@license"},"sourceMap":"input.js.map","asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{"regexp":"@license"},"sourceMap":"input.js.map","asset":"script.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"script.js\\",\\"sources\\":[\\"script.js\\"],\\"sourcesContent\\":[\\"\\\\n/*! @license MIT - keep me */\\\\n// a line comment\\\\n\\\\\\"use strict\\\\\\";\\\\nfunction unusedHelper(a, b) { return a + b; }\\\\nsink(function outer() {\\\\n\\\\tlet list = [1, 2, 3].map((value) => value + 1);\\\\n\\\\tif (list.length > 0) { console.log(list); } else { console.log(\\\\\\"empty\\\\\\"); }\\\\n\\\\treturn list;\\\\n});\\\\n\\"],\\"names\\":[\\"unusedHelper\\",\\"a\\",\\"b\\",\\"sink\\",\\"list\\",\\"value\\"],\\"mappings\\":\\"AAGA,aACA,SAASA,aAAaC,EAAGC,GAAK,OAAOD,EAAIC,EACzCC,KAAK,WACJ,IAAIC,EAAO,CAAC,EAAG,EAAG,OAAQC,GAAUA,EAAQ\\"},\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{},"asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{},"asset":"script.js"}} 2`] = `"{\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{},"sourceMap":"input.js.map","asset":"script.js"}} 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","minimizer":{"extractComments":{},"sourceMap":"input.js.map","asset":"script.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"script.js\\",\\"sources\\":[\\"script.js\\"],\\"sourcesContent\\":[\\"\\\\n/*! @license MIT - keep me */\\\\n// a line comment\\\\n\\\\\\"use strict\\\\\\";\\\\nfunction unusedHelper(a, b) { return a + b; }\\\\nsink(function outer() {\\\\n\\\\tlet list = [1, 2, 3].map((value) => value + 1);\\\\n\\\\tif (list.length > 0) { console.log(list); } else { console.log(\\\\\\"empty\\\\\\"); }\\\\n\\\\treturn list;\\\\n});\\\\n\\"],\\"names\\":[\\"unusedHelper\\",\\"a\\",\\"b\\",\\"sink\\",\\"list\\",\\"value\\"],\\"mappings\\":\\"AAGA,aACA,SAASA,aAAaC,EAAGC,GAAK,OAAOD,EAAIC,EACzCC,KAAK,WACJ,IAAIC,EAAO,CAAC,EAAG,EAAG,OAAQC,GAAUA,EAAQ\\"},\\"extractedComments\\":[\\"/*! @license MIT - keep me */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","output":{"comments":"all"},"minimizer":{"extractComments":false,"asset":"script.js"}} 1`] = `
+"/*! @license MIT - keep me */
+// a line comment
+\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
+`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","output":{"comments":"all"},"minimizer":{"extractComments":false,"asset":"script.js"}} 2`] = `"{\\"extractedComments\\":[]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","output":{"comments":"all"},"minimizer":{"extractComments":false,"sourceMap":"input.js.map","asset":"script.js"}} 1`] = `
+"/*! @license MIT - keep me */
+// a line comment
+\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
+`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-defaults prints {"print":"jsMinify","output":{"comments":"all"},"minimizer":{"extractComments":false,"sourceMap":"input.js.map","asset":"script.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"script.js\\",\\"sources\\":[\\"script.js\\"],\\"sourcesContent\\":[\\"\\\\n/*! @license MIT - keep me */\\\\n// a line comment\\\\n\\\\\\"use strict\\\\\\";\\\\nfunction unusedHelper(a, b) { return a + b; }\\\\nsink(function outer() {\\\\n\\\\tlet list = [1, 2, 3].map((value) => value + 1);\\\\n\\\\tif (list.length > 0) { console.log(list); } else { console.log(\\\\\\"empty\\\\\\"); }\\\\n\\\\treturn list;\\\\n});\\\\n\\"],\\"names\\":[\\"unusedHelper\\",\\"a\\",\\"b\\",\\"sink\\",\\"list\\",\\"value\\"],\\"mappings\\":\\"AAAA;;AAGA,aACA,SAASA,aAAaC,EAAGC,GAAK,OAAOD,EAAIC,EACzCC,KAAK,WACJ,IAAIC,EAAO,CAAC,EAAG,EAAG,OAAQC,GAAUA,EAAQ\\"},\\"extractedComments\\":[]}"`;
 
 exports[`JavaScript syntax — invariants js-minify-should-minify-defaults tokenizes 1`] = `"block[1,30] line[31,48] string[49,61]=\\"use strict\\" ;[61,62] function[63,71] name[72,84] ([84,85] name[85,86] ,[86,87] name[88,89] )[89,90] {[91,92] return[93,99] name[100,101] +/-[102,103] name[104,105] ;[105,106] }[107,108] name[109,113] ([113,114] function[114,122] name[123,128] ([128,129] )[129,130] {[131,132] name[134,137] name[138,142] =[143,144] [[145,146] num[146,147] ,[147,148] num[149,150] ,[150,151] num[152,153] ][153,154] .[154,155] name[155,158] ([158,159] ([159,160] name[160,165] )[165,166] =>[167,169] name[170,175] +/-[176,177] num[178,179] )[179,180] ;[180,181] if[183,185] ([186,187] name[187,191] .[191,192] name[192,198] </>/<=/>=[199,200] num[201,202] )[202,203] {[204,205] name[206,213] .[213,214] name[214,217] ([217,218] name[218,222] )[222,223] ;[223,224] }[225,226] else[227,231] {[232,233] name[234,241] .[241,242] name[242,245] ([245,246] string[246,253]=\\"empty\\" )[253,254] ;[254,255] }[256,257] return[259,265] name[266,270] ;[270,271] }[272,273] )[273,274] ;[274,275] eof[276,276]"`;
 
@@ -23133,6 +23384,14 @@ exports[`JavaScript syntax — invariants js-minify-should-minify-event-handler 
 
 exports[`JavaScript syntax — invariants js-minify-should-minify-event-handler prints {"mode":"minify"} 1`] = `"if(window.x){console.log(\\"clicked\\",event)}else{alert(\\"no\\")}"`;
 
+exports[`JavaScript syntax — invariants js-minify-should-minify-event-handler prints {"print":"jsMinify","as":"event-handler","minimizer":{"extractComments":true,"asset":"handler.js"}} 1`] = `"window.x?console.log(\\"clicked\\",event):alert(\\"no\\")"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-event-handler prints {"print":"jsMinify","as":"event-handler","minimizer":{"extractComments":true,"asset":"handler.js"}} 2`] = `"{\\"extractedComments\\":[]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-event-handler prints {"print":"jsMinify","as":"event-handler","minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"handler.js"}} 1`] = `"window.x?console.log(\\"clicked\\",event):alert(\\"no\\")"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-event-handler prints {"print":"jsMinify","as":"event-handler","minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"handler.js"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"handler.js\\",\\"sources\\":[\\"handler.js\\"],\\"sourcesContent\\":[\\"if (window.x) { console.log(\\\\\\"clicked\\\\\\", event); } else { alert(\\\\\\"no\\\\\\"); }\\"],\\"names\\":[\\"window\\",\\"console\\",\\"event\\",\\"alert\\"],\\"mappings\\":\\"AAAIA,SAAYC,YAAY,UAAWC,OAAiBC,MAAM\\"},\\"extractedComments\\":[]}"`;
+
 exports[`JavaScript syntax — invariants js-minify-should-minify-event-handler tokenizes 1`] = `"if[0,2] ([3,4] name[4,10] .[10,11] name[11,12] )[12,13] {[14,15] name[16,23] .[23,24] name[24,27] ([27,28] string[28,37]=\\"clicked\\" ,[37,38] name[39,44] )[44,45] ;[45,46] }[47,48] else[49,53] {[54,55] name[56,61] ([61,62] string[62,66]=\\"no\\" )[66,67] ;[67,68] }[69,70] eof[70,70]"`;
 
 exports[`JavaScript syntax — invariants js-minify-should-minify-module-goal parses 1`] = `"Program[0,188](body=[ImportDeclaration[25,69](specifiers=[ImportSpecifier[34,42](imported=Identifier[34,42](name=\\"readFile\\") local=Identifier[34,42](name=\\"readFile\\"))] source=Literal[50,68](value=\\"node:fs/promises\\" raw=\\"\\\\\\"node:fs/promises\\\\\\"\\") attributes=[]),ExportNamedDeclaration[70,187](declaration=FunctionDeclaration[77,187](id=Identifier[92,96](name=\\"read\\") expression=false generator=false async=true params=[Identifier[97,101](name=\\"path\\")] body=BlockStatement[103,187](body=[VariableDeclaration[106,146](declarations=[VariableDeclarator[110,145](id=Identifier[110,114](name=\\"text\\") init=AwaitExpression[117,145](argument=CallExpression[123,145](callee=Identifier[123,131](name=\\"readFile\\") arguments=[Identifier[132,136](name=\\"path\\"),Literal[138,144](value=\\"utf8\\" raw=\\"\\\\\\"utf8\\\\\\"\\")] optional=false)))] kind=\\"let\\"),ReturnStatement[148,185](argument=ConditionalExpression[155,184](test=BinaryExpression[155,170](left=MemberExpression[155,166](object=Identifier[155,159](name=\\"text\\") property=Identifier[160,166](name=\\"length\\") computed=false optional=false) operator=\\">\\" right=Literal[169,170](value=0 raw=\\"0\\")) consequent=Identifier[173,177](name=\\"text\\") alternate=Literal[180,184](value=null raw=\\"null\\")))])) specifiers=[] source=null attributes=[])] sourceType=\\"module\\")"`;
@@ -23142,6 +23401,22 @@ exports[`JavaScript syntax — invariants js-minify-should-minify-module-goal pa
 exports[`JavaScript syntax — invariants js-minify-should-minify-module-goal parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (3:0)"`;
 
 exports[`JavaScript syntax — invariants js-minify-should-minify-module-goal prints {"mode":"minify"} 1`] = `"import{readFile}from\\"node:fs/promises\\";export async function read(path){let text=await readFile(path,\\"utf8\\");return text.length>0?text:null}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-module-goal prints {"print":"jsMinify","as":"module","minimizer":{"extractComments":true,"asset":"module.mjs"}} 1`] = `"import{readFile as t}from\\"node:fs/promises\\";export async function read(e){let r=await t(e,\\"utf8\\");return r.length>0?r:null}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-module-goal prints {"print":"jsMinify","as":"module","minimizer":{"extractComments":true,"asset":"module.mjs"}} 2`] = `"{\\"extractedComments\\":[\\"/*! @preserve banner */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-module-goal prints {"print":"jsMinify","as":"module","minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"module.mjs"}} 1`] = `"import{readFile as t}from\\"node:fs/promises\\";export async function read(e){let r=await t(e,\\"utf8\\");return r.length>0?r:null}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-module-goal prints {"print":"jsMinify","as":"module","minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"module.mjs"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"module.mjs\\",\\"sources\\":[\\"module.mjs\\"],\\"sourcesContent\\":[\\"\\\\n/*! @preserve banner */\\\\nimport { readFile } from \\\\\\"node:fs/promises\\\\\\";\\\\nexport async function read(path) {\\\\n\\\\tlet text = await readFile(path, \\\\\\"utf8\\\\\\");\\\\n\\\\treturn text.length > 0 ? text : null;\\\\n}\\\\n\\"],\\"names\\":[\\"readFile\\",\\"read\\",\\"path\\",\\"text\\"],\\"mappings\\":\\"AAEA,OAAS,YAAAA,MAAgB,mBACzB,OAAO,eAAeC,KAAKC,GAC1B,IAAIC,EAAO,MAAMH,EAASE,EAAM,QAChC,OAAOC,SAAc,EAAIA,EAAO\\"},\\"extractedComments\\":[\\"/*! @preserve banner */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-module-goal prints {"print":"jsMinify","module":true,"minimizer":{"extractComments":true,"asset":"module.mjs"}} 1`] = `"import{readFile as t}from\\"node:fs/promises\\";export async function read(e){let r=await t(e,\\"utf8\\");return r.length>0?r:null}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-module-goal prints {"print":"jsMinify","module":true,"minimizer":{"extractComments":true,"asset":"module.mjs"}} 2`] = `"{\\"extractedComments\\":[\\"/*! @preserve banner */\\"]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-module-goal prints {"print":"jsMinify","module":true,"minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"module.mjs"}} 1`] = `"import{readFile as t}from\\"node:fs/promises\\";export async function read(e){let r=await t(e,\\"utf8\\");return r.length>0?r:null}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-minify-module-goal prints {"print":"jsMinify","module":true,"minimizer":{"extractComments":true,"sourceMap":"input.js.map","asset":"module.mjs"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"module.mjs\\",\\"sources\\":[\\"module.mjs\\"],\\"sourcesContent\\":[\\"\\\\n/*! @preserve banner */\\\\nimport { readFile } from \\\\\\"node:fs/promises\\\\\\";\\\\nexport async function read(path) {\\\\n\\\\tlet text = await readFile(path, \\\\\\"utf8\\\\\\");\\\\n\\\\treturn text.length > 0 ? text : null;\\\\n}\\\\n\\"],\\"names\\":[\\"readFile\\",\\"read\\",\\"path\\",\\"text\\"],\\"mappings\\":\\"AAEA,OAAS,YAAAA,MAAgB,mBACzB,OAAO,eAAeC,KAAKC,GAC1B,IAAIC,EAAO,MAAMH,EAASE,EAAM,QAChC,OAAOC,SAAc,EAAIA,EAAO\\"},\\"extractedComments\\":[\\"/*! @preserve banner */\\"]}"`;
 
 exports[`JavaScript syntax — invariants js-minify-should-minify-module-goal tokenizes 1`] = `"block[1,24] import[25,31] {[32,33] name[34,42] }[43,44] name[45,49] string[50,68]=\\"node:fs/promises\\" ;[68,69] export[70,76] name[77,82] function[83,91] name[92,96] ([96,97] name[97,101] )[101,102] {[103,104] name[106,109] name[110,114] =[115,116] name[117,122] name[123,131] ([131,132] name[132,136] ,[136,137] string[138,144]=\\"utf8\\" )[144,145] ;[145,146] return[148,154] name[155,159] .[159,160] name[160,166] </>/<=/>=[167,168] num[169,170] ?[171,172] name[173,177] :[178,179] null[180,184] ;[184,185] }[186,187] eof[188,188]"`;
 
@@ -23153,7 +23428,33 @@ exports[`JavaScript syntax — invariants js-minify-should-read-a-buffer-input-a
 
 exports[`JavaScript syntax — invariants js-minify-should-read-a-buffer-input-as-utf-8 prints {"mode":"minify"} 1`] = `"console.log(\\"é\\");"`;
 
+exports[`JavaScript syntax — invariants js-minify-should-read-a-buffer-input-as-utf-8 prints {"print":"jsMinify","minimizer":{"buffer":true,"asset":"a.js"}} 1`] = `"console.log(\\"é\\");"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-read-a-buffer-input-as-utf-8 prints {"print":"jsMinify","minimizer":{"buffer":true,"asset":"a.js"}} 2`] = `"{\\"extractedComments\\":[]}"`;
+
 exports[`JavaScript syntax — invariants js-minify-should-read-a-buffer-input-as-utf-8 tokenizes 1`] = `"name[0,7] .[7,8] name[8,11] ([11,12] string[13,16]=\\"é\\" )[17,18] ;[18,19] eof[19,19]"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-refuse-what-reads-or-prints-a-tree-rather-than-code parses 1`] = `"Program[0,3](body=[ExpressionStatement[0,3](expression=CallExpression[0,3](callee=Identifier[0,1](name=\\"a\\") arguments=[] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-refuse-what-reads-or-prints-a-tree-rather-than-code parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants js-minify-should-refuse-what-reads-or-prints-a-tree-rather-than-code parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-refuse-what-reads-or-prints-a-tree-rather-than-code prints {"mode":"minify"} 1`] = `"a();"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-refuse-what-reads-or-prints-a-tree-rather-than-code prints {"print":"jsMinify","format":{"ast":true},"minimizer":{"extractComments":false,"asset":"a.js"}} 1`] = `"throws: javascript syntax: the one-pass minify reads one source text and prints code: \`parse.spidermonkey\`, \`format.ast\`, \`format.spidermonkey\` and \`format.code: false\` are not supported"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-refuse-what-reads-or-prints-a-tree-rather-than-code prints {"print":"jsMinify","format":{"code":false},"minimizer":{"extractComments":false,"asset":"a.js"}} 1`] = `"throws: javascript syntax: the one-pass minify reads one source text and prints code: \`parse.spidermonkey\`, \`format.ast\`, \`format.spidermonkey\` and \`format.code: false\` are not supported"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-refuse-what-reads-or-prints-a-tree-rather-than-code prints {"print":"jsMinify","format":{"spidermonkey":true},"minimizer":{"extractComments":false,"asset":"a.js"}} 1`] = `"throws: javascript syntax: the one-pass minify reads one source text and prints code: \`parse.spidermonkey\`, \`format.ast\`, \`format.spidermonkey\` and \`format.code: false\` are not supported"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-refuse-what-reads-or-prints-a-tree-rather-than-code prints {"print":"jsMinify","parse":{"spidermonkey":false},"format":{"ast":false,"spidermonkey":false,"code":true},"minimizer":{"extractComments":false,"asset":"a.js"}} 1`] = `"a();"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-refuse-what-reads-or-prints-a-tree-rather-than-code prints {"print":"jsMinify","parse":{"spidermonkey":false},"format":{"ast":false,"spidermonkey":false,"code":true},"minimizer":{"extractComments":false,"asset":"a.js"}} 2`] = `"{\\"extractedComments\\":[]}"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-refuse-what-reads-or-prints-a-tree-rather-than-code prints {"print":"jsMinify","parse":{"spidermonkey":true},"minimizer":{"extractComments":false,"asset":"a.js"}} 1`] = `"throws: javascript syntax: the one-pass minify reads one source text and prints code: \`parse.spidermonkey\`, \`format.ast\`, \`format.spidermonkey\` and \`format.code: false\` are not supported"`;
+
+exports[`JavaScript syntax — invariants js-minify-should-refuse-what-reads-or-prints-a-tree-rather-than-code tokenizes 1`] = `"name[0,1] ([1,2] )[2,3] eof[3,3]"`;
 
 exports[`JavaScript syntax — invariants js-minify-should-report-a-parse-error-rather-than-throwing-a-different-shape parses 1`] = `"throws: Unexpected token (1:9)"`;
 
@@ -26783,6 +27084,28 @@ exports[`JavaScript syntax — invariants parse-program-reads-every-grammar-opti
 
 exports[`JavaScript syntax — invariants parse-program-reads-every-grammar-option-into-the-tree-as-acorn-reads-it-6 tokenizes 1`] = `"([0,1] name[1,2] )[2,3] eof[3,3]"`;
 
+exports[`JavaScript syntax — invariants parse-program-reads-import-phases parses {"entry":"parseProgram","options":{},"fields":["childCount","textOf:phase"]} 1`] = `"Program[0,93](body=[ImportDeclaration[0,29](specifiers=[ImportNamespaceSpecifier[13,19](local=Identifier[18,19](name=\\"a\\"))] source=Literal[25,28](value=\\"x\\" raw=\\"\\\\\\"x\\\\\\"\\") attributes=[] phase=\\"defer\\"),ImportDeclaration[30,55](specifiers=[ImportDefaultSpecifier[44,45](local=Identifier[44,45](name=\\"b\\"))] source=Literal[51,54](value=\\"y\\" raw=\\"\\\\\\"y\\\\\\"\\") attributes=[] phase=\\"source\\"),ExpressionStatement[56,74](expression=ImportExpression[56,73](source=Literal[69,72](value=\\"x\\" raw=\\"\\\\\\"x\\\\\\"\\") options=null phase=\\"defer\\")),ExpressionStatement[75,93](expression=ImportExpression[75,93](source=Literal[89,92](value=\\"y\\" raw=\\"\\\\\\"y\\\\\\"\\") options=null phase=\\"source\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants parse-program-reads-import-phases parses {"entry":"parseProgram","options":{},"fields":["childCount","textOf:phase"]} 2`] = `""`;
+
+exports[`JavaScript syntax — invariants parse-program-reads-import-phases parses {"entry":"parseProgram","options":{},"fields":["childCount","textOf:phase"]} 3`] = `
+"Program[0,93] childCount=4 textOf:phase=null
+  ImportDeclaration[0,29] childCount=2 textOf:phase=\\"defer\\"
+    ImportNamespaceSpecifier[13,19] childCount=1 textOf:phase=null
+      Identifier[18,19] childCount=0 textOf:phase=null
+    Literal[25,28] childCount=0 textOf:phase=null
+  ImportDeclaration[30,55] childCount=2 textOf:phase=\\"source\\"
+    ImportDefaultSpecifier[44,45] childCount=1 textOf:phase=null
+      Identifier[44,45] childCount=0 textOf:phase=null
+    Literal[51,54] childCount=0 textOf:phase=null
+  ExpressionStatement[56,74] childCount=1 textOf:phase=null
+    ImportExpression[56,73] childCount=1 textOf:phase=\\"defer\\"
+      Literal[69,72] childCount=0 textOf:phase=null
+  ExpressionStatement[75,93] childCount=1 textOf:phase=null
+    ImportExpression[75,93] childCount=1 textOf:phase=\\"source\\"
+      Literal[89,92] childCount=0 textOf:phase=null"
+`;
+
 exports[`JavaScript syntax — invariants parse-program-reads-import-phases parses 1`] = `"throws: Unexpected token (1:13)"`;
 
 exports[`JavaScript syntax — invariants parse-program-reads-import-phases parses 2`] = `""`;
@@ -26793,6 +27116,10 @@ exports[`JavaScript syntax — invariants parse-program-reads-import-phases prin
 
 exports[`JavaScript syntax — invariants parse-program-reads-import-phases tokenizes 1`] = `"import[0,6] name[7,12] *[13,14] name[15,17] name[18,19] name[20,24] string[25,28]=\\"x\\" ;[28,29] import[30,36] name[37,43] name[44,45] name[46,50] string[51,54]=\\"y\\" ;[54,55] import[56,62] .[62,63] name[63,68] ([68,69] string[69,72]=\\"x\\" )[72,73] ;[73,74] import[75,81] .[81,82] name[82,88] ([88,89] string[89,92]=\\"y\\" )[92,93] eof[93,93]"`;
 
+exports[`JavaScript syntax — invariants parse-program-reads-import-phases-2 parses {"entry":"parseProgram","options":{"sourceType":"script"}} 1`] = `"Program[0,17](body=[ExpressionStatement[0,17](expression=ImportExpression[0,17](source=Literal[13,16](value=\\"x\\" raw=\\"\\\\\\"x\\\\\\"\\") options=null phase=\\"defer\\"))] sourceType=\\"script\\")"`;
+
+exports[`JavaScript syntax — invariants parse-program-reads-import-phases-2 parses {"entry":"parseProgram","options":{"sourceType":"script"}} 2`] = `""`;
+
 exports[`JavaScript syntax — invariants parse-program-reads-import-phases-2 parses 1`] = `"throws: The only valid meta property for import is 'import.meta' (1:7)"`;
 
 exports[`JavaScript syntax — invariants parse-program-reads-import-phases-2 parses 2`] = `""`;
@@ -26802,6 +27129,10 @@ exports[`JavaScript syntax — invariants parse-program-reads-import-phases-2 pa
 exports[`JavaScript syntax — invariants parse-program-reads-import-phases-2 prints {"mode":"minify"} 1`] = `"import.defer(\\"x\\");"`;
 
 exports[`JavaScript syntax — invariants parse-program-reads-import-phases-2 tokenizes 1`] = `"import[0,6] .[6,7] name[7,12] ([12,13] string[13,16]=\\"x\\" )[16,17] eof[17,17]"`;
+
+exports[`JavaScript syntax — invariants parse-program-reads-import-phases-3 parses {"entry":"parseProgram","options":{}} 1`] = `"Program[0,23](body=[ImportDeclaration[0,23](specifiers=[ImportDefaultSpecifier[13,14](local=Identifier[13,14](name=\\"a\\"))] source=Literal[20,23](value=\\"x\\" raw=\\"\\\\\\"x\\\\\\"\\") attributes=[] phase=\\"defer\\")] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants parse-program-reads-import-phases-3 parses {"entry":"parseProgram","options":{}} 2`] = `"warning[7,12]:defer-import-requires-namespace"`;
 
 exports[`JavaScript syntax — invariants parse-program-reads-import-phases-3 parses 1`] = `"throws: Unexpected token (1:13)"`;
 
@@ -26954,6 +27285,16 @@ exports[`JavaScript syntax — invariants parse-program-returns-the-program-s-no
 exports[`JavaScript syntax — invariants parse-program-returns-the-program-s-node-read-through-a-until-the-next-parse-2 prints {"mode":"minify"} 1`] = `"g();"`;
 
 exports[`JavaScript syntax — invariants parse-program-returns-the-program-s-node-read-through-a-until-the-next-parse-2 tokenizes 1`] = `"name[0,1] ([1,2] )[2,3] eof[3,3]"`;
+
+exports[`JavaScript syntax — invariants parse-program-starts-at-the-offset-given parses {"entry":"parseProgram","pos":5,"options":{},"fields":["childCount","source"]} 1`] = `"Program[5,9](body=[ExpressionStatement[5,9](expression=Identifier[5,8](name=\\"def\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants parse-program-starts-at-the-offset-given parses {"entry":"parseProgram","pos":5,"options":{},"fields":["childCount","source"]} 2`] = `""`;
+
+exports[`JavaScript syntax — invariants parse-program-starts-at-the-offset-given parses {"entry":"parseProgram","pos":5,"options":{},"fields":["childCount","source"]} 3`] = `
+"Program[5,9] childCount=1 source=\\"def;\\"
+  ExpressionStatement[5,9] childCount=1 source=\\"def;\\"
+    Identifier[5,8] childCount=0 source=\\"def\\""
+`;
 
 exports[`JavaScript syntax — invariants parse-program-starts-at-the-offset-given parses 1`] = `"throws: Unexpected token (1:5)"`;
 
