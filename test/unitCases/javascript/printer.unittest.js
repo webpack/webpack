@@ -6717,6 +6717,33 @@ describe("one-pass minify spellings, third round", () => {
 	});
 });
 
+describe("one-pass minify of conditions", () => {
+	it("should swap the branches of a conditional whose sequence test ends in a `!`", () => {
+		for (const [name, expected] of [
+			// A `!` its operands took in leaves none to drop.
+			[
+				"one-pass-condition-c-1",
+				'var n=0;function inc(){n++}function test(){return n>1}inc(),test()?console.log("b",n):console.log("a",n),inc(),test()?console.log("b",n):console.log("a",n),inc(),--n?console.log("d",n):console.log("c",n);var k=0;inc(),!n&&!k?console.log("e",n):console.log("f",n);'
+			],
+			// A comma or parenthesis in a string is no item's end.
+			[
+				"one-pass-condition-c-2",
+				'var n=0;function inc(s){return n++,s}function m(){return n-1}inc(","),(n=m())?console.log("b",n):console.log("a",n),inc(\'(")\'),n?console.log("d",n):console.log("c",n);'
+			],
+			// It keeps the `!` past a template or regular expression, or with none.
+			[
+				"one-pass-condition-c-3",
+				'var n=0;function inc(s){return n++,s}inc(`,`),!n?console.log("a",n):console.log("b",n),inc(/,/),!n?console.log("c",n):console.log("d",n),inc(),n?console.log("e",n):console.log("f",n);'
+			]
+		]) {
+			const source = fixture("javascript", name);
+			const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+			expect(code).toBe(expected);
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+	});
+});
+
 describe("one-pass minify hazards", () => {
 	it("should keep a script's only call where the function's body leaves a `var` it hoists", () => {
 		// Unwrapped, the `var` would be a global another script can set.
