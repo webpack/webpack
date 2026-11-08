@@ -15,6 +15,7 @@ const {
 	_propertyIdOf,
 	normalizeUrl,
 	parseABlocksContents,
+	parseACommaSeparatedListOfComponentValues,
 	parseAComponentValue,
 	parseADeclaration,
 	parseARule,
@@ -50,6 +51,10 @@ describe("CssSyntax — component values (tokenToNode)", () => {
 });
 
 describe("CssSyntax — parser entry points", () => {
+	it("takes the start offset and the options as optional", () => {
+		expect(parseACommaSeparatedListOfComponentValues("a, b")).toHaveLength(2);
+	});
+
 	/**
 	 * @param {import("../../../lib/css/syntax-parser").Node} node a rule or stylesheet
 	 * @param {number} field a `Field`

@@ -331,6 +331,34 @@ describe("tokenize", () => {
 		);
 		expect(tokenize(source)).toBe(source.length);
 	});
+
+	it("reads a CDATA section with no comment callback", () => {
+		/** @type {string[]} */
+		const codes = [];
+		const callbacks = {
+			isForeign: () => true,
+			/**
+			 * @param {string} input source
+			 * @param {string} code error code
+			 * @returns {void}
+			 */
+			parseError: (input, code) => {
+				codes.push(code);
+			}
+		};
+		for (const name of ["3", "4"]) {
+			const source = fixture(
+				"html",
+				`tokenize-content-modes-cdata-and-nul-arcs-cdata-sections-in-foreign-content-${name}`
+			);
+			expect(tokenize(source, 0, callbacks)).toBe(source.length);
+		}
+		expect(codes).toEqual([
+			"eof-in-cdata",
+			"unexpected-null-character",
+			"unexpected-null-character"
+		]);
+	});
 });
 
 describe("token parts reported by the tokenizer", () => {
