@@ -3727,6 +3727,14 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should print `String` of a value that is a string already as that value", () => {
+		// A place a `+` binds looser in, a local `String` or another argument keep the call.
+		const source = fixture("javascript", "one-pass-minify-of-statement-sequences-should-print-string-of-a-value-that-is-a");
+		const { code: code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe("var x=1,o={toString(){return\"t\"},valueOf(){return\"v\"}},a=x+\"str\",b=[\"str\"+o,`a${x}`,\"q\"];console.log(a,b,String(x+\"s\").length,String(x),String(o+\"!\",2),function(String){return String(x+\"s\")}(function(v){return\"f\"+v}));");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
