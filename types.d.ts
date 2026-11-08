@@ -440,6 +440,7 @@ declare abstract class AssetGenerator extends Generator<AssetNormalModule> {
 	publicPath?: string | TemplatePathFn<PathData>;
 	outputPath?: string | TemplatePathFn<PathDataModule>;
 	emit?: boolean;
+	binary?: boolean;
 
 	/**
 	 * Returns mime type.
