@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = {
-	findBundle() {
-		return ["main.js"];
+	findBundle(i) {
+		return [i === 0 ? "./main.js" : "./main.mjs"];
 	}
 };

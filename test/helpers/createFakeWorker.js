@@ -1,6 +1,7 @@
 "use strict";
 
 const path = require("path");
+const { pathToFileURL } = require("url");
 const { decodeUrlPath } = require("../harness/runner/RunnerHelpers");
 
 /** @typedef {{ terminate(): Promise<number> }} LiveWorker */
@@ -136,7 +137,10 @@ parentPort.on("message", data => {
 	else messageBuffer.push(data);
 });
 if (${options.type === "module"}) {
-	import(${JSON.stringify(file)});
+	import(${JSON.stringify(
+		// a file URL, so import() does not decode the escapes of the path again
+		isFileURL ? file : pathToFileURL(/** @type {string} */ (file)).href
+	)});
 } else {
 	scopedRequire(${JSON.stringify(file)});
 }
