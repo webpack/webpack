@@ -435,7 +435,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-26"),
 				{},
-				'function f(i,e,n){var t=i.indexOf("x",e);if(t===-1||t>n)return 1;r(g(i)),t=2;while(t)t--;var a=h();q+=a;var u=h();w(u),w=1;return[h(),2]}function r(){}var q,w;'
+				'function f(i,e,n){var t=i.indexOf("x",e);if(t===-1||t>n)return 1;g(i);r(),t=2;while(t)t--;var a=h();q+=a;var u=h();w(u),w=1;return[h(),2]}function r(){}var q,w;'
 			],
 			// What folds to a constant prints its value where that is shorter,
 			// and a template's parts that fold are its text; a tag's are not.
@@ -6716,6 +6716,15 @@ describe("one-pass minify hazards", () => {
 		const { code } = minifyOnePass(source, { compress: {}, ecma: 2020, mangle: false });
 		expect(code).toBe(
 			"function h(a,v){console.log(a,v)}function f(a){var v=arguments[0]=2;h(a,v)}f(1);function k(a){var v=arguments.length=2;h(a,v)}k(1);"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should not fold a call past a read of a script's global, which the call may set", () => {
+		const source = fixture("javascript", "hz-4");
+		const { code } = minifyOnePass(source, { compress: {}, ecma: 2020, mangle: false });
+		expect(code).toBe(
+			"var x=1;function f(){var v=g();h(x,v)}this.g=function(){return this.x=2,3},this.h=function(a,b){console.log(a,b)},f();"
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
