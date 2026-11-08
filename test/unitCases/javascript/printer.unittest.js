@@ -6813,4 +6813,29 @@ describe("one-pass minify of functions read once, family A", () => {
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
+
+	it("should print each read of an object of constants at a key it sets as that key's last value", () => {
+		const source = fixture("javascript", "one-pass-inline-a-9");
+		const { code } = minifyOnePass(source, options);
+		expect(code).toBe("console.log(2,`x`);");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should keep an object of constants read at a key it does not set or one not known", () => {
+		const source = fixture("javascript", "one-pass-inline-a-10");
+		const { code } = minifyOnePass(source, options);
+		expect(code).toBe(
+			"let o={a:1,b:2};console.log(o.a,o.c),console.log(o.b,o[0]);"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should keep an object setting its prototype or holding a getter", () => {
+		const source = fixture("javascript", "one-pass-inline-a-11");
+		const { code } = minifyOnePass(source, options);
+		expect(code).toBe(
+			"let o={__proto__:{b:2},a:1};console.log(o.a,o.b);let p={a:1,get b(){return 2}};console.log(p.a,p.b);"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
 });
