@@ -1,0 +1,1 @@
+function f() { try {} catch (e) { var a; x(a) } finally { g() } return a } function h() { try {} catch (e) { var e = 1 } return e } function i() { try {} catch ({ e }) { var b } return b } function j() { try {} catch (e) { var c; function k() {} } return c }

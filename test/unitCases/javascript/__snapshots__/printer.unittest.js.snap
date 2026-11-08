@@ -20,7 +20,7 @@ var a={b:1,\\"c d\\":[1,,2],[e]:f,get g(){return 1},h(){},...i,1e3:2,16:3};
 
 class A extends B{#t=1;static m(){return#t in this}static{a}get[k](){}q(){}static async*g(){}}
 
-import z,{b,d}from\\"f\\"with{type:\\"json\\"};export*from\\"g\\";export*as h from\\"i\\";export{z};export*as\\"*\\"from\\"j\\";import*as o from\\"k\\";import\\"l\\";
+export{default as\\"z\\"}from\\"f\\"with{type:\\"json\\"};export*from\\"g\\";export*as h from\\"i\\";export*as\\"*\\"from\\"j\\";import\\"k\\";import\\"l\\";
 
 export default function(){}
 
@@ -32,7 +32,7 @@ let x=\`a\${b}cd\${e}\`;tag\`x\\\\u{41}\${y}\\\\n\`,new(a.b().c),new(a().b);
 
 for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
-(a=b?c:d,b)?c:d,a??(b||c),(a??b)||c,a**-b,(-a)**b;
+a=b?c:d,b?c:d,a??(b||c),(a??b)||c,a**-b,(-a)**b;
 
 function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
@@ -131,7 +131,7 @@ x=(1/0).y;
 
 1 in a,1.5 in a,.5 in a,/x/ in a,/x/ instanceof a,a in b,a instanceof b,1 instanceof a;
 
-!1 in obj,a+/x/ in b,typeof/x/ instanceof y,x=!1 in a,x=-1 in a,(a,/x/)in b,a?b:/c/ in d,/x/ in b,f(/x/)in b,x=3 in a;
+!1 in obj,a+/x/ in b,\\"object\\"instanceof y,x=!1 in a,x=-1 in a,(a,/x/)in b,a?b:/c/ in d,/x/ in b,f(/x/)in b,x=3 in a;
 
 a< /script/.test(b),a</x/,f(/a/,/script/);
 
@@ -143,7 +143,7 @@ a< /script/.test(b),a</x/,f(/a/,/script/);
 
 a,a,-(()=>a),b,a+(()=>b),f(()=>a),a=()=>b;
 
-(a,b)?c:d,f((a,b)),a,b,a,b,a[b,c],(a,b).c,a,b,x=2;var v=2;for(a,b;c,d;e,f);for(x of(a,b));for(x in a,b);a,b;
+a,b?c:d,f((a,b)),a,b,a,b,a[b,c],(a,b).c,a,b,x=2;var v=2;for(a,b;c,d;e,f);for(x of(a,b));for(x in a,b);a,b;
 
 for(var a=(b in c),a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
 
@@ -177,7 +177,7 @@ async function f(){await a,await(a?b:c),a,await b,await a.b,await f(),await-a,aw
 
 async,async(),async(a),x=async function(){},x=async function*(){};
 
-import a,*as h from\\"c\\";import\\"a\\";import{d}from\\"b\\";import{e}from\\"b\\";import{\\"a b\\"as o}from\\"d\\";export{};export{a as default};export{\\"a b\\"as g}from\\"d\\";export*as\\"a b\\"from\\"c\\";export{a};export{h};export*from\\"x\\"with{type:\\"json\\"};export{y}from\\"z\\"with{type:\\"json\\"};import r from\\"k\\"with{__proto__:\\"x\\"};
+import a,*as h from\\"c\\";import\\"a\\";import\\"b\\";import\\"d\\";export{};export{a as default,a,h};export{\\"a b\\"as g}from\\"d\\";export*as\\"a b\\"from\\"c\\";export*from\\"x\\"with{type:\\"json\\"};export{y}from\\"z\\"with{type:\\"json\\"};import\\"k\\"with{__proto__:\\"x\\"};
 
 export default(a,b);export const x=(a,b),y=1;export function f(){}export class C{}export let z;
 
@@ -185,7 +185,7 @@ export default a=b;
 
 export default 3;
 
-export default(function(){}());
+export default void 0;
 
 export default{}.a;
 
@@ -213,7 +213,7 @@ x=null,y=!0,z=!1,w=1000n,v=0b1n,q=\\"a'ba\\\\\\"b'\\\\\\"\\\\u2028\\\\u2029\\\\u
 
 a.if,a.if,a.𐊧,a?.𐊧,a.ゟ,a.b,a[0],a?.[0],this.x;function n(){}a.b.c.d;
 
-x=[,],y=[a,,],z=[,a],w=[a,b],v=[...a,...b],f(...a);({...a,b});
+x=[,],y=[a,,],z=[,a],w=[a,b],v=[...a,...b],f(...a),{...a,b};
 
 \\"use strict\\";y;
 
@@ -239,13 +239,13 @@ with(o)a;with(o)b;with(o)a?b:c;
 
 class P{#i;m(i){#i in(a=b),#i in(a?b:c),#i in(a,b),(#i in i)+1,#i in i,(#i in i).y,(#i in i)(),a<(#i in i),#i in i<a,#i in i||a,a in(#i in i),#i in i in a,(#i in i)**2,#i in(#i in i),#i in a+b,#i in(a in b),#i in(a||b),#i in i,(#i in i)\`t\`}*g(){#i in(yield)}}
 
-import n from\\"x\\";import{let as i}from\\"y\\";new a[function(){b()}],new a[()=>b()],new(a[b()]),x=function(){}.y;do{}while(a);if(a===1){\`y\`}1 in a,.5 in a;
+import\\"x\\";import\\"y\\";new a[function(){b()}],new a[()=>b()],new(a[b()]),x=function(){}.y;do{}while(a);a;1 in a,.5 in a;
 
-import o from\\"b\\"with{type:\\"json\\",other:\\"x\\"};export{c}from\\"d\\"with{type:\\"json\\",other:\\"y\\"};
+import\\"b\\"with{type:\\"json\\",other:\\"x\\"};export{c}from\\"d\\"with{type:\\"json\\",other:\\"y\\"};
 
 x={a,b:b=1,c,\\"d e\\":d};
 
-do{a}while(b);switch(a){case 1:}(a??b)||c,a&&(b??c),(a??b)&&c;
+do{a}while(b);a;(a??b)||c,a&&(b??c),(a??b)&&c;
 
 \\"use asm\\";f=()=>1.50;class A{x=1.50;static{y=1.50}}g=function(){return 1.50};
 
@@ -272,7 +272,7 @@ var a={b:1,\\"c d\\":[1,,2],[e]:f,get g(){return 1},h(){},...i,1e3:2,16:3};
 
 class A extends B{#t=1;static m(){return#t in this}static{a}get[k](){}q(){}static async*g(){}}
 
-import z,{b,d}from\\"f\\"with{type:\\"json\\"};export*from\\"g\\";export*as h from\\"i\\";export{z};export*as\\"*\\"from\\"j\\";import*as o from\\"k\\";import\\"l\\";
+export{default as\\"z\\"}from\\"f\\"with{type:\\"json\\"};export*from\\"g\\";export*as h from\\"i\\";export*as\\"*\\"from\\"j\\";import\\"k\\";import\\"l\\";
 
 export default function(){}
 
@@ -284,7 +284,7 @@ let x=\`a\${b}cd\${e}\`;tag\`x\\\\u{41}\${y}\\\\n\`,new(a.b().c),new(a().b);
 
 for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
-(a=b?c:d,b)?c:d,a??(b||c),(a??b)||c,a**-b,(-a)**b;
+a=b?c:d,b?c:d,a??(b||c),(a??b)||c,a**-b,(-a)**b;
 
 function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
@@ -390,7 +390,7 @@ x=(1/0).y;
 
 1 in a,1.5 in a,.5 in a,/x/ in a,/x/ instanceof a,a in b,a instanceof b,1 instanceof a;
 
-!1 in obj,a+/x/ in b,typeof/x/ instanceof y,x=!1 in a,x=-1 in a,(a,/x/)in b,a?b:/c/ in d,/x/ in b,f(/x/)in b,x=3 in a;
+!1 in obj,a+/x/ in b,\\"object\\"instanceof y,x=!1 in a,x=-1 in a,(a,/x/)in b,a?b:/c/ in d,/x/ in b,f(/x/)in b,x=3 in a;
 
 a< /script/.test(b),a</x/,f(/a/,/script/);
 
@@ -402,7 +402,7 @@ a< /script/.test(b),a</x/,f(/a/,/script/);
 
 a,a,-(()=>a),b,a+(()=>b),f(()=>a),a=()=>b;
 
-(a,b)?c:d,f((a,b)),a,b,a,b,a[b,c],(a,b).c,a,b,x=2;var v=2;for(a,b;c,d;e,f);for(x of(a,b));for(x in a,b);a,b;
+a,b?c:d,f((a,b)),a,b,a,b,a[b,c],(a,b).c,a,b,x=2;var v=2;for(a,b;c,d;e,f);for(x of(a,b));for(x in a,b);a,b;
 
 for(var a=(b in c),a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
 
@@ -436,7 +436,7 @@ async function f(){await a,await(a?b:c),a,await b,await a.b,await f(),await-a,aw
 
 async,async(),async(a),x=async function(){},x=async function*(){};
 
-import a,*as h from\\"c\\";import\\"a\\";import{d}from\\"b\\";import{e}from\\"b\\";import{\\"a b\\"as o}from\\"d\\";export{};export{a as default};export{\\"a b\\"as g}from\\"d\\";export*as\\"a b\\"from\\"c\\";export{a};export{h};export*from\\"x\\"with{type:\\"json\\"};export{y}from\\"z\\"with{type:\\"json\\"};import r from\\"k\\"with{__proto__:\\"x\\"};
+import a,*as h from\\"c\\";import\\"a\\";import\\"b\\";import\\"d\\";export{};export{a as default,a,h};export{\\"a b\\"as g}from\\"d\\";export*as\\"a b\\"from\\"c\\";export*from\\"x\\"with{type:\\"json\\"};export{y}from\\"z\\"with{type:\\"json\\"};import\\"k\\"with{__proto__:\\"x\\"};
 
 export default(a,b);export const x=(a,b),y=1;export function f(){}export class C{}export let z;
 
@@ -444,7 +444,7 @@ export default a=b;
 
 export default 3;
 
-export default(function(){}());
+export default void 0;
 
 export default{}.a;
 
@@ -472,7 +472,7 @@ x=null,y=!0,z=!1,w=1000n,v=0b1n,q=\\"a'ba\\\\\\"b'\\\\\\"\\\\u2028\\\\u2029\\\\u
 
 a.if,a.if,a[\\"𐊧\\"],a?.[\\"𐊧\\"],a.ゟ,a.b,a[0],a?.[0],this.x;function n(){}a.b.c.d;
 
-x=[,],y=[a,,],z=[,a],w=[a,b],v=[...a,...b],f(...a);({...a,b:b});
+x=[,],y=[a,,],z=[,a],w=[a,b],v=[...a,...b],f(...a),{...a,b:b};
 
 \\"use strict\\";y;
 
@@ -498,13 +498,13 @@ with(o)a;with(o)b;with(o)a?b:c;
 
 class P{#i;m(i){#i in(a=b),#i in(a?b:c),#i in(a,b),(#i in i)+1,#i in i,(#i in i).y,(#i in i)(),a<(#i in i),#i in i<a,#i in i||a,a in(#i in i),#i in i in a,(#i in i)**2,#i in(#i in i),#i in a+b,#i in(a in b),#i in(a||b),#i in i,(#i in i)\`t\`}*g(){#i in(yield)}}
 
-import n from\\"x\\";import{let as i}from\\"y\\";new a[function(){b()}],new a[()=>b()],new(a[b()]),x=function(){}.y;do{}while(a);if(a===1){\\"y\\"}1 in a,.5 in a;
+import\\"x\\";import\\"y\\";new a[function(){b()}],new a[()=>b()],new(a[b()]),x=function(){}.y;do{}while(a);a;1 in a,.5 in a;
 
-import o from\\"b\\"with{type:\\"json\\",other:\\"x\\"};export{c}from\\"d\\"with{type:\\"json\\",other:\\"y\\"};
+import\\"b\\"with{type:\\"json\\",other:\\"x\\"};export{c}from\\"d\\"with{type:\\"json\\",other:\\"y\\"};
 
 x={a:a,b:b=1,c:c,\\"d e\\":d};
 
-do{a}while(b);switch(a){case 1:}(a??b)||c,a&&(b??c),(a??b)&&c;
+do{a}while(b);a;(a??b)||c,a&&(b??c),(a??b)&&c;
 
 \\"use asm\\";f=()=>1.50;class A{x=1.50;static{y=1.50}}g=function(){return 1.50};
 
@@ -531,7 +531,7 @@ var a={b:1,\\"c d\\":[1,,2],[e]:f,get g(){return 1},h(){},...i,1e3:2,16:3};
 
 class A extends B{#t=1;static m(){return#t in this}static{a}get[k](){}q(){}static async*g(){}}
 
-import z,{b,d}from\\"f\\"with{type:\\"json\\"};export*from\\"g\\";export*as h from\\"i\\";export{z};export*as\\"*\\"from\\"j\\";import*as o from\\"k\\";import\\"l\\";
+export{default as\\"z\\"}from\\"f\\"with{type:\\"json\\"};export*from\\"g\\";export*as h from\\"i\\";export*as\\"*\\"from\\"j\\";import\\"k\\";import\\"l\\";
 
 export default function(){}
 
@@ -543,7 +543,7 @@ let x=\`a\${b}cd\${e}\`;tag\`x\\\\u{41}\${y}\\\\n\`,new(a.b().c),new(a().b);
 
 for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
-(a=b?c:d,b)?c:d,a??(b||c),(a??b)||c,a**-b,(-a)**b;
+a=b?c:d,b?c:d,a??(b||c),(a??b)||c,a**-b,(-a)**b;
 
 function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
@@ -642,7 +642,7 @@ x=(1/0).y;
 
 1 in a,1.5 in a,.5 in a,/x/ in a,/x/ instanceof a,a in b,a instanceof b,1 instanceof a;
 
-!1 in obj,a+/x/ in b,typeof/x/ instanceof y,x=!1 in a,x=-1 in a,(a,/x/)in b,a?b:/c/ in d,/x/ in b,f(/x/)in b,x=3 in a;
+!1 in obj,a+/x/ in b,\\"object\\"instanceof y,x=!1 in a,x=-1 in a,(a,/x/)in b,a?b:/c/ in d,/x/ in b,f(/x/)in b,x=3 in a;
 
 a< /script/.test(b),a</x/,f(/a/,/script/);
 
@@ -654,7 +654,7 @@ a< /script/.test(b),a</x/,f(/a/,/script/);
 
 a,a,-(()=>a),b,a+(()=>b),f(()=>a),a=()=>b;
 
-(a,b)?c:d,f((a,b)),a,b,a,b,a[b,c],(a,b).c,a,b,x=2;var v=2;for(a,b;c,d;e,f);for(x of(a,b));for(x in a,b);a,b;
+a,b?c:d,f((a,b)),a,b,a,b,a[b,c],(a,b).c,a,b,x=2;var v=2;for(a,b;c,d;e,f);for(x of(a,b));for(x in a,b);a,b;
 
 for(var a=(b in c),a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
 
@@ -688,7 +688,7 @@ async function f(){await a,await(a?b:c),a,await b,await a.b,await f(),await-a,aw
 
 async,async(),async(a),x=async function(){},x=async function*(){};
 
-import a,*as h from\\"c\\";import\\"a\\";import{d}from\\"b\\";import{e}from\\"b\\";import{\\"a b\\"as o}from\\"d\\";export{};export{a as default};export{\\"a b\\"as g}from\\"d\\";export*as\\"a b\\"from\\"c\\";export{a};export{h};export*from\\"x\\"with{type:\\"json\\"};export{y}from\\"z\\"with{type:\\"json\\"};import r from\\"k\\"with{__proto__:\\"x\\"};
+import a,*as h from\\"c\\";import\\"a\\";import\\"b\\";import\\"d\\";export{};export{a as default,a,h};export{\\"a b\\"as g}from\\"d\\";export*as\\"a b\\"from\\"c\\";export*from\\"x\\"with{type:\\"json\\"};export{y}from\\"z\\"with{type:\\"json\\"};import\\"k\\"with{__proto__:\\"x\\"};
 
 export default(a,b);export const x=(a,b),y=1;export function f(){}export class C{}export let z;
 
@@ -696,7 +696,7 @@ export default a=b;
 
 export default 3;
 
-export default(function(){}());
+export default void 0;
 
 export default{}.a;
 
@@ -724,7 +724,7 @@ x=null,y=!0,z=!1,w=1000n,v=0b1n,q=\\"a'ba\\\\\\"b'\\\\\\"\\\\u2028\\\\u2029\\\\u
 
 a.if,a.if,a[\\"𐊧\\"],a?.[\\"𐊧\\"],a.ゟ,a.b,a[0],a?.[0],this.x;function n(){}a.b.c.d;
 
-x=[,],y=[a,,],z=[,a],w=[a,b],v=[...a,...b],f(...a);({...a,b:b});
+x=[,],y=[a,,],z=[,a],w=[a,b],v=[...a,...b],f(...a),{...a,b:b};
 
 \\"use strict\\";y;
 
@@ -750,13 +750,13 @@ with(o)a;with(o)b;with(o)a?b:c;
 
 class P{#i;m(i){#i in(a=b),#i in(a?b:c),#i in(a,b),(#i in i)+1,#i in i,(#i in i).y,(#i in i)(),a<(#i in i),#i in i<a,#i in i||a,a in(#i in i),#i in i in a,(#i in i)**2,#i in(#i in i),#i in a+b,#i in(a in b),#i in(a||b),#i in i,(#i in i)\`t\`}*g(){#i in(yield)}}
 
-import n from\\"x\\";import{let as i}from\\"y\\";new a[function(){b()}],new a[()=>b()],new(a[b()]),x=function(){}.y;do{}while(a);if(a===1){\\"y\\"}1 in a,.5 in a;
+import\\"x\\";import\\"y\\";new a[function(){b()}],new a[()=>b()],new(a[b()]),x=function(){}.y;do{}while(a);a;1 in a,.5 in a;
 
-import o from\\"b\\"with{type:\\"json\\",other:\\"x\\"};export{c}from\\"d\\"with{type:\\"json\\",other:\\"y\\"};
+import\\"b\\"with{type:\\"json\\",other:\\"x\\"};export{c}from\\"d\\"with{type:\\"json\\",other:\\"y\\"};
 
 x={a:a,b:b=1,c:c,\\"d e\\":d};
 
-do{a}while(b);switch(a){case 1:}(a??b)||c,a&&(b??c),(a??b)&&c;
+do{a}while(b);a;(a??b)||c,a&&(b??c),(a??b)&&c;
 
 \\"use asm\\";f=()=>1.50;class A{x=1.50;static{y=1.50}}g=function(){return 1.50};
 
@@ -783,7 +783,7 @@ var a={b:1,\\"c d\\":[1,,2],[e]:f,get g(){return 1},h(){},...i,1000:2,16:3};
 
 class A extends B{#x=1;static m(){return#x in this}static{a}get[k](){}'q'(){}static async*g(){}}
 
-import a,{b as c,\\"d\\"as e}from\\"f\\"with{type:\\"json\\"};export*from\\"g\\";export*as h from\\"i\\";export{a as\\"z\\"};export*as\\"*\\"from\\"j\\";import*as ns from\\"k\\";import\\"l\\";
+export{default as\\"z\\"}from\\"f\\"with{type:\\"json\\"};export*from\\"g\\";export*as h from\\"i\\";export*as\\"*\\"from\\"j\\";import\\"k\\";import\\"l\\";
 
 export default function(){}
 
@@ -795,7 +795,7 @@ let x=\`a\${b}cd\${e}\`;tag\`x\\\\u{41}\${y}\\\\n\`,new(a.b().c),new(a().b);
 
 for(var i=(a in b);i;);for(let k of(a,b));for((x=1 in o);;);
 
-(a=b?c:d,b)?c:d,a??(b||c),(a??b)||c,a**-b,(-a)**b;
+a=b?c:d,b?c:d,a??(b||c),(a??b)||c,a**-b,(-a)**b;
 
 function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
@@ -901,7 +901,7 @@ x=(1/0).y;
 
 1 in a,1.5 in a,.5 in a,/x/ in a,/x/ instanceof a,a in b,a instanceof b,1 instanceof a;
 
-!1 in obj,a+/x/ in b,typeof/x/ instanceof y,x=!1 in a,x=-1 in a,(a,/x/)in b,a?b:/c/ in d,/x/ in b,f(/x/)in b,x=3 in a;
+!1 in obj,a+/x/ in b,\\"object\\"instanceof y,x=!1 in a,x=-1 in a,(a,/x/)in b,a?b:/c/ in d,/x/ in b,f(/x/)in b,x=3 in a;
 
 a< /script/.test(b),a</x/,f(/a/,/script/);
 
@@ -913,7 +913,7 @@ a< /script/.test(b),a</x/,f(/a/,/script/);
 
 a,a,-(()=>a),b,a+(()=>b),f(()=>a),a=()=>b;
 
-(a,b)?c:d,f((a,b)),a,b,a,b,a[b,c],(a,b).c,a,b,x=2;var v=2;for(a,b;c,d;e,f);for(x of(a,b));for(x in a,b);a,b;
+a,b?c:d,f((a,b)),a,b,a,b,a[b,c],(a,b).c,a,b,x=2;var v=2;for(a,b;c,d;e,f);for(x of(a,b));for(x in a,b);a,b;
 
 for(var a=(b in c),a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
 
@@ -947,7 +947,7 @@ async function f(){await a,await(a?b:c),a,await b,await a.b,await f(),await-a,aw
 
 async,async(),async(a),x=async function(){},x=async function*(){};
 
-import a,*as b from'c';import'a';import{d}from'b';import{e}from'b';import{'a b'as f}from'd';export{};export{a as default};export{'a b'as g}from'd';export*as'a b'from'c';export{a};export{b as'h'};export*from'x'with{type:'json'};export{y}from'z'with{type:'json'};import j from'k'with{__proto__:'x'};
+import a,*as b from'c';import'a';import'b';import'd';export{};export{a as default,a,b as'h'};export{'a b'as g}from'd';export*as'a b'from'c';export*from'x'with{type:'json'};export{y}from'z'with{type:'json'};import'k'with{__proto__:'x'};
 
 export default(a,b);export const x=(a,b),y=1;export function f(){}export class C{}export let z;
 
@@ -955,7 +955,7 @@ export default a=b;
 
 export default 3;
 
-export default(function(){}());
+export default void 0;
 
 export default{}.a;
 
@@ -983,7 +983,7 @@ x=null,y=!0,z=!1,w=1_000n,v=0b1n,q=\\"a'ba\\\\\\"b'\\\\\\"\\\\u2028\\\\u2029\\\\
 
 a.if,a.if,a.\\\\u{102a7},a?.\\\\u{102a7},a.\\\\u309f,a.b,a[0],a?.[0],this.x;function n(){}a.b.c.d;
 
-x=[,],y=[a,,],z=[,a],w=[a,b],v=[...a,...b],f(...a);({...a,b});
+x=[,],y=[a,,],z=[,a],w=[a,b],v=[...a,...b],f(...a),{...a,b};
 
 'use strict';y;
 
@@ -1009,13 +1009,13 @@ with(o)a;with(o)b;with(o)a?b:c;
 
 class P{#x;m(o){#x in(a=b),#x in(a?b:c),#x in(a,b),(#x in o)+1,#x in o,(#x in o).y,(#x in o)(),a<(#x in o),#x in o<a,#x in o||a,a in(#x in o),#x in o in a,(#x in o)**2,#x in(#x in o),#x in a+b,#x in(a in b),#x in(a||b),#x in o,(#x in o)\`t\`}*g(){#x in(yield)}}
 
-import async from'x';import{let as l}from'y';new a[function(){b()}],new a[()=>b()],new(a[b()]),x=function(){}.y;do{}while(a);if(a===1){'y'}1. in a,.5 in a;
+import'x';import'y';new a[function(){b()}],new a[()=>b()],new(a[b()]),x=function(){}.y;do{}while(a);a;1. in a,.5 in a;
 
-import a from'b'with{type:'json',other:'x'};export{c}from'd'with{type:'json',other:'y'};
+import'b'with{type:'json',other:'x'};export{c}from'd'with{type:'json',other:'y'};
 
 x={'a':a,'b':b=1,c,'d e':d};
 
-do{a}while(b);switch(a){case 1:}(a??b)||c,a&&(b??c),(a??b)&&c;
+do{a}while(b);a;(a??b)||c,a&&(b??c),(a??b)&&c;
 
 'use asm';f=()=>1.50;class A{x=1.50;static{y=1.50}}g=function(){return 1.50};
 
@@ -1059,12 +1059,11 @@ class A extends B{#t=1
 static m(){return#t in this}static{a}get[k](){}q(){}static async*g(){}}
 
 /* p */
-import z,{b,d}from\\"f\\"with{type:\\"json\\"}
+export{default as\\"z\\"}from\\"f\\"with{type:\\"json\\"}
 export*from\\"g\\"
 export*as h from\\"i\\"
-export{z}
 export*as\\"*\\"from\\"j\\"
-import*as o from\\"k\\"
+import\\"k\\"
 import\\"l\\"
 
 
@@ -1088,7 +1087,7 @@ tag\`x\\\\u{41}\${y}\\\\n\`,new(a.b().c),new(a().b)
 for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
 /* p */
-(a=b?c:d,b)?c:d,a??(b||c),(a??b)||c,a**-b,(-a)**b
+a=b?c:d,b?c:d,a??(b||c),(a??b)||c,a**-b,(-a)**b
 
 
 /* p */
@@ -1301,7 +1300,7 @@ x=(1/0).y
 
 
 /* p */
-!1 in obj,a+/x/ in b,typeof/x/ instanceof y,x=!1 in a,x=-1 in a,(a,/x/)in b,a?b:/c/ in d,/x/ in b,f(/x/)in b,x=3 in a
+!1 in obj,a+/x/ in b,\\"object\\"instanceof y,x=!1 in a,x=-1 in a,(a,/x/)in b,a?b:/c/ in d,/x/ in b,f(/x/)in b,x=3 in a
 
 
 /* p */
@@ -1325,7 +1324,7 @@ a,a,-(()=>a),b,a+(()=>b),f((()=>a)),a=()=>b
 
 
 /* p */
-(a,b)?c:d,f((a,b)),a,b,a,b,a[b,c],(a,b).c,a,b,x=2
+a,b?c:d,f((a,b)),a,b,a,b,a[b,c],(a,b).c,a,b,x=2
 var v=2
 for(a,b;c,d;e,f);for(x of(a,b));for(x in a,b);a,b
 
@@ -1410,18 +1409,15 @@ async,async(),async(a),x=async function(){},x=async function*(){}
 /* p */
 import a,*as h from\\"c\\"
 import\\"a\\"
-import{d}from\\"b\\"
-import{e}from\\"b\\"
-import{\\"a b\\"as o}from\\"d\\"
+import\\"b\\"
+import\\"d\\"
 export{}
-export{a as default}
+export{a as default,a,h}
 export{\\"a b\\"as g}from\\"d\\"
 export*as\\"a b\\"from\\"c\\"
-export{a}
-export{h}
 export*from\\"x\\"with{type:\\"json\\"}
 export{y}from\\"z\\"with{type:\\"json\\"}
-import r from\\"k\\"with{__proto__:\\"x\\"}
+import\\"k\\"with{__proto__:\\"x\\"}
 
 
 /* p */
@@ -1439,7 +1435,7 @@ export default 3
 
 
 /* p */
-export default((function(){})())
+export default void 0
 
 
 /* p */
@@ -1550,15 +1546,16 @@ class P{#i
 m(i){#i in(a=b),#i in(a?b:c),#i in(a,b),(#i in i)+1,#i in i,(#i in i).y,(#i in i)(),a<(#i in i),#i in i<a,#i in i||a,a in(#i in i),#i in i in a,(#i in i)**2,#i in(#i in i),#i in a+b,#i in(a in b),#i in(a||b),#i in i,(#i in i)\`t\`}*g(){#i in(yield)}}
 
 /* p */
-import n from\\"x\\"
-import{let as i}from\\"y\\"
+import\\"x\\"
+import\\"y\\"
 new a[function(){b()}],new a[()=>b()],new(a[b()]),x=(function(){}).y
 do{}while(a)
-if(a===1){\\"y\\"}1 in a,.5 in a
+a
+1 in a,.5 in a
 
 
 /* p */
-import o from\\"b\\"with{type:\\"json\\",other:\\"x\\"}
+import\\"b\\"with{type:\\"json\\",other:\\"x\\"}
 export{c}from\\"d\\"with{type:\\"json\\",other:\\"y\\"}
 
 
@@ -1568,7 +1565,7 @@ x={a:a,b:b=1,c:c,\\"d e\\":d}
 
 /* p */
 do{a}while(b)
-switch(a){case 1:}(a??b)||c,a&&(b??c),(a??b)&&c
+a;(a??b)||c,a&&(b??c),(a??b)&&c
 
 
 /* p */
@@ -1941,7 +1938,7 @@ Array [
 ]
 `;
 
-exports[`one-pass minify of statement sequences should print the known \`switch\`, spread and unary values of the config cases: minify-known-switch 1`] = `"function e(e){e.push(\\"square\\"),e.push(\\"falls through\\");return e}function t(e){e.push(\\"default\\"),e.push(\\"one\\");return e}function o(){{let e=Math.random()<2?\\"block\\":\\"never\\";return e}}function l(e,t){{let t=\\"inner\\";e.push(t)}return e.push(t),e}function a(e,t){if(!t)e.push(\\"else\\");return e}function u(e){e:{e.push(\\"one\\");break e}return e}function s(e,t){if(!t)e.push(\\"a\\"),e.push(\\"b\\")}function n(e,t){}function r(e,t){switch(1){case t():e.push(\\"at\\");break;case 1:e.push(\\"one\\")}return e}function c(e,t){switch(1){case 1:if(t)break;e.push(\\"after\\");break;default:e.push(\\"default\\")}return e}function h(e){switch(1){case 0:var t=\\"set\\";case 1:e.push(typeof t)}return e}it(\\"should print the statements a \`switch\` on a known value runs\\",()=>{expect(e([])).toEqual([\\"square\\",\\"falls through\\"]),expect(t([])).toEqual([\\"default\\",\\"one\\"]),expect(o()).toBe(\\"block\\"),expect(l([],\\"outer\\")).toEqual([\\"inner\\",\\"outer\\"]),expect(l([],\\"other\\")).toEqual([\\"inner\\",\\"other\\"]),expect(u([])).toEqual([\\"one\\"])}),it(\\"should keep a \`switch\` whose path is not known or whose dropped cases declare\\",()=>{var e=[];s(e,!0),s(e,!1),n(e,!0),n(e,!1),expect(e).toEqual([\\"a\\",\\"b\\"]),expect(a([],!0)).toEqual([]),expect(a([],!1)).toEqual([\\"else\\"]),expect(r([],()=>1)).toEqual([\\"at\\"]),expect(c([],!0)).toEqual([]),expect(c([],!1)).toEqual([\\"after\\"]),expect(h([])).toEqual([\\"undefined\\"])});"`;
+exports[`one-pass minify of statement sequences should print the known \`switch\`, spread and unary values of the config cases: minify-known-switch 1`] = `"function e(e){e.push(\\"square\\"),e.push(\\"falls through\\");return e}function t(e){e.push(\\"default\\"),e.push(\\"one\\");return e}function o(){{let e=Math.random()<2?\\"block\\":\\"never\\";return e}}function l(e,t){{let t=\\"inner\\";e.push(t)}return e.push(t),e}function a(e,t){if(!t)e.push(\\"else\\");return e}function u(e){e:{e.push(\\"one\\");break e}return e}function s(e,t){if(!t)e.push(\\"a\\"),e.push(\\"b\\")}function n(e,t){}function r(e,t){if(1===t())e.push(\\"at\\");else e.push(\\"one\\");return e}function c(e,t){switch(1){case 1:if(t)break;e.push(\\"after\\")}return e}function h(e){e.push(typeof t);var t;return e}it(\\"should print the statements a \`switch\` on a known value runs\\",()=>{expect(e([])).toEqual([\\"square\\",\\"falls through\\"]),expect(t([])).toEqual([\\"default\\",\\"one\\"]),expect(o()).toBe(\\"block\\"),expect(l([],\\"outer\\")).toEqual([\\"inner\\",\\"outer\\"]),expect(l([],\\"other\\")).toEqual([\\"inner\\",\\"other\\"]),expect(u([])).toEqual([\\"one\\"])}),it(\\"should keep a \`switch\` whose path is not known or whose dropped cases declare\\",()=>{var e=[];s(e,!0),s(e,!1),n(e,!0),n(e,!1),expect(e).toEqual([\\"a\\",\\"b\\"]),expect(a([],!0)).toEqual([]),expect(a([],!1)).toEqual([\\"else\\"]),expect(r([],()=>1)).toEqual([\\"at\\"]),expect(c([],!0)).toEqual([]),expect(c([],!1)).toEqual([\\"after\\"]),expect(h([])).toEqual([\\"undefined\\"])});"`;
 
 exports[`one-pass minify of statement sequences should print the known \`switch\`, spread and unary values of the config cases: minify-literal-spread 1`] = `"function e(){return Array.prototype.slice.call(arguments)}function t(){this.items=Array.prototype.slice.call(arguments)}it(\\"should print what a spread literal holds in its place\\",()=>{expect([1,2,3]).toEqual([1,2,3]),expect({a:1,b:2,c:3}).toEqual({a:1,b:2,c:3}),expect({a:1,a:2}).toEqual({a:2}),expect(e(4,5)).toEqual([4,5]),expect(new t(6).items).toEqual([6])}),it(\\"should keep a hole a spread printing nothing follows\\",()=>{expect(2).toBe(2),expect(1).toBe(1)}),it(\\"should run what a spread holds where only the arguments of a call run\\",()=>{let e=[];e.push(\\"a\\"),e.push(\\"b\\"),expect(e).toEqual([\\"a\\",\\"b\\"])}),it(\\"should drop a spread primitive, which copies nothing\\",()=>{expect({a:1}).toEqual({a:1})}),it(\\"should keep a spread whose items would read otherwise inlined\\",()=>{let e=[1,...[2,,3]];expect(1 in e).toBe(!0),expect(2 in e).toBe(!0);let t=0,l={...{get value(){return t++,t}}};expect(Object.getOwnPropertyDescriptor(l,\\"value\\").value).toBe(1),expect(Object.getPrototypeOf({...{__proto__:null}})).toBe(Object.prototype),expect({...\\"ab\\"}).toEqual({0:\\"a\\",1:\\"b\\"})});"`;
 
