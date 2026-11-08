@@ -6,51 +6,7 @@ const webpack = require("../../../");
 
 const { xmlMinify } = webpack.html;
 
-const SOURCE = fixture(
-	"xml",
-	"xml-minify-should-minify-the-document-and-the-stylesheets-it-holds"
-);
-
 describe("xmlMinify", () => {
-	it("should minify the document and the stylesheets it holds", async () => {
-		const { code } = await xmlMinify({ "image.svg": SOURCE });
-		expect(code).toMatchSnapshot();
-	});
-
-	it("should report what the CSS minifier throws and keep the stylesheets", async () => {
-		// `unusedSymbols` that is no list stands in for anything that makes it throw.
-		const unreadable = /** @type {string[]} */ (/** @type {unknown} */ (42));
-		const { code, errors } = await xmlMinify(
-			{ "image.svg": SOURCE },
-			undefined,
-			{ css: { unusedSymbols: unreadable } }
-		);
-		expect(code).toContain(".dot { fill: #ff0000; user-select: none; }");
-		expect(code).toContain('style="stroke: #00ff00"');
-		expect(errors).toHaveLength(2);
-	});
-
-	it("should hand the stylesheets the target's browsers", async () => {
-		const { code } = await xmlMinify({ "image.svg": SOURCE }, undefined, {
-			environment: { browsers: ["chrome 50"], vendorPrefixes: true }
-		});
-		expect(code).toMatchSnapshot();
-	});
-
-	it("should hand the stylesheets the CSS minifier's options", async () => {
-		const { code } = await xmlMinify(
-			{
-				"image.svg": fixture(
-					"xml",
-					"xml-minify-should-hand-the-stylesheets-the-css-minifier-s-options"
-				)
-			},
-			undefined,
-			{ css: { convertLengthUnits: true } }
-		);
-		expect(code).toMatchSnapshot();
-	});
-
 	it("should read a Buffer as UTF-8", async () => {
 		const { code } = await xmlMinify({
 			"data.xml": Buffer.from(
@@ -58,23 +14,6 @@ describe("xmlMinify", () => {
 			)
 		});
 		expect(code).toBe('<a title="café">x</a>');
-	});
-
-	it("should compact attribute spacing and optionally sort attributes", async () => {
-		const input = {
-			"image.svg": fixture(
-				"xml",
-				"xml-minify-should-compact-attribute-spacing-and-optionally-sort-attributes"
-			)
-		};
-		for (const sortAttributes of [undefined, false, true]) {
-			const { code } = await xmlMinify(input, undefined, { sortAttributes });
-			expect(code).toBe(
-				sortAttributes
-					? '<svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg"><path a="2" style="fill:red" z="1"/></svg>'
-					: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path z="1" style="fill:red" a="2"/></svg>'
-			);
-		}
 	});
 
 	it("should describe itself to the minimizer plugin", () => {
@@ -171,184 +110,15 @@ describe("SVG data URLs", () => {
 	});
 });
 
-// Each fixture's print under its option sets is in `invariants.unittest.js`'s
-// snapshot; these hold the printer with a renderer or helper in the way.
+// Each fixture's print under its option sets, renderers included, is in
+// `invariants.unittest.js`'s snapshot; these hold the helpers the printer uses.
 describe("SourceProcessor — XML printing", () => {
-	const { SourceProcessor } = require("../../../lib/html/syntax");
-
-	it("should hand SVG and XHTML stylesheets to the embedded renderer", () => {
-		const {
-			builtinEmbeddedRenderer
-		} = require("../../../lib/html/builtinEmbeddedRenderer");
-		const document = fixture("xml", "source-processor-xml-printing-should-hand-svg-and-xhtml-stylesheets-to-the");
-		expect(
-			/** @type {{ code: string }} */ (
-				new SourceProcessor().process(document, {
-					xml: true,
-					mode: "minify",
-					renderEmbeddedSource: builtinEmbeddedRenderer()
-				})
-			).code
-		).toMatchSnapshot();
-	});
-
-	it("should read a stylesheet across the comments it drops", () => {
-		const {
-			builtinEmbeddedRenderer
-		} = require("../../../lib/html/builtinEmbeddedRenderer");
-		const document = fixture(
-			"xml",
-			"source-processor-xml-printing-reads-a-style-sheet-across-the-comments-it-drops"
-		);
-		expect(
-			/** @type {{ code: string }} */ (
-				new SourceProcessor().process(document, {
-					xml: true,
-					mode: "minify",
-					renderEmbeddedSource: builtinEmbeddedRenderer()
-				})
-			).code
-		).toBe(
-			[
-				'<svg xmlns="http://www.w3.org/2000/svg">',
-				"<style>a{b:c}d{e:f}g>h{i:j}</style>",
-				'<style>a { b : c }<!--#include virtual="x" -->d { e : f }</style>',
-				"<style>a { b : c }<g/>d { e : f }</style>",
-				"<style>  </style>",
-				'<style type="text/less">a { b : c }d { e : f }</style>',
-				"</svg>"
-			].join("\n")
-		);
-	});
-
-	it("should self-close a stylesheet the renderer minifies away", () => {
-		const {
-			builtinEmbeddedRenderer
-		} = require("../../../lib/html/builtinEmbeddedRenderer");
-		/**
-		 * @param {string} document an XML document
-		 * @returns {string} the minified document
-		 */
-		const minify = (document) =>
-			/** @type {{ code: string }} */ (
-				new SourceProcessor().process(document, {
-					xml: true,
-					mode: "minify",
-					renderEmbeddedSource: builtinEmbeddedRenderer()
-				})
-			).code;
-		const svg = '<svg xmlns="http://www.w3.org/2000/svg">';
-		const name =
-			"source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer";
-		// An empty rule, and a prelude the input ran out in before its block.
-		for (const suffix of ["", "-2"]) {
-			const minified = minify(fixture("xml", `${name}${suffix}`));
-			expect(minified).toBe(`${svg}<style/></svg>`);
-			expect(minify(minified)).toBe(minified);
-		}
-		expect(minify(fixture("xml", `${name}-3`))).toBe(
-			`${svg}<style>a{b:c}</style></svg>`
-		);
-	});
-
-	it("should write only what the target browsers read", () => {
-		const {
-			builtinEmbeddedRenderer
-		} = require("../../../lib/html/builtinEmbeddedRenderer");
-		const document =
-			fixture("xml", "source-processor-xml-printing-should-write-only-what-the-target-browsers-read");
-		/**
-		 * @param {string[]=} browsers the browserslist selection
-		 * @returns {string} the minified document
-		 */
-		const minify = (browsers) =>
-			/** @type {{ code: string }} */ (
-				new SourceProcessor().process(document, {
-					xml: true,
-					mode: "minify",
-					renderEmbeddedSource: builtinEmbeddedRenderer(
-						browsers === undefined ? undefined : { environment: { browsers } }
-					)
-				})
-			).code;
-		expect(minify()).toMatchSnapshot("every ability");
-		expect(minify(["chrome 60", "safari 10", "ie 11"])).toMatchSnapshot(
-			"legacy browsers"
-		);
-	});
-
-	it("should defer an XML stylesheet to an asynchronous renderer", async () => {
-		/** @type {string[]} */
-		const offered = [];
-		const { code } = await new SourceProcessor().processAsync(
-			fixture("xml", "source-processor-xml-printing-should-defer-an-xml-stylesheet-to-an-asynchronous"),
-			{
-				xml: true,
-				mode: "minify",
-				renderEmbeddedSource: (
-					/** @type {string} */ source,
-					/** @type {{ as?: string }} */ hole
-				) => {
-					offered.push(source);
-					return Promise.resolve(hole.as ? 'fill:"a<b"' : "a<b{}");
-				}
-			}
-		);
-		expect(offered).toEqual(["a { b : c }", "fill: red"]);
-		expect(code).toMatchSnapshot();
-	});
-
 	it("should write a rendered stylesheet in the shortest character data", () => {
 		const { _xmlCharacterData } = require("../../../lib/html/syntax-parser");
 		expect(_xmlCharacterData("a>b{}")).toBe("a>b{}");
 		expect(_xmlCharacterData("a]]>b\r")).toBe("a]]&gt;b&#13;");
 		expect(_xmlCharacterData("a<b&c")).toBe("<![CDATA[a<b&c]]>");
 		expect(_xmlCharacterData("a<b]]>")).toBe("a&lt;b]]&gt;");
-	});
-
-	it("should leave a stylesheet as written when nothing renders it", () => {
-		const document =
-			fixture("xml", "source-processor-xml-printing-should-leave-a-stylesheet-as-written-when-nothing");
-		expect(
-			/** @type {{ code: string }} */ (
-				new SourceProcessor().process(document, {
-					xml: true,
-					mode: "minify",
-					renderEmbeddedSource: () => undefined
-				})
-			).code
-		).toBe(document);
-	});
-
-	it("should resolve a prefixed stylesheet's namespace through its own prefix", () => {
-		const {
-			builtinEmbeddedRenderer
-		} = require("../../../lib/html/builtinEmbeddedRenderer");
-		expect(
-			/** @type {{ code: string }} */ (
-				new SourceProcessor().process(
-					fixture("xml", "source-processor-xml-printing-should-resolve-a-prefixed-stylesheet-s-namespace"),
-					{
-						xml: true,
-						mode: "minify",
-						renderEmbeddedSource: builtinEmbeddedRenderer()
-					}
-				)
-			).code
-		).toBe(
-			'<s:svg xmlns:s="http://www.w3.org/2000/svg"><s:style>a{b:c}</s:style><style>d { e : f }</style></s:svg>'
-		);
-	});
-
-	it("should keep a stylesheet an asynchronous renderer declines", async () => {
-		const document =
-			fixture("xml", "source-processor-xml-printing-should-leave-a-stylesheet-as-written-when-nothing");
-		const { code } = await new SourceProcessor().processAsync(document, {
-			xml: true,
-			mode: "minify",
-			renderEmbeddedSource: () => Promise.resolve(undefined)
-		});
-		expect(code).toBe(document);
 	});
 
 	it("should tell XML text well-formed as written from text a strict parser refuses", () => {
@@ -361,33 +131,5 @@ describe("SourceProcessor — XML printing", () => {
 		expect(isXmlWellFormedText("&amp")).toBe(false);
 		expect(isXmlWellFormedText("&1a;")).toBe(false);
 		expect(isXmlWellFormedText("a < b")).toBe(false);
-	});
-
-	it("should close a blank stylesheet the input ran out in", () => {
-		const {
-			builtinEmbeddedRenderer
-		} = require("../../../lib/html/builtinEmbeddedRenderer");
-		/**
-		 * @param {string} document an SVG
-		 * @returns {string} the minified document
-		 */
-		const minify = (document) =>
-			/** @type {{ code: string }} */ (
-				new SourceProcessor().process(document, {
-					xml: true,
-					mode: "minify",
-					renderEmbeddedSource: builtinEmbeddedRenderer()
-				})
-			).code;
-		expect(
-			minify(fixture("xml", "source-processor-xml-printing-should-close-a-blank-stylesheet-the-input-ran-out"))
-		).toBe('<svg xmlns="http://www.w3.org/2000/svg"><style>\n\n</style></svg>');
-		expect(
-			minify(
-				fixture("xml", "source-processor-xml-printing-should-close-a-blank-stylesheet-the-input-ran-out-2")
-			)
-		).toBe(
-			'<svg xmlns="http://www.w3.org/2000/svg"><style><![CDATA[ ]]></style></svg>'
-		);
 	});
 });

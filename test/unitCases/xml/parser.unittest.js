@@ -27,24 +27,10 @@ const parseXml = (src, skip) => {
 	};
 };
 
-// What the parser builds and reports for each fixture is in
-// `invariants.unittest.js`'s snapshot; these hold its accessors, options and
-// inputs too large to snapshot.
+// What the parser builds and reports for each fixture, under each option a
+// fixture's `parse.json` names, is in `invariants.unittest.js`'s snapshot;
+// these hold its accessors and inputs too large to snapshot.
 describe("XmlSyntax — parsing", () => {
-	const { SourceProcessor } = require("../../../lib/html/syntax");
-
-	// Each fixture's sorted print is in the snapshot; this holds it as final.
-	it.each([
-		"xml-syntax-parsing-should-reuse-attribute-sorting-without-html-normalization",
-		"xml-syntax-parsing-should-reuse-attribute-sorting-without-html-normalization-2",
-		"xml-syntax-parsing-should-rank-only-explicit-xml-attributes-and-preserve-dtd"
-	])("should print %s sorted the same again", (name) => {
-		const processor = new SourceProcessor();
-		const options = { xml: true, mode: /** @type {const} */ ("minify"), sortAttributes: true };
-		const once = processor.process(fixture("xml", name), options).code;
-		expect(processor.process(once, options).code).toBe(once);
-	});
-
 	it("should expose XML attribute values through the shared path", () => {
 		const source = fixture("xml", "xml-syntax-parsing-should-expose-xml-attribute-values-through-the-shared-path");
 		const document = parseHtmlRefs(source, 0, { xml: true });
@@ -96,20 +82,6 @@ describe("XmlSyntax — parsing", () => {
 		const document = parseHtmlRefs(source, 0, { xml: true });
 		const root = A.child(1, document);
 		expect(A.name(A.child(1, root))).toBe("after");
-	});
-
-	it("should honor AST skip options without changing XML structure", () => {
-		const root = /** @type {MatElement} */ (
-			parseXml(fixture("xml", "xml-syntax-parsing-should-honor-ast-skip-options-without-changing-xml-structure"), {
-				text: true,
-				comments: true
-			}).children[0]
-		);
-		expect(root.children).toHaveLength(1);
-		expect(root.children[0]).toMatchObject({
-			type: NodeType.Element,
-			tagName: "child"
-		});
 	});
 
 	it("should expand the internal entities the DTD declares", () => {

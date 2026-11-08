@@ -3,5 +3,16 @@
 		"xml": true,
 		"mode": "minify",
 		"sortAttributes": true
+	},
+	{
+		"print": "xmlMinify"
+	},
+	{
+		"print": "xmlMinify",
+		"sortAttributes": false
+	},
+	{
+		"print": "xmlMinify",
+		"sortAttributes": true
 	}
 ]

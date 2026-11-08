@@ -1,0 +1,28 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"renderEmbeddedSource": "builtin"
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "builtin",
+			"options": {
+				"environment": {
+					"browsers": [
+						"chrome 60",
+						"safari 10",
+						"ie 11"
+					]
+				}
+			}
+		}
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	}
+]
