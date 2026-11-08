@@ -744,7 +744,6 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: conditionals/ifs_1",
 			"terser compress: conditionals/ifs_2",
-			"terser compress: conditionals/cond_1",
 			"terser compress: conditionals/cond_2",
 			"terser compress: conditionals/cond_4",
 			"terser compress: conditionals/cond_5",

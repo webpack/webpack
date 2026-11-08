@@ -1399,7 +1399,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: conditionals/ifs_1",
 			"terser compress: conditionals/ifs_2",
 			"terser compress: conditionals/ifs_5",
-			"terser compress: conditionals/cond_1",
 			"terser compress: conditionals/cond_5",
 			"terser compress: conditionals/cond_7",
 			"terser compress: conditionals/cond_7_1",

@@ -5827,6 +5827,36 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should print an `if` calling one local name in both branches as one call", () => {
+		// A test running something or calls differing twice stay.
+		const source = fixture("javascript", "one-pass-minify-of-statement-sequences-should-print-an-if-calling-one-local-name");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'function f(d,c){d(c?1:2,"a"),d(c?1:2),g(c?1:2),h()?d(1):d(2),c?d(1,1):d(2,2)}function g(v){console.log("g",v)}function h(){return 0}f(function(v,w){console.log(v,w)},1);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should print an `if` holding an `if` with a branch alike as one `?:` of joined tests", () => {
+		// Branches unlike stay nested; an assignment test takes its parentheses.
+		const source = fixture("javascript", "one-pass-minify-of-statement-sequences-should-print-an-if-holding-an-if-with-a");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'var l=[];function t(v){return l.push(v),v}function f(a,b){t(a)&&t(b)?l.push("c"):l.push("d"),t(a)||t(b)?l.push("c"):l.push("d"),t(a)?t(b)?l.push("c"):l.push("d"):l.push("e"),t(a)&&t(b)?l.push("c"):l.push("d")}f(1,0),f(0,1),console.log(l.join());'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should print two `new`s of one local name differing in one argument as one", () => {
+		// A call and a `new`, or a member read off each, stay.
+		const source = fixture("javascript", "one-pass-minify-of-statement-sequences-should-print-two-new-s-of-one-local-name");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			"function F(v){this.v=v}function f(c){return new F(c?1:2)}function g(c){c?new F(1).v:new F(2).v,new F(c?3:4)}function h(c){return c?new F(1):F(2)}console.log(f(1).v,g(0),typeof h(0));"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
