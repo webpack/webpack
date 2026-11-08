@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Minify more conditions, inlined calls, dead code and spellings in one pass.
+Minify more JavaScript in one pass while preserving aliased parameter reads.
