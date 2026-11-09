@@ -18749,11 +18749,6 @@ declare interface KnownJavascriptModuleBuildInfo {
 	 * whether this module was parsed with `optimization.inlineExports` enabled (gates inlining of its exports)
 	 */
 	inlineExports?: boolean;
-
-	/**
-	 * module scope holds a `using`/`await using` declaration, so its resources must be disposed when the module finished evaluating
-	 */
-	usesTopLevelUsingDeclaration?: boolean;
 }
 
 /**
