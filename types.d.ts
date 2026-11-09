@@ -18426,7 +18426,8 @@ declare class JavascriptSourceProcessor<
 
 /**
  * The path every visitor of a JavaScript `SourceProcessor` run receives, its
- * reads defaulting to the node the walk is at.
+ * reads defaulting to the node the walk is at; outside a walk it is `A`, read by
+ * passing the node a parse returned.
  */
 declare abstract class JavascriptSyntaxPath {
 	state: unknown;
