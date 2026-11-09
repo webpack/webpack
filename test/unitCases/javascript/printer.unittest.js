@@ -320,7 +320,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-32"),
 				{},
-				"function f(n){g();({[q]:1});({...o});`${n}`;[g()];var t=0;return n}var top=1;function topFunction(){}"
+				"function f(n){g();({[q]:1});({...o});`${n}`;g();var t=0;return n}var top=1;function topFunction(){}"
 			],
 			[
 				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-33"),
@@ -489,7 +489,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-63"),
 				{},
-				"function f(){var x=s();n(x);let n=()=>{}}function h(){var x=s();new n(x);class n{}}function i(){x(s());var x=()=>{}}"
+				"function f(){var x=s();n(x);let n=()=>{}}function h(){s();new x;class x{}}function i(){x(s());var x=()=>{}}"
 			],
 			// A directive stays, and so does a global set before a call that may read it.
 			[
@@ -4414,5 +4414,41 @@ describe("one-pass minify of known tests and switches, family E", () => {
 		expect(code).toBe(
 			"export const mode=`staging`;export const resolved=`other`;export function late(){return mode+`!`}"
 		);
+	});
+
+	it("should drop what a constructor, a class or a pattern made in place never reads", () => {
+		const options = { compress: { ecma: 2020, toplevel: true }, ecma: 2020, mangle: false };
+		/** @type {[string, string][]} */
+		const cases = [
+			// `new` of a function or class known where it is called passes what its parameters take, and past them only what runs.
+			[fixture("javascript", "one-pass-f2-1"), "function F(a){this.a=a}class C{constructor(a){this.a=a}}class B{}out.f=new F(1,g()),out.c=new C(1,h(),k(),m()),out.b=new B,out.e=new function(){this.e=1},out.x=new class{constructor(){this.x=1}},out.d=new function({value}){this.value=value}({value:1}),out.F=F,out.C=C;"],
+			// A rest, a default or `arguments` reading the arguments, a derived class's default constructor and a spread keep them.
+			[fixture("javascript", "one-pass-f2-2"), "function A(a,b){this.a=a}function R(...r){this.r=r}function D(a=arguments[1]){this.a=a}class P extends Q{}class S{constructor(){this.n=arguments.length}}out.a=new A(1,2),out.r=new R(1,2),out.d=new D(void 0,2),out.p=new P(1,2),out.s=new S(1,2),out.l=new class{constructor(){this.f=()=>arguments}}(1,2),out.u=new A(...v,1),out.A=A,out.R=R,out.D=D,out.P=P,out.S=S;"],
+			// An `eval` may read `arguments`.
+			[fixture("javascript", "one-pass-f2-9"), "out.t=new function(){eval(`this.n = arguments.length`)}(1,2),out.c=new class{constructor(){eval(`this.n = arguments.length`)}}(1,2);"],
+			// `new` of a class running nothing goes; a key, field, block or constructor running code, a field reading `this` or `super`, or heritage keep it.
+			[fixture("javascript", "one-pass-f2-3"), "new class{[k()](){}},new class{a=g()},new class{a=this.b;get b(){return g()}},new class{a=()=>super.x},new class{static{g()}},new class{constructor(){g()}},new class{constructor(x=g()){}},new class extends Base{},new class{}(g());"],
+			// A base class's constructor taking nothing but a rest and running nothing is its default one.
+			[fixture("javascript", "one-pass-f2-4"), "class A{m(){}}class B{}class C{}class D extends A{constructor(){}}class E{constructor(a){}}class F{constructor(){g()}}class G{constructor(...[a]){}}class H{static constructor(){}}out.l=[A,B,C,D,E,F,G,H];"],
+			// An object pattern nothing reads goes where it takes apart a literal by plain keys, each default a constant or a function.
+			[fixture("javascript", "one-pass-f2-5"), "let{kept=`kept`,read=`read`}={};console.log(read);"],
+			// A getter, `__proto__`, a default running code, a function's `arguments` or `caller`, a computed key, another value or pattern keep it.
+			[fixture("javascript", "one-pass-f2-6"), "let{a}={get a(){return log(`getter`)}},{b}={__proto__:proto},{c=log(`default`)}={},{arguments:d}=()=>{},{caller:e}=function(){},{[key]:f}={},{g}=source,{h:{i}}={h:{}},[j]=[];log(`value`);let{...l}=[];"],
+			// A declarator going prints what its array or object runs, but one whose value prints where it is read.
+			[fixture("javascript", "one-pass-f2-7"), "out.f=function(p){g();h();k();if(!(p instanceof A||p instanceof B)||p&&p.init!==this)m()};"],
+			// A primitive spread in parentheses, or the global `undefined`, copies nothing too.
+			[fixture("javascript", "one-pass-f2-8"), "console.log({a:1},{b:2},{},{...void f()},{...`ab`},{c:3}),out.g=function(undefined){return{...undefined}};"]
+		];
+		for (const [source, expected] of cases) {
+			expect(minifyOnePass(source, options).code).toBe(expected);
+		}
+		// What the constructors and patterns run is kept.
+		for (const [prelude, name] of [
+			['var out={},g=()=>console.log("g"),h=g,k=g,m=g;', "one-pass-f2-1"],
+			['var log=console.log,proto={},key="k",source={};', "one-pass-f2-6"]
+		]) {
+			const source = `${prelude}${fixture("javascript", name)}`;
+			expect(runProgram(minifyOnePass(source, options).code)).toBe(runProgram(source));
+		}
 	});
 });
