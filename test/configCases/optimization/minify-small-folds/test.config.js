@@ -16,7 +16,10 @@ module.exports = {
 		expect(code).toContain("[kept=/*! keep */void 0]");
 		expect(code).toContain("function length(parameter=void 0)");
 		expect(code).toContain("method(parameter=void 0)");
-		expect(code).toContain("expect([typeof void 0,3,[1,,2][1.5]");
+		// `-1` and `1.5` name no index and no built-in, reading `undefined` too.
+		expect(code).toContain(
+			'expect(["undefined",3,void 0,void 0,void 0,void 0,[track("hole"),,2][1]'
+		);
 		expect(code).toContain('[track("hole"),,2][1]');
 		expect(code).toContain(
 			'var pattern=/a/,fn="function",object="object",runs=[track("made")]&&"runs",unset={size:1}.size'
