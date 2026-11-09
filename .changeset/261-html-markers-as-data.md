@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep text that looks like an internal marker as data and escape URLs in HTML.
+Keep marker-like text as data in HTML and JavaScript and escape HTML URLs.
