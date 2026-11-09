@@ -3819,6 +3819,100 @@ describe("SyntaxTree", () => {
 		expect(call.range).toEqual([1, 6]);
 	});
 
+	it("builds lazy objects equal to the eager ones", () => {
+		for (const options of TREE_OPTION_SETS) {
+			for (const [code, sourceType] of [
+				[SCRIPT, "script"],
+				[MODULE, "module"]
+			]) {
+				/**
+				 * @returns {WrittenNode} the program, parsed afresh
+				 */
+				const parse = () =>
+					/** @type {WrittenNode} */ (
+						/** @type {unknown} */ (
+							WebpackParser.parse(code, {
+								...options,
+								sourceType: /** @type {"script" | "module"} */ (sourceType)
+							})
+						)
+					);
+				const eagerTree = new SyntaxTree();
+				const eager = eagerTree.estree(
+					write(eagerTree, parse(), new Set())
+				);
+				const tree = new SyntaxTree();
+				const root = write(tree, parse(), new Set());
+				const lazy = /** @type {import("estree").Program} */ (
+					tree.lazyEstree(root)
+				);
+				expect(tree.nodeOf(lazy)).toBe(root);
+				expect(tree.estree(root)).toBe(lazy);
+				// a node left unread until the tree is gone reads copied columns
+				const unread = /** @type {import("estree").Node} */ (
+					tree.estree(tree.field(0, Field.body, root))
+				);
+				expect(firstDifference(lazy, eager, "Program")).toBeNull();
+				tree.release();
+				expect(
+					firstDifference(
+						unread,
+						/** @type {import("estree").Program} */ (eager).body[0],
+						"Program.body[0]"
+					)
+				).toBeNull();
+			}
+		}
+	});
+
+	it("builds a lazy object's child once it is read, and maps it back", () => {
+		const { tree, node } = writeExpression(fixture("javascript", "syntax-tree-builds-only-the-fields-asked-for-then-the-rest-on-the-same-object"));
+		const call = /** @type {EXPECTED_ANY} */ (tree.lazyEstree(node));
+		// children live on the prototype until read, so they are no own keys
+		expect(Object.keys(call)).not.toContain("callee");
+		expect(call.callee).toBe(call.callee);
+		expect(tree.nodeOf(call.callee)).toBe(tree.field(0, Field.callee, node));
+		expect(tree.nodeOf({ type: "Identifier", name: "f" })).toBe(0);
+		const callee = { type: "Identifier", name: "g" };
+		call.callee = callee;
+		expect(call.callee).toBe(callee);
+		expect(tree.lazyEstree(0)).toBeNull();
+		// resetting the tree leaves a made object reading its own copy
+		tree.reset();
+		expect(
+			call.arguments.map((/** @type {EXPECTED_ANY} */ arg) => arg.name)
+		).toEqual(["a", "b"]);
+		expect(new SyntaxTree().nodeOf(call)).toBe(0);
+		// a tree whose lazy objects were never made has none to hand columns to
+		const empty = new SyntaxTree();
+		expect(empty.lazyEstree(0)).toBeNull();
+		empty.release();
+		expect(empty.nodeOf(call)).toBe(0);
+	});
+
+	it("hands a large tree's columns to its lazy objects", () => {
+		const { parseProgram, takeParsedTree } = require(
+			"../../../lib/javascript/syntax-parser"
+		);
+		parseProgram("a;".repeat(40000), 0, { sourceType: "script" });
+		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
+		const program = /** @type {import("estree").Program} */ (
+			tree.lazyEstree(tree._count)
+		);
+		const types = tree._types;
+		tree.release();
+		expect(program.body).toHaveLength(40000);
+		expect(
+			/** @type {import("estree").ExpressionStatement} */ (program.body[39999])
+				.expression
+		).toMatchObject({ type: "Identifier", name: "a", start: 79998 });
+		// kept, not copied, and so not handed to the next tree either
+		expect(types.byteLength).toBeGreaterThan(0);
+		// a release sizes the next tree after this one: size it back down
+		parseProgram("a;", 0, { sourceType: "script" });
+		/** @type {SyntaxTree} */ (takeParsedTree()).release();
+	});
+
 	it("reads a literal's regex and bigint forms when asked for alone", () => {
 		const regex = writeExpression(fixture("javascript", "reg-exp-validator-rejects-and-accepts-the-same-patterns-as-acorn-at-ecma-version"));
 		const literal = /** @type {EXPECTED_ANY} */ (
