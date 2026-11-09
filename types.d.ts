@@ -6635,80 +6635,7 @@ declare class CssModulesPlugin {
 	};
 }
 type CssNodePath<T = number, S = unknown> = Omit<
-	{
-		state: unknown;
-		get node(): number;
-		get parent(): null | number;
-		get index(): number;
-		/**
-		 * Stop the walk descending into the current node (enter only).
-		 */
-		skipChildren(): void;
-		/**
-		 * Stop the walk: no visitor fires after the current one returns.
-		 */
-		stop(): void;
-		/**
-		 * Print the current node as `text` in place of what the printer writes; on a
-		 * walk that prints nothing, or on a comment, it does nothing. What holds the
-		 * node then prints its children's text as they printed, without the rewrites.
-		 */
-		replace(text: string): void;
-		/**
-		 * Print nothing for the current node, as `replace("")`.
-		 */
-		remove(): void;
-		/**
-		 * A top-level rule and a comment have none; a hash within a declaration is
-		 * a color, elsewhere an id.
-		 */
-		within(type: number): boolean;
-		type(n?: number): number;
-		range(n?: number): [number, number];
-		start(n?: number): number;
-		end(n?: number): number;
-		loc(n?: number): [number, number, number, number];
-		/**
-		 * A node's text exactly as the input wrote it (`name` and `value` decode).
-		 */
-		source(n?: number, end?: number): string;
-		/**
-		 * The token's value as CSS Syntax defines it: a number for a number,
-		 * percentage or dimension, otherwise text with escapes resolved (a string
-		 * without its quotes, a hash without its `#`, a `url()`'s contents, a
-		 * comment's text); "" for a rule, declaration, function or block.
-		 */
-		value(n?: number): string | number;
-		name(n?: number): string;
-		/**
-		 * A rule's children are its prelude; its block is read with {@link field }.
-		 */
-		childCount(n?: number): number;
-		child(i: number, n?: number): number;
-		/**
-		 * Every child as a new array, for a reader that keeps or searches them.
-		 */
-		children(n?: number): number[];
-		/**
-		 * A block big enough to stream hands its children to the visitors as each
-		 * one finishes rather than collecting them, so its lists read as empty here.
-		 */
-		fieldCount(field: number, n?: number): number;
-		field(i: number, field: number, n?: number): number;
-		fieldNamed(field: number, name: string, n?: number): number;
-		/**
-		 * `important` is a container's bit, cleared when its id is reused; a token's
-		 * type flags are read off its text.
-		 */
-		flag(flag: number, n?: number): boolean;
-		rangeOf(part: number, n?: number): null | [number, number];
-		startOf(part: number, n?: number): number;
-		endOf(part: number, n?: number): number;
-		/**
-		 * CSS has no text beyond a node's name and value, read with `name` and `value`.
-		 */
-		textOf(_part: number, _n?: number): null;
-	},
+	CssSyntaxPath,
 	| "flag"
 	| "node"
 	| "state"
@@ -7605,80 +7532,7 @@ declare interface CssProcessOptions {
  * @experimental exposed as `webpack.css.syntax.SourceProcessor`; unstable API
  */
 declare class CssSourceProcessor<TState = unknown> extends SourceProcessor<
-	{
-		state: unknown;
-		get node(): number;
-		get parent(): null | number;
-		get index(): number;
-		/**
-		 * Stop the walk descending into the current node (enter only).
-		 */
-		skipChildren(): void;
-		/**
-		 * Stop the walk: no visitor fires after the current one returns.
-		 */
-		stop(): void;
-		/**
-		 * Print the current node as `text` in place of what the printer writes; on a
-		 * walk that prints nothing, or on a comment, it does nothing. What holds the
-		 * node then prints its children's text as they printed, without the rewrites.
-		 */
-		replace(text: string): void;
-		/**
-		 * Print nothing for the current node, as `replace("")`.
-		 */
-		remove(): void;
-		/**
-		 * A top-level rule and a comment have none; a hash within a declaration is
-		 * a color, elsewhere an id.
-		 */
-		within(type: number): boolean;
-		type(n?: number): number;
-		range(n?: number): [number, number];
-		start(n?: number): number;
-		end(n?: number): number;
-		loc(n?: number): [number, number, number, number];
-		/**
-		 * A node's text exactly as the input wrote it (`name` and `value` decode).
-		 */
-		source(n?: number, end?: number): string;
-		/**
-		 * The token's value as CSS Syntax defines it: a number for a number,
-		 * percentage or dimension, otherwise text with escapes resolved (a string
-		 * without its quotes, a hash without its `#`, a `url()`'s contents, a
-		 * comment's text); "" for a rule, declaration, function or block.
-		 */
-		value(n?: number): string | number;
-		name(n?: number): string;
-		/**
-		 * A rule's children are its prelude; its block is read with {@link field }.
-		 */
-		childCount(n?: number): number;
-		child(i: number, n?: number): number;
-		/**
-		 * Every child as a new array, for a reader that keeps or searches them.
-		 */
-		children(n?: number): number[];
-		/**
-		 * A block big enough to stream hands its children to the visitors as each
-		 * one finishes rather than collecting them, so its lists read as empty here.
-		 */
-		fieldCount(field: number, n?: number): number;
-		field(i: number, field: number, n?: number): number;
-		fieldNamed(field: number, name: string, n?: number): number;
-		/**
-		 * `important` is a container's bit, cleared when its id is reused; a token's
-		 * type flags are read off its text.
-		 */
-		flag(flag: number, n?: number): boolean;
-		rangeOf(part: number, n?: number): null | [number, number];
-		startOf(part: number, n?: number): number;
-		endOf(part: number, n?: number): number;
-		/**
-		 * CSS has no text beyond a node's name and value, read with `name` and `value`.
-		 */
-		textOf(_part: number, _n?: number): null;
-	},
+	CssSyntaxPath,
 	number,
 	CssProcessOptions,
 	CssPrintOptions,
@@ -7693,6 +7547,99 @@ declare class CssSourceProcessor<TState = unknown> extends SourceProcessor<
 		writes: DeferredWrite[]
 	) => string;
 	static deferredWrite: (id: number) => string;
+}
+
+/**
+ * The path every visitor of a CSS `SourceProcessor` run receives, its reads
+ * defaulting to the node the walk is at; outside a walk it is `A`, read by
+ * passing the node a parse returned. Every field `CssParser` reads goes through
+ * it, with `n` an integer node id into the columns, so the storage stays behind it.
+ */
+declare abstract class CssSyntaxPath {
+	state: unknown;
+	get node(): number;
+	get parent(): null | number;
+	get index(): number;
+
+	/**
+	 * Stop the walk descending into the current node (enter only).
+	 */
+	skipChildren(): void;
+
+	/**
+	 * Stop the walk: no visitor fires after the current one returns.
+	 */
+	stop(): void;
+
+	/**
+	 * Print the current node as `text` in place of what the printer writes; on a
+	 * walk that prints nothing, or on a comment, it does nothing. What holds the
+	 * node then prints its children's text as they printed, without the rewrites.
+	 */
+	replace(text: string): void;
+
+	/**
+	 * Print nothing for the current node, as `replace("")`.
+	 */
+	remove(): void;
+
+	/**
+	 * A top-level rule and a comment have none; a hash within a declaration is
+	 * a color, elsewhere an id.
+	 */
+	within(type: number): boolean;
+	type(n?: number): number;
+	range(n?: number): [number, number];
+	start(n?: number): number;
+	end(n?: number): number;
+	loc(n?: number): [number, number, number, number];
+
+	/**
+	 * A node's text exactly as the input wrote it (`name` and `value` decode).
+	 */
+	source(n?: number, end?: number): string;
+
+	/**
+	 * The token's value as CSS Syntax defines it: a number for a number,
+	 * percentage or dimension, otherwise text with escapes resolved (a string
+	 * without its quotes, a hash without its `#`, a `url()`'s contents, a
+	 * comment's text); "" for a rule, declaration, function or block.
+	 */
+	value(n?: number): string | number;
+	name(n?: number): string;
+
+	/**
+	 * A rule's children are its prelude; its block is read with {@link field}.
+	 */
+	childCount(n?: number): number;
+	child(i: number, n?: number): number;
+
+	/**
+	 * Every child as a new array, for a reader that keeps or searches them.
+	 */
+	children(n?: number): number[];
+
+	/**
+	 * A block big enough to stream hands its children to the visitors as each
+	 * one finishes rather than collecting them, so its lists read as empty here.
+	 */
+	fieldCount(field: number, n?: number): number;
+	field(i: number, field: number, n?: number): number;
+	fieldNamed(field: number, name: string, n?: number): number;
+
+	/**
+	 * `important` is a container's bit, cleared when its id is reused; a token's
+	 * type flags are read off its text.
+	 */
+	flag(flag: number, n?: number): boolean;
+	rangeOf(part: number, n?: number): null | [number, number];
+	startOf(part: number, n?: number): number;
+	endOf(part: number, n?: number): number;
+
+	/**
+	 * CSS has no text beyond a node's name and value, read with `name` and `value`.
+	 */
+	textOf(_part: number, _n?: number): null;
 }
 
 /**
@@ -13115,84 +13062,7 @@ declare interface HtmlMutableTag {
 	remove?: boolean;
 }
 type HtmlNodePath<T = number, S = unknown> = Omit<
-	{
-		state: unknown;
-		get node(): number;
-		get parent(): null | number;
-		/**
-		 * Counted along the sibling links when asked, so the walk stores nothing for it.
-		 */
-		get index(): number;
-		/**
-		 * Stop the walk descending into the current node (enter only).
-		 */
-		skipChildren(): void;
-		/**
-		 * Stop the walk: no visitor fires after the current one returns.
-		 */
-		stop(): void;
-		/**
-		 * Walks the parent links, so a `<template>`'s content ends at its fragment.
-		 */
-		within(type: number): boolean;
-		type(n?: number): number;
-		range(n?: number): [number, number];
-		start(n?: number): number;
-		end(n?: number): number;
-		/**
-		 * Line / column are converted only when asked, by a converter made on the
-		 * first call of a parse. Valid during the walk, as {@link source } is.
-		 */
-		loc(n?: number): [number, number, number, number];
-		/**
-		 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
-		 */
-		source(n?: number, end?: number): string;
-		/**
-		 * An element's or attribute's name (lowercased, adjusted in foreign content),
-		 * a doctype's name, a processing instruction's target; "" for other nodes.
-		 */
-		name(n?: number): string;
-		fieldCount(field: number, n?: number): number;
-		/**
-		 * An attribute item is a node the shared reads take.
-		 */
-		field(i: number, field: number, n?: number): number;
-		/**
-		 * Attribute names are stored lowercased, so `name` is compared as written.
-		 */
-		fieldNamed(field: number, name: string, n?: number): number;
-		flag(flag: number, n?: number): boolean;
-		/**
-		 * A parser-inserted element has no name, tags or content in the source.
-		 */
-		rangeOf(part: number, n?: number): null | [number, number];
-		startOf(part: number, n?: number): number;
-		endOf(part: number, n?: number): number;
-		/**
-		 * Name and value are read with `name` and `value`; this reads a node's
-		 * other text, such as a doctype's identifiers, which are stored decoded.
-		 */
-		textOf(part: number, n?: number): null | string;
-		/**
-		 * A text's, comment's, processing instruction's or attribute's data,
-		 * character references decoded; "" for other nodes.
-		 */
-		value(n?: number): string;
-		/**
-		 * Counted along the sibling links once per node and visitor call.
-		 */
-		childCount(n?: number): number;
-		/**
-		 * Reached along the sibling links from the last child read under `n`, so a
-		 * loop over a node's children takes one step per child.
-		 */
-		child(i: number, n?: number): number;
-		/**
-		 * Every child as a new array, for a reader that keeps or searches them.
-		 */
-		children(n?: number): number[];
-	},
+	HtmlSyntaxPath,
 	| "flag"
 	| "node"
 	| "state"
@@ -13812,84 +13682,7 @@ declare interface HtmlResourceHintWebpackOptions {
  * @experimental exposed as `webpack.html.syntax.SourceProcessor`; unstable API
  */
 declare class HtmlSourceProcessor<TState = unknown> extends SourceProcessor<
-	{
-		state: unknown;
-		get node(): number;
-		get parent(): null | number;
-		/**
-		 * Counted along the sibling links when asked, so the walk stores nothing for it.
-		 */
-		get index(): number;
-		/**
-		 * Stop the walk descending into the current node (enter only).
-		 */
-		skipChildren(): void;
-		/**
-		 * Stop the walk: no visitor fires after the current one returns.
-		 */
-		stop(): void;
-		/**
-		 * Walks the parent links, so a `<template>`'s content ends at its fragment.
-		 */
-		within(type: number): boolean;
-		type(n?: number): number;
-		range(n?: number): [number, number];
-		start(n?: number): number;
-		end(n?: number): number;
-		/**
-		 * Line / column are converted only when asked, by a converter made on the
-		 * first call of a parse. Valid during the walk, as {@link source } is.
-		 */
-		loc(n?: number): [number, number, number, number];
-		/**
-		 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
-		 */
-		source(n?: number, end?: number): string;
-		/**
-		 * An element's or attribute's name (lowercased, adjusted in foreign content),
-		 * a doctype's name, a processing instruction's target; "" for other nodes.
-		 */
-		name(n?: number): string;
-		fieldCount(field: number, n?: number): number;
-		/**
-		 * An attribute item is a node the shared reads take.
-		 */
-		field(i: number, field: number, n?: number): number;
-		/**
-		 * Attribute names are stored lowercased, so `name` is compared as written.
-		 */
-		fieldNamed(field: number, name: string, n?: number): number;
-		flag(flag: number, n?: number): boolean;
-		/**
-		 * A parser-inserted element has no name, tags or content in the source.
-		 */
-		rangeOf(part: number, n?: number): null | [number, number];
-		startOf(part: number, n?: number): number;
-		endOf(part: number, n?: number): number;
-		/**
-		 * Name and value are read with `name` and `value`; this reads a node's
-		 * other text, such as a doctype's identifiers, which are stored decoded.
-		 */
-		textOf(part: number, n?: number): null | string;
-		/**
-		 * A text's, comment's, processing instruction's or attribute's data,
-		 * character references decoded; "" for other nodes.
-		 */
-		value(n?: number): string;
-		/**
-		 * Counted along the sibling links once per node and visitor call.
-		 */
-		childCount(n?: number): number;
-		/**
-		 * Reached along the sibling links from the last child read under `n`, so a
-		 * loop over a node's children takes one step per child.
-		 */
-		child(i: number, n?: number): number;
-		/**
-		 * Every child as a new array, for a reader that keeps or searches them.
-		 */
-		children(n?: number): number[];
-	},
+	HtmlSyntaxPath,
 	number,
 	HtmlProcessOptions,
 	HtmlPrintOptions,
@@ -13904,6 +13697,107 @@ declare class HtmlSourceProcessor<TState = unknown> extends SourceProcessor<
 		writes: DeferredWrite[]
 	) => string;
 	static deferredWrite: (id: number) => string;
+}
+
+/**
+ * The path every visitor of an HTML `SourceProcessor` run receives, its reads
+ * defaulting to the node the walk is at; outside a walk it is `A`, read by
+ * passing the node a parse returned. Every field a consumer reads goes through
+ * it, so the node representation can change underneath; `n` is an `HtmlNodeRef`,
+ * valid until the next `parseHtml`.
+ */
+declare abstract class HtmlSyntaxPath {
+	state: unknown;
+	get node(): number;
+	get parent(): null | number;
+
+	/**
+	 * Counted along the sibling links when asked, so the walk stores nothing for it.
+	 */
+	get index(): number;
+
+	/**
+	 * Stop the walk descending into the current node (enter only).
+	 */
+	skipChildren(): void;
+
+	/**
+	 * Stop the walk: no visitor fires after the current one returns.
+	 */
+	stop(): void;
+
+	/**
+	 * Walks the parent links, so a `<template>`'s content ends at its fragment.
+	 */
+	within(type: number): boolean;
+	type(n?: number): number;
+	range(n?: number): [number, number];
+	start(n?: number): number;
+	end(n?: number): number;
+
+	/**
+	 * Line / column are converted only when asked, by a converter made on the
+	 * first call of a parse. Valid during the walk, as {@link source} is.
+	 */
+	loc(n?: number): [number, number, number, number];
+
+	/**
+	 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
+	 */
+	source(n?: number, end?: number): string;
+
+	/**
+	 * An element's or attribute's name (lowercased, adjusted in foreign content),
+	 * a doctype's name, a processing instruction's target; "" for other nodes.
+	 */
+	name(n?: number): string;
+	fieldCount(field: number, n?: number): number;
+
+	/**
+	 * An attribute item is a node the shared reads take.
+	 */
+	field(i: number, field: number, n?: number): number;
+
+	/**
+	 * Attribute names are stored lowercased, so `name` is compared as written.
+	 */
+	fieldNamed(field: number, name: string, n?: number): number;
+	flag(flag: number, n?: number): boolean;
+
+	/**
+	 * A parser-inserted element has no name, tags or content in the source.
+	 */
+	rangeOf(part: number, n?: number): null | [number, number];
+	startOf(part: number, n?: number): number;
+	endOf(part: number, n?: number): number;
+
+	/**
+	 * Name and value are read with `name` and `value`; this reads a node's
+	 * other text, such as a doctype's identifiers, which are stored decoded.
+	 */
+	textOf(part: number, n?: number): null | string;
+
+	/**
+	 * A text's, comment's, processing instruction's or attribute's data,
+	 * character references decoded; "" for other nodes.
+	 */
+	value(n?: number): string;
+
+	/**
+	 * Counted along the sibling links once per node and visitor call.
+	 */
+	childCount(n?: number): number;
+
+	/**
+	 * Reached along the sibling links from the last child read under `n`, so a
+	 * loop over a node's children takes one step per child.
+	 */
+	child(i: number, n?: number): number;
+
+	/**
+	 * Every child as a new array, for a reader that keeps or searches them.
+	 */
+	children(n?: number): number[];
 }
 
 /**
@@ -39017,80 +38911,7 @@ declare namespace exports {
 		}
 		export namespace syntax {
 			export namespace parser {
-				export let A: {
-					state: unknown;
-					get node(): number;
-					get parent(): null | number;
-					get index(): number;
-					/**
-					 * Stop the walk descending into the current node (enter only).
-					 */
-					skipChildren(): void;
-					/**
-					 * Stop the walk: no visitor fires after the current one returns.
-					 */
-					stop(): void;
-					/**
-					 * Print the current node as `text` in place of what the printer writes; on a
-					 * walk that prints nothing, or on a comment, it does nothing. What holds the
-					 * node then prints its children's text as they printed, without the rewrites.
-					 */
-					replace(text: string): void;
-					/**
-					 * Print nothing for the current node, as `replace("")`.
-					 */
-					remove(): void;
-					/**
-					 * A top-level rule and a comment have none; a hash within a declaration is
-					 * a color, elsewhere an id.
-					 */
-					within(type: number): boolean;
-					type(n?: number): number;
-					range(n?: number): [number, number];
-					start(n?: number): number;
-					end(n?: number): number;
-					loc(n?: number): [number, number, number, number];
-					/**
-					 * A node's text exactly as the input wrote it (`name` and `value` decode).
-					 */
-					source(n?: number, end?: number): string;
-					/**
-					 * The token's value as CSS Syntax defines it: a number for a number,
-					 * percentage or dimension, otherwise text with escapes resolved (a string
-					 * without its quotes, a hash without its `#`, a `url()`'s contents, a
-					 * comment's text); "" for a rule, declaration, function or block.
-					 */
-					value(n?: number): string | number;
-					name(n?: number): string;
-					/**
-					 * A rule's children are its prelude; its block is read with {@link field }.
-					 */
-					childCount(n?: number): number;
-					child(i: number, n?: number): number;
-					/**
-					 * Every child as a new array, for a reader that keeps or searches them.
-					 */
-					children(n?: number): number[];
-					/**
-					 * A block big enough to stream hands its children to the visitors as each
-					 * one finishes rather than collecting them, so its lists read as empty here.
-					 */
-					fieldCount(field: number, n?: number): number;
-					field(i: number, field: number, n?: number): number;
-					fieldNamed(field: number, name: string, n?: number): number;
-					/**
-					 * `important` is a container's bit, cleared when its id is reused; a token's
-					 * type flags are read off its text.
-					 */
-					flag(flag: number, n?: number): boolean;
-					rangeOf(part: number, n?: number): null | [number, number];
-					startOf(part: number, n?: number): number;
-					endOf(part: number, n?: number): number;
-					/**
-					 * CSS has no text beyond a node's name and value, read with `name` and `value`.
-					 */
-					textOf(_part: number, _n?: number): null;
-				};
+				export let A: CssSyntaxPath;
 				export let DARK_PROPERTY: "--webpack-dark";
 				export let KEYFRAMES_AT_RULE_RE: RegExp;
 				export let LIGHT_PROPERTY: "--webpack-light";
@@ -39192,160 +39013,9 @@ declare namespace exports {
 				export let escapeName: (name: string) => string;
 				export let grammar: (
 					input: string,
-					visitors: CompiledVisitorBucket<{
-						state: unknown;
-						get node(): number;
-						get parent(): null | number;
-						get index(): number;
-						/**
-						 * Stop the walk descending into the current node (enter only).
-						 */
-						skipChildren(): void;
-						/**
-						 * Stop the walk: no visitor fires after the current one returns.
-						 */
-						stop(): void;
-						/**
-						 * Print the current node as `text` in place of what the printer writes; on a
-						 * walk that prints nothing, or on a comment, it does nothing. What holds the
-						 * node then prints its children's text as they printed, without the rewrites.
-						 */
-						replace(text: string): void;
-						/**
-						 * Print nothing for the current node, as `replace("")`.
-						 */
-						remove(): void;
-						/**
-						 * A top-level rule and a comment have none; a hash within a declaration is
-						 * a color, elsewhere an id.
-						 */
-						within(type: number): boolean;
-						type(n?: number): number;
-						range(n?: number): [number, number];
-						start(n?: number): number;
-						end(n?: number): number;
-						loc(n?: number): [number, number, number, number];
-						/**
-						 * A node's text exactly as the input wrote it (`name` and `value` decode).
-						 */
-						source(n?: number, end?: number): string;
-						/**
-						 * The token's value as CSS Syntax defines it: a number for a number,
-						 * percentage or dimension, otherwise text with escapes resolved (a string
-						 * without its quotes, a hash without its `#`, a `url()`'s contents, a
-						 * comment's text); "" for a rule, declaration, function or block.
-						 */
-						value(n?: number): string | number;
-						name(n?: number): string;
-						/**
-						 * A rule's children are its prelude; its block is read with {@link field }.
-						 */
-						childCount(n?: number): number;
-						child(i: number, n?: number): number;
-						/**
-						 * Every child as a new array, for a reader that keeps or searches them.
-						 */
-						children(n?: number): number[];
-						/**
-						 * A block big enough to stream hands its children to the visitors as each
-						 * one finishes rather than collecting them, so its lists read as empty here.
-						 */
-						fieldCount(field: number, n?: number): number;
-						field(i: number, field: number, n?: number): number;
-						fieldNamed(field: number, name: string, n?: number): number;
-						/**
-						 * `important` is a container's bit, cleared when its id is reused; a token's
-						 * type flags are read off its text.
-						 */
-						flag(flag: number, n?: number): boolean;
-						rangeOf(part: number, n?: number): null | [number, number];
-						startOf(part: number, n?: number): number;
-						endOf(part: number, n?: number): number;
-						/**
-						 * CSS has no text beyond a node's name and value, read with `name` and `value`.
-						 */
-						textOf(_part: number, _n?: number): null;
-					}>[],
+					visitors: CompiledVisitorBucket<CssSyntaxPath>[],
 					writer:
-						| undefined
-						| PrintContext<
-								{
-									state: unknown;
-									get node(): number;
-									get parent(): null | number;
-									get index(): number;
-									/**
-									 * Stop the walk descending into the current node (enter only).
-									 */
-									skipChildren(): void;
-									/**
-									 * Stop the walk: no visitor fires after the current one returns.
-									 */
-									stop(): void;
-									/**
-									 * Print the current node as `text` in place of what the printer writes; on a
-									 * walk that prints nothing, or on a comment, it does nothing. What holds the
-									 * node then prints its children's text as they printed, without the rewrites.
-									 */
-									replace(text: string): void;
-									/**
-									 * Print nothing for the current node, as `replace("")`.
-									 */
-									remove(): void;
-									/**
-									 * A top-level rule and a comment have none; a hash within a declaration is
-									 * a color, elsewhere an id.
-									 */
-									within(type: number): boolean;
-									type(n?: number): number;
-									range(n?: number): [number, number];
-									start(n?: number): number;
-									end(n?: number): number;
-									loc(n?: number): [number, number, number, number];
-									/**
-									 * A node's text exactly as the input wrote it (`name` and `value` decode).
-									 */
-									source(n?: number, end?: number): string;
-									/**
-									 * The token's value as CSS Syntax defines it: a number for a number,
-									 * percentage or dimension, otherwise text with escapes resolved (a string
-									 * without its quotes, a hash without its `#`, a `url()`'s contents, a
-									 * comment's text); "" for a rule, declaration, function or block.
-									 */
-									value(n?: number): string | number;
-									name(n?: number): string;
-									/**
-									 * A rule's children are its prelude; its block is read with {@link field }.
-									 */
-									childCount(n?: number): number;
-									child(i: number, n?: number): number;
-									/**
-									 * Every child as a new array, for a reader that keeps or searches them.
-									 */
-									children(n?: number): number[];
-									/**
-									 * A block big enough to stream hands its children to the visitors as each
-									 * one finishes rather than collecting them, so its lists read as empty here.
-									 */
-									fieldCount(field: number, n?: number): number;
-									field(i: number, field: number, n?: number): number;
-									fieldNamed(field: number, name: string, n?: number): number;
-									/**
-									 * `important` is a container's bit, cleared when its id is reused; a token's
-									 * type flags are read off its text.
-									 */
-									flag(flag: number, n?: number): boolean;
-									rangeOf(part: number, n?: number): null | [number, number];
-									startOf(part: number, n?: number): number;
-									endOf(part: number, n?: number): number;
-									/**
-									 * CSS has no text beyond a node's name and value, read with `name` and `value`.
-									 */
-									textOf(_part: number, _n?: number): null;
-								},
-								number,
-								CssPrintOptions
-						  >,
+						undefined | PrintContext<CssSyntaxPath, number, CssPrintOptions>,
 					options: CssProcessOptions
 				) => void;
 				export let isDashedIdentifier: (identifier: string) => boolean;
@@ -39422,158 +39092,8 @@ declare namespace exports {
 			}
 			export namespace printer {
 				export let printer: (
-					path: {
-						state: unknown;
-						get node(): number;
-						get parent(): null | number;
-						get index(): number;
-						/**
-						 * Stop the walk descending into the current node (enter only).
-						 */
-						skipChildren(): void;
-						/**
-						 * Stop the walk: no visitor fires after the current one returns.
-						 */
-						stop(): void;
-						/**
-						 * Print the current node as `text` in place of what the printer writes; on a
-						 * walk that prints nothing, or on a comment, it does nothing. What holds the
-						 * node then prints its children's text as they printed, without the rewrites.
-						 */
-						replace(text: string): void;
-						/**
-						 * Print nothing for the current node, as `replace("")`.
-						 */
-						remove(): void;
-						/**
-						 * A top-level rule and a comment have none; a hash within a declaration is
-						 * a color, elsewhere an id.
-						 */
-						within(type: number): boolean;
-						type(n?: number): number;
-						range(n?: number): [number, number];
-						start(n?: number): number;
-						end(n?: number): number;
-						loc(n?: number): [number, number, number, number];
-						/**
-						 * A node's text exactly as the input wrote it (`name` and `value` decode).
-						 */
-						source(n?: number, end?: number): string;
-						/**
-						 * The token's value as CSS Syntax defines it: a number for a number,
-						 * percentage or dimension, otherwise text with escapes resolved (a string
-						 * without its quotes, a hash without its `#`, a `url()`'s contents, a
-						 * comment's text); "" for a rule, declaration, function or block.
-						 */
-						value(n?: number): string | number;
-						name(n?: number): string;
-						/**
-						 * A rule's children are its prelude; its block is read with {@link field }.
-						 */
-						childCount(n?: number): number;
-						child(i: number, n?: number): number;
-						/**
-						 * Every child as a new array, for a reader that keeps or searches them.
-						 */
-						children(n?: number): number[];
-						/**
-						 * A block big enough to stream hands its children to the visitors as each
-						 * one finishes rather than collecting them, so its lists read as empty here.
-						 */
-						fieldCount(field: number, n?: number): number;
-						field(i: number, field: number, n?: number): number;
-						fieldNamed(field: number, name: string, n?: number): number;
-						/**
-						 * `important` is a container's bit, cleared when its id is reused; a token's
-						 * type flags are read off its text.
-						 */
-						flag(flag: number, n?: number): boolean;
-						rangeOf(part: number, n?: number): null | [number, number];
-						startOf(part: number, n?: number): number;
-						endOf(part: number, n?: number): number;
-						/**
-						 * CSS has no text beyond a node's name and value, read with `name` and `value`.
-						 */
-						textOf(_part: number, _n?: number): null;
-					},
-					writer: PrintContext<
-						{
-							state: unknown;
-							get node(): number;
-							get parent(): null | number;
-							get index(): number;
-							/**
-							 * Stop the walk descending into the current node (enter only).
-							 */
-							skipChildren(): void;
-							/**
-							 * Stop the walk: no visitor fires after the current one returns.
-							 */
-							stop(): void;
-							/**
-							 * Print the current node as `text` in place of what the printer writes; on a
-							 * walk that prints nothing, or on a comment, it does nothing. What holds the
-							 * node then prints its children's text as they printed, without the rewrites.
-							 */
-							replace(text: string): void;
-							/**
-							 * Print nothing for the current node, as `replace("")`.
-							 */
-							remove(): void;
-							/**
-							 * A top-level rule and a comment have none; a hash within a declaration is
-							 * a color, elsewhere an id.
-							 */
-							within(type: number): boolean;
-							type(n?: number): number;
-							range(n?: number): [number, number];
-							start(n?: number): number;
-							end(n?: number): number;
-							loc(n?: number): [number, number, number, number];
-							/**
-							 * A node's text exactly as the input wrote it (`name` and `value` decode).
-							 */
-							source(n?: number, end?: number): string;
-							/**
-							 * The token's value as CSS Syntax defines it: a number for a number,
-							 * percentage or dimension, otherwise text with escapes resolved (a string
-							 * without its quotes, a hash without its `#`, a `url()`'s contents, a
-							 * comment's text); "" for a rule, declaration, function or block.
-							 */
-							value(n?: number): string | number;
-							name(n?: number): string;
-							/**
-							 * A rule's children are its prelude; its block is read with {@link field }.
-							 */
-							childCount(n?: number): number;
-							child(i: number, n?: number): number;
-							/**
-							 * Every child as a new array, for a reader that keeps or searches them.
-							 */
-							children(n?: number): number[];
-							/**
-							 * A block big enough to stream hands its children to the visitors as each
-							 * one finishes rather than collecting them, so its lists read as empty here.
-							 */
-							fieldCount(field: number, n?: number): number;
-							field(i: number, field: number, n?: number): number;
-							fieldNamed(field: number, name: string, n?: number): number;
-							/**
-							 * `important` is a container's bit, cleared when its id is reused; a token's
-							 * type flags are read off its text.
-							 */
-							flag(flag: number, n?: number): boolean;
-							rangeOf(part: number, n?: number): null | [number, number];
-							startOf(part: number, n?: number): number;
-							endOf(part: number, n?: number): number;
-							/**
-							 * CSS has no text beyond a node's name and value, read with `name` and `value`.
-							 */
-							textOf(_part: number, _n?: number): null;
-						},
-						number,
-						CssPrintOptions
-					>
+					path: CssSyntaxPath,
+					writer: PrintContext<CssSyntaxPath, number, CssPrintOptions>
 				) => string;
 			}
 			export { CssSourceProcessor as SourceProcessor };
@@ -39648,84 +39168,7 @@ declare namespace exports {
 		}
 		export namespace syntax {
 			export namespace parser {
-				export let A: {
-					state: unknown;
-					get node(): number;
-					get parent(): null | number;
-					/**
-					 * Counted along the sibling links when asked, so the walk stores nothing for it.
-					 */
-					get index(): number;
-					/**
-					 * Stop the walk descending into the current node (enter only).
-					 */
-					skipChildren(): void;
-					/**
-					 * Stop the walk: no visitor fires after the current one returns.
-					 */
-					stop(): void;
-					/**
-					 * Walks the parent links, so a `<template>`'s content ends at its fragment.
-					 */
-					within(type: number): boolean;
-					type(n?: number): number;
-					range(n?: number): [number, number];
-					start(n?: number): number;
-					end(n?: number): number;
-					/**
-					 * Line / column are converted only when asked, by a converter made on the
-					 * first call of a parse. Valid during the walk, as {@link source } is.
-					 */
-					loc(n?: number): [number, number, number, number];
-					/**
-					 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
-					 */
-					source(n?: number, end?: number): string;
-					/**
-					 * An element's or attribute's name (lowercased, adjusted in foreign content),
-					 * a doctype's name, a processing instruction's target; "" for other nodes.
-					 */
-					name(n?: number): string;
-					fieldCount(field: number, n?: number): number;
-					/**
-					 * An attribute item is a node the shared reads take.
-					 */
-					field(i: number, field: number, n?: number): number;
-					/**
-					 * Attribute names are stored lowercased, so `name` is compared as written.
-					 */
-					fieldNamed(field: number, name: string, n?: number): number;
-					flag(flag: number, n?: number): boolean;
-					/**
-					 * A parser-inserted element has no name, tags or content in the source.
-					 */
-					rangeOf(part: number, n?: number): null | [number, number];
-					startOf(part: number, n?: number): number;
-					endOf(part: number, n?: number): number;
-					/**
-					 * Name and value are read with `name` and `value`; this reads a node's
-					 * other text, such as a doctype's identifiers, which are stored decoded.
-					 */
-					textOf(part: number, n?: number): null | string;
-					/**
-					 * A text's, comment's, processing instruction's or attribute's data,
-					 * character references decoded; "" for other nodes.
-					 */
-					value(n?: number): string;
-					/**
-					 * Counted along the sibling links once per node and visitor call.
-					 */
-					childCount(n?: number): number;
-					/**
-					 * Reached along the sibling links from the last child read under `n`, so a
-					 * loop over a node's children takes one step per child.
-					 */
-					child(i: number, n?: number): number;
-					/**
-					 * Every child as a new array, for a reader that keeps or searches them.
-					 */
-					children(n?: number): number[];
-				};
+				export let A: HtmlSyntaxPath;
 				export let BLOCK_CONTENTS: "block-contents";
 				export let EMBEDDED_LANGUAGES: string[];
 				export let EVENT_HANDLER: "event-handler";
@@ -39804,168 +39247,9 @@ declare namespace exports {
 				export let escapeXmlText: (data: string) => string;
 				export let grammar: (
 					input: string,
-					visitors: CompiledVisitorBucket<{
-						state: unknown;
-						get node(): number;
-						get parent(): null | number;
-						/**
-						 * Counted along the sibling links when asked, so the walk stores nothing for it.
-						 */
-						get index(): number;
-						/**
-						 * Stop the walk descending into the current node (enter only).
-						 */
-						skipChildren(): void;
-						/**
-						 * Stop the walk: no visitor fires after the current one returns.
-						 */
-						stop(): void;
-						/**
-						 * Walks the parent links, so a `<template>`'s content ends at its fragment.
-						 */
-						within(type: number): boolean;
-						type(n?: number): number;
-						range(n?: number): [number, number];
-						start(n?: number): number;
-						end(n?: number): number;
-						/**
-						 * Line / column are converted only when asked, by a converter made on the
-						 * first call of a parse. Valid during the walk, as {@link source } is.
-						 */
-						loc(n?: number): [number, number, number, number];
-						/**
-						 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
-						 */
-						source(n?: number, end?: number): string;
-						/**
-						 * An element's or attribute's name (lowercased, adjusted in foreign content),
-						 * a doctype's name, a processing instruction's target; "" for other nodes.
-						 */
-						name(n?: number): string;
-						fieldCount(field: number, n?: number): number;
-						/**
-						 * An attribute item is a node the shared reads take.
-						 */
-						field(i: number, field: number, n?: number): number;
-						/**
-						 * Attribute names are stored lowercased, so `name` is compared as written.
-						 */
-						fieldNamed(field: number, name: string, n?: number): number;
-						flag(flag: number, n?: number): boolean;
-						/**
-						 * A parser-inserted element has no name, tags or content in the source.
-						 */
-						rangeOf(part: number, n?: number): null | [number, number];
-						startOf(part: number, n?: number): number;
-						endOf(part: number, n?: number): number;
-						/**
-						 * Name and value are read with `name` and `value`; this reads a node's
-						 * other text, such as a doctype's identifiers, which are stored decoded.
-						 */
-						textOf(part: number, n?: number): null | string;
-						/**
-						 * A text's, comment's, processing instruction's or attribute's data,
-						 * character references decoded; "" for other nodes.
-						 */
-						value(n?: number): string;
-						/**
-						 * Counted along the sibling links once per node and visitor call.
-						 */
-						childCount(n?: number): number;
-						/**
-						 * Reached along the sibling links from the last child read under `n`, so a
-						 * loop over a node's children takes one step per child.
-						 */
-						child(i: number, n?: number): number;
-						/**
-						 * Every child as a new array, for a reader that keeps or searches them.
-						 */
-						children(n?: number): number[];
-					}>[],
+					visitors: CompiledVisitorBucket<HtmlSyntaxPath>[],
 					writer:
-						| undefined
-						| PrintContext<
-								{
-									state: unknown;
-									get node(): number;
-									get parent(): null | number;
-									/**
-									 * Counted along the sibling links when asked, so the walk stores nothing for it.
-									 */
-									get index(): number;
-									/**
-									 * Stop the walk descending into the current node (enter only).
-									 */
-									skipChildren(): void;
-									/**
-									 * Stop the walk: no visitor fires after the current one returns.
-									 */
-									stop(): void;
-									/**
-									 * Walks the parent links, so a `<template>`'s content ends at its fragment.
-									 */
-									within(type: number): boolean;
-									type(n?: number): number;
-									range(n?: number): [number, number];
-									start(n?: number): number;
-									end(n?: number): number;
-									/**
-									 * Line / column are converted only when asked, by a converter made on the
-									 * first call of a parse. Valid during the walk, as {@link source } is.
-									 */
-									loc(n?: number): [number, number, number, number];
-									/**
-									 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
-									 */
-									source(n?: number, end?: number): string;
-									/**
-									 * An element's or attribute's name (lowercased, adjusted in foreign content),
-									 * a doctype's name, a processing instruction's target; "" for other nodes.
-									 */
-									name(n?: number): string;
-									fieldCount(field: number, n?: number): number;
-									/**
-									 * An attribute item is a node the shared reads take.
-									 */
-									field(i: number, field: number, n?: number): number;
-									/**
-									 * Attribute names are stored lowercased, so `name` is compared as written.
-									 */
-									fieldNamed(field: number, name: string, n?: number): number;
-									flag(flag: number, n?: number): boolean;
-									/**
-									 * A parser-inserted element has no name, tags or content in the source.
-									 */
-									rangeOf(part: number, n?: number): null | [number, number];
-									startOf(part: number, n?: number): number;
-									endOf(part: number, n?: number): number;
-									/**
-									 * Name and value are read with `name` and `value`; this reads a node's
-									 * other text, such as a doctype's identifiers, which are stored decoded.
-									 */
-									textOf(part: number, n?: number): null | string;
-									/**
-									 * A text's, comment's, processing instruction's or attribute's data,
-									 * character references decoded; "" for other nodes.
-									 */
-									value(n?: number): string;
-									/**
-									 * Counted along the sibling links once per node and visitor call.
-									 */
-									childCount(n?: number): number;
-									/**
-									 * Reached along the sibling links from the last child read under `n`, so a
-									 * loop over a node's children takes one step per child.
-									 */
-									child(i: number, n?: number): number;
-									/**
-									 * Every child as a new array, for a reader that keeps or searches them.
-									 */
-									children(n?: number): number[];
-								},
-								number,
-								HtmlPrintOptions
-						  >,
+						undefined | PrintContext<HtmlSyntaxPath, number, HtmlPrintOptions>,
 					options: HtmlProcessOptions
 				) => void;
 				export let isAllAsciiWhitespace: (s: string) => boolean;
@@ -40003,166 +39287,8 @@ declare namespace exports {
 				export let CLASSIC_SCRIPT: "script";
 				export let MODULE_SCRIPT: "module";
 				export let printer: (
-					path: {
-						state: unknown;
-						get node(): number;
-						get parent(): null | number;
-						/**
-						 * Counted along the sibling links when asked, so the walk stores nothing for it.
-						 */
-						get index(): number;
-						/**
-						 * Stop the walk descending into the current node (enter only).
-						 */
-						skipChildren(): void;
-						/**
-						 * Stop the walk: no visitor fires after the current one returns.
-						 */
-						stop(): void;
-						/**
-						 * Walks the parent links, so a `<template>`'s content ends at its fragment.
-						 */
-						within(type: number): boolean;
-						type(n?: number): number;
-						range(n?: number): [number, number];
-						start(n?: number): number;
-						end(n?: number): number;
-						/**
-						 * Line / column are converted only when asked, by a converter made on the
-						 * first call of a parse. Valid during the walk, as {@link source } is.
-						 */
-						loc(n?: number): [number, number, number, number];
-						/**
-						 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
-						 */
-						source(n?: number, end?: number): string;
-						/**
-						 * An element's or attribute's name (lowercased, adjusted in foreign content),
-						 * a doctype's name, a processing instruction's target; "" for other nodes.
-						 */
-						name(n?: number): string;
-						fieldCount(field: number, n?: number): number;
-						/**
-						 * An attribute item is a node the shared reads take.
-						 */
-						field(i: number, field: number, n?: number): number;
-						/**
-						 * Attribute names are stored lowercased, so `name` is compared as written.
-						 */
-						fieldNamed(field: number, name: string, n?: number): number;
-						flag(flag: number, n?: number): boolean;
-						/**
-						 * A parser-inserted element has no name, tags or content in the source.
-						 */
-						rangeOf(part: number, n?: number): null | [number, number];
-						startOf(part: number, n?: number): number;
-						endOf(part: number, n?: number): number;
-						/**
-						 * Name and value are read with `name` and `value`; this reads a node's
-						 * other text, such as a doctype's identifiers, which are stored decoded.
-						 */
-						textOf(part: number, n?: number): null | string;
-						/**
-						 * A text's, comment's, processing instruction's or attribute's data,
-						 * character references decoded; "" for other nodes.
-						 */
-						value(n?: number): string;
-						/**
-						 * Counted along the sibling links once per node and visitor call.
-						 */
-						childCount(n?: number): number;
-						/**
-						 * Reached along the sibling links from the last child read under `n`, so a
-						 * loop over a node's children takes one step per child.
-						 */
-						child(i: number, n?: number): number;
-						/**
-						 * Every child as a new array, for a reader that keeps or searches them.
-						 */
-						children(n?: number): number[];
-					},
-					writer: PrintContext<
-						{
-							state: unknown;
-							get node(): number;
-							get parent(): null | number;
-							/**
-							 * Counted along the sibling links when asked, so the walk stores nothing for it.
-							 */
-							get index(): number;
-							/**
-							 * Stop the walk descending into the current node (enter only).
-							 */
-							skipChildren(): void;
-							/**
-							 * Stop the walk: no visitor fires after the current one returns.
-							 */
-							stop(): void;
-							/**
-							 * Walks the parent links, so a `<template>`'s content ends at its fragment.
-							 */
-							within(type: number): boolean;
-							type(n?: number): number;
-							range(n?: number): [number, number];
-							start(n?: number): number;
-							end(n?: number): number;
-							/**
-							 * Line / column are converted only when asked, by a converter made on the
-							 * first call of a parse. Valid during the walk, as {@link source } is.
-							 */
-							loc(n?: number): [number, number, number, number];
-							/**
-							 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
-							 */
-							source(n?: number, end?: number): string;
-							/**
-							 * An element's or attribute's name (lowercased, adjusted in foreign content),
-							 * a doctype's name, a processing instruction's target; "" for other nodes.
-							 */
-							name(n?: number): string;
-							fieldCount(field: number, n?: number): number;
-							/**
-							 * An attribute item is a node the shared reads take.
-							 */
-							field(i: number, field: number, n?: number): number;
-							/**
-							 * Attribute names are stored lowercased, so `name` is compared as written.
-							 */
-							fieldNamed(field: number, name: string, n?: number): number;
-							flag(flag: number, n?: number): boolean;
-							/**
-							 * A parser-inserted element has no name, tags or content in the source.
-							 */
-							rangeOf(part: number, n?: number): null | [number, number];
-							startOf(part: number, n?: number): number;
-							endOf(part: number, n?: number): number;
-							/**
-							 * Name and value are read with `name` and `value`; this reads a node's
-							 * other text, such as a doctype's identifiers, which are stored decoded.
-							 */
-							textOf(part: number, n?: number): null | string;
-							/**
-							 * A text's, comment's, processing instruction's or attribute's data,
-							 * character references decoded; "" for other nodes.
-							 */
-							value(n?: number): string;
-							/**
-							 * Counted along the sibling links once per node and visitor call.
-							 */
-							childCount(n?: number): number;
-							/**
-							 * Reached along the sibling links from the last child read under `n`, so a
-							 * loop over a node's children takes one step per child.
-							 */
-							child(i: number, n?: number): number;
-							/**
-							 * Every child as a new array, for a reader that keeps or searches them.
-							 */
-							children(n?: number): number[];
-						},
-						number,
-						HtmlPrintOptions
-					>
+					path: HtmlSyntaxPath,
+					writer: PrintContext<HtmlSyntaxPath, number, HtmlPrintOptions>
 				) => string;
 			}
 			export { HtmlSourceProcessor as SourceProcessor };
