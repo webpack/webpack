@@ -30,6 +30,7 @@ it("should resolve an imported url() value in the module that defines it", () =>
 		const url = `url(${assets[0]})`;
 		expect(backgroundOf(css, "uses-bg")).toBe(url);
 		expect(backgroundOf(css, "uses-quoted-bg")).toBe(url);
+		expect(backgroundOf(css, "uses-local-alias")).toBe(url);
 		expect(backgroundOf(css, "uses-alias-in-list")).toBe(`${url} no-repeat`);
 		expect(backgroundOf(css, "uses-reexported-bg")).toBe(url);
 		expect(backgroundOf(css, "cycle-b")).toBe(url);
