@@ -10123,8 +10123,16 @@ declare class EstreeView {
 	 * Forgets every id, for the next read.
 	 */
 	reset(): void;
+
+	/**
+	 * Reads a statement as holding a directive its object does not mark, as
+	 * the tree's `setPart` does: another parser may leave `directive` off.
+	 */
+	markDirective(statement: NodeEstreeIndex, directive: string): void;
 	type(node: number): number;
 	start(node: number): number;
+	end(node: number): number;
+	range(node: number): [number, number];
 	name(node: number): string;
 	value(
 		node: number
@@ -15566,6 +15574,33 @@ declare class JavascriptModulesPlugin {
 	};
 	static chunkHasJs: (chunk: Chunk, chunkGraph: ChunkGraph) => boolean;
 }
+
+/**
+ * What a `{ path: true }` tap reads nodes through: the node ids it is handed,
+ * read as the CSS and HTML paths read theirs.
+ */
+declare interface JavascriptNodeReader {
+	name: (node: number) => string;
+	flag: (flag: number, node: number) => boolean;
+	type: (node: number) => number;
+	end: (node: number) => number;
+	value: (
+		node: number
+	) =>
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| { cooked?: null | string; raw: string };
+	start: (node: number) => number;
+	range: (node: number) => [number, number];
+	field: (i: number, field: number, node: number) => number;
+	fieldCount: (field: number, node: number) => number;
+	textOf: (part: number, node: number) => null | string;
+}
 type JavascriptNormalModule = NormalModule & {
 	buildInfo?: JavascriptModuleBuildInfo;
 	buildMeta?: JavascriptModuleBuildMeta;
@@ -15727,7 +15762,6 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 			typescript?: boolean;
 			importPhases?: boolean;
 			strictModeViolations?: false | "error" | "warn";
-			walkIds?: boolean;
 		}
 	);
 	hooks: Readonly<{
@@ -16278,17 +16312,12 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 			[LogicalExpression],
 			boolean | void
 		>;
-		program: SyncBailHook<[Program, CommentJavascriptParser[]], boolean | void>;
-		/**
-		 * The program as a node of the flat tree, before `program`; it fires
-		 * only for a parser built with `walkIds`, and the tree is read during the call.
-		 * @since 5.113.0
-		 * @experimental
-		 */
-		programTree: SyncBailHook<
-			[ColumnarSyntaxTree, number, CommentJavascriptParser[]],
-			boolean | void
-		>;
+		program: ProgramPathTap &
+			SyncBailHook<
+				[Program, CommentJavascriptParser[]],
+				boolean | void,
+				{ path?: boolean }
+			>;
 		/**
 		 * @since 5.99.0
 		 */
@@ -16308,7 +16337,6 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		typescript?: boolean;
 		importPhases?: boolean;
 		strictModeViolations?: false | "error" | "warn";
-		walkIds?: boolean;
 	};
 	scope: ScopeInfo;
 	state: JavascriptParserState;
@@ -27641,6 +27669,24 @@ declare interface ProfilingPluginOptions {
 	 * Path to the output file e.g. `path.resolve(__dirname, 'profiling/events.json')`. Defaults to `events.json`.
 	 */
 	outputPath?: string;
+}
+
+/**
+ * A `program` tap reading the program through the path, as CSS and HTML
+ * visitors read theirs: `path.type(program)`, `path.field(i, Field.body, program)`.
+ */
+declare interface ProgramPathTap {
+	/**
+	 * registers it
+	 */
+	tap: (
+		options: { name: string; path: true; stage?: number; before?: string },
+		fn: (
+			path: JavascriptNodeReader,
+			program: number,
+			comments: CommentJavascriptParser[]
+		) => boolean | void
+	) => void;
 }
 declare class ProgressPlugin {
 	/**
