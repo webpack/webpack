@@ -21,6 +21,11 @@ class Counter {
 
 const { a, b: [c] } = { a: 1, b: [3] };
 
+// walked, never run: its tap parses another source in the middle of this one
+function nested() {
+	nestedParse(/*#__PURE__*/ make());
+}
+
 it("should build each module from the walked syntax tree", () => {
 	expect(double(2)).toBe(4);
 	expect(cjs.value).toBe(42);
