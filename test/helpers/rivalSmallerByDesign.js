@@ -72,7 +72,6 @@ const BY_DESIGN = [
 		[
 			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-arg-unused/input.js",
 			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-default-unused/input.js",
-			"swc minifier: fixture/issues/11684/identifier-reduce-vars-only/input.js",
 			"swc minifier: fixture/issues/12227/input.js",
 			"swc minifier: fixture/issues/2262/1/input.js",
 			"terser compress: arrow/call_args_drop_param",
