@@ -4307,3 +4307,62 @@ describe("one-pass minify of unused values and side effects, fourth round", () =
 		expect(code).toBe("var x=1?function(){}:null;y=1?class{}:null,o={a:1?function(){}:0},g(function(){});");
 	});
 });
+
+describe("one-pass minify of known tests and switches, family E", () => {
+	const options = { compress: { ecma: 2020 }, ecma: 2020, mangle: false };
+
+	it("should fold a `var` set once to a falsy value where a function another runs first only tests it", () => {
+		const source = fixture("javascript", "one-pass-e2-1");
+		const { code } = minifyOnePass(source, options);
+		// Read before it is set, it is `undefined`, as falsy: the tail never runs.
+		expect(code).toBe(
+			'function load(exports,require){exports.run=function(render,props){return wrap(render,props)},exports.again=function(render,props){return wrap(render,props)};require("lib");function wrap(render,props){return render(props)}}var exportsObject={};load(exportsObject,function(){return{}}),console.log(exportsObject.run(function(props){return props.a},{a:1}));'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should keep a `var` set after a call where it is truthy or read for more than its truth", () => {
+		const source = fixture("javascript", "one-pass-e2-2");
+		const { code } = minifyOnePass(source, options);
+		expect(code).toBe(
+			'function load(exports,require){exports.run=function(value){return check(value)},exports.again=function(value){return check(value)},require("lib");var enabled=!0,disabled=0;function check(value){return!enabled?`off`:disabled===0?`zero`:value}}var exportsObject={};load(exportsObject,function(){}),console.log(exportsObject.run(1));'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should fold the test of a `var` a branch sets falsy, and keep one written elsewhere", () => {
+		const source = fixture("javascript", "one-pass-e2-3");
+		const { code } = minifyOnePass(source, options);
+		expect(code).toBe(
+			"function pick(flag){if(flag)var seen=!1;return`ok`}function count(flag){if(flag)var seen=!1;return(seen=flag)?`set`:`unset`}console.log(pick(!0),pick(!1),count(!1));"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should fold a `switch` of a known value whose earlier tests run something, those running first", () => {
+		const source = fixture("javascript", "one-pass-e2-4");
+		const { code } = minifyOnePass(source, options);
+		expect(code).toBe(
+			"function log(name){console.log(name)}function first(){log(`a`),log(`two`)}function fallback(){log(`b`),log(`default`),log(`after`)}function none(){log(`c`),log(`d`)}first(),fallback(),none();"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should keep a `switch` whose test is known by no literal, or whose dead case declares what stays", () => {
+		const source = fixture("javascript", "one-pass-e2-5");
+		const { code } = minifyOnePass(source, options);
+		// A `let` or `class` in a case that never runs goes only with the whole `switch`.
+		expect(code).toBe(
+			"function log(name){console.log(name)}var k=1;switch(1){case log(`a`),k:log(`one`)}function f(q){if(q)switch(3){case log(`b`),1:break;var v}return v}switch(3){case log(`c`),1:}log(f(1));"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should fold an exported `const` where it is read once set, not where a call may run first", () => {
+		const source = fixture("javascript", "one-pass-e2-6");
+		const { code } = minifyOnePass(source, { ...options, module: true });
+		expect(code).toBe(
+			"export const mode=`staging`;export const resolved=`other`;export function late(){return mode+`!`}"
+		);
+	});
+});
