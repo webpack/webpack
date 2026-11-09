@@ -38,6 +38,19 @@ describe("Template", () => {
 		expect(Template.toLineComment("a*/b\nc")).toBe("// a*/b\\nc");
 	});
 
+	it("should keep comment text from spelling a reserved name of ESM output", () => {
+		expect(Template.toComment("./@@webpackFullHash@@/a.js")).toBe(
+			"/*! ./@ @webpackFullHash@@/a.js */"
+		);
+		expect(Template.toNormalComment("a*@@webpackFullHash-0@@/b")).toBe(
+			"/* a*@ @webpackFullHash-0@@/b */"
+		);
+		expect(Template.toLineComment("data:,@@webpack@@webpack")).toBe(
+			"// data:,@ @webpack@ @webpack"
+		);
+		expect(Template.toComment("a@@b @webpack")).toBe("/*! a@@b @webpack */");
+	});
+
 	it("should strip JSDoc types from runtime function content but keep other comments", () => {
 		const content = Template.getFunctionContent({
 			toString: () =>
