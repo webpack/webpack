@@ -4201,9 +4201,27 @@ describe("SyntaxTree", () => {
 			/** @type {EXPECTED_ANY} */ ({ type: "Identifier", name: "r", range: [4, 5] })
 		);
 		expect(view.start(ranged)).toBe(4);
+		expect(view.end(ranged)).toBe(5);
+		expect(view.range(ranged)).toEqual([4, 5]);
+		expect(view.range(assignment)).toEqual([0, 14]);
 		expect(
 			view.type(view.add(/** @type {EXPECTED_ANY} */ ({ type: "Unknown" })))
 		).toBe(0);
+		// A directive another parser leaves unmarked reads as marked, until a reset.
+		const unmarked = /** @type {EXPECTED_ANY} */ ({
+			type: "ExpressionStatement",
+			start: 0,
+			end: 12,
+			expression: { type: "Literal", value: "use strict" }
+		});
+		expect(view.textOf(Part.directive, view.add(unmarked))).toBeNull();
+		view.markDirective(unmarked, "use strict");
+		expect(view.textOf(Part.directive, view.add(unmarked))).toBe(
+			"use strict"
+		);
+		expect(view.textOf(Part.operator, view.add(unmarked))).toBeNull();
+		view.reset();
+		expect(view.textOf(Part.directive, view.add(unmarked))).toBeNull();
 		view.reset();
 		expect(view.add(/** @type {EXPECTED_ANY} */ ({ type: "Super" }))).toBe(1);
 		// A view after the first reads the same names.

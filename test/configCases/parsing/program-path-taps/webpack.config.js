@@ -6,58 +6,59 @@ const acorn = require("acorn");
 /** @typedef {import("../../../../lib/module/NormalModule")} NormalModule */
 /** @import JavascriptParser, { ParseOptions, ParseResult } from "../../../../lib/javascript/JavascriptParser" */
 
-const PLUGIN_NAME = "walk-ids";
-
-/** @type {Record<string, "auto" | "module" | "script">} */
-const SOURCE_TYPES = {
-	"javascript/auto": "auto",
-	"javascript/esm": "module",
-	"javascript/dynamic": "script"
-};
+const PLUGIN_NAME = "program-path-taps";
 
 /**
- * Builds with parsers that walk ids and checks what the tree-reading taps
- * recorded on each module it built.
+ * Taps `program` with `{ path: true }` next to a tap without it, and checks
+ * what the built-in taps recorded on each module.
  * @param {Compiler} compiler the compiler
  * @returns {void}
  */
-const walkIds = (compiler) => {
+const programPathTaps = (compiler) => {
 	compiler.hooks.compilation.tap(
 		PLUGIN_NAME,
 		(compilation, { normalModuleFactory }) => {
+			const { Field, NodeType, Part } =
+				compiler.webpack.javascript.syntax.parser;
 			/** @type {Set<string>} */
 			const walked = new Set();
-			for (const type of Object.keys(SOURCE_TYPES)) {
-				normalModuleFactory.hooks.createParser.for(type).tap(
-					{ name: PLUGIN_NAME, stage: -10 },
-					(options) =>
-						new compiler.webpack.javascript.JavascriptParser(
-							SOURCE_TYPES[type],
-							{
-								parse: options.parse,
-								walkIds: true
-							}
-						)
-				);
+			for (const type of [
+				"javascript/auto",
+				"javascript/esm",
+				"javascript/dynamic"
+			]) {
 				normalModuleFactory.hooks.parser
 					.for(type)
 					.tap(PLUGIN_NAME, (moduleParser) => {
 						const parser = /** @type {JavascriptParser} */ (moduleParser);
-						// another parse, started before the plugins read the tree
-						parser.hooks.programTree.tap(
+						// another parse, started before the path taps read the program
+						parser.hooks.program.tap(
 							{ name: PLUGIN_NAME, stage: -100 },
-							() => {
+							(ast) => {
+								expect(ast.type).toBe("Program");
 								parser.evaluate("1 + 1");
 							}
 						);
-						parser.hooks.programTree.tap(PLUGIN_NAME, (tree, program) => {
-							expect(tree.type(program)).toBe(
-								compiler.webpack.javascript.syntax.parser.NodeType.Program
-							);
-							walked.add(
-								/** @type {NormalModule} */ (parser.state.module).resource
-							);
-						});
+						parser.hooks.program.tap(
+							{ name: PLUGIN_NAME, path: true },
+							(path, program, comments) => {
+								expect(path.type(program)).toBe(NodeType.Program);
+								expect(Array.isArray(comments)).toBe(true);
+								const { resource } = /** @type {NormalModule} */ (
+									parser.state.module
+								);
+								if (/(strict-cjs|custom)\.js$/.test(resource)) {
+									// `custom.js` comes from a parse marking no directive
+									const first = path.field(0, Field.body, program);
+									expect(path.textOf(Part.directive, first)).toBe("use strict");
+									expect(path.range(first)).toEqual([
+										path.start(first),
+										path.end(first)
+									]);
+								}
+								walked.add(resource);
+							}
+						);
 					});
 			}
 			compilation.hooks.succeedModule.tap(PLUGIN_NAME, (module) => {
@@ -105,7 +106,7 @@ module.exports = {
 	output: {
 		filename: "[name].js"
 	},
-	plugins: [walkIds],
+	plugins: [programPathTaps],
 	module: {
 		rules: [
 			{
@@ -113,7 +114,7 @@ module.exports = {
 				parser: {
 					/**
 					 * A program another parser read, marking no directive, which the
-					 * build writes into a tree.
+					 * path taps read as `getDirective` recovers it.
 					 * @param {string} code source code
 					 * @param {ParseOptions} options parse options
 					 * @returns {ParseResult} parse result
