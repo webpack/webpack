@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Evaluate built-in calls on constants when minifying JavaScript.
+Evaluate built-in calls on constants and preserve writes through global objects.
