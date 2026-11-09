@@ -97,3 +97,11 @@
 .chained-from-local-after {
 	color: chainedAlias;
 }
+
+@value (sharedColor as importedChainSource) from "./colors-a.module.css";
+@value importedChainHop1: importedChainSource;
+@value importedChainHop2: importedChainHop1;
+
+.chained-from-import {
+	color: importedChainHop2;
+}

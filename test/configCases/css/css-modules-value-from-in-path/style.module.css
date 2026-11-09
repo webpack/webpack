@@ -1,7 +1,24 @@
 @value primary from "./from-colors.module.css";
 @value theme-from-base from "./from-colors.module.css";
+@value (from as importedFrom) from "./from-colors.module.css";
+@value color-from 12px;
+@value gradientWithFrom: conic-gradient(from 90deg, red, blue);
+@value relativeWithFrom: rgb(from rebeccapurple r g b);
+@value rangeWithFrom: from to;
+@value mediaNoColon (max-width: 599px);
 
 .a {
 	color: primary;
 	padding: theme-from-base;
+	margin: importedFrom;
+	gap: color-from;
+	background: gradientWithFrom;
+	border-color: relativeWithFrom;
+	--range: rangeWithFrom;
+}
+
+@media mediaNoColon {
+	.a {
+		outline-color: primary;
+	}
 }

@@ -56,6 +56,14 @@ it("should re-resolve a chained @value alias after the source name is re-defined
 	matchClassDecl(cssContent, "chained-from-local-after", "maroon");
 });
 
+it("should resolve multi-hop @value aliases pointing to an imported @value", () => {
+	const cssContent = readBundle();
+	matchClassDecl(cssContent, "chained-from-import", "green");
+	expect(style.importedChainSource).toBe("green");
+	expect(style.importedChainHop1).toBe("green");
+	expect(style.importedChainHop2).toBe("green");
+});
+
 it("should still export the renamed classes for every override scenario", () => {
 	expect(style["local-override"]).toMatch(/local-override$/);
 	expect(style["mid-before"]).toMatch(/mid-before$/);

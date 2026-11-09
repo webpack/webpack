@@ -18,8 +18,18 @@ it("should split `@value ... from <source>` on the keyword when the source path 
 	// `./from-colors.module.css` request resolved.
 	expect(cssContent).toMatch(/color:\s*rebeccapurple/);
 	expect(cssContent).toMatch(/padding:\s*10px/);
+	expect(cssContent).toMatch(/margin:\s*20px/);
+	expect(cssContent).toMatch(/gap:\s*12px/);
+	expect(cssContent).toMatch(
+		/background:\s*conic-gradient\(from 90deg,\s*red,\s*blue\)/
+	);
+	expect(cssContent).toMatch(/border-color:\s*rgb\(from rebeccapurple r g b\)/);
+	expect(cssContent).toMatch(/--[^:]+:\s*from to/);
+	expect(cssContent).toMatch(/@media\s*\(max-width:\s*599px\)/);
 
 	// The identifiers must not survive unsubstituted.
 	expect(cssContent).not.toMatch(/color:\s*primary/);
 	expect(cssContent).not.toMatch(/padding:\s*theme-from-base/);
+	expect(cssContent).not.toMatch(/margin:\s*importedFrom/);
+	expect(cssContent).not.toMatch(/gap:\s*color-from/);
 });
