@@ -4698,6 +4698,19 @@ describe("parseProgram", () => {
 		).toThrow("a visitor cannot start another JavaScript parse");
 	});
 
+	it("refuses a tree a visitor hands `A` to read", () => {
+		const { _SyntaxTree: SyntaxTree, readParsedTree } = require(
+			"../../../lib/javascript/syntax-parser"
+		);
+		expect(() =>
+			new SourceProcessor()
+				.use([NodeType.Identifier], () => {
+					readParsedTree(new SyntaxTree(), "");
+				})
+				.process("a", { sourceType: "script" })
+		).toThrow("a visitor cannot swap the tree it walks");
+	});
+
 	it("lets the last tree go once an ESTree parse starts", () => {
 		const { parsedTree } = require("../../../lib/javascript/syntax-parser");
 		parseProgram(fixture("javascript", "parse-program-lets-the-last-tree-go-once-an-estree-parse-starts"));
