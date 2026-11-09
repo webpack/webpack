@@ -50,8 +50,6 @@ const BY_DESIGN = [
 			"swc exec: terser_harmony_issue_t80",
 			"swc exec: issue_6279_1",
 			"swc exec: issue_6279_2",
-			"oxc minifier: peephole/dead_code_elimination.rs:920",
-			"oxc minifier: peephole/fold_constants.rs:1380",
 			"oxc minifier: peephole/inline.rs:647",
 			"oxc minifier: peephole/minimize_conditions.rs:138",
 			"oxc minifier: peephole/minimize_exit_points.rs:183",
