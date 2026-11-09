@@ -4138,7 +4138,9 @@ describe("one-pass minify of reads and calls on literals", () => {
 			// The `+` takes no parentheses where a value, a branch, a logical, a looser operator or a `+` on its right side stands.
 			["one-pass-h2-10", "function f(x,y){var a=x+\"a\"+-y;a+=x+\"b\"+-y;var o={k:x+\"c\"+-y},c=y?x+\"e\"+-y:x+\"f\"+-y,l=y&&x+\"g\"+-y,b=x+\"h\"+-y<y,t=`${x+\"i\"+-y}!`;return console.log(a,o.k,x+\"d\"+-y,c,l,b,t,[x+\"j\"+-y],new String(x+\"k\"+-y)+\"\"),x+\"l\"+-y+(x+\"m\"+-y)}console.log(f(1,2));"],
 			// Where `</script` is escaped, pieces that may join into it, `<!--` or `-->` keep the `join`.
-			["one-pass-h2-11", "function f(a){return[[`${a}<`,\"/script>\"].join(\"\"),[`${a}<`,\"!--\"].join(\"\"),[`${a}-`,\"->\"].join(\"\"),`${a}-b`]}console.log(f(1));"]
+			["one-pass-h2-11", "function f(a){return[[`${a}<`,\"/script>\"].join(\"\"),[`${a}<`,\"!--\"].join(\"\"),[`${a}-`,\"->\"].join(\"\"),`${a}-b`]}console.log(f(1));"],
+			// A missing key a program writes on `Array.prototype`, `String.prototype` or `Object.prototype` keeps its read.
+			["one-pass-h2-12", "Array.prototype[-1]=7,Array.prototype[5]=8,String.prototype[3]=9,console.log([1,2][-1],[1,2][5],void 0,\"ab\"[3],void 0);"]
 		]) {
 			const source = fixture("javascript", name);
 			const { code } = minifyOnePass(source, { compress: {}, mangle: false });
