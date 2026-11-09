@@ -1,6 +1,6 @@
 import { value } from "./dep";
 
-globalThis.magicCall = (text) => text.length;
+global.magicCall = (text) => text.length;
 
 class Shape {
 	area() {
