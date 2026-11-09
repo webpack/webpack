@@ -3026,6 +3026,58 @@ describe("JavaScript SourceProcessor printing", () => {
 });
 
 describe("JavaScript minifier mangling a SyntaxTree", () => {
+	it("should read its own tree after a name counter starts another parse", () => {
+		const { parseProgram } = require("../../../lib/javascript/syntax").parser;
+		const letters = "abcdefghij";
+		let resets = 0;
+		const { code } = minifyOnePass(
+			"class K { #first = 1; #second = 2; get() { return this.#first + this.#second; } } console.log(new K().get());",
+			{
+				sourceType: "script",
+				mangle: {
+					nthIdentifier: {
+						get: (n) => letters[n],
+						reset: () => {
+							resets++;
+							parseProgram("var other = 1;", 0, {});
+						},
+						consider: () => {},
+						sort: () => {}
+					}
+				}
+			}
+		);
+		expect(resets).toBe(1);
+		expect(code).toBe(
+			"class K{#a=1;#b=2;get(){return this.#a+this.#b}}console.log((new K).get());"
+		);
+	});
+
+	it("should name every private name after a name source starts another parse", () => {
+		const { isWalkingSyntaxTree } = require("../../../lib/javascript/syntax-parser");
+		const { parseProgram } = require("../../../lib/javascript/syntax").parser;
+		const letters = "abcdefghij";
+		const { code } = minifyOnePass(
+			"class K { #first = 1; #second = 2; get() { return this.#first + this.#second; } } console.log(new K().get());",
+			{
+				sourceType: "script",
+				mangle: {
+					nthIdentifier: {
+						get: (n) => {
+							if (!isWalkingSyntaxTree()) {
+								parseProgram("var other = 1;", 0, {});
+							}
+							return letters[n];
+						}
+					}
+				}
+			}
+		);
+		expect(code).toBe(
+			"class K{#a=1;#b=2;get(){return this.#a+this.#b}}console.log((new K).get());"
+		);
+	});
+
 	it("should keep a sloppy block's function in its block where a lexical name would clash, in the one pass", () => {
 		const source = [
 			"function t1(){ let f = 1; { function f() { return 2 } } return typeof f }",

@@ -4698,6 +4698,19 @@ describe("parseProgram", () => {
 		).toThrow("a visitor cannot start another JavaScript parse");
 	});
 
+	it("refuses a tree a visitor hands `A` to read", () => {
+		const { _SyntaxTree: SyntaxTree, readParsedTree } = require(
+			"../../../lib/javascript/syntax-parser"
+		);
+		expect(() =>
+			new SourceProcessor()
+				.use([NodeType.Identifier], () => {
+					readParsedTree(new SyntaxTree(), "");
+				})
+				.process("a", { sourceType: "script" })
+		).toThrow("a visitor cannot swap the tree it walks");
+	});
+
 	it("lets the last tree go once an ESTree parse starts", () => {
 		const { parsedTree } = require("../../../lib/javascript/syntax-parser");
 		parseProgram(fixture("javascript", "parse-program-lets-the-last-tree-go-once-an-estree-parse-starts"));
@@ -4907,5 +4920,29 @@ describe("fromEstreeObject", () => {
 			})
 		);
 		expect(A.range(fromEstreeObject(program, "  "))).toEqual([0, 2]);
+	});
+
+	it("hands its tree back on the next parse", () => {
+		const { _SyntaxTree: SyntaxTree } = require(
+			"../../../lib/javascript/syntax-parser"
+		);
+		const { parseProgram } = require("../../../lib/javascript/syntax").parser;
+		const program = /** @type {import("estree").Program} */ (
+			/** @type {unknown} */ ({
+				type: "Program",
+				sourceType: "script",
+				start: 0,
+				end: 0,
+				body: []
+			})
+		);
+		fromEstreeObject(program, "");
+		const release = jest.spyOn(SyntaxTree.prototype, "release");
+		try {
+			parseProgram("b", 0, {});
+			expect(release).toHaveBeenCalledTimes(1);
+		} finally {
+			release.mockRestore();
+		}
 	});
 });
