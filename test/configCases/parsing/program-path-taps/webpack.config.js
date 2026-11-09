@@ -10,7 +10,7 @@ const PLUGIN_NAME = "program-path-taps";
 
 /**
  * Taps `program` with `{ path: true }` next to a tap without it, and checks
- * what the built-in path taps recorded on each module.
+ * what the built-in taps recorded on each module.
  * @param {Compiler} compiler the compiler
  * @returns {void}
  */
@@ -18,7 +18,8 @@ const programPathTaps = (compiler) => {
 	compiler.hooks.compilation.tap(
 		PLUGIN_NAME,
 		(compilation, { normalModuleFactory }) => {
-			const { NodeType } = compiler.webpack.javascript.syntax.parser;
+			const { Field, NodeType, Part } =
+				compiler.webpack.javascript.syntax.parser;
 			/** @type {Set<string>} */
 			const walked = new Set();
 			for (const type of [
@@ -43,9 +44,19 @@ const programPathTaps = (compiler) => {
 							(path, program, comments) => {
 								expect(path.type(program)).toBe(NodeType.Program);
 								expect(Array.isArray(comments)).toBe(true);
-								walked.add(
-									/** @type {NormalModule} */ (parser.state.module).resource
+								const { resource } = /** @type {NormalModule} */ (
+									parser.state.module
 								);
+								if (/(strict-cjs|custom)\.js$/.test(resource)) {
+									// `custom.js` comes from a parse marking no directive
+									const first = path.field(0, Field.body, program);
+									expect(path.textOf(Part.directive, first)).toBe("use strict");
+									expect(path.range(first)).toEqual([
+										path.start(first),
+										path.end(first)
+									]);
+								}
+								walked.add(resource);
 							}
 						);
 					});
