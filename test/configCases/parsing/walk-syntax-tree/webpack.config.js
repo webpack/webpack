@@ -30,7 +30,7 @@ const walkSyntaxTree = (compiler) => {
 			compilation.hooks.finishModules.tap(PLUGIN_NAME, () => {
 				// a build restored from the cache parses nothing
 				if (walked === 0) return;
-				expect(walked).toBe(4);
+				expect(walked).toBe(5);
 			});
 		}
 	);
