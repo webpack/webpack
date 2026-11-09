@@ -4306,6 +4306,23 @@ describe("one-pass minify of unused values and side effects, fourth round", () =
 		const { code } = minifyOnePass(source, { compress: { ecma: 2020 }, ecma: 2020, mangle: false });
 		expect(code).toBe("var x=1?function(){}:null;y=1?class{}:null,o={a:1?function(){}:0},g(function(){});");
 	});
+
+	it("should merge `if`s returning a property written shorthand or not, and keep a method apart", () => {
+		expect(
+			minifyOnePass(fixture("javascript", "one-pass-g2-1"), { compress: { ecma: 2020 }, ecma: 2020, mangle: false }).code
+		).toBe("function f(body){if(a||b||c)return{body}}function g(body){if(a)return{body};if(b)return{body(){}}}");
+	});
+
+	it("should join a loop's opening `if(x)break` to its test past a name the body scopes that the test reads not", () => {
+		const options = { compress: { ecma: 2020 }, ecma: 2020, mangle: false };
+		expect(minifyOnePass(fixture("javascript", "one-pass-g2-2"), options).code).toBe(
+			"for(;!x;){let y=foo();bar(y),bar(y)}while(t&&!x(i)){class C{}bar(C),bar(C)}for(;x;){q();let y=foo();bar(y),bar(y)}"
+		);
+		// A test reading the name, maybe through `eval`, or a body declaring a pattern or a labeled function, keeps the `if`.
+		expect(minifyOnePass(fixture("javascript", "one-pass-g2-3"), options).code).toBe(
+			"for(;;){if(y)break;let y=foo();bar(y),bar(y)}for(;;){if(eval(`y`))break;let y=foo();bar(y),bar(y)}for(;;){if(x)break;let{y}=foo();bar(y),bar(y)}for(;;){if(x)break;l:function h(){}bar(h)}"
+		);
+	});
 });
 
 describe("one-pass minify of known tests and switches, family E", () => {
