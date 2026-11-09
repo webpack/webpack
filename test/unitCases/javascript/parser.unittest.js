@@ -4089,6 +4089,49 @@ describe("SyntaxTree", () => {
 		expect(next._types.length).toBe(nodes + 1);
 	});
 
+	it("sizes the columns once for an ESTree program, from its own counts", () => {
+		const { fromEstreeObject, takeParsedTree } = require(
+			"../../../lib/javascript/syntax-parser"
+		);
+		const reserve = jest.spyOn(SyntaxTree.prototype, "reserve");
+		try {
+			fromEstreeObject(
+				/** @type {import("estree").Program} */ (
+					/** @type {unknown} */ ({
+						type: "Program",
+						sourceType: "script",
+						start: 0,
+						end: 2,
+						body: [
+							{
+								type: "ExpressionStatement",
+								start: 0,
+								end: 2,
+								expression: { type: "Identifier", start: 0, end: 1, name: "a" }
+							}
+						]
+					})
+				),
+				"a;"
+			);
+			expect(reserve).toHaveBeenCalledTimes(1);
+			expect(reserve.mock.calls[0][0]).toBe(3);
+		} finally {
+			reserve.mockRestore();
+			/** @type {SyntaxTree} */ (takeParsedTree()).release();
+		}
+		const tree = new SyntaxTree();
+		tree.reserve(10, 20, 3, 5);
+		expect(tree._types.length).toBeGreaterThan(10);
+		expect(tree._slots.length).toBeGreaterThanOrEqual(20);
+		expect(tree._listStarts.length).toBeGreaterThan(3);
+		expect(tree._listItems.length).toBeGreaterThanOrEqual(5);
+		const types = tree._types;
+		tree.reserve(1, 1, 1, 1);
+		expect(tree._types).toBe(types);
+		tree.release();
+	});
+
 	it("refuses an unknown type or field", () => {
 		const tree = new SyntaxTree();
 		expect(() => tree.add(0, 0, 1)).toThrow(/Unknown node type/);
@@ -4920,6 +4963,28 @@ describe("fromEstreeObject", () => {
 			})
 		);
 		expect(A.range(fromEstreeObject(program, "  "))).toEqual([0, 2]);
+	});
+
+	it("takes both offsets from `range` alone, and 0 without either", () => {
+		const program = /** @type {import("estree").Program} */ (
+			/** @type {unknown} */ ({
+				type: "Program",
+				sourceType: "script",
+				range: [0, 4],
+				body: [
+					{
+						type: "ExpressionStatement",
+						range: [1, 3],
+						expression: { type: "Identifier", name: "a" }
+					}
+				]
+			})
+		);
+		const node = fromEstreeObject(program, " a; ");
+		expect(A.range(node)).toEqual([0, 4]);
+		const statement = A.field(0, Field.body, node);
+		expect(A.range(statement)).toEqual([1, 3]);
+		expect(A.range(A.field(0, Field.expression, statement))).toEqual([0, 0]);
 	});
 
 	it("hands its tree back on the next parse", () => {

@@ -3647,6 +3647,13 @@ declare abstract class ColumnarSyntaxTree {
 	addEstree(root: EstreeSource, input?: string): number;
 
 	/**
+	 * Grows the columns once to hold this many more nodes, slots, lists and
+	 * list items, where writing a tree of a known size would double them,
+	 * copying each column every time.
+	 */
+	reserve(nodes: number, slots: number, lists: number, items: number): void;
+
+	/**
 	 * The ESTree object of a node of this tree, as `toEstreeObject` builds it
 	 * for the last parse's.
 	 */
