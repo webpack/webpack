@@ -4951,6 +4951,11 @@ declare interface ConcatenatedModuleInfo {
 	 * where each shorthand property's identifier starts
 	 */
 	shorthandIdentifierStarts?: Set<number>;
+
+	/**
+	 * where each module reference identifier that lacks the appended "._" starts
+	 */
+	bareReferenceStarts?: Set<number>;
 	internalSource?: Source;
 	source?: ReplaceSource;
 	chunkInitFragments?: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
