@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Escaped urls</title>
+</head>
+<body>
+<!-- webpackChunkName: "named' data-x='1" -->
+<script type="module" src='./external.js'></script>
+<img src=./image.png?a&#32;data-x=2>
+<img src="./image.png?b=__WEBPACK_CSS_PUBLIC_PATH_AUTO__">
+<!-- webpackChunkName: "linked' data-x='3" -->
+<a href='./other.html'>other</a>
+<script type="module" src="./main.js"></script>
+</body>
+</html>
