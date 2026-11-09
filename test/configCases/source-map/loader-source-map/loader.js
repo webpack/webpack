@@ -1,8 +1,12 @@
 /**
- * @import {
- * 	FileResult as BabelFileResult,
- * 	InputOptions as TransformOptions
- * } from "@babel/core"
+ * @typedef {object} BabelResult
+ * @property {string | null=} code transformed code
+ * @property {import("webpack-sources").RawSourceMap | null=} map source map
+ */
+
+/**
+ * @typedef {object} Babel
+ * @property {(code: string, options: EXPECTED_OBJECT, callback: (err: Error | null, result: BabelResult | null) => void) => void} transform transforms code
  */
 
 /** @type {import("../../../../").LoaderDefinition} */
@@ -11,16 +15,14 @@ module.exports = function (source, inputSourceMap) {
 	const { resourcePath, sourceMap } = this;
 
 	// @babel/core v8 is ESM-only, load it via dynamic import from this CJS loader.
-	import("@babel/core").then((babel) => {
+	// The cast keeps tsc from checking babel's own declarations (~530 MB).
+	import(/** @type {string} */ ("@babel/core")).then((/** @type {Babel} */ babel) => {
 		babel.transform(
 			source,
 			{
 				filename: resourcePath,
 				sourceFileName: resourcePath,
-				inputSourceMap:
-					/** @type {NonNullable<TransformOptions["inputSourceMap"]>} */ (
-						inputSourceMap
-					),
+				inputSourceMap,
 				sourceMaps: sourceMap,
 				plugins: [
 					function () {
@@ -43,7 +45,7 @@ module.exports = function (source, inputSourceMap) {
 					return;
 				}
 
-				const { code, map } = /** @type {BabelFileResult} */ (result);
+				const { code, map } = /** @type {BabelResult} */ (result);
 
 				callback(
 					null,
