@@ -56,8 +56,8 @@ const walkSyntaxTree = (compiler) => {
 			compilation.hooks.finishModules.tap(PLUGIN_NAME, () => {
 				// a build restored from the cache parses nothing
 				if (walked === 0) return;
-				// five modules and the parse nested in one of them
-				expect(walked).toBe(6);
+				// six modules and the parse nested in one of them
+				expect(walked).toBe(7);
 			});
 		}
 	);

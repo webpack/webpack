@@ -5,6 +5,8 @@ import { early, parts, label, flag, pick, self } from "./walked";
 
 const legacy = require("./legacy");
 const cjs = require("./cjs");
+const members = require("./members").read();
+const callMember = require("./cjs").value;
 
 if (true) {
 	function hoisted() {
@@ -41,6 +43,15 @@ it("should build each module from the walked syntax tree", () => {
 	expect(pick(3)).toBe("many");
 	expect(self.call(parts)).toBe(parts);
 	expect(early()).toBe(1);
+	expect(members).toEqual({
+		member: 3,
+		callRooted: 4,
+		computed: 2,
+		shorthand: "b",
+		nested: [2, 15, 6],
+		meta: "object"
+	});
+	expect(callMember).toBe(42);
 	expect(typeof require("./esm")).toBe("object");
 	return import("./esm").then((ns) => {
 		expect(ns.double(3)).toBe(6);
