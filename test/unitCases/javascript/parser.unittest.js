@@ -4908,4 +4908,28 @@ describe("fromEstreeObject", () => {
 		);
 		expect(A.range(fromEstreeObject(program, "  "))).toEqual([0, 2]);
 	});
+
+	it("hands its tree back on the next parse", () => {
+		const { _SyntaxTree: SyntaxTree } = require(
+			"../../../lib/javascript/syntax-parser"
+		);
+		const { parseProgram } = require("../../../lib/javascript/syntax").parser;
+		const program = /** @type {import("estree").Program} */ (
+			/** @type {unknown} */ ({
+				type: "Program",
+				sourceType: "script",
+				start: 0,
+				end: 0,
+				body: []
+			})
+		);
+		fromEstreeObject(program, "");
+		const release = jest.spyOn(SyntaxTree.prototype, "release");
+		try {
+			parseProgram("b", 0, {});
+			expect(release).toHaveBeenCalledTimes(1);
+		} finally {
+			release.mockRestore();
+		}
+	});
 });
