@@ -14,10 +14,19 @@ module.exports = function (source) {
 		/** @type {unknown} */ (this)
 	);
 	const callback = this.async();
+	const minimize = /** @type {{ minimize?: boolean }} */ (this).minimize;
 
 	if (customValue !== 42) {
 		callback(
 			new Error("compiler.options.loader did not reach the worker loader")
+		);
+		return;
+	}
+	if (minimize !== true) {
+		callback(
+			new Error(
+				`loader context minimize did not match: ${String(minimize)}`
+			)
 		);
 		return;
 	}
@@ -103,7 +112,7 @@ module.exports = function (source) {
 								/** @type {string | Buffer} */ (loaded)
 							).includes("loaded")}:${imported}:${typeof contextified}:${absolutified.endsWith(
 								"value.js"
-							)}:${path}:${contentPath}:${digestPath}:${digestLengthPath}:${fullHashPath}:${moduleIdPath}:${digestFromBase64}:${customValue}`
+							)}:${path}:${contentPath}:${digestPath}:${digestLengthPath}:${fullHashPath}:${moduleIdPath}:${digestFromBase64}:${customValue}:${minimize}`
 						)};`
 					);
 				}, 10);

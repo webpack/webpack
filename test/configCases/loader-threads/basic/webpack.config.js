@@ -1,5 +1,7 @@
 "use strict";
 
+const { LoaderOptionsPlugin } = require("../../../../");
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
@@ -12,6 +14,10 @@ module.exports = {
 		}
 	},
 	plugins: [
+		new LoaderOptionsPlugin({
+			test: /value\.js$/,
+			minimize: true
+		}),
 		{
 			apply(compiler) {
 				let built = false;

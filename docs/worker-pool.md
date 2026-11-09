@@ -71,8 +71,8 @@ When `options` fields ship, they reuse the `jest-worker` or `thread-loader` name
 - the farm is created once per `compiler.root` when `experiments.threads` is on;
 - child compilers return the root's facade;
 - each compiler of a `MultiCompiler` is its own root, so every config gets its own pool;
-- `compiler.close()` sets a closed flag and ends the pool before `shutdown`;
-- after close, a farm whose pool was never created throws; otherwise the same ended facade is returned, whose calls reject.
+- `compiler.close()` sets a closed flag immediately and ends the pool before `shutdown`; an existing facade can still run calls until the pool ends;
+- after `compiler.close()` calls back, a farm whose pool was never created throws; otherwise the same facade is returned, and its calls reject because the pool ended.
 
 ## Worker module contract
 
@@ -105,9 +105,9 @@ Ordering rules:
 ## Scheduling
 
 - One FIFO queue. `_dispatch` runs after every enqueue, settle, preload completion and exit.
-- Each thread runs one plain call at a time, or up to `loaders.parallelJobs` loader jobs.
+- A thread runs at most one plain call and up to `loaders.parallelJobs` loader jobs at once; blocked jobs do not count against either limit.
 - Among idle threads, the pool takes the last from its idle list (LIFO). If none can take the call and fewer than `max` threads live, it spawns one.
-- When every call on a thread waits on the main thread, that thread takes the next job before a new one spawns: it cannot make progress itself.
+- When every call on a thread waits on the main thread, that thread takes the next queued job of any type before a new one spawns: it cannot make progress itself. A plain call taken this way avoids a deadlock when an RPC handler calls back into the pool, and runs beside the loader jobs once they resume.
 - At `max`, a loader job goes to the thread with the fewest running loader jobs, up to its `parallelJobs`. These two loader-aware hooks (`blocked` and `parallelJobs`) are the deliberate price of one queue: split queues would lose the deterministic order above.
 - A queued plain call keeps the head of the queue: when every thread is busy, later loader jobs wait even if a thread still has loader capacity. This is head-of-line blocking; one FIFO queue trades loader throughput for strict call order.
 - When a call settles, its thread goes idle and dispatch continues.
