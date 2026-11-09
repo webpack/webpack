@@ -1,0 +1,1 @@
+text __WEBPACK_MODULE_REFERENCE__0_ns__._ stays
