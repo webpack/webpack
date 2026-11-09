@@ -4151,6 +4151,15 @@ describe("one-pass minify of reads and calls on literals", () => {
 			expect(minifyOnePass(code, { compress: {}, mangle: false }).code).toBe(code);
 		}
 	});
+
+	it("should keep a join whose run starts with `{` after a `$` printed in backticks", () => {
+		const source = fixture("javascript", "one-pass-h2-14");
+		const options = { compress: {}, ecma: 2015, mangle: false };
+		const { code } = minifyOnePass(source, options);
+		expect(code).toBe("function f(x){return[[x+`$`,`{oops}`].join(``),x+`a{b}`]}console.log(f(1));");
+		expect(runProgram(code)).toBe(runProgram(source));
+		expect(minifyOnePass(code, options).code).toBe(code);
+	});
 });
 
 describe("one-pass minify hazards", () => {
