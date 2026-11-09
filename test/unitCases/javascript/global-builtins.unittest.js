@@ -52,5 +52,6 @@ describe("minifying built-in mutations through the global object", () => {
 			})
 		);
 		expect(code).toMatchSnapshot();
+		expect(code).toContain("Math.abs(");
 	});
 });
