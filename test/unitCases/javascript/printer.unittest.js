@@ -4142,7 +4142,9 @@ describe("one-pass minify of reads and calls on literals", () => {
 			// A missing key a program writes on `Array.prototype`, `String.prototype` or `Object.prototype` keeps its read.
 			["one-pass-h2-12", "Array.prototype[-1]=7,Array.prototype[5]=8,String.prototype[3]=9,console.log([1,2][-1],[1,2][5],void 0,\"ab\"[3],void 0);"],
 			// A string ending in `\0` keeps a `join` of a run starting with a digit, which would make it an octal escape.
-			["one-pass-h2-13", "function f(a){return[[a+\"\\0\",\"1\"].join(\"\"),a+\"\\0x\"]}console.log(JSON.stringify(f(1)));"]
+			["one-pass-h2-13", "function f(a){return[[a+\"\\0\",\"1\"].join(\"\"),a+\"\\0x\"]}console.log(JSON.stringify(f(1)));"],
+			// A key no index names reads past a literal, not the node being printed.
+			["one-pass-h2-15", "console.log(void 0,void 0,void 0);"]
 		]) {
 			const source = fixture("javascript", name);
 			const { code } = minifyOnePass(source, { compress: {}, mangle: false });
