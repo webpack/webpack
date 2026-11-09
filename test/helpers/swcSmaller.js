@@ -418,8 +418,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/feedback-3/579-dcac359116b2707c/input.js",
 			"swc minifier: fixture/next/joda/input.js",
 			"swc minifier: fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js",
-			"swc minifier: fixture/next/styled-components/1/input.js",
-			"swc minifier: fixture/next/swc-4559/input.js"
+			"swc minifier: fixture/next/styled-components/1/input.js"
 		]
 	],
 	[
@@ -526,7 +525,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: template-string/escape_dollar_curly",
 			"terser compress: template-string/sequence_2",
 			"terser compress: template-string/template_literal_plus",
-			"terser compress: template-string/array_join",
 			"terser compress: template-string/coerce_to_string"
 		]
 	],
@@ -653,11 +651,8 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/reduce_vars_assign",
 			"terser compress: comparing/issue_2857_6",
 			"terser compress: typeof/issue_2728_3",
-			"swc minifier: fixture/issues/12208/independent-optional-operands/input.js",
 			"swc minifier: fixture/issues/12224/input.js",
-			"swc minifier: fixture/issues/9453/input.js",
-			"swc minifier: fixture/issues/numeric-property-key/input.js",
-			"swc minifier: fixture/issues/string-index-utf16/input.js"
+			"swc minifier: fixture/issues/9453/input.js"
 		]
 	],
 	[
@@ -695,12 +690,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: evaluate/issue_2207_1",
 			"terser compress: issue-597/beautify_off_1",
 			"terser compress: issue-597/beautify_on_1",
-			"swc minifier: fixture/issues/12196/input.js",
-			"swc minifier: fixture/issues/12197/input.js",
-			"swc minifier: fixture/issues/12199/template/input.js",
-			"swc minifier: fixture/issues/12200/1/input.js",
-			"swc minifier: fixture/issues/12200/2/input.js",
-			"swc minifier: fixture/issues/12214/input.js"
+			"swc minifier: fixture/issues/12196/input.js"
 		]
 	],
 	[
@@ -801,8 +791,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: switch/issue_441_1",
 			"terser compress: switch/issue_441_2",
 			"swc minifier: fixture/issues/12206/keep-trailing-test-after-default/input.js",
-			"swc minifier: fixture/issues/12206/preserve-selected-test/input.js",
-			"swc minifier: fixture/issues/12206/preserve-visited-nonmatching-test/input.js",
 			"swc minifier: fixture/issues/12206/skip-removed-test-after-dynamic-match/input.js",
 			"swc minifier: fixture/issues/4412/input.js",
 			"swc minifier: fixture/issues/9922/1/input.js",
@@ -911,18 +899,8 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/10178/input.js",
 			"swc minifier: fixture/issues/10425/input.js",
 			"swc minifier: fixture/issues/10981/input.js",
-			"swc minifier: fixture/issues/11320/input.js",
-			"swc minifier: fixture/issues/11684/class-decl/input.js",
-			"swc minifier: fixture/issues/11684/class-expression/input.js",
-			"swc minifier: fixture/issues/11684/constructor-scopes/input.js",
-			"swc minifier: fixture/issues/11684/function-decl/input.js",
-			"swc minifier: fixture/issues/11684/function-expression/input.js",
 			"swc minifier: fixture/issues/11684/identifier-side-effects/input.js",
-			"swc minifier: fixture/issues/11684/identifier-unused-only/input.js",
-			"swc minifier: fixture/issues/11684/input.js",
-			"swc minifier: fixture/issues/11684/reduce-vars-only/input.js",
 			"swc minifier: fixture/issues/11684/side-effects/input.js",
-			"swc minifier: fixture/issues/11684/unused-only/input.js",
 			"swc minifier: fixture/issues/11730/input.js",
 			"swc minifier: fixture/issues/11730_class_expr/input.js",
 			"swc minifier: fixture/issues/12204/empty-controls/input.js",
@@ -932,14 +910,8 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/5343/input.js",
 			"swc minifier: fixture/issues/8626/input.js",
 			"swc minifier: fixture/issues/8670/input.js",
-			"swc minifier: fixture/issues/8974/input.js",
-			"swc minifier: fixture/issues/9460/alternate-identifiers/input.js",
 			"swc minifier: fixture/issues/9460/partial-used-default/input.js",
-			"swc minifier: fixture/issues/9460/report/input.js",
-			"swc minifier: fixture/issues/9460/safe-initializers/input.js",
 			"swc minifier: fixture/issues/9741_global_objects/input.js",
-			"swc minifier: fixture/issues/spread-primitives-void-call/input.js",
-			"swc minifier: fixture/issues/spread-primitives/input.js",
 			"swc minifier: fixture/projects/jquery/5/input.js"
 		]
 	],

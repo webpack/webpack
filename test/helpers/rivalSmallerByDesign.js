@@ -37,7 +37,6 @@ const BY_DESIGN = [
 			"swc minifier: fixture/issues/8161/input.js",
 			"swc minifier: fixture/issues/9238/input.js",
 			"swc minifier: fixture/next/30498/1/input.js",
-			"swc minifier: fixture/next/swc-4559/input.js",
 			"swc minifier: fixture/projects/react/12/input.js",
 			"swc minifier: fixture/projects/underscore/22/input.js",
 			"swc minifier: fixture/projects/underscore/6/input.js",
@@ -72,7 +71,6 @@ const BY_DESIGN = [
 		[
 			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-arg-unused/input.js",
 			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-default-unused/input.js",
-			"swc minifier: fixture/issues/11684/identifier-reduce-vars-only/input.js",
 			"swc minifier: fixture/issues/12227/input.js",
 			"swc minifier: fixture/issues/2262/1/input.js",
 			"terser compress: arrow/call_args_drop_param",
