@@ -1,0 +1,6 @@
+@value bg, tone from "./style.module.css";
+
+.uses-reexported-bg {
+	background-image: bg;
+	color: tone;
+}

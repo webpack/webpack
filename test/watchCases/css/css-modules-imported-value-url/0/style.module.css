@@ -1,0 +1,5 @@
+@value bg, tone from "./sub/values.module.css";
+
+.uses-bg {
+	background-image: bg;
+}

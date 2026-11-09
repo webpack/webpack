@@ -1,0 +1,8 @@
+@value bg: url(./img/shape.png);
+@value quotedBg: url("./img/shape.png");
+@value plain: red;
+@value pair from "../cycle-b.module.css";
+
+.cycle-a {
+	color: pair;
+}
