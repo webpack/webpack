@@ -3735,11 +3735,12 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
-	it("should drop a `|0` an operand of `>>>` takes", () => {
+	it("should drop a `|0` an operand of `>>>` takes where it converts no later than before", () => {
 		// `>>>` converts both sides to integers itself, and throws on a BigInt either way; `>>` keeps it.
+		// A bare read, or a redundant `+` another fold may print bare, could defer an object's conversion past the other operand's read, so only a side already guaranteed primitive goes.
 		const source = fixture("javascript", "one-pass-minify-of-statement-sequences-should-drop-a-0-an-operand-of-takes");
 		const { code: code } = minifyOnePass(source, { compress: {}, mangle: false });
-		expect(code).toBe("function f(v,s){return[v>>>s,v>>>s,v>>>s,(v|0)>>s,v>>>(s|1)]}console.log(f(-1,0).join(),f(4.7,33).join(),f(\"8\",1).join());");
+		expect(code).toBe("function f(v,s,o){return[1>>>s,v-0>>>s,v++>>>s,~v>>>s,v>>>1,(v|0)>>>s,(v|0)>>>s,(o.x|0)>>>s,v>>>(s|0),(v|0)>>s]}console.log(f(-1,0).join(),f(4.7,33).join(),f(\"8\",1,{x:2}).join());");
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 

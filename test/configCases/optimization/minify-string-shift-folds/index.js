@@ -6,8 +6,8 @@ function converted(x) {
 	return [String(x + "s")];
 }
 
-function shifted(v, s) {
-	return (v | 0) >>> s;
+function shifted(v) {
+	return (v - 0 | 0) >>> 1;
 }
 
 function pattern(n) {
@@ -24,9 +24,9 @@ it("should print `String` of a string as that string", () => {
 	expect(converted("q")).toEqual(["qs"]);
 });
 
-it("should drop a `|0` an operand of `>>>` takes", () => {
-	expect(shifted(-1, 0)).toBe(4294967295);
-	expect(shifted(4.7, 1)).toBe(2);
+it("should drop a `|0` an operand of `>>>` takes where it converts no later than before", () => {
+	expect(shifted(-1)).toBe(2147483647);
+	expect(shifted(4.7)).toBe(2);
 });
 
 it("should write a regexp a sequence ends with as template text", () => {

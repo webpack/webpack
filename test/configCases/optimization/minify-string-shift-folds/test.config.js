@@ -10,7 +10,7 @@ module.exports = {
 			"utf8"
 		);
 		expect(code).toMatch(/"ab"\+x|`ab\$\{x\}`/);
-		expect(code).toContain("v>>>s");
+		expect(code).toContain("v-0>>>1");
 		expect(code).not.toContain("String(");
 		expect(code).toContain("/c/g");
 		expect(code).not.toMatch(/\$\{\/c\/g\}/);
