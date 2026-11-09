@@ -3909,6 +3909,7 @@ declare abstract class ColumnarSyntaxTree {
 		| ArrayPattern
 		| RestElement
 		| AssignmentPattern;
+	legacyAssert(node: number): boolean;
 
 	/**
 	 * The node a lazy object of this tree stands for, the way back from `lazyEstree`.
@@ -3933,6 +3934,12 @@ declare abstract class ColumnarSyntaxTree {
 	fieldCount(field: number, node: number): number;
 	field(i: number, field: number, node: number): number;
 	flag(flag: number, node: number): boolean;
+
+	/**
+	 * Pushes a node's children in its fields' order, holes left out, for a
+	 * walk that reaches every node without naming each type's fields.
+	 */
+	pushChildren(node: number, out: number[]): void;
 	textOf(part: number, node: number): null | string;
 }
 type CommentJavascriptParser = CommentImport & {
@@ -6828,15 +6835,15 @@ type CssNodePath<T = number, S = unknown> = Omit<
 	CssSyntaxPath,
 	| "flag"
 	| "node"
+	| "fieldCount"
+	| "field"
+	| "textOf"
 	| "state"
 	| "within"
-	| "field"
-	| "fieldCount"
 	| "fieldNamed"
 	| "rangeOf"
 	| "startOf"
 	| "endOf"
-	| "textOf"
 > & {
 	readonly node: TypedNode<number, T>;
 	readonly state: S;
@@ -10332,6 +10339,14 @@ declare class EstreeView {
 	field(i: number, field: number, node: number): number;
 	flag(flag: number, node: number): boolean;
 	textOf(part: number, node: number): null | string;
+	legacyAssert(node: number): boolean;
+
+	/**
+	 * Pushes a node's children, holes left out, for a walk that reaches every
+	 * node without naming each type's fields: every property holding a node,
+	 * so a node type the tree has none for is walked into too.
+	 */
+	pushChildren(node: number, out: number[]): void;
 }
 
 /**
@@ -13271,15 +13286,15 @@ type HtmlNodePath<T = number, S = unknown> = Omit<
 	HtmlSyntaxPath,
 	| "flag"
 	| "node"
+	| "fieldCount"
+	| "field"
+	| "textOf"
 	| "state"
 	| "within"
-	| "field"
-	| "fieldCount"
 	| "fieldNamed"
 	| "rangeOf"
 	| "startOf"
 	| "endOf"
-	| "textOf"
 > & {
 	readonly node: TypedNode<number, T>;
 	readonly state: S;
@@ -15775,8 +15790,9 @@ declare interface JavascriptNodeReader {
 	name: (node: number) => string;
 	flag: (flag: number, node: number) => boolean;
 	type: (node: number) => number;
-	range: (node: number) => [number, number];
+	start: (node: number) => number;
 	end: (node: number) => number;
+	range: (node: number) => [number, number];
 	value: (
 		node: number
 	) =>
@@ -15788,10 +15804,17 @@ declare interface JavascriptNodeReader {
 		| boolean
 		| RegExp
 		| { cooked?: null | string; raw: string };
-	start: (node: number) => number;
-	field: (i: number, field: number, node: number) => number;
 	fieldCount: (field: number, node: number) => number;
+	field: (i: number, field: number, node: number) => number;
 	textOf: (part: number, node: number) => null | string;
+	legacyAssert: (node: number) => boolean;
+
+	/**
+	 * Pushes a node's children, holes left out, for a walk that reaches every
+	 * node without naming each type's fields: every property holding a node,
+	 * so a node type the tree has none for is walked into too.
+	 */
+	pushChildren: (node: number, out: number[]) => void;
 }
 type JavascriptNormalModule = NormalModule & {
 	buildInfo?: JavascriptModuleBuildInfo;
@@ -17995,18 +18018,28 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	): boolean;
 
 	/**
+	 * The node an id a `{ path: true }` tap got stands for, as the parser's
+	 * methods take it: the id itself in the tree walk, else the node's object.
+	 */
+	nodeOfPath(path: JavascriptNodeReader, node: number): any;
+
+	/**
 	 * Returns the location of a node or comment, computed from its offsets so
 	 * ASTs from parsers without location support work too. Falls back to the
 	 * node's own `loc` only when no source text is available (preparsed ASTs).
 	 * Offsets can only be mapped while parsing — callbacks deferred past the
 	 * `parse()` call must take the location upfront.
 	 */
-	getLocation(node: {
-		start?: number;
-		end?: number;
-		range?: [number, number];
-		loc?: null | SourceLocation;
-	}): DependencyLocation;
+	getLocation(
+		node:
+			| number
+			| {
+					start?: number;
+					end?: number;
+					range?: [number, number];
+					loc?: null | SourceLocation;
+			  }
+	): DependencyLocation;
 
 	/**
 	 * Returns comments in the range.
@@ -18325,10 +18358,12 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	}>;
 	static getImportAttributes: (
 		node:
+			| number
 			| ImportDeclaration
 			| ExportNamedDeclaration
 			| ExportAllDeclaration
-			| ImportExpressionJavascriptParser
+			| ImportExpressionJavascriptParser,
+		path?: JavascriptNodeReader
 	) => undefined | ImportAttributes;
 }
 
@@ -35653,15 +35688,15 @@ type TypedNodePath<TPath, TNode, P extends NodeParts, T, S = unknown> = Omit<
 	TPath,
 	| "flag"
 	| "node"
+	| "fieldCount"
+	| "field"
+	| "textOf"
 	| "state"
 	| "within"
-	| "field"
-	| "fieldCount"
 	| "fieldNamed"
 	| "rangeOf"
 	| "startOf"
 	| "endOf"
-	| "textOf"
 > & {
 	readonly node: TypedNode<TNode, T>;
 	readonly state: S;
