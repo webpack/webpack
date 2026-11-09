@@ -114,7 +114,8 @@ const {
 	Field,
 	NodeType,
 	_SyntaxTree: SyntaxTree,
-	WebpackParser
+	WebpackParser,
+	readParsedTree
 } = require("../../../lib/javascript/syntax-parser");
 
 describe("JavaScript minifier printing a SyntaxTree", () => {
@@ -3191,8 +3192,9 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 		);
 		const types = Uint8Array.from(tree._types);
 		types[tree.field(0, Field.body, program)] = 255;
+		readParsedTree(tree, "a;");
 		expect(() =>
-			analyzeMinifierTree(tree, program, types, {}, () => {
+			analyzeMinifierTree(program, types, {}, () => {
 				throw new Error("unreachable");
 			})
 		).toThrow("The minifier's scope analysis cannot read a node of type 255");
@@ -3200,16 +3202,14 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 
 	it("should read a `with`, a loop and a catch where no option asks for more", () => {
 		const tree = new SyntaxTree();
+		const source = fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-read-a-with-a-loop-and-a");
 		const program = tree.addEstree(
 			/** @type {EXPECTED_ANY} */ (
-				WebpackParser.parse(
-					fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-read-a-with-a-loop-and-a"),
-					{ ecmaVersion: "latest" }
-				)
+				WebpackParser.parse(source, { ecmaVersion: "latest" })
 			)
 		);
+		readParsedTree(tree, source);
 		const analysis = analyzeMinifierTree(
-			tree,
 			program,
 			Uint8Array.from(tree._types),
 			{},
