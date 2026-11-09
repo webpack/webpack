@@ -1112,7 +1112,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-219"), {}, "function f(){let c;g(c),g(c)}"],
 			// `-Infinity` prints `-1/0` where a division reads as one value there.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-220"), {}, "function f(){return-1/0}"],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-221"), {}, "function f(n){return[n/-(1/0),-(1/0)/n,(-(1/0)).x]}"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-221"), {}, "function f(n){return[n/-(1/0),-1/0/n,(-(1/0)).x]}"],
 			// `false` read off and a boolean constructed print shorter in parentheses, `undefined`
 			// read off too, an arrow returning it returns nothing, and a class field reads it as `void 0`.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-222"), {}, "x=[(!1).toString(b),new(!0),new(!1)(1),true.x,(void 0).x],y=()=>{};class A{u=void 0;static v=void 0}"],
