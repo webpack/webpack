@@ -3555,6 +3555,201 @@ declare interface ColorsOptions {
 	 */
 	useColor?: boolean;
 }
+
+/**
+ * A JavaScript syntax tree held as a struct of arrays: a node is an integer
+ * id from 1, `0` is no node, and it reads as the CSS and HTML paths do.
+ */
+declare abstract class ColumnarSyntaxTree {
+	/**
+	 * Hands the columns back once nothing reads the tree: the next tree reuses
+	 * small ones, and a large one's ArrayBuffers are freed at once, where they
+	 * would otherwise outlast the parse into the work after it.
+	 */
+	release(): void;
+
+	/**
+	 * Forgets every node, keeping the columns for the next tree.
+	 */
+	reset(): void;
+	add(type: number, start: number, end: number): number;
+
+	/**
+	 * Sets one field of a node: a child node, an array of them for a list,
+	 * `0` or null where ESTree has null.
+	 */
+	set(
+		node: number,
+		name: string,
+		value?:
+			| null
+			| string
+			| number
+			| bigint
+			| boolean
+			| RegExp
+			| { cooked?: null | string; raw: string }
+			| (null | number)[]
+	): void;
+
+	/**
+	 * Writes a node from its record, each slot a child node, a list from
+	 * `addList` or a value from `addValue`, `0` or left out for none.
+	 */
+	addNode(
+		type: number,
+		start: number,
+		end: number,
+		flags: number,
+		slot0?: null | number,
+		slot1?: null | number,
+		slot2?: null | number,
+		slot3?: null | number
+	): number;
+
+	/**
+	 * `addNode` for a node whose record is one value, as an identifier's name.
+	 */
+	addValueNode(
+		type: number,
+		start: number,
+		end: number,
+		value: TreeValue
+	): number;
+	addValue(
+		value?:
+			| null
+			| string
+			| number
+			| bigint
+			| boolean
+			| RegExp
+			| { cooked?: null | string; raw: string }
+	): number;
+	addList(items: number[], count: number): number;
+
+	/**
+	 * Retypes a node whose record the new type reads the same, as an
+	 * expression the parser then reads as a pattern.
+	 */
+	setType(node: number, type: number): void;
+
+	/**
+	 * Sets the slot a node's record holds a part in.
+	 */
+	setPart(part: number, node: number, text: string): void;
+
+	/**
+	 * Writes a parsed node and everything under it, children before their
+	 * parent in source order, as the parser writes; a child already written
+	 * stands as its id.
+	 */
+	addEstree(root: EstreeSource, input?: string): number;
+
+	/**
+	 * The ESTree object of a node of this tree, as `toEstreeObject` builds it
+	 * for the last parse's.
+	 */
+	estree(
+		node: number,
+		fields?: string[]
+	):
+		| null
+		| Program
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| SpreadElement
+		| PrivateIdentifier
+		| Super
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| Property
+		| CatchClause
+		| ClassBody
+		| SwitchCase
+		| TemplateElement
+		| AssignmentProperty
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern;
+	type(node: number): number;
+	start(node: number): number;
+	end(node: number): number;
+	range(node: number): [number, number];
+	name(node: number): string;
+	value(
+		node: number
+	):
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| { cooked?: null | string; raw: string };
+	fieldCount(field: number, node: number): number;
+	field(i: number, field: number, node: number): number;
+	flag(flag: number, node: number): boolean;
+	textOf(part: number, node: number): null | string;
+}
 type CommentJavascriptParser = CommentImport & {
 	start: number;
 	end: number;
@@ -15481,6 +15676,38 @@ declare interface JavascriptParseOptions {
 	sourceType?: "module" | "commonjs" | "auto" | "script" | "event-handler";
 
 	/**
+	 * the edition to read the source as, the latest by default
+	 */
+	ecmaVersion?:
+		| 3
+		| 5
+		| 6
+		| 7
+		| 8
+		| 9
+		| 10
+		| 11
+		| 12
+		| 13
+		| 14
+		| 15
+		| 16
+		| 17
+		| 2015
+		| 2016
+		| 2017
+		| 2018
+		| 2019
+		| 2020
+		| 2021
+		| 2022
+		| 2023
+		| 2024
+		| 2025
+		| 2026
+		| "latest";
+
+	/**
 	 * optional callback for each parse error, with the CSS and HTML parsers' signature and Babel's `reasonCode` kebab-cased as `code`; `severity` is `"error"` for one that stops the parse and `"warning"` for one it reads past; without it, the first error throws, as acorn's does
 	 */
 	parseError?: (
@@ -15552,9 +15779,9 @@ declare interface JavascriptParseOptions {
 	onToken?: Token[] | ((token: Token) => void);
 
 	/**
-	 * the parser itself at each token
+	 * the parser itself at each token, read for the token it has just read
 	 */
-	onTokenRead?: (parser: SyntaxParser) => void;
+	onTokenRead?: (token: TokenRead) => void;
 
 	/**
 	 * where comments are reported, as acorn reports them
@@ -16158,7 +16385,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		 * @experimental
 		 */
 		programTree: SyncBailHook<
-			[SyntaxTree, number, CommentJavascriptParser[]],
+			[ColumnarSyntaxTree, number, CommentJavascriptParser[]],
 			boolean | void
 		>;
 		/**
@@ -17844,13 +18071,6 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	 * Whether a definition is a variable rather than a free name or a scope.
 	 */
 	static isVariableInfo(value?: string | VariableInfo | ScopeInfo): boolean;
-
-	/**
-	 * Returns parser.
-	 */
-	static extend(
-		...plugins: ((BaseParser: typeof SyntaxParser) => typeof SyntaxParser)[]
-	): typeof JavascriptParser;
 	static ALLOWED_MEMBER_TYPES_ALL: number;
 	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: number;
 	static ALLOWED_MEMBER_TYPES_EXPRESSION: number;
@@ -26434,24 +26654,9 @@ declare interface ParseOptionsJavascriptParser {
 	allowReturnOutsideFunction?: boolean;
 
 	/**
-	 * internal: serve `range` lazily and skip the parser's location/range tracking
-	 */
-	lazyNodes?: boolean;
-
-	/**
-	 * internal: collect comments here without slicing their text eagerly
-	 */
-	lazyComments?: CommentJavascriptParser[];
-
-	/**
 	 * enable parsing of the import phase proposals (import defer / import source)
 	 */
 	importPhases?: boolean;
-
-	/**
-	 * internal: for `auto`, let the parser downgrade module->script in place instead of re-parsing
-	 */
-	moduleFallback?: boolean;
 }
 
 /**
@@ -26550,7 +26755,7 @@ declare interface ParsedTree {
 	/**
 	 * the tree
 	 */
-	tree: SyntaxTree;
+	tree: ColumnarSyntaxTree;
 
 	/**
 	 * its program
@@ -26696,7 +26901,7 @@ type ParserOptionsSyntaxParser = Omit<OptionsSyntaxParser, "onComment"> & {
 	lazyComments?: CollectedComment[];
 	importPhases?: boolean;
 	moduleFallback?: boolean;
-	syntaxTree?: SyntaxTree;
+	syntaxTree?: ColumnarSyntaxTree;
 };
 
 /**
@@ -34497,203 +34702,6 @@ declare class SyntaxParser {
 }
 
 /**
- * A JavaScript syntax tree held as a struct of arrays: a node is an integer
- * id from 1, `0` is no node, and it reads as the CSS and HTML paths do.
- */
-declare class SyntaxTree {
-	constructor();
-
-	/**
-	 * Hands the columns back once nothing reads the tree: the next tree reuses
-	 * small ones, and a large one's ArrayBuffers are freed at once, where they
-	 * would otherwise outlast the parse into the work after it.
-	 */
-	release(): void;
-
-	/**
-	 * Forgets every node, keeping the columns for the next tree.
-	 */
-	reset(): void;
-	add(type: number, start: number, end: number): number;
-
-	/**
-	 * Sets one field of a node: a child node, an array of them for a list,
-	 * `0` or null where ESTree has null.
-	 */
-	set(
-		node: number,
-		name: string,
-		value?:
-			| null
-			| string
-			| number
-			| bigint
-			| boolean
-			| RegExp
-			| { cooked?: null | string; raw: string }
-			| (null | number)[]
-	): void;
-
-	/**
-	 * Writes a node from its record, each slot a child node, a list from
-	 * `addList` or a value from `addValue`, `0` or left out for none.
-	 */
-	addNode(
-		type: number,
-		start: number,
-		end: number,
-		flags: number,
-		slot0?: null | number,
-		slot1?: null | number,
-		slot2?: null | number,
-		slot3?: null | number
-	): number;
-
-	/**
-	 * `addNode` for a node whose record is one value, as an identifier's name.
-	 */
-	addValueNode(
-		type: number,
-		start: number,
-		end: number,
-		value: TreeValue
-	): number;
-	addValue(
-		value?:
-			| null
-			| string
-			| number
-			| bigint
-			| boolean
-			| RegExp
-			| { cooked?: null | string; raw: string }
-	): number;
-	addList(items: number[], count: number): number;
-
-	/**
-	 * Retypes a node whose record the new type reads the same, as an
-	 * expression the parser then reads as a pattern.
-	 */
-	setType(node: number, type: number): void;
-
-	/**
-	 * Sets the slot a node's record holds a part in.
-	 */
-	setPart(part: number, node: number, text: string): void;
-
-	/**
-	 * Writes a parsed node and everything under it, children before their
-	 * parent in source order, as the parser writes; a child already written
-	 * stands as its id.
-	 */
-	addEstree(root: EstreeSource): number;
-
-	/**
-	 * The ESTree object of a node of this tree, as `toEstreeObject` builds it
-	 * for the last parse's.
-	 */
-	estree(
-		node: number,
-		fields?: string[]
-	):
-		| null
-		| Program
-		| ImportDeclaration
-		| ExportNamedDeclaration
-		| ExportAllDeclaration
-		| ImportExpressionImport
-		| UnaryExpression
-		| ArrayExpression
-		| ArrowFunctionExpression
-		| AssignmentExpression
-		| AwaitExpression
-		| BinaryExpression
-		| SimpleCallExpression
-		| NewExpression
-		| ChainExpression
-		| ClassExpression
-		| ConditionalExpression
-		| FunctionExpression
-		| Identifier
-		| SimpleLiteral
-		| RegExpLiteral
-		| BigIntLiteral
-		| LogicalExpression
-		| MemberExpression
-		| MetaProperty
-		| ObjectExpression
-		| SequenceExpression
-		| TaggedTemplateExpression
-		| TemplateLiteral
-		| ThisExpression
-		| UpdateExpression
-		| YieldExpression
-		| SpreadElement
-		| PrivateIdentifier
-		| Super
-		| FunctionDeclaration
-		| VariableDeclaration
-		| ClassDeclaration
-		| ExpressionStatement
-		| BlockStatement
-		| StaticBlock
-		| EmptyStatement
-		| DebuggerStatement
-		| WithStatement
-		| ReturnStatement
-		| LabeledStatement
-		| BreakStatement
-		| ContinueStatement
-		| IfStatement
-		| SwitchStatement
-		| ThrowStatement
-		| TryStatement
-		| WhileStatement
-		| DoWhileStatement
-		| ForStatement
-		| ForInStatement
-		| ForOfStatement
-		| ExportDefaultDeclaration
-		| MethodDefinition
-		| PropertyDefinition
-		| VariableDeclarator
-		| Property
-		| CatchClause
-		| ClassBody
-		| SwitchCase
-		| TemplateElement
-		| AssignmentProperty
-		| ImportSpecifier
-		| ImportDefaultSpecifier
-		| ImportNamespaceSpecifier
-		| ExportSpecifier
-		| ObjectPattern
-		| ArrayPattern
-		| RestElement
-		| AssignmentPattern;
-	type(node: number): number;
-	start(node: number): number;
-	end(node: number): number;
-	range(node: number): [number, number];
-	name(node: number): string;
-	value(
-		node: number
-	):
-		| undefined
-		| null
-		| string
-		| number
-		| bigint
-		| boolean
-		| RegExp
-		| { cooked?: null | string; raw: string };
-	fieldCount(field: number, node: number): number;
-	field(i: number, field: number, node: number): number;
-	flag(flag: number, node: number): boolean;
-	textOf(part: number, node: number): null | string;
-}
-
-/**
  * Defines the synthetic dependency location type used by this module.
  */
 declare interface SyntheticDependencyLocation {
@@ -34993,6 +35001,16 @@ declare class Token {
 	end: number;
 	loc?: ParserSourceLocation;
 	range?: number[];
+}
+
+/**
+ * the token the parser has just read, as `onTokenRead` reads it off the parser
+ */
+declare interface TokenRead {
+	type: TokenType;
+	value: any;
+	start: number;
+	end: number;
 }
 
 /**
@@ -36465,7 +36483,7 @@ declare class WebpackParser extends SyntaxParser {
 			lazyComments?: CollectedComment[];
 			importPhases?: boolean;
 			moduleFallback?: boolean;
-			syntaxTree?: SyntaxTree;
+			syntaxTree?: ColumnarSyntaxTree;
 		},
 		input: string,
 		startPos?: number
@@ -38121,8 +38139,8 @@ declare namespace exports {
 					options: ParserOptionsSyntaxParser
 				) => Program;
 				export let parseProgram: _functionSyntaxParserFunction_1;
-				export let parsedTree: () => null | SyntaxTree;
-				export let takeParsedTree: () => null | SyntaxTree;
+				export let parsedTree: () => null | ColumnarSyntaxTree;
+				export let takeParsedTree: () => null | ColumnarSyntaxTree;
 				export let positionAt: (
 					lineStarts: number[],
 					offset: number
@@ -38207,6 +38225,10 @@ declare namespace exports {
 					| ArrayPattern
 					| RestElement
 					| AssignmentPattern;
+				export let fromEstreeObject: (
+					program: Program,
+					input: string
+				) => number;
 				export let A: {
 					state: unknown;
 					get node(): number;
@@ -38371,7 +38393,7 @@ declare namespace exports {
 				) => void;
 				export let isWalkingSyntaxTree: () => boolean;
 				export let walkSyntaxTree: (
-					tree: SyntaxTree,
+					tree: ColumnarSyntaxTree,
 					program: number,
 					input: string,
 					visitors: CompiledVisitorBucket<{
@@ -38498,7 +38520,6 @@ declare namespace exports {
 					MODULE_DECLARATIONS,
 					LEGACY_ASSERT_ATTRIBUTES,
 					ParserPosition,
-					SyntaxTree,
 					WebpackParser,
 					EstreeView
 				};
@@ -38508,7 +38529,7 @@ declare namespace exports {
 					text: string,
 					options: JavascriptProcessOptions
 				) => {
-					tree: SyntaxTree;
+					tree: ColumnarSyntaxTree;
 					program: number;
 					text: string;
 					options: NodePrintOptions;

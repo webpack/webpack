@@ -1451,7 +1451,7 @@ const PARSERS = [
 			if (!options.syntaxTree) {
 				return webpackParse(code, /** @type {ParserOptions} */ (options));
 			}
-			const { SyntaxTree, WebpackParser } = require(
+			const { _SyntaxTree: SyntaxTree, WebpackParser } = require(
 				"../../../lib/javascript/syntax-parser"
 			);
 			const tree = new SyntaxTree();
@@ -3006,7 +3006,7 @@ describe("Parser", () => {
 	// different paths through its own productions.
 	describe("parses like acorn as the parser a build runs", () => {
 		const {
-			SyntaxTree,
+			_SyntaxTree: SyntaxTree,
 			WebpackParser
 		} = require("../../../lib/javascript/syntax-parser");
 		/**
@@ -3143,7 +3143,7 @@ describe("Parser", () => {
 	// an error and read on, which takes every parser past the checks that throw.
 	describe("parses like acorn with recoverable errors noted", () => {
 		const {
-			SyntaxTree,
+			_SyntaxTree: SyntaxTree,
 			WebpackParser
 		} = require("../../../lib/javascript/syntax-parser");
 		/** @type {[number, string][]} */
@@ -3398,7 +3398,7 @@ describe("Parser", () => {
 
 	it("reads a regexp after await that the tokenizer took for `/=`, unlike acorn", () => {
 		// acorn 8 refuses it; V8 and the spec read `await /=/g` as a regexp
-		const { SyntaxTree, WebpackParser } = require(
+		const { _SyntaxTree: SyntaxTree, WebpackParser } = require(
 			"../../../lib/javascript/syntax-parser"
 		);
 		const source = fixture("javascript", "parser-reads-a-regexp-after-await-that-the-tokenizer-took-for-unlike-acorn");
@@ -3638,7 +3638,7 @@ const {
 	Flag,
 	NodeType,
 	Part,
-	SyntaxTree,
+	_SyntaxTree: SyntaxTree,
 	WebpackParser
 } = require("../../../lib/javascript/syntax-parser");
 
@@ -4316,7 +4316,7 @@ describe("JavaScript SourceProcessor", () => {
 
 describe("WebpackParser writing a SyntaxTree", () => {
 	const {
-		SyntaxTree,
+		_SyntaxTree: SyntaxTree,
 		WebpackParser
 	} = require("../../../lib/javascript/syntax-parser");
 
@@ -4497,13 +4497,21 @@ describe("WebpackParser writing a SyntaxTree", () => {
 	});
 
 	it("refuses a tree where its productions would be acorn's", () => {
+		/** @type {import("../../../lib/javascript/syntax-parser").ParserPlugin} */
+		const ownIfStatement = (Parser) =>
+			class extends Parser {
+				/**
+				 * @param {import("../../../lib/javascript/syntax-parser").UnfinishedNode} node the statement
+				 * @returns {ReturnType<WebpackParser["parseIfStatement"]>} the statement
+				 */
+				parseIfStatement(node) {
+					return super.parseIfStatement(node);
+				}
+			};
+		const Extended = WebpackParser.extend(ownIfStatement);
 		expect(
-			() =>
-				new WebpackParser(
-					{ ...options, ecmaVersion: 2015, syntaxTree: new SyntaxTree() },
-					"x"
-				)
-		).toThrow(/latest edition only/);
+			() => new Extended({ ...options, syntaxTree: new SyntaxTree() }, "x")
+		).toThrow(/without parser plugins/);
 	});
 });
 
@@ -4818,5 +4826,86 @@ describe("validateRegExpLiteral", () => {
 		const validate = () => validateRegExpLiteral(pattern, flags, ecmaVersion);
 		if (error === undefined) expect(validate).not.toThrow();
 		else expect(validate).toThrow(error);
+	});
+});
+
+describe("fromEstreeObject", () => {
+	const { A, fromEstreeObject, toEstreeObject } =
+		require("../../../lib/javascript/syntax").parser;
+
+	/**
+	 * @param {import("estree").Expression} expression the expression a statement holds
+	 * @param {string} input the source its offsets point into
+	 * @returns {import("estree").Program} a script of that one statement
+	 */
+	const programOf = (expression, input) =>
+		/** @type {import("estree").Program} */ (
+			/** @type {unknown} */ ({
+				type: "Program",
+				sourceType: "script",
+				start: 0,
+				end: input.length,
+				body: [
+					{
+						type: "ExpressionStatement",
+						start: 0,
+						end: input.length,
+						expression
+					}
+				]
+			})
+		);
+
+	/**
+	 * @param {import("estree").Program} program the program to write into a tree
+	 * @param {string} input the source its offsets point into
+	 * @returns {import("estree").Literal} the literal the tree builds back
+	 */
+	const literalBack = (program, input) =>
+		/** @type {import("estree").Literal} */ (
+			/** @type {import("estree").ExpressionStatement} */ (
+				/** @type {import("estree").Program} */ (
+					toEstreeObject(fromEstreeObject(program, input))
+				).body[0]
+			).expression
+		);
+
+	it.each([
+		["the input", { type: "Literal", value: "ab", start: 0, end: 4 }, '"ab";', '"ab"'],
+		["a string", { type: "Literal", value: "ab", start: 0, end: 0 }, "", '"ab"'],
+		["a number", { type: "Literal", value: 3, start: 0, end: 0 }, "", "3"],
+		[
+			"a pattern",
+			{ type: "Literal", value: null, regex: { pattern: "a", flags: "g" }, start: 0, end: 0 },
+			"",
+			"/a/g"
+		],
+		[
+			"a bigint",
+			{ type: "Literal", value: BigInt(5), bigint: "5", start: 0, end: 0 },
+			"",
+			"5n"
+		]
+	])("reads a literal's missing `raw` off %s", (_name, literal, input, raw) => {
+		const program = programOf(
+			/** @type {import("estree").Expression} */ (
+				/** @type {unknown} */ (literal)
+			),
+			input
+		);
+		expect(literalBack(program, input).raw).toBe(raw);
+	});
+
+	it("takes an offset `start` and `end` leave off from `range`", () => {
+		const program = /** @type {import("estree").Program} */ (
+			/** @type {unknown} */ ({
+				type: "Program",
+				sourceType: "script",
+				start: 0,
+				range: [0, 2],
+				body: []
+			})
+		);
+		expect(A.range(fromEstreeObject(program, "  "))).toEqual([0, 2]);
 	});
 });
