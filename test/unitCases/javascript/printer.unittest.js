@@ -4140,7 +4140,9 @@ describe("one-pass minify of reads and calls on literals", () => {
 			// Where `</script` is escaped, pieces that may join into it, `<!--` or `-->` keep the `join`.
 			["one-pass-h2-11", "function f(a){return[[`${a}<`,\"/script>\"].join(\"\"),[`${a}<`,\"!--\"].join(\"\"),[`${a}-`,\"->\"].join(\"\"),`${a}-b`]}console.log(f(1));"],
 			// A missing key a program writes on `Array.prototype`, `String.prototype` or `Object.prototype` keeps its read.
-			["one-pass-h2-12", "Array.prototype[-1]=7,Array.prototype[5]=8,String.prototype[3]=9,console.log([1,2][-1],[1,2][5],void 0,\"ab\"[3],void 0);"]
+			["one-pass-h2-12", "Array.prototype[-1]=7,Array.prototype[5]=8,String.prototype[3]=9,console.log([1,2][-1],[1,2][5],void 0,\"ab\"[3],void 0);"],
+			// A string ending in `\0` keeps a `join` of a run starting with a digit, which would make it an octal escape.
+			["one-pass-h2-13", "function f(a){return[[a+\"\\0\",\"1\"].join(\"\"),a+\"\\0x\"]}console.log(JSON.stringify(f(1)));"]
 		]) {
 			const source = fixture("javascript", name);
 			const { code } = minifyOnePass(source, { compress: {}, mangle: false });
