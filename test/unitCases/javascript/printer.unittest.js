@@ -3053,6 +3053,31 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 		);
 	});
 
+	it("should name every private name after a name source starts another parse", () => {
+		const { isWalkingSyntaxTree } = require("../../../lib/javascript/syntax-parser");
+		const { parseProgram } = require("../../../lib/javascript/syntax").parser;
+		const letters = "abcdefghij";
+		const { code } = minifyOnePass(
+			"class K { #first = 1; #second = 2; get() { return this.#first + this.#second; } } console.log(new K().get());",
+			{
+				sourceType: "script",
+				mangle: {
+					nthIdentifier: {
+						get: (n) => {
+							if (!isWalkingSyntaxTree()) {
+								parseProgram("var other = 1;", 0, {});
+							}
+							return letters[n];
+						}
+					}
+				}
+			}
+		);
+		expect(code).toBe(
+			"class K{#a=1;#b=2;get(){return this.#a+this.#b}}console.log((new K).get());"
+		);
+	});
+
 	it("should keep a sloppy block's function in its block where a lexical name would clash, in the one pass", () => {
 		const source = [
 			"function t1(){ let f = 1; { function f() { return 2 } } return typeof f }",
