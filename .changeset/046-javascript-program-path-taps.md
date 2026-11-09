@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Let a `program` parser tap read the program through the path with `path: true`.
+Let JavaScript parser hook taps read nodes through the path with `path: true`.
