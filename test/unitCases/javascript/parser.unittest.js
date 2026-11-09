@@ -3883,6 +3883,13 @@ describe("SyntaxTree", () => {
 			call.arguments.map((/** @type {EXPECTED_ANY} */ arg) => arg.name)
 		).toEqual(["a", "b"]);
 		expect(new SyntaxTree().nodeOf(call)).toBe(0);
+		// an eager object made first, here without its arguments, is not served
+		const other = writeExpression(fixture("javascript", "syntax-tree-builds-only-the-fields-asked-for-then-the-rest-on-the-same-object"));
+		const eager = other.tree.estree(other.node, ["callee"]);
+		const lazy = /** @type {EXPECTED_ANY} */ (other.tree.lazyEstree(other.node));
+		expect(lazy).not.toBe(eager);
+		expect(other.tree.nodeOf(lazy)).toBe(other.node);
+		expect(lazy.arguments).toHaveLength(2);
 		// a tree whose lazy objects were never made has none to hand columns to
 		const empty = new SyntaxTree();
 		expect(empty.lazyEstree(0)).toBeNull();
