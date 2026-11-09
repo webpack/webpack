@@ -4089,16 +4089,33 @@ describe("SyntaxTree", () => {
 		expect(next._types.length).toBe(nodes + 1);
 	});
 
-	it("sizes a large source's columns from its length before parsing it", () => {
-		const { parseProgram, takeParsedTree } = require(
+	it("sizes the columns once for an ESTree program, from its own counts", () => {
+		const { fromEstreeObject, takeParsedTree } = require(
 			"../../../lib/javascript/syntax-parser"
 		);
 		const reserve = jest.spyOn(SyntaxTree.prototype, "reserve");
 		try {
-			parseProgram("a;", 0, {});
-			expect(reserve).not.toHaveBeenCalled();
-			parseProgram(" ".repeat(120000), 0, {});
-			expect(reserve).toHaveBeenCalledWith(10000, 20000, 2500, 5000);
+			fromEstreeObject(
+				/** @type {import("estree").Program} */ (
+					/** @type {unknown} */ ({
+						type: "Program",
+						sourceType: "script",
+						start: 0,
+						end: 2,
+						body: [
+							{
+								type: "ExpressionStatement",
+								start: 0,
+								end: 2,
+								expression: { type: "Identifier", start: 0, end: 1, name: "a" }
+							}
+						]
+					})
+				),
+				"a;"
+			);
+			expect(reserve).toHaveBeenCalledTimes(1);
+			expect(reserve.mock.calls[0][0]).toBe(3);
 		} finally {
 			reserve.mockRestore();
 			/** @type {SyntaxTree} */ (takeParsedTree()).release();
