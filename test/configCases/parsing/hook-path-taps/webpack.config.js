@@ -44,6 +44,13 @@ const hookPathTaps = (compiler) => {
 					});
 					parser.hooks.call.for("magicCall").tap(opts, (path, call) => {
 						expect(path.type(call)).toBe(NodeType.CallExpression);
+						// a parse inside the tap has a view of its own, and this one's
+						// ids read the same after it
+						if (!seen.has("nested parse")) {
+							seen.add("nested parse");
+							parser.parse("1;", parser.state);
+						}
+						expect(path.type(call)).toBe(NodeType.CallExpression);
 						const argument = path.field(0, Field.arguments, call);
 						expect(path.value(argument)).toBe("hello");
 						seen.add("call");
@@ -106,6 +113,7 @@ const hookPathTaps = (compiler) => {
 					"importCall",
 					"importCall without then",
 					"importSpecifier",
+					"nested parse",
 					"statement"
 				]);
 				// called outside a parse, a path tap reads through a view of its own
