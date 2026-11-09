@@ -4136,7 +4136,9 @@ describe("one-pass minify of reads and calls on literals", () => {
 			// A program writing `Array.prototype.join` keeps every `join`.
 			["one-pass-h2-9", "Array.prototype.join=function(){return\"patched\"};function f(x){return[+x,\"a\"].join(\"\")}console.log(f(1));"],
 			// The `+` takes no parentheses where a value, a branch, a logical, a looser operator or a `+` on its right side stands.
-			["one-pass-h2-10", "function f(x,y){var a=x+\"a\"+-y;a+=x+\"b\"+-y;var o={k:x+\"c\"+-y},c=y?x+\"e\"+-y:x+\"f\"+-y,l=y&&x+\"g\"+-y,b=x+\"h\"+-y<y,t=`${x+\"i\"+-y}!`;return console.log(a,o.k,x+\"d\"+-y,c,l,b,t,[x+\"j\"+-y],new String(x+\"k\"+-y)+\"\"),x+\"l\"+-y+(x+\"m\"+-y)}console.log(f(1,2));"]
+			["one-pass-h2-10", "function f(x,y){var a=x+\"a\"+-y;a+=x+\"b\"+-y;var o={k:x+\"c\"+-y},c=y?x+\"e\"+-y:x+\"f\"+-y,l=y&&x+\"g\"+-y,b=x+\"h\"+-y<y,t=`${x+\"i\"+-y}!`;return console.log(a,o.k,x+\"d\"+-y,c,l,b,t,[x+\"j\"+-y],new String(x+\"k\"+-y)+\"\"),x+\"l\"+-y+(x+\"m\"+-y)}console.log(f(1,2));"],
+			// Where `</script` is escaped, pieces that may join into it, `<!--` or `-->` keep the `join`.
+			["one-pass-h2-11", "function f(a){return[[`${a}<`,\"/script>\"].join(\"\"),[`${a}<`,\"!--\"].join(\"\"),[`${a}-`,\"->\"].join(\"\"),`${a}-b`]}console.log(f(1));"]
 		]) {
 			const source = fixture("javascript", name);
 			const { code } = minifyOnePass(source, { compress: {}, mangle: false });
