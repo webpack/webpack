@@ -41,9 +41,22 @@ const walkSyntaxTree = (compiler) => {
 						.for("nestedParse")
 						.tap(PLUGIN_NAME, (expression) => {
 							expect(firstArgumentIsPure(expression)).toBe(true);
+							const evaluated = parser.evaluateExpression(
+								/** @type {import("estree").Expression} */
+								(expression.arguments[0])
+							);
 							// the nested parse reads purity in its own tree, released after
 							parser.parse("innerPure(/*#__PURE__*/ other());", parser.state);
 							expect(firstArgumentIsPure(expression)).toBe(true);
+							// the evaluated node is still readable from its pinned source
+							const node = /** @type {import("estree").Node} */ (
+								evaluated.expression
+							);
+							expect(node.type).toBe("CallExpression");
+							expect(evaluated.expression).toBe(node);
+							// still a writable field, as before it was read lazily
+							evaluated.expression = expression;
+							expect(evaluated.expression).toBe(expression);
 							return true;
 						});
 					// a tap without `path` gets as many arguments as its hook passes
