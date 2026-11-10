@@ -12765,36 +12765,14 @@ type GuardFormula =
  */
 declare interface GuardFrame {
 	/**
+	 * the reader of `node`
+	 */
+	path?: JavascriptNodeReader;
+
+	/**
 	 * the conditional test (for the lazily built formula)
 	 */
-	test?:
-		| ImportExpressionImport
-		| UnaryExpression
-		| ArrayExpression
-		| ArrowFunctionExpression
-		| AssignmentExpression
-		| AwaitExpression
-		| BinaryExpression
-		| SimpleCallExpression
-		| NewExpression
-		| ChainExpression
-		| ClassExpression
-		| ConditionalExpression
-		| FunctionExpression
-		| Identifier
-		| SimpleLiteral
-		| RegExpLiteral
-		| BigIntLiteral
-		| LogicalExpression
-		| MemberExpression
-		| MetaProperty
-		| ObjectExpression
-		| SequenceExpression
-		| TaggedTemplateExpression
-		| TemplateLiteral
-		| ThisExpression
-		| UpdateExpression
-		| YieldExpression;
+	node?: number;
 
 	/**
 	 * dependency count before the test was walked
@@ -12870,6 +12848,22 @@ declare interface HMRJavascriptParserHooks {
 		void
 	>;
 	hotAcceptWithoutCallback: SyncBailHook<[CallExpression, string[]], void>;
+
+	/**
+	 * `hotAcceptCallback` for a tap reading the callback by id
+	 */
+	hotAcceptCallbackByPath: SyncBailHook<
+		[JavascriptNodeReader, number, string[]],
+		void
+	>;
+
+	/**
+	 * `hotAcceptWithoutCallback` for a tap reading the call by id
+	 */
+	hotAcceptWithoutCallbackByPath: SyncBailHook<
+		[JavascriptNodeReader, number, string[]],
+		void
+	>;
 }
 declare const HOISTED_DECLARATIONS: unique symbol;
 

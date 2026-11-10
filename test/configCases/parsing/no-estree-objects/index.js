@@ -4,6 +4,7 @@ import { cjsValue, describeThis } from "./cjs-consumer.js";
 import amdValue from "./amd.js";
 import { ensure, lazy } from "./rare.js";
 import { syntax } from "./syntax.js";
+import { guards } from "./guards.js";
 
 it("should build each construct without making an ESTree object", () => {
 	expect(def).toBe("default");
@@ -19,6 +20,17 @@ it("should build each construct without making an ESTree object", () => {
 	expect(amdValue).toEqual({ a: "a", b: "b" });
 	expect(typeof ensure).toBe("function");
 	expect(typeof lazy).toBe("function");
+	expect(guards()).toEqual([
+		"named",
+		"in:named",
+		"not-in",
+		"in-and:named",
+		"or:named",
+		"nullish:named",
+		"ternary:named",
+		"and:named",
+		"absent"
+	]);
 	expect(syntax()).toEqual({
 		defined: "defined",
 		flag: true,

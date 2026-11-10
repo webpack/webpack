@@ -5,3 +5,4 @@ export function increment() {
 	counter++;
 }
 export { reexported } from "./reexport.js";
+export const nothing = undefined;
