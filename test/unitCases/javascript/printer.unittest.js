@@ -3884,6 +3884,18 @@ describe("one-pass minify of side effects and dead code, second round", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should keep a `Number` constant where the program replaces `Number`", () => {
+		for (const [source, compress, expected] of [
+			["globalThis.Number={MIN_VALUE:1,NaN:2};console.log(Number.MIN_VALUE,Number.NaN)", {}, "globalThis.Number={MIN_VALUE:1,NaN:2},console.log(Number.MIN_VALUE,Number.NaN);"],
+			["var g=globalThis;g.Number={MIN_VALUE:1};console.log(Number.MIN_VALUE)", { pristineGlobals: false }, "var g=globalThis;g.Number={MIN_VALUE:1},console.log(Number.MIN_VALUE);"]
+		]) {
+			const { code } = minifyOnePass(source, { compress, mangle: false });
+			expect(code).toBe(expected);
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+		expect(minifyOnePass("Number.x=1;console.log(Number.MIN_VALUE)", { compress: {}, mangle: false }).code).toBe("Number.x=1,console.log(5e-324);");
+	});
+
 	it("should take no built-in as native under `pristineGlobals: false`", () => {
 		// A write the default takes as native: an alias, a computed key, a script's `this`.
 		const C = "class{constructor(p){this.p=p}}";
