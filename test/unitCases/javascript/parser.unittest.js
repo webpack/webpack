@@ -3897,24 +3897,191 @@ describe("SyntaxTree", () => {
 		expect(empty.nodeOf(call)).toBe(0);
 	});
 
-	it("hands a large tree's columns to its lazy objects", () => {
+	it("reads children, legacy assert and pinned nodes of a tree and a view", () => {
+		const {
+			EstreeView,
+			lazyObjectOfSource,
+			parseProgram,
+			takeParsedTree
+		} = require("../../../lib/javascript/syntax-parser");
+		const source =
+			'import a from "./a" assert { type: "json" };\nimport b from "./b" with { type: "json" };';
+		const program = /** @type {number} */ (
+			/** @type {unknown} */ (parseProgram(source, 0, { sourceType: "module" }))
+		);
+		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
+		const first = tree.field(0, Field.body, program);
+		const second = tree.field(1, Field.body, program);
+		expect([tree.legacyAssert(first), tree.legacyAssert(second)]).toEqual([
+			true,
+			false
+		]);
+		/** @type {number[]} */
+		const children = [];
+		tree.pushChildren(program, children);
+		expect(children).toEqual([first, second]);
+		expect(tree.object(first)).toBe(tree.estree(first));
+		// a pinned source is copied on release, so it reads after the tree is reused
+		const pinned = tree.pinSource();
+		tree.release();
+		parseProgram("other();", 0, { sourceType: "module" });
+		/** @type {SyntaxTree} */ (takeParsedTree()).release();
+		expect(
+			/** @type {import("estree").ImportDeclaration} */ (
+				lazyObjectOfSource(pinned, first)
+			).source.value
+		).toBe("./a");
+
+		const view = new EstreeView();
+		const root = view.add(
+			/** @type {EXPECTED_ANY} */ (
+				parseProgram(source, 0, { sourceType: "module", estree: true })
+			)
+		);
+		const viewFirst = view.field(0, Field.body, root);
+		const viewSecond = view.field(1, Field.body, root);
+		expect([view.legacyAssert(viewFirst), view.legacyAssert(viewSecond)]).toEqual(
+			[true, false]
+		);
+		/** @type {number[]} */
+		const viewChildren = [];
+		view.pushChildren(root, viewChildren);
+		expect(viewChildren.map((child) => view.object(child))).toEqual([
+			view.object(viewFirst),
+			view.object(viewSecond)
+		]);
+	});
+
+	it("skips holes and empty fields when pushing children", () => {
+		const {
+			EstreeView,
+			fromEstreeObject,
+			parseProgram,
+			takeParsedTree
+		} = require("../../../lib/javascript/syntax-parser");
+		const code = "[, a, b.c];";
+		const program = /** @type {number} */ (
+			/** @type {unknown} */ (parseProgram(code, 0, { sourceType: "module" }))
+		);
+		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
+		const array = tree.field(
+			0,
+			Field.expression,
+			tree.field(0, Field.body, program)
+		);
+		/** @type {number[]} */
+		const children = [];
+		tree.pushChildren(array, children);
+		expect(children.map((child) => tree.type(child))).toEqual([
+			NodeType.Identifier,
+			NodeType.MemberExpression
+		]);
+		// no node type has the id 0, and a name holds no node
+		/** @type {number[]} */
+		const none = [];
+		tree.pushChildren(0, none);
+		tree.pushChildren(children[0], none);
+		expect(none).toEqual([]);
+		tree.release();
+
+		const view = new EstreeView();
+		const estree = /** @type {EXPECTED_ANY} */ (
+			parseProgram(code, 0, { sourceType: "module", estree: true })
+		);
+		/** @type {number[]} */
+		const viewChildren = [];
+		view.pushChildren(view.add(estree.body[0].expression), viewChildren);
+		expect(viewChildren.map((child) => view.object(child).type)).toEqual([
+			"Identifier",
+			"MemberExpression"
+		]);
+
+		// legacy `assert` is kept on each export an ESTree program is written with
+		const source =
+			'export { a } from "./a" assert { type: "json" };\nexport { b } from "./b" assert { type: "json" };\nimport c from "./c";\nexport { c };';
+		const module = /** @type {EXPECTED_ANY} */ (
+			parseProgram(source, 0, { sourceType: "module", estree: true })
+		);
+		// an edition before import attributes leaves them off
+		delete module.body[2].attributes;
+		delete module.body[3].attributes;
+		const root = fromEstreeObject(module, source);
+		const written = /** @type {SyntaxTree} */ (takeParsedTree());
+		written.lazyEstree(root);
+		expect(
+			[0, 1, 2, 3].map((index) =>
+				written.legacyAssert(written.field(index, Field.body, root))
+			)
+		).toEqual([true, true, false, false]);
+		// a local export has no declaration, the field the walk skips
+		/** @type {number[]} */
+		const exportChildren = [];
+		written.pushChildren(written.field(3, Field.body, root), exportChildren);
+		expect(exportChildren.map((child) => written.type(child))).toEqual([
+			NodeType.ExportSpecifier
+		]);
+		written.release();
+	});
+
+	it("parses into its own tree when a hashbang callback parses again", () => {
 		const { parseProgram, takeParsedTree } = require(
 			"../../../lib/javascript/syntax-parser"
 		);
-		parseProgram("a;".repeat(40000), 0, { sourceType: "script" });
+		const program = parseProgram("#!/usr/bin/env node\nfoo();", 0, {
+			sourceType: "module",
+			onComment: () => {
+				parseProgram("bar;", 0, { sourceType: "module" });
+			}
+		});
+		expect(typeof program).toBe("number");
+		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
+		const estree = /** @type {import("estree").Program} */ (
+			tree.lazyEstree(/** @type {number} */ (program))
+		);
+		const [statement] = /** @type {import("estree").ExpressionStatement[]} */ (
+			estree.body
+		);
+		expect(
+			/** @type {import("estree").Identifier} */ (
+				/** @type {import("estree").CallExpression} */ (statement.expression)
+					.callee
+			).name
+		).toBe("foo");
+		tree.release();
+		// the nested parse leaves the outer one its own options too
+		const script = parseProgram("#!/usr/bin/env node\nreturn 1;", 0, {
+			sourceType: "auto",
+			onComment: () => {
+				parseProgram("bar;", 0, { sourceType: "module" });
+			}
+		});
+		expect(typeof script).toBe("number");
+		/** @type {SyntaxTree} */ (takeParsedTree()).release();
+	});
+
+	it("copies a large tree's columns for its lazy objects and frees its own", () => {
+		const { parseProgram, takeParsedTree } = require(
+			"../../../lib/javascript/syntax-parser"
+		);
+		parseProgram("a;".repeat(140000), 0, { sourceType: "script" });
 		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
 		const program = /** @type {import("estree").Program} */ (
 			tree.lazyEstree(tree._count)
 		);
 		const types = tree._types;
 		tree.release();
-		expect(program.body).toHaveLength(40000);
+		expect(program.body).toHaveLength(140000);
 		expect(
-			/** @type {import("estree").ExpressionStatement} */ (program.body[39999])
+			/** @type {import("estree").ExpressionStatement} */ (program.body[139999])
 				.expression
-		).toMatchObject({ type: "Identifier", name: "a", start: 79998 });
-		// kept, not copied, and so not handed to the next tree either
-		expect(types.byteLength).toBeGreaterThan(0);
+		).toMatchObject({ type: "Identifier", name: "a", start: 279998 });
+		// the objects read a copy, so the tree's own columns are freed where
+		// `ArrayBuffer#transfer` exists
+		if (
+			typeof (/** @type {EXPECTED_ANY} */ (types.buffer).transfer) === "function"
+		) {
+			expect(types.byteLength).toBe(0);
+		}
 		// a release sizes the next tree after this one: size it back down
 		parseProgram("a;", 0, { sourceType: "script" });
 		/** @type {SyntaxTree} */ (takeParsedTree()).release();
@@ -4111,9 +4278,8 @@ describe("SyntaxTree", () => {
 		const types = tree._types;
 		const values = tree._values;
 		tree.release();
-		expect([tree._types.length, tree._values.length, tree._listCount]).toEqual([
-			0, 0, 0
-		]);
+		// kept, with its columns, for the next parse, and holding nothing now
+		expect([tree._count, tree._valueCount, tree._listCount]).toEqual([0, 0, 0]);
 		expect(values.every((value) => value === undefined)).toBe(true);
 		const next = new SyntaxTree();
 		expect(next._types).toBe(types);
@@ -4172,7 +4338,7 @@ describe("SyntaxTree", () => {
 
 	it("lets go of a large tree's columns, and the next grows to its size", () => {
 		const tree = new SyntaxTree();
-		parseInto(tree, "a;".repeat(40000));
+		parseInto(tree, "a;".repeat(140000));
 		const types = tree._types;
 		const nodes = tree._count;
 		tree.release();

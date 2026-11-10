@@ -3608,6 +3608,35 @@ declare abstract class ColumnarSyntaxTree {
 	): number;
 
 	/**
+	 * `addNode` for a node whose record holds no slot, as `this`.
+	 */
+	addNode0(type: number, start: number, end: number, flags: number): number;
+
+	/**
+	 * `addNode` for a node whose record holds two slots, as a member
+	 * expression or a call does, written without reading its slot count.
+	 */
+	addNode2(
+		type: number,
+		start: number,
+		end: number,
+		flags: number,
+		slot0: number,
+		slot1: number
+	): number;
+
+	/**
+	 * `addNode` for a literal, its value and raw text written in place, as a
+	 * parse writes one for every string and number.
+	 */
+	addLiteralNode(
+		start: number,
+		end: number,
+		value: TreeValue,
+		raw: string
+	): number;
+
+	/**
 	 * `addNode` for a node whose record is one value, as an identifier's name.
 	 */
 	addValueNode(
@@ -3660,6 +3689,89 @@ declare abstract class ColumnarSyntaxTree {
 	estree(
 		node: number,
 		fields?: string[]
+	):
+		| null
+		| Program
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| SpreadElement
+		| PrivateIdentifier
+		| Super
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| Property
+		| CatchClause
+		| ClassBody
+		| SwitchCase
+		| TemplateElement
+		| AssignmentProperty
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern;
+
+	/**
+	 * A node's ESTree object, as `estree` makes it: a path's way to an object
+	 * for code that still reads one, as `EstreeView#object` is the view's.
+	 */
+	object(
+		node: number
 	):
 		| null
 		| Program
@@ -3822,9 +3934,21 @@ declare abstract class ColumnarSyntaxTree {
 		| AssignmentPattern;
 
 	/**
+	 * Records that the legacy `assert` keyword opens a declaration's attributes.
+	 */
+	markLegacyAssert(node: number): void;
+	legacyAssert(node: number): boolean;
+
+	/**
 	 * The node a lazy object of this tree stands for, the way back from `lazyEstree`.
 	 */
 	nodeOf(object: NodeEstreeIndex): number;
+
+	/**
+	 * The columns a reader of this tree's nodes keeps reading after the tree is
+	 * released and reused: a release copies them for it, as for a lazy object.
+	 */
+	pinSource(): LazySource;
 	type(node: number): number;
 	start(node: number): number;
 	end(node: number): number;
@@ -3844,6 +3968,12 @@ declare abstract class ColumnarSyntaxTree {
 	fieldCount(field: number, node: number): number;
 	field(i: number, field: number, node: number): number;
 	flag(flag: number, node: number): boolean;
+
+	/**
+	 * Pushes a node's children in its fields' order, holes left out, for a
+	 * walk that reaches every node without naming each type's fields.
+	 */
+	pushChildren(node: number, out: number[]): void;
 	textOf(part: number, node: number): null | string;
 }
 type CommentJavascriptParser = CommentImport & {
@@ -10183,6 +10313,12 @@ declare class EnvironmentPlugin {
 type ErrorWithDetail = Error & { details?: string };
 
 /**
+ * A node `toEstreeObject` builds: ESTree's fields, with `range` read off its
+ * offsets on first access, as the parser's own nodes serve it.
+ */
+declare abstract class EstreeObject extends LazyLocNode {}
+
+/**
  * a node the parser made, as `SyntaxTree#addEstree` reads it, its offsets from `start` and `end` or else `range`
  */
 declare interface EstreeSource {
@@ -10243,6 +10379,14 @@ declare class EstreeView {
 	field(i: number, field: number, node: number): number;
 	flag(flag: number, node: number): boolean;
 	textOf(part: number, node: number): null | string;
+	legacyAssert(node: number): boolean;
+
+	/**
+	 * Pushes a node's children, holes left out, for a walk that reaches every
+	 * node without naming each type's fields: every property holding a node,
+	 * so a node type the tree has none for is walked into too.
+	 */
+	pushChildren(node: number, out: number[]): void;
 }
 
 /**
@@ -19443,6 +19587,25 @@ type LazyFunction<
 	InternalLazyOptions extends undefined | LazyOptions
 > = (() => InputValue | Promise<InputValue>) &
 	Partial<{ options: InternalLazyOptions }>;
+
+/**
+ * Drop-in replacement for acorn's `Node` that materializes `loc` and `range`
+ * on first access instead of allocating them during parsing. Most nodes never
+ * get either read, which saves three objects and an array per node.
+ */
+declare abstract class LazyLocNode {
+	type: string;
+	start: number;
+	end: number;
+
+	/**
+	 * Memoized in a symbol slot — a plain store is far cheaper than making the
+	 * property own via defineProperty, and the slot stays invisible to for-in,
+	 * Object.keys and JSON.stringify. No `loc` is served at all — locations
+	 * are derived from offsets via `JavascriptParser#getLocation`.
+	 */
+	range: [number, number];
+}
 declare interface LazyOptions {
 	name?: string;
 	size?: number;
@@ -19536,6 +19699,90 @@ declare class LazySet<T> {
 	static deserialize<T>(
 		__0: ObjectDeserializerContextObjectMiddlewareObject_3<(number | T)[]>
 	): LazySet<T>;
+}
+
+/**
+ * The columns a tree's lazy objects read, kept by them past the tree's release.
+ */
+declare interface LazySource {
+	/**
+	 * node types
+	 */
+	types: Uint8Array;
+
+	/**
+	 * start offsets
+	 */
+	starts: Int32Array;
+
+	/**
+	 * end offsets
+	 */
+	ends: Int32Array;
+
+	/**
+	 * flag bits
+	 */
+	flags: Uint16Array;
+
+	/**
+	 * first slot of each node
+	 */
+	bases: Int32Array;
+
+	/**
+	 * field slots
+	 */
+	slots: Int32Array;
+
+	/**
+	 * first item of each list
+	 */
+	listStarts: Int32Array;
+
+	/**
+	 * length of each list
+	 */
+	listLengths: Int32Array;
+
+	/**
+	 * list items
+	 */
+	listItems: Int32Array;
+
+	/**
+	 * strings and literal values
+	 */
+	values: (
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| { cooked?: null | string; raw: string }
+	)[];
+
+	/**
+	 * the imports and exports whose attributes `assert` opens
+	 */
+	legacyAsserts?: Set<number>;
+
+	/**
+	 * each node's object, once made: empty until the first is
+	 */
+	objects: (undefined | EstreeObject)[];
+
+	/**
+	 * how many nodes the tree holds, the length `objects` takes
+	 */
+	count: number;
+
+	/**
+	 * whether a reader outside the lazy objects keeps reading the columns
+	 */
+	pinned: boolean;
 }
 
 /**
@@ -38252,6 +38499,85 @@ declare namespace exports {
 					input: string,
 					options: ParserOptionsSyntaxParser
 				) => Program;
+				export let lazyObjectOfSource: (
+					source: LazySource,
+					node: number
+				) =>
+					| null
+					| Program
+					| ImportDeclaration
+					| ExportNamedDeclaration
+					| ExportAllDeclaration
+					| ImportExpressionImport
+					| UnaryExpression
+					| ArrayExpression
+					| ArrowFunctionExpression
+					| AssignmentExpression
+					| AwaitExpression
+					| BinaryExpression
+					| SimpleCallExpression
+					| NewExpression
+					| ChainExpression
+					| ClassExpression
+					| ConditionalExpression
+					| FunctionExpression
+					| Identifier
+					| SimpleLiteral
+					| RegExpLiteral
+					| BigIntLiteral
+					| LogicalExpression
+					| MemberExpression
+					| MetaProperty
+					| ObjectExpression
+					| SequenceExpression
+					| TaggedTemplateExpression
+					| TemplateLiteral
+					| ThisExpression
+					| UpdateExpression
+					| YieldExpression
+					| SpreadElement
+					| PrivateIdentifier
+					| Super
+					| FunctionDeclaration
+					| VariableDeclaration
+					| ClassDeclaration
+					| ExpressionStatement
+					| BlockStatement
+					| StaticBlock
+					| EmptyStatement
+					| DebuggerStatement
+					| WithStatement
+					| ReturnStatement
+					| LabeledStatement
+					| BreakStatement
+					| ContinueStatement
+					| IfStatement
+					| SwitchStatement
+					| ThrowStatement
+					| TryStatement
+					| WhileStatement
+					| DoWhileStatement
+					| ForStatement
+					| ForInStatement
+					| ForOfStatement
+					| ExportDefaultDeclaration
+					| MethodDefinition
+					| PropertyDefinition
+					| VariableDeclarator
+					| Property
+					| CatchClause
+					| ClassBody
+					| SwitchCase
+					| TemplateElement
+					| AssignmentProperty
+					| ImportSpecifier
+					| ImportDefaultSpecifier
+					| ImportNamespaceSpecifier
+					| ExportSpecifier
+					| ObjectPattern
+					| ArrayPattern
+					| RestElement
+					| AssignmentPattern;
 				export let parseProgram: _functionSyntaxParserFunction_1;
 				export let parsedTree: () => null | ColumnarSyntaxTree;
 				export let takeParsedTree: () => null | ColumnarSyntaxTree;
