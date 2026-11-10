@@ -5,9 +5,9 @@ it("should resolve unknown import.meta member access with undefined (issue 15559
 	const a = function () { return import.meta.config.MISSING; };
 	const b = function () { return import.meta.config?.MISSING; };
 	const c = function () { return import.meta.config.MISSING?.(); };
-	expect(a.toString()).toBe("function () { return undefined; }");
-	expect(b.toString()).toBe("function () { return undefined; }");
-	expect(c.toString()).toBe("function () { return undefined?.(); }");
+	expect(a.toString()).toBe("function () { return (void 0); }");
+	expect(b.toString()).toBe("function () { return (void 0); }");
+	expect(c.toString()).toBe("function () { return (void 0)?.(); }");
 	expect(import.meta.config.MISSING).toBe(undefined);
 	expect(import.meta.config?.MISSING).toBe(undefined);
 	expect(import.meta.config.MISSING?.()).toBe(undefined);
@@ -16,9 +16,9 @@ it("should read past an unknown import.meta member as the source would (issue 22
 	const a = function () { return import.meta.config.MISSING.deep; };
 	const b = function () { return import.meta.config.MISSING?.deep; };
 	const c = function () { return import.meta.config.MISSING.deep?.a; };
-	expect(a.toString()).toBe("function () { return undefined.deep; }");
-	expect(b.toString()).toBe("function () { return undefined; }");
-	expect(c.toString()).toBe("function () { return undefined.deep?.a; }");
+	expect(a.toString()).toBe("function () { return (void 0).deep; }");
+	expect(b.toString()).toBe("function () { return (void 0); }");
+	expect(c.toString()).toBe("function () { return (void 0).deep?.a; }");
 	expect(import.meta.config.MISSING?.deep).toBe(undefined);
 	expect(a).toThrow(TypeError);
 	expect(c).toThrow(TypeError);
@@ -27,9 +27,9 @@ it("should short-circuit a call reached through an unknown import.meta member (i
 	const a = function () { return import.meta.config.MISSING?.includes("token"); };
 	const b = function () { return import.meta.config?.MISSING?.deep.method(); };
 	const c = function () { return import.meta.config.MISSING.deep?.method(); };
-	expect(a.toString()).toBe("function () { return undefined; }");
-	expect(b.toString()).toBe("function () { return undefined; }");
-	expect(c.toString()).toBe("function () { return undefined.deep?.method(); }");
+	expect(a.toString()).toBe("function () { return (void 0); }");
+	expect(b.toString()).toBe("function () { return (void 0); }");
+	expect(c.toString()).toBe("function () { return (void 0).deep?.method(); }");
 	expect(import.meta.config.MISSING?.includes("token")).toBe(undefined);
 	expect(import.meta.config?.MISSING?.deep.method()).toBe(undefined);
 	expect(import.meta.config.TOKEN?.toUpperCase()).toBe("TOKEN");
