@@ -13,11 +13,15 @@ const bound = function (n) {
 }.call({ base: 10 }, 5);
 const arrow = ((n) => n * 3)(2);
 
+// a dead branch only when the build evaluates `void 0` to undefined
+if (typeof void 0 !== "undefined") require("./missing");
+
 exports.read = () => ({
 	member: table[`a`] + table["b"],
 	callRooted: make().value.deep,
 	computed: table[key],
 	shorthand: table.key,
 	nested: [iife, bound, arrow],
-	meta: typeof import.meta
+	meta: typeof import.meta,
+	voided: typeof void key
 });

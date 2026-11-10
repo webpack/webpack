@@ -54,7 +54,8 @@ it("should build each module from the walked syntax tree", () => {
 		computed: 2,
 		shorthand: "b",
 		nested: [2, 15, 6],
-		meta: "object"
+		meta: "object",
+		voided: "undefined"
 	});
 	expect(callMember).toBe(42);
 	expect(templates).toEqual({
