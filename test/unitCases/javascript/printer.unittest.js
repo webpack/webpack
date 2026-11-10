@@ -3877,6 +3877,28 @@ describe("one-pass minify options", () => {
 });
 
 describe("one-pass minify of side effects and dead code, second round", () => {
+	it("should keep a built-in the program replaces through an alias, a writer or a script's `this`", () => {
+		// A computed key or a writer handed an object it cannot read replaces any name.
+		const C = "class{constructor(p){this.p=p}}";
+		for (const [source, expected] of [
+			[`var g=globalThis;g.RegExp=${C};console.log(new RegExp("a"+g.x).p)`, `var g=globalThis;g.RegExp=${C},console.log(new RegExp("a"+g.x).p);`],
+			[`var k="Error";globalThis[k]=${C};console.log(new Error("e").p)`, `var k="Error";globalThis[k]=${C},console.log(new Error("e").p);`],
+			[`Object.defineProperty(globalThis,"RegExp",{value:${C}});console.log(new RegExp("ab").p)`, `Object.defineProperty(globalThis,"RegExp",{value:${C}}),console.log(new RegExp("ab").p);`],
+			[`Object.assign(globalThis,{Error:${C}});console.log(new Error("e").p)`, `Object.assign(globalThis,{Error:${C}}),console.log(new Error("e").p);`],
+			[`Reflect.set(globalThis,"Error",${C});console.log(new Error("e").p)`, `Reflect.set(globalThis,"Error",${C}),console.log(new Error("e").p);`],
+			[`this.Error=${C};console.log(new Error("e").p)`, `this.Error=${C},console.log(new Error("e").p);`],
+			['this.isFinite=function(){return"f"};console.log(isFinite(1))', 'this.isFinite=function(){return"f"},console.log(isFinite(1));'],
+			['Array.prototype.join=function(){return"j"};console.log([1,2].join("-"))', 'Array.prototype.join=function(){return"j"},console.log([1,2].join("-"));'],
+			['Object.getPrototypeOf([]).join=function(){return"j"};console.log([1,2].join("-"))', 'Object.getPrototypeOf([]).join=function(){return"j"},console.log([1,2].join("-"));'],
+			// A literal key names the one it replaces; `Error` keeps its fold.
+			['Object.defineProperty(globalThis,"event",{value:1});console.log(new Error("e").message)', 'Object.defineProperty(globalThis,"event",{value:1}),console.log(Error("e").message);']
+		]) {
+			const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+			expect(code).toBe(expected);
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+	});
+
 	it("should keep `new` of a built-in the program replaces through the global object", () => {
 		// The replacement may be a class, which throws called without `new`.
 		const source = fixture("javascript", "h-builtin-written-global-1");
