@@ -54,7 +54,7 @@ const KEYS = [
 ];
 
 /**
- * Describes a hook argument the same way in both walks.
+ * Describes a hook argument the same way for both inputs.
  * @param {unknown} value the argument
  * @returns {string} its description
  */
@@ -82,14 +82,29 @@ const describePathValue = (reader, value, isNode) => {
 };
 
 /**
+ * The ESTree AST a loader could hand webpack for a source, with its comments.
+ * @param {string} source the source
+ * @returns {import("../../../lib/module/Parser").PreparsedAst} the program
+ */
+const preparsedAst = (source) => {
+	const { ast, comments } = JavascriptParser._parse(source, {
+		sourceType: "auto",
+		ranges: true,
+		comments: true
+	});
+	return /** @type {import("../../../lib/module/Parser").PreparsedAst} */ (
+		Object.assign(ast, { comments })
+	);
+};
+
+/**
  * Parses a source with every hook tapped, once by object and once by path.
  * @param {string} source the source
- * @param {boolean} walkTree whether to walk the syntax tree
+ * @param {boolean} preparsed whether to pass it as an ESTree AST, as a loader can
  * @returns {string[]} each hook call, in order
  */
-const trace = (source, walkTree) => {
+const trace = (source, preparsed) => {
 	const parser = new JavascriptParser("auto");
-	parser._walkTree = walkTree;
 	/** @type {string[]} */
 	const calls = [];
 	/**
@@ -127,16 +142,16 @@ const trace = (source, walkTree) => {
 		}
 	}
 	parser.parse(
-		source,
+		preparsed ? preparsedAst(source) : source,
 		/** @type {import("../../../lib/module/Parser").ParserState} */ (
-			/** @type {unknown} */ ({})
+			/** @type {unknown} */ ({ source })
 		)
 	);
 	return calls;
 };
 
 /**
- * Describes an evaluation the same way in both walks.
+ * Describes an evaluation the same way for both inputs.
  * @param {import("../../../lib/javascript/BasicEvaluatedExpression")} evaluated the evaluation
  * @returns {string} its description
  */
@@ -157,13 +172,12 @@ const describeEvaluated = (evaluated) => {
  * Parses a source with a few hooks tapped, so the walk keeps its fast paths,
  * and evaluates each call's arguments and each `if` test.
  * @param {string} source the source
- * @param {boolean} walkTree whether to walk the syntax tree
+ * @param {boolean} preparsed whether to pass it as an ESTree AST, as a loader can
  * @param {boolean} strictOutput whether the output is strict ESM
  * @returns {string[]} each evaluation and member chain, in order
  */
-const evaluations = (source, walkTree, strictOutput) => {
+const evaluations = (source, preparsed, strictOutput) => {
 	const parser = new JavascriptParser("auto");
-	parser._walkTree = walkTree;
 	/** @type {string[]} */
 	const results = [];
 	/**
@@ -260,10 +274,10 @@ const evaluations = (source, walkTree, strictOutput) => {
 			});
 	}
 	const state = strictOutput
-		? { compilation: { runtimeTemplate: { isModule: () => true } } }
-		: {};
+		? { source, compilation: { runtimeTemplate: { isModule: () => true } } }
+		: { source };
 	parser.parse(
-		source,
+		preparsed ? preparsedAst(source) : source,
 		/** @type {import("../../../lib/module/Parser").ParserState} */ (
 			/** @type {unknown} */ (state)
 		)
@@ -330,7 +344,7 @@ describe("walk the syntax tree", () => {
 		...filesIn("test/cases/parsing")
 	];
 
-	it.each(files)("should call the hooks the ESTree walk calls in %s", (file) => {
+	it.each(files)("should call the same hooks for a preparsed AST of %s", (file) => {
 		const source = fs.readFileSync(path.join(ROOT, file), "utf8");
 		/** @type {string[] | Error} */
 		let expected;
@@ -351,7 +365,7 @@ describe("walk the syntax tree", () => {
 			[file, false],
 			[file, true]
 		])
-	)("should evaluate as the ESTree walk does in %s, strict output %s", (
+	)("should evaluate a preparsed AST of %s the same, strict output %s", (
 		file,
 		strictOutput
 	) => {
@@ -375,7 +389,7 @@ describe("walk the syntax tree", () => {
 	});
 
 	it.each(SNIPPETS.map((_, i) => i))(
-		"should call the hooks the ESTree walk calls in snippet %i",
+		"should call the same hooks for a preparsed AST of snippet %i",
 		(index) => {
 			const source = SNIPPETS[index];
 			expect(trace(source, true)).toEqual(trace(source, false));
