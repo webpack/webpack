@@ -7,6 +7,7 @@ const legacy = require("./legacy");
 const cjs = require("./cjs");
 const members = require("./members").read();
 const callMember = require("./cjs").value;
+const literal = require("./literal");
 
 if (true) {
 	function hoisted() {
@@ -29,6 +30,7 @@ function nested() {
 }
 
 it("should build each module from the walked syntax tree", () => {
+	expect([literal.a(), literal.b, literal.c]).toEqual([1, 2, 3]);
 	expect(double(2)).toBe(4);
 	expect(cjs.value).toBe(42);
 	expect(legacy.read({ x: 7 })).toBe(7);

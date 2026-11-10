@@ -53,11 +53,18 @@ const walkSyntaxTree = (compiler) => {
 						walked++;
 					});
 				});
-			compilation.hooks.finishModules.tap(PLUGIN_NAME, () => {
+			compilation.hooks.finishModules.tap(PLUGIN_NAME, (modules) => {
 				// a build restored from the cache parses nothing
 				if (walked === 0) return;
-				// six modules and the parse nested in one of them
-				expect(walked).toBe(7);
+				// seven modules and the parse nested in one of them
+				expect(walked).toBe(8);
+				for (const module of modules) {
+					if (!module.identifier().endsWith("literal.js")) continue;
+					// `module.exports = { … }` read as the module's named exports
+					expect(module.buildMeta && module.buildMeta.exportsType).toBe(
+						"default"
+					);
+				}
 			});
 		}
 	);

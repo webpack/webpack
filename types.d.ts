@@ -18168,7 +18168,37 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	/**
 	 * Checks whether this javascript parser is statement level expression.
 	 */
-	isStatementLevelExpression(expr: Expression): boolean;
+	isStatementLevelExpression(
+		expr:
+			| number
+			| ImportExpressionImport
+			| UnaryExpression
+			| ArrayExpression
+			| ArrowFunctionExpression
+			| AssignmentExpression
+			| AwaitExpression
+			| BinaryExpression
+			| SimpleCallExpression
+			| NewExpression
+			| ChainExpression
+			| ClassExpression
+			| ConditionalExpression
+			| FunctionExpression
+			| Identifier
+			| SimpleLiteral
+			| RegExpLiteral
+			| BigIntLiteral
+			| LogicalExpression
+			| MemberExpression
+			| MetaProperty
+			| ObjectExpression
+			| SequenceExpression
+			| TaggedTemplateExpression
+			| TemplateLiteral
+			| ThisExpression
+			| UpdateExpression
+			| YieldExpression
+	): boolean;
 
 	/**
 	 * Returns tag data, typed by the tag it was stored under.
