@@ -3885,11 +3885,11 @@ describe("one-pass minify of side effects and dead code, second round", () => {
 	});
 
 	it("should keep a `Number` constant where the program replaces `Number`", () => {
-		for (const [source, compress, expected] of [
-			["globalThis.Number={MIN_VALUE:1,NaN:2};console.log(Number.MIN_VALUE,Number.NaN)", {}, "globalThis.Number={MIN_VALUE:1,NaN:2},console.log(Number.MIN_VALUE,Number.NaN);"],
-			["var g=globalThis;g.Number={MIN_VALUE:1};console.log(Number.MIN_VALUE)", { pristineGlobals: false }, "var g=globalThis;g.Number={MIN_VALUE:1},console.log(Number.MIN_VALUE);"]
-		]) {
-			const { code } = minifyOnePass(source, { compress, mangle: false });
+		for (const [source, pristineGlobals, expected] of /** @type {[string, boolean, string][]} */ ([
+			["globalThis.Number={MIN_VALUE:1,NaN:2};console.log(Number.MIN_VALUE,Number.NaN)", true, "globalThis.Number={MIN_VALUE:1,NaN:2},console.log(Number.MIN_VALUE,Number.NaN);"],
+			["var g=globalThis;g.Number={MIN_VALUE:1};console.log(Number.MIN_VALUE)", false, "var g=globalThis;g.Number={MIN_VALUE:1},console.log(Number.MIN_VALUE);"]
+		])) {
+			const { code } = minifyOnePass(source, { compress: { pristineGlobals }, mangle: false });
 			expect(code).toBe(expected);
 			expect(runProgram(code)).toBe(runProgram(source));
 		}
