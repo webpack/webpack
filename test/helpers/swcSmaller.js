@@ -58,7 +58,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/6957/number-tostring/input.js",
 			"swc minifier: fixture/issues/8465/input.js",
 			"swc minifier: fixture/issues/non-finite-number-method-call/input.js",
-			"swc minifier: fixture/projects/backbone/18/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/alias-outside.6e8773c7/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.5a544c41/input.js",
 			"swc minifier: full/helpers/1/input.js"
@@ -91,7 +90,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/issue_3140_1",
 			"terser compress: sandbox/console_log",
 			"terser compress: switch/issue_1083_6",
-			"terser compress: template-string/template_string_with_predefined_constants",
 			"terser compress: template-string/tagged_template_with_invalid_escape",
 			"terser compress: yield/issue_2832",
 			"swc minifier: fixture/issues/11084/input.js",

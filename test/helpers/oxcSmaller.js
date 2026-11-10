@@ -1244,6 +1244,12 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
+		"constant folding: webpack writes a computed value (a string, `NaN`, an element) where the rival keeps the expression that makes it",
+		[
+			"terser compress: template-string/template_string_with_predefined_constants"
+		]
+	],
+	[
 		"where a declaration goes: a `let`, `var` or function declaration placed earlier or later, or its first value assigned apart",
 		[
 			"swc minifier: fixture/issues/12182/receiver-sensitive/input.js",
@@ -1463,10 +1469,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc drops `new` before a built-in that constructs the same when called",
-		[
-			"swc minifier: fixture/issues/12187/input.js",
-			"swc minifier: fixture/projects/backbone/18/input.js"
-		]
+		["swc minifier: fixture/issues/12187/input.js"]
 	],
 	[
 		"oxc writes classes, methods and object literals shorter",
