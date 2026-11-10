@@ -12,6 +12,15 @@ const { value: rest, ...others } = require("./cjs");
 const [first, , third, ...tail] = [1, 2, 3, 4];
 const [[deep], { shallow }] = [[5], { shallow: 6 }];
 
+const params = (
+	{ a, b: [c = 2] = [], ["k" + 1]: d = a, ...more },
+	[e, , ...f] = [],
+	g = 3
+) => [a, c, d, more, e, f, g];
+const named = function self({ y = 1 }, z) {
+	return [y, z, typeof self];
+};
+
 class Local {}
 box.value = 7;
 
@@ -38,5 +47,7 @@ export {
 	deep,
 	shallow,
 	Local,
+	params,
+	named,
 	awaited
 };
