@@ -10,6 +10,7 @@ const callMember = require("./cjs").value;
 const literal = require("./literal");
 const destructure = require("./destructure");
 const iife = require("./iife");
+const templates = require("./templates");
 
 if (true) {
 	function hoisted() {
@@ -56,6 +57,15 @@ it("should build each module from the walked syntax tree", () => {
 		meta: "object"
 	});
 	expect(callMember).toBe(42);
+	expect(templates).toEqual({
+		viaTemplate: 42,
+		viaMerged: 42,
+		viaRaw: 42,
+		merged: "abcnumberd",
+		raw: "x\\ny",
+		tagged: "p|q:10",
+		scoped: true
+	});
 	expect(iife).toEqual({
 		viaCall: [42, 1, "this"],
 		viaBind: 2,

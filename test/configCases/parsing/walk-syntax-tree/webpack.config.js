@@ -56,8 +56,8 @@ const walkSyntaxTree = (compiler) => {
 			compilation.hooks.finishModules.tap(PLUGIN_NAME, (modules) => {
 				// a build restored from the cache parses nothing
 				if (walked === 0) return;
-				// ten modules and the parse nested in one of them
-				expect(walked).toBe(11);
+				// eleven modules and the parse nested in one of them
+				expect(walked).toBe(12);
 				for (const module of modules) {
 					if (module.identifier().endsWith("destructure.js")) {
 						/** @type {string[]} */
