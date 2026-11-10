@@ -46,6 +46,13 @@ const walkSyntaxTree = (compiler) => {
 							expect(firstArgumentIsPure(expression)).toBe(true);
 							return true;
 						});
+					// a tap without `path` gets as many arguments as its hook passes
+					parser.hooks.statement.tap(PLUGIN_NAME, (...args) => {
+						expect(args).toHaveLength(1);
+					});
+					parser.hooks.binaryExpression.tap(PLUGIN_NAME, (...args) => {
+						expect(args).toHaveLength(1);
+					});
 					parser.hooks.finish.tap(PLUGIN_NAME, (ast) => {
 						// a lazy object builds its children on first read, off its own keys
 						expect(Object.keys(ast)).not.toContain("body");
