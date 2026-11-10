@@ -459,6 +459,10 @@ const SWC_SMALLER_BY_REASON = [
 		]
 	],
 	[
+		"swc drops a `|0` beside a shift unconditionally: `(a|0)>>>b` reads `b` after `a`'s own conversion runs, which `a>>>b` defers past `b`'s read, reordering a conversion with side effects where `a` is not provably already a primitive",
+		["swc minifier: fixture/issues/12186/nested-bitwise/input.js"]
+	],
+	[
 		"swc drops or moves an operation converting a value that may be an object or a symbol, which runs its `valueOf` or `toString` or throws, as oxc keeps it",
 		[
 			"swc minifier: fixture/issues/5680/input.js",
@@ -524,16 +528,13 @@ const SWC_SMALLER_BY_REASON = [
 		"swc goes further than webpack on what terser's `template-string` tests cover",
 		[
 			"terser compress: template-string/escape_dollar_curly",
-			"terser compress: template-string/sequence_2",
-			"terser compress: template-string/template_literal_plus",
-			"terser compress: template-string/coerce_to_string"
+			"terser compress: template-string/template_literal_plus"
 		]
 	],
 	[
 		"swc goes further than webpack on what swc's `pass-1` tests cover",
 		[
 			"swc minifier: pass-1/1/input.js",
-			"swc minifier: pass-1/3/input.js",
 			"swc minifier: pass-1/7/input.js",
 			"swc minifier: pass-1/8/input.js",
 			"swc minifier: pass-1/issue-6788/1/input.js"
@@ -726,7 +727,6 @@ const SWC_SMALLER_BY_REASON = [
 		'swc picks shorter spellings for comparisons and coercions: `"u">typeof x`, `null==x`, `==` between operands of one type, `!!x` for `Boolean(x)`, no `|0` on an int32',
 		[
 			"swc minifier: fixture/issues/10281/input.js",
-			"swc minifier: fixture/issues/12186/nested-bitwise/input.js",
 			"swc minifier: fixture/issues/12186/signed-shift/input.js",
 			"swc minifier: fixture/issues/12307/input.js",
 			"terser compress: collapse_vars/collapse_vars_properties",
@@ -948,10 +948,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc goes further than webpack on what terser's `issue-269` tests cover",
-		[
-			"terser compress: issue-269/issue_269_1",
-			"terser compress: issue-269/strings_concat"
-		]
+		["terser compress: issue-269/issue_269_1"]
 	],
 	[
 		"swc goes further than webpack on what swc's `fixture/member_expr` tests cover",
