@@ -3614,6 +3614,17 @@ declare abstract class ColumnarSyntaxTree {
 	): number;
 
 	/**
+	 * `addNode` for a literal, its value and raw text written in place, as a
+	 * parse writes one for every string and number.
+	 */
+	addLiteralNode(
+		start: number,
+		end: number,
+		value: TreeValue,
+		raw: string
+	): number;
+
+	/**
 	 * `addNode` for a node whose record is one value, as an identifier's name.
 	 */
 	addValueNode(
