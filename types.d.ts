@@ -18096,7 +18096,10 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	 * The node an id a `{ path: true }` tap got stands for, as the parser's
 	 * methods take it: the id itself in the tree walk, else the node's object.
 	 */
-	nodeOfPath(path: JavascriptNodeReader, node: number): any;
+	nodeOfPath<T extends NodeEstreeIndex = NodeEstreeIndex>(
+		path: JavascriptNodeReader,
+		node: number
+	): T;
 
 	/**
 	 * Returns the location of a node or comment, computed from its offsets so
