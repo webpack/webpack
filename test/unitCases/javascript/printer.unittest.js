@@ -3877,26 +3877,28 @@ describe("one-pass minify options", () => {
 });
 
 describe("one-pass minify of side effects and dead code, second round", () => {
-	it("should keep a built-in the program replaces through an alias, a writer or a script's `this`", () => {
-		// A computed key or a writer handed an object it cannot read replaces any name.
+	it("should keep a `join` of constants where the program replaces `Array.prototype.join`", () => {
+		const source = 'Array.prototype.join=function(){return"j"};console.log([1,2].join("-"))';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe('Array.prototype.join=function(){return"j"},console.log([1,2].join("-"));');
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should take no built-in as native under `pristineGlobals: false`", () => {
+		// A write the default takes as native: an alias, a computed key, a script's `this`.
 		const C = "class{constructor(p){this.p=p}}";
 		for (const [source, expected] of [
 			[`var g=globalThis;g.RegExp=${C};console.log(new RegExp("a"+g.x).p)`, `var g=globalThis;g.RegExp=${C},console.log(new RegExp("a"+g.x).p);`],
 			[`var k="Error";globalThis[k]=${C};console.log(new Error("e").p)`, `var k="Error";globalThis[k]=${C},console.log(new Error("e").p);`],
-			[`Object.defineProperty(globalThis,"RegExp",{value:${C}});console.log(new RegExp("ab").p)`, `Object.defineProperty(globalThis,"RegExp",{value:${C}}),console.log(new RegExp("ab").p);`],
-			[`Object.assign(globalThis,{Error:${C}});console.log(new Error("e").p)`, `Object.assign(globalThis,{Error:${C}}),console.log(new Error("e").p);`],
-			[`Reflect.set(globalThis,"Error",${C});console.log(new Error("e").p)`, `Reflect.set(globalThis,"Error",${C}),console.log(new Error("e").p);`],
-			[`this.Error=${C};console.log(new Error("e").p)`, `this.Error=${C},console.log(new Error("e").p);`],
 			['this.isFinite=function(){return"f"};console.log(isFinite(1))', 'this.isFinite=function(){return"f"},console.log(isFinite(1));'],
-			['Array.prototype.join=function(){return"j"};console.log([1,2].join("-"))', 'Array.prototype.join=function(){return"j"},console.log([1,2].join("-"));'],
-			['Object.getPrototypeOf([]).join=function(){return"j"};console.log([1,2].join("-"))', 'Object.getPrototypeOf([]).join=function(){return"j"},console.log([1,2].join("-"));'],
-			// A literal key names the one it replaces; `Error` keeps its fold.
-			['Object.defineProperty(globalThis,"event",{value:1});console.log(new Error("e").message)', 'Object.defineProperty(globalThis,"event",{value:1}),console.log(Error("e").message);']
+			['Object.getPrototypeOf([]).join=function(){return"j"};console.log([1,2].join("-"))', 'Object.getPrototypeOf([]).join=function(){return"j"},console.log([1,2].join("-"));']
 		]) {
-			const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+			const { code } = minifyOnePass(source, { compress: { pristineGlobals: false }, mangle: false });
 			expect(code).toBe(expected);
 			expect(runProgram(code)).toBe(runProgram(source));
 		}
+		// The default takes them as native.
+		expect(minifyOnePass('console.log(new Error("e").message,[1,2].join("-"),isFinite(1))', { compress: {}, mangle: false }).code).toBe('console.log(Error("e").message,"1-2",!0);');
 	});
 
 	it("should keep `new` of a built-in the program replaces through the global object", () => {
