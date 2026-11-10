@@ -30,7 +30,7 @@ it("should inline constants", () => {
 	).toBe(true);
 	expect(
 		block.includes(
-			`((/* inlined export .REMOVE_u */undefined)).toBe(undefined)`
+			`((/* inlined export .REMOVE_u */void 0)).toBe(undefined)`
 		)
 	).toBe(true);
 	expect(
@@ -68,7 +68,7 @@ it("should inline constants with re-export", () => {
 	).toBe(true);
 	expect(
 		block.includes(
-			`((/* inlined export .REMOVE_u */undefined)).toBe(undefined)`
+			`((/* inlined export .REMOVE_u */void 0)).toBe(undefined)`
 		)
 	).toBe(true);
 	expect(
