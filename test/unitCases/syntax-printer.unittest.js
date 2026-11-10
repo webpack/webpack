@@ -460,6 +460,12 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"`RegExp` built from a `+` that is never an object, without `new`",
+		'var y = Math.random() < 2 ? "a" : "b"; console.log(new RegExp("^" + y + "$").test("a"), new RegExp(y + "x").source);',
+		{ compress: {}, mangle: false },
+		'var y=Math.random()<2?"a":"b";console.log(RegExp("^"+y+"$").test("a"),RegExp(y+"x").source);'
+	],
+	[
 		"a spread array literal passed to `new`",
 		"function F() { this.n = arguments.length; } console.log(new F(...[1, 2]).n, new F(...[]).n, new F(...[1, 2]).n);",
 		{ compress: {}, mangle: false }
