@@ -1034,6 +1034,12 @@ declare abstract class BasicEvaluatedExpression {
 		| AssignmentPattern;
 
 	/**
+	 * The expression's node in the syntax tree, for a reader that walks or
+	 * evaluates it by id during the same parse, before its object is read.
+	 */
+	get expressionNode(): number;
+
+	/**
 	 * Served lazily from the attached expression when not set explicitly:
 	 * `evaluateExpression`'s plain results share the expression's range, and
 	 * most evaluations never read it, so the node's range array is only
@@ -17446,6 +17452,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	 */
 	walkExpression(
 		expression:
+			| number
 			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
@@ -17939,6 +17946,18 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 			| AssignmentPattern
 		)[],
 		onIdent: (ident: string) => void
+	): void;
+
+	/**
+	 * Processes the provided pattern.
+	 */
+
+	/**
+	 * Processes the provided pattern, by id in the tree walk.
+	 */
+	enterPattern(
+		pattern: number,
+		onIdent: (name: string, ident: number) => void
 	): void;
 
 	/**
