@@ -1469,10 +1469,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc drops `new` before a built-in that constructs the same when called",
-		[
-			"swc minifier: fixture/issues/12187/input.js",
-			"swc minifier: fixture/projects/backbone/18/input.js"
-		]
+		["swc minifier: fixture/issues/12187/input.js"]
 	],
 	[
 		"oxc writes classes, methods and object literals shorter",

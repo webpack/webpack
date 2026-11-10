@@ -1794,7 +1794,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-703"), { compress: { toplevel: false, unsafe: true, builtinsEcma: 2020 } }, "Object.keys=f,Object.keys({});var o=Object;o.isFrozen=g,Object.isFrozen({}),Object.assign(Date,h),Date.now(),x=1;"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-704"), {}, "Math.abs?.(1),Math?.abs(1),a.Math.abs(1),Math.abs.call(1),x=1;"],
 			// A call that stays one where the dropped `var` keeps it stays one where its value is read too.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-705"), {}, "!function(){var a=\"[^\\\\.]\",r=\"(W)\".replace(\"W\",a);g(new RegExp(\"^\"+r+n+\"$\"),a,\"\\\\.\")}();"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-705"), {}, "!function(){var a=\"[^\\\\.]\",r=\"(W)\".replace(\"W\",a);g(RegExp(\"^\"+r+n+\"$\"),a,\"\\\\.\")}();"],
 			// An array or regular expression literal converts to a number as it joins; a hole or a name stays.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-fold-literals"), {}, "x=[0,1,-2,NaN,+[,1],+[a]];"],
 			// `typeof` of an object literal or of a boolean that runs nothing, where no longer; a class stays.
@@ -3699,6 +3699,14 @@ describe("one-pass minify of statement sequences", () => {
 		).toBe("(function(){/*!keep*/return 1});({a:/*!k*/1});");
 	});
 
+	it("should join a template's substitution reading the global `undefined` as its name", () => {
+		// A local `undefined` is a name the fold may not read as the value.
+		const source = "var a=`1${undefined}`;function f(undefined){return`2${undefined}`}console.log(a,f(1));";
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe('var a="1undefined";function f(undefined){return`2${undefined}`}console.log(a,f(1));');
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should open a statement with the branch a folded conditional keeps, unparenthesized", () => {
 		// A member read off the kept branch stays unparenthesized too.
 		const source = fixture("javascript", "one-pass-minify-of-statement-sequences-should-open-a-statement-with-the-branch-a");
@@ -3876,7 +3884,7 @@ describe("one-pass minify of side effects and dead code, second round", () => {
 			// What may throw or reads a replaced built-in stays.
 			[fixture("javascript", "h-pure-builtins-2"), "Object.create(1),Object.create(10n),Float16Array.of(),Number.parseInt(`1`,10n),BigInt64Array.of(1),parseInt(`1`,10n),isNaN(10n),RegExp(/\\-/,`u`),RegExp(/a/g,`gg`),Math.random(...a),RegExp.prototype.flags=1,RegExp(/a/);"],
 			// A pattern no regular expression makes the same without `new`.
-			[fixture("javascript", "h-regexp-without-new-1"), "var r=RegExp(`abc${d}`,`g`),s=new RegExp(`^`+t);f(r,s);"],
+			[fixture("javascript", "h-regexp-without-new-1"), "var r=RegExp(`abc${d}`,`g`),s=RegExp(`^`+t);f(r,s);"],
 			// A known `switch` declares the `var` its dropped cases hold.
 			[fixture("javascript", "h-switch-var-1"), "console.log(x);var x;if(z){g(y);var y}function h(){k()}var w;"],
 			// A name read in its function past its declaration is set: the read runs nothing.
