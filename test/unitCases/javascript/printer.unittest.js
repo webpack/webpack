@@ -3740,7 +3740,15 @@ describe("one-pass minify of statement sequences", () => {
 		// A bare read, or a redundant `+` another fold may print bare, could defer an object's conversion past the other operand's read, so only a side already guaranteed primitive goes.
 		const source = fixture("javascript", "one-pass-minify-of-statement-sequences-should-drop-a-0-an-operand-of-takes");
 		const { code: code } = minifyOnePass(source, { compress: {}, mangle: false });
-		expect(code).toBe("function f(v,s,o){return[1>>>s,v-0>>>s,v++>>>s,~v>>>s,v>>>1,(v|0)>>>s,(v|0)>>>s,(o.x|0)>>>s,v>>>(s|0),(v|0)>>s]}console.log(f(-1,0).join(),f(4.7,33).join(),f(\"8\",1,{x:2}).join());");
+		expect(code).toBe("function f(v,s,o){return[1>>>s,v-0>>>s,(v++|0)>>>s,(~v|0)>>>s,v>>>1,(v|0)>>>s,(v|0)>>>s,(o.x|0)>>>s,v>>>(s|0),(v|0)>>s]}console.log(f(-1,0).join(),f(4.7,33).join(),f(\"8\",1,{x:2}).join());");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should keep a `|0` beside `>>>` where its side may be a BigInt", () => {
+		// `|` throws on a BigInt before `>>>` reads its count, `>>>` alone only after.
+		const source = fixture("javascript", "one-pass-minify-of-statement-sequences-should-drop-a-0-an-operand-of-takes-2");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe("var n=0;function c(){return n++,1}function f(v,s){try{return[(~v|0)>>>c(),(-v|0)>>>c(),(v*v|0)>>>c(),(++v|0)>>>c(),(1n|0)>>>c()]}catch(e){return n}}function g(v,s){return[!v>>>s,typeof v>>>s,-1>>>s,-6>>>s]}console.log(f(1n),f(2),g(1,1).join());");
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
@@ -3754,6 +3762,11 @@ describe("one-pass minify of statement sequences", () => {
 		const { code: code2 } = minifyOnePass(source2, { compress: {}, mangle: false });
 		expect(code2).toBe("var x=1,a=`${x}`;console.log(a);");
 		expect(runProgram(code2)).toBe(runProgram(source2));
+		// A substitution that folds prints as the string it makes, shorter still.
+		const source3 = fixture("javascript", "one-pass-minify-of-statement-sequences-should-print-a-template-of-one-3");
+		const { code: code3 } = minifyOnePass(source3, { compress: { unsafe: true }, mangle: false });
+		expect(code3).toBe("const a=1;function f(x){return[\"1\",\"b\",\"1\",\"\"+x]}console.log(f(2).join());");
+		expect(runProgram(code3)).toBe(runProgram(source3));
 	});
 
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
