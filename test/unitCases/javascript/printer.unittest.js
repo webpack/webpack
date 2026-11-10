@@ -3896,6 +3896,20 @@ describe("one-pass minify of side effects and dead code, second round", () => {
 		expect(minifyOnePass("Number.x=1;console.log(Number.MIN_VALUE)", { compress: {}, mangle: false }).code).toBe("Number.x=1,console.log(5e-324);");
 	});
 
+	it("should keep a call of `RegExp`, `String` or `Object.keys` the program replaces", () => {
+		const F = 'function(){console.log("r");return["z"]}';
+		for (const [source, pristineGlobals, expected] of /** @type {[string, boolean, string][]} */ ([
+			[`globalThis.RegExp=${F};RegExp("x");RegExp()`, true, `globalThis.RegExp=${F},RegExp("x"),RegExp();`],
+			[`var g=globalThis;g.RegExp=${F};RegExp("x")`, false, `var g=globalThis;g.RegExp=${F},RegExp("x");`],
+			['globalThis.String=function(v){return"S"+v};var x=1;console.log(String("a"+x))', true, 'globalThis.String=function(v){return"S"+v};var x=1;console.log(String("a"+x));'],
+			[`globalThis.Object.keys=${F};console.log(Object.keys({a:1}))`, true, `globalThis.Object.keys=${F},console.log(Object.keys({a:1}));`]
+		])) {
+			const { code } = minifyOnePass(source, { compress: { pristineGlobals }, mangle: false });
+			expect(code).toBe(expected);
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+	});
+
 	it("should take no built-in as native under `pristineGlobals: false`", () => {
 		// A write the default takes as native: an alias, a computed key, a script's `this`.
 		const C = "class{constructor(p){this.p=p}}";
