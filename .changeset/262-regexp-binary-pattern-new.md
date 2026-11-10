@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Drop `new` before `RegExp` when its pattern is a binary expression.
+Drop `new` before `RegExp` on a binary pattern; add `compress.pristineGlobals`.

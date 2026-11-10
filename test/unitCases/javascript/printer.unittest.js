@@ -3877,6 +3877,64 @@ describe("one-pass minify options", () => {
 });
 
 describe("one-pass minify of side effects and dead code, second round", () => {
+	it("should keep a `join` of constants where the program replaces `Array.prototype.join`", () => {
+		const source = 'Array.prototype.join=function(){return"j"};console.log([1,2].join("-"))';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe('Array.prototype.join=function(){return"j"},console.log([1,2].join("-"));');
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should keep a `Number` constant where the program replaces `Number`", () => {
+		for (const [source, pristineGlobals, expected] of /** @type {[string, boolean, string][]} */ ([
+			["globalThis.Number={MIN_VALUE:1,NaN:2};console.log(Number.MIN_VALUE,Number.NaN)", true, "globalThis.Number={MIN_VALUE:1,NaN:2},console.log(Number.MIN_VALUE,Number.NaN);"],
+			["var g=globalThis;g.Number={MIN_VALUE:1};console.log(Number.MIN_VALUE)", false, "var g=globalThis;g.Number={MIN_VALUE:1},console.log(Number.MIN_VALUE);"]
+		])) {
+			const { code } = minifyOnePass(source, { compress: { pristineGlobals }, mangle: false });
+			expect(code).toBe(expected);
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+		expect(minifyOnePass("Number.x=1;console.log(Number.MIN_VALUE)", { compress: {}, mangle: false }).code).toBe("Number.x=1,console.log(5e-324);");
+	});
+
+	it("should keep a call of `RegExp`, `String` or `Object.keys` the program replaces", () => {
+		const F = 'function(){console.log("r");return["z"]}';
+		for (const [source, pristineGlobals, expected] of /** @type {[string, boolean, string][]} */ ([
+			[`globalThis.RegExp=${F};RegExp("x");RegExp()`, true, `globalThis.RegExp=${F},RegExp("x"),RegExp();`],
+			[`var g=globalThis;g.RegExp=${F};RegExp("x")`, false, `var g=globalThis;g.RegExp=${F},RegExp("x");`],
+			['globalThis.String=function(v){return"S"+v};var x=1;console.log(String("a"+x))', true, 'globalThis.String=function(v){return"S"+v};var x=1;console.log(String("a"+x));'],
+			[`globalThis.Object.keys=${F};console.log(Object.keys({a:1}))`, true, `globalThis.Object.keys=${F},console.log(Object.keys({a:1}));`]
+		])) {
+			const { code } = minifyOnePass(source, { compress: { pristineGlobals }, mangle: false });
+			expect(code).toBe(expected);
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+	});
+
+	it("should take no built-in as native under `pristineGlobals: false`", () => {
+		// A write the default takes as native: an alias, a computed key, a script's `this`.
+		const C = "class{constructor(p){this.p=p}}";
+		for (const [source, expected] of [
+			[`var g=globalThis;g.RegExp=${C};console.log(new RegExp("a"+g.x).p)`, `var g=globalThis;g.RegExp=${C},console.log(new RegExp("a"+g.x).p);`],
+			[`var k="Error";globalThis[k]=${C};console.log(new Error("e").p)`, `var k="Error";globalThis[k]=${C},console.log(new Error("e").p);`],
+			['this.isFinite=function(){return"f"};console.log(isFinite(1))', 'this.isFinite=function(){return"f"},console.log(isFinite(1));'],
+			['Object.getPrototypeOf([]).join=function(){return"j"};console.log([1,2].join("-"))', 'Object.getPrototypeOf([]).join=function(){return"j"},console.log([1,2].join("-"));']
+		]) {
+			const { code } = minifyOnePass(source, { compress: { pristineGlobals: false }, mangle: false });
+			expect(code).toBe(expected);
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+		// The default takes them as native.
+		expect(minifyOnePass('console.log(new Error("e").message,[1,2].join("-"),isFinite(1))', { compress: {}, mangle: false }).code).toBe('console.log(Error("e").message,"1-2",!0);');
+	});
+
+	it("should keep `new` of a built-in the program replaces through the global object", () => {
+		// The replacement may be a class, which throws called without `new`.
+		const source = fixture("javascript", "h-builtin-written-global-1");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe("globalThis.RegExp=class{constructor(p){this.p=p}},globalThis.Error=class{constructor(m){this.m=m}};function make(a,b){return[new RegExp(a+b).p,new RegExp(\"ab\").p,new Error(a).m]}console.log(make(\"x\",\"y\").join());");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should drop what only makes a value, run what is left, and declare what never runs", () => {
 		const cases = [
 			// Built-ins called on what they convert quietly make a value only.
