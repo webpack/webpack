@@ -56,9 +56,37 @@ const walkSyntaxTree = (compiler) => {
 			compilation.hooks.finishModules.tap(PLUGIN_NAME, (modules) => {
 				// a build restored from the cache parses nothing
 				if (walked === 0) return;
-				// seven modules and the parse nested in one of them
-				expect(walked).toBe(8);
+				// nine modules and the parse nested in one of them
+				expect(walked).toBe(10);
 				for (const module of modules) {
+					if (module.identifier().endsWith("destructure.js")) {
+						/** @type {string[]} */
+						const names = [];
+						for (const dependency of module.dependencies) {
+							const properties =
+								/** @type {{ referencedPropertiesInDestructuring?: Set<{ id: string }> }} */
+								(dependency).referencedPropertiesInDestructuring;
+							if (properties) for (const { id } of properties) names.push(id);
+							const exports =
+								/** @type {{ referencedExports?: string[][] | null }} */
+								(dependency).referencedExports;
+							if (exports) for (const [id] of exports) names.push(id);
+						}
+						// the names each destructuring reads, recorded by id
+						expect(names.sort()).toEqual(
+							[
+								"double",
+								"value",
+								"extra",
+								"lit",
+								"0",
+								"value",
+								"value",
+								"value",
+								"value"
+							].sort()
+						);
+					}
 					if (!module.identifier().endsWith("literal.js")) continue;
 					// `module.exports = { … }` read as the module's named exports
 					expect(module.buildMeta && module.buildMeta.exportsType).toBe(

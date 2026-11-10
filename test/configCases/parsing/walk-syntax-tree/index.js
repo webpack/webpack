@@ -8,6 +8,7 @@ const cjs = require("./cjs");
 const members = require("./members").read();
 const callMember = require("./cjs").value;
 const literal = require("./literal");
+const destructure = require("./destructure");
 
 if (true) {
 	function hoisted() {
@@ -54,6 +55,21 @@ it("should build each module from the walked syntax tree", () => {
 		meta: "object"
 	});
 	expect(callMember).toBe(42);
+	expect(destructure.twice(2)).toBe(4);
+	expect([destructure.value, destructure.extra, destructure.assigned]).toEqual([
+		42, 1, 42
+	]);
+	expect([destructure.inner, destructure.outer, destructure.rest]).toEqual([
+		42, 42, 42
+	]);
+	expect([destructure.first, destructure.third, destructure.tail]).toEqual([
+		1,
+		3,
+		[4]
+	]);
+	expect([destructure.deep, destructure.shallow]).toEqual([5, 6]);
+	expect(new destructure.Local()).toBeInstanceOf(destructure.Local);
+	expect(require("./box").box.value).toBe(7);
 	expect(typeof require("./esm")).toBe("object");
 	return import("./esm").then((ns) => {
 		expect(ns.double(3)).toBe(6);
