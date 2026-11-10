@@ -3897,6 +3897,33 @@ describe("SyntaxTree", () => {
 		expect(empty.nodeOf(call)).toBe(0);
 	});
 
+	it("parses into its own tree when a hashbang callback parses again", () => {
+		const { parseProgram, takeParsedTree } = require(
+			"../../../lib/javascript/syntax-parser"
+		);
+		const program = parseProgram("#!/usr/bin/env node\nfoo();", 0, {
+			sourceType: "module",
+			onComment: () => {
+				parseProgram("bar;", 0, { sourceType: "module" });
+			}
+		});
+		expect(typeof program).toBe("number");
+		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
+		const estree = /** @type {import("estree").Program} */ (
+			tree.lazyEstree(/** @type {number} */ (program))
+		);
+		const [statement] = /** @type {import("estree").ExpressionStatement[]} */ (
+			estree.body
+		);
+		expect(
+			/** @type {import("estree").Identifier} */ (
+				/** @type {import("estree").CallExpression} */ (statement.expression)
+					.callee
+			).name
+		).toBe("foo");
+		tree.release();
+	});
+
 	it("copies a large tree's columns for its lazy objects and frees its own", () => {
 		const { parseProgram, takeParsedTree } = require(
 			"../../../lib/javascript/syntax-parser"
