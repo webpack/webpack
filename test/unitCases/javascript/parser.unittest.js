@@ -3901,18 +3901,18 @@ describe("SyntaxTree", () => {
 		const { parseProgram, takeParsedTree } = require(
 			"../../../lib/javascript/syntax-parser"
 		);
-		parseProgram("a;".repeat(40000), 0, { sourceType: "script" });
+		parseProgram("a;".repeat(140000), 0, { sourceType: "script" });
 		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
 		const program = /** @type {import("estree").Program} */ (
 			tree.lazyEstree(tree._count)
 		);
 		const types = tree._types;
 		tree.release();
-		expect(program.body).toHaveLength(40000);
+		expect(program.body).toHaveLength(140000);
 		expect(
-			/** @type {import("estree").ExpressionStatement} */ (program.body[39999])
+			/** @type {import("estree").ExpressionStatement} */ (program.body[139999])
 				.expression
-		).toMatchObject({ type: "Identifier", name: "a", start: 79998 });
+		).toMatchObject({ type: "Identifier", name: "a", start: 279998 });
 		// the objects read a copy, so the tree's own columns are freed where
 		// `ArrayBuffer#transfer` exists
 		if (
@@ -4116,9 +4116,8 @@ describe("SyntaxTree", () => {
 		const types = tree._types;
 		const values = tree._values;
 		tree.release();
-		expect([tree._types.length, tree._values.length, tree._listCount]).toEqual([
-			0, 0, 0
-		]);
+		// kept, with its columns, for the next parse, and holding nothing now
+		expect([tree._count, tree._valueCount, tree._listCount]).toEqual([0, 0, 0]);
 		expect(values.every((value) => value === undefined)).toBe(true);
 		const next = new SyntaxTree();
 		expect(next._types).toBe(types);
@@ -4177,7 +4176,7 @@ describe("SyntaxTree", () => {
 
 	it("lets go of a large tree's columns, and the next grows to its size", () => {
 		const tree = new SyntaxTree();
-		parseInto(tree, "a;".repeat(40000));
+		parseInto(tree, "a;".repeat(140000));
 		const types = tree._types;
 		const nodes = tree._count;
 		tree.release();

@@ -3614,6 +3614,24 @@ declare abstract class ColumnarSyntaxTree {
 	): number;
 
 	/**
+	 * `addNode` for a node whose record holds no slot, as `this`.
+	 */
+	addNode0(type: number, start: number, end: number, flags: number): number;
+
+	/**
+	 * `addNode` for a node whose record holds two slots, as a member
+	 * expression or a call does, written without reading its slot count.
+	 */
+	addNode2(
+		type: number,
+		start: number,
+		end: number,
+		flags: number,
+		slot0: number,
+		slot1: number
+	): number;
+
+	/**
 	 * `addNode` for a literal, its value and raw text written in place, as a
 	 * parse writes one for every string and number.
 	 */
