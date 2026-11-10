@@ -3897,7 +3897,7 @@ describe("SyntaxTree", () => {
 		expect(empty.nodeOf(call)).toBe(0);
 	});
 
-	it("hands a large tree's columns to its lazy objects", () => {
+	it("copies a large tree's columns for its lazy objects and frees its own", () => {
 		const { parseProgram, takeParsedTree } = require(
 			"../../../lib/javascript/syntax-parser"
 		);
@@ -3913,8 +3913,13 @@ describe("SyntaxTree", () => {
 			/** @type {import("estree").ExpressionStatement} */ (program.body[39999])
 				.expression
 		).toMatchObject({ type: "Identifier", name: "a", start: 79998 });
-		// kept, not copied, and so not handed to the next tree either
-		expect(types.byteLength).toBeGreaterThan(0);
+		// the objects read a copy, so the tree's own columns are freed where
+		// `ArrayBuffer#transfer` exists
+		if (
+			typeof (/** @type {EXPECTED_ANY} */ (types.buffer).transfer) === "function"
+		) {
+			expect(types.byteLength).toBe(0);
+		}
 		// a release sizes the next tree after this one: size it back down
 		parseProgram("a;", 0, { sourceType: "script" });
 		/** @type {SyntaxTree} */ (takeParsedTree()).release();

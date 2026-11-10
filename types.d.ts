@@ -3909,6 +3909,11 @@ declare abstract class ColumnarSyntaxTree {
 		| ArrayPattern
 		| RestElement
 		| AssignmentPattern;
+
+	/**
+	 * Records that the legacy `assert` keyword opens a declaration's attributes.
+	 */
+	markLegacyAssert(node: number): void;
 	legacyAssert(node: number): boolean;
 
 	/**
