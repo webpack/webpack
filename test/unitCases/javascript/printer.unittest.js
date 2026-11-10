@@ -3877,6 +3877,14 @@ describe("one-pass minify options", () => {
 });
 
 describe("one-pass minify of side effects and dead code, second round", () => {
+	it("should keep `new` of a built-in the program replaces through the global object", () => {
+		// The replacement may be a class, which throws called without `new`.
+		const source = fixture("javascript", "h-builtin-written-global-1");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe("globalThis.RegExp=class{constructor(p){this.p=p}},globalThis.Error=class{constructor(m){this.m=m}};function make(a,b){return[new RegExp(a+b).p,new RegExp(\"ab\").p,new Error(a).m]}console.log(make(\"x\",\"y\").join());");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should drop what only makes a value, run what is left, and declare what never runs", () => {
 		const cases = [
 			// Built-ins called on what they convert quietly make a value only.
