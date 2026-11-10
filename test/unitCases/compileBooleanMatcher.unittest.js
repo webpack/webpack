@@ -136,6 +136,8 @@ describe("itemsToRegexp", () => {
 describe("compileBooleanMatcher", () => {
 	it("should quote non-finite numeric strings like NaN and Infinity", () => {
 		const positive = compileBooleanMatcher({ NaN: true, other: false });
+		expect(typeof positive).toBe("function");
+		if (typeof positive !== "function") return;
 		expect(positive("chunkId")).toBe('"NaN" == chunkId');
 		expect(
 			new Function("chunkId", `return ${positive("chunkId")}`)("NaN")
@@ -151,12 +153,18 @@ describe("compileBooleanMatcher", () => {
 		).toBe(false);
 
 		const inf = compileBooleanMatcher({ Infinity: true, other: false });
+		expect(typeof inf).toBe("function");
+		if (typeof inf !== "function") return;
 		expect(inf("chunkId")).toBe('"Infinity" == chunkId');
 
 		const negInf = compileBooleanMatcher({ "-Infinity": true, other: false });
+		expect(typeof negInf).toBe("function");
+		if (typeof negInf !== "function") return;
 		expect(negInf("chunkId")).toBe('"-Infinity" == chunkId');
 
 		const num = compileBooleanMatcher({ 42: true, other: false });
+		expect(typeof num).toBe("function");
+		if (typeof num !== "function") return;
 		expect(num("chunkId")).toBe("42 == chunkId");
 	});
 });
