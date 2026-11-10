@@ -3698,6 +3698,14 @@ describe("one-pass minify of statement sequences", () => {
 			minifyOnePass(fixture("javascript", "one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left-4"), { compress: {} }).code
 		).toBe("(function(){/*!keep*/return 1});({a:/*!k*/1});");
 	});
+
+	it("should join a template's substitution reading the global `undefined` as its name", () => {
+		// A local `undefined` is a name the fold may not read as the value.
+		const source = "var a=`1${undefined}`;function f(undefined){return`2${undefined}`}console.log(a,f(1));";
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe('var a="1undefined";function f(undefined){return`2${undefined}`}console.log(a,f(1));');
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
 });
 
 describe("one-pass minify of side effects and dead code, second round", () => {

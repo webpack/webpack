@@ -1251,12 +1251,6 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"constant folding: webpack writes a computed value (a string, `NaN`, an element) where the rival keeps the expression that makes it",
-		[
-			"terser compress: template-string/template_string_with_predefined_constants"
-		]
-	],
-	[
 		"where a declaration goes: a `let`, `var` or function declaration placed earlier or later, or its first value assigned apart",
 		[
 			"swc minifier: fixture/issues/12182/receiver-sensitive/input.js",
