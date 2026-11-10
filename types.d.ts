@@ -18129,6 +18129,12 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	): boolean;
 
 	/**
+	 * How many statements the walk is in, as `statementPath.length` counts them
+	 * without making their objects: `1` at a top-level statement.
+	 */
+	get statementDepth(): number;
+
+	/**
 	 * The statements the walk is in, innermost last, each as its object.
 	 */
 	statementPath?: StatementPathItem[];
