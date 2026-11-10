@@ -1,0 +1,1 @@
+function x(){console.log("x")}function y(){console.log("y")}function f(a){O:{x();switch(1){case 1:x();if(a)break O;y()}}try{switch(1){case 1:x();if(a)return;y()}}finally{}if(a){switch(1){case 1:x();if(a)return;y()}}}f(0);f(1)

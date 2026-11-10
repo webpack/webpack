@@ -12,6 +12,11 @@ function escaped() { "use\x20strict"; if (false) { function g() {} } try { g; re
 function continued() { "use \
 strict"; if (false) { function g() {} } try { g; return true; } catch (_e) { return false; } }
 
+function inOperator() { "use strict"
+in {}; return 00; }
+function instanceofOperator() { "use strict"
+instanceof String; return 00; }
+
 // `true` where `g` stayed hoisted, i.e. the function is sloppy
 module.exports = {
 	strictDouble: strictDouble(),
@@ -23,5 +28,7 @@ module.exports = {
 	escapedAfterCustom: escapedAfterCustom(),
 	parenthesized: parenthesized(),
 	escaped: escaped(),
-	continued: continued()
+	continued: continued(),
+	inOperator: inOperator(),
+	instanceofOperator: instanceofOperator()
 };

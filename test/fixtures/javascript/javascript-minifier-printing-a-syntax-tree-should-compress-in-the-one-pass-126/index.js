@@ -1,0 +1,1 @@
+function f(x) { if (!!!x) g(); if (!!!!x) h(); return [!!!x ? 1 : 2, !!!x] }

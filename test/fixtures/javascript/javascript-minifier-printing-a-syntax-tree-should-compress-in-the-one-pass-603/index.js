@@ -1,0 +1,1 @@
+function f(eval){var v=42;eval!=null&&eval("v=43");x=eval!=null?eval("v"):void 0;return v}

@@ -1,0 +1,14 @@
+[
+	{
+		"entry": "parseABlocksContents",
+		"fields": [
+			"name",
+			"source",
+			"childCount",
+			"fieldCount:prelude",
+			"fieldCount:value",
+			"fieldCount:declarations",
+			"fieldCount:rules"
+		]
+	}
+]

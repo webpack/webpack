@@ -1,0 +1,1 @@
+function f(x,g){return[({['k'+1]:3}).k1]}

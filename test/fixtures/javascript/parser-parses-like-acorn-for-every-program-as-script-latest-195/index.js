@@ -1,0 +1,1 @@
+class A { static static() {} async async() {} get get() {} set set(v) {} }

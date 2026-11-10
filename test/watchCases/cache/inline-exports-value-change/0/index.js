@@ -1,4 +1,4 @@
-import { FLAG, NUM } from "./env";
+import { FLAG, NUM, ZERO } from "./env";
 import { REEXPORTED_NUM } from "./reexport";
 import "./trigger";
 
@@ -7,6 +7,7 @@ const path = __non_webpack_require__("path");
 
 const expectedFlag = WATCH_STEP === "0" ? "on" : "off";
 const expectedNum = WATCH_STEP === "2" ? 6 : 5;
+const expectedZero = WATCH_STEP === "2" ? -0 : 0;
 
 it("should refresh the inlined constants a cached build baked into consumers", () => {
 	const source = fs.readFileSync(
@@ -16,10 +17,15 @@ it("should refresh the inlined constants a cached build baked into consumers", (
 	expect(FLAG).toBe(expectedFlag);
 	expect(NUM).toBe(expectedNum);
 	expect(REEXPORTED_NUM).toBe(expectedNum);
+	expect(Object.is(ZERO, expectedZero)).toBe(true);
+	expect(1 / ZERO).toBe(1 / expectedZero);
 	expect(source).toContain(
 		`(/* inlined export .FLAG */${JSON.stringify(expectedFlag)})`
 	);
 	expect(source).toContain(`(/* inlined export .NUM */${expectedNum})`);
+	expect(source).toContain(
+		`(/* inlined export .ZERO */${Object.is(expectedZero, -0) ? "-0" : "0"})`
+	);
 });
 
 it("should refresh the literal a re-exporter with side effects bakes into its getter", () =>

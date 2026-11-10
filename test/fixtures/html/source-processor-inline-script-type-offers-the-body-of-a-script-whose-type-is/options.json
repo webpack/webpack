@@ -1,0 +1,19 @@
+[
+	{
+		"mode": "minify",
+		"removeRedundantAttributes": "smart"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"javascript/script": "rendered"
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	}
+]

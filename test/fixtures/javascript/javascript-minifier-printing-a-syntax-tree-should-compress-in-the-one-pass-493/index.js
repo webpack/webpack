@@ -1,0 +1,1 @@
+function f(o){return[typeof(0,o),typeof(0,o.x),typeof(0,u),typeof(g(),o)]}

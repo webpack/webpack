@@ -1,0 +1,1 @@
+a: function f() {} /re/; { function g() {} /re/ }

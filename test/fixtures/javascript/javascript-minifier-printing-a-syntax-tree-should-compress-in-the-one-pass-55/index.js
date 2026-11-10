@@ -1,0 +1,1 @@
+function f(o){ let { a } = o, [b, , c] = o; a = 1; return a + b + c }

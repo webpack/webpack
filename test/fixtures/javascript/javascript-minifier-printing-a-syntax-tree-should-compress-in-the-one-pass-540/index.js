@@ -1,0 +1,1 @@
+for(;;)if(1)a();while(x)if(0)a();else b();if(x)if(0)a();for(;;)if(0)var v=1;label:if(1)a()

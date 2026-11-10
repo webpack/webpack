@@ -1159,7 +1159,7 @@ div {
 }
 
 .global-foo {
-	.nested-global {
+	.my-app-style_module_css-nested-global {
 		color: red;
 	}
 
@@ -2478,19 +2478,19 @@ p:not(#my-app-style_module_css-main-paragraph) {
 }
 
 .my-app-style_module_css-gird2 {
-	grid: \\"my-app-style_module_css-a-a\\" 100px \\"my-app-style_module_css-b-b\\" 1fr;
+	grid: \\"my-app-style_module_css-a\\" 100px \\"my-app-style_module_css-b\\" 1fr;
 }
 
 .my-app-style_module_css-grid3 {
-	grid: [my-app-style_module_css-line-name1-line-name1] \\"my-app-style_module_css-a-a\\" 100px [my-app-style_module_css-line-name2-line-name2];
+	grid: [my-app-style_module_css-line-name1] \\"my-app-style_module_css-a\\" 100px [my-app-style_module_css-line-name2];
 }
 
 .my-app-style_module_css-grid4 {
-	grid: \\"my-app-style_module_css-a-a\\" 200px \\"my-app-style_module_css-b-b\\" min-content;
+	grid: \\"my-app-style_module_css-a\\" 200px \\"my-app-style_module_css-b\\" min-content;
 }
 
 .my-app-style_module_css-grid5 {
-	grid: \\"my-app-style_module_css-a-a\\" minmax(100px, max-content) \\"my-app-style_module_css-b-b\\" 20%;
+	grid: \\"my-app-style_module_css-a\\" minmax(100px, max-content) \\"my-app-style_module_css-b\\" 20%;
 }
 
 .my-app-style_module_css-grid6 {
@@ -2510,11 +2510,11 @@ p:not(#my-app-style_module_css-main-paragraph) {
 }
 
 .my-app-style_module_css-grid10 {
-	grid: repeat(3, [my-app-style_module_css-line1-line1 my-app-style_module_css-line2-line2 my-app-style_module_css-line3-line3] 200px) / auto-flow 300px;
+	grid: repeat(3, [my-app-style_module_css-line1 my-app-style_module_css-line2 my-app-style_module_css-line3] 200px) / auto-flow 300px;
 }
 
 .my-app-style_module_css-grid11 {
-	grid: [my-app-style_module_css-line1-line1] minmax(20em, max-content) / auto-flow dense 40%;
+	grid: [my-app-style_module_css-line1] minmax(20em, max-content) / auto-flow dense 40%;
 }
 
 .my-app-style_module_css-grid12 {
@@ -2526,11 +2526,11 @@ p:not(#my-app-style_module_css-main-paragraph) {
 }
 
 .my-app-style_module_css-grid14 {
-	grid: auto-flow 300px / repeat(3, [my-app-style_module_css-line1-line1 my-app-style_module_css-line2-line2 my-app-style_module_css-line3-line3] 200px);
+	grid: auto-flow 300px / repeat(3, [my-app-style_module_css-line1 my-app-style_module_css-line2 my-app-style_module_css-line3] 200px);
 }
 
 .my-app-style_module_css-grid15 {
-	grid: auto-flow dense 40% / [my-app-style_module_css-line1-line1] minmax(20em, max-content);
+	grid: auto-flow dense 40% / [my-app-style_module_css-line1] minmax(20em, max-content);
 }
 
 .my-app-style_module_css-grid16 {
@@ -2542,7 +2542,7 @@ p:not(#my-app-style_module_css-main-paragraph) {
 }
 
 .my-app-style_module_css-grid17 {
-	grid-template-areas: 'my-app-style_module_css-nav-nav my-app-style_module_css-main-main';
+	grid-template-areas: 'my-app-style_module_css-nav my-app-style_module_css-main';
 }
 
 .my-app-style_module_css-grid-area {
@@ -2550,19 +2550,19 @@ p:not(#my-app-style_module_css-main-paragraph) {
 }
 
 .my-app-style_module_css-grid-area1 {
-	grid-area: my-app-style_module_css-some-grid-area-some-grid-area;
+	grid-area: my-app-style_module_css-some-grid-area;
 }
 
 .my-app-style_module_css-grid-area2 {
-	grid-area: my-app-style_module_css-some-grid-area-some-grid-area / my-app-style_module_css-another-grid-area-another-grid-area;
+	grid-area: my-app-style_module_css-some-grid-area / my-app-style_module_css-another-grid-area;
 }
 
 .my-app-style_module_css-grid-area3 {
-	grid-area: 4 my-app-style_module_css-some-grid-area-some-grid-area / 2 my-app-style_module_css-another-grid-area-another-grid-area;
+	grid-area: 4 my-app-style_module_css-some-grid-area / 2 my-app-style_module_css-another-grid-area;
 }
 
 .my-app-style_module_css-grid-area4 {
-	grid-area: span 3 / span my-app-style_module_css-some-grid-area-some-grid-area;
+	grid-area: span 3 / span my-app-style_module_css-some-grid-area;
 }
 
 /* Keyword value */
@@ -2572,7 +2572,7 @@ p:not(#my-app-style_module_css-main-paragraph) {
 
 /* <custom-ident> values */
 .my-app-style_module_css-grid-row-start1 {
-	grid-row-start: my-app-style_module_css-some-grid-area-some-grid-area;
+	grid-row-start: my-app-style_module_css-some-grid-area;
 }
 
 /* <integer> + <custom-ident> values */
@@ -2580,7 +2580,7 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	grid-row-start: 2;
 }
 .my-app-style_module_css-grid-row-start3 {
-	grid-row-start: my-app-style_module_css-some-grid-area-some-grid-area 4;
+	grid-row-start: my-app-style_module_css-some-grid-area 4;
 }
 
 /* span + <integer> + <custom-ident> values */
@@ -2588,10 +2588,10 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	grid-row-start: span 3;
 }
 .my-app-style_module_css-grid-row-start5 {
-	grid-row-start: span my-app-style_module_css-some-grid-area-some-grid-area;
+	grid-row-start: span my-app-style_module_css-some-grid-area;
 }
 .my-app-style_module_css-grid-row-start6 {
-	grid-row-start: 5 my-app-style_module_css-some-grid-area-some-grid-area span;
+	grid-row-start: 5 my-app-style_module_css-some-grid-area span;
 }
 
 /* Global values */
@@ -2613,24 +2613,24 @@ p:not(#my-app-style_module_css-main-paragraph) {
 
 .my-app-style_module_css-grid-template-areas {
 	grid-template-areas:
-  \\"my-app-style_module_css-a-a my-app-style_module_css-b-b .\\"
-  \\"my-app-style_module_css-a-a   my-app-style_module_css-c-c   my-app-style_module_css-d-d\\";
+  \\"my-app-style_module_css-a my-app-style_module_css-b .\\"
+  \\"my-app-style_module_css-a   my-app-style_module_css-c   my-app-style_module_css-d\\";
 }
 
 .my-app-style_module_css-grid-template-rows {
-	grid-template-rows: [my-app-style_module_css-line-name1-line-name1] 100px [my-app-style_module_css-line-name2-line-name2 my-app-style_module_css-line-name3-line-name3];
+	grid-template-rows: [my-app-style_module_css-line-name1] 100px [my-app-style_module_css-line-name2 my-app-style_module_css-line-name3];
 }
 
 .my-app-style_module_css-grid-template-rows1 {
 	grid-template-rows:
-  	[my-app-style_module_css-line-name1-line-name1 my-app-style_module_css-line-name2-line-name2] 100px
-  	repeat(auto-fit, [my-app-style_module_css-line-name1-line-name1] 300px) [my-app-style_module_css-line-name3-line-name3];
+  	[my-app-style_module_css-line-name1 my-app-style_module_css-line-name2] 100px
+  	repeat(auto-fit, [my-app-style_module_css-line-name1] 300px) [my-app-style_module_css-line-name3];
 }
 
 .my-app-style_module_css-grid-template-rows2 {
 	grid-template-rows:
-		[my-app-style_module_css-line-name1-line-name1] 100px [my-app-style_module_css-line-name2-line-name2]
-		repeat(auto-fit, [my-app-style_module_css-line-name3-line-name3 my-app-style_module_css-line-name4-line-name4] 300px)
+		[my-app-style_module_css-line-name1] 100px [my-app-style_module_css-line-name2]
+		repeat(auto-fit, [my-app-style_module_css-line-name3 my-app-style_module_css-line-name4] 300px)
 		100px;
 }
 
@@ -2640,8 +2640,8 @@ p:not(#my-app-style_module_css-main-paragraph) {
 
 .my-app-style_module_css-grid-template {
 	grid-template:
-		[my-app-style_module_css-header-top-header-top] \\"my-app-style_module_css-a-a my-app-style_module_css-a-a my-app-style_module_css-a-a\\" [my-app-style_module_css-header-bottom-header-bottom]
-		[my-app-style_module_css-main-top-main-top] \\"my-app-style_module_css-b-b my-app-style_module_css-b-b my-app-style_module_css-b-b\\" 1fr [my-app-style_module_css-main-bottom-main-bottom]
+		[my-app-style_module_css-header-top] \\"my-app-style_module_css-a my-app-style_module_css-a my-app-style_module_css-a\\" [my-app-style_module_css-header-bottom]
+		[my-app-style_module_css-main-top] \\"my-app-style_module_css-b my-app-style_module_css-b my-app-style_module_css-b\\" 1fr [my-app-style_module_css-main-bottom]
 		/ auto 1fr auto;
 }
 
@@ -2650,10 +2650,10 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	/* 1. Use repeat, auto-fit, and minmax for responsive columns.
 		 Columns will be at least 150px wide, growing to fill available space (1fr).
 		 Lines are named 'col-start' and 'col-end' for each track repetition. */
-	grid-template-columns: repeat(auto-fit, [my-app-style_module_css-col-start-col-start] minmax(150px, 1fr) [my-app-style_module_css-col-end-col-end]);
+	grid-template-columns: repeat(auto-fit, [my-app-style_module_css-col-start] minmax(150px, 1fr) [my-app-style_module_css-col-end]);
 
 	/* 2. Define explicit row heights and name key row lines. */
-	grid-template-rows: [my-app-style_module_css-header-start-header-start] 100px [my-app-style_module_css-header-end-header-end my-app-style_module_css-content-start-content-start] auto [my-app-style_module_css-content-end-content-end];
+	grid-template-rows: [my-app-style_module_css-header-start] 100px [my-app-style_module_css-header-end my-app-style_module_css-content-start] auto [my-app-style_module_css-content-end];
 
 	/* 3. Add gaps for spacing */
 	gap: 20px;
@@ -2663,36 +2663,36 @@ p:not(#my-app-style_module_css-main-paragraph) {
 }
 
 .my-app-style_module_css-class {
-	grid-template-columns: repeat(auto-fit, [my-app-style_module_css-col-start-col-start] minmax(150px, 1fr) [my-app-style_module_css-col-end-col-end]);
+	grid-template-columns: repeat(auto-fit, [my-app-style_module_css-col-start] minmax(150px, 1fr) [my-app-style_module_css-col-end]);
 }
 
 .my-app-style_module_css-wrapper {
 	display: grid;
-	grid-template-columns: [my-app-style_module_css-main-start-main-start] 1fr [my-app-style_module_css-content-start-content-start] 1fr [my-app-style_module_css-content-end-content-end] 1fr [my-app-style_module_css-main-end-main-end];
-	grid-template-rows: [my-app-style_module_css-main-start-main-start] 100px [my-app-style_module_css-content-start-content-start] 100px [my-app-style_module_css-content-end-content-end] 100px [my-app-style_module_css-main-end-main-end];
+	grid-template-columns: [my-app-style_module_css-main-start] 1fr [my-app-style_module_css-content-start] 1fr [my-app-style_module_css-content-end] 1fr [my-app-style_module_css-main-end];
+	grid-template-rows: [my-app-style_module_css-main-start] 100px [my-app-style_module_css-content-start] 100px [my-app-style_module_css-content-end] 100px [my-app-style_module_css-main-end];
 }
 
 .my-app-style_module_css-box1 {
-	grid-column-start: my-app-style_module_css-main-start-main-start;
-	grid-row-start: my-app-style_module_css-main-start-main-start;
-	grid-row-end: my-app-style_module_css-main-end-main-end;
+	grid-column-start: my-app-style_module_css-main-start;
+	grid-row-start: my-app-style_module_css-main-start;
+	grid-row-end: my-app-style_module_css-main-end;
 }
 
 .my-app-style_module_css-box2 {
-	grid-column-start: my-app-style_module_css-content-end-content-end;
-	grid-row-start: my-app-style_module_css-main-start-main-start;
-	grid-row-end: my-app-style_module_css-content-end-content-end;
+	grid-column-start: my-app-style_module_css-content-end;
+	grid-row-start: my-app-style_module_css-main-start;
+	grid-row-end: my-app-style_module_css-content-end;
 }
 
 .my-app-style_module_css-box3 {
-	grid-column-start: my-app-style_module_css-content-start-content-start;
-	grid-row-start: my-app-style_module_css-main-start-main-start;
+	grid-column-start: my-app-style_module_css-content-start;
+	grid-row-start: my-app-style_module_css-main-start;
 }
 
 .my-app-style_module_css-box4 {
-	grid-column-start: my-app-style_module_css-content-start-content-start;
-	grid-column-end: my-app-style_module_css-main-end-main-end;
-	grid-row-start: my-app-style_module_css-content-end-content-end;
+	grid-column-start: my-app-style_module_css-content-start;
+	grid-column-end: my-app-style_module_css-main-end;
+	grid-row-start: my-app-style_module_css-content-end;
 }
 
 .my-app-style_module_css-wrapper {
@@ -2700,31 +2700,31 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	grid-template-columns: repeat(9, 1fr);
 	grid-auto-rows: minmax(100px, auto);
 	grid-template-areas:
-    \\"my-app-style_module_css-hd-hd my-app-style_module_css-hd-hd my-app-style_module_css-hd-hd my-app-style_module_css-hd-hd   my-app-style_module_css-hd-hd   my-app-style_module_css-hd-hd   my-app-style_module_css-hd-hd   my-app-style_module_css-hd-hd   my-app-style_module_css-hd-hd\\"
-    \\"my-app-style_module_css-sd-sd my-app-style_module_css-sd-sd my-app-style_module_css-sd-sd my-app-style_module_css-main-main my-app-style_module_css-main-main my-app-style_module_css-main-main my-app-style_module_css-main-main my-app-style_module_css-main-main my-app-style_module_css-main-main\\"
-    \\"my-app-style_module_css-ft-ft my-app-style_module_css-ft-ft my-app-style_module_css-ft-ft my-app-style_module_css-ft-ft   my-app-style_module_css-ft-ft   my-app-style_module_css-ft-ft   my-app-style_module_css-ft-ft   my-app-style_module_css-ft-ft   my-app-style_module_css-ft-ft\\";
+    \\"my-app-style_module_css-hd my-app-style_module_css-hd my-app-style_module_css-hd my-app-style_module_css-hd   my-app-style_module_css-hd   my-app-style_module_css-hd   my-app-style_module_css-hd   my-app-style_module_css-hd   my-app-style_module_css-hd\\"
+    \\"my-app-style_module_css-sd my-app-style_module_css-sd my-app-style_module_css-sd my-app-style_module_css-main my-app-style_module_css-main my-app-style_module_css-main my-app-style_module_css-main my-app-style_module_css-main my-app-style_module_css-main\\"
+    \\"my-app-style_module_css-ft my-app-style_module_css-ft my-app-style_module_css-ft my-app-style_module_css-ft   my-app-style_module_css-ft   my-app-style_module_css-ft   my-app-style_module_css-ft   my-app-style_module_css-ft   my-app-style_module_css-ft\\";
 }
 
 .my-app-style_module_css-header {
-	grid-area: my-app-style_module_css-hd-hd;
+	grid-area: my-app-style_module_css-hd;
 }
 
 .my-app-style_module_css-footer {
-	grid-area: my-app-style_module_css-ft-ft;
+	grid-area: my-app-style_module_css-ft;
 }
 
 .my-app-style_module_css-content {
-	grid-area: my-app-style_module_css-main-main;
+	grid-area: my-app-style_module_css-main;
 }
 
 .my-app-style_module_css-sidebar {
-	grid-area: my-app-style_module_css-sd-sd;
+	grid-area: my-app-style_module_css-sd;
 }
 
 .my-app-style_module_css-wrapper > div.my-app-style_module_css-overlay {
 	z-index: 10;
-	grid-column: my-app-style_module_css-main-start-main-start / my-app-style_module_css-main-end-main-end;
-	grid-row: my-app-style_module_css-hd-start-hd-start / my-app-style_module_css-ft-end-ft-end;
+	grid-column: my-app-style_module_css-main-start / my-app-style_module_css-main-end;
+	grid-row: my-app-style_module_css-hd-start / my-app-style_module_css-ft-end;
 	border: 4px solid rgb(92 148 13);
 	background-color: rgb(92 148 13 / 40%);
 	color: rgb(92 148 13);
@@ -2733,27 +2733,27 @@ p:not(#my-app-style_module_css-main-paragraph) {
 
 .my-app-style_module_css-wrapper {
 	display: grid;
-	grid-template-columns: repeat(12, [my-app-style_module_css-col-start-col-start] 1fr);
+	grid-template-columns: repeat(12, [my-app-style_module_css-col-start] 1fr);
 }
 
 .my-app-style_module_css-item1to5 {
-	grid-column: my-app-style_module_css-col-start-col-start / my-app-style_module_css-col-start-col-start 5;
+	grid-column: my-app-style_module_css-col-start / my-app-style_module_css-col-start 5;
 }
 
 .my-app-style_module_css-item7to9 {
-	grid-column: my-app-style_module_css-col-start-col-start 7 / span 3;
+	grid-column: my-app-style_module_css-col-start 7 / span 3;
 }
 
 .my-app-style_module_css-wrapper {
-	grid-template-columns: repeat(4, [my-app-style_module_css-col1-start-col1-start] 1fr [my-app-style_module_css-col2-start-col2-start] 3fr);
+	grid-template-columns: repeat(4, [my-app-style_module_css-col1-start] 1fr [my-app-style_module_css-col2-start] 3fr);
 }
 
 .my-app-style_module_css-wrapper {
-	grid-template-columns: repeat(4, [my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end]);
+	grid-template-columns: repeat(4, [my-app-style_module_css-col-start] 1fr [my-app-style_module_css-col-end]);
 }
 
 .my-app-style_module_css-wrapper {
-	grid-template-columns: [my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end];
+	grid-template-columns: [my-app-style_module_css-col-start] 1fr [my-app-style_module_css-col-end my-app-style_module_css-col-start] 1fr [my-app-style_module_css-col-end my-app-style_module_css-col-start] 1fr [my-app-style_module_css-col-end my-app-style_module_css-col-start] 1fr [my-app-style_module_css-col-end];
 }
 
 .my-app-style_module_css-important {
@@ -2767,8 +2767,8 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	container: my-app-style_module_css-sticky-heading / inline-size !important;
 	container-name: my-app-style_module_css-tall !important;
 
-	grid-column: my-app-style_module_css-col-start-col-start / my-app-style_module_css-col-start-col-start 5 !important;
-	grid-area: my-app-style_module_css-some-grid-area-some-grid-area !important;
+	grid-column: my-app-style_module_css-col-start / my-app-style_module_css-col-start 5 !important;
+	grid-area: my-app-style_module_css-some-grid-area !important;
 
 	list-style-type: my-app-style_module_css-extend-thumbs !important;
 	list-style: my-app-style_module_css-extend-thumbs !important;
@@ -4190,7 +4190,7 @@ div {
 		color: red;
 	}
 
-	./** test **/my-app-style_module_css-class {
+	./** test **/class {
 		color: red;
 	}
 
@@ -6922,7 +6922,7 @@ div {
 		color: red;
 	}
 
-	./** test **/Vx2ADA {
+	./** test **/class {
 		color: red;
 	}
 
@@ -9491,7 +9491,7 @@ div {
 }
 
 .global-foo {
-	.nested-global {
+	.ysZJYJ {
 		color: red;
 	}
 
@@ -10962,7 +10962,7 @@ p:not(#dBVRDQ) {
 ._3XmJPy {
 	grid-template-rows:
 		[zUFz4T-line-name1] 100px [IJTjHw-line-name2]
-		repeat(auto-fit, [yPPlU6-line-name3 _5sjD27-line-name4] 300px)
+		repeat(auto-fit, [yPPlU6-line-name3 \\\\35sjD27-line-name4] 300px)
 		100px;
 }
 
@@ -10973,7 +10973,7 @@ p:not(#dBVRDQ) {
 .c9md82 {
 	grid-template:
 		[F71VCF-header-top] \\"rWk7j_-a rWk7j_-a rWk7j_-a\\" [mr66Z_-header-bottom]
-		[tsTNVP-main-top] \\"Sa2viG-b Sa2viG-b Sa2viG-b\\" 1fr [_2PB9a0-main-bottom]
+		[tsTNVP-main-top] \\"Sa2viG-b Sa2viG-b Sa2viG-b\\" 1fr [\\\\32PB9a0-main-bottom]
 		/ auto 1fr auto;
 }
 
@@ -10982,10 +10982,10 @@ p:not(#dBVRDQ) {
 	/* 1. Use repeat, auto-fit, and minmax for responsive columns.
 		 Columns will be at least 150px wide, growing to fill available space (1fr).
 		 Lines are named 'col-start' and 'col-end' for each track repetition. */
-	grid-template-columns: repeat(auto-fit, [_1Yrglr-col-start] minmax(150px, 1fr) [UIbRwt-col-end]);
+	grid-template-columns: repeat(auto-fit, [zipwf3-col-start] minmax(150px, 1fr) [zipwf3-col-end]);
 
 	/* 2. Define explicit row heights and name key row lines. */
-	grid-template-rows: [Zfi6tA-header-start] 100px [TFOL0g-header-end RA1tbr-content-start] auto [q_keew-content-end];
+	grid-template-rows: [Zq4Bgu-header-start] 100px [Zq4Bgu-header-end evvjkJ-content-start] auto [evvjkJ-content-end];
 
 	/* 3. Add gaps for spacing */
 	gap: 20px;
@@ -10995,36 +10995,36 @@ p:not(#dBVRDQ) {
 }
 
 .Vx2ADA {
-	grid-template-columns: repeat(auto-fit, [_1Yrglr-col-start] minmax(150px, 1fr) [UIbRwt-col-end]);
+	grid-template-columns: repeat(auto-fit, [zipwf3-col-start] minmax(150px, 1fr) [zipwf3-col-end]);
 }
 
 .EDnegT {
 	display: grid;
-	grid-template-columns: [rRCri6-main-start] 1fr [RA1tbr-content-start] 1fr [q_keew-content-end] 1fr [xGMSmb-main-end];
-	grid-template-rows: [rRCri6-main-start] 100px [RA1tbr-content-start] 100px [q_keew-content-end] 100px [xGMSmb-main-end];
+	grid-template-columns: [X982uk-main-start] 1fr [evvjkJ-content-start] 1fr [evvjkJ-content-end] 1fr [X982uk-main-end];
+	grid-template-rows: [X982uk-main-start] 100px [evvjkJ-content-start] 100px [evvjkJ-content-end] 100px [X982uk-main-end];
 }
 
 .E_Xs87 {
-	grid-column-start: rRCri6-main-start;
-	grid-row-start: rRCri6-main-start;
-	grid-row-end: xGMSmb-main-end;
+	grid-column-start: X982uk-main-start;
+	grid-row-start: X982uk-main-start;
+	grid-row-end: X982uk-main-end;
 }
 
 .lG966Z {
-	grid-column-start: q_keew-content-end;
-	grid-row-start: rRCri6-main-start;
-	grid-row-end: q_keew-content-end;
+	grid-column-start: evvjkJ-content-end;
+	grid-row-start: X982uk-main-start;
+	grid-row-end: evvjkJ-content-end;
 }
 
 .AyxbM3 {
-	grid-column-start: RA1tbr-content-start;
-	grid-row-start: rRCri6-main-start;
+	grid-column-start: evvjkJ-content-start;
+	grid-row-start: X982uk-main-start;
 }
 
 .sEMgMA {
-	grid-column-start: RA1tbr-content-start;
-	grid-column-end: xGMSmb-main-end;
-	grid-row-start: q_keew-content-end;
+	grid-column-start: evvjkJ-content-start;
+	grid-column-end: X982uk-main-end;
+	grid-row-start: evvjkJ-content-end;
 }
 
 .EDnegT {
@@ -11055,8 +11055,8 @@ p:not(#dBVRDQ) {
 
 .EDnegT > div.xdTdxz {
 	z-index: 10;
-	grid-column: rRCri6-main-start / xGMSmb-main-end;
-	grid-row: wJdD_6-hd-start / -CSZqj-ft-end;
+	grid-column: X982uk-main-start / X982uk-main-end;
+	grid-row: mtsh_D-hd-start / nMcK39-ft-end;
 	border: 4px solid rgb(92 148 13);
 	background-color: rgb(92 148 13 / 40%);
 	color: rgb(92 148 13);
@@ -11065,27 +11065,27 @@ p:not(#dBVRDQ) {
 
 .EDnegT {
 	display: grid;
-	grid-template-columns: repeat(12, [_1Yrglr-col-start] 1fr);
+	grid-template-columns: repeat(12, [zipwf3-col-start] 1fr);
 }
 
 .dBiT79 {
-	grid-column: _1Yrglr-col-start / _1Yrglr-col-start 5;
+	grid-column: zipwf3-col-start / zipwf3-col-start 5;
 }
 
 ._7kAI1c {
-	grid-column: _1Yrglr-col-start 7 / span 3;
+	grid-column: zipwf3-col-start 7 / span 3;
 }
 
 .EDnegT {
-	grid-template-columns: repeat(4, [TzgowJ-col1-start] 1fr [dQggyi-col2-start] 3fr);
+	grid-template-columns: repeat(4, [\\\\31 B5Qtc-col1-start] 1fr [rnNlcV-col2-start] 3fr);
 }
 
 .EDnegT {
-	grid-template-columns: repeat(4, [_1Yrglr-col-start] 1fr [UIbRwt-col-end]);
+	grid-template-columns: repeat(4, [zipwf3-col-start] 1fr [zipwf3-col-end]);
 }
 
 .EDnegT {
-	grid-template-columns: [_1Yrglr-col-start] 1fr [UIbRwt-col-end _1Yrglr-col-start] 1fr [UIbRwt-col-end _1Yrglr-col-start] 1fr [UIbRwt-col-end _1Yrglr-col-start] 1fr [UIbRwt-col-end];
+	grid-template-columns: [zipwf3-col-start] 1fr [zipwf3-col-end zipwf3-col-start] 1fr [zipwf3-col-end zipwf3-col-start] 1fr [zipwf3-col-end zipwf3-col-start] 1fr [zipwf3-col-end];
 }
 
 .nCG28w {
@@ -11099,7 +11099,7 @@ p:not(#dBVRDQ) {
 	container: _5unArO / inline-size !important;
 	container-name: _16PWt_ !important;
 
-	grid-column: _1Yrglr-col-start / _1Yrglr-col-start 5 !important;
+	grid-column: zipwf3-col-start / zipwf3-col-start 5 !important;
 	grid-area: -UptLF-some-grid-area !important;
 
 	list-style-type: YZsmDI !important;
@@ -11232,6 +11232,7 @@ Object {
   "class-1": "my-app-style_module_css-class-1",
   "class-in-container": "my-app-style_module_css-class-in-container",
   "class-local-scope": "my-app-style_module_css-class-local-scope",
+  "class-name-after-broken-keyframes": "my-app-style_module_css-class-name-after-broken-keyframes",
   "class-with-composes": "my-app-style_module_css-class-with-composes my-app-style_module_css-local-class global-class global-class-other my-app-shared_css-local-my-shared-class",
   "className": "my-app-style_module_css-className",
   "classNameLocal": "my-app-style_module_css-classNameLocal",
@@ -11364,6 +11365,7 @@ Object {
   "my-global-class-again": "my-app-style_module_css-my-global-class-again",
   "my-simple-local": "my-app-style_module_css-my-simple-local",
   "narrowScreenClass": "my-app-style_module_css-narrowScreenClass",
+  "nested-global": "my-app-style_module_css-nested-global",
   "nested-layer": "my-app-style_module_css-nested-layer",
   "nested-media": "my-app-style_module_css-nested-media",
   "nested-parens": "my-app-style_module_css-nested-parens",
@@ -12513,7 +12515,7 @@ div {
 }
 
 .global-foo {
-	.nested-global {
+	.my-app-style_module_css-nested-global {
 		color: red;
 	}
 
@@ -13540,7 +13542,7 @@ section {
 
 @keyframes broken-kf;
 
-.class-name-after-broken-keyframes {
+.my-app-style_module_css-class-name-after-broken-keyframes {
 	color: red;
 }
 

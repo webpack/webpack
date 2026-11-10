@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+// `fs` and `path` come from the runner (`moduleScope` in `test.config.js`):
+// bundling them would make this universal build warn.
 
 // Exported (so this is an ESM library) but never instantiated — the assertion only
 // checks that the worker chunk is referenced by an analyzable `new URL(...)` literal.

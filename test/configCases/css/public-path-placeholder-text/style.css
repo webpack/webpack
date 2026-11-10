@@ -1,0 +1,19 @@
+/* doc: *__WEBPACK_CSS_PUBLIC_PATH_AUTO__/ .hidden { color: red; } */
+.a {
+	content: "__WEBPACK_CSS_PUBLIC_PATH_AUTO__";
+}
+.b {
+	content: "__WEBPACK_CSS_PUBLIC_PATH_FULL_HASH_8__";
+}
+.c {
+	background: url(./image.png?a=__WEBPACK_CSS_PUBLIC_PATH_AUTO__);
+}
+.d {
+	background: url("./image.png?b=__WEBPACK_CSS_PUBLIC_PATH_FULL_HASH_8__");
+}
+.e {
+	background: url("data:text/plain,__WEBPACK_CSS_PUBLIC_PATH_AUTO__");
+}
+.f {
+	background: url(./image.png?own=__WEBPACK_CSS_PUBLIC_PATH_AUTO__);
+}

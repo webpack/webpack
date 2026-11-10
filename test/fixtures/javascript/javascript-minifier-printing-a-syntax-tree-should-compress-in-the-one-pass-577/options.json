@@ -1,0 +1,13 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"toplevel": false,
+			"ecma": 2020
+		},
+		"mangle": {
+			"toplevel": false
+		},
+		"ecma": 2020
+	}
+]

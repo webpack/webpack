@@ -1,0 +1,1 @@
+@media all{@layer x{a{color:red}}@layer y{b{color:blue}}@layer x{c{color:lime}}}

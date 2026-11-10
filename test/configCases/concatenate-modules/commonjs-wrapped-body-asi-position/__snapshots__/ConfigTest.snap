@@ -80,7 +80,7 @@ const log = (log_namespaceFn())
 log.push(\\"body\\")
 ;(side_namespaceFn())
 __webpack_require__.cr((ctor_namespaceFn()))
-;(plain_namespaceFn().member)()
+;(plain_namespaceFn().D)()
 
 module.exports.z = () => log
 
@@ -112,7 +112,7 @@ var plain_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 (log_namespaceFn().push)(\\"plain\\");
 
-module.exports = { member: () => \\"member\\" };
+module.exports = { D: () => \\"member\\" };
 
 });
 

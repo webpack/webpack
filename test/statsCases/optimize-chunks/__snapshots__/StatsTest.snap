@@ -27,7 +27,7 @@ chunk {712} (runtime: main) cir1.js (cir1) X bytes <{792}> <{816}> <{915}> >{816
   ./circular1.js [985] X bytes {712} [built] [code generated]
 chunk {792} (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) >{470}< >{518}< >{712}< >{915}< [entry] [rendered]
   > ./index main
-  runtime modules X KiB 7 modules
+  runtime modules X KiB 6 modules
   cacheable modules X bytes
     ./index.js [237] X bytes {792} [built] [code generated]
     ./modules/f.js [633] X bytes {792} [dependent] [built] [code generated]

@@ -1,0 +1,1 @@
+var o={h(){var e=eval;return e('this')===o}};console.log(o.h())

@@ -3,6 +3,11 @@ declare module "*.json";
 // optional peer of webpack-cli, not installed
 declare module "webpack-dev-server";
 
+// hash-wasm's single-algorithm bundle, typed like the same export of its entry
+declare module "hash-wasm/dist/xxhash64.umd.min" {
+	export { createXXHash64 } from "hash-wasm";
+}
+
 // only required by a few CSS test cases; ships no types
 declare module "less";
 declare module "less-loader";

@@ -16,5 +16,8 @@ Array [
    the hex would name a color it never paints rather than a near one */.t10{background:color(a98-rgb .2 .4 .6)}",
   "/*! ...both of them */.t11{background:color(prophoto-rgb .2 .4 .6)}",
   "/*! a color the conversion is exact for needs no option and takes none */.t12{background:red}",
+  "/*! declined still: a hex this near gray loses its hue when mixed in \`oklch\`,
+   where Chromium reads it as missing below a chroma of 0.02 */.t13{background:oklch(97.807% .029 256.847)}",
+  "/*! ...as does one the conversion is exact for */.t14{background:oklch(97.4% .0159 227)}",
 ]
 `;

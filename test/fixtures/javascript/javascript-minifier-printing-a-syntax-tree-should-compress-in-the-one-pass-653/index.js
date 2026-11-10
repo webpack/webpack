@@ -1,0 +1,1 @@
+x=[parseFloat("x"),"xy".charCodeAt(5),+"a","a"*2,parseInt("")]

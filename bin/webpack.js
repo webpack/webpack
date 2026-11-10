@@ -4,11 +4,21 @@
 
 // Cache compiled module bytecode on disk (available since Node.js 22.8)
 // eslint-disable-next-line n/no-unsupported-features/node-builtins
-const { enableCompileCache } = require("module");
+const { constants, enableCompileCache } = require("module");
 
 if (enableCompileCache) {
 	try {
-		enableCompileCache();
+		const { status, directory } = enableCompileCache();
+		// Minimizer workers and other child processes start without the cache;
+		// the variable Node reads at startup hands them the same directory. Only a
+		// fresh start returns the base directory, which children tag by version.
+		if (
+			// eslint-disable-next-line n/no-unsupported-features/node-builtins
+			status === constants.compileCacheStatus.ENABLED &&
+			process.env.NODE_COMPILE_CACHE === undefined
+		) {
+			process.env.NODE_COMPILE_CACHE = directory;
+		}
 	} catch (_error) {
 		// Nothing
 	}
@@ -95,12 +105,12 @@ const runCli = (cli) => {
 
 	const pkgPath = require.resolve(`${cli.package}/package.json`);
 
-	/** @type {Record<string, EXPECTED_ANY> & { type: string, bin: Record<string, string> }} */
+	/** @type {{ type?: string, bin: Record<string, string> }} */
 	const pkg = require(pkgPath);
 
 	if (pkg.type === "module" || /\.mjs/i.test(pkg.bin[cli.binName])) {
 		import(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName])).catch(
-			(err) => {
+			(/** @type {ThrownValue} */ err) => {
 				console.error(err);
 				process.exitCode = 1;
 			}
@@ -190,15 +200,11 @@ if (!cli.installed) {
 			}')...`
 		);
 
-		runCommand(
-			/** @type {string} */
-			(packageManager),
-			[...installOptions, cli.package]
-		)
+		runCommand(packageManager, [...installOptions, cli.package])
 			.then(() => {
 				runCli(cli);
 			})
-			.catch((err) => {
+			.catch((/** @type {ThrownValue} */ err) => {
 				console.error(err);
 				process.exitCode = 1;
 			});

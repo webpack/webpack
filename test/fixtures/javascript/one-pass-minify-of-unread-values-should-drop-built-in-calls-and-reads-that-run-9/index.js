@@ -1,0 +1,1 @@
+Object.prototype.x=f;Object.prototype.x

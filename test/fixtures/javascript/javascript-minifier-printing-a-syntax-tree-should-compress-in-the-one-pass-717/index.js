@@ -1,0 +1,1 @@
+function k(){return!function(){x()}()}function f(t){if(t)return 1;return function(){for(;;)g()}()}function m(){return void function(){for(;;)x()}()}

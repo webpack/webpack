@@ -1,0 +1,12 @@
+[
+	{
+		"mode": "beautify"
+	},
+	{
+		"mode": "minify",
+		"rewriteCustomProperties": true
+	},
+	{
+		"mode": "minify"
+	}
+]

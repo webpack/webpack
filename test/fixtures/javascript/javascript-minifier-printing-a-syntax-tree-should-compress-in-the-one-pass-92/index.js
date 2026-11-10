@@ -1,0 +1,1 @@
+function f(o, a){ var b = ({ ...o }).x, c = (o && {}).x, d = (o?.p).x, e = (function(){}).prototype.x, h = (o += 1).x, i = (o = {}).y, j = [1][a()], k = [1][0], l = delete o.x, m = (a ? o : {}).x, n = (() => 1).prototype.x, p = (class {}).prototype.x, q = ({} || o).x, r = (1 && {}).x; }

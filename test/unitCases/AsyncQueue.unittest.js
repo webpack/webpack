@@ -163,6 +163,52 @@ describe("AsyncQueue", () => {
 		queue.stop();
 	});
 
+	it("should run a child queue's items within its parent's parallelism", (done) => {
+		let active = 0;
+		let maxActive = 0;
+		/** @type {string[]} */
+		const order = [];
+		const parent = new AsyncQueue({
+			name: "parent",
+			parallelism: 1,
+			/** @type {import("../../lib/util/AsyncQueue").Processor<number, number>} */
+			processor: (item, callback) => {
+				order.push(`parent:${item}`);
+				callback(null, item);
+			}
+		});
+		const child = new AsyncQueue({
+			name: "child",
+			parent,
+			/** @type {import("../../lib/util/AsyncQueue").Processor<string, string>} */
+			processor: (item, callback) => {
+				active++;
+				maxActive = Math.max(maxActive, active);
+				order.push(`child:${item}`);
+				setImmediate(() => {
+					active--;
+					callback(null, item.toUpperCase());
+				});
+			}
+		});
+		let pending = 2;
+		/**
+		 * @param {Error | null | undefined} err error
+		 * @param {(string | null)=} result result
+		 */
+		const finish = (err, result) => {
+			expect(err).toBeFalsy();
+			expect(typeof result).toBe("string");
+			if (--pending === 0) {
+				expect(order).toEqual(["child:a", "child:b"]);
+				expect(maxActive).toBe(1);
+				done();
+			}
+		};
+		child.add("a", finish);
+		child.add("b", finish);
+	});
+
 	it("should ignore invalidate for an item that was never added", () => {
 		const queue = createQueue();
 

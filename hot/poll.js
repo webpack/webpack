@@ -23,7 +23,7 @@ if (module.hot) {
 					require("./log-apply-result")(updatedModules, updatedModules);
 					checkForUpdate(true);
 				})
-				.catch(function (err) {
+				.catch(function (/** @type {Error} */ err) {
 					var status = module.hot.status();
 					if (["abort", "fail"].indexOf(status) >= 0) {
 						log("warning", "[HMR] Cannot apply update.");

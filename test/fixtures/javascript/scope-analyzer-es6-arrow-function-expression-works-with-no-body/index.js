@@ -1,0 +1,1 @@
+var arrow = a => a;

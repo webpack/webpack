@@ -1,0 +1,1 @@
+function f(d,c){if(c){d(1,"a")}else{d(2,"a")}if(c)d(1);else d(2);if(c)g(1);else g(2);if(h())d(1);else d(2);if(c)d(1,1);else d(2,2)}function g(v){console.log("g",v)}function h(){return 0}f(function(v,w){console.log(v,w)},1)

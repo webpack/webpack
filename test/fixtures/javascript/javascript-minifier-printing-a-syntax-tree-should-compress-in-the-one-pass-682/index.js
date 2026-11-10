@@ -1,0 +1,1 @@
+function h(NaN,Infinity){Math.abs(-NaN);Math.abs(Infinity)}

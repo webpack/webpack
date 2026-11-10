@@ -1,0 +1,1 @@
+function f(){d();function c(){x()}function d(){c()}}

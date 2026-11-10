@@ -1,0 +1,1 @@
+function* g() { yi\u0065ld 1 }

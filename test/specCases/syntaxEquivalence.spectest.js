@@ -9,7 +9,10 @@
 const path = require("path");
 // The comparison has to know which family names are keywords, and the table
 // that says so is generated rather than written twice.
-const { GENERIC_FONT_FAMILIES } = require("../../lib/css/data");
+const {
+	GENERIC_FONT_FAMILIES,
+	getDeclarationRanks
+} = require("../../lib/css/data");
 const { SourceProcessor: CssSourceProcessor } = require("../../lib/css/syntax");
 const { readToken } = require("../../lib/css/syntax-parser");
 const {
@@ -20,20 +23,22 @@ const {
 	REWRITABLE_ATTRIBUTES
 } = require("../../lib/html/data");
 const { SourceProcessor: HtmlSourceProcessor } = require("../../lib/html/syntax");
-const { A, NS_MATHML, NS_SVG, NodeType, decodeEntities, parseHtml } = require("../../lib/html/syntax-parser");
+const { A, Field, Namespace, NodeType, _attributeList, _namespaceOf, decodeEntities, parseHtml } = require("../../lib/html/syntax-parser");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const launchBrowser = require("../helpers/launchBrowser");
 
 // Which engine the comparisons are held against. `EQUIVALENCE_BROWSER` points
-// the same corpus at Gecko or at WebKit; anything else is Blink.
+// the same corpus at Gecko or at WebKit; anything else is Blink. A list
+// (`chrome,firefox,webkit`) gives each part of a `--parts` run its own engine.
 const ENGINES = new Set(["chrome", "firefox", "webkit"]);
-const ENGINE = ENGINES.has(String(process.env.EQUIVALENCE_BROWSER))
-	? String(process.env.EQUIVALENCE_BROWSER)
-	: "chrome";
+const LISTED = String(process.env.EQUIVALENCE_BROWSER).split(",");
+const LISTED_ENGINE =
+	LISTED[(require("../helpers/testParts").currentPart()[0] - 1) % LISTED.length];
+const ENGINE = ENGINES.has(LISTED_ENGINE) ? LISTED_ENGINE : "chrome";
 
-// Only Chromium answers the media-emulation calls: they are CDP, and playwright
-// offers no `color-gamut` either. Elsewhere the signature carries what no
-// viewport varies as text.
+// Media is emulated on Chromium only, the engine the filed defects were
+// measured on; elsewhere the signature carries what no viewport varies as text,
+// though playwright could emulate print and the color scheme there too.
 const EMULATES_MEDIA = ENGINE === "chrome";
 
 // WHY: The printer caps a number at six significant digits, so a computed value
@@ -82,13 +87,13 @@ const POLICED_PAGE = `<!doctype html><html><head><meta http-equiv="Content-Secur
 
 // What neither a width nor a frame's color scheme reaches, set by media
 // emulation where the engine offers it; each runs only over the pairs naming it.
-/** @type {{ label: string, named: RegExp, apply: (page: import("puppeteer-core").Page, on: boolean) => Promise<void> }[]} */
+/** @type {{ label: string, named: RegExp, apply: (page: import("playwright-core").Page, on: boolean) => Promise<void> }[]} */
 const EMULATIONS = EMULATES_MEDIA
 	? [
 			{
 				label: "print",
 				named: /@media[^{]*\bprint\b/i,
-				apply: (page, on) => page.emulateMediaType(on ? "print" : undefined)
+				apply: (page, on) => page.emulateMedia({ media: on ? "print" : null })
 			}
 		]
 	: [];
@@ -114,12 +119,12 @@ const {
 	readDocument
 } = require("../helpers/wptCorpus");
 
-/** @import { Fixture, PageHelpers, StylePair } from "../helpers/syntaxEquivalence" */
+/** @import { Fixture, PageHelpers, Relaxation, StylePair } from "../helpers/syntaxEquivalence" */
 
 /**
  * Every pair whose stylesheets style some element differently, on a page with
  * the helpers installed — at the default media, then under each emulation.
- * @param {import("puppeteer-core").Page} page the page
+ * @param {import("playwright-core").Page} page the page
  * @param {StylePair[]} pairs the pairs
  * @param {string[]=} types element types every pair nests in each other
  * @returns {Promise<{ name: string, why: string }[]>} what moved, per pair
@@ -185,7 +190,7 @@ const CUSTOM_PROPERTY = "--webpack-probe";
 // exactly, so an entry outlives its defect by one run.
 const FILED_CONFIG_CSS_DEFECTS = new Map([
 	[
-		"test/configCases/css/minimize-values/style.css",
+		"test/configCases/css/minimize-corpus/minimize-values/style.css",
 		"webkit only: not a printer defect — `shape-image-threshold: 12.5%` prints as `.125`, the number CSS Shapes 1 says the percentage names, but WebKit takes no percentage there, so it drops the source's declaration and reads the printed one"
 	]
 ]);
@@ -194,20 +199,11 @@ const FILED_CONFIG_HTML_DEFECTS = new Map([
 	[
 		"test/configCases/html/attribute-tables/page.html",
 		"firefox, webkit only: not a printer defect — an IDL attribute the engine does not implement falls back to the attribute as written, so a normalization reads as a difference. Measured in Firefox 156: `writingSuggestions` and `blocking` both read `undefined` where Chrome 147 reflects `false` and `render`; WebKit reads `autofocus`, `enterkeyhint` and `inputmode` apart from Blink the same way"
-	],
-	[
-		"test/configCases/html/minimize-round-trip/cases/reflected.html",
-		"firefox only: the unimplemented `blocking` IDL again — see `attribute-tables`"
-	],
-	[
-		"test/configCases/html/minimize-transforms/page.html",
-		"firefox only: the unimplemented `blocking` IDL again — see `attribute-tables`"
 	]
 ]);
 
 const FILED_BENCHMARK_CSS_DEFECTS = new Map([
 	["UIkit 3", "firefox only: not a printer defect — `rgba(255, 255, 255, 0.7)` prints as `#ffffffb3` (lightningcss writes the same), whose alpha is 179/255. Blink stores alpha in a byte either way, while Gecko keeps 0.702 and its `::placeholder` mix lands one byte from the source's 0.378"],
-	["Radix Themes 3 (components)", "firefox only: `calc(100% / 3)` prints as `33.3333%`, six digits being calibrated on Blink's 1/64px layout; Gecko lays out in 1/60px, so a `translateX(100%)` over that width moves by 0.03px"],
 ]);
 
 const FILED_BENCHMARK_HTML_DEFECTS = new Map();
@@ -220,6 +216,31 @@ const FILED_WPT_HTML_DEFECTS = new Map([
 ]);
 
 const FILED_WPT_CSS_DEFECTS = new Map();
+
+// The same, for each corpus printed with every option that is off by default.
+const FILED_CONFIG_HTML_OPT_IN_DEFECTS = new Map([
+	[
+		"test/configCases/html/attribute-tables/page.html",
+		"firefox, webkit only: the unimplemented IDL attributes again — see `attribute-tables` above"
+	]
+]);
+const FILED_CONFIG_CSS_OPT_IN_DEFECTS = new Map([
+	[
+		"test/configCases/css/minimize-corpus/minimize-values/style.css",
+		"webkit only: the percentage `shape-image-threshold` again — see `minimize-values` above"
+	],
+	[
+		"test/configCases/css/minimize-vendor-prefixes/style.css",
+		"webkit only: the element read carries every class, so `.t16`'s `display:-webkit-box` lays out the `-webkit-box-align` the opt-in drops from `.t15`, whose block writes `display:flex`; WebKit centers its child in the original only, where Chrome 156 lays both alike"
+	]
+]);
+const FILED_BENCHMARK_HTML_OPT_IN_DEFECTS = new Map();
+const FILED_BENCHMARK_CSS_OPT_IN_DEFECTS = new Map([
+	[
+		"Tailwind 4 + daisyUI 5",
+		"chrome, firefox, webkit only: not a printer defect — `convertApproximateColors` clips `oklch(71% .194 13.428)`, outside sRGB, before `color-mix(in oklab, … 80%, #000)` reads it, which is what the option documents; every engine pinned paints the mix of the clipped color a byte or two from the clipped mix (WebKit 190,71,91 against 192,71,92; Chrome 156 and Firefox 157 the same `.link-error` under hover)"
+	]
+]);
 
 // The same, for what webpack's own parser sees over the whole corpus.
 // Keyed `"<mode> <document>"`, so filing one print mode leaves the other held.
@@ -267,10 +288,6 @@ const FILED_WPT_VALUE_DEFECTS = new Map([
 	[
 		"background-image:paint(mypaint ",
 		"webkit only: the unimplemented `paint()` again \u2014 see `paint( mypaint`"
-	],
-	[
-		"font-family:\"New Century Schoolbook\", serif",
-		"firefox only: not a printer defect — Gecko carries the source's quoting into the computed family where Blink drops it, so unquoting a name neither engine reads differently still reads as a difference there"
 	]
 ]);
 
@@ -301,6 +318,7 @@ const PRINT_MODES = [
 
 /**
  * @param {string} source a stylesheet
+ * @param {object=} extra print options beyond the defaults
  * @returns {string} the same stylesheet, minified
  */
 // A fixture names the minimizer options its own claim is about, so the engine
@@ -355,10 +373,10 @@ const cssomDirective = (source) => {
 	return [];
 };
 
-const minifyCss = (source) => {
+const minifyCss = (source, extra = {}) => {
 	// The merge too, which is off by default: every corpus is then held to it.
 	/** @type {{ mode: string, [k: string]: EXPECTED_ANY }} */
-	const options = { mode: "minify", mergeDistantRules: true };
+	const options = { mode: "minify", mergeDistantRules: true, ...extra };
 	for (const name of cssomDirective(source)) options[name] = true;
 	return /** @type {{ code: string }} */ (
 		new CssSourceProcessor().process(source, options)
@@ -380,24 +398,71 @@ const minifyDeclaration = (property, value) => {
 	return colon === -1 ? "" : body.slice(colon + 1);
 };
 
+// Every option off by default, with a target current engines meet. What each
+// rewrites on purpose is set aside where it would read as a difference.
+const CSS_OPT_INS = {
+	convertLengthUnits: true,
+	convertApproximateColors: true,
+	dropOverriddenDeclarations: true,
+	rewriteCustomProperties: true,
+	environment: { browsers: ["chrome 140", "firefox 140", "safari 26.2"] }
+};
+/** @type {Relaxation[]} */
+const CSS_OPT_IN_RELAX = [
+	"custom-properties",
+	"length-units",
+	"approximate-colors",
+	"prefixes"
+];
+
+// The same for HTML; `removeImpliedTags` has variants of its own.
+const HTML_OPT_INS = {
+	collapseWhitespace: "conservative",
+	mergeStyles: true,
+	removeEmptyAttributes: true,
+	removeEmptyElements: true,
+	removeRedundantAttributes: "all",
+	sortAttributes: true,
+	sortTokenLists: true
+};
+/** @type {Relaxation[]} */
+const HTML_OPT_IN_RELAX = [
+	"whitespace",
+	"redundant-attributes",
+	"empty-elements",
+	"merged-styles"
+];
+
 /**
  * @typedef {object} Corpus
  * @property {string} label what to call it in a test name
  * @property {Fixture[]} html every page
  * @property {Fixture[]} htmlAllImpliedTags the same, printed with `removeImpliedTags: true`
  * @property {Fixture[]} htmlSmartTags the same, printed with `removeImpliedTags: "smart"`
+ * @property {Fixture[]} htmlOptIns the same, printed with `HTML_OPT_INS`; empty for wpt
  * @property {Fixture[]} css every stylesheet
+ * @property {Fixture[]} cssOptIns the same, printed with `CSS_OPT_INS`; empty for wpt
  * @property {Map<string, string>} filedHtml its filed DOM defects
  * @property {Map<string, string>} filedCss its filed stylesheet defects
+ * @property {Map<string, string>} filedHtmlOptIns its filed DOM defects under `HTML_OPT_INS`
+ * @property {Map<string, string>} filedCssOptIns its filed stylesheet defects under `CSS_OPT_INS`
  */
 
 /**
  * @param {Fixture[]} sources pages, read once
  * @param {object} options extra print options
+ * @param {Relaxation[]=} relax what those options rewrite on purpose
  * @returns {Fixture[]} the same pages, printed with them
  */
-const variant = (sources, options) =>
-	sources.map((one) => ({ ...one, min: minifyHtml(one.raw, options) }));
+const variant = (sources, options, relax) =>
+	sources.map((one) => ({ ...one, min: minifyHtml(one.raw, options), relax }));
+
+/**
+ * @param {Fixture[]} sheets stylesheets, printed with `CSS_OPT_INS`
+ * @returns {Fixture[]} the same, compared with what those rewrite set aside
+ */
+const cssOptIns = (sheets) =>
+	sheets.map((one) => ({ ...one, relax: CSS_OPT_IN_RELAX }));
 
 /**
  * Every corpus, built while jest collects — one test per fixture means the
@@ -407,6 +472,9 @@ const variant = (sources, options) =>
 const buildCorpora = () => {
 	const configHtml = buildCorpus(CONFIG_CASES, ".html", (source) => source);
 	const configCss = buildCorpus(CONFIG_CASES, ".css", minifyCss);
+	const configCssOptIns = buildCorpus(CONFIG_CASES, ".css", (source) =>
+		minifyCss(source, CSS_OPT_INS)
+	);
 	/** @type {Corpus[]} */
 	const built = [
 		{
@@ -416,9 +484,13 @@ const buildCorpora = () => {
 			// the one option whose whole claim is that the DOM does not notice.
 			htmlAllImpliedTags: variant(configHtml, { removeImpliedTags: true }),
 			htmlSmartTags: variant(configHtml, { removeImpliedTags: "smart" }),
+			htmlOptIns: variant(configHtml, HTML_OPT_INS, HTML_OPT_IN_RELAX),
 			css: configCss,
+			cssOptIns: cssOptIns(configCssOptIns),
 			filedHtml: forEngine(FILED_CONFIG_HTML_DEFECTS),
-			filedCss: forEngine(FILED_CONFIG_CSS_DEFECTS)
+			filedCss: forEngine(FILED_CONFIG_CSS_DEFECTS),
+			filedHtmlOptIns: forEngine(FILED_CONFIG_HTML_OPT_IN_DEFECTS),
+			filedCssOptIns: forEngine(FILED_CONFIG_CSS_OPT_IN_DEFECTS)
 		}
 	];
 	// Real projects, where `configCases` and wpt are both written to exercise a
@@ -431,9 +503,15 @@ const buildCorpora = () => {
 			html: variant(benchHtml, {}),
 			htmlAllImpliedTags: variant(benchHtml, { removeImpliedTags: true }),
 			htmlSmartTags: variant(benchHtml, { removeImpliedTags: "smart" }),
+			htmlOptIns: variant(benchHtml, HTML_OPT_INS, HTML_OPT_IN_RELAX),
 			css: benchCss,
+			cssOptIns: cssOptIns(
+				benchmarkStylesheets((source) => minifyCss(source, CSS_OPT_INS))
+			),
 			filedHtml: forEngine(FILED_BENCHMARK_HTML_DEFECTS),
-			filedCss: forEngine(FILED_BENCHMARK_CSS_DEFECTS)
+			filedCss: forEngine(FILED_BENCHMARK_CSS_DEFECTS),
+			filedHtmlOptIns: forEngine(FILED_BENCHMARK_HTML_OPT_IN_DEFECTS),
+			filedCssOptIns: forEngine(FILED_BENCHMARK_CSS_OPT_IN_DEFECTS)
 		});
 	}
 	if (!hasCorpus()) return built;
@@ -456,9 +534,15 @@ const buildCorpora = () => {
 		html: variant(wptHtml, {}),
 		htmlAllImpliedTags: variant(wptHtml, { removeImpliedTags: true }),
 		htmlSmartTags: variant(wptHtml, { removeImpliedTags: "smart" }),
+		// The opt-ins stay on the real-project corpora: wpt is far larger, and
+		// written to exercise one rule rather than to ship.
+		htmlOptIns: [],
 		css: wptCss,
+		cssOptIns: [],
 		filedHtml: forEngine(FILED_WPT_HTML_DEFECTS),
-		filedCss: forEngine(FILED_WPT_CSS_DEFECTS)
+		filedCss: forEngine(FILED_WPT_CSS_DEFECTS),
+		filedHtmlOptIns: new Map(),
+		filedCssOptIns: new Map()
 	});
 	return built;
 };
@@ -509,6 +593,17 @@ const STYLE_CONTROLS = new Map([
 	["bad nth-child after", [".a+.b:nth-child(3){color:red}", ".a+.b:nth-child(3){color:blue}"]],
 	["bad nth-child among", [".a~.b:nth-child(3){color:red}", ".a~.b:nth-child(3){color:blue}"]],
 	["bad nth-of-type after", ["i+p:nth-of-type(2){color:red}", "i+p:nth-of-type(2){color:blue}"]],
+	// A computed `line-height` serializes at six digits, so only where `1lh` lands on the layout grid tells these apart.
+	// Gecko rounds a length to its nearest 1/60px rather than flooring, so these and the length ones lay out alike in Firefox.
+	["bad line-height digits", [".a{font-size:14px;line-height:1.4285714286}", ".a{font-size:14px;line-height:1.42857}"]],
+	["bad line-height digits through a custom property", [":root{--h:1.4285714286}.a{font-size:14px;line-height:var(--h)}", ":root{--h:1.42857}.a{font-size:14px;line-height:var(--h)}"]],
+	["bad line-height digits at a queried font size", ["@media (max-width:300px){.a{font-size:14px}}.a{line-height:1.4285714286}", "@media (max-width:300px){.a{font-size:14px}}.a{line-height:1.42857}"]],
+	// The same for any length: a computed one serializes at six digits as well, so only where the box lands tells these apart.
+	["bad width digits", [".a{font-size:19px;width:.1052631579em}", ".a{font-size:19px;width:.105263em}"]],
+	["bad padding digits", [".a{font-size:19px;padding-left:.1052631579em}", ".a{font-size:19px;padding-left:.105263em}"]],
+	["bad margin digits", [".a{font-size:19px;margin-top:.1052631579em}", ".a{font-size:19px;margin-top:.105263em}"]],
+	["good length digits", [".a{font-size:19px;margin-top:.1052631579em}", ".a{font-size:19px;margin-top:.10526316em}"]],
+	["good line-height digits", [".a{font-size:14px;line-height:1.4285714286}", ".a{font-size:14px;line-height:1.42857143}"]],
 	["good spelling", [".a{color:red;margin:0px}", ".a{color:#f00;margin:0}"]],
 	["good nth spellings", ["li:nth-child(odd){color:red}li:nth-child(even){color:blue}", "li:nth-child(2n+1){color:red}li:nth-child(2n){color:blue}"]],
 	["good has spacing", ["a:has( > b ){color:red}", "a:has(>b){color:red}"]],
@@ -532,7 +627,7 @@ const STYLE_CONTROLS = new Map([
  * Run `evaluate` over `items` in batches the page can hold.
  * @template TIn
  * @template TOut
- * @param {import("puppeteer-core").Page} page the page
+ * @param {import("playwright-core").Page} page the page
  * @param {TIn[]} items everything to send
  * @param {(batch: TIn[]) => Promise<TOut[]>} evaluate what to run per batch
  * @returns {Promise<TOut[]>} every batch's results, in order
@@ -557,17 +652,17 @@ const NO_BENCHMARK_CORPUS =
 expectNoDeprecations();
 
 describe(`printer output in real ${ENGINE}`, () => {
-	/** @type {import("puppeteer-core").Browser} */
+	/** @type {import("playwright-core").Browser} */
 	let browser;
-	/** @type {import("puppeteer-core").Page | undefined} the corpus tiers' page */
+	/** @type {import("playwright-core").Page | undefined} the corpus tiers' page */
 	let page;
 	/** @type {number} documents the current page has been asked to parse */
 	let parsed = 0;
 
-	/** @type {import("puppeteer-core").Page} the page the probing tiers share */
+	/** @type {import("playwright-core").Page} the page the probing tiers share */
 	let probePage;
 
-	/** @returns {Promise<import("puppeteer-core").Page>} a page with the helpers */
+	/** @returns {Promise<import("playwright-core").Page>} a page with the helpers */
 	const freshPage = async () => {
 		const opened = await browser.newPage();
 		await opened.setContent(POLICED_PAGE);
@@ -581,7 +676,7 @@ describe(`printer output in real ${ENGINE}`, () => {
 	 * than the tests do: opening one takes 58ms, comparing one document takes far
 	 * less.
 	 * @param {number} documents how many it is about to parse
-	 * @returns {Promise<import("puppeteer-core").Page>} the page to compare on
+	 * @returns {Promise<import("playwright-core").Page>} the page to compare on
 	 */
 	const pageFor = async (documents) => {
 		if (page === undefined || parsed + documents > PAGE_DOCUMENTS) {
@@ -594,10 +689,7 @@ describe(`printer output in real ${ENGINE}`, () => {
 	};
 
 	beforeAll(async () => {
-		browser = await launchBrowser({
-			browser: ENGINE,
-			protocolTimeout: FILE_TIMEOUT
-		});
+		browser = await launchBrowser({ browser: ENGINE });
 		// The probing tiers set a property on one element and read it back, leaving
 		// nothing behind, so they share a page — at 58ms to open one and 1ms to
 		// call into it, a page per test would cost more than the tests do.
@@ -605,10 +697,8 @@ describe(`printer output in real ${ENGINE}`, () => {
 	}, 300000);
 
 	afterAll(async () => {
-		if (page) await page.close();
-		if (probePage) await probePage.close();
 		if (browser) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	/**
 	 * Every page in `cases`, compared as the engine builds it: the facets it
@@ -633,13 +723,14 @@ describe(`printer output in real ${ENGINE}`, () => {
 					).__eq;
 					return batch.map((fixture) => ({
 						name: fixture.name,
-						before: htmlFacets(fixture.raw),
-						after: htmlFacets(fixture.min)
+						relax: fixture.relax,
+						before: htmlFacets(fixture.raw, fixture.relax),
+						after: htmlFacets(fixture.min, fixture.relax)
 					}));
 				},
 				cases.slice(at, at + BATCH)
 			);
-			for (const { name, before, after } of collected) {
+			for (const { name, relax, before, after } of collected) {
 				let why = "";
 				for (const facet of Object.keys(before.facets)) {
 					const a = before.facets[facet];
@@ -678,7 +769,12 @@ describe(`printer output in real ${ENGINE}`, () => {
 					if (before.styles.length === after.styles.length) {
 						for (const [i, sheet] of before.styles.entries()) {
 							if (sheet !== after.styles[i]) {
-								sheets.push({ name, before: sheet, after: after.styles[i] });
+								sheets.push({
+									name,
+									before: sheet,
+									after: after.styles[i],
+									relax
+								});
 							}
 						}
 					} else {
@@ -700,7 +796,12 @@ describe(`printer output in real ${ENGINE}`, () => {
 	const compareStylesheets = async (cases) =>
 		styleDifferences(
 			await pageFor(cases.length * 2),
-			cases.map(({ name, raw, min }) => ({ name, before: raw, after: min }))
+			cases.map(({ name, raw, min, relax }) => ({
+				name,
+				before: raw,
+				after: min,
+				relax
+			}))
 		);
 
 	/**
@@ -765,6 +866,33 @@ describe(`printer output in real ${ENGINE}`, () => {
 				},
 				1800000
 			);
+
+			// The rewrites only an option asks for, held to the same DOM and CSSOM.
+			for (const fixture of one.htmlOptIns) {
+				it(
+					`should build the same DOM and CSSOM from ${fixture.name} with the HTML opt-ins`,
+					async () => {
+						const differences = await comparePages([fixture], true);
+						expect(named(differences, one.filedHtmlOptIns)).toEqual(
+							expected(one.filedHtmlOptIns, fixture.name)
+						);
+					},
+					FILE_TIMEOUT
+				);
+			}
+
+			for (const fixture of one.cssOptIns) {
+				it(
+					`should build the same CSSOM from ${fixture.name} with the CSS opt-ins`,
+					async () => {
+						const differences = await compareStylesheets([fixture]);
+						expect(named(differences, one.filedCssOptIns)).toEqual(
+							expected(one.filedCssOptIns, fixture.name)
+						);
+					},
+					FILE_TIMEOUT
+				);
+			}
 
 			// The same rules, in the same cascade order, under conditions the engine
 			// answers alike, each computing to the same style.
@@ -840,7 +968,9 @@ describe(`printer output in real ${ENGINE}`, () => {
 				const css = new Set(one.css.map((each) => each.name));
 				expect([
 					...[...one.filedHtml.keys()].filter((name) => !html.has(name)),
-					...[...one.filedCss.keys()].filter((name) => !css.has(name))
+					...[...one.filedCss.keys()].filter((name) => !css.has(name)),
+					...[...one.filedHtmlOptIns.keys()].filter((name) => !html.has(name)),
+					...[...one.filedCssOptIns.keys()].filter((name) => !css.has(name))
 				]).toEqual([]);
 			});
 		});
@@ -858,7 +988,13 @@ describe(`printer output in real ${ENGINE}`, () => {
 				[...STYLE_CONTROLS].map(([name, [raw, min]]) => ({ name, raw, min }))
 			);
 			expect(differences.map((each) => each.name).sort()).toEqual(
-				[...STYLE_CONTROLS.keys()].filter((name) => name.startsWith("bad ")).sort()
+				[...STYLE_CONTROLS.keys()]
+					.filter(
+						(name) =>
+							name.startsWith("bad ") &&
+							!(ENGINE === "firefox" && / digits/.test(name))
+					)
+					.sort()
 			);
 		},
 		FILE_TIMEOUT
@@ -927,8 +1063,9 @@ describe(`printer output in real ${ENGINE}`, () => {
 
 	const compareValues = (cases) =>
 		inBatches(probePage, cases, (batch) =>
-			probePage.evaluate((each, custom) => {
-				const { canonical, paintedColors } =
+			// playwright hands a page function one argument
+			probePage.evaluate(([each, custom]) => {
+				const { canonical, paintedColors, unquoteFamilies } =
 					/** @type {{ __eq: PageHelpers }} */ (/** @type {unknown} */ (window))
 						.__eq;
 				const probe = document.createElement("div");
@@ -970,8 +1107,13 @@ describe(`printer output in real ${ENGINE}`, () => {
 						// Under the one name the spec gives the value, its colors painted: the engine
 						// echoes the spelling it was handed — `jump-start` beside `start` — so without
 						// this the tier reads a synonym as a change of meaning.
+						const value = computed.getPropertyValue(name);
+						// a family name quoted or bare is one family, which the engines echo
+						// in either spelling, as the cascade tier already reads it
 						out += `${name}:${paintedColors(
-							canonical(computed.getPropertyValue(name))
+							canonical(
+								name === "font-family" ? unquoteFamilies(value) : value
+							)
 						)}\u0000`;
 					}
 					return out;
@@ -1003,7 +1145,7 @@ describe(`printer output in real ${ENGINE}`, () => {
 				// The page is shared, so what this tier appends it takes back out.
 				probe.remove();
 				return out;
-			}, batch, CUSTOM_PROPERTY)
+			}, /** @type {const} */ ([batch, CUSTOM_PROPERTY]))
 		);
 
 	/**
@@ -1188,7 +1330,7 @@ describe(`printer output in real ${ENGINE}`, () => {
 	}, 600000);
 });
 
-const NS_PREFIX = { [NS_SVG]: "svg ", [NS_MATHML]: "math " };
+const NS_PREFIX = { [Namespace.SVG]: "svg ", [Namespace.MathML]: "math " };
 // Whitespace inside these is data or is rendered verbatim, so it is not text to
 // collapse; a `<style>` body is CSS, held to the CSSOM comparison above instead.
 const VERBATIM_TEXT = new Set(["pre", "textarea", "script", "style"]);
@@ -1235,16 +1377,16 @@ const domShapeOf = (source) => {
 	 */
 	const walk = (node, depth, renders) => {
 		for (
-			let child = A.firstChild(node);
+			let childIndex = 0, child = A.child(0, node);
 			child !== 0;
-			child = A.nextSibling(child)
+			child = A.child(++childIndex, node)
 		) {
 			if (A.type(child) !== NodeType.Element) continue;
-			const tag = A.tagName(child);
+			const tag = A.name(child);
 			const namespace =
-				/** @type {Record<number, string>} */ (NS_PREFIX)[A.namespace(child)] ||
+				/** @type {Record<number, string>} */ (NS_PREFIX)[_namespaceOf(child)] ||
 				"";
-			const written = [...A.attributes(child)]
+			const written = _attributeList(child)
 				.map((attribute) => {
 					const name = attribute.serializedName || attribute.name;
 					// The printer may rewrite these — a boolean written bare, an enumerated value
@@ -1262,12 +1404,12 @@ const domShapeOf = (source) => {
 			const inPage = renders || (namespace === "" && tag === "body");
 			if (inPage && !VERBATIM_TEXT.has(tag)) {
 				let own = "";
-				for (let t = A.firstChild(child); t !== 0; t = A.nextSibling(t)) {
-					if (A.type(t) === NodeType.Text) own += A.data(t);
+				for (let tIndex = 0, t = A.child(0, child); t !== 0; t = A.child(++tIndex, child)) {
+					if (A.type(t) === NodeType.Text) own += A.value(t);
 				}
 				text.push(own.replace(ASCII_WHITESPACE, " "));
 			}
-			const content = A.templateContent(child);
+			const content = A.field(0, Field.content, child);
 			if (content !== 0) walk(content, depth + 1, true);
 			walk(child, depth + 1, inPage);
 		}
@@ -1445,6 +1587,60 @@ describe("wpt css token adjacency", () => {
 /** @type {LoweringFixture[]} */
 const LOWERING_FIXTURES = [
 	{
+		name: "what a modern target makes dead, and the shorter spellings",
+		produces: [
+			"outline:2px solid}",
+			"#b{background:none}",
+			"transform-origin:bottom",
+			"background-position:bottom",
+			"transition:color 1s.5s,opacity 2s 1s",
+			"#z{top:0}#e{width:var(--b,2px)}",
+			"#f{background-color:#73859f80}",
+			"#g{text-decoration:underline dotted}",
+			"button,[type=button]{"
+		],
+		css:
+			"#a{outline:2px solid currentColor;color:rgb(1,2,3)}" +
+			"#b{background:transparent}" +
+			"#c{transform-origin:50% 100%;background-position:center bottom}" +
+			"#d{transition:color 1s,opacity 2s;transition-delay:.5s,1s}" +
+			"#e{width:var(--a,1px)}#z{top:0}#e{width:var(--b,2px)}" +
+			"#f{background-color:#73859f;background-color:#73859f80}" +
+			"#g{text-decoration:underline;-webkit-text-decoration:underline;" +
+			"text-decoration:underline dotted;-webkit-text-decoration:underline dotted}" +
+			"[type=button],button{color:teal}",
+		browsers: ["chrome 140", "firefox 140", "safari 26.2"],
+		html:
+			"<div id=a>a</div><div id=b>b</div><div id=c>c</div><div id=d>d</div>" +
+			"<div id=e>e</div><div id=z>z</div><div id=f>f</div><div id=g>g</div>" +
+			"<button id=h>h</button><input id=i type=button>",
+		probes: [
+			["#a", "outline-color"],
+			["#b", "background-color"],
+			["#c", "transform-origin"],
+			["#c", "background-position"],
+			["#d", "transition-delay"],
+			["#e", "width"],
+			["#f", "background-color"],
+			["#g", "text-decoration-style"],
+			["#h", "color"],
+			["#i", "color"]
+		]
+	},
+	{
+		name: "an An+B argument whose sign stands apart",
+		// Written as they stand: no engine reads either argument, so each rule is
+		// dropped, where `-n+1` and `2` would match.
+		produces: ["li:nth-child(- n+1){", "li:nth-child(+ 2){"],
+		css: "li{color:blue}li:nth-child(- n+1){color:red}li:nth-child(+ 2){color:green}",
+		browsers: ["chrome 130"],
+		html: "<ul><li id=a>a</li><li id=b>b</li></ul>",
+		probes: [
+			["#a", "color"],
+			["#b", "color"]
+		]
+	},
+	{
 		name: "nesting",
 		// The rules the lowering writes on their own, which the source states
 		// inside the one they were written in.
@@ -1470,12 +1666,25 @@ const LOWERING_FIXTURES = [
 		]
 	},
 	{
+		name: "nesting under a rule opening on a combinator",
+		// Swiper writes `.swiper-vertical{~.swiper-button-prev{.icon{…}}}`; the
+		// parent goes into `:is()` written out, which takes no relative argument.
+		produces: [":is(a b,a~b) c{"],
+		css: "a{b,~b{c{color:red}}}",
+		browsers: ["chrome 100"],
+		html: "<a><b><c id=t>t</c></b></a><b><c id=u>u</c></b>",
+		probes: [
+			["#t", "color"],
+			["#u", "color"]
+		]
+	},
+	{
 		name: "light-dark()",
 		// The pair the lowering writes, which a script enumerating the computed
 		// custom properties would see where the source has none.
 		introduces: ["--webpack-light", "--webpack-dark"],
 		produces: [
-			"var(--webpack-light,#aaa) var(--webpack-dark,#444)",
+			"var(--webpack-light,#aaa)var(--webpack-dark,#444)",
 			":where(:root){--webpack-light:initial",
 			"@media (prefers-color-scheme:dark){html{"
 		],
@@ -1640,6 +1849,97 @@ const LOWERING_FIXTURES = [
 		]
 	},
 	{
+		name: "a lone border none a later rule gives a style",
+		css: ".a{border:none}.a.b{border-style:solid}.c{border-left:none}.c.d{border-left-style:solid}",
+		browsers: ["chrome 130"],
+		produces: [".a{border:none}", ".c{border-left:none}"],
+		html: '<div class="a b"></div><div class="c d"></div>',
+		probes: [
+			[".a", "border-top-width"],
+			[".a", "border-top-style"],
+			[".c", "border-left-width"],
+			[".c", "border-left-style"]
+		]
+	},
+	{
+		name: "a rule beside one whose selector no engine parses",
+		// Each odd rule is one an engine drops, so joining it to the rule before
+		// would take that rule's color down with it.
+		css:
+			".a{color:green}.b:first{color:green}.c{color:green}.d:nth-child{color:green}" +
+			".e{color:green}.f::part{color:green}.g{color:green}.h:before.i{color:green}" +
+			".j{color:green}.k:hover(odd){color:green}.l{color:green}.m:playing{color:green}",
+		browsers: ["chrome 130", "firefox 130", "safari 18"],
+		produces: [
+			".a{color:green}.b:first{",
+			".c{color:green}.d:nth-child{",
+			".e{color:green}.f::part{",
+			".g{color:green}.h:before.i{",
+			".j{color:green}.k:hover(odd){",
+			".l{color:green}.m:playing{"
+		],
+		html: '<i class="a"></i><i class="c"></i><i class="e"></i><i class="g"></i><i class="j"></i><i class="l"></i>',
+		probes: [
+			[".a", "color"],
+			[".c", "color"],
+			[".e", "color"],
+			[".g", "color"],
+			[".j", "color"],
+			[".l", "color"]
+		]
+	},
+	{
+		name: "a layer block written where its layer is first named",
+		css:
+			"@layer a;@layer b;@layer c{.x{color:red;margin-left:3px!important}}" +
+			".x{padding-left:1px}@layer b{.x{color:blue;padding-left:2px;margin-left:2px!important}}" +
+			"@layer a{.x{color:green;padding-left:3px;margin-left:1px!important;border-left:1px solid}}",
+		browsers: ["chrome 130"],
+		produces: [
+			"@layer a{.x{color:green;",
+			"}}@layer b{.x{color:blue;",
+			"}}@layer c{.x{color:red;"
+		],
+		html: '<div class="x">x</div>',
+		probes: [
+			[".x", "color"],
+			[".x", "padding-left"],
+			[".x", "margin-left"],
+			[".x", "border-left-width"]
+		]
+	},
+	{
+		name: "a line height folded into the font before it",
+		css:
+			".a{font:italic 700 12px/1 serif;color:red;line-height:2}" +
+			".b{font:small serif;line-height:normal}.c{font-size:20px;font:menu;line-height:3}" +
+			".d{font:oblique 10deg 12px/1 serif;line-height:2}.e{font:0 serif!important;line-height:2!important}" +
+			".f{font:1.2em KaTeX_Main,Times New Roman,serif;line-height:1.2}",
+		browsers: ["chrome 130"],
+		produces: [
+			".a{color:red;font:italic 700 12px/2 serif}",
+			".b{font:small serif}",
+			".d{font:oblique 10deg 12px/2 serif}",
+			".e{font:0/2 serif!important}",
+			".f{font:1.2em/1.2 KaTeX_Main,Times New Roman,serif}"
+		],
+		html: '<p class="a">x</p><p class="b">x</p><p class="c">x</p><p class="d">x</p><p class="e">x</p><p class="f">x</p>',
+		probes: [
+			[".a", "line-height"],
+			[".a", "font-size"],
+			[".a", "font-weight"],
+			[".b", "line-height"],
+			[".c", "line-height"],
+			[".d", "line-height"],
+			[".d", "font-style"],
+			[".d", "font-size"],
+			[".e", "line-height"],
+			[".e", "font-size"],
+			[".f", "line-height"],
+			[".f", "font-family"]
+		]
+	},
+	{
 		name: "a slot holding the value an unwritten one takes",
 		css:
 			"#b{background:0% 0% / auto repeat scroll padding-box border-box red;" +
@@ -1688,7 +1988,7 @@ const LOWERING_FIXTURES = [
 			"border-top-width:calc(hypot(3px,4px));top:calc(1cm + 1px);" +
 			"left:calc(log(8,2)*10px);right:calc(pow(2,10)*.01px)}",
 		browsers: ["chrome 130"],
-		produces: ["width:141.421px", "height:70.7107px", "margin-left:.3px"],
+		produces: ["width:141.42135624px", "height:70.71067812px", "margin-left:.3px"],
 		html: '<button id=b style="position:absolute">x</button>',
 		probes: [
 			["#b", "width"],
@@ -1816,23 +2116,20 @@ const LOWERING_FIXTURES = [
 ];
 
 describe("a lowering computes as the spelling it replaces", () => {
-	/** @type {import("puppeteer-core").Browser} */
+	/** @type {import("playwright-core").Browser} */
 	let browser;
 
 	beforeAll(async () => {
-		browser = await launchBrowser({
-			browser: ENGINE,
-			protocolTimeout: FILE_TIMEOUT
-		});
+		browser = await launchBrowser({ browser: ENGINE });
 	}, 300000);
 
 	afterAll(async () => {
 		if (browser) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	/**
 	 * Every probe's computed value under one stylesheet.
-	 * @param {import("puppeteer-core").Page} page the page to read from
+	 * @param {import("playwright-core").Page} page the page to read from
 	 * @param {string} css the stylesheet
 	 * @param {string} html the document
 	 * @param {[string, string][]} probes selector and property
@@ -1870,7 +2167,7 @@ describe("a lowering computes as the spelling it replaces", () => {
 	 * stylesheet — the whole of what the CSSOM reports rather than the handful of
 	 * properties the fixture names, so a rewrite reaching a property nobody
 	 * thought to probe is one this still sees.
-	 * @param {import("puppeteer-core").Page} page the page to read from
+	 * @param {import("playwright-core").Page} page the page to read from
 	 * @param {string} css the stylesheet
 	 * @param {string} html the document
 	 * @param {string[]} selectors the elements to read
@@ -1931,9 +2228,9 @@ describe("a lowering computes as the spelling it replaces", () => {
 					// An engine with no media emulation takes the scheme from its own
 					// launch settings, so a run there is held to the default one.
 					if (EMULATES_MEDIA) {
-						await page.emulateMediaFeatures([
-							{ name: "prefers-color-scheme", value: scheme }
-						]);
+						await page.emulateMedia({
+							colorScheme: /** @type {"light" | "dark"} */ (scheme)
+						});
 					} else if (scheme !== "light") {
 						continue;
 					}
@@ -2035,19 +2332,16 @@ const RELATIVE_CHANNELS = {
 const COLOR_SAMPLES = 20000;
 
 describe("a color rewrite paints as the color it replaced", () => {
-	/** @type {import("puppeteer-core").Browser} */
+	/** @type {import("playwright-core").Browser} */
 	let browser;
 
 	beforeAll(async () => {
-		browser = await launchBrowser({
-			browser: ENGINE,
-			protocolTimeout: FILE_TIMEOUT
-		});
+		browser = await launchBrowser({ browser: ENGINE });
 	}, FILE_TIMEOUT);
 
 	afterAll(async () => {
 		if (browser !== undefined) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	/**
 	 * One color, in a spelling drawn from the seeded sequence.
@@ -2283,6 +2577,8 @@ describe("a color rewrite paints as the color it replaced", () => {
 				"a{color:red}}}",
 				"a{content:'\\'",
 				"@namespace url(http://www.w3.org/2000/svg);",
+				"@\\6e \\61 \\6d \\65 \\73 \\70 \\61 \\63 \\65  url(http://www.w3.org/2000/svg);",
+				// One space ends the last escape, so `url` runs on into the name.
 				"@\\6e \\61 \\6d \\65 \\73 \\70 \\61 \\63 \\65 url(http://www.w3.org/2000/svg);"
 			];
 			// A custom property's value is kept open as the input left it, and a
@@ -2291,7 +2587,7 @@ describe("a color rewrite paints as the color it replaced", () => {
 				".a{--x:f(",
 				".a{--x:{",
 				"@namespace url(http://www.w3.org/2000/svg);",
-				"@\\6e \\61 \\6d \\65 \\73 \\70 \\61 \\63 \\65 url(http://www.w3.org/2000/svg);"
+				"@\\6e \\61 \\6d \\65 \\73 \\70 \\61 \\63 \\65  url(http://www.w3.org/2000/svg);"
 			]);
 			const seconds = [
 				"b{color:#00f}",
@@ -2395,6 +2691,9 @@ const MERGE_DECLARATIONS = [
 // Stylesheets the merge changes, drawn until there are this many; about half of
 // those drawn are, and the page compares a hundred in a few seconds.
 const MERGE_SAMPLES = 1500;
+// The whole sample is one test, about a minute in Chromium and sometimes over
+// three under coverage in Firefox, so it gets more than one file's timeout.
+const MERGE_TIMEOUT = 600000;
 
 /**
  * A stylesheet drawn from the seeded sequence: rules repeating a few blocks
@@ -2488,25 +2787,21 @@ const mergePair = (name, source) => {
 };
 
 describe("a distant merge keeps every element's cascade", () => {
-	/** @type {import("puppeteer-core").Browser} */
+	/** @type {import("playwright-core").Browser} */
 	let browser;
-	/** @type {import("puppeteer-core").Page} */
+	/** @type {import("playwright-core").Page} */
 	let page;
 
 	beforeAll(async () => {
-		browser = await launchBrowser({
-			browser: ENGINE,
-			protocolTimeout: FILE_TIMEOUT
-		});
+		browser = await launchBrowser({ browser: ENGINE });
 		page = await browser.newPage();
 		await page.setContent(POLICED_PAGE);
 		await page.evaluate(installHelpers, [...GENERIC_FONT_FAMILIES]);
 	}, FILE_TIMEOUT);
 
 	afterAll(async () => {
-		if (page !== undefined) await page.close();
 		if (browser !== undefined) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	/**
 	 * @param {StylePair[]} pairs the pairs
@@ -2532,7 +2827,7 @@ describe("a distant merge keeps every element's cascade", () => {
 			}
 			expect(await differing(pairs, MERGE_TYPES)).toEqual([]);
 		},
-		FILE_TIMEOUT
+		MERGE_TIMEOUT
 	);
 
 });
@@ -2540,10 +2835,41 @@ describe("a distant merge keeps every element's cascade", () => {
 // A narrow viewport and a wide one, since media queries switch between them.
 const RENDER_WIDTHS = [360, 1400];
 
+// WHY: Chrome 155 lays out no box for an iframe the adoption agency moved —
+// measured: `<b><p><iframe></iframe></b>` gives it 0x0, where Chromium 141
+// gives 304x154 — so a page doing so renders apart from its printed tree, and
+// is skipped only in an engine `dropsAdoptedIframeBox` finds doing it.
+const ADOPTED_IFRAME_PAGES = new Set([
+	"test/external/wpt/html/syntax/parsing/crashtests/adoption-agency-cycle-mutation.html"
+]);
+
+/**
+ * Whether the engine lays out no box for an iframe the adoption agency moved.
+ * @param {import("playwright-core").Page} page a page to probe in
+ * @returns {Promise<boolean>} true when the moved iframe has no width
+ */
+const dropsAdoptedIframeBox = (page) =>
+	page.evaluate(async () => {
+		const frame = document.createElement("iframe");
+		frame.setAttribute("sandbox", "allow-same-origin");
+		const loaded = new Promise((resolve) => {
+			frame.addEventListener("load", resolve, { once: true });
+		});
+		frame.srcdoc = "<!doctype html><b><p><iframe></iframe></b>";
+		document.body.append(frame);
+		await loaded;
+		const moved = /** @type {HTMLIFrameElement} */ (
+			/** @type {Document} */ (frame.contentDocument).querySelector("iframe")
+		);
+		const { width } = moved.getBoundingClientRect();
+		frame.remove();
+		return width === 0;
+	});
+
 // Engine behaviors a workaround in this suite exists for, each probed in the
 // engines it was measured in: once one is fixed its test fails, naming the
 // workaround to take back out.
-/** @type {{ engines: string[], quirk: string, workaround: string, holds: (page: import("puppeteer-core").Page) => Promise<boolean> }[]} */
+/** @type {{ engines: string[], quirk: string, workaround: string, holds: (page: import("playwright-core").Page) => Promise<boolean> }[]} */
 const ENGINE_QUIRKS = [
 	{
 		engines: ["chrome"],
@@ -2596,42 +2922,24 @@ const ENGINE_QUIRKS = [
 				// What Chromium 141 reads, at six significant digits.
 				return read !== "38.7953px";
 			})
-	},
-	{
-		engines: ["firefox"],
-		quirk: "keeps a family name's quotes in its computed value",
-		workaround: "`unquoteFamilies` in the page helpers",
-		holds: (page) =>
-			page.evaluate(() => {
-				const element = document.createElement("div");
-				element.style.fontFamily = '"Manrope"';
-				document.body.append(element);
-				const read = getComputedStyle(element).fontFamily;
-				element.remove();
-				return read.startsWith('"');
-			})
 	}
 ];
 
 describe(`engine quirks a workaround depends on in real ${ENGINE}`, () => {
-	/** @type {import("puppeteer-core").Browser} */
+	/** @type {import("playwright-core").Browser} */
 	let browser;
-	/** @type {import("puppeteer-core").Page} */
+	/** @type {import("playwright-core").Page} */
 	let page;
 
 	beforeAll(async () => {
-		browser = await launchBrowser({
-			browser: ENGINE,
-			protocolTimeout: FILE_TIMEOUT
-		});
+		browser = await launchBrowser({ browser: ENGINE });
 		page = await browser.newPage();
 		await page.setContent(POLICED_PAGE);
 	}, FILE_TIMEOUT);
 
 	afterAll(async () => {
-		if (page !== undefined) await page.close();
 		if (browser !== undefined) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	const quirks = ENGINE_QUIRKS.filter(({ engines }) => engines.includes(ENGINE));
 	if (quirks.length === 0) {
@@ -2648,13 +2956,72 @@ describe(`engine quirks a workaround depends on in real ${ENGINE}`, () => {
 	}
 });
 
-describe("a minified page renders as the page it came from", () => {
-	/** @type {import("puppeteer-core").Browser} */
+describe(`declaration order in real ${ENGINE}`, () => {
+	/** @type {import("playwright-core").Browser} */
 	let browser;
-	/** @type {import("puppeteer-core").Page} */
+	/** @type {import("playwright-core").Page} */
+	let page;
+
+	beforeAll(async () => {
+		browser = await launchBrowser({ browser: ENGINE });
+		page = await browser.newPage();
+		await page.setContent(POLICED_PAGE);
+	}, FILE_TIMEOUT);
+
+	afterAll(async () => {
+		if (browser !== undefined) await browser.close();
+	}, FILE_TIMEOUT);
+
+	// The engine, not the data, says which longhands each property sets, so a
+	// spec relating two properties before `mdn-data` does fails here first.
+	it("moves no declaration past one setting a longhand it sets", async () => {
+		const ranks = getDeclarationRanks();
+		/** @type {Record<string, string[]>} */
+		const sets = await page.evaluate((names) => {
+			/** @type {Record<string, string[]>} */
+			const out = {};
+			const element = document.createElement("div");
+			for (const name of names) {
+				element.style.cssText = "";
+				element.style.setProperty(name, "inherit");
+				if (element.style.length !== 0) out[name] = [...element.style];
+			}
+			return out;
+		}, [...ranks.keys()]);
+		const names = Object.keys(sets);
+		/** @type {string[]} */
+		const moved = [];
+		for (let i = 0; i < names.length; i++) {
+			for (let j = i + 1; j < names.length; j++) {
+				const [first, second] =
+					/** @type {number} */ (ranks.get(names[i])) >
+					/** @type {number} */ (ranks.get(names[j]))
+						? [names[i], names[j]]
+						: [names[j], names[i]];
+				if (ranks.get(first) === ranks.get(second)) continue;
+				if (!sets[first].some((longhand) => sets[second].includes(longhand))) {
+					continue;
+				}
+				const { code } = new CssSourceProcessor().process(
+					`a{${first}:var(--a);${second}:var(--b)}`,
+					{ mode: "minify" }
+				);
+				const at = code.indexOf(`{${second}:`);
+				if (at !== -1 && at < code.indexOf(`;${first}:`)) moved.push(code);
+			}
+		}
+		expect(moved).toEqual([]);
+	});
+});
+
+describe("a minified page renders as the page it came from", () => {
+	/** @type {import("playwright-core").Browser} */
+	let browser;
+	/** @type {import("playwright-core").Page} */
 	let page;
 	/** @type {Error | undefined} */
 	let unrecovered;
+	let skipAdoptedIframes = false;
 
 	// WHY: a WebKit run never returned from one wpt/css batch, and every later
 	// test then waited behind it on the same page. Past a deadline the batch is
@@ -2662,7 +3029,7 @@ describe("a minified page renders as the page it came from", () => {
 	const BATCH_DEADLINE = 40000;
 	const PAIR_DEADLINE = 20000;
 
-	/** @returns {Promise<import("puppeteer-core").Page>} a page ready to render in */
+	/** @returns {Promise<import("playwright-core").Page>} a page ready to render in */
 	const openPage = async () => {
 		const opened = await browser.newPage();
 		await opened.setContent(POLICED_PAGE);
@@ -2671,17 +3038,16 @@ describe("a minified page renders as the page it came from", () => {
 	};
 
 	beforeAll(async () => {
-		browser = await launchBrowser({
-			browser: ENGINE,
-			protocolTimeout: FILE_TIMEOUT
-		});
+		browser = await launchBrowser({ browser: ENGINE });
 		page = await openPage();
+		skipAdoptedIframes = await dropsAdoptedIframeBox(page);
 	}, FILE_TIMEOUT);
 
+	// WHY: closing WebKit outlasted Jest's 30s hook default once every test had
+	// passed; closing the browser closes its pages, so none is closed first
 	afterAll(async () => {
-		if (page !== undefined) await page.close();
 		if (browser !== undefined) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	/**
 	 * @template T
@@ -2770,6 +3136,9 @@ describe("a minified page renders as the page it came from", () => {
 	 */
 	const renderPairs = (fixtures, options) =>
 		fixtures.flatMap((fixture) => {
+			if (skipAdoptedIframes && ADOPTED_IFRAME_PAGES.has(fixture.name)) {
+				return [];
+			}
 			const after = minifyHtml(fixture.raw, options);
 			return after === fixture.raw
 				? []

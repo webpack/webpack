@@ -1,0 +1,14 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 120"
+			]
+		},
+		"transforms": {
+			"foldCase": true,
+			"removeDeadRules": false
+		}
+	}
+]

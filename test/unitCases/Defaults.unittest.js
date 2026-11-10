@@ -145,7 +145,7 @@ describe("snapshots", () => {
 		    },
 		  },
 		  "experiments": Object {
-		    "asyncWebAssembly": true,
+		    "asyncWebAssembly": "auto",
 		    "backCompat": true,
 		    "buildHttp": undefined,
 		    "cacheUnaffected": false,
@@ -312,6 +312,32 @@ describe("snapshots", () => {
 		        "type": "css/auto",
 		      },
 		      Object {
+		        "parser": Object {
+		          "exportType": "css-style-sheet",
+		        },
+		        "resolve": Object {
+		          "fullySpecified": true,
+		          "preferRelative": true,
+		        },
+		        "type": "css/auto",
+		        "with": Object {
+		          "type": "css",
+		        },
+		      },
+		      Object {
+		        "assert": Object {
+		          "type": "css",
+		        },
+		        "parser": Object {
+		          "exportType": "css-style-sheet",
+		        },
+		        "resolve": Object {
+		          "fullySpecified": true,
+		          "preferRelative": true,
+		        },
+		        "type": "css/auto",
+		      },
+		      Object {
 		        "mimetype": "text/css+module",
 		        "resolve": Object {
 		          "fullySpecified": true,
@@ -344,30 +370,6 @@ describe("snapshots", () => {
 		          "preferRelative": true,
 		        },
 		        "type": "css/global",
-		      },
-		      Object {
-		        "parser": Object {
-		          "exportType": "css-style-sheet",
-		        },
-		        "resolve": Object {
-		          "fullySpecified": true,
-		          "preferRelative": true,
-		        },
-		        "with": Object {
-		          "type": "css",
-		        },
-		      },
-		      Object {
-		        "assert": Object {
-		          "type": "css",
-		        },
-		        "parser": Object {
-		          "exportType": "css-style-sheet",
-		        },
-		        "resolve": Object {
-		          "fullySpecified": true,
-		          "preferRelative": true,
-		        },
 		      },
 		      Object {
 		        "resolve": Object {
@@ -404,6 +406,7 @@ describe("snapshots", () => {
 		          "fullySpecified": true,
 		          "preferRelative": true,
 		        },
+		        "type": "css",
 		      },
 		      Object {
 		        "dependency": "html-style-attribute",
@@ -1515,7 +1518,7 @@ describe("snapshots", () => {
 		+ Received
 
 		@@ ... @@
-		-     "asyncWebAssembly": true,
+		-     "asyncWebAssembly": "auto",
 		+     "asyncWebAssembly": false,
 		@@ ... @@
 		-     "syncWebAssembly": false,
@@ -1601,7 +1604,14 @@ describe("snapshots", () => {
 	);
 
 	test("async wasm", { experiments: { asyncWebAssembly: true } }, (e) =>
-		e.toMatchInlineSnapshot("Compared values have no visual difference.")
+		e.toMatchInlineSnapshot(`
+		- Expected
+		+ Received
+
+		@@ ... @@
+		-     "asyncWebAssembly": "auto",
+		+     "asyncWebAssembly": true,
+	`)
 	);
 
 	test(
@@ -1612,6 +1622,9 @@ describe("snapshots", () => {
 			- Expected
 			+ Received
 
+			@@ ... @@
+			-     "asyncWebAssembly": "auto",
+			+     "asyncWebAssembly": true,
 			@@ ... @@
 			-     "syncWebAssembly": false,
 			+     "syncWebAssembly": true,
@@ -1965,7 +1978,9 @@ describe("snapshots", () => {
 			+     "type": "memory",
 			+   },
 			@@ ... @@
+			-     "asyncWebAssembly": "auto",
 			-     "backCompat": true,
+			+     "asyncWebAssembly": true,
 			+     "backCompat": false,
 			@@ ... @@
 			-     "cacheUnaffected": false,
@@ -1990,7 +2005,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)raw(&|$)/,
 			+             "type": "asset/source",
-			+           },
+			@@ ... @@
 			+           Object {
 			+             "resourceQuery": /(\\?|&)url(&|$)/,
 			+             "type": "asset/resource",
@@ -1998,7 +2013,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
-			@@ ... @@
+			+           },
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
@@ -2068,11 +2083,10 @@ describe("snapshots", () => {
 			-     "devtoolNamespace": "webpack",
 			+     "devtoolNamespace": "myLib",
 			@@ ... @@
-			+     ],
+			-     "enabledLibraryTypes": Array [],
 			+     "enabledLibraryTypes": Array [
 			+       "var",
-			@@ ... @@
-			-     "enabledLibraryTypes": Array [],
+			+     ],
 			@@ ... @@
 			-     "hashDigestLength": 20,
 			-     "hashFunction": "md4",
@@ -4430,7 +4444,10 @@ describe("snapshots", () => {
 		+     "allowCollectingMemory": false,
 		+     "buildDependencies": Object {
 		+       "defaultWebpack": Array [
-		+         "<cwd>/lib/",
+		+         Object {
+		+           "dependency": "<cwd>/lib/",
+		+           "optional": false,
+		+         },
 		+       ],
 		+     },
 		+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
@@ -4476,7 +4493,10 @@ describe("snapshots", () => {
 			+     "allowCollectingMemory": true,
 			+     "buildDependencies": Object {
 			+       "defaultWebpack": Array [
-			+         "<cwd>/lib/",
+			+         Object {
+			+           "dependency": "<cwd>/lib/",
+			+           "optional": false,
+			+         },
 			+       ],
 			+     },
 			+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
@@ -4578,7 +4598,10 @@ describe("snapshots", () => {
 			+     "allowCollectingMemory": false,
 			+     "buildDependencies": Object {
 			+       "defaultWebpack": Array [
-			+         "<cwd>/lib/",
+			+         Object {
+			+           "dependency": "<cwd>/lib/",
+			+           "optional": false,
+			+         },
 			+       ],
 			+     },
 			+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
@@ -4599,7 +4622,9 @@ describe("snapshots", () => {
 			+     "version": "",
 			+   },
 			@@ ... @@
+			-     "asyncWebAssembly": "auto",
 			-     "backCompat": true,
+			+     "asyncWebAssembly": true,
 			+     "backCompat": false,
 			@@ ... @@
 			-     "cacheUnaffected": false,
@@ -4626,6 +4651,7 @@ describe("snapshots", () => {
 			-       "module": undefined,
 			+       "module": true,
 			@@ ... @@
+			+       },
 			+       Object {
 			+         "oneOf": Array [
 			+           Object {
@@ -4639,14 +4665,13 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
-			+           },
+			@@ ... @@
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
 			+           },
-			@@ ... @@
+			+         ],
 			+       },
-			+     ],
 			@@ ... @@
 			-         "localIdentHashFunction": "md4",
 			+         "localIdentHashFunction": "xxhash64",
@@ -5048,7 +5073,10 @@ describe("snapshots", () => {
 			+     "allowCollectingMemory": false,
 			+     "buildDependencies": Object {
 			+       "defaultWebpack": Array [
-			+         "<cwd>/lib/",
+			+         Object {
+			+           "dependency": "<cwd>/lib/",
+			+           "optional": false,
+			+         },
 			+       ],
 			+     },
 			+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
@@ -5133,7 +5161,9 @@ describe("snapshots", () => {
 			+ Received
 
 			@@ ... @@
+			-     "asyncWebAssembly": "auto",
 			-     "backCompat": true,
+			+     "asyncWebAssembly": true,
 			+     "backCompat": false,
 			@@ ... @@
 			-     "cacheUnaffected": false,
@@ -5166,7 +5196,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)raw(&|$)/,
 			+             "type": "asset/source",
-			+           },
+			@@ ... @@
 			+           Object {
 			+             "resourceQuery": /(\\?|&)url(&|$)/,
 			+             "type": "asset/resource",
@@ -5174,7 +5204,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
-			@@ ... @@
+			+           },
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
@@ -5300,7 +5330,9 @@ describe("snapshots", () => {
 			+ Received
 
 			@@ ... @@
+			-     "asyncWebAssembly": "auto",
 			-     "backCompat": true,
+			+     "asyncWebAssembly": true,
 			+     "backCompat": false,
 			@@ ... @@
 			-     "cacheUnaffected": false,
@@ -5337,6 +5369,32 @@ describe("snapshots", () => {
 			-         "type": "css/auto",
 			-       },
 			-       Object {
+			-         "parser": Object {
+			-           "exportType": "css-style-sheet",
+			-         },
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
+			-         },
+			-         "type": "css/auto",
+			-         "with": Object {
+			-           "type": "css",
+			-         },
+			-       },
+			-       Object {
+			-         "assert": Object {
+			-           "type": "css",
+			-         },
+			-         "parser": Object {
+			-           "exportType": "css-style-sheet",
+			-         },
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
+			-         },
+			-         "type": "css/auto",
+			-       },
+			-       Object {
 			-         "mimetype": "text/css+module",
 			-         "resolve": Object {
 			-           "fullySpecified": true,
@@ -5358,38 +5416,14 @@ describe("snapshots", () => {
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
-			-         },
+			@@ ... @@
 			-         "type": "css/module",
+			-       },
 			@@ ... @@
 			-         "dependency": /css-import-global-module/,
 			-         "exclude": /\\.module\\.\\w+$/i,
 			@@ ... @@
-			-         },
 			-         "type": "css/global",
-			-       },
-			-       Object {
-			-         "parser": Object {
-			-           "exportType": "css-style-sheet",
-			-         },
-			-         "resolve": Object {
-			-           "fullySpecified": true,
-			-           "preferRelative": true,
-			-         },
-			-         "with": Object {
-			-           "type": "css",
-			-         },
-			-       },
-			-       Object {
-			-         "assert": Object {
-			-           "type": "css",
-			-         },
-			-         "parser": Object {
-			-           "exportType": "css-style-sheet",
-			@@ ... @@
-			-         "resolve": Object {
-			-           "fullySpecified": true,
-			-           "preferRelative": true,
-			-         },
 			-       },
 			-       Object {
 			-         "resolve": Object {
@@ -5412,6 +5446,7 @@ describe("snapshots", () => {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
 			-         },
+			-         "type": "css",
 			-       },
 			-       Object {
 			-         "dependency": "html-style-attribute",
@@ -5429,10 +5464,6 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)raw(&|$)/,
 			+             "type": "asset/source",
-			+           },
-			+           Object {
-			+             "resourceQuery": /(\\?|&)url(&|$)/,
-			+             "type": "asset/resource",
 			@@ ... @@
 			-       "css/auto": Object {
 			-         "exportsConvention": "as-is",
@@ -5441,6 +5472,10 @@ describe("snapshots", () => {
 			-         "localIdentHashFunction": "md4",
 			-         "localIdentHashSalt": undefined,
 			-         "localIdentName": "[fullhash]",
+			+           Object {
+			+             "resourceQuery": /(\\?|&)url(&|$)/,
+			+             "type": "asset/resource",
+			+           },
 			+           Object {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
@@ -5467,6 +5502,8 @@ describe("snapshots", () => {
 			@@ ... @@
 			+     ],
 			+     "generator": Object {
+			@@ ... @@
+			-         },
 			@@ ... @@
 			-       "css": Object {
 			-         "customMedia": true,
@@ -5504,7 +5541,6 @@ describe("snapshots", () => {
 			-         "dashedIdents": true,
 			-         "function": true,
 			-         "grid": true,
-			-       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -5596,11 +5632,10 @@ describe("snapshots", () => {
 			-         ],
 			-         "mainFields": Array [
 			-           "style",
-			-           "...",
-			-         ],
+			@@ ... @@
 			-         "mainFiles": Array [],
 			-         "preferRelative": true,
-			-       },
+			@@ ... @@
 			-       "css-import-global-module": Object {
 			-         "conditionNames": Array [
 			-           "webpack",
@@ -5612,10 +5647,11 @@ describe("snapshots", () => {
 			-         ],
 			-         "mainFields": Array [
 			-           "style",
-			@@ ... @@
+			-           "...",
+			-         ],
 			-         "mainFiles": Array [],
 			-         "preferRelative": true,
-			@@ ... @@
+			-       },
 			-       "css-import-local-module": Object {
 			-         "conditionNames": Array [
 			-           "webpack",
@@ -5890,19 +5926,19 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 	};
 
 	it("enables the built-in css/html/wasm support by default (no loaders)", () => {
-		// css/html keep the `"auto"` marker (truthy): loaders on a module then
+		// css/html/wasm keep the `"auto"` marker (truthy): loaders on a module then
 		// take precedence over the implicitly enabled built-in type.
 		expect(resolve({})).toEqual({
 			css: "auto",
 			html: "auto",
-			asyncWebAssembly: true
+			asyncWebAssembly: "auto"
 		});
 	});
 
 	it("keeps css off when a loader is registered for .css files", () => {
 		expect(
 			resolve({ module: { rules: [{ test: /\.css$/i, use: ["css-loader"] }] } })
-		).toEqual({ css: false, html: "auto", asyncWebAssembly: true });
+		).toEqual({ css: false, html: "auto", asyncWebAssembly: "auto" });
 	});
 
 	it("keeps css off when a loader also covers .module.css", () => {
@@ -5910,7 +5946,7 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 			resolve({
 				module: { rules: [{ test: /\.module\.css$/i, use: ["css-loader"] }] }
 			})
-		).toEqual({ css: false, html: "auto", asyncWebAssembly: true });
+		).toEqual({ css: false, html: "auto", asyncWebAssembly: "auto" });
 	});
 
 	it("keeps html off when a loader is registered for .html files", () => {
@@ -5918,7 +5954,7 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 			resolve({
 				module: { rules: [{ test: /\.html$/i, loader: "html-loader" }] }
 			})
-		).toEqual({ css: "auto", html: false, asyncWebAssembly: true });
+		).toEqual({ css: "auto", html: false, asyncWebAssembly: "auto" });
 	});
 
 	it("keeps async wasm off when a loader is registered for .wasm files", () => {
@@ -5952,7 +5988,7 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 					]
 				}
 			})
-		).toEqual({ css: false, html: "auto", asyncWebAssembly: true });
+		).toEqual({ css: false, html: "auto", asyncWebAssembly: "auto" });
 	});
 
 	it("keeps css off for a loader scoped to specific .css filenames", () => {
@@ -5967,7 +6003,7 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 					]
 				}
 			})
-		).toEqual({ css: false, html: "auto", asyncWebAssembly: true });
+		).toEqual({ css: false, html: "auto", asyncWebAssembly: "auto" });
 	});
 
 	it("keeps css off for a combined sass/less rule that also covers .css", () => {
@@ -5984,7 +6020,7 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 					]
 				}
 			})
-		).toEqual({ css: false, html: "auto", asyncWebAssembly: true });
+		).toEqual({ css: false, html: "auto", asyncWebAssembly: "auto" });
 	});
 
 	it("leaves css on when sass/less loaders only handle .scss/.less", () => {
@@ -5999,7 +6035,7 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 					]
 				}
 			})
-		).toEqual({ css: "auto", html: "auto", asyncWebAssembly: true });
+		).toEqual({ css: "auto", html: "auto", asyncWebAssembly: "auto" });
 	});
 
 	it("reads the extension out of a path-scoped alternation or class", () => {
@@ -6016,7 +6052,7 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 					]
 				}
 			})
-		).toEqual({ css: false, html: "auto", asyncWebAssembly: true });
+		).toEqual({ css: false, html: "auto", asyncWebAssembly: "auto" });
 		expect(
 			resolve({
 				module: {
@@ -6025,7 +6061,7 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 					]
 				}
 			})
-		).toEqual({ css: false, html: "auto", asyncWebAssembly: true });
+		).toEqual({ css: false, html: "auto", asyncWebAssembly: "auto" });
 		expect(
 			resolve({
 				module: {
@@ -6034,7 +6070,7 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 					]
 				}
 			})
-		).toEqual({ css: "auto", html: false, asyncWebAssembly: true });
+		).toEqual({ css: "auto", html: false, asyncWebAssembly: "auto" });
 	});
 
 	it("stays lenient about include/exclude narrowing", () => {
@@ -6046,7 +6082,7 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 					rules: [{ test: /\.css$/i, include: /src/, use: ["css-loader"] }]
 				}
 			})
-		).toEqual({ css: false, html: "auto", asyncWebAssembly: true });
+		).toEqual({ css: false, html: "auto", asyncWebAssembly: "auto" });
 	});
 
 	it("keeps css on when only an enforce:pre loader targets .css", () => {
@@ -6060,7 +6096,7 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 					]
 				}
 			})
-		).toEqual({ css: "auto", html: "auto", asyncWebAssembly: true });
+		).toEqual({ css: "auto", html: "auto", asyncWebAssembly: "auto" });
 	});
 
 	it("ignores loaders registered for unrelated extensions", () => {
@@ -6068,7 +6104,7 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 			resolve({
 				module: { rules: [{ test: /\.js$/i, use: ["babel-loader"] }] }
 			})
-		).toEqual({ css: "auto", html: "auto", asyncWebAssembly: true });
+		).toEqual({ css: "auto", html: "auto", asyncWebAssembly: "auto" });
 	});
 
 	it("applies the default dev css source map to auto-enabled css", () => {
@@ -6115,13 +6151,13 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 			resolve({
 				experiments: { css: "auto", html: "auto", asyncWebAssembly: "auto" }
 			})
-		).toEqual({ css: "auto", html: "auto", asyncWebAssembly: true });
+		).toEqual({ css: "auto", html: "auto", asyncWebAssembly: "auto" });
 		expect(
 			resolve({
 				experiments: { css: "auto" },
 				module: { rules: [{ test: /\.css$/i, use: ["css-loader"] }] }
 			})
-		).toEqual({ css: false, html: "auto", asyncWebAssembly: true });
+		).toEqual({ css: false, html: "auto", asyncWebAssembly: "auto" });
 	});
 
 	it("keeps futureDefaults forcing the experiments on even with a loader", () => {
@@ -6375,19 +6411,13 @@ describe("optimization.minimize", () => {
 			} finally {
 				MinimizerPlugin.prototype.apply = apply;
 			}
-			return Array.isArray(implementation)
-				? implementation[0]
-				: implementation;
+			return Array.isArray(implementation) ? implementation[0] : implementation;
 		};
 
 		// terser as the plugin publishes it, until the printer is proven on real
-		// builds; both implementations are passed as module references so workers
-		// can load them without serializing their function source.
-		expect(wiredMinify(false)).toEqual({
-			path: require.resolve("minimizer-webpack-plugin"),
-			export: "terserMinify"
-		});
-		expect(wiredMinify(true)).toBe(require.resolve("../../lib/javascript/jsMinify"));
+		// builds; the printer writes what it writes, so neither needs an option.
+		expect(wiredMinify(false)).toBe(MinimizerPlugin.terserMinify);
+		expect(wiredMinify(true)).toBe(require("../../lib/javascript/jsMinify"));
 
 		/**
 		 * @param {boolean} futureDefaults whether `experiments.futureDefaults` is on
@@ -6680,7 +6710,10 @@ describe("cache.buildDependencies.defaultWebpack", () => {
 		const cache = /** @type {EXPECTED_ANY} */ (normalized.cache);
 
 		expect(cache.buildDependencies.defaultWebpack).toEqual([
-			path.join(__dirname, "..", "..", "lib") + path.sep
+			{
+				dependency: path.join(__dirname, "..", "..", "lib") + path.sep,
+				optional: false
+			}
 		]);
 	});
 });

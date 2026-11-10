@@ -1,0 +1,1 @@
+export function f(log,k){return [new (0, a.b)(2), new (0, a)(), new (log.push(1), a)(), new (0, a.b().c)(), new (0, a[k])(1), new (0, a?.b)(), (0, a.b)(1), new (0,this.x)]}

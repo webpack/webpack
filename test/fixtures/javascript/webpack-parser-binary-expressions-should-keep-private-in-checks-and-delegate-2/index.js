@@ -1,0 +1,1 @@
+class C { #x; m(o){ return o in #x in o; } }

@@ -1,8 +1,25 @@
 "use strict";
 
 const path = require("path");
+const LazyBarrels = require("../../../../lib/optimize/LazyBarrels");
 
 /** @import { AsyncDependenciesBlock, Compilation, Compiler, Configuration, Dependency, Module, NormalModule } from "../../../../" */
+/** @import LibDependency from "../../../../lib/graph/Dependency" */
+/** @import LibModuleGraph from "../../../../lib/graph/ModuleGraph" */
+
+/**
+ * Returns whether lazy barrel left the dependency unbuilt in the compilation.
+ * @param {Compilation} compilation the compilation
+ * @param {Dependency} dependency the dependency
+ * @returns {boolean} true while deferred
+ */
+const isLazy = (compilation, dependency) =>
+	LazyBarrels.isLazy(
+		/** @type {LibModuleGraph} */ (
+			/** @type {unknown} */ (compilation.moduleGraph)
+		),
+		/** @type {LibDependency} */ (/** @type {unknown} */ (dependency))
+	);
 
 /**
  * Collects the dependencies of a block and its nested blocks.
@@ -46,7 +63,7 @@ const getForwardIds = (dependencies) => {
 	/** @type {Set<string>} */
 	const ids = new Set();
 	for (const dependency of dependencies) {
-		const id = dependency.getForwardId();
+		const id = dependency.forwardId;
 		if (id === true) return "*";
 		if (id !== null) ids.add(id);
 	}
@@ -100,7 +117,9 @@ const printLazyBarrelGraph = (compilation) => {
 			let line = `${prefix}${last ? "└─" : "├─"}${ids ? ` (${ids})` : ""} `;
 			if (target === null) {
 				line += `${request} [raw]`;
-				if (dependencies.every((dependency) => dependency.isLazy())) {
+				if (
+					dependencies.every((dependency) => isLazy(compilation, dependency))
+				) {
 					line += " [lazy]";
 				}
 				lines.push(line);

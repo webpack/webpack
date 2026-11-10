@@ -1,0 +1,1 @@
+obj.class; obj.enum; ({ if: 1, default: 2 });

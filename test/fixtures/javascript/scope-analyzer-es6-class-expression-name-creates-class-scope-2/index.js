@@ -1,0 +1,6 @@
+
+				(class extends Base {
+					constructor() {
+					}
+				});
+			

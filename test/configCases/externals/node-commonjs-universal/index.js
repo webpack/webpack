@@ -9,8 +9,14 @@ const source = fs.readFileSync(
 	path.join(outputPath, `bundle${__STATS_I__}.mjs`),
 	"utf-8"
 );
-// only the createRequire setup, excluding module bodies (which embed this test source)
+// only the top-level setup, excluding module bodies (which embed this test source)
 const header = source.slice(0, source.indexOf("__webpack_modules__"));
+// Built dynamically so the asserted phrase never appears verbatim in this file,
+// which is itself embedded into the bundle being inspected.
+const external = (guard) =>
+	`module.exports = ${guard}process.${"getBuiltinModule"}("node:os");`;
+const processGuard = 'typeof process !== "undefined" && ';
+const getterGuard = 'typeof process.getBuiltinModule === "function" && ';
 
 it("should load node built-in modules in a universal bundle", () => {
 	expect(typeof fs.readFileSync).toBe("function");
@@ -23,20 +29,12 @@ it("should resolve a node-commonjs external at runtime in an ESM bundle", () => 
 	expect(Array.isArray(os.cpus())).toBe(true);
 });
 
-it("should not statically import the `module` built-in (would crash in browser)", () => {
+it("should not statically import or set up `createRequire` (would crash in browser)", () => {
 	expect(header).not.toMatch(/\bfrom\b/);
-	expect(header).toContain("getBuiltinModule");
+	expect(header).not.toContain("createRequire");
 });
 
-it("should resolve the builtin getter based on node support", () => {
-	if (__STATS_I__ === 0) {
-		// node version known to expose `process.getBuiltinModule()` -> call it directly
-		expect(header).toContain("process.getBuiltinModule(");
-		expect(header).not.toContain('typeof process.getBuiltinModule === "function"');
-	} else {
-		// unknown/old node -> `typeof`-guarded getter (no `require`; falsy on node <22.3)
-		expect(header).toContain('typeof process.getBuiltinModule === "function"');
-		expect(header).toContain("createRequire(import.meta.url)");
-		expect(header).not.toContain("catch");
-	}
+it("should keep both getter guards on a universal target", () => {
+	// even with the getter known, a browser `process` shim may lack it
+	expect(source).toContain(external(processGuard + getterGuard));
 });

@@ -70,5 +70,17 @@ module.exports = [
 				}
 			]
 		}
+	},
+	{
+		target: "node",
+		entry: "./remove-comment-without-devtool",
+		devtool: false,
+		module: {
+			rules: [
+				{
+					extractSourceMap: true
+				}
+			]
+		}
 	}
 ];

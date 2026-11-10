@@ -1053,6 +1053,32 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "experiments-lazy-compilation-test-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+        "multiple": true,
+        "path": "experiments.lazyCompilation.test.glob[]",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "experiments-lazy-compilation-test-glob-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'experiments.lazyCompilation.test.glob' configuration. A list of glob patterns.",
+        "multiple": false,
+        "path": "experiments.lazyCompilation.test.glob",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'experiments.lazyCompilation.test.glob' configuration. A list of glob patterns.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "experiments-source-import": Object {
     "configs": Array [
       Object {
@@ -1392,13 +1418,19 @@ Object {
   "ignore-warnings-file": Object {
     "configs": Array [
       Object {
-        "description": "A RegExp to select the origin file for the warning.",
+        "description": "A RegExp or a glob to select the origin file for the warning.",
         "multiple": true,
         "path": "ignoreWarnings[].file",
         "type": "RegExp",
       },
+      Object {
+        "description": "A glob matching the origin file for the warning at any depth.",
+        "multiple": true,
+        "path": "ignoreWarnings[].file",
+        "type": "string",
+      },
     ],
-    "description": "A RegExp to select the origin file for the warning.",
+    "description": "A RegExp or a glob to select the origin file for the warning. A glob matching the origin file for the warning at any depth.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -2292,8 +2324,14 @@ Object {
         "path": "module.noParse[]",
         "type": "path",
       },
+      Object {
+        "description": "A glob, when it matches the module's resource path at any depth the module is not parsed.",
+        "multiple": true,
+        "path": "module.noParse[]",
+        "type": "string",
+      },
     ],
-    "description": "A regular expression, when matched the module is not parsed. An absolute path, when the module starts with this path it is not parsed.",
+    "description": "A regular expression, when matched the module is not parsed. An absolute path, when the module starts with this path it is not parsed. A glob, when it matches the module's resource path at any depth the module is not parsed.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -2516,6 +2554,19 @@ Object {
       },
     ],
     "description": "Use ES modules named export for css exports.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-auto-parse-errors": Object {
+    "configs": Array [
+      Object {
+        "description": "Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.",
+        "multiple": false,
+        "path": "module.parser.css/auto.parseErrors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3071,6 +3122,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-css-global-parse-errors": Object {
+    "configs": Array [
+      Object {
+        "description": "Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.",
+        "multiple": false,
+        "path": "module.parser.css/global.parseErrors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-global-url": Object {
     "configs": Array [
       Object {
@@ -3565,6 +3629,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-css-module-parse-errors": Object {
+    "configs": Array [
+      Object {
+        "description": "Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.",
+        "multiple": false,
+        "path": "module.parser.css/module.parseErrors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-module-pure": Object {
     "configs": Array [
       Object {
@@ -3890,6 +3967,19 @@ Object {
       },
     ],
     "description": "Use ES modules named export for css exports.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-parse-errors": Object {
+    "configs": Array [
+      Object {
+        "description": "Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.",
+        "multiple": false,
+        "path": "module.parser.css.parseErrors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4230,6 +4320,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-html-parse-errors": Object {
+    "configs": Array [
+      Object {
+        "description": "Report each HTML parse error the page holds, by its WHATWG or html5lib name: a build error where end of input cuts a tag, comment or doctype short, a build warning for one the parser reads past. Off by default.",
+        "multiple": false,
+        "path": "module.parser.html.parseErrors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report each HTML parse error the page holds, by its WHATWG or html5lib name: a build error where end of input cuts a tag, comment or doctype short, a build warning for one the parser reads past. Off by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-html-sources": Object {
     "configs": Array [
       Object {
@@ -4242,13 +4345,13 @@ Object {
         ],
       },
       Object {
-        "description": "Configure extraction of URL-like attribute values (e.g. \`<img src>\`, \`<link href>\`, \`<script src>\`) as webpack dependencies. \`true\` (default) uses the built-in source list; \`false\` disables extraction entirely so attributes are left untouched and \`<script src>\` / \`<link rel=\\"modulepreload\\">\` / \`<link rel=\\"stylesheet\\">\` no longer become compilation entries; an array lets you customize which \`tag\`/\`attribute\` pairs are treated as URLs and how they are bundled. Use the string \`\\"...\\"\` inside the array to inline the defaults. Inline \`<script>\` and \`<style>\` bodies are always processed. Use \`webpackIgnore\` comments or \`IgnorePlugin\` to skip individual URLs.",
+        "description": "Configure extraction of URL-like attribute values (e.g. \`<img src>\`, \`<link href>\`, \`<script src>\`) as webpack dependencies. \`true\` (default) uses the built-in source list; \`false\` disables extraction entirely so attributes are left untouched and \`<script src>\` / \`<link rel=\\"modulepreload\\">\` / \`<link rel=\\"stylesheet\\">\` no longer become compilation entries; an array lets you customize which \`tag\`/\`attribute\` pairs are treated as URLs and how they are bundled. Use the string \`\\"...\\"\` inside the array to inline the defaults. Inline \`<script>\` and \`<style>\` bodies are always processed; one whose \`lang\` names another language is a \`data:\` module typed as that language's files (\`<style lang=\\"scss\\">\` as \`text/x-scss\`, \`<script lang=\\"ts\\">\` as \`text/typescript\`), and any other valid media-type name as \`text/x-<lang>\`, so a \`mimetype\` rule runs its loader. Use \`webpackIgnore\` comments or \`IgnorePlugin\` to skip individual URLs.",
         "multiple": false,
         "path": "module.parser.html.sources",
         "type": "boolean",
       },
     ],
-    "description": "A source entry: either the string \`\\"...\\"\` to inline the built-in default sources, or an object describing a \`tag\`/\`attribute\` pair to extract and how to bundle it. Configure extraction of URL-like attribute values (e.g. \`<img src>\`, \`<link href>\`, \`<script src>\`) as webpack dependencies. \`true\` (default) uses the built-in source list; \`false\` disables extraction entirely so attributes are left untouched and \`<script src>\` / \`<link rel=\\"modulepreload\\">\` / \`<link rel=\\"stylesheet\\">\` no longer become compilation entries; an array lets you customize which \`tag\`/\`attribute\` pairs are treated as URLs and how they are bundled. Use the string \`\\"...\\"\` inside the array to inline the defaults. Inline \`<script>\` and \`<style>\` bodies are always processed. Use \`webpackIgnore\` comments or \`IgnorePlugin\` to skip individual URLs.",
+    "description": "A source entry: either the string \`\\"...\\"\` to inline the built-in default sources, or an object describing a \`tag\`/\`attribute\` pair to extract and how to bundle it. Configure extraction of URL-like attribute values (e.g. \`<img src>\`, \`<link href>\`, \`<script src>\`) as webpack dependencies. \`true\` (default) uses the built-in source list; \`false\` disables extraction entirely so attributes are left untouched and \`<script src>\` / \`<link rel=\\"modulepreload\\">\` / \`<link rel=\\"stylesheet\\">\` no longer become compilation entries; an array lets you customize which \`tag\`/\`attribute\` pairs are treated as URLs and how they are bundled. Use the string \`\\"...\\"\` inside the array to inline the defaults. Inline \`<script>\` and \`<style>\` bodies are always processed; one whose \`lang\` names another language is a \`data:\` module typed as that language's files (\`<style lang=\\"scss\\">\` as \`text/x-scss\`, \`<script lang=\\"ts\\">\` as \`text/typescript\`), and any other valid media-type name as \`text/x-<lang>\`, so a \`mimetype\` rule runs its loader. Use \`webpackIgnore\` comments or \`IgnorePlugin\` to skip individual URLs.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -10833,6 +10936,70 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-use-source-test": Object {
+    "configs": Array [
+      Object {
+        "description": "Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.",
+        "multiple": true,
+        "path": "module.rules[].use.sourceTest",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.",
+        "multiple": true,
+        "path": "module.rules[].use.sourceTest",
+        "type": "string",
+      },
+    ],
+    "description": "Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-use-source-test-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+        "multiple": true,
+        "path": "module.rules[].use.sourceTest.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-use-source-test-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].use.sourceTest.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].use.sourceTest.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-use-source-test-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+        "multiple": true,
+        "path": "module.rules[].use.sourceTest.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-strict-export-presence": Object {
     "configs": Array [
       Object {
@@ -11261,6 +11428,23 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-css-charset": Object {
+    "configs": Array [
+      Object {
+        "description": "How the minimizer states a \`.css\` asset's encoding. \`\\"auto\\"\` (the default) opens it with \`@charset \\"UTF-8\\"\` only when its output holds a non-ASCII character, so it is read as UTF-8 wherever the server's \`Content-Type\` names no other charset, which \`@charset\` cannot override. \`false\` writes no \`@charset\` at all, and writes an escaped character past U+FFFF (an icon font's \`content: \\"\\\\F0A86\\"\`) as the character itself, as \`\\"auto\\"\` does once that \`@charset\` is written. Set \`false\` only where the asset is read as UTF-8 anyway: a stylesheet with no \`@charset\` is read in the encoding the server's \`Content-Type\` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.",
+        "multiple": false,
+        "path": "optimization.minimize.css.charset",
+        "type": "enum",
+        "values": Array [
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "How the minimizer states a \`.css\` asset's encoding. \`\\"auto\\"\` (the default) opens it with \`@charset \\"UTF-8\\"\` only when its output holds a non-ASCII character, so it is read as UTF-8 wherever the server's \`Content-Type\` names no other charset, which \`@charset\` cannot override. \`false\` writes no \`@charset\` at all, and writes an escaped character past U+FFFF (an icon font's \`content: \\"\\\\F0A86\\"\`) as the character itself, as \`\\"auto\\"\` does once that \`@charset\` is written. Set \`false\` only where the asset is read as UTF-8 anyway: a stylesheet with no \`@charset\` is read in the encoding the server's \`Content-Type\` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "optimization-minimize-css-color-fallbacks": Object {
     "configs": Array [
       Object {
@@ -11364,13 +11548,13 @@ Object {
   "optimization-minimize-css-drop-overridden-declarations": Object {
     "configs": Array [
       Object {
-        "description": "Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a \`browserslist\` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: \`color:#c65d06;color:lab(50% 100 -100)\` loses the hex, so an engine that cannot read \`lab()\` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
+        "description": "Drop a declaration a later one in the same block overrides even where no target is selected, assuming the engines shipping today: wherever Chromium, Gecko and WebKit each read the later value. Off by default. With a \`browserslist\` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: \`color:#c65d06;color:lab(50% 100 -100)\` loses the hex, so an engine that cannot read \`lab()\` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
         "multiple": false,
         "path": "optimization.minimize.css.dropOverriddenDeclarations",
         "type": "boolean",
       },
     ],
-    "description": "Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a \`browserslist\` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: \`color:#c65d06;color:lab(50% 100 -100)\` loses the hex, so an engine that cannot read \`lab()\` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
+    "description": "Drop a declaration a later one in the same block overrides even where no target is selected, assuming the engines shipping today: wherever Chromium, Gecko and WebKit each read the later value. Off by default. With a \`browserslist\` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: \`color:#c65d06;color:lab(50% 100 -100)\` loses the hex, so an engine that cannot read \`lab()\` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11500,6 +11684,19 @@ Object {
       },
     ],
     "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration a later one in the same block overrides, a rule an identical later sibling makes dead, and the \`@charset\` naming an encoding the output is not written in. On by default. Joining rules that are not dead is \`mergeRules\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-css-reorder-declarations": Object {
+    "configs": Array [
+      Object {
+        "description": "Print a style rule's declarations in one order by property family, the properties no family names first where they were written, so blocks setting the same things read alike and compress smaller. Only declarations whose order nothing can see move: two spellings of one property, a shorthand and what it sets, two shorthands sharing a longhand, and a flow-relative side and a physical one keep theirs, and a block holding a property no dataset names or a nested rule is printed as written. On by default.",
+        "multiple": false,
+        "path": "optimization.minimize.css.reorderDeclarations",
+        "type": "boolean",
+      },
+    ],
+    "description": "Print a style rule's declarations in one order by property family, the properties no family names first where they were written, so blocks setting the same things read alike and compress smaller. Only declarations whose order nothing can see move: two spellings of one property, a shorthand and what it sets, two shorthands sharing a longhand, and a flow-relative side and a physical one keep theirs, and a block holding a property no dataset names or a nested rule is printed as written. On by default.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11797,13 +11994,13 @@ Object {
   "optimization-minimize-html-minify-conditional-comments": Object {
     "configs": Array [
       Object {
-        "description": "Minify the markup inside a downlevel-hidden conditional comment (\`<!--[if IE]> … <![endif]-->\`). Off by default: the body is minified on its own, so a context-sensitive decision inside it — which end tags are optional, where a table cell may sit — is taken as though it started a document rather than where the comment sits. Only browsers older than IE10 read these at all.",
+        "description": "Minify the markup inside a downlevel-hidden conditional comment (\`<!--[if IE]> … <![endif]-->\`). Off by default. The body is minified on its own with every tag it spells kept, and one whose print would still add, drop or move a tag — a wrapper another comment closes, a row of the table it sits in — is left as written, as it is read where the comment sits rather than as a document. Only browsers older than IE10 read these at all.",
         "multiple": false,
         "path": "optimization.minimize.html.minifyConditionalComments",
         "type": "boolean",
       },
     ],
-    "description": "Minify the markup inside a downlevel-hidden conditional comment (\`<!--[if IE]> … <![endif]-->\`). Off by default: the body is minified on its own, so a context-sensitive decision inside it — which end tags are optional, where a table cell may sit — is taken as though it started a document rather than where the comment sits. Only browsers older than IE10 read these at all.",
+    "description": "Minify the markup inside a downlevel-hidden conditional comment (\`<!--[if IE]> … <![endif]-->\`). Off by default. The body is minified on its own with every tag it spells kept, and one whose print would still add, drop or move a tag — a wrapper another comment closes, a row of the table it sits in — is left as written, as it is read where the comment sits rather than as a document. Only browsers older than IE10 read these at all.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11888,13 +12085,13 @@ Object {
   "optimization-minimize-html-remove-empty-elements": Object {
     "configs": Array [
       Object {
-        "description": "Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (\`canvas\`, \`slot\`, \`template\`, \`textarea\`, \`progress\`, \`meter\`, \`output\`, \`dialog\`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a \`::before\`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace \`collapseWhitespace\` deletes goes with them.",
+        "description": "Drop an element that has no children and no attributes, where its bare form renders nothing and nothing reads it: a generic container such as \`div\`, \`span\` or \`section\`, an inline phrase element, an empty \`title\`, \`script\` or \`style\`, or an attribute-less \`meta\`, \`link\` or \`base\`. Every other element is kept, including widgets, list items, elements with margins and custom elements. Off by default: CSS can give an empty element a size or a \`::before\`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace \`collapseWhitespace\` deletes goes with them.",
         "multiple": false,
         "path": "optimization.minimize.html.removeEmptyElements",
         "type": "boolean",
       },
     ],
-    "description": "Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (\`canvas\`, \`slot\`, \`template\`, \`textarea\`, \`progress\`, \`meter\`, \`output\`, \`dialog\`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a \`::before\`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace \`collapseWhitespace\` deletes goes with them.",
+    "description": "Drop an element that has no children and no attributes, where its bare form renders nothing and nothing reads it: a generic container such as \`div\`, \`span\` or \`section\`, an inline phrase element, an empty \`title\`, \`script\` or \`style\`, or an attribute-less \`meta\`, \`link\` or \`base\`. Every other element is kept, including widgets, list items, elements with margins and custom elements. Off by default: CSS can give an empty element a size or a \`::before\`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace \`collapseWhitespace\` deletes goes with them.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11937,7 +12134,7 @@ Object {
   "optimization-minimize-html-remove-redundant-attributes": Object {
     "configs": Array [
       Object {
-        "description": "Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one \`getAttribute\` and every attribute selector read differently, whichever tier dropped it. \`true\` (or \`\\"smart\\"\`) drops only markers on elements that render nothing — \`<script type=text/javascript>\`, \`<script language=javascript>\`, \`<script charset=utf-8>\`, \`<style type=text/css>\`, \`<link type=text/css>\`, \`<link media=all>\` — so no rule that styles the page stops applying, which is what \`@swc/html\` does by default. \`\\"all\\"\` also drops spec defaults such as \`<input type=text>\` and \`<form method=get>\`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so \`input[type=text]\` stops matching.",
+        "description": "Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one \`getAttribute\` and every attribute selector read differently, whichever tier dropped it. \`true\` (or \`\\"smart\\"\`) drops only markers on elements that render nothing — \`<script type=text/javascript>\`, \`<script language=javascript>\`, \`<script charset=utf-8>\` on a page that declares UTF-8, \`<style type=text/css>\`, \`<link type=text/css>\`, \`<link media=all>\` — so no rule that styles the page stops applying, which is what \`@swc/html\` does by default. \`\\"all\\"\` also drops spec defaults such as \`<input type=text>\` and \`<form method=get>\`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so \`input[type=text]\` stops matching.",
         "multiple": false,
         "path": "optimization.minimize.html.removeRedundantAttributes",
         "type": "enum",
@@ -11947,13 +12144,13 @@ Object {
         ],
       },
       Object {
-        "description": "Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one \`getAttribute\` and every attribute selector read differently, whichever tier dropped it. \`true\` (or \`\\"smart\\"\`) drops only markers on elements that render nothing — \`<script type=text/javascript>\`, \`<script language=javascript>\`, \`<script charset=utf-8>\`, \`<style type=text/css>\`, \`<link type=text/css>\`, \`<link media=all>\` — so no rule that styles the page stops applying, which is what \`@swc/html\` does by default. \`\\"all\\"\` also drops spec defaults such as \`<input type=text>\` and \`<form method=get>\`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so \`input[type=text]\` stops matching.",
+        "description": "Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one \`getAttribute\` and every attribute selector read differently, whichever tier dropped it. \`true\` (or \`\\"smart\\"\`) drops only markers on elements that render nothing — \`<script type=text/javascript>\`, \`<script language=javascript>\`, \`<script charset=utf-8>\` on a page that declares UTF-8, \`<style type=text/css>\`, \`<link type=text/css>\`, \`<link media=all>\` — so no rule that styles the page stops applying, which is what \`@swc/html\` does by default. \`\\"all\\"\` also drops spec defaults such as \`<input type=text>\` and \`<form method=get>\`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so \`input[type=text]\` stops matching.",
         "multiple": false,
         "path": "optimization.minimize.html.removeRedundantAttributes",
         "type": "boolean",
       },
     ],
-    "description": "Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one \`getAttribute\` and every attribute selector read differently, whichever tier dropped it. \`true\` (or \`\\"smart\\"\`) drops only markers on elements that render nothing — \`<script type=text/javascript>\`, \`<script language=javascript>\`, \`<script charset=utf-8>\`, \`<style type=text/css>\`, \`<link type=text/css>\`, \`<link media=all>\` — so no rule that styles the page stops applying, which is what \`@swc/html\` does by default. \`\\"all\\"\` also drops spec defaults such as \`<input type=text>\` and \`<form method=get>\`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so \`input[type=text]\` stops matching.",
+    "description": "Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one \`getAttribute\` and every attribute selector read differently, whichever tier dropped it. \`true\` (or \`\\"smart\\"\`) drops only markers on elements that render nothing — \`<script type=text/javascript>\`, \`<script language=javascript>\`, \`<script charset=utf-8>\` on a page that declares UTF-8, \`<style type=text/css>\`, \`<link type=text/css>\`, \`<link media=all>\` — so no rule that styles the page stops applying, which is what \`@swc/html\` does by default. \`\\"all\\"\` also drops spec defaults such as \`<input type=text>\` and \`<form method=get>\`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so \`input[type=text]\` stops matching.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -12027,6 +12224,23 @@ Object {
     "description": "Minimize CSS assets: \`false\` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-charset": Object {
+    "configs": Array [
+      Object {
+        "description": "How the minimizer states a \`.css\` asset's encoding. \`\\"auto\\"\` (the default) opens it with \`@charset \\"UTF-8\\"\` only when its output holds a non-ASCII character, so it is read as UTF-8 wherever the server's \`Content-Type\` names no other charset, which \`@charset\` cannot override. \`false\` writes no \`@charset\` at all, and writes an escaped character past U+FFFF (an icon font's \`content: \\"\\\\F0A86\\"\`) as the character itself, as \`\\"auto\\"\` does once that \`@charset\` is written. Set \`false\` only where the asset is read as UTF-8 anyway: a stylesheet with no \`@charset\` is read in the encoding the server's \`Content-Type\` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.charset",
+        "type": "enum",
+        "values": Array [
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "How the minimizer states a \`.css\` asset's encoding. \`\\"auto\\"\` (the default) opens it with \`@charset \\"UTF-8\\"\` only when its output holds a non-ASCII character, so it is read as UTF-8 wherever the server's \`Content-Type\` names no other charset, which \`@charset\` cannot override. \`false\` writes no \`@charset\` at all, and writes an escaped character past U+FFFF (an icon font's \`content: \\"\\\\F0A86\\"\`) as the character itself, as \`\\"auto\\"\` does once that \`@charset\` is written. Set \`false\` only where the asset is read as UTF-8 anyway: a stylesheet with no \`@charset\` is read in the encoding the server's \`Content-Type\` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "optimization-minimize-options-css-color-fallbacks": Object {
     "configs": Array [
@@ -12131,13 +12345,13 @@ Object {
   "optimization-minimize-options-css-drop-overridden-declarations": Object {
     "configs": Array [
       Object {
-        "description": "Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a \`browserslist\` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: \`color:#c65d06;color:lab(50% 100 -100)\` loses the hex, so an engine that cannot read \`lab()\` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
+        "description": "Drop a declaration a later one in the same block overrides even where no target is selected, assuming the engines shipping today: wherever Chromium, Gecko and WebKit each read the later value. Off by default. With a \`browserslist\` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: \`color:#c65d06;color:lab(50% 100 -100)\` loses the hex, so an engine that cannot read \`lab()\` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
         "multiple": false,
         "path": "optimization.minimizeOptions.css.dropOverriddenDeclarations",
         "type": "boolean",
       },
     ],
-    "description": "Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a \`browserslist\` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: \`color:#c65d06;color:lab(50% 100 -100)\` loses the hex, so an engine that cannot read \`lab()\` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
+    "description": "Drop a declaration a later one in the same block overrides even where no target is selected, assuming the engines shipping today: wherever Chromium, Gecko and WebKit each read the later value. Off by default. With a \`browserslist\` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: \`color:#c65d06;color:lab(50% 100 -100)\` loses the hex, so an engine that cannot read \`lab()\` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -12267,6 +12481,19 @@ Object {
       },
     ],
     "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration a later one in the same block overrides, a rule an identical later sibling makes dead, and the \`@charset\` naming an encoding the output is not written in. On by default. Joining rules that are not dead is \`mergeRules\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-reorder-declarations": Object {
+    "configs": Array [
+      Object {
+        "description": "Print a style rule's declarations in one order by property family, the properties no family names first where they were written, so blocks setting the same things read alike and compress smaller. Only declarations whose order nothing can see move: two spellings of one property, a shorthand and what it sets, two shorthands sharing a longhand, and a flow-relative side and a physical one keep theirs, and a block holding a property no dataset names or a nested rule is printed as written. On by default.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.reorderDeclarations",
+        "type": "boolean",
+      },
+    ],
+    "description": "Print a style rule's declarations in one order by property family, the properties no family names first where they were written, so blocks setting the same things read alike and compress smaller. Only declarations whose order nothing can see move: two spellings of one property, a shorthand and what it sets, two shorthands sharing a longhand, and a flow-relative side and a physical one keep theirs, and a block holding a property no dataset names or a nested rule is printed as written. On by default.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -12564,13 +12791,13 @@ Object {
   "optimization-minimize-options-html-minify-conditional-comments": Object {
     "configs": Array [
       Object {
-        "description": "Minify the markup inside a downlevel-hidden conditional comment (\`<!--[if IE]> … <![endif]-->\`). Off by default: the body is minified on its own, so a context-sensitive decision inside it — which end tags are optional, where a table cell may sit — is taken as though it started a document rather than where the comment sits. Only browsers older than IE10 read these at all.",
+        "description": "Minify the markup inside a downlevel-hidden conditional comment (\`<!--[if IE]> … <![endif]-->\`). Off by default. The body is minified on its own with every tag it spells kept, and one whose print would still add, drop or move a tag — a wrapper another comment closes, a row of the table it sits in — is left as written, as it is read where the comment sits rather than as a document. Only browsers older than IE10 read these at all.",
         "multiple": false,
         "path": "optimization.minimizeOptions.html.minifyConditionalComments",
         "type": "boolean",
       },
     ],
-    "description": "Minify the markup inside a downlevel-hidden conditional comment (\`<!--[if IE]> … <![endif]-->\`). Off by default: the body is minified on its own, so a context-sensitive decision inside it — which end tags are optional, where a table cell may sit — is taken as though it started a document rather than where the comment sits. Only browsers older than IE10 read these at all.",
+    "description": "Minify the markup inside a downlevel-hidden conditional comment (\`<!--[if IE]> … <![endif]-->\`). Off by default. The body is minified on its own with every tag it spells kept, and one whose print would still add, drop or move a tag — a wrapper another comment closes, a row of the table it sits in — is left as written, as it is read where the comment sits rather than as a document. Only browsers older than IE10 read these at all.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -12655,13 +12882,13 @@ Object {
   "optimization-minimize-options-html-remove-empty-elements": Object {
     "configs": Array [
       Object {
-        "description": "Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (\`canvas\`, \`slot\`, \`template\`, \`textarea\`, \`progress\`, \`meter\`, \`output\`, \`dialog\`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a \`::before\`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace \`collapseWhitespace\` deletes goes with them.",
+        "description": "Drop an element that has no children and no attributes, where its bare form renders nothing and nothing reads it: a generic container such as \`div\`, \`span\` or \`section\`, an inline phrase element, an empty \`title\`, \`script\` or \`style\`, or an attribute-less \`meta\`, \`link\` or \`base\`. Every other element is kept, including widgets, list items, elements with margins and custom elements. Off by default: CSS can give an empty element a size or a \`::before\`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace \`collapseWhitespace\` deletes goes with them.",
         "multiple": false,
         "path": "optimization.minimizeOptions.html.removeEmptyElements",
         "type": "boolean",
       },
     ],
-    "description": "Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (\`canvas\`, \`slot\`, \`template\`, \`textarea\`, \`progress\`, \`meter\`, \`output\`, \`dialog\`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a \`::before\`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace \`collapseWhitespace\` deletes goes with them.",
+    "description": "Drop an element that has no children and no attributes, where its bare form renders nothing and nothing reads it: a generic container such as \`div\`, \`span\` or \`section\`, an inline phrase element, an empty \`title\`, \`script\` or \`style\`, or an attribute-less \`meta\`, \`link\` or \`base\`. Every other element is kept, including widgets, list items, elements with margins and custom elements. Off by default: CSS can give an empty element a size or a \`::before\`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace \`collapseWhitespace\` deletes goes with them.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -12704,7 +12931,7 @@ Object {
   "optimization-minimize-options-html-remove-redundant-attributes": Object {
     "configs": Array [
       Object {
-        "description": "Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one \`getAttribute\` and every attribute selector read differently, whichever tier dropped it. \`true\` (or \`\\"smart\\"\`) drops only markers on elements that render nothing — \`<script type=text/javascript>\`, \`<script language=javascript>\`, \`<script charset=utf-8>\`, \`<style type=text/css>\`, \`<link type=text/css>\`, \`<link media=all>\` — so no rule that styles the page stops applying, which is what \`@swc/html\` does by default. \`\\"all\\"\` also drops spec defaults such as \`<input type=text>\` and \`<form method=get>\`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so \`input[type=text]\` stops matching.",
+        "description": "Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one \`getAttribute\` and every attribute selector read differently, whichever tier dropped it. \`true\` (or \`\\"smart\\"\`) drops only markers on elements that render nothing — \`<script type=text/javascript>\`, \`<script language=javascript>\`, \`<script charset=utf-8>\` on a page that declares UTF-8, \`<style type=text/css>\`, \`<link type=text/css>\`, \`<link media=all>\` — so no rule that styles the page stops applying, which is what \`@swc/html\` does by default. \`\\"all\\"\` also drops spec defaults such as \`<input type=text>\` and \`<form method=get>\`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so \`input[type=text]\` stops matching.",
         "multiple": false,
         "path": "optimization.minimizeOptions.html.removeRedundantAttributes",
         "type": "enum",
@@ -12714,13 +12941,13 @@ Object {
         ],
       },
       Object {
-        "description": "Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one \`getAttribute\` and every attribute selector read differently, whichever tier dropped it. \`true\` (or \`\\"smart\\"\`) drops only markers on elements that render nothing — \`<script type=text/javascript>\`, \`<script language=javascript>\`, \`<script charset=utf-8>\`, \`<style type=text/css>\`, \`<link type=text/css>\`, \`<link media=all>\` — so no rule that styles the page stops applying, which is what \`@swc/html\` does by default. \`\\"all\\"\` also drops spec defaults such as \`<input type=text>\` and \`<form method=get>\`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so \`input[type=text]\` stops matching.",
+        "description": "Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one \`getAttribute\` and every attribute selector read differently, whichever tier dropped it. \`true\` (or \`\\"smart\\"\`) drops only markers on elements that render nothing — \`<script type=text/javascript>\`, \`<script language=javascript>\`, \`<script charset=utf-8>\` on a page that declares UTF-8, \`<style type=text/css>\`, \`<link type=text/css>\`, \`<link media=all>\` — so no rule that styles the page stops applying, which is what \`@swc/html\` does by default. \`\\"all\\"\` also drops spec defaults such as \`<input type=text>\` and \`<form method=get>\`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so \`input[type=text]\` stops matching.",
         "multiple": false,
         "path": "optimization.minimizeOptions.html.removeRedundantAttributes",
         "type": "boolean",
       },
     ],
-    "description": "Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one \`getAttribute\` and every attribute selector read differently, whichever tier dropped it. \`true\` (or \`\\"smart\\"\`) drops only markers on elements that render nothing — \`<script type=text/javascript>\`, \`<script language=javascript>\`, \`<script charset=utf-8>\`, \`<style type=text/css>\`, \`<link type=text/css>\`, \`<link media=all>\` — so no rule that styles the page stops applying, which is what \`@swc/html\` does by default. \`\\"all\\"\` also drops spec defaults such as \`<input type=text>\` and \`<form method=get>\`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so \`input[type=text]\` stops matching.",
+    "description": "Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one \`getAttribute\` and every attribute selector read differently, whichever tier dropped it. \`true\` (or \`\\"smart\\"\`) drops only markers on elements that render nothing — \`<script type=text/javascript>\`, \`<script language=javascript>\`, \`<script charset=utf-8>\` on a page that declares UTF-8, \`<style type=text/css>\`, \`<link type=text/css>\`, \`<link media=all>\` — so no rule that styles the page stops applying, which is what \`@swc/html\` does by default. \`\\"all\\"\` also drops spec defaults such as \`<input type=text>\` and \`<form method=get>\`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so \`input[type=text]\` stops matching.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -12776,6 +13003,64 @@ Object {
       },
     ],
     "description": "Minimize JSON assets by re-serializing them without whitespace (defaults to \`true\` with \`experiments.futureDefaults\`, otherwise \`false\`).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml": Object {
+    "configs": Array [
+      Object {
+        "description": "Minimize \`.svg\` and \`.xml\` assets: \`false\` disables it, an object enables it. Absent means off unless \`experiments.futureDefaults\` is set.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Minimize \`.svg\` and \`.xml\` assets: \`false\` disables it, an object enables it. Absent means off unless \`experiments.futureDefaults\` is set.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-sort-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.sortAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml": Object {
+    "configs": Array [
+      Object {
+        "description": "Minimize \`.svg\` and \`.xml\` assets: \`false\` disables it, an object enables it. Absent means off unless \`experiments.futureDefaults\` is set.",
+        "multiple": false,
+        "path": "optimization.minimize.xml",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Minimize \`.svg\` and \`.xml\` assets: \`false\` disables it, an object enables it. Absent means off unless \`experiments.futureDefaults\` is set.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-sort-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.sortAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13534,6 +13819,32 @@ Object {
     "description": "Keep these assets.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "output-clean-keep-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+        "multiple": true,
+        "path": "output.clean.keep.glob[]",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-clean-keep-glob-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.clean.keep.glob' configuration. A list of glob patterns.",
+        "multiple": false,
+        "path": "output.clean.keep.glob",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.clean.keep.glob' configuration. A list of glob patterns.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "output-compare-before-emit": Object {
     "configs": Array [
@@ -17479,8 +17790,14 @@ Object {
         "path": "resolveLoader.restrictions[]",
         "type": "path",
       },
+      Object {
+        "description": "A glob the resolve result must match at any depth.",
+        "multiple": true,
+        "path": "resolveLoader.restrictions[]",
+        "type": "string",
+      },
     ],
-    "description": "Resolve restriction. Resolve result must fulfill this restriction.",
+    "description": "Resolve restriction. Resolve result must fulfill this restriction. A glob the resolve result must match at any depth.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -17734,8 +18051,14 @@ Object {
         "path": "resolve.restrictions[]",
         "type": "path",
       },
+      Object {
+        "description": "A glob the resolve result must match at any depth.",
+        "multiple": true,
+        "path": "resolve.restrictions[]",
+        "type": "string",
+      },
     ],
-    "description": "Resolve restriction. Resolve result must fulfill this restriction.",
+    "description": "Resolve restriction. Resolve result must fulfill this restriction. A glob the resolve result must match at any depth.",
     "multiple": true,
     "simpleType": "string",
   },

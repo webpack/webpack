@@ -1,0 +1,1 @@
+Infinity = 0; if (!(1 < Infinity)) t();

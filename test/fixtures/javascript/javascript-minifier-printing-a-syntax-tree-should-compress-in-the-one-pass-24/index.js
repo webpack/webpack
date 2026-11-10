@@ -1,0 +1,1 @@
+function f(){ var a = g(), b = 1, c = h(), d = k(); var e = function(){}.call(), o = {x: 1}.x, q = m(); return b + d } function u(){ let x = g(); var y = h(); var z = 1, w = 2; function k(){ return w } return [z, k] }

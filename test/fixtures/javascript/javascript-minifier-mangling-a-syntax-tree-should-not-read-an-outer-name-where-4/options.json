@@ -1,0 +1,12 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": false
+	}
+]

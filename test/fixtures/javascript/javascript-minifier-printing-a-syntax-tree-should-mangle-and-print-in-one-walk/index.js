@@ -1,0 +1,1 @@
+function foo(longName, other) { var local = longName + other; return local * 2; } foo(1, 2); foo(3, 4); class A { #field = 1; read() { return this.#field } static #hidden() {} } print(new A().read());

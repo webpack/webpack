@@ -1,0 +1,1 @@
+function f() { using a\u0062 = 1; }

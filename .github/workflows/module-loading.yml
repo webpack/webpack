@@ -1,0 +1,67 @@
+name: Module Loading
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  module-loading:
+    if: github.repository == 'webpack/webpack'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Use Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: lts/*
+          cache: yarn
+
+      - run: node tooling/retry.js yarn --frozen-lockfile
+
+      # The minimizer's worker threads resolve `require("webpack")` themselves.
+      - run: yarn link --frozen-lockfile || true
+
+      - run: yarn link webpack --frozen-lockfile
+
+      # The counts compare with the pull request's base commit, on its own
+      # dependencies, so a dependency the pull request changes shows up.
+      - name: Check out and install the base commit
+        run: |
+          git fetch --no-tags --depth=1 origin "$BASE_SHA"
+          git worktree add --detach "$RUNNER_TEMP/base" "$BASE_SHA"
+          cd "$RUNNER_TEMP/base"
+          node "$GITHUB_WORKSPACE/tooling/retry.js" yarn --frozen-lockfile --ignore-scripts
+          ln -s "$RUNNER_TEMP/base" node_modules/webpack
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+
+      # This pull request's script measures both checkouts, so a scenario added
+      # here is counted on the base too.
+      - name: Count the modules each way of using webpack loads
+        run: |
+          node tooling/check-module-loading.js --base "$RUNNER_TEMP/base" --output module-loading.md
+          {
+            echo "<!-- module-loading-report -->"
+            cat module-loading.md
+          } > module-loading-report.md
+          cat module-loading.md >> "$GITHUB_STEP_SUMMARY"
+
+      # `pr-reports.yml` puts this in the pull request's one report comment,
+      # from the base repository's context: a fork's token is read-only.
+      - name: Upload the report for the pull request comment
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: pr-report-module-loading
+          path: module-loading-report.md
+          retention-days: 90

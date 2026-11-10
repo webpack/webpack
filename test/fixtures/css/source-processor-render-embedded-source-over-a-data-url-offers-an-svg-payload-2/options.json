@@ -1,0 +1,23 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "as-written"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "throws"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"svg": "<svg><rect/></svg>"
+			}
+		}
+	}
+]

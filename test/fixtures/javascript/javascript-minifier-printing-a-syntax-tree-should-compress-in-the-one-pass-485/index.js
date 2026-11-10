@@ -1,0 +1,1 @@
+function f(){try{}finally{let x=foo()}for(;;){const x=y}}function g(){if(x){let a=f()}else g();while(x){let y=z();if(1)continue;z()}}function h(){if(x){let a=1,b=f()}else h();if(x){let a=f(),b=1}else h()}

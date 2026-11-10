@@ -1,0 +1,13 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"firefox 40"
+			]
+		},
+		"transforms": {
+			"foldCase": false
+		},
+		"mode": "minify"
+	}
+]

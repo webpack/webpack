@@ -4,7 +4,7 @@ exports[`StatsTestCases asset should print correct stats for asset 1`] = `
 "asset XXXXXXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset bundle.js X KiB [emitted] (name: main)
 asset static/file.html X bytes [emitted] [from: static/file.html] (auxiliary name: main)
-runtime modules X KiB 2 modules
+runtime modules X bytes 1 module
 modules by path ./ X KiB (asset) X KiB (javascript)
   modules by path ./images/ X KiB (asset) X KiB (javascript)
     ./images/file.png X KiB (asset) X bytes (javascript) [built] [code generated]

@@ -1,0 +1,1 @@
+import a from 'a' with { type: 'json' }; export * from 'b' with { type: 'json' };

@@ -84,6 +84,42 @@ it("should bind an area named by the grid shorthand", () => {
 	expect(gridAreaOf(styles["shorthand-nav"])).toBe(styles["nav-bar"]);
 });
 
+it("should keep an escaped area name escaped", () => {
+	expect(styles["x.y"]).toBe("_x.y");
+	expect(gridAreaOf(styles["dotted-head"])).toBe("_x\\.y");
+});
+
+it("should keep implicit -start / -end line names paired with their area", () => {
+	expect(cellsOf(styles["implicit-grid"])).toEqual([styles.side, styles.main]);
+	expect(styles["main-start"]).toBe(`${styles.main}-start`);
+	expect(styles["main-end"]).toBe(`${styles.main}-end`);
+	expect(css()).toContain(
+		`grid-column: ${styles["main-start"]} / ${styles["main-end"]}`
+	);
+	expect(styles["y-start"]).toBe(`${styles.y}-start`);
+	expect(styles["y-end"]).toBe(`${styles.y}-end`);
+	expect(gridAreaOf(styles["implicit-area"])).toBe(styles.y);
+});
+
+it("should pair implicit line names in every grid value form", () => {
+	expect(styles["top-start"]).toBe(`${styles.top}-start`);
+	expect(styles["top-end"]).toBe(`${styles.top}-end`);
+	// `repeat()` and `subgrid` only name lines, so no area export to compare.
+	expect(styles["col-start"]).toBe("_col-start");
+	expect(styles["col-end"]).toBe("_col-end");
+	expect(styles["row-start"]).toBe("_row-start");
+	expect(styles["row-end"]).toBe("_row-end");
+	expect(gridAreaOf(styles["implicit-placement"])).toBe(
+		`${styles["top-start"]} / ${styles["col-start"]} / ${styles["top-end"]} / ${styles["col-end"]}`
+	);
+});
+
+it("should strip a whole run of -start / -end suffixes, case-sensitively", () => {
+	expect(styles["foo-start-start"]).toBe(`${styles["foo-start"]}-start`);
+	expect(styles["foo-start-end"]).toBe(`${styles["foo-start"]}-end`);
+	expect(styles["main-START"]).toBe("_main-START");
+});
+
 it("should emit the stylesheet", () => {
 	expect(css()).toMatchSnapshot();
 });

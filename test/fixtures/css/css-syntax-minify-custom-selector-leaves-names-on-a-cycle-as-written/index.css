@@ -1,0 +1,1 @@
+@custom-selector :--a :--b;@custom-selector :--b :--a;:--a{color:red}

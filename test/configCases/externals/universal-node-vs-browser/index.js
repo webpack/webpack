@@ -28,6 +28,6 @@ it("loads node builtins defensively so the browser bundle never crashes", () => 
 	);
 	const header = source.slice(0, source.indexOf("__webpack_modules__"));
 	// node builtin reached via getBuiltinModule, never a static `from "fs"` import
-	expect(header).not.toMatch(/from\s+["']fs["']/);
-	expect(header).toContain("getBuiltinModule");
+	expect(header).not.toMatch(/from\s+["'](node:)?fs["']/);
+	expect(source).toContain(`${"getBuiltinModule"}("node:fs")`);
 });

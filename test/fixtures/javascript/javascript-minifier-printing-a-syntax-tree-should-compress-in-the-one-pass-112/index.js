@@ -1,0 +1,1 @@
+function f(a, b){ const T = 1; if (a) for (;;) g(); else y(); if ((h(), b)) x(); else y(); if (0) { let w = () => { var z } } g([T ? a : 2]) }

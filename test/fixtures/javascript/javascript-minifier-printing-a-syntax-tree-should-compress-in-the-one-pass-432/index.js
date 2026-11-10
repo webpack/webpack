@@ -1,0 +1,1 @@
+function f(){switch(foo()){case g():let x=1;h(x)}}

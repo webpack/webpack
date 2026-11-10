@@ -1,0 +1,1 @@
+function f(a){ g((1 || -a) ? 1 : 2, (1 || Math.PI) ? 3 : 4) }

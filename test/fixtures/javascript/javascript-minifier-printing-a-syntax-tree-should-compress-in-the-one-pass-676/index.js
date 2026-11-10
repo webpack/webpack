@@ -1,0 +1,1 @@
+x=[new("abc".concat(1,"def")),new(Math.min(-1,2)),new(Math.min(1,2))(3),new(g(1))]

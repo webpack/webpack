@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.plain { color: red; }
+</style>
+<style lang="css">
+.css-lang { color: blue; }
+</style>
+<style lang="less">
+@accent: green;
+.less-lang { color: @accent; .nested { background: url("./pixel.png"); } }
+</style>
+<style lang="SCSS">
+$accent: purple; .scss-lang { color: $accent; }
+</style>
+<style lang="styl">
+$accent: teal; .styl-lang { color: $accent; }
+</style>
+<style lang="postcss">
+$accent: olive; .postcss-lang { color: $accent; }
+</style>
+<style lang="no media type">
+$accent: navy; .attribute-lang { color: $accent; }
+</style>
+<script lang="upper">
+window.inlineScriptLang = "shout";
+</script>
+<script>
+window.inlineScriptPlain = "plain";
+</script>
+<script lang="js">
+window.inlineScriptJs = "js";
+</script>
+<script lang="no media type">
+window.inlineScriptInvalid = "invalid";
+</script>
+</head>
+<body></body>
+</html>

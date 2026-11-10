@@ -1,0 +1,1 @@
+result = (function () { function w(p) { var acc = []; for (let i = 0; i < p.length; i++) { let v = p[i]; acc.push(function () { return v + i }) } try { throw acc } catch (z) { return z.map(function (f) { return f() }).join() } } return w([3, 4, 5]) })();

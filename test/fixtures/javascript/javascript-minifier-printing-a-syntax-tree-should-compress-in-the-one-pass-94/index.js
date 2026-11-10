@@ -1,0 +1,1 @@
+function f(){ const k = void 1, m = delete x; g(k, m) }

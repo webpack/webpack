@@ -152,9 +152,9 @@ require.ensure(["c"], function(require) {
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -195,7 +195,7 @@ require.ensure(["c"], function(require) {
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -246,7 +246,7 @@ require.ensure(["c"], function(require) {
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -279,7 +279,7 @@ __webpack_require__.e(/*! require.ensure */ "node_modules_c_js-node_modules_d_js
 # dist/node_modules_c_js-node_modules_d_js.output.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["node_modules_c_js-node_modules_d_js"],[
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["node_modules_c_js-node_modules_d_js"],[
 /* 0 */,
 /* 1 */,
 /* 2 */,
@@ -311,7 +311,7 @@ __webpack_require__.e(/*! require.ensure */ "node_modules_c_js-node_modules_d_js
 Minimized
 
 ```javascript
-(self.webpackChunk=self.webpackChunk||[]).push([["node_modules_c_js-node_modules_d_js"],{605(){},576(){}}]);
+(Array.isArray(self.webpackChunk)?self.webpackChunk:self.webpackChunk=[]).push([["node_modules_c_js-node_modules_d_js"],{605(){},576(){}}]);
 ```
 
 # Info
@@ -320,7 +320,7 @@ Minimized
 
 ```
 asset output.js 9.09 KiB [emitted] (name: main)
-asset node_modules_c_js-node_modules_d_js.output.js 562 bytes [emitted]
+asset node_modules_c_js-node_modules_d_js.output.js 601 bytes [emitted]
 chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 4.77 KiB 6 modules
@@ -342,8 +342,8 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.78 KiB [emitted] [minimized] (name: main)
-asset node_modules_c_js-node_modules_d_js.output.js 108 bytes [emitted] [minimized]
+asset output.js 1.79 KiB [emitted] [minimized] (name: main)
+asset node_modules_c_js-node_modules_d_js.output.js 140 bytes [emitted] [minimized]
 chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 4.77 KiB 6 modules

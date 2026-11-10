@@ -1,0 +1,1 @@
+function f(){switch(d){case 1:for(k in o)break;g()}}

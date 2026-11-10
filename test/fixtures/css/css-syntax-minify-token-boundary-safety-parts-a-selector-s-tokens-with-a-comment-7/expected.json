@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "respelling leading-zero",
+		"contains": "+.5m\n      -> +0.5m",
+		"why": "`width&:` is no declaration and `.a+.5m` no selector, so the number in either is written back as authored"
+	}
+]

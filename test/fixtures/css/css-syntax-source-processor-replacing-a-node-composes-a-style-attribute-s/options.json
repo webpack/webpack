@@ -1,0 +1,23 @@
+[
+	{
+		"mode": "minify",
+		"as": "block-contents",
+		"visit": {
+			"types": [
+				"Declaration"
+			],
+			"fields": [
+				"name"
+			],
+			"exit": false,
+			"at": [
+				{
+					"type": "Declaration",
+					"name": "margin-top",
+					"do": "replace",
+					"with": "padding:0"
+				}
+			]
+		}
+	}
+]

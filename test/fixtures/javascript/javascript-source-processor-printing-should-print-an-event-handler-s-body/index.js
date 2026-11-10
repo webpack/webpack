@@ -1,0 +1,1 @@
+x(); return new.target

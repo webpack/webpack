@@ -5,7 +5,7 @@ exports[`StatsTestCases preset-normal-performance should print correct stats for
 asset <CLR=32,BOLD>964.js</CLR> X bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>226.js</CLR> X bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>899.js</CLR> X bytes <CLR=32,BOLD>[emitted]</CLR>
-runtime modules X KiB 7 modules
+runtime modules X KiB 6 modules
 cacheable modules X KiB
   <CLR=BOLD>./index.js</CLR> X bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
   <CLR=BOLD>./a.js</CLR> X KiB <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>

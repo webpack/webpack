@@ -201,9 +201,9 @@ module.exports = config;
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -244,7 +244,7 @@ module.exports = config;
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -295,7 +295,7 @@ module.exports = config;
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -332,7 +332,7 @@ main();
 # dist/pageA_js.output.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["pageA_js"],[
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["pageA_js"],[
 /* 0 */,
 /* 1 */
 /*!******************!*\
@@ -358,7 +358,7 @@ module.exports = function() {
 # dist/pageB_js.output.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["pageB_js"],{
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["pageB_js"],{
 
 /***/ 3
 /*!******************!*\
@@ -386,7 +386,7 @@ module.exports = function() {
 # dist/pageC_js.output.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["pageC_js"],{
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["pageC_js"],{
 
 /***/ 4
 /*!******************!*\
@@ -413,7 +413,7 @@ module.exports = function() {
 # dist/reusableComponent_js.output.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["reusableComponent_js"],{
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["reusableComponent_js"],{
 
 /***/ 2
 /*!******************************!*\
@@ -440,10 +440,10 @@ module.exports = function() {
 
 ```
 asset output.js 8.7 KiB [emitted] (name: main)
-asset pageB_js.output.js 760 bytes [emitted]
-asset pageA_js.output.js 565 bytes [emitted]
-asset pageC_js.output.js 547 bytes [emitted]
-asset reusableComponent_js.output.js 441 bytes [emitted]
+asset pageB_js.output.js 799 bytes [emitted]
+asset pageA_js.output.js 604 bytes [emitted]
+asset pageC_js.output.js 586 bytes [emitted]
+asset reusableComponent_js.output.js 480 bytes [emitted]
 chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 4.77 KiB 6 modules
@@ -483,10 +483,10 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 1.84 KiB [emitted] [minimized] (name: main)
-asset pageB_js.output.js 228 bytes [emitted] [minimized]
-asset reusableComponent_js.output.js 141 bytes [emitted] [minimized]
-asset pageC_js.output.js 138 bytes [emitted] [minimized]
-asset pageA_js.output.js 137 bytes [emitted] [minimized]
+asset pageB_js.output.js 260 bytes [emitted] [minimized]
+asset reusableComponent_js.output.js 173 bytes [emitted] [minimized]
+asset pageC_js.output.js 170 bytes [emitted] [minimized]
+asset pageA_js.output.js 169 bytes [emitted] [minimized]
 chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 4.77 KiB 6 modules

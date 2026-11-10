@@ -1,0 +1,1 @@
+function f(s, e) { (() => ({ a: 1 }))(); return [((x, y) => x + y)(s, e), ((x) => (x, 1))(s)] }

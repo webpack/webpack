@@ -1,0 +1,11 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"chrome 130"
+			]
+		},
+		"rewriteCustomProperties": true,
+		"mode": "minify"
+	}
+]

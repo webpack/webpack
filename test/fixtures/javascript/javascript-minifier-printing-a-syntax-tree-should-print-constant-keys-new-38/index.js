@@ -1,0 +1,1 @@
+(function(a){g(a,a,a)})("a long string")

@@ -1,0 +1,7 @@
+.m3 {
+	composes: m4 from "./m4.module.css";
+}
+
+.m2 {
+	composes: m3;
+}

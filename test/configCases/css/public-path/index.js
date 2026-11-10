@@ -5,8 +5,7 @@ it("should work", () => {
 	const links = document.getElementsByTagName("link");
 	const css = [];
 
-	// Skip first because import it by default
-	for (const link of links.slice(1)) {
+	for (const link of links) {
 		css.push(link.sheet.css);
 	}
 

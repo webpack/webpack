@@ -1,0 +1,1 @@
+function f(){if(a)try{return g()}catch{return g()}else throw i()}function k(){if(a)try{b}finally{return g()}else throw i()}function m(){if(a)try{return b}catch{c}else throw i()}function n(){if(a){if(b)return 1;else throw 2}else g();h()}function p(){if(a)try{return 1}finally{c()}else g();h()}

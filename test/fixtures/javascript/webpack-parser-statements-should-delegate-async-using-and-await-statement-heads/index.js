@@ -1,0 +1,1 @@
+async function f() { await g(); } async () => 1; using?.x;

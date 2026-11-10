@@ -1,0 +1,1 @@
+function k(a,p){function A(x,y){x.push(this);x.push(2)}if(p){a.push(3);A(a,p)}return a}

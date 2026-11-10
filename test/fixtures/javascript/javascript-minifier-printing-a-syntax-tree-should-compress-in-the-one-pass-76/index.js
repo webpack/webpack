@@ -1,0 +1,1 @@
+a=``.length;b=`abc`[1];c="abc"[3];d="a"[1];e=+void 0;f=void 0*2;g=void 0+void 0;h=void 0|0;i=void 0<1;j=void 0==null;k=void f()+1

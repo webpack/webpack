@@ -1,0 +1,1 @@
+function f(){for(k in o){continue}}

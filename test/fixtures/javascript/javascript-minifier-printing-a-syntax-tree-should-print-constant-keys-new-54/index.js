@@ -1,0 +1,1 @@
+export function f(a,l){return a?false:l(1)}export function g(a,l,b,c){if(a?true:l(1))l(2);if(a?l(3):false)l(4);if(a?l(5):true)l(6);return a?false:b||c}

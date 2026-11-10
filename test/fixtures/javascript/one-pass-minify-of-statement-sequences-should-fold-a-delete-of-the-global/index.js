@@ -1,0 +1,1 @@
+console.log(delete undefined,delete NaN,delete Infinity)

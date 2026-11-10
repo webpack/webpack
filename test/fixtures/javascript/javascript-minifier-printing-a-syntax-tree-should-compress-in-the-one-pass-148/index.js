@@ -1,0 +1,1 @@
+function f(o) { var h = function () { return o.m }; const k = () => undeclaredY; return [h()(), typeof k()] }

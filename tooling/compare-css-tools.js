@@ -33,42 +33,34 @@ const fs = require("fs");
 const path = require("path");
 const { promisify } = require("util");
 const zlib = require("zlib");
-// What every other tool assumes when told no target: current engines only.
-// Resolved rather than written out, so it does not go stale.
-const MODERN_BROWSERS = require("browserslist")(
-	"last 1 chrome version, last 1 firefox version, last 1 safari version, last 1 edge version"
-);
 const cssMinify = require("../lib/css/cssMinify");
 const { SourceProcessor } = require("../lib/css/syntax");
 const cssSyntaxParser = require("../lib/css/syntax-parser");
 
-const {
-	NodeType,
-	TT_AT_KEYWORD,
-	TT_COMMENT,
-	TT_DIMENSION,
-	TT_EOF,
-	TT_FUNCTION,
-	TT_HASH,
-	TT_IDENTIFIER,
-	TT_LEFT_CURLY_BRACKET,
-	TT_LEFT_PARENTHESIS,
-	TT_LEFT_SQUARE_BRACKET,
-	TT_NUMBER,
-	TT_PERCENTAGE,
-	TT_RIGHT_CURLY_BRACKET,
-	TT_RIGHT_PARENTHESIS,
-	TT_RIGHT_SQUARE_BRACKET,
-	TT_SEMICOLON,
-	TT_STRING,
-	TT_WHITESPACE,
-	TokenStream,
-	pickTransforms,
-	unescapeIdentifier
-} = cssSyntaxParser;
+const { Flag, NodeType, Part, isIdentStartCodePoint, unescapeIdentifier } =
+	cssSyntaxParser;
 
 const {
+	CSS_RESPELLINGS,
+	DEFAULT_OPTIONS,
+	EXPECTED,
+	MODERN_BROWSERS,
+	PRESETS,
+	TARGET_OPTIONS,
+	TARGET_VARS_OPTIONS,
+	cssCuts,
+	cssPurityDigest,
+	cssSlices,
+	cssSpans,
+	printerFor,
+	sweepRespellings,
+	tokenStream
+} = require("../test/helpers/syntaxInvariants/css");
+const {
 	STAGES,
+	TreeEvents,
+	agreement,
+	agreementInvariant,
 	collectFiles,
 	compress,
 	exists,
@@ -77,7 +69,6 @@ const {
 	formatCost,
 	formatProfile,
 	formatSecond,
-	hasher,
 	idempotence,
 	installPackages,
 	kb,
@@ -88,17 +79,12 @@ const {
 	measure,
 	measureInWorker,
 	missingReport,
-	oneLine,
-	pathSpanWalk,
 	purityRelation,
 	run,
-	shrink,
-	signed,
-	sliceRelation,
-	spans,
 	sweepExitCode,
 	sweepMode,
-	thrownText
+	wantedExpectations,
+	wantedRespelling
 } = require("./compare-tools-harness");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -320,37 +306,7 @@ const fixtures = () => [
 	)
 ];
 
-/** @typedef {import("../lib/css/syntax-parser").CssPrintOptions} CssPrintOptions */
-
-/** @type {CssPrintOptions} */
-const DEFAULT_OPTIONS = {};
-
-/** @type {CssPrintOptions} */
-const TARGET_OPTIONS = { environment: { browsers: MODERN_BROWSERS } };
-
-/** @type {CssPrintOptions} */
-const TARGET_VARS_OPTIONS = {
-	environment: { browsers: MODERN_BROWSERS },
-	rewriteCustomProperties: true
-};
-
-// WHY: every engine `MODERN_BROWSERS` names reads nesting, color-mix and the
-// rest, so under it the lowerings never run. A pinned pre-nesting target that
-// reads `:is()` is the one the nesting lowering needs, and never goes stale.
-/** @type {CssPrintOptions} */
-const LEGACY_TARGET_OPTIONS = {
-	environment: { browsers: ["chrome 100", "firefox 100", "safari 15.4"] }
-};
-
-// The option sets the invariants are held over: the ones the comparison's own
-// webpack rows are measured with, plus the legacy target for the lowerings.
-/** @type {[string, CssPrintOptions][]} */
-const PRESETS = [
-	["default", DEFAULT_OPTIONS],
-	["target", TARGET_OPTIONS],
-	["target+vars", TARGET_VARS_OPTIONS],
-	["legacy", LEGACY_TARGET_OPTIONS]
-];
+/** @typedef {import("../lib/css/syntax-parser").CssPath} CssPath */
 
 // Each entry builds its callable on demand, so the measuring worker loads only
 // the one tool it measures — anything else would land in that tool's peak RSS.
@@ -703,6 +659,369 @@ const classSelectors = (postcss, selectorParser, css) => {
 	return set;
 };
 
+// --- Parser agreement -------------------------------------------------------
+
+// css-tree is the reference the trees are held to; postcss builds the same
+// rules, at-rules and declarations. The others build trees of their own.
+const REFERENCE_PARSER = "css-tree";
+
+/**
+ * A prelude or value as the readers compare it: comments dropped, whitespace
+ * runs collapsed. Each side's own source text, so no printer respells it.
+ * @param {string} text what the source wrote
+ * @returns {string} it compared
+ */
+const comparedText = (text) =>
+	text
+		.replace(/\/\*[\s\S]*?(?:\*\/|$)/g, " ")
+		.replace(/\s+/g, " ")
+		.trim();
+
+/**
+ * Whether a declaration's name opens with an identifier, which is all the spec
+ * reads as one: an IE hack such as `*zoom` is a parse error, dropped.
+ * @param {string} name a declaration's name
+ * @returns {boolean} true when the spec keeps the declaration
+ */
+const startsIdentifier = (name) => {
+	const first = name.charCodeAt(0);
+	if (first === 0x2d) {
+		const second = name.charCodeAt(1);
+		return isIdentStartCodePoint(second) || second === 0x2d || second === 0x5c;
+	}
+	return isIdentStartCodePoint(first) || first === 0x5c;
+};
+
+/**
+ * @param {TreeEvents} events the tree so far
+ * @param {string} property a declaration's name
+ * @param {string} value its value
+ * @param {boolean} important whether it carries `!important`
+ * @param {(name: string) => string} decode the reader's own escape decoder, read the name with
+ */
+const declaration = (events, property, value, important, decode) => {
+	if (!startsIdentifier(property)) return;
+	events.leaf(
+		`${decode(property)}: ${comparedText(value)}${
+			important ? " !important" : ""
+		}`
+	);
+};
+
+/**
+ * @param {string} name an at-rule's name
+ * @param {string} prelude its prelude
+ * @param {boolean} block whether it has a block
+ * @param {(name: string) => string} decode the reader's own escape decoder, read the name with
+ * @returns {string} what its start says, as every reader writes it
+ */
+const atRuleOf = (name, prelude, block, decode) => {
+	const compared = comparedText(prelude);
+	return `@${decode(name)}${compared === "" ? "" : ` ${compared}`}${
+		block ? " {" : ";"
+	}`;
+};
+
+/**
+ * css-tree's tree, as the agreement column reads it. A prelude or value is
+ * read off its source range. Inside a style rule, css-tree gives up on a block
+ * mixing declarations and rules, and reads an at-rule's block as rules alone, so
+ * both are read again below.
+ * @param {string} css a stylesheet
+ * @returns {TreeEvents} what it says
+ */
+const cssTreeTree = (css) => {
+	const cssTree = load("css-tree");
+	const events = new TreeEvents();
+	/**
+	 * @param {EXPECTED_ANY} node a css-tree node
+	 * @returns {string} its source
+	 */
+	const source = (node) =>
+		node === null
+			? ""
+			: comparedText(css.slice(node.loc.start.offset, node.loc.end.offset));
+	/**
+	 * @param {number} start where to parse from
+	 * @param {number} end where to stop
+	 * @param {string} context what to parse it as
+	 * @returns {EXPECTED_ANY[]} the nodes it holds
+	 */
+	const parse = (start, end, context) => [
+		...cssTree.parse(css.slice(start, end), {
+			context,
+			positions: true,
+			offset: start,
+			parseValue: false,
+			parseAtrulePrelude: false,
+			parseCustomProperty: false
+		}).children
+	];
+	/**
+	 * Part of a style rule's block, read as declarations, else as rules,
+	 * whichever reads its start; what neither does reads `unparsed`. Each pass
+	 * reads past one node, so a `Raw` node it leaves is shorter.
+	 * @param {number} start where the part starts
+	 * @param {number} end where it ends
+	 */
+	const reread = (start, end) => {
+		let at = start;
+		while (at < end) {
+			let nodes = parse(at, end, "declarationList");
+			if (nodes.length === 0) return;
+			if (nodes[0].type === "Raw") nodes = parse(at, end, "stylesheet");
+			if (nodes.length === 0 || nodes[0].type === "Raw") {
+				events.leaf(`unparsed ${comparedText(css.slice(at, end))}`);
+				return;
+			}
+			at = end;
+			for (let i = 0; i < nodes.length; i++) {
+				// Read as rules, a declaration after one runs into the next
+				// selector, which a `;` gives away: read on from it afresh.
+				if (
+					i > 0 &&
+					nodes[i].type === "Rule" &&
+					source(nodes[i].prelude).includes(";")
+				) {
+					at = nodes[i].loc.start.offset;
+					break;
+				}
+				walk([nodes[i]], true);
+			}
+		}
+	};
+	/**
+	 * @param {Iterable<EXPECTED_ANY>} list a css-tree list
+	 * @param {boolean} nested whether it is inside a style rule
+	 */
+	const walk = (list, nested) => {
+		for (const node of list) {
+			if (node.type === "Rule") {
+				const prelude = source(node.prelude);
+				events.open(prelude, `rule ${prelude}`);
+				walk(node.block.children, true);
+				events.close("}");
+			} else if (node.type === "Atrule") {
+				const { block } = node;
+				events.open(
+					`@${node.name}`,
+					atRuleOf(
+						node.name,
+						source(node.prelude),
+						Boolean(block),
+						cssTree.ident.decode
+					)
+				);
+				if (block && nested) {
+					const { start, end } = block.loc;
+					reread(
+						start.offset + 1,
+						css.charCodeAt(end.offset - 1) === 0x7d
+							? end.offset - 1
+							: end.offset
+					);
+				} else if (block) {
+					walk(block.children, false);
+				}
+				events.close(block ? "}" : "");
+			} else if (node.type === "Declaration") {
+				declaration(
+					events,
+					node.property,
+					source(node.value),
+					node.important,
+					cssTree.ident.decode
+				);
+			} else if (node.type === "Raw") {
+				// A stray `;` is no statement: the spec discards it (§5.4.5).
+				if (/^[\s;]*$/.test(source(node))) continue;
+				if (nested) {
+					reread(node.loc.start.offset, node.loc.end.offset);
+				} else {
+					events.leaf(`unparsed ${source(node)}`);
+				}
+			}
+		}
+	};
+	walk(parse(0, css.length, "stylesheet"), false);
+	return events;
+};
+
+/**
+ * One node of webpack's tree, held until its block is complete.
+ * @typedef {object} HeldNode
+ * @property {number} start where it starts in the stylesheet
+ * @property {string} name its name in the path, or "" for a declaration
+ * @property {string} said what its start says, or the declaration itself
+ * @property {string | undefined} end what its end says; none for a declaration
+ * @property {HeldNode[]} children what its block holds
+ */
+
+/**
+ * webpack's tree, as the agreement column reads it. The walk visits a block's
+ * declarations before its nested rules (the parse-css.js model, §5.4.5), so a
+ * block's contents are put back in source order, the order a printer keeps.
+ * @param {string} css a stylesheet
+ * @returns {TreeEvents} what it says
+ */
+const webpackTree = (css) => {
+	/** @type {HeldNode} */
+	const root = { start: 0, name: "", said: "", end: "", children: [] };
+	/** @type {HeldNode[]} */
+	const open = [root];
+	/**
+	 * @param {number} start where the node starts
+	 * @param {string} name its name in the path
+	 * @param {string} said what its start says
+	 * @param {string | undefined} end what its end says
+	 */
+	const hold = (start, name, said, end) => {
+		/** @type {HeldNode} */
+		const node = { start, name, said, end, children: [] };
+		open[open.length - 1].children.push(node);
+		if (end !== undefined) open.push(node);
+	};
+	/** @type {Record<number, { enter: (nodePath: CssPath) => void, exit: (nodePath: CssPath) => void }>} */
+	const visitors = {
+		[NodeType.QualifiedRule]: {
+			enter: (nodePath) => {
+				// A rule the input ends before its block opens is a parse error, dropped.
+				const block = /** @type {[number, number]} */ (
+					nodePath.rangeOf(Part.block)
+				);
+				const prelude = comparedText(
+					nodePath.source(nodePath.start(), block[0])
+				);
+				hold(nodePath.start(), prelude, `rule ${prelude}`, "}");
+			},
+			exit: () => {
+				open.pop();
+			}
+		},
+		[NodeType.AtRule]: {
+			enter: (nodePath) => {
+				const block = nodePath.rangeOf(Part.block);
+				const name = /** @type {[number, number]} */ (
+					nodePath.rangeOf(Part.name)
+				);
+				const prelude = nodePath.source(
+					name[1],
+					block ? block[0] : nodePath.end()
+				);
+				const written = nodePath.source(name[0], name[1]);
+				hold(
+					nodePath.start(),
+					`@${written}`,
+					atRuleOf(
+						written,
+						block ? prelude : prelude.replace(/;\s*$/, ""),
+						block !== null,
+						unescapeIdentifier
+					),
+					block ? "}" : ""
+				);
+			},
+			exit: () => {
+				open.pop();
+			}
+		},
+		[NodeType.Declaration]: {
+			enter: (nodePath) => {
+				const name = /** @type {[number, number]} */ (
+					nodePath.rangeOf(Part.name)
+				);
+				const value = nodePath.rangeOf(Part.value);
+				const held = new TreeEvents();
+				declaration(
+					held,
+					nodePath.source(name[0], name[1]),
+					value ? nodePath.source(value[0], value[1]) : "",
+					nodePath.flag(Flag.important),
+					unescapeIdentifier
+				);
+				for (const [, , said] of held.list) {
+					hold(nodePath.start(), "", said, undefined);
+				}
+				nodePath.skipChildren();
+			},
+			exit: () => {}
+		}
+	};
+	new SourceProcessor().use(visitors).process(css, {});
+	const events = new TreeEvents();
+	/**
+	 * @param {HeldNode[]} nodes one block's contents
+	 */
+	const emit = (nodes) => {
+		for (const node of nodes.sort((a, b) => a.start - b.start)) {
+			if (node.end === undefined) {
+				events.leaf(node.said);
+				continue;
+			}
+			events.open(node.name, node.said);
+			emit(node.children);
+			events.close(node.end);
+		}
+	};
+	emit(root.children);
+	return events;
+};
+
+/**
+ * postcss's tree, as the agreement column reads it: each prelude and value as
+ * the source wrote it, which postcss keeps in `raws` where a comment cleaned it,
+ * and each declaration's name with the IE hack (`_`, `*`) it moves into `raws`.
+ * @param {string} css a stylesheet
+ * @returns {TreeEvents} what it says
+ */
+const postcssTree = (css) => {
+	const postcss = load("postcss");
+	// postcss keeps names as written, so they are read with the reference's decoder.
+	const { decode } = load("css-tree").ident;
+	const events = new TreeEvents();
+	/**
+	 * @param {EXPECTED_ANY} parent a postcss container
+	 */
+	const walk = (parent) => {
+		for (const node of parent.nodes) {
+			if (node.type === "rule") {
+				const prelude = comparedText(
+					node.raws.selector ? node.raws.selector.raw : node.selector
+				);
+				events.open(prelude, `rule ${prelude}`);
+				walk(node);
+				events.close("}");
+			} else if (node.type === "atrule") {
+				events.open(
+					`@${node.name}`,
+					atRuleOf(node.name, node.params, node.nodes !== undefined, decode)
+				);
+				if (node.nodes) walk(node);
+				events.close(node.nodes ? "}" : "");
+			} else if (node.type === "decl") {
+				declaration(
+					events,
+					/** @type {RegExpExecArray} */ (
+						/[^\s;]*$/.exec(node.raws.before)
+					)[0] + node.prop,
+					node.raws.value ? node.raws.value.raw : node.value,
+					Boolean(node.important),
+					decode
+				);
+			}
+		}
+	};
+	walk(postcss.parse(css));
+	return events;
+};
+
+/** @type {Map<string, import("./compare-tools-harness").TreeReader>} */
+const TREE_READERS = new Map([
+	["webpack", webpackTree],
+	["postcss", postcssTree],
+	[REFERENCE_PARSER, cssTreeTree]
+]);
+
 const wantedFixture = filterFrom("FIXTURE");
 const wantedTool = filterFrom("TOOL");
 const wantedStage = filterFrom("STAGE");
@@ -722,799 +1041,11 @@ const wantedStage = filterFrom("STAGE");
 // thousands of stylesheets are a corpus of their own rather than a default run.
 const SKIPPED_FIXTURE_DIRS = new Set(["js", "node_modules", "wpt"]);
 
-/**
- * @param {CssPrintOptions} options one preset's minimizer options
- * @returns {(css: string) => string} the printer those options name
- */
-const printerFor = (options) => {
-	const printOptions = {
-		mode: /** @type {"minify"} */ ("minify"),
-		transforms: pickTransforms(options),
-		...options
-	};
-	return (css) =>
-		/** @type {{ code: string }} */ (
-			new SourceProcessor().process(css, printOptions)
-		).code;
-};
-
-// Each token type by what a report calls it, read off the exports rather than
-// listed, so a type the tokenizer gains is named without editing this.
-/** @type {Map<number, string>} */
-const TOKEN_TYPE_NAMES = new Map();
-for (const [name, value] of Object.entries(cssSyntaxParser)) {
-	if (name.startsWith("TT_") && typeof value === "number") {
-		TOKEN_TYPE_NAMES.set(value, name.slice(3).toLowerCase().replace(/_/g, " "));
-	}
-}
-
-// How much of a stylesheet one cut keeps at most, where the source offers a
-// construct that small: the cost is two prints of it under every preset.
-const CUT_CONSTRUCT_LIMIT = 2048;
-
-/**
- * The stylesheet cut short inside and just after one token of each type, since
- * the end of the input is where the tokenizer and the parser close what the
- * source left open. Each cut keeps only the top-level construct it falls in,
- * which is all the end of the input can reach — the first one small enough.
- * @param {string} css a stylesheet
- * @returns {[string, string][]} `[where, cut]` for each place it was cut
- */
-const cssCuts = (css) => {
-	/** @type {Map<number, [number, number, number]>} */
-	const first = new Map();
-	/** @type {Set<number>} */
-	const small = new Set();
-	let depth = 0;
-	let construct = 0;
-	/**
-	 * @param {number} type the token's type
-	 * @param {number} start where it starts
-	 * @param {number} end where it ends
-	 */
-	const offer = (type, start, end) => {
-		if (small.has(type)) return;
-		if (end - construct <= CUT_CONSTRUCT_LIMIT) {
-			first.set(type, [construct, start, end]);
-			small.add(type);
-		} else if (!first.has(type)) {
-			first.set(type, [construct, start, end]);
-		}
-	};
-	// The stream skips a comment rather than returning it, so its callback is
-	// the one place a comment is seen to cut inside.
-	const stream = new TokenStream(css, 0, undefined, (_input, start, end) => {
-		offer(TT_COMMENT, start, end);
-		return end;
-	});
-	for (;;) {
-		const token = stream.consume();
-		const type = token.type;
-		if (type === TT_EOF) break;
-		offer(type, token.start, token.end);
-		if (
-			type === TT_FUNCTION ||
-			type === TT_LEFT_PARENTHESIS ||
-			type === TT_LEFT_SQUARE_BRACKET ||
-			type === TT_LEFT_CURLY_BRACKET
-		) {
-			depth++;
-		} else if (
-			depth !== 0 &&
-			(type === TT_RIGHT_PARENTHESIS ||
-				type === TT_RIGHT_SQUARE_BRACKET ||
-				type === TT_RIGHT_CURLY_BRACKET)
-		) {
-			depth--;
-			if (depth === 0 && type === TT_RIGHT_CURLY_BRACKET) construct = token.end;
-		} else if (depth === 0 && type === TT_SEMICOLON) {
-			construct = token.end;
-		}
-	}
-	/** @type {[string, string][]} */
-	const cuts = [];
-	for (const [type, [from, start, end]] of first) {
-		const name = TOKEN_TYPE_NAMES.get(type) || String(type);
-		if (end - start > 1) {
-			cuts.push([
-				`inside a ${name}`,
-				css.slice(from, start + ((end - start) >> 1))
-			]);
-		}
-		cuts.push([`after a ${name}`, css.slice(from, end)]);
-	}
-	return cuts;
-};
-
-/**
- * What a stylesheet says, as a flat token stream: whitespace runs collapse to
- * one marker (dropping a comment leaves the run either side of it), so only a
- * token the printer actually rewrote separates two outputs. A respelling is one,
- * which is why `#FFF` -> `#fff` between two passes reads as `differs` here.
- * @param {string} css a stylesheet
- * @returns {string} its stream, as the JSON of every token in order
- */
-const tokenStream = (css) => {
-	const stream = new TokenStream(css);
-	/** @type {string[]} */
-	const out = [];
-	for (;;) {
-		const token = stream.consume();
-		if (token.type === TT_EOF) break;
-		if (token.type === TT_WHITESPACE) {
-			if (out[out.length - 1] !== " ") out.push(" ");
-			continue;
-		}
-		out.push(`${token.type}:${css.slice(token.start, token.end)}`);
-	}
-	return JSON.stringify(out);
-};
-
-/** @type {Record<number, string>} */
-const NODE_TYPE_NAMES = {};
-for (const [name, type] of Object.entries(NodeType)) {
-	NODE_TYPE_NAMES[type] = name;
-}
-
-// Which types state a sub-range of their own. One accessor view answers every
-// property for every node, so reading `nameStart` off a token reports whatever
-// that column holds for it — the type decides, never what came back.
-const NAMED = new Set([
-	NodeType.Declaration,
-	NodeType.AtRule,
-	NodeType.Function
-]);
-const BLOCKED = new Set([NodeType.AtRule, NodeType.QualifiedRule]);
-
-/**
- * The sub-ranges a node names, as the span relation reads them.
- * @param {import("../lib/css/syntax-parser").CssPath} nodePath the accessor
- * @returns {readonly [string, number, number][] | undefined} each `[name, start, end]`
- */
-const cssInnerRanges = (nodePath) => {
-	const type = nodePath.type();
-	/** @type {[string, number, number][]} */
-	const inner = [];
-	if (NAMED.has(type)) {
-		inner.push(["name", nodePath.nameStart(), nodePath.nameEnd()]);
-	}
-	if (BLOCKED.has(type)) {
-		inner.push(["block", nodePath.blockStart(), nodePath.blockEnd()]);
-	}
-	return inner.length === 0 ? undefined : inner;
-};
-
-/**
- * Hold the parser's ranges to what they claim about the stylesheet they came
- * from. CSS owes every part of the relation: a component value sits inside the
- * declaration that holds it, and two of them never overlap.
- * @param {string} css a stylesheet
- * @returns {import("./compare-tools-harness").Report[]} what the ranges broke
- */
-const cssSpans = (css) =>
-	spans({
-		length: css.length,
-		contains: true,
-		siblings: true,
-		walk: pathSpanWalk({
-			length: css.length,
-			run: (enter, exit) => {
-				/** @type {Record<number, { enter: typeof enter, exit: typeof exit }>} */
-				const visitors = {};
-				for (const type of Object.values(NodeType)) {
-					visitors[type] = { enter, exit };
-				}
-				new SourceProcessor().use(visitors).process(css, {});
-			},
-			start: (nodePath) => nodePath.start(),
-			end: (nodePath) => nodePath.end(),
-			name: (nodePath) => NODE_TYPE_NAMES[nodePath.type()],
-			// A comment reaches the walk from the tokenizer rather than from the
-			// tree, so it arrives before the rule holding it has opened.
-			structural: (nodePath) => nodePath.type() !== NodeType.Comment,
-			inner: cssInnerRanges
-		})
-	});
-
-// What a node's own source has to be wrapped in to parse on its own. A rule
-// stands alone; a declaration needs a rule around it and a component value a
-// declaration, which is the offset shift each answer is read back through.
-/** @type {Record<number, [string, string]>} */
-const CSS_SLICE_CONTEXT = {
-	[NodeType.AtRule]: ["", ""],
-	[NodeType.QualifiedRule]: ["", ""],
-	[NodeType.Declaration]: ["a{", "}"]
-};
-
-const CSS_VALUE_CONTEXT = /** @type {[string, string]} */ (["a{b:", "}"]);
-
-// Reparsing every node costs a parse of its own, so a stylesheet would cost its
-// size times its depth. Each one is capped at this many times its own bytes,
-// spent leaves first, which is where a range is most likely to be wrong.
-const SLICE_BUDGET_FACTOR = 4;
-
-/**
- * @typedef {{ type: number, start: number, end: number, size: number }} NodeRun
- */
-
-/**
- * Every node in one stylesheet, in post-order with the size of its subtree —
- * which is what lets a subtree be read as a run rather than walked again. A
- * comment is left out: it reaches the walk from the tokenizer, so it would land
- * in whichever node happened to be open.
- * @param {string} css a stylesheet
- * @returns {NodeRun[]} each node, children before parents
- */
-const cssNodeRuns = (css) => {
-	/** @type {NodeRun[]} */
-	const runs = [];
-	// How many nodes each open node has collected, so a size is a sum rather
-	// than a second descent.
-	/** @type {number[]} */
-	const held = [0];
-	/** @type {Record<number, { enter: () => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
-	const visitors = {};
-	for (const type of Object.values(NodeType)) {
-		visitors[type] = {
-			enter: () => {
-				held.push(0);
-			},
-			exit: (nodePath) => {
-				const inside = /** @type {number} */ (held.pop());
-				if (nodePath.type() === NodeType.Comment) return;
-				const size = inside + 1;
-				held[held.length - 1] += size;
-				runs.push({
-					type: nodePath.type(),
-					start: nodePath.start(),
-					end: nodePath.end(),
-					size
-				});
-			}
-		};
-	}
-	new SourceProcessor().use(visitors).process(css, {});
-	return runs;
-};
-
-/**
- * What one node's subtree says: its shape and the offsets inside it, read
- * against the node's own start so the same construct digests the same wherever
- * it was found.
- * @param {readonly NodeRun[]} runs every node in post-order
- * @param {number} at which one to digest
- * @returns {string} its digest
- */
-const runDigest = (runs, at) => {
-	const node = runs[at];
-	/** @type {string[]} */
-	const out = [];
-	for (let index = at - node.size + 1; index <= at; index++) {
-		const one = runs[index];
-		out.push(
-			`${NODE_TYPE_NAMES[one.type]}[${one.start - node.start},${
-				one.end - node.start
-			})`
-		);
-	}
-	return out.join(" ");
-};
-
-/**
- * Hold each node's own source to the node it came from: the bytes between its
- * offsets, wrapped in the least context that lets them parse, give that node
- * back.
- * @param {string} css a stylesheet
- * @returns {{ reports: import("./compare-tools-harness").Report[], read: number, skipped: number, capped: number, repeats: number }} what broke, how many answered, and what was left out
- */
-const cssSlices = (css) => {
-	const runs = cssNodeRuns(css);
-	/** @type {import("./compare-tools-harness").SliceCandidate[]} */
-	const candidates = [];
-	let budget = css.length * SLICE_BUDGET_FACTOR;
-	let capped = 0;
-	let repeats = 0;
-	// One shape is one question: a bundle carries the same `Identifier[0,3)`
-	// hundreds of thousands of times, and reparsing each one asks nothing the
-	// first did not. Spends the budget on the shapes a source actually holds.
-	/** @type {Set<string>} */
-	const seen = new Set();
-	for (let at = 0; at < runs.length; at++) {
-		const node = runs[at];
-		const said = runDigest(runs, at);
-		// Before the budget, not after: a shape already asked about must not spend
-		// what is left, or a bundle's millionth identifier crowds out every
-		// composite node in it.
-		if (seen.has(said)) {
-			repeats++;
-			continue;
-		}
-		seen.add(said);
-		const text = css.slice(node.start, node.end);
-		if (text.length > budget) {
-			capped++;
-			continue;
-		}
-		budget -= text.length;
-		const [prefix, suffix] = CSS_SLICE_CONTEXT[node.type] || CSS_VALUE_CONTEXT;
-		candidates.push({
-			what: NODE_TYPE_NAMES[node.type],
-			said,
-			reparse: () => {
-				/** @type {NodeRun[]} */
-				let again;
-				try {
-					again = cssNodeRuns(`${prefix}${text}${suffix}`);
-				} catch (_error) {
-					return null;
-				}
-				// The node this slice is meant to be, where the wrapper put it. Read
-				// out of its stylesheet the parser can take these bytes for something
-				// else, or for nothing: what they lacked is context, not a range.
-				const want = again.findIndex(
-					(one) =>
-						one.type === node.type &&
-						one.start === prefix.length &&
-						one.end === prefix.length + text.length
-				);
-				return want === -1 ? null : runDigest(again, want);
-			}
-		});
-	}
-	return { ...sliceRelation(candidates), capped, repeats };
-};
-
-/**
- * What one parse of a stylesheet amounts to: every node's type and range, the
- * names and values it derived, and the bytes the printer makes of it.
- *
- * WHY: the derived values are the point, not the offsets. An unescaped name or
- * a cached word can come back from the last parse with every offset still
- * right, and printing reads all of them — so the output is digested too, which
- * covers the derived fields a node type does not name here.
- * @param {string} css a stylesheet
- * @param {(css: string) => string} print the printer to read it back out with
- * @returns {string} the digest
- */
-const cssPurityDigest = (css, print) => {
-	const digest = hasher();
-	/** @type {Record<number, { enter: () => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
-	const visitors = {};
-	const read = (/** @type {EXPECTED_ANY} */ nodePath) => {
-		const type = nodePath.type();
-		digest.update(
-			`${NODE_TYPE_NAMES[type]}[${nodePath.start()},${nodePath.end()})`
-		);
-		if (NAMED.has(type)) {
-			digest.update(`|${nodePath.name()}|${nodePath.unescapedName()}`);
-		}
-		digest.update("\n");
-	};
-	for (const type of Object.values(NodeType)) {
-		visitors[type] = { enter: () => {}, exit: read };
-	}
-	try {
-		new SourceProcessor().use(visitors).process(css, {});
-		digest.update(print(css));
-	} catch (error) {
-		return `refused: ${/** @type {Error} */ (error).message}`;
-	}
-	return digest.hex();
-};
-
-/**
- * What a stylesheet says, token by token, with each one's value as the parser
- * resolves it rather than as the source wrote it: an escape resolved, a string
- * without its delimiters, a number as its value and its unit folded.
- *
- * WHY: this is what a respelling has to be judged against. The raw stream
- * `idempotence` reads would call `8PX` and `8px`, or `"a"` and `'a'`, two
- * different outputs — so every respelling would report the printer for keeping
- * a spelling that says exactly what the other one says.
- * @param {string} css a stylesheet
- * @returns {string} its meaning, as the JSON of every token in order
- */
-const tokenMeaning = (css) => {
-	const stream = new TokenStream(css);
-	/** @type {string[]} */
-	const out = [];
-	for (;;) {
-		const token = stream.consume();
-		if (token.type === TT_EOF) break;
-		const text = css.slice(token.start, token.end);
-		out.push(`${token.type}:${canonicalToken(token.type, text, token)}`);
-	}
-	return JSON.stringify(out);
-};
-
-/**
- * One token's value as the parser resolves it.
- * @param {number} type which token it is
- * @param {string} text the token as the source spelled it
- * @param {EXPECTED_ANY} token the token, for a dimension's unit
- * @returns {string} its value
- */
-const canonicalToken = (type, text, token) => {
-	if (type === TT_IDENTIFIER) return unescapeIdentifier(text);
-	// The sigil is not part of the name, and an at-rule name is matched
-	// case-insensitively where an identifier is not.
-	if (type === TT_AT_KEYWORD) {
-		return unescapeIdentifier(text.slice(1)).toLowerCase();
-	}
-	if (type === TT_HASH) return unescapeIdentifier(text.slice(1));
-	if (type === TT_FUNCTION) {
-		return unescapeIdentifier(text.slice(0, -1)).toLowerCase();
-	}
-	if (type === TT_STRING) return unescapeIdentifier(text.slice(1, -1));
-	if (type === TT_DIMENSION) {
-		const at = token.unitStart - token.start;
-		return `${Number(text.slice(0, at))}${text.slice(at).toLowerCase()}`;
-	}
-	if (type === TT_NUMBER || type === TT_PERCENTAGE) {
-		return String(Number(type === TT_PERCENTAGE ? text.slice(0, -1) : text));
-	}
-	return text;
-};
-
-/**
- * @typedef {object} Site
- * @property {number} start where the token begins
- * @property {number} end where it ends
- * @property {number} type which token it is
- * @property {string} text the token as the source spelled it
- * @property {number} unitStart where a dimension's unit begins, or -1
- */
-
-/**
- * Where a declaration an escape cannot be respelled in sits: a custom property,
- * `@property`'s `initial-value`, `@function`'s `result` and a lone `{}` block
- * are kept as authored, and a `unicode-range` reads its tokens' representations.
- * @param {string} css a stylesheet
- * @returns {[number, number][]} each range, in source order
- */
-const opaqueDeclarationRanges = (css) => {
-	/** @type {[number, number][]} */
-	const ranges = [];
-	// The at-rules open around the walk: `result` stays `@function`'s inside a
-	// condition nested in it.
-	/** @type {string[]} */
-	const atRules = [];
-	/** @type {Record<number, { enter: (nodePath: EXPECTED_ANY) => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
-	const visitors = {
-		[NodeType.AtRule]: {
-			enter: (nodePath) => {
-				atRules.push(unescapeIdentifier(nodePath.name()).toLowerCase());
-			},
-			exit: () => {
-				atRules.pop();
-			}
-		},
-		[NodeType.Declaration]: {
-			enter: () => {},
-			exit: (nodePath) => {
-				const name = nodePath.unescapedName().toLowerCase();
-				const first =
-					nodePath.childCount() === 1 ? nodePath.childAt(nodePath.node, 0) : -1;
-				if (
-					name.startsWith("--") ||
-					// CSS Syntax 3 §7.1 reads a urange off the source text, and Chromium
-					// reads one only from a literal `u`.
-					name === "unicode-range" ||
-					(name === "initial-value" &&
-						atRules[atRules.length - 1] === "property") ||
-					(name === "result" && atRules.includes("function")) ||
-					(first !== -1 &&
-						nodePath.type(first) === NodeType.SimpleBlock &&
-						nodePath.blockToken(first) === "{")
-				) {
-					ranges.push([nodePath.start(), nodePath.end()]);
-				}
-			}
-		}
-	};
-	new SourceProcessor().use(visitors).process(css, {});
-	// Visited in the order the walk finishes them, which puts a nested block's
-	// declarations after its parent's later ones.
-	return ranges.sort((a, b) => a[0] - b[0]);
-};
-
-/**
- * Every token a respelling could rewrite, in source order.
- * @param {string} css a stylesheet
- * @returns {Site[]} the sites
- */
-const cssSites = (css) => {
-	const kept = opaqueDeclarationRanges(css);
-	const stream = new TokenStream(css);
-	/** @type {Site[]} */
-	const sites = [];
-	// Both are in source order, so the ranges are walked alongside the tokens
-	// rather than searched for each one: a stylesheet of custom properties holds
-	// thousands, and asking every token about all of them is quadratic.
-	let range = 0;
-	// A container style query compares token streams as written, so the printer
-	// keeps each `style()` whole (CSS Conditional 5 §5).
-	let containerPrelude = false;
-	let styleDepth = 0;
-	for (;;) {
-		const token = stream.consume();
-		if (token.type === TT_EOF) break;
-		if (styleDepth !== 0) {
-			if (token.type === TT_FUNCTION || token.type === TT_LEFT_PARENTHESIS) {
-				styleDepth++;
-			} else if (token.type === TT_RIGHT_PARENTHESIS) {
-				styleDepth--;
-			}
-			continue;
-		}
-		if (token.type === TT_AT_KEYWORD) {
-			containerPrelude =
-				unescapeIdentifier(
-					css.slice(token.start + 1, token.end)
-				).toLowerCase() === "container";
-		} else if (
-			token.type === TT_LEFT_CURLY_BRACKET ||
-			token.type === TT_SEMICOLON
-		) {
-			containerPrelude = false;
-		} else if (
-			containerPrelude &&
-			token.type === TT_FUNCTION &&
-			unescapeIdentifier(
-				css.slice(token.start, token.end - 1)
-			).toLowerCase() === "style"
-		) {
-			styleDepth = 1;
-			continue;
-		}
-		while (range < kept.length && kept[range][1] <= token.start) range++;
-		if (range < kept.length && token.start >= kept[range][0]) continue;
-		sites.push({
-			start: token.start,
-			end: token.end,
-			type: token.type,
-			text: css.slice(token.start, token.end),
-			unitStart: token.type === TT_DIMENSION ? token.unitStart : -1
-		});
-	}
-	return sites;
-};
-
-/**
- * One character of an identifier written as the escape §4.3.7 resolves to the
- * same character, which is the spelling a minifier comparing raw text misses.
- * @param {string} name an identifier, or the name part of one
- * @returns {string | null} it with its first ASCII letter escaped, or null
- */
-const asEscaped = (name) => {
-	const at = name.search(/[a-z]/i);
-	if (at === -1) return null;
-	const code = name.charCodeAt(at).toString(16);
-	// The space ends the escape, so the character after it stays its own.
-	return `${name.slice(0, at)}\\${code} ${name.slice(at + 1)}`;
-};
-
-/**
- * @param {string} text a string token as written, delimiters included
- * @param {string} quote the delimiter to write it with
- * @returns {string | null} the same string under that delimiter, or null
- */
-const asQuoted = (text, quote) => {
-	const had = text[0];
-	if (had !== '"' && had !== "'") return null;
-	if (had === quote) return null;
-	// Unterminated at end of input: re-delimiting it would close it.
-	if (text.length < 2 || text[text.length - 1] !== had) return null;
-	const body = text.slice(1, -1);
-	// Already escaped for the old delimiter, and the new one is not escaped at
-	// all: both would have to be rewritten, so leave those alone.
-	if (body.includes("\\") || body.includes(quote)) return null;
-	return `${quote}${body}${quote}`;
-};
-
-/**
- * @typedef {object} Respelling
- * @property {string} name how the row is labelled
- * @property {(site: Site) => string | null} write the token's new source text, or null to leave it alone
- */
-
-/**
- * Each writes the same value a different way, which the spec says in so many
- * words: §4.3.7 for an escape, an ASCII case-insensitive match for a unit and
- * an at-rule name.
- *
- * WHY: an identifier is deliberately not case-respelled, though a property name
- * and a keyword are case-insensitive too. Which of those an identifier is
- * depends on where it sits, and a class, an id, a custom property, a font
- * family and a counter name are all case-sensitive — so a case respelling there
- * would report the printer for keeping a distinction the source made.
- * @type {Respelling[]}
- */
-const CSS_RESPELLINGS = [
-	{
-		name: "escape",
-		write: (site) => (site.type === TT_IDENTIFIER ? asEscaped(site.text) : null)
-	},
-	{
-		name: "quote-double",
-		write: (site) => (site.type === TT_STRING ? asQuoted(site.text, '"') : null)
-	},
-	{
-		name: "quote-single",
-		write: (site) => (site.type === TT_STRING ? asQuoted(site.text, "'") : null)
-	},
-	{
-		name: "leading-zero",
-		write: (site) => {
-			if (site.type !== TT_NUMBER && site.type !== TT_DIMENSION) return null;
-			const written = site.text.replace(/^([+-]?)\./, "$10.");
-			return written === site.text ? null : written;
-		}
-	},
-	{
-		name: "unit-case",
-		write: (site) => {
-			if (site.unitStart === -1) return null;
-			const unit = site.text.slice(site.unitStart - site.start);
-			const upper = unit.toUpperCase();
-			return upper === unit
-				? null
-				: `${site.text.slice(0, site.unitStart - site.start)}${upper}`;
-		}
-	},
-	{
-		name: "at-keyword-case",
-		write: (site) => {
-			if (site.type !== TT_AT_KEYWORD) return null;
-			const upper = site.text.toUpperCase();
-			return upper === site.text ? null : upper;
-		}
-	}
-];
-
-// A divergence the printer has not answered for yet, with what it is. Read by
-// the report and the gate: an entry matching nothing is itself a finding, so
-// the fix retires its entry rather than leaving it to rot.
-/** @type {import("./compare-tools-harness").Expected[]} */
-const EXPECTED = [
-	{
-		relation: "respelling escape",
-		contains: "-> \\7a ",
-		why: "`*zoom: 1` is no declaration but the star hack an engine drops, which the printer writes back as authored, escape included"
-	},
-	{
-		relation: "respelling escape",
-		contains: "-> \\76 ",
-		source: "parsing/cases/declaration.css",
-		why: "`prop: {value}{value}` is no declaration: it reparses as a rule whose selector `prop:` is invalid, which the printer writes back as authored"
-	}
-];
-
-/**
- * @param {string} css a stylesheet
- * @param {Site[]} sites the sites to respell
- * @param {Respelling} respelling how to respell them
- * @returns {string} the stylesheet, respelled
- */
-const respell = (css, sites, respelling) => {
-	let out = "";
-	let read = 0;
-	for (const site of sites) {
-		const written = respelling.write(site);
-		if (written === null) continue;
-		out += css.slice(read, site.start) + written;
-		read = site.end;
-	}
-	return out + css.slice(read);
-};
-
-/** @typedef {{ kind: "differs" | "bytes" | "throws", delta: number, note: string }} Finding */
-
-/**
- * Whether respelling these sites moved the output, and how. An output of the
- * same length saying the same thing is not a finding: webpack keeps the
- * source's spelling where nothing beats it.
- * @param {(css: string) => string} minify the printer under test
- * @param {string} css a stylesheet
- * @param {string} minified what it minifies to
- * @param {Site[]} sites the sites to respell
- * @param {Respelling} respelling how to respell them
- * @returns {Finding | null} what moved, or null
- */
-const spellingFinding = (minify, css, minified, sites, respelling) => {
-	const mutated = respell(css, sites, respelling);
-	if (mutated === css) return null;
-	// Verified against the tokenizer rather than argued for: a respelling that
-	// moved the stylesheet is dropped instead of reported.
-	if (tokenMeaning(mutated) !== tokenMeaning(css)) return null;
-	/** @type {string} */
-	let answer;
-	try {
-		answer = minify(mutated);
-	} catch (error) {
-		return { kind: "throws", delta: 0, note: thrownText(error) };
-	}
-	if (answer === minified) return null;
-	const says = tokenMeaning(answer) !== tokenMeaning(minified);
-	if (!says && answer.length === minified.length) return null;
-	return {
-		kind: says ? "differs" : "bytes",
-		delta: answer.length - minified.length,
-		note: ""
-	};
-};
-
-/**
- * What the report shows for a set of sites: how they were written, and how the
- * respelling writes them, each cut to a line around the first place they part.
- * @param {Site[]} sites the sites carrying the finding
- * @param {Respelling} respelling how they are respelled
- * @returns {string} the repro
- */
-const reproOf = (sites, respelling) => {
-	const from = sites.map((site) => site.text).join(" ");
-	const to = sites.map((site) => respelling.write(site) || site.text).join(" ");
-	// Shown from where they part rather than from the start, which for sites
-	// past the line is the same prefix twice with the respelling itself cut off
-	// — where the entry answering for it, read off this string, misses it too.
-	let at = 0;
-	while (at < from.length && at < to.length && from[at] === to[at]) at++;
-	const start = at < 60 ? 0 : at - 16;
-	const cut = (/** @type {string} */ text) =>
-		start === 0 ? text : `…${text.slice(start)}`;
-	return `    ${oneLine(cut(from), 76)}\n      -> ${oneLine(cut(to), 76)}`;
-};
-
-/**
- * Every respelling this stylesheet's output depends on.
- * @param {(css: string) => string} minify the printer under test
- * @param {string} css a stylesheet
- * @param {string} minified what it minifies to
- * @returns {import("./compare-tools-harness").Report[]} what moved, and the smallest repro found for each
- */
-const sweepRespellings = (minify, css, minified) => {
-	/** @type {import("./compare-tools-harness").Report[]} */
-	const reports = [];
-	const sites = cssSites(css);
-	for (const respelling of CSS_RESPELLINGS.filter((one) =>
-		wantedSpelling(one.name)
-	)) {
-		/**
-		 * @param {Site[]} subset the sites to respell
-		 * @returns {Finding | null} what moved
-		 */
-		const holds = (subset) =>
-			spellingFinding(minify, css, minified, subset, respelling);
-		const found = holds(sites);
-		if (found === null) continue;
-		const relation = `respelling ${respelling.name}`;
-		// Bisecting costs a minify of the whole stylesheet per step, and it is
-		// there to name a repro for something that needs looking at. A divergence
-		// already answered for needs none, so the sites it was found over stand.
-		const answered = EXPECTED.some(
-			(entry) =>
-				entry.relation === relation &&
-				reproOf(sites, respelling).includes(entry.contains)
-		);
-		const carried =
-			found.kind === "throws" || answered
-				? sites
-				: shrink(holds, sites, found.kind);
-		const blamed = (carried === sites ? found : holds(carried)) || found;
-		reports.push({
-			relation,
-			what:
-				blamed.kind === "throws"
-					? `threw: ${blamed.note}`
-					: `${blamed.kind}, ${signed(blamed.delta)}`,
-			repro: reproOf(carried, respelling)
-		});
-	}
-	return reports;
-};
+// The inputs the unit tests read, one directory each: `css/invariants.unittest.js`
+// holds every one of them to these relations, with its own known differences.
+const UNIT_INPUT_RE = /^test\/fixtures\/css\/[^/]+\/index\.css$/;
 
 const wantedRelation = filterFrom("RELATION");
-const wantedSpelling = filterFrom("SPELLING");
 const wantedPreset = filterFrom("PRESET");
 
 /**
@@ -1617,10 +1148,9 @@ const invariantFixtures = () => {
 		".css",
 		SKIPPED_FIXTURE_DIRS
 	)) {
-		out.push([
-			path.relative(ROOT, file).replace(/\\/g, "/"),
-			fs.readFileSync(file, "utf8")
-		]);
+		const label = path.relative(ROOT, file).replace(/\\/g, "/");
+		if (UNIT_INPUT_RE.test(label)) continue;
+		out.push([label, fs.readFileSync(file, "utf8")]);
 	}
 	// Written rather than installed: what ships repeats what ships, and these are
 	// the constructs it does not.
@@ -1650,15 +1180,29 @@ const invariants = (write) => {
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
-	// Filtered like the corpus is: an expectation for a relation this run was
-	// never going to reach matched nothing because nothing asked it to, which is
-	// not the divergence having gone away.
+	const referenceHeld = agreementInvariant({
+		wanted: wantedRelation("agreement"),
+		referenceName: REFERENCE_PARSER,
+		reference: () => {
+			load(REFERENCE_PARSER);
+			return cssTreeTree;
+		},
+		tree: webpackTree,
+		corpus,
+		expected: EXPECTED,
+		missing: _missingFixtures
+	});
+	// Filtered like the corpus is: an expectation for a relation, fixture or
+	// preset this run was never going to reach matched nothing because nothing
+	// asked it to, which is not the divergence having gone away.
 	const groups = findingGroups(
-		EXPECTED.filter(
-			(entry) =>
-				wantedRelation(entry.relation) && wantedSpelling(entry.relation)
+		wantedExpectations(
+			referenceHeld.expected,
+			corpus.map(([label]) => label),
+			presets.map(([name]) => name)
 		)
 	);
+	referenceHeld.hold(groups);
 	// Nothing is printed to reach this one, so it is read under no preset: what
 	// the parser said about the stylesheet it was handed.
 	if (wantedRelation("spans")) {
@@ -1703,7 +1247,9 @@ const invariants = (write) => {
 	// The printer's two relations share a sweep: both need the output, and
 	// printing it twice to ask two questions of it would double the run.
 	const wantsIdempotence = wantedRelation("idempotence");
-	const wantsRespelling = wantedRelation("respelling");
+	const wantsRespelling = CSS_RESPELLINGS.some((one) =>
+		wantedRespelling(one.name)
+	);
 	if (wantsIdempotence || wantsRespelling) {
 		log(
 			`sweeping ${corpus.length} stylesheets under ${presets.length} presets …`
@@ -1780,6 +1326,7 @@ const main = async () => {
 		);
 		const before = classSelectors(postcss, selectorParser, css);
 		const noticesBefore = legalNotices(css);
+		const agrees = agreement(REFERENCE_PARSER, TREE_READERS, css);
 		const input = await compress(Buffer.from(css));
 		process.stdout.write(
 			`\n${label} — ${kb(input.raw)} (${kb(input.gzip)} gzip, ${kb(
@@ -1795,7 +1342,7 @@ const main = async () => {
 				stage === "parse"
 					? `  ${"parse".padEnd(26)}${"ms".padStart(8)}${"cpu".padStart(
 							7
-						)}${"peak".padStart(9)}\n`
+						)}${"peak".padStart(9)}   agrees with ${REFERENCE_PARSER}\n`
 					: `  ${stage.padEnd(26)}${"out".padStart(10)}${"gzip".padStart(
 							9
 						)}${"saved".padStart(8)}${"brotli".padStart(9)}${"zstd".padStart(
@@ -1809,7 +1356,9 @@ const main = async () => {
 				if ("error" in result) {
 					// A tool rejecting the stylesheet outright is a comparison result too.
 					process.stdout.write(
-						`  ${tool.name.padEnd(26)} rejects it: ${result.error}\n`
+						`  ${tool.name.padEnd(26)} ${
+							result.timedOut ? "" : "rejects it: "
+						}${result.error}\n`
 					);
 					continue;
 				}
@@ -1821,7 +1370,7 @@ const main = async () => {
 							cost.wall.padStart(8) +
 							cost.cpu.padStart(7) +
 							cost.peak.padStart(9)
-						}\n`
+						}   ${await agrees(tool.name)}\n`
 					);
 					process.stdout.write(formatProfile(result));
 					continue;
@@ -1851,33 +1400,47 @@ const main = async () => {
 	}
 };
 
+/**
+ * `--invariants`: the relations alone, which need no install.
+ * @returns {Promise<void>} resolves once the exit code is set
+ */
+const reportInvariantsOnly = async () => {
+	process.exitCode = sweepExitCode(
+		reportInvariants(),
+		_missingFixtures,
+		process.argv
+	);
+};
+
+// A lookup rather than a chain of ternaries: each entry point is bound where
+// it is named, so reading the dispatch is reading the whole table. `--setup`
+// installs the fixtures and stops, without paying for the comparison.
+const RUNNERS = new Map(
+	/** @type {[string, () => Promise<unknown>][]} */ ([
+		["--measure", measure.bind(null, TOOLS)],
+		["--setup", setup],
+		["--invariants", reportInvariantsOnly]
+	])
+);
+
+/**
+ * Runs the entry point the mode names, defaulting to the whole comparison.
+ * @param {string=} mode which entry point to run
+ * @returns {Promise<unknown>} what that entry point resolves to
+ */
+const runMode = (mode = "") => (RUNNERS.get(mode) || main)();
+
 // Only as the entry point, so a test can read the corpus below without running
 // the comparison.
-if (require.main === module) {
-	// `--setup` installs the fixtures and builds nothing else, so a consumer
-	// that only reads them does not run the comparison to get them.
-	const mode = sweepMode(process.argv);
-	// The sweep alone, for a caller that wants the relations without the ten
-	// minutes the comparison costs; a full run prints the same section.
-	if (mode === "--invariants") {
-		process.exitCode = sweepExitCode(
-			reportInvariants(),
-			_missingFixtures,
-			process.argv
-		);
-	} else {
-		const started =
-			mode === "--measure"
-				? measure(TOOLS)
-				: mode === "--setup"
-					? setup()
-					: main();
-		started.catch((error) => {
-			log(String(error && error.stack ? error.stack : error));
-			process.exitCode = 1;
-		});
-	}
-}
+const started =
+	require.main === module
+		? runMode(sweepMode(process.argv))
+		: Promise.resolve();
+
+started.catch((error) => {
+	log(String(error && error.stack ? error.stack : error));
+	process.exitCode = 1;
+});
 
 // Where the cache holds each fixture, for a reader that is not this script.
 module.exports = {
@@ -1887,5 +1450,15 @@ module.exports = {
 	GENERATED_FIXTURES: /** @type {[string, string][]} */ (
 		GENERATED_FIXTURES.map(([label, file]) => [label, file])
 	),
-	PACKED_FIXTURES
+	PACKED_FIXTURES,
+	TREE_READERS,
+	runMode,
+	PRESETS,
+	cssCuts,
+	cssPurityDigest,
+	cssSlices,
+	cssSpans,
+	printerFor,
+	sweepRespellings,
+	tokenStream
 };

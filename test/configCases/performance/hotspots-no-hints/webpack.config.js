@@ -1,5 +1,7 @@
 "use strict";
 
+const holdMainThread = require("../../../helpers/holdMainThread");
+
 /**
  * Holds the main thread for a known stretch, which is what the hint measures.
  * @param {number} ms how long to burn
@@ -9,11 +11,7 @@ const burn = (ms) => ({
 	apply(compiler) {
 		compiler.hooks.compilation.tap("BurnPlugin", (compilation) => {
 			compilation.hooks.afterSeal.tap("BurnPlugin", () => {
-				const until = Date.now() + ms;
-
-				while (Date.now() < until) {
-					// Spinning on purpose.
-				}
+				holdMainThread(ms);
 			});
 		});
 	}

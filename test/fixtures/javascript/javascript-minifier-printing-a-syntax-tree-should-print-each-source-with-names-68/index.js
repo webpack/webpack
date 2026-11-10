@@ -1,0 +1,1 @@
+(a, b) ? c : d; f((a, b)); [(a, b)]; ({ a: (a, b) }); a[(b, c)]; (a, b).c; void (a, b); x = (1, 2); var v = (1, 2); for (a, b; c, d; e, f); for (x of (a, b)); for (x in a, b); (a, b);

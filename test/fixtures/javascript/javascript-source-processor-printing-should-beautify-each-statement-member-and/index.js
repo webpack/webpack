@@ -1,0 +1,1 @@
+function f(a,b){if(a){return b in a}for(;;)x()} class A{m(){}} switch(x){case 1:y();break;case 2:w();break;default:z()} const o={a:1,b:[2,3]};

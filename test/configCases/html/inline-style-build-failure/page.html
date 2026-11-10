@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<title>Inline styles the CSS parser fails on</title>
+<style>.ok { color : green }</style>
+<style>.deep { b: DEEP }</style>
+<div style="b: DEEP">styled</div>
+<svg><style>.svg { b: DEEP }</style></svg>

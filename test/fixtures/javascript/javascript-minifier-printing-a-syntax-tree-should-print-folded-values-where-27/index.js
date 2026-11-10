@@ -1,0 +1,1 @@
+f(() => { var o = {}; return o.a + 1 })

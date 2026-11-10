@@ -1,0 +1,7 @@
+[
+	{
+		"mode": "minify",
+		"inlinesNames": true,
+		"source": "in.js"
+	}
+]

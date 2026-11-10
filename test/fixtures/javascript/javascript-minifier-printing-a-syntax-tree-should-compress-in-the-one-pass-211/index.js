@@ -1,0 +1,1 @@
+function m(){f();var greeting="hello";g(greeting+"!")}

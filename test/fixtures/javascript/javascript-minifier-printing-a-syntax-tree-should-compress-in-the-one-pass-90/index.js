@@ -1,0 +1,1 @@
+function h(){ var m = Math, w = window, j = JSON.parse, u = undeclaredThing, k = JSON[x], q = JSON?.p; } function t(){ try { var m = Math; } catch (e) {} }

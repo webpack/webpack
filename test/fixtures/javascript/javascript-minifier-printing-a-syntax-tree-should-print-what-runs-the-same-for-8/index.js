@@ -1,0 +1,1 @@
+function f(){var x=123;var z=0;z=x&&(z=2);return z}console.log(f())

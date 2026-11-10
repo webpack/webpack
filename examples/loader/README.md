@@ -257,8 +257,7 @@ module.exports = function (cssWithMappingToString) {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /************************************************************************/
@@ -303,11 +302,11 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ## Unoptimized
 
 ```
-asset output.js 8.72 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 3.01 KiB (javascript) 883 bytes (runtime) [entry] [rendered]
+asset output.js 8.68 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 3.01 KiB (javascript) 856 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 2.81 KiB [dependent] 4 modules
-  runtime modules 883 bytes 4 modules
+  runtime modules 856 bytes 4 modules
   ./example.js 205 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -317,11 +316,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.81 KiB [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 3.01 KiB (javascript) 1.23 KiB (runtime) [entry] [rendered]
+asset output.js 1.79 KiB [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 3.01 KiB (javascript) 1.2 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 2.81 KiB [dependent] 4 modules
-  runtime modules 1.23 KiB 4 modules
+  runtime modules 1.2 KiB 4 modules
   ./example.js 205 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main

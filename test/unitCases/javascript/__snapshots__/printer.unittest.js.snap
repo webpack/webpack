@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`jsMinify should minify: keep and extract by predicate (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`jsMinify should minify: keep and extract by predicate (with source map) 2`] = `
+Array [
+  "/*! @license MIT - keep me */",
+]
+`;
+
+exports[`jsMinify should minify: keep and extract by predicate 1`] = `"\\"use strict\\";function unusedHelper(e,l){return e+l}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+
+exports[`jsMinify should minify: keep and extract by predicate 2`] = `
+Array [
+  "/*! @license MIT - keep me */",
+]
+`;

@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "if(/*! b */(obj.y=foo()))use();",
+		"why": "a `!!x` test holding a kept comment prints through its own printing, which keeps the parentheses `!!` gave `x`; the reprint reads the comment on `x` and prints it bare, as main does"
+	}
+]

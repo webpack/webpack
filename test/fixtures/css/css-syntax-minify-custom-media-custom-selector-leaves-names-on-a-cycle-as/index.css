@@ -1,0 +1,1 @@
+@custom-media --a (--b);@custom-media --b (--a);@media (--a){a{color:red}}@media (--b){a{color:red}}

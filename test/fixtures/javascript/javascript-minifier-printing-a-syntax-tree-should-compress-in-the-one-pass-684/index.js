@@ -1,0 +1,1 @@
+x=[[1,,2].concat(3),[1].concat([,2]),[1].concat([...a]),[...a].concat(1),[f()].concat(g(),[h()]),[1].concat(y).concat(2),[1].concat(/*! c */2),[1]?.concat(2),[1].concat?.(2),[1]["concat"](2),[1].concat(y).join()]

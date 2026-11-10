@@ -1,0 +1,6 @@
+[
+	{
+		"print": "jsMinify",
+		"as": "event-handler"
+	}
+]

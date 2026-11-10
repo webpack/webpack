@@ -1,0 +1,1 @@
+@custom-media --foo (--bar: 1px);@custom-media --bar (--foo);@media (--bar){a{color:red}}

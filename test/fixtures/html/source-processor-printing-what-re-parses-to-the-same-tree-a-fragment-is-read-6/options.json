@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "beautify",
+		"fragmentContext": "table"
+	},
+	{
+		"mode": "minify",
+		"fragmentContext": "table"
+	}
+]

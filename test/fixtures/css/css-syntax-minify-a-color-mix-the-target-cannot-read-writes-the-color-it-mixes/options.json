@@ -1,0 +1,29 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 130"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 80"
+			]
+		},
+		"transforms": {
+			"colorFallbacks": false
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 80"
+			]
+		}
+	}
+]

@@ -28,19 +28,38 @@
 const { spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const vm = require("vm");
+const { parse: acornParse } = require("acorn");
 const { parse: webpackParse } = require("../lib/javascript/syntax-parser");
-// Acorn's own suite, recorded case by case: what `WebpackParser.unittest.js`
+// Acorn's own suite, recorded case by case: what `javascript/parser.unittest.js`
 // replays, read here for the ranges rather than for the trees.
 const ACORN_CORPUS = require("../test/fixtures/acorn-corpus.json");
+const {
+	JS_CUTS,
+	JS_RESPELLINGS,
+	PRESETS,
+	goalFor,
+	jsPurityDigest,
+	jsSlices,
+	jsSpans,
+	minifyOnePass,
+	parsesAsLatest,
+	printerFor,
+	spansEitherGoal,
+	sweepRespellings,
+	tokenMeaning
+} = require("../test/helpers/syntaxInvariants/javascript");
 const {
 	STAGES,
 	collectFiles,
 	compress,
+	cutsAt,
 	filterFrom,
 	findingGroups,
 	formatCost,
 	formatProfile,
-	hasher,
+	formatSecond,
+	idempotence,
 	installPackages,
 	kb,
 	loaderFor,
@@ -48,12 +67,13 @@ const {
 	measure,
 	measureInWorker,
 	missingReport,
-	pathSpanWalk,
+	oneLine,
 	purityRelation,
-	sliceRelation,
-	spans,
 	sweepExitCode,
-	sweepMode
+	sweepMode,
+	thrownText,
+	wantedExpectations,
+	wantedRespelling
 } = require("./compare-tools-harness");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -83,7 +103,7 @@ const sourceType = () =>
 // reads from `node_modules` is in, and it is where a parser's hot loop lives.
 /** @type {[string, string, "module" | "script"][]} */
 const INSTALLED_FIXTURES = [
-	["Preact 10 (ESM)", "preact/dist/preact.module.js", "module"],
+	["Preact 11 (ESM)", "preact/dist/preact.mjs", "module"],
 	["jQuery 3", "jquery/dist/jquery.js", "script"],
 	["jQuery 3 (minified)", "jquery/dist/jquery.min.js", "script"],
 	["Moment 2", "moment/moment.js", "script"],
@@ -111,7 +131,7 @@ const INSTALLED_FIXTURES = [
 	["pdf.js 6 (ESM)", "pdfjs-dist/build/pdf.mjs", "module"],
 	["Swagger UI 5 (bundle)", "swagger-ui-dist/swagger-ui-bundle.js", "script"],
 	["ECharts 6", "echarts/dist/echarts.js", "script"],
-	["Babel 7 (standalone)", "@babel/standalone/babel.js", "script"]
+	["Babel 8 (standalone)", "@babel/standalone/babel.js", "script"]
 ];
 
 /**
@@ -403,9 +423,8 @@ const TOOLS = [
 	},
 	{
 		// What a `futureDefaults` production build pays: webpack's own minify
-		// function under the options `optimization.minimize` defaults to, whose
-		// second compress pass is why this is no like for like against terser's.
-		name: "webpack (2 passes)",
+		// function, compressing and mangling in its one pass.
+		name: "webpack",
 		stage: "minify",
 		create: () => {
 			const jsMinify = require("../lib/javascript/jsMinify");
@@ -415,10 +434,7 @@ const TOOLS = [
 					await jsMinify(
 						{ "input.js": code },
 						undefined,
-						{
-							as: sourceType() === "module" ? "module" : "script",
-							compress: { passes: 2 }
-						},
+						{ as: sourceType() === "module" ? "module" : "script" },
 						false
 					)
 				).code;
@@ -429,19 +445,8 @@ const TOOLS = [
 		// shows what that function's own plumbing costs.
 		name: "webpack printer",
 		stage: "minify",
-		create: () => {
-			const loading = require("../lib/javascript/syntax").printer.load();
-
-			return async (code) =>
-				(
-					await (
-						await loading
-					).minify(code, {
-						compress: { passes: 2 },
-						module: sourceType() === "module"
-					})
-				).code;
-		}
+		create: () => (code) =>
+			minifyOnePass(code, { module: sourceType() === "module" }).code
 	},
 	{
 		name: "terser",
@@ -552,7 +557,7 @@ const scalar = (value) =>
  * @param {string} at the path walked so far
  * @returns {string | undefined} the first divergence
  */
-const firstDifference = (left, right, at) => {
+const keysDifference = (left, right, at) => {
 	if (Array.isArray(left) || Array.isArray(right)) {
 		if (!Array.isArray(left) || !Array.isArray(right)) {
 			return `${at}: acorn ${Array.isArray(left) ? "list" : "value"}, tool ${
@@ -563,7 +568,7 @@ const firstDifference = (left, right, at) => {
 			return `${at}: acorn ${left.length} items, tool ${right.length}`;
 		}
 		for (let i = 0; i < left.length; i++) {
-			const found = firstDifference(left[i], right[i], `${at}[${i}]`);
+			const found = keysDifference(left[i], right[i], `${at}[${i}]`);
 			if (found !== undefined) return found;
 		}
 		return undefined;
@@ -584,7 +589,7 @@ const firstDifference = (left, right, at) => {
 	for (const key of Object.keys(left)) {
 		if (IGNORED_NODE_KEYS.has(key)) continue;
 		if (typeof left[key] === "function") continue;
-		const found = firstDifference(
+		const found = keysDifference(
 			left[key],
 			right[key],
 			at === "" ? key : `${at}.${key}`
@@ -620,7 +625,7 @@ const compare = async () => {
 	try {
 		const reference = parserNamed("acorn")(source);
 		const tree = await parserNamed(name)(source);
-		answer = { difference: firstDifference(reference, tree, "") };
+		answer = { difference: keysDifference(reference, tree, "") };
 	} catch (error) {
 		answer = {
 			error: String(
@@ -639,9 +644,10 @@ const compare = async () => {
  * @param {EXPECTED_ANY} acorn the acorn export
  * @param {string} code JavaScript source
  * @param {"module" | "script"} goal what to parse it as
+ * @param {EXPECTED_ANY[]=} comments receives every comment the parse reads
  * @returns {Set<string>} the property names it names
  */
-const propertyNames = (acorn, code, goal) => {
+const propertyNames = (acorn, code, goal, comments) => {
 	const names = new Set();
 	/**
 	 * @param {EXPECTED_ANY} node any node
@@ -667,11 +673,29 @@ const propertyNames = (acorn, code, goal) => {
 		acorn.parse(code, {
 			sourceType: goal,
 			ecmaVersion: "latest",
-			allowHashBang: true
+			allowHashBang: true,
+			onComment: comments
 		})
 	);
 	return names;
 };
+
+// What terser keeps by default, as a license asks a bundle to: a block comment
+// opening `/*!`, or one naming `@license` or `@preserve`.
+const LEGAL_COMMENT = /^\**!|@license|@preserve/;
+
+/**
+ * The legal notices among a program's comments, read off a real parse, so a
+ * `/*!` inside a string, a template or a regular expression is not one.
+ * @param {{ type: string, value: string }[]} comments what acorn read
+ * @returns {string[]} the legal notices, each as its comment's text
+ */
+const legalNoticesOf = (comments) =>
+	comments
+		.filter(
+			(comment) => comment.type === "Block" && LEGAL_COMMENT.test(comment.value)
+		)
+		.map((comment) => comment.value);
 
 const wantedFixture = filterFrom("FIXTURE");
 const wantedTool = filterFrom("TOOL");
@@ -693,380 +717,216 @@ const SKIPPED_FIXTURE_DIRS = new Set([
 	"css-parsing-tests"
 ]);
 
-// Neither a child nor a range: `start` and `end` are the range itself, `range`
-// and `loc` restate it, and `type` is a string.
-const NOT_CHILD_KEYS = new Set(["type", "start", "end", "range", "loc"]);
+// --- Holding the parser to acorn --------------------------------------------
 
 /**
- * The nodes one ESTree node holds, in whatever order its keys are in.
- * @param {EXPECTED_ANY} node an ESTree node
- * @returns {EXPECTED_ANY[]} the nodes it holds
+ * A value as it reads in a difference report, kept short enough to scan.
+ * @param {unknown} value either parser's value at the differing path
+ * @returns {string} how the value prints
  */
-const childNodesOf = (node) => {
-	/** @type {EXPECTED_ANY[]} */
-	const children = [];
-	for (const key of Object.keys(node)) {
-		if (NOT_CHILD_KEYS.has(key)) continue;
-		const value = node[key];
-		if (value === null || typeof value !== "object") continue;
-		if (Array.isArray(value)) {
-			for (const item of value) {
-				if (item !== null && typeof item.type === "string") children.push(item);
-			}
-		} else if (typeof value.type === "string") {
-			children.push(value);
-		}
+const show = (value) => {
+	if (typeof value === "bigint") return `${value}n`;
+	if (value instanceof RegExp) return String(value);
+	if (typeof value === "object" && value !== null) {
+		return Array.isArray(value)
+			? `[${value.length} items]`
+			: `{${Object.keys(value).sort().join(",")}}`;
 	}
-	return children;
+	return JSON.stringify(value) || String(value);
 };
 
 /**
- * Hold the parser's ranges to what they claim about the source they came from.
- *
- * `siblings` is off because ESTree says two siblings may share a range rather
- * than because webpack's parser drifts: a shorthand `{ a }` carries `key` and
- * `value` as separate nodes over the same bytes, and `{ a = 1 }` nests the
- * key's range inside the value's `AssignmentPattern`. Asking for it reports
- * 6136 of those over the fixtures and not one defect.
- * @param {string} source a script or a module
- * @param {EXPECTED_ANY} options what to parse it as
- * @returns {import("./compare-tools-harness").Report[]} what the ranges broke
+ * The first place two parse trees disagree, or null when they match: every key,
+ * positions included, unlike the comparison's agreement column. Key presence is
+ * asked with `in`, since the lazy path serves `range` from a prototype getter.
+ * @param {unknown} ours what webpack's parser built
+ * @param {unknown} theirs what acorn built
+ * @param {string} at the path walked so far
+ * @returns {{ at: string, ours: string, acorn: string } | null} the difference
  */
-const jsSpans = (source, options) =>
-	spans({
-		length: source.length,
-		contains: true,
-		siblings: false,
-		walk: pathSpanWalk({
-			length: source.length,
-			run: (enter, exit) => {
-				const root = webpackParse(source, options);
-				// WHY: an explicit stack, not recursion — the acorn corpus carries a
-				// case nesting hundreds of arrays, which overflows a recursive walk
-				// well before the parser that built it minds.
-				/** @type {{ node: EXPECTED_ANY, children: EXPECTED_ANY[], index: number }[]} */
-				const stack = [{ node: root, children: childNodesOf(root), index: 0 }];
-				enter(root);
-				while (stack.length > 0) {
-					const top = stack[stack.length - 1];
-					if (top.index === top.children.length) {
-						exit(top.node);
-						stack.pop();
-						continue;
-					}
-					const child = top.children[top.index++];
-					enter(child);
-					stack.push({
-						node: child,
-						children: childNodesOf(child),
-						index: 0
-					});
-				}
-			},
-			start: (node) => node.start,
-			end: (node) => node.end,
-			name: (node) => node.type,
-			inner: () => undefined
-		})
-	});
-
-/**
- * Parse one source the way a build would, as a module where that reads and as a
- * script otherwise.
- * @param {string} source a script or a module
- * @returns {import("./compare-tools-harness").Report[] | null} what its ranges broke, or null where the parser refused it
- */
-const spansEitherGoal = (source) => {
-	const options = goalFor(source);
-	return options === null ? null : jsSpans(source, options);
-};
-
-// Both goals a build reads a file under, in the order it tries them.
-const GOALS = /** @type {("module" | "script")[]} */ (["module", "script"]);
-
-/**
- * The options one source parses under, as a build would read it: a module where
- * that works and a script otherwise.
- * @param {string} source a script or a module
- * @returns {EXPECTED_ANY} those options, or null where the parser refuses it either way
- */
-const goalFor = (source) => {
-	for (const sourceType of GOALS) {
-		// The options a build parses with, so what is held is what ships:
-		// `ranges` is on there, and a range is what this reads.
-		/** @type {import("../lib/javascript/syntax-parser").ParserOptions} */
-		const options = {
-			sourceType,
-			ecmaVersion: "latest",
-			ranges: true,
-			allowHashBang: true
-		};
-		try {
-			webpackParse(source, options);
-			return options;
-		} catch (_error) {
-			continue;
+const firstDifference = (ours, theirs, at) => {
+	if (ours === theirs) return null;
+	const report = { at, ours: show(ours), acorn: show(theirs) };
+	if (typeof ours !== typeof theirs) return report;
+	if (typeof ours === "number") {
+		return Number.isNaN(ours) && Number.isNaN(/** @type {number} */ (theirs))
+			? null
+			: report;
+	}
+	if (typeof ours === "bigint") {
+		return String(ours) === String(theirs) ? null : report;
+	}
+	if (typeof ours !== "object" || ours === null || theirs === null) {
+		return report;
+	}
+	if (ours instanceof RegExp || theirs instanceof RegExp) {
+		return String(ours) === String(theirs) ? null : report;
+	}
+	if (Array.isArray(ours) !== Array.isArray(theirs)) return report;
+	if (Array.isArray(ours)) {
+		const other = /** @type {unknown[]} */ (theirs);
+		if (ours.length !== other.length) return report;
+		for (let i = 0; i < ours.length; i++) {
+			const difference = firstDifference(ours[i], other[i], `${at}[${i}]`);
+			if (difference) return difference;
 		}
+		return null;
+	}
+	const left = /** @type {Record<string, unknown>} */ (ours);
+	const right = /** @type {Record<string, unknown>} */ (theirs);
+	const ourKeys = Object.keys(left);
+	const theirKeys = Object.keys(right);
+	// Whichever side owns more keys covers the other: two same-sized key sets
+	// that differ must each hold a key the other lacks.
+	for (const key of ourKeys.length >= theirKeys.length ? ourKeys : theirKeys) {
+		if (!(key in left)) {
+			return { at: `${at}.${key}`, ours: "absent", acorn: show(right[key]) };
+		}
+		if (!(key in right)) {
+			return { at: `${at}.${key}`, ours: show(left[key]), acorn: "absent" };
+		}
+		const difference = firstDifference(left[key], right[key], `${at}.${key}`);
+		if (difference) return difference;
 	}
 	return null;
 };
 
 /**
- * @typedef {{ what: string, start: number, end: number, size: number }} NodeRun
+ * The first few differences, with a count when more were found.
+ * @template T
+ * @param {T[]} differences everything the run collected
+ * @param {number=} limit how many to keep
+ * @returns {(T | string)[]} what the assertion prints
  */
+const reportable = (differences, limit = 10) =>
+	differences.length > limit
+		? [
+				...differences.slice(0, limit),
+				`…and ${differences.length - limit} more`
+			]
+		: differences;
 
 /**
- * Every node in one source, in post-order with the size of its subtree — which
- * is what lets a subtree be read as a run rather than walked again.
- * @param {EXPECTED_ANY} root the tree
- * @returns {NodeRun[]} each node, children before parents
+ * Where webpack's parser and acorn's read one source apart, under the options
+ * a build parses with, or null where they agree or acorn refuses it.
+ * @param {string} source a script or a module
+ * @param {EXPECTED_ANY} options what to parse it as
+ * @returns {import("../test/helpers/syntaxInvariants/relations").Report[]} the difference, as a finding
  */
-const nodeRuns = (root) => {
-	/** @type {NodeRun[]} */
-	const runs = [];
-	/** @type {{ node: EXPECTED_ANY, children: EXPECTED_ANY[], index: number, held: number }[]} */
-	const stack = [
-		{ node: root, children: sortedChildren(root), index: 0, held: 0 }
-	];
-	while (stack.length > 0) {
-		const top = stack[stack.length - 1];
-		if (top.index === top.children.length) {
-			const size = top.held + 1;
-			stack.pop();
-			if (stack.length > 0) stack[stack.length - 1].held += size;
-			runs.push({
-				what: top.node.type,
-				start: top.node.start,
-				end: top.node.end,
-				size
-			});
-			continue;
+const acornDifference = (source, options) => {
+	/** @type {EXPECTED_ANY} */
+	let theirs;
+	try {
+		theirs = acornParse(source, options);
+	} catch (_error) {
+		// acorn's own defects are its suite's to answer for: what it refuses is
+		// held by the test262 suites, not by this one.
+		return [];
+	}
+	const difference = firstDifference(
+		webpackParse(source, options),
+		theirs,
+		"Program"
+	);
+	if (difference === null) return [];
+	return [
+		{
+			relation: "acorn",
+			what: difference.at.replace(/\[\d+\]/g, "[]"),
+			repro: `    ours ${oneLine(difference.ours, 60)}, acorn ${oneLine(
+				difference.acorn,
+				60
+			)}`
 		}
-		const child = top.children[top.index++];
-		stack.push({
-			node: child,
-			children: sortedChildren(child),
-			index: 0,
-			held: 0
-		});
-	}
-	return runs;
+	];
 };
 
 /**
- * @param {EXPECTED_ANY} node an ESTree node
- * @returns {EXPECTED_ANY[]} the nodes it holds, in source order
+ * What a program cut short reads to: the tree acorn builds where acorn reads
+ * it, and otherwise a `SyntaxError`, as acorn's own refusal is.
+ * @param {string} source a program cut short
+ * @param {EXPECTED_ANY} options what to parse it as
+ * @returns {import("../test/helpers/syntaxInvariants/relations").Report[]} the difference, as a finding
  */
-const sortedChildren = (node) =>
-	childNodesOf(node).sort((a, b) => a.start - b.start || a.end - b.end);
-
-/**
- * What one node's subtree says: its shape and the offsets inside it, read
- * against the node's own start so the same construct digests the same wherever
- * it was found.
- * @param {readonly NodeRun[]} runs every node in post-order
- * @param {number} at which one to digest
- * @returns {string} its digest
- */
-const runDigest = (runs, at) => {
-	const node = runs[at];
-	/** @type {string[]} */
-	const out = [];
-	for (let index = at - node.size + 1; index <= at; index++) {
-		const one = runs[index];
-		out.push(`${one.what}[${one.start - node.start},${one.end - node.start})`);
+const cutDifference = (source, options) => {
+	try {
+		acornParse(source, options);
+	} catch (_error) {
+		try {
+			webpackParse(source, options);
+		} catch (error) {
+			if (error instanceof SyntaxError) return [];
+			return [
+				{
+					relation: "acorn",
+					what: `a cut program throws ${
+						/** @type {Error} */ (error).name
+					}, not a SyntaxError`,
+					repro: `    …${oneLine(source.slice(-60), 60)}`
+				}
+			];
+		}
+		return [
+			{
+				relation: "acorn",
+				what: "a cut program acorn rejects reads to a tree",
+				repro: `    …${oneLine(source.slice(-60), 60)}`
+			}
+		];
 	}
-	return out.join(" ");
+	try {
+		return acornDifference(source, options);
+	} catch (error) {
+		return [
+			{
+				relation: "acorn",
+				what: "a cut program acorn reads is refused",
+				repro: `    …${oneLine(source.slice(-60), 60)}: ${thrownText(error)}`
+			}
+		];
+	}
 };
 
-/**
- * What a node's own source may have to be wrapped in to stand alone, widest
- * context last. Parentheses let an object literal, a function expression or a
- * class expression open a statement.
- *
- * WHY: the function and class contexts are this relation's normalization, not
- * a convenience. Out of context `yield x` and `await x` are not invalid, they
- * are an identifier and a call, and `super.x` and `return` are only syntax
- * inside a method and a function — so a slice read at the top level is
- * reported for meaning something else when only its extent is owed. Each is
- * tried under the source's own options, which is why the ladder runs from the
- * edition-neutral ones up: a case pinned to ES6 cannot parse `async function*`,
- * and its `yield` would read as an identifier if that were the only context
- * offering a generator.
- * @type {[string, string][]}
- */
-const JS_SLICE_CONTEXTS = [
-	["", ""],
-	["(", ")"],
-	// Named, because an anonymous function declaration cannot open a statement.
-	["function f(){", "}"],
-	["function* f(){", "}"],
-	["async function f(){", "}"],
-	["async function* f(){", "}"],
-	["class X extends Y{ m(){", "} }"],
-	["class X extends Y{ async *m(){", "} }"]
+// Divergences already answered for, each with why it stands.
+/** @type {import("./compare-tools-harness").Expected[]} */
+const EXPECTED = [
+	{
+		relation: "respelling hex",
+		contains: "0x",
+		source: "asm-js/asm.js",
+		why: "asm.js reads a number's spelling, so the printer keeps it as written"
+	},
+	{
+		relation: "idempotence",
+		contains: "{return",
+		source: "test/statsCases/track-returned/index.js",
+		presets: ["default"],
+		why: "an arrow whose one statement is an `if` with a known test returning a value keeps its braces: the `if` prints before the arrow reads what it returns"
+	},
+	{
+		relation: "idempotence",
+		contains: "(1)}",
+		source:
+			"test/configCases/concatenate-modules/top-level-declarations-library-conflict/module.js",
+		presets: ["default"],
+		why: "a call printing as what its function returns keeps the parentheses that value takes unfolded, which the reprint reads as the constant it folded to"
+	},
+	{
+		relation: "idempotence",
+		contains: "(r.entrySeq()",
+		source: "Swagger UI 5 (bundle)",
+		presets: ["default"],
+		why: "`a?(b,c):c` printing as `a&&(b),c` parenthesizes a call left of `,`: an unread call may print as its arguments' sequence or what its function returns, which the printed text no longer tells apart"
+	}
 ];
 
-// Reparsing every node costs a parse of its own, so a source would cost its
-// size times its depth. Each one is capped at this many times its own bytes,
-// spent leaves first, which is where a range is most likely to be wrong.
-const SLICE_BUDGET_FACTOR = 4;
-
-/**
- * Hold each node's own source to the node it came from: the bytes between its
- * offsets, wrapped in the least context that lets them parse, give that node
- * back.
- * @param {string} source a script or a module
- * @param {EXPECTED_ANY} options what to parse it as
- * @returns {{ reports: import("./compare-tools-harness").Report[], read: number, skipped: number, capped: number, repeats: number } | null} what broke, how many answered and how many the budget cut, or null where the parser refuses the source
- */
-const jsSlices = (source, options) => {
-	/** @type {EXPECTED_ANY} */
-	let root;
-	try {
-		root = webpackParse(source, options);
-	} catch (_error) {
-		// One of the corpus cases asserting the parser refuses it.
-		return null;
-	}
-	const runs = nodeRuns(root);
-	/** @type {import("./compare-tools-harness").SliceCandidate[]} */
-	const candidates = [];
-	let budget = source.length * SLICE_BUDGET_FACTOR;
-	let capped = 0;
-	let repeats = 0;
-	// One shape is one question: a bundle carries the same `Identifier[0,3)`
-	// hundreds of thousands of times, and reparsing each one asks nothing the
-	// first did not. Spends the budget on the shapes a source actually holds.
-	/** @type {Set<string>} */
-	const seen = new Set();
-	for (let at = 0; at < runs.length; at++) {
-		const node = runs[at];
-		const said = runDigest(runs, at);
-		// Before the budget, not after: a shape already asked about must not spend
-		// what is left, or a bundle's millionth identifier crowds out every
-		// composite node in it.
-		if (seen.has(said)) {
-			repeats++;
-			continue;
-		}
-		seen.add(said);
-		const text = source.slice(node.start, node.end);
-		if (text.length > budget) {
-			capped++;
-			continue;
-		}
-		budget -= text.length;
-		candidates.push({
-			what: node.what,
-			said,
-			reparse: () => {
-				/** @type {string | null} */
-				let disagreed = null;
-				for (const [prefix, suffix] of JS_SLICE_CONTEXTS) {
-					/** @type {NodeRun[]} */
-					let again;
-					try {
-						again = nodeRuns(
-							webpackParse(`${prefix}${text}${suffix}`, options)
-						);
-					} catch (_error) {
-						continue;
-					}
-					// The node this slice is meant to be, where the wrapper put it.
-					const want = again.findIndex(
-						(one) =>
-							one.what === node.what &&
-							one.start === prefix.length &&
-							one.end === prefix.length + text.length
-					);
-					if (want === -1) continue;
-					const answer = runDigest(again, want);
-					if (answer === said) return answer;
-					if (disagreed === null) disagreed = answer;
-				}
-				// Nothing here stood these bytes alone, so what they lacked is a
-				// context rather than a range: a labelled `break` needs its label.
-				return disagreed;
-			}
-		});
-	}
-	return { ...sliceRelation(candidates), capped, repeats };
-};
-
-// What `catchStackOverflow` raises, whose position is where the stack ran out.
-const STACK_REFUSAL = "Not enough stack space to parse input";
-
-/**
- * What one parse of a source amounts to: every node's type and range and every
- * primitive a node carries, in walk order.
- *
- * WHY: the derived values are the point, not the offsets. A cached word, an
- * interned name or a reused column can hand back the last parse's answer with
- * every offset still right, so an identifier's `name`, a literal's `value` and
- * `raw`, an operator and a regexp's flags all go in. Read off the node's own
- * keys rather than a list of types, so a production added later is covered
- * without this being edited.
- * @param {string} source a script or a module
- * @param {EXPECTED_ANY} options what to parse it as
- * @returns {string} the digest
- */
-const jsPurityDigest = (source, options) => {
-	const digest = hasher();
-	/** @type {EXPECTED_ANY} */
-	let root;
-	try {
-		root = webpackParse(source, options);
-	} catch (error) {
-		// A refusal is an answer too, and one that has to be the same answer: a
-		// source rejected only after something else was read is state leaking.
-		const message = /** @type {Error} */ (error).message;
-		// Except this one. Running out of stack is a fact about the machine, and
-		// the position it names is wherever the call depth around the parse
-		// happened to run out, so only that it happened is owed.
-		return message.startsWith(STACK_REFUSAL)
-			? `refused: ${STACK_REFUSAL}`
-			: `refused: ${message}`;
-	}
-	/** @type {EXPECTED_ANY[]} */
-	const stack = [root];
-	while (stack.length > 0) {
-		const node = /** @type {EXPECTED_ANY} */ (stack.pop());
-		digest.update(`${node.type}[${node.start},${node.end})`);
-		/** @type {EXPECTED_ANY[]} */
-		const children = [];
-		for (const key of Object.keys(node)) {
-			if (NOT_CHILD_KEYS.has(key)) continue;
-			const value = node[key];
-			if (value === null || typeof value !== "object") {
-				digest.update(`|${key}=${String(value)}`);
-				continue;
-			}
-			if (Array.isArray(value)) {
-				for (const item of value) {
-					if (item !== null && typeof item.type === "string") {
-						children.push(item);
-					}
-				}
-			} else if (typeof value.type === "string") {
-				children.push(value);
-			} else {
-				// A regexp literal's `regex`, an import attribute's `with`: a plain
-				// object the parser filled in rather than a node.
-				for (const inner of Object.keys(value)) {
-					digest.update(`|${key}.${inner}=${String(value[inner])}`);
-				}
-			}
-		}
-		digest.update("\n");
-		for (let index = children.length - 1; index >= 0; index--) {
-			stack.push(children[index]);
-		}
-	}
-	return digest.hex();
-};
+const wantedPreset = filterFrom("PRESET");
 
 const wantedRelation = filterFrom("RELATION");
+
+// The inputs the unit tests read, one directory each: `javascript/invariants.unittest.js`
+// holds every one of them to these relations, with its own known differences.
+const UNIT_INPUT_RE = /^test\/fixtures\/javascript\/[^/]+\/index\.js$/;
 
 // What the last sweep did not find, read by the report and by the gate.
 /** @type {string[]} */
@@ -1086,11 +946,9 @@ const invariantFixtures = () => {
 		".js",
 		SKIPPED_FIXTURE_DIRS
 	)) {
-		out.push([
-			path.relative(ROOT, file).replace(/\\/g, "/"),
-			fs.readFileSync(file, "utf8"),
-			undefined
-		]);
+		const label = path.relative(ROOT, file).replace(/\\/g, "/");
+		if (UNIT_INPUT_RE.test(label)) continue;
+		out.push([label, fs.readFileSync(file, "utf8"), undefined]);
 	}
 	// Every production in every edition, under the options acorn tests it with:
 	// the corpus is recorded from acorn's own suite, so a range the parser gets
@@ -1116,20 +974,30 @@ const invariantFixtures = () => {
 };
 
 /**
- * Sweep mode: hold the parser to its own invariants and report what it breaks.
- * Nothing is installed and nothing is compared to, so this is the cheap half of
- * the script and the one a check can be gated on.
+ * Sweep mode: hold the parser and the printer to their own invariants and
+ * report what they break. Nothing is installed and nothing is compared to, so
+ * this is the cheap half of the script and the one a check can be gated on.
  * @param {(text: string) => void} write receives the report
- * @returns {number} how many distinct findings it named
+ * @returns {Promise<number>} how many distinct findings it named
  */
-const invariants = (write) => {
+const invariants = async (write) => {
 	const built = invariantFixtures();
 	// Filtered the same way the corpus is: a run narrowed to one fixture is not
 	// short of the ones it was never going to read, and the gate answers for the
 	// sweep that happened.
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
-	const groups = findingGroups();
+	const presets = PRESETS.filter(([name]) => wantedPreset(name));
+	// Filtered like the corpus is: an expectation for a relation, fixture or
+	// preset this run was never going to reach matched nothing because nothing
+	// asked it to, which is not the divergence having gone away.
+	const groups = findingGroups(
+		wantedExpectations(
+			EXPECTED,
+			corpus.map(([label]) => label),
+			presets.map(([name]) => name)
+		)
+	);
 	if (wantedRelation("spans")) {
 		let refused = 0;
 		for (const [label, source, options] of corpus) {
@@ -1153,7 +1021,9 @@ const invariants = (write) => {
 			for (const report of reports) groups.add(report, "parse", label);
 		}
 		log(
-			`read ranges over ${corpus.length - refused} sources (${refused} the parser refuses) …`
+			`read ranges over ${
+				corpus.length - refused
+			} sources (${refused} the parser refuses) …`
 		);
 	}
 	if (wantedRelation("slices")) {
@@ -1177,14 +1047,24 @@ const invariants = (write) => {
 		);
 	}
 	if (wantedRelation("purity")) {
-		/** @type {import("./compare-tools-harness").PuritySource[]} */
+		// Printed alone: a compress pass over every source twice costs four
+		// minutes for state the printer, not the compressor, is asked to hold.
+		const [, presetOptions] = /** @type {[string, EXPECTED_ANY]} */ (
+			PRESETS.find(([name]) => name === "format")
+		);
+		/** @type {import("../test/helpers/syntaxInvariants/relations").PuritySource[]} */
 		const sources = [];
 		for (const [label, source, options] of corpus) {
 			const settled = options === undefined ? goalFor(source) : options;
 			if (settled === null) continue;
+			const { minify } = printerFor(
+				minifyOnePass,
+				presetOptions,
+				settled.sourceType === "module"
+			);
 			sources.push({
 				what: label,
-				digest: () => jsPurityDigest(source, settled)
+				digest: () => jsPurityDigest(source, settled, minify)
 			});
 		}
 		const { reports, read } = purityRelation(sources);
@@ -1193,17 +1073,215 @@ const invariants = (write) => {
 		}
 		log(`read ${read} sources twice over …`);
 	}
+	// What the parser is held to everywhere else, asked of every fixture: acorn's
+	// own corpus is left out, as the parser's unit tests replay its trees.
+	if (wantedRelation("acorn")) {
+		let read = 0;
+		let cuts = 0;
+		for (const [label, source, options] of corpus) {
+			if (label.startsWith("acorn corpus: ")) continue;
+			const settled = options === undefined ? goalFor(source) : options;
+			if (settled === null) continue;
+			read++;
+			for (const report of acornDifference(source, settled)) {
+				groups.add(report, "parse", label);
+			}
+			for (const [where, cut] of cutsAt(source, JS_CUTS)) {
+				cuts++;
+				for (const report of cutDifference(cut, settled)) {
+					groups.add(report, "parse", `${label}, cut ${where}`);
+				}
+			}
+		}
+		log(`held ${read} trees to acorn's …`);
+		log(`… and ${cuts} of them cut short inside a construct …`);
+	}
+	// The printer's two relations share a sweep: both need the output, and
+	// printing it twice to ask two questions of it would double the run.
+	const wantsIdempotence = wantedRelation("idempotence");
+	const wantsRespelling = JS_RESPELLINGS.some((respelling) =>
+		wantedRespelling(respelling.name)
+	);
+	const wantsBehavior = wantedRelation("behavior");
+	if (wantsIdempotence || wantsRespelling || wantsBehavior) {
+		// Only what a script does before it returns is compared: a promise it
+		// leaves rejected, such as an `import()` with no loader, is ignored, and
+		// for the rest of the run, as one may settle after the sweep.
+		const ignore = () => {};
+		if (wantsBehavior) process.on("unhandledRejection", ignore);
+		let ran = 0;
+		// Respelling asks the first preset, behavior the ones printing alone.
+		const printing = presets.filter(
+			([name, presetOptions], i) =>
+				wantsIdempotence ||
+				(wantsRespelling && i === 0) ||
+				(wantsBehavior && presetOptions.compress === false)
+		);
+		let read = 0;
+		for (const [label, source, options] of corpus) {
+			const settled = options === undefined ? goalFor(source) : options;
+			// Read as a build reads it, at the latest edition: a corpus case only
+			// an older edition parses is the parser's to hold, not the printer's.
+			if (
+				settled === null ||
+				!parsesAsLatest(source, settled.sourceType === "module")
+			) {
+				continue;
+			}
+			read++;
+			const module = settled.sourceType === "module";
+			/**
+			 * @param {string} text a program
+			 * @returns {string} what it says
+			 */
+			const says = (text) => tokenMeaning(text, module);
+			for (const [preset, presetOptions] of printing) {
+				const { minify, reprint } = printerFor(
+					minifyOnePass,
+					presetOptions,
+					module
+				);
+				const { printed, reports } = wantsIdempotence
+					? idempotence({ minify, reprint, source, says })
+					: { printed: minify(source), reports: [] };
+				for (const report of reports) groups.add(report, preset, label);
+				// Compressed or renamed, what a script observes may change by
+				// contract; printed alone, nothing it does may.
+				if (
+					printed !== null &&
+					wantsBehavior &&
+					!module &&
+					presetOptions.compress === false
+				) {
+					const reports = behaviorDifference(source, printed);
+					if (reports !== null) ran++;
+					for (const report of reports || []) {
+						groups.add(report, preset, label);
+					}
+				}
+				// Under the first preset only: whether a spelling decides the
+				// output is the same question under every option set, and each
+				// asking of it is a full minify of the whole program.
+				if (printed === null || !wantsRespelling || preset !== presets[0][0]) {
+					continue;
+				}
+				for (const report of sweepRespellings(
+					minify,
+					source,
+					module,
+					printed
+				)) {
+					groups.add(report, preset, label);
+				}
+			}
+		}
+		log(`printed ${read} sources under ${printing.length} presets …`);
+		if (wantsBehavior) {
+			log(`ran ${ran} printed scripts against their sources …`);
+		}
+	}
 	return groups.write(write);
+};
+
+// The scripts `behavior` runs: short enough that a run costs little, and
+// bounded so one that loops is skipped rather than hanging the sweep.
+const BEHAVIOR_MAX_LENGTH = 20000;
+const BEHAVIOR_TIMEOUT = 200;
+// Every run reads the same clock and random numbers, so a script reading them
+// still answers for its printed form.
+const BEHAVIOR_PRELUDE =
+	"Math.random = () => 0.5;" +
+	"Date = new Proxy(Date, { construct: (D, a) => new D(...(a.length ? a : [0])), apply: (D) => String(new D(0)) });" +
+	"Date.now = () => 0;";
+
+/**
+ * What a script prints and, where it throws, the error's kind and message or the
+ * thrown value, run in a fresh context: a function prints as `[function]`, as
+ * its text is the printer's.
+ * @param {string} code the script
+ * @returns {string | null} its transcript, null where it timed out
+ */
+const behaviorOf = (code) => {
+	/** @type {string[]} */
+	const lines = [];
+	/**
+	 * @param {unknown} value a logged value
+	 * @returns {string} it, as the transcript holds it
+	 */
+	const show = (value) =>
+		typeof value === "function" ? "[function]" : String(value);
+	const context = vm.createContext({
+		console: {
+			log: (/** @type {unknown[]} */ ...values) =>
+				lines.push(values.map(show).join(" "))
+		}
+	});
+	vm.runInContext(BEHAVIOR_PRELUDE, context);
+	try {
+		vm.runInContext(code, context, { timeout: BEHAVIOR_TIMEOUT });
+	} catch (error) {
+		try {
+			const isObject = error !== null && typeof error === "object";
+			const {
+				code: reason,
+				name,
+				message
+			} = /** @type {{ code?: unknown, name?: unknown, message?: unknown }} */ (
+				isObject ? error : {}
+			);
+			if (reason === "ERR_SCRIPT_EXECUTION_TIMEOUT") return null;
+			const kind = typeof name === "string" ? name : typeof error;
+			// JavaScriptCore quotes the failing source text, which a printer may
+			// rewrite, as `(evaluating '…')`; V8 never writes it.
+			const value =
+				typeof message === "string"
+					? message.replace(/ \(evaluating '[\s\S]*'\)$/, "")
+					: isObject
+						? ""
+						: show(error);
+			lines.push(`threw <${kind}>${value ? ` ${value}` : ""}`);
+		} catch (_error) {
+			// A thrown object whose own properties throw when read.
+			lines.push("threw <unreadable>");
+		}
+	}
+	return lines.join("\n");
+};
+
+/**
+ * Whether a printed script still prints and throws what its source does.
+ * @param {string} source the script
+ * @param {string} printed what the printer wrote of it
+ * @returns {import("../test/helpers/syntaxInvariants/relations").Report[] | null} what differs, empty where it runs the same, null where it was not run
+ */
+const behaviorDifference = (source, printed) => {
+	if (source.length > BEHAVIOR_MAX_LENGTH) return null;
+	const expected = behaviorOf(source);
+	// A script whose two runs differ answers for nothing.
+	if (expected === null || behaviorOf(source) !== expected) return null;
+	const got = behaviorOf(printed);
+	if (got === expected) return [];
+	return [
+		{
+			relation: "behavior",
+			what: got === null ? "times out" : "runs otherwise",
+			repro: `    ${oneLine(expected, 80)}\n      -> ${
+				got === null ? "<timeout>" : oneLine(got, 80)
+			}`
+		}
+	];
 };
 
 /**
  * The sweep as a section of the comparison's own report, so a run that asks
  * what the parser costs is told what it owes as well.
- * @returns {number} how many distinct findings it named
+ * @returns {Promise<number>} how many distinct findings it named
  */
-const reportInvariants = () => {
-	process.stdout.write("\ninvariants — what the parser owes its own source\n");
-	const found = invariants((text) => process.stdout.write(text));
+const reportInvariants = async () => {
+	process.stdout.write(
+		"\ninvariants — what the parser owes its source and the printer its output\n"
+	);
+	const found = await invariants((text) => process.stdout.write(text));
 	process.stdout.write(missingReport(_missingFixtures));
 	process.stdout.write(`\n${found} finding${found === 1 ? "" : "s"}\n`);
 	return found;
@@ -1214,7 +1292,7 @@ const reportInvariants = () => {
  * @returns {Promise<void>} resolves once the exit code is set
  */
 const reportInvariantsOnly = async () => {
-	const found = reportInvariants();
+	const found = await reportInvariants();
 	process.exitCode = sweepExitCode(found, _missingFixtures, process.argv);
 };
 
@@ -1233,21 +1311,23 @@ const header = (stage) =>
 				9
 			)}${"ms".padStart(7)}${"cpu".padStart(6)}${"peak".padStart(
 				8
-			)}   round-trip\n`;
+			)}${"2nd".padStart(7)}   round-trip\n`;
 
 const main = async () => {
+	// Before the install: the relations are webpack's own, so they answer
+	// whether or not there is anything to compare against yet.
+	await reportInvariants();
 	await installPackages(CACHE_NAME);
 	const acorn = load("acorn");
 	for (const [label, file, goal] of fixtures().filter(([name]) =>
-		wantedFixture(/** @type {string} */ (name))
+		wantedFixture(name)
 	)) {
 		const code = await fs.promises.readFile(file, "utf8");
 		process.env[SOURCE_TYPE_VARIABLE] = goal;
-		const before = propertyNames(
-			acorn,
-			code,
-			/** @type {"module" | "script"} */ (goal)
-		);
+		/** @type {{ type: string, value: string }[]} */
+		const comments = [];
+		const before = propertyNames(acorn, code, goal, comments);
+		const notices = legalNoticesOf(comments);
 		const input = await compress(Buffer.from(code));
 		process.stdout.write(
 			`\n${label} — ${kb(input.raw)} (${kb(input.gzip)} gzip, ${kb(
@@ -1272,7 +1352,9 @@ const main = async () => {
 				if ("error" in result) {
 					// A tool rejecting the source outright is a comparison result too.
 					process.stdout.write(
-						`  ${tool.name.padEnd(22)} rejects it: ${result.error}\n`
+						`  ${tool.name.padEnd(22)} ${
+							result.timedOut ? "" : "rejects it: "
+						}${result.error}\n`
 					);
 					continue;
 				}
@@ -1301,13 +1383,9 @@ const main = async () => {
 						kb(out.zstd).padStart(9) +
 						cost.wall.padStart(7) +
 						cost.cpu.padStart(6) +
-						cost.peak.padStart(8)
-					}   ${roundTrip(
-						acorn,
-						before,
-						printed,
-						/** @type {"module" | "script"} */ (goal)
-					)}\n`
+						cost.peak.padStart(8) +
+						formatSecond(result.second).padStart(7)
+					}   ${roundTrip(acorn, before, notices, printed, goal)}\n`
 				);
 				process.stdout.write(formatProfile(result));
 			}
@@ -1364,27 +1442,49 @@ const compareInWorker = (name, input) =>
 
 /**
  * What a printing table's last column says: whether the output parses back, and
- * whether it still names every property the input did.
+ * whether it still names every property and keeps every legal notice the input did.
  * @param {EXPECTED_ANY} acorn the acorn export
  * @param {Set<string>} before the input's property names
+ * @param {string[]} notices the legal notices the input carries
  * @param {string} printed what the tool wrote
  * @param {"module" | "script"} goal what to parse it as
  * @returns {string} the cell
  */
-const roundTrip = (acorn, before, printed, goal) => {
+const roundTrip = (acorn, before, notices, printed, goal) => {
 	/** @type {Set<string>} */
 	let after;
+	/** @type {{ type: string, value: string }[]} */
+	const comments = [];
 	try {
-		after = propertyNames(acorn, printed, goal);
+		after = propertyNames(acorn, printed, goal, comments);
 	} catch (error) {
 		return `will not parse back: ${
 			String(/** @type {Error} */ (error).message).split("\n", 1)[0]
 		}`;
 	}
 	const lost = [...before].filter((name) => !after.has(name));
-	return lost.length === 0
-		? "-"
-		: `${lost.length} names! e.g. ${lost.slice(0, 3).join(", ")}`;
+	// Matched notice by notice: one changed, or another written twice in
+	// its place, is one dropped as surely as a missing one.
+	/** @type {Map<string, number>} */
+	const kept = new Map();
+	for (const notice of legalNoticesOf(comments)) {
+		kept.set(notice, (kept.get(notice) || 0) + 1);
+	}
+	let dropped = 0;
+	for (const notice of notices) {
+		const count = kept.get(notice) || 0;
+		if (count === 0) dropped++;
+		else kept.set(notice, count - 1);
+	}
+	/** @type {string[]} */
+	const parts = [];
+	if (lost.length > 0) {
+		parts.push(`${lost.length} names! e.g. ${lost.slice(0, 3).join(", ")}`);
+	}
+	if (dropped > 0) {
+		parts.push(`${dropped} legal notice${dropped === 1 ? "" : "s"}!`);
+	}
+	return parts.length === 0 ? "-" : parts.join(", ");
 };
 
 // A lookup rather than a chain of ternaries: each entry point is bound where
@@ -1419,4 +1519,23 @@ started.catch((error) => {
 	process.exitCode = 1;
 });
 
-module.exports = { runMode };
+module.exports = {
+	JS_CUTS,
+	PRESETS,
+	behaviorDifference,
+	cutDifference,
+	firstDifference,
+	goalFor,
+	jsPurityDigest,
+	jsSlices,
+	minifyOnePass,
+	parsesAsLatest,
+	printerFor,
+	reportable,
+	roundTrip,
+	runMode,
+	show,
+	spansEitherGoal,
+	sweepRespellings,
+	tokenMeaning
+};

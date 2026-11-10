@@ -1,0 +1,1 @@
+(let)[0] = 1; for ((let).x of y); for ((async) of x); for (let.x in y); (let[0]); let = 1; for ((let)[0] in y); for ((let)[0];;); let.a; (let)?.[0]; async.x; for ((async).x of y);

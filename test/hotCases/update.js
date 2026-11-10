@@ -4,7 +4,15 @@ module.exports = function (done, options, callback) {
 		module.hot
 			.check(options || true)
 			.then(updatedModules => {
-				if (!updatedModules) return done(new Error("No update available"));
+				if (!updatedModules) {
+					// A client sharing the output that loaded a chunk of the new build has
+					// already caught up to it by itself.
+					if (stats && stats.hash === __webpack_hash__) {
+						if (callback) callback(stats);
+						return;
+					}
+					return done(new Error("No update available"));
+				}
 				if (callback) callback(stats);
 			})
 			.catch(err => {

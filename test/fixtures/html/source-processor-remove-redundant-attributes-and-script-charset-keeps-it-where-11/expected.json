@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "    <script charset=utf-8 src=a.js>\n      -> <script charset=utf-8 src=a.js></script>",
+		"why": "minifying the stylesheet away brings the `<meta charset>` into the first 1024 bytes, so the second print finds the page declared UTF-8 and drops the redundant `charset`"
+	}
+]

@@ -1,0 +1,12 @@
+/* ICSS re-exports: here <- icss-b <- icss-c <- icss-d. */
+:import("./icss-b.module.css") {
+	_tone: tone;
+}
+
+:export {
+	tone: _tone;
+}
+
+.icss {
+	color: _tone;
+}

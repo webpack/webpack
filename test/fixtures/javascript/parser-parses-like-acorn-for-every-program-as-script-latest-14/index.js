@@ -1,0 +1,1 @@
+function f(a, b = 1, ...rest) { return a }

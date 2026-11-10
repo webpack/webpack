@@ -1,0 +1,1 @@
+outer: for (;;) { break outer; } let: x();

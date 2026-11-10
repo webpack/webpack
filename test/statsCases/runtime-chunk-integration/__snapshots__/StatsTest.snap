@@ -6,7 +6,7 @@ exports[`StatsTestCases runtime-chunk-integration should print correct stats for
   asset without-580.js X KiB [emitted]
   asset without-main1.js X bytes [emitted] (name: main1)
   Entrypoint main1 X KiB = without-runtime.js X KiB without-main1.js X bytes
-  runtime modules X KiB 10 modules
+  runtime modules X KiB 9 modules
   cacheable modules X bytes
     ./main1.js X bytes [built] [code generated]
     ./b.js X bytes [built] [code generated]
@@ -23,7 +23,7 @@ static custom name:
   Entrypoint main1 X KiB = with-manifest.js X KiB with-main1.js X bytes
   Entrypoint main2 X KiB = with-manifest.js X KiB with-main2.js X bytes
   Entrypoint main3 X KiB = with-manifest.js X KiB with-main3.js X bytes
-  runtime modules X KiB 10 modules
+  runtime modules X KiB 9 modules
   cacheable modules X bytes
     ./main1.js X bytes [built] [code generated]
     ./main2.js X bytes [built] [code generated]
@@ -43,7 +43,7 @@ dynamic custom name:
   Entrypoint main1 X KiB = func-b.js X KiB func-main1.js X bytes
   Entrypoint main2 X KiB = func-b.js X KiB func-main2.js X bytes
   Entrypoint main3 X KiB = func-a.js X KiB func-main3.js X bytes
-  runtime modules X KiB 13 modules
+  runtime modules X KiB 12 modules
   cacheable modules X bytes
     ./main1.js X bytes [built] [code generated]
     ./main2.js X bytes [built] [code generated]

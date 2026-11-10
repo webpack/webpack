@@ -1,0 +1,1 @@
+class A { #p; m() { return this.#p; } }

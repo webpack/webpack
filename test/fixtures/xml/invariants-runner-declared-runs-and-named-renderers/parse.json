@@ -1,0 +1,45 @@
+[
+	{
+		"options": {
+			"skip": {
+				"comments": true
+			}
+		}
+	},
+	{
+		"entry": "tokenizeXml"
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"skip": {
+				"comments": true
+			}
+		}
+	},
+	{
+		"entry": "tokenizeXml",
+		"pos": 5
+	},
+	{
+		"fields": [
+			"name",
+			"childCount"
+		]
+	},
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"fields": [
+				"name"
+			],
+			"at": [
+				{
+					"type": "Element",
+					"name": "style",
+					"do": "skipChildren"
+				}
+			]
+		}
+	}
+]

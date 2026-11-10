@@ -1,0 +1,1 @@
+'use asm'; f = () => 1.50; class A { x = 1.50; static { y = 1.50 } } g = function () { return 1.50 };

@@ -1,0 +1,1 @@
+console.log((function(x,y,z){return 123})());console.log(function(x,y,z){return z}());console.log(function(x){return 6}(a));function q(b){console.log(function(x,y){return x}(b))}console.log(function(x){return arguments.length}())

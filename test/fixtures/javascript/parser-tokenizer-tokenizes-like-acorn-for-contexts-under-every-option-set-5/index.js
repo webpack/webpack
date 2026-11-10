@@ -1,0 +1,1 @@
+x = class {} / 2; class A {} /re/

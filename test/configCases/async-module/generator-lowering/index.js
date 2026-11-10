@@ -3,6 +3,13 @@ it("should lower async modules to generators and keep correct values", () =>
 		expect(combined).toBe(23);
 	}));
 
+it("should keep the parentheses around an awaited operand balanced", () =>
+	import("./parenthesized.js").then(({ picked, scaled, broken }) => {
+		expect(picked).toBe(4);
+		expect(scaled).toBe(6);
+		expect(broken).toBe(7);
+	}));
+
 it("should drive bodies with the generator helper (no async wrapper)", () => {
 	const fs = require("fs");
 	const path = require("path");

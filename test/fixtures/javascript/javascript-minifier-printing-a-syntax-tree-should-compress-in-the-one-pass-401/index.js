@@ -1,0 +1,1 @@
+function f(){{class y{}h(y)}}

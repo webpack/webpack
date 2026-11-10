@@ -1,0 +1,42 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"toplevel": true
+		},
+		"mangle": false
+	},
+	{
+		"mode": "minify",
+		"compress": {
+			"toplevel": true,
+			"top_retain": "foo, bar"
+		},
+		"mangle": false
+	},
+	{
+		"mode": "minify",
+		"compress": {
+			"toplevel": true,
+			"top_retain": [
+				"bar"
+			]
+		},
+		"mangle": false
+	},
+	{
+		"mode": "minify",
+		"compress": {
+			"top_retain": "foo"
+		},
+		"mangle": false
+	},
+	{
+		"mode": "minify",
+		"compress": {
+			"top_retain": "foo",
+			"toplevel": false
+		},
+		"mangle": false
+	}
+]

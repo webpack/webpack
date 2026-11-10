@@ -1,0 +1,52 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "builtin"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": {
+				"regexp": "keep"
+			}
+		}
+	},
+	{
+		"print": "htmlMinify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"css": "b{c:d}"
+			},
+			"async": true
+		}
+	},
+	{
+		"mode": "minify",
+		"visit": {
+			"types": [
+				"Element"
+			],
+			"fields": [
+				"name"
+			],
+			"at": [
+				{
+					"type": "Element",
+					"name": "p",
+					"do": "skipChildren"
+				}
+			]
+		}
+	},
+	{
+		"print": "htmlMinify",
+		"minimizer": {
+			"extractComments": true
+		}
+	}
+]

@@ -1,0 +1,1 @@
+function m(RegExp){new RegExp("a")}

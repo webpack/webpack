@@ -557,6 +557,11 @@ describe("JavascriptParser", () => {
 			"5n ^ 2n": "bigint=7",
 			"5n >> 2n": "bigint=1",
 			"5n << 2n": "bigint=20",
+			"1n - 1": "",
+			"1n & 1": "",
+			"+1n": "",
+			"1n / 0n": "",
+			"~1n": "bigint=-2",
 			"null == null": "bool=true",
 			"null === null": "bool=true",
 			"null != null": "bool=false",
@@ -748,6 +753,18 @@ describe("JavascriptParser", () => {
 				);
 			});
 		}
+
+		it("should not warn when a const operation throws at runtime", () => {
+			const spy = jest.spyOn(console, "warn").mockImplementation(() => {});
+			try {
+				for (const source of ["1n - 1", "1n & 1", "1n / 0n", "+1n"]) {
+					evaluateInParser(source);
+				}
+				expect(spy).not.toHaveBeenCalled();
+			} finally {
+				spy.mockRestore();
+			}
+		});
 	});
 
 	describe("async/await support", () => {
@@ -2021,6 +2038,51 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			expect(() =>
 				parse("({ __proto__: 1 }); ({ __proto__: 2 });")
 			).not.toThrow();
+		});
+
+		it("reads a regular expression after `yield` in a generator method, as V8 does", () => {
+			const { Parser } = require("../../lib/javascript/syntax-parser");
+			const programs = [
+				"class K { *m() { yield /a/g; } }",
+				"class K { static async *m() { yield /a/g; } }",
+				"({ *m() { yield /a/g; } });",
+				"({ async *m() { yield /a/g; } });",
+				"(async function* () { yield /a/g; });",
+				// the token after a nested body is read before its scope exits
+				"function* g() { function f() {} yield /a/g; }",
+				"class K { *m() { function f() {} yield /a/g; } }",
+				"function* g() { var h = () => 1\nyield /a/g; }"
+			];
+			for (const read of [
+				parse,
+				(/** @type {string} */ source) =>
+					/** @type {EXPECTED_ANY} */ (Parser.parse(source, parseOptions))
+			]) {
+				for (const source of programs) {
+					let argument;
+					JSON.stringify(read(source), (key, value) => {
+						if (value && value.type === "YieldExpression") {
+							argument = value.argument;
+						}
+						return value;
+					});
+					expect(argument).toMatchObject({ regex: { pattern: "a" } });
+				}
+				// In a plain method inside a generator, `yield` is a name divided.
+				const method = read(
+					"function* g() { ({ m() { return yield / 2 / 1; } }); }"
+				);
+				expect(
+					method.body[0].body.body[0].expression.properties[0].value.body
+						.body[0].argument
+				).toMatchObject({ type: "BinaryExpression", operator: "/" });
+				// After a nested generator, a sloppy function's `yield` is a name.
+				const nested = read("function f() { function* g() {} yield / 2 / 1; }");
+				expect(nested.body[0].body.body[1].expression).toMatchObject({
+					type: "BinaryExpression",
+					operator: "/"
+				});
+			}
 		});
 
 		it("validates regexp flags from the precomputed whitelist", () => {

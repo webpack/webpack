@@ -215,7 +215,7 @@ const AlternativeCreateUserAction = async name => {
 /******/ 			}
 /******/ 		}
 /******/ 		const wrapDeps = (deps) => (deps.map((dep) => {
-/******/ 			if(dep !== null && typeof dep === "object") {
+/******/ 			if(dep && typeof dep === "object") {
 /******/ 		
 /******/ 				if(dep[webpackQueues]) return dep;
 /******/ 				if(dep.then) {
@@ -234,10 +234,7 @@ const AlternativeCreateUserAction = async name => {
 /******/ 					return obj;
 /******/ 				}
 /******/ 			}
-/******/ 			const ret = {};
-/******/ 			ret[webpackQueues] = x => {};
-/******/ 			ret[webpackExports] = dep;
-/******/ 			return ret;
+/******/ 			return { [webpackQueues]: x => {}, [webpackExports]: dep };
 /******/ 		}));
 /******/ 		__webpack_require__.a = (module, body, hasAwait) => {
 /******/ 			let queue;
@@ -342,9 +339,9 @@ const AlternativeCreateUserAction = async name => {
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -352,8 +349,7 @@ const AlternativeCreateUserAction = async name => {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
@@ -392,7 +388,7 @@ const AlternativeCreateUserAction = async name => {
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -443,7 +439,7 @@ const AlternativeCreateUserAction = async name => {
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -481,7 +477,7 @@ __webpack_require__.r(__webpack_exports__);
 
 ```javascript
 "use strict";
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["UserApi_js"],[
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["UserApi_js"],[
 /* 0 */,
 /* 1 */,
 /* 2 */
@@ -559,7 +555,7 @@ __webpack_async_result__();
 ## in production mode:
 
 ```javascript
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([["UserApi_js"],{560(a,e,s){s.a(a,async(a,t)=>{try{s.r(e);var c=s(312),n=a([c]),m=n.then?(await n)():n;c=m[0];const i=async a=>{command=`CREATE USER ${a}`,await(0,c.D)({command})};s.d(e,["createUser",0,i]),t()}catch(a){t(a)}})},312(a,e,s){s.a(a,async(a,t)=>{try{const a=async a=>{await new Promise(a=>setTimeout(a,1e3))};await a("my-sql://example.com");const c=async a=>(await new Promise(a=>setTimeout(a,100)),"fake data");s.d(e,["D",0,c]),t()}catch(a){t(a)}},1)}}]);
+"use strict";(Array.isArray(self.webpackChunk)?self.webpackChunk:self.webpackChunk=[]).push([["UserApi_js"],{560(a,e,s){s.a(a,async(a,c)=>{try{s.r(e);var t=s(312),n=a([t]),r=n.then?(await n)():n;t=r[0];const m=async a=>{command=`CREATE USER ${a}`,await(0,t.D)({command})};s.d(e,["createUser",0,m]),c()}catch(a){c(a)}})},312(a,e,s){s.a(a,async(a,c)=>{try{const a=async a=>{await new Promise(a=>setTimeout(a,1e3))};await a("my-sql://example.com");const t=async a=>(await new Promise(a=>setTimeout(a,100)),"fake data");s.d(e,["D",0,t]),c()}catch(a){c(a)}},1)}}]);
 ```
 
 # Info
@@ -567,8 +563,8 @@ __webpack_async_result__();
 ## Unoptimized
 
 ```
-asset output.js 14.4 KiB [emitted] (name: main)
-asset UserApi_js.output.js 3.05 KiB [emitted]
+asset output.js 14.3 KiB [emitted] (name: main)
+asset UserApi_js.output.js 3.09 KiB [emitted]
 chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
   > ./UserApi.js ./Actions.js 22:30-52
   > ./UserApi.js ./Actions.js 2:16-38
@@ -578,9 +574,9 @@ chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
     [used exports unknown]
     import() ./UserApi.js ./Actions.js 2:16-38
     import() ./UserApi.js ./Actions.js 22:30-52
-chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.24 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.18 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 7.24 KiB 9 modules
+  runtime modules 7.18 KiB 9 modules
   dependent modules 1.09 KiB [dependent] 1 module
   ./example.js 103 bytes [built] [code generated]
     [no exports]
@@ -592,8 +588,8 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.96 KiB [emitted] [minimized] (name: main)
-asset UserApi_js.output.js 528 bytes [emitted] [minimized]
+asset output.js 2.92 KiB [emitted] [minimized] (name: main)
+asset UserApi_js.output.js 560 bytes [emitted] [minimized]
 chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
   > ./UserApi.js ./Actions.js 22:30-52
   > ./UserApi.js ./Actions.js 2:16-38
@@ -602,9 +598,9 @@ chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
     [exports: createUser]
     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 2:16-38
     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 22:30-52
-chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.61 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 7.61 KiB 9 modules
+  runtime modules 7.54 KiB 9 modules
   ./example.js + 1 modules 1.19 KiB [built] [code generated]
     [no exports]
     [no exports used]

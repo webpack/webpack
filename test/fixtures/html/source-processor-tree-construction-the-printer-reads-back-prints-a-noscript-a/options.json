@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"removeImpliedTags": "all"
+	},
+	{
+		"mode": "beautify"
+	}
+]

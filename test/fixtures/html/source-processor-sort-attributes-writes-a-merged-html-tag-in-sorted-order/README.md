@@ -1,0 +1,1 @@
+An `<html>` the parser implies takes the attributes of a later `<html>` tag, and a formatting element the table fosters out is rebuilt: neither has a source tag, so the printer writes it, sorted as a written one would be.

@@ -1,0 +1,1 @@
+<!DOCTYPE root [<!ENTITY value "<?target a&#13;b?><child/>">]><root>&value;</root>

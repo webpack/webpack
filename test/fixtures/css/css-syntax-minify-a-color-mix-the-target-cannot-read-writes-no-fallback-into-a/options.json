@@ -1,0 +1,13 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 80"
+			]
+		},
+		"transforms": {
+			"colorFallbacks": false
+		}
+	}
+]

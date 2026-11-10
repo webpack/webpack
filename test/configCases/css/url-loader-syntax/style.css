@@ -1,0 +1,6 @@
+.loaded {
+	background: url("!./changer.js!./icon.svg");
+}
+.plain {
+	background: url("./icon.svg");
+}

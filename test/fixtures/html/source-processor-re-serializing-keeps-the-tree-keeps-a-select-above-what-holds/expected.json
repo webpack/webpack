@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "slices",
+		"contains": "Element:input[13,20) Element:table[6,20) Element:span[0,20)\n      -> Element:table[6,20) Element:span[0,20)",
+		"why": "out of its context the element is built by other rules (foster parenting, the adoption agency, implied tags), so its bytes alone read to another tree"
+	}
+]

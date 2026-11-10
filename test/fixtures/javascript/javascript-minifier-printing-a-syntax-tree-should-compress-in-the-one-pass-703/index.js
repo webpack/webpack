@@ -1,0 +1,1 @@
+Object.keys=f;Object.keys({});var o=Object;o.isFrozen=g;Object.isFrozen({});Object.assign(Date,h);Date.now();Array.isArray(1);x=1

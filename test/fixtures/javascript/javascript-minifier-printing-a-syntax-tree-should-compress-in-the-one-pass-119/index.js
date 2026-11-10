@@ -1,0 +1,1 @@
+function f(p){ var a = g(); h(...p, a); var b = g(); h({ p, b }); var c = g(); h({ [p]: 1, c }); var d = g(); h({ get x(){}, y: d }); var e = g(); h(`${p}${e}`); var m = g(); h(p?.[m]); var n = (h = g)(); h(n); var q = (h++, g()); h(q); var r = g(); h(p, r); p = 1 } function k(){ var a = g(); h(a); eval("") } function l(){ x = g(); h(x) }

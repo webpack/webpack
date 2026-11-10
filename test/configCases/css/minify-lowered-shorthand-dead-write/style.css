@@ -16,5 +16,5 @@
 /* A longhand is not the property the shorthand repeats. */
 .f { text-decoration-line: underline; text-decoration: underline dotted }
 
-/* A substitution is a value nothing here reads. */
+/* A substitution parses wherever `var()` is read, leaving the earlier dead. */
 .g { text-decoration: overline; text-decoration: var(--x) }

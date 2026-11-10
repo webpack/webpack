@@ -1,0 +1,1 @@
+function f(a) { return a + 1 } g(f); stop(); function h() { b }

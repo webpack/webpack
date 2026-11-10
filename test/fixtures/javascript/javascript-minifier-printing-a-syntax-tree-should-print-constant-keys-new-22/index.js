@@ -1,0 +1,1 @@
+(function(){try{throw 1}finally{return 2}})();x=(function(){try{g()}finally{return 2}})();(function(){if(g())return 1;for(;;)h()})();(async function(){g();return 1})();(function(){g();return h()})();a(),(()=>{g();return 2})(),b();(function*(){return 1})().next()

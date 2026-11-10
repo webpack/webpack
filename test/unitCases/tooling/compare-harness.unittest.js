@@ -1,0 +1,1532 @@
+"use strict";
+
+const { createHash } = require("crypto");
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+const { Readable } = require("stream");
+const { pathToFileURL } = require("url");
+const {
+	TreeEvents,
+	agreement,
+	agreementInvariant,
+	collectFiles,
+	compress,
+	cutsAt,
+	exists,
+	filterFrom,
+	findingGroups,
+	formatCost,
+	formatProfile,
+	formatSecond,
+	idempotence,
+	installPackages,
+	kb,
+	legalNotices,
+	loaderFor,
+	log,
+	lossColumn,
+	measure,
+	measureInWorker,
+	missingReport,
+	profileShares,
+	run,
+	shrink,
+	sweepExitCode,
+	sweepMode,
+	treeDifferences,
+	wantedExpectations,
+	wantedRespelling
+} = require("../../../tooling/compare-tools-harness");
+
+/** @type {string} */
+let directory;
+
+let made = 0;
+
+/** @type {import("../../../tooling/compare-tools-harness").Tool[]} */
+const TOOLS = [
+	{
+		name: "counts",
+		stage: "parse",
+		create: () => (source) => ({ of: source.length })
+	},
+	{ name: "trims", stage: "minify", create: () => (source) => source.trim() },
+	{
+		// Its first call outlasts the warm-up's time bound on its own.
+		name: "slow",
+		stage: "parse",
+		create: () => {
+			let first = true;
+			return (source) => {
+				if (first) {
+					first = false;
+					const until = Date.now() + 510;
+					while (Date.now() < until);
+				}
+				return source.length;
+			};
+		}
+	},
+	{
+		// Prints its input trimmed, then cannot read back what it printed.
+		name: "picky",
+		stage: "minify",
+		create: () => (source) => {
+			if (source === source.trim()) throw new Error("already trimmed");
+			return source.trim();
+		}
+	},
+	{
+		name: "refuses",
+		stage: "minify",
+		create: () => () => {
+			throw new Error("nope\nand more");
+		}
+	},
+	{
+		// Warms up, then fails once the timed runs start.
+		name: "tires",
+		stage: "minify",
+		create: () => {
+			let calls = 0;
+			return (/** @type {string} */ source) => {
+				if (++calls > 8) throw new Error("tired");
+				return source;
+			};
+		}
+	}
+];
+
+/**
+ * A stand-in worker: it drains the source it is handed as the real one does,
+ * then writes what the test asks for instead of a measurement.
+ * @param {string} output what it writes to stdout
+ * @param {number=} code what it exits with
+ * @returns {string} the script's path
+ */
+const workerWriting = (output, code) => {
+	const file = path.join(directory, `worker${made++}.js`);
+	fs.writeFileSync(
+		file,
+		`"use strict";
+(async () => {
+	for await (const chunk of process.stdin) String(chunk);
+	process.stdout.write(${JSON.stringify(output)});
+	process.exitCode = ${code || 0};
+})();
+`
+	);
+	return file;
+};
+
+/**
+ * @param {string} entry the stand-in worker
+ * @returns {Promise<Error>} what measuring it rejected with
+ */
+const rejection = async (entry) => {
+	try {
+		await measureInWorker(entry, "parse", "stylis", "a{}");
+	} catch (error) {
+		return /** @type {Error} */ (error);
+	}
+	throw new Error("expected the measurement to reject");
+};
+
+describe("compare-tools-harness", () => {
+	beforeAll(() => {
+		directory = fs.mkdtempSync(path.join(os.tmpdir(), "compare-tools-"));
+	});
+
+	afterAll(() => {
+		fs.rmSync(directory, { recursive: true, force: true });
+	});
+
+	describe("measureInWorker", () => {
+		it("reads back the measurement a worker wrote", async () => {
+			const entry = workerWriting(
+				JSON.stringify({ code: "a{}", wall: 1, cpu: 2, peak: 3 })
+			);
+			await expect(
+				measureInWorker(entry, "minify", "webpack", "a { }")
+			).resolves.toEqual({ code: "a{}", wall: 1, cpu: 2, peak: 3 });
+		});
+
+		// A tool writing to stdout of its own lands here, and the parse used to
+		// throw inside the close listener, where nothing named the tool.
+		it("names the tool when the output will not parse", async () => {
+			const entry = workerWriting("a native warning nobody asked for");
+			expect((await rejection(entry)).message).toBe(
+				"measuring stylis wrote unreadable output: a native warning nobody asked for"
+			);
+		});
+
+		// Asserted whole rather than by substring: 200 characters are a substring
+		// of 500, so a truncation that never happened would pass either way.
+		it("keeps at most the first 200 characters of it", async () => {
+			const entry = workerWriting("x".repeat(500));
+			expect((await rejection(entry)).message).toBe(
+				`measuring stylis wrote unreadable output: ${"x".repeat(200)}`
+			);
+		});
+
+		it("gives up on a worker that outlasts its budget", async () => {
+			const file = path.join(directory, `worker${made++}.js`);
+			fs.writeFileSync(file, '"use strict";\nsetInterval(() => {}, 1000);\n');
+			await expect(
+				measureInWorker(file, "parse", "stylis", "a{}", 200)
+			).resolves.toEqual({ error: "timed out after 0.2 s", timedOut: true });
+		});
+
+		it("reports the code a failing worker exited with", async () => {
+			const entry = workerWriting("{}", 3);
+			expect((await rejection(entry)).message).toBe(
+				"measuring stylis exited with 3"
+			);
+		});
+	});
+
+	// Driven in this process rather than in a worker: coverage does not follow a
+	// child, and these are the branches that decide what a row reports.
+	describe("measure", () => {
+		/**
+		 * @param {string} stage which table the row belongs to
+		 * @param {string} name the tool to run
+		 * @param {string} source what to hand it on stdin
+		 * @returns {Promise<EXPECTED_ANY>} the report it wrote
+		 */
+		const measureHere = async (stage, name, source) => {
+			const argv = process.argv;
+			const stdin = /** @type {PropertyDescriptor} */ (
+				Object.getOwnPropertyDescriptor(process, "stdin")
+			);
+			/** @type {string[]} */
+			const written = [];
+			const write = jest
+				.spyOn(process.stdout, "write")
+				.mockImplementation((chunk) => {
+					written.push(String(chunk));
+					return true;
+				});
+
+			process.argv = ["node", "entry.js", "--measure", stage, name];
+			Object.defineProperty(process, "stdin", {
+				value: Readable.from([Buffer.from(source)]),
+				configurable: true
+			});
+			try {
+				await measure(TOOLS);
+			} finally {
+				write.mockRestore();
+				process.argv = argv;
+				Object.defineProperty(process, "stdin", stdin);
+			}
+			return JSON.parse(written.join(""));
+		};
+
+		it("reports the text a printing tool wrote, and what it cost", async () => {
+			const result = await measureHere("minify", "trims", "  a{}  ");
+			expect(result.code).toBe("a{}");
+			expect(result.wall).toBeGreaterThanOrEqual(0);
+			expect(result.cpu).toBeGreaterThanOrEqual(0);
+			expect(result.peak).toBeGreaterThan(0);
+		});
+
+		it("stops warming up a tool once the time bound is spent", async () => {
+			const result = await measureHere("parse", "slow", "abcd");
+			expect(result.code).toBeUndefined();
+			expect(result.wall).toBeGreaterThanOrEqual(0);
+		});
+
+		it("reports a second pass that throws", async () => {
+			const result = await measureHere("minify", "picky", " a ");
+			expect(result.code).toBe("a");
+			expect(result.second).toEqual({
+				stable: false,
+				delta: 0,
+				error: "already trimmed"
+			});
+		});
+
+		// A parse hands back a tree, which is measured but never reported.
+		it("reports no text for a parse", async () => {
+			const result = await measureHere("parse", "counts", "abcd");
+			expect(result.code).toBeUndefined();
+			expect(result.peak).toBeGreaterThan(0);
+		});
+
+		describe("with PROFILE set", () => {
+			const previous = process.env.PROFILE;
+			beforeEach(() => {
+				process.env.PROFILE = "1";
+			});
+			afterEach(() => {
+				if (previous === undefined) delete process.env.PROFILE;
+				else process.env.PROFILE = previous;
+			});
+
+			it("reports where the timed runs spent the CPU", async () => {
+				const result = await measureHere("minify", "trims", "  a{}  ");
+				expect(result.code).toBe("a{}");
+				expect(Array.isArray(result.profile)).toBe(true);
+				let total = 0;
+				for (const [bucket, share] of result.profile) {
+					expect(typeof bucket).toBe("string");
+					total += share;
+				}
+				expect(total).toBeLessThanOrEqual(1.0001);
+				expect(formatProfile(result)).toBe(
+					result.profile
+						.map(
+							(/** @type {[string, number]} */ [bucket, share]) =>
+								`${`${(share * 100).toFixed(1)}%`.padStart(12)}  ${bucket}\n`
+						)
+						.join("")
+				);
+			});
+
+			it("reports the error of a run failing while sampled", async () => {
+				expect(await measureHere("minify", "tires", "a")).toEqual({
+					error: "tired"
+				});
+			});
+
+			it("reports a profiler that will not stop, unless the run failed first", async () => {
+				const { Session } = require("inspector");
+				const post = Session.prototype.post;
+				const stop = jest.spyOn(Session.prototype, "post").mockImplementation(
+					/** @type {EXPECTED_ANY} */ (
+						function post_(
+							/** @type {string} */ method,
+							/** @type {(error: Error | null) => void} */ callback
+						) {
+							if (method === "Profiler.stop") {
+								callback(new Error("cannot stop"));
+								return;
+							}
+							// @ts-expect-error this is the session the harness posts to
+							post.call(this, method, callback);
+						}
+					)
+				);
+				try {
+					expect(await measureHere("minify", "trims", " a ")).toEqual({
+						error: "cannot stop"
+					});
+					expect(await measureHere("minify", "tires", "a")).toEqual({
+						error: "tired"
+					});
+				} finally {
+					stop.mockRestore();
+				}
+			});
+		});
+
+		it("prints no profile for a row that has none", () => {
+			expect(
+				formatProfile({ code: "", second: undefined, wall: 1, cpu: 1, peak: 1 })
+			).toBe("");
+			expect(formatProfile({ error: "nope" })).toBe("");
+		});
+
+		/**
+		 * @param {() => string} answer what `/proc/self/status` reads as
+		 * @param {() => Promise<EXPECTED_ANY>} what to run meanwhile
+		 * @returns {Promise<EXPECTED_ANY>} whatever it answered
+		 */
+		const withStatusFile = async (answer, what) => {
+			const real = fs.readFileSync;
+			const read = jest
+				.spyOn(fs, "readFileSync")
+				.mockImplementation(
+					/** @type {EXPECTED_ANY} */ (
+						(
+							/** @type {string} */ file,
+							/** @type {EXPECTED_ANY} */ options
+						) =>
+							file === "/proc/self/status"
+								? answer()
+								: real.call(fs, file, options)
+					)
+				);
+			try {
+				return await what();
+			} finally {
+				read.mockRestore();
+			}
+		};
+
+		// Where the file is not there to read, and where it is but names no
+		// high-water mark: the peak is what the platform itself accounts for.
+		it("reports a peak without the status file to read it from", async () => {
+			const thrown = await withStatusFile(
+				() => {
+					throw new Error("ENOENT");
+				},
+				() => measureHere("parse", "counts", "abcd")
+			);
+			expect(thrown.peak).toBeGreaterThan(0);
+			const unnamed = await withStatusFile(
+				() => "Name:\tnode\n",
+				() => measureHere("parse", "counts", "abcd")
+			);
+			expect(unnamed.peak).toBeGreaterThan(0);
+		});
+
+		// Only the first line: a native tool's panic carries a whole backtrace.
+		it("reports the first line of what a tool threw", async () => {
+			expect(await measureHere("minify", "refuses", "a{}")).toEqual({
+				error: "nope"
+			});
+		});
+
+		it("refuses a name no tool answers to", async () => {
+			await expect(measureHere("minify", "nothing", "a{}")).rejects.toThrow(
+				"unknown minify tool nothing"
+			);
+		});
+	});
+
+	describe("sizes", () => {
+		it("weighs a buffer under each encoding a CDN serves", async () => {
+			const sizes = await compress(Buffer.from("a{color:red}".repeat(200)));
+			expect(sizes.raw).toBe(2400);
+			expect(sizes.gzip).toBeLessThan(sizes.raw);
+			expect(sizes.brotli).toBeLessThan(sizes.raw);
+			// zlib carries zstd only from Node 22.15, where the column reads "-".
+			expect(sizes.zstd === undefined || sizes.zstd < sizes.raw).toBe(true);
+		});
+
+		it("weighs no zstd size where zlib has no zstd", async () => {
+			/** @type {EXPECTED_ANY} */
+			let isolated;
+			jest.isolateModules(() => {
+				jest.doMock("zlib", () => ({
+					...jest.requireActual("zlib"),
+					zstdCompress: undefined
+				}));
+				isolated = require("../../../tooling/compare-tools-harness");
+			});
+			jest.unmock("zlib");
+			expect((await isolated.compress(Buffer.from("a"))).zstd).toBeUndefined();
+		});
+
+		it("prints a count in KB, and a dash for one it cannot have", () => {
+			expect(kb(1536)).toBe("1.5 KB");
+			expect(kb(undefined)).toBe("-");
+		});
+	});
+
+	describe("running a command", () => {
+		it("resolves when it exits cleanly", async () => {
+			await expect(run(process.execPath, ["-e", ""])).resolves.toBeUndefined();
+		});
+
+		it("rejects with the code it exited with", async () => {
+			await expect(
+				run(process.execPath, ["-e", "process.exitCode = 2"])
+			).rejects.toThrow("exited with 2");
+		});
+
+		// Matched on the name rather than on `ENOENT`: bun says "Executable not
+		// found in $PATH" where node spells the errno out.
+		it("rejects when it cannot be run at all", async () => {
+			await expect(run("no-such-command-anywhere", [])).rejects.toThrow(
+				"no-such-command-anywhere"
+			);
+		});
+	});
+
+	describe("loaderFor", () => {
+		/** @type {string} */
+		let cache;
+
+		beforeAll(() => {
+			cache = path.join(directory, "cache");
+			const plain = path.join(cache, "node_modules", "plain-package");
+			fs.mkdirSync(plain, { recursive: true });
+			fs.writeFileSync(
+				path.join(plain, "package.json"),
+				'{ "name": "plain-package", "main": "index.js" }'
+			);
+			fs.writeFileSync(
+				path.join(plain, "index.js"),
+				'module.exports = { named: "plain" };'
+			);
+			const mapped = path.join(cache, "node_modules", "mapped-package");
+			fs.mkdirSync(mapped, { recursive: true });
+			// No `main`, so only the `exports` map can resolve it — the shape that
+			// a joined path reads as missing.
+			fs.writeFileSync(
+				path.join(mapped, "package.json"),
+				'{ "name": "mapped-package", "exports": { ".": "./entry.js" } }'
+			);
+			fs.writeFileSync(
+				path.join(mapped, "entry.js"),
+				'module.exports = { named: "mapped" };'
+			);
+		});
+
+		it("loads a package that names a main", () => {
+			expect(loaderFor(cache)("plain-package")).toEqual({ named: "plain" });
+		});
+
+		it("loads one that ships only an exports map", () => {
+			expect(loaderFor(cache)("mapped-package")).toEqual({ named: "mapped" });
+		});
+
+		// The map does not list `./package.json`, so resolving it as a specifier
+		// throws and the joined path is what answers.
+		it("falls back to the joined path for a subpath the map withholds", () => {
+			expect(loaderFor(cache)("mapped-package/package.json").name).toBe(
+				"mapped-package"
+			);
+		});
+	});
+
+	// The installer is reached through `PATH`, so a stand-in on it exercises the
+	// real orchestration without standing in for any of this repo's own code.
+	describe("installPackages", () => {
+		const NAMES = [
+			"compare-tools-harness-unittest-warm",
+			"compare-tools-harness-unittest-cold",
+			"compare-tools-harness-unittest-failed",
+			"compare-tools-harness-unittest-moved",
+			"compare-tools-harness-unittest-derived",
+			"compare-tools-harness-unittest-manifest"
+		];
+
+		/**
+		 * @param {string} name which cache
+		 * @returns {string} where it lives
+		 */
+		const cacheFor = (name) =>
+			path.resolve(__dirname, "../../..", "node_modules/.cache", name);
+
+		const RAN = "stand-in-npm-ran";
+
+		/**
+		 * @param {string} name which cache
+		 * @returns {boolean} whether the stand-in npm ran for it
+		 */
+		const npmRan = (name) => fs.existsSync(path.join(cacheFor(name), RAN));
+
+		/**
+		 * @param {string} name which corpus
+		 * @returns {string} where its committed manifest lives
+		 */
+		const corpusFor = (name) =>
+			path.resolve(__dirname, "../../..", "tooling/comparison", name);
+
+		/**
+		 * Write a corpus of the shape `installPackages` reads: the manifest and the
+		 * lockfile, whose contents together decide whether an install is owed.
+		 * @param {string} name which corpus
+		 * @param {string} lock what its lockfile says
+		 * @param {string=} manifest what its package.json says
+		 * @returns {string} the hash a matching stamp would carry
+		 */
+		const writeCorpus = (name, lock, manifest) => {
+			const written = manifest || JSON.stringify({ name, private: true });
+			fs.mkdirSync(corpusFor(name), { recursive: true });
+			fs.writeFileSync(path.join(corpusFor(name), "package.json"), written);
+			fs.writeFileSync(path.join(corpusFor(name), "package-lock.json"), lock);
+			const identity = createHash("sha256");
+			for (const part of [written, lock]) identity.update(part).update("\0");
+			return identity.digest("hex");
+		};
+
+		/**
+		 * @param {string} name which cache
+		 * @returns {string | undefined} the lockfile hash it was installed from
+		 */
+		const stampOf = (name) => {
+			const stamp = path.join(cacheFor(name), ".corpus-lock");
+			return fs.existsSync(stamp) ? fs.readFileSync(stamp, "utf8") : undefined;
+		};
+
+		/**
+		 * Run with an `npm` of our own first on `PATH`, so nothing is fetched.
+		 * @param {number} code what that npm exits with
+		 * @param {() => Promise<EXPECTED_ANY>} what to run meanwhile
+		 * @returns {Promise<EXPECTED_ANY>} whatever it answered
+		 */
+		const withStandInNpm = async (code, what) => {
+			const bin = fs.mkdtempSync(path.join(os.tmpdir(), "stand-in-npm-"));
+			const npm = path.join(bin, "npm");
+			// It leaves the mark in its working directory, which is the cache the
+			// install was for, so a test can tell a real install from a skipped one.
+			fs.writeFileSync(npm, `#!/bin/sh\n: > ${RAN}\nexit ${code}\n`);
+			fs.chmodSync(npm, 0o755);
+			const before = process.env.PATH;
+			const quiet = jest.spyOn(process.stderr, "write").mockReturnValue(true);
+
+			process.env.PATH = `${bin}${path.delimiter}${before}`;
+			try {
+				return await what();
+			} finally {
+				quiet.mockRestore();
+				process.env.PATH = before;
+				fs.rmSync(bin, { recursive: true, force: true });
+			}
+		};
+
+		// The stand-in is a shell script, which Windows would pass over in favour
+		// of the real npm — and then a test would install over the network.
+		const posixOnly = process.platform === "win32" ? it.skip : it;
+
+		/**
+		 * @returns {void}
+		 */
+		const clearCaches = () => {
+			for (const name of NAMES) {
+				fs.rmSync(cacheFor(name), { recursive: true, force: true });
+				fs.rmSync(corpusFor(name), { recursive: true, force: true });
+			}
+		};
+
+		// A run interrupted before its `afterAll` leaves a cache behind, and a
+		// warm one would send the cold case down the path it exists to cover.
+		beforeAll(clearCaches);
+
+		afterAll(clearCaches);
+
+		// Nothing is installed here: the cache was installed from this very
+		// lockfile, which is the branch a restored CI cache takes.
+		posixOnly("reuses a cache whose stamp matches the lockfile", async () => {
+			const [name] = NAMES;
+			const hash = writeCorpus(name, '{"lockfileVersion":3,"warm":true}');
+			fs.mkdirSync(path.join(cacheFor(name), "node_modules"), {
+				recursive: true
+			});
+			fs.writeFileSync(path.join(cacheFor(name), ".corpus-lock"), hash);
+			// The stand-in fails, so taking the install path would fail the case
+			// rather than reach the real npm and the network behind it.
+			await withStandInNpm(1, () =>
+				expect(installPackages(name)).resolves.toBe(cacheFor(name))
+			);
+			expect(npmRan(name)).toBe(false);
+		});
+
+		posixOnly("installs into a cache that has none of it yet", async () => {
+			const name = NAMES[1];
+			const hash = writeCorpus(name, '{"lockfileVersion":3,"cold":true}');
+			await withStandInNpm(0, () => installPackages(name));
+			expect(npmRan(name)).toBe(true);
+			expect(stampOf(name)).toBe(hash);
+			// Both are what `npm ci` reads, so the install ran against the corpus
+			// as committed rather than against whatever the cache last held.
+			expect(
+				fs.existsSync(path.join(cacheFor(name), "package-lock.json"))
+			).toBe(true);
+		});
+
+		// The stamp is what a later run compares against, so writing it before
+		// the install succeeded would let a broken cache pass for a warm one.
+		posixOnly("records nothing when the install fails", async () => {
+			const name = NAMES[2];
+			writeCorpus(name, '{"lockfileVersion":3,"failed":true}');
+			await expect(
+				withStandInNpm(1, () => installPackages(name))
+			).rejects.toThrow("exited with 1");
+			expect(npmRan(name)).toBe(true);
+			expect(stampOf(name)).toBeUndefined();
+		});
+
+		// The manifest decides as much as the lockfile does: one edited without
+		// regenerating the other is what `npm ci` refuses, and a warm cache that
+		// read the lockfile alone would skip the install that would refuse it.
+		posixOnly("reinstalls when only the manifest moved", async () => {
+			const name = NAMES[5];
+			const lock = '{"lockfileVersion":3,"pinned":"1.0.0"}';
+			writeCorpus(name, lock, JSON.stringify({ name, asked: "1.0.0" }));
+			await withStandInNpm(0, () => installPackages(name));
+			const before = stampOf(name);
+			fs.mkdirSync(path.join(cacheFor(name), "node_modules"), {
+				recursive: true
+			});
+			// The lockfile is byte-identical; only what the manifest asks for moved.
+			const after = writeCorpus(
+				name,
+				lock,
+				JSON.stringify({ name, asked: "1.0.1" })
+			);
+			expect(after).not.toBe(before);
+			fs.rmSync(path.join(cacheFor(name), RAN), { force: true });
+			await withStandInNpm(0, () => installPackages(name));
+			expect(npmRan(name)).toBe(true);
+			expect(stampOf(name)).toBe(after);
+		});
+
+		// A fixture the caller generated with the packages it installed is as
+		// stale as they are, and nothing else would clear it: `npm ci` rewrites
+		// `node_modules` alone, and the builder skips an output already there.
+		posixOnly("clears what the last corpus derived", async () => {
+			const name = NAMES[4];
+			writeCorpus(name, '{"lockfileVersion":3,"pinned":"1.0.0"}');
+			fs.mkdirSync(cacheFor(name), { recursive: true });
+			const derived = path.join(cacheFor(name), "tailwind-app.css");
+			fs.writeFileSync(derived, ".from-the-old-tailwind{}");
+			writeCorpus(name, '{"lockfileVersion":3,"pinned":"1.0.1"}');
+			await withStandInNpm(0, () => installPackages(name));
+			expect(fs.existsSync(derived)).toBe(false);
+		});
+
+		// The case the lockfile exists for: Dependabot moves a pin, and a cache
+		// installed from the version before it is stale rather than warm.
+		posixOnly("reinstalls when the lockfile has moved", async () => {
+			const name = NAMES[3];
+			writeCorpus(name, '{"lockfileVersion":3,"pinned":"1.0.0"}');
+			await withStandInNpm(0, () => installPackages(name));
+			const before = stampOf(name);
+			// The stand-in installs nothing, so the tree it would have written is
+			// what makes this cache warm — without it the stamp is never consulted.
+			fs.mkdirSync(path.join(cacheFor(name), "node_modules"), {
+				recursive: true
+			});
+			const after = writeCorpus(name, '{"lockfileVersion":3,"pinned":"1.0.1"}');
+			expect(after).not.toBe(before);
+			fs.rmSync(path.join(cacheFor(name), RAN), { force: true });
+			await withStandInNpm(0, () => installPackages(name));
+			expect(npmRan(name)).toBe(true);
+			expect(stampOf(name)).toBe(after);
+		});
+	});
+
+	describe("log", () => {
+		it("writes the line to stderr", () => {
+			const written = jest.spyOn(process.stderr, "write").mockReturnValue(true);
+			try {
+				log("installing …");
+				expect(written).toHaveBeenCalledWith("installing …\n");
+			} finally {
+				written.mockRestore();
+			}
+		});
+	});
+
+	describe("exists", () => {
+		it("answers for a file that is there and one that is not", async () => {
+			await expect(exists(__filename)).resolves.toBe(true);
+			await expect(exists(`${__filename}.absent`)).resolves.toBe(false);
+		});
+	});
+
+	describe("formatCost", () => {
+		it("rounds the three cells", () => {
+			expect(formatCost({ wall: 12.4, cpu: 30.6, peak: 71024 })).toEqual({
+				wall: "12",
+				cpu: "31",
+				peak: "69 MB"
+			});
+		});
+
+		// A tool working in a service process of its own spends both where this
+		// worker cannot see them, so neither is reported as a number.
+		it("withholds cpu and peak from a tool that works out of process", () => {
+			expect(formatCost({ wall: 22.2, cpu: 1.6, peak: 71024 }, true)).toEqual({
+				wall: "22",
+				cpu: "-",
+				peak: "-"
+			});
+		});
+	});
+
+	describe("idempotence", () => {
+		/**
+		 * @param {string} text a text
+		 * @returns {string} what it says, ignoring case
+		 */
+		const says = (text) => text.toLowerCase();
+
+		it("reports nothing when printing the output again leaves it be", () => {
+			const minify = (/** @type {string} */ source) => source.trim();
+			expect(idempotence({ minify, source: " a ", says })).toEqual({
+				printed: "a",
+				reports: []
+			});
+		});
+
+		it("prints the output again with reprint where one is given", () => {
+			const minify = (/** @type {string} */ source) => `${source}!`;
+			const reprint = (/** @type {string} */ printed) => printed;
+			expect(idempotence({ minify, reprint, source: "a", says })).toEqual({
+				printed: "a!",
+				reports: []
+			});
+			expect(
+				idempotence({ minify, source: "a", says }).reports[0].what
+			).toBe("differs, +1 B");
+		});
+
+		it("reports a first print that throws", () => {
+			const { printed, reports } = idempotence({
+				minify: () => {
+					throw new Error("cannot print it");
+				},
+				source: "a",
+				says
+			});
+			expect(printed).toBeNull();
+			expect(reports).toEqual([
+				{ relation: "minify", what: "threw", repro: "    cannot print it" }
+			]);
+		});
+
+		it("reports a second print that throws", () => {
+			const reprint = () => {
+				throw new Error("cannot read it back");
+			};
+			const { printed, reports } = idempotence({
+				minify: (source) => source,
+				reprint,
+				source: "a",
+				says
+			});
+			expect(printed).toBe("a");
+			expect(reports[0].relation).toBe("idempotence");
+			expect(reports[0].what).toBe("threw");
+		});
+	});
+
+	describe("formatSecond", () => {
+		it("writes each second-pass outcome as its cell", () => {
+			expect(formatSecond(undefined)).toBe("-");
+			expect(
+				formatSecond({ stable: false, delta: 0, error: "x" })
+			).toBe("threw");
+			expect(formatSecond({ stable: true, delta: 0 })).toBe("-");
+			expect(formatSecond({ stable: false, delta: 0 })).toBe("moved");
+			expect(formatSecond({ stable: false, delta: -3 })).toBe("-3 B");
+		});
+	});
+
+	describe("shrink", () => {
+		/**
+		 * @param {number} needed the site a finding needs
+		 * @returns {(sites: number[]) => { kind: string } | null} whether a subset keeps it
+		 */
+		const needs = (needed) => (sites) =>
+			sites.includes(needed) ? { kind: "differs" } : null;
+
+		it("bisects down to the one site a finding needs", () => {
+			expect(shrink(needs(5), [1, 2, 3, 4, 5, 6, 7], "differs")).toEqual([5]);
+			expect(shrink(needs(1), [1, 2, 3, 4], "differs")).toEqual([1]);
+		});
+
+		// Where neither half keeps it on its own, the sites interact.
+		it("keeps every site that only shows it together", () => {
+			const both = (/** @type {number[]} */ sites) =>
+				sites.includes(1) && sites.includes(4) ? { kind: "differs" } : null;
+			expect(shrink(both, [1, 2, 3, 4], "differs")).toEqual([1, 2, 3, 4]);
+		});
+
+		it("does not settle for a half that shows another kind", () => {
+			const other = () => ({ kind: "bytes" });
+			expect(shrink(other, [1, 2], "differs")).toEqual([1, 2]);
+		});
+	});
+
+	describe("legalNotices", () => {
+		it("counts the `/*!` comments a source carries, over any number of lines", () => {
+			expect(legalNotices("a{color:red}")).toBe(0);
+			expect(legalNotices("/*! one */a{color:red}/* not one */")).toBe(1);
+			expect(legalNotices("/*!\n one\n*/a{}/*!two*/")).toBe(2);
+		});
+
+		it("does not read one comment's end as the next one's", () => {
+			expect(legalNotices("/*! a */b{}/*! c */")).toBe(2);
+		});
+
+		it("counts only openers, not the same text inside something else", () => {
+			expect(legalNotices("/* ordinary /*! text */")).toBe(0);
+			expect(legalNotices('a{content:"/*! not one */"}')).toBe(0);
+			expect(legalNotices("a{content:'/*! nor this */'}")).toBe(0);
+		});
+
+		it("reads a quote inside a comment as that comment's text", () => {
+			expect(legalNotices("/* it's fine */a{}/*! real */")).toBe(1);
+		});
+
+		it("does not count a notice the source never closes", () => {
+			expect(legalNotices("/*! unterminated")).toBe(0);
+		});
+	});
+
+	describe("lossColumn", () => {
+		it("reads as a dash when the output lost nothing", () => {
+			expect(lossColumn(0, [], 0)).toBe("-");
+			expect(lossColumn(0, [], -1)).toBe("-");
+		});
+
+		it("counts the classes and names the examples it was given", () => {
+			expect(lossColumn(2, ["a", "b"], 0)).toBe("2 classes! e.g. a, b");
+			expect(lossColumn(9, ["a", "b", "c"], 0)).toBe("9 classes! e.g. a, b, c");
+		});
+
+		it("says class and notice in the singular", () => {
+			expect(lossColumn(1, ["a"], 0)).toBe("1 class! e.g. a");
+			expect(lossColumn(0, [], 1)).toBe("1 legal notice!");
+			expect(lossColumn(0, [], 3)).toBe("3 legal notices!");
+		});
+
+		it("says both when the output lost both", () => {
+			expect(lossColumn(1, ["a"], 2)).toBe("1 class! e.g. a, 2 legal notices!");
+		});
+	});
+
+	describe("filterFrom", () => {
+		const VARIABLE = "COMPARE_TOOLS_HARNESS_TEST_FILTER";
+
+		afterEach(() => {
+			delete process.env[VARIABLE];
+		});
+
+		it("wants every row when the variable is unset", () => {
+			expect(filterFrom(VARIABLE)("anything at all")).toBe(true);
+		});
+
+		it("wants the rows whose name contains it, whatever the case", () => {
+			process.env[VARIABLE] = "LIGHTNING";
+			const wanted = filterFrom(VARIABLE);
+			expect(wanted("lightningcss+target")).toBe(true);
+			expect(wanted("csso")).toBe(false);
+		});
+	});
+
+	describe("findingGroups", () => {
+		/**
+		 * @param {string} relation what the finding is about
+		 * @param {string} repro the lines reproducing it
+		 * @returns {import("../../helpers/syntaxInvariants/relations").Report} the finding
+		 */
+		const finding = (relation, repro) => ({ relation, what: "bytes", repro });
+
+		/**
+		 * @param {ReturnType<typeof findingGroups>} groups the collector
+		 * @returns {{ text: string, count: number }} what it wrote and counted
+		 */
+		const written = (groups) => {
+			let text = "";
+			const count = groups.write((line) => {
+				text += line;
+			});
+			return { text, count };
+		};
+
+		it("names a finding no entry expects, and counts it", () => {
+			const groups = findingGroups();
+			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
+			const { text, count } = written(groups);
+			expect(count).toBe(1);
+			expect(text).toContain("idempotence — bytes");
+			expect(text).toContain("one.html");
+		});
+
+		it("gathers one repro found in several sources into one finding", () => {
+			const groups = findingGroups();
+			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
+			groups.add(finding("idempotence", "    a -> b"), "aggressive", "two.html");
+			const { text, count } = written(groups);
+			expect(count).toBe(1);
+			expect(text).toContain("2 sources, from one.html");
+			expect(text).toContain("[default, aggressive]");
+		});
+
+		it("counts an expected finding apart, and says why it is owed nothing", () => {
+			const groups = findingGroups([
+				{ relation: "idempotence", contains: "a ->", why: "the spec says so" }
+			]);
+			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
+			const { text, count } = written(groups);
+			expect(count).toBe(0);
+			expect(text).toContain("expected, and why — 1 of 1");
+			expect(text).toContain("the spec says so");
+		});
+
+		it("expects nothing on a relation or a repro the entry does not name", () => {
+			const groups = findingGroups([
+				{ relation: "idempotence", contains: "a ->", why: "…" }
+			]);
+			groups.add(finding("respelling", "    a -> b"), "default", "one.html");
+			groups.add(finding("idempotence", "    c -> d"), "default", "two.html");
+			expect(written(groups).count).toBe(3);
+		});
+
+		it("reports an entry that matched nothing as stale", () => {
+			const groups = findingGroups([
+				{ relation: "idempotence", contains: "gone", why: "…" }
+			]);
+			const { text, count } = written(groups);
+			expect(count).toBe(1);
+			expect(text).toContain("stale — 1 expectation(s) matched nothing");
+			expect(text).toContain("idempotence: gone");
+		});
+
+		it("lets a source-scoped entry cover the fixture it names", () => {
+			const groups = findingGroups([
+				{
+					relation: "idempotence",
+					contains: "a ->",
+					source: "one",
+					why: "that fixture writes it"
+				}
+			]);
+			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
+			expect(written(groups).count).toBe(0);
+		});
+
+		it("leaves a group unexpected where it reaches a fixture the entry omits", () => {
+			const groups = findingGroups([
+				{ relation: "idempotence", contains: "a ->", source: "one", why: "…" }
+			]);
+			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
+			groups.add(finding("idempotence", "    a -> b"), "default", "other.html");
+			const { text, count } = written(groups);
+			// The finding itself, and the entry that then covers nothing.
+			expect(count).toBe(2);
+			expect(text).toContain("idempotence — bytes");
+			expect(text).toContain("stale — 1 expectation(s) matched nothing");
+		});
+
+		it("lets an entry naming several fixtures cover a group reaching them", () => {
+			const groups = findingGroups([
+				{
+					relation: "idempotence",
+					contains: "a ->",
+					source: ["one", "two"],
+					why: "those fixtures write it"
+				}
+			]);
+			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
+			groups.add(finding("idempotence", "    a -> b"), "default", "two.html");
+			expect(written(groups).count).toBe(0);
+			groups.add(finding("idempotence", "    a -> b"), "default", "three.html");
+			expect(written(groups).count).toBe(2);
+		});
+	});
+
+	describe("cutsAt", () => {
+		it("cuts inside the first construct past the midpoint, else the first", () => {
+			const source = "<a>1</a><b>2</b><c>3</c>";
+			expect(cutsAt(source, [["in a start tag", /<[a-z]/g]])).toEqual([
+				["in a start tag", "<a>1</a><b>2</b><c"]
+			]);
+			expect(cutsAt(source, [["in a comment", /<!--./g]])).toEqual([]);
+			expect(cutsAt("<a>1</a>xyz", [["in a tag", /<[a-z]/g]])).toEqual([
+				["in a tag", "<a"]
+			]);
+		});
+
+		it("leaves out a cut that would keep the whole source", () => {
+			expect(cutsAt("ab<a", [["in a start tag", /<[a-z]/g]])).toEqual([]);
+		});
+	});
+
+	describe("narrowing a sweep", () => {
+		afterEach(() => {
+			delete process.env.RELATION;
+			delete process.env.SPELLING;
+		});
+
+		it("asks every respelling when nothing narrows the run", () => {
+			expect(wantedRespelling("quote-double")).toBe(true);
+		});
+
+		it("asks a respelling `RELATION` names alone or as `respelling`", () => {
+			process.env.RELATION = "respelling quote-double";
+			expect(wantedRespelling("quote-double")).toBe(true);
+			expect(wantedRespelling("quote-single")).toBe(false);
+			process.env.RELATION = "respelling";
+			expect(wantedRespelling("quote-single")).toBe(true);
+			process.env.RELATION = "spans";
+			expect(wantedRespelling("quote-single")).toBe(false);
+		});
+
+		it("asks only the respelling `SPELLING` names", () => {
+			process.env.SPELLING = "unquote";
+			expect(wantedRespelling("unquote")).toBe(true);
+			expect(wantedRespelling("quote-double")).toBe(false);
+		});
+
+		/** @type {import("../../../tooling/compare-tools-harness").Expected[]} */
+		const EXPECTED = [
+			{ relation: "idempotence", contains: "a", why: "…" },
+			{ relation: "respelling quote-double", contains: "b", why: "…" },
+			{ relation: "idempotence", contains: "c", source: "one", why: "…" },
+			{ relation: "idempotence", contains: "d", presets: ["legacy"], why: "…" },
+			{
+				relation: "idempotence",
+				contains: "e",
+				source: ["three", "one"],
+				why: "…"
+			}
+		];
+
+		/**
+		 * @param {string[]} labels the fixtures the run reads
+		 * @param {string[]} presets the option sets it prints under
+		 * @returns {string[]} what each kept entry contains
+		 */
+		const kept = (labels, presets) =>
+			wantedExpectations(EXPECTED, labels, presets).map(
+				(entry) => entry.contains
+			);
+
+		it("keeps every entry a full run reaches", () => {
+			expect(kept(["one.html"], ["default", "legacy"])).toEqual([
+				"a",
+				"b",
+				"c",
+				"d",
+				"e"
+			]);
+		});
+
+		it("drops an entry for a fixture or preset the run does not read", () => {
+			expect(kept(["two.html"], ["default"])).toEqual(["a", "b"]);
+		});
+
+		it("drops an entry for a relation or respelling the run does not ask", () => {
+			process.env.SPELLING = "unquote";
+			expect(kept(["one.html"], ["legacy"])).toEqual(["a", "c", "d", "e"]);
+			delete process.env.SPELLING;
+			process.env.RELATION = "respelling quote-double";
+			expect(kept(["one.html"], ["legacy"])).toEqual(["b"]);
+		});
+	});
+});
+
+describe("missingReport", () => {
+	it("says nothing where the corpus was whole", () => {
+		expect(missingReport([])).toBe("");
+	});
+
+	it("names every fixture the sweep did not find", () => {
+		expect(missingReport(["Tailwind 4 + daisyUI 5", "Bootstrap 5"])).toBe(
+			"\nnot built — 2\n    Tailwind 4 + daisyUI 5\n    Bootstrap 5\n"
+		);
+	});
+});
+
+describe("sweepExitCode", () => {
+	it("passes a whole corpus with nothing found", () => {
+		expect(sweepExitCode(0, [], [])).toBe(0);
+		expect(sweepExitCode(0, [], ["--require-corpus"])).toBe(0);
+	});
+
+	it("fails on a finding whether or not the corpus is required", () => {
+		expect(sweepExitCode(1, [], [])).toBe(1);
+		expect(sweepExitCode(2, [], ["--require-corpus"])).toBe(1);
+	});
+
+	// The silent pass this flag exists to remove: the sweep reports the findings
+	// of the fixtures it kept, and says nothing about the one it lost.
+	it("passes a short corpus only where it is not required", () => {
+		expect(sweepExitCode(0, ["Tailwind 4 + daisyUI 5"], [])).toBe(0);
+		expect(
+			sweepExitCode(0, ["Tailwind 4 + daisyUI 5"], ["--require-corpus"])
+		).toBe(1);
+	});
+
+	it("reads the flag out of the whole command line", () => {
+		expect(
+			sweepExitCode(0, ["A"], ["node", "x.js", "--invariants", "--require-corpus"])
+		).toBe(1);
+		expect(sweepExitCode(0, ["A"], ["node", "x.js", "--invariants"])).toBe(0);
+	});
+});
+
+describe("sweepMode", () => {
+	it("reads the mode whichever side of the modifier it stands", () => {
+		expect(sweepMode(["node", "x.js", "--invariants", "--require-corpus"])).toBe(
+			"--invariants"
+		);
+		expect(sweepMode(["node", "x.js", "--require-corpus", "--invariants"])).toBe(
+			"--invariants"
+		);
+	});
+
+	it("reads the other modes unchanged", () => {
+		expect(sweepMode(["node", "x.js", "--setup"])).toBe("--setup");
+		expect(sweepMode(["node", "x.js", "--measure"])).toBe("--measure");
+	});
+
+	// The comparison, which is what no mode has always meant.
+	it("names no mode where only the modifier was given", () => {
+		expect(sweepMode(["node", "x.js"])).toBeUndefined();
+		expect(sweepMode(["node", "x.js", "--require-corpus"])).toBeUndefined();
+	});
+});
+
+describe("profileShares", () => {
+	it("counts each sample toward its file, the engine's work by name", () => {
+		const frame = (/** @type {string} */ functionName, /** @type {string} */ url) => ({
+			callFrame: { functionName, url }
+		});
+		const nodes = [
+			{ id: 1, ...frame("minify", "file:///x/node_modules/terser/lib/minify.js") },
+			{ id: 2, ...frame("print", pathToFileURL(path.join(__dirname, "../../../lib/javascript/syntax-printer.js")).href) },
+			{ id: 3, ...frame("(garbage collector)", "") },
+			{ id: 4, ...frame("anonymous", "") },
+			{ id: 5, ...frame("helper", "file:///x/node_modules/other/index.js") }
+		];
+		const shares = profileShares({
+			nodes,
+			samples: [1, 1, 2, 3, 4, 5, 1, 5],
+			timeDeltas: [10, 10, 20, 5, 5, 10, 20]
+		});
+		expect(shares).toEqual([
+			["terser minify.js", 40 / 80],
+			["webpack javascript/syntax-printer.js", 20 / 80],
+			["other", 10 / 80],
+			["(garbage collector)", 5 / 80],
+			["(generated)", 5 / 80]
+		]);
+		expect(profileShares({ nodes, samples: [], timeDeltas: [] })).toEqual([]);
+		expect(
+			profileShares({ nodes, samples: [1], timeDeltas: [0] })
+		).toEqual([["terser minify.js", 0]]);
+	});
+});
+
+describe("parser agreement", () => {
+	/**
+	 * @param {string[]} texts what each `<p>` holds
+	 * @returns {TreeEvents} a body of paragraphs
+	 */
+	const paragraphs = (texts) => {
+		const events = new TreeEvents();
+		events.open("body", "<body>");
+		for (const text of texts) {
+			events.open("p", "<p>");
+			events.text(text);
+			events.close("</p>");
+		}
+		events.leaf("comment");
+		events.close("</body>");
+		return events;
+	};
+
+	it("numbers each node among its same-named siblings and folds text runs", () => {
+		const events = new TreeEvents();
+		events.open("a", "<a>");
+		expect(events.depth).toBe(1);
+		events.text("x");
+		events.text("y");
+		events.open("b", "<b>");
+		events.close("</b>");
+		events.text("z");
+		events.open("b", "<b>");
+		events.close("</b>");
+		events.close("</a>");
+		events.open("a", "<a>");
+		events.close("</a>");
+		expect(events.depth).toBe(0);
+		expect(events.list).toEqual([
+			["/a[1]", "open", "<a>"],
+			["/a[1]", "text", "xy"],
+			["/a[1]/b[1]", "open", "<b>"],
+			["/a[1]/b[1]", "close", "</b>"],
+			["/a[1]", "text", "z"],
+			["/a[1]/b[2]", "open", "<b>"],
+			["/a[1]/b[2]", "close", "</b>"],
+			["/a[1]", "close", "</a>"],
+			["/a[2]", "open", "<a>"],
+			["/a[2]", "close", "</a>"]
+		]);
+	});
+
+	it("names each place two trees differ, and what each side says there", () => {
+		expect(
+			treeDifferences(paragraphs(["a", "b"]), paragraphs(["a", "b"]), "ref")
+		).toEqual([]);
+		expect(
+			treeDifferences(paragraphs(["a", "b"]), paragraphs(["a", "c"]), "ref")
+		).toEqual(['/body[1]/p[2]: ref text "b", tool text "c"']);
+		// A run of closes alone, as an unbalanced reader leaves, names its first.
+		const balanced = /** @type {EXPECTED_ANY} */ ({
+			list: [
+				["/a[1]", "open", "a"],
+				["/a[1]", "close", "}"]
+			]
+		});
+		const closedTwice = /** @type {EXPECTED_ANY} */ ({
+			list: [...balanced.list, ["/a[1]", "close", "}"]]
+		});
+		expect(treeDifferences(balanced, closedTwice, "ref")).toEqual([
+			"/a[1]: ref nothing, tool }"
+		]);
+		// A node one side lacks is one difference, not one per node after it.
+		expect(
+			treeDifferences(paragraphs(["a", "c"]), paragraphs(["a", "b", "c"]), "ref")
+		).toEqual(['/body[1]/p[2]: ref nothing, tool text "b"']);
+		expect(
+			treeDifferences(
+				paragraphs(["x", "a", "b", "y"]),
+				paragraphs(["z", "a", "b"]),
+				"ref"
+			)
+		).toEqual([
+			'/body[1]/p[1]: ref text "x", tool text "z"',
+			"/body[1]/p[4]: ref <p>, tool nothing"
+		]);
+		const empty = new TreeEvents();
+		expect(treeDifferences(empty, paragraphs([]), "ref")).toEqual([
+			"/body[1]: ref nothing, tool <body>"
+		]);
+		const loose = new TreeEvents();
+		loose.leaf("comment");
+		expect(treeDifferences(loose, empty, "ref")).toEqual([
+			"/: ref comment, tool nothing"
+		]);
+		expect(
+			treeDifferences(paragraphs(["x".repeat(80)]), paragraphs(["y"]), "ref")
+		).toEqual([`/body[1]/p[1]: ref text "${"x".repeat(41)}…, tool text "y"`]);
+		/**
+		 * @param {string} said what the innermost node says
+		 * @returns {TreeEvents} it under twenty nested sections
+		 */
+		const deep = (said) => {
+			const events = new TreeEvents();
+			for (let i = 0; i < 20; i++) events.open("section", "<section>");
+			events.leaf(said);
+			return events;
+		};
+		expect(treeDifferences(deep("a"), deep("b"), "ref")).toEqual([
+			`…${"/section[1]".repeat(20).slice(-59)}: ref a, tool b`
+		]);
+		// Two sides alike past the cut are shown from just before they differ.
+		const long = (/** @type {string} */ tail) => {
+			const events = new TreeEvents();
+			events.leaf(`<path d="${"m0 0".repeat(20)}${tail}">`);
+			return events;
+		};
+		expect(treeDifferences(long("h1"), long("v1"), "ref")).toEqual([
+			'/: ref …m0 0m0 0m0 0h1">, tool …m0 0m0 0m0 0v1">'
+		]);
+	});
+
+	it("reports trees too far apart to align as one difference", () => {
+		const texts = Array.from({ length: 300 }, (_, i) => `${i}`);
+		expect(
+			treeDifferences(
+				paragraphs(texts),
+				paragraphs(texts.map((text) => `${text}!`)),
+				"ref"
+			)
+		).toEqual([
+			'/body[1]/p[1]: ref text "0", tool text "0!", and too many more to align'
+		]);
+	});
+
+	it("answers each parser's cell, reading the reference once", async () => {
+		const reference = jest.fn((/** @type {string} */ source) =>
+			paragraphs(source.split(" "))
+		);
+		/** @typedef {import("../../../tooling/compare-tools-harness").TreeReader} TreeReader */
+		const readers = new Map(
+			/** @type {[string, TreeReader][]} */ ([
+			["ref", reference],
+			["same", (source) => Promise.resolve(paragraphs(source.split(" ")))],
+			["other", () => paragraphs(["no", "b", "x"])],
+			[
+				"throws",
+				() => {
+					throw new Error("bad input\nmore");
+				}
+			]
+		])
+		);
+		const cell = agreement("ref", readers, "a b");
+		expect(await cell("ref")).toBe("reference");
+		expect(await cell("unread")).toBe("own dialect");
+		expect(await cell("same")).toBe("yes");
+		expect(await cell("other")).toBe(
+			'no — /body[1]/p[1]: ref text "a", tool text "no" (and 1 more)'
+		);
+		expect(await cell("throws")).toBe("could not compare: bad input");
+		expect(reference).toHaveBeenCalledTimes(1);
+
+		readers.set("ref", () => {
+			throw new Error("not well-formed");
+		});
+		expect(await agreement("ref", readers, "a")("same")).toBe(
+			"could not compare: ref rejects it: not well-formed"
+		);
+	});
+});
+
+describe("agreementInvariant", () => {
+	/**
+	 * @param {string} source words a paragraph holds
+	 * @returns {TreeEvents} the paragraph
+	 */
+	const paragraph = (source) => {
+		const events = new TreeEvents();
+		events.open("p", "<p>");
+		events.text(source);
+		events.close("</p>");
+		return events;
+	};
+	/** @type {import("../../../tooling/compare-tools-harness").Expected[]} */
+	const expected = [
+		{ relation: "agreement", contains: "x", why: "the reference's gap" },
+		{ relation: "spans", contains: "y", why: "another relation's" }
+	];
+	const corpus = /** @type {[string, string][]} */ ([
+		["same", "a"],
+		["apart", "b"],
+		["rejected", "!"],
+		["throws", "?"]
+	]);
+
+	/**
+	 * @param {boolean} wanted whether the run asks for the relation
+	 * @param {() => (source: string) => TreeEvents} reference the reference's reader
+	 * @returns {{ missing: string[], held: ReturnType<typeof agreementInvariant>, reports: [string, string, string][] }} what the sweep made of it
+	 */
+	const sweep = (wanted, reference) => {
+		/** @type {string[]} */
+		const missing = [];
+		const held = agreementInvariant({
+			wanted,
+			referenceName: "ref",
+			reference,
+			tree: (source) => {
+				if (source === "?") throw new Error("parser bug\nstack");
+				return paragraph(source === "b" ? "c" : source);
+			},
+			corpus,
+			expected,
+			missing
+		});
+		/** @type {[string, string, string][]} */
+		const reports = [];
+		held.hold({
+			add: (report, preset, label) => {
+				reports.push([report.repro, preset, label]);
+			}
+		});
+		return { missing, held, reports };
+	};
+
+	it("holds webpack's tree to the reference's, counting what the reference rejects", () => {
+		const { missing, held, reports } = sweep(true, () => (source) => {
+			if (source === "!") throw new Error("not well-formed");
+			return paragraph(source);
+		});
+		expect(missing).toEqual([]);
+		expect(held.expected).toEqual(expected);
+		expect(reports).toEqual([
+			['    /p[1]: ref text "b", tool text "c"', "parse", "apart"],
+			["    /: webpack's parser throws: parser bug", "parse", "throws"]
+		]);
+	});
+
+	it("reports each difference in a source as its own finding", () => {
+		/** @type {string[]} */
+		const reproductions = [];
+		agreementInvariant({
+			wanted: true,
+			referenceName: "ref",
+			reference: () => () => {
+				const events = paragraph("a");
+				events.leaf("comment");
+				return events;
+			},
+			tree: () => {
+				const events = paragraph("b");
+				events.leaf("other");
+				return events;
+			},
+			corpus: [["twice", ""]],
+			expected: [],
+			missing: []
+		}).hold({ add: (report) => reproductions.push(report.repro) });
+		expect(reproductions).toEqual([
+			'    /p[1]: ref text "a", tool text "b"',
+			"    /: ref comment, tool other"
+		]);
+	});
+
+	it("names a reference that is not installed as missing, and sets its expectations aside", () => {
+		const { missing, held, reports } = sweep(true, () => {
+			throw new Error("Cannot find module");
+		});
+		expect(missing).toEqual(["ref, the agreement relation's reference"]);
+		expect(held.expected).toEqual([expected[1]]);
+		expect(reports).toEqual([]);
+	});
+
+	it("reads nothing where the run does not ask for the relation", () => {
+		const reference = jest.fn(() => paragraph);
+		const { missing, held, reports } = sweep(false, reference);
+		expect(reference).not.toHaveBeenCalled();
+		expect(missing).toEqual([]);
+		expect(held.expected).toEqual([expected[1]]);
+		expect(reports).toEqual([]);
+	});
+});
+
+describe("collectFiles", () => {
+	it("walks past a directory removed after the listing named it", () => {
+		const root = fs.mkdtempSync(path.join(os.tmpdir(), "collect-files-"));
+		fs.mkdirSync(path.join(root, "kept"));
+		fs.writeFileSync(path.join(root, "kept", "a.css"), "");
+		fs.mkdirSync(path.join(root, "gone"));
+		const readdirSync = fs.readdirSync;
+		const spy = jest
+			.spyOn(fs, "readdirSync")
+			.mockImplementation((current, options) => {
+				if (current === path.join(root, "gone")) {
+					fs.rmdirSync(current);
+				}
+				return readdirSync(current, options);
+			});
+		try {
+			expect(collectFiles(root, ".css", new Set())).toEqual([
+				path.join(root, "kept", "a.css")
+			]);
+			expect(() =>
+				collectFiles(path.join(root, "missing"), ".css", new Set())
+			).toThrow(/ENOENT/);
+		} finally {
+			spy.mockRestore();
+			fs.rmSync(root, { recursive: true, force: true });
+		}
+	});
+
+	it("lists a directory again when a child it stats is removed", () => {
+		const root = fs.mkdtempSync(path.join(os.tmpdir(), "collect-files-"));
+		fs.writeFileSync(path.join(root, "a.css"), "");
+		fs.writeFileSync(path.join(root, "b.css"), "");
+		const readdirSync = fs.readdirSync;
+		let thrown = false;
+		const spy = jest
+			.spyOn(fs, "readdirSync")
+			.mockImplementation((current, options) => {
+				if (!thrown) {
+					thrown = true;
+					fs.writeFileSync(path.join(root, "c.css"), "");
+					throw Object.assign(new Error("ENOENT: vanished"), {
+						code: "ENOENT",
+						path: path.join(root, "vanished.css")
+					});
+				}
+				return readdirSync(current, options);
+			});
+		try {
+			expect(collectFiles(root, ".css", new Set())).toEqual(
+				["a.css", "b.css", "c.css"].map((name) => path.join(root, name))
+			);
+			spy.mockImplementation(() => {
+				throw Object.assign(new Error("ENOENT"), { code: "ENOENT" });
+			});
+			expect(() => collectFiles(root, ".css", new Set())).toThrow(/ENOENT/);
+		} finally {
+			spy.mockRestore();
+			fs.rmSync(root, { recursive: true, force: true });
+		}
+	});
+});

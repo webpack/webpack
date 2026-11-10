@@ -1,0 +1,12 @@
+[
+	{
+		"entry": "parseADeclaration"
+	},
+	{
+		"entry": "parseADeclaration",
+		"fields": [
+			"source",
+			"loc"
+		]
+	}
+]

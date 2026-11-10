@@ -1,0 +1,26 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"edge 79"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"ie 11"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"ie_mob 11"
+			]
+		}
+	}
+]

@@ -1,0 +1,44 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": "some"
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": false
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": true
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": "all"
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": "@license"
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": {
+				"regexp": "^\\s*@license"
+			}
+		}
+	}
+]

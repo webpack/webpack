@@ -1,0 +1,1 @@
+(function(DEBUG){g(DEBUG)})(h)

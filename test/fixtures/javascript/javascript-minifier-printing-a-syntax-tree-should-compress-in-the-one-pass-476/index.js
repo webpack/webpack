@@ -1,0 +1,1 @@
+for(;;){if(b){x();continue}y()}function f(a){if(a){x();return}/*c*/y()}function g(a){if(a){x();return}if(a){x();return}}

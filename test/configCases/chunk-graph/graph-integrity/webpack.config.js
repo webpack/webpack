@@ -17,16 +17,14 @@ module.exports = {
 						}
 
 						const m = modules[0];
-						const mock = {
-							identifier: () => "mock-module",
-							getSourceTypes: () => ["javascript"],
-							size: () => 0
-						};
+						const mock = new compiler.webpack.ExternalModule(
+							"mock-module",
+							"var",
+							"mock-module"
+						);
 
-						// @ts-expect-error for tests
 						chunkGraph.replaceModule(m, mock);
 
-						// @ts-expect-error for tests
 						if (!chunkGraph.isModuleInChunk(mock, chunk)) {
 							throw new Error("replaceModule failed (new module missing)");
 						}
@@ -35,7 +33,6 @@ module.exports = {
 						}
 
 						// Restore original state for downstream stats
-						// @ts-expect-error for tests
 						chunkGraph.replaceModule(mock, m);
 
 						chunkGraph.disconnectChunkAndModule(chunk, m);

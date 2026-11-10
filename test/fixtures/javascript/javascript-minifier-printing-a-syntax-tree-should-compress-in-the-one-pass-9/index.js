@@ -1,0 +1,1 @@
+if (a) /* before */ { b() } if (a) { b() /* after */ }

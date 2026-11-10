@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const { decodeUrlPath } = require("../harness/runner/RunnerHelpers");
 
 /** @import { MutableToken } from "../../lib/css/syntax-parser" */
 /** @typedef {Record<string, unknown> & { getPropertyValue: (property: string) => unknown }} StyleDeclaration */
@@ -50,7 +51,7 @@ const parseFragment = (html) => {
 	if (htmlSyntax === undefined) htmlSyntax = require("../../lib/html/syntax");
 	const { SourceProcessor } = htmlSyntax;
 
-	const { NodeType } = require("../../lib/html/syntax-parser");
+	const { Field, NodeType } = require("../../lib/html/syntax-parser");
 
 	/** @type {{ tag: string, attributes: { name: string, value: string }[], text: string }[]} */
 	const elements = [];
@@ -61,15 +62,21 @@ const parseFragment = (html) => {
 		.use({
 			[NodeType.Element]: {
 				enter: (path) => {
-					const end = path.end();
-					if (end === 0 || path.start() < lastEnd) return;
+					const end = path.range()[1];
+					if (end === 0 || path.range()[0] < lastEnd) return;
 					lastEnd = end;
 					open = {
-						tag: path.tagName(),
-						attributes: path.attributes().map((attribute) => ({
-							name: attribute.name,
-							value: attribute.value
-						})),
+						tag: path.name(),
+						attributes: Array.from(
+							{ length: path.fieldCount(Field.attributes) },
+							(_, i) => {
+								const attribute = path.field(i, Field.attributes);
+								return {
+									name: path.name(attribute),
+									value: path.value(attribute)
+								};
+							}
+						),
 						text: ""
 					};
 					elements.push(open);
@@ -79,7 +86,7 @@ const parseFragment = (html) => {
 				}
 			},
 			[NodeType.Text]: (path) => {
-				if (open !== undefined) open.text += path.data();
+				if (open !== undefined) open.text += path.value();
 			}
 		})
 		.process(html, {});
@@ -341,7 +348,7 @@ class FakeElement {
 				const loadEvent = { type: "load", target: node };
 				if (node.onload) node.onload(loadEvent);
 				node._dispatchEvent(loadEvent);
-			}, 100);
+			}, 10);
 			// Don't let this cosmetic load timer keep the worker's event loop alive
 			// past teardown (Deno's setTimeout returns a number, hence the guard).
 			if (typeof timer.unref === "function") timer.unref();
@@ -607,10 +614,12 @@ class FakeSheet {
 		let css = fs.readFileSync(
 			path.resolve(
 				this._basePath,
-				/** @type {string} */ (this._element.href)
-					.replace(/^https:\/\/test\.cases\/path\//, "")
-					.replace(/^https:\/\/example\.com\//, "")
-					.split("?")[0] // Remove query parameters (e.g., ?hmr=timestamp)
+				decodeUrlPath(
+					/** @type {string} */ (this._element.href)
+						.replace(/^https:\/\/test\.cases\/path\//, "")
+						.replace(/^https:\/\/example\.com\//, "")
+						.split("?")[0] // Remove query parameters (e.g., ?hmr=timestamp)
+				)
 			),
 			"utf8"
 		);
@@ -639,12 +648,7 @@ class FakeSheet {
 	get cssRules() {
 		if (this._cssRules) return this._cssRules;
 
-		const {
-			TT_LEFT_CURLY_BRACKET,
-			TT_RIGHT_CURLY_BRACKET,
-			TT_SEMICOLON,
-			readToken
-		} = require("../../lib/css/syntax-parser");
+		const { TokenType, readToken } = require("../../lib/css/syntax-parser");
 
 		/** @type {CssRule[]} */
 		const rules = [];
@@ -667,16 +671,17 @@ class FakeSheet {
 			? new URL(href)
 			: path.resolve(
 					this._basePath,
-					href
-						.replace(/^https:\/\/test\.cases\/path\//, "")
-						.replace(/^https:\/\/example\.com\/public\/path\//, "")
-						.replace(/^https:\/\/example\.com\//, "")
+					decodeUrlPath(
+						href
+							.replace(/^https:\/\/test\.cases\/path\//, "")
+							.replace(/^https:\/\/example\.com\/public\/path\//, "")
+							.replace(/^https:\/\/example\.com\//, "")
+					)
 				);
 		let css = fs.readFileSync(filepath, "utf8");
 		css = css
 			// Remove comments
-			// @ts-expect-error we use es2018 for such tests
-			.replace(/\/\*.*?\*\//gs, "")
+			.replace(/\/\*[\s\S]*?\*\//g, "")
 			.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
 				if (!/^https:\/\/test\.cases\/path\//.test(url)) {
 					return url;
@@ -698,13 +703,13 @@ class FakeSheet {
 			const t = readToken(css, pos, /** @type {MutableToken} */ ({}));
 			if (t === undefined) break;
 			pos = t.end;
-			if (t.type === TT_LEFT_CURLY_BRACKET) {
+			if (t.type === TokenType.LeftCurlyBracket) {
 				if (selector === undefined) {
 					ruleStart = last; // Record the start of the rule (before the selector)
 					selector = css.slice(last, t.start).trim();
 					last = t.end;
 				}
-			} else if (t.type === TT_RIGHT_CURLY_BRACKET) {
+			} else if (t.type === TokenType.RightCurlyBracket) {
 				processDeclaration(css.slice(last, t.start));
 				rules.push({
 					selectorText: selector,
@@ -714,7 +719,7 @@ class FakeSheet {
 				selector = undefined;
 				currentRule = { getPropertyValue };
 				last = t.end;
-			} else if (t.type === TT_SEMICOLON) {
+			} else if (t.type === TokenType.Semicolon) {
 				processDeclaration(css.slice(last, t.start));
 				last = t.end;
 			}
@@ -768,12 +773,7 @@ class CSSStyleSheet {
 	 * @param {string} cssText CSS text to parse
 	 */
 	_parseCssRules(cssText) {
-		const {
-			TT_LEFT_CURLY_BRACKET,
-			TT_RIGHT_CURLY_BRACKET,
-			TT_SEMICOLON,
-			readToken
-		} = require("../../lib/css/syntax-parser");
+		const { TokenType, readToken } = require("../../lib/css/syntax-parser");
 
 		/** @type {CssRule[]} */
 		const rules = [];
@@ -793,9 +793,7 @@ class CSSStyleSheet {
 		};
 
 		// Remove comments
-		const cleanCss = cssText
-			// @ts-expect-error we use es2018 for such tests
-			.replace(/\/\*.*?\*\//gs, "");
+		const cleanCss = cssText.replace(/\/\*[\s\S]*?\*\//g, "");
 
 		let ruleStart = 0;
 
@@ -803,13 +801,13 @@ class CSSStyleSheet {
 			const t = readToken(cleanCss, pos, /** @type {MutableToken} */ ({}));
 			if (t === undefined) break;
 			pos = t.end;
-			if (t.type === TT_LEFT_CURLY_BRACKET) {
+			if (t.type === TokenType.LeftCurlyBracket) {
 				if (selector === undefined) {
 					selector = cleanCss.slice(last, t.start).trim();
 					ruleStart = last;
 					last = t.end;
 				}
-			} else if (t.type === TT_RIGHT_CURLY_BRACKET) {
+			} else if (t.type === TokenType.RightCurlyBracket) {
 				processDeclaration(cleanCss.slice(last, t.start));
 				last = t.end;
 
@@ -824,7 +822,7 @@ class CSSStyleSheet {
 				});
 				selector = undefined;
 				currentRule = { getPropertyValue };
-			} else if (t.type === TT_SEMICOLON) {
+			} else if (t.type === TokenType.Semicolon) {
 				processDeclaration(cleanCss.slice(last, t.start));
 				last = t.end;
 			}

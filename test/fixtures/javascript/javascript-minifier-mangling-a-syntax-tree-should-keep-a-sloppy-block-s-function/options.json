@@ -1,0 +1,20 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": true,
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"compress": false,
+		"mangle": true,
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": false,
+		"behavior": true
+	}
+]

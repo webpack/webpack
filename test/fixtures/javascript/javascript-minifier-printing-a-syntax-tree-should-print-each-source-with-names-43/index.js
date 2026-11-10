@@ -1,0 +1,1 @@
+async function f(){ return /*! a */ (await /*! b */ x).y } function* g(){ yield /*! c */ a ? b : c; throw /*! d */ a++ + b }

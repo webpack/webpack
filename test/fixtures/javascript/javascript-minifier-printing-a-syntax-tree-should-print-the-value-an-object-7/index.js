@@ -1,0 +1,1 @@
+class C{#x;static t(){try{return({x:1}).#x}catch(e){return e.constructor.name}}}console.log(C.t())

@@ -90,12 +90,13 @@ const makeModule = (id) =>
  * @param {BackendApi} api backend api
  * @param {Server} server fake server
  * @param {string} url request url
+ * @param {jest.Mock=} writeHead spy for the response status
  * @returns {Socket} the request socket
  */
-const connect = (api, server, url) => {
+const connect = (api, server, url, writeHead = jest.fn()) => {
 	const socket = makeSocket();
 	const req = { url, socket };
-	const res = { writeHead() {}, write() {} };
+	const res = { writeHead, write() {}, end() {} };
 	server.emit("connection", socket);
 	server.emit("request", req, res);
 	return socket;
@@ -164,6 +165,40 @@ describe("lazyCompilationBackend", () => {
 		s2.emit("close");
 		advanceTimersByTime(120000);
 		expect(api.module(mod).active).toBe(false);
+	});
+
+	it("ignores keys that were never handed out by module()", () => {
+		const { api, server, invalidate } = setup();
+		const mod = makeModule("mod-a");
+		const { data: key } = api.module(mod);
+
+		// unknown keys are neither counted nor kept until the idle timer fires
+		const s1 = connect(api, server, `${PREFIX}made-up@${key}x@other`);
+		expect(invalidate).not.toHaveBeenCalled();
+		expect(api.module(mod).active).toBe(false);
+		s1.emit("close");
+		expect(timerCount()).toBe(0);
+
+		// a known key among unknown ones, repeated, is counted once
+		const s2 = connect(api, server, `${PREFIX}made-up@${key}@${key}`);
+		expect(invalidate).toHaveBeenCalledTimes(1);
+		expect(api.module(mod).active).toBe(true);
+		s2.emit("close");
+		expect(timerCount()).toBe(1);
+		advanceTimersByTime(120000);
+		expect(api.module(mod).active).toBe(false);
+	});
+
+	it("rejects requests outside the lazy compilation prefix", () => {
+		const { api, server, invalidate } = setup();
+		const { data: key } = api.module(makeModule("mod-a"));
+		const writeHead = jest.fn();
+
+		const socket = connect(api, server, `/${key}`, writeHead);
+		expect(writeHead).toHaveBeenCalledWith(404);
+		expect(invalidate).not.toHaveBeenCalled();
+		socket.emit("close");
+		expect(timerCount()).toBe(0);
 	});
 
 	it("does not schedule idle timers or hang after dispose", () => {

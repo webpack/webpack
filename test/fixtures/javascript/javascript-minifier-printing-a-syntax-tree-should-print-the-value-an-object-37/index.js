@@ -1,0 +1,1 @@
+function f(x,g){return[[true][0].x]}

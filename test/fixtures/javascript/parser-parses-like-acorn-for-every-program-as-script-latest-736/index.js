@@ -1,0 +1,1 @@
+function* g() { function f() {} yield /re/; }

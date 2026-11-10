@@ -117,3 +117,12 @@
 	symbols: "+";
 	suffix: " ";
 }
+
+/* `local(--usage-vs-class)` in a value uses the property, so the class keeps
+   its export with no shadowing warning. */
+.usage-vs-class {
+	color: red;
+}
+.usage-vs-class-user {
+	width: local(--usage-vs-class);
+}

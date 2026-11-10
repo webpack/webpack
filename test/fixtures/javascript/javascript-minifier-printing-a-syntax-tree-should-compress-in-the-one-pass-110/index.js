@@ -1,0 +1,1 @@
+function f(o){ const T = 1; g(T ? o : 2); g(!T ? 1 : (o, 2)); delete (T ? o.x : 1); (T ? o.f : 1)(); (T ? o.f : 1)``; typeof (T ? u : 1); g(T ? o.f : 1); T ? function(){}() : 1; g(T ? o : h(/*! c */ 2)); return () => T ? {} : 1 }

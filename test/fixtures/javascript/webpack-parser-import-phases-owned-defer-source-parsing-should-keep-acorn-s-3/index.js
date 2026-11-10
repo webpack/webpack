@@ -1,0 +1,1 @@
+const y = import.m\u0065ta;

@@ -1,0 +1,1 @@
+function s(x){switch(1){case 2:y()}}

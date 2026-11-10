@@ -41,6 +41,9 @@ const webpack = (options) => {
 	return { options };
 };
 
+// webpack-cli reads it to tell which features the webpack it drives supports.
+webpack.version = require("../../../package.json").version;
+
 // build only calls getArguments(undefined); ignore it and describe our schema.
 webpack.cli = {
 	getArguments: () => cli.getArguments(schema),

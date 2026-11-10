@@ -43,10 +43,9 @@ module.exports = {
 
 		// Safe value transforms (each value-identical):
 		expect(css).toContain(
-			".transforms{color:red;background:#abc;" +
-				"background-image:linear-gradient(#abc,red);border-color:teal;" +
-				"margin:.5px 1px 0;--raw:0.50;fill:red;" +
-				"stroke:#00000080;outline-color:#0000}"
+			".transforms{color:red;--raw:0.50;fill:red;stroke:#00000080;" +
+				"background:#abc;background-image:linear-gradient(#abc,red);" +
+				"border-color:teal;outline-color:#0000;margin:.5px 1px 0}"
 		);
 		// Colors take their shortest spelling — a name, a short hex, or a hex alpha where
 		// the build states no target — including inside a value function. Numbers are

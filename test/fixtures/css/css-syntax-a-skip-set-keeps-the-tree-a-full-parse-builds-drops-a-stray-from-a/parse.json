@@ -1,0 +1,47 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents"
+		},
+		"visit": {
+			"types": [
+				"AtRule",
+				"QualifiedRule",
+				"Declaration",
+				"Function"
+			],
+			"fields": [
+				"name",
+				"source",
+				"childCount"
+			],
+			"exit": false
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents",
+			"skip": {
+				"types": [
+					"RightCurlyBracket"
+				]
+			}
+		},
+		"visit": {
+			"types": [
+				"AtRule",
+				"QualifiedRule",
+				"Declaration",
+				"Function"
+			],
+			"fields": [
+				"name",
+				"source",
+				"childCount"
+			],
+			"exit": false
+		}
+	}
+]

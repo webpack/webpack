@@ -1,0 +1,1 @@
+var implements; var package = 1;

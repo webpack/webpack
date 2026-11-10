@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {
+			"shortenNumbers": false
+		}
+	},
+	{
+		"mode": "minify"
+	}
+]

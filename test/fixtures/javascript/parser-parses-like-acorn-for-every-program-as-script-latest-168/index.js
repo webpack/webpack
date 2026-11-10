@@ -1,0 +1,1 @@
+export default function f() {} export function g() {} export class C {} export const a = 1, b = 2; export { a, b as c, d as 'e' }; export * from 'x'; export * as ns from 'y'; export { f } from 'z';

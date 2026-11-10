@@ -1,0 +1,4 @@
+
+	.a  { fill : #FFFFFF ; }
+	text > tspan { stroke: red }
+	a[href="x&y"] { fill: blue }

@@ -1,3 +1,4 @@
+import "./quiet-log";
 import value from "./module";
 // universal regular-HMR client: works on web (dev-server EventSource signal)
 // and Node (same emitter signal) without a platform-specific client

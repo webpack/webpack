@@ -1,0 +1,1 @@
+L:for(var i=0;i<2;i++){(function(){M:for(var j=0;j<3;j++){if(j==1)break M;console.log(i,j)}})()}

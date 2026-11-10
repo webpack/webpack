@@ -1,0 +1,1 @@
+import async from 'x'; import { let as l } from 'y'; new (a[function () { b() }]); new (a[() => b()]); new (a[b()]); x = function () {}.y; do ; while (a); { ('x') } switch (a) { case 1: ('y') } 1. in a; .5 in a;

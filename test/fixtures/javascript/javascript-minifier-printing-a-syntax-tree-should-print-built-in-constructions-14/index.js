@@ -1,0 +1,1 @@
+window.Object=f;x=Object()

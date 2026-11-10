@@ -1,8 +1,21 @@
 "use strict";
 
 const path = require("path");
+const { pathToFileURL } = require("url");
+const { decodeUrlPath } = require("../harness/runner/RunnerHelpers");
 
-module.exports = (
+/** @typedef {{ terminate(): Promise<number> }} LiveWorker */
+
+const LIVE = Symbol.for("webpack.test.fakeWorkers");
+/** @type {EXPECTED_ANY} */
+const testGlobal = global;
+
+// On the test file's global, so a copy of this module loaded after
+// `jest.resetModules()` shares it and teardown still reaches every worker
+/** @type {Set<LiveWorker>} the workers not terminated yet */
+const live = testGlobal[LIVE] || (testGlobal[LIVE] = new Set());
+
+const createFakeWorker = (
 	/** @type {{ outputDirectory: string }} */ { outputDirectory }
 ) =>
 	class Worker {
@@ -26,9 +39,12 @@ module.exports = (
 				? resource
 				: path.resolve(
 						outputDirectory,
-						isBlobURL
-							? /** @type {URL} */ (options.originalURL).pathname.slice(6)
-							: /** @type {URL} */ (resource).pathname.slice(6)
+						// the pathname is a URL path, so its escapes are decoded
+						decodeUrlPath(
+							isBlobURL
+								? /** @type {URL} */ (options.originalURL).pathname.slice(6)
+								: /** @type {URL} */ (resource).pathname.slice(6)
+						)
 					);
 
 			const workerBootstrap = `
@@ -62,6 +78,7 @@ Object.defineProperty(self, "location", {
 const urlToPath = url => {
   if (/^file:/i.test(url)) return fileURLToPath(url);
 	if (url.startsWith("https://test.cases/path/")) url = url.slice(24);
+	try { url = decodeURIComponent(url); } catch (_err) {}
 	return path.resolve(${JSON.stringify(outputDirectory)}, \`./\${url}\`);
 };
 self.importScripts = url => {
@@ -120,7 +137,10 @@ parentPort.on("message", data => {
 	else messageBuffer.push(data);
 });
 if (${options.type === "module"}) {
-	import(${JSON.stringify(file)});
+	import(${JSON.stringify(
+		// a file URL, so import() does not decode the escapes of the path again
+		isFileURL ? file : pathToFileURL(/** @type {string} */ (file)).href
+	)});
 } else {
 	scopedRequire(${JSON.stringify(file)});
 }
@@ -128,6 +148,9 @@ if (${options.type === "module"}) {
 			this.worker = new (require("worker_threads").Worker)(workerBootstrap, {
 				eval: true
 			});
+			// A worker a test never terminates must not hold the process open after it.
+			this.worker.unref();
+			live.add(this);
 
 			this._terminated = false;
 			// A chunk load rejected after the test got its result and called `terminate()`
@@ -160,9 +183,21 @@ if (${options.type === "module"}) {
 		}
 
 		terminate() {
+			live.delete(this);
 			this._terminated = true;
 			this.worker.off("error", this._onerror);
 			if (this._onmessage) this.worker.off("message", this._onmessage);
 			return this.worker.terminate();
 		}
 	};
+
+/**
+ * Terminates the workers a test left running, which `unref()` only stopped
+ * holding the process open.
+ * @returns {Promise<void>} resolves once all are terminated
+ */
+createFakeWorker.terminateAll = async () => {
+	await Promise.all([...live].map((worker) => worker.terminate()));
+};
+
+module.exports = createFakeWorker;

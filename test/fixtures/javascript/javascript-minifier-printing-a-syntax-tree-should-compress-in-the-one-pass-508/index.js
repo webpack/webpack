@@ -1,0 +1,1 @@
+x=(a instanceof b)===true;x=!a===!1;x=true===(a in b);x=y===true;x=(a<b)!=true;x=delete y==false;while(x&&!0)f();x=!(y()&&true);x=!(a<b&&!0);if(a??true)b();x=a&&true;if(a&&b())c()

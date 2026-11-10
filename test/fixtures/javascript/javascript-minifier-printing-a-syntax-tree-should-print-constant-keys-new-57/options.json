@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"module": true,
+		"ecma": 2020
+	}
+]

@@ -1,0 +1,1 @@
+@starting-style{.a{color:red;color:if(style(--x:1):red;else:blue)}}

@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`parseHtml — insertion modes breaks out of MathML text integration points 1`] = `
+"| <b>
+| <math mglyph>
+| <i>
+| <math malignmark>
+| <u>
+| <ms>
+|   \\"X\\""
+`;
+
+exports[`parseHtml — insertion modes closes a foreign element by its own end tag 1`] = `
+"| <svg g>
+|   \\"X\\""
+`;
+
+exports[`parseHtml — insertion modes drops an input from a select fragment 1`] = `"| <option>"`;
+
+exports[`parseHtml — insertion modes ends a caption fragment 1`] = `"| <div>"`;
+
+exports[`parseHtml — insertion modes ends a frameset fragment 1`] = `"| <frame>"`;
+
+exports[`parseHtml — insertion modes ends the body from an html fragment 1`] = `
+"| <head>
+| <body>"
+`;
+
+exports[`parseHtml — insertion modes ignores a foreign end tag with no match 1`] = `"| \\"X\\""`;
+
+exports[`parseHtml — insertion modes ignores a frameset start tag in an SVG desc fragment 1`] = `"| \\"X\\""`;
+
+exports[`parseHtml — insertion modes ignores a plaintext end tag in a plaintext fragment 1`] = `"| \\"</plaintext>\\""`;
+
+exports[`parseHtml — insertion modes ignores a tbody start tag inside MathML in a thead fragment 1`] = `
+"| <math math>
+|   <math thead>
+|     <math mo>"
+`;
+
+exports[`parseHtml — insertion modes ignores table-section end tags in a row fragment 1`] = `"| <td>"`;
+
+exports[`parseHtml — insertion modes keeps an end tag inside a script fragment 1`] = `"| \\"<!-- inside </script> -->\\""`;
+
+exports[`parseHtml — insertion modes opens an implied tbody in a table fragment 1`] = `
+"| <tbody>
+|   <tr>"
+`;
+
+exports[`parseHtml — insertion modes parses a body start tag in an SVG desc fragment 1`] = `"| \\"X\\""`;
+
+exports[`parseHtml — insertion modes parses a template fragment with a form in it 1`] = `
+"| <template>
+|   content
+|     <form>
+|       <input>
+|         name=\\"q\\"
+|     <div>
+|       \\"second\\""
+`;
+
+exports[`parseHtml — insertion modes reads a textarea fragment as text 1`] = `"| \\"direct textarea content\\""`;

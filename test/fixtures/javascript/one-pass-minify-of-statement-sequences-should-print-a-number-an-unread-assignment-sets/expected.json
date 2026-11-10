@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "(2).toFixed()}function r(){return 1-2}console.log(n(1),a(),r());\n      -> 2..toFixed()}",
+		"why": "a number an unread assignment set prints in the parentheses the assignment took, which a second pass, reading the number alone, spells `2..`, the same size"
+	}
+]

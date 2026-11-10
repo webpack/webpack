@@ -144,7 +144,7 @@ module.exports = \\"first entry\\";
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self[\\"webpackChunk\\"] = self[\\"webpackChunk\\"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self[\\"webpackChunk\\"]) ? self[\\"webpackChunk\\"] : (self[\\"webpackChunk\\"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -171,7 +171,7 @@ exports[`ConfigCacheTestCases html script-src-classic exported tests should rewr
 <body>
 <script src=\\"other.js\\"></script>
 <script type=\\"text/javascript\\" src=\\"classic-typed.js\\"></script>
-<script src=\\"module-entry.js\\"></script>
+<script charset=\\"utf-8\\" src=\\"module-entry.js\\"></script>
 <script type=\\"application/ld+json\\" src=\\"1aeae0731d54e523748c.jsonld\\"></script>
 </body>
 </html>

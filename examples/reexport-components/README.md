@@ -50,7 +50,7 @@ export { DialogInline } from "./DialogInline";
 
 ```javascript
 "use strict";
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["pages_Dashboard_js"],{
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["pages_Dashboard_js"],{
 
 /***/ "./components/Button.js"
 /*!******************************!*\
@@ -212,7 +212,7 @@ const Dashboard = () => {
 
 ```javascript
 "use strict";
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["pages_Login_js"],{
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["pages_Login_js"],{
 
 /***/ "./components/Button.js"
 /*!******************************!*\
@@ -372,7 +372,7 @@ const Login = () => {
 
 ```javascript
 /*! For license information please see pages_Login_js.output.js.LICENSE.txt */
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([["pages_Login_js"],{"./components/index.js"(e,s,o){o.d(s,{$n:()=>n,Sc:()=>t,lG:()=>r});var d=o("../../node_modules/react/jsx-dev-runtime.js");const n=()=>(0,d.jsxDEV)("button",{},void 0,!1),t=()=>(0,d.jsxDEV)("input",{type:"checkbox"},void 0,!1),r=({children:e})=>(0,d.jsxDEV)("dialog",{children:e},void 0,!1)},"./pages/Login.js"(e,s,o){o.r(s);var d=o("./components/index.js"),n=o("../../node_modules/react/jsx-dev-runtime.js");o.d(s,["default",0,()=>(0,n.jsxDEV)(n.Fragment,{children:[(0,n.jsxDEV)(d.$n,{},void 0,!1),(0,n.jsxDEV)(d.lG,{},void 0,!1)]},void 0,!0)])},"../../node_modules/react/cjs/react-jsx-dev-runtime.production.js"(e,s){var o=Symbol.for("react.fragment");s.Fragment=o,s.jsxDEV=void 0},"../../node_modules/react/jsx-dev-runtime.js"(e,s,o){e.exports=o("../../node_modules/react/cjs/react-jsx-dev-runtime.production.js")}}]);
+"use strict";(Array.isArray(self.webpackChunk)?self.webpackChunk:self.webpackChunk=[]).push([["pages_Login_js"],{"./components/index.js"(e,s,n){n.d(s,{$n:()=>d,Sc:()=>r,lG:()=>t});var o=n("../../node_modules/react/jsx-dev-runtime.js");const d=()=>(0,o.jsxDEV)("button",{},void 0,!1),r=()=>(0,o.jsxDEV)("input",{type:"checkbox"},void 0,!1),t=({children:e})=>(0,o.jsxDEV)("dialog",{children:e},void 0,!1)},"./pages/Login.js"(e,s,n){n.r(s);var o=n("./components/index.js"),d=n("../../node_modules/react/jsx-dev-runtime.js");n.d(s,["default",0,()=>(0,d.jsxDEV)(d.Fragment,{children:[(0,d.jsxDEV)(o.$n,{},void 0,!1),(0,d.jsxDEV)(o.lG,{},void 0,!1)]},void 0,!0)])},"../../node_modules/react/cjs/react-jsx-dev-runtime.production.js"(e,s){var n=Symbol.for("react.fragment");s.Fragment=n,s.jsxDEV=void 0},"../../node_modules/react/jsx-dev-runtime.js"(e,s,n){e.exports=n("../../node_modules/react/cjs/react-jsx-dev-runtime.production.js")}}]);
 ```
 
 # Info
@@ -382,11 +382,11 @@ const Login = () => {
 ```
 asset vendors-node_modules_react_jsx-dev-runtime_js.output.js 95.1 KiB [emitted] (id hint: vendors)
 asset output.js 11.1 KiB [emitted] (name: main)
-asset pages_Dashboard_js.output.js 7.42 KiB [emitted]
-asset pages_Login_js.output.js 7.4 KiB [emitted]
-chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.41 KiB (runtime) [entry] [rendered]
+asset pages_Dashboard_js.output.js 7.46 KiB [emitted]
+asset pages_Login_js.output.js 7.43 KiB [emitted]
+chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.38 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.41 KiB 9 modules
+  runtime modules 5.38 KiB 9 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 48 bytes [built] [code generated]
     [no exports used]
@@ -436,12 +436,12 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.66 KiB [emitted] [minimized] (name: main)
-asset pages_Dashboard_js.output.js 992 bytes [emitted] [minimized] 1 related asset
-asset pages_Login_js.output.js 980 bytes [emitted] [minimized] 1 related asset
-chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.65 KiB (runtime) [entry] [rendered]
+asset output.js 2.65 KiB [emitted] [minimized] (name: main)
+asset pages_Dashboard_js.output.js 1 KiB [emitted] [minimized] 1 related asset
+asset pages_Login_js.output.js 1010 bytes [emitted] [minimized] 1 related asset
+chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.62 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.65 KiB 8 modules
+  runtime modules 5.62 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 48 bytes [built] [code generated]
     [no exports used]

@@ -1,0 +1,1 @@
+function s(x){switch(1){case 1:{for(;;)break;while(x)break;do{break}while(x);for(k in x)break;for(k of x)break;switch(x){case 2:break}(function(){});(()=>{});class C{};x()}break}}

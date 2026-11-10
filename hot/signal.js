@@ -37,7 +37,7 @@ if (module.hot) {
 						return null;
 					});
 			})
-			.catch(function (err) {
+			.catch(function (/** @type {Error} */ err) {
 				var status = module.hot.status();
 				if (["abort", "fail"].indexOf(status) >= 0) {
 					log("warning", "[HMR] Cannot apply update.");

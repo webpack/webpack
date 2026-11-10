@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"mergeDistantRules": true
+	},
+	{
+		"mode": "minify"
+	}
+]

@@ -1,0 +1,1 @@
+(function(){class C extends (f(), K){} g()})()

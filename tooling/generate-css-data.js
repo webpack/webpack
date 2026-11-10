@@ -26,24 +26,30 @@
 
 const fs = require("fs");
 const path = require("path");
-const bcd =
-	/** @type {{ css: { properties: { [name: string]: BcdNode }, selectors: { [name: string]: BcdNode }, "at-rules": { [name: string]: BcdNode }, types: { [name: string]: BcdNode } }, __meta: { version: string } }} */ (
-		/** @type {unknown} */ (require("@mdn/browser-compat-data"))
-	);
+
+/** @typedef {import("@mdn/browser-compat-data").SimpleSupportStatement} BcdSupport */
+/** @typedef {import("@mdn/browser-compat-data").CompatStatement} BcdCompat */
+/** @typedef {import("@mdn/browser-compat-data").Identifier} BcdNode */
+/** @typedef {import("@mdn/browser-compat-data").BrowserName} BcdBrowser */
+
+// `require()` returns the package's `data.json` itself, while its `require.d.ts`
+// declares that table as a default export, so it is read as the JSON it is.
+/** @type {import("@mdn/browser-compat-data").CompatData} */
+const bcd = JSON.parse(
+	fs.readFileSync(require.resolve("@mdn/browser-compat-data"), "utf8")
+);
 
 /** @typedef {{ version: string }} PackageManifest */
 /** @typedef {{ [name: string]: [number, number, number] }} ColorNameTable */
 /** @typedef {{ [name: string]: { syntax: string } }} SyntaxTable */
 /** @typedef {{ [name: string]: { syntax?: string } }} PartialSyntaxTable */
+/** @typedef {{ [name: string]: { syntax?: string, descriptors?: PartialSyntaxTable } }} AtRuleTable */
 /** @typedef {{ [name: string]: { syntax?: string, status?: string, computed?: string | string[], initial?: string | string[] } }} PartialPropertyTable */
 /** @typedef {{ [name: string]: { syntax?: string, status?: string } }} PartialSelectorTable */
-/** @typedef {{ version_added?: string | boolean | null, version_removed?: string | boolean | null, prefix?: string, alternative_name?: string, partial_implementation?: boolean, flags?: EXPECTED_ANY[] }} BcdSupport */
-/** @typedef {{ support: { [browser: string]: BcdSupport | BcdSupport[] } }} BcdCompat */
-/** @typedef {{ __compat?: BcdCompat }} BcdNode */
 
 /** @type {PackageManifest} */
 const colorNamePackage = require("color-name/package.json");
-/** @type {PartialSyntaxTable} */
+/** @type {AtRuleTable} */
 const atRules = require("mdn-data/css/at-rules.json");
 /** @type {SyntaxTable} */
 const functions = require("mdn-data/css/functions.json");
@@ -571,6 +577,78 @@ const collectShorthandLonghands = () => {
 	return out;
 };
 
+/**
+ * Every spelling a dataset gives a property under another name — a vendor
+ * prefix, an alternative name, a legacy shorthand — mapped to that property, so
+ * two declarations of one property are known as one wherever they are spelled.
+ * @param {[string, [string, [string, number, number][]][]][]} prefixedProperties each property's vendor spellings
+ * @returns {[string, string][]} `[spelling, property]`, sorted by spelling
+ */
+const collectPropertyAliases = (prefixedProperties) => {
+	/** @type {Map<string, string>} */
+	const out = new Map();
+	for (const name of Object.keys(bcd.css.properties)) {
+		const compat = bcd.css.properties[name].__compat;
+		if (compat === undefined) continue;
+		for (const support of Object.values(compat.support)) {
+			for (const entry of Array.isArray(support) ? support : [support]) {
+				const spelling = entry.prefix
+					? entry.prefix + name
+					: entry.alternative_name;
+				if (spelling !== undefined && spelling !== name) {
+					out.set(spelling.toLowerCase(), name);
+				}
+			}
+		}
+	}
+	for (const [name, spelled] of prefixedProperties) {
+		for (const [spelling] of spelled) {
+			if (spelling !== name) out.set(spelling, name);
+		}
+	}
+	for (const [spelling, name] of SUPPLEMENT.legacyShorthandAliases) {
+		out.set(spelling, name);
+	}
+	return [...out].sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * Each property's place in the printed order of a block's declarations: its
+ * `SUPPLEMENT.declarationFamilies` family's place, shared by every property a
+ * member's name starts, and -1 for one no family names, which keeps its place.
+ * Another spelling of a property takes that property's place, so the two never part.
+ * @param {string[]} names every property a dataset names
+ * @param {[string, string][]} aliases `[spelling, property]` for every other spelling
+ * @returns {[string, number][]} `[property, rank]`, sorted by property
+ */
+const collectDeclarationRanks = (names, aliases) => {
+	const aliasOf = new Map(aliases);
+	/** @type {Map<string, number>} */
+	const members = new Map();
+	/** @type {[string, number][]} */
+	const words = [];
+	let rank = 0;
+	for (const family of SUPPLEMENT.declarationFamilies) {
+		for (const member of family) {
+			members.set(member, rank);
+			words.push([`${member}-`, rank]);
+		}
+		rank++;
+	}
+	/** @type {[string, number][]} */
+	const out = [];
+	for (const name of [...new Set(names)].sort()) {
+		const bare = (aliasOf.get(name) || name).replace(/^-[a-z]+-/, "");
+		const member = members.get(bare);
+		const word = words.find(([prefix]) => bare.startsWith(prefix));
+		out.push([
+			name,
+			member !== undefined ? member : word !== undefined ? word[1] : -1
+		]);
+	}
+	return out;
+};
+
 const collectPairLonghands = () => {
 	/** @type {[string, string[]][]} */
 	const out = [];
@@ -635,7 +713,7 @@ const collectCustomIdentListProperties = () => {
 	 * rather than `walkValueSyntax`: a `<custom-ident>` inside a function's
 	 * arguments is that function's, not a name the item itself may be spelled as,
 	 * and reading it as one would let a `-webkit-` *function* pass for a name.
-	 * @param {EXPECTED_ANY} node a value-syntax node
+	 * @param {SyntaxNode} node a value-syntax node
 	 * @param {Set<string>} seen the references already followed
 	 * @returns {boolean} whether the item itself may be a `<custom-ident>`
 	 */
@@ -654,10 +732,7 @@ const collectCustomIdentListProperties = () => {
 			case "anyOf":
 			case "allOf":
 			case "sequence":
-				return node.items.some(
-					/** @type {(item: EXPECTED_ANY) => boolean} */
-					((item) => reachesCustomIdent(item, seen))
-				);
+				return node.items.some((item) => reachesCustomIdent(item, seen));
 			case "group":
 			case "parens":
 			case "multiplier":
@@ -703,7 +778,7 @@ const collectSlashLonghands = () => {
 		const tree = grammarOf(property.syntax);
 		if (tree.type !== "sequence" || tree.items.length !== 2) continue;
 		const [first, rest] = tree.items;
-		if (first.type !== "type" || rest.type !== "multiplier") continue;
+		if (rest.type !== "multiplier") continue;
 		if (rest.comma || rest.min !== 0) continue;
 		if (rest.max !== longhands.length - 1) continue;
 		const body = rest.body.type === "group" ? rest.body.body : rest.body;
@@ -711,8 +786,19 @@ const collectSlashLonghands = () => {
 		const [slash, repeated] = body.items;
 		if (slash.type !== "literal" || slash.value !== "/") continue;
 		// The same production on both sides, so every slot takes the same values
-		// and the order `computed` states is the order they are written in.
-		if (repeated.type !== "type" || repeated.name !== first.name) continue;
+		// and the order `computed` states is the order they are written in — or a
+		// pair naming its own two longhands, in that order (`container`).
+		const sameProduction =
+			first.type === "type" &&
+			repeated.type === "type" &&
+			repeated.name === first.name;
+		const ownPair =
+			longhands.length === 2 &&
+			first.type === "property" &&
+			repeated.type === "property" &&
+			first.name === longhands[0] &&
+			repeated.name === longhands[1];
+		if (!sameProduction && !ownPair) continue;
 		out.push([name, longhands]);
 	}
 	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
@@ -731,7 +817,7 @@ const collectOneValuePairShorthands = (pairs) => {
 
 /**
  * A dataset entry's value definition, or null where it states none.
- * @param {EXPECTED_ANY} entry a `properties` or `syntaxes` entry
+ * @param {{ syntax?: string } | undefined} entry a `properties` or `syntaxes` entry
  * @returns {string | null} its grammar
  */
 const grammarText = (entry) =>
@@ -758,7 +844,7 @@ const collectUnsharedLonghandKeywords = (tables) => {
 		/** @type {Set<string>} */
 		const out = new Set();
 		/**
-		 * @param {EXPECTED_ANY} node a value-syntax node
+		 * @param {SyntaxNode} node a value-syntax node
 		 * @param {Set<string>} seen the references already followed
 		 * @returns {void}
 		 */
@@ -855,8 +941,11 @@ const VALUE_CLASSES = new Set([
  * @returns {{ keywords: Set<string>, classes: Set<string> }} what it accepts
  */
 const acceptedValues = (syntax) => {
+	/** @type {Set<string>} */
 	const keywords = new Set();
+	/** @type {Set<string>} */
 	const classes = new Set();
+	/** @type {Set<string>} */
 	const seen = new Set();
 	/**
 	 * @param {string} source a value-definition syntax to expand
@@ -872,7 +961,7 @@ const acceptedValues = (syntax) => {
 			return;
 		}
 		/**
-		 * @param {EXPECTED_ANY} node the node to walk
+		 * @param {SyntaxNode} node the node to walk
 		 * @param {boolean} inFunction whether it sits in a function's arguments
 		 * @returns {void}
 		 */
@@ -900,8 +989,11 @@ const acceptedValues = (syntax) => {
 				if (node.body !== null) walk(node.body, true);
 				return;
 			}
-			if (node.items) for (const item of node.items) walk(item, inFunction);
-			else if (node.body) walk(node.body, inFunction);
+			if ("items" in node) {
+				for (const item of node.items) walk(item, inFunction);
+			} else if ("body" in node) {
+				walk(node.body, inFunction);
+			}
 		};
 		walk(tree, false);
 	};
@@ -939,7 +1031,7 @@ const isSpelledSyntax = (source, seen) => {
 	}
 	let spelled = true;
 	/**
-	 * @param {EXPECTED_ANY} node the node to walk
+	 * @param {SyntaxNode} node the node to walk
 	 * @returns {void}
 	 */
 	const walk = (node) => {
@@ -960,8 +1052,8 @@ const isSpelledSyntax = (source, seen) => {
 			spelled = false;
 			return;
 		}
-		if (node.items) for (const item of node.items) walk(item);
-		else if (node.body) walk(node.body);
+		if ("items" in node) for (const item of node.items) walk(item);
+		else if ("body" in node) walk(node.body);
 	};
 	walk(tree);
 	return spelled;
@@ -1076,6 +1168,7 @@ const collectFamilyLonghands = (
 		// A logical family states its grammar as its physical twin's whole value
 		// (`border-inline-start` is `<'border-top'>`), so the slots are read off that
 		// one and mapped back by position — both list width, style then color.
+		/** @type {string[] | null} */
 		let twin = null;
 		if (tree.type === "property") {
 			const other = propertyTable[tree.name];
@@ -1478,6 +1571,7 @@ const numericLeaves = (syntax) => {
  * @returns {string[]} the property names, sorted
  */
 const collectIntegerProperties = () => {
+	/** @type {string[]} */
 	const out = [];
 	for (const [name, entry] of Object.entries(properties)) {
 		if (typeof entry.syntax !== "string") continue;
@@ -1569,6 +1663,7 @@ const valueLevelNumericTypes = (syntax, propertyTable, onType) => {
  * @returns {string[]} the property names, sorted
  */
 const collectZeroUnitAmbiguousProperties = (propertyTable = properties) => {
+	/** @type {string[]} */
 	const out = [];
 	for (const [name, entry] of Object.entries(propertyTable)) {
 		if (typeof entry.syntax !== "string") continue;
@@ -1589,6 +1684,7 @@ const collectZeroUnitAmbiguousProperties = (propertyTable = properties) => {
  * @returns {string[]} the property names, sorted
  */
 const collectNumberZeroProperties = (propertyTable = properties) => {
+	/** @type {string[]} */
 	const out = [];
 	for (const [name, entry] of Object.entries(propertyTable)) {
 		if (typeof entry.syntax !== "string") continue;
@@ -1631,9 +1727,11 @@ const collectAlphaValueProperties = (
 	propertyTable = properties,
 	syntaxTable = syntaxes
 ) => {
+	/** @type {string[]} */
 	const out = [];
 	for (const [name, entry] of Object.entries(propertyTable)) {
 		let syntax = entry.syntax;
+		/** @type {Set<string>} */
 		const seen = new Set();
 		// Named through a production of its own (`<alpha-value>`), so follow those
 		// to whatever states the alternation.
@@ -1658,6 +1756,7 @@ const collectAlphaValueProperties = (
  * @returns {Set<string>} the reachable production names (a property as `'name'`)
  */
 const reachableProductions = (syntax) => {
+	/** @type {Set<string>} */
 	const seen = new Set();
 	const queue = [syntax];
 	while (queue.length !== 0) {
@@ -1685,6 +1784,7 @@ const reachableProductions = (syntax) => {
  * @returns {string[]} the property names, sorted
  */
 const collectRatioProperties = () => {
+	/** @type {string[]} */
 	const out = [];
 	for (const [name, entry] of Object.entries(properties)) {
 		if (typeof entry.syntax !== "string") continue;
@@ -1742,6 +1842,7 @@ const collectDisplayShortForms = () => {
 			const defaultOutside = DISPLAY_INLINE_DEFAULTED_INSIDES.has(inside)
 				? "inline"
 				: DISPLAY_DEFAULT_OUTSIDE;
+			/** @type {string | null} */
 			let short = null;
 			if (inside === DISPLAY_DEFAULT_INSIDE) {
 				short = outside;
@@ -2012,7 +2113,9 @@ const collectColorSpaceModel = () => {
 		// `display-p3` names `DISPLAY_P3_M` and `toDisplayP3`, so neither the
 		// constants nor the functions carry a spelling the linter reads as a word.
 		const upper = name.replace(/-/g, "_").toUpperCase();
-		const camel = name.replace(/-(.)/g, (_, one) => one.toUpperCase());
+		const camel = name.replace(/-(.)/g, (_, /** @type {string} */ one) =>
+			one.toUpperCase()
+		);
 		const title = camel[0].toUpperCase() + camel.slice(1);
 		sources.push(
 			`const ${upper}_M = ${flat(invertMatrix(toSrgb))};`,
@@ -2199,6 +2302,7 @@ const collectSrgbToP3 = () => {
  * @returns {string[]} the keywords, sorted
  */
 const collectAlternationKeywords = (productions) => {
+	/** @type {Set<string>} */
 	const names = new Set();
 	/** @type {(syntax: string, seen: Set<string>) => void} */
 	const walk = (syntax, seen) => {
@@ -2227,6 +2331,7 @@ const collectAlternationKeywords = (productions) => {
  * @returns {string[]} the property names, sorted
  */
 const collectRepeatStyleProperties = () => {
+	/** @type {string[]} */
 	const out = [];
 	for (const [name, entry] of Object.entries(properties)) {
 		if (typeof entry.syntax !== "string") continue;
@@ -2265,6 +2370,7 @@ const KEYWORD_ALTERNATIVE_REGEXP = /^[a-z-]+$/;
  * @returns {string[]} the property names, sorted
  */
 const collectPositionProperties = () => {
+	/** @type {string[]} */
 	const out = [];
 	for (const [name, entry] of Object.entries(properties)) {
 		if (typeof entry.syntax !== "string") continue;
@@ -2377,6 +2483,7 @@ const collectGradientFunctions = (syntaxTable, functionTable) => {
  */
 const collectMergeableAtRules = (atRuleTable) => {
 	const replaced = new Set(SUPPLEMENT.replacedByNameAtRules);
+	/** @type {string[]} */
 	const out = [];
 	for (const [name, entry] of Object.entries(atRuleTable)) {
 		const syntax = entry.syntax;
@@ -2442,6 +2549,7 @@ const POSITION_OFFSET_CLASSES = new Set(["length", "percentage"]);
  * @returns {string[]} the property names, sorted
  */
 const collectSpelledPositionProperties = () => {
+	/** @type {string[]} */
 	const out = [];
 	for (const [name, entry] of Object.entries(properties)) {
 		if (typeof entry.syntax !== "string") continue;
@@ -2465,6 +2573,7 @@ const collectSpelledPositionProperties = () => {
  * @returns {string[] | null} the parts, or `null` when there are not two of them
  */
 const splitTopLevelAnyOf = (syntax) => {
+	/** @type {string[]} */
 	const parts = [];
 	let depth = 0;
 	let start = 0;
@@ -2565,10 +2674,12 @@ const initialKeyword = (name, depth) => {
  * @returns {Set<string>} the spellings, lowercased
  */
 const slotSpellings = (slot) => {
+	/** @type {Set<string>} */
 	const out = new Set();
 	for (const keyword of acceptedValues(slot).keywords) {
 		out.add(keyword.toLowerCase());
 	}
+	/** @type {Set<string>} */
 	const seen = new Set();
 	/**
 	 * @param {string} source a value definition to walk
@@ -2644,6 +2755,7 @@ const collectShorthandInitialKeywords = (colorKeywords) => {
 		for (const longhand of initial) {
 			const keyword = initialKeyword(longhand, 0);
 			if (keyword === null) continue;
+			/** @type {number[]} */
 			const hits = [];
 			for (let i = 0; i < accepted.length; i++) {
 				if (
@@ -2784,6 +2896,7 @@ const collectPositionKeywordAxes = () => {
 		});
 	});
 	const stated = new Map(SUPPLEMENT.positionKeywordPercentages);
+	/** @type {Set<string>} */
 	const named = new Set();
 	for (const axis of axes) {
 		for (const name of axis) {
@@ -2815,6 +2928,7 @@ const collectPositionKeywordAxes = () => {
  */
 // The keywords that stand for a length: the ones `<line-width>` and
 // `<absolute-size>` offer beside `<length>`, which is where CSS states them.
+/** @type {Set<string>} */
 const lengthKeywords = new Set();
 for (const production of ["line-width", "absolute-size"]) {
 	const entry = syntaxes[production];
@@ -2874,6 +2988,7 @@ const collectInitialValueKeywords = () => {
  * @returns {string[]} the property names, sorted
  */
 const collectKeywordOnlyProperties = () => {
+	/** @type {string[]} */
 	const out = [];
 	for (const [name, entry] of Object.entries(properties)) {
 		if (typeof entry.syntax !== "string") continue;
@@ -2895,6 +3010,7 @@ const collectKeywordOnlyProperties = () => {
  * @returns {string[]} the property names, sorted
  */
 const collectColorOnlyProperties = () => {
+	/** @type {string[]} */
 	const out = [];
 	for (const [name, entry] of Object.entries(properties)) {
 		if (typeof entry.syntax !== "string") continue;
@@ -3191,18 +3307,17 @@ const collectCssModulesKeywords = () => {
 		if (entries === undefined) supplement.set(name, [[keyword, count]]);
 		else entries.push([keyword, count]);
 	}
-	const counterStyleDescriptors =
-		/** @type {Record<string, { syntax?: string }>} */
-		(
-			/** @type {{ descriptors?: EXPECTED_OBJECT }} */
-			(atRules["@counter-style"]).descriptors
-		);
+	// `@counter-style` is the at-rule defined by its descriptors.
+	const counterStyleDescriptors = /** @type {PartialSyntaxTable} */ (
+		atRules["@counter-style"].descriptors
+	);
 	/** @type {[string, string, [string, number][]][]} */
 	const out = [];
 	for (const [name, option, kind] of CSS_MODULES_SCOPED_PROPERTIES) {
 		const entry =
 			/** @type {{ syntax?: string } | undefined} */
 			(kind === "property" ? properties[name] : counterStyleDescriptors[name]);
+		/** @type {Map<string, number>} */
 		const table =
 			entry === undefined || typeof entry.syntax !== "string"
 				? new Map()
@@ -3307,6 +3422,7 @@ const collectNegativeAcceptingProperties = () => {
  * @returns {string[]} the function names, without their parentheses, sorted
  */
 const collectLengthOnlyFunctions = () => {
+	/** @type {Set<string>} */
 	const names = new Set();
 	for (const [name, syntax] of definitions) {
 		if (!name.endsWith("()")) continue;
@@ -3317,6 +3433,31 @@ const collectLengthOnlyFunctions = () => {
 		}
 	}
 	return [...names].sort();
+};
+
+/**
+ * The transform functions a negative argument is valid in: the alternatives of
+ * `<transform-function>` whose own grammar bounds no number from below, which
+ * leaves `perspective()` out.
+ * @returns {string[]} the function names, lowercased, sorted
+ */
+const collectNegativeAcceptingFunctions = () => {
+	const transform = definitions.get("transform-function");
+	if (transform === undefined) {
+		throw new Error("`<transform-function>` is gone: the grammar moved");
+	}
+	/** @type {string[]} */
+	const names = [];
+	for (const reference of references(transform)) {
+		const syntax = definitions.get(reference);
+		if (syntax === undefined || !reference.endsWith("()")) {
+			throw new Error(`\`<transform-function>\` names ${reference}, unread`);
+		}
+		if (!/\[\s*0\s*,/.test(syntax)) {
+			names.push(reference.slice(0, -2).toLowerCase());
+		}
+	}
+	return names.sort();
 };
 
 /**
@@ -3366,6 +3507,7 @@ const EXTRA_SUBSTITUTION_FUNCTIONS = [
  * @returns {string[]} the function names, sorted
  */
 const collectZeroAngleFunctions = () => {
+	/** @type {string[]} */
 	const names = [];
 	for (const [name, entry] of Object.entries(functions)) {
 		if (typeof entry.syntax !== "string") continue;
@@ -3386,6 +3528,7 @@ const collectZeroAngleFunctions = () => {
  * @returns {string[]} the function names, sorted
  */
 const collectNumberArgumentFunctions = (functionTable = functions) => {
+	/** @type {string[]} */
 	const names = [];
 	for (const [name, entry] of Object.entries(functionTable)) {
 		if (typeof entry.syntax !== "string" || !name.endsWith("()")) continue;
@@ -3408,6 +3551,7 @@ const collectNumberArgumentFunctions = (functionTable = functions) => {
  * @returns {string[]} the function names, sorted
  */
 const collectNthPseudoFunctions = () => {
+	/** @type {string[]} */
 	const names = [];
 	for (const [name, entry] of Object.entries(selectors)) {
 		// The An+B pseudo-classes are exactly the ones whose grammar names it.
@@ -3545,6 +3689,7 @@ const SELECTOR_PRODUCTION_REGEXP = /<[a-z-]*selector[a-z-]*>/;
  * @returns {string[]} the function names, sorted
  */
 const collectSelectorFunctions = () => {
+	/** @type {Set<string>} */
 	const names = new Set();
 	for (const [name, entry] of Object.entries(selectors)) {
 		if (entry.status !== "standard") continue;
@@ -3594,6 +3739,7 @@ const FAMILY_PROPERTY = "font-family";
  * @returns {string[]} the property names, sorted
  */
 const collectFamilyListProperties = () => {
+	/** @type {string[]} */
 	const out = [];
 	for (const [name, property] of Object.entries(properties)) {
 		if (typeof property.syntax !== "string") continue;
@@ -3715,19 +3861,13 @@ const collectColorNames = (colorName) => {
  * carrying a `<named-color>` compatibility row, where a name that arrived after
  * the list did is recorded. Every other name is as old as naming a color at all,
  * so one stands wherever another does.
- * @param {{ [name: string]: BcdNode }=} named the `<named-color>` rows
+ * @param {string[]=} keys the keys of the `<named-color>` rows
  * @returns {string[]} the names, sorted
  */
 const collectLaterColorNames = (
-	named = /** @type {{ [name: string]: BcdNode }} */ (
-		/** @type {unknown} */ (
-			/** @type {{ [name: string]: BcdNode }} */ (
-				/** @type {unknown} */ (bcd.css.types.color)
-			)["named-color"]
-		)
-	)
+	keys = Object.keys(bcd.css.types.color["named-color"])
 ) => {
-	const names = Object.keys(named).filter((name) => name !== "__compat");
+	const names = keys.filter((name) => name !== "__compat");
 	if (names.length === 0) {
 		throw new Error("no <named-color> carries a row of its own: bcd moved");
 	}
@@ -3873,11 +4013,267 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], numberOnlyOutsideCalcProperties: string[], clampedValueRanges: [string, string, number, number][], stepPositionMinimumCounts: [string, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], defaultGradientPositions: string[], reversedGradientDirections: string[], gradientSideAngles: [string, string][], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], svgUserUnitProperties: string[], legacyBoxProperties: string[], legacyBoxDisplays: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], declarationFamilies: string[][], legacyShorthandAliases: [string, string][], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], numberOnlyOutsideCalcProperties: string[], clampedValueRanges: [string, string, number, number][], stepPositionMinimumCounts: [string, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], defaultGradientPositions: string[], reversedGradientDirections: string[], gradientSideAngles: [string, string][], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], svgUserUnitProperties: string[], legacyBoxProperties: string[], legacyBoxDisplays: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
 	cssWideKeywords: ["inherit", "initial", "revert", "revert-layer", "unset"],
+	// WHY: the order a block's declarations print in, by family, everything no
+	// family names keeping its place before them. It is the order lightningcss
+	// prints its property handlers in: one order every rule shares lets deflate
+	// match longer runs — measured 3.4 KB smaller over the corpus with a target.
+	// Within a family declarations keep the order they were written in, as in
+	// lightningcss: a spec relating two members moves nothing before data knows.
+	declarationFamilies: [
+		["direction"],
+		[
+			"background",
+			"background-color",
+			"background-image",
+			"background-position",
+			"background-position-x",
+			"background-position-y",
+			"background-repeat",
+			"background-size",
+			"background-attachment",
+			"background-origin",
+			"background-clip"
+		],
+		[
+			"border",
+			"border-style",
+			"border-width",
+			"border-color",
+			"border-top",
+			"border-top-style",
+			"border-top-width",
+			"border-top-color",
+			"border-block-start",
+			"border-block-start-style",
+			"border-block-start-width",
+			"border-block-start-color",
+			"border-block",
+			"border-block-style",
+			"border-block-width",
+			"border-block-color",
+			"border-block-end",
+			"border-block-end-style",
+			"border-block-end-width",
+			"border-block-end-color",
+			"border-bottom",
+			"border-bottom-style",
+			"border-bottom-width",
+			"border-bottom-color",
+			"border-left",
+			"border-left-style",
+			"border-left-width",
+			"border-left-color",
+			"border-inline-start",
+			"border-inline-start-style",
+			"border-inline-start-width",
+			"border-inline-start-color",
+			"border-inline",
+			"border-inline-style",
+			"border-inline-width",
+			"border-inline-color",
+			"border-inline-end",
+			"border-inline-end-style",
+			"border-inline-end-width",
+			"border-inline-end-color",
+			"border-right",
+			"border-right-style",
+			"border-right-width",
+			"border-right-color",
+			"border-image",
+			"border-image-source",
+			"border-image-slice",
+			"border-image-width",
+			"border-image-outset",
+			"border-image-repeat",
+			"border-radius",
+			"border-top-left-radius",
+			"border-start-start-radius",
+			"border-top-right-radius",
+			"border-start-end-radius",
+			"border-bottom-right-radius",
+			"border-end-end-radius",
+			"border-bottom-left-radius",
+			"border-end-start-radius"
+		],
+		["outline", "outline-width", "outline-style", "outline-color"],
+		[
+			"box-orient",
+			"flex-flow",
+			"flex-wrap",
+			"flex-direction",
+			"flex",
+			"flex-grow",
+			"flex-shrink",
+			"flex-basis",
+			"order",
+			"box-pack"
+		],
+		[
+			"grid",
+			"grid-template",
+			"grid-template-rows",
+			"grid-template-columns",
+			"grid-template-areas",
+			"grid-auto-rows",
+			"grid-auto-columns",
+			"grid-auto-flow",
+			"grid-area",
+			"grid-row",
+			"grid-row-start",
+			"grid-row-end",
+			"grid-column",
+			"grid-column-start",
+			"grid-column-end"
+		],
+		[
+			"justify-content",
+			"align-content",
+			"place-content",
+			"align-self",
+			"justify-self",
+			"place-self",
+			"align-items",
+			"place-items",
+			"justify-items",
+			"gap",
+			"row-gap",
+			"column-gap"
+		],
+		[
+			"width",
+			"height",
+			"min-width",
+			"min-height",
+			"max-width",
+			"max-height",
+			"inline-size",
+			"block-size",
+			"min-inline-size",
+			"min-block-size",
+			"max-inline-size",
+			"max-block-size",
+			// WebKit reads `size` outside `@page` as `width` and `height`, and
+			// `min-size` / `max-size` as the `min-` and `max-` pairs.
+			"size",
+			"min-size",
+			"max-size"
+		],
+		[
+			"margin",
+			"margin-top",
+			"margin-block-start",
+			"margin-block",
+			"margin-block-end",
+			"margin-bottom",
+			"margin-left",
+			"margin-inline-start",
+			"margin-inline",
+			"margin-inline-end",
+			"margin-right"
+		],
+		[
+			"padding",
+			"padding-top",
+			"padding-block-start",
+			"padding-block",
+			"padding-block-end",
+			"padding-bottom",
+			"padding-left",
+			"padding-inline-start",
+			"padding-inline",
+			"padding-inline-end",
+			"padding-right"
+		],
+		[
+			"font",
+			"font-family",
+			"font-size",
+			"font-style",
+			"font-weight",
+			"font-stretch",
+			"font-variant-caps",
+			"line-height"
+		],
+		[
+			"text-decoration",
+			"text-decoration-line",
+			"text-decoration-style",
+			"text-decoration-color",
+			"text-decoration-thickness"
+		],
+		[
+			"list-style",
+			"list-style-type",
+			"list-style-image",
+			"list-style-position"
+		],
+		[
+			"transition",
+			"transition-property",
+			"transition-duration",
+			"transition-timing-function",
+			"transition-delay"
+		],
+		[
+			"animation",
+			"animation-name",
+			"animation-duration",
+			"animation-timing-function",
+			"animation-iteration-count",
+			"animation-direction",
+			"animation-play-state",
+			"animation-delay",
+			"animation-fill-mode"
+		],
+		["display"],
+		["position"],
+		[
+			"inset",
+			"top",
+			"inset-block-start",
+			"inset-block",
+			"inset-block-end",
+			"bottom",
+			"left",
+			"inset-inline-start",
+			"inset-inline",
+			"inset-inline-end",
+			"right"
+		],
+		["overflow", "overflow-x", "overflow-y"],
+		["transform", "translate", "rotate", "scale"],
+		["box-shadow"],
+		[
+			"mask",
+			"mask-image",
+			"mask-position",
+			"mask-size",
+			"mask-repeat",
+			"mask-clip",
+			"mask-origin",
+			"mask-composite",
+			"mask-mode"
+		],
+		["container", "container-type", "container-name"]
+	],
+	// CSS Break 3 §3.4 makes each `page-break-*` a legacy shorthand of a `break-*`,
+	// as engines read `-webkit-column-break-*`; CSS Grid 2 §10.1 aliases `grid-*gap`.
+	legacyShorthandAliases: [
+		["-webkit-column-break-after", "break-after"],
+		["-webkit-column-break-before", "break-before"],
+		["-webkit-column-break-inside", "break-inside"],
+		["grid-column-gap", "column-gap"],
+		["grid-gap", "gap"],
+		["grid-row-gap", "row-gap"],
+		["page-break-after", "break-after"],
+		["page-break-before", "break-before"],
+		["page-break-inside", "break-inside"]
+	],
 	// CSS Easing 1 §2 defines each keyword as exactly this curve; the syntax
 	// database describes `cubic-bezier()`'s shape, not which curves have a name.
 	// Keyed by the arguments as `Number` prints them.
@@ -4747,10 +5143,9 @@ const rec2020Transfer = (c) => {
 	// answer a whole step out.
 	//
 	// Everything else folds and lets the printer decide what is worth writing.
-	// `_roundSignificant` already holds every number it writes to six significant
-	// digits below 1e4 — measured against Chromium, which serializes a computed
-	// number at six and lays a length out in 1/64px — so a fold's last bits are
-	// below what a stylesheet can observe. The four basic operations and `sqrt`
+	// The printer drops a fold's last bits and writes the fewest digits that land
+	// on the same layout step at every scale, so they are below what a stylesheet
+	// can observe. The four basic operations and `sqrt`
 	// are exactly specified by IEEE 754, so an engine reaches the same double;
 	// the transcendental ones may differ in the last bit, which the same rounding
 	// covers. An angle is not rounded (a `rotate()` runs it back through trig), so
@@ -5450,6 +5845,20 @@ const NEVER = 1e9;
 // literal — which is what lets prettier pack the tables many to a line.
 const NEVER_LITERAL = "1e9";
 
+// WHY: browserslist names these, but no compat dataset states what they read, so
+// each is known only by its engine: Opera Mini renders with Presto, KaiOS with
+// Gecko, UC, QQ and Baidu with Blink and BlackBerry 10 with WebKit. Node renders
+// no CSS. The minifier keeps the one prefix such an engine reads and no other.
+const UNSTATED_BROWSER_PREFIXES = [
+	["and_qq", "-webkit-"],
+	["and_uc", "-webkit-"],
+	["baidu", "-webkit-"],
+	["bb", "-webkit-"],
+	["kaios", "-moz-"],
+	["node", null],
+	["op_mini", "-o-"]
+];
+
 /**
  * One version as the emitted tables spell it.
  * @param {number} version an encoded version
@@ -5545,16 +5954,17 @@ const isPlainSupport = (entry) =>
  * When each browser first read every one of a feature's constructs, as
  * `[browserslistName, since][]`. Only a plain arrival counts, and a browser BCD
  * never gives one carries `NEVER`, which no version satisfies.
- * @param {string[]} paths BCD paths that all have to have arrived
+ * @param {string[]} paths BCD paths under `css` that all have to have arrived
  * @returns {[string, number][]} the versions, by browserslist name
  */
 const collectSupportedFrom = (paths) => {
 	/** @type {Map<string, number>} */
 	const since = new Map();
 	for (const path of paths) {
-		/** @type {EXPECTED_ANY} */
-		let node = bcd;
-		for (const key of path.split(".")) node = node && node[key];
+		const [area, ...keys] = path.split(".");
+		/** @type {BcdNode | undefined} */
+		let node = area === "css" ? bcd.css : undefined;
+		for (const key of keys) node = node && node[key];
 		const compat = node && node.__compat;
 		if (!compat || !compat.support) {
 			throw new Error(`no BCD support block at ${path}`);
@@ -5576,32 +5986,92 @@ const collectSupportedFrom = (paths) => {
 };
 
 /**
- * When each browser first read every standard pseudo-class and pseudo-element,
- * keyed by the spelling a selector carries (`:hover`, `::before`, `:nth-child`).
- * Only a pseudo every target reads may be joined into a selector list, because
- * one selector an engine cannot parse invalidates the whole list.
+ * When each browser first read every standard pseudo-class and pseudo-element a
+ * style rule's selector may name, keyed by the shape it is written in: `:hover`
+ * bare, `:nth-child(` with its argument. Only a pseudo every target reads may be
+ * joined into a selector list, because one selector an engine cannot parse
+ * invalidates the whole list.
  * @returns {[string, [string, number][]][]} the versions, by spelling
  */
 const collectSelectorSupport = () => {
 	/** @type {[string, [string, number][]][]} */
 	const table = [];
-	// `::cue` and `::cue()` are two entries naming one pseudo, and the spelling
-	// is what the print looks up — so the second would shadow the first in the
-	// `Map` this becomes rather than say anything new.
 	/** @type {Set<string>} */
 	const spellings = new Set();
 	for (const entry of Object.values(selectors)) {
 		if (entry.status !== "standard") continue;
-		const match = /^(::?)([-\w]+)/.exec(entry.syntax || "");
+		// `:first`, `:left`, `:right` and `:blank` select pages, so a style rule
+		// naming one is a selector no engine parses.
+		if (entry.groups.includes("CSS Paged Media")) continue;
+		const match = /^(::?)([-\w]+)(\()?/.exec(entry.syntax || "");
 		if (match === null) continue;
-		const [, colons, name] = match;
+		const [, colons, name, call] = match;
 		if (!bcd.css.selectors[name]) continue;
-		const spelling = `${colons}${name}`;
+		// `::cue` and `::cue()` are two pseudos to a parser, each valid only in
+		// its own shape.
+		const spelling = `${colons}${name}${call || ""}`;
 		if (spellings.has(spelling)) continue;
 		spellings.add(spelling);
 		table.push([spelling, collectSupportedFrom([`css.selectors.${name}`])]);
 	}
 	return table.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * When each browser first read each length and angle unit, keyed `"unit <name>"`.
+ * A row grouping several units names them in its description; an absolute
+ * length has no row of its own, so the `<length>` type's row answers for it.
+ * @returns {[string, [string, number][]][]} the versions, by unit
+ */
+const collectUnitSupport = () => {
+	/** @type {Map<string, [string, number][]>} */
+	const out = new Map();
+	for (const type of ["length", "angle"]) {
+		const node = bcd.css.types[type];
+		for (const name of Object.keys(node)) {
+			if (name.startsWith("__")) continue;
+			/** @type {string[]} */
+			const units = [];
+			if (/^[a-z]+$/i.test(name)) {
+				units.push(name);
+			} else {
+				const listed = /<code>([a-z]+)<\/code>/gi;
+				// A row grouping units is a feature, so it carries a block of its own.
+				const compat = /** @type {BcdCompat} */ (node[name].__compat);
+				const description = String(compat.description || "");
+				let match;
+				while ((match = listed.exec(description)) !== null) {
+					units.push(match[1]);
+				}
+			}
+			if (units.length === 0) {
+				throw new Error(`css.types.${type}.${name} names no unit: bcd moved`);
+			}
+			const versions = collectSupportedFrom([`css.types.${type}.${name}`]);
+			for (const unit of units) out.set(`unit ${unit.toLowerCase()}`, versions);
+		}
+	}
+	const base = collectSupportedFrom(["css.types.length"]);
+	for (const [unit, group] of SUPPLEMENT.absoluteUnitScale) {
+		if (group === "length" && !out.has(`unit ${unit}`)) {
+			out.set(`unit ${unit}`, base);
+		}
+	}
+	return [...out].sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * When each browser first read each gradient function, by its name.
+ * @returns {[string, [string, number][]][]} the versions, by function name
+ */
+const collectGradientSupport = () => {
+	/** @type {[string, [string, number][]][]} */
+	const table = [];
+	for (const name of Object.keys(bcd.css.types.gradient)) {
+		if (name.startsWith("__")) continue;
+		table.push([name, collectSupportedFrom([`css.types.gradient.${name}`])]);
+	}
+	return table;
 };
 
 /**
@@ -5612,34 +6082,31 @@ const collectSelectorSupport = () => {
  * filed under rather than for one it never names, which is why `canvastext` is
  * absent and its ancient `<system-color>` parent is not read for it.
  * @param {string[]} colorFunctions the functions `<color>` names
- * @param {{ [name: string]: BcdNode }=} propertyNodes the BCD property tree to read
+ * @param {BcdNode=} propertyNodes the BCD property tree to read
  * @returns {[string, [string, number][]][]} the versions, by spelling
  */
 const collectValueSupport = (
 	colorFunctions,
-	propertyNodes = /** @type {{ [name: string]: BcdNode }} */ (
-		/** @type {unknown} */ (bcd.css.properties)
-	)
+	propertyNodes = bcd.css.properties
 ) => {
 	/** @type {[string, [string, number][]][]} */
 	const table = [];
 	for (const name of colorFunctions) {
-		const node = /** @type {EXPECTED_ANY} */ (bcd.css.types.color)[name];
+		const node = bcd.css.types.color[name];
 		if (!node || !node.__compat) continue;
 		table.push([name, collectSupportedFrom([`css.types.color.${name}`])]);
 	}
-	for (const [property, node] of Object.entries(propertyNodes)) {
+	for (const property of Object.keys(propertyNodes)) {
 		if (property.startsWith("__")) continue;
-		const entry = /** @type {PartialPropertyTable} */ (properties)[property];
+		const node = propertyNodes[property];
+		const entry = properties[property];
 		if (!entry || !entry.syntax || entry.status !== "standard") continue;
 		const keywords = new Set(
 			lowerSorted(acceptedValues(entry.syntax).keywords)
 		);
 		for (const value of Object.keys(node)) {
 			if (value === "__compat") continue;
-			const sub = /** @type {BcdNode} */ (
-				/** @type {EXPECTED_ANY} */ (node)[value]
-			);
+			const sub = node[value];
 			const keyword = value.toLowerCase();
 			// A sub-feature the grammar does not name is something else BCD files
 			// under the property — an animation, a syntax variant, a longhand's own
@@ -5763,6 +6230,7 @@ const collectPrefixes = (compat, name, alternatives) => {
 		const allowed = BROWSER_PREFIXES.get(bcdBrowser);
 		if (allowed === undefined) continue;
 		const entries = Array.isArray(raw) ? raw : [raw];
+		/** @type {number | null} */
 		let unprefixedFrom = null;
 		for (const entry of entries) {
 			// The earliest plain entry is the arrival — BCD's newest-first ordering
@@ -5923,6 +6391,7 @@ const collectPrefixTable = (
 // opening after the unprefixed one, which the rule above drops as an alias added
 // for compatibility — right for Gecko taking `-webkit-transform` in Firefox 49,
 // wrong here, where the earlier unprefixed support belonged to another engine.
+/** @type {Map<string, { bcd: BcdBrowser, base: BcdBrowser, from: number }>} */
 const ENGINE_SWITCH = new Map([
 	["opera", { bcd: "opera", base: "chrome", from: 15 }],
 	["op_mob", { bcd: "opera_android", base: "chrome", from: 14 }]
@@ -5932,8 +6401,8 @@ const ENGINE_SWITCH = new Map([
  * Where the base browser's versions land on the derived browser's own line,
  * learned from BCD: every feature both date unprefixed after the change is one
  * observation of the same engine release under two numbers.
- * @param {string} bcdName the derived browser's BCD id
- * @param {string} baseName the base browser's BCD id
+ * @param {BcdBrowser} bcdName the derived browser's BCD id
+ * @param {BcdBrowser} baseName the base browser's BCD id
  * @param {number} from the derived browser's first version on the new engine
  * @returns {(version: number) => number} base version -> derived version
  */
@@ -5945,12 +6414,14 @@ const engineVersionLine = (bcdName, baseName, from) => {
 		return entry ? encodeVersion(entry.version_added) : null;
 	};
 	/**
-	 * @param {{ [key: string]: EXPECTED_ANY }} node a BCD subtree
+	 * @param {BcdNode} node a BCD subtree
 	 * @returns {Generator<BcdCompat>} every `__compat` block under it
 	 */
 	function* walk(node) {
-		for (const [key, value] of Object.entries(node)) {
-			if (key === "__compat") yield /** @type {BcdCompat} */ (value);
+		for (const key of Object.keys(node)) {
+			const value = node[key];
+			// The key is there, so its block is too.
+			if (key === "__compat") yield /** @type {BcdCompat} */ (node.__compat);
 			else if (value && typeof value === "object") yield* walk(value);
 		}
 	}
@@ -6837,9 +7308,10 @@ const collectPrefixedValues = () => {
 	// some engine spelled its own way.
 	/** @type {Map<string, { keywords: string[], values: Map<string, [string, [string, number, number][]][]> }>} */
 	const read = new Map();
-	for (const [property, node] of Object.entries(bcd.css.properties)) {
+	for (const property of Object.keys(bcd.css.properties)) {
 		if (property.startsWith("__")) continue;
-		const entry = /** @type {PartialPropertyTable} */ (properties)[property];
+		const node = bcd.css.properties[property];
+		const entry = properties[property];
 		if (!entry || !entry.syntax) continue;
 		const keywords = lowerSorted(acceptedValues(entry.syntax).keywords);
 		if (keywords.length === 0) continue;
@@ -6856,9 +7328,9 @@ const collectPrefixedValues = () => {
 		);
 		/** @type {Map<string, [string, [string, number, number][]][]>} */
 		const values = new Map();
-		for (const [value, sub] of Object.entries(node)) {
+		for (const value of Object.keys(node)) {
 			if (value === "__compat") continue;
-			const compat = /** @type {BcdNode} */ (sub).__compat;
+			const compat = node[value].__compat;
 			if (!compat) continue;
 			const keyword = value.toLowerCase();
 			if (!keywords.includes(keyword)) continue;
@@ -7122,6 +7594,7 @@ const collectData = async () => {
 
 	// Every longhand the three merge tables can consume, so the printer can ask
 	// one question of a block instead of walking all three tables.
+	/** @type {Set<string>} */
 	const mergeLonghands = new Set();
 	for (const table of [
 		boxLonghands,
@@ -7134,6 +7607,7 @@ const collectData = async () => {
 			for (const longhand of longhands) mergeLonghands.add(longhand);
 		}
 	}
+	/** @type {Map<string, { keywords: Set<string>, classes: Set<string> }>} */
 	const slotAccepts = new Map();
 	for (const [, longhands] of familyLonghands) {
 		for (const longhand of longhands) {
@@ -7155,9 +7629,19 @@ const collectData = async () => {
 	}
 	assertClassesArePrintable(slotAccepts);
 	const lengthOnlyFunctions = collectLengthOnlyFunctions();
+	const negativeAcceptingFunctions = collectNegativeAcceptingFunctions();
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
 	const prefixedProperties = collectPrefixTable(bcd.css.properties, true, true);
+	const propertyAliases = collectPropertyAliases(prefixedProperties);
+	const declarationRanks = collectDeclarationRanks(
+		[
+			...Object.keys(properties),
+			...Object.keys(bcd.css.properties),
+			...propertyAliases.map(([spelling]) => spelling)
+		],
+		propertyAliases
+	);
 	const prefixSpellingKeywords = collectPrefixSpellingKeywords();
 	const prefixSpellingNumbers = collectPrefixSpellingNumbers();
 	const prefixedSelectors = collectPrefixTable(bcd.css.selectors, true);
@@ -7167,7 +7651,22 @@ const collectData = async () => {
 		name,
 		collectSupportedFrom(paths)
 	]);
-	const valueSupport = collectValueSupport(colorValueFunctions);
+	const valueSupport = [
+		...collectValueSupport(colorValueFunctions),
+		...collectGradientSupport(),
+		...collectUnitSupport(),
+		// Where a substitution function is read, any declaration holding it parses.
+		// `attr()` is left out: its row is the `content` reading, not this one.
+		...[...substitutionFunctions]
+			.filter((name) => name !== "attr" && bcd.css.types[name] !== undefined)
+			.map(
+				(name) =>
+					/** @type {[string, [string, number][]]} */ ([
+						name,
+						collectSupportedFrom([`css.types.${name}`])
+					])
+			)
+	].sort((a, b) => (a[0] < b[0] ? -1 : 1));
 	const pooled = poolSupport([supportedFrom, selectorSupport, valueSupport]);
 	const prefixedAtRules = collectPrefixTable(bcd.css["at-rules"]);
 	const prefixedValues = collectPrefixedValues();
@@ -7315,6 +7814,23 @@ const ORDERED_LONGHANDS = new Map([${orderedLonghands
 const SLASH_LONGHANDS = new Map([${slashLonghands
 		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
 		.join(", ")}]);
+
+// Every other spelling of a property — vendor, alternative or legacy — mapped to
+// the property, so two declarations of one property are known wherever spelled.
+const getPropertyAliases = memoize(() => new Map([${propertyAliases
+		.map(([spelling, name]) => `["${spelling}", "${name}"]`)
+		.join(", ")}]));
+
+// Every property a dataset names, mapped to its family's place in the order a
+// block's declarations print in; -1 keeps a property where it was written.
+const getDeclarationRanks = memoize(() => {
+	const names = [${declarationRanks.map(([name]) => `"${name}"`).join(", ")}];
+	const ranks = [${declarationRanks.map(([, rank]) => rank).join(", ")}];
+	/** @type {Map<string, number>} */
+	const out = new Map();
+	for (let i = 0; i < names.length; i++) out.set(names[i], ranks[i]);
+	return out;
+});
 
 // Every longhand each shorthand sets, so one block can be asked whether another
 // could shadow it. Not every shorthand prefixes its longhands: \`inset\` sets \`top\`.
@@ -7927,6 +8443,10 @@ const NEGATIVE_ACCEPTING_PROPERTIES = ${setLiteral(
 // a dropped declaration valid.
 const LENGTH_ONLY_FUNCTIONS = ${setLiteral(lengthOnlyFunctions)};
 
+// The transform functions a negative argument is valid in, all but those whose
+// grammar bounds one from below (\`perspective()\`).
+const NEGATIVE_ACCEPTING_FUNCTIONS = ${setLiteral(negativeAcceptingFunctions)};
+
 // Packed \`0xrrggbb\` -> the shortest named color with that value. Only names that
 // can beat \`#rrggbb\`; anything longer would never be picked.
 const RGB_TO_NAME = new Map([
@@ -7973,6 +8493,11 @@ const NEVER = ${NEVER_LITERAL};
 // past the version its profile row gives.
 /** @type {string[]} */
 const SUPPORT_BROWSERS = ${JSON.stringify(pooled.browsers)};
+
+// The vendor prefix each browserslist name no profile covers reads, by its
+// engine, and null for one reading no CSS. A name missing here reads them all.
+/** @type {Map<string, string | null>} */
+const UNSTATED_BROWSER_PREFIXES = new Map(${JSON.stringify(UNSTATED_BROWSER_PREFIXES)});
 
 // The versions themselves, rows of \`SUPPORT_BROWSERS.length\` laid end to end,
 // one row per distinct profile: a construct names the row it reads rather than
@@ -8049,7 +8574,7 @@ module.exports.AUTO_SECOND_VALUE_PROPERTIES = AUTO_SECOND_VALUE_PROPERTIES;
 module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
-module.exports.CALC_CONSTANTS = CALC_CONSTANTS;\nmodule.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CANONICAL_NAMES = CANONICAL_NAMES;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;\nmodule.exports.COLOR_FUNCTIONS = COLOR_FUNCTIONS;
+module.exports.CALC_CONSTANTS = CALC_CONSTANTS;\nmodule.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CANONICAL_NAMES = CANONICAL_NAMES;\nmodule.exports.getDeclarationRanks = getDeclarationRanks;\nmodule.exports.getPropertyAliases = getPropertyAliases;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;\nmodule.exports.COLOR_FUNCTIONS = COLOR_FUNCTIONS;
 module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;\nmodule.exports.getColorNameToRgb = getColorNameToRgb;\nmodule.exports.getColorNameToShortest = getColorNameToShortest;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;\nmodule.exports.getColorSpaceModel = getColorSpaceModel;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.getCssModulesKeywords = getCssModulesKeywords;
@@ -8075,7 +8600,7 @@ module.exports.MATH_FUNCTION_ARITY = MATH_FUNCTION_ARITY;
 module.exports.MATH_FUNCTION_FOLD = MATH_FUNCTION_FOLD;
 module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
 module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;\nmodule.exports.MERGEABLE_AT_RULES = MERGEABLE_AT_RULES;\nmodule.exports.MERGE_LONGHANDS = MERGE_LONGHANDS;
-module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;\nmodule.exports.NEVER = NEVER;
+module.exports.NEGATIVE_ACCEPTING_FUNCTIONS = NEGATIVE_ACCEPTING_FUNCTIONS;\nmodule.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;\nmodule.exports.NEVER = NEVER;
 module.exports.NTH_NAMED_EQUIVALENTS = NTH_NAMED_EQUIVALENTS;\nmodule.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;\nmodule.exports.OMITTABLE_INITIAL_KEYWORDS = OMITTABLE_INITIAL_KEYWORDS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;\nmodule.exports.ORDERED_LONGHANDS = ORDERED_LONGHANDS;
 module.exports.NUMBER_ARGUMENT_FUNCTIONS = NUMBER_ARGUMENT_FUNCTIONS;\nmodule.exports.NUMBER_ONLY_OUTSIDE_CALC_PROPERTIES = NUMBER_ONLY_OUTSIDE_CALC_PROPERTIES;\nmodule.exports.NUMBER_ZERO_PROPERTIES = NUMBER_ZERO_PROPERTIES;\nmodule.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.PLACE_SHORTHANDS = PLACE_SHORTHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
@@ -8091,7 +8616,7 @@ module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.getSelectorSupportedFrom = getSelectorSupportedFrom;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.getShorthandInitialKeywords = getShorthandInitialKeywords;\nmodule.exports.getShorthandLonghands = getShorthandLonghands;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;\nmodule.exports.SRGB_SPACE = SRGB_SPACE;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;\nmodule.exports.STEP_POSITION_MINIMUM_COUNTS = STEP_POSITION_MINIMUM_COUNTS;
-module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.SUPPORT_BROWSERS = SUPPORT_BROWSERS;\nmodule.exports.getSupportProfiles = getSupportProfiles;\nmodule.exports.SVG_USER_UNIT_PROPERTIES = SVG_USER_UNIT_PROPERTIES;\nmodule.exports.SYSTEM_UI_STACK = SYSTEM_UI_STACK;\nmodule.exports.THROUGH_MATRIX = THROUGH_MATRIX;\nmodule.exports.THROUGH_TRANSFER = THROUGH_TRANSFER;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
+module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.SUPPORT_BROWSERS = SUPPORT_BROWSERS;\nmodule.exports.UNSTATED_BROWSER_PREFIXES = UNSTATED_BROWSER_PREFIXES;\nmodule.exports.getSupportProfiles = getSupportProfiles;\nmodule.exports.SVG_USER_UNIT_PROPERTIES = SVG_USER_UNIT_PROPERTIES;\nmodule.exports.SYSTEM_UI_STACK = SYSTEM_UI_STACK;\nmodule.exports.THROUGH_MATRIX = THROUGH_MATRIX;\nmodule.exports.THROUGH_TRANSFER = THROUGH_TRANSFER;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
 module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.UNSHARED_LONGHAND_KEYWORDS = UNSHARED_LONGHAND_KEYWORDS;\nmodule.exports.getValueSupportPacked = getValueSupportPacked;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
 module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
@@ -8162,8 +8687,10 @@ const generate = async () => {
 if (require.main === module) {
 	// `generate` is async, so a failed generation has to be turned back into a
 	// non-zero exit rather than left as an unhandled rejection.
-	generate().catch((error) => {
-		process.stderr.write(`${error.stack}\n`);
+	generate().catch((/** @type {ThrownValue} */ error) => {
+		process.stderr.write(
+			`${error instanceof Error ? error.stack : String(error)}\n`
+		);
 		process.exitCode = 1;
 	});
 }

@@ -1,0 +1,1 @@
+export const a=["a","b"].join(),b=Object.keys("ab").join("-"),c=Object.keys({x:1,y:2,1:3,0:4,x:5}),d=Object.keys([1,,2]).join(),e=[1,null,,void 0,"x"].join(""),f=Object.keys({[NaN]:5,[null]:6}).join(),g=Object.keys({__proto__:1,a:2}),h=[x].join(),i=Object.keys({a:f()}),j=[1.5,true].join(void 0),k=Object.keys({get a(){},b(){},["__proto__"]:1})

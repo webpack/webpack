@@ -9,20 +9,28 @@
 
 const fs = require("fs");
 const path = require("path");
-const bcd =
-	/** @type {{ javascript: { builtins: { [name: string]: { __compat: BcdCompat } & BcdMembers } }, __meta: { version: string } }} */ (
-		/** @type {unknown} */ (require("@mdn/browser-compat-data"))
-	);
 const acorn = require("acorn");
 
-/** @typedef {{ version_added?: string | boolean | null }} BcdSupport */
-/** @typedef {{ spec_url?: string | string[], mdn_url?: string, status?: { standard_track: boolean, deprecated: boolean }, support: Record<string, BcdSupport | BcdSupport[]> }} BcdCompat */
+/** @typedef {import("@mdn/browser-compat-data").SupportStatement} BcdSupport */
+/** @typedef {import("@mdn/browser-compat-data").CompatStatement} BcdCompat */
 /** @typedef {{ [name: string]: { __compat: BcdCompat } }} BcdMembers */
+
+// `require()` returns the package's `data.json` itself, while its `require.d.ts`
+// declares that table as a default export, so it is read as the JSON it is —
+// the parts read here, where every built-in and member carries its own row.
+/** @type {{ javascript: { builtins: { [name: string]: { __compat: BcdCompat } & BcdMembers } }, api: { Window: BcdMembers }, __meta: import("@mdn/browser-compat-data").MetaBlock }} */
+const bcd = JSON.parse(
+	fs.readFileSync(require.resolve("@mdn/browser-compat-data"), "utf8")
+);
 
 const DATA_TARGET = path.resolve(__dirname, "../lib/javascript/data.js");
 const PRINTER_DATA_TARGET = path.resolve(
 	__dirname,
 	"../lib/javascript/syntax-printer-data.js"
+);
+const PARSE_ERROR_CODES_TARGET = path.resolve(
+	__dirname,
+	"../lib/javascript/parse-error-codes.js"
 );
 
 // The largest code point Unicode defines, and the first one above the BMP.
@@ -63,8 +71,8 @@ const encodeRanges = (accepts, from, to) => {
 const collectIdentifierTables = () => {
 	// acorn exports the predicates at runtime but leaves them out of its types.
 	const { isIdentifierStart, isIdentifierChar } =
-		/** @type {{ isIdentifierStart: (code: number, astral?: boolean) => boolean, isIdentifierChar: (code: number, astral?: boolean) => boolean }} */ (
-			/** @type {unknown} */ (acorn)
+		/** @type {typeof acorn & { isIdentifierStart: (code: number, astral?: boolean) => boolean, isIdentifierChar: (code: number, astral?: boolean) => boolean }} */ (
+			acorn
 		);
 	return {
 		start: encodeRanges((code) => isIdentifierStart(code, false), 0x80, 0xffff),
@@ -132,11 +140,13 @@ const collectNarrowIdentifierTables = () => {
 const PROPERTY_BLOCK_START = "var scriptValuesAddedInUnicode";
 const PROPERTY_BLOCK_END = "var data = {}";
 
+/** @typedef {{ binary: Record<string, string>, binaryOfStrings: Record<string, string>, generalCategory: string, script: Record<string, string> }} UnicodePropertyTables */
+
 /**
  * The per-edition Unicode property names, read out of acorn's own bundle: the
  * spec pins them by edition, so no dataset states them and the dependency is
  * the only place they are already written down.
- * @returns {{ binary: Record<string, string>, binaryOfStrings: Record<string, string>, generalCategory: string, script: Record<string, string> }} the tables
+ * @returns {UnicodePropertyTables} the tables
  */
 const collectUnicodeProperties = () => {
 	const bundle = fs.readFileSync(
@@ -151,15 +161,18 @@ const collectUnicodeProperties = () => {
 		);
 	}
 	const block = bundle.slice(from, to);
-	// eslint-disable-next-line no-new-func
-	const read = new Function(
-		`${block}
+	// The block declares exactly the four tables the body hands back.
+	const read = /** @type {() => UnicodePropertyTables} */ (
+		// eslint-disable-next-line no-new-func
+		new Function(
+			`${block}
 		return {
 			binary: unicodeBinaryProperties,
 			binaryOfStrings: unicodeBinaryPropertiesOfStrings,
 			generalCategory: unicodeGeneralCategoryValues,
 			script: unicodeScriptValues
 		};`
+		)
 	);
 	const tables = read();
 	for (const edition of [9, 10, 11, 12, 13, 14]) {
@@ -189,35 +202,42 @@ const NATIVE_OBJECT_TABLES = new Map([
 	["lone_arg_is_range", "NATIVE_LONE_ARG_IS_RANGE"]
 ]);
 
+// Statics terser's tables leave out that a call of runs nothing observable,
+// by why, added to `NATIVE_PURE_STATIC_FUNCTIONS`.
+const NATIVE_PURE_STATIC_SUPPLEMENT = {
+	"no program can seed or read the generator, so a call nothing reads is unobservable":
+		["Math.random"]
+};
+
 /** @typedef {"sloppy" | number} NativeCondition */
 /** @typedef {string | { name: string, when: NativeCondition[] }} NativeName */
 /** @typedef {{ when?: NativeCondition[], names: NativeName[] }} NativeGroup */
 /** @typedef {NativeName[] | Record<string, NativeGroup>} NativeTable */
-/** @typedef {import("estree").Node} EstreeNode */
+/** @typedef {import("acorn").AnyNode} AcornNode */
 
 /**
- * @param {EstreeNode} node the node terser's source holds there
+ * @param {AcornNode} node the node terser's source holds there
  * @param {string} expected what the generator expected to find
  * @returns {Error} the failure naming where terser's source moved
  */
 const unexpectedNativeSyntax = (node, expected) =>
 	new Error(
 		`terser's native-objects.js holds a ${node.type} at offset ${
-			/** @type {EstreeNode & { start: number }} */ (node).start
+			node.start
 		} where this generator expects ${expected}`
 	);
 
 /**
  * Split an `a && b && c` chain into its conditions and its final value, each
  * condition read as `sloppy` or `es >= N` in the order terser evaluates them.
- * @param {EstreeNode} node the element or property value
- * @returns {{ when: NativeCondition[], value: EstreeNode }} the parts
+ * @param {AcornNode} node the element or property value
+ * @returns {{ when: NativeCondition[], value: AcornNode }} the parts
  */
 const splitNativeConditions = (node) => {
-	/** @type {EstreeNode[]} */
+	/** @type {AcornNode[]} */
 	const operands = [];
 	/**
-	 * @param {EstreeNode} current a node of the chain
+	 * @param {AcornNode} current a node of the chain
 	 * @returns {void}
 	 */
 	const flatten = (current) => {
@@ -229,7 +249,7 @@ const splitNativeConditions = (node) => {
 		}
 	};
 	flatten(node);
-	const value = /** @type {EstreeNode} */ (operands.pop());
+	const value = /** @type {AcornNode} */ (operands.pop());
 	/** @type {NativeCondition[]} */
 	const when = operands.map((operand) => {
 		if (operand.type === "Identifier" && operand.name === "sloppy") {
@@ -251,7 +271,7 @@ const splitNativeConditions = (node) => {
 };
 
 /**
- * @param {EstreeNode} node an array literal of names
+ * @param {AcornNode} node an array literal of names
  * @param {Map<string, NativeName[]>} lists the plain lists declared so far
  * @returns {NativeName[]} its names, each with its conditions
  */
@@ -279,7 +299,7 @@ const readNativeNames = (node, lists) => {
 };
 
 /**
- * @param {EstreeNode} node an array literal, or a list declared earlier
+ * @param {AcornNode} node an array literal, or a list declared earlier
  * @param {Map<string, NativeName[]>} lists the plain lists declared so far
  * @returns {NativeName[]} its names, a declared list expanded in place
  */
@@ -295,8 +315,8 @@ const readNativeList = (node, lists) => {
 };
 
 /**
- * @param {EstreeNode} node what a `make_lookup` or `make_nested_lookup` receives
- * @returns {EstreeNode} the value its arrow returns for `{ sloppy, es }`
+ * @param {AcornNode} node what a `make_lookup` or `make_nested_lookup` receives
+ * @returns {AcornNode} the value its arrow returns for `{ sloppy, es }`
  */
 const readFeatureCallback = (node) => {
 	if (
@@ -320,13 +340,13 @@ const readFeatureCallback = (node) => {
 /**
  * Read one table's initializer: a `make_lookup` list, a `make_nested_lookup`
  * object of lists, a `new Set` of names or a plain list.
- * @param {EstreeNode} init the declarator's initializer
+ * @param {AcornNode} init the declarator's initializer
  * @param {Map<string, NativeName[]>} lists the plain lists declared so far
  * @returns {NativeTable} the table
  */
 const readNativeTable = (init, lists) => {
 	/**
-	 * @param {EstreeNode} node an array literal outside any `{ sloppy, es }`
+	 * @param {AcornNode} node an array literal outside any `{ sloppy, es }`
 	 * @returns {string[]} its names, none of which can carry a condition
 	 */
 	const readPlainNames = (node) =>
@@ -345,7 +365,7 @@ const readNativeTable = (init, lists) => {
 		init.callee.name === "Set" &&
 		init.arguments.length === 1
 	) {
-		return readPlainNames(/** @type {EstreeNode} */ (init.arguments[0]));
+		return readPlainNames(/** @type {AcornNode} */ (init.arguments[0]));
 	}
 	if (
 		init.type === "CallExpression" &&
@@ -353,7 +373,7 @@ const readNativeTable = (init, lists) => {
 		init.arguments.length === 1
 	) {
 		const body = readFeatureCallback(
-			/** @type {EstreeNode} */ (init.arguments[0])
+			/** @type {AcornNode} */ (init.arguments[0])
 		);
 		if (init.callee.name === "make_lookup") {
 			return readNativeNames(body, lists);
@@ -405,9 +425,7 @@ const collectNativeObjects = () => {
 	const lists = new Map();
 	/** @type {Record<string, NativeTable>} */
 	const tables = {};
-	for (const statement of /** @type {EstreeNode[]} */ (
-		/** @type {unknown} */ (program.body)
-	)) {
+	for (const statement of program.body) {
 		const declaration =
 			statement.type === "ExportNamedDeclaration"
 				? statement.declaration
@@ -445,6 +463,25 @@ const collectNativeObjects = () => {
 			);
 		}
 	}
+	const statics = /** @type {Record<string, NativeGroup>} */ (
+		tables.NATIVE_PURE_STATIC_FUNCTIONS
+	);
+	for (const names of Object.values(NATIVE_PURE_STATIC_SUPPLEMENT)) {
+		for (const qualified of names) {
+			const [owner, name] = qualified.split(".");
+			const listed = statics[owner].names;
+			if (
+				listed.some((entry) =>
+					typeof entry === "string" ? entry === name : entry.name === name
+				)
+			) {
+				throw new Error(
+					`terser's native-objects.js lists ${qualified} now: remove it from NATIVE_PURE_STATIC_SUPPLEMENT`
+				);
+			}
+			listed.push(name);
+		}
+	}
 	return tables;
 };
 
@@ -480,20 +517,22 @@ ${properties}
  * @returns {NativeObjectTables} the tables, fresh on each call
  */
 const nativeObjectTables = () => ({
-${sections.map(({ constant, source }) => `\t${constant}: ${source}`).join(",\n")}
+${sections
+	.map(({ constant, source }) => `\t${constant}: ${source}`)
+	.join(",\n")}
 });
 `;
 };
 
 /**
- * @param {EstreeNode} node the node terser's source holds there
+ * @param {AcornNode} node the node terser's source holds there
  * @param {string} expected what the generator expected to find
  * @returns {Error} the failure naming where terser's source moved
  */
 const unexpectedParserSyntax = (node, expected) =>
 	new Error(
 		`terser's parse.js holds a ${node.type} at offset ${
-			/** @type {EstreeNode & { start: number }} */ (node).start
+			node.start
 		} where this generator expects ${expected}`
 	);
 
@@ -503,7 +542,7 @@ const unexpectedParserSyntax = (node, expected) =>
  * The value of one of terser's table declarations, as far as tables are
  * written: strings, their concatenation, `makePredicate` over words and
  * `characters` over a string, and the IIFE that numbers operator precedence.
- * @param {EstreeNode} node the expression
+ * @param {AcornNode} node the expression
  * @param {Map<string, ParserValue>} known the tables read before it
  * @returns {ParserValue} its value
  */
@@ -516,7 +555,7 @@ const evaluateParserTable = (node, known) => {
 	}
 	if (node.type === "BinaryExpression" && node.operator === "+") {
 		const left = evaluateParserTable(
-			/** @type {EstreeNode} */ (node.left),
+			/** @type {AcornNode} */ (node.left),
 			known
 		);
 		const right = evaluateParserTable(node.right, known);
@@ -530,12 +569,12 @@ const evaluateParserTable = (node, known) => {
 				throw unexpectedParserSyntax(node, "an array of strings without holes");
 			}
 			const value = evaluateParserTable(
-				/** @type {EstreeNode} */ (element),
+				/** @type {AcornNode} */ (element),
 				known
 			);
 			if (typeof value !== "string") {
 				throw unexpectedParserSyntax(
-					/** @type {EstreeNode} */ (element),
+					/** @type {AcornNode} */ (element),
 					"a string"
 				);
 			}
@@ -544,7 +583,7 @@ const evaluateParserTable = (node, known) => {
 	}
 	if (node.type === "CallExpression") {
 		const { callee } = node;
-		const [argument] = /** @type {EstreeNode[]} */ (node.arguments);
+		const [argument] = /** @type {AcornNode[]} */ (node.arguments);
 		if (callee.type === "Identifier" && callee.name === "characters") {
 			const value = evaluateParserTable(argument, known);
 			if (typeof value === "string") return [...value];
@@ -565,7 +604,7 @@ const evaluateParserTable = (node, known) => {
 				levels: argument.elements.map(
 					(level) =>
 						/** @type {string[]} */ (
-							evaluateParserTable(/** @type {EstreeNode} */ (level), known)
+							evaluateParserTable(/** @type {AcornNode} */ (level), known)
 						)
 				)
 			};
@@ -606,7 +645,7 @@ const collectParserTables = () => {
 	/** @type {Map<string, ParserValue>} */
 	const known = new Map();
 	/**
-	 * @param {EstreeNode[]} statements a body
+	 * @param {AcornNode[]} statements a body
 	 * @returns {void}
 	 */
 	const read = (statements) => {
@@ -623,7 +662,7 @@ const collectParserTables = () => {
 					known.set(
 						declarator.id.name,
 						evaluateParserTable(
-							/** @type {EstreeNode} */ (declarator.init),
+							/** @type {AcornNode} */ (declarator.init),
 							known
 						)
 					);
@@ -647,7 +686,7 @@ const collectParserTables = () => {
 			}
 		}
 	};
-	read(/** @type {EstreeNode[]} */ (/** @type {unknown} */ (program.body)));
+	read(program.body);
 	/** @type {Record<string, string[] | string[][]>} */
 	const tables = {};
 	for (const name of PARSER_TABLES) {
@@ -684,12 +723,10 @@ const collectDomProperties = () => {
 		ecmaVersion: "latest",
 		sourceType: "module"
 	});
-	for (const statement of /** @type {EstreeNode[]} */ (
-		/** @type {unknown} */ (program.body)
-	)) {
+	for (const statement of program.body) {
 		const declaration =
 			statement.type === "ExportNamedDeclaration"
-				? /** @type {EstreeNode | null | undefined} */ (statement.declaration)
+				? /** @type {AcornNode | null | undefined} */ (statement.declaration)
 				: statement;
 		if (!declaration || declaration.type !== "VariableDeclaration") continue;
 		for (const declarator of declaration.declarations) {
@@ -701,7 +738,7 @@ const collectDomProperties = () => {
 			) {
 				return /** @type {string[]} */ (
 					evaluateParserTable(
-						/** @type {EstreeNode} */ (declarator.init),
+						/** @type {AcornNode} */ (declarator.init),
 						new Map()
 					)
 				);
@@ -769,6 +806,7 @@ const FOLDED_BUILT_INS = {
 		"parseFloat",
 		"parseInt"
 	],
+	"Boolean.prototype": ["toString", "valueOf"],
 	"Number.prototype": [
 		"toExponential",
 		"toFixed",
@@ -796,18 +834,55 @@ const FOLDED_BUILT_INS = {
 		"substr",
 		"substring",
 		"toLowerCase",
+		"toString",
 		"toUpperCase",
 		"trim",
 		"trimEnd",
-		"trimStart"
+		"trimStart",
+		"valueOf"
 	],
 	Array: ["of"],
 	"Array.prototype": ["concat", "join"]
 };
 
+// The edition each folded built-in came in after ECMAScript 5, which the
+// printer folds only where `builtinsEcma` reaches it.
+const FOLDED_FROM_EDITION = {
+	2015: [
+		"Array.of",
+		"Math.clz32",
+		"Math.fround",
+		"Math.imul",
+		"Math.sign",
+		"Math.trunc",
+		"Number.isFinite",
+		"Number.isInteger",
+		"Number.isNaN",
+		"Number.isSafeInteger",
+		"Number.parseFloat",
+		"Number.parseInt",
+		"String.fromCodePoint",
+		"String.prototype.codePointAt",
+		"String.prototype.endsWith",
+		"String.prototype.includes",
+		"String.prototype.normalize",
+		"String.prototype.repeat",
+		"String.prototype.startsWith"
+	],
+	2017: ["String.prototype.padEnd", "String.prototype.padStart"],
+	2019: ["String.prototype.trimEnd", "String.prototype.trimStart"]
+};
+
 // Static values `improve` writes as the number they hold where that is shorter.
 const FOLDED_CONSTANTS = {
-	Number: ["EPSILON", "NEGATIVE_INFINITY", "NaN", "POSITIVE_INFINITY"]
+	Number: ["NEGATIVE_INFINITY", "NaN", "POSITIVE_INFINITY"]
+};
+
+// Static values `improve` writes as a power of two, as `2**53-1`, from
+// ECMAScript 2016: their digits are longer, or gzip worse, than their name.
+/** @type {{ Number: ("EPSILON" | "MAX_SAFE_INTEGER" | "MIN_SAFE_INTEGER")[] }} */
+const POWER_OF_TWO_CONSTANTS = {
+	Number: ["EPSILON", "MAX_SAFE_INTEGER", "MIN_SAFE_INTEGER"]
 };
 
 // Methods whose answer for a string outside ASCII follows the engine's Unicode
@@ -865,10 +940,6 @@ const UNFOLDED_BUILT_INS = {
 		"Array.@@species",
 		"Array.prototype.@@unscopables"
 	],
-	"its sixteen digits gzip worse than the name they replace": [
-		"Number.MAX_SAFE_INTEGER",
-		"Number.MIN_SAFE_INTEGER"
-	],
 	"it runs code, or answers differently on each call": ["eval", "Math.random"],
 	"the spec lets each engine approximate its answer": [
 		"Math.acos",
@@ -922,11 +993,14 @@ const UNFOLDED_BUILT_INS = {
 	"it answers an array, which gzips worse as a literal than the call": [
 		"String.prototype.split"
 	],
+	"called as a conversion, which the printer folds by its global name": [
+		"Boolean.Boolean",
+		"Number.Number",
+		"String.String"
+	],
 	"rarely called on literals, so not weighed yet": [
 		"escape",
 		"unescape",
-		"Number.Number",
-		"String.String",
 		"String.raw",
 		"String.prototype.anchor",
 		"String.prototype.big",
@@ -942,10 +1016,8 @@ const UNFOLDED_BUILT_INS = {
 		"String.prototype.strike",
 		"String.prototype.sub",
 		"String.prototype.sup",
-		"String.prototype.toString",
 		"String.prototype.trimLeft",
 		"String.prototype.trimRight",
-		"String.prototype.valueOf",
 		"Array.Array",
 		"Array.from",
 		"Array.fromAsync",
@@ -997,7 +1069,7 @@ const collectBuiltInMembers = () => {
 	for (const key of Object.keys(builtins)) {
 		if (/^[a-z]/.test(key)) members.set(key, builtins[key].__compat);
 	}
-	for (const owner of ["Math", "Number", "String", "Array"]) {
+	for (const owner of ["Math", "Boolean", "Number", "String", "Array"]) {
 		for (const key of Object.keys(builtins[owner])) {
 			if (key === "__compat") continue;
 			const compat = builtins[owner][key].__compat;
@@ -1015,11 +1087,9 @@ const collectBuiltInMembers = () => {
  * @returns {number[]} major, minor and patch
  */
 const oldestSupportedNode = () =>
-	/** @type {string} */ (
-		/** @type {RegExpMatchArray} */ (
-			require("../package.json").engines.node.match(/\d+\.\d+\.\d+/)
-		)[0]
-	)
+	/** @type {RegExpMatchArray} */ (
+		require("../package.json").engines.node.match(/\d+\.\d+\.\d+/)
+	)[0]
 		.split(".")
 		.map(Number);
 
@@ -1041,7 +1111,7 @@ const isNoLaterThan = (version, limit) => {
 /**
  * The built-ins `improve` folds, checked against BCD: each one present, on the
  * owner it is spelled under, and in every Node webpack builds on.
- * @returns {{ globals: string[], statics: Record<string, string[]>, methods: Record<string, string[]>, constants: Record<string, string[]>, unicodeDependent: string[], sizedByArgument: string[], constructedWhenCalled: string[] }} the tables
+ * @returns {{ editions: Record<string, number>, globals: string[], statics: Record<string, string[]>, methods: Record<string, string[]>, constants: Record<string, string[]>, powerOfTwoConstants: Record<string, string[]>, unicodeDependent: string[], sizedByArgument: string[], constructedWhenCalled: string[] }} the tables
  */
 const collectFoldedBuiltIns = () => {
 	const members = collectBuiltInMembers();
@@ -1073,8 +1143,10 @@ const collectFoldedBuiltIns = () => {
 		for (const name of names) {
 			const qualified = owner === "global" ? name : `${owner}.${name}`;
 			place(qualified, "FOLDED_BUILT_INS");
-			const support = /** @type {BcdCompat} */ (members.get(qualified)).support
-				.nodejs;
+			// A folded built-in is one Node runs, so it carries a Node row.
+			const support = /** @type {BcdSupport} */ (
+				/** @type {BcdCompat} */ (members.get(qualified)).support.nodejs
+			);
 			const added = (Array.isArray(support) ? support[0] : support)
 				.version_added;
 			if (typeof added !== "string" || !isNoLaterThan(added, oldestNode)) {
@@ -1093,6 +1165,17 @@ const collectFoldedBuiltIns = () => {
 	}
 	for (const [owner, names] of Object.entries(FOLDED_CONSTANTS)) {
 		for (const name of names) place(`${owner}.${name}`, "FOLDED_CONSTANTS");
+	}
+	for (const [owner, names] of Object.entries(POWER_OF_TWO_CONSTANTS)) {
+		for (const name of names) {
+			place(`${owner}.${name}`, "POWER_OF_TWO_CONSTANTS");
+			// The printer writes 2**k, 2**k-1 or 1-2**k, k its magnitude's log rounded.
+			const value = Number[name];
+			const power = 2 ** Math.round(Math.log2(Math.abs(value)));
+			if (![power, power - 1, 1 - power].includes(value)) {
+				throw new Error(`${owner}.${name} is no power of two, nor one off it`);
+			}
+		}
 	}
 	for (const [reason, names] of Object.entries(UNFOLDED_BUILT_INS)) {
 		for (const name of names) place(name, `left out as "${reason}"`);
@@ -1118,11 +1201,23 @@ const collectFoldedBuiltIns = () => {
 			throw new Error(`@mdn/browser-compat-data lists no built-in ${name}`);
 		}
 	}
+	/** @type {Record<string, number>} */
+	const editions = {};
+	for (const [edition, names] of Object.entries(FOLDED_FROM_EDITION)) {
+		for (const name of names) {
+			if (placed.get(name) !== "FOLDED_BUILT_INS") {
+				throw new Error(`${name} has an edition but is not a folded built-in`);
+			}
+			editions[name] = Number(edition);
+		}
+	}
 	return {
+		editions,
 		globals,
 		statics,
 		methods,
 		constants: FOLDED_CONSTANTS,
+		powerOfTwoConstants: POWER_OF_TWO_CONSTANTS,
 		unicodeDependent: UNICODE_DEPENDENT_METHODS,
 		sizedByArgument: SIZED_BY_ARGUMENT_METHODS,
 		constructedWhenCalled: CONSTRUCTED_WHEN_CALLED
@@ -1136,10 +1231,12 @@ const collectFoldedBuiltIns = () => {
 const renderFoldedBuiltIns = () => `
 /**
  * @typedef {object} FoldedBuiltIns
+ * @property {Record<string, number>} editions the edition each one came in after ECMAScript 5, by qualified name
  * @property {string[]} globals the global functions
  * @property {Record<string, string[]>} statics the functions of each global object
  * @property {Record<string, string[]>} methods the prototype methods of each constructor
  * @property {Record<string, string[]>} constants the static values of each global object
+ * @property {Record<string, string[]>} powerOfTwoConstants the static values of each global object written as a power of two
  * @property {string[]} unicodeDependent the string methods folded on ASCII only
  * @property {string[]} sizedByArgument the string methods a count or length argument sizes
  * @property {string[]} constructedWhenCalled the constructors that construct the same without \`new\`
@@ -1176,6 +1273,22 @@ const UNREAD_BUILT_INS = {
 	]
 };
 
+// The globals a browser page defines whose read `improve` takes to have no
+// effect, as swc and oxc do; each a property of `Window`, as BCD lists it. A
+// storage, whose read throws where a page may not use it, is left out.
+const HOST_GLOBALS = [
+	"document",
+	"frames",
+	"history",
+	"location",
+	"navigator",
+	"parent",
+	"screen",
+	"self",
+	"top",
+	"window"
+];
+
 /**
  * Whether BCD says a feature is in every Node webpack builds on.
  * @param {BcdCompat} compat the feature's compat entry
@@ -1195,7 +1308,7 @@ const isInOldestNode = (compat, oldestNode) => {
 /**
  * The built-ins `improve` drops when nothing reads what they answer: the
  * globals it may read, those it may call, and each one's static members.
- * @returns {{ globals: string[], callableGlobals: string[], statics: Record<string, string[]> }} the tables
+ * @returns {{ globals: string[], callableGlobals: string[], statics: Record<string, string[]>, hostGlobals: string[], knownMembers: Record<string, string[]> }} the tables
  */
 const collectPureBuiltIns = () => {
 	const builtins = bcd.javascript.builtins;
@@ -1225,19 +1338,12 @@ const collectPureBuiltIns = () => {
 	const globals = [];
 	/** @type {Record<string, string[]>} */
 	const statics = {};
-	for (const name of Object.keys(builtins).sort()) {
+	/**
+	 * @param {string} name a built-in BCD lists
+	 * @returns {string[]} its static members the oldest Node webpack builds on has
+	 */
+	const staticMembers = (name) => {
 		const entry = builtins[name];
-		// A constructor's own entry dates the global; a namespace's dates itself.
-		const compat = (entry[name] || entry).__compat;
-		if (
-			unread.has(name) ||
-			!isInOldestNode(compat, oldestNode) ||
-			!Object.prototype.hasOwnProperty.call(global, name)
-		) {
-			continue;
-		}
-		globals.push(name);
-		if (!/^[A-Z]/.test(name)) continue;
 		/** @type {string[]} */
 		const members = [];
 		for (const key of Object.keys(entry).sort()) {
@@ -1266,12 +1372,64 @@ const collectPureBuiltIns = () => {
 			if (impure.has(`${name}.${key}`)) continue;
 			if (isInOldestNode(memberCompat, oldestNode)) members.push(key);
 		}
+		return members;
+	};
+	// BCD lists `of` and `from` once, on `%TypedArray%`, which each typed array inherits.
+	const typedArrayStatics = staticMembers("TypedArray");
+	// `%TypedArray%`, the constructor every typed array extends.
+	/** @type {{ prototype: ArrayBufferView }} */
+	const TypedArray = Object.getPrototypeOf(Int8Array);
+	for (const name of Object.keys(builtins).sort()) {
+		const entry = builtins[name];
+		// A constructor's own entry dates the global; a namespace's dates itself.
+		const compat = (entry[name] || entry).__compat;
+		if (
+			unread.has(name) ||
+			!isInOldestNode(compat, oldestNode) ||
+			!Object.prototype.hasOwnProperty.call(global, name)
+		) {
+			continue;
+		}
+		globals.push(name);
+		if (!/^[A-Z]/.test(name)) continue;
+		const members = staticMembers(name);
+		// a global looked up by a name from the compat data can hold any value
+		/** @type {unknown} */
+		const value = Reflect.get(global, name);
+		if (Object.getPrototypeOf(value) === TypedArray) {
+			for (const member of typedArrayStatics) {
+				if (!members.includes(member)) members.push(member);
+			}
+			members.sort();
+		}
 		if (members.length > 0) statics[name] = members;
+	}
+	for (const name of HOST_GLOBALS) {
+		const compat = bcd.api.Window[name] && bcd.api.Window[name].__compat;
+		if (!compat || !compat.status || !compat.status.standard_track) {
+			throw new Error(
+				`@mdn/browser-compat-data lists no standard Window property ${name}`
+			);
+		}
+	}
+	// Every member BCD knows on each, whichever edition added it, so a key the
+	// build's Node lacks yet the target's has is never read as missing.
+	/** @type {Record<string, string[]>} */
+	const knownMembers = {};
+	for (const owner of ["Array", "Object", "String"]) {
+		knownMembers[owner] = Object.keys(builtins[owner])
+			.filter(
+				(key) =>
+					key !== "__compat" && key !== owner && /^[a-z$_][\w$]*$/i.test(key)
+			)
+			.sort();
 	}
 	return {
 		globals,
 		callableGlobals: globals.filter((name) => !impure.has(name)),
-		statics
+		statics,
+		hostGlobals: HOST_GLOBALS,
+		knownMembers
 	};
 };
 
@@ -1285,6 +1443,8 @@ const renderPureBuiltIns = () => `
  * @property {string[]} globals the globals a read of which has no effect
  * @property {string[]} callableGlobals the globals a call of which on literals has none but a throw
  * @property {Record<string, string[]>} statics the functions of each global a call of which on literals has none but a throw
+ * @property {string[]} hostGlobals the globals a browser page defines, a read of which is taken to have no effect
+ * @property {Record<string, string[]>} knownMembers every member any edition gives \`Array\`, \`Object\` and \`String\` or their prototypes
  */
 
 // The built-ins the \`improve\` phase drops where nothing reads them, each in
@@ -1342,13 +1502,921 @@ const renderHeader = (sources) => `/*
 */
 
 // GENERATED by tooling/generate-js-data.js — do not edit.
-// Sources: ${sources}. The tables read from terser are under its
-// license, quoted in full in syntax-printer.js.
+// Sources: ${sources}.${
+	sources.includes("terser")
+		? ` The tables read from terser are under its
+// license, quoted in full in syntax-printer.js.`
+		: ""
+}
 
 "use strict";
 `;
 
 const TERSER_SOURCE = `terser ${require("terser/package.json").version}`;
+
+const FUNCTION_FIELDS =
+	"id:node expression:flag generator:flag async:flag params:list body:node";
+const CLASS_FIELDS = "id:node superClass:node body:node";
+
+// Each node type the parser makes, its fields as `name:kind` in the order its
+// objects hold them: a child `node`, a `list` of them, a `string`, a `flag`, a
+// literal's `value`, or a string an `optional` node lacks while unset.
+/** @type {Record<string, string>} */
+const NODE_TYPES = {
+	Identifier: "name:string",
+	PrivateIdentifier: "name:string",
+	Literal: "value:value raw:string",
+	MemberExpression: "object:node property:node computed:flag optional:flag",
+	CallExpression: "callee:node arguments:list optional:flag",
+	NewExpression: "callee:node arguments:list",
+	ExpressionStatement: "expression:node directive:optional",
+	VariableDeclarator: "id:node init:node",
+	VariableDeclaration: "declarations:list kind:string",
+	Property:
+		"method:flag shorthand:flag computed:flag key:node value:node kind:string",
+	BinaryExpression: "left:node operator:string right:node",
+	LogicalExpression: "left:node operator:string right:node",
+	AssignmentExpression: "operator:string left:node right:node",
+	AssignmentPattern: "left:node right:node",
+	BlockStatement: "body:list",
+	StaticBlock: "body:list",
+	ClassBody: "body:list",
+	Program: "body:list sourceType:string",
+	ReturnStatement: "argument:node",
+	ThrowStatement: "argument:node",
+	AwaitExpression: "argument:node",
+	SpreadElement: "argument:node",
+	RestElement: "argument:node",
+	YieldExpression: "delegate:flag argument:node",
+	UnaryExpression: "operator:string prefix:flag argument:node",
+	UpdateExpression: "operator:string prefix:flag argument:node",
+	ArrayExpression: "elements:list",
+	ArrayPattern: "elements:list",
+	ObjectExpression: "properties:list",
+	ObjectPattern: "properties:list",
+	ThisExpression: "",
+	Super: "",
+	EmptyStatement: "",
+	DebuggerStatement: "",
+	FunctionExpression: FUNCTION_FIELDS,
+	FunctionDeclaration: FUNCTION_FIELDS,
+	ArrowFunctionExpression: FUNCTION_FIELDS,
+	IfStatement: "test:node consequent:node alternate:node",
+	ConditionalExpression: "test:node consequent:node alternate:node",
+	ParenthesizedExpression: "expression:node",
+	PropertyDefinition: "static:flag computed:flag key:node value:node",
+	MethodDefinition: "static:flag computed:flag key:node kind:string value:node",
+	TemplateElement: "value:value tail:flag",
+	TemplateLiteral: "expressions:list quasis:list",
+	TaggedTemplateExpression: "tag:node quasi:node",
+	SequenceExpression: "expressions:list",
+	SwitchCase: "consequent:list test:node",
+	SwitchStatement: "discriminant:node cases:list",
+	ForStatement: "init:node test:node update:node body:node",
+	ForInStatement: "left:node right:node body:node",
+	ForOfStatement: "await:flag left:node right:node body:node",
+	WhileStatement: "test:node body:node",
+	DoWhileStatement: "body:node test:node",
+	WithStatement: "object:node body:node",
+	LabeledStatement: "body:node label:node",
+	BreakStatement: "label:node",
+	ContinueStatement: "label:node",
+	TryStatement: "block:node handler:node finalizer:node",
+	CatchClause: "param:node body:node",
+	ClassDeclaration: CLASS_FIELDS,
+	ClassExpression: CLASS_FIELDS,
+	ChainExpression: "expression:node",
+	ImportDeclaration:
+		"specifiers:list source:node attributes:list phase:optional",
+	ImportSpecifier: "imported:node local:node",
+	ImportDefaultSpecifier: "local:node",
+	ImportNamespaceSpecifier: "local:node",
+	ImportAttribute: "key:node value:node",
+	ImportExpression: "source:node options:node phase:optional",
+	ExportNamedDeclaration:
+		"declaration:node specifiers:list source:node attributes:list",
+	ExportDefaultDeclaration: "declaration:node",
+	ExportAllDeclaration: "exported:node source:node attributes:list",
+	ExportSpecifier: "local:node exported:node",
+	MetaProperty: "meta:node property:node"
+};
+
+// WHY: the parser turns an expression into a pattern in place (`toAssignable`),
+// so a pattern's slots must be a prefix of its expression's: an assignment's
+// operator goes last, after the `left` and `right` an `AssignmentPattern` keeps.
+/** @type {Record<string, string[]>} */
+const SLOT_ORDERS = {
+	AssignmentExpression: ["left", "right", "operator"]
+};
+
+/**
+ * The numbering the tree and its path read nodes by, as CSS and HTML number
+ * theirs: node types and fields from 1, flags as bits, and texts from 1.
+ * @returns {{ types: Record<string, number>, fields: Record<string, number>, flags: Record<string, number>, parts: Record<string, number> }} each table by member name
+ */
+const collectNodeTables = () => {
+	/** @type {Record<string, number>} */
+	const types = {};
+	/** @type {Record<string, number>} */
+	const fields = {};
+	/** @type {Record<string, number>} */
+	const flags = {};
+	/** @type {Record<string, number>} */
+	const parts = {};
+	let flagCount = 0;
+	for (const name of Object.keys(NODE_TYPES)) {
+		types[name] = Object.keys(types).length + 1;
+		for (const part of NODE_TYPES[name].split(" ").filter(Boolean)) {
+			const [field, kind] = part.split(":");
+			if (kind === "node" || kind === "list") {
+				if (!(field in fields)) fields[field] = Object.keys(fields).length + 1;
+			} else if (kind === "flag") {
+				if (!(field in flags)) flags[field] = 1 << flagCount++;
+			} else if (kind !== "value" && field !== "name" && !(field in parts)) {
+				parts[field] = Object.keys(parts).length + 1;
+			}
+		}
+	}
+	return { types, fields, flags, parts };
+};
+
+/**
+ * Each node type's fields as `name:kind:slot`, in the order its objects hold
+ * them; a flag's slot is its `Flag` bit, any other field's its place in the record.
+ * @returns {Record<string, string>} the fields by node type
+ */
+const collectNodeFields = () => {
+	const { flags } = collectNodeTables();
+	/** @type {Record<string, string>} */
+	const result = {};
+	for (const name of Object.keys(NODE_TYPES)) {
+		const fields = NODE_TYPES[name]
+			.split(" ")
+			.filter(Boolean)
+			.map((part) => {
+				const [field, kind] = part.split(":");
+				return { field, kind, slot: 0 };
+			});
+		const slotted = fields.filter((field) => field.kind !== "flag");
+		const order = SLOT_ORDERS[name];
+		if (order !== undefined) {
+			slotted.sort((a, b) => order.indexOf(a.field) - order.indexOf(b.field));
+		}
+		for (let i = 0; i < slotted.length; i++) slotted[i].slot = i;
+		for (const field of fields) {
+			if (field.kind === "flag") field.slot = flags[field.field];
+		}
+		result[name] = fields
+			.map(({ field, kind, slot }) => `${field}:${kind}:${slot}`)
+			.join(" ");
+	}
+	return result;
+};
+
+/**
+ * One generated table as a constant whose JSDoc types each member literally,
+ * so `types.d.ts` reads `NodeType.Identifier` as `1`.
+ * @param {string} name the constant's name
+ * @param {string} description its comment
+ * @param {Record<string, number>} table the table
+ * @returns {string} its source
+ */
+const renderNumberTable = (name, description, table) => {
+	const entries = Object.keys(table).map((key) => `${key}: ${table[key]}`);
+	return `// ${description}\n/** @type {Readonly<{ ${entries.join(
+		", "
+	)} }>} */\nconst ${name} = {\n${entries.join(",\n")}\n};\n`;
+};
+
+// Babel names its parse errors, ECMA-262 and acorn do not, so a parse error's
+// code is Babel's `reasonCode` for the same error, kebab-cased.
+const BABEL_PARSER = require.resolve("@babel/parser", {
+	paths: [require.resolve("@babel/core")]
+});
+
+/**
+ * One parse error message, `*` standing for its variable parts. A `probe` is
+ * read by both parsers to take Babel's code; one no option reaches names it.
+ * @typedef {object} ParseErrorEntry
+ * @property {string} template the message, `*` matching any text
+ * @property {string=} probe source raising it, read with Babel too
+ * @property {"script" | "module"=} sourceType what the probe is read as
+ * @property {boolean=} importPhases whether the probe needs import phases
+ * @property {string=} babel Babel's code, where no probe reaches the message
+ * @property {string=} own a code of webpack's own, where Babel has none
+ */
+
+// cspell:ignore rget
+/** @type {ParseErrorEntry[]} */
+const PARSE_ERRORS = [
+	{
+		template:
+			"'import defer' can only be used with namespace imports ('import defer * as identifierName from ...').",
+		probe: 'import defer a from "x"',
+		sourceType: "module",
+		importPhases: true
+	},
+	{
+		template:
+			"'import source' can only be used with direct identifier specifier imports ('import source identifierName from ...').",
+		babel: "SourcePhaseImportRequiresDefault"
+	},
+	{
+		template:
+			"'import source' can only be used with direct identifier specifier imports.",
+		probe: 'import source {a} from "x"',
+		sourceType: "module",
+		importPhases: true
+	},
+	{
+		template: "'import' and 'export' may appear only with 'sourceType: module'",
+		probe: "import a from 'x'",
+		sourceType: "script"
+	},
+	{
+		template: "'import' and 'export' may only appear at the top level",
+		probe: "{ import a from 'x' }",
+		sourceType: "module"
+	},
+	{
+		template: "'import.*' can only be used in a dynamic import.",
+		probe: "import.source",
+		sourceType: "module",
+		importPhases: true
+	},
+	{
+		template: "'import.*' must not contain escaped characters",
+		probe: "import.m\\u0065ta",
+		sourceType: "module"
+	},
+	{
+		template:
+			"'new.target' can only be used in functions and class static block",
+		probe: "new.target",
+		sourceType: "script"
+	},
+	{
+		template: "'new.target' must not contain escaped characters",
+		probe: "function f(){ new.t\\u0061rget }",
+		sourceType: "script"
+	},
+	{
+		template: "'return' outside of function",
+		probe: "return 1",
+		sourceType: "script"
+	},
+	{
+		template: "'super' keyword outside a method",
+		probe: "super.x",
+		sourceType: "script"
+	},
+	{
+		template: "'with' in strict mode",
+		probe: "'use strict'; with (a) {}",
+		sourceType: "script"
+	},
+	{
+		template: "* loop variable declaration may not have an initializer",
+		probe: "for (var a = 1 of b);",
+		sourceType: "script"
+	},
+	{
+		template:
+			"A string literal cannot be used as an exported binding without `from`.",
+		probe: "export { 'a' }",
+		sourceType: "module"
+	},
+	{
+		template: "An export name cannot include a lone surrogate.",
+		probe: "export { a as '\\uD800' }; var a",
+		sourceType: "module"
+	},
+	{
+		template: "Argument name clash",
+		probe: "function f(a, a) { 'use strict' }",
+		sourceType: "script"
+	},
+	{
+		template: "Assigning to * in strict mode",
+		probe: "'use strict'; eval = 1",
+		sourceType: "script"
+	},
+	{
+		template: "Binding * in strict mode",
+		probe: "'use strict'; function eval() {}",
+		sourceType: "script"
+	},
+	{ template: "Assigning to rvalue", probe: "1 = 2", sourceType: "script" },
+	{ template: "Binding rvalue", babel: "InvalidLhsBinding" },
+	{
+		template: "Await expression cannot be a default value",
+		probe: "async function f(a = await 1) {}",
+		sourceType: "module"
+	},
+	{
+		template: "Await using cannot appear outside of async function",
+		probe: "function f() { await using x = y }",
+		sourceType: "module"
+	},
+	{
+		template: "Bad character escape sequence",
+		probe: "a\\u0",
+		sourceType: "script"
+	},
+	{
+		template: "Bad escape sequence in untagged template literal",
+		probe: "`\\u{`",
+		sourceType: "script"
+	},
+	{
+		template: "Binding member expression",
+		babel: "InvalidPropertyBindingPattern"
+	},
+	{
+		template: "Binding parenthesized expression",
+		babel: "InvalidParenthesizedAssignment"
+	},
+	{
+		template: "Parenthesized pattern",
+		probe: "((a)) => 1",
+		sourceType: "script"
+	},
+	{
+		template: "Cannot use 'arguments' in class field initializer",
+		probe: "class A { x = arguments }",
+		sourceType: "script"
+	},
+	{
+		template: "Cannot use 'await' as identifier inside an async function",
+		probe: "async function f() { var await }",
+		sourceType: "script"
+	},
+	{
+		template: "Cannot use 'import.meta' outside a module",
+		probe: "import.meta",
+		sourceType: "script"
+	},
+	{
+		template: "Cannot use 'yield' as identifier inside a generator",
+		probe: "function* f() { var yield }",
+		sourceType: "script"
+	},
+	{
+		template: "Cannot use * in class static initialization block",
+		probe: "class A { static { arguments } }",
+		sourceType: "script"
+	},
+	{
+		template: "Cannot use keyword 'await' outside an async function",
+		probe: "function f() { await x }",
+		sourceType: "module"
+	},
+	{
+		template: "Classes can't have a field named 'constructor'",
+		probe: "class A { constructor = 1 }",
+		sourceType: "script"
+	},
+	{
+		template: "Classes can't have a static field named 'prototype'",
+		probe: "class A { static prototype = 1 }",
+		sourceType: "script"
+	},
+	{
+		template: "Classes can't have an element named '#constructor'",
+		probe: "class A { #constructor }",
+		sourceType: "script"
+	},
+	{
+		template: "Classes may not have a static property named prototype",
+		probe: "class A { static prototype() {} }",
+		sourceType: "script"
+	},
+	{ template: "Code point out of bounds", babel: "InvalidCodePoint" },
+	{
+		template: "Comma is not permitted after the rest element",
+		probe: "let [...a,] = b",
+		sourceType: "script"
+	},
+	{
+		template: "Complex binding patterns require an initialization value",
+		probe: "let {a}",
+		sourceType: "script"
+	},
+	{
+		template: "Constructor can't be a generator",
+		probe: "class A { *constructor() {} }",
+		sourceType: "script"
+	},
+	{
+		template: "Constructor can't be an async method",
+		probe: "class A { async constructor() {} }",
+		sourceType: "script"
+	},
+	{
+		template: "Constructor can't have get/set modifier",
+		probe: "class A { get constructor() {} }",
+		sourceType: "script"
+	},
+	{
+		template: "Deleting local variable in strict mode",
+		probe: "'use strict'; var a; delete a",
+		sourceType: "script"
+	},
+	{
+		template: "Duplicate attribute key '*'",
+		probe: "import a from 'x' with { type: 'a', type: 'b' }",
+		sourceType: "module"
+	},
+	{
+		template: "Duplicate constructor in the same class",
+		probe: "class A { constructor() {} constructor() {} }",
+		sourceType: "script"
+	},
+	{
+		template: "Duplicate export 'default'",
+		probe: "export default 1; export default 2",
+		sourceType: "module"
+	},
+	{
+		template: "Duplicate export '*'",
+		probe: "export { a }; export { b as a }; var a, b",
+		sourceType: "module"
+	},
+	{
+		template: "Duplicate regular expression flag",
+		probe: "/a/gg",
+		sourceType: "script"
+	},
+	{
+		template: "Escape sequence in keyword *",
+		probe: "\\u0069f (a) {}",
+		sourceType: "script"
+	},
+	{
+		template: "Expected number in radix *",
+		probe: "0b2",
+		sourceType: "script"
+	},
+	{
+		template: "Expecting Unicode escape sequence \\uXXXX",
+		probe: "\\x",
+		sourceType: "script"
+	},
+	{
+		template: "Export '*' is not defined",
+		probe: "export { a }",
+		sourceType: "module"
+	},
+	{
+		template: "Identifier '#*' has already been declared",
+		probe: "class A { #a; #a }",
+		sourceType: "script"
+	},
+	{
+		template: "Identifier '*' has already been declared",
+		probe: "let a; let a",
+		sourceType: "script"
+	},
+	{
+		template: "Identifier directly after number",
+		probe: "1a",
+		sourceType: "script"
+	},
+	{
+		template:
+			"Illegal 'use strict' directive in function with non-simple parameter list",
+		probe: "function f(a = 1) { 'use strict' }",
+		sourceType: "script"
+	},
+	{
+		template: "Illegal newline after throw",
+		probe: "throw\n1",
+		sourceType: "script"
+	},
+	{
+		template: "Invalid Unicode escape",
+		probe: "\\u0000",
+		sourceType: "script"
+	},
+	{ template: "Invalid escape sequence", probe: "'\\8'", sourceType: "module" },
+	{
+		template: "Invalid escape sequence in template string",
+		babel: "InvalidEscapeSequenceTemplate"
+	},
+	{
+		template: "Octal literal in strict mode",
+		probe: "'use strict'; '\\08'",
+		sourceType: "script"
+	},
+	{
+		template: "Octal literal in template string",
+		babel: "InvalidEscapeSequenceTemplate"
+	},
+	{ template: "Invalid number", probe: "1e", sourceType: "script" },
+	{
+		template: "Invalid regular expression flag",
+		probe: "/a/x",
+		sourceType: "script"
+	},
+	{
+		template: "Invalid regular expression: /*/: *",
+		own: "invalid-regular-expression"
+	},
+	{ template: "Invalid use of 'super'", babel: "UnsupportedSuper" },
+	{
+		template: "Label '*' is already declared",
+		probe: "a: a: 1",
+		sourceType: "script"
+	},
+	{
+		template:
+			"Logical expressions and coalesce expressions cannot be mixed. Wrap either by parentheses",
+		probe: "a ?? b || c",
+		sourceType: "script"
+	},
+	{
+		template: "Missing catch or finally clause",
+		probe: "try {}",
+		sourceType: "script"
+	},
+	{
+		template: "Missing initializer in * declaration",
+		probe: "using a",
+		sourceType: "module"
+	},
+	{
+		template: "Multiple default clauses",
+		probe: "switch (a) { default: default: }",
+		sourceType: "script"
+	},
+	{
+		template: "Not enough stack space to parse input",
+		own: "not-enough-stack-space"
+	},
+	{
+		template: "Numeric separator is not allowed at the first of digits",
+		probe: "0x_1",
+		sourceType: "script"
+	},
+	{
+		template: "Numeric separator is not allowed at the last of digits",
+		probe: "1_",
+		sourceType: "script"
+	},
+	{
+		template:
+			"Numeric separator is not allowed in legacy octal numeric literals",
+		probe: "0_1",
+		sourceType: "script"
+	},
+	{
+		template: "Numeric separator must be exactly one underscore",
+		probe: "1__0",
+		sourceType: "script"
+	},
+	{
+		template: "Object pattern can't contain getter or setter",
+		probe: "({get a(){}} = b)",
+		sourceType: "script"
+	},
+	{
+		template: "Only '=' operator can be used for specifying default value.",
+		probe: "[a += 1] = b",
+		sourceType: "script"
+	},
+	{
+		template: "Optional chaining cannot appear in left-hand side",
+		babel: "InvalidLhsOptionalChaining"
+	},
+	{
+		template:
+			"Optional chaining cannot appear in the callee of new expressions",
+		probe: "new a?.b()",
+		sourceType: "script"
+	},
+	{
+		template:
+			"Optional chaining cannot appear in the tag of tagged template expressions",
+		probe: "a?.b``",
+		sourceType: "script"
+	},
+	{
+		template: "Private field '#*' must be declared in an enclosing class",
+		probe: "class A { m() { this.#a } }",
+		sourceType: "script"
+	},
+	{
+		template: "Private fields can not be deleted",
+		probe: "class A { #a; m() { delete this.#a } }",
+		sourceType: "script"
+	},
+	{
+		template: "Private identifier can only be left side of binary expression",
+		babel: "PrivateInExpectedIn"
+	},
+	{
+		template: "Redefinition of __proto__ property",
+		probe: "({__proto__: 1, __proto__: 2})",
+		sourceType: "script"
+	},
+	{ template: "Redefinition of property", own: "redefinition-of-property" },
+	{
+		template: "Rest elements cannot have a default value",
+		probe: "[...a = 1] = b",
+		sourceType: "script"
+	},
+	{
+		template: "Setter cannot use rest params",
+		probe: "({set a(...b){}})",
+		sourceType: "script"
+	},
+	{
+		template:
+			"Shorthand property assignments are valid only in destructuring patterns",
+		probe: "({a = 1})",
+		sourceType: "script"
+	},
+	{
+		template: "The keyword '*' is reserved",
+		probe: "'use strict'; var implements",
+		sourceType: "script"
+	},
+	{
+		template: "The left-hand side of a for-of loop may not start with 'let'.",
+		probe: "for (let.a of b);",
+		sourceType: "script"
+	},
+	{
+		template: "The only valid meta property for import is 'import.meta'",
+		probe: "import.foo",
+		sourceType: "module"
+	},
+	{
+		template: "The only valid meta property for new is 'new.target'",
+		probe: "new.foo",
+		sourceType: "script"
+	},
+	{
+		template: "Trailing comma is not allowed in import()",
+		babel: "ImportCallArity"
+	},
+	{
+		template: "Unexpected character '*'",
+		probe: "\u0007",
+		sourceType: "script"
+	},
+	{
+		template: "Unexpected keyword '*'",
+		probe: "var break",
+		sourceType: "script"
+	},
+	{ template: "Unexpected token", probe: "a ~ ", sourceType: "script" },
+	{ template: "Unsyntactic *", probe: "break", sourceType: "script" },
+	{ template: "Unterminated comment", probe: "/* x", sourceType: "script" },
+	{
+		template: "Unterminated regular expression",
+		probe: "/a",
+		sourceType: "script"
+	},
+	{
+		template: "Unterminated string constant",
+		probe: "'a",
+		sourceType: "script"
+	},
+	{ template: "Unterminated template", probe: "`a", sourceType: "script" },
+	{
+		template: "Unterminated template literal",
+		probe: "`${`",
+		sourceType: "script"
+	},
+	{
+		template:
+			"Using declaration cannot appear in the top level when source type is `script` or in the bare case statement",
+		probe: "using x = y",
+		sourceType: "script"
+	},
+	{
+		template: "Using declaration is not allowed in for-in loops",
+		probe: "for (using x in y);",
+		sourceType: "module"
+	},
+	{
+		template: "Using declaration is not allowed in single-statement positions",
+		probe: "if (a) using x = y;",
+		sourceType: "module"
+	},
+	{
+		template: "Yield expression cannot be a default value",
+		probe: "function* g(){ (a = yield) => 1 }",
+		sourceType: "module"
+	},
+	{
+		template: "getter should have no params",
+		probe: "({get a(b){}})",
+		sourceType: "script"
+	},
+	{
+		template: "import call cannot be the target of `new`",
+		babel: "ImportCallNotNewExpression"
+	},
+	{
+		template: "let is disallowed as a lexically bound name",
+		probe: "let let = 1",
+		sourceType: "script"
+	},
+	{
+		template: "setter should have exactly one param",
+		probe: "({set a(){}})",
+		sourceType: "script"
+	},
+	{
+		template: "super() call outside constructor of a subclass",
+		probe: "class A extends B { m() { super() } }",
+		sourceType: "script"
+	}
+];
+
+/**
+ * @param {string} template a message, `*` standing for its variable parts
+ * @returns {RegExp} what matches every message it stands for
+ */
+const parseErrorTemplateRegExp = (template) =>
+	new RegExp(
+		`^${template
+			.replace(/[.+?^${}()|[\]\\]/g, "\\$&")
+			.replace(/\*/g, "[\\s\\S]*")}$`
+	);
+
+/**
+ * @param {string} name a Babel `reasonCode`
+ * @returns {string} it kebab-cased
+ */
+const kebabCase = (name) =>
+	name
+		.replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+		.replace(/([A-Z]+)([A-Z][a-z])/g, "$1-$2")
+		.toLowerCase();
+
+/**
+ * Every message the parser raises as a literal, `*` for each interpolation,
+ * read off the calls to its raising methods.
+ * @returns {Set<string>} the messages
+ */
+const collectRaisedMessages = () => {
+	/** @type {Set<string>} */
+	const messages = new Set();
+	for (const file of ["syntax-parser.js", "regexp.js"]) {
+		const source = fs.readFileSync(
+			path.resolve(__dirname, "../lib/javascript", file),
+			"utf8"
+		);
+		const call = /\b(?:raise|raiseRecoverable|invalidStringToken)\(/g;
+		for (
+			let match = call.exec(source);
+			match !== null;
+			match = call.exec(source)
+		) {
+			let depth = 1;
+			let end = call.lastIndex;
+			while (depth > 0 && end < source.length) {
+				const char = source[end];
+				if (char === '"' || char === "'" || char === "`") {
+					end++;
+					while (end < source.length && source[end] !== char) {
+						if (source[end] === "\\") end++;
+						end++;
+					}
+				} else if (char === "(") {
+					depth++;
+				} else if (char === ")") {
+					depth--;
+				}
+				end++;
+			}
+			const args = source.slice(call.lastIndex, end - 1);
+			for (const literal of args.matchAll(
+				/`(?:[^`\\]|\\[\s\S])*`|"(?:[^"\\]|\\[\s\S])*"/g
+			)) {
+				const text = literal[0]
+					.slice(1, -1)
+					.replace(/\$\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/g, "*")
+					.replace(/\\\\/g, "\\")
+					.replace(/\s+/g, " ");
+				// Literals naming a node type ride along in casts; a message has a space.
+				// The pattern validator's own reach the parser wrapped, as one error.
+				if (!text.includes(" ")) continue;
+				messages.add(
+					file === "regexp.js" && literal.index === args.search(/\S/)
+						? `Invalid regular expression: /*/: ${text}`
+						: text
+				);
+			}
+		}
+	}
+	return messages;
+};
+
+/**
+ * The part of `@babel/parser` read here. It is the copy `@babel/core` resolves,
+ * loaded by path, so the typings TypeScript finds may be another version's.
+ * @typedef {object} BabelParser
+ * @property {(code: string, options: { errorRecovery: boolean, sourceType: "script" | "module", plugins: string[] }) => { errors: { pos: number, reasonCode: string }[] }} parse
+ */
+
+/**
+ * Each parse error message the parser raises paired with its code: Babel's
+ * for the same error, read off a probe both parsers reject.
+ * @returns {[string, string][]} the templates and their codes, in match order
+ */
+const collectParseErrorCodes = () => {
+	/** @type {BabelParser} */
+	const babel = require(BABEL_PARSER);
+
+	const babelSource = fs.readFileSync(BABEL_PARSER, "utf8");
+
+	const { parseProgram } = require("../lib/javascript/syntax-parser");
+
+	const patterns = PARSE_ERRORS.map((entry) =>
+		parseErrorTemplateRegExp(entry.template)
+	);
+	// A message built from interpolations alone is matched the other way round.
+	for (const message of collectRaisedMessages()) {
+		const asPattern = parseErrorTemplateRegExp(message.replace(/\*+/g, "*"));
+		if (
+			!patterns.some((pattern) => pattern.test(message)) &&
+			!PARSE_ERRORS.some((entry) => asPattern.test(entry.template))
+		) {
+			throw new Error(`no PARSE_ERRORS template matches "${message}"`);
+		}
+	}
+	/** @type {[string, string][]} */
+	const codes = PARSE_ERRORS.map((entry, index) => {
+		if (entry.own !== undefined) return [entry.template, entry.own];
+		if (entry.babel !== undefined) {
+			if (!new RegExp(`\\n\\s+${entry.babel}:`).test(babelSource)) {
+				throw new Error(`Babel names no parse error ${entry.babel}`);
+			}
+			return [entry.template, kebabCase(entry.babel)];
+		}
+		const probe = /** @type {string} */ (entry.probe);
+		const sourceType = entry.sourceType || "script";
+		/** @type {{ message: string, pos: number } | undefined} */
+		let raised;
+		try {
+			parseProgram(probe, 0, {
+				sourceType,
+				importPhases: entry.importPhases === true
+			});
+		} catch (error) {
+			const syntaxError = /** @type {SyntaxError & { pos: number }} */ (error);
+			raised = {
+				message: syntaxError.message.replace(/ \(\d+:\d+\)$/, ""),
+				pos: syntaxError.pos
+			};
+		}
+		const matched =
+			raised === undefined
+				? -1
+				: patterns.findIndex((pattern) => pattern.test(raised.message));
+		if (matched !== index) {
+			throw new Error(
+				`probe ${JSON.stringify(probe)} raises ${
+					raised ? `"${raised.message}"` : "nothing"
+				}, not "${entry.template}"`
+			);
+		}
+		const at = /** @type {{ message: string, pos: number }} */ (raised).pos;
+		/** @type {string | undefined} */
+		let reasonCode;
+		try {
+			const { errors } = babel.parse(probe, {
+				errorRecovery: true,
+				sourceType,
+				plugins: entry.importPhases
+					? ["sourcePhaseImports", "deferredImportEvaluation"]
+					: []
+			});
+			const error =
+				errors.find(
+					/**
+					 * @param {{ pos: number }} item a recovered error
+					 * @returns {boolean} whether it is the one our parser raised
+					 */
+					(item) => item.pos === at
+				) || errors[0];
+			reasonCode = error && error.reasonCode;
+		} catch (error) {
+			reasonCode = /** @type {{ reasonCode?: string }} */ (error).reasonCode;
+		}
+		if (reasonCode === undefined) {
+			throw new Error(`Babel raises no error for ${JSON.stringify(probe)}`);
+		}
+		return [entry.template, kebabCase(reasonCode)];
+	});
+	// Last, for a message built at run time that no template above names.
+	codes.push(["*", "syntax-error"]);
+	return codes;
+};
 
 /**
  * Build the module the parser classifies with: the identifier ranges the
@@ -1357,6 +2425,7 @@ const TERSER_SOURCE = `terser ${require("terser/package.json").version}`;
  */
 const renderData = () => {
 	const tables = collectIdentifierTables();
+	const nodeTables = collectNodeTables();
 	const narrow = collectNarrowIdentifierTables();
 	return `${renderHeader(`acorn ${acorn.version}, ${TERSER_SOURCE}`)}
 ${renderTable(
@@ -1396,12 +2465,42 @@ ${renderTable(
 	0
 )}
 ${renderUnicodeProperties()}
+${renderNumberTable(
+	"NodeType",
+	"Every node type the parser makes, by its ESTree name.",
+	nodeTables.types
+)}
+${renderNumberTable(
+	"Field",
+	"The fields that hold a node or a list of them, by their ESTree name.",
+	nodeTables.fields
+)}
+${renderNumberTable(
+	"Flag",
+	"The boolean fields, as bits of a node's flags.",
+	nodeTables.flags
+)}
+${renderNumberTable(
+	"Part",
+	"The text fields beyond an identifier's name and a literal's value.",
+	nodeTables.parts
+)}
+// Each node type's fields as \`name:kind:slot\`, in the order its objects hold
+// them; a flag's slot is its \`Flag\` bit, any other field's its place in the record.
+/** @type {Record<string, string>} */
+const NODE_FIELDS = ${JSON.stringify(collectNodeFields(), null, 1)};
+
 module.exports.ASTRAL_IDENTIFIER_PART_RANGES = ASTRAL_IDENTIFIER_PART_RANGES;
 module.exports.ASTRAL_IDENTIFIER_START_RANGES = ASTRAL_IDENTIFIER_START_RANGES;
 module.exports.IDENTIFIER_PART_RANGES = IDENTIFIER_PART_RANGES;
 module.exports.IDENTIFIER_START_RANGES = IDENTIFIER_START_RANGES;
 module.exports.NARROW_IDENTIFIER_PART_RANGES = NARROW_IDENTIFIER_PART_RANGES;
 module.exports.NARROW_IDENTIFIER_START_RANGES = NARROW_IDENTIFIER_START_RANGES;
+module.exports.Field = Field;
+module.exports.Flag = Flag;
+module.exports.NODE_FIELDS = NODE_FIELDS;
+module.exports.NodeType = NodeType;
+module.exports.Part = Part;
 module.exports.UNICODE_BINARY_PROPERTIES = UNICODE_BINARY_PROPERTIES;
 module.exports.UNICODE_BINARY_PROPERTIES_OF_STRINGS =
 	UNICODE_BINARY_PROPERTIES_OF_STRINGS;
@@ -1454,6 +2553,26 @@ const UNICODE_SCRIPT_VALUES = ${JSON.stringify(properties.script, null, 1)};
 };
 
 /**
+ * Build the module only a parse reporting an error reads, so one reporting
+ * none never loads its table.
+ * @returns {string} its source
+ */
+const renderParseErrorCodes = () => `${renderHeader(
+	`acorn ${acorn.version}, @babel/parser ${
+		/** @type {{ version: string }} */ (
+			require(path.join(BABEL_PARSER, "../../package.json"))
+		).version
+	}`
+)}
+// Each parse error message, \`*\` for its variable parts, with its code: Babel's
+// \`reasonCode\` for the same error kebab-cased, where Babel has one.
+/** @type {[string, string][]} */
+const PARSE_ERROR_CODES = ${JSON.stringify(collectParseErrorCodes(), null, 1)};
+
+module.exports = PARSE_ERROR_CODES;
+`;
+
+/**
  * Write one generated module, or report that it is stale.
  * @param {string} target where it belongs
  * @param {string} source what it should hold
@@ -1489,19 +2608,22 @@ const writeGenerated = async (target, source) => {
 };
 
 /**
- * Write the generated module, or report that it is stale.
- * @returns {Promise<void>} settles once it is written or checked
+ * Write the generated modules, or report those that are stale.
+ * @returns {Promise<void>} settles once each is written or checked
  */
 const generate = async () => {
 	await writeGenerated(DATA_TARGET, renderData());
 	await writeGenerated(PRINTER_DATA_TARGET, renderPrinterData());
+	await writeGenerated(PARSE_ERROR_CODES_TARGET, renderParseErrorCodes());
 };
 
 if (require.main === module) {
 	// `generate` is async, so a failed generation has to be turned back into a
 	// non-zero exit rather than left as an unhandled rejection.
-	generate().catch((error) => {
-		process.stderr.write(`${error.stack}\n`);
+	generate().catch((/** @type {ThrownValue} */ error) => {
+		process.stderr.write(
+			`${error instanceof Error ? error.stack : String(error)}\n`
+		);
 		process.exitCode = 1;
 	});
 }
@@ -1512,6 +2634,8 @@ module.exports.collectDomProperties = collectDomProperties;
 module.exports.collectIdentifierTables = collectIdentifierTables;
 module.exports.collectNarrowIdentifierTables = collectNarrowIdentifierTables;
 module.exports.collectNativeObjects = collectNativeObjects;
+module.exports.collectNodeFields = collectNodeFields;
+module.exports.collectNodeTables = collectNodeTables;
 module.exports.collectParserTables = collectParserTables;
 module.exports.collectUnicodeProperties = collectUnicodeProperties;
 module.exports.encodeRanges = encodeRanges;

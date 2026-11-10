@@ -1,0 +1,22 @@
+@media screen {
+	:global .globalInMedia { color: red; }
+	.afterGlobalInMedia { color: red; }
+}
+
+.outer {
+	:global .globalInRule { color: red; }
+	.afterGlobalInRule { color: red; }
+}
+
+:global .globalParent {
+	animation-name: globalAnimation;
+	.nestedInGlobal { color: red; }
+}
+
+.last { color: blue; }
+
+:global .scopeParent {
+	@scope (.scopeRoot) {
+		.scopeChild { color: red; }
+	}
+}

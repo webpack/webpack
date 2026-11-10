@@ -8,7 +8,7 @@ it("should not parse css modules in type: css", () => {
     const style = getComputedStyle(document.body);
     expect(style.getPropertyValue("color")).toBe(" red");
     const links = document.getElementsByTagName("link");
-    const css = links[1].sheet.css;
+    const css = links[0].sheet.css;
 
 		expect(css).toMatch(/\:local\(\.foo\)/);
     expect(css).toMatch(/\:global\(\.bar\)/);
@@ -33,7 +33,7 @@ it("should not parse css modules in type: css/auto", () => {
 	const style = getComputedStyle(document.body);
 	expect(style.getPropertyValue("background")).toBe(" red");
 	const links = document.getElementsByTagName("link");
-	const css = links[1].sheet.css;
+	const css = links[0].sheet.css;
 	expect(css).toMatch(/\:local\(\.baz\)/);
 	expect(css).toMatch(/\:global\(\.qux\)/);
 });

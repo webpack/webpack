@@ -1,0 +1,1 @@
+function b(){console.log("b");return 1}function c(){console.log("c")}function k(a){if(a)typeof x;if(b())1;else 2;if(a)1;else c();for(;;)if(a)1;else break}k(0)

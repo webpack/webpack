@@ -1,0 +1,12 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {
+			"shortenMediaQueries": false
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {}
+	}
+]

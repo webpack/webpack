@@ -1,0 +1,9 @@
+[
+	{
+		"print": "jsMinify",
+		"minimizer": {
+			"buffer": true,
+			"asset": "a.js"
+		}
+	}
+]

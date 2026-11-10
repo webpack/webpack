@@ -1,0 +1,8 @@
+[
+	{
+		"mode": "minify",
+		"compress": false,
+		"mangle": false,
+		"enclose": true
+	}
+]

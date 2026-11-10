@@ -1,0 +1,1 @@
+function f(v){if(v===1)g();else if(v===2)g();else g()}

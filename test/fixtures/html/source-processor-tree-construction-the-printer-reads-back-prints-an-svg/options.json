@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "builtin"
+	},
+	{
+		"mode": "beautify"
+	}
+]

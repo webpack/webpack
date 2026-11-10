@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"removeRedundantAttributes": "all"
+	},
+	{
+		"mode": "minify",
+		"removeRedundantAttributes": "smart"
+	}
+]

@@ -1,0 +1,1 @@
+function f(){ const a = 1, z = 0, n = null; return [a && 2, a || 2, a ?? 2, z && a, z || 3, n ?? 4, a ? 5 : 6, z ? 7 : 8] }

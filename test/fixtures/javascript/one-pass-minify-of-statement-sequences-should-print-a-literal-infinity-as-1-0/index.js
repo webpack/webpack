@@ -1,0 +1,1 @@
+(function(Infinity){eval("");console.log(1e400,-1e400,1e400+"",{1e400:1}[1/0],{[1e400]:2}[1/0],delete 1e400,new class{[1e400]=1e400}[1/0])})(5)

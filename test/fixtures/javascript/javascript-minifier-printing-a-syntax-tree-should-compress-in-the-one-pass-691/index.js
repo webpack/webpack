@@ -1,0 +1,1 @@
+Reflect["get"](Math,"abs");Object[1](Math);x=Math.abs(-1)

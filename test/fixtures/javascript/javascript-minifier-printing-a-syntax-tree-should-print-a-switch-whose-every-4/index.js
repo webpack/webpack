@@ -1,0 +1,1 @@
+function f(v){switch(v){case 1:default:g()}}

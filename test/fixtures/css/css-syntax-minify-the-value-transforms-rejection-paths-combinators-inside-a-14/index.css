@@ -1,0 +1,1 @@
+@supports selector(.a:HOVER > .b){c{color:red}}

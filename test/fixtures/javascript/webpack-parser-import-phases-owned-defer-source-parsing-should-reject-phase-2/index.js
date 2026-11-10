@@ -1,0 +1,1 @@
+import source * as ns from "x";

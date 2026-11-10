@@ -1,0 +1,1 @@
+function c(){return 1}console.log(c())

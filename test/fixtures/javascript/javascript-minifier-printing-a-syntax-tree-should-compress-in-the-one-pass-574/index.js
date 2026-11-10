@@ -1,0 +1,1 @@
+function f(){return void foo()}function g(){b;return a,void 0}function h(){if(x)return void g();else k()}function i(){return void function(){g()}()}function j(){return void {a:g()}.a}function k(){if(x)return void g();return void h()}function l(){return g(),void 0}f=()=>{return void g()};f=()=>{h();return void g()};class C{m(){return void g()}}

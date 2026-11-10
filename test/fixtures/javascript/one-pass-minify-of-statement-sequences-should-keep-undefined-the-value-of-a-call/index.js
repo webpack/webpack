@@ -1,0 +1,1 @@
+(function(){var l=[];function t(){return void l.push(1)}function u(){return function(){l.push(2)}()}console.log(t(),u(),l.length)})()

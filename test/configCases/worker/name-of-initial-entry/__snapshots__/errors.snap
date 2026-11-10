@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  "It's not allowed to load an initial chunk on demand. The chunk name \\"main\\" is already used by an entrypoint.",
+]
+`;

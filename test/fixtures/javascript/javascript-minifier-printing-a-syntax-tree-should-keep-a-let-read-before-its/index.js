@@ -1,0 +1,1 @@
+function f(){ try { g(() => later) } catch (e) {} let later = 1; return later } it(f())

@@ -15,12 +15,27 @@ const {
 	getNodeVersion,
 	getSubPath,
 	isRelativePath,
+	decodeUrlPath,
 	urlToPath,
 	urlToRelativePath
 } = require("./RunnerHelpers");
 const rewriteImportMeta = require("./rewriteImportMeta");
 
 const [major] = getNodeVersion();
+
+/**
+ * `setTimeout` for a page, whose timers never keep the process alive.
+ * @param {(...args: EXPECTED_ANY[]) => void} fn callback
+ * @param {number=} ms delay
+ * @param {...EXPECTED_ANY} args callback arguments
+ * @returns {ReturnType<typeof setTimeout>} the timer
+ */
+const unrefTimeout = (fn, ms, ...args) => {
+	const timer = setTimeout(fn, ms, ...args);
+	// Deno's setTimeout returns a number
+	if (typeof timer.unref === "function") timer.unref();
+	return timer;
+};
 
 /**
  * Mirrors the library types `lib/config/defaults.js` turns `output.module` on for.
@@ -88,6 +103,7 @@ const resolveTargetProperties = (webpackOptions) => {
  * @typedef {object} TestConfig
  * @property {EXPECTED_FUNCTION=} resolveModule
  * @property {EXPECTED_FUNCTION=} moduleScope
+ * @property {((document: import("../../helpers/FakeDocument"), context: { options: EXPECTED_ANY, index: number, target: string }) => void)=} setupDocument prepare the page once per run, before any bundle executes (e.g. server-rendered `<link>` tags)
  * @property {EXPECTED_FUNCTION=} nonEsmThis
  * @property {boolean=} evaluateScriptOnAttached
  * @property {"jsdom"=} env
@@ -251,7 +267,9 @@ class TestRunner {
 					outputDirectory,
 					testMeta: {
 						category: category.name,
-						name: testName,
+						// Distinct realms need distinct module identifiers so V8 does not
+						// reuse another target's dynamic import callback.
+						name: targets.length > 1 ? `${testName}-${target}` : testName,
 						round: i
 					},
 					testConfig,
@@ -262,6 +280,13 @@ class TestRunner {
 					index: i,
 					target
 				});
+				if (testConfig.setupDocument && runner._moduleScope.document) {
+					testConfig.setupDocument(runner._moduleScope.document, {
+						options,
+						index: i,
+						target
+					});
+				}
 				if (testConfig.restrictEnvironment) runner.restrictEnvironment();
 				const bundlePaths = getBundlePaths(i, options, runner);
 				if (bundlePaths) {
@@ -431,7 +456,8 @@ class TestRunner {
 		const base = {
 			global,
 			process,
-			setTimeout,
+			// spread over the module scope, so a page's timers have to be unref'd here too
+			setTimeout: this.jsDom() ? unrefTimeout : setTimeout,
 			clearTimeout,
 			setImmediate,
 			URL,
@@ -740,9 +766,11 @@ class TestRunner {
 										path.dirname(identifier),
 										fileURLToPath(specifier)
 									)}`
-								: specifier.replace(
-										/https:\/\/example.com\/public\/path\//,
-										"./"
+								: decodeUrlPath(
+										specifier.replace(
+											/https:\/\/example.com\/public\/path\//,
+											"./"
+										)
 									);
 
 							const res = await this.require(
@@ -806,7 +834,10 @@ class TestRunner {
 											)
 										)
 								),
-								specifier,
+								// a static import names a URL, so its escapes are decoded
+								isRelativePath(specifier)
+									? decodeUrlPath(specifier)
+									: specifier,
 								{ esmReturnStatus: ESModuleStatus.Unlinked }
 							),
 							referencingModule.context,
@@ -960,7 +991,8 @@ class TestRunner {
 				}
 			};
 			const env = {
-				setTimeout,
+				// the runtime's chunk-load timeout waits 120s on a script never loaded
+				setTimeout: unrefTimeout,
 				document,
 				CSSStyleSheet: FakeDocument.CSSStyleSheet,
 				location: {

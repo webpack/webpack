@@ -1,0 +1,1 @@
+try{new true}catch(e){console.log(e.name)}try{new false}catch(e){console.log(e.name)}console.log(false.a,true.a,false**2,[false][0]);try{false()}catch(e){console.log(e.name)}try{false`t`}catch(e){console.log(e.name)}

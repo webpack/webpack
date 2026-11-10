@@ -1,0 +1,1 @@
+(a?.b).c; (a?.b)(); a?.b.c; a?.(); a?.b(); new (a.b()); new (a().b); new a.b(); new (a()); (new A).b; (new A)(); (new A)`x`; new A`x`; new (a`x`);

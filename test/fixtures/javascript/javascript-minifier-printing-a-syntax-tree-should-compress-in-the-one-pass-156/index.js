@@ -1,0 +1,1 @@
+function m(o) { function add(a) { o.x(a) } function stop() { o.y() } return { add, stop } }

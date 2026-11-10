@@ -1,0 +1,25 @@
+[
+	{
+		"xml": true,
+		"mode": "minify"
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"renderEmbeddedSource": "decline"
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"print": "processAsync",
+		"renderEmbeddedSource": {
+			"name": "decline",
+			"async": true
+		}
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	}
+]

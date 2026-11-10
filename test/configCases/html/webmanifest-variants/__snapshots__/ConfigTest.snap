@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html webmanifest-variants exported tests webmanifest-icons: should parse a <link rel=manifest> webmanifest and bundle its icon URLs 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Test</title>
+<link rel=\\"manifest\\" href=\\"e9d68669affe7dd0d5bc.webmanifest\\">
+</head>
+<body></body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html webmanifest-variants exported tests webmanifest-parsing: should rewrite icon URLs in a manifest with a BOM, unquoted keys and non-ASCII text 1`] = `
+"<BOM>{
+  name: \\"café\\",
+  icons: [
+    { src: \\"<hash>.png\\", sizes: \\"192x192\\" },
+    { src: \\"\\", sizes: \\"1x1\\" },
+    { src: \\"#only-fragment\\", sizes: \\"2x2\\" },
+    { src: \\"https://cdn.example.com/remote.png\\", sizes: \\"3x3\\" }
+  ],
+  src: \\"./icon-192.png\\"
+}
+"
+`;

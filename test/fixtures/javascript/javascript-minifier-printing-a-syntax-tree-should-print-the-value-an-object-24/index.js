@@ -1,0 +1,1 @@
+function f(x,g){return[({[null]:1}).a]}

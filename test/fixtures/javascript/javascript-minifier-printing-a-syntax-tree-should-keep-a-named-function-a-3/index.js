@@ -1,0 +1,1 @@
+result = (function f() { return function () { return eval("typeof f") } })()();

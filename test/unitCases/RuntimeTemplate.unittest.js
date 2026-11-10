@@ -263,3 +263,32 @@ describe("RuntimeTemplate.assignOr", () => {
 		);
 	});
 });
+
+describe("RuntimeTemplate.globalObject", () => {
+	/**
+	 * @param {string} globalObject the `output.globalObject` option
+	 * @returns {string} what the runtime reads the global object as
+	 */
+	const globalObjectOf = (globalObject) =>
+		new RuntimeTemplate(
+			/** @type {import("../../lib/Compilation")} */ (
+				/** @type {unknown} */ (undefined)
+			),
+			/** @type {OutputOptions} */ (
+				/** @type {unknown} */ ({ globalObject, environment: {} })
+			),
+			new RequestShortener(testDirectory)
+		).globalObject;
+
+	it("keeps an identifier or a call in any letter case", () => {
+		expect(globalObjectOf("Self")).toBe("Self");
+		expect(globalObjectOf("WINDOW")).toBe("WINDOW");
+		expect(globalObjectOf("Ω")).toBe("Ω");
+		expect(globalObjectOf("GetGlobal()")).toBe("GetGlobal()");
+	});
+
+	it("wraps anything else in Object()", () => {
+		expect(globalObjectOf("a.b")).toBe("Object(a.b)");
+		expect(globalObjectOf("1x")).toBe("Object(1x)");
+	});
+});

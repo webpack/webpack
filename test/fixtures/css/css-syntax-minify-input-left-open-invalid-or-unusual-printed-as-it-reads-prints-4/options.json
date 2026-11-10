@@ -1,0 +1,15 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"chrome 80"
+			]
+		},
+		"transforms": {
+			"shortenMediaQueries": false,
+			"foldCase": false,
+			"reduceFunctions": false
+		},
+		"mode": "minify"
+	}
+]

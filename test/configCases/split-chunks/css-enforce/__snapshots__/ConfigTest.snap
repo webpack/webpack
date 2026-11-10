@@ -2,14 +2,6 @@
 
 exports[`ConfigTestCases split-chunks css-enforce exported tests should work and enforce create vendor CSS chunk 1`] = `
 Array [
-  "/*!*********************************************!*\\\\
-  !*** css ./node_modules/package/styles.css ***!
-  \\\\*********************************************/
-body {
-  background: green;
-}
-
-",
   "/*!***********************!*\\\\
   !*** css ./style.css ***!
   \\\\***********************/

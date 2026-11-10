@@ -1,0 +1,17 @@
+[
+	{
+		"relation": "respelling quote-double",
+		"contains": "<a title=<%x&lt;%y>  ->  <a title=<%x&lt;%y></a>\n    <a title=\"<%x<%y\">  ->  <a title=\"<%x<%y\"></a>",
+		"why": "a template marker written escaped stays escaped so minifying never turns it into markup, and one written as such stays as written, so its spelling shows in the output"
+	},
+	{
+		"relation": "respelling quote-single",
+		"contains": "<a title=<%x&lt;%y>  ->  <a title=<%x&lt;%y></a>\n    <a title='<%x<%y'>  ->  <a title='<%x<%y'></a>",
+		"why": "a template marker written escaped stays escaped so minifying never turns it into markup, and one written as such stays as written, so its spelling shows in the output"
+	},
+	{
+		"relation": "respelling references",
+		"contains": "<a title=<%x&lt;%y>  ->  <a title=<%x&lt;%y></a>\n    <a title=\"&#x3c;&#x25;&#x78;&#x3c;&#x25;&#x79;\">  ->  <a title=&lt;%x&lt;%y></a>",
+		"why": "a template marker written escaped stays escaped so minifying never turns it into markup, and one written as such stays as written, so its spelling shows in the output"
+	}
+]

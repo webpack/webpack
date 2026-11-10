@@ -1,0 +1,1 @@
+with(o)a!=null&&a.b()

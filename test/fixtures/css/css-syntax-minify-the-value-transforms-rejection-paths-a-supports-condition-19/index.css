@@ -1,0 +1,1 @@
+@supports selector(a:nth-of-type(odd)){a{color:red}}

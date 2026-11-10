@@ -1,0 +1,1 @@
+console.log(Object.keys({[Infinity]:1, [NaN]:2}).join())

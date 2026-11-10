@@ -1,0 +1,1 @@
+(let)[0] = 1; for ((let).x of y); for ((async) of x);

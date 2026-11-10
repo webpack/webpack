@@ -1,0 +1,17 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 40"
+			]
+		}
+	},
+	{
+		"mode": "minify"
+	},
+	{
+		"mode": "minify",
+		"recurseBlocks": false
+	}
+]

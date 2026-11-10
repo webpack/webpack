@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "respelling quote-double",
+		"contains": "<a title=\"&lt;%= b %&gt;\" rel=\"&lt;?php c ?&gt;\">  ->  <a title=\"&lt;%= b %>\" rel=\"&lt;?php c ?>\"></a>\n    <a title=\"<%= b %>\" rel=\"&lt;?php c ?&gt;\">  ->  <a title=\"<%= b %>\" rel=\"&lt;?php c ?>\"></a>",
+		"why": "a template marker written escaped stays escaped so minifying never turns it into markup, and one written as such stays as written, so its spelling shows in the output"
+	},
+	{
+		"relation": "respelling quote-single",
+		"contains": "<a title=\"&lt;%= b %&gt;\" rel=\"&lt;?php c ?&gt;\">  ->  <a title=\"&lt;%= b %>\" rel=\"&lt;?php c ?>\"></a>\n    <a title='<%= b %>' rel=\"&lt;?php c ?&gt;\">  ->  <a title='<%= b %>' rel=\"&lt;?php c ?>\"></a>",
+		"why": "a template marker written escaped stays escaped so minifying never turns it into markup, and one written as such stays as written, so its spelling shows in the output"
+	}
+]

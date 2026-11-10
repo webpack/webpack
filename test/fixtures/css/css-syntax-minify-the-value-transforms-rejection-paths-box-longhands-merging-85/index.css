@@ -1,0 +1,1 @@
+.a:is([href="a'\")b"])::-ms-expand{color:red}

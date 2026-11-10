@@ -1,0 +1,1 @@
+L:{for(var i=0;i<3;i++){if(i==1)break L;console.log(i)}console.log("after")}

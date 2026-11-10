@@ -4,7 +4,7 @@ exports[`StatsTestCases preset-minimal should print correct stats for preset-min
 "<e> [LogTestPlugin] Error
 <w> [LogTestPlugin] Warning
 4 assets
-13 modules
+12 modules
 
 LOG from LogTestPlugin
 <e> Error

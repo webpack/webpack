@@ -10,6 +10,7 @@ const MinimizerPlugin = require("minimizer-webpack-plugin");
 const webpack = require("../..");
 const jsMinify = require("../../lib/javascript/jsMinify");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
+const { isInPart } = require("../helpers/testParts");
 
 /** @import NormalModule from "../../lib/module/NormalModule" */
 
@@ -242,7 +243,29 @@ const knownHostBugs = [
 	"global-code/script-decl-lex.js",
 	// The store to an unresolvable name must throw before its right side
 	// creates that name. V8 resolves it afterwards and finds it.
-	"identifier-resolution/assign-to-global-undefined.js"
+	"identifier-resolution/assign-to-global-undefined.js",
+	// An escaped `get` or `set` ends a field before a line break, which V8
+	// reads as the accessor keyword and refuses.
+	"expressions/class/elements/escaped-get-field-asi-before-comment.js",
+	"expressions/class/elements/escaped-get-field-asi-before-computed-field.js",
+	"expressions/class/elements/escaped-get-field-asi-before-field.js",
+	"expressions/class/elements/escaped-get-field-asi-before-method.js",
+	"expressions/class/elements/escaped-get-field-asi-before-private-field.js",
+	"expressions/class/elements/escaped-set-field-asi-before-comment.js",
+	"expressions/class/elements/escaped-set-field-asi-before-computed-field.js",
+	"expressions/class/elements/escaped-set-field-asi-before-field.js",
+	"expressions/class/elements/escaped-set-field-asi-before-method.js",
+	"expressions/class/elements/escaped-set-field-asi-before-private-field.js",
+	"statements/class/elements/escaped-get-field-asi-before-comment.js",
+	"statements/class/elements/escaped-get-field-asi-before-computed-field.js",
+	"statements/class/elements/escaped-get-field-asi-before-field.js",
+	"statements/class/elements/escaped-get-field-asi-before-method.js",
+	"statements/class/elements/escaped-get-field-asi-before-private-field.js",
+	"statements/class/elements/escaped-set-field-asi-before-comment.js",
+	"statements/class/elements/escaped-set-field-asi-before-computed-field.js",
+	"statements/class/elements/escaped-set-field-asi-before-field.js",
+	"statements/class/elements/escaped-set-field-asi-before-method.js",
+	"statements/class/elements/escaped-set-field-asi-before-private-field.js"
 ];
 /* cspell:enable */
 
@@ -1579,6 +1602,69 @@ const MINIFIED_FAILURES = [
 			"statements/class/elements/private-methods/prod-private-method.js (sloppy)",
 			"statements/class/elements/private-methods/prod-private-method.js (strict)"
 		]
+	},
+	{
+		reason:
+			"terser reads an escaped `async`, `get`, `set` or `static` field name as the keyword",
+		minifiers: ["terser"],
+		tests: [
+			"expressions/class/elements/escaped-async-field-asi-before-comment.js (sloppy)",
+			"expressions/class/elements/escaped-async-field-asi-before-comment.js (strict)",
+			"expressions/class/elements/escaped-async-field-asi-before-computed-field.js (sloppy)",
+			"expressions/class/elements/escaped-async-field-asi-before-computed-field.js (strict)",
+			"expressions/class/elements/escaped-async-field-asi-before-field.js (sloppy)",
+			"expressions/class/elements/escaped-async-field-asi-before-field.js (strict)",
+			"expressions/class/elements/escaped-async-field-asi-before-generator.js (sloppy)",
+			"expressions/class/elements/escaped-async-field-asi-before-generator.js (strict)",
+			"expressions/class/elements/escaped-async-field-asi-before-method.js (sloppy)",
+			"expressions/class/elements/escaped-async-field-asi-before-method.js (strict)",
+			"expressions/class/elements/escaped-async-field-asi-before-private-field.js (sloppy)",
+			"expressions/class/elements/escaped-async-field-asi-before-private-field.js (strict)",
+			"expressions/class/elements/escaped-get-field-asi-before-generator.js (sloppy)",
+			"expressions/class/elements/escaped-get-field-asi-before-generator.js (strict)",
+			"expressions/class/elements/escaped-set-field-asi-before-generator.js (sloppy)",
+			"expressions/class/elements/escaped-set-field-asi-before-generator.js (strict)",
+			"expressions/class/elements/escaped-static-field-asi-before-comment.js (sloppy)",
+			"expressions/class/elements/escaped-static-field-asi-before-comment.js (strict)",
+			"expressions/class/elements/escaped-static-field-asi-before-computed-field.js (sloppy)",
+			"expressions/class/elements/escaped-static-field-asi-before-computed-field.js (strict)",
+			"expressions/class/elements/escaped-static-field-asi-before-field.js (sloppy)",
+			"expressions/class/elements/escaped-static-field-asi-before-field.js (strict)",
+			"expressions/class/elements/escaped-static-field-asi-before-generator.js (sloppy)",
+			"expressions/class/elements/escaped-static-field-asi-before-generator.js (strict)",
+			"expressions/class/elements/escaped-static-field-asi-before-method.js (sloppy)",
+			"expressions/class/elements/escaped-static-field-asi-before-method.js (strict)",
+			"expressions/class/elements/escaped-static-field-asi-before-private-field.js (sloppy)",
+			"expressions/class/elements/escaped-static-field-asi-before-private-field.js (strict)",
+			"statements/class/elements/escaped-async-field-asi-before-comment.js (sloppy)",
+			"statements/class/elements/escaped-async-field-asi-before-comment.js (strict)",
+			"statements/class/elements/escaped-async-field-asi-before-computed-field.js (sloppy)",
+			"statements/class/elements/escaped-async-field-asi-before-computed-field.js (strict)",
+			"statements/class/elements/escaped-async-field-asi-before-field.js (sloppy)",
+			"statements/class/elements/escaped-async-field-asi-before-field.js (strict)",
+			"statements/class/elements/escaped-async-field-asi-before-generator.js (sloppy)",
+			"statements/class/elements/escaped-async-field-asi-before-generator.js (strict)",
+			"statements/class/elements/escaped-async-field-asi-before-method.js (sloppy)",
+			"statements/class/elements/escaped-async-field-asi-before-method.js (strict)",
+			"statements/class/elements/escaped-async-field-asi-before-private-field.js (sloppy)",
+			"statements/class/elements/escaped-async-field-asi-before-private-field.js (strict)",
+			"statements/class/elements/escaped-get-field-asi-before-generator.js (sloppy)",
+			"statements/class/elements/escaped-get-field-asi-before-generator.js (strict)",
+			"statements/class/elements/escaped-set-field-asi-before-generator.js (sloppy)",
+			"statements/class/elements/escaped-set-field-asi-before-generator.js (strict)",
+			"statements/class/elements/escaped-static-field-asi-before-comment.js (sloppy)",
+			"statements/class/elements/escaped-static-field-asi-before-comment.js (strict)",
+			"statements/class/elements/escaped-static-field-asi-before-computed-field.js (sloppy)",
+			"statements/class/elements/escaped-static-field-asi-before-computed-field.js (strict)",
+			"statements/class/elements/escaped-static-field-asi-before-field.js (sloppy)",
+			"statements/class/elements/escaped-static-field-asi-before-field.js (strict)",
+			"statements/class/elements/escaped-static-field-asi-before-generator.js (sloppy)",
+			"statements/class/elements/escaped-static-field-asi-before-generator.js (strict)",
+			"statements/class/elements/escaped-static-field-asi-before-method.js (sloppy)",
+			"statements/class/elements/escaped-static-field-asi-before-method.js (strict)",
+			"statements/class/elements/escaped-static-field-asi-before-private-field.js (sloppy)",
+			"statements/class/elements/escaped-static-field-asi-before-private-field.js (strict)"
+		]
 	}
 ];
 /* cspell:enable */
@@ -1947,6 +2033,11 @@ const linkErrorsAtBuildTime = new Set([
 ]);
 
 const knownBugs = [
+	// A label named `arguments` is no reference to it, but the parser refuses it
+	// in a class field initializer or static block, as acorn does.
+	"statements/class/elements/arrow-body-arguments-label.js",
+	"statements/class/static-init-arguments-label.js",
+
 	// Tests use `$262.evalScript`/`Object.preventExtensions(this)` to declare
 	// or collide global bindings; webpack wraps each module so `this` is not
 	// the realm's global object and there is no Script Record context.
@@ -2014,51 +2105,17 @@ const testFiles = fs
 	.globSync(`${baseDir}/**/*.js`)
 	.filter((name) => !/_FIXTURE\.js$/i.test(name));
 
-const shard =
-	typeof process.env.SHARD !== "undefined"
-		? process.env.SHARD.split("/").map((item) => Number.parseInt(item, 10))
-		: [1, 1];
-
-if (
-	typeof shard[0] === "undefined" ||
-	typeof shard[1] === "undefined" ||
-	shard[0] > shard[1] ||
-	shard[0] <= 0 ||
-	shard[1] <= 0
-) {
-	throw new Error(
-		`Invalid \`SHARD\` value - it should be less then a part and more than zero, shard part is ${shard[0]}, count of shards is ${shard[1]}`
-	);
-}
-
-/**
- * @template T
- * @param {T[]} array an array
- * @param {number} n number of chunks
- * @returns {T[][]} splitted to n chunks
- */
-function splitToNChunks(array, n) {
-	/** @type {T[][]} */
-	const result = [];
-
-	for (let i = n; i > 0; i--) {
-		result.push(
-			/** @type {T[]} */
-			(array.splice(0, Math.ceil(array.length / i)))
-		);
-	}
-
-	return result;
-}
-
-const shardedTestFiles = splitToNChunks([...testFiles], shard[1])[shard[0] - 1];
+// `--parts=<n>` splits the files across workers by a hash of each one's name.
+const testFilesOfPart = testFiles.filter((testFile) =>
+	isInPart(path.posix.relative(baseDir, testFile))
+);
 
 expectNoDeprecations();
 
 describe("test262", () => {
 	for (const { name: modeName, mode, minify } of MODES) {
 		describe(modeName, () => {
-			for (const testFile of shardedTestFiles) {
+			for (const testFile of testFilesOfPart) {
 				const name = path.posix.relative(baseDir, testFile);
 				const outputPath = path.resolve(
 					__dirname,

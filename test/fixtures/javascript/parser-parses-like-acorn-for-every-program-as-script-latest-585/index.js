@@ -1,0 +1,1 @@
+export { a } from 'b' with { type: 'json' };

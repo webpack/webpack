@@ -3,8 +3,96 @@
 const path = require("path");
 const { pathToFileURL } = require("url");
 const identifierUtil = require("../../lib/util/identifier");
+const { getScheme } = require("../../lib/util/URLAbsoluteSpecifier");
 
 describe("util/identifier", () => {
+	describe("decodeResourcePath", () => {
+		/** @type {[string, string][]} */
+		const cases = [
+			["./a%20b.png", "./a b.png"],
+			["./a%2520b.png", "./a%20b.png"],
+			["./a%23b.png?x=%23#y%20z", "./a\0#b.png?x=%23#y%20z"],
+			["./a%3Fb.png", "./a\0?b.png"],
+			["./a%21b.png", "./a\0!b.png"],
+			["a%3Ab.png", "a\0:b.png"],
+			["./100%.png", "./100%.png"]
+		];
+
+		it.each(cases)("decodes %s as %s", (resource, expected) => {
+			expect(identifierUtil.decodeResourcePath(resource)).toBe(expected);
+		});
+
+		it("should keep a decoded colon from reading as a scheme", () => {
+			expect(
+				getScheme(identifierUtil.decodeResourcePath("c%3Ad.png"))
+			).toBeUndefined();
+		});
+	});
+
+	describe("escapeUrlRequest", () => {
+		/** @type {[string, string, string][]} */
+		const cases = [
+			["!./a.js!./b.svg", "/project", "\0!./a.js\0!./b.svg"],
+			["-!./a.js!./b.svg", "/project", "-\0!./a.js\0!./b.svg"],
+			["./a\0!b.svg", "/project", "./a\0!b.svg"],
+			["./b.svg", "/project", "./b.svg"],
+			["data:text/plain,a!b", "/project", "data:text/plain,a!b"],
+			["./a!b.svg", "https://example.com/dir/", "./a!b.svg"]
+		];
+
+		it.each(cases)("escapes %s in %s", (url, context, expected) => {
+			expect(identifierUtil.escapeUrlRequest(url, context)).toBe(expected);
+		});
+	});
+
+	describe("contextifySourceUrl", () => {
+		/** @type {[string, string, string][]} */
+		const cases = [
+			["/project", "file:///project/source.js", "webpack://./source.js"],
+			["/project", "file:///project/a%20file.js", "webpack://./a file.js"],
+			["/project", "file:///shared/source.js", "webpack://../shared/source.js"],
+			["/project", "file:///project/a%2520file.js", "webpack://./a%20file.js"],
+			["/project", "file:///project/a%23file.js", "webpack://./a#file.js"],
+			[
+				"/work/a?b/project",
+				"file:///work/a%3Fb/project/src/entry.js?query#fragment",
+				"webpack://./src/entry.js?query#fragment"
+			],
+			[
+				"C:\\work\\a?b",
+				"file:///C:/work/a%3Fb/entry.js",
+				"webpack://./entry.js"
+			],
+			[
+				"/project",
+				"file:///project/source.js?query=%20#fragment",
+				"webpack://./source.js?query=%20#fragment"
+			],
+			[
+				"C:\\project",
+				"file:///C:/project/a%20file.js",
+				"webpack://./a file.js"
+			],
+			[
+				"/project",
+				"file://server/share/source.js",
+				"webpack://file://server/share/source.js"
+			],
+			["/project", "file:///project/100%.js", "webpack://file:///project/100%.js"],
+			[
+				"/project",
+				"file:///project/%FF.js",
+				"webpack://file:///project/%FF.js"
+			],
+			["/project", "webpack://custom/source.js", "webpack://custom/source.js"],
+			["/project", "/project/source.js", "webpack://./source.js"]
+		];
+
+		it.each(cases)("contextifies %s and %s as %s", (context, source, expected) => {
+			expect(identifierUtil.contextifySourceUrl(context, source)).toBe(expected);
+		});
+	});
+
 	describe("normalizeSourceMapUrl", () => {
 		it("should normalize a source map's source as its readers resolve it", () => {
 			/** @type {[string, string][]} */
@@ -360,5 +448,94 @@ describe("util/identifier", () => {
 				expect(fileUrlToPath(value)).toBe(value);
 			}
 		});
+	});
+	describe("isOutsideDirectory", () => {
+		/** @type {[string, boolean][]} */
+		const cases = [
+			["", false],
+			["file.js", false],
+			["nested/file.js", false],
+			["..x/file.js", false],
+			["..", true],
+			["../file.js", true],
+			["..\\file.js", true],
+			["/file.js", true],
+			["C:\\file.js", true]
+		];
+
+		for (const [value, expected] of cases) {
+			it(`should return ${expected} for ${JSON.stringify(value)}`, () => {
+				expect(identifierUtil.isOutsideDirectory(value)).toBe(expected);
+			});
+		}
+	});
+	describe("escapeResourcePath", () => {
+		for (const value of [
+			"images/plain.png",
+			"images/photo#1.png",
+			"images/photo?1.png",
+			"data:image.png",
+			"a!b.png"
+		]) {
+			it(`should keep ${JSON.stringify(value)} whole as a path`, () => {
+				const parsed = identifierUtil.parseResource(
+					identifierUtil.escapeResourcePath(value)
+				);
+				expect(parsed.path).toBe(value);
+				expect(parsed.query).toBe("");
+				expect(parsed.fragment).toBe("");
+			});
+		}
+	});
+
+	describe("escapeFilenameForUrl", () => {
+		it("keeps a filename without a percent sign", () => {
+			const filename = "a b.js?v=1#x";
+			expect(identifierUtil.escapeFilenameForUrl(filename)).toBe(filename);
+		});
+
+		it("escapes each percent sign of the path", () => {
+			expect(identifierUtil.escapeFilenameForUrl("dir%41/a%2F.js")).toBe(
+				"dir%2541/a%252F.js"
+			);
+		});
+
+		it("keeps the query and fragment as written", () => {
+			expect(identifierUtil.escapeFilenameForUrl("a%41.js?v=%2F#%41")).toBe(
+				"a%2541.js?v=%2F#%41"
+			);
+			expect(identifierUtil.escapeFilenameForUrl("a%41.js#%41")).toBe(
+				"a%2541.js#%41"
+			);
+		});
+	});
+
+	describe("getAssetFile", () => {
+		/** @type {[string, string | undefined][]} */
+		const cases = [
+			["main.js", "main.js"],
+			["js/main.js", "js/main.js"],
+			["./js/main.js", "js/main.js"],
+			// the emit's path.join reads a backslash as a separator only on Windows
+			["js\\main.js", path.sep === "\\" ? "js/main.js" : "js\\main.js"],
+			["main.js?v=1", "main.js"],
+			["main.js#top", "main.js"],
+			["..x/../main.js", "main.js"],
+			["a/..b/../main.js", "a/main.js"],
+			["picture.txt?/..a/../../../file.txt", "picture.txt"],
+			["..x/../../main.js", undefined],
+			["../main.js", undefined],
+			["a/..", undefined],
+			["/main.js", "main.js"],
+			["/js/main.js", "js/main.js"],
+			["/../main.js", undefined],
+			["C:/main.js", undefined]
+		];
+
+		for (const [asset, expected] of cases) {
+			it(`should map ${JSON.stringify(asset)} to ${JSON.stringify(expected)}`, () => {
+				expect(identifierUtil.getAssetFile(asset)).toBe(expected);
+			});
+		}
 	});
 });

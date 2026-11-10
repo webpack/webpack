@@ -1,0 +1,1 @@
+function* g() { yield; yield a; yield* b; x = yield c; (yield d) + 1; (yield a).b; (yield a)(); (yield a) ? b : c; -(yield a); yield (a, b); yield yield a; a = yield; f(yield a); `${yield}`; (yield)`x`; }

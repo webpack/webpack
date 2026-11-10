@@ -1,0 +1,1 @@
+(a?.b)?.c;(a?.b).c;(a?.b)?.();(a?.b)?.[0];(a?.b)();v=1-+foo;v=+foo-1;v=1e3*+d;v=5|+b;v=+xs-(2*3);v=a-+b;v=1+ +b;v=1-+-b;v=1-+(a+b);v=(+a)**2;v=1-+x++;v=undefined!=foo;v=void 0==foo;v=!0==y;v=false!=y;function*g(){yield void 0;yield*void 0;x=yield undefined;yield void f()}

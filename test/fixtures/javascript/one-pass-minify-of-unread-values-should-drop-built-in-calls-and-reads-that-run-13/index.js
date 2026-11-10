@@ -1,0 +1,1 @@
+Object.create({},{a:1})

@@ -132,16 +132,6 @@ module.exports = webpackAsyncContext;
 /******/ 	__webpack_require__.m = __webpack_modules__;
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = (module) => {
-/******/ 		const getter = module && module.__esModule ?
-/******/ 			() => (module['default']) :
-/******/ 			() => (module);
-/******/ 		__webpack_require__.d(getter, { a: getter });
-/******/ 		return getter;
-/******/ 	};
-/******/ 	
 /******/ 	/* webpack/runtime/create fake namespace object */
 /******/ 	(() => {
 /******/ 		const getProto = Object.getPrototypeOf;
@@ -237,9 +227,9 @@ module.exports = webpackAsyncContext;
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -247,8 +237,7 @@ module.exports = webpackAsyncContext;
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
@@ -287,7 +276,7 @@ module.exports = webpackAsyncContext;
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -338,7 +327,7 @@ module.exports = webpackAsyncContext;
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -358,10 +347,9 @@ let __webpack_exports__ = {};
   \********************/
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.r, __webpack_exports__, __webpack_require__.e, __webpack_require__.t, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.e, __webpack_require__.t, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! a */ 1);
-/* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(a__WEBPACK_IMPORTED_MODULE_0__);
 
 
 __webpack_require__.e(/*! import() */ 414).then(() => (__webpack_require__.t(/*! b */ 3, 23))).then(function(b) {
@@ -387,10 +375,10 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 ## Unoptimized
 
 ```
-asset output.js 13 KiB [emitted] (name: main)
-asset 140.output.js 284 bytes [emitted]
-asset 197.output.js 284 bytes [emitted]
-asset 414.output.js 276 bytes [emitted]
+asset output.js 12.4 KiB [emitted] (name: main)
+asset 140.output.js 323 bytes [emitted]
+asset 197.output.js 323 bytes [emitted]
+asset 414.output.js 315 bytes [emitted]
 chunk (runtime: main) 140.output.js 13 bytes [rendered]
   > ./2 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2
   > ./2.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2.js
@@ -410,9 +398,9 @@ chunk (runtime: main) 414.output.js 11 bytes [rendered]
   ./node_modules/b.js 11 bytes [built] [code generated]
     [used exports unknown]
     import() b ./example.js 3:0-11
-chunk (runtime: main) output.js (main) 414 bytes (javascript) 6.63 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 414 bytes (javascript) 6.34 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 6.63 KiB 10 modules
+  runtime modules 6.34 KiB 9 modules
   dependent modules 171 bytes [dependent] 2 modules
   ./example.js 243 bytes [built] [code generated]
     [no exports]
@@ -424,10 +412,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.89 KiB [emitted] [minimized] (name: main)
-asset 140.output.js 66 bytes [emitted] [minimized]
-asset 197.output.js 66 bytes [emitted] [minimized]
-asset 414.output.js 66 bytes [emitted] [minimized]
+asset output.js 2.88 KiB [emitted] [minimized] (name: main)
+asset 140.output.js 98 bytes [emitted] [minimized]
+asset 197.output.js 98 bytes [emitted] [minimized]
+asset 414.output.js 98 bytes [emitted] [minimized]
 chunk (runtime: main) 140.output.js 13 bytes [rendered]
   > ./2 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2
   > ./2.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2.js
@@ -447,9 +435,9 @@ chunk (runtime: main) 414.output.js 11 bytes [rendered]
   ./node_modules/b.js 11 bytes [built] [code generated]
     [used exports unknown]
     import() b ./example.js 3:0-11
-chunk (runtime: main) output.js (main) 403 bytes (javascript) 6.37 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 403 bytes (javascript) 6.34 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 6.37 KiB 9 modules
+  runtime modules 6.34 KiB 9 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 243 bytes [built] [code generated]
     [no exports]

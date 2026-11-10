@@ -1,0 +1,1 @@
+Object.keys(42);Object.keys(null);Object.create({},{a:1});Reflect.ownKeys(1);RegExp.escape(1);String.fromCodePoint(-1);decodeURI("a");x=1

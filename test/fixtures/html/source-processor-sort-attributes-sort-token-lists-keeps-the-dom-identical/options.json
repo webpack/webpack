@@ -1,0 +1,15 @@
+[
+	{
+		"mode": "minify",
+		"sortAttributes": true
+	},
+	{
+		"mode": "minify",
+		"sortTokenLists": true
+	},
+	{
+		"mode": "minify",
+		"sortAttributes": true,
+		"sortTokenLists": true
+	}
+]

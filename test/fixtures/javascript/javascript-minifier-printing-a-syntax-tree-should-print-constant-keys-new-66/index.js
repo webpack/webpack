@@ -1,0 +1,1 @@
+export var c;(function f(){(a--&&f()).p;return{get p(){c=1}}})();(function(){(function(a){a=a&&(c=2)})()})()

@@ -1,0 +1,26 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"op_mob 12.1"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"op_mob 12"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"opera 11"
+			]
+		}
+	}
+]

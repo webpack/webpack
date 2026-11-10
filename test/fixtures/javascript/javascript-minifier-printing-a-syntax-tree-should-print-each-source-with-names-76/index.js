@@ -1,0 +1,1 @@
+x = { a: a, if: if_, b: if_, Infinity: 1e999, c: 1e999, async: async, get: get, set: set, static: s }; x = { get() {}, set(v) {}, async() {}, *gen() {}, async *ag() {}, get [k]() {}, set [k](v) {}, async [k]() {}, 'q'() {}, 1() {}, [k]: 1 };

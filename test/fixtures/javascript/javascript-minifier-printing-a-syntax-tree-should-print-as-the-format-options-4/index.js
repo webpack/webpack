@@ -1,0 +1,1 @@
+/*#__PURE__*/ f(); /* @__NOINLINE__ */ g(); /* text @__PURE__ */ h()

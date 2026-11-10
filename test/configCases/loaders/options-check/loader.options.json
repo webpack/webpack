@@ -1,0 +1,10 @@
+{
+  "title": "Checked Loader options",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

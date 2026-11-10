@@ -1,0 +1,1 @@
+function f(){switch(g()){case 2:debugger}}

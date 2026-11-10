@@ -45,3 +45,27 @@
 	grid-template: "nav-bar main-area" 1fr / auto;
 }
 .shorthand-nav { grid-area: nav-bar }
+
+/* An escaped `.` stays escaped in the scoped name. */
+.dotted-head { grid-area: x\.y }
+
+/* An area `main` defines the implicit lines `main-start` / `main-end`, and
+   lines `y-start` / `y-end` define an implicit area `y`. */
+.implicit-grid {
+	grid-template-areas: "side main";
+}
+.implicit-item { grid-column: main-start / main-end }
+.implicit-lines { grid-template-columns: [y-start] 50px [y-end] }
+.implicit-area { grid-area: y }
+.implicit-shorthand { grid-template: [top-start] "top" 1fr [top-end] / auto }
+.implicit-repeat { grid-template-columns: repeat(2, [col-start] 1fr [col-end]) }
+.implicit-subgrid { grid-template-rows: subgrid [row-start] [row-end] }
+.implicit-placement { grid-area: top-start / col-start / top-end / col-end }
+
+/* Area `foo-start` implies `foo-start-start`, so the whole suffix run stays
+   outside the scoped part; a differently cased suffix is another name. */
+.implicit-nested {
+	grid-template-areas: "foo-start";
+	grid-column: foo-start-start / foo-start-end;
+}
+.implicit-case { grid-column: main-START }

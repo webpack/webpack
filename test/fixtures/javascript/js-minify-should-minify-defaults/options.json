@@ -1,0 +1,344 @@
+[
+	{
+		"print": "jsMinify",
+		"compress": {},
+		"minimizer": {
+			"extractComments": true,
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"compress": {},
+		"minimizer": {
+			"extractComments": true,
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"compress": {},
+		"minimizer": {
+			"extractComments": false,
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"compress": {},
+		"minimizer": {
+			"extractComments": false,
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"minimizer": {
+			"extractComments": {
+				"regexp": "@license"
+			},
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"minimizer": {
+			"extractComments": {
+				"regexp": "@license"
+			},
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"minimizer": {
+			"extractComments": {
+				"condition": "some"
+			},
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"minimizer": {
+			"extractComments": {
+				"condition": "some"
+			},
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"minimizer": {
+			"extractComments": {
+				"condition": false
+			},
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"minimizer": {
+			"extractComments": {
+				"condition": false
+			},
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"format": {
+			"comments": "all"
+		},
+		"minimizer": {
+			"extractComments": false,
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"format": {
+			"comments": "all"
+		},
+		"minimizer": {
+			"extractComments": false,
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"format": {
+			"comments": false
+		},
+		"minimizer": {
+			"extractComments": true,
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"format": {
+			"comments": false
+		},
+		"minimizer": {
+			"extractComments": true,
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"output": {
+			"comments": "all"
+		},
+		"minimizer": {
+			"extractComments": false,
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"output": {
+			"comments": "all"
+		},
+		"minimizer": {
+			"extractComments": false,
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"compress": false,
+		"minimizer": {
+			"extractComments": true,
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"compress": false,
+		"minimizer": {
+			"extractComments": true,
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"mangle": false,
+		"minimizer": {
+			"extractComments": true,
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"mangle": false,
+		"minimizer": {
+			"extractComments": true,
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"ecma": 5,
+		"minimizer": {
+			"extractComments": true,
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"ecma": 5,
+		"minimizer": {
+			"extractComments": true,
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"as": "script",
+		"minimizer": {
+			"extractComments": true,
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"as": "script",
+		"minimizer": {
+			"extractComments": true,
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"minimizer": {
+			"extractComments": {
+				"condition": true
+			},
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"minimizer": {
+			"extractComments": {
+				"condition": true
+			},
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"minimizer": {
+			"extractComments": {},
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"minimizer": {
+			"extractComments": {},
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"format": {
+			"comments": true
+		},
+		"minimizer": {
+			"extractComments": false,
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"format": {
+			"comments": true
+		},
+		"minimizer": {
+			"extractComments": false,
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"compress": true,
+		"minimizer": {
+			"extractComments": true,
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"compress": true,
+		"minimizer": {
+			"extractComments": true,
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"ecma": 5,
+		"compress": {
+			"ecma": 2020
+		},
+		"minimizer": {
+			"extractComments": true,
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"ecma": 5,
+		"compress": {
+			"ecma": 2020
+		},
+		"minimizer": {
+			"extractComments": true,
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"mangle": {
+			"reserved": [
+				"value"
+			]
+		},
+		"minimizer": {
+			"extractComments": true,
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"mangle": {
+			"reserved": [
+				"value"
+			]
+		},
+		"minimizer": {
+			"extractComments": true,
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
+	}
+]

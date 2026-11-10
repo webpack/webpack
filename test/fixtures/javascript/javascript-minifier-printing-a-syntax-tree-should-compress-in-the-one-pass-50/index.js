@@ -1,0 +1,1 @@
+function f(){ var m = function(){}; h({ k: m }); var n = function(){}; h(n + 1); var p = function(){}; h({ [p]: 1 }) }

@@ -34,7 +34,7 @@ chunk (runtime: main) common-node_modules_z_js.js (id hint: common) X bytes <{ma
   ./node_modules/z.js X bytes [built] [code generated]
 chunk (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) >{async-a}< >{async-b}< >{async-c}< >{common-d_js}< >{common-f_js}< >{common-node_modules_x_js}< >{common-node_modules_y_js}< >{common-node_modules_z_js}< [entry] [rendered]
   > ./ main
-  runtime modules X KiB 9 modules
+  runtime modules X KiB 8 modules
   ./index.js X bytes [built] [code generated]
 production (webpack x.x.x) compiled successfully"
 `;

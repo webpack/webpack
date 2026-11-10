@@ -1,0 +1,31 @@
+@value quotedUrl: url("./img/shape.png");
+@value bareUrl: url(./img/shape.png);
+@value spacedUrl: url( ./img/shape.png	);
+@value escapedUrl: url(./img/sh\61 pe.png);
+@value badUrl: url(./img/sh\
+ape.png);
+@value notOneUrl: url(./img/\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61\61) x;
+
+.uses-quoted-url {
+	background-image: quotedUrl;
+}
+
+.uses-bare-url {
+	background-image: bareUrl;
+}
+
+.uses-escaped-url {
+	background-image: escapedUrl;
+}
+
+.uses-bad-url {
+	background-image: badUrl;
+}
+
+.uses-not-one-url {
+	background-image: notOneUrl;
+}
+
+.uses-spaced-url {
+	background-image: spacedUrl;
+}

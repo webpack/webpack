@@ -1,0 +1,23 @@
+[
+	{
+		"mode": "minify",
+		"visit": {
+			"types": [
+				"Comma",
+				"Whitespace"
+			],
+			"exit": false,
+			"at": [
+				{
+					"type": "Comma",
+					"do": "replace",
+					"with": " / "
+				},
+				{
+					"type": "Whitespace",
+					"do": "remove"
+				}
+			]
+		}
+	}
+]

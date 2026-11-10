@@ -35,6 +35,19 @@ describe("BasicEvaluatedExpression", () => {
 		expect(e.asString()).toBe("0");
 		expect(e.asCompileTimeValue()).toBe(0);
 
+		e.setNumber(Number.NaN);
+		expect(e.isNumber()).toBe(true);
+		expect(e.number).toBeNaN();
+		// NaN is falsy in JavaScript, so it must not count as a truthy number
+		expect(e.asBool()).toBe(false);
+		expect(e.asCompileTimeValue()).toBeNaN();
+
+		e.setNumber(-0);
+		expect(e.asBool()).toBe(false);
+
+		e.setNumber(1);
+		expect(e.asBool()).toBe(true);
+
 		e.setBigInt(BigInt(0));
 		expect(e.isBigInt()).toBe(true);
 		expect(e.bigint).toBe(BigInt(0));

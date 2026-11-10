@@ -1,0 +1,24 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "as-written"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"css": "/*css*/",
+				"javascript/script": "/*javascript*/",
+				"json": "/*json*/",
+				"css/block-contents": "/*css*/",
+				"svg/foreign-element": "/*svg*/",
+				"html/srcdoc": "/*html*/"
+			}
+		}
+	}
+]

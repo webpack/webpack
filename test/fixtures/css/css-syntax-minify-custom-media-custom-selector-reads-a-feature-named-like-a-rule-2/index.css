@@ -1,0 +1,1 @@
+@custom-media --b ( /* c */ --a ) and (y:1);@custom-media --a (width>1px);@media (--b){a{color:red}}

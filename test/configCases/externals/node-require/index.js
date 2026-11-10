@@ -1,13 +1,5 @@
-function getMajorVersion(versionStr) {
-	const match = versionStr.match(/^v?(\d+)\./);
-	if (match) {
-	  return parseInt(match[1], 10);
-	}
-	return null;
-}
-
 it("should not fail on optional externals", function() {	
-	if (getMajorVersion(NODE_VERSION) <= 12) {
+	if (NODE_MAJOR_VERSION <= 12) {
 		const external = require("external");
 		// The behavior of jest mock's require is different from that of node require, so it works fine here.
 		expect(external).toBe(EXPECTED);

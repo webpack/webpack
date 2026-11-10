@@ -51,12 +51,12 @@ module.exports = config;
 ## Unoptimized
 
 ```
-asset 5664f09ab8adf033e173.node 16.5 KiB [emitted] [immutable] [from: file.node] (auxiliary name: main)
-asset output.js 5.75 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 457 bytes (javascript) 16.5 KiB (asset) 1.12 KiB (runtime) [entry] [rendered]
+asset 2bb0e77b6cb516f91391.node 16.5 KiB [emitted] [immutable] [from: file.node] (auxiliary name: main)
+asset output.js 4.38 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 457 bytes (javascript) 16.5 KiB (asset) 448 bytes (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 1.12 KiB 6 modules
   dependent modules 16.5 KiB (asset) 126 bytes (javascript) [dependent] 3 modules
+  runtime modules 448 bytes 3 modules
   ./example.js 331 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -67,7 +67,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset 5664f09ab8adf033e173.node 16.5 KiB [emitted] [immutable] [from: file.node] (auxiliary name: main)
+asset 2bb0e77b6cb516f91391.node 16.5 KiB [emitted] [immutable] [from: file.node] (auxiliary name: main)
 asset output.js 463 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 457 bytes (javascript) 16.5 KiB (asset) 264 bytes (runtime) [entry] [rendered]
   > ./example.js main

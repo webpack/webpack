@@ -1,0 +1,1 @@
+f(()=>{if(s)a();else b();return x})

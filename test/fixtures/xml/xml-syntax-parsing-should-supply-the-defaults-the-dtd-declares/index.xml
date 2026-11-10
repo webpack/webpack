@@ -1,0 +1,1 @@
+<!DOCTYPE r [<!ATTLIST r a CDATA 'one' b ( x | y ) #FIXED ' y ' c CDATA #REQUIRED a CDATA 'two'><!ATTLIST e f CDATA 'g'>]><r a='mine'><e/></r>

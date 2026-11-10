@@ -374,13 +374,13 @@ __webpack_require__.e(/*! import() */ "src_bootstrap_js").then(() => (__webpack_
   \*********************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__.l, module, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__.l, __webpack_require__.o, __webpack_require__.g, module, __webpack_require__.* */
 (module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 const __webpack_error__ = new Error();
 module.exports = new Promise((resolve, reject) => {
-	if(typeof mfeBBB !== "undefined") return resolve();
+	if(typeof mfeBBB !== "undefined" && (__webpack_require__.o(__webpack_require__.g, "mfeBBB") || !("mfeBBB" in __webpack_require__.g))) return resolve();
 	__webpack_require__.l("/dist/bbb/mfeBBB.js", (event) => {
 		if(typeof mfeBBB !== "undefined") return resolve();
 		const errorType = event && (event.type === 'load' ? 'missing' : event.type);
@@ -402,13 +402,13 @@ module.exports = new Promise((resolve, reject) => {
   \*********************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__.l, module, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__.l, __webpack_require__.o, __webpack_require__.g, module, __webpack_require__.* */
 (module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 const __webpack_error__ = new Error();
 module.exports = new Promise((resolve, reject) => {
-	if(typeof mfeCCC !== "undefined") return resolve();
+	if(typeof mfeCCC !== "undefined" && (__webpack_require__.o(__webpack_require__.g, "mfeCCC") || !("mfeCCC" in __webpack_require__.g))) return resolve();
 	__webpack_require__.l("/dist/ccc/mfeCCC.js", (event) => {
 		if(typeof mfeCCC !== "undefined") return resolve();
 		const errorType = event && (event.type === 'load' ? 'missing' : event.type);
@@ -527,6 +527,16 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	// This function allow to reference async chunks
 /******/ 	__webpack_require__.u = (chunkId) => (chunkId + ".js");
 /******/ 	
+/******/ 	/* webpack/runtime/global */
+/******/ 	__webpack_require__.g = (function() {
+/******/ 		if (typeof globalThis === 'object') return globalThis;
+/******/ 		try {
+/******/ 			return this || new Function('return this')();
+/******/ 		} catch (e) {
+/******/ 			if (typeof window === 'object') return window;
+/******/ 		}
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
 /******/ 	
@@ -568,9 +578,9 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -578,8 +588,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/remotes loading */
@@ -613,8 +622,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		__webpack_require__.f.remotes = (chunkId, promises) => {
 /******/ 			if(__webpack_require__.o(chunkMapping, chunkId)) {
 /******/ 				chunkMapping[chunkId].forEach((id) => {
-/******/ 					let getScope = __webpack_require__.R;
-/******/ 					if(!getScope) getScope = [];
+/******/ 					const getScope = __webpack_require__.R || [];
 /******/ 					const data = idToExternalAndNameMapping[id];
 /******/ 					if(getScope.indexOf(data) >= 0) return;
 /******/ 					getScope.push(data);
@@ -661,10 +669,9 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		const initPromises = {};
 /******/ 		const initTokens = {};
 /******/ 		__webpack_require__.I = (name, initScope) => {
-/******/ 			if(!initScope) initScope = [];
+/******/ 			initScope = initScope || [];
 /******/ 			// handling circular init calls
-/******/ 			let initToken = initTokens[name];
-/******/ 			if(!initToken) initToken = initTokens[name] = {};
+/******/ 			const initToken = initTokens[name] = initTokens[name] || {};
 /******/ 			if(initScope.indexOf(initToken) >= 0) return;
 /******/ 			initScope.push(initToken);
 /******/ 			// only runs once
@@ -687,7 +694,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 				try {
 /******/ 					const module = __webpack_require__(id);
 /******/ 					if(!module) return;
-/******/ 					const initFn = (module) => (module && module.init && module.init(__webpack_require__.S[name], initScope))
+/******/ 					const initFn = (module) => (module?.init?.(__webpack_require__.S[name], initScope))
 /******/ 					if(module.then) return promises.push(module.then(initFn, handleError));
 /******/ 					const initResult = initFn(module);
 /******/ 					if(initResult?.then) return promises.push(initResult['catch'](handleError));
@@ -696,7 +703,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 			const promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
-/******/ 					register("react", "19.3.0", () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/react/index.js */ 24))))));
+/******/ 					register("react", "19.3.1", () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/react/index.js */ 24))))));
 /******/ 					initExternal(9);
 /******/ 					initExternal(11);
 /******/ 				}
@@ -718,7 +725,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		}
 /******/ 		var versionLt = (a, b) => {
 /******/ 			// see webpack/lib/sharing/semver.js for original code
-/******/ 			a=parseVersion(a),b=parseVersion(b);for(var r=0;;){if(r>=a.length)return r<b.length&&"u"!=(typeof b[r])[0];var e=a[r],n=(typeof e)[0];if(r>=b.length)return"u"==n;var t=b[r],f=(typeof t)[0];if(n!=f)return"o"==n&&"n"==f||("s"==f||"u"==n);if("o"!=n&&"u"!=n&&e!=t)return e<t;r++}
+/******/ 			for(var r=parseVersion(a),e=parseVersion(b),n=0;;){if(n>=r.length)return n<e.length&&"u"!=(typeof e[n])[0];var t=r[n],f=(typeof t)[0];if(n>=e.length)return"u"==f;var o=e[n],u=(typeof o)[0];if(f!=u)return"o"==f&&"n"==u||("s"==u||"u"==f);if("o"!=f&&"u"!=f&&t!=o)return t<o;n++}
 /******/ 		}
 /******/ 		var rangeToString = (range) => {
 /******/ 			// see webpack/lib/sharing/semver.js for original code
@@ -726,7 +733,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		}
 /******/ 		var satisfy = (range, version) => {
 /******/ 			// see webpack/lib/sharing/semver.js for original code
-/******/ 			if(0 in range){version=parseVersion(version);var e=range[0],r=e<0;r&&(e=-e-1);for(var n=0,i=1,a=!0;;i++,n++){var f,s,g=i<range.length?(typeof range[i])[0]:"";if(n>=version.length||"o"==(s=(typeof(f=version[n]))[0]))return!a||("u"==g?i>e&&!r:""==g!=r);if("u"==s){if(!a||"u"!=g)return!1}else if(a)if(g==s)if(i<=e){if(f!=range[i])return!1}else{if(r?f>range[i]:f<range[i])return!1;f!=range[i]&&(a=!1)}else if("s"!=g&&"n"!=g){if(r||i<=e)return!1;a=!1,i--}else{if(i<=e||s<g!=r)return!1;a=!1}else"s"!=g&&"n"!=g&&(a=!1,i--)}}var t=[],o=t.pop.bind(t);for(n=1;n<range.length;n++){var u=range[n];t.push(1==u?o()|o():2==u?o()&o():u?satisfy(u,version):!o())}return!!o();
+/******/ 			if(0 in range){var e=parseVersion(version),r=range[0],n=r<0;n&&(r=-r-1);for(var i=0,a=1,f=!0;;a++,i++){var s,g,t=a<range.length?(typeof range[a])[0]:"";if(i>=e.length||"o"==(g=(typeof(s=e[i]))[0]))return!f||("u"==t?a>r&&!n:""==t!=n);if("u"==g){if(!f||"u"!=t)return!1}else if(f)if(t==g)if(a<=r){if(s!=range[a])return!1}else{if(n?s>range[a]:s<range[a])return!1;s!=range[a]&&(f=!1)}else if("s"!=t&&"n"!=t){if(n||a<=r)return!1;f=!1,a--}else{if(a<=r||g<t!=n)return!1;f=!1}else"s"!=t&&"n"!=t&&(f=!1,a--)}}var u=[],o=u.pop.bind(u);for(i=1;i<range.length;i++){var l=range[i];u.push(1==l?o()|o():2==l?o()&o():l?satisfy(l,version):!o())}return!!o();
 /******/ 		}
 /******/ 		const exists = (scope, key) => {
 /******/ 			return scope && __webpack_require__.o(scope, key);
@@ -783,7 +790,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		const warn = /*#__PURE__*/ (msg) => {
 /******/ 			if (typeof console !== "undefined" && console.warn) console.warn(msg);
 /******/ 		};
-/******/ 		const init = (fn) => (function(scopeName, key, eager, c, d) {
+/******/ 		const init = (fn) => ((scopeName, key, eager, c, d) => {
 /******/ 			const promise = __webpack_require__.I(scopeName);
 /******/ 			if (promise?.then && !eager) {
 /******/ 				return promise.then(fn.bind(fn, scopeName, __webpack_require__.S[scopeName], key, false, c, d));
@@ -835,7 +842,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		});
 /******/ 		const installedModules = {};
 /******/ 		const moduleToHandlerMapping = {
-/******/ 			5: () => (loadSingletonVersion("default", "react", false, [1,19,3,0], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ 24))))))),
+/******/ 			5: () => (loadSingletonVersion("default", "react", false, [1,19,3,1], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ 24))))))),
 /******/ 			6: () => (loadSingletonVersion("default", "react", false, [1,19,2,7], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ 24)))))))
 /******/ 		};
 /******/ 		// no consumes in initial chunks
@@ -911,7 +918,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -962,7 +969,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunkmodule_federation_aaa"] = self["webpackChunkmodule_federation_aaa"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunkmodule_federation_aaa"]) ? self["webpackChunkmodule_federation_aaa"] : (self["webpackChunkmodule_federation_aaa"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -1138,9 +1145,9 @@ __webpack_require__.d(exports, {
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -1148,8 +1155,7 @@ __webpack_require__.d(exports, {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/sharing */
@@ -1158,10 +1164,9 @@ __webpack_require__.d(exports, {
 /******/ 		const initPromises = {};
 /******/ 		const initTokens = {};
 /******/ 		__webpack_require__.I = (name, initScope) => {
-/******/ 			if(!initScope) initScope = [];
+/******/ 			initScope = initScope || [];
 /******/ 			// handling circular init calls
-/******/ 			let initToken = initTokens[name];
-/******/ 			if(!initToken) initToken = initTokens[name] = {};
+/******/ 			const initToken = initTokens[name] = initTokens[name] || {};
 /******/ 			if(initScope.indexOf(initToken) >= 0) return;
 /******/ 			initScope.push(initToken);
 /******/ 			// only runs once
@@ -1184,7 +1189,7 @@ __webpack_require__.d(exports, {
 /******/ 				try {
 /******/ 					const module = __webpack_require__(id);
 /******/ 					if(!module) return;
-/******/ 					const initFn = (module) => (module && module.init && module.init(__webpack_require__.S[name], initScope))
+/******/ 					const initFn = (module) => (module?.init?.(__webpack_require__.S[name], initScope))
 /******/ 					if(module.then) return promises.push(module.then(initFn, handleError));
 /******/ 					const initResult = initFn(module);
 /******/ 					if(initResult?.then) return promises.push(initResult['catch'](handleError));
@@ -1194,7 +1199,7 @@ __webpack_require__.d(exports, {
 /******/ 			switch(name) {
 /******/ 				case "default": {
 /******/ 					register("date-fns", "4.4.0", () => (__webpack_require__.e("vendors-node_modules_date-fns_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/date-fns/index.js */ 8))))));
-/******/ 					register("react", "19.3.0", () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/react/index.js */ 311))))));
+/******/ 					register("react", "19.3.1", () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/react/index.js */ 311))))));
 /******/ 				}
 /******/ 				break;
 /******/ 			}
@@ -1214,7 +1219,7 @@ __webpack_require__.d(exports, {
 /******/ 		}
 /******/ 		var versionLt = (a, b) => {
 /******/ 			// see webpack/lib/sharing/semver.js for original code
-/******/ 			a=parseVersion(a),b=parseVersion(b);for(var r=0;;){if(r>=a.length)return r<b.length&&"u"!=(typeof b[r])[0];var e=a[r],n=(typeof e)[0];if(r>=b.length)return"u"==n;var t=b[r],f=(typeof t)[0];if(n!=f)return"o"==n&&"n"==f||("s"==f||"u"==n);if("o"!=n&&"u"!=n&&e!=t)return e<t;r++}
+/******/ 			for(var r=parseVersion(a),e=parseVersion(b),n=0;;){if(n>=r.length)return n<e.length&&"u"!=(typeof e[n])[0];var t=r[n],f=(typeof t)[0];if(n>=e.length)return"u"==f;var o=e[n],u=(typeof o)[0];if(f!=u)return"o"==f&&"n"==u||("s"==u||"u"==f);if("o"!=f&&"u"!=f&&t!=o)return t<o;n++}
 /******/ 		}
 /******/ 		var rangeToString = (range) => {
 /******/ 			// see webpack/lib/sharing/semver.js for original code
@@ -1222,7 +1227,7 @@ __webpack_require__.d(exports, {
 /******/ 		}
 /******/ 		var satisfy = (range, version) => {
 /******/ 			// see webpack/lib/sharing/semver.js for original code
-/******/ 			if(0 in range){version=parseVersion(version);var e=range[0],r=e<0;r&&(e=-e-1);for(var n=0,i=1,a=!0;;i++,n++){var f,s,g=i<range.length?(typeof range[i])[0]:"";if(n>=version.length||"o"==(s=(typeof(f=version[n]))[0]))return!a||("u"==g?i>e&&!r:""==g!=r);if("u"==s){if(!a||"u"!=g)return!1}else if(a)if(g==s)if(i<=e){if(f!=range[i])return!1}else{if(r?f>range[i]:f<range[i])return!1;f!=range[i]&&(a=!1)}else if("s"!=g&&"n"!=g){if(r||i<=e)return!1;a=!1,i--}else{if(i<=e||s<g!=r)return!1;a=!1}else"s"!=g&&"n"!=g&&(a=!1,i--)}}var t=[],o=t.pop.bind(t);for(n=1;n<range.length;n++){var u=range[n];t.push(1==u?o()|o():2==u?o()&o():u?satisfy(u,version):!o())}return!!o();
+/******/ 			if(0 in range){var e=parseVersion(version),r=range[0],n=r<0;n&&(r=-r-1);for(var i=0,a=1,f=!0;;a++,i++){var s,g,t=a<range.length?(typeof range[a])[0]:"";if(i>=e.length||"o"==(g=(typeof(s=e[i]))[0]))return!f||("u"==t?a>r&&!n:""==t!=n);if("u"==g){if(!f||"u"!=t)return!1}else if(f)if(t==g)if(a<=r){if(s!=range[a])return!1}else{if(n?s>range[a]:s<range[a])return!1;s!=range[a]&&(f=!1)}else if("s"!=t&&"n"!=t){if(n||a<=r)return!1;f=!1,a--}else{if(a<=r||g<t!=n)return!1;f=!1}else"s"!=t&&"n"!=t&&(f=!1,a--)}}var u=[],o=u.pop.bind(u);for(i=1;i<range.length;i++){var l=range[i];u.push(1==l?o()|o():2==l?o()&o():l?satisfy(l,version):!o())}return!!o();
 /******/ 		}
 /******/ 		const exists = (scope, key) => {
 /******/ 			return scope && __webpack_require__.o(scope, key);
@@ -1279,7 +1284,7 @@ __webpack_require__.d(exports, {
 /******/ 		const warn = /*#__PURE__*/ (msg) => {
 /******/ 			if (typeof console !== "undefined" && console.warn) console.warn(msg);
 /******/ 		};
-/******/ 		const init = (fn) => (function(scopeName, key, eager, c, d) {
+/******/ 		const init = (fn) => ((scopeName, key, eager, c, d) => {
 /******/ 			const promise = __webpack_require__.I(scopeName);
 /******/ 			if (promise?.then && !eager) {
 /******/ 				return promise.then(fn.bind(fn, scopeName, __webpack_require__.S[scopeName], key, false, c, d));
@@ -1407,7 +1412,7 @@ __webpack_require__.d(exports, {
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -1458,7 +1463,7 @@ __webpack_require__.d(exports, {
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunkmodule_federation_bbb"] = self["webpackChunkmodule_federation_bbb"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunkmodule_federation_bbb"]) ? self["webpackChunkmodule_federation_bbb"] : (self["webpackChunkmodule_federation_bbb"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -1658,9 +1663,9 @@ __webpack_require__.d(exports, {
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -1668,8 +1673,7 @@ __webpack_require__.d(exports, {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/sharing */
@@ -1678,10 +1682,9 @@ __webpack_require__.d(exports, {
 /******/ 		const initPromises = {};
 /******/ 		const initTokens = {};
 /******/ 		__webpack_require__.I = (name, initScope) => {
-/******/ 			if(!initScope) initScope = [];
+/******/ 			initScope = initScope || [];
 /******/ 			// handling circular init calls
-/******/ 			let initToken = initTokens[name];
-/******/ 			if(!initToken) initToken = initTokens[name] = {};
+/******/ 			const initToken = initTokens[name] = initTokens[name] || {};
 /******/ 			if(initScope.indexOf(initToken) >= 0) return;
 /******/ 			initScope.push(initToken);
 /******/ 			// only runs once
@@ -1704,7 +1707,7 @@ __webpack_require__.d(exports, {
 /******/ 				try {
 /******/ 					const module = __webpack_require__(id);
 /******/ 					if(!module) return;
-/******/ 					const initFn = (module) => (module && module.init && module.init(__webpack_require__.S[name], initScope))
+/******/ 					const initFn = (module) => (module?.init?.(__webpack_require__.S[name], initScope))
 /******/ 					if(module.then) return promises.push(module.then(initFn, handleError));
 /******/ 					const initResult = initFn(module);
 /******/ 					if(initResult?.then) return promises.push(initResult['catch'](handleError));
@@ -1734,7 +1737,7 @@ __webpack_require__.d(exports, {
 /******/ 		}
 /******/ 		var versionLt = (a, b) => {
 /******/ 			// see webpack/lib/sharing/semver.js for original code
-/******/ 			a=parseVersion(a),b=parseVersion(b);for(var r=0;;){if(r>=a.length)return r<b.length&&"u"!=(typeof b[r])[0];var e=a[r],n=(typeof e)[0];if(r>=b.length)return"u"==n;var t=b[r],f=(typeof t)[0];if(n!=f)return"o"==n&&"n"==f||("s"==f||"u"==n);if("o"!=n&&"u"!=n&&e!=t)return e<t;r++}
+/******/ 			for(var r=parseVersion(a),e=parseVersion(b),n=0;;){if(n>=r.length)return n<e.length&&"u"!=(typeof e[n])[0];var t=r[n],f=(typeof t)[0];if(n>=e.length)return"u"==f;var o=e[n],u=(typeof o)[0];if(f!=u)return"o"==f&&"n"==u||("s"==u||"u"==f);if("o"!=f&&"u"!=f&&t!=o)return t<o;n++}
 /******/ 		}
 /******/ 		var rangeToString = (range) => {
 /******/ 			// see webpack/lib/sharing/semver.js for original code
@@ -1742,7 +1745,7 @@ __webpack_require__.d(exports, {
 /******/ 		}
 /******/ 		var satisfy = (range, version) => {
 /******/ 			// see webpack/lib/sharing/semver.js for original code
-/******/ 			if(0 in range){version=parseVersion(version);var e=range[0],r=e<0;r&&(e=-e-1);for(var n=0,i=1,a=!0;;i++,n++){var f,s,g=i<range.length?(typeof range[i])[0]:"";if(n>=version.length||"o"==(s=(typeof(f=version[n]))[0]))return!a||("u"==g?i>e&&!r:""==g!=r);if("u"==s){if(!a||"u"!=g)return!1}else if(a)if(g==s)if(i<=e){if(f!=range[i])return!1}else{if(r?f>range[i]:f<range[i])return!1;f!=range[i]&&(a=!1)}else if("s"!=g&&"n"!=g){if(r||i<=e)return!1;a=!1,i--}else{if(i<=e||s<g!=r)return!1;a=!1}else"s"!=g&&"n"!=g&&(a=!1,i--)}}var t=[],o=t.pop.bind(t);for(n=1;n<range.length;n++){var u=range[n];t.push(1==u?o()|o():2==u?o()&o():u?satisfy(u,version):!o())}return!!o();
+/******/ 			if(0 in range){var e=parseVersion(version),r=range[0],n=r<0;n&&(r=-r-1);for(var i=0,a=1,f=!0;;a++,i++){var s,g,t=a<range.length?(typeof range[a])[0]:"";if(i>=e.length||"o"==(g=(typeof(s=e[i]))[0]))return!f||("u"==t?a>r&&!n:""==t!=n);if("u"==g){if(!f||"u"!=t)return!1}else if(f)if(t==g)if(a<=r){if(s!=range[a])return!1}else{if(n?s>range[a]:s<range[a])return!1;s!=range[a]&&(f=!1)}else if("s"!=t&&"n"!=t){if(n||a<=r)return!1;f=!1,a--}else{if(a<=r||g<t!=n)return!1;f=!1}else"s"!=t&&"n"!=t&&(f=!1,a--)}}var u=[],o=u.pop.bind(u);for(i=1;i<range.length;i++){var l=range[i];u.push(1==l?o()|o():2==l?o()&o():l?satisfy(l,version):!o())}return!!o();
 /******/ 		}
 /******/ 		const exists = (scope, key) => {
 /******/ 			return scope && __webpack_require__.o(scope, key);
@@ -1799,7 +1802,7 @@ __webpack_require__.d(exports, {
 /******/ 		const warn = /*#__PURE__*/ (msg) => {
 /******/ 			if (typeof console !== "undefined" && console.warn) console.warn(msg);
 /******/ 		};
-/******/ 		const init = (fn) => (function(scopeName, key, eager, c, d) {
+/******/ 		const init = (fn) => ((scopeName, key, eager, c, d) => {
 /******/ 			const promise = __webpack_require__.I(scopeName);
 /******/ 			if (promise?.then && !eager) {
 /******/ 				return promise.then(fn.bind(fn, scopeName, __webpack_require__.S[scopeName], key, false, c, d));
@@ -1933,7 +1936,7 @@ __webpack_require__.d(exports, {
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -1984,7 +1987,7 @@ __webpack_require__.d(exports, {
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunkmodule_federation_ccc"] = self["webpackChunkmodule_federation_ccc"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunkmodule_federation_ccc"]) ? self["webpackChunkmodule_federation_ccc"] : (self["webpackChunkmodule_federation_ccc"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -2013,23 +2016,23 @@ __webpack_require__.d(exports, {
 ```
 app:
   asset src_bootstrap_js.js 46.9 KiB [emitted]
-  asset app.js 29.7 KiB [emitted] (name: app)
-  asset vendors-node_modules_react_index_js.js 29.7 KiB [emitted] (id hint: vendors)
-  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 18.9 KiB (runtime) [entry] [rendered]
+  asset app.js 30.2 KiB [emitted] (name: app)
+  asset vendors-node_modules_react_index_js.js 29.8 KiB [emitted] (id hint: vendors)
+  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
-    runtime modules 18.9 KiB 13 modules
+    runtime modules 19 KiB 14 modules
     built modules 672 bytes (javascript) 42 bytes (share-init) [built]
       ./src/index.js 588 bytes [built] [code generated]
       external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built] [code generated]
       external "mfeCCC@/dist/ccc/mfeCCC.js" 42 bytes [built] [code generated]
-      provide shared module (default) react@19.3.0 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
+      provide shared module (default) react@19.3.1 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
   chunk (runtime: app) src_bootstrap_js.js 27.8 KiB (javascript) 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [rendered]
     > ./bootstrap ./src/index.js 10:0-21
     dependent modules 27.4 KiB (javascript) 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [dependent] 19 modules
     ./src/bootstrap.js 440 bytes [built] [code generated]
   chunk (runtime: app) vendors-node_modules_react_index_js.js (id hint: vendors) 17.8 KiB [rendered] reused as split chunk (cache group: defaultVendors)
-    > provide shared module (default) react@19.3.0 = ../../node_modules/react/index.js
-    > consume shared module (default) react@^19.3.0 (singleton) (fallback: ../../node_modules/react/index.js)
+    > provide shared module (default) react@19.3.1 = ../../node_modules/react/index.js
+    > consume shared module (default) react@^19.3.1 (singleton) (fallback: ../../node_modules/react/index.js)
     > consume shared module (default) react@^19.2.7 (singleton) (fallback: ../../node_modules/react/index.js)
     dependent modules 17.6 KiB [dependent] 1 module
     ../../node_modules/react/index.js 186 bytes [built] [code generated]
@@ -2040,17 +2043,17 @@ app:
 
 mfe-b:
   assets by chunk 1 MiB (id hint: vendors)
-    asset vendors-node_modules_date-fns_index_js.js 997 KiB [emitted] (id hint: vendors)
-    asset vendors-node_modules_react_index_js.js 29.7 KiB [emitted] (id hint: vendors)
-  asset mfeBBB.js 23.8 KiB [emitted] (name: mfeBBB)
-  asset src-b_Component_js.js 4.02 KiB [emitted]
+    asset vendors-node_modules_date-fns_index_js.js 998 KiB [emitted] (id hint: vendors)
+    asset vendors-node_modules_react_index_js.js 29.8 KiB [emitted] (id hint: vendors)
+  asset mfeBBB.js 23.7 KiB [emitted] (name: mfeBBB)
+  asset src-b_Component_js.js 4.08 KiB [emitted]
   chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 15.8 KiB (runtime) [entry] [rendered]
     > mfeBBB
     runtime modules 15.8 KiB 10 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
-      provide shared module (default) react@19.3.0 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
+      provide shared module (default) react@19.3.1 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
   chunk (runtime: mfeBBB) src-b_Component_js.js 1.44 KiB (javascript) 84 bytes (consume-shared) [rendered]
     > ./src-b/Component container entry ./Component
     dependent modules 605 bytes (javascript) 84 bytes (consume-shared) [dependent] 4 modules
@@ -2061,7 +2064,7 @@ mfe-b:
     dependent modules 515 KiB [dependent] 302 modules
     ../../node_modules/date-fns/index.js 8.68 KiB [built] [code generated]
   chunk (runtime: mfeBBB) vendors-node_modules_react_index_js.js (id hint: vendors) 17.8 KiB [rendered] reused as split chunk (cache group: defaultVendors)
-    > provide shared module (default) react@19.3.0 = ../../node_modules/react/index.js
+    > provide shared module (default) react@19.3.1 = ../../node_modules/react/index.js
     > consume shared module (default) react@^19.2.7 (singleton) (fallback: ../../node_modules/react/index.js)
     dependent modules 17.6 KiB [dependent] 1 module
     ../../node_modules/react/index.js 186 bytes [built] [code generated]
@@ -2069,14 +2072,14 @@ mfe-b:
 
 mfe-c:
   assets by chunk 1020 KiB (id hint: vendors)
-    asset vendors-node_modules_date-fns_index_js.js 997 KiB [emitted] (id hint: vendors)
+    asset vendors-node_modules_date-fns_index_js.js 998 KiB [emitted] (id hint: vendors)
     asset vendors-node_modules_lodash_random_js.js 24.8 KiB [emitted] (id hint: vendors)
-  asset mfeCCC.js 25.2 KiB [emitted] (name: mfeCCC)
-  asset src-c_LazyComponent_js.js 4.09 KiB [emitted]
-  asset src-c_Component_js.js 3.9 KiB [emitted]
-  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.6 KiB (runtime) [entry] [rendered]
+  asset mfeCCC.js 25.1 KiB [emitted] (name: mfeCCC)
+  asset src-c_LazyComponent_js.js 4.01 KiB [emitted]
+  asset src-c_Component_js.js 3.8 KiB [emitted]
+  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.5 KiB (runtime) [entry] [rendered]
     > mfeCCC
-    runtime modules 16.6 KiB 12 modules
+    runtime modules 16.5 KiB 12 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
@@ -2111,20 +2114,20 @@ mfe-c:
 ```
 app:
   asset src_bootstrap_js.js 13.1 KiB [emitted] [minimized] 1 related asset
-  asset node_modules_react_index_js.js 7.79 KiB [emitted] [minimized] 1 related asset
-  asset app.js 7.78 KiB [emitted] [minimized] (name: app)
-  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.2 KiB (runtime) [entry] [rendered]
+  asset app.js 8 KiB [emitted] [minimized] (name: app)
+  asset node_modules_react_index_js.js 7.84 KiB [emitted] [minimized] 1 related asset
+  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.3 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
-    runtime modules 19.2 KiB 14 modules
+    runtime modules 19.3 KiB 15 modules
     built modules 672 bytes (javascript) 42 bytes (share-init) [built]
       ./src/index.js 588 bytes [built] [code generated]
       external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built] [code generated]
       external "mfeCCC@/dist/ccc/mfeCCC.js" 42 bytes [built] [code generated]
-      provide shared module (default) react@19.3.0 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
+      provide shared module (default) react@19.3.1 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
   chunk (runtime: app) node_modules_react_index_js.js 17.8 KiB [rendered]
     > consume shared module (default) react@^19.2.7 (singleton) (fallback: ../../node_modules/react/index.js)
-    > consume shared module (default) react@^19.3.0 (singleton) (fallback: ../../node_modules/react/index.js)
-    > provide shared module (default) react@19.3.0 = ../../node_modules/react/index.js
+    > consume shared module (default) react@^19.3.1 (singleton) (fallback: ../../node_modules/react/index.js)
+    > provide shared module (default) react@19.3.1 = ../../node_modules/react/index.js
     dependent modules 17.6 KiB [dependent] 1 module
     ../../node_modules/react/index.js 186 bytes [built] [code generated]
   chunk (runtime: app) src_bootstrap_js.js 27.8 KiB (javascript) 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [rendered]
@@ -2137,20 +2140,20 @@ app:
   app (webpack X.X.X) compiled successfully
 
 mfe-b:
-  asset vendors-node_modules_date-fns_index_js.js 70.3 KiB [emitted] [minimized] (id hint: vendors)
-  asset node_modules_react_index_js.js 7.79 KiB [emitted] [minimized] 1 related asset
+  asset vendors-node_modules_date-fns_index_js.js 70.4 KiB [emitted] [minimized] (id hint: vendors)
+  asset node_modules_react_index_js.js 7.84 KiB [emitted] [minimized] 1 related asset
   asset mfeBBB.js 6.33 KiB [emitted] [minimized] (name: mfeBBB)
-  asset src-b_Component_js.js 616 bytes [emitted] [minimized]
-  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.1 KiB (runtime) [entry] [rendered]
+  asset src-b_Component_js.js 669 bytes [emitted] [minimized]
+  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16 KiB (runtime) [entry] [rendered]
     > mfeBBB
-    runtime modules 16.1 KiB 11 modules
+    runtime modules 16 KiB 11 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
-      provide shared module (default) react@19.3.0 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
+      provide shared module (default) react@19.3.1 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
   chunk (runtime: mfeBBB) node_modules_react_index_js.js 17.8 KiB [rendered]
     > consume shared module (default) react@^19.2.7 (singleton) (fallback: ../../node_modules/react/index.js)
-    > provide shared module (default) react@19.3.0 = ../../node_modules/react/index.js
+    > provide shared module (default) react@19.3.1 = ../../node_modules/react/index.js
     dependent modules 17.6 KiB [dependent] 1 module
     ../../node_modules/react/index.js 186 bytes [built] [code generated]
   chunk (runtime: mfeBBB) src-b_Component_js.js 1.44 KiB (javascript) 84 bytes (consume-shared) [rendered]
@@ -2164,14 +2167,14 @@ mfe-b:
   mfe-b (webpack X.X.X) compiled successfully
 
 mfe-c:
-  asset vendors-node_modules_date-fns_index_js.js 70.3 KiB [emitted] [minimized] (id hint: vendors)
-  asset mfeCCC.js 7.01 KiB [emitted] [minimized] (name: mfeCCC)
-  asset node_modules_lodash_random_js.js 3.08 KiB [emitted] [minimized]
-  asset src-c_LazyComponent_js.js 651 bytes [emitted] [minimized]
-  asset src-c_Component_js.js 595 bytes [emitted] [minimized]
-  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.8 KiB (runtime) [entry] [rendered]
+  asset vendors-node_modules_date-fns_index_js.js 70.4 KiB [emitted] [minimized] (id hint: vendors)
+  asset mfeCCC.js 7 KiB [emitted] [minimized] (name: mfeCCC)
+  asset node_modules_lodash_random_js.js 3.13 KiB [emitted] [minimized]
+  asset src-c_LazyComponent_js.js 704 bytes [emitted] [minimized]
+  asset src-c_Component_js.js 648 bytes [emitted] [minimized]
+  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.7 KiB (runtime) [entry] [rendered]
     > mfeCCC
-    runtime modules 16.8 KiB 12 modules
+    runtime modules 16.7 KiB 12 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]

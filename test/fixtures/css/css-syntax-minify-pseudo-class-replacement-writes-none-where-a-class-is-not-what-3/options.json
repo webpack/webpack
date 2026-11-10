@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"pseudoClasses": {
+			"focus-visible": "focus-visible",
+			"hover": "hovered"
+		}
+	}
+]

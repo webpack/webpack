@@ -1,0 +1,1 @@
+function f(x){if(0!==(x&4))return!0;return!1}console.log(f(4),f(0))

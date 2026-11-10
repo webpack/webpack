@@ -1,0 +1,1 @@
+A `\` carries meanings a stylesheet a build reads never reaches, since each needs the source to stop mid-escape or to spell a newline the corpus does not: §4.3.5 inside a string and §4.3.7 everywhere else.

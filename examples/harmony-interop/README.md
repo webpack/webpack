@@ -189,16 +189,6 @@ var named = "named";
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = (module) => {
-/******/ 		const getter = module && module.__esModule ?
-/******/ 			() => (module['default']) :
-/******/ 			() => (module);
-/******/ 		__webpack_require__.d(getter, { a: getter });
-/******/ 		return getter;
-/******/ 	};
-/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	// define getter/value functions for harmony exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
@@ -215,8 +205,7 @@ var named = "named";
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /************************************************************************/
@@ -234,12 +223,11 @@ let __webpack_exports__ = {};
   \********************/
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./fs */ 1);
 /* harmony import */ var _reexport_commonjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport-commonjs */ 2);
 /* harmony import */ var _example2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./example2 */ 3);
-/* harmony import */ var _example2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_example2__WEBPACK_IMPORTED_MODULE_2__);
 // harmony module
 
 // import from CommonJS module
@@ -268,11 +256,11 @@ _fs__WEBPACK_IMPORTED_MODULE_0__.readFile("file");
 ## Unoptimized
 
 ```
-asset output.js 6.99 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 883 bytes (runtime) [entry] [rendered]
+asset output.js 6.38 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 587 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 785 bytes [dependent] 4 modules
-  runtime modules 883 bytes 4 modules
+  runtime modules 587 bytes 3 modules
   ./example.js 374 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -283,12 +271,12 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 895 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 991 bytes (runtime) [entry] [rendered]
+asset output.js 670 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 858 bytes (javascript) 587 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 484 bytes [dependent] 3 modules
-  runtime modules 991 bytes 3 modules
-  ./example.js + 1 modules 675 bytes [built] [code generated]
+  runtime modules 587 bytes 3 modules
+  ./example.js 374 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main

@@ -1,0 +1,1 @@
+var p = { zBazQux: 3, zOther: 4 }; console.log(p.zBazQux, p.zOther);

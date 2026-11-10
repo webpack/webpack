@@ -8,7 +8,10 @@ on:
     tags: ["!**"]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # Only pull request runs share a group. A group holds one pending run, so
+  # with a shared group a third push to `main` would evict the one queued
+  # behind the run in progress; every other run keys on its own run id.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
   # A preview of a commit that has been replaced is one nobody will install.
   # Every push to `main` publishes its own preview, so those are not dropped.
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -25,6 +28,7 @@ jobs:
       github.event.pull_request.head.repo.full_name == github.repository)
     name: Publish to pkg.pr.new
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     outputs:
       sha: ${{ steps.publish.outputs.sha }}
       urls: ${{ steps.publish.outputs.urls }}
@@ -32,16 +36,24 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: corepack enable
       - name: Use Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: lts/*
           cache: yarn
       - run: node tooling/retry.js yarn --frozen-lockfile
       - run: npx pkg-pr-new publish --compact --json output.json --comment=off
-      - name: Add metadata to output
+      - name: Write the preview package report
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { run } = await import('${{ github.workspace }}/.github/scripts/publish-to-pkg-pr-new.mjs');
-            await run({ github, context });
+            run({ context });
+
+      # `pr-reports.yml` puts this in the pull request's one report comment.
+      - name: Upload the report for the pull request comment
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: pr-report-pkg-pr-new
+          path: pkg-pr-new-report.md
+          retention-days: 90

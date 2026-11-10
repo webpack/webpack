@@ -66,7 +66,6 @@ document.querySelector('#app').innerHTML = [toml, yaml, json].map(data => `
 
 const json5 = require("json5");
 const toml = require("toml");
-// @ts-expect-error no types for yamljs
 const yaml = require("yamljs");
 
 /** @type {import("webpack").Configuration} */
@@ -205,8 +204,7 @@ module.exports = /*#__PURE__*/JSON.parse('{"title":"JSON5 Example","owner":{"nam
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /************************************************************************/
@@ -251,11 +249,11 @@ document.querySelector('#app').innerHTML = [_data_toml__WEBPACK_IMPORTED_MODULE_
 ## webpack output
 
 ```
-asset output.js 6.06 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 919 bytes (javascript) 211 bytes (runtime) [entry] [rendered]
+asset output.js 6.02 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 919 bytes (javascript) 184 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 565 bytes [dependent] 3 modules
-  runtime modules 211 bytes 1 module
+  runtime modules 184 bytes 1 module
   ./example.js 354 bytes [built] [code generated]
     [no exports]
     [used exports unknown]

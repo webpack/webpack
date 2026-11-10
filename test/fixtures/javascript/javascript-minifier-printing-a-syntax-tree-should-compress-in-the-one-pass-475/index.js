@@ -1,0 +1,1 @@
+l:for(;;){if(b){x();continue l}y()}for(;;){if(b){x();/*c*/continue}y()}for(;;){if(b){if(c)x();continue}y()}for(;;){if(b){x();continue}function q(){}q()}for(;;){if(b){x();continue}y();y()}function f(){if(1){x();return}y()}function g(a){if(a){x();return 1}y()}for(;;){if(b){continue}y()}

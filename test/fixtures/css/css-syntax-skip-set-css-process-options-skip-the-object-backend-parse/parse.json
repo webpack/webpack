@@ -1,0 +1,18 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"skip": {
+				"types": [
+					"Number"
+				]
+			}
+		},
+		"visit": {
+			"types": [
+				"Declaration"
+			],
+			"exit": false
+		}
+	}
+]

@@ -1,0 +1,1 @@
+function f(e,t,g){return[!!!(e&6)]}

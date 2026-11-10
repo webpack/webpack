@@ -24,3 +24,7 @@
 .t13 { color: red; & .inner { color: lime } color: blue }
 /*! a keyframe ignores `!important`, so one there stands over nothing */
 @keyframes t14 { 0% { color: red !important; color: blue } }
+/*! no shipping engine reads a later value that is invalid or names what none
+   of them has, so the earlier one is what they all use and stays */
+.t15 { background-image: linear-gradient(red, blue); background-image: radial-gradient(red at center, blue) }
+.t16 { color: red; color: device-cmyk(0 1 1 0) }

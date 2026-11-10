@@ -1,0 +1,3 @@
+.x3 {
+	composes: x4 from "./x4.module.css";
+}

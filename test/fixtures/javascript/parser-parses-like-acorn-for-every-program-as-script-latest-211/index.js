@@ -1,0 +1,1 @@
+async (a = await 1) => a

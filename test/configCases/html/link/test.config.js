@@ -1,10 +1,10 @@
 "use strict";
 
 module.exports = {
-	moduleScope(scope) {
-		const link = scope.window.document.createElement("link");
+	setupDocument(document, { index }) {
+		const link = document.createElement("link");
 		link.rel = "stylesheet";
-		link.href = `bundle${scope.__STATS_I__}.css`;
-		scope.window.document.head.appendChild(link);
+		link.href = `bundle${index}.css`;
+		document.head.appendChild(link);
 	}
 };

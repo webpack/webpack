@@ -1,0 +1,1 @@
+function f() { '\08'; 'use strict'; }

@@ -1,0 +1,1 @@
+for(;;){if(b)/*c*/continue;y()}

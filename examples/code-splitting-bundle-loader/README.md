@@ -137,9 +137,9 @@ __webpack_require__.e(/*! require.ensure */ "file_js").then((function(require) {
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -180,7 +180,7 @@ __webpack_require__.e(/*! require.ensure */ "file_js").then((function(require) {
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -231,7 +231,7 @@ __webpack_require__.e(/*! require.ensure */ "file_js").then((function(require) {
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -262,7 +262,7 @@ __webpack_require__(/*! bundle-loader!./file.js */ 1)(function(fileJsExports) {
 # dist/file_js.output.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["file_js"],{
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["file_js"],{
 
 /***/ 2
 /*!*****************!*\
@@ -286,7 +286,7 @@ module.exports = "It works";
 
 ```
 asset output.js 9.27 KiB [emitted] (name: main)
-asset file_js.output.js 348 bytes [emitted]
+asset file_js.output.js 387 bytes [emitted]
 chunk (runtime: main) file_js.output.js 28 bytes [rendered]
   > ../../node_modules/bundle-loader/index.js!./file.js 7:0-14:2
   ./file.js 28 bytes [built] [code generated]
@@ -306,8 +306,8 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.86 KiB [emitted] [minimized] (name: main)
-asset file_js.output.js 93 bytes [emitted] [minimized]
+asset output.js 1.87 KiB [emitted] [minimized] (name: main)
+asset file_js.output.js 125 bytes [emitted] [minimized]
 chunk (runtime: main) file_js.output.js 28 bytes [rendered]
   > ../../node_modules/bundle-loader/index.js!./file.js 7:0-14:2
   ./file.js 28 bytes [built] [code generated]

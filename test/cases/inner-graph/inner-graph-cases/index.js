@@ -1,0 +1,12 @@
+import "./array-expression/index.js";
+import "./circular/index.js";
+import "./circular2/index.js";
+import "./export-default-named/index.js";
+import "./no-side-effects/index.js";
+import "./object-expression/index.js";
+import "./pure-in-removed/index.js";
+import "./reexport-namespace-and-default/index.js";
+import "./simple/index.js";
+import "./static-of-class/index.js";
+import "./switch/index.js";
+import "./try-globals/index.js";

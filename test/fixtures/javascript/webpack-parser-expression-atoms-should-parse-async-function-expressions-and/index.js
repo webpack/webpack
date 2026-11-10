@@ -1,0 +1,1 @@
+const f = async function() { return 1; };

@@ -19,8 +19,16 @@ describe("MultiItemCache", () => {
 
 	it("returns the single ItemCacheFacade when passed an array of length 1", () => {
 		const itemCaches = generateItemCaches(1);
-		const multiItemCache = new MultiItemCache(itemCaches);
-		expect(multiItemCache).toBe(itemCaches[0]);
+		expect(MultiItemCache.from(itemCaches)).toBe(itemCaches[0]);
+	});
+
+	it("wraps no ItemCacheFacades", () => {
+		expect(MultiItemCache.from([])).toBeInstanceOf(MultiItemCache);
+	});
+
+	it("wraps several ItemCacheFacades", () => {
+		const itemCaches = generateItemCaches(2);
+		expect(MultiItemCache.from(itemCaches)).toBeInstanceOf(MultiItemCache);
 	});
 
 	it("retrieves items from the underlying Cache when get is called", () => {
@@ -52,6 +60,24 @@ describe("MultiItemCache", () => {
 		};
 		multiItemCache.get(callback);
 		expect(callbacks).toBe(1);
+	});
+
+	it("resolves getPromise with the first item that has data", async () => {
+		let calls = 0;
+		const itemCaches = generateItemCaches(3, () =>
+			++calls === 2 ? { name: "second" } : undefined
+		);
+		const multiItemCache = new MultiItemCache(itemCaches);
+		await expect(multiItemCache.getPromise()).resolves.toEqual({
+			name: "second"
+		});
+		expect(calls).toBe(2);
+	});
+
+	it("resolves getPromise with undefined when no item has data", async () => {
+		const itemCaches = generateItemCaches(3, () => undefined);
+		const multiItemCache = new MultiItemCache(itemCaches);
+		await expect(multiItemCache.getPromise()).resolves.toBeUndefined();
 	});
 
 	/**

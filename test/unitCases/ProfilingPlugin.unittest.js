@@ -23,7 +23,6 @@ describe("Profiling Plugin", () => {
 	});
 
 	it("should handle when unable to require the inspector", () => {
-		// @ts-expect-error intentionally calling without required argument
 		const profiler = new ProfilingPlugin.Profiler();
 		return profiler.startProfiling();
 	});
@@ -37,20 +36,26 @@ describe("Profiling Plugin", () => {
 			})
 		);
 
-		return profiler.startProfiling();
+		return profiler.startProfiling().then(() => {
+			expect(profiler.hasSession()).toBe(false);
+		});
 	});
 
 	it("handles sending a profiling message when no session", () => {
-		// @ts-expect-error intentionally calling without required argument
 		const profiler = new ProfilingPlugin.Profiler();
 		return profiler.sendCommand(
 			"randy",
-			/** @type {EXPECTED_OBJECT} */ (/** @type {unknown} */ ("is awesome"))
+			/** @type {import("inspector").Profiler.SetSamplingIntervalParameterType} */ (/** @type {unknown} */ ("is awesome"))
 		);
 	});
 
+	it("resolves no profile when stopping without a session", async () => {
+		const profiler = new ProfilingPlugin.Profiler();
+		await profiler.startProfiling();
+		await expect(profiler.stopProfiling()).resolves.toBeUndefined();
+	});
+
 	it("handles destroying when no session", () => {
-		// @ts-expect-error intentionally calling without required argument
 		const profiler = new ProfilingPlugin.Profiler();
 		return profiler.destroy();
 	});
@@ -62,7 +67,7 @@ describe("Profiling Plugin", () => {
  */
 
 describe("ProfilingPlugin in real Chrome", () => {
-	/** @type {import("puppeteer-core").Browser} */
+	/** @type {import("playwright-core").Browser} */
 	let browser;
 
 	beforeAll(async () => {

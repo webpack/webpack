@@ -1,0 +1,1 @@
+with(o)(c?foo:foo)()

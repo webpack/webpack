@@ -30,7 +30,9 @@ module.exports = {
 			const handler = (compilation) => {
 				compilation.hooks.afterProcessAssets.tap("testcase", (assets) => {
 					const source = assets["test.js"].source();
-					expect(source).toContain("export const value");
+					expect(source).toMatch(
+						/export \{[^}]*\b__webpack_exports__value as value\b/
+					);
 				});
 			};
 			this.hooks.compilation.tap("testcase", handler);

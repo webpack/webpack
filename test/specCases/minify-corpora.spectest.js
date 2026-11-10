@@ -1,31 +1,45 @@
 "use strict";
 
-// cspell:ignore destructurings fnames napi reminify reminifies ufuzz
+// cspell:ignore defun destructurings dstr fargs feeback fnames fromindex inof lref napi plotly reminify reminifies rtrn targetbuffer targettype tointeger trlg ufuzz
 
-// Holds webpack's JavaScript minifier to every test terser, swc and oxc write
-// for theirs. Each source of each corpus below is minified by webpack and by the
-// minifier it replaces under the same options, and:
-// 1. both must write the same bytes, or refuse the source with the same error;
-// 2. where the test states what its input prints, webpack's output, run in
-//    terser's own sandbox, must print it too, whatever the bytes;
+// Holds webpack's JavaScript minifier, the one `SourceProcessor` pass production
+// runs, to every test terser, swc and oxc write for theirs. Each source of each
+// corpus below is minified by webpack and by terser, the minifier it replaces,
+// under the same options, and:
+// 1. webpack's output must run the same: where the test states what its input
+//    prints, run in terser's own sandbox it must print that too, and webpack
+//    must refuse a source where terser does, and only there, unless
+//    REFUSED_BY_REFERENCE or REFUSED_BY_WEBPACK lists why;
+// 2. summed over each corpus, webpack's output must gzip no bigger than terser's;
 // 3. where swc records its own output, webpack's must be no bigger (gzip, then
-//    raw), unless SWC_SMALLER lists why, nor than oxc's unless OXC_SMALLER does;
+//    raw), unless SWC_SMALLER lists why, nor than oxc's unless OXC_SMALLER does
+//    (`rivalSmallerByDesign.js` adds to both what no minifier change closes);
 //    JS_MINIFY_REPORT names a file to tally where it is worse, the same and better.
 
 const { spawnSync } = require("child_process");
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 const { pathToFileURL } = require("url");
 const vm = require("vm");
 const zlib = require("zlib");
 const acorn = require("acorn");
-const { IGNORED_FORMAT_OPTIONS, load } =
-	require("../../lib/javascript/syntax").printer;
-const OXC_SMALLER = require("../helpers/oxcSmaller");
-const SWC_SMALLER = require("../helpers/swcSmaller");
+const { SourceProcessor, printer } = require("../../lib/javascript/syntax");
+const BY_DESIGN = require("../helpers/rivalSmallerByDesign");
+const { claimInPart, currentPart } = require("../helpers/testParts");
+
+const OXC_SMALLER = {
+	...require("../helpers/oxcSmaller"),
+	...BY_DESIGN.OXC_SMALLER
+};
+const SWC_SMALLER = {
+	...require("../helpers/swcSmaller"),
+	...BY_DESIGN.SWC_SMALLER
+};
 
 /** @typedef {import("terser").MinifyOptions} MinifyOptions */
-/** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }>} Minify */
+/** @typedef {import("../../lib/javascript/syntax-parser").JavascriptProcessOptions} JavascriptProcessOptions */
+/** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }> | { code?: string }} Minify */
 /** @typedef {{ code?: string, error?: string }} Outcome */
 /** @typedef {{ expected: string | Error | true, input: string, prepend: string, microtasks?: boolean, strict?: boolean }} Stdout */
 /** @typedef {{ name: string, input: string, module?: boolean, invalid?: boolean, own?: { compress: EXPECTED_ANY, mangle: EXPECTED_ANY, format: EXPECTED_OBJECT, parse: EXPECTED_OBJECT }, stdout?: Stdout, reminify?: boolean, rival?: { name: string, code: string } }} Source */
@@ -44,7 +58,9 @@ const swcTestsDir = path.join(
 const oxcTestsDir = path.join(externalDir, "oxc/crates/oxc_minifier/tests");
 
 // A group minifies each of its sources once per option set, with both minifiers.
-const GROUP_TIMEOUT = 300000;
+const GROUP_TIMEOUT = 600000;
+// Sources a part claims at once: enough that oxc's batches stay few.
+const CLAIM_SIZE = 100;
 
 /**
  * An option value, copied so neither minifier sees what the other wrote into
@@ -100,7 +116,11 @@ const withoutLayout = (options) => {
 		);
 		if (!given || typeof given !== "object") continue;
 		const format = { ...given };
-		for (const name of IGNORED_FORMAT_OPTIONS) delete format[name];
+		for (const name of printer.IGNORED_FORMAT_OPTIONS) {
+			// terser reads its own snake_case spelling, which the printer aliases.
+			delete format[name];
+			delete format[name.replace(/[A-Z]/g, (c) => `_${c.toLowerCase()}`)];
+		}
 		result[key] = format;
 	}
 	return /** @type {MinifyOptions} */ (result);
@@ -434,6 +454,9 @@ const readsAsModule = (input) => {
 	}
 };
 
+// What stands for swc's `passes: 0`, which it runs until nothing changes.
+const SWC_UNBOUNDED_PASSES = 10;
+
 /**
  * One of swc's minifier tests, as swc's own harness reads it: the compress
  * options of the nearest `config.json` up the tree, and a `mangle.json` beside
@@ -464,6 +487,9 @@ const readSwcTest = (file, { knows }) => {
 	const compress = dir.startsWith(swcTestsDir)
 		? { defaults: true, ...readJson(path.join(dir, "config.json")) }
 		: undefined;
+	// swc repeats its passes until one changes nothing where `passes` is 0 or
+	// unset; terser, given more, stops once a pass leaves the tree no smaller.
+	if (compress && !compress.passes) compress.passes = SWC_UNBOUNDED_PASSES;
 	const [area] = path.relative(swcTestsDir, file).split(path.sep);
 	const mangle = readJson(path.join(path.dirname(file), "mangle.json"));
 	// swc also reads its Rust field's camelCase spelling, which terser does not.
@@ -938,92 +964,22 @@ const CORPORA = [
  * @type {Record<string, string>}
  */
 const INHERITED = {
-	"swc exec: terser_pure_funcs_issue_3065_3 (its own options)":
-		"`pure_funcs` names these calls free of effects, so dropping them is what it asks",
-	"swc exec: terser_pure_funcs_issue_3065_4 (its own options)":
-		"`pure_funcs` names these calls free of effects, so dropping them is what it asks",
-	"swc exec: terser_pure_getters_impure_getter_2 (its own options)":
-		"`pure_getters` says property reads have no effects, so dropping the getter is what it asks"
+	"swc minifier: fixture/issues/12606/runtime/input.js (the default minimizer's options)":
+		"the case keeps class names through its mangle options alone, which this set does not read, so `.name` reads the mangled name"
 };
 
 /**
- * Sources terser misprints under a set and webpack's `correct` phase prints
- * right, each with the defect: without the phase each must misprint as terser's.
- * @type {Record<string, string>}
+ * By corpus, how many times terser's gzip total webpack's outputs may gzip to
+ * where they still gzip bigger, a ratio one zlib gives both sides of: no run
+ * may grow it, and one no longer bigger retires it. Lower it as a run shrinks it.
+ * @type {Record<string, number>}
  */
-const CORRECTED = {
-	"swc exec: object_spread_proto_key_is_not_flattened (its own options)":
-		"terser flattens a spread object carrying a `__proto__` key into a literal, where it sets the prototype",
-	"swc exec: object_spread_proto_key_is_not_flattened (the default minimizer's options)":
-		"terser flattens a spread object carrying a `__proto__` key into a literal, where it sets the prototype",
-	"swc exec: terser_reduce_vars_shorthand_proto_null (its own options)":
-		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
-	"swc exec: terser_reduce_vars_shorthand_proto_null (printing alone)":
-		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
-	"swc exec: terser_reduce_vars_shorthand_proto_null (the default minimizer's options)":
-		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
-	"swc exec: terser_reduce_vars_shorthand_proto_object (its own options)":
-		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
-	"swc exec: terser_reduce_vars_shorthand_proto_object (printing alone)":
-		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
-	"swc exec: terser_reduce_vars_shorthand_proto_object (the default minimizer's options)":
-		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
-	"swc minifier: fixture/issues/12182/callee-contexts/input.js (its own options)":
-		"terser drops the `(0, \u2026)` detaching a callee from its receiver, so `this` becomes the object",
-	"swc minifier: fixture/issues/12182/callee-contexts/input.js (the default minimizer's options)":
-		"terser drops the `(0, \u2026)` detaching a callee from its receiver, so `this` becomes the object",
-	"swc minifier: fixture/issues/12182/callee-safety/direct-eval/input.js (its own options)":
-		"terser calls a function reading `this` through direct `eval` out of the array holding it, so `this` is lost",
-	"swc minifier: fixture/issues/12182/callee-safety/direct-eval/input.js (the default minimizer's options)":
-		"terser calls a function reading `this` through direct `eval` out of the array holding it, so `this` is lost",
-	"swc minifier: fixture/issues/12209/input.js (its own options)":
-		"terser reads `arguments[0]` as a parameter reassigned in the body, though no argument was passed to alias it",
-	"swc minifier: fixture/issues/12214/input.js (its own options)":
-		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
-	"swc minifier: fixture/issues/12214/input.js (printing alone)":
-		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
-	"swc minifier: fixture/issues/12214/input.js (the default minimizer's options)":
-		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
-	"swc minifier: fixture/issues/12222/input.js (its own options)":
-		"terser drops calls whose parameter defaults or destructuring have effects or throw",
-	"swc minifier: fixture/issues/12222/input.js (the default minimizer's options)":
-		"terser drops calls whose parameter defaults or destructuring have effects or throw",
-	"swc minifier: fixture/issues/12296/input.js (its own options)":
-		"terser moves a class declaration into a block the closure reading it cannot see, so it throws",
-	"swc minifier: fixture/issues/12307/input.js (its own options)":
-		"terser folds `f().a == f().a` to true, though each call returns a different object",
-	"swc minifier: fixture/issues/12307/input.js (the default minimizer's options)":
-		"terser folds `f().a == f().a` to true, though each call returns a different object",
-	"swc minifier: fixture/issues/9460/side-effects/input.js (its own options)":
-		"terser drops destructuring defaults and patterns whose evaluation has effects or throws",
-	"swc minifier: fixture/issues/9460/side-effects/input.js (the default minimizer's options)":
-		"terser drops destructuring defaults and patterns whose evaluation has effects or throws"
+const TERSER_TOTAL_BUDGET = {
+	"terser compress": 1.0593,
+	"swc exec": 1.053
 };
 
 /* cspell:disable */
-// What the reference gets wrong, or how its output and webpack's agree, where
-// several sources differ for the same reason.
-const DEFAULT_FUNCTION_ENDS =
-	"an exported default function declaration ends at its `}`, so `(foo)` is a statement of its own, which terser's own FIXME says";
-const ASI_LET =
-	"terser reads a `let` before a line break as a declaration, where the semicolon inserted after it leaves a name";
-const ASI_ASYNC =
-	"terser reads an `async` before a line break as the modifier, where the semicolon inserted after it leaves a name";
-const CONTINUATION =
-	"terser writes a line continuation's own break into the string, which holds nothing";
-const NUMERIC_KEY =
-	"terser quotes a binary, octal or hex key as it is written, naming the property `0b1` where it is `1`";
-const RAW_BREAK =
-	"a tagged template's raw text reads either break as one line feed, and webpack writes the feed itself";
-const ESCAPED_DIRECTIVE =
-	"webpack keeps the escape that stops the string being a directive, where terser unescapes it and detaches it with `;`";
-const EMPTY_IMPORT =
-	"webpack writes an import of nothing without the empty list, which imports the same";
-const EMPTY_ATTRIBUTES =
-	"webpack writes an import without the empty attributes, which asks for the same";
-const AWAIT_IDENTIFIER =
-	"terser reads `await` in a class field as the operator, where a script may hold it as a name";
-
 /**
  * Parse errors the reference answers with where the spec allows the source,
  * each with what makes it legal: webpack reads these and prints, and the output
@@ -1056,98 +1012,46 @@ const REFUSED_BY_REFERENCE = {
 	"Unexpected token: operator (>)":
 		"Annex B reads this as the identifier it is, not an operator",
 	"Strict mode may not include a with statement":
-		"the corpus reads this module as a script, where `with` is allowed"
+		"the corpus reads this module as a script, where `with` is allowed",
+	'"arguments" is redeclared':
+		"a function body may declare `arguments` lexically, shadowing the arguments object",
+	'"asd" is redeclared':
+		"Annex B leaves a block's function unhoisted where a lexical binding of its name stands",
+	'"f" is redeclared':
+		"Annex B leaves a block's function unhoisted where a lexical binding of its name stands",
+	'"x" is redeclared':
+		"a `let` in a `for` head is scoped to the loop, so it may shadow an outer `let`",
+	"Cannot convert a BigInt value to a number":
+		"terser's compressor throws on a BigInt operation that throws only when it runs",
+	"Division by zero":
+		"terser's compressor throws on a BigInt division by zero that throws only when it runs",
+	// terser reads identifier characters off the running V8's Unicode tables.
+	...(!/\p{ID_Start}/u.test("\u088F") && {
+		"First identifier char is an invalid identifier char":
+			"Unicode 17 adds identifier characters this Node's Unicode tables predate",
+		"Invalid escaped identifier char":
+			"Unicode 17 adds identifier characters this Node's Unicode tables predate",
+		"Unexpected character '\u088F'":
+			"Unicode 17 adds identifier characters this Node's Unicode tables predate",
+		"Unexpected character '\u1ACF'":
+			"Unicode 17 adds identifier characters this Node's Unicode tables predate"
+	}),
+	"Unexpected token: punc (})":
+		"the corpus reads this as a script, where a class field may read a binding named `await`",
+	"Unexpected token: punc (;)":
+		"the corpus reads this as a script, where a class field may read a binding named `await`",
+	"Unexpected token name \u00ABpromise\u00BB, expected punc \u00AB,\u00BB":
+		"a module's top-level `await` may stand inside an array literal",
+	"Unexpected token name \u00ABasyncProgression\u00BB, expected punc \u00AB,\u00BB":
+		"a module's top-level `await` may stand inside a call's arguments",
+	"Unexpected token operator \u00AB=\u00BB, expected punc \u00AB(\u00BB":
+		"a field named `get` or `set` with an escape in it ends at the semicolon inserted after it"
 };
-
-/**
- * Sources the reference reads or prints differently, each with what it gets
- * wrong or how the two agree; webpack's output stands, and is still run against
- * what the test says it prints. An entry that stops differing fails until
- * retired.
- * @type {Record<string, string>}
- */
-const REFERENCE_MISPRINTS = {
-	"test262: import-attributes.js (the default minimizer's options)": EMPTY_ATTRIBUTES,
-	"test262: import-attributes.js (printing alone)": EMPTY_ATTRIBUTES,
-	"swc minifier: fixture/issues/6192/2/input.js (its own options)": EMPTY_IMPORT,
-	"swc minifier: fixture/issues/6192/2/input.js (the default minimizer's options)": EMPTY_IMPORT,
-	"swc minifier: fixture/issues/6192/2/input.js (printing alone)": EMPTY_IMPORT,
-	"terser compress: export/export_default_anonymous_function_not_call (its own options)":
-		DEFAULT_FUNCTION_ENDS,
-	"terser compress: export/export_default_anonymous_function_not_call (the default minimizer's options)":
-		DEFAULT_FUNCTION_ENDS,
-	"terser compress: export/export_default_anonymous_function_not_call (printing alone)":
-		DEFAULT_FUNCTION_ENDS,
-	"terser compress: export/export_default_anonymous_function_not_call (a module mangled at its top level)":
-		DEFAULT_FUNCTION_ENDS,
-	"terser compress: harmony/import_no_mappings (its own options)": EMPTY_IMPORT,
-	"terser compress: harmony/import_no_mappings (the default minimizer's options)": EMPTY_IMPORT,
-	"terser compress: harmony/import_no_mappings (printing alone)": EMPTY_IMPORT,
-	"terser compress: harmony/import_no_mappings (a module mangled at its top level)": EMPTY_IMPORT,
-	"test262: let-identifier-with-newline.js (printing alone)": ASI_LET,
-	"test262: let-identifier-with-newline.js (the default minimizer's options)":
-		ASI_LET,
-	"test262: let-block-with-newline.js (printing alone)": ASI_LET,
-	"test262: let-block-with-newline.js (the default minimizer's options)":
-		ASI_LET,
-	"test262: syntax-declaration-no-line-terminator.js (printing alone)": ASI_ASYNC,
-	"test262: syntax-declaration-no-line-terminator.js (the default minimizer's options)":
-		ASI_ASYNC,
-	"test262: escaped-async-line-terminator.js (printing alone)": ASI_ASYNC,
-	"test262: escaped-async-line-terminator.js (the default minimizer's options)":
-		ASI_ASYNC,
-	"test262: async-lineterminator-identifier-throws.js (printing alone)":
-		ASI_ASYNC,
-	"test262: async-lineterminator-identifier-throws.js (the default minimizer's options)":
-		ASI_ASYNC,
-	"test262: line-continuation-double.js (printing alone)": CONTINUATION,
-	"test262: line-continuation-double.js (the default minimizer's options)":
-		CONTINUATION,
-	"test262: line-continuation-single.js (printing alone)": CONTINUATION,
-	"test262: line-continuation-single.js (the default minimizer's options)":
-		CONTINUATION,
-	"test262: property-name.js (printing alone)": NUMERIC_KEY,
-	"test262: property-name.js (the default minimizer's options)": NUMERIC_KEY,
-	"test262: special-characters.js (printing alone)": RAW_BREAK,
-	"test262: special-characters.js (the default minimizer's options)": RAW_BREAK,
-	"test262: tv-line-continuation.js (printing alone)": RAW_BREAK,
-	"test262: tv-line-continuation.js (the default minimizer's options)": RAW_BREAK,
-	"test262: 14.1-4-s.js (printing alone)": ESCAPED_DIRECTIVE,
-	"test262: 14.1-5-s.js (printing alone)": ESCAPED_DIRECTIVE,
-	"test262: eval-rqstd-order.js (printing alone)": EMPTY_IMPORT,
-	"test262: eval-rqstd-order.js (the default minimizer's options)": EMPTY_IMPORT,
-	"test262: eval-self-once.js (printing alone)": EMPTY_IMPORT,
-	"test262: eval-self-once.js (the default minimizer's options)": EMPTY_IMPORT,
-	"test262: instn-once.js (printing alone)": EMPTY_IMPORT,
-	"test262: instn-once.js (the default minimizer's options)": EMPTY_IMPORT,
-	"test262: instn-resolve-empty-import.js (printing alone)": EMPTY_IMPORT,
-	"test262: instn-resolve-empty-import.js (the default minimizer's options)":
-		EMPTY_IMPORT,
-	"oxc minifier: peephole/remove_unused_declaration.rs:1051 (printing alone)":
-		EMPTY_IMPORT,
-	"oxc minifier: peephole/remove_unused_declaration.rs:1051 (the default minimizer's options)":
-		EMPTY_IMPORT,
-	"oxc minifier: peephole/remove_unused_declaration.rs:1058 (printing alone)":
-		EMPTY_IMPORT,
-	"oxc minifier: peephole/remove_unused_declaration.rs:1058 (the default minimizer's options)":
-		EMPTY_IMPORT,
-	"test262: import-attribute-empty.js (printing alone)": EMPTY_ATTRIBUTES,
-	"test262: import-attribute-empty.js (the default minimizer's options)":
-		EMPTY_ATTRIBUTES,
-	"test262: await-identifier-script.js (printing alone)": AWAIT_IDENTIFIER,
-	"test262: await-identifier-script.js (the default minimizer's options)":
-		AWAIT_IDENTIFIER,
-	"test262: await-identifier-module-2.js (printing alone)": AWAIT_IDENTIFIER,
-	"test262: await-identifier-module-2.js (the default minimizer's options)":
-		AWAIT_IDENTIFIER
-};
-/* cspell:enable */
 
 // terser's parse options for what is not a program in the spec's sense: an
 // expression alone, TypeScript, and a stricter reading than the spec's.
 const DROPPED_PARSE_OPTIONS = ["expression", "experimental_typescript", "strict"];
 
-/* cspell:disable */
 const PRIVATE_UNDECLARED =
 	"a private name must be declared by a class enclosing it (AllPrivateIdentifiersValid)";
 const SETTER_ARITY = "a setter has exactly one parameter";
@@ -1165,6 +1069,8 @@ const USING_IN_SCRIPT = "`using` may not be declared at the top level of a scrip
 const AUTO_ACCESSOR =
 	"`accessor` fields are a proposal; the spec reads `accessor` as a field name, which a name may not follow";
 const INVALID_PATTERN = "a regular expression literal must hold a valid pattern";
+const ARGUMENTS_LABEL =
+	"a label named `arguments` is no reference to it, which acorn refuses in a class field or static block, as webpack's parser does";
 const FOR_OF_SEQUENCE =
 	"the right of `for…of` is an AssignmentExpression, never a comma sequence";
 
@@ -1185,22 +1091,24 @@ const REFUSED_BY_WEBPACK = {
 	"oxc minifier: mangler/property_mangler.rs:311": AUTO_ACCESSOR,
 	"oxc minifier: peephole/remove_unused_declaration.rs:356": AUTO_ACCESSOR,
 	"oxc minifier: peephole/remove_unused_declaration.rs:357": AUTO_ACCESSOR,
-	"oxc minifier: peephole/remove_unused_expression.rs:752": AUTO_ACCESSOR,
-	"oxc minifier: peephole/remove_unused_expression.rs:753": AUTO_ACCESSOR,
-	"oxc minifier: peephole/remove_unused_expression.rs:859": AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_expression.rs:868": AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_expression.rs:869": AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_expression.rs:975": AUTO_ACCESSOR,
 	"oxc minifier: peephole/remove_unused_private_members.rs:49": AUTO_ACCESSOR,
 	"oxc minifier: peephole/remove_unused_private_members.rs:53": AUTO_ACCESSOR,
-	"oxc minifier: peephole/replace_known_methods.rs:1260": INVALID_PATTERN,
-	"oxc minifier: peephole/replace_known_methods.rs:1262": INVALID_PATTERN,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:705": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:718": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:720": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:737": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:742": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:744": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:746": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:757": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:760": AUTO_ACCESSOR,
+	"oxc minifier: peephole/replace_known_methods.rs:1423": INVALID_PATTERN,
+	"oxc minifier: peephole/replace_known_methods.rs:1425": INVALID_PATTERN,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:708": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:722": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:734": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:736": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:750": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:767": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:772": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:774": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:776": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:787": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:790": AUTO_ACCESSOR,
 	"swc minifier: fixture/issues/11133/input.js": REDECLARED,
 	"terser compress: class-properties/parens_in": PRIVATE_UNDECLARED,
 	"terser compress: class-properties/parens_in_10": PRIVATE_UNDECLARED,
@@ -1247,18 +1155,10 @@ const REFUSED_BY_WEBPACK = {
 	"test262: grammar-field-accessor.js": AUTO_ACCESSOR,
 	"test262: private-auto-accessor.js": AUTO_ACCESSOR,
 	"test262: public-auto-accessor.js": AUTO_ACCESSOR,
+	"test262: arrow-body-arguments-label.js": ARGUMENTS_LABEL,
+	"test262: static-init-arguments-label.js": ARGUMENTS_LABEL,
 };
 /* cspell:enable */
-
-/**
- * Whether two outcomes agree: the same code, or both a refusal, whatever
- * either says, since the two parsers word their errors each their own way.
- * @param {Outcome} a an outcome
- * @param {Outcome} b another
- * @returns {boolean} whether they agree
- */
-const sameOutcome = (a, b) =>
-	a.code === b.code && (a.error === undefined) === (b.error === undefined);
 
 // What this run met of the tables above, so an entry it no longer meets fails
 // instead of lingering.
@@ -1266,447 +1166,52 @@ const sameOutcome = (a, b) =>
 const refusalsSeen = new Set();
 /** @type {Set<string>} */
 const webpackRefusalsSeen = new Set();
-/** @type {Set<string>} */
-const misprintsSeen = new Set();
-/** @type {Set<string>} */
-const improvedYetBiggerSeen = new Set();
+// The gzip sizes of webpack's and terser's outputs, summed per corpus.
+/** @type {Record<string, { ours: number, theirs: number }>} */
+const terserTotals = {};
 // Each `SWC_SMALLER` and `OXC_SMALLER` entry met, as `<table>: <source>`.
 /** @type {Set<string>} */
 const rivalSmallerSeen = new Set();
 
 /**
- * Outputs the `improve` phase writes shorter yet gzip compresses worse, each
- * with why; an entry that stops compressing worse fails until retired.
- * @type {Record<string, string>}
+ * webpack's minifier as production runs it: one `SourceProcessor` pass reads,
+ * mangles, compresses and prints the source, given its options as `jsMinify`
+ * gives them, `compress` and `mangle` on where unnamed and `output` read as `format`.
+ * @param {string} code the source
+ * @param {MinifyOptions} options the options
+ * @returns {{ code?: string }} what it wrote
  */
-const IMPROVED_YET_BIGGER = {
-	"arrow/object_parens (its own options)":
-		"3 bytes fewer, 1 more gzipped: `+!!{}` breaks the `()=>(` runs of the arrows around it gzip reused",
-	"projects/files/jquery.mobile-1.4.2.js (the default minimizer's options)":
-		"30 bytes fewer, 2 more gzipped: `this.p=c?x:y` breaks the `c?this.p=x:this.p=y` runs gzip reused",
-	"fixture/next/regression-1/framework-798bab57daac3897/input.js (its own options)":
-		"195 bytes fewer, 23 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
-	"projects/files/react-17.0.1.js (its own options)":
-		"33 bytes fewer, 3 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
-	"fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js (its own options)":
-		"196 bytes fewer, 9 more gzipped: the shorter `typeof x<\"u\"` breaks the `\"…\"!=typeof` runs gzip reused",
-	"evaluate/string_case (the default minimizer's options)":
-		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
-	"evaluate/string_case (a module mangled at its top level)":
-		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
-	"evaluate/string_case (reminify 2 {\"mangle\":false})":
-		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
-	"evaluate/string_case (reminify 3 {})":
-		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
-	"evaluate/string_case (reminify 4 {\"toplevel\":true})":
-		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
-	"evaluate/string_case (reminify 7 {\"safari10\":true})":
-		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
-	"evaluate/string_case (reminify 8 {\"compress\":{\"reduce_funcs\":false}})":
-		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
-	"harmony/issue_2345 (the default minimizer's options)":
-		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
-	"harmony/issue_2345 (reminify 2 {\"mangle\":false})":
-		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
-	"harmony/issue_2345 (reminify 3 {})":
-		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
-	"harmony/issue_2345 (reminify 7 {\"safari10\":true})":
-		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
-	"harmony/issue_2345 (reminify 8 {\"compress\":{\"reduce_funcs\":false}})":
-		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
-	"issue_8864_1 (its own options)":
-		"19 bytes fewer, 1 more gzipped: the folded `toUpperCase()` matched the one left in the template",
-	"S15.1.3.3_A4_T2.js (the default minimizer's options)":
-		"51 bytes fewer, 19 more gzipped: each folded lower-cased URL no longer repeats the upper-cased one",
-	"S15.1.3.4_A4_T2.js (the default minimizer's options)":
-		"51 bytes fewer, 19 more gzipped: each folded lower-cased URL no longer repeats the upper-cased one",
-	"S15.1.2.3_A1_T6.js (the default minimizer's options)":
-		"52 bytes fewer, 2 more gzipped: each folded `parseFloat` call matched the one in its message",
-	"S15.1.2.2_A7.2_T3.js (the default minimizer's options)":
-		"323 bytes fewer, 2 more gzipped: each folded `parseInt` call matched the one in its message",
-	"parseInt-default-to-decimal.js (the default minimizer's options)":
-		"60 bytes fewer, 1 more gzipped: each folded `parseInt` call matched the one in the strict function",
-	"issue-597/beautify_off_1 (its own options)":
-		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
-	"issue-597/beautify_off_1 (the default minimizer's options)":
-		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
-	"issue-597/beautify_off_1 (a module mangled at its top level)":
-		"17 bytes fewer, 5 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
-	"issue-597/beautify_off_1 (reminify 2 {\"mangle\":false})":
-		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
-	"issue-597/beautify_off_1 (reminify 3 {})":
-		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
-	"issue-597/beautify_off_1 (reminify 4 {\"toplevel\":true})":
-		"17 bytes fewer, 5 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
-	"issue-597/beautify_off_1 (reminify 7 {\"safari10\":true})":
-		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
-	"issue-597/beautify_off_1 (reminify 8 {\"compress\":{\"reduce_funcs\":false}})":
-		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
-	"issue-597/beautify_on_1 (its own options)":
-		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
-	"issue-597/beautify_on_1 (the default minimizer's options)":
-		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
-	"issue-597/beautify_on_1 (a module mangled at its top level)":
-		"17 bytes fewer, 5 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
-	"issue-597/beautify_on_1 (reminify 2 {\"mangle\":false})":
-		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
-	"issue-597/beautify_on_1 (reminify 3 {})":
-		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
-	"issue-597/beautify_on_1 (reminify 4 {\"toplevel\":true})":
-		"17 bytes fewer, 5 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
-	"issue-597/beautify_on_1 (reminify 7 {\"safari10\":true})":
-		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
-	"issue-597/beautify_on_1 (reminify 8 {\"compress\":{\"reduce_funcs\":false}})":
-		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
-	"does-not-use-prototype-properties.js (the default minimizer's options)":
-		"8 bytes fewer, 2 more gzipped: the folded `Array.of` matched the `Array.of.call` left after it",
-	"return-a-new-array-object.js (the default minimizer's options)":
-		"8 bytes fewer, 1 more gzipped: the folded `Array.of` matched the `Array.of.call` left after it",
-	"coerced-indexes.js (the default minimizer's options)":
-		"40 bytes fewer, 2 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"positive-infinity.js (the default minimizer's options)":
-		"21 bytes fewer, 2 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"S15.4.4.5_A2_T2.js (the default minimizer's options)":
-		"61 bytes fewer, 4 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"S15.4.4.10_A2.1_T3.js (the default minimizer's options)":
-		"21 bytes fewer, 2 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"S15.4.4.10_A2.1_T4.js (the default minimizer's options)":
-		"20 bytes fewer, 5 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"S15.4.4.10_A2.2_T3.js (the default minimizer's options)":
-		"21 bytes fewer, 3 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"S15.4.4.10_A2.2_T4.js (the default minimizer's options)":
-		"20 bytes fewer, 4 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"S15.4.4.12_A2.1_T3.js (the default minimizer's options)":
-		"21 bytes fewer, 4 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"S15.4.4.12_A2.1_T4.js (the default minimizer's options)":
-		"20 bytes fewer, 4 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"S15.4.4.12_A2.2_T3.js (the default minimizer's options)":
-		"21 bytes fewer, 3 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"S15.4.4.12_A2.2_T4.js (the default minimizer's options)":
-		"20 bytes fewer, 5 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"S15.4.4.13_A1_T2.js (the default minimizer's options)":
-		"42 bytes fewer, 1 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"S15.4.4.13_A2_T2.js (the default minimizer's options)":
-		"20 bytes fewer, 1 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"not-an-object-throws.js (the default minimizer's options)":
-		"20 bytes fewer, 2 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"S15.7.4.5_A1.4_T01.js (the default minimizer's options)":
-		"28 bytes fewer, 2 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"S15.5.4.19_A1_T6.js (the default minimizer's options)":
-		"36 bytes fewer, 1 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"S15.5.4.18_A1_T6.js (the default minimizer's options)":
-		"36 bytes fewer, 1 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"fixture/issues/number-radix-conversion/input.js (its own options)":
-		"6 bytes fewer, 9 more gzipped: the folded base-36 digits are a string gzip finds no run in",
-	"fixture/issues/number-radix-conversion/input.js (the default minimizer's options)":
-		"6 bytes fewer, 9 more gzipped: the folded base-36 digits are a string gzip finds no run in",
-	"RGI_Emoji_Flag_Sequence.js (the default minimizer's options)":
-		"507 bytes fewer, 8 more gzipped: each emoji sequence split out of the array loses the quotes gzip matched around the same code points",
-	"RGI_Emoji_Modifier_Sequence.js (the default minimizer's options)":
-		"1319 bytes fewer, 22 more gzipped: each emoji sequence split out of the array loses the quotes gzip matched around the same code points",
-	"rgi-emoji-14.0.js (the default minimizer's options)":
-		"213 bytes fewer, 6 more gzipped: each emoji sequence split out of the array loses the quotes gzip matched around the same code points",
-	"rgi-emoji-15.1.js (the default minimizer's options)":
-		"225 bytes fewer, 9 more gzipped: each emoji sequence split out of the array loses the quotes gzip matched around the same code points",
-	"rgi-emoji-17.0.js (the default minimizer's options)":
-		"315 bytes fewer, 3 more gzipped: each emoji sequence split out of the array loses the quotes gzip matched around the same code points",
-	"exponential.js (the default minimizer's options)":
-		"421 bytes fewer, 15 more gzipped: each folded call repeats the string the test asserts it equals",
-	"fixture/issues/6957/exponential/input.js (its own options)":
-		"421 bytes fewer, 14 more gzipped: each folded call repeats the string the test asserts it equals",
-	"fixture/issues/6957/exponential/input.js (the default minimizer's options)":
-		"421 bytes fewer, 15 more gzipped: each folded call repeats the string the test asserts it equals",
-	"range.js (the default minimizer's options)":
-		"11 to 14 bytes fewer, 2 to 3 more gzipped: each folded call repeats the string the test asserts it equals",
-	"return-values.js (the default minimizer's options)":
-		"392 bytes fewer, 18 more gzipped: each folded call repeats the string the test asserts it equals",
+const minify = (code, options) => {
+	const { output, ...rest } = options;
+	const compress =
+		typeof rest.compress === "boolean"
+			? rest.compress && {}
+			: { ...rest.compress };
+	if (compress && compress.ecma === undefined) compress.ecma = rest.ecma;
+	return {
+		code: new SourceProcessor().process(code, {
+			.../** @type {JavascriptProcessOptions} */ (rest),
+			compress,
+			mangle:
+				rest.mangle === undefined || rest.mangle === null ? true : rest.mangle,
+			format: { ...rest.format, ...output },
+			mode: "minify"
+		}).code
+	};
 };
 
-// Sources whose shorter spelling no longer repeats text gzip matched, by the
-// spelling written; an entry that stops compressing worse fails until retired.
-for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
-	[
-		"`new` arguments its constructor no longer reads dropped, where a twin `new` beside it keeps them",
-		[
-			"new/new_statements_3 (a module mangled at its top level)",
-			"new/new_statements_3 (the default minimizer's options)"
-		]
-	],
-	[
-		"`c ? x : c` written as `c && x` where the source repeats the conditional gzip matched",
-		[
-			"bound-to-collator-instance.js (the default minimizer's options)",
-			"returns-same-results-as-NumberFormat.js (the default minimizer's options)",
-			"short-circuit-compound-assignment.js (the default minimizer's options)"
-		]
-	],
-	[
-		"`Array` written as a literal where the source writes the call again",
-		[
-			"S15.4.1_A1.1_T1.js (the default minimizer's options)",
-			"S15.4.1_A1.1_T3.js (the default minimizer's options)",
-			"S15.4.1_A3.1_T1.js (the default minimizer's options)",
-			"array-constructor/array_constructor_unsafe (its own options)",
-			"fixture/issues/12201/input.js (its own options)",
-			"fixture/issues/12201/input.js (the default minimizer's options)",
-			"terser_array_constructor_unsafe (its own options)"
-		]
-	],
-	[
-		"`if(c)return x` written where `return c?x:void 0` matched the returns around it",
-		[
-			"fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js (its own options)",
-			"fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js (the default minimizer's options)",
-			"if_return/if_return_same_value (its own options)",
-			"if_return/if_return_same_value (the default minimizer's options)",
-			"replacer-function-result-undefined.js (the default minimizer's options)",
-			"stringify-replacer.js (the default minimizer's options)"
-		]
-	],
-	[
-		"`new` dropped before a constructor the source quotes or writes again beside it",
-		[
-			"15.2.3.5-4-12.js (the default minimizer's options)",
-			"15.2.3.5-4-174.js (the default minimizer's options)",
-			"15.4.3.2-0-6.js (the default minimizer's options)",
-			"15.4.3.2-1-10.js (the default minimizer's options)",
-			"15.4.3.2-1-12.js (the default minimizer's options)",
-			"15.4.4.20-6-7.js (the default minimizer's options)",
-			"15.4.4.20-9-c-iii-23.js (the default minimizer's options)",
-			"S11.1.2_A1_T1.js (the default minimizer's options)",
-			"S11.10.1_A2.1_T1.js (the default minimizer's options)",
-			"S11.10.2_A2.1_T1.js (the default minimizer's options)",
-			"S11.11.1_A2.1_T1.js (the default minimizer's options)",
-			"S11.11.2_A2.1_T1.js (the default minimizer's options)",
-			"S11.13.1_A2.1_T1.js (the default minimizer's options)",
-			"S11.14_A2.1_T1.js (the default minimizer's options)",
-			"S11.3.1_A2.1_T1.js (the default minimizer's options)",
-			"S11.3.2_A2.1_T1.js (the default minimizer's options)",
-			"S11.4.1_A4.js (the default minimizer's options)",
-			"S11.4.4_A2.1_T1.js (the default minimizer's options)",
-			"S11.4.5_A2.1_T1.js (the default minimizer's options)",
-			"S11.5.1_A2.1_T1.js (the default minimizer's options)",
-			"S11.5.2_A2.1_T1.js (the default minimizer's options)",
-			"S11.5.3_A2.1_T1.js (the default minimizer's options)",
-			"S11.6.1_A2.1_T1.js (the default minimizer's options)",
-			"S11.6.1_A2.2_T2.js (the default minimizer's options)",
-			"S11.6.2_A2.1_T1.js (the default minimizer's options)",
-			"S11.7.1_A2.1_T1.js (the default minimizer's options)",
-			"S11.8.3_A2.1_T1.js (the default minimizer's options)",
-			"S11.8.6_A7_T3.js (the default minimizer's options)",
-			"S11.9.2_A7.1.js (the default minimizer's options)",
-			"S11.9.4_A2.1_T1.js (the default minimizer's options)",
-			"S11.9.4_A7.js (the default minimizer's options)",
-			"S11.9.5_A2.1_T1.js (the default minimizer's options)",
-			"S11.9.5_A7.js (the default minimizer's options)",
-			"S15.10.1_A1_T14.js (the default minimizer's options)",
-			"S15.10.1_A1_T16.js (the default minimizer's options)",
-			"S15.10.2.11_A1_T1.js (the default minimizer's options)",
-			"S15.10.3.1_A2_T1.js (the default minimizer's options)",
-			"S15.10.4.1_A1_T4.js (the default minimizer's options)",
-			"S15.10.4.1_A8_T12.js (the default minimizer's options)",
-			"S15.10.7_A2_T2.js (the default minimizer's options)",
-			"S15.3.5.3_A2_T2.js (the default minimizer's options)",
-			"S15.3.5_A1_T1.js (the default minimizer's options)",
-			"S15.4.2.1_A1.1_T3.js (the default minimizer's options)",
-			"S15.4.2.2_A1.1_T3.js (the default minimizer's options)",
-			"S15.4.2.2_A2.2_T3.js (the default minimizer's options)",
-			"S15.4.4.11_A1.1_T1.js (the default minimizer's options)",
-			"S15.4.4.11_A1.5_T1.js (the default minimizer's options)",
-			"S15.4.4.2_A1_T3.js (the default minimizer's options)",
-			"S15.4.4.5_A1.2_T1.js (the default minimizer's options)",
-			"S15.4.4.5_A1.2_T2.js (the default minimizer's options)",
-			"S15.4.4.5_A3.1_T1.js (the default minimizer's options)",
-			"S15.4.4.5_A3.2_T1.js (the default minimizer's options)",
-			"S15.4.4.5_A3.2_T2.js (the default minimizer's options)",
-			"S15.4.4.6_A1.1_T1.js (the default minimizer's options)",
-			"S15.4.4.6_A1.2_T1.js (the default minimizer's options)",
-			"S15.4.4.9_A1.1_T1.js (the default minimizer's options)",
-			"S15.4.4.9_A1.2_T1.js (the default minimizer's options)",
-			"S15.5.1.1_A1_T19.js (the default minimizer's options)",
-			"S15.5.1.1_A1_T8.js (the default minimizer's options)",
-			"S15.5.2.1_A1_T19.js (the default minimizer's options)",
-			"S15.5.4.13_A3_T1.js (the default minimizer's options)",
-			"S15.5.4.15_A3_T1.js (the default minimizer's options)",
-			"S15.5.4.15_A3_T11.js (the default minimizer's options)",
-			"S15.5.4.15_A3_T2.js (the default minimizer's options)",
-			"S15.5.4.15_A3_T3.js (the default minimizer's options)",
-			"S15.5.4.15_A3_T4.js (the default minimizer's options)",
-			"S15.5.4.15_A3_T5.js (the default minimizer's options)",
-			"S15.5.4.15_A3_T6.js (the default minimizer's options)",
-			"S15.5.4.17_A1_T14.js (the default minimizer's options)",
-			"S15.5.4.19_A1_T14.js (the default minimizer's options)",
-			"S15.5.4.7_A1_T12.js (the default minimizer's options)",
-			"S15.5.4.8_A1_T12.js (the default minimizer's options)",
-			"S15.6.4.2_A1_T1.js (the default minimizer's options)",
-			"S15.6.4.2_A1_T2.js (the default minimizer's options)",
-			"S15.6.4.3_A1_T1.js (the default minimizer's options)",
-			"S8.12.8_A1.js (the default minimizer's options)",
-			"S8.12.8_A2.js (the default minimizer's options)",
-			"S8.6.2_A6.js (the default minimizer's options)",
-			"S8.7_A5_T1.js (the default minimizer's options)",
-			"argument-is-new-reg-exp-and-instance-is-string-hello.js (the default minimizer's options)",
-			"arguments-are-new-reg-exp-and-4-and-instance-is-string-hello.js (the default minimizer's options)",
-			"arguments-are-new-reg-exp-and-hi-and-instance-is-string-hello.js (the default minimizer's options)",
-			"arguments-are-new-reg-exp-and-undefined-and-instance-is-string-hello.js (the default minimizer's options)",
-			"arguments-are-new-reg-exp-and-void-0-and-instance-is-string-hello.js (the default minimizer's options)",
-			"built-in-exotic-objects-no-call.js (the default minimizer's options)",
-			"constructor-ArrayBuffer-species-wrap.js (the default minimizer's options)",
-			"get-next-method-throws.js (the default minimizer's options)",
-			"next-method-returns-throwing-done.js (the default minimizer's options)",
-			"next-method-returns-throwing-value-done.js (the default minimizer's options)",
-			"next-method-returns-throwing-value.js (the default minimizer's options)",
-			"next-method-throws.js (the default minimizer's options)",
-			"next-throws.js (the default minimizer's options)",
-			"non-callable-join-string-tag.js (the default minimizer's options)",
-			"optional-catch-binding-throws.js (the default minimizer's options)",
-			"predicate-throws-then-closing-iterator-also-throws.js (the default minimizer's options)",
-			"quantifier-integer-limit.js (the default minimizer's options)",
-			"sorting_buffer_access.js (the default minimizer's options)",
-			"symbol-tag-override-instances.js (the default minimizer's options)",
-			"this-val-regexp.js (the default minimizer's options)",
-			"try-finally-nested-try-catch-within-catch.js (the default minimizer's options)",
-			"try-finally-nested-try-catch-within-outer-try-after-nested.js (the default minimizer's options)",
-			"yield-promise-reject-next-for-await-of-sync-iterator.js (the default minimizer's options)",
-			"yield-promise-reject-next-yield-star-async-iterator.js (the default minimizer's options)"
-		]
-	],
-	[
-		"`typeof x<\"u\"` where the source repeats the `\"undefined\"` comparison gzip matched",
-		[
-			"S11.1.6_A3_T7.js (the default minimizer's options)",
-			"S12.6.2_A2.js (the default minimizer's options)",
-			"S13.2.2_A15_T1.js (the default minimizer's options)",
-			"S13.2.2_A15_T3.js (the default minimizer's options)",
-			"S13.2.2_A16_T2.js (the default minimizer's options)",
-			"S13.2.2_A16_T3.js (the default minimizer's options)",
-			"S13_A1.js (the default minimizer's options)",
-			"S14_A3.js (the default minimizer's options)",
-			"S8.7_A5_T2.js (the default minimizer's options)"
-		]
-	],
-	[
-		"a conversion or a `!!` written shorter where the source's own messages quote it, which gzip matched",
-		[
-			"S15.2.4.3_A9.js (the default minimizer's options)",
-			"S15.5.1.1_A1_T10.js (the default minimizer's options)",
-			"S15.5.1.1_A1_T16.js (the default minimizer's options)",
-			"S15.5.1.1_A1_T17.js (the default minimizer's options)",
-			"S15.5.1.1_A1_T2.js (the default minimizer's options)",
-			"S15.5.1.1_A1_T3.js (the default minimizer's options)",
-			"S15.5.1.1_A2_T1.js (the default minimizer's options)",
-			"S15.5.4.10_A1_T7.js (the default minimizer's options)",
-			"S15.5.4.12_A1_T7.js (the default minimizer's options)",
-			"S15.6.1.1_A1_T5.js (the default minimizer's options)",
-			"S15.6.1.1_A2.js (the default minimizer's options)",
-			"symbol-coercion.js (the default minimizer's options)",
-			"symbol-tag-non-str-bigint.js (the default minimizer's options)"
-		]
-	],
-	[
-		"an empty constructor dropped where the source repeats it gzip matched",
-		[
-			"classConstructorNoCall.js (the default minimizer's options)",
-			"className.js (the default minimizer's options)",
-			"harmony/classes (the default minimizer's options)",
-			"staticConstructor.js (the default minimizer's options)",
-			"superElemDelete.js (the default minimizer's options)",
-			"superPropChains.js (the default minimizer's options)",
-			"superPropStatics.js (the default minimizer's options)"
-		]
-	],
-	[
-		"consecutive `if`s leaving with one value merged, where the source repeats the `if` gzip matched",
-		[
-			"S7.9_A5.8_T1.js (the default minimizer's options)",
-			"S7.9_A5.9_T1.js (the default minimizer's options)",
-			"if_return/if_return_same_value (its own options)",
-			"if_return/if_return_same_value (the default minimizer's options)",
-			"symbol-logical-not-evaluation.js (the default minimizer's options)"
-		]
-	],
-	[
-		"a literal folded into the string it makes where the source repeats the literal gzip matched",
-		[
-			"evaluate/unsafe_array (a module mangled at its top level)",
-			"evaluate/unsafe_array (reminify 2 {\"mangle\":false})",
-			"evaluate/unsafe_array (reminify 3 {})",
-			"evaluate/unsafe_array (reminify 4 {\"toplevel\":true})",
-			"evaluate/unsafe_array (reminify 7 {\"safari10\":true})",
-			"evaluate/unsafe_array (reminify 8 {\"compress\":{\"reduce_funcs\":false}})",
-			"evaluate/unsafe_array (the default minimizer's options)",
-			"fixture/issues/string-index-utf16/input.js (its own options)",
-			"fixture/issues/string-index-utf16/input.js (the default minimizer's options)"
-		]
-	],
-	[
-		"a value read where a built-in read stood between, where the source repeats the declaration gzip matched",
-		[
-			"regress-1383630.js (the default minimizer's options)",
-			"reviver-forward-modifies-object.js (the default minimizer's options)"
-		]
-	],
-	[
-		"a pattern's unused names dropped where the source repeats the pattern gzip matched",
-		[
-			"array-elements-without-initializer.js (the default minimizer's options)",
-			"parameters/default_values_in_destructurings (a module mangled at its top level)"
-		]
-	]
-])) {
-	for (const key of keys) IMPROVED_YET_BIGGER[key] = reason;
-}
-
 /**
- * @param {Minify} minify a minifier
+ * @param {Minify} minifier a minifier
  * @param {string} code the source
  * @param {MinifyOptions} options the options
  * @returns {Promise<Outcome>} what it wrote, or the error it threw
  */
-const outcome = async (minify, code, options) => {
+const outcome = async (minifier, code, options) => {
 	try {
-		return { code: (await minify(code, options)).code };
+		return { code: (await minifier(code, options)).code };
 	} catch (err) {
 		return { error: String(/** @type {Error} */ (err).message) };
 	}
-};
-
-/**
- * Runs `run` with each enabled switch turned off, as though the printer had
- * no such phase, and turns them back on after.
- * @template T
- * @param {({ enabled: boolean } | undefined)[]} switches the phases' switches
- * @param {() => Promise<T>} run what to run
- * @returns {Promise<T>} what it returned
- */
-const outcomeWithout = async (switches, run) => {
-	const off = /** @type {{ enabled: boolean }[]} */ (
-		switches.filter((phase) => phase && phase.enabled)
-	);
-	for (const phase of off) phase.enabled = false;
-	try {
-		return await run();
-	} finally {
-		for (const phase of off) phase.enabled = true;
-	}
-};
-
-/**
- * Whether only writing `const` as `let` makes a program gzip bigger: shorter,
- * it is bigger gzipped than without, as `const` matched `console` nearby, and
- * with that alone switched off the improvements gzip no bigger.
- * @param {{ raw: number, gzip: number }} withSize the size with the improvements
- * @param {{ raw: number, gzip: number }} withoutSize the size without them
- * @param {() => Promise<{ code?: string, error?: string }>} run minifies the program
- * @param {{ lets: { enabled: boolean } } | undefined} improvements the improvements' switches
- * @returns {Promise<boolean>} true when it does
- */
-const onlyLetsGzipWorse = async (withSize, withoutSize, run, improvements) => {
-	if (!improvements || withSize.raw >= withoutSize.raw) return false;
-	const withoutLets = await outcomeWithout([improvements.lets], run);
-	if (withoutLets.code === undefined) return false;
-	const size = sizeOf(withoutLets.code);
-	return size.raw > withSize.raw && size.gzip <= withoutSize.gzip;
 };
 
 /** @typedef {{ filename: string, input: string, options: EXPECTED_OBJECT }} OxcJob */
@@ -1726,7 +1231,8 @@ const oxcOptionsOf = (options) => {
 		filename: module ? "input.mjs" : "input.js",
 		options: {
 			module,
-			compress: { keepNames },
+			// As webpack's output is compared at ECMAScript 2020, so is oxc's.
+			compress: { target: "es2020", keepNames },
 			mangle: { toplevel: module, keepNames },
 			codegen: { removeWhitespace: true }
 		}
@@ -1831,18 +1337,49 @@ const formatLeads = (leads) => {
 	].join("\n");
 };
 
+/**
+ * Lists the table entries no part met, so one no longer met fails instead of
+ * lingering.
+ * @param {Record<string, string[]>} seen what every part met, by table
+ * @returns {string[]} the entries to retire
+ */
+const staleEntries = (seen) => {
+	const refusalsSeen = new Set(seen.refusals);
+	const webpackRefusalsSeen = new Set(seen.webpackRefusals);
+	const rivalSmallerSeen = new Set(seen.rivalSmaller);
+	return [
+		...Object.keys(REFUSED_BY_REFERENCE)
+			.filter((message) => !refusalsSeen.has(message))
+			.map((message) => `REFUSED_BY_REFERENCE: ${message}`),
+		...Object.keys(REFUSED_BY_WEBPACK)
+			.filter((message) => !webpackRefusalsSeen.has(message))
+			.map((message) => `REFUSED_BY_WEBPACK: ${message}`),
+		...Object.keys(SWC_SMALLER)
+			.map((key) => `SWC_SMALLER: ${key}`)
+			.filter((entry) => !rivalSmallerSeen.has(entry)),
+		...Object.keys(OXC_SMALLER)
+			.map((key) => `OXC_SMALLER: ${key}`)
+			.filter((entry) => !rivalSmallerSeen.has(entry))
+	];
+};
+
 describe("JavaScript minifier", () => {
-	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[], corrections: { enabled: boolean } | undefined, improvements?: { enabled: boolean, lets: { enabled: boolean } } | undefined }, sandbox?: { run_code: (code: string, prepend: string) => string | Error, same_stdout: (expected: string | Error, actual: string | Error) => boolean } }} */
+	const [part, parts] = currentPart();
+	// Shared by the parts of one jest run, which all have its process as parent.
+	const runDir = path.join(os.tmpdir(), `webpack-minify-corpora-${process.ppid}`);
+
+	/** @type {{ reader?: CaseReader, sandbox?: { run_code: (code: string, prepend: string) => string | Error, same_stdout: (expected: string | Error, actual: string | Error) => boolean } }} */
 	const loaded = {};
 	/** @type {Lead[]} */
 	const leads = [];
+	// A `-t` filter skips groups, whose table entries then look unmet.
+	const groupCounts = { defined: 0, run: 0 };
 	const { runInNewContext } = vm;
 	// Whether the sandbox also drains promise callbacks: swc's harness runs a
 	// whole process, terser's runner captures only what runs synchronously.
 	let microtasks = false;
 
 	beforeAll(async () => {
-		loaded.printer = await load();
 		if (!isPresent(referenceDir)) return;
 		// eslint-disable-next-line no-new-func
 		const importModule = new Function("specifier", "return import(specifier)");
@@ -1893,9 +1430,129 @@ describe("JavaScript minifier", () => {
 
 	afterAll(() => {
 		vm.runInNewContext = runInNewContext;
-		const report = process.env.JS_MINIFY_REPORT;
-		if (report) fs.writeFileSync(report, formatLeads(leads));
+		fs.mkdirSync(runDir, { recursive: true });
+		const file = path.join(runDir, `${part}.json`);
+		fs.writeFileSync(
+			`${file}.tmp`,
+			JSON.stringify({
+				leads,
+				complete: groupCounts.run === groupCounts.defined,
+				terserTotals,
+				seen: {
+					refusals: [...refusalsSeen],
+					webpackRefusals: [...webpackRefusalsSeen],
+					rivalSmaller: [...rivalSmallerSeen]
+				}
+			})
+		);
+		fs.renameSync(`${file}.tmp`, file);
+		// Parts finish moments apart, so one at a time reads, reports and cleans
+		// up; one still waiting after a minute fails rather than hang the run.
+		const lockDir = `${runDir}.lock`;
+		const pause = new Int32Array(new SharedArrayBuffer(4));
+		for (let waited = 0; ; waited += 10) {
+			try {
+				fs.mkdirSync(lockDir);
+				break;
+			} catch (err) {
+				if (/** @type {NodeJS.ErrnoException} */ (err).code !== "EEXIST") {
+					throw err;
+				}
+				if (waited >= 60000) {
+					throw new Error(
+						`${lockDir} was held for a minute: remove it if no jest run is using it`,
+						{ cause: err }
+					);
+				}
+				Atomics.wait(pause, 0, 0, 10);
+			}
+		}
+		try {
+			// The last part already checked everything and removed the results.
+			if (!fs.existsSync(runDir)) return;
+			aggregate();
+		} finally {
+			fs.rmSync(lockDir, { recursive: true, force: true });
+		}
 	});
+
+	/**
+	 * Merges every part result present, rewrites the report from them, and once
+	 * all parts ran every group, fails on the table entries none of them met.
+	 * @returns {void}
+	 */
+	const aggregate = () => {
+		const done = fs
+			.readdirSync(runDir)
+			.filter((name) => name.endsWith(".json"));
+		let complete = done.length === parts;
+		/** @type {Lead[]} */
+		const allLeads = [];
+		/** @type {Record<string, string[]>} */
+		const seen = {};
+		/** @type {Record<string, { ours: number, theirs: number }>} */
+		const totals = {};
+		for (const name of done) {
+			const result = JSON.parse(
+				fs.readFileSync(path.join(runDir, name), "utf8")
+			);
+			allLeads.push(...result.leads);
+			if (!result.complete) complete = false;
+			for (const [name, { ours, theirs }] of Object.entries(
+				/** @type {Record<string, { ours: number, theirs: number }>} */ (
+					result.terserTotals
+				)
+			)) {
+				const total = totals[name] || (totals[name] = { ours: 0, theirs: 0 });
+				total.ours += ours;
+				total.theirs += theirs;
+			}
+			for (const [table, entries] of Object.entries(result.seen)) {
+				(seen[table] = seen[table] || []).push(
+					.../** @type {string[]} */ (entries)
+				);
+			}
+		}
+		// Rewritten by every part, as a filter can leave a part with no test to run.
+		const report = process.env.JS_MINIFY_REPORT;
+		if (report) fs.writeFileSync(report, formatLeads(allLeads));
+		if (done.length === parts) {
+			fs.rmSync(runDir, { recursive: true, force: true });
+		}
+		// Run alone or filtered, a part cannot tell which entries the others meet.
+		const stale = complete ? staleEntries(seen) : [];
+		if (stale.length > 0) {
+			throw new Error(
+				`List no difference the reference no longer makes:\n${stale.join("\n")}`
+			);
+		}
+		/** @type {string[]} */
+		const bigger = [];
+		for (const [name, { ours, theirs }] of complete
+			? Object.entries(totals)
+			: []) {
+			const budget = Object.prototype.hasOwnProperty.call(
+				TERSER_TOTAL_BUDGET,
+				name
+			)
+				? TERSER_TOTAL_BUDGET[name]
+				: undefined;
+			if (ours > theirs && (budget === undefined || ours > theirs * budget)) {
+				bigger.push(
+					`${name}: ${ours} B gzip, against terser's ${theirs} B, ${(ours / theirs).toFixed(4)} times it${budget === undefined ? "" : ` where the budget is ${budget}`}`
+				);
+			} else if (ours <= theirs && budget !== undefined) {
+				bigger.push(
+					`${name}: ${ours} B gzip, no bigger than terser's ${theirs} B now: retire it from TERSER_TOTAL_BUDGET`
+				);
+			}
+		}
+		if (bigger.length > 0) {
+			throw new Error(
+				`Corpora whose outputs gzip bigger than terser's in total:\n${bigger.join("\n")}`
+			);
+		}
+	};
 
 	it("should run only the node_version ranges it can read", () => {
 		const major = Number(process.versions.node.split(".")[0]);
@@ -1906,7 +1563,7 @@ describe("JavaScript minifier", () => {
 		expect(() => nodeSatisfies(`^${major}`)).toThrow(/Unsupported/);
 	});
 
-	if (isPresent(referenceDir)) {
+	if (part === 1 && isPresent(referenceDir)) {
 		it("should pin the reference's corpus to the version it is compared with", () => {
 			const pinned = JSON.parse(
 				fs.readFileSync(path.join(referenceDir, "package.json"), "utf8")
@@ -1915,7 +1572,7 @@ describe("JavaScript minifier", () => {
 		});
 	}
 
-	if (isPresent(oxcTestsDir)) {
+	if (part === 1 && isPresent(oxcTestsDir)) {
 		it("should pin oxc's corpus to the oxc-minify it is compared with", () => {
 			const pinned = JSON.parse(
 				fs.readFileSync(
@@ -1974,22 +1631,25 @@ describe("JavaScript minifier", () => {
 	for (const corpus of CORPORA) {
 		describe(corpus.name, () => {
 			if (!isPresent(corpus.directory)) {
+				if (part !== 1) return;
+
 				it(`submodule not initialized (run \`git submodule update --init --depth 1 ${corpus.submodule}\`)`, () => {
 					// No-op: each corpus is an optional git submodule.
 				});
 
 				return;
 			}
-			const groups = corpus.groups();
+			const allGroups = corpus.groups();
 
-			it("should read every source the corpus holds", () => {
+			if (part === 1) {
+				it("should read every source the corpus holds", () => {
 				const reader = /** @type {CaseReader} */ (loaded.reader);
 				let count = 0;
 				let own = 0;
 				let defaultsUnnamed = 0;
 				let runnable = 0;
 				let rivals = 0;
-				for (const { files } of groups) {
+				for (const { files } of allGroups) {
 					for (const file of files) {
 						for (const source of corpus.read(file, reader)) {
 							count++;
@@ -2019,22 +1679,25 @@ describe("JavaScript minifier", () => {
 				}
 				if (corpus.ownDefaultsNamed) expect(defaultsUnnamed).toBe(0);
 			});
+			}
 
-			for (const group of groups) {
+			groupCounts.defined += allGroups.length;
+			for (const group of allGroups) {
 				it(
-					`should minify as the reference does, printing what the input prints: ${group.name || "."}`,
+					`should run as the input does, no bigger than the reference: ${group.name || "."}`,
 					async () => {
+						groupCounts.run++;
+
 						const reference = require("terser");
 
 						const reader = /** @type {CaseReader} */ (loaded.reader);
-						const printer = /** @type {NonNullable<typeof loaded.printer>} */ (
-							loaded.printer
-						);
 						/** @type {string[]} */
 						const differences = [];
 						/**
 						 * Holds webpack's output to another minifier's, both printed alone
-						 * by webpack's printer: no bigger, unless the table lists why.
+						 * by webpack's printer without comments, which extracting licenses
+						 * decides, and with shorthand properties, which ECMAScript 5 lacks:
+						 * no bigger, unless the table lists why.
 						 * @param {Source} source the source both minified
 						 * @param {{ name: string, code: string }} rival its output
 						 * @param {string} code webpack's output
@@ -2052,10 +1715,11 @@ describe("JavaScript minifier", () => {
 							const printing = {
 								compress: false,
 								mangle: false,
-								module: source.module
+								module: source.module,
+								format: { comments: false, shorthand: true }
 							};
-							const theirs = await outcome(printer.minify, rival.code, printing);
-							const mine = await outcome(printer.minify, code, printing);
+							const theirs = await outcome(minify, rival.code, printing);
+							const mine = await outcome(minify, code, printing);
 							if (theirs.code === undefined || mine.code === undefined) return;
 							const oursSize = sizeOf(mine.code);
 							const theirsSize = sizeOf(theirs.code);
@@ -2085,126 +1749,122 @@ describe("JavaScript minifier", () => {
 								);
 							}
 						};
-						const sources = group.files.flatMap((file) =>
+						const allSources = group.files.flatMap((file) =>
 							corpus.read(file, reader)
 						);
-						const oxcSet = "the default minimizer's options";
-						/** @type {Map<Source, string | null | Error>} */
-						const oxcOutputs = new Map();
-						if (!corpus.withoutOxc && corpus.optionSets.includes(oxcSet)) {
-							const jobs = sources.map((source) => ({
-								input: source.input,
-								...oxcOptionsOf(
-									/** @type {MinifyOptions} */ (OPTION_SETS[oxcSet](source))
-								)
-							}));
-							const outputs = minifyAllWithOxc(jobs);
-							for (const [i, source] of sources.entries()) {
-								oxcOutputs.set(source, outputs[i]);
-							}
-						}
-						for (const source of sources) {
-							const expectation = source.stdout
-								? expectedOf(source.stdout)
-								: {};
-							if (expectation.disagrees) {
-								differences.push(`${source.name}: ${expectation.disagrees}`);
-							}
-							/** @type {Map<string, string | undefined>} */
-							const verdicts = new Map();
-							for (const setName of corpus.optionSets) {
-								const optionsFor = OPTION_SETS[setName];
-								const options = optionsFor(source);
-								if (!options) continue;
-								const theirs = await outcome(
-									reference.minify,
-									source.input,
-									withoutLayout(options)
-								);
-								const ours = await outcome(
-									printer.minify,
-									source.input,
-									optionsFor(source)
-								);
-								// A case reading its source with a parser option webpack's
-								// parser has no counterpart for holds nothing of webpack's.
-								if (
-									ours.error !== undefined &&
-									DROPPED_PARSE_OPTIONS.some(
-										(name) =>
-											ours.error === `\`${name}\` is not a supported option`
+						// `--parts=<n>`: each part claims the next chunk of sources no other part
+						// took, so one that ends its chunks early takes more and the parts end
+						// together; a chunk is minified by oxc in one batch.
+						for (let start = 0; start < allSources.length; start += CLAIM_SIZE) {
+							if (!claimInPart(`${corpus.name}/${group.name}/${start}`)) continue;
+							const sources = allSources.slice(start, start + CLAIM_SIZE);
+							const oxcSet = "the default minimizer's options";
+							// webpack's minimizer reads `ecma` off `output.environment`, 2020 for a
+							// modern target, which oxc's output assumes too.
+							const oxcEcma = 2020;
+							/** @type {Map<Source, string | null | Error>} */
+							const oxcOutputs = new Map();
+							if (!corpus.withoutOxc && corpus.optionSets.includes(oxcSet)) {
+								const jobs = sources.map((source) => ({
+									input: source.input,
+									...oxcOptionsOf(
+										/** @type {MinifyOptions} */ (OPTION_SETS[oxcSet](source))
 									)
-								) {
-									continue;
+								}));
+								const outputs = minifyAllWithOxc(jobs);
+								for (const [i, source] of sources.entries()) {
+									oxcOutputs.set(source, outputs[i]);
 								}
-								if (
-									corpus.ownOptionsKnown &&
-									setName === "its own options" &&
-									theirs.error !== undefined &&
-									/is not a supported option/.test(theirs.error)
-								) {
-									differences.push(
-										`${source.name} (${setName})\n\tterser refused an option: ${theirs.error}`
+							}
+							for (const source of sources) {
+								const expectation = source.stdout
+									? expectedOf(source.stdout)
+									: {};
+								if (expectation.disagrees) {
+									differences.push(`${source.name}: ${expectation.disagrees}`);
+								}
+								/** @type {Map<string, string | undefined>} */
+								const verdicts = new Map();
+								for (const setName of corpus.optionSets) {
+									const optionsFor = OPTION_SETS[setName];
+									const options = optionsFor(source);
+									if (!options) continue;
+									const theirs = await outcome(
+										reference.minify,
+										source.input,
+										withoutLayout(options)
 									);
-								}
-								const { expected } = expectation;
-								// Run where the case says what it prints: under its own options
-								// always, under another set unless it opts out, and never as a
-								// module where it is a script, since a module is strict.
-								const runs =
-									expected !== undefined &&
-									(setName === "its own options" ||
-										(source.reminify !== false &&
-											!(options.module && !source.module)));
-								/**
-								 * @param {string} code an output
-								 * @returns {string | undefined} how it misprints, if it does
-								 */
-								const misprint = (code) => {
-									const { same_stdout: sameStdout } =
-										/** @type {NonNullable<typeof loaded.sandbox>} */ (
-											loaded.sandbox
-										);
-									const stdout = /** @type {Stdout} */ (source.stdout);
-									const wanted = /** @type {string | Error} */ (expected);
-									let actual = run(stdout, code);
-									// As terser's runner reminifies: a throw of the expected kind
-									// passes whatever its message says.
+									const ours = await outcome(
+										minify,
+										source.input,
+										optionsFor(source)
+									);
+									// A case reading its source with a parser option webpack's
+									// parser has no counterpart for holds nothing of webpack's.
 									if (
-										setName !== "its own options" &&
-										typeof wanted !== "string" &&
-										typeof actual !== "string" &&
-										wanted.name === actual.name
+										ours.error !== undefined &&
+										DROPPED_PARSE_OPTIONS.some(
+											(name) =>
+												ours.error === `\`${name}\` is not a supported option`
+										)
 									) {
-										actual = wanted;
+										continue;
 									}
-									return sameStdout(wanted, actual)
-										? undefined
-										: `\n\toutput:   ${code}\n\texpected: ${String(wanted)}\n\tprinted:  ${String(actual)}`;
-								};
-								const key = `${corpus.name}: ${source.name} (${setName})`;
-								if (!sameOutcome(theirs, ours)) {
-									// A difference only the `correct` and `improve` phases make is
-									// theirs, which the run check below holds to; any other is a
-									// difference, and an improvement must not write more.
-									const { corrections, improvements } = printer;
-									const unimproved = await outcomeWithout([improvements], () =>
-										outcome(printer.minify, source.input, optionsFor(source))
-									);
-									// Without the improvements terser's bytes back, nothing else differs.
-									const uncorrected = sameOutcome(theirs, unimproved)
-										? unimproved
-											: await outcomeWithout([corrections, improvements], () =>
-													outcome(printer.minify, source.input, optionsFor(source))
-												);
-									if (!sameOutcome(theirs, uncorrected)) {
+									if (
+										corpus.ownOptionsKnown &&
+										setName === "its own options" &&
+										theirs.error !== undefined &&
+										/is not a supported option/.test(theirs.error)
+									) {
+										differences.push(
+											`${source.name} (${setName})\n\tterser refused an option: ${theirs.error}`
+										);
+									}
+									const { expected } = expectation;
+									// Run where the case says what it prints: under its own options
+									// always, under another set unless it opts out, and never as a
+									// module where it is a script, since a module is strict.
+									const runs =
+										expected !== undefined &&
+										(setName === "its own options" ||
+											(source.reminify !== false &&
+												!(options.module && !source.module)));
+									/**
+									 * @param {string} code an output
+									 * @returns {string | undefined} how it misprints, if it does
+									 */
+									const misprint = (code) => {
+										const { same_stdout: sameStdout } =
+											/** @type {NonNullable<typeof loaded.sandbox>} */ (
+												loaded.sandbox
+											);
+										const stdout = /** @type {Stdout} */ (source.stdout);
+										const wanted = /** @type {string | Error} */ (expected);
+										let actual = run(stdout, code);
+										// A throw of the expected kind passes whatever its message says
+										// as terser's runner reminifies, and anywhere for a callee that is
+										// not a function, which V8 names as written and folding rewrites.
+										if (
+											typeof wanted !== "string" &&
+											typeof actual !== "string" &&
+											wanted.name === actual.name &&
+											(setName !== "its own options" ||
+												(wanted.message.endsWith(" is not a function") &&
+													actual.message.endsWith(" is not a function")))
+										) {
+											actual = wanted;
+										}
+										return sameStdout(wanted, actual)
+											? undefined
+											: `\n\toutput:   ${code}\n\texpected: ${String(wanted)}\n\tprinted:  ${String(actual)}`;
+									};
+									const key = `${corpus.name}: ${source.name} (${setName})`;
+									if ((theirs.error === undefined) !== (ours.error === undefined)) {
 										const webpackRefusal =
-											theirs.code !== undefined &&
-											uncorrected.error !== undefined
+											ours.error !== undefined
 												? `${corpus.name}: ${source.name}`
 												: undefined;
 										const refused =
-											uncorrected.code !== undefined &&
 											typeof theirs.error === "string" &&
 											Object.prototype.hasOwnProperty.call(
 												REFUSED_BY_REFERENCE,
@@ -2218,141 +1878,109 @@ describe("JavaScript minifier", () => {
 											)
 										) {
 											webpackRefusalsSeen.add(webpackRefusal);
+										} else if (webpackRefusal !== undefined && source.invalid) {
+											// The corpus says the source is not JavaScript.
 										} else if (
 											webpackRefusal !== undefined &&
-											source.invalid
+											options.module &&
+											!source.module
 										) {
-											// The corpus says the source is not JavaScript.
+											// A script read as a module is strict, which terser's parser
+											// does not hold it to.
 										} else if (refused) {
-											refusalsSeen.add(
-												/** @type {string} */ (theirs.error)
-											);
-										} else if (
-											// A misprint is the reference's: webpack must still print.
-											uncorrected.code !== undefined &&
-											Object.prototype.hasOwnProperty.call(
-												REFERENCE_MISPRINTS,
-												key
-											)
-										) {
-											misprintsSeen.add(key);
+											refusalsSeen.add(/** @type {string} */ (theirs.error));
 										} else {
 											differences.push(
-												`${source.name} (${setName})\n\treference: ${JSON.stringify(theirs)}\n\twebpack:   ${JSON.stringify(uncorrected)}`
+												`${source.name} (${setName}) refused by one minifier alone\n\treference: ${JSON.stringify(theirs)}\n\twebpack:   ${JSON.stringify(ours)}`
+											);
+										}
+									} else if (theirs.code !== undefined && ours.code !== undefined) {
+										const total =
+											terserTotals[corpus.name] ||
+											(terserTotals[corpus.name] = { ours: 0, theirs: 0 });
+										total.ours += sizeOf(ours.code).gzip;
+										total.theirs += sizeOf(theirs.code).gzip;
+									}
+									if (runs && ours.code !== undefined) {
+										let wrong = verdicts.get(ours.code);
+										if (!verdicts.has(ours.code)) {
+											wrong = misprint(ours.code);
+											verdicts.set(ours.code, wrong);
+										}
+										const inherited = Object.prototype.hasOwnProperty.call(
+											INHERITED,
+											key
+										);
+										if (wrong !== undefined && !inherited) {
+											differences.push(`${key} prints differently${wrong}`);
+										} else if (wrong === undefined && inherited) {
+											differences.push(
+												`${key} prints what it should now: retire it from INHERITED`
 											);
 										}
 									}
-									if (unimproved.error !== ours.error) {
-										differences.push(
-											`${source.name} (${setName}) refused differently with the improvements\n\twithout: ${JSON.stringify(unimproved)}\n\twith:    ${JSON.stringify(ours)}`
-										);
-									} else if (
-										ours.code !== undefined &&
-										unimproved.code !== undefined &&
-										ours.code !== unimproved.code
+									if (
+										source.rival &&
+										setName === "its own options" &&
+										ours.code !== undefined
 									) {
-										const withSize = sizeOf(ours.code);
-										const withoutSize = sizeOf(unimproved.code);
-										/** @type {Lead} */
-										const lead = {
-											source: source.name,
-											rival: "unimproved",
-											ours: withSize.raw,
-											theirs: withoutSize.raw,
-											oursGzip: withSize.gzip,
-											theirsGzip: withoutSize.gzip
-										};
-										const key = `${source.name} (${setName})`;
-										// Sources sharing a name share an entry, standing while one is bigger;
-										// an entry none of them meets fails at the end.
-										if (standingOf(lead) === "worse") {
-											if (
-												Object.prototype.hasOwnProperty.call(IMPROVED_YET_BIGGER, key)
-											) {
-												improvedYetBiggerSeen.add(key);
-											} else if (
-												await onlyLetsGzipWorse(
-													withSize,
-													withoutSize,
-													() =>
-														outcome(
-															printer.minify,
-															source.input,
-															optionsFor(source)
-														),
-													improvements
-												)
-											) {
-												// `let` gzips worse than the `const` it replaced in a small program.
-											} else {
-												differences.push(
-												`${key} is bigger with the improvements: ${withSize.raw} raw, ${withSize.gzip} gzip, against ${withoutSize.raw} raw, ${withoutSize.gzip} gzip\n\twith:    ${ours.code}\n\twithout: ${unimproved.code}`
-											);
-											}
-										}
-									}
-								}
-								if (runs && ours.code !== undefined) {
-									let wrong = verdicts.get(ours.code);
-									if (!verdicts.has(ours.code)) {
-										wrong = misprint(ours.code);
-										verdicts.set(ours.code, wrong);
-									}
-									const corrected = Boolean(
-										printer.corrections && printer.corrections.enabled
-									);
-									const table = Object.prototype.hasOwnProperty.call(
-										INHERITED,
-										key
-									)
-										? "INHERITED"
-										: !corrected &&
-											  Object.prototype.hasOwnProperty.call(CORRECTED, key)
-											? "CORRECTED"
-											: undefined;
-									if (wrong !== undefined && table === undefined) {
-										differences.push(`${key} prints differently${wrong}`);
-									} else if (wrong === undefined && table !== undefined) {
-										differences.push(
-											`${key} prints what it should now: retire it from ${table}`
+										await compareWithRival(
+											source,
+											source.rival,
+											ours.code,
+											SWC_SMALLER,
+											"SWC_SMALLER"
 										);
 									}
-								}
-								if (
-									source.rival &&
-									setName === "its own options" &&
-									ours.code !== undefined
-								) {
-									await compareWithRival(
-										source,
-										source.rival,
-										ours.code,
-										SWC_SMALLER,
-										"SWC_SMALLER"
-									);
-								}
-								const oxc = oxcOutputs.get(source);
-								const oxcKey = `${corpus.name}: ${source.name}`;
-								if (oxc instanceof Error && setName === oxcSet) {
-									if (Object.prototype.hasOwnProperty.call(OXC_SMALLER, oxcKey)) {
-										rivalSmallerSeen.add(`OXC_SMALLER: ${oxcKey}`);
-									} else {
-										differences.push(`${oxcKey} aborts oxc: ${oxc.message}`);
+									const oxc = oxcOutputs.get(source);
+									const oxcKey = `${corpus.name}: ${source.name}`;
+									if (oxc instanceof Error && setName === oxcSet) {
+										if (Object.prototype.hasOwnProperty.call(OXC_SMALLER, oxcKey)) {
+											rivalSmallerSeen.add(`OXC_SMALLER: ${oxcKey}`);
+										} else {
+											differences.push(`${oxcKey} aborts oxc: ${oxc.message}`);
+										}
+									} else if (
+										typeof oxc === "string" &&
+										setName === oxcSet &&
+										ours.code !== undefined &&
+										// A smaller output that prints wrong is no lead to follow.
+										!(expected !== undefined && runs && misprint(oxc))
+									) {
+										const plain = /** @type {MinifyOptions} */ (optionsFor(source));
+										// As webpack's minimizer passes it, to the compressor too.
+										const modern = await outcome(minify, source.input, {
+											...plain,
+											ecma: oxcEcma,
+											compress: plain.compress && {
+												...plain.compress,
+												ecma: oxcEcma
+											}
+										});
+										if (modern.code === undefined) {
+											differences.push(
+												`${source.name} (${setName}, ecma ${oxcEcma}) failed: ${modern.error}`
+											);
+										}
+										const modernCode =
+											modern.code === undefined ? ours.code : modern.code;
+										const wrong =
+											runs && modernCode !== ours.code
+												? misprint(modernCode)
+												: undefined;
+										if (wrong !== undefined) {
+											differences.push(
+												`${source.name} (${setName}, ecma ${oxcEcma}) prints differently${wrong}`
+											);
+										}
+										await compareWithRival(
+											source,
+											{ name: "oxc", code: oxc },
+											modernCode,
+											OXC_SMALLER,
+											"OXC_SMALLER"
+										);
 									}
-								} else if (
-									typeof oxc === "string" &&
-									setName === oxcSet &&
-									ours.code !== undefined &&
-									// A smaller output that prints wrong is no lead to follow.
-									!(expected !== undefined && runs && misprint(oxc))
-								) {
-									await compareWithRival(
-										source,
-										{ name: "oxc", code: oxc },
-										ours.code,
-										OXC_SMALLER,
-										"OXC_SMALLER"
-									);
 								}
 							}
 						}
@@ -2365,26 +1993,4 @@ describe("JavaScript minifier", () => {
 		});
 	}
 
-	it("should list no difference the reference no longer makes", () => {
-		expect([
-			...Object.keys(REFUSED_BY_REFERENCE)
-				.filter((message) => !refusalsSeen.has(message))
-				.map((message) => `REFUSED_BY_REFERENCE: ${message}`),
-			...Object.keys(REFUSED_BY_WEBPACK)
-				.filter((message) => !webpackRefusalsSeen.has(message))
-				.map((message) => `REFUSED_BY_WEBPACK: ${message}`),
-			...Object.keys(REFERENCE_MISPRINTS)
-				.filter((key) => !misprintsSeen.has(key))
-				.map((key) => `REFERENCE_MISPRINTS: ${key}`),
-			...Object.keys(IMPROVED_YET_BIGGER)
-				.filter((key) => !improvedYetBiggerSeen.has(key))
-				.map((key) => `IMPROVED_YET_BIGGER: ${key}`),
-			...Object.keys(SWC_SMALLER)
-				.map((key) => `SWC_SMALLER: ${key}`)
-				.filter((entry) => !rivalSmallerSeen.has(entry)),
-			...Object.keys(OXC_SMALLER)
-				.map((key) => `OXC_SMALLER: ${key}`)
-				.filter((entry) => !rivalSmallerSeen.has(entry))
-		]).toEqual([]);
-	});
 });

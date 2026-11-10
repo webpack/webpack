@@ -1,0 +1,1 @@
+var Q=void 0&&(void 0).x||function(){return 1};g(Q);x=(0&&undefined.a)||f;x=(1||undefined.a)&&f;undefined.a

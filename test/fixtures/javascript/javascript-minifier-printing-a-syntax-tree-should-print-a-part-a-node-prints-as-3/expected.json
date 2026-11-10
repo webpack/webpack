@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "()=>1)]:1},y=[()=>1];\n      -> )=>1]:1},y=[()=>1];",
+		"why": "a part left standing where the items before it were dropped prints in the parentheses it took as an operand, as the printer test asks; a second pass, reading it alone, prints it bare"
+	}
+]

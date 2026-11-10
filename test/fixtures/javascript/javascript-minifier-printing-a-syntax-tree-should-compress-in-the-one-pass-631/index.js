@@ -1,0 +1,1 @@
+function f(){var a=0;/* c */for(;a<9;a++)use(a)}function h(){var a=0;for(;a<9;a++)use(a)}

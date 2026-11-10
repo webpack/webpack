@@ -807,6 +807,31 @@ describe("Validation", () => {
 		(msg) => expect(msg).toMatch(/options\.filename/)
 	);
 
+	createTestCase(
+		"BannerPlugin empty glob list",
+		{
+			plugins: [
+				new (require("../..").BannerPlugin)({
+					banner: "banner",
+					exclude: { glob: [] }
+				})
+			]
+		},
+		(msg) => expect(msg).toContain("options.exclude.glob should be a non-empty array")
+	);
+
+	createTestCase(
+		"SourceMapDevToolPlugin empty glob list",
+		{
+			plugins: [
+				new (require("../..").SourceMapDevToolPlugin)({
+					exclude: { glob: [] }
+				})
+			]
+		},
+		(msg) => expect(msg).toContain("options.exclude.glob should be a non-empty array")
+	);
+
 	describe("did you mean", () => {
 		createTestCase(
 			"module.rules",
@@ -922,4 +947,37 @@ describe("Validation", () => {
 		`)
 		);
 	});
+
+	it("accepts the conditions a rule's test takes as loader source tests", () => {
+		const webpack = require("../..");
+		expect(() =>
+			webpack.validate({
+				module: {
+					rules: [
+						"use client",
+						/use client/,
+						[/use client/, "use server"],
+						() => true,
+						{ and: [/use client/, { not: /use server/ }] },
+						{ or: [/use client/, /use server/] },
+						{ glob: "**/*.js" }
+					].map((sourceTest) => ({
+						use: [{ loader: "example-loader", sourceTest }]
+					}))
+				}
+			})
+		).not.toThrow();
+	});
+
+	for (const [name, sourceTest] of [
+		["object with include", { include: /marker/ }],
+		["number", 42],
+		["null", null]
+	]) {
+		createTestCaseOnlyValidate(
+			`loader sourceTest with ${name}`,
+			{ module: { rules: [{ use: [{ loader: "example-loader", sourceTest }] }] } },
+			(msg) => expect(msg).toContain("sourceTest")
+		);
+	}
 });

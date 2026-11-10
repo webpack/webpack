@@ -1,0 +1,1 @@
+var g=globalThis;g.parseInt=f;x=parseInt("12")

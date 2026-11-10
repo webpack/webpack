@@ -1,0 +1,1 @@
+x=function f(){return(f=1,f)}

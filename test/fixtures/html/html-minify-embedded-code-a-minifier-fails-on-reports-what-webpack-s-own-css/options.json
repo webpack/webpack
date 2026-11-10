@@ -1,0 +1,11 @@
+[
+	{
+		"print": "htmlMinify",
+		"minimizer": {
+			"asset": "page.html"
+		},
+		"css": {
+			"unusedSymbols": 42
+		}
+	}
+]

@@ -1,0 +1,17 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"CallExpression",
+				"TemplateLiteral",
+				"Identifier",
+				"TemplateElement"
+			],
+			"fields": [
+				"source",
+				"index"
+			]
+		}
+	}
+]

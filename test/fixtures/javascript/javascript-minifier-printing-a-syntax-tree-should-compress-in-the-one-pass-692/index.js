@@ -1,0 +1,1 @@
+Reflect.deleteProperty(Array.prototype,"concat");Reflect.setPrototypeOf(Math,p);x=[[1].concat(2),Math.sign(1)]

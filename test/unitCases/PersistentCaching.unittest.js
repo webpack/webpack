@@ -475,6 +475,38 @@ export default 40 + file;
 		await expect(getCacheFileTimes()).resolves.toEqual(firstCacheFileTimes);
 	}, 20000);
 
+	it("should load every chunk of a group after a build with HMR filled the cache", async () => {
+		const webpack = require("../../");
+
+		const configAdditions = {
+			entry: "./src/main.js",
+			optimization: {
+				splitChunks: {
+					chunks: "async",
+					minSize: 0,
+					cacheGroups: {
+						shared: { test: /shared/, name: "shared", enforce: true }
+					}
+				}
+			}
+		};
+		await updateSrc({
+			"main.js":
+				'if (module.hot) module.hot.accept("./a.js");\nexport default import("./a.js").then((m) => m.default);',
+			"a.js": 'import value from "./shared.js";\nexport default value + 1;',
+			"shared.js": "export default 41;"
+		});
+		await compile(configAdditions);
+		await compile({
+			...configAdditions,
+			plugins: [new webpack.HotModuleReplacementPlugin()]
+		});
+		const hotSource = await readFile(path.resolve(outputPath, "main.js"), "utf8");
+		expect(hotSource).toMatch(/module\.hot\.accept\(\d+, /);
+		await compile(configAdditions);
+		await expect(execute()).resolves.toBe(42);
+	}, 20000);
+
 	const inlineConfig = {
 		mode: "production",
 		optimization: { minimize: false },

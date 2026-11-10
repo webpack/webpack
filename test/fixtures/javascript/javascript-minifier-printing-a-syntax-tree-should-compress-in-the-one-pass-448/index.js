@@ -1,0 +1,1 @@
+switch(a){case 1:var x=1}console.log(x)

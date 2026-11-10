@@ -1,0 +1,1 @@
+function f(){"use asm";function g(a){a=a|0;b=b|0;return a|0}return g}

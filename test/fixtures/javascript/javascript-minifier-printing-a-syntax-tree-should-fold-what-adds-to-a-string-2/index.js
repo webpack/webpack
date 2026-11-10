@@ -1,0 +1,1 @@
+Array.prototype.join=f;a=[1]+""

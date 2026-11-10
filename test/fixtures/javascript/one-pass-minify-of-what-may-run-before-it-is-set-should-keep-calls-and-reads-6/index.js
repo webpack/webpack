@@ -1,0 +1,1 @@
+function f(){try{return g()}catch(e){return 0}let x=1;function g(){return x+x}}

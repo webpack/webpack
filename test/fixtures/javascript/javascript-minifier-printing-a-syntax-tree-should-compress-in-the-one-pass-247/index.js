@@ -1,0 +1,1 @@
+function f(a,b){return a instanceof b?!0:!1}

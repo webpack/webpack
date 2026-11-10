@@ -1,0 +1,1 @@
+!(a==b);var v=!(a==b);function g(){return!(a===b)}

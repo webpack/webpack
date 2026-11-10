@@ -42,15 +42,9 @@ const config = (env = "development") => ({
 			config: [__filename]
 			// By default webpack and loaders are build dependencies
 		}
-	},
-	module: {
-		rules: [
-			{
-				test: /\.css$/,
-				use: ["style-loader", "css-loader"]
-			}
-		]
 	}
+	// No CSS rule: webpack handles `import "./example.css"` itself
+	// (`experiments.css` defaults to "auto"), and its output is cached too.
 });
 
 module.exports = config;
@@ -61,31 +55,35 @@ module.exports = config;
 ## Unoptimized
 
 ```
-asset output.js 3.68 MiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 2.3 MiB (javascript) 1.23 KiB (runtime) [entry]
+asset output.js 3.67 MiB [emitted] (name: main)
+asset output.css 120 bytes [emitted] (name: main)
+Entrypoint main 3.67 MiB = output.js 3.67 MiB output.css 120 bytes
+chunk (runtime: main) output.js, output.css (main) 2.29 MiB (javascript) 27 bytes (css) 931 bytes (runtime) [entry]
   > ./example.js main
-  cached modules 2.3 MiB (javascript) 1.23 KiB (runtime) [cached] 1537 modules
+  cached modules 2.29 MiB (javascript) 27 bytes (css) 931 bytes (runtime) [cached] 1531 modules
 webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 535 KiB [emitted] [minimized] [big] (name: main) 1 related asset
-chunk (runtime: main) output.js (main) 2.23 MiB (javascript) 1.98 KiB (runtime) [entry]
+asset output.js 532 KiB [emitted] [minimized] [big] (name: main) 1 related asset
+asset output.css 20 bytes [emitted] [minimized] (name: main)
+Entrypoint main [big] 532 KiB = output.js 532 KiB output.css 20 bytes
+chunk (runtime: main) output.js, output.css (main) 2.23 MiB (javascript) 27 bytes (css) 1.29 KiB (runtime) [entry]
   > ./example.js main
-  cached modules 2.23 MiB (javascript) 1.98 KiB (runtime) [cached] 41 modules
+  cached modules 2.23 MiB (javascript) 27 bytes (css) 1.29 KiB (runtime) [cached] 38 modules
 
 WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
 Assets: 
-  output.js (535 KiB)
-    Largest modules: ./example.js + 1495 modules (1.7 MiB), ../../node_modules/lodash/lodash.js (533 KiB), ../../node_modules/css-loader/dist/runtime/api.js (2.25 KiB)
+  output.js (532 KiB)
 
 WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
 Entrypoints:
-  main (535 KiB)
+  main (532 KiB)
       output.js
+      output.css
 
 WARNING in webpack performance recommendations: 
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.

@@ -1,0 +1,1 @@
+x=[new Object,Object(),new Object()];Object().a=1;new Object().b=1;f=()=>Object();g=()=>new Object().c;h=a?Object():[]

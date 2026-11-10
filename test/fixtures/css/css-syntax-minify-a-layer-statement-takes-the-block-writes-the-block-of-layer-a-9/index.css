@@ -1,0 +1,1 @@
+@layer a;@layer b{.x{color:red}}@layer a{.y{color:blue}}@layer a{.z{color:red}}

@@ -1,0 +1,1 @@
+if(a){do{for(;;)g();f();break}while(x)}if(a){do{for(;;)g();f()}while(0)}if(a){try{}finally{for(;;)g();f()}}for(;;){do{for(;;)g();f();break}while(x)}if(a){try{for(;;)g();f()}finally{}}

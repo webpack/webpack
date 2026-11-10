@@ -1,0 +1,81 @@
+[
+	{
+		"print": "htmlMinify"
+	},
+	{
+		"print": "htmlMinify",
+		"minimizer": {
+			"extractComments": false,
+			"asset": "a.html"
+		},
+		"extractComments": true
+	},
+	{
+		"print": "htmlMinify",
+		"minimizer": {
+			"extractComments": false,
+			"asset": "a.html"
+		},
+		"extractComments": "some"
+	},
+	{
+		"print": "htmlMinify",
+		"minimizer": {
+			"extractComments": false,
+			"asset": "a.html"
+		},
+		"extractComments": "all"
+	},
+	{
+		"print": "htmlMinify",
+		"minimizer": {
+			"extractComments": false,
+			"asset": "a.html"
+		},
+		"extractComments": {
+			"regexp": "license"
+		}
+	},
+	{
+		"print": "htmlMinify",
+		"minimizer": {
+			"extractComments": false,
+			"asset": "a.html"
+		},
+		"extractComments": "^!"
+	},
+	{
+		"print": "htmlMinify",
+		"minimizer": {
+			"extractComments": {
+				"condition": {
+					"regexp": "license"
+				}
+			},
+			"asset": "a.html"
+		}
+	},
+	{
+		"print": "htmlMinify",
+		"minimizer": {
+			"extractComments": true,
+			"asset": "a.html"
+		},
+		"comments": "plain"
+	},
+	{
+		"print": "htmlMinify",
+		"minimizer": {
+			"extractComments": false,
+			"asset": "a.html"
+		}
+	},
+	{
+		"print": "htmlMinify",
+		"minimizer": {
+			"extractComments": true,
+			"asset": "a.html"
+		},
+		"extractComments": false
+	}
+]

@@ -1,0 +1,1 @@
+class A { static async method() { await 1 } }

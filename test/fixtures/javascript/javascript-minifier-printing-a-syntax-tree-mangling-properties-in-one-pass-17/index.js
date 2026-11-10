@@ -1,0 +1,1 @@
+var o={zFoo:1,zQux:2};console.log(o.zFoo,o.zQux)

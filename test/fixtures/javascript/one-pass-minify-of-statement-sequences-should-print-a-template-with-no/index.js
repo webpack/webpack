@@ -1,0 +1,1 @@
+console.log(`\${ beep }`,`a\${b`,`plain`,`it"s`,`a\nb`,`x\`y`,`${1}\${`)

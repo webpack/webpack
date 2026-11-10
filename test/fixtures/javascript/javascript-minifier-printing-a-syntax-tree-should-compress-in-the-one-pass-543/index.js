@@ -1,0 +1,1 @@
+(x?true:false)&&y();(x?true:y)&&y();(x&&true)&&y();(x||false)&&y();a?true:false;a?false:true;x=(a?!0:!1)||b;x=y&&(a?!0:!1);x=(a?!1:!0).b;x=(a<b?!0:!1)&&c;x=(a?!0:!1)+1;(a+b?!0:!1)&&c();x=(a?!1:!0)**2;x=(a?!0:!1)?1:2

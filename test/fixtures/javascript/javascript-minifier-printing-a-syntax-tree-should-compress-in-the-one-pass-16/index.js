@@ -1,0 +1,1 @@
+const a = 1; function f() { const b = g(); h(b); return b } f(a)

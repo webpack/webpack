@@ -1,0 +1,41 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"AtRule",
+				"QualifiedRule",
+				"Declaration",
+				"Function"
+			],
+			"fields": [
+				"name",
+				"source",
+				"childCount"
+			],
+			"exit": false
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"skip": {
+				"atRulePrelude": true
+			}
+		},
+		"visit": {
+			"types": [
+				"AtRule",
+				"QualifiedRule",
+				"Declaration",
+				"Function"
+			],
+			"fields": [
+				"name",
+				"source",
+				"childCount"
+			],
+			"exit": false
+		}
+	}
+]

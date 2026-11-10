@@ -1,0 +1,1 @@
+var ä = 1, 𐊧 = 2; f(typeof ä, ä in 𐊧, void 𐊧, new ä(), ä instanceof ä);

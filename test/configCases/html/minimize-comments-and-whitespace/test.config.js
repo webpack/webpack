@@ -27,7 +27,7 @@ module.exports = {
 		expect(page).toContain("@license MIT");
 		expect(page).not.toContain("ordinary chatter");
 		// The markup inside the conditional comment was minified in place.
-		expect(page).toContain("<!--[if IE 8]><p class=a>ie");
+		expect(page).toContain("<!--[if IE 8]><p class=a>ie</p><![endif]-->");
 		expect(page).toContain("<![endif]-->");
 	}
 };

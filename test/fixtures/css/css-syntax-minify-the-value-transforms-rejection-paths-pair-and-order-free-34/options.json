@@ -1,0 +1,22 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"ie 11"
+			],
+			"vendorPrefixes": false
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"ie 11"
+			]
+		}
+	},
+	{
+		"mode": "minify"
+	}
+]

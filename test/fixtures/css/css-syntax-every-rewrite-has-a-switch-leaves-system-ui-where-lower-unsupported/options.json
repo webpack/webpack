@@ -1,0 +1,48 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 130"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 50"
+			]
+		},
+		"transforms": {
+			"lowerUnsupported": false
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 50"
+			]
+		}
+	},
+	{
+		"mode": "minify"
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 55"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 56"
+			]
+		}
+	}
+]

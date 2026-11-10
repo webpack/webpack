@@ -1,0 +1,1 @@
+export async function f(){ await (4 ** 2) }

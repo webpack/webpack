@@ -1,0 +1,1 @@
+function f(){(function(o){g(o)})({a:[1,{b:-1}]})}

@@ -1,0 +1,1 @@
+@supports selector(.a + .b ~ .c){a{color:red}}

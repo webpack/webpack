@@ -1,0 +1,1 @@
+function f(a, b){ if (a) return 1; else b(); if (b) { x(); return 2 } else { y(); z() } if (a) throw 1; else { let q = g(); h(q) } while (a) { if (b) break; else w() } for (;;) { if (a) continue; else { /*! c */ v() } } if (b) return; else if (a) v(); else u(); } for (;;) if (a) break; else b(); l: if (a) break l; else b(); switch (a) { case 1: if (b) break; else c() }

@@ -238,7 +238,7 @@ const fetchUrl = (url) =>
 					}
 					/** @type {Buffer[]} */
 					const chunks = [];
-					res.on("data", (chunk) => chunks.push(chunk));
+					res.on("data", (/** @type {Buffer} */ chunk) => chunks.push(chunk));
 					res.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
 					res.on("error", reject);
 				}
@@ -415,7 +415,9 @@ const SUPPLEMENT = {
 		href: ["a", "area", "base"],
 		action: ["form"],
 		formaction: ["button", "input"],
-		manifest: ["html"]
+		manifest: ["html"],
+		// Typed `(TrustedScriptURL or USVString)` for Trusted Types, so no marker.
+		src: ["script"]
 	},
 	// Not pure reflections on these elements — the IDL member resizes a bitmap or
 	// drives a plugin — so they carry no marker.
@@ -1563,44 +1565,56 @@ const PARSER_TABLES = [
 		"`<element> <attribute>` for each enumerated attribute whose invalid value default names a different state from its missing value default, so a value matching no keyword may not be dropped as redundant.",
 		["track kind"]
 	],
-	// WHY: Elements `removeEmptyElements` keeps even with no children and no
-	// attributes, because that is their ordinary form rather than a leftover.
-	// The option's other guards are rules, not names: a void element is always
-	// childless, a foreign one is not ours to judge, and an element carrying any
-	// attribute at all was written for a reason (which is what covers
-	// `<script src>`, `<iframe src>`, `<div id=mount>` and `<div class=spacer>`,
-	// each of which html-minifier-terser drops).
+	// WHY: Elements `removeEmptyElements` may drop when they hold nothing and
+	// carry no attribute: an empty one has no box, margin, marker, widget or
+	// generated text of its own, and nothing finds it by name. Every other name
+	// stays — a widget, a margin, a custom element a script upgrades, or one
+	// added to HTML after this list — so an unknown element takes the safe side.
 	[
-		"EMPTY_ELEMENT_KEPT",
+		"EMPTY_ELEMENT_DROPPED",
 		"set",
-		"Elements `removeEmptyElements` never drops: with no children and no attributes each is still doing its job, so an empty one is not a leftover.",
+		"Elements `removeEmptyElements` may drop: with no children and no attributes each renders nothing and is read by nothing; every other element, a custom one included, is kept.",
 		[
-			// Drawn into by script, and found by tag name.
-			"canvas",
-			// Filled and opened by script.
-			"dialog",
-			// A gauge reads its value off an attribute; bare, it is still a gauge.
-			"meter",
-			// Form-associated and written to by script.
-			"output",
-			"progress",
-			// The default slot, which is exactly the one with no name.
-			"slot",
-			// Its children hang off a content fragment, not off it.
-			"template",
-			// Empty is a valid value, and its own end tag is what delimits it.
-			"textarea",
-			// Table shape: dropping a cell or a row shifts every one after it.
-			"caption",
-			"col",
-			"colgroup",
-			"table",
-			"tbody",
-			"td",
-			"tfoot",
-			"th",
-			"thead",
-			"tr"
+			"a",
+			"abbr",
+			"address",
+			"article",
+			"aside",
+			"b",
+			"bdi",
+			"bdo",
+			"cite",
+			"code",
+			"data",
+			"del",
+			"dfn",
+			"div",
+			"em",
+			"footer",
+			// The parser puts one back wherever it is left out.
+			"head",
+			"header",
+			"i",
+			"ins",
+			"kbd",
+			"label",
+			"main",
+			"mark",
+			"nav",
+			"s",
+			"samp",
+			"script",
+			"section",
+			"small",
+			"span",
+			"strong",
+			"style",
+			"sub",
+			"sup",
+			"time",
+			"title",
+			"u",
+			"var"
 		]
 	],
 	// WHY: Global attributes whose empty value is the state the spec gives their
@@ -1631,15 +1645,12 @@ const PARSER_TABLES = [
 	[
 		"REDUNDANT_TYPE_ATTRIBUTES",
 		"byElement",
-		'element -> attribute -> the value that states the element\'s own default, for `removeRedundantAttributes: "smart"` (the default). Grouped by element so the printer gates on one lookup for an element no entry names, which is nearly every attribute it prints. Only markers on elements that render nothing, so no rule that styles the page stops applying — unlike `input[type=text]`, which is why that tier is separate. A `querySelector` naming one of these can still tell it went. `media` defaults to `all`, and a `<script charset>` matching the document encoding is obsolete and ignored. Matched ASCII-case-insensitively, unlike `@swc/html`, which lowercases `type` but not `media` / `charset`. `<script type>` is not here — its redundant values are `JAVASCRIPT_SCRIPT_TYPES` minus the empty and `module` spellings, which mean something.',
+		'element -> attribute -> the value that states the element\'s own default, for `removeRedundantAttributes: "smart"` (the default). Grouped by element so the printer gates on one lookup for an element no entry names, which is nearly every attribute it prints. Only markers on elements that render nothing, so no rule that styles the page stops applying — unlike `input[type=text]`, which is why that tier is separate. A `querySelector` naming one of these can still tell it went. `media` defaults to `all`. `<script charset>` is not here: it decides how a classic script is decoded, so the printer drops a UTF-8 one only on a document that declares UTF-8 itself. Matched ASCII-case-insensitively, unlike `@swc/html`, which lowercases `type` but not `media`. `<script type>` is not here — its redundant values are `JAVASCRIPT_SCRIPT_TYPES` minus the empty and `module` spellings, which mean something.',
 		[
 			["style type", "text/css"],
 			["link type", "text/css"],
 			["link media", "all"],
-			["script language", "javascript"],
-			// The attribute value the spec spells, not a Node encoding identifier.
-			// eslint-disable-next-line unicorn/text-encoding-identifier-case
-			["script charset", "utf-8"]
+			["script language", "javascript"]
 		]
 	],
 	[
@@ -1686,6 +1697,53 @@ const PARSER_TABLES = [
 			"text/x-ecmascript",
 			"text/x-javascript"
 		]
+	],
+	[
+		"NO_END_TAG",
+		"set",
+		"§13.3's elements serialized with no end tag: the void ones and those tree construction pops as soon as it inserts them, so none holds a child.",
+		[
+			"area",
+			"base",
+			"basefont",
+			"bgsound",
+			"br",
+			"col",
+			"embed",
+			"frame",
+			"hr",
+			"img",
+			"input",
+			"keygen",
+			"link",
+			"meta",
+			"param",
+			"source",
+			"track",
+			"wbr"
+		]
+	],
+	[
+		"ACKNOWLEDGED_NON_VOID",
+		"set",
+		"Start tags besides the void elements whose self-closing flag tree construction acknowledges.",
+		["basefont", "bgsound", "image"]
+	],
+	[
+		"END_TAG_OPTIONAL_AT_BODY_END",
+		"set",
+		"What the end of the body may leave open without a parse error: elements whose end tag is optional.",
+		[
+			...IMPLIED_END_TAG_ELEMENTS,
+			"tbody",
+			"td",
+			"tfoot",
+			"th",
+			"thead",
+			"tr",
+			"body",
+			"html"
+		]
 	]
 ];
 
@@ -1697,11 +1755,7 @@ const ENUMERATED_ATTRIBUTE_NAMES = [
 		/** @type {[string, string][]} */
 		(
 			/** @type {ParserTable} */
-			(
-				/** @type {ParserTable[]} */ (PARSER_TABLES).find(
-					([name]) => name === "ENUMERATED_KEYWORDS"
-				)
-			)[3]
+			(PARSER_TABLES.find(([name]) => name === "ENUMERATED_KEYWORDS"))[3]
 		).map(([key]) => key.slice(key.indexOf(" ") + 1))
 	)
 ].sort();
@@ -1728,11 +1782,7 @@ const REWRITABLE_ATTRIBUTE_NAMES = [
 // except `sandbox`, whose empty list is the most restrictive state there is.
 const emptyRemovable = /** @type {[string, string[] | null][]} */ (
 	/** @type {ParserTable} */
-	(
-		/** @type {ParserTable[]} */ (PARSER_TABLES).find(
-			([name]) => name === "EMPTY_REMOVABLE_ATTRIBUTES"
-		)
-	)[3]
+	(PARSER_TABLES.find(([name]) => name === "EMPTY_REMOVABLE_ATTRIBUTES"))[3]
 );
 // Carrying the scope, not just the name: off the elements the list is defined
 // for, the same spelling is an author attribute that means whatever a script
@@ -1755,19 +1805,11 @@ emptyRemovable.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 // may drop these even though the void guard otherwise keeps every void element.
 const EMPTY_METADATA_ELEMENTS = /** @type {string[]} */ (
 	/** @type {ParserTable} */
-	(
-		/** @type {ParserTable[]} */ (PARSER_TABLES).find(
-			([name]) => name === "HEAD_ELEMENTS"
-		)
-	)[3]
+	(PARSER_TABLES.find(([name]) => name === "HEAD_ELEMENTS"))[3]
 ).filter((name) =>
 	/** @type {string[]} */ (
 		/** @type {ParserTable} */
-		(
-			/** @type {ParserTable[]} */ (PARSER_TABLES).find(
-				([name2]) => name2 === "VOID"
-			)
-		)[3]
+		(PARSER_TABLES.find(([name2]) => name2 === "VOID"))[3]
 	).includes(name)
 );
 
@@ -1822,16 +1864,16 @@ const byElementLiteral = (entries, asSet = false) => {
 	const inner = [...grouped]
 		.map(
 			([element, attributes]) =>
-				`${propertyKey(
-					element
-				)}: Object.assign(Object.create(null), {${attributes
+				`${propertyKey(element)}: /** @type {${
+					asSet ? "Record<string, Set<string>>" : "Record<string, string>"
+				}} */ (Object.assign(Object.create(null), {${attributes
 					.map(
 						([attribute, mapped]) =>
 							`${propertyKey(attribute)}: ${
 								asSet ? setLiteral(mapped.split(" ")) : `"${mapped}"`
 							}`
 					)
-					.join(", ")}})`
+					.join(", ")}}))`
 		)
 		.join(", ");
 	return `Object.assign(Object.create(null), {${inner}})`;
@@ -1883,15 +1925,7 @@ const parserTable = ([name, kind, doc, items]) => {
 						: kind === "array"
 							? "string[]"
 							: "Record<string, string>";
-	// The `charset` value is an attribute spelling, not a Node encoding id.
-	const encoded = value.includes('"utf-8"');
-	const open = encoded
-		? "/* eslint-disable unicorn/text-encoding-identifier-case */\n"
-		: "";
-	const close = encoded
-		? "/* eslint-enable unicorn/text-encoding-identifier-case */\n"
-		: "";
-	return `/**\n * ${doc}\n * @type {${type}}\n */\n${open}const ${name} = ${value};\n${close}`;
+	return `/**\n * ${doc}\n * @type {${type}}\n */\nconst ${name} = ${value};\n`;
 };
 
 // WHY: The §13.1.2.4 optional-tag conditions and the value grammars below are prose
@@ -2212,6 +2246,8 @@ const main = async () => {
 	const config = await prettier.resolveConfig(TARGET);
 	const data = await prettier.format(source, { ...config, filepath: TARGET });
 
+	// The vendored WHATWG `entities.json`, keyed by name; only `characters` is read.
+	/** @type {Record<string, { characters: string }>} */
 	const entities = JSON.parse(fs.readFileSync(ENTITIES_PATH, "utf8"));
 	const syntax = fs.readFileSync(SYNTAX_TARGET, "utf8");
 	if (!REGION_REGEXP.test(syntax)) {
@@ -2238,6 +2274,6 @@ const main = async () => {
 	if (ok.includes(false)) process.exitCode = 1;
 };
 
-main().catch((err) => {
+main().catch((/** @type {ThrownValue} */ err) => {
 	throw err;
 });

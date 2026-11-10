@@ -1,0 +1,13 @@
+@value themeColor: --theme-color;
+
+.declares-through-value {
+	themeColor: blue;
+}
+
+.uses-value {
+	color: var(themeColor);
+}
+
+.uses-direct {
+	color: var(--theme-color);
+}

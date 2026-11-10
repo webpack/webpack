@@ -1,0 +1,1 @@
+void /*@__PURE__*/(function(){})(g(),h())

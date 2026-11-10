@@ -1,0 +1,1 @@
+var x;0||function(){console.log(1)}.call();1&&{f(){console.log(2)}}.f();x=0||function(){return 4}.call();console.log(x)

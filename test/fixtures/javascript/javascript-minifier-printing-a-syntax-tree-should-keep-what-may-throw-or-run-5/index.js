@@ -1,0 +1,1 @@
+t(function (undefined, x) { undefined == x; null == x; void 0 == x; });

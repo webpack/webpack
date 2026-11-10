@@ -1,0 +1,1 @@
+x = null; y = true; z = false; w = 1_000n; v = 0b1n; q = "a'b" + 'a"b' + '\'"' + '\u2028\u2029\ufeff\0\x001' + '\b\f\v\t\r\n' + '\\';

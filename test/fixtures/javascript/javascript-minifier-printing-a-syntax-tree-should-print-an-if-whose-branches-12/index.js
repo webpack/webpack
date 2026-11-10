@@ -1,0 +1,1 @@
+function f(a,b){if(a)return 1;else if(g(b))return 2;else return 2}

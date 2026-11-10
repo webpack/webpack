@@ -1,0 +1,10 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"chrome 130"
+			]
+		},
+		"mode": "minify"
+	}
+]

@@ -1,0 +1,1 @@
+function h(e){ const s = e; arguments[0] = 2; return s } h(1)

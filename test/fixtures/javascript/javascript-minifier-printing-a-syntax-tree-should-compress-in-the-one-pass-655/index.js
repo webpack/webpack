@@ -1,0 +1,1 @@
+Array.of=f;x=Array.of(1)

@@ -1,0 +1,8 @@
+[
+	{
+		"mode": "minify",
+		"mergeDistantRules": true,
+		"source": "in.css",
+		"content": ".a{color:red}\n.b{margin:0}\n.c{color:red}\n"
+	}
+]

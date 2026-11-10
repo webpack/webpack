@@ -1,0 +1,15 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"javascript/event-handler": "f(\"a\")"
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	}
+]

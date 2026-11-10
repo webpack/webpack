@@ -1,0 +1,8 @@
+[
+	{
+		"options": {
+			"fragmentContext": "select",
+			"scripting": true
+		}
+	}
+]

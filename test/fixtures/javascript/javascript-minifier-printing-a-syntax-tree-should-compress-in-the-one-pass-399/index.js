@@ -1,0 +1,1 @@
+function f(){{let y=g();h(y)}{let y=k();h(y)}}

@@ -1,0 +1,1 @@
+function f(c){ switch (c) { case -1: c = 1; break; case 0: c = 2; break; default: break } switch (c) { case 1: x(); break } switch (c) { default: break } switch (c) { case 1: y(); break; default: } a: switch (c) { case 1: z(); break a } switch (c) { case 1: y(); /*! c */ break } var i = r(c); return import(i) }
