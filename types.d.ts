@@ -950,6 +950,13 @@ declare interface BasenameCacheEntry {
  * field readable. This shrinks instances from 224 to 144 bytes on V8.
  */
 declare abstract class BasicEvaluatedExpression {
+	quasis?: BasicEvaluatedExpression[];
+	parts?: BasicEvaluatedExpression[];
+	items?: BasicEvaluatedExpression[];
+	options?: BasicEvaluatedExpression[];
+	prefix?: null | BasicEvaluatedExpression;
+	postfix?: null | BasicEvaluatedExpression;
+	wrappedInnerExpressions?: BasicEvaluatedExpression[];
 	expression?:
 		| Program
 		| ImportDeclaration
@@ -1025,13 +1032,6 @@ declare abstract class BasicEvaluatedExpression {
 		| ArrayPattern
 		| RestElement
 		| AssignmentPattern;
-	quasis?: BasicEvaluatedExpression[];
-	parts?: BasicEvaluatedExpression[];
-	items?: BasicEvaluatedExpression[];
-	options?: BasicEvaluatedExpression[];
-	prefix?: null | BasicEvaluatedExpression;
-	postfix?: null | BasicEvaluatedExpression;
-	wrappedInnerExpressions?: BasicEvaluatedExpression[];
 
 	/**
 	 * Served lazily from the attached expression when not set explicitly:
@@ -1285,6 +1285,12 @@ declare abstract class BasicEvaluatedExpression {
 			| RestElement
 			| AssignmentPattern
 	): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the expression to a node of a syntax tree, its object made only
+	 * when `expression` is first read.
+	 */
+	setNode(tree: ColumnarSyntaxTree, node: number): BasicEvaluatedExpression;
 }
 type BeforeContextResolveData = ContextResolveData & ContextOptions;
 
@@ -6869,15 +6875,15 @@ type CssNodePath<T = number, S = unknown> = Omit<
 	CssSyntaxPath,
 	| "flag"
 	| "node"
+	| "fieldCount"
+	| "field"
+	| "textOf"
 	| "state"
 	| "within"
-	| "field"
-	| "fieldCount"
 	| "fieldNamed"
 	| "rangeOf"
 	| "startOf"
 	| "endOf"
-	| "textOf"
 > & {
 	readonly node: TypedNode<number, T>;
 	readonly state: S;
@@ -13326,15 +13332,15 @@ type HtmlNodePath<T = number, S = unknown> = Omit<
 	HtmlSyntaxPath,
 	| "flag"
 	| "node"
+	| "fieldCount"
+	| "field"
+	| "textOf"
 	| "state"
 	| "within"
-	| "field"
-	| "fieldCount"
 	| "fieldNamed"
 	| "rangeOf"
 	| "startOf"
 	| "endOf"
-	| "textOf"
 > & {
 	readonly node: TypedNode<number, T>;
 	readonly state: S;
@@ -15826,11 +15832,13 @@ declare class JavascriptModulesPlugin {
  * read as the CSS and HTML paths read theirs.
  */
 declare interface JavascriptNodeReader {
+	object: (node: number) => NodeEstreeIndex;
 	name: (node: number) => string;
 	flag: (flag: number, node: number) => boolean;
 	type: (node: number) => number;
-	range: (node: number) => [number, number];
+	start: (node: number) => number;
 	end: (node: number) => number;
+	range: (node: number) => [number, number];
 	value: (
 		node: number
 	) =>
@@ -15842,10 +15850,17 @@ declare interface JavascriptNodeReader {
 		| boolean
 		| RegExp
 		| { cooked?: null | string; raw: string };
-	start: (node: number) => number;
-	field: (i: number, field: number, node: number) => number;
 	fieldCount: (field: number, node: number) => number;
+	field: (i: number, field: number, node: number) => number;
 	textOf: (part: number, node: number) => null | string;
+	legacyAssert: (node: number) => boolean;
+
+	/**
+	 * Pushes a node's children, holes left out, for a walk that reaches every
+	 * node without naming each type's fields: every property holding a node,
+	 * so a node type the tree has none for is walked into too.
+	 */
+	pushChildren: (node: number, out: number[]) => void;
 }
 type JavascriptNormalModule = NormalModule & {
 	buildInfo?: JavascriptModuleBuildInfo;
@@ -16701,63 +16716,6 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	state: JavascriptParserState;
 	comments?: CommentJavascriptParser[];
 	semicolons?: Map<number, boolean>;
-	statementPath?: StatementPathItem[];
-	prevStatement?:
-		| ImportDeclaration
-		| ExportNamedDeclaration
-		| ExportAllDeclaration
-		| ImportExpressionImport
-		| UnaryExpression
-		| ArrayExpression
-		| ArrowFunctionExpression
-		| AssignmentExpression
-		| AwaitExpression
-		| BinaryExpression
-		| SimpleCallExpression
-		| NewExpression
-		| ChainExpression
-		| ClassExpression
-		| ConditionalExpression
-		| FunctionExpression
-		| Identifier
-		| SimpleLiteral
-		| RegExpLiteral
-		| BigIntLiteral
-		| LogicalExpression
-		| MemberExpression
-		| MetaProperty
-		| ObjectExpression
-		| SequenceExpression
-		| TaggedTemplateExpression
-		| TemplateLiteral
-		| ThisExpression
-		| UpdateExpression
-		| YieldExpression
-		| FunctionDeclaration
-		| MaybeNamedFunctionDeclaration
-		| VariableDeclaration
-		| ClassDeclaration
-		| MaybeNamedClassDeclaration
-		| ExpressionStatement
-		| BlockStatement
-		| StaticBlock
-		| EmptyStatement
-		| DebuggerStatement
-		| WithStatement
-		| ReturnStatement
-		| LabeledStatement
-		| BreakStatement
-		| ContinueStatement
-		| IfStatement
-		| SwitchStatement
-		| ThrowStatement
-		| TryStatement
-		| WhileStatement
-		| DoWhileStatement
-		| ForStatement
-		| ForInStatement
-		| ForOfStatement
-		| ExportDefaultDeclaration;
 	destructuringAssignmentProperties?: WeakMap<
 		Expression,
 		Set<DestructuringAssignmentProperty>
@@ -16775,7 +16733,35 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	 * Destructuring assignment properties for.
 	 */
 	destructuringAssignmentPropertiesFor(
-		node: Expression
+		node:
+			| number
+			| ImportExpressionImport
+			| UnaryExpression
+			| ArrayExpression
+			| ArrowFunctionExpression
+			| AssignmentExpression
+			| AwaitExpression
+			| BinaryExpression
+			| SimpleCallExpression
+			| NewExpression
+			| ChainExpression
+			| ClassExpression
+			| ConditionalExpression
+			| FunctionExpression
+			| Identifier
+			| SimpleLiteral
+			| RegExpLiteral
+			| BigIntLiteral
+			| LogicalExpression
+			| MemberExpression
+			| MetaProperty
+			| ObjectExpression
+			| SequenceExpression
+			| TaggedTemplateExpression
+			| TemplateLiteral
+			| ThisExpression
+			| UpdateExpression
+			| YieldExpression
 	): undefined | Set<DestructuringAssignmentProperty>;
 
 	/**
@@ -17533,6 +17519,66 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	walkSequenceExpression(expression: SequenceExpression): void;
 
 	/**
+	 * The statement walked last before the current one, as its object.
+	 */
+	prevStatement?:
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| FunctionDeclaration
+		| MaybeNamedFunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| MaybeNamedClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration;
+
+	/**
 	 * Walk update expression.
 	 */
 	walkUpdateExpression(expression: UpdateExpression): void;
@@ -18009,6 +18055,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		expr:
 			| undefined
 			| null
+			| number
 			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
@@ -18046,18 +18093,28 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	): boolean;
 
 	/**
+	 * The node an id a `{ path: true }` tap got stands for, as the parser's
+	 * methods take it: the id itself in the tree walk, else the node's object.
+	 */
+	nodeOfPath(path: JavascriptNodeReader, node: number): any;
+
+	/**
 	 * Returns the location of a node or comment, computed from its offsets so
 	 * ASTs from parsers without location support work too. Falls back to the
 	 * node's own `loc` only when no source text is available (preparsed ASTs).
 	 * Offsets can only be mapped while parsing — callbacks deferred past the
 	 * `parse()` call must take the location upfront.
 	 */
-	getLocation(node: {
-		start?: number;
-		end?: number;
-		range?: [number, number];
-		loc?: null | SourceLocation;
-	}): DependencyLocation;
+	getLocation(
+		node:
+			| number
+			| {
+					start?: number;
+					end?: number;
+					range?: [number, number];
+					loc?: null | SourceLocation;
+			  }
+	): DependencyLocation;
 
 	/**
 	 * Returns comments in the range.
@@ -18068,7 +18125,65 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	 * Where the comments written for `statement` begin: the run of comments
 	 * before it that whitespace alone separates from it and from each other.
 	 */
-	getAttachedCommentsStart(statement: StatementPathItem): number;
+	getAttachedCommentsStart(
+		statement:
+			| number
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportAllDeclaration
+			| ImportExpressionImport
+			| UnaryExpression
+			| ArrayExpression
+			| ArrowFunctionExpression
+			| AssignmentExpression
+			| AwaitExpression
+			| BinaryExpression
+			| SimpleCallExpression
+			| NewExpression
+			| ChainExpression
+			| ClassExpression
+			| ConditionalExpression
+			| FunctionExpression
+			| Identifier
+			| SimpleLiteral
+			| RegExpLiteral
+			| BigIntLiteral
+			| LogicalExpression
+			| MemberExpression
+			| MetaProperty
+			| ObjectExpression
+			| SequenceExpression
+			| TaggedTemplateExpression
+			| TemplateLiteral
+			| ThisExpression
+			| UpdateExpression
+			| YieldExpression
+			| FunctionDeclaration
+			| MaybeNamedFunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration
+			| MaybeNamedClassDeclaration
+			| ExpressionStatement
+			| BlockStatement
+			| StaticBlock
+			| EmptyStatement
+			| DebuggerStatement
+			| WithStatement
+			| ReturnStatement
+			| LabeledStatement
+			| BreakStatement
+			| ContinueStatement
+			| IfStatement
+			| SwitchStatement
+			| ThrowStatement
+			| TryStatement
+			| WhileStatement
+			| DoWhileStatement
+			| ForStatement
+			| ForInStatement
+			| ForOfStatement
+			| ExportDefaultDeclaration
+	): number;
 
 	/**
 	 * Reports whether `identifier` may occur as a word in the source text of
@@ -18081,6 +18196,17 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		range: [number, number],
 		identifier: string
 	): boolean;
+
+	/**
+	 * How many statements the walk is in, as `statementPath.length` counts them
+	 * without making their objects: `1` at a top-level statement.
+	 */
+	get statementDepth(): number;
+
+	/**
+	 * The statements the walk is in, innermost last, each as its object.
+	 */
+	statementPath?: StatementPathItem[];
 
 	/**
 	 * Checks whether this javascript parser is asi position.
@@ -18100,7 +18226,37 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	/**
 	 * Checks whether this javascript parser is statement level expression.
 	 */
-	isStatementLevelExpression(expr: Expression): boolean;
+	isStatementLevelExpression(
+		expr:
+			| number
+			| ImportExpressionImport
+			| UnaryExpression
+			| ArrayExpression
+			| ArrowFunctionExpression
+			| AssignmentExpression
+			| AwaitExpression
+			| BinaryExpression
+			| SimpleCallExpression
+			| NewExpression
+			| ChainExpression
+			| ClassExpression
+			| ConditionalExpression
+			| FunctionExpression
+			| Identifier
+			| SimpleLiteral
+			| RegExpLiteral
+			| BigIntLiteral
+			| LogicalExpression
+			| MemberExpression
+			| MetaProperty
+			| ObjectExpression
+			| SequenceExpression
+			| TaggedTemplateExpression
+			| TemplateLiteral
+			| ThisExpression
+			| UpdateExpression
+			| YieldExpression
+	): boolean;
 
 	/**
 	 * Returns tag data, typed by the tag it was stored under.
@@ -18371,10 +18527,12 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	}>;
 	static getImportAttributes: (
 		node:
+			| number
 			| ImportDeclaration
 			| ExportNamedDeclaration
 			| ExportAllDeclaration
-			| ImportExpressionJavascriptParser
+			| ImportExpressionJavascriptParser,
+		path?: JavascriptNodeReader
 	) => undefined | ImportAttributes;
 }
 
@@ -35802,15 +35960,15 @@ type TypedNodePath<TPath, TNode, P extends NodeParts, T, S = unknown> = Omit<
 	TPath,
 	| "flag"
 	| "node"
+	| "fieldCount"
+	| "field"
+	| "textOf"
 	| "state"
 	| "within"
-	| "field"
-	| "fieldCount"
 	| "fieldNamed"
 	| "rangeOf"
 	| "startOf"
 	| "endOf"
-	| "textOf"
 > & {
 	readonly node: TypedNode<TNode, T>;
 	readonly state: S;
