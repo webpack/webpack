@@ -3922,6 +3922,15 @@ describe("SyntaxTree", () => {
 			).name
 		).toBe("foo");
 		tree.release();
+		// the nested parse leaves the outer one its own options too
+		const script = parseProgram("#!/usr/bin/env node\nreturn 1;", 0, {
+			sourceType: "auto",
+			onComment: () => {
+				parseProgram("bar;", 0, { sourceType: "module" });
+			}
+		});
+		expect(typeof script).toBe("number");
+		/** @type {SyntaxTree} */ (takeParsedTree()).release();
 	});
 
 	it("copies a large tree's columns for its lazy objects and frees its own", () => {
