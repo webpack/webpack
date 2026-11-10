@@ -158,8 +158,8 @@ it("should replace unknown member access with undefined (issue 15559)", function
 	expect(typeof OBJECT.UNKNOWN).toBe("undefined");
 	const a = function () { return OBJECT.UNKNOWN; };
 	const b = function () { return OBJECT.SUB1.UNKNOWN; };
-	expect(a.toString()).toBe("function () { return undefined; }");
-	expect(b.toString()).toBe("function () { return undefined; }");
+	expect(a.toString()).toBe("function () { return (void 0); }");
+	expect(b.toString()).toBe("function () { return (void 0); }");
 	expect(OBJECT.SUB1.a).toBe(1);
 	expect(OBJECT.SUB2.a).toBe(1);
 	expect(OBJECT.SUB2.b).toBe(undefined);
@@ -173,8 +173,8 @@ it("should resolve unknown member access on a dotted object key (issue 15559)", 
 	const a = function () { return OBJECT.SUB2.b; };
 	// dotted key whose root is only ever a dotted define (no inlining of the object)
 	const b = function () { return NOT_DEFINED.SUB2.b; };
-	expect(a.toString()).toBe("function () { return undefined; }");
-	expect(b.toString()).toBe("function () { return undefined; }");
+	expect(a.toString()).toBe("function () { return (void 0); }");
+	expect(b.toString()).toBe("function () { return (void 0); }");
 });
 it("should keep a non-optional read past an unknown member throwing (issue 22014)", function () {
 	const a = function () { return OBJECT.UNKNOWN.A; };
@@ -182,11 +182,11 @@ it("should keep a non-optional read past an unknown member throwing (issue 22014
 	const c = function () { return OBJECT.SUB1.UNKNOWN["a"]; };
 	const d = function () { return OBJECT.SUB1.UNKNOWN.a.b; };
 	const e = function () { return NOT_DEFINED.SUB2.b.deep; };
-	expect(a.toString()).toBe("function () { return undefined.A; }");
-	expect(b.toString()).toBe("function () { return undefined.a; }");
-	expect(c.toString()).toBe('function () { return undefined["a"]; }');
-	expect(d.toString()).toBe("function () { return undefined.a.b; }");
-	expect(e.toString()).toBe("function () { return undefined.deep; }");
+	expect(a.toString()).toBe("function () { return (void 0).A; }");
+	expect(b.toString()).toBe("function () { return (void 0).a; }");
+	expect(c.toString()).toBe('function () { return (void 0)["a"]; }');
+	expect(d.toString()).toBe("function () { return (void 0).a.b; }");
+	expect(e.toString()).toBe("function () { return (void 0).deep; }");
 	expect(a).toThrow(TypeError);
 	expect(b).toThrow(TypeError);
 	expect(c).toThrow(TypeError);
@@ -197,9 +197,9 @@ it("should not inline the object when calling an unknown member (issue 15559)", 
 	const a = function () { return OBJECT.SUB1.UNKNOWN(); };
 	const b = function () { return (OBJECT.SUB1.UNKNOWN)(); };
 	const c = function () { return new OBJECT.SUB1.UNKNOWN(); };
-	expect(a.toString()).toBe("function () { return undefined(); }");
-	expect(b.toString()).toBe("function () { return (undefined)(); }");
-	expect(c.toString()).toBe("function () { return new undefined(); }");
+	expect(a.toString()).toBe("function () { return (void 0)(); }");
+	expect(b.toString()).toBe("function () { return ((void 0))(); }");
+	expect(c.toString()).toBe("function () { return new (void 0)(); }");
 	// the object is not inlined; calling an undefined member still throws
 	expect(() => OBJECT.SUB1.UNKNOWN()).toThrow();
 	expect(() => new OBJECT.SUB1.UNKNOWN()).toThrow();

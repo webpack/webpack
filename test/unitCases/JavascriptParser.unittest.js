@@ -605,6 +605,8 @@ describe("JavascriptParser", () => {
 			"typeof null": "string=object",
 			"typeof 1": "string=number",
 			"typeof 1n": "string=bigint",
+			"typeof void 0": "string=undefined",
+			"typeof void a": "",
 			"b.Number": "number=123",
 			"b['Number']": "number=123",
 			"b[Number]": "",
