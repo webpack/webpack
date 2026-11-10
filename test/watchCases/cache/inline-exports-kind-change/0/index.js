@@ -8,7 +8,7 @@ const EXPECTED = {
 	1: { value: "ab", literal: '"ab"' },
 	2: { value: true, literal: "true" },
 	3: { value: null, literal: "null" },
-	4: { value: undefined, literal: "undefined" },
+	4: { value: undefined, literal: "void 0" },
 	5: { value: 2, literal: "2" }
 };
 

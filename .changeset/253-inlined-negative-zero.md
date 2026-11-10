@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep the sign of `-0` when inlining exported constants.
+Preserve `-0`, `undefined` and `NaN` when inlining exported constants.

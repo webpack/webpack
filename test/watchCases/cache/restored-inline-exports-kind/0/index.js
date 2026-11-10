@@ -12,7 +12,7 @@ const steps = [
 	["ab", '"ab"'],
 	[true, "true"],
 	[null, "null"],
-	[undefined, "undefined"],
+	[undefined, "void 0"],
 	[2, "2"]
 ];
 
