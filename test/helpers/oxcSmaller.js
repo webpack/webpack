@@ -997,13 +997,6 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"oxc goes further than webpack on what terser's `template-string` tests cover",
-		[
-			"terser compress: template-string/sequence_1",
-			"terser compress: template-string/sequence_2"
-		]
-	],
-	[
 		"oxc goes further than webpack on what oxc's `ecmascript/value_type.rs` tests cover",
 		[
 			"oxc minifier: ecmascript/value_type.rs:158",
