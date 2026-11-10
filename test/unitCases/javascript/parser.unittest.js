@@ -3897,6 +3897,132 @@ describe("SyntaxTree", () => {
 		expect(empty.nodeOf(call)).toBe(0);
 	});
 
+	it("reads children, legacy assert and pinned nodes of a tree and a view", () => {
+		const {
+			EstreeView,
+			lazyObjectOfSource,
+			parseProgram,
+			takeParsedTree
+		} = require("../../../lib/javascript/syntax-parser");
+		const source =
+			'import a from "./a" assert { type: "json" };\nimport b from "./b" with { type: "json" };';
+		const program = /** @type {number} */ (
+			/** @type {unknown} */ (parseProgram(source, 0, { sourceType: "module" }))
+		);
+		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
+		const first = tree.field(0, Field.body, program);
+		const second = tree.field(1, Field.body, program);
+		expect([tree.legacyAssert(first), tree.legacyAssert(second)]).toEqual([
+			true,
+			false
+		]);
+		/** @type {number[]} */
+		const children = [];
+		tree.pushChildren(program, children);
+		expect(children).toEqual([first, second]);
+		expect(tree.object(first)).toBe(tree.estree(first));
+		// a pinned source is copied on release, so it reads after the tree is reused
+		const pinned = tree.pinSource();
+		tree.release();
+		parseProgram("other();", 0, { sourceType: "module" });
+		/** @type {SyntaxTree} */ (takeParsedTree()).release();
+		expect(
+			/** @type {import("estree").ImportDeclaration} */ (
+				lazyObjectOfSource(pinned, first)
+			).source.value
+		).toBe("./a");
+
+		const view = new EstreeView();
+		const root = view.add(
+			/** @type {EXPECTED_ANY} */ (
+				parseProgram(source, 0, { sourceType: "module", estree: true })
+			)
+		);
+		const viewFirst = view.field(0, Field.body, root);
+		const viewSecond = view.field(1, Field.body, root);
+		expect([view.legacyAssert(viewFirst), view.legacyAssert(viewSecond)]).toEqual(
+			[true, false]
+		);
+		/** @type {number[]} */
+		const viewChildren = [];
+		view.pushChildren(root, viewChildren);
+		expect(viewChildren.map((child) => view.object(child))).toEqual([
+			view.object(viewFirst),
+			view.object(viewSecond)
+		]);
+	});
+
+	it("skips holes and empty fields when pushing children", () => {
+		const {
+			EstreeView,
+			fromEstreeObject,
+			parseProgram,
+			takeParsedTree
+		} = require("../../../lib/javascript/syntax-parser");
+		const code = "[, a, b.c];";
+		const program = /** @type {number} */ (
+			/** @type {unknown} */ (parseProgram(code, 0, { sourceType: "module" }))
+		);
+		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
+		const array = tree.field(
+			0,
+			Field.expression,
+			tree.field(0, Field.body, program)
+		);
+		/** @type {number[]} */
+		const children = [];
+		tree.pushChildren(array, children);
+		expect(children.map((child) => tree.type(child))).toEqual([
+			NodeType.Identifier,
+			NodeType.MemberExpression
+		]);
+		// no node type has the id 0, and a name holds no node
+		/** @type {number[]} */
+		const none = [];
+		tree.pushChildren(0, none);
+		tree.pushChildren(children[0], none);
+		expect(none).toEqual([]);
+		tree.release();
+
+		const view = new EstreeView();
+		const estree = /** @type {EXPECTED_ANY} */ (
+			parseProgram(code, 0, { sourceType: "module", estree: true })
+		);
+		/** @type {number[]} */
+		const viewChildren = [];
+		view.pushChildren(view.add(estree.body[0].expression), viewChildren);
+		expect(viewChildren.map((child) => view.object(child).type)).toEqual([
+			"Identifier",
+			"MemberExpression"
+		]);
+
+		// legacy `assert` is kept on each export an ESTree program is written with
+		const source =
+			'export { a } from "./a" assert { type: "json" };\nexport { b } from "./b" assert { type: "json" };\nimport c from "./c";\nexport { c };';
+		const module = /** @type {EXPECTED_ANY} */ (
+			parseProgram(source, 0, { sourceType: "module", estree: true })
+		);
+		// an edition before import attributes leaves them off
+		delete module.body[2].attributes;
+		delete module.body[3].attributes;
+		const root = fromEstreeObject(module, source);
+		const written = /** @type {SyntaxTree} */ (takeParsedTree());
+		written.lazyEstree(root);
+		expect(
+			[0, 1, 2, 3].map((index) =>
+				written.legacyAssert(written.field(index, Field.body, root))
+			)
+		).toEqual([true, true, false, false]);
+		// a local export has no declaration, the field the walk skips
+		/** @type {number[]} */
+		const exportChildren = [];
+		written.pushChildren(written.field(3, Field.body, root), exportChildren);
+		expect(exportChildren.map((child) => written.type(child))).toEqual([
+			NodeType.ExportSpecifier
+		]);
+		written.release();
+	});
+
 	it("parses into its own tree when a hashbang callback parses again", () => {
 		const { parseProgram, takeParsedTree } = require(
 			"../../../lib/javascript/syntax-parser"
