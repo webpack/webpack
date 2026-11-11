@@ -48,6 +48,11 @@ it("should read import.meta.glob options", () => {
 	expect(Object.values(modules)).toEqual(["one"]);
 });
 
+it("should walk an AMD factory body with its directive", () => {
+	const amd = require("./amd");
+	expect(amd).toEqual({ name: "a" });
+});
+
 it("should keep the never-called constructs", () => {
 	expect(typeof neverCalled).toBe("function");
 });
