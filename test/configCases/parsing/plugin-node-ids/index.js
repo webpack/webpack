@@ -3,7 +3,7 @@ import "./module-string-key";
 import "./number-key";
 import "./statement-kinds";
 import "./impure-for-update";
-import { current, declaredDefault, fixed, reset } from "./live";
+import { current, declaredDefault, fixed, plainLive, reset } from "./live";
 import {
 	literal,
 	template,
@@ -29,7 +29,9 @@ it("should keep modules with an effect", () => {
 
 it("should write a live binding through a shorthand default", () => {
 	expect(current).toBe(0);
+	expect(plainLive).toBe(5);
 	reset();
+	expect(plainLive).toBe(6);
 	expect(current).toBe(2);
 	expect(fixed).toBe(1);
 	expect(declaredDefault).toBe(3);

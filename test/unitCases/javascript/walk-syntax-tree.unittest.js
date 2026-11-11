@@ -297,6 +297,7 @@ const SNIPPETS = [
 	'fn(x + ("p" + y + "s"), ("p" + x + "s") + y, "a".concat(`${x}b`), `${x}b`.concat("c"));',
 	'fn(typeof function () {}, typeof "s", typeof `${x}`, typeof undefined, typeof 1, typeof 1n);',
 	'fn(typeof true, typeof [1], typeof null, typeof /r/, typeof [x], typeof a.b.c, typeof a?.b);',
+	'fn("abc".substr(...[1]), "abc".substr(1, ...[1]), "abc".slice(...[1]));',
 	'fn("a-b".split("-"), "a-b".split(/-/), "ab".substr(1, 1), "ab".slice(0, 1), "ab".substring(x));',
 	"if (a in b) fn(1); else fn(2); x = a in b ? fn(3) : fn(4); var bb = b; bb = b; fn(b);",
 	"if (true) fn(1); else fn(2); if (false) fn(3); else fn(4); fn(1 ? a : b, 0 || a, 1 && a);",

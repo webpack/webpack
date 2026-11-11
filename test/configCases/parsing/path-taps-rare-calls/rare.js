@@ -24,4 +24,25 @@ export function neverCalled(args, opts, k) {
 	new SharedWorker(new URL("./worker.js", import.meta.url), "shared");
 	new SharedWorker(new URL("./worker.js", import.meta.url), opts);
 	System.import("./dir/a.js");
+	new URL("./dir/a.js", opts);
+	new URL("./dir/a.js", import.meta["url"]);
+	new URL("./dir/a.js", import.meta["href"]);
+	new URL("./dir/a.js", import.meta[`url`]);
+	new URL("./dir/a.js", import.meta[k]);
+	__webpack_is_included__(...args);
+	require(["./dir/a.js"], opts.callback.bind(this));
+	require(["./dir/a.js"], make(this));
+	require(
+		["./dir/a.js"],
+		(function (_this) {
+			make();
+			return function () {};
+		})(this)
+	);
+	require(
+		["./dir/a.js"],
+		(function (_this) {
+			make();
+		})(this)
+	);
 }
