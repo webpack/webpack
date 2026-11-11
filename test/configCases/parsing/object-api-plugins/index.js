@@ -37,3 +37,7 @@ it("should walk function arguments through the object-form AMD handler", () => {
 	}
 	expect(called).toBe(false);
 });
+
+it("should define through the object-form AMD define handler", () => {
+	expect(require("./c")).toBe("ac");
+});

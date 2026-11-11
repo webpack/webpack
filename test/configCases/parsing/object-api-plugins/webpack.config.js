@@ -1,5 +1,6 @@
 "use strict";
 
+const AMDDefineDependencyParserPlugin = require("../../../../lib/dependencies/amd/AMDDefineDependencyParserPlugin");
 const AMDRequireDependenciesBlockParserPlugin = require("../../../../lib/dependencies/amd/AMDRequireDependenciesBlockParserPlugin");
 const CommonJsImportsParserPlugin = require("../../../../lib/dependencies/commonjs/CommonJsImportsParserPlugin");
 
@@ -61,6 +62,15 @@ const tapParser = (parser, options) => {
 		.for("customAmdRequire")
 		.tap(PLUGIN_NAME, (expression) =>
 			amd.processCallRequire(parser, /** @type {CallExpression} */ (expression))
+		);
+	const define = new AMDDefineDependencyParserPlugin(options);
+	parser.hooks.call
+		.for("customDefine")
+		.tap(PLUGIN_NAME, (expression) =>
+			define.processCallDefine(
+				parser,
+				/** @type {CallExpression} */ (expression)
+			)
 		);
 	parser.hooks.call.for("customFunction").tap(PLUGIN_NAME, (expression) => {
 		for (const argument of /** @type {CallExpression} */ (expression)
