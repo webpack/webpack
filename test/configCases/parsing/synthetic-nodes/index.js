@@ -3,7 +3,7 @@
 const marker = 1;
 
 // a free name, so the plugin's `call` tap sees it
-globalThis.probe = () => undefined;
+global.probe = () => undefined;
 
 it("should walk, evaluate and enter nodes a plugin built", () => {
 	expect(probe(marker)).toBe(undefined);
