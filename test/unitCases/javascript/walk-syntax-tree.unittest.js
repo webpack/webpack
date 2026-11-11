@@ -396,3 +396,64 @@ describe("walk the syntax tree", () => {
 		}
 	);
 });
+
+describe("a syntax tree written from ESTree objects", () => {
+	const { syntaxTreeOfEstree } = require("../../../lib/javascript/syntax-parser");
+	const acorn = require("acorn");
+
+	it("serves each node's object until the tree is released", () => {
+		const program = /** @type {import("estree").Program} */ (
+			/** @type {unknown} */ (
+				acorn.parse("f(a, [b]);", { ecmaVersion: "latest", ranges: true })
+			)
+		);
+		const call = /** @type {import("estree").CallExpression} */ (
+			/** @type {import("estree").ExpressionStatement} */ (program.body[0])
+				.expression
+		);
+		const { tree, program: node } = syntaxTreeOfEstree(program, "f(a, [b]);");
+		expect(tree.estree(node)).toBe(program);
+		const id = tree.nodeOf(call);
+		expect(id).not.toBe(0);
+		expect(tree.estree(id)).toBe(call);
+		// lazy objects read the same objects back
+		const lazy = /** @type {import("estree").Program} */ (tree.lazyEstree(node));
+		expect(lazy).toBe(program);
+		tree.release();
+		expect(tree.nodeOf(call)).toBe(0);
+	});
+
+	it("writes a subtree nested deeper than the compiled writer recurses", () => {
+		const depth = 1500;
+		const source = `${"[".repeat(depth)}x${"]".repeat(depth)};`;
+		/** @type {import("estree").Identifier & { range: [number, number] }} */
+		const deepest = { type: "Identifier", name: "x", range: [depth, depth + 1] };
+		/** @type {import("estree").Expression & { range: [number, number] }} */
+		let expression = deepest;
+		for (let level = depth - 1; level >= 0; level--) {
+			expression = {
+				type: "ArrayExpression",
+				elements: [expression],
+				range: [level, source.length - 1 - level]
+			};
+		}
+		/** @type {import("estree").Program & { range: [number, number] }} */
+		const program = {
+			type: "Program",
+			sourceType: "script",
+			body: [
+				{
+					type: "ExpressionStatement",
+					expression,
+					range: [0, source.length]
+				}
+			],
+			range: [0, source.length]
+		};
+		const { tree } = syntaxTreeOfEstree(program, source);
+		const id = tree.nodeOf(deepest);
+		expect(id).not.toBe(0);
+		expect(tree.estree(id)).toBe(deepest);
+		tree.release();
+	});
+});

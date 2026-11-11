@@ -20112,6 +20112,11 @@ declare interface LazySource {
 	objects: (undefined | EstreeObject)[];
 
 	/**
+	 * the objects an outside parser or a plugin wrote, served for their nodes
+	 */
+	originals?: EstreeInput[];
+
+	/**
 	 * how many nodes the tree holds, the length `objects` takes
 	 */
 	count: number;
