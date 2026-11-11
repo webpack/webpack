@@ -3685,7 +3685,13 @@ declare abstract class ColumnarSyntaxTree {
 	 * parent in source order, as the parser writes; a child already written
 	 * stands as its id.
 	 */
-	addEstree(root: EstreeSource, input?: string): number;
+	addEstree(root: EstreeInput, input?: string, skipUnknown?: boolean): number;
+
+	/**
+	 * Writes a node a plugin built while this tree is read into it, keeping
+	 * the lazy objects already made reading the columns the write may grow.
+	 */
+	appendEstree(object: EstreeInput, input: string): number;
 
 	/**
 	 * Grows the columns once to hold this many more nodes, slots, lists and
@@ -10323,6 +10329,82 @@ declare class EnvironmentPlugin {
 	apply(compiler: Compiler): void;
 }
 type ErrorWithDetail = Error & { details?: string };
+type EstreeInput =
+	| Program
+	| ImportDeclaration
+	| ExportNamedDeclaration
+	| ExportAllDeclaration
+	| ImportExpressionImport
+	| UnaryExpression
+	| ArrayExpression
+	| ArrowFunctionExpression
+	| AssignmentExpression
+	| AwaitExpression
+	| BinaryExpression
+	| SimpleCallExpression
+	| NewExpression
+	| ChainExpression
+	| ClassExpression
+	| ConditionalExpression
+	| FunctionExpression
+	| Identifier
+	| SimpleLiteral
+	| RegExpLiteral
+	| BigIntLiteral
+	| LogicalExpression
+	| MemberExpression
+	| MetaProperty
+	| ObjectExpression
+	| SequenceExpression
+	| TaggedTemplateExpression
+	| TemplateLiteral
+	| ThisExpression
+	| UpdateExpression
+	| YieldExpression
+	| SpreadElement
+	| PrivateIdentifier
+	| Super
+	| FunctionDeclaration
+	| VariableDeclaration
+	| ClassDeclaration
+	| ExpressionStatement
+	| BlockStatement
+	| StaticBlock
+	| EmptyStatement
+	| DebuggerStatement
+	| WithStatement
+	| ReturnStatement
+	| LabeledStatement
+	| BreakStatement
+	| ContinueStatement
+	| IfStatement
+	| SwitchStatement
+	| ThrowStatement
+	| TryStatement
+	| WhileStatement
+	| DoWhileStatement
+	| ForStatement
+	| ForInStatement
+	| ForOfStatement
+	| ExportDefaultDeclaration
+	| MethodDefinition
+	| PropertyDefinition
+	| VariableDeclarator
+	| Property
+	| CatchClause
+	| ClassBody
+	| SwitchCase
+	| TemplateElement
+	| AssignmentProperty
+	| ImportSpecifier
+	| ImportDefaultSpecifier
+	| ImportNamespaceSpecifier
+	| ExportSpecifier
+	| ObjectPattern
+	| ArrayPattern
+	| RestElement
+	| AssignmentPattern
+	| EstreeSource;
 
 /**
  * A node `toEstreeObject` builds: ESTree's fields, with `range` read off its
@@ -15832,7 +15914,88 @@ declare class JavascriptModulesPlugin {
  * read as the CSS and HTML paths read theirs.
  */
 declare interface JavascriptNodeReader {
-	object: (node: number) => NodeEstreeIndex;
+	/**
+	 * A node's ESTree object, as `estree` makes it: a path's way to an object
+	 * for code that still reads one, as `EstreeView#object` is the view's.
+	 */
+	object: (
+		node: number
+	) =>
+		| null
+		| Program
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| SpreadElement
+		| PrivateIdentifier
+		| Super
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| Property
+		| CatchClause
+		| ClassBody
+		| SwitchCase
+		| TemplateElement
+		| AssignmentProperty
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern;
 	name: (node: number) => string;
 	flag: (flag: number, node: number) => boolean;
 	type: (node: number) => number;
@@ -15856,9 +16019,8 @@ declare interface JavascriptNodeReader {
 	legacyAssert: (node: number) => boolean;
 
 	/**
-	 * Pushes a node's children, holes left out, for a walk that reaches every
-	 * node without naming each type's fields: every property holding a node,
-	 * so a node type the tree has none for is walked into too.
+	 * Pushes a node's children in its fields' order, holes left out, for a
+	 * walk that reaches every node without naming each type's fields.
 	 */
 	pushChildren: (node: number, out: number[]) => void;
 }
@@ -17520,66 +17682,6 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	walkSequenceExpression(expression: SequenceExpression): void;
 
 	/**
-	 * The statement walked last before the current one, as its object.
-	 */
-	prevStatement?:
-		| ImportDeclaration
-		| ExportNamedDeclaration
-		| ExportAllDeclaration
-		| ImportExpressionImport
-		| UnaryExpression
-		| ArrayExpression
-		| ArrowFunctionExpression
-		| AssignmentExpression
-		| AwaitExpression
-		| BinaryExpression
-		| SimpleCallExpression
-		| NewExpression
-		| ChainExpression
-		| ClassExpression
-		| ConditionalExpression
-		| FunctionExpression
-		| Identifier
-		| SimpleLiteral
-		| RegExpLiteral
-		| BigIntLiteral
-		| LogicalExpression
-		| MemberExpression
-		| MetaProperty
-		| ObjectExpression
-		| SequenceExpression
-		| TaggedTemplateExpression
-		| TemplateLiteral
-		| ThisExpression
-		| UpdateExpression
-		| YieldExpression
-		| FunctionDeclaration
-		| MaybeNamedFunctionDeclaration
-		| VariableDeclaration
-		| ClassDeclaration
-		| MaybeNamedClassDeclaration
-		| ExpressionStatement
-		| BlockStatement
-		| StaticBlock
-		| EmptyStatement
-		| DebuggerStatement
-		| WithStatement
-		| ReturnStatement
-		| LabeledStatement
-		| BreakStatement
-		| ContinueStatement
-		| IfStatement
-		| SwitchStatement
-		| ThrowStatement
-		| TryStatement
-		| WhileStatement
-		| DoWhileStatement
-		| ForStatement
-		| ForInStatement
-		| ForOfStatement
-		| ExportDefaultDeclaration;
-
-	/**
 	 * Walk update expression.
 	 */
 	walkUpdateExpression(expression: UpdateExpression): void;
@@ -18014,6 +18116,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	 */
 	evaluateExpression(
 		expression:
+			| number
 			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
@@ -18107,7 +18210,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 
 	/**
 	 * The node an id a `{ path: true }` tap got stands for, as the parser's
-	 * methods take it: the id itself in the tree walk, else the node's object.
+	 * methods take it: every parse walks a tree, so it is the id itself.
 	 */
 	nodeOfPath<T extends NodeEstreeIndex = Expression>(
 		path: JavascriptNodeReader,
@@ -18223,6 +18326,66 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	 * The statements the walk is in, innermost last, each as its object.
 	 */
 	statementPath?: StatementPathItem[];
+
+	/**
+	 * The statement walked last before the current one, as its object.
+	 */
+	prevStatement?:
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| FunctionDeclaration
+		| MaybeNamedFunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| MaybeNamedClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration;
 
 	/**
 	 * Checks whether this javascript parser is asi position.
@@ -19947,6 +20110,11 @@ declare interface LazySource {
 	 * each node's object, once made: empty until the first is
 	 */
 	objects: (undefined | EstreeObject)[];
+
+	/**
+	 * the objects an outside parser or a plugin wrote, served for their nodes
+	 */
+	originals?: EstreeInput[];
 
 	/**
 	 * how many nodes the tree holds, the length `objects` takes
@@ -38847,6 +39015,10 @@ declare namespace exports {
 					program: Program,
 					input: string
 				) => number;
+				export let syntaxTreeOfEstree: (
+					program: NodeEstreeIndex,
+					input: string
+				) => { tree: ColumnarSyntaxTree; program: number };
 				export let A: JavascriptSyntaxPath;
 				export let grammar: (
 					input: string,

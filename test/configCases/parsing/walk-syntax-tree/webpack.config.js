@@ -19,7 +19,6 @@ const walkSyntaxTree = (compiler) => {
 				.for("javascript/auto")
 				.tap(PLUGIN_NAME, (moduleParser) => {
 					const parser = /** @type {JavascriptParser} */ (moduleParser);
-					parser._walkTree = true;
 					/**
 					 * @param {import("estree").CallExpression} expression the call
 					 * @returns {boolean} whether its first argument is pure

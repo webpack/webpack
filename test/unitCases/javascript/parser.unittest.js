@@ -4356,14 +4356,12 @@ describe("SyntaxTree", () => {
 		expect(next._types.length).toBe(nodes + 1);
 	});
 
-	it("sizes the columns once for an ESTree program, from its own counts", () => {
-		const { fromEstreeObject, takeParsedTree } = require(
-			"../../../lib/javascript/syntax-parser"
-		);
+	it("sizes the columns once when it writes an ESTree program in two passes", () => {
 		const reserve = jest.spyOn(SyntaxTree.prototype, "reserve");
+		const written = new SyntaxTree();
 		try {
-			fromEstreeObject(
-				/** @type {import("estree").Program} */ (
+			written._addEstreeInOrder(
+				/** @type {EXPECTED_ANY} */ (
 					/** @type {unknown} */ ({
 						type: "Program",
 						sourceType: "script",
@@ -4379,13 +4377,14 @@ describe("SyntaxTree", () => {
 						]
 					})
 				),
-				"a;"
+				"a;",
+				false
 			);
 			expect(reserve).toHaveBeenCalledTimes(1);
 			expect(reserve.mock.calls[0][0]).toBe(3);
 		} finally {
 			reserve.mockRestore();
-			/** @type {SyntaxTree} */ (takeParsedTree()).release();
+			written.release();
 		}
 		const tree = new SyntaxTree();
 		tree.reserve(10, 20, 3, 5);
@@ -4409,6 +4408,178 @@ describe("SyntaxTree", () => {
 		).toThrow(/Unknown node type Unknown/);
 		const node = tree.add(NodeType.Identifier, 0, 1);
 		expect(() => tree.set(node, "value", 1)).toThrow(/has no field value/);
+	});
+
+	describe("the compiled ESTree writer", () => {
+		/**
+		 * Writes an object both ways and expects the same columns.
+		 * @param {EXPECTED_ANY} object the ESTree object
+		 * @param {string} input the source its offsets point into
+		 * @param {boolean=} skipUnknown whether unknown children write as no node
+		 * @returns {number} the node the compiled writer wrote
+		 */
+		const expectSameWrite = (object, input, skipUnknown = false) => {
+			const compiled = new SyntaxTree();
+			const twoPass = new SyntaxTree();
+			try {
+				const node = compiled.addEstree(object, input, skipUnknown);
+				expect(twoPass._addEstreeInOrder(object, input, skipUnknown)).toBe(node);
+				expect(compiled._count).toBe(twoPass._count);
+				for (const column of ["_types", "_starts", "_ends", "_flags", "_bases"]) {
+					expect(
+						Array.from(
+							/** @type {Int32Array} */ (
+								/** @type {EXPECTED_ANY} */ (compiled)[column]
+							).subarray(0, compiled._count + 1)
+						)
+					).toEqual(
+						Array.from(
+							/** @type {Int32Array} */ (
+								/** @type {EXPECTED_ANY} */ (twoPass)[column]
+							).subarray(0, twoPass._count + 1)
+						)
+					);
+				}
+				expect(Array.from(compiled._slots.subarray(0, compiled._slotTop))).toEqual(
+					Array.from(twoPass._slots.subarray(0, twoPass._slotTop))
+				);
+				expect(
+					Array.from(compiled._listItems.subarray(0, compiled._listItemTop))
+				).toEqual(Array.from(twoPass._listItems.subarray(0, twoPass._listItemTop)));
+				expect(compiled._values.slice(0, compiled._valueCount)).toEqual(
+					twoPass._values.slice(0, twoPass._valueCount)
+				);
+				return node;
+			} finally {
+				compiled.release();
+				twoPass.release();
+			}
+		};
+
+		it("writes the same tree as the two-pass write for real programs", () => {
+			for (const file of [
+				"lib/javascript/JavascriptParser.js",
+				"test/configCases/parsing/no-estree-objects/syntax.js"
+			]) {
+				const input = fs.readFileSync(path.resolve(__dirname, "../../..", file), "utf8");
+				expectSameWrite(
+					acorn.parse(input, {
+						ecmaVersion: "latest",
+						sourceType: file.includes("no-estree-objects") ? "module" : "script",
+						allowReturnOutsideFunction: true,
+						allowHashBang: true,
+						ranges: true
+					}),
+					input
+				);
+			}
+			const module =
+				"import a, * as b from 'c' with { type: 'json' }; export { a }; export * from 'd'; class E { #f = 1; static { super.g?.(); } } label: for await (const [h, ...i] of j) { break label; } import.meta; `k${l}`;";
+			expectSameWrite(
+				acorn.parse(module, {
+					ecmaVersion: "latest",
+					sourceType: "module",
+					ranges: true
+				}),
+				module
+			);
+		});
+
+		it("writes every node type it knows, with no field set", () => {
+			for (const type of Object.keys(NodeType)) {
+				expectSameWrite({ type, start: 1, end: 2 }, "abc");
+			}
+		});
+
+		it("hands a chain nested past its recursion to the two-pass write", () => {
+			let expression = /** @type {EXPECTED_ANY} */ ({
+				type: "Identifier",
+				start: 0,
+				end: 1,
+				name: "a"
+			});
+			for (let i = 0; i < 3000; i++) {
+				expression = {
+					type: "BinaryExpression",
+					start: 0,
+					end: 3 + i * 2,
+					operator: "+",
+					left: expression,
+					right: { type: "Identifier", start: 2 + i * 2, end: 3 + i * 2, name: "b" }
+				};
+			}
+			const twoPass = jest.spyOn(SyntaxTree.prototype, "_addEstreeInOrder");
+			try {
+				expectSameWrite(expression, "");
+				// the compiled write hands one subtree over; the comparison writes once
+				expect(twoPass.mock.calls.length).toBeGreaterThan(1);
+			} finally {
+				twoPass.mockRestore();
+			}
+		});
+
+		it("writes an unknown child as no node only when asked, a raw from the source and an id as written", () => {
+			const program = {
+				type: "ExpressionStatement",
+				start: 0,
+				end: 3,
+				expression: { type: "JSXElement", start: 0, end: 3 }
+			};
+			expect(() => new SyntaxTree().addEstree(program, "<a>")).toThrow(
+				/Unknown node type JSXElement/
+			);
+			expectSameWrite(program, "<a>", true);
+			expectSameWrite({ type: "Literal", start: 0, end: 2, value: 12 }, "12");
+			expectSameWrite({ type: "Literal", start: 5, end: 9, value: "ab" }, "");
+			const shared = { type: "Identifier", start: 9, end: 10, name: "a" };
+			expectSameWrite(
+				{
+					type: "ImportSpecifier",
+					start: 9,
+					end: 10,
+					imported: shared,
+					local: shared
+				},
+				""
+			);
+			const tree = new SyntaxTree();
+			try {
+				const written = tree.add(NodeType.Identifier, 0, 1);
+				const statement = tree.addEstree(
+					/** @type {EXPECTED_ANY} */ ({
+						type: "ExpressionStatement",
+						start: 0,
+						end: 1,
+						expression: written
+					})
+				);
+				const { Field } = require("../../../lib/javascript/syntax-parser");
+				expect(tree.field(0, Field.expression, statement)).toBe(written);
+			} finally {
+				tree.release();
+			}
+		});
+
+		it("marks an import written with `assert`", () => {
+			const { LEGACY_ASSERT_ATTRIBUTES } = require("../../../lib/javascript/syntax-parser");
+			const attributes = /** @type {EXPECTED_ANY} */ ([]);
+			attributes[LEGACY_ASSERT_ATTRIBUTES] = true;
+			const node = {
+				type: "ImportDeclaration",
+				start: 0,
+				end: 10,
+				specifiers: [],
+				source: { type: "Literal", start: 7, end: 10, value: "a", raw: "'a'" },
+				attributes
+			};
+			expectSameWrite(node, "");
+			const tree = new SyntaxTree();
+			try {
+				expect(tree.legacyAssert(tree.addEstree(/** @type {EXPECTED_ANY} */ (node)))).toBe(true);
+			} finally {
+				tree.release();
+			}
+		});
 	});
 
 	it("hands a tree's columns on to the next tree once only, and lets go of a large tree's values", () => {
