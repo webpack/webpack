@@ -3967,6 +3967,18 @@ declare abstract class ColumnarSyntaxTree {
 	 * released and reused: a release copies them for it, as for a lazy object.
 	 */
 	pinSource(): LazySource;
+
+	/**
+	 * Lets a release skip copying the columns for readers of nodes the text
+	 * parses back to: such a reader parses the text again if it reads later.
+	 */
+	setRebuild(rebuild: () => ColumnarSyntaxTree): void;
+
+	/**
+	 * The source an evaluation of a node reads: unpinned when a rebuild can
+	 * make the node again, so a release copies nothing for it.
+	 */
+	evaluationSource(node: number): LazySource;
 	type(node: number): number;
 	start(node: number): number;
 	end(node: number): number;
@@ -20125,6 +20137,21 @@ declare interface LazySource {
 	 * whether a reader outside the lazy objects keeps reading the columns
 	 */
 	pinned: boolean;
+
+	/**
+	 * whether a release let the columns go without copying them
+	 */
+	released: boolean;
+
+	/**
+	 * parses the same text into a new tree, for a reader after the release
+	 */
+	rebuild?: () => ColumnarSyntaxTree;
+
+	/**
+	 * the source of that tree, once a reader asked for it
+	 */
+	rebuilt?: LazySource;
 }
 
 /**
