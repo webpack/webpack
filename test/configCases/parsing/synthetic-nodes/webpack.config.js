@@ -39,6 +39,7 @@ const syntheticNodes = (compiler) => {
 		(compilation, { normalModuleFactory }) => {
 			/** @type {Record<string, unknown>} */
 			const seen = { walked: [], entered: [] };
+			let parsed = 0;
 			normalModuleFactory.hooks.parser
 				.for("javascript/auto")
 				.tap(PLUGIN_NAME, (moduleParser) => {
@@ -78,6 +79,7 @@ const syntheticNodes = (compiler) => {
 						return false;
 					});
 					parser.hooks.finish.tap(PLUGIN_NAME, () => {
+						parsed++;
 						if (seen.outsideEvaluated !== undefined) return;
 						// after the parse, with no tree to read: each gets one of its own
 						process.nextTick(() => {
@@ -100,7 +102,7 @@ const syntheticNodes = (compiler) => {
 						// a build restored from the cache parses nothing
 						source.replace(
 							"__SYNTHETIC__",
-							seen.evaluated === undefined ? "null" : JSON.stringify(seen)
+							parsed === 0 ? "null" : JSON.stringify(seen)
 						)
 					);
 				}
