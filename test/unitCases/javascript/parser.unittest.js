@@ -4841,6 +4841,37 @@ describe("WebpackParser writing a SyntaxTree", () => {
 			() => new Extended({ ...options, syntaxTree: new SyntaxTree() }, "x")
 		).toThrow(/without parser plugins/);
 	});
+
+	it("keeps a parseExprList override for call, new and array lists", () => {
+		let lists = 0;
+		/** @type {import("../../../lib/javascript/syntax-parser").ParserPlugin} */
+		const countLists = (Parser) =>
+			class extends Parser {
+				/**
+				 * @param {Parameters<WebpackParser["parseExprList"]>} args the list's arguments
+				 * @returns {ReturnType<WebpackParser["parseExprList"]>} the list
+				 */
+				parseExprList(...args) {
+					lists++;
+					return super.parseExprList(...args);
+				}
+			};
+		const Extended = WebpackParser.extend(countLists);
+		const ast = /** @type {import("estree").Program} */ (
+			new Extended(options, "f(a, b); new C(1); [2, 3];").parse()
+		);
+		expect(lists).toBe(3);
+		expect(
+			ast.body.map(
+				(statement) =>
+					/** @type {import("estree").ExpressionStatement} */ (statement)
+						.expression.type
+			)
+		).toEqual(["CallExpression", "NewExpression", "ArrayExpression"]);
+		expect(
+			() => new Extended({ ...options, syntaxTree: new SyntaxTree() }, "x")
+		).toThrow(/without parser plugins/);
+	});
 });
 
 describe("parseProgram", () => {
