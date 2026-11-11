@@ -53,3 +53,10 @@
 .t17 { transform: scale(1); -moz-transform: scale(1.0001) !important }
 /*! ...though one after it saying the same thing is dead all the same */
 .t18 { transform: scale(1); -moz-transform: scale(1) }
+/*! declined: `z-index` is no custom property, though its second character is a
+   hyphen too, so a later value no engine reads leaves the earlier one read */
+.t19 { z-index: 3; z-index: foo }
+/*! ...in a block long enough to be read through the map as well */
+.t20 { --p1: 1; --p2: 2; --p3: 3; --p4: 4; --p5: 5; --p6: 6; --p7: 7; --p8: 8; --p9: 9; --p10: 10; --p11: 11; --p12: 12; --p13: 13; --p14: 14; --p15: 15; --p16: 16; --p17: 17; --p18: 18; --p19: 19; --p20: 20; --p21: 21; --p22: 22; --p23: 23; --p24: 24; --p25: 25; --p26: 26; --p27: 27; --p28: 28; --p29: 29; --p30: 30; --p31: 31; --p32: 32; z-index: 3; z-index: foo }
+/*! a later `z-index` this can read still leaves the earlier one dead */
+.t21 { z-index: 3; z-index: 4 }
