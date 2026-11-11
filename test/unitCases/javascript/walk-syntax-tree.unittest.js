@@ -456,4 +456,42 @@ describe("a syntax tree written from ESTree objects", () => {
 		expect(tree.estree(id)).toBe(deepest);
 		tree.release();
 	});
+
+	it("skips a node type it has no layout for in a deep subtree", () => {
+		const depth = 1500;
+		/** @type {import("estree").Expression & { range: [number, number] }} */
+		let expression =
+			/** @type {import("estree").Expression & { range: [number, number] }} */ (
+				/** @type {unknown} */ ({ type: "JSXElement", range: [depth, depth + 1] })
+			);
+		for (let level = depth - 1; level >= 0; level--) {
+			expression = {
+				type: "UnaryExpression",
+				operator: "!",
+				prefix: true,
+				argument: expression,
+				range: [level, depth + 1]
+			};
+		}
+		const { tree, program } = syntaxTreeOfEstree(
+			{
+				type: "ExpressionStatement",
+				expression,
+				range: [0, depth + 2]
+			},
+			""
+		);
+		expect(program).not.toBe(0);
+		tree.release();
+		const {
+			_SyntaxTree: SyntaxTree
+		} = require("../../../lib/javascript/syntax-parser");
+
+		const strict = new SyntaxTree();
+		// without skipping, the type the tree lacks is an error
+		expect(() => strict.addEstree(expression, "", false)).toThrow(
+			"Unknown node type JSXElement"
+		);
+		strict.release();
+	});
 });

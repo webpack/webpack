@@ -151,6 +151,259 @@ describe("JavascriptParser object API", () => {
 		expect(declared).toEqual(["x", "fd"]);
 	});
 
+	it("should walk and read the statement and pattern objects a plugin hands it", () => {
+		const code = `"use strict";
+function t() { return 1; foo(); function g() {} }
+f().g;
+o.a["b"].c;
+o[k].c;
+var { p, q } = r;
+`;
+		const parser = new JavascriptParser("script");
+		parser.hooks.terminate.tap("test", () => true);
+		/** @type {string[]} */
+		const unused = [];
+		parser.hooks.unusedStatement.tap("test", (statement) => {
+			unused.push(statement.type);
+			return true;
+		});
+		/** @type {boolean[]} */
+		const statementLevel = [];
+		parser.hooks.statement.tap("test", (statement) => {
+			if (statement.type !== "ExpressionStatement") return;
+			const plain = /** @type {import("estree").Identifier} */ ({
+				type: "Identifier",
+				name: "plain",
+				start: 0,
+				end: 1
+			});
+			statementLevel.push(
+				parser.isStatementLevelExpression(statement.expression),
+				parser.isStatementLevelExpression(plain)
+			);
+		});
+		parser.hooks.program.tap("test", (ast) => {
+			const body = /** @type {Program} */ (ast).body;
+			const [directive, fn, call, member, computed, declaration] = body;
+			parser.preWalkStatements(body);
+			parser.blockPreWalkStatements(body);
+			parser.scope.isStrict = false;
+			parser.detectMode(body);
+			expect(parser.scope.isStrict).toBe(true);
+			expect(parser.getDirective(directive)).toBe("use strict");
+			expect(parser.getDirective(fn)).toBeUndefined();
+			// a return ends a function's scope, past which only declarations count
+			const { topLevelScope } = parser.scope;
+			parser.scope.topLevelScope = false;
+			parser.walkStatements(
+				/** @type {import("estree").FunctionDeclaration} */ (fn).body.body
+			);
+			parser.scope.topLevelScope = topLevelScope;
+			parser.scope.terminated = undefined;
+			expect(unused).toEqual(["ExpressionStatement"]);
+			parser.walkExpressions([
+				/** @type {import("estree").Expression} */ (expressionOf(call)),
+				null
+			]);
+			const root = parser.getMemberExpressionRoot(
+				/** @type {import("estree").MemberExpression} */ (expressionOf(member))
+			);
+			expect(/** @type {import("estree").Identifier} */ (root).name).toBe("o");
+			expect(
+				parser.getMemberExpressionRoot(
+					/** @type {import("estree").MemberExpression} */ (
+						expressionOf(computed)
+					)
+				).type
+			).toBe("MemberExpression");
+			const info =
+				/** @type {{ type: string, getCalleeMembers: () => string[], call: import("estree").CallExpression }} */ (
+					parser.getMemberExpressionInfo(
+						/** @type {import("estree").MemberExpression} */ (
+							expressionOf(call)
+						),
+						3
+					)
+				);
+			expect(info.type).toBe("call");
+			expect(info.getCalleeMembers()).toEqual([]);
+			expect(info.call.type).toBe("CallExpression");
+			const pattern = /** @type {import("estree").VariableDeclaration} */ (
+				declaration
+			).declarations[0].id;
+			/** @type {string[]} */
+			const names = [];
+			parser.enterPatterns(["n", "", pattern], (name) => {
+				names.push(name);
+			});
+			parser.enterPattern(
+				/** @type {import("estree").Pattern} */ (
+					/** @type {unknown} */ (null)
+				),
+				() => {
+					names.push("none");
+				}
+			);
+			expect(names).toEqual(["n", "p", "q"]);
+		});
+		parser.parse(
+			code,
+			/** @type {ParserState} */ (/** @type {unknown} */ ({ source: code }))
+		);
+		// each expression statement, the directive included: its expression, then the plain object
+		expect(statementLevel).toEqual([
+			true,
+			false,
+			true,
+			false,
+			true,
+			false,
+			true,
+			false
+		]);
+	});
+
+	it("should evaluate an object outside a parse in a tree of its own", () => {
+		const parser = new JavascriptParser("module");
+		const result = parser.evaluateExpression(
+			/** @type {import("estree").Literal} */ ({
+				type: "Literal",
+				value: 1,
+				raw: "1",
+				start: 0,
+				end: 1
+			})
+		);
+		expect(result.isNumber()).toBe(true);
+		expect(result.number).toBe(1);
+	});
+
+	it("should run the object taps and helpers a plugin outside webpack calls", () => {
+		const code = "class K { m() {} }\no.a;\nnew RegExp();\nnull?.b;\n";
+		const parser = new JavascriptParser("script");
+		/** @type {string[]} */
+		const elements = [];
+		parser.hooks.classBodyElement.tap("test", (element) => {
+			elements.push(element.type);
+			return true;
+		});
+		parser.hooks.program.tap("test", (ast) => {
+			const body = /** @type {Program} */ (ast).body;
+			const member = /** @type {import("estree").MemberExpression} */ (
+				expressionOf(body[1])
+			);
+			/** @type {string[]} */
+			const fallbacks = [];
+			expect(
+				parser.callHooksForExpressionWithFallback(
+					parser.hooks.expression,
+					member,
+					(name) => {
+						fallbacks.push(name);
+						return true;
+					},
+					undefined,
+					member
+				)
+			).toBe(true);
+			expect(fallbacks).toEqual(["o.a"]);
+			expect(
+				parser.callHooksForName(parser.hooks.expression, "untapped", member)
+			).toBeUndefined();
+			const tag = Symbol("tag");
+			parser.tagVariable("tagged", tag, {});
+			const nameInfo =
+				/** @type {{ name: string }} */
+				(parser.getNameInfoFromVariable("tagged"));
+			expect(nameInfo.name).toBe("tagged");
+			const [, , regExp, optional] =
+				/** @type {import("estree").Expression[]} */ (body.map(expressionOf));
+			expect(parser.evaluateExpression(regExp).isRegExp()).toBe(true);
+			expect(parser.evaluateExpression(optional).asNullish()).toBe(true);
+		});
+		parser.parse(
+			code,
+			/** @type {ParserState} */ (/** @type {unknown} */ ({ source: code }))
+		);
+		expect(elements).toEqual(["MethodDefinition"]);
+		expect(() =>
+			parser.parseString(
+				/** @type {import("estree").Expression} */ ({
+					type: "Identifier",
+					name: "x"
+				})
+			)
+		).toThrow("Identifier is not supported as parameter for require");
+		expect(() =>
+			parser.parse(
+				/** @type {string} */ (/** @type {unknown} */ (null)),
+				/** @type {ParserState} */ (/** @type {unknown} */ ({}))
+			)
+		).toThrow("source must not be null");
+	});
+
+	it("should read a directive and a member root from objects outside a parse", () => {
+		const parser = new JavascriptParser("script");
+		/**
+		 * @param {string} raw the literal's source
+		 * @param {[number, number]} statementRange the statement's range
+		 * @returns {import("estree").ExpressionStatement} a statement no parser made
+		 */
+		const statement = (raw, statementRange) => ({
+			type: "ExpressionStatement",
+			range: statementRange,
+			expression: {
+				type: "Literal",
+				value: "use strict",
+				raw,
+				range: [1, 13]
+			}
+		});
+		expect(parser.getDirective(statement("'use strict'", [1, 14]))).toBe(
+			"use strict"
+		);
+		// a parenthesized string starts after the statement does
+		expect(
+			parser.getDirective(statement("'use strict'", [0, 15]))
+		).toBeUndefined();
+		const unquoted = statement("'use strict'", [1, 14]);
+		delete (/** @type {import("estree").SimpleLiteral} */ (unquoted.expression).raw);
+		expect(parser.getDirective(unquoted)).toBe("use strict");
+		expect(
+			parser.getDirective({
+				type: "ExpressionStatement",
+				expression: { type: "Identifier", name: "x" }
+			})
+		).toBeUndefined();
+		const member = /** @type {import("estree").MemberExpression} */ ({
+			type: "MemberExpression",
+			computed: false,
+			optional: false,
+			object: { type: "ThisExpression" },
+			property: { type: "PrivateIdentifier", name: "x" }
+		});
+		expect(parser.getMemberExpressionRoot(member)).toBe(member);
+	});
+
+	it("should push a view node's single and listed children", () => {
+		const { EstreeView } = require("../../../lib/javascript/syntax-parser");
+
+		const view = new EstreeView();
+		const node = view.add(
+			/** @type {import("estree").Node} */ ({
+				type: "ExpressionStatement",
+				expression: { type: "Identifier", name: "x" }
+			})
+		);
+		/** @type {number[]} */
+		const children = [];
+		view.pushChildren(node, children);
+		expect(children).toHaveLength(1);
+		expect(
+			/** @type {import("estree").Identifier} */ (view.object(children[0])).name
+		).toBe("x");
+	});
+
 	it("should skip a node type the tree has no layout for", () => {
 		const parser = new JavascriptParser("module");
 		const code = "a;";
