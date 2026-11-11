@@ -1034,6 +1034,12 @@ declare abstract class BasicEvaluatedExpression {
 		| AssignmentPattern;
 
 	/**
+	 * The expression's node in the syntax tree, for a reader that walks or
+	 * evaluates it by id during the same parse, before its object is read.
+	 */
+	get expressionNode(): number;
+
+	/**
 	 * Served lazily from the attached expression when not set explicitly:
 	 * `evaluateExpression`'s plain results share the expression's range, and
 	 * most evaluations never read it, so the node's range array is only
@@ -12759,36 +12765,14 @@ type GuardFormula =
  */
 declare interface GuardFrame {
 	/**
+	 * the reader of `node`
+	 */
+	path?: JavascriptNodeReader;
+
+	/**
 	 * the conditional test (for the lazily built formula)
 	 */
-	test?:
-		| ImportExpressionImport
-		| UnaryExpression
-		| ArrayExpression
-		| ArrowFunctionExpression
-		| AssignmentExpression
-		| AwaitExpression
-		| BinaryExpression
-		| SimpleCallExpression
-		| NewExpression
-		| ChainExpression
-		| ClassExpression
-		| ConditionalExpression
-		| FunctionExpression
-		| Identifier
-		| SimpleLiteral
-		| RegExpLiteral
-		| BigIntLiteral
-		| LogicalExpression
-		| MemberExpression
-		| MetaProperty
-		| ObjectExpression
-		| SequenceExpression
-		| TaggedTemplateExpression
-		| TemplateLiteral
-		| ThisExpression
-		| UpdateExpression
-		| YieldExpression;
+	node?: number;
 
 	/**
 	 * dependency count before the test was walked
@@ -12864,6 +12848,22 @@ declare interface HMRJavascriptParserHooks {
 		void
 	>;
 	hotAcceptWithoutCallback: SyncBailHook<[CallExpression, string[]], void>;
+
+	/**
+	 * `hotAcceptCallback` for a tap reading the callback by id
+	 */
+	hotAcceptCallbackByPath: SyncBailHook<
+		[JavascriptNodeReader, number, string[]],
+		void
+	>;
+
+	/**
+	 * `hotAcceptWithoutCallback` for a tap reading the call by id
+	 */
+	hotAcceptWithoutCallbackByPath: SyncBailHook<
+		[JavascriptNodeReader, number, string[]],
+		void
+	>;
 }
 declare const HOISTED_DECLARATIONS: unique symbol;
 
@@ -17446,6 +17446,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	 */
 	walkExpression(
 		expression:
+			| number
 			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
@@ -17939,6 +17940,18 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 			| AssignmentPattern
 		)[],
 		onIdent: (ident: string) => void
+	): void;
+
+	/**
+	 * Processes the provided pattern.
+	 */
+
+	/**
+	 * Processes the provided pattern, by id in the tree walk.
+	 */
+	enterPattern(
+		pattern: number,
+		onIdent: (name: string, ident: number) => void
 	): void;
 
 	/**
