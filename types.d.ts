@@ -3685,13 +3685,13 @@ declare abstract class ColumnarSyntaxTree {
 	 * parent in source order, as the parser writes; a child already written
 	 * stands as its id.
 	 */
-	addEstree(root: EstreeSource, input?: string, skipUnknown?: boolean): number;
+	addEstree(root: EstreeInput, input?: string, skipUnknown?: boolean): number;
 
 	/**
 	 * Writes a node a plugin built while this tree is read into it, keeping
 	 * the lazy objects already made reading the columns the write may grow.
 	 */
-	appendEstree(object: EstreeSource, input: string): number;
+	appendEstree(object: EstreeInput, input: string): number;
 
 	/**
 	 * Grows the columns once to hold this many more nodes, slots, lists and
@@ -10329,6 +10329,82 @@ declare class EnvironmentPlugin {
 	apply(compiler: Compiler): void;
 }
 type ErrorWithDetail = Error & { details?: string };
+type EstreeInput =
+	| Program
+	| ImportDeclaration
+	| ExportNamedDeclaration
+	| ExportAllDeclaration
+	| ImportExpressionImport
+	| UnaryExpression
+	| ArrayExpression
+	| ArrowFunctionExpression
+	| AssignmentExpression
+	| AwaitExpression
+	| BinaryExpression
+	| SimpleCallExpression
+	| NewExpression
+	| ChainExpression
+	| ClassExpression
+	| ConditionalExpression
+	| FunctionExpression
+	| Identifier
+	| SimpleLiteral
+	| RegExpLiteral
+	| BigIntLiteral
+	| LogicalExpression
+	| MemberExpression
+	| MetaProperty
+	| ObjectExpression
+	| SequenceExpression
+	| TaggedTemplateExpression
+	| TemplateLiteral
+	| ThisExpression
+	| UpdateExpression
+	| YieldExpression
+	| SpreadElement
+	| PrivateIdentifier
+	| Super
+	| FunctionDeclaration
+	| VariableDeclaration
+	| ClassDeclaration
+	| ExpressionStatement
+	| BlockStatement
+	| StaticBlock
+	| EmptyStatement
+	| DebuggerStatement
+	| WithStatement
+	| ReturnStatement
+	| LabeledStatement
+	| BreakStatement
+	| ContinueStatement
+	| IfStatement
+	| SwitchStatement
+	| ThrowStatement
+	| TryStatement
+	| WhileStatement
+	| DoWhileStatement
+	| ForStatement
+	| ForInStatement
+	| ForOfStatement
+	| ExportDefaultDeclaration
+	| MethodDefinition
+	| PropertyDefinition
+	| VariableDeclarator
+	| Property
+	| CatchClause
+	| ClassBody
+	| SwitchCase
+	| TemplateElement
+	| AssignmentProperty
+	| ImportSpecifier
+	| ImportDefaultSpecifier
+	| ImportNamespaceSpecifier
+	| ExportSpecifier
+	| ObjectPattern
+	| ArrayPattern
+	| RestElement
+	| AssignmentPattern
+	| EstreeSource;
 
 /**
  * A node `toEstreeObject` builds: ESTree's fields, with `range` read off its
@@ -38935,7 +39011,7 @@ declare namespace exports {
 					input: string
 				) => number;
 				export let syntaxTreeOfEstree: (
-					program: Program,
+					program: NodeEstreeIndex,
 					input: string
 				) => { tree: ColumnarSyntaxTree; program: number };
 				export let A: JavascriptSyntaxPath;
