@@ -71,18 +71,19 @@ const { fixture } = require("../../helpers/fixture");
 
 "use strict";
 
-const analyzeTree = require("../../../lib/javascript/ScopeAnalyzer");
+const syntax = require("../../../lib/javascript/syntax");
+
+const { analyzeScope: analyzeTree, ScopeLog } = syntax.scopes;
 const {
 	fromEstreeObject,
-	parse: parseProgram
-} = require("../../../lib/javascript/syntax").parser;
+	parseProgram: parseTree,
+	toEstreeObject
+} = syntax.parser;
 
 /** @import { Program } from "estree" */
 
-// The analyser exports one function and hangs the classes off it, so their
-// instance types are read back through it rather than imported by name.
-/** @typedef {InstanceType<typeof analyzeTree.Scope>} Scope */
-/** @typedef {InstanceType<typeof analyzeTree.Reference>} Reference */
+/** @typedef {InstanceType<typeof syntax.scopes.Scope>} Scope */
+/** @typedef {InstanceType<typeof syntax.scopes.Reference>} Reference */
 
 /**
  * The source each program the suite parsed was read from, which the tree the
@@ -138,7 +139,11 @@ const startOf = (node) => /** @type {EXPECTED_ANY} */ (node).start;
  * @returns {Program} the parsed program
  */
 const parse = (code, sourceType = "module") => {
-	const ast = parseProgram(code, { sourceType, ecmaVersion: "latest" });
+	// the tree's own ESTree objects: what a custom parser or a plugin would hand
+	// `fromEstreeObject`
+	const ast = /** @type {Program} */ (
+		toEstreeObject(/** @type {number} */ (parseTree(code, 0, { sourceType })))
+	);
 	sources.set(ast, code);
 	return ast;
 };
@@ -147,10 +152,14 @@ const parse = (code, sourceType = "module") => {
  * @param {Program} ast a program to analyse
  * @returns {Analysis} the analysis, plus the harness views over it
  */
-const analyzeAst = (ast) => {
-	// the cases assert on references at every depth, which the analyser only
-	// collects on request — webpack itself reads back the module scope alone
-	const analysis = analyzeScope(ast, true);
+const analyzeAst = (ast) => withViews(ast, analyzeScope(ast, true));
+
+/**
+ * @param {Program} ast the program analysed
+ * @param {ReturnType<typeof analyzeTree>} analysis its analysis, with references at every depth
+ * @returns {Analysis} the analysis, plus the harness views over it
+ */
+const withViews = (ast, analysis) => {
 
 	/** @type {Scope[]} */
 	const scopes = [];
@@ -194,8 +203,24 @@ const analyzeAst = (ast) => {
  * @param {"module" | "script"} sourceType source type
  * @returns {Analysis} the analysis
  */
-const analyze = (code, sourceType = "module") =>
-	analyzeAst(parse(code, sourceType));
+const analyze = (code, sourceType = "module") => {
+	const program = /** @type {number} */ (
+		parseTree(code, 0, { sourceType, scopes: scopeLog })
+	);
+	// the cases assert on references at every depth, which the analyser only
+	// collects on request — webpack itself reads back the module scope alone
+	const analysis = analyzeTree(program, true);
+	return withViews(
+		/** @type {Program} */ (toEstreeObject(program)),
+		analysis
+	);
+};
+
+/**
+ * One log every case's parse refills, as webpack's concatenation reuses one.
+ * @type {InstanceType<typeof ScopeLog>}
+ */
+const scopeLog = new ScopeLog();
 
 /**
  * @param {Scope} scope a scope
@@ -3264,15 +3289,14 @@ const analyzeBoth = (code, sourceType) => {
 	// lazy: on a node the suite skips, loading the reference is what throws
 	const eslintScope = require("eslint-scope");
 
-	// eslint-scope reads `range` to tell a function's parameter list from its
-	// body, so the parse has to serve it
-	const ast = /** @type {Program} */ (
-		parseProgram(code, { sourceType, ecmaVersion: "latest", ranges: true })
+	const program = /** @type {number} */ (
+		parseTree(code, 0, { sourceType, scopes: true })
 	);
-	sources.set(ast, code);
-
 	// records references everywhere, as the reference does
-	const ours = analyzeScope(ast, true);
+	const ours = analyzeTree(program, true);
+	// eslint-scope reads `range` to tell a function's parameter list from its
+	// body, which the tree's ESTree objects carry
+	const ast = /** @type {Program} */ (toEstreeObject(program));
 	const theirs = /** @type {GlobalScope} */ (
 		eslintScope.analyze(ast, REFERENCE_OPTIONS).globalScope
 	);
@@ -3596,8 +3620,6 @@ describeIfSupported("ScopeAnalyzer matches eslint-scope", () => {
 	describe("the scope log a parse records", () => {
 		const fs = require("fs");
 		const path = require("path");
-		const { ScopeLog, parseProgram: parseTree } =
-			require("../../../lib/javascript/syntax").parser;
 
 		/**
 		 * @param {EXPECTED_ANY} analysis an analysis

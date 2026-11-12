@@ -29562,7 +29562,8 @@ declare interface RecursiveNonNullable<T> {}
 /**
  * One identifier occurrence that refers to a binding.
  */
-declare abstract class Reference {
+declare class Reference {
+	constructor(identifier: ScopeIdentifier, from: Scope);
 	identifier: ScopeIdentifier;
 	from: Scope;
 	resolved?: Variable;
@@ -32368,7 +32369,15 @@ declare interface SSRManifestPluginOptions {
  * A lexical scope. One shape for every kind, so the property loads in the
  * resolution loop stay monomorphic.
  */
-declare abstract class Scope {
+declare class Scope {
+	constructor(
+		type: ScopeType,
+		blockType: string,
+		blockStart: number,
+		upper: null | Scope,
+		isVarScope: boolean,
+		recordEveryReference: boolean
+	);
 	type: ScopeType;
 	blockType: string;
 	blockStart: number;
@@ -32387,11 +32396,33 @@ declare abstract class Scope {
 	paramBoundary: number;
 	getBinding(name: string): undefined | Variable;
 }
+declare interface ScopeAnalysis {
+	/**
+	 * the outermost scope
+	 */
+	globalScope: Scope;
+
+	/**
+	 * the module body scope, where top-level declarations live
+	 */
+	moduleScope: Scope;
+
+	/**
+	 * every identifier that resolved to no binding — the module's free names
+	 */
+	unresolvedReferences: Reference[];
+
+	/**
+	 * where each shorthand property's identifier starts, so a rename can write `name: newName` without the tree
+	 */
+	shorthandIdentifierStarts: Set<number>;
+}
 
 /**
  * One occurrence of a name in the source, which a rename rewrites in place.
  */
-declare abstract class ScopeIdentifier {
+declare class ScopeIdentifier {
+	constructor(name: string, start: number, end: number);
 	name: string;
 	start: number;
 	end: number;
@@ -36434,7 +36465,8 @@ declare interface Values {
 /**
  * A binding: one name declared in one scope.
  */
-declare abstract class Variable {
+declare class Variable {
+	constructor(name: string, scope: Scope);
 	name: string;
 	identifiers: ScopeIdentifier[];
 	references: Reference[];
@@ -39278,6 +39310,13 @@ declare namespace exports {
 				| ArrayPattern
 				| RestElement
 				| AssignmentPattern;
+			/** Usage: `const { analyzeScope } = webpack.javascript.syntax.scopes; analyzeScope(parser.parseProgram(code, 0, { scopes: true }))`. @experimental exposed as `webpack.javascript.syntax.scopes`; unstable API */ export namespace scopes {
+				export let analyzeScope: (
+					program: number,
+					recordEveryReference?: boolean
+				) => ScopeAnalysis;
+				export { ScopeLog, Scope, Variable, Reference, ScopeIdentifier };
+			}
 			export { JavascriptSourceProcessor as SourceProcessor };
 		}
 		export {
