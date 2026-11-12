@@ -103,6 +103,12 @@ jobs:
 
       - run: node tooling/retry.js yarn --frozen-lockfile
 
+      # The syntax tests the coverage step reruns spawn minifiers that load
+      # `webpack` by name, as in `unit`
+      - run: yarn link --frozen-lockfile || true
+
+      - run: yarn link webpack --frozen-lockfile
+
       # The framework stylesheets and documents the comparisons install, which
       # the sweep reads as well: the corpus a contributor builds is 77
       # stylesheets wider than the one a bare checkout holds, and a finding has
