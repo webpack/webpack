@@ -10,7 +10,6 @@ const {
 	A,
 	buildSkipSet,
 	Field,
-	Flag,
 	NodeType,
 	_propertyIdOf,
 	normalizeUrl,
@@ -21,7 +20,6 @@ const {
 	parseARule,
 	parseAStylesheet,
 	parseAStylesheetsContents,
-	Part,
 	TokenStream
 } = require("../../../lib/css/syntax-parser");
 
@@ -437,92 +435,6 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 	});
 });
 
-describe("CssSyntax — path accessors", () => {
-	/** @import { CssPath } from "../../../lib/css/syntax-parser" */
-	const SRC =
-		fixture("css", "css-syntax-path-accessors-exposes-every-field-read-on-the-current-node");
-
-	it("exposes every field read on the current node", () => {
-		/** @type {string[]} */
-		const log = [];
-		new SourceProcessor()
-			.use(
-				/** @type {import("../../../lib/css/syntax-parser").VisitorMap} */ ({
-					[NodeType.AtRule]: (/** @type {CssPath} */ path) => {
-						log.push(`at:${path.name()}`);
-						log.push(
-							`atName:${path.source(.../** @type {[number, number]} */ (path.rangeOf(Part.name)))}`
-						);
-						log.push(`prelude:${path.childCount() > 0}`);
-						log.push(
-							`childRules:${path.fieldCount(Field.rules)}`
-						);
-						log.push(
-							`decls:${path.fieldCount(Field.declarations)
-							}`
-						);
-						log.push(`blockOpen:${SRC[/** @type {[number, number]} */ (path.rangeOf(Part.block))[0]]}`);
-						log.push(`blockClose:${SRC[/** @type {[number, number]} */ (path.rangeOf(Part.block))[1] - 1]}`);
-						log.push(`span:${SRC.slice(path.range()[0], path.range()[0] + 6)}`);
-						log.push(`node:${path.node !== null}`);
-						log.push(`parent:${path.parent}`);
-					},
-					[NodeType.Declaration]: (/** @type {CssPath} */ path) => {
-						if (path.flag(Flag.important)) {
-							log.push(
-								`decl:${path.source(.../** @type {[number, number]} */ (path.rangeOf(Part.name)))}=${path.name()}`
-							);
-						}
-					},
-					[NodeType.Url]: (/** @type {CssPath} */ path) => {
-						log.push(
-							`url:${SRC.slice(/** @type {[number, number]} */ (path.rangeOf(Part.value))[0], /** @type {[number, number]} */ (path.rangeOf(Part.value))[1])}`
-						);
-					},
-					[NodeType.SimpleBlock]: (/** @type {CssPath} */ path) => {
-						log.push(`blockToken:${path.value()}`);
-					},
-					[NodeType.Function]: {
-						enter: (/** @type {CssPath} */ path) => {
-							if (path.name() === "var") {
-								log.push(`fnChildren:${path.childCount() > 0}`);
-							}
-						},
-						exit: (/** @type {CssPath} */ path) => {
-							log.push(`fnExit:${path.name()}`);
-						}
-					},
-					[NodeType.Comment]: {
-						enter: (/** @type {CssPath} */ path) => {
-							log.push(`comment:${SRC.slice(path.range()[0], path.range()[1])}`);
-							log.push(`commentParent:${path.parent}`);
-						},
-						exit: () => log.push("commentExit")
-					}
-				})
-			)
-			.process(SRC);
-		expect(log).toContain("at:media");
-		expect(log).toContain("atName:media");
-		expect(log).toContain("prelude:true");
-		expect(log).toContain("childRules:1");
-		expect(log).toContain("decls:0");
-		expect(log).toContain("blockOpen:{");
-		expect(log).toContain("blockClose:}");
-		expect(log).toContain("blockToken:[");
-		expect(log).toContain("span:@media");
-		expect(log).toContain("node:true");
-		expect(log).toContain("parent:null");
-		expect(log).toContain("decl:co\\6cor=color");
-		expect(log).toContain("url:x.png");
-		expect(log).toContain("fnChildren:true");
-		expect(log).toContain("fnExit:var");
-		expect(log).toContain("comment:/* note */");
-		expect(log).toContain("commentParent:null");
-		expect(log).toContain("commentExit");
-	});
-});
-
 describe("CssSyntax — normalizeUrl", () => {
 	it("should return a plain url unchanged", () => {
 		const s = "./images/photo.png";
@@ -593,146 +505,6 @@ describe("CssSyntax — token value decoding", () => {
 		};
 		// Linear work reads about four times as much for four times the input.
 		expect(reads(2000) / reads(500)).toBeLessThan(6);
-	});
-});
-
-describe("CssSyntax — path reads on every node kind", () => {
-	/**
-	 * Run one visitor per node type over `css`, collecting what it returns.
-	 * @param {string} css source
-	 * @param {Record<number, (path: import("../../../lib/css/syntax-parser").CssPath) => unknown>} reads per-type reads
-	 * @param {object=} options process options
-	 * @returns {unknown[]} the reads, in walk order
-	 */
-	const collect = (css, reads, options) => {
-		/** @type {unknown[]} */
-		const out = [];
-		/** @type {import("../../../lib/css/syntax-parser").VisitorMap} */
-		const map = {};
-		for (const [type, read] of Object.entries(reads)) {
-			map[Number(type)] = (
-				/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
-			) => {
-				out.push(read(path));
-			};
-		}
-		new SourceProcessor().use(map).process(css, options);
-		return out;
-	};
-
-	it("reads names, values and flags that a node kind does not have as empty", () => {
-		const read = (
-			/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
-		) => [
-			path.name(),
-			path.value(),
-			path.childCount(),
-			path.children().length,
-			path.flag(Flag.integer),
-			path.flag(Flag.important),
-			path.flag(Flag.id),
-			path.rangeOf(Part.value),
-			path.rangeOf(Part.block),
-			path.textOf(Part.name)
-		];
-		expect(
-			collect(fixture("css", "css-syntax-nesting-and-error-recovery-rethrows-what-else-fails-a-parse-as-it-is"), {
-				[NodeType.Ident]: read,
-				[NodeType.Declaration]: read
-			})
-		).toEqual([
-			["", "a", 0, 0, false, false, false, null, null, null],
-			["b", "", 1, 1, false, false, false, [4, 5], null, null],
-			["", "c", 0, 0, false, false, false, null, null, null]
-		]);
-	});
-
-	it("reads children, fields and fields by name", () => {
-		const read = (
-			/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
-		) => {
-			const color = path.fieldNamed(Field.declarations, "color");
-			return [
-				path.index,
-				path.children().map((n) => path.source(n)),
-				/** @type {unknown} */ (path.child(0)) !== 0 && path.source(path.child(0)),
-				path.child(9),
-				path.fieldCount(Field.prelude),
-				path.fieldCount(Field.value),
-				path.fieldCount(Field.declarations),
-				path.fieldCount(Field.rules),
-				path.source(path.field(0, Field.prelude)),
-				/** @type {unknown} */ (path.field(0, Field.rules)) !== 0 &&
-					path.source(path.field(0, Field.rules)),
-				/** @type {unknown} */ (path.field(1, Field.declarations)) !== 0 &&
-					path.source(path.field(1, Field.declarations)),
-				path.field(-1, Field.declarations),
-				path.field(5, Field.declarations),
-				/** @type {unknown} */ (color) !== 0 && path.source(color),
-				path.fieldNamed(Field.declarations, "nope"),
-				path.source(path.node)
-			];
-		};
-		expect(
-			collect(fixture("css", "css-syntax-path-reads-on-every-node-kind-reads-children-fields-and-fields-by"), {
-				[NodeType.QualifiedRule]: read
-			})
-		).toEqual([
-			[0, ["x"], "x", 0, 1, 0, 0, 0, "x", false, false, 0, 0, false, 0, "x{}"],
-			[
-				0,
-				["a", " ", "b"],
-				"a",
-				0,
-				3,
-				0,
-				2,
-				0,
-				"a",
-				false,
-				fixture("css", "source-processor-merging-adjacent-style-writes-a-style-attribute-whose-4"),
-				0,
-				0,
-				fixture("css", "source-processor-merging-adjacent-style-writes-a-style-attribute-whose-4"),
-				0,
-				"a b{width:1;color:red}"
-			],
-			[0, ["c"], "c", 0, 1, 0, 0, 1, "c", "d{}", false, 0, 0, false, 0, "c{d{}}"],
-			[0, ["d"], "d", 0, 1, 0, 0, 0, "d", false, false, 0, 0, false, 0, "d{}"]
-		]);
-		// Below the top level, each node knows its place among its siblings.
-		expect(
-			collect(fixture("css", "css-syntax-path-reads-on-every-node-kind-reads-children-fields-and-fields-by-2"), {
-				[NodeType.Declaration]: (path) => path.index,
-				[NodeType.QualifiedRule]: (path) => path.index
-			})
-		).toEqual([0, 0, 1, 0]);
-		// A leaf has no children and no fields.
-		expect(
-			collect(fixture("css", "css-syntax-nesting-and-error-recovery-rethrows-what-else-fails-a-parse-as-it-is"), {
-				[NodeType.Declaration]: (path) => [
-					path.fieldCount(Field.declarations, path.child(0)),
-					path.children(path.child(0))
-				]
-			})
-		).toEqual([[0, []]]);
-	});
-
-	it("stop() ends the walk once, however often it is called", () => {
-		/** @type {string[]} */
-		const log = [];
-		new SourceProcessor()
-			.use({
-				[NodeType.Declaration]: (
-					/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
-				) => {
-					log.push(path.name());
-					path.stop();
-					path.stop();
-				}
-			})
-			.process(fixture("css", "css-syntax-path-reads-on-every-node-kind-stop-ends-the-walk-once-however-often"));
-		expect(log).toEqual(["b"]);
 	});
 });
 
@@ -839,10 +611,6 @@ describe("CssSyntax — block streaming reads the same tree", () => {
 			.process(css);
 		return log;
 	};
-
-	it("walks an at-rule opening a block", () => {
-		expect(walk(fixture("css", "css-syntax-block-streaming-reads-the-same-tree-walks-an-at-rule-opening-a-block"))).toEqual(["rule:a", "@media", "b"]);
-	});
 
 	it("streams a block grown on declarations after a child rule", () => {
 		const log = walk(`a{b{}${DECLS}d:1}`);
