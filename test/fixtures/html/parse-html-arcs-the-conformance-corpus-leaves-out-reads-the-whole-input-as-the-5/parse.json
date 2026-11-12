@@ -1,0 +1,11 @@
+[
+	{
+		"options": {
+			"fragmentContext": "noscript",
+			"scripting": true
+		},
+		"check": {
+			"fixture": "fragmentTree"
+		}
+	}
+]

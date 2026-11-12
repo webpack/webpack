@@ -1,0 +1,11 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"fixture": "walk"
+		},
+		"check": {
+			"fixture": "flushed"
+		}
+	}
+]

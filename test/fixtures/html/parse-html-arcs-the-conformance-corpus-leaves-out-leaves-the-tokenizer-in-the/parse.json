@@ -1,0 +1,10 @@
+[
+	{
+		"options": {
+			"fragmentContext": "colgroup"
+		},
+		"check": {
+			"fixture": "fragmentTree"
+		}
+	}
+]

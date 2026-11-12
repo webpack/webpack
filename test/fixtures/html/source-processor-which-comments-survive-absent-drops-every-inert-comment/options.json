@@ -40,5 +40,16 @@
 				"regexp": "^\\s*@license"
 			}
 		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": {
+				"fixture": "license"
+			}
+		},
+		"check": {
+			"fixture": "printed"
+		}
 	}
 ]

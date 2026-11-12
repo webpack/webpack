@@ -1,0 +1,11 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"fixture": "links"
+		},
+		"check": {
+			"fixture": "logged"
+		}
+	}
+]

@@ -4,5 +4,13 @@
 			"fragmentContext": "script",
 			"scripting": true
 		}
+	},
+	{
+		"options": {
+			"fragmentContext": "script"
+		},
+		"check": {
+			"fixture": "fragmentTree"
+		}
 	}
 ]

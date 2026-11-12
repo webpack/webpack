@@ -1,0 +1,8 @@
+[
+	{
+		"mode": "minify",
+		"check": {
+			"fixture": "printed"
+		}
+	}
+]

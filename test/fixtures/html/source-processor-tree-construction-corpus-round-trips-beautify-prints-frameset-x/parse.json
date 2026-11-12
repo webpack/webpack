@@ -4,5 +4,13 @@
 			"fragmentContext": "svg desc",
 			"scripting": true
 		}
+	},
+	{
+		"options": {
+			"fragmentContext": "svg desc"
+		},
+		"check": {
+			"fixture": "fragmentTree"
+		}
 	}
 ]

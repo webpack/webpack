@@ -1,0 +1,12 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"visit": {
+			"fixture": "skipRoot"
+		},
+		"check": {
+			"fixture": "printedAndLog"
+		}
+	}
+]
