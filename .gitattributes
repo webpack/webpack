@@ -49,6 +49,7 @@ test/configCases/css/minify-checks/minify-selectors-and-functions/** eol=lf
 test/configCases/css/minify-checks/minify-value-keywords/** eol=lf
 test/configCases/performance/unused-reexports/** eol=lf
 test/configCases/performance/unused-reexports-error/** eol=lf
+test/configCases/output/allow-outside-list/copied.txt eol=lf
 examples/* eol=lf
 bin/* eol=lf
 *.svg eol=lf
