@@ -32,6 +32,7 @@ const {
 	spans,
 	thrownText
 } = require("./relations");
+const { canonicalCss } = require("./xml");
 
 /** @typedef {import("../../../lib/html/syntax-printer").HtmlPrintOptions} HtmlPrintOptions */
 /** @typedef {import("../../../lib/html/syntax-printer").HtmlTransformOptions} HtmlTransformOptions */
@@ -830,6 +831,150 @@ const sweepRespellings = (minify, html, minified) => {
 	return reports;
 };
 
+/**
+ * What a document says, read by webpack's own parser: the words of its text and
+ * each `<style>` sheet in its canonical CSS form, plus, where `tree` is set, every
+ * element with its namespace and attribute names, in order. Attribute values,
+ * whitespace, comments and `<script>` bodies are left out, as the printer and its
+ * renderers respell those by contract (`type=IMAGE` → `image`, a `srcset`'s spaces).
+ * @param {string} html a document
+ * @param {boolean} tree whether the element tree is read too
+ * @param {CssOptions} cssOptions the options the sheets are minified with
+ * @returns {{ said: string[], sheets: string[] }} what it says, and each non-empty sheet
+ */
+const htmlMeaning = (html, tree, cssOptions) => {
+	/** @type {string[]} */
+	const said = [];
+	/** @type {string[]} */
+	const sheets = [];
+	/** @type {string[]} */
+	const open = [];
+	// Text a comment splits is one run, as the DOM's text content reads it.
+	let run = "";
+	/**
+	 * @returns {void} the run's words said, and the run emptied
+	 */
+	const flush = () => {
+		const words = run.replace(/\s+/g, " ").trim();
+		if (words !== "") said.push(...words.split(" "));
+		run = "";
+	};
+	/** @type {Record<number, { enter: (nodePath: EXPECTED_ANY) => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
+	const visitors = {
+		[NodeType.Element]: {
+			enter: (nodePath) => {
+				flush();
+				open.push(nodePath.name());
+				if (!tree) return;
+				/** @type {string[]} */
+				const names = [];
+				const count = nodePath.fieldCount(Field.attributes);
+				for (let index = 0; index < count; index++) {
+					names.push(nodePath.name(nodePath.field(index, Field.attributes)));
+				}
+				said.push(
+					`<${_namespaceOf(nodePath.node)}:${nodePath.name()} ${names
+						.sort()
+						.join(" ")}>`
+				);
+			},
+			exit: (nodePath) => {
+				flush();
+				open.pop();
+				if (tree) said.push(`</${nodePath.name()}>`);
+			}
+		},
+		[NodeType.Text]: {
+			enter: (nodePath) => {
+				const parent = open[open.length - 1];
+				if (parent === "script") return;
+				const text = nodePath.value();
+				if (parent === "style") {
+					const css = canonicalCss(text, cssOptions);
+					if (css !== "") sheets.push(css);
+					return;
+				}
+				run += text;
+			},
+			exit: () => {}
+		}
+	};
+	new SourceProcessor().use(visitors).process(html, {});
+	flush();
+	return { said, sheets };
+};
+
+/**
+ * Whether the output's sheets say what the source's do, in order. An output
+ * sheet may stand for several consecutive source sheets merged into one, and is
+ * matched against them joined only then, so an open value can't swallow a sheet.
+ * @param {string[]} source the source's canonical sheets
+ * @param {string[]} output the output's canonical sheets
+ * @param {CssOptions} cssOptions the options the sheets are minified with
+ * @returns {boolean} true when every source sheet is accounted for
+ */
+const sameSheets = (source, output, cssOptions) => {
+	let at = 0;
+	for (const sheet of output) {
+		let joined = "";
+		do {
+			if (at === source.length) return false;
+			joined += source[at++];
+		} while (canonicalCss(joined, cssOptions) !== sheet);
+	}
+	return at === source.length;
+};
+
+
+/**
+ * Whether the printed document says what its source does (`meaning`): the
+ * same words, its sheets the same canonical CSS and, where no option removes
+ * elements or attributes, the same element tree.
+ * @param {string} html the document
+ * @param {string} printed what the preset printed of it
+ * @param {HtmlPrintOptions} options the preset's printer options
+ * @param {CssOptions} cssOptions the preset's CSS options
+ * @returns {import("./relations").Report[]} what it says otherwise
+ */
+const meaningReports = (html, printed, options, cssOptions) => {
+	// The tree is held only where no option removes elements or attributes,
+	// which every other preset's options name.
+	const tree =
+		!options.removeEmptyElements &&
+		!options.removeEmptyAttributes &&
+		!options.removeRedundantAttributes &&
+		!options.mergeStyles;
+	const before = htmlMeaning(html, tree, cssOptions);
+	const after = htmlMeaning(printed, tree, cssOptions);
+	let at = 0;
+	while (at < before.said.length && before.said[at] === after.said[at]) at++;
+	if (at < before.said.length || at < after.said.length) {
+		return [
+			{
+				relation: "meaning",
+				what: "the minified document says something else",
+				repro: `    ${oneLine(
+					before.said.slice(at, at + 4).join(" "),
+					76
+				)}  ->  ${oneLine(after.said.slice(at, at + 4).join(" "), 76)}`
+			}
+		];
+	}
+	if (!sameSheets(before.sheets, after.sheets, cssOptions)) {
+		return [
+			{
+				relation: "meaning",
+				what: "a minified stylesheet says something else",
+				repro: `    ${oneLine(before.sheets.join(" "), 76)}  ->  ${oneLine(
+					after.sheets.join(" "),
+					76
+				)}`
+			}
+		];
+	}
+	return [];
+};
+
 // Where a cut lands, by the construct it interrupts: each pattern ends where the
 // document is cut, just inside what the end of the input then has to close.
 /** @type {[string, RegExp][]} */
@@ -857,13 +1002,15 @@ const HTML_CUTS = [
 /** @type {import("./index").SyntaxInvariants} */
 const invariants = {
 	printers: () =>
-		PRESETS.map(([name, options]) => {
+		PRESETS.map(([name, options, cssOptions]) => {
 			const minify = printerFor(options);
 			return {
 				name,
 				minify,
 				says: tokenStream,
-				repro: (printed, at) => idempotenceRepro(minify, printed, at)
+				repro: (printed, at) => idempotenceRepro(minify, printed, at),
+				keeps: (html, printed) =>
+					meaningReports(html, printed, options, cssOptions)
 			};
 		}),
 	spans: htmlSpans,
@@ -886,8 +1033,11 @@ module.exports = {
 	htmlPurityDigest,
 	htmlSlices,
 	htmlSpans,
+	htmlMeaning,
 	idempotenceRepro,
+	meaningReports,
 	printerFor,
+	sameSheets,
 	sweepRespellings,
 	tokenStream
 };

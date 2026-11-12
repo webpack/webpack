@@ -950,13 +950,50 @@ const sweepRespellings = (minify, css, minified) => {
 	return reports;
 };
 
+/**
+ * The legal notices a stylesheet carries, read off webpack's own tokenizer, so
+ * a quote in an unquoted `url()` opens no string that hides the next one.
+ * @param {string} css a stylesheet
+ * @returns {number} how many `/*!` comments it holds
+ */
+const legalNotices = (css) => {
+	let count = 0;
+	const stream = new TokenStream(css, 0, undefined, (input, start, end) => {
+		if (input[start + 2] === "!") count++;
+		return end;
+	});
+	while (stream.consume().type !== TokenType.EOF);
+	return count;
+};
+
+/**
+ * Whether the printed stylesheet keeps every legal notice (`/*!`) its source
+ * carries, which a license may require kept as written.
+ * @param {string} css the stylesheet
+ * @param {string} printed what a preset printed of it
+ * @returns {import("./relations").Report[]} one finding where it carries fewer
+ */
+const noticeReports = (css, printed) => {
+	const before = legalNotices(css);
+	const after = legalNotices(printed);
+	if (after >= before) return [];
+	return [
+		{
+			relation: "notices",
+			what: `dropped ${before - after} of ${before} legal notices`,
+			repro: `    ${oneLine(printed, 80)}`
+		}
+	];
+};
+
 /** @type {import("./index").SyntaxInvariants} */
 const invariants = {
 	printers: () =>
 		PRESETS.map(([name, options]) => ({
 			name,
 			minify: printerFor(options),
-			says: tokenStream
+			says: tokenStream,
+			keeps: noticeReports
 		})),
 	spans: cssSpans,
 	slices: (css) => cssSlices(css).reports,
@@ -979,6 +1016,7 @@ module.exports = {
 	cssPurityDigest,
 	cssSlices,
 	cssSpans,
+	noticeReports,
 	printerFor,
 	sweepRespellings,
 	tokenStream

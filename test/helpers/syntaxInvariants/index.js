@@ -17,6 +17,7 @@ const { idempotence, purityRelation } = require("./relations");
  * @property {((printed: string) => string)=} reprint prints its output again, where a second minify would change it
  * @property {(text: string) => string} says what a text says, as a digest
  * @property {((printed: string, at: number) => { source: string, again: string } | null)=} repro cuts an idempotence difference down
+ * @property {((source: string, printed: string) => Report[])=} keeps what the output fails to keep of a whole source: its meaning, its legal notices, what it does when run
  */
 
 /**
@@ -37,7 +38,8 @@ const { idempotence, purityRelation } = require("./relations");
 
 /**
  * Every relation one syntax breaks over a set of sources: spans, slices and
- * purity for the parser; idempotence, respelling and cut inputs for the printer.
+ * purity for the parser; idempotence, what each preset keeps, respelling and
+ * cut inputs for the printer.
  * @param {SyntaxInvariants} syntax the syntax's answers
  * @param {readonly [string, string][]} sources `[label, source]` pairs
  * @returns {InvariantFinding[]} what broke
@@ -58,26 +60,30 @@ const invariantFindings = (syntax, sources) => {
 	/**
 	 * @param {string} label the source
 	 * @param {string} source its text
-	 * @returns {{ name: string, printed: string | null }[]} each preset's output
+	 * @returns {{ printer: InvariantPrinter, printed: string | null }[]} each preset's output
 	 */
 	const print = (label, source) =>
 		syntax.printers(source).map((printer) => {
 			const { printed, reports } = idempotence({ ...printer, source });
 			add(label, printer.name, reports);
-			return { name: printer.name, printed };
+			return { printer, printed };
 		});
 	for (const [label, source] of sources) {
 		add(label, "parse", syntax.spans(source));
 		add(label, "parse", syntax.slices(source));
-		const [first] = syntax.printers(source);
-		const [printed] = print(label, source);
+		const outputs = print(label, source);
+		for (const { printer, printed } of outputs) {
+			if (printer.keeps !== undefined && printed !== null) {
+				add(label, printer.name, printer.keeps(source, printed));
+			}
+		}
 		// One preset is enough: whether a spelling decides the output is the same
 		// question under every option set.
-		if (first !== undefined && printed.printed !== null) {
+		if (outputs.length > 0 && outputs[0].printed !== null) {
 			add(
 				label,
-				first.name,
-				syntax.respellings(first, source, printed.printed)
+				outputs[0].printer.name,
+				syntax.respellings(outputs[0].printer, source, outputs[0].printed)
 			);
 		}
 		for (const [where, cut] of syntax.cuts(source)) {

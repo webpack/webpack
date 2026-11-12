@@ -5,6 +5,7 @@
 
 "use strict";
 
+const vm = require("vm");
 const { parse: acornParse } = require("acorn");
 const { parse: webpackParse } = require("../../../lib/javascript/syntax-parser");
 const { wantedRespelling } = require("../../../tooling/compare-tools-harness");
@@ -746,6 +747,110 @@ const isModule = (source) => {
 	return goal === null ? null : goal.sourceType === "module";
 };
 
+// The scripts `behavior` runs: short enough that a run costs little, and
+// bounded so one that loops is skipped rather than hanging the sweep.
+const BEHAVIOR_MAX_LENGTH = 20000;
+const BEHAVIOR_TIMEOUT = 200;
+// Every run reads the same clock and random numbers, so a script reading them
+// still answers for its printed form.
+const BEHAVIOR_PRELUDE =
+	"Math.random = () => 0.5;" +
+	"Date = new Proxy(Date, { construct: (D, a) => new D(...(a.length ? a : [0])), apply: (D) => String(new D(0)) });" +
+	"Date.now = () => 0;";
+
+/**
+ * What a script prints and, where it throws, the error's kind and message or the
+ * thrown value, run in a fresh context: a function prints as `[function]`, as
+ * its text is the printer's.
+ * @param {string} code the script
+ * @returns {string | null} its transcript, null where it timed out
+ */
+const behaviorOf = (code) => {
+	/** @type {string[]} */
+	const lines = [];
+	/**
+	 * @param {unknown} value a logged value
+	 * @returns {string} it, as the transcript holds it
+	 */
+	const show = (value) =>
+		typeof value === "function" ? "[function]" : String(value);
+	const context = vm.createContext({
+		console: {
+			log: (/** @type {unknown[]} */ ...values) =>
+				lines.push(values.map(show).join(" "))
+		}
+	});
+	vm.runInContext(BEHAVIOR_PRELUDE, context);
+	try {
+		vm.runInContext(code, context, { timeout: BEHAVIOR_TIMEOUT });
+	} catch (error) {
+		try {
+			const isObject = error !== null && typeof error === "object";
+			const {
+				code: reason,
+				name,
+				message
+			} = /** @type {{ code?: unknown, name?: unknown, message?: unknown }} */ (
+				isObject ? error : {}
+			);
+			if (reason === "ERR_SCRIPT_EXECUTION_TIMEOUT") return null;
+			const kind = typeof name === "string" ? name : typeof error;
+			// JavaScriptCore quotes the failing source text, which a printer may
+			// rewrite, as `(evaluating '…')`; V8 never writes it.
+			const value =
+				typeof message === "string"
+					? message.replace(/ \(evaluating '[\s\S]*'\)$/, "")
+					: isObject
+						? ""
+						: show(error);
+			lines.push(`threw <${kind}>${value ? ` ${value}` : ""}`);
+		} catch (_error) {
+			// A thrown object whose own properties throw when read.
+			lines.push("threw <unreadable>");
+		}
+	}
+	return lines.join("\n");
+};
+
+// The last source run and its transcript: every preset asks of the same source.
+/** @type {string | undefined} */
+let lastSource;
+/** @type {string | null} */
+let lastExpected = null;
+
+/**
+ * Whether a printed script still prints and throws what its source does.
+ * @param {string} source the script
+ * @param {string} printed what the printer wrote of it
+ * @returns {import("./relations").Report[] | null} what differs, empty where it runs the same, null where it was not run
+ */
+const behaviorDifference = (source, printed) => {
+	if (source.length > BEHAVIOR_MAX_LENGTH) return null;
+	if (source !== lastSource) {
+		lastSource = source;
+		lastExpected = behaviorOf(source);
+		// A script whose two runs differ answers for nothing.
+		if (lastExpected !== null && behaviorOf(source) !== lastExpected) {
+			lastExpected = null;
+		}
+	}
+	const expected = lastExpected;
+	if (expected === null) return null;
+	let got = behaviorOf(printed);
+	// A run times out under a loaded machine too, so one runs again before it counts.
+	if (got === null) got = behaviorOf(printed);
+	if (got === expected) return [];
+	return [
+		{
+			relation: "behavior",
+			what: got === null ? "times out" : "runs otherwise",
+			repro: `    ${oneLine(expected, 80)}\n      -> ${
+				got === null ? "<timeout>" : oneLine(got, 80)
+			}`
+		}
+	];
+};
+
 /** @type {import("./index").SyntaxInvariants} */
 const invariants = {
 	printers: (source) => {
@@ -758,7 +863,13 @@ const invariants = {
 				name,
 				minify,
 				reprint,
-				says: (text) => tokenMeaning(text, module)
+				says: (text) => tokenMeaning(text, module),
+				// Compressed or renamed, what a script observes may change by
+				// contract; printed alone, nothing it does may.
+				keeps:
+					module || options.compress !== false
+						? undefined
+						: (text, printed) => behaviorDifference(text, printed) || []
 			};
 		});
 	},
@@ -791,6 +902,7 @@ module.exports = {
 	JS_CUTS,
 	JS_RESPELLINGS,
 	PRESETS,
+	behaviorDifference,
 	goalFor,
 	jsPurityDigest,
 	jsSlices,

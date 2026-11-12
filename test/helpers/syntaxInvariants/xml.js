@@ -690,6 +690,25 @@ const xmlPurityDigest = (xml) => {
 	return digest.hex();
 };
 
+/**
+ * Whether the printed document reads back to its source's canonical form
+ * (`meaning`), its sheets read as the CSS minifier writes them.
+ * @param {string} xml the document
+ * @param {string} printed what a preset printed of it
+ * @param {CssOptions} cssOptions the preset's CSS options
+ * @returns {Report[]} one finding where it says something else
+ */
+const meaningReports = (xml, printed, cssOptions) =>
+	canonical(printed, cssOptions) === canonical(xml, cssOptions)
+		? []
+		: [
+				{
+					relation: "meaning",
+					what: "the minified document says something else",
+					repro: `    ${oneLine(xml, 80)}`
+				}
+			];
+
 /** @type {import("./index").SyntaxInvariants} */
 const syntax = {
 	printers: () =>
@@ -699,7 +718,8 @@ const syntax = {
 				name,
 				minify,
 				says: (text) => canonical(text, cssOptions),
-				repro: (printed, at) => idempotenceRepro(minify, printed, at)
+				repro: (printed, at) => idempotenceRepro(minify, printed, at),
+				keeps: (xml, printed) => meaningReports(xml, printed, cssOptions)
 			};
 		}),
 	spans: xmlSpans,
@@ -719,6 +739,7 @@ module.exports = {
 	canonicalCss,
 	decodedAttributes,
 	idempotenceRepro,
+	meaningReports,
 	printXml,
 	printerFor,
 	sweepRespellings,

@@ -18,7 +18,7 @@ const { parse, plain } = require("../../helpers/javascriptParse");
 const { invariantFindings } = require("../../helpers/syntaxInvariants");
 const { purityRelation } = require("../../helpers/syntaxInvariants/relations");
 const syntax = require("../../helpers/syntaxInvariants/javascript");
-const { behaviorDifference } = require("../../../tooling/compare-js-tools");
+const { behaviorDifference } = syntax;
 
 /** @typedef {import("../../helpers/syntaxInvariants/relations").Report} Report */
 /** @typedef {import("../../helpers/fixture").ParseEntry} ParseEntry */
@@ -301,7 +301,14 @@ describe("JavaScript syntax — invariants", () => {
 				});
 			}
 
-			// Opt-in, as running costs a fresh context per run.
+			// A `behavior` entry naming no preset answers for a marked set; one
+			// naming `format` or `beautify` answers for the invariants' own run.
+			const marked = expected.filter(
+				(entry) => entry.relation === "behavior" && entry.presets === undefined
+			);
+
+			// Opt-in for the compressing sets, as running costs a fresh context per
+			// run; the invariants run every script under the presets printing alone.
 			if (behavior.length > 0) {
 				it.each(behavior.map((one) => [JSON.stringify(one), one]))(
 				"runs as its source when printed %s",
@@ -329,7 +336,7 @@ describe("JavaScript syntax — invariants", () => {
 								preset: title,
 								report
 							})),
-							expected.filter((entry) => entry.relation === "behavior")
+							marked
 						)
 					).toEqual([]);
 				}
@@ -341,7 +348,7 @@ describe("JavaScript syntax — invariants", () => {
 				expect(
 					unexplained(
 						invariantFindings(syntax, [[name, source]]),
-						expected.filter((entry) => entry.relation !== "behavior")
+						expected.filter((entry) => !marked.includes(entry))
 					)
 				).toEqual([]);
 			});

@@ -44,11 +44,14 @@ const {
 	EMBEDDED_OPTIONS,
 	HTML_CUTS,
 	PRESETS,
+	htmlMeaning,
 	htmlPurityDigest,
 	htmlSlices,
 	htmlSpans,
 	idempotenceRepro,
+	meaningReports,
 	printerFor,
+	sameSheets,
 	sweepRespellings,
 	tokenStream
 } = require("../test/helpers/syntaxInvariants/html");
@@ -73,7 +76,6 @@ const {
 	measure,
 	measureInWorker,
 	missingReport,
-	oneLine,
 	purityRelation,
 	sweepExitCode,
 	sweepMode,
@@ -1132,88 +1134,6 @@ const TREE_READERS = new Map([
 ]);
 
 /**
- * What a document says, read by webpack's own parser: the words of its text and
- * each `<style>` sheet in its canonical CSS form, plus, where `tree` is set, every
- * element with its namespace and attribute names, in order. Attribute values,
- * whitespace, comments and `<script>` bodies are left out, as the printer and its
- * renderers respell those by contract (`type=IMAGE` → `image`, a `srcset`'s spaces).
- * @param {string} html a document
- * @param {boolean} tree whether the element tree is read too
- * @param {CssOptions} cssOptions the options the sheets are minified with
- * @returns {{ said: string[], sheets: string[] }} what it says, and each non-empty sheet
- */
-const htmlMeaning = (html, tree, cssOptions) => {
-	/** @type {string[]} */
-	const said = [];
-	/** @type {string[]} */
-	const sheets = [];
-	/** @type {string[]} */
-	const open = [];
-	/** @type {Record<number, { enter: (nodePath: EXPECTED_ANY) => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
-	const visitors = {
-		[NodeType.Element]: {
-			enter: (nodePath) => {
-				open.push(nodePath.name());
-				if (!tree) return;
-				/** @type {string[]} */
-				const names = [];
-				const count = nodePath.fieldCount(Field.attributes);
-				for (let index = 0; index < count; index++) {
-					names.push(nodePath.name(nodePath.field(index, Field.attributes)));
-				}
-				said.push(
-					`<${_namespaceOf(nodePath.node)}:${nodePath.name()} ${names
-						.sort()
-						.join(" ")}>`
-				);
-			},
-			exit: (nodePath) => {
-				open.pop();
-				if (tree) said.push(`</${nodePath.name()}>`);
-			}
-		},
-		[NodeType.Text]: {
-			enter: (nodePath) => {
-				const parent = open[open.length - 1];
-				if (parent === "script") return;
-				const text = nodePath.value();
-				if (parent === "style") {
-					const css = canonicalCss(text, cssOptions);
-					if (css !== "") sheets.push(css);
-					return;
-				}
-				const words = text.replace(/\s+/g, " ").trim();
-				if (words !== "") said.push(...words.split(" "));
-			},
-			exit: () => {}
-		}
-	};
-	new SourceProcessor().use(visitors).process(html, {});
-	return { said, sheets };
-};
-
-/**
- * Whether the output's sheets say what the source's do, in order. An output
- * sheet may stand for several consecutive source sheets merged into one, and is
- * matched against them joined only then, so an open value can't swallow a sheet.
- * @param {string[]} source the source's canonical sheets
- * @param {string[]} output the output's canonical sheets
- * @param {CssOptions} cssOptions the options the sheets are minified with
- * @returns {boolean} true when every source sheet is accounted for
- */
-const sameSheets = (source, output, cssOptions) => {
-	let at = 0;
-	for (const sheet of output) {
-		let joined = "";
-		do {
-			if (at === source.length) return false;
-			joined += source[at++];
-		} while (canonicalCss(joined, cssOptions) !== sheet);
-	}
-	return at === source.length;
-};
-
-/**
  * @param {Map<string, number>} before input counts
  * @param {Map<string, number>} after output counts
  * @param {Set<string>} empty the entries that carried nothing in the input
@@ -1279,36 +1199,7 @@ const sweepDocument = (minify, html, options, cssOptions) => {
 	if (printed === null) return reports;
 	reports.push(...sweepRespellings(minify, html, printed));
 	if (wantedRelation("meaning")) {
-		// The tree is held only where no option removes elements or attributes,
-		// which every other preset's options name.
-		const tree =
-			!options.removeEmptyElements &&
-			!options.removeEmptyAttributes &&
-			!options.removeRedundantAttributes &&
-			!options.mergeStyles;
-		const before = htmlMeaning(html, tree, cssOptions);
-		const after = htmlMeaning(printed, tree, cssOptions);
-		let at = 0;
-		while (at < before.said.length && before.said[at] === after.said[at]) at++;
-		if (at < before.said.length || at < after.said.length) {
-			reports.push({
-				relation: "meaning",
-				what: "the minified document says something else",
-				repro: `    ${oneLine(
-					before.said.slice(at, at + 4).join(" "),
-					76
-				)}  ->  ${oneLine(after.said.slice(at, at + 4).join(" "), 76)}`
-			});
-		} else if (!sameSheets(before.sheets, after.sheets, cssOptions)) {
-			reports.push({
-				relation: "meaning",
-				what: "a minified stylesheet says something else",
-				repro: `    ${oneLine(before.sheets.join(" "), 76)}  ->  ${oneLine(
-					after.sheets.join(" "),
-					76
-				)}`
-			});
-		}
+		reports.push(...meaningReports(html, printed, options, cssOptions));
 	}
 	return reports;
 };
