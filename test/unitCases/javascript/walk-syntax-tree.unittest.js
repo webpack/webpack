@@ -87,14 +87,31 @@ const describePathValue = (reader, value, isNode) => {
  * @returns {import("../../../lib/module/Parser").PreparsedAst} the program
  */
 const preparsedAst = (source) => {
-	const { ast, comments } = JavascriptParser._parse(source, {
-		sourceType: "auto",
-		ranges: true,
-		comments: true
-	});
-	return /** @type {import("../../../lib/module/Parser").PreparsedAst} */ (
-		Object.assign(ast, { comments })
-	);
+	const { parseProgram, toEstreeObject } =
+		require("../../../lib/javascript/syntax").parser;
+	/**
+	 * @param {"auto" | "script"} sourceType what to read it as
+	 * @returns {import("../../../lib/module/Parser").PreparsedAst} the program, as plain objects
+	 */
+	const parseAs = (sourceType) => {
+		/** @type {import("../../../lib/javascript/syntax-parser").CollectedComment[]} */
+		const comments = [];
+		const program = parseProgram(source, 0, {
+			sourceType,
+			allowReturnOutsideFunction: sourceType === "script",
+			comments
+		});
+		return /** @type {import("../../../lib/module/Parser").PreparsedAst} */ (
+			Object.assign(/** @type {object} */ (toEstreeObject(program)), {
+				comments
+			})
+		);
+	};
+	try {
+		return parseAs("auto");
+	} catch (_err) {
+		return parseAs("script");
+	}
 };
 
 /**

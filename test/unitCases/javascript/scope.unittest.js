@@ -229,6 +229,13 @@ const freeNames = (analysis) =>
 	analysis.unresolvedReferences.map((r) => r.identifier.name);
 
 describe("ScopeAnalyzer", () => {
+	it("reads the initializer of a sloppy var for-in head", () => {
+		// eslint-scope also counts the initializer's write to `a`, which the
+		// analyser folds into the loop's write at the same position
+		const analysis = analyze("for (var a = b in c);", "script");
+		expect(freeNames(analysis).sort()).toEqual(["b", "c"]);
+	});
+
 	describe("the scope tree the analyser always builds", () => {
 		it("is a module scope under an empty global scope", () => {
 			const { globalScope, moduleScope, scopes, ast } = analyze(fixture("javascript", "scope-analyzer-the-scope-tree-the-analyser-always-builds-is-a-module-scope-under"));
