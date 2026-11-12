@@ -1999,3 +1999,22 @@ describe("CssSyntax minify — escapes and urls in a value spaced for an old tok
 		expect(minifyFor(source, ["ie 11"])).toBe(expected);
 	});
 });
+
+describe("CssSyntax minify — an escaped `!important` is part of the value", () => {
+	it.each([
+		[
+			".a{grid-column-start:x\\!important;grid-column-end:y}",
+			".a{grid-column:x\\!important/y}"
+		],
+		[
+			".a{grid-column-start:x\\\\!important;grid-column-end:y\\\\!important}",
+			".a{grid-column:x\\\\/y\\\\!important}"
+		],
+		[
+			".a{grid-template-rows:x\\!important;grid-template-columns:y;grid-template-areas:none}",
+			".a{grid-template:x\\!important/y}"
+		]
+	])("merges %s", (source, expected) => {
+		expect(minifyFor(source)).toBe(expected);
+	});
+});
