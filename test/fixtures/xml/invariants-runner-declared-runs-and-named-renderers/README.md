@@ -1,1 +1,1 @@
-Exercises each channel the XML fixture runner offers beyond the defaults: a `parse.json` run per entry point and a named `renderEmbeddedSource` and `{ "regexp" }` print option; no XML entry takes a callback for `visit` to record.
+Exercises each channel the XML fixture runner offers beyond the defaults: a `parse.json` run per entry point and a named `renderEmbeddedSource` and `{ "regexp" }` print option; `tokenize-xml-hands-each-callback-the-text-of-its-token` shows `"visit": true` on `tokenizeXml`.

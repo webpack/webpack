@@ -47,31 +47,49 @@ const QUOTE_TEXT = {
 
 /**
  * Every callback the public XML tokenizer makes, in call order, as one line:
- * each token's kind and offset ranges, then the offset it returns.
+ * each token's kind and offset ranges, then the offset it returns. With `log`,
+ * each call also writes the text it was handed, read off its own `input`.
  * @param {string} source a document
  * @param {number=} pos where it starts reading
+ * @param {string[]=} log receives each call's kind and text
  * @returns {string} the token line
  */
-const tokenLine = (source, pos = 0) => {
+const tokenLine = (source, pos = 0, log = undefined) => {
 	/** @type {string[]} */
 	const out = [];
+	/**
+	 * @param {string} kind the callback
+	 * @param {string} input the text it was handed
+	 * @param {number} start where its token starts
+	 * @param {number} end where it ends
+	 * @returns {void}
+	 */
+	const record = (kind, input, start, end) => {
+		if (log !== undefined) {
+			log.push(`${kind} ${JSON.stringify(input.slice(start, end))}`);
+		}
+	};
 	const end = parser.tokenizeXml(source, pos, {
 		text: (input, start, end) => {
 			out.push(tokenText("text", [start, end]));
+			record("text", input, start, end);
 			return end;
 		},
 		comment: (input, start, end, dataStart, dataEnd) => {
 			out.push(tokenText("comment", [start, end, dataStart, dataEnd]));
+			record("comment", input, dataStart, dataEnd);
 			return end;
 		},
 		openTag: (input, start, end, nameStart, nameEnd, selfClosing) => {
 			out.push(
 				tokenText("open", [start, end, nameStart, nameEnd], selfClosing ? "/" : "")
 			);
+			record("open", input, nameStart, nameEnd);
 			return end;
 		},
 		closeTag: (input, start, end, nameStart, nameEnd) => {
 			out.push(tokenText("close", [start, end, nameStart, nameEnd]));
+			record("close", input, nameStart, nameEnd);
 			return end;
 		},
 		attribute: (input, nameStart, nameEnd, valueStart, valueEnd, quote) => {
@@ -82,6 +100,8 @@ const tokenLine = (source, pos = 0) => {
 					QUOTE_TEXT[quote]
 				)
 			);
+			record("attr", input, nameStart, nameEnd);
+			if (valueStart !== -1) record("value", input, valueStart, valueEnd);
 			return valueEnd;
 		},
 		doctype: (
@@ -116,10 +136,12 @@ const tokenLine = (source, pos = 0) => {
 					forceQuirks ? "!" : ""
 				)
 			);
+			record("doctype", input, start, end);
 			return end;
 		},
 		parseError: (input, code, start, end, severity) => {
 			out.push(tokenText(severity, [start, end], `:${code}`));
+			record(code, input, start, end);
 		}
 	});
 	out.push(`end=${end}`);
@@ -128,8 +150,8 @@ const tokenLine = (source, pos = 0) => {
 
 /**
  * The public entry points a fixture's `parse.json` may name, the document
- * parse first, each reading XML; `SourceProcessor` logs its walk's visitors.
- * None takes a callback the token line does not already log.
+ * parse first, each reading XML; `SourceProcessor` logs its walk's visitors,
+ * and `tokenizeXml` under `visit` the text each of its callbacks is handed.
  * @type {Record<string, ParseEntry>}
  */
 const ENTRIES = {
@@ -157,8 +179,9 @@ const ENTRIES = {
 		}
 	},
 	tokenizeXml: {
+		records: true,
 		positions: true,
-		read: (source, options, log, { pos }) => [tokenLine(source, pos)]
+		read: (source, options, log, { pos }) => [tokenLine(source, pos, log)]
 	},
 	SourceProcessor: {
 		walks: true,
