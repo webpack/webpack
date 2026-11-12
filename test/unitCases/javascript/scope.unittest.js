@@ -3658,7 +3658,11 @@ describeIfSupported("ScopeAnalyzer matches eslint-scope", () => {
 				["let a, b; export { a, b as c };"],
 				['import j from "./a.json" assert { type: "json" }; export { k } from "./b.json" assert { type: "json" }; j;'],
 				["do ; while (0) x;", "script"],
-				["f(async x => x, async y => { await y; }); (class {}); (class K { m() { K; } });"]
+				["f(async x => x, async y => { await y; }); (class {}); (class K { m() { K; } });"],
+				["({ [k]: v } = o); ({ [k]: 1, [m]() {} }); class C { [m]() {} [p] = 1; }"],
+				["{ ; let x; } { x; class D {} } switch (y) { case 1: ; case 2: let z; }"],
+				["for (var a of b); for (var [c] in d); class E { f; }"],
+				["export const e = 1; export function g() {} export class H {}"]
 			];
 			for (const [code, sourceType] of cases) {
 				const walked = analyzeParse(code, false, sourceType);
