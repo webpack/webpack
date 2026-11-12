@@ -3615,14 +3615,13 @@ describeIfSupported("ScopeAnalyzer matches eslint-scope", () => {
 		/**
 		 * @param {string} code source code
 		 * @param {boolean | InstanceType<typeof ScopeLog>} scopes what the parse records into, `false` for nothing
+		 * @param {"module" | "script"=} sourceType what to read it as
 		 * @returns {EXPECTED_ANY} the analysis of its parse, normalized
 		 */
-		const analyzeParse = (code, scopes) =>
+		const analyzeParse = (code, scopes, sourceType = "module") =>
 			view(
 				analyzeTree(
-					/** @type {number} */ (
-						parseTree(code, 0, { sourceType: "module", scopes })
-					),
+					/** @type {number} */ (parseTree(code, 0, { sourceType, scopes })),
 					true
 				)
 			);
@@ -3646,6 +3645,43 @@ describeIfSupported("ScopeAnalyzer matches eslint-scope", () => {
 				expect(analyzeParse(code, true)).toEqual(walked);
 				expect(analyzeParse(code, log)).toEqual(walked);
 			}
+		});
+
+		it("matches the tree walk on what webpack's own sources never write", () => {
+			/** @type {[string, ("module" | "script")?][]} */
+			const cases = [
+				["[a = b] = c; ({ d = e } = f); for ([g = h] of i);"],
+				["with (o) { x; var y; } y;", "script"],
+				["switch (x) { case 1: let y = 1; y; function z() {} } z;"],
+				["(async function () { await x; }); f(async (x) => x, async function named() {});"],
+				["class A { x = 1; #p = this.x; static y = A; static { z; let w = 1; } }"],
+				["let a, b; export { a, b as c };"],
+				['import j from "./a.json" assert { type: "json" }; export { k } from "./b.json" assert { type: "json" }; j;'],
+				["do ; while (0) x;", "script"],
+				["f(async x => x, async y => { await y; }); (class {}); (class K { m() { K; } });"]
+			];
+			for (const [code, sourceType] of cases) {
+				const walked = analyzeParse(code, false, sourceType);
+
+				expect(analyzeParse(code, true, sourceType)).toEqual(walked);
+			}
+			// An ESTree parse logs a block's statements as objects.
+			const program = /** @type {EXPECTED_ANY} */ (
+				parseTree("{ let a; var b; class C {} if (a) {} } x: { function f() {} } (function g() {}); (function () {}); (class {}); (class K {});", 0, {
+					sourceType: "script",
+					estree: true,
+					scopes: true
+				})
+			);
+
+			expect(program.body.map((/** @type {{ type: string }} */ statement) => statement.type)).toEqual([
+				"BlockStatement",
+				"LabeledStatement",
+				"ExpressionStatement",
+				"ExpressionStatement",
+				"ExpressionStatement",
+				"ExpressionStatement"
+			]);
 		});
 	});
 });

@@ -1869,3 +1869,18 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 	});
 });
 
+describe("SourceProcessor.processAsync — `declareCharset` over embedded answers", () => {
+	it("writes `@charset` when a later answer, not the first, is outside ASCII", async () => {
+		const css =
+			'.a{background:url("data:image/svg+xml,<svg></svg>")}.b{background:url("data:image/svg+xml,<svg><g/></svg>")}';
+		const { code } = await new SourceProcessor().processAsync(css, {
+			mode: "minify",
+			declareCharset: true,
+			renderEmbeddedSource: async (source) =>
+				source.includes("<g/>") ? source.replace("<g/>", "<g>é</g>") : source
+		});
+		expect(code).toBe(
+			'@charset "UTF-8";.a{background:url(data:image/svg+xml,<svg></svg>)}.b{background:url(data:image/svg+xml,<svg><g>é</g></svg>)}'
+		);
+	});
+});
