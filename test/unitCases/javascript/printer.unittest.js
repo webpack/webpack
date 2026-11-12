@@ -1,6 +1,7 @@
 "use strict";
 
 const { fixture } = require("../../helpers/fixture");
+const supportsOptionalChaining = require("../../helpers/supportsOptionalChaining");
 
 // cspell:ignore binop, fnames, propmangle, fargs, domprops, argnames, nondeferred, loopcontrol, Defun, defun, NOINLINE, Funarg, unmangleable, Unmangleable, thedef, funs
 // cspell:ignore fnames
@@ -1371,8 +1372,18 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(minifyOnePass(kept, { compress: {}, mangle: false, ecma: 2020 }).code).toBe(
 			"function s(){let a=x+y;return a?.b}function t(){let a=g();return a!=null?a.b:1}function u(){let a=g();return a!=null?b.c(a):void 0}function v(){let a=g();return a!=null&&x?a.b:void 0}function w(){let a=g();return a!=null?a:void 0}function y(){let a=g();return b!=null?a.b(a):void 0}"
 		);
+		// A value printing as a constant: the test picks, or `?.` takes it whole.
+		const constant =
+			'function i(){var s="a";var x=s;return x!=null?x.y:void 0}function j(){const o={p:-1};let x=o.p;return x!=null?x.y:void 0}function q(){let x=(()=>-1)();return x!=null?x.y:void 0}function r(){let x=String(1);return x!=null?x.y:void 0}';
+		const constantCode = minifyOnePass(constant, { compress: {}, mangle: false, ecma: 2020 }).code;
+		expect(constantCode).toBe("function i(){return`a`.y}function j(){return{p:-1}.p?.y}function q(){return(-1)?.y}function r(){return`1`.y}");
 		const program = "var o={m(){return this===o}};function l(){let a=o.m;return a!=null?a():void 0}function p(){let a=o;return a!=null?a.m():void 0}console.log(l(),p())";
-		expect(runProgram(minifyOnePass(program, { compress: {}, mangle: false, ecma: 2020 }).code)).toBe(runProgram(program));
+		const code = minifyOnePass(program, { compress: {}, mangle: false, ecma: 2020 }).code;
+		// What an engine without `?.` cannot parse runs only where it can.
+		if (supportsOptionalChaining()) {
+			expect(runProgram(code)).toBe(runProgram(program));
+			expect(runProgram(`${constantCode}console.log(i(),j(),q(),r())`)).toBe(runProgram(`${constant}console.log(i(),j(),q(),r())`));
+		}
 	});
 
 	it("should fold an update into the `return` or `throw` giving the name it sets", () => {
