@@ -2124,6 +2124,16 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 		expect(lower("a{&.b,.c &{color:red}}")).toBe(".c a,a.b{color:red}");
 	});
 
+	it("keeps the escaped space a lowered nested selector ends in", () => {
+		const lower = (/** @type {string} */ css) =>
+			minifyFor(css, ["chrome 100"]);
+		expect(lower(".a{color:red;.b\\  {color:blue}}")).toBe(
+			".a{color:red}.a .b\\ {color:blue}"
+		);
+		expect(lower(".s{&.t\\ {color:gray}}")).toBe(".s.t\\ {color:gray}");
+		expect(lower(".s{&.t\\\\ {color:gray}}")).toBe(".s.t\\\\{color:gray}");
+	});
+
 	it("renders a data url whose escapes spell a comment as that comment", () => {
 		const payload = "data:text/css,/* %%32%41/ .x{color:red} /* */";
 		const processor = new SourceProcessor();
