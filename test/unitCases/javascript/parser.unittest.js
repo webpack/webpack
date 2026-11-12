@@ -5516,3 +5516,53 @@ describe("fromEstreeObject", () => {
 		}
 	});
 });
+
+describe("parseProgram and parse beside the fast paths", () => {
+	const { parseProgram } = require("../../../lib/javascript/syntax").parser;
+
+	it("should read ES5's `do`-`while` semicolon and object literals without the pooled key record", () => {
+		const program = /** @type {EXPECTED_ANY} */ (
+			parseProgram("do ; while (0); ({ a: 1, b: { c: 2 } });", 0, {
+				ecmaVersion: 5,
+				sourceType: "script",
+				estree: true
+			})
+		);
+
+		expect(program.body.map((/** @type {{ type: string }} */ statement) => statement.type)).toEqual([
+			"DoWhileStatement",
+			"ExpressionStatement"
+		]);
+		// The tree reads the same.
+		expect(
+			typeof parseProgram("do ; while (0); ({ a: 1, b: { c: 2 } });", 0, { ecmaVersion: 5, sourceType: "script" })
+		).toBe("number");
+		// ES5 needs the semicolon after a `do`-`while`.
+		expect(() => parseProgram("do ; while (0) x;", 0, { ecmaVersion: 5, sourceType: "script" })).toThrow(SyntaxError);
+	});
+
+	it("should read an export of an edition before import attributes", () => {
+		const program = /** @type {EXPECTED_ANY} */ (
+			parseProgram("let a; export { a }; export { b } from './b';", 0, {
+				ecmaVersion: 2020,
+				sourceType: "module",
+				estree: true
+			})
+		);
+
+		expect(program.body.map((/** @type {{ type: string }} */ statement) => statement.type)).toEqual([
+			"VariableDeclaration",
+			"ExportNamedDeclaration",
+			"ExportNamedDeclaration"
+		]);
+		expect(
+			typeof parseProgram("let a; export { a }; export { b } from './b';", 0, { ecmaVersion: 2020, sourceType: "module" })
+		).toBe("number");
+	});
+
+	it("should throw an error it could go on past where no `parseError` takes it", () => {
+		expect(() => parseProgram("let a; let a;", 0, { sourceType: "module" })).toThrow(
+			"Identifier 'a' has already been declared"
+		);
+	});
+});

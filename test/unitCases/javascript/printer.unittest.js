@@ -1,6 +1,7 @@
 "use strict";
 
 const { fixture } = require("../../helpers/fixture");
+const supportsOptionalChaining = require("../../helpers/supportsOptionalChaining");
 
 // cspell:ignore binop, fnames, propmangle, fargs, domprops, argnames, nondeferred, loopcontrol, Defun, defun, NOINLINE, Funarg, unmangleable, Unmangleable, thedef, funs
 // cspell:ignore fnames
@@ -1352,6 +1353,83 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(minifyOnePass(throwing, { compress: {}, mangle: false }).code).toBe('(class{[a()](){}static["prototype"](){}}),class{[a()];static["prototype"]=1},class{[a()];static[k()]=1};');
 		const program = `var a=()=>"k",k=()=>"prototype";try{(class{[a()](){}static["prototype"](){}})}catch(e){console.log(e.name)}try{(class{[a()];static["prototype"]=1})}catch(e){console.log(e.name)}try{(class{[a()];static[k()]=1})}catch(e){console.log(e.name)}`;
 		expect(runProgram(minifyOnePass(program, { compress: {}, mangle: false }).code)).toBe("TypeError\nTypeError\nTypeError");
+	});
+
+	it("should fold a value read only by its null check into the optional chain it prints as", () => {
+		const source =
+			"function f(){let a=g();return a!=null?a.b:void 0}function h(){let a=g();return a==null?void 0:a?.b.c[d](e)}function k(a){return a!=undefined?a.b:undefined}function l(){let a=o.m;return a!=null?a():void 0}function n(){let a=g();return null!=a?a(1):void 0}function p(){let a=o.m;return a!=null?a.x():void 0}";
+		// A member called bare would bind its object as `this`, so it stays apart.
+		expect(minifyOnePass(source, { compress: {}, mangle: false, ecma: 2020 }).code).toBe(
+			"function f(){return g()?.b}function h(){return g()?.b.c[d](e)}function k(a){return a?.b}function l(){let a=o.m;return a?.()}function n(){return g()?.(1)}function p(){return o.m?.x()}"
+		);
+		expect(minifyOnePass(source, { compress: {}, mangle: false, ecma: 2019 }).code).toBe(
+			"function f(){let a=g();return a!=null?a.b:void 0}function h(){let a=g();return a==null?void 0:a?.b.c[d](e)}function k(a){return a!=null?a.b:void 0}function l(){let a=o.m;return a!=null?a():void 0}function n(){let a=g();return null!=a?a(1):void 0}function p(){let a=o.m;return a!=null?a.x():void 0}"
+		);
+		// Kept apart: a value printing in parentheses before `?.`, another branch
+		// than `undefined`, a chain on another name, another test, no chain.
+		const kept =
+			"function s(){let a=x+y;return a!=null?a.b:void 0}function t(){let a=g();return a!=null?a.b:1}function u(){let a=g();return a!=null?b.c(a):void 0}function v(){let a=g();return a!=null&&x?a.b:void 0}function w(){let a=g();return a!=null?a:void 0}function y(){let a=g();return b!=null?a.b(a):void 0}function z(){let a=g();return a===b?a.b:void 0}";
+		expect(minifyOnePass(kept, { compress: {}, mangle: false, ecma: 2020 }).code).toBe(
+			"function s(){let a=x+y;return a?.b}function t(){let a=g();return a!=null?a.b:1}function u(){let a=g();return a!=null?b.c(a):void 0}function v(){let a=g();return a!=null&&x?a.b:void 0}function w(){let a=g();return a!=null?a:void 0}function y(){let a=g();return b!=null?a.b(a):void 0}function z(){let a=g();return a===b?a.b:void 0}"
+		);
+		// A value printing as a constant: the test picks, or `?.` takes it whole.
+		const constant =
+			'function i(){var s="a";var x=s;return x!=null?x.y:void 0}function j(){const o={p:-1};let x=o.p;return x!=null?x.y:void 0}function q(){let x=(()=>-1)();return x!=null?x.y:void 0}function r(){let x=String(1);return x!=null?x.y:void 0}';
+		const constantCode = minifyOnePass(constant, { compress: {}, mangle: false, ecma: 2020 }).code;
+		expect(constantCode).toBe("function i(){return`a`.y}function j(){return{p:-1}.p?.y}function q(){return(-1)?.y}function r(){return`1`.y}");
+		const program = "var o={m(){return this===o}};function l(){let a=o.m;return a!=null?a():void 0}function p(){let a=o;return a!=null?a.m():void 0}console.log(l(),p())";
+		const code = minifyOnePass(program, { compress: {}, mangle: false, ecma: 2020 }).code;
+		// What an engine without `?.` cannot parse runs only where it can.
+		if (supportsOptionalChaining()) {
+			expect(runProgram(code)).toBe(runProgram(program));
+			expect(runProgram(`${constantCode}console.log(i(),j(),q(),r())`)).toBe(runProgram(`${constant}console.log(i(),j(),q(),r())`));
+		}
+	});
+
+	it("should fold an update into the `return` or `throw` giving the name it sets", () => {
+		const source =
+			"function f(a){a+=1;a+=2;return a}function h(i){i++;return i}function k(i){i--;throw i}function l(i){var x=i++;return x**2}function n(a){a+=g();return a}function p(i){i++;return i+1}function q(){const c=1;c+=1;return c}function r(a){with(o)a+=1;return a}";
+		// `x++` a declarator took gives the old value still; a value that runs
+		// code, or a read deeper in the value, stays apart, as it gzips bigger.
+		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(
+			"function f(a){return a+=1,a+=2}function h(i){return++i}function k(i){throw--i}function l(i){return i++**2}function n(a){return a+=g(),a}function p(i){return i++,i+1}function q(){const c=1;return c+=1,c}function r(a){with(o)a+=1;return a}"
+		);
+		// A script's global may be an accessor of the global object; a module's is not.
+		expect(minifyOnePass("var x;x++;throw x", { compress: {}, mangle: false }).code).toBe("var x;x++;throw x;");
+		expect(minifyOnePass("var x;x++;throw x", { compress: {}, mangle: false, module: true }).code).toBe("var x;throw++x;");
+		expect(minifyOnePass("function f(café){café++;return café}g(f)", { compress: {}, mangle: false, format: { ascii_only: true } }).code).toBe(
+			"function f(caf\\u00e9){return++caf\\u00e9}g(f);"
+		);
+		const program = "function h(i){i++;return i}function l(i){var x=i++;return x**2}function f(a){a+=1;a+=2;return a}console.log(h(1),l(3),f(1))";
+		expect(runProgram(minifyOnePass(program, { compress: {}, mangle: false }).code)).toBe("2 9 4");
+	});
+
+	it("should merge the calls of a conditional differing in what one spread spreads", () => {
+		const source = "let x=g(),b=h();x?b(...c):b(...d);x?b(...x):b(...c);x?b(1,...c,2):b(1,...d,2);x?new b(...c):new b(...d);x?b(...c):b(d);x?b(...[1,2]):b(...d);";
+		// A spread against a plain argument, or one printing as its items, stays.
+		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(
+			"let x=g(),b=h();b(...x?c:d),b(...x||c),b(1,...x?c:d,2),new b(...x?c:d),x?b(...c):b(d),x?b(1,2):b(...d);"
+		);
+	});
+
+	it("should fold a value running nothing into the compound assignment after it", () => {
+		const source = "var foo;function w(a){let x=foo;a+=x;return a}function v(a){let x=foo;a||=x;return a}function u(a){let x=g();a+=x;return a}w(),v(),u();";
+		// A value running code would run after the target is read.
+		expect(minifyOnePass(source, { compress: {}, mangle: false, ecma: 2021 }).code).toBe(
+			"var foo;function w(a){return a+=foo}function v(a){return a||=foo}function u(a){let x=g();return a+=x,a}w(),v(),u();"
+		);
+		// A global's read may run a getter, which could set the value first.
+		expect(minifyOnePass("var foo;function w(a){let x=foo;slot+=x;return a}w();", { compress: {}, mangle: false }).code).toBe(
+			"var foo;function w(a){let x=foo;return slot+=x,a}w();"
+		);
+	});
+
+	it("should keep a null check whose chain a call, `delete` or tag reads as a reference", () => {
+		// `(x?.m)()` would call `m` on `x`, and `delete(x?.m)` delete it.
+		const source = "function f(x){return(x!=null?x.m:void 0)()}function g(x){return delete(x!=null?x.m:void 0)}function h(x){return(x!=null?x.m:void 0)``}function k(x){return x!=null?x.m:void 0}";
+		expect(minifyOnePass(source, { compress: {}, mangle: false, ecma: 2020 }).code).toBe(
+			"function f(x){return(x!=null?x.m:void 0)()}function g(x){return delete(x!=null?x.m:void 0)}function h(x){return(x!=null?x.m:void 0)``}function k(x){return x?.m}"
+		);
 	});
 
 	it("should drop a `for`'s own declarator nothing reads", () => {

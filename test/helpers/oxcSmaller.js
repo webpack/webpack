@@ -59,7 +59,6 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"oxc minifier: peephole/esbuild.rs:1213",
 			"oxc minifier: peephole/esbuild.rs:1220",
-			"oxc minifier: peephole/esbuild.rs:1796",
 			"oxc minifier: peephole/esbuild.rs:2307",
 			"oxc minifier: peephole/esbuild.rs:252",
 			"oxc minifier: peephole/esbuild.rs:159",
@@ -81,9 +80,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:540",
 			"oxc minifier: peephole/esbuild.rs:541",
 			"oxc minifier: peephole/esbuild.rs:542",
-			"oxc minifier: peephole/esbuild.rs:594",
-			"oxc minifier: peephole/esbuild.rs:597",
-			"oxc minifier: peephole/esbuild.rs:598",
 			"oxc minifier: peephole/esbuild.rs:657",
 			"oxc minifier: peephole/esbuild.rs:665",
 			"oxc minifier: peephole/esbuild.rs:680",
@@ -94,24 +90,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:744",
 			"oxc minifier: peephole/esbuild.rs:745",
 			"oxc minifier: peephole/esbuild.rs:746",
-			"oxc minifier: peephole/esbuild.rs:822",
-			"oxc minifier: peephole/esbuild.rs:826",
-			"oxc minifier: peephole/esbuild.rs:830",
-			"oxc minifier: peephole/esbuild.rs:834",
-			"oxc minifier: peephole/esbuild.rs:838",
-			"oxc minifier: peephole/esbuild.rs:842",
-			"oxc minifier: peephole/esbuild.rs:846",
-			"oxc minifier: peephole/esbuild.rs:850",
-			"oxc minifier: peephole/esbuild.rs:854",
-			"oxc minifier: peephole/esbuild.rs:858",
-			"oxc minifier: peephole/esbuild.rs:862",
-			"oxc minifier: peephole/esbuild.rs:866",
-			"oxc minifier: peephole/esbuild.rs:890",
-			"oxc minifier: peephole/esbuild.rs:894",
-			"oxc minifier: peephole/esbuild.rs:898",
-			"oxc minifier: peephole/esbuild.rs:902",
-			"oxc minifier: peephole/esbuild.rs:906",
-			"oxc minifier: peephole/esbuild.rs:910",
 			"oxc minifier: peephole/esbuild.rs:1030",
 			"oxc minifier: peephole/esbuild.rs:1129",
 			"oxc minifier: peephole/esbuild.rs:1151",
@@ -127,7 +105,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:1550",
 			"oxc minifier: peephole/esbuild.rs:1633",
 			"oxc minifier: peephole/esbuild.rs:1652",
-			"oxc minifier: peephole/esbuild.rs:1792",
 			"oxc minifier: peephole/esbuild.rs:1984",
 			"oxc minifier: peephole/esbuild.rs:2272",
 			"oxc minifier: peephole/esbuild.rs:2434"
@@ -502,7 +479,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what oxc's `peephole/minimize_conditional_expression.rs` tests cover",
 		[
-			"oxc minifier: peephole/minimize_conditional_expression.rs:61",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:79",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:121"
 		]
