@@ -4424,19 +4424,19 @@ describe("SyntaxTree", () => {
 			try {
 				const node = compiled.addEstree(object, input, skipUnknown);
 				expect(twoPass._addEstreeInOrder(object, input, skipUnknown)).toBe(node);
-				expect(compiled._count).toBe(twoPass._count);
+				expect(compiled._nodeCount).toBe(twoPass._nodeCount);
 				for (const column of ["_types", "_starts", "_ends", "_flags", "_bases"]) {
 					expect(
 						Array.from(
 							/** @type {Int32Array} */ (
 								/** @type {EXPECTED_ANY} */ (compiled)[column]
-							).subarray(0, compiled._count + 1)
+							).subarray(0, compiled._nodeCount + 1)
 						)
 					).toEqual(
 						Array.from(
 							/** @type {Int32Array} */ (
 								/** @type {EXPECTED_ANY} */ (twoPass)[column]
-							).subarray(0, twoPass._count + 1)
+							).subarray(0, twoPass._nodeCount + 1)
 						)
 					);
 				}
