@@ -162,6 +162,10 @@ A list of module, source or dependency types in `lib/` is silently wrong the day
 
 Code that runs outside webpack's own module graph (tests, examples, tooling, a minifier the plugin evaluates as source) loads `require("webpack")`, never `webpack/lib/...`: internal files move between releases, and others copy the pattern.
 
+### Reach the JavaScript syntax through its facade
+
+Outside the JavaScript syntax layer (`lib/javascript/syntax*.js`, `regexp.js`, `ScopeAnalyzer.js` and the generated tables), require `lib/javascript/syntax.js`, webpack's `javascript.syntax`, and read the parser from its `parser` getter (`const { Field, NodeType } = require("./syntax").parser`), never `syntax-parser.js` or `syntax-printer.js` directly, so the internals can move behind it. Type-only `@import`s may name `syntax-parser.js`. CSS and HTML do not follow this yet.
+
 ### Source file headers
 
 Every source file in `lib/`, `hot/` and `tooling/` opens with the MIT license header. A **new** file's `Author` line names its actual author (`Author <Name> @<github-handle>`), never copied from another file.
