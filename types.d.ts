@@ -15195,7 +15195,7 @@ declare interface InputFileSystem {
 	readJsonSync?: (pathOrFileDescriptor: PathOrFileDescriptorFs) => JsonObjectFs;
 	purge?: (
 		value?: string | string[] | Set<string>,
-		options?: { exact?: boolean }
+		options?: { exact?: boolean; readdirPrefix?: boolean }
 	) => void;
 	join?: (path1: string, path2: string) => string;
 	relative?: (from: string, to: string) => string;
