@@ -4428,6 +4428,8 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(
 			minifyOnePass('(class{[a];static b=f()}),(class{[a];static{f()}}),(class extends B{[a]}),(class{static[f()]=1}),(class{static["prototype"](){}}),(class C{[r(()=>C)](){}});', { compress: {}, mangle: false }).code
 		).toBe('(class{[a];static b=f()}),class{[a];static{f()}},class extends B{[a]},class{static[f()]=1},class{static["prototype"](){}},class C{[r(()=>C)](){}};');
+		// A direct `eval` in a key may read the class's name too.
+		expect(minifyOnePass('(class C{[r(()=>eval("C"))](){}});', { compress: {}, mangle: false }).code).toBe('(class C{[r(()=>eval("C"))](){}});');
 		// Beside a key that runs code, a static `prototype` keeps the class too, as making it throws.
 		const throwing = '(class{[a()](){}static["prototype"](){}}),(class{[a()];static["prototype"]=1}),(class{[a()];static[k()]=1});';
 		expect(minifyOnePass(throwing, { compress: {}, mangle: false }).code).toBe('(class{[a()](){}static["prototype"](){}}),class{[a()];static["prototype"]=1},class{[a()];static[k()]=1};');
