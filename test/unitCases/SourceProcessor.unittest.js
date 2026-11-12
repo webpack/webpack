@@ -464,6 +464,43 @@ describe("SourceProcessor", () => {
 			};
 		};
 
+		it("counts each language's line terminators in loc", () => {
+			/**
+			 * @param {string} separator what ends each rule's line
+			 * @returns {number[]} the start line of every CSS identifier
+			 */
+			const cssLines = (separator) => {
+				/** @type {number[]} */
+				const lines = [];
+				new CssSourceProcessor()
+					.use([CssNodeType.Ident], (path) => {
+						lines.push(path.loc()[0]);
+					})
+					.process(`a{color:red}${separator}b{color:blue}`);
+				return lines;
+			};
+			expect(cssLines("\r")).toEqual([1, 1, 2, 2]);
+			expect(cssLines("\f")).toEqual([1, 1, 2, 2]);
+			expect(cssLines("\r\n")).toEqual([1, 1, 2, 2]);
+			/**
+			 * @param {string} separator what ends each element's line
+			 * @returns {number[]} the start line of every `<i>`
+			 */
+			const htmlLines = (separator) => {
+				/** @type {number[]} */
+				const lines = [];
+				new HtmlSourceProcessor()
+					.use([HtmlNodeType.Element], (path) => {
+						if (path.name() === "i") lines.push(path.loc()[0]);
+					})
+					.process(`<i></i>${separator}<i></i>${separator}\f<i></i>`);
+				return lines;
+			};
+			// HTML ends a line at a lone CR, but a form feed is only whitespace.
+			expect(htmlLines("\r")).toEqual([1, 2, 3]);
+			expect(htmlLines("\r\n")).toEqual([1, 2, 3]);
+		});
+
 		it("reads html nodes through the shared members", () => {
 			const input = fixture("html", "source-processor-node-path-reads-html-nodes-through-the-shared-members");
 			/** @type {Record<string, unknown>[]} */

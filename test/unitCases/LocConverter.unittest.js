@@ -59,4 +59,20 @@ describe("LocConverter", () => {
 		const converter = new LocConverter("");
 		expect(at(converter, 0)).toEqual([1, 0]);
 	});
+
+	it("ends a line at a lone carriage return, and at CRLF once", () => {
+		// offsets: a=0 \r=1 b=2 \r=3 \n=4 c=5
+		const converter = new LocConverter("a\rb\r\nc");
+		expect(at(converter, 1)).toEqual([1, 1]);
+		expect(at(converter, 2)).toEqual([2, 0]);
+		expect(at(converter, 4)).toEqual([2, 2]);
+		expect(at(converter, 5)).toEqual([3, 0]);
+		expect(at(converter, 0)).toEqual([1, 0]);
+	});
+
+	it("ends a line at a form feed only when asked to", () => {
+		// offsets: a=0 \f=1 b=2
+		expect(at(new LocConverter("a\fb", true), 2)).toEqual([2, 0]);
+		expect(at(new LocConverter("a\fb"), 2)).toEqual([1, 2]);
+	});
 });
