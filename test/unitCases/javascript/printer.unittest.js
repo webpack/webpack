@@ -551,6 +551,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-724"), { compress: {} }, "function a(n,r){return!(n<0)^r}function b(n,r){return r^!n}function c(n){return!n&1}function d(n,r){return n*r^1}function e(n,r){return(0|n)^r}function f(n){return(0|n)^1n}function g(n,r){return(0|-n)<<r}"],
 			// An object literal read off another prints in its place, but where its `{` would open a block.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-725"), { compress: {} }, "x={b:1},y={b:1},z={b:g()},w=`${{b:1}}`,f=()=>({a:{b:1}}.a),v={b(){return this}}.b(),delete{a:{b:1}}.a,[{b:g()}][0].c;"],
+			// `globalDefs` reads `?.` in a chain it defines as `.`.
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-726"), { compress: { globalDefs: { "a.b.c": "d", "x.y": 5 } } }, "console.log(\"d\",\"d\",\"d\",a?.b,5..toFixed(),\"d\");"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-1"), { compress: {} }, "if(a)u();a,a.b,b(),x=1,c||(x=1);d;e|+f;g,h(),i,j(),k();o=l();m(!!n);"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-2"), { compress: {} }, "a(),b,f(),c(),x,g(),h(),d,e(),y,i.j,k;"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-3"), { compress: {} }, "x,x,y(),foo,bar(),a(),b(),x(),c(),z(),d(),e,f(),g;function h(){return i,j()}"],
