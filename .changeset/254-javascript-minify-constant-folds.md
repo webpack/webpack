@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fold more calls and constants when minifying JavaScript.
+Fold more calls, constants, literal reads and bitwise operands when minifying JavaScript.
