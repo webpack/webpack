@@ -1394,6 +1394,12 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(
 			"function f(a){return a+=1,a+=2}function h(i){return++i}function k(i){throw--i}function l(i){return i++**2}function n(a){return a+=g(),a}function p(i){return i++,i+1}function q(){const c=1;return c+=1,c}function r(a){with(o)a+=1;return a}"
 		);
+		// A script's global may be an accessor of the global object; a module's is not.
+		expect(minifyOnePass("var x;x++;throw x", { compress: {}, mangle: false }).code).toBe("var x;x++;throw x;");
+		expect(minifyOnePass("var x;x++;throw x", { compress: {}, mangle: false, module: true }).code).toBe("var x;throw++x;");
+		expect(minifyOnePass("function f(café){café++;return café}g(f)", { compress: {}, mangle: false, format: { ascii_only: true } }).code).toBe(
+			"function f(caf\\u00e9){return++caf\\u00e9}g(f);"
+		);
 		const program = "function h(i){i++;return i}function l(i){var x=i++;return x**2}function f(a){a+=1;a+=2;return a}console.log(h(1),l(3),f(1))";
 		expect(runProgram(minifyOnePass(program, { compress: {}, mangle: false }).code)).toBe("2 9 4");
 	});
