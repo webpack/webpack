@@ -2121,6 +2121,18 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 			`:is(.a)url(/*){color:red}${after}`
 		);
 		expect(lower("a{b&{color:red}}")).toBe("b:is(a){color:red}");
+		// A type selector after `&` leads the compound the parent joins.
+		expect(lower(".a{&-x{color:red}}")).toBe("-x.a{color:red}");
+		expect(lower(".a{&--x{color:red}}")).toBe("--x.a{color:red}");
+		expect(lower(".a{&-1{color:red}}")).toBe(":is(.a)-1{color:red}");
+		expect(lower(".a{&div{color:red}}")).toBe("div.a{color:red}");
+		expect(lower(".a{&*{color:red}}")).toBe("*.a{color:red}");
+		expect(lower(".a{&svg|rect{color:red}}")).toBe("svg|rect.a{color:red}");
+		expect(lower("p{&div{color:red}}")).toBe("div:is(p){color:red}");
+		expect(lower("[x]{&div{color:red}}")).toBe("div[x]{color:red}");
+		expect(lower(".a{&\\31 x{color:red}}")).toBe("\\31x.a{color:red}");
+		expect(lower(".a{&x|.b{color:red}}")).toBe("x.a|.b{color:red}");
+		expect(lower(".a{&||b{color:red}}")).toBe(".a||b{color:red}");
 		expect(lower("a{&.b,.c &{color:red}}")).toBe(".c a,a.b{color:red}");
 	});
 
