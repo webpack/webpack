@@ -1,0 +1,1 @@
+function f(x){return`-${x}-a${x},1${x},${x+"b"}`}function g(x){return[`${x}`,String(x)].join("")+"a"+[`${x}`,-`${x}`].join()}console.log(f(1),g(2));

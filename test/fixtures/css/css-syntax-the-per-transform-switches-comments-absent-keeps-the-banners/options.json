@@ -40,5 +40,16 @@
 				"regexp": "inert"
 			}
 		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": {
+				"fixture": "keepLicense"
+			}
+		},
+		"check": {
+			"fixture": "check"
+		}
 	}
 ]

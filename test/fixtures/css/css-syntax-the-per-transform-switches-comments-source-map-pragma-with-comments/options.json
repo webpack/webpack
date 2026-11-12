@@ -34,5 +34,16 @@
 				"regexp": "nothing-matches"
 			}
 		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": {
+				"fixture": "keepNone"
+			}
+		},
+		"check": {
+			"fixture": "check"
+		}
 	}
 ]

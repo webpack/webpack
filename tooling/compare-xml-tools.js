@@ -49,6 +49,7 @@ const {
 	canonicalCss,
 	decodedAttributes,
 	idempotenceRepro,
+	meaningReports,
 	printXml,
 	printerFor,
 	sweepRespellings,
@@ -77,7 +78,6 @@ const {
 	measure,
 	measureInWorker,
 	missingReport,
-	oneLine,
 	purityRelation,
 	sweepExitCode,
 	sweepMode,
@@ -1047,19 +1047,10 @@ const invariants = (write, parseXml) => {
 			if (printed === null) continue;
 			// What minifying keeps is what the document says, which a reader other
 			// than the printer's own has to agree with.
-			if (
-				wantedRelation("meaning") &&
-				canonical(printed, cssOptions) !== canonical(xml, cssOptions)
-			) {
-				groups.add(
-					{
-						relation: "meaning",
-						what: "the minified document says something else",
-						repro: `    ${oneLine(xml, 80)}`
-					},
-					preset,
-					label
-				);
+			if (wantedRelation("meaning")) {
+				for (const report of meaningReports(xml, printed, cssOptions)) {
+					groups.add(report, preset, label);
+				}
 			}
 			// Under the first preset only, as the other comparisons ask it: whether
 			// a spelling decides the output is the same question under every set.
@@ -1132,7 +1123,10 @@ const main = async () => {
 			)} brotli, ${kb(input.zstd)} zstd)${
 				typeof before === "string"
 					? `, not well-formed: ${before}`
-					: `, ${[...before.elements.values()].reduce((a, b) => a + b, 0)} elements`
+					: `, ${[...before.elements.values()].reduce(
+							(a, b) => a + b,
+							0
+						)} elements`
 			}\n`
 		);
 		for (const stage of STAGES.filter(wantedStage)) {
@@ -1156,7 +1150,9 @@ const main = async () => {
 				if ("error" in result) {
 					// A tool rejecting the document outright is a comparison result too.
 					process.stdout.write(
-						`  ${tool.name.padEnd(40)} ${result.timedOut ? "" : "rejects it: "}${result.error}\n`
+						`  ${tool.name.padEnd(40)} ${
+							result.timedOut ? "" : "rejects it: "
+						}${result.error}\n`
 					);
 					continue;
 				}

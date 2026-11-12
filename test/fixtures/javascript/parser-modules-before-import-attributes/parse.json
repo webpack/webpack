@@ -1,0 +1,8 @@
+[
+	{
+		"entry": "parseProgram",
+		"options": { "ecmaVersion": 15, "sourceType": "module" },
+		"fields": ["childCount"]
+	},
+	{ "options": { "ecmaVersion": 15, "sourceType": "module" } }
+]

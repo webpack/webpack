@@ -1,5 +1,12 @@
 [
 	{
 		"entry": "parseAListOfComponentValues"
+	},
+	{
+		"entry": "parseAListOfComponentValues",
+		"fields": [
+			"value",
+			"name"
+		]
 	}
 ]

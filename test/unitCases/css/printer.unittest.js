@@ -432,21 +432,6 @@ describe("CssSyntax — block streaming", () => {
 		expect(minify(`${open}${BIG}${close}`)).toBe(`${open}${BIG}${close}`);
 	});
 
-	it("drops a streamed block that prints to nothing", () => {
-		// The opener is held back until something inside prints, so a rule whose
-		// every child minifies away is still dropped whole at its `}`. An empty
-		// rule is only a few nodes, so it takes a lot of them to cross.
-		const EMPTY = repeat(6000, (i) => `.e${i}{}`);
-		expect(childCount(`@media a{${EMPTY}}`)).toBe(0);
-		expect(minify(`@media a{${EMPTY}}`)).toBe("");
-		expect(minify(`@media a{${EMPTY}@media b{${EMPTY}}}`)).toBe("");
-		expect(minify(`@media a{${EMPTY}.keep{color:red}}`)).toBe(
-			"@media a{.keep{color:red}}"
-		);
-		// A `@layer` block carries meaning even when empty, so it stays.
-		expect(minify(`@layer a{${EMPTY}}`)).toBe("@layer a{}");
-	});
-
 	it("keeps only the last of a streamed block's identical declarations", () => {
 		// Reached by taking the earlier one back out of the output, since a streamed
 		// block cannot look ahead. The duplicate is 3000 child rules from its match, so
@@ -657,45 +642,6 @@ describe("CssSyntax — the memo of which properties' order matters", () => {
 		expect(first.startsWith("a{margin:1px 0 0;x0:1;")).toBe(true);
 		expect(first.endsWith(";x32999:1}")).toBe(true);
 		expect(min(css)).toBe(first);
-	});
-});
-
-describe("CssSyntax — the per-transform switches", () => {
-	/**
-	 * @param {string} src css source
-	 * @param {import("../../../lib/css/syntax-parser").CssTransformOptions=} transforms which rewrites to make
-	 * @returns {string} the minified serialization
-	 */
-	const min = (src, transforms) =>
-		new SourceProcessor().process(src, { mode: "minify", transforms }).code;
-
-	// One option says which comments survive, in the forms terser's
-	// `format.comments` takes; the snapshot holds those JSON can spell.
-	describe("comments", () => {
-		const css =
-			fixture("css", "css-syntax-the-per-transform-switches-comments-absent-keeps-the-banners");
-
-		it.each([
-			[
-				"a predicate keeps what it accepts",
-				/** @type {(comment: string) => boolean} */ (
-					(comment) => comment.includes("@license")
-				),
-				"/* @license L */a{b:c}"
-			]
-		])("%s", (_name, comments, expected) => {
-			expect(min(css, { comments })).toBe(expected);
-		});
-
-		// The pragma names the source's own map, which minified text no longer
-		// matches, so the banner levels drop it as terser drops `//#`; a selector
-		// the author wrote decides it like any other comment.
-		it.each([
-			[/** @type {(comment: string) => boolean} */ (() => false), false]
-		])("source-map pragma with comments: %s", (comments, kept) => {
-			const out = min(fixture("css", "css-syntax-the-per-transform-switches-comments-source-map-pragma-with-comments"), { comments });
-			expect(out.includes("/*# sourceMappingURL=x.map */")).toBe(kept);
-		});
 	});
 });
 
@@ -1261,95 +1207,6 @@ describe("cssMinify export", () => {
 
 		expect(code).toMatchInlineSnapshot('"a{color:red}"');
 	});
-
-	describe("extractComments", () => {
-		const sheet =
-			"/*! one */a{color:red}/* plain */b{color:blue}/*! one */" +
-			"/* @license two */c{margin:0}/*# sourceMappingURL=a.map */";
-
-		/**
-		 * @param {EXPECTED_ANY} extractComments the plugin's option
-		 * @param {Record<string, EXPECTED_ANY>=} options `minimize.css`
-		 * @returns {Promise<{ code: string, extractedComments?: string[] }>} what the minifier answers
-		 */
-		const run = async (extractComments, options = {}) => {
-			const cssMinify = require("../../../lib/css/cssMinify");
-
-			const { code, extractedComments } = await cssMinify(
-				{ "a.css": sheet },
-				undefined,
-				options,
-				extractComments
-			);
-			return { code, extractedComments };
-		};
-
-		it.each([
-			[
-				{
-					condition: (/** @type {{ value: string }} */ comment) =>
-						comment.value.includes("two")
-				},
-				"a{color:red}b{color:blue}c{margin:0}",
-				["/* @license two */"]
-			]
-		])("takes out what %p names", async (extractComments, code, extracted) => {
-			expect(await run(extractComments)).toEqual({
-				code,
-				extractedComments: extracted
-			});
-		});
-
-		it.each([
-			[
-				(/** @type {{ value: string }} */ comment) =>
-					comment.value.includes("one"),
-				"a{color:red}b{color:blue}c{margin:0}",
-				["/*! one */"]
-			]
-		])(
-			"takes out what `minimize.css.extractComments: %p` names, over the plugin's",
-			async (extractComments, code, extracted) => {
-				expect(await run(false, { extractComments })).toEqual({
-					code,
-					extractedComments: extracted
-				});
-			}
-		);
-
-		// cspell:ignore licence
-		it("hands a predicate the comment's text, line and column", async () => {
-			const cssMinify = require("../../../lib/css/cssMinify");
-
-			/** @type {{ value: string, line: number, col: number }[]} */
-			const seen = [];
-			await cssMinify(
-				{ "a.css": fixture("css", "css-minify-export-extract-comments-hands-a-predicate-the-comment-s-text-line-and") },
-				undefined,
-				{
-					extractComments: (
-						/** @type {{ value: string, line: number, col: number }} */ comment
-					) => {
-						seen.push(comment);
-						return false;
-					}
-				}
-			);
-			expect(seen).toEqual([
-				{ value: "! a ", line: 1, col: 0 },
-				{ value: " b ", line: 3, col: 1 },
-				{ value: " c ", line: 4, col: 5 }
-			]);
-		});
-
-		it.each([
-			[(/** @type {string} */ comment) => comment.includes("plain"), "/* plain */"]
-		])("keeps what `comments: %p` keeps of the rest", async (comments, kept) => {
-			const { code } = await run(true, { comments });
-			expect(code).toContain(`a{color:red}${kept}b{color:blue}`);
-			expect(code).not.toContain("/*! one */");
-		});
-	});
 });
 
 describe("SourceProcessor — mergeDistantRules", () => {
@@ -1752,12 +1609,6 @@ describe("CssSyntax minify — nesting lowered in a block too big to collect", (
 		expect(minifyFor(`.p{.a{x:1}@st ${prelude};.b{y:1}}`, TARGET)).toBe(
 			`.p{@st ${prelude}}.p .a{x:1}.p .b{y:1}`
 		);
-	});
-
-	it("keeps a rule the repeats of another follow", () => {
-		expect(
-			minifyFor(`.p{.a{x:1}.b{y:1}${".z{w:1}".repeat(4000)}}`, TARGET)
-		).toBe(".p .a{x:1}.p .b{y:1}.p .z{w:1}");
 	});
 });
 

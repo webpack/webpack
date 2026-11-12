@@ -2109,6 +2109,16 @@ exports[`HTML syntax — invariants html-minify-export-extract-comments-hands-a-
 "
 `;
 
+exports[`HTML syntax — invariants html-minify-export-extract-comments-hands-a-predicate-the-comment-s-text-line prints {"print":"htmlMinify","extractComments":{"fixture":"record"},"minimizer":{"extractComments":false,"asset":"a.html"},"check":{"fixture":"handed"}} 1`] = `
+"<p>a</p>
+	<p>b</p> 
+"
+`;
+
+exports[`HTML syntax — invariants html-minify-export-extract-comments-hands-a-predicate-the-comment-s-text-line prints {"print":"htmlMinify","extractComments":{"fixture":"record"},"minimizer":{"extractComments":false,"asset":"a.html"},"check":{"fixture":"handed"}} 2`] = `"{}"`;
+
+exports[`HTML syntax — invariants html-minify-export-extract-comments-hands-a-predicate-the-comment-s-text-line prints {"print":"htmlMinify","extractComments":{"fixture":"record"},"minimizer":{"extractComments":false,"asset":"a.html"},"check":{"fixture":"handed"}} 3`] = `"{\\"asserted\\":[[{\\"value\\":\\"! a \\",\\"line\\":1,\\"col\\":0},{\\"value\\":\\" b \\",\\"line\\":3,\\"col\\":1},{\\"value\\":\\" c \\",\\"line\\":3,\\"col\\":20}]]}"`;
+
 exports[`HTML syntax — invariants html-minify-export-extract-comments-hands-a-predicate-the-comment-s-text-line tokenizes 1`] = `"comment[0,11|4,8] text[11,12] open[12,15|13,14] text[15,16] close[16,20|18,19] text[20,22] comment[22,32|26,29] open[32,35|33,34] text[35,36] close[36,40|38,39] text[40,41] comment[41,51|45,48] text[51,52] end=52"`;
 
 exports[`HTML syntax — invariants html-minify-export-extract-comments-leaves-a-nested-document-s-comments-to-it parses 1`] = `
@@ -2181,6 +2191,12 @@ exports[`HTML syntax — invariants html-minify-export-extract-comments-takes-ou
 exports[`HTML syntax — invariants html-minify-export-extract-comments-takes-out-what-minimize-html-extract parses 2`] = `"warning[13,16]:expected-doctype-but-got-start-tag"`;
 
 exports[`HTML syntax — invariants html-minify-export-extract-comments-takes-out-what-minimize-html-extract prints {"mode":"minify"} 1`] = `"<p>a</p><!--[if IE]><b>x</b><![endif]--><!--#include virtual=x -->"`;
+
+exports[`HTML syntax — invariants html-minify-export-extract-comments-takes-out-what-minimize-html-extract prints {"print":"htmlMinify","extractComments":{"fixture":"one"},"minimizer":{"extractComments":false,"asset":"a.html"},"check":{"fixture":"taken"}} 1`] = `"<p>a</p><!--[if IE]><b>x</b><![endif]--><!--#include virtual=x -->"`;
+
+exports[`HTML syntax — invariants html-minify-export-extract-comments-takes-out-what-minimize-html-extract prints {"print":"htmlMinify","extractComments":{"fixture":"one"},"minimizer":{"extractComments":false,"asset":"a.html"},"check":{"fixture":"taken"}} 2`] = `"{\\"extractedComments\\":[\\"<!--! one -->\\"]}"`;
+
+exports[`HTML syntax — invariants html-minify-export-extract-comments-takes-out-what-minimize-html-extract prints {"print":"htmlMinify","extractComments":{"fixture":"one"},"minimizer":{"extractComments":false,"asset":"a.html"},"check":{"fixture":"taken"}} 3`] = `"{\\"asserted\\":[{\\"code\\":\\"<p>a</p><!--[if IE]><b>x</b><![endif]--><!--#include virtual=x -->\\",\\"extractedComments\\":[\\"<!--! one -->\\"]}]}"`;
 
 exports[`HTML syntax — invariants html-minify-export-extract-comments-takes-out-what-minimize-html-extract prints {"print":"htmlMinify","minimizer":{"extractComments":{"condition":{"regexp":"license"}},"asset":"a.html"}} 1`] = `"<p>a</p><!--[if IE]><b>x</b><![endif]--><!--#include virtual=x -->"`;
 
@@ -2368,6 +2384,18 @@ exports[`HTML syntax — invariants html-minify-one-document-reaching-every-embe
 </body></html>"
 `;
 
+exports[`HTML syntax — invariants html-minify-one-document-reaching-every-embedded-site-offers-every-body-to-a prints {"print":"htmlMinify","renderEmbeddedSource":{"fixture":"answerAll"},"check":{"fixture":"answered"}} 1`] = `
+"<!doctype html><html lang=en><head><title>   every embedded body   </title><style>ANSWER(css)</style><script type=application/json>ANSWER(json)</script><script>ANSWER(javascript/script)</script></head><body>
+<p style=ANSWER(css/block-contents) onclick=ANSWER(javascript/event-handler)>styled</p>
+ANSWER(svg/foreign-element)
+<iframe srcdoc=\\"ANSWER(html/srcdoc)\\"></iframe>
+<iframe srcdoc=\\"ANSWER(html/srcdoc)\\"></iframe>
+
+</body></html>"
+`;
+
+exports[`HTML syntax — invariants html-minify-one-document-reaching-every-embedded-site-offers-every-body-to-a prints {"print":"htmlMinify","renderEmbeddedSource":{"fixture":"answerAll"},"check":{"fixture":"answered"}} 2`] = `"{\\"asserted\\":[[\\"css\\",\\"json\\",\\"javascript/script\\",\\"css/block-contents\\",\\"javascript/event-handler\\",\\"svg/foreign-element\\",\\"html/srcdoc\\",\\"html/srcdoc\\"],\\"<!doctype html><html lang=en><head><title>   every embedded body   </title><style>ANSWER(css)</style><script type=application/json>ANSWER(json)</script><script>ANSWER(javascript/script)</script></head><body>\\\\n<p style=ANSWER(css/block-contents) onclick=ANSWER(javascript/event-handler)>styled</p>\\\\nANSWER(svg/foreign-element)\\\\n<iframe srcdoc=\\\\\\"ANSWER(html/srcdoc)\\\\\\"></iframe>\\\\n<iframe srcdoc=\\\\\\"ANSWER(html/srcdoc)\\\\\\"></iframe>\\\\n\\\\n</body></html>\\"]}"`;
+
 exports[`HTML syntax — invariants html-minify-one-document-reaching-every-embedded-site-offers-every-body-to-a prints {"print":"htmlMinify"} 1`] = `
 "<!doctype html><html lang=en><head><title>   every embedded body   </title><style>.a{color:red;margin:10px}.svg{background:url(\\"data:image/svg+xml,<svg>   <rect  fill='red' />   </svg>\\")}.css{background:url(\\"data:text/css,.i {  color : #ff0000  }\\")}.html{background:url(\\"data:text/html,<div>  <!-- x -->  <p>hi</p>  </div>\\")}.json{background:url('data:application/json,{ \\"a\\" :  1 }')}.js{background:url(\\"data:text/javascript,var  a  =  1 ;\\")}.b64{background:url(data:text/css;base64,LmlubmVyIHsgIGNvbG9yIDogI2ZmMDAwMCAgfQ==)}.png{background:url(data:image/png;base64,AAAA)}</style><script type=application/json>{\\"a\\":1,\\"b\\":[1,2]}</script><script>  var  a  =  1 ;  function  f ( ) { return  a }  </script></head><body>
 <p style=color:red;margin:10px onclick=\\"  f( 1 )  ;  g( 2 )  ;  h( 3 )  \\">styled</p>
@@ -2523,6 +2551,13 @@ exports[`HTML syntax — invariants html-syntax-invariants-holds-every-relation-
 
 exports[`HTML syntax — invariants html-syntax-invariants-holds-every-relation-over-its-sources tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] open[21,27|22,26] open[27,34|28,33] text[34,35] close[35,43|37,42] open[43,50|44,49] text[50,62] close[62,70|64,69] close[70,77|72,76] open[77,83|78,82] attr[86,91|93,97]\\" open[83,99|84,85] text[99,102] open[102,105|103,104] text[105,110] close[110,114|112,113] close[114,118|116,117] open[118,126|119,125] text[126,136] close[136,145|138,144] close[145,152|147,151] close[152,159|154,158] end=159"`;
 
+exports[`HTML syntax — invariants html-syntax-the-facade-holds-no-printer-until-something-prints parses {"entry":"SourceProcessor","visit":{"fixture":"rootOnly"},"check":{"fixture":"logged"}} 1`] = `
+"enter
+exit"
+`;
+
+exports[`HTML syntax — invariants html-syntax-the-facade-holds-no-printer-until-something-prints parses {"entry":"SourceProcessor","visit":{"fixture":"rootOnly"},"check":{"fixture":"logged"}} 2`] = `"{\\"asserted\\":[[\\"enter\\",\\"exit\\"]]}"`;
+
 exports[`HTML syntax — invariants html-syntax-the-facade-holds-no-printer-until-something-prints parses 1`] = `
 "| <html>
 |   <head>
@@ -2629,6 +2664,114 @@ exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-re
 exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"print":"htmlMinify","renderEmbeddedSource":{"name":"answers","options":{"css":"b{c:d}"},"async":true}} 1`] = `"<p style=b{c:d}>x</p><style>b{c:d}</style>"`;
 
 exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers tokenizes 1`] = `"attr[3,8|10,20]\\" open[0,22|1,2] text[22,23] close[23,27|25,26] open[27,34|28,33] text[34,44] close[44,52|46,51] comment[52,63|56,60] end=63"`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code parses {"check":{"fixture":"lengths"}} 1`] = `
+"length 1685, sha256 18416bd1f3fe6059
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       \\"t\\"
+|     <style>
+|       \\"b { color: red }\\"
+|   <body>
+|     <p>
+|       style=\\"margin: 0px\\"
+|       \\"x0\\"
+|     <p>
+|       style=\\"margin: 
+…
+       style=\\"margin: 26px\\"
+|       \\"x26\\"
+|     <p>
+|       style=\\"margin: 27px\\"
+|       \\"x27\\"
+|     <p>
+|       style=\\"margin: 28px\\"
+|       \\"x28\\"
+|     <p>
+|       style=\\"margin: 29px\\"
+|       \\"x29\\""
+`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code parses {"check":{"fixture":"lengths"}} 2`] = `""`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code parses {"check":{"fixture":"lengths"}} 3`] = `"[1685,0]"`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code parses {"entry":"SourceProcessor","visit":{"fixture":"countElements"}} 1`] = `
+"#10 p
+#20 p
+#30 p"
+`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code parses 1`] = `
+"length 1685, sha256 18416bd1f3fe6059
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       \\"t\\"
+|     <style>
+|       \\"b { color: red }\\"
+|   <body>
+|     <p>
+|       style=\\"margin: 0px\\"
+|       \\"x0\\"
+|     <p>
+|       style=\\"margin: 
+…
+       style=\\"margin: 26px\\"
+|       \\"x26\\"
+|     <p>
+|       style=\\"margin: 27px\\"
+|       \\"x27\\"
+|     <p>
+|       style=\\"margin: 28px\\"
+|       \\"x28\\"
+|     <p>
+|       style=\\"margin: 29px\\"
+|       \\"x29\\""
+`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code parses 2`] = `""`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code prints {"mode":"minify","renderEmbeddedSource":{"fixture":"minifyStyleAttributes"},"check":{"fixture":"check"}} 1`] = `
+"length 762, sha256 765c3ffd1460a824
+<!doctype html><title>t</title><style>b { color: red }</style><p style=margin:0px>x0<p style=margin:1px>x1<p style=margin:2px>x2<p style=margin:3px>x3<p style=margin:4px>x4<p style=margin:5px>x5<p sty
+…
+21px>x21<p style=margin:22px>x22<p style=margin:23px>x23<p style=margin:24px>x24<p style=margin:25px>x25<p style=margin:26px>x26<p style=margin:27px>x27<p style=margin:28px>x28<p style=margin:29px>x29"
+`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code prints {"mode":"minify","renderEmbeddedSource":{"fixture":"minifyStyleAttributes"},"check":{"fixture":"check"}} 2`] = `"{\\"length\\":762,\\"offers\\":{\\"css/html\\":31},\\"elements\\":0}"`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code prints {"mode":"minify","visit":{"fixture":"countElements"},"check":{"fixture":"check"}} 1`] = `
+"length 852, sha256 729c66967239ddf2
+<!doctype html><title>t</title><style>b { color: red }</style><p style=\\"margin: 0px\\">x0<p style=\\"margin: 1px\\">x1<p style=\\"margin: 2px\\">x2<p style=\\"margin: 3px\\">x3<p style=\\"margin: 4px\\">x4<p style=\\"mar
+…
+: 22px\\">x22<p style=\\"margin: 23px\\">x23<p style=\\"margin: 24px\\">x24<p style=\\"margin: 25px\\">x25<p style=\\"margin: 26px\\">x26<p style=\\"margin: 27px\\">x27<p style=\\"margin: 28px\\">x28<p style=\\"margin: 29px\\">x29"
+`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code prints {"mode":"minify","visit":{"fixture":"countElements"},"check":{"fixture":"check"}} 2`] = `"{\\"length\\":852,\\"offers\\":{},\\"elements\\":35}"`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code prints {"mode":"minify","visit":{"fixture":"countElements"},"check":{"fixture":"check"}} 3`] = `
+"#10 p
+#20 p
+#30 p"
+`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code prints {"mode":"minify"} 1`] = `
+"length 852, sha256 729c66967239ddf2
+<!doctype html><title>t</title><style>b { color: red }</style><p style=\\"margin: 0px\\">x0<p style=\\"margin: 1px\\">x1<p style=\\"margin: 2px\\">x2<p style=\\"margin: 3px\\">x3<p style=\\"margin: 4px\\">x4<p style=\\"mar
+…
+: 22px\\">x22<p style=\\"margin: 23px\\">x23<p style=\\"margin: 24px\\">x24<p style=\\"margin: 25px\\">x25<p style=\\"margin: 26px\\">x26<p style=\\"margin: 27px\\">x27<p style=\\"margin: 28px\\">x28<p style=\\"margin: 29px\\">x29"
+`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code tokenizes 1`] = `
+"length 2578, sha256 aa72cd6fd3ff6f05
+doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,38|32,37] text[38,54] close[54,62|56,61] attr[65,70|72,83]\\" open[62,85|63,64] text[85,87] close[87,91|89,90] at
+…
+,906] close[906,910|908,909] attr[913,918|920,932]\\" open[910,934|911,912] text[934,937] close[937,941|939,940] attr[944,949|951,963]\\" open[941,965|942,943] text[965,968] close[968,972|970,971] end=972"
+`;
 
 exports[`HTML syntax — invariants output-html-with-a-java-script-entry-should-wrap-the-entry-before-the-first parses 1`] = `
 "| <!DOCTYPE html>
@@ -3318,6 +3461,21 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-ignores-a-doctype-in-foreign tokenizes 1`] = `"open[0,5|1,4] doctype[5,20|15,19|-1,-1|-1,-1] open[20,24|21,22]/ close[24,30|26,29] end=30"`;
 
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-inserts-the-whitespace-among parses {"check":{"fixture":"documentTree"}} 1`] = `
+"| <html>
+|   <head>
+|     <template>
+|       content
+|         <col>
+|         \\" \\"
+|         <col>
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-inserts-the-whitespace-among parses {"check":{"fixture":"documentTree"}} 2`] = `"warning[0,10]:expected-doctype-but-got-start-tag warning[15,16]:unexpected-char-in-column-group warning[17,18]:unexpected-char-in-column-group"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-inserts-the-whitespace-among parses {"check":{"fixture":"documentTree"}} 3`] = `"{\\"asserted\\":[\\"| <html>\\\\n|   <head>\\\\n|     <template>\\\\n|       content\\\\n|         <col>\\\\n|         \\\\\\" \\\\\\"\\\\n|         <col>\\\\n|   <body>\\"]}"`;
+
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-inserts-the-whitespace-among parses 1`] = `
 "| <html>
 |   <head>
@@ -3335,6 +3493,15 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-inserts-the-whitespace-among tokenizes 1`] = `"open[0,10|1,9] open[10,15|11,14] text[15,18] open[18,23|19,22] close[23,34|25,33] end=34"`;
 
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-inserts-the-whitespace-among-2 parses {"options":{"fragmentContext":"colgroup"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   \\" 	\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-inserts-the-whitespace-among-2 parses {"options":{"fragmentContext":"colgroup"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[0,1]:unexpected-char-in-column-group warning[2,3]:unexpected-char-in-column-group warning[4,5]:unexpected-char-in-column-group"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-inserts-the-whitespace-among-2 parses {"options":{"fragmentContext":"colgroup"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| \\\\\\" \\\\t\\\\\\"\\"]}"`;
+
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-inserts-the-whitespace-among-2 parses 1`] = `
 "| <html>
 |   <head>
@@ -3347,6 +3514,17 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-inserts-the-whitespace-among-2 prints {"mode":"minify"} 1`] = `"a b	c"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-inserts-the-whitespace-among-2 tokenizes 1`] = `"text[0,5] end=5"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references parses {"options":{"fragmentContext":"tbody"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   \\"x\\"
+|   <plaintext>
+|     \\"&amp;\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references parses {"options":{"fragmentContext":"tbody"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[0,1]:unexpected-character-implies-table-voodoo warning[1,12]:unexpected-start-tag-implies-table-voodoo warning[12,13]:unexpected-character-implies-table-voodoo warning[13,14]:unexpected-character-implies-table-voodoo warning[14,15]:unexpected-character-implies-table-voodoo warning[15,16]:unexpected-character-implies-table-voodoo warning[16,17]:unexpected-character-implies-table-voodoo warning[17,17]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references parses {"options":{"fragmentContext":"tbody"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| \\\\\\"x\\\\\\"\\\\n| <plaintext>\\\\n|   \\\\\\"&amp;\\\\\\"\\"]}"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references parses 1`] = `
 "| <html>
@@ -3363,6 +3541,19 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references tokenizes 1`] = `"text[0,1] open[1,12|2,11] text[12,17] end=17"`;
 
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references-2 parses {"check":{"fixture":"documentTree"}} 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <plaintext>
+|       \\"a&amp;b<p>\\"
+|     <table>"
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references-2 parses {"check":{"fixture":"documentTree"}} 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag warning[7,18]:unexpected-start-tag-implies-table-voodoo warning[18,19]:unexpected-character-implies-table-voodoo warning[19,20]:unexpected-character-implies-table-voodoo warning[20,21]:unexpected-character-implies-table-voodoo warning[21,22]:unexpected-character-implies-table-voodoo warning[22,23]:unexpected-character-implies-table-voodoo warning[23,24]:unexpected-character-implies-table-voodoo warning[24,25]:unexpected-character-implies-table-voodoo warning[25,26]:unexpected-character-implies-table-voodoo warning[26,27]:unexpected-character-implies-table-voodoo warning[27,28]:unexpected-character-implies-table-voodoo warning[28,28]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references-2 parses {"check":{"fixture":"documentTree"}} 3`] = `"{\\"asserted\\":[\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <plaintext>\\\\n|       \\\\\\"a&amp;b<p>\\\\\\"\\\\n|     <table>\\"]}"`;
+
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references-2 parses 1`] = `
 "| <html>
 |   <head>
@@ -3377,6 +3568,22 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references-2 prints {"mode":"minify"} 1`] = `"<table><plaintext>a&amp;b<p>"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references-2 tokenizes 1`] = `"open[0,7|1,6] open[7,18|8,17] text[18,28] end=28"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references-3 parses {"check":{"fixture":"documentTree"}} 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <plaintext>
+|               \\"a&amp;b<p>\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references-3 parses {"check":{"fixture":"documentTree"}} 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag warning[7,11]:unexpected-cell-in-table-body warning[32,32]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references-3 parses {"check":{"fixture":"documentTree"}} 3`] = `"{\\"asserted\\":[\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <table>\\\\n|       <tbody>\\\\n|         <tr>\\\\n|           <td>\\\\n|             <plaintext>\\\\n|               \\\\\\"a&amp;b<p>\\\\\\"\\"]}"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references-3 parses 1`] = `
 "| <html>
@@ -3396,6 +3603,20 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references-3 tokenizes 1`] = `"open[0,7|1,6] open[7,11|8,10] open[11,22|12,21] text[22,32] end=32"`;
 
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references-4 parses {"check":{"fixture":"documentTree"}} 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <caption>
+|         <plaintext>
+|           \\"a&amp;b<p>\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references-4 parses {"check":{"fixture":"documentTree"}} 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag warning[37,37]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references-4 parses {"check":{"fixture":"documentTree"}} 3`] = `"{\\"asserted\\":[\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <table>\\\\n|       <caption>\\\\n|         <plaintext>\\\\n|           \\\\\\"a&amp;b<p>\\\\\\"\\"]}"`;
+
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references-4 parses 1`] = `
 "| <html>
 |   <head>
@@ -3412,6 +3633,17 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references-4 tokenizes 1`] = `"open[0,7|1,6] open[7,16|8,15] open[16,27|17,26] text[27,37] end=37"`;
 
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-every-form-in-template parses {"options":{"fragmentContext":"template"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   <table>
+|     <form>
+|     <form>"
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-every-form-in-template parses {"options":{"fragmentContext":"template"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[7,13]:unexpected-form-in-table warning[13,19]:unexpected-form-in-table"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-every-form-in-template parses {"options":{"fragmentContext":"template"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| <table>\\\\n|   <form>\\\\n|   <form>\\"]}"`;
+
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-every-form-in-template parses 1`] = `
 "| <html>
 |   <head>
@@ -3425,6 +3657,21 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-every-form-in-template prints {"mode":"minify"} 1`] = `"<table><form></form></table>"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-every-form-in-template tokenizes 1`] = `"open[0,7|1,6] open[7,13|8,12] open[13,19|14,18] end=19"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-every-form-in-template-2 parses {"check":{"fixture":"documentTree"}} 1`] = `
+"| <html>
+|   <head>
+|     <template>
+|       content
+|         <table>
+|           <form>
+|           <form>
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-every-form-in-template-2 parses {"check":{"fixture":"documentTree"}} 2`] = `"warning[0,10]:expected-doctype-but-got-start-tag warning[17,23]:unexpected-form-in-table warning[23,29]:unexpected-form-in-table warning[29,29]:eof-in-template"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-every-form-in-template-2 parses {"check":{"fixture":"documentTree"}} 3`] = `"{\\"asserted\\":[\\"| <html>\\\\n|   <head>\\\\n|     <template>\\\\n|       content\\\\n|         <table>\\\\n|           <form>\\\\n|           <form>\\\\n|   <body>\\"]}"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-keeps-every-form-in-template-2 parses 1`] = `
 "| <html>
@@ -3521,6 +3768,16 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-leaves-the-link-below-a-marker tokenizes 1`] = `"open[0,3|1,2] text[3,4] open[4,13|5,12] open[13,16|14,15] text[16,17] open[17,20|18,19] text[20,21] close[21,31|23,30] text[31,32] end=32"`;
 
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-leaves-the-tokenizer-in-the parses {"options":{"fragmentContext":"colgroup"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   <!-- c -->
+|   \\"  \\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-leaves-the-tokenizer-in-the parses {"options":{"fragmentContext":"colgroup"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[0,10]:unexpected-start-tag warning[20,29]:unexpected-start-tag"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-leaves-the-tokenizer-in-the parses {"options":{"fragmentContext":"colgroup"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| <!-- c -->\\\\n| \\\\\\"  \\\\\\"\\"]}"`;
+
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-leaves-the-tokenizer-in-the parses 1`] = `
 "| <html>
 |   <head>
@@ -3534,6 +3791,21 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-leaves-the-tokenizer-in-the prints {"mode":"minify"} 1`] = `"<textarea><!--c-->  <bgsound></textarea>"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-leaves-the-tokenizer-in-the tokenizes 1`] = `"open[0,10|1,9] text[10,29] end=29"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-leaves-the-tokenizer-in-the-2 parses {"check":{"fixture":"documentTree"}} 1`] = `
+"| <html>
+|   <head>
+|     <template>
+|       content
+|         <col>
+|         \\" \\"
+|         <col>
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-leaves-the-tokenizer-in-the-2 parses {"check":{"fixture":"documentTree"}} 2`] = `"warning[0,10]:expected-doctype-but-got-start-tag warning[15,22]:unexpected-start-tag warning[22,23]:unexpected-char-in-column-group warning[23,31]:unexpected-end-tag"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-leaves-the-tokenizer-in-the-2 parses {"check":{"fixture":"documentTree"}} 3`] = `"{\\"asserted\\":[\\"| <html>\\\\n|   <head>\\\\n|     <template>\\\\n|       content\\\\n|         <col>\\\\n|         \\\\\\" \\\\\\"\\\\n|         <col>\\\\n|   <body>\\"]}"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-leaves-the-tokenizer-in-the-2 parses 1`] = `
 "| <html>
@@ -3570,6 +3842,19 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-merges-the-texts-a-declarative prints {"mode":"minify"} 1`] = `"<b></b><div><template shadowrootmode=open></template><b>ab</b></div>"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-merges-the-texts-a-declarative tokenizes 1`] = `"open[0,3|1,2] open[3,8|4,7] text[8,9] attr[19,33|35,39]\\" open[9,41|10,18] close[41,52|43,51] text[52,53] close[53,57|55,56] end=57"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-re-sizes-the-attribute-columns parses {"check":{"fixture":"documentTree"}} 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <b>
+|       class=\\"c\\"
+|       \\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-re-sizes-the-attribute-columns parses {"check":{"fixture":"documentTree"}} 2`] = `"warning[0,13]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-re-sizes-the-attribute-columns parses {"check":{"fixture":"documentTree"}} 3`] = `"{\\"asserted\\":[\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <b>\\\\n|       class=\\\\\\"c\\\\\\"\\\\n|       \\\\\\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\\\\\\"\\"]}"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-re-sizes-the-attribute-columns parses 1`] = `
 "| <html>
@@ -3614,6 +3899,15 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-a-noscript-in-the-body tokenizes 1`] = `"open[0,6|1,5] open[6,16|7,15] open[16,19|17,18] text[19,20] close[20,31|22,30] text[31,32] end=32"`;
 
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the parses {"options":{"fragmentContext":"textarea"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   \\"a�</textarea>�<b>&\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the parses {"options":{"fragmentContext":"textarea"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[1,2]:unexpected-null-character warning[22,22]:expected-named-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the parses {"options":{"fragmentContext":"textarea"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| \\\\\\"a�</textarea>�<b>&\\\\\\"\\"]}"`;
+
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the parses 1`] = `
 "| <html>
 |   <head>
@@ -3628,6 +3922,16 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the prints {"mode":"minify"} 1`] = `"a<b>&amp;</b>"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the tokenizes 1`] = `"warning[1,2]:unexpected-null-character text[0,2] close[2,13|4,12] warning[13,14]:unexpected-null-character text[13,14] open[14,17|15,16] text[17,22] end=22"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-2 parses {"options":{"fragmentContext":"style"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   \\"a</style><b>&amp;
+\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-2 parses {"options":{"fragmentContext":"style"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[19,19]:expected-named-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-2 parses {"options":{"fragmentContext":"style"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| \\\\\\"a</style><b>&amp;\\\\n\\\\\\"\\"]}"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-2 parses 1`] = `
 "| <html>
@@ -3648,6 +3952,15 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-2 tokenizes 1`] = `"text[0,1] close[1,9|3,8] open[9,12|10,11] text[12,19] end=19"`;
 
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-3 parses {"options":{"fragmentContext":"script"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   \\"</script><!--<b>\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-3 parses {"options":{"fragmentContext":"script"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[16,16]:expected-named-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-3 parses {"options":{"fragmentContext":"script"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| \\\\\\"</script><!--<b>\\\\\\"\\"]}"`;
+
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-3 parses 1`] = `
 "| <!-- <b> -->
 | <html>
@@ -3661,6 +3974,15 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-3 tokenizes 1`] = `"close[0,9|2,8] error[16,16]:eof-in-comment comment[9,16|13,16] end=16"`;
 
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-4 parses {"options":{"fragmentContext":"title"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   \\"</title\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-4 parses {"options":{"fragmentContext":"title"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[7,7]:expected-named-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-4 parses {"options":{"fragmentContext":"title"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| \\\\\\"</title\\\\\\"\\"]}"`;
+
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-4 parses 1`] = `
 "| <html>
 |   <head>
@@ -3672,6 +3994,15 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-4 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-4 tokenizes 1`] = `"error[7,7]:eof-in-tag close[0,7|2,7] end=7"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-5 parses {"options":{"fragmentContext":"noscript","scripting":true},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   \\"</noscript><b>x\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-5 parses {"options":{"fragmentContext":"noscript","scripting":true},"check":{"fixture":"fragmentTree"}} 2`] = `""`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-5 parses {"options":{"fragmentContext":"noscript","scripting":true},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| \\\\\\"</noscript><b>x\\\\\\"\\"]}"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-5 parses 1`] = `
 "| <html>
@@ -3686,6 +4017,15 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-5 prints {"mode":"minify"} 1`] = `"<b>x</b>"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-5 tokenizes 1`] = `"close[0,11|2,10] open[11,14|12,13] text[14,15] end=15"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-6 parses {"options":{"fragmentContext":"svg title"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   <b>"
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-6 parses {"options":{"fragmentContext":"svg title"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[0,8]:unexpected-end-tag warning[11,11]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-6 parses {"options":{"fragmentContext":"svg title"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| <b>\\"]}"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the-6 parses 1`] = `
 "| <html>
@@ -4132,6 +4472,21 @@ exports[`HTML syntax — invariants parse-html-insertion-modes-breaks-a-paragrap
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-breaks-a-paragraph-out-of-foreign-content tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,18|16,17] open[18,24|19,23] close[24,28|26,27] text[28,29] end=29"`;
 
+exports[`HTML syntax — invariants parse-html-insertion-modes-breaks-out-of-math-ml-text-integration-points parses {"options":{"fragmentContext":"math ms"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   <b>
+|   <math mglyph>
+|   <i>
+|   <math malignmark>
+|   <u>
+|   <ms>
+|     \\"X\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-breaks-out-of-math-ml-text-integration-points parses {"options":{"fragmentContext":"math ms"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[43,48]:non-void-html-element-start-tag-with-trailing-solidus warning[49,49]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-breaks-out-of-math-ml-text-integration-points parses {"options":{"fragmentContext":"math ms"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| <b>\\\\n| <math mglyph>\\\\n| <i>\\\\n| <math malignmark>\\\\n| <u>\\\\n| <ms>\\\\n|   \\\\\\"X\\\\\\"\\"]}"`;
+
 exports[`HTML syntax — invariants parse-html-insertion-modes-breaks-out-of-math-ml-text-integration-points parses 1`] = `
 "| <html>
 |   <head>
@@ -4403,6 +4758,15 @@ exports[`HTML syntax — invariants parse-html-insertion-modes-drops-whitespace-
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-drops-whitespace-before-the-html-element tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] text[15,16] open[16,22|17,21] end=22"`;
 
+exports[`HTML syntax — invariants parse-html-insertion-modes-ends-a-caption-fragment parses {"options":{"fragmentContext":"caption"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   <div>"
+`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-ends-a-caption-fragment parses {"options":{"fragmentContext":"caption"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[0,10]:unexpected-end-tag warning[15,15]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-ends-a-caption-fragment parses {"options":{"fragmentContext":"caption"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| <div>\\"]}"`;
+
 exports[`HTML syntax — invariants parse-html-insertion-modes-ends-a-caption-fragment parses 1`] = `
 "| <html>
 |   <head>
@@ -4430,6 +4794,15 @@ exports[`HTML syntax — invariants parse-html-insertion-modes-ends-a-column-gro
 exports[`HTML syntax — invariants parse-html-insertion-modes-ends-a-column-group-on-text-inside-a-template prints {"mode":"minify"} 1`] = `"<body><template><col></template></body>"`;
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-ends-a-column-group-on-text-inside-a-template tokenizes 1`] = `"open[0,6|1,5] open[6,16|7,15] open[16,21|17,20] text[21,26] end=26"`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-ends-a-frameset-fragment parses {"options":{"fragmentContext":"frameset"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   <frame>"
+`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-ends-a-frameset-fragment parses {"options":{"fragmentContext":"frameset"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[0,11]:unexpected-frameset-in-frameset-innerhtml"`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-ends-a-frameset-fragment parses {"options":{"fragmentContext":"frameset"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| <frame>\\"]}"`;
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-ends-a-frameset-fragment parses 1`] = `
 "| <html>
@@ -4673,6 +5046,15 @@ exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-doctype
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-doctype-inside-a-column-group tokenizes 1`] = `"open[0,7|1,6] open[7,17|8,16] doctype[17,32|27,31|-1,-1|-1,-1] close[32,43|34,42] close[43,51|45,50] end=51"`;
 
+exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-foreign-end-tag-with-no-match parses {"options":{"fragmentContext":"svg path"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   \\"X\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-foreign-end-tag-with-no-match parses {"options":{"fragmentContext":"svg path"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[0,7]:unexpected-end-tag"`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-foreign-end-tag-with-no-match parses {"options":{"fragmentContext":"svg path"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| \\\\\\"X\\\\\\"\\"]}"`;
+
 exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-foreign-end-tag-with-no-match parses 1`] = `
 "| <html>
 |   <head>
@@ -4714,6 +5096,15 @@ exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-paragra
 exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-paragraph-end-tag-after-head prints {"mode":"minify"} 1`] = `"<!doctype html><head></head>"`;
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-paragraph-end-tag-after-head tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] close[21,28|23,27] close[28,32|30,31] comment[32,42|36,39] end=42"`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-plaintext-end-tag-in-a-plaintext-fragment parses {"options":{"fragmentContext":"plaintext"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   \\"</plaintext>\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-plaintext-end-tag-in-a-plaintext-fragment parses {"options":{"fragmentContext":"plaintext"},"check":{"fixture":"fragmentTree"}} 2`] = `""`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-plaintext-end-tag-in-a-plaintext-fragment parses {"options":{"fragmentContext":"plaintext"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| \\\\\\"</plaintext>\\\\\\"\\"]}"`;
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-plaintext-end-tag-in-a-plaintext-fragment parses 1`] = `
 "| <html>
@@ -4861,6 +5252,17 @@ exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-table-e
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-table-end-tag-inside-a-template tokenizes 1`] = `"open[0,6|1,5] open[6,16|7,15] open[16,23|17,22] close[23,31|25,30] close[31,39|33,38] open[39,46|40,45] close[46,54|48,53] close[54,65|56,64] close[65,72|67,71] end=72"`;
 
+exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-tbody-start-tag-inside-math-ml-in-a-thead parses {"options":{"fragmentContext":"thead"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   <math math>
+|     <math thead>
+|       <math mo>"
+`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-tbody-start-tag-inside-math-ml-in-a-thead parses {"options":{"fragmentContext":"thead"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[0,6]:unexpected-start-tag-implies-table-voodoo warning[17,24]:unexpected-start-tag warning[24,24]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-tbody-start-tag-inside-math-ml-in-a-thead parses {"options":{"fragmentContext":"thead"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| <math math>\\\\n|   <math thead>\\\\n|     <math mo>\\"]}"`;
+
 exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-tbody-start-tag-inside-math-ml-in-a-thead parses 1`] = `
 "| <html>
 |   <head>
@@ -4914,6 +5316,15 @@ exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-thead-e
 exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-thead-end-tag-in-a-table-body prints {"mode":"minify"} 1`] = `"<table><tbody></table>"`;
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-thead-end-tag-in-a-table-body tokenizes 1`] = `"open[0,7|1,6] open[7,14|8,13] close[14,22|16,21] end=22"`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-table-section-end-tags-in-a-row-fragment parses {"options":{"fragmentContext":"tr"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   <td>"
+`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-table-section-end-tags-in-a-row-fragment parses {"options":{"fragmentContext":"tr"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[0,8]:unexpected-end-tag warning[8,16]:unexpected-end-tag warning[16,24]:unexpected-end-tag"`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-table-section-end-tags-in-a-row-fragment parses {"options":{"fragmentContext":"tr"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| <td>\\"]}"`;
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-table-section-end-tags-in-a-row-fragment parses 1`] = `
 "| <html>
@@ -5324,6 +5735,16 @@ exports[`HTML syntax — invariants parse-html-insertion-modes-opens-a-template-
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-opens-a-template-with-no-body-yet tokenizes 1`] = `"open[0,6|1,5] close[6,13|8,12] open[13,23|14,22] end=23"`;
 
+exports[`HTML syntax — invariants parse-html-insertion-modes-opens-an-implied-tbody-in-a-table-fragment parses {"options":{"fragmentContext":"table"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   <tbody>
+|     <tr>"
+`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-opens-an-implied-tbody-in-a-table-fragment parses {"options":{"fragmentContext":"table"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[0,7]:unexpected-start-tag-implies-end-tag"`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-opens-an-implied-tbody-in-a-table-fragment parses {"options":{"fragmentContext":"table"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| <tbody>\\\\n|   <tr>\\"]}"`;
+
 exports[`HTML syntax — invariants parse-html-insertion-modes-opens-an-implied-tbody-in-a-table-fragment parses 1`] = `
 "| <html>
 |   <head>
@@ -5339,6 +5760,15 @@ exports[`HTML syntax — invariants parse-html-insertion-modes-opens-an-implied-
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-opens-an-implied-tbody-in-a-table-fragment tokenizes 1`] = `"open[0,7|1,6] open[7,11|8,10] end=11"`;
 
+exports[`HTML syntax — invariants parse-html-insertion-modes-parses-a-body-start-tag-in-an-svg-desc-fragment parses {"options":{"fragmentContext":"svg desc"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   \\"X\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-parses-a-body-start-tag-in-an-svg-desc-fragment parses {"options":{"fragmentContext":"svg desc"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[0,6]:unexpected-start-tag"`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-parses-a-body-start-tag-in-an-svg-desc-fragment parses {"options":{"fragmentContext":"svg desc"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| \\\\\\"X\\\\\\"\\"]}"`;
+
 exports[`HTML syntax — invariants parse-html-insertion-modes-parses-a-body-start-tag-in-an-svg-desc-fragment parses 1`] = `
 "| <html>
 |   <head>
@@ -5351,6 +5781,21 @@ exports[`HTML syntax — invariants parse-html-insertion-modes-parses-a-body-sta
 exports[`HTML syntax — invariants parse-html-insertion-modes-parses-a-body-start-tag-in-an-svg-desc-fragment prints {"mode":"minify"} 1`] = `"<body>X</body>"`;
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-parses-a-body-start-tag-in-an-svg-desc-fragment tokenizes 1`] = `"open[0,6|1,5] text[6,7] end=7"`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-parses-a-template-fragment-with-a-form-in-it parses {"options":{"fragmentContext":"template"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   <template>
+|     content
+|       <form>
+|         <input>
+|           name=\\"q\\"
+|       <div>
+|         \\"second\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-parses-a-template-fragment-with-a-form-in-it parses {"options":{"fragmentContext":"template"},"check":{"fixture":"fragmentTree"}} 2`] = `""`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-parses-a-template-fragment-with-a-form-in-it parses {"options":{"fragmentContext":"template"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| <template>\\\\n|   content\\\\n|     <form>\\\\n|       <input>\\\\n|         name=\\\\\\"q\\\\\\"\\\\n|     <div>\\\\n|       \\\\\\"second\\\\\\"\\"]}"`;
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-parses-a-template-fragment-with-a-form-in-it parses 1`] = `
 "| <html>
@@ -5444,6 +5889,15 @@ This page contains an insanely badly-nested tag sequence."
 `;
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-re-nests-a-badly-nested-table-font-and-anchor tokenizes 1`] = `"open[0,7|1,6] text[7,8] open[8,12|9,11] text[12,13] open[13,21|14,20] open[21,29|22,28] open[29,33|30,32] close[33,38|35,37] close[38,43|40,42] open[43,47|44,46] text[47,48] open[48,54|49,53] text[54,55] open[55,62|56,61] open[62,66|63,65] close[66,71|68,70] close[71,79|73,78] text[79,80] close[80,84|82,83] text[84,85] open[85,88|86,87] close[88,95|90,94] open[95,101|96,100] close[101,105|103,104] text[105,163] end=163"`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-reads-a-textarea-fragment-as-text parses {"options":{"fragmentContext":"textarea"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   \\"direct textarea content\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-reads-a-textarea-fragment-as-text parses {"options":{"fragmentContext":"textarea"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[23,23]:expected-named-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-insertion-modes-reads-a-textarea-fragment-as-text parses {"options":{"fragmentContext":"textarea"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| \\\\\\"direct textarea content\\\\\\"\\"]}"`;
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-reads-a-textarea-fragment-as-text parses 1`] = `
 "| <html>
@@ -5698,6 +6152,16 @@ exports[`HTML syntax — invariants parse-html-parse-error-forwards-the-option-t
 exports[`HTML syntax — invariants parse-html-parse-error-forwards-the-option-to-the-tokenizer prints {"mode":"minify"} 1`] = `"<!doctype html><br foo><p>"`;
 
 exports[`HTML syntax — invariants parse-html-parse-error-forwards-the-option-to-the-tokenizer tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] warning[23,24]:missing-attribute-value attr[19,22|23,23] open[15,24|16,18] open[24,27|25,26] close[27,31|29,30] end=31"`;
+
+exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-body-body-html parses {"options":{"fragmentContext":"html"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   <head>
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-body-body-html parses {"options":{"fragmentContext":"html"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[13,20]:unexpected-end-tag-after-body-innerhtml"`;
+
+exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-body-body-html parses {"options":{"fragmentContext":"html"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| <head>\\\\n| <body>\\"]}"`;
 
 exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-body-body-html parses {"options":{"fragmentContext":"html"}} 1`] = `
 "| <html>
@@ -7116,6 +7580,22 @@ exports[`HTML syntax — invariants parse-html-path-accessor-completeness-expose
 
 exports[`HTML syntax — invariants parse-html-path-accessor-completeness-exposes-a-doctype-s-identifier-ranges tokenizes 1`] = `"doctype[0,30|10,14|23,24|27,28] open[30,33|31,32] text[33,34] end=34"`;
 
+exports[`HTML syntax — invariants parse-html-path-accessor-completeness-exposes-node-parent-links-and-attribute parses {"entry":"SourceProcessor","visit":{"fixture":"links"},"check":{"fixture":"logged"}} 1`] = `
+"doctype:p/s
+node:true
+parentTag:body
+index:0
+attrs:2
+id:id=d
+idName:id
+idValue:d
+checkedValue:null
+firstChildType:4
+nextSibling:0"
+`;
+
+exports[`HTML syntax — invariants parse-html-path-accessor-completeness-exposes-node-parent-links-and-attribute parses {"entry":"SourceProcessor","visit":{"fixture":"links"},"check":{"fixture":"logged"}} 2`] = `"{\\"asserted\\":[[\\"doctype:p/s\\",\\"node:true\\",\\"parentTag:body\\",\\"index:0\\",\\"attrs:2\\",\\"id:id=d\\",\\"idName:id\\",\\"idValue:d\\",\\"checkedValue:null\\",\\"firstChildType:4\\",\\"nextSibling:0\\"]]}"`;
+
 exports[`HTML syntax — invariants parse-html-path-accessor-completeness-exposes-node-parent-links-and-attribute parses 1`] = `
 "| <!DOCTYPE html \\"p\\" \\"s\\">
 | <html>
@@ -7219,6 +7699,39 @@ exports[`HTML syntax — invariants parse-html-path-accessor-completeness-path-s
 
 exports[`HTML syntax — invariants parse-html-path-accessor-completeness-path-stop-ends-the-walk-after-the-current-3 tokenizes 1`] = `"open[0,3|1,2] open[3,6|4,5] close[6,10|8,9] close[10,14|12,13] open[14,17|15,16] close[17,21|19,20] end=21"`;
 
+exports[`HTML syntax — invariants parse-html-path-accessor-completeness-reads-each-part-of-an-element-with-an-end parses {"fields":["name","startOf:name","endOf:name","startOf:startTag","endOf:startTag","startOf:content","endOf:content","startOf:endTag","endOf:endTag","startOf:publicId","endOf:publicId"],"check":{"fixture":"parts"}} 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             \\"x\\"
+|     <div>
+|       a=\\"1\\"
+|       \\"y\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-path-accessor-completeness-reads-each-part-of-an-element-with-an-end parses {"fields":["name","startOf:name","endOf:name","startOf:startTag","endOf:startTag","startOf:content","endOf:content","startOf:endTag","endOf:endTag","startOf:publicId","endOf:publicId"],"check":{"fixture":"parts"}} 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants parse-html-path-accessor-completeness-reads-each-part-of-an-element-with-an-end parses {"fields":["name","startOf:name","endOf:name","startOf:startTag","endOf:startTag","startOf:content","endOf:content","startOf:endTag","endOf:endTag","startOf:publicId","endOf:publicId"],"check":{"fixture":"parts"}} 3`] = `
+"Document[0,0] name=\\"\\" startOf:name=-1 endOf:name=-1 startOf:startTag=-1 endOf:startTag=-1 startOf:content=-1 endOf:content=-1 startOf:endTag=-1 endOf:endTag=-1 startOf:publicId=-1 endOf:publicId=-1
+  Element[0,0] name=\\"html\\" startOf:name=-1 endOf:name=-1 startOf:startTag=-1 endOf:startTag=-1 startOf:content=-1 endOf:content=-1 startOf:endTag=-1 endOf:endTag=-1 startOf:publicId=-1 endOf:publicId=-1
+    Element[0,0] name=\\"head\\" startOf:name=-1 endOf:name=-1 startOf:startTag=-1 endOf:startTag=-1 startOf:content=-1 endOf:content=-1 startOf:endTag=-1 endOf:endTag=-1 startOf:publicId=-1 endOf:publicId=-1
+    Element[0,0] name=\\"body\\" startOf:name=-1 endOf:name=-1 startOf:startTag=-1 endOf:startTag=-1 startOf:content=-1 endOf:content=-1 startOf:endTag=-1 endOf:endTag=-1 startOf:publicId=-1 endOf:publicId=-1
+      Element[0,24] name=\\"table\\" startOf:name=1 endOf:name=6 startOf:startTag=0 endOf:startTag=7 startOf:content=7 endOf:content=16 startOf:endTag=16 endOf:endTag=24 startOf:publicId=-1 endOf:publicId=-1
+        Element[7,24] name=\\"tbody\\" startOf:name=8 endOf:name=10 startOf:startTag=-1 endOf:startTag=-1 startOf:content=11 endOf:content=24 startOf:endTag=-1 endOf:endTag=-1 startOf:publicId=-1 endOf:publicId=-1
+          Element[7,24] name=\\"tr\\" startOf:name=8 endOf:name=10 startOf:startTag=7 endOf:startTag=11 startOf:content=11 endOf:content=24 startOf:endTag=-1 endOf:endTag=-1 startOf:publicId=-1 endOf:publicId=-1
+            Element[11,24] name=\\"td\\" startOf:name=12 endOf:name=14 startOf:startTag=11 endOf:startTag=15 startOf:content=15 endOf:content=24 startOf:endTag=-1 endOf:endTag=-1 startOf:publicId=-1 endOf:publicId=-1
+              Text[15,16] name=\\"\\" startOf:name=-1 endOf:name=-1 startOf:startTag=-1 endOf:startTag=-1 startOf:content=-1 endOf:content=-1 startOf:endTag=-1 endOf:endTag=-1 startOf:publicId=-1 endOf:publicId=-1
+      Element[24,40] name=\\"div\\" startOf:name=25 endOf:name=28 startOf:startTag=24 endOf:startTag=33 startOf:content=33 endOf:content=34 startOf:endTag=34 endOf:endTag=40 startOf:publicId=-1 endOf:publicId=-1
+        Text[33,34] name=\\"\\" startOf:name=-1 endOf:name=-1 startOf:startTag=-1 endOf:startTag=-1 startOf:content=-1 endOf:content=-1 startOf:endTag=-1 endOf:endTag=-1 startOf:publicId=-1 endOf:publicId=-1
+        Attribute[29,32] name=\\"a\\" startOf:name=29 endOf:name=30 startOf:startTag=-1 endOf:startTag=-1 startOf:content=-1 endOf:content=-1 startOf:endTag=-1 endOf:endTag=-1 startOf:publicId=-1 endOf:publicId=-1"
+`;
+
+exports[`HTML syntax — invariants parse-html-path-accessor-completeness-reads-each-part-of-an-element-with-an-end parses {"fields":["name","startOf:name","endOf:name","startOf:startTag","endOf:startTag","startOf:content","endOf:content","startOf:endTag","endOf:endTag","startOf:publicId","endOf:publicId"],"check":{"fixture":"parts"}} 4`] = `"{\\"asserted\\":[{\\"html\\":\\"-1/-1 -1/-1 -1/-1 -1/-1 -1/-1\\",\\"head\\":\\"-1/-1 -1/-1 -1/-1 -1/-1 -1/-1\\",\\"body\\":\\"-1/-1 -1/-1 -1/-1 -1/-1 -1/-1\\",\\"table\\":\\"1/6 0/7 7/16 16/24 -1/-1\\",\\"tbody\\":\\"8/10 -1/-1 11/24 -1/-1 -1/-1\\",\\"tr\\":\\"8/10 7/11 11/24 -1/-1 -1/-1\\",\\"td\\":\\"12/14 11/15 15/24 -1/-1 -1/-1\\",\\"div\\":\\"25/28 24/33 33/34 34/40 -1/-1\\"}]}"`;
+
 exports[`HTML syntax — invariants parse-html-path-accessor-completeness-reads-each-part-of-an-element-with-an-end parses 1`] = `
 "| <html>
 |   <head>
@@ -7238,6 +7751,22 @@ exports[`HTML syntax — invariants parse-html-path-accessor-completeness-reads-
 exports[`HTML syntax — invariants parse-html-path-accessor-completeness-reads-each-part-of-an-element-with-an-end prints {"mode":"minify"} 1`] = `"<table><tr><td>x</table><div a=1>y</div>"`;
 
 exports[`HTML syntax — invariants parse-html-path-accessor-completeness-reads-each-part-of-an-element-with-an-end tokenizes 1`] = `"open[0,7|1,6] open[7,11|8,10] open[11,15|12,14] text[15,16] close[16,24|18,23] attr[29,30|31,32] open[24,33|25,28] text[33,34] close[34,40|36,39] end=40"`;
+
+exports[`HTML syntax — invariants parse-html-path-accessor-completeness-reads-every-node-kind-and-attribute parses {"entry":"SourceProcessor","visit":{"fixture":"defaults"},"check":{"fixture":"logged"}} 1`] = `
+"doc:0:0,0:1,0,1,0:false
+doctype:-1:-1:null
+template:1:2:0
+fragment:0:true:\\"\\":\\"\\"
+attr:8:a=1:49,52:49-52:1,49,1,52:51,52:-1:-1:false:0
+attr:8:b=\\"2\\":53,58:53-58:1,53,1,58:56,57:-1:-1:false:0
+attr:8:c='3':59,64:59-64:1,59,1,64:62,63:-1:-1:false:0
+attr:8:d:65,66:65-66:1,65,1,66:null:-1:-1:false:0
+div:<!DOCTYPE:44-90:3/3:5:4:3:false:0:0:0
+comment:1:5:<!--c-->:\\"\\":0:0:0:-1:-1:null
+i:2:79,84:true:false"
+`;
+
+exports[`HTML syntax — invariants parse-html-path-accessor-completeness-reads-every-node-kind-and-attribute parses {"entry":"SourceProcessor","visit":{"fixture":"defaults"},"check":{"fixture":"logged"}} 2`] = `"{\\"asserted\\":[[\\"doc:0:0,0:1,0,1,0:false\\",\\"doctype:-1:-1:null\\",\\"template:1:2:0\\",\\"fragment:0:true:\\\\\\"\\\\\\":\\\\\\"\\\\\\"\\",\\"attr:8:a=1:49,52:49-52:1,49,1,52:51,52:-1:-1:false:0\\",\\"attr:8:b=\\\\\\"2\\\\\\":53,58:53-58:1,53,1,58:56,57:-1:-1:false:0\\",\\"attr:8:c='3':59,64:59-64:1,59,1,64:62,63:-1:-1:false:0\\",\\"attr:8:d:65,66:65-66:1,65,1,66:null:-1:-1:false:0\\",\\"div:<!DOCTYPE:44-90:3/3:5:4:3:false:0:0:0\\",\\"comment:1:5:<!--c-->:\\\\\\"\\\\\\":0:0:0:-1:-1:null\\",\\"i:2:79,84:true:false\\"]]}"`;
 
 exports[`HTML syntax — invariants parse-html-path-accessor-completeness-reads-every-node-kind-and-attribute parses 1`] = `
 "| <!DOCTYPE html>
@@ -7263,6 +7792,57 @@ exports[`HTML syntax — invariants parse-html-path-accessor-completeness-reads-
 exports[`HTML syntax — invariants parse-html-path-accessor-completeness-reads-every-node-kind-and-attribute prints {"mode":"minify"} 1`] = `"<!doctype html><template><p>t</template><div a=1 b=2 c=3 d>x<i></i></div>"`;
 
 exports[`HTML syntax — invariants parse-html-path-accessor-completeness-reads-every-node-kind-and-attribute tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,25|16,24] open[25,28|26,27] text[28,29] close[29,33|31,32] close[33,44|35,43] attr[49,50|51,52] attr[53,54|56,57]\\" attr[59,60|62,63]' attr[65,66|-1,-1] open[44,67|45,48] text[67,68] comment[68,76|72,73] open[76,79|77,78] close[79,84|81,82] close[84,90|86,89] end=90"`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to parses {"fields":["name"],"check":{"fixture":"reconstructed"}} 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <b>
+|         x=\\"1\\"
+|         <b>
+|           x=\\"1\\"
+|           <b>
+|             x=\\"1\\"
+|             <b>
+|               x=\\"1\\"
+|               \\"t\\"
+|     <b>
+|       x=\\"1\\"
+|       <b>
+|         x=\\"1\\"
+|         <b>
+|           x=\\"1\\"
+|           \\"after\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to parses {"fields":["name"],"check":{"fixture":"reconstructed"}} 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[32,36]:unexpected-end-tag warning[41,41]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to parses {"fields":["name"],"check":{"fixture":"reconstructed"}} 3`] = `
+"Document[0,0] name=\\"\\"
+  Element[0,0] name=\\"html\\"
+    Element[0,0] name=\\"head\\"
+    Element[0,0] name=\\"body\\"
+      Element[0,36] name=\\"p\\"
+        Element[3,32] name=\\"b\\"
+          Element[10,32] name=\\"b\\"
+            Element[17,32] name=\\"b\\"
+              Element[24,32] name=\\"b\\"
+                Text[31,32] name=\\"\\"
+                Attribute[27,30] name=\\"x\\"
+              Attribute[20,23] name=\\"x\\"
+            Attribute[13,16] name=\\"x\\"
+          Attribute[6,9] name=\\"x\\"
+      Element[0,0] name=\\"b\\"
+        Element[0,0] name=\\"b\\"
+          Element[0,0] name=\\"b\\"
+            Text[36,41] name=\\"\\"
+            Attribute[-1,-1] name=\\"x\\"
+          Attribute[-1,-1] name=\\"x\\"
+        Attribute[-1,-1] name=\\"x\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to parses {"fields":["name"],"check":{"fixture":"reconstructed"}} 4`] = `"{\\"asserted\\":[3]}"`;
 
 exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to parses 1`] = `
 "| <html>
@@ -7292,6 +7872,65 @@ exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-a
 exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to prints {"mode":"minify"} 1`] = `"<p><b x=1><b x=1><b x=1><b x=1>t</b></b></b></b></p><b x=1><b x=1><b x=1>after</b></b></b>"`;
 
 exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to tokenizes 1`] = `"open[0,3|1,2] attr[6,7|8,9] open[3,10|4,5] attr[13,14|15,16] open[10,17|11,12] attr[20,21|22,23] open[17,24|18,19] attr[27,28|29,30] open[24,31|25,26] text[31,32] close[32,36|34,35] text[36,41] end=41"`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to-2 parses {"fields":["name"],"check":{"fixture":"reconstructed"}} 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <b>
+|         x=\\"1\\"
+|         <b>
+|           x=\\"1\\"
+|           y=\\"2\\"
+|           <b>
+|             x=\\"1\\"
+|             <b>
+|               x=\\"1\\"
+|               \\"t\\"
+|     <b>
+|       x=\\"1\\"
+|       <b>
+|         x=\\"1\\"
+|         y=\\"2\\"
+|         <b>
+|           x=\\"1\\"
+|           <b>
+|             x=\\"1\\"
+|             \\"after\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to-2 parses {"fields":["name"],"check":{"fixture":"reconstructed"}} 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[36,40]:unexpected-end-tag warning[45,45]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to-2 parses {"fields":["name"],"check":{"fixture":"reconstructed"}} 3`] = `
+"Document[0,0] name=\\"\\"
+  Element[0,0] name=\\"html\\"
+    Element[0,0] name=\\"head\\"
+    Element[0,0] name=\\"body\\"
+      Element[0,40] name=\\"p\\"
+        Element[3,36] name=\\"b\\"
+          Element[10,36] name=\\"b\\"
+            Element[21,36] name=\\"b\\"
+              Element[28,36] name=\\"b\\"
+                Text[35,36] name=\\"\\"
+                Attribute[31,34] name=\\"x\\"
+              Attribute[24,27] name=\\"x\\"
+            Attribute[13,16] name=\\"x\\"
+            Attribute[17,20] name=\\"y\\"
+          Attribute[6,9] name=\\"x\\"
+      Element[0,0] name=\\"b\\"
+        Element[0,0] name=\\"b\\"
+          Element[0,0] name=\\"b\\"
+            Element[0,0] name=\\"b\\"
+              Text[40,45] name=\\"\\"
+              Attribute[-1,-1] name=\\"x\\"
+            Attribute[-1,-1] name=\\"x\\"
+          Attribute[-1,-1] name=\\"x\\"
+          Attribute[-1,-1] name=\\"y\\"
+        Attribute[-1,-1] name=\\"x\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to-2 parses {"fields":["name"],"check":{"fixture":"reconstructed"}} 4`] = `"{\\"asserted\\":[4]}"`;
 
 exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to-2 parses 1`] = `
 "| <html>
@@ -7325,6 +7964,61 @@ exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-a
 exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to-2 prints {"mode":"minify"} 1`] = `"<p><b x=1><b x=1 y=2><b x=1><b x=1>t</b></b></b></b></p><b x=1><b x=1 y=2><b x=1><b x=1>after</b></b></b></b>"`;
 
 exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to-2 tokenizes 1`] = `"open[0,3|1,2] attr[6,7|8,9] open[3,10|4,5] attr[13,14|15,16] attr[17,18|19,20] open[10,21|11,12] attr[24,25|26,27] open[21,28|22,23] attr[31,32|33,34] open[28,35|29,30] text[35,36] close[36,40|38,39] text[40,45] end=45"`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to-3 parses {"fields":["name"],"check":{"fixture":"reconstructed"}} 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <b>
+|         x=\\"1\\"
+|         <b>
+|           x=\\"2\\"
+|           <b>
+|             x=\\"1\\"
+|             <b>
+|               x=\\"1\\"
+|               \\"t\\"
+|     <b>
+|       x=\\"1\\"
+|       <b>
+|         x=\\"2\\"
+|         <b>
+|           x=\\"1\\"
+|           <b>
+|             x=\\"1\\"
+|             \\"after\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to-3 parses {"fields":["name"],"check":{"fixture":"reconstructed"}} 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[32,36]:unexpected-end-tag warning[41,41]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to-3 parses {"fields":["name"],"check":{"fixture":"reconstructed"}} 3`] = `
+"Document[0,0] name=\\"\\"
+  Element[0,0] name=\\"html\\"
+    Element[0,0] name=\\"head\\"
+    Element[0,0] name=\\"body\\"
+      Element[0,36] name=\\"p\\"
+        Element[3,32] name=\\"b\\"
+          Element[10,32] name=\\"b\\"
+            Element[17,32] name=\\"b\\"
+              Element[24,32] name=\\"b\\"
+                Text[31,32] name=\\"\\"
+                Attribute[27,30] name=\\"x\\"
+              Attribute[20,23] name=\\"x\\"
+            Attribute[13,16] name=\\"x\\"
+          Attribute[6,9] name=\\"x\\"
+      Element[0,0] name=\\"b\\"
+        Element[0,0] name=\\"b\\"
+          Element[0,0] name=\\"b\\"
+            Element[0,0] name=\\"b\\"
+              Text[36,41] name=\\"\\"
+              Attribute[-1,-1] name=\\"x\\"
+            Attribute[-1,-1] name=\\"x\\"
+          Attribute[-1,-1] name=\\"x\\"
+        Attribute[-1,-1] name=\\"x\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to-3 parses {"fields":["name"],"check":{"fixture":"reconstructed"}} 4`] = `"{\\"asserted\\":[4]}"`;
 
 exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to-3 parses 1`] = `
 "| <html>
@@ -8181,6 +8875,29 @@ exports[`HTML syntax — invariants parse-html-should-mirror-the-selected-option
 exports[`HTML syntax — invariants parse-html-should-mirror-the-selected-option-into-selectedcontent prints {"mode":"minify"} 1`] = `"<select><button><selectedcontent></selectedcontent></button><option><span id=x>Y</span></select>"`;
 
 exports[`HTML syntax — invariants parse-html-should-mirror-the-selected-option-into-selectedcontent tokenizes 1`] = `"open[0,8|1,7] open[8,16|9,15] open[16,33|17,32] close[33,42|35,41] open[42,50|43,49] attr[56,58|59,60] open[50,61|51,55] text[61,62] close[62,69|64,68] end=69"`;
+
+exports[`HTML syntax — invariants parse-html-should-not-resolve-prototype-named-svg-tags-and-attributes-through parses {"fields":["name"],"check":{"fixture":"names"}} 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg constructor>
+|         tostring=\\"x\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-should-not-resolve-prototype-named-svg-tags-and-attributes-through parses {"fields":["name"],"check":{"fixture":"names"}} 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants parse-html-should-not-resolve-prototype-named-svg-tags-and-attributes-through parses {"fields":["name"],"check":{"fixture":"names"}} 3`] = `
+"Document[0,0] name=\\"\\"
+  Element[0,0] name=\\"html\\"
+    Element[0,0] name=\\"head\\"
+    Element[0,0] name=\\"body\\"
+      Element[0,51] name=\\"svg\\"
+        Element[5,45] name=\\"constructor\\"
+          Attribute[18,30] name=\\"tostring\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-should-not-resolve-prototype-named-svg-tags-and-attributes-through parses {"fields":["name"],"check":{"fixture":"names"}} 4`] = `"{\\"asserted\\":[\\"constructor\\",\\"tostring\\"]}"`;
 
 exports[`HTML syntax — invariants parse-html-should-not-resolve-prototype-named-svg-tags-and-attributes-through parses 1`] = `
 "| <html>
@@ -15461,6 +16178,8 @@ exports[`HTML syntax — invariants source-processor-a-frameset-document-keeps-t
 
 exports[`HTML syntax — invariants source-processor-a-frameset-document-keeps-the-html-end-tag-it-spelled parses 2`] = `"warning[0,10]:expected-doctype-but-got-start-tag"`;
 
+exports[`HTML syntax — invariants source-processor-a-frameset-document-keeps-the-html-end-tag-it-spelled prints {"mode":"minify","removeImpliedTags":"all"} 1`] = `"<frameset><frame src=a></frameset>"`;
+
 exports[`HTML syntax — invariants source-processor-a-frameset-document-keeps-the-html-end-tag-it-spelled prints {"mode":"minify"} 1`] = `"<frameset><frame src=a></frameset></html>"`;
 
 exports[`HTML syntax — invariants source-processor-a-frameset-document-keeps-the-html-end-tag-it-spelled tokenizes 1`] = `"open[0,10|1,9] attr[17,20|21,22] open[10,23|11,16] close[23,34|25,33] close[34,41|36,40] text[41,42] end=42"`;
@@ -16642,6 +17361,10 @@ exports[`HTML syntax — invariants source-processor-attribute-values-the-minifi
 
 exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag"`;
 
+exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written prints {"mode":"minify","embeddedAnswers":{"fixture":"noAnswer"},"check":{"fixture":"printed"}} 1`] = `"<style>a { color : red }</style><p style='a : b'>x"`;
+
+exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written prints {"mode":"minify","embeddedAnswers":{"fixture":"noAnswer"},"check":{"fixture":"printed"}} 2`] = `"{\\"asserted\\":[\\"<style>a { color : red }</style><p style='a : b'>x\\"]}"`;
+
 exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written prints {"mode":"minify"} 1`] = `"<style>a { color : red }</style><p style='a : b'>x"`;
 
 exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written tokenizes 1`] = `"open[0,7|1,6] text[7,24] close[24,32|26,31] attr[35,40|42,47]' open[32,49|33,34] text[49,50] end=50"`;
@@ -16658,6 +17381,10 @@ exports[`HTML syntax — invariants source-processor-attribute-values-the-minifi
 
 exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written-2 parses 2`] = `"warning[0,17]:expected-doctype-but-got-start-tag"`;
 
+exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written-2 prints {"mode":"minify","renderEmbeddedSource":{"fixture":"noAnswer"},"check":{"fixture":"printed"}} 1`] = `"<p style='a : b'>x<svg/>"`;
+
+exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written-2 prints {"mode":"minify","renderEmbeddedSource":{"fixture":"noAnswer"},"check":{"fixture":"printed"}} 2`] = `"{\\"asserted\\":[\\"<p style='a : b'>x<svg/>\\"]}"`;
+
 exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written-2 prints {"mode":"minify"} 1`] = `"<p style='a : b'>x<svg/>"`;
 
 exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written-2 tokenizes 1`] = `"attr[3,8|10,15]' open[0,17|1,2] text[17,18] open[18,24|19,22]/ end=24"`;
@@ -16672,6 +17399,10 @@ exports[`HTML syntax — invariants source-processor-attribute-values-the-minifi
 `;
 
 exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written-3 parses 2`] = `"warning[0,17]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written-3 prints {"mode":"minify","renderEmbeddedSource":"builtin","check":{"fixture":"printed"}} 1`] = `"<p style=a:b>x"`;
+
+exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written-3 prints {"mode":"minify","renderEmbeddedSource":"builtin","check":{"fixture":"printed"}} 2`] = `"{\\"asserted\\":[\\"<p style=a:b>x\\"]}"`;
 
 exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written-3 prints {"mode":"minify"} 1`] = `"<p style='a : b'>x"`;
 
@@ -30150,6 +30881,12 @@ exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-
 
 exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-print-that-skips parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
 
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-print-that-skips prints {"mode":"minify","visit":{"fixture":"skipRoot"},"check":{"fixture":"printedAndLog"}} 1`] = `"<div><b>x</b></div><p>y"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-print-that-skips prints {"mode":"minify","visit":{"fixture":"skipRoot"},"check":{"fixture":"printedAndLog"}} 2`] = `"{\\"asserted\\":[\\"<div><b>x</b></div><p>y\\",[\\"-doc\\"]]}"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-print-that-skips prints {"mode":"minify","visit":{"fixture":"skipRoot"},"check":{"fixture":"printedAndLog"}} 3`] = `"-doc"`;
+
 exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-print-that-skips prints {"mode":"minify"} 1`] = `"<div><b>x</b></div><p>y"`;
 
 exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-print-that-skips tokenizes 1`] = `"open[0,5|1,4] open[5,8|6,7] text[8,9] close[9,13|11,12] close[13,19|15,18] open[19,22|20,21] text[22,23] end=23"`;
@@ -30222,6 +30959,12 @@ exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-
 exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-print-that-skips-3 parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[3,7]:non-void-html-element-start-tag-with-trailing-solidus warning[7,11]:adoption-agency-1.3"`;
 
 exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-print-that-skips-3 prints {"mode":"minify"} 1`] = `"<a><b></b></a>"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-print-that-skips-3 prints {"xml":true,"mode":"minify","visit":{"fixture":"skipRoot"},"check":{"fixture":"printedAndLog"}} 1`] = `"<a><b/></a>"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-print-that-skips-3 prints {"xml":true,"mode":"minify","visit":{"fixture":"skipRoot"},"check":{"fixture":"printedAndLog"}} 2`] = `"{\\"asserted\\":[\\"<a><b/></a>\\"]}"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-print-that-skips-3 prints {"xml":true,"mode":"minify","visit":{"fixture":"skipRoot"},"check":{"fixture":"printedAndLog"}} 3`] = `"-doc"`;
 
 exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-a-print-that-skips-3 tokenizes 1`] = `"open[0,3|1,2] open[3,7|4,5]/ close[7,11|9,10] end=11"`;
 
@@ -36368,6 +37111,10 @@ exports[`HTML syntax — invariants source-processor-render-embedded-source-keep
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-keeps-srcdoc-off-the-deferred-path-when prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"html/srcdoc:\\"<p>  a  </p>\\""`;
 
+exports[`HTML syntax — invariants source-processor-render-embedded-source-keeps-srcdoc-off-the-deferred-path-when prints {"mode":"minify","renderEmbeddedSource":{"fixture":"answerHtml"},"deferEmbeddedSource":{"fixture":"holes"},"deferSrcdoc":false,"check":{"fixture":"collected"}} 1`] = `"<iframe srcdoc=\\"<p>answered</p>\\"></iframe>"`;
+
+exports[`HTML syntax — invariants source-processor-render-embedded-source-keeps-srcdoc-off-the-deferred-path-when prints {"mode":"minify","renderEmbeddedSource":{"fixture":"answerHtml"},"deferEmbeddedSource":{"fixture":"holes"},"deferSrcdoc":false,"check":{"fixture":"collected"}} 2`] = `"{\\"asserted\\":[[],\\"<iframe srcdoc=\\\\\\"<p>answered</p>\\\\\\"></iframe>\\"]}"`;
+
 exports[`HTML syntax — invariants source-processor-render-embedded-source-keeps-srcdoc-off-the-deferred-path-when prints {"mode":"minify"} 1`] = `"<iframe srcdoc=\\"<p>  a  </p>\\"></iframe>"`;
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-keeps-srcdoc-off-the-deferred-path-when prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<iframe srcdoc=\\"<p>  a  </p>\\"></iframe>"`;
@@ -36561,6 +37308,10 @@ exports[`HTML syntax — invariants source-processor-render-embedded-source-name
 `;
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-names-html-as-the-host-of-every-body-it parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-render-embedded-source-names-html-as-the-host-of-every-body-it prints {"mode":"minify","renderEmbeddedSource":{"fixture":"recordHost"},"check":{"fixture":"hostsSeen"}} 1`] = `"<style>.a{color:red}</style><script>var a=1</script>"`;
+
+exports[`HTML syntax — invariants source-processor-render-embedded-source-names-html-as-the-host-of-every-body-it prints {"mode":"minify","renderEmbeddedSource":{"fixture":"recordHost"},"check":{"fixture":"hostsSeen"}} 2`] = `"{\\"asserted\\":[[\\"html\\"]]}"`;
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-names-html-as-the-host-of-every-body-it prints {"mode":"minify"} 1`] = `"<style>.a{color:red}</style><script>var a=1</script>"`;
 
@@ -37179,6 +37930,10 @@ exports[`HTML syntax — invariants source-processor-render-embedded-source-offe
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-offers-only-the-outermost-svg-its-nested parses 2`] = `"warning[0,23]:expected-doctype-but-got-start-tag"`;
 
+exports[`HTML syntax — invariants source-processor-render-embedded-source-offers-only-the-outermost-svg-its-nested prints {"mode":"minify","renderEmbeddedSource":{"fixture":"renderSvg"},"check":{"fixture":"offeredSvg"}} 1`] = `"<svg v=\\"0 0 2 2\\"><style>.s{fill:red}</style><svg><rect/></svg></svg>"`;
+
+exports[`HTML syntax — invariants source-processor-render-embedded-source-offers-only-the-outermost-svg-its-nested prints {"mode":"minify","renderEmbeddedSource":{"fixture":"renderSvg"},"check":{"fixture":"offeredSvg"}} 2`] = `"{\\"asserted\\":[[\\"<svg viewBox=\\\\\\"0 0 2 2\\\\\\"><style>.s{fill:red}</style><svg><rect/></svg></svg>\\"],\\"<svg v=\\\\\\"0 0 2 2\\\\\\"><style>.s{fill:red}</style><svg><rect/></svg></svg>\\"]}"`;
+
 exports[`HTML syntax — invariants source-processor-render-embedded-source-offers-only-the-outermost-svg-its-nested prints {"mode":"minify"} 1`] = `"<svg viewBox=\\"0 0 2 2\\"><style>  .s { fill : red }  </style><svg><rect/></svg></svg>"`;
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-offers-only-the-outermost-svg-its-nested tokenizes 1`] = `"attr[5,12|14,21]\\" open[0,23|1,4] open[23,30|24,29] text[30,51] close[51,59|53,58] open[59,64|60,63] open[64,71|65,69]/ close[71,77|73,76] close[77,83|79,82] end=83"`;
@@ -37572,6 +38327,10 @@ exports[`HTML syntax — invariants source-processor-reusing-work-across-a-print
 `;
 
 exports[`HTML syntax — invariants source-processor-reusing-work-across-a-print-runs-a-caller-s-renderer-for-every parses 2`] = `"warning[0,22]:expected-doctype-but-got-start-tag warning[44,44]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants source-processor-reusing-work-across-a-print-runs-a-caller-s-renderer-for-every prints {"mode":"minify","renderEmbeddedSource":{"fixture":"numberCalls"},"check":{"fixture":"callsMade"}} 1`] = `"<p style=--call:1><b style=--call:2></b>"`;
+
+exports[`HTML syntax — invariants source-processor-reusing-work-across-a-print-runs-a-caller-s-renderer-for-every prints {"mode":"minify","renderEmbeddedSource":{"fixture":"numberCalls"},"check":{"fixture":"callsMade"}} 2`] = `"{\\"asserted\\":[2,\\"<p style=--call:1><b style=--call:2></b>\\"]}"`;
 
 exports[`HTML syntax — invariants source-processor-reusing-work-across-a-print-runs-a-caller-s-renderer-for-every prints {"mode":"minify"} 1`] = `"<p style=\\"color: red\\"><b style=\\"color: red\\"></b>"`;
 
@@ -38268,6 +39027,13 @@ exports[`HTML syntax — invariants source-processor-streamed-walk-offsets-refus
 
 exports[`HTML syntax — invariants source-processor-streamed-walk-offsets-refuses-a-nested-parse-rather-than-taking tokenizes 1`] = `"open[0,3|1,2] text[3,9] close[9,13|11,12] end=13"`;
 
+exports[`HTML syntax — invariants source-processor-streamed-walk-offsets-reports-a-provisional-end-at-enter-and-a parses {"entry":"SourceProcessor","visit":{"fixture":"ends"},"check":{"fixture":"endAtEnter"}} 1`] = `
+"enter 170
+exit 170"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-offsets-reports-a-provisional-end-at-enter-and-a parses {"entry":"SourceProcessor","visit":{"fixture":"ends"},"check":{"fixture":"endAtEnter"}} 2`] = `"{\\"asserted\\":[170]}"`;
+
 exports[`HTML syntax — invariants source-processor-streamed-walk-offsets-reports-a-provisional-end-at-enter-and-a parses 1`] = `
 "| <html>
 |   <head>
@@ -38312,6 +39078,65 @@ exports[`HTML syntax — invariants source-processor-streamed-walk-offsets-repor
 
 exports[`HTML syntax — invariants source-processor-streamed-walk-offsets-reports-a-provisional-end-at-enter-and-a tokenizes 1`] = `"attr[5,7|8,13] open[0,14|1,4] open[14,17|15,16] open[17,20|18,19] text[20,21] close[21,25|23,24] close[25,29|27,28] open[29,32|30,31] open[32,35|33,34] text[35,36] close[36,40|38,39] close[40,44|42,43] open[44,47|45,46] open[47,50|48,49] text[50,51] close[51,55|53,54] close[55,59|57,58] open[59,62|60,61] open[62,65|63,64] text[65,66] close[66,70|68,69] close[70,74|72,73] open[74,77|75,76] open[77,80|78,79] text[80,81] close[81,85|83,84] close[85,89|87,88] open[89,92|90,91] open[92,95|93,94] text[95,96] close[96,100|98,99] close[100,104|102,103] open[104,107|105,106] open[107,110|108,109] text[110,111] close[111,115|113,114] close[115,119|117,118] open[119,122|120,121] open[122,125|123,124] text[125,126] close[126,130|128,129] close[130,134|132,133] open[134,137|135,136] open[137,140|138,139] text[140,141] close[141,145|143,144] close[145,149|147,148] open[149,152|150,151] open[152,155|153,154] text[155,156] close[156,160|158,159] close[160,164|162,163] close[164,170|166,169] end=170"`;
 
+exports[`HTML syntax — invariants source-processor-streamed-walk-offsets-reports-a-provisional-end-at-enter-and-a-2 parses {"entry":"SourceProcessor","visit":{"fixture":"ends"},"check":{"fixture":"endsAtBoth"}} 1`] = `
+"enter 14
+exit 600020"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-offsets-reports-a-provisional-end-at-enter-and-a-2 parses {"entry":"SourceProcessor","visit":{"fixture":"ends"},"check":{"fixture":"endsAtBoth"}} 2`] = `"{\\"asserted\\":[14,600020]}"`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-offsets-reports-a-provisional-end-at-enter-and-a-2 parses 1`] = `
+"length 1680061, sha256 deb31bd54dab5992
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       id=\\"outer\\"
+|       <p>
+|         <b>
+|           \\"x\\"
+|       <p>
+|         <b>
+|           \\"x\\"
+|       <p>
+|         <b>
+|           \\"x\\"
+|       <p>
+
+…
+p>
+|         <b>
+|           \\"x\\"
+|       <p>
+|         <b>
+|           \\"x\\"
+|       <p>
+|         <b>
+|           \\"x\\"
+|       <p>
+|         <b>
+|           \\"x\\"
+|       <p>
+|         <b>
+|           \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-offsets-reports-a-provisional-end-at-enter-and-a-2 parses 2`] = `"warning[0,14]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-offsets-reports-a-provisional-end-at-enter-and-a-2 prints {"mode":"minify"} 1`] = `
+"length 440020, sha256 b36bde04f648a4fa
+<div id=outer><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b
+…
+b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b></div>"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-offsets-reports-a-provisional-end-at-enter-and-a-2 tokenizes 1`] = `
+"length 6186823, sha256 b89a27821636efe2
+attr[5,7|8,13] open[0,14|1,4] open[14,17|15,16] open[17,20|18,19] text[20,21] close[21,25|23,24] close[25,29|27,28] open[29,32|30,31] open[32,35|33,34] text[35,36] close[36,40|38,39] close[40,44|42,43
+…
+n[599999,600002|600000,600001] open[600002,600005|600003,600004] text[600005,600006] close[600006,600010|600008,600009] close[600010,600014|600012,600013] close[600014,600020|600016,600019] end=600020"
+`;
+
 exports[`HTML syntax — invariants source-processor-streamed-walk-offsets-reports-final-end-offsets-for-head parses {"entry":"SourceProcessor","visit":{"types":["Element"],"fields":["name","range"],"exit":false}} 1`] = `
 "Element[15,170] name=\\"html\\" range=[15,170]
 Element[21,135] name=\\"head\\" range=[21,135]
@@ -38347,6 +39172,400 @@ exports[`HTML syntax — invariants source-processor-streamed-walk-offsets-repor
 
 exports[`HTML syntax — invariants source-processor-streamed-walk-offsets-reports-final-end-offsets-for-head tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] open[21,27|22,26] open[27,34|28,33] text[34,35] close[35,43|37,42] attr[51,54|56,60]\\" open[43,62|44,50] close[62,71|64,70] open[71,78|72,77] text[78,91] close[91,99|93,98] attr[105,108|110,120]\\" attr[122,126|128,133]\\" open[99,135|100,104] close[135,142|137,141] open[142,148|143,147] open[148,151|149,150] text[151,152] close[152,156|154,155] close[156,163|158,162] close[163,170|165,169] end=170"`;
 
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-does-not-re-visit-an-element-the-form parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"divBalanced"}} 1`] = `
+"length 240063, sha256 18115e70275b24a4
++html
++head
+-head
++body
++form
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+…
+p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++div
++p
+-p
+-div
+-form
+-body
+-html"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-does-not-re-visit-an-element-the-form parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"divBalanced"}} 2`] = `
+"length 160063, sha256 2a6e52500ebd8925
+{\\"asserted\\":[1,80009,\\"head\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",
+…
+,\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"div\\",\\"form\\",\\"body\\",\\"html\\",[]]}"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-does-not-re-visit-an-element-the-form parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"divOnce"}} 1`] = `
+"length 240063, sha256 18115e70275b24a4
++html
++head
+-head
++body
++form
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+…
+p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++div
++p
+-p
+-div
+-form
+-body
+-html"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-does-not-re-visit-an-element-the-form parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"divOnce"}} 2`] = `"{\\"asserted\\":[[\\"+div\\"],[\\"-div\\"],80009]}"`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-does-not-re-visit-an-element-the-form parses 1`] = `
+"length 1040105, sha256 a0fefa017d9e8606
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <form>
+|       <p>
+|         \\"x\\"
+|       <p>
+|         \\"x\\"
+|       <p>
+|         \\"x\\"
+|       <p>
+|         \\"x\\"
+|       <p>
+|         \\"x\\"
+|       
+…
+
+|       <p>
+|         \\"x\\"
+|       <p>
+|         \\"x\\"
+|       <p>
+|         \\"x\\"
+|       <p>
+|         \\"x\\"
+|       <p>
+|         \\"x\\"
+|       <p>
+|         \\"x\\"
+|       <div>
+|         <p>
+|           \\"y\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-does-not-re-visit-an-element-the-form parses 2`] = `"warning[320038,320045]:end-tag-too-early-ignored"`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-does-not-re-visit-an-element-the-form prints {"mode":"minify"} 1`] = `
+"length 160063, sha256 95168ae033189734
+<!doctype html><body><form><p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<
+…
+<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<div><p>y</div></form></body></html>"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-does-not-re-visit-an-element-the-form tokenizes 1`] = `
+"length 3421652, sha256 5c68e57884a3b6e1
+doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] open[21,27|22,26] open[27,33|28,32] open[33,36|34,35] text[36,37] close[37,41|39,40] open[41,44|42,43] text[44,45] close[45,49|47,48] open[49,52|50,51
+…
+[320045,320048|320046,320047] text[320048,320049] close[320049,320053|320051,320052] close[320053,320059|320055,320058] close[320059,320066|320061,320065] close[320066,320073|320068,320072] end=320073"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-honours-skip-children-on-a-streamed parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"skipped"}} 1`] = `
+"+html
++head
+-head
++body
++div
+-div
+-body
+-html"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-honours-skip-children-on-a-streamed parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"skipped"}} 2`] = `"{\\"asserted\\":[[\\"+div\\"],[\\"-div\\"],[],\\"head\\",\\"div\\",\\"body\\",\\"html\\",[]]}"`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-honours-skip-children-on-a-streamed parses 1`] = `
+"length 1680060, sha256 0bd4dc162c12930f
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <p>
+|         <b>
+|           \\"x\\"
+|       <p>
+|         <b>
+|           \\"x\\"
+|       <p>
+|         <b>
+|           \\"x\\"
+|       <p>
+|
+…
+p>
+|         <b>
+|           \\"x\\"
+|       <p>
+|         <b>
+|           \\"x\\"
+|       <p>
+|         <b>
+|           \\"x\\"
+|       <p>
+|         <b>
+|           \\"x\\"
+|       <p>
+|         <b>
+|           \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-honours-skip-children-on-a-streamed parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-honours-skip-children-on-a-streamed prints {"mode":"minify"} 1`] = `
+"length 440046, sha256 ed13112ce23d78a1
+<!doctype html><body><div><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</
+…
+</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b></div></body></html>"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-honours-skip-children-on-a-streamed tokenizes 1`] = `
+"length 6187029, sha256 beb31d8800b8aa66
+doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] open[21,27|22,26] open[27,32|28,31] open[32,35|33,34] open[35,38|36,37] text[38,39] close[39,43|41,42] close[43,47|45,46] open[47,50|48,49] open[50,53
+…
+600023,600024] close[600024,600028|600026,600027] close[600028,600032|600030,600031] close[600032,600038|600034,600037] close[600038,600045|600040,600044] close[600045,600052|600047,600051] end=600052"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-honours-skip-children-on-the-root-below parses {"entry":"SourceProcessor","visit":{"fixture":"skipRoot"},"check":{"fixture":"logged"}} 1`] = `
+"+doc
+-doc"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-honours-skip-children-on-the-root-below parses {"entry":"SourceProcessor","visit":{"fixture":"skipRoot"},"check":{"fixture":"logged"}} 2`] = `"{\\"asserted\\":[[\\"+doc\\",\\"-doc\\"]]}"`;
+
 exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-honours-skip-children-on-the-root-below parses 1`] = `
 "| <!DOCTYPE html>
 | <html>
@@ -38380,6 +39599,1076 @@ exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-mat
 
 exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as tokenizes 1`] = `"open[0,4|1,3] open[4,11|5,10] text[11,23] close[23,31|25,30] open[31,34|32,33] text[34,35] close[35,39|37,38] end=39"`;
 
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-merges-adjacent-text-across-a-flush parses {"entry":"SourceProcessor","visit":{"fixture":"texts"},"check":{"fixture":"merged"}} 1`] = `
+"length 86000, sha256 dd5d87c11d0068f0
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+
+…
+&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&b"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-merges-adjacent-text-across-a-flush parses {"entry":"SourceProcessor","visit":{"fixture":"texts"},"check":{"fixture":"merged"}} 2`] = `
+"length 172022, sha256 33790edf690f81db
+{\\"asserted\\":[[\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x\\",\\"x
+…
+&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&b\\"]}"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-merges-adjacent-text-across-a-flush parses 1`] = `
+"length 886087, sha256 7c550d722fbd9e0d
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"
+…
+ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&b\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-merges-adjacent-text-across-a-flush parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-merges-adjacent-text-across-a-flush prints {"mode":"minify"} 1`] = `
+"length 166050, sha256 41941596558b7308
+<!doctype html><body><p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>
+…
+&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&amp;b</body></html>"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-merges-adjacent-text-across-a-flush tokenizes 1`] = `
+"length 3421530, sha256 73fb584b5a3e3220
+doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] open[21,27|22,26] open[27,30|28,29] text[30,31] close[31,35|33,34] open[35,38|36,37] text[38,39] close[39,43|41,42] open[43,46|44,45] text[46,47] clos
+…
+[320030,320032|320034,320038]\\" open[320027,320040|320028,320029] text[320040,334040] close[334040,334044|334042,334043] close[334044,334051|334046,334050] close[334051,334058|334053,334057] end=334058"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-streams-a-document-whose-form-element parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"forms"}} 1`] = `
+"length 720035, sha256 dfc9f196799cd797
++html
++head
+-head
++body
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-f
+…
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
+-body
+-html"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-streams-a-document-whose-form-element parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"forms"}} 2`] = `
+"length 640018, sha256 3b46f1269ed4e490
+{\\"asserted\\":[[\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+form\\",\\"+
+…
+form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\",\\"-form\\"]]}"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-streams-a-document-whose-form-element parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"formsBalanced"}} 1`] = `
+"length 720035, sha256 dfc9f196799cd797
++html
++head
+-head
++body
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-f
+…
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
++form
++p
+-p
+-form
+-body
+-html"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-streams-a-document-whose-form-element parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"formsBalanced"}} 2`] = `
+"length 440050, sha256 8bb997d0ee183b78
+{\\"asserted\\":[40000,40000,\\"head\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\"
+…
+form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"p\\",\\"form\\",\\"body\\",\\"html\\",[]]}"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-streams-a-document-whose-form-element parses 1`] = `
+"length 1560048, sha256 b67cd777e52c6822
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <form>
+|       <p>
+|         \\"x\\"
+|     <form>
+|       <p>
+|         \\"x\\"
+|     <form>
+|       <p>
+|         \\"x\\"
+|     <form>
+|       <p>
+|        
+…
+  \\"x\\"
+|     <form>
+|       <p>
+|         \\"x\\"
+|     <form>
+|       <p>
+|         \\"x\\"
+|     <form>
+|       <p>
+|         \\"x\\"
+|     <form>
+|       <p>
+|         \\"x\\"
+|     <form>
+|       <p>
+|         \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-streams-a-document-whose-form-element parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-streams-a-document-whose-form-element prints {"mode":"minify"} 1`] = `
+"length 680035, sha256 7b2045be9a6606f4
+<!doctype html><body><form><p>x</form><form><p>x</form><form><p>x</form><form><p>x</form><form><p>x</form><form><p>x</form><form><p>x</form><form><p>x</form><form><p>x</form><form><p>x</form><form><p>
+…
+form><p>x</form><form><p>x</form><form><p>x</form><form><p>x</form><form><p>x</form><form><p>x</form><form><p>x</form><form><p>x</form><form><p>x</form><form><p>x</form><form><p>x</form></body></html>"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-streams-a-document-whose-form-element tokenizes 1`] = `
+"length 6225012, sha256 d4592c2fc3c81f50
+doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] open[21,27|22,26] open[27,33|28,32] open[33,36|34,35] text[36,37] close[37,41|39,40] close[41,48|43,47] open[48,54|49,53] open[54,57|55,56] text[57,58
+…
+[840012,840015|840013,840014] text[840015,840016] close[840016,840020|840018,840019] close[840020,840027|840022,840026] close[840027,840034|840029,840033] close[840034,840041|840036,840040] end=840041"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-streams-tables-where-flushing-is-held parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"tables"}} 1`] = `
+"length 660035, sha256 cf0d91d6d198cf60
++html
++head
+-head
++body
++table
++tbody
++tr
++td
+-td
+-tr
+-tbody
+-table
++table
++tbody
++tr
++td
+-td
+-tr
+-tbody
+-table
++table
++tbody
++tr
++td
+-td
+-tr
+-tbody
+-table
++table
++tbody
++tr
++td
+-td
+-tr
+-tbody
+-table
+
+…
+tbody
+-table
++table
++tbody
++tr
++td
+-td
+-tr
+-tbody
+-table
++table
++tbody
++tr
++td
+-td
+-tr
+-tbody
+-table
++table
++tbody
++tr
++td
+-td
+-tr
+-tbody
+-table
++table
++tbody
++tr
++td
+-td
+-tr
+-tbody
+-table
+-body
+-html"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-streams-tables-where-flushing-is-held parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"tables"}} 2`] = `
+"length 225018, sha256 43e0c65b914f05e1
+{\\"asserted\\":[[\\"+table\\",\\"+table\\",\\"+table\\",\\"+table\\",\\"+table\\",\\"+table\\",\\"+table\\",\\"+table\\",\\"+table\\",\\"+table\\",\\"+table\\",\\"+table\\",\\"+table\\",\\"+table\\",\\"+table\\",\\"+table\\",\\"+table\\",\\"+table\\",\\"+table\\",\\"+table\\",\\"+tabl
+…
+\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\",\\"+td\\"]]}"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-streams-tables-where-flushing-is-held parses 1`] = `
+"length 1200048, sha256 fa62a2c9977bdd19
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             \\"a\\"
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|        
+…
+ <tr>
+|           <td>
+|             \\"a\\"
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             \\"a\\"
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             \\"a\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-streams-tables-where-flushing-is-held parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-streams-tables-where-flushing-is-held prints {"mode":"minify"} 1`] = `
+"length 360035, sha256 447cc9f6aa235a07
+<!doctype html><body><table><tr><td>a</table><table><tr><td>a</table><table><tr><td>a</table><table><tr><td>a</table><table><tr><td>a</table><table><tr><td>a</table><table><tr><td>a</table><table><tr>
+…
+><tr><td>a</table><table><tr><td>a</table><table><tr><td>a</table><table><tr><td>a</table><table><tr><td>a</table><table><tr><td>a</table><table><tr><td>a</table><table><tr><td>a</table></body></html>"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-streams-tables-where-flushing-is-held tokenizes 1`] = `
+"length 3320274, sha256 462db81cc72db0ff
+doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] open[21,27|22,26] open[27,34|28,33] open[34,38|35,37] open[38,42|39,41] text[42,43] close[43,48|45,47] close[48,53|50,52] close[53,61|55,60] open[61,6
+…
+510008,510009] close[510009,510014|510011,510013] close[510014,510019|510016,510018] close[510019,510027|510021,510026] close[510027,510034|510029,510033] close[510034,510041|510036,510040] end=510041"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-visits-a-form-subtree-the-walk-never parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"fromForm"}} 1`] = `
+"length 240063, sha256 19136e64c567e347
++html
++head
+-head
++body
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+…
+p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++form
++div
++p
+-p
+-div
+-form
+-body
+-html"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-visits-a-form-subtree-the-walk-never parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"fromForm"}} 2`] = `"{\\"asserted\\":[[\\"+form\\",\\"+div\\",\\"+p\\",\\"-p\\",\\"-div\\",\\"-form\\",\\"-body\\",\\"-html\\"]]}"`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-visits-a-form-subtree-the-walk-never parses 1`] = `
+"length 880105, sha256 86126e0d9d9ba650
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"
+…
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <form>
+|       <div>
+|         <p>
+|           \\"y\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-visits-a-form-subtree-the-walk-never parses 2`] = `"warning[320038,320045]:end-tag-too-early-ignored"`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-visits-a-form-subtree-the-walk-never prints {"mode":"minify"} 1`] = `
+"length 160063, sha256 3dab8670811552ac
+<!doctype html><body><p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>
+…
+>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<form><div><p>y</div></form></body></html>"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-visits-a-form-subtree-the-walk-never tokenizes 1`] = `
+"length 3421633, sha256 2a7c3404fc1d6517
+doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] open[21,27|22,26] open[27,30|28,29] text[30,31] close[31,35|33,34] open[35,38|36,37] text[38,39] close[39,43|41,42] open[43,46|44,45] text[46,47] clos
+…
+[320045,320048|320046,320047] text[320048,320049] close[320049,320053|320051,320052] close[320053,320059|320055,320058] close[320059,320066|320061,320065] close[320066,320073|320068,320072] end=320073"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-visits-every-element-once-across-flush parses {"entry":"SourceProcessor","visit":{"fixture":"skipRoot"},"check":{"fixture":"logged"}} 1`] = `
+"+doc
+-doc"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-visits-every-element-once-across-flush parses {"entry":"SourceProcessor","visit":{"fixture":"skipRoot"},"check":{"fixture":"logged"}} 2`] = `"{\\"asserted\\":[[\\"+doc\\",\\"-doc\\"]]}"`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-visits-every-element-once-across-flush parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"keepsParents"}} 1`] = `
+"length 480035, sha256 018cdad975a6e7be
++html
++head
+-head
++body
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+…
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
+-body
+-html"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-visits-every-element-once-across-flush parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"keepsParents"}} 2`] = `
+"length 880014, sha256 d8a568395a057680
+{\\"asserted\\":[[\\"+p\\",\\"+b\\",\\"-b\\",\\"-p\\"],[\\"+p\\",\\"+b\\",\\"-b\\",\\"-p\\"],[\\"+p\\",\\"+b\\",\\"-b\\",\\"-p\\"],[\\"+p\\",\\"+b\\",\\"-b\\",\\"-p\\"],[\\"+p\\",\\"+b\\",\\"-b\\",\\"-p\\"],[\\"+p\\",\\"+b\\",\\"-b\\",\\"-p\\"],[\\"+p\\",\\"+b\\",\\"-b\\",\\"-p\\"],[\\"+p\\",\\"+b\\",\\"-b\\",\\"-p\\"],[\\"+p\\",\\"+b\\",
+…
+,[\\"+p\\",\\"+b\\",\\"-b\\",\\"-p\\"],[\\"+p\\",\\"+b\\",\\"-b\\",\\"-p\\"],[\\"+p\\",\\"+b\\",\\"-b\\",\\"-p\\"],[\\"+p\\",\\"+b\\",\\"-b\\",\\"-p\\"],[\\"+p\\",\\"+b\\",\\"-b\\",\\"-p\\"],[\\"+p\\",\\"+b\\",\\"-b\\",\\"-p\\"],[\\"+p\\",\\"+b\\",\\"-b\\",\\"-p\\"],[\\"+p\\",\\"+b\\",\\"-b\\",\\"-p\\"],[\\"+p\\",\\"+b\\",\\"-b\\",\\"-p\\"]]}"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-visits-every-element-once-across-flush parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"visitsEachOnce"}} 1`] = `
+"length 480035, sha256 018cdad975a6e7be
++html
++head
+-head
++body
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+…
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
++p
++b
+-b
+-p
+-body
+-html"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-visits-every-element-once-across-flush parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"visitsEachOnce"}} 2`] = `
+"length 800044, sha256 0b88b950666d6f0c
+{\\"asserted\\":[[\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"+p\\",\\"
+…
+p\\",\\"+b\\",\\"+p\\",\\"+b\\",\\"+p\\",\\"+b\\",\\"+p\\",\\"+b\\",\\"+p\\",\\"+b\\",\\"+p\\",\\"+b\\",\\"+p\\",\\"+b\\",\\"+p\\",\\"+b\\",\\"+p\\",\\"+b\\",\\"+p\\",\\"+b\\",\\"+p\\",\\"+b\\",\\"+p\\",\\"+b\\",\\"+p\\",\\"+b\\",\\"+p\\",\\"+b\\",\\"+p\\",\\"+b\\",\\"+p\\",\\"+b\\",\\"+p\\",\\"+b\\",\\"+p\\",\\"+b\\",\\"+p\\",\\"+b\\",\\"+p\\",\\"+b\\"]]}"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-visits-every-element-once-across-flush parses 1`] = `
+"length 1440048, sha256 3ca6a793869e113d
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <b>
+|         \\"x\\"
+|     <p>
+|       <b>
+|         \\"x\\"
+|     <p>
+|       <b>
+|         \\"x\\"
+|     <p>
+|       <b>
+|         \\"x\\"
+|     <
+…
+   <b>
+|         \\"x\\"
+|     <p>
+|       <b>
+|         \\"x\\"
+|     <p>
+|       <b>
+|         \\"x\\"
+|     <p>
+|       <b>
+|         \\"x\\"
+|     <p>
+|       <b>
+|         \\"x\\"
+|     <p>
+|       <b>
+|         \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-visits-every-element-once-across-flush parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-visits-every-element-once-across-flush prints {"mode":"minify"} 1`] = `
+"length 440035, sha256 dbfc515f7ee86941
+<!doctype html><body><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p>
+…
+p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b></body></html>"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-visits-every-element-once-across-flush tokenizes 1`] = `
+"length 6186960, sha256 cef2d12772fe1df7
+doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] open[21,27|22,26] open[27,30|28,29] open[30,33|31,32] text[33,34] close[34,38|36,37] close[38,42|40,41] open[42,45|43,44] open[45,48|46,47] text[48,49
+…
+[600015,600018|600016,600017] text[600018,600019] close[600019,600023|600021,600022] close[600023,600027|600025,600026] close[600027,600034|600029,600033] close[600034,600041|600036,600040] end=600041"
+`;
+
 exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-a-start-tag parses 1`] = `
 "| <html>
 |   <head>
@@ -38392,6 +40681,175 @@ exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-
 exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-a-start-tag prints {"mode":"minify"} 1`] = `"<br>"`;
 
 exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-a-start-tag tokenizes 1`] = `"open[0,4|1,3] end=4"`;
+
+exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-a-start-tag-2 parses 1`] = `
+"length 1573058, sha256 cb985bd2cc9d8b69
+| <html>
+|   <head>
+|   <body>
+|     <i>
+|       data-0-0=\\"1\\"
+|       data-0-1=\\"1\\"
+|       data-0-10=\\"1\\"
+|       data-0-11=\\"1\\"
+|       data-0-12=\\"1\\"
+|       data-0-13=\\"1\\"
+|       data-0-14=\\"1\\"
+|      
+…
+=\\"1\\"
+|       data-659-93=\\"1\\"
+|       data-659-94=\\"1\\"
+|       data-659-95=\\"1\\"
+|       data-659-96=\\"1\\"
+|       data-659-97=\\"1\\"
+|       data-659-98=\\"1\\"
+|       data-659-99=\\"1\\"
+|     <b>
+|       class=\\"c\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-a-start-tag-2 parses 2`] = `"warning[0,1393]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-a-start-tag-2 prints {"mode":"minify","check":{"fixture":"printed"}} 1`] = `
+"length 911035, sha256 71544964aabc20cf
+<i data-0-0=1 data-0-1=1 data-0-2=1 data-0-3=1 data-0-4=1 data-0-5=1 data-0-6=1 data-0-7=1 data-0-8=1 data-0-9=1 data-0-10=1 data-0-11=1 data-0-12=1 data-0-13=1 data-0-14=1 data-0-15=1 data-0-16=1 dat
+…
+ata-659-87=1 data-659-88=1 data-659-89=1 data-659-90=1 data-659-91=1 data-659-92=1 data-659-93=1 data-659-94=1 data-659-95=1 data-659-96=1 data-659-97=1 data-659-98=1 data-659-99=1></i><b class=c></b>"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-a-start-tag-2 prints {"mode":"minify","check":{"fixture":"printed"}} 2`] = `
+"length 911052, sha256 1ebb7d9be99a90b8
+{\\"asserted\\":[\\"<i data-0-0=1 data-0-1=1 data-0-2=1 data-0-3=1 data-0-4=1 data-0-5=1 data-0-6=1 data-0-7=1 data-0-8=1 data-0-9=1 data-0-10=1 data-0-11=1 data-0-12=1 data-0-13=1 data-0-14=1 data-0-15=1 d
+…
+-659-87=1 data-659-88=1 data-659-89=1 data-659-90=1 data-659-91=1 data-659-92=1 data-659-93=1 data-659-94=1 data-659-95=1 data-659-96=1 data-659-97=1 data-659-98=1 data-659-99=1></i><b class=c></b>\\"]}"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-a-start-tag-2 prints {"mode":"minify"} 1`] = `
+"length 911035, sha256 71544964aabc20cf
+<i data-0-0=1 data-0-1=1 data-0-2=1 data-0-3=1 data-0-4=1 data-0-5=1 data-0-6=1 data-0-7=1 data-0-8=1 data-0-9=1 data-0-10=1 data-0-11=1 data-0-12=1 data-0-13=1 data-0-14=1 data-0-15=1 data-0-16=1 dat
+…
+ata-659-87=1 data-659-88=1 data-659-89=1 data-659-90=1 data-659-91=1 data-659-92=1 data-659-93=1 data-659-94=1 data-659-95=1 data-659-96=1 data-659-97=1 data-659-98=1 data-659-99=1></i><b class=c></b>"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-a-start-tag-2 tokenizes 1`] = `
+"length 2335915, sha256 d996d564cae43353
+attr[3,11|13,14]\\" attr[16,24|26,27]\\" attr[29,37|39,40]\\" attr[42,50|52,53]\\" attr[55,63|65,66]\\" attr[68,76|78,79]\\" attr[81,89|91,92]\\" attr[94,102|104,105]\\" attr[107,115|117,118]\\" attr[120,128|130,131]\\" 
+…
+[1043016,1043020|1043018,1043019] attr[1043023,1043028|1043030,1043031]\\" attr[1043033,1043038|1043040,1043041]\\" open[1043020,1043043|1043021,1043022] close[1043043,1043047|1043045,1043046] end=1043047"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-a-start-tag-3 parses 1`] = `
+"length 1573030, sha256 d28cf6b37c274467
+| <html>
+|   <head>
+|   <body>
+|     <i>
+|       data-0-0=\\"1\\"
+|       data-0-1=\\"1\\"
+|       data-0-10=\\"1\\"
+|       data-0-11=\\"1\\"
+|       data-0-12=\\"1\\"
+|       data-0-13=\\"1\\"
+|       data-0-14=\\"1\\"
+|      
+…
+9-91=\\"1\\"
+|       data-659-92=\\"1\\"
+|       data-659-93=\\"1\\"
+|       data-659-94=\\"1\\"
+|       data-659-95=\\"1\\"
+|       data-659-96=\\"1\\"
+|       data-659-97=\\"1\\"
+|       data-659-98=\\"1\\"
+|       data-659-99=\\"1\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-a-start-tag-3 parses 2`] = `"warning[0,1393]:expected-doctype-but-got-start-tag error[1043042,1043042]:eof-in-tag"`;
+
+exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-a-start-tag-3 prints {"mode":"minify","check":{"fixture":"printed"}} 1`] = `
+"length 911020, sha256 af74c78186d55a81
+<i data-0-0=1 data-0-1=1 data-0-2=1 data-0-3=1 data-0-4=1 data-0-5=1 data-0-6=1 data-0-7=1 data-0-8=1 data-0-9=1 data-0-10=1 data-0-11=1 data-0-12=1 data-0-13=1 data-0-14=1 data-0-15=1 data-0-16=1 dat
+…
+data-659-86=1 data-659-87=1 data-659-88=1 data-659-89=1 data-659-90=1 data-659-91=1 data-659-92=1 data-659-93=1 data-659-94=1 data-659-95=1 data-659-96=1 data-659-97=1 data-659-98=1 data-659-99=1></i>"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-a-start-tag-3 prints {"mode":"minify","check":{"fixture":"printed"}} 2`] = `
+"length 911037, sha256 4d2e342aa74bc395
+{\\"asserted\\":[\\"<i data-0-0=1 data-0-1=1 data-0-2=1 data-0-3=1 data-0-4=1 data-0-5=1 data-0-6=1 data-0-7=1 data-0-8=1 data-0-9=1 data-0-10=1 data-0-11=1 data-0-12=1 data-0-13=1 data-0-14=1 data-0-15=1 d
+…
+a-659-86=1 data-659-87=1 data-659-88=1 data-659-89=1 data-659-90=1 data-659-91=1 data-659-92=1 data-659-93=1 data-659-94=1 data-659-95=1 data-659-96=1 data-659-97=1 data-659-98=1 data-659-99=1></i>\\"]}"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-a-start-tag-3 prints {"mode":"minify"} 1`] = `
+"length 911020, sha256 af74c78186d55a81
+<i data-0-0=1 data-0-1=1 data-0-2=1 data-0-3=1 data-0-4=1 data-0-5=1 data-0-6=1 data-0-7=1 data-0-8=1 data-0-9=1 data-0-10=1 data-0-11=1 data-0-12=1 data-0-13=1 data-0-14=1 data-0-15=1 data-0-16=1 dat
+…
+data-659-86=1 data-659-87=1 data-659-88=1 data-659-89=1 data-659-90=1 data-659-91=1 data-659-92=1 data-659-93=1 data-659-94=1 data-659-95=1 data-659-96=1 data-659-97=1 data-659-98=1 data-659-99=1></i>"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-a-start-tag-3 tokenizes 1`] = `
+"length 2335910, sha256 e46c632dfbe6b687
+attr[3,11|13,14]\\" attr[16,24|26,27]\\" attr[29,37|39,40]\\" attr[42,50|52,53]\\" attr[55,63|65,66]\\" attr[68,76|78,79]\\" attr[81,89|91,92]\\" attr[94,102|104,105]\\" attr[107,115|117,118]\\" attr[120,128|130,131]\\" 
+…
+close[1043016,1043020|1043018,1043019] attr[1043023,1043028|1043030,1043031]\\" attr[1043033,1043038|1043040,1043041]\\" error[1043042,1043042]:eof-in-tag open[1043020,1043042|1043021,1043022] end=1043042"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-an-end-tag parses 1`] = `
+"length 1573030, sha256 d28cf6b37c274467
+| <html>
+|   <head>
+|   <body>
+|     <i>
+|       data-0-0=\\"1\\"
+|       data-0-1=\\"1\\"
+|       data-0-10=\\"1\\"
+|       data-0-11=\\"1\\"
+|       data-0-12=\\"1\\"
+|       data-0-13=\\"1\\"
+|       data-0-14=\\"1\\"
+|      
+…
+9-91=\\"1\\"
+|       data-659-92=\\"1\\"
+|       data-659-93=\\"1\\"
+|       data-659-94=\\"1\\"
+|       data-659-95=\\"1\\"
+|       data-659-96=\\"1\\"
+|       data-659-97=\\"1\\"
+|       data-659-98=\\"1\\"
+|       data-659-99=\\"1\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-an-end-tag parses 2`] = `"warning[0,1393]:expected-doctype-but-got-start-tag warning[1043020,1043044]:end-tag-with-attributes warning[1043020,1043044]:unexpected-end-tag"`;
+
+exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-an-end-tag prints {"mode":"minify","check":{"fixture":"printed"}} 1`] = `
+"length 911020, sha256 af74c78186d55a81
+<i data-0-0=1 data-0-1=1 data-0-2=1 data-0-3=1 data-0-4=1 data-0-5=1 data-0-6=1 data-0-7=1 data-0-8=1 data-0-9=1 data-0-10=1 data-0-11=1 data-0-12=1 data-0-13=1 data-0-14=1 data-0-15=1 data-0-16=1 dat
+…
+data-659-86=1 data-659-87=1 data-659-88=1 data-659-89=1 data-659-90=1 data-659-91=1 data-659-92=1 data-659-93=1 data-659-94=1 data-659-95=1 data-659-96=1 data-659-97=1 data-659-98=1 data-659-99=1></i>"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-an-end-tag prints {"mode":"minify","check":{"fixture":"printed"}} 2`] = `
+"length 911037, sha256 4d2e342aa74bc395
+{\\"asserted\\":[\\"<i data-0-0=1 data-0-1=1 data-0-2=1 data-0-3=1 data-0-4=1 data-0-5=1 data-0-6=1 data-0-7=1 data-0-8=1 data-0-9=1 data-0-10=1 data-0-11=1 data-0-12=1 data-0-13=1 data-0-14=1 data-0-15=1 d
+…
+a-659-86=1 data-659-87=1 data-659-88=1 data-659-89=1 data-659-90=1 data-659-91=1 data-659-92=1 data-659-93=1 data-659-94=1 data-659-95=1 data-659-96=1 data-659-97=1 data-659-98=1 data-659-99=1></i>\\"]}"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-an-end-tag prints {"mode":"minify"} 1`] = `
+"length 911020, sha256 af74c78186d55a81
+<i data-0-0=1 data-0-1=1 data-0-2=1 data-0-3=1 data-0-4=1 data-0-5=1 data-0-6=1 data-0-7=1 data-0-8=1 data-0-9=1 data-0-10=1 data-0-11=1 data-0-12=1 data-0-13=1 data-0-14=1 data-0-15=1 data-0-16=1 dat
+…
+data-659-86=1 data-659-87=1 data-659-88=1 data-659-89=1 data-659-90=1 data-659-91=1 data-659-92=1 data-659-93=1 data-659-94=1 data-659-95=1 data-659-96=1 data-659-97=1 data-659-98=1 data-659-99=1></i>"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-an-end-tag tokenizes 1`] = `
+"length 2335926, sha256 d13d8598fc6bed0e
+attr[3,11|13,14]\\" attr[16,24|26,27]\\" attr[29,37|39,40]\\" attr[42,50|52,53]\\" attr[55,63|65,66]\\" attr[68,76|78,79]\\" attr[81,89|91,92]\\" attr[94,102|104,105]\\" attr[107,115|117,118]\\" attr[120,128|130,131]\\" 
+…
+43020|1043018,1043019] attr[1043024,1043029|1043031,1043032]\\" attr[1043034,1043039|1043041,1043042]\\" warning[1043020,1043044]:end-tag-with-attributes close[1043020,1043044|1043022,1043023] end=1043044"
+`;
 
 exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j parses 1`] = `
 "| <html>
@@ -38822,6 +41280,353 @@ exports[`HTML syntax — invariants source-processor-the-per-transform-switches-
 
 exports[`HTML syntax — invariants source-processor-the-per-transform-switches-takes-an-absent-option-as-every tokenizes 1`] = `"open[0,5|1,4] text[5,6] close[6,12|8,11] comment[12,22|16,19] end=22"`;
 
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-closes-a-body-a-frameset-took-out-of-the-tree parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"detached"}} 1`] = `
+"length 300055, sha256 a0ffe33f8eee9523
++html
++head
+-head
++body
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+…
+
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
++p
+-p
+-body
++frameset
+-frameset
+-html"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-closes-a-body-a-frameset-took-out-of-the-tree parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"detached"}} 2`] = `
+"length 200097, sha256 7b233a254325ed65
+{\\"asserted\\":[50000,[\\"-body\\",\\"+frameset\\",\\"-frameset\\",\\"-html\\"],\\"head\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",
+…
+p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"p\\",\\"body\\",\\"frameset\\",\\"html\\",[]]}"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-closes-a-body-a-frameset-took-out-of-the-tree parses 1`] = `
+"| <html>
+|   <head>
+|   <frameset>"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-closes-a-body-a-frameset-took-out-of-the-tree parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[350000,350010]:unexpected-start-tag warning[350010,350010]:eof-in-frameset"`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-closes-a-body-a-frameset-took-out-of-the-tree prints {"mode":"minify"} 1`] = `"<frameset></frameset>"`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-closes-a-body-a-frameset-took-out-of-the-tree tokenizes 1`] = `
+"length 3323063, sha256 4ee81ac9cb4ee1f2
+open[0,3|1,2] close[3,7|5,6] open[7,10|8,9] close[10,14|12,13] open[14,17|15,16] close[17,21|19,20] open[21,24|22,23] close[24,28|26,27] open[28,31|29,30] close[31,35|33,34] open[35,38|36,37] close[38
+…
+86|349984,349985] open[349986,349989|349987,349988] close[349989,349993|349991,349992] open[349993,349996|349994,349995] close[349996,350000|349998,349999] open[350000,350010|350001,350009] end=350010"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-closes-an-entered-element-when-the-next-one parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"closed"}} 1`] = `
+"length 480051, sha256 19cfe8be9d292ea6
++html
++head
+-head
++body
++p
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+…
+n
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
++span
+-span
+-p
++div
+-div
+-body
+-html"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-closes-an-entered-element-when-the-next-one parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"closed"}} 2`] = `
+"length 280091, sha256 9dc4fa67ce12d303
+{\\"asserted\\":[40000,[\\"-p\\",\\"+div\\",\\"-div\\",\\"-body\\",\\"-html\\"],\\"head\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"spa
+…
+an\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"span\\",\\"p\\",\\"div\\",\\"body\\",\\"html\\",[]]}"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-closes-an-entered-element-when-the-next-one parses 1`] = `
+"length 1160064, sha256 1f573c8508d6b309
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <span>
+|         \\"x\\"
+|       <span>
+|         \\"x\\"
+|       <span>
+|         \\"x\\"
+|       <span>
+|         \\"x\\"
+|       <span>
+|         \\"x\\"
+|       <span>
+…
+x\\"
+|       <span>
+|         \\"x\\"
+|       <span>
+|         \\"x\\"
+|       <span>
+|         \\"x\\"
+|       <span>
+|         \\"x\\"
+|       <span>
+|         \\"x\\"
+|       <span>
+|         \\"x\\"
+|     <div>
+|       \\"y\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-closes-an-entered-element-when-the-next-one parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-closes-an-entered-element-when-the-next-one prints {"mode":"minify"} 1`] = `
+"length 560015, sha256 3bc585304b2f177a
+<p><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><
+…
+/span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><div>y</div>"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-closes-an-entered-element-when-the-next-one tokenizes 1`] = `
+"length 3480760, sha256 692562276e97bf08
+open[0,3|1,2] open[3,9|4,8] text[9,10] close[10,17|12,16] open[17,23|18,22] text[23,24] close[24,31|26,30] open[31,37|32,36] text[37,38] close[38,45|40,44] open[45,51|46,50] text[51,52] close[52,59|54
+…
+984,559988] open[559989,559995|559990,559994] text[559995,559996] close[559996,560003|559998,560002] open[560003,560008|560004,560007] text[560008,560009] close[560009,560015|560011,560014] end=560015"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-does-not-start-streaming-on-an-open-stack-a parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"logged"}} 1`] = `
+"+html
++head
+-head
++body
++form
++div
+-div
+-form
+-body
+-html"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-does-not-start-streaming-on-an-open-stack-a parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"logged"}} 2`] = `"{\\"asserted\\":[[\\"+html\\",\\"+head\\",\\"-head\\",\\"+body\\",\\"+form\\",\\"+div\\",\\"-div\\",\\"-form\\",\\"-body\\",\\"-html\\"]]}"`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-does-not-start-streaming-on-an-open-stack-a parses 1`] = `
+"length 850072, sha256 fd3bb02ec290c889
+| <html>
+|   <head>
+|   <body>
+|     <form>
+|       <div>
+|         \\"a\\"
+|         <!--  -->
+|         \\"a\\"
+|         <!--  -->
+|         \\"a\\"
+|         <!--  -->
+|         \\"a\\"
+|         <!--  -->
+|     
+…
+      <!--  -->
+|         \\"a\\"
+|         <!--  -->
+|         \\"a\\"
+|         <!--  -->
+|         \\"a\\"
+|         <!--  -->
+|         \\"a\\"
+|         <!--  -->
+|         \\"a\\"
+|         <!--  -->
+|         \\"bc\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-does-not-start-streaming-on-an-open-stack-a parses 2`] = `"warning[0,6]:expected-doctype-but-got-start-tag warning[200012,200019]:end-tag-too-early-ignored warning[200020,200020]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-does-not-start-streaming-on-an-open-stack-a prints {"mode":"minify"} 1`] = `
+"length 25026, sha256 8296162e1da1701b
+<form><div>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+…
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabc</div></form>"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-does-not-start-streaming-on-an-open-stack-a tokenizes 1`] = `
+"length 1341825, sha256 c31418add714cdf7
+open[0,6|1,5] open[6,11|7,10] text[11,12] comment[12,19|16,16] text[19,20] comment[20,27|24,24] text[27,28] comment[28,35|32,32] text[35,36] comment[36,43|40,40] text[43,44] comment[44,51|48,48] text[
+…
+ text[199995,199996] comment[199996,200003|200000,200000] text[200003,200004] comment[200004,200011|200008,200008] text[200011,200012] close[200012,200019|200014,200018] text[200019,200020] end=200020"
+`;
+
 exports[`HTML syntax — invariants source-processor-the-streamed-walk-ends-a-walk-a-visitor-stopped-and-fires-its parses 1`] = `
 "| <html>
 |   <head>
@@ -38835,6 +41640,265 @@ exports[`HTML syntax — invariants source-processor-the-streamed-walk-ends-a-wa
 exports[`HTML syntax — invariants source-processor-the-streamed-walk-ends-a-walk-a-visitor-stopped-and-fires-its prints {"mode":"minify"} 1`] = `"<b>y</b>"`;
 
 exports[`HTML syntax — invariants source-processor-the-streamed-walk-ends-a-walk-a-visitor-stopped-and-fires-its tokenizes 1`] = `"open[0,3|1,2] text[3,4] close[4,8|6,7] end=8"`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-exits-a-skipped-element-that-closes-while parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"logged"}} 1`] = `
+"+html
++head
+-head
++body
++div
+-div
++p
+-p
+-body
+-html"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-exits-a-skipped-element-that-closes-while parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"logged"}} 2`] = `"{\\"asserted\\":[[\\"+html\\",\\"+head\\",\\"-head\\",\\"+body\\",\\"+div\\",\\"-div\\",\\"+p\\",\\"-p\\",\\"-body\\",\\"-html\\"]]}"`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-exits-a-skipped-element-that-closes-while parses 1`] = `
+"length 1920086, sha256 38a2cac10d88e54e
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <section>
+|         <p>
+|           <b>
+|             \\"x\\"
+|         <p>
+|           <b>
+|             \\"x\\"
+|         <p>
+|           <b>
+|            
+…
+         <b>
+|             \\"x\\"
+|         <p>
+|           <b>
+|             \\"x\\"
+|         <p>
+|           <b>
+|             \\"x\\"
+|         <p>
+|           <b>
+|             \\"x\\"
+|     <p>
+|       \\"after\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-exits-a-skipped-element-that-closes-while parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-exits-a-skipped-element-that-closes-while prints {"mode":"minify"} 1`] = `
+"length 440038, sha256 e23e24ee414156fa
+<div><section><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b
+…
+<p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b></section></div><p>after"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-exits-a-skipped-element-that-closes-while tokenizes 1`] = `
+"length 6186947, sha256 69458b05c24aeba8
+open[0,5|1,4] open[5,14|6,13] open[14,17|15,16] open[17,20|18,19] text[20,21] close[21,25|23,24] close[25,29|27,28] open[29,32|30,31] open[32,35|33,34] text[35,36] close[36,40|38,39] close[40,44|42,43
+…
+e[600010,600014|600012,600013] close[600014,600024|600016,600023] close[600024,600030|600026,600029] open[600030,600033|600031,600032] text[600033,600038] close[600038,600042|600040,600041] end=600042"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-finishes-a-skipped-element-the-input-left parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"logged"}} 1`] = `
+"+html
++head
+-head
++body
++div
+-div
+-body
+-html"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-finishes-a-skipped-element-the-input-left parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"logged"}} 2`] = `"{\\"asserted\\":[[\\"+html\\",\\"+head\\",\\"-head\\",\\"+body\\",\\"+div\\",\\"-div\\",\\"-body\\",\\"-html\\"]]}"`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-finishes-a-skipped-element-the-input-left parses 1`] = `
+"length 1920060, sha256 801c16cd4dc81d33
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <section>
+|         <p>
+|           <b>
+|             \\"x\\"
+|         <p>
+|           <b>
+|             \\"x\\"
+|         <p>
+|           <b>
+|            
+…
+     \\"x\\"
+|         <p>
+|           <b>
+|             \\"x\\"
+|         <p>
+|           <b>
+|             \\"x\\"
+|         <p>
+|           <b>
+|             \\"x\\"
+|         <p>
+|           <b>
+|             \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-finishes-a-skipped-element-the-input-left parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag warning[600014,600014]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-finishes-a-skipped-element-the-input-left prints {"mode":"minify"} 1`] = `
+"length 440030, sha256 9213f174b3df738d
+<div><section><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b
+…
+<b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b><p><b>x</b></section></div>"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-finishes-a-skipped-element-the-input-left tokenizes 1`] = `
+"length 6186788, sha256 87a8444103e293f5
+open[0,5|1,4] open[5,14|6,13] open[14,17|15,16] open[17,20|18,19] text[20,21] close[21,25|23,24] close[25,29|27,28] open[29,32|30,31] open[32,35|33,34] text[35,36] close[36,40|38,39] close[40,44|42,43
+…
+se[599995,599999|599997,599998] open[599999,600002|600000,600001] open[600002,600005|600003,600004] text[600005,600006] close[600006,600010|600008,600009] close[600010,600014|600012,600013] end=600014"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-flushes-a-body-whose-first-child-is-the-text parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"flushed"}} 1`] = `
+"length 600041, sha256 b5ad238c3ff2fb84
++html
++head
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-m
+…
+ta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
++meta
+-meta
+-head
++body
++p
+-p
+-body
+-html"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-flushes-a-body-whose-first-child-is-the-text parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"flushed"}} 2`] = `
+"length 350076, sha256 a74986e62bd96fc1
+{\\"asserted\\":[50000,[\\"+p\\",\\"-p\\",\\"-body\\",\\"-html\\"],\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\"
+…
+a\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"meta\\",\\"head\\",\\"p\\",\\"body\\",\\"html\\",[]]}"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-flushes-a-body-whose-first-child-is-the-text parses 1`] = `
+"length 650062, sha256 50c816ea6dcbab08
+| <html>
+|   <head>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta
+…
+>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|     <meta>
+|   <body>
+|     \\"x\\"
+|     <p>
+|       \\"y\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-flushes-a-body-whose-first-child-is-the-text parses 2`] = `"warning[0,6]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-flushes-a-body-whose-first-child-is-the-text prints {"mode":"minify"} 1`] = `
+"length 300018, sha256 eb23fc503184950d
+<head><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><m
+…
+a><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta></head>x<p>y"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-flushes-a-body-whose-first-child-is-the-text tokenizes 1`] = `
+"length 1626083, sha256 4d02dfd91548ca52
+open[0,6|1,5] open[6,12|7,11] open[12,18|13,17] open[18,24|19,23] open[24,30|25,29] open[30,36|31,35] open[36,42|37,41] open[42,48|43,47] open[48,54|49,53] open[54,60|55,59] open[60,66|61,65] open[66,
+…
+9989,299993] open[299994,300000|299995,299999] open[300000,300006|300001,300005] text[300006,300007] open[300007,300010|300008,300009] text[300010,300011] close[300011,300015|300013,300014] end=300015"
+`;
 
 exports[`HTML syntax — invariants source-processor-token-list-values-collapses-the-separators-of-every-list parses 1`] = `
 "| <html>
@@ -40580,6 +43644,16 @@ exports[`HTML syntax — invariants source-processor-tree-construction-corpus-ro
 
 exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-form-form parses {"options":{"fragmentContext":"template","scripting":true}} 2`] = `""`;
 
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-form-form parses {"options":{"fragmentContext":"template"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   <form>
+|     <form>"
+`;
+
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-form-form parses {"options":{"fragmentContext":"template"},"check":{"fixture":"fragmentTree"}} 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-form-form parses {"options":{"fragmentContext":"template"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| <form>\\\\n|   <form>\\"]}"`;
+
 exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-form-form parses 1`] = `
 "| <html>
 |   <head>
@@ -40623,6 +43697,15 @@ exports[`HTML syntax — invariants source-processor-tree-construction-corpus-ro
 
 exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-frameset-x parses {"options":{"fragmentContext":"svg desc","scripting":true}} 2`] = `"warning[0,10]:unexpected-start-tag"`;
 
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-frameset-x parses {"options":{"fragmentContext":"svg desc"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   \\"X\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-frameset-x parses {"options":{"fragmentContext":"svg desc"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[0,10]:unexpected-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-frameset-x parses {"options":{"fragmentContext":"svg desc"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| \\\\\\"X\\\\\\"\\"]}"`;
+
 exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-frameset-x parses 1`] = `
 "| <html>
 |   <head>
@@ -40664,6 +43747,16 @@ exports[`HTML syntax — invariants source-processor-tree-construction-corpus-ro
 `;
 
 exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-g-path-x parses {"options":{"fragmentContext":"svg path","scripting":true}} 2`] = `"warning[3,10]:unexpected-end-tag warning[3,10]:unexpected-end-tag warning[11,11]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-g-path-x parses {"options":{"fragmentContext":"svg path"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   <svg g>
+|     \\"X\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-g-path-x parses {"options":{"fragmentContext":"svg path"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[3,10]:unexpected-end-tag warning[3,10]:unexpected-end-tag warning[11,11]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-g-path-x parses {"options":{"fragmentContext":"svg path"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| <svg g>\\\\n|   \\\\\\"X\\\\\\"\\"]}"`;
 
 exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-g-path-x parses 1`] = `
 "| <html>
@@ -40818,6 +43911,15 @@ exports[`HTML syntax — invariants source-processor-tree-construction-corpus-ro
 
 exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-input parses {"options":{"fragmentContext":"select","scripting":true}} 2`] = `"warning[0,7]:unexpected-input-in-select"`;
 
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-input parses {"options":{"fragmentContext":"select"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   <option>"
+`;
+
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-input parses {"options":{"fragmentContext":"select"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[0,7]:unexpected-input-in-select"`;
+
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-input parses {"options":{"fragmentContext":"select"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| <option>\\"]}"`;
+
 exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-input parses 1`] = `
 "| <html>
 |   <head>
@@ -40860,6 +43962,15 @@ exports[`HTML syntax — invariants source-processor-tree-construction-corpus-ro
 `;
 
 exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-inside parses {"options":{"fragmentContext":"script","scripting":true}} 2`] = `"warning[25,25]:expected-named-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-inside parses {"options":{"fragmentContext":"script"},"check":{"fixture":"fragmentTree"}} 1`] = `
+"| <html>
+|   \\"<!-- inside </script> -->\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-inside parses {"options":{"fragmentContext":"script"},"check":{"fixture":"fragmentTree"}} 2`] = `"warning[25,25]:expected-named-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-inside parses {"options":{"fragmentContext":"script"},"check":{"fixture":"fragmentTree"}} 3`] = `"{\\"asserted\\":[\\"| \\\\\\"<!-- inside </script> -->\\\\\\"\\"]}"`;
 
 exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-inside parses 1`] = `
 "| <!--  inside </script>  -->
@@ -44844,6 +47955,10 @@ exports[`HTML syntax — invariants source-processor-which-comments-survive-abse
 
 exports[`HTML syntax — invariants source-processor-which-comments-survive-absent-drops-every-inert-comment prints {"mode":"minify","transforms":{"comments":"some"}} 1`] = `"<div></div>"`;
 
+exports[`HTML syntax — invariants source-processor-which-comments-survive-absent-drops-every-inert-comment prints {"mode":"minify","transforms":{"comments":{"fixture":"license"}},"check":{"fixture":"printed"}} 1`] = `"<div><!-- @license MIT --></div>"`;
+
+exports[`HTML syntax — invariants source-processor-which-comments-survive-absent-drops-every-inert-comment prints {"mode":"minify","transforms":{"comments":{"fixture":"license"}},"check":{"fixture":"printed"}} 2`] = `"{\\"asserted\\":[\\"<div><!-- @license MIT --></div>\\"]}"`;
+
 exports[`HTML syntax — invariants source-processor-which-comments-survive-absent-drops-every-inert-comment prints {"mode":"minify","transforms":{"comments":{"regexp":"^\\\\s*@license"}}} 1`] = `"<div><!-- @license MIT --></div>"`;
 
 exports[`HTML syntax — invariants source-processor-which-comments-survive-absent-drops-every-inert-comment prints {"mode":"minify","transforms":{"comments":false}} 1`] = `"<div></div>"`;
@@ -44983,6 +48098,25 @@ exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-folds-
 
 exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-folds-only-ascii-upper-alpha-in-a-doctype-3 tokenizes 1`] = `"warning[9,10]:missing-whitespace-before-doctype-name doctype[0,11|9,10|-1,-1|-1,-1] end=11"`;
 
+exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing parses {"fields":["name","textOf:publicId","textOf:systemId"],"check":{"fixture":"doctype"}} 1`] = `
+"| <!DOCTYPE html \\"x\\" \\"\\">
+| <html>
+|   <head>
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing parses {"fields":["name","textOf:publicId","textOf:systemId"],"check":{"fixture":"doctype"}} 2`] = `"error[24,24]:eof-in-doctype warning[0,24]:unknown-doctype"`;
+
+exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing parses {"fields":["name","textOf:publicId","textOf:systemId"],"check":{"fixture":"doctype"}} 3`] = `
+"Document[0,0] name=\\"\\" textOf:publicId=null textOf:systemId=null
+  Doctype[0,24] name=\\"html\\" textOf:publicId=\\"x\\" textOf:systemId=null
+  Element[0,0] name=\\"html\\" textOf:publicId=null textOf:systemId=null
+    Element[0,0] name=\\"head\\" textOf:publicId=null textOf:systemId=null
+    Element[0,0] name=\\"body\\" textOf:publicId=null textOf:systemId=null"
+`;
+
+exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing parses {"fields":["name","textOf:publicId","textOf:systemId"],"check":{"fixture":"doctype"}} 4`] = `"{\\"asserted\\":[{\\"name\\":\\"html\\",\\"publicId\\":\\"x\\",\\"systemId\\":null}]}"`;
+
 exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing parses 1`] = `
 "| <!DOCTYPE html \\"x\\" \\"\\">
 | <html>
@@ -44996,6 +48130,25 @@ exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-
 
 exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing tokenizes 1`] = `"error[24,24]:eof-in-doctype doctype[0,24|10,14|23,24|-1,-1]! end=24"`;
 
+exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing-2 parses {"fields":["name","textOf:publicId","textOf:systemId"],"check":{"fixture":"doctype"}} 1`] = `
+"| <!DOCTYPE html \\"\\" \\"s\\">
+| <html>
+|   <head>
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing-2 parses {"fields":["name","textOf:publicId","textOf:systemId"],"check":{"fixture":"doctype"}} 2`] = `"error[24,24]:eof-in-doctype warning[0,24]:unknown-doctype"`;
+
+exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing-2 parses {"fields":["name","textOf:publicId","textOf:systemId"],"check":{"fixture":"doctype"}} 3`] = `
+"Document[0,0] name=\\"\\" textOf:publicId=null textOf:systemId=null
+  Doctype[0,24] name=\\"html\\" textOf:publicId=null textOf:systemId=\\"s\\"
+  Element[0,0] name=\\"html\\" textOf:publicId=null textOf:systemId=null
+    Element[0,0] name=\\"head\\" textOf:publicId=null textOf:systemId=null
+    Element[0,0] name=\\"body\\" textOf:publicId=null textOf:systemId=null"
+`;
+
+exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing-2 parses {"fields":["name","textOf:publicId","textOf:systemId"],"check":{"fixture":"doctype"}} 4`] = `"{\\"asserted\\":[{\\"name\\":\\"html\\",\\"publicId\\":null,\\"systemId\\":\\"s\\"}]}"`;
+
 exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing-2 parses 1`] = `
 "| <!DOCTYPE html \\"\\" \\"s\\">
 | <html>
@@ -45008,6 +48161,27 @@ exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-
 exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing-2 prints {"mode":"minify"} 1`] = `"<!doctype html SYSTEM 's"`;
 
 exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing-2 tokenizes 1`] = `"error[24,24]:eof-in-doctype doctype[0,24|10,14|-1,-1|23,24]! end=24"`;
+
+exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing-3 parses {"fields":["name","textOf:publicId","textOf:systemId"],"check":{"fixture":"doctype"}} 1`] = `
+"| <!DOCTYPE html \\"p\\" \\"\\">
+| <html>
+|   <head>
+|   <body>
+|     \\"x\\""
+`;
+
+exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing-3 parses {"fields":["name","textOf:publicId","textOf:systemId"],"check":{"fixture":"doctype"}} 2`] = `"warning[27,28]:abrupt-doctype-system-identifier warning[0,28]:unknown-doctype"`;
+
+exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing-3 parses {"fields":["name","textOf:publicId","textOf:systemId"],"check":{"fixture":"doctype"}} 3`] = `
+"Document[0,0] name=\\"\\" textOf:publicId=null textOf:systemId=null
+  Doctype[0,28] name=\\"html\\" textOf:publicId=\\"p\\" textOf:systemId=\\"\\"
+  Element[0,0] name=\\"html\\" textOf:publicId=null textOf:systemId=null
+    Element[0,0] name=\\"head\\" textOf:publicId=null textOf:systemId=null
+    Element[0,0] name=\\"body\\" textOf:publicId=null textOf:systemId=null
+      Text[28,29] name=\\"\\" textOf:publicId=null textOf:systemId=null"
+`;
+
+exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing-3 parses {"fields":["name","textOf:publicId","textOf:systemId"],"check":{"fixture":"doctype"}} 4`] = `"{\\"asserted\\":[{\\"name\\":\\"html\\",\\"publicId\\":\\"p\\",\\"systemId\\":\\"\\"}]}"`;
 
 exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing-3 parses 1`] = `
 "| <!DOCTYPE html \\"p\\" \\"\\">

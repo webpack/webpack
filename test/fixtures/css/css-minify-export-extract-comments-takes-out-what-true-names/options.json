@@ -142,5 +142,45 @@
 			"asset": "a.css",
 			"extractComments": true
 		}
+	},
+	{
+		"print": "cssMinify",
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": {
+				"condition": {
+					"fixture": "extractTwo"
+				}
+			}
+		},
+		"check": {
+			"fixture": "check"
+		}
+	},
+	{
+		"print": "cssMinify",
+		"extractComments": {
+			"fixture": "extractOne"
+		},
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": false
+		},
+		"check": {
+			"fixture": "check"
+		}
+	},
+	{
+		"print": "cssMinify",
+		"comments": {
+			"fixture": "keepPlain"
+		},
+		"minimizer": {
+			"asset": "a.css",
+			"extractComments": true
+		},
+		"check": {
+			"fixture": "check"
+		}
 	}
 ]

@@ -55,6 +55,70 @@ exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-ren
 
 exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers tokenizes 1`] = `"open[0,5|1,4] open[5,12|6,11] text[12,22] close[22,30|24,29] comment[30,41|34,38] close[41,47|43,46] end=47"`;
 
+exports[`XML syntax — invariants invariants-runner-fixture-code parses {"check":{"fixture":"lengths"}} 1`] = `
+"length 10877, sha256 430c2dcc12002826
+[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":5,\\"nameEnd\\":10,\\"valueStart\\":12,\\"valueEnd\\":38}],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"
+…
+d\\":1107}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":1075,\\"end\\":1110,\\"tagEnd\\":1110,\\"nameEnd\\":1082,\\"contentEnd\\":1110}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":1116,\\"tagEnd\\":40,\\"nameEnd\\":4,\\"contentEnd\\":1110}]"
+`;
+
+exports[`XML syntax — invariants invariants-runner-fixture-code parses {"check":{"fixture":"lengths"}} 2`] = `""`;
+
+exports[`XML syntax — invariants invariants-runner-fixture-code parses {"check":{"fixture":"lengths"}} 3`] = `"[10877,0]"`;
+
+exports[`XML syntax — invariants invariants-runner-fixture-code parses {"entry":"SourceProcessor","visit":{"fixture":"countElements"}} 1`] = `
+"#10 circle
+#20 circle
+#30 circle"
+`;
+
+exports[`XML syntax — invariants invariants-runner-fixture-code parses 1`] = `
+"length 10877, sha256 430c2dcc12002826
+[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":5,\\"nameEnd\\":10,\\"valueStart\\":12,\\"valueEnd\\":38}],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"
+…
+d\\":1107}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":1075,\\"end\\":1110,\\"tagEnd\\":1110,\\"nameEnd\\":1082,\\"contentEnd\\":1110}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":1116,\\"tagEnd\\":40,\\"nameEnd\\":4,\\"contentEnd\\":1110}]"
+`;
+
+exports[`XML syntax — invariants invariants-runner-fixture-code parses 2`] = `""`;
+
+exports[`XML syntax — invariants invariants-runner-fixture-code prints {"xml":true,"mode":"minify","renderEmbeddedSource":{"fixture":"dropSpaces"},"check":{"fixture":"check"}} 1`] = `
+"length 1082, sha256 596cafe501fd3e3d
+<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>c{fill:red}</style><circle r=\\"0\\" style=\\"fill:blue\\"/><circle r=\\"1\\" style=\\"fill:blue\\"/><circle r=\\"2\\" style=\\"fill:blue\\"/><circle r=\\"3\\" style=\\"fill:blue\\"/><c
+…
+\\"24\\" style=\\"fill:blue\\"/><circle r=\\"25\\" style=\\"fill:blue\\"/><circle r=\\"26\\" style=\\"fill:blue\\"/><circle r=\\"27\\" style=\\"fill:blue\\"/><circle r=\\"28\\" style=\\"fill:blue\\"/><circle r=\\"29\\" style=\\"fill:blue\\"/></svg>"
+`;
+
+exports[`XML syntax — invariants invariants-runner-fixture-code prints {"xml":true,"mode":"minify","renderEmbeddedSource":{"fixture":"dropSpaces"},"check":{"fixture":"check"}} 2`] = `"{\\"length\\":1082,\\"offers\\":{\\"css/html\\":31},\\"elements\\":0}"`;
+
+exports[`XML syntax — invariants invariants-runner-fixture-code prints {"xml":true,"mode":"minify","visit":{"fixture":"countElements"},"check":{"fixture":"check"}} 1`] = `
+"length 1116, sha256 baf8e413fded5819
+<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>c { fill: red }</style><circle r=\\"0\\" style=\\"fill: blue\\"/><circle r=\\"1\\" style=\\"fill: blue\\"/><circle r=\\"2\\" style=\\"fill: blue\\"/><circle r=\\"3\\" style=\\"fill: b
+…
+tyle=\\"fill: blue\\"/><circle r=\\"25\\" style=\\"fill: blue\\"/><circle r=\\"26\\" style=\\"fill: blue\\"/><circle r=\\"27\\" style=\\"fill: blue\\"/><circle r=\\"28\\" style=\\"fill: blue\\"/><circle r=\\"29\\" style=\\"fill: blue\\"/></svg>"
+`;
+
+exports[`XML syntax — invariants invariants-runner-fixture-code prints {"xml":true,"mode":"minify","visit":{"fixture":"countElements"},"check":{"fixture":"check"}} 2`] = `"{\\"length\\":1116,\\"offers\\":{},\\"elements\\":32}"`;
+
+exports[`XML syntax — invariants invariants-runner-fixture-code prints {"xml":true,"mode":"minify","visit":{"fixture":"countElements"},"check":{"fixture":"check"}} 3`] = `
+"#10 circle
+#20 circle
+#30 circle"
+`;
+
+exports[`XML syntax — invariants invariants-runner-fixture-code prints {"xml":true,"mode":"minify"} 1`] = `
+"length 1116, sha256 baf8e413fded5819
+<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>c { fill: red }</style><circle r=\\"0\\" style=\\"fill: blue\\"/><circle r=\\"1\\" style=\\"fill: blue\\"/><circle r=\\"2\\" style=\\"fill: blue\\"/><circle r=\\"3\\" style=\\"fill: b
+…
+tyle=\\"fill: blue\\"/><circle r=\\"25\\" style=\\"fill: blue\\"/><circle r=\\"26\\" style=\\"fill: blue\\"/><circle r=\\"27\\" style=\\"fill: blue\\"/><circle r=\\"28\\" style=\\"fill: blue\\"/><circle r=\\"29\\" style=\\"fill: blue\\"/></svg>"
+`;
+
+exports[`XML syntax — invariants invariants-runner-fixture-code tokenizes 1`] = `
+"length 2215, sha256 64880509b7d81798
+attr[5,10|12,38]\\" open[0,40|1,4] open[40,47|41,46] text[47,62] close[62,70|64,69] attr[78,79|81,82]\\" attr[84,89|91,101]\\" open[70,104|71,77]/ attr[112,113|115,116]\\" attr[118,123|125,135]\\" open[104,138|
+…
+]/ attr[1048,1049|1051,1053]\\" attr[1055,1060|1062,1072]\\" open[1040,1075|1041,1047]/ attr[1083,1084|1086,1088]\\" attr[1090,1095|1097,1107]\\" open[1075,1110|1076,1082]/ close[1110,1116|1112,1115] end=1116"
+`;
+
 exports[`XML syntax — invariants source-processor-xml-printing-reads-a-style-sheet-across-the-comments-it-drops parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":5,\\"nameEnd\\":10,\\"valueStart\\":12,\\"valueEnd\\":38}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":40,\\"end\\":41},{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a { b : c }\\",\\"start\\":48,\\"end\\":59},{\\"type\\":5,\\"data\\":\\" one \\",\\"start\\":59,\\"end\\":71},{\\"type\\":4,\\"data\\":\\"d { e : f }\\",\\"start\\":71,\\"end\\":82},{\\"type\\":5,\\"data\\":\\" two \\",\\"start\\":82,\\"end\\":94},{\\"type\\":4,\\"data\\":\\" g > h { i : j } \\",\\"start\\":94,\\"end\\":123}],\\"selfClosing\\":false,\\"start\\":41,\\"end\\":131,\\"tagEnd\\":48,\\"nameEnd\\":47,\\"contentEnd\\":123},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":131,\\"end\\":132},{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a { b : c }\\",\\"start\\":139,\\"end\\":150},{\\"type\\":5,\\"data\\":\\"#include virtual=\\\\\\"x\\\\\\" \\",\\"start\\":150,\\"end\\":178},{\\"type\\":4,\\"data\\":\\"d { e : f }\\",\\"start\\":178,\\"end\\":189}],\\"selfClosing\\":false,\\"start\\":132,\\"end\\":197,\\"tagEnd\\":139,\\"nameEnd\\":138,\\"contentEnd\\":189},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":197,\\"end\\":198},{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a { b : c }\\",\\"start\\":205,\\"end\\":216},{\\"type\\":3,\\"tagName\\":\\"g\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":216,\\"end\\":220,\\"tagEnd\\":220,\\"nameEnd\\":218,\\"contentEnd\\":220},{\\"type\\":4,\\"data\\":\\"d { e : f }\\",\\"start\\":220,\\"end\\":231}],\\"selfClosing\\":false,\\"start\\":198,\\"end\\":239,\\"tagEnd\\":205,\\"nameEnd\\":204,\\"contentEnd\\":231},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":239,\\"end\\":240},{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\" \\",\\"start\\":247,\\"end\\":248},{\\"type\\":5,\\"data\\":\\" blank \\",\\"start\\":248,\\"end\\":262},{\\"type\\":4,\\"data\\":\\" \\",\\"start\\":262,\\"end\\":263}],\\"selfClosing\\":false,\\"start\\":240,\\"end\\":271,\\"tagEnd\\":247,\\"nameEnd\\":246,\\"contentEnd\\":263},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":271,\\"end\\":272},{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"type\\",\\"value\\":\\"text/less\\",\\"nameStart\\":279,\\"nameEnd\\":283,\\"valueStart\\":285,\\"valueEnd\\":294}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a { b : c }\\",\\"start\\":296,\\"end\\":307},{\\"type\\":5,\\"data\\":\\" not css \\",\\"start\\":307,\\"end\\":323},{\\"type\\":4,\\"data\\":\\"d { e : f }\\",\\"start\\":323,\\"end\\":334}],\\"selfClosing\\":false,\\"start\\":272,\\"end\\":342,\\"tagEnd\\":296,\\"nameEnd\\":278,\\"contentEnd\\":334},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":342,\\"end\\":343}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":349,\\"tagEnd\\":40,\\"nameEnd\\":4,\\"contentEnd\\":343}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-printing-reads-a-style-sheet-across-the-comments-it-drops parses 2`] = `""`;
@@ -877,6 +941,18 @@ exports[`XML syntax — invariants tokenize-xml-ends-a-start-tag-at-a-which-open
 
 exports[`XML syntax — invariants tokenize-xml-ends-a-start-tag-at-a-which-opens-markup-of-its-own tokenizes 1`] = `"open[0,3|1,2] open[3,6|4,5] end=6"`;
 
+exports[`XML syntax — invariants tokenize-xml-hands-each-callback-the-text-of-its-token parses {"entry":"tokenizeXml","visit":true} 1`] = `"comment[0,21|2,19] doctype[21,51|31,32|-1,-1|-1,-1|34,49] attr[54,55|57,58]\\" attr[60,61|63,64]' attr[66,67|-1,-1] open[51,68|52,53] comment[68,83|77,80] comment[83,91|87,88] text[91,95] close[95,99|97,98] text[99,100] end=100"`;
+
+exports[`XML syntax — invariants tokenize-xml-hands-each-callback-the-text-of-its-token parses {"entry":"tokenizeXml","visit":true} 2`] = `"comment \\"xml version=\\\\\\"1.0\\\\\\"\\" doctype \\"<!DOCTYPE a [<!ENTITY e \\\\\\"x\\\\\\">]>\\" attr \\"b\\" value \\"1\\" attr \\"c\\" value \\"2\\" attr \\"d\\" open \\"a\\" comment \\"<d>\\" comment \\"e\\" text \\"f&e;\\" close \\"a\\" text \\"\\\\n\\""`;
+
+exports[`XML syntax — invariants tokenize-xml-hands-each-callback-the-text-of-its-token parses 1`] = `"[{\\"type\\":7,\\"target\\":\\"xml\\",\\"data\\":\\"version=\\\\\\"1.0\\\\\\"\\",\\"start\\":0,\\"end\\":21},{\\"type\\":6,\\"name\\":\\"a\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":21,\\"end\\":51},{\\"type\\":3,\\"tagName\\":\\"a\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"b\\",\\"value\\":\\"1\\",\\"nameStart\\":54,\\"nameEnd\\":55,\\"valueStart\\":57,\\"valueEnd\\":58},{\\"name\\":\\"c\\",\\"value\\":\\"2\\",\\"nameStart\\":60,\\"nameEnd\\":61,\\"valueStart\\":63,\\"valueEnd\\":64},{\\"name\\":\\"d\\",\\"value\\":\\"\\",\\"nameStart\\":66,\\"nameEnd\\":67,\\"valueStart\\":-1,\\"valueEnd\\":-1}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"<d>\\",\\"start\\":68,\\"end\\":83},{\\"type\\":5,\\"data\\":\\"e\\",\\"start\\":83,\\"end\\":91},{\\"type\\":4,\\"data\\":\\"fx\\",\\"start\\":91,\\"end\\":95}],\\"selfClosing\\":false,\\"start\\":51,\\"end\\":99,\\"tagEnd\\":68,\\"nameEnd\\":53,\\"contentEnd\\":95}]"`;
+
+exports[`XML syntax — invariants tokenize-xml-hands-each-callback-the-text-of-its-token parses 2`] = `""`;
+
+exports[`XML syntax — invariants tokenize-xml-hands-each-callback-the-text-of-its-token prints {"xml":true,"mode":"minify"} 1`] = `"<?xml version=\\"1.0\\"?><!DOCTYPE a [<!ENTITY e \\"x\\">]><a b=\\"1\\" c=\\"2\\" d=\\"\\">&lt;d&gt;fx</a>"`;
+
+exports[`XML syntax — invariants tokenize-xml-hands-each-callback-the-text-of-its-token tokenizes 1`] = `"comment[0,21|2,19] doctype[21,51|31,32|-1,-1|-1,-1|34,49] attr[54,55|57,58]\\" attr[60,61|63,64]' attr[66,67|-1,-1] open[51,68|52,53] comment[68,83|77,80] comment[83,91|87,88] text[91,95] close[95,99|97,98] text[99,100] end=100"`;
+
 exports[`XML syntax — invariants tokenize-xml-leaves-a-that-opens-no-markup-in-the-text parses 1`] = `"[]"`;
 
 exports[`XML syntax — invariants tokenize-xml-leaves-a-that-opens-no-markup-in-the-text parses 2`] = `""`;
@@ -1149,6 +1225,70 @@ exports[`XML syntax — invariants xml-syntax-parsing-reports-what-an-entity-exp
 
 exports[`XML syntax — invariants xml-syntax-parsing-reports-what-an-entity-expands-to-at-its-reference tokenizes 1`] = `"doctype[0,59|10,11|-1,-1|-1,-1|13,57] text[59,61] open[61,64|62,63] text[64,83] close[83,87|85,86] text[87,89] end=89"`;
 
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-an-entity-bomb-of-markup parses {"check":{"fixture":"childCounts"}} 1`] = `
+"length 13832100, sha256 2ccd8ae87fcdf75d
+[{\\"type\\":6,\\"name\\":\\"r\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":546},{\\"type\\":3,\\"tagName\\":\\"r\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"m\\",\\"namespace\\":3,\\"attributes\\":[],\\"chil
+…
+l6;&l6;&l6;&l6;&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l8;&l8;&l8;&l8;&l8;&l8;&l8;&l8;&l8;\\",\\"start\\":549,\\"end\\":553}],\\"selfClosing\\":false,\\"start\\":546,\\"end\\":557,\\"tagEnd\\":549,\\"nameEnd\\":548,\\"contentEnd\\":553}]"
+`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-an-entity-bomb-of-markup parses {"check":{"fixture":"childCounts"}} 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-an-entity-bomb-of-markup parses {"check":{"fixture":"childCounts"}} 3`] = `"{\\"children\\":[0,91601],\\"bounded\\":true}"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-an-entity-bomb-of-markup parses 1`] = `
+"length 13832100, sha256 2ccd8ae87fcdf75d
+[{\\"type\\":6,\\"name\\":\\"r\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":546},{\\"type\\":3,\\"tagName\\":\\"r\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"m\\",\\"namespace\\":3,\\"attributes\\":[],\\"chil
+…
+l6;&l6;&l6;&l6;&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l8;&l8;&l8;&l8;&l8;&l8;&l8;&l8;&l8;\\",\\"start\\":549,\\"end\\":553}],\\"selfClosing\\":false,\\"start\\":546,\\"end\\":557,\\"tagEnd\\":549,\\"nameEnd\\":548,\\"contentEnd\\":553}]"
+`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-an-entity-bomb-of-markup parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-an-entity-bomb-of-markup prints {"xml":true,"mode":"minify"} 1`] = `
+"length 557, sha256 0070224e9ce02726
+<!DOCTYPE r [<!ENTITY m \\"<m/>\\"><!ENTITY l0 \\"&m;\\"><!ENTITY l1 \\"&l0;&l0;&l0;&l0;&l0;&l0;&l0;&l0;&l0;&l0;\\"><!ENTITY l2 \\"&l1;&l1;&l1;&l1;&l1;&l1;&l1;&l1;&l1;&l1;\\"><!ENTITY l3 \\"&l2;&l2;&l2;&l2;&l2;&l2;&l2;
+…
+&l5;&l5;&l5;&l5;&l5;\\"><!ENTITY l7 \\"&l6;&l6;&l6;&l6;&l6;&l6;&l6;&l6;&l6;&l6;\\"><!ENTITY l8 \\"&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l7;\\"><!ENTITY l9 \\"&l8;&l8;&l8;&l8;&l8;&l8;&l8;&l8;&l8;&l8;\\">]><r>&l9;</r>"
+`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-an-entity-bomb-of-markup tokenizes 1`] = `"doctype[0,546|10,11|-1,-1|-1,-1|13,544] open[546,549|547,548] text[549,553] close[553,557|555,556] end=557"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-markup-detection-in-deeply-nested-xml-entities parses {"fields":["name"]} 1`] = `
+"length 480, sha256 63829d0ffe379955
+[{\\"type\\":6,\\"name\\":\\"root\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":247829},{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"&e16;\\",\\"start\\":247835,\\"end\\":2478
+…
+fClosing\\":true,\\"start\\":247839,\\"end\\":247847,\\"tagEnd\\":247847,\\"nameEnd\\":247845,\\"contentEnd\\":247847}],\\"selfClosing\\":false,\\"start\\":247829,\\"end\\":247854,\\"tagEnd\\":247835,\\"nameEnd\\":247834,\\"contentEnd\\":247847}]"
+`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-markup-detection-in-deeply-nested-xml-entities parses {"fields":["name"]} 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-markup-detection-in-deeply-nested-xml-entities parses {"fields":["name"]} 3`] = `
+"Document[0,247854] name=\\"\\"
+  Doctype[0,247829] name=\\"root\\"
+  Element[247829,247854] name=\\"root\\"
+    Text[247835,247839] name=\\"\\"
+    Element[247839,247847] name=\\"after\\""
+`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-markup-detection-in-deeply-nested-xml-entities parses 1`] = `
+"length 480, sha256 63829d0ffe379955
+[{\\"type\\":6,\\"name\\":\\"root\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":247829},{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"&e16;\\",\\"start\\":247835,\\"end\\":2478
+…
+fClosing\\":true,\\"start\\":247839,\\"end\\":247847,\\"tagEnd\\":247847,\\"nameEnd\\":247845,\\"contentEnd\\":247847}],\\"selfClosing\\":false,\\"start\\":247829,\\"end\\":247854,\\"tagEnd\\":247835,\\"nameEnd\\":247834,\\"contentEnd\\":247847}]"
+`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-markup-detection-in-deeply-nested-xml-entities parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-markup-detection-in-deeply-nested-xml-entities prints {"xml":true,"mode":"minify"} 1`] = `
+"length 247854, sha256 b65306393d8488b4
+<!DOCTYPE root [<!ENTITY e0 \\"&e1;\\"><!ENTITY e1 \\"&e2;\\"><!ENTITY e2 \\"&e3;\\"><!ENTITY e3 \\"&e4;\\"><!ENTITY e4 \\"&e5;\\"><!ENTITY e5 \\"&e6;\\"><!ENTITY e6 \\"&e7;\\"><!ENTITY e7 \\"&e8;\\"><!ENTITY e8 \\"&e9;\\"><!ENTITY e9 \\"
+…
+ITY e9994 \\"&e9995;\\"><!ENTITY e9995 \\"&e9996;\\"><!ENTITY e9996 \\"&e9997;\\"><!ENTITY e9997 \\"&e9998;\\"><!ENTITY e9998 \\"&e9999;\\"><!ENTITY e9999 \\"&e10000;\\"><!ENTITY e10000 \\"<child/>\\">]><root>&e0;<after/></root>"
+`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-markup-detection-in-deeply-nested-xml-entities tokenizes 1`] = `"doctype[0,247829|10,14|-1,-1|-1,-1|16,247827] open[247829,247835|247830,247834] text[247835,247839] open[247839,247847|247840,247845]/ close[247847,247854|247849,247853] end=247854"`;
+
 exports[`XML syntax — invariants xml-syntax-parsing-should-close-misnested-elements-at-the-end-tag-naming-an-open parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"a\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"b\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"x\\",\\"start\\":12,\\"end\\":13}],\\"selfClosing\\":false,\\"start\\":9,\\"end\\":13,\\"tagEnd\\":12,\\"nameEnd\\":11,\\"contentEnd\\":13}],\\"selfClosing\\":false,\\"start\\":6,\\"end\\":17,\\"tagEnd\\":9,\\"nameEnd\\":8,\\"contentEnd\\":13},{\\"type\\":3,\\"tagName\\":\\"c\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":17,\\"end\\":21,\\"tagEnd\\":21,\\"nameEnd\\":19,\\"contentEnd\\":21}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":36,\\"tagEnd\\":6,\\"nameEnd\\":5,\\"contentEnd\\":29}]"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-close-misnested-elements-at-the-end-tag-naming-an-open parses 2`] = `""`;
@@ -1204,6 +1344,12 @@ exports[`XML syntax — invariants xml-syntax-parsing-should-drop-a-tag-instruct
 exports[`XML syntax — invariants xml-syntax-parsing-should-drop-a-tag-instruction-or-end-tag-the-input-ends-3 prints {"xml":true,"mode":"minify"} 1`] = `"<r>x</r>"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-drop-a-tag-instruction-or-end-tag-the-input-ends-3 tokenizes 1`] = `"open[0,3|1,2] text[3,4] end=7"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-expand-the-internal-entities-the-dtd-declares parses {"check":{"fixture":"decodedAttributes"}} 1`] = `"[{\\"type\\":6,\\"name\\":\\"svg\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":123},{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"&ns;\\",\\"nameStart\\":128,\\"nameEnd\\":133,\\"valueStart\\":135,\\"valueEnd\\":139}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"http://www.w3.org/2000/svg & &undeclared;\\",\\"start\\":141,\\"end\\":147}],\\"selfClosing\\":false,\\"start\\":123,\\"end\\":153,\\"tagEnd\\":141,\\"nameEnd\\":127,\\"contentEnd\\":147}]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-expand-the-internal-entities-the-dtd-declares parses {"check":{"fixture":"decodedAttributes"}} 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-expand-the-internal-entities-the-dtd-declares parses {"check":{"fixture":"decodedAttributes"}} 3`] = `"[[\\"&ns;\\",\\"http://www.w3.org/2000/svg\\"]]"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-expand-the-internal-entities-the-dtd-declares parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"svg\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":123},{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"&ns;\\",\\"nameStart\\":128,\\"nameEnd\\":133,\\"valueStart\\":135,\\"valueEnd\\":139}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"http://www.w3.org/2000/svg & &undeclared;\\",\\"start\\":141,\\"end\\":147}],\\"selfClosing\\":false,\\"start\\":123,\\"end\\":153,\\"tagEnd\\":141,\\"nameEnd\\":127,\\"contentEnd\\":147}]"`;
 

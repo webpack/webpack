@@ -77,5 +77,18 @@
 			"asset": "a.html"
 		},
 		"extractComments": false
+	},
+	{
+		"print": "htmlMinify",
+		"extractComments": {
+			"fixture": "one"
+		},
+		"minimizer": {
+			"extractComments": false,
+			"asset": "a.html"
+		},
+		"check": {
+			"fixture": "taken"
+		}
 	}
 ]

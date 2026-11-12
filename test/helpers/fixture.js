@@ -1,5 +1,6 @@
 "use strict";
 
+const { createHash } = require("crypto");
 const fs = require("fs");
 const path = require("path");
 const { namedRenderer } = require("./embeddedRenderers");
@@ -12,6 +13,13 @@ const FIXTURES = path.join(__dirname, "..", "fixtures");
 const cache = new Map();
 
 /**
+ * The inputs a `fixture.js` `source()` made, whose snapshot entries
+ * `snapshotOf` cuts to an excerpt.
+ * @type {Set<string>}
+ */
+const generated = new Set();
+
+/**
  * @param {FixtureLanguage} lang a fixture language
  * @returns {string} the file name its inputs are kept under
  */
@@ -19,19 +27,162 @@ const indexFile = (lang) =>
 	lang === "javascript" ? "index.js" : `index.${lang}`;
 
 /**
- * One unit-test input, kept once under `test/fixtures/<lang>/<name>/`.
+ * What a fixture directory's `fixture.js` exports, for what JSON cannot hold:
+ * `source()` makes the input, and any other export is a value the fixture's
+ * JSON names as `{ "fixture": "<export>" }`.
+ * @typedef {{ source?: () => string, [name: string]: unknown }} FixtureCode
+ */
+
+/**
+ * @param {string} dir a fixture directory
+ * @returns {FixtureCode} what its `fixture.js` exports, nothing where it has none
+ */
+const codeOf = (dir) => {
+	const file = path.join(dir, "fixture.js");
+	return fs.existsSync(file) ? require(file) : {};
+};
+
+/**
+ * One unit-test input, kept once under `test/fixtures/<lang>/<name>/`: its
+ * `index.<ext>`, or what its `fixture.js` `source()` returns where it has
+ * none. A fixture with both throws, as it has two inputs.
  * @param {FixtureLanguage} lang the language the input is written in
  * @param {string} name the fixture directory
  * @returns {string} the input
  */
 const fixture = (lang, name) => {
-	const file = path.join(FIXTURES, lang, name, indexFile(lang));
+	const dir = path.join(FIXTURES, lang, name);
+	const file = path.join(dir, indexFile(lang));
 	let source = cache.get(file);
 	if (source === undefined) {
-		source = fs.readFileSync(file, "utf8");
+		const { source: make } = codeOf(dir);
+		if (make === undefined) {
+			source = fs.readFileSync(file, "utf8");
+		} else {
+			if (fs.existsSync(file)) {
+				throw new Error(`${name} has both ${indexFile(lang)} and source()`);
+			}
+			source = make();
+			generated.add(source);
+		}
 		cache.set(file, source);
 	}
 	return source;
+};
+
+/**
+ * A `{ "fixture": "<export>" }` value of a fixture's JSON, holding that export
+ * of its `fixture.js`; it writes itself back as that JSON, so titles keep it.
+ */
+class FixtureRef {
+	/**
+	 * @param {string} name the export's name
+	 * @param {unknown} value the export
+	 */
+	constructor(name, value) {
+		this.name = name;
+		this.value = value;
+	}
+
+	/**
+	 * @returns {{ fixture: string }} the JSON it was read from
+	 */
+	toJSON() {
+		return { fixture: this.name };
+	}
+}
+
+/**
+ * @param {unknown} value a JSON value of a fixture's
+ * @param {FixtureCode} code what its `fixture.js` exports
+ * @param {string} what the fixture, for the error
+ * @returns {EXPECTED_ANY} it with each `{ "fixture" }` a `FixtureRef`; an unknown name throws
+ */
+const withRefs = (value, code, what) => {
+	if (Array.isArray(value)) {
+		return value.map((one) => withRefs(one, code, what));
+	}
+	if (value === null || typeof value !== "object") return value;
+	const object = /** @type {Record<string, unknown>} */ (value);
+	const keys = Object.keys(object);
+	if (keys.length === 1 && typeof object.fixture === "string") {
+		const name = object.fixture;
+		if (
+			name === "source" ||
+			!Object.prototype.hasOwnProperty.call(code, name)
+		) {
+			throw new Error(`${what}: fixture.js exports no "${name}"`);
+		}
+		return new FixtureRef(name, code[name]);
+	}
+	/** @type {Record<string, unknown>} */
+	const out = {};
+	for (const key of keys) out[key] = withRefs(object[key], code, what);
+	return out;
+};
+
+/**
+ * @param {unknown} value a fixture's JSON value, `FixtureRef`s in it
+ * @returns {EXPECTED_ANY} it with each `FixtureRef` the export it holds
+ */
+const resolveRefs = (value) => {
+	if (value instanceof FixtureRef) return value.value;
+	if (Array.isArray(value)) return value.map(resolveRefs);
+	if (value === null || typeof value !== "object") return value;
+	/** @type {Record<string, unknown>} */
+	const out = {};
+	for (const [key, one] of Object.entries(value)) out[key] = resolveRefs(one);
+	return out;
+};
+
+/**
+ * @param {unknown} ref what a `check` key holds
+ * @returns {(result: EXPECTED_ANY, context: CheckContext) => unknown} the function it names
+ */
+const checkOf = (ref) => {
+	if (!(ref instanceof FixtureRef) || typeof ref.value !== "function") {
+		throw new Error('"check" names a function of fixture.js');
+	}
+	return /** @type {(result: EXPECTED_ANY, context: CheckContext) => unknown} */ (
+		ref.value
+	);
+};
+
+/**
+ * @typedef {object} CheckContext
+ * @property {string} source the fixture's input
+ * @property {Record<string, unknown>} spec the print set or `parse.json` run it checks
+ */
+
+/**
+ * @param {unknown} summary what a `check` returned
+ * @returns {string} it as JSON, an Error as its text
+ */
+const summaryText = (summary) => {
+	const text = JSON.stringify(summary, errorText);
+	return text === undefined ? "undefined" : text;
+};
+
+/** How many characters of each end an excerpt keeps. */
+const EXCERPT = 200;
+
+/**
+ * A snapshot entry of a fixture's: as it is, but from a `source()` input
+ * longer than an excerpt, its length, a digest and both ends.
+ * @param {string} source the fixture's input
+ * @param {string} text what it would snapshot
+ * @returns {string} the entry
+ */
+const snapshotOf = (source, text) => {
+	if (!generated.has(source)) return text;
+	if (text.length <= EXCERPT * 2) return snapshotText(text);
+	const digest = createHash("sha256").update(text).digest("hex").slice(0, 16);
+	return snapshotText(
+		`length ${text.length}, sha256 ${digest}\n${text.slice(
+			0,
+			EXCERPT
+		)}\n…\n${text.slice(-EXCERPT)}`
+	);
 };
 
 /**
@@ -39,6 +190,7 @@ const fixture = (lang, name) => {
  * @typedef {object} KnownDifference
  * @property {string} relation the relation, as a finding names it
  * @property {string} contains text the finding's repro holds
+ * @property {string[]=} presets the option sets it shows under, every one where absent, as the comparison scripts' `Expected` narrows one
  * @property {string} why the reason, read by whoever meets the entry later
  */
 
@@ -50,9 +202,10 @@ const fixture = (lang, name) => {
  * @typedef {object} ParseRun
  * @property {string=} entry the public entry point, by the name the language's runner lists it under; its document parse where absent
  * @property {Record<string, EXPECTED_ANY>=} options the JSON options the entry is called with
- * @property {(boolean | VisitSpec)=} visit `true`: the callbacks the entry makes are logged as one more entry of one line; on `SourceProcessor`, what its walk visits, logs and does
+ * @property {(boolean | VisitSpec | FixtureRef)=} visit `true`: the callbacks the entry makes are logged as one more entry of one line; on `SourceProcessor`, what its walk visits, logs and does
  * @property {number=} pos the offset the entry starts reading at, where it takes one
  * @property {string[]=} fields reads (see `fieldRead`) made through `A` on every node the entry returns, logged as one more entry
+ * @property {FixtureRef=} check a `fixture.js` function given the values and a `CheckContext`, whose answer is logged as one more entry
  */
 
 /**
@@ -80,7 +233,7 @@ const fixture = (lang, name) => {
  * @typedef {object} ParseContext
  * @property {number} pos the run's `pos`
  * @property {string[] | undefined} fields the run's `fields`
- * @property {VisitSpec | undefined} visit the run's `visit`, where it is an object
+ * @property {VisitSpec | FixtureRef | undefined} visit the run's `visit`, where it is an object
  */
 
 /**
@@ -143,11 +296,20 @@ const readList = (file) =>
 
 /**
  * Every fixture of a language with what the runner asks of it. Its
- * `options.json` lists option sets to print it under as well; one marked
- * `"behavior": true` (marker left out of what the printer gets) also runs.
+ * `options.json` lists option sets to print it under as well; a JavaScript one
+ * marked `"behavior": true` (marker left out of what the printer gets) also
+ * runs, and a mark in another language throws.
  * A print set names a renderer and a RegExp in JSON (see `printOptions`), and
- * `print`, `visit` and `minimizer` in one are read by `readPrint`;
- * `parse.json` lists `ParseRun`s, each read by `readRun`.
+ * `print`, `visit`, `minimizer` and `check` in one are read by `readPrint`;
+ * `parse.json` lists `ParseRun`s, each read by `readRun`. A `fixture.js`
+ * beside them (CommonJS, Node 10 syntax) holds what JSON cannot:
+ * - `source()` returns the input, in place of `index.<ext>`; each snapshot
+ *   entry longer than two excerpts becomes its length, a digest and both ends.
+ * - Any other export is what `{ "fixture": "<export>" }` stands for anywhere
+ *   in either file; an unknown name throws. A `visit` export is called with
+ *   the log and the enums and returns the visitor map; a `check` export is
+ *   called with the printer's result, or a run's values, and `{ source, spec }`,
+ *   and what it returns is snapshotted as JSON.
  * @param {FixtureLanguage} lang the language
  * @returns {FixtureEntry[]} one entry per fixture, by name
  */
@@ -160,15 +322,29 @@ const fixtures = (lang) => {
 	const first =
 		lang === "xml" ? { xml: true, mode: "minify" } : { mode: "minify" };
 	for (const name of fs.readdirSync(dir).sort()) {
-		if (!fs.existsSync(path.join(dir, name, indexFile(lang)))) continue;
+		const code = codeOf(path.join(dir, name));
+		if (
+			code.source === undefined &&
+			!fs.existsSync(path.join(dir, name, indexFile(lang)))
+		) {
+			continue;
+		}
 		/** @type {Map<string, PrintOptionSet>} */
 		const options = new Map([[JSON.stringify(first), first]]);
 		/** @type {Set<PrintOptionSet>} */
 		const behavior = new Set();
-		for (const { behavior: runs, ...one } of readList(
-			path.join(dir, name, "options.json")
+		for (const { behavior: runs, ...one } of withRefs(
+			readList(path.join(dir, name, "options.json")),
+			code,
+			name
 		)) {
 			const key = JSON.stringify(one);
+			// Only JavaScript runs: a mark elsewhere would hold nothing.
+			if (runs !== undefined && lang !== "javascript") {
+				throw new Error(
+					`${name}: "behavior" runs a print, and ${lang} has no runtime`
+				);
+			}
 			if (!options.has(key)) options.set(key, one);
 			if (runs === true) {
 				behavior.add(/** @type {PrintOptionSet} */ (options.get(key)));
@@ -180,7 +356,11 @@ const fixtures = (lang) => {
 			source: fixture(lang, name),
 			options: [...options.values()],
 			behavior: [...behavior],
-			parses: readList(path.join(dir, name, "parse.json")),
+			parses: withRefs(
+				readList(path.join(dir, name, "parse.json")),
+				code,
+				name
+			),
 			expected: readList(path.join(dir, name, "expected.json"))
 		});
 	}
@@ -202,7 +382,9 @@ const unexplained = (findings, expected) => {
 	for (const { preset, report } of findings) {
 		const entry = expected.find(
 			(one) =>
-				one.relation === report.relation && report.repro.includes(one.contains)
+				one.relation === report.relation &&
+				report.repro.includes(one.contains) &&
+				(one.presets === undefined || one.presets.includes(preset))
 		);
 		if (entry === undefined) {
 			left.push(
@@ -220,15 +402,32 @@ const unexplained = (findings, expected) => {
 	return left;
 };
 
+/** A lone surrogate, which a snapshot file, being UTF-8, cannot hold. */
+const LONE_SURROGATE =
+	/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g;
+
 /**
  * A printed text as a snapshot holds it: raw where it reads as text, as a JSON
- * string where a control character would otherwise land in the snapshot file.
+ * string where a control character or lone surrogate would otherwise land in
+ * the snapshot file.
  * @param {string} text what was printed
  * @returns {string} the snapshot's value
  */
-const snapshotText = (text) =>
-	// eslint-disable-next-line no-control-regex
-	/[\u0000-\u0008\u000B-\u001F\u007F]/.test(text) ? JSON.stringify(text) : text;
+const snapshotText = (text) => {
+	LONE_SURROGATE.lastIndex = 0;
+	if (
+		// eslint-disable-next-line no-control-regex
+		!/[\u0000-\u0008\u000B-\u001F\u007F]/.test(text) &&
+		!LONE_SURROGATE.test(text)
+	) {
+		return text;
+	}
+	// WHY: Node before 12 writes a lone surrogate into JSON as it is.
+	return JSON.stringify(text).replace(
+		LONE_SURROGATE,
+		(unit) => `\\u${unit.charCodeAt(0).toString(16)}`
+	);
+};
 
 /**
  * @param {() => string} read what to run
@@ -383,13 +582,20 @@ const ACTIONS = new Set(["skipChildren", "stop", "remove", "replace"]);
 /**
  * Visitors that log each call `spec` asks for into `log`, one line each:
  * `Type[start,end]` and its `fields` on enter, `/Type` on exit, then `!` and
- * each action of `at` the call took.
- * @param {VisitSpec} spec what to visit, log and do
+ * each action of `at` the call took. A `fixture.js` export `spec` names is
+ * called with `log` and `enums` and returns the visitor map itself.
+ * @param {VisitSpec | FixtureRef} spec what to visit, log and do
  * @param {SyntaxEnums} enums the language's enums
  * @param {string[]} log where each call is written
  * @returns {Record<number, { enter: (path: EXPECTED_ANY) => void, exit?: (path: EXPECTED_ANY) => void }>} the visitor map
  */
 const visitorsOf = (spec, enums, log) => {
+	if (spec instanceof FixtureRef) {
+		if (typeof spec.value !== "function") {
+			throw new Error('"visit" names a function of fixture.js');
+		}
+		return spec.value(log, enums);
+	}
 	checkKeys(spec, VISIT_KEYS, "visit");
 	const {
 		types = Object.keys(enums.NodeType),
@@ -495,12 +701,19 @@ const treeLines = (enums, roots, fields) => {
 };
 
 /** @type {Set<string>} */
-const RUN_KEYS = new Set(["entry", "options", "visit", "pos", "fields"]);
+const RUN_KEYS = new Set([
+	"entry",
+	"options",
+	"visit",
+	"pos",
+	"fields",
+	"check"
+]);
 
 /**
  * What one `parse.json` run snapshots: what its entry answers, then the
- * callbacks it made where `visit` is `true`. A name or key the entry does not
- * take throws.
+ * callbacks it made where `visit` is `true`, then what its `check` returns
+ * for those values. A name or key the entry does not take throws.
  * @param {Record<string, ParseEntry>} entries the language's entry points, its document parse first
  * @param {string} source the fixture's input
  * @param {ParseRun} run the run
@@ -513,7 +726,8 @@ const readRun = (entries, source, run) => {
 		options = {},
 		visit = false,
 		pos = 0,
-		fields
+		fields,
+		check
 	} = run;
 	if (!Object.prototype.hasOwnProperty.call(entries, entry)) {
 		throw new Error(
@@ -539,13 +753,20 @@ const readRun = (entries, source, run) => {
 	}
 	/** @type {string[] | undefined} */
 	const log = visit === true ? [] : undefined;
-	const values = read(source, options, log, {
+	const values = read(source, resolveRefs(options), log, {
 		pos,
 		fields,
 		visit: typeof visit === "object" ? visit : undefined
 	});
 	if (log !== undefined) values.push(log.join(" "));
-	return values.map(snapshotText);
+	if (check !== undefined) {
+		values.push(
+			summaryText(checkOf(check)([...values], { source, spec: run }))
+		);
+	}
+	return values.map((value) =>
+		generated.has(source) ? snapshotOf(source, value) : snapshotText(value)
+	);
 };
 
 /**
@@ -556,7 +777,7 @@ const readRun = (entries, source, run) => {
  * @param {SyntaxEnums} enums its enums
  * @param {string} source what to walk
  * @param {Record<string, EXPECTED_ANY>} options the process options, which print nothing
- * @param {VisitSpec=} spec what to visit, log and do
+ * @param {(VisitSpec | FixtureRef)=} spec what to visit, log and do
  * @returns {string} the visit log
  */
 const walkLine = (Processor, enums, source, options, spec) => {
@@ -573,7 +794,9 @@ const walkLine = (Processor, enums, source, options, spec) => {
 			enter: (path) => {
 				const nodeName = path.name();
 				out.push(
-					`${name}${nodeName ? `(${nodeName})` : ""}[${path.start()},${path.end()}]`
+					`${name}${
+						nodeName ? `(${nodeName})` : ""
+					}[${path.start()},${path.end()}]`
 				);
 			},
 			exit: () => {
@@ -587,8 +810,9 @@ const walkLine = (Processor, enums, source, options, spec) => {
 
 /**
  * A print set as the printer takes it: a `renderEmbeddedSource` name (or
- * `{ name, options }`) becomes that renderer of `embeddedRenderers.js`, and
- * `{ "regexp": source, "flags"?: flags }` anywhere becomes a RegExp.
+ * `{ name, options }`) becomes that renderer of `embeddedRenderers.js`,
+ * `{ "regexp": source, "flags"?: flags }` anywhere becomes a RegExp, and
+ * `{ "fixture": "<export>" }` anywhere that export of `fixture.js`.
  * @param {PrintOptionSet} given the set as its `options.json` holds it
  * @returns {{ options: PrintOptionSet, log: string[] | undefined }} the options, and what a recording renderer is offered, to snapshot after the print
  */
@@ -601,6 +825,7 @@ const printOptions = (given) => {
 	 * @returns {unknown} it with every RegExp and renderer in place
 	 */
 	const revive = (value) => {
+		if (value instanceof FixtureRef) return value.value;
 		if (Array.isArray(value)) return value.map(revive);
 		if (value === null || typeof value !== "object") return value;
 		const object = /** @type {Record<string, EXPECTED_ANY>} */ (value);
@@ -614,7 +839,10 @@ const printOptions = (given) => {
 		/** @type {Record<string, unknown>} */
 		const out = {};
 		for (const key of keys) {
-			if (key === "renderEmbeddedSource") {
+			if (
+				key === "renderEmbeddedSource" &&
+				!(object[key] instanceof FixtureRef)
+			) {
 				const renderer = namedRenderer(object[key], log);
 				records = records || renderer.records;
 				out[key] = renderer.render;
@@ -641,10 +869,10 @@ const MINIMIZER_KEYS = new Set([
 
 /**
  * @param {PrintOptionSet} set a print set
- * @returns {boolean} whether `readPrint` prints it, as `print`, `visit` or `minimizer` asks
+ * @returns {boolean} whether `readPrint` prints it, as `print`, `visit`, `minimizer` or `check` asks
  */
 const declaresPrint = (set) =>
-	"print" in set || "visit" in set || "minimizer" in set;
+	"print" in set || "visit" in set || "minimizer" in set || "check" in set;
 
 /**
  * A reported error as its text, or only its name where the engine throws it,
@@ -668,18 +896,20 @@ const errorText = (key, value) =>
 	value instanceof Error ? reportText(value) : value;
 
 /**
- * What a print set with `print`, `visit` or `minimizer` snapshots: the code,
- * or what the print throws, then what the minimizer returned beside it (all of
- * it under `minimizer`, else only non-empty reports), then the `visit` log,
- * then a recording renderer's offers.
+ * What a print set with `print`, `visit`, `minimizer` or `check` snapshots:
+ * the code, or what the print throws, then what the minimizer returned beside
+ * it (all of it under `minimizer`, else only non-empty reports), then what
+ * `check` returns for the printer's result, then the `visit` log, then a
+ * recording renderer's offers.
  * @param {Printers} printers the language's printers
  * @param {string} dir the fixture's directory, which `minimizer.sourceMap` is read from
  * @param {string} source the fixture's input
- * @param {PrintOptionSet & { print?: string, visit?: VisitSpec, minimizer?: MinimizerCall }} set the print set
+ * @param {PrintOptionSet & { print?: string, visit?: VisitSpec | FixtureRef, minimizer?: MinimizerCall, check?: FixtureRef }} set the print set
  * @returns {Promise<string[]>} the values to snapshot, in order
  */
 const readPrint = async (printers, dir, source, set) => {
-	const { print = "process", visit, minimizer, ...rest } = set;
+	const { print = "process", visit, minimizer, check, ...rest } = set;
+	const checks = check === undefined ? undefined : checkOf(check);
 	const names = ["process", "processAsync", printers.minimizer];
 	if (!names.includes(print)) {
 		throw new Error(`unknown print "${print}", not one of ${names.join(", ")}`);
@@ -752,12 +982,17 @@ const readPrint = async (printers, dir, source, set) => {
 			}
 			if (reported.length > 0) values.push(reported.join("\n"));
 		}
+		if (checks !== undefined) {
+			values.push(summaryText(checks(result, { source, spec: set })));
+		}
 	} catch (err) {
 		values.push(`throws: ${/** @type {Error} */ (err).message}`);
 	}
 	if (visitors !== undefined) values.push(visits.join("\n"));
 	if (log !== undefined) values.push(log.join(" "));
-	return values.map(snapshotText);
+	return values.map((value) =>
+		generated.has(source) ? snapshotOf(source, value) : snapshotText(value)
+	);
 };
 
 module.exports = {
@@ -769,6 +1004,7 @@ module.exports = {
 	printOptions,
 	readPrint,
 	readRun,
+	snapshotOf,
 	snapshotText,
 	treeLines,
 	unexplained,

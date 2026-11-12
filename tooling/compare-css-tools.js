@@ -52,6 +52,7 @@ const {
 	cssPurityDigest,
 	cssSlices,
 	cssSpans,
+	noticeReports,
 	printerFor,
 	sweepRespellings,
 	tokenStream
@@ -1250,7 +1251,8 @@ const invariants = (write) => {
 	const wantsRespelling = CSS_RESPELLINGS.some((one) =>
 		wantedRespelling(one.name)
 	);
-	if (wantsIdempotence || wantsRespelling) {
+	const wantsNotices = wantedRelation("notices");
+	if (wantsIdempotence || wantsRespelling || wantsNotices) {
 		log(
 			`sweeping ${corpus.length} stylesheets under ${presets.length} presets …`
 		);
@@ -1261,6 +1263,11 @@ const invariants = (write) => {
 					? idempotence({ minify: print, source: css, says: tokenStream })
 					: { printed: print(css), reports: [] };
 				for (const report of reports) groups.add(report, preset, label);
+				if (printed !== null && wantsNotices) {
+					for (const report of noticeReports(css, printed)) {
+						groups.add(report, preset, label);
+					}
+				}
 				// Under the first preset only: whether a spelling decides the
 				// output is the same question under every option set, and each
 				// asking of it is a full minify of the whole stylesheet.

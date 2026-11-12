@@ -1,0 +1,8 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "-> ; }",
+		"presets": ["beautify"],
+		"why": "known bug: beautify drops the newline that ends a custom property's bad string and writes the `;` after it into the string, so `--x` reads on into the next declaration and each pass adds a `;`"
+	}
+]

@@ -40,13 +40,13 @@
   },
   "javascript": {
     "lib/javascript/syntax-parser.js": {
-      "statements": 8,
+      "statements": 5,
       "branches": 12,
-      "functions": 1
+      "functions": 0
     },
     "lib/javascript/syntax-printer.js": {
-      "statements": 277,
-      "branches": 479,
+      "statements": 239,
+      "branches": 447,
       "functions": 0
     },
     "lib/javascript/ScopeAnalyzer.js": {

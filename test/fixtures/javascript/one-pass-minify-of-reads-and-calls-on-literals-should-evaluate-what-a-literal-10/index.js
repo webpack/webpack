@@ -1,0 +1,1 @@
+function f(x,y){var a=x+"a"+-y;a+=x+"b"+-y;var o={k:x+"c"+-y},c=y?x+"e"+-y:x+"f"+-y,l=y&&x+"g"+-y,b=x+"h"+-y<y,t=`${x+"i"+-y}!`;return console.log(a,o.k,x+"d"+-y,c,l,b,t,[x+"j"+-y],new String(x+"k"+-y)+""),x+"l"+-y+(x+"m"+-y)}console.log(f(1,2));

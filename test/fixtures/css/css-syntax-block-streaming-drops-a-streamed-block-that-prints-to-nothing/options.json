@@ -1,0 +1,14 @@
+[
+	{
+		"mode": "minify",
+		"check": {
+			"fixture": "short"
+		}
+	},
+	{
+		"mode": "minify",
+		"visit": {
+			"fixture": "firstAtRule"
+		}
+	}
+]

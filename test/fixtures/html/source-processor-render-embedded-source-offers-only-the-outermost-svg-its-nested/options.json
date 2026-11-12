@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"fixture": "renderSvg"
+		},
+		"check": {
+			"fixture": "offeredSvg"
+		}
+	}
+]

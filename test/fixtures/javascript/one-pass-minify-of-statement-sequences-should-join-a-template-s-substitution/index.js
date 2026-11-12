@@ -1,0 +1,1 @@
+var a=`1${undefined}`;function f(undefined){return`2${undefined}`}console.log(a,f(1));

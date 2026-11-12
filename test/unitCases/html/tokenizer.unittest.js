@@ -10,19 +10,12 @@ const { fixture } = require("../../helpers/fixture");
 /** @import { MatText } from "../../helpers/materializeHtmlTree" */
 
 const {
-	A,
-	Part,
-	NodeType,
 	Quote,
 	decodeEntities,
 	escapeAttribute,
 	escapeText,
-	parseHtml: parseHtmlRefs,
 	tokenize
 } = require("../../../lib/html/syntax-parser");
-const {
-	childrenOf
-} = require("../../helpers/materializeHtmlTree");
 
 describe("tokenize", () => {
 
@@ -361,47 +354,6 @@ describe("tokenize", () => {
 	});
 });
 
-describe("token parts reported by the tokenizer", () => {
-	/**
-	 * @param {string} source HTML
-	 * @returns {{ name: (string | null), publicId: (string | null), systemId: (string | null) }} the parsed doctype
-	 */
-	const doctypeOf = (source) => {
-		for (const child of childrenOf(parseHtmlRefs(source))) {
-			if (A.type(child) === NodeType.Doctype) {
-				return {
-					name: A.name(child),
-					publicId: A.textOf(Part.publicId, child),
-					systemId: A.textOf(Part.systemId, child)
-				};
-			}
-		}
-		throw new Error(`no doctype in ${JSON.stringify(source)}`);
-	};
-
-	/**
-	 * @param {string} source HTML
-	 * @returns {string[]} every comment's data, in document order
-	 */
-
-	it("keeps a DOCTYPE identifier that no closing quote terminates", () => {
-		expect(doctypeOf(fixture("html", "token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing"))).toEqual({
-			name: "html",
-			publicId: "x",
-			systemId: null
-		});
-		expect(doctypeOf(fixture("html", "token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing-2"))).toEqual({
-			name: "html",
-			publicId: null,
-			systemId: "s"
-		});
-		expect(doctypeOf(fixture("html", "token-parts-reported-by-the-tokenizer-keeps-a-doctype-identifier-that-no-closing-3"))).toEqual({
-			name: "html",
-			publicId: "p",
-			systemId: ""
-		});
-	});
-});
 
 
 describe("HtmlSyntax — Infra string helpers", () => {

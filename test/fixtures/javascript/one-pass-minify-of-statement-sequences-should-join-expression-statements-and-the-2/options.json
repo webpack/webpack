@@ -7,5 +7,15 @@
 		"mangle": {
 			"toplevel": false
 		}
+	},
+	{
+		"mode": "minify",
+		"compress": {
+			"toplevel": false
+		},
+		"mangle": {
+			"toplevel": false
+		},
+		"source": "a.js"
 	}
 ]

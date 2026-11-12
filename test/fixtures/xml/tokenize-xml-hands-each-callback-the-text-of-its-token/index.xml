@@ -1,0 +1,1 @@
+<?xml version="1.0"?><!DOCTYPE a [<!ENTITY e "x">]><a b="1" c='2' d><![CDATA[<d>]]><!--e-->f&e;</a>

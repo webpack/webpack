@@ -1,5 +1,14 @@
 [
 	{
 		"print": "htmlMinify"
+	},
+	{
+		"print": "htmlMinify",
+		"renderEmbeddedSource": {
+			"fixture": "answerAll"
+		},
+		"check": {
+			"fixture": "answered"
+		}
 	}
 ]

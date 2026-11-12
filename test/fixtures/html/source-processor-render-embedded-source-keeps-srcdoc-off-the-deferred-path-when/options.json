@@ -19,5 +19,18 @@
 		"print": "processAsync",
 		"mode": "minify",
 		"renderEmbeddedSource": "offers"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"fixture": "answerHtml"
+		},
+		"deferEmbeddedSource": {
+			"fixture": "holes"
+		},
+		"deferSrcdoc": false,
+		"check": {
+			"fixture": "collected"
+		}
 	}
 ]

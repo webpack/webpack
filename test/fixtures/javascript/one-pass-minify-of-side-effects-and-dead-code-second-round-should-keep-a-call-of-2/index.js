@@ -1,0 +1,1 @@
+var g=globalThis;g.RegExp=function(){console.log("r");return["z"]};RegExp("x")

@@ -8,6 +8,7 @@ const {
 	printOptions,
 	readPrint,
 	readRun,
+	snapshotOf,
 	snapshotText,
 	treeLines,
 	unexplained,
@@ -17,7 +18,7 @@ const { parse, plain } = require("../../helpers/javascriptParse");
 const { invariantFindings } = require("../../helpers/syntaxInvariants");
 const { purityRelation } = require("../../helpers/syntaxInvariants/relations");
 const syntax = require("../../helpers/syntaxInvariants/javascript");
-const { behaviorDifference } = require("../../../tooling/compare-js-tools");
+const { behaviorDifference } = syntax;
 
 /** @typedef {import("../../helpers/syntaxInvariants/relations").Report} Report */
 /** @typedef {import("../../helpers/fixture").ParseEntry} ParseEntry */
@@ -231,7 +232,10 @@ describe("JavaScript syntax — invariants", () => {
 		describe(name, () => {
 			it("tokenizes", () => {
 				expect(
-					tokenLine(source, { sourceType: sourceTypeOf(source) })
+					snapshotOf(
+						source,
+						tokenLine(source, { sourceType: sourceTypeOf(source) })
+					)
 				).toMatchSnapshot();
 			});
 
@@ -240,7 +244,7 @@ describe("JavaScript syntax — invariants", () => {
 				const tree = answerOf(() =>
 					treeText(plain(parse(source, { sourceType }).ast))
 				);
-				expect(tree).toMatchSnapshot();
+				expect(snapshotOf(source, tree)).toMatchSnapshot();
 				/** @type {string[]} */
 				const errors = [];
 				parser.parseProgram(source, 0, {
@@ -250,7 +254,7 @@ describe("JavaScript syntax — invariants", () => {
 					}
 				});
 				// The second entry, so the tree's stays as it was.
-				expect(errors.join(" ")).toMatchSnapshot();
+				expect(snapshotOf(source, errors.join(" "))).toMatchSnapshot();
 				if (sourceType === "module") {
 					// Read as a script too, as most tests read one: a third entry,
 					// which says so alone where only `sourceType` differs.
@@ -262,7 +266,7 @@ describe("JavaScript syntax — invariants", () => {
 							? "as the module"
 							: treeText(ast);
 					});
-					expect(script).toMatchSnapshot();
+					expect(snapshotOf(source, script)).toMatchSnapshot();
 				}
 			});
 
@@ -276,17 +280,16 @@ describe("JavaScript syntax — invariants", () => {
 						return;
 					}
 					const { options: given, log } = printOptions(one);
-					expect(
-						snapshotText(
-							answerOf(
-								() =>
-									/** @type {{ code: string }} */ (
-										new SourceProcessor().process(source, given)
-									).code
-							)
-						)
-					).toMatchSnapshot();
-					if (log !== undefined) expect(log.join(" ")).toMatchSnapshot();
+					const code = answerOf(
+						() =>
+							/** @type {{ code: string }} */ (
+								new SourceProcessor().process(source, given)
+							).code
+					);
+					expect(snapshotOf(source, snapshotText(code))).toMatchSnapshot();
+					if (log !== undefined) {
+						expect(snapshotOf(source, log.join(" "))).toMatchSnapshot();
+					}
 				}
 			);
 
@@ -298,7 +301,14 @@ describe("JavaScript syntax — invariants", () => {
 				});
 			}
 
-			// Opt-in, as running costs a fresh context per run.
+			// A `behavior` entry naming no preset answers for a marked set; one
+			// naming `format` or `beautify` answers for the invariants' own run.
+			const marked = expected.filter(
+				(entry) => entry.relation === "behavior" && entry.presets === undefined
+			);
+
+			// Opt-in for the compressing sets, as running costs a fresh context per
+			// run; the invariants run every script under the presets printing alone.
 			if (behavior.length > 0) {
 				it.each(behavior.map((one) => [JSON.stringify(one), one]))(
 				"runs as its source when printed %s",
@@ -326,7 +336,7 @@ describe("JavaScript syntax — invariants", () => {
 								preset: title,
 								report
 							})),
-							expected.filter((entry) => entry.relation === "behavior")
+							marked
 						)
 					).toEqual([]);
 				}
@@ -338,7 +348,7 @@ describe("JavaScript syntax — invariants", () => {
 				expect(
 					unexplained(
 						invariantFindings(syntax, [[name, source]]),
-						expected.filter((entry) => entry.relation !== "behavior")
+						expected.filter((entry) => !marked.includes(entry))
 					)
 				).toEqual([]);
 			});

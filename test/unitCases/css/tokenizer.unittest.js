@@ -127,47 +127,12 @@ describe("CssSyntax — the token the lexer reuses", () => {
 	});
 });
 
-// CSS Syntax 3 §3.3, the half webpack does not get from reading newlines as it
-// tokenizes: a NUL stands for the replacement character.
-describe("CssSyntax — preprocessing the input stream", () => {
-	it("leaves a surrogate, which tokenizes as that character already", () => {
-		// §3.3 names surrogates too, and webpack skips them because a lone one is
-		// an ident code point here. Should that stop being true, this fails and
-		// the replacement is owed after all.
-		const HIGH = String.fromCharCode(0xd800);
-		/** @type {((code: string) => string)[]} */
-		const WRAPS = [
-			(c) => `a${c}b`,
-			(c) => `#a${c}b`,
-			(c) => `@a${c}b`,
-			(c) => `12${c}red`,
-			(c) => `url(a${c}b)`
-		];
-		for (const wrap of WRAPS) {
-			expect(cvTypes(wrap(HIGH))).toEqual(cvTypes(wrap("\uFFFD")));
-			// And each token carries the same run, so the boundaries agree too \u2014
-			// modulo the one code point, which is what is not being replaced.
-			expect(
-				cvUnescaped(wrap(HIGH)).map(
-					(value) => value.split(HIGH).join("\uFFFD")
-				)
-			).toEqual(cvUnescaped(wrap("\uFFFD")));
-		}
-	});
-});
-
 /**
  * @param {string} src css source
  * @returns {number[]} component value types
  */
 const cvTypes = (src) =>
 	parseAListOfComponentValues(src).map((n) => A.type(n));
-/**
- * @param {string} src css source
- * @returns {string[]} what each component value unescapes to, a unit after its number
- */
-const cvUnescaped = (src) =>
-	parseAListOfComponentValues(src).map((n) => `${A.value(n)}${A.name(n)}`);
 
 describe("CssSyntax — code point and substitution helpers", () => {
 	const {

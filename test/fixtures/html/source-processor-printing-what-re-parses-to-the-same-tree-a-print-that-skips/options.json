@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"visit": {
+			"fixture": "skipRoot"
+		},
+		"check": {
+			"fixture": "printedAndLog"
+		}
+	}
+]

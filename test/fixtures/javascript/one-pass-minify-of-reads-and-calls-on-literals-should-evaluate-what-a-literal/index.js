@@ -1,0 +1,1 @@
+console.log("Infinity",NaN,"number",!0);

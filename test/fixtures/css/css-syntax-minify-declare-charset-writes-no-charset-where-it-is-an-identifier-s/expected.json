@@ -1,0 +1,8 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "-> {",
+		"presets": ["beautify"],
+		"why": "known bug: beautify writes the space before `{` straight after the hex escape `\\1F600`, which reads it as the escape's terminator, so the next pass writes a second space"
+	}
+]

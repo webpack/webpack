@@ -1,0 +1,1 @@
+var x=1,a={b:{c:2}};console.log(void 0,-x,!x,a?.b,[a?.b][0].c,[-x][0]**2,x,x);

@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"fixture": "numberCalls"
+		},
+		"check": {
+			"fixture": "callsMade"
+		}
+	}
+]

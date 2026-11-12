@@ -30,6 +30,9 @@ const {
 	runMode
 } = require("../../../tooling/compare-css-tools");
 const { agreement } = require("../../../tooling/compare-tools-harness");
+const {
+	noticeReports
+} = require("../../helpers/syntaxInvariants/css");
 
 // Read before anything clears the mock: an unguarded script installs while
 // being required, and a `beforeEach` would erase exactly that evidence.
@@ -94,6 +97,24 @@ const KEPT = [
  */
 const minify = (css, options) =>
 	new SourceProcessor().process(css, { mode: "minify", ...options }).code;
+
+describe("compare-css-tools — the notices relation", () => {
+	it("should report a printed stylesheet carrying fewer legal notices", () => {
+		expect(noticeReports("/*! a */b{}", "b{}")).toEqual([
+			{
+				relation: "notices",
+				what: "dropped 1 of 1 legal notices",
+				repro: "    b{}"
+			}
+		]);
+		expect(noticeReports("/*! a */b{}", "/*! a */b{}")).toEqual([]);
+	});
+
+	it("should read a `/*!` in a string as no notice, and one after a `url()` as one", () => {
+		expect(noticeReports('a{b:"/*! x */"}', "a{}")).toEqual([]);
+		expect(noticeReports("a{b:url(it's)}/*! x */", "a{}")).toHaveLength(1);
+	});
+});
 
 describe("compare-css-tools — the cold branches fixture", () => {
 	it.each(REDUCED)("carries %s", (_name, written) => {

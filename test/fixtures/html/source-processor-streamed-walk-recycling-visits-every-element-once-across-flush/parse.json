@@ -1,0 +1,29 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"fixture": "walk"
+		},
+		"check": {
+			"fixture": "visitsEachOnce"
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"fixture": "walk"
+		},
+		"check": {
+			"fixture": "keepsParents"
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"fixture": "skipRoot"
+		},
+		"check": {
+			"fixture": "logged"
+		}
+	}
+]

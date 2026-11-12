@@ -1,0 +1,4 @@
+[
+	{ "entry": "SourceProcessor", "visit": { "fixture": "countElements" } },
+	{ "check": { "fixture": "lengths" } }
+]

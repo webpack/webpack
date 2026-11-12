@@ -1,0 +1,10 @@
+[
+	{
+		"options": {
+			"fragmentContext": "textarea"
+		},
+		"check": {
+			"fixture": "fragmentTree"
+		}
+	}
+]

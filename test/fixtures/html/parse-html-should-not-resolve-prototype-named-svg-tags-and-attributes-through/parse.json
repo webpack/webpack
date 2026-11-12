@@ -1,0 +1,10 @@
+[
+	{
+		"fields": [
+			"name"
+		],
+		"check": {
+			"fixture": "names"
+		}
+	}
+]
