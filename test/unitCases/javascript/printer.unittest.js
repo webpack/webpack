@@ -4396,6 +4396,19 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 		expect(minifyOnePass(code, options).code).toBe(code);
 	});
+
+	it("should lift a computed key reading a constant as the key it names", () => {
+		for (const [source, toplevel, expected] of /** @type {[string, boolean, string][]} */ ([
+			// Inlined, the read prints as the plain key; `__proto__` and a class's `constructor` mean something else bare.
+			['const key="FOO",p="__proto__",c="constructor",n=12;class X{[key]=1;static get[key](){return 2}[c](){}}console.log(new X,{[key]:1,[p]:2,[n]:3})', true, 'class X{FOO=1;static get FOO(){return 2}["constructor"](){}}console.log(new X,{FOO:1,["__proto__"]:2,12:3});'],
+			// Kept for its size, it lifts only where the key prints shorter than the name in brackets.
+			['const prop="_foo",x="FOO";console.log({[prop]:1,[x]:2})', false, 'const prop="_foo",x="FOO";console.log({_foo:1,[x]:2});']
+		])) {
+			const { code } = minifyOnePass(source, { compress: {}, mangle: false, toplevel });
+			expect(code).toBe(expected);
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+	});
 });
 
 describe("one-pass minify hazards", () => {
