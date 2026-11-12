@@ -35620,6 +35620,11 @@ declare interface TerserCompressAliases {
 	keep_classnames?: boolean | RegExp;
 
 	/**
+	 * terser's name for `keepFargs`
+	 */
+	keep_fargs?: boolean;
+
+	/**
 	 * terser's name for `keepFnames`
 	 */
 	keep_fnames?: boolean | RegExp;

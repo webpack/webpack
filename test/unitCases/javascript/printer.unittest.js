@@ -4397,6 +4397,15 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(minifyOnePass(code, options).code).toBe(code);
 	});
 
+	it("should drop the trailing parameters nothing reads under `keep_fargs: false`", () => {
+		const source = 'function f(a,b){return a}var g=(a,b)=>a,o={set x(v){},m(a){}};function h(a){return arguments}function k(a){eval("a")}console.log(f.length,g.length,o.m.length,h.length,k.length)';
+		const { code } = minifyOnePass(source, { compress: { keep_fargs: false }, mangle: false });
+		// A setter's one parameter, `arguments` and `eval` keep theirs.
+		expect(code).toBe('function f(a){return a}var g=a=>a,o={set x(v){},m(){}};function h(a){return arguments}function k(a){eval("a")}console.log(f.length,g.length,o.m.length,h.length,k.length);');
+		// By default they stay.
+		expect(minifyOnePass("function f(a,b){return a}console.log(f.length)", { compress: {}, mangle: false }).code).toBe("function f(a,b){return a}console.log(f.length);");
+	});
+
 	it("should lift a computed key reading a constant as the key it names", () => {
 		for (const [source, toplevel, expected] of /** @type {[string, boolean, string][]} */ ([
 			// Inlined, the read prints as the plain key; `__proto__` and a class's `constructor` mean something else bare.
