@@ -135,6 +135,8 @@ Use the most specific real type, in `test/` too. `EXPECTED_ANY`, `EXPECTED_OBJEC
 
 Spell names out in full (`attributeCount`, not `attrCnt`), beyond abbreviations the codebase already uses pervasively. Name a class for what it does, with its kind's suffix (`*Plugin`, `*Dependency`, …), and the file for the class; a name never invents a role suffix (`*Manager`, `*Util`), takes a `Webpack` prefix or repeats another `lib/` class. Exceptions and reasons: [docs/code-style.md](docs/code-style.md#naming).
 
+**The CSS, HTML and JavaScript syntax modules name one concept one way** (columns, walk state, helpers): reuse the names in [docs/syntax.md](docs/syntax.md#shared-names) and rename the other languages' copies with yours; only what one grammar alone has takes its own name.
+
 ### Path regexps and helpers live in one file
 
 > [!REQUIRED]

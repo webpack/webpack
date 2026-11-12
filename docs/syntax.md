@@ -13,6 +13,18 @@ Read this before touching the CSS, HTML or JavaScript parser, printer or minifie
 - A minify entry the default minimizer dispatches to: `cssMinify.js`, `htmlMinify.js`, `jsMinify.js` — and `xmlMinify.js` for `.svg` and `.xml`, under `experiments.futureDefaults` or an `optimization.minimizeOptions.xml` object.
 - A spec-conformance suite (`yarn test:css-parsing`, `test:html5lib`, `test:xmlconf`, `test:test262`) and the invariants and ecosystem comparison in [tooling/COMPARE_TOOLS.md](../tooling/COMPARE_TOOLS.md).
 
+## Shared names
+
+The three parsers store a tree the same way, so the same concept has the same name in every `syntax-*.js`: a reader who knows one language reads the others. A new name for a shared concept goes in this table and replaces every other language's spelling in the same change; a concept only one grammar has (HTML's sibling links and attribute columns, CSS's `_aux0`/`_aux1`, JavaScript's `_slots`/`_bases`) keeps its own name.
+
+| Concept                                | Name                                                                         |
+| -------------------------------------- | ---------------------------------------------------------------------------- |
+| node type, offsets and flags columns   | `_types`, `_starts`, `_ends`, `_flags`                                       |
+| nodes written, column capacity, growth | `_nodeCount`, `_nodeCapacity`, `_growNodeColumns`                            |
+| a node's list of children, as a span   | `_listStarts`, `_listLengths` into `_listItems`, filled up to `_listItemTop` |
+| the empty column a released one shares | `EMPTY_U8`, `EMPTY_U16`, `EMPTY_I32`, one per typed-array kind               |
+| the path object and its class          | `A`, `<Language>SyntaxPath`                                                  |
+
 ## The node path
 
 Every visitor and node printer receives one argument, the language's `path`: `webpack.css.syntax`, `webpack.html.syntax` and `webpack.javascript.syntax` hand over an object with the same members under the same names, named after ESTree where ESTree has the concept. `NodePath<TNode>` in `lib/util/SourceProcessor.js` is that contract, and `SourceProcessor` takes only a path satisfying it, so a missing or misnamed member fails `lint:types`.
