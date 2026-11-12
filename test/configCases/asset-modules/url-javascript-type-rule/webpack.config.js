@@ -4,17 +4,20 @@ const path = require("path");
 const webpack = require("../../../../");
 
 /**
- * @param {boolean} futureDefaults whether to enable `experiments.futureDefaults`
+ * @param {boolean} emptyDefaultRules whether `module.defaultRules` is emptied
  * @returns {import("../../../../").Configuration} configuration
  */
-const config = (futureDefaults) => ({
+const config = (emptyDefaultRules) => ({
 	mode: "development",
 	target: "node",
 	output: {
-		filename: futureDefaults ? "future/bundle.mjs" : "bundle.js",
-		assetModuleFilename: futureDefaults ? "future/[name][ext]" : "[name][ext]"
+		filename: emptyDefaultRules ? "no-default-rules/bundle.js" : "bundle0.js",
+		assetModuleFilename: emptyDefaultRules
+			? "no-default-rules/[name][ext]"
+			: "[name][ext]"
 	},
 	module: {
+		defaultRules: emptyDefaultRules ? [] : ["..."],
 		rules: [
 			{ test: /\.js$/, type: "javascript/auto" },
 			{ mimetype: "text/javascript", type: "javascript/auto" },
@@ -25,10 +28,9 @@ const config = (futureDefaults) => ({
 			}
 		]
 	},
-	experiments: { futureDefaults },
 	plugins: [
 		new webpack.DefinePlugin({
-			FUTURE_DEFAULTS: JSON.stringify(futureDefaults)
+			EMPTY_DEFAULT_RULES: JSON.stringify(emptyDefaultRules)
 		})
 	]
 });
