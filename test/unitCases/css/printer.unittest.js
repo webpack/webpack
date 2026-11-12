@@ -1421,7 +1421,7 @@ describe("CssSyntax minify — joining rules whose values hold escapes", () => {
 describe("CssSyntax minify — merged and joined text keeps its boundaries", () => {
 	/**
 	 * @param {string} css source text
-	 * @param {Record<string, EXPECTED_ANY>=} options more process options
+	 * @param {import("../../../lib/css/syntax-parser").CssProcessOptions=} options more process options
 	 * @returns {string} the minified output
 	 */
 	const min = (css, options) =>
