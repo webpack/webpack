@@ -26439,6 +26439,12 @@ declare class OriginalSource extends Source {
  */
 declare interface Output {
 	/**
+	 * Where files may be written, copied and cleaned outside of 'output.path'. 'true' allows anywhere, 'false' nowhere, and a list allows only inside those directories. When unset, assets plugins emit there are still written (refused with 'experiments.futureDefaults'), while 'output.copy' and 'output.clean' stay inside 'output.path'.
+	 * @since 5.113.0
+	 */
+	allowOutside?: boolean | string[];
+
+	/**
 	 * Add a container for define/require functions in the AMD module.
 	 */
 	amdContainer?: string;
@@ -26999,6 +27005,12 @@ declare interface OutputHtmlOptions {
  * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
  */
 declare interface OutputNormalized {
+	/**
+	 * Where files may be written, copied and cleaned outside of 'output.path'. 'true' allows anywhere, 'false' nowhere, and a list allows only inside those directories. When unset, assets plugins emit there are still written (refused with 'experiments.futureDefaults'), while 'output.copy' and 'output.clean' stay inside 'output.path'.
+	 * @since 5.113.0
+	 */
+	allowOutside?: boolean | string[];
+
 	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */

@@ -13637,6 +13637,38 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-allow-outside": Object {
+    "configs": Array [
+      Object {
+        "description": "Absolute path of a directory outside of 'output.path' where files may be written, copied and cleaned.",
+        "multiple": true,
+        "path": "output.allowOutside[]",
+        "type": "path",
+      },
+      Object {
+        "description": "Where files may be written, copied and cleaned outside of 'output.path'. 'true' allows anywhere, 'false' nowhere, and a list allows only inside those directories. When unset, assets plugins emit there are still written (refused with 'experiments.futureDefaults'), while 'output.copy' and 'output.clean' stay inside 'output.path'.",
+        "multiple": false,
+        "path": "output.allowOutside",
+        "type": "boolean",
+      },
+    ],
+    "description": "Absolute path of a directory outside of 'output.path' where files may be written, copied and cleaned. Where files may be written, copied and cleaned outside of 'output.path'. 'true' allows anywhere, 'false' nowhere, and a list allows only inside those directories. When unset, assets plugins emit there are still written (refused with 'experiments.futureDefaults'), while 'output.copy' and 'output.clean' stay inside 'output.path'.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-allow-outside-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.allowOutside' configuration. Where files may be written, copied and cleaned outside of 'output.path'. 'true' allows anywhere, 'false' nowhere, and a list allows only inside those directories. When unset, assets plugins emit there are still written (refused with 'experiments.futureDefaults'), while 'output.copy' and 'output.clean' stay inside 'output.path'.",
+        "multiple": false,
+        "path": "output.allowOutside",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.allowOutside' configuration. Where files may be written, copied and cleaned outside of 'output.path'. 'true' allows anywhere, 'false' nowhere, and a list allows only inside those directories. When unset, assets plugins emit there are still written (refused with 'experiments.futureDefaults'), while 'output.copy' and 'output.clean' stay inside 'output.path'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-asset-module-filename": Object {
     "configs": Array [
       Object {

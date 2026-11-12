@@ -64,6 +64,14 @@ export type NonNegativeNumber = number;
 export type PositiveNumber = number;
 
 /**
+ * Where files may be written, copied and cleaned outside of 'output.path'. 'true' allows anywhere, 'false' nowhere, and a list allows only inside those directories. When unset, assets plugins emit there are still written (refused with 'experiments.futureDefaults'), while 'output.copy' and 'output.clean' stay inside 'output.path'.
+ * @since 5.113.0
+ */
+export type AllowOutside =
+	| Array</** Absolute path of a directory outside of 'output.path' where files may be written, copied and cleaned. */ AbsolutePath>
+	| boolean;
+
+/**
  * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
  */
 export type Amd =
@@ -3906,6 +3914,11 @@ export type OptimizationSplitChunksSizes =
  */
 export interface Output {
 	/**
+	 * Where files may be written, copied and cleaned outside of 'output.path'. 'true' allows anywhere, 'false' nowhere, and a list allows only inside those directories. When unset, assets plugins emit there are still written (refused with 'experiments.futureDefaults'), while 'output.copy' and 'output.clean' stay inside 'output.path'.
+	 * @since 5.113.0
+	 */
+	allowOutside?: AllowOutside;
+	/**
 	 * @cliExclude
 	 */
 	amdContainer?: AmdContainer;
@@ -4299,6 +4312,11 @@ export type OutputModule = boolean;
  * @required environment, enabledChunkLoadingTypes, enabledLibraryTypes, enabledWasmLoadingTypes
  */
 export interface OutputNormalized {
+	/**
+	 * Where files may be written, copied and cleaned outside of 'output.path'. 'true' allows anywhere, 'false' nowhere, and a list allows only inside those directories. When unset, assets plugins emit there are still written (refused with 'experiments.futureDefaults'), while 'output.copy' and 'output.clean' stay inside 'output.path'.
+	 * @since 5.113.0
+	 */
+	allowOutside?: AllowOutside;
 	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
