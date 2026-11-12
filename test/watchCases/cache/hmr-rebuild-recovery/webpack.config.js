@@ -30,6 +30,12 @@ for (const target of ["node", "async-node", "web", "webworker"]) {
 			plugins: [
 				(compiler) => {
 					new compiler.webpack.HotModuleReplacementPlugin().apply(compiler);
+					/** @type {import("webpack").ModuleGraph | undefined} */
+					let graph;
+					compiler.hooks.finishMake.tap("RetainedGraph", (compilation) => {
+						if (graph) expect(compilation.moduleGraph).toBe(graph);
+						graph = compilation.moduleGraph;
+					});
 				}
 			]
 		});

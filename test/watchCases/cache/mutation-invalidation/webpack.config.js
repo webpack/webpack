@@ -13,7 +13,11 @@ module.exports = () => ({
 		createWatchMutation({
 			name: "ignored invalidation",
 			detector: "comparison",
-			fault: "invalidation"
+			method: "_checkNeedBuild",
+			before: "const resolveSnapshot = module._incrementalResolveSnapshot;",
+			after:
+				"if (need) return callback(null, (recordMutation(), false));\n" +
+				"const resolveSnapshot = module._incrementalResolveSnapshot;"
 		})
 	]
 });

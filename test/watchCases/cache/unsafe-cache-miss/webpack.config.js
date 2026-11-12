@@ -10,6 +10,8 @@ const currentWatchStep = require("../../../helpers/currentWatchStep");
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
+	// Retaining the graph bypasses the cache restoration this case exercises.
+	incremental: false,
 	experiments: {
 		cacheUnaffected: true
 	},

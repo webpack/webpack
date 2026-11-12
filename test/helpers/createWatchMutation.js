@@ -1,30 +1,51 @@
 "use strict";
 
 const assert = require("assert");
+const fs = require("fs");
 const path = require("path");
-const currentWatchStep = require("./currentWatchStep");
+const vm = require("vm");
 
-/** @import { Compiler } from "webpack" */
+/** @import { Compilation, Compiler } from "webpack" */
+/** @import Incremental from "../../lib/watch/Incremental" */
+/** @typedef {Compilation & { _incremental: Incremental }} IncrementalCompilation */
 /**
  * @typedef {object} WatchMutation
  * @property {string} name fault being introduced
  * @property {"graph" | "comparison"} detector expected failure
- * @property {"graph" | "invalidation" | "recovery"} fault fault to inject
+ * @property {"_checkNeedBuild" | "canReuseDependencies" | "removePreRebuildConnections"} method method to replace on each watch compilation
+ * @property {string} before unique source fragment
+ * @property {string} after replacement that calls recordMutation when the fault is reached
  */
 
 /**
- * Injects one watch fault to verify that the runner detects it and can retry.
+ * Compiles a mutated copy, installing only its selected method on watched compilations.
  * @param {WatchMutation} mutation fault to inject
  * @returns {{ apply: (compiler: Compiler) => void, check: (error: Error) => void, failures: () => number }} fault injection and recovery assertions
  */
 const createWatchMutation = (mutation) => {
+	const filename = require.resolve("../../lib/watch/Incremental");
+	const source = fs.readFileSync(filename, "utf8");
+	const position = source.indexOf(mutation.before);
+	assert(
+		position >= 0 && position === source.lastIndexOf(mutation.before),
+		`${mutation.name}: expected exactly one mutation location`
+	);
 	let hits = 0;
 	let failures = 0;
-	/** @type {Error[]} */
-	let previousErrors = [];
-	/** @returns {boolean} whether the next rebuild should contain the fault */
-	const shouldMutate = () =>
-		currentWatchStep.step === "1" && hits === 0 && failures === 0;
+	const sandbox = {
+		module: { exports: {} },
+		require: (/** @type {string} */ request) =>
+			require(path.resolve(path.dirname(filename), request)),
+		recordMutation: () => {
+			hits++;
+		}
+	};
+	new vm.Script(source.replace(mutation.before, mutation.after), {
+		filename
+	}).runInNewContext(sandbox);
+	const MutatedIncremental = /** @type {typeof Incremental} */ (
+		sandbox.module.exports
+	);
 	return {
 		/**
 		 * @param {Compiler} compiler watched compiler
@@ -32,58 +53,14 @@ const createWatchMutation = (mutation) => {
 		 */
 		apply(compiler) {
 			compiler.hooks.compilation.tap("WatchMutation", (compilation) => {
-				if (!compiler.watchMode || mutation.fault !== "invalidation") return;
-				compilation.buildQueue.hooks.beforeStart.tap(
-					"WatchMutation",
-					(module) => {
-						if (
-							!shouldMutate() ||
-							module.nameForCondition() !==
-								path.join(compiler.context, "value.js")
-						) {
-							return;
-						}
-						const needBuild = module.needBuild;
-						module.needBuild = (_context, callback) => {
-							module.needBuild = needBuild;
-							hits++;
-							callback(null, false);
-						};
-					}
-				);
-			});
-			compiler.hooks.finishMake.tap("WatchMutation", (compilation) => {
-				if (
-					!compiler.watchMode ||
-					mutation.fault !== "graph" ||
-					!shouldMutate()
-				) {
-					return;
-				}
-				const origin = [...compilation.modules].find(
-					(module) =>
-						module.nameForCondition() ===
-						path.join(compiler.context, "branch.js")
-				);
-				const target = [...compilation.modules].find(
-					(module) =>
-						module.nameForCondition() === path.join(compiler.context, "new.js")
-				);
-				assert(origin && target, mutation.name);
-				const dependency = new compiler.webpack.Dependency();
-				compilation.moduleGraph.setParents(dependency, origin, origin);
-				compilation.moduleGraph.setResolvedModule(origin, dependency, target);
-				hits++;
-			});
-			compiler.hooks.afterCompile.tap("WatchMutation", (compilation) => {
-				if (!compiler.watchMode || mutation.fault !== "recovery") return;
-				if (currentWatchStep.step === "0") {
-					previousErrors = [...compilation.errors];
-				} else if (shouldMutate()) {
-					expect(previousErrors).toHaveLength(1);
-					compilation.errors.push(...previousErrors);
-					hits++;
-				}
+				if (!compiler.watchMode || failures > 0) return;
+				const incremental = /** @type {IncrementalCompilation} */ (compilation)
+					._incremental;
+				Object.defineProperty(incremental, mutation.method, {
+					value: MutatedIncremental.prototype[mutation.method],
+					configurable: true,
+					writable: true
+				});
 			});
 		},
 		/**
@@ -92,7 +69,7 @@ const createWatchMutation = (mutation) => {
 		 */
 		check(error) {
 			expect(failures).toBe(0);
-			expect(hits).toBe(1);
+			expect(hits).toBeGreaterThan(0);
 			if (mutation.detector === "graph") {
 				expect(error).toBeInstanceOf(assert.AssertionError);
 				expect(error.message).toMatch(/branch\.js: stale outgoing dependency$/);

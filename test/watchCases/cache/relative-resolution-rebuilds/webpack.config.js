@@ -9,5 +9,20 @@ const caches = [false, true, { type: "filesystem" }];
 module.exports = caches.map((cache) => ({
 	mode: "development",
 	cache,
-	module: { unsafeCache: false }
+	module: { unsafeCache: false },
+	plugins: [
+		(compiler) => {
+			compiler.hooks.afterCompile.tap(
+				"CheckEmptyResolveSnapshot",
+				(compilation) => {
+					for (const module of compilation.modules) {
+						expect(module).toHaveProperty(
+							"_incrementalResolveSnapshot",
+							undefined
+						);
+					}
+				}
+			);
+		}
+	]
 }));

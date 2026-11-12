@@ -13,7 +13,10 @@ module.exports = () => ({
 		createWatchMutation({
 			name: "stale outgoing connections",
 			detector: "graph",
-			fault: "graph"
+			method: "removePreRebuildConnections",
+			before:
+				"this._compilation.removeReasonsOfDependencyBlock(module, staleReferences);",
+			after: "recordMutation(); return;"
 		})
 	]
 });

@@ -5,6 +5,25 @@ const { pathToFileURL } = require("url");
 const { getNormalizedWebpackOptions } = require("../../lib/config/normalization");
 
 describe("getNormalizedWebpackOptions", () => {
+	describe("incremental", () => {
+		it.each([true, false])("normalizes %s to stage options", (enabled) => {
+			expect(
+				getNormalizedWebpackOptions({ incremental: enabled }).incremental
+			).toEqual({ buildModuleGraph: enabled });
+		});
+
+		it("leaves omitted stages for defaults and clones the options", () => {
+			const incremental = { buildModuleGraph: false };
+			const normalized = getNormalizedWebpackOptions({ incremental });
+			expect(normalized.incremental).toEqual(incremental);
+			expect(normalized.incremental).not.toBe(incremental);
+			expect(getNormalizedWebpackOptions({}).incremental).toEqual({});
+			expect(
+				getNormalizedWebpackOptions({ incremental: {} }).incremental
+			).toEqual({});
+		});
+	});
+
 	describe("file URLs", () => {
 		const directory = path.resolve("/dir");
 		const url = pathToFileURL(directory).href;
