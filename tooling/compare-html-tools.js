@@ -1185,9 +1185,10 @@ const wantedPreset = filterFrom("PRESET");
  * @param {string} html the document
  * @param {HtmlPrintOptions} options the preset's printer options
  * @param {CssOptions} cssOptions the preset's CSS options
+ * @param {boolean=} respell whether to ask the respellings, which the sweep asks under its first preset alone
  * @returns {import("../test/helpers/syntaxInvariants/relations").Report[]} what moved, and the smallest repro found for each
  */
-const sweepDocument = (minify, html, options, cssOptions) => {
+const sweepDocument = (minify, html, options, cssOptions, respell = true) => {
 	const { printed, reports } = wantedRelation("idempotence")
 		? idempotence({
 				minify,
@@ -1197,7 +1198,7 @@ const sweepDocument = (minify, html, options, cssOptions) => {
 			})
 		: { printed: minify(html), reports: [] };
 	if (printed === null) return reports;
-	reports.push(...sweepRespellings(minify, html, printed));
+	if (respell) reports.push(...sweepRespellings(minify, html, printed));
 	if (wantedRelation("meaning")) {
 		reports.push(...meaningReports(html, printed, options, cssOptions));
 	}
@@ -1429,11 +1430,14 @@ const invariants = (write) => {
 	log(`sweeping ${corpus.length} documents under ${presets.length} presets …`);
 	for (const [label, html] of corpus) {
 		for (const [preset, options, cssOptions] of presets) {
+			// Under the first preset only, as the other comparisons ask it: whether
+			// a spelling decides the output is the same question under every set.
 			for (const report of sweepDocument(
 				printerFor(options),
 				html,
 				options,
-				cssOptions
+				cssOptions,
+				preset === presets[0][0]
 			)) {
 				groups.add(report, preset, label);
 			}
