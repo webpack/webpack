@@ -17,7 +17,7 @@ const {
 	Part
 } = require("../../../lib/css/syntax-parser");
 
-// cspell:ignore OLOR abcdefghijklmnopqrstuvwxyzabcdefgh acontent arting auop conten displa imptant inear laye olor pmportant pxcustom suppo webk widt
+// cspell:ignore OLOR abcdefghijklmnopqrstuvwxyzabcdefgh acontent arting auop conten displa imptant inear laye ment olor pmportant pxcustom suppo webk widt
 
 /**
  * @param {string} css a stylesheet
@@ -2047,6 +2047,17 @@ describe("CssSyntax minify — a color fallback reads only the value's own calls
 			])
 		).toBe(
 			'.a{background:"oklch(.7 .2 150)"#00bf54;background:"oklch(.7 .2 150)"color(display-p3 .317813 .736696 .379141);background:"oklch(.7 .2 150)"oklch(.7 .2 150)}'
+		);
+	});
+});
+
+describe("CssSyntax minify — text a rewrite keeps inside its string or url", () => {
+	it("copies an escaped at-rule name's prelude whole for a vendor prefix", () => {
+		const css =
+			'@d\\00006f\\000063\\000075ment url-prefix(),x("}.x{color:red}"){.q{color:red}}';
+		const rest = ' url-prefix(),x("}.x{color:red}"){.q{color:red}}';
+		expect(minifyFor(css, ["firefox 50"])).toBe(
+			`@-moz-document${rest}@document${rest}`
 		);
 	});
 });
