@@ -14,3 +14,11 @@ it("returns the styles collected while rendering without a DOM", () => {
 		expect(__webpack_css_server_styles__).toContain("color: rebeccapurple");
 	}
 });
+
+it("escapes a closing style tag so the styles stay inside a <style> element", () => {
+	if (hasDocument) return;
+	expect(__webpack_css_server_styles__).not.toMatch(/<\/style/i);
+	expect(__webpack_css_server_styles__).toContain(
+		'content: "<\\/style>.x{color:red}"'
+	);
+});
