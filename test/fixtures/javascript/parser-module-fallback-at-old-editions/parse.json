@@ -1,0 +1,20 @@
+[
+	{ "options": { "ecmaVersion": 3, "sourceType": "module", "moduleFallback": true } },
+	{
+		"options": {
+			"ecmaVersion": 3,
+			"sourceType": "module",
+			"moduleFallback": true,
+			"allowReserved": false
+		}
+	},
+	{ "options": { "ecmaVersion": 5, "sourceType": "module", "moduleFallback": true } },
+	{
+		"options": {
+			"ecmaVersion": 6,
+			"sourceType": "module",
+			"moduleFallback": true,
+			"allowReserved": true
+		}
+	}
+]
