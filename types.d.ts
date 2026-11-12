@@ -32440,8 +32440,8 @@ declare class ScopeLog {
 	scopeTypes: string[];
 	blockTypes: string[];
 	blockStarts: number[];
-	froms: number[];
-	tos: number[];
+	scopeStarts: number[];
+	scopeEnds: number[];
 	scopeFlags: number[];
 	paramBoundaries: number[];
 	shorthands: number[];
@@ -37286,6 +37286,7 @@ declare class WebpackParser extends SyntaxParser {
 			importPhases?: boolean;
 			moduleFallback?: boolean;
 			syntaxTree?: ColumnarSyntaxTree;
+			scopeLog?: null | ScopeLog;
 		},
 		input: string,
 		startPos?: number
