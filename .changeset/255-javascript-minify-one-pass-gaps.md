@@ -1,5 +1,5 @@
 ---
-"webpack": patch
+"webpack": minor
 ---
 
-Minify more conditions, calls, dead code, unused values, spellings and folds.
+Minify more conditions, calls, keys, dead code and unused values; honor `keep_fargs`.

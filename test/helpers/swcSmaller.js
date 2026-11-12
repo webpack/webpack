@@ -364,11 +364,8 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `drop-unused` tests cover",
 		[
-			"terser compress: drop-unused/unused_funarg_1",
-			"terser compress: drop-unused/unused_funarg_2",
 			"terser compress: drop-unused/drop_fargs",
 			"terser compress: drop-unused/iife",
-			"terser compress: drop-unused/issue_1656",
 			"terser compress: drop-unused/issue_2136_2",
 			"terser compress: drop-unused/issue_2136_3",
 			"terser compress: drop-unused/issue_t161_top_retain_1",
@@ -636,8 +633,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `object` tests cover",
 		[
-			"terser compress: object/prop_arrows_to_concise_method_various",
-			"terser compress: object/computed_property_names_side_effects",
 			"terser compress: object/prop_arrow_to_concise_method",
 			"terser compress: object/concise_method_to_prop_arrow"
 		]
@@ -742,14 +737,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: arrow/issue_2136_3",
 			"terser compress: arrow/concise_methods_with_computed_property2",
 			"terser compress: arrow/async_object_literal"
-		]
-	],
-	[
-		"swc goes further than webpack on what terser's `export` tests cover",
-		[
-			"terser compress: export/async_func",
-			"terser compress: export/issue_2134_1",
-			"terser compress: export/issue_2134_2"
 		]
 	],
 	[
@@ -907,7 +894,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12212/safe-unused-rest/input.js",
 			"swc minifier: fixture/issues/12218/leading-argument/input.js",
 			"swc minifier: fixture/issues/5343/input.js",
-			"swc minifier: fixture/issues/8626/input.js",
 			"swc minifier: fixture/issues/8670/input.js",
 			"swc minifier: fixture/issues/9460/partial-used-default/input.js",
 			"swc minifier: fixture/issues/9741_global_objects/input.js",

@@ -1,7 +1,7 @@
 [
 	{
 		"relation": "idempotence",
-		"contains": "()==x);\n      -> )()==x;",
-		"why": "a part left standing where the items before it were dropped prints in the parentheses it took as an operand, as the printer test asks; a second pass, reading it alone, prints it bare"
+		"contains": "()),x;\n      -> )(),x;",
+		"why": "a call of a function in place left standing as the first item of what an unread comparison runs keeps the parentheses it took as an operand; a second pass, reading it alone, negates it instead"
 	}
 ]

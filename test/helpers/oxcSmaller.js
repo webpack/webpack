@@ -43,16 +43,12 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc applies esbuild's shortenings, as oxc's `peephole/esbuild.rs` tests show",
 		[
-			"oxc minifier: peephole/esbuild.rs:1541",
 			"oxc minifier: peephole/esbuild.rs:1213",
 			"oxc minifier: peephole/esbuild.rs:1220",
 			"oxc minifier: peephole/esbuild.rs:1796",
 			"oxc minifier: peephole/esbuild.rs:2307",
 			"oxc minifier: peephole/esbuild.rs:252",
 			"oxc minifier: peephole/esbuild.rs:159",
-			"oxc minifier: peephole/esbuild.rs:168",
-			"oxc minifier: peephole/esbuild.rs:169",
-			"oxc minifier: peephole/esbuild.rs:170",
 			"oxc minifier: peephole/esbuild.rs:174",
 			"oxc minifier: peephole/esbuild.rs:214",
 			"oxc minifier: peephole/esbuild.rs:219",
@@ -126,39 +122,18 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc knows more expressions have no side effects and drops them when their value is unused, as oxc's `ecmascript/may_have_side_effects.rs` tests show",
 		[
-			"oxc minifier: ecmascript/may_have_side_effects.rs:745",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:744",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:743",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:388",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:387",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:386",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1300",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1365",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:783",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:907",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:213",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:214",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:215",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:216",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:392",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:393",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:394",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:395",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:398",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:399",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:403",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:404",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:405",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:406",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:441",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:627",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:636",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:760",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:784",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:791",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:792",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:801",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:809",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1036",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1047",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1146",
@@ -171,6 +146,14 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than oxc's",
 		[
+			"oxc minifier: ecmascript/is_int32_or_uint32.rs:77",
+			"oxc minifier: ecmascript/is_int32_or_uint32.rs:79",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:639",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:640",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:641",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:642",
+			"oxc minifier: ecmascript/value_type.rs:167",
+			"oxc minifier: ecmascript/value_type.rs:169",
 			"oxc minifier: peephole/minimize_statements.rs:32",
 			"oxc minifier: peephole/replace_known_methods.rs:1090",
 			"swc exec: terser_arguments_modified",
@@ -202,7 +185,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: drop-unused/issue_3146_4",
 			"terser compress: evaluate/unsafe_constant",
 			"terser compress: export/name_cache_do_not_mangle_export_let_name",
-			"terser compress: export/name_cache_do_not_mangle_export_const_name",
 			"terser compress: issue-1413/issue_1413_top_retain_reference_shorter_than_value_2",
 			"terser compress: issue-1656/f7",
 			"terser compress: loops/keep_collapse_const_in_own_block_scope_2",
@@ -225,7 +207,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12215/input.js",
 			"swc minifier: fixture/issues/12218/leading-argument/input.js",
 			"swc minifier: fixture/issues/12565/while_body/input.js",
-			"swc minifier: fixture/issues/firebase-core/1/input.js",
 			"swc minifier: fixture/next/66237/input.js",
 			"swc minifier: fixture/next/feedback-3/579-dcac359116b2707c/input.js",
 			"swc minifier: fixture/next/regression-1/framework-798bab57daac3897/input.js",
@@ -246,41 +227,14 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_collapse_vars_issue_2914_2",
 			"swc exec: terser_collapse_vars_cond_branch_2",
 			"swc exec: terser_properties_join_object_assignments_nan_2",
-			"oxc minifier: ecmascript/is_int32_or_uint32.rs:72",
-			"oxc minifier: ecmascript/is_int32_or_uint32.rs:73",
-			"oxc minifier: ecmascript/is_int32_or_uint32.rs:77",
-			"oxc minifier: ecmascript/is_int32_or_uint32.rs:79",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:622",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:623",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:628",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:629",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:639",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:640",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:641",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:642",
-			"oxc minifier: ecmascript/value_type.rs:162",
-			"oxc minifier: ecmascript/value_type.rs:163",
-			"oxc minifier: ecmascript/value_type.rs:167",
-			"oxc minifier: ecmascript/value_type.rs:169",
 			"oxc minifier: peephole/dead_code_elimination.rs:664",
 			"oxc minifier: peephole/esbuild.rs:202",
 			"oxc minifier: peephole/esbuild.rs:222",
 			"oxc minifier: peephole/esbuild.rs:705",
 			"oxc minifier: peephole/esbuild.rs:707",
-			"oxc minifier: peephole/esbuild.rs:1519",
-			"oxc minifier: peephole/esbuild.rs:1520",
-			"oxc minifier: peephole/esbuild.rs:1522",
-			"oxc minifier: peephole/esbuild.rs:1523",
-			"oxc minifier: peephole/fold_constants.rs:761",
-			"oxc minifier: peephole/fold_constants.rs:765",
-			"oxc minifier: peephole/fold_constants.rs:769",
 			"oxc minifier: peephole/inline.rs:165",
-			"oxc minifier: peephole/inline.rs:600",
-			"oxc minifier: peephole/inline.rs:601",
 			"oxc minifier: peephole/inline.rs:603",
 			"oxc minifier: peephole/inline.rs:604",
-			"oxc minifier: peephole/inline.rs:715",
-			"oxc minifier: peephole/inline.rs:716",
 			"oxc minifier: peephole/minimize_conditions.rs:175",
 			"oxc minifier: peephole/minimize_conditions.rs:297",
 			"oxc minifier: peephole/minimize_conditions.rs:410",
@@ -290,7 +244,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_exit_points.rs:122",
 			"oxc minifier: peephole/minimize_if_statement.rs:5",
 			"oxc minifier: peephole/obscure_edge_cases.rs:463",
-			"oxc minifier: peephole/remove_unused_declaration.rs:494",
 			"oxc minifier: peephole/statement_fusion.rs:103",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:190",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:549",
@@ -304,7 +257,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc drops more unused expressions, as oxc's `peephole/remove_unused_expression.rs` tests show",
 		[
-			"oxc minifier: peephole/remove_unused_expression.rs:452",
 			"oxc minifier: peephole/remove_unused_expression.rs:449",
 			"oxc minifier: peephole/remove_unused_expression.rs:31",
 			"oxc minifier: peephole/remove_unused_expression.rs:62",
@@ -321,9 +273,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_unused_expression.rs:602",
 			"oxc minifier: peephole/remove_unused_expression.rs:792",
 			"oxc minifier: peephole/remove_unused_expression.rs:840",
-			"oxc minifier: peephole/remove_unused_expression.rs:848",
-			"oxc minifier: peephole/remove_unused_expression.rs:862",
-			"oxc minifier: peephole/remove_unused_expression.rs:863",
 			"oxc minifier: peephole/remove_unused_expression.rs:872",
 			"oxc minifier: peephole/remove_unused_expression.rs:873",
 			"oxc minifier: peephole/remove_unused_expression.rs:1116",
@@ -372,8 +321,8 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc writes conditions shorter, as oxc's `peephole/minimize_conditions.rs` tests show",
 		[
-			"oxc minifier: peephole/minimize_conditions.rs:1066",
 			"oxc minifier: peephole/minimize_conditions.rs:223",
+			"oxc minifier: peephole/minimize_conditions.rs:1066",
 			"oxc minifier: peephole/minimize_conditions.rs:6",
 			"oxc minifier: peephole/minimize_conditions.rs:7",
 			"oxc minifier: peephole/minimize_conditions.rs:9",
@@ -491,7 +440,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc drops more unreachable code, as oxc's `peephole/remove_dead_code.rs` tests show",
 		[
 			"oxc minifier: peephole/remove_dead_code.rs:263",
-			"oxc minifier: peephole/remove_dead_code.rs:24",
 			"oxc minifier: peephole/remove_dead_code.rs:30",
 			"oxc minifier: peephole/remove_dead_code.rs:63",
 			"oxc minifier: peephole/remove_dead_code.rs:77",
@@ -643,7 +591,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/reduce_funcs_in_array_1",
 			"terser compress: reduce_vars/reduce_funcs_in_array_2",
 			"terser compress: reduce_vars/reduce_funcs_in_object_literal_2",
-			"terser compress: reduce_vars/issue_443",
 			"terser compress: reduce_vars/issue_639"
 		]
 	],
@@ -692,13 +639,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what oxc's `ecmascript/is_literal_value.rs` tests cover",
 		[
-			"oxc minifier: ecmascript/is_literal_value.rs:284",
-			"oxc minifier: ecmascript/is_literal_value.rs:282",
-			"oxc minifier: ecmascript/is_literal_value.rs:279",
-			"oxc minifier: ecmascript/is_literal_value.rs:273",
-			"oxc minifier: ecmascript/is_literal_value.rs:271",
-			"oxc minifier: ecmascript/is_literal_value.rs:267",
-			"oxc minifier: ecmascript/is_literal_value.rs:251",
 			"oxc minifier: ecmascript/is_literal_value.rs:159",
 			"oxc minifier: ecmascript/is_literal_value.rs:167",
 			"oxc minifier: ecmascript/is_literal_value.rs:259",
@@ -980,10 +920,6 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"oxc goes further than webpack on what oxc's `peephole/collapse_variable_declarations.rs` tests cover",
-		["oxc minifier: peephole/collapse_variable_declarations.rs:97"]
-	],
-	[
 		"oxc reads a global twice as one value, as in `a ? b : a` to `a && b` or `a === null || a === void 0` to `a == null`, where webpack takes a global for a getter that may answer each read anew",
 		["oxc minifier: peephole/minimize_conditional_expression.rs:90"]
 	],
@@ -1038,13 +974,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/replace_known_methods.rs:637",
 			"oxc minifier: peephole/replace_known_methods.rs:638",
 			"oxc minifier: peephole/replace_known_methods.rs:639"
-		]
-	],
-	[
-		"oxc goes further than webpack on what terser's `object` tests cover",
-		[
-			"terser compress: object/prop_arrows_to_concise_method_various",
-			"terser compress: object/prop_func_to_concise_method_various"
 		]
 	],
 	[
@@ -1149,16 +1078,6 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"oxc's output differs: it drops a class whose static member's computed key may be `\"prototype\"`, which throws a TypeError as the class is defined",
-		[
-			"oxc minifier: ecmascript/may_have_side_effects.rs:445",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:451",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:816",
-			"oxc minifier: peephole/remove_unused_expression.rs:850",
-			"oxc minifier: peephole/remove_unused_expression.rs:865"
-		]
-	],
-	[
 		"oxc goes further than webpack on what terser's `if_return` tests cover",
 		["terser compress: if_return/if_return_same_value"]
 	],
@@ -1205,15 +1124,6 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"oxc goes further than webpack on what terser's `issue-143` tests cover",
-		[
-			"terser compress: issue-143/transformation_sort_order_equal",
-			"terser compress: issue-143/transformation_sort_order_unequal",
-			"terser compress: issue-143/transformation_sort_order_lesser_or_equal",
-			"terser compress: issue-143/transformation_sort_order_greater_or_equal"
-		]
-	],
-	[
 		"oxc goes further than webpack on what terser's `pure_getters` tests cover",
 		[
 			"terser compress: pure_getters/impure_getter_1",
@@ -1231,10 +1141,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: yield/generators_yield_assign",
 			"terser compress: yield/yield_statements"
 		]
-	],
-	[
-		"oxc goes further than webpack on what oxc's `peephole/manual_pure_functions.rs` tests cover",
-		["oxc minifier: peephole/manual_pure_functions.rs:119"]
 	],
 	[
 		"boolean and conditional forms: `!a&&b` vs `a?!1:b`, `!!a` vs `a&&!0`, `x||void 0` vs `if(x)`, an `if` with or without braces, a test's branches swapped",
@@ -1322,10 +1228,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `nullish` tests cover",
-		[
-			"terser compress: nullish/simplify_nullish_coalescing",
-			"terser compress: nullish/delete_nullish_2"
-		]
+		["terser compress: nullish/delete_nullish_2"]
 	],
 	[
 		"oxc goes further than webpack on what terser's `issue-1482` tests cover",
@@ -1460,10 +1363,6 @@ const OXC_SMALLER_BY_REASON = [
 		["swc minifier: fixture/member_expr/callee/input.js"]
 	],
 	[
-		"oxc goes further than webpack on what swc's `fixture/simple` tests cover",
-		["swc minifier: fixture/simple/sequences/.0001/input.js"]
-	],
-	[
 		"a shorter operator oxc writes: `**` for `Math.pow` of numbers",
 		["terser compress: evaluate/issue_2207_1"]
 	],
@@ -1524,10 +1423,6 @@ const OXC_SMALLER_BY_REASON = [
 		["terser compress: issue-1006/issue_1006"]
 	],
 	[
-		"oxc goes further than webpack on what terser's `issue-2871` tests cover",
-		["terser compress: issue-2871/comparison_with_undefined"]
-	],
-	[
 		"oxc goes further than webpack on what terser's `issue-368` tests cover",
 		["terser compress: issue-368/collapse"]
 	],
@@ -1546,12 +1441,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what terser's `pure_globals` tests cover",
 		["terser compress: pure_globals/globals_whose_access_is_pure"]
-	],
-	[
-		"oxc goes further than webpack on what terser's `typescript` tests cover",
-		[
-			"terser compress: typescript/typescript_disabled_call_type_parameters_are_valid_js"
-		]
 	],
 	[
 		"oxc goes further than webpack on what swc's `fixture/check` tests cover",
@@ -1575,6 +1464,37 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc folds a `parseFloat` of more than 20 digits, which ECMAScript lets an engine round otherwise, so webpack keeps the call",
 		["oxc minifier: peephole/replace_known_methods.rs:790"]
+	],
+	[
+		"oxc goes further than webpack on what terser's `issue-143` tests cover",
+		[
+			"terser compress: issue-143/transformation_sort_order_lesser_or_equal",
+			"terser compress: issue-143/transformation_sort_order_greater_or_equal"
+		]
+	],
+	[
+		"oxc goes further than webpack on what terser's `typescript` tests cover",
+		[
+			"terser compress: typescript/typescript_disabled_call_type_parameters_are_valid_js"
+		]
+	],
+	[
+		"oxc goes further than webpack on what swc's `fixture/simple` tests cover",
+		["swc minifier: fixture/simple/sequences/.0001/input.js"]
+	],
+	[
+		"oxc's output differs: it drops a class whose static member's computed key may be `\"prototype\"`, which throws a TypeError as the class is defined",
+		[
+			"oxc minifier: ecmascript/may_have_side_effects.rs:445",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:451",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:816",
+			"oxc minifier: peephole/remove_unused_expression.rs:850",
+			"oxc minifier: peephole/remove_unused_expression.rs:865"
+		]
+	],
+	[
+		"oxc goes further than webpack on what oxc's `peephole/manual_pure_functions.rs` tests cover",
+		["oxc minifier: peephole/manual_pure_functions.rs:119"]
 	]
 ];
 
