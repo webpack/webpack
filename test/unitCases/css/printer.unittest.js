@@ -1376,6 +1376,29 @@ describe("CssSyntax minify — joining rules whose values hold escapes", () => {
 	});
 });
 
+describe("CssSyntax minify — merged and joined text keeps its boundaries", () => {
+	/**
+	 * @param {string} css source text
+	 * @param {Record<string, EXPECTED_ANY>=} options more process options
+	 * @returns {string} the minified output
+	 */
+	const min = (css, options) =>
+		new SourceProcessor().process(css, { mode: "minify", ...options }).code;
+
+	it("parts a slash shorthand's `/` from a slot that starts with `*`", () => {
+		expect(
+			min(
+				fixture(
+					"css",
+					"css-syntax-minify-a-merged-slash-shorthand-parts-a-slot-that-starts-with-an-asterisk"
+				)
+			)
+		).toBe(
+			'.a{grid-row:1/ *}.b{grid-template:1px/ *}.c{grid-template:"a"1px/ *}.d{color:red}'
+		);
+	});
+});
+
 describe("CssSyntax — the identifier and url helpers", () => {
 	it.each([
 		["a control character", "a\tb", "a\\9 b"],
