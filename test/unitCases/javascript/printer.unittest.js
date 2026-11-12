@@ -4406,6 +4406,18 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(minifyOnePass("function f(a,b){return a}console.log(f.length)", { compress: {}, mangle: false }).code).toBe("function f(a,b){return a}console.log(f.length);");
 	});
 
+	it("should merge a conditional's calls of one global into one call", () => {
+		for (const [source, expected] of [
+			["function f(t){return t?alert(3):alert(5)}g(f)", "function f(t){return alert(t?3:5)}g(f);"],
+			// A member's calls stay apart, as they measured larger merged once gzipped.
+			["function f(t,o){return t?o.f(3):o.f(5)}g(f)", "function f(t,o){return t?o.f(3):o.f(5)}g(f);"],
+			// An undeclared test may throw, which reading the callee first would hide; `eval` called is direct.
+			["x?alert(3):alert(5);function f(t){t?eval(1):eval(2)}g(f)", "x?alert(3):alert(5);function f(t){t?eval(1):eval(2)}g(f);"]
+		]) {
+			expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(expected);
+		}
+	});
+
 	it("should lift a computed key reading a constant as the key it names", () => {
 		for (const [source, toplevel, expected] of /** @type {[string, boolean, string][]} */ ([
 			// Inlined, the read prints as the plain key; `__proto__` and a class's `constructor` mean something else bare.

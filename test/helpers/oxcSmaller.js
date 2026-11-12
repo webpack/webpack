@@ -372,7 +372,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc writes conditions shorter, as oxc's `peephole/minimize_conditions.rs` tests show",
 		[
 			"oxc minifier: peephole/minimize_conditions.rs:1066",
-			"oxc minifier: peephole/minimize_conditions.rs:223",
 			"oxc minifier: peephole/minimize_conditions.rs:6",
 			"oxc minifier: peephole/minimize_conditions.rs:7",
 			"oxc minifier: peephole/minimize_conditions.rs:9",
