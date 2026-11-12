@@ -285,7 +285,6 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: switch/issue_1663",
 			"terser compress: switch/if_else8",
-			"terser compress: switch/issue_1679",
 			"terser compress: switch/issue_1680_1",
 			"terser compress: switch/issue_1690_2",
 			"terser compress: switch/issue_1083_3",
@@ -790,10 +789,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: switch/issue_441_1",
 			"terser compress: switch/issue_441_2",
 			"swc minifier: fixture/issues/12206/keep-trailing-test-after-default/input.js",
-			"swc minifier: fixture/issues/12206/skip-removed-test-after-dynamic-match/input.js",
-			"swc minifier: fixture/issues/4412/input.js",
-			"swc minifier: fixture/issues/9922/1/input.js",
-			"swc minifier: fixture/issues/9922/2/input.js"
+			"swc minifier: fixture/issues/12206/skip-removed-test-after-dynamic-match/input.js"
 		]
 	],
 	[
