@@ -32431,9 +32431,9 @@ declare interface ScopeInfo {
 declare class ScopeLog {
 	constructor();
 	count: number;
-	infos: Int32Array;
-	starts: Int32Array;
-	ends: Int32Array;
+	infos: number[];
+	starts: number[];
+	ends: number[];
 	names: string[];
 	scopeCount: number;
 	scopeTypes: string[];
@@ -32459,10 +32459,10 @@ declare class ScopeLog {
 	read(start: number, end: number, name: string): void;
 
 	/**
-	 * Counts one more read of each name declared since `from`, as an
+	 * Counts one more read of each name declared from `from` to `to`, as an
 	 * initializer or a loop head writes them.
 	 */
-	readDeclared(from: number): void;
+	readDeclared(from: number, to: number): void;
 	scope(
 		type: string,
 		blockType: string,
@@ -39113,6 +39113,7 @@ declare namespace exports {
 					program: Program,
 					input: string
 				) => number;
+				export let STATEMENT_TYPES_WITHOUT_BINDINGS: Set<string>;
 				export let syntaxTreeOfEstree: (
 					program: NodeEstreeIndex,
 					input: string

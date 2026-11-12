@@ -7,10 +7,8 @@ const require = createRequire(import.meta.url);
 
 const JavascriptParser = require("../../../lib/javascript/JavascriptParser.js");
 const analyzeScope = require("../../../lib/javascript/ScopeAnalyzer.js");
-const {
-	readParsedTree,
-	takeParsedTree
-} = require("../../../lib/javascript/syntax-parser.js");
+const { readParsedTree, takeParsedTree } =
+	require("../../../lib/javascript/syntax.js").parser;
 
 /** @type {typeof import("../../../lib/javascript/JavascriptParser")} */
 
