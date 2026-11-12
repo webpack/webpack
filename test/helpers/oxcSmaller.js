@@ -1102,15 +1102,6 @@ const OXC_SMALLER_BY_REASON = [
 		["terser compress: block-scope/switch_block_scope_mangler"]
 	],
 	[
-		"oxc goes further than webpack on what terser's `issue-1034` tests cover",
-		[
-			"terser compress: issue-1034/non_hoisted_function_after_return_2a",
-			"terser compress: issue-1034/non_hoisted_function_after_return_2b",
-			"terser compress: issue-1034/non_hoisted_function_after_return_2a_strict",
-			"terser compress: issue-1034/non_hoisted_function_after_return_2b_strict"
-		]
-	],
-	[
 		"oxc goes further than webpack on what terser's `pure_getters` tests cover",
 		[
 			"terser compress: pure_getters/impure_getter_1",

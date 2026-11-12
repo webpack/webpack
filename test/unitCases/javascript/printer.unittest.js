@@ -1412,6 +1412,26 @@ describe("one-pass minify of reads and calls on literals", () => {
 		);
 	});
 
+	it("should merge the calls an `if` returns or throws from both branches", () => {
+		const source =
+			"function f(a){return[a]}function r(x){if(x)return f(1);else return f(2)}function t(x){if(x){throw f(1)}else{throw f(2)}}function n(x){if(!x)return new f(1);else return new f(2)}function c(x,y){if(x)return 0;else if(y)return f(1,y);else return f(2,y)}g(r,t,n,c);";
+		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(
+			"function f(a){return[a]}function r(x){return f(x?1:2)}function t(x){throw f(x?1:2)}function n(x){return new f(x?2:1)}function c(x,y){return x?0:f(y?1:2)}g(r,t,n,c);"
+		);
+		// Parts longer than what the branches share, or spreads printing as their
+		// items, stay apart.
+		const kept =
+			"function f(a){return[a]}function l(x){if(x)return f({a:1,b:2});else return f({c:3,d:4})}function s(x){if(x)return f(...[1]);else return f(...[2])}g(l,s);";
+		expect(minifyOnePass(kept, { compress: {}, mangle: false }).code).toBe(
+			"function f(a){return[a]}function l(x){return x?f({a:1,b:2}):f({c:3,d:4})}function s(x){return x?f(1):f(2)}g(l,s);"
+		);
+		const program =
+			"function f(a){return[a]}function r(x){if(!x)return f(1);else return f(2)}console.log(r(0)[0],r(1)[0],(x=>!x?f(3):f(4))(0)[0])";
+		const { code } = minifyOnePass(program, { compress: {}, mangle: false });
+		expect(code).toContain("return f(x?2:1)");
+		expect(runProgram(code)).toBe("1 2 3");
+	});
+
 	it("should fold a value running nothing into the compound assignment after it", () => {
 		const source = "var foo;function w(a){let x=foo;a+=x;return a}function v(a){let x=foo;a||=x;return a}function u(a){let x=g();a+=x;return a}w(),v(),u();";
 		// A value running code would run after the target is read.
