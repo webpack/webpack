@@ -17,7 +17,8 @@ module.exports = {
 		expect(code).not.toContain("droppedVarUpdate");
 		expect(code).not.toContain("secondChunkUpdate");
 		// What may hold an object, or is read later, keeps its update.
-		expect(code).toContain("readUpdate++");
+		// The `return` reading it takes the update, as `++readUpdate`.
+		expect(code).toContain("++readUpdate");
 		expect(code).toContain("paramUpdate++");
 		expect(code).toContain("callUpdate++");
 		expect(code).toContain("redeclaredUpdate++");

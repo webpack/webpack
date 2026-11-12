@@ -1387,6 +1387,22 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(runProgram(minifyOnePass(program, { compress: {}, mangle: false }).code)).toBe("2 9 4");
 	});
 
+	it("should merge the calls of a conditional differing in what one spread spreads", () => {
+		const source = "let x=g(),b=h();x?b(...c):b(...d);x?b(...x):b(...c);x?b(1,...c,2):b(1,...d,2);x?new b(...c):new b(...d);x?b(...c):b(d);x?b(...[1,2]):b(...d);";
+		// A spread against a plain argument, or one printing as its items, stays.
+		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(
+			"let x=g(),b=h();b(...x?c:d),b(...x||c),b(1,...x?c:d,2),new b(...x?c:d),x?b(...c):b(d),x?b(1,2):b(...d);"
+		);
+	});
+
+	it("should fold a value running nothing into the compound assignment after it", () => {
+		const source = "var foo;function w(a){let x=foo;a+=x;return a}function v(a){let x=foo;a||=x;return a}function u(a){let x=g();a+=x;return a}w(),v(),u();";
+		// A value running code would run after the target is read.
+		expect(minifyOnePass(source, { compress: {}, mangle: false, ecma: 2021 }).code).toBe(
+			"var foo;function w(a){return a+=foo}function v(a){return a||=foo}function u(a){let x=g();return a+=x,a}w(),v(),u();"
+		);
+	});
+
 	it("should drop a `for`'s own declarator nothing reads", () => {
 		const source = "function f(){for(var a,b=1;;);}function g(){for(let i=0,n=h();;)k(i)}function m(){for(let c=32,d=0;d<c;d++)k(d)}k(f,g,m)";
 		// A value running code stays, as does a constant its reads print.
