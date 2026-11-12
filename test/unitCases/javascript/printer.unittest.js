@@ -1354,6 +1354,39 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(runProgram(minifyOnePass(program, { compress: {}, mangle: false }).code)).toBe("TypeError\nTypeError\nTypeError");
 	});
 
+	it("should fold a value read only by its null check into the optional chain it prints as", () => {
+		const source =
+			"function f(){let a=g();return a!=null?a.b:void 0}function h(){let a=g();return a==null?void 0:a?.b.c[d](e)}function k(a){return a!=undefined?a.b:undefined}function l(){let a=o.m;return a!=null?a():void 0}function n(){let a=g();return null!=a?a(1):void 0}function p(){let a=o.m;return a!=null?a.x():void 0}";
+		// A member called bare would bind its object as `this`, so it stays apart.
+		expect(minifyOnePass(source, { compress: {}, mangle: false, ecma: 2020 }).code).toBe(
+			"function f(){return g()?.b}function h(){return g()?.b.c[d](e)}function k(a){return a?.b}function l(){let a=o.m;return a?.()}function n(){return g()?.(1)}function p(){return o.m?.x()}"
+		);
+		expect(minifyOnePass(source, { compress: {}, mangle: false, ecma: 2019 }).code).toBe(
+			"function f(){let a=g();return a!=null?a.b:void 0}function h(){let a=g();return a==null?void 0:a?.b.c[d](e)}function k(a){return a!=null?a.b:void 0}function l(){let a=o.m;return a!=null?a():void 0}function n(){let a=g();return null!=a?a(1):void 0}function p(){let a=o.m;return a!=null?a.x():void 0}"
+		);
+		// Kept apart: a value printing in parentheses before `?.`, another branch
+		// than `undefined`, a chain on another name, another test, no chain.
+		const kept =
+			"function s(){let a=x+y;return a!=null?a.b:void 0}function t(){let a=g();return a!=null?a.b:1}function u(){let a=g();return a!=null?b.c(a):void 0}function v(){let a=g();return a!=null&&x?a.b:void 0}function w(){let a=g();return a!=null?a:void 0}function y(){let a=g();return b!=null?a.b(a):void 0}";
+		expect(minifyOnePass(kept, { compress: {}, mangle: false, ecma: 2020 }).code).toBe(
+			"function s(){let a=x+y;return a?.b}function t(){let a=g();return a!=null?a.b:1}function u(){let a=g();return a!=null?b.c(a):void 0}function v(){let a=g();return a!=null&&x?a.b:void 0}function w(){let a=g();return a!=null?a:void 0}function y(){let a=g();return b!=null?a.b(a):void 0}"
+		);
+		const program = "var o={m(){return this===o}};function l(){let a=o.m;return a!=null?a():void 0}function p(){let a=o;return a!=null?a.m():void 0}console.log(l(),p())";
+		expect(runProgram(minifyOnePass(program, { compress: {}, mangle: false, ecma: 2020 }).code)).toBe(runProgram(program));
+	});
+
+	it("should fold an update into the `return` or `throw` giving the name it sets", () => {
+		const source =
+			"function f(a){a+=1;a+=2;return a}function h(i){i++;return i}function k(i){i--;throw i}function l(i){var x=i++;return x**2}function n(a){a+=g();return a}function p(i){i++;return i+1}function q(){const c=1;c+=1;return c}function r(a){with(o)a+=1;return a}";
+		// `x++` a declarator took gives the old value still; a value that runs
+		// code, or a read deeper in the value, stays apart, as it gzips bigger.
+		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(
+			"function f(a){return a+=1,a+=2}function h(i){return++i}function k(i){throw--i}function l(i){return i++**2}function n(a){return a+=g(),a}function p(i){return i++,i+1}function q(){const c=1;return c+=1,c}function r(a){with(o)a+=1;return a}"
+		);
+		const program = "function h(i){i++;return i}function l(i){var x=i++;return x**2}function f(a){a+=1;a+=2;return a}console.log(h(1),l(3),f(1))";
+		expect(runProgram(minifyOnePass(program, { compress: {}, mangle: false }).code)).toBe("2 9 4");
+	});
+
 	it("should drop a `for`'s own declarator nothing reads", () => {
 		const source = "function f(){for(var a,b=1;;);}function g(){for(let i=0,n=h();;)k(i)}function m(){for(let c=32,d=0;d<c;d++)k(d)}k(f,g,m)";
 		// A value running code stays, as does a constant its reads print.

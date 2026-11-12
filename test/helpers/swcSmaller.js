@@ -355,9 +355,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12118/input.js",
 			"swc minifier: fixture/issues/2614/1/input.js",
 			"swc minifier: fixture/issues/6422/1/input.js",
-			"swc minifier: fixture/issues/6864/input.js",
-			"swc minifier: fixture/issues/8718/7/input.js",
-			"swc minifier: fixture/issues/8924/input.js"
+			"swc minifier: fixture/issues/6864/input.js"
 		]
 	],
 	[
@@ -386,7 +384,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/collapse_vars_assignment",
 			"terser compress: collapse_vars/collapse_vars_lvalues_drop_assign",
 			"terser compress: collapse_vars/collapse_vars_closures",
-			"terser compress: collapse_vars/issue_1631_1",
 			"terser compress: collapse_vars/conditional_1",
 			"terser compress: collapse_vars/issue_2436_4",
 			"terser compress: collapse_vars/issue_2436_8",

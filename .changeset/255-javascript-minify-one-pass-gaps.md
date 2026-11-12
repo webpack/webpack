@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Minify more conditions, calls, keys, dead code and unused values; honor `keep_fargs`.
+Minify more calls, keys, chains, updates and dead code; honor `keep_fargs`.
