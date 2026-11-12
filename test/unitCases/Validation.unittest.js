@@ -566,7 +566,7 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.output has an unknown property 'ecmaVersion'. These properties are valid:
-			   object { amdContainer?, assetModuleFilename?, asyncChunks?, auxiliaryComment?, charset?, chunkFilename?, chunkFormat?, chunkLoadTimeout?, chunkLoading?, chunkLoadingGlobal?, clean?, compareBeforeEmit?, copy?, crossOriginLoading?, cssChunkFilename?, cssFilename?, devtoolFallbackModuleFilenameTemplate?, devtoolModuleFilenameTemplate?, devtoolNamespace?, enabledChunkLoadingTypes?, enabledLibraryTypes?, enabledWasmLoadingTypes?, environment?, filename?, globalObject?, hashDigest?, hashDigestLength?, hashFunction?, hashSalt?, hotUpdateChunkFilename?, hotUpdateGlobal?, hotUpdateMainFilename?, html?, htmlChunkFilename?, htmlFilename?, ignoreBrowserWarnings?, iife?, importFunctionName?, importMetaName?, library?, libraryExport?, libraryTarget?, module?, path?, pathinfo?, publicPath?, resourceHints?, scriptType?, sourceMapFilename?, sourcePrefix?, strictModuleErrorHandling?, strictModuleExceptionHandling?, strictModuleResolution?, trustedTypes?, umdNamedDefine?, uniqueName?, wasmLoading?, wasmStreamingFallback?, webassemblyModuleFilename?, workerChunkFilename?, workerChunkLoading?, workerPublicPath?, workerWasmLoading? }
+			   object { allowOutside?, amdContainer?, assetModuleFilename?, asyncChunks?, auxiliaryComment?, charset?, chunkFilename?, chunkFormat?, chunkLoadTimeout?, chunkLoading?, chunkLoadingGlobal?, clean?, compareBeforeEmit?, copy?, crossOriginLoading?, cssChunkFilename?, cssFilename?, devtoolFallbackModuleFilenameTemplate?, devtoolModuleFilenameTemplate?, devtoolNamespace?, enabledChunkLoadingTypes?, enabledLibraryTypes?, enabledWasmLoadingTypes?, environment?, filename?, globalObject?, hashDigest?, hashDigestLength?, hashFunction?, hashSalt?, hotUpdateChunkFilename?, hotUpdateGlobal?, hotUpdateMainFilename?, html?, htmlChunkFilename?, htmlFilename?, ignoreBrowserWarnings?, iife?, importFunctionName?, importMetaName?, library?, libraryExport?, libraryTarget?, module?, path?, pathinfo?, publicPath?, resourceHints?, scriptType?, sourceMapFilename?, sourcePrefix?, strictModuleErrorHandling?, strictModuleExceptionHandling?, strictModuleResolution?, trustedTypes?, umdNamedDefine?, uniqueName?, wasmLoading?, wasmStreamingFallback?, webassemblyModuleFilename?, workerChunkFilename?, workerChunkLoading?, workerPublicPath?, workerWasmLoading? }
 			   -> Options affecting the output of the compilation. \`output\` options tell webpack how to write the compiled files to disk.
 			   Did you mean output.environment (output.ecmaVersion was a temporary configuration option during webpack 5 beta)?"
 		`)
@@ -817,7 +817,8 @@ describe("Validation", () => {
 				})
 			]
 		},
-		(msg) => expect(msg).toContain("options.exclude.glob should be a non-empty array")
+		(msg) =>
+			expect(msg).toContain("options.exclude.glob should be a non-empty array")
 	);
 
 	createTestCase(
@@ -829,7 +830,8 @@ describe("Validation", () => {
 				})
 			]
 		},
-		(msg) => expect(msg).toContain("options.exclude.glob should be a non-empty array")
+		(msg) =>
+			expect(msg).toContain("options.exclude.glob should be a non-empty array")
 	);
 
 	describe("did you mean", () => {
@@ -976,7 +978,9 @@ describe("Validation", () => {
 	]) {
 		createTestCaseOnlyValidate(
 			`loader sourceTest with ${name}`,
-			{ module: { rules: [{ use: [{ loader: "example-loader", sourceTest }] }] } },
+			{
+				module: { rules: [{ use: [{ loader: "example-loader", sourceTest }] }] }
+			},
 			(msg) => expect(msg).toContain("sourceTest")
 		);
 	}

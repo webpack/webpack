@@ -709,6 +709,7 @@ describe("snapshots", () => {
 		    "usedExports": false,
 		  },
 		  "output": Object {
+		    "allowOutside": undefined,
 		    "assetModuleFilename": "[hash][ext][query][fragment]",
 		    "asyncChunks": true,
 		    "charset": true,
@@ -2005,7 +2006,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)raw(&|$)/,
 			+             "type": "asset/source",
-			@@ ... @@
+			+           },
 			+           Object {
 			+             "resourceQuery": /(\\?|&)url(&|$)/,
 			+             "type": "asset/resource",
@@ -2017,9 +2018,9 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
-			+           },
-			+         ],
+			@@ ... @@
 			+       },
+			+     ],
 			@@ ... @@
 			-         "localIdentHashFunction": "md4",
 			+         "localIdentHashFunction": "xxhash64",
@@ -2073,6 +2074,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "minRemainingSize": undefined,
 			+       "minRemainingSize": 0,
+			@@ ... @@
+			-     "allowOutside": undefined,
+			+     "allowOutside": false,
 			@@ ... @@
 			-     "charset": true,
 			+     "charset": false,
@@ -4657,7 +4661,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)raw(&|$)/,
 			+             "type": "asset/source",
-			+           },
+			@@ ... @@
 			+           Object {
 			+             "resourceQuery": /(\\?|&)url(&|$)/,
 			+             "type": "asset/resource",
@@ -4665,7 +4669,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
-			@@ ... @@
+			+           },
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
@@ -4702,6 +4706,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "dedupDepth": 0,
 			+       "dedupDepth": 1,
+			@@ ... @@
+			-     "allowOutside": undefined,
+			+     "allowOutside": false,
 			@@ ... @@
 			-     "charset": true,
 			-     "chunkFilename": "[name].js",
@@ -5196,7 +5203,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)raw(&|$)/,
 			+             "type": "asset/source",
-			@@ ... @@
+			+           },
 			+           Object {
 			+             "resourceQuery": /(\\?|&)url(&|$)/,
 			+             "type": "asset/resource",
@@ -5210,7 +5217,6 @@ describe("snapshots", () => {
 			+             "type": "asset/inline",
 			+           },
 			+         ],
-			+       },
 			@@ ... @@
 			-         "localIdentHashFunction": "md4",
 			+         "localIdentHashFunction": "xxhash64",
@@ -5238,6 +5244,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "dedupDepth": 0,
 			+       "dedupDepth": 1,
+			@@ ... @@
+			-     "allowOutside": undefined,
+			+     "allowOutside": false,
 			@@ ... @@
 			-     "charset": true,
 			-     "chunkFilename": "[name].js",
@@ -5407,22 +5416,23 @@ describe("snapshots", () => {
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
-			-         },
+			@@ ... @@
 			-         "type": "css",
 			-       },
-			-       Object {
+			@@ ... @@
 			-         "dependency": /css-import-local-module/,
+			-         "exclude": /\\.module\\.\\w+$/i,
+			@@ ... @@
+			-         },
+			-         "type": "css/module",
+			@@ ... @@
+			-       Object {
+			-         "dependency": /css-import-global-module/,
 			-         "exclude": /\\.module\\.\\w+$/i,
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
-			@@ ... @@
-			-         "type": "css/module",
-			-       },
-			@@ ... @@
-			-         "dependency": /css-import-global-module/,
-			-         "exclude": /\\.module\\.\\w+$/i,
-			@@ ... @@
+			-         },
 			-         "type": "css/global",
 			-       },
 			-       Object {
@@ -5431,18 +5441,11 @@ describe("snapshots", () => {
 			-           "preferRelative": true,
 			-         },
 			@@ ... @@
-			-         },
-			-         "resolve": Object {
-			-           "fullySpecified": true,
-			-           "preferRelative": true,
-			-         },
-			-       },
-			-       Object {
 			-         "dependency": "html-style",
 			-         "parser": Object {
 			-           "exportType": "text",
 			-         },
-			-         "resolve": Object {
+			@@ ... @@
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
 			-         },
@@ -5453,17 +5456,30 @@ describe("snapshots", () => {
 			-         "parser": Object {
 			-           "as": "block-contents",
 			-           "exportType": "text",
+			-         },
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
+			-         },
+			-       },
+			-       Object {
+			-         "resolve": Object {
+			@@ ... @@
+			+       },
+			+       Object {
+			+         "oneOf": Array [
+			+           Object {
+			+             "resourceQuery": /(\\?|&)raw(&|$)/,
+			+             "type": "asset/source",
 			@@ ... @@
 			-     ],
 			-     "generator": Object {
 			-       "css": Object {
 			-         "esModule": true,
 			-         "exportsOnly": false,
-			+       Object {
-			+         "oneOf": Array [
 			+           Object {
-			+             "resourceQuery": /(\\?|&)raw(&|$)/,
-			+             "type": "asset/source",
+			+             "resourceQuery": /(\\?|&)url(&|$)/,
+			+             "type": "asset/resource",
 			@@ ... @@
 			-       "css/auto": Object {
 			-         "exportsConvention": "as-is",
@@ -5472,10 +5488,6 @@ describe("snapshots", () => {
 			-         "localIdentHashFunction": "md4",
 			-         "localIdentHashSalt": undefined,
 			-         "localIdentName": "[fullhash]",
-			+           Object {
-			+             "resourceQuery": /(\\?|&)url(&|$)/,
-			+             "type": "asset/resource",
-			+           },
 			+           Object {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
@@ -5504,14 +5516,14 @@ describe("snapshots", () => {
 			+     "generator": Object {
 			@@ ... @@
 			-         },
-			@@ ... @@
+			-       },
 			-       "css": Object {
 			-         "customMedia": true,
 			-         "customSelectors": true,
 			-         "import": true,
 			-         "namedExports": true,
 			-         "url": true,
-			-       },
+			@@ ... @@
 			-       "css/auto": Object {
 			-         "animation": true,
 			-         "container": true,
@@ -5521,7 +5533,7 @@ describe("snapshots", () => {
 			-         "dashedIdents": true,
 			-         "function": true,
 			-         "grid": true,
-			-       },
+			@@ ... @@
 			-       "css/global": Object {
 			-         "animation": true,
 			-         "container": true,
@@ -5541,6 +5553,7 @@ describe("snapshots", () => {
 			-         "dashedIdents": true,
 			-         "function": true,
 			-         "grid": true,
+			-       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -5561,6 +5574,9 @@ describe("snapshots", () => {
 			+       "dedupDepth": 1,
 			@@ ... @@
 			-         "css",
+			@@ ... @@
+			-     "allowOutside": undefined,
+			+     "allowOutside": false,
 			@@ ... @@
 			-     "charset": true,
 			-     "chunkFilename": "[name].js",
