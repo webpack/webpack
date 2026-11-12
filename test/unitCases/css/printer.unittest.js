@@ -2134,6 +2134,43 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 		expect(lower(".s{&.t\\\\ {color:gray}}")).toBe(".s.t\\\\{color:gray}");
 	});
 
+	it("splits a gradient's double-position stops outside its strings", () => {
+		const after = ".e{color:blue}";
+		expect(
+			minifyFor(
+				`.b{background:linear-gradient(red,"x,"red 10% 20%)}${after}`,
+				["chrome 60"]
+			)
+		).toBe(`.b{background:linear-gradient(red,"x,"red 10%,"x,"red 20%)}${after}`);
+		expect(
+			minifyFor(
+				`.b{background:linear-gradient(red,"x\\"y" 10% 20%)}${after}`,
+				["chrome 60"]
+			)
+		).toBe(
+			`.b{background:linear-gradient(red,'x"y' 10%,'x"y' 20%)}${after}`
+		);
+		expect(
+			minifyFor(`.b{background:linear-gradient(red,\\,x 10% 20%)}${after}`, [
+				"chrome 60"
+			])
+		).toBe(`.b{background:linear-gradient(red,\\,x 10%,\\,x 20%)}${after}`);
+		expect(
+			minifyFor(`.b{background:linear-gradient(red,"x\\\\," 10% 20%)}`, [
+				"chrome 60"
+			])
+		).toBe('.b{background:linear-gradient(red,"x\\\\," 10%,"x\\\\," 20%)}');
+	});
+
+	it("drops no zero length unit inside a string a length-only call holds", () => {
+		expect(minifyFor('.b{transform:translate("a 0px b")}')).toBe(
+			'.b{transform:translate("a 0px b")}'
+		);
+		expect(minifyFor(".b{transform:translate3d(1px,0px,2px)}")).toBe(
+			".b{transform:translate3d(1px,0,2px)}"
+		);
+	});
+
 	it("renders a data url whose escapes spell a comment as that comment", () => {
 		const payload = "data:text/css,/* %%32%41/ .x{color:red} /* */";
 		const processor = new SourceProcessor();
