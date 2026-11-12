@@ -545,6 +545,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-721"), { compress: {} }, "function a(e){switch(e){case E:try{w()}finally{c()}break}}function b(c){if(c===E){if(c)g()}}1+/*! keep */2,probe();function c(e){switch(e){case E:try{w()}finally{c()}break}}function d(c,e){if(e){if(c===E){g(),h()}}else k()}"],
 			// `void 0` in an array joins as nothing, as `undefined` does.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-722"), { compress: {} }, "console.log(\"a\",\",b\",\",1\",[void g()]+\"c\",\"d\");function f(n){return[n]+\"\"}"],
+			// An unread `~`, `-` or `+` of `undefined` runs only what it takes; one of a call nothing notes unread stays.
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-723"), { compress: {} }, "function a(){b}function c(){b,d()}function e(){g()}function h(){g()}function i(){b}function j(){~function(){}(1)}function k(){~function(){}(b),d()}function l(){~function(){g()}()}function m(){~function(){}(...b)}function n(){~g()}function o(){x=~function(){}(b)}"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-1"), { compress: {} }, "if(a)u();a,a.b,b(),x=1,c||(x=1);d;e|+f;g,h(),i,j(),k();o=l();m(!!n);"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-2"), { compress: {} }, "a(),b,f(),c(),x,g(),h(),d,e(),y,i.j,k;"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-3"), { compress: {} }, "x,x,y(),foo,bar(),a(),b(),x(),c(),z(),d(),e,f(),g;function h(){return i,j()}"],
@@ -2760,7 +2762,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-2"), "(function(){g()}()),x;"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-3"), "x={k:()=>1,[(()=>1)]:1},y=[()=>1];"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-4"), "x=(a||(f(1)(2)),longName);"],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-5"), "!(g(),h());"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-5"), "g(),h();"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-6"), "g(),h();"],
 			[
 				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-7"),
