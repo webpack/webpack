@@ -1479,7 +1479,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-505"), { compress: false, mangle: false }, "(0,foo)``;"],
 			// terser's `comparisons`: `!(a==b)` is `a!=b` where an equality takes no parentheses, and a boolean compared with one is itself or negated.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-506"), {}, "x=a!=b;if(a==b)f();x=!(a<b),x=!(a==b)+1,f(a===b,[a!=b],-!(a==b)),x=a!=b&&c,x=a==b?2:1,x=c?a!=b:d!==e,x=()=>a!=b,x={k:a!=b},x=`${a!=b}`;throw a!=b;"],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-507"), {}, "a==b;var v=a!=b;function g(){return a!==b}"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-507"), {}, "a,b;var v=a!=b;function g(){return a!==b}"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-508"), {}, "x=a instanceof b,x=!!a,x=a in b,x=y===!0,x=!(a<b),x=!delete y;while(x)f();x=!y(),x=!(a<b);if(a??!0)b();x=a&&!0;if(a&&b())c();"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-509"), { mangle: false, format: { comments: "all" } }, "x=!(/*c*/a==b);if(a&&/*k*/1)b();"],
 			// A name both branches call is called bare, after the test runs; `eval` or a member as `(0,f)`; in `with` the test stays, and `new` keeps it.
@@ -1489,7 +1489,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-512"), {}, "for(;!x;);for(;x;);for(;a&&!x;)y();while(x&&!y)z();while(a!=b)c();for(;(a||b)&&!(c&&d););for(;;){if(x)break;y()}for(;;)if(!x)y();for(;(a=b)&&!x;);for(;a&&b&&c;);for(var x=1;;){if(r)break;let r=g();h(r,r)}for(;!x;)y();for(;!x;)y();"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-513"), { mangle: false, format: { comments: "all" } }, fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-513")],
 			// `!!b` is `b` where `b` is a boolean; a key an integer spells is that number; a static block running nothing goes.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-514"), {}, "a=delete b,a=b==c,a=(b==c)+1,a=!(b<c);if(!(b<c))d();a=!b;(function(){g()})()==x;(function(){g()})()==x;x[0],x[-123],x[\"-0\"],x[\"01\"],x?.[5];class P{foo}class Q{}class R{static{g()}}"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-514"), {}, "a=delete b,a=b==c,a=(b==c)+1,a=!(b<c);if(!(b<c))d();a=!b;(function(){g()})(),x;(function(){g()})(),x;x[0],x[-123],x[\"-0\"],x[\"01\"],x?.[5];class P{foo}class Q{}class R{static{g()}}"],
 			// What is never nullish leaves `??` nothing to run; same logical operators regroup; an integer compared with `0` read for its truth is itself.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-515"), {}, "x(0n),x(/./),x({}),x(()=>{}),x(+y),x(y<z),x(a??b),x=a&&b&&c&&d&&e,x=a||b||c||d||e,x=a??b??c??d??e,x=a&&(b||c);if(a|+b||a&+b||!(a^+b))throw 0;if(!~a)f();x=(a|b)!==0;if(a>>b!==0)g();if(a>>b===0)g();x=(a|b)!==0?1:2,x=(a|b)!==0;if(a+b!==0)h();if(a!==0)k();"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-516"), { mangle: false, format: { comments: "all" } }, "x=a&&(/*c*/b&&c),x=(a|b/*d*/)!==0?1:2;"],
@@ -1501,7 +1501,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-520"), { mangle: false }, "function a(){\"use strict\";return function(){c()}}function e(){\"use strict\";\"use asm\";f()}class K{m(){g()}}"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-521"), { module: true, compress: {}, mangle: {} }, "export function foo(){g()}"],
 			// What nobody reads: an operator running only its operand goes, a branch running nothing goes, an array or object prints what its parts run, `x==null&&y` is `x??y`.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-522"), {}, "x.y,x?.y,x.y,x.y.z(),delete x.y,delete x,x,g(),a==b,f(),a<b,g(),a=b;({}).a+1;foo(),foo()||bar(),foo()&&bar(),a,b||c(),(a??b)||c(),x=foo()?1:2,c||(a=b),c||(d,e),c&&d;"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-522"), {}, "x.y,x?.y,x.y,x.y.z(),delete x.y,delete x,x,g(),a,b,f(),a<b,g(),a=b;({}).a+1;foo(),foo()||bar(),foo()&&bar(),a,b||c(),(a??b)||c(),x=foo()?1:2,c||(a=b),c||(d,e),c&&d;"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-523"), {}, "a,foo(),[...c,a],foo(),foo(),{[bar()]:foo()},g(),h(),x=[a(),b()],g(),{get a(){},b:g()},a(),b(),b,x=(f(),1);"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-524"), {"ecma": 2019}, "x==null&&y;"],
 			// A `concat` whose pieces would join as a substitution or an octal escape stays a call.
@@ -1524,7 +1524,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-535"), { format: { comments: "all" } }, "x=!!(!b&&/*c*/c),y=!!(/*k*/!b&&c);"],
 			// A test `!!!t` printing `!t` swaps the branches for `t`, as `!t` does.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-536"), {}, "x=(a,b)?d:c,x=a&&b?d:c,a?g():f(),x=a?d:c;"],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-537"), {}, "x,x(),x,a(),b,a,b(),f(a===b,c()),g(),a(),b(),h(),x==null,b(),b;"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-537"), {}, "x,x(),x,a(),b,a,b(),f(a===b,c()),g(),a(),b(),h(),x,b(),b;"],
 			// `x["length"]` folds as `x.length` does, and `"a"[0]` to its character; an `else if` known false goes, one known true prints its branch.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-538"), {}, "use(3),use(3),use(3),use(\"a\"),use(\"a\".x),use(\"a\"),use(a?.length),delete\"ab\".length;"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-539"), {}, "if(xxx)foo;if(xxx)foo;else baz;if(xxx)foo;else bar;if(x)a();else var q;"],
@@ -1872,7 +1872,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A body ending in an `if` that prints no `else` of its own, as one running nothing goes, takes braces before the `else` after it.
 			[fixture("javascript", "e-conditions-13"), { mangle: false }, "if(x){if(y)foo()}else bar();if(x){if(!y)foo()}else bar();if(x){for(;;)if(y)foo()}else bar();if(x){if(y)foo()}else bar();x?y?foo():g():bar();"],
 			// Nobody reading it, a loose or ordering comparison of two primitives runs only its sides, as a strict one does, which print bare in the sequence; one side that may be an object stays.
-			[fixture("javascript", "e-conditions-14"), { mangle: false }, "a+\"\",b|c,b+\"\",a|0,b|0,a,b,f(),g(),h(),a==b,a+\"\"<b,x=a+\"\"==(b|c);"],
+			[fixture("javascript", "e-conditions-14"), { mangle: false }, "a+\"\",b|c,b+\"\",a|0,b|0,a,b,f(),g(),h(),a,b,a+\"\",b,x=a+\"\"==(b|c);"],
 			// terser's `join_vars` of `var x;x=x||1` as `var x=x||1`, a `var` reading there what it held, but not a `let` in its dead zone, nor `x=x+1` printing as `x+=1`.
 			[fixture("javascript", "e-conditions-15"), { mangle: false, ecma: 2020, compress: { toplevel: false, ecma: 2020 } }, "var x=x||1,y;y+=1;function f(a){var a=a??2;let b;b=b||3;return[a,b]}"],
 			// A function moved to its one call, a statement, prints as its statements there, braced only where they scope a name; a member named as the function reads not it.
@@ -2706,7 +2706,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 	it("should print a part a node prints as without the parentheses it took as that node's operand", () => {
 		const source = fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-kept-part-as-its-place-takes");
 		const expected =
-			"const s=(g(),h());g(),h(),g(),h(),a,b,f([a]=[1],({b:b}={b:2}),([c]=[1])),x=a?y=1:c,x=(a||f(),c),g``,(a,b)``,(x={}.y)(()=>{}),a=- -b;a in b,c;x=!a&&b in c,x=a<b&&c;if(!b&&c)f();a(),- -b;({a:g()}).b;({a:g()}).b.c();({m(){}}).m()?a():b();(function(){g()})()==x;x=function(){g()}()==x,a=c;function k(i){return i++**2}function n(){return 1..a}x=new[1,2],x=new function(){this.b=1},k(1),n(),x={k:a=1,[b=1]:1},x=a?c:(f(1)(2),c);if(x=a?c:(g()+1,c)){({}).a?b():c();y()}x=new F(1);";
+			"const s=(g(),h());g(),h(),g(),h(),a,b,f([a]=[1],({b:b}={b:2}),([c]=[1])),x=a?y=1:c,x=(a||f(),c),g``,(a,b)``,(x={}.y)(()=>{}),a=- -b;a in b,c;x=!a&&b in c,x=a<b&&c;if(!b&&c)f();a(),- -b;({a:g()}).b;({a:g()}).b.c();({m(){}}).m()?a():b();(function(){g()})(),x;x=function(){g()}()==x,a=c;function k(i){return i++**2}function n(){return 1..a}x=new[1,2],x=new function(){this.b=1},k(1),n(),x={k:a=1,[b=1]:1},x=a?c:(f(1)(2),c);if(x=a?c:(g()+1,c)){({}).a?b():c();y()}x=new F(1);";
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(
 			expected
 		);
@@ -2726,7 +2726,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		for (const [input, output, options] of /** @type {[string, string, EXPECTED_OBJECT?][]} */ ([
 			// Where the items before it go, what opens the statement keeps them.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as"), "x,({a:g()}.b);"],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-2"), "(function(){g()}()==x);"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-2"), "(function(){g()}()),x;"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-3"), "x={k:()=>1,[(()=>1)]:1},y=[()=>1];"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-4"), "x=(a||(f(1)(2)),longName);"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-5"), "!(g(),h());"],
@@ -4404,6 +4404,13 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(code).toBe('function f(a){return a}var g=a=>a,o={set x(v){},m(){}};function h(a){return arguments}function k(a){eval("a")}console.log(f.length,g.length,o.m.length,h.length,k.length);');
 		// By default they stay.
 		expect(minifyOnePass("function f(a,b){return a}console.log(f.length)", { compress: {}, mangle: false }).code).toBe("function f(a,b){return a}console.log(f.length);");
+	});
+
+	it("should keep only what the sides of an unread loose comparison run", () => {
+		const source = "a==b;a()<b;(function(){g()})()>=x;";
+		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("a,b,a(),b,function(){g()}(),x;");
+		// An object's `valueOf` may run where conversions are not taken as pure.
+		expect(minifyOnePass(source, { compress: { pure_conversions: false }, mangle: false }).code).toBe("a==b,a()<b,function(){g()}()>=x;");
 	});
 
 	it("should merge a conditional's calls of one global into one call", () => {

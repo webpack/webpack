@@ -245,31 +245,11 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_collapse_vars_issue_2914_2",
 			"swc exec: terser_collapse_vars_cond_branch_2",
 			"swc exec: terser_properties_join_object_assignments_nan_2",
-			"oxc minifier: ecmascript/is_int32_or_uint32.rs:72",
-			"oxc minifier: ecmascript/is_int32_or_uint32.rs:73",
-			"oxc minifier: ecmascript/is_int32_or_uint32.rs:77",
-			"oxc minifier: ecmascript/is_int32_or_uint32.rs:79",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:622",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:623",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:628",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:629",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:639",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:640",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:641",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:642",
-			"oxc minifier: ecmascript/value_type.rs:162",
-			"oxc minifier: ecmascript/value_type.rs:163",
-			"oxc minifier: ecmascript/value_type.rs:167",
-			"oxc minifier: ecmascript/value_type.rs:169",
 			"oxc minifier: peephole/dead_code_elimination.rs:664",
 			"oxc minifier: peephole/esbuild.rs:202",
 			"oxc minifier: peephole/esbuild.rs:222",
 			"oxc minifier: peephole/esbuild.rs:705",
 			"oxc minifier: peephole/esbuild.rs:707",
-			"oxc minifier: peephole/esbuild.rs:1519",
-			"oxc minifier: peephole/esbuild.rs:1520",
-			"oxc minifier: peephole/esbuild.rs:1522",
-			"oxc minifier: peephole/esbuild.rs:1523",
 			"oxc minifier: peephole/fold_constants.rs:761",
 			"oxc minifier: peephole/fold_constants.rs:765",
 			"oxc minifier: peephole/fold_constants.rs:769",
@@ -489,7 +469,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc drops more unreachable code, as oxc's `peephole/remove_dead_code.rs` tests show",
 		[
 			"oxc minifier: peephole/remove_dead_code.rs:263",
-			"oxc minifier: peephole/remove_dead_code.rs:24",
 			"oxc minifier: peephole/remove_dead_code.rs:30",
 			"oxc minifier: peephole/remove_dead_code.rs:63",
 			"oxc minifier: peephole/remove_dead_code.rs:77",
@@ -1092,7 +1071,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what terser's `pure_funcs` tests cover",
 		[
-			"terser compress: pure_funcs/relational",
 			"terser compress: pure_funcs/issue_2638",
 			"terser compress: pure_funcs/issue_2705_6",
 			"terser compress: pure_funcs/issue_526_1"
@@ -1203,15 +1181,6 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"oxc goes further than webpack on what terser's `issue-143` tests cover",
-		[
-			"terser compress: issue-143/transformation_sort_order_equal",
-			"terser compress: issue-143/transformation_sort_order_unequal",
-			"terser compress: issue-143/transformation_sort_order_lesser_or_equal",
-			"terser compress: issue-143/transformation_sort_order_greater_or_equal"
-		]
-	],
-	[
 		"oxc goes further than webpack on what terser's `pure_getters` tests cover",
 		[
 			"terser compress: pure_getters/impure_getter_1",
@@ -1229,10 +1198,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: yield/generators_yield_assign",
 			"terser compress: yield/yield_statements"
 		]
-	],
-	[
-		"oxc goes further than webpack on what oxc's `peephole/manual_pure_functions.rs` tests cover",
-		["oxc minifier: peephole/manual_pure_functions.rs:119"]
 	],
 	[
 		"boolean and conditional forms: `!a&&b` vs `a?!1:b`, `!!a` vs `a&&!0`, `x||void 0` vs `if(x)`, an `if` with or without braces, a test's branches swapped",
@@ -1458,10 +1423,6 @@ const OXC_SMALLER_BY_REASON = [
 		["swc minifier: fixture/member_expr/callee/input.js"]
 	],
 	[
-		"oxc goes further than webpack on what swc's `fixture/simple` tests cover",
-		["swc minifier: fixture/simple/sequences/.0001/input.js"]
-	],
-	[
 		"a shorter operator oxc writes: `**` for `Math.pow` of numbers",
 		["terser compress: evaluate/issue_2207_1"]
 	],
@@ -1522,10 +1483,6 @@ const OXC_SMALLER_BY_REASON = [
 		["terser compress: issue-1006/issue_1006"]
 	],
 	[
-		"oxc goes further than webpack on what terser's `issue-2871` tests cover",
-		["terser compress: issue-2871/comparison_with_undefined"]
-	],
-	[
 		"oxc goes further than webpack on what terser's `issue-368` tests cover",
 		["terser compress: issue-368/collapse"]
 	],
@@ -1544,12 +1501,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what terser's `pure_globals` tests cover",
 		["terser compress: pure_globals/globals_whose_access_is_pure"]
-	],
-	[
-		"oxc goes further than webpack on what terser's `typescript` tests cover",
-		[
-			"terser compress: typescript/typescript_disabled_call_type_parameters_are_valid_js"
-		]
 	],
 	[
 		"oxc goes further than webpack on what swc's `fixture/check` tests cover",
