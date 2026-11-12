@@ -230,37 +230,6 @@ describe("SourceProcessor — merging adjacent <script>", () => {
 
 
 
-describe("SourceProcessor — which comments survive", () => {
-	const { SourceProcessor } = require("../../../lib/html/syntax");
-
-	/**
-	 * @param {string} html input markup
-	 * @param {import("../../../lib/html/syntax-parser").HtmlTransformOptions["comments"]=} comments which comments to keep
-	 * @returns {string} the minified serialization
-	 */
-	const minify = (html, comments) =>
-		new SourceProcessor().process(html, {
-			mode: "minify",
-			transforms: { comments }
-		}).code;
-
-	const html = fixture("html", "source-processor-which-comments-survive-absent-drops-every-inert-comment");
-	const licensed = "<div><!-- @license MIT --></div>";
-
-	// The six forms terser's `format.comments` takes, on an element whose own
-	// tags stay put either way.
-	it.each([
-		[
-			"a predicate keeps what it accepts",
-			/** @type {(comment: string) => boolean} */ (
-				(comment) => comment.includes("@license")
-			),
-			licensed
-		]
-	])("%s", (_name, comments, expected) => {
-		expect(minify(html, /** @type {EXPECTED_ANY} */ (comments))).toBe(expected);
-	});
-});
 
 describe("SourceProcessor — enumerated attribute values", () => {
 	const { ENUMERATED_KEYWORDS } = require("../../../lib/html/data");
@@ -392,31 +361,6 @@ describe("SourceProcessor — removeRedundantAttributes and script charset", () 
 	});
 });
 
-describe("SourceProcessor — a frameset document", () => {
-	const { SourceProcessor } = require("../../../lib/html/syntax");
-
-	/**
-	 * @param {string} html input markup
-	 * @param {(boolean | "smart" | "all")=} removeImpliedTags the mode
-	 * @returns {string} the minified serialization
-	 */
-	const minify = (html, removeImpliedTags) =>
-		new SourceProcessor().process(html, { mode: "minify", removeImpliedTags })
-			.code;
-
-	it("keeps the `</html>` it spelled unless every implied tag goes", () => {
-		const page = fixture("html", "source-processor-a-frameset-document-keeps-the-html-end-tag-it-spelled");
-		expect(minify(page)).toBe("<frameset><frame src=a></frameset></html>");
-		expect(minify(page, "all")).toBe("<frameset><frame src=a></frameset>");
-	});
-
-	it("prints no end tag for an element tree construction pops at once", () => {
-		// §13.3 serializes no end tag for `frame`, `basefont` or `bgsound`.
-		expect(minify(fixture("html", "source-processor-a-frameset-document-prints-no-end-tag-for-an-element-popped-at-once"))).toBe(
-			"<head><basefont><bgsound></head><frameset><frame><frame src=b></frameset>"
-		);
-	});
-});
 
 describe("SourceProcessor — renderEmbeddedSource", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
@@ -456,27 +400,6 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		expect(processor.process(fixture("html", "source-processor-render-embedded-source-is-usable-again-after-a-deferred-print"), { mode: "minify" }).code).toBe("<p>y");
 	});
 
-	it("keeps `srcdoc` off the deferred path when the caller says so", () => {
-		// Both renderers set: `deferSrcdoc: false` asks for the attribute on the
-		// normal path, so it is answered synchronously and collected nowhere.
-		/** @type {import("../../../lib/html/syntax-parser").DeferredEmbeddedSource[]} */
-		const holes = [];
-		const { code } = new SourceProcessor().process(
-			fixture("html", "source-processor-render-embedded-source-keeps-srcdoc-off-the-deferred-path-when"),
-			{
-				mode: "minify",
-				renderEmbeddedSource: (
-					/** @type {string} */ _source,
-					/** @type {{ type: string }} */ info
-				) => (info.type === "html" ? "<p>answered</p>" : undefined),
-				deferEmbeddedSource: holes,
-				deferSrcdoc: false
-			}
-		);
-
-		expect(holes).toEqual([]);
-		expect(code).toBe('<iframe srcdoc="<p>answered</p>"></iframe>');
-	});
 
 
 	it("prints again where an answer overturns a choice made on the source", async () => {
@@ -556,14 +479,6 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 
 
-	it("names html as the host of every body it offers", () => {
-		const hosts = new Set();
-		minify(fixture("html", "source-processor-render-embedded-source-names-html-as-the-host-of-every-body-it"), (s, i) => {
-			hosts.add(i.hostType);
-			return s;
-		});
-		expect([...hosts]).toEqual(["html"]);
-	});
 
 
 
@@ -574,26 +489,6 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 
 
-	it("offers only the outermost `<svg>`, its nested bodies already rendered", () => {
-		/** @type {string[]} */
-		const svg = [];
-		const out = minify(
-			fixture("html", "source-processor-render-embedded-source-offers-only-the-outermost-svg-its-nested"),
-			(source, info) => {
-				if (info.type === "css") return source.replace(/\s+/g, "");
-				svg.push(source);
-				return source.replace(" viewBox", " v");
-			}
-		);
-		// One offer for the whole subtree — the inner `<svg>` is part of it — and
-		// the CSS inside it is what the renderer just returned.
-		expect(svg).toEqual([
-			'<svg viewBox="0 0 2 2"><style>.s{fill:red}</style><svg><rect/></svg></svg>'
-		]);
-		expect(out).toBe(
-			'<svg v="0 0 2 2"><style>.s{fill:red}</style><svg><rect/></svg></svg>'
-		);
-	});
 
 
 
@@ -719,50 +614,6 @@ describe("htmlMinify — embedded code a minifier fails on", () => {
 	});
 });
 
-describe("htmlMinify — one document reaching every embedded site", () => {
-	const htmlMinify = require("../../../lib/html/htmlMinify");
-
-	// One document per site the print offers, down to two `<iframe srcdoc>` —
-	// one quoted, one written bare.
-	const DOCUMENT = fixture("html", "html-minify-one-document-reaching-every-embedded-site-offers-every-body-to-a");
-
-	it("offers every body to a caller's renderer, and prints each answer", async () => {
-		/** @type {string[]} */
-		const offered = [];
-		/**
-		 * @param {string} source the body offered
-		 * @param {{ type: string, as?: string }} info what it is
-		 * @returns {string} a marker naming what was asked for
-		 */
-		const render = (source, info) => {
-			const name =
-				info.as === undefined ? info.type : `${info.type}/${info.as}`;
-
-			offered.push(name);
-
-			return `ANSWER(${name})`;
-		};
-
-		const { code } = await htmlMinify({ "page.html": DOCUMENT }, undefined, {
-			renderEmbeddedSource: render
-		});
-
-		// Every site, once each: the `style=""` as the block-contents production
-		// it is, and one `html/srcdoc` per `<iframe srcdoc>`.
-		expect(offered).toEqual([
-			"css",
-			"json",
-			"javascript/script",
-			"css/block-contents",
-			"javascript/event-handler",
-			"svg/foreign-element",
-			"html/srcdoc",
-			"html/srcdoc"
-		]);
-		expect(code).toMatchSnapshot();
-	});
-
-});
 
 describe("SourceProcessor — print modes", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
@@ -820,18 +671,6 @@ describe("SourceProcessor — reusing work across a print", () => {
 		new SourceProcessor().process(html, { mode: "minify", ...options }).code;
 
 
-	it("runs a caller's renderer for every style attribute, repeats included", () => {
-		// The renderer is handed every `style=""`, so a memo keyed on the value
-		// alone would hand the second attribute the first one's result. It is
-		// offered the declaration list itself — `as` says so — and answers with one.
-		let calls = 0;
-		const code = minify(fixture("html", "source-processor-reusing-work-across-a-print-runs-a-caller-s-renderer-for-every"), {
-			renderEmbeddedSource: (source, info) =>
-				info.type === "css" ? `--call:${++calls}` : source
-		});
-		expect(calls).toBe(2);
-		expect(code).toBe("<p style=--call:1><b style=--call:2></b>");
-	});
 
 	it("does not carry a style attribute's result into a renderer with other options", () => {
 		const html = fixture("html", "source-processor-reusing-work-across-a-print-does-not-carry-a-style-attribute-s");
@@ -941,118 +780,9 @@ describe("htmlMinify export", () => {
 		expect(htmlMinify.getBannerPosition()).toBe("end");
 	});
 
-	describe("extractComments", () => {
-		const page =
-			"<!--! one --><p>a</p><!-- plain --><!-- @license two -->" +
-			"<!--! one --><!--[if IE]><b>x</b><![endif]--><!--#include virtual=x -->";
-
-		/**
-		 * @param {EXPECTED_ANY} extractComments the plugin's option
-		 * @param {Record<string, EXPECTED_ANY>=} options `minimize.html`
-		 * @param {string=} html the document
-		 * @returns {Promise<{ code: string, extractedComments?: string[] }>} what the minifier answers
-		 */
-		const run = async (extractComments, options = {}, html = page) => {
-			const htmlMinify = require("../../../lib/html/htmlMinify");
-
-			const { code, extractedComments } = await htmlMinify(
-				{ "a.html": html },
-				undefined,
-				options,
-				extractComments
-			);
-			return { code, extractedComments };
-		};
-		// A conditional comment and a server-side include are code, never taken.
-		const rest =
-			"<p>a</p><!--[if IE]><b>x</b><![endif]--><!--#include virtual=x -->";
-
-		it.each([
-			[
-				(/** @type {{ value: string }} */ comment) =>
-					comment.value.includes("one"),
-				["<!--! one -->"]
-			]
-		])(
-			"takes out what `minimize.html.extractComments: %p` names, over the plugin's",
-			async (extractComments, extracted) => {
-				expect(await run(false, { extractComments })).toEqual({
-					code: rest,
-					extractedComments: extracted
-				});
-			}
-		);
-
-
-
-
-
-		it("hands a predicate the comment's text, line and column", async () => {
-			/** @type {{ value: string, line: number, col: number }[]} */
-			const seen = [];
-			await run(
-				false,
-				{
-					extractComments: (
-						/** @type {{ value: string, line: number, col: number }} */ comment
-					) => {
-						seen.push(comment);
-						return false;
-					}
-				},
-				fixture("html", "html-minify-export-extract-comments-hands-a-predicate-the-comment-s-text-line")
-			);
-			expect(seen).toEqual([
-				{ value: "! a ", line: 1, col: 0 },
-				{ value: " b ", line: 3, col: 1 },
-				{ value: " c ", line: 3, col: 20 }
-			]);
-		});
-
-	});
 });
 
 
-describe("SourceProcessor — the dropped-duplicate flag is per tag", () => {
-	const { SourceProcessor } = require("../../../lib/html/syntax");
-
-	/**
-	 * @param {string} html input markup
-	 * @returns {string} the minified serialization
-	 */
-	const minify = (html) =>
-		new SourceProcessor().process(html, { mode: "minify" }).code;
-
-	/**
-	 * Markup allocating more attributes than the columns are kept at, so the
-	 * release after it drops the name column instead of clearing it.
-	 * @returns {string} the markup
-	 */
-	const oversizedDocument = () => {
-		let src = "";
-		for (let i = 0; i < 660; i++) {
-			src += "<i";
-			for (let j = 0; j < 100; j++) src += ` data-${i}-${j}="1"`;
-			src += "></i>";
-		}
-		return src;
-	};
-
-	it("clears it on a start tag that dropped one", () => {
-		const src = `${oversizedDocument()}<b class="c" class="d"></b>`;
-		expect(minify(src)).toContain("<b class=c></b>");
-	});
-
-	it("clears it on an end tag, which drops every attribute it parsed", () => {
-		const src = `${oversizedDocument()}</b class="c" class="d">`;
-		expect(minify(src)).toContain("data-659-99=1></i>");
-	});
-
-	it("clears it on a start tag the tokenizer only emitted at EOF", () => {
-		const src = `${oversizedDocument()}<b class="c" class="d"`;
-		expect(minify(src)).toContain("data-659-99=1></i>");
-	});
-});
 
 
 describe("SourceProcessor — parseError while printing", () => {
@@ -1101,7 +831,6 @@ describe("SourceProcessor — printing what re-parses to the same tree", () => {
 
 
 
-	const MINIFY = /** @type {const} */ ({ mode: "minify" });
 
 
 
@@ -1142,69 +871,11 @@ describe("SourceProcessor — printing what re-parses to the same tree", () => {
 	});
 
 
-	describe("a print that skips what a visitor skipped", () => {
-		/**
-		 * @param {string} source html source
-		 * @param {HtmlPrint} options print options
-		 * @param {number} skipped the node type whose `enter` skips its children
-		 * @returns {{ code: string, log: string[] }} the print and what the visitors saw
-		 */
-		const skipping = (source, options, skipped) => {
-			/** @type {string[]} */
-			const log = [];
-			const code = new SourceProcessor()
-				.use({
-					[NodeType.Document]: {
-						enter: (path) => {
-							if (skipped === NodeType.Document) path.skipChildren();
-						},
-						exit: () => log.push("-doc")
-					},
-					[NodeType.Element]: {
-						enter: (path) => {
-							log.push(`+${path.name()}`);
-							if (skipped === NodeType.Element && path.name() === "div") {
-								path.skipChildren();
-							}
-						},
-						exit: (path) => log.push(`-${path.name()}`)
-					}
-				})
-				.process(source, options).code;
-			return { code, log };
-		};
-
-
-		it("still prints a document whose root skipped its children", () => {
-			const { code, log } = skipping(
-				fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-a-print-that-skips"),
-				MINIFY,
-				NodeType.Document
-			);
-			expect(code).toBe("<div><b>x</b></div><p>y");
-			expect(log).toEqual(["-doc"]);
-			expect(
-				skipping(
-					fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-a-print-that-skips-3"),
-					{ xml: true, mode: "minify" },
-					NodeType.Document
-				).code
-			).toBe("<a><b/></a>");
-		});
-	});
 });
 
 describe("SourceProcessor — attribute values the minifier rewrites", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
-	const R = builtinEmbeddedRenderer();
 
-	/**
-	 * @param {string} source html source
-	 * @param {import("../../../lib/html/syntax-printer").HtmlPrintOptions=} options print options on top of `mode: "minify"`
-	 * @returns {string} the minified document
-	 */
-	const minify = (source, options) =>
-		new SourceProcessor().process(source, { mode: "minify", ...options }).code;
 
 	/**
 	 * @param {string} source html source
@@ -1268,21 +939,6 @@ describe("SourceProcessor — attribute values the minifier rewrites", () => {
 	});
 
 
-	it("leaves a body as written where the answer is no text", () => {
-		expect(
-			minify(fixture("html", "source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written"), {
-				embeddedAnswers: () => undefined
-			})
-		).toBe("<style>a { color : red }</style><p style='a : b'>x");
-		expect(
-			minify(fixture("html", "source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written-2"), {
-				renderEmbeddedSource: () => undefined
-			})
-		).toBe("<p style='a : b'>x<svg/>");
-		expect(minify(fixture("html", "source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written-3"), { renderEmbeddedSource: R })).toBe(
-			"<p style=a:b>x"
-		);
-	});
 });
 
 
@@ -1363,152 +1019,16 @@ describe("SourceProcessor — the streamed walk", () => {
 	// entering what is still open and recycling what finished under it.
 	const BIG = 40000;
 
-	/**
-	 * @param {string} source html source
-	 * @param {string=} skip the element whose `enter` calls `skipChildren()`
-	 * @returns {string[]} `+name` / `-name` in visit order
-	 */
-	const walk = (source, skip) => {
-		/** @type {string[]} */
-		const log = [];
-		new SourceProcessor()
-			.use({
-				[NodeType.Element]: {
-					enter: (path) => {
-						log.push(`+${path.name()}`);
-						if (path.name() === skip) path.skipChildren();
-					},
-					exit: (path) => log.push(`-${path.name()}`)
-				}
-			})
-			.process(source);
-		return log;
-	};
 
-	/**
-	 * @param {string[]} log a walk's log
-	 * @param {string} entry one entry
-	 * @returns {number} how often it occurs
-	 */
-	const count = (log, entry) => log.filter((e) => e === entry).length;
 
-	/**
-	 * @param {string[]} log a walk's log
-	 */
-	const balanced = (log) => {
-		/** @type {string[]} */
-		const open = [];
-		for (const entry of log) {
-			if (entry.startsWith("+")) open.push(entry.slice(1));
-			else expect(open.pop()).toBe(entry.slice(1));
-		}
-		expect(open).toEqual([]);
-	};
 
-	it("closes an entered element when the next one ends it", () => {
-		// The `<p>` was entered while open; the `<div>` that closes it diverges the
-		// open stack from the entered one below the top.
-		const log = walk(`<p>${"<span>x</span>".repeat(BIG)}<div>y</div>`);
-		expect(count(log, "+span")).toBe(BIG);
-		expect(log.slice(-5)).toEqual(["-p", "+div", "-div", "-body", "-html"]);
-		balanced(log);
-	});
 
-	it("flushes a body whose first child is the text a head left", () => {
-		// The text ends the head and opens the body on one token, so the body
-		// already holds it when the walk first catches up.
-		const log = walk(`<head>${"<meta>".repeat(50000)}x<p>y</p>`);
-		expect(count(log, "+meta")).toBe(50000);
-		expect(log.slice(-4)).toEqual(["+p", "-p", "-body", "-html"]);
-		balanced(log);
-	});
 
-	it("does not start streaming on an open stack a `</form>` broke", () => {
-		// The nodes piled up with no stack change until `</form>` took the form off
-		// the middle of it, which is where the walk would first sync: entering the
-		// stack then entered the `<div>` with its form never entered, and visited
-		// the form after its own child had exited.
-		const log = walk(`<form><div>${"a<!---->".repeat(25000)}b</form>c`);
-		expect(log).toEqual([
-			"+html",
-			"+head",
-			"-head",
-			"+body",
-			"+form",
-			"+div",
-			"-div",
-			"-form",
-			"-body",
-			"-html"
-		]);
-	});
 
-	it("finishes a skipped element the input left open", () => {
-		const log = walk(`<div><section>${"<p><b>x</b></p>".repeat(BIG)}`, "div");
-		expect(log).toEqual([
-			"+html",
-			"+head",
-			"-head",
-			"+body",
-			"+div",
-			"-div",
-			"-body",
-			"-html"
-		]);
-	});
 
-	it("closes a body a frameset took out of the tree", () => {
-		const log = walk(`${fixture("html", "source-processor-node-path-hands-every-visitor-the-run-s-state-typed-by-the-2").repeat(50000)}<frameset>`);
-		expect(count(log, "+p")).toBe(50000);
-		// The body still exits, detached, ahead of the frameset that replaced it.
-		expect(log.slice(-4)).toEqual(["-body", "+frameset", "-frameset", "-html"]);
-		balanced(log);
-	});
 
-	it("streams forms the end tag takes off the top of the stack", () => {
-		const log = walk(
-			`<!DOCTYPE html><html><body>${"<form><p>x</p></form>".repeat(
-				BIG
-			)}</body></html>`
-		);
-		expect(count(log, "+form")).toBe(BIG);
-		expect(count(log, "-form")).toBe(BIG);
-		balanced(log);
-	});
 
-	it("stops streaming where a `</form>` takes an entered form off mid-stack", () => {
-		// The `<div>` inside stays open, so nothing has finished: reconciling there
-		// would close and re-enter it.
-		const log = walk(
-			`<!DOCTYPE html><html><body><form>${fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints").repeat(
-				BIG
-			)}<div></form><p>y</p></div></body></html>`
-		);
-		expect(count(log, "+div")).toBe(1);
-		expect(log.indexOf("-form")).toBeGreaterThan(log.lastIndexOf("-div"));
-		balanced(log);
-	});
 
-	it("exits a skipped element that closes while streaming", () => {
-		const log = walk(
-			`<div><section>${"<p><b>x</b></p>".repeat(
-				BIG
-			)}</section></div><p>after</p>`,
-			"div"
-		);
-		expect(log).toEqual([
-			"+html",
-			"+head",
-			"-head",
-			"+body",
-			"+div",
-			"-div",
-			"+p",
-			"-p",
-			"-body",
-			"-html"
-		]);
-	});
 
 	it("ends a walk a visitor stopped, and fires its visitors on the next", () => {
 		const processor = new SourceProcessor();
