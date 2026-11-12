@@ -1987,3 +1987,15 @@ describe("SourceProcessor.processAsync — `declareCharset` over embedded answer
 		);
 	});
 });
+
+describe("CssSyntax minify — escapes and urls in a value spaced for an old tokenizer", () => {
+	it.each([
+		// `x\)url(` is one function token: its `\)` closes nothing.
+		['.a{background:x\\)url(y ".x{color:red}")}', '.a{background:x\\)url(y ".x{color:red}")}'],
+		// An escaped `)` in a raw url is part of the address.
+		[".a{background:url(a\\)b)c}", ".a{background:url(a\\)b) c}"],
+		[".a{background:url(a\\)b)1px}", ".a{background:url(a\\)b) 1px}"]
+	])("keeps %s reading as written", (source, expected) => {
+		expect(minifyFor(source, ["ie 11"])).toBe(expected);
+	});
+});
