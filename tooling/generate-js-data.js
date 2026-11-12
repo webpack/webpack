@@ -2334,7 +2334,7 @@ const collectParseErrorCodes = () => {
 
 	const babelSource = fs.readFileSync(BABEL_PARSER, "utf8");
 
-	const { parseProgram } = require("../lib/javascript/syntax-parser");
+	const { parseProgram } = require("../lib/javascript/syntax").parser;
 
 	const patterns = PARSE_ERRORS.map((entry) =>
 		parseErrorTemplateRegExp(entry.template)
