@@ -323,6 +323,23 @@ ${details(snapshot)}`)
 		fs.utimesSync(filename, before.atime, mtime);
 	};
 
+	/**
+	 * Like `updateFile` but restores the original mtime after writing, so the
+	 * timestamp stays identical while the content changes. This reproduces the
+	 * scenario described in issue #23282 (e.g. checkout tools that preserve
+	 * timestamps).
+	 * @param {IFs} fs file system
+	 * @param {string} filename file to modify
+	 */
+	const updateFileSameTime = (fs, filename) => {
+		const oldContent = /** @type {string} */ (
+			/** @type {unknown} */ (fs.readFileSync(filename, "utf8"))
+		);
+		const before = fs.statSync(filename);
+		fs.writeFileSync(filename, `${oldContent}!`);
+		fs.utimesSync(filename, before.atime, before.mtime);
+	};
+
 	for (const [name, options] of /** @type {[string, SnapshotOptions][]} */ ([
 		["timestamp", { timestamp: true }],
 		["hash", { hash: true }],
@@ -451,6 +468,17 @@ ${details(snapshot)}`)
 						if (err) return done(err);
 						const fs = createFs();
 						expectSnapshotsState(fs, snapshot, snapshot2, true, done);
+					});
+				});
+			}
+
+			if (name === "tsh") {
+				it("should invalidate the snapshot when content changes but timestamp stays the same (#23282)", (done) => {
+					const fs = createFs();
+					createSnapshot(fs, options, (err, snapshot, snapshot2) => {
+						if (err) return done(err);
+						updateFileSameTime(fs, "/path/file.txt");
+						expectSnapshotsState(fs, snapshot, snapshot2, false, done);
 					});
 				});
 			}
