@@ -1,0 +1,3 @@
+[
+	{ "entry": "parseProgram", "options": { "scopes": true }, "fields": ["childCount"] }
+]
