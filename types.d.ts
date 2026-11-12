@@ -29578,6 +29578,7 @@ declare interface RecursiveNonNullable<T> {}
 
 /**
  * One identifier occurrence that refers to a binding.
+ * @experimental exposed as `webpack.javascript.syntax.scopes.Reference`; unstable API
  */
 declare class Reference {
 	constructor(identifier: ScopeIdentifier, from: Scope);
@@ -32385,6 +32386,7 @@ declare interface SSRManifestPluginOptions {
 /**
  * A lexical scope. One shape for every kind, so the property loads in the
  * resolution loop stay monomorphic.
+ * @experimental exposed as `webpack.javascript.syntax.scopes.Scope`; unstable API
  */
 declare class Scope {
 	constructor(
@@ -32437,7 +32439,7 @@ declare interface ScopeAnalysis {
 
 /**
  * One occurrence of a name in the source, which a rename rewrites in place.
- * @experimental the `{ path: true }` tap option; unstable API
+ * @experimental the `{ path: true }` tap option and `webpack.javascript.syntax.scopes.ScopeIdentifier`; unstable API
  */
 declare class ScopeIdentifier {
 	constructor(name: string, start: number, end: number);
@@ -32470,6 +32472,7 @@ declare interface ScopeInfo {
  * What a parse with `scopes` saw of names and scopes, in the order it saw
  * them, keyed by where each name starts: a name can be an object or a tree
  * node at that point, and a key the parser writes late still starts where it is.
+ * @experimental exposed as `webpack.javascript.syntax.scopes.ScopeLog`; unstable API
  */
 declare class ScopeLog {
 	constructor();
@@ -36482,6 +36485,7 @@ declare interface Values {
 
 /**
  * A binding: one name declared in one scope.
+ * @experimental exposed as `webpack.javascript.syntax.scopes.Variable`; unstable API
  */
 declare class Variable {
 	constructor(name: string, scope: Scope);
