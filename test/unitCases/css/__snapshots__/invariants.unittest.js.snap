@@ -43326,6 +43326,18 @@ exports[`CSS syntax — invariants source-processor-merge-distant-rules-merges-r
 
 exports[`CSS syntax — invariants source-processor-merge-distant-rules-merges-rules-nested-in-an-at-rule tokenizes 1`] = `"at-keyword[0,6] whitespace[6,7] ident[7,12] left-curly-bracket[12,13] delim[13,14] ident[14,15] left-curly-bracket[15,16] ident[16,21] colon[21,22] ident[22,25] right-curly-bracket[25,26] delim[26,27] ident[27,28] left-curly-bracket[28,29] ident[29,35] colon[35,36] number[36,37] right-curly-bracket[37,38] delim[38,39] ident[39,40] left-curly-bracket[40,41] ident[41,46] colon[46,47] ident[47,50] right-curly-bracket[50,51] right-curly-bracket[51,52] end=52"`;
 
+exports[`CSS syntax — invariants source-processor-merge-distant-rules-orders-a-list-whose-block-a-neighbor-changed parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"b\\"],\\",\\",[\\"ident\\",\\"c\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"c\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]"`;
+
+exports[`CSS syntax — invariants source-processor-merge-distant-rules-orders-a-list-whose-block-a-neighbor-changed parses 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-merge-distant-rules-orders-a-list-whose-block-a-neighbor-changed prints {"mode":"minify","mergeDistantRules":false} 1`] = `"b,c{color:red}"`;
+
+exports[`CSS syntax — invariants source-processor-merge-distant-rules-orders-a-list-whose-block-a-neighbor-changed prints {"mode":"minify","mergeDistantRules":true} 1`] = `"b,c{color:red}"`;
+
+exports[`CSS syntax — invariants source-processor-merge-distant-rules-orders-a-list-whose-block-a-neighbor-changed prints {"mode":"minify"} 1`] = `"b,c{color:red}"`;
+
+exports[`CSS syntax — invariants source-processor-merge-distant-rules-orders-a-list-whose-block-a-neighbor-changed tokenizes 1`] = `"ident[0,1] comma[1,2] ident[2,3] left-curly-bracket[3,4] ident[4,9] colon[9,10] ident[10,14] right-curly-bracket[14,15] ident[15,16] left-curly-bracket[16,17] ident[17,22] colon[22,23] ident[23,26] right-curly-bracket[26,27] ident[27,28] left-curly-bracket[28,29] ident[29,34] colon[34,35] ident[35,38] right-curly-bracket[38,39] end=39"`;
+
 exports[`CSS syntax — invariants source-processor-merge-distant-rules-past-a-rule-matching-other-element-types parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"h1\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"sm:flex\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"h2\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]"`;
 
 exports[`CSS syntax — invariants source-processor-merge-distant-rules-past-a-rule-matching-other-element-types parses 2`] = `""`;

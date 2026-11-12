@@ -1234,6 +1234,18 @@ describe("SourceProcessor — mergeDistantRules", () => {
 		expect(code).toBe(".a,.c{color:red}.b{margin:0}");
 		expect(map).toBeDefined();
 	});
+
+	it("orders a list whose block a neighbor folded into changed", () => {
+		const sheet = fixture(
+			"css",
+			"source-processor-merge-distant-rules-orders-a-list-whose-block-a-neighbor-changed"
+		);
+		const { code } = new SourceProcessor().process(sheet, {
+			mode: "minify",
+			mergeDistantRules: true
+		});
+		expect(code).toBe("b,c{color:red}");
+	});
 });
 
 // Every entry the tables hold has to stay a non-negative integer below 2**31, or
