@@ -482,6 +482,47 @@ describe("Compiler", () => {
 		});
 	});
 
+	it("should rebuild after an async 'done' tap when invalidated during it", (done) => {
+		const webpack = require("../..");
+
+		compiler = webpack({
+			context: testDirectory,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/directory",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+		let doneCalls = 0;
+		let inDone = false;
+		let compileDuringDone = false;
+		compiler.hooks.compile.tap("test", () => {
+			if (inDone) compileDuringDone = true;
+		});
+		compiler.hooks.done.tapPromise("test", async () => {
+			if (++doneCalls > 1) return;
+			inDone = true;
+			/** @type {NonNullable<import("../../").Compiler["watching"]>} */
+			(compiler.watching).invalidate();
+			await new Promise((resolve) => {
+				setTimeout(resolve, 50);
+			});
+			inDone = false;
+		});
+		let callbacks = 0;
+		compiler.watch({}, (err) => {
+			if (err) return done(err);
+			if (++callbacks < 2) return;
+			expect(doneCalls).toBe(2);
+			expect(compileDuringDone).toBe(false);
+			done();
+		});
+	});
+
 	it("should not be running twice at a time (instance cb)", (done) => {
 		const webpack = require("../..");
 
