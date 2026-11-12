@@ -4066,7 +4066,7 @@ describe("SyntaxTree", () => {
 		parseProgram("a;".repeat(140000), 0, { sourceType: "script" });
 		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
 		const program = /** @type {import("estree").Program} */ (
-			tree.lazyEstree(tree._count)
+			tree.lazyEstree(tree._nodeCount)
 		);
 		const types = tree._types;
 		tree.release();
@@ -4279,7 +4279,7 @@ describe("SyntaxTree", () => {
 		const values = tree._values;
 		tree.release();
 		// kept, with its columns, for the next parse, and holding nothing now
-		expect([tree._count, tree._valueCount, tree._listCount]).toEqual([0, 0, 0]);
+		expect([tree._nodeCount, tree._valueCount, tree._listCount]).toEqual([0, 0, 0]);
 		expect(values.every((value) => value === undefined)).toBe(true);
 		const next = new SyntaxTree();
 		expect(next._types).toBe(types);
@@ -4340,7 +4340,7 @@ describe("SyntaxTree", () => {
 		const tree = new SyntaxTree();
 		parseInto(tree, "a;".repeat(140000));
 		const types = tree._types;
-		const nodes = tree._count;
+		const nodes = tree._nodeCount;
 		tree.release();
 		// A runtime that transfers an ArrayBuffer frees the old one at once.
 		const detached =
@@ -4424,19 +4424,19 @@ describe("SyntaxTree", () => {
 			try {
 				const node = compiled.addEstree(object, input, skipUnknown);
 				expect(twoPass._addEstreeInOrder(object, input, skipUnknown)).toBe(node);
-				expect(compiled._count).toBe(twoPass._count);
+				expect(compiled._nodeCount).toBe(twoPass._nodeCount);
 				for (const column of ["_types", "_starts", "_ends", "_flags", "_bases"]) {
 					expect(
 						Array.from(
 							/** @type {Int32Array} */ (
 								/** @type {EXPECTED_ANY} */ (compiled)[column]
-							).subarray(0, compiled._count + 1)
+							).subarray(0, compiled._nodeCount + 1)
 						)
 					).toEqual(
 						Array.from(
 							/** @type {Int32Array} */ (
 								/** @type {EXPECTED_ANY} */ (twoPass)[column]
-							).subarray(0, twoPass._count + 1)
+							).subarray(0, twoPass._nodeCount + 1)
 						)
 					);
 				}
@@ -4921,7 +4921,7 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		const { tree } = parseIntoTree(source);
 		/** @type {string[]} */
 		const later = [];
-		for (let node = 1; node <= tree._count; node++) {
+		for (let node = 1; node <= tree._nodeCount; node++) {
 			for (const field of Object.values(Field)) {
 				for (let i = 0, n = tree.fieldCount(field, node); i < n; i++) {
 					const child = tree.field(i, field, node);
@@ -4939,7 +4939,7 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		const parents = new Map();
 		/** @type {string[]} */
 		const shared = [];
-		for (let node = 1; node <= tree._count; node++) {
+		for (let node = 1; node <= tree._nodeCount; node++) {
 			for (const field of Object.values(Field)) {
 				for (let i = 0, n = tree.fieldCount(field, node); i < n; i++) {
 					const child = tree.field(i, field, node);
