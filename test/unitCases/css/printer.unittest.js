@@ -2060,4 +2060,37 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 			`@-moz-document${rest}@document${rest}`
 		);
 	});
+
+	it("does not decode a data url's percent-escape into the half of another", () => {
+		// Read once, `%%32%41` is the text `%2A`, which must not become `*`.
+		const cases = [
+			[
+				'"data:text/css,/* %%32%41/ .x{color:red} /* */"',
+				'"data:text/css,/* %%32A/ .x{color:red} /* */"'
+			],
+			[
+				'"data:text/css,/* %2%41/ .x{color:red} /* */"',
+				'"data:text/css,/* %2%41/ .x{color:red} /* */"'
+			],
+			["data:text/plain,%25%34%31%3C", "data:text/plain,%2541<"]
+		];
+		for (const [url, printed] of cases) {
+			const once = minifyFor(`.a{background:url(${url})}`);
+			expect(once).toBe(`.a{background:url(${printed})}`);
+			expect(minifyFor(once)).toBe(once);
+		}
+	});
+
+	it("renders a data url whose escapes spell a comment as that comment", () => {
+		const payload = "data:text/css,/* %%32%41/ .x{color:red} /* */";
+		const processor = new SourceProcessor();
+		const { code } = processor.process(`@import url("${payload}");`, {
+			mode: "minify",
+			renderEmbeddedSource: (source) => {
+				expect(source).toBe("/* %2A/ .x{color:red} /* */");
+				return "";
+			}
+		});
+		expect(code).toBe("@import url(data:text/css,);");
+	});
 });
