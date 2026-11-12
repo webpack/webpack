@@ -1,0 +1,8 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "-> </r>",
+		"presets": ["beautify"],
+		"why": "known bug: beautify echoes a declaration the input ran out in (`<!FOO b`) unclosed, so the `</r>` it writes after it lands inside it and the next pass closes `<r>` again"
+	}
+]

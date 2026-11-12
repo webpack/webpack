@@ -1,0 +1,8 @@
+[
+	{
+		"relation": "meaning",
+		"contains": "e[f?g/>",
+		"presets": ["beautify"],
+		"why": "known bug: beautify writes an unquoted value ending in `/` back without the `/`, so `b` reads `c\"d'e[f?g` where the source's reads `c\"d'e[f?g/`"
+	}
+]

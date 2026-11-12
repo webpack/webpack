@@ -55,17 +55,19 @@ const LEGACY_TARGET_OPTIONS = {
 };
 
 // The option sets the invariants are held over: the ones the comparison's own
-// webpack rows are measured with, plus the legacy target for the lowerings.
-/** @type {[string, CssPrintOptions][]} */
+// webpack rows are measured with, the legacy target for the lowerings, and the
+// readable print the `beautify` rows run.
+/** @type {[string, CssPrintOptions & { mode?: "minify" | "beautify" }][]} */
 const PRESETS = [
 	["default", DEFAULT_OPTIONS],
 	["target", TARGET_OPTIONS],
 	["target+vars", TARGET_VARS_OPTIONS],
-	["legacy", LEGACY_TARGET_OPTIONS]
+	["legacy", LEGACY_TARGET_OPTIONS],
+	["beautify", { mode: "beautify" }]
 ];
 
 /**
- * @param {CssPrintOptions & CssTransformOptions} options one preset's minimizer options
+ * @param {CssPrintOptions & CssTransformOptions & { mode?: "minify" | "beautify" }} options one preset's minimizer options
  * @returns {(css: string) => string} the printer those options name
  */
 const printerFor = (options) => {

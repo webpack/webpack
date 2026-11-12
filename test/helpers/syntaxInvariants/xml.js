@@ -42,7 +42,7 @@ const printXml = (xml, mode) =>
 		new SourceProcessor().process(xml, { xml: true, mode })
 	).code;
 
-/** @typedef {Pick<import("../../../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "renderEmbeddedSource">} XmlPrintOptions */
+/** @typedef {Pick<import("../../../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "renderEmbeddedSource"> & { mode?: "minify" | "beautify" }} XmlPrintOptions */
 
 /** @typedef {import("../../../lib/html/builtinEmbeddedRenderer").BuiltinEmbeddedRendererOptions} CssOptions */
 
@@ -52,8 +52,8 @@ const LEGACY_CSS_OPTIONS = {
 };
 
 // The printer alone, the two the webpack rows run, where an SVG's `<style>` and
-// `style=""` reach the CSS minifier as in a build, and a target it lowers for;
-// each with the CSS options its renderer minifies with, which `meaning` reads.
+// `style=""` reach the CSS minifier as in a build, a target it lowers for, and
+// the readable print; each with the CSS options `meaning` reads its sheets by.
 /** @type {[string, XmlPrintOptions, CssOptions][]} */
 const PRESETS = [
 	["default", {}, {}],
@@ -67,19 +67,20 @@ const PRESETS = [
 		"embedded+legacy",
 		{ renderEmbeddedSource: builtinEmbeddedRenderer(LEGACY_CSS_OPTIONS) },
 		LEGACY_CSS_OPTIONS
-	]
+	],
+	["beautify", { mode: "beautify" }, {}]
 ];
 
 /**
  * @param {XmlPrintOptions} options one preset's printer options
- * @returns {(xml: string) => string} the minifier those options name
+ * @returns {(xml: string) => string} the printer those options name, a minifier unless they name another mode
  */
 const printerFor = (options) => (xml) =>
 	/** @type {{ code: string }} */ (
 		new SourceProcessor().process(xml, {
+			mode: "minify",
 			...options,
-			xml: true,
-			mode: "minify"
+			xml: true
 		})
 	).code;
 

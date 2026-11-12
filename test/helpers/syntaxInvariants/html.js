@@ -73,19 +73,23 @@ const EMBEDDED_LEGACY_OPTIONS = {
 	renderEmbeddedSource: builtinEmbeddedRenderer(LEGACY_CSS_OPTIONS)
 };
 
+/** @typedef {HtmlPrintOptions & { mode?: "minify" | "beautify" }} PresetOptions */
+
 // The option sets the invariants are held over: the two the comparison's own
-// webpack rows run, then the two a build runs, where a `<style>` and `style=""`
-// reach the CSS minifier. Each names its CSS options, which `meaning` reads.
-/** @type {[string, HtmlPrintOptions, CssOptions][]} */
+// webpack rows run, the two a build runs, where a `<style>` and `style=""`
+// reach the CSS minifier, and the readable print the `beautify` rows run.
+// Each names its CSS options, which `meaning` reads.
+/** @type {[string, PresetOptions, CssOptions][]} */
 const PRESETS = [
 	["default", DEFAULT_OPTIONS, {}],
 	["aggressive", AGGRESSIVE_OPTIONS, {}],
 	["embedded", EMBEDDED_OPTIONS, {}],
-	["embedded+legacy", EMBEDDED_LEGACY_OPTIONS, LEGACY_CSS_OPTIONS]
+	["embedded+legacy", EMBEDDED_LEGACY_OPTIONS, LEGACY_CSS_OPTIONS],
+	["beautify", { mode: "beautify" }, {}]
 ];
 
 /**
- * @param {HtmlPrintOptions & HtmlTransformOptions} options one preset's minimizer options
+ * @param {PresetOptions & HtmlTransformOptions} options one preset's minimizer options
  * @returns {(html: string) => string} the printer those options name
  */
 const printerFor = (options) => {
