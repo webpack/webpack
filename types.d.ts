@@ -1036,6 +1036,7 @@ declare abstract class BasicEvaluatedExpression {
 	/**
 	 * The expression's node in the syntax tree, for a reader that walks or
 	 * evaluates it by id during the same parse, before its object is read.
+	 * @experimental the `{ path: true }` tap option; unstable API
 	 */
 	get expressionNode(): number;
 
@@ -10449,6 +10450,7 @@ type EstreeSourceItem = null | number | EstreeSource;
 /**
  * ESTree objects read the way a `SyntaxTree` is, `toEstreeObject`'s way back:
  * an object takes an id when a read first reaches it, and nothing is copied.
+ * @experimental exposed through `webpack.javascript.syntax.parser`; unstable API
  */
 declare class EstreeView {
 	constructor();
@@ -18222,6 +18224,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	/**
 	 * The node an id a `{ path: true }` tap got stands for, as the parser's
 	 * methods take it: every parse walks a tree, so it is the id itself.
+	 * @experimental the `{ path: true }` tap option; unstable API
 	 */
 	nodeOfPath<T extends NodeEstreeIndex = Expression>(
 		path: JavascriptNodeReader,
@@ -19064,6 +19067,7 @@ declare class JavascriptSourceProcessor<
  * The path every visitor of a JavaScript `SourceProcessor` run receives, its
  * reads defaulting to the node the walk is at; outside a walk it is `A`, read by
  * passing the node a parse returned.
+ * @experimental exposed through `webpack.javascript.syntax.SourceProcessor`; unstable API
  */
 declare abstract class JavascriptSyntaxPath {
 	state: unknown;
@@ -27779,6 +27783,7 @@ type PathOrFileDescriptorResolver = string | number | URL | Buffer;
 /**
  * A hook's `{ path: true }` tap, reading its nodes through the path as CSS and
  * HTML visitors read theirs: `path.type(node)`, `path.field(i, Field.body, node)`.
+ * @experimental the `{ path: true }` tap option; unstable API
  */
 declare interface PathTaps<T, R> {
 	/**
@@ -32432,6 +32437,7 @@ declare interface ScopeAnalysis {
 
 /**
  * One occurrence of a name in the source, which a rename rewrites in place.
+ * @experimental the `{ path: true }` tap option; unstable API
  */
 declare class ScopeIdentifier {
 	constructor(name: string, start: number, end: number);
@@ -38705,7 +38711,7 @@ declare namespace exports {
 			};
 		}
 		export namespace syntax {
-			export namespace parser {
+			/** exposed as `webpack.javascript.syntax.parser`; unstable API @experimental */ export namespace parser {
 				export let BIND_FUNCTION: 3;
 				export let BIND_LEXICAL: 2;
 				export let BIND_NONE: 0;
@@ -39207,7 +39213,7 @@ declare namespace exports {
 					EstreeView
 				};
 			}
-			export namespace printer {
+			/** exposed as `webpack.javascript.syntax.printer`; unstable API @experimental */ export namespace printer {
 				export let prepareMinify: (
 					text: string,
 					options: JavascriptProcessOptions
@@ -39243,7 +39249,7 @@ declare namespace exports {
 					) => boolean;
 				};
 			}
-			export const toEstreeObject: (
+			/** exposed as `webpack.javascript.syntax.toEstreeObject`; unstable API @experimental */ export const toEstreeObject: (
 				node: number,
 				fields?: string[]
 			) =>
@@ -39603,7 +39609,7 @@ declare namespace exports {
 			export let filter: (name: string) => boolean;
 		}
 		export namespace syntax {
-			export namespace parser {
+			/** exposed as `webpack.css.syntax.parser`; unstable API @experimental */ export namespace parser {
 				export let A: CssSyntaxPath;
 				export let DARK_PROPERTY: "--webpack-dark";
 				export let KEYFRAMES_AT_RULE_RE: RegExp;
@@ -39783,7 +39789,7 @@ declare namespace exports {
 				};
 				export { TokenStream };
 			}
-			export namespace printer {
+			/** exposed as `webpack.css.syntax.printer`; unstable API @experimental */ export namespace printer {
 				export let printer: (
 					path: CssSyntaxPath,
 					writer: PrintContext<CssSyntaxPath, number, CssPrintOptions>
@@ -39860,7 +39866,7 @@ declare namespace exports {
 			export let getBannerPosition: () => "end";
 		}
 		export namespace syntax {
-			export namespace parser {
+			/** exposed as `webpack.html.syntax.parser`; unstable API @experimental */ export namespace parser {
 				export let A: HtmlSyntaxPath;
 				export let BLOCK_CONTENTS: "block-contents";
 				export let EMBEDDED_LANGUAGES: string[];
@@ -39976,7 +39982,7 @@ declare namespace exports {
 					callbacks?: HtmlTokenCallbacks
 				) => number;
 			}
-			export namespace printer {
+			/** exposed as `webpack.html.syntax.printer`; unstable API @experimental */ export namespace printer {
 				export let CLASSIC_SCRIPT: "script";
 				export let MODULE_SCRIPT: "module";
 				export let printer: (
