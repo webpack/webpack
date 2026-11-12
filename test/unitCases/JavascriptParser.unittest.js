@@ -1253,19 +1253,29 @@ describe("JavascriptParser", () => {
 			});
 		}
 
-		it("should reuse the line table across calls", () => {
+		it("should reuse the location converter across calls", () => {
 			const parser = parserFor("a;\nbb;\n");
 			expect(parser.getLocation({ start: 0, end: 1 })).toEqual({
 				start: { line: 1, column: 0 },
 				end: { line: 1, column: 1 }
 			});
-			const lineStarts = parser._lineStarts;
-			expect(lineStarts).toEqual([0, 3, 7]);
+			const converter = parser._locConverter;
+			expect(converter).toBeDefined();
 			expect(parser.getLocation({ start: 4, end: 5 })).toEqual({
 				start: { line: 2, column: 1 },
 				end: { line: 2, column: 2 }
 			});
-			expect(parser._lineStarts).toBe(lineStarts);
+			expect(parser._locConverter).toBe(converter);
+		});
+
+		it("should count every ECMAScript line terminator", () => {
+			const parser = parserFor("a;\rb;\u2028c;\u2029d;\r\ne;");
+			for (const [start, line] of [[3, 2], [6, 3], [9, 4], [13, 5]]) {
+				expect(parser.getLocation({ start, end: start })).toEqual({
+					start: { line, column: 0 },
+					end: { line, column: 0 }
+				});
+			}
 		});
 	});
 
