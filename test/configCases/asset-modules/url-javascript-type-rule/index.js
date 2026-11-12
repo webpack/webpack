@@ -1,23 +1,32 @@
 import fs from "fs";
 
+const source = new URL("./source.js", import.meta.url);
+
 it("should emit a JavaScript file referenced by new URL() as an asset", () => {
-	const url = new URL("./source.js", import.meta.url);
-	if (EMPTY_DEFAULT_RULES) {
-		// without a default `url` rule there is no asset type to fall back to
-		expect(fs.existsSync(new URL("./source.js", import.meta.url))).toBe(false);
+	if (CASE === "url-rule") {
+		expect(source.protocol).toBe("data:");
 		return;
 	}
-	expect(url.pathname.endsWith("/source.js")).toBe(true);
-	expect(fs.existsSync(url)).toBe(true);
+	const emitted = source.pathname.endsWith(`/${CASE}/source.js`);
+	// a rule keeping a loader's module keeps the earlier behavior everywhere
+	expect(emitted).toBe(CASE !== "loader-rule");
+	if (!emitted) return;
+	expect(fs.existsSync(source)).toBe(true);
 });
 
 it("should inline a data: JavaScript URL referenced by new URL()", () => {
-	if (EMPTY_DEFAULT_RULES) return;
+	if (CASE !== "type-rule" && CASE !== "future") return;
 	const url = new URL("data:text/javascript,export default 1", import.meta.url);
 	expect(url.protocol).toBe("data:");
 });
 
-it("should keep the rule type when a loader applies", () => {
+it("should emit the loader result as an asset only with futureDefaults", () => {
+	if (CASE !== "loader-rule" && CASE !== "future") return;
 	const url = new URL("./image.png", import.meta.url);
-	expect(url.pathname.endsWith("/loader-result.png")).toBe(true);
+	if (CASE === "loader-rule") {
+		expect(url.pathname.endsWith("/loader-result.png")).toBe(true);
+		return;
+	}
+	expect(url.pathname.endsWith("/image.png")).toBe(true);
+	expect(fs.readFileSync(url, "utf8")).toContain("loader-result.png");
 });

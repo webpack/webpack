@@ -2969,6 +2969,11 @@ export interface ModuleOptionsNormalized {
 	 */
 	defaultRules: RuleSetRules;
 	/**
+	 * Built-in rules applied after `module.rules`, so they win over them. Set by the defaults, not by the configuration.
+	 * @cliExclude
+	 */
+	finalDefaultRules: RuleSetRules;
+	/**
 	 * Specify options for each generator.
 	 */
 	generator: GeneratorOptionsByModuleType;

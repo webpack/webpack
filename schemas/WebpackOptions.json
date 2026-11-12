@@ -3774,6 +3774,17 @@
             }
           ]
         },
+        "finalDefaultRules": {
+          "description": "Built-in rules applied after `module.rules`, so they win over them. Set by the defaults, not by the configuration.",
+          "cli": {
+            "exclude": true
+          },
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetRules"
+            }
+          ]
+        },
         "generator": {
           "$ref": "#/definitions/GeneratorOptionsByModuleType"
         },
@@ -3804,7 +3815,13 @@
           ]
         }
       },
-      "required": ["defaultRules", "generator", "parser", "rules"]
+      "required": [
+        "defaultRules",
+        "finalDefaultRules",
+        "generator",
+        "parser",
+        "rules"
+      ]
     },
     "Name": {
       "description": "Name of the configuration. Used when loading multiple configurations.",

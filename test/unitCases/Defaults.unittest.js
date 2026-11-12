@@ -524,6 +524,7 @@ describe("snapshots", () => {
 		        "type": "asset/webmanifest",
 		      },
 		    ],
+		    "finalDefaultRules": Array [],
 		    "generator": Object {
 		      "css": Object {
 		        "esModule": true,
@@ -5407,22 +5408,23 @@ describe("snapshots", () => {
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
-			-         },
+			@@ ... @@
 			-         "type": "css",
 			-       },
-			-       Object {
+			@@ ... @@
 			-         "dependency": /css-import-local-module/,
+			-         "exclude": /\\.module\\.\\w+$/i,
+			@@ ... @@
+			-         },
+			-         "type": "css/module",
+			@@ ... @@
+			-       Object {
+			-         "dependency": /css-import-global-module/,
 			-         "exclude": /\\.module\\.\\w+$/i,
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
-			@@ ... @@
-			-         "type": "css/module",
-			-       },
-			@@ ... @@
-			-         "dependency": /css-import-global-module/,
-			-         "exclude": /\\.module\\.\\w+$/i,
-			@@ ... @@
+			-         },
 			-         "type": "css/global",
 			-       },
 			-       Object {
@@ -5431,18 +5433,11 @@ describe("snapshots", () => {
 			-           "preferRelative": true,
 			-         },
 			@@ ... @@
-			-         },
-			-         "resolve": Object {
-			-           "fullySpecified": true,
-			-           "preferRelative": true,
-			-         },
-			-       },
-			-       Object {
 			-         "dependency": "html-style",
 			-         "parser": Object {
 			-           "exportType": "text",
 			-         },
-			-         "resolve": Object {
+			@@ ... @@
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
 			-         },
@@ -5453,17 +5448,31 @@ describe("snapshots", () => {
 			-         "parser": Object {
 			-           "as": "block-contents",
 			-           "exportType": "text",
+			-         },
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
+			-         },
+			-       },
+			-       Object {
+			-         "resolve": Object {
 			@@ ... @@
-			-     ],
-			-     "generator": Object {
-			-       "css": Object {
-			-         "esModule": true,
-			-         "exportsOnly": false,
+			+       },
 			+       Object {
 			+         "oneOf": Array [
 			+           Object {
 			+             "resourceQuery": /(\\?|&)raw(&|$)/,
 			+             "type": "asset/source",
+			@@ ... @@
+			-     ],
+			-     "finalDefaultRules": Array [],
+			-     "generator": Object {
+			-       "css": Object {
+			-         "esModule": true,
+			-         "exportsOnly": false,
+			+           Object {
+			+             "resourceQuery": /(\\?|&)url(&|$)/,
+			+             "type": "asset/resource",
 			@@ ... @@
 			-       "css/auto": Object {
 			-         "exportsConvention": "as-is",
@@ -5472,10 +5481,6 @@ describe("snapshots", () => {
 			-         "localIdentHashFunction": "md4",
 			-         "localIdentHashSalt": undefined,
 			-         "localIdentName": "[fullhash]",
-			+           Object {
-			+             "resourceQuery": /(\\?|&)url(&|$)/,
-			+             "type": "asset/resource",
-			+           },
 			+           Object {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
@@ -5501,9 +5506,8 @@ describe("snapshots", () => {
 			+         ],
 			@@ ... @@
 			+     ],
+			+     "finalDefaultRules": Array [],
 			+     "generator": Object {
-			@@ ... @@
-			-         },
 			@@ ... @@
 			-       "css": Object {
 			-         "customMedia": true,
@@ -5541,6 +5545,7 @@ describe("snapshots", () => {
 			-         "dashedIdents": true,
 			-         "function": true,
 			-         "grid": true,
+			-       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@

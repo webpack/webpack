@@ -234,6 +234,38 @@ describe("RuleSetCompiler.hasRuleForResource", () => {
 	});
 });
 
+describe("RuleSetCompiler.hasTypeForDependency", () => {
+	/**
+	 * @param {EXPECTED_ANY} rules module rules (may be intentionally malformed)
+	 * @returns {boolean} whether a rule types `url` dependencies
+	 */
+	const has = (rules) => RuleSetCompiler.hasTypeForDependency(rules, "url");
+
+	it("returns false for missing rules and skips falsy entries", () => {
+		expect(has(undefined)).toBe(false);
+		expect(has([false, null, "...", 0])).toBe(false);
+	});
+
+	it("requires a matching `dependency` condition and a type", () => {
+		expect(has([{ dependency: "url", use: ["loader"] }])).toBe(false);
+		expect(has([{ dependency: "esm", type: "asset/inline" }])).toBe(false);
+		expect(has([{ dependency: { not: "url" }, type: "asset" }])).toBe(false);
+		expect(has([{ type: "javascript/auto" }])).toBe(false);
+		expect(has([{ dependency: "url", type: "asset/inline" }])).toBe(true);
+		expect(has([{ dependency: /^url$/, type: "asset" }])).toBe(true);
+	});
+
+	it("finds a type in nested `oneOf` and `rules`", () => {
+		expect(
+			has([{ dependency: "url", oneOf: [{ type: "asset/inline" }] }])
+		).toBe(true);
+		expect(has([{ rules: [{ dependency: "url", type: "asset" }] }])).toBe(
+			true
+		);
+		expect(has([{ oneOf: [{ type: "asset" }] }])).toBe(false);
+	});
+});
+
 describe("RuleSetCompiler glob conditions", () => {
 	const compiler = new RuleSetCompiler([]);
 

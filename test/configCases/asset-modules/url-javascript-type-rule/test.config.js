@@ -1,7 +1,9 @@
 "use strict";
 
+const cases = ["type-rule", "loader-rule", "url-rule", "future"];
+
 module.exports = {
 	findBundle(i) {
-		return i === 0 ? "./bundle0.js" : "./no-default-rules/bundle.js";
+		return `./${cases[i]}/bundle.${cases[i] === "future" ? "mjs" : "js"}`;
 	}
 };

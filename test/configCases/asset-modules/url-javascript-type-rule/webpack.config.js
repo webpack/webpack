@@ -3,36 +3,36 @@
 const path = require("path");
 const webpack = require("../../../../");
 
+const jsRule = { test: /\.js$/, type: "javascript/auto" };
+const dataJsRule = { mimetype: "text/javascript", type: "javascript/auto" };
+// the documented way to keep a loader producing the module instead of an asset module
+const loaderRule = {
+	test: /\.png$/,
+	type: "javascript/auto",
+	use: path.resolve(__dirname, "url-loader.js")
+};
+
 /**
- * @param {boolean} emptyDefaultRules whether `module.defaultRules` is emptied
+ * @param {string} name case name, also the output subdirectory
+ * @param {import("../../../../").RuleSetRule[]} rules user `module.rules`
+ * @param {boolean=} futureDefaults whether to enable `experiments.futureDefaults`
  * @returns {import("../../../../").Configuration} configuration
  */
-const config = (emptyDefaultRules) => ({
+const config = (name, rules, futureDefaults = false) => ({
 	mode: "development",
 	target: "node",
 	output: {
-		filename: emptyDefaultRules ? "no-default-rules/bundle.js" : "bundle0.js",
-		assetModuleFilename: emptyDefaultRules
-			? "no-default-rules/[name][ext]"
-			: "[name][ext]"
+		filename: `${name}/bundle.${futureDefaults ? "mjs" : "js"}`,
+		assetModuleFilename: `${name}/[name][ext]`
 	},
-	module: {
-		defaultRules: emptyDefaultRules ? [] : ["..."],
-		rules: [
-			{ test: /\.js$/, type: "javascript/auto" },
-			{ mimetype: "text/javascript", type: "javascript/auto" },
-			{
-				test: /\.png$/,
-				type: "javascript/auto",
-				use: path.resolve(__dirname, "url-loader.js")
-			}
-		]
-	},
-	plugins: [
-		new webpack.DefinePlugin({
-			EMPTY_DEFAULT_RULES: JSON.stringify(emptyDefaultRules)
-		})
-	]
+	module: { rules },
+	experiments: { futureDefaults },
+	plugins: [new webpack.DefinePlugin({ CASE: JSON.stringify(name) })]
 });
 
-module.exports = [config(false), config(true)];
+module.exports = [
+	config("type-rule", [jsRule, dataJsRule]),
+	config("loader-rule", [jsRule, loaderRule]),
+	config("url-rule", [jsRule, { dependency: "url", type: "asset/inline" }]),
+	config("future", [jsRule, dataJsRule, loaderRule], true)
+];

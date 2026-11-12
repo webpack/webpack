@@ -23066,6 +23066,13 @@ declare interface ModuleOptionsNormalized {
 	defaultRules: (undefined | null | false | "" | 0 | RuleSetRule | "...")[];
 
 	/**
+	 * Built-in rules applied after `module.rules`, so they win over them. Set by the defaults, not by the configuration.
+	 */
+	finalDefaultRules: (
+		undefined | null | false | "" | 0 | RuleSetRule | "..."
+	)[];
+
+	/**
 	 * Specify options for each generator.
 	 */
 	generator: GeneratorOptionsByModuleType;
