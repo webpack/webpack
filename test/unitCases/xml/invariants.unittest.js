@@ -8,6 +8,7 @@ const {
 	printOptions,
 	readPrint,
 	readRun,
+	snapshotOf,
 	snapshotText,
 	treeLines,
 	unexplained,
@@ -193,7 +194,7 @@ describe("XML syntax — invariants", () => {
 	for (const { name, dir, source, options, parses, expected } of all) {
 		describe(name, () => {
 			it("tokenizes", () => {
-				expect(tokenLine(source)).toMatchSnapshot();
+				expect(snapshotOf(source, tokenLine(source))).toMatchSnapshot();
 			});
 
 			it("parses", () => {
@@ -206,10 +207,13 @@ describe("XML syntax — invariants", () => {
 					}
 				});
 				expect(
-					JSON.stringify(A.children(document).map(materialize))
+					snapshotOf(
+						source,
+						JSON.stringify(A.children(document).map(materialize))
+					)
 				).toMatchSnapshot();
 				// The second entry, so the tree's stays as it was.
-				expect(errors.join(" ")).toMatchSnapshot();
+				expect(snapshotOf(source, errors.join(" "))).toMatchSnapshot();
 			});
 
 			it.each(options.map((one) => [JSON.stringify(one), one]))(
@@ -222,14 +226,13 @@ describe("XML syntax — invariants", () => {
 						return;
 					}
 					const { options: given, log } = printOptions(one);
-					expect(
-						snapshotText(
-							/** @type {{ code: string }} */ (
-								new SourceProcessor().process(source, given)
-							).code
-						)
-					).toMatchSnapshot();
-					if (log !== undefined) expect(log.join(" ")).toMatchSnapshot();
+					const { code } = /** @type {{ code: string }} */ (
+						new SourceProcessor().process(source, given)
+					);
+					expect(snapshotOf(source, snapshotText(code))).toMatchSnapshot();
+					if (log !== undefined) {
+						expect(snapshotOf(source, log.join(" "))).toMatchSnapshot();
+					}
 				}
 			);
 

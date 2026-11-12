@@ -41501,6 +41501,60 @@ exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-ren
 
 exports[`CSS syntax — invariants invariants-runner-declared-runs-and-named-renderers tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,12] colon[12,13] function[13,17] string[17,58] right-parenthesis[58,59] comment[59,65] right-curly-bracket[65,66] end=66"`;
 
+exports[`CSS syntax — invariants invariants-runner-fixture-code parses {"entry":"SourceProcessor","visit":{"fixture":"countDeclarations"}} 1`] = `
+"#25 margin
+#50 color
+#75 margin"
+`;
+
+exports[`CSS syntax — invariants invariants-runner-fixture-code parses {"entry":"parseAStylesheet","check":{"fixture":"lengths"}} 1`] = `
+"length 6858, sha256 237329b161f96b29
+[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"u\\"],\\":\\",\\":\\",[\\"ident\\",\\"after\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"content\\"],\\":\\",\\" \\",[\\"string\\",\\"\\\\ud800\\"],\\" \\"]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"r0\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"color\\"],\\":\\",\\" 
+…
+,\\"38\\",38,\\"integer\\",\\"px\\"],\\" \\"]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"r39\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"color\\"],\\":\\",\\" \\",[\\"ident\\",\\"red\\"],\\";\\",\\" \\",[\\"ident\\",\\"margin\\"],\\":\\",\\" \\",[\\"dimension\\",\\"39\\",39,\\"integer\\",\\"px\\"],\\" \\"]]]"
+`;
+
+exports[`CSS syntax — invariants invariants-runner-fixture-code parses {"entry":"parseAStylesheet","check":{"fixture":"lengths"}} 2`] = `""`;
+
+exports[`CSS syntax — invariants invariants-runner-fixture-code parses {"entry":"parseAStylesheet","check":{"fixture":"lengths"}} 3`] = `"[6858,0]"`;
+
+exports[`CSS syntax — invariants invariants-runner-fixture-code parses 1`] = `
+"length 6858, sha256 237329b161f96b29
+[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"u\\"],\\":\\",\\":\\",[\\"ident\\",\\"after\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"content\\"],\\":\\",\\" \\",[\\"string\\",\\"\\\\ud800\\"],\\" \\"]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"r0\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"color\\"],\\":\\",\\" 
+…
+,\\"38\\",38,\\"integer\\",\\"px\\"],\\" \\"]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"r39\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"color\\"],\\":\\",\\" \\",[\\"ident\\",\\"red\\"],\\";\\",\\" \\",[\\"ident\\",\\"margin\\"],\\":\\",\\" \\",[\\"dimension\\",\\"39\\",39,\\"integer\\",\\"px\\"],\\" \\"]]]"
+`;
+
+exports[`CSS syntax — invariants invariants-runner-fixture-code parses 2`] = `""`;
+
+exports[`CSS syntax — invariants invariants-runner-fixture-code prints {"mode":"minify","transforms":{"comments":{"fixture":"keepLicense"}},"check":{"fixture":"check"}} 1`] = `"\\"length 1093, sha256 08d8d40e54f123d7\\\\n/*! license */.u:after{content:\\\\\\"\\\\ud800\\\\\\"}.r0{color:red;margin:0}.r1{color:red;margin:1px}.r2{color:red;margin:2px}.r3{color:red;margin:3px}.r4{color:red;margin:4px}.r5{color:red;margin:5px}.r6{color:red;mar\\\\n…\\\\nargin:32px}.r33{color:red;margin:33px}.r34{color:red;margin:34px}.r35{color:red;margin:35px}.r36{color:red;margin:36px}.r37{color:red;margin:37px}.r38{color:red;margin:38px}.r39{color:red;margin:39px}\\""`;
+
+exports[`CSS syntax — invariants invariants-runner-fixture-code prints {"mode":"minify","transforms":{"comments":{"fixture":"keepLicense"}},"check":{"fixture":"check"}} 2`] = `"{\\"length\\":1093,\\"license\\":true,\\"declarations\\":0}"`;
+
+exports[`CSS syntax — invariants invariants-runner-fixture-code prints {"mode":"minify","visit":{"fixture":"countDeclarations"},"check":{"fixture":"check"}} 1`] = `"\\"length 1093, sha256 08d8d40e54f123d7\\\\n/*! license */.u:after{content:\\\\\\"\\\\ud800\\\\\\"}.r0{color:red;margin:0}.r1{color:red;margin:1px}.r2{color:red;margin:2px}.r3{color:red;margin:3px}.r4{color:red;margin:4px}.r5{color:red;margin:5px}.r6{color:red;mar\\\\n…\\\\nargin:32px}.r33{color:red;margin:33px}.r34{color:red;margin:34px}.r35{color:red;margin:35px}.r36{color:red;margin:36px}.r37{color:red;margin:37px}.r38{color:red;margin:38px}.r39{color:red;margin:39px}\\""`;
+
+exports[`CSS syntax — invariants invariants-runner-fixture-code prints {"mode":"minify","visit":{"fixture":"countDeclarations"},"check":{"fixture":"check"}} 2`] = `"{\\"length\\":1093,\\"license\\":true,\\"declarations\\":81}"`;
+
+exports[`CSS syntax — invariants invariants-runner-fixture-code prints {"mode":"minify","visit":{"fixture":"countDeclarations"},"check":{"fixture":"check"}} 3`] = `
+"#25 margin
+#50 color
+#75 margin"
+`;
+
+exports[`CSS syntax — invariants invariants-runner-fixture-code prints {"mode":"minify"} 1`] = `
+"length 1102, sha256 abec5cdd15f8f926
+\\"/*! license */.u:after{content:\\\\\\"\\\\ud800\\\\\\"}.r0{color:red;margin:0}.r1{color:red;margin:1px}.r2{color:red;margin:2px}.r3{color:red;margin:3px}.r4{color:red;margin:4px}.r5{color:red;margin:5px}.r6{color
+…
+rgin:32px}.r33{color:red;margin:33px}.r34{color:red;margin:34px}.r35{color:red;margin:35px}.r36{color:red;margin:36px}.r37{color:red;margin:37px}.r38{color:red;margin:38px}.r39{color:red;margin:39px}\\""
+`;
+
+exports[`CSS syntax — invariants invariants-runner-fixture-code tokenizes 1`] = `
+"length 14627, sha256 31e7bad091f21c57
+comment[0,14] whitespace[14,15] comment[15,26] whitespace[26,27] delim[27,28] ident[28,29] colon[29,30] colon[30,31] ident[31,36] whitespace[36,37] left-curly-bracket[37,38] whitespace[38,39] ident[39
+…
+7,1378] whitespace[1378,1379] ident[1379,1385] colon[1385,1386] whitespace[1386,1387] dimension[1387,1391|1389,1391] whitespace[1391,1392] right-curly-bracket[1392,1393] whitespace[1393,1394] end=1394"
+`;
+
 exports[`CSS syntax — invariants parser parses {"entry":"SourceProcessor","options":{"as":"block-contents","skip":{"types":["Colon"]}},"visit":{"exit":false}} 1`] = `
 "Declaration[0,59]
 Ident[3,6]

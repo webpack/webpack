@@ -677,6 +677,73 @@ exports[`JavaScript syntax — invariants invariants-runner-declared-runs-and-na
 
 exports[`JavaScript syntax — invariants invariants-runner-declared-runs-and-named-renderers tokenizes 1`] = `"line[0,4] name[5,6] =[7,8] function[9,17] name[18,21] ([21,22] name[22,25] )[25,26] {[27,28] return[30,36] name[37,40] ;[40,41] }[42,43] ;[43,44] eof[44,44]"`;
 
+exports[`JavaScript syntax — invariants invariants-runner-fixture-code parses {"entry":"SourceProcessor","visit":{"fixture":"countIdentifiers"}} 1`] = `
+"#25 s
+#50 call
+#75 s"
+`;
+
+exports[`JavaScript syntax — invariants invariants-runner-fixture-code parses {"entry":"parseProgram","check":{"fixture":"lengths"}} 1`] = `
+"length 8097, sha256 5bb7dea7982da81b
+Program[0,550](body=[VariableDeclaration[27,39](declarations=[VariableDeclarator[31,38](id=Identifier[31,32](name=\\"s\\") init=Literal[35,38](value=\\"\\\\ud800\\" raw=\\"\\\\\\"\\\\ud800\\\\\\"\\"))] kind=\\"var\\"),ExpressionStat
+…
+537,549](expression=CallExpression[537,548](callee=Identifier[537,541](name=\\"call\\") arguments=[Identifier[542,543](name=\\"s\\"),Literal[545,547](value=39 raw=\\"39\\")] optional=false))] sourceType=\\"module\\")"
+`;
+
+exports[`JavaScript syntax — invariants invariants-runner-fixture-code parses {"entry":"parseProgram","check":{"fixture":"lengths"}} 2`] = `""`;
+
+exports[`JavaScript syntax — invariants invariants-runner-fixture-code parses {"entry":"parseProgram","check":{"fixture":"lengths"}} 3`] = `"[8097,0]"`;
+
+exports[`JavaScript syntax — invariants invariants-runner-fixture-code parses 1`] = `
+"length 8097, sha256 5bb7dea7982da81b
+Program[0,550](body=[VariableDeclaration[27,39](declarations=[VariableDeclarator[31,38](id=Identifier[31,32](name=\\"s\\") init=Literal[35,38](value=\\"\\\\ud800\\" raw=\\"\\\\\\"\\\\ud800\\\\\\"\\"))] kind=\\"var\\"),ExpressionStat
+…
+537,549](expression=CallExpression[537,548](callee=Identifier[537,541](name=\\"call\\") arguments=[Identifier[542,543](name=\\"s\\"),Literal[545,547](value=39 raw=\\"39\\")] optional=false))] sourceType=\\"module\\")"
+`;
+
+exports[`JavaScript syntax — invariants invariants-runner-fixture-code parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants invariants-runner-fixture-code parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants invariants-runner-fixture-code prints {"mode":"minify","visit":{"fixture":"countIdentifiers"},"check":{"fixture":"check"}} 1`] = `
+"length 445, sha256 d3effd5b9805bf91
+var s=\\"\\\\ud800\\";call(s,0);call(s,1);call(s,2);call(s,3);call(s,4);call(s,5);call(s,6);call(s,7);call(s,8);call(s,9);call(s,10);call(s,11);call(s,12);call(s,13);call(s,14);call(s,15);call(s,16);call(s,1
+…
+);call(s,22);call(s,23);call(s,24);call(s,25);call(s,26);call(s,27);call(s,28);call(s,29);call(s,30);call(s,31);call(s,32);call(s,33);call(s,34);call(s,35);call(s,36);call(s,37);call(s,38);call(s,39);"
+`;
+
+exports[`JavaScript syntax — invariants invariants-runner-fixture-code prints {"mode":"minify","visit":{"fixture":"countIdentifiers"},"check":{"fixture":"check"}} 2`] = `"{\\"length\\":445,\\"license\\":false,\\"surrogate\\":false,\\"identifiers\\":81}"`;
+
+exports[`JavaScript syntax — invariants invariants-runner-fixture-code prints {"mode":"minify","visit":{"fixture":"countIdentifiers"},"check":{"fixture":"check"}} 3`] = `
+"#25 s
+#50 call
+#75 s"
+`;
+
+exports[`JavaScript syntax — invariants invariants-runner-fixture-code prints {"mode":"minify"} 1`] = `
+"length 445, sha256 d3effd5b9805bf91
+var s=\\"\\\\ud800\\";call(s,0);call(s,1);call(s,2);call(s,3);call(s,4);call(s,5);call(s,6);call(s,7);call(s,8);call(s,9);call(s,10);call(s,11);call(s,12);call(s,13);call(s,14);call(s,15);call(s,16);call(s,1
+…
+);call(s,22);call(s,23);call(s,24);call(s,25);call(s,26);call(s,27);call(s,28);call(s,29);call(s,30);call(s,31);call(s,32);call(s,33);call(s,34);call(s,35);call(s,36);call(s,37);call(s,38);call(s,39);"
+`;
+
+exports[`JavaScript syntax — invariants invariants-runner-fixture-code prints {"print":"jsMinify","compress":{},"format":{"comments":{"fixture":"keepLicense"}},"check":{"fixture":"check"}} 1`] = `
+"length 460, sha256 808261bac571f53c
+/*! license */
+var s=\\"\\\\ud800\\";call(s,0),call(s,1),call(s,2),call(s,3),call(s,4),call(s,5),call(s,6),call(s,7),call(s,8),call(s,9),call(s,10),call(s,11),call(s,12),call(s,13),call(s,14),call(s,15),call
+…
+),call(s,22),call(s,23),call(s,24),call(s,25),call(s,26),call(s,27),call(s,28),call(s,29),call(s,30),call(s,31),call(s,32),call(s,33),call(s,34),call(s,35),call(s,36),call(s,37),call(s,38),call(s,39);"
+`;
+
+exports[`JavaScript syntax — invariants invariants-runner-fixture-code prints {"print":"jsMinify","compress":{},"format":{"comments":{"fixture":"keepLicense"}},"check":{"fixture":"check"}} 2`] = `"{\\"length\\":460,\\"license\\":true,\\"surrogate\\":false,\\"identifiers\\":0}"`;
+
+exports[`JavaScript syntax — invariants invariants-runner-fixture-code tokenizes 1`] = `
+"length 3431, sha256 76d181bf44e0ec4e
+block[0,14] block[15,26] var[27,30] name[31,32] =[33,34] string[35,38]=\\"\\\\ud800\\" ;[38,39] name[40,44] ([44,45] name[45,46] ,[46,47] num[48,49] )[49,50] ;[50,51] name[52,56] ([56,57] name[57,58] ,[58,59
+…
+1,522] ;[522,523] name[524,528] ([528,529] name[529,530] ,[530,531] num[532,534] )[534,535] ;[535,536] name[537,541] ([541,542] name[542,543] ,[543,544] num[545,547] )[547,548] ;[548,549] eof[550,550]"
+`;
+
 exports[`JavaScript syntax — invariants j-spellings-1 parses 1`] = `"Program[0,106](body=[VariableDeclaration[0,15](declarations=[VariableDeclarator[4,14](id=Identifier[4,5](name=\\"s\\") init=Literal[8,14](value=\\"PASS\\" raw=\\"\\\\\\"PASS\\\\\\"\\"))] kind=\\"let\\"),IfStatement[16,60](test=BinaryExpression[20,43](left=UnaryExpression[20,28](operator=\\"typeof\\" prefix=true argument=Identifier[27,28](name=\\"x\\")) operator=\\"==\\" right=Literal[32,43](value=\\"undefined\\" raw=\\"\\\\\\"undefined\\\\\\"\\")) consequent=ExpressionStatement[45,60](expression=CallExpression[45,59](callee=MemberExpression[45,56](object=Identifier[45,52](name=\\"console\\") property=Identifier[53,56](name=\\"log\\") computed=false optional=false) arguments=[Identifier[57,58](name=\\"s\\")] optional=false)) alternate=null),IfStatement[61,105](test=BinaryExpression[65,88](left=UnaryExpression[65,73](operator=\\"typeof\\" prefix=true argument=Identifier[72,73](name=\\"y\\")) operator=\\"!=\\" right=Literal[77,88](value=\\"undefined\\" raw=\\"\\\\\\"undefined\\\\\\"\\")) consequent=ExpressionStatement[90,105](expression=CallExpression[90,104](callee=MemberExpression[90,101](object=Identifier[90,97](name=\\"console\\") property=Identifier[98,101](name=\\"log\\") computed=false optional=false) arguments=[Identifier[102,103](name=\\"y\\")] optional=false)) alternate=null)] sourceType=\\"module\\")"`;
 
 exports[`JavaScript syntax — invariants j-spellings-1 parses 2`] = `""`;

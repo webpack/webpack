@@ -2630,6 +2630,114 @@ exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-re
 
 exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers tokenizes 1`] = `"attr[3,8|10,20]\\" open[0,22|1,2] text[22,23] close[23,27|25,26] open[27,34|28,33] text[34,44] close[44,52|46,51] comment[52,63|56,60] end=63"`;
 
+exports[`HTML syntax — invariants invariants-runner-fixture-code parses {"check":{"fixture":"lengths"}} 1`] = `
+"length 1685, sha256 18416bd1f3fe6059
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       \\"t\\"
+|     <style>
+|       \\"b { color: red }\\"
+|   <body>
+|     <p>
+|       style=\\"margin: 0px\\"
+|       \\"x0\\"
+|     <p>
+|       style=\\"margin: 
+…
+       style=\\"margin: 26px\\"
+|       \\"x26\\"
+|     <p>
+|       style=\\"margin: 27px\\"
+|       \\"x27\\"
+|     <p>
+|       style=\\"margin: 28px\\"
+|       \\"x28\\"
+|     <p>
+|       style=\\"margin: 29px\\"
+|       \\"x29\\""
+`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code parses {"check":{"fixture":"lengths"}} 2`] = `""`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code parses {"check":{"fixture":"lengths"}} 3`] = `"[1685,0]"`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code parses {"entry":"SourceProcessor","visit":{"fixture":"countElements"}} 1`] = `
+"#10 p
+#20 p
+#30 p"
+`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code parses 1`] = `
+"length 1685, sha256 18416bd1f3fe6059
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       \\"t\\"
+|     <style>
+|       \\"b { color: red }\\"
+|   <body>
+|     <p>
+|       style=\\"margin: 0px\\"
+|       \\"x0\\"
+|     <p>
+|       style=\\"margin: 
+…
+       style=\\"margin: 26px\\"
+|       \\"x26\\"
+|     <p>
+|       style=\\"margin: 27px\\"
+|       \\"x27\\"
+|     <p>
+|       style=\\"margin: 28px\\"
+|       \\"x28\\"
+|     <p>
+|       style=\\"margin: 29px\\"
+|       \\"x29\\""
+`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code parses 2`] = `""`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code prints {"mode":"minify","renderEmbeddedSource":{"fixture":"minifyStyleAttributes"},"check":{"fixture":"check"}} 1`] = `
+"length 762, sha256 765c3ffd1460a824
+<!doctype html><title>t</title><style>b { color: red }</style><p style=margin:0px>x0<p style=margin:1px>x1<p style=margin:2px>x2<p style=margin:3px>x3<p style=margin:4px>x4<p style=margin:5px>x5<p sty
+…
+21px>x21<p style=margin:22px>x22<p style=margin:23px>x23<p style=margin:24px>x24<p style=margin:25px>x25<p style=margin:26px>x26<p style=margin:27px>x27<p style=margin:28px>x28<p style=margin:29px>x29"
+`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code prints {"mode":"minify","renderEmbeddedSource":{"fixture":"minifyStyleAttributes"},"check":{"fixture":"check"}} 2`] = `"{\\"length\\":762,\\"offers\\":{\\"css/html\\":31},\\"elements\\":0}"`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code prints {"mode":"minify","visit":{"fixture":"countElements"},"check":{"fixture":"check"}} 1`] = `
+"length 852, sha256 729c66967239ddf2
+<!doctype html><title>t</title><style>b { color: red }</style><p style=\\"margin: 0px\\">x0<p style=\\"margin: 1px\\">x1<p style=\\"margin: 2px\\">x2<p style=\\"margin: 3px\\">x3<p style=\\"margin: 4px\\">x4<p style=\\"mar
+…
+: 22px\\">x22<p style=\\"margin: 23px\\">x23<p style=\\"margin: 24px\\">x24<p style=\\"margin: 25px\\">x25<p style=\\"margin: 26px\\">x26<p style=\\"margin: 27px\\">x27<p style=\\"margin: 28px\\">x28<p style=\\"margin: 29px\\">x29"
+`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code prints {"mode":"minify","visit":{"fixture":"countElements"},"check":{"fixture":"check"}} 2`] = `"{\\"length\\":852,\\"offers\\":{},\\"elements\\":35}"`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code prints {"mode":"minify","visit":{"fixture":"countElements"},"check":{"fixture":"check"}} 3`] = `
+"#10 p
+#20 p
+#30 p"
+`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code prints {"mode":"minify"} 1`] = `
+"length 852, sha256 729c66967239ddf2
+<!doctype html><title>t</title><style>b { color: red }</style><p style=\\"margin: 0px\\">x0<p style=\\"margin: 1px\\">x1<p style=\\"margin: 2px\\">x2<p style=\\"margin: 3px\\">x3<p style=\\"margin: 4px\\">x4<p style=\\"mar
+…
+: 22px\\">x22<p style=\\"margin: 23px\\">x23<p style=\\"margin: 24px\\">x24<p style=\\"margin: 25px\\">x25<p style=\\"margin: 26px\\">x26<p style=\\"margin: 27px\\">x27<p style=\\"margin: 28px\\">x28<p style=\\"margin: 29px\\">x29"
+`;
+
+exports[`HTML syntax — invariants invariants-runner-fixture-code tokenizes 1`] = `
+"length 2578, sha256 aa72cd6fd3ff6f05
+doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,38|32,37] text[38,54] close[54,62|56,61] attr[65,70|72,83]\\" open[62,85|63,64] text[85,87] close[87,91|89,90] at
+…
+,906] close[906,910|908,909] attr[913,918|920,932]\\" open[910,934|911,912] text[934,937] close[937,941|939,940] attr[944,949|951,963]\\" open[941,965|942,943] text[965,968] close[968,972|970,971] end=972"
+`;
+
 exports[`HTML syntax — invariants output-html-with-a-java-script-entry-should-wrap-the-entry-before-the-first parses 1`] = `
 "| <!DOCTYPE html>
 | <html>

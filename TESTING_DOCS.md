@@ -96,6 +96,11 @@ Directories come first, in alphabetical order, then the individual files worth t
     - On `SourceProcessor`, `"visit"` takes a visit spec instead: `{ "types"?, "fields"?, "exit"?, "at"? }`. It names the `NodeType`s to visit, the reads to log on each enter, and whether exits are logged. `at` lists actions, each `{ "type", "on"?, "name"?, "source"? (a prefix), "index"?, "do", "with"? }`, where `do` is `skipChildren`, `stop`, `remove` or `replace` (`with` is the text).
     - A read is `name`, `value`, `source`, `range`, `loc` or `childCount`; on a path also `index` or `parent`; or `flag:<Flag>`, `fieldCount:<Field>`, or `rangeOf`, `startOf`, `endOf`, `textOf` or `sourceOf` followed by `:<Part>`.
   - `expected.json` — known differences the invariants may report.
+  - `fixture.js` — what JSON cannot hold, as CommonJS in Node 10 syntax ([example](test/fixtures/css/invariants-runner-fixture-code/)):
+    - `source()` returns the input, for one generated in code or holding a character no file can (a lone surrogate); the fixture then has no `index.<ext>`, and having both throws. Each snapshot entry of such an input longer than 400 characters holds its length, a digest and its first and last 200 characters.
+    - Any other export is what `{ "fixture": "<export>" }` stands for anywhere in `options.json` or `parse.json`, exactly where the JSON value would go, e.g. `"transforms": { "comments": { "fixture": "keepLicense" } }` or `"renderEmbeddedSource": { "fixture": "myRenderer" }`; an unknown name throws.
+    - `"visit": { "fixture": "<export>" }`, in a print set or on `SourceProcessor`, calls the export with the visit log and the parser's enums, and the visitor map it returns fires; what it writes to the log is snapshotted.
+    - `"check": { "fixture": "<export>" }`, in a print set or a run, calls the export with the printer's result (or the run's values) and `{ source, spec }`, and snapshots what it returns as JSON: in a print before the visit and renderer logs, in a run last. Return a summary rather than asserting, and keep engine-dependent values (error messages) out of it. State an export keeps, such as a renderer's call count, is read back and reset by a `check`.
 
 ### `harness/`
 

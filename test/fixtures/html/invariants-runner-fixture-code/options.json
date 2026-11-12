@@ -1,0 +1,12 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": { "fixture": "minifyStyleAttributes" },
+		"check": { "fixture": "check" }
+	},
+	{
+		"mode": "minify",
+		"visit": { "fixture": "countElements" },
+		"check": { "fixture": "check" }
+	}
+]
