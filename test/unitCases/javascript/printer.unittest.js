@@ -1504,3 +1504,27 @@ describe("one-pass minify of known tests and switches, family E", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 });
+
+describe("one-pass minify, family I round 6", () => {
+	const options = { compress: { ecma: 2020 }, ecma: 2020, mangle: false };
+
+	it("should read a parameter for a `var` alias a function made after it reads", () => {
+		const source = fixture("javascript", "one-pass-i3-1");
+		const { code } = minifyOnePass(source, options);
+		// A declared function, or one made before the alias is set, may run while it is still `undefined`.
+		expect(code).toBe(
+			"function made(x){return function(){return x}}function arrow(x){return()=>x}function declared(x){var outer=x;function g(){return outer}return[g,g]}function before(x){var f=function(){return outer},outer=x;return[f,f]}console.log(made(1)(),arrow(2)(),declared(3)[0](),before(4)[1]());"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should fold a value past an array literal of constants and names nothing writes", () => {
+		const source = fixture("javascript", "one-pass-i3-2");
+		const { code } = minifyOnePass(source, options);
+		// A spread iterates and a call runs code, so the value stays before them.
+		expect(code).toBe(
+			"function nested(x){return[[3],[g(x),x]]}function holes(x){return[[,1],g(x)]}function spread(x){var y=g(x);return[[...x],y]}function call(x){var y=g(x);return[[h()],y]}function g(v){return v+1}function h(){return 0}console.log(nested(1),holes(2),spread([3]),call(4));"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+});
