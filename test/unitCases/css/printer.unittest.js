@@ -2110,6 +2110,20 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 		);
 	});
 
+	it("does not fuse the parent written for `&` with the text around it", () => {
+		const after = '.w{content:"*/}.x{color:red}.z{"}';
+		const lower = (/** @type {string} */ css) =>
+			minifyFor(css, ["chrome 100"]);
+		expect(lower(`*{/&{color:red}}${after}`)).toBe(
+			`/:is(*){color:red}${after}`
+		);
+		expect(lower(`.a{&url(/*){color:red}}${after}`)).toBe(
+			`:is(.a)url(/*){color:red}${after}`
+		);
+		expect(lower("a{b&{color:red}}")).toBe("b:is(a){color:red}");
+		expect(lower("a{&.b,.c &{color:red}}")).toBe(".c a,a.b{color:red}");
+	});
+
 	it("renders a data url whose escapes spell a comment as that comment", () => {
 		const payload = "data:text/css,/* %%32%41/ .x{color:red} /* */";
 		const processor = new SourceProcessor();
