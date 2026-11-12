@@ -15,5 +15,17 @@
 			],
 			"exit": false
 		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"fixture": "empty"
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"fixture": "leaf"
+		}
 	}
 ]

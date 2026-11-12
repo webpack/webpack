@@ -10,5 +10,11 @@
 			"fieldCount:declarations",
 			"fieldCount:rules"
 		]
+	},
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"fixture": "walk"
+		}
 	}
 ]

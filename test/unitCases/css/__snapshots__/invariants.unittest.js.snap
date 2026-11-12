@@ -288,6 +288,12 @@ exports[`CSS syntax — invariants css-minify-export-extract-comments-hands-a-pr
 
 exports[`CSS syntax — invariants css-minify-export-extract-comments-hands-a-predicate-the-comment-s-text-line-and prints {"mode":"minify"} 1`] = `"/*! a */"`;
 
+exports[`CSS syntax — invariants css-minify-export-extract-comments-hands-a-predicate-the-comment-s-text-line-and prints {"print":"cssMinify","extractComments":{"fixture":"extractNone"},"minimizer":{"asset":"a.css"},"check":{"fixture":"check"}} 1`] = `""`;
+
+exports[`CSS syntax — invariants css-minify-export-extract-comments-hands-a-predicate-the-comment-s-text-line-and prints {"print":"cssMinify","extractComments":{"fixture":"extractNone"},"minimizer":{"asset":"a.css"},"check":{"fixture":"check"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"a.css\\",\\"sources\\":[\\"a.css\\"],\\"sourcesContent\\":[\\"/*! a */\\\\n.a{}\\\\n\\\\t/* b */\\\\n.b{} /* c */\\\\n\\"],\\"names\\":[],\\"mappings\\":\\"\\"}}"`;
+
+exports[`CSS syntax — invariants css-minify-export-extract-comments-hands-a-predicate-the-comment-s-text-line-and prints {"print":"cssMinify","extractComments":{"fixture":"extractNone"},"minimizer":{"asset":"a.css"},"check":{"fixture":"check"}} 3`] = `"{\\"extractNone\\":[[[{\\"value\\":\\"! a \\",\\"line\\":1,\\"col\\":0}],false],[[{\\"value\\":\\" b \\",\\"line\\":3,\\"col\\":1}],false],[[{\\"value\\":\\" c \\",\\"line\\":4,\\"col\\":5}],false]]}"`;
+
 exports[`CSS syntax — invariants css-minify-export-extract-comments-hands-a-predicate-the-comment-s-text-line-and tokenizes 1`] = `"comment[0,8] whitespace[8,9] delim[9,10] ident[10,11] left-curly-bracket[11,12] right-curly-bracket[12,13] whitespace[13,15] comment[15,22] whitespace[22,23] delim[23,24] ident[24,25] left-curly-bracket[25,26] right-curly-bracket[26,27] whitespace[27,28] comment[28,35] whitespace[35,36] end=36"`;
 
 exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"c\\"]],[[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
@@ -304,6 +310,12 @@ exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-
 
 exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names prints {"print":"cssMinify","comments":"plain","minimizer":{"asset":"a.css","extractComments":true}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"a.css\\",\\"sources\\":[\\"a.css\\"],\\"sourcesContent\\":[\\"/*! one */a{color:red}/* plain */b{color:blue}/*! one *//* @license two */c{margin:0}/*# sourceMappingURL=a.map */\\"],\\"names\\":[],\\"mappings\\":\\"AAAU,uBAAuB,aAAyC\\"},\\"extractedComments\\":[\\"/*! one */\\",\\"/* @license two */\\"]}"`;
 
+exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names prints {"print":"cssMinify","comments":{"fixture":"keepPlain"},"minimizer":{"asset":"a.css","extractComments":true},"check":{"fixture":"check"}} 1`] = `"a{color:red}/* plain */b{color:blue}c{margin:0}"`;
+
+exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names prints {"print":"cssMinify","comments":{"fixture":"keepPlain"},"minimizer":{"asset":"a.css","extractComments":true},"check":{"fixture":"check"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"a.css\\",\\"sources\\":[\\"a.css\\"],\\"sourcesContent\\":[\\"/*! one */a{color:red}/* plain */b{color:blue}/*! one *//* @license two */c{margin:0}/*# sourceMappingURL=a.map */\\"],\\"names\\":[],\\"mappings\\":\\"AAAU,uBAAuB,aAAyC\\"},\\"extractedComments\\":[\\"/*! one */\\",\\"/* @license two */\\"]}"`;
+
+exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names prints {"print":"cssMinify","comments":{"fixture":"keepPlain"},"minimizer":{"asset":"a.css","extractComments":true},"check":{"fixture":"check"}} 3`] = `"{\\"extractOne\\":[],\\"extractTwo\\":[],\\"keepPlain\\":[[[\\" plain \\"],true],[[\\"# sourceMappingURL=a.map \\"],false]]}"`;
+
 exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names prints {"print":"cssMinify","comments":{"regexp":"plain"},"minimizer":{"asset":"a.css","extractComments":true}} 1`] = `"a{color:red}/* plain */b{color:blue}c{margin:0}"`;
 
 exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names prints {"print":"cssMinify","comments":{"regexp":"plain"},"minimizer":{"asset":"a.css","extractComments":true}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"a.css\\",\\"sources\\":[\\"a.css\\"],\\"sourcesContent\\":[\\"/*! one */a{color:red}/* plain */b{color:blue}/*! one *//* @license two */c{margin:0}/*# sourceMappingURL=a.map */\\"],\\"names\\":[],\\"mappings\\":\\"AAAU,uBAAuB,aAAyC\\"},\\"extractedComments\\":[\\"/*! one */\\",\\"/* @license two */\\"]}"`;
@@ -319,6 +331,12 @@ exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-
 exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names prints {"print":"cssMinify","extractComments":"all","minimizer":{"asset":"a.css","extractComments":false}} 1`] = `"a{color:red}b{color:blue}c{margin:0}"`;
 
 exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names prints {"print":"cssMinify","extractComments":"all","minimizer":{"asset":"a.css","extractComments":false}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"a.css\\",\\"sources\\":[\\"a.css\\"],\\"sourcesContent\\":[\\"/*! one */a{color:red}/* plain */b{color:blue}/*! one *//* @license two */c{margin:0}/*# sourceMappingURL=a.map */\\"],\\"names\\":[],\\"mappings\\":\\"AAAU,YAAuB,aAAyC\\"},\\"extractedComments\\":[\\"/*! one */\\",\\"/* plain */\\",\\"/* @license two */\\",\\"/*# sourceMappingURL=a.map */\\"]}"`;
+
+exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names prints {"print":"cssMinify","extractComments":{"fixture":"extractOne"},"minimizer":{"asset":"a.css","extractComments":false},"check":{"fixture":"check"}} 1`] = `"a{color:red}b{color:blue}c{margin:0}"`;
+
+exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names prints {"print":"cssMinify","extractComments":{"fixture":"extractOne"},"minimizer":{"asset":"a.css","extractComments":false},"check":{"fixture":"check"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"a.css\\",\\"sources\\":[\\"a.css\\"],\\"sourcesContent\\":[\\"/*! one */a{color:red}/* plain */b{color:blue}/*! one *//* @license two */c{margin:0}/*# sourceMappingURL=a.map */\\"],\\"names\\":[],\\"mappings\\":\\"AAAU,YAAuB,aAAyC\\"},\\"extractedComments\\":[\\"/*! one */\\"]}"`;
+
+exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names prints {"print":"cssMinify","extractComments":{"fixture":"extractOne"},"minimizer":{"asset":"a.css","extractComments":false},"check":{"fixture":"check"}} 3`] = `"{\\"extractOne\\":[[[{\\"value\\":\\"! one \\",\\"line\\":1,\\"col\\":0}],true],[[{\\"value\\":\\" plain \\",\\"line\\":1,\\"col\\":22}],false],[[{\\"value\\":\\"! one \\",\\"line\\":1,\\"col\\":46}],true],[[{\\"value\\":\\" @license two \\",\\"line\\":1,\\"col\\":56}],false],[[{\\"value\\":\\"# sourceMappingURL=a.map \\",\\"line\\":1,\\"col\\":85}],false]],\\"extractTwo\\":[],\\"keepPlain\\":[]}"`;
 
 exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names prints {"print":"cssMinify","extractComments":{"regexp":"license"},"minimizer":{"asset":"a.css","extractComments":false}} 1`] = `"a{color:red}b{color:blue}c{margin:0}"`;
 
@@ -343,6 +361,12 @@ exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-
 exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names prints {"print":"cssMinify","minimizer":{"asset":"a.css","extractComments":{"condition":"all"}}} 1`] = `"a{color:red}b{color:blue}c{margin:0}"`;
 
 exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names prints {"print":"cssMinify","minimizer":{"asset":"a.css","extractComments":{"condition":"all"}}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"a.css\\",\\"sources\\":[\\"a.css\\"],\\"sourcesContent\\":[\\"/*! one */a{color:red}/* plain */b{color:blue}/*! one *//* @license two */c{margin:0}/*# sourceMappingURL=a.map */\\"],\\"names\\":[],\\"mappings\\":\\"AAAU,YAAuB,aAAyC\\"},\\"extractedComments\\":[\\"/*! one */\\",\\"/* plain */\\",\\"/* @license two */\\",\\"/*# sourceMappingURL=a.map */\\"]}"`;
+
+exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names prints {"print":"cssMinify","minimizer":{"asset":"a.css","extractComments":{"condition":{"fixture":"extractTwo"}}},"check":{"fixture":"check"}} 1`] = `"a{color:red}b{color:blue}c{margin:0}"`;
+
+exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names prints {"print":"cssMinify","minimizer":{"asset":"a.css","extractComments":{"condition":{"fixture":"extractTwo"}}},"check":{"fixture":"check"}} 2`] = `"{\\"map\\":{\\"version\\":3,\\"file\\":\\"a.css\\",\\"sources\\":[\\"a.css\\"],\\"sourcesContent\\":[\\"/*! one */a{color:red}/* plain */b{color:blue}/*! one *//* @license two */c{margin:0}/*# sourceMappingURL=a.map */\\"],\\"names\\":[],\\"mappings\\":\\"AAAU,YAAuB,aAAyC\\"},\\"extractedComments\\":[\\"/* @license two */\\"]}"`;
+
+exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names prints {"print":"cssMinify","minimizer":{"asset":"a.css","extractComments":{"condition":{"fixture":"extractTwo"}}},"check":{"fixture":"check"}} 3`] = `"{\\"extractOne\\":[],\\"extractTwo\\":[[[{\\"value\\":\\"! one \\",\\"line\\":1,\\"col\\":0}],false],[[{\\"value\\":\\" plain \\",\\"line\\":1,\\"col\\":22}],false],[[{\\"value\\":\\"! one \\",\\"line\\":1,\\"col\\":46}],false],[[{\\"value\\":\\" @license two \\",\\"line\\":1,\\"col\\":56}],true],[[{\\"value\\":\\"# sourceMappingURL=a.map \\",\\"line\\":1,\\"col\\":85}],false]],\\"keepPlain\\":[]}"`;
 
 exports[`CSS syntax — invariants css-minify-export-extract-comments-takes-out-what-true-names prints {"print":"cssMinify","minimizer":{"asset":"a.css","extractComments":{"condition":false}}} 1`] = `"a{color:red}b{color:blue}c{margin:0}"`;
 
@@ -2564,6 +2588,101 @@ exports[`CSS syntax — invariants css-syntax-beautifying-the-parsing-corpus-sho
 
 exports[`CSS syntax — invariants css-syntax-beautifying-the-parsing-corpus-should-beautify-urls-css tokenizes 1`] = `"ident[0,4] whitespace[4,5] left-curly-bracket[5,6] whitespace[6,7] ident[7,17] colon[17,18] whitespace[18,19] url[19,64|25,61] semicolon[64,65] whitespace[65,66] right-curly-bracket[66,67] ident[67,76] whitespace[76,77] ident[77,81] delim[81,82] ident[82,87] whitespace[87,88] ident[88,92] hash[92,96]# whitespace[96,97] left-curly-bracket[97,98] whitespace[98,99] ident[99,109] colon[109,110] whitespace[110,111] function[111,115] string[115,167] right-parenthesis[167,168] whitespace[168,169] function[169,173] string[173,211] right-parenthesis[211,212] semicolon[212,213] whitespace[213,214] right-curly-bracket[214,215] ident[215,218] whitespace[218,219] left-curly-bracket[219,220] whitespace[220,221] ident[221,226] colon[226,227] whitespace[227,228] ident[228,231] semicolon[231,232] whitespace[232,233] ident[233,237] colon[237,238] whitespace[238,239] function[239,257] string[257,266] dimension[266,268|267,268] right-parenthesis[268,269] semicolon[269,270] whitespace[270,271] right-curly-bracket[271,272] ident[272,275] whitespace[275,276] left-curly-bracket[276,277] whitespace[277,278] ident[278,283] colon[283,284] whitespace[284,285] ident[285,288] semicolon[288,289] whitespace[289,290] ident[290,294] colon[294,295] whitespace[295,296] function[296,300] string[300,309] right-parenthesis[309,310] semicolon[310,311] whitespace[311,312] right-curly-bracket[312,313] ident[313,316] whitespace[316,317] left-curly-bracket[317,318] whitespace[318,319] ident[319,324] colon[324,325] whitespace[325,326] ident[326,329] semicolon[329,330] whitespace[330,331] ident[331,335] colon[335,336] whitespace[336,337] url[337,349|341,348] semicolon[349,350] whitespace[350,351] right-curly-bracket[351,352] end=352"`;
 
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing parses 1`] = `
+"length 172933, sha256 5f73f16f6b5de3fb
+[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"a\\"]],[\\".\\",[\\"ident\\",\\"e0\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e1\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e2\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e3\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e4\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5\\"],[\\"{}\\"],\\".\\"
+…
+\\"ident\\",\\"e5993\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5994\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5995\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5996\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5997\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5998\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5999\\"],[\\"{}\\"]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing prints {"mode":"minify","check":{"fixture":"short"}} 1`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing prints {"mode":"minify","check":{"fixture":"short"}} 2`] = `"{\\"code\\":\\"\\"}"`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing prints {"mode":"minify","visit":{"fixture":"firstAtRule"}} 1`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing prints {"mode":"minify","visit":{"fixture":"firstAtRule"}} 2`] = `
+"[\\"visitors\\",\\"AtRule\\"]
+[\\"AtRule\\",[\\"rangeOf\\",[3],[8,6]],[\\"fieldCount\\",[4],0]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing tokenizes 1`] = `
+"length 605617, sha256 9e298c99a1e28e19
+at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] delim[9,10] ident[10,12] left-curly-bracket[12,13] right-curly-bracket[13,14] delim[14,15] ident[15,17] left-curly-bracket[17,18] rig
+…
+-bracket[46889,46890] right-curly-bracket[46890,46891] delim[46891,46892] ident[46892,46897] left-curly-bracket[46897,46898] right-curly-bracket[46898,46899] right-curly-bracket[46899,46900] end=46900"
+`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing-2 parses 1`] = `
+"length 345871, sha256 69031df4318adddf
+[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"a\\"]],[\\".\\",[\\"ident\\",\\"e0\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e1\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e2\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e3\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e4\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5\\"],[\\"{}\\"],\\".\\"
+…
+ident\\",\\"e5993\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5994\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5995\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5996\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5997\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5998\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5999\\"],[\\"{}\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing-2 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing-2 prints {"mode":"minify","check":{"fixture":"short"}} 1`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing-2 prints {"mode":"minify","check":{"fixture":"short"}} 2`] = `"{\\"code\\":\\"\\"}"`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing-2 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing-2 tokenizes 1`] = `
+"length 1223749, sha256 24ea74fa80f60def
+at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] delim[9,10] ident[10,12] left-curly-bracket[12,13] right-curly-bracket[13,14] delim[14,15] ident[15,17] left-curly-bracket[17,18] rig
+…
+-bracket[93789,93790] delim[93790,93791] ident[93791,93796] left-curly-bracket[93796,93797] right-curly-bracket[93797,93798] right-curly-bracket[93798,93799] right-curly-bracket[93799,93800] end=93800"
+`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing-3 parses 1`] = `
+"length 172999, sha256 620a6245fd645064
+[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"a\\"]],[\\".\\",[\\"ident\\",\\"e0\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e1\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e2\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e3\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e4\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5\\"],[\\"{}\\"],\\".\\"
+…
+\\"e5995\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5996\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5997\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5998\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5999\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"keep\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing-3 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing-3 prints {"mode":"minify","check":{"fixture":"short"}} 1`] = `"@media a{.keep{color:red}}"`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing-3 prints {"mode":"minify","check":{"fixture":"short"}} 2`] = `"{\\"code\\":\\"@media a{.keep{color:red}}\\"}"`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing-3 prints {"mode":"minify"} 1`] = `"@media a{.keep{color:red}}"`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing-3 tokenizes 1`] = `
+"length 605777, sha256 44d76438355d623b
+at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] delim[9,10] ident[10,12] left-curly-bracket[12,13] right-curly-bracket[13,14] delim[14,15] ident[15,17] left-curly-bracket[17,18] rig
+…
+lim[46899,46900] ident[46900,46904] left-curly-bracket[46904,46905] ident[46905,46910] colon[46910,46911] ident[46911,46914] right-curly-bracket[46914,46915] right-curly-bracket[46915,46916] end=46916"
+`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing-4 parses 1`] = `
+"length 172933, sha256 1f4f56913f79096d
+[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a\\"]],[\\".\\",[\\"ident\\",\\"e0\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e1\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e2\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e3\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e4\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5\\"],[\\"{}\\"],\\".\\"
+…
+\\"ident\\",\\"e5993\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5994\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5995\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5996\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5997\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5998\\"],[\\"{}\\"],\\".\\",[\\"ident\\",\\"e5999\\"],[\\"{}\\"]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing-4 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing-4 prints {"mode":"minify","check":{"fixture":"short"}} 1`] = `"@layer a{}"`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing-4 prints {"mode":"minify","check":{"fixture":"short"}} 2`] = `"{\\"code\\":\\"@layer a{}\\"}"`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing-4 prints {"mode":"minify"} 1`] = `"@layer a{}"`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing-4 tokenizes 1`] = `
+"length 605617, sha256 9e298c99a1e28e19
+at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] delim[9,10] ident[10,12] left-curly-bracket[12,13] right-curly-bracket[13,14] delim[14,15] ident[15,17] left-curly-bracket[17,18] rig
+…
+-bracket[46889,46890] right-curly-bracket[46890,46891] delim[46891,46892] ident[46892,46897] left-curly-bracket[46897,46898] right-curly-bracket[46898,46899] right-curly-bracket[46899,46900] end=46900"
+`;
+
 exports[`CSS syntax — invariants css-syntax-block-streaming-falls-back-past-the-depth-the-frame-table-holds parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"m0\\"]],[[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m1\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m2\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m3\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m4\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m5\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m6\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m7\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m8\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m9\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m10\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m11\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m12\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m13\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m14\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m15\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m16\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m17\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m18\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m19\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m20\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m21\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m22\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m23\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m24\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m25\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m26\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m27\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m28\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m29\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m30\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m31\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m32\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m33\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m34\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m35\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m36\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m37\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m38\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m39\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m40\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m41\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m42\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m43\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m44\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m45\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m46\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m47\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m48\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m49\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m50\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m51\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m52\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m53\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m54\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m55\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m56\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m57\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m58\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m59\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m60\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m61\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m62\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m63\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m64\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m65\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m66\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m67\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m68\\"],[\\"{}\\",[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"m69\\"],[\\"{}\\"]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-falls-back-past-the-depth-the-frame-table-holds parses 2`] = `""`;
@@ -2595,6 +2714,13 @@ exports[`CSS syntax — invariants css-syntax-block-streaming-reads-a-streamed-r
 exports[`CSS syntax — invariants css-syntax-block-streaming-reads-a-streamed-rule-s-body-as-an-empty-block-not-as prints {"mode":"minify"} 1`] = `"@import url(x);"`;
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-reads-a-streamed-rule-s-body-as-an-empty-block-not-as tokenizes 1`] = `"at-keyword[0,7] whitespace[7,8] url[8,14|12,13] semicolon[14,15] end=15"`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-reads-the-same-tree-walks-an-at-rule-opening-a-block parses {"entry":"SourceProcessor","visit":{"fixture":"walk"}} 1`] = `
+"[\\"visitors\\",\\"AtRule\\",\\"Declaration\\",\\"QualifiedRule\\"]
+[\\"QualifiedRule\\",[\\"child\\",[0],{\\"@\\":1}],[\\"source\\",[{\\"@\\":1}],\\"a\\"]]
+[\\"AtRule\\",[\\"name\\",[],\\"media\\"]]
+[\\"Declaration\\",[\\"name\\",[],\\"b\\"]]"
+`;
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-reads-the-same-tree-walks-an-at-rule-opening-a-block parses {"entry":"parseAStylesheet","fields":["name","source","childCount","fieldCount:prelude","fieldCount:value","fieldCount:declarations","fieldCount:rules"]} 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"s\\"],[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]]]]"`;
 
@@ -10897,6 +11023,28 @@ exports[`CSS syntax — invariants css-syntax-minify-nesting-lowered-against-the
 exports[`CSS syntax — invariants css-syntax-minify-nesting-lowered-against-the-declarations-after-it-lowers-past-2 prints {"mode":"minify"} 1`] = `".a{color:green;.b{color:blue}}"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-nesting-lowered-against-the-declarations-after-it-lowers-past-2 tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,8] colon[8,9] ident[9,12] semicolon[12,13] delim[13,14] ident[14,15] left-curly-bracket[15,16] ident[16,21] colon[21,22] ident[22,26] right-curly-bracket[26,27] ident[27,32] colon[32,33] ident[33,38] semicolon[38,39] delim[39,40] ident[40,41] left-curly-bracket[41,42] ident[42,47] colon[47,48] ident[48,52] right-curly-bracket[52,53] right-curly-bracket[53,54] end=54"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-nesting-lowered-in-a-block-too-big-to-collect-keeps-a-rule-the parses 1`] = `
+"length 280182, sha256 64455f669f4f7238
+[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"p\\"]],[\\".\\",[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"x\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]],\\".\\",[\\"ident\\",\\"b\\"],[\\"{}\\",[\\"ident\\",\\"y\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]],\\".\\",[\\"ident\\",\\"z\\"],[\\"
+…
+,\\"z\\"],[\\"{}\\",[\\"ident\\",\\"w\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]],\\".\\",[\\"ident\\",\\"z\\"],[\\"{}\\",[\\"ident\\",\\"w\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]],\\".\\",[\\"ident\\",\\"z\\"],[\\"{}\\",[\\"ident\\",\\"w\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-nesting-lowered-in-a-block-too-big-to-collect-keeps-a-rule-the parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-nesting-lowered-in-a-block-too-big-to-collect-keeps-a-rule-the prints {"mode":"minify","environment":{"browsers":["chrome 100"]},"check":{"fixture":"short"}} 1`] = `".p .a{x:1}.p .b{y:1}.p .z{w:1}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-nesting-lowered-in-a-block-too-big-to-collect-keeps-a-rule-the prints {"mode":"minify","environment":{"browsers":["chrome 100"]},"check":{"fixture":"short"}} 2`] = `"{\\"code\\":\\".p .a{x:1}.p .b{y:1}.p .z{w:1}\\"}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-nesting-lowered-in-a-block-too-big-to-collect-keeps-a-rule-the prints {"mode":"minify"} 1`] = `".p{.a{x:1}.b{y:1}.z{w:1}}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-nesting-lowered-in-a-block-too-big-to-collect-keeps-a-rule-the tokenizes 1`] = `
+"length 622218, sha256 4ff6cf4eef92425b
+delim[0,1] ident[1,2] left-curly-bracket[2,3] delim[3,4] ident[4,5] left-curly-bracket[5,6] ident[6,7] colon[7,8] number[8,9] right-curly-bracket[9,10] delim[10,11] ident[11,12] left-curly-bracket[12,
+…
+im[28010,28011] ident[28011,28012] left-curly-bracket[28012,28013] ident[28013,28014] colon[28014,28015] number[28015,28016] right-curly-bracket[28016,28017] right-curly-bracket[28017,28018] end=28018"
+`;
 
 exports[`CSS syntax — invariants css-syntax-minify-nesting-the-target-cannot-read-drops-the-rule-left-holding parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[\\"&\\",\\" \\",[\\"ident\\",\\"b\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]]]]]"`;
 
@@ -37623,6 +37771,18 @@ exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-recover
 
 exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-recovers-from-malformed-nested-rules-and-3 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] delim[2,3] delim[3,4] delim[4,5] right-curly-bracket[5,6] end=6"`;
 
+exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-rethrows-what-else-fails-a-parse-as-it-is parses {"entry":"SourceProcessor","visit":{"fixture":"empty"}} 1`] = `
+"[\\"visitors\\",\\"Declaration\\",\\"Ident\\"]
+[\\"Ident\\",[\\"name\\",[],\\"\\"],[\\"value\\",[],\\"a\\"],[\\"childCount\\",[],0],[\\"children\\",[],[]],[\\"flag\\",[2],false],[\\"flag\\",[1],false],[\\"flag\\",[4],false],[\\"rangeOf\\",[2],null],[\\"rangeOf\\",[3],null],[\\"textOf\\",[1],null]]
+[\\"Declaration\\",[\\"name\\",[],\\"b\\"],[\\"value\\",[],\\"\\"],[\\"childCount\\",[],1],[\\"children\\",[],[{\\"@\\":1}]],[\\"flag\\",[2],false],[\\"flag\\",[1],false],[\\"flag\\",[4],false],[\\"rangeOf\\",[2],[4,5]],[\\"rangeOf\\",[3],null],[\\"textOf\\",[1],null]]
+[\\"Ident\\",[\\"name\\",[],\\"\\"],[\\"value\\",[],\\"c\\"],[\\"childCount\\",[],0],[\\"children\\",[],[]],[\\"flag\\",[2],false],[\\"flag\\",[1],false],[\\"flag\\",[4],false],[\\"rangeOf\\",[2],null],[\\"rangeOf\\",[3],null],[\\"textOf\\",[1],null]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-rethrows-what-else-fails-a-parse-as-it-is parses {"entry":"SourceProcessor","visit":{"fixture":"leaf"}} 1`] = `
+"[\\"visitors\\",\\"Declaration\\"]
+[\\"Declaration\\",[\\"child\\",[0],{\\"@\\":1}],[\\"fieldCount\\",[3,{\\"@\\":1}],0],[\\"child\\",[0],{\\"@\\":1}],[\\"children\\",[{\\"@\\":1}],[]]]"
+`;
+
 exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-rethrows-what-else-fails-a-parse-as-it-is parses {"entry":"SourceProcessor","visit":{"types":["Ident"],"fields":["startOf:block","endOf:block","startOf:name","endOf:name","startOf:value","endOf:value"],"exit":false}} 1`] = `
 "Ident[0,1] startOf:block=-1 endOf:block=-1 startOf:name=-1 endOf:name=-1 startOf:value=-1 endOf:value=-1
 Ident[4,5] startOf:block=-1 endOf:block=-1 startOf:name=-1 endOf:name=-1 startOf:value=-1 endOf:value=-1"
@@ -38378,6 +38538,22 @@ exports[`CSS syntax — invariants css-syntax-parser-entry-points-returns-refs-v
 
 exports[`CSS syntax — invariants css-syntax-parser-entry-points-returns-refs-valid-until-the-next-parse tokenizes 1`] = `"ident[0,6] colon[6,7] whitespace[7,8] number[8,9] end=9"`;
 
+exports[`CSS syntax — invariants css-syntax-path-accessors-exposes-every-field-read-on-the-current-node parses {"entry":"SourceProcessor","visit":{"fixture":"walk"}} 1`] = `
+"[\\"visitors\\",\\"/Comment\\",\\"/Function\\",\\"AtRule\\",\\"Comment\\",\\"Declaration\\",\\"Function\\",\\"SimpleBlock\\",\\"Url\\"]
+[\\"AtRule\\",[\\"name\\",[],\\"media\\"],[\\"rangeOf\\",[1],[1,6]],[\\"source\\",[1,6],\\"media\\"],[\\"childCount\\",[],3],[\\"fieldCount\\",[4],1],[\\"fieldCount\\",[3],0],[\\"rangeOf\\",[3],[14,95]],[\\"rangeOf\\",[3],[14,95]],[\\"range\\",[],[0,95]],[\\"range\\",[],[0,95]],[\\".node\\",[],{\\"@\\":1}],[\\".parent\\",[],null]]
+[\\"Declaration\\",[\\"flag\\",[1],true],[\\"rangeOf\\",[1],[21,28]],[\\"source\\",[21,28],\\"co\\\\\\\\6cor\\"],[\\"name\\",[],\\"color\\"]]
+[\\"Declaration\\",[\\"flag\\",[1],false]]
+[\\"Url\\",[\\"rangeOf\\",[2],[62,67]],[\\"rangeOf\\",[2],[62,67]]]
+[\\"Function\\",[\\"name\\",[],\\"var\\"],[\\"childCount\\",[],4]]
+[\\"Function\\",[\\"name\\",[],\\"calc\\"]]
+[\\"/Function\\",[\\"name\\",[],\\"calc\\"]]
+[\\"/Function\\",[\\"name\\",[],\\"var\\"]]
+[\\"Comment\\",[\\"range\\",[],[96,106]],[\\"range\\",[],[96,106]],[\\".parent\\",[],null]]
+[\\"/Comment\\"]
+[\\"Declaration\\",[\\"flag\\",[1],false]]
+[\\"SimpleBlock\\",[\\"value\\",[],\\"[\\"]]"
+`;
+
 exports[`CSS syntax — invariants css-syntax-path-accessors-exposes-every-field-read-on-the-current-node parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"screen\\"],\\" \\"],[\\" \\",\\".\\",[\\"ident\\",\\"a\\"],\\" \\",[\\"{}\\",\\" \\",[\\"ident\\",\\"color\\"],\\":\\",\\" \\",[\\"ident\\",\\"red\\"],\\" \\",\\"!\\",[\\"ident\\",\\"important\\"],\\";\\",\\" \\",[\\"ident\\",\\"background\\"],\\":\\",\\" \\",[\\"url\\",\\"x.png\\"],\\" \\",[\\"function\\",\\"var\\",[\\"ident\\",\\"--v\\"],\\",\\",\\" \\",[\\"function\\",\\"calc\\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\" \\",\\"+\\",\\" \\",[\\"number\\",\\"2\\",2,\\"integer\\"]]],\\";\\",\\" \\"],\\" \\"]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"b\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"grid\\"],\\":\\",\\" \\",[\\"[]\\",[\\"ident\\",\\"x\\"]],\\" \\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\";\\",\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-path-accessors-exposes-every-field-read-on-the-current-node parses 2`] = `""`;
@@ -38458,6 +38634,14 @@ exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-read
 
 exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-reads-an-at-rule-s-name-the-input-ran tokenizes 1`] = `"at-keyword[0,5] end=5"`;
 
+exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-reads-children-fields-and-fields-by parses {"entry":"SourceProcessor","visit":{"fixture":"walk"}} 1`] = `
+"[\\"visitors\\",\\"QualifiedRule\\"]
+[\\"QualifiedRule\\",[\\"fieldNamed\\",[3,\\"color\\"],0],[\\".index\\",[],0],[\\"children\\",[],[{\\"@\\":1}]],[\\"source\\",[{\\"@\\":1}],\\"x\\"],[\\"child\\",[0],{\\"@\\":1}],[\\"child\\",[0],{\\"@\\":1}],[\\"source\\",[{\\"@\\":1}],\\"x\\"],[\\"child\\",[9],0],[\\"fieldCount\\",[1],1],[\\"fieldCount\\",[2],0],[\\"fieldCount\\",[3],0],[\\"fieldCount\\",[4],0],[\\"field\\",[0,1],{\\"@\\":1}],[\\"source\\",[{\\"@\\":1}],\\"x\\"],[\\"field\\",[0,4],0],[\\"field\\",[1,3],0],[\\"field\\",[-1,3],0],[\\"field\\",[5,3],0],[\\"fieldNamed\\",[3,\\"nope\\"],0],[\\".node\\",[],{\\"@\\":2}],[\\"source\\",[{\\"@\\":2}],\\"x{}\\"]]
+[\\"QualifiedRule\\",[\\"fieldNamed\\",[3,\\"color\\"],{\\"@\\":1}],[\\".index\\",[],0],[\\"children\\",[],[{\\"@\\":2},{\\"@\\":3},{\\"@\\":4}]],[\\"source\\",[{\\"@\\":2}],\\"a\\"],[\\"source\\",[{\\"@\\":3}],\\" \\"],[\\"source\\",[{\\"@\\":4}],\\"b\\"],[\\"child\\",[0],{\\"@\\":2}],[\\"child\\",[0],{\\"@\\":2}],[\\"source\\",[{\\"@\\":2}],\\"a\\"],[\\"child\\",[9],0],[\\"fieldCount\\",[1],3],[\\"fieldCount\\",[2],0],[\\"fieldCount\\",[3],2],[\\"fieldCount\\",[4],0],[\\"field\\",[0,1],{\\"@\\":2}],[\\"source\\",[{\\"@\\":2}],\\"a\\"],[\\"field\\",[0,4],0],[\\"field\\",[1,3],{\\"@\\":1}],[\\"field\\",[1,3],{\\"@\\":1}],[\\"source\\",[{\\"@\\":1}],\\"color:red\\"],[\\"field\\",[-1,3],0],[\\"field\\",[5,3],0],[\\"source\\",[{\\"@\\":1}],\\"color:red\\"],[\\"fieldNamed\\",[3,\\"nope\\"],0],[\\".node\\",[],{\\"@\\":5}],[\\"source\\",[{\\"@\\":5}],\\"a b{width:1;color:red}\\"]]
+[\\"QualifiedRule\\",[\\"fieldNamed\\",[3,\\"color\\"],0],[\\".index\\",[],0],[\\"children\\",[],[{\\"@\\":1}]],[\\"source\\",[{\\"@\\":1}],\\"c\\"],[\\"child\\",[0],{\\"@\\":1}],[\\"child\\",[0],{\\"@\\":1}],[\\"source\\",[{\\"@\\":1}],\\"c\\"],[\\"child\\",[9],0],[\\"fieldCount\\",[1],1],[\\"fieldCount\\",[2],0],[\\"fieldCount\\",[3],0],[\\"fieldCount\\",[4],1],[\\"field\\",[0,1],{\\"@\\":1}],[\\"source\\",[{\\"@\\":1}],\\"c\\"],[\\"field\\",[0,4],{\\"@\\":2}],[\\"field\\",[0,4],{\\"@\\":2}],[\\"source\\",[{\\"@\\":2}],\\"d{}\\"],[\\"field\\",[1,3],0],[\\"field\\",[-1,3],0],[\\"field\\",[5,3],0],[\\"fieldNamed\\",[3,\\"nope\\"],0],[\\".node\\",[],{\\"@\\":3}],[\\"source\\",[{\\"@\\":3}],\\"c{d{}}\\"]]
+[\\"QualifiedRule\\",[\\"fieldNamed\\",[3,\\"color\\"],0],[\\".index\\",[],0],[\\"children\\",[],[{\\"@\\":1}]],[\\"source\\",[{\\"@\\":1}],\\"d\\"],[\\"child\\",[0],{\\"@\\":1}],[\\"child\\",[0],{\\"@\\":1}],[\\"source\\",[{\\"@\\":1}],\\"d\\"],[\\"child\\",[9],0],[\\"fieldCount\\",[1],1],[\\"fieldCount\\",[2],0],[\\"fieldCount\\",[3],0],[\\"fieldCount\\",[4],0],[\\"field\\",[0,1],{\\"@\\":1}],[\\"source\\",[{\\"@\\":1}],\\"d\\"],[\\"field\\",[0,4],0],[\\"field\\",[1,3],0],[\\"field\\",[-1,3],0],[\\"field\\",[5,3],0],[\\"fieldNamed\\",[3,\\"nope\\"],0],[\\".node\\",[],{\\"@\\":2}],[\\"source\\",[{\\"@\\":2}],\\"d{}\\"]]"
+`;
+
 exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-reads-children-fields-and-fields-by parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"x\\"]],[]],[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"c\\"]],[[\\"ident\\",\\"d\\"],[\\"{}\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-reads-children-fields-and-fields-by parses 2`] = `""`;
@@ -38465,6 +38649,14 @@ exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-read
 exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-reads-children-fields-and-fields-by prints {"mode":"minify"} 1`] = `"a b{color:red;width:1}"`;
 
 exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-reads-children-fields-and-fields-by tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] right-curly-bracket[2,3] whitespace[3,4] ident[4,5] whitespace[5,6] ident[6,7] left-curly-bracket[7,8] ident[8,13] colon[13,14] number[14,15] semicolon[15,16] ident[16,21] colon[21,22] ident[22,25] right-curly-bracket[25,26] whitespace[26,27] ident[27,28] left-curly-bracket[28,29] ident[29,30] left-curly-bracket[30,31] right-curly-bracket[31,32] right-curly-bracket[32,33] end=33"`;
+
+exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-reads-children-fields-and-fields-by-2 parses {"entry":"SourceProcessor","visit":{"fixture":"walk"}} 1`] = `
+"[\\"visitors\\",\\"Declaration\\",\\"QualifiedRule\\"]
+[\\"QualifiedRule\\",[\\".index\\",[],0]]
+[\\"Declaration\\",[\\".index\\",[],0]]
+[\\"Declaration\\",[\\".index\\",[],1]]
+[\\"QualifiedRule\\",[\\".index\\",[],0]]"
+`;
 
 exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-reads-children-fields-and-fields-by-2 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\";\\",[\\"ident\\",\\"c\\"],\\":\\",[\\"number\\",\\"2\\",2,\\"integer\\"],\\";\\",[\\"ident\\",\\"d\\"],[\\"{}\\"]]]]"`;
 
@@ -38499,6 +38691,11 @@ exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-read
 
 exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-reads-numeric-values-units-and-integer-2 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,3] colon[3,4] dimension[4,7|5,7] end=7"`;
 
+exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-stop-ends-the-walk-once-however-often parses {"entry":"SourceProcessor","visit":{"fixture":"walk"}} 1`] = `
+"[\\"visitors\\",\\"Declaration\\"]
+[\\"Declaration\\",[\\"name\\",[],\\"b\\"],[\\"stop\\",[]],[\\"stop\\",[]]]"
+`;
+
 exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-stop-ends-the-walk-once-however-often parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\";\\",[\\"ident\\",\\"c\\"],\\":\\",[\\"number\\",\\"2\\",2,\\"integer\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"d\\"]],[[\\"ident\\",\\"e\\"],\\":\\",[\\"number\\",\\"3\\",3,\\"integer\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-stop-ends-the-walk-once-however-often parses 2`] = `""`;
@@ -38524,6 +38721,12 @@ exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-stop
 
 exports[`CSS syntax — invariants css-syntax-path-reads-on-every-node-kind-stop-in-a-comment-reads-past-the tokenizes 1`] = `"comment[0,5] ident[5,6] left-curly-bracket[6,7] comment[7,12] ident[12,13] colon[13,14] number[14,15] semicolon[15,16] comment[16,21] right-curly-bracket[21,22] comment[22,27] ident[27,28] left-curly-bracket[28,29] right-curly-bracket[29,30] end=30"`;
 
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 1`] = `"[[\\"dimension\\",\\"12\\",12,\\"integer\\",\\"�red\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 3`] = `"Dimension[0,6] value=12 name=\\"�red\\""`;
+
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"dimension\\",\\"12\\",12,\\"integer\\",\\"�red\\"]]"`;
 
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as parses {"entry":"parseAListOfComponentValues"} 2`] = `""`;
@@ -38535,6 +38738,12 @@ exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-lea
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as tokenizes 1`] = `"dimension[0,6|2,6] end=6"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-2 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 1`] = `"[[\\"url\\",\\"a�b\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-2 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-2 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 3`] = `"Url[0,8] value=\\"a�b\\" name=\\"\\""`;
 
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-2 parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"url\\",\\"a�b\\"]]"`;
 
@@ -38548,6 +38757,12 @@ exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-lea
 
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-2 tokenizes 1`] = `"url[0,8|4,7] end=8"`;
 
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-3 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 1`] = `"[[\\"hash\\",\\"a�b\\",\\"id\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-3 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-3 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 3`] = `"Hash[0,4] value=\\"a�b\\" name=\\"\\""`;
+
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-3 parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-3 parses 2`] = `"error[4,4]:eof-in-qualified-rule"`;
@@ -38556,6 +38771,12 @@ exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-lea
 
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-3 tokenizes 1`] = `"hash[0,4]# end=4"`;
 
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-4 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 1`] = `"[[\\"at-keyword\\",\\"a�b\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-4 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-4 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 3`] = `"AtKeyword[0,4] value=\\"a�b\\" name=\\"\\""`;
+
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-4 parses 1`] = `"[[\\"at-rule\\",\\"a�b\\",[],null]]"`;
 
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-4 parses 2`] = `""`;
@@ -38563,6 +38784,82 @@ exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-lea
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-4 prints {"mode":"minify"} 1`] = `"@a�b;"`;
 
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-4 tokenizes 1`] = `"at-keyword[0,4] end=4"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-5 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 1`] = `"[[\\"ident\\",\\"a\\\\ud800b\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-5 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-5 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 3`] = `"Ident[0,3] value=\\"a\\\\ud800b\\" name=\\"\\""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-5 parses 1`] = `"[]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-5 parses 2`] = `"error[3,3]:eof-in-qualified-rule"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-5 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-5 tokenizes 1`] = `"ident[0,3] end=3"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-6 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 1`] = `"[[\\"hash\\",\\"a\\\\ud800b\\",\\"id\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-6 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-6 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 3`] = `"Hash[0,4] value=\\"a\\\\ud800b\\" name=\\"\\""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-6 parses 1`] = `"[]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-6 parses 2`] = `"error[4,4]:eof-in-qualified-rule"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-6 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-6 tokenizes 1`] = `"hash[0,4]# end=4"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-7 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 1`] = `"[[\\"at-keyword\\",\\"a\\\\ud800b\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-7 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-7 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 3`] = `"AtKeyword[0,4] value=\\"a\\\\ud800b\\" name=\\"\\""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-7 parses 1`] = `"[[\\"at-rule\\",\\"a\\\\ud800b\\",[],null]]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-7 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-7 prints {"mode":"minify"} 1`] = `"\\"@a\\\\ud800b;\\""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-7 tokenizes 1`] = `"at-keyword[0,4] end=4"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-8 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 1`] = `"[[\\"dimension\\",\\"12\\",12,\\"integer\\",\\"\\\\ud800red\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-8 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-8 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 3`] = `"Dimension[0,6] value=12 name=\\"\\\\ud800red\\""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-8 parses 1`] = `"[]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-8 parses 2`] = `"error[6,6]:eof-in-qualified-rule"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-8 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-8 tokenizes 1`] = `"dimension[0,6|2,6] end=6"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-9 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 1`] = `"[[\\"url\\",\\"a\\\\ud800b\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-9 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-9 parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 3`] = `"Url[0,8] value=\\"a\\\\ud800b\\" name=\\"\\""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-9 parses 1`] = `"[]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-9 parses 2`] = `"error[8,8]:eof-in-qualified-rule"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-9 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-leaves-a-surrogate-which-tokenizes-as-9 tokenizes 1`] = `"url[0,8|4,7] end=8"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-reads-a-nul-as-the-replacement parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 1`] = `"[[\\"ident\\",\\"a�b\\"]]"`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-reads-a-nul-as-the-replacement parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-reads-a-nul-as-the-replacement parses {"entry":"parseAListOfComponentValues","fields":["value","name"]} 3`] = `"Ident[0,3] value=\\"a�b\\" name=\\"\\""`;
 
 exports[`CSS syntax — invariants css-syntax-preprocessing-the-input-stream-reads-a-nul-as-the-replacement parses {"entry":"parseAListOfComponentValues"} 1`] = `"[[\\"ident\\",\\"a�b\\"]]"`;
 
@@ -40390,6 +40687,10 @@ exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comment
 
 exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-absent-keeps-the-banners prints {"mode":"minify","transforms":{"comments":"some"}} 1`] = `"/*! banner *//* @license L */a{b:c}"`;
 
+exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-absent-keeps-the-banners prints {"mode":"minify","transforms":{"comments":{"fixture":"keepLicense"}},"check":{"fixture":"check"}} 1`] = `"/* @license L */a{b:c}"`;
+
+exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-absent-keeps-the-banners prints {"mode":"minify","transforms":{"comments":{"fixture":"keepLicense"}},"check":{"fixture":"check"}} 2`] = `"{\\"keepLicense\\":[[[\\"inert\\",1,0],false],[[\\"! banner \\",1,9],false],[[\\" @license L \\",1,22],true],[[\\"# sourceMappingURL=x.map \\",1,44],false]]}"`;
+
 exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-absent-keeps-the-banners prints {"mode":"minify","transforms":{"comments":{"regexp":"inert"}}} 1`] = `"/*inert*/a{b:c}"`;
 
 exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-absent-keeps-the-banners prints {"mode":"minify","transforms":{"comments":false}} 1`] = `"a{b:c}"`;
@@ -40419,6 +40720,10 @@ exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comment
 exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-source-map-pragma-with-comments prints {"mode":"minify","transforms":{"comments":"all"}} 1`] = `"a{b:c}/*# sourceMappingURL=x.map */"`;
 
 exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-source-map-pragma-with-comments prints {"mode":"minify","transforms":{"comments":"some"}} 1`] = `"a{b:c}"`;
+
+exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-source-map-pragma-with-comments prints {"mode":"minify","transforms":{"comments":{"fixture":"keepNone"}},"check":{"fixture":"check"}} 1`] = `"a{b:c}"`;
+
+exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-source-map-pragma-with-comments prints {"mode":"minify","transforms":{"comments":{"fixture":"keepNone"}},"check":{"fixture":"check"}} 2`] = `"{\\"keepNone\\":[[[\\"# sourceMappingURL=x.map \\",1,6],false]]}"`;
 
 exports[`CSS syntax — invariants css-syntax-the-per-transform-switches-comments-source-map-pragma-with-comments prints {"mode":"minify","transforms":{"comments":{"regexp":"nothing-matches"}}} 1`] = `"a{b:c}"`;
 

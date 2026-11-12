@@ -1,0 +1,14 @@
+[
+	{
+		"print": "cssMinify",
+		"extractComments": {
+			"fixture": "extractNone"
+		},
+		"minimizer": {
+			"asset": "a.css"
+		},
+		"check": {
+			"fixture": "check"
+		}
+	}
+]
