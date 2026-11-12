@@ -4433,6 +4433,12 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("function f(){for(;;);}function g(){for(let i=0,n=h();;)k(i)}function m(){for(let c=32,d=0;d<c;d++)k(d)}k(f,g,m);");
 	});
 
+	it("should print a kept global constant's value where it reads shorter", () => {
+		const source = "const foo=1;log(foo,{foo});const many=2;log(many,many,many)";
+		// A shorthand keeps the name it keys, and a name read three times stays, as it measured smaller once gzipped.
+		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("const foo=1;log(1,{foo:foo});const many=2;log(many,many,many);");
+	});
+
 	it("should merge a conditional's calls of one global into one call", () => {
 		for (const [source, expected] of [
 			["function f(t){return t?alert(3):alert(5)}g(f)", "function f(t){return alert(t?3:5)}g(f);"],

@@ -177,7 +177,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: drop-unused/issue_3146_4",
 			"terser compress: evaluate/unsafe_constant",
 			"terser compress: export/name_cache_do_not_mangle_export_let_name",
-			"terser compress: export/name_cache_do_not_mangle_export_const_name",
 			"terser compress: issue-1413/issue_1413_top_retain_reference_shorter_than_value_2",
 			"terser compress: issue-1656/f7",
 			"terser compress: loops/keep_collapse_const_in_own_block_scope_2",
@@ -225,16 +224,9 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:222",
 			"oxc minifier: peephole/esbuild.rs:705",
 			"oxc minifier: peephole/esbuild.rs:707",
-			"oxc minifier: peephole/fold_constants.rs:761",
-			"oxc minifier: peephole/fold_constants.rs:765",
-			"oxc minifier: peephole/fold_constants.rs:769",
 			"oxc minifier: peephole/inline.rs:165",
-			"oxc minifier: peephole/inline.rs:600",
-			"oxc minifier: peephole/inline.rs:601",
 			"oxc minifier: peephole/inline.rs:603",
 			"oxc minifier: peephole/inline.rs:604",
-			"oxc minifier: peephole/inline.rs:715",
-			"oxc minifier: peephole/inline.rs:716",
 			"oxc minifier: peephole/minimize_conditions.rs:175",
 			"oxc minifier: peephole/minimize_conditions.rs:297",
 			"oxc minifier: peephole/minimize_conditions.rs:410",
@@ -244,7 +236,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_exit_points.rs:122",
 			"oxc minifier: peephole/minimize_if_statement.rs:5",
 			"oxc minifier: peephole/obscure_edge_cases.rs:463",
-			"oxc minifier: peephole/remove_unused_declaration.rs:494",
 			"oxc minifier: peephole/statement_fusion.rs:103",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:190",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:549",
@@ -591,7 +582,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/reduce_funcs_in_array_1",
 			"terser compress: reduce_vars/reduce_funcs_in_array_2",
 			"terser compress: reduce_vars/reduce_funcs_in_object_literal_2",
-			"terser compress: reduce_vars/issue_443",
 			"terser compress: reduce_vars/issue_639"
 		]
 	],
@@ -1228,10 +1218,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `nullish` tests cover",
-		[
-			"terser compress: nullish/simplify_nullish_coalescing",
-			"terser compress: nullish/delete_nullish_2"
-		]
+		["terser compress: nullish/delete_nullish_2"]
 	],
 	[
 		"oxc goes further than webpack on what terser's `issue-1482` tests cover",
