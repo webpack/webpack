@@ -1,5 +1,6 @@
 import "./recoverable.css";
 import "./cut-short.css";
+import "./line-terminators.css";
 import "./quiet.css";
 
 it("should build the stylesheets the parser read past", () => {

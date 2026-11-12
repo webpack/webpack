@@ -58,3 +58,5 @@ bin/* eol=lf
 test/fixtures/css/*/index.css -text
 test/fixtures/javascript/*/index.js -text
 test/fixtures/xml/*/index.xml -text
+test/configCases/css/parse-errors/line-terminators.css -text
+test/configCases/html/parse-errors/line-terminators.html -text
