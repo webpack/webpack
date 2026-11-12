@@ -2081,6 +2081,35 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 		}
 	});
 
+	it("keeps an embedded url's deferred payload where a nested rule is lowered", async () => {
+		const rule = '[x=")}.x{color:red}"]';
+		const { code } = await new SourceProcessor().processAsync(
+			`.p{${rule}{background:url(data:image/svg+xml,%3Csvg/%3E)}}`,
+			{
+				mode: "minify",
+				environment: { browsers: ["chrome 100"] },
+				renderEmbeddedSource: (source) => source
+			}
+		);
+		expect(code).toBe(`.p ${rule}{background:url(data:image/svg+xml,<svg/>)}`);
+	});
+
+	it("keeps an embedded url's deferred payload where light-dark() is lowered", async () => {
+		const url = "url(data:image/svg+xml,%3Csvg/%3E)";
+		const { code } = await new SourceProcessor().processAsync(
+			`.a{color-scheme:light dark;color:light-dark(red,blue);background:${url}}`,
+			{
+				mode: "minify",
+				environment: { browsers: ["chrome 100"] },
+				renderEmbeddedSource: (source) => source
+			}
+		);
+		expect(code).toContain("background:url(data:image/svg+xml,<svg/>);");
+		expect(code).toContain(
+			"@media (prefers-color-scheme:dark){.a{--webpack-light:;"
+		);
+	});
+
 	it("renders a data url whose escapes spell a comment as that comment", () => {
 		const payload = "data:text/css,/* %%32%41/ .x{color:red} /* */";
 		const processor = new SourceProcessor();
