@@ -1213,6 +1213,70 @@ exports[`XML syntax — invariants xml-syntax-parsing-reports-what-an-entity-exp
 
 exports[`XML syntax — invariants xml-syntax-parsing-reports-what-an-entity-expands-to-at-its-reference tokenizes 1`] = `"doctype[0,59|10,11|-1,-1|-1,-1|13,57] text[59,61] open[61,64|62,63] text[64,83] close[83,87|85,86] text[87,89] end=89"`;
 
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-an-entity-bomb-of-markup parses {"check":{"fixture":"childCounts"}} 1`] = `
+"length 13832100, sha256 2ccd8ae87fcdf75d
+[{\\"type\\":6,\\"name\\":\\"r\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":546},{\\"type\\":3,\\"tagName\\":\\"r\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"m\\",\\"namespace\\":3,\\"attributes\\":[],\\"chil
+…
+l6;&l6;&l6;&l6;&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l8;&l8;&l8;&l8;&l8;&l8;&l8;&l8;&l8;\\",\\"start\\":549,\\"end\\":553}],\\"selfClosing\\":false,\\"start\\":546,\\"end\\":557,\\"tagEnd\\":549,\\"nameEnd\\":548,\\"contentEnd\\":553}]"
+`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-an-entity-bomb-of-markup parses {"check":{"fixture":"childCounts"}} 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-an-entity-bomb-of-markup parses {"check":{"fixture":"childCounts"}} 3`] = `"{\\"children\\":[0,91601],\\"bounded\\":true}"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-an-entity-bomb-of-markup parses 1`] = `
+"length 13832100, sha256 2ccd8ae87fcdf75d
+[{\\"type\\":6,\\"name\\":\\"r\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":546},{\\"type\\":3,\\"tagName\\":\\"r\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"m\\",\\"namespace\\":3,\\"attributes\\":[],\\"chil
+…
+l6;&l6;&l6;&l6;&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l8;&l8;&l8;&l8;&l8;&l8;&l8;&l8;&l8;\\",\\"start\\":549,\\"end\\":553}],\\"selfClosing\\":false,\\"start\\":546,\\"end\\":557,\\"tagEnd\\":549,\\"nameEnd\\":548,\\"contentEnd\\":553}]"
+`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-an-entity-bomb-of-markup parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-an-entity-bomb-of-markup prints {"xml":true,"mode":"minify"} 1`] = `
+"length 557, sha256 0070224e9ce02726
+<!DOCTYPE r [<!ENTITY m \\"<m/>\\"><!ENTITY l0 \\"&m;\\"><!ENTITY l1 \\"&l0;&l0;&l0;&l0;&l0;&l0;&l0;&l0;&l0;&l0;\\"><!ENTITY l2 \\"&l1;&l1;&l1;&l1;&l1;&l1;&l1;&l1;&l1;&l1;\\"><!ENTITY l3 \\"&l2;&l2;&l2;&l2;&l2;&l2;&l2;
+…
+&l5;&l5;&l5;&l5;&l5;\\"><!ENTITY l7 \\"&l6;&l6;&l6;&l6;&l6;&l6;&l6;&l6;&l6;&l6;\\"><!ENTITY l8 \\"&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l7;&l7;\\"><!ENTITY l9 \\"&l8;&l8;&l8;&l8;&l8;&l8;&l8;&l8;&l8;&l8;\\">]><r>&l9;</r>"
+`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-an-entity-bomb-of-markup tokenizes 1`] = `"doctype[0,546|10,11|-1,-1|-1,-1|13,544] open[546,549|547,548] text[549,553] close[553,557|555,556] end=557"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-markup-detection-in-deeply-nested-xml-entities parses {"fields":["name"]} 1`] = `
+"length 480, sha256 63829d0ffe379955
+[{\\"type\\":6,\\"name\\":\\"root\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":247829},{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"&e16;\\",\\"start\\":247835,\\"end\\":2478
+…
+fClosing\\":true,\\"start\\":247839,\\"end\\":247847,\\"tagEnd\\":247847,\\"nameEnd\\":247845,\\"contentEnd\\":247847}],\\"selfClosing\\":false,\\"start\\":247829,\\"end\\":247854,\\"tagEnd\\":247835,\\"nameEnd\\":247834,\\"contentEnd\\":247847}]"
+`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-markup-detection-in-deeply-nested-xml-entities parses {"fields":["name"]} 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-markup-detection-in-deeply-nested-xml-entities parses {"fields":["name"]} 3`] = `
+"Document[0,247854] name=\\"\\"
+  Doctype[0,247829] name=\\"root\\"
+  Element[247829,247854] name=\\"root\\"
+    Text[247835,247839] name=\\"\\"
+    Element[247839,247847] name=\\"after\\""
+`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-markup-detection-in-deeply-nested-xml-entities parses 1`] = `
+"length 480, sha256 63829d0ffe379955
+[{\\"type\\":6,\\"name\\":\\"root\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":247829},{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"&e16;\\",\\"start\\":247835,\\"end\\":2478
+…
+fClosing\\":true,\\"start\\":247839,\\"end\\":247847,\\"tagEnd\\":247847,\\"nameEnd\\":247845,\\"contentEnd\\":247847}],\\"selfClosing\\":false,\\"start\\":247829,\\"end\\":247854,\\"tagEnd\\":247835,\\"nameEnd\\":247834,\\"contentEnd\\":247847}]"
+`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-markup-detection-in-deeply-nested-xml-entities parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-markup-detection-in-deeply-nested-xml-entities prints {"xml":true,"mode":"minify"} 1`] = `
+"length 247854, sha256 b65306393d8488b4
+<!DOCTYPE root [<!ENTITY e0 \\"&e1;\\"><!ENTITY e1 \\"&e2;\\"><!ENTITY e2 \\"&e3;\\"><!ENTITY e3 \\"&e4;\\"><!ENTITY e4 \\"&e5;\\"><!ENTITY e5 \\"&e6;\\"><!ENTITY e6 \\"&e7;\\"><!ENTITY e7 \\"&e8;\\"><!ENTITY e8 \\"&e9;\\"><!ENTITY e9 \\"
+…
+ITY e9994 \\"&e9995;\\"><!ENTITY e9995 \\"&e9996;\\"><!ENTITY e9996 \\"&e9997;\\"><!ENTITY e9997 \\"&e9998;\\"><!ENTITY e9998 \\"&e9999;\\"><!ENTITY e9999 \\"&e10000;\\"><!ENTITY e10000 \\"<child/>\\">]><root>&e0;<after/></root>"
+`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-bound-markup-detection-in-deeply-nested-xml-entities tokenizes 1`] = `"doctype[0,247829|10,14|-1,-1|-1,-1|16,247827] open[247829,247835|247830,247834] text[247835,247839] open[247839,247847|247840,247845]/ close[247847,247854|247849,247853] end=247854"`;
+
 exports[`XML syntax — invariants xml-syntax-parsing-should-close-misnested-elements-at-the-end-tag-naming-an-open parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"a\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"b\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"x\\",\\"start\\":12,\\"end\\":13}],\\"selfClosing\\":false,\\"start\\":9,\\"end\\":13,\\"tagEnd\\":12,\\"nameEnd\\":11,\\"contentEnd\\":13}],\\"selfClosing\\":false,\\"start\\":6,\\"end\\":17,\\"tagEnd\\":9,\\"nameEnd\\":8,\\"contentEnd\\":13},{\\"type\\":3,\\"tagName\\":\\"c\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":17,\\"end\\":21,\\"tagEnd\\":21,\\"nameEnd\\":19,\\"contentEnd\\":21}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":36,\\"tagEnd\\":6,\\"nameEnd\\":5,\\"contentEnd\\":29}]"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-close-misnested-elements-at-the-end-tag-naming-an-open parses 2`] = `""`;
@@ -1268,6 +1332,12 @@ exports[`XML syntax — invariants xml-syntax-parsing-should-drop-a-tag-instruct
 exports[`XML syntax — invariants xml-syntax-parsing-should-drop-a-tag-instruction-or-end-tag-the-input-ends-3 prints {"xml":true,"mode":"minify"} 1`] = `"<r>x</r>"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-drop-a-tag-instruction-or-end-tag-the-input-ends-3 tokenizes 1`] = `"open[0,3|1,2] text[3,4] end=7"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-expand-the-internal-entities-the-dtd-declares parses {"check":{"fixture":"decodedAttributes"}} 1`] = `"[{\\"type\\":6,\\"name\\":\\"svg\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":123},{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"&ns;\\",\\"nameStart\\":128,\\"nameEnd\\":133,\\"valueStart\\":135,\\"valueEnd\\":139}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"http://www.w3.org/2000/svg & &undeclared;\\",\\"start\\":141,\\"end\\":147}],\\"selfClosing\\":false,\\"start\\":123,\\"end\\":153,\\"tagEnd\\":141,\\"nameEnd\\":127,\\"contentEnd\\":147}]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-expand-the-internal-entities-the-dtd-declares parses {"check":{"fixture":"decodedAttributes"}} 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-expand-the-internal-entities-the-dtd-declares parses {"check":{"fixture":"decodedAttributes"}} 3`] = `"[[\\"&ns;\\",\\"http://www.w3.org/2000/svg\\"]]"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-expand-the-internal-entities-the-dtd-declares parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"svg\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":123},{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"&ns;\\",\\"nameStart\\":128,\\"nameEnd\\":133,\\"valueStart\\":135,\\"valueEnd\\":139}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"http://www.w3.org/2000/svg & &undeclared;\\",\\"start\\":141,\\"end\\":147}],\\"selfClosing\\":false,\\"start\\":123,\\"end\\":153,\\"tagEnd\\":141,\\"nameEnd\\":127,\\"contentEnd\\":147}]"`;
 
