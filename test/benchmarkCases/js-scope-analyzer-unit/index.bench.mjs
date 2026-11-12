@@ -7,7 +7,7 @@ const require = createRequire(import.meta.url);
 
 const JavascriptParser = require("../../../lib/javascript/JavascriptParser.js");
 const analyzeScope = require("../../../lib/javascript/ScopeAnalyzer.js");
-const { readParsedTree, takeParsedTree } =
+const { ScopeLog, parseProgram, readParsedTree, takeParsedTree } =
 	require("../../../lib/javascript/syntax.js").parser;
 
 /** @type {typeof import("../../../lib/javascript/JavascriptParser")} */
@@ -55,7 +55,10 @@ const parse = (code, sourceType) =>
  * @returns {() => void} analyses the program, `A` pointed at its tree first
  */
 const parseOnce = (code, sourceType) => {
-	const program = parse(code, sourceType);
+	// a log of its own: `_parseScopes` refills one shared log on every parse
+	const program = /** @type {number} */ (
+		parseProgram(code, 0, { sourceType, scopes: new ScopeLog() })
+	);
 	const tree =
 		/** @type {import("../../../lib/javascript/syntax-parser").SyntaxTree} */ (
 			takeParsedTree()

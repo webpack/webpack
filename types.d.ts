@@ -16105,9 +16105,9 @@ declare interface JavascriptParseOptions {
 	importPhases?: boolean;
 
 	/**
-	 * whether to record the names and scopes a scope analysis reads, on the tree
+	 * whether to record the names and scopes a scope analysis reads, on the tree; a log given is emptied and refilled, so one can serve every parse
 	 */
-	scopes?: boolean;
+	scopes?: boolean | ScopeLog;
 
 	/**
 	 * whether the code is strict whatever it says
@@ -32443,7 +32443,15 @@ declare class ScopeLog {
 	scopeEnds: number[];
 	scopeFlags: number[];
 	paramBoundaries: number[];
+	shorthandCount: number;
 	shorthands: number[];
+
+	/**
+	 * Empties the log for the next parse; its arrays keep their room, so a log
+	 * reused across parses grows once rather than on every parse.
+	 */
+	reset(): void;
+	shorthand(start: number): void;
 	add(
 		kind: number,
 		start: number,

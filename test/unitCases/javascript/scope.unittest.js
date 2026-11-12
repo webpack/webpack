@@ -3592,4 +3592,60 @@ describeIfSupported("ScopeAnalyzer matches eslint-scope", () => {
 			});
 		}
 	});
+
+	describe("the scope log a parse records", () => {
+		const fs = require("fs");
+		const path = require("path");
+		const { ScopeLog, parseProgram: parseTree } =
+			require("../../../lib/javascript/syntax").parser;
+
+		/**
+		 * @param {EXPECTED_ANY} analysis an analysis
+		 * @returns {EXPECTED_ANY} its scope tree and resolutions, normalized
+		 */
+		const view = (analysis) => ({
+			tree: normalizeScope(/** @type {AnyScope} */ (analysis.globalScope)),
+			resolutions: resolutions(
+				/** @type {AnyScope} */ (analysis.globalScope),
+				analysis.unresolvedReferences
+			),
+			shorthands: [...analysis.shorthandIdentifierStarts].sort((a, b) => a - b)
+		});
+
+		/**
+		 * @param {string} code source code
+		 * @param {boolean | InstanceType<typeof ScopeLog>} scopes what the parse records into, `false` for nothing
+		 * @returns {EXPECTED_ANY} the analysis of its parse, normalized
+		 */
+		const analyzeParse = (code, scopes) =>
+			view(
+				analyzeTree(
+					/** @type {number} */ (
+						parseTree(code, 0, { sourceType: "module", scopes })
+					),
+					true
+				)
+			);
+
+		it("matches the tree walk, from a fresh log and from one reused", () => {
+			const dir = path.resolve(__dirname, "../../../lib/javascript");
+			// largest first, so the reused log is refilled with fewer entries
+			// than a parse before left in it
+			const files = fs
+				.readdirSync(dir)
+				.filter((name) => name.endsWith(".js"))
+				.map((name) => fs.readFileSync(path.join(dir, name), "utf8"))
+				.sort((a, b) => b.length - a.length);
+			const log = new ScopeLog();
+
+			expect(files.length).toBeGreaterThan(1);
+
+			for (const code of files) {
+				const walked = analyzeParse(code, false);
+
+				expect(analyzeParse(code, true)).toEqual(walked);
+				expect(analyzeParse(code, log)).toEqual(walked);
+			}
+		});
+	});
 });
