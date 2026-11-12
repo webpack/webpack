@@ -49,9 +49,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:2307",
 			"oxc minifier: peephole/esbuild.rs:252",
 			"oxc minifier: peephole/esbuild.rs:159",
-			"oxc minifier: peephole/esbuild.rs:168",
-			"oxc minifier: peephole/esbuild.rs:169",
-			"oxc minifier: peephole/esbuild.rs:170",
 			"oxc minifier: peephole/esbuild.rs:174",
 			"oxc minifier: peephole/esbuild.rs:214",
 			"oxc minifier: peephole/esbuild.rs:219",
@@ -922,10 +919,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: dead-code/return_assignment",
 			"terser compress: dead-code/issue_2749"
 		]
-	],
-	[
-		"oxc goes further than webpack on what oxc's `peephole/collapse_variable_declarations.rs` tests cover",
-		["oxc minifier: peephole/collapse_variable_declarations.rs:97"]
 	],
 	[
 		"oxc reads a global twice as one value, as in `a ? b : a` to `a && b` or `a === null || a === void 0` to `a == null`, where webpack takes a global for a getter that may answer each read anew",

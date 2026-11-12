@@ -672,7 +672,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-write-a-value-at-its-one-read-2"),
 				{},
-				"function f(){for(var a=foo;bar;)return a}function g(){for(let o=foo,f=bar;baz;)return[o,f]}function h(){for(let a=foo();bar;a++)use(()=>a)}function k(){for(let o=foo(),a=o.x,f=1;f;f--)use(o,a)}function m(o){for(let f=o;o;)return o}function n(){for(let a=foo(),f=1;f;f--)use(f)}"
+				"function f(){for(var a=foo;bar;)return a}function g(){for(let o=foo,a=bar;baz;)return[o,a]}function h(){for(let a=foo();bar;a++)use(()=>a)}function k(){for(let o=foo(),a=o.x,f=1;f;f--)use(o,a)}function m(o){for(;o;)return o}function n(){for(let a=foo(),f=1;f;f--)use(f)}"
 			],
 			// A value folds into the loop after it, where its head is first evaluated, but not where it would read a name a `let` head declares or past a pattern there, nor holding `in` in a `for`'s head, nor past a `var` set in a `for … in` head.
 			[
@@ -4427,6 +4427,12 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(minifyOnePass("(class{[a];static b=f()}),(class{[a];static{f()}}),(class extends B{[a]});", { compress: {}, mangle: false }).code).toBe("(class{[a];static b=f()}),class{[a];static{f()}},class extends B{[a]};");
 	});
 
+	it("should drop a `for`'s own declarator nothing reads", () => {
+		const source = "function f(){for(var a,b=1;;);}function g(){for(let i=0,n=h();;)k(i)}function m(){for(let c=32,d=0;d<c;d++)k(d)}k(f,g,m)";
+		// A value running code stays, as does a constant its reads print.
+		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("function f(){for(;;);}function g(){for(let i=0,n=h();;)k(i)}function m(){for(let c=32,d=0;d<c;d++)k(d)}k(f,g,m);");
+	});
+
 	it("should merge a conditional's calls of one global into one call", () => {
 		for (const [source, expected] of [
 			["function f(t){return t?alert(3):alert(5)}g(f)", "function f(t){return alert(t?3:5)}g(f);"],
@@ -4591,7 +4597,7 @@ describe("one-pass minify of unused values and side effects, fourth round", () =
 			// A `delete` of a write nobody reads runs the value, then gives `true`; a read name keeps the write.
 			[fixture("javascript", "one-pass-unused-d-3"), "function f(){return o.f,!0}function g(){return(o.f,!0).x}function h(){return!0}function k(){let t;return[(t=o.f,!0),t]}"],
 			// A loop's body running nothing is `;`, a write to a name nobody reads too, a loop's `let` among them; a global read stays.
-			[fixture("javascript", "one-pass-unused-d-4"), "function f(){for(;g(););}for(let j;g();)h();while(g());for(x in y);for(;g();)a;"],
+			[fixture("javascript", "one-pass-unused-d-4"), "function f(){for(;g(););}for(;g();)h();while(g());for(x in y);for(;g();)a;"],
 			// A call marked pure of a function written in place prints its arguments alone; a callee that runs code stays.
 			[fixture("javascript", "one-pass-unused-d-5"), "y,z,a(),y(),z,g()(y),g();"],
 			// An empty function written in place and called is `void` of its arguments; a spread or a default stays.
