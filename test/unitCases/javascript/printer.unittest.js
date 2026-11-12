@@ -4428,6 +4428,11 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(
 			minifyOnePass('(class{[a];static b=f()}),(class{[a];static{f()}}),(class extends B{[a]}),(class{static[f()]=1}),(class{static["prototype"](){}}),(class C{[r(()=>C)](){}});', { compress: {}, mangle: false }).code
 		).toBe('(class{[a];static b=f()}),class{[a];static{f()}},class extends B{[a]},class{static[f()]=1},class{static["prototype"](){}},class C{[r(()=>C)](){}};');
+		// Beside a key that runs code, a static `prototype` keeps the class too, as making it throws.
+		const throwing = '(class{[a()](){}static["prototype"](){}}),(class{[a()];static["prototype"]=1}),(class{[a()];static[k()]=1});';
+		expect(minifyOnePass(throwing, { compress: {}, mangle: false }).code).toBe('(class{[a()](){}static["prototype"](){}}),class{[a()];static["prototype"]=1},class{[a()];static[k()]=1};');
+		const program = `var a=()=>"k",k=()=>"prototype";try{(class{[a()](){}static["prototype"](){}})}catch(e){console.log(e.name)}try{(class{[a()];static["prototype"]=1})}catch(e){console.log(e.name)}try{(class{[a()];static[k()]=1})}catch(e){console.log(e.name)}`;
+		expect(runProgram(minifyOnePass(program, { compress: {}, mangle: false }).code)).toBe("TypeError\nTypeError\nTypeError");
 	});
 
 	it("should drop a `for`'s own declarator nothing reads", () => {
