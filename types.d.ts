@@ -27618,7 +27618,6 @@ type ParserOptionsSyntaxParser = Omit<OptionsSyntaxParser, "onComment"> & {
 	onComment?:
 		| CollectedComment[]
 		| ((isBlock: boolean, text: string, start: number, end: number) => void);
-	scopeLog?: null | ScopeLog;
 	lazyNodes?: boolean;
 	lazyComments?: CollectedComment[];
 	importPhases?: boolean;
@@ -37286,7 +37285,6 @@ declare class WebpackParser extends SyntaxParser {
 			importPhases?: boolean;
 			moduleFallback?: boolean;
 			syntaxTree?: ColumnarSyntaxTree;
-			scopeLog?: null | ScopeLog;
 		},
 		input: string,
 		startPos?: number
