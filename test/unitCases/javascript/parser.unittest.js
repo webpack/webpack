@@ -496,37 +496,54 @@ describe("WebpackParser", () => {
 		const { WebpackParser } = require("../../../lib/javascript/syntax-parser");
 
 		/**
-		 * The retry as a script after a failed module parse is `_parse`'s own, so
+		 * The retry as a script after a failed module parse is the parser's own, so
 		 * this block alone goes through it rather than the syntax parser.
 		 * @param {string} code source
-		 * @param {object=} options extra parse options
-		 * @returns {import("../../../lib/javascript/JavascriptParser").ParseResult} result
+		 * @returns {{ ast: import("../../../lib/javascript/JavascriptParser").ParseResult["ast"] }} the program
 		 */
-		const parseThroughJavascriptParser = (code, options) =>
-			JavascriptParser._parse(
+		const parseThroughJavascriptParser = (code) => {
+			const { tree, program } = JavascriptParser._parseTree(
 				code,
-				/** @type {import("../../../lib/javascript/JavascriptParser").InternalParseOptions} */ ({
-					sourceType: "auto",
-					ecmaVersion: "latest",
-					comments: true,
-					ranges: true,
-					allowHashBang: true,
-					...options
-				})
+				"auto",
+				false
 			);
+			/**
+			 * @param {unknown} value a lazy node, a list of them or a value
+			 * @returns {unknown} the same as plain own properties, inherited fields included
+			 */
+			const copy = (value) => {
+				if (Array.isArray(value)) return value.map(copy);
+				if (value === null || typeof value !== "object") return value;
+				if (value instanceof RegExp) return value;
+				/** @type {Record<string, unknown>} */
+				const out = {};
+				// a lazy node's child fields are enumerable getters on its prototype
+				// eslint-disable-next-line guard-for-in
+				for (const key in value) {
+					out[key] = copy(/** @type {Record<string, unknown>} */ (value)[key]);
+				}
+				return out;
+			};
+			const ast = copy(tree.estree(program));
+			tree.release();
+			return {
+				ast: /** @type {import("../../../lib/javascript/JavascriptParser").ParseResult["ast"]} */ (
+					ast
+				)
+			};
+		};
 
 		/**
 		 * @param {string} code source
-		 * @param {object=} options extra parse options
-		 * @returns {{ ast: import("../../../lib/javascript/JavascriptParser").ParseResult["ast"], parses: number }} result and acorn parse count
+		 * @returns {{ ast: import("../../../lib/javascript/JavascriptParser").ParseResult["ast"], parses: number }} result and parse count
 		 */
-		const parseAuto = (code, options) => {
+		const parseAuto = (code) => {
 			const proto =
 				/** @type {{ parse: () => unknown }} */
 				(/** @type {unknown} */ (WebpackParser.prototype));
 			const spy = jest.spyOn(proto, "parse");
 			try {
-				const { ast } = parseThroughJavascriptParser(code, options);
+				const { ast } = parseThroughJavascriptParser(code);
 				return { ast, parses: spy.mock.calls.length };
 			} finally {
 				spy.mockRestore();
@@ -542,8 +559,8 @@ describe("WebpackParser", () => {
 			expect(ast.body[0].type).toBe("IfStatement");
 		});
 
-		it("should downgrade a bare top-level return without ranges", () => {
-			const { ast, parses } = parseAuto(fixture("javascript", "webpack-parser-statements-should-parse-if-else-chains-and-returns-on-the-fast-2"), { ranges: false });
+		it("should downgrade a bare top-level return", () => {
+			const { ast, parses } = parseAuto(fixture("javascript", "webpack-parser-statements-should-parse-if-else-chains-and-returns-on-the-fast-2"));
 			expect(parses).toBe(1);
 			expect(ast.body[0].type).toBe("ReturnStatement");
 		});
@@ -556,8 +573,9 @@ describe("WebpackParser", () => {
 						? undefined
 						: v
 				);
-			expect(strip(parseAuto(code).ast)).toBe(
-				strip(parse(code, { sourceType: "script" }).ast)
+			// equal by value: the tree's objects list their fields in another order
+			expect(JSON.parse(strip(parseAuto(code).ast))).toEqual(
+				JSON.parse(strip(parse(code, { sourceType: "script" }).ast))
 			);
 		});
 
