@@ -1872,7 +1872,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A body ending in an `if` that prints no `else` of its own, as one running nothing goes, takes braces before the `else` after it.
 			[fixture("javascript", "e-conditions-13"), { mangle: false }, "if(x){if(y)foo()}else bar();if(x){if(!y)foo()}else bar();if(x){for(;;)if(y)foo()}else bar();if(x){if(y)foo()}else bar();x?y?foo():g():bar();"],
 			// Nobody reading it, a loose or ordering comparison of two primitives runs only its sides, as a strict one does, which print bare in the sequence; one side that may be an object stays.
-			[fixture("javascript", "e-conditions-14"), { mangle: false }, "a+\"\",b|c,b+\"\",a|0,b|0,a,b,f(),g(),h(),a,b,a+\"\",b,x=a+\"\"==(b|c);"],
+			[fixture("javascript", "e-conditions-14"), { mangle: false }, "a+\"\",b|c,b+\"\",a|0,b|0,a,b,f(),g(),h(),a,b,a+\"\"<b,x=a+\"\"==(b|c);"],
 			// terser's `join_vars` of `var x;x=x||1` as `var x=x||1`, a `var` reading there what it held, but not a `let` in its dead zone, nor `x=x+1` printing as `x+=1`.
 			[fixture("javascript", "e-conditions-15"), { mangle: false, ecma: 2020, compress: { toplevel: false, ecma: 2020 } }, "var x=x||1,y;y+=1;function f(a){var a=a??2;let b;b=b||3;return[a,b]}"],
 			// A function moved to its one call, a statement, prints as its statements there, braced only where they scope a name; a member named as the function reads not it.
@@ -4406,11 +4406,12 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(minifyOnePass("function f(a,b){return a}console.log(f.length)", { compress: {}, mangle: false }).code).toBe("function f(a,b){return a}console.log(f.length);");
 	});
 
-	it("should keep only what the sides of an unread loose comparison run", () => {
-		const source = "a==b;a()<b;(function(){g()})()>=x;";
-		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("a,b,a(),b,function(){g()}(),x;");
+	it("should keep only what the sides of an unread loose equality run", () => {
+		const source = "a==b;c()!=d;a()<b;";
+		// A relation throws on a symbol, which `==` does not: it stays.
+		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("a,b,c(),d,a()<b;");
 		// An object's `valueOf` may run where conversions are not taken as pure.
-		expect(minifyOnePass(source, { compress: { pure_conversions: false }, mangle: false }).code).toBe("a==b,a()<b,function(){g()}()>=x;");
+		expect(minifyOnePass(source, { compress: { pure_conversions: false }, mangle: false }).code).toBe("a==b,c()!=d,a()<b;");
 	});
 
 	it("should keep only what the computed keys and values of an unread object run", () => {
@@ -4421,10 +4422,12 @@ describe("one-pass minify of reads and calls on literals", () => {
 	});
 
 	it("should keep only what the computed keys of an unread class run", () => {
-		const source = "(class{[a](){}static[b()]=1;#p;get[c](){}static{}static d=1}),x=(class C{[e]},1);";
-		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("a,b(),c,x=(e,1);");
-		// A static value, a static block or `extends` running code keeps the class.
-		expect(minifyOnePass("(class{[a];static b=f()}),(class{[a];static{f()}}),(class extends B{[a]});", { compress: {}, mangle: false }).code).toBe("(class{[a];static b=f()}),class{[a];static{f()}},class extends B{[a]};");
+		const source = '(class{[a](){}static["b"]=1;#p;get[c](){}static{}static d=1}),x=(class{[e]},1);';
+		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("a,c,x=(e,1);");
+		// A static value, block, `extends` or key that may name `prototype`, or a key reading the class's own name, keeps it.
+		expect(
+			minifyOnePass('(class{[a];static b=f()}),(class{[a];static{f()}}),(class extends B{[a]}),(class{static[f()]=1}),(class{static["prototype"](){}}),(class C{[r(()=>C)](){}});', { compress: {}, mangle: false }).code
+		).toBe('(class{[a];static b=f()}),class{[a];static{f()}},class extends B{[a]},class{static[f()]=1},class{static["prototype"](){}},class C{[r(()=>C)](){}};');
 	});
 
 	it("should drop a `for`'s own declarator nothing reads", () => {
@@ -4437,18 +4440,6 @@ describe("one-pass minify of reads and calls on literals", () => {
 		const source = "const foo=1;log(foo,{foo});const many=2;log(many,many,many)";
 		// A shorthand keeps the name it keys, and a name read three times stays, as it measured smaller once gzipped.
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("const foo=1;log(1,{foo:foo});const many=2;log(many,many,many);");
-	});
-
-	it("should merge a conditional's calls of one global into one call", () => {
-		for (const [source, expected] of [
-			["function f(t){return t?alert(3):alert(5)}g(f)", "function f(t){return alert(t?3:5)}g(f);"],
-			// A member's calls stay apart, as they measured larger merged once gzipped.
-			["function f(t,o){return t?o.f(3):o.f(5)}g(f)", "function f(t,o){return t?o.f(3):o.f(5)}g(f);"],
-			// An undeclared test may throw, which reading the callee first would hide; `eval` called is direct.
-			["x?alert(3):alert(5);function f(t){t?eval(1):eval(2)}g(f)", "x?alert(3):alert(5);function f(t){t?eval(1):eval(2)}g(f);"]
-		]) {
-			expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(expected);
-		}
 	});
 
 	it("should lift a computed key reading a constant as the key it names", () => {

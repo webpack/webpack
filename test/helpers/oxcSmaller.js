@@ -146,6 +146,14 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than oxc's",
 		[
+			"oxc minifier: ecmascript/is_int32_or_uint32.rs:77",
+			"oxc minifier: ecmascript/is_int32_or_uint32.rs:79",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:639",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:640",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:641",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:642",
+			"oxc minifier: ecmascript/value_type.rs:167",
+			"oxc minifier: ecmascript/value_type.rs:169",
 			"oxc minifier: peephole/minimize_statements.rs:32",
 			"oxc minifier: peephole/replace_known_methods.rs:1090",
 			"swc exec: terser_arguments_modified",
@@ -313,6 +321,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc writes conditions shorter, as oxc's `peephole/minimize_conditions.rs` tests show",
 		[
+			"oxc minifier: peephole/minimize_conditions.rs:223",
 			"oxc minifier: peephole/minimize_conditions.rs:1066",
 			"oxc minifier: peephole/minimize_conditions.rs:6",
 			"oxc minifier: peephole/minimize_conditions.rs:7",
@@ -1014,6 +1023,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what terser's `pure_funcs` tests cover",
 		[
+			"terser compress: pure_funcs/relational",
 			"terser compress: pure_funcs/issue_2638",
 			"terser compress: pure_funcs/issue_2705_6",
 			"terser compress: pure_funcs/issue_526_1"
@@ -1454,6 +1464,37 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc folds a `parseFloat` of more than 20 digits, which ECMAScript lets an engine round otherwise, so webpack keeps the call",
 		["oxc minifier: peephole/replace_known_methods.rs:790"]
+	],
+	[
+		"oxc goes further than webpack on what terser's `issue-143` tests cover",
+		[
+			"terser compress: issue-143/transformation_sort_order_lesser_or_equal",
+			"terser compress: issue-143/transformation_sort_order_greater_or_equal"
+		]
+	],
+	[
+		"oxc goes further than webpack on what terser's `typescript` tests cover",
+		[
+			"terser compress: typescript/typescript_disabled_call_type_parameters_are_valid_js"
+		]
+	],
+	[
+		"oxc goes further than webpack on what swc's `fixture/simple` tests cover",
+		["swc minifier: fixture/simple/sequences/.0001/input.js"]
+	],
+	[
+		"oxc's output differs: it drops a class whose static member's computed key may be `\"prototype\"`, which throws a TypeError as the class is defined",
+		[
+			"oxc minifier: ecmascript/may_have_side_effects.rs:445",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:451",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:816",
+			"oxc minifier: peephole/remove_unused_expression.rs:850",
+			"oxc minifier: peephole/remove_unused_expression.rs:865"
+		]
+	],
+	[
+		"oxc goes further than webpack on what oxc's `peephole/manual_pure_functions.rs` tests cover",
+		["oxc minifier: peephole/manual_pure_functions.rs:119"]
 	]
 ];
 
