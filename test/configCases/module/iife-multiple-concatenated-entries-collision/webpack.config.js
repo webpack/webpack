@@ -15,10 +15,10 @@ const createCountEntryParsesPlugin = (expectedParses) => ({
 					for (const entry of entries) {
 						const render = entry.render;
 						entry.render = () => {
-							const parse = JavascriptParser._parse;
+							const parse = JavascriptParser._parseScopes;
 							/** @type {string[]} */
 							const parsedSources = [];
-							JavascriptParser._parse = (source, ...args) => {
+							JavascriptParser._parseScopes = (source, ...args) => {
 								parsedSources.push(source);
 								return parse(source, ...args);
 							};
@@ -38,7 +38,7 @@ const createCountEntryParsesPlugin = (expectedParses) => ({
 								).toBe(true);
 								return source;
 							} finally {
-								JavascriptParser._parse = parse;
+								JavascriptParser._parseScopes = parse;
 							}
 						};
 					}
