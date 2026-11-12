@@ -365,12 +365,35 @@ const knownV8PrefixAndPostfixBugs = [
 	"expressions/postfix-increment/S11.3.1_A5_T1.js"
 ];
 
+// A compound or logical assignment to `o[k]` converts `k` to a key once; V8
+// converts it again for the store, so `toString` runs twice.
+const knownV8ToPropertyKeyOnceBugs = [
+	/* cspell:disable */
+	"expressions/compound-assignment/left-hand-side-property-reference-topropertykey-once-add.js",
+	"expressions/compound-assignment/left-hand-side-property-reference-topropertykey-once-sub.js",
+	"expressions/compound-assignment/left-hand-side-property-reference-topropertykey-once-mult.js",
+	"expressions/compound-assignment/left-hand-side-property-reference-topropertykey-once-div.js",
+	"expressions/compound-assignment/left-hand-side-property-reference-topropertykey-once-mod.js",
+	"expressions/compound-assignment/left-hand-side-property-reference-topropertykey-once-exp.js",
+	"expressions/compound-assignment/left-hand-side-property-reference-topropertykey-once-lshift.js",
+	"expressions/compound-assignment/left-hand-side-property-reference-topropertykey-once-rshift.js",
+	"expressions/compound-assignment/left-hand-side-property-reference-topropertykey-once-srshift.js",
+	"expressions/compound-assignment/left-hand-side-property-reference-topropertykey-once-bitand.js",
+	"expressions/compound-assignment/left-hand-side-property-reference-topropertykey-once-bitor.js",
+	"expressions/compound-assignment/left-hand-side-property-reference-topropertykey-once-bitxor.js",
+	"expressions/logical-assignment/lgcl-and-assignment-operator-topropertykey-once.js",
+	"expressions/logical-assignment/lgcl-or-assignment-operator-topropertykey-once.js",
+	"expressions/logical-assignment/lgcl-nullish-assignment-operator-topropertykey-once.js"
+	/* cspell:enable */
+];
+
 const knownV8Bugs = [
 	...knownV8EvalBugs,
 	...knownHostEvalBugs,
 	...knownV8WithBugs,
 	...knownHostBugs,
 	...knownV8PrefixAndPostfixBugs,
+	...knownV8ToPropertyKeyOnceBugs,
 	"module-code/namespace/internals/super-access-to-tdz-binding.js"
 ];
 
