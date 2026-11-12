@@ -94,7 +94,7 @@ jobs:
       # Each case is measured in its own fresh process, so its result does not
       # depend on the shard. All cases in one job exceed CodSpeed's upload limit.
       - name: Run memory benchmarks
-        uses: CodSpeedHQ/action@61efe07e57e55bedeab750c434504de272a56e8c # v5.6.1
+        uses: CodSpeedHQ/action@af75f77f17a054769abefaa42fe8dc2975469b5f # v5.6.3
         with:
           run: yarn benchmark --ci
           mode: "memory"
@@ -105,7 +105,7 @@ jobs:
           NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule|-unit$' || '-unit$' }}
 
       - name: Run benchmarks
-        uses: CodSpeedHQ/action@61efe07e57e55bedeab750c434504de272a56e8c # v5.6.1
+        uses: CodSpeedHQ/action@af75f77f17a054769abefaa42fe8dc2975469b5f # v5.6.3
         with:
           run: yarn benchmark --ci
           mode: "simulation"
