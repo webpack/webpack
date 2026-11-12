@@ -3971,9 +3971,8 @@ describe("SyntaxTree", () => {
 	});
 
 	it("marks legacy assert on a re-export, and writes one an edition before attributes parsed", () => {
-		const { parseProgram, takeParsedTree } = require(
-			"../../../lib/javascript/syntax-parser"
-		);
+		const { parseProgram, takeParsedTree } =
+			require("../../../lib/javascript/syntax").parser;
 		const source =
 			'export { a } from "./a" assert { type: "json" };\nexport { b } from "./b" with { type: "json" };';
 		const program = /** @type {number} */ (
@@ -4006,9 +4005,8 @@ describe("SyntaxTree", () => {
 	});
 
 	it("ends an ES5 do-while and checks an ES5 object literal by ES5's rules", () => {
-		const { parseProgram, takeParsedTree } = require(
-			"../../../lib/javascript/syntax-parser"
-		);
+		const { parseProgram, takeParsedTree } =
+			require("../../../lib/javascript/syntax").parser;
 		/**
 		 * @param {string} code an ES5 script
 		 * @returns {number[]} the types of its first two statements
@@ -4783,7 +4781,7 @@ describe("JavaScript SourceProcessor", () => {
 	});
 
 	it("moves a position along its line", () => {
-		const { ParserPosition } = require("../../../lib/javascript/syntax-parser");
+		const { ParserPosition } = require("../../../lib/javascript/syntax").parser;
 		expect(new ParserPosition(2, 3).offset(4)).toEqual(
 			new ParserPosition(2, 7)
 		);
