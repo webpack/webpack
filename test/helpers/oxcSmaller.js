@@ -675,7 +675,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what terser's `drop-unused` tests cover",
 		[
-			"terser compress: drop-unused/iife",
 			"terser compress: drop-unused/issue_1709",
 			"terser compress: drop-unused/issue_1715_4",
 			"terser compress: drop-unused/issue_1830_1",
@@ -1386,10 +1385,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc writes classes, methods and object literals shorter",
 		["swc exec: object_spread_proto_key_is_not_flattened"]
-	],
-	[
-		"oxc folds arithmetic, comparisons and concatenation of constants",
-		["swc minifier: fixture/issues/8706/input.js"]
 	],
 	[
 		"oxc's output differs: it drops a name read in a `with` body, which runs the object's `has` trap or getter",
