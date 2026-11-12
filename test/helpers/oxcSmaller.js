@@ -751,8 +751,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline.rs:686",
 			"oxc minifier: peephole/inline.rs:693",
 			"oxc minifier: peephole/inline.rs:747",
-			"oxc minifier: peephole/inline.rs:607",
-			"oxc minifier: peephole/inline.rs:612",
 			"swc minifier: fixture/projects/next/archive-3/pages/dynamic/no-chunk-e2d9573b8d7df68a6cde/input.js"
 		]
 	],
