@@ -537,6 +537,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-717"), { compress: {} }, "function k(){return!function(){x()}()}function f(n){return n?1:function(){for(;;)g()}()}function m(){for(;;)x()}"],
 			// A `break` under a label leaves as one bare does: what follows it goes, and a case running only it runs nothing.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-718"), { compress: {} }, "function a(e){}function b(){for(;;)break}function c(){return 1}function d(e){if(e===1)p();else q()}function e(){p()}function k(){for(;;)g()}function m(){h()}function n(e){}function p(e){switch(e){case 1:q();/*! c */e:break;default:r()}}"],
+			// A `switch` whose cases run nothing runs what it tests and its first test, where no later test runs code.
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-719"), { compress: {} }, "function a(c){g()}function b(){g(),h()}function c(c){g()}function d(c){switch(c){case g():case h():}}function e(c){switch(c){case 1:case h():}}function f(c){switch(c){case g():case 2:h()}}function i(c,s){if(s)g();else h()}function j(c){a(),b()}function k(c){y=1}function l(c){g()}x,g();function m(c){switch(c){/*! c */case g():}}"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-1"), { compress: {} }, "if(a)u();a,a.b,b(),x=1,c||(x=1);d;e|+f;g,h(),i,j(),k();o=l();m(!!n);"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-2"), { compress: {} }, "a(),b,f(),c(),x,g(),h(),d,e(),y,i.j,k;"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-3"), { compress: {} }, "x,x,y(),foo,bar(),a(),b(),x(),c(),z(),d(),e,f(),g;function h(){return i,j()}"],
@@ -1542,7 +1544,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// The value read, a branch not a constant, an object, `void 0`, `0n`, both branches constant or a branch `&&` would take in parentheses keeps `?:`.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-545"), {}, "a=(x?y:0)&&z,a=x?y:0,(x?y:{})&&f(),(x?y:void 0)&&f(),(x?[]:y)&&f(),x,(x?0n:y)&&f(),(c?a||b:0)&&f(),(x?y:g())&&f();"],
 			// terser's `switches`: cases ending a `switch` that run nothing go; one with none left runs its test, or goes from its list.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-546"), {}, "a();a;if(a===3)b();if(a===3)b();switch(a){case f():}a,b();switch(a){case 1:b();break;case 2:c()}if(x)y;else z();function f(a){g()}switch(a){case 1:/*! k */}"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-546"), {}, "a();a;if(a===3)b();if(a===3)b();a,f();a,b();switch(a){case 1:b();break;case 2:c()}if(x)y;else z();function f(a){g()}switch(a){case 1:/*! k */}"],
 			// An empty case falling into `default`, or reached from it, goes where each test after it is a constant matching otherwise.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-547"), {}, "switch(x){case 0:f();break;default:g()}switch(x){default:g();case 2:h()}switch(x){case 1:default:g();case f():h()}switch(x){case 1:default:g();break;case 1:h()}switch(x){case 1:default:g();break;case y:h()}"],
 			// A read in parentheses may be what they write, and with `unused` off the array stays: either keeps its reads.
@@ -4656,7 +4658,7 @@ describe("one-pass minify of known tests and switches, family E", () => {
 		const { code } = minifyOnePass(source, options);
 		// A `let` or `class` in a case that never runs goes only with the whole `switch`.
 		expect(code).toBe(
-			"function log(name){console.log(name)}var k=1;switch(1){case log(`a`),k:log(`one`)}function f(q){if(q)switch(3){case log(`b`),1:break;var v}return v}switch(3){case log(`c`),1:}log(f(1));"
+			"function log(name){console.log(name)}var k=1;switch(1){case log(`a`),k:log(`one`)}function f(q){if(q)switch(3){case log(`b`),1:break;var v}return v}log(`c`),1;log(f(1));"
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
