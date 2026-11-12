@@ -1368,9 +1368,9 @@ describe("one-pass minify of reads and calls on literals", () => {
 		// Kept apart: a value printing in parentheses before `?.`, another branch
 		// than `undefined`, a chain on another name, another test, no chain.
 		const kept =
-			"function s(){let a=x+y;return a!=null?a.b:void 0}function t(){let a=g();return a!=null?a.b:1}function u(){let a=g();return a!=null?b.c(a):void 0}function v(){let a=g();return a!=null&&x?a.b:void 0}function w(){let a=g();return a!=null?a:void 0}function y(){let a=g();return b!=null?a.b(a):void 0}";
+			"function s(){let a=x+y;return a!=null?a.b:void 0}function t(){let a=g();return a!=null?a.b:1}function u(){let a=g();return a!=null?b.c(a):void 0}function v(){let a=g();return a!=null&&x?a.b:void 0}function w(){let a=g();return a!=null?a:void 0}function y(){let a=g();return b!=null?a.b(a):void 0}function z(){let a=g();return a===b?a.b:void 0}";
 		expect(minifyOnePass(kept, { compress: {}, mangle: false, ecma: 2020 }).code).toBe(
-			"function s(){let a=x+y;return a?.b}function t(){let a=g();return a!=null?a.b:1}function u(){let a=g();return a!=null?b.c(a):void 0}function v(){let a=g();return a!=null&&x?a.b:void 0}function w(){let a=g();return a!=null?a:void 0}function y(){let a=g();return b!=null?a.b(a):void 0}"
+			"function s(){let a=x+y;return a?.b}function t(){let a=g();return a!=null?a.b:1}function u(){let a=g();return a!=null?b.c(a):void 0}function v(){let a=g();return a!=null&&x?a.b:void 0}function w(){let a=g();return a!=null?a:void 0}function y(){let a=g();return b!=null?a.b(a):void 0}function z(){let a=g();return a===b?a.b:void 0}"
 		);
 		// A value printing as a constant: the test picks, or `?.` takes it whole.
 		const constant =
