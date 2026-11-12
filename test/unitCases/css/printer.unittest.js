@@ -2018,3 +2018,35 @@ describe("CssSyntax minify — an escaped `!important` is part of the value", ()
 		expect(minifyFor(source)).toBe(expected);
 	});
 });
+
+describe("CssSyntax minify — a color fallback reads only the value's own calls", () => {
+	it.each([
+		// Text a string, a url or an escape holds names no call.
+		['.a{background:url(x oklch(.5 .1 20) ".x{color:red}")}', '.a{background:url(x oklch(.5 .1 20) ".x{color:red}")}'],
+		['.a{background:url( x oklch(.5 .1 20) "a")}', '.a{background:url( x oklch(.5 .1 20) "a")}'],
+		[".a{background:x\\ oklch(.5 .1 20)}", ".a{background:x\\ oklch(.5 .1 20)}"],
+		[".a{background:url(oklch(1 0 0).png)}", ".a{background:url(oklch(1 0 0) .png)}"],
+		['.a{color:color-mix(in srgb,red,blue);background:url(x color-mix(in srgb,red,blue) "a")}', '.a{color:#7f007f;color:color-mix(in srgb,red,blue);background:url(x color-mix(in srgb,red,blue) "a")}'],
+		// A call beside one still folds, and the text stays as written.
+		['.a{background:url("oklch(1 0 0)") oklch(.5 .1 20)}', '.a{background:url("oklch(1 0 0)") #944a4b;background:url("oklch(1 0 0)") oklch(.5 .1 20)}'],
+		['.a{background:"oklch(1 0 0)" oklch(.5 .1 20)}', '.a{background:"oklch(1 0 0)" #944a4b;background:"oklch(1 0 0)" oklch(.5 .1 20)}']
+	])("writes %s", (source, expected) => {
+		expect(minifyFor(source, ["ie 11"])).toBe(expected);
+	});
+
+	it("leaves a relative hue that reduces to no degrees as written", () => {
+		expect(
+			minifyFor(".a{color:hsl(from red calc(h * 1turn) s l)}", ["ie 11"])
+		).toBe(".a{color:hsl(from red calc(h*1turn) s l)}");
+	});
+
+	it("keeps a string as written in the wide-gamut fallback", () => {
+		expect(
+			minifyFor('.a{background:"oklch(.7 .2 150)" oklch(.7 .2 150)}', [
+				"safari 15.0"
+			])
+		).toBe(
+			'.a{background:"oklch(.7 .2 150)"#00bf54;background:"oklch(.7 .2 150)"color(display-p3 .317813 .736696 .379141);background:"oklch(.7 .2 150)"oklch(.7 .2 150)}'
+		);
+	});
+});
