@@ -27015,13 +27015,13 @@ exports[`CSS syntax — invariants css-syntax-minify-the-value-transforms-reject
 
 exports[`CSS syntax — invariants css-syntax-minify-the-value-transforms-rejection-paths-sibling-rules-printing-40 tokenizes 1`] = `"ident[0,1] colon[1,2] ident[2,15] left-curly-bracket[15,16] ident[16,19] colon[19,20] number[20,21] right-curly-bracket[21,22] ident[22,23] colon[23,24] ident[24,37] left-curly-bracket[37,38] ident[38,41] colon[41,42] number[42,43] right-curly-bracket[43,44] end=44"`;
 
-exports[`CSS syntax — invariants css-syntax-minify-the-value-transforms-rejection-paths-sibling-rules-printing-41 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\":\\",[\\"ident\\",\\"playing\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"playing\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
+exports[`CSS syntax — invariants css-syntax-minify-the-value-transforms-rejection-paths-sibling-rules-printing-41 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\":\\",[\\"function\\",\\"host-context\\",[\\"ident\\",\\"p\\"]]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"],\\":\\",[\\"function\\",\\"host-context\\",[\\"ident\\",\\"p\\"]]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-the-value-transforms-rejection-paths-sibling-rules-printing-41 parses 2`] = `""`;
 
-exports[`CSS syntax — invariants css-syntax-minify-the-value-transforms-rejection-paths-sibling-rules-printing-41 prints {"mode":"minify"} 1`] = `"a:playing{top:0}b:playing{top:0}"`;
+exports[`CSS syntax — invariants css-syntax-minify-the-value-transforms-rejection-paths-sibling-rules-printing-41 prints {"mode":"minify"} 1`] = `"a:host-context(p){top:0}b:host-context(p){top:0}"`;
 
-exports[`CSS syntax — invariants css-syntax-minify-the-value-transforms-rejection-paths-sibling-rules-printing-41 tokenizes 1`] = `"ident[0,1] colon[1,2] ident[2,9] left-curly-bracket[9,10] ident[10,13] colon[13,14] number[14,15] right-curly-bracket[15,16] ident[16,17] colon[17,18] ident[18,25] left-curly-bracket[25,26] ident[26,29] colon[29,30] number[30,31] right-curly-bracket[31,32] end=32"`;
+exports[`CSS syntax — invariants css-syntax-minify-the-value-transforms-rejection-paths-sibling-rules-printing-41 tokenizes 1`] = `"ident[0,1] colon[1,2] function[2,15] ident[15,16] right-parenthesis[16,17] left-curly-bracket[17,18] ident[18,21] colon[21,22] number[22,23] right-curly-bracket[23,24] ident[24,25] colon[25,26] function[26,39] ident[39,40] right-parenthesis[40,41] left-curly-bracket[41,42] ident[42,45] colon[45,46] number[46,47] right-curly-bracket[47,48] end=48"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-the-value-transforms-rejection-paths-sibling-rules-printing-42 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\":\\",[\\"ident\\",\\"totally-made-up\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"totally-made-up\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
 
