@@ -532,7 +532,8 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: pass-1/1/input.js",
 			"swc minifier: pass-1/7/input.js",
 			"swc minifier: pass-1/8/input.js",
-			"swc minifier: pass-1/issue-6788/1/input.js"
+			"swc minifier: pass-1/issue-6788/1/input.js",
+			"swc minifier: pass-1/issue-6405/1/input.js"
 		]
 	],
 	[
@@ -1087,6 +1088,23 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what swc's `fixture/non-finite-number-literals` tests cover",
 		["swc minifier: fixture/non-finite-number-literals/input.js"]
+	],
+	[
+		"swc goes further than webpack on what swc's `fixture/issues` tests cover",
+		[
+			"swc minifier: fixture/issues/12587/input.js",
+			"swc minifier: fixture/issues/12587/top-level/input.js",
+			"swc minifier: fixture/issues/12643/input.js",
+			"swc minifier: fixture/issues/12643/runtime/input.js",
+			"swc minifier: fixture/issues/12669/another/input.js",
+			"swc minifier: fixture/issues/12669/class-methods/input.js",
+			"swc minifier: fixture/issues/12669/constructor-default/input.js",
+			"swc minifier: fixture/issues/12669/destructured-array/input.js",
+			"swc minifier: fixture/issues/12669/destructured-object/input.js",
+			"swc minifier: fixture/issues/12669/object-method/input.js",
+			"swc minifier: fixture/issues/12669/parameter-scope/input.js",
+			"swc minifier: fixture/issues/12669/setter-default/input.js"
+		]
 	]
 ];
 

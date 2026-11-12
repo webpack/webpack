@@ -18,26 +18,40 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/replace_known_methods.rs:207",
 			"oxc minifier: peephole/replace_known_methods.rs:209",
 			"oxc minifier: peephole/replace_known_methods.rs:210",
-			"oxc minifier: peephole/replace_known_methods.rs:392",
-			"oxc minifier: peephole/replace_known_methods.rs:393",
-			"oxc minifier: peephole/replace_known_methods.rs:394",
-			"oxc minifier: peephole/replace_known_methods.rs:395",
-			"oxc minifier: peephole/replace_known_methods.rs:397",
-			"oxc minifier: peephole/replace_known_methods.rs:398",
-			"oxc minifier: peephole/replace_known_methods.rs:425",
-			"oxc minifier: peephole/replace_known_methods.rs:426",
-			"oxc minifier: peephole/replace_known_methods.rs:427",
-			"oxc minifier: peephole/replace_known_methods.rs:428",
-			"oxc minifier: peephole/replace_known_methods.rs:430",
-			"oxc minifier: peephole/replace_known_methods.rs:431",
-			"oxc minifier: peephole/replace_known_methods.rs:931",
-			"oxc minifier: peephole/replace_known_methods.rs:932",
-			"oxc minifier: peephole/replace_known_methods.rs:933",
+			"oxc minifier: peephole/replace_known_methods.rs:405",
+			"oxc minifier: peephole/replace_known_methods.rs:406",
+			"oxc minifier: peephole/replace_known_methods.rs:407",
+			"oxc minifier: peephole/replace_known_methods.rs:408",
+			"oxc minifier: peephole/replace_known_methods.rs:410",
+			"oxc minifier: peephole/replace_known_methods.rs:411",
+			"oxc minifier: peephole/replace_known_methods.rs:438",
+			"oxc minifier: peephole/replace_known_methods.rs:439",
+			"oxc minifier: peephole/replace_known_methods.rs:440",
+			"oxc minifier: peephole/replace_known_methods.rs:441",
+			"oxc minifier: peephole/replace_known_methods.rs:443",
+			"oxc minifier: peephole/replace_known_methods.rs:444",
+			"oxc minifier: peephole/replace_known_methods.rs:944",
+			"oxc minifier: peephole/replace_known_methods.rs:945",
+			"oxc minifier: peephole/replace_known_methods.rs:946",
+			"oxc minifier: peephole/replace_known_methods.rs:1000",
+			"oxc minifier: peephole/replace_known_methods.rs:1001",
+			"oxc minifier: peephole/replace_known_methods.rs:1002",
+			"oxc minifier: peephole/replace_known_methods.rs:1102",
+			"oxc minifier: peephole/replace_known_methods.rs:1106",
+			"oxc minifier: peephole/replace_known_methods.rs:231",
+			"oxc minifier: peephole/replace_known_methods.rs:232",
+			"oxc minifier: peephole/replace_known_methods.rs:233",
+			"oxc minifier: peephole/replace_known_methods.rs:234",
+			"oxc minifier: peephole/replace_known_methods.rs:235",
+			"oxc minifier: peephole/replace_known_methods.rs:236",
+			"oxc minifier: peephole/replace_known_methods.rs:949",
+			"oxc minifier: peephole/replace_known_methods.rs:951",
+			"oxc minifier: peephole/replace_known_methods.rs:955",
+			"oxc minifier: peephole/replace_known_methods.rs:959",
 			"oxc minifier: peephole/replace_known_methods.rs:961",
 			"oxc minifier: peephole/replace_known_methods.rs:962",
-			"oxc minifier: peephole/replace_known_methods.rs:963",
-			"oxc minifier: peephole/replace_known_methods.rs:1063",
-			"oxc minifier: peephole/replace_known_methods.rs:1067"
+			"oxc minifier: peephole/replace_known_methods.rs:970",
+			"oxc minifier: peephole/replace_known_methods.rs:1129"
 		]
 	],
 	[
@@ -122,22 +136,22 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc knows more expressions have no side effects and drops them when their value is unused, as oxc's `ecmascript/may_have_side_effects.rs` tests show",
 		[
-			"oxc minifier: ecmascript/may_have_side_effects.rs:743",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1300",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1365",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:783",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:907",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:755",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:1312",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:1377",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:795",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:919",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:215",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:216",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:627",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:636",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:784",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:791",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:792",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1036",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1047",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1146",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1401",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:796",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:803",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:804",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:1048",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:1059",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:1158",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:1413",
 			"swc minifier: fixture/issues/9460/side-effects/input.js",
 			"swc minifier: fixture/issues/12566/defaults/input.js",
 			"swc minifier: fixture/issues/12566/without-reduce-vars/input.js"
@@ -155,7 +169,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: ecmascript/value_type.rs:167",
 			"oxc minifier: ecmascript/value_type.rs:169",
 			"oxc minifier: peephole/minimize_statements.rs:32",
-			"oxc minifier: peephole/replace_known_methods.rs:1090",
 			"swc exec: terser_arguments_modified",
 			"swc minifier: fixture/issues/10412/input.js",
 			"swc minifier: fixture/issues/11684/identifier-preserved/input.js",
@@ -598,7 +611,7 @@ const OXC_SMALLER_BY_REASON = [
 		"mangled-name choice: the same program with other mangled names, or one name given to other bindings",
 		[
 			"oxc minifier: peephole/dead_code_elimination.rs:917",
-			"oxc minifier: peephole/fold_constants.rs:1377",
+			"oxc minifier: peephole/fold_constants.rs:1391",
 			"oxc minifier: peephole/inline_single_use_variable.rs:359",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:1137",
 			"swc exec: issue_10095",
@@ -971,9 +984,9 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		'oxc converts the operands of `Math.pow` or `"".concat` in another order, writing `a ** +b`, a template or one `concat` for a chain of them, where a getter or `valueOf` of one may see what converting the other did',
 		[
-			"oxc minifier: peephole/replace_known_methods.rs:637",
-			"oxc minifier: peephole/replace_known_methods.rs:638",
-			"oxc minifier: peephole/replace_known_methods.rs:639"
+			"oxc minifier: peephole/replace_known_methods.rs:650",
+			"oxc minifier: peephole/replace_known_methods.rs:651",
+			"oxc minifier: peephole/replace_known_methods.rs:652"
 		]
 	],
 	[
@@ -989,14 +1002,15 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc goes further than webpack on what oxc's `peephole/fold_constants.rs` tests cover",
 		[
 			"oxc minifier: peephole/fold_constants.rs:521",
-			"oxc minifier: peephole/fold_constants.rs:1681",
-			"oxc minifier: peephole/fold_constants.rs:1689"
+			"oxc minifier: peephole/fold_constants.rs:1695",
+			"oxc minifier: peephole/fold_constants.rs:1703",
+			"oxc minifier: peephole/fold_constants.rs:1342"
 		]
 	],
 	[
 		"oxc's output is wrong: it writes `x -= 1` as `--x` and `x -= -1` as `++x` on a name or property that may hold a BigInt, where the input throws a TypeError and the update does not; webpack, like swc, rewrites only a name holding only numbers",
 		[
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1638",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:1650",
 			"oxc minifier: ecmascript/value_type.rs:192",
 			"oxc minifier: peephole/minimize_conditions.rs:158",
 			"oxc minifier: peephole/minimize_conditions.rs:163",
@@ -1010,10 +1024,10 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc's output is wrong: it folds a string method otherwise than the spec, as its own tests now show: `slice` and `substring` keep a surrogate pair they split, an `undefined` end reads as 0, `indexOf` wraps a position past 2**32, and `trim` keeps U+FEFF and drops U+0085",
 		[
-			"oxc minifier: peephole/replace_known_methods.rs:449",
-			"oxc minifier: peephole/replace_known_methods.rs:450",
-			"oxc minifier: peephole/replace_known_methods.rs:451",
-			"oxc minifier: peephole/replace_known_methods.rs:452"
+			"oxc minifier: peephole/replace_known_methods.rs:462",
+			"oxc minifier: peephole/replace_known_methods.rs:463",
+			"oxc minifier: peephole/replace_known_methods.rs:464",
+			"oxc minifier: peephole/replace_known_methods.rs:465"
 		]
 	],
 	[
@@ -1325,8 +1339,8 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc drops an unused `Symbol.for`, which webpack keeps: running it at build time would keep its key in the build's own symbol registry",
 		[
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1259",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1404"
+			"oxc minifier: ecmascript/may_have_side_effects.rs:1271",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:1416"
 		]
 	],
 	[
@@ -1463,7 +1477,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc folds a `parseFloat` of more than 20 digits, which ECMAScript lets an engine round otherwise, so webpack keeps the call",
-		["oxc minifier: peephole/replace_known_methods.rs:790"]
+		["oxc minifier: peephole/replace_known_methods.rs:803"]
 	],
 	[
 		"oxc goes further than webpack on what terser's `issue-143` tests cover",
@@ -1487,7 +1501,7 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"oxc minifier: ecmascript/may_have_side_effects.rs:445",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:451",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:816",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:828",
 			"oxc minifier: peephole/remove_unused_expression.rs:850",
 			"oxc minifier: peephole/remove_unused_expression.rs:865"
 		]
@@ -1495,6 +1509,16 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what oxc's `peephole/manual_pure_functions.rs` tests cover",
 		["oxc minifier: peephole/manual_pure_functions.rs:119"]
+	],
+	[
+		"oxc goes further than webpack on what swc's `fixture/issues` tests cover",
+		[
+			"swc minifier: fixture/issues/12643/input.js",
+			"swc minifier: fixture/issues/12643/runtime/input.js",
+			"swc minifier: fixture/issues/12669/class-methods/input.js",
+			"swc minifier: fixture/issues/12669/function-kinds/input.js",
+			"swc minifier: fixture/issues/12669/object-method/input.js"
+		]
 	]
 ];
 

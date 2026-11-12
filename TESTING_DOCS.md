@@ -69,7 +69,7 @@ Directories come first, in alphabetical order, then the individual files worth t
 
 #### `oxc/`
 
-- **Purpose**: oxc's repository, pinned to the commit that released webpack's `oxc-minify` devDependency and read only under `crates/oxc_minifier/tests`: the source each `test…(` helper call in its Rust tests passes first, but TypeScript. Each is held to terser's bytes like the other corpora, and under the default minimizer's options every source of every corpus but test262 is also minified by `oxc-minify`: webpack's output may be no bigger than oxc's unless `OXC_SMALLER` lists why, and an oxc output that misprints is no lead.
+- **Purpose**: oxc's repository, read only under `crates/oxc_minifier/tests`: the source each `test…(` helper call in its Rust tests passes first, but TypeScript. Each is held to terser's bytes like the other corpora, and under the default minimizer's options every source of every corpus but test262 is also minified by `oxc-minify`: webpack's output may be no bigger than oxc's unless `OXC_SMALLER` lists why, and an oxc output that misprints is no lead.
 - **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/oxc`. Test runner: `test/specCases/minify-corpora.spectest.js` (`yarn test:minify-corpora`), which also fails when the pin and the installed `oxc-minify` disagree.
 
 #### `terser/`

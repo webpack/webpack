@@ -17,7 +17,7 @@ const BY_DESIGN = [
 			"terser compress: issue-597/beautify_off_1",
 			"terser compress: issue-597/beautify_on_1",
 			"terser compress: harmony/array_literal_with_spread_3b",
-			"oxc minifier: peephole/replace_known_methods.rs:1082",
+			"oxc minifier: peephole/replace_known_methods.rs:1121",
 			"terser compress: collapse_vars/collapse_vars_if",
 			"terser compress: conditionals/equality_conditionals_false",
 			"terser compress: conditionals/equality_conditionals_true",
