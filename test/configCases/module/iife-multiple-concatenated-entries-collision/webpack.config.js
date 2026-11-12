@@ -1,6 +1,35 @@
 "use strict";
 
+const acorn = require("acorn");
 const JavascriptParser = require("../../../../lib/javascript/JavascriptParser");
+
+/**
+ * @import {
+ * 	ParseOptions,
+ * 	ParseResult
+ * } from "../../../../lib/javascript/JavascriptParser"
+ */
+
+/**
+ * A custom parser, so the collision check also runs on an AST it did not build.
+ * @param {string} code source code
+ * @param {ParseOptions} options parse options
+ * @returns {ParseResult} parse result
+ */
+const customParse = (code, options) => {
+	/** @type {acorn.Comment[]} */
+	const comments = [];
+	const ast = acorn.parse(code, {
+		sourceType: options.sourceType === "script" ? "script" : "module",
+		ecmaVersion: "latest",
+		ranges: true,
+		onComment: comments
+	});
+	return {
+		ast: /** @type {ParseResult["ast"]} */ (ast),
+		comments: /** @type {ParseResult["comments"]} */ (comments)
+	};
+};
 
 /**
  * @param {number} expectedParses number of entries requiring scope analysis
@@ -86,7 +115,7 @@ module.exports = [
 		},
 		optimization: { ...base.optimization, avoidEntryIife: true },
 		module: {
-			parser: { javascript: { parse: JavascriptParser._parse } }
+			parser: { javascript: { parse: customParse } }
 		},
 		plugins: [createCountEntryParsesPlugin(2)]
 	},
