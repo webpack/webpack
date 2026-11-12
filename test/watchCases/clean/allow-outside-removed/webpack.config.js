@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const rimraf = require("rimraf");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
 const PLUGIN_NAME = "AllowOutsideCleanPlugin";
@@ -24,7 +25,7 @@ module.exports = {
 			compiler.hooks.initialize.tap(PLUGIN_NAME, () => {
 				outside = path.join(compiler.outputPath, "..", "outside-removed");
 				compiler.options.output.allowOutside = [outside];
-				fs.rmSync(outside, { recursive: true, force: true });
+				rimraf.sync(outside);
 				fs.mkdirSync(outside, { recursive: true });
 				// written by someone else, never by this build
 				fs.writeFileSync(path.join(outside, "foreign.txt"), "");
