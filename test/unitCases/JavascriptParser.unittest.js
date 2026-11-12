@@ -1228,9 +1228,7 @@ describe("JavascriptParser", () => {
 			expect(parser.getLocation({ start: 0, end: 1 })).toBeUndefined();
 		});
 
-		// `buildLineStarts` serves LF-only and CRLF sources from a native
-		// `indexOf` search and everything else from the char-code fallback —
-		// both paths must agree with acorn's `lineBreak` semantics.
+		// Every ECMAScript line terminator starts a line, CRLF counting once.
 		const lineBreakCases = /** @type {[string, string, number[]][]} */ ([
 			["lf", "a;\nbb;\nccc;", [0, 3, 7]],
 			["crlf", "a;\r\nbb;\r\nccc;", [0, 4, 9]],

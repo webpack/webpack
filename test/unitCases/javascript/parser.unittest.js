@@ -4710,12 +4710,8 @@ describe("JavaScript SourceProcessor", () => {
 		expect(isWalkingSyntaxTree()).toBe(false);
 	});
 
-	it("reads a line's start past a lone carriage return, and moves a position along its line", () => {
-		const {
-			ParserPosition,
-			buildLineStarts
-		} = require("../../../lib/javascript/syntax-parser");
-		expect(buildLineStarts("a\rb\r\nc\nd")).toEqual([0, 2, 5, 7]);
+	it("moves a position along its line", () => {
+		const { ParserPosition } = require("../../../lib/javascript/syntax-parser");
 		expect(new ParserPosition(2, 3).offset(4)).toEqual(
 			new ParserPosition(2, 7)
 		);

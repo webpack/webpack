@@ -38838,7 +38838,6 @@ declare namespace exports {
 				export let isPrivateFieldAccess: (node?: any) => boolean;
 				export let keywordTypes: Record<string, TokenType>;
 				export let lineBreak: RegExp;
-				export let lineBreakG: RegExp;
 				export let nextLineBreak: (
 					code: string,
 					from: number,
@@ -38991,7 +38990,6 @@ declare namespace exports {
 					sourceType: 5;
 					phase: 6;
 				}>;
-				export let buildLineStarts: (source: string) => number[];
 				export let collectCjsRequireSpecifiers: (source: string) => Set<string>;
 				export let declaresIntoBlock: (statement?: any) => boolean;
 				export let overflowFrom: (mask: number, index: number) => number[];
@@ -39086,10 +39084,6 @@ declare namespace exports {
 					tree: ColumnarSyntaxTree,
 					input: string
 				) => void;
-				export let positionAt: (
-					lineStarts: number[],
-					offset: number
-				) => SourcePosition;
 				export let releaseParserCaches: () => void;
 				export let toEstreeObject: (
 					node: number,
