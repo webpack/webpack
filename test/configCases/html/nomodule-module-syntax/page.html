@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head><title>nomodule module syntax</title></head>
+<body>
+<script nomodule src="./legacy-module.js"></script>
+<script nomodule src="./legacy-plain.js"></script>
+<script nomodule>import { shared } from "./shared.js"; window.MARK_INLINE_MODULE = shared;</script>
+<script nomodule>window.MARK_INLINE_PLAIN = 1;</script>
+</body>
+</html>
