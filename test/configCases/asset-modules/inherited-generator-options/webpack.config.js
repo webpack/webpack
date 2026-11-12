@@ -7,7 +7,7 @@ module.exports = {
 			// reaches every `asset/*` type, each taking only the keys it uses
 			asset: {
 				filename: "assets/[name][ext]",
-				dataUrl: { encoding: "base64" }
+				dataUrl: { encoding: false }
 			}
 		},
 		rules: [
