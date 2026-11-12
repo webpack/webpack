@@ -1397,6 +1397,18 @@ describe("CssSyntax minify — merged and joined text keeps its boundaries", () 
 			'.a{grid-row:1/ *}.b{grid-template:1px/ *}.c{grid-template:"a"1px/ *}.d{color:red}'
 		);
 	});
+
+	it("closes a bad url the input ran out in", () => {
+		const name = "css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed";
+		const nested = fixture("css", name);
+		expect(min(nested)).toBe('.p{.q{content:")}.x{color:red}"}url(x")}');
+		// Lowered, the rule hoisted out of `.p` comes after the bad url.
+		expect(min(nested, { environment: { browsers: ["chrome 100"] } })).toBe(
+			'.p{url(x")}.p .q{content:")}.x{color:red}"}'
+		);
+		expect(min(fixture("css", `${name}-2`))).toBe('@media url(x");');
+		expect(min(fixture("css", `${name}-3`))).toBe('.a{b:url(x")}');
+	});
 });
 
 describe("CssSyntax — the identifier and url helpers", () => {

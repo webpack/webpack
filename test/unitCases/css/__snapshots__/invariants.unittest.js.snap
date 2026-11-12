@@ -3683,6 +3683,32 @@ exports[`CSS syntax — invariants css-syntax-minify-a-2009-flexbox-property-und
 
 exports[`CSS syntax — invariants css-syntax-minify-a-2009-flexbox-property-under-its-own-display-keeps-the-7 tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,21] colon[21,22] number[22,23] semicolon[23,24] ident[24,42] colon[42,43] ident[43,51] semicolon[51,52] ident[52,66] colon[66,67] ident[67,73] semicolon[73,74] ident[74,81] colon[81,82] ident[82,93] semicolon[93,94] ident[94,102] colon[102,103] ident[103,109] right-curly-bracket[109,110] end=110"`;
 
+exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"p\\"]],[\\".\\",[\\"ident\\",\\"q\\"],[\\"{}\\",[\\"ident\\",\\"content\\"],\\":\\",[\\"string\\",\\")}.x{color:red}\\"]],[\\"error\\",\\"bad-url\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed parses 2`] = `"warning[37,38]:unexpected-character-in-url error[38,38]:eof-in-qualified-rule"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed prints {"mode":"minify","environment":{"browsers":["chrome 100"]}} 1`] = `".p{url(x\\")}.p .q{content:\\")}.x{color:red}\\"}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed prints {"mode":"minify"} 1`] = `".p{.q{content:\\")}.x{color:red}\\"}url(x\\")}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] delim[3,4] ident[4,5] left-curly-bracket[5,6] ident[6,13] colon[13,14] string[14,31] right-curly-bracket[31,32] bad-url[32,38] end=38"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed-2 parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"error\\",\\"bad-url\\"]],null]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed-2 parses 2`] = `"warning[12,13]:unexpected-character-in-url"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed-2 prints {"mode":"minify"} 1`] = `"@media url(x\\");"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed-2 tokenizes 1`] = `"at-keyword[0,6] whitespace[6,7] bad-url[7,13] end=13"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed-3 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"error\\",\\"bad-url\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed-3 parses 2`] = `"warning[10,11]:unexpected-character-in-url"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed-3 prints {"mode":"minify"} 1`] = `".a{b:url(x\\")}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed-3 tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,4] colon[4,5] bad-url[5,11] end=11"`;
+
 exports[`CSS syntax — invariants css-syntax-minify-a-box-fallback-leaves-out-the-sides-its-notation-implies parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"border-color\\"],\\":\\",[\\"function\\",\\"color\\",[\\"ident\\",\\"display-p3\\"],\\" \\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\" \\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\" \\",[\\"number\\",\\"0\\",0,\\"integer\\"]],\\" \\",[\\"ident\\",\\"red\\"],\\" \\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"border-color\\"],\\":\\",[\\"function\\",\\"color\\",[\\"ident\\",\\"display-p3\\"],\\" \\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\" \\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\" \\",[\\"number\\",\\"0\\",0,\\"integer\\"]],\\" \\",[\\"function\\",\\"rgb\\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\" \\",[\\"number\\",\\"2\\",2,\\"integer\\"],\\" \\",[\\"number\\",\\"3\\",3,\\"integer\\"]],\\" \\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"c\\"]],[[\\"ident\\",\\"BORDER-COLOR\\"],\\":\\",[\\"function\\",\\"color\\",[\\"ident\\",\\"display-p3\\"],\\" \\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\" \\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\" \\",[\\"number\\",\\"0\\",0,\\"integer\\"]],\\" \\",[\\"hash\\",\\"010203\\",\\"unrestricted\\"],\\" \\",[\\"hash\\",\\"010203\\",\\"unrestricted\\"],\\" \\",[\\"hash\\",\\"010203\\",\\"unrestricted\\"],\\"!\\",[\\"ident\\",\\"important\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"d\\"]],[[\\"ident\\",\\"border-color\\"],\\":\\",[\\"function\\",\\"color\\",[\\"ident\\",\\"display-p3\\"],\\" \\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\" \\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\" \\",[\\"number\\",\\"0\\",0,\\"integer\\"]],\\" \\",[\\"function\\",\\"rgb\\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\" \\",[\\"number\\",\\"2\\",2,\\"integer\\"],\\" \\",[\\"number\\",\\"3\\",3,\\"integer\\"],\\" \\",\\"/\\",\\" \\",[\\"percentage\\",\\"50\\",50,\\"integer\\"]],\\" \\",[\\"ident\\",\\"red\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-a-box-fallback-leaves-out-the-sides-its-notation-implies parses 2`] = `""`;
