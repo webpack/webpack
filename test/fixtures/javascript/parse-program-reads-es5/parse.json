@@ -1,0 +1,3 @@
+[
+	{ "entry": "parseProgram", "options": { "ecmaVersion": 5, "sourceType": "script" }, "fields": ["childCount"] }
+]

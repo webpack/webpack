@@ -27619,6 +27619,14 @@ exports[`CSS syntax — invariants css-syntax-minify-the-value-transforms-reject
 
 exports[`CSS syntax — invariants css-syntax-minify-the-value-transforms-rejection-paths-sibling-rules-printing-96 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,5] colon[5,6] number[6,7] right-curly-bracket[7,8] ident[8,9] left-curly-bracket[9,10] ident[10,13] colon[13,14] dimension[14,17|15,17] right-curly-bracket[17,18] ident[18,19] left-curly-bracket[19,20] ident[20,23] colon[23,24] dimension[24,27|25,27] right-curly-bracket[27,28] end=28"`;
 
+exports[`CSS syntax — invariants css-syntax-minify-the-value-transforms-rejection-paths-sibling-rules-printing-97 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\":\\",[\\"ident\\",\\"future\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"future\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-the-value-transforms-rejection-paths-sibling-rules-printing-97 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-the-value-transforms-rejection-paths-sibling-rules-printing-97 prints {"mode":"minify"} 1`] = `"a:future{top:0}b:future{top:0}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-the-value-transforms-rejection-paths-sibling-rules-printing-97 tokenizes 1`] = `"ident[0,1] colon[1,2] ident[2,8] left-curly-bracket[8,9] ident[9,12] colon[12,13] number[13,14] right-curly-bracket[14,15] ident[15,16] colon[16,17] ident[17,23] left-curly-bracket[23,24] ident[24,27] colon[27,28] number[28,29] right-curly-bracket[29,30] end=30"`;
+
 exports[`CSS syntax — invariants css-syntax-minify-the-value-transforms-rejection-paths-sqrt-pow-log-exp-and-the parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"x\\"],\\":\\",[\\"function\\",\\"asin\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-the-value-transforms-rejection-paths-sqrt-pow-log-exp-and-the parses 2`] = `""`;

@@ -40,8 +40,8 @@
   },
   "javascript": {
     "lib/javascript/syntax-parser.js": {
-      "statements": 5,
-      "branches": 12,
+      "statements": 2,
+      "branches": 9,
       "functions": 0
     },
     "lib/javascript/syntax-printer.js": {
@@ -50,7 +50,7 @@
       "functions": 0
     },
     "lib/javascript/ScopeAnalyzer.js": {
-      "statements": 4,
+      "statements": 3,
       "branches": 16,
       "functions": 0
     },

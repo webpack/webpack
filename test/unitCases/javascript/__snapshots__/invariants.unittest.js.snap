@@ -30818,6 +30818,16 @@ b;"
 
 exports[`JavaScript syntax — invariants parse-program-collects-comments-and-reports-them-to-on-comment-in-one-parse tokenizes 1`] = `"line[0,3] block[4,11] name[12,13] ;[13,14] line[15,19] eof[19,19]"`;
 
+exports[`JavaScript syntax — invariants parse-program-export-from-keeps-a-legacy-assert parses 1`] = `"Program[0,49](body=[ExportNamedDeclaration[0,48](declaration=null specifiers=[ExportSpecifier[9,10](local=Identifier[9,10](name=\\"a\\") exported=Identifier[9,10](name=\\"a\\"))] source=Literal[18,23](value=\\"./a\\" raw=\\"\\\\\\"./a\\\\\\"\\") attributes=[ImportAttribute[33,45](key=Identifier[33,37](name=\\"type\\") value=Literal[39,45](value=\\"json\\" raw=\\"\\\\\\"json\\\\\\"\\"))])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants parse-program-export-from-keeps-a-legacy-assert parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants parse-program-export-from-keeps-a-legacy-assert parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants parse-program-export-from-keeps-a-legacy-assert prints {"mode":"minify"} 1`] = `"export{a}from\\"./a\\"with{type:\\"json\\"};"`;
+
+exports[`JavaScript syntax — invariants parse-program-export-from-keeps-a-legacy-assert tokenizes 1`] = `"export[0,6] {[7,8] name[9,10] }[11,12] name[13,17] string[18,23]=\\"./a\\" name[24,30] {[31,32] name[33,37] :[37,38] string[39,45]=\\"json\\" }[46,47] ;[47,48] eof[49,49]"`;
+
 exports[`JavaScript syntax — invariants parse-program-leaves-the-parsed-tree-to-a-source-processor-run-and-refuses-one parses 1`] = `"Program[0,5](body=[ExpressionStatement[0,5](expression=BinaryExpression[0,5](left=Identifier[0,1](name=\\"a\\") operator=\\"+\\" right=Identifier[4,5](name=\\"b\\")))] sourceType=\\"module\\")"`;
 
 exports[`JavaScript syntax — invariants parse-program-leaves-the-parsed-tree-to-a-source-processor-run-and-refuses-one parses 2`] = `""`;
@@ -30847,6 +30857,75 @@ exports[`JavaScript syntax — invariants parse-program-lets-the-last-tree-go-on
 exports[`JavaScript syntax — invariants parse-program-lets-the-last-tree-go-once-an-estree-parse-starts prints {"mode":"minify"} 1`] = `"a;"`;
 
 exports[`JavaScript syntax — invariants parse-program-lets-the-last-tree-go-once-an-estree-parse-starts tokenizes 1`] = `"name[0,1] eof[1,1]"`;
+
+exports[`JavaScript syntax — invariants parse-program-logs-scopes-of-estree-objects parses {"entry":"parseProgram","options":{"scopes":true},"fields":["childCount"]} 1`] = `"Program[0,197](body=[BlockStatement[0,6](body=[ExpressionStatement[2,4](expression=Identifier[2,3](name=\\"a\\"))]),BlockStatement[7,20](body=[VariableDeclaration[9,15](declarations=[VariableDeclarator[13,14](id=Identifier[13,14](name=\\"b\\") init=null)] kind=\\"let\\"),ExpressionStatement[16,18](expression=Identifier[16,17](name=\\"b\\"))]),FunctionDeclaration[21,55](id=Identifier[30,31](name=\\"f\\") expression=false generator=false async=false params=[Identifier[32,33](name=\\"c\\"),Identifier[35,36](name=\\"d\\")] body=BlockStatement[38,55](body=[ReturnStatement[40,53](argument=BinaryExpression[47,52](left=Identifier[47,48](name=\\"c\\") operator=\\"+\\" right=Identifier[51,52](name=\\"d\\")))])),ExpressionStatement[56,86](expression=FunctionExpression[57,84](id=Identifier[66,67](name=\\"g\\") expression=false generator=false async=false params=[Identifier[68,69](name=\\"h\\")] body=BlockStatement[71,84](body=[ReturnStatement[73,82](argument=Identifier[80,81](name=\\"h\\"))]))),ExpressionStatement[87,110](expression=FunctionExpression[88,108](id=null expression=false generator=false async=true params=[] body=BlockStatement[106,108](body=[]))),ExpressionStatement[111,135](expression=FunctionExpression[112,133](id=Identifier[127,128](name=\\"i\\") expression=false generator=false async=true params=[] body=BlockStatement[131,133](body=[]))),ExpressionStatement[136,151](expression=ArrowFunctionExpression[137,149](id=null expression=true generator=false async=true params=[Identifier[143,144](name=\\"j\\")] body=Identifier[148,149](name=\\"j\\"))),ExpressionStatement[152,166](expression=ObjectExpression[153,164](properties=[Property[155,159](method=false shorthand=false computed=false key=Identifier[155,156](name=\\"k\\") value=Literal[158,159](value=1 raw=\\"1\\") kind=\\"init\\"),Property[161,162](method=false shorthand=true computed=false key=Identifier[161,162](name=\\"l\\") value=Identifier[161,162](name=\\"l\\") kind=\\"init\\")])),SwitchStatement[167,196](discriminant=Identifier[175,176](name=\\"m\\") cases=[SwitchCase[180,194](consequent=[VariableDeclaration[188,194](declarations=[VariableDeclarator[192,193](id=Identifier[192,193](name=\\"n\\") init=null)] kind=\\"let\\")] test=Literal[185,186](value=1 raw=\\"1\\"))])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants parse-program-logs-scopes-of-estree-objects parses {"entry":"parseProgram","options":{"scopes":true},"fields":["childCount"]} 2`] = `""`;
+
+exports[`JavaScript syntax — invariants parse-program-logs-scopes-of-estree-objects parses {"entry":"parseProgram","options":{"scopes":true},"fields":["childCount"]} 3`] = `
+"Program[0,197] childCount=9
+  BlockStatement[0,6] childCount=1
+    ExpressionStatement[2,4] childCount=1
+      Identifier[2,3] childCount=0
+  BlockStatement[7,20] childCount=2
+    VariableDeclaration[9,15] childCount=1
+      VariableDeclarator[13,14] childCount=1
+        Identifier[13,14] childCount=0
+    ExpressionStatement[16,18] childCount=1
+      Identifier[16,17] childCount=0
+  FunctionDeclaration[21,55] childCount=4
+    Identifier[30,31] childCount=0
+    Identifier[32,33] childCount=0
+    Identifier[35,36] childCount=0
+    BlockStatement[38,55] childCount=1
+      ReturnStatement[40,53] childCount=1
+        BinaryExpression[47,52] childCount=2
+          Identifier[47,48] childCount=0
+          Identifier[51,52] childCount=0
+  ExpressionStatement[56,86] childCount=1
+    FunctionExpression[57,84] childCount=3
+      Identifier[66,67] childCount=0
+      Identifier[68,69] childCount=0
+      BlockStatement[71,84] childCount=1
+        ReturnStatement[73,82] childCount=1
+          Identifier[80,81] childCount=0
+  ExpressionStatement[87,110] childCount=1
+    FunctionExpression[88,108] childCount=1
+      BlockStatement[106,108] childCount=0
+  ExpressionStatement[111,135] childCount=1
+    FunctionExpression[112,133] childCount=2
+      Identifier[127,128] childCount=0
+      BlockStatement[131,133] childCount=0
+  ExpressionStatement[136,151] childCount=1
+    ArrowFunctionExpression[137,149] childCount=2
+      Identifier[143,144] childCount=0
+      Identifier[148,149] childCount=0
+  ExpressionStatement[152,166] childCount=1
+    ObjectExpression[153,164] childCount=2
+      Property[155,159] childCount=2
+        Identifier[155,156] childCount=0
+        Literal[158,159] childCount=0
+      Property[161,162] childCount=2
+        Identifier[161,162] childCount=0
+        Identifier[161,162] childCount=0
+  SwitchStatement[167,196] childCount=2
+    Identifier[175,176] childCount=0
+    SwitchCase[180,194] childCount=2
+      Literal[185,186] childCount=0
+      VariableDeclaration[188,194] childCount=1
+        VariableDeclarator[192,193] childCount=1
+          Identifier[192,193] childCount=0"
+`;
+
+exports[`JavaScript syntax — invariants parse-program-logs-scopes-of-estree-objects parses 1`] = `"Program[0,197](body=[BlockStatement[0,6](body=[ExpressionStatement[2,4](expression=Identifier[2,3](name=\\"a\\"))]),BlockStatement[7,20](body=[VariableDeclaration[9,15](declarations=[VariableDeclarator[13,14](id=Identifier[13,14](name=\\"b\\") init=null)] kind=\\"let\\"),ExpressionStatement[16,18](expression=Identifier[16,17](name=\\"b\\"))]),FunctionDeclaration[21,55](id=Identifier[30,31](name=\\"f\\") expression=false generator=false async=false params=[Identifier[32,33](name=\\"c\\"),Identifier[35,36](name=\\"d\\")] body=BlockStatement[38,55](body=[ReturnStatement[40,53](argument=BinaryExpression[47,52](left=Identifier[47,48](name=\\"c\\") operator=\\"+\\" right=Identifier[51,52](name=\\"d\\")))])),ExpressionStatement[56,86](expression=FunctionExpression[57,84](id=Identifier[66,67](name=\\"g\\") expression=false generator=false async=false params=[Identifier[68,69](name=\\"h\\")] body=BlockStatement[71,84](body=[ReturnStatement[73,82](argument=Identifier[80,81](name=\\"h\\"))]))),ExpressionStatement[87,110](expression=FunctionExpression[88,108](id=null expression=false generator=false async=true params=[] body=BlockStatement[106,108](body=[]))),ExpressionStatement[111,135](expression=FunctionExpression[112,133](id=Identifier[127,128](name=\\"i\\") expression=false generator=false async=true params=[] body=BlockStatement[131,133](body=[]))),ExpressionStatement[136,151](expression=ArrowFunctionExpression[137,149](id=null expression=true generator=false async=true params=[Identifier[143,144](name=\\"j\\")] body=Identifier[148,149](name=\\"j\\"))),ExpressionStatement[152,166](expression=ObjectExpression[153,164](properties=[Property[155,159](method=false shorthand=false computed=false key=Identifier[155,156](name=\\"k\\") value=Literal[158,159](value=1 raw=\\"1\\") kind=\\"init\\"),Property[161,162](method=false shorthand=true computed=false key=Identifier[161,162](name=\\"l\\") value=Identifier[161,162](name=\\"l\\") kind=\\"init\\")])),SwitchStatement[167,196](discriminant=Identifier[175,176](name=\\"m\\") cases=[SwitchCase[180,194](consequent=[VariableDeclaration[188,194](declarations=[VariableDeclarator[192,193](id=Identifier[192,193](name=\\"n\\") init=null)] kind=\\"let\\")] test=Literal[185,186](value=1 raw=\\"1\\"))])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants parse-program-logs-scopes-of-estree-objects parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants parse-program-logs-scopes-of-estree-objects parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants parse-program-logs-scopes-of-estree-objects prints {"mode":"minify"} 1`] = `"{a}{let b;b}function f(c,d){return c+d}(function g(h){return h});(async function(){});(async function i(){});async j=>j;({k:1,l:l});switch(m){case 1:let n}"`;
+
+exports[`JavaScript syntax — invariants parse-program-logs-scopes-of-estree-objects tokenizes 1`] = `"{[0,1] name[2,3] ;[3,4] }[5,6] {[7,8] name[9,12] name[13,14] ;[14,15] name[16,17] ;[17,18] }[19,20] function[21,29] name[30,31] ([31,32] name[32,33] ,[33,34] name[35,36] )[36,37] {[38,39] return[40,46] name[47,48] +/-[49,50] name[51,52] ;[52,53] }[54,55] ([56,57] function[57,65] name[66,67] ([67,68] name[68,69] )[69,70] {[71,72] return[73,79] name[80,81] ;[81,82] }[83,84] )[84,85] ;[85,86] ([87,88] name[88,93] function[94,102] ([103,104] )[104,105] {[106,107] }[107,108] )[108,109] ;[109,110] ([111,112] name[112,117] function[118,126] name[127,128] ([128,129] )[129,130] {[131,132] }[132,133] )[133,134] ;[134,135] ([136,137] name[137,142] name[143,144] =>[145,147] name[148,149] )[149,150] ;[150,151] ([152,153] {[153,154] name[155,156] :[156,157] num[158,159] ,[159,160] name[161,162] }[163,164] )[164,165] ;[165,166] switch[167,173] ([174,175] name[175,176] )[176,177] {[178,179] case[180,184] num[185,186] :[186,187] name[188,191] name[192,193] ;[193,194] }[195,196] eof[197,197]"`;
 
 exports[`JavaScript syntax — invariants parse-program-names-an-error-whose-message-holds-a-line-terminator parses {"entry":"parseProgram","options":{"sourceType":"module"}} 1`] = `"Program[0,45](body=[ExportNamedDeclaration[0,36](declaration=null specifiers=[ExportSpecifier[9,20](local=Identifier[9,10](name=\\"a\\") exported=Literal[14,20](value=\\"x\\\\ny\\" raw=\\"\\\\\\"x\\\\\\\\ny\\\\\\"\\")),ExportSpecifier[22,33](local=Identifier[22,23](name=\\"b\\") exported=Literal[27,33](value=\\"x\\\\ny\\" raw=\\"\\\\\\"x\\\\\\\\ny\\\\\\"\\"))] source=null attributes=[]),VariableDeclaration[37,45](declarations=[VariableDeclarator[41,42](id=Identifier[41,42](name=\\"a\\") init=null),VariableDeclarator[44,45](id=Identifier[44,45](name=\\"b\\") init=null)] kind=\\"var\\")] sourceType=\\"module\\")"`;
 
@@ -31092,6 +31171,39 @@ exports[`JavaScript syntax — invariants parse-program-reads-await-as-a-name-on
 exports[`JavaScript syntax — invariants parse-program-reads-await-as-a-name-once-auto-turns-into-a-script-2 prints {"mode":"minify"} 1`] = `"throws: 'return' outside of function (1:14)"`;
 
 exports[`JavaScript syntax — invariants parse-program-reads-await-as-a-name-once-auto-turns-into-a-script-2 tokenizes 1`] = `"string[0,12]=\\"use strict\\" ;[12,13] return[14,20] ;[20,21] var[22,25] name[26,31] =[32,33] num[34,35] ;[35,36] eof[36,36]"`;
+
+exports[`JavaScript syntax — invariants parse-program-reads-es5 parses {"entry":"parseProgram","options":{"ecmaVersion":5,"sourceType":"script"},"fields":["childCount"]} 1`] = `"Program[0,43](body=[DoWhileStatement[0,18](body=ExpressionStatement[3,7](expression=CallExpression[3,6](callee=Identifier[3,4](name=\\"a\\") arguments=[])) test=Identifier[15,16](name=\\"b\\")),VariableDeclaration[19,42](declarations=[VariableDeclarator[23,41](id=Identifier[23,24](name=\\"o\\") init=ObjectExpression[27,41](properties=[Property[29,33](key=Identifier[29,30](name=\\"d\\") value=Literal[32,33](value=1 raw=\\"1\\") kind=\\"init\\"),Property[35,39](key=Identifier[35,36](name=\\"e\\") value=Literal[38,39](value=2 raw=\\"2\\") kind=\\"init\\")]))] kind=\\"var\\")] sourceType=\\"script\\")"`;
+
+exports[`JavaScript syntax — invariants parse-program-reads-es5 parses {"entry":"parseProgram","options":{"ecmaVersion":5,"sourceType":"script"},"fields":["childCount"]} 2`] = `""`;
+
+exports[`JavaScript syntax — invariants parse-program-reads-es5 parses {"entry":"parseProgram","options":{"ecmaVersion":5,"sourceType":"script"},"fields":["childCount"]} 3`] = `
+"Program[0,43] childCount=2
+  DoWhileStatement[0,18] childCount=2
+    ExpressionStatement[3,7] childCount=1
+      CallExpression[3,6] childCount=1
+        Identifier[3,4] childCount=0
+    Identifier[15,16] childCount=0
+  VariableDeclaration[19,42] childCount=1
+    VariableDeclarator[23,41] childCount=2
+      Identifier[23,24] childCount=0
+      ObjectExpression[27,41] childCount=2
+        Property[29,33] childCount=2
+          Identifier[29,30] childCount=0
+          Literal[32,33] childCount=0
+        Property[35,39] childCount=2
+          Identifier[35,36] childCount=0
+          Literal[38,39] childCount=0"
+`;
+
+exports[`JavaScript syntax — invariants parse-program-reads-es5 parses 1`] = `"Program[0,43](body=[DoWhileStatement[0,18](body=ExpressionStatement[3,7](expression=CallExpression[3,6](callee=Identifier[3,4](name=\\"a\\") arguments=[] optional=false)) test=Identifier[15,16](name=\\"b\\")),VariableDeclaration[19,42](declarations=[VariableDeclarator[23,41](id=Identifier[23,24](name=\\"o\\") init=ObjectExpression[27,41](properties=[Property[29,33](method=false shorthand=false computed=false key=Identifier[29,30](name=\\"d\\") value=Literal[32,33](value=1 raw=\\"1\\") kind=\\"init\\"),Property[35,39](method=false shorthand=false computed=false key=Identifier[35,36](name=\\"e\\") value=Literal[38,39](value=2 raw=\\"2\\") kind=\\"init\\")]))] kind=\\"var\\")] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants parse-program-reads-es5 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants parse-program-reads-es5 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants parse-program-reads-es5 prints {"mode":"minify"} 1`] = `"do{a()}while(b);var o={d:1,e:2};"`;
+
+exports[`JavaScript syntax — invariants parse-program-reads-es5 tokenizes 1`] = `"do[0,2] name[3,4] ([4,5] )[5,6] ;[6,7] while[8,13] ([14,15] name[15,16] )[16,17] ;[17,18] var[19,22] name[23,24] =[25,26] {[27,28] name[29,30] :[30,31] num[32,33] ,[33,34] name[35,36] :[36,37] num[38,39] }[40,41] ;[41,42] eof[43,43]"`;
 
 exports[`JavaScript syntax — invariants parse-program-reads-every-grammar-option-into-the-tree-as-acorn-reads-it parses 1`] = `"Program[0,7](body=[ExpressionStatement[0,7](expression=MemberExpression[0,7](object=Identifier[0,1](name=\\"a\\") property=Identifier[2,7](name=\\"class\\") computed=false optional=false))] sourceType=\\"module\\")"`;
 

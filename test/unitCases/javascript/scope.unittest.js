@@ -3333,6 +3333,22 @@ const expectAgreement = (code, sourceType = "module") => {
 
 	expect(ours.tree).toEqual(theirs.tree);
 	expect(ours.resolutions).toEqual(theirs.resolutions);
+
+	// a tree parsed without `scopes` is logged by a walk, which must agree
+	const walked = analyzeTree(
+		/** @type {number} */ (parseTree(code, 0, { sourceType })),
+		true
+	);
+
+	expect(normalizeScope(/** @type {AnyScope} */ (walked.globalScope))).toEqual(
+		ours.tree
+	);
+	expect(
+		resolutions(
+			/** @type {AnyScope} */ (walked.globalScope),
+			walked.unresolvedReferences
+		)
+	).toEqual(ours.resolutions);
 };
 
 /**
@@ -3364,6 +3380,7 @@ const CASES = {
 		"a named function expression shadowing its own name":
 			"(function foo() { var foo; return foo; });",
 		"a class field initializer": "class C { f = g; static s = h; }",
+		"a class field without an initializer": "class C { f; [g]; static s; }",
 		"a class static block": "class C { static { x; } }",
 		"a class static block reading a private method":
 			"class C { static #m() {} static { C.#m(); } }",
