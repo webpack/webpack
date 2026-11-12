@@ -1207,6 +1207,19 @@ describe("cssMinify export", () => {
 
 		expect(code).toMatchInlineSnapshot('"a{color:red}"');
 	});
+
+	it("keeps escapes and writes no `@charset` for CSS another document embeds", async () => {
+		const { cssMinify } = require("../../..").css;
+		const css = String.raw`.a:after{content:"\1F903\\"}.b{content:".x{color:red}"}`;
+
+		expect((await cssMinify({ "a.css": css })).code).toBe(
+			'@charset "UTF-8";.a:after{content:"\u{1F903}\\\\"}.b{content:".x{color:red}"}'
+		);
+		// A `<style>` body is handed over under the name of the page holding it.
+		expect((await cssMinify({ "index.html": css })).code).toBe(
+			String.raw`.a:after{content:"\1F903\\"}.b{content:".x{color:red}"}`
+		);
+	});
 });
 
 describe("SourceProcessor — mergeDistantRules", () => {
