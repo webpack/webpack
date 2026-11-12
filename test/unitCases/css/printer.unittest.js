@@ -207,6 +207,36 @@ describe("CssSyntax — block streaming", () => {
 		).toBe("@layer a{.p,.q{color:teal}.q{color:teal}}.mid{margin:0}}");
 	});
 
+	it("keeps the `;` a gathered layer block ends a declaration on", () => {
+		// The `}` a block ends on drops its last `;`, which a body folded in behind
+		// it needs back, or the declaration runs on into what that body holds.
+		const streamed = `@layer a{${BIG}x:i;}`;
+		expect(childCount(streamed)).toBe(0);
+		const tail = (/** @type {string} */ out) => out.slice(out.indexOf("x:i"));
+		const top = minify(`${streamed}@layer a{.q{top:0}}.w{color:red}`);
+		expect(tail(top)).toBe("x:i;.q{top:0}}.w{color:red}");
+		expect(minify(top)).toBe(top);
+		const nested = minify(`.p{${streamed}@layer a{y:j}@layer a{z:k}}`);
+		expect(tail(nested)).toBe("x:i;y:j;z:k}}");
+		// A block written whole, in a parent that streams, folds the same way.
+		const parent = (/** @type {string} */ body) =>
+			tail(
+				minify(
+					`@layer outer{${repeat(6000, (i) => `.f${i}{color:red}`)}${body}}`
+				)
+			);
+		expect(parent("@layer a{x:i}.mid{margin:0}@layer a{y:j}")).toBe(
+			"x:i;y:j}.mid{margin:0}}"
+		);
+		expect(parent("@layer a{x:i}.mid{margin:0}@layer a{.q{top:0}}")).toBe(
+			"x:i;.q{top:0}}.mid{margin:0}}"
+		);
+		// A rule ends in its own `}`, and a `;` after it would start a selector.
+		expect(
+			parent("@layer a{x:i;.p{top:0}}.mid{margin:0}@layer a{y:j}")
+		).toBe("x:i;.p{top:0}y:j}.mid{margin:0}}");
+	});
+
 	it("drops a prefixed list a streamed block's rules cover between them", () => {
 		// The list is held as the node its parent would skip, and a streamed parent
 		// assembles no body — so it has to be held as a piece instead.
