@@ -340,5 +340,34 @@
 			"sourceMap": "input.js.map",
 			"asset": "script.js"
 		}
+	},
+	{
+		"print": "jsMinify",
+		"format": {
+			"comments": {
+				"fixture": "keepKept"
+			}
+		},
+		"minimizer": {
+			"extractComments": {
+				"fixture": "extractLicense"
+			},
+			"asset": "script.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"format": {
+			"comments": {
+				"fixture": "keepKept"
+			}
+		},
+		"minimizer": {
+			"extractComments": {
+				"fixture": "extractLicense"
+			},
+			"sourceMap": "input.js.map",
+			"asset": "script.js"
+		}
 	}
 ]

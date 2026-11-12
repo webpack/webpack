@@ -5,5 +5,14 @@
 		"format": {
 			"comments": "/keep/"
 		}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"format": {
+			"comments": {
+				"fixture": "keepComment"
+			}
+		}
 	}
 ]

@@ -1,0 +1,1 @@
+function f(){return{}}console.log(["a"],["b"]),console.log(Object.keys({__proto__:f(),c:3}),["__proto__"]);

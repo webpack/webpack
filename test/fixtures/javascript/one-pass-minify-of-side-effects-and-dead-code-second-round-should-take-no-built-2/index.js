@@ -1,0 +1,1 @@
+var k="Error";globalThis[k]=class{constructor(p){this.p=p}};console.log(new Error("e").p)

@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"pristineGlobals": true
+		},
+		"mangle": false,
+		"behavior": true
+	}
+]

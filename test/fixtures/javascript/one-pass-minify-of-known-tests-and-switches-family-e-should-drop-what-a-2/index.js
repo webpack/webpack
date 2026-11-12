@@ -1,0 +1,11 @@
+var log=console.log,proto={},key="k",source={};const { a } = { get a() { return log("getter"); } };
+const { b } = { __proto__: proto };
+const { c = log("default") } = {};
+const { arguments: d } = () => {};
+const { caller: e } = function () {};
+const { [key]: f } = {};
+const { g } = source;
+const { h: { i } } = { h: {} };
+const [j] = [];
+const { k } = { k: log("value") };
+const { ...l } = [];

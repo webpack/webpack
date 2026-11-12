@@ -1,0 +1,1 @@
+this.isFinite=function(){return"f"};console.log(isFinite(1))

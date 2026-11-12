@@ -1,0 +1,1 @@
+function bar(){return 1}var foo=console.log,x=2,c=3;foo(bar()+"1ab",bar()+"a5",x+1+3+"b",bar()+"a"+("b"+c));
