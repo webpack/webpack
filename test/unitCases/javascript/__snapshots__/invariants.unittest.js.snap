@@ -27525,7 +27525,7 @@ exports[`JavaScript syntax — invariants one-pass-minify-of-unread-values-shoul
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-unread-values-should-drop-a-class-whose-static-blocks-run-6 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants one-pass-minify-of-unread-values-should-drop-a-class-whose-static-blocks-run-6 prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"(class{[a](){}});"`;
+exports[`JavaScript syntax — invariants one-pass-minify-of-unread-values-should-drop-a-class-whose-static-blocks-run-6 prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"a;"`;
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-unread-values-should-drop-a-class-whose-static-blocks-run-6 prints {"mode":"minify"} 1`] = `"(class{[a](){}});"`;
 

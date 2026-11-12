@@ -130,24 +130,13 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1365",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:783",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:907",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:213",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:214",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:215",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:216",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:398",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:399",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:403",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:404",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:405",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:406",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:441",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:627",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:636",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:784",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:791",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:792",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:801",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:809",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1036",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1047",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1146",
@@ -288,9 +277,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_unused_expression.rs:602",
 			"oxc minifier: peephole/remove_unused_expression.rs:792",
 			"oxc minifier: peephole/remove_unused_expression.rs:840",
-			"oxc minifier: peephole/remove_unused_expression.rs:848",
-			"oxc minifier: peephole/remove_unused_expression.rs:862",
-			"oxc minifier: peephole/remove_unused_expression.rs:863",
 			"oxc minifier: peephole/remove_unused_expression.rs:872",
 			"oxc minifier: peephole/remove_unused_expression.rs:873",
 			"oxc minifier: peephole/remove_unused_expression.rs:1116",
@@ -1096,16 +1082,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/terser/issue-2435-1/1/input.js",
 			"swc minifier: fixture/terser/issue-2435-1/3/input.js",
 			"swc minifier: fixture/terser/issue-2435-1/4/input.js"
-		]
-	],
-	[
-		"oxc's output differs: it drops a class whose static member's computed key may be `\"prototype\"`, which throws a TypeError as the class is defined",
-		[
-			"oxc minifier: ecmascript/may_have_side_effects.rs:445",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:451",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:816",
-			"oxc minifier: peephole/remove_unused_expression.rs:850",
-			"oxc minifier: peephole/remove_unused_expression.rs:865"
 		]
 	],
 	[

@@ -4420,6 +4420,13 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(minifyOnePass(source, { compress: { pure_conversions: false }, mangle: false }).code).toBe("({[a]:x(),[b()]:1,get[c()](){},set d(v){},e:f()});");
 	});
 
+	it("should keep only what the computed keys of an unread class run", () => {
+		const source = "(class{[a](){}static[b()]=1;#p;get[c](){}static{}static d=1}),x=(class C{[e]},1);";
+		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("a,b(),c,x=(e,1);");
+		// A static value, a static block or `extends` running code keeps the class.
+		expect(minifyOnePass("(class{[a];static b=f()}),(class{[a];static{f()}}),(class extends B{[a]});", { compress: {}, mangle: false }).code).toBe("(class{[a];static b=f()}),class{[a];static{f()}},class extends B{[a]};");
+	});
+
 	it("should merge a conditional's calls of one global into one call", () => {
 		for (const [source, expected] of [
 			["function f(t){return t?alert(3):alert(5)}g(f)", "function f(t){return alert(t?3:5)}g(f);"],
