@@ -321,7 +321,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-32"),
 				{},
-				"function f(n){g();({[q]:1});({...o});`${n}`;g();var t=0;return n}var top=1;function topFunction(){}"
+				"function f(n){g();q;({...o});`${n}`;g();var t=0;return n}var top=1;function topFunction(){}"
 			],
 			[
 				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-33"),
@@ -429,7 +429,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-52"),
 				{},
-				"function f(x){var e=g();return e=g(),e=g(),h(...e),e=g(),delete e.y,e=g(),e=g(),e=g(),{[k]:e},e=g(),new x(e=g()),e=g(),new x(...e),new U(e=g()),e=g(),[...e],`${e=g()}`,-(e=g()),e}"
+				"function f(x){var e=g();return e=g(),e=g(),h(...e),e=g(),delete e.y,e=g(),e=g(),e=g(),k,e=g(),new x(e=g()),e=g(),new x(...e),new U(e=g()),e=g(),[...e],`${e=g()}`,-(e=g()),e}"
 			],
 			[
 				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-53"),
@@ -546,7 +546,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-9"), { compress: {} }, "(function(){}).i();x=1,y=(a,1),z=b-1,d,g(),h();"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-10"), { compress: {} }, "var a=!0,b=!0,c=!0,d=!0,e=!!{a:f()};g(!0);"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-11"), { compress: {} }, "a++,c(),d(),e(),f(),g(),i(),k();for(;;);"],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-12"), { compress: {} }, "f(),g(),e(),{[h]:1};"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-12"), { compress: {} }, "f(),g(),e(),h;"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-13"), { compress: {} }, "function f(){}function g(){x(),y()}function h(){for(;;);}"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-77"), { compress: { toplevel: true } }, "f();x=g();f();(function(){})();"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-78"), { compress: { toplevel: true } }, "x=(g(),1),y=(h(),{a:1}).a,a(),q(),b();"],
@@ -1453,7 +1453,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// What runs nothing before a name called or an unread `typeof` reads goes, and before a member is `0`, but before `eval` or in `with`.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-487"), {}, "foo(),foo``,foo?.(),(0,a.b)(),(0,a.b)(),(0,a.b)(),(0,eval)(),foo,(x(),foo)``,foo``,(x(),a.b)();"],
 			// esbuild's `-(a,b)` as `a,-b`, and `yield` or `await` alike, where a sequence stands bare, but where its first value would open the statement as a block.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-488"), {}, "a(),-b,a(),b,~c,a(),+1,a(),- -b,x=-(a(),b),-({[f()]:0},g());async function h(){c(),await d,c(),await(d+e)}function*k(){c(),yield d,c(),yield*d}"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-488"), {}, "a(),-b,a(),b,~c,a(),+1,a(),- -b,x=-(a(),b),f(),-g();async function h(){c(),await d,c(),await(d+e)}function*k(){c(),yield d,c(),yield*d}"],
 			// terser's `(a=x(),a)` as `a=x()` for a declared name no `with` reaches.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-489"), {}, "function f(n,u){return(n=x())?n++:u(),c(),n=x()}function g(a){with(o)return a=x(),a}function h(){return u=x(),u}"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-490"), {}, "x=function f(){return f=1,f};"],
@@ -1502,7 +1502,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-521"), { module: true, compress: {}, mangle: {} }, "export function foo(){g()}"],
 			// What nobody reads: an operator running only its operand goes, a branch running nothing goes, an array or object prints what its parts run, `x==null&&y` is `x??y`.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-522"), {}, "x.y,x?.y,x.y,x.y.z(),delete x.y,delete x,x,g(),a,b,f(),a<b,g(),a=b;({}).a+1;foo(),foo()||bar(),foo()&&bar(),a,b||c(),(a??b)||c(),x=foo()?1:2,c||(a=b),c||(d,e),c&&d;"],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-523"), {}, "a,foo(),[...c,a],foo(),foo(),{[bar()]:foo()},g(),h(),x=[a(),b()],g(),{get a(){},b:g()},a(),b(),b,x=(f(),1);"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-523"), {}, "a,foo(),[...c,a],foo(),foo(),bar(),foo(),g(),h(),x=[a(),b()],g(),g(),a(),b(),b,x=(f(),1);"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-524"), {"ecma": 2019}, "x==null&&y;"],
 			// A `concat` whose pieces would join as a substitution or an octal escape stays a call.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-525"), {"ecma": 2020}, "x=y?\"a$\".concat(\"{b}\",z):0,x=y?\"\\0\".concat(1,z):0,x=y?\"a$\".concat(\"\",\"{b}\",z):0;"],
@@ -4411,6 +4411,13 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("a,b,a(),b,function(){g()}(),x;");
 		// An object's `valueOf` may run where conversions are not taken as pure.
 		expect(minifyOnePass(source, { compress: { pure_conversions: false }, mangle: false }).code).toBe("a==b,a()<b,function(){g()}()>=x;");
+	});
+
+	it("should keep only what the computed keys and values of an unread object run", () => {
+		const source = "({[a]:x(),[b()]:1,get[c()](){},set d(v){},e:f()});";
+		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("a,x(),b(),c(),f();");
+		// A key may convert an object running its `toString` where conversions are not taken as pure.
+		expect(minifyOnePass(source, { compress: { pure_conversions: false }, mangle: false }).code).toBe("({[a]:x(),[b()]:1,get[c()](){},set d(v){},e:f()});");
 	});
 
 	it("should merge a conditional's calls of one global into one call", () => {

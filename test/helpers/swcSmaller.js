@@ -634,8 +634,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `object` tests cover",
 		[
-			"terser compress: object/prop_arrows_to_concise_method_various",
-			"terser compress: object/computed_property_names_side_effects",
 			"terser compress: object/prop_arrow_to_concise_method",
 			"terser compress: object/concise_method_to_prop_arrow"
 		]

@@ -43,7 +43,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc applies esbuild's shortenings, as oxc's `peephole/esbuild.rs` tests show",
 		[
-			"oxc minifier: peephole/esbuild.rs:1541",
 			"oxc minifier: peephole/esbuild.rs:1213",
 			"oxc minifier: peephole/esbuild.rs:1220",
 			"oxc minifier: peephole/esbuild.rs:1796",
@@ -126,12 +125,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc knows more expressions have no side effects and drops them when their value is unused, as oxc's `ecmascript/may_have_side_effects.rs` tests show",
 		[
-			"oxc minifier: ecmascript/may_have_side_effects.rs:745",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:744",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:743",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:388",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:387",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:386",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1300",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1365",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:783",
@@ -140,10 +134,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: ecmascript/may_have_side_effects.rs:214",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:215",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:216",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:392",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:393",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:394",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:395",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:398",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:399",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:403",
@@ -153,7 +143,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: ecmascript/may_have_side_effects.rs:441",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:627",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:636",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:760",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:784",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:791",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:792",
@@ -283,7 +272,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc drops more unused expressions, as oxc's `peephole/remove_unused_expression.rs` tests show",
 		[
-			"oxc minifier: peephole/remove_unused_expression.rs:452",
 			"oxc minifier: peephole/remove_unused_expression.rs:449",
 			"oxc minifier: peephole/remove_unused_expression.rs:31",
 			"oxc minifier: peephole/remove_unused_expression.rs:62",
@@ -669,13 +657,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what oxc's `ecmascript/is_literal_value.rs` tests cover",
 		[
-			"oxc minifier: ecmascript/is_literal_value.rs:284",
-			"oxc minifier: ecmascript/is_literal_value.rs:282",
-			"oxc minifier: ecmascript/is_literal_value.rs:279",
-			"oxc minifier: ecmascript/is_literal_value.rs:273",
-			"oxc minifier: ecmascript/is_literal_value.rs:271",
-			"oxc minifier: ecmascript/is_literal_value.rs:267",
-			"oxc minifier: ecmascript/is_literal_value.rs:251",
 			"oxc minifier: ecmascript/is_literal_value.rs:159",
 			"oxc minifier: ecmascript/is_literal_value.rs:167",
 			"oxc minifier: ecmascript/is_literal_value.rs:259",
@@ -1015,13 +996,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/replace_known_methods.rs:637",
 			"oxc minifier: peephole/replace_known_methods.rs:638",
 			"oxc minifier: peephole/replace_known_methods.rs:639"
-		]
-	],
-	[
-		"oxc goes further than webpack on what terser's `object` tests cover",
-		[
-			"terser compress: object/prop_arrows_to_concise_method_various",
-			"terser compress: object/prop_func_to_concise_method_various"
 		]
 	],
 	[
