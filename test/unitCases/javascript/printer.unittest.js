@@ -1418,6 +1418,18 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(minifyOnePass(source, { compress: {}, mangle: false, ecma: 2021 }).code).toBe(
 			"var foo;function w(a){return a+=foo}function v(a){return a||=foo}function u(a){let x=g();return a+=x,a}w(),v(),u();"
 		);
+		// A global's read may run a getter, which could set the value first.
+		expect(minifyOnePass("var foo;function w(a){let x=foo;slot+=x;return a}w();", { compress: {}, mangle: false }).code).toBe(
+			"var foo;function w(a){let x=foo;return slot+=x,a}w();"
+		);
+	});
+
+	it("should keep a null check whose chain a call, `delete` or tag reads as a reference", () => {
+		// `(x?.m)()` would call `m` on `x`, and `delete(x?.m)` delete it.
+		const source = "function f(x){return(x!=null?x.m:void 0)()}function g(x){return delete(x!=null?x.m:void 0)}function h(x){return(x!=null?x.m:void 0)``}function k(x){return x!=null?x.m:void 0}";
+		expect(minifyOnePass(source, { compress: {}, mangle: false, ecma: 2020 }).code).toBe(
+			"function f(x){return(x!=null?x.m:void 0)()}function g(x){return delete(x!=null?x.m:void 0)}function h(x){return(x!=null?x.m:void 0)``}function k(x){return x?.m}"
+		);
 	});
 
 	it("should drop a `for`'s own declarator nothing reads", () => {
