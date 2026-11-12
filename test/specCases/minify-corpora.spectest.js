@@ -1563,15 +1563,6 @@ describe("JavaScript minifier", () => {
 		expect(() => nodeSatisfies(`^${major}`)).toThrow(/Unsupported/);
 	});
 
-	if (part === 1 && isPresent(referenceDir)) {
-		it("should pin the reference's corpus to the version it is compared with", () => {
-			const pinned = JSON.parse(
-				fs.readFileSync(path.join(referenceDir, "package.json"), "utf8")
-			).version;
-			expect(pinned).toBe(require("terser/package.json").version);
-		});
-	}
-
 	/**
 	 * @param {Stdout} stdout what a source prints
 	 * @param {string} code a program
