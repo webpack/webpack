@@ -1,0 +1,8 @@
+{
+  "http://localhost:9991/folder/dependency.js": { "integrity": "sha512-N0En4W3aNPY82MPu16+50P4PqLLyPLI6l33wR2a3ue8VCRjY8RJl8erRB8ztWSEYNad7yRDPrqlYT+IBtoOA9w==", "contentType": "text/javascript" },
+  "http://localhost:9991/folder/sub-dependency.js": { "integrity": "sha512-Jjmwazwmg67EwNPViCBwvSIxhENfS6gwufXoQLrB0B/JDA4v1p+p2S5Y6IGP4SzZqqVTsROlU8meD6ep3q6MTA==", "contentType": "text/javascript" },
+  "http://localhost:9991/folder/sub-dependency2.js": { "integrity": "sha512-BDZKEwlnwBabeHEwmMd02NxFEjYy+QwKAKP0S8zMMesX7dUsvh11hM7LUOPPFOS+nIEFZPtnc7kFwmnojVUw5A==", "contentType": "text/javascript" },
+  "http://localhost:9991/resolve.js": { "integrity": "sha512-6J9zBO2hXSMTO1EtXJOxSRB2nVPHCoNmNHS8an1QeehzJFc3uoBPRWu6hqHPc54gv2/QME9RBR/BXIan68virg==", "contentType": "text/javascript" },
+  "http://localhost:9991/resolve.js?gzip": { "integrity": "sha512-6J9zBO2hXSMTO1EtXJOxSRB2nVPHCoNmNHS8an1QeehzJFc3uoBPRWu6hqHPc54gv2/QME9RBR/BXIan68virg==", "contentType": "text/javascript" },
+  "version": 1
+}
