@@ -190,6 +190,7 @@ const snapshotOf = (source, text) => {
  * @typedef {object} KnownDifference
  * @property {string} relation the relation, as a finding names it
  * @property {string} contains text the finding's repro holds
+ * @property {string[]=} presets the option sets it shows under, every one where absent, as the comparison scripts' `Expected` narrows one
  * @property {string} why the reason, read by whoever meets the entry later
  */
 
@@ -295,8 +296,9 @@ const readList = (file) =>
 
 /**
  * Every fixture of a language with what the runner asks of it. Its
- * `options.json` lists option sets to print it under as well; one marked
- * `"behavior": true` (marker left out of what the printer gets) also runs.
+ * `options.json` lists option sets to print it under as well; a JavaScript one
+ * marked `"behavior": true` (marker left out of what the printer gets) also
+ * runs, and a mark in another language throws.
  * A print set names a renderer and a RegExp in JSON (see `printOptions`), and
  * `print`, `visit`, `minimizer` and `check` in one are read by `readPrint`;
  * `parse.json` lists `ParseRun`s, each read by `readRun`. A `fixture.js`
@@ -337,6 +339,12 @@ const fixtures = (lang) => {
 			name
 		)) {
 			const key = JSON.stringify(one);
+			// Only JavaScript runs: a mark elsewhere would hold nothing.
+			if (runs !== undefined && lang !== "javascript") {
+				throw new Error(
+					`${name}: "behavior" runs a print, and ${lang} has no runtime`
+				);
+			}
 			if (!options.has(key)) options.set(key, one);
 			if (runs === true) {
 				behavior.add(/** @type {PrintOptionSet} */ (options.get(key)));
@@ -374,7 +382,9 @@ const unexplained = (findings, expected) => {
 	for (const { preset, report } of findings) {
 		const entry = expected.find(
 			(one) =>
-				one.relation === report.relation && report.repro.includes(one.contains)
+				one.relation === report.relation &&
+				report.repro.includes(one.contains) &&
+				(one.presets === undefined || one.presets.includes(preset))
 		);
 		if (entry === undefined) {
 			left.push(
