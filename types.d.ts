@@ -958,7 +958,6 @@ declare abstract class BasicEvaluatedExpression {
 	postfix?: null | BasicEvaluatedExpression;
 	wrappedInnerExpressions?: BasicEvaluatedExpression[];
 	expression?:
-		| Program
 		| ImportDeclaration
 		| ExportNamedDeclaration
 		| ExportAllDeclaration
@@ -1018,6 +1017,7 @@ declare abstract class BasicEvaluatedExpression {
 		| MethodDefinition
 		| PropertyDefinition
 		| VariableDeclarator
+		| Program
 		| Property
 		| CatchClause
 		| ClassBody
@@ -1216,7 +1216,6 @@ declare abstract class BasicEvaluatedExpression {
 	 */
 	setExpression(
 		expression?:
-			| Program
 			| ImportDeclaration
 			| ExportNamedDeclaration
 			| ExportAllDeclaration
@@ -1276,6 +1275,7 @@ declare abstract class BasicEvaluatedExpression {
 			| MethodDefinition
 			| PropertyDefinition
 			| VariableDeclarator
+			| Program
 			| Property
 			| CatchClause
 			| ClassBody
@@ -3709,7 +3709,6 @@ declare abstract class ColumnarSyntaxTree {
 		fields?: string[]
 	):
 		| null
-		| Program
 		| ImportDeclaration
 		| ExportNamedDeclaration
 		| ExportAllDeclaration
@@ -3769,6 +3768,7 @@ declare abstract class ColumnarSyntaxTree {
 		| MethodDefinition
 		| PropertyDefinition
 		| VariableDeclarator
+		| Program
 		| Property
 		| CatchClause
 		| ClassBody
@@ -3792,7 +3792,6 @@ declare abstract class ColumnarSyntaxTree {
 		node: number
 	):
 		| null
-		| Program
 		| ImportDeclaration
 		| ExportNamedDeclaration
 		| ExportAllDeclaration
@@ -3852,6 +3851,7 @@ declare abstract class ColumnarSyntaxTree {
 		| MethodDefinition
 		| PropertyDefinition
 		| VariableDeclarator
+		| Program
 		| Property
 		| CatchClause
 		| ClassBody
@@ -3876,7 +3876,6 @@ declare abstract class ColumnarSyntaxTree {
 		node: number
 	):
 		| null
-		| Program
 		| ImportDeclaration
 		| ExportNamedDeclaration
 		| ExportAllDeclaration
@@ -3936,6 +3935,7 @@ declare abstract class ColumnarSyntaxTree {
 		| MethodDefinition
 		| PropertyDefinition
 		| VariableDeclarator
+		| Program
 		| Property
 		| CatchClause
 		| ClassBody
@@ -10342,7 +10342,6 @@ declare class EnvironmentPlugin {
 }
 type ErrorWithDetail = Error & { details?: string };
 type EstreeInput =
-	| Program
 	| ImportDeclaration
 	| ExportNamedDeclaration
 	| ExportAllDeclaration
@@ -10402,6 +10401,7 @@ type EstreeInput =
 	| MethodDefinition
 	| PropertyDefinition
 	| VariableDeclarator
+	| Program
 	| Property
 	| CatchClause
 	| ClassBody
@@ -15928,7 +15928,6 @@ declare interface JavascriptNodeReader {
 		node: number
 	) =>
 		| null
-		| Program
 		| ImportDeclaration
 		| ExportNamedDeclaration
 		| ExportAllDeclaration
@@ -15988,6 +15987,7 @@ declare interface JavascriptNodeReader {
 		| MethodDefinition
 		| PropertyDefinition
 		| VariableDeclarator
+		| Program
 		| Property
 		| CatchClause
 		| ClassBody
@@ -16097,6 +16097,11 @@ declare interface JavascriptParseOptions {
 	 * whether `import defer` and `import source` parse, as they always do without the option
 	 */
 	importPhases?: boolean;
+
+	/**
+	 * whether to record the names and scopes a scope analysis reads, on the tree; a log given is emptied and refilled, so one can serve every parse
+	 */
+	scopes?: boolean | ScopeLog;
 
 	/**
 	 * whether the code is strict whatever it says
@@ -23709,7 +23714,6 @@ declare interface NodeEnvironmentPluginOptions {
 	infrastructureLogging: InfrastructureLogging;
 }
 type NodeEstreeIndex =
-	| Program
 	| ImportDeclaration
 	| ExportNamedDeclaration
 	| ExportAllDeclaration
@@ -23769,6 +23773,7 @@ type NodeEstreeIndex =
 	| MethodDefinition
 	| PropertyDefinition
 	| VariableDeclarator
+	| Program
 	| Property
 	| CatchClause
 	| ClassBody
@@ -29558,7 +29563,7 @@ declare interface RecursiveNonNullable<T> {}
  * One identifier occurrence that refers to a binding.
  */
 declare abstract class Reference {
-	identifier: Identifier;
+	identifier: ScopeIdentifier;
 	from: Scope;
 	resolved?: Variable;
 }
@@ -32384,6 +32389,21 @@ declare abstract class Scope {
 }
 
 /**
+ * One occurrence of a name in the source, which a rename rewrites in place.
+ */
+declare abstract class ScopeIdentifier {
+	name: string;
+	start: number;
+	end: number;
+
+	/**
+	 * Where it sits in the source, as the ESTree identifier it replaces held it.
+	 * @deprecated read `start` and `end`
+	 */
+	get range(): [number, number];
+}
+
+/**
  * Defines the scope info type used by this module.
  */
 declare interface ScopeInfo {
@@ -32395,6 +32415,65 @@ declare interface ScopeInfo {
 	isStrict: boolean;
 	isAsmJs: boolean;
 	terminated?: 1 | 2;
+}
+
+/**
+ * What a parse with `scopes` saw of names and scopes, in the order it saw
+ * them, keyed by where each name starts: a name can be an object or a tree
+ * node at that point, and a key the parser writes late still starts where it is.
+ */
+declare class ScopeLog {
+	constructor();
+	count: number;
+	infos: number[];
+	starts: number[];
+	ends: number[];
+	names: string[];
+	scopeCount: number;
+	scopeTypes: string[];
+	blockTypes: string[];
+	blockStarts: number[];
+	scopeStarts: number[];
+	scopeEnds: number[];
+	scopeFlags: number[];
+	paramBoundaries: number[];
+	shorthandCount: number;
+	shorthands: number[];
+
+	/**
+	 * Empties the log for the next parse; its arrays keep their room, so a log
+	 * reused across parses grows once rather than on every parse.
+	 */
+	reset(): void;
+	shorthand(start: number): void;
+	add(
+		kind: number,
+		start: number,
+		end: number,
+		name: string,
+		binds: number,
+		reads: number
+	): void;
+
+	/**
+	 * Logs a name an expression reads, the most common event.
+	 */
+	read(start: number, end: number, name: string): void;
+
+	/**
+	 * Counts one more read of each name declared from `from` to `to`, as an
+	 * initializer or a loop head writes them.
+	 */
+	readDeclared(from: number, to: number): void;
+	scope(
+		type: string,
+		blockType: string,
+		blockStart: number,
+		from: number,
+		to: number,
+		flags: number,
+		paramBoundary: number
+	): void;
 }
 type ScopeType =
 	| "function"
@@ -36357,7 +36436,7 @@ declare interface Values {
  */
 declare abstract class Variable {
 	name: string;
-	identifiers: Identifier[];
+	identifiers: ScopeIdentifier[];
 	references: Reference[];
 	scope: Scope;
 }
@@ -38872,7 +38951,6 @@ declare namespace exports {
 					node: number
 				) =>
 					| null
-					| Program
 					| ImportDeclaration
 					| ExportNamedDeclaration
 					| ExportAllDeclaration
@@ -38932,6 +39010,7 @@ declare namespace exports {
 					| MethodDefinition
 					| PropertyDefinition
 					| VariableDeclarator
+					| Program
 					| Property
 					| CatchClause
 					| ClassBody
@@ -38963,7 +39042,6 @@ declare namespace exports {
 					fields?: string[]
 				) =>
 					| null
-					| Program
 					| ImportDeclaration
 					| ExportNamedDeclaration
 					| ExportAllDeclaration
@@ -39023,6 +39101,7 @@ declare namespace exports {
 					| MethodDefinition
 					| PropertyDefinition
 					| VariableDeclarator
+					| Program
 					| Property
 					| CatchClause
 					| ClassBody
@@ -39041,6 +39120,7 @@ declare namespace exports {
 					program: Program,
 					input: string
 				) => number;
+				export let STATEMENT_TYPES_WITHOUT_BINDINGS: Set<string>;
 				export let syntaxTreeOfEstree: (
 					program: NodeEstreeIndex,
 					input: string
@@ -39079,6 +39159,7 @@ declare namespace exports {
 					LEGACY_ASSERT_ATTRIBUTES,
 					ParserPosition,
 					WebpackParser,
+					ScopeLog,
 					EstreeView
 				};
 			}
@@ -39123,7 +39204,6 @@ declare namespace exports {
 				fields?: string[]
 			) =>
 				| null
-				| Program
 				| ImportDeclaration
 				| ExportNamedDeclaration
 				| ExportAllDeclaration
@@ -39183,6 +39263,7 @@ declare namespace exports {
 				| MethodDefinition
 				| PropertyDefinition
 				| VariableDeclarator
+				| Program
 				| Property
 				| CatchClause
 				| ClassBody

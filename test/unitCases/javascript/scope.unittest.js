@@ -71,15 +71,37 @@ const { fixture } = require("../../helpers/fixture");
 
 "use strict";
 
-const analyzeScope = require("../../../lib/javascript/ScopeAnalyzer");
-const { parse: parseProgram } = require("../../../lib/javascript/syntax").parser;
+const analyzeTree = require("../../../lib/javascript/ScopeAnalyzer");
+const {
+	fromEstreeObject,
+	parse: parseProgram
+} = require("../../../lib/javascript/syntax").parser;
 
 /** @import { Program } from "estree" */
 
 // The analyser exports one function and hangs the classes off it, so their
 // instance types are read back through it rather than imported by name.
-/** @typedef {InstanceType<typeof analyzeScope.Scope>} Scope */
-/** @typedef {InstanceType<typeof analyzeScope.Reference>} Reference */
+/** @typedef {InstanceType<typeof analyzeTree.Scope>} Scope */
+/** @typedef {InstanceType<typeof analyzeTree.Reference>} Reference */
+
+/**
+ * The source each program the suite parsed was read from, which the tree the
+ * analyser reads is written from.
+ * @type {WeakMap<Program, string>}
+ */
+const sources = new WeakMap();
+
+/**
+ * Analyses an ESTree program the suite parsed, written into a tree.
+ * @param {Program} ast the program
+ * @param {boolean=} recordEveryReference whether every binding collects its references
+ * @returns {ReturnType<typeof analyzeTree>} the analysis
+ */
+const analyzeScope = (ast, recordEveryReference) =>
+	analyzeTree(
+		fromEstreeObject(ast, /** @type {string} */ (sources.get(ast))),
+		recordEveryReference
+	);
 
 /**
  * @typedef {object} Analysis
@@ -105,7 +127,7 @@ const { parse: parseProgram } = require("../../../lib/javascript/syntax").parser
 const scopeReferences = new WeakMap();
 
 /**
- * @param {{ type: string }} node any node
+ * @param {{ type: string } | { start: number }} node any node, or an occurrence the analyser recorded
  * @returns {number} its start offset
  */
 const startOf = (node) => /** @type {EXPECTED_ANY} */ (node).start;
@@ -115,8 +137,11 @@ const startOf = (node) => /** @type {EXPECTED_ANY} */ (node).start;
  * @param {"module" | "script"} sourceType source type
  * @returns {Program} the parsed program
  */
-const parse = (code, sourceType = "module") =>
-	parseProgram(code, { sourceType, ecmaVersion: "latest" });
+const parse = (code, sourceType = "module") => {
+	const ast = parseProgram(code, { sourceType, ecmaVersion: "latest" });
+	sources.set(ast, code);
+	return ast;
+};
 
 /**
  * @param {Program} ast a program to analyse
@@ -260,6 +285,8 @@ describe("ScopeAnalyzer", () => {
 			expect(varNames(catchScope)).toEqual(["e"]);
 			expect(catchScope.variables[0].identifiers).toHaveLength(1);
 			expect(catchScope.variables[0].identifiers[0].name).toBe("e");
+			const { start, end, range } = catchScope.variables[0].identifiers[0];
+			expect(range).toEqual([start, end]);
 			expect(refs(catchScope)).toHaveLength(0);
 		});
 
@@ -2308,8 +2335,8 @@ describe("ScopeAnalyzer", () => {
 			const typeVariable = moduleScope.variables[0];
 
 			expect(typeVariable.references).toHaveLength(1);
-			expect(typeVariable.references[0].identifier).toBe(
-				/** @type {EXPECTED_ANY} */ (ast.body[0]).declarations[0].id
+			expect(typeVariable.references[0].identifier.start).toBe(
+				startOf(/** @type {EXPECTED_ANY} */ (ast.body[0]).declarations[0].id)
 			);
 		});
 
@@ -2344,12 +2371,14 @@ describe("ScopeAnalyzer", () => {
 			const typeVariable = moduleScope.variables[0];
 
 			expect(typeVariable.references).toHaveLength(2);
-			expect(typeVariable.references[0].identifier).toBe(
-				/** @type {EXPECTED_ANY} */ (ast.body[0]).declarations[0].id
+			expect(typeVariable.references[0].identifier.start).toBe(
+				startOf(/** @type {EXPECTED_ANY} */ (ast.body[0]).declarations[0].id)
 			);
-			expect(typeVariable.references[1].identifier).toBe(
-				/** @type {EXPECTED_ANY} */ (ast.body[1]).expression.options
-					.properties[0].value.properties[0].value
+			expect(typeVariable.references[1].identifier.start).toBe(
+				startOf(
+					/** @type {EXPECTED_ANY} */ (ast.body[1]).expression.options
+						.properties[0].value.properties[0].value
+				)
 			);
 		});
 	});
@@ -2722,14 +2751,28 @@ describe("ScopeAnalyzer", () => {
 		});
 	});
 
+	/**
+	 * Wraps a node in parentheses, as a parser keeping them reports it: the one
+	 * node type the walker has no case or key table entry for.
+	 * @param {EXPECTED_ANY} node the node
+	 * @returns {EXPECTED_ANY} the parenthesized node
+	 */
+	const parenthesize = (node) => ({
+		type: "ParenthesizedExpression",
+		start: node.start,
+		end: node.end,
+		expression: node
+	});
+
 	// ported from tests/fallback.test.js, whose `fallback: "iteration"` option
 	// is the analyser's only behaviour for a node type it does not know
 	describe("unknown node types", () => {
 		it("keeps walking a node type it does not know", () => {
 			const ast = parse(fixture("javascript", "scope-analyzer-unknown-node-types-keeps-walking-a-node-type-it-does-not-know"));
+			const declarator = /** @type {EXPECTED_ANY} */ (ast.body[0])
+				.declarations[0];
 
-			/** @type {EXPECTED_ANY} */ (ast.body[0]).declarations[0].init.type =
-				"SpecialCallExpression";
+			declarator.init = parenthesize(declarator.init);
 
 			const analysis = analyzeAst(ast);
 
@@ -2740,9 +2783,9 @@ describe("ScopeAnalyzer", () => {
 
 		it("resolves references found under an unknown node type", () => {
 			const ast = parse(fixture("javascript", "scope-analyzer-unknown-node-types-resolves-references-found-under-an-unknown"));
+			const statement = /** @type {EXPECTED_ANY} */ (ast.body[1]).body.body[0];
 
-			/** @type {EXPECTED_ANY} */ (ast.body[1]).body.body[0].argument.type =
-				"SpecialCallExpression";
+			statement.argument = parenthesize(statement.argument);
 
 			const analysis = analyzeAst(ast);
 			const functionScope = analysis.scopes[2];
@@ -2836,15 +2879,11 @@ describe("ScopeAnalyzer", () => {
 			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
 		});
 
-		it("scopes a block whose statement type it does not know", () => {
-			const ast = parse(fixture("javascript", "scope-analyzer-scopes-a-block-only-when-it-declares-something-scopes-a-block"));
-			const block = /** @type {EXPECTED_ANY} */ (ast.body[0]);
+		it("scopes a block whose statement type it does not list", () => {
+			const { scopes } = analyze("{ label: x; }");
 
-			block.body[0].type = "SpecialDeclaration";
-
-			const { scopes } = analyzeAst(ast);
-
-			// the unknown statement might declare, so the block keeps a scope
+			// a statement it does not list as declaring nothing might declare, so
+			// the block keeps a scope
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "block"]);
 		});
 	});
@@ -2967,12 +3006,7 @@ describe("ScopeAnalyzer", () => {
 			const ast = parse(fixture("javascript", "scope-analyzer-assignment-targets-a-parser-may-report-as-expressions-visits-a"));
 			const outer = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression.left;
 
-			outer.elements[0] = {
-				type: "SpecialTarget",
-				start: 1,
-				end: 2,
-				argument: outer.elements[0]
-			};
+			outer.elements[0] = parenthesize(outer.elements[0]);
 
 			const analysis = analyzeAst(ast);
 
@@ -3056,20 +3090,6 @@ describe("ScopeAnalyzer", () => {
 		});
 	});
 
-	describe("an unknown node with a non-computed key", () => {
-		it("does not read the key as a reference", () => {
-			const ast = parse(fixture("javascript", "scope-analyzer-an-unknown-node-with-a-non-computed-key-does-not-read-the-key-as"));
-			const property = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression
-				.properties[0];
-
-			property.type = "SpecialProperty";
-
-			const analysis = analyzeAst(ast);
-
-			// `a` is the key of a non-computed property, so only `b` is read
-			expect(freeNames(analysis)).toEqual(["b"]);
-		});
-	});
 });
 
 /*
@@ -3089,15 +3109,16 @@ const supportsEslintScope = require("../../helpers/supportsEslintScope");
 
 /**
  * Only ever read for its offset, and narrow because eslint-scope types an
- * identifier as `Identifier | JSXIdentifier`, which is no estree `Node`.
- * @typedef {{ type: string }} AnyNode
+ * identifier as `Identifier | JSXIdentifier`, which is no estree `Node`, and
+ * webpack's analyser records an occurrence rather than a node.
+ * @typedef {{ type: string } | { start: number }} AnyNode
  */
 
 /**
  * The surface shared by the classes each analyser builds.
  * @typedef {object} AnyScope
  * @property {string} type what opened the scope
- * @property {AnyNode=} block the node that opened it, as eslint-scope names it
+ * @property {{ type: string }=} block the node that opened it, as eslint-scope names it
  * @property {string=} blockType its type, as webpack's analyser names it
  * @property {number=} blockStart where it starts, as webpack's analyser names it
  * @property {AnyScope[]} childScopes the scopes nested in it
@@ -3248,6 +3269,7 @@ const analyzeBoth = (code, sourceType) => {
 	const ast = /** @type {Program} */ (
 		parseProgram(code, { sourceType, ecmaVersion: "latest", ranges: true })
 	);
+	sources.set(ast, code);
 
 	// records references everywhere, as the reference does
 	const ours = analyzeScope(ast, true);
@@ -3569,5 +3591,61 @@ describeIfSupported("ScopeAnalyzer matches eslint-scope", () => {
 				}
 			});
 		}
+	});
+
+	describe("the scope log a parse records", () => {
+		const fs = require("fs");
+		const path = require("path");
+		const { ScopeLog, parseProgram: parseTree } =
+			require("../../../lib/javascript/syntax").parser;
+
+		/**
+		 * @param {EXPECTED_ANY} analysis an analysis
+		 * @returns {EXPECTED_ANY} its scope tree and resolutions, normalized
+		 */
+		const view = (analysis) => ({
+			tree: normalizeScope(/** @type {AnyScope} */ (analysis.globalScope)),
+			resolutions: resolutions(
+				/** @type {AnyScope} */ (analysis.globalScope),
+				analysis.unresolvedReferences
+			),
+			shorthands: [...analysis.shorthandIdentifierStarts].sort((a, b) => a - b)
+		});
+
+		/**
+		 * @param {string} code source code
+		 * @param {boolean | InstanceType<typeof ScopeLog>} scopes what the parse records into, `false` for nothing
+		 * @returns {EXPECTED_ANY} the analysis of its parse, normalized
+		 */
+		const analyzeParse = (code, scopes) =>
+			view(
+				analyzeTree(
+					/** @type {number} */ (
+						parseTree(code, 0, { sourceType: "module", scopes })
+					),
+					true
+				)
+			);
+
+		it("matches the tree walk, from a fresh log and from one reused", () => {
+			const dir = path.resolve(__dirname, "../../../lib/javascript");
+			// largest first, so the reused log is refilled with fewer entries
+			// than a parse before left in it
+			const files = fs
+				.readdirSync(dir)
+				.filter((name) => name.endsWith(".js"))
+				.map((name) => fs.readFileSync(path.join(dir, name), "utf8"))
+				.sort((a, b) => b.length - a.length);
+			const log = new ScopeLog();
+
+			expect(files.length).toBeGreaterThan(1);
+
+			for (const code of files) {
+				const walked = analyzeParse(code, false);
+
+				expect(analyzeParse(code, true)).toEqual(walked);
+				expect(analyzeParse(code, log)).toEqual(walked);
+			}
+		});
 	});
 });
