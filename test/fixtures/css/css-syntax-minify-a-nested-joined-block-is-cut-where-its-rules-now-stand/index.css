@@ -1,0 +1,1 @@
+@supports (display:grid){@media print{.x{color:red}.q{color:green}.s{content:"}}}}.y{color:red}"}}@media print{.x{color:red}}.sep{color:blue}@media print{.q{color:green}}}.app{color:black}

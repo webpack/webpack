@@ -1421,6 +1421,19 @@ describe("CssSyntax minify — merged and joined text keeps its boundaries", () 
 		expect(min(fixture("css", `${name}-2`))).toBe('@media url(x");');
 		expect(min(fixture("css", `${name}-3`))).toBe('.a{b:url(x")}');
 	});
+
+	it("cuts a dead copy out of a nested joined block where it now stands", () => {
+		expect(
+			min(
+				fixture(
+					"css",
+					"css-syntax-minify-a-nested-joined-block-is-cut-where-its-rules-now-stand"
+				)
+			)
+		).toBe(
+			'@supports (display:grid){@media print{.s{content:"}}}}.y{color:red}"}.x{color:red}}.sep{color:blue}@media print{.q{color:green}}}.app{color:#000}'
+		);
+	});
 });
 
 describe("CssSyntax — the identifier and url helpers", () => {
