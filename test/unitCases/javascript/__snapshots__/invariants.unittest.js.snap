@@ -29742,7 +29742,7 @@ exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-print-a-number-an-unread-assignment-sets parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-print-a-number-an-unread-assignment-sets prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"function f(c){if(c)return 2+3}function g(){return(2).toFixed()}function h(){return 1-2}console.log(f(1),g(),h());"`;
+exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-print-a-number-an-unread-assignment-sets prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"function f(c){if(c)return 2+3}function g(){return 2..toFixed()}function h(){return 1-2}console.log(f(1),g(),h());"`;
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-print-a-number-an-unread-assignment-sets prints {"mode":"minify"} 1`] = `"function f(c){var a,b;if(c)return(a=2)+(b=3)}function g(){var a;return(a=2).toFixed()}function h(){var a;return 1-(a=2)}console.log(f(1),g(),h());"`;
 
