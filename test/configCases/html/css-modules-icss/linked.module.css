@@ -1,0 +1,7 @@
+@value primaryColor from "./values.module.css";
+:export { linkedToken: 42; }
+.linked { color: primaryColor; }
+.linkedComposes { composes: linked; composes: other from "./base.module.css"; }
+#linkedId { color: pink; }
+.dup { color: orange; }
+.later { color: maroon; }

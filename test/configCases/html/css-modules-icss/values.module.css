@@ -1,0 +1,4 @@
+@value primaryColor: purple;
+@value gap: 4px;
+@value shared: 1px;
+@value small: (max-width: 600px);
