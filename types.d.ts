@@ -35021,6 +35021,7 @@ declare class SyntaxParser {
 	scopeStack: ParserScope[];
 	regexpState: null | RegExpValidationState;
 	privateNameStack: any[];
+	inTemplateElement: boolean;
 	get inFunction(): boolean;
 	get inGenerator(): boolean;
 	get inAsync(): boolean;
@@ -35522,7 +35523,6 @@ declare class SyntaxParser {
 	readCodePoint(): number;
 	readString(quote: number): void;
 	tryReadTemplateToken(): void;
-	inTemplateElement?: boolean;
 
 	/**
 	 * Report a bad escape, unless it sits in a tagged template, where the raw

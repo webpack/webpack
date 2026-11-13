@@ -1,5 +1,6 @@
 "use strict";
 
+const fs = require("fs");
 const { fixture } = require("../../helpers/fixture");
 
 // cspell:ignore apos notpre Elig reconsumes xyzabc zzzunknown codepoint DFFF ampx noncharacter FFFE scrip
@@ -84,6 +85,47 @@ describe("tokenize", () => {
 				"b",
 				"c",
 				"d"
+			]);
+		});
+
+		it("reads an unquoted attribute value as one run between its stops", () => {
+			// Whitespace ends the value, `&` opens a reference in it, and NUL, `"`,
+			// `'`, `<`, `=` and a backtick each report a parse error inside it.
+			/** @type {[string, string][]} */
+			const attributes = [];
+			/** @type {[string, number][]} */
+			const errors = [];
+			tokenize(
+				"<a b=x\"y'z<w=v`u\0t&amp;\u00E9 c=1\td=2\ne=3\ff=4\rg=&h i=`>",
+				0,
+				{
+					attribute: (input, ns, ne, vs, ve) => {
+						attributes.push([input.slice(ns, ne), input.slice(vs, ve)]);
+						return ve;
+					},
+					parseError: (input, code, start) => {
+						errors.push([code, start]);
+					}
+				}
+			);
+			expect(attributes).toEqual([
+				["b", "x\"y'z<w=v`u\0t&amp;\u00E9"],
+				["c", "1"],
+				["d", "2"],
+				["e", "3"],
+				["f", "4"],
+				["g", "&h"],
+				["i", "`"]
+			]);
+			const unexpected = "unexpected-character-in-unquoted-attribute-value";
+			expect(errors).toEqual([
+				[unexpected, 6],
+				[unexpected, 8],
+				[unexpected, 10],
+				[unexpected, 12],
+				[unexpected, 14],
+				["unexpected-null-character", 16],
+				[unexpected, 48]
 			]);
 		});
 	});
@@ -317,6 +359,32 @@ describe("tokenize", () => {
 		});
 	});
 
+	it("labels every state's case with that state's number", () => {
+		// The state switch has literal labels, so only a label's comment ties
+		// it to the constant the transitions assign.
+		const source = fs.readFileSync(
+			require.resolve("../../../lib/html/syntax-parser"),
+			"utf8"
+		);
+		/**
+		 * @param {RegExp} regexp a global pattern capturing a name and a number
+		 * @param {number} name index of the group holding the name
+		 * @returns {string[]} every match as `name = number`, sorted
+		 */
+		const pairs = (regexp, name) => {
+			/** @type {string[]} */
+			const found = [];
+			for (let m = regexp.exec(source); m !== null; m = regexp.exec(source)) {
+				found.push(`${m[name]} = ${m[3 - name]}`);
+			}
+			return found.sort();
+		};
+		const states = pairs(/^const (STATE_[A-Z_]+) = (\d+);$/gm, 1);
+		const labels = pairs(/^\t+case (\d+): \/[/*] (STATE_[A-Z_]+)\b/gm, 2);
+		expect(states).toHaveLength(80);
+		expect(labels).toEqual(states);
+	});
+
 	it("takes the start offset and the callbacks as optional", () => {
 		const source = fixture(
 			"html",
@@ -352,9 +420,69 @@ describe("tokenize", () => {
 			"unexpected-null-character"
 		]);
 	});
+
+	it("reads a named reference the same wherever the input repeats it", () => {
+		// `lt;`, `le;` and `lx;` share a first character and a length, and only
+		// the first two are names; `nope;` is none however often it comes.
+		/** @type {[string, number][]} */
+		const errors = [];
+		tokenize(
+			'&lt;&lt;&le;&lt;&lx;&nope;&nope;&lt &amp;<a b="&lt;&lx;&lt=&ltx">',
+			0,
+			{
+				parseError: (input, code, start) => {
+					errors.push([code, start]);
+				}
+			}
+		);
+		expect(errors).toEqual([
+			["unknown-named-character-reference", 19],
+			["unknown-named-character-reference", 25],
+			["unknown-named-character-reference", 31],
+			["missing-semicolon-after-character-reference", 35],
+			["unknown-named-character-reference", 54]
+		]);
+	});
 });
 
 
+
+describe("a tag whose name a NUL interrupts", () => {
+	it("ends at the `>` the tag-name state reads", () => {
+		// The name scan stops on the NUL, so the `>` after it is left to the
+		// state; the first open tag's callback also skips a character ahead.
+		/** @type {[string, string, number, number][]} */
+		const tags = [];
+		/** @type {[string, number][]} */
+		const errors = [];
+		let skip = 1;
+		tokenize("<a\0b>x</a\0b><c\0>y", 0, {
+			openTag: (input, start, end, ns, ne) => {
+				tags.push(["open", input.slice(ns, ne), start, end]);
+				const next = end + skip;
+				skip = 0;
+				return next;
+			},
+			closeTag: (input, start, end, ns, ne) => {
+				tags.push(["close", input.slice(ns, ne), start, end]);
+				return end;
+			},
+			parseError: (input, code, start) => {
+				errors.push([code, start]);
+			}
+		});
+		expect(tags).toEqual([
+			["open", "a\0b", 0, 5],
+			["close", "a\0b", 6, 12],
+			["open", "c\0", 12, 16]
+		]);
+		expect(errors).toEqual([
+			["unexpected-null-character", 2],
+			["unexpected-null-character", 9],
+			["unexpected-null-character", 14]
+		]);
+	});
+});
 
 describe("HtmlSyntax — Infra string helpers", () => {
 	const {

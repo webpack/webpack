@@ -45,6 +45,61 @@ describe("CssSyntax — parser entry points", () => {
 		parseADeclaration(fixture("css", "css-syntax-parser-entry-points-returns-refs-valid-until-the-next-parse"));
 		expect(A.name(first)).toBe("margin");
 	});
+
+	it("keeps no list of rules for each stylesheet it parsed", () => {
+		const { gc } = global;
+		// `yarn test:base` exposes it; without it nothing can be counted.
+		if (gc === undefined) return;
+		const sheet = "a{b:c}".repeat(30000);
+		const settle = () => {
+			gc();
+			gc();
+			return process.memoryUsage().heapUsed;
+		};
+		for (let i = 0; i < 5; i++) parseAStylesheet(sheet);
+		const before = settle();
+		for (let i = 0; i < 20; i++) parseAStylesheet(sheet);
+		// A list of 30000 rules kept by each of 20 parses is over 4 MB.
+		expect(settle() - before).toBeLessThan(1 << 20);
+		expect(A.fieldCount(Field.rules, parseAStylesheet("a{}b{}"))).toBe(2);
+		expect(parseAStylesheetsContents("a{}b{}c{}")).toHaveLength(3);
+	});
+
+	it("reads a small input after a large one, and the large one again", () => {
+		// 40000 rules are over 65536 nodes: more than is kept for a small input.
+		const large = "a{b:c}".repeat(39999) + "last{b:c}";
+		const small = "d{e:f}g{h:i}";
+		/**
+		 * @param {string} input a stylesheet
+		 * @returns {string[]} how many rules it has, and its first and last
+		 */
+		const read = (input) => {
+			const sheet = parseAStylesheet(input);
+			const count = A.fieldCount(Field.rules, sheet);
+			return [
+				String(count),
+				A.source(A.field(0, Field.rules, sheet)),
+				A.source(A.field(count - 1, Field.rules, sheet))
+			];
+		};
+		expect(read(large)).toEqual(["40000", "a{b:c}", "last{b:c}"]);
+		expect(read(small)).toEqual(["2", "d{e:f}", "g{h:i}"]);
+		expect(read(large)).toEqual(["40000", "a{b:c}", "last{b:c}"]);
+		// A walk hands large columns back itself, so the next parse starts small.
+		/** @type {string[]} */
+		const seen = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.QualifiedRule]: (
+					/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
+				) => {
+					seen.push(path.source(path.node));
+				}
+			})
+			.process(small);
+		expect(seen).toEqual(["d{e:f}", "g{h:i}"]);
+		expect(read(small)).toEqual(["2", "d{e:f}", "g{h:i}"]);
+	});
 });
 
 describe("CssSyntax — Node / Token", () => {

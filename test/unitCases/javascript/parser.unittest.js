@@ -1166,6 +1166,133 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		);
 	});
 
+	it("adds no field to a parser while it parses", () => {
+		// a field first written mid-parse would change the instance's shape
+		const source = "x = `a${b}c`; y = tag`\\u`;";
+		for (const options of [lazyOptions, { ecmaVersion: "latest" }]) {
+			const parser = /** @type {EXPECTED_ANY} */ (
+				new WebpackParser(
+					/** @type {import("../../../lib/javascript/syntax-parser").Options} */ (
+						options
+					),
+					source
+				)
+			);
+			const fields = Object.keys(parser);
+			parser.parse();
+			expect(Object.keys(parser)).toEqual(fields);
+			expect(parser.inTemplateElement).toBe(false);
+		}
+	});
+
+	it("gives a caller who passes no options a copy of the defaults", () => {
+		// acorn warns once per module copy that a missing `ecmaVersion` defaults
+		// to 2020: a fresh copy leaves the warning for the tests that expect it
+		const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
+		try {
+			jest.isolateModules(() => {
+				const {
+					defaultOptions,
+					getOptions
+				} = require("../../../lib/javascript/syntax-parser");
+
+				const options = /** @type {EXPECTED_ANY} */ (getOptions(undefined));
+				expect(Object.keys(options)).toEqual(Object.keys(defaultOptions));
+				expect(options.sourceType).toBe("script");
+				expect(options).not.toBe(defaultOptions);
+			});
+		} finally {
+			warn.mockRestore();
+		}
+	});
+
+
+	it("fills in the options a caller left out, on a copy of the defaults", () => {
+		const {
+			defaultOptions,
+			getOptions
+		} = require("../../../lib/javascript/syntax-parser");
+
+		const defaults = { ...defaultOptions };
+		const onToken = () => {};
+		// an inherited option is not the caller's own, so its default stands
+		const given = Object.assign(Object.create({ sourceType: "module" }), {
+			ecmaVersion: 2020,
+			onToken,
+			strict: undefined,
+			unknown: true
+		});
+		const options = /** @type {EXPECTED_ANY} */ (getOptions(given));
+		expect(Object.keys(options)).toEqual(Object.keys(defaultOptions));
+		expect(options.ecmaVersion).toBe(11);
+		expect(options.onToken).toBe(onToken);
+		expect(options.strict).toBeUndefined();
+		expect(options.sourceType).toBe("script");
+		expect(options.allowHashBang).toBe(false);
+		expect(defaultOptions).toEqual(defaults);
+		// each fast-built parser has a copy of its own to write to
+		const first = /** @type {EXPECTED_ANY} */ (
+			new WebpackParser(lazyOptions, "x")
+		);
+		const second = /** @type {EXPECTED_ANY} */ (
+			new WebpackParser(lazyOptions, "x")
+		);
+		first.options.sourceType = "module";
+		expect(second.options.sourceType).toBe("script");
+		expect(Object.keys(second.options)).toEqual(Object.keys(defaultOptions));
+	});
+
+	it("finds a fast construction's shape by each option it varies with", () => {
+		const { getOptions } = require("../../../lib/javascript/syntax-parser");
+
+		const variants = [
+			{},
+			{ sourceType: "module" },
+			{ strict: true },
+			{ allowReturnOutsideFunction: true },
+			{ allowImportExportEverywhere: true },
+			{ allowAwaitOutsideFunction: true },
+			{ allowSuperOutsideMethod: true },
+			{ allowHashBang: true },
+			{ allowHashBang: false },
+			{ ecmaVersion: 2019 },
+			// an edition that is neither a number nor a string is keyed by its text
+			{ ecmaVersion: Object(2019) },
+			{ ecmaVersion: "2019" }
+		];
+		// twice: the first round builds each shape, the second finds it again
+		for (let round = 0; round < 2; round++) {
+			for (const variant of variants) {
+				const options = { .../** @type {EXPECTED_ANY} */ (lazyOptions), ...variant };
+				const parser = /** @type {EXPECTED_ANY} */ (
+					new WebpackParser(options, "#!x\nlet y = 1;")
+				);
+				const expected = /** @type {EXPECTED_ANY} */ (getOptions(options));
+				for (const name of [
+					"ecmaVersion",
+					"sourceType",
+					"strict",
+					"allowHashBang"
+				]) {
+					expect(parser.options[name]).toBe(expected[name]);
+				}
+				// the parser reads these by truthiness, and the shape keeps booleans
+				for (const name of [
+					"allowReturnOutsideFunction",
+					"allowImportExportEverywhere",
+					"allowAwaitOutsideFunction",
+					"allowSuperOutsideMethod"
+				]) {
+					expect(Boolean(parser.options[name])).toBe(Boolean(expected[name]));
+				}
+				expect(parser.strict).toBe(
+					options.sourceType === "module" || options.strict === true
+				);
+				expect(parser.pos).toBe(parser.options.allowHashBang ? 3 : 0);
+			}
+		}
+	});
+
 	it("keeps the class fast path off for plugins overriding element names", () => {
 		let calls = 0;
 		class Plugin extends WebpackParser {
