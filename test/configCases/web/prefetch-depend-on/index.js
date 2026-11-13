@@ -9,7 +9,8 @@ it("prefetches a chunk from an entry that shares a runtime through dependOn", as
 	const promise = import(
 		/* webpackChunkName: "lazy", webpackPrefetch: true */ "./lazy"
 	);
-	const script = document.head._children.at(-1);
+	const children = document.head._children;
+	const script = children[children.length - 1];
 	expect(script._type).toBe("script");
 	__non_webpack_require__("./lazy.js");
 	script.onload();
