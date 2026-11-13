@@ -34,7 +34,10 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should decode an XML attribute only once per parse", () => {
 		const value = "x".repeat(400000);
-		const source = `<!DOCTYPE root [<!ENTITY value "${value}">]><root value="&value;"/>`;
+		const source = fixture(
+			"xml",
+			"xml-syntax-parsing-should-decode-an-xml-attribute-only-once-per-parse-2"
+		);
 		const document = parseHtmlRefs(source, 0, { xml: true });
 		const attribute = A.fieldNamed(Field.attributes, "value", A.child(1, document));
 		for (let i = 0; i < 4; i++) expect(A.value(attribute) === value).toBe(true);
