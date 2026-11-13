@@ -1273,7 +1273,7 @@ const EXPECTED = [
 	{
 		relation: "respelling references",
 		contains: "<link href=\"&lt;?php echo 'http://foo/' ?>\">",
-		source: "test/configCases/html/minimize-attributes/page.html",
+		source: "test/configCases/html/minify-html/minimize-attributes/page.html",
 		why: TEMPLATE_DELIMITER_REFERENCES
 	},
 	{

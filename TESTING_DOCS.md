@@ -32,6 +32,7 @@ Directories come first, in alphabetical order, then the individual files worth t
 
 - **Purpose**: Tests related to Webpack configurations.
 - **Usage**: Ensures that Webpack’s configuration (e.g., loaders, plugins) functions correctly.
+- **Merged cases**: `optimization/minify-javascript/`, `css/minify-css/` and `html/minify-html/` each run every directory inside them as one case, through `helpers/mergedConfigCases.js`. A directory keeps its own `webpack.config.js`, `test.config.js` (`afterExecute`, `findBundle` and `moduleScope` only) and `test.filter.js`, and builds into an output directory of its own. Its `it` titles open with its name. A case needing another hook, `errors.js`, `warnings.js` or `infrastructure-log.js` stays on its own. Each directory's inputs are copied as syntax fixtures too ([below](#fixtures)).
 
 ### `external/`
 

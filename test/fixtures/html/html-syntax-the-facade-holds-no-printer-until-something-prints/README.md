@@ -2,7 +2,7 @@ implied <body> with leading whitespace
 
 Every other minify transform is covered end to end by
 
-`configCases/html/minimize-transforms`. CR cases cannot live there:
+`configCases/html/minify-html/minimize-transforms`. CR cases cannot live there:
 
 `.gitattributes` checks `test/` out with LF, so a CR needs a string here.
 

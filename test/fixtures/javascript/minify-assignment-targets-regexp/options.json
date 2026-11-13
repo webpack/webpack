@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"ecma": 2018,
+		"compress": {
+			"pure_getters": false,
+			"pure_conversions": false
+		},
+		"behavior": true
+	}
+]

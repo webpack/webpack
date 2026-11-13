@@ -1,0 +1,13 @@
+[
+	{
+		"print": "cssMinify",
+		"environment": {
+			"browsers": [
+				"chrome 41"
+			],
+			"vendorPrefixes": true
+		},
+		"svg": false,
+		"extractComments": false
+	}
+]

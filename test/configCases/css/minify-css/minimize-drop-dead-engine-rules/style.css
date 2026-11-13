@@ -1,0 +1,37 @@
+/* Only Trident and EdgeHTML ever read these, so both rules go. */
+input::-ms-expand {
+	display: none;
+}
+input:-ms-input-placeholder {
+	color: red;
+}
+
+/* Only Presto read this one. */
+.opera-only :-o-prefocus {
+	word-spacing: -0.43em;
+}
+
+/* A live engine in the selection reads these, so they stay. */
+input::-webkit-slider-thumb {
+	width: 1px;
+}
+input::-moz-range-thumb {
+	width: 2px;
+}
+
+/* One live selector stands in this list, so the whole rule stays: taking the
+   dead half out would start the live one matching. */
+.kept,
+input::-ms-track {
+	color: green;
+}
+
+/* A forgiving list drops only the argument an engine cannot parse, so the rest
+   of this selector goes on matching. */
+.forgiving:is(.b, input::-ms-clear) {
+	color: teal;
+}
+
+.plain {
+	color: blue;
+}

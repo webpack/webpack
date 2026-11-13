@@ -1,0 +1,9 @@
+[
+	{
+		"print": "htmlMinify",
+		"collapseWhitespace": "smart",
+		"extractComments": false,
+		"comments": "@license",
+		"minifyConditionalComments": true
+	}
+]

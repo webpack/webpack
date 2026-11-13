@@ -1,0 +1,16 @@
+[
+	{
+		"print": "cssMinify",
+		"environment": {
+			"browsers": [
+				"chrome 100"
+			],
+			"vendorPrefixes": true
+		},
+		"svg": false,
+		"extractComments": false,
+		"customMedia": true,
+		"customSelectors": true,
+		"rewriteDirSelector": true
+	}
+]

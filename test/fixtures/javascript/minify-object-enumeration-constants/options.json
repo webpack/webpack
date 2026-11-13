@@ -1,0 +1,14 @@
+[
+	{
+		"mode": "minify",
+		"ecma": 2018,
+		"mangle": false,
+		"compress": {
+			"passes": 2
+		},
+		"format": {
+			"ascii_only": true
+		},
+		"behavior": true
+	}
+]

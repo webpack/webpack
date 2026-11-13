@@ -748,7 +748,7 @@ const EXPECTED = [
 	{
 		relation: "respelling escape",
 		contains: "-> \\7a ",
-		source: ["test/configCases/css/minimize","Tachyons 4"],
+		source: ["test/configCases/css/minify-css/minimize","Tachyons 4"],
 		why: "`*zoom: 1` is no declaration but the star hack an engine drops, which the printer writes back as authored, escape included"
 	},
 	{

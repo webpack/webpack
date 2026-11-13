@@ -1,0 +1,20 @@
+[
+	{
+		"mode": "minify",
+		"mangle": false,
+		"keep_fnames": true,
+		"keep_classnames": true,
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"mangle": true,
+		"keep_fnames": {
+			"regexp": "^preserved$"
+		},
+		"keep_classnames": {
+			"regexp": "^preservedClass$"
+		},
+		"behavior": true
+	}
+]

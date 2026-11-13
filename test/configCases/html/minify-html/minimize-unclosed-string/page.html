@@ -1,0 +1,10 @@
+<!doctype html>
+<title>t</title>
+<!-- CSS Syntax 4.3.5 ends a string at the end of its input, so each value
+     below is valid and the minifier writes the closing quote itself. A raw
+     newline would end them as bad-strings instead, which is a different case
+     and is covered by css/minimize-bad-string. -->
+<div style="content:'a">a string the value leaves open</div>
+<div style="font-family:'Some Face">the same, where unquoting applies</div>
+<div style="content:'b\">the same, with the quote escaped away</div>
+<style>.a::before { content: 'c</style>

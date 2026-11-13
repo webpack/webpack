@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "behavior",
+		"contains": "it should keep function and class names, as `keepFnames`",
+		"why": "the fixture logs a function's source text, which `format.asciiOnly` rewrites by contract"
+	}
+]
