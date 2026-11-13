@@ -584,6 +584,48 @@ describe("WebpackParser", () => {
 			expect(ast.body[0].type).toBe("ReturnStatement");
 		});
 
+		it("should read the whole source as a script where the module parse fails", () => {
+			const { parseProgram, takeParsedTree } = require("../../../lib/javascript/syntax-parser");
+			const name = "webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails";
+			for (const [suffix, comment] of [
+				["", " comment"],
+				// `<!--` read as operators leaves no script to turn into in place
+				["-2", "value"]
+			]) {
+				/** @type {CollectedComment[]} */
+				const comments = [];
+				const program = /** @type {number} */ (
+					parseProgram(fixture("javascript", `${name}${suffix}`), 0, {
+						sourceType: "auto",
+						comments
+					})
+				);
+				const tree = /** @type {import("../../../lib/javascript/syntax-parser").SyntaxTree} */ (takeParsedTree());
+				expect(/** @type {EXPECTED_ANY} */ (tree.estree(program)).sourceType).toBe("script");
+				expect(comments.map((item) => item.value)).toEqual([comment]);
+				tree.release();
+			}
+			// where both fail, the module parse's error is the one thrown
+			expect(() =>
+				parseProgram(fixture("javascript", `${name}-3`), 0, { sourceType: "auto" })
+			).toThrow("Unexpected token (2:0)");
+			const source = fixture("javascript", name);
+			expect(
+				/** @type {EXPECTED_ANY} */ (
+					parseProgram(source, 0, { sourceType: "auto", estree: true })
+				).sourceType
+			).toBe("script");
+			expect(() =>
+				parseProgram(source, 0, { sourceType: "auto", scopes: true })
+			).not.toThrow();
+			// a parse-error callback is told of the module parse's error instead
+			const parseError = jest.fn();
+			expect(
+				parseProgram(source, 0, { sourceType: "auto", parseError })
+			).toBeUndefined();
+			expect(parseError).toHaveBeenCalledTimes(1);
+		});
+
 		it("should produce the same AST as an explicit script parse", () => {
 			const code = fixture("javascript", "webpack-parser-auto-source-type-module-script-fallback-should-produce-the-same");
 			const strip = (/** @type {unknown} */ node) =>

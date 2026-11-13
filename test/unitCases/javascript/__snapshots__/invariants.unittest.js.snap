@@ -49000,6 +49000,34 @@ exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module
 
 exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-produce-the-same tokenizes 1`] = `"var[0,3] name[4,5] =[6,7] num[8,9] ;[9,10] if[11,13] ([14,15] name[15,16] )[16,17] return[18,24] ;[24,25] name[26,32] .[32,33] name[33,40] =[41,42] name[43,44] ;[44,45] eof[45,45]"`;
 
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails parses 1`] = `"Program[0,28](body=[VariableDeclaration[13,27](declarations=[VariableDeclarator[17,26](id=Identifier[17,22](name=\\"value\\") init=Literal[25,26](value=1 raw=\\"1\\"))] kind=\\"var\\")] sourceType=\\"script\\")"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails prints {"mode":"minify"} 1`] = `"throws: Unexpected token (1:0)"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails tokenizes 1`] = `"line[0,12] var[13,16] name[17,22] =[23,24] num[25,26] ;[26,27] eof[28,28]"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-2 parses 1`] = `"throws: 'return' outside of function (2:0)"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-2 parses 2`] = `"error[24,30]:illegal-return"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-2 parses 3`] = `"Program[0,32](body=[VariableDeclaration[0,13](declarations=[VariableDeclarator[4,13](id=Identifier[4,9](name=\\"value\\") init=Literal[12,13](value=1 raw=\\"1\\"))] kind=\\"var\\"),ReturnStatement[24,31](argument=null)] sourceType=\\"script\\")"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-2 prints {"mode":"minify"} 1`] = `"throws: 'return' outside of function (2:0)"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-2 tokenizes 1`] = `"var[0,3] name[4,9] =[10,11] num[12,13] </>/<=/>=[14,15] !/~[15,16] ++/--[16,18] name[18,23] return[24,30] ;[30,31] eof[32,32]"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-3 parses 1`] = `"throws: Unexpected token (2:0)"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-3 parses 2`] = `"error[21,22]:unexpected-token"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-3 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-3 prints {"mode":"minify"} 1`] = `"throws: Unexpected token (2:0)"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-3 tokenizes 1`] = `"import[0,6] name[7,8] name[9,13] string[14,19]=\\"./x\\" ;[19,20] </>/<=/>=[21,22] !/~[22,23] ++/--[23,25] name[26,33] eof[34,34]"`;
+
 exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-single-parse-a-top parses 1`] = `"throws: 'return' outside of function (2:8)"`;
 
 exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-single-parse-a-top parses 2`] = `"error[40,46]:illegal-return"`;
