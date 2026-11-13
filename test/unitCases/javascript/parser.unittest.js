@@ -1185,6 +1185,28 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		}
 	});
 
+	it("gives a caller who passes no options a copy of the defaults", () => {
+		// acorn warns once per module copy that a missing `ecmaVersion` defaults
+		// to 2020: a fresh copy leaves the warning for the tests that expect it
+		const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
+		try {
+			jest.isolateModules(() => {
+				const {
+					defaultOptions,
+					getOptions
+				} = require("../../../lib/javascript/syntax-parser");
+
+				const options = /** @type {EXPECTED_ANY} */ (getOptions(undefined));
+				expect(Object.keys(options)).toEqual(Object.keys(defaultOptions));
+				expect(options.sourceType).toBe("script");
+				expect(options).not.toBe(defaultOptions);
+			});
+		} finally {
+			warn.mockRestore();
+		}
+	});
+
+
 	it("fills in the options a caller left out, on a copy of the defaults", () => {
 		const {
 			defaultOptions,

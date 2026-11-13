@@ -249,4 +249,30 @@ describe("XmlSyntax — parsing", () => {
 		expect(attributeValue(inner, "f")).toBe("4");
 		expect(attributeValue(A.child(3, root), "g")).toBe("5");
 	});
+
+	it("should end an XML start tag the input cuts after the space around `=`", () => {
+		for (const source of ["<r a ", "<r a =", "<r a= "]) {
+			/** @type {string[]} */
+			const codes = [];
+			const document = parseHtmlRefs(source, 0, {
+				xml: true,
+				parseError: (_input, code) => {
+					codes.push(code);
+				}
+			});
+			expect(codes).toEqual(["eof-in-tag"]);
+			expect(A.child(0, document)).toBe(0);
+		}
+	});
+
+	it("should decode the character references a declared entity's value holds", () => {
+		const document = parseHtmlRefs(
+			'<!DOCTYPE r [<!ENTITY e "&#65;&#x42;&#1;">]><r>&e;</r>',
+			0,
+			{ xml: true }
+		);
+		const root = A.child(1, document);
+		// a reference to a code point XML does not allow reads as U+FFFD
+		expect(A.value(A.child(0, root))).toBe("AB\uFFFD");
+	});
 });
