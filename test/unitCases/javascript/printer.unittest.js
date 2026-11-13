@@ -1549,7 +1549,8 @@ describe("one-pass minify, family K round 6", () => {
 		expect(code).toBe(
 			"function f(a){var n;return(n=a.x)?.y()}function g(a){var n;return(n=a.x)?.y}function h(a){var n;return(n=a.x)?.[0]}function k(a){var n;return(n=a.x)?.(1)}function l(a){var n;return(n=a.x)?.y}function m(a){var n;return(n=a.x)!=null?n:7}function p(a){var n;(n=a.x)?.y()}function q(a){var n;(n=a.x)?.y()}console.log(f({x:{y:()=>1}}),f({}),g({x:{y:2}}),h({x:[3]}),k({x:v=>v}),l({}),m({x:0})),p({x:{y:()=>console.log(`p`)}}),q({x:{y:()=>console.log(`q`)}}),p({}),q({});"
 		);
-		expect(runProgram(code)).toBe(runProgram(source));
+		// Node 10 cannot parse the `?.` the output prints.
+		if (supportsOptionalChaining()) expect(runProgram(code)).toBe(runProgram(source));
 		// Before ES2020 there is no `?.`.
 		expect(
 			minifyOnePass(source, { ...options, compress: { ecma: 2019 }, ecma: 2019 })
@@ -1626,5 +1627,64 @@ describe("one-pass minify, family J round 6", () => {
 		expect(
 			minifyOnePass("for(/*#__PURE__*/f(g(),h());a;);", { compress: {}, mangle: false }).code
 		).toBe("for((g(),h());a;);");
+	});
+});
+
+describe("one-pass minify, round 6 review", () => {
+	const options = { compress: { ecma: 2020 }, ecma: 2020, mangle: false };
+
+	it("should keep an alias of a `let` or `const` its declarator reads before the name is set", () => {
+		const source =
+			"function a(){var x=y;var g=function(){return x};const y=1;return g}function b(){var x=y;const y=1;return x}function c(){const y=g();var x=y;return x+x}h(a,b,c);";
+		expect(minifyOnePass(source, options).code).toBe(
+			"function a(){var x=y;let y=1;return function(){return x}}function b(){var x=y;let y=1;return x}function c(){var x=g();return x+x}h(a,b,c);"
+		);
+		const program =
+			"function a(){var x=y;var g=function(){return x};const y=1;return g}try{a()}catch(e){console.log(e.name)}";
+		expect(runProgram(minifyOnePass(program, options).code)).toBe(
+			runProgram(program)
+		);
+	});
+
+	it("should read a name a loop's head sets through its alias, which a cycle reads in its dead zone", () => {
+		expect(
+			minifyOnePass(
+				"function f(l){for(const x of l){const a=x;g(()=>a)}}function c(){const a=b,b=a;return a}h(f,c);",
+				options
+			).code
+		).toBe("function f(l){for(let x of l)g(()=>x)}function c(){let a=a;return a}h(f,c);");
+		expect(runProgram("function c(){const a=b,b=a;return a}try{c()}catch(e){console.log(e.name)}")).toBe(
+			runProgram(minifyOnePass("function c(){const a=b,b=a;return a}try{c()}catch(e){console.log(e.name)}", options).code)
+		);
+	});
+
+	it("should keep the parentheses of a `!!` whose operand opens an arrow's body with an object", () => {
+		expect(
+			minifyOnePass(
+				"h((a,b,c)=>!!({}===a||b===c),(a,b)=>!!(a===b||b===1),()=>[{value:1}][0].missing);",
+				options
+			).code
+		).toBe(
+			"h((a,b,c)=>!!({}===a||b===c),(a,b)=>a===b||b===1,()=>[{value:1}][0].missing);"
+		);
+	});
+
+	it("should treat a pattern's defaults as reaching the body's functions", () => {
+		const source =
+			"function run(o,c){var{cb=read}=o;c(cb);var v=1;function read(){return v}return read()}console.log(run({},function(f){console.log(f())}));";
+		const { code } = minifyOnePass(source, options);
+		expect(code).toContain("var v=1");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should keep a null check assigning a function expression's own name", () => {
+		expect(
+			minifyOnePass(
+				"h(function f(v){return(f=v)!=null?f.answer:void 0},function(v){var n;return(n=v)!=null?n.answer:void 0});",
+				options
+			).code
+		).toBe(
+			"h(function f(v){return(f=v)!=null?f.answer:void 0},function(v){var n;return(n=v)?.answer});"
+		);
 	});
 });
