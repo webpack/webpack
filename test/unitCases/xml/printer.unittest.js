@@ -65,7 +65,7 @@ describe("SVG data URLs", () => {
 		expect(builtinEmbeddedRenderer()(SVG, OFFER)).toBeUndefined();
 	});
 
-	it("should decline one offered while an HTML parse is running", () => {
+	it("should minify one offered while an HTML parse is running", () => {
 		const render = builtinEmbeddedRenderer({ svg: true });
 		/** @type {(string | undefined)[]} */
 		const answers = [];
@@ -76,7 +76,7 @@ describe("SVG data URLs", () => {
 				return undefined;
 			}
 		});
-		expect(answers).toEqual([undefined]);
+		expect(answers).toEqual([MINIFIED]);
 	});
 
 	it("should minify the ones a stylesheet holds, after the caller's renderer", async () => {
