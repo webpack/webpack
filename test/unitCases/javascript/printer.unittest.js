@@ -1677,6 +1677,15 @@ describe("one-pass minify, round 6 review", () => {
 		);
 	});
 
+	it("should end a `return` pair folding an `else` exit before a function declaration", () => {
+		const source =
+			"function f(a,b){if(a)return g(b);else return a;function g(x){return x+1}h(g,g)}function k(a,b){if(a===1)return b(g,g);else return!1;function g(x){return x+1}}function h(){}console.log(f(1,2),f(0,2),k(1,()=>3),k(2));";
+		const { code } = minifyOnePass(source, options);
+		expect(code).toContain("return a&&g(b);function g");
+		expect(code).toContain("return a===1&&b(g,g);function g");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should parenthesize an arrow's returned value that a fold opens with an object", () => {
 		const source =
 			"g(()=>{return[{value:1}][0].missing},()=>{return[{value:1}][0]});";
@@ -1779,7 +1788,9 @@ describe("one-pass minify, family P round 7", () => {
 		const source = fixture("javascript", "one-pass-p4-1");
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
 		// The statement after it is no `var` to join; one opening with a value printed apart, or a `let`, stays apart.
-		expect(code).toBe("function make(name){return function(value){return console.log(name,value),value}}function joins(require){var first=require(1),second=first(2);first(3);var third=first(4);return[second,second,third,third]}console.log(joins(make(\"joins\")));function opensApart(require){var first=require(1);first(2);var second=first(3);return[second,second]}console.log(opensApart(make(\"opensApart\")));function opensNew(require){var first=require(1);new first(2);var[second]=[first(3)];return[second,second]}console.log(opensNew(make(\"opensNew\")));function lets(require){let first=require(1),second=first(2);first(3);return[second,second]}console.log(lets(make(\"lets\")));");
+		expect(code).toBe("function make(name){return function(value){return console.log(name,value),function(next){return console.log(name,value,next),next}}}function joins(require){var first=require(1),second=first(2);first(3);var third=first(4);return[second,second,third,third]}console.log(joins(make(\"joins\")));function opensApart(require){var first=require(1);first(2);var second=first(3);return[second,second]}console.log(opensApart(make(\"opensApart\")));function opensNew(require){var first=require(1);new first(2);var[second]=[first(3)];return[second,second]}console.log(opensNew(make(\"opensNew\")));function lets(require){let first=require(1),second=first(2);first(3);return[second,second]}console.log(lets(make(\"lets\")));");
+		// Every call returns a function, so the source runs to its end.
+		expect(runProgram(source)).not.toContain("throws");
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 

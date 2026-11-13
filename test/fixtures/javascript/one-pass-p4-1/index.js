@@ -1,7 +1,10 @@
 function make(name) {
 	return function (value) {
 		console.log(name, value);
-		return value;
+		return function (next) {
+			console.log(name, value, next);
+			return next;
+		};
 	};
 }
 function joins(require) {
