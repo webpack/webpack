@@ -2094,14 +2094,11 @@ describe("folding a `var` set after calls", () => {
 		}
 		// Mangled, only a value of one character folds: a longer one repeated gzips larger than the letter the name gets.
 		const mangled = { compress: {}, mangle: true };
-		expect(minifyOnePass('(function(){init(function(){});var LONG_NAME="transition";function g(a){return a===LONG_NAME?1:a===LONG_NAME+1?2:LONG_NAME}window.g=g;window.h=g})()', mangled).code).toBe('!function(){init(function(){});var n="transition";function i(i){return i===n?1:i===n+1?2:n}window.g=i,window.h=i}();');
-		expect(minifyOnePass("(function(){init(function(){});var LONG_NAME=7;function g(a){return a===LONG_NAME?1:LONG_NAME}window.g=g;window.h=g})()", mangled).code).toBe("!function(){init(function(){});function n(n){return n===7?1:7}window.g=n,window.h=n}();");
+		expect(minifyOnePass(fixture("javascript", "one-pass-fold-var-mangled-string"), mangled).code).toBe('!function(){init(function(){});var n="transition";function i(i){return i===n?1:i===n+1?2:n}window.g=i,window.h=i}();');
+		expect(minifyOnePass(fixture("javascript", "one-pass-fold-var-mangled-number"), mangled).code).toBe("!function(){init(function(){});function n(n){return n===7?1:7}window.g=n,window.h=n}();");
 		// Read before it is set, it reads `undefined` printed or not.
-		for (const source of [
-			"function register(f){console.log(f())}(function(){register(function(){return A});var A=4;console.log(A)})();",
-			"(function(){h();var A=4;function h(){g()}function g(){console.log(A)}h()})();",
-			"function f(){console.log(a)}function g(){f()}while(g());var a=1;f();"
-		]) {
+		for (const name of ["one-pass-var-read-early-escaped", "one-pass-var-read-early-called", "one-pass-var-read-early-toplevel"]) {
+			const source = fixture("javascript", name);
 			expect(runProgram(minifyOnePass(source, { compress: { toplevel: true }, mangle: false }).code)).toBe(runProgram(source));
 		}
 	});
