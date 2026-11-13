@@ -21802,6 +21802,25 @@ open[0,5|1,4] open[5,8|6,7] text[8,9] close[9,13|11,12] open[13,16|14,15] text[1
 98,239999] text[240000,240001] close[240001,240005|240003,240004] close[240005,240011|240007,240010] open[240011,240015|240012,240014] text[240015,240018] close[240018,240023|240020,240022] end=240023"
 `;
 
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-textarea-fragment-inner parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"raw\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-textarea-fragment-inner parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-textarea-fragment-inner prints {"mode":"minify"} 1`] = `
+"<p>raw</p>
+"
+`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-textarea-fragment-inner tokenizes 1`] = `"open[0,3|1,2] text[3,6] close[6,10|8,9] text[10,11] end=11"`;
+
 exports[`HTML syntax — invariants source-processor-an-empty-value-is-the-bare-name-does-it-in-foreign-content-too parses 1`] = `
 "| <html>
 |   <head>

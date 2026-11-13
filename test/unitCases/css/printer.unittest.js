@@ -2150,6 +2150,25 @@ describe("SourceProcessor — a run inside a run", () => {
 		expect(code).toBe(alone);
 	});
 
+	it("prints the blocks of a stylesheet a renderer starts inside an outer block", () => {
+		const outerSheet = fixture("css", "source-processor-a-run-inside-a-run-media-outer");
+		const innerSheet = fixture("css", "source-processor-a-run-inside-a-run-media-inner");
+		const alone = new SourceProcessor().process(outerSheet, { mode: "minify" }).code;
+		const innerAlone = new SourceProcessor().process(innerSheet, { mode: "minify" }).code;
+		/** @type {string[]} */
+		const inner = [];
+		const { code } = new SourceProcessor().process(outerSheet, {
+			mode: "minify",
+			renderEmbeddedSource: (source) => {
+				inner.push(new SourceProcessor().process(innerSheet, { mode: "minify" }).code);
+				return source;
+			}
+		});
+		expect(innerAlone).toBe("@media print{x{color:red}y{color:blue}}z{margin:0}");
+		expect(inner).toEqual([innerAlone]);
+		expect(code).toBe(alone);
+	});
+
 	it("walks a stylesheet a visitor starts, and the outer walk goes on", () => {
 		/**
 		 * @param {boolean} nest whether the first declaration starts runs of its own

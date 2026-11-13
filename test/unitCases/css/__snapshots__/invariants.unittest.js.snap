@@ -47082,6 +47082,22 @@ exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-direct-pa
 
 exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-direct-parse-rule tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,5] colon[5,6] number[6,7] right-curly-bracket[7,8] end=8"`;
 
+exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-media-inner parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"print\\"]],[[\\"ident\\",\\"x\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]],[\\"ident\\",\\"y\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]]]],[\\"qualified rule\\",[[\\"ident\\",\\"z\\"]],[[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-media-inner parses 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-media-inner prints {"mode":"minify"} 1`] = `"@media print{x{color:red}y{color:blue}}z{margin:0}"`;
+
+exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-media-inner tokenizes 1`] = `"at-keyword[0,6] whitespace[6,7] ident[7,12] left-curly-bracket[12,13] ident[13,14] left-curly-bracket[14,15] ident[15,20] colon[20,21] ident[21,24] right-curly-bracket[24,25] ident[25,26] left-curly-bracket[26,27] ident[27,32] colon[32,33] ident[33,37] right-curly-bracket[37,38] right-curly-bracket[38,39] ident[39,40] left-curly-bracket[40,41] ident[41,47] colon[47,48] number[48,49] right-curly-bracket[49,50] whitespace[50,51] end=51"`;
+
+exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-media-outer parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"print\\"]],[[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"url\\",[\\"string\\",\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>\\"]]],[\\"ident\\",\\"b\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]]"`;
+
+exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-media-outer parses 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-media-outer prints {"mode":"minify"} 1`] = `"@media print{a{background:url(\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>\\")}b{color:red}}"`;
+
+exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-media-outer tokenizes 1`] = `"at-keyword[0,6] whitespace[6,7] ident[7,12] left-curly-bracket[12,13] ident[13,14] left-curly-bracket[14,15] ident[15,25] colon[25,26] function[26,30] string[30,92] right-parenthesis[92,93] right-curly-bracket[93,94] ident[94,95] left-curly-bracket[95,96] ident[96,101] colon[101,102] ident[102,105] right-curly-bracket[105,106] right-curly-bracket[106,107] whitespace[107,108] end=108"`;
+
 exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-renderer-inner parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"x\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"color\\"],\\" \\",\\":\\",\\" \\",[\\"ident\\",\\"red\\"],\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-renderer-inner parses 2`] = `""`;
