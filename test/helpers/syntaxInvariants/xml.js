@@ -8,6 +8,7 @@
 const {
 	builtinEmbeddedRenderer
 } = require("../../../lib/html/builtinEmbeddedRenderer");
+const { isStackOverflow } = require("../fixture");
 const { SourceProcessor } = require("../../../lib/html/syntax");
 const {
 	Field,
@@ -686,6 +687,8 @@ const xmlPurityDigest = (xml) => {
 		new SourceProcessor().use(visitors).process(xml, { xml: true });
 		digest.update(printXml(xml, "minify"));
 	} catch (error) {
+		// Where the stack runs out is the machine's, not the parser's answer.
+		if (isStackOverflow(error)) throw error;
 		return `refused: ${/** @type {Error} */ (error).message}`;
 	}
 	return digest.hex();

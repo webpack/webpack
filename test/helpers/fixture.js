@@ -186,6 +186,56 @@ const snapshotOf = (source, text) => {
 };
 
 /**
+ * What `snapshotOf` makes of the text a writer writes in pieces, without
+ * joining them where it would only digest them: a tree whose text outgrows
+ * the longest string an engine holds still snapshots.
+ * @param {string} source the fixture's input
+ * @param {(write: (piece: string) => void) => void} writeAll writes the text, piece by piece
+ * @returns {string} the entry
+ */
+const snapshotOfPieces = (source, writeAll) => {
+	/**
+	 * @returns {string} the text, joined
+	 */
+	const joined = () => {
+		/** @type {string[]} */
+		const pieces = [];
+		writeAll((piece) => {
+			pieces.push(piece);
+		});
+		return pieces.join("");
+	};
+	if (!generated.has(source)) return snapshotText(joined());
+	const hash = createHash("sha256");
+	let length = 0;
+	let head = "";
+	let tail = "";
+	let plain = true;
+	writeAll((piece) => {
+		if (!plain) return;
+		if (snapshotText(piece) !== piece) {
+			plain = false;
+			return;
+		}
+		hash.update(piece);
+		length += piece.length;
+		if (head.length < EXCERPT) head += piece.slice(0, EXCERPT - head.length);
+		tail =
+			piece.length >= EXCERPT
+				? piece.slice(-EXCERPT)
+				: (tail + piece).slice(-EXCERPT);
+	});
+	// Escaping moves the digest's bytes, so such a text is joined after all.
+	if (!plain || length <= EXCERPT * 2) {
+		return snapshotOf(source, snapshotText(joined()));
+	}
+	const digest = hash.digest("hex").slice(0, 16);
+	return snapshotText(
+		`length ${length}, sha256 ${digest}\n${head}\n…\n${tail}`
+	);
+};
+
+/**
  * A relation a fixture is allowed to break, with why it is owed nothing.
  * @typedef {object} KnownDifference
  * @property {string} relation the relation, as a finding names it
@@ -305,6 +355,9 @@ const readList = (file) =>
  * beside them (CommonJS, Node 10 syntax) holds what JSON cannot:
  * - `source()` returns the input, in place of `index.<ext>`; each snapshot
  *   entry longer than two excerpts becomes its length, a digest and both ends.
+ *   An input past `INVARIANT_BUDGET` (`syntaxInvariants/index.js`) skips the
+ *   cuts, respellings and every preset but the first; one deeper than the
+ *   stack snapshots `OVERFLOW` where a stage runs out and holds no relation.
  * - Any other export is what `{ "fixture": "<export>" }` stands for anywhere
  *   in either file; an unknown name throws. A `visit` export is called with
  *   the log and the enums and returns the visitor map; a `check` export is
@@ -369,12 +422,14 @@ const fixtures = (lang) => {
 
 /**
  * What a fixture's findings leave unexplained: each finding no entry names,
- * and each entry no finding needs any more, which has to go.
+ * and each entry no finding needs any more, which has to go. A source past
+ * `INVARIANT_BUDGET` skips relations an entry may answer for, so none is stale.
  * @param {{ preset: string, report: { relation: string, what: string, repro: string } }[]} findings what the relations reported
  * @param {KnownDifference[]} expected the fixture's known differences
+ * @param {string} source the fixture's input
  * @returns {string[]} one line per finding left over or entry gone stale
  */
-const unexplained = (findings, expected) => {
+const unexplained = (findings, expected, source) => {
 	/** @type {Set<KnownDifference>} */
 	const used = new Set();
 	/** @type {string[]} */
@@ -395,7 +450,7 @@ const unexplained = (findings, expected) => {
 		}
 	}
 	for (const entry of expected) {
-		if (!used.has(entry)) {
+		if (!used.has(entry) && source.length <= INVARIANT_BUDGET) {
 			left.push(`stale: ${entry.relation} ${entry.contains}`);
 		}
 	}
@@ -430,13 +485,52 @@ const snapshotText = (text) => {
 };
 
 /**
+ * The size past which a source is held only to the relations that cost about
+ * its length: spans, idempotence under the first preset with what that preset
+ * keeps, and purity among all the others. The cuts, slices, respellings and
+ * other presets each read or print it again per site or per preset, which a
+ * filler of hundreds of kilobytes turns into minutes. 20000 characters, the
+ * cap on running a script, spares every file fixture but three 40 KB HTML
+ * pages; the generated ones past it are fillers whose point is their size.
+ */
+const INVARIANT_BUDGET = 20000;
+
+/** What a read deeper than the stack answers. */
+const OVERFLOW = "overflows the stack";
+
+/**
+ * @param {unknown} err what a read threw
+ * @returns {boolean} whether it ran out of stack, as the engine or a parser's own refusal says
+ */
+const isStackOverflow = (err) =>
+	(err instanceof RangeError && /call stack/i.test(err.message)) ||
+	(err instanceof Error && err.message.startsWith("Not enough stack space"));
+
+/**
+ * What a read answers, or `OVERFLOW` where it runs out of stack: where that
+ * happens and how the engine words it differ between engines.
+ * @template T
+ * @param {() => T} read the read
+ * @returns {T | string} its answer, or `OVERFLOW`
+ */
+const unlessOverflow = (read) => {
+	try {
+		return read();
+	} catch (err) {
+		if (isStackOverflow(err)) return OVERFLOW;
+		throw err;
+	}
+};
+
+/**
  * @param {() => string} read what to run
- * @returns {string} its answer, or the error it throws
+ * @returns {string} its answer, or the error it throws; `OVERFLOW` for one out of stack
  */
 const answerOf = (read) => {
 	try {
 		return read();
 	} catch (err) {
+		if (isStackOverflow(err)) return OVERFLOW;
 		return `throws: ${/** @type {Error} */ (err).message}`;
 	}
 };
@@ -986,7 +1080,11 @@ const readPrint = async (printers, dir, source, set) => {
 			values.push(summaryText(checks(result, { source, spec: set })));
 		}
 	} catch (err) {
-		values.push(`throws: ${/** @type {Error} */ (err).message}`);
+		values.push(
+			isStackOverflow(err)
+				? OVERFLOW
+				: `throws: ${/** @type {Error} */ (err).message}`
+		);
 	}
 	if (visitors !== undefined) values.push(visits.join("\n"));
 	if (log !== undefined) values.push(log.join(" "));
@@ -996,17 +1094,22 @@ const readPrint = async (printers, dir, source, set) => {
 };
 
 module.exports = {
+	INVARIANT_BUDGET,
+	OVERFLOW,
 	answerOf,
 	declaresPrint,
 	enumValue,
 	fixture,
 	fixtures,
+	isStackOverflow,
 	printOptions,
 	readPrint,
 	readRun,
 	snapshotOf,
+	snapshotOfPieces,
 	snapshotText,
 	treeLines,
 	unexplained,
+	unlessOverflow,
 	walkLine
 };

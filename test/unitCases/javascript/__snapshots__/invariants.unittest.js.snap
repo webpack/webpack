@@ -46807,6 +46807,31 @@ exports[`JavaScript syntax — invariants syntax-tree-builds-only-the-fields-ask
 
 exports[`JavaScript syntax — invariants syntax-tree-builds-only-the-fields-asked-for-then-the-rest-on-the-same-object tokenizes 1`] = `"name[0,1] ([1,2] name[2,3] ,[3,4] name[5,6] )[6,7] ;[7,8] eof[8,8]"`;
 
+exports[`JavaScript syntax — invariants syntax-tree-copies-a-large-tree-s-columns-for-its-lazy-objects-and-frees-its-own parses 1`] = `
+"length 11397830, sha256 6a14ddda22a2c5f7
+Program[0,280000](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"a\\")),ExpressionStatement[2,4](expression=Identifier[2,3](name=\\"a\\")),ExpressionStatement[4,6](expression=Identifier[4,5
+…
+](name=\\"a\\")),ExpressionStatement[279996,279998](expression=Identifier[279996,279997](name=\\"a\\")),ExpressionStatement[279998,280000](expression=Identifier[279998,279999](name=\\"a\\"))] sourceType=\\"module\\")"
+`;
+
+exports[`JavaScript syntax — invariants syntax-tree-copies-a-large-tree-s-columns-for-its-lazy-objects-and-frees-its-own parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants syntax-tree-copies-a-large-tree-s-columns-for-its-lazy-objects-and-frees-its-own parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants syntax-tree-copies-a-large-tree-s-columns-for-its-lazy-objects-and-frees-its-own prints {"mode":"minify"} 1`] = `
+"length 280000, sha256 5f8880c85d19120e
+a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;
+…
+a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;"
+`;
+
+exports[`JavaScript syntax — invariants syntax-tree-copies-a-large-tree-s-columns-for-its-lazy-objects-and-frees-its-own tokenizes 1`] = `
+"length 4957803, sha256 c23622f5071d2d26
+name[0,1] ;[1,2] name[2,3] ;[3,4] name[4,5] ;[5,6] name[6,7] ;[7,8] name[8,9] ;[9,10] name[10,11] ;[11,12] name[12,13] ;[13,14] name[14,15] ;[15,16] name[16,17] ;[17,18] name[18,19] ;[19,20] name[20,2
+…
+e[279990,279991] ;[279991,279992] name[279992,279993] ;[279993,279994] name[279994,279995] ;[279995,279996] name[279996,279997] ;[279997,279998] name[279998,279999] ;[279999,280000] eof[280000,280000]"
+`;
+
 exports[`JavaScript syntax — invariants syntax-tree-ends-an-es5-do-while-and-checks-an-es5-object-literal-by-es5-s-rules parses 1`] = `"Program[0,18](body=[DoWhileStatement[0,15](body=ExpressionStatement[3,5](expression=Identifier[3,4](name=\\"x\\")) test=Identifier[13,14](name=\\"y\\")),ExpressionStatement[16,18](expression=Identifier[16,17](name=\\"z\\"))] sourceType=\\"module\\")"`;
 
 exports[`JavaScript syntax — invariants syntax-tree-ends-an-es5-do-while-and-checks-an-es5-object-literal-by-es5-s-rules parses 2`] = `""`;
@@ -46886,6 +46911,81 @@ exports[`JavaScript syntax — invariants syntax-tree-hands-a-tree-s-columns-on-
 exports[`JavaScript syntax — invariants syntax-tree-hands-a-tree-s-columns-on-to-the-next-tree-once-only-2 prints {"mode":"minify"} 1`] = `"c(d);"`;
 
 exports[`JavaScript syntax — invariants syntax-tree-hands-a-tree-s-columns-on-to-the-next-tree-once-only-2 tokenizes 1`] = `"name[0,1] ([1,2] name[2,3] )[3,4] ;[4,5] eof[5,5]"`;
+
+exports[`JavaScript syntax — invariants syntax-tree-hands-a-tree-s-columns-on-to-the-next-tree-once-only-3 parses 1`] = `
+"length 24677830, sha256 cb4f9d39618aa88b
+Program[0,600000](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"a\\")),ExpressionStatement[2,4](expression=Identifier[2,3](name=\\"a\\")),ExpressionStatement[4,6](expression=Identifier[4,5
+…
+](name=\\"a\\")),ExpressionStatement[599996,599998](expression=Identifier[599996,599997](name=\\"a\\")),ExpressionStatement[599998,600000](expression=Identifier[599998,599999](name=\\"a\\"))] sourceType=\\"module\\")"
+`;
+
+exports[`JavaScript syntax — invariants syntax-tree-hands-a-tree-s-columns-on-to-the-next-tree-once-only-3 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants syntax-tree-hands-a-tree-s-columns-on-to-the-next-tree-once-only-3 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants syntax-tree-hands-a-tree-s-columns-on-to-the-next-tree-once-only-3 prints {"mode":"minify"} 1`] = `
+"length 600000, sha256 4550bd55f8e47580
+a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;
+…
+a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;"
+`;
+
+exports[`JavaScript syntax — invariants syntax-tree-hands-a-tree-s-columns-on-to-the-next-tree-once-only-3 tokenizes 1`] = `
+"length 10877803, sha256 80b4f86466bbaa5b
+name[0,1] ;[1,2] name[2,3] ;[3,4] name[4,5] ;[5,6] name[6,7] ;[7,8] name[8,9] ;[9,10] name[10,11] ;[11,12] name[12,13] ;[13,14] name[14,15] ;[15,16] name[16,17] ;[17,18] name[18,19] ;[19,20] name[20,2
+…
+e[599990,599991] ;[599991,599992] name[599992,599993] ;[599993,599994] name[599994,599995] ;[599995,599996] name[599996,599997] ;[599997,599998] name[599998,599999] ;[599999,600000] eof[600000,600000]"
+`;
+
+exports[`JavaScript syntax — invariants syntax-tree-keeps-a-list-s-items-while-an-item-written-into-it-grows-the-column parses 1`] = `
+"length 3138282, sha256 5962f6a9f395484a
+Program[0,80022](body=[VariableDeclaration[0,9](declarations=[VariableDeclarator[4,5](id=Identifier[4,5](name=\\"a\\") init=null),VariableDeclarator[7,8](id=Identifier[7,8](name=\\"b\\") init=null)] kind=\\"var
+…
+9,80022](declaration=null specifiers=[ExportSpecifier[80018,80019](local=Identifier[80018,80019](name=\\"a\\") exported=Identifier[80018,80019](name=\\"a\\"))] source=null attributes=[])] sourceType=\\"module\\")"
+`;
+
+exports[`JavaScript syntax — invariants syntax-tree-keeps-a-list-s-items-while-an-item-written-into-it-grows-the-column parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants syntax-tree-keeps-a-list-s-items-while-an-item-written-into-it-grows-the-column parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:80009)"`;
+
+exports[`JavaScript syntax — invariants syntax-tree-keeps-a-list-s-items-while-an-item-written-into-it-grows-the-column prints {"mode":"minify"} 1`] = `
+"length 80018, sha256 a70d25533c53dd2d
+var a,b;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;
+…
+a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;export{a};"
+`;
+
+exports[`JavaScript syntax — invariants syntax-tree-keeps-a-list-s-items-while-an-item-written-into-it-grows-the-column tokenizes 1`] = `
+"length 1297998, sha256 f6d64e1ffc23d307
+var[0,3] name[4,5] ,[5,6] name[7,8] ;[8,9] name[9,10] ;[10,11] name[11,12] ;[12,13] name[13,14] ;[14,15] name[15,16] ;[16,17] name[17,18] ;[18,19] name[19,20] ;[20,21] name[21,22] ;[22,23] name[23,24]
+…
+] name[80003,80004] ;[80004,80005] name[80005,80006] ;[80006,80007] name[80007,80008] ;[80008,80009] export[80009,80015] {[80016,80017] name[80018,80019] }[80020,80021] ;[80021,80022] eof[80022,80022]"
+`;
+
+exports[`JavaScript syntax — invariants syntax-tree-keeps-a-list-s-items-while-an-item-written-into-it-grows-the-column-2 parses 1`] = `
+"length 3138395, sha256 9843ca34e9fdd4f2
+Program[0,80025](body=[VariableDeclaration[0,9](declarations=[VariableDeclarator[4,5](id=Identifier[4,5](name=\\"a\\") init=null),VariableDeclarator[7,8](id=Identifier[7,8](name=\\"b\\") init=null)] kind=\\"var
+…
+ed=Identifier[80018,80019](name=\\"a\\")),ExportSpecifier[80021,80022](local=Identifier[80021,80022](name=\\"b\\") exported=Identifier[80021,80022](name=\\"b\\"))] source=null attributes=[])] sourceType=\\"module\\")"
+`;
+
+exports[`JavaScript syntax — invariants syntax-tree-keeps-a-list-s-items-while-an-item-written-into-it-grows-the-column-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants syntax-tree-keeps-a-list-s-items-while-an-item-written-into-it-grows-the-column-2 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:80009)"`;
+
+exports[`JavaScript syntax — invariants syntax-tree-keeps-a-list-s-items-while-an-item-written-into-it-grows-the-column-2 prints {"mode":"minify"} 1`] = `
+"length 80020, sha256 318bf84035c6a6ef
+var a,b;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;
+…
+a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;export{a,b};"
+`;
+
+exports[`JavaScript syntax — invariants syntax-tree-keeps-a-list-s-items-while-an-item-written-into-it-grows-the-column-2 tokenizes 1`] = `
+"length 1298031, sha256 343d459725eda8e1
+var[0,3] name[4,5] ,[5,6] name[7,8] ;[8,9] name[9,10] ;[10,11] name[11,12] ;[12,13] name[13,14] ;[14,15] name[15,16] ;[16,17] name[17,18] ;[18,19] name[19,20] ;[20,21] name[21,22] ;[22,23] name[23,24]
+…
+] name[80005,80006] ;[80006,80007] name[80007,80008] ;[80008,80009] export[80009,80015] {[80016,80017] name[80018,80019] ,[80019,80020] name[80021,80022] }[80023,80024] ;[80024,80025] eof[80025,80025]"
+`;
 
 exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-re-export-and-writes-one-an-edition-before parses 1`] = `"Program[0,95](body=[ExportNamedDeclaration[0,48](declaration=null specifiers=[ExportSpecifier[9,10](local=Identifier[9,10](name=\\"a\\") exported=Identifier[9,10](name=\\"a\\"))] source=Literal[18,23](value=\\"./a\\" raw=\\"\\\\\\"./a\\\\\\"\\") attributes=[ImportAttribute[33,45](key=Identifier[33,37](name=\\"type\\") value=Literal[39,45](value=\\"json\\" raw=\\"\\\\\\"json\\\\\\"\\"))]),ExportNamedDeclaration[49,95](declaration=null specifiers=[ExportSpecifier[58,59](local=Identifier[58,59](name=\\"b\\") exported=Identifier[58,59](name=\\"b\\"))] source=Literal[67,72](value=\\"./b\\" raw=\\"\\\\\\"./b\\\\\\"\\") attributes=[ImportAttribute[80,92](key=Identifier[80,84](name=\\"type\\") value=Literal[86,92](value=\\"json\\" raw=\\"\\\\\\"json\\\\\\"\\"))])] sourceType=\\"module\\")"`;
 
@@ -48113,6 +48213,36 @@ exports[`JavaScript syntax — invariants webpack-parser-expressions-spreads-and
 exports[`JavaScript syntax — invariants webpack-parser-expressions-spreads-and-parameter-checks-should-parse-comma-2 prints {"mode":"minify"} 1`] = `"f(...args);"`;
 
 exports[`JavaScript syntax — invariants webpack-parser-expressions-spreads-and-parameter-checks-should-parse-comma-2 tokenizes 1`] = `"name[0,1] ([1,2] ...[2,5] name[5,9] )[9,10] ;[10,11] eof[11,11]"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-expressions-spreads-and-parameter-checks-should-report-stack parses 1`] = `"overflows the stack"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-expressions-spreads-and-parameter-checks-should-report-stack parses 2`] = `"overflows the stack"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-expressions-spreads-and-parameter-checks-should-report-stack parses 3`] = `"overflows the stack"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-expressions-spreads-and-parameter-checks-should-report-stack prints {"mode":"minify"} 1`] = `"overflows the stack"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-expressions-spreads-and-parameter-checks-should-report-stack tokenizes 1`] = `
+"length 1477823, sha256 65e85cac98f4874f
+([0,1] ([1,2] ([2,3] ([3,4] ([4,5] ([5,6] ([6,7] ([7,8] ([8,9] ([9,10] ([10,11] ([11,12] ([12,13] ([13,14] ([14,15] ([15,16] ([16,17] ([17,18] ([18,19] ([19,20] ([20,21] ([21,22] ([22,23] ([23,24] ([2
+…
+989,99990] ([99990,99991] ([99991,99992] ([99992,99993] ([99993,99994] ([99994,99995] ([99995,99996] ([99996,99997] ([99997,99998] ([99998,99999] ([99999,100000] name[100000,100001] eof[100001,100001]"
+`;
+
+exports[`JavaScript syntax — invariants webpack-parser-expressions-spreads-and-parameter-checks-should-report-stack-2 parses 1`] = `"overflows the stack"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-expressions-spreads-and-parameter-checks-should-report-stack-2 parses 2`] = `"overflows the stack"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-expressions-spreads-and-parameter-checks-should-report-stack-2 parses 3`] = `"overflows the stack"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-expressions-spreads-and-parameter-checks-should-report-stack-2 prints {"mode":"minify"} 1`] = `"overflows the stack"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-expressions-spreads-and-parameter-checks-should-report-stack-2 tokenizes 1`] = `
+"length 1477803, sha256 0b007767105039de
+{[0,1] {[1,2] {[2,3] {[3,4] {[4,5] {[5,6] {[6,7] {[7,8] {[8,9] {[9,10] {[10,11] {[11,12] {[12,13] {[13,14] {[14,15] {[15,16] {[16,17] {[17,18] {[18,19] {[19,20] {[20,21] {[21,22] {[22,23] {[23,24] {[2
+…
+ {[99988,99989] {[99989,99990] {[99990,99991] {[99991,99992] {[99992,99993] {[99993,99994] {[99994,99995] {[99995,99996] {[99996,99997] {[99997,99998] {[99998,99999] {[99999,100000] eof[100000,100000]"
+`;
 
 exports[`JavaScript syntax — invariants webpack-parser-identifier-word-cache-should-read-identifiers-written-with-a parses 1`] = `"Program[0,34](body=[VariableDeclaration[0,34](declarations=[VariableDeclarator[4,33](id=Identifier[4,12](name=\\"abc\\") init=BinaryExpression[15,33](left=Identifier[15,23](name=\\"abc\\") operator=\\"+\\" right=Identifier[26,33](name=\\"ax\\")))] kind=\\"var\\")] sourceType=\\"module\\")"`;
 

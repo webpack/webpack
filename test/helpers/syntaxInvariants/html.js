@@ -8,6 +8,7 @@
 const {
 	builtinEmbeddedRenderer
 } = require("../../../lib/html/builtinEmbeddedRenderer");
+const { isStackOverflow } = require("../fixture");
 const { SourceProcessor } = require("../../../lib/html/syntax");
 const {
 	Field,
@@ -783,6 +784,8 @@ const htmlPurityDigest = (html, print) => {
 		new SourceProcessor().use(visitors).process(html, {});
 		digest.update(print(html));
 	} catch (error) {
+		// Where the stack runs out is the machine's, not the parser's answer.
+		if (isStackOverflow(error)) throw error;
 		return `refused: ${/** @type {Error} */ (error).message}`;
 	}
 	return digest.hex();
