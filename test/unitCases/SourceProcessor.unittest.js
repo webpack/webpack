@@ -193,10 +193,11 @@ describe("SourceProcessor", () => {
 			context.printNode(1, null);
 			expect(context.get(1)).toBe("z");
 			context.dropStore();
-			expect(context.get(1)).toBeUndefined();
+			expect(context.lookup(1)).toBeUndefined();
 			context.printNode(2, null);
 			expect(context.get(2)).toBe("z");
-			expect(context.get(1)).toBeUndefined();
+			expect(context.lookup(1)).toBeUndefined();
+			expect(context.get(1)).toBe("");
 		});
 
 		it("reads a node printed as its source once, and only when asked", () => {
@@ -216,7 +217,7 @@ describe("SourceProcessor", () => {
 			expect(context.get(1)).toBe("s1");
 			expect(reads).toBe(1);
 			context.dropStore();
-			expect(context.get(1)).toBeUndefined();
+			expect(context.lookup(1)).toBeUndefined();
 			expect(reads).toBe(1);
 		});
 	});
