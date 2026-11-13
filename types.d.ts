@@ -16399,42 +16399,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		 * statement, and goes away with that walk in the next major release.
 		 * @since 5.109.0
 		 */
-		preStatementByType: HookMap<
-			PathTaps<[number], boolean | void> &
-				SyncBailHook<
-					[
-						| ImportDeclaration
-						| ExportNamedDeclaration
-						| ExportAllDeclaration
-						| FunctionDeclaration
-						| MaybeNamedFunctionDeclaration
-						| VariableDeclaration
-						| ClassDeclaration
-						| MaybeNamedClassDeclaration
-						| ExpressionStatement
-						| BlockStatement
-						| StaticBlock
-						| EmptyStatement
-						| DebuggerStatement
-						| WithStatement
-						| ReturnStatement
-						| LabeledStatement
-						| BreakStatement
-						| ContinueStatement
-						| IfStatement
-						| SwitchStatement
-						| ThrowStatement
-						| TryStatement
-						| WhileStatement
-						| DoWhileStatement
-						| ForStatement
-						| ForInStatement
-						| ForOfStatement
-						| ExportDefaultDeclaration
-					],
-					boolean | void
-				>
-		>;
+		preStatementByType: TypedHookMap<Record<string, StatementHook>>;
 		/**
 		 * Every statement the block pass reads, which a tap on this turns back
 		 * into a walk of them all. Tap `blockPreStatementByType` instead.
@@ -16480,42 +16445,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		 * of every statement, and goes away with that walk in the next major release.
 		 * @since 5.109.0
 		 */
-		blockPreStatementByType: HookMap<
-			PathTaps<[number], boolean | void> &
-				SyncBailHook<
-					[
-						| ImportDeclaration
-						| ExportNamedDeclaration
-						| ExportAllDeclaration
-						| FunctionDeclaration
-						| MaybeNamedFunctionDeclaration
-						| VariableDeclaration
-						| ClassDeclaration
-						| MaybeNamedClassDeclaration
-						| ExpressionStatement
-						| BlockStatement
-						| StaticBlock
-						| EmptyStatement
-						| DebuggerStatement
-						| WithStatement
-						| ReturnStatement
-						| LabeledStatement
-						| BreakStatement
-						| ContinueStatement
-						| IfStatement
-						| SwitchStatement
-						| ThrowStatement
-						| TryStatement
-						| WhileStatement
-						| DoWhileStatement
-						| ForStatement
-						| ForInStatement
-						| ForOfStatement
-						| ExportDefaultDeclaration
-					],
-					boolean | void
-				>
-		>;
+		blockPreStatementByType: TypedHookMap<Record<string, StatementHook>>;
 		statement: PathTaps<[number], boolean | void> &
 			SyncBailHook<
 				[
@@ -34018,6 +33948,40 @@ type Statement =
 	| ForStatement
 	| ForInStatement
 	| ForOfStatement;
+type StatementHook = PathTaps<[number], boolean | void> &
+	SyncBailHook<
+		[
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportAllDeclaration
+			| FunctionDeclaration
+			| MaybeNamedFunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration
+			| MaybeNamedClassDeclaration
+			| ExpressionStatement
+			| BlockStatement
+			| StaticBlock
+			| EmptyStatement
+			| DebuggerStatement
+			| WithStatement
+			| ReturnStatement
+			| LabeledStatement
+			| BreakStatement
+			| ContinueStatement
+			| IfStatement
+			| SwitchStatement
+			| ThrowStatement
+			| TryStatement
+			| WhileStatement
+			| DoWhileStatement
+			| ForStatement
+			| ForInStatement
+			| ForOfStatement
+			| ExportDefaultDeclaration
+		],
+		boolean | void
+	>;
 type StatementPathItem =
 	| ImportDeclaration
 	| ExportNamedDeclaration
