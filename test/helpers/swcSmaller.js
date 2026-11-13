@@ -491,14 +491,9 @@ const SWC_SMALLER_BY_REASON = [
 		"swc goes further than webpack on what terser's `destructuring` tests cover",
 		[
 			"terser compress: destructuring/destructuring_with_undefined_as_default_assignment",
-			"terser compress: destructuring/unused_destructuring_decl_1",
-			"terser compress: destructuring/unused_destructuring_decl_5",
 			"terser compress: destructuring/unused_destructuring_function_param",
 			"terser compress: destructuring/unused_destructuring_object_method_param",
 			"terser compress: destructuring/unused_destructuring_class_method_param",
-			"terser compress: destructuring/export_function_containing_destructuring_decl",
-			"terser compress: destructuring/unused_destructuring_declaration_complex_1",
-			"terser compress: destructuring/unused_destructuring_multipass",
 			"terser compress: destructuring/empty_object_destructuring_3",
 			"terser compress: destructuring/empty_object_destructuring_4",
 			"terser compress: destructuring/empty_object_destructuring_misc",
@@ -877,10 +872,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12204/empty-controls/input.js",
 			"swc minifier: fixture/issues/12204/nullish-arguments/input.js",
 			"swc minifier: fixture/issues/12212/safe-unused-rest/input.js",
-			"swc minifier: fixture/issues/12218/leading-argument/input.js",
 			"swc minifier: fixture/issues/5343/input.js",
-			"swc minifier: fixture/issues/8670/input.js",
-			"swc minifier: fixture/issues/9460/partial-used-default/input.js",
 			"swc minifier: fixture/issues/9741_global_objects/input.js",
 			"swc minifier: fixture/projects/jquery/5/input.js"
 		]
