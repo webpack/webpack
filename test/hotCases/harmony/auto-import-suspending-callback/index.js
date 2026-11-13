@@ -1,34 +1,37 @@
 import { value } from "./file";
+import { value as other } from "./other";
 
-it("should auto-import on accept when the callback expression awaits", (done) => {
+it("should auto-import on accept when the callback expression awaits or yields", (done) => {
 	expect(value).toBe(1);
+	expect(other).toBe(1);
+	let pending = 2;
+	const finish = () => {
+		if (--pending === 0) done();
+	};
 	let evaluated = 0;
-	const setup = async () => {
+	const setupAwait = async () => {
 		module.hot.accept(
 			"./file",
 			(await Promise.resolve(evaluated++),
 			() => {
 				expect(value).toBe(2);
 				expect(evaluated).toBe(1);
-				done();
+				finish();
 			})
 		);
 	};
-	setup().then(() => {
-		NEXT(require("../../update")(done));
-	}, done);
-});
-
-it("should auto-import on accept when the callback expression yields", () => {
-	function* setup() {
+	function* setupYield() {
 		module.hot.accept(
-			"./file",
+			"./other",
 			yield () => {
-				expect(value).toBe(2);
+				expect(other).toBe(2);
+				finish();
 			}
 		);
 	}
-	const generator = setup();
-	const { value: callback } = generator.next();
-	generator.next(callback);
+	const generator = setupYield();
+	generator.next(generator.next().value);
+	setupAwait().then(() => {
+		NEXT(require("../../update")(done));
+	}, done);
 });
