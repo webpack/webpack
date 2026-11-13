@@ -4186,14 +4186,14 @@ declare class Compilation {
 		additionalChunkAssets: FakeHook<
 			Pick<
 				AsyncSeriesHook<[Set<Chunk>]>,
-				"name" | "tap" | "tapAsync" | "tapPromise"
+				"name" | "tapAsync" | "tapPromise" | "tap"
 			>
 		>;
 		/**
 		 * @deprecated
 		 */
 		additionalAssets: FakeHook<
-			Pick<AsyncSeriesHook<[]>, "name" | "tap" | "tapAsync" | "tapPromise">
+			Pick<AsyncSeriesHook<[]>, "name" | "tapAsync" | "tapPromise" | "tap">
 		>;
 		/**
 		 * @deprecated
@@ -4201,7 +4201,7 @@ declare class Compilation {
 		optimizeChunkAssets: FakeHook<
 			Pick<
 				AsyncSeriesHook<[Set<Chunk>]>,
-				"name" | "tap" | "tapAsync" | "tapPromise"
+				"name" | "tapAsync" | "tapPromise" | "tap"
 			>
 		>;
 		/**
@@ -4210,7 +4210,7 @@ declare class Compilation {
 		afterOptimizeChunkAssets: FakeHook<
 			Pick<
 				AsyncSeriesHook<[Set<Chunk>]>,
-				"name" | "tap" | "tapAsync" | "tapPromise"
+				"name" | "tapAsync" | "tapPromise" | "tap"
 			>
 		>;
 		/**
@@ -5994,7 +5994,7 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 					[ContextAlternativeRequest[]],
 					ContextAlternativeRequest[]
 				>,
-				"name" | "tap" | "tapAsync" | "tapPromise"
+				"name" | "tapAsync" | "tapPromise" | "tap"
 			>
 		>;
 		alternativeRequests: AsyncSeriesWaterfallHook<
