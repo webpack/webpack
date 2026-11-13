@@ -143,7 +143,6 @@ const BY_DESIGN = [
 			"terser compress: assignment/op_equals_left_local_var",
 			"terser compress: collapse_vars/issue_2858",
 			"terser compress: comparing/keep_comparisons",
-			"terser compress: directives/simple_statement_is_not_a_directive",
 			"terser compress: harmony/object_rest_spread",
 			"terser compress: html_comments/html_comment_after_multiline_comment",
 			"terser compress: issue-281/ref_scope",

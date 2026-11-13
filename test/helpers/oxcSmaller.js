@@ -70,7 +70,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:223",
 			"oxc minifier: peephole/esbuild.rs:224",
 			"oxc minifier: peephole/esbuild.rs:243",
-			"oxc minifier: peephole/esbuild.rs:382",
 			"oxc minifier: peephole/esbuild.rs:425",
 			"oxc minifier: peephole/esbuild.rs:533",
 			"oxc minifier: peephole/esbuild.rs:534",
@@ -171,8 +170,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: drop-unused/delete_assign_1",
 			"terser compress: drop-unused/delete_assign_2",
 			"terser compress: drop-unused/issue_1838",
-			"terser compress: drop-unused/issue_3146_3",
-			"terser compress: drop-unused/issue_3146_4",
 			"terser compress: evaluate/unsafe_constant",
 			"terser compress: export/name_cache_do_not_mangle_export_let_name",
 			"terser compress: issue-1413/issue_1413_top_retain_reference_shorter_than_value_2",
@@ -204,14 +201,11 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/target-es2015/static/chunks/main-04b5934c26266542/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/polyfills-6437a4964f697e5b0b3e/input.js",
-			"swc minifier: fixture/projects/next/archive-2/pages/hmr/.counter-c6a48518c4a56e4d9ce5/input.js",
 			"swc minifier: fixture/projects/underscore/16/input.js",
 			"swc minifier: fixture/projects/underscore/17/input.js",
 			"swc minifier: fixture/projects/underscore/18/input.js",
 			"swc minifier: mangle/2/input.js",
 			"swc exec: terser_drop_unused_delete_assign_1",
-			"swc exec: terser_drop_unused_issue_3146_3",
-			"swc exec: terser_drop_unused_issue_3146_4",
 			"swc exec: terser_drop_unused_delete_assign_2",
 			"swc exec: terser_reduce_vars_inner_var_for_2",
 			"swc exec: terser_collapse_vars_issue_2914_2",
@@ -227,7 +221,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline.rs:604",
 			"oxc minifier: peephole/minimize_conditions.rs:175",
 			"oxc minifier: peephole/minimize_conditions.rs:297",
-			"oxc minifier: peephole/minimize_conditions.rs:410",
 			"oxc minifier: peephole/minimize_conditions.rs:896",
 			"oxc minifier: peephole/minimize_conditions.rs:897",
 			"oxc minifier: peephole/minimize_exit_points.rs:78",
@@ -353,8 +346,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_conditions.rs:1020",
 			"oxc minifier: peephole/minimize_conditions.rs:1224",
 			"oxc minifier: peephole/minimize_conditions.rs:1243",
-			"oxc minifier: peephole/minimize_conditions.rs:1252",
-			"swc minifier: fixture/projects/backbone/4/input.js"
+			"oxc minifier: peephole/minimize_conditions.rs:1252"
 		]
 	],
 	[
@@ -465,7 +457,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/dead_code_elimination.rs:867",
 			"oxc minifier: peephole/dead_code_elimination.rs:908",
 			"oxc minifier: peephole/dead_code_elimination.rs:955",
-			"oxc minifier: peephole/dead_code_elimination.rs:990",
 			"oxc minifier: peephole/dead_code_elimination.rs:1068",
 			"oxc minifier: peephole/dead_code_elimination.rs:560",
 			"oxc minifier: peephole/dead_code_elimination.rs:561"
@@ -512,7 +503,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/2044/full/input.js",
 			"swc minifier: fixture/issues/4386/1/input.js",
 			"swc minifier: fixture/issues/4386/2/input.js",
-			"swc minifier: fixture/issues/react-autosuggest/1/input.js",
 			"swc minifier: fixture/projects/jquery/9/input.js",
 			"swc minifier: fixture/projects/next/extra/if_return/2/input.js",
 			"swc exec: terser_reduce_vars_escaped_prop_3",
@@ -630,7 +620,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc goes further than webpack on what oxc's `peephole/minimize_not_expression.rs` tests cover",
 		[
 			"oxc minifier: peephole/minimize_not_expression.rs:33",
-			"oxc minifier: peephole/minimize_not_expression.rs:48",
 			"oxc minifier: peephole/minimize_not_expression.rs:49",
 			"oxc minifier: peephole/minimize_not_expression.rs:72",
 			"oxc minifier: peephole/minimize_not_expression.rs:74",
@@ -715,8 +704,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline.rs:685",
 			"oxc minifier: peephole/inline.rs:686",
 			"oxc minifier: peephole/inline.rs:693",
-			"oxc minifier: peephole/inline.rs:747",
-			"swc minifier: fixture/projects/next/archive-3/pages/dynamic/no-chunk-e2d9573b8d7df68a6cde/input.js"
+			"oxc minifier: peephole/inline.rs:747"
 		]
 	],
 	[
