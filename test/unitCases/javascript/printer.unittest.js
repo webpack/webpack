@@ -2063,3 +2063,28 @@ describe("one-pass minify, family Y round 9", () => {
 		expect(minifyOnePass("f(a?b?1:c?d?1:2:2:2,a?1:b?c?1:d?1:2:2)", options).code).toBe("f(a&&(b||c&&d)?1:2,a||b&&(c||d)?1:2);");
 	});
 });
+
+describe("one-pass minify, family Z round 9", () => {
+	const options = { compress: {}, mangle: false };
+
+	it("should join the tests of `if`s returning or throwing the same before a last exit with `||`", () => {
+		const source = fixture("javascript", "one-pass-Z6-1");
+		const { code } = minifyOnePass(source, options);
+		// A test `||` would read otherwise keeps parentheses.
+		expect(code).toBe("function label(node){return node.type===\"a\"||node.type===\"b\"&&node.flag||!node.type?node.value.name:\"other\"}function check(node){throw node.bad||node.type==null?Error(\"invalid \"+node.type):TypeError(\"unknown \"+node.type)}function pick(a,b,c){return(a??b)||(b??c)||(a=b)?String(c):String(a)}const nodes=[{type:\"a\",value:{name:\"x\"}},{type:\"b\",flag:!0,value:{name:\"y\"}},{type:\"b\",value:{name:\"z\"}},{value:{name:\"w\"}}];for(let node of nodes)console.log(label(node));for(let node of[{bad:!0,type:\"q\"},{},{type:\"r\"}])try{check(node)}catch(error){console.log(error.message)}console.log(pick(null,0,1),pick(null,null,2),pick(null,null,null));");
+		expect(runProgram(code)).toBe(runProgram(source));
+		// A negated test joins as it is; an assignment setting nothing as its value.
+		expect(minifyOnePass("function f(a,b){if(a)return o.value;if(!b)return o.value;return g()}", options).code).toBe("function f(a,b){return a||!b?o.value:g()}");
+		expect(minifyOnePass("function f(){var x;if(x=g())return o.value;if(c)return o.value;return d()}", options).code).toBe("function f(){return g()||c?o.value:d()}");
+	});
+
+	it("should keep `?:` of `if`s returning the same where another fold or gzip favors it", () => {
+		// A value of four characters or fewer, a boolean, or the last exit giving it too.
+		expect(minifyOnePass("function f(a,b){if(a)return x.y;if(b)return x.y;return g()}", options).code).toBe("function f(a,b){return a?x.y:b?x.y:g()}");
+		expect(minifyOnePass("function f(a,b){if(a)return!0;if(b)return!0;return c()}", options).code).toBe("function f(a,b){return a?!0:b?!0:c()}");
+		expect(minifyOnePass("function f(a,b){if(a)return o.value;if(b)return o.value;return o.value}", options).code).toBe("function f(a,b){return a?o.value:o.value}");
+		// The second test reading the name returned, there or after: `||` or `&&` of it.
+		expect(minifyOnePass("function f(a,value){if(a)return value;if(value)return value;return g()}", options).code).toBe("function f(a,value){return a?value:value||g()}");
+		expect(minifyOnePass("function f(a,other){if(a)return o.value;if(other)return o.value;return other}", options).code).toBe("function f(a,other){return a?o.value:other&&o.value}");
+	});
+});
