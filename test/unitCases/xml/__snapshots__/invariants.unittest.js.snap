@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`XML syntax — invariants builtin-embedded-renderer-what-it-loads-keeps-the-css-parser-out-of-an-html-or parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":5,\\"nameEnd\\":10,\\"valueStart\\":12,\\"valueEnd\\":38}],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"rect\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":40,\\"end\\":47,\\"tagEnd\\":47,\\"nameEnd\\":45,\\"contentEnd\\":47}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":53,\\"tagEnd\\":40,\\"nameEnd\\":4,\\"contentEnd\\":47}]"`;
+
+exports[`XML syntax — invariants builtin-embedded-renderer-what-it-loads-keeps-the-css-parser-out-of-an-html-or parses 2`] = `""`;
+
+exports[`XML syntax — invariants builtin-embedded-renderer-what-it-loads-keeps-the-css-parser-out-of-an-html-or prints {"xml":true,"mode":"minify"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><rect/></svg>"`;
+
+exports[`XML syntax — invariants builtin-embedded-renderer-what-it-loads-keeps-the-css-parser-out-of-an-html-or tokenizes 1`] = `"attr[5,10|12,38]' open[0,40|1,4] open[40,47|41,45]/ close[47,53|49,52] end=53"`;
+
 exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"SourceProcessor","options":{"skip":{"comments":true}}} 1`] = `"Document[0,0] Element(svg)[0,47] Element(style)[5,30] Text[12,22] /Text /Element /Element /Document"`;
 
 exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"SourceProcessor","visit":{"fields":["name"],"at":[{"type":"Element","name":"style","do":"skipChildren"}]}} 1`] = `

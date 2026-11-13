@@ -282,9 +282,7 @@ describe("parseHtml — skip options preserve element structure", () => {
 describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 
 	it("grows the node and attribute columns past their initial capacity", () => {
-		let src = "";
-		for (let i = 0; i < 5000; i++) src += `<i data-n="${i}"></i>`;
-		const nodes = body(src);
+		const nodes = body(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-grows-the-node-and-attribute"));
 		expect(nodes).toHaveLength(5000);
 		expect(nodes[4999].attributes[0].value).toBe("4999");
 	});
@@ -293,9 +291,7 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 		// > 64 Ki nodes and attributes grow the columns past the shrink
 		// threshold; the release after the parse re-shrinks them and the next
 		// parse must work from the re-grown baseline
-		let src = "";
-		for (let i = 0; i < 70000; i++) src += `<i data-n="${i}"></i>`;
-		const nodes = body(src);
+		const nodes = body(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-re-shrinks-the-columns-after"));
 		expect(nodes).toHaveLength(70000);
 		expect(nodes[69999].attributes[0].value).toBe("69999");
 		const small = body(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-re-shrinks-the-columns"));
@@ -306,7 +302,7 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	it("handles a large structurally sparse document", () => {
 		// Exercise both byte-length estimate caps without needing enough nodes or
 		// attributes to fill the speculative columns.
-		const nodes = body(`<!--${"x".repeat(3200000)}--><p>x</p>`);
+		const nodes = body(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-handles-a-large-structurally"));
 		expect(nodes).toHaveLength(1);
 		expect(nodes[0]).toEqual(
 			expect.objectContaining({ tagName: "p", children: [expect.any(Object)] })
@@ -333,10 +329,6 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 describe("SourceProcessor — streamed walk recycling", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 
-	// Every case is sized past the streaming threshold (49152 nodes) to reach
-	// what one pass at EOF cannot: entering an open element, flushing under it,
-	// recycling node ids. It counts nodes, so the repeat counts are per-shape.
-	const BIG = 40000;
 
 
 
@@ -345,7 +337,6 @@ describe("SourceProcessor — streamed walk recycling", () => {
 	it("materializes a streamed implied tag as the walked one does", () => {
 		// The streamed path decides this where the node is known, the walked one on
 		// the first piece emitted, so the two have to agree on the same document.
-		const opening = fixture("html", "source-processor-remove-implied-tags-materializes-an-implied-tag-whose-content");
 		/**
 		 * @param {string} src source
 		 * @returns {string} the minified document
@@ -355,8 +346,8 @@ describe("SourceProcessor — streamed walk recycling", () => {
 				mode: "minify",
 				removeImpliedTags: true
 			}).code;
-		const walked = minify(`${opening}<p>x</p>`);
-		const streamed = minify(`${opening}${fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints").repeat(BIG)}`);
+		const walked = minify(fixture("html", "source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as"));
+		const streamed = minify(fixture("html", "source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as-2"));
 		expect(streamed.slice(0, walked.length)).toBe(walked);
 	});
 
@@ -381,7 +372,7 @@ describe("SourceProcessor — streamed walk offsets", () => {
 				.use(
 					/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
 						[NodeType.Element]: () => {
-							new SourceProcessor().process("<b>nested</b>");
+							new SourceProcessor().process(fixture("html", "source-processor-streamed-walk-offsets-refuses-a-nested-parse-rather-than-taking"));
 						}
 					})
 				)
@@ -538,8 +529,14 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 
 	it("keeps character references literal in a plaintext opened in a table mode", () => {
 		// The PLAINTEXT state outlives the table, cell or caption mode it opened in.
-		for (const opening of ["<table>", "<table><td>", "<table><caption>"]) {
-			const plaintext = find(`${opening}<plaintext>a&amp;b<p>`, "plaintext");
+		for (const name of ["2", "3", "4"]) {
+			const plaintext = find(
+				fixture(
+					"html",
+					`parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references-${name}`
+				),
+				"plaintext"
+			);
 			expect(plaintext.children).toEqual([
 				expect.objectContaining({ type: NodeType.Text, data: "a&amp;b<p>" })
 			]);
@@ -552,9 +549,7 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 
 	it("clears the whole name memo once a document filled every slot", () => {
 		// 512 unknown names, one per memo slot (`z` repeated 1…512 times).
-		let src = "";
-		for (let n = 1; n <= 512; n++) src += `<${"z".repeat(n)}>`;
-		expect(find(src, "z".repeat(512)).tagName).toBe("z".repeat(512));
+		expect(find(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-clears-the-whole-name-memo-3"), "z".repeat(512)).tagName).toBe("z".repeat(512));
 		// the next parse reads every name afresh
 		expect(body(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-clears-the-whole-name-memo")).map((n) => n.tagName)).toEqual(["zz"]);
 		expect(find(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-clears-the-whole-name-memo-2"), "zzz").children[0]).toEqual(
@@ -569,11 +564,11 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 			text: "a&b",
 			map: [0, 1, 6, 7]
 		});
-		expect(decodeEntities("x&lt;&gt;", false, true)).toEqual({
+		expect(decodeEntities(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-maps-decoded-text-back-to-the"), false, true)).toEqual({
 			text: "x<>",
 			map: [0, 1, 5, 9]
 		});
-		expect(decodeEntities("&zz;", true, true)).toEqual({
+		expect(decodeEntities(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-maps-decoded-text-back-to-the-2"), true, true)).toEqual({
 			text: "&zz;",
 			map: undefined
 		});
@@ -593,9 +588,9 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 		let elements = 0;
 		new SourceProcessor()
 			.use({ [NodeType.Element]: () => elements++ })
-			.process("<i a b></i>".repeat(33000));
+			.process(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-re-sizes-the-attribute-columns-2"));
 		expect(elements).toBe(33003);
-		const nodes = body(`<b class="c">${"x".repeat(100)}</b>`);
+		const nodes = body(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-re-sizes-the-attribute-columns"));
 		expect(nodes[0].attributes[0].value).toBe("c");
 	});
 });
