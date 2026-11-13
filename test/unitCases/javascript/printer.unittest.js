@@ -2175,6 +2175,8 @@ describe("printing again what the one pass printed", () => {
 			["function f(e,t){t&&(e?console.error(\"a\",e):console.error(\"b\",e))}", "function f(e,t){t&&console.error(e?\"a\":\"b\",e)}"],
 			["function f(i,a){return 3*(0!==i?Math.abs(i):Math.abs(a))}", "function f(i,a){return 3*Math.abs(0!==i?i:a)}"],
 			["function f(e,t,g){x=new (e?g(\"aaaa\",e,t,1):g(\"bbbb\",e,t,1))}", "function f(e,t,g){x=new(e?g(\"aaaa\",e,t,1):g(\"bbbb\",e,t,1))}"],
+			// A merged assignment keeps them: `t&&x=a` sets an rvalue.
+			["function f(t,s){t&&(s?this.v=g(1,t,s,\"aa\"):this.v=g(2,t,s,\"aa\"))}", "function f(t,s){t&&(s?this.v=g(1,t,s,\"aa\"):this.v=g(2,t,s,\"aa\"))}"],
 			["function f(e,t,g){x=(e?g(\"aaaa\",e,t,1):g(\"bbbb\",e,t,1))`q`}", "function f(e,t,g){x=(e?g(\"aaaa\",e,t,1):g(\"bbbb\",e,t,1))`q`}"],
 			["const flag=typeof Promise===\"function\";export const picked=await(flag?Promise.resolve(4):Promise.resolve(5));", "let flag=\"function\"==typeof Promise;export const picked=await(flag?Promise.resolve(4):Promise.resolve(5));", "module"],
 			// A call printing as the argument its parameter's one read evaluates parenthesizes it as that argument.
