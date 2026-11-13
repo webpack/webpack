@@ -3042,7 +3042,7 @@ at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] delim[9,10] i
 `;
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-joins-a-streamed-layer-block-to-the-one-gathered-behind-it parses 1`] = `
-"length 1203531, sha256 c0627c4c7b0bb0c5
+"length 1604655, sha256 6f410edc3a477144
 [[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"print\\"]],[[\\"at-keyword\\",\\"layer\\"],\\" \\",[\\"ident\\",\\"x\\"],[\\"{}\\",\\".\\",[\\"ident\\",\\"f0\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]],\\".\\",[\\"ident\\",\\"f1\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\"
 …
 teal\\"]]],\\".\\",[\\"ident\\",\\"mid\\"],[\\"{}\\",[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]],[\\"at-keyword\\",\\"layer\\"],\\" \\",[\\"ident\\",\\"a\\"],[\\"{}\\",\\".\\",[\\"ident\\",\\"q\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"teal\\"]]]]]]"
@@ -3051,17 +3051,17 @@ teal\\"]]],\\".\\",[\\"ident\\",\\"mid\\"],[\\"{}\\",[\\"ident\\",\\"margin\\"],
 exports[`CSS syntax — invariants css-syntax-block-streaming-joins-a-streamed-layer-block-to-the-one-gathered-behind-it parses 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-joins-a-streamed-layer-block-to-the-one-gathered-behind-it prints {"mode":"minify"} 1`] = `
-"length 122809, sha256 f8ef4cff7a6948d6
+"length 163727, sha256 b72282b8e476d8f6
 @media print{@layer x{.f0,.f1,.f10,.f100,.f1000,.f1001,.f1002,.f1003,.f1004,.f1005,.f1006,.f1007,.f1008,.f1009,.f101,.f1010,.f1011,.f1012,.f1013,.f1014,.f1015,.f1016,.f1017,.f1018,.f1019,.f102,.f1020,
 …
 8,.f979,.f98,.f980,.f981,.f982,.f983,.f984,.f985,.f986,.f987,.f988,.f989,.f99,.f990,.f991,.f992,.f993,.f994,.f995,.f996,.f997,.f998,.f999{color:red}@layer a{.q,[x=\\"a,.q,b\\"]{color:teal}}.mid{margin:0}}"
 `;
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-joins-a-streamed-layer-block-to-the-one-gathered-behind-it tokenizes 1`] = `
-"length 3041237, sha256 3b82531c2adf8228
+"length 4085871, sha256 da4deeb3c8e5ba9a
 at-keyword[0,6] whitespace[6,7] ident[7,12] left-curly-bracket[12,13] at-keyword[13,19] whitespace[19,20] ident[20,21] left-curly-bracket[21,22] delim[22,23] ident[23,25] left-curly-bracket[25,26] ide
 …
-racket[302816,302817] ident[302817,302822] colon[302822,302823] ident[302823,302827] right-curly-bracket[302827,302828] right-curly-bracket[302828,302829] right-curly-bracket[302829,302830] end=302830"
+racket[403740,403741] ident[403741,403746] colon[403746,403747] ident[403747,403751] right-curly-bracket[403751,403752] right-curly-bracket[403752,403753] right-curly-bracket[403753,403754] end=403754"
 `;
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-joins-the-pair-a-gathered-layer-block-leaves-side-by parses 1`] = `
