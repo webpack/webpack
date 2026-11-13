@@ -1,4 +1,4 @@
 "use strict";
 
-if (globalThis.conditionalReexportFlag) module.exports = require("./a?if");
+if (global.conditionalReexportFlag) module.exports = require("./a?if");
 else module.exports = require("./b?if");

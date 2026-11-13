@@ -32418,6 +32418,11 @@ declare interface ScopeInfo {
 	inShorthand: string | boolean;
 	inTaggedTemplateTag: boolean;
 	inTry: boolean;
+
+	/**
+	 * true inside a loop, or a branch whose condition is unknown at build time
+	 */
+	inBranch: boolean;
 	isStrict: boolean;
 	isAsmJs: boolean;
 	terminated?: 1 | 2;

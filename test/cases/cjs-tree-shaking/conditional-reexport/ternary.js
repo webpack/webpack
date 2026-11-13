@@ -1,5 +1,5 @@
 "use strict";
 
-globalThis.conditionalReexportFlag
+global.conditionalReexportFlag
 	? (module.exports = require("./a?ternary"))
 	: (module.exports = require("./b?ternary"));

@@ -1,16 +1,20 @@
 import { name as ifElse } from "./if-else";
 import { name as ternary } from "./ternary";
 import { name as logical } from "./logical";
+import { name as loop } from "./loop";
 import { value } from "./member";
 import { name as unconditional } from "./unconditional";
 import { name as property, other } from "./property";
 import { name as neverCalled } from "./never-called";
+import { name as constant } from "./constant";
+import { name as constantTernary } from "./constant-ternary";
 
 it("should use the branch taken for a conditional `module.exports = require()`", () => {
-	expect(globalThis.conditionalReexportFlag).toBe(undefined);
+	expect(global.conditionalReexportFlag).toBe(undefined);
 	expect(ifElse).toBe("b");
 	expect(ternary).toBe("b");
 	expect(logical).toBe("b");
+	expect(loop).toBe("b");
 });
 
 it("should use the branch taken for a conditional `exports.x = require()`", () => {
@@ -25,4 +29,9 @@ it("should not re-export from an assignment in a function that never runs", () =
 
 it("should still re-export an unconditional `module.exports = require()`", () => {
 	expect(unconditional).toBe("b");
+});
+
+it("should re-export the branch of a condition known at build time", () => {
+	expect(constant).toBe("b");
+	expect(constantTernary).toBe("b");
 });
