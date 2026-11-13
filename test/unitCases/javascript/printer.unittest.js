@@ -1669,6 +1669,18 @@ describe("one-pass minify, round 6 review", () => {
 		);
 	});
 
+	it("should parenthesize an arrow's returned value that a fold opens with an object", () => {
+		const source =
+			"g(()=>{return[{value:1}][0].missing},()=>{return[{value:1}][0]});";
+		const { code } = minifyOnePass(source, options);
+		expect(code).toBe("g(()=>({value:1}.missing),()=>({value:1}));");
+		const program =
+			"console.log((()=>{return[{value:1}][0]})().value,(()=>{return[{value:1}][0].missing})());";
+		expect(runProgram(minifyOnePass(program, options).code)).toBe(
+			runProgram(program)
+		);
+	});
+
 	it("should treat a pattern's defaults as reaching the body's functions", () => {
 		const source =
 			"function run(o,c){var{cb=read}=o;c(cb);var v=1;function read(){return v}return read()}console.log(run({},function(f){console.log(f())}));";
