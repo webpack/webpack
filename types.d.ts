@@ -7603,7 +7603,7 @@ declare interface CssPrintOptions {
 	environment?: CssEnvironment;
 
 	/**
-	 * renders source this stylesheet embeds: the payload of a `url()` `data:` URL whose media type names a language webpack knows (SVG, CSS, HTML, JSON, JavaScript), a CSS payload offered with `as: "embedded-stylesheet"`. Absent, a data URL is emitted exactly as written
+	 * renders source this stylesheet embeds: the payload of a `url()` `data:` URL whose media type names a language webpack knows (SVG, CSS, HTML, JSON, JavaScript). Absent, a data URL is emitted exactly as written
 	 */
 	renderEmbeddedSource?: (
 		source: string,
@@ -7760,7 +7760,7 @@ declare interface CssProcessOptions {
 	rewriteCustomProperties?: boolean;
 
 	/**
-	 * renders source this stylesheet embeds: the payload of a `url()` `data:` URL whose media type names a language webpack knows (SVG, CSS, HTML, JSON, JavaScript), a CSS payload offered with `as: "embedded-stylesheet"`. Absent, a data URL is emitted exactly as written
+	 * renders source this stylesheet embeds: the payload of a `url()` `data:` URL whose media type names a language webpack knows (SVG, CSS, HTML, JSON, JavaScript). Absent, a data URL is emitted exactly as written
 	 */
 	renderEmbeddedSource?: (
 		source: string,
@@ -14005,7 +14005,7 @@ declare interface HtmlProcessOptions {
 	deferEmbeddedSource?: DeferredEmbeddedSource[];
 
 	/**
-	 * renders each nested body this document embeds — an inline `<style>` (with `as: "embedded-stylesheet"` saying it is read in this document's encoding rather than as a file of its own, so it declares no `@charset`; a `data:` URL's stylesheet is offered the same way), every `style=""` (as the block's contents it is, SVG's and MathML's included), a `<script>` holding JSON or JavaScript (with `as` naming which production of it the body is — `"module"` for a `<script type=module>`, `"script"` for a classic one), every event handler attribute, with `as: "event-handler"` saying it is a function body rather than a script — the production a `return` at its top level is in, which a renderer whose engine takes only whole scripts wraps before it reads — an `<svg>` subtree, with `as: "foreign-element"` saying it is an element of this document rather than a standalone `.svg`, and the document an `<iframe srcdoc>` holds (decoded, and written back escaped). The only way any of them is minified: webpack minifies nothing here itself, and `builtinEmbeddedRenderer` is its own CSS and JSON minifiers for a caller to pass; returning anything but text leaves a body as written
+	 * renders each nested body this document embeds — an inline `<style>` (with `as: "embedded-stylesheet"` saying it is read in this document's encoding rather than as a file of its own, so it declares no `@charset`; a `data:` URL's stylesheet is a file of its own, offered with no `as`), every `style=""` (as the block's contents it is, SVG's and MathML's included), a `<script>` holding JSON or JavaScript (with `as` naming which production of it the body is — `"module"` for a `<script type=module>`, `"script"` for a classic one), every event handler attribute, with `as: "event-handler"` saying it is a function body rather than a script — the production a `return` at its top level is in, which a renderer whose engine takes only whole scripts wraps before it reads — an `<svg>` subtree, with `as: "foreign-element"` saying it is an element of this document rather than a standalone `.svg`, and the document an `<iframe srcdoc>` holds (decoded, and written back escaped). The only way any of them is minified: webpack minifies nothing here itself, and `builtinEmbeddedRenderer` is its own CSS and JSON minifiers for a caller to pass; returning anything but text leaves a body as written
 	 */
 	renderEmbeddedSource?: (
 		source: string,
@@ -40491,12 +40491,7 @@ declare namespace exports {
 			export let parseDataURI: (uri: string) => null | ParsedDataURI;
 			export let readEmbeddedDataURI: (
 				uri: string
-			) => null | {
-				parsed: ParsedDataURI;
-				type: string;
-				as?: string;
-				payload: string;
-			};
+			) => null | { parsed: ParsedDataURI; type: string; payload: string };
 		}
 		export namespace extractComments {
 			export let extractComments: (

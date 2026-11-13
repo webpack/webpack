@@ -721,7 +721,8 @@ describe("SourceProcessor — reusing work across a print", () => {
 			await new SourceProcessor().processAsync(xml ? svg : html, options);
 		}
 
-		const sheets = ["embedded-stylesheet", "block-contents", "embedded-stylesheet"];
+		// A `data:text/css` URL is a stylesheet of its own, so it carries no `as`.
+		const sheets = ["embedded-stylesheet", "block-contents", undefined];
 		expect(offered).toEqual([
 			...sheets,
 			...sheets,

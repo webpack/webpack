@@ -1169,6 +1169,20 @@ describe("cssMinify export", () => {
 		// A stylesheet asset declares `@charset` whatever its name ends in.
 		expect((await cssMinify({ "a.css": css })).code).toBe(declared);
 		expect((await cssMinify({ "a.style": css })).code).toBe(declared);
+		// A `data:text/css` URL is a stylesheet of its own, offered as one.
+		/** @type {(string | undefined)[]} */
+		const offered = [];
+		const sheet = fixture(
+			"css",
+			"css-minify-export-keeps-escapes-and-writes-no-charset-for-css-another-document-2"
+		);
+		await cssMinify({ "a.css": sheet }, undefined, {
+			renderEmbeddedSource: (source, info) => {
+				offered.push(/** @type {{ as?: string }} */ (info).as);
+				return undefined;
+			}
+		});
+		expect(offered).toEqual([undefined]);
 		// A `<style>` body arrives under the host's name, whatever that name is.
 		for (const name of ["index.html", "a.css"]) {
 			expect(
