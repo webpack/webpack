@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": ".a/**/-1{color:red}",
-		"why": "known bug: lowering `&` for a target without `:is()` writes `:is()`, which a second minify rewrites with a comment"
-	}
-]

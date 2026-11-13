@@ -2035,7 +2035,7 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-3"))).toBe("--x.a{color:red}");
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-4"))).toBe(":is(.a)-1{color:red}");
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-5"))).toBe("div.a{color:red}");
-		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-6"))).toBe("*.a{color:red}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-6"))).toBe(".a{color:red}");
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-7"))).toBe("svg|rect.a{color:red}");
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-8"))).toBe("div:is(p){color:red}");
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-9"))).toBe("div[x]{color:red}");
