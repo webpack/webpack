@@ -22,5 +22,5 @@ export function keys(o) {
 }
 export function plain(o) {
 	const NAME = "_bar";
-	return [o[NAME], o[NAME], { [o.x]: NAME, k: NAME }, NAME.big];
+	return [o[NAME], o[NAME], { [o.x]: NAME, k: NAME }, NAME.big, NAME[o.i]];
 }
