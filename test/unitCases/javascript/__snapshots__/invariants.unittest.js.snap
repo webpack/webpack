@@ -14494,7 +14494,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-17 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-17 prints {"mode":"minify","compress":{},"mangle":true} 1`] = `"var log=[];function b(){log.push(\\"b\\")}function c(){log.push(\\"c\\")}function g(n){(n)||b()}g(0),g(1),g(null),console.log(log.join());"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-17 prints {"mode":"minify","compress":{},"mangle":true} 1`] = `"var log=[];function b(){log.push(\\"b\\")}function c(){log.push(\\"c\\")}function g(n){n||b()}g(0),g(1),g(null),console.log(log.join());"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-17 prints {"mode":"minify"} 1`] = `"var log=[];function b(){log.push(\\"b\\")}function c(){log.push(\\"c\\")}function g(a){(function(){if(a??0)return;b()})()}g(0);g(1);g(null);console.log(log.join());"`;
 
@@ -14506,7 +14506,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-18 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-18 prints {"mode":"minify","compress":{},"mangle":true} 1`] = `"var log=[];function b(){log.push(\\"b\\")}function c(){log.push(\\"c\\")}function g(n){n||(b())}g(0),g(1),g(null),console.log(log.join());"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-18 prints {"mode":"minify","compress":{},"mangle":true} 1`] = `"var log=[];function b(){log.push(\\"b\\")}function c(){log.push(\\"c\\")}function g(n){n||b()}g(0),g(1),g(null),console.log(log.join());"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-18 prints {"mode":"minify"} 1`] = `"var log=[];function b(){log.push(\\"b\\")}function c(){log.push(\\"c\\")}function g(a){(function(){if(a)return;0,b()})()}g(0);g(1);g(null);console.log(log.join());"`;
 
