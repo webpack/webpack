@@ -8848,7 +8848,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-589 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-589 prints {"mode":"minify","compress":{"pure_funcs":["debug"]},"mangle":{"toplevel":false}} 1`] = `"debug(g()),g();"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-589 prints {"mode":"minify","compress":{"pure_funcs":["debug"]},"mangle":{"toplevel":false}} 1`] = `"g(),g();"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-589 prints {"mode":"minify"} 1`] = `"debug(g());f(g());"`;
 
