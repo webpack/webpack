@@ -50367,6 +50367,26 @@ exports[`JavaScript syntax — invariants webpack-parser-owned-operator-scanner-
 
 exports[`JavaScript syntax — invariants webpack-parser-owned-operator-scanner-should-keep-single-char-tails-for-direct tokenizes 1`] = `"=[0,1] .[2,3] eof[3,3]"`;
 
+exports[`JavaScript syntax — invariants webpack-parser-owned-operator-scanner-should-keep-where-a-module-reads-html-open-as-operators parses 1`] = `"Program[0,69](body=[VariableDeclaration[0,10](declarations=[VariableDeclarator[4,9](id=Identifier[4,5](name=\\"b\\") init=Literal[8,9](value=2 raw=\\"2\\"))] kind=\\"let\\"),ExportNamedDeclaration[11,50](declaration=VariableDeclaration[18,50](declarations=[VariableDeclarator[24,35](id=Identifier[24,25](name=\\"x\\") init=BinaryExpression[28,35](left=Literal[28,29](value=1 raw=\\"1\\") operator=\\"<\\" right=UnaryExpression[31,35](operator=\\"!\\" prefix=true argument=UpdateExpression[32,35](operator=\\"--\\" prefix=true argument=Identifier[34,35](name=\\"b\\"))))),VariableDeclarator[37,49](id=Identifier[37,38](name=\\"y\\") init=ArrayExpression[41,49](elements=[BinaryExpression[42,48](left=Literal[42,43](value=1 raw=\\"1\\") operator=\\"<\\" right=UnaryExpression[44,48](operator=\\"!\\" prefix=true argument=UpdateExpression[45,48](operator=\\"--\\" prefix=true argument=Identifier[47,48](name=\\"b\\"))))]))] kind=\\"const\\") specifiers=[] source=null attributes=[]),VariableDeclaration[51,68](declarations=[VariableDeclarator[57,67](id=Identifier[57,58](name=\\"s\\") init=Literal[61,67](value=\\"<!--\\" raw=\\"\\\\\\"<!--\\\\\\"\\"))] kind=\\"const\\")] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-owned-operator-scanner-should-keep-where-a-module-reads-html-open-as-operators parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants webpack-parser-owned-operator-scanner-should-keep-where-a-module-reads-html-open-as-operators parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (2:0)"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-owned-operator-scanner-should-keep-where-a-module-reads-html-open-as-operators prints {"mode":"minify"} 1`] = `"let b=2;export const x=1<! --b,y=[1<! --b];const s=\\"\\\\x3c!--\\";"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-owned-operator-scanner-should-keep-where-a-module-reads-html-open-as-operators tokenizes 1`] = `"name[0,3] name[4,5] =[6,7] num[8,9] ;[9,10] export[11,17] const[18,23] name[24,25] =[26,27] num[28,29] </>/<=/>=[30,31] !/~[31,32] ++/--[32,34] name[34,35] ,[35,36] name[37,38] =[39,40] [[41,42] num[42,43] </>/<=/>=[43,44] !/~[44,45] ++/--[45,47] name[47,48] ][48,49] ;[49,50] const[51,56] name[57,58] =[59,60] string[61,67]=\\"<!--\\" ;[67,68] eof[69,69]"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-owned-operator-scanner-should-keep-where-a-module-reads-html-open-as-operators-2 parses 1`] = `"throws: 'return' outside of function (2:0)"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-owned-operator-scanner-should-keep-where-a-module-reads-html-open-as-operators-2 parses 2`] = `"error[23,29]:illegal-return"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-owned-operator-scanner-should-keep-where-a-module-reads-html-open-as-operators-2 parses 3`] = `"Program[0,31](body=[VariableDeclaration[0,16](declarations=[VariableDeclarator[4,9](id=Identifier[4,5](name=\\"b\\") init=Literal[8,9](value=2 raw=\\"2\\")),VariableDeclarator[11,16](id=Identifier[11,12](name=\\"x\\") init=Literal[15,16](value=1 raw=\\"1\\"))] kind=\\"var\\"),ReturnStatement[23,30](argument=null)] sourceType=\\"script\\")"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-owned-operator-scanner-should-keep-where-a-module-reads-html-open-as-operators-2 prints {"mode":"minify"} 1`] = `"throws: 'return' outside of function (2:0)"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-owned-operator-scanner-should-keep-where-a-module-reads-html-open-as-operators-2 tokenizes 1`] = `"var[0,3] name[4,5] =[6,7] num[8,9] ,[9,10] name[11,12] =[13,14] num[15,16] </>/<=/>=[17,18] !/~[18,19] ++/--[19,21] name[21,22] return[23,29] ;[29,30] eof[31,31]"`;
+
 exports[`JavaScript syntax — invariants webpack-parser-owned-operator-scanner-should-read-a-lone-dot-after-a-dot-as-a parses 1`] = `"throws: Unexpected token (1:2)"`;
 
 exports[`JavaScript syntax — invariants webpack-parser-owned-operator-scanner-should-read-a-lone-dot-after-a-dot-as-a parses 2`] = `"error[2,3]:unexpected-token"`;

@@ -490,6 +490,25 @@ describe("WebpackParser", () => {
 			expect(close.comments.map((c) => c.value)).toEqual([" rest"]);
 			expect(op(fixture("javascript", "webpack-parser-owned-operator-scanner-should-read-the-inlined-html-comment-forms-4"))).toBe(">");
 		});
+
+		it("should keep where a module reads `<!--` as operators", () => {
+			const source = fixture("javascript", "webpack-parser-owned-operator-scanner-should-keep-where-a-module-reads-html-open-as-operators");
+			for (const type of /** @type {("module" | "auto")[]} */ (["module", "auto"])) {
+				const { tree } = JavascriptParser._parseTree(source, type, false);
+				expect(tree.htmlOpensAsOperators()).toEqual([30, 43]);
+				tree.release();
+			}
+			expect(() => Parser.parse(source, { ecmaVersion: "latest", sourceType: "module" })).not.toThrow();
+			// a script, as the fallback of `auto` reads it, takes a comment there
+			const fallback = JavascriptParser._parseTree(
+				fixture("javascript", "webpack-parser-owned-operator-scanner-should-keep-where-a-module-reads-html-open-as-operators-2"),
+				"auto",
+				false
+			);
+			expect(fallback.tree.htmlOpensAsOperators()).toEqual([]);
+			expect(fallback.comments.map((comment) => comment.value)).toEqual(["b"]);
+			fallback.tree.release();
+		});
 	});
 
 	describe("auto source type module->script fallback", () => {
