@@ -25,11 +25,11 @@ const {
 
 describe("CssSyntax — parser entry points", () => {
 	it("takes the start offset and the options as optional", () => {
-		expect(parseACommaSeparatedListOfComponentValues("a, b")).toHaveLength(2);
-		expect(parseAStylesheetsContents("a{}")).toHaveLength(1);
-		expect(parseABlocksContents("a:b").decls).toHaveLength(1);
-		expect(parseARule("a{}")).toBeDefined();
-		expect(parseAComponentValue("a")).toBeDefined();
+		expect(parseACommaSeparatedListOfComponentValues(fixture("css", "css-syntax-parser-entry-points-takes-the-start-offset-and-the-options-as"))).toHaveLength(2);
+		expect(parseAStylesheetsContents(fixture("css", "source-processor-merging-adjacent-style-drops-a-run-s-first-element-only-where-4"))).toHaveLength(1);
+		expect(parseABlocksContents(fixture("css", "css-syntax-parser-entry-points-takes-the-start-offset-and-the-options-as-2")).decls).toHaveLength(1);
+		expect(parseARule(fixture("css", "source-processor-merging-adjacent-style-drops-a-run-s-first-element-only-where-4"))).toBeDefined();
+		expect(parseAComponentValue(fixture("css", "css-syntax-parse-error-callback-reports-a"))).toBeDefined();
 	});
 
 	it("accepts a pre-built TokenStream as input", () => {
@@ -229,11 +229,7 @@ describe("CssSyntax — SourceProcessor", () => {
 
 		it("prints a rule large enough to stream as written, and what follows it too", () => {
 			// Past the streaming threshold the block is written out as it is read.
-			let body = "";
-			for (let i = 0; i < 1800; i++) {
-				body += `.c${i}>d${i}:hover{color:red;margin:${i + 1}px}`;
-			}
-			const css = `a{${body}}b{color:red}`;
+			const css = fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-rule-large-enough-to");
 			const plain = print(css, {});
 			for (const event of ["enter", "exit"]) {
 				expect(
@@ -266,7 +262,7 @@ describe("CssSyntax — SourceProcessor", () => {
 		// one top-level rule with > 64 Ki component-value nodes grows the SoA
 		// buffers past the shrink threshold; the next parse must work after the
 		// post-parse release re-shrinks them
-		const big = `a{b:${"x ".repeat(70000)}}`;
+		const big = fixture("css", "css-syntax-source-processor-re-shrinks-the-so-a-buffers-after-a-pathologically-2");
 		let idents = 0;
 		new SourceProcessor()
 			.use({ [NodeType.Ident]: () => idents++ })
@@ -325,6 +321,7 @@ describe("CssSyntax — the facade", () => {
 
 describe("CssSyntax — nesting and error recovery", () => {
 	it("fails on a nesting deeper than the stack as a parse error", () => {
+		// Inline: a parse of it throws, which the invariants runner cannot hold.
 		const deep = `a{b:${"(".repeat(100000)}}`;
 		expect(() => new SourceProcessor().process(deep)).toThrow(
 			/^Not enough stack space to parse input \(1:\d+\)$/
@@ -533,11 +530,11 @@ describe("CssSyntax — SourceProcessor without visitors", () => {
 describe("CssSyntax — token value decoding", () => {
 	it("scans escaped at-signs in linear time", () => {
 		/**
-		 * @param {number} length number of escaped at-signs
+		 * @param {string} name the fixture holding the escaped at-signs
 		 * @returns {number} character reads while processing them
 		 */
-		const reads = (length) => {
-			const src = `.a{color:red}${"\\@".repeat(length)}`;
+		const reads = (name) => {
+			const src = fixture("css", name);
 			const original = String.prototype.charCodeAt;
 			let count = 0;
 			/**
@@ -559,7 +556,8 @@ describe("CssSyntax — token value decoding", () => {
 			return count;
 		};
 		// Linear work reads about four times as much for four times the input.
-		expect(reads(2000) / reads(500)).toBeLessThan(6);
+		const name = "css-syntax-token-value-decoding-scans-escaped-at-signs-in-linear-time";
+		expect(reads(`${name}-2`) / reads(name)).toBeLessThan(6);
 	});
 });
 
@@ -639,7 +637,6 @@ describe("CssSyntax — a skip set keeps the tree a full parse builds", () => {
 describe("CssSyntax — block streaming reads the same tree", () => {
 	// Comfortably past the node count a block streams its children at.
 	const MANY = 3000;
-	const DECLS = "c:1 2 3 4;".repeat(MANY);
 
 	/**
 	 * Each rule entered and each declaration's name, in walk order.
@@ -668,21 +665,21 @@ describe("CssSyntax — block streaming reads the same tree", () => {
 	};
 
 	it("streams a block grown on declarations after a child rule", () => {
-		const log = walk(`a{b{}${DECLS}d:1}`);
+		const log = walk(fixture("css", "css-syntax-block-streaming-reads-the-same-tree-streams-a-block-grown-on"));
 		expect(log.slice(0, 3)).toEqual(["rule:a", "rule:b", "c"]);
 		expect(log).toHaveLength(MANY + 3);
 		expect(log[log.length - 1]).toBe("d");
 	});
 
 	it("streams the rest of a block a descendant's growth activated", () => {
-		const log = walk(`a{b{${DECLS}}e{}d:1}`);
+		const log = walk(fixture("css", "css-syntax-block-streaming-reads-the-same-tree-streams-the-rest-of-a-block-a"));
 		expect(log.slice(0, 3)).toEqual(["rule:a", "rule:b", "c"]);
 		expect(log.slice(-2)).toEqual(["rule:e", "d"]);
 		expect(log).toHaveLength(MANY + 4);
 	});
 
 	it("streams a block grown on child rules", () => {
-		const log = walk(`a{${"b c{}".repeat(MANY * 2)}d:1}`);
+		const log = walk(fixture("css", "css-syntax-block-streaming-reads-the-same-tree-streams-a-block-grown-on-child"));
 		expect(log).toHaveLength(MANY * 2 + 2);
 		expect(log.slice(0, 2)).toEqual(["rule:a", "rule:b"]);
 		expect(log[log.length - 1]).toBe("d");
@@ -699,11 +696,9 @@ describe("CssSyntax — what a minifying print reads off the parse", () => {
 		/** @type {{ code: string }} */ (
 			new SourceProcessor().process(css, { mode: "minify", ...options })
 		).code;
-	// Comfortably past the node count a block streams its children at.
-	const MANY = 3000;
 
 	it("collects a block of declarations alone for the longhand merge", () => {
-		const css = `a{${"margin-top:1px;margin-right:2px;margin-bottom:3px;margin-left:4px;".repeat(MANY)}}`;
+		const css = fixture("css", "css-syntax-what-a-minifying-print-reads-off-the-parse-collects-a-block-of");
 		expect(minify(css)).toBe("a{margin:1px 2px 3px 4px}");
 	});
 });

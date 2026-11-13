@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "b,c{x:1}}",
+		"why": "known bug: a streamed block's gather leaves two rules of one block side by side, which a second minify joins"
+	}
+]

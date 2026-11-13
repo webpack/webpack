@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": ".a{color:red}",
+		"why": "known bug: lowering `&*` for a legacy target keeps the `*` a second minify drops"
+	}
+]

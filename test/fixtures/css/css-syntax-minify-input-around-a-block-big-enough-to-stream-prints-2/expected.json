@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "@media print { @LAYER X { A { COLOR: C\\O",
+		"why": "known bug: beautify of a block left open before a streamed block closes it only once it reads its own output"
+	},
+	{
+		"relation": "respelling escape",
+		"contains": "b\\:c\n      -> \\62 \\:c",
+		"why": "a declaration, selector or block that is invalid or left open, which the printer writes back as authored, escape included"
+	}
+]

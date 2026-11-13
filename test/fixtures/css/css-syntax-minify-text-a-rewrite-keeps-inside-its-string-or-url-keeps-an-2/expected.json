@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "--webpack-light:initial;--webpack-dark:;",
+		"why": "known bug: lowering `light-dark()` for a legacy target writes its custom properties after the declarations, and a second minify moves them in front"
+	}
+]
