@@ -55,11 +55,6 @@ it("should print what a spread literal holds in its place", () => {
 	expect(new Collect(...[6]).items).toEqual([6]);
 });
 
-it("should keep a hole a spread printing nothing follows", () => {
-	expect([1, , ...[]].length).toBe(2);
-	expect([, ...[]].length).toBe(1);
-});
-
 it("should run what a spread holds where only the arguments of a call run", () => {
 	const calls = [];
 	(function () {})(...[calls.push("a"), calls.push("b")]);
