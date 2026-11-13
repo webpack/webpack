@@ -1571,6 +1571,14 @@ describe("one-pass minify, family K round 6", () => {
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
+
+	it("should keep a script's global a null check assigns, which may be an accessor", () => {
+		const source = "var name;g((name=a.x)==null?void 0:name.y);";
+		expect(minifyOnePass(source, options).code).toBe(source);
+		expect(minifyOnePass(source, { ...options, module: true }).code).toBe(
+			"var name;g((name=a.x)?.y);"
+		);
+	});
 });
 
 describe("one-pass minify, family L round 6", () => {
