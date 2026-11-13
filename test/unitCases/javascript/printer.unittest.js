@@ -1773,3 +1773,21 @@ describe("one-pass minify, family R round 7", () => {
 		).toBe("function f(t,e){return t===0?!1:e.length}function g(t,e){return t>1?e.length:!0}");
 	});
 });
+
+describe("one-pass minify, family P round 7", () => {
+	it("should join a `var` to the one before it where a later declarator prints apart", () => {
+		const source = fixture("javascript", "one-pass-p4-1");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// The statement after it is no `var` to join; one opening with a value printed apart, or a `let`, stays apart.
+		expect(code).toBe("function make(name){return function(value){return console.log(name,value),value}}function joins(require){var first=require(1),second=first(2);first(3);var third=first(4);return[second,second,third,third]}console.log(joins(make(\"joins\")));function opensApart(require){var first=require(1);first(2);var second=first(3);return[second,second]}console.log(opensApart(make(\"opensApart\")));function opensNew(require){var first=require(1);new first(2);var[second]=[first(3)];return[second,second]}console.log(opensNew(make(\"opensNew\")));function lets(require){let first=require(1),second=first(2);first(3);return[second,second]}console.log(lets(make(\"lets\")));");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should print a call in place passed `this` as its statements", () => {
+		const source = fixture("javascript", "one-pass-p4-2");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// Only a function declaration's or a program's `this`, which no `super()` sets; a parameter `delete` takes stays.
+		expect(code).toBe("function Item(name){if(!(this instanceof Item))throw TypeError(\"Cannot call a class as a function\");this.name=name}console.log(new Item(\"item\").name);try{Item(\"called\")}catch(error){console.log(error.message)}function Short(value){console.log({self:typeof this}),this.value=value}console.log(new Short(1).value);function Deletes(){!function(self){console.log(delete self)}(this)}new Deletes;var Expressed=function(){!function(self){self.kept=1}(this)};console.log((new Expressed).kept);class Base{}class Derived extends Base{constructor(){super();var arrow=()=>{!function(self){self.set=1}(this)};arrow(),arrow()}}console.log((new Derived).set),console.log(typeof this);");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+});
