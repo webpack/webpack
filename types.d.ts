@@ -9587,6 +9587,11 @@ declare interface EffectBasic {
 	 */
 	value?:
 		string | boolean | ResolveOptionsWebpackOptions | { [index: string]: any };
+
+	/**
+	 * whether the rule matched a dependency condition
+	 */
+	hasDependency?: boolean;
 }
 
 /**
