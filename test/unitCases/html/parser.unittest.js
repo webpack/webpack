@@ -364,20 +364,193 @@ describe("SourceProcessor — streamed walk offsets", () => {
 
 
 
-	it("refuses a nested parse rather than taking the walk's state over", () => {
-		// One parse at a time: the walk's state is module-scoped, so a visitor that
-		// started another would take this one's over and release its columns.
-		expect(() =>
+	it("runs a walk a visitor starts on a tree of its own, and the outer walk goes on", () => {
+		/** @type {string[]} */
+		const outer = [];
+		/** @type {string[]} */
+		const inner = [];
+		/** @type {string[]} */
+		const innermost = [];
+		/**
+		 * @param {string[]} names where the element names go
+		 * @param {(() => void)=} nested what to run on the first `li`
+		 * @returns {import("../../../lib/html/syntax-printer").VisitorMap} visitors
+		 */
+		const collect = (names, nested) => ({
+			[NodeType.Element]: (path) => {
+				names.push(path.name());
+				if (nested !== undefined && path.name() === "li" && names.length === 5) nested();
+			}
+		});
+		new SourceProcessor()
+			.use(
+				/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
+					[NodeType.Element]: {
+						enter: (path) => {
+							outer.push(path.name());
+							if (path.name() !== "span") return;
+							new SourceProcessor()
+								.use(
+									collect(inner, () => {
+										new SourceProcessor().use(collect(innermost)).process(fixture("html", "source-processor-streamed-walk-offsets-refuses-a-nested-parse-rather-than-taking"));
+									})
+								)
+								.process(fixture("html", "source-processor-a-run-inside-a-run-inner-list"));
+							// The outer tree is the one read again once the nested walk is done.
+							outer.push(`${path.source()} in ${A.name(/** @type {number} */ (path.parent))}`);
+						},
+						exit: (path) => {
+							if (path.name() === "em") outer.push(`/${path.source()}`);
+						}
+					}
+				})
+			)
+			.process(fixture("html", "source-processor-a-run-inside-a-run-outer-walk"));
+		expect(innermost).toEqual(["html", "head", "body", "b"]);
+		expect(inner).toEqual(["html", "head", "body", "ul", "li", "li"]);
+		expect(outer).toEqual([
+			"html",
+			"head",
+			"body",
+			"div",
+			"span",
+			"<span>x</span> in div",
+			"em",
+			"/<em>y</em>",
+			"p"
+		]);
+	});
+
+	it("runs a walk the document's enter starts before the outer tokenizer does", () => {
+		/** @type {string[]} */
+		const outer = [];
+		/** @type {string[]} */
+		const inner = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
+					[NodeType.Document]: () => {
+						new SourceProcessor()
+							.use(
+								/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
+									[NodeType.Element]: (path) => {
+										inner.push(path.name());
+									}
+								})
+							)
+							.process(fixture("html", "source-processor-a-run-inside-a-run-document-enter-inner"));
+					},
+					[NodeType.Element]: (path) => {
+						outer.push(`${path.name()}:${path.source()}`);
+					}
+				})
+			)
+			.process(fixture("html", "source-processor-a-run-inside-a-run-document-enter-outer"));
+		expect(inner).toEqual(["html", "head", "body", "table", "tbody", "tr", "td"]);
+		expect(outer).toEqual(["html:", "head:", "body:", "p:<p>outer</p>"]);
+	});
+
+	it("runs a walk and a print a streamed walk's visitor starts mid-parse", () => {
+		const count = 30000;
+		/**
+		 * @param {boolean} nest whether the 25000th `p` starts runs of its own
+		 * @returns {{ seen: string[], inner: string[] }} what the outer and nested runs saw
+		 */
+		const run = (nest) => {
+			/** @type {string[]} */
+			const seen = [];
+			/** @type {string[]} */
+			const inner = [];
+			let paragraphs = 0;
 			new SourceProcessor()
 				.use(
 					/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
-						[NodeType.Element]: () => {
-							new SourceProcessor().process(fixture("html", "source-processor-streamed-walk-offsets-refuses-a-nested-parse-rather-than-taking"));
+						[NodeType.Element]: {
+							exit: (path) => {
+								if (path.name() !== "p") {
+									seen.push(`${path.name()}:${path.end() - path.start()}`);
+									return;
+								}
+								if (path.source() !== "<p>a</p>") seen.push(path.source());
+								if (++paragraphs !== 25000 || !nest) return;
+								new SourceProcessor()
+									.use(
+										/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
+											[NodeType.Element]: (nested) => {
+												inner.push(nested.name());
+											}
+										})
+									)
+									.process(fixture("html", "source-processor-a-run-inside-a-run-streamed-inner"));
+								inner.push(
+									new SourceProcessor().process(fixture("html", "source-processor-a-run-inside-a-run-streamed-minify"), {
+										mode: "minify",
+										collapseWhitespace: true
+									}).code
+								);
+							}
 						}
 					})
 				)
-				.process(fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints"))
-		).toThrow(/already running/);
+				.process(fixture("html", "source-processor-a-run-inside-a-run-streamed-outer"));
+			seen.push(String(paragraphs));
+			return { seen, inner };
+		};
+		const alone = run(false);
+		const nested = run(true);
+		expect(nested.inner).toEqual(["html", "head", "body", "ul", "li", "<p> y "]);
+		expect(nested.seen).toEqual(alone.seen);
+		expect(alone.seen).toEqual([
+			"head:0",
+			"div:" + (count * 8 + 11),
+			"em:12",
+			"body:0",
+			"html:0",
+			String(count)
+		]);
+	});
+
+	it("refuses a parseHtml a visitor calls during a run, and the run goes on", () => {
+		/**
+		 * @param {boolean} attempt whether the `p` visitor calls `parseHtml`
+		 * @returns {{ seen: string[], errors: string[] }} what the walk saw and threw
+		 */
+		const run = (attempt) => {
+			/** @type {string[]} */
+			const seen = [];
+			/** @type {string[]} */
+			const errors = [];
+			new SourceProcessor()
+				.use(
+					/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
+						[NodeType.Element]: {
+							enter: (path) => {
+								seen.push(path.name());
+								if (!attempt || path.name() !== "p") return;
+								try {
+									parseHtmlRefs(fixture("html", "source-processor-a-run-inside-a-run-direct-parse-inner"));
+								} catch (err) {
+									errors.push(/** @type {Error} */ (err).message);
+								}
+							},
+							exit: (path) => {
+								seen.push(`/${path.source()}`);
+							}
+						}
+					})
+				)
+				.process(fixture("html", "source-processor-a-run-inside-a-run-direct-parse-outer"));
+			return { seen, errors };
+		};
+		const alone = run(false);
+		const tried = run(true);
+		expect(tried.errors).toEqual([
+			"html syntax: parseHtml was called during an HTML process run; nest the work with a SourceProcessor process instead"
+		]);
+		expect(tried.seen).toEqual(alone.seen);
+		// Outside a run it parses as ever.
+		const document = parseHtmlRefs(fixture("html", "source-processor-a-run-inside-a-run-direct-parse-inner"));
+		expect(A.name(A.child(0, A.child(1, A.child(0, document))))).toBe("i");
 	});
 });
 

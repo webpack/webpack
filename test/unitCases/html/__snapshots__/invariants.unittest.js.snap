@@ -21543,6 +21543,265 @@ exports[`HTML syntax — invariants source-processor-a-frameset-document-prints-
 
 exports[`HTML syntax — invariants source-processor-a-frameset-document-prints-no-end-tag-for-an-element-popped-at-once tokenizes 1`] = `"open[0,6|1,5] open[6,16|7,15] open[16,25|17,24] close[25,32|27,31] open[32,42|33,41] open[42,49|43,48] attr[56,59|60,61] open[49,62|50,55] close[62,73|64,72] text[73,74] end=74"`;
 
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-direct-parse-inner parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <i>
+|       \\"inner\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-direct-parse-inner parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-direct-parse-inner prints {"mode":"minify"} 1`] = `"<i>inner</i>"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-direct-parse-inner tokenizes 1`] = `"open[0,3|1,2] text[3,8] close[8,12|10,11] end=12"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-direct-parse-outer parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <p>
+|         \\"a\\"
+|       <em>
+|         \\"b\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-direct-parse-outer parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-direct-parse-outer prints {"mode":"minify"} 1`] = `"<div><p>a</p><em>b</em></div>"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-direct-parse-outer tokenizes 1`] = `"open[0,5|1,4] open[5,8|6,7] text[8,9] close[9,13|11,12] open[13,17|14,16] text[17,18] close[18,23|20,22] close[23,29|25,28] end=29"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-document-enter-inner parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             \\"n\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-document-enter-inner parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag warning[7,11]:unexpected-cell-in-table-body"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-document-enter-inner prints {"mode":"minify"} 1`] = `"<table><td>n</table>"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-document-enter-inner tokenizes 1`] = `"open[0,7|1,6] open[7,11|8,10] text[11,12] close[12,20|14,19] end=20"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-document-enter-outer parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"outer\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-document-enter-outer parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-document-enter-outer prints {"mode":"minify"} 1`] = `"<p>outer"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-document-enter-outer tokenizes 1`] = `"open[0,3|1,2] text[3,8] close[8,12|10,11] end=12"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-inner-list parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <ul>
+|       <li>
+|         \\"a\\"
+|       <li>
+|         \\"b\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-inner-list parses 2`] = `"warning[0,4]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-inner-list prints {"mode":"minify"} 1`] = `"<ul><li>a<li>b</ul>"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-inner-list tokenizes 1`] = `"open[0,4|1,3] open[4,8|5,7] text[8,9] close[9,14|11,13] open[14,18|15,17] text[18,19] close[19,24|21,23] close[24,29|26,28] end=29"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-nested-print-inner parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"  a  \\"
+|       <b>
+|         \\"b\\"
+|       \\"  \\""
+`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-nested-print-inner parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-nested-print-inner prints {"mode":"minify"} 1`] = `"<p>  a  <b>b</b>  "`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-nested-print-inner tokenizes 1`] = `"open[0,3|1,2] text[3,8] open[8,11|9,10] text[11,12] close[12,16|14,15] text[16,18] close[18,22|20,21] end=22"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-outer-walk parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <span>
+|         \\"x\\"
+|       <em>
+|         \\"y\\"
+|     <p>
+|       \\"z\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-outer-walk parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-outer-walk prints {"mode":"minify"} 1`] = `"<div><span>x</span><em>y</em></div><p>z"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-outer-walk tokenizes 1`] = `"open[0,5|1,4] open[5,11|6,10] text[11,12] close[12,19|14,18] open[19,23|20,22] text[23,24] close[24,29|26,28] close[29,35|31,34] open[35,38|36,37] text[38,39] close[39,43|41,42] end=43"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-sorted-attributes-inner parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <b>
+|       class=\\"z y\\"
+|       id=\\"q\\"
+|       lang=\\"de\\"
+|       style=\\"a : b\\"
+|       title=\\"x\\"
+|       \\"n\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-sorted-attributes-inner parses 2`] = `"warning[0,50]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-sorted-attributes-inner prints {"mode":"minify"} 1`] = `"<b title=x class=\\"z y\\" id=q lang=de style=\\"a : b\\">n</b>"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-sorted-attributes-inner tokenizes 1`] = `"attr[3,8|9,10] attr[11,16|18,21]\\" attr[23,25|26,27] attr[28,32|33,35] attr[36,41|43,48]\\" open[0,50|1,2] text[50,51] close[51,55|53,54] end=55"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-sorted-attributes-outer parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       class=\\"b a\\"
+|       id=\\"a\\"
+|       lang=\\"en\\"
+|       onclick=\\"go( 1 )\\"
+|       style=\\"color : red\\"
+|       title=\\"t\\"
+|       \\"x\\"
+|     <p>
+|       id=\\"c\\"
+|       lang=\\"en\\"
+|       style=\\"top : 0px\\"
+|       title=\\"t\\"
+|       \\"y\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-sorted-attributes-outer parses 2`] = `"warning[0,74]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-sorted-attributes-outer prints {"mode":"minify"} 1`] = `"<p id=a class=\\"b a\\" title=t style=\\"color : red\\" onclick=\\"go( 1 )\\" lang=en>x<p lang=en title=t id=c style=\\"top : 0px\\">y"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-sorted-attributes-outer tokenizes 1`] = `"attr[3,5|6,7] attr[8,13|15,18]\\" attr[20,25|26,27] attr[28,33|35,46]\\" attr[48,55|57,64]\\" attr[66,70|71,73] open[0,74|1,2] text[74,75] close[75,79|77,78] attr[82,86|87,89] attr[90,95|96,97] attr[98,100|101,102] attr[103,108|110,119]\\" open[79,121|80,81] text[121,122] close[122,126|124,125] end=126"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-srcdoc-renderer parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"  x  \\"
+|     <iframe>
+|       srcdoc=\\"<p>  y  </p>\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-srcdoc-renderer parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-srcdoc-renderer prints {"mode":"minify"} 1`] = `"<p>  x  </p><iframe srcdoc=\\"<p>  y  </p>\\"></iframe>"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-srcdoc-renderer tokenizes 1`] = `"open[0,3|1,2] text[3,8] close[8,12|10,11] attr[20,26|28,40]\\" open[12,42|13,19] close[42,51|44,50] end=51"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-streamed-inner parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <ul>
+|       <li>
+|         \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-streamed-inner parses 2`] = `"warning[0,4]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-streamed-inner prints {"mode":"minify"} 1`] = `"<ul><li>x</ul>"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-streamed-inner tokenizes 1`] = `"open[0,4|1,3] open[4,8|5,7] text[8,9] close[9,14|11,13] end=14"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-streamed-minify parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"  y  \\""
+`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-streamed-minify parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-streamed-minify prints {"mode":"minify"} 1`] = `"<p>  y  "`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-streamed-minify tokenizes 1`] = `"open[0,3|1,2] text[3,8] close[8,12|10,11] end=12"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-streamed-outer parses 1`] = `
+"length 780067, sha256 5949ae1112c3c61d
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <p>
+|         \\"a\\"
+|       <p>
+|         \\"a\\"
+|       <p>
+|         \\"a\\"
+|       <p>
+|         \\"a\\"
+|       <p>
+|         \\"a\\"
+|       <p>
+|         \\"a\\"
+|
+…
+  <p>
+|         \\"a\\"
+|       <p>
+|         \\"a\\"
+|       <p>
+|         \\"a\\"
+|       <p>
+|         \\"a\\"
+|       <p>
+|         \\"a\\"
+|       <p>
+|         \\"a\\"
+|       <p>
+|         \\"a\\"
+|     <em>
+|       \\"end\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-streamed-outer parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-streamed-outer prints {"mode":"minify"} 1`] = `
+"length 120023, sha256 98beeb07ab6016a1
+<div><p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>
+…
+>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a<p>a</div><em>end</em>"
+`;
+
+exports[`HTML syntax — invariants source-processor-a-run-inside-a-run-streamed-outer tokenizes 1`] = `
+"length 2531294, sha256 46382bdf7189ce9c
+open[0,5|1,4] open[5,8|6,7] text[8,9] close[9,13|11,12] open[13,16|14,15] text[16,17] close[17,21|19,20] open[21,24|22,23] text[24,25] close[25,29|27,28] open[29,32|30,31] text[32,33] close[33,37|35,3
+…
+98,239999] text[240000,240001] close[240001,240005|240003,240004] close[240005,240011|240007,240010] open[240011,240015|240012,240014] text[240015,240018] close[240018,240023|240020,240022] end=240023"
+`;
+
 exports[`HTML syntax — invariants source-processor-an-empty-value-is-the-bare-name-does-it-in-foreign-content-too parses 1`] = `
 "| <html>
 |   <head>
