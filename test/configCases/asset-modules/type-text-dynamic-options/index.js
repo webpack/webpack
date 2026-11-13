@@ -54,3 +54,29 @@ it("should read the attributes of options given by a sequence expression", () =>
 		expect(mod.default).toContain("module.exports");
 	});
 });
+
+it("should read a `with` defined after an accessor with the same key", () => {
+	return import("./fixture.js?accessor-with", {
+		get with() {
+			throw new Error("the accessor is replaced");
+		},
+		with: { type: "text" }
+	}).then((mod) => {
+		expect(typeof mod.default).toBe("string");
+		expect(mod.default).toContain("module.exports");
+	});
+});
+
+it("should read an attribute defined after an accessor with the same key", () => {
+	return import("./fixture.js?accessor-type", {
+		with: {
+			get type() {
+				throw new Error("the accessor is replaced");
+			},
+			type: "text"
+		}
+	}).then((mod) => {
+		expect(typeof mod.default).toBe("string");
+		expect(mod.default).toContain("module.exports");
+	});
+});
