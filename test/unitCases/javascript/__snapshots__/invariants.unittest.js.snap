@@ -382,7 +382,7 @@ exports[`JavaScript syntax — invariants f-inline-call-2 parses 2`] = `""`;
 
 exports[`JavaScript syntax — invariants f-inline-call-2 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants f-inline-call-2 prints {"mode":"minify","compress":{"toplevel":false},"mangle":false} 1`] = `"function a(){return\\"x\\"}function b(){return 1}function c(){return 10}function d(){return function(){return\\"y\\"}}function e(){if(p)q();r();x()}function f(){return(()=>()=>y)()()}function g(){return(0,a.b)()}function h(){return(k(),a.b)()}const i=()=>{if(p)q();r()},j=()=>{x();r(p())};"`;
+exports[`JavaScript syntax — invariants f-inline-call-2 prints {"mode":"minify","compress":{"toplevel":false},"mangle":false} 1`] = `"function a(){return\\"x\\"}function b(){return 1}function c(){return 10}function d(){return function(){return\\"y\\"}}function e(){if(p)q();r();x()}function f(){return(()=>y)()}function g(){return(0,a.b)()}function h(){return(k(),a.b)()}const i=()=>{if(p)q();r()},j=()=>{x();r(p())};"`;
 
 exports[`JavaScript syntax — invariants f-inline-call-2 prints {"mode":"minify"} 1`] = `"function a(){return function(v){return function(){return v}}(\\"x\\")()}function b(){return function(){return function(){return function(){return 1}}()}()()}function c(){const A=10,B=5;function mod(x,y){return(x%y+y)%y}return mod(A,A+B)}function d(){function inner(v){function closure(){return v}return function(){return closure()}}return inner(\\"y\\")}function e(){function t(){if(p)q();r()}function u(){return t()}u();x()}function f(){const s=(()=>()=>y)();return s()}function g(){const s=(()=>a.b)();return s()}function h(){const s=(()=>(k(),a.b))();return s()}const i=()=>{(function(){if(p)q();r()})()};const j=()=>{x();return function(){let v=p();r(v)}()};"`;
 
@@ -2068,7 +2068,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-21 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-21 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(c,s,t){g(t.kind,t,{s:t});var n=c=>c+t;c.exports=n;if(s)var o=()=>1;g(o);switch(s){case 1:var r=()=>2;case 2:g(r)}let e=()=>3;for(;;)g(e);let a=function(){};g(a)}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-21 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(c,s,t){g(t.kind,t,{s:t}),c.exports=c=>c+t;if(s)var n=()=>1;g(n);switch(s){case 1:var o=()=>2;case 2:g(o)}let r=()=>3;for(;;)g(r);g(function(){})}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-21 prints {"mode":"minify"} 1`] = `"function f(m,c,e){const s=e;let t=s;g(s.kind,t,{s:s});var o=n=>n+t;m.exports=o;if(c){var p=()=>1}g(p);switch(c){case 1:var q=()=>2;case 2:g(q)}const r=()=>3;for(;;)g(r);const u=function(){};{g(u)}}"`;
 
@@ -2405,7 +2405,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-49 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-49 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(){var n=function(){};(n||h)(),function(){}\`t\`;({}).r++}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-49 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(){(function(){}||h)();(function(){})\`t\`;({}).r++}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-49 prints {"mode":"minify"} 1`] = `"function f(){var g=function(){};(g||h)();var k=function(){};k?1:2;var m=function(){};m\`t\`;var p=class{};p,1;var q={};q.r++}"`;
 
@@ -2417,7 +2417,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-50 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-50 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(){var n=function(){};h({k:n});var f=function(){};h(f+1);var c=function(){};h({[c]:1})}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-50 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(){h({k:function(){}}),h(function(){}+1),h({[function(){}]:1})}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-50 prints {"mode":"minify"} 1`] = `"function f(){var m=function(){};h({k:m});var n=function(){};h(n+1);var p=function(){};h({[p]:1})}"`;
 
@@ -2775,7 +2775,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-80 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:18)"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-80 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false},"module":true} 1`] = `"let t=()=>\\"b\\"+v;export default t;"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-80 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false},"module":true} 1`] = `"export default()=>\\"b\\"+v;"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-80 prints {"mode":"minify"} 1`] = `"const B=()=>\\"b\\"+v;export default B;"`;
 
@@ -2811,7 +2811,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-83 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-83 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"var Q=(0,function(){return 1});g(Q),x=f,x=f,(void 0).a;"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-83 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"var Q=function(){return 1};g(Q),x=f,x=f,(void 0).a;"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-83 prints {"mode":"minify"} 1`] = `"var Q=void 0&&(void 0).x||function(){return 1};g(Q);x=0&&undefined.a||f;x=(1||undefined.a)&&f;undefined.a;"`;
 
@@ -2849,7 +2849,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-86 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-86 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(){var n=function(){return 1};h(n)+1}function i(){var n=()=>{};h(n)}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-86 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(){h(function(){return 1})+1}function i(){h(()=>{})}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-86 prints {"mode":"minify"} 1`] = `"function f(){var g=function(){return 1};h(g)+1}function i(){var k=()=>{};h(k)}"`;
 
@@ -2861,7 +2861,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-87 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-87 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(){var n=()=>a;h(n)}function i(){var n=async()=>1;h(n)}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-87 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(){h(()=>a)}function i(){h(async()=>1)}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-87 prints {"mode":"minify"} 1`] = `"function f(){var g=()=>a;h(g)}function i(){var k=async()=>1;h(k)}"`;
 
@@ -3655,7 +3655,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-154 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-154 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"g(function(){var r=function(){return 7};return r()+3}()),g(9),g(function(n){return n.v}({v:5})+3);"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-154 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"g(function(n){return n()}(function(){return 7})+3),g(9),g(function(n){return n.v}({v:5})+3);"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-154 prints {"mode":"minify"} 1`] = `"(function(){var x=7;function h(k){return k()}function f(a){var g=function(){return x};return h(g)+a}g(f(3))})();(function(){function h(k){return k+1}function f(a){var c=5;return h(c)+a}g(f(3))})();(function(){function h(k){return k.v}function f(a){var c={v:5};return h(c)+a}g(f(3))})();"`;
 
@@ -3905,7 +3905,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-175 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-175 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(a){var n=class{};return n.name}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-175 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(a){return class{}.name}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-175 prints {"mode":"minify"} 1`] = `"function f(a){var b=class{};return b.name}"`;
 
@@ -3917,7 +3917,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-176 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-176 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(n){var a=function(){return n};a.call()}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-176 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(n){(function(){return n}).call()}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-176 prints {"mode":"minify"} 1`] = `"function f(a){var b=function(){return a};b.call()}"`;
 
@@ -3965,7 +3965,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-180 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-180 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(n){var a=function(){};a.x=n}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-180 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(n){(function(){}).x=n}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-180 prints {"mode":"minify"} 1`] = `"function f(a){var b=function(){};b.x=a}"`;
 
@@ -3977,7 +3977,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-181 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-181 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(n){var f=function(){};return f.x}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-181 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(n){return function(){}.x}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-181 prints {"mode":"minify"} 1`] = `"function f(a){var b=function(){};return b.x}"`;
 
@@ -9048,7 +9048,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-606 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-606 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"!function(){var f=function(){g()};f(1)}();"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-606 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"Object(function(){g()})(1);"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-606 prints {"mode":"minify"} 1`] = `"(function(){var f=function(){g()};Object(f)(1)})();"`;
 
@@ -13213,7 +13213,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-3 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-3 prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"x={k:(0,()=>1),[()=>1]:1},y=[()=>1];"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-3 prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"x={k:()=>1,[()=>1]:1},y=[()=>1];"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-3 prints {"mode":"minify"} 1`] = `"x={k:0||(()=>1),[0||(()=>1)]:1},y=[0||(()=>1)];"`;
 
@@ -15693,7 +15693,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-constant-keys-new-47 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-constant-keys-new-47 prints {"mode":"minify","compress":{},"mangle":{},"module":true} 1`] = `"export function f(r){var t=r=>r+1;r.add([t])}export function g(r){var t;return[t,r()]}export function h(){var r=1;return r}export function k(r){let t;t=r();if(r===1){var a;r(a=r(),a)}return[t,t]}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-constant-keys-new-47 prints {"mode":"minify","compress":{},"mangle":{},"module":true} 1`] = `"export function f(r){r.add([r=>r+1])}export function g(r){var t;return[t,r()]}export function h(){var r=1;return r}export function k(r){let t;t=r();if(r===1){var a;r(a=r(),a)}return[t,t]}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-constant-keys-new-47 prints {"mode":"minify"} 1`] = `"export function f(r){var h;h=x=>x+1;r.add([h])}export function g(r){var a,b;b=r();return[a,b]}export function h(){var h;h=h||1;return h}export function k(r){let a;a=r();switch(r){case 1:var c;c=r();r(c,c)}return[a,a]}"`;
 
@@ -15705,7 +15705,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-constant-keys-new-48 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-constant-keys-new-48 prints {"mode":"minify","compress":{},"mangle":{},"module":true} 1`] = `"export function a(t){let o=function(t){g(t)};t.forEach(t=>{}),t.forEach(o)}export function b(t){let n=()=>{o=t};n();let o;n()}export function c(t){let n;n=t}export function d(t){let n;t.forEach(t=>{n=t});return()=>n}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-constant-keys-new-48 prints {"mode":"minify","compress":{},"mangle":{},"module":true} 1`] = `"export function a(t){t.forEach(t=>{}),t.forEach(function(t){g(t)})}export function b(t){let n=()=>{o=t};n();let o;n()}export function c(t){let n;n=t}export function d(t){let n;t.forEach(t=>{n=t});return()=>n}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-constant-keys-new-48 prints {"mode":"minify"} 1`] = `"export function a(v){let s,k=function(x){s=x;g(x)};v.forEach(x=>{s=x});v.forEach(k)}export function b(r){const w=()=>{p=r};w();let p;w()}export function c(r){function w(){p=r}let p;w()}export function d(v){let s;v.forEach(x=>{s=x});return()=>s}"`;
 
@@ -26141,7 +26141,7 @@ exports[`JavaScript syntax — invariants one-pass-inline-a-6 parses 2`] = `""`;
 
 exports[`JavaScript syntax — invariants one-pass-inline-a-6 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants one-pass-inline-a-6 prints {"mode":"minify","compress":{"toplevel":true},"ecma":2020,"mangle":false} 1`] = `"var a=function(){};a.b,console.log(\`done\`);"`;
+exports[`JavaScript syntax — invariants one-pass-inline-a-6 prints {"mode":"minify","compress":{"toplevel":true},"ecma":2020,"mangle":false} 1`] = `"(function(){}).b;console.log(\`done\`);"`;
 
 exports[`JavaScript syntax — invariants one-pass-inline-a-6 prints {"mode":"minify"} 1`] = `"var a=function(){};a.b;console.log(\\"done\\");"`;
 
@@ -27671,7 +27671,7 @@ exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-fold-a-value-into-the-callee-new-2 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-fold-a-value-into-the-callee-new-2 prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"function m(){var t=class{};return new t}"`;
+exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-fold-a-value-into-the-callee-new-2 prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"function m(){return new class{}}"`;
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-fold-a-value-into-the-callee-new-2 prints {"mode":"minify"} 1`] = `"function m(){var t=class{};return new t}"`;
 
