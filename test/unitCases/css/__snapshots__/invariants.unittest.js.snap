@@ -3687,6 +3687,38 @@ exports[`CSS syntax — invariants css-syntax-block-streaming-reads-the-same-tre
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-reads-the-same-tree-walks-an-at-rule-opening-a-block tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] at-keyword[2,8] whitespace[8,9] ident[9,10] left-curly-bracket[10,11] ident[11,12] colon[12,13] number[13,14] right-curly-bracket[14,15] right-curly-bracket[15,16] end=16"`;
 
+exports[`CSS syntax — invariants css-syntax-block-streaming-restates-no-rule-with-a-list-no-engine-reads parses 1`] = `
+"length 473129, sha256 4fb85b774040f89a
+[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"x\\"]],[\\".\\",[\\"ident\\",\\"f0\\"],[\\"{}\\",[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]],\\".\\",[\\"ident\\",\\"f1\\"],[\\"{}\\",[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]],\\".\\",[\\"i
+…
+],\\".\\",[\\"ident\\",\\"a\\"],\\",\\",\\":\\",[\\"ident\\",\\"unknown\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"x\\"]],[\\".\\",[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-restates-no-rule-with-a-list-no-engine-reads parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-restates-no-rule-with-a-list-no-engine-reads prints {"mode":"minify","check":{"fixture":"short"}} 1`] = `
+"length 40944, sha256 21f9d8ef35a91423
+@layer x{.f0,.f1,.f10,.f100,.f1000,.f1001,.f1002,.f1003,.f1004,.f1005,.f1006,.f1007,.f1008,.f1009,.f101,.f1010,.f1011,.f1012,.f1013,.f1014,.f1015,.f1016,.f1017,.f1018,.f1019,.f102,.f1020,.f1021,.f1022
+…
+,.f976,.f977,.f978,.f979,.f98,.f980,.f981,.f982,.f983,.f984,.f985,.f986,.f987,.f988,.f989,.f99,.f990,.f991,.f992,.f993,.f994,.f995,.f996,.f997,.f998,.f999{margin:0}.a,:unknown{color:red}.a{color:red}}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-restates-no-rule-with-a-list-no-engine-reads prints {"mode":"minify","check":{"fixture":"short"}} 2`] = `"{\\"code\\":\\"@layer x{\${FILLER}.a,:unknown{color:red}.a{color:red}}\\"}"`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-restates-no-rule-with-a-list-no-engine-reads prints {"mode":"minify"} 1`] = `
+"length 40944, sha256 21f9d8ef35a91423
+@layer x{.f0,.f1,.f10,.f100,.f1000,.f1001,.f1002,.f1003,.f1004,.f1005,.f1006,.f1007,.f1008,.f1009,.f101,.f1010,.f1011,.f1012,.f1013,.f1014,.f1015,.f1016,.f1017,.f1018,.f1019,.f102,.f1020,.f1021,.f1022
+…
+,.f976,.f977,.f978,.f979,.f98,.f980,.f981,.f982,.f983,.f984,.f985,.f986,.f987,.f988,.f989,.f99,.f990,.f991,.f992,.f993,.f994,.f995,.f996,.f997,.f998,.f999{margin:0}.a,:unknown{color:red}.a{color:red}}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-restates-no-rule-with-a-list-no-engine-reads tokenizes 1`] = `
+"length 956092, sha256 90f0beff5cec8742
+at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] delim[9,10] ident[10,12] left-curly-bracket[12,13] ident[13,19] colon[19,20] number[20,21] right-curly-bracket[21,22] delim[22,23] id
+…
+lim[94931,94932] ident[94932,94933] left-curly-bracket[94933,94934] ident[94934,94939] colon[94939,94940] ident[94940,94943] right-curly-bracket[94943,94944] right-curly-bracket[94944,94945] end=94945"
+`;
+
 exports[`CSS syntax — invariants css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"screen\\"]],[\\".\\",[\\"ident\\",\\"c0\\"],\\">\\",[\\"ident\\",\\"d0\\"],\\":\\",[\\"ident\\",\\"hover\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"],\\";\\",[\\"ident\\",\\"margin\\"],\\":\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]],\\".\\",[\\"ident\\",\\"c1\\"],\\">\\",[\\"ident\\",\\"d1\\"],\\":\\",[\\"ident\\",\\"hover\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"],\\";\\",[\\"ident\\",\\"margin\\"],\\":\\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"px\\"]],\\".\\",[\\"ident\\",\\"c2\\"],\\">\\",[\\"ident\\",\\"d2\\"],\\":\\",[\\"ident\\",\\"hover\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"],\\";\\",[\\"ident\\",\\"margin\\"],\\":\\",[\\"dimension\\",\\"3\\",3,\\"integer\\",\\"px\\"]],\\".\\",[\\"ident\\",\\"c3\\"],\\">\\",[\\"ident\\",\\"d3\\"],\\":\\",[\\"ident\\",\\"hover\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"],\\";\\",[\\"ident\\",\\"margin\\"],\\":\\",[\\"dimension\\",\\"4\\",4,\\"integer\\",\\"px\\"]]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one parses 2`] = `""`;
