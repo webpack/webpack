@@ -2037,3 +2037,29 @@ describe("one-pass minify, family B round 9", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 });
+
+describe("one-pass minify, family Y round 9", () => {
+	const options = { compress: {}, mangle: false };
+
+	it("should merge the tests of a chain of conditionals sharing a branch in one pass", () => {
+		const source = fixture("javascript", "one-pass-y9-1");
+		const { code } = minifyOnePass(source, options);
+		// `a?x:b?x:c?x:y` joins all three tests, with `&&` and `||` mixed.
+		expect(code).toBe("function kind(a,b,c){return a||b||c?\"small\":\"large\"}function all(a,b,c){return a&&b&&c?\"yes\":\"no\"}function mixed(a,b,c){return a&&(b||c)?1:2}function other(a,b,c){return a||b&&c?1:2}function x(){console.log(\"x\")}function y(){console.log(\"y\")}function run(a,b,c){a||b||c?x():y()}for(let a of[0,1])for(let b of[0,1])for(let c of[0,1])console.log(kind(a,b,c),all(a,b,c),mixed(a,b,c),other(a,b,c)),run(a,b,c);");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should merge the tests of nested `if`s printing as a conditional sharing a branch", () => {
+		const source = fixture("javascript", "one-pass-y9-2");
+		const { code } = minifyOnePass(source, options);
+		expect(code).toBe("function x(){console.log(\"x\")}function y(){console.log(\"y\")}function nested(a,b,c){a&&(b||c)?x():y()}nested(1,0,1),nested(0,1,1),nested.length||nested?x():y();");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should keep a third test apart where the merged branches share `void 0`, and parenthesize a merged test as needed", () => {
+		// Babel's optional chains merge two links at a time, as before.
+		expect(minifyOnePass("f(a==null?void 0:b==null?void 0:c==null?void 0:c.d)", options).code).toBe("f(a==null?void 0:b==null||c==null?void 0:c.d);");
+		expect(minifyOnePass("f(a?1:b?1:(c=g())?1:2,a?b?c??d?1:2:2:2)", options).code).toBe("f(a||b||(c=g())?1:2,a&&b&&(c??d)?1:2);");
+		expect(minifyOnePass("f(a?b?1:c?d?1:2:2:2,a?1:b?c?1:d?1:2:2)", options).code).toBe("f(a&&(b||c&&d)?1:2,a||b&&(c||d)?1:2);");
+	});
+});
