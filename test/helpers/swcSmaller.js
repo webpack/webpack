@@ -382,7 +382,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/collapse_vars_throw",
 			"terser compress: collapse_vars/collapse_vars_assignment",
 			"terser compress: collapse_vars/collapse_vars_lvalues_drop_assign",
-			"terser compress: collapse_vars/collapse_vars_closures",
 			"terser compress: collapse_vars/issue_1631_1",
 			"terser compress: collapse_vars/conditional_1",
 			"terser compress: collapse_vars/issue_2436_4",
@@ -742,8 +741,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: pure_funcs/issue_2705_1",
 			"terser compress: pure_funcs/issue_2705_6",
 			"terser compress: pure_funcs/issue_3065_3",
-			"terser compress: pure_funcs/issue_3065_4",
-			"terser compress: pure_funcs/side_effects"
+			"terser compress: pure_funcs/issue_3065_4"
 		]
 	],
 	[

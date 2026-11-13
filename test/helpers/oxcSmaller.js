@@ -291,7 +291,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:1081",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:1129",
 			"swc minifier: fixture/issues/7749/input.js",
-			"swc minifier: fixture/issues/8826/input.js",
 			"swc minifier: fixture/projects/jquery/26/input.js"
 		]
 	],
@@ -373,13 +372,9 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_labels_labels_3",
 			"swc exec: terser_reduce_vars_issue_2420_2",
 			"swc exec: terser_reduce_vars_side_effects_assign",
-			"swc exec: terser_reduce_vars_issue_1670_1",
 			"swc exec: terser_reduce_vars_recursive_inlining_4",
 			"swc exec: terser_reduce_vars_reduce_vars",
-			"swc exec: terser_reduce_vars_issue_1670_2",
 			"swc exec: terser_reduce_vars_escape_local_sequence",
-			"swc exec: terser_reduce_vars_issue_1670_4",
-			"swc exec: terser_reduce_vars_issue_1670_3",
 			"swc exec: terser_collapse_vars_cond_branch_1",
 			"swc exec: terser_collapse_vars_issue_2203_4",
 			"swc exec: terser_collapse_vars_issue_2203_3",
@@ -564,10 +559,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/reduce_vars",
 			"terser compress: reduce_vars/inner_var_if",
 			"terser compress: reduce_vars/issue_1595_4",
-			"terser compress: reduce_vars/issue_1670_1",
-			"terser compress: reduce_vars/issue_1670_2",
-			"terser compress: reduce_vars/issue_1670_3",
-			"terser compress: reduce_vars/issue_1670_4",
 			"terser compress: reduce_vars/unary_delete",
 			"terser compress: reduce_vars/side_effects_assign",
 			"terser compress: reduce_vars/immutable",
@@ -641,7 +632,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_not_expression.rs:33",
 			"oxc minifier: peephole/minimize_not_expression.rs:48",
 			"oxc minifier: peephole/minimize_not_expression.rs:49",
-			"oxc minifier: peephole/minimize_not_expression.rs:69",
 			"oxc minifier: peephole/minimize_not_expression.rs:72",
 			"oxc minifier: peephole/minimize_not_expression.rs:74",
 			"oxc minifier: peephole/minimize_not_expression.rs:101",
@@ -855,7 +845,6 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"terser compress: evaluate/issue_2207_3",
 			"terser compress: evaluate/bitwise_1",
-			"terser compress: evaluate/bitwise_2",
 			"terser compress: evaluate/issue_2535_3",
 			"terser compress: evaluate/string_case"
 		]

@@ -1622,4 +1622,9 @@ describe("one-pass minify, family J round 6", () => {
 		// A test folding to a `!` drops it where what it negates needs no parentheses, as a comparison before `&&`; an assignment keeps it.
 		expect(minifyOnePass("for(;a;){if(false||!(b<c))break;d()}if(false||!(b=c))a();else d()", options).code).toBe("for(;a&&b<c;)d();!(b=c)?a():d();");
 	});
+	it("should keep the arguments of an unread pure call in a loop head together", () => {
+		expect(
+			minifyOnePass("for(/*#__PURE__*/f(g(),h());a;);", { compress: {}, mangle: false }).code
+		).toBe("for((g(),h());a;);");
+	});
 });
