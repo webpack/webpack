@@ -2129,9 +2129,10 @@ describe("moving a value made of names", () => {
 			// A name a value moved into already prints that value, run where it is read; a boolean prints as `!0`, which a member read would take in.
 			['function f(){var a=read();var b=!a;middle();return b}function read(){console.log("read");return 1}function middle(){console.log("middle")}console.log(f())', 'function f(){var b=!read();return middle(),b}function read(){return console.log("read"),1}function middle(){console.log("middle")}console.log(f());'],
 			["function f(){var value=true;middle();return value.toString()}function middle(){}console.log(f())", "function f(){return middle(),true.toString()}function middle(){}console.log(f());"],
-			// An outer `var` read before an `await` or a `yield` may be set while the function waits.
+			// An outer `var` read before an `await` or a `yield` may be set while the function, or the generator owning it, waits.
 			["function f(p){async function i(){var n=!r;await p;return n}var t=i(),r=1;return t}f(0)", "function f(p){var t=async function(){var n=!r;return await p,n}(),r=1;return t}f(0);"],
 			["function f(){function*i(){var n=!r;yield;return n}var t=i();t.next();var r=1;return t.next().value}console.log(f())", "function f(){var t=function*(){var n=!r;return yield,n}();t.next();var r=1;return t.next().value}console.log(f());"],
+			["function*o(g,a){g(function(){var n=!r;a();return n});yield 0;var r=1}let i,t=o(function(f){i=f},function(){t.next()});t.next();console.log(i())", "function*o(g,a){g(function(){var n=!r;return a(),n}),yield 0;var r=1}let i,t=o(function(f){i=f},function(){t.next()});t.next(),console.log(i());"],
 			// Set by then, it holds its value wherever later the value is made.
 			["function h(){var r=4,n=[r];return[n,function(){return r}]}console.log(JSON.stringify(h()))", "function h(){return[[4],function(){return 4}]}console.log(JSON.stringify(h()));"]
 		]) {
