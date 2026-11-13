@@ -579,6 +579,13 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 		});
 	});
 
+	it("decodes a repeated named reference and a long one alike", () => {
+		expect(decodeEntities("&amp;&amp;&lt;&amp;")).toBe("&&<&");
+		const long = "&CounterClockwiseContourIntegral;";
+		expect(decodeEntities(`${long}${long}&amp;${long}`)).toBe("\u2233\u2233&\u2233");
+		expect(decodeEntities("&amp;&amp=&amp")).toBe("&&=&");
+	});
+
 	it("re-sizes the attribute columns a walk released from the next estimate", () => {
 		const { SourceProcessor } = require("../../../lib/html/syntax");
 		// Past the shrink threshold, the walk's release drops the columns, so the
