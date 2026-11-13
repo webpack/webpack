@@ -168,6 +168,8 @@ Code that runs outside webpack's own module graph (tests, examples, tooling, a m
 
 Outside the JavaScript syntax layer (`lib/javascript/syntax*.js`, `regexp.js`, `ScopeAnalyzer.js` and the generated tables), require `lib/javascript/syntax.js`, webpack's `javascript.syntax`, and read the parser from its `parser` getter (`const { Field, NodeType } = require("./syntax").parser`), never `syntax-parser.js` or `syntax-printer.js` directly, so the internals can move behind it. Type-only `@import`s may name `syntax-parser.js`. CSS and HTML do not follow this yet.
 
+**Every language's `syntax` facade and the JavaScript parser's `{ path: true }` taps are experimental**: tag each new public name they expose with `@experimental <where it is exposed>; unstable API` ([convention](docs/options.md)).
+
 ### Source file headers
 
 Every source file in `lib/`, `hot/` and `tooling/` opens with the MIT license header. A **new** file's `Author` line names its actual author (`Author <Name> @<github-handle>`), never copied from another file.
