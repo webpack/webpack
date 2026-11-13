@@ -3672,6 +3672,60 @@ describeIfSupported("ScopeAnalyzer matches eslint-scope", () => {
 				)
 			);
 
+		/**
+		 * @param {InstanceType<typeof ScopeLog>} log a log a parse filled
+		 * @returns {EXPECTED_ANY} its events, scopes and shorthands as plain arrays
+		 */
+		const logged = (log) => ({
+			events: log.infos
+				.slice(0, log.count)
+				.map((info, i) => [info, log.starts[i], log.ends[i], log.names[i]]),
+			scopes: log.scopeTypes
+				.slice(0, log.scopeCount)
+				.map((type, i) => [
+					type,
+					log.blockTypes[i],
+					log.blockStarts[i],
+					log.scopeStarts[i],
+					log.scopeEnds[i],
+					log.scopeFlags[i],
+					log.paramBoundaries[i]
+				]),
+			shorthands: log.shorthands.slice(0, log.shorthandCount)
+		});
+
+		it("matches the tree walk on syntax webpack's own sources lack", () => {
+			for (const [code, sourceType] of /** @type {[string, "module" | "script"][]} */ ([
+				[
+					"var f = async function () { return a; }; var g = async x => x + b; class C { x = c; static { let q = d; } } switch (e) { case 1: let h = i; } let a; export { a };",
+					"module"
+				],
+				["[x = 1] = y; ({ z = 2 } = w);", "module"],
+				["with (o) { x; } do y; while (z)", "script"]
+			])) {
+				const walked = analyzeParse(code, false, sourceType);
+
+				expect(Object.keys(walked.resolutions).length).toBeGreaterThan(0);
+				expect(analyzeParse(code, true, sourceType)).toEqual(walked);
+			}
+		});
+
+		it("logs the same from a parse into ESTree objects as into a tree", () => {
+			const code =
+				"function f(a) { { let b; class K {} function g() {} } } var h = function named(x) {}; var k = function () {}; [p = 1] = q; ({ r = 2 } = s); (class {}); (class N {}); var arrow = (y) => y;";
+			const fromTree = new ScopeLog();
+			parseTree(code, 0, { sourceType: "module", scopes: fromTree });
+			const fromObjects = new ScopeLog();
+			parseTree(code, 0, {
+				sourceType: "module",
+				scopes: fromObjects,
+				estree: true
+			});
+
+			expect(fromObjects.count).toBeGreaterThan(0);
+			expect(logged(fromObjects)).toEqual(logged(fromTree));
+		});
+
 		it("matches the tree walk, from a fresh log and from one reused", () => {
 			const dir = path.resolve(__dirname, "../../../lib/javascript");
 			// largest first, so the reused log is refilled with fewer entries

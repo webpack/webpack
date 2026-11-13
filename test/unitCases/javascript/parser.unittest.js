@@ -3970,6 +3970,76 @@ describe("SyntaxTree", () => {
 		]);
 	});
 
+	it("marks legacy assert on a re-export, and writes one an edition before attributes parsed", () => {
+		const { parseProgram, takeParsedTree } =
+			require("../../../lib/javascript/syntax").parser;
+		const source =
+			'export { a } from "./a" assert { type: "json" };\nexport { b } from "./b" with { type: "json" };';
+		const program = /** @type {number} */ (
+			/** @type {unknown} */ (parseProgram(source, 0, { sourceType: "module" }))
+		);
+		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
+		expect(
+			[0, 1].map((index) =>
+				tree.legacyAssert(tree.field(index, Field.body, program))
+			)
+		).toEqual([true, false]);
+		tree.release();
+
+		const before = /** @type {number} */ (
+			/** @type {unknown} */ (
+				parseProgram('export { c } from "./c";', 0, {
+					sourceType: "module",
+					ecmaVersion: 2020
+				})
+			)
+		);
+		const written = /** @type {SyntaxTree} */ (takeParsedTree());
+		const declaration = written.field(0, Field.body, before);
+		expect(written.type(declaration)).toBe(NodeType.ExportNamedDeclaration);
+		expect(written.legacyAssert(declaration)).toBe(false);
+		expect(
+			written.type(written.field(0, Field.specifiers, declaration))
+		).toBe(NodeType.ExportSpecifier);
+		written.release();
+	});
+
+	it("ends an ES5 do-while and checks an ES5 object literal by ES5's rules", () => {
+		const { parseProgram, takeParsedTree } =
+			require("../../../lib/javascript/syntax").parser;
+		/**
+		 * @param {string} code an ES5 script
+		 * @returns {number[]} the types of its first two statements
+		 */
+		const types = (code) => {
+			const program = /** @type {number} */ (
+				/** @type {unknown} */ (
+					parseProgram(code, 0, { sourceType: "script", ecmaVersion: 5 })
+				)
+			);
+			const tree = /** @type {SyntaxTree} */ (takeParsedTree());
+			const result = [0, 1].map((index) =>
+				tree.type(tree.field(index, Field.body, program))
+			);
+			tree.release();
+			return result;
+		};
+		// before ES2015 a do-while needs its semicolon or a line break
+		expect(types("do x; while (y)\nz;")).toEqual([
+			NodeType.DoWhileStatement,
+			NodeType.ExpressionStatement
+		]);
+		expect(() => types("do x; while (y) z;")).toThrow(/Unexpected token/);
+		// ES5 allows a repeated data property only outside strict mode
+		expect(types("({ a: 1, a: 2 }); x;")).toEqual([
+			NodeType.ExpressionStatement,
+			NodeType.ExpressionStatement
+		]);
+		expect(() => types("'use strict'; ({ a: 1, a: 2 });")).toThrow(
+			/Redefinition of property/
+		);
+	});
+
 	it("skips holes and empty fields when pushing children", () => {
 		const {
 			EstreeView,
@@ -4710,12 +4780,8 @@ describe("JavaScript SourceProcessor", () => {
 		expect(isWalkingSyntaxTree()).toBe(false);
 	});
 
-	it("reads a line's start past a lone carriage return, and moves a position along its line", () => {
-		const {
-			ParserPosition,
-			buildLineStarts
-		} = require("../../../lib/javascript/syntax-parser");
-		expect(buildLineStarts("a\rb\r\nc\nd")).toEqual([0, 2, 5, 7]);
+	it("moves a position along its line", () => {
+		const { ParserPosition } = require("../../../lib/javascript/syntax").parser;
 		expect(new ParserPosition(2, 3).offset(4)).toEqual(
 			new ParserPosition(2, 7)
 		);

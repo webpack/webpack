@@ -29549,6 +29549,14 @@ exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-consu
 
 exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-consumes-a-crlf-pair-as-one-escape-8 tokenizes 1`] = `"delim[0,1] ident[1,9] left-curly-bracket[9,10] ident[10,15] colon[15,16] ident[16,19] right-curly-bracket[19,20] end=20"`;
 
+exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-consumes-a-crlf-pair-as-one-escape-9 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"--x\\"],\\":\\",[\\"ident\\",\\"1\\"],[\\"ident\\",\\"c\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-consumes-a-crlf-pair-as-one-escape-9 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-consumes-a-crlf-pair-as-one-escape-9 prints {"mode":"minify"} 1`] = `"\\"a{--x:\\\\\\\\31\\\\r\\\\n c}\\""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-consumes-a-crlf-pair-as-one-escape-9 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,5] colon[5,6] ident[6,11] comment[11,15] ident[15,16] right-curly-bracket[16,17] end=17"`;
+
 exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-does-not-separate-tokens-that-cannot parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"],\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-does-not-separate-tokens-that-cannot parses 2`] = `""`;
