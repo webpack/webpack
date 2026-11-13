@@ -46,3 +46,17 @@ console.log(new Derived().set);
 (function (self) {
 	console.log(typeof self);
 })(this);
+class Early extends Base {
+	constructor() {
+		(function (self) {
+			console.log("before");
+			self.early = 1;
+		})(this);
+		super();
+	}
+}
+try {
+	new Early();
+} catch (error) {
+	console.log(error.constructor.name);
+}
