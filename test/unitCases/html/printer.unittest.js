@@ -701,6 +701,35 @@ describe("SourceProcessor — reusing work across a print", () => {
 		expect(minify(html, plain)).toBe("<p style=width:16px>");
 	});
 
+	it("marks each stylesheet it offers as one embedded in this document", async () => {
+		const html = fixture("html", "html-printer-marks-each-stylesheet-it-offers-as-one-embedded-in-this-document");
+		const svg = fixture("xml", "html-printer-marks-each-stylesheet-it-offers-as-one-embedded-in-this-document");
+		/** @type {(string | undefined)[]} */
+		const offered = [];
+		/** @type {import("../../../lib/html/syntax-printer").EmbeddedSourceRenderer} */
+		const record = (source, info) => {
+			if (info.type === "css") offered.push(info.as);
+			return undefined;
+		};
+		for (const xml of [false, true]) {
+			const options = {
+				xml,
+				mode: /** @type {"minify"} */ ("minify"),
+				renderEmbeddedSource: record
+			};
+			new SourceProcessor().process(xml ? svg : html, options);
+			await new SourceProcessor().processAsync(xml ? svg : html, options);
+		}
+
+		const sheets = ["embedded-stylesheet", "block-contents", "embedded-stylesheet"];
+		expect(offered).toEqual([
+			...sheets,
+			...sheets,
+			"embedded-stylesheet",
+			"embedded-stylesheet"
+		]);
+	});
+
 	/**
 	 * @param {string} html input markup
 	 * @returns {string} the tag name of the document's deepest element

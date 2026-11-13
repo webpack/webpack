@@ -8,6 +8,14 @@ exports[`XML syntax — invariants builtin-embedded-renderer-what-it-loads-keeps
 
 exports[`XML syntax — invariants builtin-embedded-renderer-what-it-loads-keeps-the-css-parser-out-of-an-html-or tokenizes 1`] = `"attr[5,10|12,38]' open[0,40|1,4] open[40,47|41,45]/ close[47,53|49,52] end=53"`;
 
+exports[`XML syntax — invariants html-printer-marks-each-stylesheet-it-offers-as-one-embedded-in-this-document parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":5,\\"nameEnd\\":10,\\"valueStart\\":12,\\"valueEnd\\":38}],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a{b:c}\\",\\"start\\":47,\\"end\\":53}],\\"selfClosing\\":false,\\"start\\":40,\\"end\\":61,\\"tagEnd\\":47,\\"nameEnd\\":46,\\"contentEnd\\":53}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":67,\\"tagEnd\\":40,\\"nameEnd\\":4,\\"contentEnd\\":61}]"`;
+
+exports[`XML syntax — invariants html-printer-marks-each-stylesheet-it-offers-as-one-embedded-in-this-document parses 2`] = `""`;
+
+exports[`XML syntax — invariants html-printer-marks-each-stylesheet-it-offers-as-one-embedded-in-this-document prints {"xml":true,"mode":"minify"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>a{b:c}</style></svg>"`;
+
+exports[`XML syntax — invariants html-printer-marks-each-stylesheet-it-offers-as-one-embedded-in-this-document tokenizes 1`] = `"attr[5,10|12,38]' open[0,40|1,4] open[40,47|41,46] text[47,53] close[53,61|55,60] close[61,67|63,66] end=67"`;
+
 exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"SourceProcessor","options":{"skip":{"comments":true}}} 1`] = `"Document[0,0] Element(svg)[0,47] Element(style)[5,30] Text[12,22] /Text /Element /Element /Document"`;
 
 exports[`XML syntax — invariants invariants-runner-declared-runs-and-named-renderers parses {"entry":"SourceProcessor","visit":{"fields":["name"],"at":[{"type":"Element","name":"style","do":"skipChildren"}]}} 1`] = `
@@ -1631,7 +1639,7 @@ exports[`XML syntax — invariants source-processor-xml-printing-reads-a-style-s
 </svg>"
 `;
 
-exports[`XML syntax — invariants source-processor-xml-printing-reads-a-style-sheet-across-the-comments-it-drops prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\"a { b : c }d { e : f } g > h { i : j } \\""`;
+exports[`XML syntax — invariants source-processor-xml-printing-reads-a-style-sheet-across-the-comments-it-drops prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\"a { b : c }d { e : f } g > h { i : j } \\""`;
 
 exports[`XML syntax — invariants source-processor-xml-printing-reads-a-style-sheet-across-the-comments-it-drops prints {"xml":true,"mode":"minify"} 1`] = `
 "<svg xmlns=\\"http://www.w3.org/2000/svg\\">
@@ -1721,7 +1729,7 @@ exports[`XML syntax — invariants source-processor-xml-printing-should-defer-an
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-defer-an-xml-stylesheet-to-an-asynchronous prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>a { b : c }</style><rect style=\\"fill: red\\"/><style> </style></svg>"`;
 
-exports[`XML syntax — invariants source-processor-xml-printing-should-defer-an-xml-stylesheet-to-an-asynchronous prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\"a { b : c }\\" css/block-contents:\\"fill: red\\""`;
+exports[`XML syntax — invariants source-processor-xml-printing-should-defer-an-xml-stylesheet-to-an-asynchronous prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\"a { b : c }\\" css/block-contents:\\"fill: red\\""`;
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-defer-an-xml-stylesheet-to-an-asynchronous prints {"xml":true,"mode":"minify"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>a { b : c }</style><rect style=\\"fill: red\\"/><style> </style></svg>"`;
 
@@ -1811,7 +1819,7 @@ exports[`XML syntax — invariants source-processor-xml-printing-should-hand-svg
 </svg>"
 `;
 
-exports[`XML syntax — invariants source-processor-xml-printing-should-hand-svg-and-xhtml-stylesheets-to-the prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\"\\\\n\\\\t.a  { fill : #FFFFFF ; }\\\\n\\\\ttext > tspan { stroke: red }\\\\n\\\\ta[href=\\\\\\"x&y\\\\\\"] { fill: blue }\\\\n\\" css/block-contents:\\"fill: #ff0000 ;  stroke : none\\" css:\\"p  { color : red }\\" css/block-contents:\\"color : red\\" css:\\"a { b : c }\\" css:\\"b { c : d }\\""`;
+exports[`XML syntax — invariants source-processor-xml-printing-should-hand-svg-and-xhtml-stylesheets-to-the prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\"\\\\n\\\\t.a  { fill : #FFFFFF ; }\\\\n\\\\ttext > tspan { stroke: red }\\\\n\\\\ta[href=\\\\\\"x&y\\\\\\"] { fill: blue }\\\\n\\" css/block-contents:\\"fill: #ff0000 ;  stroke : none\\" css/embedded-stylesheet:\\"p  { color : red }\\" css/block-contents:\\"color : red\\" css/embedded-stylesheet:\\"a { b : c }\\" css/embedded-stylesheet:\\"b { c : d }\\""`;
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-hand-svg-and-xhtml-stylesheets-to-the prints {"xml":true,"mode":"minify"} 1`] = `
 "<svg xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:h=\\"http://www.w3.org/1999/xhtml\\">
@@ -1843,7 +1851,7 @@ exports[`XML syntax — invariants source-processor-xml-printing-should-leave-a-
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-leave-a-stylesheet-as-written-when-nothing prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>a { b : c }</style><rect style=\\"fill : red\\"/></svg>"`;
 
-exports[`XML syntax — invariants source-processor-xml-printing-should-leave-a-stylesheet-as-written-when-nothing prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\"a { b : c }\\" css/block-contents:\\"fill : red\\""`;
+exports[`XML syntax — invariants source-processor-xml-printing-should-leave-a-stylesheet-as-written-when-nothing prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\"a { b : c }\\" css/block-contents:\\"fill : red\\""`;
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-leave-a-stylesheet-as-written-when-nothing prints {"xml":true,"mode":"minify"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>a { b : c }</style><rect style=\\"fill : red\\"/></svg>"`;
 
@@ -1857,7 +1865,7 @@ exports[`XML syntax — invariants source-processor-xml-printing-should-resolve-
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-resolve-a-prefixed-stylesheet-s-namespace prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<s:svg xmlns:s=\\"http://www.w3.org/2000/svg\\"><s:style>a { b : c }</s:style><style>d { e : f }</style></s:svg>"`;
 
-exports[`XML syntax — invariants source-processor-xml-printing-should-resolve-a-prefixed-stylesheet-s-namespace prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\"a { b : c }\\""`;
+exports[`XML syntax — invariants source-processor-xml-printing-should-resolve-a-prefixed-stylesheet-s-namespace prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\"a { b : c }\\""`;
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-resolve-a-prefixed-stylesheet-s-namespace prints {"xml":true,"mode":"minify"} 1`] = `"<s:svg xmlns:s=\\"http://www.w3.org/2000/svg\\"><s:style>a { b : c }</s:style><style>d { e : f }</style></s:svg>"`;
 
@@ -1871,7 +1879,7 @@ exports[`XML syntax — invariants source-processor-xml-printing-should-self-clo
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>a{}</style></svg>"`;
 
-exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\"a{}\\""`;
+exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\"a{}\\""`;
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer prints {"xml":true,"mode":"minify"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>a{}</style></svg>"`;
 
@@ -1885,7 +1893,7 @@ exports[`XML syntax — invariants source-processor-xml-printing-should-self-clo
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer-2 prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>.cut</style></svg>"`;
 
-exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer-2 prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\".cut\\""`;
+exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer-2 prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\".cut\\""`;
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer-2 prints {"xml":true,"mode":"minify"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>.cut</style></svg>"`;
 
@@ -1899,7 +1907,7 @@ exports[`XML syntax — invariants source-processor-xml-printing-should-self-clo
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer-3 prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>a { b : c }</style></svg>"`;
 
-exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer-3 prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\"a { b : c }\\""`;
+exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer-3 prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\"a { b : c }\\""`;
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-self-close-a-stylesheet-the-renderer-3 prints {"xml":true,"mode":"minify"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>a { b : c }</style></svg>"`;
 
@@ -1927,7 +1935,7 @@ exports[`XML syntax — invariants source-processor-xml-printing-should-write-on
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-write-only-what-the-target-browsers-read prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>g > .b { fill: rgba(0,0,255,0.5) } @media (min-width: 0px) { .e { fill: red } } .p { user-select: none }</style><rect style=\\"fill: rgba(255,0,0,0.5)\\"/></svg>"`;
 
-exports[`XML syntax — invariants source-processor-xml-printing-should-write-only-what-the-target-browsers-read prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\"g > .b { fill: rgba(0,0,255,0.5) } @media (min-width: 0px) { .e { fill: red } } .p { user-select: none }\\" css/block-contents:\\"fill: rgba(255,0,0,0.5)\\""`;
+exports[`XML syntax — invariants source-processor-xml-printing-should-write-only-what-the-target-browsers-read prints {"xml":true,"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\"g > .b { fill: rgba(0,0,255,0.5) } @media (min-width: 0px) { .e { fill: red } } .p { user-select: none }\\" css/block-contents:\\"fill: rgba(255,0,0,0.5)\\""`;
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-write-only-what-the-target-browsers-read prints {"xml":true,"mode":"minify","renderEmbeddedSource":{"name":"builtin","options":{"environment":{"browsers":["chrome 60","safari 10","ie 11"]}}}} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>g>.b{fill:rgba(0,0,255,.5)}@media (min-width:0px){.e{fill:red}}.p{-webkit-user-select:none;-ms-user-select:none;user-select:none}</style><rect style=\\"fill:rgba(255,0,0,.5)\\"/></svg>"`;
 
