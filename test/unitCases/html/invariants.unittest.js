@@ -16,12 +16,28 @@ const {
 	readPrint,
 	readRun,
 	snapshotOf,
+	snapshotOfPieces,
 	snapshotText,
 	treeLines,
 	unexplained,
+	unlessOverflow,
 	walkLine
 } = require("../../helpers/fixture");
 const serializeHtmlTree = require("../../helpers/serializeHtmlTree");
+
+const { writeHtmlTree } = serializeHtmlTree;
+
+/** The longest indent written so far, which each shorter one is cut from. */
+let indents = "";
+
+/**
+ * @param {number} depth a line's depth
+ * @returns {string} its indent, two spaces a level
+ */
+const indentOf = (depth) => {
+	if (indents.length < depth * 2) indents = "  ".repeat(depth * 2);
+	return indents.slice(0, depth * 2);
+};
 const { invariantFindings } = require("../../helpers/syntaxInvariants");
 const { purityRelation } = require("../../helpers/syntaxInvariants/relations");
 const syntax = require("../../helpers/syntaxInvariants/html");
@@ -236,7 +252,15 @@ describe("HTML syntax — invariants", () => {
 					}
 				});
 				expect(
-					snapshotOf(source, snapshotText(serializeHtmlTree(document)))
+					snapshotOfPieces(source, (write) => {
+						let first = true;
+						writeHtmlTree(document, (depth, text) => {
+							write(first ? "| " : "\n| ");
+							first = false;
+							write(indentOf(depth));
+							write(text);
+						});
+					})
 				).toMatchSnapshot();
 				// The second entry, so the tree's stays as it was.
 				expect(snapshotOf(source, errors.join(" "))).toMatchSnapshot();
@@ -272,7 +296,11 @@ describe("HTML syntax — invariants", () => {
 
 			it("holds its invariants", () => {
 				expect(
-					unexplained(invariantFindings(syntax, [[name, source]]), expected)
+					unexplained(
+						invariantFindings(syntax, [[name, source]]),
+						expected,
+						source
+					)
 				).toEqual([]);
 			});
 		});
@@ -284,7 +312,7 @@ describe("HTML syntax — invariants", () => {
 		const { reports } = purityRelation(
 			all.map(({ name, source }) => ({
 				what: name,
-				digest: () => syntax.digest(source)
+				digest: () => unlessOverflow(() => syntax.digest(source))
 			}))
 		);
 		expect(reports.map((report) => report.repro)).toEqual([]);

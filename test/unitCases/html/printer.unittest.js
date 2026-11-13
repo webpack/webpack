@@ -78,9 +78,9 @@ describe("builtinEmbeddedRenderer — what it loads", () => {
 				const states = [];
 				const state = ({ code }) =>
 					states.push({ code, css: require.cache[cssParser] !== undefined });
-				state(await webpack.html.xmlMinify({ "a.svg": "<svg xmlns='http://www.w3.org/2000/svg'><rect/></svg>" }, undefined, { css: {} }));
-				state(await webpack.html.htmlMinify({ "a.html": "<p>hi</p>" }, undefined, { css: {} }));
-				state(await webpack.html.htmlMinify({ "a.html": "<style>a { color : #ff0000 }</style>" }, undefined, { css: { shortenColors: false } }));
+				state(await webpack.html.xmlMinify({ "a.svg": ${JSON.stringify(fixture("xml", "builtin-embedded-renderer-what-it-loads-keeps-the-css-parser-out-of-an-html-or"))} }, undefined, { css: {} }));
+				state(await webpack.html.htmlMinify({ "a.html": ${JSON.stringify(fixture("html", "builtin-embedded-renderer-what-it-loads-keeps-the-css-parser-out-of-an-html-or-2"))} }, undefined, { css: {} }));
+				state(await webpack.html.htmlMinify({ "a.html": ${JSON.stringify(fixture("html", "builtin-embedded-renderer-what-it-loads-keeps-the-css-parser-out-of-an-html-or-3"))} }, undefined, { css: { shortenColors: false } }));
 				process.stdout.write(JSON.stringify(states));
 			})();
 		`;
@@ -108,7 +108,7 @@ describe("SourceProcessor — one print at a time", () => {
 				.use(
 					/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
 						[NodeType.Element]: () => {
-							new SourceProcessor().process("<b>nested</b>", { mode: "minify" });
+							new SourceProcessor().process(fixture("html", "source-processor-streamed-walk-offsets-refuses-a-nested-parse-rather-than-taking"), { mode: "minify" });
 						}
 					})
 				)
@@ -149,34 +149,34 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 
 		for (const [sheet, closing] of /** @type {[string, string | null][]} */ ([
 			// §4.3.6: whitespace may open and end a url; a bad one runs to a `)`.
-			["a{b:url( x", ")}"],
-			["a{b:url(  ", ")}"],
-			["a{b:url( x )", "}"],
-			["a{b:url(x ", ")}"],
-			["a{b:url(x  )", "}"],
-			["url(x", "){}"],
-			["a{b:url(x y(", ")}"],
-			["a{b:url(x\\)y", ")}"],
-			["a{b:url(x\\\ny(", ")}"],
-			["a{b:url(x\\\ny\\\nz", ")}"],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input"), ")}"],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-2"), ")}"],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-3"), "}"],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-4"), ")}"],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-5"), "}"],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-6"), "){}"],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-7"), ")}"],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-8"), ")}"],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-9"), ")}"],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-10"), ")}"],
 			// A quoted url is a function holding a string.
-			['a{b:url("x', '")}'],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-11"), '")}'],
 			// Part of a longer name, `url(` is a function's name, not a url token.
-			["a{b:image-url(x", ")}"],
-			["a{b:\\url(x", ")}"],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-12"), ")}"],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-13"), ")}"],
 			// An escape starts a name, so `@` opens an at-rule; one before a
 			// newline is no escape, and `@` a delimiter opening a prelude.
-			["x{}@\\61 b", ";"],
-			["x{}@-\\61", ";"],
-			["x{}@-\\\n", "{}"],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-14"), ";"],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-15"), ";"],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-16"), "{}"],
 			// Past whitespace and comments, a custom property's open value is kept.
-			["a{/*c*/--x:f(", null],
-			["a{\t--x:[1", null],
-			["a{ /*c*/ b:f(", ")}"],
-			["a{b:1;/*", "*/}"],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-17"), null],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-18"), null],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-19"), ")}"],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-20"), "*/}"],
 			// A lone backslash escapes whatever would follow it.
-			["a{b:url(x\\", null],
-			["x{}@\\", null]
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-21"), null],
+			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-22"), null]
 		])) {
 			expect({ sheet, closing: _sheetClosing(sheet) }).toEqual({
 				sheet,
@@ -347,17 +347,17 @@ describe("SourceProcessor — removeRedundantAttributes and script charset", () 
 		const { declaresUtf8 } = require("../../../lib/html/syntax-parser");
 
 		for (const html of [
-			'<div title="<meta charset=utf-8>',
-			"<!-- <meta charset=utf-8>",
-			"<!doctype <meta charset=utf-8>",
-			"<?x <meta charset=utf-8>",
-			"<?x <meta charset=utf-8",
-			'</div x="><meta charset=utf-8>'
+			fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-reads-nothing"),
+			fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-2"),
+			fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-3"),
+			fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-4"),
+			fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-5"),
+			fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-6")
 		]) {
 			expect(declaresUtf8(html)).toBe(false);
 		}
-		expect(declaresUtf8('<!-->x<meta charset="utf-8">')).toBe(true);
-		expect(declaresUtf8('</ x><meta charset="utf-8">')).toBe(true);
+		expect(declaresUtf8(fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-7"))).toBe(true);
+		expect(declaresUtf8(fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-8"))).toBe(true);
 	});
 });
 
@@ -406,9 +406,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		// Each choice is one a deferred print makes on the source: the emptied
 		// sheet and list go with their elements; the sheet the input left open
 		// in a custom property's value is kept as written, on its own.
-		const html =
-			'<p>x<style>a{}</style><div style="color:"></div>' +
-			"<style>.a{--x:f(</style><style>.b{color:red}</style><script>1</script>";
+		const html = fixture("html", "source-processor-render-embedded-source-prints-again-where-an-answer-overturns-a");
 		const options = {
 			mode: /** @type {"minify"} */ ("minify"),
 			mergeStyles: true,
@@ -633,15 +631,14 @@ describe("SourceProcessor — the leading newline of `<pre>`", () => {
 	// Run in a heap far smaller than a copy of every subtree would take, which a
 	// per-element read of the composed children's first character used to make.
 	it.each([
-		["<pre>", "<pre>", "</pre>"],
-		["<svg> under a renderer", "<svg><g>", "</g></svg>"]
-	])("prints %s nested 20000 deep in a small heap", (_, open, close) => {
+		["<pre>", ""],
+		["<svg> under a renderer", "-2"]
+	])("prints %s nested 20000 deep in a small heap", (_, suffix) => {
 		const script = `
 			const { SourceProcessor } = require(${JSON.stringify(
 				require.resolve("../../../lib/html/syntax")
 			)});
-			const source = ${JSON.stringify(open)}.repeat(20000) + "x" +
-				${JSON.stringify(close)}.repeat(20000);
+			const source = require("fs").readFileSync(0, "utf8");
 			const { code } = new SourceProcessor().process(source, {
 				mode: "minify",
 				renderEmbeddedSource: () => undefined
@@ -652,7 +649,14 @@ describe("SourceProcessor — the leading newline of `<pre>`", () => {
 			execFileSync(
 				process.execPath,
 				["--max-old-space-size=128", "-e", script],
-				{ encoding: "utf8", stdio: "pipe" }
+				{
+					encoding: "utf8",
+					input: fixture(
+						"html",
+						`source-processor-the-leading-newline-of-pre-prints-nested-20000-deep-in-a-small-heap${suffix}`
+					),
+					stdio: "pipe"
+				}
 			)
 		).toBe("true");
 	});
@@ -703,10 +707,6 @@ describe("SourceProcessor — reusing work across a print", () => {
 		// A slot is picked by first character and length, so 512 consecutive
 		// lengths reach every one — the parse that drops the memo whole.
 		const SLOTS = 512;
-		let markup = "<body>";
-		for (let i = 1; i <= SLOTS; i++) {
-			markup += `<x-${"a".repeat(i)}></x-${"a".repeat(i)}>`;
-		}
 		/** @type {string[]} */
 		const names = [];
 		/**
@@ -721,7 +721,7 @@ describe("SourceProcessor — reusing work across a print", () => {
 				}
 			}
 		};
-		walk(parseHtmlRefs(markup));
+		walk(parseHtmlRefs(fixture("html", "source-processor-reusing-work-across-a-print-reads-back-every-name-of-a-document")));
 		expect(names).toHaveLength(SLOTS + 3);
 		expect(names[3]).toBe("x-a");
 		expect(names[names.length - 1]).toBe(`x-${"a".repeat(SLOTS)}`);
@@ -963,9 +963,10 @@ describe("SourceProcessor — the markup generators", () => {
 		const text = "a & b < c > d e\nf\rg";
 		expect(escapeText("plain")).toBe("plain");
 		expect(escapeText(text)).toBe("a &amp; b &lt; c &gt; d&nbsp;e&#10;f&#13;g");
-		expect(tree(`<p>${escapeText(text)}`)).toBe(
+		// The fixture is `<p>` and that escape, which reads back as the text.
+		expect(
 			tree(fixture("html", "source-processor-the-markup-generators-escapes-text-so-that-it-reads-back-as"))
-		);
+		).toBe(`| <html>\n|   <head>\n|   <body>\n|     <p>\n|       "${text}"`);
 	});
 
 	it("escapes an attribute value for the quote it is written in", () => {
@@ -1015,9 +1016,6 @@ describe("SourceProcessor — the markup generators", () => {
 describe("SourceProcessor — the streamed walk", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 
-	// Past `_STREAM_MIN_NODES` (49152) the walk follows the open element stack,
-	// entering what is still open and recycling what finished under it.
-	const BIG = 40000;
 
 
 
@@ -1040,7 +1038,7 @@ describe("SourceProcessor — the streamed walk", () => {
 				if (path.name() === "b") path.stop();
 			}
 		});
-		processor.process(`${fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints").repeat(BIG)}<b>y</b><i>z</i>`);
+		processor.process(fixture("html", "source-processor-the-streamed-walk-ends-a-walk-a-visitor-stopped-and-fires-its-2"));
 		expect(log.slice(-2)).toEqual(["p", "b"]);
 		log.length = 0;
 		processor.process(fixture("html", "source-processor-the-streamed-walk-ends-a-walk-a-visitor-stopped-and-fires-its"));

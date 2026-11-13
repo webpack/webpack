@@ -1,0 +1,1 @@
+var r=function(){};export default r

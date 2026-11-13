@@ -1,0 +1,1 @@
+function f(){if(x)return;else z();w();return 5}

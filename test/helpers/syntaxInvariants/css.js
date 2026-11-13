@@ -10,6 +10,7 @@
 const MODERN_BROWSERS = require("browserslist")(
 	"last 1 chrome version, last 1 firefox version, last 1 safari version, last 1 edge version"
 );
+const { isStackOverflow } = require("../fixture");
 const { SourceProcessor } = require("../../../lib/css/syntax");
 const {
 	NodeType,
@@ -453,6 +454,8 @@ const cssPurityDigest = (css, print) => {
 		new SourceProcessor().use(visitors).process(css, {});
 		digest.update(print(css));
 	} catch (error) {
+		// Where the stack runs out is the machine's, not the parser's answer.
+		if (isStackOverflow(error)) throw error;
 		return `refused: ${/** @type {Error} */ (error).message}`;
 	}
 	return digest.hex();

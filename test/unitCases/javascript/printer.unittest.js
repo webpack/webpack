@@ -120,72 +120,6 @@ const {
 } = require("../../../lib/javascript/syntax-parser");
 
 describe("JavaScript minifier printing a SyntaxTree", () => {
-	it("should compress in the one pass where nothing outside a node decides it", () => {
-		/** @type {[string, import("../../../lib/javascript/syntax-printer").MinifyOptions, string][]} */
-		const cases = [
-			// What nothing reads goes where its value makes nothing happen.
-			[
-				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-32"),
-				{},
-				"function f(n){g();q;({...o});`${n}`;g();var t=0;return n}var top=1;function topFunction(){}"
-			],
-			// A statement folds into the next one's first read, where nothing runs before it.
-			[
-				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-52"),
-				{},
-				"function f(x){var e=g();return e=g(),e=g(),h(...e),e=g(),delete e.y,e=g(),e=g(),e=g(),k,e=g(),new x(e=g()),e=g(),new x(...e),new U(e=g()),e=g(),[...e],`${e=g()}`,-(e=g()),e}"
-			],
-			// A `break` under a label leaves as one bare does: what follows it goes, and a case running only it runs nothing.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-718"), { compress: {} }, "function a(e){}function b(){for(;;)break}function c(){return 1}function d(e){e===1?p():q()}function e(){p()}function k(){for(;;)g()}function m(){h()}function n(e){}function p(e){switch(e){case 1:q();/*! c */e:break;default:r()}}"],
-			// A `switch` whose cases run nothing runs what it tests and its first test, where no later test runs code.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-719"), { compress: {} }, "function a(c){g()}function b(){g(),h()}function c(c){g()}function d(c){switch(c){case g():case h():}}function e(c){switch(c){case 1:case h():}}function f(c){switch(c){case g():case 2:h()}}function i(c,s){if(s)g();else h()}function j(c){a(),b()}function k(c){y=1}function l(c){g()}x,g();function m(c){switch(c){/*! c */case g():}}"],
-			// A case's block keeping its braces is the `if`'s body, a `break` ending it dropped.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-720"), { compress: {} }, "function a(c){if(c===E){let{data:a}=c;call(a)}}function b(c){if(c===E){function a(){}call(a)}}function c(c,a){if(c===E)call(c);else a()}function d(c){if(c===E)call(c)}function e(c){if(c===E){let c=h();g(c,c)}}function f(c){if(c===E){g(),h()}return 1}function i(c){switch(c){case E:}}function j(c){switch(c){case E:if(c)break;g()}}function k(c){switch(c){case E:g();break;default:m()}}"],
-			// A block whose `break` no `;` precedes once printed, or a discriminant holding a comment, stays.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-721"), { compress: {} }, "function a(e){switch(e){case E:try{w()}finally{c()}break}}function b(c){if(c===E){if(c)g()}}1+/*! keep */2,probe();function c(e){switch(e){case E:try{w()}finally{c()}break}}function d(c,e){if(e){if(c===E){g(),h()}}else k()}"],
-			// `void 0` in an array joins as nothing, as `undefined` does.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-722"), { compress: {} }, "console.log(\"a\",\",b\",\",1\",[void g()]+\"c\",\"d\");function f(n){return[n]+\"\"}"],
-			// An unread `~`, `-` or `+` of `undefined` runs only what it takes; one of a call nothing notes unread stays.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-723"), { compress: {} }, "function a(){b}function c(){b,d()}function e(){g()}function h(){g()}function i(){b}function j(){~function(){}(1)}function k(){~function(){}(b),d()}function l(){~function(){g()}()}function m(){~function(){}(...b)}function n(){~g()}function o(){x=~function(){}(b)}"],
-			// A `0|` beside any bitwise operator or shift goes where the other side is no BigInt.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-724"), { compress: {} }, "function a(n,r){return!(n<0)^r}function b(n,r){return r^!n}function c(n){return!n&1}function d(n,r){return n*r^1}function e(n,r){return(0|n)^r}function f(n){return(0|n)^1n}function g(n,r){return(0|-n)<<r}"],
-			// An object literal read off another prints in its place, but where its `{` would open a block.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-725"), { compress: {} }, "x={b:1},y={b:1},z={b:g()},w=`${{b:1}}`,f=()=>({a:{b:1}}.a),v={b(){return this}}.b(),delete{a:{b:1}}.a,[{b:g()}][0].c;"],
-			// `globalDefs` reads `?.` in a chain it defines as `.`.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-726"), { compress: { globalDefs: { "a.b.c": "d", "x.y": 5 } } }, "console.log(\"d\",\"d\",\"d\",a?.b,5..toFixed(),\"d\");"],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-12"), { compress: {} }, "f(),g(),e(),h;"],
-			// A loop head's declarator folds into the next, and an alias nothing reads goes from it, but not one a value folds into.
-			[
-				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-write-a-value-at-its-one-read-2"),
-				{},
-				"function f(){for(var a=foo;bar;)return a}function g(){for(let o=foo,a=bar;baz;)return[o,a]}function h(){for(let a=foo();bar;a++)use(()=>a)}function k(){for(let o=foo(),a=o.x,f=1;f;f--)use(o,a)}function m(o){for(;o;)return o}function n(){for(let a=foo(),f=1;f;f--)use(f)}"
-			],
-			// esbuild's `-(a,b)` as `a,-b`, and `yield` or `await` alike, where a sequence stands bare, but where its first value would open the statement as a block.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-488"), {}, "a(),-b,a(),b,~c,a(),+1,a(),- -b,x=-(a(),b),f(),-g();async function h(){c(),await d,c(),await(d+e)}function*k(){c(),yield d,c(),yield*d}"],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-507"), {}, "a,b;var v=a!=b;function g(){return a!==b}"],
-			// `!!b` is `b` where `b` is a boolean; a key an integer spells is that number; a static block running nothing goes.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-514"), {}, "a=delete b,a=b==c,a=(b==c)+1,a=!(b<c);if(!(b<c))d();a=!b;(function(){g()})(),x;(function(){g()})(),x;x[0],x[-123],x[\"-0\"],x[\"01\"],x?.[5];class P{foo}class Q{}class R{static{g()}}"],
-			// What nobody reads: an operator running only its operand goes, a branch running nothing goes, an array or object prints what its parts run, `x==null&&y` is `x??y`.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-522"), {}, "x.y,x?.y,x.y,x.y.z(),delete x.y,delete x,x,g(),a,b,f(),a<b,g(),a=b;({}).a+1;foo(),foo()||bar(),foo()&&bar(),a,b||c(),(a??b)||c(),x=foo()?1:2,c||(a=b),c||(d,e),c&&d;"],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-523"), {}, "a,foo(),[...c,a],foo(),foo(),bar(),foo(),g(),h(),x=[a(),b()],g(),g(),a(),b(),b,x=(f(),1);"],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-537"), {}, "x,x(),x,a(),b,a,b(),f(a===b,c()),g(),a(),b(),h(),x,b(),b;"],
-			// terser's `switches`: cases ending a `switch` that run nothing go; one with none left runs its test, or goes from its list.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-546"), {}, "a();a;if(a===3)b();if(a===3)b();a,f();a,b();switch(a){case 1:b();break;case 2:c()}if(x)y;else z();function f(a){g()}switch(a){case 1:/*! k */}"],
-			// terser's `switches` of one case and a `default`: `if…else` after a `break`, the other after where one falls into it, in a list, its block keeping braces.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-592"), {}, "a===1?b():c();if(a===1)b();c();a===1?b():c();if(a!==1)c();b();if(a!==1)b();if(a!==1)b();if(a===1)b();else if(y)z();w();if(a===1){if(y)z()}else w();if(a===1){let a=g();f(a,a)}else h();switch(a){case 1:f();if(x)break;g();break;default:h()}for(;;)switch(a){case 1:f();break;default:g()}if(x){if(a===1)f();g()}else h();switch(a){/*! c */case 1:b();break;default:c()}b()===1?c():d(),a===f()?c():d();"],
-			// Nobody reading it, a loose or ordering comparison of two primitives runs only its sides, as a strict one does, which print bare in the sequence; one side that may be an object stays.
-			[fixture("javascript", "e-conditions-14"), { mangle: false }, "a+\"\",b|c,b+\"\",a|0,b|0,a,b,f(),g(),h(),a,b,a+\"\"<b,x=a+\"\"==(b|c);"]
-		];
-		for (const [source, options, expected] of cases) {
-			const { code } = minifyOnePass(source, {
-				compress: { toplevel: false },
-				mangle: { toplevel: false },
-				...options
-			});
-			expect(code).toBe(expected);
-		}
-	});
-
 	it("should keep a case's `break` where no `;` before it prints", () => {
 		const source = fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-720");
 		const { code } = minifyOnePass(source, {
@@ -210,7 +144,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 	it("should compress in the one pass what a long input, the engine or the map decides", () => {
 		// A literal read too far on stays where it is, the search for the read bounded.
 		expect(
-			minifyOnePass(`function f(p){var o=[p];${"g();".repeat(3000)}h(o)}`, {
+			minifyOnePass(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-what"), {
 				compress: { toplevel: false },
 				mangle: false
 			}).code
@@ -314,26 +248,27 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 	});
 
 	it("should keep the parentheses a binary takes under a `!` of `!!`", () => {
+		// Each returns `[<expression>]`, which the print is cut down to.
 		const print = (/** @type {string} */ source) =>
-			minifyOnePass(`function f(e,t,g){return[${source}]}`, {
+			minifyOnePass(source, {
 				compress: {},
 				mangle: false
 			}).code.slice(25, -2);
 		for (const [source, expected] of [
-			["!!!(e&6)", "!(e&6)"],
-			["!!(!(e+t))", "!(e+t)"],
-			["!!!(e===t)", "!(e===t)"],
-			["!!!(e&6)?t:g", "e&6?g:t"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-the-parentheses-a-binary"), "!(e&6)"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-the-parentheses-a-binary-2"), "!(e+t)"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-the-parentheses-a-binary-3"), "!(e===t)"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-the-parentheses-a-binary-4"), "e&6?g:t"],
 			// Read only for its truth elsewhere, `!!x` still prints as `x`.
-			["!!(e&6)?t:g", "e&6?t:g"]
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-the-parentheses-a-binary-5"), "e&6?t:g"]
 		]) {
 			expect(print(source)).toBe(expected);
 		}
-		for (const [source, value] of [
-			["!!!(e&6)", [false, true]],
-			["!!(!(e+t))", [false, true]]
-		]) {
-			const { code } = minifyOnePass(`function f(e,t){return ${source}}`, {
+		for (const [source, value] of /** @type {[string, boolean[]][]} */ ([
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-the-parentheses-a-binary-6"), [false, true]],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-the-parentheses-a-binary-7"), [false, true]]
+		])) {
+			const { code } = minifyOnePass(source, {
 				compress: {},
 				mangle: false
 			});
@@ -884,7 +819,7 @@ describe("JavaScript SourceProcessor printing", () => {
 								parsedTree()
 							),
 							path.node,
-							"f()",
+							fixture("javascript", "javascript-source-processor-printing-should-refuse-a-walk-a-visitor-starts"),
 							[],
 							undefined
 						);
@@ -899,7 +834,7 @@ describe("JavaScript SourceProcessor printing", () => {
 		expect(processor.process(fixture("javascript", "javascript-source-processor-printing-should-print-one-source-after-another-and"), { mode: "minify" }).code).toBe(
 			"a(1);"
 		);
-		expect(() => processor.process("a(", { mode: "minify" })).toThrow(
+		expect(() => processor.process(fixture("javascript", "javascript-source-processor-printing-should-print-one-source-after-another-and-a"), { mode: "minify" })).toThrow(
 			/Unexpected token/
 		);
 		expect(
@@ -941,7 +876,7 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 		const letters = "abcdefghij";
 		let resets = 0;
 		const { code } = minifyOnePass(
-			"class K { #first = 1; #second = 2; get() { return this.#first + this.#second; } } console.log(new K().get());",
+			fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-read-its-own-tree-after-a-name"),
 			{
 				sourceType: "script",
 				mangle: {
@@ -949,7 +884,7 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 						get: (n) => letters[n],
 						reset: () => {
 							resets++;
-							parseProgram("var other = 1;", 0, {});
+							parseProgram(fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-read-its-own-tree-after-a-name-2"), 0, {});
 						},
 						consider: () => {},
 						sort: () => {}
@@ -968,14 +903,14 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 		const { parseProgram } = require("../../../lib/javascript/syntax").parser;
 		const letters = "abcdefghij";
 		const { code } = minifyOnePass(
-			"class K { #first = 1; #second = 2; get() { return this.#first + this.#second; } } console.log(new K().get());",
+			fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-read-its-own-tree-after-a-name"),
 			{
 				sourceType: "script",
 				mangle: {
 					nthIdentifier: {
 						get: (n) => {
 							if (!isWalkingSyntaxTree()) {
-								parseProgram("var other = 1;", 0, {});
+								parseProgram(fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-read-its-own-tree-after-a-name-2"), 0, {});
 							}
 							return letters[n];
 						}
@@ -989,31 +924,7 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 	});
 
 	it("should keep a sloppy block's function in its block where a lexical name would clash, in the one pass", () => {
-		const source = [
-			"function t1(){ let f = 1; { function f() { return 2 } } return typeof f }",
-			"function t2(){ { let f = 1; { function f(){} } return typeof f } }",
-			"function t3(x){ switch (x) { case 1: let g = 1; { function g(){} } return typeof g } }",
-			"function t4(){ for (let h of [1]) { { function h(){} } return typeof h } }",
-			"function t5(){ for (let i = 0; i < 1; i++) { { function i(){} } return typeof i } }",
-			"function t6(){ for (const j in {a: 1}) { { function j(){} } return typeof j } }",
-			"function t7(){ try { throw { a: [1, 2] } } catch ({ a: [b = 1, ...c], d: e }) { { function c(){} } return typeof c } }",
-			"function t8(){ try { throw 1 } catch (e) { let k = 1; { function k(){} } return typeof k } }",
-			"function t9(p) { { function p(){} } return typeof p }",
-			"function t10({ q }) { { function q(){} } return typeof q }",
-			"function t11() { { function s(){} } return typeof s }",
-			"function t12() { class u {} { function u(){} } return typeof u }",
-			"function t13([v = 1]) { { function v(){} } return typeof v }",
-			"function t14(...w) { { function w(){} } return typeof w }",
-			"function t15(){ for (;;) { { function z(){} } return typeof z } }",
-			"function t16(x){ switch (x) { case 1: let o; break; case 2: { function g2(){} } return typeof g2 } }",
-			"function t17(){ for (var k in {a: 1}) { { function k2(){} } return typeof k2 } }",
-			"function t18(){ try { throw 1 } catch (e) { { function e2(){} } return typeof e2 } }",
-			"function t19(){ try { throw 1 } catch (e) { var e = 2; return e } }",
-			"function t20(){ try { throw [1, 2] } catch ([, h]) { { function h(){} } return typeof h } }",
-			"function t21(){ try { throw {} } catch ({ ...r }) { { function r(){} } return typeof r } }",
-			"function t22(){ var o = {a: 1}, p = {b: 2}, a = 0, b = 0; with (o) { with (p) { return a + b } } }",
-			"console.log(t1(), t2(), t3(1), t4(), t5(), t6(), t7(), t8(), t9(1), t10({}), t11(), t12(), t13([]), t14(), t15(), t16(2), t17(), t18(), t19(), t20(), t21(), t22());"
-		].join("\n");
+		const source = fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-keep-a-sloppy-block-s-function");
 		expect(runProgram(source)).toBe(
 			"number number number number number string object number number undefined function function number object function function function function 2 number object 3"
 		);
@@ -1097,11 +1008,11 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 	it("should refuse a node its scope analysis cannot read", () => {
 		const tree = new SyntaxTree();
 		const program = tree.addEstree(
-			/** @type {EXPECTED_ANY} */ (WebpackParser.parse("a;", {}))
+			/** @type {EXPECTED_ANY} */ (WebpackParser.parse(fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-refuse-a-node-its-scope"), {}))
 		);
 		const types = Uint8Array.from(tree._types);
 		types[tree.field(0, Field.body, program)] = 255;
-		readParsedTree(tree, "a;");
+		readParsedTree(tree, fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-refuse-a-node-its-scope"));
 		expect(() =>
 			analyzeMinifierTree(program, types, {}, () => {
 				throw new Error("unreachable");
@@ -1145,14 +1056,14 @@ const INPUT_MAP = {
 
 describe("jsMinify", () => {
 	it("takes the minimizer options as optional", async () => {
-		const { code } = await jsMinify({ "a.js": "var a = 1;" }, undefined);
+		const { code } = await jsMinify({ "a.js": fixture("javascript", "js-minify-takes-the-minimizer-options-as-optional") }, undefined);
 		expect(code).toBe("var a=1;");
 	});
 
 	it("should cache the names it hands out across assets", async () => {
 		const nameCache = {};
 		const result = await jsMinify(
-			{ "cached.js": "var longName = 1; sink(longName);" },
+			{ "cached.js": fixture("javascript", "js-minify-should-cache-the-names-it-hands-out-across-assets") },
 			INPUT_MAP,
 			{ toplevel: true, nameCache },
 			false
@@ -1163,13 +1074,13 @@ describe("jsMinify", () => {
 		const shared = {};
 		const options = { compress: false, toplevel: true, nameCache: shared };
 		const first = await jsMinify(
-			{ "first.js": 'var shared = "cached"; sink(shared);' },
+			{ "first.js": fixture("javascript", "js-minify-should-cache-the-names-it-hands-out-across-assets-2") },
 			undefined,
 			{ ...options },
 			false
 		);
 		const second = await jsMinify(
-			{ "second.js": "sink(shared);" },
+			{ "second.js": fixture("javascript", "js-minify-should-cache-the-names-it-hands-out-across-assets-3") },
 			undefined,
 			{ ...options },
 			false
@@ -1185,13 +1096,13 @@ describe("jsMinify", () => {
 		// Exercise a malformed runtime pattern outside the published type union.
 		const invalidPattern = /** @type {EXPECTED_ANY} */ ("[");
 		const options = { format: { comments: invalidPattern } };
-		const input = { "plain.js": "run();" };
+		const input = { "plain.js": fixture("javascript", "js-minify-should-defer-invalid-comment-patterns-until-a-comment-is-tested") };
 		expect(
 			await jsMinify(input, undefined, options, { condition: invalidPattern })
 		).toEqual(
 			await jsMinify(input, undefined, { format: { comments: false } }, false)
 		);
-		const commented = { "commented.js": "/* comment */ run();" };
+		const commented = { "commented.js": fixture("javascript", "js-minify-should-defer-invalid-comment-patterns-until-a-comment-is-tested-2") };
 		await expect(
 			jsMinify(commented, undefined, options, false)
 		).rejects.toThrow(SyntaxError);
@@ -1313,29 +1224,18 @@ describe("one-pass minify of statement sequences", () => {
 	});
 });
 
-describe("one-pass minify spellings", () => {
-	it("should drop the `break` ending a block the last case of a `switch` ends with", () => {
-		const source = fixture("javascript", "j-spellings-11");
-		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
-		expect(code).toBe(
-			"function f(a,q){switch(a){default:console.log(1);break;case 1:console.log(2)}if(q===2){let y=a+1;console.log(y,y)}}f(1,2),f(0,0);"
-		);
-		expect(runProgram(code)).toBe(runProgram(source));
-	});
-});
-
 describe("one-pass minify of reads and calls on literals", () => {
 	it("should drop the trailing parameters nothing reads under `keep_fargs: false`", () => {
-		const source = 'function f(a,b){return a}var g=(a,b)=>a,o={set x(v){},m(a){}};function h(a){return arguments}function k(a){eval("a")}console.log(f.length,g.length,o.m.length,h.length,k.length)';
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-drop-the-trailing");
 		const { code } = minifyOnePass(source, { compress: { keep_fargs: false }, mangle: false });
 		// A setter's one parameter, `arguments` and `eval` keep theirs.
 		expect(code).toBe('function f(a){return a}var g=a=>a,o={set x(v){},m(){}};function h(a){return arguments}function k(a){eval("a")}console.log(f.length,g.length,o.m.length,h.length,k.length);');
 		// By default they stay.
-		expect(minifyOnePass("function f(a,b){return a}console.log(f.length)", { compress: {}, mangle: false }).code).toBe("function f(a,b){return a}console.log(f.length);");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-drop-the-trailing-2"), { compress: {}, mangle: false }).code).toBe("function f(a,b){return a}console.log(f.length);");
 	});
 
 	it("should keep only what the sides of an unread loose equality run", () => {
-		const source = "a==b;c()!=d;a()<b;";
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the-sides");
 		// A relation throws on a symbol, which `==` does not: it stays.
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("a,b,c(),d,a()<b;");
 		// An object's `valueOf` may run where conversions are not taken as pure.
@@ -1343,31 +1243,31 @@ describe("one-pass minify of reads and calls on literals", () => {
 	});
 
 	it("should keep only what the computed keys and values of an unread object run", () => {
-		const source = "({[a]:x(),[b()]:1,get[c()](){},set d(v){},e:f()});";
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the");
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("a,x(),b(),c(),f();");
 		// A key may convert an object running its `toString` where conversions are not taken as pure.
 		expect(minifyOnePass(source, { compress: { pure_conversions: false }, mangle: false }).code).toBe("({[a]:x(),[b()]:1,get[c()](){},set d(v){},e:f()});");
 	});
 
 	it("should keep only what the computed keys of an unread class run", () => {
-		const source = '(class{[a](){}static["b"]=1;#p;get[c](){}static{}static d=1}),x=(class{[e]},1);';
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the-2");
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("a,c,x=(e,1);");
 		// A static value, block, `extends` or key that may name `prototype`, or a key reading the class's own name, keeps it.
 		expect(
-			minifyOnePass('(class{[a];static b=f()}),(class{[a];static{f()}}),(class extends B{[a]}),(class{static[f()]=1}),(class{static["prototype"](){}}),(class C{[r(()=>C)](){}});', { compress: {}, mangle: false }).code
+			minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the-3"), { compress: {}, mangle: false }).code
 		).toBe('(class{[a];static b=f()}),class{[a];static{f()}},class extends B{[a]},class{static[f()]=1},class{static["prototype"](){}},class C{[r(()=>C)](){}};');
 		// A direct `eval` in a key may read the class's name too.
-		expect(minifyOnePass('(class C{[r(()=>eval("C"))](){}});', { compress: {}, mangle: false }).code).toBe('(class C{[r(()=>eval("C"))](){}});');
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the-4"), { compress: {}, mangle: false }).code).toBe('(class C{[r(()=>eval("C"))](){}});');
 		// Beside a key that runs code, a static `prototype` keeps the class too, as making it throws.
-		const throwing = '(class{[a()](){}static["prototype"](){}}),(class{[a()];static["prototype"]=1}),(class{[a()];static[k()]=1});';
+		const throwing = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the-5");
 		expect(minifyOnePass(throwing, { compress: {}, mangle: false }).code).toBe('(class{[a()](){}static["prototype"](){}}),class{[a()];static["prototype"]=1},class{[a()];static[k()]=1};');
-		const program = `var a=()=>"k",k=()=>"prototype";try{(class{[a()](){}static["prototype"](){}})}catch(e){console.log(e.name)}try{(class{[a()];static["prototype"]=1})}catch(e){console.log(e.name)}try{(class{[a()];static[k()]=1})}catch(e){console.log(e.name)}`;
+		const program = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the-6");
 		expect(runProgram(minifyOnePass(program, { compress: {}, mangle: false }).code)).toBe("TypeError\nTypeError\nTypeError");
 	});
 
 	it("should fold a value read only by its null check into the optional chain it prints as", () => {
 		const source =
-			"function f(){let a=g();return a!=null?a.b:void 0}function h(){let a=g();return a==null?void 0:a?.b.c[d](e)}function k(a){return a!=undefined?a.b:undefined}function l(){let a=o.m;return a!=null?a():void 0}function n(){let a=g();return null!=a?a(1):void 0}function p(){let a=o.m;return a!=null?a.x():void 0}";
+			fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-read-only-by");
 		// A member called bare would bind its object as `this`, so it stays apart.
 		expect(minifyOnePass(source, { compress: {}, mangle: false, ecma: 2020 }).code).toBe(
 			"function f(){return g()?.b}function h(){return g()?.b.c[d](e)}function k(a){return a?.b}function l(){let a=o.m;return a?.()}function n(){return g()?.(1)}function p(){return o.m?.x()}"
@@ -1378,16 +1278,16 @@ describe("one-pass minify of reads and calls on literals", () => {
 		// Kept apart: a value printing in parentheses before `?.`, another branch
 		// than `undefined`, a chain on another name, another test, no chain.
 		const kept =
-			"function s(){let a=x+y;return a!=null?a.b:void 0}function t(){let a=g();return a!=null?a.b:1}function u(){let a=g();return a!=null?b.c(a):void 0}function v(){let a=g();return a!=null&&x?a.b:void 0}function w(){let a=g();return a!=null?a:void 0}function y(){let a=g();return b!=null?a.b(a):void 0}function z(){let a=g();return a===b?a.b:void 0}";
+			fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-read-only-by-2");
 		expect(minifyOnePass(kept, { compress: {}, mangle: false, ecma: 2020 }).code).toBe(
 			"function s(){let a=x+y;return a?.b}function t(){let a=g();return a!=null?a.b:1}function u(){let a=g();return a!=null?b.c(a):void 0}function v(){let a=g();return a!=null&&x?a.b:void 0}function w(){let a=g();return a!=null?a:void 0}function y(){let a=g();return b!=null?a.b(a):void 0}function z(){let a=g();return a===b?a.b:void 0}"
 		);
 		// A value printing as a constant: the test picks, or `?.` takes it whole.
 		const constant =
-			'function i(){var s="a";var x=s;return x!=null?x.y:void 0}function j(){const o={p:-1};let x=o.p;return x!=null?x.y:void 0}function q(){let x=(()=>-1)();return x!=null?x.y:void 0}function r(){let x=String(1);return x!=null?x.y:void 0}';
+			fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-read-only-by-3");
 		const constantCode = minifyOnePass(constant, { compress: {}, mangle: false, ecma: 2020 }).code;
 		expect(constantCode).toBe("function i(){return`a`.y}function j(){return{p:-1}.p?.y}function q(){return(-1)?.y}function r(){return`1`.y}");
-		const program = "var o={m(){return this===o}};function l(){let a=o.m;return a!=null?a():void 0}function p(){let a=o;return a!=null?a.m():void 0}console.log(l(),p())";
+		const program = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-read-only-by-4");
 		const code = minifyOnePass(program, { compress: {}, mangle: false, ecma: 2020 }).code;
 		// What an engine without `?.` cannot parse runs only where it can.
 		if (supportsOptionalChaining()) {
@@ -1398,24 +1298,24 @@ describe("one-pass minify of reads and calls on literals", () => {
 
 	it("should fold an update into the `return` or `throw` giving the name it sets", () => {
 		const source =
-			"function f(a){a+=1;a+=2;return a}function h(i){i++;return i}function k(i){i--;throw i}function l(i){var x=i++;return x**2}function n(a){a+=g();return a}function p(i){i++;return i+1}function q(){const c=1;c+=1;return c}function r(a){with(o)a+=1;return a}";
+			fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-an-update-into-the");
 		// `x++` a declarator took gives the old value still; a value that runs
 		// code, or a read deeper in the value, stays apart, as it gzips bigger.
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(
 			"function f(a){return a+=1,a+=2}function h(i){return++i}function k(i){throw--i}function l(i){return i++**2}function n(a){return a+=g(),a}function p(i){return i++,i+1}function q(){const c=1;return c+=1,c}function r(a){with(o)a+=1;return a}"
 		);
 		// A script's global may be an accessor of the global object; a module's is not.
-		expect(minifyOnePass("var x;x++;throw x", { compress: {}, mangle: false }).code).toBe("var x;x++;throw x;");
-		expect(minifyOnePass("var x;x++;throw x", { compress: {}, mangle: false, module: true }).code).toBe("var x;throw++x;");
-		expect(minifyOnePass("function f(café){café++;return café}g(f)", { compress: {}, mangle: false, format: { ascii_only: true } }).code).toBe(
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-an-update-into-the-2"), { compress: {}, mangle: false }).code).toBe("var x;x++;throw x;");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-an-update-into-the-2"), { compress: {}, mangle: false, module: true }).code).toBe("var x;throw++x;");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-an-update-into-the-3"), { compress: {}, mangle: false, format: { ascii_only: true } }).code).toBe(
 			"function f(caf\\u00e9){return++caf\\u00e9}g(f);"
 		);
-		const program = "function h(i){i++;return i}function l(i){var x=i++;return x**2}function f(a){a+=1;a+=2;return a}console.log(h(1),l(3),f(1))";
+		const program = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-an-update-into-the-4");
 		expect(runProgram(minifyOnePass(program, { compress: {}, mangle: false }).code)).toBe("2 9 4");
 	});
 
 	it("should merge the calls of a conditional differing in what one spread spreads", () => {
-		const source = "let x=g(),b=h();x?b(...c):b(...d);x?b(...x):b(...c);x?b(1,...c,2):b(1,...d,2);x?new b(...c):new b(...d);x?b(...c):b(d);x?b(...[1,2]):b(...d);";
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-merge-the-calls-of-a");
 		// A spread against a plain argument, or one printing as its items, stays.
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(
 			"let x=g(),b=h();b(...x?c:d),b(...x||c),b(1,...x?c:d,2),new b(...x?c:d),x?b(...c):b(d),x?b(1,2):b(...d);"
@@ -1424,52 +1324,52 @@ describe("one-pass minify of reads and calls on literals", () => {
 
 	it("should merge the calls an `if` returns or throws from both branches", () => {
 		const source =
-			"function f(a){return[a]}function r(x){if(x)return f(1);else return f(2)}function t(x){if(x){throw f(1)}else{throw f(2)}}function n(x){if(!x)return new f(1);else return new f(2)}function c(x,y){if(x)return 0;else if(y)return f(1,y);else return f(2,y)}g(r,t,n,c);";
+			fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-merge-the-calls-an-if");
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(
 			"function f(a){return[a]}function r(x){return f(x?1:2)}function t(x){throw f(x?1:2)}function n(x){return new f(x?2:1)}function c(x,y){return x?0:f(y?1:2)}g(r,t,n,c);"
 		);
 		// Parts longer than what the branches share, or spreads printing as their
 		// items, stay apart.
 		const kept =
-			"function f(a){return[a]}function l(x){if(x)return f({a:1,b:2});else return f({c:3,d:4})}function s(x){if(x)return f(...[1]);else return f(...[2])}g(l,s);";
+			fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-merge-the-calls-an-if-2");
 		expect(minifyOnePass(kept, { compress: {}, mangle: false }).code).toBe(
 			"function f(a){return[a]}function l(x){return x?f({a:1,b:2}):f({c:3,d:4})}function s(x){return x?f(1):f(2)}g(l,s);"
 		);
 		const program =
-			"function f(a){return[a]}function r(x){if(!x)return f(1);else return f(2)}console.log(r(0)[0],r(1)[0],(x=>!x?f(3):f(4))(0)[0])";
+			fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-merge-the-calls-an-if-3");
 		const { code } = minifyOnePass(program, { compress: {}, mangle: false });
 		expect(code).toContain("return f(x?2:1)");
 		expect(runProgram(code)).toBe("1 2 3");
 	});
 
 	it("should fold a value running nothing into the compound assignment after it", () => {
-		const source = "var foo;function w(a){let x=foo;a+=x;return a}function v(a){let x=foo;a||=x;return a}function u(a){let x=g();a+=x;return a}w(),v(),u();";
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-running");
 		// A value running code would run after the target is read.
 		expect(minifyOnePass(source, { compress: {}, mangle: false, ecma: 2021 }).code).toBe(
 			"var foo;function w(a){return a+=foo}function v(a){return a||=foo}function u(a){let x=g();return a+=x,a}w(),v(),u();"
 		);
 		// A global's read may run a getter, which could set the value first.
-		expect(minifyOnePass("var foo;function w(a){let x=foo;slot+=x;return a}w();", { compress: {}, mangle: false }).code).toBe(
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-running-2"), { compress: {}, mangle: false }).code).toBe(
 			"var foo;function w(a){let x=foo;return slot+=x,a}w();"
 		);
 	});
 
 	it("should keep a null check whose chain a call, `delete` or tag reads as a reference", () => {
 		// `(x?.m)()` would call `m` on `x`, and `delete(x?.m)` delete it.
-		const source = "function f(x){return(x!=null?x.m:void 0)()}function g(x){return delete(x!=null?x.m:void 0)}function h(x){return(x!=null?x.m:void 0)``}function k(x){return x!=null?x.m:void 0}";
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-a-null-check-whose");
 		expect(minifyOnePass(source, { compress: {}, mangle: false, ecma: 2020 }).code).toBe(
 			"function f(x){return(x!=null?x.m:void 0)()}function g(x){return delete(x!=null?x.m:void 0)}function h(x){return(x!=null?x.m:void 0)``}function k(x){return x?.m}"
 		);
 	});
 
 	it("should drop a `for`'s own declarator nothing reads", () => {
-		const source = "function f(){for(var a,b=1;;);}function g(){for(let i=0,n=h();;)k(i)}function m(){for(let c=32,d=0;d<c;d++)k(d)}k(f,g,m)";
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-drop-a-for-s-own");
 		// A value running code stays, as does a constant its reads print.
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("function f(){for(;;);}function g(){for(let i=0,n=h();;)k(i)}function m(){for(let c=32,d=0;d<c;d++)k(d)}k(f,g,m);");
 	});
 
 	it("should print a kept global constant's value where it reads shorter", () => {
-		const source = "const foo=1;log(foo,{foo});const many=2;log(many,many,many)";
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-print-a-kept-global");
 		// A shorthand keeps the name it keys, and a name read three times stays, as it measured smaller once gzipped.
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("const foo=1;log(1,{foo:foo});const many=2;log(many,many,many);");
 	});
@@ -1477,41 +1377,14 @@ describe("one-pass minify of reads and calls on literals", () => {
 	it("should lift a computed key reading a constant as the key it names", () => {
 		for (const [source, toplevel, expected] of /** @type {[string, boolean, string][]} */ ([
 			// Inlined, the read prints as the plain key; `__proto__` and a class's `constructor` mean something else bare.
-			['const key="FOO",p="__proto__",c="constructor",n=12;class X{[key]=1;static get[key](){return 2}[c](){}}console.log(new X,{[key]:1,[p]:2,[n]:3})', true, 'class X{FOO=1;static get FOO(){return 2}["constructor"](){}}console.log(new X,{FOO:1,["__proto__"]:2,12:3});'],
+			[fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-lift-a-computed-key"), true, 'class X{FOO=1;static get FOO(){return 2}["constructor"](){}}console.log(new X,{FOO:1,["__proto__"]:2,12:3});'],
 			// Kept for its size, it lifts only where the key prints shorter than the name in brackets.
-			['const prop="_foo",x="FOO";console.log({[prop]:1,[x]:2})', false, 'const prop="_foo",x="FOO";console.log({_foo:1,[x]:2});']
+			[fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-lift-a-computed-key-2"), false, 'const prop="_foo",x="FOO";console.log({_foo:1,[x]:2});']
 		])) {
 			const { code } = minifyOnePass(source, { compress: {}, mangle: false, toplevel });
 			expect(code).toBe(expected);
 			expect(runProgram(code)).toBe(runProgram(source));
 		}
-	});
-});
-
-describe("one-pass minify of unused values and side effects, fourth round", () => {
-	it("should drop what only makes a value nobody reads, keeping what may run code", () => {
-		const cases = [
-			// A loop's body running nothing is `;`, a write to a name nobody reads too, a loop's `let` among them; a global read stays.
-			[fixture("javascript", "one-pass-unused-d-4"), "function f(){for(;g(););}for(;g();)h();while(g());for(x in y);for(;g();)a;"]
-		];
-		for (const [source, expected] of cases) {
-			expect(minifyOnePass(source, { compress: { ecma: 2020 }, ecma: 2020, mangle: false }).code).toBe(expected);
-		}
-	});
-
-});
-
-describe("one-pass minify of known tests and switches, family E", () => {
-	const options = { compress: { ecma: 2020 }, ecma: 2020, mangle: false };
-
-	it("should keep a `switch` whose test is known by no literal, or whose dead case declares what stays", () => {
-		const source = fixture("javascript", "one-pass-e2-5");
-		const { code } = minifyOnePass(source, options);
-		// A `let` or `class` in a case that never runs goes only with the whole `switch`.
-		expect(code).toBe(
-			"function log(name){console.log(name)}var k=1;switch(1){case log(`a`),k:log(`one`)}function f(q){if(q)switch(3){case log(`b`),1:break;var v}return v}log(`c`),1;log(f(1));"
-		);
-		expect(runProgram(code)).toBe(runProgram(source));
 	});
 });
 
@@ -1584,7 +1457,7 @@ describe("one-pass minify, family K round 6", () => {
 	});
 
 	it("should keep a script's global a null check assigns, which may be an accessor", () => {
-		const source = "var name;g((name=a.x)==null?void 0:name.y);";
+		const source = fixture("javascript", "one-pass-minify-family-k-round-6-should-keep-a-script-s-global-a-null-check");
 		expect(minifyOnePass(source, options).code).toBe(source);
 		expect(minifyOnePass(source, { ...options, module: true }).code).toBe(
 			"var name;g((name=a.x)?.y);"
@@ -1621,11 +1494,11 @@ describe("one-pass minify, family J round 6", () => {
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 		// A test folding to a `!` drops it where what it negates needs no parentheses, as a comparison before `&&`; an assignment keeps it.
-		expect(minifyOnePass("for(;a;){if(false||!(b<c))break;d()}if(false||!(b=c))a();else d()", options).code).toBe("for(;a&&b<c;)d();!(b=c)?a():d();");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-j-round-6-should-guard-what-follows-a-run-of-if-s-leaving"), options).code).toBe("for(;a&&b<c;)d();!(b=c)?a():d();");
 	});
 	it("should keep the arguments of an unread pure call in a loop head together", () => {
 		expect(
-			minifyOnePass("for(/*#__PURE__*/f(g(),h());a;);", { compress: {}, mangle: false }).code
+			minifyOnePass(fixture("javascript", "one-pass-minify-family-j-round-6-should-keep-the-arguments-of-an-unread-pure-cal"), { compress: {}, mangle: false }).code
 		).toBe("for((g(),h());a;);");
 	});
 });
@@ -1635,12 +1508,12 @@ describe("one-pass minify, round 6 review", () => {
 
 	it("should keep an alias of a `let` or `const` its declarator reads before the name is set", () => {
 		const source =
-			"function a(){var x=y;var g=function(){return x};const y=1;return g}function b(){var x=y;const y=1;return x}function c(){const y=g();var x=y;return x+x}h(a,b,c);";
+			fixture("javascript", "one-pass-minify-round-6-review-should-keep-an-alias-of-a-let-or-const-its");
 		expect(minifyOnePass(source, options).code).toBe(
 			"function a(){var x=y;let y=1;return function(){return x}}function b(){var x=y;let y=1;return x}function c(){var x=g();return x+x}h(a,b,c);"
 		);
 		const program =
-			"function a(){var x=y;var g=function(){return x};const y=1;return g}try{a()}catch(e){console.log(e.name)}";
+			fixture("javascript", "one-pass-minify-round-6-review-should-keep-an-alias-of-a-let-or-const-its-2");
 		expect(runProgram(minifyOnePass(program, options).code)).toBe(
 			runProgram(program)
 		);
@@ -1648,7 +1521,7 @@ describe("one-pass minify, round 6 review", () => {
 
 	it("should keep an alias of a name a `switch` case sets, which a later case may enter past", () => {
 		const source =
-			"function f(n){switch(n){case 0:const x=1;case 1:const a=x;return()=>a}}try{f(1);console.log(\"no\")}catch(e){console.log(e.name)}";
+			fixture("javascript", "one-pass-minify-round-6-review-should-keep-an-alias-of-a-name-a-switch-case-sets");
 		const { code } = minifyOnePass(source, options);
 		expect(code).toContain("let a=x");
 		expect(runProgram(code)).toBe(runProgram(source));
@@ -1657,19 +1530,19 @@ describe("one-pass minify, round 6 review", () => {
 	it("should read a name a loop's head sets through its alias, which a cycle reads in its dead zone", () => {
 		expect(
 			minifyOnePass(
-				"function f(l){for(const x of l){const a=x;g(()=>a)}}function c(){const a=b,b=a;return a}h(f,c);",
+				fixture("javascript", "one-pass-minify-round-6-review-should-read-a-name-a-loop-s-head-sets-through-its"),
 				options
 			).code
 		).toBe("function f(l){for(let x of l)g(()=>x)}function c(){let a=a;return a}h(f,c);");
 		expect(runProgram("function c(){const a=b,b=a;return a}try{c()}catch(e){console.log(e.name)}")).toBe(
-			runProgram(minifyOnePass("function c(){const a=b,b=a;return a}try{c()}catch(e){console.log(e.name)}", options).code)
+			runProgram(minifyOnePass(fixture("javascript", "one-pass-minify-round-6-review-should-read-a-name-a-loop-s-head-sets-through-its-2"), options).code)
 		);
 	});
 
 	it("should keep the parentheses of a `!!` whose operand opens an arrow's body with an object", () => {
 		expect(
 			minifyOnePass(
-				"h((a,b,c)=>!!({}===a||b===c),(a,b)=>!!(a===b||b===1),()=>[{value:1}][0].missing);",
+				fixture("javascript", "one-pass-minify-round-6-review-should-keep-the-parentheses-of-a-whose-operand-op"),
 				options
 			).code
 		).toBe(
@@ -1679,7 +1552,7 @@ describe("one-pass minify, round 6 review", () => {
 
 	it("should end a `return` pair folding an `else` exit before a function declaration", () => {
 		const source =
-			"function f(a,b){if(a)return g(b);else return a;function g(x){return x+1}h(g,g)}function k(a,b){if(a===1)return b(g,g);else return!1;function g(x){return x+1}}function h(){}console.log(f(1,2),f(0,2),k(1,()=>3),k(2));";
+			fixture("javascript", "one-pass-minify-round-6-review-should-end-a-return-pair-folding-an-else-exit-bef");
 		const { code } = minifyOnePass(source, options);
 		expect(code).toContain("return a&&g(b);function g");
 		expect(code).toContain("return a===1&&b(g,g);function g");
@@ -1688,11 +1561,11 @@ describe("one-pass minify, round 6 review", () => {
 
 	it("should parenthesize an arrow's returned value that a fold opens with an object", () => {
 		const source =
-			"g(()=>{return[{value:1}][0].missing},()=>{return[{value:1}][0]});";
+			fixture("javascript", "one-pass-minify-round-6-review-should-parenthesize-an-arrow-s-returned-value-tha");
 		const { code } = minifyOnePass(source, options);
 		expect(code).toBe("g(()=>({value:1}.missing),()=>({value:1}));");
 		const program =
-			"console.log((()=>{return[{value:1}][0]})().value,(()=>{return[{value:1}][0].missing})());";
+			fixture("javascript", "one-pass-minify-round-6-review-should-parenthesize-an-arrow-s-returned-value-tha-2");
 		expect(runProgram(minifyOnePass(program, options).code)).toBe(
 			runProgram(program)
 		);
@@ -1700,7 +1573,7 @@ describe("one-pass minify, round 6 review", () => {
 
 	it("should treat a pattern's defaults as reaching the body's functions", () => {
 		const source =
-			"function run(o,c){var{cb=read}=o;c(cb);var v=1;function read(){return v}return read()}console.log(run({},function(f){console.log(f())}));";
+			fixture("javascript", "one-pass-minify-round-6-review-should-treat-a-pattern-s-defaults-as-reaching-the");
 		const { code } = minifyOnePass(source, options);
 		expect(code).toContain("var v=1");
 		expect(runProgram(code)).toBe(runProgram(source));
@@ -1709,7 +1582,7 @@ describe("one-pass minify, round 6 review", () => {
 	it("should keep a null check assigning a function expression's own name", () => {
 		expect(
 			minifyOnePass(
-				"h(function f(v){return(f=v)!=null?f.answer:void 0},function(v){var n;return(n=v)!=null?n.answer:void 0});",
+				fixture("javascript", "one-pass-minify-round-6-review-should-keep-a-null-check-assigning-a-function-exp"),
 				options
 			).code
 		).toBe(
@@ -1727,12 +1600,12 @@ describe("one-pass minify, family O round 7", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 		const options = { compress: { ecma: 2020 }, ecma: 2020, mangle: false };
 		// `await` lifts too; a template or regular expression in the text, or a `yield` last, keeps it.
-		expect(minifyOnePass("async function f(){if(await(a(),b))c()}", options).code).toBe("async function f(){if(a(),await b)c()}");
-		expect(minifyOnePass("if(!(a(`x`),b))c()", options).code).toBe("if(!(a(`x`),b))c();");
-		expect(minifyOnePass("function*g(){if(!(a(),yield))c()}", options).code).toBe("function*g(){if(!(a(),yield))c()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-o-round-7-should-lift-a-test-s-or-exit-s-operator-past-a"), options).code).toBe("async function f(){if(a(),await b)c()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-o-round-7-should-lift-a-test-s-or-exit-s-operator-past-a-2"), options).code).toBe("if(!(a(`x`),b))c();");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-o-round-7-should-lift-a-test-s-or-exit-s-operator-past-a-3"), options).code).toBe("function*g(){if(!(a(),yield))c()}");
 		// A sequence printing one value keeps no comma; a `!` of what takes parentheses stays.
-		expect(minifyOnePass("if(!(0,x))y()", options).code).toBe("if(!x)y();");
-		expect(minifyOnePass("if(!(a(),!(b+c)))d()", options).code).toBe("if(!(a(),!(b+c)))d();");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-o-round-7-should-lift-a-test-s-or-exit-s-operator-past-a-4"), options).code).toBe("if(!x)y();");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-o-round-7-should-lift-a-test-s-or-exit-s-operator-past-a-5"), options).code).toBe("if(!(a(),!(b+c)))d();");
 	});
 
 	it("should negate a chain of `||` or `&&` whose links each flip only equalities or drop `!`s", () => {
@@ -1776,7 +1649,7 @@ describe("one-pass minify, family R round 7", () => {
 		// Negating the test measured larger gzipped.
 		expect(
 			minifyOnePass(
-				"function f(t,e){if(t===0)return false;return e.length}function g(t,e){if(t>1)return e.length;return true}",
+				fixture("javascript", "one-pass-minify-family-r-round-7-should-print-a-return-pair-with-a-boolean-as-or"),
 				{ compress: {}, mangle: false }
 			).code
 		).toBe("function f(t,e){return t===0?!1:e.length}function g(t,e){return t>1?e.length:!0}");
@@ -1817,7 +1690,7 @@ describe("one-pass minify, family P round 7", () => {
 		expect(code).toBe("function noSSR(initializer,options){return delete options.webpack,delete options.modules,initializer(options)}function log(value){return console.log(Object.keys(value).join()),value}console.log(noSSR(log,{webpack:1,modules:2,loading:3}).loading);function elseKept(options){return log(options),options.loading}console.log(elseKept({loading:4}));function several(options){return log(options),log(options),options.loading}console.log(several({loading:5}));function nothing(options){log(options)}console.log(nothing({loading:6}));function hoisted(options){log(options);var kept;return kept}console.log(hoisted({loading:7}));function branchless(options){return log(options),options.loading}console.log(branchless({loading:8}));");
 		expect(runProgram(code)).toBe(runProgram(source));
 		// A call of a name spelled as `return` opens is no `return`.
-		expect(minifyOnePass("function f(o){g(o);if(1)returnValue(o)}", { compress: {}, mangle: false }).code).toBe("function f(o){g(o);returnValue(o)}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-p-round-7-should-join-statements-into-the-return-an-if-of"), { compress: {}, mangle: false }).code).toBe("function f(o){g(o);returnValue(o)}");
 	});
 
 	it("should drop a directive no engine reads", () => {
@@ -1871,13 +1744,13 @@ describe("one-pass minify, family T round 8", () => {
 		expect(code).toBe("function make(name){return function(value){return console.log(name,\"object\"==typeof value?JSON.stringify(value):value),value}}var load=make(\"load\");function interop(require){var obj=require({__esModule:!0,default:\"react\"}),_react=obj&&obj.__esModule?obj:{default:obj};return[_react.default,_react.default]}console.log(interop(load));function shared(require){var obj=require({x:1}),a=obj&&obj.x?obj:{x:obj},obj=require({y:2}),b=(obj.y,obj);return[a.x,a.x,b.y,b.y]}console.log(shared(load));function lexical(require){let o=require({x:3}),a=o.x+o.x;console.log(a,a);{let b=function(o){return o.y*o.y}(require({y:4}));console.log(b,b)}}lexical(load);function written(require,value){var o=value=require(value),a=o-o;return[a,a]}console.log(written(load,5));function collides(require){var o=require(1),a=function(o){return o/o}(require(2));return[a,a,o]}console.log(collides(load));function collapsed(require){return function(o){return o+1+o}(require(7))}console.log(collapsed(load));function repeated(require){var a=function(o){return o+2+o}(require(8)),b=function(o){return o+2+o}(require(9)),c;return[a,a,b,b,c]}console.log(repeated(load));function twoArguments(require){var a=function(o){return o+3+o}(require(10),1);return[a,a]}console.log(twoArguments(load));");
 		expect(runProgram(code)).toBe(runProgram(source));
 		// A program's names are its own only with `toplevel`.
-		expect(minifyOnePass("var a=function(o){return o.x+o.y}(r(1));use(a,a)", { compress: { toplevel: true }, mangle: false }).code).toBe("var o=r(1),a=o.x+o.y;use(a,a);");
-		expect(minifyOnePass("var a=function(o){return o.x+o.y}(r(1));use(a,a)", { compress: {}, mangle: false }).code).toBe("var a=function(o){return o.x+o.y}(r(1));use(a,a);");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-t-round-8-should-declare-a-parameter-set-to-the-argument"), { compress: { toplevel: true }, mangle: false }).code).toBe("var o=r(1),a=o.x+o.y;use(a,a);");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-t-round-8-should-declare-a-parameter-set-to-the-argument-2"), { compress: {}, mangle: false }).code).toBe("var a=function(o){return o.x+o.y}(r(1));use(a,a);");
 		// Mangled, a `using`, a spread passed or a function reading its `this` keeps the call.
-		expect(minifyOnePass("function f(r){var a=function(o){return o.x+o.y}(r(1));return[a,a]}", { compress: {}, mangle: true }).code).toBe("function f(r){var n=function(r){return r.x+r.y}(r(1));return[n,n]}");
-		expect(minifyOnePass("function f(r){{using a=function(o){return o.x+o.y}(r(1));use(a,a)}}", { compress: {}, mangle: false }).code).toBe("function f(r){{using a=function(o){return o.x+o.y}(r(1));use(a,a)}}");
-		expect(minifyOnePass("function f(r){var a=function(o){return o.x+o.y}(...r);return[a,a]}", { compress: {}, mangle: false }).code).toBe("function f(r){var a=function(o){return o.x+o.y}(...r);return[a,a]}");
-		expect(minifyOnePass("function f(r){var a=function(o){return this.x+o.y+o}(r());return[a,a]}", { compress: {}, mangle: false }).code).toBe("function f(r){var a=function(o){return this.x+o.y+o}(r());return[a,a]}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-t-round-8-should-declare-a-parameter-set-to-the-argument-3"), { compress: {}, mangle: true }).code).toBe("function f(r){var n=function(r){return r.x+r.y}(r(1));return[n,n]}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-t-round-8-should-declare-a-parameter-set-to-the-argument-4"), { compress: {}, mangle: false }).code).toBe("function f(r){{using a=function(o){return o.x+o.y}(r(1));use(a,a)}}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-t-round-8-should-declare-a-parameter-set-to-the-argument-5"), { compress: {}, mangle: false }).code).toBe("function f(r){var a=function(o){return o.x+o.y}(...r);return[a,a]}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-t-round-8-should-declare-a-parameter-set-to-the-argument-6"), { compress: {}, mangle: false }).code).toBe("function f(r){var a=function(o){return this.x+o.y+o}(r());return[a,a]}");
 	});
 });
 
@@ -1891,7 +1764,7 @@ describe("one-pass minify, family V round 8", () => {
 		// A function the assignment names, or a test or value reading the name, stays apart.
 		expect(
 			minifyOnePass(
-				"function f(t){var v;if(t)v=function(){};else v=2;return[v]}function g(t){var v;if(t)v=class N{};else v=()=>{};return[v]}function h(t){var v;if(t)v=\"a\";else v=typeof v;return[v]}function k(t){var v;if(v===t)v=\"a\";else v=\"b\";return[v]}function m(t){var v;if(t)v=(function(){});else v=2;return[v]}",
+				fixture("javascript", "one-pass-minify-family-v-round-8-should-join-a-var-set-by-both-branches-of-an-if"),
 				{ compress: {}, mangle: false }
 			).code
 		).toBe(
@@ -1899,7 +1772,7 @@ describe("one-pass minify, family V round 8", () => {
 		);
 		// Branches printing alike as an operation print once, after the test.
 		expect(
-			minifyOnePass("var x;if(y)x=1+1;else x=2;g(x,y?a+b:a+b)", {
+			minifyOnePass(fixture("javascript", "one-pass-minify-family-v-round-8-should-join-a-var-set-by-both-branches-of-an-if-2"), {
 				compress: {},
 				mangle: false
 			}).code
@@ -1915,7 +1788,7 @@ describe("one-pass minify, family V round 8", () => {
 		// `&&` on the other side measured larger gzipped, and a comment on the test stays.
 		expect(
 			minifyOnePass(
-				"function f(v,o){if(v)return v;return o&&o.length}function g(v,o){if(/*! c */v)return v;return o}",
+				fixture("javascript", "one-pass-minify-family-v-round-8-should-print-a-return-pair-giving-its-test-back"),
 				{ compress: {}, mangle: false }
 			).code
 		).toBe("function f(v,o){return v?v:o&&o.length}function g(v,o){/*! c */return v?v:o}");
@@ -1955,15 +1828,15 @@ describe("one-pass minify, family S round 8", () => {
 		// Under the defaults, as terser, no name is promised: the old folds stay.
 		expect(minifyOnePass(source, folds).code).toBe("var or=function(){},nullish=function(){},wrapped=()=>1,picked=()=>1,kept=1?function(){}:0,keyed={[()=>1]:1},bare=[()=>1],assigned=class{};function defaulted(value=()=>1){return value.name}var object={value:()=>1};class Field{value=()=>1}console.log(or.name,nullish.name,wrapped.name,picked.name,kept.name,Object.keys(keyed).length,bare[0].name),console.log(assigned.name,defaulted(),object.value.name,(new Field).value.name);");
 		const modules = { compress: { keepFnames: true, keepClassnames: true }, mangle: false, module: true };
-		expect(minifyOnePass("x=void 0??(()=>/*! c */1)", modules).code).toBe("x=void 0??(()=>/*! c */1);");
-		expect(minifyOnePass("var r=function(){};export default r", modules).code).toBe("var r=function(){};export default r;");
-		expect(minifyOnePass("export default 1?class{}:null", { ...modules, compress: {} }).code).toBe("export default(0,class{});");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-folded-anonymous-function-or"), modules).code).toBe("x=void 0??(()=>/*! c */1);");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-folded-anonymous-function-or-2"), modules).code).toBe("var r=function(){};export default r;");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-folded-anonymous-function-or-3"), { ...modules, compress: {} }).code).toBe("export default(0,class{});");
 		// An `if` or `?:` setting one name either way keeps the value it names.
-		expect(minifyOnePass("function f(y){var x;if(y)x=function(){};else x=2;return x}", keeps).code).toBe("function f(y){var x;return y?x=function(){}:x=2,x}");
-		expect(minifyOnePass("function f(y){var x;y?x=function(){}:x=2;return x}", keeps).code).toBe("function f(y){var x;return y?x=function(){}:x=2,x}");
-		expect(minifyOnePass("function f(y){var x;y?x=function(){}:x=2;return x}", folds).code).toBe("function f(y){var x;return x=y?function(){}:2,x}");
-		expect(minifyOnePass("function f(y,o){y?o.p=function(){}:o.p=2}", keeps).code).toBe("function f(y,o){o.p=y?function(){}:2}");
-		expect(minifyOnePass("function f(y){var x;switch(y){case 1:x=function(){};break;default:x=2}return x}", keeps).code).toBe("function f(y){var x;return y===1?x=function(){}:x=2,x}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-folded-anonymous-function-or-4"), keeps).code).toBe("function f(y){var x;return y?x=function(){}:x=2,x}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-folded-anonymous-function-or-5"), keeps).code).toBe("function f(y){var x;return y?x=function(){}:x=2,x}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-folded-anonymous-function-or-6"), folds).code).toBe("function f(y){var x;return x=y?function(){}:2,x}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-folded-anonymous-function-or-7"), keeps).code).toBe("function f(y,o){o.p=y?function(){}:2}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-folded-anonymous-function-or-8"), keeps).code).toBe("function f(y){var x;return y===1?x=function(){}:x=2,x}");
 	});
 
 	it("should keep a call in place returning an anonymous function where its place would name it, where `keepFnames` keeps names", () => {
@@ -1977,27 +1850,27 @@ describe("one-pass minify, family S round 8", () => {
 
 	it("should print the value of an assignment setting nothing without the parentheses the assignment took", () => {
 		// Opening a statement, a function keeps them; a value set through two names alike.
-		expect(minifyOnePass("function f(o,i){return(o=i=[1]).length}", folds).code).toBe("function f(o,i){return[1].length}");
-		expect(minifyOnePass("function f(o,i){(o=i=function(){}).x=1}", folds).code).toBe("function f(o,i){(function(){}).x=1}");
-		expect(minifyOnePass("export function r(){var i;o=i=function(){};return o.name}var o;", { ...folds, module: true }).code).toBe("export function r(){return function(){}.name}");
-		expect(minifyOnePass("export function r(){var i;o=i=(1,2);return o}var o;", { ...folds, module: true }).code).toBe("export function r(){return 2}");
-		expect(minifyOnePass("export function r(){var i;o=i=a.b;return o()}var o;", { ...folds, module: true }).code).toBe("export function r(){return(0,a.b)()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-print-the-value-of-an-assignment-setting"), folds).code).toBe("function f(o,i){return[1].length}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-print-the-value-of-an-assignment-setting-2"), folds).code).toBe("function f(o,i){(function(){}).x=1}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-print-the-value-of-an-assignment-setting-3"), { ...folds, module: true }).code).toBe("export function r(){return function(){}.name}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-print-the-value-of-an-assignment-setting-4"), { ...folds, module: true }).code).toBe("export function r(){return 2}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-print-the-value-of-an-assignment-setting-5"), { ...folds, module: true }).code).toBe("export function r(){return(0,a.b)()}");
 	});
 
 	it("should keep a moved function or a folded value from printing bare as a picked element read off", () => {
 		// A low-binding value stays in its literal under a member, call or operator.
-		expect(minifyOnePass("function g(){var m=()=>1;return[m][0].name}", folds).code).toBe("function g(){return[()=>1][0].name}");
-		expect(minifyOnePass("function g(a,b){var r=a+b;return[r][0].x}", folds).code).toBe("function g(a,b){return[a+b][0].x}");
-		expect(minifyOnePass("function g(a,b){var r=a?b:1;return{k:r}.k*2}", folds).code).toBe("function g(a,b){return{k:a?b:1}.k*2}");
-		expect(minifyOnePass("function g(a,b){var r=(a(),b);return[r][0]}", folds).code).toBe("function g(a,b){return[(a(),b)][0]}");
-		expect(minifyOnePass("function g(a,b){var r=a+b;h([r][0]),k({p:[r][0]})}", folds).code).toBe("function g(a,b){var r=a+b;h(r),k({p:r})}");
-		expect(minifyOnePass("function g(a,b){var r=a+b;return[r][0]}", folds).code).toBe("function g(a,b){return a+b}");
-		expect(minifyOnePass("function g(a,b){var r=a+b;throw[r][0]}", folds).code).toBe("function g(a,b){throw a+b}");
-		expect(minifyOnePass("function g(a,b){var r=a+b;return x=[r][0]}", folds).code).toBe("function g(a,b){return x=a+b}");
-		expect(minifyOnePass("function g(a,b){var r=a+b;h([r][0])}", folds).code).toBe("function g(a,b){h(a+b)}");
-		expect(minifyOnePass("function g(a,b){var r=a+b;return[[r][0]]}", folds).code).toBe("function g(a,b){return[a+b]}");
-		expect(minifyOnePass("function g(a,b){var r=a+b;return{p:[r][0]}}", folds).code).toBe("function g(a,b){return{p:a+b}}");
-		expect(runProgram("function g(a,b){var r=a+b;return[r][0].toFixed(1)}console.log(g(1,2))")).toBe(runProgram(minifyOnePass("function g(a,b){var r=a+b;return[r][0].toFixed(1)}console.log(g(1,2))", folds).code));
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-moved-function-or-a-folded-value"), folds).code).toBe("function g(){return[()=>1][0].name}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-moved-function-or-a-folded-value-2"), folds).code).toBe("function g(a,b){return[a+b][0].x}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-moved-function-or-a-folded-value-3"), folds).code).toBe("function g(a,b){return{k:a?b:1}.k*2}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-moved-function-or-a-folded-value-4"), folds).code).toBe("function g(a,b){return[(a(),b)][0]}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-moved-function-or-a-folded-value-5"), folds).code).toBe("function g(a,b){var r=a+b;h(r),k({p:r})}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-moved-function-or-a-folded-value-6"), folds).code).toBe("function g(a,b){return a+b}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-moved-function-or-a-folded-value-7"), folds).code).toBe("function g(a,b){throw a+b}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-moved-function-or-a-folded-value-8"), folds).code).toBe("function g(a,b){return x=a+b}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-moved-function-or-a-folded-value-9"), folds).code).toBe("function g(a,b){h(a+b)}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-moved-function-or-a-folded-value-10"), folds).code).toBe("function g(a,b){return[a+b]}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-moved-function-or-a-folded-value-11"), folds).code).toBe("function g(a,b){return{p:a+b}}");
+		expect(runProgram("function g(a,b){var r=a+b;return[r][0].toFixed(1)}console.log(g(1,2))")).toBe(runProgram(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-should-keep-a-moved-function-or-a-folded-value-12"), folds).code));
 	});
 });
 
@@ -2014,14 +1887,14 @@ describe("one-pass minify, family S round 8, switches", () => {
 
 	it("should keep the `if` a `switch` prints as where `?:` would read otherwise or grow", () => {
 		// A call of one callee, a part one side repeats, a sequence, or a test opening as a declaration.
-		expect(minifyOnePass("switch(a){case 1:0;f();break;default:g()}", options).code).toBe("a===1?f():g();");
-		expect(minifyOnePass("switch(a){case 1:f(1);break;default:f(2)}", options).code).toBe("if(a===1)f(1);else f(2);");
-		expect(minifyOnePass("switch(a){case 1:f(b);break;default:b}", options).code).toBe("if(a===1)f(b);else b;");
-		expect(minifyOnePass("switch(a){case 1:f(),g();break;default:h()}", options).code).toBe("if(a===1)f(),g();else h();");
-		expect(minifyOnePass("switch(function(){}.x){case 1:f();break;default:g()}", options).code).toBe("if(function(){}.x===1)f();else g();");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-switches-should-keep-the-if-a-switch-prints-as"), options).code).toBe("a===1?f():g();");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-switches-should-keep-the-if-a-switch-prints-as-2"), options).code).toBe("if(a===1)f(1);else f(2);");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-switches-should-keep-the-if-a-switch-prints-as-3"), options).code).toBe("if(a===1)f(b);else b;");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-switches-should-keep-the-if-a-switch-prints-as-4"), options).code).toBe("if(a===1)f(),g();else h();");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-switches-should-keep-the-if-a-switch-prints-as-5"), options).code).toBe("if(function(){}.x===1)f();else g();");
 		// An assignment printing as another operator sets no name the other's `=` shares.
-		expect(minifyOnePass("function f(a){var y=g();switch(a){case 1:y=y+1;break;default:y=b}return y}", options).code).toBe("function f(a){var y=g();return a===1?y+=1:y=b,y}");
-		expect(minifyOnePass("function f(a){var y=g();switch(a){case 1:y=b;break;default:y=y+1}return y}", options).code).toBe("function f(a){var y=g();return a===1?y=b:y+=1,y}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-switches-should-keep-the-if-a-switch-prints-as-6"), options).code).toBe("function f(a){var y=g();return a===1?y+=1:y=b,y}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-switches-should-keep-the-if-a-switch-prints-as-7"), options).code).toBe("function f(a){var y=g();return a===1?y=b:y+=1,y}");
 	});
 });
 
@@ -2058,9 +1931,9 @@ describe("one-pass minify, family Y round 9", () => {
 
 	it("should keep a third test apart where the merged branches share `void 0`, and parenthesize a merged test as needed", () => {
 		// Babel's optional chains merge two links at a time, as before.
-		expect(minifyOnePass("f(a==null?void 0:b==null?void 0:c==null?void 0:c.d)", options).code).toBe("f(a==null?void 0:b==null||c==null?void 0:c.d);");
-		expect(minifyOnePass("f(a?1:b?1:(c=g())?1:2,a?b?c??d?1:2:2:2)", options).code).toBe("f(a||b||(c=g())?1:2,a&&b&&(c??d)?1:2);");
-		expect(minifyOnePass("f(a?b?1:c?d?1:2:2:2,a?1:b?c?1:d?1:2:2)", options).code).toBe("f(a&&(b||c&&d)?1:2,a||b&&(c||d)?1:2);");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-y-round-9-should-keep-a-third-test-apart-where-the-merged"), options).code).toBe("f(a==null?void 0:b==null||c==null?void 0:c.d);");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-y-round-9-should-keep-a-third-test-apart-where-the-merged-2"), options).code).toBe("f(a||b||(c=g())?1:2,a&&b&&(c??d)?1:2);");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-y-round-9-should-keep-a-third-test-apart-where-the-merged-3"), options).code).toBe("f(a&&(b||c&&d)?1:2,a||b&&(c||d)?1:2);");
 	});
 });
 
@@ -2074,18 +1947,18 @@ describe("one-pass minify, family Z round 9", () => {
 		expect(code).toBe("function label(node){return node.type===\"a\"||node.type===\"b\"&&node.flag||!node.type?node.value.name:\"other\"}function check(node){throw node.bad||node.type==null?Error(\"invalid \"+node.type):TypeError(\"unknown \"+node.type)}function pick(a,b,c){return(a??b)||(b??c)||(a=b)?String(c):String(a)}const nodes=[{type:\"a\",value:{name:\"x\"}},{type:\"b\",flag:!0,value:{name:\"y\"}},{type:\"b\",value:{name:\"z\"}},{value:{name:\"w\"}}];for(let node of nodes)console.log(label(node));for(let node of[{bad:!0,type:\"q\"},{},{type:\"r\"}])try{check(node)}catch(error){console.log(error.message)}console.log(pick(null,0,1),pick(null,null,2),pick(null,null,null));");
 		expect(runProgram(code)).toBe(runProgram(source));
 		// A negated test joins as it is; an assignment setting nothing as its value.
-		expect(minifyOnePass("function f(a,b){if(a)return o.value;if(!b)return o.value;return g()}", options).code).toBe("function f(a,b){return a||!b?o.value:g()}");
-		expect(minifyOnePass("function f(){var x;if(x=g())return o.value;if(c)return o.value;return d()}", options).code).toBe("function f(){return g()||c?o.value:d()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-z-round-9-should-join-the-tests-of-if-s-returning-or-thro"), options).code).toBe("function f(a,b){return a||!b?o.value:g()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-z-round-9-should-join-the-tests-of-if-s-returning-or-thro-2"), options).code).toBe("function f(){return g()||c?o.value:d()}");
 	});
 
 	it("should keep `?:` of `if`s returning the same where another fold or gzip favors it", () => {
 		// A value of four characters or fewer, a boolean, or the last exit giving it too.
-		expect(minifyOnePass("function f(a,b){if(a)return x.y;if(b)return x.y;return g()}", options).code).toBe("function f(a,b){return a?x.y:b?x.y:g()}");
-		expect(minifyOnePass("function f(a,b){if(a)return!0;if(b)return!0;return c()}", options).code).toBe("function f(a,b){return a?!0:b?!0:c()}");
-		expect(minifyOnePass("function f(a,b){if(a)return o.value;if(b)return o.value;return o.value}", options).code).toBe("function f(a,b){return a?o.value:o.value}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-z-round-9-should-keep-of-if-s-returning-the-same-where-an"), options).code).toBe("function f(a,b){return a?x.y:b?x.y:g()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-z-round-9-should-keep-of-if-s-returning-the-same-where-an-2"), options).code).toBe("function f(a,b){return a?!0:b?!0:c()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-z-round-9-should-keep-of-if-s-returning-the-same-where-an-3"), options).code).toBe("function f(a,b){return a?o.value:o.value}");
 		// The second test reading the name returned, there or after: `||` or `&&` of it.
-		expect(minifyOnePass("function f(a,value){if(a)return value;if(value)return value;return g()}", options).code).toBe("function f(a,value){return a?value:value||g()}");
-		expect(minifyOnePass("function f(a,other){if(a)return o.value;if(other)return o.value;return other}", options).code).toBe("function f(a,other){return a?o.value:other&&o.value}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-z-round-9-should-keep-of-if-s-returning-the-same-where-an-4"), options).code).toBe("function f(a,value){return a?value:value||g()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-z-round-9-should-keep-of-if-s-returning-the-same-where-an-5"), options).code).toBe("function f(a,other){return a?o.value:other&&o.value}");
 	});
 
 	it("should print an `else` after an `if` leaving its function or loop bare inside the negated `if`, the expressions after joining it", () => {
@@ -2094,16 +1967,16 @@ describe("one-pass minify, family Z round 9", () => {
 		expect(code).toBe("const log=[];function track(event){if(event)log.push(\"event\"),log.push(event)}function flush(queue){if(queue.length!==0)log.push(\"flush\"),log.push(queue.length),queue.length=0,log.push(\"done\")}function each(items){for(let item of items)if(item!==0)log.push(\"item\"),log.push(item)}track(\"a\"),track(\"\"),flush([1,2]),flush([]),each([1,0,2]),console.log(log.join());");
 		expect(runProgram(code)).toBe(runProgram(source));
 		// A dropped expression of the `else`, and a statement printing nothing after.
-		expect(minifyOnePass("function f(){if(x)return;else{1;g()}w()}", options).code).toBe("function f(){if(!x)g(),w()}");
-		expect(minifyOnePass("function f(){if(x)return;else z();w();;}", options).code).toBe("function f(){if(!x)z(),w()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-z-round-9-should-print-an-else-after-an-if-leaving-its-fu"), options).code).toBe("function f(){if(!x)g(),w()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-z-round-9-should-print-an-else-after-an-if-leaving-its-fu-2"), options).code).toBe("function f(){if(!x)z(),w()}");
 	});
 
 	it("should keep `return;` before an `else` where the block would not print as one expression", () => {
 		// An `else` or a statement after that is no expression, an exit after, or an `if` returning a value.
-		expect(minifyOnePass("function f(){if(x)return;else for(;;)g();w()}", options).code).toBe("function f(){if(x)return;for(;;)g();w()}");
-		expect(minifyOnePass("function f(){if(x)return;else z();w();if(q)v()}", options).code).toBe("function f(){if(x)return;z();w();if(q)v()}");
-		expect(minifyOnePass("function f(){if(x)return;else z();w();return 5}", options).code).toBe("function f(){if(x)return;z();return w(),5}");
-		expect(minifyOnePass("function f(){if(x)return 1;else g();w()}", options).code).toBe("function f(){if(x)return 1;g();w()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-z-round-9-should-keep-return-before-an-else-where-the-blo"), options).code).toBe("function f(){if(x)return;for(;;)g();w()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-z-round-9-should-keep-return-before-an-else-where-the-blo-2"), options).code).toBe("function f(){if(x)return;z();w();if(q)v()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-z-round-9-should-keep-return-before-an-else-where-the-blo-3"), options).code).toBe("function f(){if(x)return;z();return w(),5}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-z-round-9-should-keep-return-before-an-else-where-the-blo-4"), options).code).toBe("function f(){if(x)return 1;g();w()}");
 	});
 });
 
@@ -2116,22 +1989,22 @@ describe("one-pass minify, family X round 9", () => {
 		expect(code).toBe("function check(node){if(node.flags&4)console.log(\"flagged\");if(node.c&&(node.a||node.b))console.log(\"either\");if(node.c||node.a&&node.b)console.log(\"listed\");if(!node.name)console.log(\"unnamed\");if(!(node.flags&8))console.log(\"unmarked\")}function value(node){return!!(node.flags&4)}check({flags:4,a:1,b:1,c:1}),check({flags:8,name:\"n\"}),console.log(value({flags:4}));");
 		expect(runProgram(code)).toBe(runProgram(source));
 		// A test takes any operation bare, a `?:` test not every one; `!x`, a sequence or a folded `!!` stay.
-		expect(minifyOnePass("function f(t){function h(t){return !!(t.a??t.b)}if(h(t))k()}", folds).code).toBe("function f(t){if(t.a??t.b)k()}");
-		expect(minifyOnePass("function f(t){function h(t){return !!(t.a||t.b)}if(h(t))k()}", folds).code).toBe("function f(t){if(t.a||t.b)k()}");
-		expect(minifyOnePass("function f(t){function h(t){return !!(t.a||t.b)}if(c||h(t))k()}", folds).code).toBe("function f(t){if(c||t.a||t.b)k()}");
-		expect(minifyOnePass("function f(t){function h(t){return !!(t.a||t.b)}if(!h(t))k()}", folds).code).toBe("function f(t){if(!(t.a||t.b))k()}");
-		expect(minifyOnePass("function f(t){function h(t){return !!(t.a?t.b:t.c)}return h(t)?1:2}", folds).code).toBe("function f(t){return(t.a?t.b:t.c)?1:2}");
-		expect(minifyOnePass("function f(t){function h(t){return !t.x}if(h(t))k()}", folds).code).toBe("function f(t){if(!t.x)k()}");
-		expect(minifyOnePass("function f(t){function h(t){g();return !!t.x}if(h(t))k()}", folds).code).toBe("function f(t){if((g(),!!t.x))k()}");
-		expect(minifyOnePass("function f(t,u){function h(t){return !!(t===u)}if(h(t))k()}", folds).code).toBe("function f(t,u){if((t===u))k()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-the-x-a-call-in-place-returns-as-x"), folds).code).toBe("function f(t){if(t.a??t.b)k()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-the-x-a-call-in-place-returns-as-x-2"), folds).code).toBe("function f(t){if(t.a||t.b)k()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-the-x-a-call-in-place-returns-as-x-3"), folds).code).toBe("function f(t){if(c||t.a||t.b)k()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-the-x-a-call-in-place-returns-as-x-4"), folds).code).toBe("function f(t){if(!(t.a||t.b))k()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-the-x-a-call-in-place-returns-as-x-5"), folds).code).toBe("function f(t){return(t.a?t.b:t.c)?1:2}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-the-x-a-call-in-place-returns-as-x-6"), folds).code).toBe("function f(t){if(!t.x)k()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-the-x-a-call-in-place-returns-as-x-7"), folds).code).toBe("function f(t){if((g(),!!t.x))k()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-the-x-a-call-in-place-returns-as-x-8"), folds).code).toBe("function f(t,u){if((t===u))k()}");
 	});
 
 	it("should print an `&&` or `||` a call in place returns bare beside the same operator", () => {
-		expect(minifyOnePass("function f(e){function h(e){return e.a&&e.b}if(c&&h(e))g()}", folds).code).toBe("function f(e){if(c&&e.a&&e.b)g()}");
-		expect(minifyOnePass("function f(e){function h(e){return e.a||e.b}return c||h(e)}", folds).code).toBe("function f(e){return c||e.a||e.b}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-an-or-a-call-in-place-returns-bare"), folds).code).toBe("function f(e){if(c&&e.a&&e.b)g()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-an-or-a-call-in-place-returns-bare-2"), folds).code).toBe("function f(e){return c||e.a||e.b}");
 		// Another operator, or one that is no such chain, keeps them.
-		expect(minifyOnePass("function f(e){function h(e){return e.a||e.b}return c&&h(e)}", folds).code).toBe("function f(e){return c&&(e.a||e.b)}");
-		expect(minifyOnePass("function f(e){function h(e){return e.a+e.b}return c+h(e)}", folds).code).toBe("function f(e){return c+(e.a+e.b)}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-an-or-a-call-in-place-returns-bare-3"), folds).code).toBe("function f(e){return c&&(e.a||e.b)}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-an-or-a-call-in-place-returns-bare-4"), folds).code).toBe("function f(e){return c+(e.a+e.b)}");
 	});
 
 	it("should print an `if` setting one member alike in both branches as one assignment of `?:`", () => {
@@ -2139,16 +2012,16 @@ describe("one-pass minify, family X round 9", () => {
 		const { code } = minifyOnePass(source, folds);
 		expect(code).toBe("var copied={};function Shape(){this.points=null}Shape.prototype.copy=function(source){return console.log(\"copy\"),this.points=source.points!==void 0?source.n:source.s,this};function store(key,value){copied.value=value||key}function apart(key,value){value?copied.value=value:copied.other=key,value?copied.value+=value:copied.value+=key}var shape=(new Shape).copy({points:[1,2],n:2});console.log(shape.points,(new Shape).copy({s:3}).points),store(\"key\",0),console.log(copied.value),store(\"key\",\"value\"),apart(\"a\",\"b\"),console.log(copied.value,copied.other);");
 		expect(runProgram(code)).toBe(runProgram(source));
-		expect(minifyOnePass("function f(u,t,o){if(u)g();else if(t)o.a=1;else o.a=2}", folds).code).toBe("function f(u,t,o){u?g():o.a=t?1:2}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-an-if-setting-one-member-alike-in"), folds).code).toBe("function f(u,t,o){u?g():o.a=t?1:2}");
 		// A test that may change the object, a part longer than what both share,
 		// a branch of two statements, no `else`, a known test or a local name keep their forms.
-		expect(minifyOnePass("function f(t,o){if(t())o.a=x();else o.a=y()}", folds).code).toBe("function f(t,o){t()?o.a=x():o.a=y()}");
-		expect(minifyOnePass("function f(t,o){if(t)o.a=x+y+z;else o.a=1}", folds).code).toBe("function f(t,o){t?o.a=x+y+z:o.a=1}");
-		expect(minifyOnePass("function f(t,o){if(t){o.a=1;g()}else o.a=2}", folds).code).toBe("function f(t,o){if(t)o.a=1,g();else o.a=2}");
-		expect(minifyOnePass("function f(t,o){if(t)o.a=1;g()}", folds).code).toBe("function f(t,o){if(t)o.a=1;g()}");
-		expect(minifyOnePass("function f(t,o){if(true)o.a=1;else o.a=2}", folds).code).toBe("function f(t,o){o.a=1}");
-		expect(minifyOnePass("function f(t,a){if(t)a=1;else a=2;return a}", folds).code).toBe("function f(t,a){return a=t?1:2,a}");
-		expect(minifyOnePass("function f(t,o){return(o.a=t)?1:2}", folds).code).toBe("function f(t,o){return(o.a=t)?1:2}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-an-if-setting-one-member-alike-in-2"), folds).code).toBe("function f(t,o){t()?o.a=x():o.a=y()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-an-if-setting-one-member-alike-in-3"), folds).code).toBe("function f(t,o){t?o.a=x+y+z:o.a=1}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-an-if-setting-one-member-alike-in-4"), folds).code).toBe("function f(t,o){if(t)o.a=1,g();else o.a=2}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-an-if-setting-one-member-alike-in-5"), folds).code).toBe("function f(t,o){if(t)o.a=1;g()}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-an-if-setting-one-member-alike-in-6"), folds).code).toBe("function f(t,o){o.a=1}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-an-if-setting-one-member-alike-in-7"), folds).code).toBe("function f(t,a){return a=t?1:2,a}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-print-an-if-setting-one-member-alike-in-8"), folds).code).toBe("function f(t,o){return(o.a=t)?1:2}");
 	});
 
 	it("should join the `var` a block printing its statements in place opens or ends with to those around it", () => {
@@ -2156,13 +2029,13 @@ describe("one-pass minify, family X round 9", () => {
 		const { code } = minifyOnePass(source, folds);
 		expect(code).toBe("var join=function(){},first=1,second=[first];function counted(list){var total=0,seen=list.length;total+=seen;var last=list[seen-1];return[total,last]}function gather(list){var out=list.slice(0,0),limit=list.length-1;list.forEach(function(item,index){if(index<limit)out.push(item)}),console.log(out)}console.log(join(),first,second,counted([1,2])),gather([3,4,5]);");
 		expect(runProgram(code)).toBe(runProgram(source));
-		expect(minifyOnePass("function f(){g();{var a=1}{var b=g(a)}return[a,b]}", folds).code).toBe("function f(){g();var a=1,b=g(a);return[a,b]}");
-		expect(minifyOnePass("function f(){var a=g();{var b=a;h(b)}var c=k();return[a,b,c]}", folds).code).toBe("function f(){var a=g(),b=a;h(b);return[a,b,k()]}");
-		expect(minifyOnePass("function f(l){var o=[];(function(){var n=l.length;l.forEach(function(i){o.push(i+n)})})();return o}", folds).code).toBe("function f(l){var o=[],n=l.length;l.forEach(function(i){o.push(i+n)});return o}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-join-the-var-a-block-printing-its"), folds).code).toBe("function f(){g();var a=1,b=g(a);return[a,b]}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-join-the-var-a-block-printing-its-2"), folds).code).toBe("function f(){var a=g(),b=a;h(b);return[a,b,k()]}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-join-the-var-a-block-printing-its-3"), folds).code).toBe("function f(l){var o=[],n=l.length;l.forEach(function(i){o.push(i+n)});return o}");
 		// A comment before the block stays before its statements; beautified, each stays its own.
-		expect(minifyOnePass("function f(){var a=g();/* c */{var b=h(a);k(b)}return[a,b]}", { ...folds, format: { comments: "all" } }).code).toBe("function f(){var a=g();/* c */var b=h(a);k(b);return[a,b]}");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-x-round-9-should-join-the-var-a-block-printing-its-4"), { ...folds, format: { comments: "all" } }).code).toBe("function f(){var a=g();/* c */var b=h(a);k(b);return[a,b]}");
 		const { SourceProcessor } = require("../../../lib/javascript/syntax");
-		const beautified = /** @type {{ code: string }} */ (new SourceProcessor().process("function f(){var a=g();{var b=h(a)}return[a,b]}", { mode: "beautify", compress: {}, mangle: false })).code;
+		const beautified = /** @type {{ code: string }} */ (new SourceProcessor().process(fixture("javascript", "one-pass-minify-family-x-round-9-should-join-the-var-a-block-printing-its-5"), { mode: "beautify", compress: {}, mangle: false })).code;
 		expect(beautified).toBe("function f() {\nvar a = g();\n\nvar b = h(a);\nreturn [ a, b ];\n}");
 	});
 });

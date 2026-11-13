@@ -1,0 +1,1 @@
+var x;x++;throw x

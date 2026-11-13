@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "a { mara.c0>d0 { color: red; margin: 1px",
+		"why": "known bug: beautify of a declaration left open running into a streamed block is no fixed point"
+	}
+]

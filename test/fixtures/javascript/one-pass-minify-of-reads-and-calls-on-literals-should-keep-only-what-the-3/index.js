@@ -1,0 +1,1 @@
+(class{[a];static b=f()}),(class{[a];static{f()}}),(class extends B{[a]}),(class{static[f()]=1}),(class{static["prototype"](){}}),(class C{[r(()=>C)](){}});

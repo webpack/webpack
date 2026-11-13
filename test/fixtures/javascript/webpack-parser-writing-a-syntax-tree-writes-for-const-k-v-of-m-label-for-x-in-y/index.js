@@ -1,0 +1,1 @@
+for (const [k, v] of m) label: for (x in y) continue label;

@@ -112,9 +112,9 @@ describe("CssSyntax — a function name that only opens like `url`", () => {
 	it("is a function token when too short or too long to spell it", () => {
 		// `url` with every code point escaped in full is 27 code units.
 		const long = `u${"r".repeat(27)}`;
-		expect(first("u(a)")).toEqual([TokenType.Function, "u("]);
-		expect(first("ur(a)")).toEqual([TokenType.Function, "ur("]);
-		expect(first(`${long}(a)`)).toEqual([TokenType.Function, `${long}(`]);
+		expect(first(fixture("css", "css-syntax-a-function-name-that-only-opens-like-url-is-a-function-token-when-too"))).toEqual([TokenType.Function, "u("]);
+		expect(first(fixture("css", "css-syntax-a-function-name-that-only-opens-like-url-is-a-function-token-when-too-2"))).toEqual([TokenType.Function, "ur("]);
+		expect(first(fixture("css", "css-syntax-a-function-name-that-only-opens-like-url-is-a-function-token-when-too-3"))).toEqual([TokenType.Function, `${long}(`]);
 	});
 });
 

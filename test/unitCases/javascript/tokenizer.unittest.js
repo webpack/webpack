@@ -48,7 +48,11 @@ describe("WebpackParser", () => {
 				/Unterminated regular expression \(1:5\)/
 			);
 			// a lone `/` there is re-read the same way, which acorn does too
-			for (const source of sources.map((code) => code.replace("/=a/", "/a/"))) {
+			for (const source of [
+				fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-re-read-a-the-5"),
+				fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-re-read-a-the-6"),
+				fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-re-read-a-the-7")
+			]) {
 				for (const options of [{}, { locations: true }]) {
 					expect(JSON.stringify(parse(source, options).ast)).toContain(
 						'"pattern":"a"'
@@ -383,9 +387,9 @@ const TOKENIZER_SOURCES = {
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-11"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-12"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-13"),
-		"\uD835",
-		"\uD835a",
-		"a\uDC00",
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-19"),
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-20"),
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-21"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-17"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-14"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-18"),

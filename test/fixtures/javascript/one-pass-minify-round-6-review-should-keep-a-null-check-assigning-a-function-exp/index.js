@@ -1,0 +1,1 @@
+h(function f(v){return(f=v)!=null?f.answer:void 0},function(v){var n;return(n=v)!=null?n.answer:void 0});

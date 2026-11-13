@@ -23,6 +23,7 @@ const {
 	snapshotText,
 	treeLines,
 	unexplained,
+	unlessOverflow,
 	walkLine
 } = require("../../helpers/fixture");
 const {
@@ -266,23 +267,26 @@ describe("CSS syntax — invariants", () => {
 	for (const { name, dir, source, options, parses, expected } of all) {
 		describe(name, () => {
 			it("tokenizes", () => {
-				expect(snapshotOf(source, tokenLine(source))).toMatchSnapshot();
+				expect(
+					snapshotOf(
+						source,
+						unlessOverflow(() => tokenLine(source))
+					)
+				).toMatchSnapshot();
 			});
 
 			it("parses", () => {
 				/** @type {string[]} */
 				const errors = [];
-				const stylesheet = parseAStylesheet(source, 0, {
-					parseError: (input, code, start, end, severity) => {
-						errors.push(tokenText(severity, [start, end], `:${code}`));
-					}
+				const tree = unlessOverflow(() => {
+					const stylesheet = parseAStylesheet(source, 0, {
+						parseError: (input, code, start, end, severity) => {
+							errors.push(tokenText(severity, [start, end], `:${code}`));
+						}
+					});
+					return JSON.stringify(serializeStylesheet(stylesheet, source));
 				});
-				expect(
-					snapshotOf(
-						source,
-						JSON.stringify(serializeStylesheet(stylesheet, source))
-					)
-				).toMatchSnapshot();
+				expect(snapshotOf(source, tree)).toMatchSnapshot();
 				// The second entry, so the tree's stays as it was.
 				expect(snapshotOf(source, errors.join(" "))).toMatchSnapshot();
 			});
@@ -297,8 +301,11 @@ describe("CSS syntax — invariants", () => {
 						return;
 					}
 					const { options: given, log } = printOptions(one);
-					const { code } = /** @type {{ code: string }} */ (
-						new SourceProcessor().process(source, given)
+					const code = unlessOverflow(
+						() =>
+							/** @type {{ code: string }} */ (
+								new SourceProcessor().process(source, given)
+							).code
 					);
 					expect(snapshotOf(source, snapshotText(code))).toMatchSnapshot();
 					if (log !== undefined) {
@@ -317,7 +324,11 @@ describe("CSS syntax — invariants", () => {
 
 			it("holds its invariants", () => {
 				expect(
-					unexplained(invariantFindings(syntax, [[name, source]]), expected)
+					unexplained(
+						invariantFindings(syntax, [[name, source]]),
+						expected,
+						source
+					)
 				).toEqual([]);
 			});
 		});
@@ -329,7 +340,7 @@ describe("CSS syntax — invariants", () => {
 		const { reports } = purityRelation(
 			all.map(({ name, source }) => ({
 				what: name,
-				digest: () => syntax.digest(source)
+				digest: () => unlessOverflow(() => syntax.digest(source))
 			}))
 		);
 		expect(reports.map((report) => report.repro)).toEqual([]);

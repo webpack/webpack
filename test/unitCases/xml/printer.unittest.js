@@ -19,7 +19,9 @@ describe("xmlMinify", () => {
 	});
 
 	it("takes the minimizer options as optional", async () => {
-		const { code } = await xmlMinify({ "a.svg": "<svg ></svg>" }, undefined);
+		const { code } = await xmlMinify({
+				"a.svg": fixture("xml", "xml-minify-takes-the-minimizer-options-as-optional")
+			}, undefined);
 		expect(code).toBe("<svg/>");
 	});
 });
@@ -44,7 +46,10 @@ describe("SVG data URLs", () => {
 		const render = builtinEmbeddedRenderer({ svg: true });
 		expect(
 			render(
-				`a{background:url("data:image/svg+xml,${SVG}")}b{background:url("data:text/css,a { color : red }")}`,
+				fixture(
+					"xml",
+					"svg-data-urls-should-minify-the-ones-an-inline-stylesheet-holds-and-only-those"
+				),
 				{ type: "css", hostType: "html" }
 			)
 		).toBe(
@@ -75,7 +80,10 @@ describe("SVG data URLs", () => {
 	});
 
 	it("should minify the ones a stylesheet holds, after the caller's renderer", async () => {
-		const css = `a{background:url("data:image/svg+xml,${SVG}")}b{background:url("data:text/css,a { color : red }")}`;
+		const css = fixture(
+			"xml",
+			"svg-data-urls-should-minify-the-ones-an-inline-stylesheet-holds-and-only-those"
+		);
 		const { code } = await cssMinify({ "a.css": css }, undefined, {
 			svg: true
 		});
@@ -98,7 +106,10 @@ describe("SVG data URLs", () => {
 	});
 
 	it("should minify the ones a page holds only when asked", async () => {
-		const html = `<img src="data:image/svg+xml,${SVG}">`;
+		const html = fixture(
+			"xml",
+			"svg-data-urls-should-minify-the-ones-a-page-holds-only-when-asked"
+		);
 		expect(
 			(await htmlMinify({ "a.html": html }, undefined, { svg: true })).code
 		).toBe(`<img src="data:image/svg+xml,${MINIFIED}">`);

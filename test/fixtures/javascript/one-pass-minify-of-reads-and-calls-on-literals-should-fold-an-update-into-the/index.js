@@ -1,0 +1,1 @@
+function f(a){a+=1;a+=2;return a}function h(i){i++;return i}function k(i){i--;throw i}function l(i){var x=i++;return x**2}function n(a){a+=g();return a}function p(i){i++;return i+1}function q(){const c=1;c+=1;return c}function r(a){with(o)a+=1;return a}

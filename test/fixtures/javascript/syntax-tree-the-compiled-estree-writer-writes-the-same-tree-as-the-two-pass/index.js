@@ -1,0 +1,1 @@
+import a, * as b from 'c' with { type: 'json' }; export { a }; export * from 'd'; class E { #f = 1; static { super.g?.(); } } label: for await (const [h, ...i] of j) { break label; } import.meta; `k${l}`;

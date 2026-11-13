@@ -1,0 +1,1 @@
+console.log((()=>{return[{value:1}][0]})().value,(()=>{return[{value:1}][0].missing})());

@@ -1,0 +1,1 @@
+function f(t,o){if(t)o.a=x+y+z;else o.a=1}

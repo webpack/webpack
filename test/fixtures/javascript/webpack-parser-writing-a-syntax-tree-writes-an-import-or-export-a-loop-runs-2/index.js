@@ -1,0 +1,1 @@
+while (x) export const c = 1;

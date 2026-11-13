@@ -1,0 +1,1 @@
+function c(){const a=b,b=a;return a}try{c()}catch(e){console.log(e.name)}

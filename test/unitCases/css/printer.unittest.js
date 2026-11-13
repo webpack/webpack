@@ -47,8 +47,8 @@ const minifyForWith = (css, browsers, transforms) =>
 
 describe("CssSyntax — block streaming", () => {
 	// A block streams once it holds more than `_STREAM_MIN_NODES` nodes; under that
-	// it is collected and walked in one batch. `BIG` clears the threshold, `SMALL`
-	// stays under, and each case pins which it exercises if the threshold moves.
+	// it is collected and walked in one batch. `BIG` clears the threshold, the
+	// fixture's four rules stay under, and each case pins which it exercises.
 	/** @type {(i: number) => string} */
 	// Distinct blocks: rules printing the same one join into a selector list, and
 	// what these cases are about is the streaming, not the joining.
@@ -60,7 +60,6 @@ describe("CssSyntax — block streaming", () => {
 		return s;
 	};
 	const BIG = repeat(1800, rule);
-	const SMALL = repeat(4, rule);
 
 	/**
 	 * Child rules the first rule of `type` reports: 0 means it streamed (its
@@ -119,20 +118,16 @@ describe("CssSyntax — block streaming", () => {
 		new SourceProcessor().process(src, { mode: "minify" }).code;
 
 	it("streams a block past the threshold and collects one under it", () => {
-		expect(childCount(`@media screen{${BIG}}`)).toBe(0);
-		expect(childCount(`@media screen{${SMALL}}`)).toBe(4);
+		expect(childCount(fixture("css", "css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one-2"))).toBe(0);
+		expect(childCount(fixture("css", "css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one"))).toBe(4);
 	});
 
 	it("cuts a dead rule where it stands after an earlier cut in the piece", () => {
 		// Sibling `@layer a` blocks fold into one piece, so a batch cuts twice in
 		// it — and its own second span must name where the first cut left it.
-		const dead = ".p{color:red}.q{color:blue}";
 		const victim =
 			".victim{opacity:1;background:red;border-radius:0;align-items:flex-start}";
-		const src = `@layer outer{${repeat(
-			6000,
-			(i) => `.f${i}{color:red}`
-		)}@layer a{${dead}}@layer a{${dead}}@layer a{${victim}}@layer a{.q{color:blue}}}`;
+		const src = fixture("css", "css-syntax-block-streaming-cuts-a-dead-rule-where-it-stands-after-an-earlier-cut");
 		// The outer block has to stream for the fold to be the one under test.
 		expect(childCount(src)).toBe(0);
 		const out = minify(src);
@@ -144,9 +139,9 @@ describe("CssSyntax — block streaming", () => {
 	it("folds no block of a layer over a streamed block of that layer", () => {
 		// A streamed block is one its parent's gather never saw, so a later block
 		// of its layer must not fold in front of it — that order is the cascade's.
-		const src = `@layer outer{@layer a{.one{color:red}}@layer a{${BIG}}@layer a{.three{color:teal}}}`;
+		const src = fixture("css", "css-syntax-block-streaming-folds-no-block-of-a-layer-over-a-streamed-block-of");
 		// The middle block has to stream for the gather to be the one under test.
-		expect(childCount(`@layer a{${BIG}}`)).toBe(0);
+		expect(childCount(fixture("css", "css-syntax-block-streaming-folds-no-block-of-a-layer-over-a-streamed-block-of-2"))).toBe(0);
 		const out = minify(src);
 		expect(out.indexOf(".one")).toBeLessThan(out.indexOf(".c0"));
 		expect(out.indexOf(".c0")).toBeLessThan(out.indexOf(".three"));
@@ -155,10 +150,7 @@ describe("CssSyntax — block streaming", () => {
 	it("joins the pair a gathered layer block leaves side by side", () => {
 		// The gather is what makes the two neighbors, so nothing else reads them
 		// as adjacent — and the sheet would join them only on a second minify.
-		const src = `@layer outer{${repeat(
-			6000,
-			(i) => `.f${i}{color:red}`
-		)}@layer a{.w{color:teal}.x{color:lime}}@layer b{.m{color:#00f}}@layer a{.y{color:lime}.z{color:teal}}}`;
+		const src = fixture("css", "css-syntax-block-streaming-joins-the-pair-a-gathered-layer-block-leaves-side-by");
 		// The outer block has to stream for the gather to be the one under test.
 		expect(childCount(src)).toBe(0);
 		const out = minify(src);
@@ -172,77 +164,63 @@ describe("CssSyntax — block streaming", () => {
 	it("leaves the pair at a gathered seam alone where it cannot join", () => {
 		// The gather still runs; only the join at the seam is declined, so each
 		// case reads as the two bodies side by side under one opener.
-		const gathered = (/** @type {string} */ tail) => {
-			const out = minify(
-				`@layer outer{${repeat(6000, (i) => `.f${i}{color:red}`)}${tail}}`
-			);
+		const gathered = (/** @type {string} */ src) => {
+			const out = minify(src);
 			return out.slice(out.indexOf("@layer a{"));
 		};
-		const lead = "@layer a{.p{color:teal}}.mid{margin:0}";
 		// A control, so a case that stopped gathering reads apart from one that
 		// stopped joining.
-		expect(gathered(`${lead}@layer a{.q{color:teal}}`)).toBe(
+		expect(gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it"))).toBe(
 			"@layer a{.p,.q{color:teal}}.mid{margin:0}}"
 		);
 		// Only a qualified rule lends its selectors.
-		expect(gathered(`${lead}@layer a{@media print{.q{color:teal}}}`)).toBe(
+		expect(gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-2"))).toBe(
 			"@layer a{.p{color:teal}@media print{.q{color:teal}}}.mid{margin:0}}"
 		);
 		// One selector an engine cannot parse invalidates the list it joins.
-		expect(gathered(`${lead}@layer a{.q:not(.r){color:teal}}`)).toBe(
+		expect(gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-3"))).toBe(
 			"@layer a{.p{color:teal}.q:not(.r){color:teal}}.mid{margin:0}}"
 		);
 		expect(
-			gathered("@layer a{.p:not(.r){color:teal}}.mid{margin:0}@layer a{.q{color:teal}}")
+			gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-4"))
 		).toBe("@layer a{.p:not(.r){color:teal}.q{color:teal}}.mid{margin:0}}");
 		// Two rules join on the block they share, which these do not.
-		expect(gathered(`${lead}@layer a{.q{color:lime}}`)).toBe(
+		expect(gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-5"))).toBe(
 			"@layer a{.p{color:teal}.q{color:lime}}.mid{margin:0}}"
 		);
 		// A selector the grown list already carries would only be written twice.
 		expect(
-			gathered(
-				"@layer a{.p{color:teal}.q{color:teal}}.mid{margin:0}@layer a{.q{color:teal}}"
-			)
+			gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-6"))
 		).toBe("@layer a{.p,.q{color:teal}.q{color:teal}}.mid{margin:0}}");
 	});
 
 	it("keeps the `;` a gathered layer block ends a declaration on", () => {
 		// The `}` a block ends on drops its last `;`, which a body folded in behind
 		// it needs back, or the declaration runs on into what that body holds.
-		const streamed = `@layer a{${BIG}x:i;}`;
+		const streamed = fixture("css", "css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration");
 		expect(childCount(streamed)).toBe(0);
 		const tail = (/** @type {string} */ out) => out.slice(out.indexOf("x:i"));
-		const top = minify(`${streamed}@layer a{.q{top:0}}.w{color:red}`);
+		const top = minify(fixture("css", "css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-2"));
 		expect(tail(top)).toBe("x:i;.q{top:0}}.w{color:red}");
 		expect(minify(top)).toBe(top);
-		const nested = minify(`.p{${streamed}@layer a{y:j}@layer a{z:k}}`);
+		const nested = minify(fixture("css", "css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-3"));
 		expect(tail(nested)).toBe("x:i;y:j;z:k}}");
 		// A block written whole, in a parent that streams, folds the same way.
-		const parent = (/** @type {string} */ body) =>
-			tail(
-				minify(
-					`@layer outer{${repeat(6000, (i) => `.f${i}{color:red}`)}${body}}`
-				)
-			);
-		expect(parent("@layer a{x:i}.mid{margin:0}@layer a{y:j}")).toBe(
+		const parent = (/** @type {string} */ src) => tail(minify(src));
+		expect(parent(fixture("css", "css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-4"))).toBe(
 			"x:i;y:j}.mid{margin:0}}"
 		);
-		expect(parent("@layer a{x:i}.mid{margin:0}@layer a{.q{top:0}}")).toBe(
+		expect(parent(fixture("css", "css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-5"))).toBe(
 			"x:i;.q{top:0}}.mid{margin:0}}"
 		);
 		// A rule ends in its own `}`, and a `;` after it would start a selector.
-		expect(
-			parent("@layer a{x:i;.p{top:0}}.mid{margin:0}@layer a{y:j}")
-		).toBe("x:i;.p{top:0}y:j}.mid{margin:0}}");
+		expect(parent(fixture("css", "css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-6"))).toBe("x:i;.p{top:0}y:j}.mid{margin:0}}");
 	});
 
 	it("drops a prefixed list a streamed block's rules cover between them", () => {
 		// The list is held as the node its parent would skip, and a streamed parent
 		// assembles no body — so it has to be held as a piece instead.
-		const covered =
-			fixture("css", "css-syntax-minify-vendor-prefixes-selectors-drops-a-prefixed-list-the-rules");
-		const src = `@media screen{${BIG}${covered}}`;
+		const src = fixture("css", "css-syntax-block-streaming-drops-a-prefixed-list-a-streamed-block-s-rules-cover");
 		// The block has to stream for the hold to be the one under test.
 		expect(childCount(src)).toBe(0);
 		const out = minifyFor(src, ["firefox 120"]);
@@ -253,22 +231,15 @@ describe("CssSyntax — block streaming", () => {
 		);
 		// Nothing writes `.b::placeholder`, so the list is still the only rule
 		// styling those elements and stays whichever way its block is written.
-		const uncovered =
-			fixture("css", "css-syntax-minify-vendor-prefixes-selectors-keeps-a-prefixed-list-no-rule-covers");
 		expect(
-			minifyFor(`@media screen{${BIG}${uncovered}}`, ["firefox 120"])
+			minifyFor(fixture("css", "css-syntax-block-streaming-drops-a-prefixed-list-a-streamed-block-s-rules-cover-2"), ["firefox 120"])
 		).toContain("-moz-placeholder");
 	});
 
 	it("drops the second of two prefixed lists a streamed block covers", () => {
 		// Each list is held as its own piece, so the one a closing child belongs to
 		// is found by walking past the pieces held for the others.
-		const lists =
-			fixture("css", "css-syntax-minify-vendor-prefixes-selectors-keeps-a-prefixed-list-no-rule-covers-2") +
-			".c::-moz-placeholder,.d::-moz-placeholder{opacity:0}" +
-			".a::placeholder{color:red}.b::placeholder{color:#00f}" +
-			".c::placeholder{color:#0f0}.d::placeholder{color:#ff0}";
-		const src = `@media screen{${BIG}${lists}}`;
+		const src = fixture("css", "css-syntax-block-streaming-drops-the-second-of-two-prefixed-lists-a-streamed");
 		expect(childCount(src)).toBe(0);
 		const out = minifyFor(src, ["firefox 120"]);
 		expect(out).not.toContain("-moz-placeholder");
@@ -279,10 +250,10 @@ describe("CssSyntax — block streaming", () => {
 	});
 
 	it("enters a streamed rule before its children and exits after them", () => {
-		const seq = walk(`@media screen{${SMALL}}`, { recurseBlocks: true });
+		const seq = walk(fixture("css", "css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one"), { recurseBlocks: true });
 		expect(seq[0]).toBe("+AtRule|0|0");
 		expect(seq[seq.length - 1]).toBe("-AtRule|0|0");
-		const streamed = walk(`@media screen{${BIG}}`);
+		const streamed = walk(fixture("css", "css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one-2"));
 		expect(streamed[0]).toBe("+AtRule|0|0");
 		expect(streamed[streamed.length - 1]).toBe("-AtRule|0|0");
 	});
@@ -291,12 +262,12 @@ describe("CssSyntax — block streaming", () => {
 		// The block outlives the call that entered its rule, so `@property` /
 		// `@function` state is restored per frame rather than around one walk.
 		const value = "rgb(255,0,0)0.50px";
-		expect(minify(`@function --f(){${BIG}result:${value}}`)).toContain(
+		expect(minify(fixture("css", "css-syntax-block-streaming-keeps-a-descriptor-opaque-in-a-streamed-body"))).toContain(
 			`result:${value}`
 		);
 		expect(
 			minify(
-				`@property --x{syntax:"*";inherits:false;${BIG}initial-value:${value}}`
+				fixture("css", "css-syntax-block-streaming-keeps-a-descriptor-opaque-in-a-streamed-body-2")
 			)
 		).toContain(`initial-value:${value}`);
 	});
@@ -305,10 +276,7 @@ describe("CssSyntax — block streaming", () => {
 		// The collected walk emits every declaration and only then every child
 		// rule; a streamed block emits each child as it finishes, so declarations
 		// and child rules interleave the way the source has them.
-		const src = `@media screen{${repeat(
-			1800,
-			(i) => `p${i}:v${i};${rule(i)}`
-		)}}`;
+		const src = fixture("css", "css-syntax-block-streaming-visits-a-streamed-block-s-children-in-source-order");
 		const kinds = walk(src)
 			.filter(
 				(e) => e.startsWith("+Declaration|") || e.startsWith("+QualifiedRule|")
@@ -332,10 +300,7 @@ describe("CssSyntax — block streaming", () => {
 		// The collected walk numbers the two lists independently (see `_walkRule`),
 		// so a streamed block has to as well — not one counter running across the
 		// merged source order.
-		const src = `@media screen{${repeat(
-			1800,
-			(i) => `p${i}:v${i};${rule(i)}`
-		)}}`;
+		const src = fixture("css", "css-syntax-block-streaming-visits-a-streamed-block-s-children-in-source-order");
 		/** @type {string[]} */
 		const seen = [];
 		new SourceProcessor()
@@ -361,7 +326,7 @@ describe("CssSyntax — block streaming", () => {
 		// The inner block crosses the threshold first, so the outer rule has to be
 		// entered on the way in — otherwise `@supports` would be entered before the
 		// `@media` holding it.
-		const seq = walk(`@media screen{@supports (display:grid){${BIG}}}`);
+		const seq = walk(fixture("css", "css-syntax-block-streaming-enters-nested-streamed-blocks-outermost-first"));
 		expect(seq[0]).toBe("+AtRule|0|0");
 		expect(seq.filter((e) => e.startsWith("+AtRule|"))[1]).toBe("+AtRule|0|14");
 	});
@@ -387,8 +352,8 @@ describe("CssSyntax — block streaming", () => {
 		// A streamed rule hands its children to the visitors instead of collecting
 		// them, so both lists read empty — but the block itself is still there,
 		// which `null` (the block-less at-rules) would deny.
-		expect(body(`@media screen{${BIG}}`)).toEqual([0, 0]);
-		expect(body(`@media screen{${SMALL}}`)).toEqual([0, 4]);
+		expect(body(fixture("css", "css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one-2"))).toEqual([0, 0]);
+		expect(body(fixture("css", "css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one"))).toEqual([0, 4]);
 		expect(body(fixture("css", "css-syntax-block-streaming-reads-a-streamed-rule-s-body-as-an-empty-block-not-as"))).toEqual([null, null]);
 	});
 
@@ -405,7 +370,7 @@ describe("CssSyntax — block streaming", () => {
 					},
 					[NodeType.QualifiedRule]: () => n++
 				})
-				.process(`@media screen{${BIG}}`, opts);
+				.process(fixture("css", "css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one-2"), opts);
 			return n;
 		};
 		expect(children({}, true)).toBe(0);
@@ -416,21 +381,25 @@ describe("CssSyntax — block streaming", () => {
 	it("prints a streamed block as the collected printer would", () => {
 		// The fixture is already minimal, so the whole output is known: opener,
 		// every child in source order, closer — and no `;` before the `}`.
-		expect(minify(`@media screen{${BIG}}`)).toBe(`@media screen{${BIG}}`);
-		expect(minify(`@media screen{@supports (display:grid){${BIG}}}`)).toBe(
+		expect(minify(fixture("css", "css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one-2"))).toBe(`@media screen{${BIG}}`);
+		expect(minify(fixture("css", "css-syntax-block-streaming-enters-nested-streamed-blocks-outermost-first"))).toBe(
 			`@media screen{@supports (display:grid){${BIG}}}`
 		);
 		// Children printing one block join into a selector list, so the streamed
 		// path has to reach the list a collected one does rather than the input.
 		/** @type {(n: number) => string} */
-		const nesting = (n) =>
-			`.root{color:red;${repeat(n, (i) => `& .n${i}{color:red}`)}}`;
-		/** @type {(n: number) => string} */
 		const joined = (n) =>
 			`.root{color:red;${Array.from({ length: n }, (_, i) => `& .n${i}`)
 				.sort()
 				.join(",")}{color:red}}`;
-		expect(minify(nesting(1800))).toBe(joined(1800));
+		expect(
+			minify(
+				fixture(
+					"css",
+					"css-syntax-block-streaming-prints-a-streamed-block-as-the-collected-printer-would"
+				)
+			)
+		).toBe(joined(1800));
 	});
 
 	it("reads a streamed rule's prelude in terms of what encloses it", () => {
@@ -439,17 +408,17 @@ describe("CssSyntax — block streaming", () => {
 		// per rule, so what is pinned is the prelude, not the sibling merge.
 		const nested = repeat(3000, (i) => `& .x${i}{top:${i + 1}px}`);
 		expect(
-			childCount(`@keyframes k{from{${nested}}}`, NodeType.QualifiedRule)
+			childCount(fixture("css", "css-syntax-block-streaming-reads-a-streamed-rule-s-prelude-in-terms-of-what"), NodeType.QualifiedRule)
 		).toBe(0);
-		expect(minify(`@keyframes k{from{${nested}}}`)).toBe(
+		expect(minify(fixture("css", "css-syntax-block-streaming-reads-a-streamed-rule-s-prelude-in-terms-of-what"))).toBe(
 			`@keyframes k{0%{${nested}}}`
 		);
 		// `to` is already shorter than the `100%` it names, and a `.from` selector
 		// outside `@keyframes` is a class like any other.
-		expect(minify(`@keyframes k{to{${nested}}}`)).toBe(
+		expect(minify(fixture("css", "css-syntax-block-streaming-reads-a-streamed-rule-s-prelude-in-terms-of-what-2"))).toBe(
 			`@keyframes k{to{${nested}}}`
 		);
-		expect(minify(`.from{${nested}}`)).toBe(`.from{${nested}}`);
+		expect(minify(fixture("css", "css-syntax-block-streaming-reads-a-streamed-rule-s-prelude-in-terms-of-what-3"))).toBe(`.from{${nested}}`);
 	});
 
 	it("falls back past the depth the frame table holds", () => {
@@ -459,7 +428,7 @@ describe("CssSyntax — block streaming", () => {
 		const depth = 70;
 		const open = repeat(depth, (i) => `@media m${i}{`);
 		const close = repeat(depth, () => "}");
-		expect(minify(`${open}${BIG}${close}`)).toBe(`${open}${BIG}${close}`);
+		expect(minify(fixture("css", "css-syntax-block-streaming-falls-back-past-the-depth-the-frame-table-holds-2"))).toBe(`${open}${BIG}${close}`);
 	});
 
 	it("keeps only the last of a streamed block's identical declarations", () => {
@@ -467,7 +436,7 @@ describe("CssSyntax — block streaming", () => {
 		// block cannot look ahead. The duplicate is 3000 child rules from its match, so
 		// this is the whole block agreeing, not a run of adjacent declarations.
 		const middle = repeat(3000, (i) => `& .m${i}{top:${i + 1}px}`);
-		const src = `.root{color:red;${middle}color:red;}`;
+		const src = fixture("css", "css-syntax-block-streaming-keeps-only-the-last-of-a-streamed-block-s-identical");
 		expect(childCount(src, NodeType.QualifiedRule)).toBe(0);
 		expect(minify(src)).toBe(`.root{${middle}color:red}`);
 	});
@@ -477,7 +446,7 @@ describe("CssSyntax — block streaming", () => {
 		// the block emitted, past the empty one a later duplicate took back. What
 		// stands before the block keeps its own separator.
 		const mid = repeat(3000, (i) => `& .m${i}{top:${i + 1}px}`);
-		const src = `.root{lead:1;${mid}dup:2;dup:2;}`;
+		const src = fixture("css", "css-syntax-block-streaming-takes-back-only-its-own-output-when-it-drops-the-last");
 		expect(childCount(src, NodeType.QualifiedRule)).toBe(0);
 		expect(minify(src)).toBe(`.root{lead:1;${mid}dup:2}`);
 	});
@@ -486,7 +455,7 @@ describe("CssSyntax — block streaming", () => {
 		// A streamed block emits each child as it finishes rather than collecting
 		// them, so the order it writes them in is the order they were parsed.
 		const out = new SourceProcessor().process(
-			`@media all{${BIG}.z1{left:0}.z2{left:0}}`,
+			fixture("css", "css-syntax-block-streaming-writes-a-streamed-block-s-children-straight-through"),
 			{ mode: "beautify" }
 		).code;
 		expect(out).toContain(".z1 {\nleft: 0;\n}\n.z2 {\nleft: 0;\n}");
@@ -495,10 +464,7 @@ describe("CssSyntax — block streaming", () => {
 	it("declines to stream a block a longhand family could still merge in", () => {
 		// The merge needs every declaration at once, so a block holding no child
 		// rule is never streamed however far past the threshold it grows.
-		const src = `.root{${repeat(
-			20000,
-			(i) => `--v${i}:${i};`
-		)}margin-top:1px;margin-right:2px;margin-bottom:3px;margin-left:4px}`;
+		const src = fixture("css", "css-syntax-block-streaming-declines-to-stream-a-block-a-longhand-family-could");
 		/** @type {number | null} */
 		let declared = null;
 		let seen = false;
@@ -523,7 +489,7 @@ describe("CssSyntax — block streaming", () => {
 	});
 
 	it("keeps the comments a streamed run carries through", () => {
-		expect(minify(`/*! keep */@media a{${BIG}}/*! tail */`)).toBe(
+		expect(minify(fixture("css", "css-syntax-block-streaming-keeps-the-comments-a-streamed-run-carries-through"))).toBe(
 			`/*! keep */@media a{${BIG}}/*! tail */`
 		);
 	});
@@ -538,13 +504,13 @@ describe("CssSyntax — block streaming", () => {
 			}
 		});
 		const plain = walk(src);
-		sp.process(`@media screen{${BIG}}`, {});
+		sp.process(fixture("css", "css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one-2"), {});
 		expect(walk(src)).toEqual(plain);
 		// Part-way through the streamed block, so the frame depth is unwound from
 		// inside the walk rather than at the closing `}`.
 		seen = 0;
 		throwAt = 500;
-		expect(() => sp.process(`@media screen{${BIG}}`, {})).toThrow("boom");
+		expect(() => sp.process(fixture("css", "css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one-2"), {})).toThrow("boom");
 		throwAt = -1;
 		expect(walk(src)).toEqual(plain);
 	});
@@ -659,9 +625,7 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 describe("CssSyntax — the memo of which properties' order matters", () => {
 	it("starts again once a sheet of made-up names fills it, and still folds", () => {
 		// One longhand walked back past more names than the memo holds.
-		const names = [];
-		for (let i = 0; i < 33000; i++) names.push(`x${i}:1`);
-		const css = `a{margin:0;${names.join(";")};margin-top:1px}`;
+		const css = fixture("css", "css-syntax-the-memo-of-which-properties-order-matters-starts-again-once-a-sheet");
 		/**
 		 * @param {string} src css source
 		 * @returns {string} the minified serialization
@@ -696,10 +660,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 	// and each is held to its own output as well: a second minify adds nothing.
 	describe("what a wider corpus found", () => {
 		it("shortens a number the same once the searches it keeps fill up", () => {
-			const widths = Array.from(
-				{ length: 5000 },
-				(_, i) => `.a${i}{width:${(i + 1) / 7}em}`
-			).join("");
+			const widths = fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-what-a-wider-corpus-found-104");
 			const once = minify(widths);
 			expect(once).toContain(".a4999{width:714.2857143em}");
 			expect(minify(widths)).toBe(once);
@@ -708,9 +669,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 	describe("a rule an identical later sibling makes dead", () => {
 		it("drops it across a streamed block, written straight out", () => {
-			let filler = "";
-			for (let i = 0; i < 4000; i++) filler += `.f${i}{color:red}`;
-			const out = minify(`@media all{.a{top:0}${filler}.a{top:0}}`);
+			const out = minify(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-rule-an-identical-later-26"));
 			expect(out.match(/\.a\{top:0\}/g)).toHaveLength(1);
 			// The surviving copy is the last one: an earlier one would be read where
 			// the later is, which is what a rule between them can override.
@@ -723,7 +682,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			let filler = "";
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const out = minify(
-				`@media all{@layer x{a{color:red}}${filler}@layer x{c{color:lime}}}`
+				fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-24")
 			);
 			expect(
 				out.startsWith("@media all{@layer x{a{color:red}c{color:lime}}")
@@ -732,19 +691,15 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("gathers past enough nodes to stream, but not past that layer again", () => {
-			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
-			const css = `@media all{@layer x{a{color:red}}${filler}.y{@layer x{b{top:0}}}@layer x{c{color:lime}}}`;
+			const css = fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-25");
 			expect(minify(css)).toBe(css);
 		});
 
 		it("gathers past a string that only looks like it opens the layer", () => {
 			// The gather reads a streamed node's printed text, where a `@layer` inside
 			// a string is a value rather than an at-rule nothing may fold across.
-			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const out = minify(
-				`@media all{@layer x{a{color:red}}${filler}.b{content:"@layer x{"}@layer x{c{color:lime}}}`
+				fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-26")
 			);
 			expect(
 				out.startsWith("@media all{@layer x{a{color:red}c{color:lime}}")
@@ -758,21 +713,19 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const block = "{color:red;outline:1px solid blue}";
 			expect(
-				minify(`@media all{${filler}a:hover${block}b:hover${block}}`)
+				minify(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-27"))
 			).toBe(`@media all{${filler}a:hover,b:hover${block}}`);
 			// A declaration is read at its own place, so it parts the run — as it does
 			// in a block whose body is assembled in one go.
-			const parted = `.p{${filler}a:hover${block}q:2;b:hover${block}}`;
+			const parted = fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-28");
 			expect(minify(parted)).toBe(parted);
 		});
 
 		it("gathers past a rule that writes a layer of its own", () => {
 			// Only a write into the very same layer fixes where this one's rules go:
 			// two layers that are not one are ordered where each was first named.
-			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const out = minify(
-				`@media all{@layer x{a{color:red}}${filler}.y{@layer q{b{top:0}}}@layer x{c{color:lime}}}`
+				fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-29")
 			);
 			expect(out.startsWith("@media all{@layer x{a{color:red}c{color:lime}}")).toBe(
 				true
@@ -782,10 +735,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it("gathers past a rule that writes a layer under it", () => {
 			// A layer's own declarations outrank its sublayers whichever side of them
 			// they are written, so writing into `x.sub` does not pin `x`.
-			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const out = minify(
-				`@media all{@layer x{a{color:red}}${filler}.y{@layer x.sub{b{top:0}}}@layer x{c{color:lime}}}`
+				fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-30")
 			);
 			expect(out.startsWith("@media all{@layer x{a{color:red}c{color:lime}}")).toBe(
 				true
@@ -793,10 +744,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("gathers past a rule that writes the layer above it", () => {
-			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const out = minify(
-				`@media all{@layer x.k{a{color:red}}${filler}.y{@layer x{b{top:0}}}@layer x.k{c{color:lime}}}`
+				fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-31")
 			);
 			expect(
 				out.startsWith("@media all{@layer x.k{a{color:red}c{color:lime}}")
@@ -807,7 +756,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			let filler = "";
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const out = minify(
-				`@media all{@layer a{.x{color:red}}@layer a.b{${filler}}@layer a{.y{color:#00f}}}`
+				fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-32")
 			);
 			expect(
 				out.startsWith("@media all{@layer a{.x{color:red}.y{color:#00f}}")
@@ -819,7 +768,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			let filler = "";
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const out = minify(
-				`@layer a{.x{color:red}}@layer a.b{${filler}}@layer a{.y{color:#00f}}`
+				fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-33")
 			);
 			expect(out.startsWith("@layer a{.x{color:red}.y{color:#00f}}")).toBe(
 				true
@@ -833,7 +782,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// in the block the layer was opened in, in the order they were written.
 			let filler = "";
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
-			const css = `@media all{@layer a{.x{color:red}}@layer a{${filler}}@layer a{.y{color:#00f}}}`;
+			const css = fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-34");
 			expect(minify(css)).toBe(
 				`@media all{@layer a{.x{color:red}${filler}.y{color:#00f}}}`
 			);
@@ -844,7 +793,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// an empty block declares where the layer sits and gathers the same.
 			let filler = "";
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
-			expect(minify(`@layer u{@layer a{}@layer a{${filler}}}`)).toBe(
+			expect(minify(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-35"))).toBe(
 				`@layer u{@layer a{${filler}}}`
 			);
 		});
@@ -855,7 +804,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			let two = "";
 			for (let i = 0; i < 17000; i++) two += `.g${i}{left:${i + 1}px}`;
 			expect(
-				minify(`@layer u{@layer a{}@layer a{${one}}@layer a{${two}}}`)
+				minify(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-36"))
 			).toBe(`@layer u{@layer a{${one}${two}}}`);
 		});
 
@@ -865,17 +814,15 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			let filler = "";
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			expect(
-				minifyFor(`@layer u{@layer a{.q{top:0}}@layer /*c*/ a{${filler}}}`)
+				minifyFor(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-37"))
 			).toBe(`@layer u{@layer a{.q{top:0}${filler}}}`);
 			expect(
-				minifyFor(`@layer u{@layer a.b{.q{top:0}}@layer a/*c*/.b{${filler}}}`)
+				minifyFor(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-38"))
 			).toBe(`@layer u{@layer a.b{.q{top:0}${filler}}}`);
 		});
 
 		it("leaves a block big enough to stream where rules are not merged", () => {
-			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
-			const css = `@layer u{@layer a{.q{top:0}}@layer a{${filler}}}`;
+			const css = fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-39");
 			expect(minifyForWith(css, ["chrome 120"], { mergeRules: false })).toBe(
 				css
 			);
@@ -885,7 +832,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// `@layer {` is a layer of its own, so a second one gathers with nothing.
 			let filler = "";
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
-			expect(minify(`@layer u{@layer{}@layer{${filler}}}`)).toBe(
+			expect(minify(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-40"))).toBe(
 				`@layer u{@layer{}@layer{${filler}}}`
 			);
 		});
@@ -894,7 +841,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			let filler = "";
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			expect(
-				minify(`@layer u{@layer a{.q{top:0}}@layer b{${filler}}}`)
+				minify(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-41"))
 			).toBe(`@layer u{@layer a{.q{top:0}}@layer b{${filler}}}`);
 		});
 
@@ -902,7 +849,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			let filler = "";
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			expect(
-				minify(`@layer u{@layer a.b.c{.q{top:0}}@layer a.b.c{${filler}}}`)
+				minify(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-42"))
 			).toBe(`@layer u{@layer a.b.c{.q{top:0}${filler}}}`);
 		});
 
@@ -911,14 +858,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// its `}` opens is the one the later block folds into.
 			let filler = "";
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
-			const css = `@media all{@layer a{${filler}}@layer a{.y{color:#00f}}}`;
+			const css = fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-43");
 			expect(minify(css)).toBe(`@media all{@layer a{${filler}.y{color:#00f}}}`);
 		});
 
 		it("gathers the same way for a block the sheet itself holds", () => {
 			let filler = "";
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
-			const css = `@layer a{.x{color:red}}@layer a{${filler}}@layer a{.y{color:#00f}}`;
+			const css = fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-44");
 			expect(minify(css)).toBe(
 				`@layer a{.x{color:red}${filler}.y{color:#00f}}`
 			);
@@ -950,7 +897,7 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 		let filler = "";
 		for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 		const out = minifyFor(
-			`@media all{::-webkit-input-placeholder{color:red}${filler}::placeholder{color:red}}`,
+			fixture("css", "css-syntax-minify-vendor-prefixes-at-rules-drops-a-prefixed-spelling-its-twin"),
 			["chrome 120"]
 		);
 		// The whole of it, not its ends: a filler rule the stream lost or reordered
@@ -963,7 +910,7 @@ describe("CssSyntax minify — the list a joined at-rule's seam leaves", () => {
 	it("orders the list a gathered block big enough to stream leaves", () => {
 		let filler = "";
 		for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
-		expect(minifyFor(`@layer a{.b{top:0}}@layer a{.a{top:0}${filler}}`)).toBe(
+		expect(minifyFor(fixture("css", "css-syntax-minify-the-list-a-joined-at-rule-s-seam-leaves-orders-the-list-a-6"))).toBe(
 			`@layer a{.a,.b{top:0}${filler}}`
 		);
 	});
@@ -1043,12 +990,10 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 		const { EMBEDDED_LANGUAGES } = require("../../../lib/util/dataURL");
 
 		// One stylesheet reaching every language a media type can name.
-		const sheet =
-			'@import url("data:text/css,.inner {  color : red  }");' +
-			'.svg{background:url("data:image/svg+xml,<svg>   <rect/>   </svg>")}' +
-			'.html{background:url("data:text/html,<p>   x   </p>")}' +
-			".json{background:url('data:application/json,{ \"a\" :  1 }')}" +
-			'.js{background:url("data:text/javascript,var  a  =  1")}';
+		const sheet = fixture(
+			"css",
+			"source-processor-render-embedded-source-over-a-data-url-offers-every-language"
+		);
 
 		// Every entry needs a live offer site behind it, and nothing may arrive
 		// that the list does not name.
@@ -1098,12 +1043,6 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 });
 
 describe("CssSyntax minify — one stylesheet reaching every embedded site", () => {
-	/**
-	 * @param {string} payload the payload to encode
-	 * @returns {string} it, base64-encoded
-	 */
-	const base64 = (payload) => Buffer.from(payload).toString("base64");
-
 	const PAYLOADS = {
 		css: "  .inner  {  color : red  ;  }  ",
 		svg: "<svg xmlns='http://www.w3.org/2000/svg'>   <rect/>   </svg>",
@@ -1114,34 +1053,10 @@ describe("CssSyntax minify — one stylesheet reaching every embedded site", () 
 
 	// Every site a stylesheet can embed a body at, each language reached twice —
 	// once written out and once base64 — plus the two a renderer never sees.
-	const STYLESHEET = `@import url("data:text/css,${PAYLOADS.css}") ;
-
-.svg  { background : url("data:image/svg+xml,${PAYLOADS.svg}") ; }
-.html { background : url("data:text/html,${PAYLOADS.html}") ; }
-.json { background : url('data:application/json,${PAYLOADS.json}') ; }
-.javascript { background : url("data:text/javascript,${
-		PAYLOADS.javascript
-	}") ; }
-
-.svg-base64  { background : url(data:image/svg+xml;base64,${base64(
-		PAYLOADS.svg
-	)}) ; }
-.css-base64  { background : url(data:text/css;base64,${base64(
-		PAYLOADS.css
-	)}) ; }
-.html-base64 { background : url(data:text/html;base64,${base64(
-		PAYLOADS.html
-	)}) ; }
-.json-base64 { background : url(data:application/json;base64,${base64(
-		PAYLOADS.json
-	)}) ; }
-.javascript-base64 { background : url(data:text/javascript;base64,${base64(
-		PAYLOADS.javascript
-	)}) ; }
-
-.png  { background : url("data:image/png;base64,iVBORw0KGgo=") ; }
-.file { background : url("./img.png") ; }
-`;
+	const STYLESHEET = fixture(
+		"css",
+		"css-syntax-minify-one-stylesheet-reaching-every-embedded-site-offers-each"
+	);
 
 	/**
 	 * @param {import("../../../lib/css/syntax-parser").EmbeddedSourceRenderer=} renderEmbeddedSource the renderer
@@ -1233,14 +1148,19 @@ describe("cssMinify export", () => {
 
 		const { cssMinify } = webpack.css;
 
-		const { code } = await cssMinify({ "a.css": "a {\n\tcolor: red;\n}\n" });
+		const { code } = await cssMinify({
+			"a.css": fixture("css", "css-minify-export-minifies-through-the-public-entry")
+		});
 
 		expect(code).toMatchInlineSnapshot('"a{color:red}"');
 	});
 
 	it("keeps escapes and writes no `@charset` for CSS another document embeds", async () => {
 		const { cssMinify } = require("../../..").css;
-		const css = String.raw`.a:after{content:"\1F903\\"}.b{content:".x{color:red}"}`;
+		const css = fixture(
+			"css",
+			"css-minify-export-keeps-escapes-and-writes-no-charset-for-css-another-document"
+		);
 
 		expect((await cssMinify({ "a.css": css })).code).toBe(
 			'@charset "UTF-8";.a:after{content:"\u{1F903}\\\\"}.b{content:".x{color:red}"}'
@@ -1548,12 +1468,8 @@ describe("CssSyntax — the node accessors a print reads", () => {
 });
 
 describe("CssSyntax — skipChildren() and stop() while printing", () => {
-	/** @type {(i: number) => string} */
-	const rule = (i) => `.c${i}>d${i}:hover{color:#ff0000;margin:${i + 1}px}`;
-	const BIG = Array.from({ length: 1800 }, (_, i) => rule(i)).join("");
-
 	it.each([
-		["a streamed at-rule", NodeType.AtRule, `@media screen{${BIG}}`]
+		["a streamed at-rule", NodeType.AtRule, fixture("css", "css-syntax-skip-children-and-stop-while-printing-prints-all-a-streamed-at-rule")]
 	])("prints all %s holds, and fires no visitor below it", (_, type, css) => {
 		/** @type {string[]} */
 		const log = [];
@@ -1589,7 +1505,7 @@ describe("CssSyntax — skipChildren() and stop() while printing", () => {
 	it("prints the whole stylesheet after stop()", () => {
 		/** @type {string[]} */
 		const log = [];
-		const css = `a{b:1}${BIG}c{d:2}`;
+		const css = fixture("css", "css-syntax-skip-children-and-stop-while-printing-prints-the-whole-stylesheet");
 		const processor = new SourceProcessor().use({
 			[NodeType.Declaration]: (
 				/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
@@ -1619,7 +1535,7 @@ describe("CssSyntax — skipChildren() and stop() while printing", () => {
 					if (log.length === 3) path.stop();
 				}
 			})
-			.process(`@media screen{${BIG}}a{z:1}`);
+			.process(fixture("css", "css-syntax-skip-children-and-stop-while-printing-ends-a-walk-stopped-inside-a"));
 		expect(log).toEqual(["color", "margin", "color"]);
 	});
 
@@ -1633,9 +1549,8 @@ describe("CssSyntax — skipChildren() and stop() while printing", () => {
 			) => path.skipChildren(),
 			[NodeType.Declaration]: () => seen.push(1)
 		});
-		const big = Array.from({ length: 4000 }, (_, i) => rule(i)).join("");
 		expect(() =>
-			processor.process(`@media print{${big}/*x*/}`, {
+			processor.process(fixture("css", "css-syntax-skip-children-and-stop-while-printing-puts-back-the-visitors-a-skip"), {
 				mode: "minify",
 				transforms: {
 					comments: (text) => {
@@ -1682,7 +1597,7 @@ describe("CssSyntax — the options a print reads", () => {
 describe("CssSyntax — a value too long for the buffers a parse keeps", () => {
 	it("prints it, and the next stylesheet after it", () => {
 		const value = "x ".repeat(40000).trim();
-		expect(minifyFor(`a{b:${value}}`)).toBe(`a{b:${value}}`);
+		expect(minifyFor(fixture("css", "css-syntax-a-value-too-long-for-the-buffers-a-parse-keeps-prints-it-and-the-next"))).toBe(`a{b:${value}}`);
 	});
 });
 
@@ -1703,49 +1618,45 @@ describe("CssSyntax minify — nesting lowered in a block too big to collect", (
 	);
 
 	it("writes every rule against its parent", () => {
-		const out = minifyFor(`.p{color:blue;${rules.join("")}}`, TARGET);
+		const out = minifyFor(fixture("css", "css-syntax-minify-nesting-lowered-in-a-block-too-big-to-collect-writes-every"), TARGET);
 		expect(out).toBe(`.p{color:blue}${rules.map((rule) => `.p ${rule}`).join("")}`);
 	});
 
 	it("keeps the rules beside a long at-rule", () => {
 		const prelude = Array.from({ length: 9000 }, (_, i) => `x${i}`).join(" ");
-		expect(minifyFor(`.p{.a{x:1}@st ${prelude};.b{y:1}}`, TARGET)).toBe(
+		expect(minifyFor(fixture("css", "css-syntax-minify-nesting-lowered-in-a-block-too-big-to-collect-keeps-the-rules"), TARGET)).toBe(
 			`.p{@st ${prelude}}.p .a{x:1}.p .b{y:1}`
 		);
 	});
 });
 
 describe("CssSyntax minify — input around a block big enough to stream", () => {
-	const BIG = Array.from(
-		{ length: 1700 },
-		(_, i) => `.c${i}>d${i}{color:red;margin:${i + 1}px}`
-	).join("");
 	const hash = (/** @type {string} */ text) =>
 		require("crypto").createHash("sha1").update(text).digest("hex").slice(0, 16);
 
 	// The whole output is pinned by its length, its digest and how it opens.
 	it.each([
-		["@supports (a:b){.p{@media print{display:-webkit-flex;display:flex}}${BIG}}", {"environment":{"browsers":["ie 9"]}}, 59640, "5fbd37571ad2871b", "@supports (a:b){.p{@media print{display:-ms-flexbox;display:"],
-		["@layer x{@media print{@LAYER X{A{COLOR:C\\OLOR-MIX(IN SRGB,#123,RED)}}${BIG}a{b:c;b\\:c}}}", {"environment":{"browsers":["chrome 100"]}}, 59668, "de61e70d773e560c", "@layer x{@media print{@layer X{A{color:#88111a;color:color-m"],
-		[".p{@supports (display:grid){@laye x{@layer x{}@layer x{@layer x,{}@laye x{@layer x{}@layer x{@layer x,{}}@media print{@media (width>=1px){:--h{b:c}}@custom-selector( :--h1}@media print{@media (width>=1px){:--h{b:c}}@custom-selector :--h1}${BIG}}", {"environment":{"browsers":["safari 15"]},"transforms":{"reduceFunctions":false},"convertApproximateColors":true}, 59802, "f700edac3df38205", ".p{@supports (display:grid){@laye x{@layer x{@layer x,{}@lay"],
-		[".p{.a{x:1}@st(arting-style{y:2}.a{x:1}@starting-style{y:2}${BIG}}", {"environment":{"browsers":["chrome 100"]},"convertLengthUnits":true}, 59638, "716f750a890312f9", ".p{@st (arting-style{y:2}.a{x:1}@starting-style{y:2}.c0>d0{c"],
-		["@layer x{@media print{@scope (.x){A{border-radius:1px;BORDER-RAD;iu(s:1px}}${BIG}}}", {"environment":{"browsers":["firefox 120"]},"transforms":{"removeDeadRules":false,"lowerUnsupported":false,"customMedia":true,"customSelectors":true},"rewriteCustomProperties":true}, 59654, "9236b96792fcc74d", "@layer x{@media print{@scope(.x){A{border-radius:1px;BORDER-"],
-		["@layer x{b c{}${BIG}}", {}, 59583, "c2202a5dc1ee4bdc", "@layer x{.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin"],
-		[".p{)}}${BIG}@layer x{a{b:c}}d{e:f}@layer x{g{h:i}}}", {"environment":{"browsers":["chrome 60"]}}, 59607, "e387786e2ee3d1c9", ".p{)}}.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2p"],
-		[".p{a${BIG}}", {"environment":{"browsers":["safari 9"]}}, 59578, "1c7f659b996f096b", ".p{a.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2px}"],
-		["@media print{a{color:light-dark(color(display-p3 1 0 0),blue)}${BIG}}", {"environment":{"browsers":["firefox 40"]},"convertApproximateColors":true}, 59616, "6660d7cfebbb10af", "@media print{a{color:light-dark(red,blue)}.c0>d0{color:red;m"],
-		[".q .r{${BIG}@supports ((displa}", {}, 59599, "42bdd3e044d317c6", ".q .r{.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2p"],
-		[".p{${BIG}.a{--x:1px (/*!k*}", {"environment":{"browsers":["safari 15"]}}, 64694, "d0372360dd4c3f18", ".p .c0>d0{color:red;margin:1px}.p .c1>d1{color:red;margin:2p"],
-		["@layer x{A{border-radius:1px;BORDER-RAD;A{-webkit-border-radius:1px;BORDER-RAD;${BIG}a{b:c}a{border-radius:1pxa{b:c}}", {"environment":{"browsers":["safari 17"]}}, 66490, "c81f51de8c22ae4b", "@layer x{A{border-radius:1px;BORDER-RAD}A A{-webkit-border-r"],
-		["@scope (.x){a{b:c}a{mara${BIG}}", {}, 59596, "3563243b1b3ccadb", "@scope(.x){a{b:c;mara.c0>d0{color:red;margin:1px}.c1>d1{colo"],
-		["@layer x{a{b:c}op:auto;left:auto}op:auto;right:0;bottom:0;left:auto}op:auto;left:auto}op:auto;right:0;bottom:0;left:auto}a{b(:1}a{b:c}${BIG}a{color:light-dark(color(display-p3 1 0 0),blue)}}", {"environment":{"browsers":["chrome 40"]}}, 59759, "3185c126c5f98d93", "@layer x{a{b:c}op:auto;left:auto}op:auto;right:0;bottom:0;le"],
-		["@media print{.p{a{b:c}@scope (.x){ {\ny/**/;\n}}a{b:c}${BIG}}}", {}, 59616, "d7c506afba0fc51b", "@media print{.p{@scope(.x){{y/**/}}a{b:c}.c0>d0{color:red;ma"],
-		[".p{a{top:calc(1px + 1%);right:anchor(top);bottom:calc(1px + 1%);left:anchor(top)}${BIG}@media print{a{co}lor:color-mix(in srgb,#123,red)}a{co}lor:color-mix(in srgb,#123,blue)}}}", {"environment":{"browsers":["safari 15"]},"convertLengthUnits":true}, 59496, "26149d6072c50870", ".p{a{inset:calc(1px + 1%)anchor(top)}.c0>d0{color:red;margin"],
-		[".p{@laye x{@layer x{}@layer x{@layer( x{}${BIG}{y/**/ z}}", {"environment":{"browsers":["opera 12"]}}, 59614, "dc0fe17fac5dcff0", ".p{@laye x{@layer x{@layer (x{}.c0>d0{color:red;margin:1px}."],
-		["@layer x{a{b:c}a{b:c};a,b{c:1};b,b{c:1}a{b(:1}a{b:c}a{b:c}${BIG}a{top:calc(1px + 1%);right:anchor(top);bottom:calc(1px + 1%);left:anchor(top)}}", {"environment":{"browsers":["chrome 120"]}}, 59703, "d654154b94e244d7", "@layer x{a{b:c}a,b{c:1}b{c:1}a{b(:1}a{b:c}a{b:c}.c0>d0{color"],
-		["@media print{.p{.a{x:}@st(arting-style{y:2}.a{x:1}@starting-style{y:2}}${BIG}}}", {"environment":{"browsers":["android 4.4"]}}, 59644, "c2f1c90198563afa", "@media print{.p{@st (arting-style{y:2}.a{x:1}@starting-style"]
-	])("prints %j (%j)", (css, options, length, digest, head) => {
-		const out = new SourceProcessor().process(css.replace("${BIG}", BIG), {
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints", {"environment":{"browsers":["ie 9"]}}, 59640, "5fbd37571ad2871b", "@supports (a:b){.p{@media print{display:-ms-flexbox;display:"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-2", {"environment":{"browsers":["chrome 100"]}}, 59668, "de61e70d773e560c", "@layer x{@media print{@layer X{A{color:#88111a;color:color-m"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-3", {"environment":{"browsers":["safari 15"]},"transforms":{"reduceFunctions":false},"convertApproximateColors":true}, 59802, "f700edac3df38205", ".p{@supports (display:grid){@laye x{@layer x{@layer x,{}@lay"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-4", {"environment":{"browsers":["chrome 100"]},"convertLengthUnits":true}, 59638, "716f750a890312f9", ".p{@st (arting-style{y:2}.a{x:1}@starting-style{y:2}.c0>d0{c"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-5", {"environment":{"browsers":["firefox 120"]},"transforms":{"removeDeadRules":false,"lowerUnsupported":false,"customMedia":true,"customSelectors":true},"rewriteCustomProperties":true}, 59654, "9236b96792fcc74d", "@layer x{@media print{@scope(.x){A{border-radius:1px;BORDER-"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-6", {}, 59583, "c2202a5dc1ee4bdc", "@layer x{.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-7", {"environment":{"browsers":["chrome 60"]}}, 59607, "e387786e2ee3d1c9", ".p{)}}.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2p"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-8", {"environment":{"browsers":["safari 9"]}}, 59578, "1c7f659b996f096b", ".p{a.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2px}"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-9", {"environment":{"browsers":["firefox 40"]},"convertApproximateColors":true}, 59616, "6660d7cfebbb10af", "@media print{a{color:light-dark(red,blue)}.c0>d0{color:red;m"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-10", {}, 59599, "42bdd3e044d317c6", ".q .r{.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2p"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-11", {"environment":{"browsers":["safari 15"]}}, 64694, "d0372360dd4c3f18", ".p .c0>d0{color:red;margin:1px}.p .c1>d1{color:red;margin:2p"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-12", {"environment":{"browsers":["safari 17"]}}, 66490, "c81f51de8c22ae4b", "@layer x{A{border-radius:1px;BORDER-RAD}A A{-webkit-border-r"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-13", {}, 59596, "3563243b1b3ccadb", "@scope(.x){a{b:c;mara.c0>d0{color:red;margin:1px}.c1>d1{colo"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-14", {"environment":{"browsers":["chrome 40"]}}, 59759, "3185c126c5f98d93", "@layer x{a{b:c}op:auto;left:auto}op:auto;right:0;bottom:0;le"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-15", {}, 59616, "d7c506afba0fc51b", "@media print{.p{@scope(.x){{y/**/}}a{b:c}.c0>d0{color:red;ma"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-16", {"environment":{"browsers":["safari 15"]},"convertLengthUnits":true}, 59496, "26149d6072c50870", ".p{a{inset:calc(1px + 1%)anchor(top)}.c0>d0{color:red;margin"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-17", {"environment":{"browsers":["opera 12"]}}, 59614, "dc0fe17fac5dcff0", ".p{@laye x{@layer x{@layer (x{}.c0>d0{color:red;margin:1px}."],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-18", {"environment":{"browsers":["chrome 120"]}}, 59703, "d654154b94e244d7", "@layer x{a{b:c}a,b{c:1}b{c:1}a{b(:1}a{b:c}a{b:c}.c0>d0{color"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-19", {"environment":{"browsers":["android 4.4"]}}, 59644, "c2f1c90198563afa", "@media print{.p{@st (arting-style{y:2}.a{x:1}@starting-style"]
+	])("prints %j (%j)", (name, options, length, digest, head) => {
+		const out = new SourceProcessor().process(fixture("css", name), {
 			...options,
 			mode: "minify"
 		}).code;
@@ -1786,32 +1697,27 @@ describe("CssData — the names the printer's shape tables hold", () => {
 
 describe("CssSyntax minify — blocks that stream inside another", () => {
 	// Twice `_STREAM_MIN_NODES` and more, so each of these blocks streams.
-	const BIG = Array.from(
-		{ length: 4000 },
-		(_, i) => `.c${i}>d${i}{color:red;margin:${i + 1}px}`
-	).join("");
-	const LONG = "x ".repeat(30000).trim();
 	const hash = (/** @type {string} */ text) =>
 		require("crypto").createHash("sha1").update(text).digest("hex").slice(0, 16);
 
 	it.each([
-		["@property --x{.q{${BIG}}}", {}, 144692, "59fd06d25e6daede"],
-		["@function --f(){.q{${BIG}}}", {}, 144694, "b092683738b6867d"],
-		["@font-feature-values F{.q{${BIG}}}", {}, 144701, "b94b5b8f205172a0"],
-		["@media a{${BIG}}.r{${BIG}}", {}, 289360, "a66a99334bfa2299"],
-		[".p{${BIG}.z{v:${LONG}}}", {}, 204682, "279e8109a89e4c9f"],
-		[".p{${BIG}::-moz-placeholder{x:1}::-moz-selection{y:1}::placeholder{x:1}}", {"environment":{"browsers":["firefox 120"]}}, 144716, "1d2ce264fd88ffa4"],
-		["@supports (a:b){@scope (.x){@layer l{}{}@scope (.x){@layer l{}{}${BIG}}", {"environment":{"browsers":["ie 9"]},"convertApproximateColors":true}, 144734, "8f15725eab59edf7"],
-		["@supports (a:b){B,;A,B{C:}B,;B{C:1}B,;A,B{C:}B,;B{C:1}${BIG}}", {"environment":{"browsers":["opera 12"]},"mergeDistantRules":true}, 144705, "63b109aff6a8fd11"],
-		["@layer x{@media print{${BIG}@layer x{.p{a{b:c}@layer l{}a{b:c}}}}}", {"environment":{"browsers":["safari 9"]},"transforms":{"removeDeadRules":false,"mergeLonghands":false,"foldCase":false,"customMedia":true,"customSelectors":true}}, 144727, "1651fef08b467925"],
-		["@media print{a{b:1}a{b${BIG}.a{--x:1px (/*!k*}", {}, 144713, "0f3f5b4bfa41cc69"],
-		["@layer x{${BIG}a{b:c}a{a{b:{ba{b:{b}", {}, 144701, "c39937110f690f2b"],
-		["@layer x{.p{@-webkit-keyframes k{}}${BIG}b,;a,b{c:1}b,;b{c:1}}", {"environment":{"browsers":["chrome 140","firefox 140","safari 26.2"]},"transforms":{"customSelectors":false,"rewriteEscapes":false,"mergeRules":false}}, 144729, "e8f008f21cc73857"]
-	])("prints %j (%j)", (css, options, length, digest) => {
-		const out = new SourceProcessor().process(
-			css.split("${BIG}").join(BIG).replace("${LONG}", LONG),
-			{ ...options, mode: "minify" }
-		).code;
+		["css-syntax-minify-blocks-that-stream-inside-another-prints", {}, 144692, "59fd06d25e6daede"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-2", {}, 144694, "b092683738b6867d"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-3", {}, 144701, "b94b5b8f205172a0"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-4", {}, 289360, "a66a99334bfa2299"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-5", {}, 204682, "279e8109a89e4c9f"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-6", {"environment":{"browsers":["firefox 120"]}}, 144716, "1d2ce264fd88ffa4"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-7", {"environment":{"browsers":["ie 9"]},"convertApproximateColors":true}, 144734, "8f15725eab59edf7"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-8", {"environment":{"browsers":["opera 12"]},"mergeDistantRules":true}, 144705, "63b109aff6a8fd11"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-9", {"environment":{"browsers":["safari 9"]},"transforms":{"removeDeadRules":false,"mergeLonghands":false,"foldCase":false,"customMedia":true,"customSelectors":true}}, 144727, "1651fef08b467925"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-10", {}, 144713, "0f3f5b4bfa41cc69"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-11", {}, 144701, "c39937110f690f2b"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-12", {"environment":{"browsers":["chrome 140","firefox 140","safari 26.2"]},"transforms":{"customSelectors":false,"rewriteEscapes":false,"mergeRules":false}}, 144729, "e8f008f21cc73857"]
+	])("prints %j (%j)", (name, options, length, digest) => {
+		const out = new SourceProcessor().process(fixture("css", name), {
+			...options,
+			mode: "minify"
+		}).code;
 		expect(out).toHaveLength(length);
 		expect(hash(out)).toBe(digest);
 	});
@@ -1819,13 +1725,9 @@ describe("CssSyntax minify — blocks that stream inside another", () => {
 
 describe("CssSyntax minify — a declaration list holding a block too big to collect", () => {
 	it("composes the list whole, the big rule in its place", () => {
-		const rules = Array.from(
-			{ length: 4000 },
-			(_, i) => `.c${i}>d${i}{color:red;margin:${i + 1}px}`
-		).join("");
 		// Streamed, the rule went out before the declarations, and the ids they
 		// were held by were handed to it.
-		const css = `a:b;.x{${rules}}c:d`;
+		const css = fixture("css", "css-syntax-minify-a-declaration-list-holding-a-block-too-big-to-collect-composes");
 		expect(
 			new SourceProcessor().process(css, {
 				mode: "minify",
@@ -1842,14 +1744,14 @@ describe("CssSyntax minify — what a printed rule can still hit", () => {
 		(_, i) => `.c${i}>d${i}{color:red;margin:${i + 1}px}`
 	).join("");
 	it.each([
-		[".p{${BIG}b{x:1}a{x:1}c:d}",{},".p{${BIG}a,b{x:1}c:d}"],
-		[".p{${BIG}@layer x{{}}x{}@layer x{d{e:f}}}",{"environment":{"browsers":["chrome 80"]}},".p{${BIG}@layer x{d{e:f}}}"],
-		["@-webkit-keyframes a{}.p{${BIG}::-webkit-input-placeholder{x:1}::placeholder{x:1}}",{"environment":{"browsers":["chrome 130"]}},"@-webkit-keyframes a{}.p{${BIG}::placeholder{x:1}}"],
-		["@layer x{${BIG}}@layer x{a{b:c}}",{},"@layer x{${BIG}a{b:c}}"]
-	])("prints %j (%j)", (css, options, out) => {
+		["css-syntax-minify-what-a-printed-rule-can-still-hit-prints",{},".p{${BIG}a,b{x:1}c:d}"],
+		["css-syntax-minify-what-a-printed-rule-can-still-hit-prints-2",{"environment":{"browsers":["chrome 80"]}},".p{${BIG}@layer x{d{e:f}}}"],
+		["css-syntax-minify-what-a-printed-rule-can-still-hit-prints-3",{"environment":{"browsers":["chrome 130"]}},"@-webkit-keyframes a{}.p{${BIG}::placeholder{x:1}}"],
+		["css-syntax-minify-what-a-printed-rule-can-still-hit-prints-4",{},"@layer x{${BIG}a{b:c}}"]
+	])("prints %j (%j)", (name, options, out) => {
 		expect(
 			new SourceProcessor()
-				.process(css.split("${BIG}").join(BIG), {
+				.process(fixture("css", name), {
 					.../** @type {EXPECTED_ANY} */ (options),
 					mode: "minify"
 				})
@@ -1874,27 +1776,23 @@ describe("CssSyntax minify — a gather that once printed a second pass's work",
 	it.each([
 		// The pair a streamed block's gather joined at the seam is one list,
 		// ordered and with a selector both named written once.
-		[".p{${BIG}@layer x{a,c{x:1}}@layer x{a,b{x:1}}}", ".p{${BIG}@layer x{a,b,c{x:1}}}"],
-		[".p{${BIG}@layer x{c{x:1}}@layer x{b{x:1}}@layer x{a{x:1}}}", ".p{${BIG}@layer x{a,b,c{x:1}}}"]
-	])("prints %j in one pass", (css, out) => {
-		const printed = once(css.split("${BIG}").join(BIG));
+		["css-syntax-minify-a-gather-that-once-printed-a-second-pass-s-work-prints-in-one", ".p{${BIG}@layer x{a,b,c{x:1}}}"],
+		["css-syntax-minify-a-gather-that-once-printed-a-second-pass-s-work-prints-in-one-2", ".p{${BIG}@layer x{a,b,c{x:1}}}"]
+	])("prints %j in one pass", (name, out) => {
+		const printed = once(fixture("css", name));
 		expect(printed.split(BIG).join("${BIG}")).toBe(out);
 		expect(once(printed)).toBe(printed);
 	});
 });
 
 describe("CssSyntax minify — one processor after another", () => {
-	const BIG = Array.from(
-		{ length: 4000 },
-		(_, i) => `.c${i}>d${i}{color:red;margin:${i + 1}px}`
-	).join("");
 	/** @type {[string, object][]} */
 	const runs = [
 		[fixture("css", "css-syntax-minify-one-processor-after-another-prints-each-sheet-as-it-prints"), { environment: { browsers: ["chrome 100"] } }],
 		[fixture("css", "css-syntax-minify-one-processor-after-another-prints-each-sheet-as-it-prints-2"), {}],
 		[fixture("css", "css-syntax-minify-one-processor-after-another-prints-each-sheet-as-it-prints-3"), { mergeDistantRules: true }],
-		[`@layer x{${BIG}c{x:1}}@layer x{b{x:1}}`, {}],
-		[`.p{${BIG}@layer x{a,c{x:1}}@layer x{a,b{x:1}}}`, {}],
+		[fixture("css", "css-syntax-minify-one-processor-after-another-prints-each-sheet-as-it-prints-6"), {}],
+		[fixture("css", "css-syntax-minify-a-gather-that-once-printed-a-second-pass-s-work-prints-in-one"), {}],
 		[fixture("css", "source-processor-merge-distant-rules-gives-an-earlier-rule-the-selectors-of-a"), { mergeDistantRules: true }],
 		[fixture("css", "css-syntax-minify-one-processor-after-another-prints-each-sheet-as-it-prints-4"), { environment: { browsers: ["chrome 100"] } }],
 		[fixture("css", "css-syntax-minify-one-processor-after-another-prints-each-sheet-as-it-prints-5"), { environment: { browsers: ["chrome 130"] } }],
@@ -1942,15 +1840,15 @@ describe("CssSyntax — declaration ranks", () => {
 			new SourceProcessor().process(src, { mode: "minify" }).code;
 		// `top` leads a pair for the first time, then `left` does, then `top` again.
 		expect(
-			min("a{color:red;top:0;display:block}c{color:red;left:0;display:block}")
+			min(fixture("css", "css-syntax-declaration-ranks-orders-a-block-alike-when-a-pair-of-its-properties"))
 		).toBe("a{color:red;display:block;top:0}c{color:red;display:block;left:0}");
-		expect(min("d{color:red;top:0;display:block}")).toBe(
+		expect(min(fixture("css", "css-syntax-declaration-ranks-orders-a-block-alike-when-a-pair-of-its-properties-2"))).toBe(
 			"d{color:red;display:block;top:0}"
 		);
 		// A shorthand and its longhand keep their order, the first time and the next.
 		const kept = "e{margin-top:1px;margin:0;display:block;top:0}";
-		expect(min("e{top:0;margin-top:1px;margin:0;display:block}")).toBe(kept);
-		expect(min("e{top:0;margin-top:1px;margin:0;display:block}")).toBe(kept);
+		expect(min(fixture("css", "css-syntax-declaration-ranks-orders-a-block-alike-when-a-pair-of-its-properties-3"))).toBe(kept);
+		expect(min(fixture("css", "css-syntax-declaration-ranks-orders-a-block-alike-when-a-pair-of-its-properties-4"))).toBe(kept);
 	});
 });
 
@@ -1970,11 +1868,7 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 
 	it("prints a rule large enough to stream as written, and what follows it too", () => {
 		// Past the streaming threshold the block is written out as it is read.
-		let body = "";
-		for (let i = 0; i < 1800; i++) {
-			body += `.c${i}>d${i}:hover{color:red;margin:${i + 1}px}`;
-		}
-		const css = `a{${body}}b{color:red}`;
+		const css = fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-rule-large-enough-to");
 		const plain = print(css, {});
 		for (const event of ["enter", "exit"]) {
 			expect(
@@ -1995,7 +1889,7 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 describe("SourceProcessor.processAsync — `declareCharset` over embedded answers", () => {
 	it("writes `@charset` when a later answer, not the first, is outside ASCII", async () => {
 		const css =
-			'.a{background:url("data:image/svg+xml,<svg></svg>")}.b{background:url("data:image/svg+xml,<svg><g/></svg>")}';
+			fixture("css", "source-processor-process-async-declare-charset-over-embedded-answers-writes");
 		const { code } = await new SourceProcessor().processAsync(css, {
 			mode: "minify",
 			declareCharset: true,
@@ -2011,10 +1905,10 @@ describe("SourceProcessor.processAsync — `declareCharset` over embedded answer
 describe("CssSyntax minify — escapes and urls in a value spaced for an old tokenizer", () => {
 	it.each([
 		// `x\)url(` is one function token: its `\)` closes nothing.
-		['.a{background:x\\)url(y ".x{color:red}")}', '.a{background:x\\)url(y ".x{color:red}")}'],
+		[fixture("css", "css-syntax-minify-escapes-and-urls-in-a-value-spaced-for-an-old-tokenizer-keeps"), '.a{background:x\\)url(y ".x{color:red}")}'],
 		// An escaped `)` in a raw url is part of the address.
-		[".a{background:url(a\\)b)c}", ".a{background:url(a\\)b) c}"],
-		[".a{background:url(a\\)b)1px}", ".a{background:url(a\\)b) 1px}"]
+		[fixture("css", "css-syntax-minify-escapes-and-urls-in-a-value-spaced-for-an-old-tokenizer-keeps-2"), ".a{background:url(a\\)b) c}"],
+		[fixture("css", "css-syntax-minify-escapes-and-urls-in-a-value-spaced-for-an-old-tokenizer-keeps-3"), ".a{background:url(a\\)b) 1px}"]
 	])("keeps %s reading as written", (source, expected) => {
 		expect(minifyFor(source, ["ie 11"])).toBe(expected);
 	});
@@ -2023,15 +1917,15 @@ describe("CssSyntax minify — escapes and urls in a value spaced for an old tok
 describe("CssSyntax minify — an escaped `!important` is part of the value", () => {
 	it.each([
 		[
-			".a{grid-column-start:x\\!important;grid-column-end:y}",
+			fixture("css", "css-syntax-minify-an-escaped-important-is-part-of-the-value-merges-a-grid-column"),
 			".a{grid-column:x\\!important/y}"
 		],
 		[
-			".a{grid-column-start:x\\\\!important;grid-column-end:y\\\\!important}",
+			fixture("css", "css-syntax-minify-an-escaped-important-is-part-of-the-value-merges-a-grid-column-2"),
 			".a{grid-column:x\\\\/y\\\\!important}"
 		],
 		[
-			".a{grid-template-rows:x\\!important;grid-template-columns:y;grid-template-areas:none}",
+			fixture("css", "css-syntax-minify-an-escaped-important-is-part-of-the-value-merges-a-grid"),
 			".a{grid-template:x\\!important/y}"
 		]
 	])("merges %s", (source, expected) => {
@@ -2042,27 +1936,27 @@ describe("CssSyntax minify — an escaped `!important` is part of the value", ()
 describe("CssSyntax minify — a color fallback reads only the value's own calls", () => {
 	it.each([
 		// Text a string, a url or an escape holds names no call.
-		['.a{background:url(x oklch(.5 .1 20) ".x{color:red}")}', '.a{background:url(x oklch(.5 .1 20) ".x{color:red}")}'],
-		['.a{background:url( x oklch(.5 .1 20) "a")}', '.a{background:url( x oklch(.5 .1 20) "a")}'],
-		[".a{background:x\\ oklch(.5 .1 20)}", ".a{background:x\\ oklch(.5 .1 20)}"],
-		[".a{background:url(oklch(1 0 0).png)}", ".a{background:url(oklch(1 0 0) .png)}"],
-		['.a{color:color-mix(in srgb,red,blue);background:url(x color-mix(in srgb,red,blue) "a")}', '.a{color:#7f007f;color:color-mix(in srgb,red,blue);background:url(x color-mix(in srgb,red,blue) "a")}'],
+		[fixture("css", "css-syntax-minify-a-color-fallback-reads-only-the-value-s-own-calls-writes-a"), '.a{background:url(x oklch(.5 .1 20) ".x{color:red}")}'],
+		[fixture("css", "css-syntax-minify-a-color-fallback-reads-only-the-value-s-own-calls-writes-a-2"), '.a{background:url( x oklch(.5 .1 20) "a")}'],
+		[fixture("css", "css-syntax-minify-a-color-fallback-reads-only-the-value-s-own-calls-writes-a-3"), ".a{background:x\\ oklch(.5 .1 20)}"],
+		[fixture("css", "css-syntax-minify-a-color-fallback-reads-only-the-value-s-own-calls-writes-a-4"), ".a{background:url(oklch(1 0 0) .png)}"],
+		[fixture("css", "css-syntax-minify-a-color-fallback-reads-only-the-value-s-own-calls-writes-a-5"), '.a{color:#7f007f;color:color-mix(in srgb,red,blue);background:url(x color-mix(in srgb,red,blue) "a")}'],
 		// A call beside one still folds, and the text stays as written.
-		['.a{background:url("oklch(1 0 0)") oklch(.5 .1 20)}', '.a{background:url("oklch(1 0 0)") #944a4b;background:url("oklch(1 0 0)") oklch(.5 .1 20)}'],
-		['.a{background:"oklch(1 0 0)" oklch(.5 .1 20)}', '.a{background:"oklch(1 0 0)" #944a4b;background:"oklch(1 0 0)" oklch(.5 .1 20)}']
+		[fixture("css", "css-syntax-minify-a-color-fallback-reads-only-the-value-s-own-calls-writes-a-6"), '.a{background:url("oklch(1 0 0)") #944a4b;background:url("oklch(1 0 0)") oklch(.5 .1 20)}'],
+		[fixture("css", "css-syntax-minify-a-color-fallback-reads-only-the-value-s-own-calls-writes-a-7"), '.a{background:"oklch(1 0 0)" #944a4b;background:"oklch(1 0 0)" oklch(.5 .1 20)}']
 	])("writes %s", (source, expected) => {
 		expect(minifyFor(source, ["ie 11"])).toBe(expected);
 	});
 
 	it("leaves a relative hue that reduces to no degrees as written", () => {
 		expect(
-			minifyFor(".a{color:hsl(from red calc(h * 1turn) s l)}", ["ie 11"])
+			minifyFor(fixture("css", "css-syntax-minify-a-color-fallback-reads-only-the-value-s-own-calls-leaves-a"), ["ie 11"])
 		).toBe(".a{color:hsl(from red calc(h*1turn) s l)}");
 	});
 
 	it("keeps a string as written in the wide-gamut fallback", () => {
 		expect(
-			minifyFor('.a{background:"oklch(.7 .2 150)" oklch(.7 .2 150)}', [
+			minifyFor(fixture("css", "css-syntax-minify-a-color-fallback-reads-only-the-value-s-own-calls-keeps-a"), [
 				"safari 15.0"
 			])
 		).toBe(
@@ -2074,7 +1968,7 @@ describe("CssSyntax minify — a color fallback reads only the value's own calls
 describe("CssSyntax minify — text a rewrite keeps inside its string or url", () => {
 	it("copies an escaped at-rule name's prelude whole for a vendor prefix", () => {
 		const css =
-			'@d\\00006f\\000063\\000075ment url-prefix(),x("}.x{color:red}"){.q{color:red}}';
+			fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-copies-an");
 		const rest = ' url-prefix(),x("}.x{color:red}"){.q{color:red}}';
 		expect(minifyFor(css, ["firefox 50"])).toBe(
 			`@-moz-document${rest}@document${rest}`
@@ -2083,19 +1977,15 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 
 	it("does not decode a data url's percent-escape into the half of another", () => {
 		// Read once, `%%32%41` is the text `%2A`, which must not become `*`.
+		const name =
+			"css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-decode";
 		const cases = [
-			[
-				'"data:text/css,/* %%32%41/ .x{color:red} /* */"',
-				'"data:text/css,/* %%32A/ .x{color:red} /* */"'
-			],
-			[
-				'"data:text/css,/* %2%41/ .x{color:red} /* */"',
-				'"data:text/css,/* %2%41/ .x{color:red} /* */"'
-			],
-			["data:text/plain,%25%34%31%3C", "data:text/plain,%2541<"]
+			[name, '"data:text/css,/* %%32A/ .x{color:red} /* */"'],
+			[`${name}-2`, '"data:text/css,/* %2%41/ .x{color:red} /* */"'],
+			[`${name}-3`, "data:text/plain,%2541<"]
 		];
-		for (const [url, printed] of cases) {
-			const once = minifyFor(`.a{background:url(${url})}`);
+		for (const [input, printed] of cases) {
+			const once = minifyFor(fixture("css", input));
 			expect(once).toBe(`.a{background:url(${printed})}`);
 			expect(minifyFor(once)).toBe(once);
 		}
@@ -2104,7 +1994,7 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 	it("keeps an embedded url's deferred payload where a nested rule is lowered", async () => {
 		const rule = '[x=")}.x{color:red}"]';
 		const { code } = await new SourceProcessor().processAsync(
-			`.p{${rule}{background:url(data:image/svg+xml,%3Csvg/%3E)}}`,
+			fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-an"),
 			{
 				mode: "minify",
 				environment: { browsers: ["chrome 100"] },
@@ -2115,9 +2005,8 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 	});
 
 	it("keeps an embedded url's deferred payload where light-dark() is lowered", async () => {
-		const url = "url(data:image/svg+xml,%3Csvg/%3E)";
 		const { code } = await new SourceProcessor().processAsync(
-			`.a{color-scheme:light dark;color:light-dark(red,blue);background:${url}}`,
+			fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-an-2"),
 			{
 				mode: "minify",
 				environment: { browsers: ["chrome 100"] },
@@ -2134,79 +2023,78 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 		const after = '.w{content:"*/}.x{color:red}.z{"}';
 		const lower = (/** @type {string} */ css) =>
 			minifyFor(css, ["chrome 100"]);
-		expect(lower(`*{/&{color:red}}${after}`)).toBe(
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-14"))).toBe(
 			`/:is(*){color:red}${after}`
 		);
-		expect(lower(`.a{&url(/*){color:red}}${after}`)).toBe(
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-15"))).toBe(
 			`:is(.a)url(/*){color:red}${after}`
 		);
-		expect(lower("a{b&{color:red}}")).toBe("b:is(a){color:red}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse"))).toBe("b:is(a){color:red}");
 		// A type selector after `&` leads the compound the parent joins.
-		expect(lower(".a{&-x{color:red}}")).toBe("-x.a{color:red}");
-		expect(lower(".a{&--x{color:red}}")).toBe("--x.a{color:red}");
-		expect(lower(".a{&-1{color:red}}")).toBe(":is(.a)-1{color:red}");
-		expect(lower(".a{&div{color:red}}")).toBe("div.a{color:red}");
-		expect(lower(".a{&*{color:red}}")).toBe("*.a{color:red}");
-		expect(lower(".a{&svg|rect{color:red}}")).toBe("svg|rect.a{color:red}");
-		expect(lower("p{&div{color:red}}")).toBe("div:is(p){color:red}");
-		expect(lower("[x]{&div{color:red}}")).toBe("div[x]{color:red}");
-		expect(lower(".a{&\\31 x{color:red}}")).toBe("\\31x.a{color:red}");
-		expect(lower(".a{&x|.b{color:red}}")).toBe("x.a|.b{color:red}");
-		expect(lower(".a{&||b{color:red}}")).toBe(".a||b{color:red}");
-		expect(lower("a{&.b,.c &{color:red}}")).toBe(".c a,a.b{color:red}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-2"))).toBe("-x.a{color:red}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-3"))).toBe("--x.a{color:red}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-4"))).toBe(":is(.a)-1{color:red}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-5"))).toBe("div.a{color:red}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-6"))).toBe("*.a{color:red}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-7"))).toBe("svg|rect.a{color:red}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-8"))).toBe("div:is(p){color:red}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-9"))).toBe("div[x]{color:red}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-10"))).toBe("\\31x.a{color:red}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-11"))).toBe("x.a|.b{color:red}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-12"))).toBe(".a||b{color:red}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-13"))).toBe(".c a,a.b{color:red}");
 	});
 
 	it("keeps the escaped space a lowered nested selector ends in", () => {
 		const lower = (/** @type {string} */ css) =>
 			minifyFor(css, ["chrome 100"]);
-		expect(lower(".a{color:red;.b\\  {color:blue}}")).toBe(
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-the"))).toBe(
 			".a{color:red}.a .b\\ {color:blue}"
 		);
-		expect(lower(".s{&.t\\ {color:gray}}")).toBe(".s.t\\ {color:gray}");
-		expect(lower(".s{&.t\\\\ {color:gray}}")).toBe(".s.t\\\\{color:gray}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-the-2"))).toBe(".s.t\\ {color:gray}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-the-3"))).toBe(".s.t\\\\{color:gray}");
 	});
 
 	it("splits a gradient's double-position stops outside its strings", () => {
 		const after = ".e{color:blue}";
 		expect(
 			minifyFor(
-				`.b{background:linear-gradient(red,"x,"red 10% 20%)}${after}`,
+				fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-splits-a-2"),
 				["chrome 60"]
 			)
 		).toBe(`.b{background:linear-gradient(red,"x,"red 10%,"x,"red 20%)}${after}`);
 		expect(
 			minifyFor(
-				`.b{background:linear-gradient(red,"x\\"y" 10% 20%)}${after}`,
+				fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-splits-a-3"),
 				["chrome 60"]
 			)
 		).toBe(
 			`.b{background:linear-gradient(red,'x"y' 10%,'x"y' 20%)}${after}`
 		);
 		expect(
-			minifyFor(`.b{background:linear-gradient(red,\\,x 10% 20%)}${after}`, [
+			minifyFor(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-splits-a-4"), [
 				"chrome 60"
 			])
 		).toBe(`.b{background:linear-gradient(red,\\,x 10%,\\,x 20%)}${after}`);
 		expect(
-			minifyFor(`.b{background:linear-gradient(red,"x\\\\," 10% 20%)}`, [
+			minifyFor(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-splits-a"), [
 				"chrome 60"
 			])
 		).toBe('.b{background:linear-gradient(red,"x\\\\," 10%,"x\\\\," 20%)}');
 	});
 
 	it("drops no zero length unit inside a string a length-only call holds", () => {
-		expect(minifyFor('.b{transform:translate("a 0px b")}')).toBe(
+		expect(minifyFor(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-drops-no-zero"))).toBe(
 			'.b{transform:translate("a 0px b")}'
 		);
-		expect(minifyFor(".b{transform:translate3d(1px,0px,2px)}")).toBe(
+		expect(minifyFor(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-drops-no-zero-2"))).toBe(
 			".b{transform:translate3d(1px,0,2px)}"
 		);
 	});
 
 	it("renders a data url whose escapes spell a comment as that comment", () => {
-		const payload = "data:text/css,/* %%32%41/ .x{color:red} /* */";
 		const processor = new SourceProcessor();
-		const { code } = processor.process(`@import url("${payload}");`, {
+		const { code } = processor.process(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-renders-a-data"), {
 			mode: "minify",
 			renderEmbeddedSource: (source) => {
 				expect(source).toBe("/* %2A/ .x{color:red} /* */");

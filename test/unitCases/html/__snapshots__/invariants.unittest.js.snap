@@ -1,5 +1,41 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`HTML syntax — invariants a-tag-whose-name-a-nul-interrupts-ends-at-the-the-tag-name-state-reads parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <a\\\\u0000b>\\\\n|       \\\\\\"x\\\\\\"\\\\n|     <c\\\\u0000>\\\\n|       \\\\\\"y\\\\\\"\\""`;
+
+exports[`HTML syntax — invariants a-tag-whose-name-a-nul-interrupts-ends-at-the-the-tag-name-state-reads parses 2`] = `"warning[2,3]:unexpected-null-character warning[0,5]:expected-doctype-but-got-start-tag warning[9,10]:unexpected-null-character warning[14,15]:unexpected-null-character warning[17,17]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants a-tag-whose-name-a-nul-interrupts-ends-at-the-the-tag-name-state-reads prints {"mode":"minify"} 1`] = `"\\"<a\\\\u0000b>x</a\\\\u0000b><c\\\\u0000>y</c\\\\u0000>\\""`;
+
+exports[`HTML syntax — invariants a-tag-whose-name-a-nul-interrupts-ends-at-the-the-tag-name-state-reads tokenizes 1`] = `"warning[2,3]:unexpected-null-character open[0,5|1,4] text[5,6] warning[9,10]:unexpected-null-character close[6,12|8,11] warning[14,15]:unexpected-null-character open[12,16|13,15] text[16,17] end=17"`;
+
+exports[`HTML syntax — invariants builtin-embedded-renderer-what-it-loads-keeps-the-css-parser-out-of-an-html-or-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"hi\\""
+`;
+
+exports[`HTML syntax — invariants builtin-embedded-renderer-what-it-loads-keeps-the-css-parser-out-of-an-html-or-2 parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants builtin-embedded-renderer-what-it-loads-keeps-the-css-parser-out-of-an-html-or-2 prints {"mode":"minify"} 1`] = `"<p>hi"`;
+
+exports[`HTML syntax — invariants builtin-embedded-renderer-what-it-loads-keeps-the-css-parser-out-of-an-html-or-2 tokenizes 1`] = `"open[0,3|1,2] text[3,5] close[5,9|7,8] end=9"`;
+
+exports[`HTML syntax — invariants builtin-embedded-renderer-what-it-loads-keeps-the-css-parser-out-of-an-html-or-3 parses 1`] = `
+"| <html>
+|   <head>
+|     <style>
+|       \\"a { color : #ff0000 }\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants builtin-embedded-renderer-what-it-loads-keeps-the-css-parser-out-of-an-html-or-3 parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants builtin-embedded-renderer-what-it-loads-keeps-the-css-parser-out-of-an-html-or-3 prints {"mode":"minify"} 1`] = `"<style>a { color : #ff0000 }</style>"`;
+
+exports[`HTML syntax — invariants builtin-embedded-renderer-what-it-loads-keeps-the-css-parser-out-of-an-html-or-3 tokenizes 1`] = `"open[0,7|1,6] text[7,28] close[28,36|30,35] end=36"`;
+
 exports[`HTML syntax — invariants compare-html-tools-agreeing-with-parse5-agrees-about-a-cut-instruction-at-the parses 1`] = `
 "| <html>
 |   <head>
@@ -805,6 +841,14 @@ exports[`HTML syntax — invariants compare-html-tools-what-a-document-says-repo
 exports[`HTML syntax — invariants compare-html-tools-what-a-document-says-reports-a-printer-that-drops-a-word-an-4 prints {"mode":"minify"} 1`] = `"<p>one two</p><b>x</b><style>.a{color:blue}</style>"`;
 
 exports[`HTML syntax — invariants compare-html-tools-what-a-document-says-reports-a-printer-that-drops-a-word-an-4 tokenizes 1`] = `"open[0,3|1,2] text[3,10] close[10,14|12,13] open[14,17|15,16] text[17,18] close[18,22|20,21] open[22,29|23,28] text[29,43] close[43,51|45,50] end=51"`;
+
+exports[`HTML syntax — invariants coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <a>\\\\n|       b=\\\\\\"x\\\\\\"y'z<w=v\`u\\\\u0000t&é\\\\\\"\\\\n|       c=\\\\\\"1\\\\\\"\\\\n|       d=\\\\\\"2\\\\\\"\\\\n|       e=\\\\\\"3\\\\\\"\\\\n|       f=\\\\\\"4\\\\\\"\\\\n|       g=\\\\\\"&h\\\\\\"\\\\n|       i=\\\\\\"\`\\\\\\"\\""`;
+
+exports[`HTML syntax — invariants coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet parses 2`] = `"warning[6,7]:unexpected-character-in-unquoted-attribute-value warning[8,9]:unexpected-character-in-unquoted-attribute-value warning[10,11]:unexpected-character-in-unquoted-attribute-value warning[12,13]:unexpected-character-in-unquoted-attribute-value warning[14,15]:unexpected-character-in-unquoted-attribute-value warning[16,17]:unexpected-null-character warning[48,49]:unexpected-character-in-unquoted-attribute-value warning[0,50]:expected-doctype-but-got-start-tag warning[50,50]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet prints {"mode":"minify"} 1`] = `"\\"<a b=x\\\\\\"y'z<w=v\`u\\\\u0000t&amp;é c=1 d=2 e=3 f=4 g=&h i=\`></a>\\""`;
+
+exports[`HTML syntax — invariants coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet tokenizes 1`] = `"warning[6,7]:unexpected-character-in-unquoted-attribute-value warning[8,9]:unexpected-character-in-unquoted-attribute-value warning[10,11]:unexpected-character-in-unquoted-attribute-value warning[12,13]:unexpected-character-in-unquoted-attribute-value warning[14,15]:unexpected-character-in-unquoted-attribute-value warning[16,17]:unexpected-null-character attr[3,4|5,24] attr[25,26|27,28] attr[29,30|31,32] attr[33,34|35,36] attr[37,38|39,40] attr[41,42|43,45] warning[48,49]:unexpected-character-in-unquoted-attribute-value attr[46,47|48,49] open[0,50|1,2] end=50"`;
 
 exports[`HTML syntax — invariants html-minify-an-answered-style-attribute-that-changes-its-quoting-declines-an parses 1`] = `
 "| <html>
@@ -3431,6 +3475,79 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-clears-the-whole-name-memo-2 tokenizes 1`] = `"open[0,5|1,4] open[5,10|6,9] end=10"`;
 
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-clears-the-whole-name-memo-3 parses 1`] = `
+"length 397598, sha256 ffdd11fc078ce260
+| <html>
+|   <head>
+|   <body>
+|     <z>
+|       <zz>
+|         <zzz>
+|           <zzzz>
+|             <zzzzz>
+|               <zzzzzz>
+|                 <zzzzzzz>
+|                   <zzzzzzzz>
+|    
+…
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz>"
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-clears-the-whole-name-memo-3 parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[132352,132352]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-clears-the-whole-name-memo-3 prints {"mode":"minify"} 1`] = `
+"length 265216, sha256 a0b5f1b60928d69b
+<z><zz><zzz><zzzz><zzzzz><zzzzzz><zzzzzzz><zzzzzzzz><zzzzzzzzz><zzzzzzzzzz><zzzzzzzzzzz><zzzzzzzzzzzz><zzzzzzzzzzzzz><zzzzzzzzzzzzzz><zzzzzzzzzzzzzzz><zzzzzzzzzzzzzzzz><zzzzzzzzzzzzzzzzz><zzzzzzzzzzzz
+…
+zzzzzzzzzzzzzzz></zzzzzzzzzzzzzzzz></zzzzzzzzzzzzzzz></zzzzzzzzzzzzzz></zzzzzzzzzzzzz></zzzzzzzzzzzz></zzzzzzzzzzz></zzzzzzzzzz></zzzzzzzzz></zzzzzzzz></zzzzzzz></zzzzzz></zzzzz></zzzz></zzz></zz></z>"
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-clears-the-whole-name-memo-3 tokenizes 1`] = `
+"length 14860, sha256 d4bfae3a8ecef4fc
+open[0,3|1,2] open[3,7|4,6] open[7,12|8,11] open[12,18|13,17] open[18,25|19,24] open[25,33|26,32] open[33,42|34,41] open[42,52|43,51] open[52,63|53,62] open[63,75|64,74] open[75,88|76,87] open[88,102|
+…
+9792|129284,129791] open[129792,130302|129793,130301] open[130302,130813|130303,130812] open[130813,131325|130814,131324] open[131325,131838|131326,131837] open[131838,132352|131839,132351] end=132352"
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&&<&\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer parses 2`] = `"warning[0,19]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer prints {"mode":"minify"} 1`] = `"&&<&amp;"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer tokenizes 1`] = `"text[0,19] end=19"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&&=&\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-2 parses 2`] = `"warning[9,10]:missing-semicolon-after-character-reference warning[14,15]:missing-semicolon-after-character-reference warning[0,14]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-2 prints {"mode":"minify"} 1`] = `"&&=&amp;"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-2 tokenizes 1`] = `"warning[9,10]:missing-semicolon-after-character-reference warning[14,15]:missing-semicolon-after-character-reference text[0,14] end=14"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-3 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"∳∳&∳\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-3 parses 2`] = `"warning[0,104]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-3 prints {"mode":"minify"} 1`] = `"∳∳&∳"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-3 tokenizes 1`] = `"text[0,104] end=104"`;
+
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-fosters-text-past-foreign parses 1`] = `
 "| <html>
 |   <head>
@@ -3824,6 +3941,32 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-leaves-the-tokenizer-in-the-2 tokenizes 1`] = `"open[0,10|1,9] open[10,15|11,14] open[15,22|16,21] text[22,23] close[23,31|25,30] text[31,32] open[32,37|33,36] close[37,48|39,47] end=48"`;
 
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-maps-decoded-text-back-to-the parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"x<>\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-maps-decoded-text-back-to-the parses 2`] = `"warning[0,9]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-maps-decoded-text-back-to-the prints {"mode":"minify"} 1`] = `"x<>"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-maps-decoded-text-back-to-the tokenizes 1`] = `"text[0,9] end=9"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-maps-decoded-text-back-to-the-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&zz;\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-maps-decoded-text-back-to-the-2 parses 2`] = `"warning[3,4]:unknown-named-character-reference warning[0,4]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-maps-decoded-text-back-to-the-2 prints {"mode":"minify"} 1`] = `"&zz;"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-maps-decoded-text-back-to-the-2 tokenizes 1`] = `"warning[3,4]:unknown-named-character-reference text[0,4] end=4"`;
+
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-merges-the-texts-a-declarative parses 1`] = `
 "| <html>
 |   <head>
@@ -3870,6 +4013,62 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-re-sizes-the-attribute-columns prints {"mode":"minify"} 1`] = `"<b class=c>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</b>"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-re-sizes-the-attribute-columns tokenizes 1`] = `"attr[3,8|10,11]\\" open[0,13|1,2] text[13,113] close[113,117|115,116] end=117"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-re-sizes-the-attribute-columns-2 parses 1`] = `
+"length 1188030, sha256 c65b96c3ba3da852
+| <html>
+|   <head>
+|   <body>
+|     <i>
+|       a=\\"\\"
+|       b=\\"\\"
+|     <i>
+|       a=\\"\\"
+|       b=\\"\\"
+|     <i>
+|       a=\\"\\"
+|       b=\\"\\"
+|     <i>
+|       a=\\"\\"
+|       b=\\"\\"
+|     <i>
+|       a=\\"\\"
+| 
+…
+   a=\\"\\"
+|       b=\\"\\"
+|     <i>
+|       a=\\"\\"
+|       b=\\"\\"
+|     <i>
+|       a=\\"\\"
+|       b=\\"\\"
+|     <i>
+|       a=\\"\\"
+|       b=\\"\\"
+|     <i>
+|       a=\\"\\"
+|       b=\\"\\"
+|     <i>
+|       a=\\"\\"
+|       b=\\"\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-re-sizes-the-attribute-columns-2 parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-re-sizes-the-attribute-columns-2 prints {"mode":"minify"} 1`] = `
+"length 363000, sha256 c443e70d70da1406
+<i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i
+…
+i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i><i a b></i>"
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-re-sizes-the-attribute-columns-2 tokenizes 1`] = `
+"length 3871802, sha256 45aef4fdede1e3cc
+attr[3,4|-1,-1] attr[5,6|-1,-1] open[0,7|1,2] close[7,11|9,10] attr[14,15|-1,-1] attr[16,17|-1,-1] open[11,18|12,13] close[18,22|20,21] attr[25,26|-1,-1] attr[27,28|-1,-1] open[22,29|23,24] close[29,3
+…
+open[362978,362985|362979,362980] close[362985,362989|362987,362988] attr[362992,362993|-1,-1] attr[362994,362995|-1,-1] open[362989,362996|362990,362991] close[362996,363000|362998,362999] end=363000"
+`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-a-noscript-in-the-body parses {"options":{"scripting":true}} 1`] = `
 "| <html>
@@ -8050,6 +8249,41 @@ exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-a
 exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to-3 prints {"mode":"minify"} 1`] = `"<p><b x=1><b x=2><b x=1><b x=1>t</b></b></b></b></p><b x=1><b x=2><b x=1><b x=1>after</b></b></b></b>"`;
 
 exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to-3 tokenizes 1`] = `"open[0,3|1,2] attr[6,7|8,9] open[3,10|4,5] attr[13,14|15,16] open[10,17|11,12] attr[20,21|22,23] open[17,24|18,19] attr[27,28|29,30] open[24,31|25,26] text[31,32] close[32,36|34,35] text[36,41] end=41"`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-grows-the-node-columns-past-the-initial parses 1`] = `
+"length 25045030, sha256 1fa25e5357c4f5d2
+| <html>
+|   <head>
+|   <body>
+|     <i>
+|       <i>
+|         <i>
+|           <i>
+|             <i>
+|               <i>
+|                 <i>
+|                   <i>
+|                     <i>
+|      
+…
+                                                                                                                                                                                                     <i>"
+`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-grows-the-node-columns-past-the-initial parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[15000,15000]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-grows-the-node-columns-past-the-initial prints {"mode":"minify"} 1`] = `
+"length 35000, sha256 bb149eeb641980b5
+<i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i
+…
+</i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i>"
+`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-grows-the-node-columns-past-the-initial tokenizes 1`] = `
+"length 135197, sha256 7a0f93699dd27aa4
+open[0,3|1,2] open[3,6|4,5] open[6,9|7,8] open[9,12|10,11] open[12,15|13,14] open[15,18|16,17] open[18,21|19,20] open[21,24|22,23] open[24,27|25,26] open[27,30|28,29] open[30,33|31,32] open[33,36|34,3
+…
+980,14981] open[14982,14985|14983,14984] open[14985,14988|14986,14987] open[14988,14991|14989,14990] open[14991,14994|14992,14993] open[14994,14997|14995,14996] open[14997,15000|14998,14999] end=15000"
+`;
 
 exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-only-treats-annotation-xml-as-an parses 1`] = `
 "| <html>
@@ -14794,6 +15028,73 @@ exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a
 
 exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-foster-parents-text-inside tokenizes 1`] = `"open[0,10|1,9] open[10,17|11,16] text[17,18] close[18,26|20,25] close[26,37|28,36] end=37"`;
 
+exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-grows-the-node-and-attribute parses 1`] = `
+"length 158920, sha256 b71863cc4704ccfd
+| <html>
+|   <head>
+|   <body>
+|     <i>
+|       data-n=\\"0\\"
+|     <i>
+|       data-n=\\"1\\"
+|     <i>
+|       data-n=\\"2\\"
+|     <i>
+|       data-n=\\"3\\"
+|     <i>
+|       data-n=\\"4\\"
+|     <i>
+|       data-n
+…
+n=\\"4993\\"
+|     <i>
+|       data-n=\\"4994\\"
+|     <i>
+|       data-n=\\"4995\\"
+|     <i>
+|       data-n=\\"4996\\"
+|     <i>
+|       data-n=\\"4997\\"
+|     <i>
+|       data-n=\\"4998\\"
+|     <i>
+|       data-n=\\"4999\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-grows-the-node-and-attribute parses 2`] = `"warning[0,14]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-grows-the-node-and-attribute prints {"mode":"minify"} 1`] = `
+"length 93890, sha256 668e45f2d0daa759
+<i data-n=0></i><i data-n=1></i><i data-n=2></i><i data-n=3></i><i data-n=4></i><i data-n=5></i><i data-n=6></i><i data-n=7></i><i data-n=8></i><i data-n=9></i><i data-n=10></i><i data-n=11></i><i dat
+…
+=4989></i><i data-n=4990></i><i data-n=4991></i><i data-n=4992></i><i data-n=4993></i><i data-n=4994></i><i data-n=4995></i><i data-n=4996></i><i data-n=4997></i><i data-n=4998></i><i data-n=4999></i>"
+`;
+
+exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-grows-the-node-and-attribute tokenizes 1`] = `
+"length 455461, sha256 911fa0bc40a6354c
+attr[3,9|11,12]\\" open[0,14|1,2] close[14,18|16,17] attr[21,27|29,30]\\" open[18,32|19,20] close[32,36|34,35] attr[39,45|47,48]\\" open[36,50|37,38] close[50,54|52,53] attr[57,63|65,66]\\" open[54,68|55,56] 
+…
+|103859,103863]\\" open[103848,103865|103849,103850] close[103865,103869|103867,103868] attr[103872,103878|103880,103884]\\" open[103869,103886|103870,103871] close[103886,103890|103888,103889] end=103890"
+`;
+
+exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-handles-a-large-structurally parses 1`] = `
+"length 3200064, sha256 3a3ebefe80ed19e9
+| <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+…
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-handles-a-large-structurally parses 2`] = `"warning[3200007,3200010]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-handles-a-large-structurally prints {"mode":"minify"} 1`] = `"<p>x"`;
+
+exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-handles-a-large-structurally tokenizes 1`] = `"comment[0,3200007|4,3200004] open[3200007,3200010|3200008,3200009] text[3200010,3200011] close[3200011,3200015|3200013,3200014] end=3200015"`;
+
 exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-keeps-input-type-hidden parses 1`] = `
 "| <html>
 |   <head>
@@ -14948,6 +15249,55 @@ exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a
 exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-re-shrinks-the-columns prints {"mode":"minify"} 1`] = `"<b class=c>x</b>"`;
 
 exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-re-shrinks-the-columns tokenizes 1`] = `"attr[3,8|10,11]\\" open[0,13|1,2] text[13,14] close[14,18|16,17] end=18"`;
+
+exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-re-shrinks-the-columns-after parses 1`] = `
+"length 2298920, sha256 4183ee9cc0cc0241
+| <html>
+|   <head>
+|   <body>
+|     <i>
+|       data-n=\\"0\\"
+|     <i>
+|       data-n=\\"1\\"
+|     <i>
+|       data-n=\\"2\\"
+|     <i>
+|       data-n=\\"3\\"
+|     <i>
+|       data-n=\\"4\\"
+|     <i>
+|       data-n
+…
+3\\"
+|     <i>
+|       data-n=\\"69994\\"
+|     <i>
+|       data-n=\\"69995\\"
+|     <i>
+|       data-n=\\"69996\\"
+|     <i>
+|       data-n=\\"69997\\"
+|     <i>
+|       data-n=\\"69998\\"
+|     <i>
+|       data-n=\\"69999\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-re-shrinks-the-columns-after parses 2`] = `"warning[0,14]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-re-shrinks-the-columns-after prints {"mode":"minify"} 1`] = `
+"length 1388890, sha256 b372eefd83111409
+<i data-n=0></i><i data-n=1></i><i data-n=2></i><i data-n=3></i><i data-n=4></i><i data-n=5></i><i data-n=6></i><i data-n=7></i><i data-n=8></i><i data-n=9></i><i data-n=10></i><i data-n=11></i><i dat
+…
+<i data-n=69990></i><i data-n=69991></i><i data-n=69992></i><i data-n=69993></i><i data-n=69994></i><i data-n=69995></i><i data-n=69996></i><i data-n=69997></i><i data-n=69998></i><i data-n=69999></i>"
+`;
+
+exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-re-shrinks-the-columns-after tokenizes 1`] = `
+"length 7503948, sha256 a7c25a9ca07d2871
+attr[3,9|11,12]\\" open[0,14|1,2] close[14,18|16,17] attr[21,27|29,30]\\" open[18,32|19,20] close[32,36|34,35] attr[39,45|47,48]\\" open[36,50|37,38] close[50,54|52,53] attr[57,63|65,66]\\" open[54,68|55,56] 
+…
+[1528846,1528864|1528847,1528848] close[1528864,1528868|1528866,1528867] attr[1528871,1528877|1528879,1528884]\\" open[1528868,1528886|1528869,1528870] close[1528886,1528890|1528888,1528889] end=1528890"
+`;
 
 exports[`HTML syntax — invariants parse-html-tree-construction-edge-cases-so-a-columns-replaces-an-empty-body-with parses 1`] = `
 "| <html>
@@ -25768,6 +26118,306 @@ exports[`HTML syntax — invariants source-processor-merging-adjacent-script-wri
 exports[`HTML syntax — invariants source-processor-merging-adjacent-script-writes-the-a-next-body-would-otherwise-6 prints {"mode":"minify"} 1`] = `"<script>var a = 1</script><script>/re/.test(x)</script>"`;
 
 exports[`HTML syntax — invariants source-processor-merging-adjacent-script-writes-the-a-next-body-would-otherwise-6 tokenizes 1`] = `"open[0,8|1,7] text[8,17] close[17,26|19,25] open[26,34|27,33] text[34,46] close[46,55|48,54] end=55"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"a{b:url( x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input parses 2`] = `"warning[0,10]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input prints {"mode":"minify"} 1`] = `"a{b:url( x"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input tokenizes 1`] = `"text[0,10] end=10"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"a{b:url(  \\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-2 parses 2`] = `"warning[0,10]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-2 prints {"mode":"minify"} 1`] = `"a{b:url(  "`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-2 tokenizes 1`] = `"text[0,10] end=10"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-3 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"a{b:url( x )\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-3 parses 2`] = `"warning[0,12]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-3 prints {"mode":"minify"} 1`] = `"a{b:url( x )"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-3 tokenizes 1`] = `"text[0,12] end=12"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-4 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"a{b:url(x \\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-4 parses 2`] = `"warning[0,10]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-4 prints {"mode":"minify"} 1`] = `"a{b:url(x "`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-4 tokenizes 1`] = `"text[0,10] end=10"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-5 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"a{b:url(x  )\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-5 parses 2`] = `"warning[0,12]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-5 prints {"mode":"minify"} 1`] = `"a{b:url(x  )"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-5 tokenizes 1`] = `"text[0,12] end=12"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-6 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"url(x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-6 parses 2`] = `"warning[0,5]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-6 prints {"mode":"minify"} 1`] = `"url(x"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-6 tokenizes 1`] = `"text[0,5] end=5"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-7 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"a{b:url(x y(\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-7 parses 2`] = `"warning[0,12]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-7 prints {"mode":"minify"} 1`] = `"a{b:url(x y("`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-7 tokenizes 1`] = `"text[0,12] end=12"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-8 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"a{b:url(x\\\\)y\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-8 parses 2`] = `"warning[0,12]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-8 prints {"mode":"minify"} 1`] = `"a{b:url(x\\\\)y"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-8 tokenizes 1`] = `"text[0,12] end=12"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-9 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"a{b:url(x\\\\
+y(\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-9 parses 2`] = `"warning[0,13]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-9 prints {"mode":"minify"} 1`] = `
+"a{b:url(x\\\\
+y("
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-9 tokenizes 1`] = `"text[0,13] end=13"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-10 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"a{b:url(x\\\\
+y\\\\
+z\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-10 parses 2`] = `"warning[0,15]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-10 prints {"mode":"minify"} 1`] = `
+"a{b:url(x\\\\
+y\\\\
+z"
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-10 tokenizes 1`] = `"text[0,15] end=15"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-11 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"a{b:url(\\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-11 parses 2`] = `"warning[0,10]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-11 prints {"mode":"minify"} 1`] = `"a{b:url(\\"x"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-11 tokenizes 1`] = `"text[0,10] end=10"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-12 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"a{b:image-url(x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-12 parses 2`] = `"warning[0,15]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-12 prints {"mode":"minify"} 1`] = `"a{b:image-url(x"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-12 tokenizes 1`] = `"text[0,15] end=15"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-13 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"a{b:\\\\url(x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-13 parses 2`] = `"warning[0,10]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-13 prints {"mode":"minify"} 1`] = `"a{b:\\\\url(x"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-13 tokenizes 1`] = `"text[0,10] end=10"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-14 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"x{}@\\\\61 b\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-14 parses 2`] = `"warning[0,9]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-14 prints {"mode":"minify"} 1`] = `"x{}@\\\\61 b"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-14 tokenizes 1`] = `"text[0,9] end=9"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-15 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"x{}@-\\\\61\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-15 parses 2`] = `"warning[0,8]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-15 prints {"mode":"minify"} 1`] = `"x{}@-\\\\61"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-15 tokenizes 1`] = `"text[0,8] end=8"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-16 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"x{}@-\\\\
+\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-16 parses 2`] = `"warning[0,7]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-16 prints {"mode":"minify"} 1`] = `
+"x{}@-\\\\
+"
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-16 tokenizes 1`] = `"text[0,7] end=7"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-17 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"a{/*c*/--x:f(\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-17 parses 2`] = `"warning[0,13]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-17 prints {"mode":"minify"} 1`] = `"a{/*c*/--x:f("`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-17 tokenizes 1`] = `"text[0,13] end=13"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-18 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"a{	--x:[1\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-18 parses 2`] = `"warning[0,9]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-18 prints {"mode":"minify"} 1`] = `"a{	--x:[1"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-18 tokenizes 1`] = `"text[0,9] end=9"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-19 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"a{ /*c*/ b:f(\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-19 parses 2`] = `"warning[0,13]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-19 prints {"mode":"minify"} 1`] = `"a{ /*c*/ b:f("`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-19 tokenizes 1`] = `"text[0,13] end=13"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-20 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"a{b:1;/*\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-20 parses 2`] = `"warning[0,8]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-20 prints {"mode":"minify"} 1`] = `"a{b:1;/*"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-20 tokenizes 1`] = `"text[0,8] end=8"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-21 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"a{b:url(x\\\\\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-21 parses 2`] = `"warning[0,10]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-21 prints {"mode":"minify"} 1`] = `"a{b:url(x\\\\"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-21 tokenizes 1`] = `"text[0,10] end=10"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-22 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"x{}@\\\\\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-22 parses 2`] = `"warning[0,5]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-22 prints {"mode":"minify"} 1`] = `"x{}@\\\\"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-22 tokenizes 1`] = `"text[0,5] end=5"`;
 
 exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-ending-inside-a-comment parses 1`] = `
 "| <html>
@@ -36662,6 +37312,112 @@ exports[`HTML syntax — invariants source-processor-remove-redundant-attributes
 
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-13 tokenizes 1`] = `"attr[8,15|17,22]\\" attr[24,27|29,33]\\" open[0,35|1,7] close[35,44|37,43] end=44"`;
 
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing parses 1`] = `
+"| <html>
+|   <head>
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing parses 2`] = `"error[32,32]:eof-in-tag warning[32,32]:expected-doctype-but-got-eof"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing prints {"mode":"minify"} 1`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing tokenizes 1`] = `"error[32,32]:eof-in-tag attr[5,10|12,32]\\" open[0,32|1,4] end=32"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-2 parses 1`] = `
+"| <!--  <meta charset=utf-8> -->
+| <html>
+|   <head>
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-2 parses 2`] = `"error[25,25]:eof-in-comment warning[25,25]:expected-doctype-but-got-eof"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-2 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-2 tokenizes 1`] = `"error[25,25]:eof-in-comment comment[0,25|4,25] end=25"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-3 parses 1`] = `
+"| <!DOCTYPE <meta>
+| <html>
+|   <head>
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-3 parses 2`] = `"warning[16,17]:invalid-character-sequence-after-doctype-name warning[0,30]:unknown-doctype"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-3 prints {"mode":"minify"} 1`] = `"<!doctype <meta charset=utf-8>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-3 tokenizes 1`] = `"warning[16,17]:invalid-character-sequence-after-doctype-name doctype[0,30|10,15|-1,-1|-1,-1]! end=30"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-4 parses 1`] = `
+"| <?x <meta charset=utf-8?>
+| <html>
+|   <head>
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-4 parses 2`] = `"warning[24,24]:expected-doctype-but-got-eof"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-4 prints {"mode":"minify"} 1`] = `"<?x <meta charset=utf-8>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-4 tokenizes 1`] = `"comment[0,24|1,23] end=24"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-5 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-5 parses 2`] = `"error[23,23]:eof-in-processing-instruction warning[23,23]:expected-doctype-but-got-eof"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-5 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-5 tokenizes 1`] = `"error[23,23]:eof-in-processing-instruction comment[0,23|1,23] end=23"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-6 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-6 parses 2`] = `"error[30,30]:eof-in-tag warning[30,30]:expected-doctype-but-got-eof"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-6 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-6 tokenizes 1`] = `"error[30,30]:eof-in-tag attr[6,7|9,30]\\" close[0,30|2,5] end=30"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-7 parses 1`] = `
+"| <!--  -->
+| <html>
+|   <head>
+|   <body>
+|     \\"x\\"
+|     <meta>
+|       charset=\\"utf-8\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-7 parses 2`] = `"warning[4,5]:abrupt-closing-of-empty-comment warning[5,6]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-7 prints {"mode":"minify"} 1`] = `"x<meta charset=utf-8>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-7 tokenizes 1`] = `"warning[4,5]:abrupt-closing-of-empty-comment comment[0,5|4,4] text[5,6] attr[12,19|21,26]\\" open[6,28|7,11] end=28"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-8 parses 1`] = `
+"| <!--  x -->
+| <html>
+|   <head>
+|     <meta>
+|       charset=\\"utf-8\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-8 parses 2`] = `"warning[2,3]:invalid-first-character-of-tag-name warning[5,27]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-8 prints {"mode":"minify"} 1`] = `"<meta charset=utf-8>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-8 tokenizes 1`] = `"warning[2,3]:invalid-first-character-of-tag-name comment[0,5|2,4] attr[11,18|20,25]\\" open[5,27|6,10] end=27"`;
+
 exports[`HTML syntax — invariants source-processor-render-embedded-source-answers-a-data-payload-on-a-deferred parses 1`] = `
 "| <html>
 |   <head>
@@ -38277,6 +39033,42 @@ exports[`HTML syntax — invariants source-processor-reusing-work-across-a-print
 
 exports[`HTML syntax — invariants source-processor-reusing-work-across-a-print-minifies-a-repeated-style-attribute tokenizes 1`] = `"attr[3,8|10,24]\\" open[0,26|1,2] attr[29,34|36,50]\\" open[26,52|27,28] end=52"`;
 
+exports[`HTML syntax — invariants source-processor-reusing-work-across-a-print-reads-back-every-name-of-a-document parses 1`] = `
+"length 136990, sha256 0c5203a4fd84ac35
+| <html>
+|   <head>
+|   <body>
+|     <x-a>
+|     <x-aa>
+|     <x-aaa>
+|     <x-aaaa>
+|     <x-aaaaa>
+|     <x-aaaaaa>
+|     <x-aaaaaaa>
+|     <x-aaaaaaaa>
+|     <x-aaaaaaaaa>
+|     <x-aaaaaaaaaa>
+|   
+…
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa>"
+`;
+
+exports[`HTML syntax — invariants source-processor-reusing-work-across-a-print-reads-back-every-name-of-a-document parses 2`] = `"warning[0,6]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-reusing-work-across-a-print-reads-back-every-name-of-a-document prints {"mode":"minify"} 1`] = `
+"length 267277, sha256 a0b71bc5ba0dbe1a
+<body><x-a></x-a><x-aa></x-aa><x-aaa></x-aaa><x-aaaa></x-aaaa><x-aaaaa></x-aaaaa><x-aaaaaa></x-aaaaaa><x-aaaaaaa></x-aaaaaaa><x-aaaaaaaa></x-aaaaaaaa><x-aaaaaaaaa></x-aaaaaaaaa><x-aaaaaaaaaa></x-aaaaa
+…
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa></body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-reusing-work-across-a-print-reads-back-every-name-of-a-document tokenizes 1`] = `
+"length 31838, sha256 38e9ff8e0e3ffd6a
+open[0,6|1,5] open[6,11|7,10] close[11,17|13,16] open[17,23|18,22] close[23,30|25,29] open[30,37|31,36] close[37,45|39,44] open[45,53|46,52] close[53,62|55,61] open[62,71|63,70] close[71,81|73,80] ope
+…
+1|264178,264690] close[264691,265206|264693,265205] open[265206,265721|265207,265720] close[265721,266237|265723,266236] open[266237,266753|266238,266752] close[266753,267270|266755,267269] end=267270"
+`;
+
 exports[`HTML syntax — invariants source-processor-reusing-work-across-a-print-reads-back-the-name-it-was-given parses 1`] = `
 "| <html>
 |   <head>
@@ -39598,6 +40390,64 @@ exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-mat
 exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as prints {"mode":"minify"} 1`] = `"<body><style>a{color:red}</style><p>x</body>"`;
 
 exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as tokenizes 1`] = `"open[0,4|1,3] open[4,11|5,10] text[11,23] close[23,31|25,30] open[31,34|32,33] text[34,35] close[35,39|37,38] end=39"`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as-2 parses 1`] = `
+"length 880067, sha256 739cc3ba1b93580a
+| <html>
+|   <head>
+|   <body>
+|     <style>
+|       \\"a{color:red}\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+
+…
+x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as-2 parses 2`] = `"warning[0,4]:expected-doctype-but-got-start-tag warning[0,4]:unexpected-start-tag-ignored"`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as-2 prints {"mode":"minify"} 1`] = `
+"length 160040, sha256 e5258c61afb2e317
+<body><style>a{color:red}</style><p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>
+…
+x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x</body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as-2 tokenizes 1`] = `
+"length 3421351, sha256 70154d9626c38fc2
+open[0,4|1,3] open[4,11|5,10] text[11,23] close[23,31|25,30] open[31,34|32,33] text[34,35] close[35,39|37,38] open[39,42|40,41] text[42,43] close[43,47|45,46] open[47,50|48,49] text[50,51] close[51,55
+…
+013,320014] open[320015,320018|320016,320017] text[320018,320019] close[320019,320023|320021,320022] open[320023,320026|320024,320025] text[320026,320027] close[320027,320031|320029,320030] end=320031"
+`;
 
 exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-merges-adjacent-text-across-a-flush parses {"entry":"SourceProcessor","visit":{"fixture":"texts"},"check":{"fixture":"merged"}} 1`] = `
 "length 86000, sha256 dd5d87c11d0068f0
@@ -41021,6 +41871,73 @@ x<table><td>y</table></pre>"
 
 exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j-8 tokenizes 1`] = `"open[0,5|1,4] open[5,12|6,11] text[12,14] open[14,18|15,17] text[18,19] close[19,27|21,26] close[27,33|29,32] end=33"`;
 
+exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-prints-nested-20000-deep-in-a-small-heap parses 1`] = `
+"length 400260040, sha256 d99ac078942e1d12
+| <html>
+|   <head>
+|   <body>
+|     <pre>
+|       <pre>
+|         <pre>
+|           <pre>
+|             <pre>
+|               <pre>
+|                 <pre>
+|                   <pre>
+|                
+…
+                                                                                                                                                                                                     \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-prints-nested-20000-deep-in-a-small-heap parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-prints-nested-20000-deep-in-a-small-heap prints {"mode":"minify"} 1`] = `
+"length 220001, sha256 615a4857675bf18f
+<pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre>
+…
+e></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre>"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-prints-nested-20000-deep-in-a-small-heap tokenizes 1`] = `
+"length 1291147, sha256 452eae822d5116a6
+open[0,5|1,4] open[5,10|6,9] open[10,15|11,14] open[15,20|16,19] open[20,25|21,24] open[25,30|26,29] open[30,35|31,34] open[35,40|36,39] open[40,45|41,44] open[45,50|46,49] open[50,55|51,54] open[55,6
+…
+219967,219970] close[219971,219977|219973,219976] close[219977,219983|219979,219982] close[219983,219989|219985,219988] close[219989,219995|219991,219994] close[219995,220001|219997,220000] end=220001"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-prints-nested-20000-deep-in-a-small-heap-2 parses 1`] = `
+"length 1600640040, sha256 9dcbd51e8362dc5e
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg g>
+|         <svg svg>
+|           <svg g>
+|             <svg svg>
+|               <svg g>
+|                 <svg svg>
+|                   <
+…
+                                                                                                                                                                                                     \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-prints-nested-20000-deep-in-a-small-heap-2 parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-prints-nested-20000-deep-in-a-small-heap-2 prints {"mode":"minify"} 1`] = `
+"length 360001, sha256 2d38c63395253c00
+<svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g>
+…
+</g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg>"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-prints-nested-20000-deep-in-a-small-heap-2 tokenizes 1`] = `
+"length 2648925, sha256 88f2780192a9e187
+open[0,5|1,4] open[5,8|6,7] open[8,13|9,12] open[13,16|14,15] open[16,21|17,20] open[21,24|22,23] open[24,29|25,28] open[29,32|30,31] open[32,37|33,36] open[37,40|38,39] open[40,45|41,44] open[45,48|4
+…
+359973,359974] close[359975,359981|359977,359980] close[359981,359985|359983,359984] close[359985,359991|359987,359990] close[359991,359995|359993,359994] close[359995,360001|359997,360000] end=360001"
+`;
+
 exports[`HTML syntax — invariants source-processor-the-markup-generators-escapes-text-so-that-it-reads-back-as parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <p>\\\\n|       \\\\\\"a & b < c > d e\\\\nf\\\\rg\\\\\\"\\""`;
 
 exports[`HTML syntax — invariants source-processor-the-markup-generators-escapes-text-so-that-it-reads-back-as parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[39,44]:control-character-reference"`;
@@ -41640,6 +42557,65 @@ exports[`HTML syntax — invariants source-processor-the-streamed-walk-ends-a-wa
 exports[`HTML syntax — invariants source-processor-the-streamed-walk-ends-a-walk-a-visitor-stopped-and-fires-its prints {"mode":"minify"} 1`] = `"<b>y</b>"`;
 
 exports[`HTML syntax — invariants source-processor-the-streamed-walk-ends-a-walk-a-visitor-stopped-and-fires-its tokenizes 1`] = `"open[0,3|1,2] text[3,4] close[4,8|6,7] end=8"`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-ends-a-walk-a-visitor-stopped-and-fires-its-2 parses 1`] = `
+"length 880074, sha256 612d5137bae5fdc3
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|    
+…
+x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"x\\"
+|     <b>
+|       \\"y\\"
+|     <i>
+|       \\"z\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-ends-a-walk-a-visitor-stopped-and-fires-its-2 parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-ends-a-walk-a-visitor-stopped-and-fires-its-2 prints {"mode":"minify"} 1`] = `
+"length 160020, sha256 0411606eaf429c7f
+<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x
+…
+<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x</p><b>y</b><i>z</i>"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-streamed-walk-ends-a-walk-a-visitor-stopped-and-fires-its-2 tokenizes 1`] = `
+"length 3421304, sha256 c6d366089d04227c
+open[0,3|1,2] text[3,4] close[4,8|6,7] open[8,11|9,10] text[11,12] close[12,16|14,15] open[16,19|17,18] text[19,20] close[20,24|22,23] open[24,27|25,26] text[27,28] close[28,32|30,31] open[32,35|33,34
+…
+998,319999] open[320000,320003|320001,320002] text[320003,320004] close[320004,320008|320006,320007] open[320008,320011|320009,320010] text[320011,320012] close[320012,320016|320014,320015] end=320016"
+`;
 
 exports[`HTML syntax — invariants source-processor-the-streamed-walk-exits-a-skipped-element-that-closes-while parses {"entry":"SourceProcessor","visit":{"fixture":"walk"},"check":{"fixture":"logged"}} 1`] = `
 "+html
@@ -51310,6 +52286,508 @@ exports[`HTML syntax — invariants tokenize-coverage-state-machine-branches-tag
 
 exports[`HTML syntax — invariants tokenize-coverage-state-machine-branches-tag-open-xml-becomes-bogus-comment tokenizes 1`] = `"text[0,1] comment[1,7|2,6] text[7,8] end=8"`;
 
+exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-longest-prefix-backtrack-per-whatwg parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"¬pre;\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-longest-prefix-backtrack-per-whatwg parses 2`] = `"warning[4,5]:missing-semicolon-after-character-reference warning[0,8]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-longest-prefix-backtrack-per-whatwg prints {"mode":"minify"} 1`] = `"¬pre;"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-longest-prefix-backtrack-per-whatwg tokenizes 1`] = `"warning[4,5]:missing-semicolon-after-character-reference text[0,8] end=8"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&=foo\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule parses 2`] = `"warning[4,5]:missing-semicolon-after-character-reference warning[0,8]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule prints {"mode":"minify"} 1`] = `"&=foo"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule tokenizes 1`] = `"warning[4,5]:missing-semicolon-after-character-reference text[0,8] end=8"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&=foo\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule-2 parses 2`] = `"warning[0,9]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule-2 prints {"mode":"minify"} 1`] = `"&=foo"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule-2 tokenizes 1`] = `"text[0,9] end=9"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule-3 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&X\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule-3 parses 2`] = `"warning[4,5]:missing-semicolon-after-character-reference warning[0,5]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule-3 prints {"mode":"minify"} 1`] = `"&amp;X"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule-3 tokenizes 1`] = `"warning[4,5]:missing-semicolon-after-character-reference text[0,5] end=5"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-core-named-entities parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&<>\\"' \\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-core-named-entities parses 2`] = `"warning[0,31]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-core-named-entities prints {"mode":"minify"} 1`] = `"&<>\\"' "`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-core-named-entities tokenizes 1`] = `"text[0,31] end=31"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-entities-outside-the-bmp-and-multi parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"Æ\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-entities-outside-the-bmp-and-multi parses 2`] = `"warning[0,7]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-entities-outside-the-bmp-and-multi prints {"mode":"minify"} 1`] = `"Æ"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-entities-outside-the-bmp-and-multi tokenizes 1`] = `"text[0,7] end=7"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-entities-outside-the-bmp-and-multi-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"≂̸\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-entities-outside-the-bmp-and-multi-2 parses 2`] = `"warning[0,15]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-entities-outside-the-bmp-and-multi-2 prints {"mode":"minify"} 1`] = `"≂̸"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-entities-outside-the-bmp-and-multi-2 tokenizes 1`] = `"text[0,15] end=15"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-legacy-named-entities-without-trailing parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-legacy-named-entities-without-trailing parses 2`] = `"warning[4,5]:missing-semicolon-after-character-reference warning[0,4]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-legacy-named-entities-without-trailing prints {"mode":"minify"} 1`] = `"&amp;"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-legacy-named-entities-without-trailing tokenizes 1`] = `"warning[4,5]:missing-semicolon-after-character-reference text[0,4] end=4"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-legacy-named-entities-without-trailing-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"©\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-legacy-named-entities-without-trailing-2 parses 2`] = `"warning[5,6]:missing-semicolon-after-character-reference warning[0,5]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-legacy-named-entities-without-trailing-2 prints {"mode":"minify"} 1`] = `"©"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-legacy-named-entities-without-trailing-2 tokenizes 1`] = `"warning[5,6]:missing-semicolon-after-character-reference text[0,5] end=5"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-decimal-references parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"ABC\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-decimal-references parses 2`] = `"warning[0,15]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-decimal-references prints {"mode":"minify"} 1`] = `"ABC"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-decimal-references tokenizes 1`] = `"text[0,15] end=15"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-hexadecimal-references parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"ABC\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-hexadecimal-references parses 2`] = `"warning[0,18]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-hexadecimal-references prints {"mode":"minify"} 1`] = `"ABC"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-hexadecimal-references tokenizes 1`] = `"text[0,18] end=18"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-hexadecimal-references-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"ABC\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-hexadecimal-references-2 parses 2`] = `"warning[0,18]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-hexadecimal-references-2 prints {"mode":"minify"} 1`] = `"ABC"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-hexadecimal-references-2 tokenizes 1`] = `"text[0,18] end=18"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-references-without-trailing parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"A\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-references-without-trailing parses 2`] = `"warning[4,4]:missing-semicolon-after-character-reference warning[0,4]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-references-without-trailing prints {"mode":"minify"} 1`] = `"A"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-references-without-trailing tokenizes 1`] = `"warning[4,4]:missing-semicolon-after-character-reference text[0,4] end=4"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-references-without-trailing-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"A\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-references-without-trailing-2 parses 2`] = `"warning[5,5]:missing-semicolon-after-character-reference warning[0,5]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-references-without-trailing-2 prints {"mode":"minify"} 1`] = `"A"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-numeric-references-without-trailing-2 tokenizes 1`] = `"warning[5,5]:missing-semicolon-after-character-reference text[0,5] end=5"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-fast-path-strings-with-no parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"plain text\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-fast-path-strings-with-no parses 2`] = `"warning[0,10]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-fast-path-strings-with-no prints {"mode":"minify"} 1`] = `"plain text"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-fast-path-strings-with-no tokenizes 1`] = `"text[0,10] end=10"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-handle-mixed-text-and-entities parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"foo & bar A baz\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-handle-mixed-text-and-entities parses 2`] = `"warning[0,24]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-handle-mixed-text-and-entities prints {"mode":"minify"} 1`] = `"foo & bar A baz"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-handle-mixed-text-and-entities tokenizes 1`] = `"text[0,24] end=24"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&zzzunknown;\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals parses 2`] = `"warning[11,12]:unknown-named-character-reference warning[0,12]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals prints {"mode":"minify"} 1`] = `"&zzzunknown;"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals tokenizes 1`] = `"warning[11,12]:unknown-named-character-reference text[0,12] end=12"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&#;\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-2 parses 2`] = `"warning[2,3]:absence-of-digits-in-numeric-character-reference warning[0,3]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-2 prints {"mode":"minify"} 1`] = `"&#;"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-2 tokenizes 1`] = `"warning[2,3]:absence-of-digits-in-numeric-character-reference text[0,3] end=3"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-3 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&#x;\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-3 parses 2`] = `"warning[3,4]:absence-of-digits-in-numeric-character-reference warning[0,4]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-3 prints {"mode":"minify"} 1`] = `"&#x;"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-3 tokenizes 1`] = `"warning[3,4]:absence-of-digits-in-numeric-character-reference text[0,4] end=4"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-4 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"bare & alone\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-4 parses 2`] = `"warning[0,12]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-4 prints {"mode":"minify"} 1`] = `"bare & alone"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-4 tokenizes 1`] = `"text[0,12] end=12"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-let-decimal-references-swallow-trailing-hex parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"Ab\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-let-decimal-references-swallow-trailing-hex parses 2`] = `"warning[4,5]:missing-semicolon-after-character-reference warning[0,5]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-let-decimal-references-swallow-trailing-hex prints {"mode":"minify"} 1`] = `"Ab"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-let-decimal-references-swallow-trailing-hex tokenizes 1`] = `"warning[4,5]:missing-semicolon-after-character-reference text[0,5] end=5"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-let-decimal-references-swallow-trailing-hex-2 parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     \\\\\\"\\\\u0001f\\\\\\"\\""`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-let-decimal-references-swallow-trailing-hex-2 parses 2`] = `"warning[3,4]:missing-semicolon-after-character-reference warning[0,3]:control-character-reference warning[0,4]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-let-decimal-references-swallow-trailing-hex-2 prints {"mode":"minify"} 1`] = `"\\"\\\\u0001f\\""`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-let-decimal-references-swallow-trailing-hex-2 tokenizes 1`] = `"warning[3,4]:missing-semicolon-after-character-reference warning[0,3]:control-character-reference text[0,4] end=4"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-match-inherited-object-prototype-keys-as parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&toString;\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-match-inherited-object-prototype-keys-as parses 2`] = `"warning[9,10]:unknown-named-character-reference warning[0,10]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-match-inherited-object-prototype-keys-as prints {"mode":"minify"} 1`] = `"&toString;"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-match-inherited-object-prototype-keys-as tokenizes 1`] = `"warning[9,10]:unknown-named-character-reference text[0,10] end=10"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-match-inherited-object-prototype-keys-as-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&constructor;\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-match-inherited-object-prototype-keys-as-2 parses 2`] = `"warning[12,13]:unknown-named-character-reference warning[0,13]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-match-inherited-object-prototype-keys-as-2 prints {"mode":"minify"} 1`] = `"&constructor;"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-match-inherited-object-prototype-keys-as-2 tokenizes 1`] = `"warning[12,13]:unknown-named-character-reference text[0,13] end=13"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-match-inherited-object-prototype-keys-as-3 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&hasOwnProperty;\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-match-inherited-object-prototype-keys-as-3 parses 2`] = `"warning[15,16]:unknown-named-character-reference warning[0,16]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-match-inherited-object-prototype-keys-as-3 prints {"mode":"minify"} 1`] = `"&hasOwnProperty;"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-not-match-inherited-object-prototype-keys-as-3 tokenizes 1`] = `"warning[15,16]:unknown-named-character-reference text[0,16] end=16"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"€\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252 parses 2`] = `"warning[0,6]:control-character-reference warning[0,6]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252 prints {"mode":"minify"} 1`] = `"€"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252 tokenizes 1`] = `"warning[0,6]:control-character-reference text[0,6] end=6"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"™\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252-2 parses 2`] = `"warning[0,6]:control-character-reference warning[0,6]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252-2 prints {"mode":"minify"} 1`] = `"™"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252-2 tokenizes 1`] = `"warning[0,6]:control-character-reference text[0,6] end=6"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252-3 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"Ÿ\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252-3 parses 2`] = `"warning[0,6]:control-character-reference warning[0,6]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252-3 prints {"mode":"minify"} 1`] = `"Ÿ"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252-3 tokenizes 1`] = `"warning[0,6]:control-character-reference text[0,6] end=6"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252-4 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252-4 parses 2`] = `"warning[0,6]:control-character-reference warning[0,6]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252-4 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252-4 tokenizes 1`] = `"warning[0,6]:control-character-reference text[0,6] end=6"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"�\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references parses 2`] = `"warning[0,4]:null-character-reference warning[0,4]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references prints {"mode":"minify"} 1`] = `"�"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references tokenizes 1`] = `"warning[0,4]:null-character-reference text[0,4] end=4"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"�\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references-2 parses 2`] = `"warning[0,5]:null-character-reference warning[0,5]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references-2 prints {"mode":"minify"} 1`] = `"�"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references-2 tokenizes 1`] = `"warning[0,5]:null-character-reference text[0,5] end=5"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references-3 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"�\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references-3 parses 2`] = `"warning[0,8]:surrogate-character-reference warning[0,8]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references-3 prints {"mode":"minify"} 1`] = `"�"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references-3 tokenizes 1`] = `"warning[0,8]:surrogate-character-reference text[0,8] end=8"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references-4 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"�\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references-4 parses 2`] = `"warning[0,8]:surrogate-character-reference warning[0,8]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references-4 prints {"mode":"minify"} 1`] = `"�"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references-4 tokenizes 1`] = `"warning[0,8]:surrogate-character-reference text[0,8] end=8"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-numeric-references-above-u-10ffff-with-u parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"�\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-numeric-references-above-u-10ffff-with-u parses 2`] = `"warning[0,10]:character-reference-outside-unicode-range warning[0,10]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-numeric-references-above-u-10ffff-with-u prints {"mode":"minify"} 1`] = `"�"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-numeric-references-above-u-10ffff-with-u tokenizes 1`] = `"warning[0,10]:character-reference-outside-unicode-range text[0,10] end=10"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-numeric-references-above-u-10ffff-with-u-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"�\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-numeric-references-above-u-10ffff-with-u-2 parses 2`] = `"warning[0,10]:character-reference-outside-unicode-range warning[0,10]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-numeric-references-above-u-10ffff-with-u-2 prints {"mode":"minify"} 1`] = `"�"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-replace-numeric-references-above-u-10ffff-with-u-2 tokenizes 1`] = `"warning[0,10]:character-reference-outside-unicode-range text[0,10] end=10"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after parses 2`] = `"warning[0,1001]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after prints {"mode":"minify"} 1`] = `"&amp;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after tokenizes 1`] = `"text[0,1001] end=1001"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after-2 parses 2`] = `"warning[4,5]:missing-semicolon-after-character-reference warning[0,1004]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after-2 prints {"mode":"minify"} 1`] = `"&amp;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after-2 tokenizes 1`] = `"warning[4,5]:missing-semicolon-after-character-reference text[0,1004] end=1004"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-with-map-should-map-around-numeric-references-and parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"x yz\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-with-map-should-map-around-numeric-references-and parses 2`] = `"warning[0,8]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-with-map-should-map-around-numeric-references-and prints {"mode":"minify"} 1`] = `"x yz"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-with-map-should-map-around-numeric-references-and tokenizes 1`] = `"text[0,8] end=8"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-with-map-should-return-the-input-and-no-map-when parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&=1\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-with-map-should-return-the-input-and-no-map-when parses 2`] = `"warning[4,5]:missing-semicolon-after-character-reference warning[0,6]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-with-map-should-return-the-input-and-no-map-when prints {"mode":"minify"} 1`] = `"&=1"`;
+
+exports[`HTML syntax — invariants tokenize-decode-entities-with-map-should-return-the-input-and-no-map-when tokenizes 1`] = `"warning[4,5]:missing-semicolon-after-character-reference text[0,6] end=6"`;
+
 exports[`HTML syntax — invariants tokenize-fused-state-transitions-apostrophe-as-attribute-name-first-char parses 1`] = `
 "| <html>
 |   <head>
@@ -52643,6 +54121,21 @@ exports[`HTML syntax — invariants tokenize-parse-error-callback-validates-nume
 exports[`HTML syntax — invariants tokenize-parse-error-callback-validates-numeric-references-that-end-exactly-at-5 prints {"mode":"minify"} 1`] = `"&amp;#"`;
 
 exports[`HTML syntax — invariants tokenize-parse-error-callback-validates-numeric-references-that-end-exactly-at-5 tokenizes 1`] = `"warning[2,2]:absence-of-digits-in-numeric-character-reference text[0,2] end=2"`;
+
+exports[`HTML syntax — invariants tokenize-reads-a-named-reference-the-same-wherever-the-input-repeats-it parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"<<≤<&lx;&nope;&nope;< &\\"
+|     <a>
+|       b=\\"<&lx;&lt=&ltx\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-reads-a-named-reference-the-same-wherever-the-input-repeats-it parses 2`] = `"warning[19,20]:unknown-named-character-reference warning[25,26]:unknown-named-character-reference warning[31,32]:unknown-named-character-reference warning[35,36]:missing-semicolon-after-character-reference warning[0,41]:expected-doctype-but-got-chars warning[54,55]:unknown-named-character-reference warning[65,65]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants tokenize-reads-a-named-reference-the-same-wherever-the-input-repeats-it prints {"mode":"minify"} 1`] = `"<<≤<&lx;&nope;&nope;< &amp;<a b=\\"<&lx;&lt=&ltx\\"></a>"`;
+
+exports[`HTML syntax — invariants tokenize-reads-a-named-reference-the-same-wherever-the-input-repeats-it tokenizes 1`] = `"warning[19,20]:unknown-named-character-reference warning[25,26]:unknown-named-character-reference warning[31,32]:unknown-named-character-reference warning[35,36]:missing-semicolon-after-character-reference text[0,41] warning[54,55]:unknown-named-character-reference attr[44,45|47,63]\\" open[41,65|42,43] end=65"`;
 
 exports[`HTML syntax — invariants tokenize-should-detect-self-closing-tags parses 1`] = `
 "| <html>

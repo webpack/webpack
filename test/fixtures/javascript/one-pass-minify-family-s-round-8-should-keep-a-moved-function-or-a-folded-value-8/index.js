@@ -1,0 +1,1 @@
+function g(a,b){var r=a+b;return x=[r][0]}

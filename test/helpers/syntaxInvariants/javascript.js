@@ -7,6 +7,7 @@
 
 const vm = require("vm");
 const { parse: acornParse } = require("acorn");
+const { isStackOverflow } = require("../fixture");
 const { parse: webpackParse } = require("../../../lib/javascript/syntax-parser");
 const { wantedRespelling } = require("../../../tooling/compare-tools-harness");
 const {
@@ -395,6 +396,8 @@ const jsPurityDigest = (source, options, print) => {
 	try {
 		digest.update(print(source));
 	} catch (error) {
+		// Where the stack runs out is the machine's, not the printer's answer.
+		if (isStackOverflow(error)) throw error;
 		digest.update(`print refused: ${/** @type {Error} */ (error).message}`);
 	}
 	return digest.hex();

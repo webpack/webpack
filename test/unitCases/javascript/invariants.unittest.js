@@ -2,6 +2,7 @@
 
 const { SourceProcessor, parser } = require("../../../lib/javascript/syntax");
 const {
+	OVERFLOW,
 	answerOf,
 	declaresPrint,
 	fixtures,
@@ -12,6 +13,7 @@ const {
 	snapshotText,
 	treeLines,
 	unexplained,
+	unlessOverflow,
 	walkLine
 } = require("../../helpers/fixture");
 const { parse, plain } = require("../../helpers/javascriptParse");
@@ -61,6 +63,20 @@ const valueText = (value) => {
 	}
 	return JSON.stringify(value);
 };
+
+/**
+ * A parse error as a snapshot holds it; running out of stack only as that,
+ * as where it runs out is the engine's.
+ * @param {string} severity its severity
+ * @param {number} start where it starts
+ * @param {number} end where it ends
+ * @param {string} code its code
+ * @returns {string} the entry
+ */
+const errorText = (severity, start, end, code) =>
+	code === "not-enough-stack-space"
+		? OVERFLOW
+		: `${severity}[${start},${end}]:${code}`;
 
 /**
  * Every token and comment the public JavaScript tokenizer reads, in order, as
@@ -164,7 +180,7 @@ const ENTRIES = {
 					...options,
 					estree: true,
 					parseError: (input, code, start, end, severity) => {
-						errors.push(`${severity}[${start},${end}]:${code}`);
+						errors.push(errorText(severity, start, end, code));
 					}
 				});
 				return program === undefined
@@ -250,7 +266,7 @@ describe("JavaScript syntax — invariants", () => {
 				parser.parseProgram(source, 0, {
 					sourceType,
 					parseError: (input, code, start, end, severity) => {
-						errors.push(`${severity}[${start},${end}]:${code}`);
+						errors.push(errorText(severity, start, end, code));
 					}
 				});
 				// The second entry, so the tree's stays as it was.
@@ -336,7 +352,8 @@ describe("JavaScript syntax — invariants", () => {
 								preset: title,
 								report
 							})),
-							marked
+							marked,
+							source
 						)
 					).toEqual([]);
 				}
@@ -348,7 +365,8 @@ describe("JavaScript syntax — invariants", () => {
 				expect(
 					unexplained(
 						invariantFindings(syntax, [[name, source]]),
-						expected.filter((entry) => !marked.includes(entry))
+						expected.filter((entry) => !marked.includes(entry)),
+						source
 					)
 				).toEqual([]);
 			});
@@ -361,7 +379,7 @@ describe("JavaScript syntax — invariants", () => {
 		const { reports } = purityRelation(
 			all.map(({ name, source }) => ({
 				what: name,
-				digest: () => syntax.digest(source)
+				digest: () => unlessOverflow(() => syntax.digest(source))
 			}))
 		);
 		expect(reports.map((report) => report.repro)).toEqual([]);

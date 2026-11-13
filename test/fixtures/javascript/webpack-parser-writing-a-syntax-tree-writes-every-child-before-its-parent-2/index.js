@@ -1,0 +1,1 @@
+import f, { g as h } from "i"; ({ j: 1, k }); switch (l) { case 1: m; }

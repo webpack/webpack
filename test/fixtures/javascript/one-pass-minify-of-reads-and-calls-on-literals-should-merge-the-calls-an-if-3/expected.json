@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "(r(3))[0]);\n      -> r(3)[0]);",
+		"why": "the call an inlined arrow's result folds to keeps the parentheses the arrow took as the callee; a second pass reads the call alone and needs none, the same meaning 2 B shorter"
+	}
+]

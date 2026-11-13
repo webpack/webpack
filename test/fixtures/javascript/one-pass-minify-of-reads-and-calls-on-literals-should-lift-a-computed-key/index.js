@@ -1,0 +1,1 @@
+const key="FOO",p="__proto__",c="constructor",n=12;class X{[key]=1;static get[key](){return 2}[c](){}}console.log(new X,{[key]:1,[p]:2,[n]:3})

@@ -1,0 +1,1 @@
+async function* g(p = 1, { q }) { yield* await r; }

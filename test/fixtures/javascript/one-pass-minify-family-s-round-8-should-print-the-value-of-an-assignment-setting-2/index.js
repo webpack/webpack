@@ -1,0 +1,1 @@
+function f(o,i){(o=i=function(){}).x=1}

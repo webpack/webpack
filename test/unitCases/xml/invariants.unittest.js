@@ -12,6 +12,7 @@ const {
 	snapshotText,
 	treeLines,
 	unexplained,
+	unlessOverflow,
 	walkLine
 } = require("../../helpers/fixture");
 const { materialize } = require("../../helpers/materializeHtmlTree");
@@ -269,7 +270,11 @@ describe("XML syntax — invariants", () => {
 
 			it("holds its invariants", () => {
 				expect(
-					unexplained(invariantFindings(syntax, [[name, source]]), expected)
+					unexplained(
+						invariantFindings(syntax, [[name, source]]),
+						expected,
+						source
+					)
 				).toEqual([]);
 			});
 		});
@@ -281,7 +286,7 @@ describe("XML syntax — invariants", () => {
 		const { reports } = purityRelation(
 			all.map(({ name, source }) => ({
 				what: name,
-				digest: () => syntax.digest(source)
+				digest: () => unlessOverflow(() => syntax.digest(source))
 			}))
 		);
 		expect(reports.map((report) => report.repro)).toEqual([]);
