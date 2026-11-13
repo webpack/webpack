@@ -42,6 +42,8 @@ const {
 	jsPurityDigest,
 	jsSlices,
 	jsSpans,
+	legalNotices,
+	meaningReports,
 	minifyOnePass,
 	parsesAsLatest,
 	printerFor,
@@ -67,6 +69,7 @@ const {
 	measure,
 	measureInWorker,
 	missingReport,
+	noticeRelation,
 	oneLine,
 	purityRelation,
 	sweepExitCode,
@@ -1095,19 +1098,29 @@ const invariants = async (write) => {
 		wantedRespelling(respelling.name)
 	);
 	const wantsBehavior = wantedRelation("behavior");
-	if (wantsIdempotence || wantsRespelling || wantsBehavior) {
+	const wantsMeaning = wantedRelation("meaning");
+	const wantsNotices = wantedRelation("notices");
+	if (
+		wantsIdempotence ||
+		wantsRespelling ||
+		wantsBehavior ||
+		wantsMeaning ||
+		wantsNotices
+	) {
 		// Only what a script does before it returns is compared: a promise it
 		// leaves rejected, such as an `import()` with no loader, is ignored, and
 		// for the rest of the run, as one may settle after the sweep.
 		const ignore = () => {};
 		if (wantsBehavior) process.on("unhandledRejection", ignore);
 		let ran = 0;
-		// Respelling asks the first preset, behavior the ones printing alone.
+		// Respelling asks the first preset, behavior and meaning the ones
+		// printing alone, notices every one.
 		const printing = presets.filter(
 			([name, presetOptions], i) =>
 				wantsIdempotence ||
+				wantsNotices ||
 				(wantsRespelling && i === 0) ||
-				(wantsBehavior && presetOptions.compress === false)
+				((wantsBehavior || wantsMeaning) && presetOptions.compress === false)
 		);
 		let read = 0;
 		for (const [label, source, options] of corpus) {
@@ -1137,6 +1150,21 @@ const invariants = async (write) => {
 					? idempotence({ minify, reprint, source, says })
 					: { printed: minify(source), reports: [] };
 				for (const report of reports) groups.add(report, preset, label);
+				const alone = presetOptions.compress === false;
+				if (printed !== null && wantsNotices) {
+					for (const report of noticeRelation(
+						legalNotices(module, !alone),
+						source,
+						printed
+					)) {
+						groups.add(report, preset, label);
+					}
+				}
+				if (printed !== null && wantsMeaning && alone) {
+					for (const report of meaningReports(source, printed, settled)) {
+						groups.add(report, preset, label);
+					}
+				}
 				// Compressed or renamed, what a script observes may change by
 				// contract; printed alone, nothing it does may.
 				if (

@@ -103,11 +103,12 @@ describe("compare-css-tools — the notices relation", () => {
 		expect(noticeReports("/*! a */b{}", "b{}")).toEqual([
 			{
 				relation: "notices",
-				what: "dropped 1 of 1 legal notices",
+				what: "dropped 1 of 1 notices",
 				repro: "    b{}"
 			}
 		]);
 		expect(noticeReports("/*! a */b{}", "/*! a */b{}")).toEqual([]);
+		expect(noticeReports("/* @license a */b{}", "b{}")).toHaveLength(1);
 	});
 
 	it("should read a `/*!` in a string as no notice, and one after a `url()` as one", () => {
