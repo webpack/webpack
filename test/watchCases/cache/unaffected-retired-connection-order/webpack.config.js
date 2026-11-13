@@ -68,7 +68,7 @@ module.exports = ["memory", "filesystem"].map((type) => ({
 									connection.dependency === dependencyB &&
 									connection !== currentB
 							);
-							// Without distinguishing retired connections, both orders have the same states and dependency ids.
+							// Both orders have the same connection states; only which connection is current differs.
 							const ordered = first
 								? [...oldA, ...oldB, currentB, currentA]
 								: [...oldA, currentA, ...oldB, currentB];

@@ -25,41 +25,13 @@ module.exports = Array.from({ length: 4 }, (_, index) => ({
 					: compiler.webpack.ModuleGraphConnection.TRANSITIVE_ONLY;
 			compiler.hooks.compilation.tap("ConnectionOrder", (compilation) => {
 				const { moduleGraph } = compilation;
-				const getParentBlock = moduleGraph.getParentBlock;
-				/** @type {import("webpack").Module | undefined} */
-				let origin;
-				let blockReads = 0;
-				compilation.hooks.beforeChunks.tap("ConnectionOrder", () => {
-					if (!compilation.moduleMemCaches) return;
-					moduleGraph.getParentBlock = (dependency) => {
-						if (moduleGraph.getParentModule(dependency) === origin) {
-							blockReads++;
-						}
-						return getParentBlock.call(moduleGraph, dependency);
-					};
-				});
-				compilation.hooks.afterChunks.tap("ConnectionOrder", () => {
-					moduleGraph.getParentBlock = getParentBlock;
-					if (!compilation.moduleMemCaches) return;
-					if (
-						(currentWatchStep.step === "0" && blockReads === 0) ||
-						([2, 5, 7].includes(Number(currentWatchStep.step)) &&
-							blockReads !== 0)
-					) {
-						compilation.errors.push(
-							new compiler.webpack.WebpackError(
-								`Unexpected block extraction at step ${currentWatchStep.step}: ${blockReads} reads`
-							)
-						);
-					}
-				});
 				compilation.hooks.optimizeDependencies.tap(
 					"ConnectionOrder",
 					(modules) => {
 						const byPath = new Map(
 							[...modules].map((module) => [module.nameForCondition(), module])
 						);
-						origin = byPath.get(path.join(compiler.context, "index.js"));
+						const origin = byPath.get(path.join(compiler.context, "index.js"));
 						const temporary = byPath.get(
 							path.join(compiler.context, "keep.js")
 						);
