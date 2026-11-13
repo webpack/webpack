@@ -1854,3 +1854,29 @@ describe("one-pass minify, family W round 8", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 });
+
+describe("one-pass minify, family T round 8", () => {
+	it("should evaluate an argument at its parameter's one read, run first", () => {
+		const source = fixture("javascript", "one-pass-t5-1");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// A later argument running code, a read after code, statements before the `return` or a call staying a call keep it passed.
+		expect(code).toBe("function make(name){return function(value){return console.log(name,\"object\"==typeof value?JSON.stringify(value):value),value}}var load=make(\"load\");function first(require){return require({value:1}).value+1}console.log(first(load));function arrow(require){return require({value:2}).value*2}console.log(arrow(load));function constantAfter(require){return require({value:3}).value+4}console.log(constantAfter(load));function laterRuns(require){return function(module,extra){return module.value+extra}(require({value:5}),require(6))}console.log(laterRuns(load));function readLater(require){return function(module){return require(7)+module.value}(require({value:8}))}console.log(readLater(load));function statements(require){return function(module){return console.log(\"runs\"),module.value}(require({value:9}))}console.log(statements(load));function written(require){var base=10;return base++,function(offset,module){return module.value+offset}(base,require({value:11}))}console.log(written(load));");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should declare a parameter set to the argument before the declarator its call is the value of", () => {
+		const source = fixture("javascript", "one-pass-t5-2");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// `var`s share a name; a `let` or `const` beside one of it, a name the holder has, a declarator gone, a body written twice or two arguments keep the call.
+		expect(code).toBe("function make(name){return function(value){return console.log(name,\"object\"==typeof value?JSON.stringify(value):value),value}}var load=make(\"load\");function interop(require){var obj=require({__esModule:!0,default:\"react\"}),_react=obj&&obj.__esModule?obj:{default:obj};return[_react.default,_react.default]}console.log(interop(load));function shared(require){var obj=require({x:1}),a=obj&&obj.x?obj:{x:obj},obj=require({y:2}),b=(obj.y,obj);return[a.x,a.x,b.y,b.y]}console.log(shared(load));function lexical(require){let o=require({x:3}),a=o.x+o.x;console.log(a,a);{let b=function(o){return o.y*o.y}(require({y:4}));console.log(b,b)}}lexical(load);function written(require,value){var o=value=require(value),a=o-o;return[a,a]}console.log(written(load,5));function collides(require){var o=require(1),a=function(o){return o/o}(require(2));return[a,a,o]}console.log(collides(load));function collapsed(require){return function(o){return o+1+o}(require(7))}console.log(collapsed(load));function repeated(require){var a=function(o){return o+2+o}(require(8)),b=function(o){return o+2+o}(require(9)),c;return[a,a,b,b,c]}console.log(repeated(load));function twoArguments(require){var a=function(o){return o+3+o}(require(10),1);return[a,a]}console.log(twoArguments(load));");
+		expect(runProgram(code)).toBe(runProgram(source));
+		// A program's names are its own only with `toplevel`.
+		expect(minifyOnePass("var a=function(o){return o.x+o.y}(r(1));use(a,a)", { compress: { toplevel: true }, mangle: false }).code).toBe("var o=r(1),a=o.x+o.y;use(a,a);");
+		expect(minifyOnePass("var a=function(o){return o.x+o.y}(r(1));use(a,a)", { compress: {}, mangle: false }).code).toBe("var a=function(o){return o.x+o.y}(r(1));use(a,a);");
+		// Mangled, a `using`, a spread passed or a function reading its `this` keeps the call.
+		expect(minifyOnePass("function f(r){var a=function(o){return o.x+o.y}(r(1));return[a,a]}", { compress: {}, mangle: true }).code).toBe("function f(r){var n=function(r){return r.x+r.y}(r(1));return[n,n]}");
+		expect(minifyOnePass("function f(r){{using a=function(o){return o.x+o.y}(r(1));use(a,a)}}", { compress: {}, mangle: false }).code).toBe("function f(r){{using a=function(o){return o.x+o.y}(r(1));use(a,a)}}");
+		expect(minifyOnePass("function f(r){var a=function(o){return o.x+o.y}(...r);return[a,a]}", { compress: {}, mangle: false }).code).toBe("function f(r){var a=function(o){return o.x+o.y}(...r);return[a,a]}");
+		expect(minifyOnePass("function f(r){var a=function(o){return this.x+o.y+o}(r());return[a,a]}", { compress: {}, mangle: false }).code).toBe("function f(r){var a=function(o){return this.x+o.y+o}(r());return[a,a]}");
+	});
+});
