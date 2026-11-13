@@ -1808,4 +1808,12 @@ describe("one-pass minify, family P round 7", () => {
 		// A call of a name spelled as `return` opens is no `return`.
 		expect(minifyOnePass("function f(o){g(o);if(1)returnValue(o)}", { compress: {}, mangle: false }).code).toBe("function f(o){g(o);returnValue(o)}");
 	});
+
+	it("should drop a directive no engine reads", () => {
+		const source = fixture("javascript", "one-pass-p4-5");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// terser's `directives`: `use strict` and `use asm` stay, as does one spelled with escapes.
+		expect(code).toBe("function typeOf(value){return typeof value}console.log(typeOf(1));function strict(){\"use strict\";return this}console.log(strict());function asm(){\"use asm\";return{f:function(){return 1}}}console.log(asm().f());function escaped(){\"\\x75se custom\";return 2}console.log(escaped());");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
 });
