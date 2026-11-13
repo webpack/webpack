@@ -1612,7 +1612,7 @@ describe("one-pass minify, family O round 7", () => {
 		const source = fixture("javascript", "one-pass-o4-2");
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
 		// A value read keeps a `!` that would leave no boolean; a link adding characters takes `!(`; an operand of `??`, `+` or a branch of `?:` keeps the chain whole.
-		expect(code).toBe("function chains(a,b,c){if(a!=1&&b!=2&&c!=3)console.log(\"none\",a,b,c);if(a!==1||b!==2||c!==3)console.log(\"not all\",a,b,c);var v=!(a===1||b===2||!c),w=a!=1&&b!=2&&!c,u=!(a==1||b<2||c==3),t=a&&a!=1&&b!=2&&c!=3,s=a||a!=1||b!=2||c!=3,r=a&&!(a==1&&b==2&&c==3),q=c??!(a==1||b==2||c==3),p=1+!(a==1||b==2||c==3),o=c?!(a==1||b==2||c==3):0,n=a==1||b==2||c==3?2:1;if(!(a<1||b<2)&&c)console.log(\"unlinked\",a,b,c);console.log(v,w,u,t,s,r,q,p,o,n)}for(let a of[0,1])for(let b of[1,2])for(let c of[0,3])chains(a,b,c);");
+		expect(code).toBe("function chains(a,b,c){if(a!=1&&b!=2&&c!=3)console.log(\"none\",a,b,c);if(a!==1||b!==2||c!==3)console.log(\"not all\",a,b,c);var w=a!=1&&b!=2&&!c,u=!(a==1||b<2||c==3),t=a&&a!=1&&b!=2&&c!=3,s=a||a!=1||b!=2||c!=3,r=a&&!(a==1&&b==2&&c==3),q=c??!(a==1||b==2||c==3),p=1+!(a==1||b==2||c==3),o=c?!(a==1||b==2||c==3):0,n=a==1||b==2||c==3?2:1;if(!(a<1||b<2)&&c)console.log(\"unlinked\",a,b,c);console.log(!(a===1||b===2||!c),w,u,t,s,r,q,p,o,n)}for(let a of[0,1])for(let b of[1,2])for(let c of[0,3])chains(a,b,c);");
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 });
@@ -2072,7 +2072,9 @@ describe("folding a `var` set after calls", () => {
 			["(function(){init();var A=4,B=5;function f(x){return x&(A|B)}window.f=f})()", "init(),window.f=function(x){return x&5};"],
 			// A function handed out, named or called before it reads the name as it is then.
 			["(function(){h();var A=4;function h(){g()}function g(){console.log(A)}h()})()", "!function(){h();var A=4;function h(){console.log(A)}h()}();"],
-			["(function(){var k=g;init();var A=4;function g(){return A}console.log(k())})()", "!function(){var k=function(){return A};init();var A=4;console.log(k())}();"],
+			// A name of a function read later names it there, made once the name is set.
+			["(function(){var k=g;init();var A=4;function g(){return A}console.log(k())})()", "!function(){init();var A=4;console.log(function(){return A}())}();"],
+			["(function(){var k=g;init(k);var A=4;function g(){return A}console.log(k())})()", "!function(){var k=function(){return A};init(k);var A=4;console.log(k())}();"],
 			["(function(){class C{m(){return A}}init(C);var A=4;console.log(new C().m())})()", "!function(){class C{m(){return A}}init(C);var A=4;console.log((new C).m())}();"],
 			// `eval` and a function no statement of the body declares may run anything.
 			['(function(){eval("g()");var A=4;function g(){return A}console.log(g(),g())})()', '!function(){eval("g()");var A=4;function g(){return A}console.log(g(),g())}();'],
@@ -2106,13 +2108,23 @@ describe("folding a `var` set after calls", () => {
 });
 
 describe("moving a value made of names", () => {
-	it("should keep a value reading a `var` its declarator sets after where it is", () => {
+	it("should move a value of names nothing writes to its one later read, but one reading a `var` its declarator sets after", () => {
 		const options = { compress: {}, mangle: false };
 		for (const [source, expected] of [
 			// Read before its declarator, the `var` is `undefined` there, not where the value is read later.
 			["function h(){var n=[r],r=4;return[n,function(){return r}]}console.log(JSON.stringify(h()))", "function h(){var n=[r],r=4;return[n,function(){return r}]}console.log(JSON.stringify(h()));"],
 			// Its function's declarator cannot run between the value and its read.
 			["function o(){function i(){var n=[r];g();return n}var r=g();return[i(),i()]}function g(){return{}}console.log(JSON.stringify(o()))", "function o(){function i(){g();return[r]}var r=g();return[i(),i()]}function g(){return{}}console.log(JSON.stringify(o()));"],
+			// Names nothing writes under operators that convert nothing give the same value later.
+			["function f(o,t){var a=o.w,w=a!==void 0&&a;t.x=1,g(),t.w=w;return t}", "function f(o,t){var a=o.w;return t.x=1,g(),t.w=a!==void 0&&a,t}"],
+			['function f(o,t){var w=typeof o==="string"?!o:void 0;g();t.w=w;return t}', 'function f(o,t){return g(),t.w="string"==typeof o?!o:void 0,t}'],
+			['function f(o,t){var w=o||"x";g();t.w=w;return t}', 'function f(o,t){return g(),t.w=o||"x",t}'],
+			// A conversion, a member read or a name written between may run code or read another value.
+			["function f(o,t){var w=o+1;g();t.w=w;return t}", "function f(o,t){var w=o+1;return g(),t.w=w,t}"],
+			["function f(o,t){var w=o==1;g();t.w=w;return t}", "function f(o,t){var w=o==1;return g(),t.w=w,t}"],
+			["function f(o,t){var w=-o;g();t.w=w;return t}", "function f(o,t){var w=-o;return g(),t.w=w,t}"],
+			["function f(o,t){var w=o.p;g();t.w=w;return t}", "function f(o,t){var w=o.p;return g(),t.w=w,t}"],
+			["function f(o,t){var w=o;o=2;t.w=w;return t}", "function f(o,t){var w=o;return o=2,t.w=w,t}"],
 			// Set by then, it holds its value wherever later the value is made.
 			["function h(){var r=4,n=[r];return[n,function(){return r}]}console.log(JSON.stringify(h()))", "function h(){return[[4],function(){return 4}]}console.log(JSON.stringify(h()));"]
 		]) {

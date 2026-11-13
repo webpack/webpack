@@ -934,7 +934,7 @@ exports[`JavaScript syntax — invariants j-spellings-6 parses 2`] = `""`;
 
 exports[`JavaScript syntax — invariants j-spellings-6 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants j-spellings-6 prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"function log2(v){var r=(v>65535)<<4,shift;return v>>>=r,shift=(v>255)<<3,v>>>=shift,r|=shift,r|v>>1}function keep(v){var a=v+1,b=a,c,d=v;return[a,b,c=d,d]}console.log(log2(65536),keep(1));"`;
+exports[`JavaScript syntax — invariants j-spellings-6 prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"function log2(v){var r=(v>65535)<<4,shift;return v>>>=r,shift=(v>255)<<3,v>>>=shift,r|=shift,r|v>>1}function keep(v){var a=v+1,c,d=v;c=d;return[a,a,c,d]}console.log(log2(65536),keep(1));"`;
 
 exports[`JavaScript syntax — invariants j-spellings-6 prints {"mode":"minify"} 1`] = `"function log2(v){var r,shift;r=(v>65535)<<4;v>>>=r;shift=(v>255)<<3;v>>>=shift;r|=shift;return r|v>>1}function keep(v){var a=v+1,b;b=a;var c,d=v;c=d;return[a,b,c,d]}console.log(log2(65536),keep(1));"`;
 
@@ -23811,7 +23811,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-read-a-var-alias-s-name-in-its-place parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-read-a-var-alias-s-name-in-its-place prints {"mode":"minify","compress":{"toplevel":false},"mangle":false} 1`] = `"function a(y){var c=3-y;while(c)return y;return y*y}function b(b,c){if(b)return b;log(c)}function c(c){log(a);var a=c;return a}function d(c,d){if(d)var a=c;return a}function e(c){return()=>c}function f(c){var a=c;return c=2,a}function g(c){var a=c;return log(a),a}function h(longer){var a=longer;if(b)log(1);return a}use(c=>b?1:c,function(c){return b?1:c});"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-read-a-var-alias-s-name-in-its-place prints {"mode":"minify","compress":{"toplevel":false},"mangle":false} 1`] = `"function a(y){var c=3-y;while(c)return y;return y*y}function b(b,c){if(b)return b;log(c)}function c(c){log(a);var a=c;return a}function d(c,d){if(d)var a=c;return a}function e(c){return()=>c}function f(c){var a=c;return c=2,a}function g(c){var a=c;return log(a),a}function h(longer){if(b)log(1);return longer}use(c=>b?1:c,function(c){return b?1:c});"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-read-a-var-alias-s-name-in-its-place prints {"mode":"minify"} 1`] = `"function a(y){var x=y,c=3-y;while(c)return x;return y*y}function b(b,c){var a=c;if(b)return b;log(a)}function c(c){log(a);var a=c;return a}function d(c,d){if(d)var a=c;return a}function e(c){var a=c;return()=>a}function f(c){var a=c;c=2;return a}function g(c){var a=c;log(a);return a}function h(longer){var a=longer;if(b)log(1);return a}use(c=>{var a=c;if(b)return 1;return a},function(c){var a=c;if(b)return 1;return a});"`;
 
@@ -27748,7 +27748,7 @@ exports[`JavaScript syntax — invariants one-pass-minify-of-known-tests-and-swi
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-known-tests-and-switches-family-e-should-drop-what-a parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants one-pass-minify-of-known-tests-and-switches-family-e-should-drop-what-a prints {"mode":"minify","compress":{"ecma":2020,"toplevel":true},"ecma":2020,"mangle":false} 1`] = `"var out={},g=()=>console.log(\`g\`),h=g,k=g,m=g;function F(a){this.a=a}class C{constructor(a){this.a=a}}class B{}out.f=new F(1,g()),out.c=new C(1,h(),k(),m()),out.b=new B,out.e=new function(){this.e=1},out.x=new class{constructor(){this.x=1}},out.d=new function({value}){this.value=value}({value:1}),out.F=F,out.C=C;"`;
+exports[`JavaScript syntax — invariants one-pass-minify-of-known-tests-and-switches-family-e-should-drop-what-a prints {"mode":"minify","compress":{"ecma":2020,"toplevel":true},"ecma":2020,"mangle":false} 1`] = `"var out={},g=()=>console.log(\`g\`);function F(a){this.a=a}class C{constructor(a){this.a=a}}class B{}out.f=new F(1,g()),out.c=new C(1,g(),g(),g()),out.b=new B,out.e=new function(){this.e=1},out.x=new class{constructor(){this.x=1}},out.d=new function({value}){this.value=value}({value:1}),out.F=F,out.C=C;"`;
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-known-tests-and-switches-family-e-should-drop-what-a prints {"mode":"minify"} 1`] = `"var out={},g=()=>console.log(\\"g\\"),h=g,k=g,m=g;function F(a){this.a=a}class C{constructor(a){this.a=a}}class B{}out.f=new F(1,2,g(),3);out.c=new C(1,2,[h()],{k:!k()},void m());out.b=new B(1,2);out.e=new function(){this.e=1}(1,2);out.x=new class{constructor(){this.x=1}}(1,2);out.d=new function({value:value}){this.value=value}({value:1},2,3);out.F=F;out.C=C;"`;
 

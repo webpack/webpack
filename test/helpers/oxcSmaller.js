@@ -190,6 +190,7 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12215/input.js",
 			"swc minifier: fixture/issues/12218/leading-argument/input.js",
 			"swc minifier: fixture/issues/12565/while_body/input.js",
+			"swc minifier: fixture/next/56408/input.js",
 			"swc minifier: fixture/next/66237/input.js",
 			"swc minifier: fixture/next/feedback-3/579-dcac359116b2707c/input.js",
 			"swc minifier: fixture/next/regression-1/framework-798bab57daac3897/input.js",
