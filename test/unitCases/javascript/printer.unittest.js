@@ -1972,6 +1972,7 @@ describe("one-pass minify, family S round 8, switches", () => {
 
 	it("should keep the `if` a `switch` prints as where `?:` would read otherwise or grow", () => {
 		// A call of one callee, a part one side repeats, a sequence, or a test opening as a declaration.
+		expect(minifyOnePass("switch(a){case 1:0;f();break;default:g()}", options).code).toBe("a===1?f():g();");
 		expect(minifyOnePass("switch(a){case 1:f(1);break;default:f(2)}", options).code).toBe("if(a===1)f(1);else f(2);");
 		expect(minifyOnePass("switch(a){case 1:f(b);break;default:b}", options).code).toBe("if(a===1)f(b);else b;");
 		expect(minifyOnePass("switch(a){case 1:f(),g();break;default:h()}", options).code).toBe("if(a===1)f(),g();else h();");
