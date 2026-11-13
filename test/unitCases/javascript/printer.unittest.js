@@ -1646,6 +1646,14 @@ describe("one-pass minify, round 6 review", () => {
 		);
 	});
 
+	it("should keep an alias of a name a `switch` case sets, which a later case may enter past", () => {
+		const source =
+			"function f(n){switch(n){case 0:const x=1;case 1:const a=x;return()=>a}}try{f(1);console.log(\"no\")}catch(e){console.log(e.name)}";
+		const { code } = minifyOnePass(source, options);
+		expect(code).toContain("let a=x");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should read a name a loop's head sets through its alias, which a cycle reads in its dead zone", () => {
 		expect(
 			minifyOnePass(
