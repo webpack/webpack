@@ -264,10 +264,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		]) {
 			expect(print(source)).toBe(expected);
 		}
-		for (const [source, value] of [
+		for (const [source, value] of /** @type {[string, boolean[]][]} */ ([
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-the-parentheses-a-binary-6"), [false, true]],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-the-parentheses-a-binary-7"), [false, true]]
-		]) {
+		])) {
 			const { code } = minifyOnePass(source, {
 				compress: {},
 				mangle: false
