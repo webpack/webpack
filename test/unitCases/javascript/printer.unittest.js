@@ -568,9 +568,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(mapped.code).toBe(expected);
 		expect(mapped.map.names).toEqual(expect.arrayContaining(["g", "h", "y"]));
 		for (const [input, output, options] of /** @type {[string, string, EXPECTED_OBJECT?][]} */ ([
-			// Where the items before it go, what opens the statement keeps them.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as"), "x,({a:g()}.b);"],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-2"), "(function(){g()}()),x;"],
+			// Where the items before it go, what opens the statement takes them;
+			// after one left standing, it needs none.
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as"), "x,{a:g()}.b;"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-2"), "(function(){g()})(),x;"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-3"), "x={k:()=>1,[()=>1]:1},y=[()=>1];"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-4"), "x=(a||(f(1)(2)),longName);"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-5"), "g(),h();"],
