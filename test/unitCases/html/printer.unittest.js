@@ -870,6 +870,42 @@ describe("SourceProcessor — printing what re-parses to the same tree", () => {
 	const print = (source, options) =>
 		new SourceProcessor().process(source, options).code;
 
+	it("keeps the end tag of a cell or caption last in a template", () => {
+		// `</template>` clears the formatting list back to one marker only, so
+		// the one an open cell or caption pushed is taken and the template's stays.
+		const minify = (/** @type {string} */ name) =>
+			print(fixture("html", `source-processor-printing-what-re-parses-to-the-same-tree-keeps-the-end-tag-of-a-cell-or-caption-last-in-a-template${name}`), {
+				mode: "minify"
+			});
+		expect(minify("")).toContain("<td>x</td></template>");
+		expect(minify("-2")).toContain("<caption>x</caption></template>");
+		// An element that pushes no marker still leaves its end tag to it.
+		expect(minify("-3")).toContain("<li>a</template>");
+	});
+
+	it("prints as written where a noscript body leaves a comment open", () => {
+		// With scripting off the comment runs past `</noscript>` into the attribute,
+		// whose value the print would spell another way.
+		const source = fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-a-noscript-body-leaves-a-comment-open");
+		expect(print(source, { mode: "minify" })).toBe(source);
+		// Markup that reads alike either way is still minified.
+		const plain = fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-a-noscript-body-leaves-a-comment-open-2");
+		expect(print(plain, { mode: "minify" })).toBe(
+			'<body><noscript><iframe src="a.html" height="0"></iframe></noscript> <p>x</body>'
+		);
+	});
+
+	it("prints as written where the doctype mode depends on the reader", () => {
+		// An empty system id is given for the standard, missing for some browsers,
+		// and the mode it picks decides whether `<table>` closes the `<p>`.
+		const disputed = fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-the-doctype-mode-depends-on-the-reader");
+		expect(print(disputed, { mode: "minify" })).toBe(disputed);
+		const named = fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-the-doctype-mode-depends-on-the-reader-2");
+		expect(print(named, { mode: "minify" })).toBe(
+			'<!doctype html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><p>a<table></table>'
+		);
+	});
+
 
 
 
@@ -1090,3 +1126,27 @@ describe("SourceProcessor — the streamed walk", () => {
 
 
 
+
+describe("htmlMinify — what it reads as written", () => {
+	it("reads a spaced base64 flag in a data URL as base64", async () => {
+		// `; base64` is the flag to a browser, so the payload is bytes, not a page
+		// whose comment could be minified away.
+		const source = fixture("html", "html-minify-reads-a-spaced-base64-flag-in-a-data-url-as-base64");
+		const { code } = await require("../../..").html.htmlMinify({ "a.html": source });
+		expect(code).toContain("data:text/html; base64,<!-- x -->PGI+aGk8L2I+");
+	});
+
+	it("leaves a document in another encoding as written", async () => {
+		const { htmlMinify } = require("../../..").html;
+		// Read as UTF-8, the escapes inside the comments would not be text.
+		const source = fixture("html", "html-minify-leaves-a-document-in-another-encoding-as-written");
+		const result = await htmlMinify({ "a.html": source });
+		expect(result.code).toBe(source);
+		expect(result.warnings).toHaveLength(1);
+		// One that holds only printable ASCII reads alike in either.
+		const ascii = fixture("html", "html-minify-leaves-a-document-in-another-encoding-as-written-2");
+		const minified = await htmlMinify({ "a.html": ascii });
+		expect(minified.code).toBe('<!doctype html><meta charset=iso-2022-jp><b>x</b>');
+		expect(minified.warnings).toBeUndefined();
+	});
+});

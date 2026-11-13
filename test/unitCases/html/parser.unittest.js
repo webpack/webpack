@@ -531,6 +531,14 @@ const treeOf = (source, fragmentContext) => {
 
 describe("parseHtml — arcs the conformance corpus leaves out", () => {
 
+	it("reads an empty system id as given", () => {
+		// HTML 4.01 Transitional with a system id is limited-quirks, where
+		// `<table>` closes the open `<p>`; only a missing one makes it quirks.
+		expect(
+			treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-reads-an-empty-system-id-as-given"))
+		).toContain(["|     <p>", '|       "a"', "|     <table>"].join("\n"));
+	});
+
 
 	it("keeps character references literal in a plaintext opened in a table mode", () => {
 		// The PLAINTEXT state outlives the table, cell or caption mode it opened in.

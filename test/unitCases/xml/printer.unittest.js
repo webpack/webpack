@@ -859,3 +859,18 @@ describe("xmlMinify — SVG switches", () => {
 		}
 	});
 });
+
+describe("xmlMinify — what it reads as written", () => {
+	it("leaves a document in another encoding as written", async () => {
+		// Read as UTF-8, the escapes inside the comments would not be text.
+		const source = fixture("xml", "xml-minify-leaves-a-document-in-another-encoding-as-written");
+		const result = await xmlMinify({ "a.svg": source });
+		expect(result.code).toBe(source);
+		expect(result.warnings).toHaveLength(1);
+		// One that holds only printable ASCII reads alike in either.
+		const ascii = fixture("xml", "xml-minify-leaves-a-document-in-another-encoding-as-written-2");
+		const minified = await xmlMinify({ "a.svg": ascii });
+		expect(minified.code.length).toBeLessThan(ascii.length);
+		expect(minified.warnings).toBeUndefined();
+	});
+});

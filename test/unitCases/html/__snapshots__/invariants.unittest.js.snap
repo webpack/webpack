@@ -2314,6 +2314,32 @@ exports[`HTML syntax — invariants html-minify-export-minifies-through-the-publ
 
 exports[`HTML syntax — invariants html-minify-export-minifies-through-the-public-entry tokenizes 1`] = `"attr[3,8|10,11]' open[0,13|1,2] text[13,18] close[18,22|20,21] end=22"`;
 
+exports[`HTML syntax — invariants html-minify-leaves-a-document-in-another-encoding-as-written parses 1`] = `"\\"| <!DOCTYPE html>\\\\n| <html>\\\\n|   <head>\\\\n|     <meta>\\\\n|       charset=\\\\\\"iso-2022-jp\\\\\\"\\\\n|     <!--  \\\\u001b$B  -->\\\\n|   <body>\\\\n|     <b>\\\\n|       \\\\\\"x\\\\\\"\\\\n|     \\\\\\" \\\\\\"\\\\n|     <!--  \\\\u001b(B  -->\\""`;
+
+exports[`HTML syntax — invariants html-minify-leaves-a-document-in-another-encoding-as-written parses 2`] = `""`;
+
+exports[`HTML syntax — invariants html-minify-leaves-a-document-in-another-encoding-as-written prints {"mode":"minify"} 1`] = `"<!doctype html><meta charset=iso-2022-jp><b>x</b> "`;
+
+exports[`HTML syntax — invariants html-minify-leaves-a-document-in-another-encoding-as-written tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] attr[21,28|30,41]\\" open[15,43|16,20] comment[43,55|47,52] open[55,58|56,57] text[58,59] close[59,63|61,62] text[63,64] comment[64,76|68,73] end=76"`;
+
+exports[`HTML syntax — invariants html-minify-leaves-a-document-in-another-encoding-as-written-2 parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <meta>
+|       charset=\\"iso-2022-jp\\"
+|     <!--  c  -->
+|   <body>
+|     <b>
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-leaves-a-document-in-another-encoding-as-written-2 parses 2`] = `""`;
+
+exports[`HTML syntax — invariants html-minify-leaves-a-document-in-another-encoding-as-written-2 prints {"mode":"minify"} 1`] = `"<!doctype html><meta charset=iso-2022-jp><b>x</b>"`;
+
+exports[`HTML syntax — invariants html-minify-leaves-a-document-in-another-encoding-as-written-2 tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] attr[21,28|30,41]\\" open[15,43|16,20] comment[43,53|47,50] open[53,56|54,55] text[56,57] close[57,61|59,60] end=61"`;
+
 exports[`HTML syntax — invariants html-minify-one-document-reaching-every-embedded-site-minifies-with-webpack-s parses 1`] = `
 "| <!--  c  -->
 | <html>
@@ -2468,6 +2494,21 @@ exports[`HTML syntax — invariants html-minify-one-document-reaching-every-embe
 `;
 
 exports[`HTML syntax — invariants html-minify-one-document-reaching-every-embedded-site-offers-every-body-to-a tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] text[15,16] attr[22,26|28,30]\\" open[16,32|17,21] text[32,33] open[33,39|34,38] text[39,40] open[40,47|41,46] text[47,72] close[72,80|74,79] text[80,81] open[81,88|82,87] text[88,689] close[689,697|691,696] text[697,698] attr[706,710|712,728]\\" open[698,730|699,705] text[730,764] close[764,773|766,772] text[773,774] open[774,782|775,781] text[782,831] close[831,840|833,839] text[840,841] close[841,848|843,847] text[848,849] open[849,855|850,854] text[855,856] attr[859,864|866,917]\\" attr[919,926|928,960]\\" open[856,962|857,858] text[962,968] close[968,972|970,971] text[972,973] attr[978,985|987,994]\\" open[973,996|974,977] text[996,999] attr[1006,1010|1012,1015]\\" open[999,1020|1000,1004]/ text[1020,1023] close[1023,1029|1025,1028] text[1029,1030] attr[1038,1044|1046,1139]\\" open[1030,1141|1031,1037] close[1141,1150|1143,1149] text[1150,1151] attr[1159,1165|1166,1189] open[1151,1190|1152,1158] close[1190,1199|1192,1198] text[1199,1200] close[1200,1207|1202,1206] text[1207,1208] close[1208,1215|1210,1214] end=1215"`;
+
+exports[`HTML syntax — invariants html-minify-reads-a-spaced-base64-flag-in-a-data-url-as-base64 parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <iframe>
+|       src=\\"data:text/html; base64,<!-- x -->PGI+aGk8L2I+\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-reads-a-spaced-base64-flag-in-a-data-url-as-base64 parses 2`] = `""`;
+
+exports[`HTML syntax — invariants html-minify-reads-a-spaced-base64-flag-in-a-data-url-as-base64 prints {"mode":"minify"} 1`] = `"<!doctype html><iframe src=\\"data:text/html; base64,<!-- x -->PGI+aGk8L2I+\\"></iframe>"`;
+
+exports[`HTML syntax — invariants html-minify-reads-a-spaced-base64-flag-in-a-data-url-as-base64 tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] attr[23,26|28,73]\\" open[15,75|16,22] close[75,84|77,83] end=84"`;
 
 exports[`HTML syntax — invariants html-minify-the-delimiter-an-answered-srcdoc-is-written-with-keeps-the-source-s parses 1`] = `
 "| <html>
@@ -8813,6 +8854,22 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-a-noscript-in-the-body tokenizes 1`] = `"open[0,6|1,5] open[6,16|7,15] open[16,19|17,18] text[19,20] close[20,31|22,30] text[31,32] end=32"`;
 
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-an-empty-system-id-as-given parses 1`] = `
+"| <!DOCTYPE html \\"-//W3C//DTD HTML 4.01 Transitional//EN\\" \\"\\">
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"a\\"
+|     <table>"
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-an-empty-system-id-as-given parses 2`] = `"warning[0,66]:unknown-doctype"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-an-empty-system-id-as-given prints {"mode":"minify"} 1`] = `"<!DOCTYPE html PUBLIC \\"-//W3C//DTD HTML 4.01 Transitional//EN\\" \\"\\"><p>a<table></table>"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-an-empty-system-id-as-given tokenizes 1`] = `"doctype[0,66|10,14|23,61|64,64] open[66,69|67,68] text[69,70] open[70,77|71,76] close[77,85|79,84] end=85"`;
+
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the parses {"options":{"fragmentContext":"textarea"},"check":{"fixture":"fragmentTree"}} 1`] = `
 "| <html>
 |   \\"a�</textarea>�<b>&\\""
@@ -10072,7 +10129,7 @@ exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-row-end
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-row-end-tag-inside-a-template parses 2`] = `"warning[0,6]:expected-doctype-but-got-start-tag warning[25,30]:unexpected-end-tag"`;
 
-exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-row-end-tag-inside-a-template prints {"mode":"minify"} 1`] = `"<body><template><td><td></template></body>"`;
+exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-row-end-tag-inside-a-template prints {"mode":"minify"} 1`] = `"<body><template><td><td></td></template></body>"`;
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-row-end-tag-inside-a-template tokenizes 1`] = `"open[0,6|1,5] open[6,16|7,15] open[16,20|17,19] close[20,25|22,24] close[25,30|27,29] open[30,34|31,33] close[34,39|36,38] close[39,50|41,49] end=50"`;
 
@@ -10089,7 +10146,7 @@ exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-row-end
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-row-end-tag-inside-a-template-cell parses 2`] = `"warning[0,6]:expected-doctype-but-got-start-tag warning[27,32]:unexpected-end-tag warning[37,48]:end-tag-too-early"`;
 
-exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-row-end-tag-inside-a-template-cell prints {"mode":"minify"} 1`] = `"<body><table><template><td><div></div></template></table></body>"`;
+exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-row-end-tag-inside-a-template-cell prints {"mode":"minify"} 1`] = `"<body><table><template><td><div></div></td></template></table></body>"`;
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-ignores-a-row-end-tag-inside-a-template-cell tokenizes 1`] = `"open[0,6|1,5] open[6,13|7,12] open[13,23|14,22] open[23,27|24,26] close[27,32|29,31] open[32,37|33,36] close[37,48|39,47] close[48,56|50,55] end=56"`;
 
@@ -10919,7 +10976,7 @@ exports[`HTML syntax — invariants parse-html-insertion-modes-runs-thorough-imp
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-runs-thorough-implied-end-tags-for-a-template-in-a parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants parse-html-insertion-modes-runs-thorough-implied-end-tags-for-a-template-in-a prints {"mode":"minify"} 1`] = `"<table><thead><template><td></template></thead></table>"`;
+exports[`HTML syntax — invariants parse-html-insertion-modes-runs-thorough-implied-end-tags-for-a-template-in-a prints {"mode":"minify"} 1`] = `"<table><thead><template><td></td></template></thead></table>"`;
 
 exports[`HTML syntax — invariants parse-html-insertion-modes-runs-thorough-implied-end-tags-for-a-template-in-a tokenizes 1`] = `"open[0,7|1,6] open[7,14|8,13] open[14,24|15,23] open[24,28|25,27] close[28,39|30,38] close[39,47|41,46] end=47"`;
 
@@ -12357,7 +12414,7 @@ exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-er
 
 exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-template-td-td parses 2`] = `"warning[34,39]:unexpected-end-tag warning[39,48]:unexpected-start-tag warning[48,56]:unexpected-end-tag"`;
 
-exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-template-td-td prints {"mode":"minify"} 1`] = `"<!doctype html><template><td></template>"`;
+exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-template-td-td prints {"mode":"minify"} 1`] = `"<!doctype html><template><td></td></template>"`;
 
 exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-template-td-td tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,25|16,24] open[25,29|26,28] close[29,34|31,33] close[34,39|36,38] open[39,48|40,47] close[48,56|50,55] close[56,67|58,66] end=67"`;
 
@@ -37757,6 +37814,125 @@ exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-
 exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-an-end-tag-the-parser-7 prints {"mode":"minify"} 1`] = `"<form><div></form><form>x</form></div></form>"`;
 
 exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-an-end-tag-the-parser-7 tokenizes 1`] = `"open[0,6|1,5] open[6,11|7,10] close[11,18|13,17] open[18,24|19,23] text[24,25] end=25"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-keeps-the-end-tag-of-a-cell-or-caption-last-in-a-template parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <object>
+|       <font>
+|         <template>
+|           content
+|             <td>
+|               \\"x\\"
+|     \\"z\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-keeps-the-end-tag-of-a-cell-or-caption-last-in-a-template parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-keeps-the-end-tag-of-a-cell-or-caption-last-in-a-template prints {"mode":"minify"} 1`] = `"<!doctype html><object><font><template><td>x</td></template></font></object>z"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-keeps-the-end-tag-of-a-cell-or-caption-last-in-a-template tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,23|16,22] open[23,29|24,28] open[29,39|30,38] open[39,43|40,42] text[43,44] close[44,49|46,48] close[49,60|51,59] close[60,67|62,66] close[67,76|69,75] text[76,77] end=77"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-keeps-the-end-tag-of-a-cell-or-caption-last-in-a-template-2 parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <template>
+|       content
+|         <caption>
+|           \\"x\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-keeps-the-end-tag-of-a-cell-or-caption-last-in-a-template-2 parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-keeps-the-end-tag-of-a-cell-or-caption-last-in-a-template-2 prints {"mode":"minify"} 1`] = `"<!doctype html><template><caption>x</caption></template>"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-keeps-the-end-tag-of-a-cell-or-caption-last-in-a-template-2 tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,25|16,24] open[25,34|26,33] text[34,35] close[35,45|37,44] close[45,56|47,55] end=56"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-keeps-the-end-tag-of-a-cell-or-caption-last-in-a-template-3 parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <template>
+|       content
+|         <li>
+|           \\"a\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-keeps-the-end-tag-of-a-cell-or-caption-last-in-a-template-3 parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-keeps-the-end-tag-of-a-cell-or-caption-last-in-a-template-3 prints {"mode":"minify"} 1`] = `"<!doctype html><template><li>a</template>"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-keeps-the-end-tag-of-a-cell-or-caption-last-in-a-template-3 tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,25|16,24] open[25,29|26,28] text[29,30] close[30,35|32,34] close[35,46|37,45] end=46"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-a-noscript-body-leaves-a-comment-open parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <noscript>
+|       <!-- </noscript><img alt=\\"--&gt;<b title=x>\\"> -->"
+`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-a-noscript-body-leaves-a-comment-open parses 2`] = `"warning[0,6]:expected-doctype-but-got-start-tag error[60,60]:eof-in-comment warning[60,60]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-a-noscript-body-leaves-a-comment-open prints {"mode":"minify"} 1`] = `"<body><noscript><!--</noscript><img alt=\\"--&gt;<b title=x>\\">"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-a-noscript-body-leaves-a-comment-open tokenizes 1`] = `"open[0,6|1,5] open[6,16|7,15] error[60,60]:eof-in-comment comment[16,60|20,60] end=60"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-a-noscript-body-leaves-a-comment-open-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <noscript>
+|       <iframe>
+|         height=\\"0\\"
+|         src=\\"a.html\\"
+|     \\" \\"
+|     <p>
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-a-noscript-body-leaves-a-comment-open-2 parses 2`] = `"warning[0,6]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-a-noscript-body-leaves-a-comment-open-2 prints {"mode":"minify"} 1`] = `"<body><noscript><iframe src=\\"a.html\\" height=\\"0\\"></iframe></noscript> <p>x</body>"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-a-noscript-body-leaves-a-comment-open-2 tokenizes 1`] = `"open[0,6|1,5] open[6,16|7,15] attr[24,27|29,35]\\" attr[37,43|45,46]\\" open[16,48|17,23] close[48,57|50,56] close[57,68|59,67] text[68,69] open[69,72|70,71] text[72,73] close[73,77|75,76] end=77"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-the-doctype-mode-depends-on-the-reader parses 1`] = `
+"| <!DOCTYPE html \\"-//W3C//DTD HTML 4.01 Transitional//EN\\" \\"\\">
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"a\\"
+|     <table>"
+`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-the-doctype-mode-depends-on-the-reader parses 2`] = `"warning[0,66]:unknown-doctype"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-the-doctype-mode-depends-on-the-reader prints {"mode":"minify"} 1`] = `"<!DOCTYPE html PUBLIC \\"-//W3C//DTD HTML 4.01 Transitional//EN\\" \\"\\"><p>a</p><table></table>"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-the-doctype-mode-depends-on-the-reader tokenizes 1`] = `"doctype[0,66|10,14|23,61|64,64] open[66,69|67,68] text[69,70] close[70,74|72,73] open[74,81|75,80] close[81,89|83,88] end=89"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-the-doctype-mode-depends-on-the-reader-2 parses 1`] = `
+"| <!DOCTYPE html \\"-//W3C//DTD HTML 4.01 Transitional//EN\\" \\"http://www.w3.org/TR/html4/loose.dtd\\">
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"a\\"
+|     <table>"
+`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-the-doctype-mode-depends-on-the-reader-2 parses 2`] = `"warning[0,102]:unknown-doctype"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-the-doctype-mode-depends-on-the-reader-2 prints {"mode":"minify"} 1`] = `"<!doctype html PUBLIC \\"-//W3C//DTD HTML 4.01 Transitional//EN\\" \\"http://www.w3.org/TR/html4/loose.dtd\\"><p>a<table></table>"`;
+
+exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-the-doctype-mode-depends-on-the-reader-2 tokenizes 1`] = `"doctype[0,102|10,14|23,61|64,100] open[102,105|103,104] text[105,106] close[106,110|108,109] open[110,117|111,116] close[117,125|119,124] end=125"`;
 
 exports[`HTML syntax — invariants source-processor-printing-what-re-parses-to-the-same-tree-text-fostered-out-of-a parses 1`] = `
 "| <html>

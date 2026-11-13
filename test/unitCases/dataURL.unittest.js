@@ -110,6 +110,24 @@ describe("parseDataURI", () => {
 		});
 	});
 
+	it("should read the base64 flag as the Fetch standard does", () => {
+		for (const uri of [
+			"data:text/html; base64,YQ==",
+			"data:text/html;base64 ,YQ==",
+			"data:text/html;BASE64,YQ==",
+			"data:text/html;ba\nse64,YQ=="
+		]) {
+			expect(parseDataURI(uri)).toHaveProperty("base64", true);
+		}
+		for (const uri of [
+			"data:text/html;base64x,YQ==",
+			"data:text/html;x-base64,YQ==",
+			"data:text/html;base64;charset=utf-8,YQ=="
+		]) {
+			expect(parseDataURI(uri)).toHaveProperty("base64", false);
+		}
+	});
+
 	it("should return null for what is not a data URI", () => {
 		expect(parseDataURI("https://example.com/a.css")).toBeNull();
 	});
