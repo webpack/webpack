@@ -2057,6 +2057,10 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-11"))).toBe("x.a|.b{color:red}");
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-12"))).toBe(".a||b{color:red}");
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-13"))).toBe(".c a,a.b{color:red}");
+		// A parent leading with a type selector cannot follow a simple selector bare.
+		expect(lower(fixture("css", "css-syntax-minify-lowering-nesting-keeps-a-type-led-parent-inside-is-after-a-compound"))).toBe(
+			"[x]:is(div){color:red}:not(.a):is(p){color:red}b>[y]:is(a){color:red}"
+		);
 	});
 
 	it("keeps the escaped space a lowered nested selector ends in", () => {

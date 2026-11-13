@@ -1,0 +1,1 @@
+div{[x]&{color:red}}p{:not(.a)&{color:red}}a{b>[y]&{color:red}}
