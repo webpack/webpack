@@ -1664,6 +1664,20 @@ describe("CssSyntax minify — input around a block big enough to stream", () =>
 		expect(out).toHaveLength(length);
 		expect(hash(out)).toBe(digest);
 	});
+
+	// Read back, the readable print holds whitespace enough for the inner block
+	// to stream, and a streamed block starts on its own line as a collected one does.
+	it.each([
+		"css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-2",
+		"css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-12",
+		"css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-13",
+		"css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-15"
+	])("beautifies %j as it beautifies its own output", (name) => {
+		const beautify = (/** @type {string} */ css) =>
+			new SourceProcessor().process(css, { mode: "beautify" }).code;
+		const out = beautify(fixture("css", name));
+		expect(beautify(out)).toBe(out);
+	});
 });
 
 describe("CssData — the names the printer's shape tables hold", () => {
