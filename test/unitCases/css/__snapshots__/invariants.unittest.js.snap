@@ -3041,6 +3041,29 @@ at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] delim[9,10] i
 63,74064] ident[74064,74067] semicolon[74067,74068] ident[74068,74074] colon[74074,74075] dimension[74075,74081|74079,74081] right-curly-bracket[74081,74082] right-curly-bracket[74082,74083] end=74083"
 `;
 
+exports[`CSS syntax — invariants css-syntax-block-streaming-joins-a-streamed-layer-block-to-the-one-gathered-behind-it parses 1`] = `
+"length 1203531, sha256 c0627c4c7b0bb0c5
+[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"print\\"]],[[\\"at-keyword\\",\\"layer\\"],\\" \\",[\\"ident\\",\\"x\\"],[\\"{}\\",\\".\\",[\\"ident\\",\\"f0\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]],\\".\\",[\\"ident\\",\\"f1\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\"
+…
+teal\\"]]],\\".\\",[\\"ident\\",\\"mid\\"],[\\"{}\\",[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]],[\\"at-keyword\\",\\"layer\\"],\\" \\",[\\"ident\\",\\"a\\"],[\\"{}\\",\\".\\",[\\"ident\\",\\"q\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"teal\\"]]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-joins-a-streamed-layer-block-to-the-one-gathered-behind-it parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-joins-a-streamed-layer-block-to-the-one-gathered-behind-it prints {"mode":"minify"} 1`] = `
+"length 122809, sha256 f8ef4cff7a6948d6
+@media print{@layer x{.f0,.f1,.f10,.f100,.f1000,.f1001,.f1002,.f1003,.f1004,.f1005,.f1006,.f1007,.f1008,.f1009,.f101,.f1010,.f1011,.f1012,.f1013,.f1014,.f1015,.f1016,.f1017,.f1018,.f1019,.f102,.f1020,
+…
+8,.f979,.f98,.f980,.f981,.f982,.f983,.f984,.f985,.f986,.f987,.f988,.f989,.f99,.f990,.f991,.f992,.f993,.f994,.f995,.f996,.f997,.f998,.f999{color:red}@layer a{.q,[x=\\"a,.q,b\\"]{color:teal}}.mid{margin:0}}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-joins-a-streamed-layer-block-to-the-one-gathered-behind-it tokenizes 1`] = `
+"length 3041237, sha256 3b82531c2adf8228
+at-keyword[0,6] whitespace[6,7] ident[7,12] left-curly-bracket[12,13] at-keyword[13,19] whitespace[19,20] ident[20,21] left-curly-bracket[21,22] delim[22,23] ident[23,25] left-curly-bracket[25,26] ide
+…
+racket[302816,302817] ident[302817,302822] colon[302822,302823] ident[302823,302827] right-curly-bracket[302827,302828] right-curly-bracket[302828,302829] right-curly-bracket[302829,302830] end=302830"
+`;
+
 exports[`CSS syntax — invariants css-syntax-block-streaming-joins-the-pair-a-gathered-layer-block-leaves-side-by parses 1`] = `
 "length 401414, sha256 987d55de9fc2400b
 [[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"outer\\"]],[\\".\\",[\\"ident\\",\\"f0\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]],\\".\\",[\\"ident\\",\\"f1\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]],\\".\\",[\\"ident\\",\\"f2\\"],[\\"{}\\",[\\"
@@ -3427,10 +3450,10 @@ teal\\"]]],\\".\\",[\\"ident\\",\\"mid\\"],[\\"{}\\",[\\"ident\\",\\"margin\\"],
 exports[`CSS syntax — invariants css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-6 parses 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-6 prints {"mode":"minify"} 1`] = `
-"length 40969, sha256 cca6cc5aba0c6fd9
+"length 40955, sha256 5a75513d866574e7
 @layer outer{.f0,.f1,.f10,.f100,.f1000,.f1001,.f1002,.f1003,.f1004,.f1005,.f1006,.f1007,.f1008,.f1009,.f101,.f1010,.f1011,.f1012,.f1013,.f1014,.f1015,.f1016,.f1017,.f1018,.f1019,.f102,.f1020,.f1021,.f
 …
-979,.f98,.f980,.f981,.f982,.f983,.f984,.f985,.f986,.f987,.f988,.f989,.f99,.f990,.f991,.f992,.f993,.f994,.f995,.f996,.f997,.f998,.f999{color:red}@layer a{.p,.q{color:teal}.q{color:teal}}.mid{margin:0}}"
+.f977,.f978,.f979,.f98,.f980,.f981,.f982,.f983,.f984,.f985,.f986,.f987,.f988,.f989,.f99,.f990,.f991,.f992,.f993,.f994,.f995,.f996,.f997,.f998,.f999{color:red}@layer a{.p,.q{color:teal}}.mid{margin:0}}"
 `;
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-6 tokenizes 1`] = `
@@ -13694,10 +13717,10 @@ exports[`CSS syntax — invariants css-syntax-minify-one-processor-after-another
 exports[`CSS syntax — invariants css-syntax-minify-one-processor-after-another-prints-each-sheet-as-it-prints-6 parses 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-minify-one-processor-after-another-prints-each-sheet-as-it-prints-6 prints {"mode":"minify"} 1`] = `
-"length 144695, sha256 fd7ef71ff63fa106
+"length 144691, sha256 2bbc13ff7f349d1d
 @layer x{.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2px}.c2>d2{color:red;margin:3px}.c3>d3{color:red;margin:4px}.c4>d4{color:red;margin:5px}.c5>d5{color:red;margin:6px}.c6>d6{color:red;margin
 …
-x}.c3995>d3995{color:red;margin:3996px}.c3996>d3996{color:red;margin:3997px}.c3997>d3997{color:red;margin:3998px}.c3998>d3998{color:red;margin:3999px}.c3999>d3999{color:red;margin:4000px}c{x:1}b{x:1}}"
+995px}.c3995>d3995{color:red;margin:3996px}.c3996>d3996{color:red;margin:3997px}.c3997>d3997{color:red;margin:3998px}.c3998>d3998{color:red;margin:3999px}.c3999>d3999{color:red;margin:4000px}b,c{x:1}}"
 `;
 
 exports[`CSS syntax — invariants css-syntax-minify-one-processor-after-another-prints-each-sheet-as-it-prints-6 tokenizes 1`] = `

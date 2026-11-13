@@ -188,10 +188,10 @@ describe("CssSyntax — block streaming", () => {
 		expect(gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-5"))).toBe(
 			"@layer a{.p{color:teal}.q{color:lime}}.mid{margin:0}}"
 		);
-		// A selector the grown list already carries would only be written twice.
+		// A rule whose selectors the grown list already carries says nothing more.
 		expect(
 			gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-6"))
-		).toBe("@layer a{.p,.q{color:teal}.q{color:teal}}.mid{margin:0}}");
+		).toBe("@layer a{.p,.q{color:teal}}.mid{margin:0}}");
 	});
 
 	it("keeps the `;` a gathered layer block ends a declaration on", () => {
