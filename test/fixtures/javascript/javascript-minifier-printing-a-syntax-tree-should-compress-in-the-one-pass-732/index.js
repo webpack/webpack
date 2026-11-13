@@ -1,0 +1,18 @@
+var v = 1;
+(function (a, b) { g(b); })({ large: v }, h());
+(function (a, b) { g(b); })({ large: v }, ...c);
+(function (a, b) { g(b); })({ large: w }, ...c);
+(function (a, b) { g(b); })(h(), ...c);
+(function (a, b) { g(b); })(0, ...c);
+(function (a, b) { g(a); })(1, { large: v });
+(function (a, b) { g(arguments); })({ large: v }, ...c);
+new (function () { this.k = 1; })(1, (2, g("s")), 3);
+(function () { k(); })((1, g()), h());
+(function (a, b) { g(a); })(h(), ...[{ large: v }]);
+new (function (a, b) { this.b = b; })({ large: v }, 1);
+(function (a, b) { g(b); })(/*! c */ { large: v }, 1);
+(function (a, b) { g(b); })(1, ...c);
+(function (a, b) { g(a, b); })({ large: v }, h());
+(function () { k(); })((g(), h()), 1);
+(function (a, b, c) { g(a, c); })(h(), { large: v }, h());
+(function (a, b) { g(b); })(v, h());
