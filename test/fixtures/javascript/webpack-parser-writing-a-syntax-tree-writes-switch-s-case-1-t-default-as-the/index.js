@@ -1,0 +1,1 @@
+switch (s) { case 1: t(); default: }

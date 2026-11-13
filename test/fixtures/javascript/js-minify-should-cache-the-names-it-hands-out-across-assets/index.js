@@ -1,0 +1,1 @@
+var longName = 1; sink(longName);

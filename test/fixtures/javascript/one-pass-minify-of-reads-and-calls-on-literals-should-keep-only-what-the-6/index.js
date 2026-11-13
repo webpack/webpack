@@ -1,0 +1,1 @@
+var a=()=>"k",k=()=>"prototype";try{(class{[a()](){}static["prototype"](){}})}catch(e){console.log(e.name)}try{(class{[a()];static["prototype"]=1})}catch(e){console.log(e.name)}try{(class{[a()];static[k()]=1})}catch(e){console.log(e.name)}

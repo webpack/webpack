@@ -1,0 +1,1 @@
+function f(café){café++;return café}g(f)

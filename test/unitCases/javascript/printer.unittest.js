@@ -210,7 +210,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 	it("should compress in the one pass what a long input, the engine or the map decides", () => {
 		// A literal read too far on stays where it is, the search for the read bounded.
 		expect(
-			minifyOnePass(`function f(p){var o=[p];${"g();".repeat(3000)}h(o)}`, {
+			minifyOnePass(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-what"), {
 				compress: { toplevel: false },
 				mangle: false
 			}).code
@@ -314,26 +314,27 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 	});
 
 	it("should keep the parentheses a binary takes under a `!` of `!!`", () => {
+		// Each returns `[<expression>]`, which the print is cut down to.
 		const print = (/** @type {string} */ source) =>
-			minifyOnePass(`function f(e,t,g){return[${source}]}`, {
+			minifyOnePass(source, {
 				compress: {},
 				mangle: false
 			}).code.slice(25, -2);
 		for (const [source, expected] of [
-			["!!!(e&6)", "!(e&6)"],
-			["!!(!(e+t))", "!(e+t)"],
-			["!!!(e===t)", "!(e===t)"],
-			["!!!(e&6)?t:g", "e&6?g:t"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-the-parentheses-a-binary"), "!(e&6)"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-the-parentheses-a-binary-2"), "!(e+t)"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-the-parentheses-a-binary-3"), "!(e===t)"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-the-parentheses-a-binary-4"), "e&6?g:t"],
 			// Read only for its truth elsewhere, `!!x` still prints as `x`.
-			["!!(e&6)?t:g", "e&6?t:g"]
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-the-parentheses-a-binary-5"), "e&6?t:g"]
 		]) {
 			expect(print(source)).toBe(expected);
 		}
 		for (const [source, value] of [
-			["!!!(e&6)", [false, true]],
-			["!!(!(e+t))", [false, true]]
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-the-parentheses-a-binary-6"), [false, true]],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-keep-the-parentheses-a-binary-7"), [false, true]]
 		]) {
-			const { code } = minifyOnePass(`function f(e,t){return ${source}}`, {
+			const { code } = minifyOnePass(source, {
 				compress: {},
 				mangle: false
 			});
@@ -884,7 +885,7 @@ describe("JavaScript SourceProcessor printing", () => {
 								parsedTree()
 							),
 							path.node,
-							"f()",
+							fixture("javascript", "javascript-source-processor-printing-should-refuse-a-walk-a-visitor-starts"),
 							[],
 							undefined
 						);
@@ -899,7 +900,7 @@ describe("JavaScript SourceProcessor printing", () => {
 		expect(processor.process(fixture("javascript", "javascript-source-processor-printing-should-print-one-source-after-another-and"), { mode: "minify" }).code).toBe(
 			"a(1);"
 		);
-		expect(() => processor.process("a(", { mode: "minify" })).toThrow(
+		expect(() => processor.process(fixture("javascript", "javascript-source-processor-printing-should-print-one-source-after-another-and-a"), { mode: "minify" })).toThrow(
 			/Unexpected token/
 		);
 		expect(
@@ -941,7 +942,7 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 		const letters = "abcdefghij";
 		let resets = 0;
 		const { code } = minifyOnePass(
-			"class K { #first = 1; #second = 2; get() { return this.#first + this.#second; } } console.log(new K().get());",
+			fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-read-its-own-tree-after-a-name"),
 			{
 				sourceType: "script",
 				mangle: {
@@ -949,7 +950,7 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 						get: (n) => letters[n],
 						reset: () => {
 							resets++;
-							parseProgram("var other = 1;", 0, {});
+							parseProgram(fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-read-its-own-tree-after-a-name-2"), 0, {});
 						},
 						consider: () => {},
 						sort: () => {}
@@ -968,14 +969,14 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 		const { parseProgram } = require("../../../lib/javascript/syntax").parser;
 		const letters = "abcdefghij";
 		const { code } = minifyOnePass(
-			"class K { #first = 1; #second = 2; get() { return this.#first + this.#second; } } console.log(new K().get());",
+			fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-read-its-own-tree-after-a-name"),
 			{
 				sourceType: "script",
 				mangle: {
 					nthIdentifier: {
 						get: (n) => {
 							if (!isWalkingSyntaxTree()) {
-								parseProgram("var other = 1;", 0, {});
+								parseProgram(fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-read-its-own-tree-after-a-name-2"), 0, {});
 							}
 							return letters[n];
 						}
@@ -989,31 +990,7 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 	});
 
 	it("should keep a sloppy block's function in its block where a lexical name would clash, in the one pass", () => {
-		const source = [
-			"function t1(){ let f = 1; { function f() { return 2 } } return typeof f }",
-			"function t2(){ { let f = 1; { function f(){} } return typeof f } }",
-			"function t3(x){ switch (x) { case 1: let g = 1; { function g(){} } return typeof g } }",
-			"function t4(){ for (let h of [1]) { { function h(){} } return typeof h } }",
-			"function t5(){ for (let i = 0; i < 1; i++) { { function i(){} } return typeof i } }",
-			"function t6(){ for (const j in {a: 1}) { { function j(){} } return typeof j } }",
-			"function t7(){ try { throw { a: [1, 2] } } catch ({ a: [b = 1, ...c], d: e }) { { function c(){} } return typeof c } }",
-			"function t8(){ try { throw 1 } catch (e) { let k = 1; { function k(){} } return typeof k } }",
-			"function t9(p) { { function p(){} } return typeof p }",
-			"function t10({ q }) { { function q(){} } return typeof q }",
-			"function t11() { { function s(){} } return typeof s }",
-			"function t12() { class u {} { function u(){} } return typeof u }",
-			"function t13([v = 1]) { { function v(){} } return typeof v }",
-			"function t14(...w) { { function w(){} } return typeof w }",
-			"function t15(){ for (;;) { { function z(){} } return typeof z } }",
-			"function t16(x){ switch (x) { case 1: let o; break; case 2: { function g2(){} } return typeof g2 } }",
-			"function t17(){ for (var k in {a: 1}) { { function k2(){} } return typeof k2 } }",
-			"function t18(){ try { throw 1 } catch (e) { { function e2(){} } return typeof e2 } }",
-			"function t19(){ try { throw 1 } catch (e) { var e = 2; return e } }",
-			"function t20(){ try { throw [1, 2] } catch ([, h]) { { function h(){} } return typeof h } }",
-			"function t21(){ try { throw {} } catch ({ ...r }) { { function r(){} } return typeof r } }",
-			"function t22(){ var o = {a: 1}, p = {b: 2}, a = 0, b = 0; with (o) { with (p) { return a + b } } }",
-			"console.log(t1(), t2(), t3(1), t4(), t5(), t6(), t7(), t8(), t9(1), t10({}), t11(), t12(), t13([]), t14(), t15(), t16(2), t17(), t18(), t19(), t20(), t21(), t22());"
-		].join("\n");
+		const source = fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-keep-a-sloppy-block-s-function");
 		expect(runProgram(source)).toBe(
 			"number number number number number string object number number undefined function function number object function function function function 2 number object 3"
 		);
@@ -1097,11 +1074,11 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 	it("should refuse a node its scope analysis cannot read", () => {
 		const tree = new SyntaxTree();
 		const program = tree.addEstree(
-			/** @type {EXPECTED_ANY} */ (WebpackParser.parse("a;", {}))
+			/** @type {EXPECTED_ANY} */ (WebpackParser.parse(fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-refuse-a-node-its-scope"), {}))
 		);
 		const types = Uint8Array.from(tree._types);
 		types[tree.field(0, Field.body, program)] = 255;
-		readParsedTree(tree, "a;");
+		readParsedTree(tree, fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-refuse-a-node-its-scope"));
 		expect(() =>
 			analyzeMinifierTree(program, types, {}, () => {
 				throw new Error("unreachable");
@@ -1145,14 +1122,14 @@ const INPUT_MAP = {
 
 describe("jsMinify", () => {
 	it("takes the minimizer options as optional", async () => {
-		const { code } = await jsMinify({ "a.js": "var a = 1;" }, undefined);
+		const { code } = await jsMinify({ "a.js": fixture("javascript", "js-minify-takes-the-minimizer-options-as-optional") }, undefined);
 		expect(code).toBe("var a=1;");
 	});
 
 	it("should cache the names it hands out across assets", async () => {
 		const nameCache = {};
 		const result = await jsMinify(
-			{ "cached.js": "var longName = 1; sink(longName);" },
+			{ "cached.js": fixture("javascript", "js-minify-should-cache-the-names-it-hands-out-across-assets") },
 			INPUT_MAP,
 			{ toplevel: true, nameCache },
 			false
@@ -1163,13 +1140,13 @@ describe("jsMinify", () => {
 		const shared = {};
 		const options = { compress: false, toplevel: true, nameCache: shared };
 		const first = await jsMinify(
-			{ "first.js": 'var shared = "cached"; sink(shared);' },
+			{ "first.js": fixture("javascript", "js-minify-should-cache-the-names-it-hands-out-across-assets-2") },
 			undefined,
 			{ ...options },
 			false
 		);
 		const second = await jsMinify(
-			{ "second.js": "sink(shared);" },
+			{ "second.js": fixture("javascript", "js-minify-should-cache-the-names-it-hands-out-across-assets-3") },
 			undefined,
 			{ ...options },
 			false
@@ -1185,13 +1162,13 @@ describe("jsMinify", () => {
 		// Exercise a malformed runtime pattern outside the published type union.
 		const invalidPattern = /** @type {EXPECTED_ANY} */ ("[");
 		const options = { format: { comments: invalidPattern } };
-		const input = { "plain.js": "run();" };
+		const input = { "plain.js": fixture("javascript", "js-minify-should-defer-invalid-comment-patterns-until-a-comment-is-tested") };
 		expect(
 			await jsMinify(input, undefined, options, { condition: invalidPattern })
 		).toEqual(
 			await jsMinify(input, undefined, { format: { comments: false } }, false)
 		);
-		const commented = { "commented.js": "/* comment */ run();" };
+		const commented = { "commented.js": fixture("javascript", "js-minify-should-defer-invalid-comment-patterns-until-a-comment-is-tested-2") };
 		await expect(
 			jsMinify(commented, undefined, options, false)
 		).rejects.toThrow(SyntaxError);
@@ -1326,16 +1303,16 @@ describe("one-pass minify spellings", () => {
 
 describe("one-pass minify of reads and calls on literals", () => {
 	it("should drop the trailing parameters nothing reads under `keep_fargs: false`", () => {
-		const source = 'function f(a,b){return a}var g=(a,b)=>a,o={set x(v){},m(a){}};function h(a){return arguments}function k(a){eval("a")}console.log(f.length,g.length,o.m.length,h.length,k.length)';
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-drop-the-trailing");
 		const { code } = minifyOnePass(source, { compress: { keep_fargs: false }, mangle: false });
 		// A setter's one parameter, `arguments` and `eval` keep theirs.
 		expect(code).toBe('function f(a){return a}var g=a=>a,o={set x(v){},m(){}};function h(a){return arguments}function k(a){eval("a")}console.log(f.length,g.length,o.m.length,h.length,k.length);');
 		// By default they stay.
-		expect(minifyOnePass("function f(a,b){return a}console.log(f.length)", { compress: {}, mangle: false }).code).toBe("function f(a,b){return a}console.log(f.length);");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-drop-the-trailing-2"), { compress: {}, mangle: false }).code).toBe("function f(a,b){return a}console.log(f.length);");
 	});
 
 	it("should keep only what the sides of an unread loose equality run", () => {
-		const source = "a==b;c()!=d;a()<b;";
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the-sides");
 		// A relation throws on a symbol, which `==` does not: it stays.
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("a,b,c(),d,a()<b;");
 		// An object's `valueOf` may run where conversions are not taken as pure.
@@ -1343,31 +1320,31 @@ describe("one-pass minify of reads and calls on literals", () => {
 	});
 
 	it("should keep only what the computed keys and values of an unread object run", () => {
-		const source = "({[a]:x(),[b()]:1,get[c()](){},set d(v){},e:f()});";
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the");
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("a,x(),b(),c(),f();");
 		// A key may convert an object running its `toString` where conversions are not taken as pure.
 		expect(minifyOnePass(source, { compress: { pure_conversions: false }, mangle: false }).code).toBe("({[a]:x(),[b()]:1,get[c()](){},set d(v){},e:f()});");
 	});
 
 	it("should keep only what the computed keys of an unread class run", () => {
-		const source = '(class{[a](){}static["b"]=1;#p;get[c](){}static{}static d=1}),x=(class{[e]},1);';
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the-2");
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("a,c,x=(e,1);");
 		// A static value, block, `extends` or key that may name `prototype`, or a key reading the class's own name, keeps it.
 		expect(
-			minifyOnePass('(class{[a];static b=f()}),(class{[a];static{f()}}),(class extends B{[a]}),(class{static[f()]=1}),(class{static["prototype"](){}}),(class C{[r(()=>C)](){}});', { compress: {}, mangle: false }).code
+			minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the-3"), { compress: {}, mangle: false }).code
 		).toBe('(class{[a];static b=f()}),class{[a];static{f()}},class extends B{[a]},class{static[f()]=1},class{static["prototype"](){}},class C{[r(()=>C)](){}};');
 		// A direct `eval` in a key may read the class's name too.
-		expect(minifyOnePass('(class C{[r(()=>eval("C"))](){}});', { compress: {}, mangle: false }).code).toBe('(class C{[r(()=>eval("C"))](){}});');
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the-4"), { compress: {}, mangle: false }).code).toBe('(class C{[r(()=>eval("C"))](){}});');
 		// Beside a key that runs code, a static `prototype` keeps the class too, as making it throws.
-		const throwing = '(class{[a()](){}static["prototype"](){}}),(class{[a()];static["prototype"]=1}),(class{[a()];static[k()]=1});';
+		const throwing = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the-5");
 		expect(minifyOnePass(throwing, { compress: {}, mangle: false }).code).toBe('(class{[a()](){}static["prototype"](){}}),class{[a()];static["prototype"]=1},class{[a()];static[k()]=1};');
-		const program = `var a=()=>"k",k=()=>"prototype";try{(class{[a()](){}static["prototype"](){}})}catch(e){console.log(e.name)}try{(class{[a()];static["prototype"]=1})}catch(e){console.log(e.name)}try{(class{[a()];static[k()]=1})}catch(e){console.log(e.name)}`;
+		const program = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the-6");
 		expect(runProgram(minifyOnePass(program, { compress: {}, mangle: false }).code)).toBe("TypeError\nTypeError\nTypeError");
 	});
 
 	it("should fold a value read only by its null check into the optional chain it prints as", () => {
 		const source =
-			"function f(){let a=g();return a!=null?a.b:void 0}function h(){let a=g();return a==null?void 0:a?.b.c[d](e)}function k(a){return a!=undefined?a.b:undefined}function l(){let a=o.m;return a!=null?a():void 0}function n(){let a=g();return null!=a?a(1):void 0}function p(){let a=o.m;return a!=null?a.x():void 0}";
+			fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-read-only-by");
 		// A member called bare would bind its object as `this`, so it stays apart.
 		expect(minifyOnePass(source, { compress: {}, mangle: false, ecma: 2020 }).code).toBe(
 			"function f(){return g()?.b}function h(){return g()?.b.c[d](e)}function k(a){return a?.b}function l(){let a=o.m;return a?.()}function n(){return g()?.(1)}function p(){return o.m?.x()}"
@@ -1378,16 +1355,16 @@ describe("one-pass minify of reads and calls on literals", () => {
 		// Kept apart: a value printing in parentheses before `?.`, another branch
 		// than `undefined`, a chain on another name, another test, no chain.
 		const kept =
-			"function s(){let a=x+y;return a!=null?a.b:void 0}function t(){let a=g();return a!=null?a.b:1}function u(){let a=g();return a!=null?b.c(a):void 0}function v(){let a=g();return a!=null&&x?a.b:void 0}function w(){let a=g();return a!=null?a:void 0}function y(){let a=g();return b!=null?a.b(a):void 0}function z(){let a=g();return a===b?a.b:void 0}";
+			fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-read-only-by-2");
 		expect(minifyOnePass(kept, { compress: {}, mangle: false, ecma: 2020 }).code).toBe(
 			"function s(){let a=x+y;return a?.b}function t(){let a=g();return a!=null?a.b:1}function u(){let a=g();return a!=null?b.c(a):void 0}function v(){let a=g();return a!=null&&x?a.b:void 0}function w(){let a=g();return a!=null?a:void 0}function y(){let a=g();return b!=null?a.b(a):void 0}function z(){let a=g();return a===b?a.b:void 0}"
 		);
 		// A value printing as a constant: the test picks, or `?.` takes it whole.
 		const constant =
-			'function i(){var s="a";var x=s;return x!=null?x.y:void 0}function j(){const o={p:-1};let x=o.p;return x!=null?x.y:void 0}function q(){let x=(()=>-1)();return x!=null?x.y:void 0}function r(){let x=String(1);return x!=null?x.y:void 0}';
+			fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-read-only-by-3");
 		const constantCode = minifyOnePass(constant, { compress: {}, mangle: false, ecma: 2020 }).code;
 		expect(constantCode).toBe("function i(){return`a`.y}function j(){return{p:-1}.p?.y}function q(){return(-1)?.y}function r(){return`1`.y}");
-		const program = "var o={m(){return this===o}};function l(){let a=o.m;return a!=null?a():void 0}function p(){let a=o;return a!=null?a.m():void 0}console.log(l(),p())";
+		const program = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-read-only-by-4");
 		const code = minifyOnePass(program, { compress: {}, mangle: false, ecma: 2020 }).code;
 		// What an engine without `?.` cannot parse runs only where it can.
 		if (supportsOptionalChaining()) {
@@ -1398,24 +1375,24 @@ describe("one-pass minify of reads and calls on literals", () => {
 
 	it("should fold an update into the `return` or `throw` giving the name it sets", () => {
 		const source =
-			"function f(a){a+=1;a+=2;return a}function h(i){i++;return i}function k(i){i--;throw i}function l(i){var x=i++;return x**2}function n(a){a+=g();return a}function p(i){i++;return i+1}function q(){const c=1;c+=1;return c}function r(a){with(o)a+=1;return a}";
+			fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-an-update-into-the");
 		// `x++` a declarator took gives the old value still; a value that runs
 		// code, or a read deeper in the value, stays apart, as it gzips bigger.
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(
 			"function f(a){return a+=1,a+=2}function h(i){return++i}function k(i){throw--i}function l(i){return i++**2}function n(a){return a+=g(),a}function p(i){return i++,i+1}function q(){const c=1;return c+=1,c}function r(a){with(o)a+=1;return a}"
 		);
 		// A script's global may be an accessor of the global object; a module's is not.
-		expect(minifyOnePass("var x;x++;throw x", { compress: {}, mangle: false }).code).toBe("var x;x++;throw x;");
-		expect(minifyOnePass("var x;x++;throw x", { compress: {}, mangle: false, module: true }).code).toBe("var x;throw++x;");
-		expect(minifyOnePass("function f(café){café++;return café}g(f)", { compress: {}, mangle: false, format: { ascii_only: true } }).code).toBe(
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-an-update-into-the-2"), { compress: {}, mangle: false }).code).toBe("var x;x++;throw x;");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-an-update-into-the-2"), { compress: {}, mangle: false, module: true }).code).toBe("var x;throw++x;");
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-an-update-into-the-3"), { compress: {}, mangle: false, format: { ascii_only: true } }).code).toBe(
 			"function f(caf\\u00e9){return++caf\\u00e9}g(f);"
 		);
-		const program = "function h(i){i++;return i}function l(i){var x=i++;return x**2}function f(a){a+=1;a+=2;return a}console.log(h(1),l(3),f(1))";
+		const program = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-an-update-into-the-4");
 		expect(runProgram(minifyOnePass(program, { compress: {}, mangle: false }).code)).toBe("2 9 4");
 	});
 
 	it("should merge the calls of a conditional differing in what one spread spreads", () => {
-		const source = "let x=g(),b=h();x?b(...c):b(...d);x?b(...x):b(...c);x?b(1,...c,2):b(1,...d,2);x?new b(...c):new b(...d);x?b(...c):b(d);x?b(...[1,2]):b(...d);";
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-merge-the-calls-of-a");
 		// A spread against a plain argument, or one printing as its items, stays.
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(
 			"let x=g(),b=h();b(...x?c:d),b(...x||c),b(1,...x?c:d,2),new b(...x?c:d),x?b(...c):b(d),x?b(1,2):b(...d);"
@@ -1443,33 +1420,33 @@ describe("one-pass minify of reads and calls on literals", () => {
 	});
 
 	it("should fold a value running nothing into the compound assignment after it", () => {
-		const source = "var foo;function w(a){let x=foo;a+=x;return a}function v(a){let x=foo;a||=x;return a}function u(a){let x=g();a+=x;return a}w(),v(),u();";
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-running");
 		// A value running code would run after the target is read.
 		expect(minifyOnePass(source, { compress: {}, mangle: false, ecma: 2021 }).code).toBe(
 			"var foo;function w(a){return a+=foo}function v(a){return a||=foo}function u(a){let x=g();return a+=x,a}w(),v(),u();"
 		);
 		// A global's read may run a getter, which could set the value first.
-		expect(minifyOnePass("var foo;function w(a){let x=foo;slot+=x;return a}w();", { compress: {}, mangle: false }).code).toBe(
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-running-2"), { compress: {}, mangle: false }).code).toBe(
 			"var foo;function w(a){let x=foo;return slot+=x,a}w();"
 		);
 	});
 
 	it("should keep a null check whose chain a call, `delete` or tag reads as a reference", () => {
 		// `(x?.m)()` would call `m` on `x`, and `delete(x?.m)` delete it.
-		const source = "function f(x){return(x!=null?x.m:void 0)()}function g(x){return delete(x!=null?x.m:void 0)}function h(x){return(x!=null?x.m:void 0)``}function k(x){return x!=null?x.m:void 0}";
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-a-null-check-whose");
 		expect(minifyOnePass(source, { compress: {}, mangle: false, ecma: 2020 }).code).toBe(
 			"function f(x){return(x!=null?x.m:void 0)()}function g(x){return delete(x!=null?x.m:void 0)}function h(x){return(x!=null?x.m:void 0)``}function k(x){return x?.m}"
 		);
 	});
 
 	it("should drop a `for`'s own declarator nothing reads", () => {
-		const source = "function f(){for(var a,b=1;;);}function g(){for(let i=0,n=h();;)k(i)}function m(){for(let c=32,d=0;d<c;d++)k(d)}k(f,g,m)";
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-drop-a-for-s-own");
 		// A value running code stays, as does a constant its reads print.
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("function f(){for(;;);}function g(){for(let i=0,n=h();;)k(i)}function m(){for(let c=32,d=0;d<c;d++)k(d)}k(f,g,m);");
 	});
 
 	it("should print a kept global constant's value where it reads shorter", () => {
-		const source = "const foo=1;log(foo,{foo});const many=2;log(many,many,many)";
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-print-a-kept-global");
 		// A shorthand keeps the name it keys, and a name read three times stays, as it measured smaller once gzipped.
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("const foo=1;log(1,{foo:foo});const many=2;log(many,many,many);");
 	});
@@ -1477,9 +1454,9 @@ describe("one-pass minify of reads and calls on literals", () => {
 	it("should lift a computed key reading a constant as the key it names", () => {
 		for (const [source, toplevel, expected] of /** @type {[string, boolean, string][]} */ ([
 			// Inlined, the read prints as the plain key; `__proto__` and a class's `constructor` mean something else bare.
-			['const key="FOO",p="__proto__",c="constructor",n=12;class X{[key]=1;static get[key](){return 2}[c](){}}console.log(new X,{[key]:1,[p]:2,[n]:3})', true, 'class X{FOO=1;static get FOO(){return 2}["constructor"](){}}console.log(new X,{FOO:1,["__proto__"]:2,12:3});'],
+			[fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-lift-a-computed-key"), true, 'class X{FOO=1;static get FOO(){return 2}["constructor"](){}}console.log(new X,{FOO:1,["__proto__"]:2,12:3});'],
 			// Kept for its size, it lifts only where the key prints shorter than the name in brackets.
-			['const prop="_foo",x="FOO";console.log({[prop]:1,[x]:2})', false, 'const prop="_foo",x="FOO";console.log({_foo:1,[x]:2});']
+			[fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-lift-a-computed-key-2"), false, 'const prop="_foo",x="FOO";console.log({_foo:1,[x]:2});']
 		])) {
 			const { code } = minifyOnePass(source, { compress: {}, mangle: false, toplevel });
 			expect(code).toBe(expected);

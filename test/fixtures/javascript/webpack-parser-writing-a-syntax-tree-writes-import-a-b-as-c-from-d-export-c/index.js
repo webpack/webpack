@@ -1,0 +1,1 @@
+import a, { b as c } from "d"; export { c }; export default (e) => e;

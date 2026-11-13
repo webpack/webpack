@@ -1,0 +1,1 @@
+const prop="_foo",x="FOO";console.log({[prop]:1,[x]:2})

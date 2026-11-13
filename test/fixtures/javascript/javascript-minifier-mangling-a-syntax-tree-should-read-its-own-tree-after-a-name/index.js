@@ -1,0 +1,1 @@
+class K { #first = 1; #second = 2; get() { return this.#first + this.#second; } } console.log(new K().get());

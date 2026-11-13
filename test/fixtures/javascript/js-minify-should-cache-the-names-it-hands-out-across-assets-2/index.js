@@ -1,0 +1,1 @@
+var shared = "cached"; sink(shared);

@@ -1,0 +1,1 @@
+function f(a,b){return a}var g=(a,b)=>a,o={set x(v){},m(a){}};function h(a){return arguments}function k(a){eval("a")}console.log(f.length,g.length,o.m.length,h.length,k.length)
