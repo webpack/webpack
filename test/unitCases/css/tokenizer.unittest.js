@@ -93,6 +93,31 @@ describe("readToken", () => {
 	}
 });
 
+describe("CssSyntax — a function name that only opens like `url`", () => {
+	/**
+	 * @param {string} source a source opening with the token
+	 * @returns {[number, string]} that token's type and source text
+	 */
+	const first = (source) => {
+		const t = /** @type {import("../../../lib/css/syntax-parser").MutableToken} */ (
+			readToken(
+				source,
+				0,
+				/** @type {import("../../../lib/css/syntax-parser").MutableToken} */ ({})
+			)
+		);
+		return [t.type, source.slice(t.start, t.end)];
+	};
+
+	it("is a function token when too short or too long to spell it", () => {
+		// `url` with every code point escaped in full is 27 code units.
+		const long = `u${"r".repeat(27)}`;
+		expect(first("u(a)")).toEqual([TokenType.Function, "u("]);
+		expect(first("ur(a)")).toEqual([TokenType.Function, "ur("]);
+		expect(first(`${long}(a)`)).toEqual([TokenType.Function, `${long}(`]);
+	});
+});
+
 describe("CssSyntax — the token the lexer reuses", () => {
 	// The stream writes every token into one instance, so a field added to it is
 	// paid on every parse and a field left out of the constructor splits the
