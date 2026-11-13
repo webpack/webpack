@@ -1798,4 +1798,14 @@ describe("one-pass minify, family P round 7", () => {
 		expect(code).toBe("function loading(props){return props.pastDelay,null}console.log(loading({pastDelay:!0}),loading({}));function chained(props){return props.error?\"error\":props.timedOut?\"timed out\":\"loading\"}console.log(chained({error:1}),chained({timedOut:1}),chained({}));function thrown(props){throw props.error?\"error\":\"other\"}try{thrown({})}catch(error){console.log(error)}function kept(props){if(props.error)return\"error\";props.read;return\"kept\"}console.log(kept({read:1}));function commented(props){return props.error?\"error\":\"commented\"}console.log(commented({}));function last(props){if(props.error)return\"error\"}console.log(last({}));");
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
+
+	it("should join statements into the `return` an `if` of a known test keeps", () => {
+		const source = fixture("javascript", "one-pass-p4-4");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// A branch printing as no `return`, or `var`s the gone one hoists, stay apart.
+		expect(code).toBe("function noSSR(initializer,options){return delete options.webpack,delete options.modules,initializer(options)}function log(value){return console.log(Object.keys(value).join()),value}console.log(noSSR(log,{webpack:1,modules:2,loading:3}).loading);function elseKept(options){return log(options),options.loading}console.log(elseKept({loading:4}));function several(options){return log(options),log(options),options.loading}console.log(several({loading:5}));function nothing(options){log(options)}console.log(nothing({loading:6}));function hoisted(options){log(options);var kept;return kept}console.log(hoisted({loading:7}));function branchless(options){return log(options),options.loading}console.log(branchless({loading:8}));");
+		expect(runProgram(code)).toBe(runProgram(source));
+		// A call of a name spelled as `return` opens is no `return`.
+		expect(minifyOnePass("function f(o){g(o);if(1)returnValue(o)}", { compress: {}, mangle: false }).code).toBe("function f(o){g(o);returnValue(o)}");
+	});
 });
