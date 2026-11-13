@@ -17,7 +17,7 @@ const {
 	Part
 } = require("../../../lib/css/syntax-parser");
 
-// cspell:ignore OLOR abcdefghijklmnopqrstuvwxyzabcdefgh acontent arting auop conten displa imptant inear laye olor pmportant pxcustom suppo webk widt
+// cspell:ignore OLOR abcdefghijklmnopqrstuvwxyzabcdefgh acontent arting auop conten displa imptant inear laye ment olor pmportant pxcustom suppo webk widt
 
 /**
  * @param {string} css a stylesheet
@@ -205,6 +205,36 @@ describe("CssSyntax — block streaming", () => {
 				"@layer a{.p{color:teal}.q{color:teal}}.mid{margin:0}@layer a{.q{color:teal}}"
 			)
 		).toBe("@layer a{.p,.q{color:teal}.q{color:teal}}.mid{margin:0}}");
+	});
+
+	it("keeps the `;` a gathered layer block ends a declaration on", () => {
+		// The `}` a block ends on drops its last `;`, which a body folded in behind
+		// it needs back, or the declaration runs on into what that body holds.
+		const streamed = `@layer a{${BIG}x:i;}`;
+		expect(childCount(streamed)).toBe(0);
+		const tail = (/** @type {string} */ out) => out.slice(out.indexOf("x:i"));
+		const top = minify(`${streamed}@layer a{.q{top:0}}.w{color:red}`);
+		expect(tail(top)).toBe("x:i;.q{top:0}}.w{color:red}");
+		expect(minify(top)).toBe(top);
+		const nested = minify(`.p{${streamed}@layer a{y:j}@layer a{z:k}}`);
+		expect(tail(nested)).toBe("x:i;y:j;z:k}}");
+		// A block written whole, in a parent that streams, folds the same way.
+		const parent = (/** @type {string} */ body) =>
+			tail(
+				minify(
+					`@layer outer{${repeat(6000, (i) => `.f${i}{color:red}`)}${body}}`
+				)
+			);
+		expect(parent("@layer a{x:i}.mid{margin:0}@layer a{y:j}")).toBe(
+			"x:i;y:j}.mid{margin:0}}"
+		);
+		expect(parent("@layer a{x:i}.mid{margin:0}@layer a{.q{top:0}}")).toBe(
+			"x:i;.q{top:0}}.mid{margin:0}}"
+		);
+		// A rule ends in its own `}`, and a `;` after it would start a selector.
+		expect(
+			parent("@layer a{x:i;.p{top:0}}.mid{margin:0}@layer a{y:j}")
+		).toBe("x:i;.p{top:0}y:j}.mid{margin:0}}");
 	});
 
 	it("drops a prefixed list a streamed block's rules cover between them", () => {
@@ -1207,6 +1237,19 @@ describe("cssMinify export", () => {
 
 		expect(code).toMatchInlineSnapshot('"a{color:red}"');
 	});
+
+	it("keeps escapes and writes no `@charset` for CSS another document embeds", async () => {
+		const { cssMinify } = require("../../..").css;
+		const css = String.raw`.a:after{content:"\1F903\\"}.b{content:".x{color:red}"}`;
+
+		expect((await cssMinify({ "a.css": css })).code).toBe(
+			'@charset "UTF-8";.a:after{content:"\u{1F903}\\\\"}.b{content:".x{color:red}"}'
+		);
+		// A `<style>` body is handed over under the name of the page holding it.
+		expect((await cssMinify({ "index.html": css })).code).toBe(
+			String.raw`.a:after{content:"\1F903\\"}.b{content:".x{color:red}"}`
+		);
+	});
 });
 
 describe("SourceProcessor — mergeDistantRules", () => {
@@ -1220,6 +1263,18 @@ describe("SourceProcessor — mergeDistantRules", () => {
 		});
 		expect(code).toBe(".a,.c{color:red}.b{margin:0}");
 		expect(map).toBeDefined();
+	});
+
+	it("orders a list whose block a neighbor folded into changed", () => {
+		const sheet = fixture(
+			"css",
+			"source-processor-merge-distant-rules-orders-a-list-whose-block-a-neighbor-changed"
+		);
+		const { code } = new SourceProcessor().process(sheet, {
+			mode: "minify",
+			mergeDistantRules: true
+		});
+		expect(code).toBe("b,c{color:red}");
 	});
 });
 
@@ -1360,6 +1415,54 @@ describe("CssSyntax minify — joining rules whose values hold escapes", () => {
 			).code;
 		expect(pieces(minify(false))).toEqual(pieces(css));
 		expect(pieces(minify(true))).toEqual(pieces(css));
+	});
+});
+
+describe("CssSyntax minify — merged and joined text keeps its boundaries", () => {
+	/**
+	 * @param {string} css source text
+	 * @param {import("../../../lib/css/syntax-parser").CssProcessOptions=} options more process options
+	 * @returns {string} the minified output
+	 */
+	const min = (css, options) =>
+		new SourceProcessor().process(css, { mode: "minify", ...options }).code;
+
+	it("parts a slash shorthand's `/` from a slot that starts with `*`", () => {
+		expect(
+			min(
+				fixture(
+					"css",
+					"css-syntax-minify-a-merged-slash-shorthand-parts-a-slot-that-starts-with-an-asterisk"
+				)
+			)
+		).toBe(
+			'.a{grid-row:1/ *}.b{grid-template:1px/ *}.c{grid-template:"a"1px/ *}.d{color:red}'
+		);
+	});
+
+	it("closes a bad url the input ran out in", () => {
+		const name = "css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed";
+		const nested = fixture("css", name);
+		expect(min(nested)).toBe('.p{.q{content:")}.x{color:red}"}url(x")}');
+		// Lowered, the rule hoisted out of `.p` comes after the bad url.
+		expect(min(nested, { environment: { browsers: ["chrome 100"] } })).toBe(
+			'.p{url(x")}.p .q{content:")}.x{color:red}"}'
+		);
+		expect(min(fixture("css", `${name}-2`))).toBe('@media url(x");');
+		expect(min(fixture("css", `${name}-3`))).toBe('.a{b:url(x")}');
+	});
+
+	it("cuts a dead copy out of a nested joined block where it now stands", () => {
+		expect(
+			min(
+				fixture(
+					"css",
+					"css-syntax-minify-a-nested-joined-block-is-cut-where-its-rules-now-stand"
+				)
+			)
+		).toBe(
+			'@supports (display:grid){@media print{.s{content:"}}}}.y{color:red}"}.x{color:red}}.sep{color:blue}@media print{.q{color:green}}}.app{color:#000}'
+		);
 	});
 });
 
@@ -1882,5 +1985,214 @@ describe("SourceProcessor.processAsync — `declareCharset` over embedded answer
 		expect(code).toBe(
 			'@charset "UTF-8";.a{background:url(data:image/svg+xml,<svg></svg>)}.b{background:url(data:image/svg+xml,<svg><g>é</g></svg>)}'
 		);
+	});
+});
+
+describe("CssSyntax minify — escapes and urls in a value spaced for an old tokenizer", () => {
+	it.each([
+		// `x\)url(` is one function token: its `\)` closes nothing.
+		['.a{background:x\\)url(y ".x{color:red}")}', '.a{background:x\\)url(y ".x{color:red}")}'],
+		// An escaped `)` in a raw url is part of the address.
+		[".a{background:url(a\\)b)c}", ".a{background:url(a\\)b) c}"],
+		[".a{background:url(a\\)b)1px}", ".a{background:url(a\\)b) 1px}"]
+	])("keeps %s reading as written", (source, expected) => {
+		expect(minifyFor(source, ["ie 11"])).toBe(expected);
+	});
+});
+
+describe("CssSyntax minify — an escaped `!important` is part of the value", () => {
+	it.each([
+		[
+			".a{grid-column-start:x\\!important;grid-column-end:y}",
+			".a{grid-column:x\\!important/y}"
+		],
+		[
+			".a{grid-column-start:x\\\\!important;grid-column-end:y\\\\!important}",
+			".a{grid-column:x\\\\/y\\\\!important}"
+		],
+		[
+			".a{grid-template-rows:x\\!important;grid-template-columns:y;grid-template-areas:none}",
+			".a{grid-template:x\\!important/y}"
+		]
+	])("merges %s", (source, expected) => {
+		expect(minifyFor(source)).toBe(expected);
+	});
+});
+
+describe("CssSyntax minify — a color fallback reads only the value's own calls", () => {
+	it.each([
+		// Text a string, a url or an escape holds names no call.
+		['.a{background:url(x oklch(.5 .1 20) ".x{color:red}")}', '.a{background:url(x oklch(.5 .1 20) ".x{color:red}")}'],
+		['.a{background:url( x oklch(.5 .1 20) "a")}', '.a{background:url( x oklch(.5 .1 20) "a")}'],
+		[".a{background:x\\ oklch(.5 .1 20)}", ".a{background:x\\ oklch(.5 .1 20)}"],
+		[".a{background:url(oklch(1 0 0).png)}", ".a{background:url(oklch(1 0 0) .png)}"],
+		['.a{color:color-mix(in srgb,red,blue);background:url(x color-mix(in srgb,red,blue) "a")}', '.a{color:#7f007f;color:color-mix(in srgb,red,blue);background:url(x color-mix(in srgb,red,blue) "a")}'],
+		// A call beside one still folds, and the text stays as written.
+		['.a{background:url("oklch(1 0 0)") oklch(.5 .1 20)}', '.a{background:url("oklch(1 0 0)") #944a4b;background:url("oklch(1 0 0)") oklch(.5 .1 20)}'],
+		['.a{background:"oklch(1 0 0)" oklch(.5 .1 20)}', '.a{background:"oklch(1 0 0)" #944a4b;background:"oklch(1 0 0)" oklch(.5 .1 20)}']
+	])("writes %s", (source, expected) => {
+		expect(minifyFor(source, ["ie 11"])).toBe(expected);
+	});
+
+	it("leaves a relative hue that reduces to no degrees as written", () => {
+		expect(
+			minifyFor(".a{color:hsl(from red calc(h * 1turn) s l)}", ["ie 11"])
+		).toBe(".a{color:hsl(from red calc(h*1turn) s l)}");
+	});
+
+	it("keeps a string as written in the wide-gamut fallback", () => {
+		expect(
+			minifyFor('.a{background:"oklch(.7 .2 150)" oklch(.7 .2 150)}', [
+				"safari 15.0"
+			])
+		).toBe(
+			'.a{background:"oklch(.7 .2 150)"#00bf54;background:"oklch(.7 .2 150)"color(display-p3 .317813 .736696 .379141);background:"oklch(.7 .2 150)"oklch(.7 .2 150)}'
+		);
+	});
+});
+
+describe("CssSyntax minify — text a rewrite keeps inside its string or url", () => {
+	it("copies an escaped at-rule name's prelude whole for a vendor prefix", () => {
+		const css =
+			'@d\\00006f\\000063\\000075ment url-prefix(),x("}.x{color:red}"){.q{color:red}}';
+		const rest = ' url-prefix(),x("}.x{color:red}"){.q{color:red}}';
+		expect(minifyFor(css, ["firefox 50"])).toBe(
+			`@-moz-document${rest}@document${rest}`
+		);
+	});
+
+	it("does not decode a data url's percent-escape into the half of another", () => {
+		// Read once, `%%32%41` is the text `%2A`, which must not become `*`.
+		const cases = [
+			[
+				'"data:text/css,/* %%32%41/ .x{color:red} /* */"',
+				'"data:text/css,/* %%32A/ .x{color:red} /* */"'
+			],
+			[
+				'"data:text/css,/* %2%41/ .x{color:red} /* */"',
+				'"data:text/css,/* %2%41/ .x{color:red} /* */"'
+			],
+			["data:text/plain,%25%34%31%3C", "data:text/plain,%2541<"]
+		];
+		for (const [url, printed] of cases) {
+			const once = minifyFor(`.a{background:url(${url})}`);
+			expect(once).toBe(`.a{background:url(${printed})}`);
+			expect(minifyFor(once)).toBe(once);
+		}
+	});
+
+	it("keeps an embedded url's deferred payload where a nested rule is lowered", async () => {
+		const rule = '[x=")}.x{color:red}"]';
+		const { code } = await new SourceProcessor().processAsync(
+			`.p{${rule}{background:url(data:image/svg+xml,%3Csvg/%3E)}}`,
+			{
+				mode: "minify",
+				environment: { browsers: ["chrome 100"] },
+				renderEmbeddedSource: (source) => source
+			}
+		);
+		expect(code).toBe(`.p ${rule}{background:url(data:image/svg+xml,<svg/>)}`);
+	});
+
+	it("keeps an embedded url's deferred payload where light-dark() is lowered", async () => {
+		const url = "url(data:image/svg+xml,%3Csvg/%3E)";
+		const { code } = await new SourceProcessor().processAsync(
+			`.a{color-scheme:light dark;color:light-dark(red,blue);background:${url}}`,
+			{
+				mode: "minify",
+				environment: { browsers: ["chrome 100"] },
+				renderEmbeddedSource: (source) => source
+			}
+		);
+		expect(code).toContain("background:url(data:image/svg+xml,<svg/>);");
+		expect(code).toContain(
+			"@media (prefers-color-scheme:dark){.a{--webpack-light:;"
+		);
+	});
+
+	it("does not fuse the parent written for `&` with the text around it", () => {
+		const after = '.w{content:"*/}.x{color:red}.z{"}';
+		const lower = (/** @type {string} */ css) =>
+			minifyFor(css, ["chrome 100"]);
+		expect(lower(`*{/&{color:red}}${after}`)).toBe(
+			`/:is(*){color:red}${after}`
+		);
+		expect(lower(`.a{&url(/*){color:red}}${after}`)).toBe(
+			`:is(.a)url(/*){color:red}${after}`
+		);
+		expect(lower("a{b&{color:red}}")).toBe("b:is(a){color:red}");
+		// A type selector after `&` leads the compound the parent joins.
+		expect(lower(".a{&-x{color:red}}")).toBe("-x.a{color:red}");
+		expect(lower(".a{&--x{color:red}}")).toBe("--x.a{color:red}");
+		expect(lower(".a{&-1{color:red}}")).toBe(":is(.a)-1{color:red}");
+		expect(lower(".a{&div{color:red}}")).toBe("div.a{color:red}");
+		expect(lower(".a{&*{color:red}}")).toBe("*.a{color:red}");
+		expect(lower(".a{&svg|rect{color:red}}")).toBe("svg|rect.a{color:red}");
+		expect(lower("p{&div{color:red}}")).toBe("div:is(p){color:red}");
+		expect(lower("[x]{&div{color:red}}")).toBe("div[x]{color:red}");
+		expect(lower(".a{&\\31 x{color:red}}")).toBe("\\31x.a{color:red}");
+		expect(lower(".a{&x|.b{color:red}}")).toBe("x.a|.b{color:red}");
+		expect(lower(".a{&||b{color:red}}")).toBe(".a||b{color:red}");
+		expect(lower("a{&.b,.c &{color:red}}")).toBe(".c a,a.b{color:red}");
+	});
+
+	it("keeps the escaped space a lowered nested selector ends in", () => {
+		const lower = (/** @type {string} */ css) =>
+			minifyFor(css, ["chrome 100"]);
+		expect(lower(".a{color:red;.b\\  {color:blue}}")).toBe(
+			".a{color:red}.a .b\\ {color:blue}"
+		);
+		expect(lower(".s{&.t\\ {color:gray}}")).toBe(".s.t\\ {color:gray}");
+		expect(lower(".s{&.t\\\\ {color:gray}}")).toBe(".s.t\\\\{color:gray}");
+	});
+
+	it("splits a gradient's double-position stops outside its strings", () => {
+		const after = ".e{color:blue}";
+		expect(
+			minifyFor(
+				`.b{background:linear-gradient(red,"x,"red 10% 20%)}${after}`,
+				["chrome 60"]
+			)
+		).toBe(`.b{background:linear-gradient(red,"x,"red 10%,"x,"red 20%)}${after}`);
+		expect(
+			minifyFor(
+				`.b{background:linear-gradient(red,"x\\"y" 10% 20%)}${after}`,
+				["chrome 60"]
+			)
+		).toBe(
+			`.b{background:linear-gradient(red,'x"y' 10%,'x"y' 20%)}${after}`
+		);
+		expect(
+			minifyFor(`.b{background:linear-gradient(red,\\,x 10% 20%)}${after}`, [
+				"chrome 60"
+			])
+		).toBe(`.b{background:linear-gradient(red,\\,x 10%,\\,x 20%)}${after}`);
+		expect(
+			minifyFor(`.b{background:linear-gradient(red,"x\\\\," 10% 20%)}`, [
+				"chrome 60"
+			])
+		).toBe('.b{background:linear-gradient(red,"x\\\\," 10%,"x\\\\," 20%)}');
+	});
+
+	it("drops no zero length unit inside a string a length-only call holds", () => {
+		expect(minifyFor('.b{transform:translate("a 0px b")}')).toBe(
+			'.b{transform:translate("a 0px b")}'
+		);
+		expect(minifyFor(".b{transform:translate3d(1px,0px,2px)}")).toBe(
+			".b{transform:translate3d(1px,0,2px)}"
+		);
+	});
+
+	it("renders a data url whose escapes spell a comment as that comment", () => {
+		const payload = "data:text/css,/* %%32%41/ .x{color:red} /* */";
+		const processor = new SourceProcessor();
+		const { code } = processor.process(`@import url("${payload}");`, {
+			mode: "minify",
+			renderEmbeddedSource: (source) => {
+				expect(source).toBe("/* %2A/ .x{color:red} /* */");
+				return "";
+			}
+		});
+		expect(code).toBe("@import url(data:text/css,);");
 	});
 });

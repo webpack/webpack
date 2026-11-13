@@ -930,16 +930,16 @@ Array [
 .postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-t\\\\ t; }
 
 /* localize animation using special characters */
-.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css--\\\\A; }
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css--\\\\A ; }
 
 /* localize animation using special characters */
-.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css---\\\\A; }
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css---\\\\A ; }
 
 /* localize animation using special characters */
-.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-\\\\A; }
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-\\\\A ; }
 
 /* localize animation using special characters */
-.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css--\\\\A; }
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css--\\\\A ; }
 
 /* localize animation using special characters */
 .postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css---; }
