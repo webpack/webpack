@@ -1790,4 +1790,12 @@ describe("one-pass minify, family P round 7", () => {
 		expect(code).toBe("function Item(name){if(!(this instanceof Item))throw TypeError(\"Cannot call a class as a function\");this.name=name}console.log(new Item(\"item\").name);try{Item(\"called\")}catch(error){console.log(error.message)}function Short(value){console.log({self:typeof this}),this.value=value}console.log(new Short(1).value);function Deletes(){!function(self){console.log(delete self)}(this)}new Deletes;var Expressed=function(){!function(self){self.kept=1}(this)};console.log((new Expressed).kept);class Base{}class Derived extends Base{constructor(){super();var arrow=()=>{!function(self){self.set=1}(this)};arrow(),arrow()}}console.log((new Derived).set),console.log(typeof this);");
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
+
+	it("should pair an `if` leaving with the exit after statements running nothing", () => {
+		const source = fixture("javascript", "one-pass-p4-3");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// A `;` or an `if` of a literal with an empty body goes; one reading a name stays between.
+		expect(code).toBe("function loading(props){return props.pastDelay,null}console.log(loading({pastDelay:!0}),loading({}));function chained(props){return props.error?\"error\":props.timedOut?\"timed out\":\"loading\"}console.log(chained({error:1}),chained({timedOut:1}),chained({}));function thrown(props){throw props.error?\"error\":\"other\"}try{thrown({})}catch(error){console.log(error)}function kept(props){if(props.error)return\"error\";props.read;return\"kept\"}console.log(kept({read:1}));function commented(props){return props.error?\"error\":\"commented\"}console.log(commented({}));function last(props){if(props.error)return\"error\"}console.log(last({}));");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
 });
