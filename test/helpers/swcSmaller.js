@@ -362,7 +362,6 @@ const SWC_SMALLER_BY_REASON = [
 		"swc goes further than webpack on what terser's `drop-unused` tests cover",
 		[
 			"terser compress: drop-unused/drop_fargs",
-			"terser compress: drop-unused/iife",
 			"terser compress: drop-unused/issue_2136_2",
 			"terser compress: drop-unused/issue_2136_3",
 			"terser compress: drop-unused/issue_t161_top_retain_1",
@@ -722,7 +721,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12307/input.js",
 			"terser compress: collapse_vars/collapse_vars_properties",
 			"terser compress: pure_funcs/assign",
-			"swc minifier: fixture/issues/11108/input.js",
 			"swc minifier: fixture/issues/2028/input.js"
 		]
 	],
@@ -815,10 +813,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		'swc folds arithmetic and concatenation of literals (`"1"+"2"`, `1+""`, `5+3`) that terser leaves as written',
-		[
-			"terser compress: dead-code/collapse_vars_misc1",
-			"swc minifier: fixture/issues/8706/input.js"
-		]
+		["terser compress: dead-code/collapse_vars_misc1"]
 	],
 	[
 		"swc goes further than webpack on what terser's `arrays` tests cover",
@@ -905,10 +900,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc goes further than webpack on what terser's `global_defs` tests cover",
-		[
-			"terser compress: global_defs/issue_2167",
-			"terser compress: global_defs/conditional_chains"
-		]
+		["terser compress: global_defs/issue_2167"]
 	],
 	[
 		"swc goes further than webpack on what terser's `if_return` tests cover",

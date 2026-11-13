@@ -143,6 +143,16 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-720"), { compress: {} }, "function a(c){if(c===E){let{data:a}=c;call(a)}}function b(c){if(c===E){function a(){}call(a)}}function c(c,a){if(c===E)call(c);else a()}function d(c){if(c===E)call(c)}function e(c){if(c===E){let c=h();g(c,c)}}function f(c){if(c===E){g(),h()}return 1}function i(c){switch(c){case E:}}function j(c){switch(c){case E:if(c)break;g()}}function k(c){switch(c){case E:g();break;default:m()}}"],
 			// A block whose `break` no `;` precedes once printed, or a discriminant holding a comment, stays.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-721"), { compress: {} }, "function a(e){switch(e){case E:try{w()}finally{c()}break}}function b(c){if(c===E){if(c)g()}}1+/*! keep */2,probe();function c(e){switch(e){case E:try{w()}finally{c()}break}}function d(c,e){if(e){if(c===E){g(),h()}}else k()}"],
+			// `void 0` in an array joins as nothing, as `undefined` does.
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-722"), { compress: {} }, "console.log(\"a\",\",b\",\",1\",[void g()]+\"c\",\"d\");function f(n){return[n]+\"\"}"],
+			// An unread `~`, `-` or `+` of `undefined` runs only what it takes; one of a call nothing notes unread stays.
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-723"), { compress: {} }, "function a(){b}function c(){b,d()}function e(){g()}function h(){g()}function i(){b}function j(){~function(){}(1)}function k(){~function(){}(b),d()}function l(){~function(){g()}()}function m(){~function(){}(...b)}function n(){~g()}function o(){x=~function(){}(b)}"],
+			// A `0|` beside any bitwise operator or shift goes where the other side is no BigInt.
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-724"), { compress: {} }, "function a(n,r){return!(n<0)^r}function b(n,r){return r^!n}function c(n){return!n&1}function d(n,r){return n*r^1}function e(n,r){return(0|n)^r}function f(n){return(0|n)^1n}function g(n,r){return(0|-n)<<r}"],
+			// An object literal read off another prints in its place, but where its `{` would open a block.
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-725"), { compress: {} }, "x={b:1},y={b:1},z={b:g()},w=`${{b:1}}`,f=()=>({a:{b:1}}.a),v={b(){return this}}.b(),delete{a:{b:1}}.a,[{b:g()}][0].c;"],
+			// `globalDefs` reads `?.` in a chain it defines as `.`.
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-726"), { compress: { globalDefs: { "a.b.c": "d", "x.y": 5 } } }, "console.log(\"d\",\"d\",\"d\",a?.b,5..toFixed(),\"d\");"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-12"), { compress: {} }, "f(),g(),e(),h;"],
 			// A loop head's declarator folds into the next, and an alias nothing reads goes from it, but not one a value folds into.
 			[
@@ -628,7 +638,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-2"), "(function(){g()}()),x;"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-3"), "x={k:()=>1,[(()=>1)]:1},y=[()=>1];"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-4"), "x=(a||(f(1)(2)),longName);"],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-5"), "!(g(),h());"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-5"), "g(),h();"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-6"), "g(),h();"],
 			[
 				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-7"),
