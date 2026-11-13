@@ -2170,6 +2170,11 @@ describe("printing Babel's default parameters as ES2015 ones", () => {
 			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;function k(){return arguments.length}return[b,k(1)]}", "function f(a,b=5){return[b,function(){return arguments.length}(1)]}"],
 			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;var k=function(){return arguments.length};return[b,k(1)]}", "function f(a,b=5){return[b,function(){return arguments.length}(1)]}"],
 			["function f(){var a=arguments.length>0&&arguments[0]!==void 0?arguments[0]:g();return[a]}", "function f(a=g()){return[a]}"],
+			// After a default, the `var` Babel writes for a parameter with none prints as one: the function's `length` stays.
+			["function f(){var a=arguments.length>0&&arguments[0]!==undefined?arguments[0]:g();var b=arguments.length>1?arguments[1]:undefined,c=arguments.length>2&&arguments[2]!==void 0?arguments[2]:b;return[a,b,c]}", "function f(a=g(),b,c=b){return[a,b,c]}"],
+			["function f(){var b=arguments.length>0?arguments[0]:undefined;return[b]}", "function f(){return[arguments.length>0?arguments[0]:void 0]}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;var c=arguments.length>2?arguments[2]:void 0;return[b,c,arguments.length]}", "function f(a){return[arguments.length>1&&arguments[1]!==void 0?arguments[1]:5,arguments.length>2?arguments[2]:void 0,arguments.length]}"],
+			["function f(){var a=arguments.length>0&&arguments[0]!==undefined?arguments[0]:1;var b=arguments.length>1?arguments[1]:undefined;return[b]}", "function f(){arguments.length>0&&arguments[0]!==void 0?arguments[0]:1;var b=arguments.length>1?arguments[1]:void 0;return[b]}"],
 			// Parameters other than names, one named `arguments` or a `var` of that name keep them.
 			["function f({a}){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;return[a,b]}", "function f({a}){return[a,arguments.length>1&&arguments[1]!==void 0?arguments[1]:5]}"],
 			["function o(value){return function(a=value){var value=arguments.length>1&&arguments[1]!==void 0?arguments[1]:1;return[a,value]}}var f=o(7);", "function o(value){return function(a=value){return[a,arguments.length>1&&arguments[1]!==void 0?arguments[1]:1]}}var f=o(7);"],
