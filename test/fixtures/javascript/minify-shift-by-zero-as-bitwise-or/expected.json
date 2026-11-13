@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "respelling exponent",
+		"contains": "37e-1",
+		"why": "known bug: the mangler counts a decimal number's characters as written rather than as it prints, so `37e-1` for `3.7` names the bindings otherwise"
+	}
+]

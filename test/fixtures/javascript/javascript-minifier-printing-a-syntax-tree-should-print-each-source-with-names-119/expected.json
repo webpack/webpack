@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "respelling exponent",
+		"contains": "150e-2",
+		"why": "asm.js reads a number's spelling: a literal holding a `.` is a double, so the printer keeps it as written"
+	}
+]

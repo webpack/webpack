@@ -50,6 +50,7 @@ const {
 	htmlSpans,
 	idempotenceRepro,
 	meaningReports,
+	noticeReports,
 	printerFor,
 	sameSheets,
 	sweepRespellings,
@@ -1202,6 +1203,7 @@ const sweepDocument = (minify, html, options, cssOptions, respell = true) => {
 	if (wantedRelation("meaning")) {
 		reports.push(...meaningReports(html, printed, options, cssOptions));
 	}
+	if (wantedRelation("notices")) reports.push(...noticeReports(html, printed));
 	return reports;
 };
 
