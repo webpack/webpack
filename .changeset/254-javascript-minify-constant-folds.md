@@ -1,5 +1,5 @@
 ---
-"webpack": patch
+"webpack": minor
 ---
 
-Fold more calls and constants when minifying JavaScript.
+Fold more calls, constants and single-use values when minifying JavaScript.
