@@ -1726,3 +1726,25 @@ describe("one-pass minify, family O round 7", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 });
+
+describe("one-pass minify, family R round 7", () => {
+	it("should count a constant's reads that are computed keys as printing its value as cheaply", () => {
+		const source = fixture("javascript", "one-pass-r4-1");
+		const options = { compress: { ecma: 2022 }, ecma: 2022, module: true };
+		// A member's key prints `.a` either way, and a key, a pattern's too, `a` for `[n]`; a number, or a string no name spells, reads as other names do.
+		expect(minifyOnePass(source, options).code).toBe(
+			"export function keys(o){let{_foo:k}=o;return[{_foo:o._foo,k},class{_foo(){return o._foo}static _foo=1},o[1],o[1],o[`a-b`],o[`a-b`],{\"a-b\":1},{\"a-b\":2},o.x]}export function plain(o){return[o._bar,o._bar,{[o.x]:`_bar`,k:`_bar`},`_bar`.big]}"
+		);
+		// Kept computed, or renamed, a key reads as other names do.
+		const kept =
+			"export function keys(o){let t=`_foo`,{[t]:k}=o;return[{[t]:o._foo,k},class{[t](){return o._foo}static[t]=1},o[1],o[1],o[`a-b`],o[`a-b`],{[`a-b`]:1},{[`a-b`]:2},o.x]}export function plain(o){return[o._bar,o._bar,{[o.x]:`_bar`,k:`_bar`},`_bar`.big]}";
+		expect(
+			minifyOnePass(source, { ...options, compress: { ecma: 2022, computed_props: false } }).code
+		).toBe(kept);
+		expect(
+			minifyOnePass(source, { ...options, mangle: { properties: { regex: /^_/ } } }).code
+		).toBe(
+			"export function keys(o){let t=`_foo`,{[`_foo`]:k}=o;return[{[`_foo`]:o._foo,k},class{[`_foo`](){return o._foo}static[`_foo`]=1},o[1],o[1],o[`a-b`],o[`a-b`],{[`a-b`]:1},{[`a-b`]:2},o.x]}export function plain(o){return[o._bar,o._bar,{[o.x]:`_bar`,k:`_bar`},`_bar`.big]}"
+		);
+	});
+});
