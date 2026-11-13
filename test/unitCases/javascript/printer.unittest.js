@@ -1535,7 +1535,7 @@ describe("one-pass minify, family J round 6", () => {
 	it("should keep the arguments of an unread pure call in a loop head together", () => {
 		expect(
 			minifyOnePass(fixture("javascript", "one-pass-minify-family-j-round-6-should-keep-the-arguments-of-an-unread-pure-cal"), { compress: {}, mangle: false }).code
-		).toBe("for((g(),h());a;);");
+		).toBe("for(g(),h();a;);");
 	});
 });
 

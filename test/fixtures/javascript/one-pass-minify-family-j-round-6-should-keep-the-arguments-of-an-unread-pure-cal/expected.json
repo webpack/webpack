@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": "(g(),h());a;);\n      -> g(),h();a;);",
-		"why": "the arguments an unread pure call leaves in a `for` head keep the parentheses its call printed them in; a second pass reads the sequence alone and needs none, the same meaning 2 B shorter"
-	}
-]
