@@ -1,0 +1,13 @@
+[
+	{ "mode": "beautify" },
+	{
+		"mode": "beautify",
+		"visit": {
+			"types": ["Declaration"],
+			"fields": ["name"],
+			"at": [
+				{ "type": "Declaration", "name": "color", "do": "replace", "with": "color:blue" }
+			]
+		}
+	}
+]

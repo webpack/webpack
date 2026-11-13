@@ -33866,7 +33866,7 @@ exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tr
 
 exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-a-second-column-group parses 2`] = `"warning[0,4]:expected-doctype-but-got-start-tag warning[16,20]:unexpected-start-tag-implies-table-voodoo warning[25,25]:expected-closing-tag-but-got-eof"`;
 
-exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-a-second-column-group prints {"mode":"beautify"} 1`] = `"<dd><table><col><dd></dd><colgroup><col></table></dd>"`;
+exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-a-second-column-group prints {"mode":"beautify"} 1`] = `"<dd><table><col><dd></dd><colgroup><col></colgroup></table></dd>"`;
 
 exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-a-second-column-group prints {"mode":"minify"} 1`] = `"<dd><table><col><dd></dd><colgroup><col></table>"`;
 
@@ -34506,7 +34506,7 @@ exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tr
 
 exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-two-colgroups-a-col-each parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag warning[12,13]:unexpected-character-implies-table-voodoo warning[18,18]:expected-closing-tag-but-got-eof"`;
 
-exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-two-colgroups-a-col-each prints {"mode":"beautify"} 1`] = `"y<table><col><colgroup><col></table>"`;
+exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-two-colgroups-a-col-each prints {"mode":"beautify"} 1`] = `"y<table><col><colgroup><col></colgroup></table>"`;
 
 exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-two-colgroups-a-col-each prints {"mode":"minify"} 1`] = `"y<table><col><colgroup><col></table>"`;
 
