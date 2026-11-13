@@ -619,6 +619,21 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe("2 1");
 	});
 
+	it("should escape a template's text as one run, its folded parts included", () => {
+		for (const [name, expected] of [
+			// A `$` before a folded `{` stays text, not a substitution.
+			["", "console.log(\"%s\",`${globalThis.name} has \\${globalThis.flag=1} left`,globalThis.flag);"],
+			["-2", "console.log(`${globalThis.name} has \\${x} and a\\${y} and b\\${z}`);"],
+			// Nor do a `\0` and a folded digit, `</script` or `<!--` split across parts.
+			["-3", "console.log(`${globalThis.name} \\x001 <\\/script> \\x3c!--`);"]
+		]) {
+			const source = fixture("javascript", `javascript-minifier-printing-a-syntax-tree-should-escape-a-template-s-text-as-one-run${name}`);
+			const { code } = minifyOnePass(source, { compress: {}, mangle: true });
+			expect(code).toBe(expected);
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+	});
+
 	it("should print as `quote_keys`, `inline_script`, `inlinesNames` and import phases ask", () => {
 		for (const [source, options, expected] of /** @type {[string, EXPECTED_OBJECT, string][]} */ ([
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-as-quote-keys-inline"), { format: { quote_keys: true } }, 'var o={"a":1};console.log(o.a);'],
