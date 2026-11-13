@@ -1,0 +1,1 @@
+function g(){var a;return(a=2)()}try{g()}catch(e){console.log(e instanceof TypeError)}
