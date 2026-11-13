@@ -28450,6 +28450,13 @@ declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
 	writesNonAscii(index: number): boolean;
 
 	/**
+	 * The start of what has been emitted so far, held-back openers left out:
+	 * what a reader of the output's first bytes, such as a browser's encoding
+	 * prescan, finds there once the print is done, unless it is replaced.
+	 */
+	emittedStart(length: number): string;
+
+	/**
 	 * Fold `text` into an already-emitted piece, in front of the character it ends
 	 * with — a later sibling whose body belongs inside that piece, as a repeated
 	 * named `@layer` block's does. Mappings are piece-relative and this only grows
