@@ -2192,9 +2192,10 @@ describe("printing Babel's default parameters as ES2015 ones", () => {
 	});
 
 	it("should keep the `var`s where the output may not use default parameters", () => {
-		const source = "export function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;return a+b}";
-		expect(minifyOnePass(source, { compress: {}, mangle: false, module: true }).code).toBe(
-			"export function f(a){return a+(arguments.length>1&&arguments[1]!==void 0?arguments[1]:5)}"
-		);
+		for (const [source, expected] of [
+			["export function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;return a+b}", "export function f(a){return a+(arguments.length>1&&arguments[1]!==void 0?arguments[1]:5)}"]
+		]) {
+			expect(minifyOnePass(source, { compress: {}, mangle: false, module: true }).code).toBe(expected);
+		}
 	});
 });
