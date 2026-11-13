@@ -625,7 +625,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["", "console.log(\"%s\",`${globalThis.name} has \\${globalThis.flag=1} left`,globalThis.flag);"],
 			["-2", "console.log(`${globalThis.name} has \\${x} and a\\${y} and b\\${z}`);"],
 			// Nor do a `\0` and a folded digit, `</script` or `<!--` split across parts.
-			["-3", "console.log(`${globalThis.name} \\x001 <\\/script> \\x3c!--`);"]
+			["-3", "console.log(`${globalThis.name} \\x001 <\\/script> \\x3c!--`);"],
+			// A template within joins in place unless a `$` it ends with meets a folded `{`.
+			["-4", "console.log(`${globalThis.name} a${`b${globalThis.name}$`}{z} cd${globalThis.name}e`);"]
 		]) {
 			const source = fixture("javascript", `javascript-minifier-printing-a-syntax-tree-should-escape-a-template-s-text-as-one-run${name}`);
 			const { code } = minifyOnePass(source, { compress: {}, mangle: true });
