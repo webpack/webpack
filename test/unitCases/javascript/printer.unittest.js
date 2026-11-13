@@ -2166,3 +2166,25 @@ describe("one-pass minify, family X round 9", () => {
 		expect(beautified).toBe("function f() {\nvar a = g();\n\nvar b = h(a);\nreturn [ a, b ];\n}");
 	});
 });
+
+describe("printing again what the one pass printed", () => {
+	it("should print a conditional's merged call and a call printing as its argument without parentheses a reprint drops", () => {
+		const options = { compress: {}, mangle: false };
+		for (const [source, expected, sourceType] of [
+			// A conditional printing as one call takes back the `(` it opened with, but as `new`'s callee, an `await`'s argument or a tag.
+			["function f(e,t){t&&(e?console.error(\"a\",e):console.error(\"b\",e))}", "function f(e,t){t&&console.error(e?\"a\":\"b\",e)}"],
+			["function f(i,a){return 3*(0!==i?Math.abs(i):Math.abs(a))}", "function f(i,a){return 3*Math.abs(0!==i?i:a)}"],
+			["function f(e,t,g){x=new (e?g(\"aaaa\",e,t,1):g(\"bbbb\",e,t,1))}", "function f(e,t,g){x=new(e?g(\"aaaa\",e,t,1):g(\"bbbb\",e,t,1))}"],
+			["function f(e,t,g){x=(e?g(\"aaaa\",e,t,1):g(\"bbbb\",e,t,1))`q`}", "function f(e,t,g){x=(e?g(\"aaaa\",e,t,1):g(\"bbbb\",e,t,1))`q`}"],
+			["const flag=typeof Promise===\"function\";export const picked=await(flag?Promise.resolve(4):Promise.resolve(5));", "let flag=\"function\"==typeof Promise;export const picked=await(flag?Promise.resolve(4):Promise.resolve(5));", "module"],
+			// A call printing as the argument its parameter's one read evaluates parenthesizes it as that argument.
+			["function w(a){x=(function(b){return b})(a||g())}", "function w(a){x=a||g()}"],
+			["function w(a){x=y*(function(b){return b})(a||g())}", "function w(a){x=y*(a||g())}"]
+		]) {
+			const settled = sourceType === "module" ? { sourceType: /** @type {const} */ ("module") } : {};
+			const once = minifyOnePass(source, { ...options, ...settled }).code;
+			expect(once).toBe(expected);
+			expect(minifyOnePass(once, { ...options, ...settled }).code).toBe(once);
+		}
+	});
+});
