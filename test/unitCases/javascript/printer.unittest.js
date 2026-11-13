@@ -1572,3 +1572,13 @@ describe("one-pass minify, family K round 6", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 });
+
+describe("one-pass minify, family L round 6", () => {
+	it("should fold a `var` set after calls that reach no function of the body reading it", () => {
+		const source = fixture("javascript", "one-pass-l3-1");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// An `if` calling `read` runs it before `value` is set, as a function or class handed to a call may; a global's call, a parameter or `eval` reaches none.
+		expect(code).toBe("function early(){read()?console.log(\"set\"):console.log(\"unset\");var value=1;function read(){return value}return[read,read]}console.log(early()[1]());function builtIn(){console.log(\"built-in\");function read(){return 2}return[read,read]}console.log(builtIn()[1]());function handed(run){run(function(){return read()});var value=3;function read(){return value}return[read,read]}console.log(handed(function(f){console.log(f())})[1]());function arrow(run){run(()=>read());var value=4;function read(){return value}return[read,read]}console.log(arrow(function(f){console.log(f())})[1]());function named(run){run(read);var value=5;function read(){return value}return[read,read]}console.log(named(function(f){console.log(f())})[1]());function classes(run){class Reader{get(){return read()}}run(new Reader);var value=6;function read(){return value}return[read,read]}console.log(classes(function(r){console.log(r.get())})[1]());function expressed(run){run(new class{get(){return read()}});var value=7;function read(){return value}return[read,read]}console.log(expressed(function(r){console.log(r.get())})[1]());function passed(run){run(run);function read(){return 8}return[read,read]}console.log(passed(function(){})[1]());function evaluated(run){run(eval);var value=9;function read(){return value}return[read,read]}console.log(evaluated(function(){})[1]());function kept(target){var size=target.size(1),key=\"orientationchange\";function fire(){target.trigger(key)}target.bind(\"resize\",fire),target.bind(\"scroll\",fire),target.on[key]=function(handler){return handler?target.bind(key,handler):target.trigger(key)};if(target.flags)target.flags[key]=size}var target={size:function(n){return n},trigger:function(name){console.log(\"trigger\",name)},bind:function(name,f){console.log(\"bind\",name);if(\"function\"==typeof f)f()},on:{},flags:{}};kept(target),console.log(Object.keys(target.on).join(),target.flags.orientationchange);");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+});
