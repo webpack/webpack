@@ -2024,3 +2024,16 @@ describe("one-pass minify, family S round 8, switches", () => {
 		expect(minifyOnePass("function f(a){var y=g();switch(a){case 1:y=b;break;default:y=y+1}return y}", options).code).toBe("function f(a){var y=g();return a===1?y=b:y+=1,y}");
 	});
 });
+
+describe("one-pass minify, family B round 9", () => {
+	const options = { compress: {}, mangle: false };
+
+	it("should join string literals where the joined one prints shorter in the quotes it takes", () => {
+		const source = fixture("javascript", "one-pass-b9-1");
+		const { code } = minifyOnePass(source, options);
+		// Counted in the quotes it prints with, not as JSON escapes them; one
+		// whose quotes the joined string would escape stays apart.
+		expect(code).toBe("function warn(name,ref){console.log('Component \"%s\" contains the string ref \"%s\". Support for string refs will be removed in a future major release.',name,ref)}function quoted(){return'Say \"hi\" or \"bye\"'}function escaped(){return\"tab\\tnew\\nline\"}warn(\"a\",\"b\"),console.log(quoted(),escaped());function mixed(){return\"''''\"+'\"\"\"\"'}console.log(mixed());");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+});
