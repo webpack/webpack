@@ -49038,6 +49038,24 @@ exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module
 
 exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-3 tokenizes 1`] = `"import[0,6] name[7,8] name[9,13] string[14,19]=\\"./x\\" ;[19,20] </>/<=/>=[21,22] !/~[22,23] ++/--[23,25] name[26,33] eof[34,34]"`;
 
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-4 parses 1`] = `"Program[0,55](body=[VariableDeclaration[11,25](declarations=[VariableDeclarator[15,24](id=Identifier[15,20](name=\\"first\\") init=Literal[23,24](value=1 raw=\\"1\\"))] kind=\\"var\\"),VariableDeclaration[39,54](declarations=[VariableDeclarator[43,53](id=Identifier[43,49](name=\\"second\\") init=Literal[52,53](value=2 raw=\\"2\\"))] kind=\\"var\\")] sourceType=\\"script\\")"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-4 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-4 prints {"mode":"minify"} 1`] = `"throws: Unexpected token (1:26)"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-4 tokenizes 1`] = `"block[0,10] var[11,14] name[15,20] =[21,22] num[23,24] ;[24,25] line[26,38] var[39,42] name[43,49] =[50,51] num[52,53] ;[53,54] eof[55,55]"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-report-a-script-read-after-a-failed parses 1`] = `"Program[0,15](body=[VariableDeclaration[0,14](declarations=[VariableDeclarator[4,13](id=Identifier[4,9](name=\\"value\\") init=Literal[12,13](value=1 raw=\\"1\\"))] kind=\\"var\\")] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-report-a-script-read-after-a-failed parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-report-a-script-read-after-a-failed parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-report-a-script-read-after-a-failed prints {"mode":"minify"} 1`] = `"var value=1;"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-report-a-script-read-after-a-failed tokenizes 1`] = `"var[0,3] name[4,9] =[10,11] num[12,13] ;[13,14] eof[15,15]"`;
+
 exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-single-parse-a-top parses 1`] = `"throws: 'return' outside of function (2:8)"`;
 
 exports[`JavaScript syntax — invariants webpack-parser-auto-source-type-module-script-fallback-should-single-parse-a-top parses 2`] = `"error[40,46]:illegal-return"`;

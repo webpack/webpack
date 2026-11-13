@@ -627,6 +627,57 @@ describe("WebpackParser", () => {
 			expect(parseError).toHaveBeenCalledTimes(1);
 		});
 
+		it("should report a script read after a failed module parse once", () => {
+			const { parseProgram, takeParsedTree } = require("../../../lib/javascript/syntax-parser");
+			const source = fixture("javascript", "webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-4");
+			/** @type {EXPECTED_ANY[]} */
+			const comments = [];
+			/** @type {EXPECTED_ANY[]} */
+			const tokens = [];
+			parseProgram(source, 0, {
+				sourceType: "auto",
+				onComment: comments,
+				onToken: tokens
+			});
+			/** @type {import("../../../lib/javascript/syntax-parser").SyntaxTree} */ (takeParsedTree()).release();
+			expect(comments.map((comment) => comment.value)).toEqual([" lead ", " comment"]);
+			expect(tokens.filter((token) => token.value === "first")).toHaveLength(1);
+			// a callback is told of each token as read, which no retry could take back
+			const onComment = jest.fn();
+			expect(() =>
+				parseProgram(source, 0, { sourceType: "auto", onComment })
+			).toThrow("Unexpected token (1:26)");
+			expect(onComment).toHaveBeenCalledTimes(1);
+			for (const name of ["onToken", "onTokenRead", "onInsertedSemicolon", "onTrailingComma"]) {
+				expect(() =>
+					parseProgram(source, 0, { sourceType: "auto", [name]: () => {} })
+				).toThrow("Unexpected token (1:26)");
+			}
+			// an error a callback throws is no syntax error to read past
+			const valid = fixture("javascript", "webpack-parser-auto-source-type-module-script-fallback-should-report-a-script-read-after-a-failed");
+			const thrown = new Error("from a callback");
+			let reads = 0;
+			expect(() =>
+				parseProgram(valid, 0, {
+					sourceType: "auto",
+					onTokenRead: () => {
+						if (reads++ === 0) throw thrown;
+					}
+				})
+			).toThrow(thrown);
+			expect(reads).toBe(1);
+			const syntaxError = new SyntaxError("from a callback");
+			expect(() =>
+				parseProgram(valid, 0, {
+					sourceType: "auto",
+					onComment: [],
+					onToken: () => {
+						throw syntaxError;
+					}
+				})
+			).toThrow(syntaxError);
+		});
+
 		it("should produce the same AST as an explicit script parse", () => {
 			const code = fixture("javascript", "webpack-parser-auto-source-type-module-script-fallback-should-produce-the-same");
 			const strip = (/** @type {unknown} */ node) =>
