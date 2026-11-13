@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": "()=>/*! c */1);\n      -> )=>/*! c */1;",
-		"why": "an arrow a folded `??` leaves as the whole value keeps the parentheses it took as that operator's operand; a second pass reads it alone and needs none, the same meaning 2 B shorter"
-	}
-]
