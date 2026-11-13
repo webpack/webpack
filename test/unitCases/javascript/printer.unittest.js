@@ -2087,4 +2087,22 @@ describe("one-pass minify, family Z round 9", () => {
 		expect(minifyOnePass("function f(a,value){if(a)return value;if(value)return value;return g()}", options).code).toBe("function f(a,value){return a?value:value||g()}");
 		expect(minifyOnePass("function f(a,other){if(a)return o.value;if(other)return o.value;return other}", options).code).toBe("function f(a,other){return a?o.value:other&&o.value}");
 	});
+
+	it("should print an `else` after an `if` leaving its function or loop bare inside the negated `if`, the expressions after joining it", () => {
+		const source = fixture("javascript", "one-pass-Z6-2");
+		const { code } = minifyOnePass(source, options);
+		expect(code).toBe("const log=[];function track(event){if(event)log.push(\"event\"),log.push(event)}function flush(queue){if(queue.length!==0)log.push(\"flush\"),log.push(queue.length),queue.length=0,log.push(\"done\")}function each(items){for(let item of items)if(item!==0)log.push(\"item\"),log.push(item)}track(\"a\"),track(\"\"),flush([1,2]),flush([]),each([1,0,2]),console.log(log.join());");
+		expect(runProgram(code)).toBe(runProgram(source));
+		// A dropped expression of the `else`, and a statement printing nothing after.
+		expect(minifyOnePass("function f(){if(x)return;else{1;g()}w()}", options).code).toBe("function f(){if(!x)g(),w()}");
+		expect(minifyOnePass("function f(){if(x)return;else z();w();;}", options).code).toBe("function f(){if(!x)z(),w()}");
+	});
+
+	it("should keep `return;` before an `else` where the block would not print as one expression", () => {
+		// An `else` or a statement after that is no expression, an exit after, or an `if` returning a value.
+		expect(minifyOnePass("function f(){if(x)return;else for(;;)g();w()}", options).code).toBe("function f(){if(x)return;for(;;)g();w()}");
+		expect(minifyOnePass("function f(){if(x)return;else z();w();if(q)v()}", options).code).toBe("function f(){if(x)return;z();w();if(q)v()}");
+		expect(minifyOnePass("function f(){if(x)return;else z();w();return 5}", options).code).toBe("function f(){if(x)return;z();return w(),5}");
+		expect(minifyOnePass("function f(){if(x)return 1;else g();w()}", options).code).toBe("function f(){if(x)return 1;g();w()}");
+	});
 });
