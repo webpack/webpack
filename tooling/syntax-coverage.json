@@ -1,8 +1,8 @@
 {
   "css": {
     "lib/css/syntax-parser.js": {
-      "statements": 15,
-      "branches": 19,
+      "statements": 14,
+      "branches": 18,
       "functions": 0
     },
     "lib/css/syntax-printer.js": {
