@@ -450,6 +450,37 @@ describe("SourceProcessor — streamed walk offsets", () => {
 		expect(outer).toEqual(["html:", "head:", "body:", "p:<p>outer</p>"]);
 	});
 
+	it("tokenizes the outer document with its own context after the document's enter nests a fragment run", () => {
+		/** @type {string[]} */
+		const outer = [];
+		/** @type {string[]} */
+		const inner = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
+					[NodeType.Document]: () => {
+						new SourceProcessor()
+							.use(
+								/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
+									[NodeType.Element]: (path) => {
+										inner.push(path.name());
+									}
+								})
+							)
+							.process(fixture("html", "source-processor-a-run-inside-a-run-textarea-fragment-inner"), {
+								fragmentContext: "textarea"
+							});
+					},
+					[NodeType.Element]: (path) => {
+						outer.push(path.name());
+					}
+				})
+			)
+			.process(fixture("html", "source-processor-a-run-inside-a-run-document-enter-outer"));
+		expect(inner).toEqual(["html"]);
+		expect(outer).toEqual(["html", "head", "body", "p"]);
+	});
+
 	it("runs a walk and a print a streamed walk's visitor starts mid-parse", () => {
 		const count = 30000;
 		/**
