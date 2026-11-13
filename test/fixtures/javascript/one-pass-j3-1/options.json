@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"ecma": 2020,
+			"pure_funcs": ["debug"]
+		},
+		"ecma": 2020,
+		"mangle": false
+	}
+]

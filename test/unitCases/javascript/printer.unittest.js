@@ -1600,3 +1600,13 @@ describe("one-pass minify, family L round 6", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 });
+
+describe("one-pass minify, family J round 6", () => {
+	it("should drop an unread `pure_funcs` call, keeping what its arguments run", () => {
+		const options = { compress: { ecma: 2020, pure_funcs: ["debug"] }, ecma: 2020, mangle: false };
+		// terser's `pure_funcs`: the call goes, a call or a member read in its arguments stays; a returned one stays whole.
+		expect(minifyOnePass(fixture("javascript", "one-pass-j3-1"), options).code).toBe(
+			"function log(value){return console.log(value),value}function f(a,b){return log(a),b.length,debug(log(b))}f(1,[2,3]);"
+		);
+	});
+});
