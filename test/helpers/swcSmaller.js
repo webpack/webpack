@@ -396,6 +396,7 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what swc's `fixture/next` tests cover",
 		[
+			"swc minifier: fixture/next/target-es2015/static/chunks/main-04b5934c26266542/input.js",
 			"swc minifier: fixture/next/33265/static/chunks/d6e1aeb5-38a8d7ae57119c23/input.js",
 			"swc minifier: fixture/next/33265/static/chunks/pages/index-cb36c1bf7f830e3c/input.js",
 			"swc minifier: fixture/next/43208/static/chunks/pages/index-e1d69965f0f167c9/input.js",
