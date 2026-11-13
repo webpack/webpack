@@ -1922,3 +1922,39 @@ describe("one-pass minify, family V round 8", () => {
 	});
 
 });
+
+describe("one-pass minify, family S round 8", () => {
+	it("should keep the name a declarator gives an anonymous function or class its one read would lose", () => {
+		const source = fixture("javascript", "one-pass-s5-1");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// Only a call or a tag of a function shows nothing of its name, but through `arguments.callee`; a class's static block runs as it is made.
+		expect(code).toBe("function show(value){return value.name}function declared(){var made=function(){};return show(made)}function classes(){var made=class{};return made.name}function arrows(){var made=()=>1;return made.name}function properties(){var made=function(){};return made.name}function called(){return\"called\"}function tagged(){return(parts=>parts[0])`tagged`}function callee(){var made=function(){return arguments.callee.name};return made()}function staticName(){var made=class{static{console.log(\"static\",this.name)}};try{made()}catch(error){return error.constructor.name}}console.log(declared(),classes(),arrows(),properties(),called(),tagged(),callee(),staticName());");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should keep the name an assignment gives an anonymous function its read would lose", () => {
+		const source = fixture("javascript", "one-pass-s5-2");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe("function show(value){return value.name}function assigned(){var made=function(){};return show(made)}function inPlace(made){return(made=function(){}).name}function chained(){var inner;return(outer=inner=function(){}).name}function calledAssigned(){return\"called\"}var outer;console.log(assigned(),inPlace(),chained(),calledAssigned());");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should print a folded anonymous function or class a naming place holds as `(0,f)`", () => {
+		const source = fixture("javascript", "one-pass-s5-3");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// Where the test and the part going are no longer than `(0,)`, the expression stays; a computed key or an element names nothing.
+		expect(code).toBe("var or=0||function(){},nullish=(0,function(){}),wrapped=(0,()=>1),picked=(0,()=>1),kept=1?function(){}:0,keyed={[()=>1]:1},bare=[()=>1],assigned=(0,class{});function defaulted(value=(0,()=>1)){return value.name}var object={value:(0,()=>1)};class Field{value=(0,()=>1)}console.log(or.name,nullish.name,wrapped.name,picked.name,kept.name,Object.keys(keyed).length,bare[0].name),console.log(assigned.name,defaulted(),object.value.name,(new Field).value.name);");
+		expect(runProgram(code)).toBe(runProgram(source));
+		const options = { compress: {}, mangle: false, module: true };
+		expect(minifyOnePass("x=void 0??(()=>/*! c */1)", options).code).toBe("x=void 0??(()=>/*! c */1);");
+		expect(minifyOnePass("var r=function(){};export default r", options).code).toBe("var r=function(){};export default r;");
+		expect(minifyOnePass("export default 1?class{}:null", options).code).toBe("export default(0,class{});");
+	});
+
+	it("should keep a call in place returning an anonymous function where its place would name it", () => {
+		const source = fixture("javascript", "one-pass-s5-4");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe("var made=function(){return function(){}}(),arrow=(()=>()=>1)();console.log(made.name,arrow.name,[()=>1][0].name);");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+});
