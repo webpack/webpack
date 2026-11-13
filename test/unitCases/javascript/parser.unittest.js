@@ -1,6 +1,7 @@
 "use strict";
 
 const { fixture, fixtures } = require("../../helpers/fixture");
+const supportsOptionalChaining = require("../../helpers/supportsOptionalChaining");
 
 /** @typedef {{ type: { label: string }, value: unknown, start: number, end: number, loc?: object, range?: [number, number] }} TokenLike */
 /** @typedef {Record<string, EXPECTED_ANY>} Options */
@@ -3625,7 +3626,10 @@ describe("Parser", () => {
 		])) {
 			it(`reads the slashes after ${name.replace(/-/g, " ")}`, () => {
 				const source = fixture("javascript", `parser-division-after-an-operand-${name}`);
-				expect(() => new (require("vm").Script)(source)).not.toThrow();
+				// the host engine reads `?.` only from Node.js 14 on
+				if (!source.includes("?.") || supportsOptionalChaining()) {
+					expect(() => new (require("vm").Script)(source)).not.toThrow();
+				}
 				/** @type {ParserOptions} */
 				const options = { ecmaVersion: "latest", sourceType: "script" };
 				// the parse a build runs
