@@ -2142,3 +2142,59 @@ describe("moving a value made of names", () => {
 		}
 	});
 });
+
+describe("printing Babel's default parameters as ES2015 ones", () => {
+	it("should print the leading `var`s Babel writes for defaults as parameters, where the output may use them and nothing tells the two apart", () => {
+		const options = { compress: {}, mangle: false, ecma: 2020 };
+		// Calls each `f` missing, passing `undefined` and passing a value, and reads its `length`.
+		const CALL_F = 'var r=[];function g(){r.push("g");return 7}console.log(JSON.stringify([f(1),f(1,void 0),f(1,2),f(1,2,3),f.length,r]))';
+		for (const [source, expected] of [
+			// Each default may read the parameters and defaults before it, and runs only where the argument is missing.
+			["function f(a){var b=arguments.length>1&&arguments[1]!==undefined?arguments[1]:g();var c=arguments.length>2&&void 0!==arguments[2]?arguments[2]:a+b;return[a,b,c]}", "function f(a,b=g(),c=a+b){return[a,b,c]}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:{x:a},c=a;return[b,c]}", "function f(a,b={x:a}){return[b,a]}"],
+			["var o={m(a){var b=arguments.length>1&&arguments[1]!==undefined?arguments[1]:5;return a+b}};function f(a,b){return o.m(a,b)}", "var o={m(a,b=5){return a+b}};function f(a,b){return o.m(a,b)}"],
+			// Another read of `arguments`, a name the body binds, the wrong index or a generator keep the `var`.
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;return[b,arguments.length]}", "function f(a){return[arguments.length>1&&arguments[1]!==void 0?arguments[1]:5,arguments.length]}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:x;var x=1;return[b,x]}", "function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:x,x=1;return[b,x]}"],
+			["function f(a){var b=arguments.length>2&&arguments[2]!==void 0?arguments[2]:5;return[b]}", "function f(a){return[arguments.length>2&&arguments[2]!==void 0?arguments[2]:5]}"],
+			// A default may not wait, read `eval` or make a function; an accessor, a rest or a repeated parameter, a function of the name or a value nothing reads keep them.
+			["async function h(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:await a;return b}function f(a){return 0}", "async function h(a){return arguments.length>1&&arguments[1]!==void 0?arguments[1]:await a}function f(a){return 0}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:eval(\"a\");return b}", "function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:eval(`a`);return b}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:function(){return a};return typeof b}", "function f(a){return typeof(arguments.length>1&&arguments[1]!==void 0?arguments[1]:function(){return a})}"],
+			["var o={set v(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;this.x=b}};function f(a){return o.v=a,o.x}", "var o={set v(a){this.x=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5}};function f(a){return o.v=a,o.x}"],
+			["function f(...a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;return b}", "function f(...a){return arguments.length>1&&arguments[1]!==void 0?arguments[1]:5}"],
+			["function f(a,a){var b=arguments.length>2&&arguments[2]!==void 0?arguments[2]:5;return b}", "function f(a,a){return arguments.length>2&&arguments[2]!==void 0?arguments[2]:5}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;function b(){}return typeof b}", "function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;function b(){}return typeof b}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:g();return a}", "function f(a){arguments.length>1&&arguments[1]!==void 0?arguments[1]:g();return a}"],
+			// A function inside reads its own `arguments`; a value not written as Babel writes defaults stays.
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;function k(){return arguments.length}return[b,k(1)]}", "function f(a,b=5){return[b,function(){return arguments.length}(1)]}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;var k=function(){return arguments.length};return[b,k(1)]}", "function f(a,b=5){return[b,function(){return arguments.length}(1)]}"],
+			["function f(){var a=arguments.length>0&&arguments[0]!==void 0?arguments[0]:g();return[a]}", "function f(a=g()){return[a]}"],
+			["function f({a}){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;return[a,b]}", "function f({a},b=5){return[a,b]}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;var c=arguments.length>2&&arguments[2]!==void 0?arguments[2]:x;var x=b;return[b,c,x]}", "function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5,c=arguments.length>2&&arguments[2]!==void 0?arguments[2]:x,x=b;return[b,c,x]}"],
+			["function f(a){var b=a?arguments[1]:5;return b}", "function f(a){return a?arguments[1]:5}"],
+			["function f(a){var b=arguments.length>1||arguments[1]!==void 0?arguments[1]:5;return b}", "function f(a){return arguments.length>1||arguments[1]!==void 0?arguments[1]:5}"],
+			["function f(a){var b=arguments.length>=1&&arguments[1]!==void 0?arguments[1]:5;return b}", "function f(a){return arguments.length>=1&&arguments[1]!==void 0?arguments[1]:5}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!=null?arguments[1]:5;return b}", "function f(a){return arguments.length>1&&arguments[1]!=null?arguments[1]:5}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==null?arguments[1]:5;return b}", "function f(a){return arguments.length>1&&arguments[1]!==null?arguments[1]:5}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[2]:5;return b}", "function f(a){return arguments.length>1&&arguments[1]!==void 0?arguments[2]:5}"],
+			["function f(a){var b=arguments.length>1&&a!==void 0?arguments[1]:5;return b}", "function f(a){return arguments.length>1&&a!==void 0?arguments[1]:5}"],
+			["function f(a){var b=arguments.size>1&&arguments[1]!==void 0?arguments[1]:5;return b}", "function f(a){return arguments.size>1&&arguments[1]!==void 0?arguments[1]:5}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5,c=a;return[b,c]}", "function f(a,b=5){return[b,a]}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;var c=arguments.length>2&&arguments[2]!==void 0?arguments[2]:b,d=c;return[b,c,d]}", "function f(a,b=5,c=b){return[b,c,c]}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;let c=b;return[c]}", "function f(a,b=5){return[b]}"],
+			["function f(a){return[...h(a)]}function*h(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:g();yield a+b}", "function f(a){return[...h(a)]}function*h(a){yield a+(arguments.length>1&&arguments[1]!==void 0?arguments[1]:g())}"]
+		]) {
+			const { code } = minifyOnePass(source, options);
+			expect(code).toBe(expected);
+			expect(runProgram(code + CALL_F)).toBe(runProgram(source + CALL_F));
+		}
+	});
+
+	it("should keep the `var`s where the output may not use default parameters", () => {
+		const source = "export function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;return a+b}";
+		expect(minifyOnePass(source, { compress: {}, mangle: false, module: true }).code).toBe(
+			"export function f(a){return a+(arguments.length>1&&arguments[1]!==void 0?arguments[1]:5)}"
+		);
+	});
+});
