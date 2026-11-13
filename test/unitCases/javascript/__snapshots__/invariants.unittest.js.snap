@@ -14626,7 +14626,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-as-the-format-options-9 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-as-the-format-options-9 prints {"mode":"minify","compress":{},"format":{"comments":"all"}} 1`] = `"f(),g({/* b */}),h([]);function k(){/* d */}class C{}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-as-the-format-options-9 prints {"mode":"minify","compress":{},"format":{"comments":"all"}} 1`] = `"f(),g({/* b */}),h([]);function k(){/* d */}class C{/* e */}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-as-the-format-options-9 prints {"mode":"minify"} 1`] = `"f();g({});h([]);function k(){}class C{}"`;
 
@@ -17330,21 +17330,21 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-45 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-45 prints {"mode":"minify","compress":{},"mangle":false,"ecma":2015,"format":{"comments":"all","quote_style":3,"keep_quoted_props":true,"keep_numbers":true,"ascii_only":true},"sourceType":"script"} 1`] = `"function e(){/*! a */}x={/*! b */};switch(a){/*! c */}if(a){/*! d */}class K{}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-45 prints {"mode":"minify","compress":{},"mangle":false,"ecma":2015,"format":{"comments":"all","quote_style":3,"keep_quoted_props":true,"keep_numbers":true,"ascii_only":true},"sourceType":"script"} 1`] = `"function e(){/*! a */}x={/*! b */};switch(a){/*! c */}if(a){/*! d */}class K{/*! e */}"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-45 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/","ecma":2020},"sourceType":"script"} 1`] = `"function e(){/*! a */}x={/*! b */};switch(a){/*! c */}if(a){/*! d */}class K{}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-45 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/","ecma":2020},"sourceType":"script"} 1`] = `"function e(){/*! a */}x={/*! b */};switch(a){/*! c */}if(a){/*! d */}class K{/*! e */}"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-45 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/"},"sourceType":"script"} 1`] = `"function e(){/*! a */}x={/*! b */};switch(a){/*! c */}if(a){/*! d */}class K{}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-45 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/"},"sourceType":"script"} 1`] = `"function e(){/*! a */}x={/*! b */};switch(a){/*! c */}if(a){/*! d */}class K{/*! e */}"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-45 prints {"mode":"minify","compress":{},"mangle":true,"format":{"comments":"all"},"sourceType":"script"} 1`] = `"function e(){/*! a */}x={/*! b */};switch(a){/*! c */}if(a){/*! d */}class K{}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-45 prints {"mode":"minify","compress":{},"mangle":true,"format":{"comments":"all"},"sourceType":"script"} 1`] = `"function e(){/*! a */}x={/*! b */};switch(a){/*! c */}if(a){/*! d */}class K{/*! e */}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-45 prints {"mode":"minify","mangle":true,"format":{"comments":"all","wrap_iife":true,"wrap_func_args":true,"webkit":true,"semicolons":false,"preserve_annotations":true,"ie8":true,"safari10":true,"preamble":"/* p */"},"sourceType":"script"} 1`] = `
 "/* p */
 function e(){/*! a */}x={/*! b */}
-switch(a){/*! c */}if(a){/*! d */}class K{}"
+switch(a){/*! c */}if(a){/*! d */}class K{/*! e */}"
 `;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-45 prints {"mode":"minify","mangle":true,"sourceType":"script"} 1`] = `"function e(){/*! a */}x={/*! b */};switch(a){/*! c */}if(a){/*! d */}class K{}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-45 prints {"mode":"minify","mangle":true,"sourceType":"script"} 1`] = `"function e(){/*! a */}x={/*! b */};switch(a){/*! c */}if(a){/*! d */}class K{/*! e */}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-45 prints {"mode":"minify"} 1`] = `"function e(){}x={};switch(a){}if(a){}class K{}"`;
 
@@ -18151,19 +18151,19 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-76 prints {"mode":"minify","compress":{},"mangle":false,"ecma":2015,"format":{"comments":"all","quote_style":3,"keep_quoted_props":true,"keep_numbers":true,"ascii_only":true},"sourceType":"script"} 1`] = `"x={a,if:if_,b:if_,Infinity:1/0,c:1/0,async,get,set,static:s},x={get(){},set(v){},async(){},*gen(){},async*ag(){},get[k](){},set[k](v){},async[k](){},'q'(){},1(){},[k]:1};"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-76 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/","ecma":2020},"sourceType":"script"} 1`] = `"x={a,if:if_,b:if_,Infinity:1/0,c:1/0,async,get,set,static:s},x={get(){},set(e){},async(){},*gen(){},async*ag(){},get[k](){},set[k](e){},async[k](){},q(){},1(){},[k]:1};"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-76 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/","ecma":2020},"sourceType":"script"} 1`] = `"x={a,if:if_,b:if_,Infinity:1/0,c:1/0,async,get,set,static:s},x={get(){},set(s){},async(){},*gen(){},async*ag(){},get[k](){},set[k](s){},async[k](){},q(){},1(){},[k]:1};"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-76 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/"},"sourceType":"script"} 1`] = `"x={a,if:if_,b:if_,Infinity:1/0,c:1/0,async,get,set,static:s},x={get(){},set(e){},async(){},*gen(){},async*ag(){},get[k](){},set[k](e){},async[k](){},q(){},1(){},[k]:1};"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-76 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/"},"sourceType":"script"} 1`] = `"x={a,if:if_,b:if_,Infinity:1/0,c:1/0,async,get,set,static:s},x={get(){},set(s){},async(){},*gen(){},async*ag(){},get[k](){},set[k](s){},async[k](){},q(){},1(){},[k]:1};"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-76 prints {"mode":"minify","compress":{},"mangle":true,"format":{"comments":"all"},"sourceType":"script"} 1`] = `"x={a:a,if:if_,b:if_,Infinity:1/0,c:1/0,async:async,get:get,set:set,static:s},x={get(){},set(e){},async(){},*gen(){},async*ag(){},get[k](){},set[k](e){},async[k](){},q(){},1(){},[k]:1};"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-76 prints {"mode":"minify","compress":{},"mangle":true,"format":{"comments":"all"},"sourceType":"script"} 1`] = `"x={a:a,if:if_,b:if_,Infinity:1/0,c:1/0,async:async,get:get,set:set,static:s},x={get(){},set(s){},async(){},*gen(){},async*ag(){},get[k](){},set[k](s){},async[k](){},q(){},1(){},[k]:1};"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-76 prints {"mode":"minify","mangle":true,"format":{"comments":"all","wrap_iife":true,"wrap_func_args":true,"webkit":true,"semicolons":false,"preserve_annotations":true,"ie8":true,"safari10":true,"preamble":"/* p */"},"sourceType":"script"} 1`] = `
 "/* p */
-x={a:a,\\"if\\":if_,b:if_,Infinity:1/0,c:1/0,async:async,get:get,set:set,\\"static\\":s},x={get(){},set(e){},async(){},*gen(){},async*ag(){},get[k](){},set[k](e){},async[k](){},q(){},1(){},[k]:1}
+x={a:a,\\"if\\":if_,b:if_,Infinity:1/0,c:1/0,async:async,get:get,set:set,\\"static\\":s},x={get(){},set(s){},async(){},*gen(){},async*ag(){},get[k](){},set[k](s){},async[k](){},q(){},1(){},[k]:1}
 "
 `;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-76 prints {"mode":"minify","mangle":true,"sourceType":"script"} 1`] = `"x={a:a,if:if_,b:if_,Infinity:1/0,c:1/0,async:async,get:get,set:set,static:s},x={get(){},set(e){},async(){},*gen(){},async*ag(){},get[k](){},set[k](e){},async[k](){},q(){},1(){},[k]:1};"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-76 prints {"mode":"minify","mangle":true,"sourceType":"script"} 1`] = `"x={a:a,if:if_,b:if_,Infinity:1/0,c:1/0,async:async,get:get,set:set,static:s},x={get(){},set(s){},async(){},*gen(){},async*ag(){},get[k](){},set[k](s){},async[k](){},q(){},1(){},[k]:1};"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-76 prints {"mode":"minify"} 1`] = `"x={a:a,if:if_,b:if_,Infinity:1/0,c:1/0,async:async,get:get,set:set,static:s};x={get(){},set(v){},async(){},*gen(){},async*ag(){},get[k](){},set[k](v){},async[k](){},q(){},1(){},[k]:1};"`;
 

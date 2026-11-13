@@ -6,8 +6,8 @@
 "use strict";
 
 // The relations every syntax's parser and printer are held to with no other
-// tool to compare against: idempotence, spans, slices, purity and cut inputs.
-// The unit tests and the comparison sweeps both read them from here.
+// tool to compare against: idempotence, spans, slices, purity, cut inputs,
+// notices and meaning. The unit tests and the comparison sweeps read them here.
 
 const { createHash } = require("crypto");
 
@@ -473,6 +473,60 @@ const purityRelation = (sources) => {
 
 
 /**
+ * Whether a print keeps every notice its source carries: a comment the
+ * language's minifier is bound to keep, a license or one a browser or server
+ * reads. They are counted, as a print may move one.
+ * @param {(text: string) => number | null} count how many notices a text carries, null where it cannot be read
+ * @param {string} source the input
+ * @param {string} printed what a preset printed of it
+ * @returns {Report[]} one finding where the print carries fewer
+ */
+const noticeRelation = (count, source, printed) => {
+	const before = count(source);
+	const after = count(printed);
+	if (before === null || after === null || after >= before) return [];
+	return [
+		{
+			relation: "notices",
+			what: `dropped ${before - after} of ${before} notices`,
+			repro: `    ${oneLine(printed, 80)}`
+		}
+	];
+};
+
+/**
+ * Whether a print says what its source does: both read by the language's own
+ * parser to one digest of what they mean, with their spelling set aside.
+ * @param {string} said what the source means
+ * @param {string | null} printed what the print means, null where it does not parse
+ * @returns {Report[]} one finding where they part, cut to where they do
+ */
+const meaningRelation = (said, printed) => {
+	if (printed === said) return [];
+	if (printed === null) {
+		return [
+			{
+				relation: "meaning",
+				what: "the print does not parse",
+				repro: `    ${oneLine(said, 80)}`
+			}
+		];
+	}
+	const at = firstDifference(said, printed);
+	const from = Math.max(0, at - 40);
+	return [
+		{
+			relation: "meaning",
+			what: "the print says something else",
+			repro: `    ${oneLine(said.slice(from, at + 40), 80)}\n      -> ${oneLine(
+				printed.slice(from, at + 40),
+				80
+			)}`
+		}
+	];
+};
+
+/**
  * The source cut short just inside the first of each construct past its
  * midpoint, or the first anywhere when none lies past it: the end of the input
  * is where the tokenizer closes what the source left open.
@@ -503,6 +557,8 @@ module.exports = {
 	firstDifference,
 	hasher,
 	idempotence,
+	meaningRelation,
+	noticeRelation,
 	oneLine,
 	pathSpanWalk,
 	purityRelation,

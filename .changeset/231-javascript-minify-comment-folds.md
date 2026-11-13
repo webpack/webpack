@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep a comment by a folded `if` test or dropped `new` from ending a `return`.
+Keep comments in folded returns and empty classes; mangle ignoring literal spelling.

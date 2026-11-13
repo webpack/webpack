@@ -25,6 +25,7 @@ const { wantedRespelling } = require("../../../tooling/compare-tools-harness");
 const {
 	cutsAt,
 	hasher,
+	noticeRelation,
 	oneLine,
 	pathSpanWalk,
 	shrink,
@@ -982,6 +983,49 @@ const meaningReports = (html, printed, options, cssOptions) => {
 	return [];
 };
 
+// A comment's data that is code rather than a comment: a downlevel conditional
+// comment drives IE's branching and `#` opens a server-side include.
+const KEPT_COMMENT = /^\s*(?:\[if|\[endif|<!\[|#)/;
+
+/**
+ * The comments a document carries that no minifier may drop, read by webpack's
+ * own parser: each conditional comment or server-side include, and each
+ * `<?…?>` a server reads as a template tag, which the tree holds as a
+ * processing instruction.
+ * @param {string} html a document
+ * @returns {number} how many it carries
+ */
+const keptComments = (html) => {
+	let count = 0;
+	new SourceProcessor()
+		.use({
+			[NodeType.Comment]: {
+				enter: (nodePath) => {
+					if (KEPT_COMMENT.test(nodePath.value())) count++;
+				},
+				exit: () => {}
+			},
+			[NodeType.ProcessingInstruction]: {
+				enter: () => {
+					count++;
+				},
+				exit: () => {}
+			}
+		})
+		.process(html, {});
+	return count;
+};
+
+/**
+ * Whether the printed document keeps every comment its source carries that
+ * is code rather than a comment (`notices`).
+ * @param {string} html the document
+ * @param {string} printed what a preset printed of it
+ * @returns {import("./relations").Report[]} one finding where it carries fewer
+ */
+const noticeReports = (html, printed) =>
+	noticeRelation(keptComments, html, printed);
+
 // Where a cut lands, by the construct it interrupts: each pattern ends where the
 // document is cut, just inside what the end of the input then has to close.
 /** @type {[string, RegExp][]} */
@@ -1016,8 +1060,10 @@ const invariants = {
 				minify,
 				says: tokenStream,
 				repro: (printed, at) => idempotenceRepro(minify, printed, at),
-				keeps: (html, printed) =>
-					meaningReports(html, printed, options, cssOptions)
+				keeps: (html, printed) => [
+					...meaningReports(html, printed, options, cssOptions),
+					...noticeReports(html, printed)
+				]
 			};
 		}),
 	spans: htmlSpans,
@@ -1043,6 +1089,7 @@ module.exports = {
 	htmlMeaning,
 	idempotenceRepro,
 	meaningReports,
+	noticeReports,
 	printerFor,
 	sameSheets,
 	sweepRespellings,
