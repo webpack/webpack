@@ -55,6 +55,13 @@ describe("LocConverter", () => {
 		expect(at(converter, 0)).toEqual([1, 0]);
 	});
 
+	it("stops at line 1 for an offset before the input, read after a later line", () => {
+		const converter = new LocConverter("a\nb\nc", "javascript");
+		expect(at(converter, 4)).toEqual([3, 0]);
+		expect(at(converter, -1)).toEqual([1, -1]);
+		expect(at(converter, 2)).toEqual([2, 0]);
+	});
+
 	it("handles empty input", () => {
 		const converter = new LocConverter("", "html");
 		expect(at(converter, 0)).toEqual([1, 0]);
