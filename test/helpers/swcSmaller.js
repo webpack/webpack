@@ -362,7 +362,6 @@ const SWC_SMALLER_BY_REASON = [
 		"swc goes further than webpack on what terser's `drop-unused` tests cover",
 		[
 			"terser compress: drop-unused/drop_fargs",
-			"terser compress: drop-unused/iife",
 			"terser compress: drop-unused/issue_2136_2",
 			"terser compress: drop-unused/issue_2136_3",
 			"terser compress: drop-unused/issue_t161_top_retain_1",
@@ -383,7 +382,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/collapse_vars_throw",
 			"terser compress: collapse_vars/collapse_vars_assignment",
 			"terser compress: collapse_vars/collapse_vars_lvalues_drop_assign",
-			"terser compress: collapse_vars/collapse_vars_closures",
 			"terser compress: collapse_vars/issue_1631_1",
 			"terser compress: collapse_vars/conditional_1",
 			"terser compress: collapse_vars/issue_2436_4",
@@ -542,7 +540,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/5846/input.js",
 			"swc minifier: fixture/issues/7412/input.js",
 			"swc minifier: fixture/issues/7784/3/input.js",
-			"swc minifier: fixture/issues/7984/input.js",
 			"swc minifier: fixture/projects/angular/5/input.js",
 			"swc minifier: fixture/projects/backbone/13/input.js",
 			"swc minifier: fixture/projects/backbone/17/input.js",
@@ -722,7 +719,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12307/input.js",
 			"terser compress: collapse_vars/collapse_vars_properties",
 			"terser compress: pure_funcs/assign",
-			"swc minifier: fixture/issues/11108/input.js",
 			"swc minifier: fixture/issues/2028/input.js"
 		]
 	],
@@ -744,8 +740,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: pure_funcs/issue_2705_1",
 			"terser compress: pure_funcs/issue_2705_6",
 			"terser compress: pure_funcs/issue_3065_3",
-			"terser compress: pure_funcs/issue_3065_4",
-			"terser compress: pure_funcs/side_effects"
+			"terser compress: pure_funcs/issue_3065_4"
 		]
 	],
 	[
@@ -770,7 +765,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc resolves a `switch` on a known value at build time, and writes a one-case `switch` as an `if`",
 		[
-			"swc minifier: fixture/issues/9619/input.js",
 			"terser compress: issue-1750/case_2",
 			"terser compress: switch/issue_441_1",
 			"terser compress: switch/issue_441_2",
@@ -809,16 +803,12 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: conditionals/ternary_boolean_consequent",
 			"swc minifier: fixture/projects/react/13/input.js",
 			"terser compress: conditionals/ternary_boolean_alternative",
-			"swc minifier: fixture/issues/12565/if_plain_cons/input.js",
-			"swc minifier: fixture/projects/backbone/4/input.js"
+			"swc minifier: fixture/issues/12565/if_plain_cons/input.js"
 		]
 	],
 	[
 		'swc folds arithmetic and concatenation of literals (`"1"+"2"`, `1+""`, `5+3`) that terser leaves as written',
-		[
-			"terser compress: dead-code/collapse_vars_misc1",
-			"swc minifier: fixture/issues/8706/input.js"
-		]
+		["terser compress: dead-code/collapse_vars_misc1"]
 	],
 	[
 		"swc goes further than webpack on what terser's `arrays` tests cover",
@@ -905,10 +895,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc goes further than webpack on what terser's `global_defs` tests cover",
-		[
-			"terser compress: global_defs/issue_2167",
-			"terser compress: global_defs/conditional_chains"
-		]
+		["terser compress: global_defs/issue_2167"]
 	],
 	[
 		"swc goes further than webpack on what terser's `if_return` tests cover",
