@@ -28289,6 +28289,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
 	 */
 	printPiece(path: TPath): string;
 	get(node: TNode): string;
+	lookup(node: TNode): undefined | string;
 
 	/**
 	 * Read a child's text for the one time anything reads it: the slot lets go
