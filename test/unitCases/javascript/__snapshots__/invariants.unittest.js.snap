@@ -10418,7 +10418,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-715 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-715 prints {"mode":"minify","compress":{},"mangle":{"toplevel":false}} 1`] = `"function f(c){if(c===1){if(a()!==2)e()}else e()}({a:1}[k()])===1?x():y();"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-715 prints {"mode":"minify","compress":{},"mangle":{"toplevel":false}} 1`] = `"function f(c){if(c===1){if(a()!==2)e()}else e()}({a:1})[k()]===1?x():y();"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-715 prints {"mode":"minify"} 1`] = `"function f(n){switch(n){case 1:switch(a()){case 2:break;default:e()}break;default:e()}}(d=>d[k()])({a:1})===1?x():y();"`;
 
