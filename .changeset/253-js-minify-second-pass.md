@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Print JavaScript minified in one pass as a second pass would reprint it.
+Print one-pass minified JavaScript as a second pass would, and keep folded calls unbound.
