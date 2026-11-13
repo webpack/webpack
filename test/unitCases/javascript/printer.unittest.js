@@ -2104,3 +2104,21 @@ describe("folding a `var` set after calls", () => {
 		}
 	});
 });
+
+describe("moving a value made of names", () => {
+	it("should keep a value reading a `var` its declarator sets after where it is", () => {
+		const options = { compress: {}, mangle: false };
+		for (const [source, expected] of [
+			// Read before its declarator, the `var` is `undefined` there, not where the value is read later.
+			["function h(){var n=[r],r=4;return[n,function(){return r}]}console.log(JSON.stringify(h()))", "function h(){var n=[r],r=4;return[n,function(){return r}]}console.log(JSON.stringify(h()));"],
+			// Its function's declarator cannot run between the value and its read.
+			["function o(){function i(){var n=[r];g();return n}var r=g();return[i(),i()]}function g(){return{}}console.log(JSON.stringify(o()))", "function o(){function i(){g();return[r]}var r=g();return[i(),i()]}function g(){return{}}console.log(JSON.stringify(o()));"],
+			// Set by then, it holds its value wherever later the value is made.
+			["function h(){var r=4,n=[r];return[n,function(){return r}]}console.log(JSON.stringify(h()))", "function h(){return[[4],function(){return 4}]}console.log(JSON.stringify(h()));"]
+		]) {
+			const { code } = minifyOnePass(source, options);
+			expect(code).toBe(expected);
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+	});
+});
