@@ -1880,3 +1880,30 @@ describe("one-pass minify, family T round 8", () => {
 		expect(minifyOnePass("function f(r){var a=function(o){return this.x+o.y+o}(r());return[a,a]}", { compress: {}, mangle: false }).code).toBe("function f(r){var a=function(o){return this.x+o.y+o}(r());return[a,a]}");
 	});
 });
+
+describe("one-pass minify, family V round 8", () => {
+	it("should join a `var` set by both branches of an `if` as its value", () => {
+		const source = fixture("javascript", "one-pass-v5-1");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// An `else` chain joins; an `if` without `else`, a branch running more, setting another or compounding, or a comment, keeps it apart.
+		expect(code).toBe("function pick(flag){return(flag?\"yes\":flag===0?\"zero\":\"no\")+\"!\"}console.log(pick(1),pick(0),pick(\"\"));function partial(flag){var value;if(flag)value=\"set\";return value}console.log(partial(1),partial(0));function more(flag){var value;if(flag){value=1;for(var key in flag)console.log(key)}else value=2;return value}console.log(more({a:1}),more(0));function other(flag,box){var value;return flag?value=1:box.value=2,value}console.log(other(1,{}),other(0,{}));function adds(flag){var value;return flag?value=1:value+=2,value}console.log(adds(1),adds(0));function calls(flag){var value;return flag?value=1:console.log(\"calls\"),value}console.log(calls(1),calls(0));function exits(flag){var value;if(flag)value=1;else return 2;return value}console.log(exits(1),exits(0));function commented(flag){var value;if(flag)value=1;/*! kept */else value=2;return value}console.log(commented(1),commented(0));");
+		expect(runProgram(code)).toBe(runProgram(source));
+		// A function the assignment names, or a test or value reading the name, stays apart.
+		expect(
+			minifyOnePass(
+				"function f(t){var v;if(t)v=function(){};else v=2;return[v]}function g(t){var v;if(t)v=class N{};else v=()=>{};return[v]}function h(t){var v;if(t)v=\"a\";else v=typeof v;return[v]}function k(t){var v;if(v===t)v=\"a\";else v=\"b\";return[v]}function m(t){var v;if(t)v=(function(){});else v=2;return[v]}",
+				{ compress: {}, mangle: false }
+			).code
+		).toBe(
+			"function f(t){var v;v=t?function(){}:2;return[v]}function g(t){var v;v=t?class{}:()=>{};return[v]}function h(t){var v;v=t?\"a\":typeof v;return[v]}function k(t){var v;v=v===t?\"a\":\"b\";return[v]}function m(t){var v;v=t?function(){}:2;return[v]}"
+		);
+		// Branches printing alike as an operation print once, after the test.
+		expect(
+			minifyOnePass("var x;if(y)x=1+1;else x=2;g(x,y?a+b:a+b)", {
+				compress: {},
+				mangle: false
+			}).code
+		).toBe("var x=(y,2);g(x,(y,a+b));");
+	});
+
+});
