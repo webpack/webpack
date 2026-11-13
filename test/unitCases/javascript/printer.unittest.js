@@ -1528,3 +1528,47 @@ describe("one-pass minify, family I round 6", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 });
+
+describe("one-pass minify, family K round 6", () => {
+	const options = { compress: { ecma: 2020 }, ecma: 2020, mangle: false };
+
+	it("should read a name a null check assigns as its optional chain", () => {
+		const source = fixture("javascript", "one-pass-K3-1");
+		const { code } = minifyOnePass(source, options);
+		// Babel's `(n=a.x)==null?void 0:n.y`, `===null||n===void 0` too; a `??` would leave `n` set and unread.
+		expect(code).toBe(
+			"function f(a){var n;return(n=a.x)?.y()}function g(a){var n;return(n=a.x)?.y}function h(a){var n;return(n=a.x)?.[0]}function k(a){var n;return(n=a.x)?.(1)}function l(a){var n;return(n=a.x)?.y}function m(a){var n;return(n=a.x)!=null?n:7}function p(a){var n;(n=a.x)?.y()}function q(a){var n;(n=a.x)?.y()}console.log(f({x:{y:()=>1}}),f({}),g({x:{y:2}}),h({x:[3]}),k({x:v=>v}),l({}),m({x:0})),p({x:{y:()=>console.log(`p`)}}),q({x:{y:()=>console.log(`q`)}}),p({}),q({});"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+		// Before ES2020 there is no `?.`.
+		expect(
+			minifyOnePass(source, { ...options, compress: { ecma: 2019 }, ecma: 2019 })
+				.code
+		).toContain("return(n=a.x)==null?void 0:n.y()");
+	});
+
+	it("should keep a null check whose chain reads another name, a global, a `with`'s or `eval`", () => {
+		const source = fixture("javascript", "one-pass-K3-2");
+		expect(minifyOnePass(source, options).code).toBe(
+			"function f(a){var m;return a.x==null?void 0:m.y}function g(a){return(x=a.x)==null?void 0:x.y}function h(a){return a.x!=null?m:7}function k(a){var n;return(n+=a.x)==null?void 0:n.y}function l(a){var n;with(a)return(n=a.x)==null?void 0:n.y}function r(a){var eval;return(eval=a.x)==null?void 0:eval(1)}function s(a,b){var n;return(n=a.x)==b?void 0:n.y}function t(a,b){var n;return(n=a.x)===null||b?void 0:n.y}function u(a){var n;return(n=a.x)==null?void 0:n.y}"
+		);
+	});
+
+	it("should drop the `!!` of a boolean `&&` or `||` where its parentheses go too", () => {
+		const source = fixture("javascript", "one-pass-K3-3");
+		// Beside a `,`, under another `&&` or an operator, the parentheses stay and so does `!!`.
+		expect(minifyOnePass(source, options).code).toBe(
+			"var v=a==b||c==d,w=a==b&&(c<d||e in f),x=a==b?c==d:!e,y=!!(a==b||c),z=[!!(g(a,b)==b||c==d)],u=p&&!!(a==b||c==d),t=a==b||c==d,s=!!(a==b||c==d)+1;console.log(v,w,x,y,z,u,t,s);"
+		);
+	});
+
+	it("should merge the calls of a built-in's member a pure test picks between", () => {
+		const source = fixture("javascript", "one-pass-K3-4");
+		const { code } = minifyOnePass(source, options);
+		// A local object's member may be a getter, a test may run code, and a computed key stays.
+		expect(code).toBe(
+			"function f(e,o){console.log(e||JSON.stringify(o))}function g(e){return Math.max(e?1:2,e)}function h(e,o){e?o.log(1):o.log(2)}function k(e){e()?console.log(1):console.log(2)}function l(e){e?console[e](1):console[e](2)}f(0,{a:1}),f(`x`),console.log(g(5),g(0));"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+});
