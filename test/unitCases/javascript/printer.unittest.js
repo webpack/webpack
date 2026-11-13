@@ -636,6 +636,24 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		}
 	});
 
+	it("should print a folded argument a parameter's read takes without the parentheses it no longer needs", () => {
+		for (const [name, expected, compress] of /** @type {[string, string, EXPECTED_OBJECT?][]} */ ([
+			["", "export const value=URL===URL;"],
+			["-2", "export const value=-globalThis.a;"],
+			// Left unfolded, a conditional keeps its own parentheses.
+			["-2", "export const value=-(1?globalThis.a:0);", { dead_code: false }],
+			["-3", "export const value=-globalThis.a;"],
+			// A sequence kept prints in its own parentheses alone.
+			["-4", "export const value=-(globalThis.a,globalThis.b);"]
+		])) {
+			const source = fixture("javascript", `javascript-minifier-printing-a-syntax-tree-should-print-a-folded-argument-without-its-parentheses${name}`);
+			const options = { compress: compress || {}, mangle: true, module: true };
+			const { code } = minifyOnePass(source, options);
+			expect(code).toBe(expected);
+			expect(minifyOnePass(code, options).code).toBe(code);
+		}
+	});
+
 	it("should print as `quote_keys`, `inline_script`, `inlinesNames` and import phases ask", () => {
 		for (const [source, options, expected] of /** @type {[string, EXPECTED_OBJECT, string][]} */ ([
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-as-quote-keys-inline"), { format: { quote_keys: true } }, 'var o={"a":1};console.log(o.a);'],
