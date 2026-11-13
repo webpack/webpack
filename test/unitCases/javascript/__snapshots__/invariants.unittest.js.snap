@@ -30676,7 +30676,7 @@ exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left-3 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left-3 prints {"mode":"minify","compress":{}} 1`] = `"(function(){console.log(3)}());"`;
+exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left-3 prints {"mode":"minify","compress":{}} 1`] = `"(function(){console.log(3)})();"`;
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left-3 prints {"mode":"minify"} 1`] = `"if(0||function(){console.log(3)}());"`;
 
