@@ -136,7 +136,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"function f(x){var e=g();return e=g(),e=g(),h(...e),e=g(),delete e.y,e=g(),e=g(),e=g(),k,e=g(),new x(e=g()),e=g(),new x(...e),new U(e=g()),e=g(),[...e],`${e=g()}`,-(e=g()),e}"
 			],
 			// A `break` under a label leaves as one bare does: what follows it goes, and a case running only it runs nothing.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-718"), { compress: {} }, "function a(e){}function b(){for(;;)break}function c(){return 1}function d(e){if(e===1)p();else q()}function e(){p()}function k(){for(;;)g()}function m(){h()}function n(e){}function p(e){switch(e){case 1:q();/*! c */e:break;default:r()}}"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-718"), { compress: {} }, "function a(e){}function b(){for(;;)break}function c(){return 1}function d(e){e===1?p():q()}function e(){p()}function k(){for(;;)g()}function m(){h()}function n(e){}function p(e){switch(e){case 1:q();/*! c */e:break;default:r()}}"],
 			// A `switch` whose cases run nothing runs what it tests and its first test, where no later test runs code.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-719"), { compress: {} }, "function a(c){g()}function b(){g(),h()}function c(c){g()}function d(c){switch(c){case g():case h():}}function e(c){switch(c){case 1:case h():}}function f(c){switch(c){case g():case 2:h()}}function i(c,s){if(s)g();else h()}function j(c){a(),b()}function k(c){y=1}function l(c){g()}x,g();function m(c){switch(c){/*! c */case g():}}"],
 			// A case's block keeping its braces is the `if`'s body, a `break` ending it dropped.
@@ -172,7 +172,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// terser's `switches`: cases ending a `switch` that run nothing go; one with none left runs its test, or goes from its list.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-546"), {}, "a();a;if(a===3)b();if(a===3)b();a,f();a,b();switch(a){case 1:b();break;case 2:c()}if(x)y;else z();function f(a){g()}switch(a){case 1:/*! k */}"],
 			// terser's `switches` of one case and a `default`: `if…else` after a `break`, the other after where one falls into it, in a list, its block keeping braces.
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-592"), {}, "if(a===1)b();else c();if(a===1)b();c();if(a===1)b();else c();if(a!==1)c();b();if(a!==1)b();if(a!==1)b();if(a===1)b();else if(y)z();w();if(a===1){if(y)z()}else w();if(a===1){let a=g();f(a,a)}else h();switch(a){case 1:f();if(x)break;g();break;default:h()}for(;;)switch(a){case 1:f();break;default:g()}if(x){if(a===1)f();g()}else h();switch(a){/*! c */case 1:b();break;default:c()}if(b()===1)c();else d();if(a===f())c();else d();"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-592"), {}, "a===1?b():c();if(a===1)b();c();a===1?b():c();if(a!==1)c();b();if(a!==1)b();if(a!==1)b();if(a===1)b();else if(y)z();w();if(a===1){if(y)z()}else w();if(a===1){let a=g();f(a,a)}else h();switch(a){case 1:f();if(x)break;g();break;default:h()}for(;;)switch(a){case 1:f();break;default:g()}if(x){if(a===1)f();g()}else h();switch(a){/*! c */case 1:b();break;default:c()}b()===1?c():d(),a===f()?c():d();"],
 			// Nobody reading it, a loose or ordering comparison of two primitives runs only its sides, as a strict one does, which print bare in the sequence; one side that may be an object stays.
 			[fixture("javascript", "e-conditions-14"), { mangle: false }, "a+\"\",b|c,b+\"\",a|0,b|0,a,b,f(),g(),h(),a,b,a+\"\"<b,x=a+\"\"==(b|c);"]
 		];
@@ -1956,5 +1956,28 @@ describe("one-pass minify, family S round 8", () => {
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
 		expect(code).toBe("var made=function(){return function(){}}(),arrow=(()=>()=>1)();console.log(made.name,arrow.name,[()=>1][0].name);");
 		expect(runProgram(code)).toBe(runProgram(source));
+	});
+});
+
+describe("one-pass minify, family S round 8, switches", () => {
+	const options = { compress: {}, mangle: false };
+
+	it("should print a `switch` of a case and a `default` each running one expression as `?:`", () => {
+		const source = fixture("javascript", "one-pass-s5-5");
+		const { code } = minifyOnePass(source, options);
+		// One `=` setting the same name takes the test as its value.
+		expect(code).toBe("function one(){console.log(\"one\")}function other(){console.log(\"other\")}var result;function runs(kind){kind===1?one():other(),console.log(\"after\")}function sets(kind){result=kind===1?\"one\":\"other\"}runs(1),runs(2),sets(1),console.log(result),sets(2),console.log(result);");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should keep the `if` a `switch` prints as where `?:` would read otherwise or grow", () => {
+		// A call of one callee, a part one side repeats, a sequence, or a test opening as a declaration.
+		expect(minifyOnePass("switch(a){case 1:f(1);break;default:f(2)}", options).code).toBe("if(a===1)f(1);else f(2);");
+		expect(minifyOnePass("switch(a){case 1:f(b);break;default:b}", options).code).toBe("if(a===1)f(b);else b;");
+		expect(minifyOnePass("switch(a){case 1:f(),g();break;default:h()}", options).code).toBe("if(a===1)f(),g();else h();");
+		expect(minifyOnePass("switch(function(){}.x){case 1:f();break;default:g()}", options).code).toBe("if(function(){}.x===1)f();else g();");
+		// An assignment printing as another operator sets no name the other's `=` shares.
+		expect(minifyOnePass("function f(a){var y=g();switch(a){case 1:y=y+1;break;default:y=b}return y}", options).code).toBe("function f(a){var y=g();return a===1?y+=1:y=b,y}");
+		expect(minifyOnePass("function f(a){var y=g();switch(a){case 1:y=b;break;default:y=y+1}return y}", options).code).toBe("function f(a){var y=g();return a===1?y=b:y+=1,y}");
 	});
 });
