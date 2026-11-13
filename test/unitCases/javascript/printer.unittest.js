@@ -2063,3 +2063,44 @@ describe("printing again what the one pass printed", () => {
 		}
 	});
 });
+
+describe("folding a `var` set after calls", () => {
+	it("should fold a constant set after calls that reach none of the functions reading it, and keep one a function run first reads", () => {
+		const options = { compress: {}, mangle: false };
+		for (const [source, expected, sourceType] of [
+			// Calls before it reach no function of the body: its reads fold, and fold on.
+			["(function(){init();var A=4,B=5;function f(x){return x&(A|B)}window.f=f})()", "init(),window.f=function(x){return x&5};"],
+			// A function handed out, named or called before it reads the name as it is then.
+			["(function(){h();var A=4;function h(){g()}function g(){console.log(A)}h()})()", "!function(){h();var A=4;function h(){console.log(A)}h()}();"],
+			["(function(){var k=g;init();var A=4;function g(){return A}console.log(k())})()", "!function(){var k=function(){return A};init();var A=4;console.log(k())}();"],
+			["(function(){class C{m(){return A}}init(C);var A=4;console.log(new C().m())})()", "!function(){class C{m(){return A}}init(C);var A=4;console.log((new C).m())}();"],
+			// `eval` and a function no statement of the body declares may run anything.
+			['(function(){eval("g()");var A=4;function g(){return A}console.log(g(),g())})()', '!function(){eval("g()");var A=4;function g(){return A}console.log(g(),g())}();'],
+			["(function(){if(init()){function g(){return A}}init(g);var A=4;console.log(g(),g())})()", "!function(){if(init()){function g(){return A}}init(g);var A=4;console.log(g(),g())}();"],
+			// A default runs before the body; one naming nothing of it leaves the fold.
+			["(function(x=init()){var A=4;function g(){return A}console.log(g(),g())})()", "!function(x=init()){function g(){return 4}console.log(g(),g())}();"],
+			// What a module exports an import cycle may call before its body runs.
+			["init();var A=4;export function f(){return A}function g(){return A}console.log(g(),g())", "init();var A=4;export function f(){return A}function g(){return A}console.log(g(),g());", "module"],
+			["init();var A=4;function f(){return A}export{f};console.log(f(),f())", "init();var A=4;function f(){return A}export{f};console.log(f(),f());", "module"],
+			["init();var A=4;export default function(){return A}function g(){return A}console.log(g(),g())", "init();var A=4;export default function(){return A}function g(){return A}console.log(g(),g());", "module"],
+			// Unmangled, a value folds where it prints shorter than the name read.
+			['(function(){init(function(){});var LONG_NAME="transition";function g(a){return a===LONG_NAME?1:a===LONG_NAME+1?2:LONG_NAME}window.g=g;window.h=g})()', '!function(){init(function(){});function g(a){return a==="transition"?1:a==="transition1"?2:"transition"}window.g=g,window.h=g}();'],
+			['(function(){init(function(){});var N="transition";function g(a){return a===N?1:a===N+1?2:N}window.g=g;window.h=g})()', '!function(){init(function(){});var N="transition";function g(a){return a===N?1:a===N+1?2:N}window.g=g,window.h=g}();']
+		]) {
+			const settled = sourceType === "module" ? { sourceType: /** @type {const} */ ("module") } : {};
+			expect(minifyOnePass(source, { ...options, ...settled }).code).toBe(expected);
+		}
+		// Mangled, only a value of one character folds: a longer one repeated gzips larger than the letter the name gets.
+		const mangled = { compress: {}, mangle: true };
+		expect(minifyOnePass('(function(){init(function(){});var LONG_NAME="transition";function g(a){return a===LONG_NAME?1:a===LONG_NAME+1?2:LONG_NAME}window.g=g;window.h=g})()', mangled).code).toBe('!function(){init(function(){});var n="transition";function i(i){return i===n?1:i===n+1?2:n}window.g=i,window.h=i}();');
+		expect(minifyOnePass("(function(){init(function(){});var LONG_NAME=7;function g(a){return a===LONG_NAME?1:LONG_NAME}window.g=g;window.h=g})()", mangled).code).toBe("!function(){init(function(){});function n(n){return n===7?1:7}window.g=n,window.h=n}();");
+		// Read before it is set, it reads `undefined` printed or not.
+		for (const source of [
+			"function register(f){console.log(f())}(function(){register(function(){return A});var A=4;console.log(A)})();",
+			"(function(){h();var A=4;function h(){g()}function g(){console.log(A)}h()})();",
+			"function f(){console.log(a)}function g(){f()}while(g());var a=1;f();"
+		]) {
+			expect(runProgram(minifyOnePass(source, { compress: { toplevel: true }, mangle: false }).code)).toBe(runProgram(source));
+		}
+	});
+});
