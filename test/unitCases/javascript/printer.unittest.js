@@ -1747,4 +1747,21 @@ describe("one-pass minify, family R round 7", () => {
 			"export function keys(o){let t=`_foo`,{[`_foo`]:k}=o;return[{[`_foo`]:o._foo,k},class{[`_foo`](){return o._foo}static[`_foo`]=1},o[1],o[1],o[`a-b`],o[`a-b`],{[`a-b`]:1},{[`a-b`]:2},o.x]}export function plain(o){return[o._bar,o._bar,{[o.x]:`_bar`,k:`_bar`},`_bar`.big]}"
 		);
 	});
+
+	it("should print a `return` pair with a boolean as `||` or `&&`", () => {
+		const source = fixture("javascript", "one-pass-r4-2");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// A test giving a boolean only; a conditional or an assignment test takes parentheses, one setting nothing printing its value.
+		expect(code).toBe(
+			'function or(t,e){return t===0||e.length}function and(t,e){return t>1&&e.length}function orElse(t,e){return t===0||e.length}function andElse(t,e){return t>1&&e.length}function wrapped(a,b,e){return(a?b<0:b>9)||e.length}function setting(a,b,e){return(b?b<0:b>9)||e.length}function value(t,e){return t?!0:e.length}for(let t of[0,1,2,-1,10])console.log(or(t,"ab"),and(t,"ab"),orElse(t,"ab"),andElse(t,"ab")),console.log(wrapped(t,t,"ab"),setting(t,t,"ab"),value(t,"ab"));'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+		// Negating the test measured larger gzipped.
+		expect(
+			minifyOnePass(
+				"function f(t,e){if(t===0)return false;return e.length}function g(t,e){if(t>1)return e.length;return true}",
+				{ compress: {}, mangle: false }
+			).code
+		).toBe("function f(t,e){return t===0?!1:e.length}function g(t,e){return t>1?e.length:!0}");
+	});
 });
