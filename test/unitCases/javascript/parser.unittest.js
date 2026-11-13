@@ -3534,6 +3534,52 @@ describe("Parser", () => {
 		}
 	});
 
+	describe("division after an operand", () => {
+		/**
+		 * @param {unknown} node a parsed node or a value inside one
+		 * @param {{ divisions: number, regexps: number }} counts what was seen so far
+		 * @returns {{ divisions: number, regexps: number }} the counts
+		 */
+		const countSlashes = (node, counts = { divisions: 0, regexps: 0 }) => {
+			if (Array.isArray(node)) {
+				for (const item of node) countSlashes(item, counts);
+			} else if (node && typeof node === "object") {
+				const object = /** @type {Record<string, unknown>} */ (node);
+				if (object.type === "BinaryExpression" && object.operator === "/") {
+					counts.divisions++;
+				}
+				if (object.type === "Literal" && object.regex) counts.regexps++;
+				for (const key of Object.keys(object)) {
+					if (key !== "type") countSlashes(object[key], counts);
+				}
+			}
+			return counts;
+		};
+
+		for (const [name, divisions, regexps] of /** @type {[string, number, number][]} */ ([
+			["a-function-or-class-expression", 12, 0],
+			["a-keyword-or-of-after-optional-chaining", 6, 0],
+			["an-identifier-named-of", 4, 2],
+			["a-class-or-function-property-after-optional-chaining", 9, 0]
+		])) {
+			it(`reads the slashes after ${name.replace(/-/g, " ")}`, () => {
+				const source = fixture("javascript", `parser-division-after-an-operand-${name}`);
+				expect(() => new (require("vm").Script)(source)).not.toThrow();
+				/** @type {ParserOptions} */
+				const options = { ecmaVersion: "latest", sourceType: "script" };
+				// the parse a build runs
+				JavascriptParser._parseTree(source, "auto", false).tree.release();
+				for (const ast of [
+					Parser.parse(source, options),
+					webpackParse(source, options),
+					webpackParse(source, { ...options, lazyNodes: true })
+				]) {
+					expect(countSlashes(plain(ast))).toEqual({ divisions, regexps });
+				}
+			});
+		}
+	});
+
 	describe("static entry points", () => {
 		it("parses an expression at an offset like acorn", () => {
 			const source = fixture("javascript", "parser-static-entry-points-parses-an-expression-at-an-offset-like-acorn");

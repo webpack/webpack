@@ -35460,6 +35460,12 @@ declare class SyntaxParser {
 	 */
 	checkUnreserved(ref?: any): void;
 	parseIdent(liberal?: boolean): any;
+
+	/**
+	 * Whether the token before the current one is a `.` or a `?.`, read from
+	 * the text, as the parser no longer holds the type.
+	 */
+	followsDot(): boolean;
 	parseIdentNode(): any;
 	parsePrivateIdent(): any;
 	parseYield(forInit?: string | boolean): any;
