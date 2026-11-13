@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html css-modules exported tests should generate the page and the linked sheets 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<link rel=\\"stylesheet\\" href=\\"card.module.css\\">
+<link rel=\\"stylesheet\\" href=\\"global.css\\">
+<link rel=\\"stylesheet\\" href=\\"by-rule.css\\" module>
+<style module>/*!********************************************************************************************************************************************************************************************************************************************************************************!*\\\\
+  !*** css data:text/css;base64,Ci5idG4geyBjb2xvcjogcmVkOyB9Ci5jYXJkIHsgY29sb3I6IHdoaXRlOyB9Ci5iYXNlIHsgbWFyZ2luOiAwOyB9Ci5wcmltYXJ5IHsgY29tcG9zZXM6IGJhc2U7IGNvbG9yOiBibHVlOyB9CiNtYWluIHsgcGFkZGluZzogMDsgfQo6Z2xvYmFsKC5zaGVsbCkgeyBjb2xvcjogYmxhY2s7IH0K (exportType: text) ***!
+  \\\\********************************************************************************************************************************************************************************************************************************************************************************/
+
+.m_btn { color: red; }
+.m_card { color: white; }
+.m_base { margin: 0; }
+.m_primary { color: blue; }
+#m_main { padding: 0; }
+.shell { color: black; }
+</style>
+<style module lang=\\"less\\">/*!*************************************************************************************************************************!*\\\\
+  !*** css data:text/less;base64,CkBhY2NlbnQ6IGdyZWVuOwoubGVzcy1zY29wZWQgeyBjb2xvcjogQGFjY2VudDsgfQo= (exportType: text) ***!
+  \\\\*************************************************************************************************************************/
+.m_less-scoped {
+  color: green;
+}
+</style>
+<style module lang=\\"scss\\">/*!***************************************************************************************************************************!*\\\\
+  !*** css data:text/x-scss;base64,CiRhY2NlbnQ6IHB1cnBsZTsgLnNjc3Mtc2NvcGVkIHsgY29sb3I6ICRhY2NlbnQ7IH0K (exportType: text) ***!
+  \\\\***************************************************************************************************************************/
+
+ .m_scss-scoped { color: purple; }
+</style>
+<style>/*!****************************************************************************************!*\\\\
+  !*** css data:text/css;base64,Ci5wbGFpbiB7IGNvbG9yOiBncmF5OyB9Cg== (exportType: text) ***!
+  \\\\****************************************************************************************/
+
+.plain { color: gray; }
+</style>
+</head>
+<body id=\\"m_main\\">
+<button class=\\"m_btn m_primary m_base shell\\" data-class=\\"btn\\">one</button>
+<div class=\\"a_card m_less-scoped m_scss-scoped plain global\\">two</div>
+<div class=a_card>three</div>
+<div id=\\"other\\" class=\\"m_btn\\">four</div>
+<div style=\\"color: red\\" class=\\"\\">five</div>
+<div class=\\"m_primary m_base\\">six</div>
+<div class=\\"m_ruled\\">seven</div>
+</body>
+</html>
+"
+`;
+
+exports[`ConfigCacheTestCases html css-modules exported tests should generate the page and the linked sheets: by-rule.css 1`] = `
+"/*!*************************!*\\\\
+  !*** css ./by-rule.css ***!
+  \\\\*************************/
+.m_ruled { color: teal; }
+
+"
+`;
+
+exports[`ConfigCacheTestCases html css-modules exported tests should generate the page and the linked sheets: card.module.css 1`] = `
+"/*!*****************************!*\\\\
+  !*** css ./card.module.css ***!
+  \\\\*****************************/
+.a_card { color: pink; }
+
+"
+`;
+
+exports[`ConfigCacheTestCases html css-modules exported tests should generate the page and the linked sheets: global.css 1`] = `
+"/*!************************!*\\\\
+  !*** css ./global.css ***!
+  \\\\************************/
+.global { color: gray; }
+
+"
+`;

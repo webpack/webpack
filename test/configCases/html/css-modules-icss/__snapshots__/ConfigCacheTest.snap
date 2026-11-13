@@ -1,0 +1,112 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html css-modules-icss exported tests should generate the page and the linked sheet 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<style module>/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\\\\
+  !*** css data:text/css;base64,CkB2YWx1ZSBicmFuZDogcmVkOwpAdmFsdWUgcHJpbWFyeUNvbG9yLCBnYXAgZnJvbSAiLi92YWx1ZXMubW9kdWxlLmNzcyI7CkB2YWx1ZSBzaGFyZWQgYXMgc2hhcmVkQWxpYXMgZnJvbSAiLi92YWx1ZXMubW9kdWxlLmNzcyI7CkB2YWx1ZSBzbWFsbCBmcm9tICIuL3ZhbHVlcy5tb2R1bGUuY3NzIjsKOmltcG9ydCgiLi9iYXNlLm1vZHVsZS5jc3MiKSB7IGltcG9ydGVkQmFzZTogYmFzZTsgfQo6ZXhwb3J0IHsgZXhwb3J0ZWRDb2xvcjogYmx1ZTsgZXhwb3J0ZWROYW1lOiBub3RBQ2xhc3M7IH0KLmxvY2FsIHsgY29sb3I6IGJyYW5kOyBtYXJnaW46IGdhcDsgfQouY29tcG9zZWQgeyBjb21wb3NlczogbG9jYWw7IH0KLm11bHRpIHsgY29tcG9zZXM6IGxvY2FsIGNvbXBvc2VkOyB9Ci5mcm9tRmlsZSB7IGNvbXBvc2VzOiBiYXNlIGZyb20gIi4vYmFzZS5tb2R1bGUuY3NzIjsgfQouZnJvbUZpbGVNYW55IHsgY29tcG9zZXM6IGJhc2Ugb3RoZXIgZnJvbSAiLi9iYXNlLm1vZHVsZS5jc3MiOyB9Ci5mcm9tR2xvYmFsIHsgY29tcG9zZXM6IGdsb2JhbFRoaW5nIGZyb20gZ2xvYmFsOyB9Ci52aWFJbXBvcnQgeyBjb21wb3NlczogaW1wb3J0ZWRCYXNlOyB9Ci5jaGFpbiB7IGNvbXBvc2VzOiBmcm9tRmlsZTsgY29sb3I6IHByaW1hcnlDb2xvcjsgfQouZGVlcENoYWluIHsgY29tcG9zZXM6IGRlZXAgZnJvbSAiLi9kZWVwLm1vZHVsZS5jc3MiOyB9Ci51c2VzVmFsdWUgeyBib3JkZXItd2lkdGg6IHNoYXJlZEFsaWFzOyB9CjpnbG9iYWwoLnNoZWxsKSB7IGNvbG9yOiBibGFjazsgfQo6bG9jYWwoLmV4cGxpY2l0KSB7IGNvbG9yOiBncmF5OyB9Ci53aXRoXDpjb2xvbiB7IGNvbG9yOiB0ZWFsOyB9Ci5kdXAgeyBjb2xvcjogbmF2eTsgfQojYW5jaG9yIHsgY29sb3I6IGJyYW5kOyB9CkBtZWRpYSBzbWFsbCB7IC5yZXNwb25zaXZlIHsgY29sb3I6IGJyYW5kOyB9IH0KQGtleWZyYW1lcyBzcGluIHsgdG8geyBvcGFjaXR5OiAwOyB9IH0KLnNwaW5uaW5nIHsgYW5pbWF0aW9uOiBzcGluIDFzOyB9Ci5hXD5iIHsgY29sb3I6IG9saXZlOyB9CltjbGFzc349ImJ5QXR0cmlidXRlIl0geyBjb2xvcjogY29yYWw7IH0K (exportType: text) ***!
+  \\\\****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+
+
+
+
+
+.m_local { color: red; margin: 4px; }
+.m_composed { }
+.m_multi { }
+.m_fromFile { }
+.m_fromFileMany { }
+.m_fromGlobal { }
+.m_viaImport { }
+.m_chain { color: purple; }
+.m_deepChain { }
+.m_usesValue { border-width: 1px; }
+.shell { color: black; }
+.m_explicit { color: gray; }
+.m_with\\\\:colon { color: teal; }
+.m_dup { color: navy; }
+#m_anchor { color: red; }
+@media (max-width: 600px) { .m_responsive { color: red; } }
+@keyframes m_spin { to { opacity: 0; } }
+.m_spinning { animation: m_spin 1s; }
+.m_a\\\\>b { color: olive; }
+[class~=\\"m_byAttribute\\"] { color: coral; }
+</style>
+<link rel=\\"stylesheet\\" href=\\"linked.module.css\\">
+<style module lang=\\"less\\">/*!*************************************************************************************************************************************************************************************************************************************************************!*\\\\
+  !*** css data:text/less;base64,CkBwYWQ6IDVweDsKLmxlc3NDb21wb3NlcyB7IGNvbXBvc2VzOiBvdGhlciBmcm9tICIuL2Jhc2UubW9kdWxlLmNzcyI7IHBhZGRpbmc6IEBwYWQ7IH0KLmxlc3NMb2NhbCB7IGNvbXBvc2VzOiBsZXNzQ29tcG9zZXM7IH0KLmxhdGVyIHsgY29sb3I6IGxpbWU7IH0K (exportType: text) ***!
+  \\\\*************************************************************************************************************************************************************************************************************************************************************/
+.m_lessComposes {
+  padding: 5px;
+}
+.m_lessLocal {
+  }
+.m_later {
+  color: lime;
+}
+</style>
+<style module lang=\\"scss\\">/*!*******************************************************************************************************************************************************************************************************************************************************************************************!*\\\\
+  !*** css data:text/x-scss;base64,CkB2YWx1ZSBwcmltYXJ5Q29sb3IgZnJvbSAiLi92YWx1ZXMubW9kdWxlLmNzcyI7CiRzaXplOiA2cHg7Ci5zY3NzVmFsdWUgeyBjb2xvcjogcHJpbWFyeUNvbG9yOyB3aWR0aDogJHNpemU7IH0KLnNjc3NDb21wb3NlcyB7IGNvbXBvc2VzOiBkZWVwIGZyb20gIi4vZGVlcC5tb2R1bGUuY3NzIjsgfQo= (exportType: text) ***!
+  \\\\*******************************************************************************************************************************************************************************************************************************************************************************************/
+
+
+
+.m_scssValue { color: purple; width: 6px; }
+.m_scssComposes { }
+</style>
+</head>
+<body>
+<p class=\\"m_local m_composed m_multi\\">composes in the same sheet</p>
+<p class=\\"m_fromFile base.module_base m_fromFileMany base.module_other\\">composes from a file</p>
+<p class=\\"m_fromGlobal globalThing\\">composes a global</p>
+<p class=\\"m_viaImport base.module_base m_chain m_fromFile m_deepChain deep.module_deep\\">composes through :import and chains</p>
+<p class=\\"brand primaryColor sharedAlias small gap\\">@value names are not classes</p>
+<p class=\\"exportedColor exportedName importedBase\\">:export and :import names are not classes</p>
+<p class=\\"m_usesValue m_responsive\\">a value used in a declaration and a media query</p>
+<p class=\\"shell m_explicit m_with:colon\\">:global, :local and an escaped name</p>
+<p class=\\"m_dup\\">the first sheet to declare a name decides it</p>
+<p id=\\"m_anchor\\">an id</p>
+<p id=\\"linked.module_linkedId\\" class=\\"linked.module_linked linked.module_linkedComposes base.module_other linkedToken\\">a linked CSS module</p>
+<p class=\\"m_local unknown\\">a name repeated by the author</p>
+<p class=\\"m_lessComposes base.module_other m_lessLocal\\">composes in a less module</p>
+<p class=\\"m_scssValue m_scssComposes deep.module_deep base.module_base\\">@value and composes in an scss module</p>
+<p class=\\"linked.module_later\\">a later sheet names what no earlier one declares</p>
+<p class=\\"spin m_spinning\\">a @keyframes name is not a class</p>
+<p class=\\"local&nbsp;x\\" id=\\"&nbsp;anchor\\">a no-break space is part of a name</p>
+<p class=\\"m_a>b\\">an unquoted value a name makes unsafe</p>
+<p class=\\"m_byAttribute\\">a name only an attribute selector scopes</p>
+<script src=\\"page.js\\" class=\\"m_local\\"></script>
+
+</body>
+</html>
+"
+`;
+
+exports[`ConfigCacheTestCases html css-modules-icss exported tests should generate the page and the linked sheet 2`] = `
+"/*!*******************************!*\\\\
+  !*** css ./values.module.css ***!
+  \\\\*******************************/
+
+
+
+
+
+/*!*****************************!*\\\\
+  !*** css ./base.module.css ***!
+  \\\\*****************************/
+.base\\\\.module_base { padding: 1px; }
+.base\\\\.module_other { padding: 2px; }
+
+/*!*******************************!*\\\\
+  !*** css ./linked.module.css ***!
+  \\\\*******************************/
+
+.linked\\\\.module_linked { color: purple; }
+.linked\\\\.module_linkedComposes { }
+#linked\\\\.module_linkedId { color: pink; }
+.linked\\\\.module_dup { color: orange; }
+.linked\\\\.module_later { color: maroon; }
+
+"
+`;

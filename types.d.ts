@@ -5760,6 +5760,8 @@ declare class ConstDependency extends NullDependency {
 		| "commonjs-export-require"
 		| "html-source"
 		| "html-entry"
+		| "html-inline-style"
+		| "html-css-module"
 		| "webassembly-import"
 		| "webassembly-export-imported"
 		| "sharing-request"
@@ -6468,6 +6470,11 @@ declare interface CssData {
 	 * the css exports
 	 */
 	exports: Map<string, string>;
+
+	/**
+	 * what each class or id name of a CSS module becomes, keyed by its name in the source, for markup that names them (an HTML page's `class` and `id`)
+	 */
+	locals?: Map<string, string>;
 
 	/**
 	 * source position (line is 1-based, column is 0-based) of each export's defining identifier in the original CSS, used to emit fine-grained JS-to-CSS source mappings
@@ -7287,6 +7294,7 @@ declare interface CssParseOptions {
 }
 declare abstract class CssParser extends Parser<BuiltCssModule> {
 	defaultMode: "global" | "auto" | "local" | "pure";
+	selectorNames: boolean;
 	options: {
 		/**
 		 * Enable/disable renaming of `@keyframes`.
@@ -7365,6 +7373,10 @@ declare abstract class CssParser extends Parser<BuiltCssModule> {
 		 * default mode
 		 */
 		defaultMode?: "global" | "auto" | "local" | "pure";
+		/**
+		 * keep which names a CSS module declares as something other than a class or an id (a `@keyframes`, a `@counter-style`), which an HTML page's `class` and `id` never name (set when `experiments.html` is on)
+		 */
+		selectorNames?: boolean;
 	};
 	magicCommentContext: ContextImport;
 }
@@ -8448,6 +8460,8 @@ declare class Dependency {
 			| "commonjs-export-require"
 			| "html-source"
 			| "html-entry"
+			| "html-inline-style"
+			| "html-css-module"
 			| "webassembly-import"
 			| "webassembly-export-imported"
 			| "sharing-request"
@@ -8624,6 +8638,8 @@ declare class Dependency {
 		| "commonjs-export-require"
 		| "html-source"
 		| "html-entry"
+		| "html-inline-style"
+		| "html-css-module"
 		| "webassembly-import"
 		| "webassembly-export-imported"
 		| "sharing-request"
@@ -9401,6 +9417,8 @@ declare class ESMImportDependency extends ModuleDependency {
 		| "commonjs-export-require"
 		| "html-source"
 		| "html-entry"
+		| "html-inline-style"
+		| "html-css-module"
 		| "webassembly-import"
 		| "webassembly-export-imported"
 		| "sharing-request"
@@ -9873,6 +9891,8 @@ declare class EntryDependency extends ModuleDependency {
 		| "commonjs-export-require"
 		| "html-source"
 		| "html-entry"
+		| "html-inline-style"
+		| "html-css-module"
 		| "webassembly-import"
 		| "webassembly-export-imported"
 		| "sharing-request"
@@ -13660,7 +13680,7 @@ declare interface HtmlParserOptions {
 	parseErrors?: boolean;
 
 	/**
-	 * Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `"..."` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed; one whose `lang` names another language is a `data:` module typed as that language's files (`<style lang="scss">` as `text/x-scss`, `<script lang="ts">` as `text/typescript`), and any other valid media-type name as `text/x-<lang>`, so a `mimetype` rule runs its loader. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
+	 * Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `"..."` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed; one whose `lang` names another language is a `data:` module typed as that language's files (`<style lang="scss">` as `text/x-scss`, `<script lang="ts">` as `text/typescript`), and any other valid media-type name as `text/x-<lang>`, so a `mimetype` rule runs its loader. A `<style module>` body is a CSS module, and the page's `class` and `id` values are rewritten with the names it and any linked CSS module stylesheet declare, one named as such (`x.module.css`) or marked `<link rel="stylesheet" module>`; a page with neither is left as it is. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
 	 */
 	sources?:
 		| boolean
@@ -22092,6 +22112,8 @@ declare class ModuleDependency extends Dependency {
 		| "commonjs-export-require"
 		| "html-source"
 		| "html-entry"
+		| "html-inline-style"
+		| "html-css-module"
 		| "webassembly-import"
 		| "webassembly-export-imported"
 		| "sharing-request"
@@ -24896,6 +24918,8 @@ declare class NullDependency extends Dependency {
 		| "commonjs-export-require"
 		| "html-source"
 		| "html-entry"
+		| "html-inline-style"
+		| "html-css-module"
 		| "webassembly-import"
 		| "webassembly-export-imported"
 		| "sharing-request"
@@ -34080,6 +34104,8 @@ declare class StaticExportsDependency extends NullDependency {
 		| "commonjs-export-require"
 		| "html-source"
 		| "html-entry"
+		| "html-inline-style"
+		| "html-css-module"
 		| "webassembly-import"
 		| "webassembly-export-imported"
 		| "sharing-request"

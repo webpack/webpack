@@ -409,6 +409,17 @@ describe("snapshots", () => {
 		        "type": "css",
 		      },
 		      Object {
+		        "dependency": "html-style-module",
+		        "parser": Object {
+		          "exportType": "text",
+		        },
+		        "resolve": Object {
+		          "fullySpecified": true,
+		          "preferRelative": true,
+		        },
+		        "type": "css/module",
+		      },
+		      Object {
 		        "dependency": "html-style-attribute",
 		        "parser": Object {
 		          "as": "block-contents",
@@ -5416,70 +5427,72 @@ describe("snapshots", () => {
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
-			@@ ... @@
+			-         },
 			-         "type": "css",
 			-       },
-			@@ ... @@
+			-       Object {
 			-         "dependency": /css-import-local-module/,
 			-         "exclude": /\\.module\\.\\w+$/i,
-			@@ ... @@
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
 			-         },
 			-         "type": "css/module",
-			@@ ... @@
+			-       },
 			-       Object {
 			-         "dependency": /css-import-global-module/,
 			-         "exclude": /\\.module\\.\\w+$/i,
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
-			-         },
+			@@ ... @@
 			-         "type": "css/global",
 			-       },
-			-       Object {
+			@@ ... @@
+			-         },
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
 			-         },
-			@@ ... @@
+			-       },
+			-       Object {
 			-         "dependency": "html-style",
 			-         "parser": Object {
 			-           "exportType": "text",
 			-         },
-			@@ ... @@
+			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
 			-         },
 			-         "type": "css",
 			-       },
 			-       Object {
-			-         "dependency": "html-style-attribute",
+			-         "dependency": "html-style-module",
 			-         "parser": Object {
-			-           "as": "block-contents",
 			-           "exportType": "text",
 			-         },
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
 			-         },
+			-         "type": "css/module",
 			-       },
 			-       Object {
-			-         "resolve": Object {
-			@@ ... @@
-			+       },
-			+       Object {
-			+         "oneOf": Array [
-			+           Object {
-			+             "resourceQuery": /(\\?|&)raw(&|$)/,
-			+             "type": "asset/source",
+			-         "dependency": "html-style-attribute",
+			-         "parser": Object {
+			-           "as": "block-contents",
+			-           "exportType": "text",
 			@@ ... @@
 			-     ],
 			-     "generator": Object {
 			-       "css": Object {
 			-         "esModule": true,
 			-         "exportsOnly": false,
+			+       Object {
+			+         "oneOf": Array [
 			+           Object {
-			+             "resourceQuery": /(\\?|&)url(&|$)/,
-			+             "type": "asset/resource",
+			+             "resourceQuery": /(\\?|&)raw(&|$)/,
+			+             "type": "asset/source",
 			@@ ... @@
 			-       "css/auto": Object {
 			-         "exportsConvention": "as-is",
@@ -5489,7 +5502,7 @@ describe("snapshots", () => {
 			-         "localIdentHashSalt": undefined,
 			-         "localIdentName": "[fullhash]",
 			+           Object {
-			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
+			+             "resourceQuery": /(\\?|&)url(&|$)/,
 			+             "type": "asset/resource",
 			@@ ... @@
 			-       "css/global": Object {
@@ -5500,8 +5513,8 @@ describe("snapshots", () => {
 			-         "localIdentHashSalt": undefined,
 			-         "localIdentName": "[fullhash]",
 			+           Object {
-			+             "resourceQuery": /(\\?|&)inline(&|$)/,
-			+             "type": "asset/inline",
+			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
+			+             "type": "asset/resource",
 			@@ ... @@
 			-       "css/module": Object {
 			-         "exportsConvention": "as-is",
@@ -5510,8 +5523,12 @@ describe("snapshots", () => {
 			-         "localIdentHashFunction": "md4",
 			-         "localIdentHashSalt": undefined,
 			-         "localIdentName": "[fullhash]",
-			+         ],
+			+           Object {
+			+             "resourceQuery": /(\\?|&)inline(&|$)/,
+			+             "type": "asset/inline",
 			@@ ... @@
+			+         ],
+			+       },
 			+     ],
 			+     "generator": Object {
 			@@ ... @@
@@ -5523,7 +5540,7 @@ describe("snapshots", () => {
 			-         "import": true,
 			-         "namedExports": true,
 			-         "url": true,
-			@@ ... @@
+			-       },
 			-       "css/auto": Object {
 			-         "animation": true,
 			-         "container": true,
@@ -5543,7 +5560,7 @@ describe("snapshots", () => {
 			-         "dashedIdents": true,
 			-         "function": true,
 			-         "grid": true,
-			-       },
+			@@ ... @@
 			-       "css/module": Object {
 			-         "animation": true,
 			-         "container": true,
@@ -5648,10 +5665,11 @@ describe("snapshots", () => {
 			-         ],
 			-         "mainFields": Array [
 			-           "style",
-			@@ ... @@
+			-           "...",
+			-         ],
 			-         "mainFiles": Array [],
 			-         "preferRelative": true,
-			@@ ... @@
+			-       },
 			-       "css-import-global-module": Object {
 			-         "conditionNames": Array [
 			-           "webpack",
@@ -5663,11 +5681,10 @@ describe("snapshots", () => {
 			-         ],
 			-         "mainFields": Array [
 			-           "style",
-			-           "...",
-			-         ],
+			@@ ... @@
 			-         "mainFiles": Array [],
 			-         "preferRelative": true,
-			-       },
+			@@ ... @@
 			-       "css-import-local-module": Object {
 			-         "conditionNames": Array [
 			-           "webpack",

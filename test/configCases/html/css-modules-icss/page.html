@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style module>
+@value brand: red;
+@value primaryColor, gap from "./values.module.css";
+@value shared as sharedAlias from "./values.module.css";
+@value small from "./values.module.css";
+:import("./base.module.css") { importedBase: base; }
+:export { exportedColor: blue; exportedName: notAClass; }
+.local { color: brand; margin: gap; }
+.composed { composes: local; }
+.multi { composes: local composed; }
+.fromFile { composes: base from "./base.module.css"; }
+.fromFileMany { composes: base other from "./base.module.css"; }
+.fromGlobal { composes: globalThing from global; }
+.viaImport { composes: importedBase; }
+.chain { composes: fromFile; color: primaryColor; }
+.deepChain { composes: deep from "./deep.module.css"; }
+.usesValue { border-width: sharedAlias; }
+:global(.shell) { color: black; }
+:local(.explicit) { color: gray; }
+.with\:colon { color: teal; }
+.dup { color: navy; }
+#anchor { color: brand; }
+@media small { .responsive { color: brand; } }
+@keyframes spin { to { opacity: 0; } }
+.spinning { animation: spin 1s; }
+.a\>b { color: olive; }
+[class~="byAttribute"] { color: coral; }
+</style>
+<link rel="stylesheet" href="./linked.module.css">
+<style module lang="less">
+@pad: 5px;
+.lessComposes { composes: other from "./base.module.css"; padding: @pad; }
+.lessLocal { composes: lessComposes; }
+.later { color: lime; }
+</style>
+<style module lang="scss">
+@value primaryColor from "./values.module.css";
+$size: 6px;
+.scssValue { color: primaryColor; width: $size; }
+.scssComposes { composes: deep from "./deep.module.css"; }
+</style>
+</head>
+<body>
+<p class="local composed multi">composes in the same sheet</p>
+<p class="fromFile fromFileMany">composes from a file</p>
+<p class="fromGlobal">composes a global</p>
+<p class="viaImport chain deepChain">composes through :import and chains</p>
+<p class="brand primaryColor sharedAlias small gap">@value names are not classes</p>
+<p class="exportedColor exportedName importedBase">:export and :import names are not classes</p>
+<p class="usesValue responsive">a value used in a declaration and a media query</p>
+<p class="shell explicit with:colon">:global, :local and an escaped name</p>
+<p class="dup">the first sheet to declare a name decides it</p>
+<p id="anchor">an id</p>
+<p id="linkedId" class="linked linkedComposes linkedToken">a linked CSS module</p>
+<p class="local unknown local">a name repeated by the author</p>
+<p class="lessComposes lessLocal">composes in a less module</p>
+<p class="scssValue scssComposes">@value and composes in an scss module</p>
+<p class="later">a later sheet names what no earlier one declares</p>
+<p class="spin spinning">a @keyframes name is not a class</p>
+<p class="local&nbsp;x" id="&nbsp;anchor">a no-break space is part of a name</p>
+<p class=a&gt;b>an unquoted value a name makes unsafe</p>
+<p class="byAttribute">a name only an attribute selector scopes</p>
+<script class="local">window.first = 1;</script>
+<script class="local">window.second = 2;</script>
+</body>
+</html>
