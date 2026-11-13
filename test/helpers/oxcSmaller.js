@@ -228,7 +228,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: conditionals/cond_9",
 			"terser compress: transform/if_return",
 			"swc minifier: fixture/issues/7412/input.js",
-			"swc minifier: fixture/issues/12196/input.js",
 			"swc minifier: fixture/projects/mootools/.11/input.js"
 		]
 	],

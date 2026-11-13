@@ -428,8 +428,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: evaluate/array_slice_index",
 			"terser compress: evaluate/issue_2231_3",
 			"terser compress: evaluate/string_case",
-			"terser compress: evaluate/issue_2919",
-			"terser compress: evaluate/issue_2926_2"
+			"terser compress: evaluate/issue_2919"
 		]
 	],
 	[
@@ -1053,10 +1052,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `typeof` tests cover",
 		["terser compress: typeof/typeof_defun_2"]
-	],
-	[
-		"swc goes further than webpack on what terser's `unsafe_symbols` tests cover",
-		["terser compress: unsafe_symbols/unsafe_symbols_2"]
 	],
 	[
 		"swc goes further than webpack on what swc's `fixture/non-finite-number-literals` tests cover",
