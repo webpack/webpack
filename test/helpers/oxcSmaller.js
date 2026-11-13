@@ -181,7 +181,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/toplevel_on_loops_3",
 			"terser compress: reduce_vars/toplevel_off_loops_3",
 			"terser compress: reduce_vars/variables_collision_in_immediately_invoked_func",
-			"terser compress: reduce_vars/issue_294",
 			"terser compress: sequences/make_sequences_2",
 			"terser compress: unicode/issue_3271",
 			"swc minifier: benches-full/echarts.js",
@@ -423,8 +422,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_dead_code.rs:86",
 			"oxc minifier: peephole/remove_dead_code.rs:294",
 			"swc minifier: fixture/issues/12299/input.js",
-			"swc minifier: fixture/issues/9619/input.js",
-			"swc minifier: fixture/issues/9628/input.js"
+			"swc minifier: fixture/issues/9619/input.js"
 		]
 	],
 	[
@@ -693,7 +691,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline.rs:718",
 			"oxc minifier: peephole/inline.rs:654",
 			"oxc minifier: peephole/inline.rs:18",
-			"oxc minifier: peephole/inline.rs:33",
 			"oxc minifier: peephole/inline.rs:171",
 			"oxc minifier: peephole/inline.rs:177",
 			"oxc minifier: peephole/inline.rs:353",

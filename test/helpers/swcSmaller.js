@@ -539,7 +539,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/5846/input.js",
 			"swc minifier: fixture/issues/7412/input.js",
 			"swc minifier: fixture/issues/7784/3/input.js",
-			"swc minifier: fixture/issues/7984/input.js",
 			"swc minifier: fixture/projects/angular/5/input.js",
 			"swc minifier: fixture/projects/backbone/13/input.js",
 			"swc minifier: fixture/projects/backbone/17/input.js",
@@ -765,7 +764,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc resolves a `switch` on a known value at build time, and writes a one-case `switch` as an `if`",
 		[
-			"swc minifier: fixture/issues/9619/input.js",
 			"terser compress: issue-1750/case_2",
 			"terser compress: switch/issue_441_1",
 			"terser compress: switch/issue_441_2",

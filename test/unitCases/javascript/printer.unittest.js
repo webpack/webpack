@@ -636,7 +636,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// Where the items before it go, what opens the statement keeps them.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as"), "x,({a:g()}.b);"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-2"), "(function(){g()}()),x;"],
-			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-3"), "x={k:()=>1,[(()=>1)]:1},y=[()=>1];"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-3"), "x={k:()=>1,[()=>1]:1},y=[()=>1];"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-4"), "x=(a||(f(1)(2)),longName);"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-5"), "g(),h();"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-6"), "g(),h();"],
@@ -1920,42 +1920,84 @@ describe("one-pass minify, family V round 8", () => {
 			).code
 		).toBe("function f(v,o){return v?v:o&&o.length}function g(v,o){/*! c */return v?v:o}");
 	});
-
 });
 
 describe("one-pass minify, family S round 8", () => {
-	it("should keep the name a declarator gives an anonymous function or class its one read would lose", () => {
+	const keeps = { compress: { keepFnames: true, keepClassnames: true }, mangle: false };
+	const folds = { compress: {}, mangle: false };
+
+	it("should keep the name a declarator gives an anonymous function or class its one read would lose, where `keepFnames` or `keepClassnames` keeps it", () => {
 		const source = fixture("javascript", "one-pass-s5-1");
-		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
-		// Only a call or a tag of a function shows nothing of its name, but through `arguments.callee`; a class's static block runs as it is made.
+		const { code } = minifyOnePass(source, keeps);
+		// Only a call or a tag of a function shows nothing of its name, but through `arguments.callee`; a class's static block reads its own.
 		expect(code).toBe("function show(value){return value.name}function declared(){var made=function(){};return show(made)}function classes(){var made=class{};return made.name}function arrows(){var made=()=>1;return made.name}function properties(){var made=function(){};return made.name}function called(){return\"called\"}function tagged(){return(parts=>parts[0])`tagged`}function callee(){var made=function(){return arguments.callee.name};return made()}function staticName(){var made=class{static{console.log(\"static\",this.name)}};try{made()}catch(error){return error.constructor.name}}console.log(declared(),classes(),arrows(),properties(),called(),tagged(),callee(),staticName());");
 		expect(runProgram(code)).toBe(runProgram(source));
+		// Under the defaults, as terser, no name is promised: the old folds stay.
+		expect(minifyOnePass(source, folds).code).toBe("function show(value){return value.name}function declared(){return show(function(){})}function classes(){return class{}.name}function arrows(){return[()=>1][0].name}function properties(){return{other:function(){}}.other.name}function called(){return\"called\"}function tagged(){return(parts=>parts[0])`tagged`}function callee(){return function(){return arguments.callee.name}()}function staticName(){var made=class{static{console.log(\"static\",this.name)}};try{made()}catch(error){return error.constructor.name}}console.log(declared(),classes(),arrows(),properties(),called(),tagged(),callee(),staticName());");
 	});
 
-	it("should keep the name an assignment gives an anonymous function its read would lose", () => {
+	it("should keep the name an assignment gives an anonymous function its read would lose, where `keepFnames` keeps it", () => {
 		const source = fixture("javascript", "one-pass-s5-2");
-		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		const { code } = minifyOnePass(source, keeps);
+		// The default folds it, the value taking no parentheses the assignment took.
 		expect(code).toBe("function show(value){return value.name}function assigned(){var made=function(){};return show(made)}function inPlace(made){return(made=function(){}).name}function chained(){var inner;return(outer=inner=function(){}).name}function calledAssigned(){return\"called\"}var outer;console.log(assigned(),inPlace(),chained(),calledAssigned());");
 		expect(runProgram(code)).toBe(runProgram(source));
+		// Under the defaults, as terser, no name is promised: the old folds stay.
+		expect(minifyOnePass(source, folds).code).toBe("function show(value){return value.name}function assigned(){return show(function(){})}function inPlace(made){return function(){}.name}function chained(){return(outer=function(){}).name}function calledAssigned(){return\"called\"}var outer;console.log(assigned(),inPlace(),chained(),calledAssigned());");
 	});
 
-	it("should print a folded anonymous function or class a naming place holds as `(0,f)`", () => {
+	it("should keep a folded anonymous function or class a naming place holds unnamed as `(0,f)`, where `keepFnames` or `keepClassnames` keeps names", () => {
 		const source = fixture("javascript", "one-pass-s5-3");
-		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
-		// Where the test and the part going are no longer than `(0,)`, the expression stays; a computed key or an element names nothing.
+		const { code } = minifyOnePass(source, keeps);
+		// Where the test and the part going are no longer than `(0,)`, the expression stays; a computed key or an element names nothing; a known test keeps a function or class unnamed in either mode.
 		expect(code).toBe("var or=0||function(){},nullish=(0,function(){}),wrapped=(0,()=>1),picked=(0,()=>1),kept=1?function(){}:0,keyed={[()=>1]:1},bare=[()=>1],assigned=(0,class{});function defaulted(value=(0,()=>1)){return value.name}var object={value:(0,()=>1)};class Field{value=(0,()=>1)}console.log(or.name,nullish.name,wrapped.name,picked.name,kept.name,Object.keys(keyed).length,bare[0].name),console.log(assigned.name,defaulted(),object.value.name,(new Field).value.name);");
 		expect(runProgram(code)).toBe(runProgram(source));
-		const options = { compress: {}, mangle: false, module: true };
-		expect(minifyOnePass("x=void 0??(()=>/*! c */1)", options).code).toBe("x=void 0??(()=>/*! c */1);");
-		expect(minifyOnePass("var r=function(){};export default r", options).code).toBe("var r=function(){};export default r;");
-		expect(minifyOnePass("export default 1?class{}:null", options).code).toBe("export default(0,class{});");
+		// Under the defaults, as terser, no name is promised: the old folds stay.
+		expect(minifyOnePass(source, folds).code).toBe("var or=function(){},nullish=function(){},wrapped=()=>1,picked=()=>1,kept=1?function(){}:0,keyed={[()=>1]:1},bare=[()=>1],assigned=class{};function defaulted(value=()=>1){return value.name}var object={value:()=>1};class Field{value=()=>1}console.log(or.name,nullish.name,wrapped.name,picked.name,kept.name,Object.keys(keyed).length,bare[0].name),console.log(assigned.name,defaulted(),object.value.name,(new Field).value.name);");
+		const modules = { compress: { keepFnames: true, keepClassnames: true }, mangle: false, module: true };
+		expect(minifyOnePass("x=void 0??(()=>/*! c */1)", modules).code).toBe("x=void 0??(()=>/*! c */1);");
+		expect(minifyOnePass("var r=function(){};export default r", modules).code).toBe("var r=function(){};export default r;");
+		expect(minifyOnePass("export default 1?class{}:null", { ...modules, compress: {} }).code).toBe("export default(0,class{});");
+		// An `if` or `?:` setting one name either way keeps the value it names.
+		expect(minifyOnePass("function f(y){var x;if(y)x=function(){};else x=2;return x}", keeps).code).toBe("function f(y){var x;return y?x=function(){}:x=2,x}");
+		expect(minifyOnePass("function f(y){var x;y?x=function(){}:x=2;return x}", keeps).code).toBe("function f(y){var x;return y?x=function(){}:x=2,x}");
+		expect(minifyOnePass("function f(y){var x;y?x=function(){}:x=2;return x}", folds).code).toBe("function f(y){var x;return x=y?function(){}:2,x}");
+		expect(minifyOnePass("function f(y,o){y?o.p=function(){}:o.p=2}", keeps).code).toBe("function f(y,o){o.p=y?function(){}:2}");
+		expect(minifyOnePass("function f(y){var x;switch(y){case 1:x=function(){};break;default:x=2}return x}", keeps).code).toBe("function f(y){var x;return y===1?x=function(){}:x=2,x}");
 	});
 
-	it("should keep a call in place returning an anonymous function where its place would name it", () => {
+	it("should keep a call in place returning an anonymous function where its place would name it, where `keepFnames` keeps names", () => {
 		const source = fixture("javascript", "one-pass-s5-4");
-		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		const { code } = minifyOnePass(source, keeps);
 		expect(code).toBe("var made=function(){return function(){}}(),arrow=(()=>()=>1)();console.log(made.name,arrow.name,[()=>1][0].name);");
 		expect(runProgram(code)).toBe(runProgram(source));
+		// Under the defaults, as terser, no name is promised: the old folds stay.
+		expect(minifyOnePass(source, folds).code).toBe("var made=function(){},arrow=()=>1;console.log(made.name,arrow.name,[()=>1][0].name);");
+	});
+
+	it("should print the value of an assignment setting nothing without the parentheses the assignment took", () => {
+		// Opening a statement, a function keeps them; a value set through two names alike.
+		expect(minifyOnePass("function f(o,i){return(o=i=[1]).length}", folds).code).toBe("function f(o,i){return[1].length}");
+		expect(minifyOnePass("function f(o,i){(o=i=function(){}).x=1}", folds).code).toBe("function f(o,i){(function(){}).x=1}");
+		expect(minifyOnePass("export function r(){var i;o=i=function(){};return o.name}var o;", { ...folds, module: true }).code).toBe("export function r(){return function(){}.name}");
+		expect(minifyOnePass("export function r(){var i;o=i=(1,2);return o}var o;", { ...folds, module: true }).code).toBe("export function r(){return 2}");
+		expect(minifyOnePass("export function r(){var i;o=i=a.b;return o()}var o;", { ...folds, module: true }).code).toBe("export function r(){return(0,a.b)()}");
+	});
+
+	it("should keep a moved function or a folded value from printing bare as a picked element read off", () => {
+		// A low-binding value stays in its literal under a member, call or operator.
+		expect(minifyOnePass("function g(){var m=()=>1;return[m][0].name}", folds).code).toBe("function g(){return[()=>1][0].name}");
+		expect(minifyOnePass("function g(a,b){var r=a+b;return[r][0].x}", folds).code).toBe("function g(a,b){return[a+b][0].x}");
+		expect(minifyOnePass("function g(a,b){var r=a?b:1;return{k:r}.k*2}", folds).code).toBe("function g(a,b){return{k:a?b:1}.k*2}");
+		expect(minifyOnePass("function g(a,b){var r=(a(),b);return[r][0]}", folds).code).toBe("function g(a,b){return[(a(),b)][0]}");
+		expect(minifyOnePass("function g(a,b){var r=a+b;h([r][0]),k({p:[r][0]})}", folds).code).toBe("function g(a,b){var r=a+b;h(r),k({p:r})}");
+		expect(minifyOnePass("function g(a,b){var r=a+b;return[r][0]}", folds).code).toBe("function g(a,b){return a+b}");
+		expect(minifyOnePass("function g(a,b){var r=a+b;throw[r][0]}", folds).code).toBe("function g(a,b){throw a+b}");
+		expect(minifyOnePass("function g(a,b){var r=a+b;return x=[r][0]}", folds).code).toBe("function g(a,b){return x=a+b}");
+		expect(minifyOnePass("function g(a,b){var r=a+b;h([r][0])}", folds).code).toBe("function g(a,b){h(a+b)}");
+		expect(minifyOnePass("function g(a,b){var r=a+b;return[[r][0]]}", folds).code).toBe("function g(a,b){return[a+b]}");
+		expect(minifyOnePass("function g(a,b){var r=a+b;return{p:[r][0]}}", folds).code).toBe("function g(a,b){return{p:a+b}}");
+		expect(runProgram("function g(a,b){var r=a+b;return[r][0].toFixed(1)}console.log(g(1,2))")).toBe(runProgram(minifyOnePass("function g(a,b){var r=a+b;return[r][0].toFixed(1)}console.log(g(1,2))", folds).code));
 	});
 });
 
