@@ -2013,7 +2013,7 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 				renderEmbeddedSource: (source) => source
 			}
 		);
-		expect(code).toContain("background:url(data:image/svg+xml,<svg/>);");
+		expect(code).toContain("background:url(data:image/svg+xml,<svg/>)}");
 		expect(code).toContain(
 			"@media (prefers-color-scheme:dark){.a{--webpack-light:;"
 		);
