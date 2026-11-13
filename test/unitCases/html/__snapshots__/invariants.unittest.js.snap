@@ -37316,6 +37316,32 @@ exports[`HTML syntax — invariants source-processor-remove-redundant-attributes
 
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-13 tokenizes 1`] = `"attr[8,15|17,22]\\" attr[24,27|29,33]\\" open[0,35|1,7] close[35,44|37,43] end=44"`;
 
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-14 parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       \\"t\\"
+|     <style>
+|       \\"a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}\\"
+|     <meta>
+|       charset=\\"utf-8\\"
+|     <script>
+|       charset=\\"utf-8\\"
+|       src=\\"a.js\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-14 parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-14 prints {"mode":"minify","removeRedundantAttributes":"smart","removeEmptyElements":true,"deferEmbeddedSource":[]} 1`] = `"\\"<!doctype html><title>t</title><style>\\\\u00000:0\\\\u0000</style><meta charset=utf-8><script charset=utf-8 src=a.js></script>\\""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-14 prints {"mode":"minify","removeRedundantAttributes":"smart","removeEmptyElements":true,"renderEmbeddedSource":"builtin"} 1`] = `"<!doctype html><title>t</title><meta charset=utf-8><script src=a.js></script>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-14 prints {"mode":"minify"} 1`] = `"<!doctype html><title>t</title><style>a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}a{}</style><meta charset=utf-8><script charset=utf-8 src=a.js></script>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-14 tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,38|32,37] text[38,1238] close[1238,1246|1240,1245] attr[1252,1259|1261,1266]\\" open[1246,1268|1247,1251] attr[1276,1283|1285,1290]\\" attr[1292,1295|1297,1301]\\" open[1268,1303|1269,1275] close[1303,1312|1305,1311] end=1312"`;
+
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing parses 1`] = `
 "| <html>
 |   <head>
