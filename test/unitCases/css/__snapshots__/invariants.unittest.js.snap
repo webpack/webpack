@@ -40508,6 +40508,19 @@ exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-fails-o
 
 exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-fails-on-a-nesting-deeper-than-the-stack tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,5] whitespace[5,6] colon[6,7] whitespace[7,8] ident[8,9] whitespace[9,10] right-curly-bracket[10,11] end=11"`;
 
+exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-fails-on-a-nesting-deeper-than-the-stack-2 parses 1`] = `"overflows the stack"`;
+
+exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-fails-on-a-nesting-deeper-than-the-stack-2 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-fails-on-a-nesting-deeper-than-the-stack-2 prints {"mode":"minify"} 1`] = `"overflows the stack"`;
+
+exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-fails-on-a-nesting-deeper-than-the-stack-2 tokenizes 1`] = `
+"length 2977927, sha256 b0638befad27e83c
+ident[0,1] left-curly-bracket[1,2] ident[2,3] colon[3,4] left-parenthesis[4,5] left-parenthesis[5,6] left-parenthesis[6,7] left-parenthesis[7,8] left-parenthesis[8,9] left-parenthesis[9,10] left-paren
+…
+-parenthesis[99999,100000] left-parenthesis[100000,100001] left-parenthesis[100001,100002] left-parenthesis[100002,100003] left-parenthesis[100003,100004] right-curly-bracket[100004,100005] end=100005"
+`;
+
 exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-parses-at-rules-nested-inside-a-style-rule parses {"entry":"parseAStylesheet","fields":["name","source","childCount","fieldCount:prelude","fieldCount:value","fieldCount:declarations","fieldCount:rules"]} 1`] = `"[[\\"at-rule\\",\\"media\\",[],[[\\"at-keyword\\",\\"page\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-parses-at-rules-nested-inside-a-style-rule parses {"entry":"parseAStylesheet","fields":["name","source","childCount","fieldCount:prelude","fieldCount:value","fieldCount:declarations","fieldCount:rules"]} 2`] = `""`;

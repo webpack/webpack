@@ -47,8 +47,8 @@ const minifyForWith = (css, browsers, transforms) =>
 
 describe("CssSyntax — block streaming", () => {
 	// A block streams once it holds more than `_STREAM_MIN_NODES` nodes; under that
-	// it is collected and walked in one batch. `BIG` clears the threshold, `SMALL`
-	// stays under, and each case pins which it exercises if the threshold moves.
+	// it is collected and walked in one batch. `BIG` clears the threshold, the
+	// fixture's four rules stay under, and each case pins which it exercises.
 	/** @type {(i: number) => string} */
 	// Distinct blocks: rules printing the same one join into a selector list, and
 	// what these cases are about is the streaming, not the joining.
@@ -60,7 +60,6 @@ describe("CssSyntax — block streaming", () => {
 		return s;
 	};
 	const BIG = repeat(1800, rule);
-	const SMALL = repeat(4, rule);
 
 	/**
 	 * Child rules the first rule of `type` reports: 0 means it streamed (its
@@ -120,7 +119,7 @@ describe("CssSyntax — block streaming", () => {
 
 	it("streams a block past the threshold and collects one under it", () => {
 		expect(childCount(fixture("css", "css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one-2"))).toBe(0);
-		expect(childCount(`@media screen{${SMALL}}`)).toBe(4);
+		expect(childCount(fixture("css", "css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one"))).toBe(4);
 	});
 
 	it("cuts a dead rule where it stands after an earlier cut in the piece", () => {
@@ -251,7 +250,7 @@ describe("CssSyntax — block streaming", () => {
 	});
 
 	it("enters a streamed rule before its children and exits after them", () => {
-		const seq = walk(`@media screen{${SMALL}}`, { recurseBlocks: true });
+		const seq = walk(fixture("css", "css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one"), { recurseBlocks: true });
 		expect(seq[0]).toBe("+AtRule|0|0");
 		expect(seq[seq.length - 1]).toBe("-AtRule|0|0");
 		const streamed = walk(fixture("css", "css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one-2"));
@@ -354,7 +353,7 @@ describe("CssSyntax — block streaming", () => {
 		// them, so both lists read empty — but the block itself is still there,
 		// which `null` (the block-less at-rules) would deny.
 		expect(body(fixture("css", "css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one-2"))).toEqual([0, 0]);
-		expect(body(`@media screen{${SMALL}}`)).toEqual([0, 4]);
+		expect(body(fixture("css", "css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one"))).toEqual([0, 4]);
 		expect(body(fixture("css", "css-syntax-block-streaming-reads-a-streamed-rule-s-body-as-an-empty-block-not-as"))).toEqual([null, null]);
 	});
 
@@ -991,12 +990,10 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 		const { EMBEDDED_LANGUAGES } = require("../../../lib/util/dataURL");
 
 		// One stylesheet reaching every language a media type can name.
-		const sheet =
-			'@import url("data:text/css,.inner {  color : red  }");' +
-			'.svg{background:url("data:image/svg+xml,<svg>   <rect/>   </svg>")}' +
-			'.html{background:url("data:text/html,<p>   x   </p>")}' +
-			".json{background:url('data:application/json,{ \"a\" :  1 }')}" +
-			'.js{background:url("data:text/javascript,var  a  =  1")}';
+		const sheet = fixture(
+			"css",
+			"source-processor-render-embedded-source-over-a-data-url-offers-every-language"
+		);
 
 		// Every entry needs a live offer site behind it, and nothing may arrive
 		// that the list does not name.
@@ -1046,12 +1043,6 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 });
 
 describe("CssSyntax minify — one stylesheet reaching every embedded site", () => {
-	/**
-	 * @param {string} payload the payload to encode
-	 * @returns {string} it, base64-encoded
-	 */
-	const base64 = (payload) => Buffer.from(payload).toString("base64");
-
 	const PAYLOADS = {
 		css: "  .inner  {  color : red  ;  }  ",
 		svg: "<svg xmlns='http://www.w3.org/2000/svg'>   <rect/>   </svg>",
@@ -1062,34 +1053,10 @@ describe("CssSyntax minify — one stylesheet reaching every embedded site", () 
 
 	// Every site a stylesheet can embed a body at, each language reached twice —
 	// once written out and once base64 — plus the two a renderer never sees.
-	const STYLESHEET = `@import url("data:text/css,${PAYLOADS.css}") ;
-
-.svg  { background : url("data:image/svg+xml,${PAYLOADS.svg}") ; }
-.html { background : url("data:text/html,${PAYLOADS.html}") ; }
-.json { background : url('data:application/json,${PAYLOADS.json}') ; }
-.javascript { background : url("data:text/javascript,${
-		PAYLOADS.javascript
-	}") ; }
-
-.svg-base64  { background : url(data:image/svg+xml;base64,${base64(
-		PAYLOADS.svg
-	)}) ; }
-.css-base64  { background : url(data:text/css;base64,${base64(
-		PAYLOADS.css
-	)}) ; }
-.html-base64 { background : url(data:text/html;base64,${base64(
-		PAYLOADS.html
-	)}) ; }
-.json-base64 { background : url(data:application/json;base64,${base64(
-		PAYLOADS.json
-	)}) ; }
-.javascript-base64 { background : url(data:text/javascript;base64,${base64(
-		PAYLOADS.javascript
-	)}) ; }
-
-.png  { background : url("data:image/png;base64,iVBORw0KGgo=") ; }
-.file { background : url("./img.png") ; }
-`;
+	const STYLESHEET = fixture(
+		"css",
+		"css-syntax-minify-one-stylesheet-reaching-every-embedded-site-offers-each"
+	);
 
 	/**
 	 * @param {import("../../../lib/css/syntax-parser").EmbeddedSourceRenderer=} renderEmbeddedSource the renderer

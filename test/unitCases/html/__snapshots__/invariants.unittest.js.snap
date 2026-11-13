@@ -8195,6 +8195,41 @@ exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-a
 
 exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-applies-the-noah-s-ark-clause-only-to-3 tokenizes 1`] = `"open[0,3|1,2] attr[6,7|8,9] open[3,10|4,5] attr[13,14|15,16] open[10,17|11,12] attr[20,21|22,23] open[17,24|18,19] attr[27,28|29,30] open[24,31|25,26] text[31,32] close[32,36|34,35] text[36,41] end=41"`;
 
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-grows-the-node-columns-past-the-initial parses 1`] = `
+"length 25045030, sha256 1fa25e5357c4f5d2
+| <html>
+|   <head>
+|   <body>
+|     <i>
+|       <i>
+|         <i>
+|           <i>
+|             <i>
+|               <i>
+|                 <i>
+|                   <i>
+|                     <i>
+|      
+…
+                                                                                                                                                                                                     <i>"
+`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-grows-the-node-columns-past-the-initial parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[15000,15000]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-grows-the-node-columns-past-the-initial prints {"mode":"minify"} 1`] = `
+"length 35000, sha256 bb149eeb641980b5
+<i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i
+…
+</i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i>"
+`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-grows-the-node-columns-past-the-initial tokenizes 1`] = `
+"length 135197, sha256 7a0f93699dd27aa4
+open[0,3|1,2] open[3,6|4,5] open[6,9|7,8] open[9,12|10,11] open[12,15|13,14] open[15,18|16,17] open[18,21|19,20] open[21,24|22,23] open[24,27|25,26] open[27,30|28,29] open[30,33|31,32] open[33,36|34,3
+…
+980,14981] open[14982,14985|14983,14984] open[14985,14988|14986,14987] open[14988,14991|14989,14990] open[14991,14994|14992,14993] open[14994,14997|14995,14996] open[14997,15000|14998,14999] end=15000"
+`;
+
 exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-only-treats-annotation-xml-as-an parses 1`] = `
 "| <html>
 |   <head>
@@ -41780,6 +41815,73 @@ x<table><td>y</table></pre>"
 `;
 
 exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-in-s-mode-prints-j-as-j-8 tokenizes 1`] = `"open[0,5|1,4] open[5,12|6,11] text[12,14] open[14,18|15,17] text[18,19] close[19,27|21,26] close[27,33|29,32] end=33"`;
+
+exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-prints-nested-20000-deep-in-a-small-heap parses 1`] = `
+"length 400260040, sha256 d99ac078942e1d12
+| <html>
+|   <head>
+|   <body>
+|     <pre>
+|       <pre>
+|         <pre>
+|           <pre>
+|             <pre>
+|               <pre>
+|                 <pre>
+|                   <pre>
+|                
+…
+                                                                                                                                                                                                     \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-prints-nested-20000-deep-in-a-small-heap parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-prints-nested-20000-deep-in-a-small-heap prints {"mode":"minify"} 1`] = `
+"length 220001, sha256 615a4857675bf18f
+<pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre>
+…
+e></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre>"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-prints-nested-20000-deep-in-a-small-heap tokenizes 1`] = `
+"length 1291147, sha256 452eae822d5116a6
+open[0,5|1,4] open[5,10|6,9] open[10,15|11,14] open[15,20|16,19] open[20,25|21,24] open[25,30|26,29] open[30,35|31,34] open[35,40|36,39] open[40,45|41,44] open[45,50|46,49] open[50,55|51,54] open[55,6
+…
+219967,219970] close[219971,219977|219973,219976] close[219977,219983|219979,219982] close[219983,219989|219985,219988] close[219989,219995|219991,219994] close[219995,220001|219997,220000] end=220001"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-prints-nested-20000-deep-in-a-small-heap-2 parses 1`] = `
+"length 1600640040, sha256 9dcbd51e8362dc5e
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg g>
+|         <svg svg>
+|           <svg g>
+|             <svg svg>
+|               <svg g>
+|                 <svg svg>
+|                   <
+…
+                                                                                                                                                                                                     \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-prints-nested-20000-deep-in-a-small-heap-2 parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-prints-nested-20000-deep-in-a-small-heap-2 prints {"mode":"minify"} 1`] = `
+"length 360001, sha256 2d38c63395253c00
+<svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g><svg><g>
+…
+</g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg></g></svg>"
+`;
+
+exports[`HTML syntax — invariants source-processor-the-leading-newline-of-pre-prints-nested-20000-deep-in-a-small-heap-2 tokenizes 1`] = `
+"length 2648925, sha256 88f2780192a9e187
+open[0,5|1,4] open[5,8|6,7] open[8,13|9,12] open[13,16|14,15] open[16,21|17,20] open[21,24|22,23] open[24,29|25,28] open[29,32|30,31] open[32,37|33,36] open[37,40|38,39] open[40,45|41,44] open[45,48|4
+…
+359973,359974] close[359975,359981|359977,359980] close[359981,359985|359983,359984] close[359985,359991|359987,359990] close[359991,359995|359993,359994] close[359995,360001|359997,360000] end=360001"
+`;
 
 exports[`HTML syntax — invariants source-processor-the-markup-generators-escapes-text-so-that-it-reads-back-as parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <p>\\\\n|       \\\\\\"a & b < c > d e\\\\nf\\\\rg\\\\\\"\\""`;
 

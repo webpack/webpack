@@ -631,15 +631,14 @@ describe("SourceProcessor — the leading newline of `<pre>`", () => {
 	// Run in a heap far smaller than a copy of every subtree would take, which a
 	// per-element read of the composed children's first character used to make.
 	it.each([
-		["<pre>", "<pre>", "</pre>"],
-		["<svg> under a renderer", "<svg><g>", "</g></svg>"]
-	])("prints %s nested 20000 deep in a small heap", (_, open, close) => {
+		["<pre>", ""],
+		["<svg> under a renderer", "-2"]
+	])("prints %s nested 20000 deep in a small heap", (_, suffix) => {
 		const script = `
 			const { SourceProcessor } = require(${JSON.stringify(
 				require.resolve("../../../lib/html/syntax")
 			)});
-			const source = ${JSON.stringify(open)}.repeat(20000) + "x" +
-				${JSON.stringify(close)}.repeat(20000);
+			const source = require("fs").readFileSync(0, "utf8");
 			const { code } = new SourceProcessor().process(source, {
 				mode: "minify",
 				renderEmbeddedSource: () => undefined
@@ -650,7 +649,14 @@ describe("SourceProcessor — the leading newline of `<pre>`", () => {
 			execFileSync(
 				process.execPath,
 				["--max-old-space-size=128", "-e", script],
-				{ encoding: "utf8", stdio: "pipe" }
+				{
+					encoding: "utf8",
+					input: fixture(
+						"html",
+						`source-processor-the-leading-newline-of-pre-prints-nested-20000-deep-in-a-small-heap${suffix}`
+					),
+					stdio: "pipe"
+				}
 			)
 		).toBe("true");
 	});
@@ -957,9 +963,10 @@ describe("SourceProcessor — the markup generators", () => {
 		const text = "a & b < c > d e\nf\rg";
 		expect(escapeText("plain")).toBe("plain");
 		expect(escapeText(text)).toBe("a &amp; b &lt; c &gt; d&nbsp;e&#10;f&#13;g");
-		expect(tree(`<p>${escapeText(text)}`)).toBe(
+		// The fixture is `<p>` and that escape, which reads back as the text.
+		expect(
 			tree(fixture("html", "source-processor-the-markup-generators-escapes-text-so-that-it-reads-back-as"))
-		);
+		).toBe(`| <html>\n|   <head>\n|   <body>\n|     <p>\n|       "${text}"`);
 	});
 
 	it("escapes an attribute value for the quote it is written in", () => {

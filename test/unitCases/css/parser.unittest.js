@@ -118,9 +118,10 @@ describe("CssSyntax — Node / Token", () => {
 				}
 			})
 			.process(
-				"a{color:1;COLOR:1;c\\6flor:1;word-wrap:1;overflow-wrap:1;" +
-					"-webkit-transition:1;transition:1;--x:1;\\2d-y:1;foo:1;é:1;" +
-					"value:1;gab:1}"
+				fixture(
+					"css",
+					"css-syntax-node-token-numbers-a-declaration-s-property-by-what-it-means"
+				)
 			);
 		expect(ids.color).toBeGreaterThanOrEqual(0);
 		expect(ids.COLOR).toBe(ids.color);
@@ -141,11 +142,14 @@ describe("CssSyntax — Node / Token", () => {
 describe("CssSyntax — substitution span searches", () => {
 	const { _hasSubstitutionInSpan } = require("../../../lib/css/syntax-parser");
 
-	it.each(["", ";last:var(--x)"])(
+	it.each([
+		["", "css-syntax-substitution-span-searches-shares-one-search-across-values-without"],
+		[";last:var(--x)", "css-syntax-substitution-span-searches-shares-one-search-across-values-without-2"]
+	])(
 		"shares one search across values without calls before %s",
-		(suffix) => {
+		(_suffix, name) => {
 			expect.assertions(2);
-			const css = `a{one:1;two:2;three:3${suffix}}`;
+			const css = fixture("css", name);
 			const spans = ["one:1", "two:2", "three:3"].map((declaration) => [
 				css.indexOf(declaration),
 				declaration.length
@@ -321,8 +325,10 @@ describe("CssSyntax — the facade", () => {
 
 describe("CssSyntax — nesting and error recovery", () => {
 	it("fails on a nesting deeper than the stack as a parse error", () => {
-		// Inline: a parse of it throws, which the invariants runner cannot hold.
-		const deep = `a{b:${"(".repeat(100000)}}`;
+		const deep = fixture(
+			"css",
+			"css-syntax-nesting-and-error-recovery-fails-on-a-nesting-deeper-than-the-stack-2"
+		);
 		expect(() => new SourceProcessor().process(deep)).toThrow(
 			/^Not enough stack space to parse input \(1:\d+\)$/
 		);

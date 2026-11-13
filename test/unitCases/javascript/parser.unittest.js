@@ -427,11 +427,11 @@ describe("WebpackParser", () => {
 		});
 
 		it("should report stack overflow on pathological nesting like acorn", () => {
-			expect(() => parse(`${"(".repeat(100000)}x`)).toThrow(
+			expect(() => parse(fixture("javascript", "webpack-parser-expressions-spreads-and-parameter-checks-should-report-stack"))).toThrow(
 				/Not enough stack space to parse input/
 			);
 			// statements alone nest past any expression's own catch
-			expect(() => parse("{".repeat(100000))).toThrow(
+			expect(() => parse(fixture("javascript", "webpack-parser-expressions-spreads-and-parameter-checks-should-report-stack-2"))).toThrow(
 				/Not enough stack space to parse input/
 			);
 		});
@@ -4240,7 +4240,7 @@ describe("SyntaxTree", () => {
 		const { parseProgram, takeParsedTree } = require(
 			"../../../lib/javascript/syntax-parser"
 		);
-		parseProgram("a;".repeat(140000), 0, { sourceType: "script" });
+		parseProgram(fixture("javascript", "syntax-tree-copies-a-large-tree-s-columns-for-its-lazy-objects-and-frees-its-own"), 0, { sourceType: "script" });
 		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
 		const program = /** @type {import("estree").Program} */ (
 			tree.lazyEstree(tree._nodeCount)
@@ -4492,11 +4492,10 @@ describe("SyntaxTree", () => {
 			);
 			return [tree, program];
 		};
-		const body = `var a, b;${"a;".repeat(40000)}`;
 		// Large enough to be let go, it leaves the next tree its list room exactly:
 		// the body's list fits, and the export's one more name does not.
-		parseModule(`${body}export { a };`)[0].release();
-		const [tree, program] = parseModule(`${body}export { a, b };`);
+		parseModule(fixture("javascript", "syntax-tree-keeps-a-list-s-items-while-an-item-written-into-it-grows-the-column"))[0].release();
+		const [tree, program] = parseModule(fixture("javascript", "syntax-tree-keeps-a-list-s-items-while-an-item-written-into-it-grows-the-column-2"));
 		const last = tree.field(
 			tree.fieldCount(Field.body, program) - 1,
 			Field.body,
@@ -4515,7 +4514,7 @@ describe("SyntaxTree", () => {
 
 	it("lets go of a large tree's columns, and the next grows to its size", () => {
 		const tree = new SyntaxTree();
-		parseInto(tree, "a;".repeat(140000));
+		parseInto(tree, fixture("javascript", "syntax-tree-copies-a-large-tree-s-columns-for-its-lazy-objects-and-frees-its-own"));
 		const types = tree._types;
 		const nodes = tree._nodeCount;
 		tree.release();
@@ -4770,7 +4769,7 @@ describe("SyntaxTree", () => {
 		second.release();
 		expect(new SyntaxTree()._types).not.toBe(types);
 		const large = new SyntaxTree();
-		parseInto(large, "a;".repeat(300000));
+		parseInto(large, fixture("javascript", "syntax-tree-hands-a-tree-s-columns-on-to-the-next-tree-once-only-3"));
 		const values = large._values;
 		large.release();
 		expect(new SyntaxTree()._values).not.toBe(values);

@@ -494,7 +494,12 @@ describe("parseHtml — quirks and foreign-content arcs", () => {
 		// `len / 12` under-estimates a document of nothing but short start tags,
 		// so the doubling growth path has to carry the rest. Walk the refs
 		// directly — `materialize` recurses, and this tree is 5000 deep.
-		let node = parseHtmlRefs("<i>".repeat(5000));
+		let node = parseHtmlRefs(
+			fixture(
+				"html",
+				"parse-html-quirks-and-foreign-content-arcs-grows-the-node-columns-past-the-initial"
+			)
+		);
 		let depth = 0;
 		for (;;) {
 			const children = childrenOf(node);
