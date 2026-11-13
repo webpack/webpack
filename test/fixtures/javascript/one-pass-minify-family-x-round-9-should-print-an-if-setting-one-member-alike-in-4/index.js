@@ -1,0 +1,1 @@
+function f(t,o){if(t){o.a=1;g()}else o.a=2}

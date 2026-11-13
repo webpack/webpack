@@ -1,0 +1,1 @@
+async function f(){if(await(a(),b))c()}

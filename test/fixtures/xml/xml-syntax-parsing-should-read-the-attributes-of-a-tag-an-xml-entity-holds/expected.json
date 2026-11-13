@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "respelling references",
+		"contains": "<j k='a b'/>  ->  <j k='&#x61; &#x62;'/></r>",
+		"why": "an entity whose replacement holds markup stays a reference, and the printer writes what follows it in its parent as authored, so a reference respelled there stays one"
+	}
+]

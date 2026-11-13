@@ -1,0 +1,1 @@
+function f(r){{using a=function(o){return o.x+o.y}(r(1));use(a,a)}}

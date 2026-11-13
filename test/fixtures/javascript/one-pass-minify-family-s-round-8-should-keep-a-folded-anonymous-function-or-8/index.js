@@ -1,0 +1,1 @@
+function f(y){var x;switch(y){case 1:x=function(){};break;default:x=2}return x}

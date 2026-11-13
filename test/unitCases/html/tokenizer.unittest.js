@@ -91,7 +91,7 @@ describe("tokenize", () => {
 			/** @type {[string, number][]} */
 			const errors = [];
 			tokenize(
-				"<a b=x\"y'z<w=v`u\0t&amp;\u00E9 c=1\td=2\ne=3\ff=4\rg=&h i=`>",
+				fixture("html", "coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet"),
 				0,
 				{
 					attribute: (input, ns, ne, vs, ve) => {
@@ -422,7 +422,7 @@ describe("tokenize", () => {
 		/** @type {[string, number][]} */
 		const errors = [];
 		tokenize(
-			'&lt;&lt;&le;&lt;&lx;&nope;&nope;&lt &amp;<a b="&lt;&lx;&lt=&ltx">',
+			fixture("html", "tokenize-reads-a-named-reference-the-same-wherever-the-input-repeats-it"),
 			0,
 			{
 				parseError: (input, code, start) => {
@@ -451,7 +451,7 @@ describe("a tag whose name a NUL interrupts", () => {
 		/** @type {[string, number][]} */
 		const errors = [];
 		let skip = 1;
-		tokenize("<a\0b>x</a\0b><c\0>y", 0, {
+		tokenize(fixture("html", "a-tag-whose-name-a-nul-interrupts-ends-at-the-the-tag-name-state-reads"), 0, {
 			openTag: (input, start, end, ns, ne) => {
 				tags.push(["open", input.slice(ns, ne), start, end]);
 				const next = end + skip;

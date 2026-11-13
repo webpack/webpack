@@ -1,0 +1,1 @@
+function g(a,b){var r=a+b;return[r][0].toFixed(1)}console.log(g(1,2))

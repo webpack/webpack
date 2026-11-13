@@ -1840,15 +1840,15 @@ describe("CssSyntax — declaration ranks", () => {
 			new SourceProcessor().process(src, { mode: "minify" }).code;
 		// `top` leads a pair for the first time, then `left` does, then `top` again.
 		expect(
-			min("a{color:red;top:0;display:block}c{color:red;left:0;display:block}")
+			min(fixture("css", "css-syntax-declaration-ranks-orders-a-block-alike-when-a-pair-of-its-properties"))
 		).toBe("a{color:red;display:block;top:0}c{color:red;display:block;left:0}");
-		expect(min("d{color:red;top:0;display:block}")).toBe(
+		expect(min(fixture("css", "css-syntax-declaration-ranks-orders-a-block-alike-when-a-pair-of-its-properties-2"))).toBe(
 			"d{color:red;display:block;top:0}"
 		);
 		// A shorthand and its longhand keep their order, the first time and the next.
 		const kept = "e{margin-top:1px;margin:0;display:block;top:0}";
-		expect(min("e{top:0;margin-top:1px;margin:0;display:block}")).toBe(kept);
-		expect(min("e{top:0;margin-top:1px;margin:0;display:block}")).toBe(kept);
+		expect(min(fixture("css", "css-syntax-declaration-ranks-orders-a-block-alike-when-a-pair-of-its-properties-3"))).toBe(kept);
+		expect(min(fixture("css", "css-syntax-declaration-ranks-orders-a-block-alike-when-a-pair-of-its-properties-4"))).toBe(kept);
 	});
 });
 

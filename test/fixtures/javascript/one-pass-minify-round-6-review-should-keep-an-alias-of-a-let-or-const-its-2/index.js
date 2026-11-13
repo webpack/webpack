@@ -1,0 +1,1 @@
+function a(){var x=y;var g=function(){return x};const y=1;return g}try{a()}catch(e){console.log(e.name)}

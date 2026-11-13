@@ -580,10 +580,9 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 	});
 
 	it("decodes a repeated named reference and a long one alike", () => {
-		expect(decodeEntities("&amp;&amp;&lt;&amp;")).toBe("&&<&");
-		const long = "&CounterClockwiseContourIntegral;";
-		expect(decodeEntities(`${long}${long}&amp;${long}`)).toBe("\u2233\u2233&\u2233");
-		expect(decodeEntities("&amp;&amp=&amp")).toBe("&&=&");
+		expect(decodeEntities(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer"))).toBe("&&<&");
+		expect(decodeEntities(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-3"))).toBe("\u2233\u2233&\u2233");
+		expect(decodeEntities(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-2"))).toBe("&&=&");
 	});
 
 	it("re-sizes the attribute columns a walk released from the next estimate", () => {

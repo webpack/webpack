@@ -1,0 +1,1 @@
+function f(t,o){if(t())o.a=x();else o.a=y()}

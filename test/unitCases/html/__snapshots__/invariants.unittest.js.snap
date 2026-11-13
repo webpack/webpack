@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`HTML syntax — invariants a-tag-whose-name-a-nul-interrupts-ends-at-the-the-tag-name-state-reads parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <a\\\\u0000b>\\\\n|       \\\\\\"x\\\\\\"\\\\n|     <c\\\\u0000>\\\\n|       \\\\\\"y\\\\\\"\\""`;
+
+exports[`HTML syntax — invariants a-tag-whose-name-a-nul-interrupts-ends-at-the-the-tag-name-state-reads parses 2`] = `"warning[2,3]:unexpected-null-character warning[0,5]:expected-doctype-but-got-start-tag warning[9,10]:unexpected-null-character warning[14,15]:unexpected-null-character warning[17,17]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants a-tag-whose-name-a-nul-interrupts-ends-at-the-the-tag-name-state-reads prints {"mode":"minify"} 1`] = `"\\"<a\\\\u0000b>x</a\\\\u0000b><c\\\\u0000>y</c\\\\u0000>\\""`;
+
+exports[`HTML syntax — invariants a-tag-whose-name-a-nul-interrupts-ends-at-the-the-tag-name-state-reads tokenizes 1`] = `"warning[2,3]:unexpected-null-character open[0,5|1,4] text[5,6] warning[9,10]:unexpected-null-character close[6,12|8,11] warning[14,15]:unexpected-null-character open[12,16|13,15] text[16,17] end=17"`;
+
 exports[`HTML syntax — invariants builtin-embedded-renderer-what-it-loads-keeps-the-css-parser-out-of-an-html-or-2 parses 1`] = `
 "| <html>
 |   <head>
@@ -833,6 +841,14 @@ exports[`HTML syntax — invariants compare-html-tools-what-a-document-says-repo
 exports[`HTML syntax — invariants compare-html-tools-what-a-document-says-reports-a-printer-that-drops-a-word-an-4 prints {"mode":"minify"} 1`] = `"<p>one two</p><b>x</b><style>.a{color:blue}</style>"`;
 
 exports[`HTML syntax — invariants compare-html-tools-what-a-document-says-reports-a-printer-that-drops-a-word-an-4 tokenizes 1`] = `"open[0,3|1,2] text[3,10] close[10,14|12,13] open[14,17|15,16] text[17,18] close[18,22|20,21] open[22,29|23,28] text[29,43] close[43,51|45,50] end=51"`;
+
+exports[`HTML syntax — invariants coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <a>\\\\n|       b=\\\\\\"x\\\\\\"y'z<w=v\`u\\\\u0000t&é\\\\\\"\\\\n|       c=\\\\\\"1\\\\\\"\\\\n|       d=\\\\\\"2\\\\\\"\\\\n|       e=\\\\\\"3\\\\\\"\\\\n|       f=\\\\\\"4\\\\\\"\\\\n|       g=\\\\\\"&h\\\\\\"\\\\n|       i=\\\\\\"\`\\\\\\"\\""`;
+
+exports[`HTML syntax — invariants coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet parses 2`] = `"warning[6,7]:unexpected-character-in-unquoted-attribute-value warning[8,9]:unexpected-character-in-unquoted-attribute-value warning[10,11]:unexpected-character-in-unquoted-attribute-value warning[12,13]:unexpected-character-in-unquoted-attribute-value warning[14,15]:unexpected-character-in-unquoted-attribute-value warning[16,17]:unexpected-null-character warning[48,49]:unexpected-character-in-unquoted-attribute-value warning[0,50]:expected-doctype-but-got-start-tag warning[50,50]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet prints {"mode":"minify"} 1`] = `"\\"<a b=x\\\\\\"y'z<w=v\`u\\\\u0000t&amp;é c=1 d=2 e=3 f=4 g=&h i=\`></a>\\""`;
+
+exports[`HTML syntax — invariants coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet tokenizes 1`] = `"warning[6,7]:unexpected-character-in-unquoted-attribute-value warning[8,9]:unexpected-character-in-unquoted-attribute-value warning[10,11]:unexpected-character-in-unquoted-attribute-value warning[12,13]:unexpected-character-in-unquoted-attribute-value warning[14,15]:unexpected-character-in-unquoted-attribute-value warning[16,17]:unexpected-null-character attr[3,4|5,24] attr[25,26|27,28] attr[29,30|31,32] attr[33,34|35,36] attr[37,38|39,40] attr[41,42|43,45] warning[48,49]:unexpected-character-in-unquoted-attribute-value attr[46,47|48,49] open[0,50|1,2] end=50"`;
 
 exports[`HTML syntax — invariants html-minify-an-answered-style-attribute-that-changes-its-quoting-declines-an parses 1`] = `
 "| <html>
@@ -3492,6 +3508,45 @@ open[0,3|1,2] open[3,7|4,6] open[7,12|8,11] open[12,18|13,17] open[18,25|19,24] 
 …
 9792|129284,129791] open[129792,130302|129793,130301] open[130302,130813|130303,130812] open[130813,131325|130814,131324] open[131325,131838|131326,131837] open[131838,132352|131839,132351] end=132352"
 `;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&&<&\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer parses 2`] = `"warning[0,19]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer prints {"mode":"minify"} 1`] = `"&&<&amp;"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer tokenizes 1`] = `"text[0,19] end=19"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"&&=&\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-2 parses 2`] = `"warning[9,10]:missing-semicolon-after-character-reference warning[14,15]:missing-semicolon-after-character-reference warning[0,14]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-2 prints {"mode":"minify"} 1`] = `"&&=&amp;"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-2 tokenizes 1`] = `"warning[9,10]:missing-semicolon-after-character-reference warning[14,15]:missing-semicolon-after-character-reference text[0,14] end=14"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-3 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"∳∳&∳\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-3 parses 2`] = `"warning[0,104]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-3 prints {"mode":"minify"} 1`] = `"∳∳&∳"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-3 tokenizes 1`] = `"text[0,104] end=104"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-fosters-text-past-foreign parses 1`] = `
 "| <html>
@@ -54066,6 +54121,21 @@ exports[`HTML syntax — invariants tokenize-parse-error-callback-validates-nume
 exports[`HTML syntax — invariants tokenize-parse-error-callback-validates-numeric-references-that-end-exactly-at-5 prints {"mode":"minify"} 1`] = `"&amp;#"`;
 
 exports[`HTML syntax — invariants tokenize-parse-error-callback-validates-numeric-references-that-end-exactly-at-5 tokenizes 1`] = `"warning[2,2]:absence-of-digits-in-numeric-character-reference text[0,2] end=2"`;
+
+exports[`HTML syntax — invariants tokenize-reads-a-named-reference-the-same-wherever-the-input-repeats-it parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"<<≤<&lx;&nope;&nope;< &\\"
+|     <a>
+|       b=\\"<&lx;&lt=&ltx\\""
+`;
+
+exports[`HTML syntax — invariants tokenize-reads-a-named-reference-the-same-wherever-the-input-repeats-it parses 2`] = `"warning[19,20]:unknown-named-character-reference warning[25,26]:unknown-named-character-reference warning[31,32]:unknown-named-character-reference warning[35,36]:missing-semicolon-after-character-reference warning[0,41]:expected-doctype-but-got-chars warning[54,55]:unknown-named-character-reference warning[65,65]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants tokenize-reads-a-named-reference-the-same-wherever-the-input-repeats-it prints {"mode":"minify"} 1`] = `"<<≤<&lx;&nope;&nope;< &amp;<a b=\\"<&lx;&lt=&ltx\\"></a>"`;
+
+exports[`HTML syntax — invariants tokenize-reads-a-named-reference-the-same-wherever-the-input-repeats-it tokenizes 1`] = `"warning[19,20]:unknown-named-character-reference warning[25,26]:unknown-named-character-reference warning[31,32]:unknown-named-character-reference warning[35,36]:missing-semicolon-after-character-reference text[0,41] warning[54,55]:unknown-named-character-reference attr[44,45|47,63]\\" open[41,65|42,43] end=65"`;
 
 exports[`HTML syntax — invariants tokenize-should-detect-self-closing-tags parses 1`] = `
 "| <html>

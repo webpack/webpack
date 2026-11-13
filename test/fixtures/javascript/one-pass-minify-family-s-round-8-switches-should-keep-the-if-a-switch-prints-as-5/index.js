@@ -1,0 +1,1 @@
+switch(function(){}.x){case 1:f();break;default:g()}

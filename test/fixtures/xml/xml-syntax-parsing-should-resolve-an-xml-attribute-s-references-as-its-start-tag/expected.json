@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "spans",
+		"contains": "starts 70 before that sibling ended",
+		"why": "a doctype inside the root element is not well-formed XML: the parser keeps it as the document's child after the root, its range inside the root's"
+	},
+	{
+		"relation": "meaning",
+		"contains": "<!DOCTYPE r [<!ENTITY e \"late\">]><b v=\"&e;\"",
+		"why": "a doctype inside the root element is not well-formed XML: the printer writes it where the parser keeps it, after the root, so the `<b>` it declared `&e;` for comes before it"
+	}
+]

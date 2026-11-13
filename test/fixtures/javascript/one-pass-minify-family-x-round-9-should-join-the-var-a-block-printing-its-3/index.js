@@ -1,0 +1,1 @@
+function f(l){var o=[];(function(){var n=l.length;l.forEach(function(i){o.push(i+n)})})();return o}

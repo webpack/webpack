@@ -1,0 +1,1 @@
+function f(y,o){y?o.p=function(){}:o.p=2}

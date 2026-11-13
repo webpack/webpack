@@ -1,0 +1,1 @@
+function f(t){var v;if(t)v=function(){};else v=2;return[v]}function g(t){var v;if(t)v=class N{};else v=()=>{};return[v]}function h(t){var v;if(t)v="a";else v=typeof v;return[v]}function k(t){var v;if(v===t)v="a";else v="b";return[v]}function m(t){var v;if(t)v=(function(){});else v=2;return[v]}

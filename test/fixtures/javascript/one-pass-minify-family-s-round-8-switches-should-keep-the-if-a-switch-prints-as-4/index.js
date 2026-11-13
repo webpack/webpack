@@ -1,0 +1,1 @@
+switch(a){case 1:f(),g();break;default:h()}

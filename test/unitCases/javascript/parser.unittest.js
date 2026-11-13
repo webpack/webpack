@@ -1152,7 +1152,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 
 	it("adds no field to a parser while it parses", () => {
 		// a field first written mid-parse would change the instance's shape
-		const source = "x = `a${b}c`; y = tag`\\u`;";
+		const source = fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-adds-no-field-to-a-parser-while-it");
 		for (const options of [lazyOptions, { ecmaVersion: "latest" }]) {
 			const parser = /** @type {EXPECTED_ANY} */ (
 				new WebpackParser(
@@ -1216,10 +1216,10 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		expect(defaultOptions).toEqual(defaults);
 		// each fast-built parser has a copy of its own to write to
 		const first = /** @type {EXPECTED_ANY} */ (
-			new WebpackParser(lazyOptions, "x")
+			new WebpackParser(lazyOptions, fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-fills-in-the-options-a-caller-left"))
 		);
 		const second = /** @type {EXPECTED_ANY} */ (
-			new WebpackParser(lazyOptions, "x")
+			new WebpackParser(lazyOptions, fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-fills-in-the-options-a-caller-left-2"))
 		);
 		first.options.sourceType = "module";
 		expect(second.options.sourceType).toBe("script");
@@ -1249,7 +1249,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 			for (const variant of variants) {
 				const options = { .../** @type {EXPECTED_ANY} */ (lazyOptions), ...variant };
 				const parser = /** @type {EXPECTED_ANY} */ (
-					new WebpackParser(options, "#!x\nlet y = 1;")
+					new WebpackParser(options, fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-finds-a-fast-construction-s-shape"))
 				);
 				const expected = /** @type {EXPECTED_ANY} */ (getOptions(options));
 				for (const name of [
