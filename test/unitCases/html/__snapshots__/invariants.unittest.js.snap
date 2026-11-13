@@ -12967,6 +12967,10 @@ exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-g
 
 exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-grows-the-node-columns-past-the-initial parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[15000,15000]:expected-closing-tag-but-got-eof"`;
 
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-grows-the-node-columns-past-the-initial prints {"mode":"minify","removeEmptyElements":true,"renderEmbeddedSource":"builtin"} 1`] = `""`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-grows-the-node-columns-past-the-initial prints {"mode":"minify","removeEmptyElements":true} 1`] = `""`;
+
 exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-grows-the-node-columns-past-the-initial prints {"mode":"minify"} 1`] = `
 "length 35000, sha256 bb149eeb641980b5
 <i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i
