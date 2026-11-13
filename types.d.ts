@@ -35779,6 +35779,11 @@ declare interface TerserCompressAliases {
 		| RegExp
 		| string[]
 		| ((definition: NamedDefinition) => boolean);
+
+	/**
+	 * terser's name for `unsafeSymbols`
+	 */
+	unsafe_symbols?: boolean;
 }
 
 /**
