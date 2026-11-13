@@ -4093,6 +4093,43 @@ describe("SyntaxTree", () => {
 		written.release();
 	});
 
+	it("marks legacy assert on a star re-export, and writes one an edition before attributes parsed", () => {
+		const { parseProgram, takeParsedTree } =
+			require("../../../lib/javascript/syntax").parser;
+		const program = /** @type {number} */ (
+			/** @type {unknown} */ (
+				parseProgram(
+					fixture("javascript", "syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before"),
+					0,
+					{ sourceType: "module" }
+				)
+			)
+		);
+		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
+		expect(
+			[0, 1].map((index) =>
+				tree.legacyAssert(tree.field(index, Field.body, program))
+			)
+		).toEqual([true, false]);
+		tree.release();
+
+		const before = /** @type {number} */ (
+			/** @type {unknown} */ (
+				parseProgram(
+					fixture("javascript", "syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before-2"),
+					0,
+					{ sourceType: "module", ecmaVersion: 2020 }
+				)
+			)
+		);
+		const written = /** @type {SyntaxTree} */ (takeParsedTree());
+		const declaration = written.field(0, Field.body, before);
+		expect(written.type(declaration)).toBe(NodeType.ExportAllDeclaration);
+		expect(written.legacyAssert(declaration)).toBe(false);
+		expect(written.fieldCount(Field.attributes, declaration)).toBe(0);
+		written.release();
+	});
+
 	it("ends an ES5 do-while and checks an ES5 object literal by ES5's rules", () => {
 		const { parseProgram, takeParsedTree } =
 			require("../../../lib/javascript/syntax").parser;

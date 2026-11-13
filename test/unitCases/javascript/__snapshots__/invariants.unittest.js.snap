@@ -14689,6 +14689,7 @@ line
 /* a */x();"
 `;
 
+
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-as-the-format-options-13 prints {"mode":"minify"} 1`] = `"x();"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-as-the-format-options-13 tokenizes 1`] = `"block[0,7] name[8,9] ([9,10] )[10,11] eof[11,11]"`;
@@ -48067,6 +48068,26 @@ exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-r
 exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-re-export-and-writes-one-an-edition-before-2 prints {"mode":"minify"} 1`] = `"export{c}from\\"./c\\";"`;
 
 exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-re-export-and-writes-one-an-edition-before-2 tokenizes 1`] = `"export[0,6] {[7,8] name[9,10] }[11,12] name[13,17] string[18,23]=\\"./c\\" ;[23,24] eof[24,24]"`;
+
+exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before parses 1`] = `"Program[0,93](body=[ExportAllDeclaration[0,44](exported=null source=Literal[14,19](value=\\"./a\\" raw=\\"\\\\\\"./a\\\\\\"\\") attributes=[ImportAttribute[29,41](key=Identifier[29,33](name=\\"type\\") value=Literal[35,41](value=\\"json\\" raw=\\"\\\\\\"json\\\\\\"\\"))]),ExportAllDeclaration[45,92](exported=Identifier[57,58](name=\\"b\\") source=Literal[64,69](value=\\"./b\\" raw=\\"\\\\\\"./b\\\\\\"\\") attributes=[ImportAttribute[77,89](key=Identifier[77,81](name=\\"type\\") value=Literal[83,89](value=\\"json\\" raw=\\"\\\\\\"json\\\\\\"\\"))])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before prints {"mode":"minify"} 1`] = `"export*from\\"./a\\"with{type:\\"json\\"};export*as b from\\"./b\\"with{type:\\"json\\"};"`;
+
+exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before tokenizes 1`] = `"export[0,6] *[7,8] name[9,13] string[14,19]=\\"./a\\" name[20,26] {[27,28] name[29,33] :[33,34] string[35,41]=\\"json\\" }[42,43] ;[43,44] export[45,51] *[52,53] name[54,56] name[57,58] name[59,63] string[64,69]=\\"./b\\" with[70,74] {[75,76] name[77,81] :[81,82] string[83,89]=\\"json\\" }[90,91] ;[91,92] eof[93,93]"`;
+
+exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before-2 parses 1`] = `"Program[0,21](body=[ExportAllDeclaration[0,20](exported=null source=Literal[14,19](value=\\"./c\\" raw=\\"\\\\\\"./c\\\\\\"\\") attributes=[])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before-2 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before-2 prints {"mode":"minify"} 1`] = `"export*from\\"./c\\";"`;
+
+exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before-2 tokenizes 1`] = `"export[0,6] *[7,8] name[9,13] string[14,19]=\\"./c\\" ;[19,20] eof[21,21]"`;
 
 exports[`JavaScript syntax — invariants syntax-tree-of-another-parsers-estree parses {"entry":"parseProgram","check":{"fixture":"roundTrip"}} 1`] = `"Program[0,214](body=[ExpressionStatement[0,13](expression=Literal[0,12](value=\\"use strict\\" raw=\\"\\\\\\"use strict\\\\\\"\\") directive=\\"use strict\\"),ImportDeclaration[14,61](specifiers=[ImportDefaultSpecifier[21,22](local=Identifier[21,22](name=\\"d\\"))] source=Literal[28,38](value=\\"./d.json\\" raw=\\"\\\\\\"./d.json\\\\\\"\\") attributes=[ImportAttribute[46,58](key=Identifier[46,50](name=\\"type\\") value=Literal[52,58](value=\\"json\\" raw=\\"\\\\\\"json\\\\\\"\\"))]),ExportNamedDeclaration[62,114](declaration=null specifiers=[ExportSpecifier[71,77](local=Identifier[71,72](name=\\"d\\") exported=Identifier[76,77](name=\\"e\\"))] source=Literal[85,93](value=\\"./e.js\\" raw=\\"\\\\\\"./e.js\\\\\\"\\") attributes=[ImportAttribute[101,111](key=Identifier[101,105](name=\\"type\\") value=Literal[107,111](value=\\"js\\" raw=\\"\\\\\\"js\\\\\\"\\"))]),ExportAllDeclaration[115,138](exported=null source=Literal[129,137](value=\\"./f.js\\" raw=\\"\\\\\\"./f.js\\\\\\"\\") attributes=[]),ExpressionStatement[139,213](expression=CallExpression[139,212](callee=Identifier[139,140](name=\\"f\\") arguments=[Literal[141,142](value=1 raw=\\"1\\"),Literal[144,147](value=\\"s\\" raw=\\"\\\\\\"s\\\\\\"\\"),ArrayExpression[149,158](elements=[Identifier[150,151](name=\\"d\\"),SpreadElement[153,157](argument=Identifier[156,157](name=\\"g\\"))]),ObjectExpression[160,168](properties=[Property[162,166](method=false shorthand=false computed=false key=Identifier[162,163](name=\\"p\\") value=Identifier[165,166](name=\\"d\\") kind=\\"init\\")]),Identifier[190,191](name=\\"a\\")] optional=false))] sourceType=\\"module\\")"`;
 
