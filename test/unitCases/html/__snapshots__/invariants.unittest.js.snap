@@ -2083,6 +2083,23 @@ exports[`HTML syntax — invariants html-minify-embedded-code-a-minifier-fails-o
 
 exports[`HTML syntax — invariants html-minify-embedded-code-a-minifier-fails-on-keeps-a-body-the-caller-s-minifier tokenizes 1`] = `"open[0,7|1,6] text[7,18] close[18,26|20,25] end=26"`;
 
+exports[`HTML syntax — invariants html-minify-embedded-code-a-minifier-fails-on-keeps-a-style-element-whose-css parses 1`] = `
+"| <html>
+|   <head>
+|     <style>
+|       \\"a { b : c }\\"
+|   <body>
+|     <p>
+|       style=\\"b : c\\"
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-embedded-code-a-minifier-fails-on-keeps-a-style-element-whose-css parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-minify-embedded-code-a-minifier-fails-on-keeps-a-style-element-whose-css prints {"mode":"minify"} 1`] = `"<style>a { b : c }</style><p style=\\"b : c\\">x"`;
+
+exports[`HTML syntax — invariants html-minify-embedded-code-a-minifier-fails-on-keeps-a-style-element-whose-css tokenizes 1`] = `"open[0,7|1,6] text[7,18] close[18,26|20,25] attr[29,34|36,41]\\" open[26,43|27,28] text[43,44] close[44,48|46,47] end=48"`;
+
 exports[`HTML syntax — invariants html-minify-embedded-code-a-minifier-fails-on-keeps-the-placeholder-output-html parses 1`] = `
 "| <html>
 |   <head>
@@ -54998,3 +55015,31 @@ exports[`HTML syntax — invariants tokenize-should-tokenize-and-roundtrip-self-
 `;
 
 exports[`HTML syntax — invariants tokenize-should-tokenize-and-roundtrip-self-closing-html tokenizes 1`] = `"attr[5,8|10,18]\\" attr[20,23|25,29]\\" open[0,31|1,4] text[31,32] open[32,36|33,35] text[36,37] open[37,42|38,40]/ text[42,43] attr[50,54|56,60]\\" attr[62,70|-1,-1] open[43,71|44,49] text[71,72] attr[78,85|87,92]\\" open[72,94|73,77] text[94,95] attr[101,104|106,110]\\" attr[112,116|118,129]\\" open[95,131|96,100] text[131,132] end=132"`;
+
+exports[`HTML syntax — invariants xml-minify-svg-switches-should-forward-resource-wrapper-cleanup-through-svg-data parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <img>
+|       src=\\"data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cdefs%3E%3Csymbol%20id%3D%22s%22%3E%3Cpath%2F%3E%3C%2Fsymbol%3E%3C%2Fdefs%3E%3Cuse%20href%3D%22%23s%22%20x%3D%220%22%2F%3E%3C%2Fsvg%3E\\""
+`;
+
+exports[`HTML syntax — invariants xml-minify-svg-switches-should-forward-resource-wrapper-cleanup-through-svg-data parses 2`] = `"warning[0,229]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants xml-minify-svg-switches-should-forward-resource-wrapper-cleanup-through-svg-data prints {"mode":"minify"} 1`] = `"<img src=data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cdefs%3E%3Csymbol%20id%3D%22s%22%3E%3Cpath%2F%3E%3C%2Fsymbol%3E%3C%2Fdefs%3E%3Cuse%20href%3D%22%23s%22%20x%3D%220%22%2F%3E%3C%2Fsvg%3E>"`;
+
+exports[`HTML syntax — invariants xml-minify-svg-switches-should-forward-resource-wrapper-cleanup-through-svg-data tokenizes 1`] = `"attr[5,8|10,227]\\" open[0,229|1,4] end=229"`;
+
+exports[`HTML syntax — invariants xml-minify-svg-switches-should-forward-sorting-and-path-reuse-to-svg-data-urls parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <img>
+|       src=\\"data:image/svg+xml,<svg xmlns=\\"http://www.w3.org/2000/svg\\"><g><path id=\\"p\\" d=\\"M0 0L10 20L20 10z\\" fill=\\"black\\" stroke=\\"none\\"/><path d=\\"M0 0L10 20L20 10z\\" fill=\\"black\\" stroke=\\"none\\"/></g></svg>\\""
+`;
+
+exports[`HTML syntax — invariants xml-minify-svg-switches-should-forward-sorting-and-path-reuse-to-svg-data-urls parses 2`] = `"warning[0,203]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants xml-minify-svg-switches-should-forward-sorting-and-path-reuse-to-svg-data-urls prints {"mode":"minify"} 1`] = `"<img src='data:image/svg+xml,<svg xmlns=\\"http://www.w3.org/2000/svg\\"><g><path id=\\"p\\" d=\\"M0 0L10 20L20 10z\\" fill=\\"black\\" stroke=\\"none\\"/><path d=\\"M0 0L10 20L20 10z\\" fill=\\"black\\" stroke=\\"none\\"/></g></svg>'>"`;
+
+exports[`HTML syntax — invariants xml-minify-svg-switches-should-forward-sorting-and-path-reuse-to-svg-data-urls tokenizes 1`] = `"attr[5,8|10,201]' open[0,203|1,4] end=203"`;

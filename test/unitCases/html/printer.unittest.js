@@ -576,6 +576,17 @@ describe("htmlMinify — embedded code a minifier fails on", () => {
 
 
 
+	it("keeps a style element whose CSS answer would close it early", async () => {
+		const { code } = await htmlMinify({ "page.html": fixture("html", "html-minify-embedded-code-a-minifier-fails-on-keeps-a-style-element-whose-css") }, undefined, {
+			renderEmbeddedSource: (
+				/** @type {string} */ _source,
+				/** @type {{ type: string }} */ info
+			) => (info.type === "css" ? "a{b:'</style><b>x</b>'}" : undefined)
+		});
+		// The quoted attribute holds the answer as it is.
+		expect(code).toBe(`<style>a { b : c }</style><p style="a{b:'</style><b>x</b>'}">x`);
+	});
+
 	it("keeps a body the caller's minifier fails on, reported once", async () => {
 		const { code, errors } = await htmlMinify({ "page.html": page }, undefined, {
 			renderEmbeddedSource: (

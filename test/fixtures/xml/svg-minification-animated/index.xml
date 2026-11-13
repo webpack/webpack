@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <path id="animated" d="M010 020L010 030L040 030l000 010" fill="none" stroke="black"/>
+  <animate href="#animated" attributeName="d" to="M10 20L20 50L40 50l0 10" dur="2s"/>
+</svg>

@@ -267,6 +267,20 @@ const fixtures = async () => {
 		]);
 	}
 	out.push(["Editor-exported SVG (DTD entities)", EDITOR_SVG]);
+	out.push([
+		"SVG geometry",
+		await fs.promises.readFile(
+			path.join(ROOT, "test/configCases/optimization/minimize-xml/numbers.svg"),
+			"utf8"
+		)
+	]);
+	out.push([
+		"SVG presentation and paths",
+		await fs.promises.readFile(
+			path.join(ROOT, "test/configCases/optimization/minimize-xml/compact.svg"),
+			"utf8"
+		)
+	]);
 	out.push(["Atom feed (400 entries)", atomFeed(400)]);
 	out.push(["Maven POM", MAVEN_POM]);
 	out.push(["XLIFF translation", XLIFF]);
@@ -426,6 +440,78 @@ const TOOLS = [
 		}
 	},
 	{
+		name: "webpack (SVG data removal)",
+		stage: "minify",
+		create: () => {
+			const renderEmbeddedSource = builtinEmbeddedRenderer();
+			return (xml) =>
+				new SourceProcessor().process(xml, {
+					xml: true,
+					mode: "minify",
+					removeSvgMetadata: true,
+					removeSvgEditorData: true,
+					renderEmbeddedSource
+				}).code;
+		}
+	},
+	...[false, true].map(
+		(collapseWhitespace) =>
+			/** @type {import("./compare-tools-harness").Tool} */ ({
+				name: collapseWhitespace
+					? "webpack (SVG whitespace cleanup)"
+					: "webpack (SVG attribute cleanup)",
+				stage: "minify",
+				create: () => {
+					const renderEmbeddedSource = builtinEmbeddedRenderer();
+					return (xml) =>
+						new SourceProcessor().process(xml, {
+							xml: true,
+							mode: "minify",
+							collapseWhitespace,
+							removeSvgMetadata: true,
+							removeSvgEditorData: true,
+							removeUnusedSvgNamespaces: true,
+							removeEmptyAttributes: true,
+							renderEmbeddedSource
+						}).code;
+				}
+			})
+	),
+
+	{
+		name: "webpack (SVG numeric cleanup)",
+		stage: "minify",
+		create: () => {
+			const renderEmbeddedSource = builtinEmbeddedRenderer();
+			return (xml) =>
+				new SourceProcessor().process(xml, {
+					xml: true,
+					mode: "minify",
+					shortenSvgNumbers: true,
+					collapseWhitespace: true,
+					removeSvgMetadata: true,
+					removeSvgEditorData: true,
+					removeUnusedSvgNamespaces: true,
+					removeEmptyAttributes: true,
+					renderEmbeddedSource
+				}).code;
+		}
+	},
+	...PRESETS.slice(6).map(([name, options]) => ({
+		name: `webpack (SVG ${name.slice(4)} cleanup)`,
+		stage: /** @type {const} */ ("minify"),
+		create: () => {
+			const renderEmbeddedSource = builtinEmbeddedRenderer();
+			return (/** @type {string} */ xml) =>
+				new SourceProcessor().process(xml, {
+					xml: true,
+					mode: "minify",
+					...options,
+					renderEmbeddedSource
+				}).code;
+		}
+	})),
+	{
 		// SVG's own optimizer: it rewrites path data and drops what it deems
 		// editor noise, so it differs by design rather than by mistake.
 		name: "svgo",
@@ -441,6 +527,25 @@ const TOOLS = [
 		create: () => {
 			const { optimize } = load("svgo");
 			return (xml) => optimize(xml, { multipass: true }).data;
+		}
+	},
+	{
+		name: "svgo (preserve IDs)",
+		stage: "minify",
+		create: () => {
+			const { optimize } = load("svgo");
+			return (xml) =>
+				optimize(xml, {
+					multipass: true,
+					plugins: [
+						{
+							name: "preset-default",
+							params: {
+								overrides: { cleanupIds: false, removeHiddenElems: false }
+							}
+						}
+					]
+				}).data;
 		}
 	},
 	{
@@ -475,7 +580,7 @@ const TOOLS = [
 
 // A tool built for one vocabulary, whose output for any other document says
 // nothing about how it reads XML: svgo drops what an SVG renderer ignores.
-const SVG_ONLY = new Set(["svgo", "svgo (multipass)"]);
+const SVG_ONLY = new Set(["svgo", "svgo (multipass)", "svgo (preserve IDs)"]);
 
 /**
  * What a document says, read by a strict XML parser that shares nothing with
@@ -1048,7 +1153,12 @@ const invariants = (write, parseXml) => {
 			// What minifying keeps is what the document says, which a reader other
 			// than the printer's own has to agree with.
 			if (wantedRelation("meaning")) {
-				for (const report of meaningReports(xml, printed, cssOptions)) {
+				for (const report of meaningReports(
+					xml,
+					printed,
+					cssOptions,
+					options
+				)) {
 					groups.add(report, preset, label);
 				}
 			}

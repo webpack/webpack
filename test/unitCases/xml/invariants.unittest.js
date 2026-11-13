@@ -233,7 +233,9 @@ describe("XML syntax — invariants", () => {
 				expect(
 					snapshotOf(
 						source,
-						JSON.stringify(A.children(document).map(materialize))
+						unlessOverflow(() =>
+							JSON.stringify(A.children(document).map(materialize))
+						)
 					)
 				).toMatchSnapshot();
 				// The second entry, so the tree's stays as it was.
