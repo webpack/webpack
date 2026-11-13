@@ -2161,6 +2161,8 @@ describe("one-pass minify, family X round 9", () => {
 		expect(minifyOnePass("function f(l){var o=[];(function(){var n=l.length;l.forEach(function(i){o.push(i+n)})})();return o}", folds).code).toBe("function f(l){var o=[],n=l.length;l.forEach(function(i){o.push(i+n)});return o}");
 		// A comment before the block stays before its statements; beautified, each stays its own.
 		expect(minifyOnePass("function f(){var a=g();/* c */{var b=h(a);k(b)}return[a,b]}", { ...folds, format: { comments: "all" } }).code).toBe("function f(){var a=g();/* c */var b=h(a);k(b);return[a,b]}");
-		expect(minifyOnePass("function f(){var a=g();{var b=h(a)}return[a,b]}", { mode: "beautify", compress: {}, mangle: false }).code).toBe("function f() {\nvar a = g();\n\nvar b = h(a);\nreturn [ a, b ];\n}");
+		const { SourceProcessor } = require("../../../lib/javascript/syntax");
+		const beautified = /** @type {{ code: string }} */ (new SourceProcessor().process("function f(){var a=g();{var b=h(a)}return[a,b]}", { mode: "beautify", compress: {}, mangle: false })).code;
+		expect(beautified).toBe("function f() {\nvar a = g();\n\nvar b = h(a);\nreturn [ a, b ];\n}");
 	});
 });
