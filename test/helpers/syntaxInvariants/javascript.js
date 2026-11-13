@@ -762,6 +762,13 @@ const BEHAVIOR_PRELUDE =
 	"Date.now = () => 0;";
 
 /**
+ * An `import()` the run makes stays pending: no module can be loaded, and a
+ * rejection nothing handles would end the test worker.
+ * @returns {Promise<never>} a promise that never settles
+ */
+const importNothing = () => new Promise(() => {});
+
+/**
  * What a script prints and, where it throws, the error's kind and message or the
  * thrown value, run in a fresh context: a function prints as `[function]`, as
  * its text is the printer's.
@@ -785,7 +792,10 @@ const behaviorOf = (code) => {
 	});
 	vm.runInContext(BEHAVIOR_PRELUDE, context);
 	try {
-		vm.runInContext(code, context, { timeout: BEHAVIOR_TIMEOUT });
+		vm.runInContext(code, context, {
+			timeout: BEHAVIOR_TIMEOUT,
+			importModuleDynamically: importNothing
+		});
 	} catch (error) {
 		try {
 			const isObject = error !== null && typeof error === "object";
