@@ -3064,6 +3064,38 @@ at-keyword[0,6] whitespace[6,7] ident[7,12] left-curly-bracket[12,13] at-keyword
 racket[403740,403741] ident[403741,403746] colon[403746,403747] ident[403747,403751] right-curly-bracket[403751,403752] right-curly-bracket[403752,403753] right-curly-bracket[403753,403754] end=403754"
 `;
 
+exports[`CSS syntax — invariants css-syntax-block-streaming-joins-no-rule-across-a-streamed-child-block parses 1`] = `
+"length 2047455, sha256 a2e9741bf543979a
+[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"x\\"]],[\\".\\",[\\"ident\\",\\"f0\\"],[\\"{}\\",[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]],\\".\\",[\\"ident\\",\\"f1\\"],[\\"{}\\",[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]],\\".\\",[\\"i
+…
+nt\\",\\"f5999\\"],[\\"{}\\",[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]],\\".\\",[\\"ident\\",\\"b\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]]],\\".\\",[\\"ident\\",\\"b\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-joins-no-rule-across-a-streamed-child-block parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-joins-no-rule-across-a-streamed-child-block prints {"mode":"minify","check":{"fixture":"short"}} 1`] = `
+"length 204684, sha256 80d64c9d804d59c2
+@layer x{.f0,.f1,.f10,.f100,.f1000,.f1001,.f1002,.f1003,.f1004,.f1005,.f1006,.f1007,.f1008,.f1009,.f101,.f1010,.f1011,.f1012,.f1013,.f1014,.f1015,.f1016,.f1017,.f1018,.f1019,.f102,.f1020,.f1021,.f1022
+…
+4,.f975,.f976,.f977,.f978,.f979,.f98,.f980,.f981,.f982,.f983,.f984,.f985,.f986,.f987,.f988,.f989,.f99,.f990,.f991,.f992,.f993,.f994,.f995,.f996,.f997,.f998,.f999{margin:0}.b{color:blue}}.b{color:red}}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-joins-no-rule-across-a-streamed-child-block prints {"mode":"minify","check":{"fixture":"short"}} 2`] = `"{\\"code\\":\\"@layer x{\${FILLER}.c{color:red}@media all{\${FILLER}.b{color:blue}}.b{color:red}}@layer y{.c{color:red}@media all{\${FILLER}.b{color:blue}}.b{color:red}}@layer z{\${FILLER}.c,.d{color:red}@media all{\${FILLER}.b{color:blue}}.b{color:red}}\\"}"`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-joins-no-rule-across-a-streamed-child-block prints {"mode":"minify"} 1`] = `
+"length 204684, sha256 80d64c9d804d59c2
+@layer x{.f0,.f1,.f10,.f100,.f1000,.f1001,.f1002,.f1003,.f1004,.f1005,.f1006,.f1007,.f1008,.f1009,.f101,.f1010,.f1011,.f1012,.f1013,.f1014,.f1015,.f1016,.f1017,.f1018,.f1019,.f102,.f1020,.f1021,.f1022
+…
+4,.f975,.f976,.f977,.f978,.f979,.f98,.f980,.f981,.f982,.f983,.f984,.f985,.f986,.f987,.f988,.f989,.f99,.f990,.f991,.f992,.f993,.f994,.f995,.f996,.f997,.f998,.f999{margin:0}.b{color:blue}}.b{color:red}}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-block-streaming-joins-no-rule-across-a-streamed-child-block tokenizes 1`] = `
+"length 4481431, sha256 b66be7e2bfafb78a
+at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] delim[9,10] ident[10,12] left-curly-bracket[12,13] ident[13,19] colon[19,20] number[20,21] right-curly-bracket[21,22] delim[22,23] id
+…
+] ident[420655,420656] left-curly-bracket[420656,420657] ident[420657,420662] colon[420662,420663] ident[420663,420666] right-curly-bracket[420666,420667] right-curly-bracket[420667,420668] end=420668"
+`;
+
 exports[`CSS syntax — invariants css-syntax-block-streaming-joins-the-pair-a-gathered-layer-block-leaves-side-by parses 1`] = `
 "length 401414, sha256 987d55de9fc2400b
 [[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"outer\\"]],[\\".\\",[\\"ident\\",\\"f0\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]],\\".\\",[\\"ident\\",\\"f1\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]],\\".\\",[\\"ident\\",\\"f2\\"],[\\"{}\\",[\\"
