@@ -222,9 +222,7 @@ const NATIVE_PURE_STATIC_SUPPLEMENT = {
  */
 const unexpectedNativeSyntax = (node, expected) =>
 	new Error(
-		`terser's native-objects.js holds a ${node.type} at offset ${
-			node.start
-		} where this generator expects ${expected}`
+		`terser's native-objects.js holds a ${node.type} at offset ${node.start} where this generator expects ${expected}`
 	);
 
 /**
@@ -531,9 +529,7 @@ ${sections
  */
 const unexpectedParserSyntax = (node, expected) =>
 	new Error(
-		`terser's parse.js holds a ${node.type} at offset ${
-			node.start
-		} where this generator expects ${expected}`
+		`terser's parse.js holds a ${node.type} at offset ${node.start} where this generator expects ${expected}`
 	);
 
 /** @typedef {string | string[] | { words: string[] } | { levels: string[][] }} ParserValue */
@@ -2585,9 +2581,10 @@ const writeGenerated = async (target, source) => {
 	// Loaded here, not at the top: tests read this module's tables, and Bun's
 	// worker threads exit when they load prettier.
 	const prettier = require("prettier");
+	const { toLatin1Source } = require("./latin1-source");
 
 	const config = await prettier.resolveConfig(target);
-	const formatted = await prettier.format(source, {
+	const formatted = await prettier.format(toLatin1Source(source), {
 		...config,
 		filepath: target
 	});

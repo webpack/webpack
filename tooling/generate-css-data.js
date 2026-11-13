@@ -8497,7 +8497,9 @@ const SUPPORT_BROWSERS = ${JSON.stringify(pooled.browsers)};
 // The vendor prefix each browserslist name no profile covers reads, by its
 // engine, and null for one reading no CSS. A name missing here reads them all.
 /** @type {Map<string, string | null>} */
-const UNSTATED_BROWSER_PREFIXES = new Map(${JSON.stringify(UNSTATED_BROWSER_PREFIXES)});
+const UNSTATED_BROWSER_PREFIXES = new Map(${JSON.stringify(
+		UNSTATED_BROWSER_PREFIXES
+	)});
 
 // The versions themselves, rows of \`SUPPORT_BROWSERS.length\` laid end to end,
 // one row per distinct profile: a construct names the row it reads rather than
@@ -8659,13 +8661,16 @@ const generate = async () => {
 	// Required here, not at the top: `collectData` is imported by a test that runs
 	// on Bun and Deno, where prettier's dynamic import fails under jest's `vm`.
 	const prettier = require("prettier");
+	const { toLatin1Source } = require("./latin1-source");
 
 	const { source, summary } = await collectData();
 	// Formatted here rather than left to `yarn fmt`, so the comparison below is
 	// against what the repo actually checks in.
 	return prettier
 		.resolveConfig(TARGET)
-		.then((config) => prettier.format(source, { ...config, filepath: TARGET }))
+		.then((config) =>
+			prettier.format(toLatin1Source(source), { ...config, filepath: TARGET })
+		)
 		.then((formatted) => {
 			const current = fs.existsSync(TARGET)
 				? fs.readFileSync(TARGET, "utf8")

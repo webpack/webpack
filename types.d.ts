@@ -4241,8 +4241,8 @@ declare class Compilation {
 		>;
 		/**
 		 * Called with source written in one language that a module emits inside
-		 * another — CSS or HTML reaching the bundle as a JavaScript string
-		 * literal today — before it is embedded; return the (possibly
+		 * another - CSS or HTML reaching the bundle as a JavaScript string
+		 * literal today - before it is embedded; return the (possibly
 		 * transformed) source, e.g. a minified one. `info.type` says which
 		 * language it is, so one tap serves every pair; no asset carries this
 		 * source, so an asset-level minimizer cannot reach it.
@@ -6873,7 +6873,7 @@ declare class CssModulesPlugin {
 	static chunkHasCss(chunk: Chunk, chunkGraph: ChunkGraph): boolean;
 
 	/**
-	 * The css-carrying chunks of `chunks`, in the order their rules cascade —
+	 * The css-carrying chunks of `chunks`, in the order their rules cascade -
 	 * the order a `<link rel="stylesheet">` per chunk has to be written in.
 	 */
 	static getCssChunksInCascadeOrder(
@@ -7581,7 +7581,7 @@ declare interface CssParts {
 }
 
 /**
- * What the CSS printer may be told, on top of the `mode` every language has —
+ * What the CSS printer may be told, on top of the `mode` every language has -
  * the printing slice of `CssProcessOptions`, named once so nothing outside CSS
  * has to enumerate it.
  */
@@ -7615,12 +7615,12 @@ declare interface CssPrintOptions {
 	convertApproximateColors?: boolean;
 
 	/**
-	 * drop a declaration a later one in the same block overrides even where no target is selected, wherever Chromium, Gecko and WebKit each read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected — a selection naming a browser the tables do not cover still answers for the whole of it
+	 * drop a declaration a later one in the same block overrides even where no target is selected, wherever Chromium, Gecko and WebKit each read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected - a selection naming a browser the tables do not cover still answers for the whole of it
 	 */
 	dropOverriddenDeclarations?: boolean;
 
 	/**
-	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included — that being the property's value rather than the function's own argument
+	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included - that being the property's value rather than the function's own argument
 	 */
 	rewriteCustomProperties?: boolean;
 
@@ -7657,7 +7657,7 @@ declare interface CssPrintOptions {
 	declareCharset?: boolean;
 
 	/**
-	 * give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block being moved does for an element it can match — a condition between counting for what its own rules declare
+	 * give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block being moved does for an element it can match - a condition between counting for what its own rules declare
 	 */
 	mergeDistantRules?: boolean;
 
@@ -7694,7 +7694,7 @@ declare interface CssProcessOptions {
 	as?: "stylesheet" | "block-contents";
 
 	/**
-	 * what the grammar may leave un-materialized to go faster — safe only for parts nothing reads in the active parse; default skip nothing. Ignored while printing (`minimize`), which needs every node
+	 * what the grammar may leave un-materialized to go faster - safe only for parts nothing reads in the active parse; default skip nothing. Ignored while printing (`minimize`), which needs every node
 	 */
 	skip?: SkipOptions;
 
@@ -7739,17 +7739,17 @@ declare interface CssProcessOptions {
 	convertApproximateColors?: boolean;
 
 	/**
-	 * give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block being moved does for an element it can match — a condition between counting for what its own rules declare
+	 * give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block being moved does for an element it can match - a condition between counting for what its own rules declare
 	 */
 	mergeDistantRules?: boolean;
 
 	/**
-	 * drop a declaration a later one in the same block overrides even where no target is selected, wherever Chromium, Gecko and WebKit each read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected — a selection naming a browser the tables do not cover still answers for the whole of it
+	 * drop a declaration a later one in the same block overrides even where no target is selected, wherever Chromium, Gecko and WebKit each read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected - a selection naming a browser the tables do not cover still answers for the whole of it
 	 */
 	dropOverriddenDeclarations?: boolean;
 
 	/**
-	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included — that being the property's value rather than the function's own argument
+	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included - that being the property's value rather than the function's own argument
 	 */
 	rewriteCustomProperties?: boolean;
 
@@ -7797,7 +7797,7 @@ declare interface CssProcessOptions {
 /**
  * The generic visitor coordinator (`util/SourceProcessor`) bound to the CSS
  * `grammar`. All configuration is per `process` call. `process(src, { minimize:
- * true })` returns `{ code, map }` — the safely-minified serialization (built by
+ * true })` returns `{ code, map }` - the safely-minified serialization (built by
  * the same walk that fires visitors) and its source map; without `minimize` it
  * just walks and returns `undefined`. Usage:
  * ```
@@ -7927,12 +7927,12 @@ declare interface CssTransformOptions {
 	colorFallbacks?: boolean;
 
 	/**
-	 * write a spelling the target cannot read as one it can — the same value, said another way
+	 * write a spelling the target cannot read as one it can - the same value, said another way
 	 */
 	lowerUnsupported?: boolean;
 
 	/**
-	 * write a name that matches ASCII case-insensitively — an at-rule, property, pseudo, function, unit or keyword — in lowercase
+	 * write a name that matches ASCII case-insensitively - an at-rule, property, pseudo, function, unit or keyword - in lowercase
 	 */
 	foldCase?: boolean;
 
@@ -7952,7 +7952,7 @@ declare interface CssTransformOptions {
 	customMedia?: boolean;
 
 	/**
-	 * write the selector list a `@custom-selector` names as `:is(…)` wherever a selector asks for it, and drop the rule that named it
+	 * write the selector list a `@custom-selector` names as `:is(...)` wherever a selector asks for it, and drop the rule that named it
 	 */
 	customSelectors?: boolean;
 
@@ -8211,12 +8211,12 @@ type DeferredEmbeddedSource = DeferredWrite & {
 
 /**
  * One write the print left a marker for, collected into the `deferEmbeddedSource`
- * print option by whichever grammar offered it — the other half of
+ * print option by whichever grammar offered it - the other half of
  * {@link deferredWrite}. `source` is the text offered, `build` spells what is
  * printed around the answer (an untapped run's spelling where there is none), and
  * `decides` says whether the answer overturns a choice the print made without it.
  * A grammar carries whatever else describes the offer (`type`, `hostType`, `as`,
- * …) on the same object.
+ * ...) on the same object.
  */
 declare interface DeferredWrite {
 	source: string;
@@ -8778,7 +8778,7 @@ declare abstract class DependencyTemplates {
 
 /**
  * Defines the destructuring assignment property type used by this module.
- * Carries only the range — consumers derive line/column via `getLocation`.
+ * Carries only the range - consumers derive line/column via `getLocation`.
  */
 declare interface DestructuringAssignmentProperty {
 	id: string;
@@ -9700,7 +9700,7 @@ declare interface EmbeddedSourceInfo {
 	module: Module;
 
 	/**
-	 * which of that language's productions this is, where more than one can be embedded — a `style=""` holds `"block-contents"`, an inline `<style>` a whole `"stylesheet"`. Absent where the language has only one
+	 * which of that language's productions this is, where more than one can be embedded - a `style=""` holds `"block-contents"`, an inline `<style>` a whole `"stylesheet"`. Absent where the language has only one
 	 */
 	as?: string;
 }
@@ -13193,12 +13193,12 @@ declare interface HotUpdateManifestContext {
 
 /**
  * Optional node kinds a consumer can drop from the AST for speed/memory. Each
- * is a pure output reduction — tree construction (and quirks detection) runs
+ * is a pure output reduction - tree construction (and quirks detection) runs
  * unchanged, so element structure and offsets are identical either way.
  */
 declare interface HtmlAstSkip {
 	/**
-	 * drop every `Text` node. Raw-text element bodies (`<script>`/`<style>`/…) aren't emitted either — their content span is recorded as the element's `contentEnd` (see `RAW_TEXT_ELEMENTS`) so a consumer can read `[tagEnd, contentEnd]` by offset. For consumers that read text by offset (e.g. `HtmlParser`), never the html5lib serializer.
+	 * drop every `Text` node. Raw-text element bodies (`<script>`/`<style>`/...) aren't emitted either - their content span is recorded as the element's `contentEnd` (see `RAW_TEXT_ELEMENTS`) so a consumer can read `[tagEnd, contentEnd]` by offset. For consumers that read text by offset (e.g. `HtmlParser`), never the html5lib serializer.
 	 */
 	text?: boolean;
 
@@ -13354,7 +13354,7 @@ declare class HtmlModulesPlugin {
 
 	/**
 	 * `output.hashFunction`/`hashSalt`/`hashDigest`/`hashDigestLength`
-	 * digest of `content`, with `nonNumericOnlyHash` applied — webpack's
+	 * digest of `content`, with `nonNumericOnlyHash` applied - webpack's
 	 * standard `[contenthash]` recipe.
 	 */
 	static computeContentHash(
@@ -13364,7 +13364,7 @@ declare class HtmlModulesPlugin {
 
 	/**
 	 * Filename template for an extracted HTML page: `output.htmlFilename` for
-	 * initial chunks, `output.htmlChunkFilename` otherwise — the HTML counterpart
+	 * initial chunks, `output.htmlChunkFilename` otherwise - the HTML counterpart
 	 * of `CssModulesPlugin.getChunkFilenameTemplate`.
 	 */
 	static getChunkFilenameTemplate(
@@ -13382,7 +13382,7 @@ declare class HtmlModulesPlugin {
 	 */
 	static getCompilationHooks: (compilation: Compilation) => {
 		/**
-		 * Called with the list of extra tags to inject into each page (initially empty) plus the current HTML; push `HtmlTagDescriptor`s and return the list — webpack serializes and places them by `injectTo`. A structured alternative to the string-level `transformHtml` for adding tags; runs before CSP so injected inline tags are hashed.
+		 * Called with the list of extra tags to inject into each page (initially empty) plus the current HTML; push `HtmlTagDescriptor`s and return the list - webpack serializes and places them by `injectTo`. A structured alternative to the string-level `transformHtml` for adding tags; runs before CSP so injected inline tags are hashed.
 		 * @since 5.109.0
 		 */
 		injectTags: AsyncSeriesWaterfallHook<
@@ -13390,14 +13390,14 @@ declare class HtmlModulesPlugin {
 			HtmlTagDescriptor[]
 		>;
 		/**
-		 * Called with the page's `<script>`/`<link>`/`<style>`/`<meta>` tags (webpack's own and any injected) as mutable descriptors; mutate `attrs` (add a `nonce`/`data-*`, switch `defer`↔`async`, …), set `remove: true`, or change `injectTo` to move a tag between `<head>` and `<body>`, and webpack rewrites the changed tags. Add new tags with `injectTags` instead.
+		 * Called with the page's `<script>`/`<link>`/`<style>`/`<meta>` tags (webpack's own and any injected) as mutable descriptors; mutate `attrs` (add a `nonce`/`data-*`, switch `defer`<->`async`, ...), set `remove: true`, or change `injectTo` to move a tag between `<head>` and `<body>`, and webpack rewrites the changed tags. Add new tags with `injectTags` instead.
 		 * @since 5.109.0
 		 */
 		transformTags: AsyncSeriesHook<
 			[HtmlMutableTag[], HtmlTransformTagsContext]
 		>;
 		/**
-		 * Called with each emitted page's final HTML (all sentinels resolved) just before it is written; return the (possibly transformed) HTML — e.g. to minify, inject a CSP meta, or rewrite tags.
+		 * Called with each emitted page's final HTML (all sentinels resolved) just before it is written; return the (possibly transformed) HTML - e.g. to minify, inject a CSP meta, or rewrite tags.
 		 * @since 5.109.0
 		 */
 		transformHtml: AsyncSeriesWaterfallHook<
@@ -13405,7 +13405,7 @@ declare class HtmlModulesPlugin {
 			string
 		>;
 		/**
-		 * Called once each page's HTML asset has been finalized — a post-emit notification (nothing to return).
+		 * Called once each page's HTML asset has been finalized - a post-emit notification (nothing to return).
 		 * @since 5.109.0
 		 */
 		htmlEmitted: AsyncSeriesHook<[HtmlEmittedContext]>;
@@ -13845,7 +13845,7 @@ declare interface HtmlProcessOptions {
 	) => void;
 
 	/**
-	 * the quote an XML minifying print gives an attribute whose value costs the same in either (default `"`); `'` for a document bound for a `"`-quoted string, such as a CSS `url("data:…")`
+	 * the quote an XML minifying print gives an attribute whose value costs the same in either (default `"`); `'` for a document bound for a `"`-quoted string, such as a CSS `url("data:...")`
 	 */
 	xmlQuote?: '"' | "'";
 
@@ -13895,7 +13895,7 @@ declare interface HtmlProcessOptions {
 	sortAttributes?: boolean;
 
 	/**
-	 * print every token list the DOM reads as a set (`class`, `rel`, `part`, …) in token order (default false)
+	 * print every token list the DOM reads as a set (`class`, `rel`, `part`, ...) in token order (default false)
 	 */
 	sortTokenLists?: boolean;
 
@@ -13927,7 +13927,7 @@ declare interface HtmlProcessOptions {
 	deferEmbeddedSource?: DeferredEmbeddedSource[];
 
 	/**
-	 * renders each nested body this document embeds — an inline `<style>`, every `style=""` (as the block's contents it is, SVG's and MathML's included), a `<script>` holding JSON or JavaScript (with `as` naming which production of it the body is — `"module"` for a `<script type=module>`, `"script"` for a classic one), every event handler attribute, with `as: "event-handler"` saying it is a function body rather than a script — the production a `return` at its top level is in, which a renderer whose engine takes only whole scripts wraps before it reads — an `<svg>` subtree, with `as: "foreign-element"` saying it is an element of this document rather than a standalone `.svg`, and the document an `<iframe srcdoc>` holds (decoded, and written back escaped). The only way any of them is minified: webpack minifies nothing here itself, and `builtinEmbeddedRenderer` is its own CSS and JSON minifiers for a caller to pass; returning anything but text leaves a body as written
+	 * renders each nested body this document embeds - an inline `<style>`, every `style=""` (as the block's contents it is, SVG's and MathML's included), a `<script>` holding JSON or JavaScript (with `as` naming which production of it the body is - `"module"` for a `<script type=module>`, `"script"` for a classic one), every event handler attribute, with `as: "event-handler"` saying it is a function body rather than a script - the production a `return` at its top level is in, which a renderer whose engine takes only whole scripts wraps before it reads - an `<svg>` subtree, with `as: "foreign-element"` saying it is an element of this document rather than a standalone `.svg`, and the document an `<iframe srcdoc>` holds (decoded, and written back escaped). The only way any of them is minified: webpack minifies nothing here itself, and `builtinEmbeddedRenderer` is its own CSS and JSON minifiers for a caller to pass; returning anything but text leaves a body as written
 	 */
 	renderEmbeddedSource?: (
 		source: string,
@@ -13972,7 +13972,7 @@ declare interface HtmlResourceHintHtmlEntryDependency {
 	type?: string;
 
 	/**
-	 * CORS mode (`true` → `anonymous`)
+	 * CORS mode (`true` -> `anonymous`)
 	 */
 	crossorigin?: boolean | "anonymous" | "use-credentials";
 
@@ -14366,7 +14366,7 @@ declare interface HtmlTransformOptions {
 	normalizeNumericAttributes?: boolean;
 
 	/**
-	 * drop the whitespace around a URL value (`href`, `src`, `action`, …), which resolving the URL skips over
+	 * drop the whitespace around a URL value (`href`, `src`, `action`, ...), which resolving the URL skips over
 	 */
 	normalizeUrlAttributes?: boolean;
 
@@ -15119,19 +15119,19 @@ declare class InitFragment<GenerateContext> {
 	static STAGE_ASYNC_ESM_IMPORTS: number;
 
 	/**
-	 * use `STAGE_ESM_EXPORTS` — TODO in the next major release: remove
+	 * use `STAGE_ESM_EXPORTS` - TODO in the next major release: remove
 	 * @deprecated
 	 */
 	static STAGE_HARMONY_EXPORTS: number;
 
 	/**
-	 * use `STAGE_ESM_IMPORTS` — TODO in the next major release: remove
+	 * use `STAGE_ESM_IMPORTS` - TODO in the next major release: remove
 	 * @deprecated
 	 */
 	static STAGE_HARMONY_IMPORTS: number;
 
 	/**
-	 * use `STAGE_ASYNC_ESM_IMPORTS` — TODO in the next major release: remove
+	 * use `STAGE_ASYNC_ESM_IMPORTS` - TODO in the next major release: remove
 	 * @deprecated
 	 */
 	static STAGE_ASYNC_HARMONY_IMPORTS: number;
@@ -18185,7 +18185,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	 * Returns the location of a node or comment, computed from its offsets so
 	 * ASTs from parsers without location support work too. Falls back to the
 	 * node's own `loc` only when no source text is available (preparsed ASTs).
-	 * Offsets can only be mapped while parsing — callbacks deferred past the
+	 * Offsets can only be mapped while parsing - callbacks deferred past the
 	 * `parse()` call must take the location upfront.
 	 */
 	getLocation(
@@ -19901,9 +19901,9 @@ declare abstract class LazyLocNode {
 	end: number;
 
 	/**
-	 * Memoized in a symbol slot — a plain store is far cheaper than making the
+	 * Memoized in a symbol slot - a plain store is far cheaper than making the
 	 * property own via defineProperty, and the slot stays invisible to for-in,
-	 * Object.keys and JSON.stringify. No `loc` is served at all — locations
+	 * Object.keys and JSON.stringify. No `loc` is served at all - locations
 	 * are derived from offsets via `JavascriptParser#getLocation`.
 	 */
 	range: [number, number];
@@ -22143,19 +22143,19 @@ declare class ModuleExternalInitFragment extends InitFragment<ChunkRenderContext
 	static STAGE_ASYNC_ESM_IMPORTS: number;
 
 	/**
-	 * use `STAGE_ESM_EXPORTS` — TODO in the next major release: remove
+	 * use `STAGE_ESM_EXPORTS` - TODO in the next major release: remove
 	 * @deprecated
 	 */
 	static STAGE_HARMONY_EXPORTS: number;
 
 	/**
-	 * use `STAGE_ESM_IMPORTS` — TODO in the next major release: remove
+	 * use `STAGE_ESM_IMPORTS` - TODO in the next major release: remove
 	 * @deprecated
 	 */
 	static STAGE_HARMONY_IMPORTS: number;
 
 	/**
-	 * use `STAGE_ASYNC_ESM_IMPORTS` — TODO in the next major release: remove
+	 * use `STAGE_ASYNC_ESM_IMPORTS` - TODO in the next major release: remove
 	 * @deprecated
 	 */
 	static STAGE_ASYNC_HARMONY_IMPORTS: number;
@@ -23948,7 +23948,7 @@ type NodePrintOptions = Omit<JavascriptProcessOptions, "compress"> & {
  * A language node printer, fired for one node once all its visitors have run and
  * its children are printed. It takes the same `path` a visitor gets plus the
  * print context as its `writer`; it switches on `path.type()` and **returns** the
- * node's serialized text, reading its children's text from `writer.get` — knowing
+ * node's serialized text, reading its children's text from `writer.get` - knowing
  * nothing of the walk. Returning (rather than writing to a buffer) is what lets a
  * parent compose / transform its text from its finished children.
  */
@@ -24095,7 +24095,7 @@ declare class NormalModule extends Module {
 		 */
 		beforeSnapshot: SyncHook<[NormalModule]>;
 		/**
-		 * Async since 5.111.0, so a tap can await work of its own — minifying an
+		 * Async since 5.111.0, so a tap can await work of its own - minifying an
 		 * asset, say, which before only a loader could do. `tap` keeps working.
 		 * @since 5.99.0
 		 */
@@ -27354,7 +27354,7 @@ declare interface ParseResult {
 
 /**
  * A `data:` URI split into the parts a caller has to put back together.
- * `parameters` is every `;…` after the media type (`;base64` included) and
+ * `parameters` is every `;...` after the media type (`;base64` included) and
  * `payload` the text after the comma, both in the form they were written.
  */
 declare interface ParsedDataURI {
@@ -28121,7 +28121,7 @@ type PrimitiveSerializableType =
  * The per-node output store handed to a language node printer as its `writer`. It
  * carries the print `options` (today just `mode`) and one map: a finished node ->
  * its printed text. A printer *returns* its text (`printNode` stores it) and reads
- * a child's with `get`, so a parent composes its own text from its children's —
+ * a child's with `get`, so a parent composes its own text from its children's -
  * the map is what makes that composition (and the CSS value transforms built on
  * it) possible. `take` flushes a finished top-level node into the output and drops
  * the map, so a streaming grammar never holds more than one top-level subtree.
@@ -28142,13 +28142,13 @@ declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
 	pushPending(text: string): number;
 
 	/**
-	 * Rewrite a held-back opener — an opener whose text depends on what turns out
+	 * Rewrite a held-back opener - an opener whose text depends on what turns out
 	 * to follow it can only be settled once something does.
 	 */
 	setPending(depth: number, text: string): void;
 
 	/**
-	 * Emit every held-back opener, outermost first — something inside the
+	 * Emit every held-back opener, outermost first - something inside the
 	 * innermost one has content, so all of them do.
 	 */
 	flushPending(): void;
@@ -28161,7 +28161,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
 	isPending(depth: number): boolean;
 
 	/**
-	 * Drop the innermost held-back opener — its node printed to nothing.
+	 * Drop the innermost held-back opener - its node printed to nothing.
 	 */
 	dropPending(): void;
 
@@ -28187,14 +28187,14 @@ declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
 
 	/**
 	 * Forget every node's printed text. A node printed in pieces does this once
-	 * each child is emitted, so the store never holds more than one of them —
+	 * each child is emitted, so the store never holds more than one of them -
 	 * which is also what keeps a recycled node id from reading as an earlier
 	 * node's text.
 	 */
 	dropStore(): void;
 
 	/**
-	 * Drop trailing `charCode`s from the end of the output at or after `from` —
+	 * Drop trailing `charCode`s from the end of the output at or after `from` -
 	 * the separator the piece before a terminator no longer needs. Walks back over
 	 * pieces emptied by {@link retract}, so it sees what the output reads as.
 	 */
@@ -28202,7 +28202,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
 
 	/**
 	 * Stand `text` in place of the output's end, where that is `printed` followed
-	 * only by `closer`s — what the printer wrote after a value the input ran out in.
+	 * only by `closer`s - what the printer wrote after a value the input ran out in.
 	 */
 	replaceEnd(printed: string, text: string, closer: number): boolean;
 
@@ -28237,7 +28237,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
 	printedSource(node: TNode, sourceText: (node: TNode) => string): void;
 
 	/**
-	 * Print one node and hand its text straight back — for a node inside one being
+	 * Print one node and hand its text straight back - for a node inside one being
 	 * printed in pieces, whose text is emitted as it is printed, so the store
 	 * would only ever be written and read once.
 	 */
@@ -28261,7 +28261,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
 	emitRetractable(text: string): number;
 
 	/**
-	 * Take back an already-emitted piece — the printer has since found that a
+	 * Take back an already-emitted piece - the printer has since found that a
 	 * later one overrides it. Pieces after it keep their place. A piece emitted by
 	 * {@link takeRetractable} takes the mapping anchored to it back as well; any
 	 * other anchor into the piece would be left pointing at what follows it, so
@@ -28277,7 +28277,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
 
 	/**
 	 * Fold `text` into an already-emitted piece, in front of the character it ends
-	 * with — a later sibling whose body belongs inside that piece, as a repeated
+	 * with - a later sibling whose body belongs inside that piece, as a repeated
 	 * named `@layer` block's does. Mappings are piece-relative and this only grows
 	 * the piece past everything already anchored in it, so they keep their
 	 * positions; the folded text carries none of its own.
@@ -28285,7 +28285,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
 	foldIntoRetractable(index: number, text: string): void;
 
 	/**
-	 * Write an already-emitted piece again, shorter — a rule inside it a later
+	 * Write an already-emitted piece again, shorter - a rule inside it a later
 	 * copy makes dead. Mappings anchored in the piece keep the offsets they were
 	 * given, so one inside what was cut names what now follows it.
 	 */
@@ -28298,7 +28298,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
 	deferRetractable(index: number, source: { readonly text: string }): void;
 
 	/**
-	 * {@link take} for a top-level node a later sibling may still make dead — the
+	 * {@link take} for a top-level node a later sibling may still make dead - the
 	 * unprefixed twin of a vendor-prefixed rule, which can stand anywhere after
 	 * it. The node is emitted as a piece of its own, with its mapping recorded
 	 * against that piece, so {@link retract} takes both back.
@@ -28314,10 +28314,10 @@ declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
 	/**
 	 * Emit one finished top-level node: first any kept comments that precede it,
 	 * then a source mapping anchoring its output start to `[srcLine, srcCol]`, then
-	 * its text — and drop the per-node store so the next top-level node starts
+	 * its text - and drop the per-node store so the next top-level node starts
 	 * clean. `srcOffset` / `srcLine` / `srcCol` are the node's source position; a
 	 * grammar that doesn't map positions (e.g. HTML) omits them (no comments, no
-	 * mapping — the map ends up empty).
+	 * mapping - the map ends up empty).
 	 */
 	take(
 		node?: TNode,
@@ -28352,13 +28352,13 @@ declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
 	/**
 	 * Emit the kept literals landing before `pos`. A printer holding a node back
 	 * calls this at hold time, so what was written above it is still emitted
-	 * above it — and {@link hasInsertBefore} then answers about the gap to the
+	 * above it - and {@link hasInsertBefore} then answers about the gap to the
 	 * next node rather than the whole span since the last node taken.
 	 */
 	flushInsertsBefore(pos: number): void;
 
 	/**
-	 * Queue a literal to carry through to the output at source offset `pos` — a
+	 * Queue a literal to carry through to the output at source offset `pos` - a
 	 * comment the printer chose to keep (e.g. a `/*!` license banner). Calls
 	 * arrive in source order; each lands just before the first top-level node
 	 * starting after `pos` (or at the end, via {@link result}).
@@ -28366,7 +28366,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
 	insert(pos: number, text: string): void;
 
 	/**
-	 * Take the queued inserts sitting in `[start, end)` — a printer that writes
+	 * Take the queued inserts sitting in `[start, end)` - a printer that writes
 	 * that source range out itself places them, so the writer must not flush
 	 * them ahead of the next top-level node as well.
 	 */
@@ -28380,7 +28380,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
 	 * {@link sourceMap}, so both read the substituted output rather than
 	 * correcting for it.
 	 * The marker is `NUL id NUL`. A NUL mostly cannot reach printed output on its
-	 * own account — both preprocessors turn one into U+FFFD — but an RCDATA
+	 * own account - both preprocessors turn one into U+FFFD - but an RCDATA
 	 * element and an attribute value keep the one they were written with, so a
 	 * pair of them is read as a write only where what stands between spells an id
 	 * this answers for. Anything else is the source's own text and is left alone.
@@ -28399,7 +28399,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
  * What every language's print options carry, read by the node printer via
  * `writer.options`. Only `mode` is here: what else a printer may be told is the
  * language's own business, and a language names it by instantiating
- * {@link PrintContext} with its own type — nothing CSS reads belongs in a
+ * {@link PrintContext} with its own type - nothing CSS reads belongs in a
  * typedef HTML also depends on.
  */
 declare interface PrintOptions {
@@ -31436,8 +31436,8 @@ declare abstract class RuntimeTemplate {
 
 	/**
 	 * Whether the deferred fill rewrote a chunk whose hashed name would otherwise go
-	 * stale, which `RealContentHashPlugin` reads to run — and to repair `[chunkhash]`
-	 * names — where `optimization.realContentHash` did not ask for it.
+	 * stale, which `RealContentHashPlugin` reads to run - and to repair `[chunkhash]`
+	 * names - where `optimization.realContentHash` did not ask for it.
 	 */
 	needsAnalyzableRepair(): boolean;
 
@@ -31449,15 +31449,15 @@ declare abstract class RuntimeTemplate {
 
 	/**
 	 * Whether a reference a foreign bundler can follow without running webpack's runtime
-	 * may be emitted — the one question every caller asks, in the form it is asking for:
-	 * - `"import"` — a literal `import("./chunk.js")` in place of `ensureChunk(id)`
-	 * - `"url"` — a literal `new URL(<file>, import.meta.url)`
-	 * - `"url-runtime"` — the same, written into a runtime module rather than a module
-	 * - `"url-inline"` — whether such a reference names the file at the call site
-	 * - `"wasm"` — the same, fully baked for a wasm binary the runtime would name
-	 * - `"wasm-relative"` — a wasm path built at runtime under an `import.meta.url` base
+	 * may be emitted - the one question every caller asks, in the form it is asking for:
+	 * - `"import"` - a literal `import("./chunk.js")` in place of `ensureChunk(id)`
+	 * - `"url"` - a literal `new URL(<file>, import.meta.url)`
+	 * - `"url-runtime"` - the same, written into a runtime module rather than a module
+	 * - `"url-inline"` - whether such a reference names the file at the call site
+	 * - `"wasm"` - the same, fully baked for a wasm binary the runtime would name
+	 * - `"wasm-relative"` - a wasm path built at runtime under an `import.meta.url` base
 	 * `"url-inline"` differs from `"url"` only in taking the `.p + <file>` fallback as
-	 * an answer too — both name the file where it is used rather than through the
+	 * an answer too - both name the file where it is used rather than through the
 	 * asset's javascript wrapper, which is what decides whether that wrapper is emitted.
 	 * A name code generation cannot settle may still be baked, through a stand-in the
 	 * deferred pass fills in. Not covered here, because only the reference can tell: a
@@ -31503,14 +31503,14 @@ declare abstract class RuntimeTemplate {
 	 * Builds the analyzable `new URL(specifier, import.meta.url)` expression the ESM
 	 * wasm/asset loader backends use to reference an emitted binary relative to the
 	 * current module (via `output.importMetaName`) instead of the runtime public-path
-	 * global — the form other bundlers and webpack itself can statically follow.
+	 * global - the form other bundlers and webpack itself can statically follow.
 	 */
 	importMetaUrl(specifier: string): string;
 
 	/**
 	 * Whether a baked asset url resolves against the entry `baseUri` at all. A public
-	 * path that reaches the same place from any base never reads `.b` — and `auto`
-	 * resolves to an absolute url too — while output with no baked form has nothing to
+	 * path that reaches the same place from any base never reads `.b` - and `auto`
+	 * resolves to an absolute url too - while output with no baked form has nothing to
 	 * resolve. Where this is false, what `baseUri` is set to cannot reach the generated
 	 * code, so it must not reach the module hash either: `URLDependency.updateHash`
 	 * asks this before contributing one.
@@ -31520,8 +31520,8 @@ declare abstract class RuntimeTemplate {
 	/**
 	 * Static literal specifier (already quoted) for the `new URL(<here>, import.meta.url)`
 	 * an asset reference bakes to, or `null` to keep the runtime form. Unlike a wasm
-	 * binary, the runtime resolves an asset url against `__webpack_require__.b` — the
-	 * output root, or an entry `baseUri` where one is set — so that base is settled here
+	 * binary, the runtime resolves an asset url against `__webpack_require__.b` - the
+	 * output root, or an entry `baseUri` where one is set - so that base is settled here
 	 * before the rest of the name is.
 	 */
 	getAnalyzableAssetUrl(
@@ -31535,7 +31535,7 @@ declare abstract class RuntimeTemplate {
 	 * The `baseUri` the entries this code runs under agree on, which replaces the output
 	 * root an asset url resolves against. Asked per runtime, because that is what the
 	 * module is generated for: two entries with different bases each get their own
-	 * source. `undefined` when none of them sets one, `null` when they disagree — an
+	 * source. `undefined` when none of them sets one, `null` when they disagree - an
 	 * entry that omits it disagrees with one that sets it.
 	 */
 	entryBaseUri(runtime: RuntimeSpec): undefined | null | string;
@@ -31543,7 +31543,7 @@ declare abstract class RuntimeTemplate {
 	/**
 	 * `output.publicPath` as the constant it will be, for code that would otherwise read
 	 * `__webpack_require__.p` for a value that never changes. `undefined` when only the
-	 * hash could say, or when a runtime reassigns `__webpack_public_path__` — then the
+	 * hash could say, or when a runtime reassigns `__webpack_public_path__` - then the
 	 * global is the only thing that knows.
 	 */
 	constantPublicPath(): undefined | string;
@@ -31633,7 +31633,7 @@ declare abstract class RuntimeTemplate {
 	 * otherwise. `target` is evaluated twice in the fallback, so it must be
 	 * side-effect free. The expression evaluates to the resulting value.
 	 * Models `||` only, so `target` must never hold a legitimate falsy value
-	 * (`0`, `""`, `false`) — it would be overwritten; use it for object/array defaults.
+	 * (`0`, `""`, `false`) - it would be overwritten; use it for object/array defaults.
 	 */
 	assignOr(target: string, value: string): string;
 
@@ -31783,7 +31783,7 @@ declare abstract class RuntimeTemplate {
 
 	/**
 	 * The side-effect annotation for output another build reads back, which is the
-	 * only output it can pay for — elsewhere it is bytes with no consumer.
+	 * only output it can pay for - elsewhere it is bytes with no consumer.
 	 */
 	sideEffectsAnnotation(): string;
 
@@ -32088,7 +32088,7 @@ declare abstract class RuntimeTemplate {
 	/**
 	 * The `../` path from a chunk's own asset back to the output root. Hashes are
 	 * neutralized first: a runtime module is generated once to be hashed, before any
-	 * hash exists, so resolving one there throws — and `RuntimeModule.updateHash`
+	 * hash exists, so resolving one there throws - and `RuntimeModule.updateHash`
 	 * lets that throw fail the build rather than hashing it.
 	 */
 	chunkRootOutputDir(chunk: Chunk, enforceRelative: boolean): string;
@@ -32096,7 +32096,7 @@ declare abstract class RuntimeTemplate {
 	/**
 	 * Static literal specifier (already quoted) for the `new URL(<here>, import.meta.url)`
 	 * a worker or worklet entry chunk bakes to, or `null` to keep the runtime form. The
-	 * gate and the build are asked together so every call site agrees on both — the
+	 * gate and the build are asked together so every call site agrees on both - the
 	 * `new Worker(...)` emit, and the resource hint `ResourceHintPlugin` spells for it.
 	 */
 	getAnalyzableWorkerUrl(
@@ -32111,7 +32111,7 @@ declare abstract class RuntimeTemplate {
 	 * keyed by chunk id, or `null` when they have to keep the runtime
 	 * `publicPath + getChunkCssFilename(id)` form. Both the runtime module reading them
 	 * and the plugin declaring what it needs ask this, so the two always agree. The
-	 * runtime hands an absolute url string to `link.href`, and so does this — the browser
+	 * runtime hands an absolute url string to `link.href`, and so does this - the browser
 	 * resolves the element against the document, which is not where the chunk sits, and
 	 * the loader reads the url as text either way.
 	 */
@@ -32364,7 +32364,7 @@ declare class Scope {
 	 * For a function scope with parameters, the offset where its body
 	 * starts; `-1` for every other scope. Separates the two regions that
 	 * share this scope, so a reference in the parameter list can be kept
-	 * from resolving to a binding declared in the body — see
+	 * from resolving to a binding declared in the body - see
 	 * `isHiddenBodyBinding`.
 	 */
 	paramBoundary: number;
@@ -32382,7 +32382,7 @@ declare interface ScopeAnalysis {
 	moduleScope: Scope;
 
 	/**
-	 * every identifier that resolved to no binding — the module's free names
+	 * every identifier that resolved to no binding - the module's free names
 	 */
 	unresolvedReferences: Reference[];
 
@@ -32713,12 +32713,12 @@ declare interface SkipOptions {
 	types?: Uint8Array;
 
 	/**
-	 * drop qualified-rule (selector) preludes — the rule and its block are still produced (default false)
+	 * drop qualified-rule (selector) preludes - the rule and its block are still produced (default false)
 	 */
 	selectorPrelude?: boolean;
 
 	/**
-	 * drop at-rule preludes — the at-rule and its block are still produced (default false)
+	 * drop at-rule preludes - the at-rule and its block are still produced (default false)
 	 */
 	atRulePrelude?: boolean;
 }
@@ -33319,7 +33319,7 @@ declare interface SourcePosition {
 
 /**
  * Visitor coordinator: owns the visitor registry and drives a language
- * `grammar` over the source. Language-agnostic — each syntax (CSS, HTML, …)
+ * `grammar` over the source. Language-agnostic - each syntax (CSS, HTML, ...)
  * binds its own grammar, node-type enum and (optionally) node printer.
  * Usage:
  * ```
@@ -33387,13 +33387,13 @@ declare abstract class SourceProcessor<
 
 	/**
 	 * Parse `input` once and fire the visitors in source order. Asking for output
-	 * — `mode`, the one thing that names it — makes the same walk print, given a
+	 * - `mode`, the one thing that names it - makes the same walk print, given a
 	 * printer supplied at construction: a
 	 * {@link PrintContext} is created, each node's printer fires into it as the node
 	 * finishes, and the result is returned as `{ code, map }`: the serialized output
 	 * and, for a caller that named its input with `source` / `content`, the
-	 * input->output source map — `map` is `undefined` without one. Asking for
-	 * none of it only walks and returns `undefined`. A single parse — printing
+	 * input->output source map - `map` is `undefined` without one. Asking for
+	 * none of it only walks and returns `undefined`. A single parse - printing
 	 * never re-parses; all configuration is per-call.
 	 */
 	process(
@@ -33416,8 +33416,8 @@ declare abstract class SourceProcessor<
 
 	/**
 	 * {@link process}, for a caller whose renderer answers asynchronously. Code
-	 * generation is synchronous — a printer returns its node's text, it cannot
-	 * await one — so the walk leaves a marker where each answer goes, they are
+	 * generation is synchronous - a printer returns its node's text, it cannot
+	 * await one - so the walk leaves a marker where each answer goes, they are
 	 * asked for together, and {@link PrintContext.substitute} stands each in its
 	 * place before the output and its map are built. One parse either way, and
 	 * the async boundary stays at the top rather than on every node.
@@ -33601,7 +33601,7 @@ declare abstract class StackEntry {
  * scopes. Layers form a linked parent chain, so `createChild` is O(1) instead
  * of copying a layer array per scope. A layer's `Map` is only allocated on its
  * first own write, and lookup results are memoized into the nearest
- * `Map`-bearing layer of the walk — read-only layers (most block scopes) stay
+ * `Map`-bearing layer of the walk - read-only layers (most block scopes) stay
  * allocation-free and share their parent's memoized entries.
  */
 declare abstract class StackedMap<K, V> {
@@ -35103,8 +35103,8 @@ declare class SyntaxParser {
 	isUsing(isFor?: boolean): boolean;
 
 	/**
-	 * Read one statement. A statement head that is only a keyword by position —
-	 * `let`, `async`, `using` — is settled by the probes above.
+	 * Read one statement. A statement head that is only a keyword by position -
+	 * `let`, `async`, `using` - is settled by the probes above.
 	 */
 	parseStatement(
 		context?: null | string,
@@ -35396,7 +35396,7 @@ declare class SyntaxParser {
 	): any;
 
 	/**
-	 * Read a `new` expression, whose callee takes subscripts but not a call —
+	 * Read a `new` expression, whose callee takes subscripts but not a call -
 	 * the argument list belongs to the `new` itself.
 	 */
 	parseNew(): any;
@@ -35526,7 +35526,7 @@ declare class SyntaxParser {
 
 	/**
 	 * Read an identifier's text, recording in `containsEsc` whether any of it
-	 * was written as an escape — which stops it reading as a keyword.
+	 * was written as an escape - which stops it reading as a keyword.
 	 */
 	readWord1(): string;
 	readWord(): void;
@@ -35683,7 +35683,7 @@ type TemplatePath = string | TemplatePathFn<PathData>;
 /**
  * Callback used to compute a path from contextual data. The type parameter
  * narrows the `pathData` shape when the caller knows it operates in a chunk
- * (`PathDataChunk`) or module (`PathDataModule`) context — defaults to the
+ * (`PathDataChunk`) or module (`PathDataModule`) context - defaults to the
  * fully-optional `PathData` for backward compatibility.
  */
 declare interface TemplatePathFn<T extends PathData = PathData> {
@@ -35865,7 +35865,7 @@ declare interface TokenRead {
 }
 
 /**
- * Position-based view over the lexer — webpack's stand-in for the spec's
+ * Position-based view over the lexer - webpack's stand-in for the spec's
  * "normalize into a token stream" (CSS Syntax §9). It unifies the lexer and the
  * stream in one class: the `readToken` primitive lexes one token (the CSS
  * tokenizer), and the spec token-stream operations `next` / `consume` /
@@ -35876,12 +35876,12 @@ declare interface TokenRead {
  * the next token (lazily tokenized once and cached until consumed). The
  * declaration-vs-qualified-rule backtracking in `consumeABlocksContents`
  * rewinds by `mark`ing / `restoreMark`ing that byte offset, which simply
- * re-tokenizes the rewound span — comment tokens are filtered here and fire
+ * re-tokenizes the rewound span - comment tokens are filtered here and fire
  * `onComment` once each, tracked by a monotonic high-water mark so a
  * re-tokenized span never re-fires them.
  * `SourceProcessor` is handed this class (not an instance) and threads it to
  * the grammar, so a different language can drive the same visitor machinery by
- * swapping the tokenizer — the per-token `readToken` primitive — for its own.
+ * swapping the tokenizer - the per-token `readToken` primitive - for its own.
  */
 declare class TokenStream {
 	constructor(
@@ -35894,7 +35894,7 @@ declare class TokenStream {
 	locConverter: LocConverter;
 
 	/**
-	 * The next token (CSS Syntax §3 "next token") — the upcoming token without
+	 * The next token (CSS Syntax §3 "next token") - the upcoming token without
 	 * consuming it; the `<eof-token>` once the source is exhausted. This is the
 	 * token the consume algorithms dispatch on (the spec's "process"). Tokenized
 	 * from `_pos` on first use and cached until consumed; comment tokens are
@@ -35903,14 +35903,14 @@ declare class TokenStream {
 	next(): MutableToken;
 
 	/**
-	 * Consume a token (CSS Syntax §3 "consume a token") — return the next token
+	 * Consume a token (CSS Syntax §3 "consume a token") - return the next token
 	 * and advance the cursor past it. The returned token is valid until the next
 	 * `next` re-tokenizes (the reused instance is not cleared by advancing).
 	 */
 	consume(): MutableToken;
 
 	/**
-	 * Discard a token (CSS Syntax §3 "discard a token") — advance the cursor past
+	 * Discard a token (CSS Syntax §3 "discard a token") - advance the cursor past
 	 * the next token without returning it.
 	 */
 	discard(): void;
@@ -35919,14 +35919,14 @@ declare class TokenStream {
 	 * Advance past the already-peeked next token, skipping the redundant `next()`
 	 * re-check `consume` / `discard` pay. Precondition: the caller has just called
 	 * `next()` (so `_tok` is the cached next token and `_hasNext` is true) and that
-	 * token is not the `<eof-token>` — the hot "peek, decide, advance" sites where
+	 * token is not the `<eof-token>` - the hot "peek, decide, advance" sites where
 	 * both always hold. Callers that can't guarantee a non-EOF cached token use
 	 * `consume` / `discard` instead.
 	 */
 	advance(): void;
 
 	/**
-	 * Step over the whitespace the next token would be, without tokenizing it —
+	 * Step over the whitespace the next token would be, without tokenizing it -
 	 * for the sites that discard whitespace tokens. No-op while a token is cached.
 	 */
 	skipWhitespace(): void;
@@ -35935,26 +35935,26 @@ declare class TokenStream {
 	 * Step over the run of selector-prelude leaves a skip-mode parse drops (CSS
 	 * Syntax §5.4.3's "append to prelude", which skip mode does not do), without
 	 * lexing one token each. Only valid where every leaf up to the next
-	 * `BC_PRELUDE_STOP` code point is dropped whatever it is — which in
+	 * `BC_PRELUDE_STOP` code point is dropped whatever it is - which in
 	 * `consumeAQualifiedRule` is once the two tokens the `--foo: {`
 	 * disambiguation reads have both been seen. No-op while a token is cached.
 	 */
 	skipPreludeLeaves(): void;
 
 	/**
-	 * Mark (CSS Syntax §3 "mark") — push the current cursor position.
+	 * Mark (CSS Syntax §3 "mark") - push the current cursor position.
 	 */
 	mark(): void;
 
 	/**
-	 * Restore a mark (CSS Syntax §3 "restore a mark") — pop the last mark and
+	 * Restore a mark (CSS Syntax §3 "restore a mark") - pop the last mark and
 	 * rewind the cursor to it. The rewound span is re-tokenized on the next read;
 	 * already-fired comments are not re-fired (`_commentHigh`).
 	 */
 	restoreMark(): void;
 
 	/**
-	 * Discard a mark (CSS Syntax §3 "discard a mark") — pop without rewinding.
+	 * Discard a mark (CSS Syntax §3 "discard a mark") - pop without rewinding.
 	 */
 	discardMark(): void;
 }
@@ -36603,8 +36603,8 @@ type VisitorBucket<TPath> =
  * Visitor map keyed by a numeric node-type discriminator; a bucket
  * is a function (enter-only) or `{ enter?, exit? }`.
  * A visitor receives a single `path` argument: the
- * language's AST accessor with the current position on it — `path.node`,
- * `path.parent` (null at a root) — plus `path.skipChildren()` (enter only)
+ * language's AST accessor with the current position on it - `path.node`,
+ * `path.parent` (null at a root) - plus `path.skipChildren()` (enter only)
  * to stop the walk descending, and every field-read method (which defaults
  * to the current node). The path is one reused object rebound before each callback:
  * it is only valid during the callback, and future per-node functionality
@@ -36862,7 +36862,7 @@ declare abstract class WeakTupleMap<K extends TupleElement[], V> {
 	 * Memoizes `compute(thisArg, ...args)` under the tuple key `[compute,
 	 * ...args]`, computing it on a miss. Equivalent to `provide(compute, ...args,
 	 * () => compute(thisArg, ...args))` but without allocating that closure (or an
-	 * extra rest array) on every call — `ModuleGraph#cached` runs this on hot
+	 * extra rest array) on every call - `ModuleGraph#cached` runs this on hot
 	 * paths where most calls hit the cache and the closure would be pure waste.
 	 */
 	cachedProvide<This, A extends TupleElement[] = K>(
@@ -37757,7 +37757,7 @@ declare namespace exports {
 		circularKind?: number;
 
 		/**
-		 * module uses top-level `for await…of` or `await using`, which can't be lowered to a generator
+		 * module uses top-level `for await...of` or `await using`, which can't be lowered to a generator
 		 */
 		usesTopLevelAwaitForOf?: boolean;
 
@@ -38424,7 +38424,7 @@ declare namespace exports {
 	export const validate: (
 		configuration: Configuration | MultiConfiguration
 	) => void;
-	/** Validates a value against a JSON schema. @deprecated use `config.validateSchema` — TODO in the next major release: remove */ export const validateSchema: (
+	/** Validates a value against a JSON schema. @deprecated use `config.validateSchema` - TODO in the next major release: remove */ export const validateSchema: (
 		schema: Parameters<typeof validateFunction>[0],
 		options: Parameters<typeof validateFunction>[1],
 		validationConfiguration?: ValidationErrorConfiguration
@@ -38525,12 +38525,12 @@ declare namespace exports {
 		export let matchPart: (str: string, test: Matcher) => boolean;
 		export let matchObject: (obj: MatchObject, str: string) => boolean;
 	}
-	/** The stage constants the optimization hooks are tapped at. @deprecated use `optimize.OptimizationStages` — TODO in the next major release: remove */ export namespace OptimizationStages {
+	/** The stage constants the optimization hooks are tapped at. @deprecated use `optimize.OptimizationStages` - TODO in the next major release: remove */ export namespace OptimizationStages {
 		export let STAGE_ADVANCED: 10;
 		export let STAGE_BASIC: -10;
 		export let STAGE_DEFAULT: 0;
 	}
-	/** The symbols a runtime module may declare a requirement on. @deprecated use `runtime.RuntimeGlobals` — TODO in the next major release: remove */ export namespace RuntimeGlobals {
+	/** The symbols a runtime module may declare a requirement on. @deprecated use `runtime.RuntimeGlobals` - TODO in the next major release: remove */ export namespace RuntimeGlobals {
 		export let amdDefine: "__webpack_require__.amdD";
 		export let amdOptions: "__webpack_require__.amdO";
 		export let asyncModule: "__webpack_require__.a";
@@ -38574,7 +38574,7 @@ declare namespace exports {
 		export let getUpdateManifestFilename: "__webpack_require__.hmrF";
 		export let getWorkletBootstrap: "__webpack_require__.wb";
 		export let global: "__webpack_require__.g";
-		/** esm module decorator @deprecated use `esmModuleDecorator` — TODO in the next major release: remove */ export let harmonyModuleDecorator: "__webpack_require__.hmd";
+		/** esm module decorator @deprecated use `esmModuleDecorator` - TODO in the next major release: remove */ export let harmonyModuleDecorator: "__webpack_require__.hmd";
 		export let hasCssModules: "has css modules";
 		export let hasServerRenderedStylesheets: "has server rendered stylesheets";
 		export let hasFetchPriority: "has fetch priority";
@@ -38667,7 +38667,7 @@ declare namespace exports {
 		export {
 			ModuleDependency,
 			ESMImportDependency,
-			/** The dependency an ESM `import` declaration makes. @deprecated use `dependencies.ESMImportDependency` — TODO in the next major release: remove */ ESMImportDependency as HarmonyImportDependency,
+			/** The dependency an ESM `import` declaration makes. @deprecated use `dependencies.ESMImportDependency` - TODO in the next major release: remove */ ESMImportDependency as HarmonyImportDependency,
 			ConstDependency,
 			NullDependency,
 			EntryDependency,
@@ -39414,7 +39414,7 @@ declare namespace exports {
 			export let getUpdateManifestFilename: "__webpack_require__.hmrF";
 			export let getWorkletBootstrap: "__webpack_require__.wb";
 			export let global: "__webpack_require__.g";
-			/** esm module decorator @deprecated use `esmModuleDecorator` — TODO in the next major release: remove */ export let harmonyModuleDecorator: "__webpack_require__.hmd";
+			/** esm module decorator @deprecated use `esmModuleDecorator` - TODO in the next major release: remove */ export let harmonyModuleDecorator: "__webpack_require__.hmd";
 			export let hasCssModules: "has css modules";
 			export let hasServerRenderedStylesheets: "has server rendered stylesheets";
 			export let hasFetchPriority: "has fetch priority";
@@ -39503,7 +39503,7 @@ declare namespace exports {
 			FetchCompileAsyncWasmPlugin,
 			JsonpChunkLoadingRuntimeModule,
 			JsonpTemplatePlugin,
-			/** The runtime module that loads a chunk's CSS. @deprecated use `css.CssLoadingRuntimeModule`, the scope this module lives in — TODO in the next major release: remove */ CssLoadingRuntimeModule
+			/** The runtime module that loads a chunk's CSS. @deprecated use `css.CssLoadingRuntimeModule`, the scope this module lives in - TODO in the next major release: remove */ CssLoadingRuntimeModule
 		};
 	}
 	export namespace esm {
@@ -40502,16 +40502,16 @@ declare namespace exports {
 	export type ObjectDeserializerContext =
 		typeof ObjectDeserializerContextObjectMiddlewareObject_2;
 	export {
-		/** Resolves every module of the last build eagerly. @deprecated use `prefetch.AutomaticPrefetchPlugin` — TODO in the next major release: remove */ AutomaticPrefetchPlugin,
+		/** Resolves every module of the last build eagerly. @deprecated use `prefetch.AutomaticPrefetchPlugin` - TODO in the next major release: remove */ AutomaticPrefetchPlugin,
 		AsyncDependenciesBlock,
 		BannerPlugin,
-		/** The cache a compilation stores and restores through. @deprecated use `cache.Cache` — TODO in the next major release: remove */ Cache,
+		/** The cache a compilation stores and restores through. @deprecated use `cache.Cache` - TODO in the next major release: remove */ Cache,
 		Chunk,
 		ChunkGraph,
 		CleanPlugin,
 		Compilation,
 		Compiler,
-		/** The protocol scope hoisting renders through. @deprecated use `optimize.ConcatenationScope` — TODO in the next major release: remove */ ConcatenationScope,
+		/** The protocol scope hoisting renders through. @deprecated use `optimize.ConcatenationScope` - TODO in the next major release: remove */ ConcatenationScope,
 		ContextExclusionPlugin,
 		ContextReplacementPlugin,
 		CopyPlugin,
@@ -40545,11 +40545,11 @@ declare namespace exports {
 		NormalModuleReplacementPlugin,
 		MultiCompiler,
 		Parser,
-		/** Pins the target platform a `target: false` build cannot infer. @deprecated use `config.PlatformPlugin` — TODO in the next major release: remove */ PlatformPlugin,
-		/** Resolves one request eagerly at build time. @deprecated use `prefetch.PrefetchPlugin` — TODO in the next major release: remove */ PrefetchPlugin,
+		/** Pins the target platform a `target: false` build cannot infer. @deprecated use `config.PlatformPlugin` - TODO in the next major release: remove */ PlatformPlugin,
+		/** Resolves one request eagerly at build time. @deprecated use `prefetch.PrefetchPlugin` - TODO in the next major release: remove */ PrefetchPlugin,
 		ProgressPlugin,
 		ProvidePlugin,
-		/** The base class every emitted runtime module extends. @deprecated use `runtime.RuntimeModule` — TODO in the next major release: remove */ RuntimeModule,
+		/** The base class every emitted runtime module extends. @deprecated use `runtime.RuntimeModule` - TODO in the next major release: remove */ RuntimeModule,
 		EntryPlugin as SingleEntryPlugin,
 		SSRManifestPlugin,
 		SourceMapDevToolPlugin,
@@ -40558,7 +40558,7 @@ declare namespace exports {
 		Template,
 		WatchIgnorePlugin,
 		WebpackError,
-		/** Reads a resolved configuration into the plugins it implies. @deprecated use `config.WebpackOptionsApply` — TODO in the next major release: remove */ WebpackOptionsApply,
+		/** Reads a resolved configuration into the plugins it implies. @deprecated use `config.WebpackOptionsApply` - TODO in the next major release: remove */ WebpackOptionsApply,
 		WebpackOptionsDefaulter,
 		ValidationError as WebpackOptionsValidationError,
 		ValidationError,
