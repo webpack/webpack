@@ -1906,4 +1906,19 @@ describe("one-pass minify, family V round 8", () => {
 		).toBe("var x=(y,2);g(x,(y,a+b));");
 	});
 
+	it("should print a `return` pair giving its test back as `||`", () => {
+		const source = fixture("javascript", "one-pass-v5-2");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// A side taking parentheses, another name returned or a comment keeps `?:`.
+		expect(code).toBe("function first(value,fallback){return value||fallback()}console.log(first(\"given\",String),first(\"\",()=>\"fallback\"));function withElse(value){return value||\"else\"}console.log(withElse(1),withElse(0));function joined(value,other){return value||other||\"none\"}console.log(joined(1,2),joined(0,2),joined(0,0));function conditional(value,other){return value?value:other?\"yes\":\"no\"}console.log(conditional(1,0),conditional(0,1),conditional(0,0));function nullish(value,other){return value?value:other??\"nullish\"}console.log(nullish(1,2),nullish(0,null));function differs(value,other){return value?other:\"differs\"}console.log(differs(1,2),differs(0,2));function commentedValue(value,other){return value?/*! value */value:other}console.log(commentedValue(1,2),commentedValue(0,2));");
+		expect(runProgram(code)).toBe(runProgram(source));
+		// `&&` on the other side measured larger gzipped, and a comment on the test stays.
+		expect(
+			minifyOnePass(
+				"function f(v,o){if(v)return v;return o&&o.length}function g(v,o){if(/*! c */v)return v;return o}",
+				{ compress: {}, mangle: false }
+			).code
+		).toBe("function f(v,o){return v?v:o&&o.length}function g(v,o){/*! c */return v?v:o}");
+	});
+
 });
