@@ -1828,3 +1828,29 @@ describe("one-pass minify, family P round 7", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 });
+
+describe("one-pass minify, family W round 8", () => {
+	it("should print an arrow body ending in an `if` returning in its `else` too as one `?:`", () => {
+		const source = fixture("javascript", "one-pass-w5-1");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// What follows it never runs; a `var` it hoists keeps the braces, and a test a fold opens with `{` takes parentheses.
+		expect(code).toBe("const pick=value=>value?\"yes\":\"no\",chain=value=>value===1?\"one\":value===2?\"two\":\"many\",object=value=>value?1:2,hoisted=value=>{return value?later:2;var later},folded=value=>({a:value}.a()?1:2);console.log(pick(1),pick(0),chain(1),chain(2),chain(3)),console.log(object(1),object(0),hoisted(1),hoisted(0),folded(()=>1),folded(()=>0));");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should print the expressions opening an arrow body before its `return` chain as one sequence", () => {
+		const source = fixture("javascript", "one-pass-w5-2");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// A statement opening with `{` keeps the braces.
+		expect(code).toBe("const log=value=>console.log(\"log\",value),sequence=value=>(log(value),value?1:2),several=value=>(log(value),log(value>1?value:-value),value?1:value===0?0:2),ambiguous=value=>{({}).a=value;return value?1:2};console.log(sequence(1),sequence(0),several(2),several(0),ambiguous(1));");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should drop what follows a `switch` folding to a branch that always leaves", () => {
+		const source = fixture("javascript", "one-pass-w5-3");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// A `break`, a `var` it hoists or a label holding it keeps what follows.
+		expect(code).toBe("const mode=\"production\";function picked(){for(let item of[1])console.log(item);console.log(\"production\");return\"expected\"}function broken(){console.log(\"broken\");return\"after\"}function hoisting(){return later;var later}function labeled(flag){label:{if(flag)break label;return\"labeled\"}return\"rest\"}console.log(picked(),broken(),hoisting(),labeled(1),labeled(0));");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+});
