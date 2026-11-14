@@ -1030,10 +1030,12 @@ const nodeMeaning = (node, parent, key, tagged) => {
 			);
 		}
 	}
-	// A class exported as the default has the same name either way.
+	// An anonymous class exported as the default has the same name either way;
+	// only the declaration of a named one binds its name in the module.
 	if (
 		node.type === "ExportDefaultDeclaration" &&
-		node.declaration.type === "ClassExpression"
+		node.declaration.type === "ClassExpression" &&
+		node.declaration.id === null
 	) {
 		return nodeMeaning(
 			{ ...node, declaration: { ...node.declaration, type: "ClassDeclaration" } },
