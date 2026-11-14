@@ -1,0 +1,39 @@
+/* Hoisting writes a nested rule out on its own, and two of them printing one
+   block are neighbors nowhere else — so the join is offered there or left to
+   a second pass. */
+.a { .x { top: 0 } .y { top: 0 } }
+
+/* A run of them ends as one list, in the printer's own order. */
+.b { .q { left: 0 } .p { left: 0 } .o { left: 0 } }
+
+/* The rule the hoist emptied stands in front of the run and prints the same
+   block, so it joins too. */
+.c { right: 0; .x { right: 0 } .y { right: 0 } }
+
+/* One that prints another block is left where it was written. */
+.d { bottom: 1px; .x { bottom: 0 } .y { bottom: 0 } }
+
+/* A rule printing another block parts the run. */
+.e { .x { margin: 0 } .y { margin: 1px } .z { margin: 0 } }
+
+/* Under the at-rule they were written in. */
+@media print { .f { .x { padding: 0 } .y { padding: 0 } } }
+
+/* A declaration after a nested rule is read after it, so this block keeps its
+   nesting and there is no run to join. */
+.g { top: 0; .x { top: 0 } left: 0 }
+
+/* The hoist writes a rule out on its own, so what stands either side of it is
+   its neighbor — and neighbors printing one block are one rule. */
+.h { color: teal }
+.i { .x { color: teal } }
+
+/* Two hoists meeting, and a rule the hoist had nothing to do with. */
+.j { .x { outline-width: 1px } }
+.k { .y { outline-width: 1px } }
+.l { outline-color: red }
+.m { .x { outline-color: red } }
+
+/* A run that took its own parent in is one rule too. */
+.n { order: 3 }
+.o { order: 3; .x { order: 3 } }

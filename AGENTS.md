@@ -202,6 +202,7 @@ Directory structure, naming and running one case: [TESTING_DOCS.md](TESTING_DOCS
 
 - **Bug fix: test first**, confirm it fails, then fix and re-run. Features may add tests alongside or after.
 - **Prefer integration tests** (`configCases/`, `watchCases/`, `hotCases/`, `statsCases/`, …) driving a real `webpack()` build whenever the behavior is reachable that way; they catch regressions mocked unit tests miss. `*.unittest.js` is for pure helpers a build can't naturally reach.
+- **Syntax tests are fixtures first.** A tokenizer, parser, printer or minifier input (CSS, HTML, XML, JavaScript) goes in `test/fixtures/<lang>/<name>/`, so `invariants.unittest.js` snapshots its prints and holds it to the invariants. Add a `configCases/` case only when the change can break what a build adds: dependencies, emitted runtime code or another webpack integration. Put a printer-only integration case in its language's merged case (`optimization/minify-javascript/`, `css/minify-css/`, `html/minify-html/`), one directory per case ([how](TESTING_DOCS.md#configcases)).
 - **An HMR change gets a `hotCases/` case for the default output and a twin under `hotCases/esm-output/`** ([why](TESTING_DOCS.md#hotcases)).
 - **Behavior across rebuilds is a `watchCases/` case**, never a unit test calling `compiler.run` in a loop ([how](TESTING_DOCS.md#writing-a-test)).
 - **Snapshot printed code; assert everything else**: never snapshot a value some machine can't produce, and keep control characters out ([details](TESTING_DOCS.md#writing-a-test)).

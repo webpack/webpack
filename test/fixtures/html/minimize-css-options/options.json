@@ -1,0 +1,12 @@
+[
+	{
+		"print": "htmlMinify",
+		"css": {
+			"extractComments": false,
+			"convertLengthUnits": true,
+			"convertApproximateColors": true,
+			"dropOverriddenDeclarations": true,
+			"rewriteCustomProperties": true
+		}
+	}
+]

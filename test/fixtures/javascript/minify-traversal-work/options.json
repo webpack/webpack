@@ -1,0 +1,20 @@
+[
+	{
+		"mode": "minify",
+		"ecma": 2018,
+		"mangle": false,
+		"compress": {
+			"passes": 2
+		},
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"ecma": 2018,
+		"mangle": true,
+		"compress": {
+			"passes": 2
+		},
+		"behavior": true
+	}
+]

@@ -1,0 +1,14 @@
+[
+	{
+		"print": "htmlMinify",
+		"environment": {
+			"browsers": [
+				"chrome 50"
+			],
+			"vendorPrefixes": true
+		},
+		"css": {
+			"extractComments": false
+		}
+	}
+]

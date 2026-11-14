@@ -1,0 +1,16 @@
+[
+	{
+		"print": "cssMinify",
+		"environment": {
+			"browsers": [
+				"chrome 140",
+				"firefox 140",
+				"safari 26.2"
+			],
+			"vendorPrefixes": true
+		},
+		"svg": false,
+		"extractComments": false,
+		"rewriteCustomProperties": true
+	}
+]

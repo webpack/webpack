@@ -1,0 +1,6 @@
+/*! a pseudo-class the caller asked to be written as a class */
+.button:focus-visible { outline: 2px solid }
+/*! ...at any depth, since the argument holds selectors of its own */
+.button:not(:focus-visible) { outline: none }
+/*! ...while one nothing named stays the pseudo-class it is */
+.button:focus { color: red }

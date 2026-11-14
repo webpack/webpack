@@ -1,9 +1,0 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
-
-exports[`ConfigTestCases html minimize-lookup-decoded-value minimize-lookup-decoded-value should compile 1`] = `
-"<!doctype html><head><meta name=viewport content=\\"width=device-width,initial-scale=1\\"><style>a{color:red}</style><script src=page.js></script></head><body>
-<input>
-
-
-</body></html>"
-`;

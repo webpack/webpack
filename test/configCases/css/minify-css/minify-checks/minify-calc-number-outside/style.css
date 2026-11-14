@@ -1,0 +1,14 @@
+/* A bare number these read as a length of their own, where Gecko refuses the
+   same number inside a `calc()` — so the parentheses stay. */
+.a { stroke-width: calc(2) }
+.b { stroke-dasharray: calc(1000) }
+.c { stroke-dashoffset: calc(1.5) }
+.d { -webkit-perspective: calc(1000) }
+
+/* The same properties with a unit, and properties that read a number as a
+   number: the fold still writes those bare. */
+.e { stroke-width: calc(2px) }
+.f { stroke-width: calc(1px + 1px) }
+.g { opacity: calc(0.5) }
+.h { z-index: calc(2) }
+.i { width: calc(10px) }

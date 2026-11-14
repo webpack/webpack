@@ -1,0 +1,9 @@
+/* WebKit named logical sizing after the physical axis, and took the standard
+   names for all six properties together in Safari 12.1. */
+
+/*! the two renames BCD records */
+.t01 { inline-size: 20em; block-size: 10em }
+/*! the four it files as a prefix on the standard name, which nothing parsed */
+.t02 { min-inline-size: 1em; max-inline-size: 30em }
+/*! the block axis reads the physical height, the same way round */
+.t03 { min-block-size: 2em; max-block-size: 40em }

@@ -1,0 +1,63 @@
+/* Every two-value display form, which reads back as the short one. */
+.d0{display:block flex}
+.d1{display:block flow}
+.d2{display:block flow-root}
+.d3{display:block grid}
+.d4{display:block table}
+.d5{display:inline flex}
+.d6{display:inline flow}
+.d7{display:inline flow-root}
+.d8{display:inline grid}
+.d9{display:inline ruby}
+.d10{display:inline table}
+.d11{display:run-in flow}
+
+/* Each cubic-bezier the spec gives a keyword name. */
+.t0{transition-timing-function:cubic-bezier(0.25,0.1,0.25,1)}
+.t1{transition-timing-function:cubic-bezier(0,0,1,1)}
+.t2{transition-timing-function:cubic-bezier(0.42,0,1,1)}
+.t3{transition-timing-function:cubic-bezier(0,0,0.58,1)}
+.t4{transition-timing-function:cubic-bezier(0.42,0,0.58,1)}
+
+/* The absolute font sizes. */
+.f0{font-size:large}
+.f1{font-size:larger}
+.f2{font-size:medium}
+.f3{font-size:small}
+.f4{font-size:smaller}
+.f5{font-size:x-large}
+.f6{font-size:x-small}
+.f7{font-size:xx-large}
+.f8{font-size:xx-small}
+.f9{font-size:xxx-large}
+
+/* The generic families, which name no font file. */
+.g0{font-family:cursive}
+.g1{font-family:emoji}
+.g2{font-family:fangsong}
+.g3{font-family:fantasy}
+.g4{font-family:math}
+.g5{font-family:monospace}
+.g6{font-family:sans-serif}
+.g7{font-family:serif}
+.g8{font-family:system-ui}
+.g9{font-family:ui-monospace}
+.g10{font-family:ui-rounded}
+.g11{font-family:ui-sans-serif}
+.g12{font-family:ui-serif}
+
+/* Shouted, since only a name carrying a capital is looked up at all. */
+.u0{pitch:1HZ}
+.u1{pitch:1KHZ}
+.u2{width:1Q}
+.u3{transform:ROTATEX(45deg)}
+.u4{transform:ROTATEY(45deg)}
+.u5{transform:ROTATEZ(45deg)}
+.u6{transform:SCALEX(2)}
+.u7{transform:SCALEY(2)}
+.u8{transform:SCALEZ(2)}
+.u9{transform:SKEWX(45deg)}
+.u10{transform:SKEWY(45deg)}
+.u11{transform:TRANSLATEX(10px)}
+.u12{transform:TRANSLATEY(10px)}
+.u13{transform:TRANSLATEZ(10px)}

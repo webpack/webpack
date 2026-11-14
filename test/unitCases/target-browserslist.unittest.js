@@ -193,6 +193,7 @@ describe("browserslist target", () => {
 			"..",
 			"configCases",
 			"css",
+			"minify-css",
 			"minimize-vendor-prefixes"
 		);
 

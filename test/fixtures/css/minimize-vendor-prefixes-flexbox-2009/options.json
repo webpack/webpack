@@ -1,0 +1,14 @@
+[
+	{
+		"print": "cssMinify",
+		"environment": {
+			"browsers": [
+				"android 4.2-4.3",
+				"firefox 20"
+			],
+			"vendorPrefixes": true
+		},
+		"svg": false,
+		"extractComments": false
+	}
+]
