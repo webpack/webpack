@@ -512,3 +512,62 @@ describe("a syntax tree written from ESTree objects", () => {
 		strict.release();
 	});
 });
+
+describe("a hook with path taps", () => {
+	/**
+	 * @param {JavascriptParser} parser the parser
+	 * @param {string} source the module
+	 * @returns {void}
+	 */
+	const parse = (parser, source) => {
+		parser.parse(
+			source,
+			/** @type {import("../../../lib/module/Parser").ParserState} */ (
+				/** @type {unknown} */ ({ source })
+			)
+		);
+	};
+
+	it("gives a path tap ids from a node object, outside a parse and through an interceptor", () => {
+		const parser = new JavascriptParser("module");
+		/** @type {string[]} */
+		const seen = [];
+		parser.hooks.statement.tap(
+			{ name: "path", path: true },
+			(/** @type {JavascriptNodeReader} */ reader, /** @type {number} */ id) => {
+				seen.push(`path ${reader.range(id)}`);
+			}
+		);
+		parser.hooks.statement.tap("object", (statement) => {
+			seen.push(`object ${statement.type}`);
+		});
+		parse(parser, "a;\nb;");
+		expect(seen).toEqual([
+			"path 0,2",
+			"object ExpressionStatement",
+			"path 3,5",
+			"object ExpressionStatement"
+		]);
+
+		seen.length = 0;
+		/** @type {Node} */
+		const statement = {
+			type: "ExpressionStatement",
+			expression: { type: "Identifier", name: "c", range: [0, 1] },
+			range: [0, 2]
+		};
+		parser.hooks.statement.call(/** @type {EXPECTED_ANY} */ (statement));
+		expect(seen).toEqual(["path 0,2", "object ExpressionStatement"]);
+
+		seen.length = 0;
+		let calls = 0;
+		parser.hooks.statement.intercept({
+			call: () => {
+				calls++;
+			}
+		});
+		parse(parser, "d;");
+		expect(calls).toBe(1);
+		expect(seen).toEqual(["path 0,2", "object ExpressionStatement"]);
+	});
+});
