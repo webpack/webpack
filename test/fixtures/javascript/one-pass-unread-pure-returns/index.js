@@ -25,9 +25,20 @@ Widget({});
 (({ size }) => /*#__PURE__*/ pure(make("a3"), size))({ size: make("a4") });
 (() => /*#__PURE__*/ pure({ x: make("o") }))();
 (({ size }) => [size])({ size: make("b") });
+((value) => /*#__PURE__*/ pure(/*#__PURE__*/ pure(make("d1"), make("d2"))))(
+	make("d0")
+);
+(function (flag) {
+	if (flag) return /*#__PURE__*/ pure(/*#__PURE__*/ pure(make("d3"), make("d4")));
+	return make("d5");
+})(count);
 /*#__PURE__*/ pure(/*#__PURE__*/ pure(make("n1"), make("n2")), make("n3"));
 /*#__PURE__*/ pure(/*#__PURE__*/ pure(make("s1"), make("s2")));
 /*#__PURE__*/ pure([/*#__PURE__*/ pure(make("e1"))]);
+/*#__PURE__*/ pure(
+	/*#__PURE__*/ pure(make("e2"), make("e3")),
+	...log
+);
 (async () => /*#__PURE__*/ pure(make("async")))();
 (function* () {
 	return /*#__PURE__*/ pure(make("generator"));
