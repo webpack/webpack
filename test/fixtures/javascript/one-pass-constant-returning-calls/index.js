@@ -11,7 +11,13 @@ console.log(twice(), twice(), early());
 function long() {
 	return "a long string";
 }
-console.log(long(), long(), twice(early()));
+function nothing() {
+	return null;
+}
+console.log(long(), long(), twice(early()), nothing(), nothing());
+// A key no constant keeps its object; a call unread as a body prints nothing.
+console.log(Object.keys({ a: 1, [long()]: 2 }).join());
+for (var index = 0; index < 2; index++) early();
 // A default runs code, and a block sets its function only once it runs.
 function defaulted(value = console.log("default")) {
 	return 2;

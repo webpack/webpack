@@ -12,6 +12,12 @@ var log = function (value) {
 (value => (log(value), {}.constructor, 1))(4);
 // A nested sequence keeps its own parentheses.
 (value => ((log(value), log(value + 1)), 1))(5);
+// One printing as an arrow, passed an object, drops it as well.
+(value => (log(value.a + value.a), 9))({ a: 8 });
+(value => ({}.constructor.call(log, value.a, value.a), 9))({ a: 8 });
+(value => (log(value.a), log(value.a), 9))({ a: 8 });
+(value => ((log(value.a), log(value.a)), 9))({ a: 8 });
+(value => (log(value.a), log(value.a)))({ a: 8 });
 // A value read keeps the tail.
 log((value => (log(value), 6))(7));
 // A template may call `toString`: it stays.
