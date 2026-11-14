@@ -409,7 +409,7 @@ describe("snapshots", () => {
 		        "type": "css",
 		      },
 		      Object {
-		        "dependency": "html-style-module",
+		        "dependency": "html-module-style",
 		        "parser": Object {
 		          "exportType": "text",
 		        },
@@ -5467,7 +5467,7 @@ describe("snapshots", () => {
 			-         "type": "css",
 			-       },
 			-       Object {
-			-         "dependency": "html-style-module",
+			-         "dependency": "html-module-style",
 			-         "parser": Object {
 			-           "exportType": "text",
 			-         },
