@@ -21,7 +21,10 @@ const {
 	runMode
 } = require("../../../tooling/compare-js-tools");
 const { cutsAt } = require("../../../tooling/compare-tools-harness");
-const { meaningReports } = require("../../helpers/syntaxInvariants/javascript");
+const {
+	meaningReports,
+	sweepRespellings
+} = require("../../helpers/syntaxInvariants/javascript");
 
 // Read before anything clears the mock: an unguarded script installs while
 // being required, and a `beforeEach` would erase exactly that evidence.
@@ -200,6 +203,19 @@ describe("the meaning relation", () => {
 		expect(
 			meaningReports("export default class {}", "export default (class{});", module)
 		).toEqual([]);
+	});
+});
+
+describe("the respelling sweep", () => {
+	/**
+	 * A script whose body holds more statements than one call takes as arguments.
+	 * @param {number} count how many statements follow its directive
+	 * @returns {string} the script
+	 */
+	const wideScript = (count) => `"use strict";${"0;".repeat(count)}`;
+
+	it("should read the directives of a program wider than a call's arguments", () => {
+		expect(sweepRespellings(() => "", wideScript(200000), false, "")).toEqual([]);
 	});
 });
 

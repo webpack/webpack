@@ -652,7 +652,8 @@ const directiveStarts = (code, module) => {
 	while (stack.length > 0) {
 		const node = stack.pop();
 		if (node.directive !== undefined) starts.add(node.expression.start);
-		stack.push(...childNodesOf(node));
+		// One at a time: a program's statements can outnumber what a call takes.
+		for (const child of childNodesOf(node)) stack.push(child);
 	}
 	return starts;
 };
