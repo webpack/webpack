@@ -4,12 +4,14 @@ const { toLatin1Source } = require("../../../tooling/latin1-source");
 
 describe("latin1-source", () => {
 	/**
-	 * @param {string} source a script
-	 * @returns {unknown} what it evaluates to
+	 * @param {string} source a script evaluating to a string or a list of numbers
+	 * @returns {string | number[]} what it evaluates to
 	 */
 	const run = (source) =>
-		// eslint-disable-next-line no-new-func
-		new Function(`return (${source});`)();
+		/** @type {string | number[]} */ (
+			// eslint-disable-next-line no-new-func
+			new Function(`return (${source});`)()
+		);
 
 	it("escapes a string's character and spells a comment's in ASCII", () => {
 		const source = '/* a — b */ "x→y"';

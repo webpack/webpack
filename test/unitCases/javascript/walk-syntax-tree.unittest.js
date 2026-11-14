@@ -522,9 +522,9 @@ describe("a hook with path taps", () => {
 	const parse = (parser, source) => {
 		parser.parse(
 			source,
-			/** @type {import("../../../lib/module/Parser").ParserState} */ (
-				/** @type {unknown} */ ({ source })
-			)
+			/** @type {import("../../../lib/module/Parser").ParserState} */ ({
+				source
+			})
 		);
 	};
 
@@ -550,13 +550,13 @@ describe("a hook with path taps", () => {
 		]);
 
 		seen.length = 0;
-		/** @type {Node} */
+		/** @type {import("estree").ExpressionStatement} */
 		const statement = {
 			type: "ExpressionStatement",
 			expression: { type: "Identifier", name: "c", range: [0, 1] },
 			range: [0, 2]
 		};
-		parser.hooks.statement.call(/** @type {EXPECTED_ANY} */ (statement));
+		parser.hooks.statement.call(statement);
 		expect(seen).toEqual(["path 0,2", "object ExpressionStatement"]);
 
 		seen.length = 0;

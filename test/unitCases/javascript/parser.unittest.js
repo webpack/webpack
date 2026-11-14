@@ -3555,13 +3555,11 @@ describe("SyntaxTree", () => {
 		const { parseProgram, takeParsedTree } =
 			require("../../../lib/javascript/syntax").parser;
 		const program = /** @type {number} */ (
-			/** @type {unknown} */ (
 				parseProgram(
 					fixture("javascript", "syntax-tree-marks-legacy-assert-on-an-export-all"),
 					0,
 					{ sourceType: "module" }
 				)
-			)
 		);
 		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
 		expect(
@@ -3572,13 +3570,11 @@ describe("SyntaxTree", () => {
 		tree.release();
 
 		const before = /** @type {number} */ (
-			/** @type {unknown} */ (
 				parseProgram(
 					fixture("javascript", "syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before-2"),
 					0,
 					{ sourceType: "module", ecmaVersion: 2020 }
 				)
-			)
 		);
 		const written = /** @type {SyntaxTree} */ (takeParsedTree());
 		const declaration = written.field(0, Field.body, before);

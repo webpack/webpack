@@ -45,33 +45,56 @@ const COMMENT_SPELLINGS = {
  */
 const hexOf = (code) => code.toString(16).toUpperCase().padStart(4, "0");
 
+// labels of the tokens after which a backtick opens a tagged template: what
+// can end an expression; a block's `}` too, as refusing is the safe mistake
+const TAG_ENDS = new Set([
+	"name",
+	"string",
+	"num",
+	"regexp",
+	")",
+	"]",
+	"}",
+	"`",
+	"this",
+	"super",
+	"null",
+	"true",
+	"false"
+]);
+
 /**
  * The source ranges of every tagged template's text, whose raw spelling the
  * tag reads, so a `\u` escape would change what it gets.
- * @param {import("estree").Node} node the node to search
- * @param {[number, number][]} ranges the ranges found so far, added to
- * @returns {void}
+ * @param {import("acorn").Token[]} tokens the script's tokens, in source order
+ * @returns {[number, number][]} the ranges, in source order
  */
-const collectTaggedTemplateText = (node, ranges) => {
-	if (node.type === "TaggedTemplateExpression") {
-		for (const quasi of node.quasi.quasis) {
-			const { start, end } = /** @type {{ start: number, end: number }} */ (
-				/** @type {unknown} */ (quasi)
-			);
-			ranges.push([start, end]);
-		}
-	}
-	for (const value of Object.values(node)) {
-		const children = Array.isArray(value) ? value : [value];
-		for (const child of children) {
-			if (child !== null && typeof child === "object" && "type" in child) {
-				collectTaggedTemplateText(
-					/** @type {import("estree").Node} */ (child),
-					ranges
-				);
+const taggedTemplateText = (tokens) => {
+	/** @type {[number, number][]} */
+	const ranges = [];
+	// what each open `{`, `${` and template is, innermost last: a template
+	// entry records whether it is tagged
+	/** @type {("{" | "tagged" | "untagged")[]} */
+	const open = [];
+	for (let i = 0; i < tokens.length; i++) {
+		const { label } = tokens[i].type;
+		const top = open.length > 0 ? open[open.length - 1] : undefined;
+		if (label === "`") {
+			if (top === "tagged" || top === "untagged") {
+				open.pop();
+			} else {
+				const previous = i > 0 ? tokens[i - 1].type.label : "";
+				open.push(TAG_ENDS.has(previous) ? "tagged" : "untagged");
 			}
+		} else if (label === "template" || label === "invalidTemplate") {
+			if (top === "tagged") ranges.push([tokens[i].start, tokens[i].end]);
+		} else if (label === "{" || label === "${") {
+			open.push("{");
+		} else if (label === "}" && top === "{") {
+			open.pop();
 		}
 	}
+	return ranges;
 };
 
 /**
@@ -106,9 +129,9 @@ const toLatin1Source = (source) => {
 
 	/** @type {[number, number][]} */
 	const comments = [];
-	/** @type {[number, number][]} */
+	/** @type {import("acorn").Token[]} */
 	const tokens = [];
-	const program = parse(source, {
+	parse(source, {
 		ecmaVersion: "latest",
 		sourceType: "script",
 		allowHashBang: true,
@@ -116,17 +139,11 @@ const toLatin1Source = (source) => {
 		onComment: (block, text, start, end) => {
 			comments.push([start, end]);
 		},
-		onToken: (token) => {
-			tokens.push([token.start, token.end]);
-		}
+		onToken: tokens
 	});
 	/** @type {[number, number][]} */
-	const taggedText = [];
-	collectTaggedTemplateText(
-		/** @type {import("estree").Node} */ (/** @type {unknown} */ (program)),
-		taggedText
-	);
-	taggedText.sort((x, y) => x[0] - y[0]);
+	const tokenRanges = tokens.map((token) => [token.start, token.end]);
+	const taggedText = taggedTemplateText(tokens);
 	let result = "";
 	for (let i = 0; i < source.length; i++) {
 		const code = source.charCodeAt(i);
@@ -139,7 +156,7 @@ const toLatin1Source = (source) => {
 			const spelling = COMMENT_SPELLINGS[source[i]];
 			result += spelling !== undefined ? spelling : `U+${hexOf(codePoint)}`;
 			if (codePoint > 0xffff) i++;
-		} else if (!inRange(tokens, i)) {
+		} else if (!inRange(tokenRanges, i)) {
 			// whitespace or a line terminator between tokens, which no escape spells
 			result += code === 0x2028 || code === 0x2029 ? "\n" : " ";
 		} else {
