@@ -905,14 +905,6 @@ const EXPECTED = [
 	},
 	{
 		relation: "idempotence",
-		contains: "(1)}",
-		source:
-			"test/configCases/concatenate-modules/top-level-declarations-library-conflict/module.js",
-		presets: ["default"],
-		why: "a call printing as what its function returns keeps the parentheses that value takes unfolded, which the reprint reads as the constant it folded to"
-	},
-	{
-		relation: "idempotence",
 		contains: "(r.entrySeq()",
 		source: "Swagger UI 5 (bundle)",
 		presets: ["default"],

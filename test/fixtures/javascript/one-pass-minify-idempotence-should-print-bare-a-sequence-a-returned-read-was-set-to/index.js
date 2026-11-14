@@ -1,0 +1,1 @@
+function f(){var a=(g(),h());return a}function t(){var a=(g(),h());throw a}f(),t();

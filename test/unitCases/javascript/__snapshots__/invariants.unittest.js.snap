@@ -10418,7 +10418,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-715 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-715 prints {"mode":"minify","compress":{},"mangle":{"toplevel":false}} 1`] = `"function f(c){if(c===1){if(a()!==2)e()}else e()}({a:1}[k()])===1?x():y();"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-715 prints {"mode":"minify","compress":{},"mangle":{"toplevel":false}} 1`] = `"function f(c){if(c===1){if(a()!==2)e()}else e()}({a:1})[k()]===1?x():y();"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-715 prints {"mode":"minify"} 1`] = `"function f(n){switch(n){case 1:switch(a()){case 2:break;default:e()}break;default:e()}}(d=>d[k()])({a:1})===1?x():y();"`;
 
@@ -13594,9 +13594,9 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-kept-part-as-its-place-takes parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-kept-part-as-its-place-takes prints {"mode":"minify","compress":{},"mangle":false,"source":"a.js"} 1`] = `"const s=(g(),h());g(),h(),g(),h(),a,b,f([a]=[1],({b:b}={b:2}),([c]=[1])),x=a?y=1:c,x=(a||f(),c),g\`\`,(a,b)\`\`,(x={}.y)(()=>{}),a=- -b;a in b,c;x=!a&&b in c,x=a<b&&c;if(!b&&c)f();a(),- -b;({a:g()}).b;({a:g()}).b.c();({m(){}}).m()?a():b();(function(){g()})(),x;x=function(){g()}()==x,a=c;function k(i){return i++**2}function n(){return 1..a}x=new[1,2],x=new function(){this.b=1},k(1),n(),x={k:a=1,[b=1]:1},x=a?c:(f(1)(2),c);if(x=a?c:(g()+1,c)){({}).a?b():c();y()}x=new F(1);"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-kept-part-as-its-place-takes prints {"mode":"minify","compress":{},"mangle":false,"source":"a.js"} 1`] = `"const s=(g(),h());g(),h(),g(),h(),a,b,f([a]=[1],({b:b}={b:2}),([c]=[1])),x=a?y=1:c,x=(a||f(),c),g\`\`,(a,b)\`\`,(x={}.y)(()=>{}),a=- -b;a in b,c;x=!a&&b in c,x=a<b&&c;if(!b&&c)f();a(),- -b;({a:g()}).b;({a:g()}).b.c();({m(){}}).m()?a():b();(function(){g()})(),x;x=function(){g()}()==x,a=c;function k(i){return i++**2}function n(){return 1..a}x=new[1,2],x=new function(){this.b=1},k(1),n(),x={k:a=1,[b=1]:1},x=(a||f(1)(2),c);if(x=a?c:(g()+1,c)){({}).a?b():c();y()}x=new F(1);"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-kept-part-as-its-place-takes prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"const s=(g(),h());g(),h(),g(),h(),a,b,f([a]=[1],({b:b}={b:2}),([c]=[1])),x=a?y=1:c,x=(a||f(),c),g\`\`,(a,b)\`\`,(x={}.y)(()=>{}),a=- -b;a in b,c;x=!a&&b in c,x=a<b&&c;if(!b&&c)f();a(),- -b;({a:g()}).b;({a:g()}).b.c();({m(){}}).m()?a():b();(function(){g()})(),x;x=function(){g()}()==x,a=c;function k(i){return i++**2}function n(){return 1..a}x=new[1,2],x=new function(){this.b=1},k(1),n(),x={k:a=1,[b=1]:1},x=a?c:(f(1)(2),c);if(x=a?c:(g()+1,c)){({}).a?b():c();y()}x=new F(1);"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-kept-part-as-its-place-takes prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"const s=(g(),h());g(),h(),g(),h(),a,b,f([a]=[1],({b:b}={b:2}),([c]=[1])),x=a?y=1:c,x=(a||f(),c),g\`\`,(a,b)\`\`,(x={}.y)(()=>{}),a=- -b;a in b,c;x=!a&&b in c,x=a<b&&c;if(!b&&c)f();a(),- -b;({a:g()}).b;({a:g()}).b.c();({m(){}}).m()?a():b();(function(){g()})(),x;x=function(){g()}()==x,a=c;function k(i){return i++**2}function n(){return 1..a}x=new[1,2],x=new function(){this.b=1},k(1),n(),x={k:a=1,[b=1]:1},x=(a||f(1)(2),c);if(x=a?c:(g()+1,c)){({}).a?b():c();y()}x=new F(1);"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-kept-part-as-its-place-takes prints {"mode":"minify"} 1`] = `"const s=(g(),h());!f(g(),h());f((g(),h()));[(a,b)];f(0||([a]=[1]),1&&({b:b}={b:2}),0||([c]=[1]));x=a?(y=1)||c:c;x=a?c:(f(),c);(0||g)\`\`;(1&&(a,b))\`\`;x=({}??1).y;x((()=>{})??1);a=-(1&&-b);for((a in b);c;)break;x=!(a||!(b in c));x=(a<b?!0:!1)&&c;if(!!(!b&&c))f();-(a(),-b);void{a:g()}.b;delete{a:g()}.b.c();if({m(){}}?.m())a();else b();!!(function(){g()}()==x);x=!!(function(){g()}()==x);a=c;a?1:1;function k(i){var x=i++;return x**2}function n(){var t=function(){return 1};return t().a}x=new(Array(1,2));x=new function(z){this.b=1}(1);k(1),n();x={k:0||(a=1),[0||(b=1)]:1};x=a?c:(f(1)(2),c);x=a?c:(g()+1,c);if(x){if({}.a)b();else c();y()}x=new F(1);"`;
 
@@ -13618,7 +13618,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"x,({a:g()}.b);"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"x,{a:g()}.b;"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as prints {"mode":"minify"} 1`] = `"x,void{a:g()}.b;"`;
 
@@ -13630,7 +13630,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-2 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-2 prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"(function(){g()}()),x;"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-2 prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"(function(){g()})(),x;"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-2 prints {"mode":"minify"} 1`] = `"1,!!(function(){g()}()==x);"`;
 
@@ -13654,7 +13654,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-4 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-4 prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"x=(a||(f(1)(2)),longName);"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-4 prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"x=(a||f(1)(2),longName);"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-4 prints {"mode":"minify"} 1`] = `"x=a?longName:(f(1)(2),longName);"`;
 
@@ -14494,7 +14494,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-17 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-17 prints {"mode":"minify","compress":{},"mangle":true} 1`] = `"var log=[];function b(){log.push(\\"b\\")}function c(){log.push(\\"c\\")}function g(n){(n)||b()}g(0),g(1),g(null),console.log(log.join());"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-17 prints {"mode":"minify","compress":{},"mangle":true} 1`] = `"var log=[];function b(){log.push(\\"b\\")}function c(){log.push(\\"c\\")}function g(n){n||b()}g(0),g(1),g(null),console.log(log.join());"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-17 prints {"mode":"minify"} 1`] = `"var log=[];function b(){log.push(\\"b\\")}function c(){log.push(\\"c\\")}function g(a){(function(){if(a??0)return;b()})()}g(0);g(1);g(null);console.log(log.join());"`;
 
@@ -14506,7 +14506,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-18 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-18 prints {"mode":"minify","compress":{},"mangle":true} 1`] = `"var log=[];function b(){log.push(\\"b\\")}function c(){log.push(\\"c\\")}function g(n){n||(b())}g(0),g(1),g(null),console.log(log.join());"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-18 prints {"mode":"minify","compress":{},"mangle":true} 1`] = `"var log=[];function b(){log.push(\\"b\\")}function c(){log.push(\\"c\\")}function g(n){n||b()}g(0),g(1),g(null),console.log(log.join());"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-call-s-body-a-18 prints {"mode":"minify"} 1`] = `"var log=[];function b(){log.push(\\"b\\")}function c(){log.push(\\"c\\")}function g(a){(function(){if(a)return;0,b()})()}g(0);g(1);g(null);console.log(log.join());"`;
 
@@ -26584,7 +26584,7 @@ exports[`JavaScript syntax — invariants minimize-javascript-apply-holes parses
 
 exports[`JavaScript syntax — invariants minimize-javascript-apply-holes parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants minimize-javascript-apply-holes prints {"mode":"minify","compress":{"unsafe":true,"passes":2}} 1`] = `"var show=function(e){if(\\"function\\"==typeof e)return\\"[function]\\";try{return String(JSON.stringify(e,function(e,t){return\\"bigint\\"==typeof t?t+\\"n\\":\\"function\\"==typeof t?\\"[function]\\":t}))}catch(t){return String(e)}},it=function(e,t){console.log(\\"it\\",e);try{t(function(){})}catch(e){console.log(\\"throws\\",e&&e.name)}},expect=function(e){var t=new Proxy({},{get:function(n,r){return r===\\"not\\"||r===\\"resolves\\"||r===\\"rejects\\"?t:function(){if(!/Snapshot$/.test(r)){if(/^toThrow/.test(r)&&\\"function\\"==typeof e){try{console.log(r,\\"returns\\",show(e()))}catch(e){console.log(r,\\"throws\\",e&&e.name)}return}console.log(r,show(e))}}}});return t};it(\\"should minimize apply calls with unused array holes\\",()=>{expect(function(){return 1}.apply(null,[,1])).toBe(1)}),it(\\"should preserve argument positions, length and receiver with array holes\\",()=>{let e={marker:42};(function(){expect(this).toBe(e),expect(arguments.length).toBe(4),expect(Array.prototype.slice.call(arguments)).toEqual([void 0,2,void 0,void 0])}).apply(e,[,2,,,])}),it(\\"should minimize apply calls without array holes\\",()=>{(function(){expect(arguments.length).toBe(2),expect(Array.prototype.slice.call(arguments)).toEqual([1,2])}).apply(null,[1,2]);(function(){expect(arguments.length).toBe(0)}).apply(null,[])});"`;
+exports[`JavaScript syntax — invariants minimize-javascript-apply-holes prints {"mode":"minify","compress":{"unsafe":true,"passes":2}} 1`] = `"var show=function(e){if(\\"function\\"==typeof e)return\\"[function]\\";try{return(JSON.stringify(e,function(e,t){return\\"bigint\\"==typeof t?t+\\"n\\":\\"function\\"==typeof t?\\"[function]\\":t}))+\\"\\"}catch(t){return e+\\"\\"}},it=function(e,t){console.log(\\"it\\",e);try{t(function(){})}catch(e){console.log(\\"throws\\",e&&e.name)}},expect=function(e){var t=new Proxy({},{get:function(n,r){return r===\\"not\\"||r===\\"resolves\\"||r===\\"rejects\\"?t:function(){if(!/Snapshot$/.test(r)){if(/^toThrow/.test(r)&&\\"function\\"==typeof e){try{console.log(r,\\"returns\\",show(e()))}catch(e){console.log(r,\\"throws\\",e&&e.name)}return}console.log(r,show(e))}}}});return t};it(\\"should minimize apply calls with unused array holes\\",()=>{expect(function(){return 1}.apply(null,[,1])).toBe(1)}),it(\\"should preserve argument positions, length and receiver with array holes\\",()=>{let e={marker:42};(function(){expect(this).toBe(e),expect(arguments.length).toBe(4),expect(Array.prototype.slice.call(arguments)).toEqual([void 0,2,void 0,void 0])}).apply(e,[,2,,,])}),it(\\"should minimize apply calls without array holes\\",()=>{(function(){expect(arguments.length).toBe(2),expect(Array.prototype.slice.call(arguments)).toEqual([1,2])}).apply(null,[1,2]);(function(){expect(arguments.length).toBe(0)}).apply(null,[])});"`;
 
 exports[`JavaScript syntax — invariants minimize-javascript-apply-holes prints {"mode":"minify"} 1`] = `"var show=function(value){if(typeof value===\\"function\\")return\\"[function]\\";try{return String(JSON.stringify(value,function(key,one){return typeof one===\\"bigint\\"?one+\\"n\\":typeof one===\\"function\\"?\\"[function]\\":one}))}catch(error){return String(value)}};var it=function(title,body){console.log(\\"it\\",title);try{body(function(){})}catch(error){console.log(\\"throws\\",error&&error.name)}};var expect=function(value){var matchers=new Proxy({},{get:function(target,name){if(name===\\"not\\"||name===\\"resolves\\"||name===\\"rejects\\")return matchers;return function(){if(/Snapshot$/.test(name))return;if(/^toThrow/.test(name)&&typeof value===\\"function\\"){try{console.log(name,\\"returns\\",show(value()))}catch(error){console.log(name,\\"throws\\",error&&error.name)}return}console.log(name,show(value))}}});return matchers};it(\\"should minimize apply calls with unused array holes\\",()=>{expect(function(){return 1}.apply(null,[,1])).toBe(1)});it(\\"should preserve argument positions, length and receiver with array holes\\",()=>{const receiver={marker:42};(function(){expect(this).toBe(receiver);expect(arguments.length).toBe(4);expect(Array.prototype.slice.call(arguments)).toEqual([undefined,2,undefined,undefined])}).apply(receiver,[,2,,,])});it(\\"should minimize apply calls without array holes\\",()=>{(function(){expect(arguments.length).toBe(2);expect(Array.prototype.slice.call(arguments)).toEqual([1,2])}).apply(null,[1,2]);(function(){expect(arguments.length).toBe(0)}).apply(null,[])});"`;
 
@@ -28389,6 +28389,232 @@ exports[`JavaScript syntax — invariants one-pass-minify-family-z-round-9-shoul
 exports[`JavaScript syntax — invariants one-pass-minify-family-z-round-9-should-print-an-else-after-an-if-leaving-its-fu-2 prints {"mode":"minify"} 1`] = `"function f(){if(x)return;else z();w()}"`;
 
 exports[`JavaScript syntax — invariants one-pass-minify-family-z-round-9-should-print-an-else-after-an-if-leaving-its-fu-2 tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] )[11,12] {[12,13] if[13,15] ([15,16] name[16,17] )[17,18] return[18,24] ;[24,25] else[25,29] name[30,31] ([31,32] )[32,33] ;[33,34] name[34,35] ([35,36] )[36,37] ;[37,38] ;[38,39] }[39,40] eof[40,40]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-drop-a-double-negated-test-s-parentheses-without-comments parses 1`] = `"Program[0,25](body=[IfStatement[0,25](test=UnaryExpression[3,18](operator=\\"!\\" prefix=true argument=UnaryExpression[4,18](operator=\\"!\\" prefix=true argument=AssignmentExpression[6,17](operator=\\"=\\" left=MemberExpression[6,11](object=Identifier[6,9](name=\\"obj\\") property=Identifier[10,11](name=\\"y\\") computed=false optional=false) right=CallExpression[12,17](callee=Identifier[12,15](name=\\"foo\\") arguments=[] optional=false)))) consequent=ExpressionStatement[19,25](expression=CallExpression[19,24](callee=Identifier[19,22](name=\\"use\\") arguments=[] optional=false)) alternate=null)] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-drop-a-double-negated-test-s-parentheses-without-comments parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-drop-a-double-negated-test-s-parentheses-without-comments parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-drop-a-double-negated-test-s-parentheses-without-comments prints {"mode":"minify","compress":{},"mangle":false,"format":{"comments":false}} 1`] = `"if(obj.y=foo())use();"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-drop-a-double-negated-test-s-parentheses-without-comments prints {"mode":"minify"} 1`] = `"if(!!(obj.y=foo()))use();"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-drop-a-double-negated-test-s-parentheses-without-comments tokenizes 1`] = `"if[0,2] ([2,3] !/~[3,4] !/~[4,5] ([5,6] name[6,9] .[9,10] name[10,11] =[11,12] name[12,15] ([15,16] )[16,17] )[17,18] )[18,19] name[19,22] ([22,23] )[23,24] ;[24,25] eof[25,25]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-keep-a-negation-off-a-call-of-a-call-ending-a-sequence parses 1`] = `"Program[0,22](body=[IfStatement[0,22](test=UnaryExpression[3,17](operator=\\"!\\" prefix=true argument=SequenceExpression[5,16](expressions=[CallExpression[5,8](callee=Identifier[5,6](name=\\"a\\") arguments=[] optional=false),CallExpression[9,16](callee=CallExpression[9,13](callee=Identifier[9,10](name=\\"b\\") arguments=[Identifier[11,12](name=\\"c\\")] optional=false) arguments=[Identifier[14,15](name=\\"d\\")] optional=false)])) consequent=ExpressionStatement[18,22](expression=CallExpression[18,21](callee=Identifier[18,19](name=\\"e\\") arguments=[] optional=false)) alternate=null)] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-keep-a-negation-off-a-call-of-a-call-ending-a-sequence parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-keep-a-negation-off-a-call-of-a-call-ending-a-sequence parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-keep-a-negation-off-a-call-of-a-call-ending-a-sequence prints {"mode":"minify"} 1`] = `"if(!(a(),b(c)(d)))e();"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-keep-a-negation-off-a-call-of-a-call-ending-a-sequence tokenizes 1`] = `"if[0,2] ([2,3] !/~[3,4] ([4,5] name[5,6] ([6,7] )[7,8] ,[8,9] name[9,10] ([10,11] name[11,12] )[12,13] ([13,14] name[14,15] )[15,16] )[16,17] )[17,18] name[18,19] ([19,20] )[20,21] ;[21,22] eof[22,22]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-keep-the-call-of-a-member-an-inlined-call-folds-to-unbound parses 1`] = `"Program[0,98](body=[VariableDeclaration[0,65](declarations=[VariableDeclarator[4,37](id=Identifier[4,5](name=\\"a\\") init=ObjectExpression[6,37](properties=[Property[7,36](method=false shorthand=false computed=false key=Identifier[7,8](name=\\"b\\") value=FunctionExpression[9,36](id=null expression=false generator=false async=false params=[] body=BlockStatement[19,36](body=[ReturnStatement[20,35](argument=BinaryExpression[27,35](left=ThisExpression[27,31]() operator=\\"===\\" right=Identifier[34,35](name=\\"a\\")))])) kind=\\"init\\")])),VariableDeclarator[38,64](id=Identifier[38,39](name=\\"c\\") init=ObjectExpression[40,64](properties=[Property[41,63](method=false shorthand=false computed=false key=Identifier[41,42](name=\\"d\\") value=FunctionExpression[43,63](id=null expression=false generator=false async=false params=[] body=BlockStatement[53,63](body=[ReturnStatement[54,62](argument=Literal[61,62](value=1 raw=\\"1\\"))])) kind=\\"init\\")]))] kind=\\"var\\"),ExpressionStatement[65,98](expression=CallExpression[65,98](callee=MemberExpression[65,76](object=Identifier[65,72](name=\\"console\\") property=Identifier[73,76](name=\\"log\\") computed=false optional=false) arguments=[CallExpression[77,97](callee=CallExpression[77,95](callee=ArrowFunctionExpression[78,91](id=null expression=true generator=false async=false params=[Identifier[78,79](name=\\"x\\")] body=ConditionalExpression[81,91](test=UnaryExpression[81,83](operator=\\"!\\" prefix=true argument=Identifier[82,83](name=\\"x\\")) consequent=MemberExpression[84,87](object=Identifier[84,85](name=\\"a\\") property=Identifier[86,87](name=\\"b\\") computed=false optional=false) alternate=MemberExpression[88,91](object=Identifier[88,89](name=\\"c\\") property=Identifier[90,91](name=\\"d\\") computed=false optional=false))) arguments=[Literal[93,94](value=0 raw=\\"0\\")] optional=false) arguments=[] optional=false)] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-keep-the-call-of-a-member-an-inlined-call-folds-to-unbound parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-keep-the-call-of-a-member-an-inlined-call-folds-to-unbound parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-keep-the-call-of-a-member-an-inlined-call-folds-to-unbound prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"var a={b:function(){return this===a}},c={d:function(){return 1}};console.log((0,a.b)());"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-keep-the-call-of-a-member-an-inlined-call-folds-to-unbound prints {"mode":"minify"} 1`] = `"var a={b:function(){return this===a}},c={d:function(){return 1}};console.log((x=>!x?a.b:c.d)(0)());"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-keep-the-call-of-a-member-an-inlined-call-folds-to-unbound tokenizes 1`] = `"var[0,3] name[4,5] =[5,6] {[6,7] name[7,8] :[8,9] function[9,17] ([17,18] )[18,19] {[19,20] return[20,26] this[27,31] ==/!=/===/!==[31,34] name[34,35] }[35,36] }[36,37] ,[37,38] name[38,39] =[39,40] {[40,41] name[41,42] :[42,43] function[43,51] ([51,52] )[52,53] {[53,54] return[54,60] num[61,62] }[62,63] }[63,64] ;[64,65] name[65,72] .[72,73] name[73,76] ([76,77] ([77,78] name[78,79] =>[79,81] !/~[81,82] name[82,83] ?[83,84] name[84,85] .[85,86] name[86,87] :[87,88] name[88,89] .[89,90] name[90,91] )[91,92] ([92,93] num[93,94] )[94,95] ([95,96] )[96,97] )[97,98] eof[98,98]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-keep-the-parentheses-an-unread-void-gave-a-pattern-assignment parses 1`] = `"Program[0,15](body=[ExpressionStatement[0,15](expression=UnaryExpression[0,14](operator=\\"void\\" prefix=true argument=AssignmentExpression[6,13](operator=\\"=\\" left=ObjectPattern[6,9](properties=[Property[7,8](method=false shorthand=true computed=false key=Identifier[7,8](name=\\"a\\") value=Identifier[7,8](name=\\"a\\") kind=\\"init\\")]) right=CallExpression[10,13](callee=Identifier[10,11](name=\\"g\\") arguments=[] optional=false))))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-keep-the-parentheses-an-unread-void-gave-a-pattern-assignment parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-keep-the-parentheses-an-unread-void-gave-a-pattern-assignment parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-keep-the-parentheses-an-unread-void-gave-a-pattern-assignment prints {"mode":"minify"} 1`] = `"void({a:a}=g());"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-keep-the-parentheses-an-unread-void-gave-a-pattern-assignment tokenizes 1`] = `"void[0,4] ([5,6] {[6,7] name[7,8] }[8,9] =[9,10] name[10,11] ([11,12] )[12,13] )[13,14] ;[14,15] eof[15,15]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-lift-a-negation-onto-a-call-ending-a-sequence parses 1`] = `"Program[0,19](body=[IfStatement[0,19](test=UnaryExpression[3,14](operator=\\"!\\" prefix=true argument=SequenceExpression[5,13](expressions=[CallExpression[5,8](callee=Identifier[5,6](name=\\"a\\") arguments=[] optional=false),CallExpression[9,13](callee=Identifier[9,10](name=\\"b\\") arguments=[Identifier[11,12](name=\\"c\\")] optional=false)])) consequent=ExpressionStatement[15,19](expression=CallExpression[15,18](callee=Identifier[15,16](name=\\"d\\") arguments=[] optional=false)) alternate=null)] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-lift-a-negation-onto-a-call-ending-a-sequence parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-lift-a-negation-onto-a-call-ending-a-sequence parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-lift-a-negation-onto-a-call-ending-a-sequence prints {"mode":"minify"} 1`] = `"if(!(a(),b(c)))d();"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-lift-a-negation-onto-a-call-ending-a-sequence tokenizes 1`] = `"if[0,2] ([2,3] !/~[3,4] ([4,5] name[5,6] ([6,7] )[7,8] ,[8,9] name[9,10] ([10,11] name[11,12] )[12,13] )[13,14] )[14,15] name[15,16] ([16,17] )[17,18] ;[18,19] eof[19,19]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-a-nullish-test-an-unread-call-s-body-opens parses 1`] = `"Program[0,54](body=[FunctionDeclaration[0,49](id=Identifier[9,10](name=\\"g\\") expression=false generator=false async=false params=[Identifier[11,12](name=\\"a\\")] body=BlockStatement[13,49](body=[ExpressionStatement[14,48](expression=CallExpression[14,48](callee=FunctionExpression[15,45](id=null expression=false generator=false async=false params=[] body=BlockStatement[25,45](body=[IfStatement[26,41](test=LogicalExpression[29,33](left=Identifier[29,30](name=\\"a\\") operator=\\"??\\" right=Identifier[32,33](name=\\"c\\")) consequent=ReturnStatement[34,41](argument=null) alternate=null),ExpressionStatement[41,44](expression=CallExpression[41,44](callee=Identifier[41,42](name=\\"b\\") arguments=[] optional=false))])) arguments=[] optional=false))])),ExpressionStatement[49,54](expression=CallExpression[49,53](callee=Identifier[49,50](name=\\"g\\") arguments=[Literal[51,52](value=0 raw=\\"0\\")] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-a-nullish-test-an-unread-call-s-body-opens parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-a-nullish-test-an-unread-call-s-body-opens parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-a-nullish-test-an-unread-call-s-body-opens prints {"mode":"minify"} 1`] = `"function g(a){(function(){if(a??c)return;b()})()}g(0);"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-a-nullish-test-an-unread-call-s-body-opens tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] name[11,12] )[12,13] {[13,14] ([14,15] function[15,23] ([23,24] )[24,25] {[25,26] if[26,28] ([28,29] name[29,30] ??[30,32] name[32,33] )[33,34] return[34,40] ;[40,41] name[41,42] ([42,43] )[43,44] }[44,45] )[45,46] ([46,47] )[47,48] }[48,49] name[49,50] ([50,51] num[51,52] )[52,53] ;[53,54] eof[54,54]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-an-inlined-assignment-before-a-member parses 1`] = `"Program[0,18](body=[ExpressionStatement[0,18](expression=AssignmentExpression[0,17](operator=\\"=\\" left=Identifier[0,1](name=\\"x\\") right=MemberExpression[2,17](object=CallExpression[2,15](callee=ArrowFunctionExpression[3,12](id=null expression=true generator=false async=false params=[] body=AssignmentExpression[7,12](operator=\\"=\\" left=Identifier[7,8](name=\\"a\\") right=CallExpression[9,12](callee=Identifier[9,10](name=\\"f\\") arguments=[] optional=false))) arguments=[] optional=false) property=Identifier[16,17](name=\\"b\\") computed=false optional=false)))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-an-inlined-assignment-before-a-member parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-an-inlined-assignment-before-a-member parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-an-inlined-assignment-before-a-member prints {"mode":"minify"} 1`] = `"x=(()=>a=f())().b;"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-an-inlined-assignment-before-a-member tokenizes 1`] = `"name[0,1] =[1,2] ([2,3] ([3,4] )[4,5] =>[5,7] name[7,8] =[8,9] name[9,10] ([10,11] )[11,12] )[12,13] ([13,14] )[14,15] .[15,16] name[16,17] ;[17,18] eof[18,18]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-an-unread-pure-call-s-arguments-in-a-branch parses 1`] = `"Program[0,37](body=[IfStatement[0,37](test=Identifier[3,4](name=\\"a\\") consequent=ExpressionStatement[18,29](expression=CallExpression[18,28](callee=Identifier[18,19](name=\\"f\\") arguments=[CallExpression[20,23](callee=Identifier[20,21](name=\\"g\\") arguments=[] optional=false),CallExpression[24,27](callee=Identifier[24,25](name=\\"h\\") arguments=[] optional=false)] optional=false)) alternate=ExpressionStatement[34,37](expression=CallExpression[34,37](callee=Identifier[34,35](name=\\"b\\") arguments=[] optional=false)))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-an-unread-pure-call-s-arguments-in-a-branch parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-an-unread-pure-call-s-arguments-in-a-branch parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-an-unread-pure-call-s-arguments-in-a-branch prints {"mode":"minify"} 1`] = `"if(a)f(g(),h());else b();"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-an-unread-pure-call-s-arguments-in-a-branch tokenizes 1`] = `"if[0,2] ([2,3] name[3,4] )[4,5] block[5,18] name[18,19] ([19,20] name[20,21] ([21,22] )[22,23] ,[23,24] name[24,25] ([25,26] )[26,27] )[27,28] ;[28,29] else[29,33] name[34,35] ([35,36] )[36,37] eof[37,37]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-the-function-an-unread-comparison-s-right-opens parses 1`] = `"Program[0,26](body=[ExpressionStatement[0,26](expression=SequenceExpression[0,26](expressions=[Literal[0,1](value=1 raw=\\"1\\"),UnaryExpression[2,26](operator=\\"!\\" prefix=true argument=UnaryExpression[3,26](operator=\\"!\\" prefix=true argument=BinaryExpression[5,25](left=Literal[5,6](value=1 raw=\\"1\\") operator=\\"==\\" right=CallExpression[8,25](callee=FunctionExpression[8,23](id=null expression=false generator=false async=false params=[] body=BlockStatement[18,23](body=[ExpressionStatement[19,22](expression=CallExpression[19,22](callee=Identifier[19,20](name=\\"g\\") arguments=[] optional=false))])) arguments=[] optional=false))))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-the-function-an-unread-comparison-s-right-opens parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-the-function-an-unread-comparison-s-right-opens parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-the-function-an-unread-comparison-s-right-opens prints {"mode":"minify"} 1`] = `"1,!!(1==function(){g()}());"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-the-function-an-unread-comparison-s-right-opens tokenizes 1`] = `"num[0,1] ,[1,2] !/~[2,3] !/~[3,4] ([4,5] num[5,6] ==/!=/===/!==[6,8] function[8,16] ([16,17] )[17,18] {[18,19] name[19,20] ([20,21] )[21,22] }[22,23] ([23,24] )[24,25] )[25,26] eof[26,26]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-the-object-a-returned-member-reads parses 1`] = `"Program[0,41](body=[ExpressionStatement[0,41](expression=ConditionalExpression[0,40](test=CallExpression[0,32](callee=FunctionExpression[1,24](id=null expression=false generator=false async=false params=[Identifier[10,11](name=\\"d\\")] body=BlockStatement[12,24](body=[ReturnStatement[13,23](argument=MemberExpression[20,23](object=Identifier[20,21](name=\\"d\\") property=Identifier[22,23](name=\\"b\\") computed=false optional=false))])) arguments=[ObjectExpression[26,31](properties=[Property[27,30](method=false shorthand=false computed=false key=Identifier[27,28](name=\\"a\\") value=Literal[29,30](value=1 raw=\\"1\\") kind=\\"init\\")])] optional=false) consequent=CallExpression[33,36](callee=Identifier[33,34](name=\\"x\\") arguments=[] optional=false) alternate=CallExpression[37,40](callee=Identifier[37,38](name=\\"y\\") arguments=[] optional=false)))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-the-object-a-returned-member-reads parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-the-object-a-returned-member-reads parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-the-object-a-returned-member-reads prints {"mode":"minify"} 1`] = `"(function(d){return d.b})({a:1})?x():y();"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-the-object-a-returned-member-reads tokenizes 1`] = `"([0,1] function[1,9] ([9,10] name[10,11] )[11,12] {[12,13] return[13,19] name[20,21] .[21,22] name[22,23] }[23,24] )[24,25] ([25,26] {[26,27] name[27,28] :[28,29] num[29,30] }[30,31] )[31,32] ?[32,33] name[33,34] ([34,35] )[35,36] :[36,37] name[37,38] ([38,39] )[39,40] ;[40,41] eof[41,41]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-the-object-a-returned-member-reads-left-of-or parses 1`] = `"Program[0,21](body=[ExpressionStatement[0,21](expression=LogicalExpression[0,20](left=CallExpression[0,15](callee=ArrowFunctionExpression[1,7](id=null expression=true generator=false async=false params=[Identifier[1,2](name=\\"d\\")] body=MemberExpression[4,7](object=Identifier[4,5](name=\\"d\\") property=Identifier[6,7](name=\\"b\\") computed=false optional=false)) arguments=[ObjectExpression[9,14](properties=[Property[10,13](method=false shorthand=false computed=false key=Identifier[10,11](name=\\"a\\") value=Literal[12,13](value=1 raw=\\"1\\") kind=\\"init\\")])] optional=false) operator=\\"||\\" right=CallExpression[17,20](callee=Identifier[17,18](name=\\"f\\") arguments=[] optional=false)))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-the-object-a-returned-member-reads-left-of-or parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-the-object-a-returned-member-reads-left-of-or parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-the-object-a-returned-member-reads-left-of-or prints {"mode":"minify"} 1`] = `"(d=>d.b)({a:1})||f();"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-parenthesize-the-object-a-returned-member-reads-left-of-or tokenizes 1`] = `"([0,1] name[1,2] =>[2,4] name[4,5] .[5,6] name[6,7] )[7,8] ([8,9] {[9,10] name[10,11] :[11,12] num[12,13] }[13,14] )[14,15] ||[15,17] name[17,18] ([18,19] )[19,20] ;[20,21] eof[21,21]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-a-chain-bare-after-a-shared-tail-s-or parses 1`] = `"Program[0,37](body=[ExpressionStatement[0,37](expression=AssignmentExpression[0,36](operator=\\"=\\" left=Identifier[0,1](name=\\"x\\") right=ConditionalExpression[2,36](test=Identifier[2,3](name=\\"a\\") consequent=Identifier[4,12](name=\\"longName\\") alternate=SequenceExpression[14,35](expressions=[MemberExpression[14,26](object=CallExpression[14,23](callee=CallExpression[14,18](callee=Identifier[14,15](name=\\"f\\") arguments=[Literal[16,17](value=1 raw=\\"1\\")] optional=false) arguments=[Literal[19,20](value=2 raw=\\"2\\"),Literal[21,22](value=3 raw=\\"3\\")] optional=false) property=Literal[24,25](value=4 raw=\\"4\\") computed=true optional=false),Identifier[27,35](name=\\"longName\\")]))))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-a-chain-bare-after-a-shared-tail-s-or parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-a-chain-bare-after-a-shared-tail-s-or parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-a-chain-bare-after-a-shared-tail-s-or prints {"mode":"minify"} 1`] = `"x=a?longName:(f(1)(2,3)[4],longName);"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-a-chain-bare-after-a-shared-tail-s-or tokenizes 1`] = `"name[0,1] =[1,2] name[2,3] ?[3,4] name[4,12] :[12,13] ([13,14] name[14,15] ([15,16] num[16,17] )[17,18] ([18,19] num[19,20] ,[20,21] num[21,22] )[22,23] [[23,24] num[24,25] ][25,26] ,[26,27] name[27,35] )[35,36] ;[36,37] eof[37,37]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-an-inlined-literal-before-a-member-bare parses 1`] = `"Program[0,36](body=[ExpressionStatement[0,36](expression=SequenceExpression[0,35](expressions=[AssignmentExpression[0,14](operator=\\"=\\" left=Identifier[0,1](name=\\"x\\") right=MemberExpression[2,14](object=CallExpression[2,12](callee=ArrowFunctionExpression[3,9](id=null expression=true generator=false async=false params=[] body=Literal[7,9](value=0.5 raw=\\".5\\")) arguments=[] optional=false) property=Identifier[13,14](name=\\"a\\") computed=false optional=false)),AssignmentExpression[15,35](operator=\\"=\\" left=Identifier[15,16](name=\\"y\\") right=MemberExpression[17,35](object=CallExpression[17,28](callee=ArrowFunctionExpression[18,25](id=null expression=true generator=false async=false params=[] body=Literal[22,25](raw=\\"/a/\\" regex={\\"pattern\\":\\"a\\",\\"flags\\":\\"\\"})) arguments=[] optional=false) property=Identifier[29,35](name=\\"source\\") computed=false optional=false))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-an-inlined-literal-before-a-member-bare parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-an-inlined-literal-before-a-member-bare parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-an-inlined-literal-before-a-member-bare prints {"mode":"minify"} 1`] = `"x=(()=>.5)().a,y=(()=>/a/)().source;"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-an-inlined-literal-before-a-member-bare tokenizes 1`] = `"name[0,1] =[1,2] ([2,3] ([3,4] )[4,5] =>[5,7] num[7,9]=0.5 )[9,10] ([10,11] )[11,12] .[12,13] name[13,14] ,[14,15] name[15,16] =[16,17] ([17,18] ([18,19] )[19,20] =>[20,22] regexp[22,25]=/a/ )[25,26] ([26,27] )[27,28] .[28,29] name[29,35] ;[35,36] eof[36,36]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-an-unread-pure-call-s-arguments-bare-as-an-if-s-statement parses 1`] = `"Program[0,28](body=[IfStatement[0,28](test=CallExpression[16,26](callee=Identifier[16,17](name=\\"f\\") arguments=[CallExpression[18,21](callee=Identifier[18,19](name=\\"g\\") arguments=[] optional=false),CallExpression[22,25](callee=Identifier[22,23](name=\\"h\\") arguments=[] optional=false)] optional=false) consequent=EmptyStatement[27,28]() alternate=null)] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-an-unread-pure-call-s-arguments-bare-as-an-if-s-statement parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-an-unread-pure-call-s-arguments-bare-as-an-if-s-statement parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-an-unread-pure-call-s-arguments-bare-as-an-if-s-statement prints {"mode":"minify"} 1`] = `"if(f(g(),h()));"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-an-unread-pure-call-s-arguments-bare-as-an-if-s-statement tokenizes 1`] = `"if[0,2] ([2,3] block[3,16] name[16,17] ([17,18] name[18,19] ([19,20] )[20,21] ,[21,22] name[22,23] ([23,24] )[24,25] )[25,26] )[26,27] ;[27,28] eof[28,28]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-function-an-unread-comparison-runs-after-an-item parses 1`] = `"Program[0,26](body=[ExpressionStatement[0,26](expression=SequenceExpression[0,26](expressions=[Identifier[0,1](name=\\"x\\"),UnaryExpression[2,26](operator=\\"!\\" prefix=true argument=UnaryExpression[3,26](operator=\\"!\\" prefix=true argument=BinaryExpression[5,25](left=CallExpression[5,22](callee=FunctionExpression[5,20](id=null expression=false generator=false async=false params=[] body=BlockStatement[15,20](body=[ExpressionStatement[16,19](expression=CallExpression[16,19](callee=Identifier[16,17](name=\\"g\\") arguments=[] optional=false))])) arguments=[] optional=false) operator=\\"==\\" right=Identifier[24,25](name=\\"x\\"))))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-function-an-unread-comparison-runs-after-an-item parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-function-an-unread-comparison-runs-after-an-item parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-function-an-unread-comparison-runs-after-an-item prints {"mode":"minify"} 1`] = `"x,!!(function(){g()}()==x);"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-function-an-unread-comparison-runs-after-an-item tokenizes 1`] = `"name[0,1] ,[1,2] !/~[2,3] !/~[3,4] ([4,5] function[5,13] ([13,14] )[14,15] {[15,16] name[16,17] ([17,18] )[18,19] }[19,20] ([20,21] )[21,22] ==/!=/===/!==[22,24] name[24,25] )[25,26] eof[26,26]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-function-an-unread-comparison-runs-after-an-item-2 parses 1`] = `"Program[0,26](body=[ExpressionStatement[0,26](expression=SequenceExpression[0,26](expressions=[Identifier[0,1](name=\\"x\\"),UnaryExpression[2,26](operator=\\"!\\" prefix=true argument=UnaryExpression[3,26](operator=\\"!\\" prefix=true argument=BinaryExpression[5,25](left=Literal[5,6](value=1 raw=\\"1\\") operator=\\"==\\" right=CallExpression[8,25](callee=FunctionExpression[8,23](id=null expression=false generator=false async=false params=[] body=BlockStatement[18,23](body=[ExpressionStatement[19,22](expression=CallExpression[19,22](callee=Identifier[19,20](name=\\"g\\") arguments=[] optional=false))])) arguments=[] optional=false))))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-function-an-unread-comparison-runs-after-an-item-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-function-an-unread-comparison-runs-after-an-item-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-function-an-unread-comparison-runs-after-an-item-2 prints {"mode":"minify"} 1`] = `"x,!!(1==function(){g()}());"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-function-an-unread-comparison-runs-after-an-item-2 tokenizes 1`] = `"name[0,1] ,[1,2] !/~[2,3] !/~[3,4] ([4,5] num[5,6] ==/!=/===/!==[6,8] function[8,16] ([16,17] )[17,18] {[18,19] name[19,20] ([20,21] )[21,22] }[22,23] ([23,24] )[24,25] )[25,26] eof[26,26]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-number-an-unread-assignment-calls parses 1`] = `"Program[0,86](body=[FunctionDeclaration[0,33](id=Identifier[9,10](name=\\"g\\") expression=false generator=false async=false params=[] body=BlockStatement[12,33](body=[VariableDeclaration[13,19](declarations=[VariableDeclarator[17,18](id=Identifier[17,18](name=\\"a\\") init=null)] kind=\\"var\\"),ReturnStatement[19,32](argument=CallExpression[25,32](callee=AssignmentExpression[26,29](operator=\\"=\\" left=Identifier[26,27](name=\\"a\\") right=Literal[28,29](value=2 raw=\\"2\\")) arguments=[] optional=false))])),TryStatement[33,86](block=BlockStatement[36,41](body=[ExpressionStatement[37,40](expression=CallExpression[37,40](callee=Identifier[37,38](name=\\"g\\") arguments=[] optional=false))]) handler=CatchClause[41,86](param=Identifier[47,48](name=\\"e\\") body=BlockStatement[49,86](body=[ExpressionStatement[50,85](expression=CallExpression[50,85](callee=MemberExpression[50,61](object=Identifier[50,57](name=\\"console\\") property=Identifier[58,61](name=\\"log\\") computed=false optional=false) arguments=[BinaryExpression[62,84](left=Identifier[62,63](name=\\"e\\") operator=\\"instanceof\\" right=Identifier[75,84](name=\\"TypeError\\"))] optional=false))])) finalizer=null)] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-number-an-unread-assignment-calls parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-number-an-unread-assignment-calls parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-number-an-unread-assignment-calls prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"function g(){return 2()}try{g()}catch(e){console.log(e instanceof TypeError)}"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-number-an-unread-assignment-calls prints {"mode":"minify"} 1`] = `"function g(){var a;return(a=2)()}try{g()}catch(e){console.log(e instanceof TypeError)}"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-number-an-unread-assignment-calls tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] )[11,12] {[12,13] var[13,16] name[17,18] ;[18,19] return[19,25] ([25,26] name[26,27] =[27,28] num[28,29] )[29,30] ([30,31] )[31,32] }[32,33] try[33,36] {[36,37] name[37,38] ([38,39] )[39,40] }[40,41] catch[41,46] ([46,47] name[47,48] )[48,49] {[49,50] name[50,57] .[57,58] name[58,61] ([61,62] name[62,63] instanceof[64,74] name[75,84] )[84,85] }[85,86] eof[86,86]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-sequence-a-returned-read-was-set-to parses 1`] = `"Program[0,83](body=[FunctionDeclaration[0,38](id=Identifier[9,10](name=\\"f\\") expression=false generator=false async=false params=[] body=BlockStatement[12,38](body=[VariableDeclaration[13,29](declarations=[VariableDeclarator[17,28](id=Identifier[17,18](name=\\"a\\") init=SequenceExpression[20,27](expressions=[CallExpression[20,23](callee=Identifier[20,21](name=\\"g\\") arguments=[] optional=false),CallExpression[24,27](callee=Identifier[24,25](name=\\"h\\") arguments=[] optional=false)]))] kind=\\"var\\"),ReturnStatement[29,37](argument=Identifier[36,37](name=\\"a\\"))])),FunctionDeclaration[38,75](id=Identifier[47,48](name=\\"t\\") expression=false generator=false async=false params=[] body=BlockStatement[50,75](body=[VariableDeclaration[51,67](declarations=[VariableDeclarator[55,66](id=Identifier[55,56](name=\\"a\\") init=SequenceExpression[58,65](expressions=[CallExpression[58,61](callee=Identifier[58,59](name=\\"g\\") arguments=[] optional=false),CallExpression[62,65](callee=Identifier[62,63](name=\\"h\\") arguments=[] optional=false)]))] kind=\\"var\\"),ThrowStatement[67,74](argument=Identifier[73,74](name=\\"a\\"))])),ExpressionStatement[75,83](expression=SequenceExpression[75,82](expressions=[CallExpression[75,78](callee=Identifier[75,76](name=\\"f\\") arguments=[] optional=false),CallExpression[79,82](callee=Identifier[79,80](name=\\"t\\") arguments=[] optional=false)]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-sequence-a-returned-read-was-set-to parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-sequence-a-returned-read-was-set-to parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-sequence-a-returned-read-was-set-to prints {"mode":"minify"} 1`] = `"function f(){var a=(g(),h());return a}function t(){var a=(g(),h());throw a}f(),t();"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-a-sequence-a-returned-read-was-set-to tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] )[11,12] {[12,13] var[13,16] name[17,18] =[18,19] ([19,20] name[20,21] ([21,22] )[22,23] ,[23,24] name[24,25] ([25,26] )[26,27] )[27,28] ;[28,29] return[29,35] name[36,37] }[37,38] function[38,46] name[47,48] ([48,49] )[49,50] {[50,51] var[51,54] name[55,56] =[56,57] ([57,58] name[58,59] ([59,60] )[60,61] ,[61,62] name[62,63] ([63,64] )[64,65] )[65,66] ;[66,67] throw[67,72] name[73,74] }[74,75] name[75,76] ([76,77] )[77,78] ,[78,79] name[79,80] ([80,81] )[81,82] ;[82,83] eof[83,83]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-an-unread-pure-call-s-arguments-in-a-loop-update parses 1`] = `"Program[0,32](body=[ForStatement[0,32](init=null test=Identifier[5,6](name=\\"a\\") update=CallExpression[20,30](callee=Identifier[20,21](name=\\"f\\") arguments=[CallExpression[22,25](callee=Identifier[22,23](name=\\"g\\") arguments=[] optional=false),CallExpression[26,29](callee=Identifier[26,27](name=\\"h\\") arguments=[] optional=false)] optional=false) body=EmptyStatement[31,32]())] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-an-unread-pure-call-s-arguments-in-a-loop-update parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-an-unread-pure-call-s-arguments-in-a-loop-update parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-an-unread-pure-call-s-arguments-in-a-loop-update prints {"mode":"minify"} 1`] = `"for(;a;f(g(),h()));"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-an-unread-pure-call-s-arguments-in-a-loop-update tokenizes 1`] = `"for[0,3] ([3,4] ;[4,5] name[5,6] ;[6,7] block[7,20] name[20,21] ([21,22] name[22,23] ([23,24] )[24,25] ,[25,26] name[26,27] ([27,28] )[28,29] )[29,30] )[30,31] ;[31,32] eof[32,32]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-the-value-an-if-s-test-reads-off-an-object parses 1`] = `"Program[0,14](body=[IfStatement[0,14](test=MemberExpression[3,12](object=ObjectExpression[3,10](properties=[Property[4,9](method=false shorthand=false computed=false key=Identifier[4,5](name=\\"a\\") value=CallExpression[6,9](callee=Identifier[6,7](name=\\"f\\") arguments=[] optional=false) kind=\\"init\\")]) property=Identifier[11,12](name=\\"a\\") computed=false optional=false) consequent=EmptyStatement[13,14]() alternate=null)] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-the-value-an-if-s-test-reads-off-an-object parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-the-value-an-if-s-test-reads-off-an-object parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-the-value-an-if-s-test-reads-off-an-object prints {"mode":"minify"} 1`] = `"if({a:f()}.a);"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-the-value-an-if-s-test-reads-off-an-object tokenizes 1`] = `"if[0,2] ([2,3] {[3,4] name[4,5] :[5,6] name[6,7] ([7,8] )[8,9] }[9,10] .[10,11] name[11,12] )[12,13] ;[13,14] eof[14,14]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-what-an-unread-comparison-runs-after-a-kept-item parses 1`] = `"Program[0,14](body=[ExpressionStatement[0,14](expression=SequenceExpression[0,14](expressions=[Literal[0,1](value=1 raw=\\"1\\"),BinaryExpression[2,14](left=MemberExpression[2,11](object=ObjectExpression[2,9](properties=[Property[3,8](method=false shorthand=false computed=false key=Identifier[3,4](name=\\"a\\") value=CallExpression[5,8](callee=Identifier[5,6](name=\\"g\\") arguments=[] optional=false) kind=\\"init\\")]) property=Identifier[10,11](name=\\"b\\") computed=false optional=false) operator=\\"==\\" right=Identifier[13,14](name=\\"x\\"))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-what-an-unread-comparison-runs-after-a-kept-item parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-what-an-unread-comparison-runs-after-a-kept-item parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-what-an-unread-comparison-runs-after-a-kept-item prints {"mode":"minify"} 1`] = `"1,{a:g()}.b==x;"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-what-an-unread-comparison-runs-after-a-kept-item tokenizes 1`] = `"num[0,1] ,[1,2] {[2,3] name[3,4] :[4,5] name[5,6] ([6,7] )[7,8] }[8,9] .[9,10] name[10,11] ==/!=/===/!==[11,13] name[13,14] eof[14,14]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-what-an-unread-void-runs-after-a-commented-item parses 1`] = `"Program[0,23](body=[ExpressionStatement[8,23](expression=SequenceExpression[8,23](expressions=[Literal[8,9](value=1 raw=\\"1\\"),UnaryExpression[10,23](operator=\\"void\\" prefix=true argument=MemberExpression[14,23](object=ObjectExpression[14,21](properties=[Property[15,20](method=false shorthand=false computed=false key=Identifier[15,16](name=\\"a\\") value=CallExpression[17,20](callee=Identifier[17,18](name=\\"g\\") arguments=[] optional=false) kind=\\"init\\")]) property=Identifier[22,23](name=\\"b\\") computed=false optional=false))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-what-an-unread-void-runs-after-a-commented-item parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-what-an-unread-void-runs-after-a-commented-item parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-what-an-unread-void-runs-after-a-commented-item prints {"mode":"minify"} 1`] = `"1,void{a:g()}.b;"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-idempotence-should-print-bare-what-an-unread-void-runs-after-a-commented-item tokenizes 1`] = `"block[0,8] num[8,9] ,[9,10] void[10,14] {[14,15] name[15,16] :[16,17] name[17,18] ([18,19] )[19,20] }[20,21] .[21,22] name[22,23] eof[23,23]"`;
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-dead-code-should-drop-what-never-runs parses 1`] = `"Program[0,49](body=[TryStatement[0,48](block=BlockStatement[4,12](body=[ExpressionStatement[6,10](expression=Literal[6,10](value=true raw=\\"true\\"))]) handler=CatchClause[13,31](param=Identifier[20,21](name=\\"e\\") body=BlockStatement[23,31](body=[ExpressionStatement[25,29](expression=Literal[25,29](value=true raw=\\"true\\"))])) finalizer=BlockStatement[40,48](body=[ExpressionStatement[42,46](expression=Literal[42,46](value=true raw=\\"true\\"))]))] sourceType=\\"module\\")"`;
 
@@ -30676,7 +30902,7 @@ exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left-3 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left-3 prints {"mode":"minify","compress":{}} 1`] = `"(function(){console.log(3)}());"`;
+exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left-3 prints {"mode":"minify","compress":{}} 1`] = `"(function(){console.log(3)})();"`;
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-parenthesize-the-side-a-known-left-3 prints {"mode":"minify"} 1`] = `"if(0||function(){console.log(3)}());"`;
 
@@ -30786,7 +31012,7 @@ exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-print-a-number-an-unread-assignment-sets parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-print-a-number-an-unread-assignment-sets prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"function f(c){if(c)return 2+3}function g(){return(2).toFixed()}function h(){return 1-2}console.log(f(1),g(),h());"`;
+exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-print-a-number-an-unread-assignment-sets prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"function f(c){if(c)return 2+3}function g(){return 2..toFixed()}function h(){return 1-2}console.log(f(1),g(),h());"`;
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-print-a-number-an-unread-assignment-sets prints {"mode":"minify"} 1`] = `"function f(c){var a,b;if(c)return(a=2)+(b=3)}function g(){var a;return(a=2).toFixed()}function h(){var a;return 1-(a=2)}console.log(f(1),g(),h());"`;
 

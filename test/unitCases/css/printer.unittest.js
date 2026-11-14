@@ -188,10 +188,10 @@ describe("CssSyntax — block streaming", () => {
 		expect(gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-5"))).toBe(
 			"@layer a{.p{color:teal}.q{color:lime}}.mid{margin:0}}"
 		);
-		// A selector the grown list already carries would only be written twice.
+		// A rule whose selectors the grown list already carries says nothing more.
 		expect(
 			gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-6"))
-		).toBe("@layer a{.p,.q{color:teal}.q{color:teal}}.mid{margin:0}}");
+		).toBe("@layer a{.p,.q{color:teal}}.mid{margin:0}}");
 	});
 
 	it("keeps the `;` a gathered layer block ends a declaration on", () => {
@@ -1664,6 +1664,20 @@ describe("CssSyntax minify — input around a block big enough to stream", () =>
 		expect(out).toHaveLength(length);
 		expect(hash(out)).toBe(digest);
 	});
+
+	// Read back, the readable print holds whitespace enough for the inner block
+	// to stream, and a streamed block starts on its own line as a collected one does.
+	it.each([
+		"css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-2",
+		"css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-12",
+		"css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-13",
+		"css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-15"
+	])("beautifies %j as it beautifies its own output", (name) => {
+		const beautify = (/** @type {string} */ css) =>
+			new SourceProcessor().process(css, { mode: "beautify" }).code;
+		const out = beautify(fixture("css", name));
+		expect(beautify(out)).toBe(out);
+	});
 });
 
 describe("CssData — the names the printer's shape tables hold", () => {
@@ -2013,7 +2027,7 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 				renderEmbeddedSource: (source) => source
 			}
 		);
-		expect(code).toContain("background:url(data:image/svg+xml,<svg/>);");
+		expect(code).toContain("background:url(data:image/svg+xml,<svg/>)}");
 		expect(code).toContain(
 			"@media (prefers-color-scheme:dark){.a{--webpack-light:;"
 		);
@@ -2035,7 +2049,7 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-3"))).toBe("--x.a{color:red}");
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-4"))).toBe(":is(.a)-1{color:red}");
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-5"))).toBe("div.a{color:red}");
-		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-6"))).toBe("*.a{color:red}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-6"))).toBe(".a{color:red}");
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-7"))).toBe("svg|rect.a{color:red}");
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-8"))).toBe("div:is(p){color:red}");
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-9"))).toBe("div[x]{color:red}");
@@ -2043,6 +2057,10 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-11"))).toBe("x.a|.b{color:red}");
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-12"))).toBe(".a||b{color:red}");
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-13"))).toBe(".c a,a.b{color:red}");
+		// A parent leading with a type selector cannot follow a simple selector bare.
+		expect(lower(fixture("css", "css-syntax-minify-lowering-nesting-keeps-a-type-led-parent-inside-is-after-a-compound"))).toBe(
+			"[x]:is(div){color:red}:not(.a):is(p){color:red}b>[y]:is(a){color:red}"
+		);
 	});
 
 	it("keeps the escaped space a lowered nested selector ends in", () => {

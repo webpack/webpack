@@ -1,0 +1,1 @@
+(function(d){return d.b})({a:1})?x():y();
