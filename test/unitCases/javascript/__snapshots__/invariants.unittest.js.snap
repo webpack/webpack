@@ -52667,6 +52667,16 @@ exports[`JavaScript syntax — invariants webpack-parser-regexp-fast-path-should
 
 exports[`JavaScript syntax — invariants webpack-parser-regexp-fast-path-should-respect-the-ecma-version-for-allowed tokenizes 1`] = `"name[0,1] =[2,3] regexp[4,8]=/a/s eof[8,8]"`;
 
+exports[`JavaScript syntax — invariants webpack-parser-reports-the-lines-and-columns-of-tokens-and-comments parses 1`] = `"Program[0,33](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"a\\")),ExpressionStatement[8,10](expression=Identifier[8,9](name=\\"b\\")),ExpressionStatement[19,30](expression=TemplateLiteral[19,29](expressions=[Identifier[25,26](name=\\"e\\")] quasis=[TemplateElement[20,23](value={\\"raw\\":\\"x\\\\ny\\",\\"cooked\\":\\"x\\\\ny\\"} tail=false),TemplateElement[27,28](value={\\"raw\\":\\"z\\",\\"cooked\\":\\"z\\"} tail=true)])),ExpressionStatement[31,32](expression=Identifier[31,32](name=\\"f\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-reports-the-lines-and-columns-of-tokens-and-comments parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants webpack-parser-reports-the-lines-and-columns-of-tokens-and-comments parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-reports-the-lines-and-columns-of-tokens-and-comments prints {"mode":"minify"} 1`] = `"a;b;\`x\\\\ny\${e}z\`;f;"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-reports-the-lines-and-columns-of-tokens-and-comments tokenizes 1`] = `"name[0,1] ;[1,2] line[3,7] name[8,9] ;[9,10] block[11,18] \`[19,20] template[20,23] \${[23,25] name[25,26] }[26,27] template[27,28] \`[28,29] ;[29,30] name[31,32] eof[33,33]"`;
+
 exports[`JavaScript syntax — invariants webpack-parser-reserved-words-and-bindings-should-allow-await-as-a-sloppy-mode parses 1`] = `"Program[0,21](body=[VariableDeclaration[0,14](declarations=[VariableDeclarator[4,13](id=Identifier[4,9](name=\\"await\\") init=Literal[12,13](value=1 raw=\\"1\\"))] kind=\\"var\\"),ExpressionStatement[15,21](expression=Identifier[15,20](name=\\"await\\"))] sourceType=\\"script\\")"`;
 
 exports[`JavaScript syntax — invariants webpack-parser-reserved-words-and-bindings-should-allow-await-as-a-sloppy-mode parses 2`] = `""`;

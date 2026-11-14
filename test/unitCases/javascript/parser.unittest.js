@@ -47,6 +47,36 @@ const locationMapperFor = (code) => {
 };
 
 describe("WebpackParser", () => {
+	it("reports the lines and columns of tokens and comments", () => {
+		const { WebpackParser } = require("../../../lib/javascript/syntax-parser");
+		const source = fixture("javascript", "webpack-parser-reports-the-lines-and-columns-of-tokens-and-comments");
+		/** @type {{ loc?: object }[]} */
+		const acornTokens = [];
+		/** @type {{ loc?: object }[]} */
+		const acornComments = [];
+		acorn.parse(source, {
+			ecmaVersion: "latest",
+			locations: true,
+			onToken: /** @type {EXPECTED_ANY} */ (acornTokens),
+			onComment: /** @type {EXPECTED_ANY} */ (acornComments)
+		});
+		const locations = (/** @type {{ loc?: object }[]} */ list) =>
+			plain(list.map((item) => item.loc));
+		// a second parse of the same source counts its lines from the start again
+		for (let parse = 0; parse < 2; parse++) {
+			/** @type {{ loc?: object }[]} */
+			const tokens = [];
+			/** @type {{ loc?: object }[]} */
+			const comments = [];
+			new WebpackParser(
+				{ ecmaVersion: "latest", locations: true, onToken: tokens, onComment: comments },
+				source
+			).parse();
+			expect(locations(tokens)).toEqual(locations(acornTokens));
+			expect(locations(comments)).toEqual(locations(acornComments));
+		}
+	});
+
 	describe("lazy comments", () => {
 		it("should collect hashbang, line, block and html comments lazily", () => {
 			const { comments } = parse(
