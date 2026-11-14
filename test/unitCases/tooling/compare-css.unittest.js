@@ -145,6 +145,14 @@ describe("compare-css-tools — the meaning relation", () => {
 		const beautify = { mode: /** @type {const} */ ("beautify") };
 		expect(meaningReports('a{--x:"a,String b"}', 'a{--x:"a" "b"}', beautify)).toHaveLength(1);
 	});
+
+	it("should keep the whitespace a sign needs in a value, and drop the rest as layout", () => {
+		const beautify = { mode: /** @type {const} */ ("beautify") };
+		expect(meaningReports("a{b:calc(1px + 2px)}", "a{b:calc(1px+ 2px)}", beautify)).toHaveLength(1);
+		expect(meaningReports("a{b:calc(1px - 2px)}", "a{b:calc(1px -/**/2px)}", beautify)).toHaveLength(1);
+		expect(meaningReports("a{b:calc( 1px  +  2px )}", "a{b:calc(1px + 2px)}", beautify)).toEqual([]);
+		expect(meaningReports("a{b:1px/**/2px}", "a{b: 1px 2px }", beautify)).toEqual([]);
+	});
 });
 
 describe("compare-css-tools — the cold branches fixture", () => {

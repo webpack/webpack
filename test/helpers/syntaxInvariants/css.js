@@ -1043,6 +1043,8 @@ const noticeReports = (css, printed) =>
 const LAYOUT_SPACE = /^(?:Comma|Colon|Semicolon|Declaration|QualifiedRule|AtRule)\b|^Delim [>+~-]$/;
 // Whitespace before a pseudo-class is a combinator still: `.a :hover` is not `.a:hover`.
 const LAYOUT_SPACE_BEFORE = /^(?:Comma|Semicolon|Declaration|QualifiedRule|AtRule)\b|^Delim [>+~-]$/;
+// Outside a selector, whitespace beside these is what a math function needs.
+const SIGN = /^Delim [+-]$/;
 
 /** @typedef {[string, ...MeaningPart[]]} MeaningNode a node's head, then its parts */
 /** @typedef {" " | MeaningNode} MeaningPart a node, or a whitespace run */
@@ -1052,10 +1054,11 @@ const LAYOUT_SPACE_BEFORE = /^(?:Comma|Semicolon|Declaration|QualifiedRule|AtRul
  * declaration and component value, each token's value as the parser resolves
  * it and comments left out.
  *
- * WHY: whitespace is kept only in a style rule's prelude, between two of its
- * parts, where `a b` and `a.b` differ. In a value or an at-rule's prelude two
- * tokens mean the same apart or juxtaposed: a comment between them prints as
- * a space.
+ * WHY: whitespace is kept in a style rule's prelude, between two of its parts,
+ * where `a b` and `a.b` differ. In a value or an at-rule's prelude two tokens
+ * mean the same apart or juxtaposed, as a comment between them prints as a
+ * space, but for a `+` or `-`: `calc(1px+ 2px)` is invalid, and a custom
+ * property keeps the space for the `calc()` it is substituted into.
  * @param {string} css a stylesheet
  * @returns {string} its meaning, as the JSON of each node's head and parts
  */
@@ -1083,21 +1086,21 @@ const cssMeaning = (css) => {
 			},
 			exit: (nodePath) => {
 				const children = /** @type {MeaningPart[]} */ (lists.pop());
-				spaced.pop();
+				const selector = /** @type {boolean} */ (spaced.pop());
 				const kind = nodePath.type();
 				const siblings = lists[lists.length - 1];
 				if (kind === NodeType.Comment) return;
 				if (kind === NodeType.Whitespace) {
-					if (spaced[spaced.length - 1]) siblings.push(" ");
+					siblings.push(" ");
 					return;
 				}
-				const parts = withLayout(children);
+				const parts = withLayout(children, selector);
 				siblings.push([meaningHead(nodePath, kind, parts.length), ...parts]);
 			}
 		};
 	}
 	new SourceProcessor().use(visitors).process(css, {});
-	return JSON.stringify(lists[0]);
+	return JSON.stringify(withLayout(lists[0], false));
 };
 
 /**
@@ -1125,12 +1128,14 @@ const meaningHead = (nodePath, kind, children) => {
 };
 
 /**
- * A selector's whitespace as what it says: one space between two of its parts,
- * none at either end or beside a part that separates on its own.
+ * Whitespace as what it says: in a selector one space between two of its parts,
+ * none at either end or beside a part that separates on its own; elsewhere one
+ * beside a sign alone.
  * @param {MeaningPart[]} children a node's parts, a space for each whitespace run
- * @returns {MeaningPart[]} them, with only the spaces that are combinators
+ * @param {boolean} selector whether the node reads its whitespace as a selector does
+ * @returns {MeaningPart[]} them, with only the spaces that say something
  */
-const withLayout = (children) => {
+const withLayout = (children, selector) => {
 	/** @type {MeaningPart[]} */
 	const out = [];
 	for (let index = 0; index < children.length; index++) {
@@ -1139,12 +1144,14 @@ const withLayout = (children) => {
 			const before = out[out.length - 1];
 			let after = index + 1;
 			while (after < children.length && children[after] === " ") after++;
+			const next = /** @type {MeaningNode} */ (children[after]);
 			if (
 				before === undefined ||
 				before === " " ||
 				after === children.length ||
-				LAYOUT_SPACE.test(before[0]) ||
-				LAYOUT_SPACE_BEFORE.test(/** @type {MeaningNode} */ (children[after])[0])
+				(selector
+					? LAYOUT_SPACE.test(before[0]) || LAYOUT_SPACE_BEFORE.test(next[0])
+					: !SIGN.test(before[0]) && !SIGN.test(next[0]))
 			) {
 				continue;
 			}
