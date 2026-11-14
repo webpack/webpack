@@ -3581,6 +3581,23 @@ describe("SyntaxTree", () => {
 		/** @type {SyntaxTree} */ (takeParsedTree()).release();
 	});
 
+	it("keeps its records when a token callback parses again", () => {
+		const { parseProgram, toEstreeObject } = require(
+			"../../../lib/javascript/syntax-parser"
+		);
+		const source = fixture("javascript", "syntax-tree-keeps-its-records-when-a-token-callback-parses-again");
+		const program = parseProgram(source, 0, {
+			sourceType: "module",
+			onToken: (token) => {
+				if (token.value !== "marker") return;
+				parseProgram(fixture("javascript", "syntax-tree-keeps-its-records-when-a-token-callback-parses-again-2"), 0, { sourceType: "module" });
+			}
+		});
+		expect(plain(toEstreeObject(program))).toEqual(
+			plain(acorn.parse(source, { ecmaVersion: "latest", sourceType: "module" }))
+		);
+	});
+
 	it("copies a large tree's columns for its lazy objects and frees its own", () => {
 		const { parseProgram, takeParsedTree } = require(
 			"../../../lib/javascript/syntax-parser"
