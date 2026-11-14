@@ -11,6 +11,12 @@ module.exports = [
 		optimization: { minimize: false }
 	},
 	{
+		target: "web",
+		entry: "./function.js",
+		output: { publicPath: "/", chunkFilename: () => "[name].js" },
+		optimization: { minimize: false }
+	},
+	{
 		target: "node",
 		entry: "./node.js",
 		output: { publicPath: "/", chunkFilename: "[name].js" },

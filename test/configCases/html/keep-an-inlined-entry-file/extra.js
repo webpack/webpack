@@ -1,1 +1,1 @@
-globalThis.extraRan = true;
+module.exports = "extra";
