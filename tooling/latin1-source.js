@@ -46,8 +46,56 @@ const COMMENT_SPELLINGS = {
 const hexOf = (code) => code.toString(16).toUpperCase().padStart(4, "0");
 
 /**
+ * The source ranges of every tagged template's text, whose raw spelling the
+ * tag reads, so a `\u` escape would change what it gets.
+ * @param {import("estree").Node} node the node to search
+ * @param {[number, number][]} ranges the ranges found so far, added to
+ * @returns {void}
+ */
+const collectTaggedTemplateText = (node, ranges) => {
+	if (node.type === "TaggedTemplateExpression") {
+		for (const quasi of node.quasi.quasis) {
+			const { start, end } = /** @type {{ start: number, end: number }} */ (
+				/** @type {unknown} */ (quasi)
+			);
+			ranges.push([start, end]);
+		}
+	}
+	for (const value of Object.values(node)) {
+		const children = Array.isArray(value) ? value : [value];
+		for (const child of children) {
+			if (child !== null && typeof child === "object" && "type" in child) {
+				collectTaggedTemplateText(
+					/** @type {import("estree").Node} */ (child),
+					ranges
+				);
+			}
+		}
+	}
+};
+
+/**
+ * @param {[number, number][]} ranges ranges in source order
+ * @param {number} position a position
+ * @returns {boolean} whether one of the ranges holds the position
+ */
+const inRange = (ranges, position) => {
+	let low = 0;
+	let high = ranges.length - 1;
+	while (low <= high) {
+		const middle = (low + high) >> 1;
+		const [start, end] = ranges[middle];
+		if (position < start) high = middle - 1;
+		else if (position >= end) low = middle + 1;
+		else return true;
+	}
+	return false;
+};
+
+/**
  * Rewrites a script's characters above U+00FF: comments get an ASCII spelling
- * (or `U+XXXX`), code gets `\u` escapes, which read back as the same value.
+ * (or `U+XXXX`), tokens `\u` escapes, which read back as the same value.
+ * Whitespace between tokens becomes a space, a line separator a newline.
  * @param {string} source the script's source
  * @returns {string} the source with every character at most U+00FF
  */
@@ -58,30 +106,48 @@ const toLatin1Source = (source) => {
 
 	/** @type {[number, number][]} */
 	const comments = [];
-	parse(source, {
+	/** @type {[number, number][]} */
+	const tokens = [];
+	const program = parse(source, {
 		ecmaVersion: "latest",
 		sourceType: "script",
 		allowHashBang: true,
 		allowReturnOutsideFunction: true,
 		onComment: (block, text, start, end) => {
 			comments.push([start, end]);
+		},
+		onToken: (token) => {
+			tokens.push([token.start, token.end]);
 		}
 	});
+	/** @type {[number, number][]} */
+	const taggedText = [];
+	collectTaggedTemplateText(
+		/** @type {import("estree").Node} */ (/** @type {unknown} */ (program)),
+		taggedText
+	);
+	taggedText.sort((x, y) => x[0] - y[0]);
 	let result = "";
-	let comment = 0;
 	for (let i = 0; i < source.length; i++) {
 		const code = source.charCodeAt(i);
 		if (code <= 0xff) {
 			result += source[i];
 			continue;
 		}
-		while (comment < comments.length && comments[comment][1] <= i) comment++;
-		if (comment < comments.length && comments[comment][0] <= i) {
+		if (inRange(comments, i)) {
 			const codePoint = /** @type {number} */ (source.codePointAt(i));
 			const spelling = COMMENT_SPELLINGS[source[i]];
 			result += spelling !== undefined ? spelling : `U+${hexOf(codePoint)}`;
 			if (codePoint > 0xffff) i++;
+		} else if (!inRange(tokens, i)) {
+			// whitespace or a line terminator between tokens, which no escape spells
+			result += code === 0x2028 || code === 0x2029 ? "\n" : " ";
 		} else {
+			if (inRange(taggedText, i)) {
+				throw new Error(
+					`A character above U+00FF at ${i} is in a tagged template's text, whose tag reads it as written`
+				);
+			}
 			let backslashes = 0;
 			while (source[i - 1 - backslashes] === "\\") backslashes++;
 			if (backslashes % 2 === 1) {
