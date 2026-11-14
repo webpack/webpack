@@ -140,6 +140,11 @@ describe("compare-css-tools — the meaning relation", () => {
 		expect(meaningReports("a{b:url( a\\20  )}", "a{b:url(a\\ )}", beautify)).toEqual([]);
 		expect(meaningReports("a{b:url(a\\ )}", "a{b:url(a)}", beautify)).toHaveLength(1);
 	});
+
+	it("should tell a value holding the digest's own separators from two values", () => {
+		const beautify = { mode: /** @type {const} */ ("beautify") };
+		expect(meaningReports('a{--x:"a,String b"}', 'a{--x:"a" "b"}', beautify)).toHaveLength(1);
+	});
 });
 
 describe("compare-css-tools — the cold branches fixture", () => {

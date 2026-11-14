@@ -1044,6 +1044,9 @@ const LAYOUT_SPACE = /^(?:Comma|Colon|Semicolon|Declaration|QualifiedRule|AtRule
 // Whitespace before a pseudo-class is a combinator still: `.a :hover` is not `.a:hover`.
 const LAYOUT_SPACE_BEFORE = /^(?:Comma|Semicolon|Declaration|QualifiedRule|AtRule)\b|^Delim [>+~-]$/;
 
+/** @typedef {[string, ...MeaningPart[]]} MeaningNode a node's head, then its parts */
+/** @typedef {" " | MeaningNode} MeaningPart a node, or a whitespace run */
+
 /**
  * What a stylesheet means, as webpack's parser reads it: every rule, at-rule,
  * declaration and component value, each token's value as the parser resolves
@@ -1054,10 +1057,10 @@ const LAYOUT_SPACE_BEFORE = /^(?:Comma|Semicolon|Declaration|QualifiedRule|AtRul
  * tokens mean the same apart or juxtaposed: a comment between them prints as
  * a space.
  * @param {string} css a stylesheet
- * @returns {string} its meaning
+ * @returns {string} its meaning, as the JSON of each node's head and parts
  */
 const cssMeaning = (css) => {
-	/** @type {string[][]} */
+	/** @type {MeaningPart[][]} */
 	const lists = [[]];
 	// Whether each open node reads its whitespace, which a selector does.
 	/** @type {boolean[]} */
@@ -1079,7 +1082,7 @@ const cssMeaning = (css) => {
 				);
 			},
 			exit: (nodePath) => {
-				const children = /** @type {string[]} */ (lists.pop());
+				const children = /** @type {MeaningPart[]} */ (lists.pop());
 				spaced.pop();
 				const kind = nodePath.type();
 				const siblings = lists[lists.length - 1];
@@ -1089,16 +1092,12 @@ const cssMeaning = (css) => {
 					return;
 				}
 				const parts = withLayout(children);
-				siblings.push(
-					`${meaningHead(nodePath, kind, parts.length)}${
-						parts.length === 0 ? "" : `(${parts.join(",")})`
-					}`
-				);
+				siblings.push([meaningHead(nodePath, kind, parts.length), ...parts]);
 			}
 		};
 	}
 	new SourceProcessor().use(visitors).process(css, {});
-	return lists[0].join("\n");
+	return JSON.stringify(lists[0]);
 };
 
 /**
@@ -1128,11 +1127,11 @@ const meaningHead = (nodePath, kind, children) => {
 /**
  * A selector's whitespace as what it says: one space between two of its parts,
  * none at either end or beside a part that separates on its own.
- * @param {string[]} children a node's parts, a space for each whitespace run
- * @returns {string[]} them, with only the spaces that are combinators
+ * @param {MeaningPart[]} children a node's parts, a space for each whitespace run
+ * @returns {MeaningPart[]} them, with only the spaces that are combinators
  */
 const withLayout = (children) => {
-	/** @type {string[]} */
+	/** @type {MeaningPart[]} */
 	const out = [];
 	for (let index = 0; index < children.length; index++) {
 		const child = children[index];
@@ -1144,8 +1143,8 @@ const withLayout = (children) => {
 				before === undefined ||
 				before === " " ||
 				after === children.length ||
-				LAYOUT_SPACE.test(before) ||
-				LAYOUT_SPACE_BEFORE.test(children[after])
+				LAYOUT_SPACE.test(before[0]) ||
+				LAYOUT_SPACE_BEFORE.test(/** @type {MeaningNode} */ (children[after])[0])
 			) {
 				continue;
 			}
