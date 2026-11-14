@@ -5079,6 +5079,80 @@ ident[0,1] colon[1,2] ident[2,3] semicolon[3,4] delim[4,5] ident[5,6] left-curly
 on[144672,144673] dimension[144673,144679|144677,144679] right-curly-bracket[144679,144680] right-curly-bracket[144680,144681] ident[144681,144682] colon[144682,144683] ident[144683,144684] end=144684"
 `;
 
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"font-size\\"],\\":\\",[\\"dimension\\",\\"12\\",12,\\"integer\\",\\"px\\"],\\";\\",[\\"ident\\",\\"font-size\\"],\\":\\",[\\"dimension\\",\\"-1\\",-1,\\"integer\\",\\"px\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should prints {"mode":"minify"} 1`] = `"a{font-size:12px;font-size:-1px}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,11] colon[11,12] dimension[12,16|14,16] semicolon[16,17] ident[17,26] colon[26,27] dimension[27,31|29,31] right-curly-bracket[31,32] end=32"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-2 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"dimension\\",\\"12\\",12,\\"integer\\",\\"px\\"],\\";\\",[\\"ident\\",\\"width\\"],\\":\\",[\\"dimension\\",\\"-1\\",-1,\\"integer\\",\\"px\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-2 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-2 prints {"mode":"minify"} 1`] = `"a{width:12px;width:-1px}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-2 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] dimension[8,12|10,12] semicolon[12,13] ident[13,18] colon[18,19] dimension[19,23|21,23] right-curly-bracket[23,24] end=24"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-3 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"stroke-width\\"],\\":\\",[\\"number\\",\\"2\\",2,\\"integer\\"],\\";\\",[\\"ident\\",\\"stroke-width\\"],\\":\\",[\\"number\\",\\"-1\\",-1,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-3 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-3 prints {"mode":"minify"} 1`] = `"a{stroke-width:2;stroke-width:-1}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-3 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,14] colon[14,15] number[15,16] semicolon[16,17] ident[17,29] colon[29,30] number[30,32] right-curly-bracket[32,33] end=33"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-4 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"font-size\\"],\\":\\",[\\"dimension\\",\\"12\\",12,\\"integer\\",\\"px\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"font-size\\"],\\":\\",[\\"dimension\\",\\"-1\\",-1,\\"integer\\",\\"px\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-4 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-4 prints {"mode":"minify"} 1`] = `"a{font-size:12px}a{font-size:-1px}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-4 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,11] colon[11,12] dimension[12,16|14,16] right-curly-bracket[16,17] ident[17,18] left-curly-bracket[18,19] ident[19,28] colon[28,29] dimension[29,33|31,33] right-curly-bracket[33,34] end=34"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-5 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"font-size\\"],\\":\\",[\\"dimension\\",\\"12\\",12,\\"integer\\",\\"px\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"font-size\\"],\\":\\",[\\"dimension\\",\\"-1\\",-1,\\"integer\\",\\"px\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-5 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-5 prints {"mode":"minify"} 1`] = `"a{font-size:12px}b{color:red}a{font-size:-1px}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-5 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,11] colon[11,12] dimension[12,16|14,16] right-curly-bracket[16,17] ident[17,18] left-curly-bracket[18,19] ident[19,24] colon[24,25] ident[25,28] right-curly-bracket[28,29] ident[29,30] left-curly-bracket[30,31] ident[31,40] colon[40,41] dimension[41,45|43,45] right-curly-bracket[45,46] end=46"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-6 parses 1`] = `
+"length 1953, sha256 c0af9579f5cc7487
+[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"font-size\\"],\\":\\",[\\"dimension\\",\\"12\\",12,\\"integer\\",\\"px\\"],\\";\\",[\\"ident\\",\\"--p0\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\";\\",[\\"ident\\",\\"--p1\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer
+…
+\\",\\"30\\",30,\\"integer\\"],\\";\\",[\\"ident\\",\\"--p31\\"],\\":\\",[\\"number\\",\\"31\\",31,\\"integer\\"],\\";\\",[\\"ident\\",\\"--p32\\"],\\":\\",[\\"number\\",\\"32\\",32,\\"integer\\"],\\";\\",[\\"ident\\",\\"font-size\\"],\\":\\",[\\"dimension\\",\\"-1\\",-1,\\"integer\\",\\"px\\"]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-6 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-6 prints {"mode":"minify"} 1`] = `"a{--p0:0;--p1:1;--p2:2;--p3:3;--p4:4;--p5:5;--p6:6;--p7:7;--p8:8;--p9:9;--p10:10;--p11:11;--p12:12;--p13:13;--p14:14;--p15:15;--p16:16;--p17:17;--p18:18;--p19:19;--p20:20;--p21:21;--p22:22;--p23:23;--p24:24;--p25:25;--p26:26;--p27:27;--p28:28;--p29:29;--p30:30;--p31:31;--p32:32;font-size:12px;font-size:-1px}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-6 tokenizes 1`] = `
+"length 2249, sha256 d584158ddbe3dfdb
+ident[0,1] left-curly-bracket[1,2] ident[2,11] colon[11,12] dimension[12,16|14,16] semicolon[16,17] ident[17,21] colon[21,22] number[22,23] semicolon[23,24] ident[24,28] colon[28,29] number[29,30] sem
+…
+1,282] number[282,284] semicolon[284,285] ident[285,290] colon[290,291] number[291,293] semicolon[293,294] ident[294,303] colon[303,304] dimension[304,308|306,308] right-curly-bracket[308,309] end=309"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-7 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"margin-left\\"],\\":\\",[\\"dimension\\",\\"12\\",12,\\"integer\\",\\"px\\"],\\";\\",[\\"ident\\",\\"margin-left\\"],\\":\\",[\\"dimension\\",\\"-1\\",-1,\\"integer\\",\\"px\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-7 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-7 prints {"mode":"minify"} 1`] = `"a{margin-left:-1px}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-7 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,13] colon[13,14] dimension[14,18|16,18] semicolon[18,19] ident[19,30] colon[30,31] dimension[31,35|33,35] right-curly-bracket[35,36] end=36"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-8 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"margin-left\\"],\\":\\",[\\"dimension\\",\\"-12\\",-12,\\"integer\\",\\"px\\"],\\";\\",[\\"ident\\",\\"margin-left\\"],\\":\\",[\\"dimension\\",\\"-1\\",-1,\\"integer\\",\\"px\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-8 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-8 prints {"mode":"minify"} 1`] = `"a{margin-left:-1px}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-8 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,13] colon[13,14] dimension[14,19|17,19] semicolon[19,20] ident[20,31] colon[31,32] dimension[32,36|34,36] right-curly-bracket[36,37] end=37"`;
+
 exports[`CSS syntax — invariants css-syntax-minify-a-fallback-for-a-color-the-target-cannot-read-carries-the parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"linear-gradient\\",[\\"function\\",\\"oklch\\",[\\"number\\",\\"0.7\\",0.7,\\"number\\"],\\" \\",[\\"number\\",\\"0.1\\",0.1,\\"number\\"],\\" \\",[\\"number\\",\\"20\\",20,\\"integer\\"]],\\",\\",[\\"hash\\",\\"fff\\",\\"id\\"]]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-a-fallback-for-a-color-the-target-cannot-read-carries-the parses 2`] = `""`;

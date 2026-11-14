@@ -15,7 +15,7 @@ const {
 	unlessOverflow,
 	walkLine
 } = require("../../helpers/fixture");
-const { materialize } = require("../../helpers/materializeHtmlTree");
+const { materializedJson } = require("../../helpers/materializeHtmlTree");
 const { invariantFindings } = require("../../helpers/syntaxInvariants");
 const { purityRelation } = require("../../helpers/syntaxInvariants/relations");
 const syntax = require("../../helpers/syntaxInvariants/xml");
@@ -170,7 +170,7 @@ const ENTRIES = {
 				}
 			});
 			const values = [
-				JSON.stringify(A.children(document).map(materialize)),
+				materializedJson(A.children(document)),
 				errors.join(" ")
 			];
 			if (fields !== undefined) {
@@ -233,7 +233,7 @@ describe("XML syntax — invariants", () => {
 				expect(
 					snapshotOf(
 						source,
-						JSON.stringify(A.children(document).map(materialize))
+						materializedJson(A.children(document))
 					)
 				).toMatchSnapshot();
 				// The second entry, so the tree's stays as it was.

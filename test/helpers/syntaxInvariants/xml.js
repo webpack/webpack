@@ -43,7 +43,7 @@ const printXml = (xml, mode) =>
 		new SourceProcessor().process(xml, { xml: true, mode })
 	).code;
 
-/** @typedef {Pick<import("../../../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "renderEmbeddedSource"> & { mode?: "minify" | "beautify" }} XmlPrintOptions */
+/** @typedef {Pick<import("../../../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "renderEmbeddedSource" | "collapseWhitespace" | "removeEmptyAttributes" | "removeEmptyElements" | "removeSvgMetadata" | "removeSvgEditorData" | "removeUnusedSvgNamespaces" | "shortenSvgNumbers" | "shortenSvgColors" | "shortenSvgPathData" | "sortSvgSymbols" | "convertSvgShapes" | "cleanupSvgStructure" | "mergeSvgPaths" | "reuseSvgPaths" | "sortSvgDefinitions"> & { mode?: "minify" | "beautify" }} XmlPrintOptions */
 
 /** @typedef {import("../../../lib/html/builtinEmbeddedRenderer").BuiltinEmbeddedRendererOptions} CssOptions */
 
@@ -69,7 +69,74 @@ const PRESETS = [
 		{ renderEmbeddedSource: builtinEmbeddedRenderer(LEGACY_CSS_OPTIONS) },
 		LEGACY_CSS_OPTIONS
 	],
-	["beautify", { mode: "beautify" }, {}]
+	["beautify", { mode: "beautify" }, {}],
+	// The SVG switches, added one group at a time in the order a build stacks them.
+	[
+		"svg-data",
+		{ sortAttributes: true, removeSvgMetadata: true, removeSvgEditorData: true },
+		{}
+	],
+	[
+		"svg-cleanup",
+		{
+			sortAttributes: true,
+			removeSvgMetadata: true,
+			removeSvgEditorData: true,
+			removeUnusedSvgNamespaces: true,
+			removeEmptyAttributes: true
+		},
+		{}
+	],
+	[
+		"svg-whitespace",
+		{
+			sortAttributes: true,
+			removeSvgMetadata: true,
+			removeSvgEditorData: true,
+			removeUnusedSvgNamespaces: true,
+			removeEmptyAttributes: true,
+			collapseWhitespace: true
+		},
+		{}
+	],
+	[
+		"svg-numeric",
+		{
+			sortAttributes: true,
+			removeSvgMetadata: true,
+			removeSvgEditorData: true,
+			removeUnusedSvgNamespaces: true,
+			removeEmptyAttributes: true,
+			collapseWhitespace: true,
+			shortenSvgNumbers: true
+		},
+		{}
+	],
+	...["colors", "paths", "containers", "symbols", "shapes", "structure"].map(
+		(step, index) =>
+			/** @type {[string, XmlPrintOptions, CssOptions]} */ ([
+				`svg-${step}`,
+				{
+					sortAttributes: true,
+					removeSvgMetadata: true,
+					removeSvgEditorData: true,
+					removeUnusedSvgNamespaces: true,
+					removeEmptyAttributes: true,
+					collapseWhitespace: true,
+					shortenSvgNumbers: true,
+					shortenSvgColors: true,
+					shortenSvgPathData: index >= 1,
+					removeEmptyElements: index >= 2,
+					sortSvgSymbols: index >= 3,
+					convertSvgShapes: index >= 4,
+					cleanupSvgStructure: index >= 5,
+					mergeSvgPaths: index >= 5,
+					reuseSvgPaths: index >= 5,
+					sortSvgDefinitions: index >= 5
+				},
+				{}
+			])
+	)
 ];
 
 /**
@@ -84,6 +151,21 @@ const printerFor = (options) => (xml) =>
 			xml: true
 		})
 	).code;
+
+/**
+ * Whether a preset keeps every piece of optional SVG data as written.
+ * @param {XmlPrintOptions} options the preset's printer options
+ * @returns {boolean} true when nothing optional is dropped or respelled
+ */
+const retainsSvgData = (options) =>
+	!options.removeSvgMetadata &&
+	!options.removeSvgEditorData &&
+	!options.removeUnusedSvgNamespaces &&
+	!options.removeEmptyAttributes &&
+	!options.shortenSvgNumbers &&
+	!options.shortenSvgColors &&
+	!options.shortenSvgPathData &&
+	!options.removeEmptyElements;
 
 const STYLE_ELEMENT = /(?:^|:)style$/;
 
@@ -696,13 +778,16 @@ const xmlPurityDigest = (xml) => {
 
 /**
  * Whether the printed document reads back to its source's canonical form
- * (`meaning`), its sheets read as the CSS minifier writes them.
+ * (`meaning`), its sheets read as the CSS minifier writes them. A preset that
+ * drops or respells optional SVG data owes no such equality.
  * @param {string} xml the document
  * @param {string} printed what a preset printed of it
  * @param {CssOptions} cssOptions the preset's CSS options
+ * @param {XmlPrintOptions=} options the preset's printer options
  * @returns {Report[]} one finding where it says something else
  */
-const meaningReports = (xml, printed, cssOptions) =>
+const meaningReports = (xml, printed, cssOptions, options = {}) =>
+	!retainsSvgData(options) ||
 	canonical(printed, cssOptions) === canonical(xml, cssOptions)
 		? []
 		: [
@@ -723,7 +808,8 @@ const syntax = {
 				minify,
 				says: (text) => canonical(text, cssOptions),
 				repro: (printed, at) => idempotenceRepro(minify, printed, at),
-				keeps: (xml, printed) => meaningReports(xml, printed, cssOptions)
+				keeps: (xml, printed) =>
+					meaningReports(xml, printed, cssOptions, options)
 			};
 		}),
 	spans: xmlSpans,

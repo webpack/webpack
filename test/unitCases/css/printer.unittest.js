@@ -2104,3 +2104,24 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 		expect(code).toBe("@import url(data:text/css,);");
 	});
 });
+
+describe("CssSyntax minify — a fallback before a negative amount the property refuses", () => {
+	it.each([
+		"css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should",
+		"css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-2",
+		"css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-3",
+		"css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-4",
+		"css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-5",
+		"css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-6"
+	])('should preserve valid fallback before an unsupported negative amount in %s', name => {
+		const css = fixture("css", name);
+		const output = minifyFor(css);
+		expect(output).toContain(css.includes('font-size') ? 'font-size:12px' : css.includes('stroke-width') ? 'stroke-width:2' : 'width:12px');
+		expect(output).toContain(css.includes('font-size') ? 'font-size:-1px' : css.includes('stroke-width') ? 'stroke-width:-1' : 'width:-1px');
+		expect(minifyFor(output)).toBe(output);
+	});
+	it('should still drop a positive fallback when the property accepts negative amounts', () => {
+		expect(minifyFor(fixture("css", "css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-7"))).toBe('a{margin-left:-1px}');
+		expect(minifyFor(fixture("css", "css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-8"))).toBe('a{margin-left:-1px}');
+	});
+});

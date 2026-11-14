@@ -40,7 +40,7 @@
     "bgsound",
     "bigint",
     "bindgen",
-    "Biró",
+    "Bir\u00f3",
     "bitfield",
     "bomfile",
     "booleanized",
@@ -426,6 +426,7 @@
     "referencer",
     "referrerpolicy",
     "rels",
+    "removeHiddenElems",
     "reparsed",
     "reparsing",
     "repo",
@@ -626,7 +627,8 @@
     "xywh",
     "Yann",
     "zizmor",
-    "zstd"
+    "zstd",
+    "viewbox"
   ],
   "ignoreRegExpList": [
     "/Author.+/",
