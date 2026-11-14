@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Allow `optimization.usedExports` and `optimization.mangleExports` with `experiments.cacheUnaffected`.
+Allow `usedExports` and `mangleExports` with `cacheUnaffected`.
