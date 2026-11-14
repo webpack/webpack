@@ -502,6 +502,15 @@ const endsEscaped = (text) => {
 };
 
 /**
+ * What CSS Syntax §3.3 preprocesses the input into: NUL is U+FFFD, a newline
+ * is LF.
+ * @param {string} text source text
+ * @returns {string} it, preprocessed
+ */
+const preprocess = (text) =>
+	text.replace(/\0/g, "\uFFFD").replace(/\r\n?|\f/g, "\n");
+
+/**
  * One token's value as the parser resolves it.
  * @param {number} type which token it is
  * @param {string} written the token as the source spelled it
@@ -509,8 +518,7 @@ const endsEscaped = (text) => {
  * @returns {string} its value
  */
 const canonicalToken = (type, written, token) => {
-	// What §3.3 preprocesses the input into: NUL is U+FFFD, a newline is LF.
-	const text = written.replace(/\0/g, "\uFFFD").replace(/\r\n?|\f/g, "\n");
+	const text = preprocess(written);
 	if (type === TokenType.Ident) return unescapeIdentifier(text);
 	// The sigil is not part of the name, and an at-rule name is matched
 	// case-insensitively where an identifier is not.
@@ -522,9 +530,16 @@ const canonicalToken = (type, written, token) => {
 		return unescapeIdentifier(text.slice(0, -1)).toLowerCase();
 	}
 	if (type === TokenType.Url) {
-		// `url(` and the `)` the input may have ended before, unless escaped.
-		const closed = text.endsWith(")") && !endsEscaped(text);
-		return unescapeIdentifier(text.slice(4, closed ? -1 : undefined).trim());
+		// The tokenizer's content range leaves out the layout around the URL,
+		// but not an escaped space ending it: `url(a\ )` is `url(a\20)`.
+		return unescapeIdentifier(
+			preprocess(
+				written.slice(
+					token.contentStart - token.start,
+					token.contentEnd - token.start
+				)
+			)
+		);
 	}
 	// Whatever a bad URL held, it is invalid wherever it sits.
 	if (type === TokenType.BadUrl) return "";

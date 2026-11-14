@@ -133,6 +133,13 @@ describe("compare-css-tools — the meaning relation", () => {
 		expect(meaningReports("a{b:\\5c 63(1px)}", "a{b:c(1px)}", beautify)).toHaveLength(1);
 		expect(meaningReports("a{CO\\4cOR:red}", "a{color:red}", beautify)).toEqual([]);
 	});
+
+	it("should keep an escaped space ending a URL, and drop only the layout around it", () => {
+		const beautify = { mode: /** @type {const} */ ("beautify") };
+		expect(meaningReports("a{b:url(a\\ )}", "a{b:url(a\\20)}", beautify)).toEqual([]);
+		expect(meaningReports("a{b:url( a\\20  )}", "a{b:url(a\\ )}", beautify)).toEqual([]);
+		expect(meaningReports("a{b:url(a\\ )}", "a{b:url(a)}", beautify)).toHaveLength(1);
+	});
 });
 
 describe("compare-css-tools — the cold branches fixture", () => {
