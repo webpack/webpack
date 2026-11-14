@@ -1647,7 +1647,7 @@ describe("one-pass minify, family O round 7", () => {
 		const source = fixture("javascript", "one-pass-o4-2");
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
 		// A value read keeps a `!` that would leave no boolean; a link adding characters takes `!(`; an operand of `??`, `+` or a branch of `?:` keeps the chain whole.
-		expect(code).toBe("function chains(a,b,c){if(a!=1&&b!=2&&c!=3)console.log(\"none\",a,b,c);if(a!==1||b!==2||c!==3)console.log(\"not all\",a,b,c);var v=!(a===1||b===2||!c),w=a!=1&&b!=2&&!c,u=!(a==1||b<2||c==3),t=a&&a!=1&&b!=2&&c!=3,s=a||a!=1||b!=2||c!=3,r=a&&!(a==1&&b==2&&c==3),q=c??!(a==1||b==2||c==3),p=1+!(a==1||b==2||c==3),o=c?!(a==1||b==2||c==3):0,n=a==1||b==2||c==3?2:1;if(!(a<1||b<2)&&c)console.log(\"unlinked\",a,b,c);console.log(v,w,u,t,s,r,q,p,o,n)}for(let a of[0,1])for(let b of[1,2])for(let c of[0,3])chains(a,b,c);");
+		expect(code).toBe("function chains(a,b,c){if(a!=1&&b!=2&&c!=3)console.log(\"none\",a,b,c);if(a!==1||b!==2||c!==3)console.log(\"not all\",a,b,c);var w=a!=1&&b!=2&&!c,u=!(a==1||b<2||c==3),t=a&&a!=1&&b!=2&&c!=3,s=a||a!=1||b!=2||c!=3,r=a&&!(a==1&&b==2&&c==3),q=c??!(a==1||b==2||c==3),p=1+!(a==1||b==2||c==3),o=c?!(a==1||b==2||c==3):0,n=a==1||b==2||c==3?2:1;if(!(a<1||b<2)&&c)console.log(\"unlinked\",a,b,c);console.log(!(a===1||b===2||!c),w,u,t,s,r,q,p,o,n)}for(let a of[0,1])for(let b of[1,2])for(let c of[0,3])chains(a,b,c);");
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 });
@@ -2095,6 +2095,152 @@ describe("printing again what the one pass printed", () => {
 			const once = minifyOnePass(source, { ...options, ...settled }).code;
 			expect(once).toBe(expected);
 			expect(minifyOnePass(once, { ...options, ...settled }).code).toBe(once);
+		}
+	});
+});
+
+describe("folding a `var` set after calls", () => {
+	it("should fold a constant set after calls that reach none of the functions reading it, and keep one a function run first reads", () => {
+		const options = { compress: {}, mangle: false };
+		for (const [source, expected, sourceType] of [
+			// Calls before it reach no function of the body: its reads fold, and fold on.
+			["(function(){init();var A=4,B=5;function f(x){return x&(A|B)}window.f=f})()", "init(),window.f=function(x){return x&5};"],
+			// A function handed out, named or called before it reads the name as it is then.
+			["(function(){h();var A=4;function h(){g()}function g(){console.log(A)}h()})()", "!function(){h();var A=4;function h(){console.log(A)}h()}();"],
+			// A name of a function read later names it there, made once the name is set.
+			["(function(){var k=g;init();var A=4;function g(){return A}console.log(k())})()", "!function(){init();var A=4;console.log(function(){return A}())}();"],
+			["(function(){var k=g;init(k);var A=4;function g(){return A}console.log(k())})()", "!function(){var k=function(){return A};init(k);var A=4;console.log(k())}();"],
+			["(function(){class C{m(){return A}}init(C);var A=4;console.log(new C().m())})()", "!function(){class C{m(){return A}}init(C);var A=4;console.log((new C).m())}();"],
+			// `eval` and a function no statement of the body declares may run anything.
+			['(function(){eval("g()");var A=4;function g(){return A}console.log(g(),g())})()', '!function(){eval("g()");var A=4;function g(){return A}console.log(g(),g())}();'],
+			["(function(){if(init()){function g(){return A}}init(g);var A=4;console.log(g(),g())})()", "!function(){if(init()){function g(){return A}}init(g);var A=4;console.log(g(),g())}();"],
+			// A default runs before the body; one naming nothing of it leaves the fold.
+			["(function(x=init()){var A=4;function g(){return A}console.log(g(),g())})()", "!function(x=init()){function g(){return 4}console.log(g(),g())}();"],
+			// What a module exports an import cycle may call before its body runs.
+			["init();var A=4;export function f(){return A}function g(){return A}console.log(g(),g())", "init();var A=4;export function f(){return A}function g(){return A}console.log(g(),g());", "module"],
+			["init();var A=4;function f(){return A}export{f};console.log(f(),f())", "init();var A=4;function f(){return A}export{f};console.log(f(),f());", "module"],
+			["init();var A=4;export default function(){return A}function g(){return A}console.log(g(),g())", "init();var A=4;export default function(){return A}function g(){return A}console.log(g(),g());", "module"],
+			// A static block runs as its class is made, before the `var` after it is set.
+			['function f(report){class C{static{report(value)}}var value=1;report(C)}f(function(v){console.log(typeof v==="function"?"fn":v)})', 'function f(report){class C{static{report(value)}}var value=1;report(C)}f(function(v){console.log("function"==typeof v?"fn":v)});'],
+			// Unmangled, a value folds where it prints shorter than the name read.
+			['(function(){init(function(){});var LONG_NAME="transition";function g(a){return a===LONG_NAME?1:a===LONG_NAME+1?2:LONG_NAME}window.g=g;window.h=g})()', '!function(){init(function(){});function g(a){return a==="transition"?1:a==="transition1"?2:"transition"}window.g=g,window.h=g}();'],
+			['(function(){init(function(){});var N="transition";function g(a){return a===N?1:a===N+1?2:N}window.g=g;window.h=g})()', '!function(){init(function(){});var N="transition";function g(a){return a===N?1:a===N+1?2:N}window.g=g,window.h=g}();']
+		]) {
+			const settled = sourceType === "module" ? { sourceType: /** @type {const} */ ("module") } : {};
+			expect(minifyOnePass(source, { ...options, ...settled }).code).toBe(expected);
+		}
+		// Mangled, only a value of one character folds: a longer one repeated gzips larger than the letter the name gets.
+		const mangled = { compress: {}, mangle: true };
+		expect(minifyOnePass(fixture("javascript", "one-pass-fold-var-mangled-string"), mangled).code).toBe('!function(){init(function(){});var n="transition";function i(i){return i===n?1:i===n+1?2:n}window.g=i,window.h=i}();');
+		expect(minifyOnePass(fixture("javascript", "one-pass-fold-var-mangled-number"), mangled).code).toBe("!function(){init(function(){});function n(n){return n===7?1:7}window.g=n,window.h=n}();");
+		// Read before it is set, it reads `undefined` printed or not.
+		for (const name of ["one-pass-var-read-early-escaped", "one-pass-var-read-early-called", "one-pass-var-read-early-toplevel"]) {
+			const source = fixture("javascript", name);
+			expect(runProgram(minifyOnePass(source, { compress: { toplevel: true }, mangle: false }).code)).toBe(runProgram(source));
+		}
+	});
+});
+
+describe("moving a value made of names", () => {
+	it("should move a value of names nothing writes to its one later read, but one reading a `var` its declarator sets after", () => {
+		const options = { compress: {}, mangle: false };
+		// Calls the cases declaring `f`, so that each moved value runs.
+		const CALL_F = 'function g(){}console.log(JSON.stringify([f({w:3,p:1},{}),f({},{}),f(0,{}),f("s",{})]))';
+		for (const [source, expected, call = ""] of [
+			// Read before its declarator, the `var` is `undefined` there, not where the value is read later.
+			["function h(){var n=[r],r=4;return[n,function(){return r}]}console.log(JSON.stringify(h()))", "function h(){var n=[r],r=4;return[n,function(){return r}]}console.log(JSON.stringify(h()));"],
+			// Its function's declarator cannot run between the value and its read.
+			["function o(){function i(){var n=[r];g();return n}var r=g();return[i(),i()]}function g(){return{}}console.log(JSON.stringify(o()))", "function o(){function i(){g();return[r]}var r=g();return[i(),i()]}function g(){return{}}console.log(JSON.stringify(o()));"],
+			// Names nothing writes under operators that convert nothing give the same value later.
+			["function f(o,t){var a=o.w,w=a!==void 0&&a;t.x=1,g(),t.w=w;return t}", "function f(o,t){var a=o.w;return t.x=1,g(),t.w=a!==void 0&&a,t}", CALL_F],
+			['function f(o,t){var w=typeof o==="string"?!o:void 0;g();t.w=w;return t}', 'function f(o,t){return g(),t.w="string"==typeof o?!o:void 0,t}', CALL_F],
+			['function f(o,t){var w=o||"x";g();t.w=w;return t}', 'function f(o,t){return g(),t.w=o||"x",t}', CALL_F],
+			// A conversion, a member read or a name written between may run code or read another value.
+			["function f(o,t){var w=o+1;g();t.w=w;return t}", "function f(o,t){var w=o+1;return g(),t.w=w,t}", CALL_F],
+			["function f(o,t){var w=o==1;g();t.w=w;return t}", "function f(o,t){var w=o==1;return g(),t.w=w,t}", CALL_F],
+			["function f(o,t){var w=-o;g();t.w=w;return t}", "function f(o,t){var w=-o;return g(),t.w=w,t}", CALL_F],
+			["function f(o,t){var w=o.p;g();t.w=w;return t}", "function f(o,t){var w=o.p;return g(),t.w=w,t}", CALL_F],
+			["function f(o,t){var w=o;o=2;t.w=w;return t}", "function f(o,t){var w=o;return o=2,t.w=w,t}", CALL_F],
+			// A name a value moved into already prints that value, run where it is read; a boolean prints as `!0`, which a member read would take in.
+			['function f(){var a=read();var b=!a;middle();return b}function read(){console.log("read");return 1}function middle(){console.log("middle")}console.log(f())', 'function f(){var b=!read();return middle(),b}function read(){return console.log("read"),1}function middle(){console.log("middle")}console.log(f());'],
+			["function f(){var value=true;middle();return value.toString()}function middle(){}console.log(f())", "function f(){return middle(),true.toString()}function middle(){}console.log(f());"],
+			// An outer `var` read before an `await` or a `yield` may be set while the function, or the generator owning it, waits.
+			["function f(p){async function i(){var n=!r;await p;return n}var t=i(),r=1;return t}f(0)", "function f(p){var t=async function(){var n=!r;return await p,n}(),r=1;return t}f(0);"],
+			["function f(){function*i(){var n=!r;yield;return n}var t=i();t.next();var r=1;return t.next().value}console.log(f())", "function f(){var t=function*(){var n=!r;return yield,n}();t.next();var r=1;return t.next().value}console.log(f());"],
+			["function*o(g,a){g(function(){var n=!r;a();return n});yield 0;var r=1}let i,t=o(function(f){i=f},function(){t.next()});t.next();console.log(i())", "function*o(g,a){g(function(){var n=!r;return a(),n}),yield 0;var r=1}let i,t=o(function(f){i=f},function(){t.next()});t.next(),console.log(i());"],
+			// Set by then, it holds its value wherever later the value is made.
+			["function h(){var r=4,n=[r];return[n,function(){return r}]}console.log(JSON.stringify(h()))", "function h(){return[[4],function(){return 4}]}console.log(JSON.stringify(h()));"]
+		]) {
+			const { code } = minifyOnePass(source, options);
+			expect(code).toBe(expected);
+			expect(runProgram(code + call)).toBe(runProgram(source + call));
+		}
+	});
+});
+
+describe("printing Babel's default parameters as ES2015 ones", () => {
+	it("should print the leading `var`s Babel writes for defaults as parameters, where the output may use them and nothing tells the two apart", () => {
+		const options = { compress: {}, mangle: false, ecma: 2020 };
+		// Calls each `f` missing, passing `undefined` and passing a value, and reads its `length`.
+		const CALL_F = 'var r=[];function g(){r.push("g");return 7}console.log(JSON.stringify([f(1),f(1,void 0),f(1,2),f(1,2,3),f.length,r]))';
+		for (const [source, expected] of [
+			// Each default may read the parameters and defaults before it, and runs only where the argument is missing.
+			["function f(a){var b=arguments.length>1&&arguments[1]!==undefined?arguments[1]:g();var c=arguments.length>2&&void 0!==arguments[2]?arguments[2]:a+b;return[a,b,c]}", "function f(a,b=g(),c=a+b){return[a,b,c]}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:{x:a},c=a;return[b,c]}", "function f(a,b={x:a}){return[b,a]}"],
+			["var o={m(a){var b=arguments.length>1&&arguments[1]!==undefined?arguments[1]:5;return a+b}};function f(a,b){return o.m(a,b)}", "var o={m(a,b=5){return a+b}};function f(a,b){return o.m(a,b)}"],
+			// Another read of `arguments`, a name the body binds, the wrong index or a generator keep the `var`.
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;return[b,arguments.length]}", "function f(a){return[arguments.length>1&&arguments[1]!==void 0?arguments[1]:5,arguments.length]}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:x;var x=1;return[b,x]}", "function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:x,x=1;return[b,x]}"],
+			["function f(a){var b=arguments.length>2&&arguments[2]!==void 0?arguments[2]:5;return[b]}", "function f(a){return[arguments.length>2&&arguments[2]!==void 0?arguments[2]:5]}"],
+			// A default may not wait, read `eval` or make a function; an accessor, a rest or a repeated parameter, a function of the name or a value nothing reads keep them.
+			["async function h(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:await a;return b}function f(a){return 0}", "async function h(a){return arguments.length>1&&arguments[1]!==void 0?arguments[1]:await a}function f(a){return 0}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:eval(\"a\");return b}", "function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:eval(`a`);return b}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:function(){return a};return typeof b}", "function f(a){return typeof(arguments.length>1&&arguments[1]!==void 0?arguments[1]:function(){return a})}"],
+			["var o={set v(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;this.x=b}};function f(a){return o.v=a,o.x}", "var o={set v(a){this.x=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5}};function f(a){return o.v=a,o.x}"],
+			["function f(...a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;return b}", "function f(...a){return arguments.length>1&&arguments[1]!==void 0?arguments[1]:5}"],
+			["function f(a,a){var b=arguments.length>2&&arguments[2]!==void 0?arguments[2]:5;return b}", "function f(a,a){return arguments.length>2&&arguments[2]!==void 0?arguments[2]:5}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;function b(){}return typeof b}", "function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;function b(){}return typeof b}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:g();return a}", "function f(a){arguments.length>1&&arguments[1]!==void 0?arguments[1]:g();return a}"],
+			// A function inside reads its own `arguments`; a value not written as Babel writes defaults stays.
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;function k(){return arguments.length}return[b,k(1)]}", "function f(a,b=5){return[b,function(){return arguments.length}(1)]}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;var k=function(){return arguments.length};return[b,k(1)]}", "function f(a,b=5){return[b,function(){return arguments.length}(1)]}"],
+			["function f(){var a=arguments.length>0&&arguments[0]!==void 0?arguments[0]:g();return[a]}", "function f(a=g()){return[a]}"],
+			// After a default, the `var` Babel writes for a parameter with none prints as one: the function's `length` stays.
+			["function f(){var a=arguments.length>0&&arguments[0]!==undefined?arguments[0]:g();var b=arguments.length>1?arguments[1]:undefined,c=arguments.length>2&&arguments[2]!==void 0?arguments[2]:b;return[a,b,c]}", "function f(a=g(),b,c=b){return[a,b,c]}"],
+			["function f(){var b=arguments.length>0?arguments[0]:undefined;return[b]}", "function f(){return[arguments.length>0?arguments[0]:void 0]}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;var c=arguments.length>2?arguments[2]:void 0;return[b,c,arguments.length]}", "function f(a){return[arguments.length>1&&arguments[1]!==void 0?arguments[1]:5,arguments.length>2?arguments[2]:void 0,arguments.length]}"],
+			["function f(){var a=arguments.length>0&&arguments[0]!==undefined?arguments[0]:1;var b=arguments.length>1?arguments[1]:undefined;return[b]}", "function f(){arguments.length>0&&arguments[0]!==void 0?arguments[0]:1;var b=arguments.length>1?arguments[1]:void 0;return[b]}"],
+			// Parameters other than names, one named `arguments` or a `var` of that name keep them.
+			["function f({a}){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;return[a,b]}", "function f({a}){return[a,arguments.length>1&&arguments[1]!==void 0?arguments[1]:5]}"],
+			["function o(value){return function(a=value){var value=arguments.length>1&&arguments[1]!==void 0?arguments[1]:1;return[a,value]}}var f=o(7);", "function o(value){return function(a=value){return[a,arguments.length>1&&arguments[1]!==void 0?arguments[1]:1]}}var f=o(7);"],
+			["function f(arguments){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:9;return b}", "function f(arguments){return arguments.length>1&&arguments[1]!==void 0?arguments[1]:9}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:9;var arguments;return b}", "function f(a){var arguments;return arguments.length>1&&arguments[1]!==void 0?arguments[1]:9}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;var c=arguments.length>2&&arguments[2]!==void 0?arguments[2]:x;var x=b;return[b,c,x]}", "function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5,c=arguments.length>2&&arguments[2]!==void 0?arguments[2]:x,x=b;return[b,c,x]}"],
+			["function f(a){var b=a?arguments[1]:5;return b}", "function f(a){return a?arguments[1]:5}"],
+			["function f(a){var b=arguments.length>1||arguments[1]!==void 0?arguments[1]:5;return b}", "function f(a){return arguments.length>1||arguments[1]!==void 0?arguments[1]:5}"],
+			["function f(a){var b=arguments.length>=1&&arguments[1]!==void 0?arguments[1]:5;return b}", "function f(a){return arguments.length>=1&&arguments[1]!==void 0?arguments[1]:5}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!=null?arguments[1]:5;return b}", "function f(a){return arguments.length>1&&arguments[1]!=null?arguments[1]:5}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==null?arguments[1]:5;return b}", "function f(a){return arguments.length>1&&arguments[1]!==null?arguments[1]:5}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[2]:5;return b}", "function f(a){return arguments.length>1&&arguments[1]!==void 0?arguments[2]:5}"],
+			["function f(a){var b=arguments.length>1&&a!==void 0?arguments[1]:5;return b}", "function f(a){return arguments.length>1&&a!==void 0?arguments[1]:5}"],
+			["function f(a){var b=a.length>1&&arguments[1]!==void 0?arguments[1]:5;return b}", "function f(a){return a.length>1&&arguments[1]!==void 0?arguments[1]:5}"],
+			["function f(a){var b=arguments.size>1&&arguments[1]!==void 0?arguments[1]:5;return b}", "function f(a){return arguments.size>1&&arguments[1]!==void 0?arguments[1]:5}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5,c=a;return[b,c]}", "function f(a,b=5){return[b,a]}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;var c=arguments.length>2&&arguments[2]!==void 0?arguments[2]:b,d=c;return[b,c,d]}", "function f(a,b=5,c=b){return[b,c,c]}"],
+			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;let c=b;return[c]}", "function f(a,b=5){return[b]}"],
+			["function f(a){return[...h(a)]}function*h(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:g();yield a+b}", "function f(a){return[...h(a)]}function*h(a){yield a+(arguments.length>1&&arguments[1]!==void 0?arguments[1]:g())}"]
+		]) {
+			const { code } = minifyOnePass(source, options);
+			expect(code).toBe(expected);
+			expect(runProgram(code + CALL_F)).toBe(runProgram(source + CALL_F));
+		}
+	});
+
+	it("should keep the `var`s where the output may not use default parameters", () => {
+		for (const [source, expected] of [
+			["export function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;return a+b}", "export function f(a){return a+(arguments.length>1&&arguments[1]!==void 0?arguments[1]:5)}"]
+		]) {
+			expect(minifyOnePass(source, { compress: {}, mangle: false, module: true }).code).toBe(expected);
 		}
 	});
 });

@@ -383,7 +383,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/collapse_vars_assignment",
 			"terser compress: collapse_vars/collapse_vars_lvalues_drop_assign",
 			"terser compress: collapse_vars/issue_1631_1",
-			"terser compress: collapse_vars/conditional_1",
 			"terser compress: collapse_vars/issue_2436_4",
 			"terser compress: collapse_vars/issue_2436_8",
 			"terser compress: collapse_vars/issue_2436_14",
@@ -895,13 +894,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `issue-1639` tests cover",
 		["terser compress: issue-1639/issue_1639_1"]
-	],
-	[
-		"swc goes further than webpack on what terser's `issue-2001` tests cover",
-		[
-			"terser compress: issue-2001/export_mangle_3",
-			"terser compress: issue-2001/export_mangle_4"
-		]
 	],
 	[
 		"swc goes further than webpack on what terser's `issue-269` tests cover",
