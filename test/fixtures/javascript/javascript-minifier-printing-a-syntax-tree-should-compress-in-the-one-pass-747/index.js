@@ -5,3 +5,4 @@ function d() { const { [g()]: k, a: { x: unused, y: used } } = { a: { x: 0, y: 1
 function e(x = (() => { x = x; })()) { return 1; }
 function h(x = 1, y = (() => { x = x; })()) { x = x; return y; }
 function i() { const [, [r, s]] = [1, [3, 4]]; return s; }
+function j(record) { const { a, b: { x: unused, y } } = { get a() { this.b = { get x() { record("x"); }, y: 2 }; return 1; }, b: { x: 0, y: 1 } }; return [a, y]; }
