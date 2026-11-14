@@ -52677,6 +52677,31 @@ exports[`JavaScript syntax — invariants webpack-parser-reports-the-lines-and-c
 
 exports[`JavaScript syntax — invariants webpack-parser-reports-the-lines-and-columns-of-tokens-and-comments tokenizes 1`] = `"name[0,1] ;[1,2] line[3,7] name[8,9] ;[9,10] block[11,18] \`[19,20] template[20,23] \${[23,25] name[25,26] }[26,27] template[27,28] \`[28,29] ;[29,30] name[31,32] eof[33,33]"`;
 
+exports[`JavaScript syntax — invariants webpack-parser-reports-the-lines-and-columns-of-tokens-on-one-long-line parses 1`] = `
+"length 147826, sha256 52716451f2586e6d
+Program[0,4009](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"a\\")),ExpressionStatement[2,4](expression=Identifier[2,3](name=\\"a\\")),ExpressionStatement[4,6](expression=Identifier[4,5](
+…
+tifier[3994,3995](name=\\"a\\")),ExpressionStatement[3996,3998](expression=Identifier[3996,3997](name=\\"a\\")),ExpressionStatement[3998,4000](expression=Identifier[3998,3999](name=\\"a\\"))] sourceType=\\"module\\")"
+`;
+
+exports[`JavaScript syntax — invariants webpack-parser-reports-the-lines-and-columns-of-tokens-on-one-long-line parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants webpack-parser-reports-the-lines-and-columns-of-tokens-on-one-long-line parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-reports-the-lines-and-columns-of-tokens-on-one-long-line prints {"mode":"minify"} 1`] = `
+"length 4000, sha256 8c58bd96200034bb
+a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;
+…
+a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;"
+`;
+
+exports[`JavaScript syntax — invariants webpack-parser-reports-the-lines-and-columns-of-tokens-on-one-long-line tokenizes 1`] = `
+"length 55814, sha256 28c729f56fe88076
+name[0,1] ;[1,2] name[2,3] ;[3,4] name[4,5] ;[5,6] name[6,7] ;[7,8] name[8,9] ;[9,10] name[10,11] ;[11,12] name[12,13] ;[13,14] name[14,15] ;[15,16] name[16,17] ;[17,18] name[18,19] ;[19,20] name[20,2
+…
+3988,3989] ;[3989,3990] name[3990,3991] ;[3991,3992] name[3992,3993] ;[3993,3994] name[3994,3995] ;[3995,3996] name[3996,3997] ;[3997,3998] name[3998,3999] ;[3999,4000] block[4000,4009] eof[4009,4009]"
+`;
+
 exports[`JavaScript syntax — invariants webpack-parser-reserved-words-and-bindings-should-allow-await-as-a-sloppy-mode parses 1`] = `"Program[0,21](body=[VariableDeclaration[0,14](declarations=[VariableDeclarator[4,13](id=Identifier[4,9](name=\\"await\\") init=Literal[12,13](value=1 raw=\\"1\\"))] kind=\\"var\\"),ExpressionStatement[15,21](expression=Identifier[15,20](name=\\"await\\"))] sourceType=\\"script\\")"`;
 
 exports[`JavaScript syntax — invariants webpack-parser-reserved-words-and-bindings-should-allow-await-as-a-sloppy-mode parses 2`] = `""`;

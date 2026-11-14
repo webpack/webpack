@@ -77,6 +77,52 @@ describe("WebpackParser", () => {
 		}
 	});
 
+	it("reports the lines and columns of tokens on one long line", () => {
+		const { WebpackParser } = require("../../../lib/javascript/syntax-parser");
+		const source = fixture("javascript", "webpack-parser-reports-the-lines-and-columns-of-tokens-on-one-long-line");
+		/** @type {{ loc?: object }[]} */
+		const acornTokens = [];
+		/** @type {{ loc?: object }[]} */
+		const acornComments = [];
+		acorn.parse(source, {
+			ecmaVersion: "latest",
+			locations: true,
+			onToken: /** @type {EXPECTED_ANY} */ (acornTokens),
+			onComment: /** @type {EXPECTED_ANY} */ (acornComments)
+		});
+		/** @type {import("../../../lib/javascript/syntax-parser").Token[]} */
+		const tokens = [];
+		/** @type {CollectedComment[]} */
+		const comments = [];
+		// counts the characters read, which grows with the square of the line
+		// when each position rescans the line from its start
+		const { charCodeAt } = String.prototype;
+		let reads = 0;
+		/**
+		 * @this {string}
+		 * @param {number} index where to read
+		 * @returns {number} the UTF-16 code unit there
+		 */
+		String.prototype.charCodeAt = function charCodeAtCounted(index) {
+			reads++;
+			return charCodeAt.call(this, index);
+		};
+		try {
+			new WebpackParser(
+				{ ecmaVersion: "latest", locations: true, onToken: tokens, onComment: comments },
+				source
+			).parse();
+		} finally {
+			String.prototype.charCodeAt = charCodeAt;
+		}
+		expect(reads).toBeLessThan(source.length * 20);
+		const last = (/** @type {{ loc?: object | null }[]} */ list) =>
+			plain(list[list.length - 1].loc);
+		expect(tokens).toHaveLength(acornTokens.length);
+		expect(last(tokens)).toEqual(last(acornTokens));
+		expect(last(comments)).toEqual(last(acornComments));
+	});
+
 	describe("lazy comments", () => {
 		it("should collect hashbang, line, block and html comments lazily", () => {
 			const { comments } = parse(
