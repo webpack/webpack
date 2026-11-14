@@ -20706,7 +20706,8 @@ declare abstract class LocConverter {
 	pos: number;
 
 	/**
-	 * Returns location converter.
+	 * Sets `line` and `column` to those of a position: a `\n` is the last column
+	 * of its own line. Each `\n` is searched for once, a lookup is a binary search.
 	 */
 	get(pos: number): LocConverter;
 }
