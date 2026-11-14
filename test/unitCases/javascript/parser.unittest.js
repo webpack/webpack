@@ -60,13 +60,13 @@ describe("WebpackParser", () => {
 			onToken: /** @type {EXPECTED_ANY} */ (acornTokens),
 			onComment: /** @type {EXPECTED_ANY} */ (acornComments)
 		});
-		const locations = (/** @type {{ loc?: object }[]} */ list) =>
+		const locations = (/** @type {{ loc?: object | null }[]} */ list) =>
 			plain(list.map((item) => item.loc));
 		// a second parse of the same source counts its lines from the start again
 		for (let parse = 0; parse < 2; parse++) {
-			/** @type {{ loc?: object }[]} */
+			/** @type {import("../../../lib/javascript/syntax-parser").Token[]} */
 			const tokens = [];
-			/** @type {{ loc?: object }[]} */
+			/** @type {CollectedComment[]} */
 			const comments = [];
 			new WebpackParser(
 				{ ecmaVersion: "latest", locations: true, onToken: tokens, onComment: comments },
