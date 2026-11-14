@@ -2125,3 +2125,302 @@ describe("CssSyntax minify — a fallback before a negative amount the property 
 		expect(minifyFor(fixture("css", "css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-8"))).toBe('a{margin-left:-1px}');
 	});
 });
+
+describe("SourceProcessor — a run inside a run", () => {
+	const SHEET = fixture("css", "source-processor-a-run-inside-a-run-renderer-outer");
+
+	it("prints a stylesheet a renderer starts while the outer print runs", () => {
+		const alone = new SourceProcessor().process(SHEET, { mode: "minify" }).code;
+		/** @type {string[]} */
+		const inner = [];
+		const { code } = new SourceProcessor().process(SHEET, {
+			mode: "minify",
+			renderEmbeddedSource: (source) => {
+				inner.push(
+					new SourceProcessor().process(fixture("css", "source-processor-a-run-inside-a-run-renderer-inner"), { mode: "minify" })
+						.code
+				);
+				return source;
+			}
+		});
+		expect(inner).toEqual(["x{color:red}"]);
+		expect(alone).toBe(
+			`a{background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>")}b{color:#fff;margin:0}.c{padding:10px}`
+		);
+		expect(code).toBe(alone);
+	});
+
+	it("prints the blocks of a stylesheet a renderer starts inside an outer block", () => {
+		const outerSheet = fixture("css", "source-processor-a-run-inside-a-run-media-outer");
+		const innerSheet = fixture("css", "source-processor-a-run-inside-a-run-media-inner");
+		const alone = new SourceProcessor().process(outerSheet, { mode: "minify" }).code;
+		const innerAlone = new SourceProcessor().process(innerSheet, { mode: "minify" }).code;
+		/** @type {string[]} */
+		const inner = [];
+		const { code } = new SourceProcessor().process(outerSheet, {
+			mode: "minify",
+			renderEmbeddedSource: (source) => {
+				inner.push(new SourceProcessor().process(innerSheet, { mode: "minify" }).code);
+				return source;
+			}
+		});
+		expect(innerAlone).toBe("@media print{x{color:red}y{color:blue}}z{margin:0}");
+		expect(inner).toEqual([innerAlone]);
+		expect(code).toBe(alone);
+	});
+
+	it("runs every visitor of a nested run on the processor whose outer run skips or stops", () => {
+		/** @type {string[]} */
+		const seen = [];
+		/** @type {string[][]} */
+		const inner = [];
+		const inside = fixture("css", "source-processor-a-run-inside-a-run-same-processor-inner");
+		/**
+		 * @param {"skip" | "stop"} halt how the outer run holds its visitors back
+		 * @returns {ReturnType<InstanceType<typeof SourceProcessor>["use"]>} a processor that nests a run on itself once halted
+		 */
+		const make = (halt) => {
+			const processor = new SourceProcessor().use(
+				/** @type {import("../../../lib/css/syntax-parser").VisitorMap} */ ({
+					[NodeType.QualifiedRule]: (rule) => {
+						if (halt === "skip" && rule.source().startsWith("b")) rule.skipChildren();
+					},
+					[NodeType.Declaration]: (declaration) => {
+						seen.push(declaration.name());
+						if (halt !== "stop" || declaration.name() !== "color") return;
+						declaration.stop();
+						const before = seen.length;
+						processor.process(inside);
+						inner.push(seen.slice(before));
+					}
+				})
+			);
+			return processor;
+		};
+		const skipping = make("skip");
+		skipping.process(fixture("css", "source-processor-a-run-inside-a-run-same-processor-skip-outer"), {
+			mode: "minify",
+			renderEmbeddedSource: (source) => {
+				const before = seen.length;
+				skipping.process(inside);
+				inner.push(seen.slice(before));
+				return source;
+			}
+		});
+		expect(seen).toEqual(["color", "margin", "padding", "top"]);
+		seen.length = 0;
+		const stopping = make("stop");
+		stopping.process(fixture("css", "source-processor-a-run-inside-a-run-same-processor-stop-outer"));
+		expect(seen).toEqual(["color", "margin", "padding"]);
+		// The halted run's visitors are held back again, then come back for the next run.
+		stopping.process(inside);
+		expect(inner).toEqual([["margin", "padding"], ["margin", "padding"]]);
+		expect(seen).toEqual(["color", "margin", "padding", "margin", "padding"]);
+	});
+
+	it("runs each visitor once in a run nested two deep on the processor whose outermost run stopped", () => {
+		/** @type {string[]} */
+		const seen = [];
+		let depth = 0;
+		const processor = new SourceProcessor().use(
+			/** @type {import("../../../lib/css/syntax-parser").VisitorMap} */ ({
+				[NodeType.Declaration]: (declaration) => {
+					seen.push(`${depth}:${declaration.name()}`);
+					if (declaration.name() !== "color" || depth === 2) return;
+					if (depth === 0) declaration.stop();
+					depth++;
+					processor.process(
+						fixture(
+							"css",
+							depth === 1
+								? "source-processor-a-run-inside-a-run-same-processor-middle"
+								: "source-processor-a-run-inside-a-run-same-processor-inner"
+						)
+					);
+					depth--;
+				}
+			})
+		);
+		processor.process(fixture("css", "source-processor-a-run-inside-a-run-same-processor-stop-outer"));
+		expect(seen).toEqual(["0:color", "1:color", "2:margin", "2:padding", "1:top"]);
+	});
+
+	it("walks a stylesheet a visitor starts, and the outer walk goes on", () => {
+		/**
+		 * @param {boolean} nest whether the first declaration starts runs of its own
+		 * @returns {{ outer: string[], inner: string[] }} what each run saw
+		 */
+		const run = (nest) => {
+			/** @type {string[]} */
+			const outer = [];
+			/** @type {string[]} */
+			const inner = [];
+			new SourceProcessor()
+				.use(
+					/** @type {import("../../../lib/css/syntax-parser").VisitorMap} */ ({
+						[NodeType.Declaration]: {
+							enter: (path) => {
+								outer.push(`${path.name()}@${path.start()}`);
+								if (!nest || outer.length !== 1) return;
+								new SourceProcessor()
+									.use(
+										/** @type {import("../../../lib/css/syntax-parser").VisitorMap} */ ({
+											[NodeType.Declaration]: (nested) => {
+												inner.push(nested.name());
+											}
+										})
+									)
+									.process(fixture("css", "source-processor-a-run-inside-a-run-walk-inner"));
+								inner.push(
+									new SourceProcessor().process(fixture("css", "source-processor-a-run-inside-a-run-walk-minify"), {
+										mode: "minify"
+									}).code
+								);
+							},
+							exit: (path) => {
+								outer.push(`/${path.source()}`);
+							}
+						}
+					})
+				)
+				.process(SHEET);
+			return { outer, inner };
+		};
+		const alone = run(false);
+		const nested = run(true);
+		expect(nested.inner).toEqual(["list-style", "gap", "i{top:0}"]);
+		expect(nested.outer).toEqual(alone.outer);
+		expect(alone.outer).toContain("/color : #ffffff ");
+	});
+
+	it("reads custom at-rules ahead while a renderer nests a run", () => {
+		const options = {
+			mode: /** @type {"minify"} */ ("minify"),
+			transforms: { customMedia: true },
+			environment: { browsers: ["ie 11"] }
+		};
+		const sheet = fixture("css", "source-processor-a-run-inside-a-run-custom-media-outer");
+		const alone = new SourceProcessor().process(sheet, options).code;
+		const { code } = new SourceProcessor().process(sheet, {
+			...options,
+			renderEmbeddedSource: (source) => {
+				new SourceProcessor().process(fixture("css", "source-processor-a-run-inside-a-run-custom-media-inner"), options);
+				return source;
+			}
+		});
+		expect(code).toBe(alone);
+		expect(alone).toContain("max-width:30em");
+	});
+
+	it("refuses a parseA* entry a visitor calls during a run, and the run goes on", () => {
+		const parser = require("../../../lib/css/syntax-parser");
+		const rule = fixture("css", "source-processor-a-run-inside-a-run-direct-parse-rule");
+		const declaration = fixture("css", "source-processor-a-run-inside-a-run-direct-parse-declaration");
+		/**
+		 * @param {boolean} attempt whether the first declaration calls the entries
+		 * @returns {{ seen: string[], errors: string[] }} what the walk saw and threw
+		 */
+		const run = (attempt) => {
+			/** @type {string[]} */
+			const seen = [];
+			/** @type {string[]} */
+			const errors = [];
+			new SourceProcessor()
+				.use(
+					/** @type {import("../../../lib/css/syntax-parser").VisitorMap} */ ({
+						[NodeType.Declaration]: (path) => {
+							seen.push(`${path.name()}:${path.source()}`);
+							if (!attempt || seen.length !== 1) return;
+							for (const parse of [
+								() => parser.parseAStylesheet(rule),
+								() => parser.parseAStylesheetsContents(rule),
+								() => parser.parseABlocksContents(declaration),
+								() => parser.parseARule(rule),
+								() => parser.parseADeclaration(declaration),
+								() => parser.parseAComponentValue(fixture("css", "source-processor-a-run-inside-a-run-direct-parse-component-value")),
+								() => parser.parseAListOfComponentValues(fixture("css", "source-processor-a-run-inside-a-run-direct-parse-component-values")),
+								() =>
+									parser.parseACommaSeparatedListOfComponentValues(
+										fixture("css", "source-processor-a-run-inside-a-run-direct-parse-comma-separated")
+									)
+							]) {
+								try {
+									parse();
+								} catch (err) {
+									errors.push(/** @type {Error} */ (err).message);
+								}
+							}
+						}
+					})
+				)
+				.process(fixture("css", "source-processor-a-run-inside-a-run-direct-parse-outer"));
+			return { seen, errors };
+		};
+		const alone = run(false);
+		const tried = run(true);
+		expect(tried.errors).toHaveLength(8);
+		for (const message of tried.errors) {
+			expect(message).toMatch(
+				/^css syntax: parseA\w+ was called during a CSS process run; nest the work with a SourceProcessor process instead$/
+			);
+		}
+		expect(tried.seen).toEqual(alone.seen);
+		// Outside a run they parse as ever.
+		expect(parser.parseADeclaration(declaration)).toBeTruthy();
+	});
+
+	it("runs a walk and a print a visitor starts while a block streams", () => {
+		const count = 12000;
+		/**
+		 * @param {boolean} nest whether a declaration deep in the block starts runs
+		 * @returns {{ seen: string[], inner: string[] }} what each run saw
+		 */
+		const run = (nest) => {
+			/** @type {string[]} */
+			const seen = [];
+			/** @type {string[]} */
+			const inner = [];
+			let declarations = 0;
+			new SourceProcessor()
+				.use(
+					/** @type {import("../../../lib/css/syntax-parser").VisitorMap} */ ({
+						[NodeType.Declaration]: (path) => {
+							declarations++;
+							if (path.source() !== "color : red ") {
+								seen.push(`${declarations}:${path.source()}@${path.start()}`);
+							}
+							if (!nest || declarations !== 9000) return;
+							new SourceProcessor()
+								.use(
+									/** @type {import("../../../lib/css/syntax-parser").VisitorMap} */ ({
+										[NodeType.Declaration]: (nested) => {
+											inner.push(nested.name());
+										}
+									})
+								)
+								.process(fixture("css", "source-processor-a-run-inside-a-run-streamed-inner"));
+							inner.push(
+								new SourceProcessor().process(fixture("css", "source-processor-a-run-inside-a-run-streamed-minify"), {
+									mode: "minify"
+								}).code
+							);
+						},
+						[NodeType.QualifiedRule]: {
+							exit: (path) => {
+								seen.push(`rule@${path.start()}-${path.end()}`);
+							}
+						}
+					})
+				)
+				.process(fixture("css", "source-processor-a-run-inside-a-run-streamed-outer"));
+			seen.push(String(declarations));
+			return { seen, inner };
+		};
+		const alone = run(false);
+		const nested = run(true);
+		expect(nested.inner).toHaveLength(count + 1);
+		expect(nested.inner[count]).toBe("i{top:0}");
+		expect(nested.seen).toEqual(alone.seen);
+		expect(alone.seen[alone.seen.length - 1]).toBe(String(count + 1));
+	});
+});

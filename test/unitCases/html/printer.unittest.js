@@ -99,21 +99,74 @@ describe("builtinEmbeddedRenderer — what it loads", () => {
 	});
 });
 
-describe("SourceProcessor — one print at a time", () => {
-	it("refuses a parse a visitor starts while the print runs", () => {
+describe("SourceProcessor — a print inside a print", () => {
+	it("prints a document a visitor starts while the outer print runs", () => {
 		const { SourceProcessor } = require("../../../lib/html/syntax");
+		const source = fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints");
+		const alone = new SourceProcessor().process(source, { mode: "minify" }).code;
+		/** @type {string[]} */
+		const inner = [];
+		const nested = new SourceProcessor()
+			.use(
+				/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
+					[NodeType.Element]: () => {
+						inner.push(
+							new SourceProcessor().process(fixture("html", "source-processor-a-run-inside-a-run-nested-print-inner"), {
+								mode: "minify",
+								collapseWhitespace: true
+							}).code
+						);
+					}
+				})
+			)
+			.process(source, { mode: "minify" }).code;
+		expect(inner.length).toBeGreaterThan(0);
+		for (const code of inner) expect(code).toBe("<p> a <b>b</b> ");
+		expect(nested).toBe(alone);
+	});
 
-		expect(() =>
-			new SourceProcessor()
-				.use(
-					/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
-						[NodeType.Element]: () => {
-							new SourceProcessor().process(fixture("html", "source-processor-streamed-walk-offsets-refuses-a-nested-parse-rather-than-taking"), { mode: "minify" });
-						}
-					})
-				)
-				.process(fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints"), { mode: "minify" })
-		).toThrow(/already running/);
+	it("minifies an embedded document with a print of its own", () => {
+		const { SourceProcessor } = require("../../../lib/html/syntax");
+		const { code } = new SourceProcessor().process(fixture("html", "source-processor-a-run-inside-a-run-srcdoc-renderer"), {
+			mode: "minify",
+			collapseWhitespace: true,
+			renderEmbeddedSource: (body, offer) =>
+				offer.type === "html"
+					? new SourceProcessor().process(body, {
+							mode: "minify",
+							collapseWhitespace: true
+						}).code
+					: undefined
+		});
+		expect(code).toBe('<p> x </p><iframe srcdoc="<p> y "></iframe>');
+	});
+
+	it("keeps the outer print's sorted attributes while a renderer prints", () => {
+		const { SourceProcessor } = require("../../../lib/html/syntax");
+		/**
+		 * @param {boolean} nest whether the renderer prints a document of its own
+		 * @returns {string} the outer print
+		 */
+		const print = (nest) =>
+			new SourceProcessor().process(fixture("html", "source-processor-a-run-inside-a-run-sorted-attributes-outer"), {
+				mode: "minify",
+				sortAttributes: true,
+				sortTokenLists: true,
+				renderEmbeddedSource: (body) => {
+					if (nest) {
+						new SourceProcessor().process(fixture("html", "source-processor-a-run-inside-a-run-sorted-attributes-inner"), {
+							mode: "minify",
+							sortAttributes: true,
+							sortTokenLists: true,
+							renderEmbeddedSource: (inner) => inner
+						});
+					}
+					return body;
+				}
+			}).code;
+		const alone = print(false);
+		expect(print(true)).toBe(alone);
+		expect(alone).toContain('class="a b"');
 	});
 });
 
