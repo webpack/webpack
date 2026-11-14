@@ -443,6 +443,48 @@ describe("SourceProcessor — streamed walk offsets", () => {
 		expect(seen).toEqual(["html", "head", "body", "p", ...inner]);
 	});
 
+	it("runs each visitor once in a run nested two deep on the processor whose outermost run stopped", () => {
+		/** @type {string[]} */
+		const seen = [];
+		let depth = 0;
+		const processor = new SourceProcessor().use(
+			/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
+				[NodeType.Element]: (path) => {
+					seen.push(`${depth}:${path.name()}`);
+					if (path.name() !== "p" || depth === 2) return;
+					if (depth === 0) path.stop();
+					depth++;
+					processor.process(
+						fixture(
+							"html",
+							depth === 1
+								? "source-processor-a-run-inside-a-run-same-processor-middle"
+								: "source-processor-a-run-inside-a-run-same-processor-inner"
+						)
+					);
+					depth--;
+				}
+			})
+		);
+		processor.process(fixture("html", "source-processor-a-run-inside-a-run-same-processor-stop-outer"));
+		expect(seen).toEqual([
+			"0:html",
+			"0:head",
+			"0:body",
+			"0:p",
+			"1:html",
+			"1:head",
+			"1:body",
+			"1:p",
+			"2:html",
+			"2:head",
+			"2:body",
+			"2:ul",
+			"2:li",
+			"1:i"
+		]);
+	});
+
 	it("runs a walk the document's enter starts before the outer tokenizer does", () => {
 		/** @type {string[]} */
 		const outer = [];

@@ -47122,6 +47122,14 @@ exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-same-proc
 
 exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-same-processor-inner tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,8] colon[8,9] number[9,10] semicolon[10,11] ident[11,18] colon[18,19] number[19,20] right-curly-bracket[20,21] whitespace[21,22] end=22"`;
 
+exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-same-processor-middle parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-same-processor-middle parses 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-same-processor-middle prints {"mode":"minify"} 1`] = `"a{color:red}b{top:0}"`;
+
+exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-same-processor-middle tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] ident[8,11] right-curly-bracket[11,12] ident[12,13] left-curly-bracket[13,14] ident[14,17] colon[17,18] number[18,19] right-curly-bracket[19,20] whitespace[20,21] end=21"`;
+
 exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-same-processor-skip-outer parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"url\\",[\\"string\\",\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>\\"]]]],[\\"qualified rule\\",[[\\"ident\\",\\"c\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
 
 exports[`CSS syntax — invariants source-processor-a-run-inside-a-run-same-processor-skip-outer parses 2`] = `""`;

@@ -2218,6 +2218,33 @@ describe("SourceProcessor — a run inside a run", () => {
 		expect(seen).toEqual(["color", "margin", "padding", "margin", "padding"]);
 	});
 
+	it("runs each visitor once in a run nested two deep on the processor whose outermost run stopped", () => {
+		/** @type {string[]} */
+		const seen = [];
+		let depth = 0;
+		const processor = new SourceProcessor().use(
+			/** @type {import("../../../lib/css/syntax-parser").VisitorMap} */ ({
+				[NodeType.Declaration]: (declaration) => {
+					seen.push(`${depth}:${declaration.name()}`);
+					if (declaration.name() !== "color" || depth === 2) return;
+					if (depth === 0) declaration.stop();
+					depth++;
+					processor.process(
+						fixture(
+							"css",
+							depth === 1
+								? "source-processor-a-run-inside-a-run-same-processor-middle"
+								: "source-processor-a-run-inside-a-run-same-processor-inner"
+						)
+					);
+					depth--;
+				}
+			})
+		);
+		processor.process(fixture("css", "source-processor-a-run-inside-a-run-same-processor-stop-outer"));
+		expect(seen).toEqual(["0:color", "1:color", "2:margin", "2:padding", "1:top"]);
+	});
+
 	it("walks a stylesheet a visitor starts, and the outer walk goes on", () => {
 		/**
 		 * @param {boolean} nest whether the first declaration starts runs of its own
