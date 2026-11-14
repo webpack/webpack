@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep minified code that `eval`, `with`, early calls or a moved function's names change, or a `!` of `!!` around an operation; read `output`.
+Fix minified output around `eval`, `with`, early calls and moved functions.
