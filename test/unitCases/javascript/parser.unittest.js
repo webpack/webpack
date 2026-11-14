@@ -4486,15 +4486,16 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		} = require("../../../lib/javascript/syntax-parser");
 		/** @type {[import("../../../lib/javascript/syntax-parser").EcmaVersion, "script" | "module", string][]} */
 		const cases = [
-			[3, "script", '"use strict"; a.b(c); ({ d: 1 }); function e() {}'],
-			[5, "script", '"use strict"; ({ get a() { return 1; } }); function b() {}'],
-			[6, "script", "for (a of b); ({ c, d() {} }); () => 1;"],
-			[8, "script", "async function a() { for (b of c); }"],
-			[10, "module", 'export * from "a"; import b from "c"; async function d() { for await (e of f); }'],
-			[2020, "module", 'export * as a from "b"; a?.b();'],
-			["latest", "module", 'import a from "b" with { type: "json" }; import("c", {});']
+			[3, "script", "webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at"],
+			[5, "script", "webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at-2"],
+			[6, "script", "webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at-3"],
+			[8, "script", "webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at-4"],
+			[10, "module", "webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at-5"],
+			[2020, "module", "webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at-6"],
+			["latest", "module", "webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at-7"]
 		];
-		for (const [ecmaVersion, sourceType, source] of cases) {
+		for (const [ecmaVersion, sourceType, name] of cases) {
+			const source = fixture("javascript", name);
 			const program = parseProgram(source, 0, { ecmaVersion, sourceType });
 			expect(JSON.parse(JSON.stringify(toEstreeObject(program)))).toEqual(
 				JSON.parse(
