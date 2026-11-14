@@ -17,6 +17,10 @@ Widget({});
 	for (var i = 0; i < 2; i++) make("loop");
 	if (count) return /*#__PURE__*/ pure(make("r3"), make("r4"));
 })();
+(function (flag) {
+	if (flag) return /*#__PURE__*/ pure(make("c1"), make("c2"));
+	return make("c3");
+})(count);
 (() => /*#__PURE__*/ pure(make("a1"), make("a2")))();
 (({ size }) => /*#__PURE__*/ pure(make("a3"), size))({ size: make("a4") });
 (() => /*#__PURE__*/ pure({ x: make("o") }))();
