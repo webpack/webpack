@@ -1975,6 +1975,13 @@ export type HotUpdateMainFilename = RelativePath;
 export type HtmlChunkFilename = FilenameTemplate;
 
 /**
+ * How an attribute's value names a class or an id: `class` a class list (like `class`), `id` one id (like `id`), `ids` a list of ids (like `aria-labelledby`), `fragment` a same-page link, `#id` (like `href`), `url` `url(#id)` references (like `fill`).
+ * @since 5.113.0
+ */
+export type HtmlCssModulesAttributeKind =
+	"class" | "id" | "ids" | "fragment" | "url";
+
+/**
  * A single favicon `<link>`: either a path string (used as the icon `href`) or an object with the icon `href` plus extra link attributes (`sizes`, `media`, `color`, `type`, `crossorigin`).
  */
 export type HtmlFaviconIcon =
@@ -2029,6 +2036,19 @@ export interface HtmlGeneratorOptions {
 export type HtmlParserAs = "document" | string;
 
 /**
+ * How a page's CSS modules rewrite it.
+ * @since 5.113.0
+ */
+export interface HtmlParserCssModules {
+	/**
+	 * Attributes whose values are rewritten with the page's CSS module names too, each with how its value names a class or an id, besides the built-in ones (`class`, `id`, `for`, `aria-labelledby`, `href="#id"`, `fill="url(#id)"`, `begin="id.click"`, ...); e.g. `{ "data-target": "id" }`.
+	 */
+	attributes?: {
+		[k: string]: HtmlCssModulesAttributeKind;
+	};
+}
+
+/**
  * Parser options for html modules.
  * @publishes plugins/HtmlParserOptions
  */
@@ -2044,12 +2064,17 @@ export interface HtmlParserOptions {
 	 */
 	chunkName?: NonEmptyString | import("../lib/html/HtmlParser").HtmlChunkNameFn;
 	/**
+	 * How a page's CSS modules — `<style module>` bodies and linked stylesheets that are CSS modules — rewrite it.
+	 * @since 5.113.0
+	 */
+	cssModules?: HtmlParserCssModules;
+	/**
 	 * Report each HTML parse error the page holds, by its WHATWG or html5lib name: a build error where end of input cuts a tag, comment or doctype short, a build warning for one the parser reads past. Off by default.
 	 * @since 5.113.0
 	 */
 	parseErrors?: boolean;
 	/**
-	 * Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `"..."` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed; one whose `lang` names another language is a `data:` module typed as that language's files (`<style lang="scss">` as `text/x-scss`, `<script lang="ts">` as `text/typescript`), and any other valid media-type name as `text/x-<lang>`, so a `mimetype` rule runs its loader. A `<style module>` body is a CSS module, and the page's `class` and `id` values are rewritten with the names it and any linked CSS module stylesheet declare, one named as such (`x.module.css`) or marked `<link rel="stylesheet" module>`; a page with neither is left as it is. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
+	 * Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `"..."` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed; one whose `lang` names another language is a `data:` module typed as that language's files (`<style lang="scss">` as `text/x-scss`, `<script lang="ts">` as `text/typescript`), and any other valid media-type name as `text/x-<lang>`, so a `mimetype` rule runs its loader. A `<style module>` body is a CSS module, and the page's `class` and `id` values, the ids its `for`, `form`, `list`, `headers`, `itemref`, `popovertarget`, `commandfor`, `interestfor` and `aria-*` reference attributes name, its same-page `href="#id"` links, SVG `url(#id)` references and SMIL `id.event` timings are rewritten with the names it and any linked stylesheet that is a CSS module declare (see `cssModules`); `<style module="card">` or `<link rel="stylesheet" module="card">` names a module, read as `card.btn`; a page with neither is left as it is. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
 	 */
 	sources?:
 		| /** Sources to extract as webpack dependencies. Use `"..."` to inline the default source list. @minItems 1 */ Array<
