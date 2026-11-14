@@ -250,8 +250,36 @@ describe("SourceProcessor — SVG minification", () => {
 	it("should preserve packed arc flags, implicit segments and exact path precision", () => {
 		const source = fixture("xml", "source-processor-svg-minification-should-preserve-packed-arc-flags-implicit");
 		const once = new SourceProcessor().process(source, compact).code;
-		expect(once).toBe(`<svg xmlns="${svg}"><path d="M0 0 1 2 .5.5A1 2 0 0110 20h9007199254740993"/></svg>`);
+		expect(once).toBe(`<svg xmlns="${svg}"><path d="M0 0l1 2-.5-1.5A1 2 0 0110 20h9007199254740993"/></svg>`);
 		expect(new SourceProcessor().process(once, compact).code).toBe(once);
+	});
+
+	it("should rebase decimal path coordinates only where every engine reads the same points", () => {
+		const source = fixture("xml", "source-processor-svg-minification-should-rebase-decimal-path-coordinates-only");
+		const options = { ...compact, collapseWhitespace: true };
+		const once = new SourceProcessor().process(source, options).code;
+		expect(once.match(/ d="[^"]*"/g)).toEqual([
+			// The second curve stays absolute: its float32 sum drifts from 371.9.
+			' d="M320 64c-106 0-192 84.4-192 188.6C128 371.9 248.2 514.9 298.4 569.4 310.2 582.2 329.8 582.2 341.6 569.4 391.8 514.9 512 371.9 512 252.6 512 148.4 426 64 320 64z"',
+			// Gecko's correctly rounded sum differs here, and Blink's digit sum below.
+			' d="M.001 0H.015"',
+			' d="M.001 0H.036"',
+			' d="M.3.1l.2.1h.2"',
+			' d="M.3.1l.1.2v.2"',
+			' d="M.3.1A1 1 0 01.7.4"',
+			' d="M.3.1A1 1 0 01.3.1"',
+			' d="M.3.1a1 1 0 010 0"',
+			' d="M.3.1l1e1.2"',
+			' d="M1e1.1.3.2"',
+			' d="M.1 0H12345678901234567.5"',
+			' d="M1.000000059604645 0H.3"',
+			' d="M0 0H999999999999999999999999999999999999999 .3"',
+			' d="M-.3.1-.1.4zL.6.7"',
+			' d="M.123.1l.2.1H9"',
+			' d="M.1.123l.1.2V9"',
+			' d="M.5 0H123456789.25"'
+		]);
+		expect(new SourceProcessor().process(once, options).code).toBe(once);
 	});
 
 	it("should preserve SVG styles without interrupting an enclosing CSS data URL", () => {
@@ -364,7 +392,7 @@ describe("SourceProcessor — SVG minification", () => {
 		const options = { ...compact, renderEmbeddedSource: builtinEmbeddedRenderer() };
 		expect(processor.process(fixture("xml", "source-processor-svg-minification-should-preserve-dtd-constraints-and-reset-every"), options).code).toBe(dtd + body);
 		for (const name of ["source-processor-svg-minification-should-preserve-dtd-constraints-and-reset-every-3", "source-processor-svg-minification-should-preserve-dtd-constraints-and-reset-every-4"]) expect(processor.process(fixture("xml", name), options).code).toBe(fixture("xml", name));
-		expect(processor.process(body, options).code).toBe(`<svg xmlns="${svg}" fill="red"><path d="M0 0 1 2" transform="scale(1)"/></svg>`);
+		expect(processor.process(body, options).code).toBe(`<svg xmlns="${svg}" fill="red"><path d="M0 0l1 2" transform="scale(1)"/></svg>`);
 	});
 
 	it("should leave foreign XML, HTML and beautified attributes unchanged", () => {
@@ -743,7 +771,7 @@ describe("SourceProcessor — SVG minification", () => {
 		const source = fixture("xml", "source-processor-svg-minification-should-shorten-path-data-alike-whether-an");
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgPathData: true };
 		const once = new SourceProcessor().process(source, options).code;
-		expect(once).toBe(`<svg xmlns="${svg}"><path id="a" d="M10 20V30"/></svg>`);
+		expect(once).toBe(`<svg xmlns="${svg}"><path id="a" d="M10 20v10"/></svg>`);
 		expect(new SourceProcessor().process(once, options).code).toBe(once);
 	});
 
