@@ -188,7 +188,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: benches-full/vue.js",
 			"swc minifier: fixture/issues/12189/input.js",
 			"swc minifier: fixture/issues/12215/input.js",
-			"swc minifier: fixture/issues/12218/leading-argument/input.js",
 			"swc minifier: fixture/issues/12565/while_body/input.js",
 			"swc minifier: fixture/next/66237/input.js",
 			"swc minifier: fixture/next/feedback-3/579-dcac359116b2707c/input.js",
@@ -229,7 +228,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: conditionals/cond_9",
 			"terser compress: transform/if_return",
 			"swc minifier: fixture/issues/7412/input.js",
-			"swc minifier: fixture/issues/12196/input.js",
 			"swc minifier: fixture/projects/mootools/.11/input.js"
 		]
 	],
@@ -425,7 +423,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc drops more dead code, as oxc's `peephole/dead_code_elimination.rs` tests show",
 		[
-			"oxc minifier: peephole/dead_code_elimination.rs:1047",
 			"oxc minifier: peephole/dead_code_elimination.rs:631",
 			"oxc minifier: peephole/dead_code_elimination.rs:636",
 			"oxc minifier: peephole/dead_code_elimination.rs:641",
@@ -529,7 +526,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/issue_2203_3",
 			"terser compress: collapse_vars/issue_2203_4",
 			"terser compress: collapse_vars/issue_2313_2",
-			"terser compress: collapse_vars/issue_2497",
 			"terser compress: collapse_vars/may_throw_2",
 			"terser compress: collapse_vars/cascade_if_1",
 			"terser compress: collapse_vars/unsafe_builtin",
@@ -644,7 +640,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc drops more unused declarations, as oxc's `peephole/remove_unused_declaration.rs` tests show",
 		[
 			"oxc minifier: peephole/remove_unused_declaration.rs:944",
-			"oxc minifier: peephole/remove_unused_declaration.rs:940",
 			"oxc minifier: peephole/remove_unused_declaration.rs:181",
 			"oxc minifier: peephole/remove_unused_declaration.rs:108",
 			"oxc minifier: peephole/remove_unused_declaration.rs:156",
@@ -864,7 +859,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what terser's `dead-code` tests cover",
 		[
-			"terser compress: dead-code/issue_2383_3",
 			"terser compress: dead-code/dead_code_2_should_warn",
 			"terser compress: dead-code/dead_code_2_should_warn_strict",
 			"terser compress: dead-code/dead_code_const_declaration",
