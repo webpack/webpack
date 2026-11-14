@@ -35954,6 +35954,12 @@ declare class TokenStream {
 	restoreMark(): void;
 
 	/**
+	 * Rewind the cursor to `pos`, an offset `_pos` held, as `restoreMark` does
+	 * for a mark the caller kept itself.
+	 */
+	rewind(pos: number): void;
+
+	/**
 	 * Discard a mark (CSS Syntax §3 "discard a mark") — pop without rewinding.
 	 */
 	discardMark(): void;
