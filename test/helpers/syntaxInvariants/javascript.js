@@ -8,7 +8,7 @@
 const vm = require("vm");
 const { parse: acornParse } = require("acorn");
 const { isStackOverflow } = require("../fixture");
-const { parse: webpackParse } = require("../../../lib/javascript/syntax-parser");
+const { estree: webpackParse } = require("../javascriptParse");
 const { wantedRespelling } = require("../../../tooling/compare-tools-harness");
 const {
 	cutsAt,
@@ -125,7 +125,7 @@ const goalFor = (source) => {
 	for (const sourceType of GOALS) {
 		// The options a build parses with, so what is held is what ships:
 		// `ranges` is on there, and a range is what this reads.
-		/** @type {import("../../../lib/javascript/syntax-parser").ParserOptions} */
+		/** @type {import("../javascriptParse").EstreeParseOptions} */
 		const options = {
 			sourceType,
 			ecmaVersion: "latest",
