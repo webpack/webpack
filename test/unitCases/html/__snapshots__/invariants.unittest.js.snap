@@ -2446,7 +2446,7 @@ exports[`HTML syntax — invariants html-minify-one-document-reaching-every-embe
 `;
 
 exports[`HTML syntax — invariants html-minify-one-document-reaching-every-embedded-site-offers-every-body-to-a prints {"print":"htmlMinify","renderEmbeddedSource":{"fixture":"answerAll"},"check":{"fixture":"answered"}} 1`] = `
-"<!doctype html><html lang=en><head><title>   every embedded body   </title><style>ANSWER(css)</style><script type=application/json>ANSWER(json)</script><script>ANSWER(javascript/script)</script></head><body>
+"<!doctype html><html lang=en><head><title>   every embedded body   </title><style>ANSWER(css/embedded-stylesheet)</style><script type=application/json>ANSWER(json)</script><script>ANSWER(javascript/script)</script></head><body>
 <p style=ANSWER(css/block-contents) onclick=ANSWER(javascript/event-handler)>styled</p>
 ANSWER(svg/foreign-element)
 <iframe srcdoc=\\"ANSWER(html/srcdoc)\\"></iframe>
@@ -2455,7 +2455,7 @@ ANSWER(svg/foreign-element)
 </body></html>"
 `;
 
-exports[`HTML syntax — invariants html-minify-one-document-reaching-every-embedded-site-offers-every-body-to-a prints {"print":"htmlMinify","renderEmbeddedSource":{"fixture":"answerAll"},"check":{"fixture":"answered"}} 2`] = `"{\\"asserted\\":[[\\"css\\",\\"json\\",\\"javascript/script\\",\\"css/block-contents\\",\\"javascript/event-handler\\",\\"svg/foreign-element\\",\\"html/srcdoc\\",\\"html/srcdoc\\"],\\"<!doctype html><html lang=en><head><title>   every embedded body   </title><style>ANSWER(css)</style><script type=application/json>ANSWER(json)</script><script>ANSWER(javascript/script)</script></head><body>\\\\n<p style=ANSWER(css/block-contents) onclick=ANSWER(javascript/event-handler)>styled</p>\\\\nANSWER(svg/foreign-element)\\\\n<iframe srcdoc=\\\\\\"ANSWER(html/srcdoc)\\\\\\"></iframe>\\\\n<iframe srcdoc=\\\\\\"ANSWER(html/srcdoc)\\\\\\"></iframe>\\\\n\\\\n</body></html>\\"]}"`;
+exports[`HTML syntax — invariants html-minify-one-document-reaching-every-embedded-site-offers-every-body-to-a prints {"print":"htmlMinify","renderEmbeddedSource":{"fixture":"answerAll"},"check":{"fixture":"answered"}} 2`] = `"{\\"asserted\\":[[\\"css/embedded-stylesheet\\",\\"json\\",\\"javascript/script\\",\\"css/block-contents\\",\\"javascript/event-handler\\",\\"svg/foreign-element\\",\\"html/srcdoc\\",\\"html/srcdoc\\"],\\"<!doctype html><html lang=en><head><title>   every embedded body   </title><style>ANSWER(css/embedded-stylesheet)</style><script type=application/json>ANSWER(json)</script><script>ANSWER(javascript/script)</script></head><body>\\\\n<p style=ANSWER(css/block-contents) onclick=ANSWER(javascript/event-handler)>styled</p>\\\\nANSWER(svg/foreign-element)\\\\n<iframe srcdoc=\\\\\\"ANSWER(html/srcdoc)\\\\\\"></iframe>\\\\n<iframe srcdoc=\\\\\\"ANSWER(html/srcdoc)\\\\\\"></iframe>\\\\n\\\\n</body></html>\\"]}"`;
 
 exports[`HTML syntax — invariants html-minify-one-document-reaching-every-embedded-site-offers-every-body-to-a prints {"print":"htmlMinify"} 1`] = `
 "<!doctype html><html lang=en><head><title>   every embedded body   </title><style>.a{color:red;margin:10px}.svg{background:url(\\"data:image/svg+xml,<svg>   <rect  fill='red' />   </svg>\\")}.css{background:url(\\"data:text/css,.i {  color : #ff0000  }\\")}.html{background:url(\\"data:text/html,<div>  <!-- x -->  <p>hi</p>  </div>\\")}.json{background:url('data:application/json,{ \\"a\\" :  1 }')}.js{background:url(\\"data:text/javascript,var  a  =  1 ;\\")}.b64{background:url(data:text/css;base64,LmlubmVyIHsgIGNvbG9yIDogI2ZmMDAwMCAgfQ==)}.png{background:url(data:image/png;base64,AAAA)}</style><script type=application/json>{\\"a\\":1,\\"b\\":[1,2]}</script><script>  var  a  =  1 ;  function  f ( ) { return  a }  </script></head><body>
@@ -2588,6 +2588,25 @@ exports[`HTML syntax — invariants html-minify-the-function-an-event-handler-is
 
 exports[`HTML syntax — invariants html-minify-the-function-an-event-handler-is-asked-about-reports-what-a-renderer tokenizes 1`] = `"attr[3,10|12,25]\\" open[0,27|1,2] text[27,28] close[28,32|30,31] end=32"`;
 
+exports[`HTML syntax — invariants html-printer-marks-each-stylesheet-it-offers-as-one-embedded-in-this-document parses 1`] = `
+"| <html>
+|   <head>
+|     <style>
+|       \\"a{b:c}\\"
+|   <body>
+|     <p>
+|       style=\\"b:c\\"
+|     <link>
+|       href=\\"data:text/css,a{b:c}\\"
+|       rel=\\"stylesheet\\""
+`;
+
+exports[`HTML syntax — invariants html-printer-marks-each-stylesheet-it-offers-as-one-embedded-in-this-document parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-printer-marks-each-stylesheet-it-offers-as-one-embedded-in-this-document prints {"mode":"minify"} 1`] = `"<style>a{b:c}</style><p style=b:c></p><link rel=stylesheet href=data:text/css,a{b:c}>"`;
+
+exports[`HTML syntax — invariants html-printer-marks-each-stylesheet-it-offers-as-one-embedded-in-this-document tokenizes 1`] = `"open[0,7|1,6] text[7,13] close[13,21|15,20] attr[24,29|31,34]\\" open[21,36|22,23] close[36,40|38,39] attr[46,49|50,60] attr[61,65|67,87]\\" open[40,89|41,45] end=89"`;
+
 exports[`HTML syntax — invariants html-syntax-invariants-holds-every-relation-over-its-sources parses 1`] = `
 "| <!DOCTYPE html>
 | <html>
@@ -2697,7 +2716,7 @@ exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-re
 
 exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<p style=\\"color: red\\">x</p><style>a { b: c }</style>"`;
 
-exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/block-contents:\\"color: red\\" css:\\"a { b: c }\\""`;
+exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/block-contents:\\"color: red\\" css/embedded-stylesheet:\\"a { b: c }\\""`;
 
 exports[`HTML syntax — invariants invariants-runner-declared-runs-and-named-renderers prints {"mode":"minify","transforms":{"comments":{"regexp":"keep"}}} 1`] = `"<p style=\\"color: red\\">x</p><style>a { b: c }</style><!--keep-->"`;
 
@@ -21500,7 +21519,7 @@ exports[`HTML syntax — invariants source-processor-a-foreign-stylesheet-answer
 
 exports[`HTML syntax — invariants source-processor-a-foreign-stylesheet-answered-later-escapes-the-answer-where prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<svg><style>a { b : c }</style></svg><style>d { e : f }</style>"`;
 
-exports[`HTML syntax — invariants source-processor-a-foreign-stylesheet-answered-later-escapes-the-answer-where prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\"a { b : c }\\" svg/foreign-element:\\"<svg><style>\\\\u00000:0\\\\u0000</style></svg>\\" css:\\"d { e : f }\\""`;
+exports[`HTML syntax — invariants source-processor-a-foreign-stylesheet-answered-later-escapes-the-answer-where prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\"a { b : c }\\" svg/foreign-element:\\"<svg><style>\\\\u00000:0\\\\u0000</style></svg>\\" css/embedded-stylesheet:\\"d { e : f }\\""`;
 
 exports[`HTML syntax — invariants source-processor-a-foreign-stylesheet-answered-later-escapes-the-answer-where prints {"print":"processAsync","mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"css":"a<b{}"},"async":true}} 1`] = `"<svg><style>a&lt;b{}</style></svg><style>a<b{}</style>"`;
 
@@ -31749,7 +31768,7 @@ exports[`HTML syntax — invariants source-processor-merging-adjacent-style-drop
 
 exports[`HTML syntax — invariants source-processor-merging-adjacent-style-drops-a-run-s-first-element-only-where-2 prints {"mode":"minify","mergeStyles":true,"removeEmptyElements":true,"renderEmbeddedSource":"offers"} 1`] = `"<style>a{}b{}</style>"`;
 
-exports[`HTML syntax — invariants source-processor-merging-adjacent-style-drops-a-run-s-first-element-only-where-2 prints {"mode":"minify","mergeStyles":true,"removeEmptyElements":true,"renderEmbeddedSource":"offers"} 2`] = `"css:\\"a{}b{}\\""`;
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-drops-a-run-s-first-element-only-where-2 prints {"mode":"minify","mergeStyles":true,"removeEmptyElements":true,"renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\"a{}b{}\\""`;
 
 exports[`HTML syntax — invariants source-processor-merging-adjacent-style-drops-a-run-s-first-element-only-where-2 prints {"mode":"minify","mergeStyles":true,"removeEmptyElements":true,"renderEmbeddedSource":{"name":"answers","options":{"css":"b{c:\\"d"}}} 1`] = `"<style>b{c:\\"d</style>"`;
 
@@ -42510,7 +42529,7 @@ exports[`HTML syntax — invariants source-processor-render-embedded-source-decl
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-declines-a-body-the-renderer-returns prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<style>.a { color : red }</style>"`;
 
-exports[`HTML syntax — invariants source-processor-render-embedded-source-declines-a-body-the-renderer-returns prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\".a { color : red }\\""`;
+exports[`HTML syntax — invariants source-processor-render-embedded-source-declines-a-body-the-renderer-returns prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\".a { color : red }\\""`;
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-declines-a-body-the-renderer-returns prints {"mode":"minify"} 1`] = `"<style>.a { color : red }</style>"`;
 
@@ -42708,13 +42727,13 @@ exports[`HTML syntax — invariants source-processor-render-embedded-source-join
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-joins-sheets-on-their-sources-where-no prints {"mode":"minify","mergeStyles":true,"renderEmbeddedSource":"offers"} 1`] = `"<style>a{b:c}d{e:f}</style>"`;
 
-exports[`HTML syntax — invariants source-processor-render-embedded-source-joins-sheets-on-their-sources-where-no prints {"mode":"minify","mergeStyles":true,"renderEmbeddedSource":"offers"} 2`] = `"css:\\"a{b:c}d{e:f}\\""`;
+exports[`HTML syntax — invariants source-processor-render-embedded-source-joins-sheets-on-their-sources-where-no prints {"mode":"minify","mergeStyles":true,"renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\"a{b:c}d{e:f}\\""`;
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-joins-sheets-on-their-sources-where-no prints {"mode":"minify"} 1`] = `"<style>a{b:c}</style><style>d{e:f}</style>"`;
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-joins-sheets-on-their-sources-where-no prints {"print":"processAsync","mode":"minify","mergeStyles":true,"renderEmbeddedSource":"offers"} 1`] = `"<style>a{b:c}d{e:f}</style>"`;
 
-exports[`HTML syntax — invariants source-processor-render-embedded-source-joins-sheets-on-their-sources-where-no prints {"print":"processAsync","mode":"minify","mergeStyles":true,"renderEmbeddedSource":"offers"} 2`] = `"css:\\"a{b:c}d{e:f}\\""`;
+exports[`HTML syntax — invariants source-processor-render-embedded-source-joins-sheets-on-their-sources-where-no prints {"print":"processAsync","mode":"minify","mergeStyles":true,"renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\"a{b:c}d{e:f}\\""`;
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-joins-sheets-on-their-sources-where-no prints {"print":"processAsync","mode":"minify","mergeStyles":true,"renderEmbeddedSource":{"name":"as-written","async":true}} 1`] = `"<style>a{b:c}d{e:f}</style>"`;
 
@@ -42792,7 +42811,7 @@ exports[`HTML syntax — invariants source-processor-render-embedded-source-keep
 </div>"
 `;
 
-exports[`HTML syntax — invariants source-processor-render-embedded-source-keeps-a-map-the-renderer-attached-to-an prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\"  .a { color : red }  \\" javascript/script:\\"  var a = 1  \\""`;
+exports[`HTML syntax — invariants source-processor-render-embedded-source-keeps-a-map-the-renderer-attached-to-an prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\"  .a { color : red }  \\" javascript/script:\\"  var a = 1  \\""`;
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-keeps-a-map-the-renderer-attached-to-an prints {"mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"css":".a{color:red}\\n/*# sourceMappingURL=data:application/json;base64,e30= */","javascript/script":"var a=1\\n//# sourceMappingURL=data:application/json;base64,e30="}}} 1`] = `
 "<div>
@@ -42899,7 +42918,7 @@ exports[`HTML syntax — invariants source-processor-render-embedded-source-keep
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-keeps-the-body-when-the-renderer-throws prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<style>.a{color:red}</style>"`;
 
-exports[`HTML syntax — invariants source-processor-render-embedded-source-keeps-the-body-when-the-renderer-throws prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\".a{color:red}\\""`;
+exports[`HTML syntax — invariants source-processor-render-embedded-source-keeps-the-body-when-the-renderer-throws prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\".a{color:red}\\""`;
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-keeps-the-body-when-the-renderer-throws prints {"mode":"minify","renderEmbeddedSource":"throws"} 1`] = `"<style>.a{color:red}</style>"`;
 
@@ -43573,7 +43592,7 @@ exports[`HTML syntax — invariants source-processor-render-embedded-source-offe
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-offers-an-inline-style-a-style-attribute prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<p style=\\"color : red\\">x</p><style>.a { color : red }</style><script>var a = 1</script>"`;
 
-exports[`HTML syntax — invariants source-processor-render-embedded-source-offers-an-inline-style-a-style-attribute prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/block-contents:\\"color : red\\" css:\\".a { color : red }\\" javascript/script:\\"var a = 1\\""`;
+exports[`HTML syntax — invariants source-processor-render-embedded-source-offers-an-inline-style-a-style-attribute prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/block-contents:\\"color : red\\" css/embedded-stylesheet:\\".a { color : red }\\" javascript/script:\\"var a = 1\\""`;
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-offers-an-inline-style-a-style-attribute prints {"mode":"minify"} 1`] = `"<p style=\\"color : red\\">x</p><style>.a { color : red }</style><script>var a = 1</script>"`;
 
@@ -43654,7 +43673,7 @@ exports[`HTML syntax — invariants source-processor-render-embedded-source-offe
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-offers-every-language-embedded-languages prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<style>  .a { color : red }  </style><script>  var  a  =  1  </script><script type=application/json>  { \\"a\\" :  1 }  </script><p style=\\"  color : red  \\">x</p><svg viewBox=\\"0 0 2 2\\">   <rect/>   </svg><iframe srcdoc=\\"<p>   inner   </p>\\"></iframe>"`;
 
-exports[`HTML syntax — invariants source-processor-render-embedded-source-offers-every-language-embedded-languages prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\"  .a { color : red }  \\" javascript/script:\\"  var  a  =  1  \\" json:\\"  { \\\\\\"a\\\\\\" :  1 }  \\" css/block-contents:\\"  color : red  \\" svg/foreign-element:\\"<svg viewBox=\\\\\\"0 0 2 2\\\\\\">   <rect/>   </svg>\\" html/srcdoc:\\"<p>   inner   </p>\\""`;
+exports[`HTML syntax — invariants source-processor-render-embedded-source-offers-every-language-embedded-languages prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\"  .a { color : red }  \\" javascript/script:\\"  var  a  =  1  \\" json:\\"  { \\\\\\"a\\\\\\" :  1 }  \\" css/block-contents:\\"  color : red  \\" svg/foreign-element:\\"<svg viewBox=\\\\\\"0 0 2 2\\\\\\">   <rect/>   </svg>\\" html/srcdoc:\\"<p>   inner   </p>\\""`;
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-offers-every-language-embedded-languages prints {"mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"css":"/*css*/","javascript/script":"/*javascript*/","json":"/*json*/","css/block-contents":"/*css*/","svg/foreign-element":"/*svg*/","html/srcdoc":"/*html*/"}}} 1`] = `"<style>/*css*/</style><script>/*javascript*/</script><script type=application/json>/*json*/</script><p style=/*css*/>x</p>/*svg*/<iframe srcdoc=\\"/*html*/\\"></iframe>"`;
 
@@ -43765,7 +43784,7 @@ exports[`HTML syntax — invariants source-processor-render-embedded-source-offe
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-offers-what-an-inline-svg-nests-its prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<svg viewBox=\\"0 0 2 2\\"><style>.s { fill : red }</style><rect style=\\"fill : red\\"/><script>var b = 2</script></svg>"`;
 
-exports[`HTML syntax — invariants source-processor-render-embedded-source-offers-what-an-inline-svg-nests-its prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\".s { fill : red }\\" css/block-contents:\\"fill : red\\" javascript/script:\\"var b = 2\\" svg/foreign-element:\\"<svg viewBox=\\\\\\"0 0 2 2\\\\\\"><style>.s { fill : red }</style><rect style=\\\\\\"fill : red\\\\\\"/><script>var b = 2</script></svg>\\""`;
+exports[`HTML syntax — invariants source-processor-render-embedded-source-offers-what-an-inline-svg-nests-its prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\".s { fill : red }\\" css/block-contents:\\"fill : red\\" javascript/script:\\"var b = 2\\" svg/foreign-element:\\"<svg viewBox=\\\\\\"0 0 2 2\\\\\\"><style>.s { fill : red }</style><rect style=\\\\\\"fill : red\\\\\\"/><script>var b = 2</script></svg>\\""`;
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-offers-what-an-inline-svg-nests-its prints {"mode":"minify"} 1`] = `"<svg viewBox=\\"0 0 2 2\\"><style>.s { fill : red }</style><rect style=\\"fill : red\\"/><script>var b = 2</script></svg>"`;
 
@@ -43881,7 +43900,7 @@ exports[`HTML syntax — invariants source-processor-render-embedded-source-repl
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-replaces-the-built-in-css-and-json prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<style>.a { color : red }</style><script type=application/json>{ \\"a\\" : 1 }</script>"`;
 
-exports[`HTML syntax — invariants source-processor-render-embedded-source-replaces-the-built-in-css-and-json prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\".a { color : red }\\" json:\\"{ \\\\\\"a\\\\\\" : 1 }\\""`;
+exports[`HTML syntax — invariants source-processor-render-embedded-source-replaces-the-built-in-css-and-json prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\".a { color : red }\\" json:\\"{ \\\\\\"a\\\\\\" : 1 }\\""`;
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-replaces-the-built-in-css-and-json prints {"mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"css":".A { COLOR : RED }","json":"{ \\"A\\" : 1 }"}}} 1`] = `"<style>.A { COLOR : RED }</style><script type=application/json>{ \\"A\\" : 1 }</script>"`;
 
@@ -53254,7 +53273,7 @@ exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-
 
 exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-into-markup-keeps-a-style-body-as prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<style>a { b: c }</style><p>x"`;
 
-exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-into-markup-keeps-a-style-body-as prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\"a { b: c }\\""`;
+exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-into-markup-keeps-a-style-body-as prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\"a { b: c }\\""`;
 
 exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-into-markup-keeps-a-style-body-as prints {"mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"css":"a{b:'</style><b>x</b>'}"}}} 1`] = `"<style>a { b: c }</style><p>x"`;
 
@@ -53296,7 +53315,7 @@ exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-
 
 exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-into-markup-keeps-a-style-body-as-3 prints {"mode":"minify","renderEmbeddedSource":"offers"} 1`] = `"<style>a { b: c }</style>"`;
 
-exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-into-markup-keeps-a-style-body-as-3 prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css:\\"a { b: c }\\""`;
+exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-into-markup-keeps-a-style-body-as-3 prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\"a { b: c }\\""`;
 
 exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-into-markup-keeps-a-style-body-as-3 prints {"mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"css":"a{b:'</styles'}"}}} 1`] = `"<style>a{b:'</styles'}</style>"`;
 

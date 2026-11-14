@@ -1,0 +1,11 @@
+.b {
+	background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><style>.c::after { content: '✓' }</style></svg>");
+}
+
+.d {
+	background: url("data:text/html,<style>.e::after { content: '✓' }</style>");
+}
+
+.f {
+	background: url("data:text/css,.g::after { content: '✓' }");
+}

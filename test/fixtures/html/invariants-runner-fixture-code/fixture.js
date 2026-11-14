@@ -22,7 +22,7 @@ const source = () => {
  */
 const minifyStyleAttributes = (body, info) => {
 	offers.push(`${info.type}/${info.hostType}`);
-	return info.as === undefined ? undefined : body.replace(/ /g, "");
+	return info.as === "block-contents" ? body.replace(/ /g, "") : undefined;
 };
 
 /**

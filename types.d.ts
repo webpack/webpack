@@ -9706,7 +9706,7 @@ declare interface EmbeddedSourceInfo {
 	module: Module;
 
 	/**
-	 * which of that language's productions this is, where more than one can be embedded — a `style=""` holds `"block-contents"`, an inline `<style>` a whole `"stylesheet"`. Absent where the language has only one
+	 * which of that language's productions this is, where more than one can be embedded — a `style=""` holds `"block-contents"`, an inline `<style>` an `"embedded-stylesheet"`. Absent where the language has only one
 	 */
 	as?: string;
 }
@@ -14005,7 +14005,7 @@ declare interface HtmlProcessOptions {
 	deferEmbeddedSource?: DeferredEmbeddedSource[];
 
 	/**
-	 * renders each nested body this document embeds — an inline `<style>`, every `style=""` (as the block's contents it is, SVG's and MathML's included), a `<script>` holding JSON or JavaScript (with `as` naming which production of it the body is — `"module"` for a `<script type=module>`, `"script"` for a classic one), every event handler attribute, with `as: "event-handler"` saying it is a function body rather than a script — the production a `return` at its top level is in, which a renderer whose engine takes only whole scripts wraps before it reads — an `<svg>` subtree, with `as: "foreign-element"` saying it is an element of this document rather than a standalone `.svg`, and the document an `<iframe srcdoc>` holds (decoded, and written back escaped). The only way any of them is minified: webpack minifies nothing here itself, and `builtinEmbeddedRenderer` is its own CSS and JSON minifiers for a caller to pass; returning anything but text leaves a body as written
+	 * renders each nested body this document embeds — an inline `<style>` (with `as: "embedded-stylesheet"` saying it is read in this document's encoding rather than as a file of its own, so it declares no `@charset`; a `data:` URL's stylesheet is a file of its own, offered with no `as`), every `style=""` (as the block's contents it is, SVG's and MathML's included), a `<script>` holding JSON or JavaScript (with `as` naming which production of it the body is — `"module"` for a `<script type=module>`, `"script"` for a classic one), every event handler attribute, with `as: "event-handler"` saying it is a function body rather than a script — the production a `return` at its top level is in, which a renderer whose engine takes only whole scripts wraps before it reads — an `<svg>` subtree, with `as: "foreign-element"` saying it is an element of this document rather than a standalone `.svg`, and the document an `<iframe srcdoc>` holds (decoded, and written back escaped). The only way any of them is minified: webpack minifies nothing here itself, and `builtinEmbeddedRenderer` is its own CSS and JSON minifiers for a caller to pass; returning anything but text leaves a body as written
 	 */
 	renderEmbeddedSource?: (
 		source: string,
@@ -39741,7 +39741,7 @@ declare namespace exports {
 			input: { [index: string]: string | Buffer },
 			sourceMap?: Partial<RawSourceMap>,
 			minimizerOptions?: {
-				as?: "stylesheet" | "block-contents";
+				as?: "stylesheet" | "block-contents" | "embedded-stylesheet";
 				environment?: CssEnvironment;
 				charset?: false | "auto";
 				convertLengthUnits?: boolean;
@@ -40055,6 +40055,7 @@ declare namespace exports {
 				export let A: HtmlSyntaxPath;
 				export let BLOCK_CONTENTS: "block-contents";
 				export let EMBEDDED_LANGUAGES: string[];
+				export let EMBEDDED_STYLESHEET: "embedded-stylesheet";
 				export let EVENT_HANDLER: "event-handler";
 				export let FOREIGN_ELEMENT: "foreign-element";
 				export let FLAG_FOSTER_REGION: 128;
@@ -40454,6 +40455,7 @@ declare namespace exports {
 		}
 		export namespace dataURL {
 			export let EMBEDDED_LANGUAGES: string[];
+			export let EMBEDDED_STYLESHEET: "embedded-stylesheet";
 			export let JSON_TYPE: "json";
 			export let SVG_TYPE: "svg";
 			export let URIRegEx: RegExp;
