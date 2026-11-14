@@ -152,6 +152,16 @@ describe("compare-css-tools — the meaning relation", () => {
 		expect(meaningReports("a{b:calc(1px - 2px)}", "a{b:calc(1px -/**/2px)}", beautify)).toHaveLength(1);
 		expect(meaningReports("a{b:calc( 1px  +  2px )}", "a{b:calc(1px + 2px)}", beautify)).toEqual([]);
 		expect(meaningReports("a{b:1px/**/2px}", "a{b: 1px 2px }", beautify)).toEqual([]);
+		expect(
+			meaningReports(
+				"a{--op:+;width:calc(1px var(--op) 2px)}",
+				"a{--op:+;width:calc(1px var(--op)2px)}",
+				beautify
+			)
+		).toHaveLength(1);
+		expect(
+			meaningReports("a{b:calc(1px env(x) 2px)}", "a{b:calc(1px env(x)2px)}", beautify)
+		).toHaveLength(1);
 	});
 });
 

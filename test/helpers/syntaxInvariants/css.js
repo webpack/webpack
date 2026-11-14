@@ -11,6 +11,7 @@ const MODERN_BROWSERS = require("browserslist")(
 	"last 1 chrome version, last 1 firefox version, last 1 safari version, last 1 edge version"
 );
 const { isStackOverflow } = require("../fixture");
+const { SUBSTITUTION_FUNCTIONS } = require("../../../lib/css/data");
 const { SourceProcessor } = require("../../../lib/css/syntax");
 const {
 	Flag,
@@ -1046,6 +1047,20 @@ const LAYOUT_SPACE_BEFORE = /^(?:Comma|Semicolon|Declaration|QualifiedRule|AtRul
 // Outside a selector, whitespace beside these is what a math function needs.
 const SIGN = /^Delim [+-]$/;
 
+/**
+ * Whether whitespace beside a part says something outside a selector: a sign
+ * needs it, and a substitution may stand for one.
+ * @param {MeaningNode} part a node's part
+ * @returns {boolean} true where the whitespace beside it is kept
+ */
+const readsSpace = (part) => {
+	if (SIGN.test(part[0])) return true;
+	if (!part[0].startsWith("Function ")) return false;
+	const name = part[0].slice("Function ".length);
+	// A custom function (`--name()`) substitutes what it returns too.
+	return SUBSTITUTION_FUNCTIONS.has(name) || name.startsWith("--");
+};
+
 /** @typedef {[string, ...MeaningPart[]]} MeaningNode a node's head, then its parts */
 /** @typedef {" " | MeaningNode} MeaningPart a node, or a whitespace run */
 
@@ -1058,7 +1073,8 @@ const SIGN = /^Delim [+-]$/;
  * where `a b` and `a.b` differ. In a value or an at-rule's prelude two tokens
  * mean the same apart or juxtaposed, as a comment between them prints as a
  * space, but for a `+` or `-`: `calc(1px+ 2px)` is invalid, and a custom
- * property keeps the space for the `calc()` it is substituted into.
+ * property keeps the space for the `calc()` it is substituted into. A `var()`
+ * may stand for a sign, so the space beside one is kept as well.
  * @param {string} css a stylesheet
  * @returns {string} its meaning, as the JSON of each node's head and parts
  */
@@ -1130,7 +1146,7 @@ const meaningHead = (nodePath, kind, children) => {
 /**
  * Whitespace as what it says: in a selector one space between two of its parts,
  * none at either end or beside a part that separates on its own; elsewhere one
- * beside a sign alone.
+ * beside a sign or a substitution alone.
  * @param {MeaningPart[]} children a node's parts, a space for each whitespace run
  * @param {boolean} selector whether the node reads its whitespace as a selector does
  * @returns {MeaningPart[]} them, with only the spaces that say something
@@ -1151,7 +1167,7 @@ const withLayout = (children, selector) => {
 				after === children.length ||
 				(selector
 					? LAYOUT_SPACE.test(before[0]) || LAYOUT_SPACE_BEFORE.test(next[0])
-					: !SIGN.test(before[0]) && !SIGN.test(next[0]))
+					: !readsSpace(before) && !readsSpace(next))
 			) {
 				continue;
 			}
