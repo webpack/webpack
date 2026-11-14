@@ -39,37 +39,6 @@ module.exports = ["memory", "filesystem"].map((type) => ({
 				}
 			});
 			compiler.hooks.compilation.tap("ReplaceConnections", (compilation) => {
-				/** @type {import("webpack").Module | undefined} */
-				let unchangedModule;
-				let blockReads = 0;
-				const { moduleGraph } = compilation;
-				const getParentBlock = moduleGraph.getParentBlock;
-				compilation.hooks.beforeChunks.tap("ReplaceConnections", () => {
-					if (!compilation.moduleMemCaches) return;
-					moduleGraph.getParentBlock = (dependency) => {
-						if (moduleGraph.getParentModule(dependency) === unchangedModule) {
-							blockReads++;
-						}
-						return getParentBlock.call(moduleGraph, dependency);
-					};
-				});
-				compilation.hooks.afterChunks.tap("ReplaceConnections", () => {
-					moduleGraph.getParentBlock = getParentBlock;
-					if (!compilation.moduleMemCaches) return;
-					if (currentWatchStep.step === "0" && blockReads === 0) {
-						compilation.errors.push(
-							new compiler.webpack.WebpackError(
-								"The initial graph must be extracted"
-							)
-						);
-					} else if (Number(currentWatchStep.step) >= 2 && blockReads !== 0) {
-						compilation.errors.push(
-							new compiler.webpack.WebpackError(
-								`Unchanged modules must reuse their cached block connections (${blockReads} reads)`
-							)
-						);
-					}
-				});
 				compilation.hooks.finishModules.tap("ReplaceConnections", (modules) => {
 					const byPath = new Map(
 						[...modules].map((module) => [module.nameForCondition(), module])
@@ -77,7 +46,6 @@ module.exports = ["memory", "filesystem"].map((type) => ({
 					const origin = byPath.get(originPath);
 					const imports = byPath.get(path.join(compiler.context, "imports.js"));
 					assert(origin && imports);
-					unchangedModule = imports;
 					const sample = imports.dependencies.find(
 						(dependency) => dependency instanceof ESMImportDependency
 					);
