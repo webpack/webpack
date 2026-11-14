@@ -1275,10 +1275,16 @@ const behaviorOf = (code) => {
 			if (reason === "ERR_SCRIPT_EXECUTION_TIMEOUT") return null;
 			const kind = typeof name === "string" ? name : typeof error;
 			// JavaScriptCore quotes the failing source text, which a printer may
-			// rewrite, as `(evaluating '…')`; V8 never writes it.
+			// rewrite, as `(evaluating '…')` and as the operand `in` refuses
+			// (`010 is not an Object.`); V8 writes neither.
 			const value =
 				typeof message === "string"
-					? message.replace(/ \(evaluating '[\s\S]*'\)$/, "")
+					? message
+							.replace(
+								/^[\s\S]* (is not an Object\.) \(evaluating '[\s\S]*'\)$/,
+								"$1"
+							)
+							.replace(/ \(evaluating '[\s\S]*'\)$/, "")
 					: isObject
 						? ""
 						: show(error);
