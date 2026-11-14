@@ -43340,6 +43340,24 @@ exports[`CSS syntax — invariants css-syntax-source-processor-replacing-a-node-
 
 exports[`CSS syntax — invariants css-syntax-source-processor-replacing-a-node-removes-a-node-in-an-enter-visitor tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] ident[8,11] semicolon[11,12] ident[12,15] colon[15,16] number[16,17] right-curly-bracket[17,18] end=18"`;
 
+exports[`CSS syntax — invariants css-syntax-source-processor-reports-an-empty-body-for-a-streamed-rule-with-no-prelude parses 1`] = `
+"length 440025, sha256 550dcb6fe0f627d4
+[[\\"qualified rule\\",[],[[\\"ident\\",\\"a\\"],\\":\\",\\";\\",[\\"ident\\",\\"a\\"],\\":\\",\\";\\",[\\"ident\\",\\"a\\"],\\":\\",\\";\\",[\\"ident\\",\\"a\\"],\\":\\",\\";\\",[\\"ident\\",\\"a\\"],\\":\\",\\";\\",[\\"ident\\",\\"a\\"],\\":\\",\\";\\",[\\"ident\\",\\"a\\"],\\":\\",\\";\\",[\\"ident\\",\\"a\\"],\\":\\",\\";\\",[
+…
+[\\"ident\\",\\"a\\"],\\":\\",\\";\\",[\\"ident\\",\\"a\\"],\\":\\",\\";\\",[\\"ident\\",\\"a\\"],\\":\\",\\";\\",[\\"ident\\",\\"a\\"],\\":\\",\\";\\",[\\"ident\\",\\"a\\"],\\":\\",\\";\\",[\\"ident\\",\\"a\\"],\\":\\",\\";\\",[\\"ident\\",\\"a\\"],\\":\\",\\";\\",[\\"ident\\",\\"a\\"],\\":\\",\\";\\",[\\"ident\\",\\"a\\"],\\":\\",\\";\\"]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-source-processor-reports-an-empty-body-for-a-streamed-rule-with-no-prelude parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-source-processor-reports-an-empty-body-for-a-streamed-rule-with-no-prelude prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-source-processor-reports-an-empty-body-for-a-streamed-rule-with-no-prelude tokenizes 1`] = `
+"length 1197858, sha256 f410ecae3a7bd650
+left-curly-bracket[0,1] ident[1,2] colon[2,3] semicolon[3,4] ident[4,5] colon[5,6] semicolon[6,7] ident[7,8] colon[8,9] semicolon[9,10] ident[10,11] colon[11,12] semicolon[12,13] ident[13,14] colon[14
+…
+59993,59994] semicolon[59994,59995] ident[59995,59996] colon[59996,59997] semicolon[59997,59998] ident[59998,59999] colon[59999,60000] semicolon[60000,60001] right-curly-bracket[60001,60002] end=60002"
+`;
+
 exports[`CSS syntax — invariants css-syntax-source-processor-surfaces-comments-through-the-node-type-comment parses {"entry":"SourceProcessor","visit":{"types":["Declaration","Comment"],"fields":["source"],"exit":false}} 1`] = `
 "Comment[11,17] source=\\"/*!c*/\\"
 Declaration[2,17] source=\\"color:red/*!c*/\\""

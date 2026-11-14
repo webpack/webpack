@@ -23,6 +23,30 @@ const attributeValue = (element, name) =>
 // fixture's `parse.json` names, is in `invariants.unittest.js`'s snapshot;
 // these hold what an accessor answers when read again.
 describe("XmlSyntax — parsing", () => {
+	it("should forget the entity text a parse that threw decoded", () => {
+		const aborted = fixture("xml", "xml-syntax-parsing-should-forget-the-entity-text-a-parse-that-threw-decoded");
+		expect(() =>
+			parseHtmlRefs(aborted, 0, {
+				xml: true,
+				parseError: (_input, code) => {
+					throw new Error(code);
+				}
+			})
+		).toThrow("eof-in-tag");
+		const root = A.child(1, parseHtmlRefs(fixture("xml", "xml-syntax-parsing-should-forget-the-entity-text-a-parse-that-threw-decoded-2"), 0, { xml: true }));
+		expect(attributeValue(root, "a")).toBe("NEW");
+		expect(A.value(A.child(0, root))).toBe("NEW");
+	});
+
+	it("should skip text under a DTD and keep the elements an entity holds", () => {
+		const document = parseHtmlRefs(fixture("xml", "xml-syntax-parsing-should-honor-ast-skip-options-outside-the-root-and-under-a-dtd-2"), 0, { xml: true, skip: { text: true } });
+		const root = A.child(1, document);
+		const children = A.children(root);
+		expect(children.map((child) => A.type(child))).toEqual([NodeType.Element]);
+		expect(A.name(children[0])).toBe("i");
+		expect(A.children(children[0])).toEqual([]);
+	});
+
 	it("should expose XML attribute values through the shared path", () => {
 		const source = fixture("xml", "xml-syntax-parsing-should-expose-xml-attribute-values-through-the-shared-path");
 		const document = parseHtmlRefs(source, 0, { xml: true });

@@ -1,0 +1,1 @@
+<!DOCTYPE r [<!ENTITY e "OLD">]><r a="&e;">&e;<a b

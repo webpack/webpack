@@ -219,6 +219,27 @@ describe("CssSyntax — substitution span searches", () => {
 });
 
 describe("CssSyntax — SourceProcessor", () => {
+	it("reports an empty body for a streamed rule with no prelude", () => {
+		const css = fixture("css", "css-syntax-source-processor-reports-an-empty-body-for-a-streamed-rule-with-no-prelude");
+		/** @type {number[]} */
+		const counts = [];
+		// A parser of its own: its list store starts empty, as in a fresh process.
+		jest.isolateModules(() => {
+			const syntax = require("../../../lib/css/syntax");
+			const { Field: fields, NodeType: types } = require("../../../lib/css/syntax-parser");
+			new syntax.SourceProcessor()
+				.use({
+					[types.QualifiedRule]: (
+						/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
+					) => {
+						counts.push(path.fieldCount(fields.declarations));
+					}
+				})
+				.process(css, {});
+		});
+		expect(counts).toEqual([0]);
+	});
+
 	describe("replacing a node", () => {
 		/**
 		 * @param {string} css source
