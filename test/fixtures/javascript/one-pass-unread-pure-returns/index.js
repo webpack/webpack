@@ -39,10 +39,15 @@ count = 2;
 (function self() {
 	return (count-- && self()).value, /*#__PURE__*/ pure(make("self"));
 })();
+var saved;
+(function () {
+	eval("saved = arguments.callee");
+	return /*#__PURE__*/ pure(make("eval"));
+})();
 var read = (tag) => /*#__PURE__*/ pure(make(tag));
 var kept = read("kept");
 function declared(tag, other) {
 	return /*#__PURE__*/ pure(make(tag), other);
 }
 declared("declared", 1);
-console.log(log.join(), kept.length);
+console.log(log.join(), kept.length, saved().length);
