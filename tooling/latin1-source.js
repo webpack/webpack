@@ -154,7 +154,13 @@ const toLatin1Source = (source) => {
 		if (inRange(comments, i)) {
 			const codePoint = /** @type {number} */ (source.codePointAt(i));
 			const spelling = COMMENT_SPELLINGS[source[i]];
-			result += spelling !== undefined ? spelling : `U+${hexOf(codePoint)}`;
+			// a line separator in a block comment still ends a line for ASI
+			result +=
+				code === 0x2028 || code === 0x2029
+					? "\n"
+					: spelling !== undefined
+						? spelling
+						: `U+${hexOf(codePoint)}`;
 			if (codePoint > 0xffff) i++;
 		} else if (!inRange(tokenRanges, i)) {
 			// whitespace or a line terminator between tokens, which no escape spells

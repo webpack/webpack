@@ -4,11 +4,11 @@ const { toLatin1Source } = require("../../../tooling/latin1-source");
 
 describe("latin1-source", () => {
 	/**
-	 * @param {string} source a script evaluating to a string or a list of numbers
-	 * @returns {string | number[]} what it evaluates to
+	 * @param {string} source a script evaluating to a string, a list of numbers or nothing
+	 * @returns {string | number[] | undefined} what it evaluates to
 	 */
 	const run = (source) =>
-		/** @type {string | number[]} */ (
+		/** @type {string | number[] | undefined} */ (
 			// eslint-disable-next-line no-new-func
 			new Function(`return (${source});`)()
 		);
@@ -25,6 +25,14 @@ describe("latin1-source", () => {
 		const rewritten = toLatin1Source(source);
 		expect(rewritten).toBe("[1,  2,\n 3]");
 		expect(run(rewritten)).toEqual(run(source));
+	});
+
+	it("keeps a line separator in a block comment a line break, as ASI reads it", () => {
+		const source = "(function () { return/*\u2028*/1; })()";
+		const rewritten = toLatin1Source(source);
+		expect(rewritten).toBe("(function () { return/*\n*/1; })()");
+		expect(run(rewritten)).toBe(run(source));
+		expect(run(source)).toBeUndefined();
 	});
 
 	it("refuses a tagged template's text, which its tag reads as written", () => {
