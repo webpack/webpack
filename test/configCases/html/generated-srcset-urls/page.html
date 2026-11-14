@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="preload" as="image" imagesrcset="./image.svg?space 480w, ./image.svg?trailing 800w">
+</head>
+<body>
+<img src="./image.svg?space" alt="ordinary source">
+<img srcset="./image.svg?space 1x, ./image.svg?trailing 2x" alt="density candidates">
+<picture>
+<source srcset='./image.svg?leading 480w, ./image.svg?interior 800w'>
+<img alt="picture candidates">
+</picture>
+<img srcset="whitespace 1x, encoded 2x" alt="external candidates">
+<img srcset="unicode 1x, data-image 2x" alt="URL syntax controls">
+<img srcset=./image.svg?leading alt="unquoted candidate">
+<img srcset="ignored" alt="empty fallback">
+<img srcset="data-comma 2x" alt="payload comma">
+</body>
+</html>
