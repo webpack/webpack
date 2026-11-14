@@ -4059,6 +4059,28 @@ describe("SyntaxTree", () => {
 		]);
 	});
 
+	it("marks legacy assert on an export-all declaration", () => {
+		const { parseProgram, takeParsedTree } =
+			require("../../../lib/javascript/syntax").parser;
+		const program = /** @type {number} */ (
+			/** @type {unknown} */ (
+				parseProgram(fixture("javascript", "syntax-tree-marks-legacy-assert-on-an-export-all"), 0, { sourceType: "module" })
+			)
+		);
+		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
+		const declarations = [0, 1].map((index) =>
+			tree.field(index, Field.body, program)
+		);
+		expect(declarations.map((node) => tree.legacyAssert(node))).toEqual([
+			true,
+			false
+		]);
+		expect(
+			tree.name(tree.field(0, Field.exported, declarations[1]))
+		).toBe("b");
+		tree.release();
+	});
+
 	it("marks legacy assert on a re-export, and writes one an edition before attributes parsed", () => {
 		const { parseProgram, takeParsedTree } =
 			require("../../../lib/javascript/syntax").parser;
@@ -4258,6 +4280,28 @@ describe("SyntaxTree", () => {
 			typeof (/** @type {EXPECTED_ANY} */ (types.buffer).transfer) === "function"
 		) {
 			expect(types.byteLength).toBe(0);
+		}
+		// a release sizes the next tree after this one: size it back down
+		parseProgram(fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-refuse-a-node-its-scope"), 0, { sourceType: "script" });
+		/** @type {SyntaxTree} */ (takeParsedTree()).release();
+	});
+
+	it("starts a large tree's values at the last one's length", () => {
+		const { parseProgram, takeParsedTree } = require(
+			"../../../lib/javascript/syntax-parser"
+		);
+		// more values than a released tree keeps for the next one
+		const source = fixture("javascript", "syntax-tree-copies-a-large-tree-s-columns-for-its-lazy-objects-and-frees-its-own").repeat(2);
+		for (let i = 0; i < 2; i++) {
+			const program = /** @type {number} */ (
+				parseProgram(source, 0, { sourceType: "script" })
+			);
+			const tree = /** @type {SyntaxTree} */ (takeParsedTree());
+			expect(tree.fieldCount(Field.body, program)).toBe(280000);
+			const last = tree.field(0, Field.expression, tree.field(279999, Field.body, program));
+			expect(tree.name(last)).toBe("a");
+			expect(tree.start(last)).toBe(559998);
+			tree.release();
 		}
 		// a release sizes the next tree after this one: size it back down
 		parseProgram(fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-refuse-a-node-its-scope"), 0, { sourceType: "script" });
