@@ -5267,17 +5267,23 @@ describe("fromEstreeObject", () => {
 			"should write the tree its objects hold with %s",
 			(_name, edit) => {
 				for (const options of [undefined, { ranges: true, locations: true }]) {
-					const program = /** @type {EXPECTED_ANY} */ (
-						toEstreeObject(
-							/** @type {number} */ (
-								parseProgram(input, 0, { sourceType: "module" })
-							),
-							options
-						)
-					);
-					edit(program);
-					const expected = json(fromEstreeObject(plain(program), input));
-					expect(json(fromEstreeObject(program, input))).toBe(expected);
+					const edited = () => {
+						const program = /** @type {EXPECTED_ANY} */ (
+							toEstreeObject(
+								/** @type {number} */ (
+									parseProgram(input, 0, { sourceType: "module" })
+								),
+								options
+							)
+						);
+						edit(program);
+						return program;
+					};
+					// written before anything else reads it, as `plain` reads every field
+					const program = edited();
+					const written = json(fromEstreeObject(program, input));
+					const expected = json(fromEstreeObject(plain(edited()), input));
+					expect(written).toBe(expected);
 					// and again once the tree they were read from was let go
 					parseProgram(fixture("javascript", "parser-from-the-objects-to-estree-object-built-should-write-the-tree-its-objects-hold-once-it-was-let-go"), 0, {});
 					expect(json(fromEstreeObject(program, input))).toBe(expected);
