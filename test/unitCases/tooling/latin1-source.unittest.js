@@ -14,7 +14,7 @@ describe("latin1-source", () => {
 		);
 
 	it("escapes a string's character and spells a comment's in ASCII", () => {
-		const source = '/* a — b */ "x→y"';
+		const source = '/* a — b */ "x\u2192y"';
 		const rewritten = toLatin1Source(source);
 		expect(rewritten).toBe('/* a - b */ "x\\u2192y"');
 		expect(run(rewritten)).toBe(run(source));
@@ -36,8 +36,13 @@ describe("latin1-source", () => {
 	});
 
 	it("refuses a tagged template's text, which its tag reads as written", () => {
-		expect(() => toLatin1Source("String.raw`a→b`")).toThrow(
+		expect(() => toLatin1Source("String.raw`a\u2192b`")).toThrow(
 			/tagged template/
 		);
+		expect(() =>
+			toLatin1Source(
+				"class C { #tag = String.raw; value() { return this.#tag`\u2192`; } }"
+			)
+		).toThrow(/tagged template/);
 	});
 });

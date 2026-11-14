@@ -49,6 +49,7 @@ const hexOf = (code) => code.toString(16).toUpperCase().padStart(4, "0");
 // can end an expression; a block's `}` too, as refusing is the safe mistake
 const TAG_ENDS = new Set([
 	"name",
+	"privateId",
 	"string",
 	"num",
 	"regexp",
