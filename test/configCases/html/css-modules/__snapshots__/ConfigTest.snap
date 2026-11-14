@@ -5,17 +5,18 @@ exports[`ConfigTestCases html css-modules exported tests should generate the pag
 <html>
 <head>
 <link rel=\\"stylesheet\\" href=\\"card.module.css\\">
-<link rel=\\"stylesheet\\" href=\\"global.css\\">
-<link rel=\\"stylesheet\\" href=\\"by-rule.css\\" module>
-<style module>/*!********************************************************************************************************************************************************************************************************************************************************************************!*\\\\
-  !*** css data:text/css;base64,Ci5idG4geyBjb2xvcjogcmVkOyB9Ci5jYXJkIHsgY29sb3I6IHdoaXRlOyB9Ci5iYXNlIHsgbWFyZ2luOiAwOyB9Ci5wcmltYXJ5IHsgY29tcG9zZXM6IGJhc2U7IGNvbG9yOiBibHVlOyB9CiNtYWluIHsgcGFkZGluZzogMDsgfQo6Z2xvYmFsKC5zaGVsbCkgeyBjb2xvcjogYmxhY2s7IH0K (exportType: text) ***!
-  \\\\********************************************************************************************************************************************************************************************************************************************************************************/
+<link rel=\\"stylesheet\\" href=\\"global1.css\\">
+<link rel=\\"stylesheet\\" href=\\"by-rule.css\\">
+<style module>/*!************************************************************************************************************************************************************************************************************************************************************************************************************!*\\\\
+  !*** css data:text/css;base64,Ci5idG4geyBjb2xvcjogcmVkOyB9Ci5jYXJkIHsgY29sb3I6IHdoaXRlOyB9Ci5iYXNlIHsgbWFyZ2luOiAwOyB9Ci5wcmltYXJ5IHsgY29tcG9zZXM6IGJhc2U7IGNvbG9yOiBibHVlOyB9CiNtYWluIHsgcGFkZGluZzogMDsgfQojaGVscCB7IG1hcmdpbjogMDsgfQo6Z2xvYmFsKC5zaGVsbCkgeyBjb2xvcjogYmxhY2s7IH0K (exportType: text) ***!
+  \\\\************************************************************************************************************************************************************************************************************************************************************************************************************/
 
 .m_btn { color: red; }
 .m_card { color: white; }
 .m_base { margin: 0; }
 .m_primary { color: blue; }
 #m_main { padding: 0; }
+#m_help { margin: 0; }
 .shell { color: black; }
 </style>
 <style module lang=\\"less\\">/*!*************************************************************************************************************************!*\\\\
@@ -46,6 +47,21 @@ exports[`ConfigTestCases html css-modules exported tests should generate the pag
 <div style=\\"color: red\\" class=\\"\\">five</div>
 <div class=\\"m_primary m_base\\">six</div>
 <div class=\\"m_ruled\\">seven</div>
+<label for=\\"m_main\\">eight</label>
+<input aria-describedby=\\"m_help  m_main unknown\\" aria-labelledby=\\"unknown\\" aria-controls=\\"m_primary\\" list=m_help>
+<output for=\\"m_help m_main\\" form=\\"m_main\\">nine</output>
+<button popovertarget=m_help commandfor=\\"m_help\\">ten</button>
+<a href=\\"#m_help\\">eleven</a>
+<a href=\\"#unknown\\">twelve</a>
+<a href=\\"#\\">thirteen</a>
+<a href=\\"#m_help\\">encoded</a>
+<a href=\\"#m_main\\">percent</a>
+<a href=\\"#%E0%A4%A\\">bad-percent</a>
+<a href=\\"#%68elp\\" id=\\"%68elp\\">literal-percent</a>
+<a href=\\"&amp;help\\">not-fragment</a>
+<a href=\\"https://example.com/#help\\">fourteen</a>
+<svg><use href=\\"#m_help\\"></use><use xlink:href=\\"#m_main\\"></use></svg>
+<div data-for=\\"help\\" title=\\"#help\\">fifteen</div>
 </body>
 </html>
 "

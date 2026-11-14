@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="./theme.module.css" module="theme">
+<style module>
+.btn { color: red; }
+.base { margin: 0; }
+.primary { composes: base; color: blue; }
+#help { padding: 0; }
+#grad { color: red; }
+#clip { color: red; }
+</style>
+<style module="card">
+.btn { color: white; }
+#field { color: gray; }
+</style>
+</head>
+<body>
+<button class="btn card.btn theme.title theme.btn card.missing other.x a.b">one</button>
+<label for="card.field">two</label>
+<input id="card.field" aria-describedby="help card.field">
+<a href="#card.field">three</a>
+<div id="help" interestfor="help">four</div>
+<template><div id="%68elp" class="btn"></div></template>
+<a href="#%68elp">five</a>
+<svg>
+<linearGradient id="grad"></linearGradient>
+<clipPath id="clip"></clipPath>
+<circle fill="url(#grad)" stroke="red" clip-path="url('#clip')" mask="url(#unknown)" filter="URL( &quot;#grad&quot; )"></circle>
+<rect fill="freeze"></rect>
+<animate begin="help.click; 2s; primary.end+1s; card.field.mouseover" end="1.5s; help.repeat(2)"></animate>
+</svg>
+<div data-target="help" data-classes="btn primary" data-link="#help" data-refs="help card.field" data-paint="url(#grad)" data-other="help">six</div>
+</body>
+</html>
