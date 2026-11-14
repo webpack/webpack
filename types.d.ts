@@ -3959,6 +3959,12 @@ declare abstract class ColumnarSyntaxTree {
 	legacyAssert(node: number): boolean;
 
 	/**
+	 * Where the text reads `<!--` as `<`, `!` and `--`, as only a module does;
+	 * a script, the source's text set in one, would read a comment from there.
+	 */
+	htmlOpensAsOperators(): ReadonlyArray<number>;
+
+	/**
 	 * The node a lazy object of this tree stands for, the way back from `lazyEstree`.
 	 */
 	nodeOf(object: NodeEstreeIndex): number;
@@ -16045,6 +16051,12 @@ declare interface JavascriptNodeReader {
 	field: (i: number, field: number, node: number) => number;
 	textOf: (part: number, node: number) => null | string;
 	legacyAssert: (node: number) => boolean;
+
+	/**
+	 * Where the text reads `<!--` as `<`, `!` and `--`, as only a module does;
+	 * a script, the source's text set in one, would read a comment from there.
+	 */
+	htmlOpensAsOperators: () => ReadonlyArray<number>;
 
 	/**
 	 * Pushes a node's children in its fields' order, holes left out, for a
@@ -32418,6 +32430,11 @@ declare interface ScopeInfo {
 	inShorthand: string | boolean;
 	inTaggedTemplateTag: boolean;
 	inTry: boolean;
+
+	/**
+	 * true inside a loop, or a branch whose condition is unknown at build time
+	 */
+	inBranch: boolean;
 	isStrict: boolean;
 	isAsmJs: boolean;
 	terminated?: 1 | 2;
@@ -35261,6 +35278,12 @@ declare class SyntaxParser {
 	inGeneratorContext(): boolean;
 	updateContext(prevType: TokenType): void;
 	overrideContext(tokenCtx: TokContextLike): void;
+
+	/**
+	 * A module reads `<!--` as `<`, `!` and `--`, where a script, as webpack
+	 * emits a module into, reads an HTML-style comment.
+	 */
+	readHtmlOpenAsOperators(pos: number): void;
 	exitScope(): void;
 
 	/**
@@ -35455,6 +35478,12 @@ declare class SyntaxParser {
 	 */
 	checkUnreserved(ref?: any): void;
 	parseIdent(liberal?: boolean): any;
+
+	/**
+	 * Whether the token before the current one is a `.` or a `?.`, read from
+	 * the text, as the parser no longer holds the type.
+	 */
+	followsDot(): boolean;
 	parseIdentNode(): any;
 	parsePrivateIdent(): any;
 	parseYield(forInit?: string | boolean): any;

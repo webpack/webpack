@@ -11,3 +11,11 @@ it("should keep a dead-branch import() balanced when its options are computed", 
 		: import("./live.js"));
 	expect(ns.V).toBe("LIVE_VALUE");
 });
+
+it("should warn about unknown attributes in the live branch only", async () => {
+	var options = makeOptions("javascript");
+	const ns = await (isDEV
+		? import("./dead.js", makeOptions("text"))
+		: import("./live.js", options).catch(() => import("./live.js")));
+	expect(ns.V).toBe("LIVE_VALUE");
+});

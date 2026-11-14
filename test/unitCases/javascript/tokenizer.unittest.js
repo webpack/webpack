@@ -497,8 +497,6 @@ describe("Parser.tokenizer", () => {
 			const sources = [
 				// `async function` reads as a statement until the parser says otherwise
 				fixture("javascript", "parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn"),
-				// a brace after a conditional's colon is an object, not a block
-				fixture("javascript", "parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn-2"),
 				fixture("javascript", "parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn-3"),
 				fixture("javascript", "parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn-4")
 			];
@@ -535,6 +533,26 @@ describe("Parser.tokenizer", () => {
 				"num",
 				"eof"
 			]);
+		});
+
+		it("should read a division after a conditional's function expression, unlike acorn", () => {
+			// acorn reads `function () {}` after a statement-level `:` as a
+			// declaration and the `/` after it as a regexp; the parser knows better
+			const source = fixture("javascript", "parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn-2");
+			expect(() => new (require("vm").Script)(source)).not.toThrow();
+			expect(() =>
+				acornPort.Parser.parse(source, { ecmaVersion: "latest" })
+			).toThrow(/Unterminated regular expression/);
+			for (const [, parser] of PARSERS) {
+				const tokens = /** @type {{ type: { label: string } }[]} */ (
+					parsedTokens(parser, source, { ecmaVersion: "latest" })
+				);
+				expect(tokens.map((token) => token.type.label)).toEqual([
+					"name", "=", "name", "?", "name", ":", "{", "}", "/", "num", ";",
+					"name", "=", "name", "?", "name", ":", "function", "(", ")", "{",
+					"}", "/", "num", "eof"
+				]);
+			}
 		});
 
 		it("should read a regexp after `yield` in a generator method", () => {

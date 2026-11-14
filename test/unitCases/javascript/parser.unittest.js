@@ -1,6 +1,7 @@
 "use strict";
 
 const { fixture, fixtures } = require("../../helpers/fixture");
+const supportsOptionalChaining = require("../../helpers/supportsOptionalChaining");
 
 /** @typedef {{ type: { label: string }, value: unknown, start: number, end: number, loc?: object, range?: [number, number] }} TokenLike */
 /** @typedef {Record<string, EXPECTED_ANY>} Options */
@@ -490,6 +491,25 @@ describe("WebpackParser", () => {
 			expect(close.comments.map((c) => c.value)).toEqual([" rest"]);
 			expect(op(fixture("javascript", "webpack-parser-owned-operator-scanner-should-read-the-inlined-html-comment-forms-4"))).toBe(">");
 		});
+
+		it("should keep where a module reads `<!--` as operators", () => {
+			const source = fixture("javascript", "webpack-parser-owned-operator-scanner-should-keep-where-a-module-reads-html-open-as-operators");
+			for (const type of /** @type {("module" | "auto")[]} */ (["module", "auto"])) {
+				const { tree } = JavascriptParser._parseTree(source, type, false);
+				expect(tree.htmlOpensAsOperators()).toEqual([30, 43]);
+				tree.release();
+			}
+			expect(() => Parser.parse(source, { ecmaVersion: "latest", sourceType: "module" })).not.toThrow();
+			// a script, as the fallback of `auto` reads it, takes a comment there
+			const fallback = JavascriptParser._parseTree(
+				fixture("javascript", "webpack-parser-owned-operator-scanner-should-keep-where-a-module-reads-html-open-as-operators-2"),
+				"auto",
+				false
+			);
+			expect(fallback.tree.htmlOpensAsOperators()).toEqual([]);
+			expect(fallback.comments.map((comment) => comment.value)).toEqual(["b"]);
+			fallback.tree.release();
+		});
 	});
 
 	describe("auto source type module->script fallback", () => {
@@ -563,6 +583,99 @@ describe("WebpackParser", () => {
 			const { ast, parses } = parseAuto(fixture("javascript", "webpack-parser-statements-should-parse-if-else-chains-and-returns-on-the-fast-2"));
 			expect(parses).toBe(1);
 			expect(ast.body[0].type).toBe("ReturnStatement");
+		});
+
+		it("should read the whole source as a script where the module parse fails", () => {
+			const { parseProgram, takeParsedTree } = require("../../../lib/javascript/syntax-parser");
+			const name = "webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails";
+			for (const [suffix, comment] of [
+				["", " comment"],
+				// `<!--` read as operators leaves no script to turn into in place
+				["-2", "value"]
+			]) {
+				/** @type {CollectedComment[]} */
+				const comments = [];
+				const program = /** @type {number} */ (
+					parseProgram(fixture("javascript", `${name}${suffix}`), 0, {
+						sourceType: "auto",
+						comments
+					})
+				);
+				const tree = /** @type {import("../../../lib/javascript/syntax-parser").SyntaxTree} */ (takeParsedTree());
+				expect(/** @type {EXPECTED_ANY} */ (tree.estree(program)).sourceType).toBe("script");
+				expect(comments.map((item) => item.value)).toEqual([comment]);
+				tree.release();
+			}
+			// where both fail, the module parse's error is the one thrown
+			expect(() =>
+				parseProgram(fixture("javascript", `${name}-3`), 0, { sourceType: "auto" })
+			).toThrow("Unexpected token (2:0)");
+			const source = fixture("javascript", name);
+			expect(
+				/** @type {EXPECTED_ANY} */ (
+					parseProgram(source, 0, { sourceType: "auto", estree: true })
+				).sourceType
+			).toBe("script");
+			expect(() =>
+				parseProgram(source, 0, { sourceType: "auto", scopes: true })
+			).not.toThrow();
+			// a parse-error callback is told of the module parse's error instead
+			const parseError = jest.fn();
+			expect(
+				parseProgram(source, 0, { sourceType: "auto", parseError })
+			).toBeUndefined();
+			expect(parseError).toHaveBeenCalledTimes(1);
+		});
+
+		it("should report a script read after a failed module parse once", () => {
+			const { parseProgram, takeParsedTree } = require("../../../lib/javascript/syntax-parser");
+			const source = fixture("javascript", "webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-4");
+			/** @type {EXPECTED_ANY[]} */
+			const comments = [];
+			/** @type {EXPECTED_ANY[]} */
+			const tokens = [];
+			parseProgram(source, 0, {
+				sourceType: "auto",
+				onComment: comments,
+				onToken: tokens
+			});
+			/** @type {import("../../../lib/javascript/syntax-parser").SyntaxTree} */ (takeParsedTree()).release();
+			expect(comments.map((comment) => comment.value)).toEqual([" lead ", " comment"]);
+			expect(tokens.filter((token) => token.value === "first")).toHaveLength(1);
+			// a callback is told of each token as read, which no retry could take back
+			const onComment = jest.fn();
+			expect(() =>
+				parseProgram(source, 0, { sourceType: "auto", onComment })
+			).toThrow("Unexpected token (1:26)");
+			expect(onComment).toHaveBeenCalledTimes(1);
+			for (const name of ["onToken", "onTokenRead", "onInsertedSemicolon", "onTrailingComma"]) {
+				expect(() =>
+					parseProgram(source, 0, { sourceType: "auto", [name]: () => {} })
+				).toThrow("Unexpected token (1:26)");
+			}
+			// an error a callback throws is no syntax error to read past
+			const valid = fixture("javascript", "webpack-parser-auto-source-type-module-script-fallback-should-report-a-script-read-after-a-failed");
+			const thrown = new Error("from a callback");
+			let reads = 0;
+			expect(() =>
+				parseProgram(valid, 0, {
+					sourceType: "auto",
+					onTokenRead: () => {
+						if (reads++ === 0) throw thrown;
+					}
+				})
+			).toThrow(thrown);
+			expect(reads).toBe(1);
+			const syntaxError = new SyntaxError("from a callback");
+			expect(() =>
+				parseProgram(valid, 0, {
+					sourceType: "auto",
+					onComment: [],
+					onToken: () => {
+						throw syntaxError;
+					}
+				})
+			).toThrow(syntaxError);
 		});
 
 		it("should produce the same AST as an explicit script parse", () => {
@@ -3530,6 +3643,55 @@ describe("Parser", () => {
 			expect(statement.expression.argument.regex).toEqual({
 				pattern: "=",
 				flags: "g"
+			});
+		}
+	});
+
+	describe("division after an operand", () => {
+		/**
+		 * @param {unknown} node a parsed node or a value inside one
+		 * @param {{ divisions: number, regexps: number }} counts what was seen so far
+		 * @returns {{ divisions: number, regexps: number }} the counts
+		 */
+		const countSlashes = (node, counts = { divisions: 0, regexps: 0 }) => {
+			if (Array.isArray(node)) {
+				for (const item of node) countSlashes(item, counts);
+			} else if (node && typeof node === "object") {
+				const object = /** @type {Record<string, unknown>} */ (node);
+				if (object.type === "BinaryExpression" && object.operator === "/") {
+					counts.divisions++;
+				}
+				if (object.type === "Literal" && object.regex) counts.regexps++;
+				for (const key of Object.keys(object)) {
+					if (key !== "type") countSlashes(object[key], counts);
+				}
+			}
+			return counts;
+		};
+
+		for (const [name, divisions, regexps] of /** @type {[string, number, number][]} */ ([
+			["a-function-or-class-expression", 12, 0],
+			["a-keyword-or-of-after-optional-chaining", 6, 0],
+			["an-identifier-named-of", 4, 2],
+			["a-class-or-function-property-after-optional-chaining", 9, 0]
+		])) {
+			it(`reads the slashes after ${name.replace(/-/g, " ")}`, () => {
+				const source = fixture("javascript", `parser-division-after-an-operand-${name}`);
+				// the host engine reads `?.` only from Node.js 14 on
+				if (!source.includes("?.") || supportsOptionalChaining()) {
+					expect(() => new (require("vm").Script)(source)).not.toThrow();
+				}
+				/** @type {ParserOptions} */
+				const options = { ecmaVersion: "latest", sourceType: "script" };
+				// the parse a build runs
+				JavascriptParser._parseTree(source, "auto", false).tree.release();
+				for (const ast of [
+					Parser.parse(source, options),
+					webpackParse(source, options),
+					webpackParse(source, { ...options, lazyNodes: true })
+				]) {
+					expect(countSlashes(plain(ast))).toEqual({ divisions, regexps });
+				}
 			});
 		}
 	});

@@ -2409,6 +2409,16 @@ describe("test262", () => {
 							(item) =>
 								!/is part of a circular reexport chain in '\.\/[^']*_FIXTURE\.js'/.test(
 									item.message
+								) &&
+								// these pass options only known at runtime on purpose, which
+								// webpack can't read import attributes from at build time
+								!(
+									name.startsWith(
+										"expressions/dynamic-import/import-attributes/2nd-param-"
+									) &&
+									/The import attributes of the import\(\) options can't be determined at build time/.test(
+										item.message
+									)
 								)
 						);
 
