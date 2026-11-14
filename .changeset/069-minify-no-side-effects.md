@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Drop unread calls to functions `#__NO_SIDE_EFFECTS__` marks when minifying.
+Drop more unread `#__PURE__` and `#__NO_SIDE_EFFECTS__` calls when minifying.
