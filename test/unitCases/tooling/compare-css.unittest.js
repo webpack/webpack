@@ -125,6 +125,14 @@ describe("compare-css-tools — the meaning relation", () => {
 		expect(meaningReports(".a :hover{}", ".a :hover {}", beautify)).toEqual([]);
 		expect(meaningReports(".a > :hover{}", ".a>:hover{}", beautify)).toEqual([]);
 	});
+
+	it("should decode a name once, so an escaped backslash stays a backslash", () => {
+		const beautify = { mode: /** @type {const} */ ("beautify") };
+		expect(meaningReports("a{\\5c 74op:0}", "a{top:0}", beautify)).toHaveLength(1);
+		expect(meaningReports("@\\5c 6d{}", "@m{}", beautify)).toHaveLength(1);
+		expect(meaningReports("a{b:\\5c 63(1px)}", "a{b:c(1px)}", beautify)).toHaveLength(1);
+		expect(meaningReports("a{CO\\4cOR:red}", "a{color:red}", beautify)).toEqual([]);
+	});
 });
 
 describe("compare-css-tools — the cold branches fixture", () => {

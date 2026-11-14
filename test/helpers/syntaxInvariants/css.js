@@ -1097,13 +1097,11 @@ const meaningHead = (nodePath, kind, children) => {
 	if (kind === NodeType.Declaration) {
 		const written = nodePath.name();
 		// A custom property's name is case-sensitive, every other one is not.
-		const said = written.startsWith("--")
-			? written
-			: unescapeIdentifier(written).toLowerCase();
+		const said = written.startsWith("--") ? written : written.toLowerCase();
 		return `${name} ${said}${nodePath.flag(Flag.important) ? " !important" : ""}`;
 	}
 	if (kind === NodeType.AtRule || kind === NodeType.Function) {
-		return `${name} ${unescapeIdentifier(nodePath.name()).toLowerCase()}`;
+		return `${name} ${nodePath.name().toLowerCase()}`;
 	}
 	if (kind === NodeType.SimpleBlock) return `${name} ${nodePath.value()}`;
 	if (children !== 0 || kind === NodeType.QualifiedRule) return name;
