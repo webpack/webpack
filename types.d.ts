@@ -11121,6 +11121,17 @@ type ExportedVariableInfo = string | VariableInfo | ScopeInfo;
 type Exports = true | string[];
 declare abstract class ExportsInfo {
 	/**
+	 * Names the module's `export *` sources provide with conflicting bindings.
+	 * They resolve to no binding, and so does any `export *` of this module.
+	 */
+	get ambiguousExports(): ReadonlySet<string>;
+
+	/**
+	 * Records that a name is ambiguous among the module's `export *` sources.
+	 */
+	addAmbiguousExport(name: string): boolean;
+
+	/**
 	 * Records that an owned export got an inlined used name.
 	 */
 	markInlinedExports(): void;
@@ -11303,6 +11314,11 @@ declare interface ExportsSpec {
 	 * list of maybe prior exposed, but now hidden exports
 	 */
 	hideExports?: null | Set<string>;
+
+	/**
+	 * names whose `export *` sources provide conflicting bindings, so they resolve to no binding
+	 */
+	ambiguousExports?: Set<string>;
 
 	/**
 	 * when reexported: from which module
