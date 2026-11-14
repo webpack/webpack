@@ -2169,6 +2169,55 @@ describe("SourceProcessor — a run inside a run", () => {
 		expect(code).toBe(alone);
 	});
 
+	it("runs every visitor of a nested run on the processor whose outer run skips or stops", () => {
+		/** @type {string[]} */
+		const seen = [];
+		/** @type {string[][]} */
+		const inner = [];
+		const inside = fixture("css", "source-processor-a-run-inside-a-run-same-processor-inner");
+		/**
+		 * @param {"skip" | "stop"} halt how the outer run holds its visitors back
+		 * @returns {ReturnType<InstanceType<typeof SourceProcessor>["use"]>} a processor that nests a run on itself once halted
+		 */
+		const make = (halt) => {
+			const processor = new SourceProcessor().use(
+				/** @type {import("../../../lib/css/syntax-parser").VisitorMap} */ ({
+					[NodeType.QualifiedRule]: (rule) => {
+						if (halt === "skip" && rule.source().startsWith("b")) rule.skipChildren();
+					},
+					[NodeType.Declaration]: (declaration) => {
+						seen.push(declaration.name());
+						if (halt !== "stop" || declaration.name() !== "color") return;
+						declaration.stop();
+						const before = seen.length;
+						processor.process(inside);
+						inner.push(seen.slice(before));
+					}
+				})
+			);
+			return processor;
+		};
+		const skipping = make("skip");
+		skipping.process(fixture("css", "source-processor-a-run-inside-a-run-same-processor-skip-outer"), {
+			mode: "minify",
+			renderEmbeddedSource: (source) => {
+				const before = seen.length;
+				skipping.process(inside);
+				inner.push(seen.slice(before));
+				return source;
+			}
+		});
+		expect(seen).toEqual(["color", "margin", "padding", "top"]);
+		seen.length = 0;
+		const stopping = make("stop");
+		stopping.process(fixture("css", "source-processor-a-run-inside-a-run-same-processor-stop-outer"));
+		expect(seen).toEqual(["color", "margin", "padding"]);
+		// The halted run's visitors are held back again, then come back for the next run.
+		stopping.process(inside);
+		expect(inner).toEqual([["margin", "padding"], ["margin", "padding"]]);
+		expect(seen).toEqual(["color", "margin", "padding", "margin", "padding"]);
+	});
+
 	it("walks a stylesheet a visitor starts, and the outer walk goes on", () => {
 		/**
 		 * @param {boolean} nest whether the first declaration starts runs of its own

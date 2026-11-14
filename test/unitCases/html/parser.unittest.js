@@ -421,6 +421,28 @@ describe("SourceProcessor — streamed walk offsets", () => {
 		]);
 	});
 
+	it("runs every visitor of a nested run on the processor whose outer run stopped", () => {
+		/** @type {string[]} */
+		const seen = [];
+		/** @type {string[]} */
+		let inner = [];
+		const processor = new SourceProcessor().use(
+			/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
+				[NodeType.Element]: (path) => {
+					seen.push(path.name());
+					if (path.name() !== "p") return;
+					path.stop();
+					const before = seen.length;
+					processor.process(fixture("html", "source-processor-a-run-inside-a-run-same-processor-inner"));
+					inner = seen.slice(before);
+				}
+			})
+		);
+		processor.process(fixture("html", "source-processor-a-run-inside-a-run-same-processor-stop-outer"));
+		expect(inner).toEqual(["html", "head", "body", "ul", "li"]);
+		expect(seen).toEqual(["html", "head", "body", "p", ...inner]);
+	});
+
 	it("runs a walk the document's enter starts before the outer tokenizer does", () => {
 		/** @type {string[]} */
 		const outer = [];
