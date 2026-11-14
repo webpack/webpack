@@ -595,7 +595,7 @@ const opaqueDeclarationRanges = (css) => {
 	const visitors = {
 		[NodeType.AtRule]: {
 			enter: (nodePath) => {
-				atRules.push(unescapeIdentifier(nodePath.name()).toLowerCase());
+				atRules.push(nodePath.name().toLowerCase());
 			},
 			exit: () => {
 				atRules.pop();

@@ -864,7 +864,7 @@ const htmlMeaning = (html, tree, cssOptions) => {
 	 */
 	const flush = () => {
 		const words = run.replace(/\s+/g, " ").trim();
-		if (words !== "") said.push(...words.split(" "));
+		if (words !== "") for (const word of words.split(" ")) said.push(word);
 		run = "";
 	};
 	/** @type {Record<number, { enter: (nodePath: EXPECTED_ANY) => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
