@@ -3,13 +3,14 @@
 <head>
 <link rel="stylesheet" href="./card.module.css">
 <link rel="stylesheet" href="./global.css">
-<link rel="stylesheet" href="./by-rule.css" module>
+<link rel="stylesheet" href="./by-rule.css">
 <style module>
 .btn { color: red; }
 .card { color: white; }
 .base { margin: 0; }
 .primary { composes: base; color: blue; }
 #main { padding: 0; }
+#help { margin: 0; }
 :global(.shell) { color: black; }
 </style>
 <style module lang="less">
@@ -31,5 +32,20 @@ $accent: purple; .scss-scoped { color: $accent; }
 <div style="color: red" class="">five</div>
 <div class=primary>six</div>
 <div class="ruled">seven</div>
+<label for="main">eight</label>
+<input aria-describedby="help  main unknown" aria-labelledby="unknown" aria-controls="primary" list=help>
+<output for="help main" form="main">nine</output>
+<button popovertarget=help commandfor="&#104;elp">ten</button>
+<a href="#help">eleven</a>
+<a href="#unknown">twelve</a>
+<a href="#">thirteen</a>
+<a href="&#35;help">encoded</a>
+<a href="#%6Dain">percent</a>
+<a href="#%E0%A4%A">bad-percent</a>
+<a href="#%68elp" id="%68elp">literal-percent</a>
+<a href="&amp;help">not-fragment</a>
+<a href="https://example.com/#help">fourteen</a>
+<svg><use href="#help"></use><use xlink:href="#main"></use></svg>
+<div data-for="help" title="#help">fifteen</div>
 </body>
 </html>

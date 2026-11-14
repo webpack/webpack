@@ -23,7 +23,10 @@ module.exports = {
 	target: "web",
 	devtool: false,
 	entry: {
-		page: "./page.html"
+		page: "./page.html",
+		ruled: "./ruled.html",
+		"ruled-ignore": "./ruled-ignore.html",
+		global: "./global.html"
 	},
 	output: {
 		filename: "[name].js",

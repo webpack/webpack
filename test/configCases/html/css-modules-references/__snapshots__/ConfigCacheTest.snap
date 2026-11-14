@@ -1,0 +1,70 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html css-modules-references exported tests should generate the pages: fragment 1`] = `
+"<link rel=\\"stylesheet\\" href=\\"by-rule.css\\">
+<tr><td class=\\"by-rule_css-ruled\\" data-target=\\"by-rule_css-target\\">one</td></tr>
+"
+`;
+
+exports[`ConfigCacheTestCases html css-modules-references exported tests should generate the pages: page 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<link rel=\\"stylesheet\\" href=\\"theme.module.css\\" module=\\"theme\\">
+<style module>/*!****************************************************************************************************************************************************************************************************************************************************************!*\\\\
+  !*** css data:text/css;base64,Ci5idG4geyBjb2xvcjogcmVkOyB9Ci5iYXNlIHsgbWFyZ2luOiAwOyB9Ci5wcmltYXJ5IHsgY29tcG9zZXM6IGJhc2U7IGNvbG9yOiBibHVlOyB9CiNoZWxwIHsgcGFkZGluZzogMDsgfQojZ3JhZCB7IGNvbG9yOiByZWQ7IH0KI2NsaXAgeyBjb2xvcjogcmVkOyB9Cg== (exportType: text) ***!
+  \\\\****************************************************************************************************************************************************************************************************************************************************************/
+
+.page_html-style-1-btn { color: red; }
+.page_html-style-1-base { margin: 0; }
+.page_html-style-1-primary { color: blue; }
+#page_html-style-1-help { padding: 0; }
+#page_html-style-1-grad { color: red; }
+#page_html-style-1-clip { color: red; }
+</style>
+<style module=\\"card\\">/*!********************************************************************************************************************!*\\\\
+  !*** css data:text/css;base64,Ci5idG4geyBjb2xvcjogd2hpdGU7IH0KI2ZpZWxkIHsgY29sb3I6IGdyYXk7IH0K (exportType: text) ***!
+  \\\\********************************************************************************************************************/
+
+.page_html-style-2-btn { color: white; }
+#page_html-style-2-field { color: gray; }
+</style>
+</head>
+<body>
+<button class=\\"page_html-style-1-btn page_html-style-2-btn theme_module_css-title theme_module_css-btn card.missing other.x a.b\\">one</button>
+<label for=\\"page_html-style-2-field\\">two</label>
+<input id=\\"page_html-style-2-field\\" aria-describedby=\\"page_html-style-1-help page_html-style-2-field\\">
+<a href=\\"#page_html-style-2-field\\">three</a>
+<div id=\\"page_html-style-1-help\\" interestfor=\\"page_html-style-1-help\\">four</div>
+<template><div id=\\"%68elp\\" class=\\"page_html-style-1-btn\\"></div></template>
+<a href=\\"#page_html-style-1-help\\">five</a>
+<svg>
+<linearGradient id=\\"page_html-style-1-grad\\"></linearGradient>
+<clipPath id=\\"page_html-style-1-clip\\"></clipPath>
+<circle fill=\\"url(#page_html-style-1-grad)\\" stroke=\\"red\\" clip-path=\\"url('#page_html-style-1-clip')\\" mask=\\"url(#unknown)\\" filter=\\"URL( &quot;#page_html-style-1-grad&quot; )\\"></circle>
+<rect fill=\\"freeze\\"></rect>
+<animate begin=\\"page_html-style-1-help.click; 2s; page_html-style-1-primary.end+1s; page_html-style-2-field.mouseover\\" end=\\"1.5s; page_html-style-1-help.repeat(2)\\"></animate>
+</svg>
+<div data-target=\\"page_html-style-1-help\\" data-classes=\\"page_html-style-1-btn page_html-style-1-primary page_html-style-1-base\\" data-link=\\"#page_html-style-1-help\\" data-refs=\\"page_html-style-1-help page_html-style-2-field\\" data-paint=\\"url(#page_html-style-1-grad)\\" data-other=\\"help\\">six</div>
+</body>
+</html>
+"
+`;
+
+exports[`ConfigCacheTestCases html css-modules-references exported tests should generate the pages: rescan 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<link rel=\\"stylesheet\\" href=\\"by-rule1.css\\">
+</head>
+<body>
+<div class=\\"by-rule_css-ruled\\" id=\\"by-rule_css-target\\" data-target=\\"by-rule_css-target\\">one</div>
+<!-- webpackIgnore: true -->
+<div class=\\"ruled\\">two</div>
+<template><div id=\\"%68elp\\"></div></template>
+<a href=\\"#by-rule_css-help\\">three</a>
+<a href=\\"#by-rule_css-help\\">four</a>
+</body>
+</html>
+"
+`;
