@@ -4709,7 +4709,7 @@ declare class Compilation {
 	/**
 	 * Processes the provided file.
 	 */
-	renameAsset(file: string, newFile: string): void;
+	renameAsset(file: string, newFile: string, overwrite?: boolean): void;
 
 	/**
 	 * Processes the provided file.
