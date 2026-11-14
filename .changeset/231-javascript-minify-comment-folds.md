@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep comments in folded returns and empty classes; mangle ignoring literal spelling.
+Keep comments in folded returns, empty classes; fix mangling, `typeof()`, CSS `*&`.
