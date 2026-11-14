@@ -1,0 +1,1 @@
+:is(:host,.a){*&{color:red}}:where(:HOST){&*{color:red}}:not(.a){*&{color:red}}*:is(:host,.b){color:red}*:not(.b){color:red}*:hover:is(.c){color:red}*:hover::host{color:red}*:hover:host{color:red}

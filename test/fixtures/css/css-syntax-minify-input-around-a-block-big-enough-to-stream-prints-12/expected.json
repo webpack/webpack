@@ -1,10 +1,5 @@
 [
 	{
-		"relation": "idempotence",
-		"contains": "A { border-radius: 1px; BORDER-RAD;A { -",
-		"why": "known bug: beautify drops the space before a rule opened inside a declaration left open only once it reads its own output"
-	},
-	{
 		"relation": "respelling escape",
 		"contains": "BORDER-RAD\n      -> \\42 ORDER-RAD",
 		"why": "a declaration, selector or block that is invalid or left open, which the printer writes back as authored, escape included"

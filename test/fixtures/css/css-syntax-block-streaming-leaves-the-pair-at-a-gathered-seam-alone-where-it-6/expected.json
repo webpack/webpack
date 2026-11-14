@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": "}.mid{margin:0}}",
-		"why": "known bug: a streamed block's gather declines a join at the seam and keeps a rule a later copy makes dead, which a second minify drops"
-	}
-]

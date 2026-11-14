@@ -1,0 +1,1 @@
+var a={b:function(){return this===a}},c={d:function(){return 1}};console.log((x=>!x?a.b:c.d)(0)())
