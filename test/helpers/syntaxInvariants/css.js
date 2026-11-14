@@ -1026,6 +1026,8 @@ const noticeReports = (css, printed) =>
 // What separates two selectors' parts without being one: whitespace beside
 // these, or An+B's sign, is layout; between two compounds it is a combinator.
 const LAYOUT_SPACE = /^(?:Comma|Colon|Semicolon|Declaration|QualifiedRule|AtRule)\b|^Delim [>+~-]$/;
+// Whitespace before a pseudo-class is a combinator still: `.a :hover` is not `.a:hover`.
+const LAYOUT_SPACE_BEFORE = /^(?:Comma|Semicolon|Declaration|QualifiedRule|AtRule)\b|^Delim [>+~-]$/;
 
 /**
  * What a stylesheet means, as webpack's parser reads it: every rule, at-rule,
@@ -1130,7 +1132,7 @@ const withLayout = (children) => {
 				before === " " ||
 				after === children.length ||
 				LAYOUT_SPACE.test(before) ||
-				LAYOUT_SPACE.test(children[after])
+				LAYOUT_SPACE_BEFORE.test(children[after])
 			) {
 				continue;
 			}

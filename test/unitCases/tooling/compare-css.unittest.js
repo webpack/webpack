@@ -31,6 +31,7 @@ const {
 } = require("../../../tooling/compare-css-tools");
 const { agreement } = require("../../../tooling/compare-tools-harness");
 const {
+	meaningReports,
 	noticeReports
 } = require("../../helpers/syntaxInvariants/css");
 
@@ -114,6 +115,15 @@ describe("compare-css-tools — the notices relation", () => {
 	it("should read a `/*!` in a string as no notice, and one after a `url()` as one", () => {
 		expect(noticeReports('a{b:"/*! x */"}', "a{}")).toEqual([]);
 		expect(noticeReports("a{b:url(it's)}/*! x */", "a{}")).toHaveLength(1);
+	});
+});
+
+describe("compare-css-tools — the meaning relation", () => {
+	it("should read the space before a pseudo-class as the combinator it is", () => {
+		const beautify = { mode: /** @type {const} */ ("beautify") };
+		expect(meaningReports(".a :hover{}", ".a:hover{}", beautify)).toHaveLength(1);
+		expect(meaningReports(".a :hover{}", ".a :hover {}", beautify)).toEqual([]);
+		expect(meaningReports(".a > :hover{}", ".a>:hover{}", beautify)).toEqual([]);
 	});
 });
 
