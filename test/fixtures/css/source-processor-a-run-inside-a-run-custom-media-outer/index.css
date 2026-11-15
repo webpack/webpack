@@ -1,0 +1,2 @@
+@custom-media --small (max-width: 30em);
+@media (--small) { a { background : url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27/%3E") } }

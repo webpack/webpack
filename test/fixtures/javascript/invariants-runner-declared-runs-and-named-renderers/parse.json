@@ -6,12 +6,6 @@
 		"visit": true
 	},
 	{
-		"entry": "parseExpressionAt",
-		"options": {
-			"ecmaVersion": 5
-		}
-	},
-	{
 		"entry": "parseProgram",
 		"options": {
 			"sourceType": "script"
@@ -37,10 +31,6 @@
 			"childCount",
 			"flag:generator"
 		]
-	},
-	{
-		"entry": "parseExpressionAt",
-		"pos": 9
 	},
 	{
 		"entry": "SourceProcessor",

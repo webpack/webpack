@@ -4,7 +4,6 @@ const fs = require("fs");
 const path = require("path");
 const acorn = require("acorn");
 const {
-	parse,
 	parseProgram,
 	toEstreeObject
 } = require("../../lib/javascript/syntax").parser;
@@ -12,6 +11,7 @@ const {
 	firstDifference,
 	reportable
 } = require("../../tooling/compare-js-tools");
+const { parseEstree } = require("../helpers/javascriptParse");
 const { isInPart } = require("../helpers/testParts");
 
 /** @typedef {{ file: string, at: string, ours: string, acorn: string }} TreeDifference */
@@ -19,9 +19,8 @@ const { isInPart } = require("../helpers/testParts");
 /** @typedef {{ ranges?: boolean, locations?: boolean, comments?: boolean }} Mode */
 /** @typedef {import("acorn").Program} Program */
 /** @typedef {import("acorn").Comment} Comment */
-/** @typedef {import("../../lib/javascript/syntax-parser").ParserOptions} ParserOptions */
-/** @typedef {import("../../lib/javascript/syntax-parser").CollectedComment} CollectedComment */
-/** @typedef {{ ast: import("estree").Program, comments: CollectedComment[] }} ParseResult */
+/** @typedef {import("../helpers/javascriptParse").AcornComment} AcornComment */
+/** @typedef {{ ast: import("estree").Program, comments: AcornComment[] }} ParseResult */
 /** @typedef {import("../../lib/javascript/syntax-parser").EcmaVersion} EcmaVersion */
 /** @typedef {string | number | boolean | bigint | RegExp | null | undefined | EstreeValue[] | { [key: string]: EstreeValue }} EstreeValue */
 
@@ -33,8 +32,8 @@ const hasCorpus =
 // parser several times slower, so jest's default 30s is far too tight.
 const AREA_TIMEOUT = 600000;
 
-// The option sets compared against acorn. Ranges alone is the one webpack
-// uses, and the only one that takes the lazy-node path.
+// The option sets compared against acorn: what the objects a tree builds hold
+// beside ESTree's fields, and whether comments are collected.
 /** @type {[string, Mode][]} */
 const MODES = [
 	["without ranges or comments", {}],
@@ -62,28 +61,21 @@ const sourceTypeOf = (code) => {
 };
 
 /**
- * Parse with webpack's parser the way a build hands it options: ranges alone
- * become lazy offsets, with comments collected lazily alongside.
+ * Parse into a syntax tree and build its objects with what the mode asks for,
+ * its comments reported as acorn reports them.
  * @param {string} code the source
  * @param {Mode & { sourceType: "module" | "script", ecmaVersion: "latest", allowHashBang: boolean }} options what acorn is given too
  * @returns {ParseResult} the program and its comments
  */
 const parseOurs = (code, { comments: collectComments, ...options }) => {
-	/** @type {CollectedComment[]} */
+	/** @type {AcornComment[]} */
 	const comments = [];
-	const lazyNodes = options.ranges === true && options.locations !== true;
-	/** @type {ParserOptions} */
-	const parserOptions = {
+	const { ast } = parseEstree(code, {
 		...options,
 		allowReturnOutsideFunction: options.sourceType === "script",
-		ranges: lazyNodes ? false : options.ranges,
-		lazyNodes
-	};
-	if (collectComments === true) {
-		if (lazyNodes) parserOptions.lazyComments = comments;
-		else parserOptions.onComment = comments;
-	}
-	return { ast: parse(code, parserOptions), comments };
+		onComment: collectComments === true ? comments : undefined
+	});
+	return { ast, comments };
 };
 
 /**
@@ -168,62 +160,6 @@ const compareFile = (file, mode, trees, verdicts) => {
 const EDITIONS = [3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, "latest"];
 // The areas whose syntax tells editions apart; the others read at the latest.
 const EDITION_AREAS = new Set(["annexB", "language"]);
-// What acorn's objects carry only from the edition that added it, which
-// `toEstreeObject` writes on every edition's objects as the latest's.
-const LATER_EDITION_FIELDS = new Set([
-	"async",
-	"attributes",
-	"await",
-	"bigint",
-	"computed",
-	"directive",
-	"exported",
-	"expression",
-	"generator",
-	"kind",
-	"method",
-	"optional",
-	"options",
-	"phase",
-	"shorthand",
-	"static"
-]);
-
-/**
- * Our object with the fields a later edition added left out where acorn's,
- * read at an earlier edition, lacks them.
- * @param {EstreeValue} ours what `toEstreeObject` built
- * @param {EstreeValue} theirs what acorn built
- * @returns {EstreeValue} ours, as acorn reads its edition
- */
-const atEdition = (ours, theirs) => {
-	if (
-		ours === null ||
-		typeof ours !== "object" ||
-		ours instanceof RegExp ||
-		theirs === null ||
-		typeof theirs !== "object" ||
-		theirs instanceof RegExp
-	) {
-		return ours;
-	}
-	if (Array.isArray(ours)) {
-		return ours.map((item, index) =>
-			atEdition(item, Array.isArray(theirs) ? theirs[index] : undefined)
-		);
-	}
-	if (Array.isArray(theirs)) return ours;
-	/** @type {{ [key: string]: EstreeValue }} */
-	const read = {};
-	for (const key in ours) {
-		if (LATER_EDITION_FIELDS.has(key) && !(key in theirs)) continue;
-		read[key] = atEdition(ours[key], theirs[key]);
-	}
-	// `range` is read through a getter `for...in` does not list
-	if ("range" in ours) read.range = ours.range;
-	return read;
-};
-
 /**
  * Read one file into a `SyntaxTree` at one edition, build its objects, and
  * record how they and the verdict differ from acorn's at that edition.
@@ -282,8 +218,7 @@ const compareTreeFile = (file, ecmaVersion, trees, verdicts) => {
 		}
 		return;
 	}
-	const read = /** @type {EstreeValue} */ (/** @type {unknown} */ (theirs));
-	const tree = firstDifference(atEdition(ours, read), theirs, "program");
+	const tree = firstDifference(ours, theirs, "program");
 	if (tree) trees.push({ file: name, ...tree });
 };
 

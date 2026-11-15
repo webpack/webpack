@@ -29,10 +29,11 @@ const { spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const { parse: acornParse } = require("acorn");
-const { parse: webpackParse } = require("../lib/javascript/syntax").parser;
+const { parseProgram } = require("../lib/javascript/syntax").parser;
+const ACORN_CORPUS = require("../test/fixtures/acorn-corpus.json");
+const { estree: webpackParse } = require("../test/helpers/javascriptParse");
 // Acorn's own suite, recorded case by case: what `javascript/parser.unittest.js`
 // replays, read here for the ranges rather than for the trees.
-const ACORN_CORPUS = require("../test/fixtures/acorn-corpus.json");
 const {
 	JS_CUTS,
 	JS_RESPELLINGS,
@@ -165,18 +166,11 @@ const readOxcResult = (result) => {
 /** @type {import("./compare-tools-harness").Tool[]} */
 const TOOLS = [
 	{
-		// The options a build asks for: a node serves its range when something
-		// reads it, which is most of what the eager rows below pay for up front.
+		// What a build asks for: a syntax tree, whose objects are built only
+		// where something reads one, which the eager rows below pay for up front.
 		name: "webpack",
 		stage: "parse",
-		create: () => (code) =>
-			webpackParse(code, {
-				sourceType: sourceType(),
-				ecmaVersion: "latest",
-				lazyNodes: true,
-				locations: false,
-				allowHashBang: true
-			})
+		create: () => (code) => parseProgram(code, 0, { sourceType: sourceType() })
 	},
 	{
 		name: "acorn",

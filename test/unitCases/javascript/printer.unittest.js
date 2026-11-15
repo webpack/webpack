@@ -11,6 +11,7 @@ const supportsOptionalChaining = require("../../helpers/supportsOptionalChaining
 
 const vm = require("vm");
 const acorn = require("acorn");
+const { estree } = require("../../helpers/javascriptParse");
 const { createUnicode } = require("../../../lib/javascript/syntax").printer;
 
 /**
@@ -115,7 +116,6 @@ const {
 	Field,
 	NodeType,
 	_SyntaxTree: SyntaxTree,
-	WebpackParser,
 	readParsedTree
 } = require("../../../lib/javascript/syntax-parser");
 
@@ -177,6 +177,25 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			readsDuplicateGroups
 				? 'function f(){return"/(?<a>x)|(?<a>y)/"}'
 				: 'function f(){return""+/(?<a>x)|(?<a>y)/}'
+		);
+		// Past the 32767 groups V8 compiles, a source every V8 rejects stays unread too.
+		const groups = "()".repeat(32768);
+		let readsManyGroups = true;
+		try {
+			// eslint-disable-next-line prefer-regex-literals
+			new RegExp(groups);
+		} catch (_err) {
+			readsManyGroups = false;
+		}
+		expect(
+			minifyOnePass(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-748"), {
+				compress: { toplevel: false },
+				mangle: { toplevel: false }
+			}).code
+		).toBe(
+			readsManyGroups
+				? `function f(){return"${groups}/${groups}/"}`
+				: `function f(){return/${groups}/.source+/${groups}/}`
 		);
 		// A test printed without its `!` keeps where its names were in the map.
 		const { SourceProcessor } = require("../../../lib/javascript/syntax");
@@ -1044,7 +1063,7 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 	it("should refuse a node its scope analysis cannot read", () => {
 		const tree = new SyntaxTree();
 		const program = tree.addEstree(
-			/** @type {EXPECTED_ANY} */ (WebpackParser.parse(fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-refuse-a-node-its-scope"), {}))
+			/** @type {EXPECTED_ANY} */ (estree(fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-refuse-a-node-its-scope")))
 		);
 		const types = Uint8Array.from(tree._types);
 		types[tree.field(0, Field.body, program)] = 255;
@@ -1060,9 +1079,7 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 		const tree = new SyntaxTree();
 		const source = fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-read-a-with-a-loop-and-a");
 		const program = tree.addEstree(
-			/** @type {EXPECTED_ANY} */ (
-				WebpackParser.parse(source, { ecmaVersion: "latest" })
-			)
+			/** @type {EXPECTED_ANY} */ (estree(source))
 		);
 		readParsedTree(tree, source);
 		const analysis = analyzeMinifierTree(

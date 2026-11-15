@@ -63,13 +63,13 @@ describe("the JavaScript tool comparison — a program cut short", () => {
 			/** @type {EXPECTED_ANY} */
 			let isolated;
 			jest.isolateModules(() => {
-				jest.doMock("../../../lib/javascript/syntax-parser", () => ({
-					...jest.requireActual("../../../lib/javascript/syntax-parser"),
-					parse
+				jest.doMock("../../helpers/javascriptParse", () => ({
+					...jest.requireActual("../../helpers/javascriptParse"),
+					estree: parse
 				}));
 				isolated = require("../../../tooling/compare-js-tools");
 			});
-			jest.unmock("../../../lib/javascript/syntax-parser");
+			jest.unmock("../../helpers/javascriptParse");
 			return isolated.cutDifference;
 		};
 
