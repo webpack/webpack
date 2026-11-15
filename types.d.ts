@@ -5219,6 +5219,16 @@ declare class Compiler {
 	compile(callback: CallbackWebpackFunction_2<Compilation, void>): void;
 
 	/**
+	 * Returns a worker bound to `workerPath`. The pool behind it is shared by the compiler and ended on close; without `experiments.threads` or `worker_threads`, calls run directly on the main thread.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	worker<M extends WorkerModule = WorkerDefaultModule>(
+		workerPath: string | URL,
+		options?: WorkerOptions
+	): Worker<M>;
+
+	/**
 	 * Processes the provided error callback.
 	 */
 	close(callback: (err: null | Error, result?: void) => void): void;
@@ -10908,6 +10918,13 @@ declare interface Experiments {
 	syncWebAssembly?: boolean;
 
 	/**
+	 * Run CPU-heavy plugin work, such as minimization, on worker threads webpack keeps for the whole compiler.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	threads?: boolean | ThreadsOptions;
+
+	/**
 	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
 	 * @since 5.107.0
 	 * @experimental
@@ -10995,6 +11012,13 @@ declare interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	syncWebAssembly?: boolean;
+
+	/**
+	 * Run CPU-heavy plugin work, such as minimization, on worker threads webpack keeps for the whole compiler.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	threads?: false | ThreadsOptions;
 
 	/**
 	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
@@ -23642,6 +23666,13 @@ declare interface ModuleSettings {
 	 * Flags a module as with or without side effects.
 	 */
 	sideEffects?: boolean;
+
+	/**
+	 * Run this rule's loader chain in a worker thread when `experiments.threads` is on. The supported loader APIs are the ones thread-loader supports; a loader using `emitFile` or a plugin-provided loader API must run on the main thread.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	threads?: boolean;
 }
 declare abstract class ModuleTemplate {
 	type: string;
@@ -24405,6 +24436,7 @@ declare class NormalModule extends Module {
 	matchResource?: string;
 	loaders: LoaderItem[];
 	extractSourceMap: boolean;
+	threads: boolean;
 	hot: boolean;
 	error: null | Error;
 	getResource(): null | string;
@@ -24678,6 +24710,11 @@ declare interface NormalModuleCreateData<T extends string = string> {
 	 * enable/disable extracting source map
 	 */
 	extractSourceMap: boolean;
+
+	/**
+	 * run this module's loader chain in a worker thread
+	 */
+	threads?: boolean;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
@@ -31379,6 +31416,13 @@ declare interface RuleSetRule {
 		| RuleSetConditionAbsolute[];
 
 	/**
+	 * Run this rule's loader chain in a worker thread when `experiments.threads` is on. The supported loader APIs are the ones thread-loader supports; a loader using `emitFile` or a plugin-provided loader API must run on the main thread.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	threads?: boolean;
+
+	/**
 	 * Module type to use for the module.
 	 */
 	type?: string;
@@ -35818,6 +35862,40 @@ declare interface TerserMangleAliases {
 }
 
 /**
+ * Options for running loaders on the worker threads.
+ */
+declare interface ThreadsLoadersOptions {
+	/**
+	 * Number of loader jobs a thread runs at once. Defaults to `20`; the CPU part still runs one at a time.
+	 * @since 5.113.0
+	 */
+	parallelJobs?: number;
+
+	/**
+	 * Milliseconds an idle thread survives after a loader job. Defaults to `500`.
+	 * @since 5.113.0
+	 */
+	poolTimeout?: number;
+}
+
+/**
+ * Options for running CPU-heavy plugin work on the worker threads webpack keeps for a compiler.
+ */
+declare interface ThreadsOptions {
+	/**
+	 * Options for running loaders on the worker threads.
+	 * @since 5.113.0
+	 */
+	loaders?: ThreadsLoadersOptions;
+
+	/**
+	 * Number of worker threads. Defaults to one less than the number of CPUs; `0` runs the work on the main thread.
+	 * @since 5.113.0
+	 */
+	max?: number;
+}
+
+/**
  * Defines the timestamp and hash type used by this module.
  */
 declare interface TimestampAndHash {
@@ -37751,6 +37829,53 @@ declare interface WithOptions {
 	withOptions: (
 		options: Partial<ResolveOptionsWithDependencyType>
 	) => ResolverWithOptions;
+}
+
+/**
+ * A module path bound to the compiler's worker pool. Calls run on a thread when available, inline otherwise.
+ * @since 5.113.0
+ * @experimental
+ */
+declare abstract class Worker<M extends WorkerModule = WorkerDefaultModule> {
+	/**
+	 * Calls one export of the module.
+	 */
+	run<K extends string>(
+		method: K,
+		...args: Parameters<Extract<M[K], (...args: never[]) => unknown>>
+	): Promise<Awaited<ReturnType<Extract<M[K], (...args: never[]) => unknown>>>>;
+
+	/**
+	 * Spawns up to `workers` threads and preloads this module in each.
+	 */
+	warmup(workers?: number): Promise<void>;
+
+	/**
+	 * Releases the shared pool's idle threads. Calls in flight finish; the pool stays usable.
+	 */
+	release(): Promise<void>;
+}
+
+/**
+ * Untyped facade: every method takes and returns `unknown`.
+ */
+declare interface WorkerDefaultModule {
+	[index: string]: (...args: unknown[]) => unknown;
+}
+
+/**
+ * Constraint for a worker module: any exports. Only the ones a caller runs
+ * need to be functions.
+ */
+declare interface WorkerModule {
+	[index: string]: unknown;
+}
+
+/**
+ * Options for `compiler.worker()`. No fields are supported yet; future fields reuse the jest-worker or thread-loader name when the purpose matches.
+ */
+declare interface WorkerOptions {
+	[index: string]: never;
 }
 
 /**

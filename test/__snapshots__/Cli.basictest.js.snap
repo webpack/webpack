@@ -1105,6 +1105,58 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-threads": Object {
+    "configs": Array [
+      Object {
+        "description": "Run CPU-heavy plugin work, such as minimization, on worker threads webpack keeps for the whole compiler.",
+        "multiple": false,
+        "path": "experiments.threads",
+        "type": "boolean",
+      },
+    ],
+    "description": "Run CPU-heavy plugin work, such as minimization, on worker threads webpack keeps for the whole compiler.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "experiments-threads-loaders-parallel-jobs": Object {
+    "configs": Array [
+      Object {
+        "description": "Number of loader jobs a thread runs at once. Defaults to \`20\`; the CPU part still runs one at a time.",
+        "multiple": false,
+        "path": "experiments.threads.loaders.parallelJobs",
+        "type": "number",
+      },
+    ],
+    "description": "Number of loader jobs a thread runs at once. Defaults to \`20\`; the CPU part still runs one at a time.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "experiments-threads-loaders-pool-timeout": Object {
+    "configs": Array [
+      Object {
+        "description": "Milliseconds an idle thread survives after a loader job. Defaults to \`500\`.",
+        "multiple": false,
+        "path": "experiments.threads.loaders.poolTimeout",
+        "type": "number",
+      },
+    ],
+    "description": "Milliseconds an idle thread survives after a loader job. Defaults to \`500\`.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "experiments-threads-max": Object {
+    "configs": Array [
+      Object {
+        "description": "Number of worker threads. Defaults to one less than the number of CPUs; \`0\` runs the work on the main thread.",
+        "multiple": false,
+        "path": "experiments.threads.max",
+        "type": "number",
+      },
+    ],
+    "description": "Number of worker threads. Defaults to one less than the number of CPUs; \`0\` runs the work on the main thread.",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "experiments-typescript": Object {
     "configs": Array [
       Object {
@@ -10870,6 +10922,19 @@ Object {
     "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
     "multiple": true,
     "simpleType": "string",
+  },
+  "module-rules-threads": Object {
+    "configs": Array [
+      Object {
+        "description": "Run this rule's loader chain in a worker thread when \`experiments.threads\` is on. The supported loader APIs are the ones thread-loader supports; a loader using \`emitFile\` or a plugin-provided loader API must run on the main thread.",
+        "multiple": true,
+        "path": "module.rules[].threads",
+        "type": "boolean",
+      },
+    ],
+    "description": "Run this rule's loader chain in a worker thread when \`experiments.threads\` is on. The supported loader APIs are the ones thread-loader supports; a loader using \`emitFile\` or a plugin-provided loader API must run on the main thread.",
+    "multiple": true,
+    "simpleType": "boolean",
   },
   "module-rules-type": Object {
     "configs": Array [
