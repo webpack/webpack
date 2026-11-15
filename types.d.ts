@@ -3319,18 +3319,20 @@ declare interface ClearCacheOptions {
  * Defines the code gen map overloads type used by this module.
  */
 declare interface CodeGenMapOverloads {
-	get: <K extends string>(key: K) => undefined | CodeGenValue<K>;
-	set: <K extends string>(
+	get: <K extends keyof exports.AllCodeGenerationSchemas>(
+		key: K
+	) => undefined | CodeGenValue<K>;
+	set: <K extends keyof exports.AllCodeGenerationSchemas>(
 		key: K,
 		value: CodeGenValue<K>
 	) => CodeGenerationResultData;
-	has: <K extends string>(key: K) => boolean;
-	delete: <K extends string>(key: K) => boolean;
+	has: (key: keyof exports.AllCodeGenerationSchemas) => boolean;
+	delete: (key: keyof exports.AllCodeGenerationSchemas) => boolean;
 }
-type CodeGenValue<K extends string> =
+type CodeGenValue<K extends keyof exports.AllCodeGenerationSchemas> =
 	K extends keyof exports.AllCodeGenerationSchemas
 		? exports.AllCodeGenerationSchemas[K]
-		: any;
+		: never;
 
 /**
  * Defines the code generation context type used by this module.
@@ -3418,7 +3420,18 @@ declare interface CodeGenerationResult {
 	hash?: string;
 }
 type CodeGenerationResultData = Omit<
-	Map<string, any>,
+	Map<
+		keyof exports.AllCodeGenerationSchemas,
+		| string
+		| AssetInfo
+		| string[]
+		| Record<string, string>
+		| Set<string>
+		| [{ shareScope: string; initStage: number; init: string }]
+		| InitFragment<ChunkRenderContextJavascriptModulesPlugin>[]
+		| { javascript?: string; "asset-url"?: string }
+		| Map<string, string>
+	>,
 	"get" | "set" | "has" | "delete"
 > &
 	CodeGenMapOverloads;
@@ -3458,9 +3471,9 @@ declare abstract class CodeGenerationResults {
 	): null | ReadonlySet<string>;
 
 	/**
-	 * Returns an arbitrary metadata entry recorded during code generation.
+	 * Returns a metadata entry recorded during code generation.
 	 */
-	getData<K extends string>(
+	getData<K extends keyof exports.AllCodeGenerationSchemas>(
 		module: Module,
 		runtime: RuntimeSpec,
 		key: K
@@ -37865,6 +37878,26 @@ declare namespace exports {
 		 * share-init for modules federation
 		 */
 		"share-init": [{ shareScope: string; initStage: number; init: string }];
+
+		/**
+		 * the reasons a module's code is not analyzable, kept beside a cached result so they are reapplied when it is restored
+		 */
+		analyzableBailouts: string[];
+
+		/**
+		 * a content hash for asset modules
+		 */
+		contentHash: string;
+
+		/**
+		 * what each class or id name of a CSS module becomes, for an HTML page that names them
+		 */
+		cssLocals: Map<string, string>;
+
+		/**
+		 * the name each import binding prints as, for source map scopes
+		 */
+		importBindings: Map<string, string>;
 	}
 
 	/**
