@@ -3518,7 +3518,7 @@ export interface OptimizationMinimizeXml {
 	 */
 	cleanupStructure?: boolean;
 	/**
-	 * Remove whitespace-only text in known SVG containers, preserving text content, foreign content and `xml:space`. Off by default because scripts can observe whitespace nodes.
+	 * Remove whitespace-only text in known SVG containers, under `xml:space` too since that lays out text alone, preserving text content and foreign content. Off by default because scripts can observe whitespace nodes.
 	 * @since 5.113.0
 	 */
 	collapseWhitespace?: boolean;

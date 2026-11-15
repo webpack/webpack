@@ -4569,7 +4569,7 @@
           "added": "5.113.0"
         },
         "collapseWhitespace": {
-          "description": "Remove whitespace-only text in known SVG containers, preserving text content, foreign content and `xml:space`. Off by default because scripts can observe whitespace nodes.",
+          "description": "Remove whitespace-only text in known SVG containers, under `xml:space` too since that lays out text alone, preserving text content and foreign content. Off by default because scripts can observe whitespace nodes.",
           "type": "boolean",
           "added": "5.113.0"
         },
