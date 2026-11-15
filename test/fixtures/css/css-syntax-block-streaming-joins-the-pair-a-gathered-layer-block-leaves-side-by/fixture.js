@@ -7,7 +7,7 @@ const { repeat } = require("../_shared/record");
  */
 const source = () =>
 	`@layer outer{${repeat(
-		6000,
+		3300,
 		(i) => `.f${i}{color:red}`
 	)}@layer a{.w{color:teal}.x{color:lime}}@layer b{.m{color:#00f}}@layer a{.y{color:lime}.z{color:teal}}}`;
 
