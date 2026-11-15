@@ -127,6 +127,15 @@ it("hashes tags as transformTags left them (removed dropped, kept hashed)", () =
 	expect(policy.match(/'sha256-/g)).toHaveLength(1);
 });
 
+for (const name of ["csp-in-body", "csp-without-content", "csp-in-noscript"]) {
+	it(`injects CSP when the page's only CSP meta does not apply (${name})`, () => {
+		const html = readHtml(`${name}.html`);
+		expect(html).toContain(
+			'<meta http-equiv="Content-Security-Policy" content="script-src \'self\';'
+		);
+	});
+}
+
 it("places the CSP meta after the doctype when <head> is implied", () => {
 	const html = readHtml("no-head.html");
 	expect(html.startsWith("<!doctype html>")).toBe(true);
