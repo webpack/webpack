@@ -1,10 +1,18 @@
 const fs = __non_webpack_require__("fs");
 const path = __non_webpack_require__("path");
 
-const inlineScripts = () =>
-	fs
-		.readFileSync(path.join(__dirname, "page.html"), "utf-8")
-		.match(/<script>[\s\S]*?<\/script>/g) || [];
+// The page's inline scripts: the text between each `<script>` and its end tag.
+const inlineScripts = () => {
+	const page = fs.readFileSync(path.join(__dirname, "page.html"), "utf-8");
+	const scripts = [];
+	let start = page.indexOf("<script>");
+	while (start !== -1) {
+		const end = page.indexOf("</script>", start);
+		scripts.push(page.slice(start, end));
+		start = page.indexOf("<script>", end);
+	}
+	return scripts;
+};
 
 it("should inline only the chunk's own script after an asset it references changes", (done) => {
 	const before = inlineScripts();
