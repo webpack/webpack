@@ -272,7 +272,10 @@ describe("util/identifier", () => {
 			[".././../dir/file.js", "../c/d/"],
 			["./.././../dir/file.js", "../c/d/"],
 			["../dir/../file.js", "d/"],
-			["../dir/../file.js", "./d/", true]
+			["../dir/../file.js", "./d/", true],
+			["file.js?v=a/b/c", ""],
+			["dir/file.js?v=a/b", "../"],
+			["dir/file.js#a/b", "../"]
 		];
 		for (const [filename, expected, enforceRelative] of cases) {
 			it(`should handle ${filename} correctly${
