@@ -1202,4 +1202,21 @@ describe("htmlMinify — what it reads as written", () => {
 		expect(minified.code).toBe('<!doctype html><meta charset=iso-2022-jp><b>x</b>');
 		expect(minified.warnings).toBeUndefined();
 	});
+
+	it("leaves character references in another encoding as written", async () => {
+		const { htmlMinify } = require("../../..").html;
+		// Printed as its character, `&#233;` would be written in UTF-8.
+		const source = fixture("html", "html-minify-leaves-a-document-in-another-encoding-as-written-3");
+		const result = await htmlMinify({ "a.html": source });
+		expect(result.code).toBe(source);
+		expect(result.warnings).toHaveLength(1);
+	});
+
+	it("leaves a data: page in another encoding as written", async () => {
+		const { htmlMinify } = require("../../..").html;
+		const source = fixture("html", "html-minify-leaves-a-document-in-another-encoding-as-written-4");
+		const { code } = await htmlMinify({ "a.html": source });
+		// The page around it is minified; the nested page keeps its comments.
+		expect(code).toBe(`<!doctype html>${source.slice(15, source.indexOf("<!-- c -->"))}\n`);
+	});
 });

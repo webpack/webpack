@@ -906,7 +906,17 @@ describe("xmlMinify — what it reads as written", () => {
 		// One that holds only printable ASCII reads alike in either.
 		const ascii = fixture("xml", "xml-minify-leaves-a-document-in-another-encoding-as-written-2");
 		const minified = await xmlMinify({ "a.svg": ascii });
-		expect(minified.code.length).toBeLessThan(ascii.length);
+		expect(minified.code).toBe(
+			'<?xml version="1.0" encoding="ISO-2022-JP"?><svg xmlns="http://www.w3.org/2000/svg"><g/></svg>'
+		);
 		expect(minified.warnings).toBeUndefined();
+	});
+
+	it("leaves character references in another encoding as written", async () => {
+		// Printed as its character, `&#233;` would be written in UTF-8.
+		const source = fixture("xml", "xml-minify-leaves-a-document-in-another-encoding-as-written-3");
+		const result = await xmlMinify({ "a.svg": source });
+		expect(result.code).toBe(source);
+		expect(result.warnings).toHaveLength(1);
 	});
 });

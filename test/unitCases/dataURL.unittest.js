@@ -122,7 +122,8 @@ describe("parseDataURI", () => {
 		for (const uri of [
 			"data:text/html;base64x,YQ==",
 			"data:text/html;x-base64,YQ==",
-			"data:text/html;base64;charset=utf-8,YQ=="
+			"data:text/html;base64;charset=utf-8,YQ==",
+			"data:text/html;base64\f,YQ=="
 		]) {
 			expect(parseDataURI(uri)).toHaveProperty("base64", false);
 		}

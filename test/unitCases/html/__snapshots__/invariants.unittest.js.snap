@@ -2340,6 +2340,37 @@ exports[`HTML syntax — invariants html-minify-leaves-a-document-in-another-enc
 
 exports[`HTML syntax — invariants html-minify-leaves-a-document-in-another-encoding-as-written-2 tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] attr[21,28|30,41]\\" open[15,43|16,20] comment[43,53|47,50] open[53,56|54,55] text[56,57] close[57,61|59,60] end=61"`;
 
+exports[`HTML syntax — invariants html-minify-leaves-a-document-in-another-encoding-as-written-3 parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <meta>
+|       charset=\\"iso-8859-1\\"
+|     <!--  c  -->
+|   <body>
+|     <p>
+|       \\"é é\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-leaves-a-document-in-another-encoding-as-written-3 parses 2`] = `""`;
+
+exports[`HTML syntax — invariants html-minify-leaves-a-document-in-another-encoding-as-written-3 prints {"mode":"minify"} 1`] = `
+"<!doctype html><meta charset=iso-8859-1><p>é é</p>
+"
+`;
+
+exports[`HTML syntax — invariants html-minify-leaves-a-document-in-another-encoding-as-written-3 tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] attr[21,28|30,40]\\" open[15,42|16,20] comment[42,52|46,49] open[52,55|53,54] text[55,70] close[70,74|72,73] text[74,75] end=75"`;
+
+exports[`HTML syntax — invariants html-minify-leaves-a-document-in-another-encoding-as-written-4 parses 1`] = `"\\"| <!DOCTYPE html>\\\\n| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <iframe>\\\\n|       src=\\\\\\"data:text/html,<meta charset=iso-2022-jp><!-- \\\\u001b$B --><b>x</b> <!-- \\\\u001b(B -->\\\\\\"\\\\n|     <!--  c  -->\\\\n|     \\\\\\"\\\\n\\\\\\"\\""`;
+
+exports[`HTML syntax — invariants html-minify-leaves-a-document-in-another-encoding-as-written-4 parses 2`] = `""`;
+
+exports[`HTML syntax — invariants html-minify-leaves-a-document-in-another-encoding-as-written-4 prints {"mode":"minify"} 1`] = `"\\"<!doctype html><iframe src=\\\\\\"data:text/html,<meta charset=iso-2022-jp><!-- \\\\u001b$B --><b>x</b> <!-- \\\\u001b(B -->\\\\\\"></iframe>\\\\n\\""`;
+
+exports[`HTML syntax — invariants html-minify-leaves-a-document-in-another-encoding-as-written-4 tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] attr[23,26|28,102]\\" open[15,104|16,22] close[104,113|106,112] comment[113,123|117,120] text[123,124] end=124"`;
+
 exports[`HTML syntax — invariants html-minify-one-document-reaching-every-embedded-site-minifies-with-webpack-s parses 1`] = `
 "| <!--  c  -->
 | <html>
