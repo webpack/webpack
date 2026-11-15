@@ -19,6 +19,8 @@ it("should leave a replace or split call to runtime when its regexp can backtrac
 		if ("aa".replace(/(a)\1/, "") === "x") return 5;
 		if ("aa".replace(/(?<a>a)\k<a>/, "") === "x") return 6;
 		if ("ab".replace(new RegExp("[[a-z]--[b]]", "v"), "") === "x") return 7;
+		if ("p{aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!".replace(/^\p{(a+)+}$/, "") === "x") return 8;
+		if ("p{aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!".split(/^\p{(a+)+}$/).length === 0) return 9;
 		return 0;
 	}
 	expect(typeof unused).toBe("function");
