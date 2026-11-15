@@ -1,0 +1,1 @@
+{ "outer": { "__proto__": { "flag": true }, "other": 1 } }

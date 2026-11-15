@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  "Should not import the named export 'a' (reexported as 'module.exports') from default-exporting module (only default export is available soon)",
+]
+`;

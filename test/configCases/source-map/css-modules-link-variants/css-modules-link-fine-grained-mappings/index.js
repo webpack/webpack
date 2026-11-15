@@ -8,6 +8,7 @@ it("css-modules-link-fine-grained-mappings: should map each generated CSS-module
 	expect(typeof styles.btn).toBe("string");
 	expect(typeof styles.card).toBe("string");
 	expect(typeof styles.alert).toBe("string");
+	expect(Object.prototype.hasOwnProperty.call(styles, "__proto__")).toBe(true);
 
 	const bundlePath = path.join(__dirname, "bundle0.js");
 	const mapPath = path.join(__dirname, "bundle0.js.map");
@@ -50,10 +51,14 @@ it("css-modules-link-fine-grained-mappings: should map each generated CSS-module
 		const expectations = [
 			{ exportName: "btn", selector: ".btn" },
 			{ exportName: "card", selector: ".card" },
-			{ exportName: "alert", selector: ".alert" }
+			{ exportName: "alert", selector: ".alert" },
+			// emitted as a computed key so it stays an own property
+			{ exportName: "__proto__", selector: ".__proto__", computed: true }
 		];
-		for (const { exportName, selector } of expectations) {
-			const generatedLine = findBundleLine(`"${exportName}":`);
+		for (const { exportName, selector, computed } of expectations) {
+			const generatedLine = findBundleLine(
+				computed ? `["${exportName}"]:` : `"${exportName}":`
+			);
 			const original = consumer.originalPositionFor({
 				line: generatedLine,
 				column: 0
