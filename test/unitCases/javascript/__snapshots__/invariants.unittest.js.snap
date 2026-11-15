@@ -49819,6 +49819,16 @@ exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-r
 
 exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-re-export-and-writes-one-an-edition-before-2 tokenizes 1`] = `"export[0,6] {[7,8] name[9,10] }[11,12] name[13,17] string[18,23]=\\"./c\\" ;[23,24] eof[24,24]"`;
 
+exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before-2 parses 1`] = `"Program[0,21](body=[ExportAllDeclaration[0,20](exported=null source=Literal[14,19](value=\\"./c\\" raw=\\"\\\\\\"./c\\\\\\"\\") attributes=[])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before-2 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before-2 prints {"mode":"minify"} 1`] = `"export*from\\"./c\\";"`;
+
+exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before-2 tokenizes 1`] = `"export[0,6] *[7,8] name[9,13] string[14,19]=\\"./c\\" ;[19,20] eof[21,21]"`;
+
 exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-an-export-all parses 1`] = `"Program[0,93](body=[ExportAllDeclaration[0,44](exported=null source=Literal[14,19](value=\\"./a\\" raw=\\"\\\\\\"./a\\\\\\"\\") attributes=[ImportAttribute[29,41](key=Identifier[29,33](name=\\"type\\") value=Literal[35,41](value=\\"json\\" raw=\\"\\\\\\"json\\\\\\"\\"))]),ExportAllDeclaration[45,92](exported=Identifier[57,58](name=\\"b\\") source=Literal[64,69](value=\\"./b\\" raw=\\"\\\\\\"./b\\\\\\"\\") attributes=[ImportAttribute[77,89](key=Identifier[77,81](name=\\"type\\") value=Literal[83,89](value=\\"json\\" raw=\\"\\\\\\"json\\\\\\"\\"))])] sourceType=\\"module\\")"`;
 
 exports[`JavaScript syntax — invariants syntax-tree-marks-legacy-assert-on-an-export-all parses 2`] = `""`;
