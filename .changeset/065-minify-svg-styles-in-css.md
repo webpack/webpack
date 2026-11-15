@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Minify the styles of an SVG `data:` URL an inline stylesheet holds.
+Minify the styles of a stylesheet's SVG `data:` URL and quote it alike per pass.

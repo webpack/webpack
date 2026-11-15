@@ -49137,7 +49137,7 @@ exports[`CSS syntax — invariants source-processor-render-embedded-source-over-
 
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"mode":"minify","renderEmbeddedSource":"throws"} 1`] = `".a{background:url(\\"data:image/svg+xml,<svg>  <rect/></svg>\\")}"`;
 
-exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"svg":"<svg viewBox=\\"0 0 2 2\\"/>"}}} 1`] = `".a{background:url(\\"data:image/svg+xml,<svg viewBox=\\\\\\"0 0 2 2\\\\\\"/>\\")}"`;
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"svg":"<svg viewBox=\\"0 0 2 2\\"/>"}}} 1`] = `".a{background:url('data:image/svg+xml,<svg viewBox=\\"0 0 2 2\\"/>')}"`;
 
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-offers-an-svg-payload prints {"mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"svg":"<svg>%#</svg>"}}} 1`] = `".a{background:url(data:image/svg+xml,<svg>%25%23</svg>)}"`;
 
