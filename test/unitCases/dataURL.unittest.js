@@ -28,10 +28,17 @@ describe("dataURL", () => {
 		expect(/** @type {Buffer} */ (decoded).toString()).toBe("hello world");
 	});
 
-	it("should return the raw body when percent-decoding fails", () => {
-		// a malformed percent escape survives as its literal bytes
-		const decoded = decodeDataURI("data:text/plain,%E0%A4%A");
-		expect(/** @type {Buffer} */ (decoded).toString()).toBe("%E0%A4%A");
+	it("should keep a malformed percent escape as written", () => {
+		const decoded = decodeDataURI("data:text/plain,100%25%20done%");
+		expect(/** @type {Buffer} */ (decoded).toString()).toBe("100% done%");
+		expect(
+			[.../** @type {Buffer} */ (decodeDataURI("data:text/plain,%E0%A4%A"))]
+		).toEqual([0xe0, 0xa4, 0x25, 0x41]);
+	});
+
+	it("should decode an escape that is not UTF-8 to its byte", () => {
+		const decoded = decodeDataURI("data:text/plain,caf%E9");
+		expect(/** @type {Buffer} */ (decoded).toString("latin1")).toBe("café");
 	});
 
 	it("should return null for a non-data URI", () => {

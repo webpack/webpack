@@ -40645,6 +40645,7 @@ declare namespace exports {
 			) => undefined | string;
 			export let languageOfMediaType: (mediaType: string) => undefined | string;
 			export let parseDataURI: (uri: string) => null | ParsedDataURI;
+			export let percentDecode: (payload: string) => Buffer;
 			export let readEmbeddedDataURI: (
 				uri: string
 			) => null | { parsed: ParsedDataURI; type: string; payload: string };
