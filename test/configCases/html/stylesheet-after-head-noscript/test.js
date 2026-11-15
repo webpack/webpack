@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
-const parse5 = require("parse5");
+const { SourceProcessor, parser } = require("webpack").html.syntax;
+
+const { Field, NodeType, Part } = parser;
 
 const readHtml = (name) =>
 	fs.readFileSync(path.resolve(__dirname, name), "utf-8");
@@ -8,18 +10,25 @@ const readHtml = (name) =>
 // The elements a browser with scripting on builds, where a `<noscript>` holds text.
 const elements = (html) => {
 	const found = [];
-	const walk = (node) => {
-		if (node.tagName) found.push(node);
-		for (const child of node.childNodes || []) walk(child);
-	};
-	walk(parse5.parse(html, { scriptingEnabled: true }));
+	new SourceProcessor()
+		.use({
+			[NodeType.Element]: (node) => {
+				const rel = node.fieldNamed(Field.attributes, "rel");
+				const start = rel === 0 ? -1 : node.startOf(Part.value, rel);
+				found.push({
+					tagName: node.name(),
+					rel: start === -1 ? undefined : node.source(start, node.endOf(Part.value, rel))
+				});
+			}
+		})
+		.process(html, { scripting: true });
 	return found;
 };
 
 const isStylesheet = (node) =>
 	node.tagName === "style" ||
 	(node.tagName === "link" &&
-		node.attrs.some((a) => a.name === "rel" && a.value === "stylesheet"));
+		node.rel === "stylesheet");
 
 for (const name of ["linked", "inlined"]) {
 	for (const page of ["closed", "implied"]) {
