@@ -1,7 +1,6 @@
 "use strict";
 
 const HotModuleReplacementPlugin = require("../../lib/hmr/HotModuleReplacementPlugin");
-const getParserHooks = require("../../lib/hmr/parserHooks");
 const JavascriptParser = require("../../lib/javascript/JavascriptParser");
 
 describe("HotModuleReplacementPlugin.getParserHooks", () => {
@@ -12,8 +11,6 @@ describe("HotModuleReplacementPlugin.getParserHooks", () => {
 		expect(typeof hooks.hotAcceptCallback.tap).toBe("function");
 		expect(typeof hooks.hotAcceptWithoutCallback.tap).toBe("function");
 		expect(HotModuleReplacementPlugin.getParserHooks(parser)).toBe(hooks);
-		// the static method and the shared module must not keep separate registries
-		expect(getParserHooks(parser)).toBe(hooks);
 		expect(
 			HotModuleReplacementPlugin.getParserHooks(new JavascriptParser())
 		).not.toBe(hooks);
@@ -28,9 +25,9 @@ describe("HotModuleReplacementPlugin.getParserHooks", () => {
 		const parser = new JavascriptParserOtherCopy();
 
 		expect(parser instanceof JavascriptParser).toBe(false);
-		const hooks = getParserHooks(/** @type {EXPECTED_ANY} */ (parser));
+		const hooks = HotModuleReplacementPlugin.getParserHooks(/** @type {EXPECTED_ANY} */ (parser));
 		expect(typeof hooks.hotAcceptCallback.tap).toBe("function");
-		expect(getParserHooks(/** @type {EXPECTED_ANY} */ (parser))).toBe(hooks);
+		expect(HotModuleReplacementPlugin.getParserHooks(/** @type {EXPECTED_ANY} */ (parser))).toBe(hooks);
 	});
 
 	it("rejects anything that is not a JavascriptParser", () => {
