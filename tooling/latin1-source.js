@@ -39,6 +39,10 @@ const COMMENT_SPELLINGS = {
 	"•": "-"
 };
 
+// the JSDoc tags whose `{...}` is a type, up to and including that `{`
+const JSDOC_TYPE_TAG_REGEXP =
+	/@(?:type|param|arg|argument|returns?|typedef|property|prop|this|enum|extends|augments|implements|throws|exception|yields?|satisfies|template)\s*\{/g;
+
 /**
  * @param {number} code a UTF-16 code unit or a code point
  * @returns {string} its hexadecimal digits, at least four, uppercase
@@ -119,6 +123,7 @@ const inRange = (ranges, position) => {
 /**
  * Rewrites a script's characters above U+00FF: comments get an ASCII spelling
  * (or `U+XXXX`), tokens `\u` escapes, which read back as the same value.
+ * A JSDoc type or a tagged template's text holding one throws instead.
  * Whitespace between tokens becomes a space, a line separator a newline.
  * @param {string} source the script's source
  * @returns {string} the source with every character at most U+00FF
@@ -130,6 +135,8 @@ const toLatin1Source = (source) => {
 
 	/** @type {[number, number][]} */
 	const comments = [];
+	/** @type {[number, number][]} */
+	const jsdocTypes = [];
 	/** @type {import("acorn").Token[]} */
 	const tokens = [];
 	parse(source, {
@@ -139,11 +146,42 @@ const toLatin1Source = (source) => {
 		allowReturnOutsideFunction: true,
 		onComment: (block, text, start, end) => {
 			comments.push([start, end]);
+			// a JSDoc tag's `{...}` type reads like code, so it keeps no ASCII
+			// spelling: the value it types would read differently
+			if (block && text.startsWith("*")) {
+				JSDOC_TYPE_TAG_REGEXP.lastIndex = 0;
+				while (JSDOC_TYPE_TAG_REGEXP.exec(text) !== null) {
+					const open = JSDOC_TYPE_TAG_REGEXP.lastIndex - 1;
+					let depth = 0;
+					let j = open;
+					for (; j < text.length; j++) {
+						const char = text[j];
+						if (char === '"' || char === "'" || char === "`") {
+							// a string type's text may hold a brace
+							for (j++; j < text.length && text[j] !== char; j++) {
+								if (text[j] === "\\") j++;
+							}
+						} else if (char === "{") {
+							depth++;
+						} else if (char === "}" && --depth === 0) {
+							break;
+						}
+					}
+					jsdocTypes.push([start + 2 + open, start + 2 + j]);
+					JSDOC_TYPE_TAG_REGEXP.lastIndex = j;
+				}
+			}
 		},
 		onToken: tokens
 	});
 	/** @type {[number, number][]} */
 	const tokenRanges = tokens.map((token) => [token.start, token.end]);
+	/** @type {[number, number][]} */
+	const nameRanges = tokens
+		.filter(
+			(token) => token.type.label === "name" || token.type.label === "privateId"
+		)
+		.map((token) => [token.start, token.end]);
 	const taggedText = taggedTemplateText(tokens);
 	let result = "";
 	for (let i = 0; i < source.length; i++) {
@@ -153,6 +191,11 @@ const toLatin1Source = (source) => {
 			continue;
 		}
 		if (inRange(comments, i)) {
+			if (inRange(jsdocTypes, i)) {
+				throw new Error(
+					`A character above U+00FF at ${i} is in a JSDoc type, which reads it as the code it types does`
+				);
+			}
 			const codePoint = /** @type {number} */ (source.codePointAt(i));
 			const spelling = COMMENT_SPELLINGS[source[i]];
 			// a line separator in a block comment still ends a line for ASI
@@ -179,7 +222,14 @@ const toLatin1Source = (source) => {
 					`An escaped character above U+00FF at ${i} has no \\u spelling`
 				);
 			}
-			result += `\\u${hexOf(code)}`;
+			const codePoint = /** @type {number} */ (source.codePointAt(i));
+			if (codePoint > 0xffff && inRange(nameRanges, i)) {
+				// a name takes no surrogate escapes, only the code point's own
+				result += `\\u{${hexOf(codePoint)}}`;
+				i++;
+			} else {
+				result += `\\u${hexOf(code)}`;
+			}
 		}
 	}
 	return result;
@@ -205,7 +255,15 @@ if (require.main === module) {
 				const source = fs.readFileSync(file, "utf8");
 				if (!ABOVE_LATIN1_REGEXP.test(source)) continue;
 				offending.push(path.relative(root, file));
-				if (write) fs.writeFileSync(file, toLatin1Source(source));
+				if (!write) continue;
+				try {
+					fs.writeFileSync(file, toLatin1Source(source));
+				} catch (err) {
+					throw new Error(
+						`${path.relative(root, file)}: ${/** @type {Error} */ (err).message}`,
+						{ cause: err }
+					);
+				}
 			}
 		}
 	};
