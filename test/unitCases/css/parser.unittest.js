@@ -254,7 +254,7 @@ describe("CssSyntax — SourceProcessor", () => {
 		};
 
 		it("prints a value token, a declaration and a rule as their replacement", () => {
-			const css = "a{color:#ff0000;margin-top:1px}b{color:red}";
+			const css = fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-value-token-a-declaration");
 			expect(print(css, { [NodeType.Hash]: (path) => path.replaceWith("blue") })).toBe(
 				"a{color:blue;margin-top:1px}b{color:red}"
 			);
@@ -283,7 +283,7 @@ describe("CssSyntax — SourceProcessor", () => {
 
 		it("removes a node, in an enter visitor too", () => {
 			expect(
-				print("a{color:red;top:0}", {
+				print(fixture("css", "css-syntax-source-processor-replacing-a-node-removes-a-node-in-an-enter-visitor"), {
 					[NodeType.Declaration]: {
 						enter: (path) => {
 							if (path.name() === "color") path.remove();
@@ -295,7 +295,7 @@ describe("CssSyntax — SourceProcessor", () => {
 
 		it("minifies what holds a replacement as the source it spells", () => {
 			expect(
-				print("a{margin:0;margin-top:#f00}b{margin:0;margin-top:1px}", {
+				print(fixture("css", "css-syntax-source-processor-replacing-a-node-minifies-what-holds-a-replacement"), {
 					[NodeType.Hash]: (path) => path.replaceWith("1px")
 				})
 			).toBe("a,b{margin:1px 0 0}");
@@ -308,10 +308,10 @@ describe("CssSyntax — SourceProcessor", () => {
 					if (path.value() === "ffffff") path.replaceWith("#ff0000");
 				}
 			};
-			expect(print("a{color:#ffffff}", once)).toBe("a{color:red}");
-			expect(print("a{color:#ffffff red}", once)).toBe("a{color:red red}");
+			expect(print(fixture("css", "css-syntax-source-processor-replacing-a-node-minifies-a-declaration-s-lone-value"), once)).toBe("a{color:red}");
+			expect(print(fixture("css", "css-syntax-source-processor-replacing-a-node-minifies-a-declaration-s-lone-value-2"), once)).toBe("a{color:red red}");
 			expect(
-				print("a{margin:0px}", {
+				print(fixture("css", "css-syntax-source-processor-replacing-a-node-minifies-a-declaration-s-lone-value-3"), {
 					[NodeType.Dimension]: (path) => {
 						if (path.name() === "px") path.replaceWith("0em");
 					}
@@ -320,7 +320,10 @@ describe("CssSyntax — SourceProcessor", () => {
 		});
 
 		it("walks and prints every replacement once its node ids outgrow the marks", () => {
-			for (const css of ["a{color:#ffffff}", "a{color:#ffffff red}"]) {
+			for (const css of [
+				fixture("css", "css-syntax-source-processor-replacing-a-node-walks-and-prints-every-replacement"),
+				fixture("css", "css-syntax-source-processor-replacing-a-node-walks-and-prints-every-replacement-2")
+			]) {
 				for (let times = 1; times <= 40; times++) {
 					let visits = 0;
 					const code = print(css, {
@@ -345,7 +348,7 @@ describe("CssSyntax — SourceProcessor", () => {
 					}
 				})
 				.process(
-					"margin-top:1px;margin-bottom:1px;margin-left:2px;margin-right:2px",
+					fixture("css", "css-syntax-source-processor-replacing-a-node-composes-a-style-attribute-s"),
 					{ mode: "minify", as: "block-contents" }
 				);
 			expect(result && result.code).toBe(
@@ -356,7 +359,7 @@ describe("CssSyntax — SourceProcessor", () => {
 		it("refuses an edit from a comment's visitor", () => {
 			// A comment is read from the token stream, not walked as a node.
 			expect(() =>
-				print("/*! x */a{color:red}b{top:0}", {
+				print(fixture("css", "css-syntax-source-processor-replacing-a-node-refuses-an-edit-from-a-comment-s"), {
 					[NodeType.Comment]: (path) => path.replaceWith("/*y*/")
 				})
 			).toThrow(
@@ -388,22 +391,22 @@ describe("CssSyntax — SourceProcessor", () => {
 		it("prints a custom property's value holding a replacement as one written so", () => {
 			/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
 			const visitors = { [NodeType.Hash]: (path) => path.replaceWith("blue") };
-			expect(print("a{--x: foo  #f00 bar(#f00) ;color:#f00}", visitors)).toBe(
+			expect(print(fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-custom-property-s-value"), visitors)).toBe(
 				"a{--x:foo blue bar(blue);color:blue}"
 			);
 			expect(
-				print("a{--x: foo  #f00 bar(#f00) }", visitors, "beautify")
+				print(fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-custom-property-s-value-2"), visitors, "beautify")
 			).toBe("a {\n--x: foo  blue bar(blue);\n}");
 			// The walk visits what an edit adds: the replacement's whitespace goes too.
 			expect(
-				print("a{--x: a, b c;b:x}", {
+				print(fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-custom-property-s-value-3"), {
 					[NodeType.Comma]: (path) => path.replaceWith(" / "),
 					[NodeType.Whitespace]: (path) => path.remove()
 				})
 			).toBe("a{--x:a/bc;b:x}");
 			// A string the input ran out in is left open, as written.
-			expect(print('a{--x:#f00 "open', visitors)).toBe('a{--x:blue "open');
-						expect(print("a{--x: a  b;--y: c  #f00}", visitors)).toBe(
+			expect(print(fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-custom-property-s-value-4"), visitors)).toBe('a{--x:blue "open');
+						expect(print(fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-custom-property-s-value-5"), visitors)).toBe(
 				"a{--x:a b;--y:c blue}"
 			);
 		});
@@ -424,7 +427,7 @@ describe("CssSyntax — SourceProcessor", () => {
 						}
 					}
 				})
-				.process("a{color:#f00}");
+				.process(fixture("css", "css-syntax-source-processor-replacing-a-node-edits-a-walk-that-prints-nothing"));
 			expect(seen).toBe(1);
 			expect(types).toEqual([NodeType.Ident]);
 		});
@@ -460,7 +463,7 @@ describe("CssSyntax — SourceProcessor", () => {
 					}
 				})
 			)
-			.process('a { z-index: 5; content: "x"; color: #123 }');
+			.process(fixture("css", "css-syntax-source-processor-exposes-range-unescaped-type-flags-set-end-set-block"));
 		expect(seen.idFlag).toBe(false);
 		expect(seen.integerFlag).toBe(true);
 		expect(seen.hashValue).toBe("123");
@@ -483,7 +486,7 @@ describe("CssSyntax — SourceProcessor", () => {
 					) => log.push(`decl:${path.name()}`)
 				})
 			)
-			.process("a{color:red;width:1px}");
+			.process(fixture("css", "css-syntax-source-processor-fires-enter-exit-visitors-in-source-order"));
 		expect(log).toEqual(["enter", "decl:color", "decl:width", "exit"]);
 	});
 
@@ -500,7 +503,7 @@ describe("CssSyntax — SourceProcessor", () => {
 				},
 				[NodeType.Declaration]: () => log.push("decl")
 			})
-			.process("a{color:red}");
+			.process(fixture("css", "css-syntax-source-processor-path-skip-children-stops-descent-into-a-node"));
 		expect(log).toEqual(["qr"]);
 	});
 
@@ -509,7 +512,7 @@ describe("CssSyntax — SourceProcessor", () => {
 			let n = 0;
 			new SourceProcessor()
 				.use({ [NodeType.QualifiedRule]: () => n++ })
-				.process("@media x{.a{c:1}.b{d:2}}", { recurseBlocks });
+				.process(fixture("css", "css-syntax-source-processor-recurse-blocks-false-stops-at-top-level-rules"), { recurseBlocks });
 			return n;
 		};
 		expect(count(false)).toBe(0);
@@ -527,7 +530,7 @@ describe("CssSyntax — SourceProcessor", () => {
 					) => names.push(path.name())
 				})
 			)
-			.process("@font-face{font-family:x;src:url(y)}");
+			.process(fixture("css", "css-syntax-source-processor-walks-declarations-inside-at-rule-blocks"));
 		expect(names).toEqual(["font-family", "src"]);
 	});
 

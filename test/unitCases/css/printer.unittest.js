@@ -1900,7 +1900,7 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 	};
 
 	it("prints a value token, a declaration and a rule as their replacement", () => {
-		const css = "a{color:#ff0000;margin-top:1px}b{color:red}";
+		const css = fixture("css", "css-syntax-printing-what-a-visitor-replaced-or-removed-prints-a-value-token-a");
 		expect(print(css, { [NodeType.Hash]: (path) => path.replaceWith("blue") })).toBe(
 			"a{color:blue;margin-top:1px}b{color:red}"
 		);
@@ -1929,7 +1929,7 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 
 	it("removes a node, in an enter visitor too", () => {
 		expect(
-			print("a{color:red;top:0}", {
+			print(fixture("css", "css-syntax-printing-what-a-visitor-replaced-or-removed-removes-a-node-in-an"), {
 				[NodeType.Declaration]: {
 					enter: (path) => {
 						if (path.name() === "color") path.remove();
@@ -1941,7 +1941,7 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 
 	it("minifies what holds a replacement as the source it spells", () => {
 		expect(
-			print("a{margin:0;margin-top:#f00}b{margin:0;margin-top:1px}", {
+			print(fixture("css", "css-syntax-printing-what-a-visitor-replaced-or-removed-minifies-what-holds-a"), {
 				[NodeType.Hash]: (path) => path.replaceWith("1px")
 			})
 		).toBe("a,b{margin:1px 0 0}");
@@ -1955,7 +1955,7 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 				}
 			})
 			.process(
-				"margin-top:1px;margin-bottom:1px;margin-left:2px;margin-right:2px",
+				fixture("css", "css-syntax-printing-what-a-visitor-replaced-or-removed-composes-a-style"),
 				{ mode: "minify", as: "block-contents" }
 			);
 		expect(result && result.code).toBe(
@@ -1966,7 +1966,7 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 	it("refuses an edit from a comment's visitor", () => {
 		// A comment is read from the token stream, not walked as a node.
 		expect(() =>
-			print("/*! x */a{color:red}b{top:0}", {
+			print(fixture("css", "css-syntax-printing-what-a-visitor-replaced-or-removed-refuses-an-edit-from-a"), {
 				[NodeType.Comment]: (path) => path.replaceWith("/*y*/")
 			})
 		).toThrow(
@@ -1998,22 +1998,22 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 	it("prints a custom property's value holding a replacement as one written so", () => {
 		/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
 		const visitors = { [NodeType.Hash]: (path) => path.replaceWith("blue") };
-		expect(print("a{--x: foo  #f00 bar(#f00) ;color:#f00}", visitors)).toBe(
+		expect(print(fixture("css", "css-syntax-printing-what-a-visitor-replaced-or-removed-prints-a-custom-property"), visitors)).toBe(
 			"a{--x:foo blue bar(blue);color:blue}"
 		);
 		expect(
-			print("a{--x: foo  #f00 bar(#f00) }", visitors, "beautify")
+			print(fixture("css", "css-syntax-printing-what-a-visitor-replaced-or-removed-prints-a-custom-property-2"), visitors, "beautify")
 		).toBe("a {\n--x: foo  blue bar(blue);\n}");
 		// The walk visits what an edit adds: the replacement's whitespace goes too.
 		expect(
-			print("a{--x: a, b c;b:x}", {
+			print(fixture("css", "css-syntax-printing-what-a-visitor-replaced-or-removed-prints-a-custom-property-3"), {
 				[NodeType.Comma]: (path) => path.replaceWith(" / "),
 				[NodeType.Whitespace]: (path) => path.remove()
 			})
 		).toBe("a{--x:a/bc;b:x}");
 		// A string the input ran out in is left open, as written.
-		expect(print('a{--x:#f00 "open', visitors)).toBe('a{--x:blue "open');
-				expect(print("a{--x: a  b;--y: c  #f00}", visitors)).toBe(
+		expect(print(fixture("css", "css-syntax-printing-what-a-visitor-replaced-or-removed-prints-a-custom-property-4"), visitors)).toBe('a{--x:blue "open');
+				expect(print(fixture("css", "css-syntax-printing-what-a-visitor-replaced-or-removed-prints-a-custom-property-5"), visitors)).toBe(
 			"a{--x:a b;--y:c blue}"
 		);
 	});
@@ -2026,7 +2026,7 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 				if (path.name() === "color") path.replaceWith("fill:red");
 			}
 		};
-		expect(print("a{color:#f00;top:0}b{x:#f00}", visitors)).toBe(
+		expect(print(fixture("css", "css-syntax-printing-what-a-visitor-replaced-or-removed-prints-a-replaced-node"), visitors)).toBe(
 			"a{fill:red;top:0}b{x:blue}"
 		);
 	});
@@ -2047,7 +2047,7 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 					}
 				}
 			})
-			.process("a{color:#f00}");
+			.process(fixture("css", "css-syntax-printing-what-a-visitor-replaced-or-removed-edits-a-walk-that-prints"));
 		expect(seen).toBe(1);
 		expect(types).toEqual([NodeType.Ident]);
 	});
@@ -2077,7 +2077,7 @@ describe("CssSyntax — node path edits", () => {
 		/** @type {string[]} */
 		const seen = [];
 		expect(
-			print("a{color:red;margin:0}", {
+			print(fixture("css", "css-syntax-node-path-edits-puts-text-in-a-node-s-place-beside-it-and-at-the-end"), {
 				[NodeType.Declaration]: (path) => {
 					seen.push(path.name());
 					if (path.name() === "color") path.insert("after", "top:1px");
@@ -2088,7 +2088,7 @@ describe("CssSyntax — node path edits", () => {
 					path.insert(Field.prelude, ",b");
 				}
 			})
-		).toBe(print("a,b{color:red;top:1px;padding:0;z-index:1}", {}));
+		).toBe(print(fixture("css", "css-syntax-node-path-edits-puts-text-in-a-node-s-place-beside-it-and-at-the-end-2"), {}));
 		// The walk visits each node an edit adds, the replacement in its place.
 		expect(seen).toEqual(["color", "top", "margin", "padding", "z-index"]);
 	});
@@ -2097,7 +2097,7 @@ describe("CssSyntax — node path edits", () => {
 		/** @type {string[]} */
 		const seen = [];
 		expect(
-			print("a{color:red}", {
+			print(fixture("css", "css-syntax-node-path-edits-visits-a-node-put-behind-the-walk-as-soon-as-the"), {
 				[NodeType.Declaration]: (path) => {
 					seen.push(path.name());
 					if (path.name() === "color") path.insert("before", "x:1");
@@ -2113,7 +2113,7 @@ describe("CssSyntax — node path edits", () => {
 		 * @returns {string | undefined} the printed code
 		 */
 		const top = (edit) =>
-			print("a{color:red}b{x:y}", {
+			print(fixture("css", "css-syntax-node-path-edits-puts-top-level-rules-beside-the-one-the-walk-is-in"), {
 				[NodeType.QualifiedRule]: (path) => {
 					if (path.source().startsWith("a")) edit(path);
 				}
@@ -2129,7 +2129,7 @@ describe("CssSyntax — node path edits", () => {
 		);
 		expect(top((path) => path.remove())).toBe("b{x:y}");
 		expect(
-			print("a{color:red}", {
+			print(fixture("css", "css-syntax-node-path-edits-puts-top-level-rules-beside-the-one-the-walk-is-in-2"), {
 				[NodeType.QualifiedRule]: { exit: (path) => path.remove() }
 			})
 		).toBe("");
@@ -2138,7 +2138,7 @@ describe("CssSyntax — node path edits", () => {
 	it("edits a style attribute's declarations", () => {
 		expect(
 			print(
-				"color:red;margin:0",
+				fixture("css", "css-syntax-node-path-edits-edits-a-style-attribute-s-declarations"),
 				{
 					[NodeType.Declaration]: (path) => {
 						if (path.name() === "color") path.insert("after", "top:1");
@@ -2153,7 +2153,7 @@ describe("CssSyntax — node path edits", () => {
 
 	it("moves nodes, and edits from exit visitors", () => {
 		expect(
-			print("a{color:red;top:0}", {
+			print(fixture("css", "css-syntax-node-path-edits-moves-nodes-and-edits-from-exit-visitors"), {
 				[NodeType.QualifiedRule]: (path) => {
 					const [color, top] = [
 						path.field(0, Field.declarations),
@@ -2164,7 +2164,7 @@ describe("CssSyntax — node path edits", () => {
 			}, "beautify")
 		).toBe("a {\ntop: 0;\ncolor: red;\n}");
 		expect(
-			print("a{color:red;top:0}", {
+			print(fixture("css", "css-syntax-node-path-edits-moves-nodes-and-edits-from-exit-visitors"), {
 				[NodeType.Declaration]: {
 					exit: (path) => {
 						if (path.name() === "top") path.remove();
@@ -2176,7 +2176,7 @@ describe("CssSyntax — node path edits", () => {
 
 	it("sets names, values and the important flag, which the print writes", () => {
 		expect(
-			print("a{color:red;width:1px}", {
+			print(fixture("css", "css-syntax-node-path-edits-sets-names-values-and-the-important-flag-which-the"), {
 				[NodeType.Declaration]: (path) => {
 					if (path.name() === "color") {
 						path.setName("background-color");
@@ -2196,7 +2196,7 @@ describe("CssSyntax — node path edits", () => {
 			})
 		).toBe("a{background-color:blue!important;width:2em}");
 		expect(
-			print("a{--x: a  #f00;b:c}", {
+			print(fixture("css", "css-syntax-node-path-edits-sets-names-values-and-the-important-flag-which-the-2"), {
 				[NodeType.Hash]: (path) => path.replaceWith("3 4")
 			})
 		).toBe("a{--x:a 3 4;b:c}");
@@ -2207,24 +2207,24 @@ describe("CssSyntax — node path edits", () => {
 		const hash = { [NodeType.Hash]: (path) => path.replaceWith("blue") };
 		// The walk below reads the new name: a custom property's value is opaque.
 		expect(
-			print("a{color:#ff0000}", {
+			print(fixture("css", "css-syntax-node-path-edits-prints-an-edited-tree-as-the-source-it-spells"), {
 				[NodeType.Declaration]: (path) => path.setName("--c")
 			})
-		).toBe(print("a{--c:#ff0000}", {}));
+		).toBe(print(fixture("css", "css-syntax-node-path-edits-prints-an-edited-tree-as-the-source-it-spells-2"), {}));
 		expect(
-			print("@media screen{a{b:#f00}}", {
+			print(fixture("css", "css-syntax-node-path-edits-prints-an-edited-tree-as-the-source-it-spells-3"), {
 				...hash,
 				[NodeType.AtRule]: (path) => path.setName("supports")
 			})
-		).toBe(print("@supports screen{a{b:blue}}", {}));
+		).toBe(print(fixture("css", "css-syntax-node-path-edits-prints-an-edited-tree-as-the-source-it-spells-4"), {}));
 		// A kept comment in a value no edit changed is written once.
-		expect(print("a{--x: a /*! k */ b;y:#f00}b{c:d}", hash)).toBe(
-			print("a{--x: a /*! k */ b;y:blue}b{c:d}", {})
+		expect(print(fixture("css", "css-syntax-node-path-edits-prints-an-edited-tree-as-the-source-it-spells-5"), hash)).toBe(
+			print(fixture("css", "css-syntax-node-path-edits-prints-an-edited-tree-as-the-source-it-spells-6"), {})
 		);
 		// Declarations an edit adds keep their place among the nested rules.
 		expect(
 			print(
-				"a{b:c;&:hover{d:e}f:g}",
+				fixture("css", "css-syntax-node-path-edits-prints-an-edited-tree-as-the-source-it-spells-7"),
 				{
 					[NodeType.QualifiedRule]: (path) => {
 						if (path.source().startsWith("a")) {
@@ -2255,9 +2255,9 @@ describe("CssSyntax — node path edits", () => {
 	it("leaves what the input ran out in open after an edit", () => {
 		/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
 		const hash = { [NodeType.Hash]: (path) => path.replaceWith("blue") };
-		expect(print("a{x:#f00}b{--y:f(a", hash)).toBe("a{x:blue}b{--y:f(a");
-		expect(print("a{x:#f00;--y:f(#f00", hash)).toBe(
-			print("a{x:blue;--y:f(blue", {})
+		expect(print(fixture("css", "css-syntax-node-path-edits-leaves-what-the-input-ran-out-in-open-after-an-edit"), hash)).toBe("a{x:blue}b{--y:f(a");
+		expect(print(fixture("css", "css-syntax-node-path-edits-leaves-what-the-input-ran-out-in-open-after-an-edit-2"), hash)).toBe(
+			print(fixture("css", "css-syntax-node-path-edits-leaves-what-the-input-ran-out-in-open-after-an-edit-3"), {})
 		);
 	});
 
@@ -2275,13 +2275,13 @@ describe("CssSyntax — node path edits", () => {
 		};
 		/** @type {[number, number, number, number][]} */
 		const locs = [];
-		const css = "a{x:1}\nb{y:#f00}\n/*! k */c{z:#f00}";
+		const css = fixture("css", "css-syntax-node-path-edits-maps-an-edited-rule-to-where-its-source-stood");
 		expect(
 			mappings(css, {
 				[NodeType.Hash]: (path) => path.replaceWith("blue"),
 				[NodeType.QualifiedRule]: { exit: (path) => locs.push(path.loc()) }
 			})
-		).toBe(mappings("a{x:1}\nb{y:blue}\n/*! k */c{z:blue}", {}));
+		).toBe(mappings(fixture("css", "css-syntax-node-path-edits-maps-an-edited-rule-to-where-its-source-stood-2"), {}));
 		expect(locs).toEqual([
 			[1, 0, 1, 6],
 			[2, 0, 2, 9],
@@ -2299,31 +2299,31 @@ describe("CssSyntax — node path edits", () => {
 		const editing = (css, type, edit) => () =>
 			print(css, /** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */ ({ [type]: edit }));
 		expect(
-			editing("@import 'x';", NodeType.AtRule, (path) =>
+			editing(fixture("css", "css-syntax-node-path-edits-refuses-what-the-stylesheet-cannot-hold"), NodeType.AtRule, (path) =>
 				path.insert(Field.declarations, "a:b")
 			)
 		).toThrow("an AtRule with no block holds no declarations");
 		expect(
-			editing("a{b:c}", NodeType.QualifiedRule, (path) =>
+			editing(fixture("css", "css-syntax-node-path-edits-refuses-what-the-stylesheet-cannot-hold-2"), NodeType.QualifiedRule, (path) =>
 				path.insert(Field.declarations, "d{e:f}")
 			)
 		).toThrow('"d{e:f}" does not read as a QualifiedRule\'s declarations');
 		expect(
-			editing("a{b:c}", NodeType.Declaration, (path) =>
+			editing(fixture("css", "css-syntax-node-path-edits-refuses-what-the-stylesheet-cannot-hold-2"), NodeType.Declaration, (path) =>
 				path.insert(Field.value, path.parent || 0)
 			)
 		).toThrow("a QualifiedRule cannot be put inside itself");
 		expect(
-			editing("a{b:c}", NodeType.Ident, (path) => path.setName("x"))
+			editing(fixture("css", "css-syntax-node-path-edits-refuses-what-the-stylesheet-cannot-hold-2"), NodeType.Ident, (path) => path.setName("x"))
 		).toThrow("an Ident has no name");
 		expect(
-			editing("a{b:1}", NodeType.Number, (path) => path.setValue("x"))
+			editing(fixture("css", "css-syntax-node-path-edits-refuses-what-the-stylesheet-cannot-hold-5"), NodeType.Number, (path) => path.setValue("x"))
 		).toThrow('a Number holds no "x"');
 		expect(
-			editing("a{b:1}", NodeType.Number, (path) => path.setFlag(Flag.integer, false))
+			editing(fixture("css", "css-syntax-node-path-edits-refuses-what-the-stylesheet-cannot-hold-5"), NodeType.Number, (path) => path.setFlag(Flag.integer, false))
 		).toThrow("a Number's type flag follows from its text");
 		expect(
-			editing("a{b:c}", NodeType.Declaration, (path) =>
+			editing(fixture("css", "css-syntax-node-path-edits-refuses-what-the-stylesheet-cannot-hold-2"), NodeType.Declaration, (path) =>
 				path.setText(Part.value, "x")
 			)
 		).toThrow("a Declaration has no text part 2");
@@ -2331,7 +2331,7 @@ describe("CssSyntax — node path edits", () => {
 
 	it("refuses an edit to what the print wrote already", () => {
 		expect(() =>
-			print("a{b:c;d:e}", {
+			print(fixture("css", "css-syntax-node-path-edits-refuses-an-edit-to-what-the-print-wrote-already"), {
 				[NodeType.Declaration]: (path) => {
 					if (path.name() === "d") {
 						path.setName("x", path.field(0, Field.declarations, path.parent || 0));

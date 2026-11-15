@@ -135,6 +135,14 @@ attr[5,10|12,38]\\" open[0,40|1,4] open[40,47|41,46] text[47,62] close[62,70|64,
 ]/ attr[1048,1049|1051,1053]\\" attr[1055,1060|1062,1072]\\" open[1040,1075|1041,1047]/ attr[1083,1084|1086,1088]\\" attr[1090,1095|1097,1107]\\" open[1075,1110|1076,1082]/ close[1110,1116|1112,1115] end=1116"
 `;
 
+exports[`XML syntax — invariants source-processor-node-path-edits-edits-a-template-s-content-and-an-xml-document parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"a\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"b\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":3,\\"end\\":7,\\"tagEnd\\":7,\\"nameEnd\\":5,\\"contentEnd\\":7}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":11,\\"tagEnd\\":3,\\"nameEnd\\":2,\\"contentEnd\\":7}]"`;
+
+exports[`XML syntax — invariants source-processor-node-path-edits-edits-a-template-s-content-and-an-xml-document parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-node-path-edits-edits-a-template-s-content-and-an-xml-document prints {"xml":true,"mode":"minify"} 1`] = `"<a><b/></a>"`;
+
+exports[`XML syntax — invariants source-processor-node-path-edits-edits-a-template-s-content-and-an-xml-document tokenizes 1`] = `"open[0,3|1,2] open[3,7|4,5]/ close[7,11|9,10] end=11"`;
+
 exports[`XML syntax — invariants source-processor-svg-minification-should-build-complete-deferred-style-attributes parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":5,\\"nameEnd\\":10,\\"valueStart\\":12,\\"valueEnd\\":38}],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"g\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"style\\",\\"value\\":\\"/* empty */\\",\\"nameStart\\":43,\\"nameEnd\\":48,\\"valueStart\\":50,\\"valueEnd\\":61}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":40,\\"end\\":64,\\"tagEnd\\":64,\\"nameEnd\\":42,\\"contentEnd\\":64}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":70,\\"tagEnd\\":40,\\"nameEnd\\":4,\\"contentEnd\\":64}]"`;
 
 exports[`XML syntax — invariants source-processor-svg-minification-should-build-complete-deferred-style-attributes parses 2`] = `""`;

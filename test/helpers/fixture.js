@@ -674,6 +674,13 @@ const ACTION_KEYS = new Set([
 const ACTIONS = new Set(["skipChildren", "stop", "remove", "replace"]);
 
 /**
+ * @param {VisitAction} action a visit action
+ * @returns {string} the path member it calls: `replace` writes text through `replaceWith`
+ */
+const methodOf = (action) =>
+	action.do === "replace" ? "replaceWith" : action.do;
+
+/**
  * Visitors that log each call `spec` asks for into `log`, one line each:
  * `Type[start,end]` and its `fields` on enter, `/Type` on exit, then `!` and
  * each action of `at` the call took. A `fixture.js` export `spec` names is
@@ -702,7 +709,10 @@ const visitorsOf = (spec, enums, log) => {
 	for (const action of at) {
 		checkKeys(action, ACTION_KEYS, "visit action");
 		enumValue(enums.NodeType, action.type, "NodeType");
-		if (!ACTIONS.has(action.do) || typeof enums.A[action.do] !== "function") {
+		if (
+			!ACTIONS.has(action.do) ||
+			typeof enums.A[methodOf(action)] !== "function"
+		) {
 			throw new Error(`a path here cannot "${action.do}"`);
 		}
 		const on = action.on || "enter";
@@ -722,6 +732,19 @@ const visitorsOf = (spec, enums, log) => {
 		(action.index === undefined || path.index === action.index);
 	/** @type {Record<number, { enter: (path: EXPECTED_ANY) => void, exit?: (path: EXPECTED_ANY) => void }>} */
 	const visitors = {};
+	// The nodes a replacement put in, by id and start, as a recycled id starts
+	// elsewhere: the walk visits them, and an action matching one again loops.
+	/** @type {Set<string>} */
+	const added = new Set();
+	/**
+	 * @param {EXPECTED_ANY} path the path
+	 * @param {number} node a node a replacement put in
+	 * @returns {void}
+	 */
+	const addTree = (path, node) => {
+		added.add(`${node}:${path.start(node)}`);
+		for (const child of path.children(node)) addTree(path, child);
+	};
 	for (const name of types) {
 		const mine = at.filter((action) => action.type === name);
 		/**
@@ -734,10 +757,16 @@ const visitorsOf = (spec, enums, log) => {
 		const call = (on, path, line, logs) => {
 			/** @type {string[]} */
 			const done = [];
+			const own = added.has(`${path.node}:${path.start()}`);
 			for (const action of mine) {
-				if ((action.on || "enter") !== on || !matches(action, path)) continue;
-				if (action.do === "replace") path.replace(action.with);
-				else path[action.do]();
+				if ((action.on || "enter") !== on || own || !matches(action, path)) {
+					continue;
+				}
+				if (action.do === "replace") {
+					for (const node of path.replaceWith(action.with)) addTree(path, node);
+				} else {
+					path[action.do]();
+				}
 				done.push(`!${action.do}`);
 			}
 			if (logs) log.push([line, ...done].join(" "));
