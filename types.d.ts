@@ -14098,7 +14098,7 @@ declare interface HtmlProcessOptions {
 	transforms?: HtmlTransformOptions;
 
 	/**
-	 * collapse each run of HTML whitespace in text to a single space, except where an ancestor renders it verbatim; `"smart"` also drops what sits against a block edge and `"all"` drops every edge. In XML, remove only whitespace-only text in known SVG containers, preserving text, foreign content and `xml:space` (default false)
+	 * collapse each run of HTML whitespace in text to a single space, except where an ancestor renders it verbatim; `"smart"` also drops what sits against a block edge and `"all"` drops every edge. In XML, remove only whitespace-only text in known SVG containers, under `xml:space` too since that lays out text alone, preserving text and foreign content (default false)
 	 */
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
 
@@ -26148,7 +26148,7 @@ declare interface OptimizationMinimizeXml {
 	cleanupStructure?: boolean;
 
 	/**
-	 * Remove whitespace-only text in known SVG containers, preserving text content, foreign content and `xml:space`. Off by default because scripts can observe whitespace nodes.
+	 * Remove whitespace-only text in known SVG containers, under `xml:space` too since that lays out text alone, preserving text content and foreign content. Off by default because scripts can observe whitespace nodes.
 	 * @since 5.113.0
 	 */
 	collapseWhitespace?: boolean;

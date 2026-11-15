@@ -463,7 +463,7 @@ describe("SourceProcessor — SVG minification", () => {
 		const source = fixture("xml", "source-processor-svg-minification-should-merge-text-exposed-by-empty-containers");
 		const options = { ...compact, removeEmptyAttributes: true, collapseWhitespace: true, removeUnusedSvgNamespaces: true };
 		const once = new SourceProcessor().process(source, options).code;
-		expect(once).toBe(`<svg xmlns="${svg}" xmlns:p="urn:used">p:Thing<g xml:space="preserve"> </g></svg>`);
+		expect(once).toBe(`<svg xmlns="${svg}" xmlns:p="urn:used">p:Thing<g xml:space="preserve"/></svg>`);
 		expect(new SourceProcessor().process(once, options).code).toBe(once);
 	});
 
@@ -607,11 +607,12 @@ describe("SourceProcessor — SVG minification", () => {
 		expect(new SourceProcessor().process(fixture("xml", "source-processor-svg-minification-should-preserve-a-long-unsupported-numeric-value"), options).code).toBe('<svg xmlns="http://www.w3.org/2000/svg" width="1"/>');
 	});
 
-	it("should inherit xml:space and allow a default override without collapsing SVG text", () => {
+	it("should drop container whitespace under xml:space but never collapse SVG text", () => {
 		const source = fixture("xml", "source-processor-svg-minification-should-inherit-xml-space-and-allow-a-default");
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), collapseWhitespace: true };
 		const once = new SourceProcessor().process(source, options).code;
-		expect(once).toBe('<root xml:space="preserve"><svg xmlns="http://www.w3.org/2000/svg"> <g> </g><g xml:space="default"><g/><text> A  <tspan xml:space="default"> B  </tspan> C </text></g> </svg></root>');
+		// `xml:space` lays out text content only, as svgo and minify-xml read it.
+		expect(once).toBe('<root xml:space="preserve"><svg xmlns="http://www.w3.org/2000/svg"><g/><g xml:space="default"><g/><text> A  <tspan xml:space="default"> B  </tspan> C </text></g></svg></root>');
 		expect(new SourceProcessor().process(once, options).code).toBe(once);
 	});
 
@@ -630,9 +631,11 @@ describe("SourceProcessor — SVG minification", () => {
 		expect(new SourceProcessor().process(source, { xml: true, mode: "minify", collapseWhitespace: true }).code).toBe('<root xmlns:s="http://www.w3.org/2000/svg"> <s:svg><s:g/><s:g xmlns:s="urn:foreign"> <svg xmlns="http://www.w3.org/2000/svg"> <g> </g> </svg> </s:g><g> </g><s:g>\u00a0</s:g></s:svg> </root>');
 	});
 
-	it("should preserve DTD-defaulted xml:space and unread DTD defaults", () => {
+	it("should drop container whitespace under DTD-defaulted xml:space and keep unread DTD defaults", () => {
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), collapseWhitespace: true };
-		for (const name of ["source-processor-svg-minification-should-preserve-dtd-defaulted-xml-space-and", "source-processor-svg-minification-should-preserve-dtd-defaulted-xml-space-and-2", "source-processor-svg-minification-should-preserve-dtd-defaulted-xml-space-and-3"]) {
+		const defaulted = fixture("xml", "source-processor-svg-minification-should-preserve-dtd-defaulted-xml-space-and");
+		expect(new SourceProcessor().process(defaulted, options).code).toBe(defaulted.replace(/> <g> <\/g> </, "><g/><"));
+		for (const name of ["source-processor-svg-minification-should-preserve-dtd-defaulted-xml-space-and-2", "source-processor-svg-minification-should-preserve-dtd-defaulted-xml-space-and-3"]) {
 			const source = fixture("xml", name);
 			expect(new SourceProcessor().process(source, options).code).toBe(source);
 		}
