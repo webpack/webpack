@@ -48,6 +48,8 @@ const START_DELAY = 100;
 const AGGREGATE_TIMEOUT = 50;
 const RETOUCH_DELAY = 1000;
 const RETOUCH_LIMIT = 5;
+// how often a suspended watching checks whether its watcher received the step
+const RECEIVE_INTERVAL = 10;
 
 /**
  * @param {string} src src
@@ -371,6 +373,9 @@ const describeCases = (config) => {
 							// watched files the current step changed, kept after builds report them
 							/** @type {Set<string>} */
 							let stepChanges = new Set();
+							// changes and removals the watchers delivered since the current step was written
+							/** @type {Set<string>} */
+							let receivedChanges = new Set();
 							/** @type {Map<import("../../").Compiler, import("../../").Compilation>} */
 							const lastChildCompilations = new Map();
 							// each child's stats from the builds of the current step
@@ -481,6 +486,72 @@ const describeCases = (config) => {
 								}, RETOUCH_DELAY);
 							};
 
+							/**
+							 * Resumes the watchings once their watchers received every pending change.
+							 * @param {NonNullable<import("../../").Compiler["watching"]>[]} watchings suspended watchings
+							 * @param {Set<string>} pending changes of the step not received yet
+							 */
+							const resumeWhenReceived = (watchings, pending) => {
+								if (failed) return;
+								const received = [...receivedChanges];
+								for (const watching of watchings) {
+									// a paused watcher still collects what arrives after its last report
+									const watcher = watching.watcher || watching.pausedWatcher;
+									if (!watcher || !watcher.getInfo) continue;
+									const { changes, removals } = watcher.getInfo();
+									received.push(...(changes || []), ...(removals || []));
+								}
+								for (const file of pending) {
+									// a watched directory reports itself, not the file inside it
+									if (
+										isWithin(file, received) ||
+										received.some((item) => isWithin(item, [file]))
+									) {
+										pending.delete(file);
+									}
+								}
+								if (pending.size > 0) {
+									timer = setTimeout(
+										() => resumeWhenReceived(watchings, pending),
+										RECEIVE_INTERVAL
+									);
+									return;
+								}
+								for (const watching of watchings) watching.resume();
+							};
+
+							/**
+							 * Records each change and removal the compiler's watchers deliver.
+							 * @param {import("../../").Compiler} child watched compiler
+							 */
+							const recordReceivedChanges = (child) => {
+								const { watchFileSystem } = child;
+								if (!watchFileSystem) return;
+								const watch = watchFileSystem.watch.bind(watchFileSystem);
+								watchFileSystem.watch = (
+									files,
+									directories,
+									missing,
+									startTime,
+									watchOptions,
+									callback,
+									callbackUndelayed
+								) =>
+									watch(
+										files,
+										directories,
+										missing,
+										startTime,
+										watchOptions,
+										(error, fileTimes, contextTimes, changes, removals) => {
+											for (const file of changes || []) receivedChanges.add(file);
+											for (const file of removals || []) receivedChanges.add(file);
+											callback(error, fileTimes, contextTimes, changes, removals);
+										},
+										callbackUndelayed
+									);
+							};
+
 							const startCompiler = () => {
 								try {
 									if (!deprecationTracker) {
@@ -512,6 +583,7 @@ const describeCases = (config) => {
 											{ name: "WatchTestCasesTest", stage: Infinity },
 											assertModuleGraph
 										);
+										if (testConfig.watchError) recordReceivedChanges(child);
 									}
 									/**
 									 * @param {Error} error watch or comparison failure
@@ -826,6 +898,24 @@ const describeCases = (config) => {
 																		closing = undefined;
 																	}
 																	waitMode = false;
+																	// a fatal error stops watching, so no late event rebuilds a failed
+																	// build that missed it: such a case builds a step only once the
+																	// watchers received all of it
+																	/** @type {NonNullable<import("../../").Compiler["watching"]>[]} */
+																	const suspended = [];
+																	if (
+																		testConfig.watchError &&
+																		!restartCompiler &&
+																		watchedCompiler
+																	) {
+																		for (const child of "compilers" in watchedCompiler
+																			? watchedCompiler.compilers
+																			: [watchedCompiler]) {
+																			if (child.watching) suspended.push(child.watching);
+																		}
+																	}
+																	for (const watching of suspended) watching.suspend();
+																	receivedChanges = new Set();
 																	/** @type {{ step: string | undefined }} */ (
 																		currentWatchStepModule
 																	).step = run.name;
@@ -909,6 +999,9 @@ const describeCases = (config) => {
 																		if (unseenChanges.size > 0) {
 																			retouchUnseenChanges(children, RETOUCH_LIMIT);
 																		}
+																	}
+																	if (suspended.length > 0) {
+																		resumeWhenReceived(suspended, new Set(unseenChanges));
 																	}
 																	if (restartCompiler) startCompiler();
 																} catch (error) {
