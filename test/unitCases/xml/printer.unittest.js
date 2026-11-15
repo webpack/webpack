@@ -281,6 +281,9 @@ describe("SourceProcessor — SVG minification", () => {
 			// WebKit turns quadratics into cubics with different float steps per case.
 			' d="M.3 0Q.4 1 .5 0"',
 			' d="M10.3 0Q10.4 1 10.5 0T10.9 0"',
+			// They agree while every value is a small eighth, and the reflected control too.
+			' d="M100 0q.5 1 1 0t1 0"',
+			' d="M100 0Q100.3 1 101 0T102 0"',
 			// WebKit treats a relative arc as zero-length only when its offsets are zero.
 			' d="M123456.7 5A1 1 0 01123456.701 5"'
 		]);
