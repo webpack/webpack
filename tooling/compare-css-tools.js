@@ -52,6 +52,7 @@ const {
 	cssPurityDigest,
 	cssSlices,
 	cssSpans,
+	meaningReports,
 	noticeReports,
 	printerFor,
 	sweepRespellings,
@@ -1252,7 +1253,8 @@ const invariants = (write) => {
 		wantedRespelling(one.name)
 	);
 	const wantsNotices = wantedRelation("notices");
-	if (wantsIdempotence || wantsRespelling || wantsNotices) {
+	const wantsMeaning = wantedRelation("meaning");
+	if (wantsIdempotence || wantsRespelling || wantsNotices || wantsMeaning) {
 		log(
 			`sweeping ${corpus.length} stylesheets under ${presets.length} presets …`
 		);
@@ -1265,6 +1267,11 @@ const invariants = (write) => {
 				for (const report of reports) groups.add(report, preset, label);
 				if (printed !== null && wantsNotices) {
 					for (const report of noticeReports(css, printed)) {
+						groups.add(report, preset, label);
+					}
+				}
+				if (printed !== null && wantsMeaning) {
+					for (const report of meaningReports(css, printed, options)) {
 						groups.add(report, preset, label);
 					}
 				}

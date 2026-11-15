@@ -2082,6 +2082,10 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 		expect(lower(fixture("css", "css-syntax-minify-lowering-nesting-keeps-a-type-led-parent-inside-is-after-a-compound"))).toBe(
 			"[x]:is(div){color:red}:not(.a):is(p){color:red}b>[y]:is(a){color:red}"
 		);
+		// A `*` keeps to the default namespace, which a namespaced parent reaches past.
+		expect(lower(fixture("css", "css-syntax-minify-lowering-nesting-keeps-a-namespaced-parent-in-is-for-the-universal"))).toBe(
+			"@namespace url(urn:html);@namespace s url(urn:svg);s|a{}:is(s|a){color:red}:is(*|a){color:red}.b :is(|a){color:red}a{color:blue}"
+		);
 	});
 
 	it("keeps the escaped space a lowered nested selector ends in", () => {
