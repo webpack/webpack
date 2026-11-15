@@ -20,7 +20,7 @@ it("should name a chunk after the comment before its tag", () => {
 	const html = read("page.html");
 	expect(html).toMatchSnapshot();
 	// The comment wins over `output.html.chunkName`, which would have named
-	// these `option-<index>`.
+	// these `<page>-option-<index>`.
 	expect(scriptUrls(html)).toEqual([
 		"header.mjs",
 		"footer.mjs",
@@ -48,8 +48,10 @@ it("should name an external tag's chunk too", () => {
 it("should warn and fall back when the comment names nothing usable", () => {
 	const html = read("bad.html");
 	// The value is not a string, so the option names the chunk instead.
-	expect(scriptUrls(html)).toEqual(["option-0.mjs"]);
-	expect(read("option-0.mjs")).toContain("unnamed");
+	expect(scriptUrls(html)).toEqual(["bad-option-0.mjs"]);
+	expect(read("bad-option-0.mjs")).toContain("unnamed");
+	// The linked page's script is named after its own page, so it stays apart.
+	expect(read("bad-option-0.mjs")).not.toContain("other-page");
 });
 
 it("should name a linked page's own file too", () => {
