@@ -8503,6 +8503,12 @@ declare class Dependency {
 	get category(): string;
 
 	/**
+	 * Returns the category the resolved module passes on to its own dependencies, e.g. "worker".
+	 * Resolve options read it through `byIssuerDependency`.
+	 */
+	get issuerCategory(): string;
+
+	/**
 	 * Returns the source type this dependency reads from the module it references:
 	 * `javascript` for anything going through the module wrapper, `asset-url` for a
 	 * bare url embedded into non-javascript output (css, html, a manifest).
@@ -22609,6 +22615,11 @@ declare interface ModuleFactoryCreateData {
 declare interface ModuleFactoryCreateDataContextInfo {
 	issuer: string;
 	issuerLayer: IssuerLayer;
+
+	/**
+	 * dependency category of the issuer chain (e.g. "worker")
+	 */
+	issuerDependency?: null | string;
 	compiler?: string;
 }
 
@@ -24392,6 +24403,7 @@ type NodeWebpackOptions = false | NodeOptions;
 type NonNullable<T> = T & {};
 declare class NormalModule extends Module {
 	constructor(__0: NormalModuleCreateData<string>);
+	issuerDependencyType?: null | string;
 	request: string;
 	userRequest: string;
 	rawRequest: string;
@@ -24544,6 +24556,11 @@ declare interface NormalModuleCreateData<T extends string = string> {
 	 * module type. When deserializing, this is set to an empty string "".
 	 */
 	type: T;
+
+	/**
+	 * dependency category of the issuer chain (e.g. "worker")
+	 */
+	issuerDependencyType?: null | string;
 
 	/**
 	 * request string
@@ -30372,6 +30389,11 @@ declare interface ResolveData {
 	attributes?: ImportAttributes;
 	dependencies: ModuleDependency[];
 	dependencyType: string;
+
+	/**
+	 * dependency category of the issuer chain (e.g. "worker")
+	 */
+	issuerDependencyType?: null | string;
 	createData: Partial<CreateData>;
 	fileDependencies: LazySet<string>;
 	missingDependencies: LazySet<string>;
@@ -30437,6 +30459,12 @@ declare interface ResolveOptionsWebpackOptions {
 	 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
 	 */
 	byDependency?: { [index: string]: ResolveOptionsWebpackOptions };
+
+	/**
+	 * Extra resolve options per dependency category of the issuer chain, e.g. "worker" for modules imported from a worker.
+	 * @since 5.113.0
+	 */
+	byIssuerDependency?: { [index: string]: ResolveOptionsWebpackOptions };
 
 	/**
 	 * Enable caching of successfully resolved requests (cache entries are revalidated).
@@ -30612,6 +30640,7 @@ declare interface ResolveOptionsWebpackOptions {
 }
 type ResolveOptionsWithDependencyType = ResolveOptionsWebpackOptions & {
 	dependencyType?: string;
+	issuerDependency?: string;
 	resolveToContext?: boolean;
 };
 type ResolvePluginInstance =

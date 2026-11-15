@@ -667,7 +667,7 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.resolve.tsconfig should be one of these:
-			   object { alias?, aliasFields?, byDependency?, cache?, cachePredicate?, cacheWithContext?, conditionNames?, descriptionFiles?, enforceExtension?, exportsFields?, extensionAlias?, extensions?, fallback?, fileSystem?, fullySpecified?, importsFields?, mainFields?, mainFiles?, modules?, plugins?, preferAbsolute?, preferRelative?, resolver?, restrictions?, roots?, symlinks?, tsconfig?, unsafeCache?, useSyncFileSystemCalls? }
+			   object { alias?, aliasFields?, byDependency?, byIssuerDependency?, cache?, cachePredicate?, cacheWithContext?, conditionNames?, descriptionFiles?, enforceExtension?, exportsFields?, extensionAlias?, extensions?, fallback?, fileSystem?, fullySpecified?, importsFields?, mainFields?, mainFiles?, modules?, plugins?, preferAbsolute?, preferRelative?, resolver?, restrictions?, roots?, symlinks?, tsconfig?, unsafeCache?, useSyncFileSystemCalls? }
 			   -> TypeScript config for paths mapping. Can be \`false\` (disabled), \`true\` (use default \`tsconfig.json\`), a string path to \`tsconfig.json\`, or an object with \`configFile\` and \`references\` options.
 			   Details:
 			    * configuration.resolve.tsconfig should be a boolean.

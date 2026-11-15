@@ -920,6 +920,18 @@ describe("snapshots", () => {
 		        "aliasFields": Array [
 		          "browser",
 		        ],
+		        "byIssuerDependency": Object {
+		          "worker": Object {
+		            "conditionNames": Array [
+		              "worker",
+		              "typescript",
+		              "import",
+		              "module-sync",
+		              "module",
+		              "...",
+		            ],
+		          },
+		        },
 		        "conditionNames": Array [
 		          "typescript",
 		          "import",
@@ -968,6 +980,18 @@ describe("snapshots", () => {
 		        "aliasFields": Array [
 		          "browser",
 		        ],
+		        "byIssuerDependency": Object {
+		          "worker": Object {
+		            "conditionNames": Array [
+		              "worker",
+		              "typescript",
+		              "import",
+		              "module-sync",
+		              "module",
+		              "...",
+		            ],
+		          },
+		        },
 		        "conditionNames": Array [
 		          "typescript",
 		          "import",
@@ -1042,6 +1066,18 @@ describe("snapshots", () => {
 		        "aliasFields": Array [
 		          "browser",
 		        ],
+		        "byIssuerDependency": Object {
+		          "worker": Object {
+		            "conditionNames": Array [
+		              "worker",
+		              "typescript",
+		              "import",
+		              "module-sync",
+		              "module",
+		              "...",
+		            ],
+		          },
+		        },
 		        "conditionNames": Array [
 		          "typescript",
 		          "import",
@@ -1067,6 +1103,18 @@ describe("snapshots", () => {
 		        "aliasFields": Array [
 		          "browser",
 		        ],
+		        "byIssuerDependency": Object {
+		          "worker": Object {
+		            "conditionNames": Array [
+		              "worker",
+		              "typescript",
+		              "import",
+		              "module-sync",
+		              "module",
+		              "...",
+		            ],
+		          },
+		        },
 		        "conditionNames": Array [
 		          "worker",
 		          "typescript",

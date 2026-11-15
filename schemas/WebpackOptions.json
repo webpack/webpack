@@ -6519,6 +6519,19 @@
             ]
           }
         },
+        "byIssuerDependency": {
+          "description": "Extra resolve options per dependency category of the issuer chain, e.g. \"worker\" for modules imported from a worker.",
+          "type": "object",
+          "additionalProperties": {
+            "description": "Options object for resolving requests.",
+            "oneOf": [
+              {
+                "$ref": "#/definitions/ResolveOptions"
+              }
+            ]
+          },
+          "added": "5.113.0"
+        },
         "cache": {
           "description": "Enable caching of successfully resolved requests (cache entries are revalidated).",
           "type": "boolean"
