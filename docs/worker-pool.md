@@ -51,12 +51,12 @@ await worker.warmup(4);
 await worker.release();
 ```
 
-| Member                                  | Behavior                                                                                                                                 |
-| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `compiler.worker(workerPath, options?)` | Absolute path or `file:` URL, required. Returns the facade; throws when `experiments.threads` is off or `worker_threads` is unavailable. |
-| `worker.run(method, ...args)`           | One call.                                                                                                                                |
-| `worker.warmup(workers?)`               | Spawns up to `workers` threads and preloads this module; defaults to the pool's `max`. Existing threads are preloaded too.               |
-| `worker.release()`                      | Terminates idle threads in the shared pool. Calls in flight finish, then their threads retire; the pool stays usable.                    |
+| Member                                  | Behavior                                                                                                                                                  |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `compiler.worker(workerPath, options?)` | Absolute path or `file:` URL, required. Returns the facade; without `experiments.threads` or `worker_threads`, its calls run directly on the main thread. |
+| `worker.run(method, ...args)`           | One call.                                                                                                                                                 |
+| `worker.warmup(workers?)`               | Spawns up to `workers` threads and preloads this module; defaults to the pool's `max`. Existing threads are preloaded too.                                |
+| `worker.release()`                      | Terminates idle threads in the shared pool. Calls in flight finish, then their threads retire; the pool stays usable.                                     |
 
 `workerPath` may be followed by a reserved `options` argument: no field is used yet, so passing one is accepted and ignored.
 
@@ -72,7 +72,8 @@ When `options` fields ship, they reuse the `jest-worker` or `thread-loader` name
 - child compilers return the root's facade;
 - each compiler of a `MultiCompiler` is its own root, so every config gets its own pool;
 - `compiler.close()` sets a closed flag immediately and ends the pool before `shutdown`; an existing facade can still run calls until the pool ends;
-- after `compiler.close()` calls back, a farm whose pool was never created throws; otherwise the same facade is returned, and its calls reject because the pool ended.
+- the farm is created on first use, so a plugin calls `compiler.worker` the same way whether threads are on or off, as it calls `getCache` whether caching is on or off;
+- after `compiler.close()` starts, a farm whose pool was never created throws; otherwise the same facade is returned, and its calls reject because the pool ended.
 
 ## Worker module contract
 
@@ -134,7 +135,7 @@ Ordering rules:
 
 A call runs inline when `max === 0`, or when a pool is used on a runtime without `worker_threads`.
 
-Inline requires the module on the main thread, caches it, and calls the method. With `strictClone`, arguments and results go through `v8.serialize` / `v8.deserialize`, which approximates structured clone for the values tests cover; it does not model `MessagePort` or transfer. The compiler passes `strictClone: true`, so inline calls reject values the thread path cannot clone. Loader jobs are unaffected: a loader chain that cannot run in a worker falls back to `runLocal`.
+Inline requires the module on the main thread, caches it, and calls the method. With `strictClone`, arguments and results go through `v8.serialize` / `v8.deserialize`, which approximates structured clone for the values tests cover; it does not model `MessagePort` or transfer. With threads on, the compiler passes `strictClone: true`, so inline calls (`max: 0`) reject values the thread path cannot clone. With threads off or without `worker_threads`, it passes `strictClone: false`: a call is a plain call, with no clone and no extra cost. Loader jobs are unaffected: a loader chain that cannot run in a worker falls back to `runLocal`.
 
 ## Configuration
 
@@ -154,11 +155,11 @@ module.exports = {
 
 | Value             | Effect                                       |
 | ----------------- | -------------------------------------------- |
-| `false` (default) | No pool; `compiler.worker` throws.           |
+| `false` (default) | Every call runs directly on the main thread. |
 | `true`            | `{ max: cores - 1 }`.                        |
 | `max: n`          | `Math.floor(n)`; `0` runs every call inline. |
 
-`cores` is `os.availableParallelism()` when available, else `os.cpus().length`; the result is clamped to at least 0. `max` is shared with loader threads. Plain calls keep an idle thread for 30 seconds; loader jobs use `loaders.poolTimeout` (default 500 ms). When `worker_threads` is unavailable, the compiler emits a warning on each compilation and does not create the farm: `compiler.worker()` throws and loader chains run on the main thread.
+`cores` is `os.availableParallelism()` when available, else `os.cpus().length`; the result is clamped to at least 0. `max` is shared with loader threads. Plain calls keep an idle thread for 30 seconds; loader jobs use `loaders.poolTimeout` (default 500 ms). When `worker_threads` is unavailable, the compiler emits a warning on each compilation, and `compiler.worker()` calls and loader chains run directly on the main thread.
 
 ## First consumer
 

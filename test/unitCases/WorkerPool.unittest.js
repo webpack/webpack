@@ -165,19 +165,36 @@ describe("WorkerPool", () => {
 	});
 
 	describe("compiler.worker", () => {
-		it("throws while experiments.threads is off", async () => {
+		it("runs calls directly on the main thread while experiments.threads is off", async () => {
 			const webpack = require("../../lib/webpack");
+			const { threadId } = require("worker_threads");
 			const compiler = webpack({ entry: "data:text/javascript,1" });
+			const worker =
+				/** @type {import("../../lib/worker/Worker")<{ add: (a: number, b: number) => number, info: () => { threadId: number }, echo: <T>(...args: T[]) => T[] }>} */ (
+					compiler.worker(TARGET)
+				);
+			const fn = () => {};
 
-			expect(() => compiler.worker(TARGET)).toThrow(
-				/experiments\.threads option/
-			);
+			expect(compiler.worker(TARGET)).toBe(worker);
+			expect(worker._pool.options.max).toBe(0);
+			expect(worker._pool.options.strictClone).toBe(false);
+			expect(await worker.run("add", 1, 2)).toBe(3);
+			expect((await worker.run("info")).threadId).toBe(threadId);
+			expect((await worker.run("echo", fn))[0]).toBe(fn);
 			await new Promise((resolve, reject) => {
 				compiler.close((err) => (err ? reject(err) : resolve(undefined)));
 			});
-			expect(() => compiler.worker(TARGET)).toThrow(
-				/experiments\.threads option/
-			);
+			expect(compiler.worker(TARGET)).toBe(worker);
+		});
+
+		it("refuses a first worker after close while experiments.threads is off", async () => {
+			const webpack = require("../../lib/webpack");
+			const compiler = webpack({ entry: "data:text/javascript,1" });
+
+			await new Promise((resolve, reject) => {
+				compiler.close((err) => (err ? reject(err) : resolve(undefined)));
+			});
+			expect(() => compiler.worker(TARGET)).toThrow(/after compiler\.close/);
 		});
 
 		it("returns one facade per path and follows the pool max", async () => {
@@ -348,7 +365,7 @@ describe("WorkerPool", () => {
 	});
 
 	describe("WorkerPlugin", () => {
-		it("warns and leaves the farm unset when the runtime cannot provide threads", async () => {
+		it("warns and runs calls inline when the runtime cannot provide threads", async () => {
 			const WorkerPool = require("../../lib/worker/WorkerPool");
 			const isThreadingAvailable = WorkerPool.isThreadingAvailable;
 			WorkerPool.isThreadingAvailable = () => false;
@@ -359,9 +376,9 @@ describe("WorkerPool", () => {
 					experiments: { threads: true }
 				});
 				expect(compiler._workerFarm).toBeUndefined();
-				expect(() => compiler.worker(TARGET)).toThrow(
-					/worker_threads support/
-				);
+				const worker = compiler.worker(TARGET);
+				expect(worker._pool.options.max).toBe(0);
+				expect(await worker.run("add", 1, 2)).toBe(3);
 				const stats = await new Promise((resolve, reject) => {
 					compiler.run((err, stats) => {
 						if (err) return reject(err);

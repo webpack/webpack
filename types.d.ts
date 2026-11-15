@@ -5219,7 +5219,7 @@ declare class Compiler {
 	compile(callback: CallbackWebpackFunction_2<Compilation, void>): void;
 
 	/**
-	 * Returns a worker bound to `workerPath`. The pool behind it is shared by the compiler and ended on close.
+	 * Returns a worker bound to `workerPath`. The pool behind it is shared by the compiler and ended on close; without `experiments.threads` or `worker_threads`, calls run directly on the main thread.
 	 * @since 5.113.0
 	 * @experimental
 	 */
