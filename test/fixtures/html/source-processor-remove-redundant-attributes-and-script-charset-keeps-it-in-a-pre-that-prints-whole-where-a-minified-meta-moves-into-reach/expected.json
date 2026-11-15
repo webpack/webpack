@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "<script charset=utf-8 src=a.js>",
+		"why": "a `<script>` inside an element printed whole, as a `<pre>` is, goes out inside that element's text, so the printer cannot hold `charset` back as a piece of its own to settle once the first 1024 bytes are printed; it keeps it, and the next pass, reading the `<meta charset>` that dropping the comment brought into reach, drops the restated default, 14 B less in the same meaning"
+	}
+]
