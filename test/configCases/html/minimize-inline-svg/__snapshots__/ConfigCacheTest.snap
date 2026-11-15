@@ -19,8 +19,8 @@ exports[`ConfigCacheTestCases html minimize-inline-svg minimize-inline-svg shoul
 "<!doctype html><html lang=en><head><title>Inline SVG</title><style>.icon { background: url(\\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m000,000 0 80-112 0 M10 20 10 30 40 30q0 0 20 20'/%3E%3C/svg%3E\\") }.animated { background: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cmetadata%3Eremoved%3C%2Fmetadata%3E%3Cstyle%3E%40keyframes%20morph%7Bto%7Bd%3Apath%28%22M10%2020L20%2050L40%2050%22%29%7D%7D%3C%2Fstyle%3E%3Cpath%20d%3D%22M010%20020L010%20030L040%20030%22%2F%3E%3C%2Fsvg%3E); color: red }</style></head><body>
 <svg viewBox=\\"0 0 24 24\\" xmlns=http://www.w3.org/2000/svg>
 	
-	<path d=\\"m0 0v80h-112M10 20V30H40s10 10 20 20\\" transform=\\"translate(1 2)\\"/>
-	<metadata><path id=metadata-shape d=\\"M1 1H3V3z\\"/></metadata><use href=#metadata-shape />
+	<path d=\\"m0 0v80h-112m122-60v10h30s10 10 20 20\\" transform=\\"translate(1 2)\\"/>
+	<metadata><path id=metadata-shape d=\\"M1 1h2v2z\\"/></metadata><use href=#metadata-shape />
 	<rect width=1.5px height=2></rect>
 </svg>
 <img alt src=\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><rect width='1.5' transform='translate(5) scale(2) rotate(30)'/></svg>\\">
