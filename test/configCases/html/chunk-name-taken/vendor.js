@@ -1,1 +1,1 @@
-globalThis.vendorRuns = (globalThis.vendorRuns || 0) + 1;
+global.vendorRuns = (global.vendorRuns || 0) + 1;

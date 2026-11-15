@@ -1,7 +1,7 @@
 it("should keep a page's tag out of an entry it names", () => {
 	// The page's script asks for this entry's name; it gets no place in it.
-	expect(globalThis.taggedByPage).toBeUndefined();
-	expect(globalThis.taggedByOther).toBeUndefined();
+	expect(global.taggedByPage).toBeUndefined();
+	expect(global.taggedByOther).toBeUndefined();
 });
 
 it("should let pages share a chunk named for the same tag", () => {
