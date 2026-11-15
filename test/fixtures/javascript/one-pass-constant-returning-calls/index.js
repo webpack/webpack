@@ -18,6 +18,15 @@ console.log(long(), long(), twice(early()), nothing(), nothing());
 // A key no constant keeps its object; a call unread as a body prints nothing.
 console.log(Object.keys({ a: 1, [long()]: 2 }).join());
 for (var index = 0; index < 2; index++) early();
+// A read that goes counts once: the call passing something keeps it.
+function nested() {
+	function inner() {
+		return 1;
+	}
+	inner();
+	return inner(early());
+}
+console.log(nested());
 // A default runs code, and a block sets its function only once it runs.
 function defaulted(value = console.log("default")) {
 	return 2;

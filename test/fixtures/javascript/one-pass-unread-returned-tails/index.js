@@ -18,6 +18,8 @@ var log = function (value) {
 (value => (log(value.a), log(value.a), 9))({ a: 8 });
 (value => ((log(value.a), log(value.a)), 9))({ a: 8 });
 (value => (log(value.a), log(value.a)))({ a: 8 });
+// What an unread pure call runs stays in its own parentheses.
+(value => (/*#__PURE__*/ String(log(value.a), log(value.a + 1)), 0))({ a: 10 });
 // A value read keeps the tail.
 log((value => (log(value), 6))(7));
 // A template may call `toString`: it stays.
