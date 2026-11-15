@@ -66,6 +66,10 @@ it("should rewrite the fragment of a link to the page's own file", () => {
 		'<a href="https://example.com/page.html#help">self-8</a>'
 	);
 	expect(body).toContain('<a href="/page.html#help">self-9</a>');
+	// A URL's leading whitespace is no part of it.
+	expect(body).toContain(
+		'<a href=" page.html#page_html-style-1-help">self-10</a>'
+	);
 });
 
 it("should read ./ as a link to an index.html, on a page that finds its names again", () => {

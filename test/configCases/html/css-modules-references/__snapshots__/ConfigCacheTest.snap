@@ -89,6 +89,7 @@ exports[`ConfigCacheTestCases html css-modules-references exported tests should 
 <a href=\\"other.html#help\\">self-7</a>
 <a href=\\"https://example.com/page.html#help\\">self-8</a>
 <a href=\\"/page.html#help\\">self-9</a>
+<a href=\\" page.html#page_html-style-1-help\\">self-10</a>
 <div data-target=\\"page_html-style-1-help\\" data-classes=\\"page_html-style-1-btn page_html-style-1-primary page_html-style-1-base\\" data-link=\\"#page_html-style-1-help\\" data-refs=\\"page_html-style-1-help page_html-style-2-field\\" data-paint=\\"url(#page_html-style-1-grad)\\" data-other=\\"help\\">six</div>
 </body>
 </html>

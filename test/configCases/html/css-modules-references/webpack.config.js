@@ -28,6 +28,16 @@ module.exports = {
 	module: {
 		parser: {
 			html: {
+				// An `<a href>` source no element passes is no extraction.
+				sources: [
+					"...",
+					{
+						tag: "a",
+						attribute: "href",
+						type: "src",
+						filter: (attributes) => attributes.has("data-asset")
+					}
+				],
 				cssModules: {
 					attributes: {
 						"data-target": "id",
