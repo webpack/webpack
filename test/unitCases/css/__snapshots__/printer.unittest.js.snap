@@ -16,7 +16,7 @@ p: v;
 p: v;
 }@unknown x y {
 p: v;
-}@unknown x,y x(1+ 2) {
+}@unknown x,y x(1+/**/2) {
 p: v;
 }@unknown {
 p: v;
@@ -55,7 +55,7 @@ p: v;
 s {
 p: v;
 }
-}@unknown x,y f(1+ 2) {
+}@unknown x,y f(1+/**/2) {
 s {
 p: v;
 }
@@ -1389,8 +1389,8 @@ color: blue;
 }:nth-child(even) {
 }:nth-child(eVeN) {
 }:nth-child(EVEN) {
-}:nth-child(2n+ 1) {
-}:nth-last-child(+3n - 2) {
+}:nth-child(2n+/**/1) {
+}:nth-last-child(+3n/**/-/**/2) {
 }:nth-child(2n + 1) {
 }:nth-last-child(+3n - 2) {
 }:nth-child(-2n+1) {

@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep a comment by a folded `if` test or dropped `new` from ending a `return`.
+Keep comments in returns, empty classes, CSS signs; fix mangling, `typeof()`, CSS `*&`.

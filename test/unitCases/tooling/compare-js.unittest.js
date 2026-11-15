@@ -21,6 +21,10 @@ const {
 	runMode
 } = require("../../../tooling/compare-js-tools");
 const { cutsAt } = require("../../../tooling/compare-tools-harness");
+const {
+	meaningReports,
+	sweepRespellings
+} = require("../../helpers/syntaxInvariants/javascript");
 
 // Read before anything clears the mock: an unguarded script installs while
 // being required, and a `beforeEach` would erase exactly that evidence.
@@ -187,6 +191,31 @@ describe("the printing table's last column", () => {
 		expect(roundTrip(acorn, new Set(), [], "a.=", "script")).toMatch(
 			/^will not parse back: /
 		);
+	});
+});
+
+describe("the meaning relation", () => {
+	it("should read a named class exported as the default otherwise than one in parentheses", () => {
+		const module = { sourceType: "module", ecmaVersion: "latest" };
+		expect(
+			meaningReports("export default class C {}", "export default (class C{});", module)
+		).toHaveLength(1);
+		expect(
+			meaningReports("export default class {}", "export default (class{});", module)
+		).toEqual([]);
+	});
+});
+
+describe("the respelling sweep", () => {
+	/**
+	 * A script whose body holds more statements than one call takes as arguments.
+	 * @param {number} count how many statements follow its directive
+	 * @returns {string} the script
+	 */
+	const wideScript = (count) => `"use strict";${"0;".repeat(count)}`;
+
+	it("should read the directives of a program wider than a call's arguments", () => {
+		expect(sweepRespellings(() => "", wideScript(200000), false, "")).toEqual([]);
 	});
 });
 

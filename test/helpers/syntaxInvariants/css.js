@@ -11,8 +11,10 @@ const MODERN_BROWSERS = require("browserslist")(
 	"last 1 chrome version, last 1 firefox version, last 1 safari version, last 1 edge version"
 );
 const { isStackOverflow } = require("../fixture");
+const { SUBSTITUTION_FUNCTIONS } = require("../../../lib/css/data");
 const { SourceProcessor } = require("../../../lib/css/syntax");
 const {
+	Flag,
 	NodeType,
 	Part,
 	TokenStream,
@@ -23,6 +25,8 @@ const {
 const { wantedRespelling } = require("../../../tooling/compare-tools-harness");
 const {
 	hasher,
+	meaningRelation,
+	noticeRelation,
 	oneLine,
 	pathSpanWalk,
 	shrink,
@@ -487,13 +491,35 @@ const tokenMeaning = (css) => {
 };
 
 /**
+ * Whether the last character of a token's text is escaped: a backslash run of
+ * odd length before it.
+ * @param {string} text a token's text
+ * @returns {boolean} true where a backslash escapes its last character
+ */
+const endsEscaped = (text) => {
+	let at = text.length - 1;
+	while (at > 0 && text[at - 1] === "\\") at--;
+	return (text.length - 1 - at) % 2 === 1;
+};
+
+/**
+ * What CSS Syntax §3.3 preprocesses the input into: NUL is U+FFFD, a newline
+ * is LF.
+ * @param {string} text source text
+ * @returns {string} it, preprocessed
+ */
+const preprocess = (text) =>
+	text.replace(/\0/g, "\uFFFD").replace(/\r\n?|\f/g, "\n");
+
+/**
  * One token's value as the parser resolves it.
  * @param {number} type which token it is
- * @param {string} text the token as the source spelled it
+ * @param {string} written the token as the source spelled it
  * @param {EXPECTED_ANY} token the token, for a dimension's unit
  * @returns {string} its value
  */
-const canonicalToken = (type, text, token) => {
+const canonicalToken = (type, written, token) => {
+	const text = preprocess(written);
 	if (type === TokenType.Ident) return unescapeIdentifier(text);
 	// The sigil is not part of the name, and an at-rule name is matched
 	// case-insensitively where an identifier is not.
@@ -504,10 +530,36 @@ const canonicalToken = (type, text, token) => {
 	if (type === TokenType.Function) {
 		return unescapeIdentifier(text.slice(0, -1)).toLowerCase();
 	}
-	if (type === TokenType.String) return unescapeIdentifier(text.slice(1, -1));
+	if (type === TokenType.Url) {
+		// The tokenizer's content range leaves out the layout around the URL,
+		// but not an escaped space ending it: `url(a\ )` is `url(a\20)`.
+		return unescapeIdentifier(
+			preprocess(
+				written.slice(
+					token.contentStart - token.start,
+					token.contentEnd - token.start
+				)
+			)
+		);
+	}
+	// Whatever a bad URL held, it is invalid wherever it sits.
+	if (type === TokenType.BadUrl) return "";
+	if (type === TokenType.String) {
+		// A string the input ends in has no closing delimiter to take off, and
+		// a `\\` it ends after escapes nothing (§4.3.5), as one before a newline.
+		let body = text.slice(1);
+		if (body.length > 0 && body.endsWith(text[0]) && !endsEscaped(body)) {
+			body = body.slice(0, -1);
+		} else if (body.endsWith("\\") && !endsEscaped(body)) {
+			body = body.slice(0, -1);
+		}
+		return unescapeIdentifier(body.replace(/\\\n/g, ""));
+	}
 	if (type === TokenType.Dimension) {
 		const at = token.unitStart - token.start;
-		return `${Number(text.slice(0, at))}${text.slice(at).toLowerCase()}`;
+		return `${Number(written.slice(0, at))}${unescapeIdentifier(
+			text.slice(at)
+		).toLowerCase()}`;
 	}
 	if (type === TokenType.Number || type === TokenType.Percentage) {
 		return String(
@@ -544,7 +596,7 @@ const opaqueDeclarationRanges = (css) => {
 	const visitors = {
 		[NodeType.AtRule]: {
 			enter: (nodePath) => {
-				atRules.push(unescapeIdentifier(nodePath.name()).toLowerCase());
+				atRules.push(nodePath.name().toLowerCase());
 			},
 			exit: () => {
 				atRules.pop();
@@ -957,14 +1009,20 @@ const sweepRespellings = (minify, css, minified) => {
 
 /**
  * The legal notices a stylesheet carries, read off webpack's own tokenizer, so
- * a quote in an unquoted `url()` opens no string that hides the next one.
+ * a quote in an unquoted `url()` opens no string that hides the next one: a
+ * `/*!` comment, or one naming `@license` or `@preserve`, as terser keeps.
  * @param {string} css a stylesheet
- * @returns {number} how many `/*!` comments it holds
+ * @returns {number} how many it holds
  */
 const legalNotices = (css) => {
 	let count = 0;
 	const stream = new TokenStream(css, 0, undefined, (input, start, end) => {
-		if (input[start + 2] === "!") count++;
+		if (
+			input[start + 2] === "!" ||
+			/@(?:license|preserve)/i.test(input.slice(start, end))
+		) {
+			count++;
+		}
 		return end;
 	});
 	while (stream.consume().type !== TokenType.EOF);
@@ -972,24 +1030,166 @@ const legalNotices = (css) => {
 };
 
 /**
- * Whether the printed stylesheet keeps every legal notice (`/*!`) its source
- * carries, which a license may require kept as written.
+ * Whether the printed stylesheet keeps every legal notice its source carries,
+ * which a license may require kept as written.
  * @param {string} css the stylesheet
  * @param {string} printed what a preset printed of it
  * @returns {import("./relations").Report[]} one finding where it carries fewer
  */
-const noticeReports = (css, printed) => {
-	const before = legalNotices(css);
-	const after = legalNotices(printed);
-	if (after >= before) return [];
-	return [
-		{
-			relation: "notices",
-			what: `dropped ${before - after} of ${before} legal notices`,
-			repro: `    ${oneLine(printed, 80)}`
-		}
-	];
+const noticeReports = (css, printed) =>
+	noticeRelation(legalNotices, css, printed);
+
+// What separates two selectors' parts without being one: whitespace beside
+// these, or An+B's sign, is layout; between two compounds it is a combinator.
+const LAYOUT_SPACE = /^(?:Comma|Colon|Semicolon|Declaration|QualifiedRule|AtRule)\b|^Delim [>+~-]$/;
+// Whitespace before a pseudo-class is a combinator still: `.a :hover` is not `.a:hover`.
+const LAYOUT_SPACE_BEFORE = /^(?:Comma|Semicolon|Declaration|QualifiedRule|AtRule)\b|^Delim [>+~-]$/;
+// Outside a selector, whitespace beside these is what a math function needs.
+const SIGN = /^Delim [+-]$/;
+
+/**
+ * Whether whitespace beside a part says something outside a selector: a sign
+ * needs it, and a substitution may stand for one.
+ * @param {MeaningNode} part a node's part
+ * @returns {boolean} true where the whitespace beside it is kept
+ */
+const readsSpace = (part) => {
+	if (SIGN.test(part[0])) return true;
+	if (!part[0].startsWith("Function ")) return false;
+	const name = part[0].slice("Function ".length);
+	// A custom function (`--name()`) substitutes what it returns too.
+	return SUBSTITUTION_FUNCTIONS.has(name) || name.startsWith("--");
 };
+
+/** @typedef {[string, ...MeaningPart[]]} MeaningNode a node's head, then its parts */
+/** @typedef {" " | MeaningNode} MeaningPart a node, or a whitespace run */
+
+/**
+ * What a stylesheet means, as webpack's parser reads it: every rule, at-rule,
+ * declaration and component value, each token's value as the parser resolves
+ * it and comments left out.
+ *
+ * WHY: whitespace is kept in a style rule's prelude, between two of its parts,
+ * where `a b` and `a.b` differ. In a value or an at-rule's prelude two tokens
+ * mean the same apart or juxtaposed, as a comment between them prints as a
+ * space, but for a `+` or `-`: `calc(1px+ 2px)` is invalid, and a custom
+ * property keeps the space for the `calc()` it is substituted into. A `var()`
+ * may stand for a sign, so the space beside one is kept as well.
+ * @param {string} css a stylesheet
+ * @returns {string} its meaning, as the JSON of each node's head and parts
+ */
+const cssMeaning = (css) => {
+	/** @type {MeaningPart[][]} */
+	const lists = [[]];
+	// Whether each open node reads its whitespace, which a selector does.
+	/** @type {boolean[]} */
+	const spaced = [false];
+	/** @type {Record<number, { enter: (nodePath: EXPECTED_ANY) => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
+	const visitors = {};
+	for (const type of Object.values(NodeType)) {
+		visitors[type] = {
+			enter: (nodePath) => {
+				const kind = nodePath.type();
+				lists.push([]);
+				// An attribute selector's `[]` reads none: `[ a = b ]` is `[a=b]`.
+				spaced.push(
+					kind === NodeType.QualifiedRule ||
+						(kind !== NodeType.Declaration &&
+							kind !== NodeType.AtRule &&
+							spaced[spaced.length - 1] &&
+							!(kind === NodeType.SimpleBlock && nodePath.value() === "["))
+				);
+			},
+			exit: (nodePath) => {
+				const children = /** @type {MeaningPart[]} */ (lists.pop());
+				const selector = /** @type {boolean} */ (spaced.pop());
+				const kind = nodePath.type();
+				const siblings = lists[lists.length - 1];
+				if (kind === NodeType.Comment) return;
+				if (kind === NodeType.Whitespace) {
+					siblings.push(" ");
+					return;
+				}
+				const parts = withLayout(children, selector);
+				siblings.push([meaningHead(nodePath, kind, parts.length), ...parts]);
+			}
+		};
+	}
+	new SourceProcessor().use(visitors).process(css, {});
+	return JSON.stringify(withLayout(lists[0], false));
+};
+
+/**
+ * @param {EXPECTED_ANY} nodePath the node leaving the walk
+ * @param {number} kind its type
+ * @param {number} children how many parts it holds
+ * @returns {string} what it says, its parts aside
+ */
+const meaningHead = (nodePath, kind, children) => {
+	const name = NODE_TYPE_NAMES[kind];
+	if (kind === NodeType.Declaration) {
+		const written = nodePath.name();
+		// A custom property's name is case-sensitive, every other one is not.
+		const said = written.startsWith("--") ? written : written.toLowerCase();
+		return `${name} ${said}${nodePath.flag(Flag.important) ? " !important" : ""}`;
+	}
+	if (kind === NodeType.AtRule || kind === NodeType.Function) {
+		return `${name} ${nodePath.name().toLowerCase()}`;
+	}
+	if (kind === NodeType.SimpleBlock) return `${name} ${nodePath.value()}`;
+	if (children !== 0 || kind === NodeType.QualifiedRule) return name;
+	const text = nodePath.source(...nodePath.range());
+	const token = new TokenStream(text).consume();
+	return `${name} ${canonicalToken(token.type, text, token)}`;
+};
+
+/**
+ * Whitespace as what it says: in a selector one space between two of its parts,
+ * none at either end or beside a part that separates on its own; elsewhere one
+ * beside a sign or a substitution alone.
+ * @param {MeaningPart[]} children a node's parts, a space for each whitespace run
+ * @param {boolean} selector whether the node reads its whitespace as a selector does
+ * @returns {MeaningPart[]} them, with only the spaces that say something
+ */
+const withLayout = (children, selector) => {
+	/** @type {MeaningPart[]} */
+	const out = [];
+	for (let index = 0; index < children.length; index++) {
+		const child = children[index];
+		if (child === " ") {
+			const before = out[out.length - 1];
+			let after = index + 1;
+			while (after < children.length && children[after] === " ") after++;
+			const next = /** @type {MeaningNode} */ (children[after]);
+			if (
+				before === undefined ||
+				before === " " ||
+				after === children.length ||
+				(selector
+					? LAYOUT_SPACE.test(before[0]) || LAYOUT_SPACE_BEFORE.test(next[0])
+					: !readsSpace(before) && !readsSpace(next))
+			) {
+				continue;
+			}
+		}
+		out.push(child);
+	}
+	return out;
+};
+
+/**
+ * Whether a readable print says what its stylesheet does (`meaning`). Only the
+ * print laying out is held to it: a minifier rewrites values by contract, and
+ * what its output computes needs an engine to tell.
+ * @param {string} css the stylesheet
+ * @param {string} printed what the preset printed of it
+ * @param {{ mode?: "minify" | "beautify" }} options the preset's options
+ * @returns {import("./relations").Report[]} what it says otherwise
+ */
+const meaningReports = (css, printed, options) =>
+	options.mode === "beautify"
+		? meaningRelation(cssMeaning(css), cssMeaning(printed))
+		: [];
 
 /** @type {import("./index").SyntaxInvariants} */
 const invariants = {
@@ -998,7 +1198,10 @@ const invariants = {
 			name,
 			minify: printerFor(options),
 			says: tokenStream,
-			keeps: noticeReports
+			keeps: (css, printed) => [
+				...noticeReports(css, printed),
+				...meaningReports(css, printed, options)
+			]
 		})),
 	spans: cssSpans,
 	slices: (css) => cssSlices(css).reports,
@@ -1018,9 +1221,11 @@ module.exports = {
 	TARGET_OPTIONS,
 	TARGET_VARS_OPTIONS,
 	cssCuts,
+	cssMeaning,
 	cssPurityDigest,
 	cssSlices,
 	cssSpans,
+	meaningReports,
 	noticeReports,
 	printerFor,
 	sweepRespellings,

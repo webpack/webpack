@@ -46,7 +46,7 @@
     },
     "lib/javascript/syntax-printer.js": {
       "statements": 213,
-      "branches": 402,
+      "branches": 401,
       "functions": 0
     },
     "lib/javascript/ScopeAnalyzer.js": {
