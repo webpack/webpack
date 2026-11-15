@@ -2625,9 +2625,10 @@ const writeGenerated = async (target, source) => {
 	// Loaded here, not at the top: tests read this module's tables, and Bun's
 	// worker threads exit when they load prettier.
 	const prettier = require("prettier");
+	const { toLatin1Source } = require("./latin1-source");
 
 	const config = await prettier.resolveConfig(target);
-	const formatted = await prettier.format(source, {
+	const formatted = await prettier.format(toLatin1Source(source), {
 		...config,
 		filepath: target
 	});

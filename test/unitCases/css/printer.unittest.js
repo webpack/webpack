@@ -392,14 +392,12 @@ describe("CssSyntax — block streaming", () => {
 			`.root{color:red;${Array.from({ length: n }, (_, i) => `& .n${i}`)
 				.sort()
 				.join(",")}{color:red}}`;
-		expect(
-			minify(
-				fixture(
-					"css",
-					"css-syntax-block-streaming-prints-a-streamed-block-as-the-collected-printer-would"
-				)
-			)
-		).toBe(joined(1800));
+		const children = fixture(
+			"css",
+			"css-syntax-block-streaming-prints-a-streamed-block-as-the-collected-printer-would"
+		);
+		expect(childCount(children, NodeType.QualifiedRule)).toBe(0);
+		expect(minify(children)).toBe(joined(2341));
 	});
 
 	it("reads a streamed rule's prelude in terms of what encloses it", () => {
@@ -484,7 +482,7 @@ describe("CssSyntax — block streaming", () => {
 			.process(src, { mode: "minify" });
 		// Collected, so it still reports every declaration it holds — a streamed
 		// block would report none, and the merge below would be lost with them.
-		expect(declared).toBe(20004);
+		expect(declared).toBe(9004);
 		expect(minify(src)).toContain("margin:1px 2px 3px 4px");
 	});
 
@@ -680,7 +678,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 	describe("a named layer block a later sibling opens again", () => {
 		it("gathers past enough nodes to stream the block", () => {
 			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			for (let i = 0; i < 3400; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const out = minify(
 				fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-24")
 			);
@@ -710,7 +708,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A block over the threshold writes its children straight out rather than
 			// assembling a body, which is where `_mergeAdjacentRules` would join them.
 			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			for (let i = 0; i < 3400; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const block = "{color:red;outline:1px solid blue}";
 			expect(
 				minify(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-27"))
@@ -754,7 +752,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it("gathers past a streamed block that writes another layer", () => {
 			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			for (let i = 0; i < 3400; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const out = minify(
 				fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-32")
 			);
@@ -766,7 +764,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it("gathers past a streamed block of another layer at the sheet's own level", () => {
 			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			for (let i = 0; i < 10200; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const out = minify(
 				fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-33")
 			);
@@ -781,7 +779,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// streamed, so the gather still reads its body whole and all three land
 			// in the block the layer was opened in, in the order they were written.
 			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			for (let i = 0; i < 3400; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const css = fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-34");
 			expect(minify(css)).toBe(
 				`@media all{@layer a{.x{color:red}${filler}.y{color:#00f}}}`
@@ -792,7 +790,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// Which blocks gather must not turn on what the first of them carries:
 			// an empty block declares where the layer sits and gathers the same.
 			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			for (let i = 0; i < 10200; i++) filler += `.f${i}{top:${i + 1}px}`;
 			expect(minify(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-35"))).toBe(
 				`@layer u{@layer a{${filler}}}`
 			);
@@ -800,9 +798,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it("gathers a run of blocks each big enough to stream", () => {
 			let one = "";
-			for (let i = 0; i < 17000; i++) one += `.f${i}{top:${i + 1}px}`;
+			for (let i = 0; i < 10200; i++) one += `.f${i}{top:${i + 1}px}`;
 			let two = "";
-			for (let i = 0; i < 17000; i++) two += `.g${i}{left:${i + 1}px}`;
+			for (let i = 0; i < 10200; i++) two += `.g${i}{left:${i + 1}px}`;
 			expect(
 				minify(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-36"))
 			).toBe(`@layer u{@layer a{${one}${two}}}`);
@@ -812,7 +810,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// The name is read off the source, where a comment stands wherever a
 			// space may — and the name itself carries no whitespace.
 			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			for (let i = 0; i < 3400; i++) filler += `.f${i}{top:${i + 1}px}`;
 			expect(
 				minifyFor(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-37"))
 			).toBe(`@layer u{@layer a{.q{top:0}${filler}}}`);
@@ -831,7 +829,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it("leaves an anonymous block big enough to stream alone", () => {
 			// `@layer {` is a layer of its own, so a second one gathers with nothing.
 			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			for (let i = 0; i < 10200; i++) filler += `.f${i}{top:${i + 1}px}`;
 			expect(minify(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-40"))).toBe(
 				`@layer u{@layer{}@layer{${filler}}}`
 			);
@@ -839,7 +837,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it("leaves a block big enough to stream that names another layer", () => {
 			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			for (let i = 0; i < 10200; i++) filler += `.f${i}{top:${i + 1}px}`;
 			expect(
 				minify(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-41"))
 			).toBe(`@layer u{@layer a{.q{top:0}}@layer b{${filler}}}`);
@@ -847,7 +845,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it("gathers a dotted layer a block big enough to stream repeats", () => {
 			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			for (let i = 0; i < 10200; i++) filler += `.f${i}{top:${i + 1}px}`;
 			expect(
 				minify(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-42"))
 			).toBe(`@layer u{@layer a.b.c{.q{top:0}${filler}}}`);
@@ -857,14 +855,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// Nothing recorded the layer before the streamed block did, so the record
 			// its `}` opens is the one the later block folds into.
 			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			for (let i = 0; i < 3400; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const css = fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-43");
 			expect(minify(css)).toBe(`@media all{@layer a{${filler}.y{color:#00f}}}`);
 		});
 
 		it("gathers the same way for a block the sheet itself holds", () => {
 			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			for (let i = 0; i < 10200; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const css = fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-layer-block-a-44");
 			expect(minify(css)).toBe(
 				`@layer a{.x{color:red}${filler}.y{color:#00f}}`
@@ -895,7 +893,7 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 		// Once the block streams, its children go straight out, so the twin is held
 		// as the piece written rather than as the node its parent would assemble.
 		let filler = "";
-		for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+		for (let i = 0; i < 3400; i++) filler += `.f${i}{top:${i + 1}px}`;
 		const out = minifyFor(
 			fixture("css", "css-syntax-minify-vendor-prefixes-at-rules-drops-a-prefixed-spelling-its-twin"),
 			["chrome 120"]
@@ -909,7 +907,7 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 describe("CssSyntax minify — the list a joined at-rule's seam leaves", () => {
 	it("orders the list a gathered block big enough to stream leaves", () => {
 		let filler = "";
-		for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+		for (let i = 0; i < 10200; i++) filler += `.f${i}{top:${i + 1}px}`;
 		expect(minifyFor(fixture("css", "css-syntax-minify-the-list-a-joined-at-rule-s-seam-leaves-orders-the-list-a-6"))).toBe(
 			`@layer a{.a,.b{top:0}${filler}}`
 		);
@@ -1634,7 +1632,7 @@ describe("CssSyntax minify — nesting lowered in a block too big to collect", (
 	// closes — where lowering writes its rules, once their parent is done.
 	const TARGET = ["chrome 100"];
 	const rules = Array.from(
-		{ length: 4000 },
+		{ length: 2000 },
 		(_, i) => `.c${i}>d${i}{color:red;margin:${i + 1}px}`
 	);
 
@@ -1657,22 +1655,22 @@ describe("CssSyntax minify — input around a block big enough to stream", () =>
 
 	// The whole output is pinned by its length, its digest and how it opens.
 	it.each([
-		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints", {"environment":{"browsers":["ie 9"]}}, 59640, "5fbd37571ad2871b", "@supports (a:b){.p{@media print{display:-ms-flexbox;display:"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints", {"environment":{"browsers":["ie 9"]}}, 22859, "035ba9d2a5116b63", "@supports (a:b){.p{@media print{display:-ms-flexbox;display:"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-2", {"environment":{"browsers":["chrome 100"]}}, 59668, "de61e70d773e560c", "@layer x{@media print{@layer X{A{color:#88111a;color:color-m"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-3", {"environment":{"browsers":["safari 15"]},"transforms":{"reduceFunctions":false},"convertApproximateColors":true}, 59802, "f700edac3df38205", ".p{@supports (display:grid){@laye x{@layer x{@layer x,{}@lay"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-4", {"environment":{"browsers":["chrome 100"]},"convertLengthUnits":true}, 59638, "716f750a890312f9", ".p{@st (arting-style{y:2}.a{x:1}@starting-style{y:2}.c0>d0{c"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-5", {"environment":{"browsers":["firefox 120"]},"transforms":{"removeDeadRules":false,"lowerUnsupported":false,"customMedia":true,"customSelectors":true},"rewriteCustomProperties":true}, 59654, "9236b96792fcc74d", "@layer x{@media print{@scope(.x){A{border-radius:1px;BORDER-"],
-		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-6", {}, 59583, "c2202a5dc1ee4bdc", "@layer x{.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin"],
-		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-7", {"environment":{"browsers":["chrome 60"]}}, 59607, "e387786e2ee3d1c9", ".p{)}}.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2p"],
-		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-8", {"environment":{"browsers":["safari 9"]}}, 59578, "1c7f659b996f096b", ".p{a.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2px}"],
-		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-9", {"environment":{"browsers":["firefox 40"]},"convertApproximateColors":true}, 59616, "6660d7cfebbb10af", "@media print{a{color:light-dark(red,blue)}.c0>d0{color:red;m"],
-		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-10", {}, 59599, "42bdd3e044d317c6", ".q .r{.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2p"],
-		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-11", {"environment":{"browsers":["safari 15"]}}, 64694, "d0372360dd4c3f18", ".p .c0>d0{color:red;margin:1px}.p .c1>d1{color:red;margin:2p"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-6", {}, 22802, "55da0f68af98b205", "@layer x{.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-7", {"environment":{"browsers":["chrome 60"]}}, 19936, "85f2a5f13b619134", ".p{)}}.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2p"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-8", {"environment":{"browsers":["safari 9"]}}, 14127, "af8d534aa5958af0", ".p{a.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2px}"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-9", {"environment":{"browsers":["firefox 40"]},"convertApproximateColors":true}, 22835, "ede9f3b96a8b4eb2", "@media print{a{color:light-dark(red,blue)}.c0>d0{color:red;m"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-10", {}, 28598, "7b8956195d4c4545", ".q .r{.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2p"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-11", {"environment":{"browsers":["safari 15"]}}, 15418, "d9f8d0d042c8eb21", ".p .c0>d0{color:red;margin:1px}.p .c1>d1{color:red;margin:2p"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-12", {"environment":{"browsers":["safari 17"]}}, 66490, "c81f51de8c22ae4b", "@layer x{A{border-radius:1px;BORDER-RAD}A A{-webkit-border-r"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-13", {}, 59596, "3563243b1b3ccadb", "@scope(.x){a{b:c;mara.c0>d0{color:red;margin:1px}.c1>d1{colo"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-14", {"environment":{"browsers":["chrome 40"]}}, 59759, "3185c126c5f98d93", "@layer x{a{b:c}op:auto;left:auto}op:auto;right:0;bottom:0;le"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-15", {}, 59616, "d7c506afba0fc51b", "@media print{.p{@scope(.x){{y/**/}}a{b:c}.c0>d0{color:red;ma"],
-		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-16", {"environment":{"browsers":["safari 15"]},"convertLengthUnits":true}, 59496, "26149d6072c50870", ".p{a{inset:calc(1px + 1%)anchor(top)}.c0>d0{color:red;margin"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-16", {"environment":{"browsers":["safari 15"]},"convertLengthUnits":true}, 28650, "15aa5b982a68377f", ".p{a{inset:calc(1px + 1%)anchor(top)}.c0>d0{color:red;margin"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-17", {"environment":{"browsers":["opera 12"]}}, 59614, "dc0fe17fac5dcff0", ".p{@laye x{@layer x{@layer (x{}.c0>d0{color:red;margin:1px}."],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-18", {"environment":{"browsers":["chrome 120"]}}, 59703, "d654154b94e244d7", "@layer x{a{b:c}a,b{c:1}b{c:1}a{b(:1}a{b:c}a{b:c}.c0>d0{color"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-19", {"environment":{"browsers":["android 4.4"]}}, 59644, "c2f1c90198563afa", "@media print{.p{@st (arting-style{y:2}.a{x:1}@starting-style"]
@@ -1731,23 +1729,23 @@ describe("CssData — the names the printer's shape tables hold", () => {
 });
 
 describe("CssSyntax minify — blocks that stream inside another", () => {
-	// Twice `_STREAM_MIN_NODES` and more, so each of these blocks streams.
+	// Past `_STREAM_MIN_NODES`, so each of these blocks streams.
 	const hash = (/** @type {string} */ text) =>
 		require("crypto").createHash("sha1").update(text).digest("hex").slice(0, 16);
 
 	it.each([
-		["css-syntax-minify-blocks-that-stream-inside-another-prints", {}, 144692, "59fd06d25e6daede"],
-		["css-syntax-minify-blocks-that-stream-inside-another-prints-2", {}, 144694, "b092683738b6867d"],
-		["css-syntax-minify-blocks-that-stream-inside-another-prints-3", {}, 144701, "b94b5b8f205172a0"],
-		["css-syntax-minify-blocks-that-stream-inside-another-prints-4", {}, 289360, "a66a99334bfa2299"],
-		["css-syntax-minify-blocks-that-stream-inside-another-prints-5", {}, 204682, "279e8109a89e4c9f"],
-		["css-syntax-minify-blocks-that-stream-inside-another-prints-6", {"environment":{"browsers":["firefox 120"]}}, 144716, "1d2ce264fd88ffa4"],
-		["css-syntax-minify-blocks-that-stream-inside-another-prints-7", {"environment":{"browsers":["ie 9"]},"convertApproximateColors":true}, 144734, "8f15725eab59edf7"],
-		["css-syntax-minify-blocks-that-stream-inside-another-prints-8", {"environment":{"browsers":["opera 12"]},"mergeDistantRules":true}, 144705, "63b109aff6a8fd11"],
-		["css-syntax-minify-blocks-that-stream-inside-another-prints-9", {"environment":{"browsers":["safari 9"]},"transforms":{"removeDeadRules":false,"mergeLonghands":false,"foldCase":false,"customMedia":true,"customSelectors":true}}, 144727, "1651fef08b467925"],
-		["css-syntax-minify-blocks-that-stream-inside-another-prints-10", {}, 144713, "0f3f5b4bfa41cc69"],
-		["css-syntax-minify-blocks-that-stream-inside-another-prints-11", {}, 144701, "c39937110f690f2b"],
-		["css-syntax-minify-blocks-that-stream-inside-another-prints-12", {"environment":{"browsers":["chrome 140","firefox 140","safari 26.2"]},"transforms":{"customSelectors":false,"rewriteEscapes":false,"mergeRules":false}}, 144729, "e8f008f21cc73857"]
+		["css-syntax-minify-blocks-that-stream-inside-another-prints", {}, 70692, "bf760dd8a339be31"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-2", {}, 70694, "eb0727d08787ac8e"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-3", {}, 70701, "dfec0506f6b75701"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-4", {}, 141360, "a089ae02f8eafbb9"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-5", {}, 100682, "241410dcdbe389ae"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-6", {"environment":{"browsers":["firefox 120"]}}, 70716, "23e9c118d25836bf"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-7", {"environment":{"browsers":["ie 9"]},"convertApproximateColors":true}, 70734, "d713dd6a37772dac"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-8", {"environment":{"browsers":["opera 12"]},"mergeDistantRules":true}, 70705, "83e27d48ed40e29c"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-9", {"environment":{"browsers":["safari 9"]},"transforms":{"removeDeadRules":false,"mergeLonghands":false,"foldCase":false,"customMedia":true,"customSelectors":true}}, 70727, "398adc8dd61a785e"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-10", {}, 70713, "33ded935deca4604"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-11", {}, 70701, "52b4e6d997e84910"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-12", {"environment":{"browsers":["chrome 140","firefox 140","safari 26.2"]},"transforms":{"customSelectors":false,"rewriteEscapes":false,"mergeRules":false}}, 70729, "444e9c121adb59ea"]
 	])("prints %j (%j)", (name, options, length, digest) => {
 		const out = new SourceProcessor().process(fixture("css", name), {
 			...options,
@@ -1775,7 +1773,7 @@ describe("CssSyntax minify — a declaration list holding a block too big to col
 describe("CssSyntax minify — what a printed rule can still hit", () => {
 	// Each reaches one guard of the printer the rest of the suite leaves alone.
 	const BIG = Array.from(
-		{ length: 4000 },
+		{ length: 2000 },
 		(_, i) => `.c${i}>d${i}{color:red;margin:${i + 1}px}`
 	).join("");
 	it.each([
@@ -1798,7 +1796,7 @@ describe("CssSyntax minify — what a printed rule can still hit", () => {
 
 describe("CssSyntax minify — a gather that once printed a second pass's work", () => {
 	const BIG = Array.from(
-		{ length: 4000 },
+		{ length: 2000 },
 		(_, i) => `.c${i}>d${i}{color:red;margin:${i + 1}px}`
 	).join("");
 	/**

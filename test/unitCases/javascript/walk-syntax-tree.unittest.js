@@ -512,3 +512,89 @@ describe("a syntax tree written from ESTree objects", () => {
 		strict.release();
 	});
 });
+
+describe("a hook with path taps", () => {
+	/**
+	 * @param {JavascriptParser} parser the parser
+	 * @param {string} source the module
+	 * @returns {void}
+	 */
+	const parse = (parser, source) => {
+		parser.parse(
+			source,
+			/** @type {import("../../../lib/module/Parser").ParserState} */ ({
+				source
+			})
+		);
+	};
+
+	it("gives a path tap ids from a node object, outside a parse and through an interceptor", () => {
+		const parser = new JavascriptParser("module");
+		/** @type {string[]} */
+		const seen = [];
+		parser.hooks.statement.tap(
+			{ name: "path", path: true },
+			(/** @type {JavascriptNodeReader} */ reader, /** @type {number} */ id) => {
+				seen.push(`path ${reader.range(id)}`);
+			}
+		);
+		parser.hooks.statement.tap("object", (statement) => {
+			seen.push(`object ${statement.type}`);
+		});
+		parse(parser, "a;\nb;");
+		expect(seen).toEqual([
+			"path 0,2",
+			"object ExpressionStatement",
+			"path 3,5",
+			"object ExpressionStatement"
+		]);
+
+		seen.length = 0;
+		/** @type {import("estree").ExpressionStatement} */
+		const statement = {
+			type: "ExpressionStatement",
+			expression: { type: "Identifier", name: "c", range: [0, 1] },
+			range: [0, 2]
+		};
+		parser.hooks.statement.call(statement);
+		expect(seen).toEqual(["path 0,2", "object ExpressionStatement"]);
+
+		seen.length = 0;
+		let calls = 0;
+		parser.hooks.statement.intercept({
+			call: () => {
+				calls++;
+			}
+		});
+		parse(parser, "d;");
+		expect(calls).toBe(1);
+		expect(seen).toEqual(["path 0,2", "object ExpressionStatement"]);
+	});
+
+	it("hands an isPure tap the node object it was asked about outside a parse", () => {
+		const parser = new JavascriptParser("module");
+		/** @type {string[]} */
+		const seen = [];
+		parser.hooks.isPure.for("Literal").tap("object", (expression) => {
+			seen.push(`${expression.type} ${/** @type {import("estree").Literal} */ (expression).value}`);
+			return false;
+		});
+		parser.hooks.isPure.for("CallExpression").tap("object", (expression) => {
+			seen.push(expression.type);
+			return true;
+		});
+		/** @type {import("estree").Literal} */
+		const literal = { type: "Literal", value: 1, raw: "1", range: [0, 1] };
+		expect(parser.isPure(literal, 0)).toBe(false);
+		/** @type {import("estree").CallExpression} */
+		const call = {
+			type: "CallExpression",
+			callee: { type: "Identifier", name: "f", range: [0, 1] },
+			arguments: [],
+			optional: false,
+			range: [0, 3]
+		};
+		expect(parser.isPure(call, 0)).toBe(true);
+		expect(seen).toEqual(["Literal 1", "CallExpression"]);
+	});
+});

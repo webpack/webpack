@@ -277,7 +277,7 @@ describe("SourceProcessor — SVG minification", () => {
 			' d="M-.3.1-.1.4zL.6.7"',
 			' d="M.123.1l.2.1H9"',
 			' d="M.1.123l.1.2V9"',
-			' d="M.5 0H123456789.25"',
+			' d="M.5 0h123456788.75"',
 			// WebKit turns quadratics into cubics with different float steps per case.
 			' d="M.3 0Q.4 1 .5 0"',
 			' d="M10.3 0Q10.4 1 10.5 0T10.9 0"',
@@ -288,6 +288,49 @@ describe("SourceProcessor — SVG minification", () => {
 			' d="M123456.7 5A1 1 0 01123456.701 5"'
 		]);
 		expect(new SourceProcessor().process(once, options).code).toBe(once);
+	});
+
+	it("should write a smooth cubic only where every engine reflects the same control", () => {
+		const source = fixture("xml", "source-processor-svg-minification-should-write-a-smooth-cubic-only-where");
+		const options = { ...compact, collapseWhitespace: true };
+		const once = new SourceProcessor().process(source, options).code;
+		expect(once.match(/ d="[^"]*"/g)).toEqual([
+			' d="M1.3 1.7S2 3 4 5"',
+			' d="M.5.5C1.1 1.2 1.3 1.4 2 2s1 1 2 2"',
+			' d="M.5.5C1.1 1.2 1.3 1.4 2 2s1 1 2 2"',
+			' d="M.5.5C1.1 1.2 1.3 1.4 2 2s.7.6 1 1 1 1 2 2"',
+			// Twice 207.2 less 192.9 is not 221.5 in float32.
+			' d="M199.8 408.3C193.3 394.1 192.9 390 207.2 385.2 221.5 380.4 232.8 377.2 250 400"',
+			// Blink rounds 1 - 33554432 before adding 1 back, so it reads another control.
+			' d="M0 0s33554432 10 1 0C-33554430-10 0 20 2 0"'
+		]);
+		expect(new SourceProcessor().process(once, options).code).toBe(once);
+	});
+
+	it("should drop an XML declaration that states only the defaults", () => {
+		const name = "source-processor-svg-minification-should-drop-an-xml-declaration-that-states";
+		const options = { xml: true, mode: /** @type {const} */ ("minify") };
+		expect(new SourceProcessor().process(fixture("xml", name), options).code).toBe(`<svg xmlns="${svg}"/>`);
+		// Another encoding, version or a standalone declaration still says something.
+		for (const suffix of ["-2", "-3", "-4"]) {
+			const source = fixture("xml", `${name}${suffix}`);
+			expect(new SourceProcessor().process(source, options).code).toBe(source.trim());
+		}
+		// What prints before it decides, so a second print agrees with the first.
+		const late = fixture("xml", `${name}-5`);
+		expect(new SourceProcessor().process(late, options).code).toBe(`<svg xmlns="${svg}"/>`);
+		const kept = { ...options, transforms: { comments: /** @type {const} */ ("all") } };
+		expect(new SourceProcessor().process(late, kept).code).toBe(late.replace(/\n/g, "").trim());
+		for (const suffix of ["-6", "-7"]) {
+			const source = fixture("xml", `${name}${suffix}`);
+			expect(new SourceProcessor().process(source, options).code).toBe(source.trim());
+		}
+	});
+
+	it("should lowercase opaque hex SVG colors at equal length", () => {
+		const source = fixture("xml", "source-processor-svg-minification-should-lowercase-hex-svg-colors");
+		const once = new SourceProcessor().process(source, { ...compact, renderEmbeddedSource: builtinEmbeddedRenderer() }).code;
+		expect(once).toBe(`<svg xmlns="${svg}"><path fill="#fff" stroke="#c8102e" d="M0 0"/><path fill="#ABCDEF80" d="M0 0"/></svg>`);
 	});
 
 	it("should preserve SVG styles without interrupting an enclosing CSS data URL", () => {
@@ -893,5 +936,30 @@ describe("xmlMinify — SVG switches", () => {
 				expect((await xmlMinify({ "image.svg": code }, undefined, { removeUnusedNamespaces, removeEmptyAttributes })).code).toBe(code);
 			}
 		}
+	});
+});
+
+describe("xmlMinify — what it reads as written", () => {
+	it("leaves a document in another encoding as written", async () => {
+		// Read as UTF-8, the escapes inside the comments would not be text.
+		const source = fixture("xml", "xml-minify-leaves-a-document-in-another-encoding-as-written");
+		const result = await xmlMinify({ "a.svg": source });
+		expect(result.code).toBe(source);
+		expect(result.warnings).toHaveLength(1);
+		// One that holds only printable ASCII reads alike in either.
+		const ascii = fixture("xml", "xml-minify-leaves-a-document-in-another-encoding-as-written-2");
+		const minified = await xmlMinify({ "a.svg": ascii });
+		expect(minified.code).toBe(
+			'<?xml version="1.0" encoding="ISO-2022-JP"?><svg xmlns="http://www.w3.org/2000/svg"><g/></svg>'
+		);
+		expect(minified.warnings).toBeUndefined();
+	});
+
+	it("leaves character references in another encoding as written", async () => {
+		// Printed as its character, `&#233;` would be written in UTF-8.
+		const source = fixture("xml", "xml-minify-leaves-a-document-in-another-encoding-as-written-3");
+		const result = await xmlMinify({ "a.svg": source });
+		expect(result.code).toBe(source);
+		expect(result.warnings).toHaveLength(1);
 	});
 });

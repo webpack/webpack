@@ -47,6 +47,10 @@ const printXml = (xml, mode) =>
 
 /** @typedef {import("../../../lib/html/builtinEmbeddedRenderer").BuiltinEmbeddedRendererOptions} CssOptions */
 
+// An XML declaration's data stating only version 1.0 and UTF-8 (XML 1.0 §2.8).
+const XML_DEFAULT_DECLARATION =
+	/^version[\t\n\r ]*=[\t\n\r ]*(["'])1\.0\1(?:[\t\n\r ]+encoding[\t\n\r ]*=[\t\n\r ]*(["'])[Uu][Tt][Ff]-8\2)?[\t\n\r ]*$/;
+
 /** @type {CssOptions} */
 const LEGACY_CSS_OPTIONS = {
 	environment: { browsers: ["chrome 100", "firefox 100", "safari 15.4"] }
@@ -293,6 +297,13 @@ const canonical = (xml, cssOptions = {}) => {
 		},
 		[NodeType.ProcessingInstruction]: {
 			enter: (nodePath) => {
+				// One stating XML's defaults says nothing; any other must survive a print.
+				if (
+					nodePath.name() === "xml" &&
+					XML_DEFAULT_DECLARATION.test(nodePath.value())
+				) {
+					return;
+				}
 				out.push(`<?${nodePath.name()} ${nodePath.value()}?>`);
 			},
 			exit: () => {}

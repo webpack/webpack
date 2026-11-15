@@ -31,12 +31,8 @@ const { pathToFileURL } = require("url");
 
 const htmlMinify = require("../lib/html/htmlMinify");
 const { SourceProcessor } = require("../lib/html/syntax");
-const {
-	Field,
-	NodeType,
-	Part,
-	_namespaceOf
-} = require("../lib/html/syntax-parser");
+const { Field, NodeType, Part, _namespaceOf } =
+	require("../lib/html/syntax").parser;
 const {
 	AGGRESSIVE_OPTIONS,
 	DEFAULT_OPTIONS,
@@ -1320,13 +1316,6 @@ const EXPECTED = [
 			"select[1]/option[1]: parse5 (scripting) <html:option>, tool <html:noscript>",
 		source: "Noscript",
 		why: "a `noscript` in a `select` is read by the in-body rules since customizable selects took the in-select mode out (§13.2.6.4.7); parse5 8 predates them and drops it"
-	},
-	{
-		relation: "agreement",
-		contains: "p[1]: parse5",
-		source:
-			'Doctype <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "">',
-		why: "a system identifier that is the empty string counts as missing, so this doctype sets quirks mode and the `<table>` stays inside the `<p>` (§13.2.6.4.1); parse5 8 predates that wording and sets limited-quirks mode"
 	},
 	{
 		relation: "respelling quote-double",

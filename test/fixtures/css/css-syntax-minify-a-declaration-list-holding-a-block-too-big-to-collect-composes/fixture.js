@@ -1,7 +1,7 @@
 "use strict";
 
 const rules = Array.from(
-	{ length: 4000 },
+	{ length: 2000 },
 	(_, i) => `.c${i}>d${i}{color:red;margin:${i + 1}px}`
 ).join("");
 

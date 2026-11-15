@@ -11,7 +11,7 @@ const victim =
  */
 const source = () =>
 	`@layer outer{${repeat(
-		6000,
+		3300,
 		(i) => `.f${i}{color:red}`
 	)}@layer a{${dead}}@layer a{${dead}}@layer a{${victim}}@layer a{.q{color:blue}}}`;
 

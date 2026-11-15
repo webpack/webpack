@@ -2,7 +2,7 @@
 
 const { repeat } = require("../_shared/record");
 
-const FILLER = repeat(6000, (i) => `.f${i}{margin:0}`);
+const FILLER = repeat(3300, (i) => `.f${i}{margin:0}`);
 
 /**
  * @returns {string} the stylesheet the test reads

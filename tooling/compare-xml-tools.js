@@ -35,12 +35,8 @@ const {
 	builtinEmbeddedRenderer
 } = require("../lib/html/builtinEmbeddedRenderer");
 const { SourceProcessor } = require("../lib/html/syntax");
-const {
-	NodeType,
-	Part,
-	parseHtml,
-	tokenizeXml
-} = require("../lib/html/syntax-parser");
+const { NodeType, Part, parseHtml, tokenizeXml } =
+	require("../lib/html/syntax").parser;
 const {
 	PRESETS,
 	STYLE_ELEMENT,
