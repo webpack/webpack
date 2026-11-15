@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0" y="0" preserveAspectRatio="xMidYMid meet" opacity="1">
+	<svg version="1.2" x="0" width="10" height="10"><rect id="r" x="0" y="0" width="1" height="1" opacity="1" display="inline"/></svg>
+	<g id="g" fill="red"><rect fill="red" width="1" height="1"/></g>
+	<use href="#r"/>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<path d="M0 0h10" stroke-dasharray="2" stroke-dashoffset="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="8" stroke-opacity=".5" stroke-width="3"/>
+	<path d="M0 0h10" stroke="none" stroke-dasharray="2"/>
+	<path d="M0 0h10" stroke="red" stroke-dasharray="2"/>
+	<g stroke="red"><path d="M0 0h10" stroke-dasharray="2"/><path d="M0 1h10" stroke-dasharray="2"/></g>
+	<path id="lent" d="M0 0h10" stroke-dasharray="2"/>
+	<g id="lentGroup"><path d="M0 0h10" stroke-dasharray="2"/><path d="M0 1h10" stroke-dasharray="2"/></g>
+	<g style="stroke:var(--paint)"><path d="M0 0h10" stroke-dasharray="2"/><path d="M0 1h10" stroke-dasharray="2"/></g>
+	<rect width="10" height="10" fill="none" fill-rule="evenodd" fill-opacity=".5"/>
+	<rect width="10" height="10" fill="red" fill-rule="evenodd" fill-opacity=".5"/>
+	<g pointer-events="all"><rect width="10" height="10" fill="none" fill-rule="evenodd"/><rect width="1" height="1"/></g>
+	<g fill="none"><circle r="5" fill-opacity=".5"/></g>
+	<text stroke-dasharray="2">text</text>
+	<use href="#lent" stroke="red"/>
+	<use href="#lentGroup" stroke="red"/>
+</svg>

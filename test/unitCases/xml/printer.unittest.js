@@ -342,7 +342,9 @@ describe("SourceProcessor — SVG minification", () => {
 		const name = "source-processor-svg-minification-should-drop-an-xml-declaration-that-states";
 		const options = { xml: true, mode: /** @type {const} */ ("minify") };
 		expect(new SourceProcessor().process(fixture("xml", name), options).code).toBe(`<svg xmlns="${svg}"/>`);
-		// Another encoding, version or a standalone declaration still says something.
+		// A parser assumes standalone="no" without the declaration (XML 1.0 §2.9).
+		expect(new SourceProcessor().process(fixture("xml", `${name}-8`), options).code).toBe(`<svg xmlns="${svg}"/>`);
+		// Another encoding, version or a standalone="yes" still says something.
 		for (const suffix of ["-2", "-3", "-4"]) {
 			const source = fixture("xml", `${name}${suffix}`);
 			expect(new SourceProcessor().process(source, options).code).toBe(source.trim());
