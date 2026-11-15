@@ -41,7 +41,7 @@ const COMMENT_SPELLINGS = {
 
 // the JSDoc tags whose `{...}` is a type, up to and including that `{`
 const JSDOC_TYPE_TAG_REGEXP =
-	/@(?:type|param|arg|argument|returns?|typedef|property|prop|this|enum|extends|augments|implements|throws|exception|yields?|satisfies)\s*\{/g;
+	/@(?:type|param|arg|argument|returns?|typedef|property|prop|this|enum|extends|augments|implements|throws|exception|yields?|satisfies|template)\s*\{/g;
 
 /**
  * @param {number} code a UTF-16 code unit or a code point
