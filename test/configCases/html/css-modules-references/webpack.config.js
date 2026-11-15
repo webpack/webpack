@@ -19,7 +19,8 @@ module.exports = {
 		rescan: "./rescan.html",
 		fragment: "./fragment.html",
 		index: "./index.html",
-		base: "./base.html"
+		base: "./base.html",
+		"ignored-base": "./ignored-base.html"
 	},
 	output: {
 		filename: "[name].js",

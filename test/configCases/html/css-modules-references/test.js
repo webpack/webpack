@@ -84,6 +84,10 @@ it("should leave a link to the page's file under a <base> as written", () => {
 	const base = read("base.html");
 	expect(base).toContain('<div id="base_html-style-1-help">one</div>');
 	expect(base).toContain('<a href="base.html#help">two</a>');
+	// A `webpackIgnore`d `<base>` still redirects the link.
+	const ignored = read("ignored-base.html");
+	expect(ignored).toContain('<div id="ignored-base_html-style-1-help">one</div>');
+	expect(ignored).toContain('<a href="ignored-base.html#help">two</a>');
 });
 
 it("should rewrite the attributes an option adds", () => {
