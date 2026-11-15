@@ -501,10 +501,15 @@ const describeCases = (config) => {
 									const { changes, removals } = watcher.getInfo();
 									received.push(...(changes || []), ...(removals || []));
 								}
+								const compilations = [...lastChildCompilations.values()];
 								for (const file of pending) {
-									// a watched directory reports itself, not the file inside it
+									// a file watched itself is not seen through its directory, which
+									// reports a sibling added next to it before the file's own change
+									const exact = compilations.some(({ fileDependencies }) =>
+										fileDependencies.has(file)
+									);
 									if (
-										isWithin(file, received) ||
+										(exact ? received.includes(file) : isWithin(file, received)) ||
 										received.some((item) => isWithin(item, [file]))
 									) {
 										pending.delete(file);
