@@ -68,6 +68,20 @@ describe("renderObjectWithOwnProto", () => {
 		expect(object.__proto__).toBe(2);
 	});
 
+	it("defines every __proto__ entry without computed keys", () => {
+		const code = renderObjectWithOwnProto(
+			[...entries, { name: "b", value: "3" }, { name: "__proto__", value: "4" }],
+			render,
+			false
+		);
+		expect(code).not.toContain("[");
+		const object = new Function(`return ${code}`)();
+		expect(Object.getPrototypeOf(object)).toBe(Object.prototype);
+		expect(Object.keys(object)).toEqual(["a", "b", "__proto__"]);
+		// The last entry wins, as with repeated keys in a literal
+		expect(object.__proto__).toBe(4);
+	});
+
 	it("renders the literal unchanged without a __proto__ entry", () => {
 		expect(renderObjectWithOwnProto([entries[0]], render, false)).toBe(
 			'{ "a": 1 }'
