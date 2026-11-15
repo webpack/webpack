@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <line x2="100%" y2="100%"/>
+    <path d="M24 0 0 24"/>
+    <path d="M10 10 50 20"/>
+    <path stroke="#000" d="M10 10 50 20"/>
+</svg>

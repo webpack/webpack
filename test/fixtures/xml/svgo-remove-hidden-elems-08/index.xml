@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g>
+        <path/>
+        <path d="z"/>
+        <path d="M 50 50"/>
+        <path d="M 50 50 L 0"/>
+        <path d="M1.25.75"/>
+        <path d="M 50 50 20 20"/>
+        <path d="M 50,50 20,20"/>
+        <path d="M 50 50 H 10"/>
+        <path d="M4.1.5.5.1"/>
+        <path d="M10.77.45c-.19-.2-.51-.2-.7 0"/>
+        <path d="M 6.39441613e-11,8.00287799 C2.85816855e-11,3.58301052 3.5797863,0 8.00005106,0"/>
+        <path d="" marker-start="url(#id)"/>
+        <path d="" marker-end="url(#id)"/>
+        <path d="M 50 50" marker-start="url(#id)"/>
+        <path d="M 50 50" marker-end="url(#id)"/>
+    </g>
+</svg>

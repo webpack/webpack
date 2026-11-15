@@ -1,0 +1,32 @@
+<svg id="icon_time" data-name="icon time" xmlns="http://www.w3.org/2000/svg" width="51" height="51" viewBox="0 0 51 51">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3 {
+        fill: #f5f5f5;
+        stroke: gray;
+      }
+
+      .cls-1, .cls-2 {
+        stroke-width: 1px;
+      }
+
+      .cls-2 {
+        fill-rule: evenodd;
+      }
+
+      .cls-3 {
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <circle class="cls-1" cx="25.5" cy="25.5" r="25"/>
+  <g>
+    <path class="cls-2" d="M1098,2415a8,8,0,0,1,8,8v2h-16v-2A8,8,0,0,1,1098,2415Z" transform="translate(-1072.5 -2389.5)"/>
+    <path id="Ellipse_14_copy" data-name="Ellipse 14 copy" class="cls-2" d="M1098,2415a8,8,0,0,0,8-8v-2h-16v2A8,8,0,0,0,1098,2415Z" transform="translate(-1072.5 -2389.5)"/>
+    <path class="cls-2" d="M1089,2427v-1h18v1h-18Z" transform="translate(-1072.5 -2389.5)"/>
+    <path id="Shape_10_copy" data-name="Shape 10 copy" class="cls-2" d="M1089,2404v-1h18v1h-18Z" transform="translate(-1072.5 -2389.5)"/>
+    <circle id="Ellipse_13_copy" data-name="Ellipse 13 copy" class="cls-3" cx="25.5" cy="31.5" r="1"/>
+    <circle id="Ellipse_13_copy_3" data-name="Ellipse 13 copy 3" class="cls-3" cx="28.5" cy="31.5" r="1"/>
+    <circle id="Ellipse_13_copy_2" data-name="Ellipse 13 copy 2" class="cls-3" cx="22.5" cy="31.5" r="1"/>
+  </g>
+</svg>

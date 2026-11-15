@@ -1,0 +1,218 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <text id="a">
+            referenced text
+        </text>
+        <text id="b">
+            referenced text
+        </text>
+        <text id="c">
+            referenced text
+        </text>
+        <text id="d">
+            referenced text
+        </text>
+        <text id="e">
+            referenced text
+        </text>
+        <text id="f">
+            referenced text
+        </text>
+        <text id="g">
+            referenced text
+        </text>
+        <text id="h">
+            referenced text
+        </text>
+        <text id="i">
+            referenced text
+        </text>
+        <text id="j">
+            referenced text
+        </text>
+        <text id="k">
+            referenced text
+        </text>
+        <text id="l">
+            referenced text
+        </text>
+        <text id="m">
+            referenced text
+        </text>
+        <text id="n">
+            referenced text
+        </text>
+        <text id="o">
+            referenced text
+        </text>
+        <text id="p">
+            referenced text
+        </text>
+        <text id="q">
+            referenced text
+        </text>
+        <text id="r">
+            referenced text
+        </text>
+        <text id="s">
+            referenced text
+        </text>
+        <text id="t">
+            referenced text
+        </text>
+        <text id="u">
+            referenced text
+        </text>
+        <text id="v">
+            referenced text
+        </text>
+        <text id="w">
+            referenced text
+        </text>
+        <text id="x">
+            referenced text
+        </text>
+        <text id="y">
+            referenced text
+        </text>
+        <text id="z">
+            referenced text
+        </text>
+        <text id="A">
+            referenced text
+        </text>
+        <text id="B">
+            referenced text
+        </text>
+        <text id="C">
+            referenced text
+        </text>
+        <text id="D">
+            referenced text
+        </text>
+        <text id="E">
+            referenced text
+        </text>
+        <text id="F">
+            referenced text
+        </text>
+        <text id="G">
+            referenced text
+        </text>
+        <text id="H">
+            referenced text
+        </text>
+        <text id="I">
+            referenced text
+        </text>
+        <text id="J">
+            referenced text
+        </text>
+        <text id="K">
+            referenced text
+        </text>
+        <text id="L">
+            referenced text
+        </text>
+        <text id="M">
+            referenced text
+        </text>
+        <text id="N">
+            referenced text
+        </text>
+        <text id="O">
+            referenced text
+        </text>
+        <text id="P">
+            referenced text
+        </text>
+        <text id="Q">
+            referenced text
+        </text>
+        <text id="R">
+            referenced text
+        </text>
+        <text id="S">
+            referenced text
+        </text>
+        <text id="T">
+            referenced text
+        </text>
+        <text id="U">
+            referenced text
+        </text>
+        <text id="V">
+            referenced text
+        </text>
+        <text id="W">
+            referenced text
+        </text>
+        <text id="X">
+            referenced text
+        </text>
+        <text id="Y">
+            referenced text
+        </text>
+        <text id="Z">
+            referenced text
+        </text>
+        <text id="aa">
+            referenced text
+        </text>
+    </defs>
+    <tref xlink:href="#a"/>
+    <tref xlink:href="#a"/>
+    <tref xlink:href="#a"/>
+    <tref xlink:href="#b"/>
+    <tref xlink:href="#c"/>
+    <tref xlink:href="#d"/>
+    <tref xlink:href="#e"/>
+    <tref xlink:href="#f"/>
+    <tref xlink:href="#g"/>
+    <tref xlink:href="#h"/>
+    <tref xlink:href="#i"/>
+    <tref xlink:href="#j"/>
+    <tref xlink:href="#k"/>
+    <tref xlink:href="#l"/>
+    <tref xlink:href="#m"/>
+    <tref xlink:href="#n"/>
+    <tref xlink:href="#o"/>
+    <tref xlink:href="#p"/>
+    <tref xlink:href="#q"/>
+    <tref xlink:href="#r"/>
+    <tref xlink:href="#s"/>
+    <tref xlink:href="#t"/>
+    <tref xlink:href="#u"/>
+    <tref xlink:href="#v"/>
+    <tref xlink:href="#w"/>
+    <tref xlink:href="#x"/>
+    <tref xlink:href="#y"/>
+    <tref xlink:href="#z"/>
+    <tref xlink:href="#A"/>
+    <tref xlink:href="#B"/>
+    <tref xlink:href="#C"/>
+    <tref xlink:href="#D"/>
+    <tref xlink:href="#E"/>
+    <tref xlink:href="#F"/>
+    <tref xlink:href="#G"/>
+    <tref xlink:href="#H"/>
+    <tref xlink:href="#I"/>
+    <tref xlink:href="#J"/>
+    <tref xlink:href="#K"/>
+    <tref xlink:href="#L"/>
+    <tref xlink:href="#M"/>
+    <tref xlink:href="#N"/>
+    <tref xlink:href="#O"/>
+    <tref xlink:href="#P"/>
+    <tref xlink:href="#Q"/>
+    <tref xlink:href="#R"/>
+    <tref xlink:href="#S"/>
+    <tref xlink:href="#T"/>
+    <tref xlink:href="#U"/>
+    <tref xlink:href="#V"/>
+    <tref xlink:href="#W"/>
+    <tref xlink:href="#X"/>
+    <tref xlink:href="#Y"/>
+    <tref xlink:href="#Z"/>
+    <tref xlink:href="#aa"/>
+</svg>

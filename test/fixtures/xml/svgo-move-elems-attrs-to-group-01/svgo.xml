@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g attr1="val1" fill="red" color="#000">
+        <g stroke="blue">
+            text
+        </g>
+        <g>
+            <rect/>
+            <ellipsis/>
+        </g>
+        <circle attr3="val3"/>
+    </g>
+</svg>

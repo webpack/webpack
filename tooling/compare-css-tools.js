@@ -35,7 +35,7 @@ const { promisify } = require("util");
 const zlib = require("zlib");
 const cssMinify = require("../lib/css/cssMinify");
 const { SourceProcessor } = require("../lib/css/syntax");
-const cssSyntaxParser = require("../lib/css/syntax-parser");
+const cssSyntaxParser = require("../lib/css/syntax").parser;
 
 const { Flag, NodeType, Part, isIdentStartCodePoint, unescapeIdentifier } =
 	cssSyntaxParser;

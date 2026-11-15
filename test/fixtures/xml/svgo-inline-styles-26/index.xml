@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 35">
+  <style>
+    .a {}
+
+    .a .b {
+      fill: none;
+      stroke: #000;
+    }
+  </style>
+  <g class="a">
+    <circle class="b" cx="42.97" cy="24.92" r="1.14"/>
+    <path class="b" d="M26,31s11.91-1.31,15.86-5.64"/>
+  </g>
+</svg>

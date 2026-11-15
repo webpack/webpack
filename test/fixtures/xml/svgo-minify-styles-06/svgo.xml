@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .used{p:1}.unused{p:2}#used{p:3}#unused{p:4}g{p:5}unused{p:6}
+    </style>
+    <g id="used" class="used">
+        test
+    </g>
+</svg>

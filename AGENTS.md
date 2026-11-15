@@ -164,9 +164,9 @@ A list of module, source or dependency types in `lib/` is silently wrong the day
 
 Code that runs outside webpack's own module graph (tests, examples, tooling, a minifier the plugin evaluates as source) loads `require("webpack")`, never `webpack/lib/...`: internal files move between releases, and others copy the pattern.
 
-### Reach the JavaScript syntax through its facade
+### Reach each language's syntax through its facade
 
-Outside the JavaScript syntax layer (`lib/javascript/syntax*.js`, `regexp.js`, `ScopeAnalyzer.js` and the generated tables), require `lib/javascript/syntax.js`, webpack's `javascript.syntax`, and read the parser from its `parser` getter (`const { Field, NodeType } = require("./syntax").parser`), never `syntax-parser.js` or `syntax-printer.js` directly, so the internals can move behind it. Type-only `@import`s may name `syntax-parser.js`. CSS and HTML do not follow this yet.
+Outside a language's syntax layer (`lib/{css,html,javascript}/syntax*.js`, the minifiers, the generated tables, and JavaScript's `regexp.js` and `ScopeAnalyzer.js`), require that language's `syntax.js`, webpack's `css.syntax`, `html.syntax` or `javascript.syntax`, and read the parser from its `parser` getter (`const { Field, NodeType } = require("./syntax").parser`), never `syntax-parser.js` or `syntax-printer.js` directly, so the internals can move behind it. Type-only `@import`s may name `syntax-parser.js`.
 
 **Every language's `syntax` facade and the JavaScript parser's `{ path: true }` taps are experimental**: tag each new public name they expose with `@experimental <where it is exposed>; unstable API` ([convention](docs/options.md)).
 
@@ -217,8 +217,6 @@ A local failure is yours only if it doesn't reproduce on `main` (check in a work
 **A check longer than a few minutes is CI's** (the minify corpora, a spec-conformance suite, a benchmark): run the fast checks, push, then wait for CI's result rather than running it locally in parallel ([details](docs/verifying.md#long-checks-belong-to-ci)).
 
 **Cover every line you add or change**: a commit must not lower coverage (CI enforces patch coverage, target 90%+). Every new branch, fast path and fallback needs a test: `configCases/` when a real build reaches it, a focused `*.unittest.js` only when a config case can't reasonably drive it or adds nothing (e.g. tokenizer cold-path fallbacks, where fast and delegated branches each still need exercising). Check with `yarn cover:unit` or the PR's "patch" report until no changed line is missing.
-
-A language's syntax (`lib/{css,html,javascript,json}` tokenizer, parser, printer and minifier) is held to its **own** unit tests: `yarn test:syntax-coverage [css|html|javascript|json]` fails when what they never run grows past `tooling/syntax-coverage.json`; `--list` prints it, `--write` lowers the baseline once you covered more. Write it on CI's Node (`lts/*`): an older engine also runs fallbacks for regexps it rejects, and its baseline fails CI.
 
 **Don't lower type coverage either.** CI reports the delta on the PR (`yarn types:cover:report`), counting `any` (`EXPECTED_ANY`, a written `any` and the one inferred where no type is written, e.g. `new Map()` or `const list = []`), `unknown`, `object`, `Function` and untyped identifiers (whose type holds an `any`, other than one TypeScript's built-in lib writes) added (🔴) or removed (🟢), and lists where each one stands. Prefer real types ([Type annotations](#type-annotations)) and run `yarn types:cover` if you widened any annotation.
 

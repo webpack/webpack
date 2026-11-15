@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 400 400">
+    <style>
+        path.lg{mask:url(#mask);}
+    </style>
+    <mask id="mask" maskContentUnits="objectBoundingBox">
+        <rect fill="white" x="0" y="0" width="100%" height="100%"/>
+        <circle fill="black" cx=".5" cy=".5" r=".5"/>
+    </mask>
+    <path mask="url(#mask)" fill="red" d="M 0 0 H 100 V 80 H 0 z"/>
+    <path mask="url(#mask)" fill="red" d="M 200 0 H 300 V 80 H 200 z"/>
+    <path style="mask:url(#mask)" fill="red" d="M 0 100 h 100 v 80 H 0 z"/>
+    <path style="mask:url(#mask)" fill="red" d="M 200 100 H 300 v 80 H 200 z"/>
+    <path class="lg" fill="red" d="M 0 200 h 100 v 80 H 0 z"/>
+    <path class="lg" fill="red" d="M 200 200 H 300 v 80 H 200 z"/>
+    <path style="mask-image: linear-gradient(to left top,black, transparent)" fill="red" d="M 0 300 h 100 v 80 H 0 z"/>
+    <path style="mask-image: linear-gradient(to left top,black, transparent)" fill="red" d="M 200 300 H 300 v 80 H 200 z"/>
+</svg>

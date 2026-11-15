@@ -31,12 +31,8 @@ const { pathToFileURL } = require("url");
 
 const htmlMinify = require("../lib/html/htmlMinify");
 const { SourceProcessor } = require("../lib/html/syntax");
-const {
-	Field,
-	NodeType,
-	Part,
-	_namespaceOf
-} = require("../lib/html/syntax-parser");
+const { Field, NodeType, Part, _namespaceOf } =
+	require("../lib/html/syntax").parser;
 const {
 	AGGRESSIVE_OPTIONS,
 	DEFAULT_OPTIONS,

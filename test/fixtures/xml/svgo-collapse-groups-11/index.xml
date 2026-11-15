@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <clipPath id="a">
+       <path d="..."/>
+    </clipPath>
+    <path d="..."/>
+    <g clip-path="url(#a)">
+        <path d="..." transform="scale(.2)"/>
+    </g>
+    <g mask="url(#a)">
+        <path d="..." transform="scale(.2)"/>
+    </g>
+</svg>

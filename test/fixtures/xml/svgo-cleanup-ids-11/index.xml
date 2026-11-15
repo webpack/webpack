@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <circle cx="100" cy="100" r="50" id="circle"/>
+        <ellipse cx="50" cy="50" rx="50" ry="10" id="ellipse"/>
+        <rect x="100" y="50" width="50" height="10" id="rect"/>
+    </defs>
+</svg>

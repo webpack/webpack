@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+  <style>
+    .a {
+      stroke: red;
+    }
+
+    [stroke] + path {
+      stroke: purple;
+    }
+  </style>
+  <path class="a" d="M10 10h20" stroke="red"/>
+  <path d="M10 20h20"/>
+  <path d="M10 30h20" stroke="yellow"/>
+  <path d="M10 40h20"/>
+</svg>

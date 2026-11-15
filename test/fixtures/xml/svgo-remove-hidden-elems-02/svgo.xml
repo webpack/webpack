@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .a { opacity: 0.5; }
+    </style>
+    <g>
+        <rect opacity="0" class="a" x="0" y="0" width="20" height="20"/>
+    </g>
+</svg>

@@ -1,0 +1,12 @@
+<svg width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        rect {
+            cursor: pointer;
+            shape-rendering: crispEdges;
+            fill:url("#MyGradient");
+        }
+
+    </style>
+    <rect x="10" y="10" width="100" height="100"/>
+    <rect x="10" y="10" width="100" height="100"/>
+</svg>

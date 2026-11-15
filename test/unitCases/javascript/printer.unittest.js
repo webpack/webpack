@@ -1459,7 +1459,7 @@ describe("one-pass minify, family I round 6", () => {
 		const { code } = minifyOnePass(source, options);
 		// A spread iterates and a call runs code, so the value stays before them.
 		expect(code).toBe(
-			"function nested(x){return[[3],[g(x),x]]}function holes(x){return[[,1],g(x)]}function spread(x){var y=g(x);return[[...x],y]}function call(x){var y=g(x);return[[h()],y]}function g(v){return v+1}function h(){return 0}console.log(nested(1),holes(2),spread([3]),call(4));"
+			"function nested(x){return[[3],[g(x),x]]}function holes(x){return[[,1],g(x)]}function spread(x){var y=g(x);return[[...x],y]}function call(x){var y=g(x);return[[h()],y]}function g(v){return v+1}function h(){return g(0)}console.log(nested(1),holes(2),spread([3]),call(4));"
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});

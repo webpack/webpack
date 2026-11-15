@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1950.1315" height="1740.1298">
+    <linearGradient id="a">
+        <stop stop-color="#f00" offset="0"/>
+    </linearGradient>
+    <linearGradient id="b" href="#a" gradientUnits="userSpaceOnUse" gradientTransform="translate(7991.4092,-7484.0182)" x1="475.01208" y1="29234.521" x2="-1343.6307" y2="29445.83"/>
+    <filter id="c" style="color-interpolation-filters:sRGB" x="-0.2760295" width="1.5520591" y="-0.33142158" height="1.6628431">
+        <feGaussianBlur stdDeviation="331.22039"/>
+    </filter>
+    <g transform="matrix(5.8862959,0,0,5.8862959,-228.3949,1414.6785)">
+        <path d="m 6416.0915,21026.021 c 496.2734,-430.162 1156.7926,-524.889 1495.2326,-581.643 1461.5227,-245.087 1539.467,2033.775 96.1224,2234.099 -524.6707,72.82 -1265.3758,450.675 -1679.5812,-402.754 -315.0174,-535.208 -91.5956,-1058.609 88.2262,-1249.702 z" style="opacity:1;fill:url(#b);fill-opacity:1;stroke:none;stroke-width:16.60000038;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#c)" transform="matrix(0.07412091,0,0,0.07412091,-359.59058,-1695.4044)"/>
+    </g>
+</svg>

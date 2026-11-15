@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+    <path transform="translate(250, 250) scale(1.5, 1.5) translate(-250, -250)" fill="#7ED321" stroke="#000" stroke-width="15" vector-effect="non-scaling-stroke" d="M125 125h250v250h-250v-250z"/>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(50 0) scale(2 2)"/>
+    <g transform="translate(50) scale(2 2)"/>
+    <g transform="translate(10 20) rotate(45) translate(-10-20)"/>
+    <g transform="scale(2) translate(10 20) rotate(45) translate(-10-20)"/>
+    <g transform="rotate(15) scale(2 1)"/>
+    <g transform="scale(2 1) rotate(15)"/>
+    <g transform="translate(10 20) rotate(45) translate(-10-20) scale(2)"/>
+    <g transform="translate(15, 3) translate(13) rotate(47 39.885486 39.782373)"/>
+</svg>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:x="http://www.w3.org/1999/xlink">
+    <defs>
+        <pattern id="a">
+            <rect/>
+        </pattern>
+        <pattern x:href="url(#a)" id="b"/>
+    </defs>
+    <g>
+        <marker>
+            <a/>
+        </marker>
+        <path d="..."/>
+    </g>
+</svg>

@@ -1,0 +1,4 @@
+<svg width="200" height="100">
+  <path transform="scale(2)" style="stroke:black;stroke-width:10;" d="M 20 20 H 80" />
+  <path transform="scale(2)" stroke="black" stroke-width="10" d="M 20 20 H 80" />
+</svg>

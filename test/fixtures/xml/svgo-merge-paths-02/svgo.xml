@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 0zM10 10zM30 30z" fill="#fff" stroke="#333"/>
+    <path d="M 30,30 z" fill="#f00"/>
+    <path d="M40 40zM50 50zM50 50"/>
+    <path d="M40 40zM50 50zM50 50z" fill="#fff" stroke="#333"/>
+    <path d="M0 0v100h100V0zM200 0v100h100V0z" fill="red"/>
+    <path d="M0 0v100h100V0zM200 0v100h100V0zM0 200h100v100H0z" fill="blue"/>
+</svg>

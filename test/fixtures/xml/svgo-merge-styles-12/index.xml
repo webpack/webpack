@@ -1,0 +1,10 @@
+<svg id="test" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <foreignObject>
+    <style>
+      .st0 { fill: yellow; }
+    </style>
+  </foreignObject>
+  <style>
+    .st1 { fill: red; }
+  </style>
+</svg>

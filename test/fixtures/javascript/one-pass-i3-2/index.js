@@ -18,6 +18,6 @@ function g(v) {
 	return v + 1;
 }
 function h() {
-	return 0;
+	return g(0);
 }
 console.log(nested(1), holes(2), spread([3]), call(4));

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:custom="https://example.com/custom">
+  <foreignObject width="300" height="300">
+    <xhtml:iframe srcdoc="&lt;script&gt;alert(document.domain)&lt;/script&gt;" src="https://example.com/content"/>
+    <xhtml:form action="javascript:alert(document.domain)" class="form"/>
+    <xhtml:object data="data:text/html,&lt;script&gt;alert(1)&lt;/script&gt;" title="Object"/>
+    <xhtml:div onbeforetoggle="alert(1)" style="color: red">Visual HTML</xhtml:div>
+    <xhtml:script>alert(1)</xhtml:script>
+  </foreignObject>
+  <svg:foreignObject width="300" height="300">
+    <xhtml:button formaction="vbscript:msgbox(1)">Button</xhtml:button>
+  </svg:foreignObject>
+  <custom:foreignObject srcdoc="Custom data">Non-executable custom content</custom:foreignObject>
+  <text>Safe SVG content</text>
+</svg>
