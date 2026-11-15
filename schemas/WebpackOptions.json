@@ -1657,6 +1657,19 @@
           "experimental": true,
           "added": "5.0.0"
         },
+        "threads": {
+          "description": "Run CPU-heavy plugin work, such as minimization, on worker threads webpack keeps for the whole compiler.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/ThreadsOptions"
+            }
+          ],
+          "experimental": true,
+          "added": "5.113.0"
+        },
         "typescript": {
           "description": "Enable typescript support. `\"auto\"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.",
           "anyOf": [
@@ -1782,6 +1795,19 @@
           "type": "boolean",
           "experimental": true,
           "added": "5.0.0"
+        },
+        "threads": {
+          "description": "Run CPU-heavy plugin work, such as minimization, on worker threads webpack keeps for the whole compiler.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "$ref": "#/definitions/ThreadsOptions"
+            }
+          ],
+          "experimental": true,
+          "added": "5.113.0"
         },
         "typescript": {
           "description": "Enable typescript support. `\"auto\"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.",
@@ -8148,6 +8174,19 @@
           "minLength": 1
         }
       ]
+    },
+    "ThreadsOptions": {
+      "description": "Options for running CPU-heavy plugin work on the worker threads webpack keeps for a compiler.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max": {
+          "description": "Number of worker threads. Defaults to one less than the number of CPUs; `0` runs the work on the main thread.",
+          "type": "number",
+          "minimum": 0,
+          "added": "5.113.0"
+        }
+      }
     },
     "TrustedTypes": {
       "description": "Use a Trusted Types policy to create urls for chunks.",
