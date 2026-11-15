@@ -277,7 +277,7 @@ describe("SourceProcessor — SVG minification", () => {
 			' d="M-.3.1-.1.4zL.6.7"',
 			' d="M.123.1l.2.1H9"',
 			' d="M.1.123l.1.2V9"',
-			' d="M.5 0H123456789.25"',
+			' d="M.5 0h123456788.75"',
 			// WebKit turns quadratics into cubics with different float steps per case.
 			' d="M.3 0Q.4 1 .5 0"',
 			' d="M10.3 0Q10.4 1 10.5 0T10.9 0"',
@@ -288,6 +288,38 @@ describe("SourceProcessor — SVG minification", () => {
 			' d="M123456.7 5A1 1 0 01123456.701 5"'
 		]);
 		expect(new SourceProcessor().process(once, options).code).toBe(once);
+	});
+
+	it("should write a smooth cubic only where every engine reflects the same control", () => {
+		const source = fixture("xml", "source-processor-svg-minification-should-write-a-smooth-cubic-only-where");
+		const options = { ...compact, collapseWhitespace: true };
+		const once = new SourceProcessor().process(source, options).code;
+		expect(once.match(/ d="[^"]*"/g)).toEqual([
+			' d="M1.3 1.7S2 3 4 5"',
+			' d="M.5.5C1.1 1.2 1.3 1.4 2 2s1 1 2 2"',
+			' d="M.5.5C1.1 1.2 1.3 1.4 2 2s1 1 2 2"',
+			' d="M.5.5C1.1 1.2 1.3 1.4 2 2s.7.6 1 1 1 1 2 2"',
+			// Twice 207.2 less 192.9 is not 221.5 in float32.
+			' d="M199.8 408.3C193.3 394.1 192.9 390 207.2 385.2 221.5 380.4 232.8 377.2 250 400"'
+		]);
+		expect(new SourceProcessor().process(once, options).code).toBe(once);
+	});
+
+	it("should drop an XML declaration that states only the defaults", () => {
+		const name = "source-processor-svg-minification-should-drop-an-xml-declaration-that-states";
+		const options = { xml: true, mode: /** @type {const} */ ("minify") };
+		expect(new SourceProcessor().process(fixture("xml", name), options).code).toBe(`<svg xmlns="${svg}"/>`);
+		// Another encoding, version or a standalone declaration still says something.
+		for (const suffix of ["-2", "-3", "-4"]) {
+			const source = fixture("xml", `${name}${suffix}`);
+			expect(new SourceProcessor().process(source, options).code).toBe(source.trim());
+		}
+	});
+
+	it("should lowercase opaque hex SVG colors at equal length", () => {
+		const source = fixture("xml", "source-processor-svg-minification-should-lowercase-hex-svg-colors");
+		const once = new SourceProcessor().process(source, { ...compact, renderEmbeddedSource: builtinEmbeddedRenderer() }).code;
+		expect(once).toBe(`<svg xmlns="${svg}"><path fill="#fff" stroke="#c8102e" d="M0 0"/><path fill="#ABCDEF80" d="M0 0"/></svg>`);
 	});
 
 	it("should preserve SVG styles without interrupting an enclosing CSS data URL", () => {

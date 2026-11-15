@@ -334,6 +334,38 @@ exports[`XML syntax — invariants source-processor-svg-minification-should-decl
 
 exports[`XML syntax — invariants source-processor-svg-minification-should-decline-what-sort-svg-definitions tokenizes 1`] = `"attr[5,10|12,38]\\" open[0,40|1,4] open[40,43|41,42] comment[43,51|47,48] text[51,52] open[52,58|53,57] attr[64,66|68,69]\\" open[58,72|59,63]/ attr[78,80|82,83]\\" open[72,86|73,77]/ close[86,93|88,92] close[93,97|95,96] open[97,100|98,99] open[100,106|101,105] attr[112,114|116,117]\\" open[106,120|107,111]/ close[120,127|122,126] text[127,131] close[131,135|133,134] open[135,138|136,137] open[138,144|139,143] attr[150,152|154,155]\\" open[144,158|145,149]/ close[158,165|160,164] attr[171,172|174,178]\\" open[165,181|166,170]/ close[181,185|183,184] close[185,191|187,190] end=191"`;
 
+exports[`XML syntax — invariants source-processor-svg-minification-should-drop-an-xml-declaration-that-states parses 1`] = `"[{\\"type\\":7,\\"target\\":\\"xml\\",\\"data\\":\\"version=\\\\\\"1.0\\\\\\" encoding=\\\\\\"UTF-8\\\\\\"\\",\\"start\\":0,\\"end\\":38},{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":44,\\"nameEnd\\":49,\\"valueStart\\":51,\\"valueEnd\\":77}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":39,\\"end\\":80,\\"tagEnd\\":80,\\"nameEnd\\":43,\\"contentEnd\\":80}]"`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-drop-an-xml-declaration-that-states parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-drop-an-xml-declaration-that-states prints {"xml":true,"mode":"minify"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"/>"`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-drop-an-xml-declaration-that-states tokenizes 1`] = `"comment[0,38|2,36] text[38,39] attr[44,49|51,77]\\" open[39,80|40,43]/ text[80,81] end=81"`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-drop-an-xml-declaration-that-states-2 parses 1`] = `"[{\\"type\\":7,\\"target\\":\\"xml\\",\\"data\\":\\"version=\\\\\\"1.0\\\\\\" encoding=\\\\\\"ISO-8859-1\\\\\\"\\",\\"start\\":0,\\"end\\":43},{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":48,\\"nameEnd\\":53,\\"valueStart\\":55,\\"valueEnd\\":81}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":43,\\"end\\":84,\\"tagEnd\\":84,\\"nameEnd\\":47,\\"contentEnd\\":84}]"`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-drop-an-xml-declaration-that-states-2 parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-drop-an-xml-declaration-that-states-2 prints {"xml":true,"mode":"minify"} 1`] = `"<?xml version=\\"1.0\\" encoding=\\"ISO-8859-1\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\"/>"`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-drop-an-xml-declaration-that-states-2 tokenizes 1`] = `"comment[0,43|2,41] attr[48,53|55,81]\\" open[43,84|44,47]/ text[84,85] end=85"`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-drop-an-xml-declaration-that-states-3 parses 1`] = `"[{\\"type\\":7,\\"target\\":\\"xml\\",\\"data\\":\\"version=\\\\\\"1.1\\\\\\"\\",\\"start\\":0,\\"end\\":21},{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":26,\\"nameEnd\\":31,\\"valueStart\\":33,\\"valueEnd\\":59}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":21,\\"end\\":62,\\"tagEnd\\":62,\\"nameEnd\\":25,\\"contentEnd\\":62}]"`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-drop-an-xml-declaration-that-states-3 parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-drop-an-xml-declaration-that-states-3 prints {"xml":true,"mode":"minify"} 1`] = `"<?xml version=\\"1.1\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\"/>"`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-drop-an-xml-declaration-that-states-3 tokenizes 1`] = `"comment[0,21|2,19] attr[26,31|33,59]\\" open[21,62|22,25]/ text[62,63] end=63"`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-drop-an-xml-declaration-that-states-4 parses 1`] = `"[{\\"type\\":7,\\"target\\":\\"xml\\",\\"data\\":\\"version=\\\\\\"1.0\\\\\\" standalone=\\\\\\"yes\\\\\\"\\",\\"start\\":0,\\"end\\":38},{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":43,\\"nameEnd\\":48,\\"valueStart\\":50,\\"valueEnd\\":76}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":38,\\"end\\":79,\\"tagEnd\\":79,\\"nameEnd\\":42,\\"contentEnd\\":79}]"`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-drop-an-xml-declaration-that-states-4 parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-drop-an-xml-declaration-that-states-4 prints {"xml":true,"mode":"minify"} 1`] = `"<?xml version=\\"1.0\\" standalone=\\"yes\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\"/>"`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-drop-an-xml-declaration-that-states-4 tokenizes 1`] = `"comment[0,38|2,36] attr[43,48|50,76]\\" open[38,79|39,42]/ text[79,80] end=80"`;
+
 exports[`XML syntax — invariants source-processor-svg-minification-should-inherit-xml-space-and-allow-a-default parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"root\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xml:space\\",\\"value\\":\\"preserve\\",\\"nameStart\\":6,\\"nameEnd\\":15,\\"valueStart\\":17,\\"valueEnd\\":25}],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":32,\\"nameEnd\\":37,\\"valueStart\\":39,\\"valueEnd\\":65}],\\"children\\":[{\\"type\\":4,\\"data\\":\\" \\",\\"start\\":67,\\"end\\":68},{\\"type\\":3,\\"tagName\\":\\"g\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\" \\",\\"start\\":71,\\"end\\":72}],\\"selfClosing\\":false,\\"start\\":68,\\"end\\":76,\\"tagEnd\\":71,\\"nameEnd\\":70,\\"contentEnd\\":72},{\\"type\\":3,\\"tagName\\":\\"g\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xml:space\\",\\"value\\":\\"default\\",\\"nameStart\\":79,\\"nameEnd\\":88,\\"valueStart\\":90,\\"valueEnd\\":97}],\\"children\\":[{\\"type\\":4,\\"data\\":\\" \\",\\"start\\":99,\\"end\\":100},{\\"type\\":3,\\"tagName\\":\\"g\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\" \\",\\"start\\":103,\\"end\\":104}],\\"selfClosing\\":false,\\"start\\":100,\\"end\\":108,\\"tagEnd\\":103,\\"nameEnd\\":102,\\"contentEnd\\":104},{\\"type\\":3,\\"tagName\\":\\"text\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\" A  \\",\\"start\\":114,\\"end\\":118},{\\"type\\":3,\\"tagName\\":\\"tspan\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xml:space\\",\\"value\\":\\"default\\",\\"nameStart\\":125,\\"nameEnd\\":134,\\"valueStart\\":136,\\"valueEnd\\":143}],\\"children\\":[{\\"type\\":4,\\"data\\":\\" B  \\",\\"start\\":145,\\"end\\":149}],\\"selfClosing\\":false,\\"start\\":118,\\"end\\":157,\\"tagEnd\\":145,\\"nameEnd\\":124,\\"contentEnd\\":149},{\\"type\\":4,\\"data\\":\\" C \\",\\"start\\":157,\\"end\\":160}],\\"selfClosing\\":false,\\"start\\":108,\\"end\\":167,\\"tagEnd\\":114,\\"nameEnd\\":113,\\"contentEnd\\":160},{\\"type\\":4,\\"data\\":\\" \\",\\"start\\":167,\\"end\\":168}],\\"selfClosing\\":false,\\"start\\":76,\\"end\\":172,\\"tagEnd\\":99,\\"nameEnd\\":78,\\"contentEnd\\":168},{\\"type\\":4,\\"data\\":\\" \\",\\"start\\":172,\\"end\\":173}],\\"selfClosing\\":false,\\"start\\":27,\\"end\\":179,\\"tagEnd\\":67,\\"nameEnd\\":31,\\"contentEnd\\":173}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":186,\\"tagEnd\\":27,\\"nameEnd\\":5,\\"contentEnd\\":179}]"`;
 
 exports[`XML syntax — invariants source-processor-svg-minification-should-inherit-xml-space-and-allow-a-default parses 2`] = `""`;
@@ -621,6 +653,14 @@ exports[`XML syntax — invariants source-processor-svg-minification-should-leav
 exports[`XML syntax — invariants source-processor-svg-minification-should-leave-foreign-xml-html-and-beautified-2 prints {"xml":true,"mode":"minify"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><path fill=\\"#ff0000\\" d=\\"M000 000\\" transform=\\"scale(001)\\"/></svg>"`;
 
 exports[`XML syntax — invariants source-processor-svg-minification-should-leave-foreign-xml-html-and-beautified-2 tokenizes 1`] = `"attr[5,10|12,38]\\" open[0,40|1,4] attr[46,50|52,59]\\" attr[61,62|64,72]\\" attr[74,83|85,95]\\" open[40,98|41,45]/ close[98,104|100,103] end=104"`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-lowercase-hex-svg-colors parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":5,\\"nameEnd\\":10,\\"valueStart\\":12,\\"valueEnd\\":38}],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"path\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"fill\\",\\"value\\":\\"#FFF\\",\\"nameStart\\":46,\\"nameEnd\\":50,\\"valueStart\\":52,\\"valueEnd\\":56},{\\"name\\":\\"stroke\\",\\"value\\":\\"#C8102E\\",\\"nameStart\\":58,\\"nameEnd\\":64,\\"valueStart\\":66,\\"valueEnd\\":73},{\\"name\\":\\"d\\",\\"value\\":\\"M0 0\\",\\"nameStart\\":75,\\"nameEnd\\":76,\\"valueStart\\":78,\\"valueEnd\\":82}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":40,\\"end\\":85,\\"tagEnd\\":85,\\"nameEnd\\":45,\\"contentEnd\\":85},{\\"type\\":3,\\"tagName\\":\\"path\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"fill\\",\\"value\\":\\"#ABCDEF80\\",\\"nameStart\\":91,\\"nameEnd\\":95,\\"valueStart\\":97,\\"valueEnd\\":106},{\\"name\\":\\"d\\",\\"value\\":\\"M0 0\\",\\"nameStart\\":108,\\"nameEnd\\":109,\\"valueStart\\":111,\\"valueEnd\\":115}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":85,\\"end\\":118,\\"tagEnd\\":118,\\"nameEnd\\":90,\\"contentEnd\\":118}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":124,\\"tagEnd\\":40,\\"nameEnd\\":4,\\"contentEnd\\":118}]"`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-lowercase-hex-svg-colors parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-lowercase-hex-svg-colors prints {"xml":true,"mode":"minify"} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><path fill=\\"#FFF\\" stroke=\\"#C8102E\\" d=\\"M0 0\\"/><path fill=\\"#ABCDEF80\\" d=\\"M0 0\\"/></svg>"`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-lowercase-hex-svg-colors tokenizes 1`] = `"attr[5,10|12,38]\\" open[0,40|1,4] attr[46,50|52,56]\\" attr[58,64|66,73]\\" attr[75,76|78,82]\\" open[40,85|41,45]/ attr[91,95|97,106]\\" attr[108,109|111,115]\\" open[85,118|86,90]/ close[118,124|120,123] text[124,125] end=125"`;
 
 exports[`XML syntax — invariants source-processor-svg-minification-should-merge-text-exposed-by-empty-containers parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":5,\\"nameEnd\\":10,\\"valueStart\\":12,\\"valueEnd\\":38},{\\"name\\":\\"xmlns:p\\",\\"value\\":\\"urn:used\\",\\"nameStart\\":40,\\"nameEnd\\":47,\\"valueStart\\":49,\\"valueEnd\\":57},{\\"name\\":\\"xmlns:q\\",\\"value\\":\\"urn:unused\\",\\"nameStart\\":59,\\"nameEnd\\":66,\\"valueStart\\":68,\\"valueEnd\\":78}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"p\\",\\"start\\":80,\\"end\\":81},{\\"type\\":3,\\"tagName\\":\\"g\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":81,\\"end\\":85,\\"tagEnd\\":85,\\"nameEnd\\":83,\\"contentEnd\\":85},{\\"type\\":4,\\"data\\":\\":Thing\\",\\"start\\":85,\\"end\\":91},{\\"type\\":3,\\"tagName\\":\\"g\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"class\\",\\"value\\":\\"\\",\\"nameStart\\":94,\\"nameEnd\\":99,\\"valueStart\\":101,\\"valueEnd\\":101}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":91,\\"end\\":104,\\"tagEnd\\":104,\\"nameEnd\\":93,\\"contentEnd\\":104},{\\"type\\":3,\\"tagName\\":\\"g\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xml:space\\",\\"value\\":\\"preserve\\",\\"nameStart\\":107,\\"nameEnd\\":116,\\"valueStart\\":118,\\"valueEnd\\":126}],\\"children\\":[{\\"type\\":4,\\"data\\":\\" \\",\\"start\\":128,\\"end\\":129}],\\"selfClosing\\":false,\\"start\\":104,\\"end\\":133,\\"tagEnd\\":128,\\"nameEnd\\":106,\\"contentEnd\\":129}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":139,\\"tagEnd\\":80,\\"nameEnd\\":4,\\"contentEnd\\":133}]"`;
 
@@ -1648,6 +1688,22 @@ exports[`XML syntax — invariants source-processor-svg-minification-should-trac
 
 exports[`XML syntax — invariants source-processor-svg-minification-should-track-namespace-aliases-rebinding-and tokenizes 1`] = `"attr[7,14|16,42]\\" attr[44,51|53,62]\\" attr[64,71|73,81]\\" open[0,83|1,6] attr[88,95|97,106]\\" attr[108,113|115,130]\\" open[83,133|84,87]/ attr[138,145|147,155]\\" open[133,157|134,137] open[157,166|158,164]/ close[166,172|168,171] close[172,180|174,179] end=180"`;
 
+exports[`XML syntax — invariants source-processor-svg-minification-should-write-a-smooth-cubic-only-where parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":5,\\"nameEnd\\":10,\\"valueStart\\":12,\\"valueEnd\\":38}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":40,\\"end\\":41},{\\"type\\":3,\\"tagName\\":\\"path\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"d\\",\\"value\\":\\"M1.3 1.7C1.3 1.7 2 3 4 5\\",\\"nameStart\\":47,\\"nameEnd\\":48,\\"valueStart\\":50,\\"valueEnd\\":74}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":41,\\"end\\":77,\\"tagEnd\\":77,\\"nameEnd\\":46,\\"contentEnd\\":77},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":77,\\"end\\":78},{\\"type\\":3,\\"tagName\\":\\"path\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"d\\",\\"value\\":\\"M.5 .5C1.1 1.2 1.3 1.4 2 2c.7 .6 1 1 2 2\\",\\"nameStart\\":84,\\"nameEnd\\":85,\\"valueStart\\":87,\\"valueEnd\\":127}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":78,\\"end\\":130,\\"tagEnd\\":130,\\"nameEnd\\":83,\\"contentEnd\\":130},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":130,\\"end\\":131},{\\"type\\":3,\\"tagName\\":\\"path\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"d\\",\\"value\\":\\"M.5 .5C1.1 1.2 1.3 1.4 2 2C2.7 2.6 3 3 4 4\\",\\"nameStart\\":137,\\"nameEnd\\":138,\\"valueStart\\":140,\\"valueEnd\\":182}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":131,\\"end\\":185,\\"tagEnd\\":185,\\"nameEnd\\":136,\\"contentEnd\\":185},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":185,\\"end\\":186},{\\"type\\":3,\\"tagName\\":\\"path\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"d\\",\\"value\\":\\"M.5 .5C1.1 1.2 1.3 1.4 2 2s.7 .6 1 1C3.3 3.4 4 4 5 5\\",\\"nameStart\\":192,\\"nameEnd\\":193,\\"valueStart\\":195,\\"valueEnd\\":247}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":186,\\"end\\":250,\\"tagEnd\\":250,\\"nameEnd\\":191,\\"contentEnd\\":250},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":250,\\"end\\":251},{\\"type\\":3,\\"tagName\\":\\"path\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"d\\",\\"value\\":\\"M199.8 408.3C193.3 394.1 192.9 390 207.2 385.2C221.5 380.4 232.8 377.2 250 400\\",\\"nameStart\\":257,\\"nameEnd\\":258,\\"valueStart\\":260,\\"valueEnd\\":338}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":251,\\"end\\":341,\\"tagEnd\\":341,\\"nameEnd\\":256,\\"contentEnd\\":341},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":341,\\"end\\":342}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":348,\\"tagEnd\\":40,\\"nameEnd\\":4,\\"contentEnd\\":342}]"`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-write-a-smooth-cubic-only-where parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-write-a-smooth-cubic-only-where prints {"xml":true,"mode":"minify"} 1`] = `
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\">
+<path d=\\"M1.3 1.7C1.3 1.7 2 3 4 5\\"/>
+<path d=\\"M.5 .5C1.1 1.2 1.3 1.4 2 2c.7 .6 1 1 2 2\\"/>
+<path d=\\"M.5 .5C1.1 1.2 1.3 1.4 2 2C2.7 2.6 3 3 4 4\\"/>
+<path d=\\"M.5 .5C1.1 1.2 1.3 1.4 2 2s.7 .6 1 1C3.3 3.4 4 4 5 5\\"/>
+<path d=\\"M199.8 408.3C193.3 394.1 192.9 390 207.2 385.2C221.5 380.4 232.8 377.2 250 400\\"/>
+</svg>"
+`;
+
+exports[`XML syntax — invariants source-processor-svg-minification-should-write-a-smooth-cubic-only-where tokenizes 1`] = `"attr[5,10|12,38]\\" open[0,40|1,4] text[40,41] attr[47,48|50,74]\\" open[41,77|42,46]/ text[77,78] attr[84,85|87,127]\\" open[78,130|79,83]/ text[130,131] attr[137,138|140,182]\\" open[131,185|132,136]/ text[185,186] attr[192,193|195,247]\\" open[186,250|187,191]/ text[250,251] attr[257,258|260,338]\\" open[251,341|252,256]/ text[341,342] close[342,348|344,347] text[348,349] end=349"`;
+
 exports[`XML syntax — invariants source-processor-xml-printing-reads-a-style-sheet-across-the-comments-it-drops parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":5,\\"nameEnd\\":10,\\"valueStart\\":12,\\"valueEnd\\":38}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":40,\\"end\\":41},{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a { b : c }\\",\\"start\\":48,\\"end\\":59},{\\"type\\":5,\\"data\\":\\" one \\",\\"start\\":59,\\"end\\":71},{\\"type\\":4,\\"data\\":\\"d { e : f }\\",\\"start\\":71,\\"end\\":82},{\\"type\\":5,\\"data\\":\\" two \\",\\"start\\":82,\\"end\\":94},{\\"type\\":4,\\"data\\":\\" g > h { i : j } \\",\\"start\\":94,\\"end\\":123}],\\"selfClosing\\":false,\\"start\\":41,\\"end\\":131,\\"tagEnd\\":48,\\"nameEnd\\":47,\\"contentEnd\\":123},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":131,\\"end\\":132},{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a { b : c }\\",\\"start\\":139,\\"end\\":150},{\\"type\\":5,\\"data\\":\\"#include virtual=\\\\\\"x\\\\\\" \\",\\"start\\":150,\\"end\\":178},{\\"type\\":4,\\"data\\":\\"d { e : f }\\",\\"start\\":178,\\"end\\":189}],\\"selfClosing\\":false,\\"start\\":132,\\"end\\":197,\\"tagEnd\\":139,\\"nameEnd\\":138,\\"contentEnd\\":189},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":197,\\"end\\":198},{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a { b : c }\\",\\"start\\":205,\\"end\\":216},{\\"type\\":3,\\"tagName\\":\\"g\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":216,\\"end\\":220,\\"tagEnd\\":220,\\"nameEnd\\":218,\\"contentEnd\\":220},{\\"type\\":4,\\"data\\":\\"d { e : f }\\",\\"start\\":220,\\"end\\":231}],\\"selfClosing\\":false,\\"start\\":198,\\"end\\":239,\\"tagEnd\\":205,\\"nameEnd\\":204,\\"contentEnd\\":231},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":239,\\"end\\":240},{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\" \\",\\"start\\":247,\\"end\\":248},{\\"type\\":5,\\"data\\":\\" blank \\",\\"start\\":248,\\"end\\":262},{\\"type\\":4,\\"data\\":\\" \\",\\"start\\":262,\\"end\\":263}],\\"selfClosing\\":false,\\"start\\":240,\\"end\\":271,\\"tagEnd\\":247,\\"nameEnd\\":246,\\"contentEnd\\":263},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":271,\\"end\\":272},{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"type\\",\\"value\\":\\"text/less\\",\\"nameStart\\":279,\\"nameEnd\\":283,\\"valueStart\\":285,\\"valueEnd\\":294}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a { b : c }\\",\\"start\\":296,\\"end\\":307},{\\"type\\":5,\\"data\\":\\" not css \\",\\"start\\":307,\\"end\\":323},{\\"type\\":4,\\"data\\":\\"d { e : f }\\",\\"start\\":323,\\"end\\":334}],\\"selfClosing\\":false,\\"start\\":272,\\"end\\":342,\\"tagEnd\\":296,\\"nameEnd\\":278,\\"contentEnd\\":334},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":342,\\"end\\":343}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":349,\\"tagEnd\\":40,\\"nameEnd\\":4,\\"contentEnd\\":343}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-printing-reads-a-style-sheet-across-the-comments-it-drops parses 2`] = `""`;
@@ -1981,7 +2037,7 @@ exports[`XML syntax — invariants source-processor-xml-printing-should-write-th
 exports[`XML syntax — invariants source-processor-xml-printing-should-write-the-shortest-well-formed-xml-when parses 2`] = `""`;
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-write-the-shortest-well-formed-xml-when prints {"xml":true,"mode":"minify"} 1`] = `
-"<?xml version=\\"1.0\\"?><!DOCTYPE svg [ <!ENTITY ns \\"http://www.w3.org/2000/svg\\"> <!ATTLIST svg version CDATA \\"1.1\\"> ]><svg xmlns=\\"&ns;\\" viewBox=\\"0 0 10 10\\" data-q='say \\"hi\\"' data-both='it&apos;s \\"q\\"' data-ws=\\"a b&#10;c\\">
+"<!DOCTYPE svg [ <!ENTITY ns \\"http://www.w3.org/2000/svg\\"> <!ATTLIST svg version CDATA \\"1.1\\"> ]><svg xmlns=\\"&ns;\\" viewBox=\\"0 0 10 10\\" data-q='say \\"hi\\"' data-both='it&apos;s \\"q\\"' data-ws=\\"a b&#10;c\\">
   <title>A &amp; B &gt; C</title>
   <g/>
   <path d=\\"M0 0L10 10\\"/>
@@ -2014,7 +2070,7 @@ b&#10;c\\">
 `;
 
 exports[`XML syntax — invariants source-processor-xml-printing-should-write-xml-back-as-written-when-beautifying prints {"xml":true,"mode":"minify"} 1`] = `
-"<?xml version=\\"1.0\\"?><!DOCTYPE svg [ <!ENTITY ns \\"http://www.w3.org/2000/svg\\"> <!ATTLIST svg version CDATA \\"1.1\\"> ]><svg xmlns=\\"&ns;\\" viewBox=\\"0 0 10 10\\" data-q='say \\"hi\\"' data-both='it&apos;s \\"q\\"' data-ws=\\"a b&#10;c\\">
+"<!DOCTYPE svg [ <!ENTITY ns \\"http://www.w3.org/2000/svg\\"> <!ATTLIST svg version CDATA \\"1.1\\"> ]><svg xmlns=\\"&ns;\\" viewBox=\\"0 0 10 10\\" data-q='say \\"hi\\"' data-both='it&apos;s \\"q\\"' data-ws=\\"a b&#10;c\\">
   <title>A &amp; B &gt; C</title>
   <g/>
   <path d=\\"M0 0L10 10\\"/>
@@ -2761,7 +2817,7 @@ exports[`XML syntax — invariants tokenize-xml-hands-each-callback-the-text-of-
 
 exports[`XML syntax — invariants tokenize-xml-hands-each-callback-the-text-of-its-token parses 2`] = `""`;
 
-exports[`XML syntax — invariants tokenize-xml-hands-each-callback-the-text-of-its-token prints {"xml":true,"mode":"minify"} 1`] = `"<?xml version=\\"1.0\\"?><!DOCTYPE a [<!ENTITY e \\"x\\">]><a b=\\"1\\" c=\\"2\\" d=\\"\\">&lt;d&gt;fx</a>"`;
+exports[`XML syntax — invariants tokenize-xml-hands-each-callback-the-text-of-its-token prints {"xml":true,"mode":"minify"} 1`] = `"<!DOCTYPE a [<!ENTITY e \\"x\\">]><a b=\\"1\\" c=\\"2\\" d=\\"\\">&lt;d&gt;fx</a>"`;
 
 exports[`XML syntax — invariants tokenize-xml-hands-each-callback-the-text-of-its-token tokenizes 1`] = `"comment[0,21|2,19] doctype[21,51|31,32|-1,-1|-1,-1|34,49] attr[54,55|57,58]\\" attr[60,61|63,64]' attr[66,67|-1,-1] open[51,68|52,53] comment[68,83|77,80] comment[83,91|87,88] text[91,95] close[95,99|97,98] text[99,100] end=100"`;
 
@@ -2974,7 +3030,7 @@ exports[`XML syntax — invariants xml-minify-should-minify-the-document-and-the
 exports[`XML syntax — invariants xml-minify-should-minify-the-document-and-the-stylesheets-it-holds parses 2`] = `""`;
 
 exports[`XML syntax — invariants xml-minify-should-minify-the-document-and-the-stylesheets-it-holds prints {"print":"xmlMinify","css":{"unusedSymbols":42}} 1`] = `
-"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
 	<style>
 		.dot { fill: #ff0000; user-select: none; }
 	</style>
@@ -2985,21 +3041,21 @@ exports[`XML syntax — invariants xml-minify-should-minify-the-document-and-the
 exports[`XML syntax — invariants xml-minify-should-minify-the-document-and-the-stylesheets-it-holds prints {"print":"xmlMinify","css":{"unusedSymbols":42}} 2`] = `"errors: TypeError | TypeError"`;
 
 exports[`XML syntax — invariants xml-minify-should-minify-the-document-and-the-stylesheets-it-holds prints {"print":"xmlMinify","environment":{"browsers":["chrome 50"],"vendorPrefixes":true}} 1`] = `
-"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
 	<style>.dot{fill:red;-webkit-user-select:none;user-select:none}</style>
 	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\" style=\\"stroke:#0f0\\"/>
 </svg>"
 `;
 
 exports[`XML syntax — invariants xml-minify-should-minify-the-document-and-the-stylesheets-it-holds prints {"print":"xmlMinify"} 1`] = `
-"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
 	<style>.dot{fill:red;user-select:none}</style>
 	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\" style=\\"stroke:#0f0\\"/>
 </svg>"
 `;
 
 exports[`XML syntax — invariants xml-minify-should-minify-the-document-and-the-stylesheets-it-holds prints {"xml":true,"mode":"minify"} 1`] = `
-"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
 	<style>
 		.dot { fill: #ff0000; user-select: none; }
 	</style>
@@ -3065,7 +3121,7 @@ exports[`XML syntax — invariants xml-syntax-invariants-holds-every-relation-ov
 
 exports[`XML syntax — invariants xml-syntax-invariants-holds-every-relation-over-its-sources parses 2`] = `""`;
 
-exports[`XML syntax — invariants xml-syntax-invariants-holds-every-relation-over-its-sources prints {"xml":true,"mode":"minify"} 1`] = `"<?xml version=\\"1.0\\"?><root a=\\"1\\"><child>text</child><empty/></root>"`;
+exports[`XML syntax — invariants xml-syntax-invariants-holds-every-relation-over-its-sources prints {"xml":true,"mode":"minify"} 1`] = `"<root a=\\"1\\"><child>text</child><empty/></root>"`;
 
 exports[`XML syntax — invariants xml-syntax-invariants-holds-every-relation-over-its-sources tokenizes 1`] = `"comment[0,21|2,19] attr[27,28|30,31]\\" open[21,33|22,26] open[33,40|34,39] text[40,44] close[44,52|46,51] comment[52,62|56,59] open[62,70|63,68]/ close[70,77|72,76] end=77"`;
 
@@ -3373,7 +3429,7 @@ exports[`XML syntax — invariants xml-syntax-parsing-should-honor-ast-skip-opti
 exports[`XML syntax — invariants xml-syntax-parsing-should-honor-ast-skip-options-outside-the-root-and-under-a-dtd parses 2`] = `""`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-honor-ast-skip-options-outside-the-root-and-under-a-dtd prints {"xml":true,"mode":"minify"} 1`] = `
-"<?xml version=\\"1.0\\"?><r>a<style>b{}</style>
+"<r>a<style>b{}</style>
 <e/>d</r>"
 `;
 
@@ -3702,7 +3758,7 @@ exports[`XML syntax — invariants xml-syntax-parsing-should-parse-xml-declarati
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-parse-xml-declarations-and-processing-instructions parses 2`] = `""`;
 
-exports[`XML syntax — invariants xml-syntax-parsing-should-parse-xml-declarations-and-processing-instructions prints {"xml":true,"mode":"minify"} 1`] = `"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><?build mode=\\"fast\\"?><root/><?done?>"`;
+exports[`XML syntax — invariants xml-syntax-parsing-should-parse-xml-declarations-and-processing-instructions prints {"xml":true,"mode":"minify"} 1`] = `"<?build mode=\\"fast\\"?><root/><?done?>"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-parse-xml-declarations-and-processing-instructions tokenizes 1`] = `"comment[0,38|2,36] comment[38,59|40,57] open[59,66|60,64]/ comment[66,74|68,72] end=74"`;
 
