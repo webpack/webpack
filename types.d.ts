@@ -37976,6 +37976,11 @@ declare namespace exports {
 		cssLocals: Map<string, string>;
 
 		/**
+		 * the stand-in for public path placeholder text an HTML module spells itself, put back once its page resolves the placeholders
+		 */
+		htmlPublicPathText: string;
+
+		/**
 		 * the name each import binding prints as, for source map scopes
 		 */
 		importBindings: Map<string, string>;
