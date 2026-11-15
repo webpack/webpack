@@ -155,8 +155,17 @@ const toLatin1Source = (source) => {
 					let depth = 0;
 					let j = open;
 					for (; j < text.length; j++) {
-						if (text[j] === "{") depth++;
-						else if (text[j] === "}" && --depth === 0) break;
+						const char = text[j];
+						if (char === '"' || char === "'" || char === "`") {
+							// a string type's text may hold a brace
+							for (j++; j < text.length && text[j] !== char; j++) {
+								if (text[j] === "\\") j++;
+							}
+						} else if (char === "{") {
+							depth++;
+						} else if (char === "}" && --depth === 0) {
+							break;
+						}
 					}
 					jsdocTypes.push([start + 2 + open, start + 2 + j]);
 					JSDOC_TYPE_TAG_REGEXP.lastIndex = j;
@@ -246,7 +255,15 @@ if (require.main === module) {
 				const source = fs.readFileSync(file, "utf8");
 				if (!ABOVE_LATIN1_REGEXP.test(source)) continue;
 				offending.push(path.relative(root, file));
-				if (write) fs.writeFileSync(file, toLatin1Source(source));
+				if (!write) continue;
+				try {
+					fs.writeFileSync(file, toLatin1Source(source));
+				} catch (err) {
+					throw new Error(
+						`${path.relative(root, file)}: ${/** @type {Error} */ (err).message}`,
+						{ cause: err }
+					);
+				}
 			}
 		}
 	};
