@@ -36,11 +36,41 @@ function n1() { var t; return (t = (() => 1.5)())`x`; }
 function n2() { var t; return (t = (() => 0.5)())`x`; }
 function n3() { var t; return (t = (() => 1e3)())`x`; }
 function n4() { var t; return (t = (() => 0x10)())`x`; }
+// A name a member's value collapsed into tags as that member.
+function c1(o) { var t; return (t = (() => { var f = o.m; return f; })())`x`; }
+function c2(o) { var f = o.m; var t; return (t = f)`x`; }
+function c3(o) { var g; var f = (g = o.m); var t; return (t = f)`x`; }
+// A call printing as an operation takes the template as its last operand,
+// which throws before the operation reads its operands.
+function o1(f) { var t; return (t = Math.pow(f, 2))`x`; }
+function o2(f) { var t; return (t = (() => Math.pow(f, 2))())`x`; }
+function o3(f) { var t; return (t = Boolean(f < 1))`x`; }
+function o4(f) { var t; return (t = String(f))`x`; }
 function tag() {
 	"use strict";
 	return this === undefined ? "unbound" : "bound";
 }
 function C() { return tag; }
+var seen = [];
+// Read as a number or a string, alike under `unsafe`.
+var recorder = {
+	toString: function () { seen.push("toString"); return "2"; }
+};
+/**
+ * @param {(f: object) => unknown} run a call reading its operand
+ * @returns {() => string} the run, saying what the operand ran
+ */
+function reads(run) {
+	return function () {
+		seen = [];
+		try {
+			run(recorder);
+		} catch (err) {
+			seen.push(err.constructor.name);
+		}
+		return seen.join();
+	};
+}
 [
 	function () { return a(tag); },
 	function () { return b(tag); },
@@ -72,7 +102,14 @@ function C() { return tag; }
 	n1,
 	n2,
 	n3,
-	n4
+	n4,
+	function () { return c1({ m: tag }); },
+	function () { return c2({ m: tag }); },
+	function () { return c3({ m: tag }); },
+	reads(o1),
+	reads(o2),
+	reads(o3),
+	reads(o4)
 ].forEach(function (run, i) {
 	try {
 		console.log(i, String(run()));

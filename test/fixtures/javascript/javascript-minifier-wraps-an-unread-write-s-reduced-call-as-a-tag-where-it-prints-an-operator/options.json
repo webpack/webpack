@@ -4,5 +4,12 @@
 		"compress": {},
 		"mangle": false,
 		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"compress": { "unsafe": true },
+		"ecma": 2016,
+		"mangle": false,
+		"behavior": true
 	}
 ]
