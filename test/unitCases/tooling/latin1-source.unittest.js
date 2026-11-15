@@ -49,6 +49,9 @@ describe("latin1-source", () => {
 			toLatin1Source('/** @type {"\u2192"} */ const value = "\u2192";')
 		).toThrow(/JSDoc type/);
 		expect(toLatin1Source("/** a \u2192 b */ 1")).toBe("/** a -> b */ 1");
+		expect(toLatin1Source("/** Example: {a \u2192 b} */ 1")).toBe(
+			"/** Example: {a -> b} */ 1"
+		);
 	});
 
 	it("refuses a tagged template's text, which its tag reads as written", () => {

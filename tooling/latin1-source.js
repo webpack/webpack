@@ -39,6 +39,10 @@ const COMMENT_SPELLINGS = {
 	"•": "-"
 };
 
+// the JSDoc tags whose `{...}` is a type, up to and including that `{`
+const JSDOC_TYPE_TAG_REGEXP =
+	/@(?:type|param|arg|argument|returns?|typedef|property|prop|this|enum|extends|augments|implements|throws|exception|yields?|satisfies)\s*\{/g;
+
 /**
  * @param {number} code a UTF-16 code unit or a code point
  * @returns {string} its hexadecimal digits, at least four, uppercase
@@ -142,18 +146,20 @@ const toLatin1Source = (source) => {
 		allowReturnOutsideFunction: true,
 		onComment: (block, text, start, end) => {
 			comments.push([start, end]);
-			// a JSDoc comment's `{...}` types read like code, so they keep no
-			// ASCII spelling: the value they type would read differently
+			// a JSDoc tag's `{...}` type reads like code, so it keeps no ASCII
+			// spelling: the value it types would read differently
 			if (block && text.startsWith("*")) {
-				let depth = 0;
-				let open = 0;
-				for (let j = 0; j < text.length; j++) {
-					const char = text[j];
-					if (char === "{") {
-						if (depth++ === 0) open = start + 2 + j;
-					} else if (char === "}" && depth > 0 && --depth === 0) {
-						jsdocTypes.push([open, start + 2 + j]);
+				JSDOC_TYPE_TAG_REGEXP.lastIndex = 0;
+				while (JSDOC_TYPE_TAG_REGEXP.exec(text) !== null) {
+					const open = JSDOC_TYPE_TAG_REGEXP.lastIndex - 1;
+					let depth = 0;
+					let j = open;
+					for (; j < text.length; j++) {
+						if (text[j] === "{") depth++;
+						else if (text[j] === "}" && --depth === 0) break;
 					}
+					jsdocTypes.push([start + 2 + open, start + 2 + j]);
+					JSDOC_TYPE_TAG_REGEXP.lastIndex = j;
 				}
 			}
 		},
