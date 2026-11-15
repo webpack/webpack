@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Type rule parser and generator options by their module types.
+Type parser and generator factory options by their module types.

@@ -7144,8 +7144,7 @@
         },
         "generator": {
           "description": "The options for the module generator.",
-          "type": "object",
-          "tsType": "{ [T in keyof GeneratorOptionsByModuleTypeKnown]-?: [ keyof NonNullable<GeneratorOptionsByModuleTypeKnown[T]> ] extends [never] ? never : NonNullable<GeneratorOptionsByModuleTypeKnown[T]> }[keyof GeneratorOptionsByModuleTypeKnown] & { [key: string]: any }"
+          "type": "object"
         },
         "glob": {
           "description": "Match the module resource against glob patterns, `!` in front of a pattern excludes it. Combines with `test`, `include` and `exclude`.",
@@ -7232,8 +7231,7 @@
         "parser": {
           "description": "Options for parsing.",
           "type": "object",
-          "additionalProperties": true,
-          "tsType": "{ [T in keyof ParserOptionsByModuleTypeKnown]-?: [ keyof NonNullable<ParserOptionsByModuleTypeKnown[T]> ] extends [never] ? never : NonNullable<ParserOptionsByModuleTypeKnown[T]> }[keyof ParserOptionsByModuleTypeKnown] & { [key: string]: any }"
+          "additionalProperties": true
         },
         "phase": {
           "description": "Match the import phase of the dependency.",
