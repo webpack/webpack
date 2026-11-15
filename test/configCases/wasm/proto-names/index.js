@@ -10,5 +10,8 @@ it("should keep an imported global re-exported as __proto__ as an own property",
 	import("./global.wat").then((wasm) => {
 		expect(Object.prototype.hasOwnProperty.call(wasm, "__proto__")).toBe(true);
 		expect(Object.getPrototypeOf(wasm)).not.toBe(wasm.__proto__);
-		expect(wasm.__proto__.value).toBe(5);
+		// Without WebAssembly.Global the export is the plain value
+		expect(
+			WebAssembly.Global ? wasm.__proto__.value : wasm.__proto__
+		).toBe(5);
 	}));
