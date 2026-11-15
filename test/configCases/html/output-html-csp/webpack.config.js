@@ -89,6 +89,8 @@ module.exports = [
 	config("fragment", true, "./src/fragment.html"),
 	// a `<meta charset>` is not an author-declared policy, so CSP is injected
 	config("charset", true, "./src/charset.html"),
+	// a page whose `<head>` is implied: the meta follows the doctype
+	config("no-head", true, "./src/no-head.html"),
 	// an external injected `<script src>` is covered by 'self', not hashed
 	config("external-script", true, "./src/main.js"),
 	// nonce on an injected inline `<script>`

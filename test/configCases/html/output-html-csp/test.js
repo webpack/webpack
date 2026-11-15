@@ -126,3 +126,12 @@ it("hashes tags as transformTags left them (removed dropped, kept hashed)", () =
 	// only the kept style contributes a hash; the removed one contributes none
 	expect(policy.match(/'sha256-/g)).toHaveLength(1);
 });
+
+it("places the CSP meta after the doctype when <head> is implied", () => {
+	const html = readHtml("no-head.html");
+	expect(html.startsWith("<!doctype html>")).toBe(true);
+	expect(html.indexOf("Content-Security-Policy")).toBeLessThan(
+		html.indexOf("<title>")
+	);
+	expect(cspMeta(html)).toHaveLength(1);
+});
