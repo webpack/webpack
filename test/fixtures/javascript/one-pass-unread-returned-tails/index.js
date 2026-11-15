@@ -23,7 +23,12 @@ var log = function (value) {
 // So does what an unread comparison or operator runs, its operands.
 ((first = log(11)) => (log(12) === log(13), 0))();
 ((first = log(14)) => (!(log(15), log(16)), 0))();
-// A `new`, an assignment or an update left alone takes no parentheses.
+// So does a call printing as the statements of what it calls.
+((first = log(20)) => ((() => {
+	log(21);
+	log(22);
+})(), 0))();
+// A `new`, an assignment or an update keeps a value after it too.
 var count = 0;
 var Counter = function (value) {
 	count += value;
