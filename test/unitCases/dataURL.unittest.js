@@ -211,6 +211,10 @@ describe("decodeDataURIPayload", () => {
 		expect(
 			decode("data:text/css;\fcharset=utf-8;charset=windows-1252,a")
 		).toBeNull();
+		// The URL parser escapes a non-ASCII charset, which then still comes first.
+		expect(
+			decode('data:text/css;charset="\u2603";charset=utf-8,a')
+		).toBeNull();
 		expect(decode('data:text/css; charset="UTF-8" ,a')).toBe("a");
 		expect(decode("data:text/css;charset=utf-8;charset=iso-8859-1,a")).toBe("a");
 		expect(decode("data:text/css;charset=utf-8;base64,YXtjb2xvcjpyZWR9")).toBe(
