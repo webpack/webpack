@@ -21098,7 +21098,7 @@ declare abstract class LocConverter {
 
 	/**
 	 * Sets `line` and `column` to those of a position: a `\n` is the last column
-	 * of its own line. Each `\n` is searched for once, a lookup is a binary search.
+	 * of its own line. The `\n`s are found once, a lookup is a binary search.
 	 */
 	get(pos: number): LocConverter;
 }
@@ -31836,6 +31836,11 @@ declare abstract class RuntimeTemplate {
 	supportsLet(): boolean;
 	supportsMethodShorthand(): boolean;
 	supportsLogicalAssignment(): boolean;
+
+	/**
+	 * Computed property keys came with method shorthand (ES2015).
+	 */
+	supportsComputedPropertyKey(): undefined | boolean;
 	supportsArrowFunction(): boolean;
 	supportsAsyncFunction(): boolean;
 	supportsGenerator(): boolean;

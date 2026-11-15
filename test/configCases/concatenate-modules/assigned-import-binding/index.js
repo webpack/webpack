@@ -23,6 +23,13 @@ it("should reject a write to an imported binding", () => {
 	expect(sum()).toBe(103);
 });
 
+it("should reject a write even in sloppy mode", () => {
+	// a minifier drops a write to a getter-only property, and sloppy mode ignores it
+	const sloppyWriteLet = new Function(`return (${writeLet});`)();
+	expect(sloppyWriteLet).toThrow(TypeError);
+	expect(read()).toBe(1);
+});
+
 it("should reject a compound write and one in expression position", () => {
 	expect(bump).toThrow(TypeError);
 	expect(bumpInExpression).toThrow(TypeError);
