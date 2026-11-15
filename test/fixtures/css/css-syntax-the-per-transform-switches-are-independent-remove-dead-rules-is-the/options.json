@@ -1,0 +1,68 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {
+			"removeDeadRules": false
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": "all"
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"mergeLonghands": false
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"mergeRules": false
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"normalizeQuotes": false
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"reduceFunctions": false
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"shortenColors": false
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"shortenMediaQueries": false
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"shortenNumbers": false
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"shortenSelectors": false
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"shortenValues": false
+		}
+	}
+]

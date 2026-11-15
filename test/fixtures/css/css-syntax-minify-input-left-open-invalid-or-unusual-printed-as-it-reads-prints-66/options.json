@@ -1,0 +1,10 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"firefox 120"
+			]
+		},
+		"mode": "minify"
+	}
+]

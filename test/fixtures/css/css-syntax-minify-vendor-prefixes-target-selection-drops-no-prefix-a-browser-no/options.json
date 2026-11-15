@@ -1,0 +1,26 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 130",
+				"bb 10"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"op_mini all",
+				"chrome"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": []
+		}
+	}
+]

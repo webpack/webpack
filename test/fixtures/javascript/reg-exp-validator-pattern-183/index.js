@@ -1,0 +1,1 @@
+/\p{RGI_Emoji_Flag_Sequence}\p{Emoji_Keycap_Sequence}/v;

@@ -1,0 +1,1 @@
+x=[Object(a),Object?.(),window.Object(),new(Object())]

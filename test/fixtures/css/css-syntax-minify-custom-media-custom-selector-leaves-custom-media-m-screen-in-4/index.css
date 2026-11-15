@@ -1,0 +1,1 @@
+@custom-media --m screen;@media not (--m){a{color:red}}

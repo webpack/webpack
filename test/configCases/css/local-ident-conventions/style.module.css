@@ -1,0 +1,27 @@
+.foo-bar {
+	color: red;
+}
+
+.fooBar {
+	color: blue;
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+}
+
+@keyframes fadeIn {
+	to {
+		opacity: 1;
+	}
+}
+
+.first {
+	animation-name: fade-in;
+}
+
+.second {
+	animation-name: fadeIn;
+}

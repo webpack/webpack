@@ -1,0 +1,14 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"chrome 60"
+			]
+		},
+		"transforms": {
+			"rewriteEscapes": false,
+			"shortenColors": false
+		},
+		"mode": "minify"
+	}
+]

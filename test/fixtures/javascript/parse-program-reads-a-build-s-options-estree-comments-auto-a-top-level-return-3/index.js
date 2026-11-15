@@ -1,0 +1,1 @@
+import defer * as d from 'e';

@@ -1,0 +1,1 @@
+function run(o,c){var{cb=read}=o;c(cb);var v=1;function read(){return v}return read()}console.log(run({},function(f){console.log(f())}));

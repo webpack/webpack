@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"computed_props": false
+		},
+		"mangle": {},
+		"module": true
+	}
+]

@@ -1,0 +1,33 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"css/block-contents": "color:red"
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"css/block-contents": "content:\"a\" b"
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"css/block-contents": "  color : red ;  /*# sourceMappingURL=data:application/json;base64,e30= */"
+			}
+		}
+	}
+]

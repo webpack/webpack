@@ -1,0 +1,10 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"samsung 4"
+			]
+		},
+		"mode": "minify"
+	}
+]

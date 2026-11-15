@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"fixture": "recordHost"
+		},
+		"check": {
+			"fixture": "hostsSeen"
+		}
+	}
+]

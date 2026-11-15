@@ -1,0 +1,1 @@
+const type = "json"; import("./package.json", { with: { type } });

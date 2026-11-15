@@ -1,0 +1,1 @@
+function f(t) { t.e = a; function c() { h(); return g(1) } function a() { return c() } return t }

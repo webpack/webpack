@@ -75,6 +75,7 @@ export default defineConfig([
 		"test/external/terser/**",
 		"test/external/swc/**",
 		"test/external/oxc/**",
+		"test/external/xml-conformance-suite/**/*.*",
 
 		// Ignore some folders
 		"benchmark",
@@ -85,6 +86,7 @@ export default defineConfig([
 
 		// Ignore not supported files
 		"**/*.d.ts",
+		"**/*.d.json.ts",
 
 		// Ignore precompiled schemas
 		"schemas/**/*.check.js",
@@ -151,7 +153,8 @@ export default defineConfig([
 		plugins: { jsdoc: getJsdocPlugin() },
 		rules: {
 			// The keywords an option type states for `tooling/generate-schemas.js`,
-			// which JSON Schema has and JSDoc does not
+			// which JSON Schema has and JSDoc does not, and `augmentable`, which
+			// `tooling/generate-types.js` exports for declaration merging
 			"jsdoc/check-tag-names": [
 				"error",
 				{
@@ -178,7 +181,8 @@ export default defineConfig([
 						"tsType",
 						"typeOnly",
 						"properties",
-						"not"
+						"not",
+						"augmentable"
 					]
 				}
 			]
@@ -296,14 +300,6 @@ export default defineConfig([
 		}
 	},
 	{
-		// puppeteer-core and @puppeteer/browsers are ESM-only and are loaded via
-		// dynamic import here
-		files: ["test/helpers/launchBrowser.js"],
-		languageOptions: {
-			ecmaVersion: 2020
-		}
-	},
-	{
 		// The equivalence helpers are installed into the page, so they run in the
 		// browser rather than in Node. So does what the color measurement hands to
 		// `page.evaluate`.
@@ -352,9 +348,9 @@ export default defineConfig([
 		}
 	},
 	{
-		// Fetches a browser for the suites that compare against one, from a package
+		// Fetches the browsers for the suites that compare against one, from a package
 		// that is ESM-only — so it runs on modern Node rather than the baseline.
-		files: ["tooling/install-firefox.js"],
+		files: ["tooling/install-browsers.js"],
 		languageOptions: {
 			ecmaVersion: 2022
 		},
@@ -374,9 +370,19 @@ export default defineConfig([
 			"tooling/compare-css-tools.js",
 			"tooling/compare-html-tools.js",
 			"tooling/compare-js-tools.js",
-			"tooling/compare-tools-harness.js"
+			"tooling/compare-tools-harness.js",
+			"tooling/compare-xml-tools.js"
 		],
 		rules: {
+			"n/no-unsupported-features/node-builtins": "off"
+		}
+	},
+	{
+		// Records every module a fresh process loads through `module.registerHooks`,
+		// so it runs on the Node `lint` uses and skips itself on an older one.
+		files: ["tooling/check-module-loading.js"],
+		rules: {
+			"n/no-unsupported-features/es-syntax": "off",
 			"n/no-unsupported-features/node-builtins": "off"
 		}
 	},
@@ -404,9 +410,13 @@ export default defineConfig([
 	},
 	{
 		// `color-name` is ESM, so the CSS data generator reaches its table through a
-		// dynamic import rather than a `require` no jest `vm` supports.
-		// `html-minifier-next` is ESM only and is imported the same way.
-		files: ["tooling/generate-css-data.js", "tooling/compare-html-tools.js"],
+		// dynamic import rather than a `require` no jest `vm` supports; the HTML and
+		// XML comparisons import their ESM-only tools the same way.
+		files: [
+			"tooling/generate-css-data.js",
+			"tooling/compare-html-tools.js",
+			"tooling/compare-xml-tools.js"
+		],
 		rules: {
 			"n/no-unsupported-features/es-syntax": [
 				"error",

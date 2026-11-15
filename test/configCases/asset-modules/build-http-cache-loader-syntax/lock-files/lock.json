@@ -1,0 +1,7 @@
+{
+  "http://localhost:9990/remote.js": {
+    "integrity": "sha512-5OBjbWCGQiNB5kiu89hte4nN7Z48reYbMRFrKwsDyR9f6gYvHeWbgQuW3tZ5Pzmggnxj+awpNfhgO5HaUF5cDg==",
+    "contentType": "application/javascript"
+  },
+  "version": 1
+}

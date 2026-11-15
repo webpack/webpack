@@ -1,0 +1,1 @@
+try{Infinity()}catch(e){console.log(e.name)}try{new Infinity}catch(e){console.log(e.name)}console.log(Infinity.toString(), typeof Infinity)

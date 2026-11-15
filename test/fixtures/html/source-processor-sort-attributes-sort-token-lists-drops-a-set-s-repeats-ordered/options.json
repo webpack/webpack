@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"sortTokenLists": true
+	},
+	{
+		"mode": "minify"
+	}
+]

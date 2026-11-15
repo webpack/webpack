@@ -1,0 +1,1 @@
+class A{m(){this.x=this.x+v;this.#p=this.#p*2}#p}o.y=o.y+1;var q;q.y=q.y+1;function f(o,p){o[k]=o[k]+1;o.y=o.z+1;o.y=p.y+1;o.y=o?.y+1;with(p)p.y=p.y+1}function g(o,b){o.b.c=o.b.c+1;({a}=b+1)}

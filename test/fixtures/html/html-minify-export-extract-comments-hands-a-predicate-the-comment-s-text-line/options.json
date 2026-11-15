@@ -1,0 +1,15 @@
+[
+	{
+		"print": "htmlMinify",
+		"extractComments": {
+			"fixture": "record"
+		},
+		"minimizer": {
+			"extractComments": false,
+			"asset": "a.html"
+		},
+		"check": {
+			"fixture": "handed"
+		}
+	}
+]

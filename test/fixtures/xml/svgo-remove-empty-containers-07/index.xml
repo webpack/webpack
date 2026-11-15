@@ -1,0 +1,9 @@
+<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+    <filter id="a" x="0" y="0" width="50" height="50" filterUnits="userSpaceOnUse">
+        <feFlood flood-color="#aaa"/>
+    </filter>
+    <mask id="b" x="0" y="0" width="50" height="50">
+        <g style="filter: url(#a)"/>
+    </mask>
+    <text x="16" y="16" style="mask: url(#b)">•ᴗ•</text>
+</svg>

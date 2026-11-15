@@ -1,0 +1,1 @@
+function f(){ var A = "a", B = "b", D = "d", E = "e", R = /r/, N = -1, G = 1n; (A); B; delete D; g((E)); return [R, N, G, A, B, D, E] } f()

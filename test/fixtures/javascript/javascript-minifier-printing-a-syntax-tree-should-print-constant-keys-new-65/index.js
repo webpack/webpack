@@ -1,0 +1,1 @@
+export function f(){var i=0;var log=g;var x=i++;var y=i++;log(y,x)}export function k(){const a=1;a=2;return a}export function m(i){var x=i++;return x**2}

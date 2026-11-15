@@ -1,0 +1,1 @@
+result = (function () { function k() { let e = 1; const g = () => e; try { throw 2 } catch (e) { return g() } } return k() })();

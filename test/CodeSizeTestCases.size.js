@@ -1,9 +1,10 @@
 "use strict";
 
-// Builds every `test/configCases` case with the defaults a user gets and reports
-// how large what webpack generated is. Run through `yarn test:size`; CI compares
-// the report against the one `main` last uploaded. Nothing here asserts and
-// nothing here fails: a size that moved is information, not a defect.
+// Builds every `test/configCases` case with the defaults a user gets, plus the
+// whole applications in `test/sizeCoreReports`, and reports how large what
+// webpack generated is. Run through `yarn test:size`; CI compares the report
+// against the one `main` last uploaded. Nothing here asserts and nothing here
+// fails: a size that moved is information, not a defect.
 
 const { execFileSync } = require("child_process");
 const { createHash } = require("crypto");
@@ -51,6 +52,9 @@ const prepareOptions = require("./helpers/prepareOptions");
  * @property {Record<string, string[]>} runtimes runtime module names per runtime,
  * sorted — how many a runtime carries, and which ones, is the deterministic half
  * of what this measures; their bytes in isolation are not what anyone downloads
+ * @property {Record<string, Metrics | null>} compilers metrics per compiler of a
+ * multi-compiler case, keyed by its report prefix, null for one that emitted
+ * nothing — what a case building one library per `output.library.type` is read by
  * @property {number} errors number of compilation errors
  * @property {string=} noOutput why the case emitted nothing — a build a case
  * expects to error (its own snapshot records it) counts as measured, not failed:
@@ -99,11 +103,16 @@ const prepareOptions = require("./helpers/prepareOptions");
  * @property {string} category case category
  * @property {string} name case name
  * @property {string} id `<category>/<case>`
+ * @property {string} directory directory the case is built from
  */
 
 const rootPath = path.resolve(__dirname, "..");
 const casesPath = path.join(__dirname, "configCases");
 const outputBaseDir = path.join(__dirname, "js", "size");
+// Whole applications, one directory each, reported as `apps/<case>`: a config
+// case isolates one feature, so only these show what a real bundle pays.
+const appsPath = path.join(__dirname, "sizeCoreReports");
+const APP_CATEGORY = "apps";
 
 // Bumped whenever a compression setting or the report shape changes, so a stale
 // baseline is reported as incomparable instead of compared against silently.
@@ -297,6 +306,46 @@ const applyDefaults = (options, index, testDirectory, outputDirectory) => {
 };
 
 /**
+ * Loads an application's configuration, first running the `setup()` its
+ * `options.mjs` may export to generate or install its sources. Only what a
+ * build needs to run here is filled in; the rest is as the application says.
+ * @param {string} directory application directory
+ * @param {string} outputDirectory directory to build into
+ * @returns {Promise<Configuration[]>} its configuration, one per compiler
+ */
+const loadAppOptions = async (directory, outputDirectory) => {
+	// `require` of an ES module needs the Node.js this script already demands.
+	const optionsPath = path.join(directory, "options.mjs");
+	if (fs.existsSync(optionsPath)) {
+		const { setup } = require(optionsPath);
+
+		if (setup) await setup();
+	}
+	const configName = fs.existsSync(path.join(directory, "webpack.config.mjs"))
+		? "webpack.config.mjs"
+		: "webpack.config.js";
+
+	const config = require(path.join(directory, configName));
+
+	/** @type {Configuration | Configuration[]} */
+	const loaded = config.default || config;
+	const configs = Array.isArray(loaded) ? loaded : [loaded];
+	return configs.map((options, index) => ({
+		...options,
+		context: directory,
+		mode: options.mode || "production",
+		output: {
+			...options.output,
+			path:
+				configs.length === 1
+					? outputDirectory
+					: path.join(outputDirectory, options.name || String(index))
+		},
+		infrastructureLogging: { level: "error", progress: false }
+	}));
+};
+
+/**
  * Which runtime modules each runtime carries. A count is the deterministic thing
  * to compare — it catches a runtime module added for one target and forgotten for
  * another — and the names say what moved when a count does.
@@ -400,8 +449,8 @@ const closeCompiler = (compiler) =>
  * @param {Case} testCase case to measure
  * @returns {Promise<CaseResult>} measured metrics
  */
-const measureCase = async ({ category, name }) => {
-	const testDirectory = path.join(casesPath, category, name);
+const measureCase = async ({ category, name, directory: testDirectory }) => {
+	const app = category === APP_CATEGORY;
 	const outputDirectory = path.join(outputBaseDir, category, name);
 
 	fs.rmSync(outputDirectory, { recursive: true, force: true });
@@ -420,6 +469,7 @@ const measureCase = async ({ category, name }) => {
 		assets: {},
 		input: createInput(),
 		runtimes: {},
+		compilers: {},
 		errors: 0
 	};
 
@@ -437,13 +487,17 @@ const measureCase = async ({ category, name }) => {
 	/** @type {Configuration[]} */
 	let optionsArr;
 	try {
-		const options = await prepareOptions(
-			require(path.join(testDirectory, "webpack.config.js")),
-			{ testPath: outputDirectory }
-		);
-		optionsArr = Array.isArray(options) ? [...options] : [options];
-		for (const [index, options] of optionsArr.entries()) {
-			applyDefaults(options, index, testDirectory, outputDirectory);
+		if (app) {
+			optionsArr = await loadAppOptions(testDirectory, outputDirectory);
+		} else {
+			const options = await prepareOptions(
+				require(path.join(testDirectory, "webpack.config.js")),
+				{ testPath: outputDirectory }
+			);
+			optionsArr = Array.isArray(options) ? [...options] : [options];
+			for (const [index, options] of optionsArr.entries()) {
+				applyDefaults(options, index, testDirectory, outputDirectory);
+			}
 		}
 	} catch (err) {
 		result.noOutput = `config: ${/** @type {Error} */ (err).message}`;
@@ -479,8 +533,13 @@ const measureCase = async ({ category, name }) => {
 		// have been replaced by `SizeOnlySource`.
 		for (const [index, child] of compilers.entries()) {
 			const prefix = prefixes[index];
+			const key = prefix.slice(0, -1);
+			// Null until the compiler emits, so one whose build fails is reported
+			// as emitting nothing rather than missing from the case.
+			if (compilers.length > 1) result.compilers[key] = null;
 			child.hooks.emit.tap("CodeSizeMeasure", (compilation) => {
 				emitted.set(compilation, prefix);
+				if (compilers.length > 1) result.compilers[key] = createMetrics();
 				for (const asset of compilation.getAssets()) {
 					const metrics = measureAsset(asset.source.buffer());
 					const name = `${prefix}${normalizeAssetName(asset.name, asset.info)}`;
@@ -490,6 +549,8 @@ const measureCase = async ({ category, name }) => {
 						? addMetrics(existing, metrics)
 						: metrics;
 					addMetrics(result.metrics, metrics);
+					const compilerMetrics = result.compilers[key];
+					if (compilerMetrics) addMetrics(compilerMetrics, metrics);
 				}
 			});
 		}
@@ -537,6 +598,7 @@ const measureCase = async ({ category, name }) => {
 		result.assets = {};
 		result.input = createInput();
 		result.runtimes = {};
+		result.compilers = {};
 		result.metrics = createMetrics();
 	} finally {
 		DEFAULTS.HASH_FUNCTION = hashFunction;
@@ -1068,6 +1130,144 @@ const formatBiggestAssets = (report) => {
 };
 
 /**
+ * The rows of the sample apps table: one per app, or per compiler of a
+ * multi-compiler app, whose total would add up bundles no user downloads together.
+ * @param {Report} report report to read
+ * @returns {Map<string, Metrics | null>} metrics per row label, null for an app
+ * that emitted nothing
+ */
+const appRows = (report) => {
+	/** @type {Map<string, Metrics | null>} */
+	const rows = new Map();
+	for (const name of Object.keys(report.cases)) {
+		if (!name.startsWith(`${APP_CATEGORY}/`)) continue;
+		const result = report.cases[name];
+		const app = `\`${name.slice(APP_CATEGORY.length + 1)}\``;
+		if (result.noOutput) {
+			rows.set(app, null);
+			continue;
+		}
+		const compilers = Object.keys(result.compilers || {}).sort();
+		if (compilers.length === 0) rows.set(app, result.metrics);
+		for (const compiler of compilers) {
+			rows.set(`${app} ${compiler}`, result.compilers[compiler]);
+		}
+	}
+	return rows;
+};
+
+/**
+ * One row per sample application, summed over every asset it emits: the whole
+ * download, which per-asset rows hide once code moves between chunks. Against a
+ * baseline only new, changed and deleted rows are open; unchanged ones fold away.
+ * @param {Report} report current report
+ * @param {Report=} baseline baseline report
+ * @returns {string[]} markdown lines
+ */
+const formatApps = (report, baseline) => {
+	const current = appRows(report);
+	const previous = baseline ? appRows(baseline) : new Map();
+	if (current.size === 0 && previous.size === 0) return [];
+
+	if (!baseline) {
+		return [
+			"### Sample apps",
+			"",
+			"| App | Gzip | Raw |",
+			"| :-- | --: | --: |",
+			...Array.from(current, ([label, metrics]) =>
+				metrics
+					? `| ${label} | ${formatBytes(metrics.gzip)} | ${formatBytes(metrics.raw)} |`
+					: `| ${label} | emitted nothing |`
+			),
+			""
+		];
+	}
+
+	/**
+	 * @param {number | undefined} before baseline bytes, none when the row is new
+	 * @param {number} after current bytes
+	 * @returns {string} the change cell
+	 */
+	const change = (before, after) =>
+		before === undefined
+			? ADDED_MARKER
+			: after === before
+				? "—"
+				: `${changeMarker(after - before)} ${formatDelta(
+						after - before
+					)} (${formatPercent(before, after)})`;
+	/**
+	 * @param {string} label app, and compiler of a multi-compiler app
+	 * @param {Metrics} after current metrics
+	 * @param {Metrics | null | undefined} before baseline metrics, none when new
+	 * @returns {string} the row
+	 */
+	const row = (label, after, before) =>
+		`| ${label} | ${formatBytes(after.gzip)} | ${change(
+			before ? before.gzip : undefined,
+			after.gzip
+		)} | ${formatBytes(after.raw)} | ${change(
+			before ? before.raw : undefined,
+			after.raw
+		)} |`;
+
+	/** @type {string[]} */
+	const moved = [];
+	/** @type {string[]} */
+	const unchanged = [];
+	for (const [label, after] of current) {
+		const before = previous.get(label);
+		if (!after) {
+			(before === null ? unchanged : moved).push(
+				`| ${label} | emitted nothing | | | |`
+			);
+		} else if (
+			before &&
+			before.gzip === after.gzip &&
+			before.raw === after.raw
+		) {
+			unchanged.push(row(label, after, before));
+		} else {
+			moved.push(row(label, after, before));
+		}
+	}
+	for (const [label, before] of previous) {
+		if (!current.has(label)) {
+			moved.push(
+				before
+					? `| ${label} | — | ➖ deleted (${formatBytes(before.gzip)}) | — | ➖ deleted (${formatBytes(before.raw)}) |`
+					: `| ${label} | — | ➖ deleted | — | ➖ deleted |`
+			);
+		}
+	}
+
+	const header = [
+		"| App | Gzip | Gzip change | Raw | Raw change |",
+		"| :-- | --: | --: | --: | --: |"
+	];
+	return [
+		"### Sample apps",
+		"",
+		...(moved.length > 0
+			? [...header, ...moved]
+			: ["No sample app changed size."]),
+		"",
+		...(unchanged.length > 0
+			? [
+					`<details><summary>${unchanged.length} unchanged app(s)</summary>`,
+					"",
+					...header,
+					...unchanged,
+					"",
+					"</details>",
+					""
+				]
+			: [])
+	];
+};
+
+/**
  * The verdict sentence: what a reviewer reads before anything else, so it leads
  * with the assets webpack builds from unchanged source — the only ones whose
  * delta is webpack's doing — and says how much of the rest is the pull request
@@ -1109,7 +1309,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 		""
 	];
 
-	const built = `Built \`test/configCases\` with the defaults a user gets: ${
+	const built = `Built \`test/configCases\` with the defaults a user gets, and the apps in \`test/sizeCoreReports\` (\`apps/\`): ${
 		report.meta.cases
 	} test(s), ${report.meta.assets} asset(s)${
 		report.meta.withoutOutput > 0
@@ -1123,6 +1323,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			"",
 			`${noBaselineReason}, so there is nothing to compare against yet.`,
 			"",
+			...formatApps(report),
 			...formatBiggestAssets(report)
 		);
 		return `${lines.join("\n")}\n`;
@@ -1262,6 +1463,8 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 		""
 	);
 
+	lines.push(...formatApps(report, baseline));
+
 	// One row per emitted file, so a minifier change reads as the files it shrank.
 	// Unchanged-source assets first, then rebuilt ones, then new and deleted.
 	if (changes.length === 0) {
@@ -1379,8 +1582,19 @@ const discoverCases = (filter, negativeFilter) => {
 				continue;
 			}
 
-			cases.push({ category, name, id });
+			cases.push({ category, name, id, directory: testDirectory });
 		}
+	}
+
+	for (const name of fs.readdirSync(appsPath).sort()) {
+		const directory = path.join(appsPath, name);
+		if (name.startsWith("_") || !fs.statSync(directory).isDirectory()) {
+			continue;
+		}
+		const id = `${APP_CATEGORY}/${name}`;
+		if (filter && !filter.test(id)) continue;
+		if (negativeFilter && negativeFilter.test(id)) continue;
+		cases.push({ category: APP_CATEGORY, name, id, directory });
 	}
 
 	return cases;
@@ -1445,6 +1659,7 @@ const run = async () => {
 				assets: {},
 				input: createInput(),
 				runtimes: {},
+				compilers: {},
 				errors: 0,
 				noOutput: `harness: ${/** @type {Error} */ (err).message}`
 			};

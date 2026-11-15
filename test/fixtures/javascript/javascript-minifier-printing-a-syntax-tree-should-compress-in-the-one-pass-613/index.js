@@ -1,0 +1,1 @@
+if(c)if(1?a||b:0)d();if(c)if(1?a:0)d();if(c)if(0||(a||b))d();if(c)if(0||a)d()

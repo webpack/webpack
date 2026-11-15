@@ -53,6 +53,10 @@ exports[`ConfigTestCases css escaped-names exported tests should emit the styles
 	initial-value: rebeccapurple;
 }
 ._escaped-custom-property-at-rule { color: var(--_four) }
+/* The first space ends the \`\\\\1\` escape, the second parts the name from what
+   follows; the scoped name has to keep both. */
+@keyframes _fade\\\\1  { from { top: 0 } }
+._escape-at-name-end { animation: _fade\\\\1  linear; }
 
 
 /*# sourceMappingURL=bundle0.css.map*/"

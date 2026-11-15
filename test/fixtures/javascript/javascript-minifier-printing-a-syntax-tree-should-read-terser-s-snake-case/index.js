@@ -1,0 +1,1 @@
+function f() { function foo() { return h() } g(foo, foo) }

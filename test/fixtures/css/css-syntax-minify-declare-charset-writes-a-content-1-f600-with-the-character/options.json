@@ -1,0 +1,26 @@
+[
+	{
+		"mode": "minify",
+		"declareCharset": false
+	},
+	{
+		"mode": "minify",
+		"declareCharset": true,
+		"transforms": {
+			"rewriteEscapes": false
+		}
+	},
+	{
+		"mode": "minify",
+		"declareCharset": true
+	},
+	{
+		"mode": "minify",
+		"declareCharset": true,
+		"source": "a.css",
+		"content": "a{content:\"\\1F600\"}"
+	},
+	{
+		"print": "cssMinify"
+	}
+]

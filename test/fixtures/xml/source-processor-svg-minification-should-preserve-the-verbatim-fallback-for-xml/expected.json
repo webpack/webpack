@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "respelling references",
+		"contains": "<svg xmlns=\"http://www.w3.org/2000/svg\">  ->  <svg xmlns=\"&#x68;",
+		"why": "an entity whose replacement holds markup turns the document verbatim, so the printer writes the root's attributes as authored and a reference respelled there stays one"
+	}
+]

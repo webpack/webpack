@@ -7,7 +7,7 @@ exports[`ConfigTestCases html attribute-tables attribute-tables should compile 1
 	<textarea writingsuggestions=false maxlength=100>text</textarea>
 	<button formaction=\\"/submit?a=1&b=2\\" formenctype=multipart/form-data formmethod=post formnovalidate>send</button>
 </form>
-<img src=data:, alt=a decoding=async ismap>
+<img src=https://example.test/a.png alt=a decoding=async ismap>
 <p draggable=true accesskey=\\"s s\\" itemref=\\"one two\\">draggable</p>
 <a href=/x ping=\\"https://example.test/p https://example.test/p https://example.test/q\\">ping</a>
 <div itemscope itemtype=https://example.test/T><span itemprop=\\"m n\\">micro</span></div>
@@ -15,7 +15,7 @@ exports[`ConfigTestCases html attribute-tables attribute-tables should compile 1
 <video controls autoplay muted playsinline loop></video>
 <iframe src=/x allowfullscreen></iframe>
 <marquee scrollamount=12 scrolldelay=85>scrolling</marquee>
-<object declare data=data:,></object>
+<object declare data=https://example.test/o></object>
 <map name=m><area shape=rect coords=0,0,1,1 nohref></map>
 
 <dialog closedby=any>d</dialog>

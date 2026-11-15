@@ -1,0 +1,1 @@
+export const f = l => { var m = 42 + l; return m; };

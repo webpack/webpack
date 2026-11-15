@@ -39,6 +39,12 @@ util.deprecate = (fn, message, _code) => {
 	};
 };
 
+// util is shared by every test file in a jest worker: restore it, or each
+// file's wrapper keeps the previous file's whole environment alive.
+afterAll(() => {
+	util.deprecate = originalDeprecate;
+});
+
 /**
  * @returns {() => { code: string, message: string, stack: string }[]} result
  */

@@ -1,0 +1,1 @@
+var Array;x=[Array(1,2),Array()]

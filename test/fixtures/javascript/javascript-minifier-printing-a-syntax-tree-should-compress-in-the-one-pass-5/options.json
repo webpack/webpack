@@ -1,0 +1,13 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"toplevel": false
+		},
+		"mangle": {
+			"toplevel": false
+		},
+		"sourceType": "module",
+		"ecma": 2020
+	}
+]

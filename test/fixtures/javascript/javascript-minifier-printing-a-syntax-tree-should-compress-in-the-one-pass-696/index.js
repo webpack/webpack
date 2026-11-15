@@ -1,0 +1,1 @@
+new Set;new Map([[1,2]]);new Map([1]);new Map(a);new WeakSet([1]);new WeakMap([[1,1]]);Symbol();new Symbol;BigInt(1);Object.isFrozen(1);Object.keys(42);Number.isNaN(1);x=1

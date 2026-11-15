@@ -1,0 +1,1 @@
+var { 'a': b } = c; ({ 'a': b } = c); function f({ 'a': b }) {} var [{ 'a': b }] = c; var { x: { 'a': b } } = c; var { 'a': b = 1 } = c; function g([{ 'a': b }] = []) {} for (var { 'a': b } of c); (function ({ 'a': b }) {}); ({ 'a': b }) => b; var { ...rest } = c; f = (a = { 'b': c }) => a;

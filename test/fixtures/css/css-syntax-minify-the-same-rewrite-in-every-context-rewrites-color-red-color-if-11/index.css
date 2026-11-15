@@ -1,0 +1,1 @@
+.p{@media (width>=600px){color:red;color:if(style(--x:1):red;else:blue)}}

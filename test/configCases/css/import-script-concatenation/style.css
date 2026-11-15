@@ -1,0 +1,5 @@
+@import url(./style-script.module.js);
+
+.style {
+	color: green;
+}

@@ -1,0 +1,21 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"opera 10.0-10.1"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"opera 10.5"
+			]
+		}
+	},
+	{
+		"mode": "minify"
+	}
+]

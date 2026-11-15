@@ -1,0 +1,1 @@
+<img src="data:image/svg+xml,<svg></svg>">

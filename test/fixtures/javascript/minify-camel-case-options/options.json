@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"keepFnames": true,
+		"keepClassnames": true,
+		"format": {
+			"asciiOnly": true
+		},
+		"behavior": true
+	}
+]

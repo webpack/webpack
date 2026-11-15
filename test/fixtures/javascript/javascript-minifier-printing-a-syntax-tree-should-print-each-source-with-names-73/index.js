@@ -1,0 +1,1 @@
+for (var a in b); for (let [a] of b); for (const { a } of b); for (var i = 0, j = 1; i < j; i++, j--); for (let i = 0;;); for (x.y in z); for ([a, b] of c);

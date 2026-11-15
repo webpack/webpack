@@ -1,0 +1,8 @@
+<svg width="480" height="360" xmlns="http://www.w3.org/2000/svg">
+  <path transform="scale(1.8)" stroke="black" stroke-width="10" fill="none" stroke-dasharray="none" d="   M  20 20   L  200 20"/>
+  <path transform="scale(1.8)" stroke="black" stroke-width="10" fill="none" stroke-dasharray="0" d="   M  20 40   L  200 40"/>
+  <path transform="scale(1.8)" stroke="black" stroke-width="20" fill="none" stroke-dasharray="5,2,5,5,2,5" d="   M  20 60   L  200 60"/>
+  <path transform="scale(1.8)" stroke="blue" stroke-width="10" fill="none" stroke-dasharray="5,2,5" d="   M  20 60   L  200 60"/>
+  <path transform="scale(1.8)" stroke="black" stroke-width="10" fill="none" stroke-dasharray="2" d="   M  20 80   L  200 80"/>
+  <path transform="scale(1.8)" stroke="blue" stroke-width="10" fill="none" stroke-dasharray="2" stroke-dashoffset="2" d="         M  20 90   L  200 90"/>
+</svg>

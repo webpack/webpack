@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "respelling escape",
+		"contains": "zoom\n      -> \\7a oom",
+		"why": "`*zoom: 1` is no declaration but the star hack an engine drops, which the printer writes back as authored, escape included"
+	}
+]

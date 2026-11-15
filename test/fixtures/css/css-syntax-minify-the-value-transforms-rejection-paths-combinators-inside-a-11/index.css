@@ -1,0 +1,1 @@
+@media (min-width:1px){:where(.a > .b){color:red}}

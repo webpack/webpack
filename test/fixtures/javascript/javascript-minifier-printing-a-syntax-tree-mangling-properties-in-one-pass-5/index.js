@@ -1,0 +1,1 @@
+var conf = { "zQuoted": 1, zPlain: 2 }; conf["zQuoted"] += 1; conf.zPlain += conf["zQuoted"]; console.log(conf["zQuoted"], conf.zPlain);

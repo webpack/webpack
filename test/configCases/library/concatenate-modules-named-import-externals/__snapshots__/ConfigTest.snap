@@ -41,13 +41,13 @@ console.log({ HomeLayout });
             console.log({ external_externals3_namespaceObject });
 }
 
-
+;
 ;// ./test.js
 // re export
 
 
 // named import
-;
+
 
 
 // default import

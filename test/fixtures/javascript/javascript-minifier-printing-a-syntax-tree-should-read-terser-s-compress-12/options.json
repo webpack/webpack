@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"pure_funcs": [
+				"foo"
+			]
+		},
+		"mangle": false
+	}
+]

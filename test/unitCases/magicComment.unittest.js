@@ -46,7 +46,9 @@ describe("parseMagicComment", () => {
 			context
 		);
 		expect(options.webpackInclude).toBeInstanceOf(RegExp);
-		expect(options.webpackInclude.source).toBe("\\.json$");
+		expect(/** @type {RegExp} */ (options.webpackInclude).source).toBe(
+			"\\.json$"
+		);
 		expect(options.webpackExports).toEqual(["a", "b"]);
 	});
 

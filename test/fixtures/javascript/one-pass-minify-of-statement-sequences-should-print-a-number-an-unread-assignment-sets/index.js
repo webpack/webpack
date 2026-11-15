@@ -1,0 +1,1 @@
+function f(c){var a,b;if(c)return(a=2)+(b=3)}function g(){var a;return(a=2).toFixed()}function h(){var a;return 1-(a=2)}console.log(f(1),g(),h())

@@ -1,0 +1,1 @@
+'\x75se strict';console.log(1)

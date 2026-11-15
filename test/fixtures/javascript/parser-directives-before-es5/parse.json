@@ -1,0 +1,4 @@
+[
+	{ "entry": "parseProgram", "options": { "ecmaVersion": 3 }, "fields": ["childCount"] },
+	{ "options": { "ecmaVersion": 3 } }
+]

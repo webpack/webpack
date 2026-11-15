@@ -1,0 +1,16 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 140",
+				"firefox 140",
+				"safari 26.2"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"dropOverriddenDeclarations": true
+	}
+]

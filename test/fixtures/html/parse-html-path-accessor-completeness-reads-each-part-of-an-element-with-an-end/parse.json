@@ -1,0 +1,20 @@
+[
+	{
+		"fields": [
+			"name",
+			"startOf:name",
+			"endOf:name",
+			"startOf:startTag",
+			"endOf:startTag",
+			"startOf:content",
+			"endOf:content",
+			"startOf:endTag",
+			"endOf:endTag",
+			"startOf:publicId",
+			"endOf:publicId"
+		],
+		"check": {
+			"fixture": "parts"
+		}
+	}
+]

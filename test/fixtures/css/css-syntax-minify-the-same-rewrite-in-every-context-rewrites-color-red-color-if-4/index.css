@@ -1,0 +1,1 @@
+@container card (width>=400px){.a{color:red;color:if(style(--x:1):red;else:blue)}}

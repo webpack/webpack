@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": true,
+		"format": {
+			"inline_script": false
+		}
+	}
+]

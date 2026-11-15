@@ -1,0 +1,16 @@
+a {
+color: red;
+}div {
+color: black;
+background: red;
+}a {
+color: black;
+}@media screen {
+}@media screen {
+}/*!test*//*!te
+st*//*!te
+
+
+st*//*!te**st*/.a {
+background: red;
+}

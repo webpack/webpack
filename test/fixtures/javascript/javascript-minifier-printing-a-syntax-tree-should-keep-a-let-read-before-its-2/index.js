@@ -1,0 +1,1 @@
+function f(){ let later = 1; g(() => later); return later } it(f())

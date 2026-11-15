@@ -1,0 +1,1 @@
+function f(){L:for(;;)break;for(;;)/*! c */break;for(;;/*! c */g())break;h()}

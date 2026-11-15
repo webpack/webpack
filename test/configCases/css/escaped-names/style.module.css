@@ -47,3 +47,7 @@
 	initial-value: rebeccapurple;
 }
 .escaped-custom-property-at-rule { color: var(--four) }
+/* The first space ends the `\1` escape, the second parts the name from what
+   follows; the scoped name has to keep both. */
+@keyframes fade\1  { from { top: 0 } }
+.escape-at-name-end { animation: fade\1  linear; }

@@ -1,0 +1,1 @@
+x = class {}; x = class A extends (B) {};

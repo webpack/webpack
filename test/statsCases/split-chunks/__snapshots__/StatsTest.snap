@@ -41,7 +41,7 @@ exports[`StatsTestCases split-chunks should print correct stats for split-chunks
     ./node_modules/y.js X bytes [built] [code generated]
   chunk (runtime: main) default/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{263}< >{425}< >{628}< >{723}< >{862}< >{869}< >{935}< [entry] [rendered]
     > ./ main
-    runtime modules X KiB 9 modules
+    runtime modules X KiB 8 modules
     ./index.js X bytes [built] [code generated]
   chunk (runtime: main) default/862.js (id hint: vendors) X bytes <{792}> ={425}= ={628}= ={869}= ={935}= [rendered] split chunk (cache group: defaultVendors)
     > ./c ./index.js 3:0-47
@@ -56,7 +56,7 @@ exports[`StatsTestCases split-chunks should print correct stats for split-chunks
     ./f.js X bytes [built] [code generated]
   chunk (runtime: a) default/a.js (a) X bytes (javascript) X KiB (runtime) >{49}< >{935}< [entry] [rendered]
     > ./a a
-    runtime modules X KiB 9 modules
+    runtime modules X KiB 8 modules
     dependent modules X bytes [dependent] 3 modules
     ./a.js + 1 modules X bytes [built] [code generated]
   default (webpack x.x.x) compiled successfully
@@ -111,7 +111,7 @@ all-chunks:
     ./node_modules/y.js X bytes [built] [code generated]
   chunk (runtime: main) all-chunks/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{210}< >{263}< >{425}< >{628}< >{723}< >{862}< >{869}< >{935}< [entry] [rendered]
     > ./ main
-    runtime modules X KiB 9 modules
+    runtime modules X KiB 8 modules
     ./index.js X bytes [built] [code generated]
   chunk (runtime: c, main) all-chunks/862.js (id hint: vendors) X bytes <{792}> ={390}= ={425}= ={628}= ={869}= ={935}= [initial] [rendered] split chunk (cache group: defaultVendors)
     > ./c ./index.js 3:0-47
@@ -129,7 +129,7 @@ all-chunks:
     ./f.js X bytes [built] [code generated]
   chunk (runtime: a) all-chunks/a.js (a) X bytes (javascript) X KiB (runtime) ={210}= ={425}= ={628}= ={723}= >{49}< >{935}< [entry] [rendered]
     > ./a a
-    runtime modules X KiB 10 modules
+    runtime modules X KiB 9 modules
     ./a.js X bytes [built] [code generated]
   all-chunks (webpack x.x.x) compiled successfully
 
@@ -187,7 +187,7 @@ manual:
     ./c.js X bytes [built] [code generated]
   chunk (runtime: main) manual/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{96}< >{263}< >{869}< [entry] [rendered]
     > ./ main
-    runtime modules X KiB 10 modules
+    runtime modules X KiB 9 modules
     ./index.js X bytes [built] [code generated]
   chunk (runtime: main) manual/async-c.js (async-c) X bytes <{792}> ={96}= [rendered]
     > ./c ./index.js 3:0-47
@@ -198,7 +198,7 @@ manual:
     > x a
     > y a
     > z a
-    runtime modules X KiB 11 modules
+    runtime modules X KiB 10 modules
     dependent modules X bytes [dependent] 1 module
     ./a.js + 1 modules X bytes [built] [code generated]
   manual (webpack x.x.x) compiled successfully
@@ -239,7 +239,7 @@ name-too-long:
     ./d.js X bytes [built] [code generated]
   chunk (runtime: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) name-too-long/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.js (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) X bytes (javascript) X KiB (runtime) ={210}= ={425}= ={628}= ={723}= >{49}< >{935}< [entry] [rendered]
     > ./a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-    runtime modules X KiB 10 modules
+    runtime modules X KiB 9 modules
     ./a.js X bytes [built] [code generated]
   chunk (runtime: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb, cccccccccccccccccccccccccccccc, main) name-too-long/628.js (id hint: vendors) X bytes <{792}> ={60}= ={63}= ={210}= ={263}= ={349}= ={425}= ={505}= ={723}= ={862}= ={869}= ={935}= >{49}< >{935}< [initial] [rendered] split chunk (cache group: defaultVendors)
     > ./a ./index.js 1:0-47
@@ -257,7 +257,7 @@ name-too-long:
     ./node_modules/y.js X bytes [built] [code generated]
   chunk (runtime: main) name-too-long/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{210}< >{263}< >{425}< >{628}< >{723}< >{862}< >{869}< >{935}< [entry] [rendered]
     > ./ main
-    runtime modules X KiB 9 modules
+    runtime modules X KiB 8 modules
     ./index.js X bytes [built] [code generated]
   chunk (runtime: cccccccccccccccccccccccccccccc, main) name-too-long/862.js (id hint: vendors) X bytes <{792}> ={349}= ={425}= ={628}= ={869}= ={935}= [initial] [rendered] split chunk (cache group: defaultVendors)
     > ./c ./index.js 3:0-47
@@ -318,7 +318,7 @@ custom-chunks-filter:
     ./node_modules/y.js X bytes [built] [code generated]
   chunk (runtime: main) custom-chunks-filter/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{263}< >{425}< >{628}< >{723}< >{862}< >{869}< >{935}< [entry] [rendered]
     > ./ main
-    runtime modules X KiB 9 modules
+    runtime modules X KiB 8 modules
     ./index.js X bytes [built] [code generated]
   chunk (runtime: c, main) custom-chunks-filter/862.js (id hint: vendors) X bytes <{792}> ={390}= ={425}= ={628}= ={869}= ={935}= [initial] [rendered] split chunk (cache group: defaultVendors)
     > ./c ./index.js 3:0-47
@@ -336,7 +336,7 @@ custom-chunks-filter:
     ./f.js X bytes [built] [code generated]
   chunk (runtime: a) custom-chunks-filter/a.js (a) X bytes (javascript) X KiB (runtime) >{49}< >{935}< [entry] [rendered]
     > ./a a
-    runtime modules X KiB 9 modules
+    runtime modules X KiB 8 modules
     dependent modules X bytes [dependent] 3 modules
     ./a.js + 1 modules X bytes [built] [code generated]
   custom-chunks-filter (webpack x.x.x) compiled successfully
@@ -399,7 +399,7 @@ custom-chunks-filter-in-cache-groups:
     ./node_modules/z.js X bytes [built] [code generated]
   chunk (runtime: main) custom-chunks-filter-in-cache-groups/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{96}< >{263}< >{869}< [entry] [rendered]
     > ./ main
-    runtime modules X KiB 10 modules
+    runtime modules X KiB 9 modules
     ./index.js X bytes [built] [code generated]
   chunk (runtime: main) custom-chunks-filter-in-cache-groups/async-c.js (async-c) X bytes <{792}> ={96}= [rendered]
     > ./c ./index.js 3:0-47
@@ -410,7 +410,7 @@ custom-chunks-filter-in-cache-groups:
     > x a
     > y a
     > z a
-    runtime modules X KiB 10 modules
+    runtime modules X KiB 9 modules
     dependent modules X bytes [dependent] 1 module
     ./a.js + 1 modules X bytes [built] [code generated]
   custom-chunks-filter-in-cache-groups (webpack x.x.x) compiled successfully"

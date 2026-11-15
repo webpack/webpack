@@ -132,8 +132,7 @@ module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e"
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /************************************************************************/
@@ -193,11 +192,11 @@ function createImageElement(title, src) {
 ## webpack output
 
 ```
-asset output.js 3.79 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 1.54 KiB (javascript) 211 bytes (runtime) [entry] [rendered]
+asset output.js 3.76 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 1.54 KiB (javascript) 184 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 915 bytes [dependent] 1 module
-  runtime modules 211 bytes 1 module
+  runtime modules 184 bytes 1 module
   ./example.js 658 bytes [built] [code generated]
     [no exports]
     [used exports unknown]

@@ -1,0 +1,42 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"toplevel": false
+		},
+		"mangle": {
+			"toplevel": false
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {
+			"toplevel": false,
+			"builtinsEcma": 2020
+		},
+		"mangle": {
+			"toplevel": false
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {
+			"toplevel": false,
+			"ecma": 2015
+		},
+		"mangle": {
+			"toplevel": false
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {
+			"toplevel": false,
+			"ecma": 2020,
+			"builtinsEcma": 5
+		},
+		"mangle": {
+			"toplevel": false
+		}
+	}
+]

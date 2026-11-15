@@ -1,0 +1,14 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {
+			"collapseBooleanAttributes": "all"
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"collapseBooleanAttributes": false
+		}
+	}
+]

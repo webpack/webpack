@@ -1,0 +1,26 @@
+[
+	{
+		"print": "cssMinify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"print": "cssMinify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"svg": "<svg>é</svg>"
+			},
+			"async": true
+		}
+	},
+	{
+		"print": "cssMinify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"svg": "<svg>y</svg>"
+			},
+			"async": true
+		}
+	}
+]

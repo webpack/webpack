@@ -1,0 +1,33 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"Comment"
+			],
+			"exit": false,
+			"at": [
+				{
+					"type": "Comment",
+					"do": "stop"
+				}
+			]
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"Comment",
+				"QualifiedRule"
+			],
+			"exit": false,
+			"at": [
+				{
+					"type": "QualifiedRule",
+					"do": "stop"
+				}
+			]
+		}
+	}
+]

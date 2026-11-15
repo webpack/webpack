@@ -1,0 +1,1 @@
+async function* g() { async (a = yield, b = await 1) => 0 }

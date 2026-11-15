@@ -194,9 +194,9 @@ module.exports = webpackAsyncContext;
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -204,8 +204,7 @@ module.exports = webpackAsyncContext;
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
@@ -244,7 +243,7 @@ module.exports = webpackAsyncContext;
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -295,7 +294,7 @@ module.exports = webpackAsyncContext;
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -342,9 +341,9 @@ __webpack_require__(1)("./ba" + createContextVar).then(function(bar) {
 
 ```
 asset output.js 10.9 KiB [emitted] (name: main)
-asset 792.output.js 846 bytes [emitted] (name: chunk-bar-baz2)
-asset 994.output.js 846 bytes [emitted] (name: chunk-bar-baz0)
-asset 45.output.js 845 bytes [emitted] (name: chunk-foo)
+asset 792.output.js 885 bytes [emitted] (name: chunk-bar-baz2)
+asset 994.output.js 885 bytes [emitted] (name: chunk-bar-baz0)
+asset 45.output.js 884 bytes [emitted] (name: chunk-foo)
 chunk (runtime: main) 45.output.js (chunk-foo) 38 bytes [rendered]
   > ./templates/foo ./example.js 1:0-62
   > ./example.js 5:0-8:16
@@ -353,9 +352,9 @@ chunk (runtime: main) 45.output.js (chunk-foo) 38 bytes [rendered]
     [used exports unknown]
     import() ./templates/foo ./example.js 1:0-62
     cjs require ./templates/foo ./example.js 6:11-37
-chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.28 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.26 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.28 KiB 8 modules
+  runtime modules 5.26 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 405 bytes [built] [code generated]
     [used exports unknown]
@@ -382,10 +381,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.61 KiB [emitted] [minimized] (name: main)
-asset 994.output.js 117 bytes [emitted] [minimized] (name: chunk-bar-baz0)
-asset 45.output.js 116 bytes [emitted] [minimized] (name: chunk-foo)
-asset 792.output.js 116 bytes [emitted] [minimized] (name: chunk-bar-baz2)
+asset output.js 2.59 KiB [emitted] [minimized] (name: main)
+asset 994.output.js 149 bytes [emitted] [minimized] (name: chunk-bar-baz0)
+asset 45.output.js 148 bytes [emitted] [minimized] (name: chunk-foo)
+asset 792.output.js 148 bytes [emitted] [minimized] (name: chunk-bar-baz2)
 chunk (runtime: main) 45.output.js (chunk-foo) 38 bytes [rendered]
   > ./templates/foo ./example.js 1:0-62
   > ./example.js 5:0-8:16
@@ -393,9 +392,9 @@ chunk (runtime: main) 45.output.js (chunk-foo) 38 bytes [rendered]
     [exports: default]
     import() ./templates/foo ./example.js 1:0-62
     cjs require ./templates/foo ./example.js 6:11-37
-chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.65 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.62 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.65 KiB 8 modules
+  runtime modules 5.62 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 405 bytes [built] [code generated]
     [no exports used]

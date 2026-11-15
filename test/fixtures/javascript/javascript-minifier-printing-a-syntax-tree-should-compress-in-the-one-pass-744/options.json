@@ -1,0 +1,34 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"toplevel": false,
+			"unsafe": true,
+			"unsafeSymbols": true
+		},
+		"mangle": {
+			"toplevel": false
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {
+			"toplevel": false,
+			"unsafe": true,
+			"unsafe_symbols": true
+		},
+		"mangle": {
+			"toplevel": false
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {
+			"toplevel": false,
+			"unsafeSymbols": true
+		},
+		"mangle": {
+			"toplevel": false
+		}
+	}
+]

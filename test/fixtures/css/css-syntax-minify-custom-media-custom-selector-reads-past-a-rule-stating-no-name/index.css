@@ -1,0 +1,1 @@
+@media (--m){a{color:red}}@custom-media (x:1);@custom-media --m (y:1);

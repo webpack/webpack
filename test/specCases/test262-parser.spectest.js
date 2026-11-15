@@ -3,20 +3,26 @@
 const fs = require("fs");
 const path = require("path");
 const acorn = require("acorn");
-const { parse } = require("../../lib/javascript/syntax").parser;
+const {
+	parseProgram,
+	toEstreeObject
+} = require("../../lib/javascript/syntax").parser;
 const {
 	firstDifference,
 	reportable
-} = require("../helpers/compareParserOutput");
+} = require("../../tooling/compare-js-tools");
+const { parseEstree } = require("../helpers/javascriptParse");
+const { isInPart } = require("../helpers/testParts");
 
 /** @typedef {{ file: string, at: string, ours: string, acorn: string }} TreeDifference */
 /** @typedef {{ file: string, webpack: string, acorn: string }} VerdictDifference */
 /** @typedef {{ ranges?: boolean, locations?: boolean, comments?: boolean }} Mode */
 /** @typedef {import("acorn").Program} Program */
 /** @typedef {import("acorn").Comment} Comment */
-/** @typedef {import("../../lib/javascript/syntax-parser").ParserOptions} ParserOptions */
-/** @typedef {import("../../lib/javascript/syntax-parser").CollectedComment} CollectedComment */
-/** @typedef {{ ast: import("estree").Program, comments: CollectedComment[] }} ParseResult */
+/** @typedef {import("../helpers/javascriptParse").AcornComment} AcornComment */
+/** @typedef {{ ast: import("estree").Program, comments: AcornComment[] }} ParseResult */
+/** @typedef {import("../../lib/javascript/syntax-parser").EcmaVersion} EcmaVersion */
+/** @typedef {string | number | boolean | bigint | RegExp | null | undefined | EstreeValue[] | { [key: string]: EstreeValue }} EstreeValue */
 
 const corpusDir = path.resolve(__dirname, "../external/test262-cases/test");
 const hasCorpus =
@@ -26,8 +32,8 @@ const hasCorpus =
 // parser several times slower, so jest's default 30s is far too tight.
 const AREA_TIMEOUT = 600000;
 
-// The option sets compared against acorn. Ranges alone is the one webpack
-// uses, and the only one that takes the lazy-node path.
+// The option sets compared against acorn: what the objects a tree builds hold
+// beside ESTree's fields, and whether comments are collected.
 /** @type {[string, Mode][]} */
 const MODES = [
 	["without ranges or comments", {}],
@@ -55,28 +61,21 @@ const sourceTypeOf = (code) => {
 };
 
 /**
- * Parse with webpack's parser the way a build hands it options: ranges alone
- * become lazy offsets, with comments collected lazily alongside.
+ * Parse into a syntax tree and build its objects with what the mode asks for,
+ * its comments reported as acorn reports them.
  * @param {string} code the source
  * @param {Mode & { sourceType: "module" | "script", ecmaVersion: "latest", allowHashBang: boolean }} options what acorn is given too
  * @returns {ParseResult} the program and its comments
  */
 const parseOurs = (code, { comments: collectComments, ...options }) => {
-	/** @type {CollectedComment[]} */
+	/** @type {AcornComment[]} */
 	const comments = [];
-	const lazyNodes = options.ranges === true && options.locations !== true;
-	/** @type {ParserOptions} */
-	const parserOptions = {
+	const { ast } = parseEstree(code, {
 		...options,
 		allowReturnOutsideFunction: options.sourceType === "script",
-		ranges: lazyNodes ? false : options.ranges,
-		lazyNodes
-	};
-	if (collectComments === true) {
-		if (lazyNodes) parserOptions.lazyComments = comments;
-		else parserOptions.onComment = comments;
-	}
-	return { ast: parse(code, parserOptions), comments };
+		onComment: collectComments === true ? comments : undefined
+	});
+	return { ast, comments };
 };
 
 /**
@@ -156,6 +155,73 @@ const compareFile = (file, mode, trees, verdicts) => {
 	if (commentDifference) trees.push({ file: name, ...commentDifference });
 };
 
+// Every edition a tree is read at: each changes a production somewhere.
+/** @type {EcmaVersion[]} */
+const EDITIONS = [3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, "latest"];
+// The areas whose syntax tells editions apart; the others read at the latest.
+const EDITION_AREAS = new Set(["annexB", "language"]);
+/**
+ * Read one file into a `SyntaxTree` at one edition, build its objects, and
+ * record how they and the verdict differ from acorn's at that edition.
+ * @param {string} file absolute path of the test262 file
+ * @param {EcmaVersion} ecmaVersion the edition both parsers read
+ * @param {TreeDifference[]} trees where tree differences are collected
+ * @param {VerdictDifference[]} verdicts where verdicts that disagree are collected
+ * @returns {void}
+ */
+const compareTreeFile = (file, ecmaVersion, trees, verdicts) => {
+	const code = fs.readFileSync(file, "utf8");
+	const sourceType = sourceTypeOf(code);
+	// a module is no source before ES2015
+	if (
+		sourceType === "module" &&
+		typeof ecmaVersion === "number" &&
+		ecmaVersion < 6
+	) {
+		return;
+	}
+	const name = path.relative(corpusDir, file);
+	const options = {
+		ecmaVersion,
+		sourceType,
+		allowHashBang: true,
+		allowReturnOutsideFunction: sourceType === "script"
+	};
+	/** @type {EstreeValue} */
+	let ours;
+	/** @type {Error | undefined} */
+	let ourError;
+	try {
+		ours = /** @type {EstreeValue} */ (
+			/** @type {unknown} */ (
+				toEstreeObject(parseProgram(code, 0, { ...options, importPhases: false }))
+			)
+		);
+	} catch (err) {
+		ourError = /** @type {Error} */ (err);
+	}
+	/** @type {Program | undefined} */
+	let theirs;
+	/** @type {Error | undefined} */
+	let theirError;
+	try {
+		theirs = acorn.parse(code, { ...options, ranges: true });
+	} catch (err) {
+		theirError = /** @type {Error} */ (err);
+	}
+	if (ourError !== undefined || theirError !== undefined) {
+		const webpackVerdict = ourError === undefined ? "parsed" : ourError.message;
+		const acornVerdict =
+			theirError === undefined ? "parsed" : theirError.message;
+		if (webpackVerdict !== acornVerdict) {
+			verdicts.push({ file: name, webpack: webpackVerdict, acorn: acornVerdict });
+		}
+		return;
+	}
+	const tree = firstDifference(ours, theirs, "program");
+	if (tree) trees.push({ file: name, ...tree });
+};
+
 const areas = hasCorpus
 	? fs
 			.readdirSync(corpusDir, { withFileTypes: true })
@@ -180,6 +246,27 @@ describe("test262 parser parity", () => {
 				.filter((file) => !/_FIXTURE\.js$/i.test(file))
 				.sort();
 
+			for (const ecmaVersion of EDITION_AREAS.has(area)
+				? EDITIONS
+				: /** @type {EcmaVersion[]} */ (["latest"])) {
+				it(
+					`builds acorn's tree from a SyntaxTree read at ${ecmaVersion}`,
+					() => {
+						/** @type {TreeDifference[]} */
+						const trees = [];
+						/** @type {VerdictDifference[]} */
+						const verdicts = [];
+						for (const file of files) {
+							if (!isInPart(path.relative(corpusDir, file))) continue;
+							compareTreeFile(file, ecmaVersion, trees, verdicts);
+						}
+						expect(reportable(trees)).toEqual([]);
+						expect(reportable(verdicts)).toEqual([]);
+					},
+					AREA_TIMEOUT
+				);
+			}
+
 			for (const [modeName, mode] of MODES) {
 				it(
 					`builds acorn's tree ${modeName}`,
@@ -189,6 +276,7 @@ describe("test262 parser parity", () => {
 						/** @type {VerdictDifference[]} */
 						const verdicts = [];
 						for (const file of files) {
+							if (!isInPart(path.relative(corpusDir, file))) continue;
 							compareFile(file, mode, trees, verdicts);
 						}
 						expect(files.length).toBeGreaterThan(0);

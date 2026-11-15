@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"passes": 2
+		},
+		"mangle": false,
+		"behavior": true
+	}
+]

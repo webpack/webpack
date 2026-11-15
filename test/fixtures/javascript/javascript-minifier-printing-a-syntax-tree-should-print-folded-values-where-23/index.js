@@ -1,0 +1,1 @@
+export function f(){ const r = new C; return r() }

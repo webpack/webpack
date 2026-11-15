@@ -1,0 +1,1 @@
+<!DOCTYPE r [<!ATTLIST r n NOTATION (a|b) 'a' e (x | y) 'y' i ID #IMPLIED f CDATA #FIXED "f" t NMTOKEN ' t '><!ATTLIST q><!ATTLIST r broken (open]><r i=' 1 '/>

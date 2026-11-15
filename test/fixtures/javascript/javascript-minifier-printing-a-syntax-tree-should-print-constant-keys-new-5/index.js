@@ -1,0 +1,1 @@
+export function late(g){ function first(){return limit} const limit = 3; g(first); return [first(), limit*2, limit] }

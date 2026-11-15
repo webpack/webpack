@@ -1,0 +1,13 @@
+@value side from "./neighbor.module.css";
+
+/* `localIdentName` does not end in `[local]`, so a grid name repeats in
+   full after the area's ident and its lines still pair with it. */
+.grid { grid-template-areas: "main x\.y" }
+.item { grid-column: main-start / main-end }
+.dotted { grid-area: x\.y }
+
+/* The imported grid name inlines the same way wherever it is used. */
+.counter {
+	counter-reset: side 5;
+	content: counter(side);
+}

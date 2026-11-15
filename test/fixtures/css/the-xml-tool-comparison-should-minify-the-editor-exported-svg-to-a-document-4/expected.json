@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "respelling escape",
+		"contains": "st0\n      -> \\73 t0",
+		"why": "a declaration, selector or block that is invalid or left open, which the printer writes back as authored, escape included"
+	}
+]

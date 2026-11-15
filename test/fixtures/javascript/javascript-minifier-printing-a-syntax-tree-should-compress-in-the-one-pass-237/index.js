@@ -1,0 +1,1 @@
+function f(a){for(a of b){}while(a()){}l:{}}

@@ -7,7 +7,7 @@ it("should work with context options", () => {
 		/* webpackInclude: /.json$/ */ "./folder1" + dyn,
 		import.meta.url
 	);
-	expect(url).toMatch("folder1/a.json");
+	expect(url.href).toMatch("folder1/a.json");
 
 	// webpackExclude
 	dyn = "/b.js";

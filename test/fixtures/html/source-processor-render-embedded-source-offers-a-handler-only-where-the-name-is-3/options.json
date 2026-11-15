@@ -1,0 +1,27 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "as-written"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"print": "processAsync",
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"javascript/event-handler": "f(1)",
+				"svg/foreign-element": "<svg><circle\u00000:0\u0000/></svg>"
+			},
+			"async": true
+		}
+	},
+	{
+		"print": "processAsync",
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	}
+]

@@ -1,0 +1,17 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"samsung 4"
+			]
+		},
+		"transforms": {
+			"removeDeadRules": false,
+			"shortenColors": false,
+			"reduceFunctions": false,
+			"customMedia": true,
+			"customSelectors": true
+		},
+		"mode": "minify"
+	}
+]

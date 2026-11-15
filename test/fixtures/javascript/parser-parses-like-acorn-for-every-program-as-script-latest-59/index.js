@@ -1,0 +1,1 @@
+x = function f() { f = 1 }; x = function () {}; x = async function () {}; x = function* () {};

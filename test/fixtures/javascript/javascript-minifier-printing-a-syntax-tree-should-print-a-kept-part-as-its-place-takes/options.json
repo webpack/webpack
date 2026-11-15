@@ -1,0 +1,13 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": false
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": false,
+		"source": "a.js"
+	}
+]

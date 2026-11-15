@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"firefox 40"
+			]
+		}
+	}
+]

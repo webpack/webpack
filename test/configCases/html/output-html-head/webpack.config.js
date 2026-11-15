@@ -101,6 +101,38 @@ module.exports = [
 		plugins: [copyTest]
 	},
 	{
+		name: "authored-entry-override",
+		entry: {
+			"authored-entry-override": {
+				import: "./src/page-entry.html",
+				html: { base: "/entry/" }
+			}
+		},
+		output: { html: { title: "Global Title", base: "/global/" } },
+		experiments: { html: true },
+		plugins: [copyTest]
+	},
+	{
+		name: "authored-relative-base",
+		entry: {
+			"authored-relative-base": {
+				import: "./src/page-relative-base.html",
+				html: { base: "assets/" }
+			}
+		},
+		experiments: { html: true },
+		plugins: [copyTest]
+	},
+	{
+		name: "synthetic-relative-base",
+		entry: {
+			"synthetic-relative-base": { import: ["./src/main.js"], html: true }
+		},
+		output: { html: { base: "assets/" } },
+		experiments: { html: true },
+		plugins: [copyTest]
+	},
+	{
 		name: "special-chars",
 		entry: { "special-chars": "./src/page-special-chars.html" },
 		output: {

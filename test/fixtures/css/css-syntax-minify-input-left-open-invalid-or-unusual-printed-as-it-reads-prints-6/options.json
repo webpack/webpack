@@ -1,0 +1,18 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"firefox 40"
+			]
+		},
+		"transforms": {
+			"shortenSelectors": false,
+			"reorderDeclarations": false,
+			"lowerUnsupported": false,
+			"customMedia": true,
+			"customSelectors": true
+		},
+		"mergeDistantRules": true,
+		"mode": "minify"
+	}
+]

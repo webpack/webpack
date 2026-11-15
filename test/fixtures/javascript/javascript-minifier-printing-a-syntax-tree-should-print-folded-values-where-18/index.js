@@ -1,0 +1,1 @@
+export function f(o){ if (!!("a" in o)) g() }

@@ -1,0 +1,1 @@
+@custom-media --a (min-width:30em);@custom-media --b (--a) and (pointer:fine);@media (--b){a{color:red}}

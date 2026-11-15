@@ -1,0 +1,1 @@
+function f(a){if(g(a))return 1;else return 1;h()}function g(x){return x}function h(){}console.log(f(0,0),f(1,0),f(0,1))

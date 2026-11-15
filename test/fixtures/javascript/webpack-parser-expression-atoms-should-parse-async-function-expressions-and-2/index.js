@@ -1,0 +1,1 @@
+const g = async x => x; const h = x => x;

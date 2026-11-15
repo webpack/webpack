@@ -1,0 +1,15 @@
+/* What a Chromium of the era actually reads, which is not what either compat
+   dataset records: the prefixed properties keep WebKit's own keywords, and the
+   bidi isolation family shipped together while BCD records only part of it. */
+
+/*! `over` and `under` are `before` and `after` under the prefixed name */
+.t01 { ruby-position: under }
+/*! a value the prefixed property cannot read gets no copy at all */
+.t02 { ruby-position: inter-character }
+/*! `mixed` is `vertical-right`, while `upright` carries over unchanged */
+.t03 { text-orientation: mixed }
+.t04 { text-orientation: upright }
+/*! Blink read all three of these prefixed; BCD records only `isolate` */
+.t05 { unicode-bidi: isolate }
+.t06 { unicode-bidi: isolate-override }
+.t07 { unicode-bidi: plaintext }

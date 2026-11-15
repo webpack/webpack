@@ -1,0 +1,1 @@
+function f(x,y,g){return[x===y?!0:y===g?(g(),!0):!1]}

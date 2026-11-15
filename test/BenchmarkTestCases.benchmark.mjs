@@ -35,6 +35,7 @@ import { simpleGit } from "simple-git";
  * @property {string} id task id (benchmark + scenario)
  * @property {string} benchmark benchmark name
  * @property {Scenario=} scenario scenario (omitted for `-unit` benchmarks)
+ * @property {string=} unitTask the one task of a `-unit` benchmark to run
  * @property {Baseline[]} baselines baselines measured in one task
  */
 
@@ -55,6 +56,8 @@ const REV_LIST_REGEXP = /^([a-f0-9]+)\s*([a-f0-9]+)\s*([a-f0-9]+)?\s*$/;
 const LAST_COMMIT = typeof process.env.LAST_COMMIT !== "undefined";
 
 const checkV8Flags = () => {
+	// Walltime measures only in the workers, which get its flags at fork.
+	if (getCodspeedRunnerMode() === "walltime") return;
 	const requiredFlags = getV8Flags().filter(
 		(flag) => !flag.startsWith("--max-old-space-size")
 	);
@@ -198,6 +201,49 @@ function splitToNChunks(array, n) {
 
 	return result;
 }
+
+/**
+ * Memory and simulation measure each task in its own process, so its shard
+ * cannot change its result: deal tasks round-robin to even out the shards' time.
+ * @returns {boolean} whether tasks are dealt round-robin across shards
+ */
+const isRoundRobinMode = () => {
+	const mode = getCodspeedRunnerMode();
+	return mode === "memory" || mode === "simulation";
+};
+
+/**
+ * Picks this shard's tasks by their measured seconds in `benchmarkTimings.json`:
+ * longest first, each to the shard with the least time so far. Round-robin left
+ * the slowest simulation shard 25 minutes behind the fastest.
+ * @template T
+ * @param {T[]} tasks tasks, in the same order on every shard
+ * @param {(task: T) => string} getId the task's id in the timings
+ * @param {Record<string, number>} timings measured seconds by task id
+ * @param {[number, number]} shard shard [part, count]
+ * @returns {T[]} the tasks this shard runs, in their original order
+ */
+const pickShardTasksByTime = (tasks, getId, timings, shard) => {
+	const known = Object.values(timings).sort((a, b) => a - b);
+	// A task added since the timings were measured counts as a typical one.
+	const fallback = known.length > 0 ? known[Math.floor(known.length / 2)] : 1;
+	const weighted = tasks.map((task, index) => ({
+		index,
+		seconds: timings[getId(task)] ?? fallback
+	}));
+	weighted.sort((a, b) => b.seconds - a.seconds || a.index - b.index);
+	const loads = Array.from({ length: shard[1] }, () => 0);
+	/** @type {Set<number>} */
+	const picked = new Set();
+
+	for (const { index, seconds } of weighted) {
+		const target = loads.indexOf(Math.min(...loads));
+		loads[target] += seconds;
+		if (target === shard[0] - 1) picked.add(index);
+	}
+
+	return tasks.filter((_, index) => picked.has(index));
+};
 
 class BenchmarkRunner {
 	constructor() {
@@ -353,9 +399,11 @@ class BenchmarkRunner {
 			);
 		}
 
-		const shardBenchmarks = splitToNChunks([...benchmarks], shard[1])[
-			shard[0] - 1
-		];
+		// Dealt round-robin in `run()` once unit benchmarks are split per bench.
+		const roundRobin = isRoundRobinMode();
+		const shardBenchmarks = roundRobin
+			? benchmarks
+			: splitToNChunks([...benchmarks], shard[1])[shard[0] - 1];
 
 		/** @type {BenchmarkTask[]} */
 		const benchmarkTasks = [];
@@ -420,6 +468,65 @@ class BenchmarkRunner {
 				await options.setup();
 			}
 		}
+	}
+
+	/**
+	 * Expand each `-unit` benchmark into one task per bench it registers, so each
+	 * runs in a fresh worker: an earlier bench's inline caches and heap would
+	 * otherwise change a later one's result. Runs after the cases' `setup()`.
+	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
+	 * @returns {Promise<BenchmarkTask[]>} benchmark tasks, one per unit bench
+	 */
+	async splitUnitTasks(benchmarkTasks) {
+		// Without CodSpeed the pool reuses its workers, so splitting isolates nothing.
+		if (getCodspeedRunnerMode() === "disabled") return benchmarkTasks;
+
+		/** @type {BenchmarkTask[]} */
+		const result = [];
+
+		for (const task of benchmarkTasks) {
+			if (!task.benchmark.includes("-unit")) {
+				result.push(task);
+				continue;
+			}
+
+			const benchmarkPath = path.resolve(
+				this.casesPath,
+				task.benchmark,
+				"index.bench.mjs"
+			);
+			/** @type {string[]} */
+			const names = [];
+
+			try {
+				const registerBenchmarks = await import(
+					`${pathToFileURL(benchmarkPath)}`
+				);
+
+				registerBenchmarks.default({
+					/**
+					 * @param {string} name bench name
+					 */
+					add(name) {
+						names.push(name);
+					}
+				});
+			} catch (_err) {
+				// Left whole, so its worker fails and reports it beside the other cases.
+				result.push(task);
+				continue;
+			}
+
+			for (const name of names) {
+				result.push({
+					...task,
+					id: `${task.benchmark}: ${name}`,
+					unitTask: name
+				});
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -499,33 +606,6 @@ class BenchmarkRunner {
 	}
 
 	/**
-	 * Run the whole shard in one shared bench in the main process. Used for
-	 * CodSpeed memory mode: a single `Bench` with one global prime pass and one
-	 * setup/teardown, exactly like the pre-parallel harness, so allocation counts
-	 * stay stable and comparable (per-benchmark benches shifted them by 2-4x).
-	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
-	 * @returns {Promise<void>}
-	 */
-	async runInMainThread(benchmarkTasks) {
-		console.log(
-			`\nRunning ${benchmarkTasks.length} benchmark task(s) in a single process (memory mode)\n`
-		);
-
-		const { runAll } = await import("./harness/benchmark/benchmark.worker.mjs");
-
-		// Any task error aborts the run (bench `throws: true`), matching the
-		// pre-parallel harness where one failure failed the whole shard.
-		const result = await runAll({
-			tasks: benchmarkTasks,
-			casesPath: this.casesPath,
-			baseOutputPath: this.baseOutputPath,
-			callingFile
-		});
-
-		this.processResults([result]);
-	}
-
-	/**
 	 * Run benchmark tasks across a pool of worker processes.
 	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
 	 * @returns {Promise<void>}
@@ -537,12 +617,18 @@ class BenchmarkRunner {
 				: os.cpus().length;
 		const cpuWorkers = Math.max(1, cpuCount - 1);
 
-		// Simulation is the only Valgrind mode here (memory mode runs in-process);
-		// its shadow memory is only freed on process exit.
+		// Simulation is the only Valgrind mode; its shadow memory is only freed
+		// on process exit.
 		const underValgrind = getCodspeedRunnerMode() === "simulation";
+		// Memory mode measures each task alone in a fresh process, so its counts
+		// don't depend on which tasks share a shard and match a filtered local run.
+		const isolated = getCodspeedRunnerMode() === "memory";
+		// Walltime times every task alone, so no other build competes for the CPU,
+		// and in a fresh process, so earlier tasks leave no JIT or heap state.
+		const walltime = getCodspeedRunnerMode() === "walltime";
 
 		// Bound the pool by RAM, not just cores: a Valgrind build peaks near 11 GiB,
-		// so 16 GiB fits one worker; bigger runners auto-scale. memory mode never gets here.
+		// so 16 GiB fits one worker; bigger runners auto-scale.
 		const totalGiB = os.totalmem() / 1024 ** 3;
 		const reserveGiB = 3;
 		const perWorkerGiB = underValgrind ? 11 : 1.5;
@@ -551,7 +637,21 @@ class BenchmarkRunner {
 			Math.floor((totalGiB - reserveGiB) / perWorkerGiB)
 		);
 
-		const numWorkers = Math.min(cpuWorkers, memWorkers);
+		// CodSpeed's runner tracks one benchmark at a time: concurrent workers
+		// interleave start/stop markers and the run reports no results.
+		const numWorkers =
+			isolated || walltime ? 1 : Math.min(cpuWorkers, memWorkers);
+		// Memory mode counts native allocations, so V8's own work must stay out of them:
+		// Maglev compiles despite `--no-opt`, helper threads split GC work, and a major
+		// GC starts on a timer or falls inside the sample by a few KB of live heap.
+		const memoryV8Flags = isolated
+			? [
+					"--no-maglev",
+					"--single-threaded",
+					"--no-incremental-marking",
+					"--initial-old-space-size=1024"
+				]
+			: [];
 
 		const workerPool = /** @type {BenchmarkWorker} */ (
 			new Worker(
@@ -562,10 +662,14 @@ class BenchmarkRunner {
 					// Valgrind memory accumulates across builds and frees only on exit, so
 					// recycle the worker after each task (`0` = always restart) to cap peak
 					// at one build's footprint; otherwise a shard OOMs mid-run (exit 143).
-					idleMemoryLimit: underValgrind ? 0 : undefined,
+					idleMemoryLimit:
+						underValgrind || isolated || walltime ? 0 : undefined,
 					// Forward the V8 flags CodSpeed needs (seeds, --no-opt, …) so the
 					// child processes measure under the same deterministic conditions.
-					forkOptions: { silent: false, execArgv: getV8Flags() }
+					forkOptions: {
+						silent: false,
+						execArgv: [...getV8Flags(), ...memoryV8Flags]
+					}
 				}
 			)
 		);
@@ -632,9 +736,25 @@ class BenchmarkRunner {
 
 		await this.prepareBenchmarkTasks(benchmarkTasks);
 
-		await (getCodspeedRunnerMode() === "memory"
-			? this.runInMainThread(benchmarkTasks)
-			: this.runInWorkers(benchmarkTasks));
+		const splitTasks = await this.splitUnitTasks(benchmarkTasks);
+
+		await this.runInWorkers(
+			getCodspeedRunnerMode() === "simulation"
+				? pickShardTasksByTime(
+						splitTasks,
+						(task) => task.id,
+						JSON.parse(
+							await fs.readFile(
+								path.join(__dirname, "benchmarkTimings.json"),
+								"utf8"
+							)
+						),
+						shard
+					)
+				: isRoundRobinMode()
+					? splitTasks.filter((_, index) => index % shard[1] === shard[0] - 1)
+					: splitTasks
+		);
 	}
 }
 

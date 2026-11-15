@@ -4,8 +4,7 @@ it("handles upper- and mixed-case CSS names case-insensitively", (done) => {
 	const links = document.getElementsByTagName("link");
 	const css = [];
 
-	// Skip the first link (injected by test.config.js).
-	for (const link of links.slice(1)) {
+	for (const link of links) {
 		css.push(link.sheet.css);
 	}
 

@@ -1,0 +1,1 @@
+const foo=1;log(foo,{foo});const many=2;log(many,many,many)

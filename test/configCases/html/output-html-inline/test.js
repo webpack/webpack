@@ -81,6 +81,14 @@ it("<!-- webpackInline: true --> inlines the tag without output.html.inline", ()
 	expect(scripts[0]).toMatch(/console\.log/);
 });
 
+it("<!-- webpackInline: true --> drops the body of the inlined <script src>", () => {
+	const html = readHtml("magic-body.html");
+	const scripts = inlineScripts(html);
+	expect(scripts).toHaveLength(1);
+	expect(scripts[0]).toMatch(/console\.log/);
+	expect(html).not.toContain("MARK_BODY");
+});
+
 it("a malformed magic comment resets a pending webpackInline directive", () => {
 	// `<!-- webpackInline: true -->` then a malformed comment then the script:
 	// the malformed comment must clear the pending inline, so the script stays external.
@@ -223,6 +231,18 @@ it('inline: true keeps type="module" on an inlined module-script entry', () => {
 	expect(scriptTags(html).some((t) => t.includes("src="))).toBe(false);
 	expect(html).toMatch(/<script type="module">[\s\S]+?<\/script>/);
 });
+
+for (const page of ["page-classic.html", "page-typed.html"]) {
+	it(`inline: true writes the type="module" upgrade into the tag of ${page}`, () => {
+		const scripts =
+			readHtml(page).match(/<script\b[^>]*>[\s\S]*?<\/script[^>]*>/gi) ||
+			[];
+		expect(scripts).toHaveLength(1);
+		expect(scripts[0]).toMatch(/^<script type="module">[\s\S]*console\.log/);
+		// Never after the inlined body, where it would be a syntax error.
+		expect(scripts[0]).not.toMatch(/(?:type="module"|module)<\/script[^>]*>$/i);
+	});
+}
 
 it("inline: true does not inline a <link rel=modulepreload> hint", () => {
 	const html = readHtml("modulepreload.html");

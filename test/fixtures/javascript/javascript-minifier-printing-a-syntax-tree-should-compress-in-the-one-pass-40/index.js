@@ -1,0 +1,1 @@
+function q() { const a = b; const b = a; return a }

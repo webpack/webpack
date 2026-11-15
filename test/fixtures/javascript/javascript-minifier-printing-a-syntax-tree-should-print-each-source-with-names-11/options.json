@@ -1,0 +1,73 @@
+[
+	{
+		"mode": "minify",
+		"mangle": true,
+		"sourceType": "script"
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": true,
+		"format": {
+			"comments": "all"
+		},
+		"sourceType": "script"
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": false,
+		"ecma": 2015,
+		"format": {
+			"comments": "all",
+			"quote_style": 3,
+			"keep_quoted_props": true,
+			"keep_numbers": true,
+			"ascii_only": true
+		},
+		"sourceType": "script"
+	},
+	{
+		"mode": "minify",
+		"mangle": true,
+		"format": {
+			"comments": "all",
+			"wrap_iife": true,
+			"wrap_func_args": true,
+			"webkit": true,
+			"semicolons": false,
+			"preserve_annotations": true,
+			"ie8": true,
+			"safari10": true,
+			"preamble": "/* p */"
+		},
+		"sourceType": "script"
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": true,
+		"ecma": 2020,
+		"format": {
+			"comments": "/!/",
+			"ecma": 2020
+		},
+		"sourceType": "script"
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": true,
+		"module": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": true,
+		"ecma": 2020,
+		"format": {
+			"comments": "/!/"
+		},
+		"sourceType": "script"
+	}
+]

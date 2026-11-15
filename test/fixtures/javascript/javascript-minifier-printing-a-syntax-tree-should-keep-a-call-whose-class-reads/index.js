@@ -1,0 +1,1 @@
+it(function () { g((function () { return class { [new.target]() {} }; })()); });

@@ -1,0 +1,1 @@
+"undefined"!=typeof x?x:0

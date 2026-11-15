@@ -1,0 +1,8 @@
+[
+	{
+		"entry": "tokenize",
+		"options": {
+			"fragmentContext": "textarea"
+		}
+	}
+]

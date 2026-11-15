@@ -1,0 +1,25 @@
+[
+	{
+		"as": "block-contents",
+		"mode": "beautify"
+	},
+	{
+		"as": "block-contents",
+		"mode": "minify"
+	},
+	{
+		"environment": {
+			"browsers": [
+				"ie 9"
+			]
+		},
+		"mode": "minify"
+	},
+	{
+		"mode": "minify",
+		"as": "block-contents"
+	},
+	{
+		"mode": "beautify"
+	}
+]

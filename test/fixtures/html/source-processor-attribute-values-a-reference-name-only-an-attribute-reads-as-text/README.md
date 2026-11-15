@@ -1,0 +1,1 @@
+A named reference without its `;` before `=` or an alphanumeric is text in an attribute value (§13.2.5.73), so its `&` needs no escape there; one ending in `;`, or at the end of the value, does. A newline needs no reference inside quotes, but a carriage return does: the input stream turns a raw one into a newline.

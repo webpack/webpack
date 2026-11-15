@@ -1,0 +1,1 @@
+a instanceof b===false;delete x!=true;x=(a instanceof b)===false

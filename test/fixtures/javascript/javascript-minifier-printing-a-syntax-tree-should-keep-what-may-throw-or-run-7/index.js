@@ -1,0 +1,1 @@
+t(function () { new (class C { m() { C = 1; } })().m(); });

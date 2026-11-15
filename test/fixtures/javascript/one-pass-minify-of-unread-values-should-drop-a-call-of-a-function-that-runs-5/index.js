@@ -1,0 +1,1 @@
+(async function(){return 1})()

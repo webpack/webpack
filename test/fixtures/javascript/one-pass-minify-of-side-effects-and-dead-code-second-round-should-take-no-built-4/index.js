@@ -1,0 +1,1 @@
+Object.getPrototypeOf([]).join=function(){return"j"};console.log([1,2].join("-"))

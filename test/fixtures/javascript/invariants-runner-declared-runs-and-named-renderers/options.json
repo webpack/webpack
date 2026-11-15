@@ -1,0 +1,38 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"keep_fnames": {
+			"regexp": "^foo$"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"compress": {},
+		"mangle": {}
+	},
+	{
+		"mode": "minify",
+		"visit": {
+			"types": [
+				"Identifier"
+			],
+			"fields": [
+				"name"
+			],
+			"exit": false
+		}
+	},
+	{
+		"print": "jsMinify",
+		"minimizer": {
+			"extractComments": {
+				"condition": {
+					"regexp": "c"
+				}
+			},
+			"sourceMap": "index.js.map"
+		}
+	}
+]

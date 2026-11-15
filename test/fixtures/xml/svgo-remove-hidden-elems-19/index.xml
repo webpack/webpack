@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <path id="path2" d="M200 200 l50 -300" style="opacity:0"/>
+    </defs>
+    <text style="font-size:24px;">
+        <textPath xlink:href="#path2">
+        this is path 2
+        </textPath>
+    </text>
+    <path id="path1" d="M200 200 l50 -300" style="opacity:0"/>
+</svg>

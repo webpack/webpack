@@ -1,0 +1,1 @@
+function f() { var x = 1.50; 'use asm'; }

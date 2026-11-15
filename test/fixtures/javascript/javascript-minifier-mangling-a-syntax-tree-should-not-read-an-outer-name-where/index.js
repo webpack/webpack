@@ -1,0 +1,1 @@
+function k(e) { let a = e; try { throw 2 } catch (e) { return a } } result = k(1);

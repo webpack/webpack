@@ -1,0 +1,1 @@
+<!DOCTYPE svg [<!ATTLIST animate attributeName CDATA "transform">]><svg xmlns="http://www.w3.org/2000/svg"><path transform="matrix(1 0 0 1 10 20)"/><animate to="matrix(1 0 0 1 30 40)" dur="2s"/></svg>

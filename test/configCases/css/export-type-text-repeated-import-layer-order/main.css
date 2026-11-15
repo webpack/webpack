@@ -1,0 +1,7 @@
+@import "./shared.css";
+@import "./theme.css";
+@import "./shared.css";
+
+.main {
+	color: green;
+}

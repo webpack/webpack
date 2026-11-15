@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"opera 12.1"
+			]
+		}
+	}
+]

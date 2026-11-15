@@ -1,0 +1,10 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"safari 17"
+			]
+		},
+		"mode": "minify"
+	}
+]

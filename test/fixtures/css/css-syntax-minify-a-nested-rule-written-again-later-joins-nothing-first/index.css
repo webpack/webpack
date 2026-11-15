@@ -1,0 +1,3 @@
+.p{a{b:c}a{width:.5px}a{b:c}}
+.q{x{y:z}a{b:c}a{width:.5px}a{b:c}}
+.r{@media x{a{b:c}}a{d:e}@media x{a{b:c}}}

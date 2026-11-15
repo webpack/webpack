@@ -1,0 +1,1 @@
+({1:{toString(){}}/2});/*@__PURE__*/f({a:g()}.b);x=+{}/2;+function(){}/3;do{}while(0);a();do;while(0);b();if(x)do{}while(0);else c();do g();while(0)

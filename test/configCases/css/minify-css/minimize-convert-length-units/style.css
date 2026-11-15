@@ -1,0 +1,15 @@
+/* `optimization.minimize.css.convertLengthUnits` lets a length be rewritten
+   into a shorter unit it is exactly equal in — off by default, on here. */
+
+/*! sixteen pixels are one pica */
+.t01 { width: 16px }
+/*! one hundred twenty pixels are ninety points */
+.t02 { width: 120px }
+/*! one hundred ninety-two pixels are two inches */
+.t03 { width: 192px }
+/*! ten millimeters are one centimeter */
+.t04 { width: 10mm }
+/*! a length no other unit spells shorter keeps its own */
+.t05 { width: 17px }
+/*! a relative unit never converts: only the absolute ones are fixed ratios */
+.t06 { width: 16em }

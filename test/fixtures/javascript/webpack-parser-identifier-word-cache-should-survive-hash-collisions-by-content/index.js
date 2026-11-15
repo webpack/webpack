@@ -1,0 +1,1 @@
+aaaa + ahri + aaaa + aafom + aaaa;

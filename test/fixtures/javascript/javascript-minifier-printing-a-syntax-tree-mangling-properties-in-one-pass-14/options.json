@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {
+				"keep_quoted": true
+			}
+		}
+	}
+]

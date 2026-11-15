@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"side_effects": false
+		},
+		"mangle": {}
+	}
+]

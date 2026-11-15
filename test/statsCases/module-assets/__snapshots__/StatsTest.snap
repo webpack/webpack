@@ -15,12 +15,12 @@ chunk (runtime: main) b.js (b) X bytes [rendered]
   ./node_modules/a/2.png X bytes [dependent] [built] [code generated] [1 asset]
   ./node_modules/b/index.js X bytes [built] [code generated]
 chunk (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) [entry] [rendered]
-  runtime modules X KiB 8 modules
+  runtime modules X KiB 7 modules
   ./index.js X bytes [built] [code generated]
 chunk (runtime: main) a.js (a) X bytes [rendered]
   ./node_modules/a/2.png X bytes [dependent] [built] [code generated] [1 asset]
   ./node_modules/a/index.js + 1 modules X bytes [built] [code generated] [1 asset]
-runtime modules X KiB 8 modules
+runtime modules X KiB 7 modules
 orphan modules X bytes [orphan] 1 module
 modules with assets X bytes
   modules by path ./node_modules/a/ X bytes

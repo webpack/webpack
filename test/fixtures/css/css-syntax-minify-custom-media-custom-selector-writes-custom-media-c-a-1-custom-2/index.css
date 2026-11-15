@@ -1,0 +1,1 @@
+@custom-media --c (a:1);@custom-media --s screen;@media ((--c) or (x:1)) or (--s){a{color:red}}

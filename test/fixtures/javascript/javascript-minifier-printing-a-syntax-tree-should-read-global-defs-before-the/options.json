@@ -1,0 +1,17 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": false
+	},
+	{
+		"mode": "minify",
+		"compress": {
+			"global_defs": {
+				"Infinity": 0,
+				"NaN": 1
+			}
+		},
+		"mangle": false
+	}
+]

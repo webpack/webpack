@@ -1,0 +1,1 @@
+Remove polyline without points

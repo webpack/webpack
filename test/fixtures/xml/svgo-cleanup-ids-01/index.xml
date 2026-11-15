@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <linearGradient id="gradient001">
+            <stop offset="5%" stop-color="#F60"/>
+            <stop offset="95%" stop-color="#FF6"/>
+        </linearGradient>
+        <text id="referencedText">
+            referenced text
+        </text>
+        <path id="crochet" d="..."/>
+        <path id="block" d="..."/>
+        <path id="two" d="..."/>
+        <path id="two" d="..."/>
+    </defs>
+    <g id="g001">
+        <circle id="circle001" fill="url(#gradient001)" cx="60" cy="60" r="50"/>
+        <rect fill="url('#gradient001')" x="0" y="0" width="500" height="100"/>
+        <tref xlink:href="#referencedText"/>
+    </g>
+    <g>
+        <tref xlink:href="#referencedText"/>
+    </g>
+    <animateMotion xlink:href="#crochet" dur="0.5s" begin="block.mouseover" fill="freeze" path="m 0,0 0,-21"/>
+    <use xlink:href="#two"/>
+</svg>

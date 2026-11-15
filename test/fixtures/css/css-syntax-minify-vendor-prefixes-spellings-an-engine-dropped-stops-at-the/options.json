@@ -1,0 +1,21 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"firefox 3"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"firefox 40"
+			]
+		}
+	},
+	{
+		"mode": "minify"
+	}
+]

@@ -1,0 +1,1 @@
+function f(){var a,b,c;a=g(),c=h(),k();return[a,b,c]}function h2(){var a,b;b=g(),a=h();let c,d;c=1,d=a;return[a,b,c,d]}

@@ -1,0 +1,9 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"skip": {
+			"doctype": true
+		}
+	}
+]

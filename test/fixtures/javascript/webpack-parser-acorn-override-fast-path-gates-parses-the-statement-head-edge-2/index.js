@@ -1,0 +1,1 @@
+try { f() } catch { g() }

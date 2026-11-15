@@ -1,0 +1,1 @@
+try{new RegExp('a', 5)}catch(e){console.log(e.name)}

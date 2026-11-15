@@ -1,0 +1,15 @@
+.a {
+	background: url("./img.png?a\d b");
+}
+
+.b {
+	background: url("./img.png?c\c d");
+}
+
+.c {
+	background: url("./img.png?e\a f");
+}
+
+.d {
+	background: url("./img.png?g\d h i");
+}

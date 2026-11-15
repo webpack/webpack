@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g transform="matrix(1 0 0 1 50 100)"/>
+    <g transform="matrix(0.5 0 0 2 0 0)"/>
+    <g transform="matrix(.707-.707.707.707 0 0)"/>
+    <g transform="matrix(1 0 0.466 1 0 0)"/>
+    <g transform="matrix(1 0.466 0 1 0 0)"/>
+    <g transform="matrix(1 0 0 1 50 90) matrix(1 0 0 1 60 20) matrix(1 0 0 1 20 40)"/>
+    <g transform="matrix(-0.10443115234375 0 0 -0.10443115234375 182.15 61.15)"/>
+</svg>

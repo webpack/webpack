@@ -29,7 +29,7 @@ it("should compile to lazy imported module", (done) => {
 										expect(generation).toBe(11);
 										setTimeout(() => {
 											done();
-										}, 1000);
+										}, 100);
 									}, done);
 								})
 							);

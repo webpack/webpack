@@ -1,0 +1,1 @@
+f=b=>{console.log(1);return b}

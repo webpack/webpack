@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "as-written"
+	}
+]

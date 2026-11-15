@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "respelling quote-double",
+		"contains": "<a title=\"<%= c %> &lt;%= d %&gt;\">  ->  <a title=\"<%= c %> &lt;%= d %&gt;\"></a>\n    <a title=\"<%= c %> <%= d %>\">  ->  <a title=\"<%= c %> <%= d %>\"></a>",
+		"why": "a template marker written escaped stays escaped so minifying never turns it into markup, and one written as such stays as written, so its spelling shows in the output"
+	},
+	{
+		"relation": "respelling quote-single",
+		"contains": "<a title=\"<%= c %> &lt;%= d %&gt;\">  ->  <a title=\"<%= c %> &lt;%= d %&gt;\"></a>\n    <a title='<%= c %> <%= d %>'>  ->  <a title='<%= c %> <%= d %>'></a>",
+		"why": "a template marker written escaped stays escaped so minifying never turns it into markup, and one written as such stays as written, so its spelling shows in the output"
+	}
+]

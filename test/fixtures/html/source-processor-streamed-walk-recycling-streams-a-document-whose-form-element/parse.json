@@ -1,0 +1,20 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"fixture": "walk"
+		},
+		"check": {
+			"fixture": "forms"
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"fixture": "walk"
+		},
+		"check": {
+			"fixture": "formsBalanced"
+		}
+	}
+]

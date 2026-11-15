@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg [ <!ENTITY ns "http://www.w3.org/2000/svg"> <!ATTLIST svg version CDATA "1.1"> ]>
+<!-- drawn by hand -->
+<svg xmlns="&ns;" viewBox = "0 0 10 10"  data-q='say "hi"' data-both="it's &quot;q&quot;" data-ws="a
+b&#10;c">
+  <title>A &amp; B &gt; C</title>
+  <g><!-- inert --></g>
+  <path d="M0 0L10 10" ></path>
+  <br></br>
+  <text>&ns;</text>
+  <style><![CDATA[a > b { fill: red } a < b && c]]></style>
+  <script><![CDATA[x]]></script>
+  <?render mode="fast"?>
+</svg>

@@ -1,0 +1,1 @@
+new Promise(function(){g()});new Proxy(1,{});new WeakRef(1);new Iterator;new AggregateError(1);RegExp("(");decodeURI("%");new parseInt;Int8Array(1);Uint8Array(1);new Int8Array([1,2]);new Int8Array([1n]);new ArrayBuffer(8);new TypeError;Error("a");escape("a");parseInt("a");x=1

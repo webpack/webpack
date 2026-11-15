@@ -1,0 +1,43 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {
+			"normalizeQuotes": false
+		}
+	},
+	{
+		"mode": "minify"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"svg": "<svg id=r></svg>"
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"normalizeQuotes": false
+		},
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"normalizeQuotes": false
+		},
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"svg": "<svg id=r></svg>"
+			}
+		}
+	}
+]

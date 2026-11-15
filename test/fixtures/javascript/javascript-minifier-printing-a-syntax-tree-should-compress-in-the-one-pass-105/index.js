@@ -1,0 +1,1 @@
+function f(a){ if (a) /*! c */ x(); else y(); if (a) { x() /*! d */ } else y(); if (a) return 1; /*! e */ return 2 }

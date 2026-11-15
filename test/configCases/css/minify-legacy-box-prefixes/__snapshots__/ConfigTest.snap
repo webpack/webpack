@@ -1,3 +1,0 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
-
-exports[`ConfigTestCases css minify-legacy-box-prefixes minify-legacy-box-prefixes should compile 1`] = `".clamp{display:-webkit-box;-webkit-box-orient:vertical;flex-direction:column;-webkit-line-clamp:2;overflow:hidden}.pack{display:-webkit-box;-webkit-box-pack:center;justify-content:center}.important{display:-webkit-box!important;display:flex;-webkit-box-align:center;align-items:center}.flex{display:flex;justify-content:center}.utility{justify-content:center}"`;

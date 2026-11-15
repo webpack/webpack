@@ -1,0 +1,249 @@
+.foo {
+color: green;
+.bar {
+font-size: 1.4rem;
+}
+}main {
+div {
+color: red;
+}
+.bar {
+color: red;
+}
+#baz {
+color: red;
+}
+:has(p) {
+color: red;
+}
+::backdrop {
+color: red;
+}
+[lang|="zh"] {
+color: red;
+}
+* {
+color: red;
+}
+}main {
++ article {
+color: red;
+}
+> p {
+color: red;
+}
+~ main {
+color: red;
+}
+}main {
+& + article {
+color: red;
+}
+& > p {
+color: red;
+}
+& ~ main {
+color: red;
+}
+}ul {
+padding-left: 1em;
+.component & {
+padding-left: 0;
+}
+}a {
+color: blue;
+&:hover {
+color: lightblue;
+}
+}.foo {
+color: blue;
+& > .bar {
+color: red;
+}
+> .baz {
+color: green;
+}
+}.foo {
+color: blue;
+&.bar {
+color: red;
+}
+}.foo, .bar {
+color: blue;
++ .baz, &.qux {
+color: red;
+}
+}.foo {
+color: blue;
+& .bar & .baz & .qux {
+color: red;
+}
+}.foo {
+color: red;
+.parent & {
+color: blue;
+}
+}.foo {
+color: red;
+:not(&) {
+color: blue;
+}
+}.foo {
+color: red;
++ .bar + & {
+color: blue;
+}
+}.foo {
+color: blue;
+& {
+padding: 2ch;
+}
+}.foo {
+color: blue;
+&& {
+padding: 2ch;
+}
+}.error, #404 {
+&:hover > .baz {
+color: red;
+}
+}.ancestor .el {
+.other-ancestor & {
+color: red;
+}
+}.foo {
+& :is(.bar, &.baz) {
+color: red;
+}
+}figure {
+margin: 0;
+> figcaption {
+background: hsl(0 0% 0% / 50%);
+> p {
+font-size: .9rem;
+}
+}
+}@layer base {
+html {
+block-size: 100%;
+body {
+min-block-size: 100%;
+}
+}
+}@layer base {
+html {
+block-size: 100%;
+@layer support {
+body {
+min-block-size: 100%;
+}
+}
+}
+}@scope (.card) to (> header) {
+:scope {
+inline-size: 40ch;
+aspect-ratio: 3/4;
+> header {
+border-block-end: 1px solid white;
+}
+}
+}.card {
+inline-size: 40ch;
+aspect-ratio: 3/4;
+@scope (&) to (> header > *) {
+:scope > header {
+border-block-end: 1px solid white;
+}
+}
+}.foo {
+display: grid;
+@media (orientation: landscape) {
+grid-auto-flow: column;
+}
+}.foo {
+display: grid;
+}@media (orientation: landscape) {
+.foo {
+grid-auto-flow: column;
+}
+}.foo {
+display: grid;
+}@media (orientation: landscape) {
+.foo {
+grid-auto-flow: column;
+}
+}.foo {
+display: grid;
+@media (orientation: landscape) {
+grid-auto-flow: column;
+@media (min-width > 1024px) {
+max-inline-size: 1024px;
+}
+}
+}.foo {
+display: grid;
+}@media (orientation: landscape) {
+.foo {
+grid-auto-flow: column;
+}
+}@media (orientation: landscape) and (min-width > 1024px) {
+.foo {
+max-inline-size: 1024px;
+}
+}html {
+@layer base {
+block-size: 100%;
+@layer support {
+& body {
+min-block-size: 100%;
+}
+}
+}
+}@layer base {
+html {
+block-size: 100%;
+}
+}@layer base.support {
+html body {
+min-block-size: 100%;
+}
+}.card {
+inline-size: 40ch;
+aspect-ratio: 3/4;
+@scope (&) {
+:scope {
+border: 1px solid white;
+}
+}
+}.card {
+inline-size: 40ch;
+aspect-ratio: 3/4;
+}@scope (.card) {
+:scope {
+border-block-end: 1px solid white;
+}
+}.parent {
+color: blue;
+@scope (& > .scope) to (& > .limit) {
+& .content {
+color: red;
+}
+}
+}article {
+color: green;
+& {
+color: blue;
+}
+color: red;
+}a, b {
+& c {
+color: blue;
+}
+}.foo, .foo::before, .foo::after {
+color: black;
+@media (prefers-color-scheme: dark) {
+& {
+color: white;
+}
+}
+}

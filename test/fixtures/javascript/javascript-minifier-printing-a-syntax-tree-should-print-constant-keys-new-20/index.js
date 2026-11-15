@@ -1,0 +1,1 @@
+export function q(x,o){return[x?o["read"]():o.read(),1+(g(x)?o.read():o.read()),f(g(x)?o.r:o.r),(x?o.f:o.f)(),delete(x?o.f:o.f),typeof(x?y:y)]}export function s(x,o){x?o.f():o.f();g(x)?o.f():o.f()}

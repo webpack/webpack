@@ -1,0 +1,1 @@
+function m(){new RegExp("[");RegExp("a","q")}

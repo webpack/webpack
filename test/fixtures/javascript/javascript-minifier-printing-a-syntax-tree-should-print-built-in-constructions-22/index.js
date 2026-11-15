@@ -1,0 +1,1 @@
+function f(a){var x=g();(a,x)+c}function k(a){var x=a.b;Object(x)(1)}Object(1e999)(1)

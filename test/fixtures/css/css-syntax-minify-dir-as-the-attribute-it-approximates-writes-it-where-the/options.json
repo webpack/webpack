@@ -1,0 +1,32 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 130"
+			]
+		},
+		"transforms": {
+			"rewriteDirSelector": true
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 80"
+			]
+		},
+		"transforms": {
+			"rewriteDirSelector": true
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 80"
+			]
+		}
+	}
+]

@@ -1,0 +1,1 @@
+<!DOCTYPE svg [<!ENTITY ns "http://www.w3.org/2000/svg"><!ENTITY both "&ns; &#38;amp; &undeclared;"><!ENTITY ns "second">]><svg xmlns="&ns;">&both;</svg>

@@ -1,6 +1,5 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+// `fs`, `path` and `fileURLToPath` come from the runner (`moduleScope` in `test.config.js`):
+// bundling them would make this universal build warn.
 
 it("should hint at every child and load them", async () => {
 	const a = await import(

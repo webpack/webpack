@@ -3,9 +3,7 @@
 /** @import { Module } from "../../../" */
 
 const webpack = require("../../../");
-const {
-	WEBPACK_MODULE_TYPE_PROVIDE
-} = require("../../../lib/module/ModuleTypeConstants");
+const ProvideSharedModule = require("../../../lib/sharing/ProvideSharedModule");
 
 const { ModuleFederationPlugin } = webpack.container;
 
@@ -37,16 +35,11 @@ module.exports = {
 				for (const group of chunk.groupsIterable) {
 					if (group.origins) {
 						for (const origin of group.origins) {
-							if (
-								/** @type {Module} */
-								(origin.module).type === WEBPACK_MODULE_TYPE_PROVIDE &&
-								chunk.id
-							) {
+							if (origin.module instanceof ProvideSharedModule && chunk.id) {
 								if (chunkIdChunkNameMap.has(chunk.id)) {
 									return `${chunkIdChunkNameMap.get(chunk.id)}.js`;
 								}
 
-								// @ts-expect-error
 								const sharedModuleName = origin.module._name;
 								const chunkName = `${sharedModuleName}-${chunk.id}--shared`;
 								usedSharedModuleNames.add(sharedModuleName);

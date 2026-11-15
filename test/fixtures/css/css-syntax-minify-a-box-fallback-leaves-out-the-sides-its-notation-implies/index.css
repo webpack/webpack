@@ -1,0 +1,4 @@
+a{border-color:color(display-p3 1 0 0) red red}
+b{border-color:color(display-p3 1 0 0) rgb(1 2 3) red}
+c{BORDER-COLOR:color(display-p3 0 1 0) #010203 #010203 #010203!important}
+d{border-color:color(display-p3 1 0 0) rgb(1 2 3 / 50%) red}

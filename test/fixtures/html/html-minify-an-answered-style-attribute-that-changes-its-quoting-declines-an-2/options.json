@@ -1,0 +1,15 @@
+[
+	{
+		"print": "htmlMinify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"css/block-contents": "margin:0 auto"
+			}
+		}
+	},
+	{
+		"print": "htmlMinify",
+		"renderEmbeddedSource": "offers"
+	}
+]

@@ -1,0 +1,1 @@
+void {a:g()}.b;typeof function(){return g()}().x;delete {a:g()}.b.c()

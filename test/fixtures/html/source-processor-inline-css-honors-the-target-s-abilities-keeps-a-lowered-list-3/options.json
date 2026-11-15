@@ -1,0 +1,15 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "builtin",
+			"options": {
+				"environment": {
+					"browsers": [
+						"chrome 100"
+					]
+				}
+			}
+		}
+	}
+]

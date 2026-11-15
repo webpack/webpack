@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"collapseWhitespace": "all"
+	},
+	{
+		"mode": "minify"
+	}
+]

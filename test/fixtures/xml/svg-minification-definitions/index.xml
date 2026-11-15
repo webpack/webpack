@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="unusedGradient"><stop offset="0" stop-color="red"/></linearGradient>
+    <linearGradient id="usedGradient"><stop offset="0" stop-color="#ff0000"/><stop offset="1" stop-color="rgb(0,0,255)"/></linearGradient>
+    <radialGradient id="inherited" xlink:href="#usedGradient"/>
+    <clipPath id="unusedClip"><rect width="1" height="1"/></clipPath>
+    <clipPath id="usedClip"><circle r="3"/></clipPath>
+    <mask id="m"><rect width="5" height="5" fill="white"/></mask>
+    <pattern id="p" width="2" height="2"><path d="M0 0h1"/></pattern>
+    <symbol id="unusedSymbol"><path d="M0 0h1"/></symbol>
+    <symbol id="usedSymbol" viewBox="0 0 2 2"><path d="M0 0h1"/></symbol>
+    <filter id="f"><feGaussianBlur stdDeviation="1"/></filter>
+    <marker id="mk"><path d="M0 0h1"/></marker>
+    <path id="reused" d="M0 0h3v3z"/>
+    <style>.c { fill: url(#p) }</style>
+  </defs>
+  <rect width="10" height="10" fill="url(#usedGradient)" clip-path="url(#usedClip)"/>
+  <rect width="10" height="10" style="fill:url(#inherited);mask:url(#m)"/>
+  <rect class="c" width="5" height="5" filter="url(#f)"/>
+  <path d="M0 0h5" marker-end="url(#mk)"/>
+  <use href="#usedSymbol" width="5" height="5"/>
+  <use xlink:href="#reused"/>
+  <path d="M0 0h3v3z"/><path d="M0 0h3v3z"/>
+  <path d="M1 1h2"/><path d="M1 1h2" fill="red"/>
+  <path d="M5 5L10 10"/><path d="M10 10L20 20"/>
+  <text>unused <tspan fill="url(#unusedGradient)">x</tspan></text>
+</svg>

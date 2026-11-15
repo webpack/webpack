@@ -1,0 +1,1 @@
+!function(){var x=1;x=x+2;x=x<<1;x=x-(1-3);console.log(x);(function(o,p){console.log(p,o.length)})([1,2],[3])}()

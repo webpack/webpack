@@ -1,5 +1,13 @@
 codecov:
   branch: main
+  notify:
+    # Statuses and the comment wait for `coverage-notify` in test.yml, which
+    # runs once every suite that uploads has finished, not after each upload.
+    manual_trigger: true
+# Create the comment only once coverage drops, so a pull request that never
+# lowers it (docs, CI config) gets none; a comment once made is kept updated.
+comment:
+  require_changes: "coverage_drop"
 coverage:
   precision: 2
   round: down
@@ -14,11 +22,12 @@ coverage:
         flags:
           - unit
           - integration
-          - css-parsing
-          - html5lib
           - test262
-          - minify-corpora
+          - spec
         target: auto
+        # Timing-dependent lines flip between runs, so a PR that changes no
+        # code still moves the total by about 0.01%.
+        threshold: 0.05%
     patch:
       default:
         flags:
@@ -42,6 +51,7 @@ ignore:
   - "tooling/compare-css-tools.js"
   - "tooling/compare-html-tools.js"
   - "tooling/compare-js-tools.js"
+  - "tooling/compare-xml-tools.js"
   # TODO in the next major release: remove
   - "lib/template/ChunkTemplate.js"
   - "lib/template/MainTemplate.js"

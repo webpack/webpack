@@ -1,0 +1,1 @@
+function f(){(function(o){g(o)})({get h(){return 1}})}

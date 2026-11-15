@@ -94,5 +94,20 @@ module.exports = [
 	// nonce on an injected inline `<script>`
 	config("nonce-script", { nonce: "__NONCE__" }, "./src/main.js", {
 		inline: "script"
-	})
+	}),
+	// a content-hashed page name that `realContentHash` renames keeps its options
+	(() => {
+		const base = config("hashed-name", true, "./src/main.js", {
+			inline: "script"
+		});
+		return {
+			...base,
+			output: {
+				...base.output,
+				filename: "[name].[contenthash].js",
+				htmlFilename: "[name].[contenthash].html"
+			},
+			optimization: { minimize: false, realContentHash: true }
+		};
+	})()
 ];

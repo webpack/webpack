@@ -1,0 +1,1 @@
+export class A extends (this === undefined ? B : B) {}

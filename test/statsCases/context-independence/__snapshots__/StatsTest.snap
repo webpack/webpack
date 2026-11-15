@@ -5,7 +5,7 @@ exports[`StatsTestCases context-independence should print correct stats for cont
   sourceMap main-XXXXXXXXXXXXXXXXXXXX.js.map X KiB [emitted] [dev] (auxiliary name: main)
 asset 369-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
   sourceMap 369-XXXXXXXXXXXXXXXXXXXX.js.map X bytes [emitted] [dev]
-runtime modules X KiB 8 modules
+runtime modules X KiB 7 modules
 orphan modules X bytes [orphan] 1 module
 built modules X bytes [built]
   modules by path ./a/*.js X bytes
@@ -21,7 +21,7 @@ asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
   sourceMap main-XXXXXXXXXXXXXXXXXXXX.js.map X KiB [emitted] [dev] (auxiliary name: main)
 asset 369-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
   sourceMap 369-XXXXXXXXXXXXXXXXXXXX.js.map X bytes [emitted] [dev]
-runtime modules X KiB 8 modules
+runtime modules X KiB 7 modules
 orphan modules X bytes [orphan] 1 module
 built modules X bytes [built]
   modules by path ./b/*.js X bytes
@@ -35,7 +35,7 @@ webpack x.x.x compiled successfully in X ms
 
 asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
 asset 369-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
-runtime modules X KiB 8 modules
+runtime modules X KiB 7 modules
 orphan modules X bytes [orphan] 1 module
 built modules X bytes [built]
   modules by path ./a/*.js X bytes
@@ -49,7 +49,7 @@ webpack x.x.x compiled successfully in X ms
 
 asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
 asset 369-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
-runtime modules X KiB 8 modules
+runtime modules X KiB 7 modules
 orphan modules X bytes [orphan] 1 module
 built modules X bytes [built]
   modules by path ./b/*.js X bytes
@@ -63,7 +63,7 @@ webpack x.x.x compiled successfully in X ms
 
 asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
 asset 369-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
-runtime modules X KiB 8 modules
+runtime modules X KiB 7 modules
 orphan modules X bytes [orphan] 1 module
 built modules X bytes [built]
   modules by path ./a/*.js X bytes
@@ -77,7 +77,7 @@ webpack x.x.x compiled successfully in X ms
 
 asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
 asset 369-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
-runtime modules X KiB 8 modules
+runtime modules X KiB 7 modules
 orphan modules X bytes [orphan] 1 module
 built modules X bytes [built]
   modules by path ./b/*.js X bytes

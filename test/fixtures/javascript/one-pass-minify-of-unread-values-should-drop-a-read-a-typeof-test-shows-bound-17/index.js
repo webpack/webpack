@@ -1,0 +1,1 @@
+function f(y){typeof x===y&&x}

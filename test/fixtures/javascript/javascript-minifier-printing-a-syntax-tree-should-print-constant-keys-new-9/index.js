@@ -1,0 +1,1 @@
+export function r(g){g(Object);return[Object.keys([1]),typeof Object,g instanceof Object]}

@@ -1,0 +1,1 @@
+function w(o){ var q; with (o) { var m = Math, r = q; } }

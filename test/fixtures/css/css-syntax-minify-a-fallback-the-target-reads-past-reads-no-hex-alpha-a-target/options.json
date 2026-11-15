@@ -1,0 +1,26 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 130",
+				"firefox 130",
+				"safari 18"
+			]
+		},
+		"transforms": {
+			"lowerUnsupported": false
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 50"
+			]
+		},
+		"transforms": {
+			"lowerUnsupported": false
+		}
+	}
+]

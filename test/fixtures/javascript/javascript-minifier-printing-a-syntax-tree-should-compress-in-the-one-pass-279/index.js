@@ -1,0 +1,1 @@
+function f(){return[[1].source,"ab".source,/a/.length,1..length]}

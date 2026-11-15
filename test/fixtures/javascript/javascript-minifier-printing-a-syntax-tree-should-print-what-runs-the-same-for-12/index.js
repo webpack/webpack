@@ -1,0 +1,1 @@
+!function(){function*g(x=arguments[2],y=arguments[3],z){yield[x,y,z]}console.log(g(void 0,void 0,'third','fourth').next().value.join(),g().next().value.join())}()

@@ -1,0 +1,1 @@
+class A { #ahri = 1; get v() { return this.#ahri; } #\u0062 = 2; #café = 3; }

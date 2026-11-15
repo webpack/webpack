@@ -1,0 +1,1 @@
+'use strict'; if (a) function f() {}

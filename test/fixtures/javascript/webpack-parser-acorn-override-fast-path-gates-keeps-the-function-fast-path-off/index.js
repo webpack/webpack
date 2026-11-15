@@ -1,0 +1,1 @@
+function f(a) { return a; } const g = (x) => x + 1;

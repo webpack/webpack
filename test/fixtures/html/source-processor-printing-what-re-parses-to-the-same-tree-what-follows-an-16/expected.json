@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "slices",
+		"contains": "Text[27,28) Element:plaintext[16,28) Element:b[0,28)\n      -> ProcessingInstruction[10,16) Text[27,28) Element:plaintext[16,28) Element:b[0,28)",
+		"why": "out of its context the element is built by other rules (foster parenting, the adoption agency, implied tags), so its bytes alone read to another tree"
+	}
+]

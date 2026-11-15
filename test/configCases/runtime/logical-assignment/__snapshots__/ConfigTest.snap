@@ -3,7 +3,7 @@
 exports[`ConfigTestCases runtime logical-assignment exported tests should emit logical assignment in the chunk-loading runtime (bundle0.js) 1`] = `
 Array [
   "const installedChunks = __webpack_require__.hmrS_jsonp ||= {",
-  "const chunkLoadingGlobal = self[\\"webpackChunk\\"] ||= [];",
+  "const chunkLoadingGlobal = Array.isArray(self[\\"webpackChunk\\"]) ? self[\\"webpackChunk\\"] : (self[\\"webpackChunk\\"] = []);",
 ]
 `;
 

@@ -1,0 +1,7 @@
+[
+	{
+		"mode": "minify",
+		"removeEmptyAttributes": true,
+		"renderEmbeddedSource": "builtin"
+	}
+]

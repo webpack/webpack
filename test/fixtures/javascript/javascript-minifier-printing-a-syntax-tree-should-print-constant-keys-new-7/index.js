@@ -1,0 +1,1 @@
+export function r(){Object.keys=()=>["k"];[Object.values]=[()=>1];return[Object.keys([1]),Object.values("a"),Object.entries("a")]}

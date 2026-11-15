@@ -1,0 +1,1 @@
+<!DOCTYPE d [<!-- c --><?pi x?><!ENTITY % p "x"><!NOTATION n SYSTEM "a>b"><!ENTITY e 'q'>%p;<!ENTITY late "no">]><d>&e;&late;</d>

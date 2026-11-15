@@ -1,0 +1,1 @@
+const instanceofX = 1; let doX = 2;

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path fill="white"/>
+    <mask id="mask1" fill="white" />
+    <mask id="mask2">
+        <path fill="rgba(255,255,255,0.75)"/>
+    </mask>
+    <mask id="mask3">
+        <g>
+            <path fill="white"/>
+            <path stroke="black"/>
+        </g>
+        <mask id="inner-mask" fill="rgba(0,0,0,.5)"></mask>
+    </mask>
+    <path fill="red"/>
+</svg>

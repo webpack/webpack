@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="-100 -100 100 100">
+    <rect x="0" y="0" width="10" height="20" transform="matrix(-1,0,0,-1,0 0)"/>
+</svg>

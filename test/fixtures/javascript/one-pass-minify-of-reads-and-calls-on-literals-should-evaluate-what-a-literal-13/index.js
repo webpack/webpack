@@ -1,0 +1,1 @@
+function f(a){return[[a+"\0","1"].join(""),a+"\0x"]}console.log(JSON.stringify(f(1)));

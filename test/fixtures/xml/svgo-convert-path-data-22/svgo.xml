@@ -1,0 +1,8 @@
+<svg width="480" height="360" xmlns="http://www.w3.org/2000/svg">
+    <path stroke="black" stroke-width="18" fill="none" stroke-dasharray="none" d="M36 36h324"/>
+    <path stroke="black" stroke-width="18" fill="none" stroke-dasharray="0" d="M36 72h324"/>
+    <path stroke="black" stroke-width="36" fill="none" stroke-dasharray="9,3.6,9,9,3.6,9" d="M36 108h324"/>
+    <path stroke="blue" stroke-width="18" fill="none" stroke-dasharray="9,3.6,9" d="M36 108h324"/>
+    <path stroke="black" stroke-width="18" fill="none" stroke-dasharray="3.6" d="M36 144h324"/>
+    <path stroke="blue" stroke-width="18" fill="none" stroke-dasharray="3.6" stroke-dashoffset="3.6" d="M36 162h324"/>
+</svg>

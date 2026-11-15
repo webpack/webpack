@@ -15,6 +15,7 @@ it("should contain banner in bundle0 chunk", () => {
 	);
 	expect(source).not.toMatch(new RegExp("^/*! A test value in single file */$"));
 	expect(source).not.toMatch(new RegExp("^/*! Match test file */$"));
+	expect(source.split("\n")).not.toContain("/*! Match glob */");
 });
 
 it("should not contain banner in vendors chunk", () => {
@@ -22,6 +23,7 @@ it("should not contain banner in vendors chunk", () => {
 	expect(source).not.toMatch("/*! A test value */");
 	expect(source).toMatch("/*! A test value in single file */");
 	expect(source).toMatch("/*! Match test file */");
+	expect(source.split("\n")).toContain("/*! Match glob */");
 });
 
 if (Math.random() < 0) require("./test.js");

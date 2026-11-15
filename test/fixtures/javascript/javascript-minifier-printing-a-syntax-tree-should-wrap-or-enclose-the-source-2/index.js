@@ -1,0 +1,1 @@
+var x = 1; window.v = x + y;

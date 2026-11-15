@@ -1,0 +1,1 @@
+export function g(){ var x = import.meta; x.url() }

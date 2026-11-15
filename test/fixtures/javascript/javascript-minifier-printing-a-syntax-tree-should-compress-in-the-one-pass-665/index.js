@@ -1,0 +1,1 @@
+x=["abcNaNdef".indexOf(NaN),(-Infinity).toString(),String.fromCharCode(Infinity),isFinite(-Infinity),"a function".indexOf(typeof function(){})]

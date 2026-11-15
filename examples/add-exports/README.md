@@ -148,7 +148,7 @@ function add(first, second) {
 	return first + second;
 }
 
-
+;
 
 /***/ })
 /******/ 	]);
@@ -209,8 +209,7 @@ function add(first, second) {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /************************************************************************/
@@ -249,10 +248,10 @@ console.log(new (_legacy_global__WEBPACK_IMPORTED_MODULE_0___default())().versio
 ## Unoptimized
 
 ```
-asset output.js 4.85 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 417 bytes (javascript) 883 bytes (runtime) [entry] [rendered]
+asset output.js 4.81 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 417 bytes (javascript) 856 bytes (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 883 bytes 4 modules
+  runtime modules 856 bytes 4 modules
   dependent modules 297 bytes [dependent] 2 modules
   ./example.js 120 bytes [built] [code generated]
     [no exports]

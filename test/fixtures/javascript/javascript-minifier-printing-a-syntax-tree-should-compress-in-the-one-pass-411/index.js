@@ -1,0 +1,1 @@
+function f(){{var a=1}{var b=2}h(a,b)}

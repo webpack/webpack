@@ -1,0 +1,1 @@
+var c;(c?foo:foo)("x");(c()?foo:foo)("y");(c?eval:eval)("z");(c?o.f:o.f)("w");(c?foo:foo)`t`;(c()?foo:foo)`v`;new(c?F:F);(c?a:b)`u`

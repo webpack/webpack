@@ -1,0 +1,1 @@
+Number.x=1;console.log(Number.MIN_VALUE)

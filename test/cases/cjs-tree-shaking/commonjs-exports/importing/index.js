@@ -1,0 +1,15 @@
+it("importing: should be able to import a module via require and property", () => {
+	expect(require("./module").abc).toBe("abc");
+});
+
+it("importing: should be able to import a module via require and destruct", () => {
+	var { abc } = require("./module");
+	expect(abc).toBe("abc");
+});
+
+it("importing: should be able to import a module via require and exports object", () => {
+	var module1 = require("./module?1");
+	expect(module1.abc).toBe("abc");
+	var module2 = require("./module?2");
+	expect(module2).toEqual({ abc: "abc", def: "def" });
+});

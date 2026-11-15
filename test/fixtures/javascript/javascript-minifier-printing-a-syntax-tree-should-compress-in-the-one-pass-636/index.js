@@ -1,0 +1,1 @@
+function f(x){x=x+(/*k*/a-b);h(x)}

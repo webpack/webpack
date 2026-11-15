@@ -138,9 +138,9 @@ require.ensure(["./a"], function(require) {
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -181,7 +181,7 @@ require.ensure(["./a"], function(require) {
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -232,7 +232,7 @@ require.ensure(["./a"], function(require) {
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -264,7 +264,7 @@ Promise.all(/*! require.ensure */[__webpack_require__.e("a_js-b_js"), __webpack_
 # dist/a_js-b_js.output.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["a_js-b_js"],[
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["a_js-b_js"],[
 /* 0 */,
 /* 1 */
 /*!**************!*\
@@ -296,7 +296,7 @@ module.exports = "b";
 # dist/c_js.output.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["c_js"],{
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["c_js"],{
 
 /***/ 3
 /*!**************!*\
@@ -317,7 +317,7 @@ module.exports = "c";
 # dist/d_js.output.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["d_js"],{
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["d_js"],{
 
 /***/ 4
 /*!**************!*\
@@ -341,9 +341,9 @@ module.exports = "d";
 
 ```
 asset output.js 8.77 KiB [emitted] (name: main)
-asset a_js-b_js.output.js 618 bytes [emitted]
-asset c_js.output.js 329 bytes [emitted]
-asset d_js.output.js 329 bytes [emitted]
+asset a_js-b_js.output.js 657 bytes [emitted]
+asset c_js.output.js 368 bytes [emitted]
+asset d_js.output.js 368 bytes [emitted]
 chunk (runtime: main) a_js-b_js.output.js 42 bytes [rendered] split chunk (cache group: default)
   > ./a ./b ./c ./example.js 2:0-30
   > ./example.js 5:0-8:2
@@ -381,11 +381,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.84 KiB [emitted] [minimized] (name: main)
-asset a_js-b_js.output.js 110 bytes [emitted] [minimized]
-asset c_js.output.js 83 bytes [emitted] [minimized]
-asset d_js.output.js 83 bytes [emitted] [minimized]
-chunk (runtime: main) a_js-b_js.output.js 42 bytes [rendered] split chunk (cache group: default)
+asset output.js 1.8 KiB [emitted] [minimized] (name: main)
+asset b_js-c_js.output.js 142 bytes [emitted] [minimized]
+asset a_js.output.js 115 bytes [emitted] [minimized]
+chunk (runtime: main) a_js.output.js 21 bytes [rendered] reused as split chunk (cache group: default)
   > ./a ./b ./c ./example.js 2:0-30
   > ./example.js 5:0-8:2
   ./a.js 21 bytes [built] [code generated]
@@ -393,23 +392,17 @@ chunk (runtime: main) a_js-b_js.output.js 42 bytes [rendered] split chunk (cache
     cjs self exports reference ./a.js 1:0-14
     amd require ./a ./example.js 2:0-30
     require.ensure item ./a ./example.js 5:0-8:2
+chunk (runtime: main) b_js-c_js.output.js 42 bytes [rendered]
+  > ./a ./b ./c ./example.js 2:0-30
   ./b.js 21 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./b.js 1:0-14
     amd require ./b ./example.js 2:0-30
-    cjs require ./b ./example.js 6:1-15
-chunk (runtime: main) c_js.output.js 21 bytes [rendered]
-  > ./a ./b ./c ./example.js 2:0-30
+    [inactive] cjs require ./b ./example.js 6:1-15
   ./c.js 21 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./c.js 1:0-14
     amd require ./c ./example.js 2:0-30
-chunk (runtime: main) d_js.output.js 21 bytes [rendered]
-  > ./example.js 5:0-8:2
-  ./d.js 21 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./d.js 1:0-14
-    cjs require ./d ./example.js 7:1-15
 chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 4.77 KiB 6 modules

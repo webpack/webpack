@@ -1,0 +1,19 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"keepClassnames": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"keep_classnames": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {}
+	}
+]

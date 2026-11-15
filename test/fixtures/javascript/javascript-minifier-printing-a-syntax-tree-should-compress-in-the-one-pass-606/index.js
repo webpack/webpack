@@ -1,0 +1,1 @@
+(function(){var f=function(){g()};Object(f)(1)})()

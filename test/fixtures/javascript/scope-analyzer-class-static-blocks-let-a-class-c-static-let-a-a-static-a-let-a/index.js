@@ -1,0 +1,1 @@
+let a; class C { static { let a; a; } static { a; let a; } }

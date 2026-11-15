@@ -1,0 +1,1 @@
+with(o)x=+"a";function f(NaN){return+"a"}

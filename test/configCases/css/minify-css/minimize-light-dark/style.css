@@ -1,0 +1,10 @@
+/* Chrome 100 reads `:where()` and no `light-dark()`, which is the window the
+   pair below is written in. */
+
+/*! the rule that hands the choice to the user's own preference */
+html { color-scheme: light dark }
+/*! ...and the two that answer for themselves */
+html[data-theme="light"] { color-scheme: light }
+html[data-theme="dark"] { color-scheme: dark }
+/*! the call, written as the pair the scheme switches */
+button { background: light-dark(#aaa, #444) }

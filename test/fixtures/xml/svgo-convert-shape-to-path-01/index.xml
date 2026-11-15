@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect width="100%"/>
+    <rect width="100%" height="100%"/>
+    <rect x="25%" y="25%" width="50%" height="50%"/>
+    <rect x="25pt" y="25pt" width="50pt" height="50pt"/>
+    <rect x="10" y="10" width="50" height="50" rx="4"/>
+    <rect x="0" y="0" width="20" height="20" ry="5"/>
+    <rect width="32" height="32"/>
+    <rect x="20" y="10" width="50" height="40"/>
+    <rect fill="#666" x="10" y="10" width="10" height="10"/>
+</svg>

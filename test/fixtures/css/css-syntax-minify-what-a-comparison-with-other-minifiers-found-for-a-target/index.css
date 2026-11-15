@@ -1,0 +1,1 @@
+@layer x{.s{color:red}@supports (x:y){.s{color:blue}}.s{color:red}.s{opacity:.8}}

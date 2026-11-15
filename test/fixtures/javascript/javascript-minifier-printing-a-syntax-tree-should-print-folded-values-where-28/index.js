@@ -1,0 +1,1 @@
+define(() => { var w = 42; return w + l })

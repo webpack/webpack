@@ -26,7 +26,7 @@ chunk (runtime: main) async-d.js (async-d) X bytes <{792}> [rendered]
   ./d.js X bytes [built] [code generated]
 chunk (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) >{49}< >{60}< >{240}< >{251}< >{263}< >{442}< >{869}< >{914}< [entry] [rendered]
   > ./ main
-  runtime modules X KiB 9 modules
+  runtime modules X KiB 8 modules
   ./index.js X bytes [built] [code generated]
 chunk (runtime: main) async-c.js (async-c) X bytes <{792}> [rendered]
   > ./c ./index.js 3:0-47

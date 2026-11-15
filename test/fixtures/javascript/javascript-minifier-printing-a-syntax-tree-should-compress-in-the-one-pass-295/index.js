@@ -1,0 +1,1 @@
+function f(b){return[!(0||(a=b))?c:d,!(0||(x(),b)())?c:d]}

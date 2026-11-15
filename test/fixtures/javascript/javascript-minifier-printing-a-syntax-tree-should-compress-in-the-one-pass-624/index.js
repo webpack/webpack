@@ -1,0 +1,1 @@
+function f(fn){var frame=c.get(fn);if(frame!==void 0)return frame;var control;g(control=h());return control}function k(){var a=g(),b;h(a,b);var c,d;var [e]=a;var q;use(c,d,e,q)}

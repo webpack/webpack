@@ -1,0 +1,56 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 130",
+				"firefox 130",
+				"safari 18",
+				"and_uc 15.5"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 130",
+				"firefox 130",
+				"safari 18",
+				"kaios 2.5"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 130",
+				"firefox 130",
+				"safari 18",
+				"op_mini all"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 130",
+				"firefox 130",
+				"safari 18",
+				"unknown 1"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 130",
+				"firefox 130",
+				"safari 18"
+			]
+		}
+	}
+]

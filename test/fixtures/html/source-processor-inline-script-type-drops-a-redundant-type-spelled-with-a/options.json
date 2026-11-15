@@ -1,0 +1,14 @@
+[
+	{
+		"mode": "minify",
+		"removeRedundantAttributes": "smart"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "as-written"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	}
+]

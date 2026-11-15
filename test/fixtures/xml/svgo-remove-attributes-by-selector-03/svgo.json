@@ -1,0 +1,1 @@
+{ "selectors": [{ "selector": "[fill='#00ff00']", "attributes": "fill" }, { "selector": "#remove", "attributes": ["stroke", "id"] }] }

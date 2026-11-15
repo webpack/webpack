@@ -1,0 +1,11 @@
+[
+	{
+		"print": "cssMinify",
+		"environment": {
+			"vendorPrefixes": true
+		},
+		"svg": false,
+		"extractComments": false,
+		"dropOverriddenDeclarations": true
+	}
+]

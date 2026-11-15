@@ -1,0 +1,1 @@
+function f(){for(var a,b=1;;);}function g(){for(let i=0,n=h();;)k(i)}function m(){for(let c=32,d=0;d<c;d++)k(d)}k(f,g,m)

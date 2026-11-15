@@ -1,0 +1,1 @@
+A nested rule an identical later sibling stands for is dropped before the joins, so it folds into no neighbor the later copy would then have to cut it back out of, and the rules either side of it join at once.

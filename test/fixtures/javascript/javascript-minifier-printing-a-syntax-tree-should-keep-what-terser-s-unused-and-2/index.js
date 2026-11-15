@@ -1,0 +1,1 @@
+(function(a){g(a)})(1)

@@ -1,0 +1,1 @@
+@custom-media --c (a:1);@custom-media --o 1px;@media ((--c) or (x:1)) and (--o){a{color:red}}

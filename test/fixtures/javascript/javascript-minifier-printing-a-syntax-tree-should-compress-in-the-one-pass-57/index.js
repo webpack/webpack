@@ -1,0 +1,1 @@
+function f(){ const t = g(); const a = t; try { h(a) } catch (e) { h(e) } }

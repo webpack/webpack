@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html remote-stylesheets exported tests should preserve remote stylesheet links and bundle local stylesheets 1`] = `
+"<!doctype html>
+<html lang=\\"en\\">
+	<head>
+		<link rel=\\"preconnect\\" href=\\"https://fonts.googleapis.com\\">
+		<link rel=\\"preconnect\\" href=\\"https://fonts.gstatic.com\\" crossorigin>
+		<link rel=\\"stylesheet\\" href=\\"https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&amp;display=swap\\">
+		<link rel=\\"stylesheet\\" href=\\"http://example.com/style.css\\" media=\\"print\\">
+		<link rel=\\"stylesheet\\" href=\\"//example.com/style.css\\" crossorigin=\\"anonymous\\" integrity=\\"sha256-example\\">
+		<link rel=\\"stylesheet\\" href=\\"HTTPS://example.com/style.css\\">
+		<link rel=\\"preload\\" as=\\" STYLE \\" href=\\"https://example.com/preload.css\\">
+		<link rel=\\"prefetch\\" as=\\"style\\" href=\\"//example.com/prefetch.css\\">
+		<link rel=\\"stylesheet\\" href=\\"style/style.css\\">
+	</head>
+	<body>Remote stylesheets</body>
+</html>
+"
+`;
+
+exports[`ConfigCacheTestCases html remote-stylesheets exported tests should preserve remote stylesheet links and bundle local stylesheets 2`] = `
+"<!doctype html>
+<html lang=\\"en\\">
+	<head>
+		<link rel=\\"preconnect\\" href=\\"https://fonts.googleapis.com\\">
+		<link rel=\\"preconnect\\" href=\\"https://fonts.gstatic.com\\" crossorigin>
+		<link rel=\\"stylesheet\\" href=\\"https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&amp;display=swap\\">
+		<link rel=\\"stylesheet\\" href=\\"http://example.com/style.css\\" media=\\"print\\">
+		<link rel=\\"stylesheet\\" href=\\"//example.com/style.css\\" crossorigin=\\"anonymous\\" integrity=\\"sha256-example\\">
+		<link rel=\\"stylesheet\\" href=\\"HTTPS://example.com/style.css\\">
+		<link rel=\\"preload\\" as=\\" STYLE \\" href=\\"https://example.com/preload.css\\">
+		<link rel=\\"prefetch\\" as=\\"style\\" href=\\"//example.com/prefetch.css\\">
+		<link rel=\\"stylesheet\\" href=\\"style/style.css\\">
+	</head>
+	<body>Remote stylesheets</body>
+</html>
+"
+`;

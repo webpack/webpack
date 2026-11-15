@@ -1,0 +1,6 @@
+{
+  "name": "nested",
+  "dependencies": {
+    "nested-number-range": 1
+  }
+}

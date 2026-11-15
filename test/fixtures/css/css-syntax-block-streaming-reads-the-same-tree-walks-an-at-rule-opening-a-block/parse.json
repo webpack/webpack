@@ -1,0 +1,20 @@
+[
+	{
+		"entry": "parseAStylesheet",
+		"fields": [
+			"name",
+			"source",
+			"childCount",
+			"fieldCount:prelude",
+			"fieldCount:value",
+			"fieldCount:declarations",
+			"fieldCount:rules"
+		]
+	},
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"fixture": "walk"
+		}
+	}
+]

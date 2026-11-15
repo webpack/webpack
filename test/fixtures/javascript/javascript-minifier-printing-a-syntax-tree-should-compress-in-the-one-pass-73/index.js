@@ -1,0 +1,1 @@
+function f(){g(this);return 1}x=f();function h(){g(arguments);return 1}y=h();function k(){g(new.target);return 1}z=k();function m(){g(m);return 1}w=m()

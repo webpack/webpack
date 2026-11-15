@@ -1,0 +1,1 @@
+switch (x) { case 1: let a; case 2: let a; }

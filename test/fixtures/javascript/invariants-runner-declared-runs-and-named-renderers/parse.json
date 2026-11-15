@@ -1,0 +1,55 @@
+[
+	{
+		"options": {
+			"sourceType": "module"
+		},
+		"visit": true
+	},
+	{
+		"entry": "parseProgram",
+		"options": {
+			"sourceType": "script"
+		}
+	},
+	{
+		"entry": "tokenizer",
+		"options": {
+			"sourceType": "script"
+		}
+	},
+	{
+		"entry": "SourceProcessor"
+	},
+	{
+		"entry": "parseProgram",
+		"pos": 5,
+		"options": {
+			"sourceType": "script"
+		},
+		"fields": [
+			"name",
+			"childCount",
+			"flag:generator"
+		]
+	},
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"Identifier",
+				"FunctionExpression"
+			],
+			"fields": [
+				"name",
+				"parent"
+			],
+			"at": [
+				{
+					"type": "FunctionExpression",
+					"on": "exit",
+					"do": "stop"
+				}
+			]
+		}
+	}
+]

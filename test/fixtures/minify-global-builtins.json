@@ -1,0 +1,112 @@
+[
+	{
+		"name": "direct assignment",
+		"source": "Math.abs = function () { return 99; }; console.log(Math.abs(-1));",
+		"expected": "99"
+	},
+	{
+		"name": "globalThis assignment",
+		"source": "globalThis.Math.abs = function () { return 99; }; console.log(Math.abs(-1));",
+		"expected": "99"
+	},
+	{
+		"name": "computed global owner",
+		"source": "globalThis['Math'].abs = function () { return 99; }; console.log(Math.abs(-1));",
+		"expected": "99"
+	},
+	{
+		"name": "computed method",
+		"source": "globalThis.Math['abs'] = function () { return 99; }; console.log(Math.abs(-1));",
+		"expected": "99"
+	},
+	{
+		"name": "computed Object writer",
+		"source": "globalThis['Object'].defineProperty(Math, 'abs', { value: function () { return 99; } }); console.log(Math.abs(-1));",
+		"expected": "99"
+	},
+	{
+		"name": "direct Object writer",
+		"source": "Object.defineProperty(Math, 'abs', { value: function () { return 99; } }); console.log(Math.abs(-1));",
+		"expected": "99"
+	},
+	{
+		"name": "direct Reflect writer",
+		"source": "Reflect.set(Math, 'abs', function () { return 99; }); console.log(Math.abs(-1));",
+		"expected": "99"
+	},
+	{
+		"name": "computed Reflect writer",
+		"source": "globalThis['Reflect']['set'](Math, 'abs', function () { return 99; }); console.log(Math.abs(-1));",
+		"expected": "99"
+	},
+	{
+		"name": "shadowed globalThis",
+		"source": "(function (globalThis) { globalThis.Math.abs = function () { return 99; }; console.log(Math.abs(-1), globalThis.Math.abs(-1)); })({ Math: {} });",
+		"expected": "1 99"
+	},
+	{
+		"name": "shadowed Math",
+		"source": "(function (Math) { Math.abs = function () { return 99; }; console.log(Math.abs(-1)); })({}); console.log(Math.abs(-1));",
+		"expected": "99\n1"
+	},
+	{
+		"name": "unmodified built-in",
+		"source": "console.log(Math.abs(-1));",
+		"expected": "1"
+	},
+	{
+		"name": "unrelated method mutation",
+		"source": "globalThis.Math.ceil = function () { return 99; }; console.log(Math.abs(-1));",
+		"expected": "1"
+	},
+	{
+		"name": "unrelated built-in mutation",
+		"source": "globalThis.Math.abs = function () { return 99; }; console.log(Math.abs(-1), String.fromCharCode(65));",
+		"expected": "99 A"
+	},
+	{
+		"name": "window assignment",
+		"source": "window.Math.abs = function () { return 99; }; console.log(Math.abs(-1));",
+		"expected": "99"
+	},
+	{
+		"name": "self assignment",
+		"source": "self.Math.abs = function () { return 99; }; console.log(Math.abs(-1));",
+		"expected": "99"
+	},
+	{
+		"name": "global assignment",
+		"source": "global.Math.abs = function () { return 99; }; console.log(Math.abs(-1));",
+		"expected": "99"
+	},
+	{
+		"name": "computed prototype owner",
+		"source": "globalThis['String']['prototype'].toLowerCase = function () { return 'patched'; }; console.log('A'.toLowerCase());",
+		"expected": "patched"
+	},
+	{
+		"name": "getter installed through Object",
+		"source": "globalThis['Object'].defineProperty(Math, 'abs', { get: function () { console.log('get'); return function () { return 99; }; } }); console.log(Math.abs(-1));",
+		"expected": "get\n99"
+	},
+	{
+		"name": "computed key effects",
+		"source": "globalThis.Math[(console.log('key'), 'abs')] = function () { return 99; }; console.log(Math.abs(-1));",
+		"expected": "key\n99"
+	},
+	{
+		"name": "destructuring target",
+		"source": "[globalThis.Math.abs] = [function () { return 99; }]; console.log(Math.abs(-1));",
+		"expected": "99"
+	},
+	{
+		"name": "numeric unrelated owner",
+		"source": "globalThis[0] = {}; globalThis[0].abs = function () { return 99; }; console.log(Math.abs(-1));",
+		"expected": "1"
+	},
+	{
+		"name": "computed unrelated owner with effects",
+		"source": "globalThis.holder = {}; function key() { console.log('key'); return 'holder'; } globalThis[key()].abs = function () { return 99; }; console.log(Math.abs(-1));",
+		"expected": "key\n1"
+	}
+]

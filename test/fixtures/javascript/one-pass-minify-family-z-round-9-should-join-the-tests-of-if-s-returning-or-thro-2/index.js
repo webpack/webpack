@@ -1,0 +1,1 @@
+function f(){var x;if(x=g())return o.value;if(c)return o.value;return d()}

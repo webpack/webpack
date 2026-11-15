@@ -1,0 +1,1 @@
+function f(){const c=undefined;g(c);g(c)}

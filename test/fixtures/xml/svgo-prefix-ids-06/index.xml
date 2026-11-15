@@ -1,0 +1,26 @@
+<svg width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .test {
+            color: blue;
+        }
+        .test2 {
+            color: green;
+        }
+        #test {
+            color: red;
+        }
+        .test3 .test4 {
+            color: black;
+        }
+        .test5.test6 {
+            color: brown;
+        }
+        .test5.test6 #test7 {
+            color: yellow;
+        }
+    </style>
+    <rect class="test" x="10" y="10" width="100" height="100"/>
+    <rect class="test test2" x="10" y="10" width="100" height="100"/>
+    <rect class="test  test2" x="10" y="10" width="100" height="100"/>
+    <rect class="" id="test" x="10" y="10" width="100" height="100"/>
+</svg>

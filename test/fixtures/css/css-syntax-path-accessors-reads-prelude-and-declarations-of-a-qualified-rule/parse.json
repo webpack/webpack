@@ -1,0 +1,16 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"QualifiedRule"
+			],
+			"fields": [
+				"childCount",
+				"fieldCount:declarations",
+				"fieldCount:rules"
+			],
+			"exit": false
+		}
+	}
+]

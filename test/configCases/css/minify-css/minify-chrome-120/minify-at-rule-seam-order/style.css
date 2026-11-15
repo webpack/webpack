@@ -1,0 +1,26 @@
+/* Two blocks of one condition join, and the pair meeting at the seam becomes
+   one rule — whose selector list has to be written in the printer's own order,
+   not the order the two were written in. */
+@media print { .b { color: red } }
+@media print { .a { color: red } }
+
+@supports (color: red) { .d { top: 0 } }
+@supports (color: red) { .c { top: 0 } }
+
+@layer named { .f { left: 0 } }
+@layer named { .e { left: 0 } }
+
+@starting-style { .h { opacity: 0 } }
+@starting-style { .g { opacity: 0 } }
+
+/* A run of them: each join settles the list it grew, so the run stays linear
+   and ends in one ordered list. */
+@container (width > 0px) { .s4 { right: 0 } }
+@container (width > 0px) { .s3 { right: 0 } }
+@container (width > 0px) { .s2 { right: 0 } }
+@container (width > 0px) { .s1 { right: 0 } }
+
+/* A seam whose two rules print different blocks joins nothing, and the two
+   stay as they were written. */
+@media screen { .keep-first { color: red } }
+@media screen { .keep-second { color: blue } }

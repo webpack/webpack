@@ -1,0 +1,1 @@
+function f(){ var c = {}.a ? g() : h(); c, 1; var d = function(){}.call() ? g() : h(); d; (() => ({}.a ? g() : 2))(), g() }

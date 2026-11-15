@@ -1,0 +1,1 @@
+window.Math=m;String.prototype=p;x=[Math.abs(-1),parseInt("1"),"a".concat("b"),String.fromCharCode(65)]

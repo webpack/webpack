@@ -1,0 +1,14 @@
+[
+	{
+		"mode": "minify",
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"compress": {
+			"unused": false,
+			"passes": 2
+		},
+		"behavior": true
+	}
+]

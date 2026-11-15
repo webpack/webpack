@@ -184,8 +184,7 @@ function execGetOutput(command, args, description) {
 		});
 		/** @type {Buffer[]} */
 		const buffers = [];
-		/** @type {import("stream").Readable} */
-		(cp.stdout).on("data", (data) => buffers.push(data));
+		cp.stdout.on("data", (data) => buffers.push(data));
 	});
 }
 

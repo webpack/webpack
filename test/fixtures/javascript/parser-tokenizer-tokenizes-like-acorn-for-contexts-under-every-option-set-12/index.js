@@ -1,0 +1,1 @@
+if (a) b; else /re/; a++ / 2; ++/re/.lastIndex

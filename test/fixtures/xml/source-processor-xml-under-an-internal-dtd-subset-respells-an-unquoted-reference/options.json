@@ -1,0 +1,10 @@
+[
+	{
+		"xml": true,
+		"mode": "beautify"
+	},
+	{
+		"xml": true,
+		"mode": "minify"
+	}
+]

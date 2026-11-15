@@ -1,0 +1,1 @@
+@layer u{@starting-style{.modal-toggle:checked+.modal,.modal:target{opacity:0}}}

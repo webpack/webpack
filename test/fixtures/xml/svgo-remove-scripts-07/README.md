@@ -1,0 +1,1 @@
+Does not remove <script> elements even when script is declared with an explicit namespace that isn't default SVG, or the explicit SVG or XHTML namespace. Our custom namespace should be treated separately by clients and is not executable.

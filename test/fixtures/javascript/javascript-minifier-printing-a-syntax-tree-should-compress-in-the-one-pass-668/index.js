@@ -1,0 +1,1 @@
+window[k]=f;x=[parseInt("1"),Math.abs(-1)]

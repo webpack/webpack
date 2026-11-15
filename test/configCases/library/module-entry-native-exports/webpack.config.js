@@ -128,7 +128,8 @@ module.exports = [
 		"./renamed.js",
 		(source) => {
 			expect(source).toContain("var renamed_store =");
-			expect(source).toContain("export const x = renamed_store.x;");
+			expect(source).toContain("const __webpack_exports__x = renamed_store.x;");
+			expect(source).toMatch(/export \{[^}]*\b__webpack_exports__x as x\b/);
 			expect(source).toMatch(/export \{[^}]*\brenamed_fetch as fetch\b/);
 		},
 		"production",

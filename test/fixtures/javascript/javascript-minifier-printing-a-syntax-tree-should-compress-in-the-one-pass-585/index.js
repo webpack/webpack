@@ -1,0 +1,1 @@
+function f(a,b){x=a?b(c,d):b(e,d);x=a===0?b(c):b(e);x=a?b(...c):b(...e);x=a()?b(1):b(2);x=a?b(1,2):b(3,4);a?b(g(),1):b(g(),2);x=a?b(c=1):b(e);x=a?b((c,d)):b(e)}x=a?f(1):f(2)

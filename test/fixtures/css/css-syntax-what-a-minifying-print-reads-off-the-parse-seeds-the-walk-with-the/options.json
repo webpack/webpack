@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {
+			"customMedia": true,
+			"customSelectors": true
+		}
+	}
+]

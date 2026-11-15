@@ -6,6 +6,8 @@ const path = require("path");
 const testDirectory = path.resolve(__dirname, "..");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("../..");
+const MultiStats = require("../../lib/stats/MultiStats");
+const deprecationTracking = require("../helpers/deprecationTracking");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 // Not exported by name; it is the type `MultiCompiler.watching` carries.
@@ -429,6 +431,50 @@ describe("MultiCompiler", () => {
 		});
 	});
 
+	it("should wait for async taps of the aggregated 'done' hook before calling back", (done) => {
+		const compiler = createMultiCompiler();
+		let resolved = false;
+		compiler.hooks.done.tapPromise(
+			"MultiCompiler test",
+			() =>
+				new Promise((resolve) => {
+					setTimeout(() => {
+						resolved = true;
+						resolve();
+					}, 10);
+				})
+		);
+		compiler.run((err) => {
+			if (err) return done(err);
+			expect(resolved).toBe(true);
+			compiler.close(done);
+		});
+	});
+
+	it("should pass an error of the aggregated 'done' hook to the run callback", (done) => {
+		const compiler = createMultiCompiler();
+		const error = new Error("done failed");
+		compiler.hooks.done.tapPromise("MultiCompiler test", () =>
+			Promise.reject(error)
+		);
+		compiler.run((err) => {
+			expect(err).toBe(error);
+			compiler.close(done);
+		});
+	});
+
+	it("should pass an error of the aggregated 'done' hook to the watch callback", (done) => {
+		const compiler = createMultiCompiler();
+		const error = new Error("done failed");
+		compiler.hooks.done.tapPromise("MultiCompiler test", () =>
+			Promise.reject(error)
+		);
+		compiler.watch({}, (err) => {
+			expect(err).toBe(error);
+			compiler.close(done);
+		});
+	});
+
 	it("should not stay running after dependency validation fails", (done) => {
 		const compiler = /** @type {import("../../").MultiCompiler} */ (
 			webpack(
@@ -501,6 +547,21 @@ describe("MultiCompiler", () => {
 				expect(child.watching).toBeUndefined();
 			}
 			expect(compiler.running).toBe(false);
+			compiler.close(done);
+		});
+	});
+
+	it("should keep the returned watching usable when a child is already watching", (done) => {
+		const compiler = createMultiCompiler();
+		compiler.compilers[0].watch({}, () => {});
+		const watching = /** @type {MultiWatching} */ (
+			compiler.watch({}, () => {})
+		);
+		expect(watching.watchings).toHaveLength(1);
+		watching.suspend();
+		watching.resume();
+		watching.close((err) => {
+			expect(err).toBeFalsy();
 			compiler.close(done);
 		});
 	});
@@ -937,5 +998,138 @@ describe("MultiCompiler", () => {
 			if (err) return done(err);
 			compiler.close(done);
 		});
+	});
+});
+
+describe("MultiCompiler deprecated 'done' hook call", () => {
+	/**
+	 * @returns {import("../../").MultiStats} stats of no compilers
+	 */
+	const createStats = () =>
+		/** @type {import("../../").MultiStats} */ (
+			/** @type {unknown} */ (new MultiStats([]))
+		);
+
+	it("should run the taps synchronously and report a deprecation", () => {
+		const tracker = deprecationTracking.start();
+		const compiler = new webpack.MultiCompiler([], {});
+		const stats = createStats();
+		/** @type {string[]} */
+		const calls = [];
+		compiler.hooks.done.tap("first", () => {
+			calls.push("first");
+		});
+		compiler.hooks.done.call(stats, []);
+		// A tap added after a call makes tapable reset `call` from `_call`.
+		compiler.hooks.done.tap("second", () => {
+			calls.push("second");
+		});
+		compiler.hooks.done.call(stats, []);
+		expect(calls).toEqual(["first", "first", "second"]);
+		expect(tracker()).toEqual([
+			expect.objectContaining({ code: "DEP_WEBPACK_MULTI_COMPILER_DONE_CALL" })
+		]);
+	});
+
+	it("should throw an error of a sync tap", () => {
+		const tracker = deprecationTracking.start();
+		const compiler = new webpack.MultiCompiler([], {});
+		const error = new Error("done failed");
+		compiler.hooks.done.tap("test", () => {
+			throw error;
+		});
+		expect(() =>
+			compiler.hooks.done.call(createStats(), [])
+		).toThrow(error);
+		tracker();
+	});
+
+	it("should throw without running the taps when one is async", () => {
+		const tracker = deprecationTracking.start();
+		const compiler = new webpack.MultiCompiler([], {});
+		let called = false;
+		compiler.hooks.done.tap("sync", () => {
+			called = true;
+		});
+		compiler.hooks.done.tapPromise("async", () => Promise.resolve());
+		expect(() => compiler.hooks.done.call(createStats(), [])).toThrow(
+			/has async taps/
+		);
+		expect(called).toBe(false);
+		tracker();
+	});
+});
+
+describe("MultiCompiler runWithDependencies", () => {
+	/**
+	 * @param {import("../../").MultiCompiler} compiler compiler
+	 * @returns {import("../../").Compiler[]} child compilers
+	 */
+	const childrenOf = (compiler) => compiler.compilers;
+
+	it("should run a compiler after the ones it depends on and report no result", (done) => {
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
+			webpack([
+				{ name: "a", context: path.join(testDirectory, "fixtures"), entry: "./a.js" },
+				{
+					name: "b",
+					dependencies: ["a"],
+					context: path.join(testDirectory, "fixtures"),
+					entry: "./b.js"
+				}
+			])
+		);
+		/** @type {string[]} */
+		const order = [];
+		compiler.runWithDependencies(
+			childrenOf(compiler),
+			(child, callback) => {
+				order.push(/** @type {string} */ (child.name));
+				setImmediate(() => callback(null));
+			},
+			(err, results) => {
+				try {
+					expect(err).toBeNull();
+					expect(results).toBeUndefined();
+					expect(order).toEqual(["a", "b"]);
+					done();
+				} catch (assertionError) {
+					done(assertionError);
+				}
+			}
+		);
+	});
+
+	it("should report the error of a failing compiler", (done) => {
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
+			webpack([
+				{ name: "a", context: path.join(testDirectory, "fixtures"), entry: "./a.js" },
+				{
+					name: "b",
+					dependencies: ["a"],
+					context: path.join(testDirectory, "fixtures"),
+					entry: "./b.js"
+				}
+			])
+		);
+		const failure = new Error("a failed");
+		/** @type {string[]} */
+		const order = [];
+		compiler.runWithDependencies(
+			childrenOf(compiler),
+			(child, callback) => {
+				order.push(/** @type {string} */ (child.name));
+				callback(failure);
+			},
+			(err) => {
+				try {
+					expect(err).toBe(failure);
+					expect(order).toEqual(["a"]);
+					done();
+				} catch (assertionError) {
+					done(assertionError);
+				}
+			}
+		);
 	});
 });

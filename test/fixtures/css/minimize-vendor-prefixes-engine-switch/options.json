@@ -1,0 +1,13 @@
+[
+	{
+		"print": "cssMinify",
+		"environment": {
+			"browsers": [
+				"opera 15"
+			],
+			"vendorPrefixes": true
+		},
+		"svg": false,
+		"extractComments": false
+	}
+]

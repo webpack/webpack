@@ -1,0 +1,1 @@
+let a; for (let b in a);

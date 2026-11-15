@@ -1,0 +1,181 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents"
+		},
+		"visit": {
+			"exit": false
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents",
+			"skip": {
+				"types": [
+					"Ident"
+				]
+			}
+		},
+		"visit": {
+			"exit": false
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents",
+			"skip": {
+				"types": [
+					"Number"
+				]
+			}
+		},
+		"visit": {
+			"exit": false
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents",
+			"skip": {
+				"types": [
+					"Dimension"
+				]
+			}
+		},
+		"visit": {
+			"exit": false
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents",
+			"skip": {
+				"types": [
+					"Percentage"
+				]
+			}
+		},
+		"visit": {
+			"exit": false
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents",
+			"skip": {
+				"types": [
+					"Hash"
+				]
+			}
+		},
+		"visit": {
+			"exit": false
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents",
+			"skip": {
+				"types": [
+					"Delim"
+				]
+			}
+		},
+		"visit": {
+			"exit": false
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents",
+			"skip": {
+				"types": [
+					"String"
+				]
+			}
+		},
+		"visit": {
+			"exit": false
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents",
+			"skip": {
+				"types": [
+					"Colon"
+				]
+			}
+		},
+		"visit": {
+			"exit": false
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents",
+			"skip": {
+				"types": [
+					"Comma"
+				]
+			}
+		},
+		"visit": {
+			"exit": false
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents",
+			"skip": {
+				"types": [
+					"Whitespace"
+				]
+			}
+		},
+		"visit": {
+			"exit": false
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents",
+			"skip": {
+				"types": [
+					"Function"
+				]
+			}
+		},
+		"visit": {
+			"exit": false
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents",
+			"skip": {
+				"types": [
+					"Number",
+					"Dimension",
+					"Ident"
+				]
+			}
+		},
+		"visit": {
+			"exit": false
+		}
+	}
+]

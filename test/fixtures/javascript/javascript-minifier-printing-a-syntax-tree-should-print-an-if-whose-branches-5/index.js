@@ -1,0 +1,1 @@
+if(a)x=b?1:2;else if(c)f();else f()

@@ -1,0 +1,6 @@
+@namespace url("urn:html");
+@namespace s url("urn:svg");
+s|a { *& { color: red } }
+*|a { &* { color: red } }
+|a { .b *& { color: red } }
+a { *& { color: blue } }

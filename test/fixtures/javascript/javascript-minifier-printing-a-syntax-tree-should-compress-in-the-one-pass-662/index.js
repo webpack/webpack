@@ -1,0 +1,1 @@
+x=hasOwnProperty.call(a,b)+constructor.name(1)

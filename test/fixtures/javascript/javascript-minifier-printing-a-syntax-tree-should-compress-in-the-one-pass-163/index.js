@@ -1,0 +1,1 @@
+function m(o){ var add = g(), b = h(); function f(a){ o.x(a) } var c = "x"; var __proto__ = g(); return { add, b, f, c, __proto__ } }

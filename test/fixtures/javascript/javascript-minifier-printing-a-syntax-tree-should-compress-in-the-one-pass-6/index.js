@@ -1,0 +1,1 @@
+let a; a = [1, , {b: 2, c: function(){}}, () => 3]; let b; b = [x]; let c; c = {[k]: 1}; let d; d = {...e}; let e2; e2 = {b: x}; f(a,b,c,d,e2)

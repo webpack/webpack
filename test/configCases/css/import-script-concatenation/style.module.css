@@ -1,0 +1,4 @@
+.base {
+	composes: shared from "./composes-script.module.js";
+	color: blue;
+}

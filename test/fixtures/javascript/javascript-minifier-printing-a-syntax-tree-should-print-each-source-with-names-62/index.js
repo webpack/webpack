@@ -1,0 +1,1 @@
+!/a/ in obj; a + /x/ in b; typeof /x/ instanceof y; x = !1. in a; x = -1. in a; (a, /x/) in b; a ? b : /c/ in d; (/x/) in b; f(/x/) in b; x = 1. + 2. in a;

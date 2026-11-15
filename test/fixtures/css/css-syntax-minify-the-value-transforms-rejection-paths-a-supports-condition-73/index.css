@@ -1,0 +1,1 @@
+@supports selector(:is( .a > .b )){a{color:red}}

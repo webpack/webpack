@@ -86,6 +86,18 @@ module.exports = [
 		experiments: { html: true, css: true },
 		plugins: [copyTest]
 	},
+	// an inlined `<script src>` drops the body a browser ignores beside `src`
+	{
+		name: "magic-body",
+		target: "web",
+		entry: { "magic-body": "./src/magic-body.html" },
+		output: {
+			filename: "[name].[contenthash].js",
+			htmlFilename: "magic-body.html"
+		},
+		experiments: { html: true, css: true },
+		plugins: [copyTest]
+	},
 	// a malformed magic comment between `<!-- webpackInline: true -->` and the
 	// script must clear the pending inline, so the script is served normally
 	{
@@ -181,6 +193,24 @@ module.exports = [
 		output: {
 			filename: "[name].[contenthash].js",
 			htmlFilename: "module.html",
+			module: true,
+			html: { inline: true }
+		},
+		experiments: { html: true, css: true },
+		plugins: [copyTest]
+	},
+	// authored classic `<script>`s but ES module output — the inlined tags become
+	// `type="module"` and nothing of that upgrade lands in their bodies
+	{
+		name: "module-upgrade",
+		target: "web",
+		entry: {
+			"module-upgrade": "./src/page-classic.html",
+			"module-upgrade-typed": "./src/page-typed.html"
+		},
+		output: {
+			filename: "[name].[contenthash].js",
+			htmlFilename: "[name].html",
 			module: true,
 			html: { inline: true }
 		},

@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"embeddedAnswers": {
+			"fixture": "noAnswer"
+		},
+		"check": {
+			"fixture": "printed"
+		}
+	}
+]

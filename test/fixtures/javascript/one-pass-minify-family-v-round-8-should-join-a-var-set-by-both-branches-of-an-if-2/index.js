@@ -1,0 +1,1 @@
+var x;if(y)x=1+1;else x=2;g(x,y?a+b:a+b)

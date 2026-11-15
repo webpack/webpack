@@ -1,0 +1,1 @@
+let d; for (d of e) export { d };

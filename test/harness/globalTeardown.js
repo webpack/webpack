@@ -6,5 +6,10 @@
 "use strict";
 
 const { remove } = require("../helpers/browserslistConfigPackages");
+const { removeClaims } = require("../helpers/testParts");
 
-module.exports = remove;
+module.exports = () => {
+	removeClaims();
+
+	return remove();
+};

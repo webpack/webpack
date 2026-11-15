@@ -1,0 +1,1 @@
+function f(v,o){if(v)return v;return o&&o.length}function g(v,o){if(/*! c */v)return v;return o}

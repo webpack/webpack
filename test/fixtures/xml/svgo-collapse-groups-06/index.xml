@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g attr1="val1">
+        <g fill="red">
+            <path fill="green" d="..."/>
+        </g>
+        <path d="..."/>
+    </g>
+</svg>

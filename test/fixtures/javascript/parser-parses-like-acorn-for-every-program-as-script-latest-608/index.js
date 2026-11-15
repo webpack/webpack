@@ -1,0 +1,1 @@
+function f() { \u006Eew.target }

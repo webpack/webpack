@@ -1,0 +1,24 @@
+[
+	{
+		"print": "xmlMinify",
+		"minimizer": {
+			"asset": "index.svg"
+		},
+		"collapseWhitespace": true,
+		"sortAttributes": true,
+		"removeMetadata": true,
+		"removeEditorData": true,
+		"removeEmptyAttributes": true,
+		"removeEmptyElements": true,
+		"shortenColors": true,
+		"shortenNumbers": true,
+		"shortenPathData": true,
+		"sortSymbols": true,
+		"convertShapes": true,
+		"cleanupStructure": true,
+		"mergePaths": true,
+		"reusePaths": true,
+		"sortDefinitions": true,
+		"removeUnusedNamespaces": true
+	}
+]

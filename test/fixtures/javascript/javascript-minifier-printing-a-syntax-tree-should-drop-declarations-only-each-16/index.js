@@ -1,0 +1,1 @@
+(function(){class C extends K{} class K{} g()})()

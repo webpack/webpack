@@ -1,0 +1,1 @@
+DEBUG=1;g(DEBUG);

@@ -1,0 +1,1 @@
+const { ...rest, a } = o;

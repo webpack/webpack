@@ -1,0 +1,1 @@
+a{.b{x:y}.c{z:w}}@namespace url(x);a .b{x:y}a .c{z:w}

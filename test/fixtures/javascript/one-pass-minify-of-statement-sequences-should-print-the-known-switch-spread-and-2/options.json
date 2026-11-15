@@ -1,0 +1,8 @@
+[
+	{
+		"mode": "minify",
+		"module": true,
+		"compress": {},
+		"mangle": {}
+	}
+]

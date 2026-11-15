@@ -1,0 +1,12 @@
+[
+	{
+		"options": {
+			"skip": {
+				"text": true
+			}
+		},
+		"fields": [
+			"rangeOf:content"
+		]
+	}
+]

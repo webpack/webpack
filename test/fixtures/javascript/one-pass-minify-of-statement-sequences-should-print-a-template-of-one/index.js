@@ -1,0 +1,1 @@
+var x=1,y=2,a=`${x}`,b=[`${x*y}`,`${x+y}`];console.log(a,b,`${x}`.length)

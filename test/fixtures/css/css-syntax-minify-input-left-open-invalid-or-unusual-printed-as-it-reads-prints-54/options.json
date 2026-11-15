@@ -1,0 +1,13 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"chrome 140",
+				"firefox 140",
+				"safari 26.2"
+			]
+		},
+		"rewriteCustomProperties": true,
+		"mode": "minify"
+	}
+]

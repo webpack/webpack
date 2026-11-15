@@ -1,0 +1,1 @@
+if (a) { if (c) switch (b) { case 2: switch (a) { case 2: foo()}}; b() }

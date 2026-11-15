@@ -1,0 +1,17 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"format": {
+			"comments": "all"
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"format": {
+			"comments": "all",
+			"shebang": false
+		}
+	}
+]

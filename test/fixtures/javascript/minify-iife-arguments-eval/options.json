@@ -1,0 +1,18 @@
+[
+	{
+		"mode": "minify",
+		"ecma": 5,
+		"mangle": false,
+		"keep_fnames": true,
+		"keep_classnames": true,
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"ecma": 2015,
+		"mangle": false,
+		"keep_fnames": true,
+		"keep_classnames": true,
+		"behavior": true
+	}
+]

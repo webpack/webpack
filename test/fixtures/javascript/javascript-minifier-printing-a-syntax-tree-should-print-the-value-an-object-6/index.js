@@ -1,0 +1,1 @@
+function g(){return 7}console.log(({a:(g()),b:1}).a)

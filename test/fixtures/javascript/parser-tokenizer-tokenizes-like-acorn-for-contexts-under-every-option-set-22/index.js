@@ -1,0 +1,1 @@
+x = function* () { yield /re/ }; function* g() { function f() { yield / 2 } yield /re/ }

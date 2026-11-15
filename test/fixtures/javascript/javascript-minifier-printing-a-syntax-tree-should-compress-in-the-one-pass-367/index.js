@@ -1,0 +1,1 @@
+function f(o){o.p=o.p+1}

@@ -37,7 +37,7 @@ console.log(react, reactDOM, propTypes);
 
 ```javascript
 "use strict";
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["app"],{
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["app"],{
 
 /***/ 3
 /*!****************!*\
@@ -205,8 +205,7 @@ module.exports = 'prop-types';
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
@@ -257,7 +256,7 @@ module.exports = 'prop-types';
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -287,18 +286,18 @@ module.exports = 'prop-types';
 
 ```
 asset react-vendors.js 7.01 KiB [emitted] (name: react-vendors)
-asset app.js 1.59 KiB [emitted] (name: app)
+asset app.js 1.63 KiB [emitted] (name: app)
 chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
   > ./app.js app
   ./app.js 139 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./app.js app
-chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javascript) 2.9 KiB (runtime) >{app}< [entry] [rendered]
+chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javascript) 2.91 KiB (runtime) >{app}< [entry] [rendered]
   > prop-types react-vendors
   > react react-vendors
   > react-dom react-vendors
-  runtime modules 2.9 KiB 6 modules
+  runtime modules 2.91 KiB 6 modules
   cacheable modules 87 bytes
     ./node_modules/prop-types.js 31 bytes [built] [code generated]
       [used exports unknown]
@@ -327,38 +326,38 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset react-vendors.js 1.07 KiB [emitted] [minimized] (name: react-vendors)
-asset app.js 180 bytes [emitted] [minimized] (name: app)
+asset react-vendors.js 1.1 KiB [emitted] [minimized] (name: react-vendors)
+asset app.js 212 bytes [emitted] [minimized] (name: app)
 chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
   > ./app.js app
   ./app.js 139 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./app.js app
-chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javascript) 2.69 KiB (runtime) >{app}< [entry] [rendered]
+chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javascript) 2.73 KiB (runtime) >{app}< [entry] [rendered]
   > prop-types react-vendors
   > react react-vendors
   > react-dom react-vendors
-  runtime modules 2.69 KiB 5 modules
+  runtime modules 2.73 KiB 5 modules
   cacheable modules 87 bytes
     ./node_modules/prop-types.js 31 bytes [built] [code generated]
       [used exports unknown]
       from origin ./app.js
-        harmony side effect evaluation prop-types ./app.js 3:0-35
+        [inactive] harmony side effect evaluation prop-types ./app.js 3:0-35
         harmony import specifier prop-types ./app.js 5:29-38
       cjs self exports reference ./node_modules/prop-types.js 1:0-14
       entry prop-types react-vendors
     ./node_modules/react-dom.js 30 bytes [built] [code generated]
       [used exports unknown]
       from origin ./app.js
-        harmony side effect evaluation react-dom ./app.js 2:0-33
+        [inactive] harmony side effect evaluation react-dom ./app.js 2:0-33
         harmony import specifier react-dom ./app.js 5:19-27
       cjs self exports reference ./node_modules/react-dom.js 1:0-14
       entry react-dom react-vendors
     ./node_modules/react.js 26 bytes [built] [code generated]
       [used exports unknown]
       from origin ./app.js
-        harmony side effect evaluation react ./app.js 1:0-26
+        [inactive] harmony side effect evaluation react ./app.js 1:0-26
         harmony import specifier react ./app.js 5:12-17
       cjs self exports reference ./node_modules/react.js 1:0-14
       entry react react-vendors

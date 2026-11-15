@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  "Critical dependency: require function is used in a way in which dependencies cannot be statically extracted",
+]
+`;

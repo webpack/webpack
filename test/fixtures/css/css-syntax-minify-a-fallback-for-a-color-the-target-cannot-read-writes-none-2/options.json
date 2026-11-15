@@ -1,0 +1,20 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 100"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 100",
+				"firefox 100",
+				"safari 15.4"
+			]
+		}
+	}
+]

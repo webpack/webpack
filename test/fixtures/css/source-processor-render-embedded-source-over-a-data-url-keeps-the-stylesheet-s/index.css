@@ -1,0 +1,9 @@
+.a {
+	color : red ;
+}
+.b {
+	background : url("data:image/svg+xml,<svg>    <rect/>    </svg>") ;
+}
+.c {
+	color : blue ;
+}

@@ -1,0 +1,1 @@
+var x;function f(){}console.log(!0,!0,!1,!0,!1,!0),console.log(!0,"undefined",NaN,void f()===void 0,x===void 0);

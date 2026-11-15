@@ -1,0 +1,1 @@
+Math.abs(Math.random());Math.abs(-NaN);Math.min(0,-Infinity,NaN);Math.abs(-1n);x=1

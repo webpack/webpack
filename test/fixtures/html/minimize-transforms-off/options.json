@@ -1,0 +1,16 @@
+[
+	{
+		"print": "htmlMinify",
+		"css": {
+			"extractComments": false
+		},
+		"collapseBooleanAttributes": false,
+		"comments": "all",
+		"normalizeAttributeQuotes": false,
+		"normalizeEnumeratedAttributes": false,
+		"normalizeListAttributes": false,
+		"normalizeNumericAttributes": false,
+		"normalizeUrlAttributes": false,
+		"removeOptionalTags": false
+	}
+]

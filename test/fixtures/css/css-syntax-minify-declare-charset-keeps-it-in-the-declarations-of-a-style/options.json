@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"declareCharset": true,
+		"as": "block-contents"
+	},
+	{
+		"print": "cssMinify",
+		"as": "block-contents"
+	}
+]

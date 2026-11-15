@@ -1,0 +1,548 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html minify-html exported tests minify-data-url-attributes: minify-data-url-attributes: should minify the payload of every data: URL a URL attribute holds 1`] = `
+"<!doctype html><head><title>data: URLs in attributes</title></head><body>
+<object data='data:application/json,{\\"a\\":1}'></object>
+<a href='data:application/json,{\\"b\\":\\"&#39;\\"}'>json</a>
+<iframe src=\\"data:text/html,<p>a\\"></iframe>
+<img src=data:image/png;base64,AAAA alt>
+<p title='data:application/json,{ \\"kept\\" : 1 }'>text</p>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 1`] = `
+"<!doctype html><html lang=en><head><title>Attribute corpus</title></head><body class=merged-onto-the-open-body>
+	<p title=blah class=a23B-foo.bar_baz:qux id=moo>removing attribute quotes</p>
+	<input value=\\"hello world\\">
+	
+	<script type=application/json>{\\"a\\":1}</script>
+	<a href=# title=foo#bar>x</a>
+	<a href=http://example.test/ title=blah>trailing slash</a>
+	<a title=blah href=http://example.test/>trailing slash, last</a>
+	<a href=http://example.test/ title>empty value</a>
+	<p class=foo|bar:baz>no quotes needed</p>
+	<p onclick=x>event handler</p>
+	<link href=\\"<?php echo 'http://foo/' ?>\\">
+	<p data-gt=\\"a>b\\" data-eq=\\"a=b\\" data-lt=\\"a<b\\" data-tick=\\"a\`b\\">must stay quoted</p>
+	<p data-nl=\\"a
+b\\">newline in a value</p>
+	<p data-dq='a\\"b'>double quote in a value</p>
+	<p data-sq='a\\"b'>the other quote wins</p>
+	<p data-amp=a?b&c data-ref=a&b>raw value bytes</p>
+	<p data-keep=\\"&amp;copy x\\" data-num=&amp;#38; data-bare=&zz data-query=\\"x?a=1&b=2\\">ampersands</p>
+	<input type=text value disabled checked>
+	
+	<input type=\\"time \\" id=padded-type>
+	<input type=time id=cased-type>
+	<div class=a id=b>collapsed attribute whitespace</div>
+	<div>no attributes</div>
+	<br>
+	<img src=data:image/gif;base64,R0lGOD alt='say \\"hi\\"'>
+	<svg viewBox=\\"0 0 8 8\\"><rect x=1 y=2 /><circle R=1 /></svg>
+	<div class=a>source casing</div>
+	<p a=1>duplicate attribute</p>
+	<p class=\\"a b\\">repeated class token, folded</p>
+	
+	<input type=text {% if isRequired %} required{% endif %}>
+	<input type=checkbox {% if on %} checked {% endif %}>
+	<li class=row {% for x in y %} data-x=1 {% endfor %}>a block over a list</li>
+	<input type=text {%- if isRequired -%} required{%- endif -%}>
+	<input type=text {% if on %} a{% endif %}=\\"\\">
+	<p class=\\"btn{% if active %} btn-active{% endif %}\\">the same list, as text</p>
+	<p data-slash=/end/>value ending in a slash</p>
+	<a href=x/>unquoted value ending in a slash</a>
+	<pre>  preformatted
+   text
+</pre>
+	<textarea class=t>  keep  me  </textarea>
+	
+	<!--[if IE]><p>kept: conditional comment</p><![endif]-->
+
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 2`] = `
+"<!doctype html><head><title>attributes by value</title></head><body>
+<form method=get action=a><button type=submit formmethod=post>s</button></form>
+<input type=text inputmode=numeric checked disabled>
+<img src=51b834b7c1ef0b59ea50.png crossorigin=anonymous decoding=async>
+<div contenteditable=true draggable=true spellcheck=true>x</div>
+<input value=&>
+<img c=f>
+<div class>y</div>
+<track kind=subtitles src=5a6ee533be65928cb355.vtt>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 3`] = `
+"<!doctype html><html lang=en><head><title>t</title></head><body>
+<input checked disabled>
+<script defer></script>
+<p contenteditable=contenteditable>enumerated, so its value is the state</p>
+<p checked=false>not a boolean attribute here</p>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 4`] = `
+"<!doctype html><html lang=en><head><title>Collapse test</title></head><body> <p>Hello <b>world</b> & friends</p> <pre>  kept
+   verbatim</pre> <pre><span>also     kept</span></pre> <textarea>  kept  too  </textarea> <p><%=   template   %></p> <p>one tab</p> <p>already spaced</p> <svg><text>foreign text</text></svg> </body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 5`] = `"<!doctype html><head><title>Comments and whitespace</title></head><body><div>a b</div><div>c</div> <span> d </span><span> e </span> <!-- @license MIT: kept by pattern -->  <!--[if IE 8]><p class=a>ie</p><![endif]--><pre>  verbatim   here  </pre></body></html>"`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 6`] = `
+"<!doctype html><html lang=en><head><style>.t01{width:1pc}.t02{width:1cm}.t03{width:17px}.t04{--a:#fff}.t05{background:#00c3ff}.t06{color:#c900ff}</style></head><body>
+<p style=width:1pc>a style attribute is handed the same option</p>
+<p style=width:17px>...and declines the same cases</p>
+<p style=--a:#fff>...and rewrites a custom property the same way</p>
+<p style=background:#00c3ff>...and approximates a color the same way</p>
+<p style=color:#c900ff>...and drops an overridden declaration the same way</p>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 7`] = `
+"<!doctype html><head><title>Empty attributes</title></head><body>
+<div>dropped</div>
+<div>whitespace is empty too, however it is spelled</div>
+<div>valueless is the empty value</div>
+<div title lang>kept: an empty value means something the spec does not give absence</div>
+<div>dropped: an empty token list is no tokens</div>
+<a href=x>dropped: on the element that carries them</a>
+<table><tr><td>dropped: here too</table>
+<x-foo rel ping headers blocking sizes>kept: none of these are the spec's here</x-foo>
+<div rel for>kept: an author attribute, whatever a script reads back</div>
+<label for>kept: one id on a label, and an id may be empty</label>
+<output>dropped: a token list on this one</output>
+<iframe sandbox src=x.html></iframe>
+<div onclick onmouseover>kept: an empty handler still reads back as one</div>
+<div data-x aria-label role>kept: not in the table</div>
+<div class=a id=b style=color:red dir=rtl>kept: carries a value</div>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 8`] = `
+"<!doctype html><head><title>Empty elements</title><meta charset=utf-8><link rel=preload href=x.css></head><body>
+<p>kept: has text</p>
+<div id=mount></div><div class=spacer></div>
+<script src=x.js></script>
+<canvas></canvas><slot></slot><template></template><textarea></textarea>
+<progress></progress><meter></meter><output></output><dialog></dialog>
+<table><tr><td><td>a</table>
+<br><img src=x.png><input>
+<svg></svg>
+
+<div> </div>
+
+
+<span id=k></span>
+<iframe srcdoc></iframe>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 9`] = `
+"<!doctype html><body>
+	<b><p>paragraph</p></b>tail
+	<em><li>item</li></em>rest
+	<div><p>kept anyway</div>
+	<b><span>not special</span></b>after
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 10`] = `
+"<!doctype html><html lang=en><head><style>.t01{background-color:transparent}.t02{top:1px;right:2px;bottom:1px;left:2px}@media (min-width:1200px){.t03{color:red}}.t05{align-items:center;justify-items:end}.t04{width:16px;height:33.3333333%}</style></head><body>
+<p style=color:transparent>a style attribute is gated too</p>
+<p style=top:1px;right:2px;bottom:1px;left:2px>...for every gate</p>
+<p style=align-items:center;justify-items:end>...including this one</p>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 11`] = `
+"<!doctype html><head><meta charset=utf-8><title>Catalog</title></head><body><p>page<ul><li>one<li>two</ul>
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 12`] = `
+"<!doctype html><head><meta name=viewport content=\\"width=device-width,initial-scale=1\\"><style>a{color:red}</style><script src=page.js></script></head><body>
+<input>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 13`] = `
+"<!doctype html><head><title>Merge styles</title><style>.merge-a{color:red}.merge-b{color:#00f}</style><meta name=sep content=1><style>.ws-a{color:red}.ws-b{color:#00f}</style><meta name=sep content=2><style>.link-a{color:red}</style><link rel=stylesheet href=x.css><style>.link-b{color:#00f}</style><meta name=sep content=3><style media=screen>.media-a{color:red}</style><style>.media-b{color:#00f}</style><meta name=sep content=4><style media=screen>.same-a{color:red}.same-b{color:#00f}</style><meta name=sep content=5><style>.cmt-a{color:red}.cmt-b{color:#00f}</style><meta name=sep content=6><style type=text/template>.tpl-a{ not css </style><style type=text/template>.tpl-b{ not css </style><meta name=sep content=7><style nonce=n1>.nonce-a{color:red}</style><style nonce=n2>.nonce-b{color:#00f}</style><meta name=sep content=8><style>.three-a{color:red}.three-b{color:#00f}.three-c{color:#0f0}</style><meta name=sep content=9><style>.empty-a{color:red}</style><style></style><meta name=sep content=10><style>.open-a{color:#010203}.open-b{color:red}</style><meta name=sep content=13><style>.custom-a{--x:f(</style><style>.custom-b{color:red}</style><meta name=sep content=11><style>.fold-a,.fold-b{color:red}</style><meta name=sep content=12><style>.blank-b{color:red}</style><meta name=sep content=14><style>.ff-a{content:\\"x
+;color:blue}.ff-b{color:red}</style></head><body>
+<svg><style>.svg-a{color:red}</style><style>.svg-b{color:#00f}</style></svg>
+<p>x</p>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 14`] = `
+"<!doctype html><head><title>Redundant</title><style>a{color:red}</style><style type=text/template>a { not css </style><link rel=stylesheet href=x.css><link rel=stylesheet media=screen href=y.css><link rel=preload as=font type=font/woff2 href=f.woff2><style media=all>b{color:blue}</style><script src=a.js></script><script src=b.js></script><script src=c.js></script><script charset=utf-8 src=z.js></script><script charset=iso-8859-1 src=w.js></script><script type=module src=m.js></script><script type src=e.js></script><script type=application/ld+json>{\\"a\\":1}</script><style>c{color:red}</style><link rel=stylesheet href=u.css><script charset=utf-8 src=u.js></script></head><body>
+<input type=text name=a>
+<input type=checkbox name=b>
+<form method=get enctype=application/x-www-form-urlencoded><button type=submit>b</button></form>
+<table><tr><td colspan=1>c<td colspan=2>d</table>
+<textarea wrap=soft></textarea>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 15`] = `
+"<!doctype html><head><title>Redundant</title><style>a{color:red}</style><style type=text/template>a { not css </style><link rel=stylesheet href=x.css><link rel=stylesheet media=screen href=y.css><link rel=preload as=font type=font/woff2 href=f.woff2><style media=all>b{color:blue}</style><script src=a.js></script><script src=b.js></script><script src=c.js></script><script charset=utf-8 src=z.js></script><script charset=iso-8859-1 src=w.js></script><script type=module src=m.js></script><script type src=e.js></script><script type=application/ld+json>{\\"a\\":1}</script></head><body>
+<input name=a>
+<input type=checkbox name=b>
+<form><button>b</button></form>
+<table><tr><td>c<td colspan=2>d</table>
+<textarea></textarea>
+<input name=c>
+<form><button>b</button></form>
+<video><track src=a.vtt><track kind=zzz src=b.vtt></video>
+<map name=m><area shape=zzz coords=0,0,1,1 href=#a></map>
+<img decoding=zzz src=i.png alt=i>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 16`] = `
+"<!doctype html><head><meta name=viewport content=\\"width=device-width,initial-scale=1\\"><link rel=preload as=image imagesrcset=\\"51b834b7c1ef0b59ea50.png 1x,51b834b7c1ef0b59ea50.png 2x\\"></head><body>
+<img src=51b834b7c1ef0b59ea50.png alt=x srcset=\\"51b834b7c1ef0b59ea50.png 200w,51b834b7c1ef0b59ea50.png 400w\\">
+<input type=text>
+<input type=checkbox checked>
+<option selected>o</option>
+<a href=./a.png>padded url</a>
+<a href=&x&y>padded url that needs no quotes once trimmed</a>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 17`] = `
+"<!doctype html><title>shell end tags</title></head><p>the source spelled no shell start tags, only their end tags</p>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 18`] = `
+"<!doctype html><head><title>Sort</title></head><body>
+<div aa=2 class=\\"aa mm zz\\" zz=1 mm=3>attributes and class both sort</div>
+<div class=\\"a b\\">duplicates go, whichever order</div>
+<a href=/x ping=\\"/z /a\\">ping keeps its request order</a>
+<svg><rect zz=1 aa=2 /></svg>
+<div data-only=1>one attribute needs no order</div>
+<script async src=/a.js></script>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 19`] = `
+"<!doctype html><html lang=en><head><title>t</title></head><body>
+<div class=\\"aa mm zz\\">a set, so it sorts</div>
+<a href=/x ping=\\"/z /a\\">ping keeps its request order</a>
+<img srcset=\\"a.png   1x\\" alt=\\"a list this switch does not reorder\\">
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 20`] = `
+"<!doctype html><head><meta name=viewport content=\\"width=device-width\\"></head><body>
+<a href=\\"/a\\">a</a>
+<a href='/b'>b</a>
+<a href='/c'>c</a>
+<a href=\\"&x&y\\">d</a>
+<a title=\\"it's\\">e</a>
+<a title='say \\"hi\\"'>f</a>
+<form action=\\"/post\\"><input type=\\"text\\"><input type=\\"search\\"></form>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 21`] = `
+"<!doctype html><head><title>Srcdoc</title></head><body>
+<iframe id=basic srcdoc=\\"<p class=a>hi\\"></iframe>
+<iframe id=single srcdoc='<b>bold</b>'></iframe>
+<iframe id=nested srcdoc='<iframe srcdoc=\\"<i>deep</i>\\"></iframe>'></iframe>
+<iframe id=style srcdoc=\\"<style>.a{color:red}</style><p class=a>styled\\"></iframe>
+<iframe id=doctype srcdoc=\\"<!doctype html><body><p>whole</body></html>\\"></iframe>
+<iframe id=entities srcdoc=\\"<p>a & b < c\\"></iframe>
+<iframe id=quote-in-body srcdoc=\\"<p title=q>quoted\\"></iframe>
+<iframe id=upper srcdoc=\\"<em>up</em>\\"></iframe>
+<iframe id=conditional srcdoc=\\"<!--[if IE]><p class=ie>downlevel</p><![endif]-->\\"></iframe>
+<iframe id=bare srcdoc=\\"<p>bare\\" title=after></iframe>
+<!--[if  IE ]>IE <![endif]-->
+<script type=application/json>{\\"cc\\":\\"<!--[if IE]><p   >script</p><![endif]-->\\"}</script>
+<!--[if IE]><p>script</p><![endif]-->
+<iframe id=empty srcdoc></iframe>
+<iframe id=none src=child.html></iframe>
+<div id=not-an-iframe srcdoc=\\"<!-- kept --><p   >div</p>\\"></div>
+<svg><iframe id=foreign srcdoc=\\"<!-- kept --><p   >svg</p>\\"></iframe></svg>
+<p>the word srcdoc in text is not an attribute</p>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 22`] = `
+"<!doctype html><head><title>text ending in tag open</title></head><body>
+<iframe srcdoc=\\"<div>a&amp;lt;/</div>\\"></iframe>
+<div>b&lt;/</div></body>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 23`] = `
+"<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content=\\"width=device-width,initial-scale=1,viewport-fit=cover\\"><meta name=description content=\\"a,  b kept as written\\"><title>Transform corpus</title><style type=text/css>:root{--gap:8px}body{color:red;margin:0}.card{background:#fff;border-radius:4px}</style><style type=text/template>a { not css </style></head><body>
+	
+	<!--[if IE]><p>conditional comment, kept</p><![endif]-->
+	<div class=\\"a b\\" id=upper>source casing folds</div>
+	<div class=trimmed style=color:red;padding:0>token list and declarations</div>
+	<div style='content:\\"}\\"'>a brace inside a string is not one in the list</div>
+	<div style=--custom:{a:b}>nor is a balanced pair</div>
+	<div style=background:#32cd32>a bare \`}\` closes no block, so it is a bad declaration running to the next \`;\`</div>
+	<div style=\\"top:anchor-size(--a1 width)\\">what the value leaves open, the end of the input closes</div>
+	<div style=box-shadow:var(--t,10px)>the same, unclosed in a fallback</div>
+	<div style='content:\\"a\\"'>the same, unclosed in a string</div>
+	<div style=width:3px>a closed pair leaves nothing open</div>
+	<div style=\\"content:'\\\\'';color:red\\">an escape inside a string is not its end</div>
+	<div style=\\"--escaped:\\\\7d \\">an escape outside one is not a brace either</div>
+	<div style=--ran-out:�>the escape the value ran out of</div>
+	
+	<div style='content:\\"a{color:red}\\"'>rule-shaped string</div>
+	<div style=--wrapper-shaped:a{color:red}>rule-shaped custom property</div>
+	<div style=\\"/*! keep */color:red\\">a kept comment stands where it was written</div>
+	<p>optional end tags</p>
+	
+	<table>
+		<tr><td>a</tr>
+			<td>b</td>
+		</tr>
+	</table>
+	<ul><li>one<li>two</ul>
+	<dl><dt>a<dd>b<dt>c</dt></dl>
+	<table><tr><td>a<td>b<tr><td>c</table>
+	<table><thead><tr><th>h<tbody><tr><td>a</table>
+	<a><p>trailing p kept: parent absorbs</p></a>
+	<my-el><p>trailing p kept: custom element</p></my-el>
+	<form method=get novalidate>
+		<input type=checkbox checked disabled>
+		<input type=text disabled=true>
+		<select multiple><option selected>a<option>b</select>
+		<textarea readonly>  keep  me  </textarea>
+	</form>
+	<div checked=checked>not boolean here</div>
+	<img srcset=\\"a.png 1x,b.png 2x\\" src=a.png alt=\\"unquoted where legal\\">
+	<img srcset=\\"bare.png, next.png 2x\\" alt=\\"descriptor-less keeps its space\\">
+	<img srcset=\\"a.png 100w 2x\\" alt=\\"invalid srcset kept\\">
+	<img srcset=\\"data:image/gif;base64,R0lGOD 1x,b.png 2x\\" alt=\\"comma in url\\">
+	<a rel=\\"noopener noreferrer\\" ping=\\"/a /b\\" href=x>token lists collapse</a>
+	<iframe sandbox=\\"allow-scripts allow-forms\\"></iframe>
+	<label for=\\"a  b\\">for keeps its spaces: an id may contain one</label>
+	<output for=\\"a b\\">for is a token list here</output>
+	<link rel=stylesheet sizes=\\"16x16 32x32\\" href=s.css>
+	<link rel=preload as=script blocking=render href=p.js>
+	<div part=\\"a b\\" itemscope itemtype=https://schema.org/Thing>globals</div>
+	<div headingreset headingoffset=2 tabindex=-1>heading globals</div>
+	<table><tr><th id=h>h<td headers=\\"h h2\\" rowspan=2>headers is a token list</table>
+	<ol><li value=5>li value is signed</ol>
+	<input type=text><form method=post target=_TOP></form>
+	<div dir=rtl translate=no contenteditable=true>enumerated values fold</div>
+	<ol type=A><li>A and a are two keywords, so type stays</ol>
+	<a target=MyFrame href=x>a named target is not a keyword</a>
+	<img src=a.png hspace=4 vspace=0 longdesc=d.html lowsrc=l.png alt=\\"legacy img attributes\\">
+	<object codebase=c/ data=o.bin width=8 hspace=2></object>
+	<a href=trimmed.html>url ends trimmed</a>
+	<img src=a.png width=10 height=20 alt=\\"  alt keeps its spaces  \\">
+	<table><tr><td width=\\"  50%  \\" colspan=7>legacy percentage kept, integer normalized</table>
+	<textarea rows=3 cols=4>x</textarea>
+	<input type=file accept=.png,.jpg>
+	<map><area coords=1,2,3 shape=rect></map>
+	<img sizes=\\"(max-width: 100px)   100px,200px\\" srcset=\\"s.png 1x\\" alt=\\"sizes keeps its media condition\\">
+	<a href=\\"x?a=1\\" title=\\"quoted: has =\\">kept quoted</a>
+	<a href=plain.html>unquoted</a>
+	<br>
+	<input type=text>
+	<svg viewBox=\\"0 0 8 8\\"><rect x=1 y=2 class=\\"a    b\\"/><circle R=1 /><myCustomThing/></svg>
+	<script type=application/json>{\\"a\\":1,\\"b\\":[1,2],\\"s\\":\\"keep   spaces\\"}</script>
+	<script type=application/ld+json>{\\"@context\\":\\"https://schema.org\\",\\"big\\":12345678901234567890,\\"n\\":1.0}</script>
+	<script type=importmap>{\\"imports\\":{\\"a\\":\\"./a.js\\"}}</script>
+	<script type=speculationrules>{\\"prerender\\":[{\\"urls\\":[\\"/x\\"]}]}</script>
+	<script type=application/json>not json {  kept</script>
+	<script type=text/template>{ \\"a\\" :  1 }  kept</script>
+	<pre>  preformatted
+   text
+</pre>
+	
+	<div class=\\"  a b\\">nbsp is a class token of its own</div>
+	<a href= nbsp.html>nbsp stays in the url</a>
+	<table><tr><td colspan= 2>nbsp is not integer whitespace<td colspan=+2>plus does not parse as non-negative</table>
+	<ol start=5><li>signed integer normalizes</ol>
+	<ol start=-5><li>negative normalizes</ol>
+	<meta name=viewport content=\\" width=device-width,initial-scale=1\\">
+	<input type=file accept= .png,.jpg>
+	<img srcset=\\"a.png  1x\\" alt=\\"nbsp descriptor kept\\">
+	<script type= application/json>{ \\"a\\" : 1 }</script>
+	<style type= text/css>a { color : red ; }</style>
+	<aİx id=x>only ascii folds in a name</aİx>
+	<table><caption>caption end tag goes<col><col><tr><td>a</table>
+	<table><caption>whitespace behind it keeps the tag</caption> <col><tr><td>a</table>
+	<table><col><colgroup><col><tr><td>a</table>
+	<table><colgroup span=2><col><colgroup><tr><td>a</table>
+	<p>a > b, < and & still escape</p>
+	<input type=file accept=\\"image/ png,.jpg\\">
+	<map><area shape=poly coords=\\"1 2,3,4 5\\"></map>
+	<input type=checkbox alpha>
+	<template shadowrootclonable shadowrootserializable><span>a</span></template>
+	<img controls src=a.png alt=\\"controls is boolean on img now\\">
+	<table><tr><td nowrap>obsolete but still boolean</table>
+	<hr noshade>
+	<div alpha=x>not boolean here</div>
+	<p>R&D, AT&T and a query x?a=1&b=2 keep a bare ampersand</p>
+	<p>but &amp;amp;, &amp;lt; and &amp;#38; stay escaped: they would read back as a reference</p>
+	<p>café and   decode to the character itself</p>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 24`] = `
+"<!doctype html><html lang=\\"en\\"><head><title>t</title></head><body>
+<!-- an inert comment, kept because \`comments\` is off -->
+<p style=color:red>a style attribute is minified whatever these switches say</p>
+<ul><li>one</li><li>two</li></ul>
+<input disabled=\\"disabled\\" type=\\"TEXT\\" tabindex=\\" 03 \\" class=\\"  b   a \\">
+<div data-x=\\"plain\\">a value that could go bare keeps its quotes</div>
+<a href=\\"  /a  \\">a url keeps the whitespace around it</a>
+<script type=\\"application/json\\">{\\"a\\":1}</script>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 25`] = `
+"<!doctype html><title>decoded attribute values</title><math><mi>x</mi><annotation-xml encoding=text/html><div>an HTML integration point</div></annotation-xml></math>
+<table><input type=hidden><tr><td>a hidden input is not foster parented</table>
+<a href=#x></a><div><template shadowrootmode=open><slot></slot></template><a href=#x></a>
+</div>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 26`] = `
+"<!doctype html><body>
+	<svg>a]b</svg>
+	<svg>c]</svg>
+	<svg>d]]e</svg>
+	<svg><circle/></svg><p></p>after-p
+	<div><svg><g>after-end-tag</g></svg></div>
+	<svg>unterminated
+</svg></body>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 27`] = `
+"<!doctype html><body>
+	<b>before</b><b>after</b>tail<table><tr><td>cell</table>
+	one<b>two</b>three<table><tr><td>x</table>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 28`] = `
+"<!doctype html><body>
+	<?instruction?>
+	<?instruction data and more?>
+	<?instruction ? still data?>
+	<?instruction terminated by gt>
+	<?xml version=\\"1.0\\"?>
+	<?1st-place?>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 29`] = `
+"<!doctype html><body>
+	<table>
+		<caption><template>in-caption</template></caption>
+		<tr><td><template><p>in-cell</template></tr>
+	</table>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 30`] = `
+"<!doctype html><title>t</title><div style='content:\\"a\\"'>a string the value leaves open</div>
+<div style=\\"font-family:Some Face\\">the same, where unquoting applies</div>
+<div style='content:\\"b\\"'>the same, with the quote escaped away</div>
+<style>.a:before{content:\\"c\\"}</style>
+"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile 31`] = `
+Object {
+  "bogus-comment.html": "<!doctype html><body><p>a bogus comment the input ends inside<?xml version=\\"1></body>",
+  "comment-closing-bracket.html": "<!doctype html><body><div>a conditional comment the input ends inside, on a > of its own<!--[if IE]>--></div></body>",
+  "comment.html": "<!doctype html><body><p>a conditional comment the input ends inside<!--[if IE 8]><p>x--></body>",
+  "css.html": "<!doctype html><title>css</title><div style=--x:lab(50%>a custom property left inside a function</div>
+<div style=--x:[>inside a block</div>
+<div style=--x:f(g(x>inside two</div>
+<div style='--s:\\"x'>inside a string</div>
+<div style=--u:url(#x)>inside a url</div>
+<div style='--x:f(\\")'>inside a string that ends on the closer</div>
+<div style=--x:a�>after a dangling backslash</div>
+<div style=background:url(#i)>a url folded on the first pass</div>
+<div style=background:url(#x\\\\\\\\)>a url padded, with a dangling backslash</div>
+<style>.a{--x:f(</style>
+<style>.b{&:is()}</style>
+<style>.c{color:red}</style>
+",
+  "end-tag-br.html": "<!doctype html><body><div>an end tag the input ends inside</div></body>",
+  "end-tag-p.html": "<!doctype html><body><div>an end tag the input ends inside</div></body>",
+  "style-body.html": "<!doctype html><body><style>.a{--x:lab(50%</style></body>",
+}
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile: head-content.html 1`] = `
+"<html lang=en><title>H</title><body><noscript>n</noscript><p>after</p>
+"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile: kept-comment.html 1`] = `
+"<title>K</title><body><!--#include file=\\"a.html\\"--><p>ssi</p>
+"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile: leading-space.html 1`] = `
+"<title>L</title><body> leading space
+"
+`;
+
+exports[`ConfigCacheTestCases html minify-html minify-html should compile: page.html 1`] = `
+"<!doctype html><meta charset=utf-8><title>Catalog</title><p>page<ul><li>one<li>two</ul>
+
+"
+`;

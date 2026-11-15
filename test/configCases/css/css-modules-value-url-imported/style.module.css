@@ -1,0 +1,20 @@
+@value bg, quotedBg, plain from "./sub/values.module.css";
+@value bg as aliasBg from "./sub/values.module.css";
+@value localAlias from "./sub/values.module.css";
+
+.uses-bg {
+	background-image: bg;
+}
+
+.uses-quoted-bg {
+	background-image: quotedBg;
+}
+
+.uses-local-alias {
+	background-image: localAlias;
+}
+
+.uses-alias-in-list {
+	background: aliasBg no-repeat;
+	color: plain;
+}

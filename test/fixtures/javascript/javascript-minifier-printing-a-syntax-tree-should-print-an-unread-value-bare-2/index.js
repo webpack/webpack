@@ -1,0 +1,1 @@
+!a()===b;f(),void c()===x,g();h(),!(d,e())===y;typeof i.j===k;

@@ -1,0 +1,23 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"parse": {
+			"bareReturns": true
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"parse": {
+			"bare_returns": true
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {}
+	}
+]

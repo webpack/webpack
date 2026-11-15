@@ -1,0 +1,11 @@
+[
+	{
+		"mergeDistantRules": true,
+		"as": "block-contents",
+		"mode": "minify"
+	},
+	{
+		"mergeDistantRules": true,
+		"mode": "minify"
+	}
+]

@@ -1,0 +1,1 @@
+export function f(e){ if (a) b(); else (function(e){ g(e) })(e) }

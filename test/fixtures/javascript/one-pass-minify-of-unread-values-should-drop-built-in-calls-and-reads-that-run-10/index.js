@@ -1,0 +1,1 @@
+Object.defineProperty(Object.prototype,"y",{get:f});Object.prototype.y

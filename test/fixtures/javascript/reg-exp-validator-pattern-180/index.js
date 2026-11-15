@@ -1,0 +1,1 @@
+/\P{RGI_Emoji}/v;

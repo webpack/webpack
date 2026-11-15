@@ -1,0 +1,1 @@
+if (window.x) { console.log("clicked", event); } else { alert("no"); }

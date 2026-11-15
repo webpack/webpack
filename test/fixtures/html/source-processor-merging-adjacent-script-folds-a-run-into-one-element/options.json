@@ -1,0 +1,14 @@
+[
+	{
+		"mode": "minify",
+		"mergeScripts": true
+	},
+	{
+		"mode": "minify"
+	},
+	{
+		"mode": "minify",
+		"mergeScripts": true,
+		"deferEmbeddedSource": []
+	}
+]

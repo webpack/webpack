@@ -1,0 +1,7 @@
+[
+	{
+		"mode": "minify",
+		"sortAttributes": true,
+		"removeRedundantAttributes": "all"
+	}
+]

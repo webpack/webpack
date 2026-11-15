@@ -1,0 +1,1 @@
+{"version":3,"sources":["block-original.js"],"sourcesContent":["export function block() { return 'block'; }"],"names":[],"mappings":"AAAA"}

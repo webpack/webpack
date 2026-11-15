@@ -1,0 +1,1 @@
+A:B:for(var i=0;i<3;i++){if(i==1)continue A;console.log(i)}

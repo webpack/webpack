@@ -1,0 +1,1 @@
+(class{#x;static{#x in{get a(){}}}})

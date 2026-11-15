@@ -1,0 +1,9 @@
+[
+	{
+		"entry": "parseAListOfComponentValues",
+		"fields": [
+			"value",
+			"name"
+		]
+	}
+]

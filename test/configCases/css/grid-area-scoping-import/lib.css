@@ -1,0 +1,6 @@
+@value primary: red;
+@value impAuto: auto;
+@value impSpan: span 2;
+@value impHero: hero;
+.areas { grid-template-areas: "area" }
+.lines { grid-template-columns: [line-start] 1fr [line-end] }

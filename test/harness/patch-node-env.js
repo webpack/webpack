@@ -16,6 +16,12 @@ class CustomEnvironment extends NodeEnvironment {
 		// TODO - regression in jest/Node@25.2.0, temporary fix
 		global.localStorage = undefined;
 		super(config, context);
+		// Node and Deno expose `gc` behind `--expose-gc`; Bun has no such flag but
+		// forces a full collection with `Bun.gc(true)`, so tests get the same global.
+		const { Bun } = global;
+		if (typeof this.global.gc !== "function" && Bun) {
+			this.global.gc = () => Bun.gc(true);
+		}
 	}
 
 	// Workaround for `Symbol('JEST_STATE_SYMBOL')`

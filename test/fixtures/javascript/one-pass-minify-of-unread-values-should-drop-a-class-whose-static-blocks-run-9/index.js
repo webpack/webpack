@@ -1,0 +1,1 @@
+(class{static{let a=b}})

@@ -1,0 +1,14 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {
+			"reorderDeclarations": false
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"reorderDeclarations": true
+		}
+	}
+]

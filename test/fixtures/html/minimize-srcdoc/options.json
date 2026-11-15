@@ -1,0 +1,9 @@
+[
+	{
+		"print": "htmlMinify",
+		"css": {
+			"extractComments": false
+		},
+		"minifyConditionalComments": true
+	}
+]

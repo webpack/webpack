@@ -1,0 +1,14 @@
+[
+	{
+		"entry": "parseProgram",
+		"options": {
+			"sourceType": "commonjs"
+		}
+	},
+	{
+		"entry": "parseProgram",
+		"options": {
+			"sourceType": "event-handler"
+		}
+	}
+]

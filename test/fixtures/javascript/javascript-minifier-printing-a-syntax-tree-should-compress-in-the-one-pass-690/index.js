@@ -1,0 +1,1 @@
+Reflect["set"](Math,"sign",f);Object["assign"](Number,o);x=[Math.sign(1),Number.isNaN(1)]

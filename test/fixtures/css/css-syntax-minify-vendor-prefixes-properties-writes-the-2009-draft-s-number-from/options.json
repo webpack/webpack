@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"android 4.3"
+			]
+		}
+	}
+]

@@ -70,6 +70,7 @@ describe("collectCjsRequireSpecifiers", () => {
 			`const s = \`x${OPEN}require('./a')}y\`; require('./b');`
 		],
 		["member access is not a call", 'foo.require("./nope"); require("./a");'],
+		["a longer name is not a call", '$require("./nope"); require("./a");'],
 		[
 			"optional member access is not a call",
 			'foo?.require("./nope"); require("./a");'

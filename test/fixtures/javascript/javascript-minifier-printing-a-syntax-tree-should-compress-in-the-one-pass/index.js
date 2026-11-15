@@ -1,0 +1,1 @@
+if (a) { b() } while (a) { a-- } for (;;) { g() } l: { c() } with (o) { d() } do { e() } while (a); for (k in o) { f(k) } for (k of o) { f(k) }

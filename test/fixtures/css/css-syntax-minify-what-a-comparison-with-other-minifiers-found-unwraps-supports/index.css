@@ -1,0 +1,1 @@
+@supports selector(:is(.a)){.b{x:1}}

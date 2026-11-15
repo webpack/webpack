@@ -1,0 +1,1 @@
+function C(){this.v=1}function x(){return console.log("x"),C}function*y(){return new(yield x())}function g(){return new(x())(1).v}function h(){var t=x();return new t.prototype.constructor}function k(){var t=C;return new C(x(),t)}var it=y();it.next(),console.log(it.next(C).value.v,g(),h().v,k().v);

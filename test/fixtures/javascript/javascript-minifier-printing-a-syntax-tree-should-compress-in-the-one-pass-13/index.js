@@ -1,0 +1,1 @@
+x = undefined; undefined = 1; for (undefined in o); undefined++

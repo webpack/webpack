@@ -1,0 +1,1 @@
+try { a } catch { b } try { a } catch (e) { b } finally { c } try { a } finally { b } try {} catch ({ a, 'b': c }) {} debugger; throw a; function f() { return; }

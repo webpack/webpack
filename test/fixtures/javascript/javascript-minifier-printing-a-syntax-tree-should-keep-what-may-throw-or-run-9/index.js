@@ -1,0 +1,1 @@
+{ function f() { x = 1; } t(f); let x; }

@@ -1,6 +1,6 @@
 import "./style.css";
-import fs from "fs";
-import path from "path";
+// `fs` and `path` come from the runner (`moduleScope` in `test.config.js`):
+// bundling them would make this universal build warn.
 import { GLOBAL_HELPER, GLOBAL_MODULE } from "./needles.js";
 
 // Nothing loads a chunk, so the css loading runtime module renders nothing and

@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+// `fs` and `path` come from the runner (`moduleScope` in `test.config.js`):
+// bundling them would make this universal build warn.
 
 // Reassigned here, so where the stylesheet sits is only known once this runs.
 __webpack_public_path__ = "./";

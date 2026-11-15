@@ -16,16 +16,24 @@ const doWrite = process.argv.includes("--write");
 
 const files = ["lib/sharing/semver.js"];
 
+/**
+ * The exports of a file in `files`: its runtime functions, whose source text
+ * is minified into the matching `...RuntimeCode` export.
+ * @typedef {Record<string, { toString(): string }>} RuntimeCodeExports
+ */
+
 (async () => {
 	for (const file of files) {
 		const filePath = path.resolve(__dirname, "..", file);
 		const content = fs.readFileSync(filePath, "utf8");
 
-		const exports = require(`../${file}`);
+		// `require` of a computed path is untyped, the files only export functions
+		const exports = /** @type {RuntimeCodeExports} */ (require(`../${file}`));
 
 		const regexp =
 			/\n\/\/#region runtime code: (.+)\n[\s\S]+?\/\/#endregion\n/g;
 
+		/** @type {Map<string, string>} */
 		const replaces = new Map();
 
 		let match = regexp.exec(content);
@@ -84,7 +92,7 @@ const files = ["lib/sharing/semver.js"];
 			const code = result.code
 				.replace(/\\/g, "\\\\")
 				.replace(/'/g, "\\'")
-				.replace(/function\(([^)]+)\)/g, (m, args) => {
+				.replace(/function\(([^)]+)\)/g, (m, /** @type {string} */ args) => {
 					templateLiteral = true;
 					return `\${runtimeTemplate.supportsArrowFunction() ? '${
 						args.includes(",") ? `(${args})` : args
@@ -110,7 +118,10 @@ module.exports.${name}RuntimeCode = runtimeTemplate => \`var ${name} = \${runtim
 
 		const prettierConfig = await prettier.resolveConfig(filePath);
 		const newContent = await prettier.format(
-			content.replace(regexp, (match) => replaces.get(match)),
+			content.replace(
+				regexp,
+				(match) => /** @type {string} */ (replaces.get(match))
+			),
 			{ filepath: filePath, ...prettierConfig }
 		);
 

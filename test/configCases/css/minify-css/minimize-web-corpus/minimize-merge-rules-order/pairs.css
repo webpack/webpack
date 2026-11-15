@@ -1,0 +1,7 @@
+/* Two pairs in a row, each one selector list over two blocks: joining both
+   leaves them sharing one block where the source had four runs. The four
+   selectors interleave under sorting, which is what makes the move visible. */
+.row-late, .cell-late { box-shadow: 0 0 red }
+.row-late, .cell-late { background: white; color: black }
+.row-early, .cell-early { box-shadow: 0 0 red }
+.row-early, .cell-early { background: white; color: black }

@@ -106,7 +106,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// AMD Module Fo
 /*! namespace exports */
 /*! export default [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -115,9 +115,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _commonjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./commonjs */ 1);
-/* harmony import */ var _commonjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_commonjs__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _amd__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./amd */ 2);
-/* harmony import */ var _amd__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_amd__WEBPACK_IMPORTED_MODULE_1__);
 // ES6 Modules
 
 
@@ -161,16 +159,6 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	__webpack_require__.m = __webpack_modules__;
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = (module) => {
-/******/ 		const getter = module && module.__esModule ?
-/******/ 			() => (module['default']) :
-/******/ 			() => (module);
-/******/ 		__webpack_require__.d(getter, { a: getter });
-/******/ 		return getter;
-/******/ 	};
-/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	// define getter/value functions for harmony exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
@@ -236,9 +224,9 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -246,8 +234,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
@@ -286,7 +273,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -337,7 +324,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -378,7 +365,7 @@ __webpack_require__.e(/*! AMD require */ "require_context_templates_sync_recursi
 # dist/require_context_templates_sync_recursive_js_.output.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["require_context_templates_sync_recursive_js_"],[
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["require_context_templates_sync_recursive_js_"],[
 /* 0 */,
 /* 1 */,
 /* 2 */,
@@ -469,11 +456,11 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 13.3 KiB [emitted] (name: main)
-asset require_context_templates_sync_recursive_js_.output.js 2.29 KiB [emitted]
-chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.55 KiB (runtime) [entry] [rendered]
+asset output.js 12.6 KiB [emitted] (name: main)
+asset require_context_templates_sync_recursive_js_.output.js 2.32 KiB [emitted]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.26 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.55 KiB 9 modules
+  runtime modules 5.26 KiB 8 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [used exports unknown]
@@ -491,11 +478,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.48 KiB [emitted] [minimized] (name: main)
-asset require_context_templates_sync_recursive_js_.output.js 625 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.55 KiB (runtime) [entry] [rendered]
+asset output.js 2.39 KiB [emitted] [minimized] (name: main)
+asset require_context_templates_sync_recursive_js_.output.js 657 bytes [emitted] [minimized]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.26 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.55 KiB 9 modules
+  runtime modules 5.26 KiB 8 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [no exports used]

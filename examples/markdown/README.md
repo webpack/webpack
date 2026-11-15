@@ -5,8 +5,6 @@ This example demonstrates how to use Markdown files, convert (transform) them to
 Configuration example:
 
 ```javascript
-/** @typedef {import("webpack").LoaderContext<void>} LoaderContext */
-
 import rehypeSanitize from "rehype-sanitize";
 import rehypeStringify from "rehype-stringify";
 import remarkFrontmatter from "remark-frontmatter";
@@ -15,35 +13,39 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 
+const markdownToHtml = unified()
+	.use(remarkParse)
+	.use(remarkFrontmatter)
+	.use(remarkGfm)
+	.use(remarkRehype)
+	.use(rehypeSanitize)
+	.use(rehypeStringify);
+
 /** @type {import("webpack").Configuration} */
 const config = {
 	// mode: "development" || "production",
 	module: {
 		rules: [
-			// To convert Markdown syntax to HTML
+			// To convert Markdown syntax to HTML: webpack's built-in HTML support
+			// parses the converted markup, so images and other URLs it references
+			// are bundled and rewritten — no `html-loader` needed
 			{
 				test: /\.(md|markdown|mdown|mkdn|mkd|mdwn|mkdown|ron)$/i,
 				exclude: /(raw-to-string|raw-to-uint8-array)\.md/,
-				loader: "html-loader",
-				options: {
-					preprocessor:
-						/**
-						 * @param {string} content content
-						 * @param {LoaderContext} loaderContext loader context
-						 * @returns {Promise<string>} result
-						 */
-						async (content, loaderContext) => {
-							const file = await unified()
-								.use(remarkParse)
-								.use(remarkFrontmatter)
-								.use(remarkGfm)
-								.use(remarkRehype)
-								.use(rehypeSanitize)
-								.use(rehypeStringify)
-								.process(content);
-
-							return String(file);
-						}
+				type: "html",
+				parser: {
+					/**
+					 * Runs before the HTML is parsed for dependencies
+					 * @param {string} source the Markdown source
+					 * @returns {string} the HTML it converts to
+					 */
+					template: (source) => String(markdownToHtml.processSync(source)),
+					// The result is a fragment, not a full document
+					as: "template"
+				},
+				generator: {
+					// Export the HTML as a string instead of emitting a page
+					extract: false
 				}
 			},
 			// Import Markdown as a string
@@ -152,256 +154,9 @@ toRawContainerUsingString.appendChild(markdownToRawText);
 ```javascript
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ([
-/* 0 */,
-/* 1 */
-/*!*****************!*\
-  !*** ./file.md ***!
-  \*****************/
-/*! namespace exports */
-/*! export default [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.b, __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/******/ 	var __webpack_modules__ = ({
 
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-// Imports
-var ___HTML_LOADER_IMPORT_0___ = new URL(/* asset import */ __webpack_require__(/*! ./file.png */ 2), __webpack_require__.b);
-// Module
-var code = `<h1>Headers</h1>
-<h1>h1 Heading 8-)</h1>
-<h2>h2 Heading</h2>
-<h3>h3 Heading</h3>
-<h4>h4 Heading</h4>
-<h5>h5 Heading</h5>
-<h6>h6 Heading</h6>
-<p>Alternatively, for H1 and H2, an underline-ish style:</p>
-<h1>Alt-H1</h1>
-<h2>Alt-H2</h2>
-<hr>
-<h1>Emphasis</h1>
-<p>Emphasis, aka italics, with <em>asterisks</em> or <em>underscores</em>.</p>
-<p>Strong emphasis, aka bold, with <strong>asterisks</strong> or <strong>underscores</strong>.</p>
-<p>Combined emphasis with <strong>asterisks and <em>underscores</em></strong>.</p>
-<p>Strikethrough uses two tildes. <del>Scratch this.</del></p>
-<p><strong>This is bold text</strong></p>
-<p><strong>This is bold text</strong></p>
-<p><em>This is italic text</em></p>
-<p><em>This is italic text</em></p>
-<p><del>Strikethrough</del></p>
-<hr>
-<h1>Lists</h1>
-<ol>
-<li>First ordered list item</li>
-<li>Another item
-⋅⋅* Unordered sub-list.</li>
-<li>Actual numbers don't matter, just that it's a number
-⋅⋅1. Ordered sub-list</li>
-<li>And another item.</li>
-</ol>
-<p>⋅⋅⋅You can have properly indented paragraphs within list items. Notice the blank line above, and the leading spaces (at least one, but we'll use three here to also align the raw Markdown).</p>
-<p>⋅⋅⋅To have a line break without a paragraph, you will need to use two trailing spaces.⋅⋅
-⋅⋅⋅Note that this line is separate, but within the same paragraph.⋅⋅
-⋅⋅⋅(This is contrary to the typical GFM line break behaviour, where trailing spaces are not required.)</p>
-<ul>
-<li>Unordered list can use asterisks</li>
-</ul>
-<ul>
-<li>Or minuses</li>
-</ul>
-<ul>
-<li>Or pluses</li>
-</ul>
-<ol>
-<li>Make my changes
-<ol>
-<li>Fix bug</li>
-<li>Improve formatting
-<ul>
-<li>Make the headings bigger</li>
-</ul>
-</li>
-</ol>
-</li>
-<li>Push my commits to GitHub</li>
-<li>Open a pull request
-<ul>
-<li>Describe my changes</li>
-<li>Mention all the members of my team
-<ul>
-<li>Ask for feedback</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-<ul>
-<li>Create a list by starting a line with <code>+</code>, <code>-</code>, or <code>*</code></li>
-<li>Sub-lists are made by indenting 2 spaces:
-<ul>
-<li>Marker character change forces new list start:
-<ul>
-<li>Ac tristique libero volutpat at</li>
-</ul>
-<ul>
-<li>Facilisis in pretium nisl aliquet</li>
-</ul>
-<ul>
-<li>Nulla volutpat aliquam velit</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Very easy!</li>
-</ul>
-<hr>
-<h1>Task lists</h1>
-<ul class="contains-task-list">
-<li class="task-list-item"><input type="checkbox" checked disabled> Finish my changes</li>
-<li class="task-list-item"><input type="checkbox" disabled> Push my commits to GitHub</li>
-<li class="task-list-item"><input type="checkbox" disabled> Open a pull request</li>
-<li class="task-list-item"><input type="checkbox" checked disabled> @mentions, #refs, <a href="">links</a>, <strong>formatting</strong>, and tags supported</li>
-<li class="task-list-item"><input type="checkbox" checked disabled> list syntax required (any unordered or ordered list supported)</li>
-<li class="task-list-item"><input type="checkbox" disabled> this is a complete item</li>
-<li class="task-list-item"><input type="checkbox" disabled> this is an incomplete item</li>
-</ul>
-<hr>
-<h1>Ignoring Markdown formatting</h1>
-<p>You can tell GitHub to ignore (or escape) Markdown formatting by using \\ before the Markdown character.</p>
-<p>Let's rename *our-new-project* to *our-old-project*.</p>
-<hr>
-<h1>Links</h1>
-<p><a href="https://www.google.com">I'm an inline-style link</a></p>
-<p><a href="https://www.google.com" title="Google&#x27;s Homepage">I'm an inline-style link with title</a></p>
-<p><a href="https://www.mozilla.org">I'm a reference-style link</a></p>
-<p><a href="../blob/master/LICENSE">I'm a relative reference to a repository file</a></p>
-<p><a href="http://slashdot.org">You can use numbers for reference-style link definitions</a></p>
-<p>Or leave it empty and use the <a href="http://www.reddit.com">link text itself</a>.</p>
-<p>URLs and URLs in angle brackets will automatically get turned into links.
-<a href="http://www.example.com">http://www.example.com</a> or <a href="http://www.example.com">http://www.example.com</a> and sometimes
-example.com (but not on Github, for example).</p>
-<p>Some text to show that the reference links can follow later.</p>
-<hr>
-<h1>Images</h1>
-<p>Here's our logo (hover to see the title text):</p>
-<p>Inline-style:
-<img src="https://webpack.js.org/assets/icon-square-big.svg" alt="alt text" title="Logo Title Text 1"></p>
-<p>Reference-style:
-<img src="https://webpack.js.org/assets/icon-square-big.svg" alt="alt text" title="Logo Title Text 2"></p>
-<p><img src="https://octodex.github.com/images/minion.png" alt="Minion">
-<img src="https://octodex.github.com/images/stormtroopocat.jpg" alt="Stormtroopocat" title="The Stormtroopocat"></p>
-<p>Like links, Images also have a footnote style syntax</p>
-<p><img src="https://octodex.github.com/images/dojocat.jpg" alt="Alt text" title="The Dojocat"></p>
-<p>With a reference later in the document defining the URL location:</p>
-<hr>
-<h1><a href="https://github.com/markdown-it/markdown-it-footnote">Footnotes</a></h1>
-<p>Footnote 1 link<sup><a href="#user-content-fn-first" id="user-content-user-content-fnref-first" data-footnote-ref aria-describedby="user-content-footnote-label">1</a></sup>.</p>
-<p>Footnote 2 link<sup><a href="#user-content-fn-second" id="user-content-user-content-fnref-second" data-footnote-ref aria-describedby="user-content-footnote-label">2</a></sup>.</p>
-<p>Inline footnote^[Text of inline footnote] definition.</p>
-<p>Duplicated footnote reference<sup><a href="#user-content-fn-second" id="user-content-user-content-fnref-second-2" data-footnote-ref aria-describedby="user-content-footnote-label">2</a></sup>.</p>
-<hr>
-<h1>Code and Syntax Highlighting</h1>
-<p>Inline <code>code</code> has <code>back-ticks around</code> it.</p>
-<pre><code class="language-javascript">function \$initHighlight(block, cls) {
-  try {
-    if (cls.search(/\\bno\\-highlight\\b/) != -1)
-      return process(block, true, 0x0F) +
-             \` class="\${cls}"\`;
-  } catch (e) {
-    /* handle exception */
-  }
-  for (var i = 0 / 2; i &#x3C; classes.length; i++) {
-    if (checkCondition(classes[i]) === undefined)
-      console.log('undefined');
-  }
-}
-
-export default \$initHighlight;
-</code></pre>
-<hr>
-<h1>Tables</h1>
-<table>
-<thead>
-<tr>
-<th>First Header</th>
-<th>Second Header</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Content Cell</td>
-<td>Content Cell</td>
-</tr>
-<tr>
-<td>Content Cell</td>
-<td>Content Cell</td>
-</tr>
-</tbody>
-</table>
-<hr>
-<h1>Blockquotes</h1>
-<blockquote>
-<p>Blockquotes are very handy in email to emulate reply text.
-This line is part of the same quote.</p>
-</blockquote>
-<p>Quote break.</p>
-<blockquote>
-<p>This is a very long line that will still be quoted properly when it wraps. Oh boy let's keep writing to make sure this is long enough to actually wrap for everyone. Oh, you can <em>put</em> <strong>Markdown</strong> into a blockquote.</p>
-</blockquote>
-<blockquote>
-<p>Blockquotes can also be nested...</p>
-<blockquote>
-<p>...by using additional greater-than signs right next to each other...</p>
-<blockquote>
-<p>...or with spaces between arrows.</p>
-</blockquote>
-</blockquote>
-</blockquote>
-<hr>
-<h1>Inline HTML</h1>
-<hr>
-<h1>Horizontal Rules</h1>
-<p>Three or more...</p>
-<hr>
-<p>Hyphens</p>
-<hr>
-<p>Asterisks</p>
-<hr>
-<p>Underscores</p>
-<hr>
-<h1>Resolving resources</h1>
-<p><img src="${___HTML_LOADER_IMPORT_0___}" alt="Webpack"></p>
-<section data-footnotes class="footnotes"><h2 class="sr-only" id="user-content-footnote-label">Footnotes</h2>
-<ol>
-<li id="user-content-user-content-fn-first">
-<p>Footnote <strong>can have markup</strong></p>
-<p>and multiple paragraphs. <a href="#user-content-fnref-first" data-footnote-backref="" aria-label="Back to reference 1" class="data-footnote-backref">↩</a></p>
-</li>
-<li id="user-content-user-content-fn-second">
-<p>Footnote text. <a href="#user-content-fnref-second" data-footnote-backref="" aria-label="Back to reference 2" class="data-footnote-backref">↩</a> <a href="#user-content-fnref-second-2" data-footnote-backref="" aria-label="Back to reference 2-2" class="data-footnote-backref">↩<sup>2</sup></a></p>
-</li>
-</ol>
-</section>`;
-// Exports
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (code);
-
-/***/ }),
-/* 2 */
-/*!******************!*\
-  !*** ./file.png ***!
-  \******************/
-/*! default exports */
-/*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.p, module, __webpack_require__.* */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
-
-/***/ }),
-/* 3 */
+/***/ 7
 /*!*******************************!*\
   !*** ./raw-to-uint8-array.md ***!
   \*******************************/
@@ -409,12 +164,13 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /*! export default [not provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.*, __webpack_require__.tb, module */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+(module, __unused_webpack_exports, __webpack_require__) {
 
 module.exports = __webpack_require__.tb("IyBFeGFtcGxlIGhlYWRpbmdzCgojIyBTYW1wbGUgU2VjdGlvbgoKIyMgVGhpcydsbCBiZSBhIF9IZWxwZnVsXyBTZWN0aW9uIEFib3V0IHRoZSBHcmVlayBMZXR0ZXIgzpghCgpBIGhlYWRpbmcgY29udGFpbmluZyBjaGFyYWN0ZXJzIG5vdCBhbGxvd2VkIGluIGZyYWdtZW50cywgVVRGLTggY2hhcmFjdGVycywgdHdvIGNvbnNlY3V0aXZlIHNwYWNlcyBiZXR3ZWVuIHRoZSBmaXJzdCBhbmQgc2Vjb25kIHdvcmRzLCBhbmQgZm9ybWF0dGluZy4KCiMjIFRoaXMgaGVhZGluZyBpcyBub3QgdW5pcXVlIGluIHRoZSBmaWxlCgpURVhUIDEKCiMjIFRoaXMgaGVhZGluZyBpcyBub3QgdW5pcXVlIGluIHRoZSBmaWxlCgpURVhUIDIK");
 
-/***/ }),
-/* 4 */
+/***/ },
+
+/***/ 8
 /*!**************************!*\
   !*** ./raw-to-string.md ***!
   \**************************/
@@ -422,12 +178,27 @@ module.exports = __webpack_require__.tb("IyBFeGFtcGxlIGhlYWRpbmdzCgojIyBTYW1wbGU
 /*! export default [not provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module */
-/***/ ((module) => {
+(module) {
 
 module.exports = "# Example headings\n\n## Sample Section\n\n## This'll be a _Helpful_ Section About the Greek Letter Θ!\n\nA heading containing characters not allowed in fragments, UTF-8 characters, two consecutive spaces between the first and second words, and formatting.\n\n## This heading is not unique in the file\n\nTEXT 1\n\n## This heading is not unique in the file\n\nTEXT 2\n";
 
-/***/ })
-/******/ 	]);
+/***/ },
+
+/***/ 1
+/*!*****************!*\
+  !*** ./file.md ***!
+  \*****************/
+/*! default exports */
+/*! export default [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: module */
+(module) {
+
+module.exports = "<h1>Headers</h1>\n<h1>h1 Heading 8-)</h1>\n<h2>h2 Heading</h2>\n<h3>h3 Heading</h3>\n<h4>h4 Heading</h4>\n<h5>h5 Heading</h5>\n<h6>h6 Heading</h6>\n<p>Alternatively, for H1 and H2, an underline-ish style:</p>\n<h1>Alt-H1</h1>\n<h2>Alt-H2</h2>\n<hr>\n<h1>Emphasis</h1>\n<p>Emphasis, aka italics, with <em>asterisks</em> or <em>underscores</em>.</p>\n<p>Strong emphasis, aka bold, with <strong>asterisks</strong> or <strong>underscores</strong>.</p>\n<p>Combined emphasis with <strong>asterisks and <em>underscores</em></strong>.</p>\n<p>Strikethrough uses two tildes. <del>Scratch this.</del></p>\n<p><strong>This is bold text</strong></p>\n<p><strong>This is bold text</strong></p>\n<p><em>This is italic text</em></p>\n<p><em>This is italic text</em></p>\n<p><del>Strikethrough</del></p>\n<hr>\n<h1>Lists</h1>\n<ol>\n<li>First ordered list item</li>\n<li>Another item\n⋅⋅* Unordered sub-list.</li>\n<li>Actual numbers don't matter, just that it's a number\n⋅⋅1. Ordered sub-list</li>\n<li>And another item.</li>\n</ol>\n<p>⋅⋅⋅You can have properly indented paragraphs within list items. Notice the blank line above, and the leading spaces (at least one, but we'll use three here to also align the raw Markdown).</p>\n<p>⋅⋅⋅To have a line break without a paragraph, you will need to use two trailing spaces.⋅⋅\n⋅⋅⋅Note that this line is separate, but within the same paragraph.⋅⋅\n⋅⋅⋅(This is contrary to the typical GFM line break behaviour, where trailing spaces are not required.)</p>\n<ul>\n<li>Unordered list can use asterisks</li>\n</ul>\n<ul>\n<li>Or minuses</li>\n</ul>\n<ul>\n<li>Or pluses</li>\n</ul>\n<ol>\n<li>Make my changes\n<ol>\n<li>Fix bug</li>\n<li>Improve formatting\n<ul>\n<li>Make the headings bigger</li>\n</ul>\n</li>\n</ol>\n</li>\n<li>Push my commits to GitHub</li>\n<li>Open a pull request\n<ul>\n<li>Describe my changes</li>\n<li>Mention all the members of my team\n<ul>\n<li>Ask for feedback</li>\n</ul>\n</li>\n</ul>\n</li>\n</ol>\n<ul>\n<li>Create a list by starting a line with <code>+</code>, <code>-</code>, or <code>*</code></li>\n<li>Sub-lists are made by indenting 2 spaces:\n<ul>\n<li>Marker character change forces new list start:\n<ul>\n<li>Ac tristique libero volutpat at</li>\n</ul>\n<ul>\n<li>Facilisis in pretium nisl aliquet</li>\n</ul>\n<ul>\n<li>Nulla volutpat aliquam velit</li>\n</ul>\n</li>\n</ul>\n</li>\n<li>Very easy!</li>\n</ul>\n<hr>\n<h1>Task lists</h1>\n<ul class=\"contains-task-list\">\n<li class=\"task-list-item\"><input type=\"checkbox\" checked disabled> Finish my changes</li>\n<li class=\"task-list-item\"><input type=\"checkbox\" disabled> Push my commits to GitHub</li>\n<li class=\"task-list-item\"><input type=\"checkbox\" disabled> Open a pull request</li>\n<li class=\"task-list-item\"><input type=\"checkbox\" checked disabled> @mentions, #refs, <a href=\"\">links</a>, <strong>formatting</strong>, and tags supported</li>\n<li class=\"task-list-item\"><input type=\"checkbox\" checked disabled> list syntax required (any unordered or ordered list supported)</li>\n<li class=\"task-list-item\"><input type=\"checkbox\" disabled> this is a complete item</li>\n<li class=\"task-list-item\"><input type=\"checkbox\" disabled> this is an incomplete item</li>\n</ul>\n<hr>\n<h1>Ignoring Markdown formatting</h1>\n<p>You can tell GitHub to ignore (or escape) Markdown formatting by using \\ before the Markdown character.</p>\n<p>Let's rename *our-new-project* to *our-old-project*.</p>\n<hr>\n<h1>Links</h1>\n<p><a href=\"https://www.google.com\">I'm an inline-style link</a></p>\n<p><a href=\"https://www.google.com\" title=\"Google&#x27;s Homepage\">I'm an inline-style link with title</a></p>\n<p><a href=\"https://www.mozilla.org\">I'm a reference-style link</a></p>\n<p><a href=\"../blob/master/LICENSE\">I'm a relative reference to a repository file</a></p>\n<p><a href=\"http://slashdot.org\">You can use numbers for reference-style link definitions</a></p>\n<p>Or leave it empty and use the <a href=\"http://www.reddit.com\">link text itself</a>.</p>\n<p>URLs and URLs in angle brackets will automatically get turned into links.\n<a href=\"http://www.example.com\">http://www.example.com</a> or <a href=\"http://www.example.com\">http://www.example.com</a> and sometimes\nexample.com (but not on Github, for example).</p>\n<p>Some text to show that the reference links can follow later.</p>\n<hr>\n<h1>Images</h1>\n<p>Here's our logo (hover to see the title text):</p>\n<p>Inline-style:\n<img src=\"https://webpack.js.org/assets/icon-square-big.svg\" alt=\"alt text\" title=\"Logo Title Text 1\"></p>\n<p>Reference-style:\n<img src=\"https://webpack.js.org/assets/icon-square-big.svg\" alt=\"alt text\" title=\"Logo Title Text 2\"></p>\n<p><img src=\"https://octodex.github.com/images/minion.png\" alt=\"Minion\">\n<img src=\"https://octodex.github.com/images/stormtroopocat.jpg\" alt=\"Stormtroopocat\" title=\"The Stormtroopocat\"></p>\n<p>Like links, Images also have a footnote style syntax</p>\n<p><img src=\"https://octodex.github.com/images/dojocat.jpg\" alt=\"Alt text\" title=\"The Dojocat\"></p>\n<p>With a reference later in the document defining the URL location:</p>\n<hr>\n<h1><a href=\"https://github.com/markdown-it/markdown-it-footnote\">Footnotes</a></h1>\n<p>Footnote 1 link<sup><a href=\"#user-content-fn-first\" id=\"user-content-user-content-fnref-first\" data-footnote-ref aria-describedby=\"user-content-footnote-label\">1</a></sup>.</p>\n<p>Footnote 2 link<sup><a href=\"#user-content-fn-second\" id=\"user-content-user-content-fnref-second\" data-footnote-ref aria-describedby=\"user-content-footnote-label\">2</a></sup>.</p>\n<p>Inline footnote^[Text of inline footnote] definition.</p>\n<p>Duplicated footnote reference<sup><a href=\"#user-content-fn-second\" id=\"user-content-user-content-fnref-second-2\" data-footnote-ref aria-describedby=\"user-content-footnote-label\">2</a></sup>.</p>\n<hr>\n<h1>Code and Syntax Highlighting</h1>\n<p>Inline <code>code</code> has <code>back-ticks around</code> it.</p>\n<pre><code class=\"language-javascript\">function $initHighlight(block, cls) {\n  try {\n    if (cls.search(/\\bno\\-highlight\\b/) != -1)\n      return process(block, true, 0x0F) +\n             ` class=\"${cls}\"`;\n  } catch (e) {\n    /* handle exception */\n  }\n  for (var i = 0 / 2; i &#x3C; classes.length; i++) {\n    if (checkCondition(classes[i]) === undefined)\n      console.log('undefined');\n  }\n}\n\nexport default $initHighlight;\n</code></pre>\n<hr>\n<h1>Tables</h1>\n<table>\n<thead>\n<tr>\n<th>First Header</th>\n<th>Second Header</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Content Cell</td>\n<td>Content Cell</td>\n</tr>\n<tr>\n<td>Content Cell</td>\n<td>Content Cell</td>\n</tr>\n</tbody>\n</table>\n<hr>\n<h1>Blockquotes</h1>\n<blockquote>\n<p>Blockquotes are very handy in email to emulate reply text.\nThis line is part of the same quote.</p>\n</blockquote>\n<p>Quote break.</p>\n<blockquote>\n<p>This is a very long line that will still be quoted properly when it wraps. Oh boy let's keep writing to make sure this is long enough to actually wrap for everyone. Oh, you can <em>put</em> <strong>Markdown</strong> into a blockquote.</p>\n</blockquote>\n<blockquote>\n<p>Blockquotes can also be nested...</p>\n<blockquote>\n<p>...by using additional greater-than signs right next to each other...</p>\n<blockquote>\n<p>...or with spaces between arrows.</p>\n</blockquote>\n</blockquote>\n</blockquote>\n<hr>\n<h1>Inline HTML</h1>\n<hr>\n<h1>Horizontal Rules</h1>\n<p>Three or more...</p>\n<hr>\n<p>Hyphens</p>\n<hr>\n<p>Asterisks</p>\n<hr>\n<p>Underscores</p>\n<hr>\n<h1>Resolving resources</h1>\n<p><img src=\"dist/89a353e9c515885abd8e.png\" alt=\"Webpack\"></p>\n<section data-footnotes class=\"footnotes\"><h2 class=\"sr-only\" id=\"user-content-footnote-label\">Footnotes</h2>\n<ol>\n<li id=\"user-content-user-content-fn-first\">\n<p>Footnote <strong>can have markup</strong></p>\n<p>and multiple paragraphs. <a href=\"#user-content-fnref-first\" data-footnote-backref=\"\" aria-label=\"Back to reference 1\" class=\"data-footnote-backref\">↩</a></p>\n</li>\n<li id=\"user-content-user-content-fn-second\">\n<p>Footnote text. <a href=\"#user-content-fnref-second\" data-footnote-backref=\"\" aria-label=\"Back to reference 2\" class=\"data-footnote-backref\">↩</a> <a href=\"#user-content-fnref-second-2\" data-footnote-backref=\"\" aria-label=\"Back to reference 2-2\" class=\"data-footnote-backref\">↩<sup>2</sup></a></p>\n</li>\n</ol>\n</section>";
+
+/***/ }
+
+/******/ 	});
 ```
 
 <details><summary><code>/* webpack runtime code */</code></summary>
@@ -459,24 +230,10 @@ module.exports = "# Example headings\n\n## Sample Section\n\n## This'll be a _He
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
-/******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		for(var key in definition) {
-/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 			}
-/******/ 		}
-/******/ 	};
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
-/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/to binary */
@@ -508,30 +265,6 @@ module.exports = "# Example headings\n\n## Sample Section\n\n## This'll be a _He
 /******/ 		})();
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/publicPath */
-/******/ 	__webpack_require__.p = "dist/";
-/******/ 	
-/******/ 	/* webpack/runtime/jsonp chunk loading */
-/******/ 	(() => {
-/******/ 		__webpack_require__.b = (typeof document !== 'undefined' && document.baseURI) || self.location.href;
-/******/ 		
-/******/ 		// no installed chunks
-/******/ 		
-/******/ 		// no chunk on demand loading
-/******/ 		
-/******/ 		// no prefetching
-/******/ 		
-/******/ 		// no preloaded
-/******/ 		
-/******/ 		// no HMR
-/******/ 		
-/******/ 		// no HMR manifest
-/******/ 		
-/******/ 		// no on chunks loaded
-/******/ 		
-/******/ 		// no jsonp function
-/******/ 	})();
-/******/ 	
 /************************************************************************/
 ```
 
@@ -549,8 +282,8 @@ let __webpack_exports__ = {};
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _file_md__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./file.md */ 1);
-/* harmony import */ var _raw_to_uint8_array_md__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./raw-to-uint8-array.md */ 3);
-/* harmony import */ var _raw_to_string_md__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./raw-to-string.md */ 4);
+/* harmony import */ var _raw_to_uint8_array_md__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./raw-to-uint8-array.md */ 7);
+/* harmony import */ var _raw_to_string_md__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./raw-to-string.md */ 8);
 // Import Markdown file and convert it to HTML
 
 
@@ -590,7 +323,7 @@ h2ToHtmlContainer.textContent = "Markdown to HTML";
 toHtmlContainer.appendChild(h2ToHtmlContainer);
 
 const markdownToHTMLText = document.createElement("div");
-markdownToHTMLText.innerHTML = _file_md__WEBPACK_IMPORTED_MODULE_0__["default"];
+markdownToHTMLText.innerHTML = _file_md__WEBPACK_IMPORTED_MODULE_0__;
 
 toHtmlContainer.appendChild(markdownToHTMLText);
 
@@ -647,12 +380,12 @@ toRawContainerUsingString.appendChild(markdownToRawText);
 ## Unoptimized
 
 ```
-asset output.js 18.2 KiB [emitted] (name: main)
+asset output.js 16.3 KiB [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 11.3 KiB (javascript) 14.6 KiB (asset) 1.92 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 11.1 KiB (javascript) 14.6 KiB (asset) 210 bytes (asset-url) 1.21 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 1.92 KiB 6 modules
-  dependent modules 8.89 KiB (javascript) 14.6 KiB (asset) [dependent] 4 modules
+  dependent modules 8.69 KiB (javascript) 14.6 KiB (asset) 210 bytes (asset-url) [dependent] 8 modules
+  runtime modules 1.21 KiB 2 modules
   ./example.js 2.39 KiB [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -664,12 +397,12 @@ webpack X.X.X compiled successfully
 
 ```
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: main)
-asset output.js 10.9 KiB [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 11.4 KiB (javascript) 14.6 KiB (asset) 1.32 KiB (runtime) [entry] [rendered]
+asset output.js 10.8 KiB [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 11.1 KiB (javascript) 14.6 KiB (asset) 210 bytes (asset-url) 1.03 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 1.32 KiB 3 modules
-  dependent modules 14.6 KiB (asset) 42 bytes (javascript) [dependent] 1 module
-  ./example.js + 3 modules 11.3 KiB [built] [code generated]
+  dependent modules 14.6 KiB (asset) 210 bytes (asset-url) [dependent] 5 modules
+  runtime modules 1.03 KiB 1 module
+  ./example.js + 3 modules 11.1 KiB [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main

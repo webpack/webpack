@@ -1,0 +1,1 @@
+a{width:var(--a)}b{x:1}a{width:var(--b);& c{top:0}}

@@ -1,0 +1,1 @@
+export function r(g){Object[g]=1;return Object.keys([1])}

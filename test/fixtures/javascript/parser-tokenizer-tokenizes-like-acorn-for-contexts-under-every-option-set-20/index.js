@@ -1,0 +1,1 @@
+x = { function: /re/, class: 1 } / 2

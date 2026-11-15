@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "meaning",
+		"contains": "a{a{a{a{",
+		"presets": [
+			"aggressive",
+			"embedded",
+			"embedded+legacy"
+		],
+		"why": "the CSS minifier refuses a sheet nested 20000 deep, so `meaning` reads that sheet as its text and cannot match it to the merged sheet the printer closed before merging; both put `b{}` at the top level"
+	}
+]

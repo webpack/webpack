@@ -1,0 +1,1 @@
+try { a } catch ({ message }) { b }

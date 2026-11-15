@@ -1,0 +1,16 @@
+[
+	{
+		"print": "cssMinify",
+		"environment": {
+			"browsers": [
+				"chrome 40",
+				"firefox 40",
+				"safari 17.0"
+			],
+			"vendorPrefixes": false
+		},
+		"svg": false,
+		"extractComments": false,
+		"vendorPrefixes": false
+	}
+]

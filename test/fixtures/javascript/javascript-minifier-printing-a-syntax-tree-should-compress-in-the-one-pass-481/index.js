@@ -1,0 +1,1 @@
+function g(){const a=[1,2];x=a[0];f({[a[1]]:1})}

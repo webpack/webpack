@@ -1,0 +1,1 @@
+function f(y){if(y)return 1;else return 1}

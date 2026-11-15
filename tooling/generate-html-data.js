@@ -18,6 +18,7 @@ const fs = require("fs");
 const path = require("path");
 const prettier = require("prettier");
 const { toJsStringLiteral } = require("../lib/util/identifier");
+const { toLatin1Source } = require("./latin1-source");
 
 const TARGET = path.resolve(__dirname, "../lib/html/data.js");
 const SYNTAX_TARGET = path.resolve(__dirname, "../lib/html/syntax-parser.js");
@@ -238,7 +239,7 @@ const fetchUrl = (url) =>
 					}
 					/** @type {Buffer[]} */
 					const chunks = [];
-					res.on("data", (chunk) => chunks.push(chunk));
+					res.on("data", (/** @type {Buffer} */ chunk) => chunks.push(chunk));
 					res.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
 					res.on("error", reject);
 				}
@@ -415,7 +416,9 @@ const SUPPLEMENT = {
 		href: ["a", "area", "base"],
 		action: ["form"],
 		formaction: ["button", "input"],
-		manifest: ["html"]
+		manifest: ["html"],
+		// Typed `(TrustedScriptURL or USVString)` for Trusted Types, so no marker.
+		src: ["script"]
 	},
 	// Not pure reflections on these elements — the IDL member resizes a bitmap or
 	// drives a plugin — so they carry no marker.
@@ -525,6 +528,376 @@ const IMPLIED_END_TAG_ELEMENTS = [
 
 /** @type {ParserTable[]} */
 const PARSER_TABLES = [
+	[
+		"SVG_COLOR_ATTRIBUTES",
+		"set",
+		"SVG presentation attributes accepting a color; paint servers and context-dependent values are left untouched.",
+		["color", "fill", "stroke", "stop-color", "flood-color", "lighting-color"]
+	],
+	[
+		"SVG_INHERITED_CLEANUP_ATTRIBUTES",
+		"set",
+		"Inherited presentation values that structural cleanup can compare without resolving CSS.",
+		[
+			"fill",
+			"stroke",
+			"stroke-width",
+			"stroke-linecap",
+			"stroke-linejoin",
+			"stroke-miterlimit",
+			"color",
+			"fill-rule",
+			"fill-opacity",
+			"stroke-opacity",
+			"text-anchor",
+			"font-family",
+			"font-size",
+			"font-style",
+			"font-weight",
+			"letter-spacing",
+			"word-spacing",
+			"clip-rule",
+			"shape-rendering",
+			"color-rendering",
+			"pointer-events",
+			"visibility",
+			"paint-order"
+		]
+	],
+	[
+		"SVG_LOCAL_DEFAULTS",
+		"object",
+		"Non-inherited presentation defaults removable in dependency-free SVG documents.",
+		[
+			["opacity", "1"],
+			["display", "inline"],
+			["vector-effect", "none"],
+			["clip-path", "none"],
+			["filter", "none"],
+			["mask", "none"],
+			["isolation", "auto"],
+			["mix-blend-mode", "normal"]
+		]
+	],
+	[
+		"SVG_SHAPE_ZERO_ATTRIBUTES",
+		"object",
+		"Coordinates whose omitted value is a local zero rather than a text position or inherited value.",
+		[
+			["rect", "x y"],
+			["circle", "cx cy"],
+			["ellipse", "cx cy"],
+			["line", "x1 y1 x2 y2"],
+			["image", "x y"],
+			["use", "x y"],
+			["foreignObject", "x y"],
+			["svg", "x y"]
+		]
+	],
+	[
+		"SVG_ASPECT_RATIO_ELEMENTS",
+		"set",
+		"Elements whose omitted aspect ratio is the non-inherited xMidYMid meet default.",
+		["svg", "image", "feImage", "symbol", "marker"]
+	],
+	[
+		"SVG_STRUCTURAL_PRESENTATION_VALUES",
+		"object",
+		"Context-free presentation values eligible for inherited attribute cleanup.",
+		[
+			["stroke-width", "number"],
+			["stroke-miterlimit", "number"],
+			["fill-opacity", "number"],
+			["stroke-opacity", "number"],
+			["stroke-linecap", "butt round square"],
+			["stroke-linejoin", "miter round bevel"],
+			["fill-rule", "nonzero evenodd"],
+			["clip-rule", "nonzero evenodd"],
+			["shape-rendering", "auto optimizeSpeed crispEdges geometricPrecision"],
+			["color-rendering", "auto optimizeSpeed optimizeQuality"],
+			[
+				"pointer-events",
+				"bounding-box visiblePainted visibleFill visibleStroke visible painted fill stroke all none"
+			],
+			["visibility", "visible hidden collapse"],
+			["paint-order", "normal"]
+		]
+	],
+	[
+		"SVG_GROUP_ATTRIBUTE_TARGETS",
+		"set",
+		"Graphics children eligible to receive a removed group's inherited attributes.",
+		["g", "path", "rect", "circle", "ellipse", "line", "polyline", "polygon"]
+	],
+	[
+		"SVG_UNUSED_DEFINITION_CONTENT",
+		"set",
+		"Known non-textual SVG content removable from an unnamed, unreferenced definition.",
+		[
+			"g",
+			"path",
+			"rect",
+			"circle",
+			"ellipse",
+			"line",
+			"polyline",
+			"polygon",
+			"linearGradient",
+			"radialGradient",
+			"stop",
+			"pattern",
+			"marker",
+			"mask",
+			"clipPath",
+			"symbol"
+		]
+	],
+	[
+		"SVG_DEFINITION_ELEMENTS",
+		"set",
+		"Resource definitions whose order within defs does not affect painting.",
+		[
+			"linearGradient",
+			"radialGradient",
+			"pattern",
+			"marker",
+			"mask",
+			"clipPath",
+			"symbol"
+		]
+	],
+	[
+		"SVG_EMPTY_CONTAINERS",
+		"set",
+		"Empty SVG containers with only namespace declarations can be omitted when structural cleanup is explicitly enabled.",
+		["g", "defs", "symbol", "marker", "pattern", "mask", "clipPath"]
+	],
+	[
+		"SVG_TRANSFORM_ARGUMENTS",
+		"object",
+		"SVG 1.1 transform functions and their allowed argument counts.",
+		[
+			["matrix", "6"],
+			["translate", "1 2"],
+			["scale", "1 2"],
+			["rotate", "1 3"],
+			["skewX", "1"],
+			["skewY", "1"]
+		]
+	],
+	[
+		"SVG_PATH_ARGUMENTS",
+		"object",
+		"SVG path commands and the number of arguments in each repeated segment.",
+		[
+			["M", "2"],
+			["L", "2"],
+			["H", "1"],
+			["V", "1"],
+			["C", "6"],
+			["S", "4"],
+			["Q", "4"],
+			["T", "2"],
+			["A", "7"],
+			["Z", "0"]
+		]
+	],
+	[
+		"SVG_NUMERIC_ATTRIBUTES",
+		"byElement",
+		"Conservative SVG numeric attribute grammars; unknown attributes and unsupported whole values stay untouched.",
+		[
+			...[
+				["svg", "x y width height"],
+				["rect", "x y width height rx ry"],
+				["circle", "cx cy r"],
+				["ellipse", "cx cy rx ry"],
+				["line", "x1 y1 x2 y2"],
+				["image", "x y width height"],
+				["foreignObject", "x y width height"],
+				["text", "textLength"],
+				["tspan", "textLength"],
+				["textPath", "textLength startOffset"],
+				["use", "x y width height"],
+				["marker", "markerWidth markerHeight refX refY"],
+				["linearGradient", "x1 y1 x2 y2"],
+				["radialGradient", "cx cy r fx fy fr"],
+				["mask", "x y width height"],
+				["pattern", "x y width height"],
+				["filter", "x y width height"]
+			].reduce((entries, [tag, names]) => {
+				for (const name of names.split(" ")) {
+					entries.push([`${tag} ${name}`, "length"]);
+				}
+				return entries;
+			}, /** @type {[string, string][]} */ ([])),
+			...[
+				["feOffset", "dx dy"],
+				["feDropShadow", "dx dy"],
+				["feComposite", "k1 k2 k3 k4"],
+				["feConvolveMatrix", "divisor bias"],
+				["feDisplacementMap", "scale"],
+				["feDiffuseLighting", "surfaceScale diffuseConstant"],
+				[
+					"feSpecularLighting",
+					"surfaceScale specularConstant specularExponent"
+				],
+				["feDistantLight", "azimuth elevation"],
+				["fePointLight", "x y z"],
+				[
+					"feSpotLight",
+					"x y z pointsAtX pointsAtY pointsAtZ specularExponent limitingConeAngle"
+				],
+				...["feFuncR", "feFuncG", "feFuncB", "feFuncA"].map((tag) => [
+					tag,
+					"slope intercept amplitude exponent offset"
+				])
+			].reduce((entries, [tag, names]) => {
+				for (const name of names.split(" ")) {
+					entries.push([`${tag} ${name}`, "number"]);
+				}
+				return entries;
+			}, /** @type {[string, string][]} */ ([])),
+			...["text", "tspan", "tref", "altGlyph"].reduce((entries, tag) => {
+				for (const name of ["x", "y", "dx", "dy"]) {
+					entries.push([`${tag} ${name}`, "lengths"]);
+				}
+				entries.push([`${tag} rotate`, "numbers"]);
+				return entries;
+			}, /** @type {[string, string][]} */ ([])),
+			["stop offset", "percentage"],
+			["feConvolveMatrix order", "integerPair"],
+			["feConvolveMatrix targetX", "integer"],
+			["feConvolveMatrix targetY", "integer"],
+			["feTurbulence numOctaves", "integer"],
+			["feTurbulence seed", "number"],
+			["feGaussianBlur stdDeviation", "pair"],
+			["feDropShadow stdDeviation", "pair"],
+			["feTurbulence baseFrequency", "pair"],
+			...["feConvolveMatrix", "feDiffuseLighting", "feSpecularLighting"].map(
+				(tag) =>
+					/** @type {[string, string]} */ ([`${tag} kernelUnitLength`, "pair"])
+			),
+			["feConvolveMatrix kernelMatrix", "numbers"],
+			["feColorMatrix values", "numbers"],
+			...["feFuncR", "feFuncG", "feFuncB", "feFuncA"].map(
+				(tag) =>
+					/** @type {[string, string]} */ ([`${tag} tableValues`, "numbers"])
+			),
+			...[
+				"path",
+				"rect",
+				"circle",
+				"ellipse",
+				"line",
+				"polygon",
+				"polyline"
+			].map(
+				(tag) =>
+					/** @type {[string, string]} */ ([`${tag} pathLength`, "number"])
+			),
+			...["svg", "symbol", "marker", "pattern", "view"].map(
+				(tag) => /** @type {[string, string]} */ ([`${tag} viewBox`, "viewBox"])
+			),
+			["polygon points", "points"],
+			["polyline points", "points"],
+			["path d", "path"],
+			...[
+				"svg",
+				"g",
+				"a",
+				"switch",
+				"defs",
+				"symbol",
+				"use",
+				"rect",
+				"circle",
+				"ellipse",
+				"line",
+				"path",
+				"polygon",
+				"polyline",
+				"text",
+				"image",
+				"foreignObject",
+				"clipPath",
+				"mask",
+				"marker",
+				"pattern"
+			].map(
+				(tag) =>
+					/** @type {[string, string]} */ ([`${tag} transform`, "transform"])
+			),
+			["linearGradient gradientTransform", "transform"],
+			["radialGradient gradientTransform", "transform"],
+			["pattern patternTransform", "transform"]
+		]
+	],
+	[
+		"SVG_PRESENTATION_NUMERIC_ATTRIBUTES",
+		"object",
+		"Numeric SVG presentation attribute grammars; CSS keywords, functions and unsupported whole values stay untouched.",
+		[
+			...[
+				"opacity",
+				"fill-opacity",
+				"stroke-opacity",
+				"stop-opacity",
+				"flood-opacity"
+			].map((name) => /** @type {[string, string]} */ ([name, "percentage"])),
+			...[
+				"stroke-width",
+				"stroke-dashoffset",
+				"font-size",
+				"letter-spacing",
+				"word-spacing",
+				"baseline-shift"
+			].map((name) => /** @type {[string, string]} */ ([name, "length"])),
+			["stroke-miterlimit", "number"],
+			["stroke-dasharray", "lengths"]
+		]
+	],
+	[
+		"SVG_LENGTH_UNITS",
+		"set",
+		"SVG 1.1 length suffixes; unknown CSS extensions are preserved rather than interpreted as geometry.",
+		["", "%", "em", "ex", "px", "in", "cm", "mm", "pt", "pc"]
+	],
+	[
+		"SVG_WHITESPACE_CONTAINERS",
+		"set",
+		"SVG containers with no rendered character data. Text, descriptive, foreign and unknown elements remain opaque to whitespace cleanup.",
+		[
+			"svg",
+			"g",
+			"defs",
+			"symbol",
+			"clipPath",
+			"mask",
+			"marker",
+			"pattern",
+			"linearGradient",
+			"radialGradient",
+			"filter"
+		]
+	],
+	[
+		"SVG_EDITOR_NAMESPACES",
+		"set",
+		"Editor-specific SVG data namespaces, not described by webref. Generic RDF and licensing vocabularies are not editor data.",
+		[
+			"http://www.inkscape.org/namespaces/inkscape",
+			"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd",
+			"http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd",
+			"http://krita.org/namespaces/svg/krita",
+			"http://ns.adobe.com/AdobeIllustrator/10.0/",
+			"http://ns.adobe.com/Extensibility/1.0/",
+			"http://ns.adobe.com/SaveForWeb/1.0/",
+			"http://schemas.microsoft.com/visio/2003/SVGExtensions/",
+			"http://www.bohemiancoding.com/sketch/ns",
+			"http://www.figma.com/figma/ns"
+		]
+	],
 	[
 		"VOID",
 		"set",
@@ -1563,44 +1936,56 @@ const PARSER_TABLES = [
 		"`<element> <attribute>` for each enumerated attribute whose invalid value default names a different state from its missing value default, so a value matching no keyword may not be dropped as redundant.",
 		["track kind"]
 	],
-	// WHY: Elements `removeEmptyElements` keeps even with no children and no
-	// attributes, because that is their ordinary form rather than a leftover.
-	// The option's other guards are rules, not names: a void element is always
-	// childless, a foreign one is not ours to judge, and an element carrying any
-	// attribute at all was written for a reason (which is what covers
-	// `<script src>`, `<iframe src>`, `<div id=mount>` and `<div class=spacer>`,
-	// each of which html-minifier-terser drops).
+	// WHY: Elements `removeEmptyElements` may drop when they hold nothing and
+	// carry no attribute: an empty one has no box, margin, marker, widget or
+	// generated text of its own, and nothing finds it by name. Every other name
+	// stays — a widget, a margin, a custom element a script upgrades, or one
+	// added to HTML after this list — so an unknown element takes the safe side.
 	[
-		"EMPTY_ELEMENT_KEPT",
+		"EMPTY_ELEMENT_DROPPED",
 		"set",
-		"Elements `removeEmptyElements` never drops: with no children and no attributes each is still doing its job, so an empty one is not a leftover.",
+		"Elements `removeEmptyElements` may drop: with no children and no attributes each renders nothing and is read by nothing; every other element, a custom one included, is kept.",
 		[
-			// Drawn into by script, and found by tag name.
-			"canvas",
-			// Filled and opened by script.
-			"dialog",
-			// A gauge reads its value off an attribute; bare, it is still a gauge.
-			"meter",
-			// Form-associated and written to by script.
-			"output",
-			"progress",
-			// The default slot, which is exactly the one with no name.
-			"slot",
-			// Its children hang off a content fragment, not off it.
-			"template",
-			// Empty is a valid value, and its own end tag is what delimits it.
-			"textarea",
-			// Table shape: dropping a cell or a row shifts every one after it.
-			"caption",
-			"col",
-			"colgroup",
-			"table",
-			"tbody",
-			"td",
-			"tfoot",
-			"th",
-			"thead",
-			"tr"
+			"a",
+			"abbr",
+			"address",
+			"article",
+			"aside",
+			"b",
+			"bdi",
+			"bdo",
+			"cite",
+			"code",
+			"data",
+			"del",
+			"dfn",
+			"div",
+			"em",
+			"footer",
+			// The parser puts one back wherever it is left out.
+			"head",
+			"header",
+			"i",
+			"ins",
+			"kbd",
+			"label",
+			"main",
+			"mark",
+			"nav",
+			"s",
+			"samp",
+			"script",
+			"section",
+			"small",
+			"span",
+			"strong",
+			"style",
+			"sub",
+			"sup",
+			"time",
+			"title",
+			"u",
+			"var"
 		]
 	],
 	// WHY: Global attributes whose empty value is the state the spec gives their
@@ -1631,15 +2016,12 @@ const PARSER_TABLES = [
 	[
 		"REDUNDANT_TYPE_ATTRIBUTES",
 		"byElement",
-		'element -> attribute -> the value that states the element\'s own default, for `removeRedundantAttributes: "smart"` (the default). Grouped by element so the printer gates on one lookup for an element no entry names, which is nearly every attribute it prints. Only markers on elements that render nothing, so no rule that styles the page stops applying — unlike `input[type=text]`, which is why that tier is separate. A `querySelector` naming one of these can still tell it went. `media` defaults to `all`, and a `<script charset>` matching the document encoding is obsolete and ignored. Matched ASCII-case-insensitively, unlike `@swc/html`, which lowercases `type` but not `media` / `charset`. `<script type>` is not here — its redundant values are `JAVASCRIPT_SCRIPT_TYPES` minus the empty and `module` spellings, which mean something.',
+		'element -> attribute -> the value that states the element\'s own default, for `removeRedundantAttributes: "smart"` (the default). Grouped by element so the printer gates on one lookup for an element no entry names, which is nearly every attribute it prints. Only markers on elements that render nothing, so no rule that styles the page stops applying — unlike `input[type=text]`, which is why that tier is separate. A `querySelector` naming one of these can still tell it went. `media` defaults to `all`. `<script charset>` is not here: it decides how a classic script is decoded, so the printer drops a UTF-8 one only on a document that declares UTF-8 itself. Matched ASCII-case-insensitively, unlike `@swc/html`, which lowercases `type` but not `media`. `<script type>` is not here — its redundant values are `JAVASCRIPT_SCRIPT_TYPES` minus the empty and `module` spellings, which mean something.',
 		[
 			["style type", "text/css"],
 			["link type", "text/css"],
 			["link media", "all"],
-			["script language", "javascript"],
-			// The attribute value the spec spells, not a Node encoding identifier.
-			// eslint-disable-next-line unicorn/text-encoding-identifier-case
-			["script charset", "utf-8"]
+			["script language", "javascript"]
 		]
 	],
 	[
@@ -1686,6 +2068,53 @@ const PARSER_TABLES = [
 			"text/x-ecmascript",
 			"text/x-javascript"
 		]
+	],
+	[
+		"NO_END_TAG",
+		"set",
+		"§13.3's elements serialized with no end tag: the void ones and those tree construction pops as soon as it inserts them, so none holds a child.",
+		[
+			"area",
+			"base",
+			"basefont",
+			"bgsound",
+			"br",
+			"col",
+			"embed",
+			"frame",
+			"hr",
+			"img",
+			"input",
+			"keygen",
+			"link",
+			"meta",
+			"param",
+			"source",
+			"track",
+			"wbr"
+		]
+	],
+	[
+		"ACKNOWLEDGED_NON_VOID",
+		"set",
+		"Start tags besides the void elements whose self-closing flag tree construction acknowledges.",
+		["basefont", "bgsound", "image"]
+	],
+	[
+		"END_TAG_OPTIONAL_AT_BODY_END",
+		"set",
+		"What the end of the body may leave open without a parse error: elements whose end tag is optional.",
+		[
+			...IMPLIED_END_TAG_ELEMENTS,
+			"tbody",
+			"td",
+			"tfoot",
+			"th",
+			"thead",
+			"tr",
+			"body",
+			"html"
+		]
 	]
 ];
 
@@ -1697,11 +2126,7 @@ const ENUMERATED_ATTRIBUTE_NAMES = [
 		/** @type {[string, string][]} */
 		(
 			/** @type {ParserTable} */
-			(
-				/** @type {ParserTable[]} */ (PARSER_TABLES).find(
-					([name]) => name === "ENUMERATED_KEYWORDS"
-				)
-			)[3]
+			(PARSER_TABLES.find(([name]) => name === "ENUMERATED_KEYWORDS"))[3]
 		).map(([key]) => key.slice(key.indexOf(" ") + 1))
 	)
 ].sort();
@@ -1728,11 +2153,7 @@ const REWRITABLE_ATTRIBUTE_NAMES = [
 // except `sandbox`, whose empty list is the most restrictive state there is.
 const emptyRemovable = /** @type {[string, string[] | null][]} */ (
 	/** @type {ParserTable} */
-	(
-		/** @type {ParserTable[]} */ (PARSER_TABLES).find(
-			([name]) => name === "EMPTY_REMOVABLE_ATTRIBUTES"
-		)
-	)[3]
+	(PARSER_TABLES.find(([name]) => name === "EMPTY_REMOVABLE_ATTRIBUTES"))[3]
 );
 // Carrying the scope, not just the name: off the elements the list is defined
 // for, the same spelling is an author attribute that means whatever a script
@@ -1755,19 +2176,11 @@ emptyRemovable.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 // may drop these even though the void guard otherwise keeps every void element.
 const EMPTY_METADATA_ELEMENTS = /** @type {string[]} */ (
 	/** @type {ParserTable} */
-	(
-		/** @type {ParserTable[]} */ (PARSER_TABLES).find(
-			([name]) => name === "HEAD_ELEMENTS"
-		)
-	)[3]
+	(PARSER_TABLES.find(([name]) => name === "HEAD_ELEMENTS"))[3]
 ).filter((name) =>
 	/** @type {string[]} */ (
 		/** @type {ParserTable} */
-		(
-			/** @type {ParserTable[]} */ (PARSER_TABLES).find(
-				([name2]) => name2 === "VOID"
-			)
-		)[3]
+		(PARSER_TABLES.find(([name2]) => name2 === "VOID"))[3]
 	).includes(name)
 );
 
@@ -1822,16 +2235,16 @@ const byElementLiteral = (entries, asSet = false) => {
 	const inner = [...grouped]
 		.map(
 			([element, attributes]) =>
-				`${propertyKey(
-					element
-				)}: Object.assign(Object.create(null), {${attributes
+				`${propertyKey(element)}: /** @type {${
+					asSet ? "Record<string, Set<string>>" : "Record<string, string>"
+				}} */ (Object.assign(Object.create(null), {${attributes
 					.map(
 						([attribute, mapped]) =>
 							`${propertyKey(attribute)}: ${
 								asSet ? setLiteral(mapped.split(" ")) : `"${mapped}"`
 							}`
 					)
-					.join(", ")}})`
+					.join(", ")}}))`
 		)
 		.join(", ");
 	return `Object.assign(Object.create(null), {${inner}})`;
@@ -1883,15 +2296,7 @@ const parserTable = ([name, kind, doc, items]) => {
 						: kind === "array"
 							? "string[]"
 							: "Record<string, string>";
-	// The `charset` value is an attribute spelling, not a Node encoding id.
-	const encoded = value.includes('"utf-8"');
-	const open = encoded
-		? "/* eslint-disable unicorn/text-encoding-identifier-case */\n"
-		: "";
-	const close = encoded
-		? "/* eslint-enable unicorn/text-encoding-identifier-case */\n"
-		: "";
-	return `/**\n * ${doc}\n * @type {${type}}\n */\n${open}const ${name} = ${value};\n${close}`;
+	return `/**\n * ${doc}\n * @type {${type}}\n */\nconst ${name} = ${value};\n`;
 };
 
 // WHY: The §13.1.2.4 optional-tag conditions and the value grammars below are prose
@@ -1935,7 +2340,9 @@ const source = `/*
 "use strict";
 
 // GENERATED by tooling/generate-html-data.js — do not edit.
-// cspell:ignore ${CSPELL_IGNORE} ${eventHandlers.map(([name]) => name).join(" ")}
+// cspell:ignore ${CSPELL_IGNORE} ${eventHandlers
+	.map(([name]) => name)
+	.join(" ")}
 // Reflected-attribute tables from ${REFLECT_SOURCE}; everything else is the
 // generator's SUPPLEMENT, which carries the spec facts no dataset states.
 
@@ -2210,8 +2617,13 @@ const main = async () => {
 	// Formatted here rather than left to `yarn fmt`, so the comparison is
 	// against what the repo actually checks in.
 	const config = await prettier.resolveConfig(TARGET);
-	const data = await prettier.format(source, { ...config, filepath: TARGET });
+	const data = await prettier.format(toLatin1Source(source), {
+		...config,
+		filepath: TARGET
+	});
 
+	// The vendored WHATWG `entities.json`, keyed by name; only `characters` is read.
+	/** @type {Record<string, { characters: string }>} */
 	const entities = JSON.parse(fs.readFileSync(ENTITIES_PATH, "utf8"));
 	const syntax = fs.readFileSync(SYNTAX_TARGET, "utf8");
 	if (!REGION_REGEXP.test(syntax)) {
@@ -2223,7 +2635,7 @@ const main = async () => {
 	const eol = syntax.includes("\r\n") ? "\r\n" : "\n";
 	const nextSyntax = syntax.replace(
 		REGION_REGEXP,
-		renderEntities(entities).replace(/\n/g, eol)
+		toLatin1Source(renderEntities(entities)).replace(/\n/g, eol)
 	);
 
 	const ok = [
@@ -2238,6 +2650,6 @@ const main = async () => {
 	if (ok.includes(false)) process.exitCode = 1;
 };
 
-main().catch((err) => {
+main().catch((/** @type {ThrownValue} */ err) => {
 	throw err;
 });

@@ -1,0 +1,1 @@
+function f(a){return[a]}function r(x){if(x)return f(1);else return f(2)}function t(x){if(x){throw f(1)}else{throw f(2)}}function n(x){if(!x)return new f(1);else return new f(2)}function c(x,y){if(x)return 0;else if(y)return f(1,y);else return f(2,y)}g(r,t,n,c);

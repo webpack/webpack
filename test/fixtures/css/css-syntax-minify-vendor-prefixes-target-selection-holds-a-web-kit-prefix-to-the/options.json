@@ -1,0 +1,34 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"ios_saf 11.3"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"ios_saf 12.0"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"safari 9.1"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"safari 9"
+			]
+		}
+	}
+]

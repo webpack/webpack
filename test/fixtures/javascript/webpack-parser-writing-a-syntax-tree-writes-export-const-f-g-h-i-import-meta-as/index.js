@@ -1,0 +1,1 @@
+export const { f, g: [h] } = i; import.meta;

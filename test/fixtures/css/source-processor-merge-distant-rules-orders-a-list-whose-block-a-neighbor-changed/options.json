@@ -1,0 +1,13 @@
+[
+	{
+		"mode": "minify",
+		"mergeDistantRules": false
+	},
+	{
+		"mode": "minify",
+		"mergeDistantRules": true
+	},
+	{
+		"mode": "minify"
+	}
+]

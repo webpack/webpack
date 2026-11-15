@@ -1,0 +1,1 @@
+function f(a){return[a]}function r(x){if(!x)return f(1);else return f(2)}console.log(r(0)[0],r(1)[0],(x=>!x?f(3):f(4))(0)[0])

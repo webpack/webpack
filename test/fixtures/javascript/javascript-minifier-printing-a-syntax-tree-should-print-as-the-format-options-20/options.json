@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"format": {
+			"ie8": true,
+			"quote_style": 1
+		}
+	}
+]

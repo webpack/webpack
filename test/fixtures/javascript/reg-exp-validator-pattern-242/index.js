@@ -1,0 +1,1 @@
+/\p{Lowercase}/v;

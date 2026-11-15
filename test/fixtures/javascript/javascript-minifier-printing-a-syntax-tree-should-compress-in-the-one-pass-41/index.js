@@ -1,0 +1,1 @@
+function f(o){ const a = 3, b = 2; return [a<<b, a>>b, a>>>b, a&b, a|b, a^b, a==b, a!=b, a!==b, a<b, a>b, a<=b, a>=b, a in o, ~a, +a, typeof a, void a, a - b, a / b, a % b, a ** b, a * b] }

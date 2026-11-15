@@ -1,0 +1,1 @@
+<r a=unquoted b c="x" / d="y">1 < 2 &amp; <3<!ELEMENT e ANY><t x="1"<u/></r><![CDATA[never closed

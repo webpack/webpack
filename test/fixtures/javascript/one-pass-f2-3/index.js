@@ -1,0 +1,11 @@
+new class {};
+new class { m() {} #p() {} static s = 1; a = 1; constructor(x) {} }(1, 2);
+new class { [k()]() {} };
+new class { a = g(); };
+new class { a = this.b; get b() { return g(); } };
+new class { a = () => super.x; };
+new class { static { g(); } };
+new class { constructor() { g(); } };
+new class { constructor(x = g()) {} };
+new class extends Base {};
+new class {}(g());

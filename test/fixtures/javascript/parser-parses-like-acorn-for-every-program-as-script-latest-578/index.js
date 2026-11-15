@@ -1,0 +1,1 @@
+class A { static constructor = 1 }

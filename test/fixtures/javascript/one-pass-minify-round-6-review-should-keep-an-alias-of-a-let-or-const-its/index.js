@@ -1,0 +1,1 @@
+function a(){var x=y;var g=function(){return x};const y=1;return g}function b(){var x=y;const y=1;return x}function c(){const y=g();var x=y;return x+x}h(a,b,c);

@@ -1,0 +1,1 @@
+@custom-media --m all and (min-width:30em);@media (--m){a{color:red}}

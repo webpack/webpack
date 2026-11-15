@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {
+			"mergeLonghands": false
+		}
+	},
+	{
+		"mode": "minify"
+	}
+]

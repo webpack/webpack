@@ -1,0 +1,1 @@
+export function f(s){return["a","b"].join(s)}export const k=Object.keys({b:1,4294967295:2,4294967294:3}),j=[1,void 0].join(void 0)

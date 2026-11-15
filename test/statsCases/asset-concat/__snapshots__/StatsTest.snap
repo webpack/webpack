@@ -5,7 +5,7 @@ exports[`StatsTestCases asset-concat should print correct stats for asset-concat
 asset bundle.js X KiB [emitted] (name: main)
 asset static/file.html X bytes [emitted] [from: static/file.html] (auxiliary name: main)
 orphan modules X KiB [orphan] 7 modules
-runtime modules X KiB 2 modules
+runtime modules X bytes 1 module
 cacheable modules X KiB (javascript) X KiB (asset)
   ./index.js + 9 modules X KiB [built] [code generated]
   ./images/file.png X KiB (asset) X bytes (javascript) [built] [code generated]

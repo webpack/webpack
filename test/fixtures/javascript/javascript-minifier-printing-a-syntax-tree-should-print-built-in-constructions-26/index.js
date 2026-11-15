@@ -1,0 +1,1 @@
+class C{static['constructor'](){}static get['constructor'](){return 1}}

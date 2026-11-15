@@ -1,0 +1,1 @@
+f(()=>{a();if(t)return 1;return 2;var z})

@@ -1,0 +1,1 @@
+with(o){a; var b}for(;;)break;while(0);try{}catch(e){e}

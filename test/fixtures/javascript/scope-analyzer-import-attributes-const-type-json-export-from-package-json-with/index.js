@@ -1,0 +1,1 @@
+const type = "json"; export * from "./package.json" with { type: "json" };

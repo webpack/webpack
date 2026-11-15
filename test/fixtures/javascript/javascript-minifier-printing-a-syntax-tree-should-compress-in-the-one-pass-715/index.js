@@ -1,0 +1,1 @@
+function f(n){switch(n){case 1:switch(a()){case 2:break;default:e()}break;default:e()}}(d=>d[k()])({a:1})===1?x():y()

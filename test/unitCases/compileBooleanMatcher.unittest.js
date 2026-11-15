@@ -2,7 +2,8 @@
 
 /** @typedef {ReturnType<expect>} ExceptResult */
 
-const { itemsToRegexp } = require("../../lib/util/compileBooleanMatcher");
+const compileBooleanMatcher = require("../../lib/util/compileBooleanMatcher");
+const { itemsToRegexp } = compileBooleanMatcher;
 
 describe("itemsToRegexp", () => {
 	/**
@@ -130,4 +131,100 @@ describe("itemsToRegexp", () => {
 				"webpack_sharing_consume_default_(|classnames_classnames\\-webpack_sharing_consume_default_)react_react"
 			)
 	);
+
+	expectCompiled(
+		"line terminators",
+		["a\nb", "a\nc", "a\rd", "a\u2028e", "a\u2029f"],
+		(e) => e.toMatchInlineSnapshot(`a(\\nb|\\nc|\\rd|\\u2028e|\\u2029f)`)
+	);
+
+	expectCompiled(
+		"line terminators single chars",
+		["\n", "\r", "\u2028", "\u2029"],
+		(e) => e.toMatchInlineSnapshot("[\\n\\r\\u2028\\u2029]")
+	);
+});
+
+describe("compileBooleanMatcher", () => {
+	it("should quote non-finite numeric strings like NaN and Infinity", () => {
+		const positive = compileBooleanMatcher({ NaN: true, other: false });
+		expect(typeof positive).toBe("function");
+		if (typeof positive !== "function") return;
+		expect(positive("chunkId")).toBe('"NaN" == chunkId');
+		expect(
+			new Function("chunkId", `return ${positive("chunkId")}`)("NaN")
+		).toBe(true);
+
+		const negative = compileBooleanMatcher.fromLists(
+			["other1", "other2"],
+			["NaN"]
+		);
+		expect(negative("chunkId")).toBe('"NaN" != chunkId');
+		expect(
+			new Function("chunkId", `return ${negative("chunkId")}`)("NaN")
+		).toBe(false);
+
+		const inf = compileBooleanMatcher({ Infinity: true, other: false });
+		expect(typeof inf).toBe("function");
+		if (typeof inf !== "function") return;
+		expect(inf("chunkId")).toBe('"Infinity" == chunkId');
+
+		const negInf = compileBooleanMatcher({ "-Infinity": true, other: false });
+		expect(typeof negInf).toBe("function");
+		if (typeof negInf !== "function") return;
+		expect(negInf("chunkId")).toBe('"-Infinity" == chunkId');
+
+		const num = compileBooleanMatcher({ 42: true, other: false });
+		expect(typeof num).toBe("function");
+		if (typeof num !== "function") return;
+		expect(num("chunkId")).toBe("42 == chunkId");
+	});
+
+	it("should escape line terminators in regular expressions", () => {
+		const positive = compileBooleanMatcher({
+			"a\nb": true,
+			"a\nc": true,
+			"a\nd": true,
+			other1: false,
+			other2: false,
+			other3: false,
+			other4: false
+		});
+		expect(typeof positive).toBe("function");
+		if (typeof positive !== "function") return;
+		const code = positive("chunkId");
+		expect(code).toBe("/^a\\n[b-d]$/.test(chunkId)");
+		const fn = new Function("chunkId", `return ${code}`);
+		expect(fn("a\nb")).toBe(true);
+		expect(fn("a\nc")).toBe(true);
+		expect(fn("a\nd")).toBe(true);
+		expect(fn("a\ne")).toBe(false);
+		expect(fn("other1")).toBe(false);
+
+		const lineTerminatorsInCharClass = compileBooleanMatcher.fromLists(
+			["\n", "\r", "\u2028", "\u2029"],
+			["foo123", "bar456", "baz789"]
+		);
+		const charClassCode = lineTerminatorsInCharClass("chunkId");
+		expect(charClassCode).toBe("/^[\\n\\r\\u2028\\u2029]$/.test(chunkId)");
+		const charClassFn = new Function("chunkId", `return ${charClassCode}`);
+		expect(charClassFn("\n")).toBe(true);
+		expect(charClassFn("\r")).toBe(true);
+		expect(charClassFn("\u2028")).toBe(true);
+		expect(charClassFn("\u2029")).toBe(true);
+		expect(charClassFn("foo123")).toBe(false);
+
+		const negativeWithLineTerminators = compileBooleanMatcher.fromLists(
+			["foo123", "bar456", "baz789"],
+			["\n", "\r", "\u2028", "\u2029"]
+		);
+		const negCode = negativeWithLineTerminators("chunkId");
+		expect(negCode).toBe("!/^[\\n\\r\\u2028\\u2029]$/.test(chunkId)");
+		const negFn = new Function("chunkId", `return ${negCode}`);
+		expect(negFn("\n")).toBe(false);
+		expect(negFn("\r")).toBe(false);
+		expect(negFn("\u2028")).toBe(false);
+		expect(negFn("\u2029")).toBe(false);
+		expect(negFn("foo123")).toBe(true);
+	});
 });

@@ -1,0 +1,1 @@
+function m(o) { var T = function Token(label, options) { this.label = label; this.options = options }; return [new T(o, 1), new T(o, 2)] }

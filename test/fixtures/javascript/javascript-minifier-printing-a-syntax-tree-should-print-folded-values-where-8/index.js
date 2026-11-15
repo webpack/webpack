@@ -1,0 +1,1 @@
+export function g(){ var x = new Error(); return x.stack }

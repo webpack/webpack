@@ -1,0 +1,1 @@
+function f(b,c,d){var t=b??c;return t&&d}console.log(f(1,2,3),f(null,0,1))

@@ -1,0 +1,1 @@
+export /*#__NO_SIDE_EFFECTS__*/ const f = () => g(); f();

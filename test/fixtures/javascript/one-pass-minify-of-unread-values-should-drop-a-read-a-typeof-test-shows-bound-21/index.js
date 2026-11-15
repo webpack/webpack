@@ -1,0 +1,1 @@
+with(o)typeof x<"u"&&x

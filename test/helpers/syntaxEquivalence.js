@@ -27,7 +27,12 @@ const {
 	spritePage
 } = require("../../tooling/compare-html-tools");
 
-/** @typedef {{ name: string, raw: string, min: string }} Fixture */
+/**
+ * The rewrites an opt-in makes on purpose, each set aside in the comparison
+ * that would otherwise read it as a difference.
+ * @typedef {"custom-properties" | "length-units" | "approximate-colors" | "prefixes" | "whitespace" | "redundant-attributes" | "empty-elements" | "merged-styles"} Relaxation
+ */
+/** @typedef {{ name: string, raw: string, min: string, relax?: Relaxation[] }} Fixture */
 
 /**
  * Every fixture of one extension under a directory. Synchronous: jest needs one
@@ -173,10 +178,11 @@ const benchmarkDocuments = (minify) => {
 
 /**
  * @typedef {object} PageHelpers
- * @property {(html: string) => Facets} htmlFacets everything a page's DOM is made of
+ * @property {(html: string, relax?: Relaxation[]) => Facets} htmlFacets everything a page's DOM is made of, with the rewrites `relax` names set aside
  * @property {(tagName: string, attribute: string, value: string | null) => [string | undefined, unknown]} probeReflection the IDL member an attribute reflects, and its value
  * @property {(value: string) => string} canonical a value under the one name the spec gives it
  * @property {(value: string) => string} paintedColors a value with every color it holds painted
+ * @property {(list: string) => string} unquoteFamilies a font family list with every name the bare spelling also names left unquoted
  * @property {(text: string) => string} spacedOnce text as its tokens, spaced one way
  * @property {(element: Element) => string} whereIs an element and its nearest ancestors, for a report
  * @property {(property: string, value: string) => string} cascadeValue a computed value in the one spelling rules are compared in
@@ -337,7 +343,7 @@ const installHelpers = (generics) => {
 	]);
 
 	// A generic family is a keyword, so quoting one names a font of that name
-	// instead, and the quoting is what tells the two apart. `CssSyntax.unittest`
+	// instead, and the quoting is what tells the two apart. `css/printer.unittest`
 	// holds the printer to the same rule.
 	const GENERIC_FAMILIES = new Set(generics);
 
@@ -526,6 +532,7 @@ const installHelpers = (generics) => {
 	// the whitespace between its tokens is read here rather than by the engine.
 	const TOKEN_LIST_ATTRIBUTES = new Set([
 		"accesskey",
+		"blocking",
 		"headers",
 		"itemprop",
 		"itemref",
@@ -535,6 +542,7 @@ const installHelpers = (generics) => {
 	// Of those, the ones the spec reflects as a `DOMTokenList` — a set, so a
 	// repeat names nothing — which this engine implements no IDL member for.
 	const UNIQUE_TOKEN_LIST_ATTRIBUTES = new Set([
+		"blocking",
 		"itemprop",
 		"itemref",
 		"itemtype"
@@ -624,13 +632,126 @@ const installHelpers = (generics) => {
 	 * tree, so re-parenting cannot pass unseen.
 	 * @param {Element} node an element
 	 * @param {number} depth how deep it sits
+	 * @param {Set<Relaxation>=} relax the rewrites set aside
 	 * @returns {string} its shape
 	 */
-	const shapeOf = (node, depth) =>
+	const shapeOf = (node, depth, relax = EMPTY_RELAX) =>
 		`${depth}|${node.namespaceURI}|${node.localName}[${[...node.attributes]
+			.filter(
+				(one) =>
+					!relax.has("redundant-attributes") || !isRedundantAttribute(node, one)
+			)
 			.map((one) => `${one.name}=${value(node, one)}`)
 			.sort()
 			.join(",")}]`;
+
+	/** @type {Set<Relaxation>} */
+	const EMPTY_RELAX = new Set();
+	// HTML §4.12.1.1: every JavaScript MIME type essence runs a classic script.
+	const JAVASCRIPT_TYPES = new Set(
+		"application/ecmascript application/javascript application/x-ecmascript application/x-javascript text/ecmascript text/javascript text/javascript1.0 text/javascript1.1 text/javascript1.2 text/javascript1.3 text/javascript1.4 text/javascript1.5 text/jscript text/livescript text/x-ecmascript text/x-javascript".split(
+			" "
+		)
+	);
+	// Elements whose empty, attribute-less form renders nothing and is read by
+	// nothing: no box, marker, margin, widget or generated text of their own.
+	const RENDERS_NOTHING_EMPTY = new Set(
+		"a abbr address article aside b bdi bdo cite code data del dfn div em footer header i ins kbd label main mark nav s samp script section small span strong style sub sup time title u var base link meta".split(
+			" "
+		)
+	);
+	/** @type {Map<string, Element>} */
+	const pristine = new Map();
+	const SPEC_DEFAULTS = new Map([
+		["area shape", "rect"],
+		["link media", "all"],
+		["style media", "all"],
+		["textarea wrap", "soft"]
+	]);
+
+	/**
+	 * Whether an attribute says only what its absence would: an empty `class`,
+	 * `id` or `style`, a script or style type naming the default, or an IDL
+	 * attribute reading the same on an element of the same kind without it.
+	 * @param {Element} node an element
+	 * @param {Attr} attribute one of its attributes
+	 * @returns {boolean} true when leaving it out changes nothing the page reads
+	 */
+	const isRedundantAttribute = (node, attribute) => {
+		const name = attribute.name;
+		const raw = attribute.value.trim().toLowerCase();
+		if ((name === "class" || name === "id" || name === "style") && raw === "") {
+			return true;
+		}
+		// An empty token list names no token, as no attribute does.
+		if (raw === "" && TOKEN_LIST_ATTRIBUTES.has(name)) return true;
+		// An enumerated value a reflection hands back as written, though it is the
+		// state the attribute's absence gives (HTML §4.8.14 for `shape`).
+		if (SPEC_DEFAULTS.get(`${node.localName} ${name}`) === raw) return true;
+		if (node.namespaceURI !== NS_HTML || attribute.namespaceURI !== null) {
+			return false;
+		}
+		const local = node.localName;
+		if (name === "type" && local === "script") return JAVASCRIPT_TYPES.has(raw);
+		// HTML §4.12.1.1: with no `type`, `language` names one as `text/` it.
+		if (name === "language" && local === "script") {
+			return JAVASCRIPT_TYPES.has(`text/${raw}`) && !node.hasAttribute("type");
+		}
+		// A classic script decodes in the document's encoding when no charset names one.
+		if (name === "charset" && local === "script") {
+			return raw === (node.ownerDocument.characterSet || "").toLowerCase();
+		}
+		if (name === "type" && (local === "style" || local === "link")) {
+			return raw === "text/css" || raw === "";
+		}
+		const property = reflectionOf(node, name);
+		if (property === undefined) return false;
+		let fresh = pristine.get(local);
+		if (fresh === undefined) {
+			fresh = document.createElement(local);
+			pristine.set(local, fresh);
+		}
+		// Read off a copy holding the value as `value()` reads it, so two spellings
+		// of one value, `TRUE` and `true` or `"  "` and `""`, get one verdict.
+		const probe = document.createElement(local);
+		probe.setAttribute(name, raw);
+		const read = /** @type {Record<string, unknown>} */ (
+			/** @type {unknown} */ (probe)
+		)[property];
+		const unset = /** @type {Record<string, unknown>} */ (
+			/** @type {unknown} */ (fresh)
+		)[property];
+		// A boolean's empty value is its presence, whatever list a reflection names.
+		if (
+			raw === "" &&
+			!BOOLEAN_ATTRIBUTES.has(name) &&
+			read instanceof DOMTokenList
+		) {
+			return true;
+		}
+		return typeof read !== "object" && read === unset;
+	};
+
+	/**
+	 * Whether an element states nothing: an HTML element with only redundant
+	 * attributes, holding only whitespace, comments and elements like it.
+	 * @param {Element} element an element
+	 * @returns {boolean} true when leaving it out changes nothing the page reads
+	 */
+	const isEmptyElement = (element) =>
+		element.namespaceURI === NS_HTML &&
+		RENDERS_NOTHING_EMPTY.has(element.localName) &&
+		[...element.attributes].every((one) =>
+			isRedundantAttribute(element, one)
+		) &&
+		[...element.childNodes].every(
+			(child) =>
+				child.nodeType === Node.COMMENT_NODE ||
+				(child.nodeType === Node.TEXT_NODE &&
+					/^[\t\n\f\r ]*$/.test(child.nodeValue || "")) ||
+				(child.nodeType === Node.ELEMENT_NODE &&
+					isEmptyElement(/** @type {Element} */ (child)))
+		);
 
 	/**
 	 * The text a subtree renders. A `<script>` / `<style>` body is data, compared
@@ -662,11 +783,55 @@ const installHelpers = (generics) => {
 	 * are minified in their own right; every other script body is data and must
 	 * survive byte for byte.
 	 * @param {string} source the page
+	 * @param {Relaxation[]=} relax the rewrites an opt-in makes on purpose
 	 * @returns {Facets} its facets
 	 */
-	const htmlFacets = (source) => {
+	const htmlFacets = (source, relax = []) => {
+		const relaxed = new Set(relax);
+		/**
+		 * @param {Element} element where the text stands
+		 * @param {string} text what it holds
+		 * @returns {string} it, with runs of whitespace one space where those render alike
+		 */
+		const spaced = (element, text) =>
+			relaxed.has("whitespace") &&
+			element.closest("pre, textarea, listing, plaintext") === null
+				? text.replace(/[\t\n\f\r ]+/g, " ")
+				: text;
 		// HTML §13.2.3.1: the decoder consumes a leading byte order mark, which a
 		// string handed to the parser would keep as text.
+		/**
+		 * @param {Element} element an element
+		 * @param {number} depth how deep it sits
+		 * @param {Set<Relaxation>} relaxedSet the relaxations in force
+		 * @returns {boolean} true for a `<style>` a merge may join to the one before it
+		 */
+		const joinsStyleBefore = (element, depth, relaxedSet) => {
+			if (element.namespaceURI !== NS_HTML || element.localName !== "style") {
+				return false;
+			}
+			// Only whitespace, comments and what prints nothing stand between two
+			// sheets a merge joins.
+			let previous = element.previousSibling;
+			while (
+				previous !== null &&
+				(previous.nodeType === Node.COMMENT_NODE ||
+					(previous.nodeType === Node.TEXT_NODE &&
+						/^[\t\n\f\r ]*$/.test(previous.nodeValue || "")) ||
+					(previous.nodeType === Node.ELEMENT_NODE &&
+						relaxedSet.has("empty-elements") &&
+						isEmptyElement(/** @type {Element} */ (previous))))
+			) {
+				previous = previous.previousSibling;
+			}
+			return (
+				previous !== null &&
+				previous.nodeType === Node.ELEMENT_NODE &&
+				/** @type {Element} */ (previous).localName === "style" &&
+				shapeOf(/** @type {Element} */ (previous), depth, relaxedSet) ===
+					shapeOf(element, depth, relaxedSet)
+			);
+		};
 		const html = source.charCodeAt(0) === 0xfeff ? source.slice(1) : source;
 		// `parseHTMLUnsafe` attaches a declarative shadow root where `DOMParser`
 		// leaves an inert `<template>`, so the tree below is the one a page gets.
@@ -702,7 +867,11 @@ const installHelpers = (generics) => {
 				}
 				if (node.nodeType !== Node.ELEMENT_NODE) continue;
 				const element = /** @type {Element} */ (node);
-				facets.elements.push(shapeOf(element, depth));
+				const dropped =
+					(relaxed.has("empty-elements") && isEmptyElement(element)) ||
+					(relaxed.has("merged-styles") &&
+						joinsStyleBefore(element, depth, relaxed));
+				if (!dropped) facets.elements.push(shapeOf(element, depth, relaxed));
 				// SVG carries `<style>` and `<script>` too, and an engine reads both
 				// the same way — so their bodies are data there as well, not the page
 				// text a minified stylesheet would look like a change to.
@@ -718,18 +887,23 @@ const installHelpers = (generics) => {
 				// between `<head>` children renders nothing, and a `<style>` body is data.
 				const inPage = renders || name === "body";
 				if (inPage && name !== "style" && name !== "script") {
-					facets.ownText.push(
-						[...element.childNodes]
-							.filter((child) => child.nodeType === Node.TEXT_NODE)
-							.map((child) => child.nodeValue || "")
-							.join("")
-					);
+					const own = [...element.childNodes]
+						.filter((child) => child.nodeType === Node.TEXT_NODE)
+						.map((child) => child.nodeValue || "")
+						.join("");
+					if (!dropped) facets.ownText.push(spaced(element, own));
 				}
 				const text = element.textContent || "";
 				if (name === "style") {
 					styles.push(text);
 				} else if (name === "script") {
-					const type = (element.getAttribute("type") || "").toLowerCase();
+					const written = (element.getAttribute("type") || "").toLowerCase();
+					// Every JavaScript type runs the same classic script as none.
+					const type =
+						relaxed.has("redundant-attributes") &&
+						JAVASCRIPT_TYPES.has(written.trim())
+							? ""
+							: written;
 					let body = text;
 					// An import map and speculation rules are JSON too, though the type
 					// does not say so.
@@ -747,14 +921,16 @@ const installHelpers = (generics) => {
 					facets.scripts.push(`${type}:${body}`);
 				} else if (name === "template") {
 					const content = /** @type {HTMLTemplateElement} */ (element).content;
-					facets.templates.push(renderedTextOf(content));
+					facets.templates.push(spaced(element, renderedTextOf(content)));
 					collect(content, depth + 1, true);
 				}
 				// An open shadow root renders and is script-reachable, so it is held
 				// to the same standard as the light tree. A closed one is reachable
 				// from neither, and the round-trip case compares it as a template.
 				if (element.shadowRoot !== null) {
-					facets.shadows.push(renderedTextOf(element.shadowRoot));
+					facets.shadows.push(
+						spaced(element, renderedTextOf(element.shadowRoot))
+					);
 					collect(element.shadowRoot, depth + 1, inPage);
 				}
 				collect(element, depth + 1, inPage);
@@ -770,7 +946,7 @@ const installHelpers = (generics) => {
 				'template[shadowrootmode="closed" i]'
 			)) {
 				const content = /** @type {HTMLTemplateElement} */ (closed).content;
-				facets.shadows.push(renderedTextOf(content));
+				facets.shadows.push(spaced(closed, renderedTextOf(content)));
 				collect(content, 0, true);
 			}
 		}
@@ -793,7 +969,27 @@ const installHelpers = (generics) => {
 			doc.title,
 			doc.body === null ? "" : renderedTextOf(doc.body)
 		];
-		return { facets, styles };
+		if (relaxed.has("whitespace") && doc.body !== null) {
+			facets.text[1] = spaced(doc.body, facets.text[1]);
+		}
+		// One sheet holding every run, in order, which is what merging writes. Each
+		// is read on its own first: a block one leaves open ends with its sheet.
+		return {
+			facets,
+			styles: relaxed.has("merged-styles")
+				? [
+						styles
+							.map((text) => {
+								const sheet = new CSSStyleSheet();
+								sheet.replaceSync(text);
+								return [...sheet.cssRules]
+									.map((rule) => rule.cssText)
+									.join("\n");
+							})
+							.join("\n")
+					]
+				: styles
+		};
 	};
 
 	/**
@@ -977,6 +1173,7 @@ const installHelpers = (generics) => {
 			probeReflection,
 			canonical,
 			paintedColors,
+			unquoteFamilies,
 			cascadeValue,
 			spacedOnce,
 			whereIs
@@ -1135,7 +1332,9 @@ const compareRenders = async ({ pairs, width }) => {
 			: boxes
 					.map(
 						([x, y, boxWidth, height]) =>
-							`${x.toFixed(2)},${y.toFixed(2)} ${boxWidth.toFixed(2)}x${height.toFixed(2)}`
+							`${x.toFixed(2)},${y.toFixed(2)} ${boxWidth.toFixed(
+								2
+							)}x${height.toFixed(2)}`
 					)
 					.join(" ");
 
@@ -1305,7 +1504,7 @@ const compareRenders = async ({ pairs, width }) => {
 
 /**
  * One stylesheet printed two ways that must style every element alike.
- * @typedef {{ name: string, before: string, after: string }} StylePair
+ * @typedef {{ name: string, before: string, after: string, relax?: Relaxation[] }} StylePair
  */
 
 /**
@@ -1706,30 +1905,16 @@ const compareStyles = async ({ pairs, types }) => {
 			);
 		});
 
-	const LENGTH = /-?\d*\.?\d+(?:e[+-]?\d+)?px/gi;
-	const NUMBER = /-?\d*\.?\d+(?:e[+-]?\d+)?/gi;
-
 	/**
-	 * @param {string} one a value
-	 * @param {string} other another
-	 * @returns {boolean} whether they differ in pixel lengths alone
+	 * Whether serialized CSSOM text holds a number at six significant digits, the
+	 * most it keeps, so one written longer may hide behind it.
+	 * @param {string} text a declaration as CSSOM serializes it
+	 * @returns {boolean} true when a number there may have lost digits
 	 */
-	const sameButLengths = (one, other) =>
-		one.replace(LENGTH, "px") === other.replace(LENGTH, "px");
-
-	/**
-	 * @param {string} one a value
-	 * @param {string} other another
-	 * @returns {boolean} whether they differ past the printer's six digits nowhere
-	 */
-	const numericallyAlike = (one, other) => {
-		if (one.replace(NUMBER, "0") !== other.replace(NUMBER, "0")) return false;
-		const theirs = other.match(NUMBER) || [];
-		return (one.match(NUMBER) || []).every((number, at) => {
-			const [a, b] = [Number(number), Number(theirs[at])];
-			return Math.abs(a - b) <= Math.max(Math.abs(a), Math.abs(b), 1) * 1e-5;
-		});
-	};
+	const _hidesDigits = (text) =>
+		(text.match(/\d*\.\d+|\d+/g) || []).some(
+			(number) => number.replace(".", "").replace(/^0+/, "").length >= 6
+		);
 
 	/**
 	 * The lengths a condition names, in pixels, by the dimension each is of.
@@ -1754,7 +1939,10 @@ const compareStyles = async ({ pairs, types }) => {
 	};
 
 	const probe = document.createElement("div");
-	document.body.append(probe);
+	// A transition or animation is read on its own element: WebKit would start
+	// one on the probe, and every property read after came back mid-transition.
+	const motionProbe = document.createElement("div");
+	document.body.append(probe, motionProbe);
 
 	/**
 	 * A declaration no element computes as it stands, read as the property it is
@@ -1764,12 +1952,15 @@ const compareStyles = async ({ pairs, types }) => {
 	 * @returns {string} the value, spelled once
 	 */
 	const computedAs = (name, value) => {
+		const target = /^(?:-[a-z]+-)?(?:transition|animation)/.test(name)
+			? motionProbe
+			: probe;
 		// Sized, so a percentage resolves to a length rather than to zero.
-		probe.style.cssText = "width:97px;height:89px";
-		probe.style.setProperty(name, value);
-		return probe.style.getPropertyValue(name) === ""
+		target.style.cssText = "width:97px;height:89px";
+		target.style.setProperty(name, value);
+		return target.style.getPropertyValue(name) === ""
 			? value
-			: cascadeValue(name, getComputedStyle(probe).getPropertyValue(name));
+			: cascadeValue(name, getComputedStyle(target).getPropertyValue(name));
 	};
 
 	/**
@@ -1917,7 +2108,11 @@ const compareStyles = async ({ pairs, types }) => {
 					const prefix = kind === "CSSMediaRule" ? "" : "box";
 					walk(
 						any.cssRules,
-						`${context}@${kind === "CSSMediaRule" ? "media" : `container ${any.containerName}`} ${spacedOnce(condition)}`,
+						`${context}@${
+							kind === "CSSMediaRule"
+								? "media"
+								: `container ${any.containerName}`
+						} ${spacedOnce(condition)}`,
 						parents,
 						scope,
 						[
@@ -1936,7 +2131,9 @@ const compareStyles = async ({ pairs, types }) => {
 				) {
 					walk(
 						any.cssRules,
-						`${context}@${kind === "CSSSupportsRule" ? "supports" : "-moz-document"} ${spacedOnce(any.conditionText)}`,
+						`${context}@${
+							kind === "CSSSupportsRule" ? "supports" : "-moz-document"
+						} ${spacedOnce(any.conditionText)}`,
 						parents,
 						scope,
 						lengths
@@ -1986,7 +2183,10 @@ const compareStyles = async ({ pairs, types }) => {
 								if (held.cssRules !== undefined) {
 									flat(
 										held.cssRules,
-										`${where}${held.cssText.slice(0, held.cssText.indexOf("{"))}`
+										`${where}${held.cssText.slice(
+											0,
+											held.cssText.indexOf("{")
+										)}`
 									);
 								}
 								continue;
@@ -2006,7 +2206,9 @@ const compareStyles = async ({ pairs, types }) => {
 									}
 									out.unobserved.set(
 										key,
-										`${computedAs(name, style.getPropertyValue(name))}${important ? "!" : ""}`
+										`${computedAs(name, style.getPropertyValue(name))}${
+											important ? "!" : ""
+										}`
 									);
 								}
 							}
@@ -2022,7 +2224,9 @@ const compareStyles = async ({ pairs, types }) => {
 						`${context}${
 							any.style === undefined
 								? spacedOnce(text)
-								: `${text.slice(0, text.indexOf("{")).trim()}${described(any.style)}`
+								: `${text.slice(0, text.indexOf("{")).trim()}${described(
+										any.style
+									)}`
 						}`
 					);
 				}
@@ -2041,6 +2245,28 @@ const compareStyles = async ({ pairs, types }) => {
 	const docs = frames.map(
 		(frame) => /** @type {Document} */ (frame.contentDocument)
 	);
+	// WHY: a computed `line-height` serializes at six digits, so `1.42857` reads
+	// `20px` at 14px where layout floors it to 19.98438px. What `1lh` floors to
+	// on Blink's 1/64px grid is a length every engine serializes apart.
+	const LINE_PROBE = "--eq-line-floor";
+	const lineProbes = windows.map((view) => {
+		view.CSS.registerProperty({
+			name: LINE_PROBE,
+			syntax: "<length>",
+			inherits: false,
+			initialValue: "0px"
+		});
+		const sheet = new view.CSSStyleSheet();
+		// One rule per selector, so an engine rejecting one pseudo-element keeps the rest.
+		sheet.replaceSync(
+			["*", "*::before", "*::after", "*::marker"]
+				.map(
+					(selector) => `${selector}{${LINE_PROBE}:round(down,1lh,0.015625px)}`
+				)
+				.join("")
+		);
+		return sheet;
+	});
 
 	/**
 	 * Renders both compared frames and lays them out, so the next read sees
@@ -2067,13 +2293,192 @@ const compareStyles = async ({ pairs, types }) => {
 		}
 	};
 
+	// What an absolute length unit is in CSS pixels (CSS Values 4 §6.2).
+	const PX_PER_UNIT = /** @type {Record<string, number>} */ ({
+		px: 1,
+		pt: 4 / 3,
+		pc: 16,
+		in: 96,
+		cm: 96 / 2.54,
+		mm: 96 / 25.4,
+		q: 96 / 101.6
+	});
+	const ABSOLUTE_LENGTH =
+		/(-?\d*\.?\d+(?:e[+-]?\d+)?)(px|pt|pc|in|cm|mm|q)\b/gi;
+	const COLOR_LITERAL =
+		/\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\([^()]*\)|#[\da-f]{3,8}\b/gi;
+	/** @type {CanvasRenderingContext2D | null} */
+	let painter = null;
+
+	/**
+	 * @param {string} color a color the engine serialized
+	 * @returns {string} the 8-bit sRGB pixel it paints
+	 */
+	const paintedAs = (color) => {
+		if (painter === null) {
+			const canvas = document.createElement("canvas");
+			canvas.width = 1;
+			canvas.height = 1;
+			painter = /** @type {CanvasRenderingContext2D} */ (
+				canvas.getContext("2d", { willReadFrequently: true })
+			);
+		}
+		painter.clearRect(0, 0, 1, 1);
+		painter.fillStyle = "#000";
+		painter.fillStyle = color;
+		painter.fillRect(0, 0, 1, 1);
+		return `rgba(${painter.getImageData(0, 0, 1, 1).data.join(",")})`;
+	};
+
+	/** @type {HTMLElement | null} */
+	let clipProbe = null;
+
+	/**
+	 * @param {string} color a color the engine serialized
+	 * @returns {string} its sRGB coordinates clipped into the gamut, as 8-bit channels
+	 */
+	const clippedAs = (color) => {
+		if (clipProbe === null) {
+			clipProbe = document.createElement("div");
+			/** @type {HTMLElement} */ (document.body).append(clipProbe);
+		}
+		clipProbe.style.color = "";
+		clipProbe.style.color = `color(from ${color} srgb r g b / alpha)`;
+		const numbers = (
+			getComputedStyle(clipProbe).color.match(/-?\d*\.?\d+(?:e[+-]?\d+)?/gi) ||
+			[]
+		).map(Number);
+		const [r = 0, g = 0, b = 0, a = 1] = numbers;
+		return `rgba(${[r, g, b, a]
+			.map((channel) => Math.round(Math.min(1, Math.max(0, channel)) * 255))
+			.join(",")})`;
+	};
+
+	/**
+	 * @param {string} one channels as `rgba(…)`
+	 * @param {string} other the same for another color
+	 * @returns {boolean} true when every channel is within one step
+	 */
+	const withinOneStep = (one, other) => {
+		const [a, b] = [one, other].map((text) =>
+			(text.match(/\d+/g) || []).map(Number)
+		);
+		return (
+			a.length === b.length &&
+			a.every((channel, i) => Math.abs(channel - b[i]) <= 1)
+		);
+	};
+
+	/**
+	 * @param {string} value a computed value or a rule's text
+	 * @returns {string} it with every absolute length in pixels
+	 */
+	const inPixels = (value) =>
+		value.replace(
+			ABSOLUTE_LENGTH,
+			(_, amount, unit) =>
+				`${
+					Math.round(Number(amount) * PX_PER_UNIT[unit.toLowerCase()] * 1e4) /
+					1e4
+				}px`
+		);
+
+	/**
+	 * Whether two computed values differ only where an opt-in rewrites on purpose:
+	 * a custom property's own text, a length's unit, a color's exact
+	 * coordinates, or a vendor-prefixed property a target adds or drops.
+	 * @param {Set<Relaxation>} relax the rewrites set aside
+	 * @param {string} name the property
+	 * @param {string} a one value, as the cascade reads it
+	 * @param {string} b the other
+	 * @param {string} rawA the first as the engine serialized it
+	 * @param {string} rawB the other
+	 * @returns {boolean} true when both read the same once those are set aside
+	 */
+	const relaxedEqual = (relax, name, a, b, rawA, rawB) => {
+		if (relax.size === 0) return false;
+		// Read where it is substituted instead: every property reading one is tracked.
+		if (relax.has("custom-properties") && name.startsWith("--")) return true;
+		if (relax.has("prefixes") && /^-(?:webkit|moz|ms|o)-/.test(name)) {
+			return true;
+		}
+		let x = a;
+		let y = b;
+		if (relax.has("length-units")) {
+			x = inPixels(x);
+			y = inPixels(y);
+		}
+		if (relax.has("approximate-colors") && x !== y) {
+			// A color is read as the pixel it paints: within one step of each 8-bit
+			// channel, or of the source clipped into sRGB where it lies outside it.
+
+			// Only a painted color's channels take the step, never a length.
+			const PAINT = /paints \d+,\d+,\d+,\d+/g;
+			const [xp, yp] = [x, y].map((text) => text.match(PAINT) || []);
+			if (
+				xp.length > 0 &&
+				xp.length === yp.length &&
+				x.replace(PAINT, "paints") === y.replace(PAINT, "paints") &&
+				xp.every((one, i) => withinOneStep(one, yp[i]))
+			) {
+				return true;
+			}
+			const whole = new RegExp(`^(?:${COLOR_LITERAL.source})$`, "i");
+			if (whole.test(rawA) && whole.test(rawB)) {
+				return withinOneStep(clippedAs(rawA), paintedAs(rawB));
+			}
+			// A value holding several colors, each read on its own and the rest as is.
+			const parted = new RegExp(`(${COLOR_LITERAL.source})`, "gi");
+			const [xs, ys] = [x, y].map((text) => text.split(parted));
+			return (
+				xs.length > 1 &&
+				xs.length === ys.length &&
+				xs.every((part, i) =>
+					i % 2 === 0
+						? part === ys[i]
+						: withinOneStep(clippedAs(part), paintedAs(ys[i]))
+				)
+			);
+		}
+		return x === y;
+	};
+
+	/**
+	 * Whether every registered property computes alike in both frames, which is
+	 * what `@property` rules spelled apart still have to agree on.
+	 * @param {{ registered: Set<string> }} one a sheet's reading
+	 * @param {{ registered: Set<string> }} other the other's
+	 * @returns {boolean} true when each initial value computes the same
+	 */
+	const sameRegistrations = (one, other) => {
+		const names = new Set([...one.registered, ...other.registered]);
+		if (names.size !== one.registered.size) return false;
+		const probes = docs.map((doc) => {
+			const probe = doc.createElement("div");
+			/** @type {HTMLElement} */ (doc.body).append(probe);
+			return probe;
+		});
+		try {
+			for (const name of names) {
+				const [a, b] = probes.map((probe, at) =>
+					windows[at].getComputedStyle(probe).getPropertyValue(name)
+				);
+				if (a !== b) return false;
+			}
+			return true;
+		} finally {
+			for (const probe of probes) probe.remove();
+		}
+	};
+
 	for (const pair of pairs) {
+		const relax = new Set(pair.relax || []);
 		const readings = [pair.before, pair.after].map((text, at) => {
 			const sheet = new windows[at].CSSStyleSheet();
 			// CSS Syntax §3.2: decoding drops a leading byte order mark, which
 			// `replaceSync` would read as part of the first selector.
 			sheet.replaceSync(text.charCodeAt(0) === 0xfeff ? text.slice(1) : text);
-			docs[at].adoptedStyleSheets = [sheet];
+			docs[at].adoptedStyleSheets = [lineProbes[at], sheet];
 			return readSheet(sheet);
 		});
 		const [one, other] = readings;
@@ -2084,18 +2489,34 @@ const compareStyles = async ({ pairs, types }) => {
 			...other.unobserved.keys()
 		])) {
 			const [a, b] = [one.unobserved.get(key), other.unobserved.get(key)];
-			if (a !== b && moved.length < KEPT) {
+			const [x, y] = [String(a), String(b)];
+			const property = key.slice(key.lastIndexOf(" ") + 1);
+			if (
+				a !== b &&
+				!relaxedEqual(relax, property, x, y, x, y) &&
+				moved.length < KEPT
+			) {
 				moved.push({
 					at: key,
 					moved: [["", String(a), String(b), String(a), String(b)]]
 				});
 			}
 		}
-		if (one.described.join("\n") !== other.described.join("\n")) {
-			const at = one.described.findIndex(
-				(text, i) => text !== other.described[i]
+		// A registered property's rule is spelled as rewritten; what it must keep is
+		// the initial value every element computes.
+		const registeredAlike =
+			relax.has("custom-properties") && sameRegistrations(one, other);
+		const [oneDescribed, otherDescribed] = [one, other].map((reading) => {
+			const described = registeredAlike
+				? reading.described.filter((text) => !/@property\b/.test(text))
+				: reading.described;
+			return relax.has("length-units") ? described.map(inPixels) : described;
+		});
+		if (oneDescribed.join("\n") !== otherDescribed.join("\n")) {
+			const at = oneDescribed.findIndex(
+				(text, i) => text !== otherDescribed[i]
 			);
-			const [a, b] = [String(one.described[at]), String(other.described[at])];
+			const [a, b] = [String(oneDescribed[at]), String(otherDescribed[at])];
 			moved.push({
 				at: "rules no element computes",
 				moved: [["", a, b, a, b]]
@@ -2123,6 +2544,28 @@ const compareStyles = async ({ pairs, types }) => {
 			for (const reading of readings) {
 				for (const reader of reading.reads.get(property) || []) {
 					tracked.add(reader);
+				}
+			}
+		}
+		// WHY: CSSOM serializes a number at six digits, so `1.4285714286` and
+		// `1.42857` declare alike above; only the line probe tells them apart,
+		// at every width a query moves either of the two on.
+		if (
+			readings.some((reading) =>
+				["line-height", "font-size"].some((property) =>
+					(reading.sequences.get(property) || []).some(_hidesDigits)
+				)
+			)
+		) {
+			tracked.add("line-height");
+			tracked.add("font-size");
+		}
+		// WHY: the same six digits hide any number written longer, so a property
+		// declaring one that CSSOM cut is read wherever it lays out.
+		for (const reading of readings) {
+			for (const [property, sequence] of reading.sequences) {
+				if (!tracked.has(property) && sequence.some(_hidesDigits)) {
+					tracked.add(property);
 				}
 			}
 		}
@@ -2311,9 +2754,11 @@ const compareStyles = async ({ pairs, types }) => {
 						docs[at].getElementById("eq-holder")
 					);
 					holder.style.cssText = queried
-						? `container-type:size;container-name:${containerNames.join(" ") || "none"};width:${
-								sample.box || sample.width
-							}px;height:${sample.box || sample.height}px`
+						? `container-type:size;container-name:${
+								containerNames.join(" ") || "none"
+							};width:${sample.box || sample.width}px;height:${
+								sample.box || sample.height
+							}px`
 						: "";
 				}
 				const read = built.elements;
@@ -2355,12 +2800,32 @@ const compareStyles = async ({ pairs, types }) => {
 					/** @type {[string, string, string, string, string][]} */
 					const changed = [];
 					for (const name of names) {
+						if (name === LINE_PROBE) continue;
 						const a = styles[0].getPropertyValue(name);
 						const b = styles[1].getPropertyValue(name);
 						if (a === b) continue;
 						const x = cascadeValue(name, a);
 						const y = cascadeValue(name, b);
-						if (x !== y) changed.push([name, a, b, x, y]);
+						if (x !== y && !relaxedEqual(relax, name, x, y, a, b)) {
+							changed.push([name, a, b, x, y]);
+						}
+					}
+					// Compared as serialized whatever the relaxations: the probe is no
+					// custom property a sheet wrote, and no opt-in may move layout.
+					const lineA = styles[0].getPropertyValue(LINE_PROBE);
+					const lineB = styles[1].getPropertyValue(LINE_PROBE);
+					if (lineA !== lineB) {
+						changed.push([LINE_PROBE, lineA, lineB, lineA, lineB]);
+					}
+					// WHY: a computed length serializes at six digits too, so where the
+					// element lays out — at the 1/64px its box is placed to — is read as
+					// well; a box of a margin or padding a rounding moved shows it.
+					if (pseudo === "") {
+						const [boxA, boxB] = [0, 1].map((side) => {
+							const box = read[side][i].getBoundingClientRect();
+							return `${box.x},${box.y} ${box.width}x${box.height}`;
+						});
+						if (boxA !== boxB) changed.push(["box", boxA, boxB, boxA, boxB]);
 					}
 					return changed;
 				};
@@ -2380,7 +2845,11 @@ const compareStyles = async ({ pairs, types }) => {
 						found.push({
 							i,
 							pseudo,
-							at: `${sample.width}x${sample.height}${sample.dark ? " dark" : ""}${sample.box ? ` in ${sample.box}px` : ""}: ${whereIs(read[0][i])}${pseudo}`,
+							at: `${sample.width}x${sample.height}${
+								sample.dark ? " dark" : ""
+							}${sample.box ? ` in ${sample.box}px` : ""}: ${whereIs(
+								read[0][i]
+							)}${pseudo}`,
 							changed
 						});
 					}
@@ -2402,6 +2871,23 @@ const compareStyles = async ({ pairs, types }) => {
 							else element.setAttribute("style", original);
 						}
 					}
+					// WHY: WebKit can leave a box where an incremental layout put it — an
+					// empty inline `<a>` read 16px tall in one frame and 0 in the other,
+					// passing on a re-run (seen in CI) — so a box apart is laid out anew.
+					if (
+						found.some(({ changed }) =>
+							changed.some(([name]) => name === "box")
+						)
+					) {
+						for (const doc of docs) {
+							const root = /** @type {HTMLElement} */ (doc.documentElement);
+							const original = root.getAttribute("style");
+							root.style.setProperty("display", "none", "important");
+							root.getBoundingClientRect();
+							if (original === null) root.removeAttribute("style");
+							else root.setAttribute("style", original);
+						}
+					}
 					await settleFrames();
 					found = found.filter((entry) => {
 						const changed = differ(
@@ -2414,47 +2900,8 @@ const compareStyles = async ({ pairs, types }) => {
 						return true;
 					});
 				}
-				// WHY: a used length is floored to the layout grid, and a percentage
-				// table multiplies that step — Semantic UI's `td{width:18.75%}` moved
-				// 6/64px over an 11px padding printed at six digits. Layout follows from
-				// computed values, so a length is read again with no box to lay out.
-				const rereading = found.some(({ changed }) =>
-					changed.some(([, , , x, y]) => sameButLengths(x, y))
-				);
-				if (rereading) {
-					for (const list of read) {
-						/** @type {HTMLElement} */ (list[2]).style.setProperty(
-							"display",
-							"none",
-							"important"
-						);
-					}
-				}
-				for (const { i, pseudo, at, changed } of found) {
-					const kept = rereading
-						? changed.filter(([name, , , x, y]) => {
-								if (!sameButLengths(x, y)) return true;
-								const [a, b] = [0, 1].map((side) =>
-									cascadeValue(
-										name,
-										windows[side]
-											.getComputedStyle(read[side][i], pseudo || null)
-											.getPropertyValue(name)
-									)
-								);
-								return !numericallyAlike(a, b);
-							})
-						: changed;
-					if (kept.length > 0 && moved.length < KEPT) {
-						moved.push({ at, moved: kept });
-					}
-				}
-				if (rereading) {
-					for (const list of read) {
-						/** @type {HTMLElement} */ (list[2]).style.removeProperty(
-							"display"
-						);
-					}
+				for (const { at, changed } of found) {
+					if (moved.length < KEPT) moved.push({ at, moved: changed });
 				}
 			}
 		};
@@ -2567,6 +3014,7 @@ const compareStyles = async ({ pairs, types }) => {
 	}
 	for (const frame of frames) frame.remove();
 	probe.remove();
+	motionProbe.remove();
 	return reports;
 };
 

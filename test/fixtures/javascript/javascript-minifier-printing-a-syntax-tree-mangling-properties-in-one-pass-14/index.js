@@ -1,0 +1,1 @@
+class A { ["zKept"]() { return 1; } zRenamed() { return 2; } } var a = new A(); console.log(a.zKept(), a.zRenamed());

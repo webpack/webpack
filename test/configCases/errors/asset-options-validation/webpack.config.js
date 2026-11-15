@@ -8,7 +8,7 @@ module.exports = {
 				test: /\.txt$/,
 				type: "asset/inline",
 				generator: {
-					filename: "[name].txt"
+					name: "[name].txt"
 				}
 			}
 		]

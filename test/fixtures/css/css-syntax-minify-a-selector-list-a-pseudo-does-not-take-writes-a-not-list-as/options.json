@@ -1,0 +1,29 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"firefox 77"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"firefox 80"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"firefox 84"
+			]
+		}
+	},
+	{
+		"mode": "minify"
+	}
+]

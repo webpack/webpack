@@ -1,0 +1,1 @@
+function f(){return[x=>{a();return b},x=>{a();b();return{c:1}},x=>{a();var y;return y}]}

@@ -44,7 +44,7 @@ Array [
 `;
 
 exports[`ConfigCacheTestCases embedded everything exported tests minifies an html document imported into javascript 1`] = `
-"<!doctype html><html lang=en><head><title>module</title><style>.moduleStyle{background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\");color:red}</style><script src=page-module.js></script><script type=application/json>{\\"moduleJson\\":1}</script></head><body>
+"<!doctype html><html lang=en><head><title>module</title><style>.moduleStyle{color:red;background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\")}</style><script src=page-module.js></script><script type=application/json>{\\"moduleJson\\":1}</script></head><body>
 <p style=color:#0f0>hi</p>
 <svg viewBox=\\"0 0 2 2\\"> <rect fill=red /> </svg>
 <iframe srcdoc=\\"<style>.moduleSrcdoc{color:#00f}</style>\\"></iframe>
@@ -53,7 +53,7 @@ exports[`ConfigCacheTestCases embedded everything exported tests minifies an htm
 `;
 
 exports[`ConfigCacheTestCases embedded everything exported tests minifies an html document webpack only emits 1`] = `
-"<!doctype html><html lang=en><head><title>asset</title><style>.assetStyle{background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\");color:red}</style><script>var assetScript=1;function f(){return assetScript}</script><script type=application/json>{\\"assetJson\\":1}</script></head><body>
+"<!doctype html><html lang=en><head><title>asset</title><style>.assetStyle{color:red;background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\")}</style><script>var assetScript=1;function f(){return assetScript}</script><script type=application/json>{\\"assetJson\\":1}</script></head><body>
 <p style=color:#0f0>hi</p>
 <svg viewBox=\\"0 0 2 2\\"> <rect fill=red /> </svg>
 <iframe srcdoc=\\"<style>.assetSrcdoc{color:#00f}</style>\\"></iframe>
@@ -62,7 +62,7 @@ exports[`ConfigCacheTestCases embedded everything exported tests minifies an htm
 `;
 
 exports[`ConfigCacheTestCases embedded everything exported tests minifies an html document webpack parses as an entry 1`] = `
-"<!doctype html><html lang=en><head><title>entry</title><style>.entryStyle{background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\");color:red}</style><script src=page-entry.js></script><script type=application/json>{\\"entryJson\\":1}</script></head><body>
+"<!doctype html><html lang=en><head><title>entry</title><style>.entryStyle{color:red;background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\")}</style><script src=page-entry.js></script><script type=application/json>{\\"entryJson\\":1}</script></head><body>
 <p style=color:#0f0>hi</p>
 <svg viewBox=\\"0 0 2 2\\"> <rect fill=red /> </svg>
 <iframe srcdoc=\\"<style>.entrySrcdoc{color:#00f}</style>\\"></iframe>
@@ -113,7 +113,7 @@ exports[`ConfigCacheTestCases embedded everything exported tests minifies css in
 
 exports[`ConfigCacheTestCases embedded everything exported tests minifies css in an html style attribute 1`] = `"<p style=color:#0f0>"`;
 
-exports[`ConfigCacheTestCases embedded everything exported tests minifies css in an html style element 1`] = `"<style>.assetStyle{background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\");color:red}</style>"`;
+exports[`ConfigCacheTestCases embedded everything exported tests minifies css in an html style element 1`] = `"<style>.assetStyle{color:red;background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\")}</style>"`;
 
 exports[`ConfigCacheTestCases embedded everything exported tests minifies html in a base64 css data url, and re-encodes it as base64 1`] = `
 Object {

@@ -1,0 +1,1 @@
+@custom-selector :--b :--a .x;@custom-selector :--a h1,h2;:--b{color:red}

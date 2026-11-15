@@ -1,0 +1,1 @@
+function f(a){return[a]}function l(x){if(x)return f({a:1,b:2});else return f({c:3,d:4})}function s(x){if(x)return f(...[1]);else return f(...[2])}g(l,s);

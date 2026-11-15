@@ -13,13 +13,13 @@ asset 18.js X bytes [emitted]
 chunk (runtime: e1) 18.js X bytes [rendered]
   ./async1.js X bytes [built] [code generated]
 chunk (runtime: e2) e2.js (e2) X bytes (javascript) X KiB (runtime) [entry] [rendered]
-  runtime modules X KiB 9 modules
+  runtime modules X KiB 8 modules
   cacheable modules X bytes
     ./b.js X bytes [dependent] [built] [code generated]
     ./e2.js + 2 modules X bytes [built] [code generated]
     ./f.js X bytes [dependent] [built] [code generated]
 chunk (runtime: e1) e1.js (e1) X bytes (javascript) X KiB (runtime) [entry] [rendered]
-  runtime modules X KiB 9 modules
+  runtime modules X KiB 8 modules
   cacheable modules X bytes
     ./b.js X bytes [dependent] [built] [code generated]
     ./d.js X bytes [dependent] [built] [code generated]
@@ -38,7 +38,7 @@ chunk (runtime: e1, e2) 752.js X bytes [rendered]
 chunk (runtime: e2) 852.js X bytes [rendered]
   ./async2.js X bytes [built] [code generated]
 chunk (runtime: e3) e3.js (e3) X bytes (javascript) X KiB (runtime) [entry] [rendered]
-  runtime modules X KiB 9 modules
+  runtime modules X KiB 8 modules
   cacheable modules X bytes
     ./b.js X bytes [dependent] [built] [code generated]
     ./e3.js + 2 modules X bytes [built] [code generated]

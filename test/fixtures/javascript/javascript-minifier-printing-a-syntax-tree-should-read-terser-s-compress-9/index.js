@@ -1,0 +1,1 @@
+x=console.log()**2;y=console.log().a;z=console.log()();w=new(console.log());

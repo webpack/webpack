@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <linearGradient id="a">
+            <stop offset="5%" stop-color="#F60"/>
+            <stop offset="95%" stop-color="#FF6"/>
+        </linearGradient>
+        <text id="b">
+            referenced text
+        </text>
+        <path id="c" d="..."/>
+        <path id="d" d="..."/>
+        <path id="e" d="..."/>
+        <path d="..."/>
+    </defs>
+    <g>
+        <circle fill="url(#a)" cx="60" cy="60" r="50"/>
+        <rect fill="url('#a')" x="0" y="0" width="500" height="100"/>
+        <tref xlink:href="#b"/>
+    </g>
+    <g>
+        <tref xlink:href="#b"/>
+    </g>
+    <animateMotion xlink:href="#c" dur="0.5s" begin="d.mouseover" fill="freeze" path="m 0,0 0,-21"/>
+    <use xlink:href="#e"/>
+</svg>

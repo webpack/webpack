@@ -1,0 +1,16 @@
+[
+	{
+		"mode": "minify",
+		"ecma": 5,
+		"compress": {},
+		"mangle": {},
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"ecma": 2015,
+		"compress": {},
+		"mangle": {},
+		"behavior": true
+	}
+]

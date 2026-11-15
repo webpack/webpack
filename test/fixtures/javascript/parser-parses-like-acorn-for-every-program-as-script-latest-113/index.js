@@ -1,0 +1,1 @@
+'use strict'; x = { a: 1, a: 2 };

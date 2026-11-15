@@ -1,0 +1,32 @@
+[
+	{
+		"print": "jsMinify",
+		"format": {
+			"comments": "first|last"
+		},
+		"minimizer": {
+			"extractComments": {
+				"condition": "@license"
+			},
+			"sourceMap": "input.js.map",
+			"asset": "comments.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"format": {
+			"comments": {
+				"regexp": "first|last"
+			}
+		},
+		"minimizer": {
+			"extractComments": {
+				"condition": {
+					"regexp": "@license"
+				}
+			},
+			"sourceMap": "input.js.map",
+			"asset": "comments.js"
+		}
+	}
+]

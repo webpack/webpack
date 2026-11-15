@@ -1,0 +1,1 @@
+function f(){switch(-x){case typeof y:g()}}

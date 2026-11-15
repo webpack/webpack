@@ -7,7 +7,10 @@ import { CSS_FILENAME_HELPER, CSS_FILENAME_MODULE } from "./needles.js";
 // emitted as css and the loading branch that names one is never rendered.
 it("should not ship the css chunk filename without a stylesheet to load", async () => {
 	const name = "lazy";
-	const { lazy } = await import(`./${name}.js`);
+	const { lazy } = await import(
+		// the folder also holds the test config, which must not be bundled
+		/* webpackInclude: /lazy\.js$/ */ `./${name}.js`
+	);
 	expect(lazy).toBe("lazy");
 	const { outputPath } = __STATS__.children[__STATS_I__];
 	const source = fs.readFileSync(path.join(outputPath, "node/main.mjs"), "utf-8");

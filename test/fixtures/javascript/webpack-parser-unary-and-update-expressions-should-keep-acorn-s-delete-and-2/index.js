@@ -1,0 +1,1 @@
+class C { #p; m(){ delete this.#p; } }

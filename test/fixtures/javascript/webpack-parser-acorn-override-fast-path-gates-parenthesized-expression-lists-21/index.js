@@ -1,0 +1,1 @@
+function* f() { return (value = yield 1) => value; }

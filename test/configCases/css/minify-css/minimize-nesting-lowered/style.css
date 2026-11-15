@@ -1,0 +1,76 @@
+@custom-media --wide (width>400px);
+
+.a {
+	color: red;
+	& .b {
+		color: blue;
+	}
+	&.c {
+		color: green;
+	}
+}
+
+.d,
+.e {
+	& .f {
+		color: teal;
+	}
+}
+
+.g:dir(rtl) {
+	color: navy;
+}
+
+@media (--wide) {
+	.h {
+		color: olive;
+	}
+}
+
+.i {
+	color: color-mix(in oklch, red, blue);
+}
+
+/* Kept: a declaration written after a nested rule is read after it. */
+.j {
+	color: red;
+	& .k {
+		color: blue;
+	}
+	color: green;
+}
+
+/* Kept: the at-rule is what the rules written in it are read under. */
+.l {
+	color: red;
+	@media print {
+		color: blue;
+	}
+}
+
+/* No fallback: `currentcolor` is whatever the element's `color` is. */
+.m {
+	color: color-mix(in srgb, currentcolor, red);
+}
+
+/* Written only as the whole condition, never beside an `and`. */
+@custom-media --either (width>400px), (orientation: portrait);
+
+@media (--either) {
+	.n {
+		color: red;
+	}
+}
+
+@media screen and (--either) {
+	.o {
+		color: red;
+	}
+}
+
+/* Resolved by the same option as `@custom-media`, and always as `:is()`. */
+@custom-selector :--picked h1, h2;
+
+:--picked {
+	color: purple;
+}

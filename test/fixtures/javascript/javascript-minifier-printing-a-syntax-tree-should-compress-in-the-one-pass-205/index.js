@@ -1,0 +1,1 @@
+function f(){return 1;if(d)/*j*/return e;return g}function h(){throw 1;if(d)/*j*/throw e;throw g}

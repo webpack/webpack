@@ -10,7 +10,7 @@ it("should support async accept", (done) => {
 			setTimeout(() => {
 				test = 1;
 				resolve();
-			}, 3000);
+			}, 100);
 		});
 	});
 

@@ -1,0 +1,1 @@
+function f(t,e){if(t===0)return false;return e.length}function g(t,e){if(t>1)return e.length;return true}

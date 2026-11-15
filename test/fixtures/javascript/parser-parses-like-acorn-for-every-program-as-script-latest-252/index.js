@@ -1,0 +1,1 @@
+if (a) const x = 1;

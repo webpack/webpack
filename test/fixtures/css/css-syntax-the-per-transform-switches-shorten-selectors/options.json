@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {
+			"shortenSelectors": false
+		}
+	},
+	{
+		"mode": "minify"
+	}
+]

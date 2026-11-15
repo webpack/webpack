@@ -1,0 +1,120 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {
+				"cache": {
+					"props": {}
+				}
+			}
+		},
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {
+				"keep_quoted": true,
+				"cache": {
+					"props": {}
+				}
+			}
+		},
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {
+				"reserved": [
+					"zAlpha",
+					"zValue"
+				],
+				"cache": {
+					"props": {}
+				}
+			}
+		},
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {
+				"regex": "^(zAlpha|zLit|zValue)$",
+				"cache": {
+					"props": {}
+				}
+			}
+		},
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {
+				"debug": true,
+				"cache": {
+					"props": {}
+				}
+			}
+		},
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {
+				"debug": "S",
+				"cache": {
+					"props": {}
+				}
+			}
+		},
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {
+				"undeclared": true,
+				"cache": {
+					"props": {}
+				}
+			}
+		},
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {
+				"only_annotated": true,
+				"cache": {
+					"props": {}
+				}
+			}
+		},
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {
+				"keep_quoted": "strict",
+				"cache": {
+					"props": {}
+				}
+			}
+		}
+	}
+]

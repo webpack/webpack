@@ -1,0 +1,181 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`minifying built-in mutations through the global object computed Object writer (ecma 5, mangle false) 1`] = `"globalThis.Object.defineProperty(Math,\\"abs\\",{value:function(){return 99}}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed Object writer (ecma 5, mangle true) 1`] = `"globalThis.Object.defineProperty(Math,\\"abs\\",{value:function(){return 99}}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed Object writer (ecma 2020, mangle false) 1`] = `"globalThis.Object.defineProperty(Math,\`abs\`,{value:function(){return 99}}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed Object writer (ecma 2020, mangle true) 1`] = `"globalThis.Object.defineProperty(Math,\`abs\`,{value:function(){return 99}}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed Reflect writer (ecma 5, mangle false) 1`] = `"globalThis.Reflect.set(Math,\\"abs\\",function(){return 99}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed Reflect writer (ecma 5, mangle true) 1`] = `"globalThis.Reflect.set(Math,\\"abs\\",function(){return 99}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed Reflect writer (ecma 2020, mangle false) 1`] = `"globalThis.Reflect.set(Math,\`abs\`,function(){return 99}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed Reflect writer (ecma 2020, mangle true) 1`] = `"globalThis.Reflect.set(Math,\`abs\`,function(){return 99}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed global owner (ecma 5, mangle false) 1`] = `"globalThis.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed global owner (ecma 5, mangle true) 1`] = `"globalThis.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed global owner (ecma 2020, mangle false) 1`] = `"globalThis.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed global owner (ecma 2020, mangle true) 1`] = `"globalThis.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed key effects (ecma 5, mangle false) 1`] = `"globalThis.Math[console.log(\\"key\\"),\\"abs\\"]=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed key effects (ecma 5, mangle true) 1`] = `"globalThis.Math[console.log(\\"key\\"),\\"abs\\"]=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed key effects (ecma 2020, mangle false) 1`] = `"globalThis.Math[console.log(\`key\`),\`abs\`]=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed key effects (ecma 2020, mangle true) 1`] = `"globalThis.Math[console.log(\`key\`),\`abs\`]=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed method (ecma 5, mangle false) 1`] = `"globalThis.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed method (ecma 5, mangle true) 1`] = `"globalThis.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed method (ecma 2020, mangle false) 1`] = `"globalThis.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed method (ecma 2020, mangle true) 1`] = `"globalThis.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object computed prototype owner (ecma 5, mangle false) 1`] = `"globalThis.String.prototype.toLowerCase=function(){return\\"patched\\"},console.log(\\"A\\".toLowerCase());"`;
+
+exports[`minifying built-in mutations through the global object computed prototype owner (ecma 5, mangle true) 1`] = `"globalThis.String.prototype.toLowerCase=function(){return\\"patched\\"},console.log(\\"A\\".toLowerCase());"`;
+
+exports[`minifying built-in mutations through the global object computed prototype owner (ecma 2020, mangle false) 1`] = `"globalThis.String.prototype.toLowerCase=function(){return\`patched\`},console.log(\`A\`.toLowerCase());"`;
+
+exports[`minifying built-in mutations through the global object computed prototype owner (ecma 2020, mangle true) 1`] = `"globalThis.String.prototype.toLowerCase=function(){return\`patched\`},console.log(\`A\`.toLowerCase());"`;
+
+exports[`minifying built-in mutations through the global object computed unrelated owner with effects (ecma 5, mangle false) 1`] = `"globalThis.holder={};function key(){console.log(\\"key\\");return\\"holder\\"}globalThis[key()].abs=function(){return 99},console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object computed unrelated owner with effects (ecma 5, mangle true) 1`] = `"globalThis.holder={};function key(){console.log(\\"key\\");return\\"holder\\"}globalThis[key()].abs=function(){return 99},console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object computed unrelated owner with effects (ecma 2020, mangle false) 1`] = `"globalThis.holder={};function key(){console.log(\`key\`);return\`holder\`}globalThis[key()].abs=function(){return 99},console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object computed unrelated owner with effects (ecma 2020, mangle true) 1`] = `"globalThis.holder={};function key(){console.log(\`key\`);return\`holder\`}globalThis[key()].abs=function(){return 99},console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object destructuring target (ecma 5, mangle false) 1`] = `"[globalThis.Math.abs]=[function(){return 99}],console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object destructuring target (ecma 5, mangle true) 1`] = `"[globalThis.Math.abs]=[function(){return 99}],console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object destructuring target (ecma 2020, mangle false) 1`] = `"[globalThis.Math.abs]=[function(){return 99}],console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object destructuring target (ecma 2020, mangle true) 1`] = `"[globalThis.Math.abs]=[function(){return 99}],console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object direct Object writer (ecma 5, mangle false) 1`] = `"Object.defineProperty(Math,\\"abs\\",{value:function(){return 99}}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object direct Object writer (ecma 5, mangle true) 1`] = `"Object.defineProperty(Math,\\"abs\\",{value:function(){return 99}}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object direct Object writer (ecma 2020, mangle false) 1`] = `"Object.defineProperty(Math,\\"abs\\",{value:function(){return 99}}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object direct Object writer (ecma 2020, mangle true) 1`] = `"Object.defineProperty(Math,\\"abs\\",{value:function(){return 99}}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object direct Reflect writer (ecma 5, mangle false) 1`] = `"Reflect.set(Math,\\"abs\\",function(){return 99}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object direct Reflect writer (ecma 5, mangle true) 1`] = `"Reflect.set(Math,\\"abs\\",function(){return 99}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object direct Reflect writer (ecma 2020, mangle false) 1`] = `"Reflect.set(Math,\`abs\`,function(){return 99}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object direct Reflect writer (ecma 2020, mangle true) 1`] = `"Reflect.set(Math,\`abs\`,function(){return 99}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object direct assignment (ecma 5, mangle false) 1`] = `"Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object direct assignment (ecma 5, mangle true) 1`] = `"Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object direct assignment (ecma 2020, mangle false) 1`] = `"Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object direct assignment (ecma 2020, mangle true) 1`] = `"Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object getter installed through Object (ecma 5, mangle false) 1`] = `"globalThis.Object.defineProperty(Math,\\"abs\\",{get:function(){return console.log(\\"get\\"),function(){return 99}}}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object getter installed through Object (ecma 5, mangle true) 1`] = `"globalThis.Object.defineProperty(Math,\\"abs\\",{get:function(){return console.log(\\"get\\"),function(){return 99}}}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object getter installed through Object (ecma 2020, mangle false) 1`] = `"globalThis.Object.defineProperty(Math,\`abs\`,{get:function(){return console.log(\`get\`),function(){return 99}}}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object getter installed through Object (ecma 2020, mangle true) 1`] = `"globalThis.Object.defineProperty(Math,\`abs\`,{get:function(){return console.log(\`get\`),function(){return 99}}}),console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object global assignment (ecma 5, mangle false) 1`] = `"global.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object global assignment (ecma 5, mangle true) 1`] = `"global.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object global assignment (ecma 2020, mangle false) 1`] = `"global.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object global assignment (ecma 2020, mangle true) 1`] = `"global.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object globalThis assignment (ecma 5, mangle false) 1`] = `"globalThis.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object globalThis assignment (ecma 5, mangle true) 1`] = `"globalThis.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object globalThis assignment (ecma 2020, mangle false) 1`] = `"globalThis.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object globalThis assignment (ecma 2020, mangle true) 1`] = `"globalThis.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object numeric unrelated owner (ecma 5, mangle false) 1`] = `"globalThis[0]={},globalThis[0].abs=function(){return 99},console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object numeric unrelated owner (ecma 5, mangle true) 1`] = `"globalThis[0]={},globalThis[0].abs=function(){return 99},console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object numeric unrelated owner (ecma 2020, mangle false) 1`] = `"globalThis[0]={},globalThis[0].abs=function(){return 99},console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object numeric unrelated owner (ecma 2020, mangle true) 1`] = `"globalThis[0]={},globalThis[0].abs=function(){return 99},console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object self assignment (ecma 5, mangle false) 1`] = `"self.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object self assignment (ecma 5, mangle true) 1`] = `"self.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object self assignment (ecma 2020, mangle false) 1`] = `"self.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object self assignment (ecma 2020, mangle true) 1`] = `"self.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object shadowed Math (ecma 5, mangle false) 1`] = `"!function(Math){Math.abs=function(){return 99},console.log(Math.abs(-1))}({}),console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object shadowed Math (ecma 5, mangle true) 1`] = `"!function(o){o.abs=function(){return 99},console.log(o.abs(-1))}({}),console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object shadowed Math (ecma 2020, mangle false) 1`] = `"!function(Math){Math.abs=function(){return 99},console.log(Math.abs(-1))}({}),console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object shadowed Math (ecma 2020, mangle true) 1`] = `"!function(o){o.abs=function(){return 99},console.log(o.abs(-1))}({}),console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object shadowed globalThis (ecma 5, mangle false) 1`] = `"!function(globalThis){globalThis.Math.abs=function(){return 99},console.log(1,globalThis.Math.abs(-1))}({Math:{}});"`;
+
+exports[`minifying built-in mutations through the global object shadowed globalThis (ecma 5, mangle true) 1`] = `"!function(a){a.Math.abs=function(){return 99},console.log(1,a.Math.abs(-1))}({Math:{}});"`;
+
+exports[`minifying built-in mutations through the global object shadowed globalThis (ecma 2020, mangle false) 1`] = `"!function(globalThis){globalThis.Math.abs=function(){return 99},console.log(1,globalThis.Math.abs(-1))}({Math:{}});"`;
+
+exports[`minifying built-in mutations through the global object shadowed globalThis (ecma 2020, mangle true) 1`] = `"!function(a){a.Math.abs=function(){return 99},console.log(1,a.Math.abs(-1))}({Math:{}});"`;
+
+exports[`minifying built-in mutations through the global object should preserve an optional global owner: (globalThis?.['Math']).abs = patched; console.log(Math.abs(-1)); 1`] = `"(globalThis?.Math).abs=patched,console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object should preserve an optional global owner: (globalThis?.Math).abs = patched; console.log(Math.abs(-1)); 1`] = `"(globalThis?.Math).abs=patched,console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object unmodified built-in (ecma 5, mangle false) 1`] = `"console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object unmodified built-in (ecma 5, mangle true) 1`] = `"console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object unmodified built-in (ecma 2020, mangle false) 1`] = `"console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object unmodified built-in (ecma 2020, mangle true) 1`] = `"console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object unrelated built-in mutation (ecma 5, mangle false) 1`] = `"globalThis.Math.abs=function(){return 99},console.log(Math.abs(-1),\\"A\\");"`;
+
+exports[`minifying built-in mutations through the global object unrelated built-in mutation (ecma 5, mangle true) 1`] = `"globalThis.Math.abs=function(){return 99},console.log(Math.abs(-1),\\"A\\");"`;
+
+exports[`minifying built-in mutations through the global object unrelated built-in mutation (ecma 2020, mangle false) 1`] = `"globalThis.Math.abs=function(){return 99},console.log(Math.abs(-1),\\"A\\");"`;
+
+exports[`minifying built-in mutations through the global object unrelated built-in mutation (ecma 2020, mangle true) 1`] = `"globalThis.Math.abs=function(){return 99},console.log(Math.abs(-1),\\"A\\");"`;
+
+exports[`minifying built-in mutations through the global object unrelated method mutation (ecma 5, mangle false) 1`] = `"globalThis.Math.ceil=function(){return 99},console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object unrelated method mutation (ecma 5, mangle true) 1`] = `"globalThis.Math.ceil=function(){return 99},console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object unrelated method mutation (ecma 2020, mangle false) 1`] = `"globalThis.Math.ceil=function(){return 99},console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object unrelated method mutation (ecma 2020, mangle true) 1`] = `"globalThis.Math.ceil=function(){return 99},console.log(1);"`;
+
+exports[`minifying built-in mutations through the global object window assignment (ecma 5, mangle false) 1`] = `"window.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object window assignment (ecma 5, mangle true) 1`] = `"window.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object window assignment (ecma 2020, mangle false) 1`] = `"window.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;
+
+exports[`minifying built-in mutations through the global object window assignment (ecma 2020, mangle true) 1`] = `"window.Math.abs=function(){return 99},console.log(Math.abs(-1));"`;

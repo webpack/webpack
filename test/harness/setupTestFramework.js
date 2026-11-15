@@ -1,5 +1,6 @@
 "use strict";
 
+const vm = require("vm");
 const { toMatchSnapshot } = require("jest-snapshot");
 const { getActiveSnapshotState } = require("./snapshot");
 
@@ -138,9 +139,57 @@ if (process.env.DEBUG_INFO) {
 	it = addDebugInfo(it);
 }
 
+// parsing/asm-js holds "use asm" functions that are not valid asm.js on
+// purpose, and V8 reports each one it rejects on stderr. Run them as plain
+// JavaScript, as V8 does once it has rejected them.
+try {
+	require("v8").setFlagsFromString("--no-validate-asm");
+} catch (_err) {
+	// a runtime without V8 flags has no asm.js validation to report either
+}
+
+// Experimental features the test runner enables on purpose; their warning on
+// every worker says nothing about the change under test.
+const realProcess = vm.runInThisContext("process");
+const originalEmitWarning = realProcess.emitWarning;
+// this file runs once per test file, while the process outlives them
+if (!originalEmitWarning.skipsKnownWarnings) {
+	realProcess.emitWarning = function emitWarning(warning, ...args) {
+		const type =
+			typeof args[0] === "string" ? args[0] : args[0] && args[0].type;
+		if (
+			type === "ExperimentalWarning" &&
+			/^(VM Modules|stripTypeScriptTypes) /.test(String(warning))
+		) {
+			return;
+		}
+		return originalEmitWarning.call(this, warning, ...args);
+	};
+	realProcess.emitWarning.skipsKnownWarnings = true;
+}
+
 // cspell:word wabt
 // Workaround for a memory leak in wabt: it leaks an Error object on construction,
 // so it leaks the whole stack trace.
 require("wast-loader");
 process.removeAllListeners("uncaughtException");
 process.removeAllListeners("unhandledRejection");
+
+// The runner's `vm.runInThisContext` writes to the worker's own global, which
+// outlives this file: drop what the file added so it can't keep it alive.
+const outerGlobal = vm.runInThisContext("this");
+const outerGlobalKeys = new Set(Object.getOwnPropertyNames(outerGlobal));
+
+// eslint-disable-next-line jest/require-top-level-describe
+afterAll(async () => {
+	await require("../helpers/createFakeWorker").terminateAll();
+	for (const key of Object.getOwnPropertyNames(outerGlobal)) {
+		if (outerGlobalKeys.has(key)) continue;
+		const descriptor =
+			/** @type {PropertyDescriptor} */
+			(Object.getOwnPropertyDescriptor(outerGlobal, key));
+		// a bundle's top-level `var` or function can't be deleted, only cleared
+		if (descriptor.configurable) delete outerGlobal[key];
+		else if (descriptor.writable) outerGlobal[key] = undefined;
+	}
+});

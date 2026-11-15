@@ -22,7 +22,7 @@ chunk (runtime: main) id-equals-name_js0.js X bytes [rendered]
 chunk (runtime: main) id-equals-name_js_3.js X bytes [rendered]
   ./id-equals-name.js?3 X bytes [built] [code generated]
 chunk (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) [entry] [rendered]
-  runtime modules X KiB 9 modules
+  runtime modules X KiB 8 modules
   ./index.js X bytes [built] [code generated]
 chunk (runtime: main) tree.js (tree) X bytes [rendered]
   dependent modules X bytes [dependent] 3 modules

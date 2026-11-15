@@ -21,7 +21,7 @@ chunk (runtime: main) default/784.js (id hint: vendors) X bytes <{792}> ={60}= =
   ./node_modules/shared.js?2 X bytes [built] [code generated]
 chunk (runtime: main) default/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{263}< >{442}< >{670}< >{784}< >{869}< [entry] [rendered]
   > ./ main
-  runtime modules X KiB 9 modules
+  runtime modules X KiB 8 modules
   ./index.js X bytes [built] [code generated]
 chunk (runtime: main) default/async-c.js (async-c) X bytes <{792}> ={784}= [rendered]
   > ./c ./index.js 3:0-47

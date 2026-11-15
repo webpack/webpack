@@ -1,0 +1,1 @@
+export function a(v){let s,k=function(x){s=x;g(x)};v.forEach(x=>{s=x});v.forEach(k)}export function b(r){const w=()=>{p=r};w();let p;w()}export function c(r){function w(){p=r}let p;w()}export function d(v){let s;v.forEach(x=>{s=x});return()=>s}

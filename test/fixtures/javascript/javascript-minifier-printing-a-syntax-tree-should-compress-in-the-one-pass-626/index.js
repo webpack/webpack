@@ -1,0 +1,1 @@
+function f(){var a=0;for(;a<9;a++)use(a)}function h(){init();for(;c<b;c++)use()}function k(){var a=1;for(var b=2;;)use(a++,b)}function m(){var a;for(a=use();a;a=a.next)use(a)}function n(){var a;for(a in b)use(a)}function p(){var a;for(a of b)use(a)}function q(){if(x){var a;for(a in b)use(a)}}function r(){let a;for(a=1;a<9;a++)use(a)}

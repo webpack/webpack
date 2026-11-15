@@ -1,0 +1,1 @@
+x=a?longName:(f(1)(2,3)[4],longName);

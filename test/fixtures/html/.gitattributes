@@ -1,0 +1,2 @@
+# Each input is kept byte for byte, CRLF included: the unit tests fed it so.
+*/index.html -text -eol

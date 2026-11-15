@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"ecma": 2020,
+		"compress": {},
+		"mangle": {
+			"properties": {}
+		}
+	}
+]

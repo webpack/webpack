@@ -1,0 +1,1 @@
+function f(){return(o=>o)({a:1})}

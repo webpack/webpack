@@ -1,0 +1,1 @@
+console.log.call(console,a);console.log.apply(console,b);g();

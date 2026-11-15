@@ -1,0 +1,1 @@
+(x=>x+1)(1);((x,y)=>x+y)(1,2);(x=>{return x+1})(1);(()=>{return})();(function(){return 1})();x=(()=>2)();(()=>{return g()})();x=function(){f();return 1}();(function(){"use strict";return 1})();(function(){return;g()})()

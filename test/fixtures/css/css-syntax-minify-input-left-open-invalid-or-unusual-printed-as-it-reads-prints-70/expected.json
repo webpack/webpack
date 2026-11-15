@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "respelling escape",
+		"contains": "a { width & : .5px } a { width : .5px } a { width & : .5px } a { width : .5…\n      -> \\61 { \\77 idth & : .5px } \\61 { \\77 idth : .5px } \\61 { \\77 idth & : .5px }…",
+		"why": "a declaration, selector or block that is invalid or left open, which the printer writes back as authored, escape included"
+	},
+	{
+		"relation": "respelling leading-zero",
+		"contains": ".5px\n      -> 0.5px",
+		"why": "`width&:` is no declaration and `.a+.5m` no selector, so the number in either is written back as authored"
+	}
+]

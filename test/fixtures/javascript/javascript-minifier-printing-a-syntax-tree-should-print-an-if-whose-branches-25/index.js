@@ -1,0 +1,1 @@
+function f(c){var x;if(c)x=(g(),h());else x=(g(),h());return x}

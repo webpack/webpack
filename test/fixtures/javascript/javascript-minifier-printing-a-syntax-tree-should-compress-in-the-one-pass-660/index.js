@@ -1,0 +1,1 @@
+function f(Math,parseInt){x=[Math.abs(-1),parseInt("1")]}x=[Math?.abs(-1),Math.abs?.(-1),Math.abs(...[g]),Math.abs(/*! c */1)]

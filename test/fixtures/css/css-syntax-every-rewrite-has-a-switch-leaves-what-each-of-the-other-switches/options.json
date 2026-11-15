@@ -1,0 +1,12 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {
+			"removeDeadRules": false
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {}
+	}
+]

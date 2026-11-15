@@ -1,17 +1,10 @@
 "use strict";
 
-const HREF = "bundle0.css";
-
 module.exports = {
-	moduleScope(scope) {
-		const { document } = scope.window;
-		const existing = document
-			.getElementsByTagName("link")
-			.find((l) => l.href.endsWith(HREF));
-		if (existing) return;
+	setupDocument(document) {
 		const link = document.createElement("link");
 		link.rel = "stylesheet";
-		link.href = HREF;
+		link.href = "bundle0.css";
 		document.head.appendChild(link);
 	}
 };

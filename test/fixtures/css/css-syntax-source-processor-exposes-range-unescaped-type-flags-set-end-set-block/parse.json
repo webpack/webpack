@@ -1,0 +1,19 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"Hash",
+				"Number",
+				"String",
+				"Ident"
+			],
+			"fields": [
+				"value",
+				"flag:id",
+				"flag:integer"
+			],
+			"exit": false
+		}
+	}
+]

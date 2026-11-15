@@ -1,0 +1,1 @@
+try{x=undefined.a}catch(e){console.log(e.name)}try{undefined[0]}catch(e){console.log(e.name)}try{undefined()}catch(e){console.log(e.name)}try{new undefined}catch(e){console.log(e.name)}try{undefined`t`}catch(e){console.log(e.name)}console.log(delete undefined);(function(undefined){console.log(undefined.a)})({a:1})

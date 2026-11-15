@@ -1,0 +1,1 @@
+.a{color:red}.a .b{color:blue}.c{color:var(--webpack-light,#fff)var(--webpack-dark,#000)}@layer x{.d,.e{top:0}}.f{text-decoration:underline;text-decoration-style:dotted}.g{inset:1px 2px}.h>.i{top:0}:where(:root){--webpack-light:initial;--webpack-dark:}

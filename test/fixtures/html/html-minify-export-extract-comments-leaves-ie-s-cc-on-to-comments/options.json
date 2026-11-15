@@ -1,0 +1,10 @@
+[
+	{
+		"print": "htmlMinify",
+		"minimizer": {
+			"extractComments": true,
+			"asset": "a.html"
+		},
+		"comments": "cc_on"
+	}
+]

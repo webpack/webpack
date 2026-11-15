@@ -1,0 +1,1 @@
+<!DOCTYPE r [ <!-- ] --> <?pi ]?> <!ENTITY q ']>'> <!ENTITY % p 'x'> <!ENTITY ext SYSTEM 'e.xml'> <!ELEMENT r ANY> ]><r>&q;&ext;</r>

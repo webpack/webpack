@@ -1,0 +1,1 @@
+(class{static{[1];let x;const y=1;var z;function f(){}(function(){});()=>{};;class D{}}})

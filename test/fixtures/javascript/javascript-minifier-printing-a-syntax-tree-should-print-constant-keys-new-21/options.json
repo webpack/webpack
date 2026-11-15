@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"side_effects": false
+		},
+		"mangle": {},
+		"module": true
+	}
+]

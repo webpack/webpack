@@ -1,0 +1,1 @@
+const A = class A extends A {}

@@ -1,0 +1,1 @@
+An at-rule name is read with its escapes resolved: `\0` is U+FFFD and `\m` an `m`, and a backslash before a newline ends the name. A sheet ending on a lone backslash is closed as end of input reads it, a custom property it left open included, since the engine writes that back closed; one left open without the backslash is not joined.

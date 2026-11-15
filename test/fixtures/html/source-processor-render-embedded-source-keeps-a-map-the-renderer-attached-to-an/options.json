@@ -1,0 +1,16 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"css": ".a{color:red}\n/*# sourceMappingURL=data:application/json;base64,e30= */",
+				"javascript/script": "var a=1\n//# sourceMappingURL=data:application/json;base64,e30="
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	}
+]

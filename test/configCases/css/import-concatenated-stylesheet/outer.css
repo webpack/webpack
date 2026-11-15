@@ -1,0 +1,5 @@
+@import url(./inner.css);
+
+.outer {
+	color: red;
+}

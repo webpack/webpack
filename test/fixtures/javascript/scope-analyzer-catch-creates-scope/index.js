@@ -1,0 +1,7 @@
+
+				(function () {
+					try {
+					} catch (e) {
+					}
+				}());
+			

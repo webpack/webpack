@@ -1,0 +1,1 @@
+function f(a) { const k = 1; let r = [((x) => x + 1)(k), ((x) => 1)(later), (function () { return eval("a") })(), (function () { return () => this })(), (function () { return () => arguments })()]; const later = 2; return r }

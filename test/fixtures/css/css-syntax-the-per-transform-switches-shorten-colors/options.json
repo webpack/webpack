@@ -1,0 +1,15 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {
+			"shortenColors": false
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {}
+	},
+	{
+		"mode": "minify"
+	}
+]

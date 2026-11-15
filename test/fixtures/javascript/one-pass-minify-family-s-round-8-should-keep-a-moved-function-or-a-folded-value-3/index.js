@@ -1,0 +1,1 @@
+function g(a,b){var r=a?b:1;return{k:r}.k*2}

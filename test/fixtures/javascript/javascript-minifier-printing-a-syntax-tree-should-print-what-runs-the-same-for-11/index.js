@@ -1,0 +1,1 @@
+!function(){function g(a,b){return a}console.log(g(1,2),g(3),g(4,5,6))}();(function(o){o.a++;console.log(o.a,Object.keys(o))})({a:1,b:[2]})

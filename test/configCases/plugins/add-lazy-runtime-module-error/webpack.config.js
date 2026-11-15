@@ -14,7 +14,9 @@ module.exports = {
 							compilation.addLazyRuntimeModule(
 								chunk,
 								() => Promise.reject(new Error("runtime module load failed")),
-								(Ctor) => new Ctor()
+								(
+									/** @type {new () => import("../../../../").RuntimeModule} */ Ctor
+								) => new Ctor()
 							);
 						}
 					);

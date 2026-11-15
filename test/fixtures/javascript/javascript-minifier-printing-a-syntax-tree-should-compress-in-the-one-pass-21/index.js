@@ -1,0 +1,1 @@
+function f(m, c, e){ const s = e; let t = s; g(s.kind, t, {s}); var o = (n) => n + t; m.exports = o; if (c) { var p = () => 1 } g(p); switch (c) { case 1: var q = () => 2; case 2: g(q) } const r = () => 3; for (;;) g(r); const u = function(){}; { g(u) } }

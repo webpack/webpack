@@ -1,0 +1,1 @@
+(class{["x"]=alert(1);static["y"]=2;[1](){}static[1n];[null](){}})

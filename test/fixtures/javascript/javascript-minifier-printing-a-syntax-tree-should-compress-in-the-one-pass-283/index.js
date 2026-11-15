@@ -1,0 +1,1 @@
+f=x=>{a();var y;return b}

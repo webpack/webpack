@@ -1,0 +1,1 @@
+x=[Number("0b1"),Math.abs(" 0O7")]

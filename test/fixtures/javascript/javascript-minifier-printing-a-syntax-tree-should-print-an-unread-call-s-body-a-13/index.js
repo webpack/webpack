@@ -1,0 +1,1 @@
+var log=[];function b(){log.push('b')}function c(){log.push('c')}function g(a){(function(){if(a)return})()}g(0);g(1);g(null);console.log(log.join())

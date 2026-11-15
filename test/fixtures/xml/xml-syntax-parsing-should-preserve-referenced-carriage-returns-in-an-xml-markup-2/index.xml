@@ -1,0 +1,2 @@
+<!DOCTYPE root [<!ENTITY value "a&#13;b<child/>">]>
+<root>&value;</root>

@@ -1,0 +1,1 @@
+if(void 0)f();while(void 0)g();for(;undefined;)h();l:for(;!1;);a:b:while(void 0)f();if(void 0)var q;function k(undefined){if(undefined)g()}

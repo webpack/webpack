@@ -30,5 +30,12 @@ module.exports = {
 		hints: "warning",
 		hotspots: true
 	},
-	plugins: [waiting]
+	plugins: [waiting],
+	// A loaded runner can hold the thread in webpack's own plugins for longer
+	// than the hint's floor; what this case holds is that WaitingPlugin goes unnamed.
+	ignoreWarnings: [
+		(warning) =>
+			warning.name === "HotspotsWarning" &&
+			!warning.message.includes("WaitingPlugin")
+	]
 };

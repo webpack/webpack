@@ -1,0 +1,1 @@
+@supports selector(a:nth-child(2n+1)){a{color:red}}

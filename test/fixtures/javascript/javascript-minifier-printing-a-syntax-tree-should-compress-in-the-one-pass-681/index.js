@@ -1,0 +1,1 @@
+Math.abs(Math.random());Math.random=g;Math.random();x=1

@@ -1,0 +1,1 @@
+console.log(new Error("e").message,[1,2].join("-"),isFinite(1))

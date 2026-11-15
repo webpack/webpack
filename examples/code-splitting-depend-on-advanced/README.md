@@ -209,9 +209,9 @@ console.log(lodash, isomorphicFetch);
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -219,8 +219,7 @@ console.log(lodash, isomorphicFetch);
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
@@ -259,7 +258,7 @@ console.log(lodash, isomorphicFetch);
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -310,7 +309,7 @@ console.log(lodash, isomorphicFetch);
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -331,7 +330,7 @@ console.log(lodash, isomorphicFetch);
 
 ```javascript
 "use strict";
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["app"],{
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["app"],{
 
 /***/ 6
 /*!****************!*\
@@ -368,7 +367,7 @@ console.log((isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()), (lodash__
 
 ```javascript
 "use strict";
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["page1"],{
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["page1"],{
 
 /***/ 7
 /*!******************!*\
@@ -409,7 +408,7 @@ __webpack_require__.e(/*! import() */ "lazy_js").then(() => (__webpack_require__
 # dist/other-vendors.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["other-vendors"],[
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["other-vendors"],[
 /* 0 */,
 /* 1 */,
 /* 2 */,
@@ -473,7 +472,7 @@ module.exports = "isomorphic-fetch";
 # dist/react-vendors.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["react-vendors"],[
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["react-vendors"],[
 /* 0 */
 /*!*******************************!*\
   !*** ./node_modules/react.js ***!
@@ -526,16 +525,16 @@ module.exports = 'prop-types';
 ## Unoptimized
 
 ```
-asset runtime.js 10.2 KiB [emitted] (name: runtime)
-asset other-vendors.js 2.11 KiB [emitted] (name: other-vendors)
-asset page1.js 1.86 KiB [emitted] (name: page1)
-asset app.js 1.41 KiB [emitted] (name: app)
-asset react-vendors.js 1.3 KiB [emitted] (name: react-vendors)
-asset lazy_js.js 1.1 KiB [emitted]
-Entrypoint app 1.41 KiB = app.js
-Entrypoint page1 1.86 KiB = page1.js
-Entrypoint react-vendors 11.5 KiB = runtime.js 10.2 KiB react-vendors.js 1.3 KiB
-Entrypoint other-vendors 12.3 KiB = runtime.js 10.2 KiB other-vendors.js 2.11 KiB
+asset runtime.js 10.1 KiB [emitted] (name: runtime)
+asset other-vendors.js 2.14 KiB [emitted] (name: other-vendors)
+asset page1.js 1.9 KiB [emitted] (name: page1)
+asset app.js 1.45 KiB [emitted] (name: app)
+asset react-vendors.js 1.34 KiB [emitted] (name: react-vendors)
+asset lazy_js.js 1.14 KiB [emitted]
+Entrypoint app 1.45 KiB = app.js
+Entrypoint page1 1.9 KiB = page1.js
+Entrypoint react-vendors 11.5 KiB = runtime.js 10.1 KiB react-vendors.js 1.34 KiB
+Entrypoint other-vendors 12.3 KiB = runtime.js 10.1 KiB other-vendors.js 2.14 KiB
 chunk (runtime: runtime) app.js (app) 116 bytes <{other-vendors}> <{runtime}> >{page1}< [initial] [rendered]
   > ./app.js app
   ./app.js 116 bytes [built] [code generated]
@@ -586,28 +585,28 @@ chunk (runtime: runtime) react-vendors.js (react-vendors) 87 bytes ={runtime}= >
       harmony import specifier react ./page1.js 5:29-34
     cjs self exports reference ./node_modules/react.js 1:0-14
     entry react react-vendors
-chunk (runtime: runtime) runtime.js (runtime) 6.18 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
+chunk (runtime: runtime) runtime.js (runtime) 6.15 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
   > ./other-vendors other-vendors
   > prop-types react-vendors
   > react react-vendors
   > react-dom react-vendors
-  runtime modules 6.18 KiB 10 modules
+  runtime modules 6.15 KiB 10 modules
 webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset runtime.js 2.23 KiB [emitted] [minimized] (name: runtime)
-asset page1.js 271 bytes [emitted] [minimized] (name: page1)
-asset other-vendors.js 232 bytes [emitted] [minimized] (name: other-vendors)
-asset react-vendors.js 197 bytes [emitted] [minimized] (name: react-vendors)
-asset app.js 193 bytes [emitted] [minimized] (name: app)
-asset lazy_js.js 157 bytes [emitted] [minimized]
-Entrypoint app 193 bytes = app.js
-Entrypoint page1 271 bytes = page1.js
-Entrypoint react-vendors 2.42 KiB = runtime.js 2.23 KiB react-vendors.js 197 bytes
-Entrypoint other-vendors 2.46 KiB = runtime.js 2.23 KiB other-vendors.js 232 bytes
+asset runtime.js 2.22 KiB [emitted] [minimized] (name: runtime)
+asset page1.js 303 bytes [emitted] [minimized] (name: page1)
+asset other-vendors.js 264 bytes [emitted] [minimized] (name: other-vendors)
+asset react-vendors.js 229 bytes [emitted] [minimized] (name: react-vendors)
+asset app.js 225 bytes [emitted] [minimized] (name: app)
+asset lazy_js.js 189 bytes [emitted] [minimized]
+Entrypoint app 225 bytes = app.js
+Entrypoint page1 303 bytes = page1.js
+Entrypoint react-vendors 2.44 KiB = runtime.js 2.22 KiB react-vendors.js 229 bytes
+Entrypoint other-vendors 2.47 KiB = runtime.js 2.22 KiB other-vendors.js 264 bytes
 chunk (runtime: runtime) app.js (app) 116 bytes <{other-vendors}> <{runtime}> >{page1}< [initial] [rendered]
   > ./app.js app
   ./app.js 116 bytes [built] [code generated]
@@ -639,29 +638,29 @@ chunk (runtime: runtime) react-vendors.js (react-vendors) 87 bytes ={runtime}= >
   ./node_modules/prop-types.js 31 bytes [built] [code generated]
     [used exports unknown]
     from origin ./lazy.js
-      harmony side effect evaluation prop-types ./lazy.js 2:0-35
+      [inactive] harmony side effect evaluation prop-types ./lazy.js 2:0-35
       harmony import specifier prop-types ./lazy.js 4:20-29
     cjs self exports reference ./node_modules/prop-types.js 1:0-14
     entry prop-types react-vendors
   ./node_modules/react-dom.js 30 bytes [built] [code generated]
     [used exports unknown]
     from origin ./page1.js
-      harmony side effect evaluation react-dom ./page1.js 3:0-33
+      [inactive] harmony side effect evaluation react-dom ./page1.js 3:0-33
       harmony import specifier react-dom ./page1.js 5:36-44
     cjs self exports reference ./node_modules/react-dom.js 1:0-14
     entry react-dom react-vendors
   ./node_modules/react.js 26 bytes [built] [code generated]
     [used exports unknown]
     from origin ./page1.js
-      harmony side effect evaluation react ./page1.js 2:0-26
+      [inactive] harmony side effect evaluation react ./page1.js 2:0-26
       harmony import specifier react ./page1.js 5:29-34
     cjs self exports reference ./node_modules/react.js 1:0-14
     entry react react-vendors
-chunk (runtime: runtime) runtime.js (runtime) 6.18 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
+chunk (runtime: runtime) runtime.js (runtime) 6.15 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
   > ./other-vendors other-vendors
   > prop-types react-vendors
   > react react-vendors
   > react-dom react-vendors
-  runtime modules 6.18 KiB 10 modules
+  runtime modules 6.15 KiB 10 modules
 webpack X.X.X compiled successfully
 ```

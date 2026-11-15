@@ -1,0 +1,11 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"safari 17"
+			]
+		},
+		"as": "block-contents",
+		"mode": "minify"
+	}
+]

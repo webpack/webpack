@@ -1,0 +1,14 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"Declaration"
+			],
+			"fields": [
+				"loc"
+			],
+			"exit": false
+		}
+	}
+]

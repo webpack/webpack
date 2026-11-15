@@ -1,0 +1,8 @@
+[
+	{
+		"options": {
+			"sourceType": "module",
+			"importPhases": true
+		}
+	}
+]

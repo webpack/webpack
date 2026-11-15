@@ -1,0 +1,1 @@
+(async function* () { yield await 1; })();

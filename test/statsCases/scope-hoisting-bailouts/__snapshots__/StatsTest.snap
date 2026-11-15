@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`StatsTestCases scope-hoisting-bailouts should print correct stats for scope-hoisting-bailouts 1`] = `
-"runtime modules X KiB 9 modules
+"runtime modules X KiB 6 modules
 cacheable modules X bytes
   code generated modules X bytes [code generated]
     ./index.js X bytes [built] [code generated]
@@ -15,7 +15,6 @@ cacheable modules X bytes
     ./entry.js X bytes [built] [code generated]
     ./cjs.js X bytes [built] [code generated]
       CommonJS bailout: module.exports is used directly at 3:0-14
-      Statement (ExpressionStatement) with side effects in source code at 1:0-26
       ModuleConcatenation bailout: Module is not in strict mode
     ./ref-from-cjs.js X bytes [built] [code generated]
     ./eval.js X bytes [built] [code generated]

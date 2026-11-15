@@ -14,9 +14,13 @@
  * @property {string} declarations folder holding the option types that are not a plugin's own
  * @property {string} types output file for types declarations
  * @property {boolean} templateLiterals whether template literal types are allowed
+ * @property {string} base git revision the types coverage report compares escape-hatch type counts with
+ * @property {string} baseCounts `coverage/type-counts.json` of a types coverage run on the base, for the report to compare its inferred `any` and untyped identifiers with
  */
 
-/** @type {Record<string, string | boolean>} */
+/** @typedef {"write" | "verbose" | "templateLiterals"} BooleanOption the flags set by naming them */
+
+/** @type {Argv} */
 const DEFAULTS = {
 	write: false,
 	verbose: false,
@@ -24,7 +28,9 @@ const DEFAULTS = {
 	schemas: "./schemas/**/*.json",
 	declarations: "declarations",
 	types: "types.d.ts",
-	templateLiterals: true
+	templateLiterals: true,
+	base: "",
+	baseCounts: ""
 };
 
 /**
@@ -32,7 +38,21 @@ const DEFAULTS = {
  * @returns {string} the matching `Argv` key
  */
 const toCamelCase = (name) =>
-	name.replace(/-([a-z])/g, (_match, letter) => letter.toUpperCase());
+	name.replace(/-([a-z])/g, (_match, /** @type {string} */ letter) =>
+		letter.toUpperCase()
+	);
+
+/**
+ * @param {string} name a camel cased flag name
+ * @returns {name is keyof Argv} whether the generators take that flag
+ */
+const isOption = (name) => name in DEFAULTS;
+
+/**
+ * @param {keyof Argv} name a flag the generators take
+ * @returns {name is BooleanOption} whether the flag is set by naming it
+ */
+const isBooleanOption = (name) => typeof DEFAULTS[name] === "boolean";
 
 /**
  * Reads the flags the generators take. A boolean is set by naming it and
@@ -50,10 +70,10 @@ const parseArgv = (args) => {
 		const written = at === -1 ? arg.slice(2) : arg.slice(2, at);
 		const negated = written.startsWith("no-");
 		const name = toCamelCase(negated ? written.slice(3) : written);
-		if (!(name in DEFAULTS)) {
+		if (!isOption(name)) {
 			throw new Error(`Unknown option "${arg}"`);
 		}
-		if (typeof DEFAULTS[name] === "boolean") {
+		if (isBooleanOption(name)) {
 			argv[name] = !negated;
 			continue;
 		}
@@ -63,7 +83,7 @@ const parseArgv = (args) => {
 		}
 		argv[name] = value;
 	}
-	return /** @type {Argv} */ (/** @type {unknown} */ (argv));
+	return argv;
 };
 
 module.exports = parseArgv(process.argv.slice(2));

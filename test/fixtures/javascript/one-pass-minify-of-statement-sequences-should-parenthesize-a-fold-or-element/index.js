@@ -1,0 +1,1 @@
+console.log((Infinity||3).toString(),(Infinity||a||3).toFixed(),(1?Number.NEGATIVE_INFINITY:2).toString(),new(0||(1&&Infinity)),(0||(1&&1e400)).x,[Infinity][0].toFixed(),{a:Infinity}.a.toFixed(),typeof[Infinity][0],2/[Infinity][0],[Infinity][0])

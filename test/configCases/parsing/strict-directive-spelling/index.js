@@ -36,7 +36,9 @@ const FUNCTIONS = {
 	escapedAfterCustom: true,
 	parenthesized: true,
 	escaped: true,
-	continued: true
+	continued: true,
+	inOperator: 0,
+	instanceofOperator: 0
 };
 
 it("should detect each spelling inside a function body", () => {

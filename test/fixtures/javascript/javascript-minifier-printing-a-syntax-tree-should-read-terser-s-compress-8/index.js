@@ -1,0 +1,1 @@
+if(a)console.log(f());for(;;)console.log(1);x=console.log(2);

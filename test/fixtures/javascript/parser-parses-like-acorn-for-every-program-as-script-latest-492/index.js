@@ -1,0 +1,1 @@
+function f() { using \u0078 = 1; }

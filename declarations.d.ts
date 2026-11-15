@@ -1,14 +1,25 @@
 type EXPECTED_ANY = any;
 type EXPECTED_FUNCTION = Function;
 type EXPECTED_OBJECT = object;
+// What a `throw` or a rejected promise hands on: any value can be thrown, so
+// `unknown` is its real type and the coverage report leaves it out.
+type ThrownValue = unknown;
+
+// Set only when webpack itself runs bundled by webpack.
+declare const __webpack_require__:
+	undefined | ((moduleId: string | number) => unknown);
 
 declare module "*.json";
 declare module "rimraf";
 
-declare module "commondir" {
-	function commonDir(paths: string[]): string;
-	function commonDir(basedir: string, relativePaths: string[]): string;
-	export = commonDir;
+// The yamljs 0.3 calls the examples make; the package ships no types
+declare module "yamljs" {
+	export function parse(yaml: string): unknown;
+	export function stringify(
+		value: unknown,
+		inline?: number,
+		spaces?: number
+	): string;
 }
 
 declare module "color-name" {

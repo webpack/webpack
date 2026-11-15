@@ -1,0 +1,19 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"css": "/*css*/",
+				"svg": "/*svg*/",
+				"html": "/*html*/",
+				"json": "/*json*/",
+				"javascript": "/*javascript*/"
+			}
+		}
+	}
+]

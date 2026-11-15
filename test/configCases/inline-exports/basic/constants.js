@@ -4,6 +4,7 @@ export const REMOVE_b = true;
 export const REMOVE_FALSE = false;
 export const REMOVE_i = 123456;
 export const REMOVE_f = 123.45;
+export const REMOVE_z = -0;
 export const REMOVE_s = "remove";
 
 const a = 1 << 0;

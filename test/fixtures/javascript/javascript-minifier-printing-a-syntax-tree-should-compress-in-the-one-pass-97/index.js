@@ -1,0 +1,1 @@
+function f(a, b){ var p = a + b, q = -a, r = a in b, s = a instanceof b, t = `${a}`, u = !a, v = typeof a, w = a < b, x = `${1}`, y = a && b, c = +a, d = a == b, e = ~a, h = a * 2; }

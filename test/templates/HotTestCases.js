@@ -11,6 +11,7 @@ require("../helpers/warmup-webpack");
 /**
  * @typedef {object} HotTestConfig
  * @property {((scope: EXPECTED_ANY, options: import("../../").Configuration) => void)=} moduleScope
+ * @property {import("../harness/runner").TestConfig["setupDocument"]=} setupDocument prepare the page once per run, before any bundle executes
  */
 
 const path = require("path");
@@ -23,6 +24,7 @@ const createLazyTestEnv = require("../helpers/createLazyTestEnv");
 const deprecationTracking = require("../helpers/deprecationTracking");
 const supportsObjectHasOwn = require("../helpers/supportsObjectHasOwn");
 const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
+const testTimeout = require("../helpers/testTimeout");
 
 const testRootDirectory = path.join(__dirname, "..");
 
@@ -93,6 +95,10 @@ const describeCases = (config) => {
 							const fakeUpdateLoaderOptions = {
 								updateIndex: 0
 							};
+							// when the lazy-compilation backend last activated a module since the
+							// previous re-run; NEXT_DEFERRED waits for this rather than a fixed delay
+							/** @type {number | undefined} */
+							let lastActivation;
 							const configPath = path.join(testDirectory, "webpack.config.js");
 							/** @type {import("../../").Configuration} */
 							let options = /** @type {import("../../").Configuration} */ ({});
@@ -236,6 +242,7 @@ const describeCases = (config) => {
 									/** @type {(err: EXPECTED_ANY, stats?: EXPECTED_ANY) => void} */ callback
 								) {
 									fakeUpdateLoaderOptions.updateIndex++;
+									lastActivation = undefined;
 									const deprecationTracker = deprecationTracking.start();
 									compiler.run((err, _stats) => {
 										const stats = /** @type {import("../../").Stats} */ (_stats);
@@ -308,12 +315,23 @@ const describeCases = (config) => {
 											STATE: jsonStats,
 											NEXT: runCompiler,
 											NEXT_DEFERRED: (/** @type {EXPECTED_ANY} */ cb) => {
-												// Under lazyCompilation, delay the first re-run so a dynamic import's request
-												// reaches the backend — otherwise NEXT recompiles while the module is still a
-												// proxy, raising "No update available". See webpack/webpack actions run 22039709807.
-												setTimeout(() => {
-													runCompiler(cb);
-												}, 1000);
+												// Under lazyCompilation, re-run only once a dynamic import's request reached the
+												// backend — otherwise NEXT recompiles while the module is still a proxy, raising
+												// "No update available" (actions run 22039709807). Wait 100ms past the last one.
+												const start = Date.now();
+												const poll = () => {
+													const now = Date.now();
+													if (
+														now - start >= 1000 ||
+														(lastActivation !== undefined &&
+															now - lastActivation >= 100)
+													) {
+														runCompiler(cb);
+													} else {
+														setTimeout(poll, 10);
+													}
+												};
+												poll();
 											},
 											// Re-run the same compilation version (without advancing the
 											// fake-update index): lets a test wait out the lazy-compilation
@@ -361,15 +379,26 @@ const describeCases = (config) => {
 							};
 							const deprecationTracker = deprecationTracking.start();
 							compiler = webpack(options);
+							compiler.hooks.infrastructureLog.tap(
+								"HotTestCasesTest",
+								(name, _type, args) => {
+									if (
+										name === "LazyCompilationBackend" &&
+										/ is now in use /.test(String(args && args[0]))
+									) {
+										lastActivation = Date.now();
+									}
+								}
+							);
 							compiler.run(/** @type {EXPECTED_ANY} */ (onCompiled));
-						}, 20000);
+						}, testTimeout(20000));
 
 						const {
 							it: _it,
 							beforeEach: _beforeEach,
 							afterEach: _afterEach,
 							getNumberOfTests
-						} = createLazyTestEnv(20000);
+						} = createLazyTestEnv(testTimeout(20000));
 					});
 				}
 			});

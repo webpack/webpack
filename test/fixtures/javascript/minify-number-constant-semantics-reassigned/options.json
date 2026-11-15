@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"ecma": 2018,
+		"compress": {
+			"passes": 2
+		},
+		"behavior": true
+	}
+]

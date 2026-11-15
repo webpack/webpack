@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"as": "bogus"
+	},
+	{
+		"mode": "minify"
+	}
+]

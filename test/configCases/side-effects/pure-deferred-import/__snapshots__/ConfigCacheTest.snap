@@ -134,7 +134,7 @@ function extra(a) {
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
-/* harmony import */ var _lib_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib.js */ 174);
+/* harmony import */ var _lib_js__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./lib.js */ 174);
 
 
 it(\\"should evaluate the deferred module on access\\", () => {
@@ -278,7 +278,7 @@ function extra(a) {
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
-/* harmony import */ var _lib_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib.js */ 174);
+/* harmony import */ var _lib_js__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./lib.js */ 174);
 
 
 it(\\"should evaluate the deferred module on access\\", () => {
@@ -642,7 +642,7 @@ function extra(a) {
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
-/* harmony import */ var _lib_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib.js */ 174);
+/* harmony import */ var _lib_js__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./lib.js */ 174);
 
 
 it(\\"should evaluate the deferred module on access\\", () => {
@@ -896,7 +896,7 @@ function extra(a) {
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
-/* harmony import */ var _lib_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib.js */ 174);
+/* harmony import */ var _lib_js__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./lib.js */ 174);
 
 
 it(\\"should evaluate the deferred module on access\\", () => {

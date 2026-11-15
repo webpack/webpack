@@ -1,0 +1,15 @@
+[
+	{
+		"print": "htmlMinify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"html/srcdoc": "<p>b"
+			}
+		}
+	},
+	{
+		"print": "htmlMinify",
+		"renderEmbeddedSource": "offers"
+	}
+]

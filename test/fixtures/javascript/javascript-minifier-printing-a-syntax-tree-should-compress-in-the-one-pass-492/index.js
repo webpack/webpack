@@ -1,0 +1,1 @@
+function f(a){g((a=x(),a));return(a=y(),a).b+(a=z(),a)}

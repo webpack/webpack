@@ -1,0 +1,9 @@
+[
+	{
+		"print": "htmlMinify",
+		"svg": true
+	},
+	{
+		"print": "htmlMinify"
+	}
+]

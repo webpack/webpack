@@ -1,0 +1,1 @@
+while (a) function f() {}

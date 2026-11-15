@@ -1,0 +1,1 @@
+function s(e,t){if(t)return;switch(1){case 1:e.push(1);e.push(2)}}

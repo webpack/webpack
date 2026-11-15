@@ -26,7 +26,7 @@ const copyTest = {
 	}
 };
 
-/** @typedef {false | string | Record<string, EXPECTED_ANY> | ((name: string) => false | string | Record<string, EXPECTED_ANY>)} Manifest */
+/** @typedef {NonNullable<import("../../../../declarations/WebpackOptions").OutputHtmlOptions["manifest"]>} Manifest */
 
 /** @type {(name: string, manifest: Manifest) => import("../../../../").Configuration} */
 const config = (name, manifest) => ({

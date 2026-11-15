@@ -1,0 +1,1 @@
+function f() { if (a) return; if (b) return } function g() { x(); if (a) return; if (b) return; if (c = 1) return } function h() { if (function () {}()) return; if (b) return } for (;;) { x(); if (a) continue; if (b) continue }

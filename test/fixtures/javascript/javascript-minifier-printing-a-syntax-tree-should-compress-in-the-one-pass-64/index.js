@@ -1,0 +1,1 @@
+function f(){ 'use strict'; g() } function h(){ x = g(); k(x) }

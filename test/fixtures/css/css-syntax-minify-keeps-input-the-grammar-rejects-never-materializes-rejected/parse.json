@@ -1,0 +1,12 @@
+[
+	{
+		"entry": "parseAStylesheet",
+		"fields": [
+			"childCount",
+			"fieldCount:prelude",
+			"fieldCount:value",
+			"fieldCount:declarations",
+			"fieldCount:rules"
+		]
+	}
+]

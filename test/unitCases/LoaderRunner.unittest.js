@@ -10,6 +10,18 @@ const {
 
 const fixtures = path.resolve(__dirname, "../fixtures", "loader-runner");
 
+/** @typedef {import("../../lib/loaders/LoaderRunner").RunLoaderResult} RunLoaderResult */
+
+/**
+ * Reads the content the loader pipeline ended with.
+ * @param {RunLoaderResult} result the pipeline's result
+ * @returns {string | Buffer} the content
+ */
+const contentOf = (result) =>
+	/** @type {string | Buffer} */ (
+		/** @type {NonNullable<RunLoaderResult["result"]>} */ (result.result)[0]
+	);
+
 /**
  * Asserts `err` is an Error. `instanceof Error` is unreliable across the jest
  * vm-module realm boundary (`--experimental-vm-modules`), so check the
@@ -227,7 +239,7 @@ describe("runLoaders", () => {
 			(err, result) => {
 				if (err) return done(err);
 				try {
-					expect(JSON.parse(result.result[0])).toEqual({
+					expect(JSON.parse(String(contentOf(result)))).toEqual({
 						context: fixtures,
 						resource: `${path.resolve(fixtures, "resource.bin")}?query#frag`,
 						resourcePath: path.resolve(fixtures, "resource.bin"),
@@ -295,7 +307,7 @@ describe("runLoaders", () => {
 			(err, result) => {
 				if (err) return done(err);
 				try {
-					const parsed = JSON.parse(result.result[0]);
+					const parsed = JSON.parse(String(contentOf(result)));
 					// the caller's own property survives...
 					expect(parsed.custom).toBe("kept");
 					// ...on the same object the loader-runner augmented in place
@@ -390,7 +402,7 @@ describe("runLoaders", () => {
 			(err, result) => {
 				if (err) return done(err);
 				try {
-					expect(JSON.parse(result.result[0])).toEqual({
+					expect(JSON.parse(String(contentOf(result)))).toEqual({
 						context: fixtures,
 						resource: `${path.resolve(fixtures, "resource.bin")}?query`,
 						resourcePath: path.resolve(fixtures, "resource.bin"),
@@ -444,7 +456,7 @@ describe("runLoaders", () => {
 			},
 			(err, result) => {
 				if (err) return done(err);
-				expect(result.result[0].toString("utf8")).toBe("efbbbf62c3b66d﻿böm");
+				expect(/** @type {Buffer} */ (contentOf(result)).toString("utf8")).toBe("efbbbf62c3b66d﻿böm");
 				done();
 			}
 		);
@@ -461,7 +473,7 @@ describe("runLoaders", () => {
 			},
 			(err, result) => {
 				if (err) return done(err);
-				expect(result.result[0].toString("utf8")).toBe(
+				expect(/** @type {Buffer} */ (contentOf(result)).toString("utf8")).toBe(
 					"62c3b66d2d73696d706c65böm-simple"
 				);
 				done();
@@ -480,7 +492,7 @@ describe("runLoaders", () => {
 			},
 			(err, result) => {
 				if (err) return done(err);
-				expect(result.result[0]).toBe("resource-simple");
+				expect(contentOf(result)).toBe("resource-simple");
 				done();
 			}
 		);
@@ -497,7 +509,7 @@ describe("runLoaders", () => {
 			},
 			(err, result) => {
 				if (err) return done(err);
-				expect(result.result[0].toString("utf8")).toBe(
+				expect(/** @type {Buffer} */ (contentOf(result)).toString("utf8")).toBe(
 					"7265736f75726365resource"
 				);
 				done();
@@ -516,7 +528,7 @@ describe("runLoaders", () => {
 			},
 			(err, result) => {
 				if (err) return done(err);
-				expect(result.result[0].toString("utf8")).toBe(
+				expect(/** @type {Buffer} */ (contentOf(result)).toString("utf8")).toBe(
 					"efbbbf7669727475616c\uFEFFvirtual"
 				);
 				done();
@@ -535,7 +547,7 @@ describe("runLoaders", () => {
 			(err, result) => {
 				if (err) return done(err);
 				try {
-					expect(JSON.parse(result.result[0])).toEqual({
+					expect(JSON.parse(String(contentOf(result)))).toEqual({
 						context: null,
 						resource: "",
 						resourcePath: "",
@@ -599,7 +611,7 @@ describe("runLoaders", () => {
 			(err, result) => {
 				if (err) return done(err);
 				try {
-					expect(JSON.parse(result.result[0])).toEqual({
+					expect(JSON.parse(String(contentOf(result)))).toEqual({
 						context: null,
 						resource: "?query",
 						resourcePath: "",
@@ -657,7 +669,7 @@ describe("runLoaders", () => {
 			(err, result) => {
 				if (err) return done(err);
 				try {
-					expect(JSON.parse(result.result[0])).toEqual({
+					expect(JSON.parse(String(contentOf(result)))).toEqual({
 						context: null,
 						resource: "#fragment",
 						resourcePath: "",
@@ -1025,7 +1037,7 @@ describe("runLoaders", () => {
 				},
 				(err, result) => {
 					if (err) return done(err);
-					expect(result.result[0].toString("utf8")).toBe("efbbbf62c3b66d﻿böm");
+					expect(/** @type {Buffer} */ (contentOf(result)).toString("utf8")).toBe("efbbbf62c3b66d﻿böm");
 					done();
 				}
 			);
@@ -1116,7 +1128,7 @@ describe("runLoaders", () => {
 			(err, result) => {
 				if (err) return done(err);
 				try {
-					expect(JSON.parse(result.result[0])).toEqual({
+					expect(JSON.parse(String(contentOf(result)))).toEqual({
 						context: fixtures,
 						resource: `${path.resolve(fixtures, "res\0#ource.bin")}?query\0#frag`,
 						resourcePath: path.resolve(fixtures, "res#ource.bin"),
@@ -1173,7 +1185,7 @@ describe("runLoaders", () => {
 			(err, result) => {
 				if (err) return done(err);
 				try {
-					expect(JSON.parse(result.result[0])).toEqual({
+					expect(JSON.parse(String(contentOf(result)))).toEqual({
 						context: null,
 						resource: "",
 						resourcePath: "",
@@ -1233,7 +1245,7 @@ describe("runLoaders", () => {
 			(err, result) => {
 				if (err) return done(err);
 				try {
-					expect(JSON.parse(result.result[0])).toEqual({
+					expect(JSON.parse(String(contentOf(result)))).toEqual({
 						context: null,
 						resource: `${path.resolve(fixtures, "resource.bin")}?foo=bar#hash`,
 						resourcePath: path.resolve(fixtures, "resource.bin"),
@@ -1293,7 +1305,7 @@ describe("runLoaders", () => {
 			(err, result) => {
 				if (err) return done(err);
 				try {
-					expect(JSON.parse(result.result[0])).toEqual({
+					expect(JSON.parse(String(contentOf(result)))).toEqual({
 						context: fixtures,
 						resource: "",
 						resourcePath: "",
@@ -1374,7 +1386,7 @@ describe("runLoaders", () => {
 				processResource(loaderContext, resourcePath, callback) {
 					fs.readFile(resourcePath, (err, content) => {
 						if (err) return callback(err);
-						return callback(null, content, "source-map", "other-arg");
+						return callback(null, content, "source-map", { other: "arg" });
 					});
 				}
 			},
@@ -1383,7 +1395,7 @@ describe("runLoaders", () => {
 				expect(result.result).toEqual([
 					Buffer.from("resource", "utf8"),
 					"source-map",
-					"other-arg"
+					{ other: "arg" }
 				]);
 				done();
 			}

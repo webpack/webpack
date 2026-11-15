@@ -1,0 +1,1 @@
+function f(){ var a = typeof x; let x = 1; return a } function g(){ return k } const k = 2; h(g())

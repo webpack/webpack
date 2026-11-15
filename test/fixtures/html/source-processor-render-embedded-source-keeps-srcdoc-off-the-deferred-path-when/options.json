@@ -1,0 +1,36 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "empty"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"print": "processAsync",
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "empty",
+			"async": true
+		}
+	},
+	{
+		"print": "processAsync",
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"fixture": "answerHtml"
+		},
+		"deferEmbeddedSource": {
+			"fixture": "holes"
+		},
+		"deferSrcdoc": false,
+		"check": {
+			"fixture": "collected"
+		}
+	}
+]

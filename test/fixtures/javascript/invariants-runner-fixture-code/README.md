@@ -1,0 +1,1 @@
+Exercises the `fixture.js` channel of the javascript fixture runner: `source()` makes the input (longer than an excerpt, so its snapshot entries hold a digest and both ends), `options.json` and `parse.json` name its exports with `{ "fixture": "<export>" }` as a print option, a `visit` factory and a `check`, whose JSON summary is snapshotted.

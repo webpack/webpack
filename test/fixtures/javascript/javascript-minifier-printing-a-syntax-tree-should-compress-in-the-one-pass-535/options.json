@@ -1,0 +1,14 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"toplevel": false
+		},
+		"mangle": {
+			"toplevel": false
+		},
+		"format": {
+			"comments": "all"
+		}
+	}
+]

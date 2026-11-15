@@ -1,0 +1,1 @@
+function f(o,i){return(o=i=[1]).length}

@@ -1,0 +1,1 @@
+function t(u){var r=[];if(u||0)r.push(1);if(u&&"s")r.push(2);if(u??!1)r.push(3);if(u??void 0)r.push(4);if(u??null)r.push(5);while(u??"")break;if(u||1)r.push(6);if(u??1)r.push(7);if(u&&f())r.push(8);if(u??/*! k */void 0)r.push(9);r.push(u||0);return r.join()}function f(){return 1}console.log(t(0),t(""),t(null),t(void 0),t(2),t("x"))

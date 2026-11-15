@@ -1,0 +1,1 @@
+function f(){var a;return a=1}function g(b){let a;return a=c(),b}function h(){var a;x(a=1);if(a=k())l()}function i(){var a,b;x(a=b=k())}function j(){var a;x(a=k());return a}function k(){x(a=g());let a}function l(a){x(a=g());return arguments}function m(c){var a;for(a=1;c;)c()}function n(a){var m=1;if(!1)x(m=a);return m}function o(){var a;a=0,p(),q()}

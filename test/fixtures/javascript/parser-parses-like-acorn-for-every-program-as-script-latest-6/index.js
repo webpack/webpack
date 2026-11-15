@@ -1,0 +1,1 @@
+lbl: for (;;) { inner: for (;;) { continue lbl; } break lbl; }

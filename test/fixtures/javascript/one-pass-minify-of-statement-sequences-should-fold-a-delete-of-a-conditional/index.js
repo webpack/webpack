@@ -1,0 +1,1 @@
+var o={p:1};function y(){console.log("y")}console.log(delete(1?void 0:x),delete(0?x:void 0),delete(1?2:x),delete(1?o.p:2),o.p,delete(1?y():2))

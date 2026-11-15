@@ -1,0 +1,1 @@
+for (var i = (a in b); i;) {} for (const k of (a, b)) ; for (x = (1 in o);;) {}

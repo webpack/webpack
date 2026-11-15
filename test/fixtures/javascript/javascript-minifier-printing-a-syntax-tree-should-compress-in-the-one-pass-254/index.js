@@ -1,0 +1,1 @@
+function f(a,b){if(!(a||b))return;if(b)g()}

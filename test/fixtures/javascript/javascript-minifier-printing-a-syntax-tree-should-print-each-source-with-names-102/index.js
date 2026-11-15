@@ -1,0 +1,1 @@
+a.if; a['if']; a.𐊧; a?.𐊧; a.ゟ; a['b']; a[0]; a?.[0]; this.x; function n() { new.target } import.meta; a.b.c.d;

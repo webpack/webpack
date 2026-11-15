@@ -68,8 +68,8 @@ module.exports = config;
 asset pageA.bundle.js 8.47 KiB [emitted] (name: pageA)
 asset pageB.bundle.js 8.47 KiB [emitted] (name: pageB)
 asset pageC.bundle.js 8.47 KiB [emitted] (name: pageC)
-asset 531.chunk.js 6.28 KiB [emitted]
-asset 78.chunk.js 581 bytes [emitted]
+asset 531.chunk.js 6.32 KiB [emitted]
+asset 78.chunk.js 620 bytes [emitted]
 chunk (runtime: pageC) 78.chunk.js 42 bytes [rendered]
   > ./a ./pageC.js 1:0-3:2
   ./a.js 21 bytes [built] [code generated]
@@ -125,10 +125,10 @@ webpack X.X.X compiled successfully
 
 ```
 asset pageC.bundle.js 1.75 KiB [emitted] [minimized] (name: pageC)
-asset pageA.bundle.js 1.73 KiB [emitted] [minimized] (name: pageA)
-asset pageB.bundle.js 1.73 KiB [emitted] [minimized] (name: pageB)
-asset 531.chunk.js 151 bytes [emitted] [minimized]
-asset 78.chunk.js 101 bytes [emitted] [minimized]
+asset pageA.bundle.js 1.74 KiB [emitted] [minimized] (name: pageA)
+asset pageB.bundle.js 1.74 KiB [emitted] [minimized] (name: pageB)
+asset 531.chunk.js 183 bytes [emitted] [minimized]
+asset 78.chunk.js 133 bytes [emitted] [minimized]
 chunk (runtime: pageC) 78.chunk.js 42 bytes [rendered]
   > ./a ./pageC.js 1:0-3:2
   ./a.js 21 bytes [built] [code generated]

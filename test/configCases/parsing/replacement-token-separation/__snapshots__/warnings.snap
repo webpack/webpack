@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  "export '__esModule' (imported as 'ns') was not found in './cjs.js' (possible exports: value)",
+  "export '__esModule' (imported as 'ns') was not found in './cjs.js' (possible exports: value)",
+]
+`;

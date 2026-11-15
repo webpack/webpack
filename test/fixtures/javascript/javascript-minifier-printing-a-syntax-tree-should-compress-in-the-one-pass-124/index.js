@@ -1,0 +1,1 @@
+function b(a){ 1n / 0n; 2n ** -1n; 1n % 0n; 1n / 2n; 1n % 3n; 2n ** 3n; 1n / (2n); 1n / a; 1n + 2n }

@@ -1,0 +1,1 @@
+function m() { var __proto__ = 1; return { __proto__ } }

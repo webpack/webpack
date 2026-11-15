@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"op_mini all"
+			]
+		}
+	}
+]

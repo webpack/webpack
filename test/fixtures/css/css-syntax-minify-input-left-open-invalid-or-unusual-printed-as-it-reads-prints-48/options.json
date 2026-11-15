@@ -1,0 +1,10 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"safari 15"
+			]
+		},
+		"mode": "minify"
+	}
+]

@@ -1,0 +1,1 @@
+function f(){if(x)return;a();b()}

@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"ecma": 2015,
+		"format": {
+			"ascii_only": true,
+			"safari10": true
+		}
+	}
+]

@@ -1,0 +1,1 @@
+function f(c){if(c){g(),h()}else{g(),h()}}

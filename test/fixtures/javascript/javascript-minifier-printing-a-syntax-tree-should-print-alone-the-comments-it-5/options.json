@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"compress": false,
+		"mangle": false,
+		"format": {
+			"comments": false,
+			"preserve_annotations": true
+		}
+	}
+]

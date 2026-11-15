@@ -4,7 +4,7 @@ exports[`StatsTestCases named-chunks-plugin-async should print correct stats for
 "asset entry.js X KiB [emitted] (name: entry)
 asset modules_a_js.js X bytes [emitted]
 asset modules_b_js.js X bytes [emitted]
-runtime modules X KiB 10 modules
+runtime modules X KiB 9 modules
 cacheable modules X bytes
   ./entry.js X bytes [built] [code generated]
   ./modules/a.js X bytes [built] [code generated]

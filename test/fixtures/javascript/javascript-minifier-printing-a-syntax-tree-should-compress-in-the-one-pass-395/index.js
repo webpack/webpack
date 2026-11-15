@@ -1,0 +1,1 @@
+function f(n,o){return n?typeof o:typeof o}

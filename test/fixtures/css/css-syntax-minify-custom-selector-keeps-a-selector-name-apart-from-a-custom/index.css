@@ -1,0 +1,1 @@
+@custom-selector :--m h1;@custom-media --m (x:1);@media (--m){:--m{color:red}}

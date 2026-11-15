@@ -1,0 +1,1 @@
+a=!!delete b;a=!!(b==c);a=!!(b==c)+1;a=!!!(b<c);if(!!!(b<c))d();a=!!!b;!!(function(){g()}()==x);!(function(){g()}()==x);x["0"];x["-123"];x["-0"];x["01"];x?.["5"];class P{static{};foo}class Q{static{123}}class R{static{g()}}

@@ -218,8 +218,7 @@ export const add = (content, from) => {
 /******/ /* webpack/runtime/make namespace object */
 /******/ // define __esModule on exports
 /******/ __webpack_require__.r = (exports) => {
-/******/ 	Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 	Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ };
 /******/ 
 /******/ /* webpack/runtime/import chunk loading */
@@ -269,11 +268,10 @@ export const add = (content, from) => {
 /******/ 				} else {
 /******/ 					if(true) { // all chunks have JS
 /******/ 						// setup Promise in chunk cache
-/******/ 						let promise = chunkImports[chunkId]().then(installChunk, (e) => {
+/******/ 						const promise = Promise.race([chunkImports[chunkId]().then(installChunk, (e) => {
 /******/ 							if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
 /******/ 							throw e;
-/******/ 						});
-/******/ 						promise = Promise.race([promise, new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))])
+/******/ 						}), new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))]);
 /******/ 						promises.push(installedChunkData[1] = promise);
 /******/ 					}
 /******/ 				}
@@ -467,8 +465,7 @@ fibWorker.onmessage = event => {
 /******/ /* webpack/runtime/make namespace object */
 /******/ // define __esModule on exports
 /******/ __webpack_require__.r = (exports) => {
-/******/ 	Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 	Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ };
 /******/ 
 /******/ /* webpack/runtime/import chunk loading */
@@ -518,11 +515,10 @@ fibWorker.onmessage = event => {
 /******/ 				} else {
 /******/ 					if(true) { // all chunks have JS
 /******/ 						// setup Promise in chunk cache
-/******/ 						let promise = chunkImports[chunkId]().then(installChunk, (e) => {
+/******/ 						const promise = Promise.race([chunkImports[chunkId]().then(installChunk, (e) => {
 /******/ 							if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
 /******/ 							throw e;
-/******/ 						});
-/******/ 						promise = Promise.race([promise, new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))])
+/******/ 						}), new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))]);
 /******/ 						promises.push(installedChunkData[1] = promise);
 /******/ 					}
 /******/ 				}
@@ -576,7 +572,7 @@ onconnect = function (e) {
 ```
 
 ```javascript
-var e={};const t={};function o(s){const r=t[s];if(void 0!==r)return r.exports;const n=t[s]={exports:{}};return e[s](n,n.exports,o),n.exports}o.m=e,o.d=(e,t)=>{if(Array.isArray(t))for(var s=0;s<t.length;){var r=t[s++],n=t[s++],a=0===n?{enumerable:!0,value:t[s++]}:{enumerable:!0,get:n};o.o(e,r)||Object.defineProperty(e,r,a)}else for(var r in t)o.o(t,r)&&!o.o(e,r)&&Object.defineProperty(e,r,{enumerable:!0,get:t[r]})},o.f={},o.e=e=>{const t=[];return o.f.j(e,t),Promise.all(t)},o.o=(e,t)=>Object.hasOwn(e,t),(()=>{const e={936:()=>import("/dist/936.js")},t={377:0},s=e=>{let{__webpack_esm_ids__:s,__webpack_esm_modules__:r,__webpack_esm_runtime__:n}=e;var a,i,c=0;for(a in r)o.o(r,a)&&(o.m[a]=r[a]);for(n&&n(o);c<s.length;c++)i=s[c],o.o(t,i)&&t[i]&&t[i][0](),t[i]=0};o.f.j=(r,n)=>{let a=o.o(t,r)?t[r]:void 0;if(0!==a)if(a)n.push(a[1]);else{let o=e[r]().then(s,e=>{throw 0!==t[r]&&(t[r]=void 0),e});o=Promise.race([o,new Promise(e=>a=t[r]=[e])]),n.push(a[1]=o)}}})(),onconnect=function(e){for(const t of e.ports)t.onmessage=async e=>{const s=e.data;switch(s.type){case"message":const{add:e}=await o.e(936).then(()=>o(936));e(s.content,s.from);case"history":const{history:r}=await o.e(936).then(()=>o(936));t.postMessage({type:"history",history:r})}}};
+var e={};const t={};function o(s){const r=t[s];if(void 0!==r)return r.exports;const n=t[s]={exports:{}};return e[s](n,n.exports,o),n.exports}o.m=e,o.d=(e,t)=>{if(Array.isArray(t))for(var s=0;s<t.length;){var r=t[s++],n=t[s++],a=n?{enumerable:!0,get:n}:{enumerable:!0,value:t[s++]};o.o(e,r)||Object.defineProperty(e,r,a)}else for(var r in t)o.o(t,r)&&!o.o(e,r)&&Object.defineProperty(e,r,{enumerable:!0,get:t[r]})},o.f={},o.e=e=>{const t=[];return o.f.j(e,t),Promise.all(t)},o.o=(e,t)=>Object.hasOwn(e,t),(()=>{const e={936:()=>import("/dist/936.js")},t={377:0},s=e=>{let{__webpack_esm_ids__:s,__webpack_esm_modules__:r,__webpack_esm_runtime__:n}=e;var a,i,c=0;for(a in r)o.o(r,a)&&(o.m[a]=r[a]);for(n&&n(o);c<s.length;c++)i=s[c],o.o(t,i)&&t[i]&&t[i][0](),t[i]=0};o.f.j=(r,n)=>{let a=o.o(t,r)?t[r]:void 0;if(0!==a)if(a)n.push(a[1]);else{const o=Promise.race([e[r]().then(s,e=>{throw 0!==t[r]&&(t[r]=void 0),e}),new Promise(e=>a=t[r]=[e])]);n.push(a[1]=o)}}})(),onconnect=function(e){for(const t of e.ports)t.onmessage=async e=>{const s=e.data;switch(s.type){case"message":const{add:e}=await o.e(936).then(()=>o(936));e(s.content,s.from);case"history":const{history:r}=await o.e(936).then(()=>o(936));t.postMessage({type:"history",history:r})}}};
 ```
 
 # dist/workers/fibonacci.js
@@ -643,8 +639,7 @@ var e={};const t={};function o(s){const r=t[s];if(void 0!==r)return r.exports;co
 /******/ /* webpack/runtime/make namespace object */
 /******/ // define __esModule on exports
 /******/ __webpack_require__.r = (exports) => {
-/******/ 	Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 	Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ };
 /******/ 
 /******/ /* webpack/runtime/import chunk loading */
@@ -694,11 +689,10 @@ var e={};const t={};function o(s){const r=t[s];if(void 0!==r)return r.exports;co
 /******/ 				} else {
 /******/ 					if(true) { // all chunks have JS
 /******/ 						// setup Promise in chunk cache
-/******/ 						let promise = chunkImports[chunkId]().then(installChunk, (e) => {
+/******/ 						const promise = Promise.race([chunkImports[chunkId]().then(installChunk, (e) => {
 /******/ 							if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
 /******/ 							throw e;
-/******/ 						});
-/******/ 						promise = Promise.race([promise, new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))])
+/******/ 						}), new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))]);
 /******/ 						promises.push(installedChunkData[1] = promise);
 /******/ 					}
 /******/ 				}
@@ -737,7 +731,7 @@ onmessage = async event => {
 ```
 
 ```javascript
-var e={};const o={};function s(t){const r=o[t];if(void 0!==r)return r.exports;const n=o[t]={exports:{}};return e[t](n,n.exports,s),n.exports}s.m=e,s.d=(e,o)=>{for(var t in o)s.o(o,t)&&!s.o(e,t)&&Object.defineProperty(e,t,{enumerable:!0,get:o[t]})},s.f={},s.e=e=>{const o=[];return s.f.j(e,o),Promise.all(o)},s.o=(e,o)=>Object.hasOwn(e,o),(()=>{const e={129:()=>import("/dist/129.js")},o={721:0},t=e=>{let{__webpack_esm_ids__:t,__webpack_esm_modules__:r,__webpack_esm_runtime__:n}=e;var i,a,_=0;for(i in r)s.o(r,i)&&(s.m[i]=r[i]);for(n&&n(s);_<t.length;_++)a=t[_],s.o(o,a)&&o[a]&&o[a][0](),o[a]=0};s.f.j=(r,n)=>{let i=s.o(o,r)?o[r]:void 0;if(0!==i)if(i)n.push(i[1]);else{let s=e[r]().then(t,e=>{throw 0!==o[r]&&(o[r]=void 0),e});s=Promise.race([s,new Promise(e=>i=o[r]=[e])]),n.push(i[1]=s)}}})(),onmessage=async e=>{const{fibonacci:o}=await s.e(129).then(()=>s(129)),t=JSON.parse(e.data);postMessage(`fib(${t}) = ${o(t)}`)};
+var e={};const o={};function s(t){const r=o[t];if(void 0!==r)return r.exports;const n=o[t]={exports:{}};return e[t](n,n.exports,s),n.exports}s.m=e,s.d=(e,o)=>{for(var t in o)s.o(o,t)&&!s.o(e,t)&&Object.defineProperty(e,t,{enumerable:!0,get:o[t]})},s.f={},s.e=e=>{const o=[];return s.f.j(e,o),Promise.all(o)},s.o=(e,o)=>Object.hasOwn(e,o),(()=>{const e={129:()=>import("/dist/129.js")},o={721:0},t=e=>{let{__webpack_esm_ids__:t,__webpack_esm_modules__:r,__webpack_esm_runtime__:n}=e;var i,a,_=0;for(i in r)s.o(r,i)&&(s.m[i]=r[i]);for(n&&n(s);_<t.length;_++)a=t[_],s.o(o,a)&&o[a]&&o[a][0](),o[a]=0};s.f.j=(r,n)=>{let i=s.o(o,r)?o[r]:void 0;if(0!==i)if(i)n.push(i[1]);else{const s=Promise.race([e[r]().then(t,e=>{throw 0!==o[r]&&(o[r]=void 0),e}),new Promise(e=>i=o[r]=[e])]);n.push(i[1]=s)}}})(),onmessage=async e=>{const{fibonacci:o}=await s.e(129).then(()=>s(129)),t=JSON.parse(e.data);postMessage(`fib(${t}) = ${o(t)}`)};
 ```
 
 # dist/129.js
@@ -775,9 +769,9 @@ function fibonacci(n) {
 ## Unoptimized
 
 ```
-asset main.js 7.79 KiB [emitted] [javascript module] (name: main)
-asset chat.js 6.01 KiB [emitted] [javascript module] (name: chat)
-asset workers/fibonacci.js 5.67 KiB [emitted] [javascript module] (name: fibonacci)
+asset main.js 7.72 KiB [emitted] [javascript module] (name: main)
+asset chat.js 5.94 KiB [emitted] [javascript module] (name: chat)
+asset workers/fibonacci.js 5.6 KiB [emitted] [javascript module] (name: fibonacci)
 asset 936.js 1020 bytes [emitted] [javascript module]
 asset 129.js 842 bytes [emitted] [javascript module]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
@@ -788,21 +782,21 @@ chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
     [used exports unknown]
     import() ./fibonacci ./example.js 70:30-51
     import() ./fibonacci ./fib-worker.js 2:29-50
-chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 2.79 KiB (runtime) [entry] [rendered]
+chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 2.74 KiB (runtime) [entry] [rendered]
   > ./example.js 25:19-31:1
-  runtime modules 2.79 KiB 5 modules
+  runtime modules 2.74 KiB 5 modules
   ./chat-worker.js 442 bytes [built] [code generated]
     [used exports unknown]
     new Worker() ./chat-worker.js ./example.js 25:19-31:1
-chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.79 KiB (runtime) [entry] [rendered]
+chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.74 KiB (runtime) [entry] [rendered]
   > ./example.js 80:18-84:2
-  runtime modules 2.79 KiB 5 modules
+  runtime modules 2.74 KiB 5 modules
   ./fib-worker.js 176 bytes [built] [code generated]
     [used exports unknown]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 2.79 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 2.74 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.79 KiB 5 modules
+  runtime modules 2.74 KiB 5 modules
   ./example.js 2.25 KiB [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -821,8 +815,8 @@ webpack X.X.X compiled successfully
 
 ```
 asset main.js 2.29 KiB [emitted] [javascript module] [minimized] (name: main)
-asset chat.js 1.22 KiB [emitted] [javascript module] [minimized] (name: chat)
-asset workers/fibonacci.js 924 bytes [emitted] [javascript module] [minimized] (name: fibonacci)
+asset chat.js 1.21 KiB [emitted] [javascript module] [minimized] (name: chat)
+asset workers/fibonacci.js 922 bytes [emitted] [javascript module] [minimized] (name: fibonacci)
 asset 936.js 185 bytes [emitted] [javascript module] [minimized]
 asset 129.js 163 bytes [emitted] [javascript module] [minimized]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
@@ -833,21 +827,21 @@ chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
     [all exports used]
     import() ./fibonacci ./example.js 70:30-51
     import() ./fibonacci ./fib-worker.js 2:29-50
-chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 2.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 2.92 KiB (runtime) [entry] [rendered]
   > ./example.js 25:19-31:1
-  runtime modules 2.95 KiB 4 modules
+  runtime modules 2.92 KiB 4 modules
   ./chat-worker.js 442 bytes [built] [code generated]
     [no exports used]
     new Worker() ./chat-worker.js ./example.js 25:19-31:1
-chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.58 KiB (runtime) [entry] [rendered]
+chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.56 KiB (runtime) [entry] [rendered]
   > ./example.js 80:18-84:2
-  runtime modules 2.58 KiB 4 modules
+  runtime modules 2.56 KiB 4 modules
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 2.58 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 2.56 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.58 KiB 4 modules
+  runtime modules 2.56 KiB 4 modules
   ./example.js 2.25 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main

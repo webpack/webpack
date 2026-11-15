@@ -258,7 +258,7 @@ if (require.main === module) {
 			);
 			process.exitCode = 1;
 		}
-	})().catch((err) => {
+	})().catch((/** @type {ThrownValue} */ err) => {
 		console.error(err);
 		process.exitCode = 1;
 	});

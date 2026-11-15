@@ -22,9 +22,10 @@ const fs = require("fs");
 const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("../..");
-const { A, QUOTE_NONE, decodeEntities, parseHtml, tokenize } = require("../../lib/html/syntax-parser");
+const { A, NodeType, Quote, decodeEntities, parseHtml, tokenize } = require("../../lib/html/syntax-parser");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const serialize = require("../helpers/serializeHtmlTree");
+const { isInPart } = require("../helpers/testParts");
 
 const testsDir = path.resolve(__dirname, "../external/html5lib-tests");
 
@@ -170,9 +171,10 @@ const tokenizerCases =
 		? loadTokenizerCases()
 		: [];
 // The build suite drives the pipeline from a document, so only the cases that
-// start in the data state describe a document webpack could be handed.
-const buildCases = tokenizerCases.filter((c) =>
-	c.initialStates.includes("Data state")
+// start in the data state describe a document webpack could be handed; each
+// part of a `--parts` run builds its own share of them.
+const buildCases = tokenizerCases.filter(
+	(c) => c.initialStates.includes("Data state") && isInPart(c.id)
 );
 
 expectNoDeprecations();
@@ -292,7 +294,12 @@ const parseDat = (text) => {
 				i++;
 				const doc = [];
 				while (i < n) {
-					if (lines[i] === "" && (i + 1 >= n || lines[i + 1] === "#data")) {
+					if (
+						lines[i] === "" &&
+						(i + 1 >= n ||
+							lines[i + 1] === "#data" ||
+							lines[i + 1] === "#description")
+					) {
 						i++;
 						break;
 					}
@@ -321,7 +328,7 @@ const runTreeCase = (c) => {
 		scripting: c.scriptMode === "on"
 	});
 	// In fragment mode the result is the children of the synthesized root.
-	const first = A.firstChild(doc);
+	const first = A.child(0, doc);
 	return serialize(c.fragment && first !== 0 ? first : doc);
 };
 
@@ -506,7 +513,7 @@ const runTokenizerCase = (input, context) => {
 							);
 			}
 			if (valueStart === -1) return nameEnd;
-			return quoteType === QUOTE_NONE ? valueEnd : valueEnd + 1;
+			return quoteType === Quote.None ? valueEnd : valueEnd + 1;
 		},
 		openTag(source, start, end, nameStart, nameEnd, selfClosing) {
 			const name = replaceNull(
@@ -533,12 +540,22 @@ const runTokenizerCase = (input, context) => {
 			attributes = null;
 			lastTagSource = source.slice(start, end);
 			lastTagWasRawText = rawText || rcdata;
-			lastTagEndedInName = end === nameEnd;
+			lastTagEndedInName = end === nameEnd && end === source.length;
 			rawText = false;
 			rcdata = false;
 			return end;
 		},
 		comment(source, start, end, dataStart, dataEnd) {
+			// `tokenize` reports a `<?…>` as one comment range and leaves telling a
+			// processing instruction apart, or dropping one EOF cut, to the tree.
+			if (source.charCodeAt(start + 1) === 0x3f) {
+				const node = A.child(0, parseHtml(source.slice(start, end), 0));
+				if (A.type(node) === NodeType.ProcessingInstruction) {
+					tokens.push(["ProcessingInstruction", A.name(node), A.value(node)]);
+					return end;
+				}
+				if (A.type(node) !== NodeType.Comment) return end;
+			}
 			tokens.push(["Comment", replaceNull(source.slice(dataStart, dataEnd))]);
 			return end;
 		},
@@ -573,10 +590,10 @@ const runTokenizerCase = (input, context) => {
 	});
 	// A tag interrupted by EOF is reported so a consumer sees how far the source got;
 	// the spec emits no token for it. The exception is EOF inside a raw-text end tag's
-	// name, which hands the characters back — `<xmp>foo</xmp` still renders `foo</xmp`.
+	// name, no parse error, which hands the characters back as `foo</xmp`.
 	const last = tokens[tokens.length - 1];
 	if (
-		eofInTag &&
+		(eofInTag || (lastTagWasRawText && lastTagEndedInName)) &&
 		last !== undefined &&
 		(last[0] === "StartTag" || last[0] === "EndTag")
 	) {
@@ -629,7 +646,7 @@ const runCdataCase = (input) => {
 	const doc = parseHtml(`<![CDATA[${input}`, 0, {
 		fragmentContext: "svg svg"
 	});
-	return serialize(A.firstChild(doc));
+	return serialize(A.child(0, doc));
 };
 /** @type {Map<string, { state: string, lastStartTag: (string | null), count: number }>} */
 const unreachableByShape = new Map();

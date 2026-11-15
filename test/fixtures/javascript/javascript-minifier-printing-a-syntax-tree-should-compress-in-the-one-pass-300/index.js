@@ -1,0 +1,1 @@
+f=b=>{void function(){0}();g();return b}

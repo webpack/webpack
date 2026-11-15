@@ -1,0 +1,1 @@
+function f(t){function h(t){return !!(t.a?t.b:t.c)}return h(t)?1:2}

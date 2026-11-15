@@ -1,0 +1,16 @@
+[
+	{
+		"print": "htmlMinify",
+		"minimizer": {
+			"asset": "page.html"
+		},
+		"renderEmbeddedSource": "throws"
+	},
+	{
+		"print": "htmlMinify",
+		"minimizer": {
+			"asset": "page.html"
+		},
+		"renderEmbeddedSource": "offers"
+	}
+]

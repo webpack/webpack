@@ -1,0 +1,1 @@
+@supports ((a:b) OR/**/(c:d)) and (e:f){a{color:red}}

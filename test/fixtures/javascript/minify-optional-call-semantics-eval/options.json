@@ -1,0 +1,12 @@
+[
+	{
+		"mode": "minify",
+		"ecma": 2020,
+		"compress": {
+			"passes": 2,
+			"pure_getters": false,
+			"pure_conversions": false
+		},
+		"behavior": true
+	}
+]

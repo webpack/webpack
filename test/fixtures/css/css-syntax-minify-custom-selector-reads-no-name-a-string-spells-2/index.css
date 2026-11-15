@@ -1,0 +1,1 @@
+@custom-selector :--bar h1;@custom-selector :--foo .a\:--bar,[data-z="a\"b' :--bar"];:--foo{color:red}

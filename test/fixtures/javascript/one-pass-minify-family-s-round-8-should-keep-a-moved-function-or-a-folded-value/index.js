@@ -1,0 +1,1 @@
+function g(){var m=()=>1;return[m][0].name}

@@ -6,7 +6,7 @@ exports[`StatsTestCases circular-correctness should print correct stats for circ
 chunk (runtime: main) 390.bundle.js (c) X bytes <{199}> <{996}> >{199}< >{996}< [rendered]
   ./module-c.js X bytes [built] [code generated]
 chunk (runtime: main) bundle.js (main) X bytes (javascript) X KiB (runtime) >{199}< >{996}< [entry] [rendered]
-  runtime modules X KiB 10 modules
+  runtime modules X KiB 9 modules
   ./index.js X bytes [built] [code generated]
 chunk (runtime: main) 996.bundle.js (a) X bytes <{390}> <{792}> >{390}< [rendered]
   ./module-a.js X bytes [built] [code generated]

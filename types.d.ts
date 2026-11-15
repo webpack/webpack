@@ -62,7 +62,7 @@ import {
 	ObjectExpression,
 	ObjectPattern,
 	PrivateIdentifier,
-	Program as ProgramImport,
+	Program,
 	Property,
 	PropertyDefinition,
 	RegExpLiteral,
@@ -91,6 +91,7 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
+import { FileHandle } from "fs/promises";
 import {
 	Server as ServerImportHttp,
 	ServerOptions as ServerOptionsImportHttp
@@ -134,6 +135,7 @@ import {
 	createScopesWriter,
 	encodeScopes
 } from "webpack-sources/types/helpers/scopes";
+import { originalPositionFor } from "webpack-sources/types/helpers/sourceMap";
 import {
 	disableDualStringBufferCaching,
 	enableDualStringBufferCaching,
@@ -142,6 +144,10 @@ import {
 	internString,
 	isDualStringBufferCachingEnabled
 } from "webpack-sources/types/helpers/stringBufferUtils";
+type Profile = import("inspector").Profiler.Profile;
+type SetSamplingIntervalParameterType =
+	import("inspector").Profiler.SetSamplingIntervalParameterType;
+type StopReturnType = import("inspector").Profiler.StopReturnType;
 
 declare interface Abortable {
 	signal?: AbortSignal;
@@ -256,13 +262,7 @@ declare interface AbstractLibraryPluginOptions {
 	 */
 	type: string;
 }
-type AdditionalData = AdditionalDataKnown & Record<string, any>;
-declare interface AdditionalDataKnown {
-	/**
-	 * the AST webpack should parse instead of the source
-	 */
-	webpackAST: object;
-}
+type AdditionalData = exports.AdditionalDataKnown & Record<string, any>;
 type AfterContextResolveData = ContextResolveData &
 	ContextOptions & {
 		resource: string | string[];
@@ -337,78 +337,29 @@ declare interface AggressiveSplittingPluginOptions {
 	 */
 	minSize?: number;
 }
-
-/**
- * Defines the all code generation schemas type used by this module.
- */
-declare interface AllCodeGenerationSchemas {
-	/**
-	 * top level declarations for javascript modules
-	 */
-	topLevelDeclarations: Set<string>;
-
-	/**
-	 * free identifier names in the rendered source for javascript modules
-	 */
-	freeNames: Set<string>;
-
-	/**
-	 * chunk init fragments for javascript modules
-	 */
-	chunkInitFragments: InitFragment<any>[];
-
-	/**
-	 * native external reexport source and attributes
-	 */
-	externalReexport: string;
-
-	/**
-	 * export definitions left out of a javascript module's source on demand (see `KnownMeta.onDemandExports`), to be placed before its body where it is wrapped
-	 */
-	exportsSource: string;
-
-	/**
-	 * export definitions left out on demand that read the module's own declarations, to be placed after its body where it is wrapped
-	 */
-	exportsBindingSource: string;
-
-	/**
-	 * final name of each used export of a concatenated module whose definitions were left out on demand
-	 */
-	exportsFinalName: Record<string, string>;
-
-	/**
-	 * url for asset modules
-	 */
-	url: { javascript?: string; "asset-url"?: string };
-
-	/**
-	 * a filename for asset modules
-	 */
-	filename: string;
-
-	/**
-	 * an asset info for asset modules
-	 */
-	assetInfo: AssetInfo;
-
-	/**
-	 * a full content hash for asset modules
-	 */
-	fullContentHash: string;
-
-	/**
-	 * share-init for modules federation
-	 */
-	"share-init": [{ shareScope: string; initStage: number; init: string }];
-}
 type AnalyzableForm =
 	"import" | "url" | "url-runtime" | "url-inline" | "wasm" | "wasm-relative";
 type AnyLoaderContext = NormalModuleLoaderContext<any> &
 	LoaderRunnerMutableContext<any> &
-	LoaderRunnerReadonlyContext<any> &
+	LoaderRunnerReadonlyContext<any, LoaderData> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
+
+/**
+ * The parts of a language that names none: every node type has every part.
+ */
+declare interface AnyParts {
+	types: number;
+	field: number;
+	flag: number;
+	part: number;
+	text: number;
+	fields: Record<number, number>;
+	flags: Record<number, number>;
+	parts: Record<number, number>;
+	texts: Record<number, number>;
+	items: Record<number, number>;
+}
 
 /**
  * Defines the argument type used by this module.
@@ -451,17 +402,17 @@ declare interface Asset {
 	 */
 	info: AssetInfo;
 }
-declare abstract class AssetBytesGenerator extends Generator {
+declare abstract class AssetBytesGenerator extends Generator<AssetNormalModule> {
 	/**
 	 * Generates fallback output for the provided error condition.
 	 */
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: AssetNormalModule,
 		generateContext: GenerateContext
 	): null | Source;
 }
-declare abstract class AssetBytesParser extends Parser {}
+declare abstract class AssetBytesParser extends Parser<BuiltAssetModule> {}
 declare interface AssetDependencyMeta {
 	sourceType: "asset-url" | "css-url";
 }
@@ -478,7 +429,7 @@ declare interface AssetEmittedInfo {
 }
 type AssetFilterItemTypes =
 	string | RegExp | ((name: string, asset: StatsAsset) => boolean);
-declare abstract class AssetGenerator extends Generator {
+declare abstract class AssetGenerator extends Generator<AssetNormalModule> {
 	dataUrlOptions?:
 		| AssetGeneratorDataUrlOptions
 		| ((
@@ -489,23 +440,24 @@ declare abstract class AssetGenerator extends Generator {
 	publicPath?: string | TemplatePathFn<PathData>;
 	outputPath?: string | TemplatePathFn<PathDataModule>;
 	emit?: boolean;
+	binary?: boolean;
 
 	/**
 	 * Returns mime type.
 	 */
-	getMimeType(module: NormalModule): string;
+	getMimeType(module: AssetNormalModule): string;
 
 	/**
 	 * Generates data uri.
 	 */
-	generateDataUri(module: NormalModule, renderedSource?: Source): string;
+	generateDataUri(module: AssetNormalModule, renderedSource?: Source): string;
 
 	/**
 	 * Generates fallback output for the provided error condition.
 	 */
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: AssetNormalModule,
 		generateContext: GenerateContext
 	): null | Source;
 }
@@ -526,7 +478,7 @@ declare interface AssetGeneratorDataUrlOptions {
 }
 type AssetGeneratorOptions = AssetInlineGeneratorOptions &
 	AssetResourceGeneratorOptions;
-type AssetInfo = KnownAssetInfo & Record<string, any>;
+type AssetInfo = exports.KnownAssetInfo & Record<string, any>;
 
 /**
  * Generator options for asset/inline modules.
@@ -547,7 +499,7 @@ declare interface AssetInlineGeneratorOptions {
 				context: { filename: string; module: Module }
 		  ) => string);
 }
-type AssetModuleBuildInfo = KnownBuildInfo &
+type AssetModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo &
 	KnownAssetModuleBuildInfo;
@@ -570,7 +522,8 @@ declare class AssetModulesPlugin {
 declare interface AssetModulesPluginOptions {
 	sideEffectFree?: boolean;
 }
-declare abstract class AssetParser extends Parser {
+type AssetNormalModule = NormalModule & { buildInfo?: AssetModuleBuildInfo };
+declare abstract class AssetParser extends Parser<BuiltAssetModule> {
 	dataUrlCondition?:
 		| boolean
 		| AssetParserDataUrlOptions
@@ -634,17 +587,17 @@ declare interface AssetResourceGeneratorOptions {
 	 */
 	publicPath?: string | TemplatePathFn<PathData>;
 }
-declare abstract class AssetSourceGenerator extends Generator {
+declare abstract class AssetSourceGenerator extends Generator<AssetNormalModule> {
 	/**
 	 * Generates fallback output for the provided error condition.
 	 */
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: AssetNormalModule,
 		generateContext: GenerateContext
 	): null | Source;
 }
-declare abstract class AssetSourceParser extends Parser {}
+declare abstract class AssetSourceParser extends Parser<BuiltAssetModule> {}
 
 /**
  * Where an asset which is a symbolic link points, as the link itself spells it.
@@ -675,22 +628,6 @@ declare interface AssetTimestamps {
 	 */
 	mtime: number;
 }
-
-/**
- * What terser's `ast.js` exports: each kind's factory, the predicate
- * `is<Kind>Node` for it, and the walkers and helpers, which stay open.
- */
-declare interface Ast {
-	[index: string]: any;
-	expressionOf(node: NodeShape): undefined | NodeShape;
-	namesOf(node: NodeShape): (null | NodeShape)[];
-	wrapOptimizer(
-		name: string,
-		wrap: (
-			original: (self: NodeShape, compressor: CompressorShape) => NodeShape
-		) => (self: NodeShape, compressor: CompressorShape) => NodeShape
-	): boolean;
-}
 declare class AsyncDependenciesBlock extends DependenciesBlock {
 	constructor(
 		groupOptions: null | string | GroupOptionsAsyncDependenciesBlock,
@@ -702,7 +639,7 @@ declare class AsyncDependenciesBlock extends DependenciesBlock {
 	request?: null | string;
 	chunkName?: null | string;
 	get circular(): boolean;
-	module: any;
+	module: void;
 }
 
 /**
@@ -807,17 +744,7 @@ declare interface AsyncWebAssemblyModulesPluginOptions {
 	 */
 	mangleImports?: boolean;
 }
-declare abstract class AsyncWebAssemblyParser extends Parser {}
-type AtRule = NodeSyntaxParser & {
-	name: string;
-	nameStart: number;
-	nameEnd: number;
-	prelude: ComponentValue[];
-	declarations: null | DeclarationSyntaxParser[];
-	childRules: null | RuleSyntaxParser[];
-	blockStart: number;
-	blockEnd: number;
-};
+declare abstract class AsyncWebAssemblyParser extends Parser<BuiltAsyncWasmModule> {}
 
 /**
  * Records modules from one compilation and adds them back as prefetch
@@ -833,7 +760,6 @@ declare class AutomaticPrefetchPlugin {
 	apply(compiler: Compiler): void;
 }
 type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
-declare const BLOCK_DECLARATIONS: unique symbol;
 
 /**
  * Defines the backend api type used by this module.
@@ -906,7 +832,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Exclude all modules matching any of these conditions.
 	 */
-	exclude?: string | RegExp | ((str: string) => boolean) | RuleObject[];
+	exclude?: string | RegExp | ((str: string) => boolean) | RuleGlob | Rule[];
 
 	/**
 	 * If true, banner will be placed at the end of the output.
@@ -916,7 +842,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules matching any of these conditions.
 	 */
-	include?: string | RegExp | ((str: string) => boolean) | RuleObject[];
+	include?: string | RegExp | ((str: string) => boolean) | RuleGlob | Rule[];
 
 	/**
 	 * If true, banner will not be wrapped in a comment.
@@ -931,7 +857,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules that pass test assertion.
 	 */
-	test?: string | RegExp | ((str: string) => boolean) | RuleObject[];
+	test?: string | RegExp | ((str: string) => boolean) | RuleGlob | Rule[];
 }
 declare interface BaseResolveRequest {
 	/**
@@ -1023,8 +949,14 @@ declare interface BasenameCacheEntry {
  * field readable. This shrinks instances from 224 to 144 bytes on V8.
  */
 declare abstract class BasicEvaluatedExpression {
+	quasis?: BasicEvaluatedExpression[];
+	parts?: BasicEvaluatedExpression[];
+	items?: BasicEvaluatedExpression[];
+	options?: BasicEvaluatedExpression[];
+	prefix?: null | BasicEvaluatedExpression;
+	postfix?: null | BasicEvaluatedExpression;
+	wrappedInnerExpressions?: BasicEvaluatedExpression[];
 	expression?:
-		| ProgramImport
 		| ImportDeclaration
 		| ExportNamedDeclaration
 		| ExportAllDeclaration
@@ -1084,27 +1016,28 @@ declare abstract class BasicEvaluatedExpression {
 		| MethodDefinition
 		| PropertyDefinition
 		| VariableDeclarator
-		| SwitchCase
-		| CatchClause
-		| ObjectPattern
-		| ArrayPattern
-		| RestElement
-		| AssignmentPattern
-		| Property
+		| Program
 		| AssignmentProperty
+		| Property
+		| CatchClause
 		| ClassBody
 		| ImportSpecifier
 		| ImportDefaultSpecifier
 		| ImportNamespaceSpecifier
 		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern
+		| SwitchCase
 		| TemplateElement;
-	quasis?: BasicEvaluatedExpression[];
-	parts?: BasicEvaluatedExpression[];
-	items?: BasicEvaluatedExpression[];
-	options?: BasicEvaluatedExpression[];
-	prefix?: null | BasicEvaluatedExpression;
-	postfix?: null | BasicEvaluatedExpression;
-	wrappedInnerExpressions?: BasicEvaluatedExpression[];
+
+	/**
+	 * The expression's node in the syntax tree, for a reader that walks or
+	 * evaluates it by id during the same parse, before its object is read.
+	 * @experimental the `{ path: true }` tap option; unstable API
+	 */
+	get expressionNode(): number;
 
 	/**
 	 * Served lazily from the attached expression when not set explicitly:
@@ -1124,7 +1057,7 @@ declare abstract class BasicEvaluatedExpression {
 	regExp?: RegExp;
 	string?: string;
 	templateStringKind?: "cooked" | "raw";
-	array?: any[];
+	array?: string[];
 	identifier?: string | VariableInfo;
 	rootInfo?: string | VariableInfo;
 	getMembers?: () => string[];
@@ -1159,7 +1092,7 @@ declare abstract class BasicEvaluatedExpression {
 	 * As compile time value.
 	 */
 	asCompileTimeValue():
-		undefined | null | string | number | bigint | boolean | RegExp | any[];
+		undefined | null | string | number | bigint | boolean | RegExp | string[];
 	isTruthy(): boolean;
 	isFalsy(): boolean;
 	isNullish(): undefined | boolean;
@@ -1283,7 +1216,6 @@ declare abstract class BasicEvaluatedExpression {
 	 */
 	setExpression(
 		expression?:
-			| ProgramImport
 			| ImportDeclaration
 			| ExportNamedDeclaration
 			| ExportAllDeclaration
@@ -1343,21 +1275,28 @@ declare abstract class BasicEvaluatedExpression {
 			| MethodDefinition
 			| PropertyDefinition
 			| VariableDeclarator
-			| SwitchCase
-			| CatchClause
-			| ObjectPattern
-			| ArrayPattern
-			| RestElement
-			| AssignmentPattern
-			| Property
+			| Program
 			| AssignmentProperty
+			| Property
+			| CatchClause
 			| ClassBody
 			| ImportSpecifier
 			| ImportDefaultSpecifier
 			| ImportNamespaceSpecifier
 			| ExportSpecifier
+			| ObjectPattern
+			| ArrayPattern
+			| RestElement
+			| AssignmentPattern
+			| SwitchCase
 			| TemplateElement
 	): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the expression to a node of a syntax tree, its object made only
+	 * when `expression` is first read.
+	 */
+	setNode(tree: ColumnarSyntaxTree, node: number): BasicEvaluatedExpression;
 }
 type BeforeContextResolveData = ContextResolveData & ContextOptions;
 
@@ -1380,6 +1319,7 @@ declare interface Bootstrap {
 	startup: string[];
 	afterStartup: string[];
 	allowInlineStartup: boolean;
+	exportsAwaited: boolean;
 }
 
 /**
@@ -1418,6 +1358,8 @@ declare interface BufferEntry {
 	bufferedMap?: null | BufferedMap;
 	scopes?: ScopesReplay;
 }
+type BufferSerializableType =
+	Buffer | (() => BufferSerializableType[] | Promise<BufferSerializableType[]>);
 declare interface BufferedMap {
 	/**
 	 * version
@@ -1453,6 +1395,11 @@ declare interface BufferedMap {
 	 * file
 	 */
 	file: string;
+}
+
+declare interface BuffersSerializerContext {
+	logger?: Logger;
+	retainedBuffer?: (x: Buffer) => Buffer;
 }
 type BuildDependencyItem =
 	| string
@@ -1501,53 +1448,58 @@ declare interface BuildDiagnostics {
 	 */
 	notCacheableReasons?: string[];
 }
-type BuildInfo = KnownBuildInfo & Record<string, any>;
-type BuildMeta = KnownBuildMeta & Record<string, any>;
-
-/**
- * What this minifies inline CSS with: the CSS minifier's own options, so an
- * inline declaration is held to the rules a `.css` asset is.
- */
-declare interface BuiltinEmbeddedRendererOptions {
+type BuildInfo = exports.KnownBuildInfo & Record<string, any>;
+type BuildMeta = exports.KnownBuildMeta & Record<string, any>;
+type BuiltAssetModule = NormalModule & {
+	buildInfo: AssetModuleBuildInfo;
+	buildMeta: BuildMeta;
+};
+type BuiltAsyncWasmModule = NormalModule & {
+	buildInfo: NormalModuleBuildInfo;
+	buildMeta: BuildMeta;
+};
+type BuiltCssModule = NormalModule & {
+	buildInfo: CssModuleBuildInfo;
+	buildMeta: CssModuleBuildMeta;
+};
+type BuiltHtmlModule = NormalModule & {
+	buildInfo: HtmlModuleBuildInfo;
+	buildMeta: BuildMeta;
+};
+type BuiltJavascriptModule = NormalModule & {
+	buildInfo: JavascriptModuleBuildInfo;
+	buildMeta: JavascriptModuleBuildMeta;
+};
+type BuiltJsonModule = NormalModule & {
+	buildInfo: JsonModuleBuildInfo;
+	buildMeta: BuildMeta;
+};
+type BuiltSyncWasmModule = NormalModule & {
+	buildInfo: NormalModuleBuildInfo;
+	buildMeta: SyncWasmModuleBuildMeta;
+};
+type BuiltinEmbeddedRendererOptions = Pick<
+	CssProcessOptions,
+	| "environment"
+	| "convertLengthUnits"
+	| "convertApproximateColors"
+	| "dropOverriddenDeclarations"
+	| "rewriteCustomProperties"
+	| "transforms"
+	| "unusedSymbols"
+	| "pseudoClasses"
+> &
+	BuiltinSvgOptions;
+declare interface BuiltinSvgOptions {
 	/**
-	 * what the target can read (the CSS entries of `output.environment`), so a spelling it would not understand is never reached for; only read while printing, and an absent entry means the modern spelling is available
+	 * minify an SVG `data:` URL as the `.svg` assets are, with their `optimization.minimize.xml` switches when given, wherever that is shorter (default false)
 	 */
-	environment?: CssEnvironment;
+	svg?: boolean | OptimizationMinimizeXml;
 
 	/**
-	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
+	 * called with what the CSS minifier throws on a body, which is then left as written
 	 */
-	convertLengthUnits?: boolean;
-
-	/**
-	 * write a polar or Lab color as the nearest hex even where that hex only approximates it: a channel too near a `.5` boundary for two engines to round it alike, and a color outside the sRGB gamut, which hex can only clip. Off by default, and only read while printing; a space engines read through transfers of their own (`a98-rgb`, `prophoto-rgb`) is left alone either way
-	 */
-	convertApproximateColors?: boolean;
-
-	/**
-	 * drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected — a selection naming a browser the tables do not cover still answers for the whole of it
-	 */
-	dropOverriddenDeclarations?: boolean;
-
-	/**
-	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included — that being the property's value rather than the function's own argument
-	 */
-	rewriteCustomProperties?: boolean;
-
-	/**
-	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
-	 */
-	transforms?: CssTransformOptions;
-
-	/**
-	 * names a whole-project analysis found unused, which the print takes out: a bare name is a class, an id and an `@keyframes` name, and a `--`-prefixed one is a custom property. Only read while printing
-	 */
-	unusedSymbols?: string[];
-
-	/**
-	 * each pseudo-class to write as a class instead (`{ "focus-visible": "focus-visible" }`), so a script can apply it where the engine does not. Only read while printing
-	 */
-	pseudoClasses?: { [index: string]: string };
+	reportError?: (error: Error) => void;
 }
 declare class BunTargetPlugin {
 	constructor();
@@ -1557,7 +1509,9 @@ declare class BunTargetPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-declare abstract class ByTypeGenerator extends Generator {
+declare abstract class ByTypeGenerator<
+	TModule extends NormalModule = NormalModule
+> extends Generator<TModule> {
 	map: { [index: string]: undefined | Generator };
 	generateError?: (
 		error: Error,
@@ -1577,8 +1531,11 @@ declare class Cache {
 	 */
 	constructor();
 	hooks: {
-		get: AsyncSeriesBailHook<[string, null | Etag, GotHandler<any>[]], any>;
-		store: AsyncParallelHook<[string, null | Etag, any]>;
+		get: AsyncSeriesBailHook<
+			[string, null | Etag, GotHandler<ComplexSerializableType>[]],
+			ComplexSerializableType
+		>;
+		store: AsyncParallelHook<[string, null | Etag, ComplexSerializableType]>;
 		storeBuildDependencies: AsyncParallelHook<
 			[Iterable<string>, Iterable<string>]
 		>;
@@ -1849,7 +1806,7 @@ declare interface CallbackCacheCache<T> {
  * Defines the callback cache callback.
  */
 declare interface CallbackCacheCacheFacade<T> {
-	(err?: null | Error, result?: null | T): void;
+	(err?: null | Error, result?: T): void;
 }
 
 /**
@@ -2068,6 +2025,11 @@ declare class Chunk {
 	 * Checks whether this chunk has runtime.
 	 */
 	hasRuntime(): boolean;
+
+	/**
+	 * Returns whether this chunk carries a hot update rather than regular output.
+	 */
+	isHotUpdate(): boolean;
 
 	/**
 	 * Checks whether it can be initial.
@@ -2444,7 +2406,11 @@ declare class ChunkGraph {
 	/**
 	 * Processes the provided chunk a.
 	 */
-	integrateChunks(chunkA: Chunk, chunkB: Chunk): void;
+	integrateChunks(
+		chunkA: Chunk,
+		chunkB: Chunk,
+		namedChunks?: Map<string, Chunk>
+	): void;
 
 	/**
 	 * Upgrade dependent to full hash modules.
@@ -2803,6 +2769,11 @@ declare abstract class ChunkGroup {
 	isInitial(): boolean;
 
 	/**
+	 * Returns whether this chunk group is an entrypoint, an async one (e.g. a worker) included.
+	 */
+	isEntrypoint(): boolean;
+
+	/**
 	 * Adds a child chunk group to the current group.
 	 */
 	addChild(group: ChunkGroup): boolean;
@@ -2977,6 +2948,10 @@ declare interface ChunkHashes {
 	[index: string]: string;
 }
 type ChunkId = string | number;
+declare interface ChunkInjectedModuleIds {
+	[index: number]: ModuleId[];
+	[index: string]: ModuleId[];
+}
 
 /**
  * Defines the chunk maps type used by this module.
@@ -3140,6 +3115,11 @@ declare interface ChunkRenderContextCssModulesPlugin {
 	 * content
 	 */
 	moduleSourceContent: Source;
+
+	/**
+	 * another module of the chunk comes after this one
+	 */
+	followed?: boolean;
 }
 
 /**
@@ -3196,9 +3176,17 @@ declare interface ChunkRenderContextJavascriptModulesPlugin {
 	 */
 	inlinedEntrySource?: Source;
 }
+declare interface ChunkRetainedDependencyIds {
+	[index: number]: ModuleId[];
+	[index: string]: ModuleId[];
+}
 declare interface ChunkRuntime {
 	[index: number]: string;
 	[index: string]: string;
+}
+declare interface ChunkSiblingIds {
+	[index: number]: ChunkId[];
+	[index: string]: ChunkId[];
 }
 
 /**
@@ -3290,7 +3278,8 @@ declare interface CleanOptions {
 	/**
 	 * Keep these assets.
 	 */
-	keep?: string | RegExp | ((path: string) => undefined | boolean);
+	keep?:
+		string | RegExp | GlobCondition | ((path: string) => undefined | boolean);
 }
 declare class CleanPlugin {
 	constructor(options?: CleanOptions);
@@ -3329,29 +3318,20 @@ declare interface ClearCacheOptions {
  * Defines the code gen map overloads type used by this module.
  */
 declare interface CodeGenMapOverloads {
-	get: <K extends string>(key: K) => undefined | CodeGenValue<K>;
-	set: <K extends string>(
+	get: <K extends keyof exports.AllCodeGenerationSchemas>(
+		key: K
+	) => undefined | CodeGenValue<K>;
+	set: <K extends keyof exports.AllCodeGenerationSchemas>(
 		key: K,
 		value: CodeGenValue<K>
 	) => CodeGenerationResultData;
-	has: <K extends string>(key: K) => boolean;
-	delete: <K extends string>(key: K) => boolean;
+	has: (key: keyof exports.AllCodeGenerationSchemas) => boolean;
+	delete: (key: keyof exports.AllCodeGenerationSchemas) => boolean;
 }
-type CodeGenValue<K extends string> = K extends
-	| "filename"
-	| "assetInfo"
-	| "share-init"
-	| "topLevelDeclarations"
-	| "freeNames"
-	| "chunkInitFragments"
-	| "externalReexport"
-	| "exportsSource"
-	| "exportsBindingSource"
-	| "exportsFinalName"
-	| "url"
-	| "fullContentHash"
-	? AllCodeGenerationSchemas[K]
-	: any;
+type CodeGenValue<K extends keyof exports.AllCodeGenerationSchemas> =
+	K extends keyof exports.AllCodeGenerationSchemas
+		? exports.AllCodeGenerationSchemas[K]
+		: never;
 
 /**
  * Defines the code generation context type used by this module.
@@ -3439,7 +3419,18 @@ declare interface CodeGenerationResult {
 	hash?: string;
 }
 type CodeGenerationResultData = Omit<
-	Map<string, any>,
+	Map<
+		keyof exports.AllCodeGenerationSchemas,
+		| string
+		| AssetInfo
+		| string[]
+		| Record<string, string>
+		| Set<string>
+		| [{ shareScope: string; initStage: number; init: string }]
+		| InitFragment<ChunkRenderContextJavascriptModulesPlugin>[]
+		| { javascript?: string; "asset-url"?: string }
+		| Map<string, string>
+	>,
 	"get" | "set" | "has" | "delete"
 > &
 	CodeGenMapOverloads;
@@ -3479,9 +3470,13 @@ declare abstract class CodeGenerationResults {
 	): null | ReadonlySet<string>;
 
 	/**
-	 * Returns an arbitrary metadata entry recorded during code generation.
+	 * Returns a metadata entry recorded during code generation.
 	 */
-	getData(module: Module, runtime: RuntimeSpec, key: string): any;
+	getData<K extends keyof exports.AllCodeGenerationSchemas>(
+		module: Module,
+		runtime: RuntimeSpec,
+		key: K
+	): undefined | CodeGenValue<K>;
 
 	/**
 	 * Returns a stable hash for the generated sources and runtime requirements,
@@ -3533,47 +3528,47 @@ type CodeValuePrimitive =
 	undefined | null | string | number | bigint | boolean | Function | RegExp;
 type CollectedComment = CommentImport & { start: number; end: number };
 declare interface Colors {
-	reset: (value?: any) => string;
-	bold: (value?: any) => string;
-	dim: (value?: any) => string;
-	italic: (value?: any) => string;
-	underline: (value?: any) => string;
-	inverse: (value?: any) => string;
-	hidden: (value?: any) => string;
-	strikethrough: (value?: any) => string;
-	black: (value?: any) => string;
-	red: (value?: any) => string;
-	green: (value?: any) => string;
-	yellow: (value?: any) => string;
-	blue: (value?: any) => string;
-	magenta: (value?: any) => string;
-	cyan: (value?: any) => string;
-	white: (value?: any) => string;
-	gray: (value?: any) => string;
-	bgBlack: (value?: any) => string;
-	bgRed: (value?: any) => string;
-	bgGreen: (value?: any) => string;
-	bgYellow: (value?: any) => string;
-	bgBlue: (value?: any) => string;
-	bgMagenta: (value?: any) => string;
-	bgCyan: (value?: any) => string;
-	bgWhite: (value?: any) => string;
-	blackBright: (value?: any) => string;
-	redBright: (value?: any) => string;
-	greenBright: (value?: any) => string;
-	yellowBright: (value?: any) => string;
-	blueBright: (value?: any) => string;
-	magentaBright: (value?: any) => string;
-	cyanBright: (value?: any) => string;
-	whiteBright: (value?: any) => string;
-	bgBlackBright: (value?: any) => string;
-	bgRedBright: (value?: any) => string;
-	bgGreenBright: (value?: any) => string;
-	bgYellowBright: (value?: any) => string;
-	bgBlueBright: (value?: any) => string;
-	bgMagentaBright: (value?: any) => string;
-	bgCyanBright: (value?: any) => string;
-	bgWhiteBright: (value?: any) => string;
+	reset: (value?: unknown) => string;
+	bold: (value?: unknown) => string;
+	dim: (value?: unknown) => string;
+	italic: (value?: unknown) => string;
+	underline: (value?: unknown) => string;
+	inverse: (value?: unknown) => string;
+	hidden: (value?: unknown) => string;
+	strikethrough: (value?: unknown) => string;
+	black: (value?: unknown) => string;
+	red: (value?: unknown) => string;
+	green: (value?: unknown) => string;
+	yellow: (value?: unknown) => string;
+	blue: (value?: unknown) => string;
+	magenta: (value?: unknown) => string;
+	cyan: (value?: unknown) => string;
+	white: (value?: unknown) => string;
+	gray: (value?: unknown) => string;
+	bgBlack: (value?: unknown) => string;
+	bgRed: (value?: unknown) => string;
+	bgGreen: (value?: unknown) => string;
+	bgYellow: (value?: unknown) => string;
+	bgBlue: (value?: unknown) => string;
+	bgMagenta: (value?: unknown) => string;
+	bgCyan: (value?: unknown) => string;
+	bgWhite: (value?: unknown) => string;
+	blackBright: (value?: unknown) => string;
+	redBright: (value?: unknown) => string;
+	greenBright: (value?: unknown) => string;
+	yellowBright: (value?: unknown) => string;
+	blueBright: (value?: unknown) => string;
+	magentaBright: (value?: unknown) => string;
+	cyanBright: (value?: unknown) => string;
+	whiteBright: (value?: unknown) => string;
+	bgBlackBright: (value?: unknown) => string;
+	bgRedBright: (value?: unknown) => string;
+	bgGreenBright: (value?: unknown) => string;
+	bgYellowBright: (value?: unknown) => string;
+	bgBlueBright: (value?: unknown) => string;
+	bgMagentaBright: (value?: unknown) => string;
+	bgCyanBright: (value?: unknown) => string;
+	bgWhiteBright: (value?: unknown) => string;
 }
 
 /**
@@ -3584,6 +3579,537 @@ declare interface ColorsOptions {
 	 * force use colors
 	 */
 	useColor?: boolean;
+}
+
+/**
+ * A JavaScript syntax tree held as a struct of arrays: a node is an integer
+ * id from 1, `0` is no node, and it reads as the CSS and HTML paths do.
+ */
+declare abstract class ColumnarSyntaxTree {
+	/**
+	 * Hands the columns back once nothing reads the tree: the next tree reuses
+	 * small ones, and a large one's ArrayBuffers are freed at once, where they
+	 * would otherwise outlast the parse into the work after it.
+	 */
+	release(): void;
+
+	/**
+	 * Forgets every node, keeping the columns for the next tree.
+	 */
+	reset(): void;
+	add(type: number, start: number, end: number): number;
+
+	/**
+	 * Sets one field of a node: a child node, an array of them for a list,
+	 * `0` or null where ESTree has null.
+	 */
+	set(
+		node: number,
+		name: string,
+		value?:
+			| null
+			| string
+			| number
+			| bigint
+			| boolean
+			| RegExp
+			| { cooked?: null | string; raw: string }
+			| (null | number)[]
+	): void;
+
+	/**
+	 * Writes a node from its record, each slot a child node, a list from
+	 * `addList` or a value from `addValue`, `0` or left out for none.
+	 */
+	addNode(
+		type: number,
+		start: number,
+		end: number,
+		flags: number,
+		slot0?: null | number,
+		slot1?: null | number,
+		slot2?: null | number,
+		slot3?: null | number
+	): number;
+
+	/**
+	 * `addNode` for a node whose record holds no slot, as `this`.
+	 */
+	addNode0(type: number, start: number, end: number, flags: number): number;
+
+	/**
+	 * `addNode` for a node whose record holds two slots, as a member
+	 * expression or a call does, written without reading its slot count.
+	 */
+	addNode2(
+		type: number,
+		start: number,
+		end: number,
+		flags: number,
+		slot0: number,
+		slot1: number
+	): number;
+
+	/**
+	 * `addNode` for a literal, its value and raw text written in place, as a
+	 * parse writes one for every string and number.
+	 */
+	addLiteralNode(
+		start: number,
+		end: number,
+		value: TreeValue,
+		raw: string
+	): number;
+
+	/**
+	 * `addNode` for a node whose record is one value, as an identifier's name.
+	 */
+	addValueNode(
+		type: number,
+		start: number,
+		end: number,
+		value: TreeValue
+	): number;
+	addValue(
+		value?:
+			| null
+			| string
+			| number
+			| bigint
+			| boolean
+			| RegExp
+			| { cooked?: null | string; raw: string }
+	): number;
+	addList(items: number[], count: number): number;
+
+	/**
+	 * Retypes a node whose record the new type reads the same, as an
+	 * expression the parser then reads as a pattern.
+	 */
+	setType(node: number, type: number): void;
+
+	/**
+	 * Sets the slot a node's record holds a part in.
+	 */
+	setPart(part: number, node: number, text: string): void;
+
+	/**
+	 * Writes a parsed node and everything under it, children before their
+	 * parent in source order, as the parser writes; a child already written
+	 * stands as its id.
+	 */
+	addEstree(root: EstreeInput, input?: string, skipUnknown?: boolean): number;
+
+	/**
+	 * Writes a node a plugin built while this tree is read into it, keeping
+	 * the lazy objects already made reading the columns the write may grow.
+	 */
+	appendEstree(object: EstreeInput, input: string): number;
+
+	/**
+	 * Grows the columns once to hold this many more nodes, slots, lists and
+	 * list items, where writing a tree of a known size would double them,
+	 * copying each column every time.
+	 */
+	reserve(nodes: number, slots: number, lists: number, items: number): void;
+
+	/**
+	 * The ESTree object of a node of this tree, the same object each time:
+	 * the lazy one once `lazyEstree` was asked for, else as `toEstreeObject`
+	 * builds it without options.
+	 */
+	estree(
+		node: number
+	):
+		| null
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| SpreadElement
+		| PrivateIdentifier
+		| Super
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| Program
+		| AssignmentProperty
+		| Property
+		| CatchClause
+		| ClassBody
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
+
+	/**
+	 * The ESTree object of a node of this tree as `toEstreeObject` builds it,
+	 * the same object for the same options. A long node reads each child from
+	 * the tree when its field is first read: a release copies what they read.
+	 */
+	estreeObject(
+		node: number,
+		options?: EstreeObjectOptions,
+		input?: string
+	):
+		| null
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| SpreadElement
+		| PrivateIdentifier
+		| Super
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| Program
+		| AssignmentProperty
+		| Property
+		| CatchClause
+		| ClassBody
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
+
+	/**
+	 * A node's ESTree object, as `estree` makes it: a path's way to an object
+	 * for code that still reads one, as `EstreeView#object` is the view's.
+	 */
+	object(
+		node: number
+	):
+		| null
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| SpreadElement
+		| PrivateIdentifier
+		| Super
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| Program
+		| AssignmentProperty
+		| Property
+		| CatchClause
+		| ClassBody
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
+
+	/**
+	 * The lazy ESTree object of a node: it builds a child's object the first
+	 * time its field is read, so a node nothing reads gets none. From then on
+	 * `estree` serves these objects for every node of this tree.
+	 */
+	lazyEstree(
+		node: number
+	):
+		| null
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| SpreadElement
+		| PrivateIdentifier
+		| Super
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| Program
+		| AssignmentProperty
+		| Property
+		| CatchClause
+		| ClassBody
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
+
+	/**
+	 * Records that the legacy `assert` keyword opens a declaration's attributes.
+	 */
+	markLegacyAssert(node: number): void;
+	legacyAssert(node: number): boolean;
+
+	/**
+	 * Where the text reads `<!--` as `<`, `!` and `--`, as only a module does;
+	 * a script, the source's text set in one, would read a comment from there.
+	 */
+	htmlOpensAsOperators(): ReadonlyArray<number>;
+
+	/**
+	 * The node a lazy object of this tree stands for, the way back from `lazyEstree`.
+	 */
+	nodeOf(object: NodeEstreeIndex): number;
+
+	/**
+	 * The columns a reader of this tree's nodes keeps reading after the tree is
+	 * released and reused: a release copies them for it, as for a lazy object.
+	 */
+	pinSource(): LazySource;
+
+	/**
+	 * Lets a release skip copying the columns for readers of nodes the text
+	 * parses back to: such a reader parses the text again if it reads later.
+	 */
+	setRebuild(rebuild: () => ColumnarSyntaxTree): void;
+
+	/**
+	 * The source an evaluation of a node reads: unpinned when a rebuild can
+	 * make the node again, so a release copies nothing for it.
+	 */
+	evaluationSource(node: number): LazySource;
+	type(node: number): number;
+	start(node: number): number;
+	end(node: number): number;
+	range(node: number): [number, number];
+	name(node: number): string;
+	value(
+		node: number
+	):
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| { cooked?: null | string; raw: string };
+	fieldCount(field: number, node: number): number;
+	field(i: number, field: number, node: number): number;
+	flag(flag: number, node: number): boolean;
+
+	/**
+	 * Pushes a node's children in its fields' order, holes left out, for a
+	 * walk that reaches every node without naming each type's fields.
+	 */
+	pushChildren(node: number, out: number[]): void;
+	textOf(part: number, node: number): null | string;
 }
 type CommentJavascriptParser = CommentImport & {
 	start: number;
@@ -3764,14 +4290,14 @@ declare class Compilation {
 		additionalChunkAssets: FakeHook<
 			Pick<
 				AsyncSeriesHook<[Set<Chunk>]>,
-				"name" | "tap" | "tapAsync" | "tapPromise"
+				"name" | "tapAsync" | "tapPromise" | "tap"
 			>
 		>;
 		/**
 		 * @deprecated
 		 */
 		additionalAssets: FakeHook<
-			Pick<AsyncSeriesHook<[]>, "name" | "tap" | "tapAsync" | "tapPromise">
+			Pick<AsyncSeriesHook<[]>, "name" | "tapAsync" | "tapPromise" | "tap">
 		>;
 		/**
 		 * @deprecated
@@ -3779,7 +4305,7 @@ declare class Compilation {
 		optimizeChunkAssets: FakeHook<
 			Pick<
 				AsyncSeriesHook<[Set<Chunk>]>,
-				"name" | "tap" | "tapAsync" | "tapPromise"
+				"name" | "tapAsync" | "tapPromise" | "tap"
 			>
 		>;
 		/**
@@ -3788,7 +4314,7 @@ declare class Compilation {
 		afterOptimizeChunkAssets: FakeHook<
 			Pick<
 				AsyncSeriesHook<[Set<Chunk>]>,
-				"name" | "tap" | "tapAsync" | "tapPromise"
+				"name" | "tapAsync" | "tapPromise" | "tap"
 			>
 		>;
 		/**
@@ -3819,8 +4345,8 @@ declare class Compilation {
 		>;
 		/**
 		 * Called with source written in one language that a module emits inside
-		 * another — CSS or HTML reaching the bundle as a JavaScript string
-		 * literal today — before it is embedded; return the (possibly
+		 * another - CSS or HTML reaching the bundle as a JavaScript string
+		 * literal today - before it is embedded; return the (possibly
 		 * transformed) source, e.g. a minified one. `info.type` says which
 		 * language it is, so one tap serves every pair; no asset carries this
 		 * source, so an asset-level minimizer cannot reach it.
@@ -3840,6 +4366,13 @@ declare class Compilation {
 		embeddedSourceHash: SyncHook<[Module, Hash]>;
 		fullHash: SyncHook<[Hash]>;
 		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+		/**
+		 * Called once per chunk, after chunk ids are assigned, to add the chunks whose
+		 * hashes its output reads, e.g. because it names their files. `createHash`
+		 * hashes those first and their hashes go into this chunk's JavaScript hashes.
+		 * @since 5.113.0
+		 */
+		chunkHashDependencies: SyncHook<[Chunk, Set<Chunk>]>;
 		moduleAsset: SyncHook<[Module, string]>;
 		chunkAsset: SyncHook<[Chunk, string]>;
 		assetPath: SyncWaterfallHook<
@@ -3885,8 +4418,8 @@ declare class Compilation {
 	chunkTemplate: ChunkTemplate;
 	runtimeTemplate: RuntimeTemplate;
 	moduleTemplates: ModuleTemplates;
-	moduleMemCaches?: Map<Module, WeakTupleMap<any[], any>>;
-	moduleMemCaches2?: Map<Module, WeakTupleMap<any[], any>>;
+	moduleMemCaches?: Map<Module, MemCache>;
+	moduleMemCaches2?: Map<Module, MemCache>;
 	moduleGraph: ModuleGraph;
 	chunkGraph: ChunkGraph;
 	codeGenerationResults?: CodeGenerationResults;
@@ -4164,10 +4697,10 @@ declare class Compilation {
 	 * the load itself; anything the tap reads off the requirement set must be
 	 * captured before queueing, since `create` runs later.
 	 */
-	addLazyRuntimeModule(
+	addLazyRuntimeModule<T>(
 		chunk: Chunk,
-		load: () => Promise<any>,
-		create: (loaded?: any) => RuntimeModule,
+		load: () => Promise<T>,
+		create: (loaded: T) => RuntimeModule,
 		chunkGraph?: ChunkGraph
 	): void;
 
@@ -4246,6 +4779,12 @@ declare class Compilation {
 	sortItemsWithChunkIds(): void;
 	summarizeDependencies(): void;
 	createModuleHashes(): void;
+
+	/**
+	 * Returns the chunks whose hashes the output of a chunk reads, as declared through
+	 * `hooks.chunkHashDependencies`; `createHash` hashes them before it.
+	 */
+	getChunkHashDependencies(chunk: Chunk): ReadonlySet<Chunk>;
 	createHash(): CodeGenerationJob[];
 	fullHash?: string;
 	hash?: string;
@@ -4268,7 +4807,7 @@ declare class Compilation {
 	/**
 	 * Processes the provided file.
 	 */
-	renameAsset(file: string, newFile: string): void;
+	renameAsset(file: string, newFile: string, overwrite?: boolean): void;
 
 	/**
 	 * Processes the provided file.
@@ -4685,61 +5224,29 @@ declare class Compiler {
 	close(callback: (err: null | Error, result?: void) => void): void;
 
 	/**
-	 * Schema validation function with optional pre-compiled check
+	 * Validates a value against a schema, skipping the schema when the precompiled check passes
 	 */
-	validate<T extends Parameters<typeof validateFunction>[1] = object>(
+	validate<T extends Parameters<typeof validateFunction>[1]>(
 		schema:
 			| (JSONSchema4 & ExtendedSchema)
 			| (JSONSchema6 & ExtendedSchema)
 			| (JSONSchema7 & ExtendedSchema)
 			| (() => Parameters<typeof validateFunction>[0]),
 		value: T,
-		options?: ValidationErrorConfiguration,
-		check?: (value: T) => boolean
+		options?: ValidationErrorConfiguration | PrecompiledCheck<T>,
+		check?: PrecompiledCheck<T>
 	): void;
 }
-type ComponentValue = TokenSyntaxParserObject | FunctionNode | SimpleBlock;
-
-/**
- * The exports of terser's `compress/common.js`, `inference.js`,
- * `compressor-flags.js` and `utils/index.js` the phases read, ported.
- */
-declare interface CompressHelpers {
-	/**
-	 * terser's `compress/common.js`
-	 */
-	common: Record<string, any>;
-
-	/**
-	 * the functions of terser's `compress/inference.js`
-	 */
-	inference: Record<string, any>;
-
-	/**
-	 * terser's `compress/compressor-flags.js`
-	 */
-	flags: Record<string, any>;
-
-	/**
-	 * terser's `utils/index.js`
-	 */
-	utils: Record<string, any>;
-}
-
-/**
- * terser's compressor: the methods the phases call typed, the rest open.
- */
-declare interface CompressorShape {
-	[index: string]: any;
-	options: Record<string, any>;
-	stack: NodeShape[];
-	option(name: string): any;
-	has_directive(directive: string): any;
-	parent(level?: number): NodeShape;
-	self(): NodeShape;
-	find_parent(test: (value: unknown) => boolean): undefined | NodeShape;
-	in_boolean_context(): undefined | boolean;
-}
+type ComplexSerializableType =
+	| undefined
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| object
+	| Buffer
+	| (() => ComplexSerializableType[] | Promise<ComplexSerializableType[]>);
 declare class ConcatSource extends Source {
 	constructor(...args: Child[]);
 	getChildren(): Source[];
@@ -4776,7 +5283,7 @@ declare interface ConcatenateModulesOptions {
 	 */
 	commonjs?: boolean;
 }
-type ConcatenatedModuleBuildInfo = KnownBuildInfo &
+type ConcatenatedModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
 	KnownConcatenatedModuleBuildInfo;
 declare interface ConcatenatedModuleInfo {
@@ -4798,6 +5305,11 @@ declare interface ConcatenatedModuleInfo {
 	 * where each shorthand property's identifier starts
 	 */
 	shorthandIdentifierStarts?: Set<number>;
+
+	/**
+	 * where each module reference identifier that lacks the appended "._" starts
+	 */
+	bareReferenceStarts?: Set<number>;
 	internalSource?: Source;
 	source?: ReplaceSource;
 	chunkInitFragments?: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
@@ -5002,7 +5514,7 @@ declare interface Configuration {
 	/**
 	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
-	amd?: false | { [index: string]: any };
+	amd?: false | JsonObjectFs;
 
 	/**
 	 * Report the first error as a hard error instead of tolerating it.
@@ -5131,9 +5643,9 @@ declare interface Configuration {
 		| RegExp
 		| {
 				/**
-				 * A RegExp to select the origin file for the warning.
+				 * A RegExp or a glob to select the origin file for the warning.
 				 */
-				file?: RegExp;
+				file?: string | RegExp;
 				/**
 				 * A RegExp to select the warning message.
 				 */
@@ -5319,21 +5831,55 @@ declare class ConstDependency extends NullDependency {
 	 */
 	static canConcatenate(
 		dependency: Dependency,
-		concatenateCommonJsModules: boolean
+		concatenateCommonJsModules: boolean,
+		module?: null | Module
 	): boolean;
 	static TRANSITIVE: symbol;
-	static LAZY_UNTIL_LOCAL: "local";
-	static LAZY_UNTIL_ID: "id";
-	static LAZY_UNTIL_FALLBACK: "*";
-	static LAZY_UNTIL_REQUEST: "@";
+	static LAZY_LOCAL_EXPORT: "local";
+	static LAZY_NAMED_REEXPORT: "id";
+	static LAZY_STAR_REEXPORT: "*";
+	static LAZY_REEXPORT_SIDE_EFFECT: "@";
+	static LAZY_IMPORT_DECLARATION: "import";
 	static ESM_CATEGORY: "esm";
+	static KINDS: Set<
+		| "worker"
+		| "css-import"
+		| "css-url"
+		| "entry"
+		| "url"
+		| "module-dependency"
+		| "esm-import"
+		| "provided"
+		| "dynamic-import"
+		| "esm-reexport"
+		| "esm-export-specifier"
+		| "esm-live-export"
+		| "esm-side-effect-import"
+		| "context-element"
+		| "esm-bare-side-effect-import"
+		| "esm-import-specifier"
+		| "esm-evaluated-import-specifier"
+		| "esm-compatibility"
+		| "commonjs-require"
+		| "commonjs-export-require"
+		| "html-source"
+		| "html-entry"
+		| "html-inline-style"
+		| "html-css-module"
+		| "webassembly-import"
+		| "webassembly-export-imported"
+		| "sharing-request"
+		| "local-module"
+		| "static-exports"
+		| "loader-import"
+		| "css-icss-import"
+		| "css-icss-export"
+	>;
 }
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
 	constructor();
 }
-declare interface Constructor {
-	new (...params: any[]): any;
-}
+type Constructor = abstract new (...params: never[]) => object;
 declare class ConsumeSharedPlugin {
 	/**
 	 * Creates an instance of ConsumeSharedPlugin.
@@ -5489,8 +6035,9 @@ declare abstract class ContextDependency extends Dependency {
 }
 type ContextDependencyOptions = ContextOptions & { request: string };
 declare abstract class ContextElementDependency extends ModuleDependency {
-	referencedExports?: null | string[][];
+	referencedExports?: null | (string[] | ReferencedCall)[];
 	attributes?: ImportAttributes;
+	phase: ImportPhaseType;
 
 	/**
 	 * The request as the user wrote it, e.g. `#configs/file.mjs` where `request`
@@ -5531,7 +6078,7 @@ declare interface ContextHash {
 }
 type ContextMode =
 	"eager" | "weak" | "lazy" | "lazy-once" | "sync" | "async-weak";
-type ContextModuleBuildInfo = KnownBuildInfo &
+type ContextModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
 	KnownContextModuleBuildInfo;
 declare abstract class ContextModuleFactory extends ModuleFactory {
@@ -5551,7 +6098,7 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 					[ContextAlternativeRequest[]],
 					ContextAlternativeRequest[]
 				>,
-				"name" | "tap" | "tapAsync" | "tapPromise"
+				"name" | "tapAsync" | "tapPromise" | "tap"
 			>
 		>;
 		alternativeRequests: AsyncSeriesWaterfallHook<
@@ -5600,7 +6147,7 @@ declare interface ContextOptions {
 	/**
 	 * exports referenced from modules (won't be mangled)
 	 */
-	referencedExports?: null | string[][];
+	referencedExports?: null | (string[] | ReferencedCall)[];
 	layer?: null | string;
 	attributes?: ImportAttributes;
 	phase?: 0 | 1 | 2;
@@ -5810,12 +6357,11 @@ declare interface CopyObjectPattern {
 							 * Everything beside the content of the file the transform depends on, serialized into the cache key as JSON.
 							 */
 							keys?:
-								| CopyTransformCacheKeys
+								| JsonObjectFs
 								| ((
-										defaultKeys: CopyTransformCacheKeys,
+										defaultKeys: JsonObjectFs,
 										absoluteFilename: string
-								  ) =>
-										CopyTransformCacheKeys | Promise<CopyTransformCacheKeys>);
+								  ) => JsonObjectFs | Promise<JsonObjectFs>);
 					  };
 				/**
 				 * Modifies the content of a copied file.
@@ -5869,19 +6415,28 @@ declare class CopyPlugin {
 		ignore: SyncBailHook<[string], boolean | void>;
 	};
 }
-declare interface CopyTransformCacheKeys {
-	[index: string]: any;
-}
 type CreateData = NormalModuleCreateData & { settings: ModuleSettings };
-type CreateReadStreamFSImplementation = FSImplementation & {
+
+/**
+ * Defines the create read stream fs implementation type used by this module.
+ */
+declare interface CreateReadStreamFSImplementation {
+	open?: (...args: any[]) => any;
+	close?: (...args: any[]) => any;
 	read: (...args: any[]) => any;
-};
+}
 type CreateStatsOptionsContext = KnownCreateStatsOptionsContext &
 	Record<string, any>;
-type CreateWriteStreamFSImplementation = FSImplementation & {
-	write: (...args: any[]) => any;
+
+/**
+ * Defines the create write stream fs implementation type used by this module.
+ */
+declare interface CreateWriteStreamFSImplementation {
+	open?: (...args: any[]) => any;
 	close?: (...args: any[]) => any;
-};
+	write: (...args: any[]) => any;
+	writev?: (...args: any[]) => any;
+}
 type CreatedObject<T, F> = T extends ChunkGroupInfoWithName[]
 	? Record<string, StatsChunkGroup>
 	: T extends (infer V)[]
@@ -5961,6 +6516,12 @@ declare interface CssAutoOrModuleParserOptions {
 	namedExports?: boolean;
 
 	/**
+	 * Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.
+	 * @since 5.113.0
+	 */
+	parseErrors?: boolean;
+
+	/**
 	 * Enable strict pure mode: every selector must contain at least one local class or id selector.
 	 */
 	pure?: boolean;
@@ -5976,6 +6537,29 @@ declare interface CssAutoOrModuleParserOptions {
 	 */
 	urlHints?: UrlHintRule[];
 }
+type CssComponentValueType =
+	| 1
+	| 2
+	| 3
+	| 4
+	| 5
+	| 6
+	| 7
+	| 8
+	| 9
+	| 22
+	| 10
+	| 11
+	| 12
+	| 13
+	| 14
+	| 15
+	| 16
+	| 17
+	| 18
+	| 19
+	| 20
+	| 21;
 
 /**
  * Defines the css data type used by this module.
@@ -5990,6 +6574,11 @@ declare interface CssData {
 	 * the css exports
 	 */
 	exports: Map<string, string>;
+
+	/**
+	 * what each class or id name of a CSS module becomes, keyed by its name in the source, for markup that names them (an HTML page's `class` and `id`)
+	 */
+	locals?: Map<string, string>;
 
 	/**
 	 * source position (line is 1-based, column is 0-based) of each export's defining identifier in the original CSS, used to emit fine-grained JS-to-CSS source mappings
@@ -6012,7 +6601,7 @@ declare interface CssEnvironment {
 	 */
 	vendorPrefixes?: boolean;
 }
-declare abstract class CssGenerator extends Generator {
+declare abstract class CssGenerator extends Generator<CssNormalModule> {
 	options: CssModuleGeneratorOptions;
 
 	/**
@@ -6031,7 +6620,7 @@ declare abstract class CssGenerator extends Generator {
 	 * Processes the provided module.
 	 */
 	sourceModule(
-		module: NormalModule,
+		module: CssNormalModule,
 		initFragments: InitFragment<GenerateContext>[],
 		source: ReplaceSource,
 		generateContext: GenerateContext & { cssData: CssData }
@@ -6042,7 +6631,7 @@ declare abstract class CssGenerator extends Generator {
 	 */
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: CssNormalModule,
 		generateContext: GenerateContext
 	): null | Source;
 }
@@ -6067,6 +6656,7 @@ declare interface CssImportDependencyMeta {
 	media?: string;
 }
 type CssLayer = undefined | string;
+type CssListField = 1 | 2 | 3 | 4;
 declare class CssLoadingRuntimeModule extends RuntimeModule {
 	constructor(runtimeRequirements: ReadonlySet<string>);
 	static getCompilationHooks: (compilation: Compilation) => {
@@ -6112,6 +6702,17 @@ declare class CssLoadingRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+	static KINDS: Set<
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
+	>;
 
 	/**
 	 * Gets source basic types.
@@ -6126,11 +6727,11 @@ declare abstract class CssModule extends NormalModule {
 	inheritance?: [CssLayer, Supports, Media][];
 	exportType?: "link" | "text" | "css-style-sheet" | "style";
 }
-type CssModuleBuildInfo = KnownBuildInfo &
+type CssModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo &
 	KnownCssModuleBuildInfo;
-type CssModuleBuildMeta = KnownBuildMeta &
+type CssModuleBuildMeta = exports.KnownBuildMeta &
 	Record<string, any> &
 	KnownCssModuleBuildMeta;
 
@@ -6263,6 +6864,12 @@ declare interface CssModuleParserOptions {
 	namedExports?: boolean;
 
 	/**
+	 * Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.
+	 * @since 5.113.0
+	 */
+	parseErrors?: boolean;
+
+	/**
 	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
 	 */
 	url?: boolean;
@@ -6370,7 +6977,7 @@ declare class CssModulesPlugin {
 	static chunkHasCss(chunk: Chunk, chunkGraph: ChunkGraph): boolean;
 
 	/**
-	 * The css-carrying chunks of `chunks`, in the order their rules cascade —
+	 * The css-carrying chunks of `chunks`, in the order their rules cascade -
 	 * the order a `<link rel="stylesheet">` per chunk has to be written in.
 	 */
 	static getCssChunksInCascadeOrder(
@@ -6400,8 +7007,398 @@ declare class CssModulesPlugin {
 		>;
 	};
 }
-declare abstract class CssParser extends Parser {
+type CssNodePath<T = number, S = unknown> = Omit<
+	CssSyntaxPath,
+	| "flag"
+	| "node"
+	| "fieldCount"
+	| "field"
+	| "textOf"
+	| "state"
+	| "within"
+	| "fieldNamed"
+	| "rangeOf"
+	| "startOf"
+	| "endOf"
+> & {
+	readonly node: TypedNode<number, T>;
+	readonly state: S;
+	within(type: CssNodeType): boolean;
+	field<R extends number = TypedNode<number, T>, F extends number = number>(
+		i: number,
+		field: F &
+			PartOf<
+				R,
+				{
+					"1": never;
+					"2": 2;
+					"3": never;
+					"4": never;
+					"5": never;
+					"6": never;
+					"7": never;
+					"8": never;
+					"9": never;
+					"10": never;
+					"11": never;
+					"12": never;
+					"13": never;
+					"14": never;
+					"15": never;
+					"16": never;
+					"17": never;
+					"18": never;
+					"19": never;
+					"20": never;
+					"21": never;
+					"22": 2;
+					"23": 2;
+					"24": 1 | 3 | 4;
+					"25": 1 | 3 | 4;
+					"26": 4;
+					"27": never;
+					"28": never;
+				},
+				CssListField
+			>,
+		n?: R
+	): TypedNode<
+		number,
+		{
+			[index: number]: number;
+			"1": CssComponentValueType;
+			"2": CssComponentValueType;
+			"3": 23;
+			"4": 24 | 25;
+		}[F]
+	>;
+	fieldCount<R extends number = TypedNode<number, T>>(
+		field: PartOf<
+			R,
+			{
+				"1": never;
+				"2": 2;
+				"3": never;
+				"4": never;
+				"5": never;
+				"6": never;
+				"7": never;
+				"8": never;
+				"9": never;
+				"10": never;
+				"11": never;
+				"12": never;
+				"13": never;
+				"14": never;
+				"15": never;
+				"16": never;
+				"17": never;
+				"18": never;
+				"19": never;
+				"20": never;
+				"21": never;
+				"22": 2;
+				"23": 2;
+				"24": 1 | 3 | 4;
+				"25": 1 | 3 | 4;
+				"26": 4;
+				"27": never;
+				"28": never;
+			},
+			CssListField
+		>,
+		n?: R
+	): number;
+	fieldNamed<
+		R extends number = TypedNode<number, T>,
+		F extends number = number
+	>(
+		field: F &
+			PartOf<
+				R,
+				{
+					"1": never;
+					"2": 2;
+					"3": never;
+					"4": never;
+					"5": never;
+					"6": never;
+					"7": never;
+					"8": never;
+					"9": never;
+					"10": never;
+					"11": never;
+					"12": never;
+					"13": never;
+					"14": never;
+					"15": never;
+					"16": never;
+					"17": never;
+					"18": never;
+					"19": never;
+					"20": never;
+					"21": never;
+					"22": 2;
+					"23": 2;
+					"24": 1 | 3 | 4;
+					"25": 1 | 3 | 4;
+					"26": 4;
+					"27": never;
+					"28": never;
+				},
+				CssListField
+			>,
+		name: string,
+		n?: R
+	): TypedNode<
+		number,
+		{
+			[index: number]: number;
+			"1": CssComponentValueType;
+			"2": CssComponentValueType;
+			"3": 23;
+			"4": 24 | 25;
+		}[F]
+	>;
+	flag<R extends number = TypedNode<number, T>>(
+		flag: PartOf<
+			R,
+			{
+				"1": never;
+				"2": never;
+				"3": never;
+				"4": 4;
+				"5": never;
+				"6": never;
+				"7": never;
+				"8": never;
+				"9": never;
+				"10": 2;
+				"11": 2;
+				"12": 2;
+				"13": never;
+				"14": never;
+				"15": never;
+				"16": never;
+				"17": never;
+				"18": never;
+				"19": never;
+				"20": never;
+				"21": never;
+				"22": never;
+				"23": 1;
+				"24": never;
+				"25": never;
+				"26": never;
+				"27": never;
+				"28": never;
+			},
+			1 | 2 | 4
+		>,
+		n?: R
+	): boolean;
+	rangeOf<R extends number = TypedNode<number, T>>(
+		part: PartOf<
+			R,
+			{
+				"1": never;
+				"2": 1;
+				"3": never;
+				"4": never;
+				"5": never;
+				"6": never;
+				"7": 2;
+				"8": never;
+				"9": never;
+				"10": never;
+				"11": never;
+				"12": 1;
+				"13": never;
+				"14": never;
+				"15": never;
+				"16": never;
+				"17": never;
+				"18": never;
+				"19": never;
+				"20": never;
+				"21": never;
+				"22": never;
+				"23": 1 | 2;
+				"24": 1 | 3;
+				"25": 3;
+				"26": never;
+				"27": never;
+				"28": never;
+			},
+			1 | 2 | 3
+		>,
+		n?: R
+	): null | [number, number];
+	startOf<R extends number = TypedNode<number, T>>(
+		part: PartOf<
+			R,
+			{
+				"1": never;
+				"2": 1;
+				"3": never;
+				"4": never;
+				"5": never;
+				"6": never;
+				"7": 2;
+				"8": never;
+				"9": never;
+				"10": never;
+				"11": never;
+				"12": 1;
+				"13": never;
+				"14": never;
+				"15": never;
+				"16": never;
+				"17": never;
+				"18": never;
+				"19": never;
+				"20": never;
+				"21": never;
+				"22": never;
+				"23": 1 | 2;
+				"24": 1 | 3;
+				"25": 3;
+				"26": never;
+				"27": never;
+				"28": never;
+			},
+			1 | 2 | 3
+		>,
+		n?: R
+	): number;
+	endOf<R extends number = TypedNode<number, T>>(
+		part: PartOf<
+			R,
+			{
+				"1": never;
+				"2": 1;
+				"3": never;
+				"4": never;
+				"5": never;
+				"6": never;
+				"7": 2;
+				"8": never;
+				"9": never;
+				"10": never;
+				"11": never;
+				"12": 1;
+				"13": never;
+				"14": never;
+				"15": never;
+				"16": never;
+				"17": never;
+				"18": never;
+				"19": never;
+				"20": never;
+				"21": never;
+				"22": never;
+				"23": 1 | 2;
+				"24": 1 | 3;
+				"25": 3;
+				"26": never;
+				"27": never;
+				"28": never;
+			},
+			1 | 2 | 3
+		>,
+		n?: R
+	): number;
+	textOf<R extends number = TypedNode<number, T>>(
+		part: PartOf<
+			R,
+			{
+				"1": never;
+				"2": never;
+				"3": never;
+				"4": never;
+				"5": never;
+				"6": never;
+				"7": never;
+				"8": never;
+				"9": never;
+				"10": never;
+				"11": never;
+				"12": never;
+				"13": never;
+				"14": never;
+				"15": never;
+				"16": never;
+				"17": never;
+				"18": never;
+				"19": never;
+				"20": never;
+				"21": never;
+				"22": never;
+				"23": never;
+				"24": never;
+				"25": never;
+				"26": never;
+				"27": never;
+				"28": never;
+			},
+			never
+		>,
+		n?: R
+	): null | string;
+};
+type CssNodeType =
+	| 1
+	| 2
+	| 3
+	| 4
+	| 5
+	| 6
+	| 7
+	| 8
+	| 9
+	| 22
+	| 10
+	| 11
+	| 12
+	| 13
+	| 14
+	| 15
+	| 16
+	| 17
+	| 18
+	| 19
+	| 20
+	| 21
+	| 23
+	| 24
+	| 25
+	| 26
+	| 27
+	| 28;
+type CssNormalModule = NormalModule & {
+	buildInfo?: CssModuleBuildInfo;
+	buildMeta?: CssModuleBuildMeta;
+};
+declare interface CssParseOptions {
+	/**
+	 * optional comment-token callback (string input only); the public `parse*` entry points use it to build the `TokenStream` so the outer parser's comment tracker still sees magic comments inside the consumed range
+	 */
+	comment?: (input: string, start: number, end: number) => number;
+
+	/**
+	 * optional callback for each parse error of the tokenizer (CSS Syntax Level 3 §4) and parser (§5), with the same signature as the HTML tokenizer's; `severity` is `"error"` when EOF cuts a token or rule short and `"warning"` otherwise
+	 */
+	parseError?: (
+		input: string,
+		code: string,
+		start: number,
+		end: number,
+		severity: ParseErrorSeverity
+	) => void;
+}
+declare abstract class CssParser extends Parser<BuiltCssModule> {
 	defaultMode: "global" | "auto" | "local" | "pure";
+	selectorNames: boolean;
 	options: {
 		/**
 		 * Enable/disable renaming of `@keyframes`.
@@ -6459,6 +7456,11 @@ declare abstract class CssParser extends Parser {
 		 */
 		namedExports: boolean;
 		/**
+		 * Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.
+		 * @since 5.113.0
+		 */
+		parseErrors?: boolean;
+		/**
 		 * Enable strict pure mode: every selector must contain at least one local class or id selector.
 		 */
 		pure?: boolean;
@@ -6475,6 +7477,10 @@ declare abstract class CssParser extends Parser {
 		 * default mode
 		 */
 		defaultMode?: "global" | "auto" | "local" | "pure";
+		/**
+		 * keep which names a CSS module declares as something other than a class or an id (a `@keyframes`, a `@counter-style`), which an HTML page's `class` and `id` never name (set when `experiments.html` is on)
+		 */
+		selectorNames?: boolean;
 	};
 	magicCommentContext: ContextImport;
 }
@@ -6522,6 +7528,12 @@ declare interface CssParserOptions {
 	namedExports?: boolean;
 
 	/**
+	 * Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.
+	 * @since 5.113.0
+	 */
+	parseErrors?: boolean;
+
+	/**
 	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
 	 */
 	url?: boolean;
@@ -6534,11 +7546,155 @@ declare interface CssParserOptions {
 }
 
 /**
- * What the CSS printer may be told, on top of the `mode` every language has —
+ * CSS's parts by node type, which type each visitor's path; every CSS `Field`
+ * is a list.
+ */
+declare interface CssParts {
+	types: CssNodeType;
+	field: CssListField;
+	flag: 1 | 2 | 4;
+	part: 1 | 2 | 3;
+	text: never;
+	fields: {
+		"1": never;
+		"2": 2;
+		"3": never;
+		"4": never;
+		"5": never;
+		"6": never;
+		"7": never;
+		"8": never;
+		"9": never;
+		"10": never;
+		"11": never;
+		"12": never;
+		"13": never;
+		"14": never;
+		"15": never;
+		"16": never;
+		"17": never;
+		"18": never;
+		"19": never;
+		"20": never;
+		"21": never;
+		"22": 2;
+		"23": 2;
+		"24": 1 | 3 | 4;
+		"25": 1 | 3 | 4;
+		"26": 4;
+		"27": never;
+		"28": never;
+	};
+	flags: {
+		"1": never;
+		"2": never;
+		"3": never;
+		"4": 4;
+		"5": never;
+		"6": never;
+		"7": never;
+		"8": never;
+		"9": never;
+		"10": 2;
+		"11": 2;
+		"12": 2;
+		"13": never;
+		"14": never;
+		"15": never;
+		"16": never;
+		"17": never;
+		"18": never;
+		"19": never;
+		"20": never;
+		"21": never;
+		"22": never;
+		"23": 1;
+		"24": never;
+		"25": never;
+		"26": never;
+		"27": never;
+		"28": never;
+	};
+	parts: {
+		"1": never;
+		"2": 1;
+		"3": never;
+		"4": never;
+		"5": never;
+		"6": never;
+		"7": 2;
+		"8": never;
+		"9": never;
+		"10": never;
+		"11": never;
+		"12": 1;
+		"13": never;
+		"14": never;
+		"15": never;
+		"16": never;
+		"17": never;
+		"18": never;
+		"19": never;
+		"20": never;
+		"21": never;
+		"22": never;
+		"23": 1 | 2;
+		"24": 1 | 3;
+		"25": 3;
+		"26": never;
+		"27": never;
+		"28": never;
+	};
+	texts: {
+		"1": never;
+		"2": never;
+		"3": never;
+		"4": never;
+		"5": never;
+		"6": never;
+		"7": never;
+		"8": never;
+		"9": never;
+		"10": never;
+		"11": never;
+		"12": never;
+		"13": never;
+		"14": never;
+		"15": never;
+		"16": never;
+		"17": never;
+		"18": never;
+		"19": never;
+		"20": never;
+		"21": never;
+		"22": never;
+		"23": never;
+		"24": never;
+		"25": never;
+		"26": never;
+		"27": never;
+		"28": never;
+	};
+	items: {
+		[index: number]: number;
+		"1": CssComponentValueType;
+		"2": CssComponentValueType;
+		"3": 23;
+		"4": 24 | 25;
+	};
+}
+
+/**
+ * What the CSS printer may be told, on top of the `mode` every language has -
  * the printing slice of `CssProcessOptions`, named once so nothing outside CSS
  * has to enumerate it.
  */
 declare interface CssPrintOptions {
+	/**
+	 * `false` when the stylesheet is read as UTF-8 wherever it is served, so no `@charset` is written for it and a string's hex escape of a character past U+FFFF is written as the character, as `declareCharset` writes it. `"auto"` by default, and only read while printing
+	 */
+	charset?: false | "auto";
+
 	/**
 	 * what the target can read (the CSS entries of `output.environment`), so a spelling it would not understand is never reached for; only read while printing, and an absent entry means the modern spelling is available
 	 */
@@ -6563,12 +7719,12 @@ declare interface CssPrintOptions {
 	convertApproximateColors?: boolean;
 
 	/**
-	 * drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected — a selection naming a browser the tables do not cover still answers for the whole of it
+	 * drop a declaration a later one in the same block overrides even where no target is selected, wherever Chromium, Gecko and WebKit each read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected - a selection naming a browser the tables do not cover still answers for the whole of it
 	 */
 	dropOverriddenDeclarations?: boolean;
 
 	/**
-	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included — that being the property's value rather than the function's own argument
+	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included - that being the property's value rather than the function's own argument
 	 */
 	rewriteCustomProperties?: boolean;
 
@@ -6593,15 +7749,43 @@ declare interface CssPrintOptions {
 	deferEmbeddedSource?: DeferredEmbeddedSource[];
 
 	/**
-	 * give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block being moved does for an element it can match — a condition between counting for what its own rules declare
+	 * what a print before this one was answered for each offer, which `processAsync` passes where an answer overturned a choice made without it: whether `@charset` is written is decided with them
+	 */
+	embeddedAnswers?: (
+		offer: Omit<DeferredEmbeddedSource, "build">
+	) => undefined | string;
+
+	/**
+	 * open the stylesheet with `@charset "UTF-8"` exactly when its output holds a non-ASCII character, so it is read as UTF-8 wherever it is served, and write a string's hex escape of a character past U+FFFF as the character, which costs fewer bytes once compressed; for a stylesheet that is a file of its own, as `@charset` is read only as one's opening bytes. Off by default, and only read while printing
+	 */
+	declareCharset?: boolean;
+
+	/**
+	 * give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block being moved does for an element it can match - a condition between counting for what its own rules declare
 	 */
 	mergeDistantRules?: boolean;
+
+	/**
+	 * close a custom property's value the input ran out in, which is otherwise left open as the engine keeps it, for output that text is appended to (as a minimizer's banner is). Only read while printing
+	 */
+	closeAtEnd?: boolean;
 }
 declare interface CssProcessOptions {
 	/**
 	 * shared loc converter (default a fresh one over the input)
 	 */
 	locConverter?: LocConverter;
+
+	/**
+	 * optional callback for each parse error, as the `parseA*` entry points report it; its offsets are into the preprocessed input `locConverter` reads
+	 */
+	parseError?: (
+		input: string,
+		code: string,
+		start: number,
+		end: number,
+		severity: ParseErrorSeverity
+	) => void;
 
 	/**
 	 * walk into block bodies' nested rules (default true); ignored while printing, as `skip` is, since a block is printed from the children it would leave unread
@@ -6614,7 +7798,7 @@ declare interface CssProcessOptions {
 	as?: "stylesheet" | "block-contents";
 
 	/**
-	 * what the grammar may leave un-materialized to go faster — safe only for parts nothing reads in the active parse; default skip nothing. Ignored while printing (`minimize`), which needs every node
+	 * what the grammar may leave un-materialized to go faster - safe only for parts nothing reads in the active parse; default skip nothing. Ignored while printing (`minimize`), which needs every node
 	 */
 	skip?: SkipOptions;
 
@@ -6639,6 +7823,16 @@ declare interface CssProcessOptions {
 	environment?: CssEnvironment;
 
 	/**
+	 * open the stylesheet with `@charset "UTF-8"` exactly when its output holds a non-ASCII character, so it is read as UTF-8 wherever it is served, and write a string's hex escape of a character past U+FFFF as the character, which costs fewer bytes once compressed; for a stylesheet that is a file of its own, as `@charset` is read only as one's opening bytes. Off by default, and only read while printing
+	 */
+	declareCharset?: boolean;
+
+	/**
+	 * `false` when the stylesheet is read as UTF-8 wherever it is served, so no `@charset` is written for it and a string's hex escape of a character past U+FFFF is written as the character, as `declareCharset` writes it. `"auto"` by default, and only read while printing
+	 */
+	charset?: false | "auto";
+
+	/**
 	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
 	 */
 	convertLengthUnits?: boolean;
@@ -6649,17 +7843,17 @@ declare interface CssProcessOptions {
 	convertApproximateColors?: boolean;
 
 	/**
-	 * give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block being moved does for an element it can match — a condition between counting for what its own rules declare
+	 * give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block being moved does for an element it can match - a condition between counting for what its own rules declare
 	 */
 	mergeDistantRules?: boolean;
 
 	/**
-	 * drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected — a selection naming a browser the tables do not cover still answers for the whole of it
+	 * drop a declaration a later one in the same block overrides even where no target is selected, wherever Chromium, Gecko and WebKit each read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected - a selection naming a browser the tables do not cover still answers for the whole of it
 	 */
 	dropOverriddenDeclarations?: boolean;
 
 	/**
-	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included — that being the property's value rather than the function's own argument
+	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included - that being the property's value rather than the function's own argument
 	 */
 	rewriteCustomProperties?: boolean;
 
@@ -6690,72 +7884,39 @@ declare interface CssProcessOptions {
 	 * collects what `renderEmbeddedSource` would be offered instead of offering it, for a caller whose renderer is asynchronous: the print leaves a marker for each and `finish` puts the answers in their place, so one parse serves both. Takes precedence over `renderEmbeddedSource`
 	 */
 	deferEmbeddedSource?: DeferredEmbeddedSource[];
+
+	/**
+	 * close a custom property's value the input ran out in, which is otherwise left open as the engine keeps it, for output that text is appended to (as a minimizer's banner is). Only read while printing
+	 */
+	closeAtEnd?: boolean;
+
+	/**
+	 * what a print before this one was answered for each offer, which `processAsync` passes where an answer overturned a choice made without it: whether `@charset` is written is decided with them
+	 */
+	embeddedAnswers?: (
+		offer: Omit<DeferredEmbeddedSource, "build">
+	) => undefined | string;
 }
 
 /**
  * The generic visitor coordinator (`util/SourceProcessor`) bound to the CSS
  * `grammar`. All configuration is per `process` call. `process(src, { minimize:
- * true })` returns `{ code, map }` — the safely-minified serialization (built by
+ * true })` returns `{ code, map }` - the safely-minified serialization (built by
  * the same walk that fires visitors) and its source map; without `minimize` it
- * just walks and returns `undefined`. Babel-style usage:
+ * just walks and returns `undefined`. Usage:
  * ```
  * new CssSourceProcessor().use({ [NodeType.AtRule]: (path) => {} }).process(source, { skip });
  * ```
  * @experimental exposed as `webpack.css.syntax.SourceProcessor`; unstable API
  */
-declare class CssSourceProcessor extends SourceProcessor<
-	{
-		get node(): NodeSyntaxParser;
-		get parent(): null | NodeSyntaxParser;
-		get index(): number;
-		/**
-		 * Stop the walk descending into the current node (enter only).
-		 */
-		skipChildren(): void;
-		inValue(): boolean;
-		type(n?: NodeSyntaxParser): number;
-		start(n?: NodeSyntaxParser): number;
-		end(n?: NodeSyntaxParser): number;
-		range(n?: NodeSyntaxParser): [number, number];
-		loc(n?: NodeSyntaxParser): {
-			start: { line: number; column: number };
-			end: { line: number; column: number };
-		};
-		source(n?: NodeSyntaxParser): string;
-		value(n?: NodeSyntaxParser): string;
-		unescaped(n?: NodeSyntaxParser): string;
-		typeFlag(n?: NodeSyntaxParser): string;
-		contentStart(n?: NodeSyntaxParser): number;
-		contentEnd(n?: NodeSyntaxParser): number;
-		name(n?: NodeSyntaxParser): string;
-		nameStart(n?: NodeSyntaxParser): number;
-		nameEnd(n?: NodeSyntaxParser): number;
-		unescapedName(n?: NodeSyntaxParser): string;
-		atKeyword(n?: NodeSyntaxParser): string;
-		children(n?: NodeSyntaxParser): ComponentValue[];
-		prelude(n?: NodeSyntaxParser): ComponentValue[];
-		childCount(n?: NodeSyntaxParser): number;
-		childAt(n: NodeSyntaxParser, i: number): ComponentValue;
-		/**
-		 * A block big enough to stream hands its children to the visitors as each one
-		 * finishes rather than collecting them, so both lists read as an empty block
-		 * on it — `null`, which means no block at all, is still only for the `@…;`
-		 * forms. Read a block's children from the walk, not from here.
-		 */
-		declarations(n?: NodeSyntaxParser): null | DeclarationSyntaxParser[];
-		/**
-		 * Reads as an empty block on a streamed rule; see {@link declarations }.
-		 */
-		childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-		blockStart(n?: NodeSyntaxParser): number;
-		blockEnd(n?: NodeSyntaxParser): number;
-		important(n?: NodeSyntaxParser): boolean;
-		blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
-		setEnd(n: NodeSyntaxParser, v: number): void;
-		setBlockEnd(n: NodeSyntaxParser, v: number): void;
-	},
-	NodeSyntaxParser,
-	CssProcessOptions
+declare class CssSourceProcessor<TState = unknown> extends SourceProcessor<
+	CssSyntaxPath,
+	number,
+	CssProcessOptions,
+	CssPrintOptions,
+	CssParts,
+	TState,
+	CssVisitorMap<TState>
 > {
 	constructor();
 	static PrintContext: typeof PrintContext;
@@ -6764,6 +7925,99 @@ declare class CssSourceProcessor extends SourceProcessor<
 		writes: DeferredWrite[]
 	) => string;
 	static deferredWrite: (id: number) => string;
+}
+
+/**
+ * The path every visitor of a CSS `SourceProcessor` run receives, its reads
+ * defaulting to the node the walk is at; outside a walk it is `A`, read by
+ * passing the node a parse returned. Every field `CssParser` reads goes through
+ * it, with `n` an integer node id into the columns, so the storage stays behind it.
+ */
+declare abstract class CssSyntaxPath {
+	state: unknown;
+	get node(): number;
+	get parent(): null | number;
+	get index(): number;
+
+	/**
+	 * Stop the walk descending into the current node (enter only).
+	 */
+	skipChildren(): void;
+
+	/**
+	 * Stop the walk: no visitor fires after the current one returns.
+	 */
+	stop(): void;
+
+	/**
+	 * Print the current node as `text` in place of what the printer writes; on a
+	 * walk that prints nothing, or on a comment, it does nothing. What holds the
+	 * node then prints its children's text as they printed, without the rewrites.
+	 */
+	replace(text: string): void;
+
+	/**
+	 * Print nothing for the current node, as `replace("")`.
+	 */
+	remove(): void;
+
+	/**
+	 * A top-level rule and a comment have none; a hash within a declaration is
+	 * a color, elsewhere an id.
+	 */
+	within(type: number): boolean;
+	type(n?: number): number;
+	range(n?: number): [number, number];
+	start(n?: number): number;
+	end(n?: number): number;
+	loc(n?: number): [number, number, number, number];
+
+	/**
+	 * A node's text exactly as the input wrote it (`name` and `value` decode).
+	 */
+	source(n?: number, end?: number): string;
+
+	/**
+	 * The token's value as CSS Syntax defines it: a number for a number,
+	 * percentage or dimension, otherwise text with escapes resolved (a string
+	 * without its quotes, a hash without its `#`, a `url()`'s contents, a
+	 * comment's text); "" for a rule, declaration, function or block.
+	 */
+	value(n?: number): string | number;
+	name(n?: number): string;
+
+	/**
+	 * A rule's children are its prelude; its block is read with {@link field}.
+	 */
+	childCount(n?: number): number;
+	child(i: number, n?: number): number;
+
+	/**
+	 * Every child as a new array, for a reader that keeps or searches them.
+	 */
+	children(n?: number): number[];
+
+	/**
+	 * A block big enough to stream hands its children to the visitors as each
+	 * one finishes rather than collecting them, so its lists read as empty here.
+	 */
+	fieldCount(field: number, n?: number): number;
+	field(i: number, field: number, n?: number): number;
+	fieldNamed(field: number, name: string, n?: number): number;
+
+	/**
+	 * `important` is a container's bit, cleared when its id is reused; a token's
+	 * type flags are read off its text.
+	 */
+	flag(flag: number, n?: number): boolean;
+	rangeOf(part: number, n?: number): null | [number, number];
+	startOf(part: number, n?: number): number;
+	endOf(part: number, n?: number): number;
+
+	/**
+	 * CSS has no text beyond a node's name and value, read with `name` and `value`.
+	 */
+	textOf(_part: number, _n?: number): null;
 }
 
 /**
@@ -6777,12 +8031,12 @@ declare interface CssTransformOptions {
 	colorFallbacks?: boolean;
 
 	/**
-	 * write a spelling the target cannot read as one it can — the same value, said another way
+	 * write a spelling the target cannot read as one it can - the same value, said another way
 	 */
 	lowerUnsupported?: boolean;
 
 	/**
-	 * write a name that matches ASCII case-insensitively — an at-rule, property, pseudo, function, unit or keyword — in lowercase
+	 * write a name that matches ASCII case-insensitively - an at-rule, property, pseudo, function, unit or keyword - in lowercase
 	 */
 	foldCase?: boolean;
 
@@ -6802,7 +8056,7 @@ declare interface CssTransformOptions {
 	customMedia?: boolean;
 
 	/**
-	 * write the selector list a `@custom-selector` names as `:is(…)` wherever a selector asks for it, and drop the rule that named it
+	 * write the selector list a `@custom-selector` names as `:is(...)` wherever a selector asks for it, and drop the rule that named it
 	 */
 	customSelectors?: boolean;
 
@@ -6830,6 +8084,11 @@ declare interface CssTransformOptions {
 	 * drop a rule or declaration nothing can read: an empty rule, and one an identical later one supersedes
 	 */
 	removeDeadRules?: boolean;
+
+	/**
+	 * print a style rule's declarations in one order by family, so blocks setting the same things read alike; only declarations whose order nothing can see move
+	 */
+	reorderDeclarations?: boolean;
 
 	/**
 	 * write a `:dir()` the target cannot read as the `[dir]` attribute selector, which reads the attribute rather than the directionality an element may inherit
@@ -6861,19 +8120,188 @@ declare interface CssTransformOptions {
 	 */
 	shortenValues?: boolean;
 }
-type DeclarationEstreeIndex =
-	FunctionDeclaration | VariableDeclaration | ClassDeclaration;
-type DeclarationSyntaxParser = NodeSyntaxParser & {
-	name: string;
-	nameStart: number;
-	nameEnd: number;
-	value: ComponentValue[];
-	important: boolean;
-};
+declare interface CssVisitorMap<S = unknown> {
+	"1"?:
+		| VisitorFn<CssNodePath<1, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<1, S>>;
+				exit?: VisitorFn<CssNodePath<1, S>>;
+		  };
+	"2"?:
+		| VisitorFn<CssNodePath<2, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<2, S>>;
+				exit?: VisitorFn<CssNodePath<2, S>>;
+		  };
+	"3"?:
+		| VisitorFn<CssNodePath<3, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<3, S>>;
+				exit?: VisitorFn<CssNodePath<3, S>>;
+		  };
+	"4"?:
+		| VisitorFn<CssNodePath<4, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<4, S>>;
+				exit?: VisitorFn<CssNodePath<4, S>>;
+		  };
+	"5"?:
+		| VisitorFn<CssNodePath<5, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<5, S>>;
+				exit?: VisitorFn<CssNodePath<5, S>>;
+		  };
+	"6"?:
+		| VisitorFn<CssNodePath<6, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<6, S>>;
+				exit?: VisitorFn<CssNodePath<6, S>>;
+		  };
+	"7"?:
+		| VisitorFn<CssNodePath<7, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<7, S>>;
+				exit?: VisitorFn<CssNodePath<7, S>>;
+		  };
+	"8"?:
+		| VisitorFn<CssNodePath<8, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<8, S>>;
+				exit?: VisitorFn<CssNodePath<8, S>>;
+		  };
+	"9"?:
+		| VisitorFn<CssNodePath<9, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<9, S>>;
+				exit?: VisitorFn<CssNodePath<9, S>>;
+		  };
+	"10"?:
+		| VisitorFn<CssNodePath<10, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<10, S>>;
+				exit?: VisitorFn<CssNodePath<10, S>>;
+		  };
+	"11"?:
+		| VisitorFn<CssNodePath<11, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<11, S>>;
+				exit?: VisitorFn<CssNodePath<11, S>>;
+		  };
+	"12"?:
+		| VisitorFn<CssNodePath<12, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<12, S>>;
+				exit?: VisitorFn<CssNodePath<12, S>>;
+		  };
+	"13"?:
+		| VisitorFn<CssNodePath<13, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<13, S>>;
+				exit?: VisitorFn<CssNodePath<13, S>>;
+		  };
+	"14"?:
+		| VisitorFn<CssNodePath<14, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<14, S>>;
+				exit?: VisitorFn<CssNodePath<14, S>>;
+		  };
+	"15"?:
+		| VisitorFn<CssNodePath<15, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<15, S>>;
+				exit?: VisitorFn<CssNodePath<15, S>>;
+		  };
+	"16"?:
+		| VisitorFn<CssNodePath<16, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<16, S>>;
+				exit?: VisitorFn<CssNodePath<16, S>>;
+		  };
+	"17"?:
+		| VisitorFn<CssNodePath<17, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<17, S>>;
+				exit?: VisitorFn<CssNodePath<17, S>>;
+		  };
+	"18"?:
+		| VisitorFn<CssNodePath<18, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<18, S>>;
+				exit?: VisitorFn<CssNodePath<18, S>>;
+		  };
+	"19"?:
+		| VisitorFn<CssNodePath<19, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<19, S>>;
+				exit?: VisitorFn<CssNodePath<19, S>>;
+		  };
+	"20"?:
+		| VisitorFn<CssNodePath<20, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<20, S>>;
+				exit?: VisitorFn<CssNodePath<20, S>>;
+		  };
+	"21"?:
+		| VisitorFn<CssNodePath<21, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<21, S>>;
+				exit?: VisitorFn<CssNodePath<21, S>>;
+		  };
+	"22"?:
+		| VisitorFn<CssNodePath<22, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<22, S>>;
+				exit?: VisitorFn<CssNodePath<22, S>>;
+		  };
+	"23"?:
+		| VisitorFn<CssNodePath<23, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<23, S>>;
+				exit?: VisitorFn<CssNodePath<23, S>>;
+		  };
+	"24"?:
+		| VisitorFn<CssNodePath<24, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<24, S>>;
+				exit?: VisitorFn<CssNodePath<24, S>>;
+		  };
+	"25"?:
+		| VisitorFn<CssNodePath<25, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<25, S>>;
+				exit?: VisitorFn<CssNodePath<25, S>>;
+		  };
+	"26"?:
+		| VisitorFn<CssNodePath<26, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<26, S>>;
+				exit?: VisitorFn<CssNodePath<26, S>>;
+		  };
+	"27"?:
+		| VisitorFn<CssNodePath<27, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<27, S>>;
+				exit?: VisitorFn<CssNodePath<27, S>>;
+		  };
+	"28"?:
+		| VisitorFn<CssNodePath<28, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<28, S>>;
+				exit?: VisitorFn<CssNodePath<28, S>>;
+		  };
+}
+type Declaration = FunctionDeclaration | VariableDeclaration | ClassDeclaration;
 declare interface DecodedEntitiesWithMap {
 	text: string;
 	map?: number[];
 }
+type DecodedSegment =
+	| [number]
+	| [number, number, number, number]
+	| [number, number, number, number, number];
+type DecodedSourceMap = Omit<RawSourceMap, "mappings"> & {
+	mappings: DecodedSegment[][];
+};
 declare interface DefaultHandlerOptions {
 	progressBar?: false | Required<ProgressPluginOptionsProgressBarBranch3Object>;
 	estimatedTime?: boolean;
@@ -6887,12 +8315,12 @@ type DeferredEmbeddedSource = DeferredWrite & {
 
 /**
  * One write the print left a marker for, collected into the `deferEmbeddedSource`
- * print option by whichever grammar offered it — the other half of
+ * print option by whichever grammar offered it - the other half of
  * {@link deferredWrite}. `source` is the text offered, `build` spells what is
  * printed around the answer (an untapped run's spelling where there is none), and
  * `decides` says whether the answer overturns a choice the print made without it.
  * A grammar carries whatever else describes the offer (`type`, `hostType`, `as`,
- * …) on the same object.
+ * ...) on the same object.
  */
 declare interface DeferredWrite {
 	source: string;
@@ -7009,6 +8437,11 @@ declare abstract class DependenciesBlock {
 	dependencies: Dependency[];
 	blocks: AsyncDependenciesBlock[];
 	parent?: DependenciesBlock;
+
+	/**
+	 * Returns whether this block is an async block, loaded on demand in its own chunk group.
+	 */
+	isAsyncBlock(): boolean;
 	getRootBlock(): DependenciesBlock;
 
 	/**
@@ -7040,12 +8473,12 @@ declare abstract class DependenciesBlock {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_3): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_4): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_2): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_3): void;
 }
 
 /**
@@ -7105,6 +8538,45 @@ declare class Dependency {
 	getContext(): undefined | string;
 
 	/**
+	 * Returns whether this dependency is of the given kind; a subclass is every kind its parent is.
+	 */
+	is<
+		K extends
+			| "worker"
+			| "css-import"
+			| "css-url"
+			| "entry"
+			| "url"
+			| "module-dependency"
+			| "esm-import"
+			| "provided"
+			| "dynamic-import"
+			| "esm-reexport"
+			| "esm-export-specifier"
+			| "esm-live-export"
+			| "esm-side-effect-import"
+			| "context-element"
+			| "esm-bare-side-effect-import"
+			| "esm-import-specifier"
+			| "esm-evaluated-import-specifier"
+			| "esm-compatibility"
+			| "commonjs-require"
+			| "commonjs-export-require"
+			| "html-source"
+			| "html-entry"
+			| "html-inline-style"
+			| "html-css-module"
+			| "webassembly-import"
+			| "webassembly-export-imported"
+			| "sharing-request"
+			| "local-module"
+			| "static-exports"
+			| "loader-import"
+			| "css-icss-import"
+			| "css-icss-export"
+	>(kind: K): boolean;
+
+	/**
 	 * Returns an identifier to merge equal requests.
 	 */
 	getResourceIdentifier(): null | string;
@@ -7117,27 +8589,17 @@ declare class Dependency {
 	/**
 	 * Returns the export name this dependency requests from its target module (lazy barrel optimization).
 	 */
-	getForwardId(): null | string | true;
+	get forwardId(): null | string | true;
 
 	/**
 	 * Returns how this dependency may be deferred when its parent module is side-effect-free (lazy barrel optimization).
 	 */
-	getLazyUntil(): null | "local" | "id" | "*" | "@";
+	get lazyRole(): null | "import" | "local" | "id" | "*" | "@";
 
 	/**
-	 * Returns the export name for a `LAZY_UNTIL_LOCAL`/`LAZY_UNTIL_ID` classification (lazy barrel optimization).
+	 * Returns the export name for a `LAZY_LOCAL_EXPORT`/`LAZY_NAMED_REEXPORT` classification (lazy barrel optimization).
 	 */
-	getLazyName(): null | string;
-
-	/**
-	 * Whether the lazy barrel currently defers creating this dependency's target module (lazy barrel optimization).
-	 */
-	isLazy(): boolean;
-
-	/**
-	 * Sets whether the lazy barrel defers creating this dependency's target module (lazy barrel optimization).
-	 */
-	setLazy(value: boolean): void;
+	get lazyName(): null | string;
 
 	/**
 	 * Returns the referenced module and export
@@ -7206,19 +8668,22 @@ declare class Dependency {
 	/**
 	 * Returns true if this dependency can be concatenated
 	 */
-	canConcatenate(concatenateCommonJsModules: boolean): boolean;
+	canConcatenate(
+		concatenateCommonJsModules: boolean,
+		module?: null | Module
+	): boolean;
 
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_3): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_4): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_2): void;
-	module: any;
-	get disconnect(): any;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_3): void;
+	module: void;
+	get disconnect(): void;
 
 	/**
 	 * Compares two dependencies by source location for sorting a module's
@@ -7244,17 +8709,59 @@ declare class Dependency {
 	 */
 	static canConcatenate(
 		dependency: Dependency,
-		concatenateCommonJsModules: boolean
+		concatenateCommonJsModules: boolean,
+		module?: null | Module
 	): boolean;
 	static TRANSITIVE: symbol;
-	static LAZY_UNTIL_LOCAL: "local";
-	static LAZY_UNTIL_ID: "id";
-	static LAZY_UNTIL_FALLBACK: "*";
-	static LAZY_UNTIL_REQUEST: "@";
+	static LAZY_LOCAL_EXPORT: "local";
+	static LAZY_NAMED_REEXPORT: "id";
+	static LAZY_STAR_REEXPORT: "*";
+	static LAZY_REEXPORT_SIDE_EFFECT: "@";
+	static LAZY_IMPORT_DECLARATION: "import";
 	static ESM_CATEGORY: "esm";
+	static KINDS: Set<
+		| "worker"
+		| "css-import"
+		| "css-url"
+		| "entry"
+		| "url"
+		| "module-dependency"
+		| "esm-import"
+		| "provided"
+		| "dynamic-import"
+		| "esm-reexport"
+		| "esm-export-specifier"
+		| "esm-live-export"
+		| "esm-side-effect-import"
+		| "context-element"
+		| "esm-bare-side-effect-import"
+		| "esm-import-specifier"
+		| "esm-evaluated-import-specifier"
+		| "esm-compatibility"
+		| "commonjs-require"
+		| "commonjs-export-require"
+		| "html-source"
+		| "html-entry"
+		| "html-inline-style"
+		| "html-css-module"
+		| "webassembly-import"
+		| "webassembly-export-imported"
+		| "sharing-request"
+		| "local-module"
+		| "static-exports"
+		| "loader-import"
+		| "css-icss-import"
+		| "css-icss-export"
+	>;
 }
-declare interface DependencyConstructor {
-	new (...args: any[]): Dependency;
+type DependencyConstructor = abstract new (...args: never[]) => Dependency;
+
+/**
+ * branch guard: the dependency is live only when the formula evaluates to `value`
+ */
+declare interface DependencyGuard {
+	formula: GuardFormula;
+	value: boolean;
 }
 type DependencyLocation = SyntheticDependencyLocation | RealDependencyLocation;
 
@@ -7340,9 +8847,9 @@ declare interface DependencyTemplateContext {
 	codeGenerationResults: CodeGenerationResults;
 
 	/**
-	 * chunkInitFragments
+	 * init fragments for the chunk, rendered with its render context
 	 */
-	chunkInitFragments: InitFragment<GenerateContext>[];
+	chunkInitFragments: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
 
 	/**
 	 * get access to the code generation data
@@ -7375,13 +8882,18 @@ declare abstract class DependencyTemplates {
 
 /**
  * Defines the destructuring assignment property type used by this module.
- * Carries only the range — consumers derive line/column via `getLocation`.
+ * Carries only the range - consumers derive line/column via `getLocation`.
  */
 declare interface DestructuringAssignmentProperty {
 	id: string;
 	range: [number, number];
 	pattern?: Set<DestructuringAssignmentProperty>;
 	shorthand: string | boolean;
+
+	/**
+	 * whether the key is a computed `[expression]` other than a literal
+	 */
+	computed?: boolean;
 }
 
 /**
@@ -7862,6 +9374,13 @@ declare class DynamicEntryPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Dependency for static evaluating import specifier. e.g.
+ */
+declare abstract class ESMEvaluatedImportSpecifierDependency extends ESMImportSpecifierDependency {
+	operator: string;
+}
 declare abstract class ESMExportImportedSpecifierDependency extends ESMImportDependency {
 	ids: string[];
 	name: null | string;
@@ -7979,6 +9498,40 @@ declare class ESMImportDependency extends ModuleDependency {
 		members: string[],
 		membersOptionals: boolean[]
 	) => string[];
+	static KINDS: Set<
+		| "worker"
+		| "css-import"
+		| "css-url"
+		| "entry"
+		| "url"
+		| "module-dependency"
+		| "esm-import"
+		| "provided"
+		| "dynamic-import"
+		| "esm-reexport"
+		| "esm-export-specifier"
+		| "esm-live-export"
+		| "esm-side-effect-import"
+		| "context-element"
+		| "esm-bare-side-effect-import"
+		| "esm-import-specifier"
+		| "esm-evaluated-import-specifier"
+		| "esm-compatibility"
+		| "commonjs-require"
+		| "commonjs-export-require"
+		| "html-source"
+		| "html-entry"
+		| "html-inline-style"
+		| "html-css-module"
+		| "webassembly-import"
+		| "webassembly-export-imported"
+		| "sharing-request"
+		| "local-module"
+		| "static-exports"
+		| "loader-import"
+		| "css-icss-import"
+		| "css-icss-export"
+	>;
 
 	/**
 	 * Compares two dependencies by source location for sorting a module's
@@ -8004,13 +9557,15 @@ declare class ESMImportDependency extends ModuleDependency {
 	 */
 	static canConcatenate(
 		dependency: Dependency,
-		concatenateCommonJsModules: boolean
+		concatenateCommonJsModules: boolean,
+		module?: null | Module
 	): boolean;
 	static TRANSITIVE: symbol;
-	static LAZY_UNTIL_LOCAL: "local";
-	static LAZY_UNTIL_ID: "id";
-	static LAZY_UNTIL_FALLBACK: "*";
-	static LAZY_UNTIL_REQUEST: "@";
+	static LAZY_LOCAL_EXPORT: "local";
+	static LAZY_NAMED_REEXPORT: "id";
+	static LAZY_STAR_REEXPORT: "*";
+	static LAZY_REEXPORT_SIDE_EFFECT: "@";
+	static LAZY_IMPORT_DECLARATION: "import";
 	static ESM_CATEGORY: "esm";
 }
 declare class ESMImportDependencyTemplate extends DependencyTemplate {
@@ -8027,6 +9582,49 @@ declare class ESMImportDependencyTemplate extends DependencyTemplate {
 declare abstract class ESMImportSideEffectDependency extends ESMImportDependency {
 	unusedSpecifiers?: UnusedSpecifiers;
 	namespaceSpecifiers?: string[];
+}
+declare abstract class ESMImportSpecifierDependency extends ESMImportDependency {
+	ids: string[];
+	name: string;
+	idRanges?: [number, number][];
+	exportPresenceMode: ExportPresenceMode;
+	namespaceObjectAsContext?: boolean;
+	call?: boolean;
+	directImport?: boolean;
+	shorthand?: string | boolean;
+	asiSafe?: boolean;
+	usedByExports?: boolean | Set<string>;
+	referencedPropertiesInDestructuring?: Set<DestructuringAssignmentProperty>;
+	branchGuards?: DependencyGuard[];
+	assignment?: boolean;
+
+	/**
+	 * Returns id.
+	 * @deprecated
+	 */
+	get id(): void;
+
+	/**
+	 * Returns id.
+	 * @deprecated
+	 */
+	getId(): void;
+
+	/**
+	 * Updates id.
+	 * @deprecated
+	 */
+	setId(): void;
+
+	/**
+	 * Returns the imported ids.
+	 */
+	getIds(moduleGraph: ModuleGraph): string[];
+
+	/**
+	 * Updates ids using the provided module graph.
+	 */
+	setIds(moduleGraph: ModuleGraph, ids: string[]): void;
 }
 
 /**
@@ -8105,7 +9703,12 @@ type Effect = EffectUse | EffectBasic;
  */
 declare interface EffectBasic {
 	type: string;
-	value: any;
+
+	/**
+	 * the rule's value of the setting the effect is named for
+	 */
+	value?:
+		string | boolean | ResolveOptionsWebpackOptions | { [index: string]: any };
 }
 
 /**
@@ -8135,8 +9738,9 @@ declare interface EffectUse {
 	type: EffectUseType;
 	value: {
 		loader: string;
-		options?: null | string | Record<string, any>;
+		options?: null | string | { [index: string]: any };
 		ident?: string;
+		sourceTest?: (value: string) => boolean;
 	};
 }
 type EffectUseType = "use" | "use-pre" | "use-post";
@@ -8200,7 +9804,7 @@ declare interface EmbeddedSourceInfo {
 	module: Module;
 
 	/**
-	 * which of that language's productions this is, where more than one can be embedded — a `style=""` holds `"block-contents"`, an inline `<style>` a whole `"stylesheet"`. Absent where the language has only one
+	 * which of that language's productions this is, where more than one can be embedded - a `style=""` holds `"block-contents"`, an inline `<style>` an `"embedded-stylesheet"`. Absent where the language has only one
 	 */
 	as?: string;
 }
@@ -8363,7 +9967,82 @@ declare interface EntryData {
 	 */
 	options: EntryOptions;
 }
-declare abstract class EntryDependency extends ModuleDependency {}
+declare class EntryDependency extends ModuleDependency {
+	/**
+	 * Creates an instance of EntryDependency.
+	 */
+	constructor(request: string);
+	static KINDS: Set<
+		| "worker"
+		| "css-import"
+		| "css-url"
+		| "entry"
+		| "url"
+		| "module-dependency"
+		| "esm-import"
+		| "provided"
+		| "dynamic-import"
+		| "esm-reexport"
+		| "esm-export-specifier"
+		| "esm-live-export"
+		| "esm-side-effect-import"
+		| "context-element"
+		| "esm-bare-side-effect-import"
+		| "esm-import-specifier"
+		| "esm-evaluated-import-specifier"
+		| "esm-compatibility"
+		| "commonjs-require"
+		| "commonjs-export-require"
+		| "html-source"
+		| "html-entry"
+		| "html-inline-style"
+		| "html-css-module"
+		| "webassembly-import"
+		| "webassembly-export-imported"
+		| "sharing-request"
+		| "local-module"
+		| "static-exports"
+		| "loader-import"
+		| "css-icss-import"
+		| "css-icss-export"
+	>;
+	static Template: typeof DependencyTemplate;
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
+	static NO_EXPORTS_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED_MANGLEABLE: string[][];
+
+	/**
+	 * Returns true if the dependency is a low priority dependency.
+	 */
+	static isLowPriorityDependency(dependency: Dependency): boolean;
+
+	/**
+	 * Returns true if the dependency can be concatenated (scope hoisting).
+	 */
+	static canConcatenate(
+		dependency: Dependency,
+		concatenateCommonJsModules: boolean,
+		module?: null | Module
+	): boolean;
+	static TRANSITIVE: symbol;
+	static LAZY_LOCAL_EXPORT: "local";
+	static LAZY_NAMED_REEXPORT: "id";
+	static LAZY_STAR_REEXPORT: "*";
+	static LAZY_REEXPORT_SIDE_EFFECT: "@";
+	static LAZY_IMPORT_DECLARATION: "import";
+	static ESM_CATEGORY: "esm";
+}
 
 /**
  * An object with entry point description.
@@ -8777,9 +10456,9 @@ declare class EnvironmentPlugin {
 	/**
 	 * Creates an instance of EnvironmentPlugin.
 	 */
-	constructor(...keys: (string | Record<string, any> | string[])[]);
+	constructor(...keys: (string | string[] | JsonObjectFs)[]);
 	keys: string[];
-	defaultValues: Record<string, any>;
+	defaultValues: JsonObjectFs;
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.
@@ -8787,6 +10466,213 @@ declare class EnvironmentPlugin {
 	apply(compiler: Compiler): void;
 }
 type ErrorWithDetail = Error & { details?: string };
+type EstreeInput =
+	| ImportDeclaration
+	| ExportNamedDeclaration
+	| ExportAllDeclaration
+	| ImportExpressionImport
+	| UnaryExpression
+	| ArrayExpression
+	| ArrowFunctionExpression
+	| AssignmentExpression
+	| AwaitExpression
+	| BinaryExpression
+	| SimpleCallExpression
+	| NewExpression
+	| ChainExpression
+	| ClassExpression
+	| ConditionalExpression
+	| FunctionExpression
+	| Identifier
+	| SimpleLiteral
+	| RegExpLiteral
+	| BigIntLiteral
+	| LogicalExpression
+	| MemberExpression
+	| MetaProperty
+	| ObjectExpression
+	| SequenceExpression
+	| TaggedTemplateExpression
+	| TemplateLiteral
+	| ThisExpression
+	| UpdateExpression
+	| YieldExpression
+	| SpreadElement
+	| PrivateIdentifier
+	| Super
+	| FunctionDeclaration
+	| VariableDeclaration
+	| ClassDeclaration
+	| ExpressionStatement
+	| BlockStatement
+	| StaticBlock
+	| EmptyStatement
+	| DebuggerStatement
+	| WithStatement
+	| ReturnStatement
+	| LabeledStatement
+	| BreakStatement
+	| ContinueStatement
+	| IfStatement
+	| SwitchStatement
+	| ThrowStatement
+	| TryStatement
+	| WhileStatement
+	| DoWhileStatement
+	| ForStatement
+	| ForInStatement
+	| ForOfStatement
+	| ExportDefaultDeclaration
+	| MethodDefinition
+	| PropertyDefinition
+	| VariableDeclarator
+	| Program
+	| AssignmentProperty
+	| Property
+	| CatchClause
+	| ClassBody
+	| ImportSpecifier
+	| ImportDefaultSpecifier
+	| ImportNamespaceSpecifier
+	| ExportSpecifier
+	| ObjectPattern
+	| ArrayPattern
+	| RestElement
+	| AssignmentPattern
+	| SwitchCase
+	| TemplateElement
+	| EstreeSource;
+
+/**
+ * A node `toEstreeObject` builds: ESTree's fields, with `range` read off its
+ * offsets on first access, as the parser's own nodes serve it.
+ */
+declare abstract class EstreeObject extends LazyLocNode {}
+
+/**
+ * What the objects `toEstreeObject` builds hold beside ESTree's fields, as
+ * acorn's options of the same names ask for them.
+ */
+declare interface EstreeObjectOptions {
+	/**
+	 * the edition whose fields they hold, by default the one the tree was read at
+	 */
+	ecmaVersion?:
+		| 3
+		| 5
+		| 6
+		| 7
+		| 8
+		| 9
+		| 10
+		| 11
+		| 12
+		| 13
+		| 14
+		| 15
+		| 16
+		| 17
+		| 2015
+		| 2016
+		| 2017
+		| 2018
+		| 2019
+		| 2020
+		| 2021
+		| 2022
+		| 2023
+		| 2024
+		| 2025
+		| 2026
+		| "latest";
+
+	/**
+	 * whether each holds an own `range`, its start and end offsets
+	 */
+	ranges?: boolean;
+
+	/**
+	 * whether each holds a `loc`, the line and column it starts and ends at
+	 */
+	locations?: boolean;
+
+	/**
+	 * the name each `loc` holds as its `source`
+	 */
+	sourceFile?: string;
+}
+
+/**
+ * a node the parser made, as `SyntaxTree#addEstree` reads it, its offsets from `start` and `end` or else `range`
+ */
+declare interface EstreeSource {
+	[index: string]:
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| { cooked?: null | string; raw: string }
+		| EstreeSource
+		| EstreeSourceItem[];
+	type: string;
+	start?: number;
+	end?: number;
+	range?: [number, number];
+}
+type EstreeSourceItem = null | number | EstreeSource;
+
+/**
+ * ESTree objects read the way a `SyntaxTree` is, `toEstreeObject`'s way back:
+ * an object takes an id when a read first reaches it, and nothing is copied.
+ * @experimental exposed through `webpack.javascript.syntax.parser`; unstable API
+ */
+declare class EstreeView {
+	constructor();
+	add(object: NodeEstreeIndex): number;
+	object(node: number): NodeEstreeIndex;
+
+	/**
+	 * Forgets every id, for the next read.
+	 */
+	reset(): void;
+
+	/**
+	 * Reads a statement as holding a directive its object does not mark, as
+	 * the tree's `setPart` does: another parser may leave `directive` off.
+	 */
+	markDirective(statement: NodeEstreeIndex, directive: string): void;
+	type(node: number): number;
+	start(node: number): number;
+	end(node: number): number;
+	range(node: number): [number, number];
+	name(node: number): string;
+	value(
+		node: number
+	):
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| { cooked?: null | string; raw: string };
+	fieldCount(field: number, node: number): number;
+	field(i: number, field: number, node: number): number;
+	flag(flag: number, node: number): boolean;
+	textOf(part: number, node: number): null | string;
+	legacyAssert(node: number): boolean;
+
+	/**
+	 * Pushes a node's children, holes left out, for a walk that reaches every
+	 * node without naming each type's fields: every property holding a node,
+	 * so a node type the tree has none for is walked into too.
+	 */
+	pushChildren(node: number, out: number[]): void;
+}
 
 /**
  * Cache validation token whose string representation identifies the build
@@ -9383,7 +11269,19 @@ declare interface ExportSpec {
 	inlined?: InlinedValue;
 }
 type ExportedVariableInfo = string | VariableInfo | ScopeInfo;
+type Exports = true | string[];
 declare abstract class ExportsInfo {
+	/**
+	 * Names the module's `export *` sources provide with conflicting bindings.
+	 * They resolve to no binding, and so does any `export *` of this module.
+	 */
+	get ambiguousExports(): ReadonlySet<string>;
+
+	/**
+	 * Records that a name is ambiguous among the module's `export *` sources.
+	 */
+	addAmbiguousExport(name: string): boolean;
+
 	/**
 	 * Records that an owned export got an inlined used name.
 	 */
@@ -9434,7 +11332,7 @@ declare abstract class ExportsInfo {
 	/**
 	 * Gets read only export info.
 	 */
-	getReadOnlyExportInfo(name: string): any;
+	getReadOnlyExportInfo(name: string): ExportInfo;
 
 	/**
 	 * Gets read only export info recursive.
@@ -9569,6 +11467,11 @@ declare interface ExportsSpec {
 	hideExports?: null | Set<string>;
 
 	/**
+	 * names whose `export *` sources provide conflicting bindings, so they resolve to no binding
+	 */
+	ambiguousExports?: Set<string>;
+
+	/**
 	 * when reexported: from which module
 	 */
 	from?: ModuleGraphConnection;
@@ -9625,7 +11528,7 @@ declare interface ExposesObject {
 	[index: string]: ExposesObjectValue;
 }
 type ExposesObjectValue = string | ExposesConfig | string[];
-type ExpressionEstreeIndex =
+type Expression =
 	| ImportExpressionImport
 	| UnaryExpression
 	| ArrayExpression
@@ -9661,38 +11564,6 @@ declare interface ExpressionExpressionInfo {
 	getMembersOptionals: () => boolean[];
 	getMemberRanges: () => [number, number][];
 }
-type ExpressionSyntaxParser =
-	| (ImportExpressionImport & NodeLike)
-	| (UnaryExpression & NodeLike)
-	| (ArrayExpression & NodeLike)
-	| (ArrowFunctionExpression & NodeLike)
-	| (AssignmentExpression & NodeLike)
-	| (AwaitExpression & NodeLike)
-	| (BinaryExpression & NodeLike)
-	| (SimpleCallExpression & NodeLike)
-	| (NewExpression & NodeLike)
-	| (ChainExpression & NodeLike)
-	| (ClassExpression & NodeLike)
-	| (ConditionalExpression & NodeLike)
-	| (FunctionExpression & NodeLike)
-	| (Identifier & NodeLike)
-	| (SimpleLiteral & NodeLike)
-	| (RegExpLiteral & NodeLike)
-	| (BigIntLiteral & NodeLike)
-	| (LogicalExpression & NodeLike)
-	| (MemberExpression & NodeLike)
-	| (MetaProperty & NodeLike)
-	| (ObjectExpression & NodeLike)
-	| (SequenceExpression & NodeLike)
-	| (TaggedTemplateExpression & NodeLike)
-	| (TemplateLiteral & NodeLike)
-	| (ThisExpression & NodeLike)
-	| (UpdateExpression & NodeLike)
-	| (YieldExpression & NodeLike)
-	| (NodeLike & {
-			type: "ParenthesizedExpression";
-			expression: ExpressionSyntaxParser;
-	  });
 type ExternalItem =
 	| string
 	| RegExp
@@ -9881,6 +11752,17 @@ declare class ExternalModule extends Module {
 		runtimeTemplate: RuntimeTemplate,
 		universal?: boolean
 	) => InitFragment<ChunkRenderContextJavascriptModulesPlugin>;
+	static KINDS: Set<
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
+	>;
 
 	/**
 	 * Gets source basic types.
@@ -9888,7 +11770,7 @@ declare class ExternalModule extends Module {
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
-type ExternalModuleBuildInfo = KnownBuildInfo &
+type ExternalModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
 	KnownExternalModuleBuildInfo;
 declare interface ExternalModuleInfo {
@@ -10185,14 +12067,6 @@ type ExternalsType =
 	| "asset-url"
 	| "css-import"
 	| "css-url";
-
-/**
- * Defines the fs implementation type used by this module.
- */
-declare interface FSImplementation {
-	open?: (...args: any[]) => any;
-	close?: (...args: any[]) => any;
-}
 
 /**
  * Defines the factorize module options type used by this module.
@@ -10577,13 +12451,6 @@ type FilterItemTypes = string | RegExp | ((value: string) => boolean);
 declare interface Flags {
 	[index: string]: Argument;
 }
-
-/**
- * terser's `format` options, defaulted
- */
-declare interface FormatOptions {
-	[index: string]: any;
-}
 declare interface FoundTargetItem {
 	module: Module;
 	connection: ModuleGraphConnection;
@@ -10593,12 +12460,6 @@ declare interface FoundTargetItem {
 declare interface FullHashChunkModuleHashes {
 	[index: string]: string;
 }
-type FunctionNode = NodeSyntaxParser & {
-	name: string;
-	nameStart: number;
-	nameEnd: number;
-	value: ComponentValue[];
-};
 
 /**
  * Defines the generate context type used by this module.
@@ -10680,37 +12541,37 @@ type GeneratedValue =
 	| Function
 	| RegExp
 	| PromiseLike<CodeValuePrimitive>;
-declare class Generator {
+declare class Generator<TModule extends NormalModule = NormalModule> {
 	constructor();
 
 	/**
 	 * Returns the source types available for this module.
 	 */
-	getTypes(module: NormalModule): ReadonlySet<string>;
+	getTypes(module: TModule): ReadonlySet<string>;
 	getTypesDependOnIncomingConnections(): boolean;
 
 	/**
 	 * Returns the estimated size for the requested source type.
 	 */
-	getSize(module: NormalModule, type?: string): number;
+	getSize(module: TModule, type?: string): number;
 
 	/**
 	 * Generates generated code for this runtime module.
 	 */
-	generate(module: NormalModule, __1: GenerateContext): null | Source;
+	generate(module: TModule, __1: GenerateContext): null | Source;
 
 	/**
 	 * Returns the reason this module cannot be concatenated, when one exists.
 	 */
 	getConcatenationBailoutReason(
-		module: NormalModule,
+		module: TModule,
 		context: ConcatenationBailoutReasonContext
 	): undefined | string;
 
 	/**
 	 * Updates the hash with the data contributed by this instance.
 	 */
-	updateHash(hash: Hash, __1: UpdateHashContextGenerator): void;
+	updateHash(hash: Hash, __1: UpdateHashContextGenerator<TModule>): void;
 
 	/**
 	 * Returns generator by type.
@@ -10878,6 +12739,17 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+	static KINDS: Set<
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
+	>;
 
 	/**
 	 * Gets source basic types.
@@ -10888,7 +12760,235 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 
 declare interface GetOptionsMethod<OptionsType> {
 	(): OptionsType;
-	(schema: Parameters<typeof validateFunction>[0]): OptionsType;
+	(
+		schema:
+			| (JSONSchema4 & ExtendedSchema)
+			| (JSONSchema6 & ExtendedSchema)
+			| (JSONSchema7 & ExtendedSchema)
+			| (() => Parameters<typeof validateFunction>[0]),
+		check?: PrecompiledCheck<OptionsType>
+	): OptionsType;
+	(
+		schema:
+			| (JSONSchema4 & ExtendedSchema)
+			| (JSONSchema6 & ExtendedSchema)
+			| (JSONSchema7 & ExtendedSchema)
+			| (() => Parameters<typeof validateFunction>[0]),
+		configuration?: ValidationErrorConfiguration,
+		check?: PrecompiledCheck<OptionsType>
+	): OptionsType;
+}
+type GivenCompressOptions = Omit<Partial<any>, "globalDefs"> & {
+	globalDefs?: false | object;
+} & TerserCompressAliases;
+
+/**
+ * terser's `format` options as a caller gives them; `sourceMap` is left out,
+ * as the minify writes it from the top-level `sourceMap` option.
+ */
+declare interface GivenFormatOptions {
+	code?: boolean;
+	ast?: boolean;
+
+	/**
+	 * which comments are kept
+	 */
+	comments?:
+		string | boolean | RegExp | ((node: any, comment: KeptComment) => boolean);
+
+	/**
+	 * which edition the output may use
+	 */
+	ecma?: number;
+
+	/**
+	 * whether the output works around that engine
+	 */
+	ie8?: boolean;
+
+	/**
+	 * whether the output works around that engine
+	 */
+	safari10?: boolean;
+
+	/**
+	 * whether the output is laid out to read, always false here
+	 */
+	beautify?: boolean;
+
+	/**
+	 * whether every body is braced, always false here
+	 */
+	braces?: boolean;
+
+	/**
+	 * how far a level indents, unread here
+	 */
+	indentLevel?: number;
+
+	/**
+	 * how far the output indents, unread here
+	 */
+	indentStart?: number;
+
+	/**
+	 * how long a line may be, unread here
+	 */
+	maxLineLen?: number | false;
+
+	/**
+	 * how wide a line may be, unread here
+	 */
+	width?: number;
+
+	/**
+	 * whether properties are written in shorthand, undefined until read from `ecma`
+	 */
+	shorthand?: boolean;
+
+	/**
+	 * whether only ASCII is written
+	 */
+	asciiOnly?: boolean;
+
+	/**
+	 * whether `</script` is escaped
+	 */
+	inlineScript?: boolean;
+
+	/**
+	 * whether numbers are written as read
+	 */
+	keepNumbers?: boolean;
+
+	/**
+	 * whether quoted keys stay quoted
+	 */
+	keepQuotedProps?: boolean;
+
+	/**
+	 * text written first
+	 */
+	preamble?: null | string;
+
+	/**
+	 * whether annotation comments are kept
+	 */
+	preserveAnnotations?: boolean;
+
+	/**
+	 * whether every key is quoted
+	 */
+	quoteKeys?: boolean;
+
+	/**
+	 * which quote strings are written with
+	 */
+	quoteStyle?: number;
+
+	/**
+	 * whether statements end in semicolons rather than line breaks
+	 */
+	semicolons?: boolean;
+
+	/**
+	 * whether a shebang is kept
+	 */
+	shebang?: boolean;
+
+	/**
+	 * whether the output works around that engine
+	 */
+	webkit?: boolean;
+
+	/**
+	 * whether an immediately called function is parenthesized
+	 */
+	wrapIife?: boolean;
+
+	/**
+	 * whether a function passed as an argument is parenthesized
+	 */
+	wrapFuncArgs?: boolean;
+
+	/**
+	 * terser's name for `asciiOnly`
+	 */
+	ascii_only?: boolean;
+
+	/**
+	 * terser's name for `indentLevel`
+	 */
+	indent_level?: number;
+
+	/**
+	 * terser's name for `indentStart`
+	 */
+	indent_start?: number;
+
+	/**
+	 * terser's name for `inlineScript`
+	 */
+	inline_script?: boolean;
+
+	/**
+	 * terser's name for `keepNumbers`
+	 */
+	keep_numbers?: boolean;
+
+	/**
+	 * terser's name for `keepQuotedProps`
+	 */
+	keep_quoted_props?: boolean;
+
+	/**
+	 * terser's name for `maxLineLen`
+	 */
+	max_line_len?: number | false;
+
+	/**
+	 * terser's name for `preserveAnnotations`
+	 */
+	preserve_annotations?: boolean;
+
+	/**
+	 * terser's name for `quoteKeys`
+	 */
+	quote_keys?: boolean;
+
+	/**
+	 * terser's name for `quoteStyle`
+	 */
+	quote_style?: number;
+
+	/**
+	 * terser's name for `wrapFuncArgs`
+	 */
+	wrap_func_args?: boolean;
+
+	/**
+	 * terser's name for `wrapIife`
+	 */
+	wrap_iife?: boolean;
+	spidermonkey?: boolean;
+}
+type GivenMangleOptions = Omit<Partial<any>, "properties"> & {
+	properties?: boolean | any;
+} & TerserMangleAliases;
+type GivenSourceMapOptions = Omit<Partial<any>, "content"> & {
+	content?:
+		null | string | object | RawSourceMap | DecodedSourceMap | IndexSourceMap;
+};
+
+/**
+ * Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
+ * @since 5.112.0
+ */
+declare interface GlobCondition {
+	/**
+	 * Glob patterns to match.
+	 */
+	glob: string | string[];
 }
 
 /**
@@ -10911,6 +13011,9 @@ declare interface GroupConfig<T, R> {
 	getOptions?: (name: string, items: T[]) => GroupOptionsSmartGrouping;
 	createGroup: (key: string, children: T[], items: T[]) => R;
 }
+declare interface GroupNames {
+	[index: string]: true | BranchID[];
+}
 type GroupOptionsAsyncDependenciesBlock = RawChunkGroupOptions & {
 	name?: null | string;
 } & { entryOptions?: EntryOptions } & { circular?: boolean };
@@ -10928,8 +13031,63 @@ declare interface GroupOptionsSmartGrouping {
  * per-branch guard frames pushed onto the parser state guard stack
  */
 declare interface GuardCollection {
-	consequent?: object;
-	alternate?: object;
+	consequent?: GuardFrame;
+	alternate?: GuardFrame;
+}
+type GuardFormula =
+	| ["v", Dependency]
+	| ["p", ESMEvaluatedImportSpecifierDependency]
+	| ["?"]
+	| ["!", GuardFormula]
+	| ["||" | "&&" | "??", GuardFormula, GuardFormula];
+
+/**
+ * A guard frame pushed onto `parser.state.guardStack` for the duration of one
+ * conditional branch body. Carries the `"x" in ns` presence guards and/or the
+ * dead-branch dependency guard for that branch.
+ */
+declare interface GuardFrame {
+	/**
+	 * the reader of `node`
+	 */
+	path?: JavascriptNodeReader;
+
+	/**
+	 * the conditional test (for the lazily built formula)
+	 */
+	node?: number;
+
+	/**
+	 * dependency count before the test was walked
+	 */
+	depStart?: number;
+
+	/**
+	 * branch truthiness the dependency guard is live for
+	 */
+	condition?: boolean;
+
+	/**
+	 * memoized dependency-guard formula (null = no knowable atom)
+	 */
+	formula?:
+		| null
+		| ["v", Dependency]
+		| ["p", ESMEvaluatedImportSpecifierDependency]
+		| ["?"]
+		| ["!", GuardFormula]
+		| ["||" | "&&" | "??", GuardFormula, GuardFormula];
+
+	/**
+	 * memoized presence formula (null = no presence atom)
+	 */
+	presenceFormula?:
+		| null
+		| ["v", Dependency]
+		| ["p", ESMEvaluatedImportSpecifierDependency]
+		| ["?"]
+		| ["!", GuardFormula]
+		| ["||" | "&&" | "??", GuardFormula, GuardFormula];
 }
 
 /**
@@ -10973,8 +13131,23 @@ declare interface HMRJavascriptParserHooks {
 		void
 	>;
 	hotAcceptWithoutCallback: SyncBailHook<[CallExpression, string[]], void>;
+
+	/**
+	 * `hotAcceptCallback` for a tap reading the callback by id
+	 */
+	hotAcceptCallbackByPath: SyncBailHook<
+		[JavascriptNodeReader, number, string[]],
+		void
+	>;
+
+	/**
+	 * `hotAcceptWithoutCallback` for a tap reading the call by id
+	 */
+	hotAcceptWithoutCallbackByPath: SyncBailHook<
+		[JavascriptNodeReader, number, string[]],
+		void
+	>;
 }
-declare const HOISTED_DECLARATIONS: unique symbol;
 
 /**
  * Defines the handle module creation options type used by this module.
@@ -11088,10 +13261,10 @@ declare interface HashedModuleIdsPluginOptions {
 	 */
 	hashFunction?: string | typeof Hash;
 }
-type Head<T extends ReadonlyArray<any>> = T extends readonly [infer H, ...any[]]
+type Head<T> = T extends readonly [infer H, ...infer _Rest]
 	? H
 	: T extends readonly []
-		? any
+		? never
 		: T extends readonly (infer E)[]
 			? E
 			: never;
@@ -11100,7 +13273,21 @@ type Head<T extends ReadonlyArray<any>> = T extends readonly [infer H, ...any[]]
  * Base class for runtime modules that only emit helper functions and do not
  * need special staging or attachment behavior beyond `RuntimeModule`.
  */
-declare abstract class HelperRuntimeModule extends RuntimeModule {}
+declare abstract class HelperRuntimeModule extends RuntimeModule {
+	/**
+	 * Whether a hot update can deliver this helper, which then runs outside the
+	 * bootstrap scope and reaches its state only through `__webpack_require__`.
+	 */
+	receivesHotUpdates(): boolean;
+}
+
+/**
+ * The hooks of a hook map by name, as a method calling them reads them: a map
+ * whose hooks also take `{ path: true }` taps is one too.
+ */
+declare interface HooksByName<T, R> {
+	get(key: string | symbol): undefined | SyncBailHook<T, R>;
+}
 declare class HotModuleReplacementPlugin {
 	constructor();
 
@@ -11113,6 +13300,17 @@ declare class HotModuleReplacementPlugin {
 	 * Returns the attached hooks.
 	 */
 	static getParserHooks(parser: JavascriptParser): HMRJavascriptParserHooks;
+
+	/**
+	 * Returns the hooks a compilation calls while it renders hot updates.
+	 */
+	static getCompilationHooks: (compilation: Compilation) => {
+		/**
+		 * Called for each hot update manifest before it is emitted; add a field for your own download handler, which gets the whole manifest.
+		 * @since 5.113.0
+		 */
+		updateManifest: SyncHook<[HotUpdateManifest, HotUpdateManifestContext]>;
+	};
 }
 declare interface HotModuleReplacementPluginLoaderContext {
 	hot?: boolean;
@@ -11122,13 +13320,57 @@ declare class HotUpdateChunk extends Chunk {
 }
 
 /**
+ * The CSS chunks a hot update removes (`r`) and loads (`l`), with the names (`n`) of the new ones.
+ */
+declare interface HotUpdateCssManifest {
+	r: ChunkId[];
+	l?: ChunkId[];
+	n?: Record<ChunkId, string>;
+}
+
+/**
+ * The manifest a runtime downloads first in a hot update; every download handler gets it
+ * whole, so a plugin adds a field here for its own handler. It is sent as JSON; the field stays open so a
+ * plugin's interface-typed value, which carries no index signature, still fits.
+ */
+declare interface HotUpdateManifest {
+	[index: string]: unknown;
+	c: ChunkId[];
+	r: ChunkId[];
+	m: ModuleId[];
+	f?: ChunkId[];
+	s?: ModuleId[];
+	css?: HotUpdateCssManifest;
+}
+
+/**
+ * What a plugin needs to fill its manifest field.
+ */
+declare interface HotUpdateManifestContext {
+	/**
+	 * the compilation
+	 */
+	compilation: Compilation;
+
+	/**
+	 * the updated chunks that are still in this build
+	 */
+	chunks: Chunk[];
+
+	/**
+	 * the chunks that joined one of the chunk's groups since the last build, which the runtime never loads on its own
+	 */
+	joinedSiblings: (chunk: Chunk) => Chunk[];
+}
+
+/**
  * Optional node kinds a consumer can drop from the AST for speed/memory. Each
- * is a pure output reduction — tree construction (and quirks detection) runs
+ * is a pure output reduction - tree construction (and quirks detection) runs
  * unchanged, so element structure and offsets are identical either way.
  */
 declare interface HtmlAstSkip {
 	/**
-	 * drop every `Text` node. Raw-text element bodies (`<script>`/`<style>`/…) aren't emitted either — their content span is recorded as the element's `contentEnd` (see `RAW_TEXT_ELEMENTS`) so a consumer can read `[tagEnd, contentEnd]` by offset. For consumers that read text by offset (e.g. `HtmlParser`), never the html5lib serializer.
+	 * drop every `Text` node. Raw-text element bodies (`<script>`/`<style>`/...) aren't emitted either - their content span is recorded as the element's `contentEnd` (see `RAW_TEXT_ELEMENTS`) so a consumer can read `[tagEnd, contentEnd]` by offset. For consumers that read text by offset (e.g. `HtmlParser`), never the html5lib serializer.
 	 */
 	text?: boolean;
 
@@ -11141,36 +13383,6 @@ declare interface HtmlAstSkip {
 	 * drop the doctype node; quirks-mode detection is unaffected.
 	 */
 	doctype?: boolean;
-}
-
-/**
- * A materialized attribute as returned by `A.attributes` (tests/tooling) —
- * the parser-facing representation is an id into the attribute columns, read
- * through the scalar `A.attr*` accessors.
- */
-declare interface HtmlAttribute {
-	/**
-	 * lowercased (and, in foreign content, adjusted) attribute name
-	 */
-	name: string;
-	value: string;
-
-	/**
-	 * name used by the html5lib tree serializer (foreign-namespaced)
-	 */
-	serializedName?: string;
-
-	/**
-	 * source offset, or -1 on adoption-agency clones
-	 */
-	nameStart: number;
-	nameEnd: number;
-
-	/**
-	 * source offset, or -1 when valueless / on clones
-	 */
-	valueStart: number;
-	valueEnd: number;
 }
 declare interface HtmlChunkNameData {
 	/**
@@ -11200,6 +13412,7 @@ declare interface HtmlChunkNameData {
 		| "script-module"
 		| "modulepreload";
 }
+type HtmlCssModulesAttributeKind = "fragment" | "ids" | "url" | "id" | "class";
 declare interface HtmlEmittedContext {
 	outputName: string;
 }
@@ -11246,7 +13459,7 @@ type HtmlFaviconIcon =
 			 */
 			type?: string;
 	  };
-declare abstract class HtmlGenerator extends Generator {
+declare abstract class HtmlGenerator extends Generator<HtmlNormalModule> {
 	options: HtmlGeneratorOptions;
 
 	/**
@@ -11271,7 +13484,7 @@ declare abstract class HtmlGenerator extends Generator {
 	 * Processes the provided module.
 	 */
 	sourceModule(
-		module: NormalModule,
+		module: HtmlNormalModule,
 		initFragments: InitFragment<GenerateContext>[],
 		source: ReplaceSource,
 		generateContext: GenerateContext
@@ -11282,7 +13495,7 @@ declare abstract class HtmlGenerator extends Generator {
 	 */
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: HtmlNormalModule,
 		generateContext: GenerateContext
 	): null | Source;
 }
@@ -11300,7 +13513,7 @@ declare interface HtmlInjectTagsContext {
 	outputName: string;
 	html: string;
 }
-type HtmlModuleBuildInfo = KnownBuildInfo &
+type HtmlModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo &
 	KnownHtmlModuleBuildInfo;
@@ -11314,7 +13527,7 @@ declare class HtmlModulesPlugin {
 
 	/**
 	 * `output.hashFunction`/`hashSalt`/`hashDigest`/`hashDigestLength`
-	 * digest of `content`, with `nonNumericOnlyHash` applied — webpack's
+	 * digest of `content`, with `nonNumericOnlyHash` applied - webpack's
 	 * standard `[contenthash]` recipe.
 	 */
 	static computeContentHash(
@@ -11324,7 +13537,7 @@ declare class HtmlModulesPlugin {
 
 	/**
 	 * Filename template for an extracted HTML page: `output.htmlFilename` for
-	 * initial chunks, `output.htmlChunkFilename` otherwise — the HTML counterpart
+	 * initial chunks, `output.htmlChunkFilename` otherwise - the HTML counterpart
 	 * of `CssModulesPlugin.getChunkFilenameTemplate`.
 	 */
 	static getChunkFilenameTemplate(
@@ -11342,7 +13555,7 @@ declare class HtmlModulesPlugin {
 	 */
 	static getCompilationHooks: (compilation: Compilation) => {
 		/**
-		 * Called with the list of extra tags to inject into each page (initially empty) plus the current HTML; push `HtmlTagDescriptor`s and return the list — webpack serializes and places them by `injectTo`. A structured alternative to the string-level `transformHtml` for adding tags; runs before CSP so injected inline tags are hashed.
+		 * Called with the list of extra tags to inject into each page (initially empty) plus the current HTML; push `HtmlTagDescriptor`s and return the list - webpack serializes and places them by `injectTo`. A structured alternative to the string-level `transformHtml` for adding tags; runs before CSP so injected inline tags are hashed.
 		 * @since 5.109.0
 		 */
 		injectTags: AsyncSeriesWaterfallHook<
@@ -11350,14 +13563,14 @@ declare class HtmlModulesPlugin {
 			HtmlTagDescriptor[]
 		>;
 		/**
-		 * Called with the page's `<script>`/`<link>`/`<style>`/`<meta>` tags (webpack's own and any injected) as mutable descriptors; mutate `attrs` (add a `nonce`/`data-*`, switch `defer`↔`async`, …), set `remove: true`, or change `injectTo` to move a tag between `<head>` and `<body>`, and webpack rewrites the changed tags. Add new tags with `injectTags` instead.
+		 * Called with the page's `<script>`/`<link>`/`<style>`/`<meta>` tags (webpack's own and any injected) as mutable descriptors; mutate `attrs` (add a `nonce`/`data-*`, switch `defer`<->`async`, ...), set `remove: true`, or change `injectTo` to move a tag between `<head>` and `<body>`, and webpack rewrites the changed tags. Add new tags with `injectTags` instead.
 		 * @since 5.109.0
 		 */
 		transformTags: AsyncSeriesHook<
 			[HtmlMutableTag[], HtmlTransformTagsContext]
 		>;
 		/**
-		 * Called with each emitted page's final HTML (all sentinels resolved) just before it is written; return the (possibly transformed) HTML — e.g. to minify, inject a CSP meta, or rewrite tags.
+		 * Called with each emitted page's final HTML (all sentinels resolved) just before it is written; return the (possibly transformed) HTML - e.g. to minify, inject a CSP meta, or rewrite tags.
 		 * @since 5.109.0
 		 */
 		transformHtml: AsyncSeriesWaterfallHook<
@@ -11365,7 +13578,7 @@ declare class HtmlModulesPlugin {
 			string
 		>;
 		/**
-		 * Called once each page's HTML asset has been finalized — a post-emit notification (nothing to return).
+		 * Called once each page's HTML asset has been finalized - a post-emit notification (nothing to return).
 		 * @since 5.109.0
 		 */
 		htmlEmitted: AsyncSeriesHook<[HtmlEmittedContext]>;
@@ -11398,11 +13611,179 @@ declare interface HtmlMutableTag {
 	 */
 	remove?: boolean;
 }
+type HtmlNodePath<T = number, S = unknown> = Omit<
+	HtmlSyntaxPath,
+	| "flag"
+	| "node"
+	| "fieldCount"
+	| "field"
+	| "textOf"
+	| "state"
+	| "within"
+	| "fieldNamed"
+	| "rangeOf"
+	| "startOf"
+	| "endOf"
+> & {
+	readonly node: TypedNode<number, T>;
+	readonly state: S;
+	within(type: HtmlNodeType): boolean;
+	field<R extends number = TypedNode<number, T>, F extends number = number>(
+		i: number,
+		field: F &
+			PartOf<
+				R,
+				{
+					"1": never;
+					"2": never;
+					"3": 1 | 2;
+					"4": never;
+					"5": never;
+					"6": never;
+					"7": never;
+					"8": never;
+				},
+				1 | 2
+			>,
+		n?: R
+	): TypedNode<number, { [index: number]: number; "1": 8; "2": 2 }[F]>;
+	fieldCount<R extends number = TypedNode<number, T>>(
+		field: PartOf<
+			R,
+			{
+				"1": never;
+				"2": never;
+				"3": 1 | 2;
+				"4": never;
+				"5": never;
+				"6": never;
+				"7": never;
+				"8": never;
+			},
+			1 | 2
+		>,
+		n?: R
+	): number;
+	fieldNamed<
+		R extends number = TypedNode<number, T>,
+		F extends number = number
+	>(
+		field: F &
+			PartOf<
+				R,
+				{
+					"1": never;
+					"2": never;
+					"3": 1 | 2;
+					"4": never;
+					"5": never;
+					"6": never;
+					"7": never;
+					"8": never;
+				},
+				1 | 2
+			>,
+		name: string,
+		n?: R
+	): TypedNode<number, { [index: number]: number; "1": 8; "2": 2 }[F]>;
+	flag<R extends number = TypedNode<number, T>>(
+		flag: PartOf<
+			R,
+			{
+				"1": never;
+				"2": never;
+				"3": 1 | 2 | 4;
+				"4": never;
+				"5": never;
+				"6": never;
+				"7": never;
+				"8": never;
+			},
+			1 | 2 | 4
+		>,
+		n?: R
+	): boolean;
+	rangeOf<R extends number = TypedNode<number, T>>(
+		part: PartOf<
+			R,
+			{
+				"1": never;
+				"2": never;
+				"3": 1 | 3 | 4 | 5;
+				"4": never;
+				"5": never;
+				"6": 6 | 7;
+				"7": never;
+				"8": 1 | 2;
+			},
+			1 | 2 | 3 | 4 | 5 | 6 | 7
+		>,
+		n?: R
+	): null | [number, number];
+	startOf<R extends number = TypedNode<number, T>>(
+		part: PartOf<
+			R,
+			{
+				"1": never;
+				"2": never;
+				"3": 1 | 3 | 4 | 5;
+				"4": never;
+				"5": never;
+				"6": 6 | 7;
+				"7": never;
+				"8": 1 | 2;
+			},
+			1 | 2 | 3 | 4 | 5 | 6 | 7
+		>,
+		n?: R
+	): number;
+	endOf<R extends number = TypedNode<number, T>>(
+		part: PartOf<
+			R,
+			{
+				"1": never;
+				"2": never;
+				"3": 1 | 3 | 4 | 5;
+				"4": never;
+				"5": never;
+				"6": 6 | 7;
+				"7": never;
+				"8": 1 | 2;
+			},
+			1 | 2 | 3 | 4 | 5 | 6 | 7
+		>,
+		n?: R
+	): number;
+	textOf<R extends number = TypedNode<number, T>>(
+		part: PartOf<
+			R,
+			{
+				"1": never;
+				"2": never;
+				"3": never;
+				"4": never;
+				"5": never;
+				"6": 6 | 7;
+				"7": never;
+				"8": never;
+			},
+			6 | 7
+		>,
+		n?: R
+	): null | string;
+};
+type HtmlNodeType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+type HtmlNormalModule = NormalModule & { buildInfo?: HtmlModuleBuildInfo };
 declare interface HtmlParseOptions {
 	/**
 	 * context element name for fragment parsing (e.g. `td`, `svg path`); omit for a full document
 	 */
 	fragmentContext?: string;
+
+	/**
+	 * parse as XML instead of applying the HTML tree-construction rules
+	 */
+	xml?: boolean;
 
 	/**
 	 * node kinds to omit from the AST (see `HtmlAstSkip`); omit to build the full tree
@@ -11413,8 +13794,24 @@ declare interface HtmlParseOptions {
 	 * parse as a browser with scripting on does, where a `noscript` holds raw text; off by default, so what it holds is read as markup
 	 */
 	scripting?: boolean;
+
+	/**
+	 * parse as an `<iframe srcdoc>` document, which is never in quirks mode whatever its doctype says
+	 */
+	srcdoc?: boolean;
+
+	/**
+	 * optional callback for each parse error of the tokenizer, as `HtmlTokenCallbacks#parseError` receives it, and of tree construction, named as html5lib names them since WHATWG names only one; those are `"warning"`
+	 */
+	parseError?: (
+		input: string,
+		code: string,
+		start: number,
+		end: number,
+		severity: ParseErrorSeverity
+	) => void;
 }
-declare abstract class HtmlParser extends Parser {
+declare abstract class HtmlParser extends Parser<BuiltHtmlModule> {
 	magicCommentContext: ContextImport;
 	template?: (source: string, context: HtmlTemplateContext) => string;
 	fragmentContext?: string;
@@ -11427,7 +13824,21 @@ declare abstract class HtmlParser extends Parser {
 	 * dependency offsets against it) and the generator (which renders from
 	 * `module.originalSource()`) stay in agreement.
 	 */
-	applyTemplate(source: string | Buffer, module: NormalModule): string | Buffer;
+	applyTemplate(
+		source: string | Buffer,
+		module: HtmlNormalModule
+	): string | Buffer;
+}
+
+/**
+ * How a page's CSS modules rewrite it.
+ * @since 5.113.0
+ */
+declare interface HtmlParserCssModules {
+	/**
+	 * Attributes whose values are rewritten with the page's CSS module names too, each with how its value names a class or an id, besides the built-in ones (`class`, `id`, `for`, `aria-labelledby`, `href="#id"`, `fill="url(#id)"`, `begin="id.click"`, ...); e.g. `{ "data-target": "id" }`.
+	 */
+	attributes?: { [index: string]: HtmlCssModulesAttributeKind };
 }
 
 /**
@@ -11447,7 +13858,19 @@ declare interface HtmlParserOptions {
 	chunkName?: string | ((data: HtmlChunkNameData) => string);
 
 	/**
-	 * Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `"..."` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
+	 * How a page's CSS modules — `<style module>` bodies and linked stylesheets that are CSS modules — rewrite it.
+	 * @since 5.113.0
+	 */
+	cssModules?: HtmlParserCssModules;
+
+	/**
+	 * Report each HTML parse error the page holds, by its WHATWG or html5lib name: a build error where end of input cuts a tag, comment or doctype short, a build warning for one the parser reads past. Off by default.
+	 * @since 5.113.0
+	 */
+	parseErrors?: boolean;
+
+	/**
+	 * Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `"..."` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed; one whose `lang` names another language is a `data:` module typed as that language's files (`<style lang="scss">` as `text/x-scss`, `<script lang="ts">` as `text/typescript`), and any other valid media-type name as `text/x-<lang>`, so a `mimetype` rule runs its loader. A `<style module>` body is a CSS module, and the page's `class` and `id` values, the ids its `for`, `form`, `list`, `headers`, `itemref`, `popovertarget`, `commandfor`, `interestfor` and `aria-*` reference attributes name, its same-page `href="#id"` links, SVG `url(#id)` references and SMIL `id.event` timings are rewritten with the names it and any linked stylesheet that is a CSS module declare (see `cssModules`); `<style module="card">` or `<link rel="stylesheet" module="card">` names a module, read as `card.btn`; a page with neither is left as it is. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
 	 */
 	sources?:
 		| boolean
@@ -11500,6 +13923,58 @@ declare interface HtmlParserOptions {
 }
 
 /**
+ * HTML's parts by node type, which type each visitor's path.
+ */
+declare interface HtmlParts {
+	types: HtmlNodeType;
+	field: 1 | 2;
+	flag: 1 | 2 | 4;
+	part: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+	text: 6 | 7;
+	fields: {
+		"1": never;
+		"2": never;
+		"3": 1 | 2;
+		"4": never;
+		"5": never;
+		"6": never;
+		"7": never;
+		"8": never;
+	};
+	flags: {
+		"1": never;
+		"2": never;
+		"3": 1 | 2 | 4;
+		"4": never;
+		"5": never;
+		"6": never;
+		"7": never;
+		"8": never;
+	};
+	parts: {
+		"1": never;
+		"2": never;
+		"3": 1 | 3 | 4 | 5;
+		"4": never;
+		"5": never;
+		"6": 6 | 7;
+		"7": never;
+		"8": 1 | 2;
+	};
+	texts: {
+		"1": never;
+		"2": never;
+		"3": never;
+		"4": never;
+		"5": never;
+		"6": 6 | 7;
+		"7": never;
+		"8": never;
+	};
+	items: { [index: number]: number; "1": 8; "2": 2 };
+}
+
+/**
  * What the HTML printer may be told, on top of the `mode` every language has:
  * `optimization.minimize.html`, and the renderer every nested body goes through.
  * `optimization.minimize.css` reaches inline CSS through `builtinEmbeddedRenderer`,
@@ -11512,9 +13987,21 @@ declare interface HtmlPrintOptions {
 	mergeScripts?: boolean;
 	removeEmptyAttributes?: boolean;
 	removeEmptyElements?: boolean;
+	removeSvgMetadata?: boolean;
+	removeSvgEditorData?: boolean;
+	removeUnusedSvgNamespaces?: boolean;
+	shortenSvgNumbers?: boolean;
+	shortenSvgColors?: boolean;
+	shortenSvgPathData?: boolean;
 	removeRedundantAttributes?: boolean | "all" | "smart";
 	sortAttributes?: boolean;
 	sortTokenLists?: boolean;
+	sortSvgSymbols?: boolean;
+	cleanupSvgStructure?: boolean;
+	mergeSvgPaths?: boolean;
+	reuseSvgPaths?: boolean;
+	sortSvgDefinitions?: boolean;
+	convertSvgShapes?: boolean;
 	removeImpliedTags?: boolean | "all" | "smart";
 	renderEmbeddedSource?: (
 		source: string,
@@ -11525,12 +14012,74 @@ declare interface HtmlPrintOptions {
 		offer: Omit<DeferredEmbeddedSource, "build">
 	) => undefined | string;
 	deferSrcdoc?: boolean;
+	xmlQuote?: '"' | "'";
 }
 declare interface HtmlProcessOptions {
 	/**
 	 * context element tag name for fragment parsing (see `parseHtml`); the HTML analog of the CSS parser's `as` parse-mode option
 	 */
 	fragmentContext?: string;
+
+	/**
+	 * parse as XML instead of applying the HTML tree-construction rules
+	 */
+	xml?: boolean;
+
+	/**
+	 * omit SVG metadata elements and their contents when minifying XML (default false)
+	 */
+	removeSvgMetadata?: boolean;
+
+	/**
+	 * omit known editor elements and attributes within SVG when minifying XML (default false)
+	 */
+	removeSvgEditorData?: boolean;
+
+	/**
+	 * omit unused prefixed namespace declarations within SVG when minifying XML (default false)
+	 */
+	removeUnusedSvgNamespaces?: boolean;
+
+	/**
+	 * offer opaque SVG presentation colors to the inline CSS renderer when minifying XML (default false)
+	 */
+	shortenSvgColors?: boolean;
+
+	/**
+	 * shorten SVG geometry and transform decimals, separators and redundant transform arguments without rounding, changing units or rewriting exponent notation when minifying XML (default false)
+	 */
+	shortenSvgNumbers?: boolean;
+
+	/**
+	 * compact SVG path numbers, repeated commands and separators without rounding or changing segments when minifying XML (default false)
+	 */
+	shortenSvgPathData?: boolean;
+
+	/**
+	 * parse as an `<iframe srcdoc>` document, which is never in quirks mode (see `parseHtml`)
+	 */
+	srcdoc?: boolean;
+
+	/**
+	 * parse a `noscript` as raw text, as a browser with scripting on does (see `parseHtml`); a print always does
+	 */
+	scripting?: boolean;
+
+	/**
+	 * optional callback for each parse error of the source, as `parseHtml` reports it
+	 */
+	parseError?: (
+		input: string,
+		code: string,
+		start: number,
+		end: number,
+		severity: ParseErrorSeverity
+	) => void;
+
+	/**
+	 * the quote an XML minifying print gives an attribute whose value costs the same in either (default `"`); `'` for a document bound for a `"`-quoted string, such as a CSS `url("data:...")`
+	 */
+	xmlQuote?: '"' | "'";
 
 	/**
 	 * node kinds to omit from the AST for speed/memory (see `HtmlAstSkip`)
@@ -11548,7 +14097,7 @@ declare interface HtmlProcessOptions {
 	transforms?: HtmlTransformOptions;
 
 	/**
-	 * collapse each run of whitespace in text to a single space, except where an ancestor renders it verbatim; `"smart"` also drops what sits against a block edge and `"all"` drops every edge (default false)
+	 * collapse each run of HTML whitespace in text to a single space, except where an ancestor renders it verbatim; `"smart"` also drops what sits against a block edge and `"all"` drops every edge. In XML, remove only whitespace-only text in known SVG containers, preserving text, foreign content and `xml:space` (default false)
 	 */
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
 
@@ -11558,7 +14107,7 @@ declare interface HtmlProcessOptions {
 	removeEmptyAttributes?: boolean;
 
 	/**
-	 * drop an element with no children and no attributes, unless its bare form is meaningful (default false)
+	 * drop an element with no children and no attributes where its bare form renders nothing and nothing reads it; in XML, only SVG g/defs containers with no non-namespace attributes or DTD constraints (default false)
 	 */
 	removeEmptyElements?: boolean;
 
@@ -11573,14 +14122,44 @@ declare interface HtmlProcessOptions {
 	mergeScripts?: boolean;
 
 	/**
-	 * print an element's attributes commonest name first, ties by name, which nothing in HTML reads (default false)
+	 * print an HTML or XML element's attributes commonest name first, ties by name (default false)
 	 */
 	sortAttributes?: boolean;
 
 	/**
-	 * print every token list the DOM reads as a set (`class`, `rel`, `part`, …) in token order (default false)
+	 * print every token list the DOM reads as a set (`class`, `rel`, `part`, ...) in token order (default false)
 	 */
 	sortTokenLists?: boolean;
+
+	/**
+	 * when minifying XML, reuse unidentified duplicate leaf paths through existing IDs, preserving target element types (default false)
+	 */
+	reuseSvgPaths?: boolean;
+
+	/**
+	 * when minifying XML, merge disjoint crisp axis-aligned paths with explicit opaque paint and disabled dashes and markers (default false)
+	 */
+	mergeSvgPaths?: boolean;
+
+	/**
+	 * when minifying XML, remove safe wrappers and redundant presentation values without IDs or document dependencies (default false)
+	 */
+	cleanupSvgStructure?: boolean;
+
+	/**
+	 * when minifying XML, sort adjacent resources inside defs by type and ID (default false)
+	 */
+	sortSvgDefinitions?: boolean;
+
+	/**
+	 * when minifying XML, convert leaf SVG lines, polylines and polygons to shorter paths, or equal-radius ellipses to circles, without rounding (default false)
+	 */
+	convertSvgShapes?: boolean;
+
+	/**
+	 * when minifying XML, sort adjacent SVG symbol definitions by ID, preserving IDs and references unless document dependencies can observe order (default false)
+	 */
+	sortSvgSymbols?: boolean;
 
 	/**
 	 * drop an attribute whose value is the element's own default; `true` is `"smart"`, and `"all"` also drops the spec defaults a selector can match, and with them a value naming no keyword where that says the same (default false)
@@ -11610,7 +14189,7 @@ declare interface HtmlProcessOptions {
 	deferEmbeddedSource?: DeferredEmbeddedSource[];
 
 	/**
-	 * renders each nested body this document embeds — an inline `<style>`, every `style=""` (as the block's contents it is, SVG's and MathML's included), a `<script>` holding JSON or JavaScript (with `as` naming which production of it the body is — `"module"` for a `<script type=module>`, `"script"` for a classic one), every event handler attribute, with `as: "event-handler"` saying it is a function body rather than a script — the production a `return` at its top level is in, which a renderer whose engine takes only whole scripts wraps before it reads — an `<svg>` subtree, and the document an `<iframe srcdoc>` holds (decoded, and written back escaped). The only way any of them is minified: webpack minifies nothing here itself, and `builtinEmbeddedRenderer` is its own CSS and JSON minifiers for a caller to pass; returning anything but text leaves a body as written
+	 * renders each nested body this document embeds - an inline `<style>` (with `as: "embedded-stylesheet"` saying it is read in this document's encoding rather than as a file of its own, so it declares no `@charset`; a `data:` URL's stylesheet is a file of its own, offered with no `as`), every `style=""` (as the block's contents it is, SVG's and MathML's included), a `<script>` holding JSON or JavaScript (with `as` naming which production of it the body is - `"module"` for a `<script type=module>`, `"script"` for a classic one), every event handler attribute, with `as: "event-handler"` saying it is a function body rather than a script - the production a `return` at its top level is in, which a renderer whose engine takes only whole scripts wraps before it reads - an `<svg>` subtree, with `as: "foreign-element"` saying it is an element of this document rather than a standalone `.svg`, and the document an `<iframe srcdoc>` holds (decoded, and written back escaped). The only way any of them is minified: webpack minifies nothing here itself, and `builtinEmbeddedRenderer` is its own CSS and JSON minifiers for a caller to pass; returning anything but text leaves a body as written
 	 */
 	renderEmbeddedSource?: (
 		source: string,
@@ -11655,7 +14234,7 @@ declare interface HtmlResourceHintHtmlEntryDependency {
 	type?: string;
 
 	/**
-	 * CORS mode (`true` → `anonymous`)
+	 * CORS mode (`true` -> `anonymous`)
 	 */
 	crossorigin?: boolean | "anonymous" | "use-credentials";
 
@@ -11735,82 +14314,20 @@ declare interface HtmlResourceHintWebpackOptions {
 
 /**
  * The generic visitor coordinator (`util/SourceProcessor`) bound to the HTML
- * `grammar`. Babel-style usage:
+ * `grammar`. Usage:
  * ```
  * new HtmlSourceProcessor().use({ [NodeType.Element]: (path) => {}, [NodeType.Comment]: { enter, exit } }).process(source, { skip });
  * ```
  * @experimental exposed as `webpack.html.syntax.SourceProcessor`; unstable API
  */
-declare class HtmlSourceProcessor extends SourceProcessor<
-	{
-		get node(): number;
-		get parent(): null | number;
-		/**
-		 * Stop the walk descending into the current node (enter only).
-		 */
-		skipChildren(): void;
-		type(n?: number): number;
-		start(n?: number): number;
-		end(n?: number): number;
-		/**
-		 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-		 * window), before `parseHtml` releases `_htmlSource`.
-		 */
-		source(n?: number): string;
-		sourceSpanAt(from: number, to: number): string;
-		tagName(n?: number): string;
-		namespace(n?: number): number;
-		selfClosing(n?: number): boolean;
-		attributes(n?: number): HtmlAttribute[];
-		attributeCount(n?: number): number;
-		/**
-		 * The i-th attribute of an element, as an id for the `attribute*` reads.
-		 */
-		attributeAt(i: number, n?: number): number;
-		/**
-		 * Linear lookup by (lowercased) name.
-		 */
-		findAttribute(name: string, n?: number): number;
-		attributeName(a: number): string;
-		attributeValue(a: number): string;
-		attributeNameStart(a: number): number;
-		attributeNameEnd(a: number): number;
-		attributeValueStart(a: number): number;
-		attributeValueEnd(a: number): number;
-		tagEnd(n?: number): number;
-		nameEnd(n?: number): number;
-		/**
-		 * Whether the source wrote this element's end tag rather than the parser
-		 * popping it for an implied close. Read back off the range instead of marked
-		 * during the parse: an element's end spans the token that closed it, so its
-		 * own end tag is the last thing in it — and only the few elements around a
-		 * region printed from source ever ask.
-		 */
-		sourceClosed(n?: number): boolean;
-		openTag(n?: number): string;
-		/**
-		 * An element's end tag, generated as `</name>` from the opening tag's own name
-		 * (exact source casing, correct for foreign camelCase elements). Generated, not
-		 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-		 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
-		 * parser inserted the element, as {@link openTag } does — it has no name in the
-		 * source to echo, and slicing one would spell `</>`.
-		 */
-		closeTag(n?: number): string;
-		contentEnd(n?: number): number;
-		templateContent(n?: number): number;
-		data(n?: number): string;
-		piTarget(n?: number): string;
-		doctypeName(n?: number): string;
-		doctypePublicId(_n?: number): null | string;
-		doctypeSystemId(_n?: number): null | string;
-		firstChild(n?: number): number;
-		nextSibling(n?: number): number;
-		parentOf(n?: number): number;
-		children(n?: number): number[];
-	},
+declare class HtmlSourceProcessor<TState = unknown> extends SourceProcessor<
+	HtmlSyntaxPath,
 	number,
-	HtmlProcessOptions
+	HtmlProcessOptions,
+	HtmlPrintOptions,
+	HtmlParts,
+	TState,
+	HtmlVisitorMap<TState>
 > {
 	constructor();
 	static PrintContext: typeof PrintContext;
@@ -11819,6 +14336,107 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		writes: DeferredWrite[]
 	) => string;
 	static deferredWrite: (id: number) => string;
+}
+
+/**
+ * The path every visitor of an HTML `SourceProcessor` run receives, its reads
+ * defaulting to the node the walk is at; outside a walk it is `A`, read by
+ * passing the node a parse returned. Every field a consumer reads goes through
+ * it, so the node representation can change underneath; `n` is an `HtmlNodeRef`,
+ * valid until the next `parseHtml`.
+ */
+declare abstract class HtmlSyntaxPath {
+	state: unknown;
+	get node(): number;
+	get parent(): null | number;
+
+	/**
+	 * Counted along the sibling links when asked, so the walk stores nothing for it.
+	 */
+	get index(): number;
+
+	/**
+	 * Stop the walk descending into the current node (enter only).
+	 */
+	skipChildren(): void;
+
+	/**
+	 * Stop the walk: no visitor fires after the current one returns.
+	 */
+	stop(): void;
+
+	/**
+	 * Walks the parent links, so a `<template>`'s content ends at its fragment.
+	 */
+	within(type: number): boolean;
+	type(n?: number): number;
+	range(n?: number): [number, number];
+	start(n?: number): number;
+	end(n?: number): number;
+
+	/**
+	 * Line / column are converted only when asked, by a converter made on the
+	 * first call of a parse. Valid during the walk, as {@link source} is.
+	 */
+	loc(n?: number): [number, number, number, number];
+
+	/**
+	 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
+	 */
+	source(n?: number, end?: number): string;
+
+	/**
+	 * An element's or attribute's name (lowercased, adjusted in foreign content),
+	 * a doctype's name, a processing instruction's target; "" for other nodes.
+	 */
+	name(n?: number): string;
+	fieldCount(field: number, n?: number): number;
+
+	/**
+	 * An attribute item is a node the shared reads take.
+	 */
+	field(i: number, field: number, n?: number): number;
+
+	/**
+	 * Attribute names are stored lowercased, so `name` is compared as written.
+	 */
+	fieldNamed(field: number, name: string, n?: number): number;
+	flag(flag: number, n?: number): boolean;
+
+	/**
+	 * A parser-inserted element has no name, tags or content in the source.
+	 */
+	rangeOf(part: number, n?: number): null | [number, number];
+	startOf(part: number, n?: number): number;
+	endOf(part: number, n?: number): number;
+
+	/**
+	 * Name and value are read with `name` and `value`; this reads a node's
+	 * other text, such as a doctype's identifiers, which are stored decoded.
+	 */
+	textOf(part: number, n?: number): null | string;
+
+	/**
+	 * A text's, comment's, processing instruction's or attribute's data,
+	 * character references decoded; "" for other nodes.
+	 */
+	value(n?: number): string;
+
+	/**
+	 * Counted along the sibling links once per node and visitor call.
+	 */
+	childCount(n?: number): number;
+
+	/**
+	 * Reached along the sibling links from the last child read under `n`, so a
+	 * loop over a node's children takes one step per child.
+	 */
+	child(i: number, n?: number): number;
+
+	/**
+	 * Every child as a new array, for a reader that keeps or searches them.
+	 */
+	children(n?: number): number[];
 }
 
 /**
@@ -11924,6 +14542,10 @@ declare interface HtmlTokenCallbacks {
 		dataStart: number,
 		dataEnd: number
 	) => number;
+
+	/**
+	 * `subsetStart` / `subsetEnd` delimit an XML internal subset (`tokenizeXml` only; -1 when absent)
+	 */
 	doctype?: (
 		input: string,
 		start: number,
@@ -11934,7 +14556,9 @@ declare interface HtmlTokenCallbacks {
 		publicEnd: number,
 		systemStart: number,
 		systemEnd: number,
-		forceQuirks: boolean
+		forceQuirks: boolean,
+		subsetStart?: number,
+		subsetEnd?: number
 	) => number;
 	parseError?: (
 		input: string,
@@ -12004,7 +14628,7 @@ declare interface HtmlTransformOptions {
 	normalizeNumericAttributes?: boolean;
 
 	/**
-	 * drop the whitespace around a URL value (`href`, `src`, `action`, …), which resolving the URL skips over
+	 * drop the whitespace around a URL value (`href`, `src`, `action`, ...), which resolving the URL skips over
 	 */
 	normalizeUrlAttributes?: boolean;
 
@@ -12016,6 +14640,56 @@ declare interface HtmlTransformOptions {
 declare interface HtmlTransformTagsContext {
 	outputName: string;
 	html: string;
+}
+declare interface HtmlVisitorMap<S = unknown> {
+	"1"?:
+		| VisitorFn<HtmlNodePath<1, S>>
+		| {
+				enter?: VisitorFn<HtmlNodePath<1, S>>;
+				exit?: VisitorFn<HtmlNodePath<1, S>>;
+		  };
+	"2"?:
+		| VisitorFn<HtmlNodePath<2, S>>
+		| {
+				enter?: VisitorFn<HtmlNodePath<2, S>>;
+				exit?: VisitorFn<HtmlNodePath<2, S>>;
+		  };
+	"3"?:
+		| VisitorFn<HtmlNodePath<3, S>>
+		| {
+				enter?: VisitorFn<HtmlNodePath<3, S>>;
+				exit?: VisitorFn<HtmlNodePath<3, S>>;
+		  };
+	"4"?:
+		| VisitorFn<HtmlNodePath<4, S>>
+		| {
+				enter?: VisitorFn<HtmlNodePath<4, S>>;
+				exit?: VisitorFn<HtmlNodePath<4, S>>;
+		  };
+	"5"?:
+		| VisitorFn<HtmlNodePath<5, S>>
+		| {
+				enter?: VisitorFn<HtmlNodePath<5, S>>;
+				exit?: VisitorFn<HtmlNodePath<5, S>>;
+		  };
+	"6"?:
+		| VisitorFn<HtmlNodePath<6, S>>
+		| {
+				enter?: VisitorFn<HtmlNodePath<6, S>>;
+				exit?: VisitorFn<HtmlNodePath<6, S>>;
+		  };
+	"7"?:
+		| VisitorFn<HtmlNodePath<7, S>>
+		| {
+				enter?: VisitorFn<HtmlNodePath<7, S>>;
+				exit?: VisitorFn<HtmlNodePath<7, S>>;
+		  };
+	"8"?:
+		| VisitorFn<HtmlNodePath<8, S>>
+		| {
+				enter?: VisitorFn<HtmlNodePath<8, S>>;
+				exit?: VisitorFn<HtmlNodePath<8, S>>;
+		  };
 }
 
 /**
@@ -12396,6 +15070,32 @@ declare interface IdToHashMap {
 	[index: number]: string;
 	[index: string]: string;
 }
+
+/**
+ * Where mangled names come from: the name for each number, and, for a source
+ * ordering its names by the characters printed, what counts them.
+ */
+declare interface IdentifierSource {
+	/**
+	 * the name for a number
+	 */
+	get: (n: number) => string;
+
+	/**
+	 * forgets what was counted
+	 */
+	reset?: () => void;
+
+	/**
+	 * counts the characters of printed text
+	 */
+	consider?: (chars: string, delta: number) => void;
+
+	/**
+	 * orders the names by what was counted
+	 */
+	sort?: () => void;
+}
 declare class IgnorePlugin {
 	/**
 	 * Creates an instance of IgnorePlugin.
@@ -12535,12 +15235,24 @@ declare interface ImportModuleOptions {
 }
 type ImportPhaseType = 0 | 1 | 2;
 declare interface ImportSettings {
-	references: string[][];
+	references: (string[] | ReferencedCall)[];
 	expression: ImportExpressionJavascriptParser;
 }
 type ImportSource =
 	undefined | null | string | SimpleLiteral | RegExpLiteral | BigIntLiteral;
 type Imported = true | [string, string][];
+
+/**
+ * a map made of sections, each a map of its own, or its JSON
+ */
+declare interface IndexSourceMap {
+	version: number;
+	file?: string;
+	sections: {
+		offset: { line: number; column: number };
+		map: string | RawSourceMap | DecodedSourceMap | IndexSourceMap;
+	}[];
+}
 
 /**
  * Options for infrastructure level logging.
@@ -12645,12 +15357,12 @@ declare class InitFragment<GenerateContext> {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(context: ObjectSerializerContextObjectMiddlewareObject_3): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_4): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_2): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_3): void;
 
 	/**
 	 * Adds the provided source to the init fragment.
@@ -12669,19 +15381,19 @@ declare class InitFragment<GenerateContext> {
 	static STAGE_ASYNC_ESM_IMPORTS: number;
 
 	/**
-	 * use `STAGE_ESM_EXPORTS` — TODO in the next major release: remove
+	 * use `STAGE_ESM_EXPORTS` - TODO in the next major release: remove
 	 * @deprecated
 	 */
 	static STAGE_HARMONY_EXPORTS: number;
 
 	/**
-	 * use `STAGE_ESM_IMPORTS` — TODO in the next major release: remove
+	 * use `STAGE_ESM_IMPORTS` - TODO in the next major release: remove
 	 * @deprecated
 	 */
 	static STAGE_HARMONY_IMPORTS: number;
 
 	/**
-	 * use `STAGE_ASYNC_ESM_IMPORTS` — TODO in the next major release: remove
+	 * use `STAGE_ASYNC_ESM_IMPORTS` - TODO in the next major release: remove
 	 * @deprecated
 	 */
 	static STAGE_ASYNC_HARMONY_IMPORTS: number;
@@ -12702,8 +15414,8 @@ declare abstract class InlinedValue {
 	renderLiteral(): string;
 	render(comment: string): string;
 	equals(other: InlinedValue): boolean;
-	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_3): void;
-	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_2): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_1): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 }
 type InlinedValueKind = "string" | "number" | "boolean" | "undefined" | "null";
 declare interface InnerGraphUtils {
@@ -12767,7 +15479,7 @@ declare interface InputFileSystem {
 	readJsonSync?: (pathOrFileDescriptor: PathOrFileDescriptorFs) => JsonObjectFs;
 	purge?: (
 		value?: string | string[] | Set<string>,
-		options?: { exact?: boolean }
+		options?: { exact?: boolean; readdirPrefix?: boolean }
 	) => void;
 	join?: (path1: string, path2: string) => string;
 	relative?: (from: string, to: string) => string;
@@ -12867,7 +15579,7 @@ declare interface IteratorObject<T, TReturn = unknown, TNext = unknown>
 	[Symbol.iterator](): IteratorObject<T, TReturn, TNext>;
 	[Symbol.dispose](): void;
 }
-declare abstract class JavascriptGenerator extends Generator {
+declare abstract class JavascriptGenerator extends Generator<JavascriptNormalModule> {
 	/**
 	 * Processes the provided dependency.
 	 */
@@ -12904,15 +15616,15 @@ declare abstract class JavascriptGenerator extends Generator {
 	 */
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: JavascriptNormalModule,
 		generateContext: GenerateContext
 	): null | Source;
 }
-type JavascriptModuleBuildInfo = KnownBuildInfo &
+type JavascriptModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo &
 	KnownJavascriptModuleBuildInfo;
-type JavascriptModuleBuildMeta = KnownBuildMeta &
+type JavascriptModuleBuildMeta = exports.KnownBuildMeta &
 	Record<string, any> &
 	KnownJavascriptModuleBuildMeta;
 declare class JavascriptModulesPlugin {
@@ -13486,612 +16198,20 @@ declare class JavascriptModulesPlugin {
 	};
 	static chunkHasJs: (chunk: Chunk, chunkGraph: ChunkGraph) => boolean;
 }
-declare class JavascriptParser extends Parser {
+
+/**
+ * What a `{ path: true }` tap reads nodes through: the node ids it is handed,
+ * read as the CSS and HTML paths read theirs.
+ */
+declare interface JavascriptNodeReader {
 	/**
-	 * Creates an instance of JavascriptParser.
+	 * A node's ESTree object, as `estree` makes it: a path's way to an object
+	 * for code that still reads one, as `EstreeView#object` is the view's.
 	 */
-	constructor(
-		sourceType?: "module" | "auto" | "script",
-		options?: {
-			parse?: (
-				code: string,
-				options: ParseOptionsJavascriptParser
-			) => ParseResult;
-			typescript?: boolean;
-			importPhases?: boolean;
-			strictModeViolations?: false | "error" | "warn";
-		}
-	);
-	hooks: Readonly<{
-		evaluateTypeof: HookMap<
-			SyncBailHook<
-				[UnaryExpression],
-				undefined | null | BasicEvaluatedExpression
-			>
-		>;
-		evaluate: HookMap<
-			SyncBailHook<
-				[
-					| ImportExpressionImport
-					| UnaryExpression
-					| ArrayExpression
-					| ArrowFunctionExpression
-					| AssignmentExpression
-					| AwaitExpression
-					| BinaryExpression
-					| SimpleCallExpression
-					| NewExpression
-					| ChainExpression
-					| ClassExpression
-					| ConditionalExpression
-					| FunctionExpression
-					| Identifier
-					| SimpleLiteral
-					| RegExpLiteral
-					| BigIntLiteral
-					| LogicalExpression
-					| MemberExpression
-					| MetaProperty
-					| ObjectExpression
-					| SequenceExpression
-					| TaggedTemplateExpression
-					| TemplateLiteral
-					| ThisExpression
-					| UpdateExpression
-					| YieldExpression
-					| SpreadElement
-					| PrivateIdentifier
-					| Super
-				],
-				undefined | null | BasicEvaluatedExpression
-			>
-		>;
-		evaluateIdentifier: HookMap<
-			SyncBailHook<
-				[Identifier | MemberExpression | MetaProperty | ThisExpression],
-				undefined | null | BasicEvaluatedExpression
-			>
-		>;
-		evaluateDefinedIdentifier: HookMap<
-			SyncBailHook<
-				[Identifier | MemberExpression | ThisExpression],
-				undefined | null | BasicEvaluatedExpression
-			>
-		>;
-		/**
-		 * @since 5.73.0
-		 */
-		evaluateNewExpression: HookMap<
-			SyncBailHook<[NewExpression], undefined | null | BasicEvaluatedExpression>
-		>;
-		/**
-		 * @since 5.73.0
-		 */
-		evaluateCallExpression: HookMap<
-			SyncBailHook<
-				[CallExpression],
-				undefined | null | BasicEvaluatedExpression
-			>
-		>;
-		evaluateCallExpressionMember: HookMap<
-			SyncBailHook<
-				[CallExpression, BasicEvaluatedExpression],
-				undefined | null | BasicEvaluatedExpression
-			>
-		>;
-		isPure: HookMap<
-			SyncBailHook<
-				[
-					(
-						| ImportExpressionImport
-						| UnaryExpression
-						| ArrayExpression
-						| ArrowFunctionExpression
-						| AssignmentExpression
-						| AwaitExpression
-						| BinaryExpression
-						| SimpleCallExpression
-						| NewExpression
-						| ChainExpression
-						| ClassExpression
-						| ConditionalExpression
-						| FunctionExpression
-						| Identifier
-						| SimpleLiteral
-						| RegExpLiteral
-						| BigIntLiteral
-						| LogicalExpression
-						| MemberExpression
-						| MetaProperty
-						| ObjectExpression
-						| SequenceExpression
-						| TaggedTemplateExpression
-						| TemplateLiteral
-						| ThisExpression
-						| UpdateExpression
-						| YieldExpression
-						| PrivateIdentifier
-						| FunctionDeclaration
-						| MaybeNamedFunctionDeclaration
-						| VariableDeclaration
-						| ClassDeclaration
-						| MaybeNamedClassDeclaration
-					),
-					number
-				],
-				boolean | void
-			>
-		>;
-		/**
-		 * Every statement the hoisting pass reads, which a tap on this turns
-		 * back into a walk of them all. Tap `preStatementByType` instead.
-		 * @deprecated TODO in the next major release: remove, with the statement walk it turns on
-		 */
-		preStatement: SyncBailHook<
-			[
-				| ImportDeclaration
-				| ExportNamedDeclaration
-				| ExportAllDeclaration
-				| FunctionDeclaration
-				| MaybeNamedFunctionDeclaration
-				| VariableDeclaration
-				| ClassDeclaration
-				| MaybeNamedClassDeclaration
-				| ExpressionStatement
-				| BlockStatement
-				| StaticBlock
-				| EmptyStatement
-				| DebuggerStatement
-				| WithStatement
-				| ReturnStatement
-				| LabeledStatement
-				| BreakStatement
-				| ContinueStatement
-				| IfStatement
-				| SwitchStatement
-				| ThrowStatement
-				| TryStatement
-				| WhileStatement
-				| DoWhileStatement
-				| ForStatement
-				| ForInStatement
-				| ForOfStatement
-				| ExportDefaultDeclaration
-			],
-			boolean | void
-		>;
-		/**
-		 * Each declaration the parser records: a variable, function or class
-		 * one. Any other type turns the pass back into a walk of every
-		 * statement, and goes away with that walk in the next major release.
-		 * @since 5.109.0
-		 */
-		preStatementByType: HookMap<
-			SyncBailHook<
-				[
-					| ImportDeclaration
-					| ExportNamedDeclaration
-					| ExportAllDeclaration
-					| FunctionDeclaration
-					| MaybeNamedFunctionDeclaration
-					| VariableDeclaration
-					| ClassDeclaration
-					| MaybeNamedClassDeclaration
-					| ExpressionStatement
-					| BlockStatement
-					| StaticBlock
-					| EmptyStatement
-					| DebuggerStatement
-					| WithStatement
-					| ReturnStatement
-					| LabeledStatement
-					| BreakStatement
-					| ContinueStatement
-					| IfStatement
-					| SwitchStatement
-					| ThrowStatement
-					| TryStatement
-					| WhileStatement
-					| DoWhileStatement
-					| ForStatement
-					| ForInStatement
-					| ForOfStatement
-					| ExportDefaultDeclaration
-				],
-				boolean | void
-			>
-		>;
-		/**
-		 * Every statement the block pass reads, which a tap on this turns back
-		 * into a walk of them all. Tap `blockPreStatementByType` instead.
-		 * @deprecated TODO in the next major release: remove, with the statement walk it turns on
-		 */
-		blockPreStatement: SyncBailHook<
-			[
-				| ImportDeclaration
-				| ExportNamedDeclaration
-				| ExportAllDeclaration
-				| FunctionDeclaration
-				| MaybeNamedFunctionDeclaration
-				| VariableDeclaration
-				| ClassDeclaration
-				| MaybeNamedClassDeclaration
-				| ExpressionStatement
-				| BlockStatement
-				| StaticBlock
-				| EmptyStatement
-				| DebuggerStatement
-				| WithStatement
-				| ReturnStatement
-				| LabeledStatement
-				| BreakStatement
-				| ContinueStatement
-				| IfStatement
-				| SwitchStatement
-				| ThrowStatement
-				| TryStatement
-				| WhileStatement
-				| DoWhileStatement
-				| ForStatement
-				| ForInStatement
-				| ForOfStatement
-				| ExportDefaultDeclaration
-			],
-			boolean | void
-		>;
-		/**
-		 * Each statement the parser records for the block pass: a variable, class
-		 * or export declaration. Any other type turns the pass back into a walk
-		 * of every statement, and goes away with that walk in the next major release.
-		 * @since 5.109.0
-		 */
-		blockPreStatementByType: HookMap<
-			SyncBailHook<
-				[
-					| ImportDeclaration
-					| ExportNamedDeclaration
-					| ExportAllDeclaration
-					| FunctionDeclaration
-					| MaybeNamedFunctionDeclaration
-					| VariableDeclaration
-					| ClassDeclaration
-					| MaybeNamedClassDeclaration
-					| ExpressionStatement
-					| BlockStatement
-					| StaticBlock
-					| EmptyStatement
-					| DebuggerStatement
-					| WithStatement
-					| ReturnStatement
-					| LabeledStatement
-					| BreakStatement
-					| ContinueStatement
-					| IfStatement
-					| SwitchStatement
-					| ThrowStatement
-					| TryStatement
-					| WhileStatement
-					| DoWhileStatement
-					| ForStatement
-					| ForInStatement
-					| ForOfStatement
-					| ExportDefaultDeclaration
-				],
-				boolean | void
-			>
-		>;
-		statement: SyncBailHook<
-			[
-				| ImportDeclaration
-				| ExportNamedDeclaration
-				| ExportAllDeclaration
-				| FunctionDeclaration
-				| MaybeNamedFunctionDeclaration
-				| VariableDeclaration
-				| ClassDeclaration
-				| MaybeNamedClassDeclaration
-				| ExpressionStatement
-				| BlockStatement
-				| StaticBlock
-				| EmptyStatement
-				| DebuggerStatement
-				| WithStatement
-				| ReturnStatement
-				| LabeledStatement
-				| BreakStatement
-				| ContinueStatement
-				| IfStatement
-				| SwitchStatement
-				| ThrowStatement
-				| TryStatement
-				| WhileStatement
-				| DoWhileStatement
-				| ForStatement
-				| ForInStatement
-				| ForOfStatement
-				| ExportDefaultDeclaration
-			],
-			boolean | void
-		>;
-		statementIf: SyncBailHook<[IfStatement], boolean | void>;
-		/**
-		 * @since 5.105.0
-		 */
-		collectGuards: SyncBailHook<
-			[ExpressionEstreeIndex],
-			void | GuardCollection
-		>;
-		classExtendsExpression: SyncBailHook<
-			[
-				ExpressionEstreeIndex,
-				ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
-			],
-			boolean | void
-		>;
-		classBodyElement: SyncBailHook<
-			[
-				StaticBlock | MethodDefinition | PropertyDefinition,
-				ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
-			],
-			boolean | void
-		>;
-		/**
-		 * @since 5.36.0
-		 */
-		classBodyValue: SyncBailHook<
-			[
-				ExpressionEstreeIndex,
-				MethodDefinition | PropertyDefinition,
-				ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
-			],
-			boolean | void
-		>;
-		label: HookMap<SyncBailHook<[LabeledStatement], boolean | void>>;
-		import: SyncBailHook<[ImportDeclaration, ImportSource], boolean | void>;
-		importSpecifier: SyncBailHook<
-			[ImportDeclaration, ImportSource, null | string, string],
-			boolean | void
-		>;
-		export: SyncBailHook<
-			[ExportNamedDeclaration | ExportDefaultDeclaration],
-			boolean | void
-		>;
-		exportImport: SyncBailHook<
-			[ExportNamedDeclaration | ExportAllDeclaration, ImportSource],
-			boolean | void
-		>;
-		exportDeclaration: SyncBailHook<
-			[
-				(
-					| ExportNamedDeclaration
-					| ExportAllDeclaration
-					| ExportDefaultDeclaration
-				),
-				DeclarationEstreeIndex
-			],
-			boolean | void
-		>;
-		exportExpression: SyncBailHook<
-			[
-				ExportDefaultDeclaration,
-				(
-					| ImportExpressionImport
-					| UnaryExpression
-					| ArrayExpression
-					| ArrowFunctionExpression
-					| AssignmentExpression
-					| AwaitExpression
-					| BinaryExpression
-					| SimpleCallExpression
-					| NewExpression
-					| ChainExpression
-					| ClassExpression
-					| ConditionalExpression
-					| FunctionExpression
-					| Identifier
-					| SimpleLiteral
-					| RegExpLiteral
-					| BigIntLiteral
-					| LogicalExpression
-					| MemberExpression
-					| MetaProperty
-					| ObjectExpression
-					| SequenceExpression
-					| TaggedTemplateExpression
-					| TemplateLiteral
-					| ThisExpression
-					| UpdateExpression
-					| YieldExpression
-					| MaybeNamedFunctionDeclaration
-					| MaybeNamedClassDeclaration
-				)
-			],
-			boolean | void
-		>;
-		exportSpecifier: SyncBailHook<
-			[
-				(
-					| ExportNamedDeclaration
-					| ExportAllDeclaration
-					| ExportDefaultDeclaration
-				),
-				string,
-				string,
-				undefined | number
-			],
-			boolean | void
-		>;
-		exportImportSpecifier: SyncBailHook<
-			[
-				ExportNamedDeclaration | ExportAllDeclaration,
-				ImportSource,
-				null | string,
-				null | string,
-				undefined | number
-			],
-			boolean | void
-		>;
-		preDeclarator: SyncBailHook<
-			[VariableDeclarator, VariableDeclaration],
-			boolean | void
-		>;
-		declarator: SyncBailHook<[VariableDeclarator, Statement], boolean | void>;
-		varDeclaration: HookMap<SyncBailHook<[Identifier], boolean | void>>;
-		varDeclarationLet: HookMap<SyncBailHook<[Identifier], boolean | void>>;
-		varDeclarationConst: HookMap<SyncBailHook<[Identifier], boolean | void>>;
-		/**
-		 * @since 5.100.0
-		 */
-		varDeclarationUsing: HookMap<SyncBailHook<[Identifier], boolean | void>>;
-		varDeclarationVar: HookMap<SyncBailHook<[Identifier], boolean | void>>;
-		pattern: HookMap<SyncBailHook<[Identifier], boolean | void>>;
-		/**
-		 * @since 5.101.3
-		 */
-		collectDestructuringAssignmentProperties: SyncBailHook<
-			[ExpressionEstreeIndex],
-			boolean | void
-		>;
-		canRename: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
-		rename: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
-		assign: HookMap<SyncBailHook<[AssignmentExpression], boolean | void>>;
-		write: HookMap<SyncBailHook<[WriteStatement], boolean | void>>;
-		writeMemberChain: HookMap<
-			SyncBailHook<[WriteStatement, string[]], boolean | void>
-		>;
-		assignMemberChain: HookMap<
-			SyncBailHook<[AssignmentExpression, string[]], boolean | void>
-		>;
-		typeof: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
-		importCall: SyncBailHook<
-			[
-				ImportExpressionJavascriptParser,
-				undefined | SimpleCallExpression | NewExpression
-			],
-			boolean | void
-		>;
-		topLevelAwait: SyncBailHook<
-			[
-				| ImportExpressionImport
-				| UnaryExpression
-				| ArrayExpression
-				| ArrowFunctionExpression
-				| AssignmentExpression
-				| AwaitExpression
-				| BinaryExpression
-				| SimpleCallExpression
-				| NewExpression
-				| ChainExpression
-				| ClassExpression
-				| ConditionalExpression
-				| FunctionExpression
-				| Identifier
-				| SimpleLiteral
-				| RegExpLiteral
-				| BigIntLiteral
-				| LogicalExpression
-				| MemberExpression
-				| MetaProperty
-				| ObjectExpression
-				| SequenceExpression
-				| TaggedTemplateExpression
-				| TemplateLiteral
-				| ThisExpression
-				| UpdateExpression
-				| YieldExpression
-				| VariableDeclaration
-				| ForOfStatement
-			],
-			boolean | void
-		>;
-		call: HookMap<SyncBailHook<[CallExpression], boolean | void>>;
-		callMemberChain: HookMap<
-			SyncBailHook<
-				[CallExpression, string[], boolean[], [number, number][]],
-				boolean | void
-			>
-		>;
-		memberChainOfCallMemberChain: HookMap<
-			SyncBailHook<
-				[
-					ExpressionEstreeIndex,
-					string[],
-					CallExpression,
-					string[],
-					[number, number][]
-				],
-				boolean | void
-			>
-		>;
-		callMemberChainOfCallMemberChain: HookMap<
-			SyncBailHook<
-				[
-					CallExpression,
-					string[],
-					CallExpression,
-					string[],
-					[number, number][]
-				],
-				boolean | void
-			>
-		>;
-		optionalChaining: SyncBailHook<[ChainExpression], boolean | void>;
-		new: HookMap<SyncBailHook<[NewExpression], boolean | void>>;
-		/**
-		 * @since 5.71.0
-		 */
-		binaryExpression: SyncBailHook<[BinaryExpression], boolean | void>;
-		expression: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
-		expressionMemberChain: HookMap<
-			SyncBailHook<
-				[MemberExpression, string[], boolean[], [number, number][]],
-				boolean | void
-			>
-		>;
-		unhandledExpressionMemberChain: HookMap<
-			SyncBailHook<[MemberExpression, string[]], boolean | void>
-		>;
-		expressionConditionalOperator: SyncBailHook<
-			[ConditionalExpression],
-			boolean | void
-		>;
-		expressionLogicalOperator: SyncBailHook<
-			[LogicalExpression],
-			boolean | void
-		>;
-		program: SyncBailHook<
-			[ProgramImport, CommentJavascriptParser[]],
-			boolean | void
-		>;
-		/**
-		 * @since 5.99.0
-		 */
-		terminate: SyncBailHook<[ReturnStatement | ThrowStatement], boolean | void>;
-		finish: SyncBailHook<
-			[ProgramImport, CommentJavascriptParser[]],
-			boolean | void
-		>;
-		/**
-		 * @since 5.99.9
-		 */
-		unusedStatement: SyncBailHook<[Statement], boolean | void>;
-	}>;
-	sourceType: "module" | "auto" | "script";
-	options: {
-		parse?: (
-			code: string,
-			options: ParseOptionsJavascriptParser
-		) => ParseResult;
-		typescript?: boolean;
-		importPhases?: boolean;
-		strictModeViolations?: false | "error" | "warn";
-	};
-	scope: ScopeInfo;
-	state: JavascriptParserState;
-	comments?: CommentJavascriptParser[];
-	semicolons?: Map<number, boolean>;
-	statementPath?: StatementPathItem[];
-	prevStatement?:
+	object: (
+		node: number
+	) =>
+		| null
 		| ImportDeclaration
 		| ExportNamedDeclaration
 		| ExportAllDeclaration
@@ -14122,11 +16242,12 @@ declare class JavascriptParser extends Parser {
 		| ThisExpression
 		| UpdateExpression
 		| YieldExpression
+		| SpreadElement
+		| PrivateIdentifier
+		| Super
 		| FunctionDeclaration
-		| MaybeNamedFunctionDeclaration
 		| VariableDeclaration
 		| ClassDeclaration
-		| MaybeNamedClassDeclaration
 		| ExpressionStatement
 		| BlockStatement
 		| StaticBlock
@@ -14146,17 +16267,853 @@ declare class JavascriptParser extends Parser {
 		| ForStatement
 		| ForInStatement
 		| ForOfStatement
-		| ExportDefaultDeclaration;
+		| ExportDefaultDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| Program
+		| AssignmentProperty
+		| Property
+		| CatchClause
+		| ClassBody
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
+	name: (node: number) => string;
+	flag: (flag: number, node: number) => boolean;
+	type: (node: number) => number;
+	start: (node: number) => number;
+	end: (node: number) => number;
+	range: (node: number) => [number, number];
+	value: (
+		node: number
+	) =>
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| { cooked?: null | string; raw: string };
+	fieldCount: (field: number, node: number) => number;
+	field: (i: number, field: number, node: number) => number;
+	textOf: (part: number, node: number) => null | string;
+	legacyAssert: (node: number) => boolean;
+
+	/**
+	 * Where the text reads `<!--` as `<`, `!` and `--`, as only a module does;
+	 * a script, the source's text set in one, would read a comment from there.
+	 */
+	htmlOpensAsOperators: () => ReadonlyArray<number>;
+
+	/**
+	 * Pushes a node's children in its fields' order, holes left out, for a
+	 * walk that reaches every node without naming each type's fields.
+	 */
+	pushChildren: (node: number, out: number[]) => void;
+}
+type JavascriptNormalModule = NormalModule & {
+	buildInfo?: JavascriptModuleBuildInfo;
+	buildMeta?: JavascriptModuleBuildMeta;
+};
+declare interface JavascriptParseOptions {
+	/**
+	 * what the source is: a module (the default), a script, a function's body, a CommonJS module's or an event handler's, or `auto`
+	 */
+	sourceType?: "module" | "commonjs" | "auto" | "script" | "event-handler";
+
+	/**
+	 * the edition to read the source as, the latest by default
+	 */
+	ecmaVersion?:
+		| 3
+		| 5
+		| 6
+		| 7
+		| 8
+		| 9
+		| 10
+		| 11
+		| 12
+		| 13
+		| 14
+		| 15
+		| 16
+		| 17
+		| 2015
+		| 2016
+		| 2017
+		| 2018
+		| 2019
+		| 2020
+		| 2021
+		| 2022
+		| 2023
+		| 2024
+		| 2025
+		| 2026
+		| "latest";
+
+	/**
+	 * optional callback for each parse error, with the CSS and HTML parsers' signature and Babel's `reasonCode` kebab-cased as `code`; `severity` is `"error"` for one that stops the parse and `"warning"` for one it reads past; without it, the first error throws, as acorn's does
+	 */
+	parseError?: (
+		input: string,
+		code: string,
+		start: number,
+		end: number,
+		severity: ParseErrorSeverity
+	) => void;
+
+	/**
+	 * whether a script's top level may `return`, as webpack reads a script it may wrap in a function
+	 */
+	allowReturnOutsideFunction?: boolean;
+
+	/**
+	 * where to collect the source's comments, their text read on demand
+	 */
+	comments?: CollectedComment[];
+
+	/**
+	 * whether `import defer` and `import source` parse, as they always do without the option
+	 */
+	importPhases?: boolean;
+
+	/**
+	 * whether to record the names and scopes a scope analysis reads, on the tree; a log given is emptied and refilled, so one can serve every parse
+	 */
+	scopes?: boolean | ScopeLog;
+
+	/**
+	 * whether the code is strict whatever it says
+	 */
+	strict?: boolean;
+
+	/**
+	 * whether reserved words may name things, `"never"` not even a property
+	 */
+	allowReserved?: boolean | "never";
+
+	/**
+	 * whether module syntax may sit anywhere
+	 */
+	allowImportExportEverywhere?: boolean;
+
+	/**
+	 * whether `await` may sit outside a function, at a module's top level by default
+	 */
+	allowAwaitOutsideFunction?: boolean;
+
+	/**
+	 * whether `super` may sit outside a method
+	 */
+	allowSuperOutsideMethod?: boolean;
+
+	/**
+	 * whether a leading `#!` line is skipped, by default except in an event handler
+	 */
+	allowHashBang?: boolean;
+
+	/**
+	 * whether private names must be declared, as they must by default
+	 */
+	checkPrivateFields?: boolean;
+
+	/**
+	 * whether parentheses become `ParenthesizedExpression` nodes
+	 */
+	preserveParens?: boolean;
+
+	/**
+	 * where tokens are reported
+	 */
+	onToken?: Token[] | ((token: Token) => void);
+
+	/**
+	 * the parser itself at each token, read for the token it has just read
+	 */
+	onTokenRead?: (token: TokenRead) => void;
+
+	/**
+	 * where comments are reported, as acorn reports them
+	 */
+	onComment?:
+		| ((
+				isBlock: boolean,
+				text: string,
+				start: number,
+				end: number,
+				startLoc?: null | Position,
+				endLoc?: null | Position
+		  ) => void)
+		| CollectedComment[];
+
+	/**
+	 * called where a semicolon was inserted
+	 */
+	onInsertedSemicolon?: (lastTokEnd: number) => void;
+
+	/**
+	 * called at a trailing comma
+	 */
+	onTrailingComma?: (lastTokEnd: number) => void;
+}
+declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
+	/**
+	 * Creates an instance of JavascriptParser.
+	 */
+	constructor(
+		sourceType?: "module" | "auto" | "script",
+		options?: {
+			parse?: (
+				code: string,
+				options: ParseOptionsJavascriptParser
+			) => ParseResult;
+			typescript?: boolean;
+			importPhases?: boolean;
+			strictModeViolations?: false | "error" | "warn";
+		}
+	);
+	hooks: Readonly<{
+		evaluateTypeof: HookMap<
+			PathTaps<[number], undefined | null | BasicEvaluatedExpression> &
+				SyncBailHook<
+					[UnaryExpression],
+					undefined | null | BasicEvaluatedExpression
+				>
+		>;
+		evaluate: HookMap<
+			PathTaps<[number], undefined | null | BasicEvaluatedExpression> &
+				SyncBailHook<
+					[
+						| ImportExpressionImport
+						| UnaryExpression
+						| ArrayExpression
+						| ArrowFunctionExpression
+						| AssignmentExpression
+						| AwaitExpression
+						| BinaryExpression
+						| SimpleCallExpression
+						| NewExpression
+						| ChainExpression
+						| ClassExpression
+						| ConditionalExpression
+						| FunctionExpression
+						| Identifier
+						| SimpleLiteral
+						| RegExpLiteral
+						| BigIntLiteral
+						| LogicalExpression
+						| MemberExpression
+						| MetaProperty
+						| ObjectExpression
+						| SequenceExpression
+						| TaggedTemplateExpression
+						| TemplateLiteral
+						| ThisExpression
+						| UpdateExpression
+						| YieldExpression
+						| SpreadElement
+						| PrivateIdentifier
+						| Super
+					],
+					undefined | null | BasicEvaluatedExpression
+				>
+		>;
+		evaluateIdentifier: HookMap<
+			PathTaps<[number], undefined | null | BasicEvaluatedExpression> &
+				SyncBailHook<
+					[Identifier | MemberExpression | MetaProperty | ThisExpression],
+					undefined | null | BasicEvaluatedExpression
+				>
+		>;
+		evaluateDefinedIdentifier: HookMap<
+			PathTaps<[number], undefined | null | BasicEvaluatedExpression> &
+				SyncBailHook<
+					[Identifier | MemberExpression | ThisExpression],
+					undefined | null | BasicEvaluatedExpression
+				>
+		>;
+		/**
+		 * @since 5.73.0
+		 */
+		evaluateNewExpression: HookMap<
+			PathTaps<[number], undefined | null | BasicEvaluatedExpression> &
+				SyncBailHook<
+					[NewExpression],
+					undefined | null | BasicEvaluatedExpression
+				>
+		>;
+		/**
+		 * @since 5.73.0
+		 */
+		evaluateCallExpression: HookMap<
+			PathTaps<[number], undefined | null | BasicEvaluatedExpression> &
+				SyncBailHook<
+					[CallExpression],
+					undefined | null | BasicEvaluatedExpression
+				>
+		>;
+		evaluateCallExpressionMember: HookMap<
+			PathTaps<
+				[number, BasicEvaluatedExpression],
+				undefined | null | BasicEvaluatedExpression
+			> &
+				SyncBailHook<
+					[CallExpression, BasicEvaluatedExpression],
+					undefined | null | BasicEvaluatedExpression
+				>
+		>;
+		isPure: HookMap<
+			PathTaps<[number, number], boolean | void> &
+				SyncBailHook<
+					[
+						(
+							| ImportExpressionImport
+							| UnaryExpression
+							| ArrayExpression
+							| ArrowFunctionExpression
+							| AssignmentExpression
+							| AwaitExpression
+							| BinaryExpression
+							| SimpleCallExpression
+							| NewExpression
+							| ChainExpression
+							| ClassExpression
+							| ConditionalExpression
+							| FunctionExpression
+							| Identifier
+							| SimpleLiteral
+							| RegExpLiteral
+							| BigIntLiteral
+							| LogicalExpression
+							| MemberExpression
+							| MetaProperty
+							| ObjectExpression
+							| SequenceExpression
+							| TaggedTemplateExpression
+							| TemplateLiteral
+							| ThisExpression
+							| UpdateExpression
+							| YieldExpression
+							| PrivateIdentifier
+							| FunctionDeclaration
+							| MaybeNamedFunctionDeclaration
+							| VariableDeclaration
+							| ClassDeclaration
+							| MaybeNamedClassDeclaration
+						),
+						number
+					],
+					boolean | void
+				>
+		>;
+		/**
+		 * Every statement the hoisting pass reads, which a tap on this turns
+		 * back into a walk of them all. Tap `preStatementByType` instead.
+		 * @deprecated TODO in the next major release: remove, with the statement walk it turns on
+		 */
+		preStatement: PathTaps<[number], boolean | void> &
+			SyncBailHook<
+				[
+					| ImportDeclaration
+					| ExportNamedDeclaration
+					| ExportAllDeclaration
+					| FunctionDeclaration
+					| MaybeNamedFunctionDeclaration
+					| VariableDeclaration
+					| ClassDeclaration
+					| MaybeNamedClassDeclaration
+					| ExpressionStatement
+					| BlockStatement
+					| StaticBlock
+					| EmptyStatement
+					| DebuggerStatement
+					| WithStatement
+					| ReturnStatement
+					| LabeledStatement
+					| BreakStatement
+					| ContinueStatement
+					| IfStatement
+					| SwitchStatement
+					| ThrowStatement
+					| TryStatement
+					| WhileStatement
+					| DoWhileStatement
+					| ForStatement
+					| ForInStatement
+					| ForOfStatement
+					| ExportDefaultDeclaration
+				],
+				boolean | void
+			>;
+		/**
+		 * Each declaration the parser records: a variable, function or class
+		 * one. Any other type turns the pass back into a walk of every
+		 * statement, and goes away with that walk in the next major release.
+		 * @since 5.109.0
+		 */
+		preStatementByType: TypedHookMap<Record<string, StatementHook>>;
+		/**
+		 * Every statement the block pass reads, which a tap on this turns back
+		 * into a walk of them all. Tap `blockPreStatementByType` instead.
+		 * @deprecated TODO in the next major release: remove, with the statement walk it turns on
+		 */
+		blockPreStatement: PathTaps<[number], boolean | void> &
+			SyncBailHook<
+				[
+					| ImportDeclaration
+					| ExportNamedDeclaration
+					| ExportAllDeclaration
+					| FunctionDeclaration
+					| MaybeNamedFunctionDeclaration
+					| VariableDeclaration
+					| ClassDeclaration
+					| MaybeNamedClassDeclaration
+					| ExpressionStatement
+					| BlockStatement
+					| StaticBlock
+					| EmptyStatement
+					| DebuggerStatement
+					| WithStatement
+					| ReturnStatement
+					| LabeledStatement
+					| BreakStatement
+					| ContinueStatement
+					| IfStatement
+					| SwitchStatement
+					| ThrowStatement
+					| TryStatement
+					| WhileStatement
+					| DoWhileStatement
+					| ForStatement
+					| ForInStatement
+					| ForOfStatement
+					| ExportDefaultDeclaration
+				],
+				boolean | void
+			>;
+		/**
+		 * Each statement the parser records for the block pass: a variable, class
+		 * or export declaration. Any other type turns the pass back into a walk
+		 * of every statement, and goes away with that walk in the next major release.
+		 * @since 5.109.0
+		 */
+		blockPreStatementByType: TypedHookMap<Record<string, StatementHook>>;
+		statement: PathTaps<[number], boolean | void> &
+			SyncBailHook<
+				[
+					| ImportDeclaration
+					| ExportNamedDeclaration
+					| ExportAllDeclaration
+					| FunctionDeclaration
+					| MaybeNamedFunctionDeclaration
+					| VariableDeclaration
+					| ClassDeclaration
+					| MaybeNamedClassDeclaration
+					| ExpressionStatement
+					| BlockStatement
+					| StaticBlock
+					| EmptyStatement
+					| DebuggerStatement
+					| WithStatement
+					| ReturnStatement
+					| LabeledStatement
+					| BreakStatement
+					| ContinueStatement
+					| IfStatement
+					| SwitchStatement
+					| ThrowStatement
+					| TryStatement
+					| WhileStatement
+					| DoWhileStatement
+					| ForStatement
+					| ForInStatement
+					| ForOfStatement
+					| ExportDefaultDeclaration
+				],
+				boolean | void
+			>;
+		statementIf: PathTaps<[number], boolean | void> &
+			SyncBailHook<[IfStatement], boolean | void>;
+		/**
+		 * @since 5.105.0
+		 */
+		collectGuards: PathTaps<[number], void | GuardCollection> &
+			SyncBailHook<[Expression], void | GuardCollection>;
+		classExtendsExpression: PathTaps<[number, number], boolean | void> &
+			SyncBailHook<
+				[
+					Expression,
+					ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
+				],
+				boolean | void
+			>;
+		classBodyElement: PathTaps<[number, number], boolean | void> &
+			SyncBailHook<
+				[
+					StaticBlock | MethodDefinition | PropertyDefinition,
+					ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
+				],
+				boolean | void
+			>;
+		/**
+		 * @since 5.36.0
+		 */
+		classBodyValue: PathTaps<[number, number, number], boolean | void> &
+			SyncBailHook<
+				[
+					Expression,
+					MethodDefinition | PropertyDefinition,
+					ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
+				],
+				boolean | void
+			>;
+		label: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[LabeledStatement], boolean | void>
+		>;
+		import: PathTaps<[number, ImportSource], boolean | void> &
+			SyncBailHook<[ImportDeclaration, ImportSource], boolean | void>;
+		importSpecifier: PathTaps<
+			[number, ImportSource, null | string, string],
+			boolean | void
+		> &
+			SyncBailHook<
+				[ImportDeclaration, ImportSource, null | string, string],
+				boolean | void
+			>;
+		export: PathTaps<[number], boolean | void> &
+			SyncBailHook<
+				[ExportNamedDeclaration | ExportDefaultDeclaration],
+				boolean | void
+			>;
+		exportImport: PathTaps<[number, ImportSource], boolean | void> &
+			SyncBailHook<
+				[ExportNamedDeclaration | ExportAllDeclaration, ImportSource],
+				boolean | void
+			>;
+		exportDeclaration: PathTaps<[number, number], boolean | void> &
+			SyncBailHook<
+				[
+					(
+						| ExportNamedDeclaration
+						| ExportAllDeclaration
+						| ExportDefaultDeclaration
+					),
+					Declaration
+				],
+				boolean | void
+			>;
+		exportExpression: PathTaps<[number, number], boolean | void> &
+			SyncBailHook<
+				[
+					ExportDefaultDeclaration,
+					(
+						| ImportExpressionImport
+						| UnaryExpression
+						| ArrayExpression
+						| ArrowFunctionExpression
+						| AssignmentExpression
+						| AwaitExpression
+						| BinaryExpression
+						| SimpleCallExpression
+						| NewExpression
+						| ChainExpression
+						| ClassExpression
+						| ConditionalExpression
+						| FunctionExpression
+						| Identifier
+						| SimpleLiteral
+						| RegExpLiteral
+						| BigIntLiteral
+						| LogicalExpression
+						| MemberExpression
+						| MetaProperty
+						| ObjectExpression
+						| SequenceExpression
+						| TaggedTemplateExpression
+						| TemplateLiteral
+						| ThisExpression
+						| UpdateExpression
+						| YieldExpression
+						| MaybeNamedFunctionDeclaration
+						| MaybeNamedClassDeclaration
+					)
+				],
+				boolean | void
+			>;
+		exportSpecifier: PathTaps<
+			[number, string, string, undefined | number],
+			boolean | void
+		> &
+			SyncBailHook<
+				[
+					(
+						| ExportNamedDeclaration
+						| ExportAllDeclaration
+						| ExportDefaultDeclaration
+					),
+					string,
+					string,
+					undefined | number
+				],
+				boolean | void
+			>;
+		exportImportSpecifier: PathTaps<
+			[number, ImportSource, null | string, null | string, undefined | number],
+			boolean | void
+		> &
+			SyncBailHook<
+				[
+					ExportNamedDeclaration | ExportAllDeclaration,
+					ImportSource,
+					null | string,
+					null | string,
+					undefined | number
+				],
+				boolean | void
+			>;
+		preDeclarator: PathTaps<[number, number], boolean | void> &
+			SyncBailHook<[VariableDeclarator, VariableDeclaration], boolean | void>;
+		declarator: PathTaps<[number, number], boolean | void> &
+			SyncBailHook<[VariableDeclarator, Statement], boolean | void>;
+		varDeclaration: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Identifier], boolean | void>
+		>;
+		varDeclarationLet: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Identifier], boolean | void>
+		>;
+		varDeclarationConst: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Identifier], boolean | void>
+		>;
+		/**
+		 * @since 5.100.0
+		 */
+		varDeclarationUsing: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Identifier], boolean | void>
+		>;
+		varDeclarationVar: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Identifier], boolean | void>
+		>;
+		pattern: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Identifier], boolean | void>
+		>;
+		/**
+		 * @since 5.101.3
+		 */
+		collectDestructuringAssignmentProperties: PathTaps<
+			[number],
+			boolean | void
+		> &
+			SyncBailHook<[Expression], boolean | void>;
+		canRename: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Expression], boolean | void>
+		>;
+		rename: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Expression], boolean | void>
+		>;
+		assign: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[AssignmentExpression], boolean | void>
+		>;
+		write: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[WriteStatement], boolean | void>
+		>;
+		writeMemberChain: HookMap<
+			PathTaps<[number, string[]], boolean | void> &
+				SyncBailHook<[WriteStatement, string[]], boolean | void>
+		>;
+		assignMemberChain: HookMap<
+			PathTaps<[number, string[]], boolean | void> &
+				SyncBailHook<[AssignmentExpression, string[]], boolean | void>
+		>;
+		typeof: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Expression], boolean | void>
+		>;
+		importCall: PathTaps<[number, number], boolean | void> &
+			SyncBailHook<
+				[
+					ImportExpressionJavascriptParser,
+					undefined | SimpleCallExpression | NewExpression
+				],
+				boolean | void
+			>;
+		topLevelAwait: PathTaps<[number], boolean | void> &
+			SyncBailHook<
+				[
+					| ImportExpressionImport
+					| UnaryExpression
+					| ArrayExpression
+					| ArrowFunctionExpression
+					| AssignmentExpression
+					| AwaitExpression
+					| BinaryExpression
+					| SimpleCallExpression
+					| NewExpression
+					| ChainExpression
+					| ClassExpression
+					| ConditionalExpression
+					| FunctionExpression
+					| Identifier
+					| SimpleLiteral
+					| RegExpLiteral
+					| BigIntLiteral
+					| LogicalExpression
+					| MemberExpression
+					| MetaProperty
+					| ObjectExpression
+					| SequenceExpression
+					| TaggedTemplateExpression
+					| TemplateLiteral
+					| ThisExpression
+					| UpdateExpression
+					| YieldExpression
+					| VariableDeclaration
+					| ForOfStatement
+				],
+				boolean | void
+			>;
+		call: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[CallExpression], boolean | void>
+		>;
+		/**
+		 * Something like "a.b()"
+		 */
+		callMemberChain: HookMap<
+			PathTaps<
+				[number, string[], boolean[], [number, number][]],
+				boolean | void
+			> &
+				SyncBailHook<
+					[CallExpression, string[], boolean[], [number, number][]],
+					boolean | void
+				>
+		>;
+		/**
+		 * Something like "a.b().c.d"
+		 */
+		memberChainOfCallMemberChain: HookMap<
+			PathTaps<
+				[number, string[], number, string[], [number, number][]],
+				boolean | void
+			> &
+				SyncBailHook<
+					[Expression, string[], CallExpression, string[], [number, number][]],
+					boolean | void
+				>
+		>;
+		/**
+		 * Something like "a.b().c.d()""
+		 */
+		callMemberChainOfCallMemberChain: HookMap<
+			PathTaps<
+				[number, string[], number, string[], [number, number][]],
+				boolean | void
+			> &
+				SyncBailHook<
+					[
+						CallExpression,
+						string[],
+						CallExpression,
+						string[],
+						[number, number][]
+					],
+					boolean | void
+				>
+		>;
+		optionalChaining: PathTaps<[number], boolean | void> &
+			SyncBailHook<[ChainExpression], boolean | void>;
+		new: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[NewExpression], boolean | void>
+		>;
+		/**
+		 * @since 5.71.0
+		 */
+		binaryExpression: PathTaps<[number], boolean | void> &
+			SyncBailHook<[BinaryExpression], boolean | void>;
+		expression: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Expression], boolean | void>
+		>;
+		expressionMemberChain: HookMap<
+			PathTaps<
+				[number, string[], boolean[], [number, number][]],
+				boolean | void
+			> &
+				SyncBailHook<
+					[MemberExpression, string[], boolean[], [number, number][]],
+					boolean | void
+				>
+		>;
+		unhandledExpressionMemberChain: HookMap<
+			PathTaps<[number, string[]], boolean | void> &
+				SyncBailHook<[MemberExpression, string[]], boolean | void>
+		>;
+		expressionConditionalOperator: PathTaps<[number], boolean | void> &
+			SyncBailHook<[ConditionalExpression], boolean | void>;
+		expressionLogicalOperator: PathTaps<[number], boolean | void> &
+			SyncBailHook<[LogicalExpression], boolean | void>;
+		program: PathTaps<[number, CommentJavascriptParser[]], boolean | void> &
+			SyncBailHook<[Program, CommentJavascriptParser[]], boolean | void>;
+		/**
+		 * @since 5.99.0
+		 */
+		terminate: PathTaps<[number], boolean | void> &
+			SyncBailHook<[ReturnStatement | ThrowStatement], boolean | void>;
+		finish: PathTaps<[number, CommentJavascriptParser[]], boolean | void> &
+			SyncBailHook<[Program, CommentJavascriptParser[]], boolean | void>;
+		/**
+		 * @since 5.99.9
+		 */
+		unusedStatement: PathTaps<[number], boolean | void> &
+			SyncBailHook<[Statement], boolean | void>;
+	}>;
+	sourceType: "module" | "auto" | "script";
+	options: {
+		parse?: (
+			code: string,
+			options: ParseOptionsJavascriptParser
+		) => ParseResult;
+		typescript?: boolean;
+		importPhases?: boolean;
+		strictModeViolations?: false | "error" | "warn";
+	};
+	scope: ScopeInfo;
+	state: JavascriptParserState;
+	comments?: CommentJavascriptParser[];
+	semicolons?: Map<number, boolean>;
 	destructuringAssignmentProperties?: WeakMap<
-		ExpressionEstreeIndex,
+		Expression,
 		Set<DestructuringAssignmentProperty>
 	>;
 	currentTagData?:
-		| Record<string, any>
-		| TopLevelSymbol
+		| object
 		| ESMSettings
 		| ImportSettings
 		| CommonJsImportSettings
+		| TopLevelSymbol
 		| CompatibilitySettings;
 	magicCommentContext: ContextImport;
 
@@ -14164,7 +17121,35 @@ declare class JavascriptParser extends Parser {
 	 * Destructuring assignment properties for.
 	 */
 	destructuringAssignmentPropertiesFor(
-		node: ExpressionEstreeIndex
+		node:
+			| number
+			| ImportExpressionImport
+			| UnaryExpression
+			| ArrayExpression
+			| ArrowFunctionExpression
+			| AssignmentExpression
+			| AwaitExpression
+			| BinaryExpression
+			| SimpleCallExpression
+			| NewExpression
+			| ChainExpression
+			| ClassExpression
+			| ConditionalExpression
+			| FunctionExpression
+			| Identifier
+			| SimpleLiteral
+			| RegExpLiteral
+			| BigIntLiteral
+			| LogicalExpression
+			| MemberExpression
+			| MetaProperty
+			| ObjectExpression
+			| SequenceExpression
+			| TaggedTemplateExpression
+			| TemplateLiteral
+			| ThisExpression
+			| UpdateExpression
+			| YieldExpression
 	): undefined | Set<DestructuringAssignmentProperty>;
 
 	/**
@@ -14555,7 +17540,10 @@ declare class JavascriptParser extends Parser {
 	 * Walks a conditional branch with its guard frame (if any) pushed onto the
 	 * parser-state guard stack for the duration of the branch body.
 	 */
-	walkGuardedBranch(frame: undefined | null | object, walk: () => void): void;
+	walkGuardedBranch(
+		frame: undefined | null | GuardFrame,
+		walk: () => void
+	): void;
 
 	/**
 	 * Processes the provided statement.
@@ -14630,6 +17618,14 @@ declare class JavascriptParser extends Parser {
 	): void;
 
 	/**
+	 * Bind a function declaration in the block holding it, when it does not
+	 * hoist to the enclosing scope.
+	 */
+	blockPreWalkFunctionDeclaration(
+		statement: FunctionDeclaration | MaybeNamedFunctionDeclaration
+	): void;
+
+	/**
 	 * Walk function declaration.
 	 */
 	walkFunctionDeclaration(
@@ -14651,7 +17647,7 @@ declare class JavascriptParser extends Parser {
 	 */
 	enterDestructuringAssignment(
 		pattern: Pattern,
-		expression: ExpressionEstreeIndex
+		expression: Expression
 	):
 		| undefined
 		| ImportExpressionImport
@@ -14691,7 +17687,7 @@ declare class JavascriptParser extends Parser {
 	 * Processes the provided declaration.
 	 */
 	enterDeclaration(
-		declaration: DeclarationEstreeIndex,
+		declaration: Declaration,
 		onIdent: (ident: string, identifier: Identifier) => void
 	): void;
 
@@ -14838,6 +17834,7 @@ declare class JavascriptParser extends Parser {
 	 */
 	walkExpression(
 		expression:
+			| number
 			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
@@ -15022,7 +18019,7 @@ declare class JavascriptParser extends Parser {
 	 * Call hooks for expression.
 	 */
 	callHooksForExpression<T, R>(
-		hookMap: HookMap<SyncBailHook<T, R>>,
+		hookMap: HooksByName<T, R>,
 		expr:
 			| ImportExpressionImport
 			| UnaryExpression
@@ -15059,7 +18056,7 @@ declare class JavascriptParser extends Parser {
 	 * Call hooks for expression with fallback.
 	 */
 	callHooksForExpressionWithFallback<T, R>(
-		hookMap: HookMap<SyncBailHook<T, R>>,
+		hookMap: HooksByName<T, R>,
 		expr:
 			| ImportExpressionImport
 			| UnaryExpression
@@ -15104,7 +18101,7 @@ declare class JavascriptParser extends Parser {
 	 * Call hooks for name.
 	 */
 	callHooksForName<T, R>(
-		hookMap: HookMap<SyncBailHook<T, R>>,
+		hookMap: HooksByName<T, R>,
 		name: string,
 		...args: AsArray<T>
 	): undefined | R;
@@ -15113,7 +18110,7 @@ declare class JavascriptParser extends Parser {
 	 * Call hooks for info.
 	 */
 	callHooksForInfo<T, R>(
-		hookMap: HookMap<SyncBailHook<T, R>>,
+		hookMap: HooksByName<T, R>,
 		info: ExportedVariableInfo,
 		...args: AsArray<T>
 	): undefined | R;
@@ -15122,7 +18119,7 @@ declare class JavascriptParser extends Parser {
 	 * Call hooks for info with fallback.
 	 */
 	callHooksForInfoWithFallback<T, R>(
-		hookMap: HookMap<SyncBailHook<T, R>>,
+		hookMap: HooksByName<T, R>,
 		info: ExportedVariableInfo,
 		fallback: undefined | ((name: string) => undefined | R),
 		defined: undefined | ((result?: string) => undefined | R),
@@ -15133,7 +18130,7 @@ declare class JavascriptParser extends Parser {
 	 * Call hooks for name with fallback.
 	 */
 	callHooksForNameWithFallback<T, R>(
-		hookMap: HookMap<SyncBailHook<T, R>>,
+		hookMap: HooksByName<T, R>,
 		name: string,
 		fallback: undefined | ((value: string) => undefined | R),
 		defined: undefined | (() => R),
@@ -15149,11 +18146,11 @@ declare class JavascriptParser extends Parser {
 			| string
 			| Identifier
 			| MemberExpression
+			| Property
 			| ObjectPattern
 			| ArrayPattern
 			| RestElement
 			| AssignmentPattern
-			| Property
 		)[],
 		fn: () => void
 	): void;
@@ -15264,13 +18261,25 @@ declare class JavascriptParser extends Parser {
 			| string
 			| Identifier
 			| MemberExpression
+			| Property
 			| ObjectPattern
 			| ArrayPattern
 			| RestElement
 			| AssignmentPattern
-			| Property
 		)[],
 		onIdent: (ident: string) => void
+	): void;
+
+	/**
+	 * Processes the provided pattern.
+	 */
+
+	/**
+	 * Processes the provided pattern, by id in the tree walk.
+	 */
+	enterPattern(
+		pattern: number,
+		onIdent: (name: string, ident: number) => void
 	): void;
 
 	/**
@@ -15280,11 +18289,11 @@ declare class JavascriptParser extends Parser {
 		pattern:
 			| Identifier
 			| MemberExpression
+			| Property
 			| ObjectPattern
 			| ArrayPattern
 			| RestElement
-			| AssignmentPattern
-			| Property,
+			| AssignmentPattern,
 		onIdent: (ident: string, identifier: Identifier) => void
 	): void;
 
@@ -15333,6 +18342,7 @@ declare class JavascriptParser extends Parser {
 	 */
 	evaluateExpression(
 		expression:
+			| number
 			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
@@ -15368,14 +18378,12 @@ declare class JavascriptParser extends Parser {
 	/**
 	 * Returns parsed string.
 	 */
-	parseString(expression: ExpressionEstreeIndex): string;
+	parseString(expression: Expression): string;
 
 	/**
 	 * Parses calculated string.
 	 */
-	parseCalculatedString(
-		expression: ExpressionEstreeIndex
-	): CalculatedStringResult;
+	parseCalculatedString(expression: Expression): CalculatedStringResult;
 
 	/**
 	 * Returns evaluation result.
@@ -15389,6 +18397,7 @@ declare class JavascriptParser extends Parser {
 		expr:
 			| undefined
 			| null
+			| number
 			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
@@ -15426,18 +18435,32 @@ declare class JavascriptParser extends Parser {
 	): boolean;
 
 	/**
+	 * The node an id a `{ path: true }` tap got stands for, as the parser's
+	 * methods take it: every parse walks a tree, so it is the id itself.
+	 * @experimental the `{ path: true }` tap option; unstable API
+	 */
+	nodeOfPath<T extends NodeEstreeIndex = Expression>(
+		path: JavascriptNodeReader,
+		node: number
+	): T;
+
+	/**
 	 * Returns the location of a node or comment, computed from its offsets so
 	 * ASTs from parsers without location support work too. Falls back to the
 	 * node's own `loc` only when no source text is available (preparsed ASTs).
-	 * Offsets can only be mapped while parsing — callbacks deferred past the
+	 * Offsets can only be mapped while parsing - callbacks deferred past the
 	 * `parse()` call must take the location upfront.
 	 */
-	getLocation(node: {
-		start?: number;
-		end?: number;
-		range?: [number, number];
-		loc?: null | SourceLocation;
-	}): DependencyLocation;
+	getLocation(
+		node:
+			| number
+			| {
+					start?: number;
+					end?: number;
+					range?: [number, number];
+					loc?: null | SourceLocation;
+			  }
+	): DependencyLocation;
 
 	/**
 	 * Returns comments in the range.
@@ -15448,7 +18471,65 @@ declare class JavascriptParser extends Parser {
 	 * Where the comments written for `statement` begin: the run of comments
 	 * before it that whitespace alone separates from it and from each other.
 	 */
-	getAttachedCommentsStart(statement: StatementPathItem): number;
+	getAttachedCommentsStart(
+		statement:
+			| number
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportAllDeclaration
+			| ImportExpressionImport
+			| UnaryExpression
+			| ArrayExpression
+			| ArrowFunctionExpression
+			| AssignmentExpression
+			| AwaitExpression
+			| BinaryExpression
+			| SimpleCallExpression
+			| NewExpression
+			| ChainExpression
+			| ClassExpression
+			| ConditionalExpression
+			| FunctionExpression
+			| Identifier
+			| SimpleLiteral
+			| RegExpLiteral
+			| BigIntLiteral
+			| LogicalExpression
+			| MemberExpression
+			| MetaProperty
+			| ObjectExpression
+			| SequenceExpression
+			| TaggedTemplateExpression
+			| TemplateLiteral
+			| ThisExpression
+			| UpdateExpression
+			| YieldExpression
+			| FunctionDeclaration
+			| MaybeNamedFunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration
+			| MaybeNamedClassDeclaration
+			| ExpressionStatement
+			| BlockStatement
+			| StaticBlock
+			| EmptyStatement
+			| DebuggerStatement
+			| WithStatement
+			| ReturnStatement
+			| LabeledStatement
+			| BreakStatement
+			| ContinueStatement
+			| IfStatement
+			| SwitchStatement
+			| ThrowStatement
+			| TryStatement
+			| WhileStatement
+			| DoWhileStatement
+			| ForStatement
+			| ForInStatement
+			| ForOfStatement
+			| ExportDefaultDeclaration
+	): number;
 
 	/**
 	 * Reports whether `identifier` may occur as a word in the source text of
@@ -15461,6 +18542,77 @@ declare class JavascriptParser extends Parser {
 		range: [number, number],
 		identifier: string
 	): boolean;
+
+	/**
+	 * How many statements the walk is in, as `statementPath.length` counts them
+	 * without making their objects: `1` at a top-level statement.
+	 */
+	get statementDepth(): number;
+
+	/**
+	 * The statements the walk is in, innermost last, each as its object.
+	 */
+	statementPath?: StatementPathItem[];
+
+	/**
+	 * The statement walked last before the current one, as its object.
+	 */
+	prevStatement?:
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| FunctionDeclaration
+		| MaybeNamedFunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| MaybeNamedClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration;
 
 	/**
 	 * Checks whether this javascript parser is asi position.
@@ -15480,36 +18632,53 @@ declare class JavascriptParser extends Parser {
 	/**
 	 * Checks whether this javascript parser is statement level expression.
 	 */
-	isStatementLevelExpression(expr: ExpressionEstreeIndex): boolean;
+	isStatementLevelExpression(
+		expr:
+			| number
+			| ImportExpressionImport
+			| UnaryExpression
+			| ArrayExpression
+			| ArrowFunctionExpression
+			| AssignmentExpression
+			| AwaitExpression
+			| BinaryExpression
+			| SimpleCallExpression
+			| NewExpression
+			| ChainExpression
+			| ClassExpression
+			| ConditionalExpression
+			| FunctionExpression
+			| Identifier
+			| SimpleLiteral
+			| RegExpLiteral
+			| BigIntLiteral
+			| LogicalExpression
+			| MemberExpression
+			| MetaProperty
+			| ObjectExpression
+			| SequenceExpression
+			| TaggedTemplateExpression
+			| TemplateLiteral
+			| ThisExpression
+			| UpdateExpression
+			| YieldExpression
+	): boolean;
 
 	/**
-	 * Returns tag data.
+	 * Returns tag data, typed by the tag it was stored under.
 	 */
-	getTagData(
+	getTagData<T extends TagData = TagData>(
 		name: string,
-		tag: symbol
-	):
-		| undefined
-		| Record<string, any>
-		| TopLevelSymbol
-		| ESMSettings
-		| ImportSettings
-		| CommonJsImportSettings
-		| CompatibilitySettings;
+		tag: symbol | Tag<T>
+	): undefined | T;
 
 	/**
 	 * Processes the provided name.
 	 */
-	tagVariable(
+	tagVariable<T extends TagData = TagData>(
 		name: string,
-		tag: symbol,
-		data?:
-			| Record<string, any>
-			| TopLevelSymbol
-			| ESMSettings
-			| ImportSettings
-			| CommonJsImportSettings
-			| CompatibilitySettings,
+		tag: symbol | Tag<T>,
+		data?: T,
 		flags?: 0 | 1 | 2 | 4
 	): void;
 
@@ -15547,7 +18716,7 @@ declare class JavascriptParser extends Parser {
 	 * Parses comment options.
 	 */
 	parseCommentOptions(range: [number, number]): {
-		options: null | Record<string, any>;
+		options: null | MagicCommentOptions;
 		errors: null | (Error & { comment: CommentJavascriptParser })[];
 	};
 
@@ -15739,7 +18908,7 @@ declare class JavascriptParser extends Parser {
 	 * Gets name for expression.
 	 */
 	getNameForExpression(
-		expression: ExpressionEstreeIndex
+		expression: Expression
 	):
 		| undefined
 		| {
@@ -15749,11 +18918,9 @@ declare class JavascriptParser extends Parser {
 		  };
 
 	/**
-	 * Returns parser.
+	 * Whether a definition is a variable rather than a free name or a scope.
 	 */
-	static extend(
-		...plugins: ((BaseParser: typeof SyntaxParser) => typeof SyntaxParser)[]
-	): typeof JavascriptParser;
+	static isVariableInfo(value?: string | VariableInfo | ScopeInfo): boolean;
 	static ALLOWED_MEMBER_TYPES_ALL: number;
 	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: number;
 	static ALLOWED_MEMBER_TYPES_EXPRESSION: number;
@@ -15766,10 +18933,12 @@ declare class JavascriptParser extends Parser {
 	}>;
 	static getImportAttributes: (
 		node:
+			| number
 			| ImportDeclaration
 			| ExportNamedDeclaration
 			| ExportAllDeclaration
-			| ImportExpressionJavascriptParser
+			| ImportExpressionJavascriptParser,
+		path?: JavascriptNodeReader
 	) => undefined | ImportAttributes;
 }
 
@@ -15780,7 +18949,7 @@ declare interface JavascriptParserOptions {
 	/**
 	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
-	amd?: false | { [index: string]: any };
+	amd?: false | JsonObjectFs;
 
 	/**
 	 * Set .name to "default" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.
@@ -16049,9 +19218,125 @@ declare interface JavascriptParserOptions {
 	 */
 	wrappedContextRegExp?: RegExp;
 }
-type JavascriptParserState = ParserStateBase &
+type JavascriptParserState = ParserStateBase<BuiltJavascriptModule> &
 	Record<string, any> &
 	KnownJavascriptParserState;
+type JavascriptParserTag<T = TagData> = symbol & { readonly __tagData?: T };
+type JavascriptProcessOptions = JavascriptReadOptions &
+	Omit<MinifyOptions, "format" | "output" | "sourceMap" | "sourceType">;
+
+/**
+ * what the JavaScript `SourceProcessor` reads its source as, and prints it with
+ */
+declare interface JavascriptReadOptions {
+	/**
+	 * what the source is: a module (the default), a script, or a function's body, a CommonJS module's or an event handler's
+	 */
+	sourceType?: "module" | "commonjs" | "script" | "event-handler";
+
+	/**
+	 * terser's format options a print reads, as `minify` reads them under `format`
+	 */
+	format?: GivenFormatOptions;
+
+	/**
+	 * terser's older name for `format`, never given beside it
+	 */
+	output?: GivenFormatOptions;
+}
+
+/**
+ * The generic visitor coordinator (`util/SourceProcessor`) bound to the
+ * JavaScript `grammar`, which walks the `SyntaxTree` a parse writes.
+ * `process(src, { mode: "minify" })` returns `{ code, map }`, printed by the
+ * same walk as `minify` prints a source it neither compresses nor mangles,
+ * comments left out; without `mode` it only walks. Usage:
+ * ```
+ * new JavascriptSourceProcessor().use({ [NodeType.CallExpression]: (path) => {} }).process(source, { sourceType: "module" });
+ * ```
+ * @experimental exposed as `webpack.javascript.syntax.SourceProcessor`; unstable API
+ */
+declare class JavascriptSourceProcessor<
+	TState = unknown
+> extends SourceProcessor<
+	JavascriptSyntaxPath,
+	number,
+	JavascriptProcessOptions,
+	PrintOptions,
+	AnyParts,
+	TState,
+	VisitorMapSourceProcessorObject_2<JavascriptSyntaxPath>
+> {
+	constructor();
+	static PrintContext: typeof PrintContext;
+	static declineDeferredWrites: (
+		text: string,
+		writes: DeferredWrite[]
+	) => string;
+	static deferredWrite: (id: number) => string;
+}
+
+/**
+ * The path every visitor of a JavaScript `SourceProcessor` run receives, its
+ * reads defaulting to the node the walk is at; outside a walk it is `A`, read by
+ * passing the node a parse returned.
+ * @experimental exposed through `webpack.javascript.syntax.SourceProcessor`; unstable API
+ */
+declare abstract class JavascriptSyntaxPath {
+	state: unknown;
+	get node(): number;
+	get parent(): null | number;
+	get index(): number;
+
+	/**
+	 * Stops the walk descending into the current node (enter only).
+	 */
+	skipChildren(): void;
+
+	/**
+	 * Stops the walk: no visitor fires after the current one returns.
+	 */
+	stop(): void;
+	ancestor(level: number): number;
+	within(type: number): boolean;
+	type(n?: number): number;
+	range(n?: number): [number, number];
+	start(n?: number): number;
+	end(n?: number): number;
+
+	/**
+	 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
+	 */
+	loc(n?: number): [number, number, number, number];
+	source(n?: number, end?: number): string;
+	name(n?: number): string;
+	value(
+		n?: number
+	):
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| { cooked?: null | string; raw: string };
+	childCount(n?: number): number;
+	child(i: number, n?: number): number;
+	children(n?: number): number[];
+	fieldCount(field: number, n?: number): number;
+	field(i: number, field: number, n?: number): number;
+	fieldNamed(field: number, name: string, n?: number): number;
+	flag(flag: number, n?: number): boolean;
+
+	/**
+	 * A JavaScript node keeps no positions beyond its own.
+	 */
+	rangeOf(part: number, n?: number): null;
+	startOf(part: number, n?: number): number;
+	endOf(part: number, n?: number): number;
+	textOf(part: number, n?: number): null | string;
+}
 declare interface JoinCacheEntry {
 	/**
 	 * cached join function
@@ -16075,7 +19360,7 @@ declare abstract class JsonData {
 	 */
 	updateHash(hash: Hash): void;
 }
-declare abstract class JsonGenerator extends Generator {
+declare abstract class JsonGenerator extends Generator<JsonNormalModule> {
 	options: JsonGeneratorOptions;
 
 	/**
@@ -16083,7 +19368,7 @@ declare abstract class JsonGenerator extends Generator {
 	 */
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: JsonNormalModule,
 		generateContext: GenerateContext
 	): null | Source;
 }
@@ -16097,7 +19382,7 @@ declare interface JsonGeneratorOptions {
 	 */
 	JSONParse?: boolean;
 }
-type JsonModuleBuildInfo = KnownBuildInfo &
+type JsonModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo &
 	KnownJsonModuleBuildInfo;
@@ -16114,6 +19399,7 @@ declare class JsonModulesPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type JsonNormalModule = NormalModule & { buildInfo?: JsonModuleBuildInfo };
 declare interface JsonObjectFs {
 	[index: string]:
 		undefined | null | string | number | boolean | JsonObjectFs | JsonValueFs[];
@@ -16128,7 +19414,7 @@ declare interface JsonObjectResolver {
 		| JsonObjectResolver
 		| JsonValueResolver[];
 }
-declare abstract class JsonParser extends Parser {
+declare abstract class JsonParser extends Parser<BuiltJsonModule> {
 	options: JsonParserOptions;
 }
 
@@ -16187,6 +19473,17 @@ declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+	static KINDS: Set<
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
+	>;
 
 	/**
 	 * Gets source basic types.
@@ -16216,98 +19513,16 @@ declare class JsonpTemplatePlugin {
 }
 
 /**
- * Defines the known asset info type used by this module.
+ * a comment as a `comments` callback is handed it: terser's comment token, its offset, line from 1 and column from 0, whether a line break comes before it, and the file it was read from
  */
-declare interface KnownAssetInfo {
-	/**
-	 * true, if the asset can be long term cached forever (contains a hash)
-	 */
-	immutable?: boolean;
-
-	/**
-	 * whether the asset is minimized
-	 */
-	minimized?: boolean;
-
-	/**
-	 * the value(s) of the full hash used for this asset
-	 */
-	fullhash?: string | string[];
-
-	/**
-	 * the value(s) of the chunk hash used for this asset
-	 */
-	chunkhash?: string | string[];
-
-	/**
-	 * the value(s) of the module hash used for this asset
-	 */
-	modulehash?: string | string[];
-
-	/**
-	 * the value(s) of the content hash used for this asset
-	 */
-	contenthash?: string | string[];
-
-	/**
-	 * maps a `[contenthash:<digest>]` value to its digest, so `RealContentHashPlugin` re-encodes the recomputed hash in it
-	 */
-	contenthashDigest?: Record<string, string>;
-
-	/**
-	 * when asset was created from a source file (potentially transformed), the original filename relative to compilation context
-	 */
-	sourceFilename?: string;
-
-	/**
-	 * true, when the asset was copied from a file by `output.copy`
-	 */
-	copied?: boolean;
-
-	/**
-	 * when set, the asset is emitted as a symbolic link rather than as its content
-	 */
-	symlink?: AssetSymlink;
-
-	/**
-	 * when set, the file the asset is written to is given these permissions
-	 */
-	mode?: number;
-
-	/**
-	 * when set, the file the asset is written to is stamped with these times
-	 */
-	timestamps?: AssetTimestamps;
-
-	/**
-	 * size in bytes, only set after asset has been emitted
-	 */
-	size?: number;
-
-	/**
-	 * true, when asset is only used for development and doesn't count towards user-facing assets
-	 */
-	development?: boolean;
-
-	/**
-	 * true, when asset ships data for updating an existing application (HMR)
-	 */
-	hotModuleReplacement?: boolean;
-
-	/**
-	 * true, when asset is javascript and an ESM
-	 */
-	javascriptModule?: boolean;
-
-	/**
-	 * true, when file is a manifest
-	 */
-	manifest?: boolean;
-
-	/**
-	 * object of pointers to other assets, keyed by type of relation (only points from parent to child)
-	 */
-	related?: Record<string, null | string | string[]>;
+declare interface KeptComment {
+	type: "comment1" | "comment2" | "comment3" | "comment4";
+	value: string;
+	pos: number;
+	line: number;
+	col: number;
+	nlb: boolean;
+	file?: string;
 }
 
 /**
@@ -16328,63 +19543,6 @@ declare interface KnownAssetModuleBuildInfo {
 	 * rename set while building survives the persistent cache
 	 */
 	assetResource?: string;
-}
-
-/**
- * Defines the build info properties common to all module types.
- * Module type specific properties live in the `Known*BuildInfo` typedef of the dedicated module class.
- */
-declare interface KnownBuildInfo {
-	/**
-	 * the module hands out a spec Module Namespace Exotic Object
-	 */
-	specNamespaceObject?: boolean;
-	cacheable?: boolean;
-	strict?: boolean;
-	moduleArgument?: string;
-	exportsArgument?: string;
-
-	/**
-	 * assets added by loaders or plugins
-	 */
-	assets?: Record<string, Source>;
-	assetsInfo?: Map<string, undefined | AssetInfo>;
-
-	/**
-	 * top level declaration names
-	 */
-	topLevelDeclarations?: Set<string>;
-
-	/**
-	 * true when the module is in a synchronous circular dependency chain
-	 */
-	isCircular?: boolean;
-
-	/**
-	 * CircularKind bit flags from CircularModulesPlugin; unset when the plugin did not run
-	 */
-	circularKind?: number;
-
-	/**
-	 * module uses top-level `for await…of` or `await using`, which can't be lowered to a generator
-	 */
-	usesTopLevelAwaitForOf?: boolean;
-
-	/**
-	 * what the build recorded for stats and the performance hints to report
-	 */
-	diagnostics?: BuildDiagnostics;
-}
-
-/**
- * Defines the build meta properties common to all module types.
- * Module type specific properties live in the `Known*BuildMeta` typedef of the dedicated module class.
- */
-declare interface KnownBuildMeta {
-	exportsType?: "default" | "namespace" | "flagged" | "dynamic";
-	defaultObject?: false | "redirect" | "redirect-warn";
-	async?: boolean;
-	sideEffectFree?: boolean;
 }
 
 /**
@@ -16441,6 +19599,11 @@ declare interface KnownCssModuleBuildInfo {
 	 * charset at-rule
 	 */
 	charset?: string;
+
+	/**
+	 * the source ends inside a comment, string or block
+	 */
+	openAtEnd?: true;
 }
 
 /**
@@ -16448,7 +19611,6 @@ declare interface KnownCssModuleBuildInfo {
  */
 declare interface KnownCssModuleBuildMeta {
 	isCssModule?: boolean;
-	needIdInConcatenation?: boolean;
 }
 
 /**
@@ -16459,6 +19621,11 @@ declare interface KnownExternalModuleBuildInfo {
 	 * true when emitting an ESM external (`output.module`)
 	 */
 	javascriptModule?: boolean;
+
+	/**
+	 * true when a node core module is read through `process.getBuiltinModule()`
+	 */
+	builtinGetter?: boolean;
 }
 declare interface KnownHooks {
 	/**
@@ -16541,11 +19708,6 @@ declare interface KnownJavascriptModuleBuildInfo {
 	 * whether this module was parsed with `optimization.inlineExports` enabled (gates inlining of its exports)
 	 */
 	inlineExports?: boolean;
-
-	/**
-	 * module scope holds a `using`/`await using` declaration, so its resources must be disposed when the module finished evaluating
-	 */
-	usesTopLevelUsingDeclaration?: boolean;
 }
 
 /**
@@ -16580,6 +19742,11 @@ declare interface KnownJavascriptParserState {
 	 * deprecated, use `lastESMImportOrder`
 	 */
 	lastHarmonyImportOrder?: number;
+
+	/**
+	 * the guard frames of the branches being walked, innermost last
+	 */
+	guardStack?: GuardFrame[];
 }
 
 /**
@@ -16587,19 +19754,6 @@ declare interface KnownJavascriptParserState {
  */
 declare interface KnownJsonModuleBuildInfo {
 	jsonData?: JsonData;
-}
-
-/**
- * Defines the known meta type used by this module.
- */
-declare interface KnownMeta {
-	importVarMap?: Map<Module, string>;
-	deferredImportVarMap?: Map<Module, string>;
-
-	/**
-	 * generate export definitions on demand
-	 */
-	onDemandExports?: boolean;
 }
 
 /**
@@ -16622,329 +19776,121 @@ declare interface KnownNormalModuleBuildInfo {
 }
 
 /**
- * Defines the known normalized stats options type used by this module.
+ * `extract` hooks of the keys in `StatsFactoryExtractKeys`, with their exact `[object, data]`.
  */
-declare interface KnownNormalizedStatsOptions {
-	context: string;
-	requestShortener: RequestShortener;
-	chunksSort: string | false;
-	modulesSort: string | false;
-	chunkModulesSort: string | false;
-	nestedModulesSort: string | false;
-	assetsSort: string | false;
-	ids: boolean;
-	cachedAssets: boolean;
-	groupAssetsByEmitStatus: boolean;
-	groupAssetsByPath: boolean;
-	groupAssetsByExtension: boolean;
-	assetsSpace: number;
-	excludeAssets: ((value: string, asset: StatsAsset) => boolean)[];
-	excludeModules: ((
-		name: string,
-		module: StatsModule,
-		type: ExcludeModulesType
-	) => boolean)[];
-	warningsFilter: ((warning: StatsError, textValue: string) => boolean)[];
-	cachedModules: boolean;
-	orphanModules: boolean;
-	dependentModules: boolean;
-	runtimeModules: boolean;
-	groupModulesByCacheStatus: boolean;
-	groupModulesByLayer: boolean;
-	groupModulesByAttributes: boolean;
-	groupModulesByPath: boolean;
-	groupModulesByExtension: boolean;
-	groupModulesByType: boolean;
-	entrypoints: boolean | "auto";
-	chunkGroups: boolean;
-	chunkGroupAuxiliary: boolean;
-	chunkGroupChildren: boolean;
-	chunkGroupMaxAssets: number;
-	modulesSpace: number;
-	chunkModulesSpace: number;
-	nestedModulesSpace: number;
-	logging: false | "none" | "verbose" | "error" | "warn" | "info" | "log";
-	loggingDebug: ((value: string) => boolean)[];
-	loggingTrace: boolean;
+declare interface KnownStatsFactoryExtractHookMap {
+	for<K extends keyof exports.StatsFactoryExtractKeys>(
+		key: K
+	): SyncBailHook<
+		[
+			exports.StatsFactoryExtractKeys[K][0],
+			exports.StatsFactoryExtractKeys[K][1],
+			StatsFactoryContext
+		],
+		void
+	>;
 }
 
 /**
- * Defines the known records type used by this module.
+ * `getItemFactory` hooks of the item names in `StatsFactoryExtractKeys` and of child compilations, with their exact data.
  */
-declare interface KnownRecords {
-	aggressiveSplits?: SplitData[];
-	chunks?: RecordsChunks;
-	modules?: RecordsModules;
-	hash?: string;
-	hotIndex?: number;
-	fullHashChunkModuleHashes?: FullHashChunkModuleHashes;
-	chunkModuleHashes?: ChunkModuleHashes;
-	chunkHashes?: ChunkHashes;
-	chunkRuntime?: ChunkRuntime;
-	chunkModuleIds?: ChunkModuleIds;
+declare interface KnownStatsFactoryGetItemFactoryHookMap {
+	for<K extends keyof exports.StatsFactoryExtractKeys>(
+		key: K
+	): SyncBailHook<
+		[exports.StatsFactoryExtractKeys[K][1], StatsFactoryContext],
+		void | StatsFactory
+	>;
+	for(
+		key: "compilation.children[].compilation"
+	): SyncBailHook<[Compilation, StatsFactoryContext], void | StatsFactory>;
 }
 
 /**
- * Defines the known stats asset type used by this module.
+ * `getItemName` hooks of the keys in `StatsFactoryItemNameKeys`, with their exact item.
  */
-declare interface KnownStatsAsset {
-	type: string;
-	name: string;
-	info: AssetInfo;
-	size: number;
-	emitted: boolean;
-	comparedForEmit: boolean;
-	cached: boolean;
-	related?: StatsAsset[];
-	chunks?: ChunkId[];
-	chunkNames?: ChunkName[];
-	chunkIdHints?: string[];
-	auxiliaryChunks?: ChunkId[];
-	auxiliaryChunkNames?: ChunkName[];
-	auxiliaryChunkIdHints?: string[];
-	filteredRelated?: number;
-	isOverSizeLimit?: boolean;
+declare interface KnownStatsFactoryGetItemNameHookMap {
+	for<K extends keyof exports.StatsFactoryItemNameKeys>(
+		key: K
+	): SyncBailHook<
+		[exports.StatsFactoryItemNameKeys[K], StatsFactoryContext],
+		string | void
+	>;
 }
 
 /**
- * Defines the known stats chunk type used by this module.
+ * `groupResults` hooks of the array paths in `StatsFactoryItemKeys`, with group configs over their exact created item and `StatsFactoryGroup`.
  */
-declare interface KnownStatsChunk {
-	rendered: boolean;
-	initial: boolean;
-	entry: boolean;
-	recorded: boolean;
-	reason?: string;
-	size: number;
-	sizes: Record<string, number>;
-	names: string[];
-	idHints: string[];
-	runtime?: string[];
-	files: string[];
-	auxiliaryFiles: string[];
-	hash: string;
-	childrenByOrder: Record<string, ChunkId[]>;
-	id?: string | number;
-	siblings?: ChunkId[];
-	parents?: ChunkId[];
-	children?: ChunkId[];
-	modules?: StatsModule[];
-	filteredModules?: number;
-	origins?: StatsChunkOrigin[];
+declare interface KnownStatsFactoryGroupResultsHookMap {
+	for<K extends keyof exports.StatsFactoryItemKeys>(
+		key: K
+	): SyncBailHook<
+		[
+			GroupConfig<exports.StatsFactoryItemKeys[K][1], StatsFactoryGroup<K>>[],
+			StatsFactoryContext
+		],
+		void
+	>;
 }
 
 /**
- * Defines the known stats chunk group type used by this module.
+ * Filter hooks over the exact item of the array paths in `StatsFactoryItemKeys`.
  */
-declare interface KnownStatsChunkGroup {
-	name?: null | string;
-	chunks?: ChunkId[];
-	assets?: { name: string; size?: number }[];
-	filteredAssets?: number;
-	assetsSize?: number;
-	auxiliaryAssets?: { name: string; size?: number }[];
-	filteredAuxiliaryAssets?: number;
-	auxiliaryAssetsSize?: number;
-	children?: Record<string, StatsChunkGroup[]>;
-	childAssets?: Record<string, string[]>;
-	isOverSizeLimit?: boolean;
+declare interface KnownStatsFactoryItemFilterHookMap {
+	for<K extends keyof exports.StatsFactoryItemKeys>(
+		key: K
+	): SyncBailHook<
+		[exports.StatsFactoryItemKeys[K][0], StatsFactoryContext, number, number],
+		boolean | void
+	>;
 }
 
 /**
- * Defines the known stats chunk origin type used by this module.
+ * Sort hooks over the exact item of the array paths in `StatsFactoryItemKeys`.
  */
-declare interface KnownStatsChunkOrigin {
-	module: string;
-	moduleIdentifier: string;
-	moduleName: string;
-	loc: string;
-	request: string;
-	moduleId?: string | number;
+declare interface KnownStatsFactoryItemSortHookMap {
+	for<K extends keyof exports.StatsFactoryItemKeys>(
+		key: K
+	): SyncBailHook<
+		[Comparator<exports.StatsFactoryItemKeys[K][0]>[], StatsFactoryContext],
+		void
+	>;
 }
 
 /**
- * Defines the known stats compilation type used by this module.
+ * `merge` hooks of the array paths in `StatsFactoryItemKeys`, merging their exact created items into the third element a merged key declares.
  */
-declare interface KnownStatsCompilation {
-	env?: any;
-	name?: string;
-	hash?: string;
-	version?: string;
-	time?: number;
-	builtAt?: number;
-	needAdditionalPass?: boolean;
-	publicPath?: string;
-	outputPath?: string;
-	assetsByChunkName?: Record<string, string[]>;
-	assets?: StatsAsset[];
-	filteredAssets?: number;
-	chunks?: StatsChunk[];
-	modules?: StatsModule[];
-	filteredModules?: number;
-	entrypoints?: Record<string, StatsChunkGroup>;
-	namedChunkGroups?: Record<string, StatsChunkGroup>;
-	errors?: StatsError[];
-	errorsCount?: number;
-	warnings?: StatsError[];
-	warningsCount?: number;
-	hints?: StatsError[];
-	hintsCount?: number;
-	children?: StatsCompilation[];
-	logging?: Record<string, StatsLogging>;
-	filteredWarningDetailsCount?: number;
-	filteredErrorDetailsCount?: number;
+declare interface KnownStatsFactoryMergeHookMap {
+	for<K extends keyof exports.StatsFactoryItemKeys>(
+		key: K
+	): SyncBailHook<
+		[exports.StatsFactoryItemKeys[K][1][], StatsFactoryContext],
+		void | StatsFactoryMergedItems<K>
+	>;
 }
 
 /**
- * Defines the known stats error type used by this module.
+ * Filter hooks over the exact created item of the array paths in `StatsFactoryItemKeys`.
  */
-declare interface KnownStatsError {
-	message: string;
-	chunkName?: string;
-	chunkEntry?: boolean;
-	chunkInitial?: boolean;
-	file?: string;
-	moduleIdentifier?: string;
-	moduleName?: string;
-	loc?: string;
-	chunkId?: string | number;
-	moduleId?: string | number;
-	moduleTrace?: StatsModuleTraceItem[];
-	details?: string;
-	stack?: string;
-	cause?: KnownStatsError;
-	errors?: KnownStatsError[];
-	compilerPath?: string;
+declare interface KnownStatsFactoryResultFilterHookMap {
+	for<K extends keyof exports.StatsFactoryItemKeys>(
+		key: K
+	): SyncBailHook<
+		[exports.StatsFactoryItemKeys[K][1], StatsFactoryContext, number, number],
+		boolean | void
+	>;
 }
 
 /**
- * Defines the known stats factory context type used by this module.
+ * Sort hooks over the exact created item of the array paths in `StatsFactoryItemKeys`.
  */
-declare interface KnownStatsFactoryContext {
-	type: string;
-	compilation: Compilation;
-	makePathsRelative: (path: string) => string;
-	rootModules: Set<Module>;
-	compilationFileToChunks: Map<string, Chunk[]>;
-	compilationAuxiliaryFileToChunks: Map<string, Chunk[]>;
-	runtime: RuntimeSpec;
-	cachedGetErrors: (compilation: Compilation) => Error[];
-	cachedGetWarnings: (compilation: Compilation) => Error[];
-}
-
-/**
- * Defines the known stats logging type used by this module.
- */
-declare interface KnownStatsLogging {
-	entries: StatsLoggingEntry[];
-	filteredEntries: number;
-	debug: boolean;
-}
-
-/**
- * Defines the known stats logging entry type used by this module.
- */
-declare interface KnownStatsLoggingEntry {
-	type: string;
-	message?: string;
-	trace?: string[];
-	children?: StatsLoggingEntry[];
-	args?: any[];
-	time?: number;
-}
-
-/**
- * Defines the known stats module type used by this module.
- */
-declare interface KnownStatsModule {
-	type?: string;
-	moduleType?: string;
-	layer?: null | string;
-	identifier?: string;
-	name?: string;
-	nameForCondition?: null | string;
-	index?: number;
-	preOrderIndex?: number;
-	index2?: number;
-	postOrderIndex?: number;
-	size?: number;
-	sizes?: Record<string, number>;
-	cacheable?: boolean;
-	notCacheableReasons?: string[];
-	built?: boolean;
-	codeGenerated?: boolean;
-	buildTimeExecuted?: boolean;
-	cached?: boolean;
-	optional?: boolean;
-	orphan?: boolean;
-	id?: string | number;
-	issuerId?: null | string | number;
-	chunks?: ChunkId[];
-	assets?: string[];
-	dependent?: boolean;
-	issuer?: null | string;
-	issuerName?: null | string;
-	issuerPath?: null | StatsModuleIssuer[];
-	failed?: boolean;
-	errors?: number;
-	warnings?: number;
-	profile?: StatsProfile;
-	reasons?: StatsModuleReason[];
-	usedExports?: null | boolean | string[];
-	providedExports?: null | string[];
-	optimizationBailout?: string[];
-	depth?: null | number;
-	modules?: StatsModule[];
-	filteredModules?: number;
-	source?: string | Buffer;
-}
-
-/**
- * Defines the known stats module issuer type used by this module.
- */
-declare interface KnownStatsModuleIssuer {
-	identifier: string;
-	name: string;
-	id?: string | number;
-	profile: StatsProfile;
-}
-
-/**
- * Defines the known stats module reason type used by this module.
- */
-declare interface KnownStatsModuleReason {
-	moduleIdentifier: null | string;
-	module: null | string;
-	moduleName: null | string;
-	resolvedModuleIdentifier: null | string;
-	resolvedModule: null | string;
-	type: null | string;
-	active: boolean;
-	explanation: null | string;
-	userRequest: null | string;
-	loc?: null | string;
-	moduleId?: null | string | number;
-	resolvedModuleId?: null | string | number;
-}
-
-/**
- * Defines the known stats module trace dependency type used by this module.
- */
-declare interface KnownStatsModuleTraceDependency {
-	loc?: string;
-}
-
-/**
- * Defines the known stats module trace item type used by this module.
- */
-declare interface KnownStatsModuleTraceItem {
-	originIdentifier?: string;
-	originName?: string;
-	moduleIdentifier?: string;
-	moduleName?: string;
-	dependencies?: StatsModuleTraceDependency[];
-	originId?: string | number;
-	moduleId?: string | number;
+declare interface KnownStatsFactoryResultSortHookMap {
+	for<K extends keyof exports.StatsFactoryItemKeys>(
+		key: K
+	): SyncBailHook<
+		[Comparator<exports.StatsFactoryItemKeys[K][1]>[], StatsFactoryContext],
+		void
+	>;
 }
 
 /**
@@ -16957,26 +19903,6 @@ declare interface KnownStatsPrinterColorFunctions {
 	green?: (value: string | number) => string;
 	magenta?: (value: string | number) => string;
 	cyan?: (value: string | number) => string;
-}
-
-/**
- * Defines the known stats printer context type used by this module.
- */
-declare interface KnownStatsPrinterContext {
-	type?: string;
-	compilation?: StatsCompilation;
-	chunkGroup?: StatsChunkGroup;
-	chunkGroupKind?: string;
-	asset?: StatsAsset;
-	module?: StatsModule;
-	chunk?: StatsChunk;
-	moduleReason?: StatsModuleReason;
-	moduleIssuer?: StatsModuleIssuer;
-	error?: StatsError;
-	profile?: StatsProfile;
-	logging?: StatsLogging;
-	moduleTraceItem?: StatsModuleTraceItem;
-	moduleTraceDependency?: StatsModuleTraceDependency;
 }
 
 /**
@@ -16998,19 +19924,27 @@ declare interface KnownStatsPrinterFormatters {
 }
 
 /**
- * Defines the known stats profile type used by this module.
+ * `getItemName` hooks of the keys in `StatsPrinterItemNameKeys`, with their exact item.
  */
-declare interface KnownStatsProfile {
-	total: number;
-	resolving: number;
-	restoring: number;
-	building: number;
-	integration: number;
-	storing: number;
-	additionalResolving: number;
-	additionalIntegration: number;
-	factory: number;
-	dependencies: number;
+declare interface KnownStatsPrinterGetItemNameHookMap {
+	for<K extends keyof exports.StatsPrinterItemNameKeys>(
+		key: K
+	): SyncBailHook<
+		[exports.StatsPrinterItemNameKeys[K], StatsPrinterContext],
+		string | void
+	>;
+}
+
+/**
+ * `print` hooks of the keys in `StatsPrinterPrintKeys`, with their exact value.
+ */
+declare interface KnownStatsPrinterPrintHookMap {
+	for<K extends keyof exports.StatsPrinterPrintKeys>(
+		key: K
+	): SyncBailHook<
+		[exports.StatsPrinterPrintKeys[K], StatsPrinterContext],
+		undefined | string | void
+	>;
 }
 
 /**
@@ -17033,7 +19967,7 @@ declare interface KnownUnsafeCacheData {
 	 * resolve options
 	 */
 	resolveOptions?: ResolveOptionsWebpackOptions;
-	parserOptions?: ParserOptionsNormalModule;
+	parserOptions?: ParserOptions;
 	generatorOptions?: GeneratorOptions;
 }
 declare const LEGACY_ASSERT_ATTRIBUTES: unique symbol;
@@ -17125,22 +20059,12 @@ declare interface LStatSync {
 	): undefined | IBigIntStatsFs;
 	(
 		path: PathLikeFs,
-		options: StatSyncOptions & { bigint: boolean; throwIfNoEntry?: true }
+		options: StatSyncOptions & { bigint: boolean; throwIfNoEntry?: undefined }
 	): IStatsFs | IBigIntStatsFs;
 	(
 		path: PathLikeFs,
 		options?: StatSyncOptions
 	): undefined | IStatsFs | IBigIntStatsFs;
-}
-
-/**
- * A label in scope, and what may jump to it.
- */
-declare class Label {
-	constructor(kind: null | string, name?: string, statementStart?: number);
-	kind?: null | string;
-	name?: string;
-	statementStart?: number;
 }
 
 /**
@@ -17209,21 +20133,37 @@ declare interface LazyCompilationOptions {
 	/**
 	 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
 	 */
-	test?: string | RegExp | ((module: Module) => boolean);
+	test?: string | RegExp | GlobCondition | ((module: Module) => boolean);
 }
 type LazyFunction<
 	InputValue,
 	OutputValue,
-	InternalLazyTarget extends SerializerMiddleware<
-		any,
-		any,
-		Record<string, any>
-	>,
+	InternalLazyTarget extends SerializerMiddleware,
 	InternalLazyOptions extends undefined | LazyOptions
 > = (() => InputValue | Promise<InputValue>) &
 	Partial<{ options: InternalLazyOptions }>;
+
+/**
+ * Drop-in replacement for acorn's `Node` that materializes `loc` and `range`
+ * on first access instead of allocating them during parsing. Most nodes never
+ * get either read, which saves three objects and an array per node.
+ */
+declare abstract class LazyLocNode {
+	type: string;
+	start: number;
+	end: number;
+
+	/**
+	 * Memoized in a symbol slot - a plain store is far cheaper than making the
+	 * property own via defineProperty, and the slot stays invisible to for-in,
+	 * Object.keys and JSON.stringify. No `loc` is served at all - locations
+	 * are derived from offsets via `JavascriptParser#getLocation`.
+	 */
+	range: [number, number];
+}
 declare interface LazyOptions {
-	[index: string]: any;
+	name?: string;
+	size?: number;
 }
 
 /**
@@ -17300,7 +20240,7 @@ declare class LazySet<T> {
 	 * serialization stream.
 	 */
 	serialize(
-		__0: ObjectSerializerContextObjectMiddlewareObject_3<(number | T)[]>
+		__0: ObjectSerializerContextObjectMiddlewareObject_4<(number | T)[]>
 	): void;
 
 	/**
@@ -17312,8 +20252,250 @@ declare class LazySet<T> {
 	 * Restores a `LazySet` from serialized item data.
 	 */
 	static deserialize<T>(
-		__0: ObjectDeserializerContextObjectMiddlewareObject_2<(number | T)[]>
+		__0: ObjectDeserializerContextObjectMiddlewareObject_3<(number | T)[]>
 	): LazySet<T>;
+}
+
+/**
+ * The columns a tree's lazy objects read, kept by them past the tree's release.
+ */
+declare interface LazySource {
+	/**
+	 * node types
+	 */
+	types: Uint8Array;
+
+	/**
+	 * start offsets
+	 */
+	starts: Int32Array;
+
+	/**
+	 * end offsets
+	 */
+	ends: Int32Array;
+
+	/**
+	 * flag bits
+	 */
+	flags: Uint16Array;
+
+	/**
+	 * first slot of each node
+	 */
+	bases: Int32Array;
+
+	/**
+	 * field slots
+	 */
+	slots: Int32Array;
+
+	/**
+	 * first item of each list
+	 */
+	listStarts: Int32Array;
+
+	/**
+	 * length of each list
+	 */
+	listLengths: Int32Array;
+
+	/**
+	 * list items
+	 */
+	listItems: Int32Array;
+
+	/**
+	 * strings and literal values
+	 */
+	values: (
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| { cooked?: null | string; raw: string }
+	)[];
+
+	/**
+	 * the imports and exports whose attributes `assert` opens
+	 */
+	legacyAsserts?: Set<number>;
+
+	/**
+	 * each node's object, once made: empty until the first short one or second long one is
+	 */
+	objects: (undefined | EstreeObject)[];
+
+	/**
+	 * for `toEstreeObject`'s objects, the long node made while `objects` was empty, `0` for none
+	 */
+	firstNode: number;
+
+	/**
+	 * that node's object
+	 */
+	first?: EstreeObject;
+
+	/**
+	 * the objects an outside parser or a plugin wrote, served for their nodes
+	 */
+	originals?: EstreeInput[];
+
+	/**
+	 * how many nodes the tree holds, the length `objects` takes
+	 */
+	count: number;
+
+	/**
+	 * whether a reader outside the lazy objects keeps reading the columns
+	 */
+	pinned: boolean;
+
+	/**
+	 * whether a release let the columns go without copying them
+	 */
+	released: boolean;
+
+	/**
+	 * parses the same text into a new tree, for a reader after the release
+	 */
+	rebuild?: () => ColumnarSyntaxTree;
+
+	/**
+	 * the source of that tree, once a reader asked for it
+	 */
+	rebuilt?: LazySource;
+
+	/**
+	 * for `toEstreeObject`'s objects, the `ESTREE_RANGES` and `ESTREE_LOCATIONS` they are built with
+	 */
+	variant: number;
+
+	/**
+	 * for `toEstreeObject`'s objects, the edition whose fields they hold
+	 */
+	edition: number;
+
+	/**
+	 * for `toEstreeObject`'s objects, the `source` each `loc` holds
+	 */
+	sourceFile: null | string;
+
+	/**
+	 * for `toEstreeObject`'s objects with `loc`, each line's first offset, once a `loc` needs it
+	 */
+	lineStarts?: number[];
+
+	/**
+	 * for `toEstreeObject`'s objects with `loc`, the source text until `lineStarts` is built from it
+	 */
+	input?: string;
+
+	/**
+	 * for `toEstreeObject`'s objects with `loc`, the offset of each position in `positions`
+	 */
+	positionOffsets?: Int32Array;
+
+	/**
+	 * for `toEstreeObject`'s objects with `loc`, the last positions made, by their offset's low bits
+	 */
+	positions?: (undefined | SourcePosition)[];
+
+	/**
+	 * for `toEstreeObject`'s objects, the function making a node's object once
+	 */
+	factory?: (
+		source: LazySource,
+		node: number
+	) =>
+		| null
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| SpreadElement
+		| PrivateIdentifier
+		| Super
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| Program
+		| AssignmentProperty
+		| Property
+		| CatchClause
+		| ClassBody
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
+
+	/**
+	 * for `toEstreeObject`'s objects, each list's array once read, by list
+	 */
+	lists?: (undefined | (null | EstreeObject)[])[];
+
+	/**
+	 * for `toEstreeObject`'s objects, whether a child field of a long one was assigned
+	 */
+	edited: boolean;
 }
 
 /**
@@ -17532,6 +20714,26 @@ declare interface LimitChunkCountPluginOptions {
 	 */
 	maxChunks: number;
 }
+
+/**
+ * A module-level `let` a module library declares in the chunk's scope instead.
+ */
+declare interface LiveBinding {
+	/**
+	 * the name the chunk's scope declares
+	 */
+	name: string;
+
+	/**
+	 * the keys of the runtimes declaring it
+	 */
+	runtimes: Set<string>;
+
+	/**
+	 * the keys of the runtimes where a module mirrors it through the setters a module library registers, not by name
+	 */
+	registered: Set<string>;
+}
 declare interface LoadScriptCompilationHooks {
 	createScript: SyncWaterfallHook<[string, Chunk], string>;
 }
@@ -17565,6 +20767,17 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+	static KINDS: Set<
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
+	>;
 
 	/**
 	 * Gets source basic types.
@@ -17582,12 +20795,15 @@ declare interface Loader {
 type LoaderContextLibIndex<OptionsType> =
 	NormalModuleLoaderContext<OptionsType> &
 		LoaderRunnerMutableContext<OptionsType> &
-		LoaderRunnerReadonlyContext<OptionsType> &
+		LoaderRunnerReadonlyContext<OptionsType, LoaderData> &
 		LoaderPluginLoaderContext &
 		HotModuleReplacementPluginLoaderContext;
-type LoaderContextNormalModule<T> = NormalModuleLoaderContext<T> &
+type LoaderContextNormalModule<
+	T,
+	DataType = LoaderData
+> = NormalModuleLoaderContext<T> &
 	LoaderRunnerMutableContext<T> &
-	LoaderRunnerReadonlyContext<T> &
+	LoaderRunnerReadonlyContext<T, DataType> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
 declare interface LoaderContextUtils {
@@ -17606,6 +20822,14 @@ declare interface LoaderContextUtils {
 	 */
 	createHash: (algorithm?: string | typeof Hash) => Hash;
 }
+
+/**
+ * What a loader keeps between its pitch and normal phase. Open by default: a
+ * loader stores whatever it likes, and reads it back without narrowing.
+ */
+declare interface LoaderData {
+	[index: string]: any;
+}
 type LoaderDefinition<
 	OptionsType = {},
 	ContextAdditions = {}
@@ -17620,7 +20844,7 @@ declare interface LoaderDefinitionFunction<
 	(
 		this: NormalModuleLoaderContext<OptionsType> &
 			LoaderRunnerMutableContext<OptionsType> &
-			LoaderRunnerReadonlyContext<OptionsType> &
+			LoaderRunnerReadonlyContext<OptionsType, LoaderData> &
 			LoaderPluginLoaderContext &
 			HotModuleReplacementPluginLoaderContext &
 			ContextAdditions,
@@ -17629,19 +20853,25 @@ declare interface LoaderDefinitionFunction<
 		additionalData?: AdditionalData
 	): string | void | Buffer | Promise<string | Buffer>;
 }
-declare interface LoaderEntry {
+declare interface LoaderEntry<
+	OptionsType = Record<string, any>,
+	DataType = LoaderData
+> {
 	request: string;
 	path: string;
 	query: string;
 	fragment: string;
-	options?: string | object;
+	options?: null | string | OptionsType;
 	ident: string;
-	normal?: Function;
-	pitch?: Function;
+	normal?:
+		| LoaderDefinitionFunction<OptionsType, {}>
+		| RawLoaderDefinitionFunction<OptionsType, {}>;
+	pitch?: PitchLoaderDefinitionFunction<OptionsType, {}>;
 	raw?: boolean;
-	data?: object;
+	data?: DataType;
 	pitchExecuted: boolean;
 	normalExecuted: boolean;
+	sourceTest?: (value: string) => boolean;
 	type?: "module" | "commonjs";
 }
 declare interface LoaderItem {
@@ -17649,6 +20879,11 @@ declare interface LoaderItem {
 	options?: null | string | Record<string, any>;
 	ident?: null | string;
 	type?: null | string;
+
+	/**
+	 * compiled condition the loader's current input has to match for its normal function to run
+	 */
+	sourceTest?: (value: string) => boolean;
 }
 
 /**
@@ -17714,7 +20949,7 @@ declare interface LoaderPluginLoaderContext {
 		callback: (
 			err: null | Error,
 			source?: string | Buffer,
-			sourceMap?: null | object,
+			sourceMap?: null | RawSourceMap,
 			module?: Module
 		) => void
 	) => void;
@@ -17790,7 +21025,7 @@ declare interface LoaderRunnerMutableContext<OptionsType> {
 	 * An array of all the loaders. It is writeable in the pitch phase.
 	 * loaders = [{request: string, path: string, query: string, module: function}]
 	 */
-	loaders: LoaderEntry[];
+	loaders: LoaderEntry<Record<string, any>, LoaderData>[];
 
 	/**
 	 * The resource path.
@@ -17833,9 +21068,12 @@ declare interface LoaderRunnerMutableContext<OptionsType> {
  * The members the runner never lets a loader assign. They carry no
  * documentation, so a type literal loses nothing and keeps `readonly`
  */
-declare interface LoaderRunnerReadonlyContext<OptionsType> {
+declare interface LoaderRunnerReadonlyContext<
+	OptionsType,
+	DataType = LoaderData
+> {
 	readonly currentRequest: string;
-	readonly data: any;
+	readonly data: DataType;
 	readonly previousRequest: string;
 	readonly query: string | OptionsType;
 	readonly remainingRequest: string;
@@ -17859,7 +21097,8 @@ declare abstract class LocConverter {
 	pos: number;
 
 	/**
-	 * Returns location converter.
+	 * Sets `line` and `column` to those of a position: a `\n` is the last column
+	 * of its own line. The `\n`s are found once, a lookup is a binary search.
 	 */
 	get(pos: number): LocConverter;
 }
@@ -17877,12 +21116,12 @@ declare abstract class LocalModule {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(context: ObjectSerializerContextObjectMiddlewareObject_1): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_2): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_3): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_1): void;
 }
 
 /**
@@ -17895,8 +21134,8 @@ declare interface LogEntry {
 		| "info"
 		| "log"
 		| "debug"
-		| "clear"
 		| "profile"
+		| "clear"
 		| "trace"
 		| "group"
 		| "groupCollapsed"
@@ -17914,8 +21153,8 @@ type LogTypeEnum =
 	| "info"
 	| "log"
 	| "debug"
-	| "clear"
 	| "profile"
+	| "clear"
 	| "trace"
 	| "group"
 	| "groupCollapsed"
@@ -18011,7 +21250,13 @@ declare abstract class Logger {
 }
 declare const MEASURE_END_OPERATION: unique symbol;
 declare const MEASURE_START_OPERATION: unique symbol;
-declare const MODULE_DECLARATIONS: unique symbol;
+
+/**
+ * Magic comment options by name; each value is whatever the user's comment evaluates to.
+ */
+declare interface MagicCommentOptions {
+	[index: string]: unknown;
+}
 
 /**
  * Defines the main render context type used by this module.
@@ -18278,23 +21523,27 @@ declare interface MatchObject {
 		| string
 		| RegExp
 		| ((str: string) => boolean)
-		| (string | RegExp | ((str: string) => boolean))[];
+		| GlobCondition
+		| (string | RegExp | ((str: string) => boolean) | GlobCondition)[];
 	include?:
 		| string
 		| RegExp
 		| ((str: string) => boolean)
-		| (string | RegExp | ((str: string) => boolean))[];
+		| GlobCondition
+		| (string | RegExp | ((str: string) => boolean) | GlobCondition)[];
 	exclude?:
 		| string
 		| RegExp
 		| ((str: string) => boolean)
-		| (string | RegExp | ((str: string) => boolean))[];
+		| GlobCondition
+		| (string | RegExp | ((str: string) => boolean) | GlobCondition)[];
 }
 type Matcher =
 	| string
 	| RegExp
 	| ((str: string) => boolean)
-	| (string | RegExp | ((str: string) => boolean))[];
+	| GlobCondition
+	| (string | RegExp | ((str: string) => boolean) | GlobCondition)[];
 
 /**
  * Defines the maybe mergeable init fragment type used by this module.
@@ -18314,6 +21563,38 @@ declare interface MaybeMergeableInitFragment<GenerateContext> {
 }
 type MaybePromise<T> = T | Promise<T>;
 type Media = undefined | string;
+type MemCache = {
+	get<K extends TupleElement>(
+		key: K,
+		...rest: TupleElement[]
+	): undefined | MemCacheValue<K>;
+	set<K extends TupleElement>(
+		key: K,
+		...restAndValue: [...TupleElement[], MemCacheValue<K>]
+	): void;
+	provide<K extends TupleElement, V, R extends TupleElement[] = TupleElement[]>(
+		key: K,
+		...restAndCompute: [
+			...R,
+			(key: K, ...rest: [R][R extends R ? 0 : never]) => MemCacheProvided<K, V>
+		]
+	): MemCacheProvided<K, V>;
+	cachedProvide<This, V, A extends TupleElement[] = TupleElement[]>(
+		compute: (thisArg: This, ...key: [A][A extends A ? 0 : never]) => V,
+		thisArg: This,
+		args: A
+	): V;
+} & Omit<
+	WeakTupleMap<TupleElement[], unknown>,
+	"get" | "set" | "provide" | "cachedProvide"
+>;
+type MemCacheKeyValue<K> = K extends { readonly __memCacheValue?: infer V }
+	? V
+	: unknown;
+type MemCacheProvided<K, V> =
+	unknown extends MemCacheKeyValue<K> ? V : MemCacheKeyValue<K>;
+type MemCacheValue<K> =
+	unknown extends MemCacheKeyValue<K> ? any : MemCacheKeyValue<K>;
 
 /**
  * Options object for in-memory caching.
@@ -18395,7 +21676,7 @@ type MergedDefinitionNode =
 			| RuntimeValue
 	  >[]
 	| Map<string, MergedDefinitionNode>;
-type Meta = KnownMeta & Record<symbol, string[]> & Record<string, any>;
+type Meta = exports.KnownMeta & Record<symbol, string[]> & Record<string, any>;
 declare class MinChunkSizePlugin {
 	/**
 	 * Creates an instance of MinChunkSizePlugin.
@@ -18426,25 +21707,29 @@ declare interface MinChunkSizePluginOptions {
 }
 
 /**
- * what a caller minifies with, the switches of its corrections and improvements, and the modules it is built from
+ * A label: a statement's, its `break`s and `continue`s naming it too.
  */
-declare interface Minifier {
-	minify: (
-		sources: MinifySources,
-		options?: MinifyOptions
-	) => Promise<MinifyOutput>;
-	phases: string[];
-	corrections?: { enabled: boolean };
-	improvements?: { enabled: boolean; lets: { enabled: boolean } };
-	modules: MinifierModules;
+declare abstract class MinifierLabel {
+	name: string;
+	mangledName: null | string;
+	parent: null | MinifierLabel;
+	counter: number;
 }
 
 /**
- * terser's own modules
+ * One name declared in one scope, or a global: terser's `SymbolDef`, less
+ * what only terser's compressor reads.
  */
-declare interface MinifierModules {
-	[index: string]: any;
-	ast: Ast;
+declare abstract class MinifierVariable extends Variable {
+	kind: number;
+	declarations: number;
+	global: boolean;
+	undeclared: boolean;
+	export: number;
+	mangledName: null | string;
+	referenceCount: number;
+	written: boolean;
+	writes: number;
 }
 
 /**
@@ -18455,37 +21740,59 @@ declare interface MinifyOptions {
 	/**
 	 * what the compressor does, or false to leave the tree as read
 	 */
-	compress?: boolean | Record<string, any>;
+	compress?: boolean | GivenCompressOptions;
 
 	/**
 	 * which names are renamed, or false to keep them
 	 */
-	mangle?: boolean | Record<string, any>;
+	mangle?: boolean | GivenMangleOptions;
 
 	/**
 	 * how the output is written
 	 */
-	format?: Record<string, any>;
+	format?: GivenFormatOptions;
 
 	/**
 	 * the older spelling of `format`, which may not be named beside it
 	 */
-	output?: Record<string, any>;
+	output?: GivenFormatOptions;
 
 	/**
 	 * how the source is read
 	 */
-	parse?: Record<string, any>;
+	parse?: {
+		bareReturns?: boolean;
+		ecma?: null | number;
+		filename?: null | string;
+		html5Comments?: boolean;
+		module?: boolean;
+		shebang?: boolean;
+		toplevel?: null;
+		spidermonkey?: boolean;
+		/**
+		 * terser's name for `bareReturns`
+		 */
+		bare_returns?: boolean;
+		/**
+		 * terser's name for `html5Comments`
+		 */
+		html5_comments?: boolean;
+	};
 
 	/**
 	 * whether a source map is written, and how
 	 */
-	sourceMap?: boolean | Record<string, any>;
+	sourceMap?: boolean | GivenSourceMapOptions;
 
 	/**
 	 * whether the source is a module
 	 */
 	module?: boolean;
+
+	/**
+	 * which production the source is, `module` read from it where given
+	 */
+	sourceType?: "module" | "commonjs" | "script" | "event-handler";
 
 	/**
 	 * which edition the output may use
@@ -18500,15 +21807,25 @@ declare interface MinifyOptions {
 	/**
 	 * names held across assets, which this writes into
 	 */
-	nameCache?: null | Record<string, any>;
+	nameCache?: null | { vars?: any; props?: any };
 
 	/**
 	 * which class names survive
 	 */
-	keep_classnames?: boolean | RegExp;
+	keepClassnames?: boolean | RegExp;
 
 	/**
 	 * which function names survive
+	 */
+	keepFnames?: boolean | RegExp;
+
+	/**
+	 * terser's name for `keepClassnames`, read as it
+	 */
+	keep_classnames?: boolean | RegExp;
+
+	/**
+	 * terser's name for `keepFnames`, read as it
 	 */
 	keep_fnames?: boolean | RegExp;
 
@@ -18521,34 +21838,17 @@ declare interface MinifyOptions {
 	 * whether the output works around that engine
 	 */
 	safari10?: boolean;
+
+	/**
+	 * the global a CommonJS module is wrapped to write its exports to
+	 */
+	wrap?: string | false;
+
+	/**
+	 * the function the source is enclosed in, as `parameters:arguments`
+	 */
+	enclose?: string | boolean;
 }
-
-/**
- * What a minify answers with: the code it wrote, the map it was asked for, and
- * the tree where the format options asked for one instead of code.
- */
-declare interface MinifyOutput {
-	/**
-	 * the minified source
-	 */
-	code?: string;
-
-	/**
-	 * the source map, as a string or an object
-	 */
-	map?: string | Record<string, any>;
-
-	/**
-	 * the map with its mappings read
-	 */
-	decoded_map?: null | Record<string, any>;
-
-	/**
-	 * the tree, where `format.ast` asked for it
-	 */
-	ast?: NodeShape;
-}
-type MinifySources = string | string[] | Record<string, string> | NodeShape;
 
 /**
  * Describes the mkdir shape.
@@ -18888,6 +22188,22 @@ declare class Module extends DependenciesBlock {
 	getReferencedSourceTypes(): undefined | ReadonlySet<string>;
 
 	/**
+	 * Returns whether this module is of the given kind; a subclass is every kind its parent is.
+	 */
+	is<
+		K extends
+			| "html"
+			| "runtime"
+			| "normal"
+			| "css"
+			| "context"
+			| "remote"
+			| "consume-shared"
+			| "external"
+			| "concatenated"
+	>(kind: K): boolean;
+
+	/**
 	 * Basic source types are high-level categories like javascript, css, webassembly, etc.
 	 * We only have built-in knowledge about the javascript basic type here; other basic types may be
 	 * added or changed over time by generators and do not need to be handled or detected here.
@@ -18920,6 +22236,16 @@ declare class Module extends DependenciesBlock {
 	 * Returns the path used when matching this module against rule conditions.
 	 */
 	nameForCondition(): null | string;
+
+	/**
+	 * Returns the module this one was built around: itself, or the root of a scope-hoisted concatenation.
+	 */
+	getRootModule(): Module;
+
+	/**
+	 * Returns the modules this one was built from: itself, or every module merged by scope hoisting.
+	 */
+	getSourceModules(): Iterable<Module>;
 
 	/**
 	 * Returns the reason this module cannot be concatenated, when one exists.
@@ -18982,17 +22308,28 @@ declare class Module extends DependenciesBlock {
 		missingDependencies: LazySet<string>,
 		buildDependencies: LazySet<string>
 	): void;
-	get hasEqualsChunks(): any;
-	get isUsed(): any;
+	get hasEqualsChunks(): void;
+	get isUsed(): void;
 	get errors(): any;
 	get warnings(): any;
-	used: any;
+	used: void;
 
 	/**
 	 * Gets source basic types.
 	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
+	static KINDS: Set<
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
+	>;
 }
 declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 	/**
@@ -19034,6 +22371,17 @@ declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+	static KINDS: Set<
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
+	>;
 
 	/**
 	 * Gets source basic types.
@@ -19062,6 +22410,40 @@ declare class ModuleDependency extends Dependency {
 	range?: [number, number];
 	weak: boolean;
 	static Template: typeof DependencyTemplate;
+	static KINDS: Set<
+		| "worker"
+		| "css-import"
+		| "css-url"
+		| "entry"
+		| "url"
+		| "module-dependency"
+		| "esm-import"
+		| "provided"
+		| "dynamic-import"
+		| "esm-reexport"
+		| "esm-export-specifier"
+		| "esm-live-export"
+		| "esm-side-effect-import"
+		| "context-element"
+		| "esm-bare-side-effect-import"
+		| "esm-import-specifier"
+		| "esm-evaluated-import-specifier"
+		| "esm-compatibility"
+		| "commonjs-require"
+		| "commonjs-export-require"
+		| "html-source"
+		| "html-entry"
+		| "html-inline-style"
+		| "html-css-module"
+		| "webassembly-import"
+		| "webassembly-export-imported"
+		| "sharing-request"
+		| "local-module"
+		| "static-exports"
+		| "loader-import"
+		| "css-icss-import"
+		| "css-icss-export"
+	>;
 
 	/**
 	 * Compares two dependencies by source location for sorting a module's
@@ -19087,20 +22469,22 @@ declare class ModuleDependency extends Dependency {
 	 */
 	static canConcatenate(
 		dependency: Dependency,
-		concatenateCommonJsModules: boolean
+		concatenateCommonJsModules: boolean,
+		module?: null | Module
 	): boolean;
 	static TRANSITIVE: symbol;
-	static LAZY_UNTIL_LOCAL: "local";
-	static LAZY_UNTIL_ID: "id";
-	static LAZY_UNTIL_FALLBACK: "*";
-	static LAZY_UNTIL_REQUEST: "@";
+	static LAZY_LOCAL_EXPORT: "local";
+	static LAZY_NAMED_REEXPORT: "id";
+	static LAZY_STAR_REEXPORT: "*";
+	static LAZY_REEXPORT_SIDE_EFFECT: "@";
+	static LAZY_IMPORT_DECLARATION: "import";
 	static ESM_CATEGORY: "esm";
 }
 
 /**
  * Represents ModuleExternalInitFragment.
  */
-declare class ModuleExternalInitFragment extends InitFragment<GenerateContext> {
+declare class ModuleExternalInitFragment extends InitFragment<ChunkRenderContextJavascriptModulesPlugin> {
 	/**
 	 * Creates an instance of ModuleExternalInitFragment.
 	 */
@@ -19150,19 +22534,19 @@ declare class ModuleExternalInitFragment extends InitFragment<GenerateContext> {
 	static STAGE_ASYNC_ESM_IMPORTS: number;
 
 	/**
-	 * use `STAGE_ESM_EXPORTS` — TODO in the next major release: remove
+	 * use `STAGE_ESM_EXPORTS` - TODO in the next major release: remove
 	 * @deprecated
 	 */
 	static STAGE_HARMONY_EXPORTS: number;
 
 	/**
-	 * use `STAGE_ESM_IMPORTS` — TODO in the next major release: remove
+	 * use `STAGE_ESM_IMPORTS` - TODO in the next major release: remove
 	 * @deprecated
 	 */
 	static STAGE_HARMONY_IMPORTS: number;
 
 	/**
-	 * use `STAGE_ASYNC_ESM_IMPORTS` — TODO in the next major release: remove
+	 * use `STAGE_ASYNC_ESM_IMPORTS` - TODO in the next major release: remove
 	 * @deprecated
 	 */
 	static STAGE_ASYNC_HARMONY_IMPORTS: number;
@@ -19192,6 +22576,11 @@ declare interface ModuleFactoryCacheEntry {
 	 * - The compilation hash
 	 */
 	hash?: string;
+
+	/**
+	 * - whether an end left open was closed
+	 */
+	closed: boolean;
 
 	/**
 	 * - The inheritance chain
@@ -19489,7 +22878,7 @@ declare class ModuleGraph {
 	): void;
 
 	/**
-	 * Adds the provided module to the module graph.
+	 * Adds an explanatory connection without duplicating an existing reason.
 	 */
 	addExtraReason(module: Module, explanation: string): void;
 
@@ -19694,7 +23083,7 @@ declare class ModuleGraph {
 	/**
 	 * Returns computed value or cached.
 	 */
-	cached<T extends any[], R>(
+	cached<T extends TupleElement[], R>(
 		fn: (moduleGraph: ModuleGraph, ...args: T) => R,
 		...args: T
 	): R;
@@ -19702,18 +23091,16 @@ declare class ModuleGraph {
 	/**
 	 * Sets module mem caches.
 	 */
-	setModuleMemCaches(
-		moduleMemCaches: Map<Module, WeakTupleMap<any[], any>>
-	): void;
+	setModuleMemCaches(moduleMemCaches: Map<Module, MemCache>): void;
 
 	/**
 	 * Dependency cache provide.
 	 */
-	dependencyCacheProvide<D extends Dependency, ARGS extends any[], R>(
+	dependencyCacheProvide<D extends Dependency, ARGS extends TupleElement[], R>(
 		dependency: D,
 		...args: [
-			ARGS,
-			...((moduleGraph: ModuleGraph, dependency: D, ...args: ARGS) => R)[]
+			...ARGS,
+			(moduleGraph: ModuleGraph, dependency: D, ...args: ARGS) => R
 		]
 	): R;
 
@@ -19825,7 +23212,77 @@ type ModuleInfo = ConcatenatedModuleInfo | ExternalModuleInfo;
 declare interface ModuleMemCachesItem {
 	buildInfo: BuildInfo;
 	references?: WeakMap<Dependency, Module>;
-	memCache: WeakTupleMap<any[], any>;
+	lazyRequests?: string;
+	memCache: MemCache;
+}
+declare class ModuleNotFoundError extends WebpackError {
+	/**
+	 * Creates an instance of ModuleNotFoundError.
+	 */
+	constructor(
+		module: null | Module,
+		err: Error & { details?: string },
+		loc: DependencyLocation
+	);
+	error: Error & { details?: string };
+
+	/**
+	 * Whether an error is a webpack error rather than any other thrown value.
+	 */
+	static isWebpackError<T>(value: T): boolean;
+
+	/**
+	 * Creates a `.stack` property on `targetObject`, which when accessed returns
+	 * a string representing the location in the code at which
+	 * `Error.captureStackTrace()` was called.
+	 * ```js
+	 * const myObject = {};
+	 * Error.captureStackTrace(myObject);
+	 * myObject.stack;  // Similar to `new Error().stack`
+	 * ```
+	 * The first line of the trace will be prefixed with
+	 * `${myObject.name}: ${myObject.message}`.
+	 * The optional `constructorOpt` argument accepts a function. If given, all frames
+	 * above `constructorOpt`, including `constructorOpt`, will be omitted from the
+	 * generated stack trace.
+	 * The `constructorOpt` argument is useful for hiding implementation
+	 * details of error generation from the user. For instance:
+	 * ```js
+	 * function a() {
+	 *   b();
+	 * }
+	 * function b() {
+	 *   c();
+	 * }
+	 * function c() {
+	 *   // Create an error without stack trace to avoid calculating the stack trace twice.
+	 *   const { stackTraceLimit } = Error;
+	 *   Error.stackTraceLimit = 0;
+	 *   const error = new Error();
+	 *   Error.stackTraceLimit = stackTraceLimit;
+	 *   // Capture the stack trace above function b
+	 *   Error.captureStackTrace(error, b); // Neither function c, nor b is included in the stack trace
+	 *   throw error;
+	 * }
+	 * a();
+	 * ```
+	 */
+	static captureStackTrace(
+		targetObject: object,
+		constructorOpt?: Function
+	): void;
+	static prepareStackTrace(err: Error, stackTraces: NodeJS.CallSite[]): any;
+
+	/**
+	 * The `Error.stackTraceLimit` property specifies the number of stack frames
+	 * collected by a stack trace (whether generated by `new Error().stack` or
+	 * `Error.captureStackTrace(obj)`).
+	 * The default value is `10` but may be set to any valid JavaScript number. Changes
+	 * will affect any stack trace captured _after_ the value has been changed.
+	 * If set to a non-number value, or set to a negative number, stack traces will
+	 * not capture any frames.
+	 */
+	static stackTraceLimit: number;
 }
 
 /**
@@ -20263,7 +23720,9 @@ declare class MultiCompiler {
 		options: MultiCompilerOptions
 	);
 	hooks: Readonly<{
-		done: SyncHook<[MultiStats, Compiler[]]>;
+		done: AsyncSeriesHook<[MultiStats, Compiler[]]> & {
+			call: (stats: MultiStats, changedCompilers: Compiler[]) => void;
+		};
 		invalid: MultiHook<SyncHook<[null | string, number]>>;
 		run: MultiHook<AsyncSeriesHook<[Compiler]>>;
 		watchClose: SyncHook<[]>;
@@ -20358,6 +23817,29 @@ declare interface MultiCompilerOptions {
 	 * how many Compilers are allows to run at the same time in parallel
 	 */
 	parallelism?: number;
+
+	/**
+	 * plugins applied once to the MultiCompiler when it is created
+	 */
+	plugins?: (
+		| undefined
+		| null
+		| false
+		| ""
+		| 0
+		| ((this: MultiCompiler, compiler: MultiCompiler) => void)
+		| MultiCompilerPluginInstance
+	)[];
+}
+
+/**
+ * A plugin applied to the MultiCompiler itself rather than to each child.
+ */
+declare interface MultiCompilerPluginInstance {
+	/**
+	 * called once with the MultiCompiler
+	 */
+	apply: (compiler: MultiCompiler) => void;
 }
 type MultiConfiguration = ReadonlyArray<Configuration> & MultiCompilerOptions;
 declare abstract class MultiStats {
@@ -20437,7 +23919,7 @@ declare abstract class MultiWatching {
  */
 declare interface MutableToken {
 	/**
-	 * one of the `TT_*` constants
+	 * a `TokenType`
 	 */
 	type: number;
 
@@ -20497,6 +23979,14 @@ declare interface NamedChunkIdsPluginOptions {
 	 * delimiter
 	 */
 	delimiter?: string;
+}
+
+/**
+ * what every definition of a name holds: the name it declares, and the one mangling gave it
+ */
+declare interface NamedDefinition {
+	name: string;
+	mangledName?: null | string;
 }
 declare class NamedModuleIdsPlugin {
 	/**
@@ -20570,6 +24060,81 @@ declare interface NodeEnvironmentPluginOptions {
 	 */
 	infrastructureLogging: InfrastructureLogging;
 }
+type NodeEstreeIndex =
+	| ImportDeclaration
+	| ExportNamedDeclaration
+	| ExportAllDeclaration
+	| ImportExpressionImport
+	| UnaryExpression
+	| ArrayExpression
+	| ArrowFunctionExpression
+	| AssignmentExpression
+	| AwaitExpression
+	| BinaryExpression
+	| SimpleCallExpression
+	| NewExpression
+	| ChainExpression
+	| ClassExpression
+	| ConditionalExpression
+	| FunctionExpression
+	| Identifier
+	| SimpleLiteral
+	| RegExpLiteral
+	| BigIntLiteral
+	| LogicalExpression
+	| MemberExpression
+	| MetaProperty
+	| ObjectExpression
+	| SequenceExpression
+	| TaggedTemplateExpression
+	| TemplateLiteral
+	| ThisExpression
+	| UpdateExpression
+	| YieldExpression
+	| SpreadElement
+	| PrivateIdentifier
+	| Super
+	| FunctionDeclaration
+	| VariableDeclaration
+	| ClassDeclaration
+	| ExpressionStatement
+	| BlockStatement
+	| StaticBlock
+	| EmptyStatement
+	| DebuggerStatement
+	| WithStatement
+	| ReturnStatement
+	| LabeledStatement
+	| BreakStatement
+	| ContinueStatement
+	| IfStatement
+	| SwitchStatement
+	| ThrowStatement
+	| TryStatement
+	| WhileStatement
+	| DoWhileStatement
+	| ForStatement
+	| ForInStatement
+	| ForOfStatement
+	| ExportDefaultDeclaration
+	| MethodDefinition
+	| PropertyDefinition
+	| VariableDeclarator
+	| Program
+	| AssignmentProperty
+	| Property
+	| CatchClause
+	| ClassBody
+	| ImportSpecifier
+	| ImportDefaultSpecifier
+	| ImportNamespaceSpecifier
+	| ExportSpecifier
+	| ObjectPattern
+	| ArrayPattern
+	| RestElement
+	| AssignmentPattern
+	| SwitchCase
+	| TemplateElement;
 
 /**
  * a node as this parser builds one, whichever fields the options asked for
@@ -20578,7 +24143,7 @@ declare interface NodeLike {
 	type: string;
 	start: number;
 	end: number;
-	loc?: any;
+	loc?: null | SourceLocation;
 	sourceFile?: string;
 	range?: [number, number];
 }
@@ -20604,75 +24169,182 @@ declare interface NodeOptions {
 }
 
 /**
+ * A language's parts, by node type: what its `Field`s and `Flag`s apply to.
+ */
+declare interface NodeParts {
+	/**
+	 * every `NodeType` member
+	 */
+	types: number;
+
+	/**
+	 * every `Field`
+	 */
+	field: number;
+
+	/**
+	 * every `Flag`
+	 */
+	flag: number;
+
+	/**
+	 * every `Part` with a position
+	 */
+	part: number;
+
+	/**
+	 * every `Part` with text beyond the name and value
+	 */
+	text: number;
+
+	/**
+	 * the `Field`s of each node type
+	 */
+	fields: Record<number, number>;
+
+	/**
+	 * the `Flag`s of each node type
+	 */
+	flags: Record<number, number>;
+
+	/**
+	 * the `Part`s with a position, by node type
+	 */
+	parts: Record<number, number>;
+
+	/**
+	 * the `Part`s with text, by node type
+	 */
+	texts: Record<number, number>;
+
+	/**
+	 * the node type of each `Field`'s items
+	 */
+	items: Record<number, number>;
+}
+type NodePath<TNode, TValue = unknown> = NodePathReads<TNode, TValue> &
+	NodePathFields<TNode>;
+
+/**
+ * Structure read through a language's `Field`, `Flag` and `Part`. Declared as
+ * methods so a language's path may accept only the parts each node type has.
+ */
+declare interface NodePathFields<TNode> {
+	field(i: number, field: number, n?: TNode): TNode;
+	fieldCount(field: number, n?: TNode): number;
+	fieldNamed(field: number, name: string, n?: TNode): TNode;
+	flag(flag: number, n?: TNode): boolean;
+	rangeOf(part: number, n?: TNode): null | [number, number];
+	startOf(part: number, n?: TNode): number;
+	endOf(part: number, n?: TNode): number;
+	textOf(part: number, n?: TNode): null | string;
+	within(type: number): boolean;
+}
+declare interface NodePathReads<TNode, TValue = unknown> {
+	/**
+	 * the current node
+	 */
+	node: TNode;
+
+	/**
+	 * the enclosing node (null at a root)
+	 */
+	parent: null | TNode;
+
+	/**
+	 * the current node's index among its siblings
+	 */
+	index: number;
+
+	/**
+	 * stop the walk descending into the current node (enter only)
+	 */
+	skipChildren: () => void;
+
+	/**
+	 * end the walk: no visitor fires after the current one returns, and a print still completes
+	 */
+	stop: () => void;
+
+	/**
+	 * the run's state, as `process` was given it
+	 */
+	state: unknown;
+
+	/**
+	 * the node's `NodeType`
+	 */
+	type: (n?: TNode) => number;
+
+	/**
+	 * start and end offsets in the input
+	 */
+	range: (n?: TNode) => [number, number];
+
+	/**
+	 * where the node starts in the input
+	 */
+	start: (n?: TNode) => number;
+
+	/**
+	 * where the node ends in the input
+	 */
+	end: (n?: TNode) => number;
+
+	/**
+	 * start line and column, end line and column (lines from 1, columns from 0)
+	 */
+	loc: (n?: TNode) => [number, number, number, number];
+
+	/**
+	 * the node's source text, or the input between two offsets
+	 */
+	source: (n?: number | TNode, end?: number) => string;
+
+	/**
+	 * the node's name as the language defines it, decoded ("" when it has none)
+	 */
+	name: (n?: TNode) => string;
+
+	/**
+	 * the node's value as the language defines it, decoded
+	 */
+	value: (n?: TNode) => TValue;
+
+	/**
+	 * number of children
+	 */
+	childCount: (n?: TNode) => number;
+
+	/**
+	 * the i-th child
+	 */
+	child: (i: number, n?: TNode) => TNode;
+
+	/**
+	 * every child as a new array
+	 */
+	children: (n?: TNode) => TNode[];
+}
+type NodePrintOptions = Omit<JavascriptProcessOptions, "compress"> & {
+	parsed?: ParsedTree;
+	leading?: { tables: TokenTables; token: number };
+	inlinesNames?: boolean;
+	names?: null | TreeNames;
+	compress?: null | Partial<any>;
+	mapsFrom?: { offset: number; length: number };
+};
+
+/**
  * A language node printer, fired for one node once all its visitors have run and
  * its children are printed. It takes the same `path` a visitor gets plus the
  * print context as its `writer`; it switches on `path.type()` and **returns** the
- * node's serialized text, reading its children's text from `writer.get` — knowing
+ * node's serialized text, reading its children's text from `writer.get` - knowing
  * nothing of the walk. Returning (rather than writing to a buffer) is what lets a
  * parent compose / transform its text from its finished children.
  */
-declare interface NodePrinter<TPath, TNode, TPrintOptions = object> {
+declare interface NodePrinter<TPath, TNode, TPrintOptions = PrintOptions> {
 	(path: TPath, writer: PrintContext<TPath, TNode, TPrintOptions>): string;
-}
-
-/**
- * One of terser's AST nodes: the fields and methods the phases share typed, the
- * rest open.
- */
-declare interface NodeShape {
-	[index: string]: any;
-	TYPE: string;
-	type: string;
-	mapName?: null | string;
-	shorthand: boolean;
-	name: string;
-	kind: string;
-	role: string;
-	computed: boolean;
-	label: NodeShape;
-	property: NodeShape;
-	flags: number;
-	startToken: TokenEs5;
-	endToken: TokenEs5;
-	expression: NodeShape;
-	callee: NodeShape;
-	object: NodeShape;
-	argument: NodeShape;
-	discriminant: NodeShape;
-	left: NodeShape;
-	right: NodeShape;
-	operator: string;
-	test: NodeShape;
-	alternate: NodeShape;
-	arguments: NodeShape[];
-	elements: (null | NodeShape)[];
-	properties: NodeShape[];
-	declarations: NodeShape[];
-	expressions: NodeShape[];
-	segments: NodeShape[];
-	params: NodeShape[];
-	quote?: string;
-	raw?: string;
-	optional: boolean;
-	tag: NodeShape;
-	superClass: NodeShape;
-	scope: NodeShape;
-	definition: SymbolDefinition;
-	fixed_value(): any;
-	tail_node(): NodeShape;
-	clone(deep?: boolean): NodeShape;
-	transform(walker?: any, inList?: boolean): NodeShape;
-	optimize(compressor: CompressorShape): NodeShape;
-	has_side_effects(compressor: CompressorShape): boolean;
-	may_throw(compressor: CompressorShape): boolean;
-	drop_side_effect_free(
-		compressor: CompressorShape,
-		firstInStatement?: boolean
-	): null | NodeShape;
-	is_constant_expression(scope?: NodeShape): boolean | "f";
-	evaluate(compressor: CompressorShape): any;
-	negate(compressor: CompressorShape, firstInStatement?: boolean): NodeShape;
-	size(compressor?: CompressorShape, stack?: any): number;
 }
 declare class NodeSourcePlugin {
 	constructor();
@@ -20681,55 +24353,6 @@ declare class NodeSourcePlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
-}
-
-/**
- * Base AST node — the property-accessor view the `parseA*` entry points return
- * (see `_makeReader`). Every concrete node carries the `[start, end)` byte
- * `range` of the source slice it covers; `loc` is computed on demand from the
- * shared `LocConverter`, so line/column conversion is only paid when a consumer
- * needs it. The concrete node typedefs below extend this via `&`.
- * Inside the parser a node ref is an integer id into the columns; the reader
- * exposes this property shape over a retained snapshot of those columns.
- */
-declare interface NodeSyntaxParser {
-	/**
-	 * node-type discriminator
-	 */
-	type: number;
-
-	/**
-	 * byte offset of the node's first code point
-	 */
-	start: number;
-
-	/**
-	 * byte offset just past the node's last code point
-	 */
-	end: number;
-
-	/**
-	 * the `[start, end)` byte range
-	 */
-	range: [number, number];
-
-	/**
-	 * source location (1-based line, 0-based column)
-	 */
-	loc: {
-		start: { line: number; column: number };
-		end: { line: number; column: number };
-	};
-
-	/**
-	 * source slice for this node
-	 */
-	toString: () => string;
-
-	/**
-	 * name with CSS escapes resolved (name-bearing nodes only)
-	 */
-	unescapedName: string;
 }
 declare class NodeTargetPlugin {
 	/**
@@ -20775,7 +24398,7 @@ declare class NormalModule extends Module {
 	rawRequest: string;
 	binary: boolean;
 	parser?: Parser;
-	parserOptions?: ParserOptionsNormalModule;
+	parserOptions?: ParserOptions;
 	generator?: Generator;
 	generatorOptions?: GeneratorOptions;
 	resource: string;
@@ -20816,7 +24439,12 @@ declare class NormalModule extends Module {
 	 * Marks the module as failed, so what it generates says so. A tap or a
 	 * loader may fail with anything, and what reads the failure expects an error.
 	 */
-	markModuleAsErrored(error?: any): void;
+	markModuleAsErrored(error?: unknown): void;
+
+	/**
+	 * An absolute path string is a prefix of `content`; a relative one is a glob
+	 * matched against the resource path, without loaders and query.
+	 */
 	applyNoParseRule(
 		rule: string | RegExp | ((content: string) => boolean),
 		content: string
@@ -20859,7 +24487,7 @@ declare class NormalModule extends Module {
 		 */
 		beforeSnapshot: SyncHook<[NormalModule]>;
 		/**
-		 * Async since 5.111.0, so a tap can await work of its own — minifying an
+		 * Async since 5.111.0, so a tap can await work of its own - minifying an
 		 * asset, say, which before only a loader could do. `tap` keeps working.
 		 * @since 5.99.0
 		 */
@@ -20884,8 +24512,19 @@ declare class NormalModule extends Module {
 		needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
 	};
 	static deserialize(
-		context: ObjectDeserializerContextObjectMiddlewareObject_2
+		context: ObjectDeserializerContextObjectMiddlewareObject_3
 	): NormalModule;
+	static KINDS: Set<
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
+	>;
 
 	/**
 	 * Gets source basic types.
@@ -20893,7 +24532,7 @@ declare class NormalModule extends Module {
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
-type NormalModuleBuildInfo = KnownBuildInfo &
+type NormalModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo;
 declare interface NormalModuleCreateData<T extends string = string> {
@@ -20992,7 +24631,7 @@ declare interface NormalModuleCreateData<T extends string = string> {
 		Record<"css/module", CssModuleParserOptions> &
 		Record<"css/global", CssModuleParserOptions> &
 		Record<"html", EmptyParserOptions> &
-		Record<string, ParserOptionsNormalModule>)[T];
+		Record<string, ParserOptions>)[T];
 
 	/**
 	 * the generator used
@@ -21117,7 +24756,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					SyncBailHook<[CssModuleParserOptions], CssParser>
 				> &
 				Record<"html", SyncBailHook<[EmptyParserOptions], HtmlParser>> &
-				Record<string, SyncBailHook<[ParserOptionsNormalModule], Parser>>
+				Record<string, SyncBailHook<[ParserOptions], Parser>>
 		>;
 		parser: TypedHookMap<
 			Record<
@@ -21172,7 +24811,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					SyncBailHook<[CssParser, CssModuleParserOptions], void>
 				> &
 				Record<"html", SyncBailHook<[HtmlParser, EmptyParserOptions], void>> &
-				Record<string, SyncBailHook<[Parser, ParserOptionsNormalModule], void>>
+				Record<string, SyncBailHook<[Parser, ParserOptions], void>>
 		>;
 		createGenerator: TypedHookMap<
 			Record<
@@ -21304,7 +24943,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	ruleSet: RuleSet;
 	context: string;
 	fs: InputFileSystem;
-	parserCache: Map<string, WeakMap<ParserOptionsNormalModule, Parser>>;
+	parserCache: Map<string, WeakMap<ParserOptions, Parser>>;
 	generatorCache: Map<string, WeakMap<GeneratorOptions, Generator>>;
 	cleanupForCache(): void;
 
@@ -21341,7 +24980,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	 */
 	getParser<T extends string>(
 		type: T,
-		parserOptions?: ParserOptionsNormalModule
+		parserOptions?: ParserOptions
 	): (Record<"javascript/auto", JavascriptParser> &
 		Record<"javascript/dynamic", JavascriptParser> &
 		Record<"javascript/esm", JavascriptParser> &
@@ -21365,7 +25004,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	 */
 	createParser<T extends string>(
 		type: T,
-		parserOptions?: ParserOptionsNormalModule
+		parserOptions?: ParserOptions
 	): (Record<"javascript/auto", JavascriptParser> &
 		Record<"javascript/dynamic", JavascriptParser> &
 		Record<"javascript/esm", JavascriptParser> &
@@ -21450,7 +25089,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 
 	/**
 	 * Extracts and parses the options of the current loader.
-	 * Parses string options as JSON or a query string.
+	 * Parses string options as JSON or a query string, and validates them as `compiler.validate` does when given a schema.
 	 */
 	getOptions: GetOptionsMethod<OptionsType>;
 
@@ -21543,48 +25182,8 @@ declare abstract class NormalReexportItem {
 declare interface NormalizedModules {
 	[index: string]: VirtualModule;
 }
-type NormalizedStatsOptions = KnownNormalizedStatsOptions &
-	Omit<
-		StatsOptions,
-		| "context"
-		| "chunkGroups"
-		| "requestShortener"
-		| "chunksSort"
-		| "modulesSort"
-		| "chunkModulesSort"
-		| "nestedModulesSort"
-		| "assetsSort"
-		| "ids"
-		| "cachedAssets"
-		| "groupAssetsByEmitStatus"
-		| "groupAssetsByPath"
-		| "groupAssetsByExtension"
-		| "assetsSpace"
-		| "excludeAssets"
-		| "excludeModules"
-		| "warningsFilter"
-		| "cachedModules"
-		| "orphanModules"
-		| "dependentModules"
-		| "runtimeModules"
-		| "groupModulesByCacheStatus"
-		| "groupModulesByLayer"
-		| "groupModulesByAttributes"
-		| "groupModulesByPath"
-		| "groupModulesByExtension"
-		| "groupModulesByType"
-		| "entrypoints"
-		| "chunkGroupAuxiliary"
-		| "chunkGroupChildren"
-		| "chunkGroupMaxAssets"
-		| "modulesSpace"
-		| "chunkModulesSpace"
-		| "nestedModulesSpace"
-		| "logging"
-		| "loggingDebug"
-		| "loggingTrace"
-		| "_env"
-	> &
+type NormalizedStatsOptions = exports.KnownNormalizedStatsOptions &
+	Omit<StatsOptions, keyof exports.KnownNormalizedStatsOptions> &
 	Record<string, any>;
 declare class NullDependency extends Dependency {
 	constructor();
@@ -21614,14 +25213,50 @@ declare class NullDependency extends Dependency {
 	 */
 	static canConcatenate(
 		dependency: Dependency,
-		concatenateCommonJsModules: boolean
+		concatenateCommonJsModules: boolean,
+		module?: null | Module
 	): boolean;
 	static TRANSITIVE: symbol;
-	static LAZY_UNTIL_LOCAL: "local";
-	static LAZY_UNTIL_ID: "id";
-	static LAZY_UNTIL_FALLBACK: "*";
-	static LAZY_UNTIL_REQUEST: "@";
+	static LAZY_LOCAL_EXPORT: "local";
+	static LAZY_NAMED_REEXPORT: "id";
+	static LAZY_STAR_REEXPORT: "*";
+	static LAZY_REEXPORT_SIDE_EFFECT: "@";
+	static LAZY_IMPORT_DECLARATION: "import";
 	static ESM_CATEGORY: "esm";
+	static KINDS: Set<
+		| "worker"
+		| "css-import"
+		| "css-url"
+		| "entry"
+		| "url"
+		| "module-dependency"
+		| "esm-import"
+		| "provided"
+		| "dynamic-import"
+		| "esm-reexport"
+		| "esm-export-specifier"
+		| "esm-live-export"
+		| "esm-side-effect-import"
+		| "context-element"
+		| "esm-bare-side-effect-import"
+		| "esm-import-specifier"
+		| "esm-evaluated-import-specifier"
+		| "esm-compatibility"
+		| "commonjs-require"
+		| "commonjs-export-require"
+		| "html-source"
+		| "html-entry"
+		| "html-inline-style"
+		| "html-css-module"
+		| "webassembly-import"
+		| "webassembly-export-imported"
+		| "sharing-request"
+		| "local-module"
+		| "static-exports"
+		| "loader-import"
+		| "css-icss-import"
+		| "css-icss-export"
+	>;
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
 	constructor();
@@ -21632,9 +25267,20 @@ declare class NullFactory extends ModuleFactory {
 declare interface ObjectConfiguration {
 	[index: string]: any;
 }
-declare namespace ObjectDeserializerContextObjectMiddlewareObject_1 {
+
+/**
+ * Defines the object deserializer context type used by this module.
+ * `T` is the tuple of values read in order: `read` returns the head, and `rest`
+ * re-types the same context to `Tail<T>` so successive reads stay positional.
+ */
+declare interface ObjectDeserializerContextObjectMiddlewareObject_1 {
+	read: () => string;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_3<[number, boolean]>;
+	setCircularReference: (value: ReferenceableItem) => void;
+}
+declare namespace ObjectDeserializerContextObjectMiddlewareObject_2 {
 	export let read: () => any;
-	export let rest: ObjectDeserializerContextObjectMiddlewareObject_2<
+	export let rest: ObjectDeserializerContextObjectMiddlewareObject_3<
 		ReadonlyArray<any>
 	>;
 	export let setCircularReference: (value: ReferenceableItem) => void;
@@ -21645,11 +25291,11 @@ declare namespace ObjectDeserializerContextObjectMiddlewareObject_1 {
  * `T` is the tuple of values read in order: `read` returns the head, and `rest`
  * re-types the same context to `Tail<T>` so successive reads stay positional.
  */
-declare interface ObjectDeserializerContextObjectMiddlewareObject_2<
-	T extends ReadonlyArray<any> = ReadonlyArray<any>
+declare interface ObjectDeserializerContextObjectMiddlewareObject_3<
+	T = ReadonlyArray<ComplexSerializableType>
 > {
 	read: () => Head<T>;
-	rest: ObjectDeserializerContextObjectMiddlewareObject_2<Tail<T>>;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_3<Tail<T>>;
 	setCircularReference: (value: ReferenceableItem) => void;
 }
 
@@ -21658,9 +25304,11 @@ declare interface ObjectDeserializerContextObjectMiddlewareObject_2<
  * `T` is the tuple of values read in order: `read` returns the head, and `rest`
  * re-types the same context to `Tail<T>` so successive reads stay positional.
  */
-declare interface ObjectDeserializerContextObjectMiddlewareObject_3 {
-	read: () => string;
-	rest: ObjectDeserializerContextObjectMiddlewareObject_2<[number, boolean]>;
+declare interface ObjectDeserializerContextObjectMiddlewareObject_4 {
+	read: () => InlinedValueKind;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_3<
+		[undefined | null | string | number | boolean]
+	>;
 	setCircularReference: (value: ReferenceableItem) => void;
 }
 
@@ -21705,15 +25353,20 @@ declare interface ObjectEncodingOptionsResolver {
 
 /**
  * Defines the object serializer type used by this module.
+ * Methods, so a serializer may narrow `value` to the class it is registered for.
  */
-declare interface ObjectSerializer {
-	serialize: (
-		value: any,
-		context: ObjectSerializerContextObjectMiddlewareObject_3<any>
-	) => void;
-	deserialize: (
-		context: ObjectDeserializerContextObjectMiddlewareObject_2<any>
-	) => any;
+declare interface ObjectSerializer<T extends object = object> {
+	serialize(
+		value: T,
+		context: ObjectSerializerContextObjectMiddlewareObject_4<
+			ReadonlyArray<ComplexSerializableType>
+		>
+	): void;
+	deserialize(
+		context: ObjectDeserializerContextObjectMiddlewareObject_3<
+			ReadonlyArray<ComplexSerializableType>
+		>
+	): object;
 }
 
 /**
@@ -21722,71 +25375,116 @@ declare interface ObjectSerializer {
  */
 declare interface ObjectSerializerContextObjectMiddlewareObject_1 {
 	write: (
-		value: string
-	) => ObjectSerializerContextObjectMiddlewareObject_3<[number, boolean]>;
+		value: InlinedValueKind
+	) => ObjectSerializerContextObjectMiddlewareObject_4<
+		[undefined | null | string | number | boolean]
+	>;
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
-	writeLazy?: (item?: any) => void;
-	writeSeparate?: (
-		item: any,
+	writeLazy?: (item: ComplexSerializableType) => void;
+	writeSeparate?: <T>(
+		item: T | (() => T | Promise<T>),
 		obj?: LazyOptions
-	) => LazyFunction<any, any, any, LazyOptions>;
+	) => LazyFunction<
+		T,
+		PrimitiveSerializableType[],
+		SerializerMiddleware,
+		LazyOptions
+	>;
 }
-declare namespace ObjectSerializerContextObjectMiddlewareObject_2 {
+
+/**
+ * Defines the object serializer context type used by this module.
+ * `T` is the tuple of values written in order; each `write` consumes the head.
+ */
+declare interface ObjectSerializerContextObjectMiddlewareObject_2 {
+	write: (
+		value: string
+	) => ObjectSerializerContextObjectMiddlewareObject_4<[number, boolean]>;
+	setCircularReference: (value: ReferenceableItem) => void;
+	snapshot: () => ObjectSerializerSnapshot;
+	rollback: (snapshot: ObjectSerializerSnapshot) => void;
+	writeLazy?: (item: ComplexSerializableType) => void;
+	writeSeparate?: <T>(
+		item: T | (() => T | Promise<T>),
+		obj?: LazyOptions
+	) => LazyFunction<
+		T,
+		PrimitiveSerializableType[],
+		SerializerMiddleware,
+		LazyOptions
+	>;
+}
+declare namespace ObjectSerializerContextObjectMiddlewareObject_3 {
 	export let write: (
 		value?: any
-	) => ObjectSerializerContextObjectMiddlewareObject_3<ReadonlyArray<any>>;
+	) => ObjectSerializerContextObjectMiddlewareObject_4<ReadonlyArray<any>>;
 	export let setCircularReference: (value: ReferenceableItem) => void;
 	export let snapshot: () => ObjectSerializerSnapshot;
 	export let rollback: (snapshot: ObjectSerializerSnapshot) => void;
-	export let writeLazy: undefined | ((item?: any) => void);
+	export let writeLazy: undefined | ((item: ComplexSerializableType) => void);
 	export let writeSeparate:
 		| undefined
-		| ((
-				item: any,
+		| (<T>(
+				item: T | (() => T | Promise<T>),
 				obj?: LazyOptions
-		  ) => LazyFunction<any, any, any, LazyOptions>);
+		  ) => LazyFunction<
+				T,
+				PrimitiveSerializableType[],
+				SerializerMiddleware,
+				LazyOptions
+		  >);
 }
 
 /**
  * Defines the object serializer context type used by this module.
  * `T` is the tuple of values written in order; each `write` consumes the head.
  */
-declare interface ObjectSerializerContextObjectMiddlewareObject_3<
-	T extends ReadonlyArray<any> = ReadonlyArray<any>
+declare interface ObjectSerializerContextObjectMiddlewareObject_4<
+	T = ReadonlyArray<ComplexSerializableType>
 > {
 	write: (
 		value: Head<T>
-	) => ObjectSerializerContextObjectMiddlewareObject_3<Tail<T>>;
+	) => ObjectSerializerContextObjectMiddlewareObject_4<Tail<T>>;
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
-	writeLazy?: (item?: any) => void;
-	writeSeparate?: (
-		item: any,
+	writeLazy?: (item: ComplexSerializableType) => void;
+	writeSeparate?: <T>(
+		item: T | (() => T | Promise<T>),
 		obj?: LazyOptions
-	) => LazyFunction<any, any, any, LazyOptions>;
+	) => LazyFunction<
+		T,
+		PrimitiveSerializableType[],
+		SerializerMiddleware,
+		LazyOptions
+	>;
 }
 
 /**
  * Defines the object serializer context type used by this module.
  * `T` is the tuple of values written in order; each `write` consumes the head.
  */
-declare interface ObjectSerializerContextObjectMiddlewareObject_4 {
+declare interface ObjectSerializerContextObjectMiddlewareObject_5 {
 	write: (
 		value: RestoreProvidedDataExports[]
-	) => ObjectSerializerContextObjectMiddlewareObject_3<
+	) => ObjectSerializerContextObjectMiddlewareObject_4<
 		[undefined | null | boolean, undefined | boolean, boolean]
 	>;
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
-	writeLazy?: (item?: any) => void;
-	writeSeparate?: (
-		item: any,
+	writeLazy?: (item: ComplexSerializableType) => void;
+	writeSeparate?: <T>(
+		item: T | (() => T | Promise<T>),
 		obj?: LazyOptions
-	) => LazyFunction<any, any, any, LazyOptions>;
+	) => LazyFunction<
+		T,
+		PrimitiveSerializableType[],
+		SerializerMiddleware,
+		LazyOptions
+	>;
 }
 
 /**
@@ -22023,6 +25721,12 @@ declare interface Optimization {
  */
 declare interface OptimizationMinimizeCss {
 	/**
+	 * How the minimizer states a `.css` asset's encoding. `"auto"` (the default) opens it with `@charset "UTF-8"` only when its output holds a non-ASCII character, so it is read as UTF-8 wherever the server's `Content-Type` names no other charset, which `@charset` cannot override. `false` writes no `@charset` at all, and writes an escaped character past U+FFFF (an icon font's `content: "\F0A86"`) as the character itself, as `"auto"` does once that `@charset` is written. Set `false` only where the asset is read as UTF-8 anyway: a stylesheet with no `@charset` is read in the encoding the server's `Content-Type` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.
+	 * @since 5.112.0
+	 */
+	charset?: false | "auto";
+
+	/**
 	 * Write a color the `browserslist` target cannot read as an extra declaration before the one naming it, in a spelling it does read: `color: oklch(59.686% 0.15619 49.7694)` is written as `color: #c65d06` and then the `oklch()` itself, so an engine reading neither the Lab family nor `hwb()` is left with a color rather than with nothing. The fallback is that color clipped into the sRGB gamut and rounded, which the declaration standing after it corrects wherever it is read. Nothing is written where the author already set the property earlier in the same block, where the color holds a substitution or a relative reference this cannot fold, or where the fallback would still name a function the target cannot read. On by default, and only in effect for a `browserslist` target — any other target names no browsers to answer for.
 	 * @since 5.111.0
 	 */
@@ -22059,7 +25763,7 @@ declare interface OptimizationMinimizeCss {
 	customSelectors?: boolean;
 
 	/**
-	 * Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.
+	 * Drop a declaration a later one in the same block overrides even where no target is selected, assuming the engines shipping today: wherever Chromium, Gecko and WebKit each read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.
 	 * @since 5.112.0
 	 */
 	dropOverriddenDeclarations?: boolean;
@@ -22127,6 +25831,12 @@ declare interface OptimizationMinimizeCss {
 	 * @since 5.110.0
 	 */
 	removeDeadRules?: boolean;
+
+	/**
+	 * Print a style rule's declarations in one order by property family, the properties no family names first where they were written, so blocks setting the same things read alike and compress smaller. Only declarations whose order nothing can see move: two spellings of one property, a shorthand and what it sets, two shorthands sharing a longhand, and a flow-relative side and a physical one keep theirs, and a block holding a property no dataset names or a nested rule is printed as written. On by default.
+	 * @since 5.112.0
+	 */
+	reorderDeclarations?: boolean;
 
 	/**
 	 * Shorten the values of custom properties (`--x: #ffffff` -> `#fff`, `--y: 0.5rem` -> `.5rem`), which are otherwise written back exactly as authored. Off by default: `getComputedStyle().getPropertyValue()` hands this text back, so a rewritten value is a different CSSOM — the one place a declaration's authored text survives. What it may rewrite is exactly what any other value's tokens may be, a color in a substitution's fallback included — that fallback being the property's value rather than the function's own argument.
@@ -22235,7 +25945,7 @@ declare interface OptimizationMinimizeHtml {
 	mergeStyles?: boolean;
 
 	/**
-	 * Minify the markup inside a downlevel-hidden conditional comment (`<!--[if IE]> … <![endif]-->`). Off by default: the body is minified on its own, so a context-sensitive decision inside it — which end tags are optional, where a table cell may sit — is taken as though it started a document rather than where the comment sits. Only browsers older than IE10 read these at all.
+	 * Minify the markup inside a downlevel-hidden conditional comment (`<!--[if IE]> … <![endif]-->`). Off by default. The body is minified on its own with every tag it spells kept, and one whose print would still add, drop or move a tag — a wrapper another comment closes, a row of the table it sits in — is left as written, as it is read where the comment sits rather than as a document. Only browsers older than IE10 read these at all.
 	 * @since 5.110.0
 	 */
 	minifyConditionalComments?: boolean;
@@ -22277,7 +25987,7 @@ declare interface OptimizationMinimizeHtml {
 	removeEmptyAttributes?: boolean;
 
 	/**
-	 * Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (`canvas`, `slot`, `template`, `textarea`, `progress`, `meter`, `output`, `dialog`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a `::before`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace `collapseWhitespace` deletes goes with them.
+	 * Drop an element that has no children and no attributes, where its bare form renders nothing and nothing reads it: a generic container such as `div`, `span` or `section`, an inline phrase element, an empty `title`, `script` or `style`, or an attribute-less `meta`, `link` or `base`. Every other element is kept, including widgets, list items, elements with margins and custom elements. Off by default: CSS can give an empty element a size or a `::before`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace `collapseWhitespace` deletes goes with them.
 	 * @since 5.110.0
 	 */
 	removeEmptyElements?: boolean;
@@ -22295,7 +26005,7 @@ declare interface OptimizationMinimizeHtml {
 	removeOptionalTags?: boolean;
 
 	/**
-	 * Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one `getAttribute` and every attribute selector read differently, whichever tier dropped it. `true` (or `"smart"`) drops only markers on elements that render nothing — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>`, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — so no rule that styles the page stops applying, which is what `@swc/html` does by default. `"all"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.
+	 * Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one `getAttribute` and every attribute selector read differently, whichever tier dropped it. `true` (or `"smart"`) drops only markers on elements that render nothing — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>` on a page that declares UTF-8, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — so no rule that styles the page stops applying, which is what `@swc/html` does by default. `"all"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.
 	 * @since 5.110.0
 	 */
 	removeRedundantAttributes?: boolean | "all" | "smart";
@@ -22346,6 +26056,116 @@ declare interface OptimizationMinimizeOptions {
 	 * @since 5.112.0
 	 */
 	json?: boolean;
+
+	/**
+	 * Minimize `.svg` and `.xml` assets: `false` disables it, an object enables it. Absent means off unless `experiments.futureDefaults` is set.
+	 * @since 5.112.0
+	 * @experimental
+	 */
+	xml?: false | OptimizationMinimizeXml;
+}
+
+/**
+ * What the XML minimizer does. The stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers. An SVG `data:` URL takes these switches too, and an `<svg>` inline in HTML takes `removeMetadata`, `shortenNumbers` and `shortenPathData`.
+ * @since 5.112.0
+ * @experimental
+ */
+declare interface OptimizationMinimizeXml {
+	/**
+	 * Collapse SVG groups, hoist identical context-free inherited attributes or move them to sole graphics children, inline validated presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.
+	 * @since 5.113.0
+	 */
+	cleanupStructure?: boolean;
+
+	/**
+	 * Remove whitespace-only text in known SVG containers, preserving text content, foreign content and `xml:space`. Off by default because scripts can observe whitespace nodes.
+	 * @since 5.113.0
+	 */
+	collapseWhitespace?: boolean;
+
+	/**
+	 * Convert leaf SVG lines, polylines and polygons to shorter paths with identical coordinates and vertices, and equal-radius ellipses to circles. Off by default because consumers can observe element types; skip documents with stylesheets, scripts, animations or DTDs.
+	 * @since 5.113.0
+	 */
+	convertShapes?: boolean;
+
+	/**
+	 * Merge adjacent disjoint axis-aligned SVG lines with explicit opaque crisp-edge strokes, no fill, dashes or markers. Skip compositing, transformed or ID-bearing ancestors; identical paint remains eligible during color cleanup. Off by default because consumers can observe element boundaries; skip stylesheets, scripts, animations and DTDs.
+	 * @since 5.113.0
+	 */
+	mergePaths?: boolean;
+
+	/**
+	 * Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.
+	 * @since 5.113.0
+	 */
+	removeEditorData?: boolean;
+
+	/**
+	 * Remove empty `class`, `id` and `style` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.
+	 * @since 5.113.0
+	 */
+	removeEmptyAttributes?: boolean;
+
+	/**
+	 * Remove empty SVG `g` and `defs` containers having only namespace declarations, preserving other attributes and DTD defaults. Off by default because selectors and scripts can observe document structure.
+	 * @since 5.113.0
+	 */
+	removeEmptyElements?: boolean;
+
+	/**
+	 * Remove SVG `metadata` elements and their contents, preserving `title`, `desc` and the document element. Off by default because metadata can carry licensing and application data.
+	 * @since 5.113.0
+	 */
+	removeMetadata?: boolean;
+
+	/**
+	 * Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.
+	 * @since 5.113.0
+	 */
+	removeUnusedNamespaces?: boolean;
+
+	/**
+	 * Reuse unidentified duplicate leaf SVG paths without transforms through existing IDs and SVG 2 href references, preserving IDs and target element types. Require explicit context-free fill and stroke; compare identical authored paint before color cleanup. Off by default because consumers can observe element types; skip stylesheets, scripts, animations, duplicate IDs and DTDs.
+	 * @since 5.113.0
+	 */
+	reusePaths?: boolean;
+
+	/**
+	 * Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.
+	 * @since 5.113.0
+	 */
+	shortenColors?: boolean;
+
+	/**
+	 * Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.
+	 * @since 5.113.0
+	 */
+	shortenNumbers?: boolean;
+
+	/**
+	 * Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.
+	 * @since 5.113.0
+	 */
+	shortenPathData?: boolean;
+
+	/**
+	 * Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.
+	 * @since 5.112.0
+	 */
+	sortAttributes?: boolean;
+
+	/**
+	 * Sort adjacent SVG resource definitions within defs by type and ID, preserving IDs and references. Off by default because consumers can observe order; skip stylesheets, scripts, animations, duplicate IDs and DTDs.
+	 * @since 5.113.0
+	 */
+	sortDefinitions?: boolean;
+
+	/**
+	 * Sort adjacent SVG symbol definitions by ID, preserving IDs and references. Off by default because consumers can observe definition order; skip documents with stylesheets, scripts, animations, duplicate IDs or DTDs.
+	 * @since 5.113.0
+	 */
+	sortSymbols?: boolean;
 }
 
 /**
@@ -22668,6 +26488,7 @@ declare interface OptimizationSplitChunksCacheGroup {
 	test?:
 		| string
 		| RegExp
+		| GlobCondition
 		| ((module: Module, context: CacheGroupsContext) => boolean);
 
 	/**
@@ -22968,30 +26789,24 @@ declare interface OptionsSyntaxParser {
 	checkPrivateFields?: boolean;
 
 	/**
-	 * whether nodes carry `loc`
+	 * whether tokens carry `loc`
 	 */
 	locations?: boolean;
 
 	/**
-	 * where the first offset falls
-	 */
-	startLocation?: { line: number; column: number };
-
-	/**
 	 * where tokens are reported
 	 */
-	onToken?: any[] | ((token?: any) => void);
+	onToken?: ((token: Token) => void) | Token[];
 
 	/**
 	 * the parser itself at each token, for a reader that copies what it needs rather than taking a token of its own
 	 */
-	onTokenRead?: (parser?: any) => void;
+	onTokenRead?: (parser: SyntaxParser) => void;
 
 	/**
 	 * where comments are reported
 	 */
 	onComment?:
-		| any[]
 		| ((
 				isBlock: boolean,
 				text: string,
@@ -22999,27 +26814,18 @@ declare interface OptionsSyntaxParser {
 				end: number,
 				startLoc?: null | Position,
 				endLoc?: null | Position
-		  ) => void);
+		  ) => void)
+		| CollectedComment[];
 
 	/**
-	 * whether nodes carry `range`
+	 * whether tokens carry `range`
 	 */
 	ranges?: boolean;
-
-	/**
-	 * a program node to append to
-	 */
-	program?: NodeLike;
 
 	/**
 	 * the name errors and locations carry
 	 */
 	sourceFile?: string;
-
-	/**
-	 * the name every node carries
-	 */
-	directSourceFile?: string;
 
 	/**
 	 * whether parentheses become nodes
@@ -23063,6 +26869,12 @@ declare class OriginalSource extends Source {
  * Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
  */
 declare interface Output {
+	/**
+	 * Where files may be written, copied and cleaned outside of 'output.path'. 'true' allows anywhere, 'false' nowhere, and a list allows only inside those directories. When unset, assets plugins emit there are still written (refused with 'experiments.futureDefaults'), while 'output.copy' and 'output.clean' stay inside 'output.path'.
+	 * @since 5.113.0
+	 */
+	allowOutside?: boolean | string[];
+
 	/**
 	 * Add a container for define/require functions in the AMD module.
 	 */
@@ -23599,8 +27411,8 @@ declare interface OutputHtmlOptions {
 	manifest?:
 		| string
 		| false
-		| { [index: string]: any }
-		| ((name: string) => string | false | { [index: string]: any });
+		| JsonObjectFs
+		| ((name: string) => string | false | JsonObjectFs);
 
 	/**
 	 * Inject `<meta>` tags into the page `<head>`. Each key is the `name` attribute (or `"charset"` for a charset declaration); the value is the `content` string. Keys beginning with `og:` use the `property` attribute instead of `name`. A tag is skipped if the HTML already contains a meta with the same name.
@@ -23624,6 +27436,12 @@ declare interface OutputHtmlOptions {
  * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
  */
 declare interface OutputNormalized {
+	/**
+	 * Where files may be written, copied and cleaned outside of 'output.path'. 'true' allows anywhere, 'false' nowhere, and a list allows only inside those directories. When unset, assets plugins emit there are still written (refused with 'experiments.futureDefaults'), while 'output.copy' and 'output.clean' stay inside 'output.path'.
+	 * @since 5.113.0
+	 */
+	allowOutside?: boolean | string[];
+
 	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
@@ -23994,43 +27812,22 @@ declare interface ParseOptionsJavascriptParser {
 	allowReturnOutsideFunction?: boolean;
 
 	/**
-	 * internal: serve `range` lazily and skip the parser's location/range tracking
-	 */
-	lazyNodes?: boolean;
-
-	/**
-	 * internal: collect comments here without slicing their text eagerly
-	 */
-	lazyComments?: CommentJavascriptParser[];
-
-	/**
 	 * enable parsing of the import phase proposals (import defer / import source)
 	 */
 	importPhases?: boolean;
-
-	/**
-	 * internal: for `auto`, let the parser downgrade module->script in place instead of re-parsing
-	 */
-	moduleFallback?: boolean;
-}
-declare interface ParseOptionsSyntaxParser {
-	/**
-	 * optional comment-token callback; the public `parse*` entry points use it to build the `TokenStream` so the outer parser's comment tracker still sees magic comments inside the consumed range
-	 */
-	comment?: (input: string, start: number, end: number) => number;
 }
 
 /**
  * Defines the parse result type used by this module.
  */
 declare interface ParseResult {
-	ast: ProgramImport;
+	ast: Program;
 	comments: CommentJavascriptParser[];
 }
 
 /**
  * A `data:` URI split into the parts a caller has to put back together.
- * `parameters` is every `;…` after the media type (`;base64` included) and
+ * `parameters` is every `;...` after the media type (`;base64` included) and
  * `payload` the text after the comma, both in the form they were written.
  */
 declare interface ParsedDataURI {
@@ -24075,7 +27872,37 @@ declare interface ParsedIdentifier {
 	 */
 	internal: boolean;
 }
-declare class Parser {
+
+/**
+ * A source `parse.parseTree` read for the tree printer.
+ */
+declare interface ParsedTree {
+	/**
+	 * the tree
+	 */
+	tree: ColumnarSyntaxTree;
+
+	/**
+	 * its program
+	 */
+	program: number;
+
+	/**
+	 * what its tokens' numbers are read through
+	 */
+	tables: TokenTables;
+
+	/**
+	 * its nodes' tokens, null where nothing printing it reads them
+	 */
+	read: null | TreeTokens;
+
+	/**
+	 * whether it imports or exports
+	 */
+	module: boolean;
+}
+declare class Parser<TModule extends NormalModule = NormalModule> {
 	constructor();
 
 	/**
@@ -24083,21 +27910,11 @@ declare class Parser {
 	 */
 	parse(
 		source: string | Buffer | PreparsedAst,
-		state: ParserState
-	): ParserState;
+		state: ParserState<NormalModule>
+	): ParserState<NormalModule>;
 }
-
-/**
- * An ESTree node, as this parser builds one.
- */
-declare class ParserNode {
-	constructor(parser: SyntaxParser, pos: number, loc?: Position);
-	type: string;
-	start: number;
-	end: number;
-	loc?: ParserSourceLocation;
-	sourceFile?: string;
-	range?: number[];
+declare interface ParserOptions {
+	[index: string]: any;
 }
 type ParserOptionsByModuleType = ParserOptionsByModuleTypeKnown &
 	ParserOptionsByModuleTypeUnknown;
@@ -24188,18 +28005,6 @@ declare interface ParserOptionsByModuleTypeKnown {
 declare interface ParserOptionsByModuleTypeUnknown {
 	[index: string]: { [index: string]: any };
 }
-declare interface ParserOptionsNormalModule {
-	[index: string]: any;
-}
-type ParserOptionsSyntaxParser = Omit<OptionsSyntaxParser, "onComment"> & {
-	onComment?:
-		| CollectedComment[]
-		| ((isBlock: boolean, text: string, start: number, end: number) => void);
-	lazyNodes?: boolean;
-	lazyComments?: CollectedComment[];
-	importPhases?: boolean;
-	moduleFallback?: boolean;
-};
 
 /**
  * Mirror of acorn's `Position` (line/column pair with its `offset` helper),
@@ -24231,23 +28036,37 @@ declare class ParserScope {
  * The `loc` a node carries when `options.locations` is on.
  */
 declare class ParserSourceLocation {
-	constructor(p: any, start?: null | PositionLike, end?: null | PositionLike);
+	constructor(
+		p: { sourceFile: null | string },
+		start?: null | PositionLike,
+		end?: null | PositionLike
+	);
 	start?: null | PositionLike;
 	end?: null | PositionLike;
-	source: any;
+	source?: string;
 }
-type ParserState = ParserStateBase & Record<string, any>;
+type ParserState<TModule extends NormalModule = NormalModule> =
+	ParserStateBase<TModule> & Record<string, any>;
 
 /**
  * Defines the parser state base type used by this module.
  */
-declare interface ParserStateBase {
+declare interface ParserStateBase<TModule extends NormalModule = NormalModule> {
 	source: string | Buffer;
 	current: NormalModule;
-	module: NormalModule;
+
+	/**
+	 * the module being parsed
+	 */
+	module: TModule;
 	compilation: Compilation;
 	options: WebpackOptionsNormalizedWithDefaults;
 }
+type PartOf<R, M extends Record<number, number>, D> = number extends (R & {
+	readonly __nodeType: number;
+})["__nodeType"]
+	? D
+	: M[(R & { readonly __nodeType: number })["__nodeType"]];
 declare interface PathCacheFunctions {
 	/**
 	 * cached join
@@ -24331,6 +28150,21 @@ type PathLikeFs = string | Buffer | URL;
 type PathLikeResolver = string | URL | Buffer;
 type PathOrFileDescriptorFs = string | number | Buffer | URL;
 type PathOrFileDescriptorResolver = string | number | URL | Buffer;
+
+/**
+ * A hook's `{ path: true }` tap, reading its nodes through the path as CSS and
+ * HTML visitors read theirs: `path.type(node)`, `path.field(i, Field.body, node)`.
+ * @experimental the `{ path: true }` tap option; unstable API
+ */
+declare interface PathTaps<T, R> {
+	/**
+	 * registers a tap reading the path
+	 */
+	tap: (
+		options: { name: string; path: true; stage?: number; before?: string },
+		fn: (path: JavascriptNodeReader, ...args: AsArray<T>) => R
+	) => void;
+}
 type Pattern =
 	| Identifier
 	| MemberExpression
@@ -24537,15 +28371,6 @@ declare interface PerformanceOptions {
 	 */
 	unusedModules?: boolean;
 }
-
-/**
- * One step building webpack's minifier, installing what it implements onto
- * the modules.
- */
-declare interface Phase {
-	name: string;
-	install: (modules: MinifierModules) => void;
-}
 declare interface PitchLoaderDefinitionFunction<
 	OptionsType = {},
 	ContextAdditions = {}
@@ -24553,13 +28378,13 @@ declare interface PitchLoaderDefinitionFunction<
 	(
 		this: NormalModuleLoaderContext<OptionsType> &
 			LoaderRunnerMutableContext<OptionsType> &
-			LoaderRunnerReadonlyContext<OptionsType> &
+			LoaderRunnerReadonlyContext<OptionsType, LoaderData> &
 			LoaderPluginLoaderContext &
 			HotModuleReplacementPluginLoaderContext &
 			ContextAdditions,
 		remainingRequest: string,
 		previousRequest: string,
-		data: object
+		data: LoaderData
 	): string | void | Buffer | Promise<string | Buffer>;
 }
 
@@ -24647,6 +28472,14 @@ declare interface PositionLike {
 	line: number;
 	column: number;
 }
+
+/**
+ * A check precompiled from a schema with `schema-utils precompile`, it only
+ * says whether the value is valid
+ */
+declare interface PrecompiledCheck<T> {
+	(value: T): boolean;
+}
 declare class PrefetchPlugin {
 	/**
 	 * Creates an instance of PrefetchPlugin.
@@ -24687,17 +28520,30 @@ declare class PrefixSource extends Source {
 declare interface PreparsedAst {
 	[index: string]: any;
 }
+type PreprocessedAsset = Asset & {
+	type: string;
+	related?: PreprocessedAsset[];
+};
+type PrimitiveSerializableType =
+	| undefined
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| Buffer
+	| (() => PrimitiveSerializableType[] | Promise<PrimitiveSerializableType[]>);
 
 /**
  * The per-node output store handed to a language node printer as its `writer`. It
  * carries the print `options` (today just `mode`) and one map: a finished node ->
  * its printed text. A printer *returns* its text (`printNode` stores it) and reads
- * a child's with `get`, so a parent composes its own text from its children's —
+ * a child's with `get`, so a parent composes its own text from its children's -
  * the map is what makes that composition (and the CSS value transforms built on
  * it) possible. `take` flushes a finished top-level node into the output and drops
  * the map, so a streaming grammar never holds more than one top-level subtree.
  */
-declare class PrintContext<TPath, TNode, TPrintOptions = object> {
+declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
 	constructor(
 		options: PrintOptions & TPrintOptions,
 		printer: NodePrinter<TPath, TNode, TPrintOptions>
@@ -24713,13 +28559,13 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	pushPending(text: string): number;
 
 	/**
-	 * Rewrite a held-back opener — an opener whose text depends on what turns out
+	 * Rewrite a held-back opener - an opener whose text depends on what turns out
 	 * to follow it can only be settled once something does.
 	 */
 	setPending(depth: number, text: string): void;
 
 	/**
-	 * Emit every held-back opener, outermost first — something inside the
+	 * Emit every held-back opener, outermost first - something inside the
 	 * innermost one has content, so all of them do.
 	 */
 	flushPending(): void;
@@ -24732,7 +28578,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	isPending(depth: number): boolean;
 
 	/**
-	 * Drop the innermost held-back opener — its node printed to nothing.
+	 * Drop the innermost held-back opener - its node printed to nothing.
 	 */
 	dropPending(): void;
 
@@ -24751,15 +28597,21 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	emitStreamed(text: string): void;
 
 	/**
+	 * Make room for the handles below `count` before anything is printed, for a
+	 * grammar that knows how many nodes it prints, so the columns grow once.
+	 */
+	reserve(count: number): void;
+
+	/**
 	 * Forget every node's printed text. A node printed in pieces does this once
-	 * each child is emitted, so the store never holds more than one of them —
+	 * each child is emitted, so the store never holds more than one of them -
 	 * which is also what keeps a recycled node id from reading as an earlier
 	 * node's text.
 	 */
 	dropStore(): void;
 
 	/**
-	 * Drop trailing `charCode`s from the end of the output at or after `from` —
+	 * Drop trailing `charCode`s from the end of the output at or after `from` -
 	 * the separator the piece before a terminator no longer needs. Walks back over
 	 * pieces emptied by {@link retract}, so it sees what the output reads as.
 	 */
@@ -24767,7 +28619,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 
 	/**
 	 * Stand `text` in place of the output's end, where that is `printed` followed
-	 * only by `closer`s — what the printer wrote after a value the input ran out in.
+	 * only by `closer`s - what the printer wrote after a value the input ran out in.
 	 */
 	replaceEnd(printed: string, text: string, closer: number): boolean;
 
@@ -24775,15 +28627,47 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	 * Run the node printer for `node` and store what it returns (the grammar calls
 	 * this once the node's visitors and children are done). `path` is on `node`.
 	 */
-	printNode(node: TNode, path: TPath): void;
+	printNode(node: TNode, path: TPath): boolean;
 
 	/**
-	 * Print one node and hand its text straight back — for a node inside one being
+	 * Have `node` print as `text` in place of what its printer returns, from its
+	 * next {@link printNode}. The printer still runs, for what it records.
+	 */
+	replace(node: TNode, text: string): void;
+
+	/**
+	 * Drop what {@link replace} gave `node`, for a node the grammar writes out
+	 * without {@link printNode}.
+	 */
+	discardReplacement(node: TNode): void;
+
+	/**
+	 * Store `text` as what `node` printed, where the grammar already knows what
+	 * the node printer would return and so does not call it.
+	 */
+	printedAs(node: TNode, text: string): void;
+
+	/**
+	 * Store that `node` printed as its source, which `sourceText` reads only once
+	 * something asks for its text.
+	 */
+	printedSource(node: TNode, sourceText: (node: TNode) => string): void;
+
+	/**
+	 * Print one node and hand its text straight back - for a node inside one being
 	 * printed in pieces, whose text is emitted as it is printed, so the store
 	 * would only ever be written and read once.
 	 */
 	printPiece(path: TPath): string;
 	get(node: TNode): string;
+	lookup(node: TNode): undefined | string;
+
+	/**
+	 * Read a child's text for the one time anything reads it: the slot lets go
+	 * of it, so a printer composing a large output from its children's text
+	 * holds each piece only until it is composed. Read again, it is empty.
+	 */
+	consume(node: TNode): string;
 
 	/**
 	 * Append `text` as a piece of its own, so {@link retract} can still take it
@@ -24794,7 +28678,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	emitRetractable(text: string): number;
 
 	/**
-	 * Take back an already-emitted piece — the printer has since found that a
+	 * Take back an already-emitted piece - the printer has since found that a
 	 * later one overrides it. Pieces after it keep their place. A piece emitted by
 	 * {@link takeRetractable} takes the mapping anchored to it back as well; any
 	 * other anchor into the piece would be left pointing at what follows it, so
@@ -24803,8 +28687,21 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	retract(index: number): void;
 
 	/**
+	 * Whether the output after a piece holds a character outside ASCII, the
+	 * comments still waiting to be placed included.
+	 */
+	writesNonAscii(index: number): boolean;
+
+	/**
+	 * The start of what has been emitted so far, held-back openers left out:
+	 * what a reader of the output's first bytes, such as a browser's encoding
+	 * prescan, finds there once the print is done, unless it is replaced.
+	 */
+	emittedStart(length: number): string;
+
+	/**
 	 * Fold `text` into an already-emitted piece, in front of the character it ends
-	 * with — a later sibling whose body belongs inside that piece, as a repeated
+	 * with - a later sibling whose body belongs inside that piece, as a repeated
 	 * named `@layer` block's does. Mappings are piece-relative and this only grows
 	 * the piece past everything already anchored in it, so they keep their
 	 * positions; the folded text carries none of its own.
@@ -24812,14 +28709,20 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	foldIntoRetractable(index: number, text: string): void;
 
 	/**
-	 * Write an already-emitted piece again, shorter — a rule inside it a later
+	 * Write an already-emitted piece again, shorter - a rule inside it a later
 	 * copy makes dead. Mappings anchored in the piece keep the offsets they were
 	 * given, so one inside what was cut names what now follows it.
 	 */
 	rewriteRetractable(index: number, text: string): void;
 
 	/**
-	 * {@link take} for a top-level node a later sibling may still make dead — the
+	 * {@link rewriteRetractable} with text that is asked for only once the output
+	 * is read: a piece rewritten many times over is then built once, not each time.
+	 */
+	deferRetractable(index: number, source: { readonly text: string }): void;
+
+	/**
+	 * {@link take} for a top-level node a later sibling may still make dead - the
 	 * unprefixed twin of a vendor-prefixed rule, which can stand anywhere after
 	 * it. The node is emitted as a piece of its own, with its mapping recorded
 	 * against that piece, so {@link retract} takes both back.
@@ -24835,10 +28738,10 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	/**
 	 * Emit one finished top-level node: first any kept comments that precede it,
 	 * then a source mapping anchoring its output start to `[srcLine, srcCol]`, then
-	 * its text — and drop the per-node store so the next top-level node starts
+	 * its text - and drop the per-node store so the next top-level node starts
 	 * clean. `srcOffset` / `srcLine` / `srcCol` are the node's source position; a
 	 * grammar that doesn't map positions (e.g. HTML) omits them (no comments, no
-	 * mapping — the map ends up empty).
+	 * mapping - the map ends up empty).
 	 */
 	take(
 		node?: TNode,
@@ -24847,6 +28750,13 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 		srcCol?: number,
 		text?: string
 	): void;
+
+	/**
+	 * Anchor the text the next {@link take} writes at many places rather than at
+	 * its start alone: a grammar printing a whole program as one node maps each
+	 * piece inside it. Nothing is kept where no map is wanted.
+	 */
+	anchorWithin(mappings: number[], names: string[]): void;
 
 	/**
 	 * Tie whatever is emitted next to a source position: flush the kept comments
@@ -24866,13 +28776,13 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	/**
 	 * Emit the kept literals landing before `pos`. A printer holding a node back
 	 * calls this at hold time, so what was written above it is still emitted
-	 * above it — and {@link hasInsertBefore} then answers about the gap to the
+	 * above it - and {@link hasInsertBefore} then answers about the gap to the
 	 * next node rather than the whole span since the last node taken.
 	 */
 	flushInsertsBefore(pos: number): void;
 
 	/**
-	 * Queue a literal to carry through to the output at source offset `pos` — a
+	 * Queue a literal to carry through to the output at source offset `pos` - a
 	 * comment the printer chose to keep (e.g. a `/*!` license banner). Calls
 	 * arrive in source order; each lands just before the first top-level node
 	 * starting after `pos` (or at the end, via {@link result}).
@@ -24880,7 +28790,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	insert(pos: number, text: string): void;
 
 	/**
-	 * Take the queued inserts sitting in `[start, end)` — a printer that writes
+	 * Take the queued inserts sitting in `[start, end)` - a printer that writes
 	 * that source range out itself places them, so the writer must not flush
 	 * them ahead of the next top-level node as well.
 	 */
@@ -24894,7 +28804,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	 * {@link sourceMap}, so both read the substituted output rather than
 	 * correcting for it.
 	 * The marker is `NUL id NUL`. A NUL mostly cannot reach printed output on its
-	 * own account — both preprocessors turn one into U+FFFD — but an RCDATA
+	 * own account - both preprocessors turn one into U+FFFD - but an RCDATA
 	 * element and an attribute value keep the one they were written with, so a
 	 * pair of them is read as a write only where what stands between spells an id
 	 * this answers for. Anything else is the source's own text and is left alone.
@@ -24913,7 +28823,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
  * What every language's print options carry, read by the node printer via
  * `writer.options`. Only `mode` is here: what else a printer may be told is the
  * language's own business, and a language names it by instantiating
- * {@link PrintContext} with its own type — nothing CSS reads belongs in a
+ * {@link PrintContext} with its own type - nothing CSS reads belongs in a
  * typedef HTML also depends on.
  */
 declare interface PrintOptions {
@@ -24953,22 +28863,33 @@ declare class Profiler {
 	/**
 	 * Creates an instance of Profiler.
 	 */
-	constructor(inspector: Inspector);
+	constructor(inspector?: Inspector);
 	session?: SessionImportInspectorClass_2;
-	inspector: Inspector;
+	inspector?: Inspector;
 	hasSession(): boolean;
-	startProfiling(): Promise<void> | Promise<[any, any, any]>;
+	startProfiling():
+		| Promise<void>
+		| Promise<
+				[
+					void | Partial<StopReturnType>,
+					void | Partial<StopReturnType>,
+					void | Partial<StopReturnType>
+				]
+		  >;
 
 	/**
 	 * Returns promise for the result.
 	 */
-	sendCommand(method: string, params?: object): Promise<any>;
+	sendCommand(
+		method: string,
+		params?: SetSamplingIntervalParameterType
+	): Promise<void | Partial<StopReturnType>>;
 	destroy(): Promise<void>;
 
 	/**
-	 * Returns }>} profile result.
+	 * Stops profiling and returns the profile.
 	 */
-	stopProfiling(): Promise<{ profile: { startTime: number; endTime: number } }>;
+	stopProfiling(): Promise<undefined | { profile: Profile }>;
 }
 declare class ProfilingPlugin {
 	/**
@@ -24989,7 +28910,6 @@ declare interface ProfilingPluginOptions {
 	 */
 	outputPath?: string;
 }
-type ProgramSyntaxParser = ProgramImport & NodeLike;
 declare class ProgressPlugin {
 	/**
 	 * Creates an instance of ProgressPlugin.
@@ -25109,6 +29029,36 @@ declare interface ProgressPluginOptionsProgressBarBranch3Object {
 	 */
 	width?: number;
 }
+
+/**
+ * What property mangling asks of its options, as both of its walks read it.
+ */
+declare interface PropertyNames {
+	/**
+	 * records a name a walk finds, before any is renamed
+	 */
+	add: (name: string) => void;
+
+	/**
+	 * the name a property is renamed to, itself where kept
+	 */
+	mangle: (name: string) => string;
+
+	/**
+	 * whether a name written quoted is kept
+	 */
+	keepQuoted: boolean;
+
+	/**
+	 * whether a name read off an undeclared global is found too
+	 */
+	undeclared: boolean;
+
+	/**
+	 * the identifier source it names from
+	 */
+	identifiers: { get: (index: number) => string };
+}
 declare class ProvidePlugin {
 	/**
 	 * Creates an instance of ProvidePlugin.
@@ -25180,13 +29130,6 @@ declare interface ProvidesObject {
 type ProvidesObjectValue = string | ProvidesConfig;
 type PureCondition =
 	boolean | ((compilation: Compilation, module: Module) => boolean);
-type QualifiedRule = NodeSyntaxParser & {
-	prelude: ComponentValue[];
-	declarations: null | DeclarationSyntaxParser[];
-	childRules: null | RuleSyntaxParser[];
-	blockStart: number;
-	blockEnd: number;
-};
 
 /**
  * Describes the scheduling hints that can be attached to a chunk group.
@@ -25218,7 +29161,7 @@ declare interface RawLoaderDefinitionFunction<
 	(
 		this: NormalModuleLoaderContext<OptionsType> &
 			LoaderRunnerMutableContext<OptionsType> &
-			LoaderRunnerReadonlyContext<OptionsType> &
+			LoaderRunnerReadonlyContext<OptionsType, LoaderData> &
 			LoaderPluginLoaderContext &
 			HotModuleReplacementPluginLoaderContext &
 			ContextAdditions,
@@ -25982,8 +29925,8 @@ declare interface RealPathSync {
 	(path: PathLikeFs, options: BufferEncodingOption): Buffer;
 	(path: PathLikeFs, options?: EncodingOptionFs): string | Buffer;
 }
-type Records = KnownRecords &
-	Record<string, KnownRecords[]> &
+type Records = exports.KnownRecords &
+	Record<string, exports.KnownRecords[]> &
 	Record<string, any>;
 
 /**
@@ -26014,13 +29957,26 @@ declare interface RecursiveNonNullable<T> {}
 
 /**
  * One identifier occurrence that refers to a binding.
+ * @experimental exposed as `webpack.javascript.syntax.scopes.Reference`; unstable API
  */
-declare abstract class Reference {
-	identifier: Identifier;
+declare class Reference {
+	constructor(identifier: ScopeIdentifier, from: Scope);
+	identifier: ScopeIdentifier;
 	from: Scope;
 	resolved?: Variable;
 }
 type ReferenceableItem = string | object;
+declare interface ReferencedCall {
+	/**
+	 * member path of the called method
+	 */
+	names: string[];
+
+	/**
+	 * whether the call observes its receiver through this
+	 */
+	namespaceObjectAsContext: boolean;
+}
 
 /**
  * Defines the referenced export type used by this module.
@@ -26048,7 +30004,7 @@ declare interface ReferencedExport {
 declare abstract class RegExpValidationState {
 	parser: SyntaxParser;
 	validFlags: string;
-	unicodeProperties: any;
+	unicodeProperties: UnicodePropertyTables;
 	source: string;
 	flags: string;
 	start: number;
@@ -26061,7 +30017,7 @@ declare abstract class RegExpValidationState {
 	lastAssertionIsQuantifiable: boolean;
 	numCapturingParens: number;
 	maxBackReference: number;
-	groupNames: any;
+	groupNames: GroupNames;
 	backReferenceNames: string[];
 	branchID: null | BranchID;
 	reset(start: number, pattern: string, flags: string): void;
@@ -26225,7 +30181,23 @@ declare interface RenderContextJavascriptModulesPlugin {
 	strictMode?: boolean;
 }
 type RenderManifestEntry =
-	RenderManifestEntryTemplated | RenderManifestEntryStatic;
+	| RenderManifestEntryChunkTemplated
+	| RenderManifestEntryStringTemplated
+	| RenderManifestEntryStatic;
+
+/**
+ * A render manifest entry named by a chunk's filename template, which may be a
+ * function of the chunk's path data.
+ */
+declare interface RenderManifestEntryChunkTemplated {
+	render: () => Source;
+	filenameTemplate: ChunkFilenameTemplate;
+	pathOptions?: PathDataChunk;
+	info?: AssetInfo;
+	identifier: string;
+	hash?: string;
+	auxiliary?: boolean;
+}
 
 /**
  * Defines the render manifest entry static type used by this module.
@@ -26240,11 +30212,12 @@ declare interface RenderManifestEntryStatic {
 }
 
 /**
- * Defines the render manifest entry templated type used by this module.
+ * A render manifest entry named by a filename template string, interpolated
+ * with any path data, e.g. a module's.
  */
-declare interface RenderManifestEntryTemplated {
+declare interface RenderManifestEntryStringTemplated {
 	render: () => Source;
-	filenameTemplate: string | TemplatePathFn<any>;
+	filenameTemplate: string;
 	pathOptions?: PathData;
 	info?: AssetInfo;
 	identifier: string;
@@ -26637,7 +30610,7 @@ declare interface ResolveOptionsWebpackOptions {
 	/**
 	 * Enable caching of successfully resolved requests (cache entries are not revalidated).
 	 */
-	unsafeCache?: boolean | { [index: string]: any };
+	unsafeCache?: boolean | UnsafeCache;
 
 	/**
 	 * Use synchronous filesystem calls for the resolver.
@@ -26758,19 +30731,14 @@ declare interface ResolvedOptionsSyntaxParser {
 	locations: boolean;
 
 	/**
-	 * where the first offset falls
-	 */
-	startLocation: null | { line: number; column: number };
-
-	/**
 	 * where tokens are reported
 	 */
-	onToken: null | ((token?: any) => void);
+	onToken: null | ((token: Token) => void);
 
 	/**
 	 * the parser itself at each token
 	 */
-	onTokenRead: null | ((parser?: any) => void);
+	onTokenRead: null | ((parser: SyntaxParser) => void);
 
 	/**
 	 * where comments are reported
@@ -26792,19 +30760,9 @@ declare interface ResolvedOptionsSyntaxParser {
 	ranges: boolean;
 
 	/**
-	 * a program node to append to
-	 */
-	program: null | NodeLike;
-
-	/**
 	 * the name errors and locations carry
 	 */
 	sourceFile: null | string;
-
-	/**
-	 * the name every node carries
-	 */
-	directSourceFile: null | string;
 
 	/**
 	 * whether parentheses become nodes
@@ -27048,7 +31006,7 @@ declare abstract class RestoreProvidedData {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(context: ObjectSerializerContextObjectMiddlewareObject_4): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_5): void;
 }
 
 /**
@@ -27063,6 +31021,7 @@ declare interface RestoreProvidedDataExports {
 	pureProvide?: boolean;
 	exportsInfo?: RestoreProvidedData;
 }
+type Rule = string | RegExp | ((str: string) => boolean) | RuleGlob;
 
 /**
  * Defines the rule condition type used by this module.
@@ -27076,19 +31035,29 @@ declare interface RuleCondition {
 			| "dependency"
 			| "resource"
 			| "scheme"
+			| "phase"
+			| "attributes"
 			| "realResource"
 			| "resourceQuery"
 			| "resourceFragment"
-			| "attributes"
 			| "mimetype"
 			| "descriptionData"
 			| "descriptionRelativePath"
 			| "issuer"
-			| "issuerLayer"
-			| "phase"]
+			| "issuerLayer"]
 	) => boolean;
 }
-type RuleObject = string | RegExp | ((str: string) => boolean);
+
+/**
+ * Glob patterns matched against the file name, `!` in front of a pattern excludes it, and a relative pattern matches at any depth.
+ * @since 5.112.0
+ */
+declare interface RuleGlob {
+	/**
+	 * Glob patterns to match.
+	 */
+	glob: string | string[];
+}
 
 /**
  * Defines the rule set type used by this module.
@@ -27447,6 +31416,16 @@ declare interface RuleSetRule {
 						 * Loader options.
 						 */
 						options?: string | { [index: string]: any };
+						/**
+						 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+						 * @since 5.113.0
+						 */
+						sourceTest?:
+							| string
+							| RegExp
+							| ((value: string) => boolean)
+							| RuleSetLogicalConditions
+							| RuleSetCondition[];
 				  }
 		  )[]
 		| RuleSetUseFunction
@@ -27463,6 +31442,16 @@ declare interface RuleSetRule {
 				 * Loader options.
 				 */
 				options?: string | { [index: string]: any };
+				/**
+				 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+				 * @since 5.113.0
+				 */
+				sourceTest?:
+					| string
+					| RegExp
+					| ((value: string) => boolean)
+					| RuleSetLogicalConditions
+					| RuleSetCondition[];
 		  };
 
 	/**
@@ -27492,6 +31481,16 @@ type RuleSetUse =
 					 * Loader options.
 					 */
 					options?: string | { [index: string]: any };
+					/**
+					 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+					 * @since 5.113.0
+					 */
+					sourceTest?:
+						| string
+						| RegExp
+						| ((value: string) => boolean)
+						| RuleSetLogicalConditions
+						| RuleSetCondition[];
 			  }
 	  )[]
 	| RuleSetUseFunction
@@ -27508,6 +31507,16 @@ type RuleSetUse =
 			 * Loader options.
 			 */
 			options?: string | { [index: string]: any };
+			/**
+			 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+			 * @since 5.113.0
+			 */
+			sourceTest?:
+				| string
+				| RegExp
+				| ((value: string) => boolean)
+				| RuleSetLogicalConditions
+				| RuleSetCondition[];
 	  };
 type RuleSetUseFunction = (data: EffectData) =>
 	| string
@@ -27525,6 +31534,16 @@ type RuleSetUseFunction = (data: EffectData) =>
 			 * Loader options.
 			 */
 			options?: string | { [index: string]: any };
+			/**
+			 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+			 * @since 5.113.0
+			 */
+			sourceTest?:
+				| string
+				| RegExp
+				| ((value: string) => boolean)
+				| RuleSetLogicalConditions
+				| RuleSetCondition[];
 	  }
 	| (
 			| undefined
@@ -27546,6 +31565,16 @@ type RuleSetUseFunction = (data: EffectData) =>
 					 * Loader options.
 					 */
 					options?: string | { [index: string]: any };
+					/**
+					 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+					 * @since 5.113.0
+					 */
+					sourceTest?:
+						| string
+						| RegExp
+						| ((value: string) => boolean)
+						| RuleSetLogicalConditions
+						| RuleSetCondition[];
 			  }
 	  )[];
 type RuleSetUseItem =
@@ -27564,8 +31593,24 @@ type RuleSetUseItem =
 			 * Loader options.
 			 */
 			options?: string | { [index: string]: any };
+			/**
+			 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+			 * @since 5.113.0
+			 */
+			sourceTest?:
+				| string
+				| RegExp
+				| ((value: string) => boolean)
+				| RuleSetLogicalConditions
+				| RuleSetCondition[];
 	  };
-type RuleSyntaxParser = AtRule | QualifiedRule;
+
+/**
+ * what a run hands its visitors as `path.state`
+ */
+declare interface RunState<S> {
+	state?: S;
+}
 declare class RuntimeChunkPlugin {
 	/**
 	 * Creates an instance of RuntimeChunkPlugin.
@@ -27627,6 +31672,12 @@ declare class RuntimeModule extends Module {
 	shouldIsolate(): boolean;
 
 	/**
+	 * Returns true, if a hot update may re-ship this module to a running runtime.
+	 * False for code that is only valid at the top level of the runtime chunk.
+	 */
+	shouldHotUpdate(): boolean;
+
+	/**
 	 * The answer a runtime module gives when it installs no chunk handler at all
 	 */
 	static NO_CHUNK_HANDLERS: [string, string][];
@@ -27650,6 +31701,17 @@ declare class RuntimeModule extends Module {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+	static KINDS: Set<
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
+	>;
 
 	/**
 	 * Gets source basic types.
@@ -27782,6 +31844,11 @@ declare abstract class RuntimeTemplate {
 	supportsLet(): boolean;
 	supportsMethodShorthand(): boolean;
 	supportsLogicalAssignment(): boolean;
+
+	/**
+	 * Computed property keys came with method shorthand (ES2015).
+	 */
+	supportsComputedPropertyKey(): undefined | boolean;
 	supportsArrowFunction(): boolean;
 	supportsAsyncFunction(): boolean;
 	supportsGenerator(): boolean;
@@ -27801,8 +31868,8 @@ declare abstract class RuntimeTemplate {
 
 	/**
 	 * Whether the deferred fill rewrote a chunk whose hashed name would otherwise go
-	 * stale, which `RealContentHashPlugin` reads to run — and to repair `[chunkhash]`
-	 * names — where `optimization.realContentHash` did not ask for it.
+	 * stale, which `RealContentHashPlugin` reads to run - and to repair `[chunkhash]`
+	 * names - where `optimization.realContentHash` did not ask for it.
 	 */
 	needsAnalyzableRepair(): boolean;
 
@@ -27814,15 +31881,15 @@ declare abstract class RuntimeTemplate {
 
 	/**
 	 * Whether a reference a foreign bundler can follow without running webpack's runtime
-	 * may be emitted — the one question every caller asks, in the form it is asking for:
-	 * - `"import"` — a literal `import("./chunk.js")` in place of `ensureChunk(id)`
-	 * - `"url"` — a literal `new URL(<file>, import.meta.url)`
-	 * - `"url-runtime"` — the same, written into a runtime module rather than a module
-	 * - `"url-inline"` — whether such a reference names the file at the call site
-	 * - `"wasm"` — the same, fully baked for a wasm binary the runtime would name
-	 * - `"wasm-relative"` — a wasm path built at runtime under an `import.meta.url` base
+	 * may be emitted - the one question every caller asks, in the form it is asking for:
+	 * - `"import"` - a literal `import("./chunk.js")` in place of `ensureChunk(id)`
+	 * - `"url"` - a literal `new URL(<file>, import.meta.url)`
+	 * - `"url-runtime"` - the same, written into a runtime module rather than a module
+	 * - `"url-inline"` - whether such a reference names the file at the call site
+	 * - `"wasm"` - the same, fully baked for a wasm binary the runtime would name
+	 * - `"wasm-relative"` - a wasm path built at runtime under an `import.meta.url` base
 	 * `"url-inline"` differs from `"url"` only in taking the `.p + <file>` fallback as
-	 * an answer too — both name the file where it is used rather than through the
+	 * an answer too - both name the file where it is used rather than through the
 	 * asset's javascript wrapper, which is what decides whether that wrapper is emitted.
 	 * A name code generation cannot settle may still be baked, through a stand-in the
 	 * deferred pass fills in. Not covered here, because only the reference can tell: a
@@ -27868,14 +31935,14 @@ declare abstract class RuntimeTemplate {
 	 * Builds the analyzable `new URL(specifier, import.meta.url)` expression the ESM
 	 * wasm/asset loader backends use to reference an emitted binary relative to the
 	 * current module (via `output.importMetaName`) instead of the runtime public-path
-	 * global — the form other bundlers and webpack itself can statically follow.
+	 * global - the form other bundlers and webpack itself can statically follow.
 	 */
 	importMetaUrl(specifier: string): string;
 
 	/**
 	 * Whether a baked asset url resolves against the entry `baseUri` at all. A public
-	 * path that reaches the same place from any base never reads `.b` — and `auto`
-	 * resolves to an absolute url too — while output with no baked form has nothing to
+	 * path that reaches the same place from any base never reads `.b` - and `auto`
+	 * resolves to an absolute url too - while output with no baked form has nothing to
 	 * resolve. Where this is false, what `baseUri` is set to cannot reach the generated
 	 * code, so it must not reach the module hash either: `URLDependency.updateHash`
 	 * asks this before contributing one.
@@ -27885,8 +31952,8 @@ declare abstract class RuntimeTemplate {
 	/**
 	 * Static literal specifier (already quoted) for the `new URL(<here>, import.meta.url)`
 	 * an asset reference bakes to, or `null` to keep the runtime form. Unlike a wasm
-	 * binary, the runtime resolves an asset url against `__webpack_require__.b` — the
-	 * output root, or an entry `baseUri` where one is set — so that base is settled here
+	 * binary, the runtime resolves an asset url against `__webpack_require__.b` - the
+	 * output root, or an entry `baseUri` where one is set - so that base is settled here
 	 * before the rest of the name is.
 	 */
 	getAnalyzableAssetUrl(
@@ -27900,7 +31967,7 @@ declare abstract class RuntimeTemplate {
 	 * The `baseUri` the entries this code runs under agree on, which replaces the output
 	 * root an asset url resolves against. Asked per runtime, because that is what the
 	 * module is generated for: two entries with different bases each get their own
-	 * source. `undefined` when none of them sets one, `null` when they disagree — an
+	 * source. `undefined` when none of them sets one, `null` when they disagree - an
 	 * entry that omits it disagrees with one that sets it.
 	 */
 	entryBaseUri(runtime: RuntimeSpec): undefined | null | string;
@@ -27908,7 +31975,7 @@ declare abstract class RuntimeTemplate {
 	/**
 	 * `output.publicPath` as the constant it will be, for code that would otherwise read
 	 * `__webpack_require__.p` for a value that never changes. `undefined` when only the
-	 * hash could say, or when a runtime reassigns `__webpack_public_path__` — then the
+	 * hash could say, or when a runtime reassigns `__webpack_public_path__` - then the
 	 * global is the only thing that knows.
 	 */
 	constantPublicPath(): undefined | string;
@@ -27964,8 +32031,15 @@ declare abstract class RuntimeTemplate {
 
 	/**
 	 * Reads a node builtin via `process.getBuiltinModule()`, guarded to stay falsy off node so universal `["node", "web"]` bundles don't crash (also falsy on node <22.3).
+	 * Both guards are dropped only on a node platform with the getter; off it a browser `process` shim may lack the getter.
 	 */
 	getBuiltinModule(request: string, access?: string): string;
+
+	/**
+	 * Pieces of a `Promise` with node's `fs.readFile` in reach, for ESM output that has no `require`.
+	 * The getter reads `fs` synchronously where the target has it; otherwise `import()` loads it.
+	 */
+	nodeReadFilePromise(): { open: string; readFile: string; close: string };
 
 	/**
 	 * Renders a `then` callback calling `fn` with `args`. An arrow keeps the `this`
@@ -27991,7 +32065,7 @@ declare abstract class RuntimeTemplate {
 	 * otherwise. `target` is evaluated twice in the fallback, so it must be
 	 * side-effect free. The expression evaluates to the resulting value.
 	 * Models `||` only, so `target` must never hold a legitimate falsy value
-	 * (`0`, `""`, `false`) — it would be overwritten; use it for object/array defaults.
+	 * (`0`, `""`, `false`) - it would be overwritten; use it for object/array defaults.
 	 */
 	assignOr(target: string, value: string): string;
 
@@ -28141,7 +32215,7 @@ declare abstract class RuntimeTemplate {
 
 	/**
 	 * The side-effect annotation for output another build reads back, which is the
-	 * only output it can pay for — elsewhere it is bytes with no consumer.
+	 * only output it can pay for - elsewhere it is bytes with no consumer.
 	 */
 	sideEffectsAnnotation(): string;
 
@@ -28446,7 +32520,7 @@ declare abstract class RuntimeTemplate {
 	/**
 	 * The `../` path from a chunk's own asset back to the output root. Hashes are
 	 * neutralized first: a runtime module is generated once to be hashed, before any
-	 * hash exists, so resolving one there throws — and `RuntimeModule.updateHash`
+	 * hash exists, so resolving one there throws - and `RuntimeModule.updateHash`
 	 * lets that throw fail the build rather than hashing it.
 	 */
 	chunkRootOutputDir(chunk: Chunk, enforceRelative: boolean): string;
@@ -28454,7 +32528,7 @@ declare abstract class RuntimeTemplate {
 	/**
 	 * Static literal specifier (already quoted) for the `new URL(<here>, import.meta.url)`
 	 * a worker or worklet entry chunk bakes to, or `null` to keep the runtime form. The
-	 * gate and the build are asked together so every call site agrees on both — the
+	 * gate and the build are asked together so every call site agrees on both - the
 	 * `new Worker(...)` emit, and the resource hint `ResourceHintPlugin` spells for it.
 	 */
 	getAnalyzableWorkerUrl(
@@ -28469,7 +32543,7 @@ declare abstract class RuntimeTemplate {
 	 * keyed by chunk id, or `null` when they have to keep the runtime
 	 * `publicPath + getChunkCssFilename(id)` form. Both the runtime module reading them
 	 * and the plugin declaring what it needs ask this, so the two always agree. The
-	 * runtime hands an absolute url string to `link.href`, and so does this — the browser
+	 * runtime hands an absolute url string to `link.href`, and so does this - the browser
 	 * resolves the element against the document, which is not where the chunk sits, and
 	 * the loader reads the url as text either way.
 	 */
@@ -28699,8 +32773,17 @@ declare interface SSRManifestPluginOptions {
 /**
  * A lexical scope. One shape for every kind, so the property loads in the
  * resolution loop stay monomorphic.
+ * @experimental exposed as `webpack.javascript.syntax.scopes.Scope`; unstable API
  */
-declare abstract class Scope {
+declare class Scope {
+	constructor(
+		type: ScopeType,
+		blockType: string,
+		blockStart: number,
+		upper: null | Scope,
+		isVarScope: boolean,
+		recordEveryReference: boolean
+	);
 	type: ScopeType;
 	blockType: string;
 	blockStart: number;
@@ -28713,11 +32796,49 @@ declare abstract class Scope {
 	 * For a function scope with parameters, the offset where its body
 	 * starts; `-1` for every other scope. Separates the two regions that
 	 * share this scope, so a reference in the parameter list can be kept
-	 * from resolving to a binding declared in the body — see
+	 * from resolving to a binding declared in the body - see
 	 * `isHiddenBodyBinding`.
 	 */
 	paramBoundary: number;
 	getBinding(name: string): undefined | Variable;
+}
+declare interface ScopeAnalysis {
+	/**
+	 * the outermost scope
+	 */
+	globalScope: Scope;
+
+	/**
+	 * the module body scope, where top-level declarations live
+	 */
+	moduleScope: Scope;
+
+	/**
+	 * every identifier that resolved to no binding - the module's free names
+	 */
+	unresolvedReferences: Reference[];
+
+	/**
+	 * where each shorthand property's identifier starts, so a rename can write `name: newName` without the tree
+	 */
+	shorthandIdentifierStarts: Set<number>;
+}
+
+/**
+ * One occurrence of a name in the source, which a rename rewrites in place.
+ * @experimental the `{ path: true }` tap option and `webpack.javascript.syntax.scopes.ScopeIdentifier`; unstable API
+ */
+declare class ScopeIdentifier {
+	constructor(name: string, start: number, end: number);
+	name: string;
+	start: number;
+	end: number;
+
+	/**
+	 * Where it sits in the source, as the ESTree identifier it replaces held it.
+	 * @deprecated read `start` and `end`
+	 */
+	get range(): [number, number];
 }
 
 /**
@@ -28729,9 +32850,74 @@ declare interface ScopeInfo {
 	inShorthand: string | boolean;
 	inTaggedTemplateTag: boolean;
 	inTry: boolean;
+
+	/**
+	 * true inside a loop, or a branch whose condition is unknown at build time
+	 */
+	inBranch: boolean;
 	isStrict: boolean;
 	isAsmJs: boolean;
 	terminated?: 1 | 2;
+}
+
+/**
+ * What a parse with `scopes` saw of names and scopes, in the order it saw
+ * them, keyed by where each name starts: a name can be an object or a tree
+ * node at that point, and a key the parser writes late still starts where it is.
+ * @experimental exposed as `webpack.javascript.syntax.scopes.ScopeLog`; unstable API
+ */
+declare class ScopeLog {
+	constructor();
+	count: number;
+	infos: number[];
+	starts: number[];
+	ends: number[];
+	names: string[];
+	scopeCount: number;
+	scopeTypes: string[];
+	blockTypes: string[];
+	blockStarts: number[];
+	scopeStarts: number[];
+	scopeEnds: number[];
+	scopeFlags: number[];
+	paramBoundaries: number[];
+	shorthandCount: number;
+	shorthands: number[];
+
+	/**
+	 * Empties the log for the next parse; its arrays keep their room, so a log
+	 * reused across parses grows once rather than on every parse.
+	 */
+	reset(): void;
+	shorthand(start: number): void;
+	add(
+		kind: number,
+		start: number,
+		end: number,
+		name: string,
+		binds: number,
+		reads: number
+	): void;
+
+	/**
+	 * Logs a name an expression reads, the most common event.
+	 */
+	read(start: number, end: number, name: string): void;
+
+	/**
+	 * Counts one more read of each name declared from `from` to `to`, as an
+	 * initializer or a loop head writes them.
+	 */
+	readDeclared(from: number, to: number): void;
+	scope(
+		type: string,
+		blockType: string,
+		blockStart: number,
+		from: number,
+		to: number,
+		flags: number,
+		paramBoundary: number
+	): void;
 }
 type ScopeType =
 	| "function"
@@ -28772,13 +32958,14 @@ declare interface ScopesReplay {
 declare interface Selector<A, B> {
 	(input: A): undefined | null | B;
 }
+type SemVerRangeItem = undefined | string | number;
 
 /**
  * Represents Serializer.
  */
 declare abstract class Serializer<DeserializedValue, SerializedValue, Context> {
-	serializeMiddlewares: SerializerMiddleware<any, any, any>[];
-	deserializeMiddlewares: SerializerMiddleware<any, any, any>[];
+	serializeMiddlewares: SerializerMiddleware[];
+	deserializeMiddlewares: SerializerMiddleware[];
 	context?: Context;
 
 	/**
@@ -28802,9 +32989,9 @@ declare abstract class Serializer<DeserializedValue, SerializedValue, Context> {
  * Represents SerializerMiddleware.
  */
 declare abstract class SerializerMiddleware<
-	DeserializedType,
-	SerializedType,
-	Context
+	DeserializedType = ComplexSerializableType,
+	SerializedType = ComplexSerializableType,
+	Context = Record<never, never>
 > {
 	/**
 	 * Serializes this instance into the provided serializer context.
@@ -28948,11 +33135,6 @@ declare class SideEffectsFlagPlugin {
 	): undefined | boolean;
 }
 type SideEffectsFlagValue = undefined | string | boolean | string[];
-type SimpleBlock = NodeSyntaxParser & {
-	token: SimpleBlockToken;
-	value: ComponentValue[];
-};
-type SimpleBlockToken = "{" | "(" | "[";
 type SimpleType = "string" | "number" | "boolean";
 declare class SizeOnlySource extends Source {
 	constructor(size: number);
@@ -28968,12 +33150,12 @@ declare interface SkipOptions {
 	types?: Uint8Array;
 
 	/**
-	 * drop qualified-rule (selector) preludes — the rule and its block are still produced (default false)
+	 * drop qualified-rule (selector) preludes - the rule and its block are still produced (default false)
 	 */
 	selectorPrelude?: boolean;
 
 	/**
-	 * drop at-rule preludes — the at-rule and its block are still produced (default false)
+	 * drop at-rule preludes - the at-rule and its block are still produced (default false)
 	 */
 	atRulePrelude?: boolean;
 }
@@ -29085,14 +33267,23 @@ declare abstract class Snapshot {
 	addChild(child: Snapshot): void;
 
 	/**
-	 * Serializes this instance into the provided serializer context.
+	 * Serializes this instance into the provided serializer context: the flags,
+	 * then each field the flags say is present.
 	 */
-	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_3): void;
+	serialize(
+		__0: ObjectSerializerContextObjectMiddlewareObject_4<
+			ReadonlyArray<SnapshotStreamValue>
+		>
+	): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_2): void;
+	deserialize(
+		__0: ObjectDeserializerContextObjectMiddlewareObject_3<
+			ReadonlyArray<SnapshotStreamValue>
+		>
+	): void;
 
 	/**
 	 * Gets file iterable.
@@ -29259,6 +33450,18 @@ declare interface SnapshotOptionsWebpackOptions {
 	 */
 	unmanagedPaths?: (string | RegExp)[];
 }
+type SnapshotStreamValue =
+	| undefined
+	| number
+	| Map<string, null | FileSystemInfoEntry>
+	| Map<string, null | string>
+	| Map<string, null | string | TimestampAndHash>
+	| Map<string, null | ResolvedContextFileSystemInfoEntry>
+	| Map<string, null | ResolvedContextTimestampAndHash>
+	| Map<string, boolean>
+	| Map<string, string>
+	| Set<string>
+	| Set<Snapshot>;
 
 /**
  * Create a new sortable set
@@ -29270,7 +33473,12 @@ declare interface SortFunction<T> {
 /**
  * A subset of Set that offers sorting functionality
  */
-declare abstract class SortableSet<T> extends Set<T> {
+declare class SortableSet<T> extends Set<T> {
+	/**
+	 * Create a new sortable set
+	 */
+	constructor(initialIterable?: Iterable<T>, defaultSort?: SortFunction<T>);
+
 	/**
 	 * Sort with a comparer function
 	 */
@@ -29332,7 +33540,7 @@ declare interface SourceBucket {
 declare interface SourceItem {
 	type: SourceTypeOrResolver;
 	filter?: (attributes: Map<string, string>, value: string) => boolean;
-	namespace?: number;
+	namespace?: 1 | 2;
 }
 declare interface SourceLike {
 	/**
@@ -29425,7 +33633,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Exclude modules that match the given value from source map generation.
 	 */
-	exclude?: string | RegExp | ((str: string) => boolean) | RuleObject[];
+	exclude?: string | RegExp | ((str: string) => boolean) | RuleGlob | Rule[];
 
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.
@@ -29446,12 +33654,12 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Decide whether to ignore source files that match the specified value in the SourceMap.
 	 */
-	ignoreList?: string | RegExp | ((str: string) => boolean) | RuleObject[];
+	ignoreList?: string | RegExp | ((str: string) => boolean) | RuleGlob | Rule[];
 
 	/**
 	 * Include source maps for module paths that match the given value.
 	 */
-	include?: string | RegExp | ((str: string) => boolean) | RuleObject[];
+	include?: string | RegExp | ((str: string) => boolean) | RuleGlob | Rule[];
 
 	/**
 	 * Indicates whether SourceMaps from loaders should be used (defaults to true).
@@ -29488,7 +33696,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Include source maps for modules based on their extension (defaults to .js and .css).
 	 */
-	test?: string | RegExp | ((str: string) => boolean) | RuleObject[];
+	test?: string | RegExp | ((str: string) => boolean) | RuleGlob | Rule[];
 }
 
 /**
@@ -29548,56 +33756,105 @@ declare interface SourcePosition {
 
 /**
  * Visitor coordinator: owns the visitor registry and drives a language
- * `grammar` over the source. Language-agnostic — each syntax (CSS, HTML, …)
+ * `grammar` over the source. Language-agnostic - each syntax (CSS, HTML, ...)
  * binds its own grammar, node-type enum and (optionally) node printer.
- * Babel-style usage:
+ * Usage:
  * ```
  * processor.use({ [NodeType.X]: (path) => {}, [NodeType.Y]: { enter, exit } });
  * processor.process(source);
  * ```
  */
 declare abstract class SourceProcessor<
-	TPath,
+	TPath extends NodePath<TNode, unknown>,
 	TNode,
-	TProcessOptions = object,
-	TPrintOptions = object
+	TProcessOptions = Record<never, never>,
+	TPrintOptions = PrintOptions,
+	TParts extends NodeParts = AnyParts,
+	TState = unknown,
+	TVisitors = VisitorMapSourceProcessorObject_1<TPath>
 > {
 	/**
-	 * Register a Babel-style visitor map; calls accumulate per node type.
+	 * Register one bucket for several node types, as a map naming each would;
+	 * its path takes only the parts those types have.
+	 */
+	use<T extends number>(
+		types: T[],
+		bucket: VisitorBucket<TypedNodePath<TPath, TNode, TParts, T, TState>>
+	): SourceProcessor<
+		TPath,
+		TNode,
+		TProcessOptions,
+		TPrintOptions,
+		TParts,
+		TState,
+		TVisitors
+	>;
+
+	/**
+	 * Register a visitor map; calls accumulate per node type, and each
+	 * visitor's path takes only its type's parts.
 	 * A bucket is a function (= `{ enter }`) or `{ enter?, exit? }`.
 	 */
 	use(
-		map: VisitorMap<TPath>
-	): SourceProcessor<TPath, TNode, TProcessOptions, TPrintOptions>;
+		map: TVisitors
+	): SourceProcessor<
+		TPath,
+		TNode,
+		TProcessOptions,
+		TPrintOptions,
+		TParts,
+		TState,
+		TVisitors
+	>;
+
+	/**
+	 * Register a visitor map built at runtime, keyed by any node type.
+	 */
+	use(
+		map: VisitorMapSourceProcessorObject_1<TPath>
+	): SourceProcessor<
+		TPath,
+		TNode,
+		TProcessOptions,
+		TPrintOptions,
+		TParts,
+		TState,
+		TVisitors
+	>;
 
 	/**
 	 * Parse `input` once and fire the visitors in source order. Asking for output
-	 * — `mode`, the one thing that names it — makes the same walk print, given a
+	 * - `mode`, the one thing that names it - makes the same walk print, given a
 	 * printer supplied at construction: a
 	 * {@link PrintContext} is created, each node's printer fires into it as the node
 	 * finishes, and the result is returned as `{ code, map }`: the serialized output
 	 * and, for a caller that named its input with `source` / `content`, the
-	 * input->output source map — `map` is `undefined` without one. Asking for
-	 * none of it only walks and returns `undefined`. A single parse — printing
+	 * input->output source map - `map` is `undefined` without one. Asking for
+	 * none of it only walks and returns `undefined`. A single parse - printing
 	 * never re-parses; all configuration is per-call.
 	 */
 	process(
 		input: string,
-		options: TProcessOptions & { mode: "beautify" | "minify" } & {
-			source: string;
-			content?: string;
-		}
+		options: TProcessOptions &
+			RunState<TState> & { mode: "beautify" | "minify" } & {
+				source: string;
+				content?: string;
+			}
 	): { code: string; map: SourceMap };
 	process(
 		input: string,
-		options: TProcessOptions & { mode: "beautify" | "minify" }
+		options: TProcessOptions &
+			RunState<TState> & { mode: "beautify" | "minify" }
 	): { code: string; map: undefined };
-	process(input: string, options?: TProcessOptions): undefined;
+	process(
+		input: string,
+		options?: TProcessOptions & RunState<TState>
+	): undefined;
 
 	/**
 	 * {@link process}, for a caller whose renderer answers asynchronously. Code
-	 * generation is synchronous — a printer returns its node's text, it cannot
-	 * await one — so the walk leaves a marker where each answer goes, they are
+	 * generation is synchronous - a printer returns its node's text, it cannot
+	 * await one - so the walk leaves a marker where each answer goes, they are
 	 * asked for together, and {@link PrintContext.substitute} stands each in its
 	 * place before the output and its map are built. One parse either way, and
 	 * the async boundary stays at the top rather than on every node.
@@ -29606,16 +33863,15 @@ declare abstract class SourceProcessor<
 	 */
 	processAsync(
 		input: string,
-		options: Omit<TProcessOptions, "renderEmbeddedSource"> & {
-			mode: "beautify" | "minify";
-		} & {
-			source?: string;
-			content?: string;
-			renderEmbeddedSource?: (
-				source: string,
-				hole?: any
-			) => undefined | string | Promise<undefined | string>;
-		}
+		options: Omit<TProcessOptions, "renderEmbeddedSource"> &
+			RunState<TState> & { mode: "beautify" | "minify" } & {
+				source?: string;
+				content?: string;
+				renderEmbeddedSource?: (
+					source: string,
+					hole: DeferredEmbeddedSource
+				) => undefined | string | Promise<undefined | string>;
+			}
 	): Promise<{ code: string; map?: SourceMap }>;
 }
 declare interface SourceTable {
@@ -29782,7 +34038,7 @@ declare abstract class StackEntry {
  * scopes. Layers form a linked parent chain, so `createChild` is O(1) instead
  * of copying a layer array per scope. A layer's `Map` is only allocated on its
  * first own write, and lookup results are memoized into the nearest
- * `Map`-bearing layer of the walk — read-only layers (most block scopes) stay
+ * `Map`-bearing layer of the walk - read-only layers (most block scopes) stay
  * allocation-free and share their parent's memoized entries.
  */
 declare abstract class StackedMap<K, V> {
@@ -29853,7 +34109,7 @@ declare abstract class StackedMap<K, V> {
  */
 declare interface StarListDeserializerContext {
 	read: () => ESMExportImportedSpecifierDependency[];
-	rest: ObjectDeserializerContextObjectMiddlewareObject_2<[]>;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_3<[]>;
 	setCircularReference: (value: ReferenceableItem) => void;
 }
 
@@ -29864,15 +34120,66 @@ declare interface StarListDeserializerContext {
 declare interface StarListSerializerContext {
 	write: (
 		value: ESMExportImportedSpecifierDependency[]
-	) => ObjectSerializerContextObjectMiddlewareObject_3<[]>;
+	) => ObjectSerializerContextObjectMiddlewareObject_4<[]>;
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
-	writeLazy?: (item?: any) => void;
-	writeSeparate?: (
-		item: any,
+	writeLazy?: (item: ComplexSerializableType) => void;
+	writeSeparate?: <T>(
+		item: T | (() => T | Promise<T>),
 		obj?: LazyOptions
-	) => LazyFunction<any, any, any, LazyOptions>;
+	) => LazyFunction<
+		T,
+		PrimitiveSerializableType[],
+		SerializerMiddleware,
+		LazyOptions
+	>;
+}
+declare class StartupEntrypointRuntimeModule extends RuntimeModule {
+	constructor(asyncChunkLoading: boolean);
+	asyncChunkLoading: boolean;
+
+	/**
+	 * The answer a runtime module gives when it installs no chunk handler at all
+	 */
+	static NO_CHUNK_HANDLERS: [string, string][];
+
+	/**
+	 * Runtime modules without any dependencies to other runtime modules
+	 */
+	static STAGE_NORMAL: number;
+
+	/**
+	 * Runtime modules with simple dependencies on other runtime modules
+	 */
+	static STAGE_BASIC: number;
+
+	/**
+	 * Runtime modules which attach to handlers of other runtime modules
+	 */
+	static STAGE_ATTACH: number;
+
+	/**
+	 * Runtime modules which trigger actions on bootstrap
+	 */
+	static STAGE_TRIGGER: number;
+	static KINDS: Set<
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
+	>;
+
+	/**
+	 * Gets source basic types.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 */
+	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
 
 /**
@@ -29933,6 +34240,11 @@ declare interface StartupRenderContext {
 	 * the inlined entry's top-level declarations renamed to avoid a collision, original to new name
 	 */
 	renamedDeclarations?: Map<string, string>;
+
+	/**
+	 * the startup already awaited the last entry, so `__webpack_exports__` holds its settled exports
+	 */
+	exportsAwaited?: boolean;
 }
 
 /**
@@ -30035,7 +34347,7 @@ declare interface StatSync {
 	): undefined | IBigIntStatsFs;
 	(
 		path: PathLikeFs,
-		options: StatSyncOptions & { bigint: boolean; throwIfNoEntry?: true }
+		options: StatSyncOptions & { bigint: boolean; throwIfNoEntry?: undefined }
 	): IStatsFs | IBigIntStatsFs;
 	(
 		path: PathLikeFs,
@@ -30073,6 +34385,40 @@ type Statement =
 	| ForStatement
 	| ForInStatement
 	| ForOfStatement;
+type StatementHook = PathTaps<[number], boolean | void> &
+	SyncBailHook<
+		[
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportAllDeclaration
+			| FunctionDeclaration
+			| MaybeNamedFunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration
+			| MaybeNamedClassDeclaration
+			| ExpressionStatement
+			| BlockStatement
+			| StaticBlock
+			| EmptyStatement
+			| DebuggerStatement
+			| WithStatement
+			| ReturnStatement
+			| LabeledStatement
+			| BreakStatement
+			| ContinueStatement
+			| IfStatement
+			| SwitchStatement
+			| ThrowStatement
+			| TryStatement
+			| WhileStatement
+			| DoWhileStatement
+			| ForStatement
+			| ForInStatement
+			| ForOfStatement
+			| ExportDefaultDeclaration
+		],
+		boolean | void
+	>;
 type StatementPathItem =
 	| ImportDeclaration
 	| ExportNamedDeclaration
@@ -30129,6 +34475,84 @@ type StatementPathItem =
 	| ForInStatement
 	| ForOfStatement
 	| ExportDefaultDeclaration;
+declare class StaticExportsDependency extends NullDependency {
+	/**
+	 * Creates an instance of StaticExportsDependency.
+	 */
+	constructor(exports: Exports, canMangle: boolean);
+	exports: Exports;
+	canMangle: boolean;
+	static KINDS: Set<
+		| "worker"
+		| "css-import"
+		| "css-url"
+		| "entry"
+		| "url"
+		| "module-dependency"
+		| "esm-import"
+		| "provided"
+		| "dynamic-import"
+		| "esm-reexport"
+		| "esm-export-specifier"
+		| "esm-live-export"
+		| "esm-side-effect-import"
+		| "context-element"
+		| "esm-bare-side-effect-import"
+		| "esm-import-specifier"
+		| "esm-evaluated-import-specifier"
+		| "esm-compatibility"
+		| "commonjs-require"
+		| "commonjs-export-require"
+		| "html-source"
+		| "html-entry"
+		| "html-inline-style"
+		| "html-css-module"
+		| "webassembly-import"
+		| "webassembly-export-imported"
+		| "sharing-request"
+		| "local-module"
+		| "static-exports"
+		| "loader-import"
+		| "css-icss-import"
+		| "css-icss-export"
+	>;
+	static Template: typeof NullDependencyTemplate;
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
+	static NO_EXPORTS_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED_MANGLEABLE: string[][];
+
+	/**
+	 * Returns true if the dependency is a low priority dependency.
+	 */
+	static isLowPriorityDependency(dependency: Dependency): boolean;
+
+	/**
+	 * Returns true if the dependency can be concatenated (scope hoisting).
+	 */
+	static canConcatenate(
+		dependency: Dependency,
+		concatenateCommonJsModules: boolean,
+		module?: null | Module
+	): boolean;
+	static TRANSITIVE: symbol;
+	static LAZY_LOCAL_EXPORT: "local";
+	static LAZY_NAMED_REEXPORT: "id";
+	static LAZY_STAR_REEXPORT: "*";
+	static LAZY_REEXPORT_SIDE_EFFECT: "@";
+	static LAZY_IMPORT_DECLARATION: "import";
+	static ESM_CATEGORY: "esm";
+}
 declare class Stats {
 	/**
 	 * Creates an instance of Stats.
@@ -30183,12 +34607,17 @@ declare class Stats {
 			| "verbose"
 	): string;
 }
-type StatsAsset = KnownStatsAsset & Record<string, any>;
-type StatsChunk = KnownStatsChunk & Record<string, any>;
-type StatsChunkGroup = KnownStatsChunkGroup & Record<string, any>;
-type StatsChunkOrigin = KnownStatsChunkOrigin & Record<string, any>;
-type StatsCompilation = KnownStatsCompilation & Record<string, any>;
-type StatsError = KnownStatsError & Record<string, any>;
+type StatsAsset = exports.KnownStatsAsset & Record<string, StatsJsonValue>;
+type StatsAssetGroup = exports.KnownStatsAssetGroup &
+	Record<string, StatsJsonValue>;
+type StatsChunk = exports.KnownStatsChunk & Record<string, StatsJsonValue>;
+type StatsChunkGroup = exports.KnownStatsChunkGroup &
+	Record<string, StatsJsonValue>;
+type StatsChunkOrigin = exports.KnownStatsChunkOrigin &
+	Record<string, StatsJsonValue>;
+type StatsCompilation = exports.KnownStatsCompilation &
+	Record<string, StatsJsonValue>;
+type StatsError = exports.KnownStatsError & Record<string, StatsJsonValue>;
 declare abstract class StatsFactory {
 	hooks: StatsFactoryHooks;
 
@@ -30201,52 +34630,117 @@ declare abstract class StatsFactory {
 		baseContext: Omit<StatsFactoryContext, "type">
 	): CreatedObject<FactoryData, FallbackCreatedObject>;
 }
-type StatsFactoryContext = KnownStatsFactoryContext & Record<string, any>;
+type StatsFactoryContext = exports.KnownStatsFactoryContext &
+	Record<string, any>;
+type StatsFactoryExtractHookMap = KnownStatsFactoryExtractHookMap & {
+	for(key: string): SyncBailHook<[any, any, StatsFactoryContext], void>;
+} & HookMap<SyncBailHook<[any, any, StatsFactoryContext], void>>;
+type StatsFactoryGetItemFactoryHookMap =
+	KnownStatsFactoryGetItemFactoryHookMap & {
+		for(
+			key: string
+		): SyncBailHook<[any, StatsFactoryContext], void | StatsFactory>;
+	} & HookMap<SyncBailHook<[any, StatsFactoryContext], void | StatsFactory>>;
+type StatsFactoryGetItemNameHookMap = KnownStatsFactoryGetItemNameHookMap & {
+	for(key: string): SyncBailHook<[any, StatsFactoryContext], string | void>;
+} & HookMap<SyncBailHook<[any, StatsFactoryContext], string | void>>;
+type StatsFactoryGroup<K extends keyof exports.StatsFactoryItemKeys> =
+	K extends keyof exports.StatsFactoryGroupKeys
+		? exports.StatsFactoryGroupKeys[K]
+		: object;
+type StatsFactoryGroupResultsHookMap = KnownStatsFactoryGroupResultsHookMap & {
+	for(
+		key: string
+	): SyncBailHook<[GroupConfig<any, any>[], StatsFactoryContext], void>;
+} & HookMap<SyncBailHook<[GroupConfig<any, any>[], StatsFactoryContext], void>>;
 
 /**
  * Defines the stats factory hooks type used by this module.
  */
 declare interface StatsFactoryHooks {
-	extract: HookMap<SyncBailHook<[any, any, StatsFactoryContext], void>>;
-	filter: HookMap<
-		SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>
-	>;
-	sort: HookMap<
-		SyncBailHook<
-			[((a?: any, b?: any) => 0 | 1 | -1)[], StatsFactoryContext],
-			void
-		>
-	>;
-	filterSorted: HookMap<
-		SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>
-	>;
-	groupResults: HookMap<
-		SyncBailHook<[GroupConfig<any, any>[], StatsFactoryContext], void>
-	>;
-	sortResults: HookMap<
-		SyncBailHook<
-			[((a?: any, b?: any) => 0 | 1 | -1)[], StatsFactoryContext],
-			void
-		>
-	>;
-	filterResults: HookMap<
-		SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>
-	>;
-	merge: HookMap<SyncBailHook<[any[], StatsFactoryContext], any>>;
-	result: HookMap<SyncBailHook<[any, StatsFactoryContext], any>>;
-	getItemName: HookMap<SyncBailHook<[any, StatsFactoryContext], string | void>>;
-	getItemFactory: HookMap<
-		SyncBailHook<[any, StatsFactoryContext], void | StatsFactory>
-	>;
+	extract: StatsFactoryExtractHookMap;
+	filter: StatsFactoryItemFilterHookMap;
+	sort: StatsFactoryItemSortHookMap;
+	filterSorted: StatsFactoryItemFilterHookMap;
+	groupResults: StatsFactoryGroupResultsHookMap;
+	sortResults: StatsFactoryResultSortHookMap;
+	filterResults: StatsFactoryResultFilterHookMap;
+	merge: StatsFactoryMergeHookMap;
+	result: StatsFactoryResultHookMap;
+	getItemName: StatsFactoryGetItemNameHookMap;
+	getItemFactory: StatsFactoryGetItemFactoryHookMap;
 }
-type StatsLogging = KnownStatsLogging & Record<string, any>;
-type StatsLoggingEntry = KnownStatsLoggingEntry & Record<string, any>;
-type StatsModule = KnownStatsModule & Record<string, any>;
-type StatsModuleIssuer = KnownStatsModuleIssuer & Record<string, any>;
-type StatsModuleReason = KnownStatsModuleReason & Record<string, any>;
-type StatsModuleTraceDependency = KnownStatsModuleTraceDependency &
-	Record<string, any>;
-type StatsModuleTraceItem = KnownStatsModuleTraceItem & Record<string, any>;
+type StatsFactoryItemFilterHookMap = KnownStatsFactoryItemFilterHookMap & {
+	for(
+		key: string
+	): SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>;
+} & HookMap<
+		SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>
+	>;
+type StatsFactoryItemSortHookMap = KnownStatsFactoryItemSortHookMap & {
+	for(
+		key: string
+	): SyncBailHook<[Comparator<any>[], StatsFactoryContext], void>;
+} & HookMap<SyncBailHook<[Comparator<any>[], StatsFactoryContext], void>>;
+type StatsFactoryMergeHookMap = KnownStatsFactoryMergeHookMap & {
+	for(key: string): SyncBailHook<[any[], StatsFactoryContext], any>;
+} & HookMap<SyncBailHook<[any[], StatsFactoryContext], any>>;
+type StatsFactoryMergedItems<K extends keyof exports.StatsFactoryItemKeys> =
+	exports.StatsFactoryItemKeys[K] extends [infer _Object, infer _Item, infer M]
+		? M
+		: exports.StatsFactoryItemKeys[K][1][];
+type StatsFactoryResultFilterHookMap = KnownStatsFactoryResultFilterHookMap & {
+	for(
+		key: string
+	): SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>;
+} & HookMap<
+		SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>
+	>;
+type StatsFactoryResultHookMap = {
+	for<K extends keyof exports.StatsFactoryExtractKeys>(
+		key: K
+	): SyncBailHook<
+		[exports.StatsFactoryExtractKeys[K][0], StatsFactoryContext],
+		exports.StatsFactoryExtractKeys[K][0]
+	>;
+	for<K extends keyof exports.StatsFactoryItemKeys>(
+		key: K
+	): SyncBailHook<
+		[StatsFactoryMergedItems<K>, StatsFactoryContext],
+		StatsFactoryMergedItems<K>
+	>;
+	for(key: string): SyncBailHook<[any, StatsFactoryContext], any>;
+} & HookMap<SyncBailHook<[any, StatsFactoryContext], any>>;
+type StatsFactoryResultSortHookMap = KnownStatsFactoryResultSortHookMap & {
+	for(
+		key: string
+	): SyncBailHook<[Comparator<any>[], StatsFactoryContext], void>;
+} & HookMap<SyncBailHook<[Comparator<any>[], StatsFactoryContext], void>>;
+type StatsJsonValue =
+	| undefined
+	| null
+	| string
+	| number
+	| boolean
+	| Buffer
+	| StatsJsonValue[]
+	| { [index: string]: StatsJsonValue };
+type StatsLogging = exports.KnownStatsLogging & Record<string, StatsJsonValue>;
+type StatsLoggingEntry = exports.KnownStatsLoggingEntry &
+	Record<string, StatsJsonValue>;
+type StatsModule = exports.KnownStatsModule & Record<string, StatsJsonValue>;
+type StatsModuleGroup = exports.KnownStatsModuleGroup &
+	Record<string, StatsJsonValue>;
+type StatsModuleIssuer = exports.KnownStatsModuleIssuer &
+	Record<string, StatsJsonValue>;
+type StatsModuleReason = exports.KnownStatsModuleReason &
+	Record<string, StatsJsonValue>;
+type StatsModuleReasonGroup = exports.KnownStatsModuleReasonGroup &
+	Record<string, StatsJsonValue>;
+type StatsModuleTraceDependency = exports.KnownStatsModuleTraceDependency &
+	Record<string, StatsJsonValue>;
+type StatsModuleTraceItem = exports.KnownStatsModuleTraceItem &
+	Record<string, StatsJsonValue>;
 type StatsObject<T, F> = T extends Compilation
 	? StatsCompilation
 	: T extends ChunkGroupInfoWithName
@@ -30771,16 +35265,12 @@ declare interface StatsPrintHooks {
 			undefined | string | void
 		>
 	>;
-	sortItems: HookMap<
-		SyncBailHook<[any[], StatsPrinterContext], boolean | void>
-	>;
-	getItemName: HookMap<SyncBailHook<[any, StatsPrinterContext], string | void>>;
+	sortItems: StatsPrinterSortItemsHookMap;
+	getItemName: StatsPrinterGetItemNameHookMap;
 	printItems: HookMap<
 		SyncBailHook<[string[], StatsPrinterContext], undefined | string>
 	>;
-	print: HookMap<
-		SyncBailHook<[any, StatsPrinterContext], undefined | string | void>
-	>;
+	print: StatsPrinterPrintHookMap;
 	result: HookMap<SyncWaterfallHook<[string, StatsPrinterContext], string>>;
 }
 declare abstract class StatsPrinter {
@@ -30789,17 +35279,36 @@ declare abstract class StatsPrinter {
 	/**
 	 * Returns printed result.
 	 */
-	print(
+	print<T>(
 		type: string,
-		object?: any,
+		object: T,
 		baseContext?: StatsPrinterContext
 	): undefined | string;
 }
 type StatsPrinterContext = KnownStatsPrinterColorFunctions &
 	KnownStatsPrinterFormatters &
-	KnownStatsPrinterContext &
+	exports.KnownStatsPrinterContext &
 	Record<string, any>;
-type StatsProfile = KnownStatsProfile & Record<string, any>;
+type StatsPrinterGetItemNameHookMap = KnownStatsPrinterGetItemNameHookMap & {
+	for(key: string): SyncBailHook<[any, StatsPrinterContext], string | void>;
+} & HookMap<SyncBailHook<[any, StatsPrinterContext], string | void>>;
+type StatsPrinterPrintHookMap = KnownStatsPrinterPrintHookMap & {
+	for(
+		key: string
+	): SyncBailHook<[any, StatsPrinterContext], undefined | string | void>;
+} & HookMap<
+		SyncBailHook<[any, StatsPrinterContext], undefined | string | void>
+	>;
+type StatsPrinterSortItemsHookMap = {
+	for<K extends keyof exports.StatsPrinterItemKeys>(
+		key: K
+	): SyncBailHook<
+		[exports.StatsPrinterItemKeys[K][], StatsPrinterContext],
+		boolean | void
+	>;
+	for(key: string): SyncBailHook<[any[], StatsPrinterContext], boolean | void>;
+} & HookMap<SyncBailHook<[any[], StatsPrinterContext], boolean | void>>;
+type StatsProfile = exports.KnownStatsProfile & Record<string, StatsJsonValue>;
 type StatsValue =
 	| boolean
 	| StatsOptions
@@ -30830,7 +35339,7 @@ declare interface StreamOptions {
 		| "latin1"
 		| "binary"
 		| "hex";
-	fd?: any;
+	fd?: number | FileHandle;
 	mode?: number;
 	autoClose?: boolean;
 	emitClose?: boolean;
@@ -30844,16 +35353,7 @@ declare interface StreamOptions {
 declare interface Stringable {
 	toString: () => string;
 }
-type Stylesheet = NodeSyntaxParser & { rules: RuleSyntaxParser[] };
 type Supports = undefined | string;
-
-/**
- * one of terser's `SymbolDef`s
- */
-declare interface SymbolDefinition {
-	[index: number]: any;
-	[index: string]: any;
-}
 declare class SyncModuleIdsPlugin {
 	/**
 	 * Creates an instance of SyncModuleIdsPlugin.
@@ -30891,7 +35391,7 @@ declare interface SyncModuleIdsPluginOptions {
 	 */
 	mode?: "read" | "create" | "merge" | "update";
 }
-type SyncWasmModuleBuildMeta = KnownBuildMeta &
+type SyncWasmModuleBuildMeta = exports.KnownBuildMeta &
 	Record<string, any> &
 	KnownSyncWasmModuleBuildMeta;
 
@@ -30939,238 +35439,38 @@ declare class SyntaxParser {
 	yieldPos: number;
 	labels: LabelLike[];
 	undefinedExports: Record<string, NodeLike>;
+
+	/**
+	 * Set by the parse entry points; a parser that only hands out tokens
+	 * keeps its top-level scope and reads its contexts instead.
+	 */
+	parsing: boolean;
 	scopeStack: ParserScope[];
 	regexpState: null | RegExpValidationState;
 	privateNameStack: any[];
-	get inFunction(): boolean;
-	get inGenerator(): boolean;
-	get inAsync(): boolean;
-	get canAwait(): boolean;
-	get allowReturn(): boolean;
-	get allowSuper(): boolean;
-	get allowDirectSuper(): boolean;
-	get treatFunctionsAsVar(): number | boolean;
-	get allowNewDotTarget(): boolean;
-	get allowUsing(): boolean;
-	get inClassStaticBlock(): boolean;
+	inTemplateElement: boolean;
 
 	/**
 	 * Whether a directive prologue starting at `start` opens with `"use strict"`.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/parseutil.js
+	 * acorn source: https://github.com/acornjs/acorn/blob/8.19.0/acorn/src/parseutil.js
 	 */
 	strictDirective(start: number): boolean;
 	unexpected(pos?: number): never;
 	initialContext(): TokContextLike[];
 	enterScope(flags: number): void;
-	treatFunctionsAsVarInScope(scope: { flags: number }): number | boolean;
-	currentScope(): ParserScope;
-	currentVarScope(): ParserScope;
-	currentThisScope(): ParserScope;
 
 	/**
 	 * Report a parse error, naming where in the source it was found.
 	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/location.js
 	 */
 	raise(pos: number, message: string): never;
-	raiseRecoverable(pos: number, message: string): never;
+
+	/**
+	 * An error the parse can go on past: `parseProgram` reports it and goes on.
+	 */
+	raiseRecoverable(pos: number, message: string): void;
 	curPosition(): undefined | Position;
 	skipLineComment(startSkip: number): void;
-	parse(): any;
-	eat(type: TokenType): boolean;
-	isContextual(name: string): boolean;
-	eatContextual(name: string): boolean;
-
-	/**
-	 * Turn the host's stack overflow into a parse error, since a deeply nested
-	 * expression is an input the caller can act on rather than a crash.
-	 */
-	catchStackOverflow<T>(f: () => T): T;
-	expectContextual(name: string): void;
-	canInsertSemicolon(): boolean;
-	insertSemicolon(): undefined | boolean;
-	semicolon(): void;
-	afterTrailingComma(
-		tokType: TokenType,
-		notNext?: boolean
-	): undefined | boolean;
-	expect(type: TokenType): void;
-	checkPatternErrors(refDestructuringErrors?: any, isAssign?: boolean): void;
-	checkExpressionErrors(
-		refDestructuringErrors?: any,
-		andThrow?: boolean
-	): undefined | boolean;
-	checkYieldAwaitInDefaultParams(): void;
-	isSimpleAssignTarget(expr?: any): boolean;
-
-	/**
-	 * Read statements until the end of input and wrap them in a `Program`.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/statement.js
-	 */
-	parseTopLevel(node?: any): any;
-
-	/**
-	 * Whether a `let` here opens a lexical declaration rather than naming a
-	 * variable, which needs a look-ahead past the keyword.
-	 */
-	isLet(context?: null | string): boolean;
-
-	/**
-	 * Whether `async` here heads a function declaration, which no line break may
-	 * separate from the `function` keyword.
-	 */
-	isAsyncFunction(): boolean;
-
-	/**
-	 * Whether `using` (or `await using`) here heads a declaration rather than
-	 * naming a variable.
-	 */
-	isUsingKeyword(isAwaitUsing: boolean, isFor?: boolean): boolean;
-	isAwaitUsing(isFor?: boolean): boolean;
-	isUsing(isFor?: boolean): boolean;
-
-	/**
-	 * Read one statement. A statement head that is only a keyword by position —
-	 * `let`, `async`, `using` — is settled by the probes above.
-	 */
-	parseStatement(
-		context?: null | string,
-		topLevel?: boolean,
-		exports?: any
-	): any;
-	parseBreakContinueStatement(node: any, keyword: string): any;
-	parseDebuggerStatement(node?: any): any;
-	parseDoStatement(node?: any): any;
-
-	/**
-	 * Read a `for` head, which is only known to be plain, `in` or `of` once its
-	 * init part has been parsed with `in` held back as an operator.
-	 */
-	parseForStatement(node?: any): any;
-	parseForAfterInit(node: any, init: any, awaitAt: number): any;
-	parseFunctionStatement(
-		node: any,
-		isAsync: boolean,
-		declarationPosition: boolean
-	): any;
-	parseIfStatement(node?: any): any;
-	parseReturnStatement(node?: any): any;
-	parseSwitchStatement(node?: any): any;
-	parseThrowStatement(node?: any): any;
-	parseCatchClauseParam(): any;
-	parseTryStatement(node?: any): any;
-	parseVarStatement(
-		node: any,
-		kind: string,
-		allowMissingInitializer?: boolean
-	): any;
-	parseWhileStatement(node?: any): any;
-	parseWithStatement(node?: any): any;
-	parseEmptyStatement(node?: any): any;
-	parseLabeledStatement(
-		node?: any,
-		maybeName?: any,
-		expr?: any,
-		context?: null | string
-	): any;
-	parseExpressionStatement(node?: any, expr?: any): any;
-	parseBlock(
-		createNewLexicalScope?: boolean,
-		node?: any,
-		exitStrict?: boolean
-	): any;
-	parseFor(node?: any, init?: any): any;
-	parseForIn(node?: any, init?: any): any;
-	parseVar(
-		node: any,
-		isFor: boolean,
-		kind: string,
-		allowMissingInitializer?: boolean
-	): any;
-	parseVarId(decl: any, kind: string): void;
-	parseFunction(
-		node: any,
-		statement: number,
-		allowExpressionBody?: boolean,
-		isAsync?: boolean,
-		forInit?: string | boolean
-	): any;
-	parseFunctionParams(node?: any): void;
-	parseClass(node?: any, isStatement?: string | boolean): any;
-	parseClassElement(constructorAllowsSuper: boolean): any;
-	isClassElementNameStart(): boolean;
-	parseClassElementName(element?: any): void;
-	parseClassMethod(
-		method: any,
-		isGenerator: boolean,
-		isAsync: boolean,
-		allowsDirectSuper: boolean
-	): any;
-	parseClassField(field?: any): any;
-	parseClassStaticBlock(node?: any): any;
-	parseClassId(node?: any, isStatement?: string | boolean): void;
-	parseClassSuper(node?: any): void;
-	enterClassBody(): any;
-	exitClassBody(): void;
-	parseExportAllDeclaration(node?: any, exports?: any): any;
-	parseExport(node?: any, exports?: any): any;
-	parseExportDeclaration(node?: any): any;
-	parseExportDefaultDeclaration(): any;
-	checkExport(exports: any, name: any, pos: number): void;
-	checkPatternExport(exports?: any, pat?: any): void;
-	checkVariableExport(exports: any, declarations: any[]): void;
-	shouldParseExportStatement(): boolean;
-	parseExportSpecifier(exports?: any): any;
-	parseExportSpecifiers(exports?: any): any[];
-	parseImport(node?: any): any;
-	parseImportSpecifier(): any;
-	parseImportDefaultSpecifier(): any;
-	parseImportNamespaceSpecifier(): any;
-	parseImportSpecifiers(): any[];
-	parseWithClause(): any[];
-	parseImportAttribute(): any;
-	parseModuleExportName(): any;
-	adaptDirectivePrologue(statements: any[]): void;
-	isDirectiveCandidate(statement: NodeLike & { expression?: any }): boolean;
-
-	/**
-	 * Rewrite an expression as the binding pattern it turns out to be, which is
-	 * only known once the `=` or `of` after it has been read.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/lval.js
-	 */
-	toAssignable(
-		node?: any,
-		isBinding?: boolean,
-		refDestructuringErrors?: any
-	): any;
-	toAssignableList(exprList: any[], isBinding?: boolean): any[];
-	parseSpread(refDestructuringErrors?: any): any;
-	parseRestBinding(): any;
-	parseBindingAtom(): any;
-	parseBindingList(
-		close: TokenType,
-		allowEmpty: boolean,
-		allowTrailingComma: boolean,
-		allowModifiers?: boolean
-	): any[];
-	parseAssignableListItem(allowModifiers?: boolean): any;
-	parseBindingListItem(param?: any): any;
-	parseMaybeDefault(
-		startPos: number,
-		startLoc?: null | PositionLike,
-		left?: any
-	): any;
-
-	/**
-	 * Check a target that may only be an identifier or member expression, and
-	 * record the binding it introduces.
-	 */
-	checkLValSimple(expr?: any, bindingType?: number, checkClashes?: any): void;
-	checkLValPattern(expr?: any, bindingType?: number, checkClashes?: any): void;
-	checkLValInnerPattern(
-		expr?: any,
-		bindingType?: number,
-		checkClashes?: any
-	): void;
 	curContext(): TokContextLike;
 
 	/**
@@ -31178,208 +35478,27 @@ declare class SyntaxParser {
 	 * token before it decides.
 	 */
 	braceIsBlock(prevType: TokenType): boolean;
+
+	/**
+	 * Whether the enclosing function is a generator. A parse reads its scope: a
+	 * method's `*` pushes no `function` context, which only the tokenizer reads.
+	 * The tokenizer alone enters no function scope, so it reads its contexts.
+	 */
 	inGeneratorContext(): boolean;
 	updateContext(prevType: TokenType): void;
-	overrideContext(tokenCtx: TokContextLike): void;
-	exitScope(): void;
 
 	/**
-	 * Record a name in the scope its binding belongs to, and report a name that
-	 * was already declared there.
+	 * A module reads `<!--` as `<`, `!` and `--`, where a script, as webpack
+	 * emits a module into, reads an HTML-style comment.
 	 */
-	declareName(name: string, bindingType: number, pos: number): void;
-	checkLocalExport(id?: any): void;
-	startNode(): any;
-	startNodeAt(pos: number, loc?: null | PositionLike): any;
-	finishNode(node: any, type: string): any;
-	finishNodeAt(
-		node: any,
-		type: string,
-		pos: number,
-		loc?: null | PositionLike
-	): any;
-	copyNode(node?: any): any;
-
-	/**
-	 * Report a property name that may not be repeated: a getter or setter that
-	 * clashes, and under ES5 a repeated `init` in strict mode.
-	 */
-	checkPropClash(
-		prop?: any,
-		propHash?: any,
-		refDestructuringErrors?: any
-	): void;
-
-	/**
-	 * Read a full expression, including the comma operator.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/expression.js
-	 */
-	parseExpression(
-		forInit?: string | boolean,
-		refDestructuringErrors?: any
-	): any;
-	parseMaybeAssign(
-		forInit?: string | boolean,
-		refDestructuringErrors?: any,
-		afterLeftParse?: any
-	): any;
-	parseMaybeConditional(
-		forInit?: string | boolean,
-		refDestructuringErrors?: any
-	): any;
-	parseExprOps(forInit?: string | boolean, refDestructuringErrors?: any): any;
-
-	/**
-	 * Read binary operators by precedence climbing, stopping where an operator
-	 * binds less tightly than the caller is parsing.
-	 */
-	parseExprOp(
-		left: any,
-		leftStartPos: number,
-		leftStartLoc: undefined | null | PositionLike,
-		minPrec: number,
-		forInit?: string | boolean
-	): any;
-	buildBinary(
-		startPos: number,
-		startLoc: undefined | null | PositionLike,
-		left: any,
-		right: any,
-		op: any,
-		logical: boolean
-	): any;
-	parseMaybeUnary(
-		refDestructuringErrors?: any,
-		sawUnary?: boolean,
-		incDec?: boolean,
-		forInit?: string | boolean
-	): any;
-	parseExprSubscripts(
-		refDestructuringErrors?: any,
-		forInit?: string | boolean
-	): any;
-	parseSubscripts(
-		baseExpr: any,
-		startPos: number,
-		startLoc: undefined | null | PositionLike,
-		noCalls: boolean,
-		forInit?: string | boolean
-	): any;
-	shouldParseAsyncArrow(): boolean;
-	parseSubscriptAsyncArrow(
-		startPos: number,
-		startLoc: undefined | null | PositionLike,
-		exprList: any[],
-		forInit?: string | boolean
-	): any;
-	parseSubscript(
-		baseExpr: any,
-		startPos: number,
-		startLoc: undefined | null | PositionLike,
-		noCalls: boolean,
-		maybeAsyncArrow: boolean,
-		optionalChained: boolean,
-		forInit?: string | boolean
-	): any;
-
-	/**
-	 * Read an expression that no operator binds into: a token that is an
-	 * expression on its own, or one that punctuation encloses.
-	 */
-	parseExprAtom(
-		refDestructuringErrors?: any,
-		forInit?: string | boolean,
-		forNew?: boolean
-	): any;
-	parseExprAtomDefault(): never;
-	parseExprImport(forNew?: boolean): any;
-	parseDynamicImport(node?: any): any;
-	parseImportMeta(node?: any): any;
-	parseLiteral(value?: any): any;
-	parseParenExpression(): any;
-	shouldParseArrow(exprList: any[]): boolean;
-
-	/**
-	 * Read a parenthesized expression, which is only known to be an arrow's
-	 * parameter list once the `=>` after the closing paren is seen.
-	 */
-	parseParenAndDistinguishExpression(
-		canBeArrow: boolean,
-		forInit?: string | boolean
-	): any;
-	parseParenItem(item?: any): any;
-	parseParenArrowList(
-		startPos: number,
-		startLoc: undefined | null | PositionLike,
-		exprList: any[],
-		forInit?: string | boolean
-	): any;
-
-	/**
-	 * Read a `new` expression, whose callee takes subscripts but not a call —
-	 * the argument list belongs to the `new` itself.
-	 */
-	parseNew(): any;
-	parseTemplateElement(opts: { isTagged: boolean }): any;
-	parseTemplate(opts?: { isTagged?: boolean }): any;
-	isAsyncProp(prop?: any): boolean;
-	parseObj(isPattern: boolean, refDestructuringErrors?: any): any;
-	parseProperty(isPattern: boolean, refDestructuringErrors?: any): any;
-	parseGetterSetter(prop?: any): void;
-	parsePropertyValue(
-		prop: any,
-		isPattern: boolean,
-		isGenerator: undefined | boolean,
-		isAsync: undefined | boolean,
-		startPos: undefined | number,
-		startLoc: undefined | null | PositionLike,
-		refDestructuringErrors: any,
-		containsEsc: boolean
-	): void;
-	parsePropertyName(prop?: any): any;
-	initFunction(node?: any): void;
-	parseMethod(
-		isGenerator?: boolean,
-		isAsync?: boolean,
-		allowDirectSuper?: boolean
-	): any;
-	parseArrowExpression(
-		node: any,
-		params: any[],
-		isAsync: boolean,
-		forInit?: string | boolean
-	): any;
-	parseFunctionBody(
-		node?: any,
-		isArrowFunction?: boolean,
-		isMethod?: boolean,
-		forInit?: string | boolean
-	): void;
-	isSimpleParamList(params: any[]): boolean;
-	checkParams(node: any, allowDuplicates: boolean): void;
-	parseExprList(
-		close: TokenType,
-		allowTrailingComma: boolean,
-		allowEmpty: boolean,
-		refDestructuringErrors?: any
-	): any[];
-
-	/**
-	 * Report a name that the surrounding code may not use as an identifier.
-	 */
-	checkUnreserved(ref?: any): void;
-	parseIdent(liberal?: boolean): any;
-	parseIdentNode(): any;
-	parsePrivateIdent(): any;
-	parseYield(forInit?: string | boolean): any;
-	parseAwait(forInit?: string | boolean): any;
+	readHtmlOpenAsOperators(pos: number): void;
 
 	/**
 	 * Move past the current token.
 	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/tokenize.js
 	 */
 	next(ignoreEscapeSequenceInKeyword?: boolean): void;
-	getToken(): TokenSyntaxParserClass;
+	getToken(): Token;
 	nextToken(): void;
 	readToken(code: number): void;
 	fullCharCodeAt(pos: number): number;
@@ -31427,7 +35546,6 @@ declare class SyntaxParser {
 	readCodePoint(): number;
 	readString(quote: number): void;
 	tryReadTemplateToken(): void;
-	inTemplateElement?: boolean;
 
 	/**
 	 * Report a bad escape, unless it sits in a tagged template, where the raw
@@ -31441,21 +35559,11 @@ declare class SyntaxParser {
 
 	/**
 	 * Read an identifier's text, recording in `containsEsc` whether any of it
-	 * was written as an escape — which stops it reading as a keyword.
+	 * was written as an escape - which stops it reading as a keyword.
 	 */
 	readWord1(): string;
 	readWord(): void;
-	[Symbol.iterator](): Iterator<TokenSyntaxParserClass>;
-	static extend(...plugins: ((parser?: any) => any)[]): any;
-	static parse(
-		input: string,
-		options?: Partial<OptionsSyntaxParser>
-	): ProgramSyntaxParser;
-	static parseExpressionAt(
-		input: string,
-		pos: number,
-		options?: Partial<OptionsSyntaxParser>
-	): ExpressionSyntaxParser;
+	[Symbol.iterator](): Iterator<Token, Token>;
 	static tokenizer(
 		input: string,
 		options?: Partial<OptionsSyntaxParser>
@@ -31471,24 +35579,30 @@ declare interface SyntheticDependencyLocation {
 }
 declare const TOMBSTONE: unique symbol;
 declare const TRANSITIVE_ONLY: unique symbol;
+type Tag<T = TagData> = symbol & { readonly __tagData?: T };
+type TagData =
+	| object
+	| ESMSettings
+	| ImportSettings
+	| CommonJsImportSettings
+	| TopLevelSymbol
+	| CompatibilitySettings;
 
 /**
  * Defines the tag info type used by this module.
  */
 declare interface TagInfo {
-	tag: symbol;
+	tag: Tag<TagData>;
 	data?:
-		| Record<string, any>
-		| TopLevelSymbol
+		| object
 		| ESMSettings
 		| ImportSettings
 		| CommonJsImportSettings
+		| TopLevelSymbol
 		| CompatibilitySettings;
 	next?: TagInfo;
 }
-type Tail<T extends ReadonlyArray<any>> = T extends readonly [any, ...infer R]
-	? R
-	: T;
+type Tail<T> = T extends readonly [infer _First, ...infer R] ? R : T;
 declare interface TargetItemWithConnection {
 	module: Module;
 	connection: ModuleGraphConnection;
@@ -31516,6 +35630,11 @@ declare class Template {
 	 * Returns a commented version of string.
 	 */
 	static toNormalComment(str: string): string;
+
+	/**
+	 * Returns a `//` comment of the string that stays on one line.
+	 */
+	static toLineComment(str: string): string;
 
 	/**
 	 * Returns normalized bundle-safe path.
@@ -31587,11 +35706,128 @@ type TemplatePath = string | TemplatePathFn<PathData>;
 /**
  * Callback used to compute a path from contextual data. The type parameter
  * narrows the `pathData` shape when the caller knows it operates in a chunk
- * (`PathDataChunk`) or module (`PathDataModule`) context — defaults to the
+ * (`PathDataChunk`) or module (`PathDataModule`) context - defaults to the
  * fully-optional `PathData` for backward compatibility.
  */
 declare interface TemplatePathFn<T extends PathData = PathData> {
 	(pathData: T, assetInfo?: AssetInfo): string;
+}
+
+/**
+ * terser's names for `compress` options webpack spells in camelCase, each read
+ * as its camelCase name so that terser's options work unchanged.
+ */
+declare interface TerserCompressAliases {
+	/**
+	 * terser's name for `builtinsEcma`
+	 */
+	builtins_ecma?: number;
+
+	/**
+	 * terser's name for `computedProps`
+	 */
+	computed_props?: boolean;
+
+	/**
+	 * terser's name for `deadCode`
+	 */
+	dead_code?: boolean;
+
+	/**
+	 * terser's name for `dropConsole`
+	 */
+	drop_console?: boolean | string[];
+
+	/**
+	 * terser's name for `dropDebugger`
+	 */
+	drop_debugger?: boolean;
+
+	/**
+	 * terser's name for `globalDefs`
+	 */
+	global_defs?: false | object;
+
+	/**
+	 * terser's name for `joinVars`
+	 */
+	join_vars?: boolean;
+
+	/**
+	 * terser's name for `keepClassnames`
+	 */
+	keep_classnames?: boolean | RegExp;
+
+	/**
+	 * terser's name for `keepFargs`
+	 */
+	keep_fargs?: boolean;
+
+	/**
+	 * terser's name for `keepFnames`
+	 */
+	keep_fnames?: boolean | RegExp;
+
+	/**
+	 * terser's name for `keepInfinity`
+	 */
+	keep_infinity?: boolean;
+
+	/**
+	 * terser's name for `negateIife`
+	 */
+	negate_iife?: boolean;
+
+	/**
+	 * terser's name for `pureConversions`
+	 */
+	pure_conversions?: boolean;
+
+	/**
+	 * terser's name for `pureFuncs`
+	 */
+	pure_funcs?: null | string[];
+
+	/**
+	 * terser's name for `sideEffects`
+	 */
+	side_effects?: boolean;
+
+	/**
+	 * terser's name for `topRetain`
+	 */
+	top_retain?:
+		| null
+		| string
+		| RegExp
+		| string[]
+		| ((definition: NamedDefinition) => boolean);
+
+	/**
+	 * terser's name for `unsafeSymbols`
+	 */
+	unsafe_symbols?: boolean;
+}
+
+/**
+ * terser's names for `mangle` options webpack spells in camelCase, each read
+ * as its camelCase name so that terser's options work unchanged.
+ */
+declare interface TerserMangleAliases {
+	/**
+	 * terser's name for `keepClassnames`
+	 */
+	keep_classnames?: boolean | RegExp;
+
+	/**
+	 * terser's name for `keepFnames`
+	 */
+	keep_fnames?: boolean | RegExp;
+
+	/**
+	 * terser's name for `nthIdentifier`
+	 */
+	nth_identifier?: IdentifierSource;
 }
 
 /**
@@ -31629,20 +35865,35 @@ declare interface TokContextLike {
 	token: string;
 	isExpr: boolean;
 	preserveSpace?: boolean;
-	override?: any;
+	override?: (parser: SyntaxParser) => void;
 	generator?: boolean;
 }
 
 /**
- * one of terser's tokens
+ * A token as `options.onToken` receives one.
  */
-declare interface TokenEs5 {
-	[index: number]: any;
-	[index: string]: any;
+declare class Token {
+	constructor(p: SyntaxParser);
+	type: TokenType;
+	value: any;
+	start: number;
+	end: number;
+	loc?: ParserSourceLocation;
+	range?: number[];
 }
 
 /**
- * Position-based view over the lexer — webpack's stand-in for the spec's
+ * the token the parser has just read, as `onTokenRead` reads it off the parser
+ */
+declare interface TokenRead {
+	type: TokenType;
+	value: any;
+	start: number;
+	end: number;
+}
+
+/**
+ * Position-based view over the lexer - webpack's stand-in for the spec's
  * "normalize into a token stream" (CSS Syntax §9). It unifies the lexer and the
  * stream in one class: the `readToken` primitive lexes one token (the CSS
  * tokenizer), and the spec token-stream operations `next` / `consume` /
@@ -31653,12 +35904,12 @@ declare interface TokenEs5 {
  * the next token (lazily tokenized once and cached until consumed). The
  * declaration-vs-qualified-rule backtracking in `consumeABlocksContents`
  * rewinds by `mark`ing / `restoreMark`ing that byte offset, which simply
- * re-tokenizes the rewound span — comment tokens are filtered here and fire
+ * re-tokenizes the rewound span - comment tokens are filtered here and fire
  * `onComment` once each, tracked by a monotonic high-water mark so a
  * re-tokenized span never re-fires them.
  * `SourceProcessor` is handed this class (not an instance) and threads it to
  * the grammar, so a different language can drive the same visitor machinery by
- * swapping the tokenizer — the per-token `readToken` primitive — for its own.
+ * swapping the tokenizer - the per-token `readToken` primitive - for its own.
  */
 declare class TokenStream {
 	constructor(
@@ -31671,7 +35922,7 @@ declare class TokenStream {
 	locConverter: LocConverter;
 
 	/**
-	 * The next token (CSS Syntax §3 "next token") — the upcoming token without
+	 * The next token (CSS Syntax §3 "next token") - the upcoming token without
 	 * consuming it; the `<eof-token>` once the source is exhausted. This is the
 	 * token the consume algorithms dispatch on (the spec's "process"). Tokenized
 	 * from `_pos` on first use and cached until consumed; comment tokens are
@@ -31680,14 +35931,14 @@ declare class TokenStream {
 	next(): MutableToken;
 
 	/**
-	 * Consume a token (CSS Syntax §3 "consume a token") — return the next token
+	 * Consume a token (CSS Syntax §3 "consume a token") - return the next token
 	 * and advance the cursor past it. The returned token is valid until the next
 	 * `next` re-tokenizes (the reused instance is not cleared by advancing).
 	 */
 	consume(): MutableToken;
 
 	/**
-	 * Discard a token (CSS Syntax §3 "discard a token") — advance the cursor past
+	 * Discard a token (CSS Syntax §3 "discard a token") - advance the cursor past
 	 * the next token without returning it.
 	 */
 	discard(): void;
@@ -31696,14 +35947,14 @@ declare class TokenStream {
 	 * Advance past the already-peeked next token, skipping the redundant `next()`
 	 * re-check `consume` / `discard` pay. Precondition: the caller has just called
 	 * `next()` (so `_tok` is the cached next token and `_hasNext` is true) and that
-	 * token is not the `<eof-token>` — the hot "peek, decide, advance" sites where
+	 * token is not the `<eof-token>` - the hot "peek, decide, advance" sites where
 	 * both always hold. Callers that can't guarantee a non-EOF cached token use
 	 * `consume` / `discard` instead.
 	 */
 	advance(): void;
 
 	/**
-	 * Step over the whitespace the next token would be, without tokenizing it —
+	 * Step over the whitespace the next token would be, without tokenizing it -
 	 * for the sites that discard whitespace tokens. No-op while a token is cached.
 	 */
 	skipWhitespace(): void;
@@ -31712,52 +35963,167 @@ declare class TokenStream {
 	 * Step over the run of selector-prelude leaves a skip-mode parse drops (CSS
 	 * Syntax §5.4.3's "append to prelude", which skip mode does not do), without
 	 * lexing one token each. Only valid where every leaf up to the next
-	 * `BC_PRELUDE_STOP` code point is dropped whatever it is — which in
+	 * `BC_PRELUDE_STOP` code point is dropped whatever it is - which in
 	 * `consumeAQualifiedRule` is once the two tokens the `--foo: {`
 	 * disambiguation reads have both been seen. No-op while a token is cached.
 	 */
 	skipPreludeLeaves(): void;
 
 	/**
-	 * Mark (CSS Syntax §3 "mark") — push the current cursor position.
+	 * Mark (CSS Syntax §3 "mark") - push the current cursor position.
 	 */
 	mark(): void;
 
 	/**
-	 * Restore a mark (CSS Syntax §3 "restore a mark") — pop the last mark and
+	 * Restore a mark (CSS Syntax §3 "restore a mark") - pop the last mark and
 	 * rewind the cursor to it. The rewound span is re-tokenized on the next read;
 	 * already-fired comments are not re-fired (`_commentHigh`).
 	 */
 	restoreMark(): void;
 
 	/**
-	 * Discard a mark (CSS Syntax §3 "discard a mark") — pop without rewinding.
+	 * Rewind the cursor to `pos`, an offset `_pos` held, as `restoreMark` does
+	 * for a mark the caller kept itself.
+	 */
+	rewind(pos: number): void;
+
+	/**
+	 * Discard a mark (CSS Syntax §3 "discard a mark") - pop without rewinding.
 	 */
 	discardMark(): void;
 }
 
 /**
- * A token as `options.onToken` receives one.
+ * The tokens and comments of one parse, a token read by its index past
+ * `base`, a list of comments and a comment by numbers of their own.
  */
-declare class TokenSyntaxParserClass {
-	constructor(p?: any);
-	type: any;
-	value: any;
-	start: any;
-	end: any;
-	loc?: ParserSourceLocation;
-	range?: any[];
+declare interface TokenTable {
+	/**
+	 * the number of its first token
+	 */
+	base: number;
+
+	/**
+	 * the list of the comments before or after a token, 0 for the one empty list
+	 */
+	commentsOf: (index: number, after: boolean) => number;
+
+	/**
+	 * binds a list onto a token, as a parenthesis does
+	 */
+	bindComments: (index: number, after: boolean, list: number) => void;
+
+	/**
+	 * a list's comments, in order
+	 */
+	members: (list: number) => number[];
+
+	/**
+	 * makes a list of its own, however empty
+	 */
+	newList: (comments: number[]) => number;
+
+	/**
+	 * how many lists there are
+	 */
+	listCount: () => number;
+
+	/**
+	 * how many comments there are
+	 */
+	commentCount: () => number;
+
+	/**
+	 * its kind, as `COMMENT_TYPES` names it
+	 */
+	commentKind: (comment: number) => number;
+
+	/**
+	 * what it holds
+	 */
+	commentValue: (comment: number) => string;
+
+	/**
+	 * where it starts
+	 */
+	commentStart: (comment: number) => number;
+
+	/**
+	 * whether a line break comes before it
+	 */
+	commentBreaks: (comment: number) => boolean;
+
+	/**
+	 * whether a line break comes between a block comment and the next token
+	 */
+	commentBreaksAfter: (comment: number) => boolean;
+
+	/**
+	 * records whether one does
+	 */
+	setCommentBreaks: (comment: number, broke: boolean) => void;
+
+	/**
+	 * it as a `comments` callback is handed it
+	 */
+	commentObject: (comment: number) => KeptComment;
+
+	/**
+	 * whether a line break comes before a token
+	 */
+	tokenBreaks: (index: number) => boolean;
+
+	/**
+	 * records whether one does
+	 */
+	setTokenBreaks: (index: number, broke: boolean) => void;
+
+	/**
+	 * whether a token is a `(`
+	 */
+	opensParenthesis: (index: number) => boolean;
+
+	/**
+	 * where a token sits
+	 */
+	tokenPlace: (index: number) => {
+		file?: string;
+		line: number;
+		col: number;
+		pos: number;
+	};
+
+	/**
+	 * each gap holding comments, and its list
+	 */
+	forEachCommentGap: (callback: (gap: number, list: number) => void) => void;
+
+	/**
+	 * by token, whether a comment is read before it (1) or after it (2)
+	 */
+	commentFlags: () => Uint8Array;
+
+	/**
+	 * 0 where `test` keeps none, 1 where only those before the first token, 2 where more
+	 */
+	keptComments: (test: (comment: number) => boolean) => number;
 }
-type TokenSyntaxParserObject = NodeSyntaxParser & {
-	value: string;
-	unescaped: string;
-	numericValue: number;
-	typeFlag: "number" | "id" | "integer" | "unrestricted";
-	sign: "" | "-" | "+";
-	unit: string;
-	contentStart: number;
-	contentEnd: number;
-};
+
+/**
+ * The tokens of the parse a tree was read from. Its nodes hold their tokens'
+ * numbers, which this answers for; a token handed in whole answers for itself.
+ */
+declare abstract class TokenTables {
+	last?: TokenTable;
+	lastBase: number;
+	add(table: TokenTable): void;
+	tableOf(number: number): undefined | TokenTable;
+	commentsOf(
+		token: undefined | null | number,
+		after: boolean
+	): undefined | number;
+	members(list?: number): number[];
+}
 
 /**
  * A token's kind, carrying what the parser needs to know about it without
@@ -31807,6 +36173,91 @@ declare class TopLevelSymbol {
 	setPure(pure: PureCondition): void;
 	isPure(compilation: Compilation, module: Module): boolean;
 }
+type TreeDefinition = null | MinifierVariable | MinifierLabel;
+
+/**
+ * What mangling gave a source `parse.parseTree` read, for the tree printer.
+ */
+declare interface TreeNames {
+	/**
+	 * each name's definition, by its node
+	 */
+	definitions: TreeDefinition[];
+
+	/**
+	 * each private name's new name, null for none renamed
+	 */
+	privateNames: null | Map<string, string>;
+
+	/**
+	 * for the one pass, the declarators whose name no read reads any more
+	 */
+	aliases: null | number[];
+
+	/**
+	 * for the one pass, each declarator of a function read once and that read, in pairs
+	 */
+	movedFunctions: null | number[];
+
+	/**
+	 * for the one pass, names the definitions but those it finds no name of prints, once it found what prints and how many reads of each go
+	 */
+	nameDefinitions:
+		| null
+		| ((
+				unprinted: null | Set<MinifierVariable>,
+				readsGone: null | Map<TreeDefinition, number>
+		  ) => void);
+
+	/**
+	 * for the one pass, the names property mangling gives, null where properties keep theirs
+	 */
+	properties: null | PropertyNames;
+
+	/**
+	 * for the one pass, the string literals renamed as property names
+	 */
+	propertyStrings: null | Set<number>;
+}
+
+/**
+ * Where each node of a `SyntaxTree` starts and ends among its parse's tokens,
+ * and what terser's conversion makes of it, by node.
+ */
+declare interface TreeTokens {
+	/**
+	 * each node's first token's number, 0 for none
+	 */
+	starts: Int32Array;
+
+	/**
+	 * each node's last token's number, 0 for none
+	 */
+	ends: Int32Array;
+
+	/**
+	 * each node's `NodeType`, as terser's conversion types it
+	 */
+	types: Uint8Array;
+
+	/**
+	 * each node's `MARK_` bits
+	 */
+	marks: Uint8Array;
+
+	/**
+	 * the number of the source's first token
+	 */
+	first: number;
+}
+type TreeValue =
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| RegExp
+	| { cooked?: null | string; raw: string };
 
 /**
  * Use a Trusted Types policy to create urls for chunks.
@@ -31864,11 +36315,89 @@ declare interface TsconfigPathsMap {
 	 */
 	fileDependencies: Set<string>;
 }
+type TupleElement =
+	undefined | null | string | number | bigint | boolean | symbol | object;
 declare class TypeScriptPlugin {
 	constructor();
 	apply(compiler: Compiler): void;
 }
+type TypedNode<TNode, T> = TNode & { readonly __nodeType: T };
+type TypedNodePath<TPath, TNode, P extends NodeParts, T, S = unknown> = Omit<
+	TPath,
+	| "flag"
+	| "node"
+	| "fieldCount"
+	| "field"
+	| "textOf"
+	| "state"
+	| "within"
+	| "fieldNamed"
+	| "rangeOf"
+	| "startOf"
+	| "endOf"
+> & {
+	readonly node: TypedNode<TNode, T>;
+	readonly state: S;
+	within(type: P["types"]): boolean;
+	field<R = TypedNode<TNode, T>, F extends number = number>(
+		i: number,
+		field: F & PartOf<R, P["fields"], P["field"]>,
+		n?: R
+	): TypedNode<TNode, P["items"][F]>;
+	fieldCount<R = TypedNode<TNode, T>>(
+		field: PartOf<R, P["fields"], P["field"]>,
+		n?: R
+	): number;
+	fieldNamed<R = TypedNode<TNode, T>, F extends number = number>(
+		field: F & PartOf<R, P["fields"], P["field"]>,
+		name: string,
+		n?: R
+	): TypedNode<TNode, P["items"][F]>;
+	flag<R = TypedNode<TNode, T>>(
+		flag: PartOf<R, P["flags"], P["flag"]>,
+		n?: R
+	): boolean;
+	rangeOf<R = TypedNode<TNode, T>>(
+		part: PartOf<R, P["parts"], P["part"]>,
+		n?: R
+	): null | [number, number];
+	startOf<R = TypedNode<TNode, T>>(
+		part: PartOf<R, P["parts"], P["part"]>,
+		n?: R
+	): number;
+	endOf<R = TypedNode<TNode, T>>(
+		part: PartOf<R, P["parts"], P["part"]>,
+		n?: R
+	): number;
+	textOf<R = TypedNode<TNode, T>>(
+		part: PartOf<R, P["texts"], P["text"]>,
+		n?: R
+	): null | string;
+};
 declare const UNDEFINED_MARKER: unique symbol;
+declare interface UnicodePropertyTables {
+	/**
+	 * the binary property names and general category values
+	 */
+	binary: RegExp;
+
+	/**
+	 * the string-valued property names
+	 */
+	binaryOfStrings: RegExp;
+
+	/**
+	 * each non-binary property's values, by property name
+	 */
+	nonBinary: Record<string, RegExp>;
+}
+
+/**
+ * Successfully resolved requests by cache key, as enhanced-resolve's unsafe cache holds them.
+ */
+declare interface UnsafeCache {
+	[index: string]: undefined | ResolveRequest | ResolveRequest[];
+}
 type UnsafeCacheData = KnownUnsafeCacheData & Record<string, any>;
 
 /**
@@ -31893,11 +36422,13 @@ declare interface UpdateHashContextDependency {
 /**
  * Represents the generator runtime component.
  */
-declare interface UpdateHashContextGenerator {
+declare interface UpdateHashContextGenerator<
+	TModule extends NormalModule = NormalModule
+> {
 	/**
 	 * the module
 	 */
-	module: NormalModule;
+	module: TModule;
 	chunkGraph: ChunkGraph;
 	runtime: RuntimeSpec;
 	runtimeTemplate?: RuntimeTemplate;
@@ -31979,10 +36510,12 @@ declare interface Values {
 
 /**
  * A binding: one name declared in one scope.
+ * @experimental exposed as `webpack.javascript.syntax.scopes.Variable`; unstable API
  */
-declare abstract class Variable {
+declare class Variable {
+	constructor(name: string, scope: Scope);
 	name: string;
-	identifiers: Identifier[];
+	identifiers: ScopeIdentifier[];
 	references: Reference[];
 	scope: Scope;
 }
@@ -32026,7 +36559,7 @@ declare interface VirtualModule {
 	 * The source function that provides the virtual content.
 	 */
 	source: (
-		loaderContext: LoaderContextNormalModule<any>
+		loaderContext: LoaderContextNormalModule<Record<string, any>, LoaderData>
 	) => string | Buffer | Promise<string | Buffer>;
 
 	/**
@@ -32042,7 +36575,7 @@ declare interface VirtualModule {
 type VirtualModuleContent =
 	| string
 	| ((
-			loaderContext: LoaderContextNormalModule<any>
+			loaderContext: LoaderContextNormalModule<Record<string, any>, LoaderData>
 	  ) => string | Buffer | Promise<string | Buffer>)
 	| VirtualModule;
 declare interface VirtualModules {
@@ -32101,11 +36634,11 @@ type VisitorBucket<TPath> =
 	VisitorFn<TPath> | { enter?: VisitorFn<TPath>; exit?: VisitorFn<TPath> };
 
 /**
- * Babel-style visitor map keyed by a numeric node-type discriminator; a bucket
+ * Visitor map keyed by a numeric node-type discriminator; a bucket
  * is a function (enter-only) or `{ enter?, exit? }`.
- * A visitor receives a single `path` argument (the Babel `path` shape): the
- * language's AST accessor with the current position on it — `path.node`,
- * `path.parent` (null at a root) — plus `path.skipChildren()` (enter only)
+ * A visitor receives a single `path` argument: the
+ * language's AST accessor with the current position on it - `path.node`,
+ * `path.parent` (null at a root) - plus `path.skipChildren()` (enter only)
  * to stop the walk descending, and every field-read method (which defaults
  * to the current node). The path is one reused object rebound before each callback:
  * it is only valid during the callback, and future per-node functionality
@@ -32114,8 +36647,11 @@ type VisitorBucket<TPath> =
 declare interface VisitorFn<TPath> {
 	(path: TPath): void;
 }
-declare interface VisitorMap<TPath> {
+declare interface VisitorMapSourceProcessorObject_1<TPath> {
 	[index: number]: VisitorBucket<TPath>;
+}
+declare interface VisitorMapSourceProcessorObject_2<T> {
+	[index: number]: VisitorBucket<T>;
 }
 type WarningFilterItemTypes =
 	string | RegExp | ((warning: StatsError, warningString: string) => boolean);
@@ -32334,11 +36870,11 @@ declare abstract class Watching {
  * Stores values by tuple keys while using `WeakMap` for object elements so the
  * cache can release entries when those objects are collected.
  */
-declare abstract class WeakTupleMap<K extends any[], V> {
+declare abstract class WeakTupleMap<K extends TupleElement[], V> {
 	/**
 	 * Stores a value at the node identified by the provided tuple key.
 	 */
-	set(...args: [K, ...V[]]): void;
+	set(...args: [...K, V]): void;
 
 	/**
 	 * Checks whether the exact tuple key has a stored value.
@@ -32354,19 +36890,19 @@ declare abstract class WeakTupleMap<K extends any[], V> {
 	 * Returns an existing value for the tuple or computes, stores, and returns a
 	 * new one when the tuple is missing.
 	 */
-	provide(...args: [K, ...((...args: K) => V)[]]): V;
+	provide<A extends TupleElement[] = K>(...args: [...A, (...args: A) => V]): V;
 
 	/**
 	 * Memoizes `compute(thisArg, ...args)` under the tuple key `[compute,
 	 * ...args]`, computing it on a miss. Equivalent to `provide(compute, ...args,
 	 * () => compute(thisArg, ...args))` but without allocating that closure (or an
-	 * extra rest array) on every call — `ModuleGraph#cached` runs this on hot
+	 * extra rest array) on every call - `ModuleGraph#cached` runs this on hot
 	 * paths where most calls hit the cache and the closure would be pure waste.
 	 */
-	cachedProvide(
-		compute: (thisArg: any, ...args: K) => V,
-		thisArg: any,
-		args: K
+	cachedProvide<This, A extends TupleElement[] = K>(
+		compute: (thisArg: This, ...args: [A][A extends A ? 0 : never]) => V,
+		thisArg: This,
+		args: A
 	): V;
 
 	/**
@@ -32379,7 +36915,7 @@ declare abstract class WeakTupleMap<K extends any[], V> {
 	 */
 	clear(): void;
 }
-declare abstract class WebAssemblyParser extends Parser {}
+declare abstract class WebAssemblyParser extends Parser<BuiltSyncWasmModule> {}
 
 /**
  * Defines the web assembly render context type used by this module.
@@ -32428,7 +36964,6 @@ declare class WebpackError extends Error {
 	 * Creates an instance of WebpackError.
 	 */
 	constructor(message?: string, options?: { cause?: unknown });
-	[index: number]: () => string;
 	details?: string;
 	module?: null | Module;
 	loc?: SyntheticDependencyLocation | RealDependencyLocation;
@@ -32439,12 +36974,17 @@ declare class WebpackError extends Error {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_3): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_4): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_2): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_3): void;
+
+	/**
+	 * Whether an error is a webpack error rather than any other thrown value.
+	 */
+	static isWebpackError<T>(value: T): boolean;
 
 	/**
 	 * Creates a `.stack` property on `targetObject`, which when accessed returns
@@ -32537,7 +37077,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
-	amd?: false | { [index: string]: any };
+	amd?: false | JsonObjectFs;
 
 	/**
 	 * Report the first error as a hard error instead of tolerating it.
@@ -32826,31 +37366,362 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 declare class WebpackParser extends SyntaxParser {
 	constructor(
 		options: OptionsSyntaxParser & {
-			lazyNodes?: boolean;
 			lazyComments?: CollectedComment[];
 			importPhases?: boolean;
 			moduleFallback?: boolean;
+			syntaxTree?: ColumnarSyntaxTree;
 		},
 		input: string,
 		startPos?: number
 	);
-	[Symbol.iterator](): Iterator<TokenSyntaxParserClass>;
+	eat(type: TokenType): boolean;
+	expect(type: TokenType): void;
+	semicolon(): void;
+	insertSemicolon(): undefined | boolean;
+	isContextual(name: string): boolean;
+	eatContextual(name: string): boolean;
+	expectContextual(name: string): void;
+	checkPatternErrors(
+		refDestructuringErrors: DestructuringErrors,
+		isAssign?: boolean
+	): void;
+	checkYieldAwaitInDefaultParams(): void;
+	isSimpleAssignTarget(expr?: any): boolean;
+	parseParenExpression(): any;
+	isUsing(isFor?: boolean): boolean;
+	isAwaitUsing(isFor?: boolean): boolean;
+	shouldParseExportStatement(): boolean;
+	parseExportDeclaration(node?: any): any;
+	parseGetterSetter(prop?: any): void;
+	parseFunctionParams(node?: any): void;
+	shouldParseAsyncArrow(): boolean;
+	parseSubscriptAsyncArrow(
+		startPos: number,
+		startLoc: undefined | null | PositionLike,
+		exprList: any[],
+		forInit?: string | boolean
+	): any;
+	shouldParseArrow(exprList: any[]): boolean;
+	parseParenArrowList(
+		startPos: number,
+		startLoc: undefined | null | PositionLike,
+		exprList: any[],
+		forInit?: string | boolean
+	): any;
+	parseParenItem(item?: any): any;
+	parseAssignableListItem(allowModifiers?: boolean): any;
+	parseBindingListItem(param?: any): any;
+	parseCatchClauseParam(): any;
+	isClassElementNameStart(): boolean;
+	overrideContext(tokenCtx: TokContextLike): void;
+	currentScope(): ParserScope;
+	currentVarScope(): ParserScope;
+	currentThisScope(): ParserScope;
+	treatFunctionsAsVarInScope(scope: { flags: number }): number | boolean;
+	get inFunction(): boolean;
+	get inGenerator(): boolean;
+	get inAsync(): boolean;
+	get canAwait(): boolean;
+	get allowReturn(): boolean;
+	get allowSuper(): boolean;
+	get allowDirectSuper(): boolean;
+	get treatFunctionsAsVar(): number | boolean;
+	get allowNewDotTarget(): boolean;
+	get allowUsing(): boolean;
+	get inClassStaticBlock(): boolean;
 
 	/**
-	 * Applies parser plugins, keeping the result typed as this parser.
+	 * Whether a `let` here opens a lexical declaration rather than naming a
+	 * variable, which needs a look-ahead past the keyword.
 	 */
-	static extend(
-		...plugins: ((BaseParser: typeof SyntaxParser) => typeof SyntaxParser)[]
-	): typeof WebpackParser;
-	static parse(
-		input: string,
-		options?: Partial<OptionsSyntaxParser>
-	): ProgramSyntaxParser;
-	static parseExpressionAt(
-		input: string,
-		pos: number,
-		options?: Partial<OptionsSyntaxParser>
-	): ExpressionSyntaxParser;
+	isLet(context?: null | string): boolean;
+
+	/**
+	 * Whether `async` here heads a function declaration, which no line break may
+	 * separate from the `function` keyword.
+	 */
+	isAsyncFunction(): boolean;
+
+	/**
+	 * Whether `using` (or `await using`) here heads a declaration rather than
+	 * naming a variable.
+	 */
+	isUsingKeyword(isAwaitUsing: boolean, isFor?: boolean): boolean;
+
+	/**
+	 * Check a target that may only be an identifier or member expression, and
+	 * record the binding it introduces.
+	 */
+	checkLValSimple(expr?: any, bindingType?: number, checkClashes?: any): void;
+	checkLValPattern(expr?: any, bindingType?: number, checkClashes?: any): void;
+	checkLValInnerPattern(
+		expr?: any,
+		bindingType?: number,
+		checkClashes?: any
+	): void;
+	canInsertSemicolon(): boolean;
+	startNode(): any;
+	startNodeAt(pos: number, loc?: null | PositionLike): any;
+	finishNode(node: any, type: string): any;
+
+	/**
+	 * Whether the token before the current one is a `.` or a `?.`, read from
+	 * the text, as the parser no longer holds the type.
+	 */
+	followsDot(): boolean;
+	parseIdent(liberal?: boolean): any;
+	parseSubscripts(
+		baseExpr: any,
+		startPos: number,
+		startLoc: undefined | null | PositionLike,
+		noCalls: boolean,
+		forInit?: string | boolean
+	): any;
+	parseSubscript(
+		baseExpr: any,
+		startPos: number,
+		startLoc: undefined | null | PositionLike,
+		noCalls: boolean,
+		maybeAsyncArrow: boolean,
+		optionalChained: boolean,
+		forInit?: string | boolean
+	): any;
+	parse(): any;
+
+	/**
+	 * Read statements until the end of input and wrap them in a `Program`.
+	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/statement.js
+	 */
+	parseTopLevel(node?: any): any;
+
+	/**
+	 * Read one statement. A statement head that is only a keyword by position -
+	 * `let`, `async`, `using` - is settled by the probes above.
+	 */
+	parseStatement(
+		context?: null | string,
+		topLevel?: boolean,
+		exports?: any
+	): any;
+	parseBlock(
+		createNewLexicalScope?: boolean,
+		node?: any,
+		exitStrict?: boolean
+	): any;
+	parseLabeledStatement(
+		node?: any,
+		maybeName?: any,
+		expr?: any,
+		context?: null | string
+	): any;
+	parseSpread(refDestructuringErrors?: any): any;
+	parseMaybeConditional(
+		forInit?: string | boolean,
+		refDestructuringErrors?: any
+	): any;
+	parseArrowExpression(
+		node: any,
+		params: any[],
+		isAsync: boolean,
+		forInit?: string | boolean
+	): any;
+	parseFunction(
+		node: any,
+		statement: number,
+		allowExpressionBody?: boolean,
+		isAsync?: boolean,
+		forInit?: string | boolean
+	): any;
+	parseFunctionBody(
+		node?: any,
+		isArrowFunction?: boolean,
+		isMethod?: boolean,
+		forInit?: string | boolean
+	): void;
+	checkParams(node: any, allowDuplicates: boolean): void;
+
+	/**
+	 * Rewrite an expression as the binding pattern it turns out to be, which is
+	 * only known once the `=` or `of` after it has been read.
+	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/lval.js
+	 */
+	toAssignable(
+		node?: any,
+		isBinding?: boolean,
+		refDestructuringErrors?: any
+	): any;
+	toAssignableList(exprList: any[], isBinding?: boolean): any[];
+	parseMaybeDefault(
+		startPos: number,
+		startLoc?: null | PositionLike,
+		left?: any
+	): any;
+	parseRestBinding(): any;
+	parseBindingAtom(): any;
+	parseExprSubscripts(
+		refDestructuringErrors?: any,
+		forInit?: string | boolean
+	): any;
+	parseBindingList(
+		close: TokenType,
+		allowEmpty: boolean,
+		allowTrailingComma: boolean,
+		allowModifiers?: boolean
+	): any[];
+
+	/**
+	 * Read a parenthesized expression, which is only known to be an arrow's
+	 * parameter list once the `=>` after the closing paren is seen.
+	 */
+	parseParenAndDistinguishExpression(
+		canBeArrow: boolean,
+		forInit?: string | boolean
+	): any;
+	afterTrailingComma(
+		tokType: TokenType,
+		notNext?: boolean
+	): undefined | boolean;
+	checkExpressionErrors(
+		refDestructuringErrors?: any,
+		andThrow?: boolean
+	): undefined | boolean;
+
+	/**
+	 * Read a full expression, including the comma operator.
+	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/expression.js
+	 */
+	parseExpression(
+		forInit?: string | boolean,
+		refDestructuringErrors?: any
+	): any;
+
+	/**
+	 * Read a `new` expression, whose callee takes subscripts but not a call -
+	 * the argument list belongs to the `new` itself.
+	 */
+	parseNew(): any;
+	parseTemplateElement(opts: { isTagged: boolean }): any;
+	parseTemplate(opts?: { isTagged?: boolean }): any;
+	parseMaybeUnary(
+		refDestructuringErrors?: any,
+		sawUnary?: boolean,
+		incDec?: boolean,
+		forInit?: string | boolean
+	): any;
+	parseMaybeAssign(
+		forInit?: string | boolean,
+		refDestructuringErrors?: any,
+		afterLeftParse?: any
+	): any;
+	parseExprOps(forInit?: string | boolean, refDestructuringErrors?: any): any;
+
+	/**
+	 * Read binary operators by precedence climbing, stopping where an operator
+	 * binds less tightly than the caller is parsing.
+	 */
+	parseExprOp(
+		left: any,
+		leftStartPos: number,
+		leftStartLoc: undefined | null | PositionLike,
+		minPrec: number,
+		forInit?: string | boolean
+	): any;
+	buildBinary(
+		startPos: number,
+		startLoc: undefined | null | PositionLike,
+		left: any,
+		right: any,
+		op: any,
+		logical: boolean
+	): any;
+
+	/**
+	 * Read an expression that no operator binds into: a token that is an
+	 * expression on its own, or one that punctuation encloses.
+	 */
+	parseExprAtom(
+		refDestructuringErrors?: any,
+		forInit?: string | boolean,
+		forNew?: boolean
+	): any;
+	parseObj(isPattern: boolean, refDestructuringErrors?: any): any;
+	parseProperty(isPattern: boolean, refDestructuringErrors?: any): any;
+	parseClass(node?: any, isStatement?: string | boolean): any;
+	parseClassElement(constructorAllowsSuper: boolean): any;
+	parseClassElementName(element?: any): void;
+	parseClassMethod(
+		method: any,
+		isGenerator: boolean,
+		isAsync: boolean,
+		allowsDirectSuper: boolean
+	): any;
+	parseClassField(field?: any): any;
+	parseClassStaticBlock(start: number): any;
+	parseClassId(node?: any, isStatement?: string | boolean): void;
+	parseClassSuper(node?: any): void;
+	enterClassBody(): any;
+	exitClassBody(): void;
+	parseMethod(
+		isGenerator?: boolean,
+		isAsync?: boolean,
+		allowDirectSuper?: boolean
+	): any;
+	parsePropertyName(prop?: any): any;
+	parsePropertyValue(
+		prop: any,
+		isPattern: boolean,
+		isGenerator: undefined | boolean,
+		isAsync: undefined | boolean,
+		startPos: undefined | number,
+		startLoc: undefined | null | PositionLike,
+		refDestructuringErrors: any,
+		containsEsc: boolean
+	): void;
+	isAsyncProp(prop?: any): boolean;
+
+	/**
+	 * Report a property name that may not be repeated: a getter or setter that
+	 * clashes, and under ES5 a repeated `init` in strict mode.
+	 */
+	checkPropClash(
+		prop?: any,
+		propHash?: any,
+		refDestructuringErrors?: any
+	): void;
+	parseLiteral(value?: any): any;
+	exitScope(): void;
+
+	/**
+	 * Record a name in the scope its binding belongs to, and report a name that
+	 * was already declared there.
+	 */
+	declareName(name: string, bindingType: number, pos: number): void;
+	checkLocalExport(id?: any): void;
+	parseWithClause(): any[];
+	parseImportAttribute(): any;
+	parseModuleExportName(): any;
+	parseImport(node?: any): any;
+	parseImportSpecifier(): any;
+	parseImportDefaultSpecifier(): any;
+	parseImportNamespaceSpecifier(): any;
+	parseExport(node?: any, exports?: any): any;
+	parseExportAllDeclaration(node?: any, exports?: any): any;
+	parseExportDefaultDeclaration(): any;
+	checkExport(exports: any, name: any, pos: number): void;
+	parseExportSpecifier(exports?: any): any;
+	parseExportSpecifiers(exports?: any): any[];
+	parseAwait(forInit?: string | boolean): any;
+	parseYield(forInit?: string | boolean): any;
+
+	/**
+	 * Reads the current token, a private name, as every caller checked.
+	 */
+	parsePrivateIdent(): any;
+	parseImportSpecifiers(): any[];
+	parseDynamicImport(node?: any): any;
+	parseExprImport(forNew?: boolean): any;
+	parseImportMeta(node?: any): any;
+	[Symbol.iterator](): Iterator<Token, Token>;
 	static tokenizer(
 		input: string,
 		options?: Partial<OptionsSyntaxParser>
@@ -32936,7 +37807,23 @@ type WriteStreamOptions = StreamOptions & {
 	fs?: null | CreateWriteStreamFSImplementation;
 	flush?: boolean;
 };
-declare interface _functionSyntaxParser {
+declare interface _functionSyntaxParserFunction_1 {
+	/**
+	 * Parse a program, ECMA-262 §16.1 or §16.2, into a `SyntaxTree` read through
+	 * `A`, its node ids valid until the next JavaScript parse.
+	 */
+	(
+		input: string,
+		pos?: number,
+		options?: JavascriptParseOptions & { parseError?: undefined }
+	): number;
+	(
+		input: string,
+		pos?: number,
+		options?: JavascriptParseOptions
+	): undefined | number;
+}
+declare interface _functionSyntaxParserFunction_2 {
 	/**
 	 * Decode HTML character references in a string. Handles all numeric
 	 * references (with WHATWG remap of 0x00, surrogates, out-of-range, and the
@@ -33011,12 +37898,903 @@ declare function exports(
 ): null | MultiCompiler;
 declare function exports(options: MultiConfiguration): MultiCompiler;
 declare namespace exports {
+	/**
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface AdditionalDataKnown { myField?: MyType } }`.
+	 */
+	export interface AdditionalDataKnown {
+		/**
+		 * the AST webpack should parse instead of the source
+		 */
+		webpackAST?: PreparsedAst;
+	}
+
+	/**
+	 * Defines the all code generation schemas type used by this module.
+	 * A plugin types its own code generation data by declaration merging: `declare module "webpack" { interface AllCodeGenerationSchemas { myField?: MyType } }`.
+	 */
+	export interface AllCodeGenerationSchemas {
+		/**
+		 * top level declarations for javascript modules
+		 */
+		topLevelDeclarations: Set<string>;
+
+		/**
+		 * free identifier names in the rendered source for javascript modules
+		 */
+		freeNames: Set<string>;
+
+		/**
+		 * chunk init fragments for javascript modules
+		 */
+		chunkInitFragments: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
+
+		/**
+		 * native external reexport source and attributes
+		 */
+		externalReexport: string;
+
+		/**
+		 * export definitions left out of a javascript module's source on demand (see `KnownMeta.onDemandExports`), to be placed before its body where it is wrapped
+		 */
+		exportsSource: string;
+
+		/**
+		 * export definitions left out on demand that read the module's own declarations, to be placed after its body where it is wrapped
+		 */
+		exportsBindingSource: string;
+
+		/**
+		 * final name of each used export of a concatenated module whose definitions were left out on demand
+		 */
+		exportsFinalName: Record<string, string>;
+
+		/**
+		 * url for asset modules
+		 */
+		url: { javascript?: string; "asset-url"?: string };
+
+		/**
+		 * a filename for asset modules
+		 */
+		filename: string;
+
+		/**
+		 * an asset info for asset modules
+		 */
+		assetInfo: AssetInfo;
+
+		/**
+		 * a full content hash for asset modules
+		 */
+		fullContentHash: string;
+
+		/**
+		 * share-init for modules federation
+		 */
+		"share-init": [{ shareScope: string; initStage: number; init: string }];
+
+		/**
+		 * the reasons a module's code is not analyzable, kept beside a cached result so they are reapplied when it is restored
+		 */
+		analyzableBailouts: string[];
+
+		/**
+		 * a content hash for asset modules
+		 */
+		contentHash: string;
+
+		/**
+		 * what each class or id name of a CSS module becomes, for an HTML page that names them
+		 */
+		cssLocals: Map<string, string>;
+
+		/**
+		 * the name each import binding prints as, for source map scopes
+		 */
+		importBindings: Map<string, string>;
+	}
+
+	/**
+	 * Defines the known asset info type used by this module.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownAssetInfo { myField?: MyType } }`.
+	 */
+	export interface KnownAssetInfo {
+		/**
+		 * true, if the asset can be long term cached forever (contains a hash)
+		 */
+		immutable?: boolean;
+
+		/**
+		 * whether the asset is minimized
+		 */
+		minimized?: boolean;
+
+		/**
+		 * the value(s) of the full hash used for this asset
+		 */
+		fullhash?: string | string[];
+
+		/**
+		 * the value(s) of the chunk hash used for this asset
+		 */
+		chunkhash?: string | string[];
+
+		/**
+		 * the value(s) of the module hash used for this asset
+		 */
+		modulehash?: string | string[];
+
+		/**
+		 * the value(s) of the content hash used for this asset
+		 */
+		contenthash?: string | string[];
+
+		/**
+		 * maps a `[contenthash:<digest>]` value to its digest, so `RealContentHashPlugin` re-encodes the recomputed hash in it
+		 */
+		contenthashDigest?: Record<string, string>;
+
+		/**
+		 * when asset was created from a source file (potentially transformed), the original filename relative to compilation context
+		 */
+		sourceFilename?: string;
+
+		/**
+		 * true, when the asset was copied from a file by `output.copy`
+		 */
+		copied?: boolean;
+
+		/**
+		 * when set, the asset is emitted as a symbolic link rather than as its content
+		 */
+		symlink?: AssetSymlink;
+
+		/**
+		 * when set, the file the asset is written to is given these permissions
+		 */
+		mode?: number;
+
+		/**
+		 * when set, the file the asset is written to is stamped with these times
+		 */
+		timestamps?: AssetTimestamps;
+
+		/**
+		 * size in bytes, only set after asset has been emitted
+		 */
+		size?: number;
+
+		/**
+		 * true, when asset is only used for development and doesn't count towards user-facing assets
+		 */
+		development?: boolean;
+
+		/**
+		 * true, when asset ships data for updating an existing application (HMR)
+		 */
+		hotModuleReplacement?: boolean;
+
+		/**
+		 * true, when asset is javascript and an ESM
+		 */
+		javascriptModule?: boolean;
+
+		/**
+		 * true, when file is a manifest
+		 */
+		manifest?: boolean;
+
+		/**
+		 * object of pointers to other assets, keyed by type of relation (only points from parent to child)
+		 */
+		related?: Record<string, null | string | string[]>;
+	}
+
+	/**
+	 * Defines the build info properties common to all module types.
+	 * Module type specific properties live in the `Known*BuildInfo` typedef of the dedicated module class.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownBuildInfo { myField?: MyType } }`.
+	 */
+	export interface KnownBuildInfo {
+		/**
+		 * the module hands out a spec Module Namespace Exotic Object
+		 */
+		specNamespaceObject?: boolean;
+		cacheable?: boolean;
+		strict?: boolean;
+		moduleArgument?: string;
+		exportsArgument?: string;
+
+		/**
+		 * assets added by loaders or plugins
+		 */
+		assets?: Record<string, Source>;
+		assetsInfo?: Map<string, undefined | AssetInfo>;
+
+		/**
+		 * top level declaration names
+		 */
+		topLevelDeclarations?: Set<string>;
+
+		/**
+		 * true when the module is in a synchronous circular dependency chain
+		 */
+		isCircular?: boolean;
+
+		/**
+		 * CircularKind bit flags from CircularModulesPlugin; unset when the plugin did not run
+		 */
+		circularKind?: number;
+
+		/**
+		 * module uses top-level `for await...of` or `await using`, which can't be lowered to a generator
+		 */
+		usesTopLevelAwaitForOf?: boolean;
+
+		/**
+		 * what the build recorded for stats and the performance hints to report
+		 */
+		diagnostics?: BuildDiagnostics;
+	}
+
+	/**
+	 * Defines the build meta properties common to all module types.
+	 * Module type specific properties live in the `Known*BuildMeta` typedef of the dedicated module class.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownBuildMeta { myField?: MyType } }`.
+	 */
+	export interface KnownBuildMeta {
+		exportsType?: "default" | "namespace" | "flagged" | "dynamic";
+		defaultObject?: false | "redirect" | "redirect-warn";
+		async?: boolean;
+		sideEffectFree?: boolean;
+
+		/**
+		 * true when the module keeps its own id after concatenation into another module, so id assignment and hot module replacement records still track it
+		 */
+		needIdInConcatenation?: boolean;
+	}
+
+	/**
+	 * Defines the known meta type used by this module.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownMeta { myField?: MyType } }`.
+	 */
+	export interface KnownMeta {
+		importVarMap?: Map<Module, string>;
+		deferredImportVarMap?: Map<Module, string>;
+
+		/**
+		 * generate export definitions on demand
+		 */
+		onDemandExports?: boolean;
+
+		/**
+		 * module-level `let` names a module library declares in the chunk's scope instead
+		 */
+		liveBindings?: Map<string, LiveBinding>;
+
+		/**
+		 * module-level names a module keeps declared and mirrors to the chunk's scope on each write
+		 */
+		liveSetters?: Map<string, LiveBinding>;
+	}
+
+	/**
+	 * Defines the known normalized stats options type used by this module.
+	 * A plugin types its own stats options by declaration merging: `declare module "webpack" { interface KnownNormalizedStatsOptions { myField?: MyType } }`.
+	 */
+	export interface KnownNormalizedStatsOptions {
+		context: string;
+		requestShortener: RequestShortener;
+		chunksSort: string | false;
+		modulesSort: string | false;
+		chunkModulesSort: string | false;
+		nestedModulesSort: string | false;
+		assetsSort: string | false;
+		ids: boolean;
+		cachedAssets: boolean;
+		groupAssetsByEmitStatus: boolean;
+		groupAssetsByPath: boolean;
+		groupAssetsByExtension: boolean;
+		assetsSpace: number;
+		excludeAssets: ((value: string, asset: StatsAsset) => boolean)[];
+		excludeModules: ((
+			name: string,
+			module: StatsModule,
+			type: ExcludeModulesType
+		) => boolean)[];
+		warningsFilter: ((warning: StatsError, textValue: string) => boolean)[];
+		cachedModules: boolean;
+		orphanModules: boolean;
+		dependentModules: boolean;
+		runtimeModules: boolean;
+		groupModulesByCacheStatus: boolean;
+		groupModulesByLayer: boolean;
+		groupModulesByAttributes: boolean;
+		groupModulesByPath: boolean;
+		groupModulesByExtension: boolean;
+		groupModulesByType: boolean;
+		entrypoints: boolean | "auto";
+		chunkGroups: boolean;
+		chunkGroupAuxiliary: boolean;
+		chunkGroupChildren: boolean;
+		chunkGroupMaxAssets: number;
+		modulesSpace: number;
+		chunkModulesSpace: number;
+		nestedModulesSpace: number;
+		logging: false | "none" | "verbose" | "error" | "warn" | "info" | "log";
+		loggingDebug: ((value: string) => boolean)[];
+		loggingTrace: boolean;
+	}
+
+	/**
+	 * Defines the known records type used by this module.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownRecords { myField?: MyType } }`.
+	 */
+	export interface KnownRecords {
+		aggressiveSplits?: SplitData[];
+		chunks?: RecordsChunks;
+		modules?: RecordsModules;
+		hash?: string;
+		hotIndex?: number;
+		fullHashChunkModuleHashes?: FullHashChunkModuleHashes;
+		chunkModuleHashes?: ChunkModuleHashes;
+		chunkHashes?: ChunkHashes;
+		chunkRuntime?: ChunkRuntime;
+		chunkModuleIds?: ChunkModuleIds;
+		chunkSiblingIds?: ChunkSiblingIds;
+		chunkInjectedModuleIds?: ChunkInjectedModuleIds;
+		chunkRetainedDependencyIds?: ChunkRetainedDependencyIds;
+	}
+
+	/**
+	 * Defines the known stats asset type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsAsset { myField?: MyType } }`.
+	 */
+	export interface KnownStatsAsset {
+		type: string;
+		name: string;
+		info: AssetInfo;
+		size: number;
+		emitted: boolean;
+		comparedForEmit: boolean;
+		cached: boolean;
+		related?: StatsAsset[];
+		chunks?: ChunkId[];
+		chunkNames?: ChunkName[];
+		chunkIdHints?: string[];
+		auxiliaryChunks?: ChunkId[];
+		auxiliaryChunkNames?: ChunkName[];
+		auxiliaryChunkIdHints?: string[];
+		filteredRelated?: number;
+		isOverSizeLimit?: boolean;
+	}
+
+	/**
+	 * A group of assets that `groupResults` creates, listing them in `children` or counting hidden ones in `filteredChildren`.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsAssetGroup { myField?: MyType } }`.
+	 */
+	export interface KnownStatsAssetGroup {
+		type: string;
+		size: number;
+		name?: string;
+		children?: StatsAsset[];
+		filteredChildren?: number;
+	}
+
+	/**
+	 * Defines the known stats chunk type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsChunk { myField?: MyType } }`.
+	 */
+	export interface KnownStatsChunk {
+		rendered: boolean;
+		initial: boolean;
+		entry: boolean;
+		recorded: boolean;
+		reason?: string;
+		size: number;
+		sizes: Record<string, number>;
+		names: string[];
+		idHints: string[];
+		runtime?: string[];
+		files: string[];
+		auxiliaryFiles: string[];
+		hash: string;
+		childrenByOrder: Record<string, ChunkId[]>;
+		id?: string | number;
+		siblings?: ChunkId[];
+		parents?: ChunkId[];
+		children?: ChunkId[];
+		modules?: StatsModule[];
+		filteredModules?: number;
+		origins?: StatsChunkOrigin[];
+	}
+
+	/**
+	 * Defines the known stats chunk group type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsChunkGroup { myField?: MyType } }`.
+	 */
+	export interface KnownStatsChunkGroup {
+		name?: null | string;
+		chunks?: ChunkId[];
+		assets?: { name: string; size?: number }[];
+		filteredAssets?: number;
+		assetsSize?: number;
+		auxiliaryAssets?: { name: string; size?: number }[];
+		filteredAuxiliaryAssets?: number;
+		auxiliaryAssetsSize?: number;
+		children?: Record<string, StatsChunkGroup[]>;
+		childAssets?: Record<string, string[]>;
+		isOverSizeLimit?: boolean;
+	}
+
+	/**
+	 * Defines the known stats chunk origin type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsChunkOrigin { myField?: MyType } }`.
+	 */
+	export interface KnownStatsChunkOrigin {
+		module: string;
+		moduleIdentifier: string;
+		moduleName: string;
+		loc: string;
+		request: string;
+		moduleId?: string | number;
+	}
+
+	/**
+	 * Defines the known stats compilation type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsCompilation { myField?: MyType } }`.
+	 */
+	export interface KnownStatsCompilation {
+		env?: StatsJsonValue;
+		name?: string;
+		hash?: string;
+		version?: string;
+		time?: number;
+		builtAt?: number;
+		needAdditionalPass?: boolean;
+		publicPath?: string;
+		outputPath?: string;
+		assetsByChunkName?: Record<string, string[]>;
+		assets?: StatsAsset[];
+		filteredAssets?: number;
+		chunks?: StatsChunk[];
+		modules?: StatsModule[];
+		filteredModules?: number;
+		entrypoints?: Record<string, StatsChunkGroup>;
+		namedChunkGroups?: Record<string, StatsChunkGroup>;
+		errors?: StatsError[];
+		errorsCount?: number;
+		warnings?: StatsError[];
+		warningsCount?: number;
+		hints?: StatsError[];
+		hintsCount?: number;
+		children?: StatsCompilation[];
+		logging?: Record<string, StatsLogging>;
+		filteredWarningDetailsCount?: number;
+		filteredErrorDetailsCount?: number;
+	}
+
+	/**
+	 * Defines the known stats error type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsError { myField?: MyType } }`.
+	 */
+	export interface KnownStatsError {
+		message: string;
+		chunkName?: string;
+		chunkEntry?: boolean;
+		chunkInitial?: boolean;
+		file?: string;
+		moduleIdentifier?: string;
+		moduleName?: string;
+		loc?: string;
+		chunkId?: string | number;
+		moduleId?: string | number;
+		moduleTrace?: StatsModuleTraceItem[];
+		details?: string;
+		stack?: string;
+		cause?: exports.KnownStatsError;
+		errors?: exports.KnownStatsError[];
+		compilerPath?: string;
+	}
+
+	/**
+	 * Defines the known stats factory context type used by this module.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownStatsFactoryContext { myField?: MyType } }`.
+	 */
+	export interface KnownStatsFactoryContext {
+		type: string;
+		compilation: Compilation;
+		makePathsRelative: (path: string) => string;
+		rootModules: Set<Module>;
+		compilationFileToChunks: Map<string, Chunk[]>;
+		compilationAuxiliaryFileToChunks: Map<string, Chunk[]>;
+		runtime: RuntimeSpec;
+		cachedGetErrors: (compilation: Compilation) => Error[];
+		cachedGetWarnings: (compilation: Compilation) => Error[];
+	}
+
+	/**
+	 * Defines the known stats logging type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsLogging { myField?: MyType } }`.
+	 */
+	export interface KnownStatsLogging {
+		entries: StatsLoggingEntry[];
+		filteredEntries: number;
+		debug: boolean;
+	}
+
+	/**
+	 * Defines the known stats logging entry type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsLoggingEntry { myField?: MyType } }`.
+	 */
+	export interface KnownStatsLoggingEntry {
+		type: string;
+		message?: string;
+		trace?: string[];
+		children?: StatsLoggingEntry[];
+		args?: any[];
+		time?: number;
+	}
+
+	/**
+	 * Defines the known stats module type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsModule { myField?: MyType } }`.
+	 */
+	export interface KnownStatsModule {
+		type?: string;
+		moduleType?: string;
+		layer?: null | string;
+		identifier?: string;
+		name?: string;
+		nameForCondition?: null | string;
+		index?: number;
+		preOrderIndex?: number;
+		index2?: number;
+		postOrderIndex?: number;
+		size?: number;
+		sizes?: Record<string, number>;
+		cacheable?: boolean;
+		notCacheableReasons?: string[];
+		built?: boolean;
+		codeGenerated?: boolean;
+		buildTimeExecuted?: boolean;
+		cached?: boolean;
+		optional?: boolean;
+		orphan?: boolean;
+		id?: string | number;
+		issuerId?: null | string | number;
+		chunks?: ChunkId[];
+		assets?: string[];
+		dependent?: boolean;
+		issuer?: null | string;
+		issuerName?: null | string;
+		issuerPath?: null | StatsModuleIssuer[];
+		failed?: boolean;
+		errors?: number;
+		warnings?: number;
+		profile?: StatsProfile;
+		reasons?: StatsModuleReason[];
+		usedExports?: null | boolean | string[];
+		providedExports?: null | string[];
+		optimizationBailout?: string[];
+		depth?: null | number;
+		modules?: StatsModule[];
+		filteredModules?: number;
+		source?: string | Buffer;
+	}
+
+	/**
+	 * A group of modules that `groupResults` creates, listing them in `children` or counting hidden ones in `filteredChildren`.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsModuleGroup { myField?: MyType } }`.
+	 */
+	export interface KnownStatsModuleGroup {
+		type: string;
+		size: number;
+		sizes: Record<string, number>;
+		name?: string;
+		moduleType?: string;
+		layer?: string;
+		children?: StatsModule[];
+		filteredChildren?: number;
+	}
+
+	/**
+	 * Defines the known stats module issuer type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsModuleIssuer { myField?: MyType } }`.
+	 */
+	export interface KnownStatsModuleIssuer {
+		identifier: string;
+		name: string;
+		id?: string | number;
+		profile: StatsProfile;
+	}
+
+	/**
+	 * Defines the known stats module reason type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsModuleReason { myField?: MyType } }`.
+	 */
+	export interface KnownStatsModuleReason {
+		moduleIdentifier: null | string;
+		module: null | string;
+		moduleName: null | string;
+		resolvedModuleIdentifier: null | string;
+		resolvedModule: null | string;
+		type: null | string;
+		active: boolean;
+		explanation: null | string;
+		userRequest: null | string;
+		loc?: null | string;
+		moduleId?: null | string | number;
+		resolvedModuleId?: null | string | number;
+	}
+
+	/**
+	 * A group of reasons from one origin module that `groupResults` creates.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsModuleReasonGroup { myField?: MyType } }`.
+	 */
+	export interface KnownStatsModuleReasonGroup {
+		type: string;
+		module: string;
+		active: boolean;
+		children: StatsModuleReason[];
+	}
+
+	/**
+	 * Defines the known stats module trace dependency type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsModuleTraceDependency { myField?: MyType } }`.
+	 */
+	export interface KnownStatsModuleTraceDependency {
+		loc?: string;
+	}
+
+	/**
+	 * Defines the known stats module trace item type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsModuleTraceItem { myField?: MyType } }`.
+	 */
+	export interface KnownStatsModuleTraceItem {
+		originIdentifier?: string;
+		originName?: string;
+		moduleIdentifier?: string;
+		moduleName?: string;
+		dependencies?: StatsModuleTraceDependency[];
+		originId?: string | number;
+		moduleId?: string | number;
+	}
+
+	/**
+	 * Defines the known stats printer context type used by this module.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownStatsPrinterContext { myField?: MyType } }`.
+	 */
+	export interface KnownStatsPrinterContext {
+		type?: string;
+		compilation?: StatsCompilation;
+		chunkGroup?: StatsChunkGroup;
+		chunkGroupKind?: string;
+		asset?: StatsAsset;
+		module?: StatsModule;
+		chunk?: StatsChunk;
+		moduleReason?: StatsModuleReason;
+		moduleIssuer?: StatsModuleIssuer;
+		error?: StatsError;
+		profile?: StatsProfile;
+		logging?: StatsLogging;
+		moduleTraceItem?: StatsModuleTraceItem;
+		moduleTraceDependency?: StatsModuleTraceDependency;
+
+		/**
+		 * the compilation's time, which colors other times by their share of it
+		 */
+		timeReference?: number;
+	}
+
+	/**
+	 * Defines the known stats profile type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsProfile { myField?: MyType } }`.
+	 */
+	export interface KnownStatsProfile {
+		total: number;
+		resolving: number;
+		restoring: number;
+		building: number;
+		integration: number;
+		storing: number;
+		additionalResolving: number;
+		additionalIntegration: number;
+		factory: number;
+		dependencies: number;
+	}
+
+	/**
+	 * The `[object, data]` `extract` receives for each object key, which also types that key's `getItemFactory` data and `result` value.
+	 * A plugin types its own keys by declaration merging: `declare module "webpack" { interface StatsFactoryExtractKeys { "myPlugin.data": [MyObject, MyData] } }`.
+	 */
+	export interface StatsFactoryExtractKeys {
+		compilation: [StatsCompilation, Compilation];
+		asset: [StatsAsset, PreprocessedAsset];
+		asset$visible: [StatsAsset, PreprocessedAsset];
+		chunkGroup: [StatsChunkGroup, ChunkGroupInfoWithName];
+		module: [StatsModule, Module];
+		module$visible: [StatsModule, Module];
+		moduleIssuer: [StatsModuleIssuer, Module];
+		profile: [StatsProfile, ModuleProfile];
+		moduleReason: [StatsModuleReason, ModuleGraphConnection];
+		chunk: [StatsChunk, Chunk];
+		chunkOrigin: [StatsChunkOrigin, OriginRecord];
+		error: [StatsError, WebpackError];
+		warning: [StatsError, WebpackError];
+		cause: [StatsError, WebpackError];
+		moduleTraceItem: [StatsModuleTraceItem, ModuleTrace];
+		moduleTraceDependency: [StatsModuleTraceDependency, Dependency];
+	}
+
+	/**
+	 * The group object `groupResults` taps create for each array path of `StatsFactoryItemKeys` they group.
+	 * A plugin types its own groups by declaration merging: `declare module "webpack" { interface StatsFactoryGroupKeys { "myPlugin.items": MyGroup } }`.
+	 */
+	export interface StatsFactoryGroupKeys {
+		"compilation.assets": StatsAssetGroup;
+		"asset.related": StatsAssetGroup;
+		"compilation.modules": StatsModuleGroup;
+		"chunk.modules": StatsModuleGroup;
+		"chunk.rootModules": StatsModuleGroup;
+		"module.modules": StatsModuleGroup;
+		"module.reasons": StatsModuleReasonGroup;
+	}
+
+	/**
+	 * The `[item, created item]` of each array path, typing its item hooks (`filter`, `sort`, `filterSorted`) and created item hooks (`sortResults`, `groupResults`, `filterResults`, `merge`); an optional third element is what `merge` makes of the created items, which `result` then gets instead of their array, so a key declaring one must register a `merge` tap returning that type.
+	 * A plugin types its own paths by declaration merging: `declare module "webpack" { interface StatsFactoryItemKeys { "myPlugin.items": [MyItem, MyCreatedItem] } }`.
+	 */
+	export interface StatsFactoryItemKeys {
+		"compilation.assets": [PreprocessedAsset, StatsAsset];
+		"compilation.chunks": [Chunk, StatsChunk];
+		"compilation.modules": [Module, StatsModule];
+		"compilation.entrypoints": [
+			ChunkGroupInfoWithName,
+			StatsChunkGroup,
+			Record<string, StatsChunkGroup>
+		];
+		"compilation.namedChunkGroups": [
+			ChunkGroupInfoWithName,
+			StatsChunkGroup,
+			Record<string, StatsChunkGroup>
+		];
+		"compilation.errors": [Error, StatsError];
+		"compilation.warnings": [Error, StatsError];
+		"compilation.hints": [Error, StatsError];
+		"compilation.children": [Compilation, StatsCompilation];
+		"asset.related": [PreprocessedAsset, StatsAsset];
+		"error.errors": [Error, StatsError];
+		"warning.errors": [Error, StatsError];
+		"chunk.modules": [Module, StatsModule];
+		"chunk.rootModules": [Module, StatsModule];
+		"chunk.origins": [OriginRecord, StatsChunkOrigin];
+		"module.issuerPath": [Module, StatsModuleIssuer];
+		"module.reasons": [ModuleGraphConnection, StatsModuleReason];
+		"module.modules": [Module, StatsModule];
+		"module.children": [Module, StatsModule];
+		moduleTrace: [ModuleTrace, StatsModuleTraceItem];
+		"moduleTraceItem.dependencies": [Dependency, StatsModuleTraceDependency];
+	}
+
+	/**
+	 * The item `getItemName` receives for each `<array path>[]` key: the first element of that path's `StatsFactoryItemKeys` entry.
+	 * A plugin types its own keys by declaration merging: `declare module "webpack" { interface StatsFactoryItemNameKeys { "myPlugin.items[]": MyItem } }`.
+	 */
+	export interface StatsFactoryItemNameKeys {
+		"compilation.assets[]": PreprocessedAsset;
+		"compilation.chunks[]": Chunk;
+		"compilation.modules[]": Module;
+		"compilation.entrypoints[]": ChunkGroupInfoWithName;
+		"compilation.namedChunkGroups[]": ChunkGroupInfoWithName;
+		"compilation.errors[]": Error;
+		"compilation.warnings[]": Error;
+		"compilation.hints[]": Error;
+		"compilation.children[]": Compilation;
+		"asset.related[]": PreprocessedAsset;
+		"error.errors[]": Error;
+		"warning.errors[]": Error;
+		"chunk.modules[]": Module;
+		"chunk.rootModules[]": Module;
+		"chunk.origins[]": OriginRecord;
+		"module.issuerPath[]": Module;
+		"module.reasons[]": ModuleGraphConnection;
+		"module.modules[]": Module;
+		"module.children[]": Module;
+		"moduleTrace[]": ModuleTrace;
+		"moduleTraceItem.dependencies[]": Dependency;
+	}
+
+	/**
+	 * The item of each array path, which `sortItems` receives the array of.
+	 * A plugin types its own paths by declaration merging: `declare module "webpack" { interface StatsPrinterItemKeys { "myPlugin.items": MyItem } }`.
+	 */
+	export interface StatsPrinterItemKeys {
+		"compilation.assets": StatsAsset;
+		"compilation.modules": StatsModule;
+		"compilation.chunks": StatsChunk;
+		"compilation.entrypoints": StatsChunkGroup;
+		"compilation.namedChunkGroups": StatsChunkGroup;
+		"compilation.errors": StatsError;
+		"compilation.warnings": StatsError;
+		"compilation.hints": StatsError;
+		"compilation.logging": exports.KnownStatsLogging &
+			Record<string, StatsJsonValue> & { name: string };
+		"compilation.children": StatsCompilation;
+		"asset.related": StatsAsset;
+		"asset.children": StatsAsset;
+		"module.modules": StatsModule;
+		"module.children": StatsModule;
+		"module.reasons": StatsModuleReason;
+		"moduleReason.children": StatsModuleReason;
+		"module.issuerPath": StatsModuleIssuer;
+		"chunk.origins": StatsChunkOrigin;
+		"chunk.modules": StatsModule;
+		"loggingGroup.entries": StatsLoggingEntry;
+		"loggingEntry.children": StatsLoggingEntry;
+		"error.moduleTrace": StatsModuleTraceItem;
+		"error.errors": StatsError;
+		"moduleTraceItem.dependencies": StatsModuleTraceDependency;
+	}
+
+	/**
+	 * The item `getItemName` receives for each `<array path>[]` key: that path's `StatsPrinterItemKeys` entry.
+	 * A plugin types its own keys by declaration merging: `declare module "webpack" { interface StatsPrinterItemNameKeys { "myPlugin.items[]": MyItem } }`.
+	 */
+	export interface StatsPrinterItemNameKeys {
+		"compilation.assets[]": StatsAsset;
+		"compilation.modules[]": StatsModule;
+		"compilation.chunks[]": StatsChunk;
+		"compilation.entrypoints[]": StatsChunkGroup;
+		"compilation.namedChunkGroups[]": StatsChunkGroup;
+		"compilation.errors[]": StatsError;
+		"compilation.warnings[]": StatsError;
+		"compilation.hints[]": StatsError;
+		"compilation.logging[]": exports.KnownStatsLogging &
+			Record<string, StatsJsonValue> & { name: string };
+		"compilation.children[]": StatsCompilation;
+		"asset.related[]": StatsAsset;
+		"asset.children[]": StatsAsset;
+		"module.modules[]": StatsModule;
+		"module.children[]": StatsModule;
+		"module.reasons[]": StatsModuleReason;
+		"moduleReason.children[]": StatsModuleReason;
+		"module.issuerPath[]": StatsModuleIssuer;
+		"chunk.origins[]": StatsChunkOrigin;
+		"chunk.modules[]": StatsModule;
+		"loggingGroup.entries[]": StatsLoggingEntry;
+		"loggingEntry.children[]": StatsLoggingEntry;
+		"error.moduleTrace[]": StatsModuleTraceItem;
+		"error.errors[]": StatsError;
+		"moduleTraceItem.dependencies[]": StatsModuleTraceDependency;
+	}
+
+	/**
+	 * The value `print` receives for each object key, which also matches same-named fields.
+	 * A plugin types its own keys by declaration merging: `declare module "webpack" { interface StatsPrinterPrintKeys { "myPlugin.data": MyObject } }`.
+	 */
+	export interface StatsPrinterPrintKeys {
+		compilation: StatsCompilation;
+		asset: StatsAsset;
+		chunk: StatsChunk;
+		chunkGroup: StatsChunkGroup;
+		module: null | string | StatsModule;
+		moduleReason: StatsModuleReason;
+		moduleIssuer: StatsModuleIssuer;
+		chunkOrigin: StatsChunkOrigin;
+		error: StatsError;
+		profile: StatsProfile;
+		loggingGroup: exports.KnownStatsLogging &
+			Record<string, StatsJsonValue> & { name: string };
+		moduleTraceItem: StatsModuleTraceItem;
+		moduleTraceDependency: StatsModuleTraceDependency;
+	}
 	export const webpack: _functionWebpack;
 	export const defineConfig: <T extends DefineConfigInput>(config: T) => T;
 	export const validate: (
 		configuration: Configuration | MultiConfiguration
 	) => void;
-	/** Validates a value against a JSON schema. @deprecated use `config.validateSchema` — TODO in the next major release: remove */ export const validateSchema: (
+	/** Validates a value against a JSON schema. @deprecated use `config.validateSchema` - TODO in the next major release: remove */ export const validateSchema: (
 		schema: Parameters<typeof validateFunction>[0],
 		options: Parameters<typeof validateFunction>[1],
 		validationConfiguration?: ValidationErrorConfiguration
@@ -33112,17 +38890,17 @@ declare namespace exports {
 				duplicateItemIndex: number,
 				numberOfTimesReplaced: number
 			) => T,
-			comparator?: (firstElement: T, nextElement: T) => 0 | 1 | -1
+			comparator?: (firstIndex: number, nextIndex: number) => number
 		) => T[];
 		export let matchPart: (str: string, test: Matcher) => boolean;
 		export let matchObject: (obj: MatchObject, str: string) => boolean;
 	}
-	/** The stage constants the optimization hooks are tapped at. @deprecated use `optimize.OptimizationStages` — TODO in the next major release: remove */ export namespace OptimizationStages {
+	/** The stage constants the optimization hooks are tapped at. @deprecated use `optimize.OptimizationStages` - TODO in the next major release: remove */ export namespace OptimizationStages {
 		export let STAGE_ADVANCED: 10;
 		export let STAGE_BASIC: -10;
 		export let STAGE_DEFAULT: 0;
 	}
-	/** The symbols a runtime module may declare a requirement on. @deprecated use `runtime.RuntimeGlobals` — TODO in the next major release: remove */ export namespace RuntimeGlobals {
+	/** The symbols a runtime module may declare a requirement on. @deprecated use `runtime.RuntimeGlobals` - TODO in the next major release: remove */ export namespace RuntimeGlobals {
 		export let amdDefine: "__webpack_require__.amdD";
 		export let amdOptions: "__webpack_require__.amdO";
 		export let asyncModule: "__webpack_require__.a";
@@ -33143,6 +38921,7 @@ declare namespace exports {
 		export let currentRemoteGetScope: "__webpack_require__.R";
 		export let deferredModuleAsyncTransitiveDependencies: "__webpack_require__.zT";
 		export let deferredModuleAsyncTransitiveDependenciesSymbol: "__webpack_require__.zS";
+		export let deferredModuleNamespaceCache: "__webpack_require__.zC";
 		export let definePropertyGetters: "__webpack_require__.d";
 		export let definePropertyGettersFromArray: "__webpack_require__.d (array)";
 		export let ensureChunk: "__webpack_require__.e";
@@ -33165,7 +38944,7 @@ declare namespace exports {
 		export let getUpdateManifestFilename: "__webpack_require__.hmrF";
 		export let getWorkletBootstrap: "__webpack_require__.wb";
 		export let global: "__webpack_require__.g";
-		/** esm module decorator @deprecated use `esmModuleDecorator` — TODO in the next major release: remove */ export let harmonyModuleDecorator: "__webpack_require__.hmd";
+		/** esm module decorator @deprecated use `esmModuleDecorator` - TODO in the next major release: remove */ export let harmonyModuleDecorator: "__webpack_require__.hmd";
 		export let hasCssModules: "has css modules";
 		export let hasServerRenderedStylesheets: "has server rendered stylesheets";
 		export let hasFetchPriority: "has fetch priority";
@@ -33173,14 +38952,19 @@ declare namespace exports {
 		export let hasOwnProperty: "__webpack_require__.o";
 		export let hasSealedDeferredNamespace: "has sealed deferred namespace";
 		export let hasSynthesizedDeferredNamespace: "has synthesized deferred namespace";
+		export let hmrChunkGroups: "__webpack_require__.hmrG";
+		export let hmrChunkVersions: "__webpack_require__.hmrV";
+		export let hmrCheckChunkVersions: "__webpack_require__.hmrK";
 		export let hmrDownloadManifest: "__webpack_require__.hmrM";
 		export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
 		export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
+		export let hmrLoadedChunkVersions: "__webpack_require__.hmrL";
 		export let hmrModuleData: "__webpack_require__.hmrD";
 		export let hmrRuntimeStatePrefix: "__webpack_require__.hmrS";
 		export let initializeSharing: "__webpack_require__.I";
 		export let instantiateWasm: "__webpack_require__.v";
 		export let interceptModuleExecution: "__webpack_require__.i";
+		export let liveExportSetters: "__webpack_require__.lE";
 		export let loadScript: "__webpack_require__.l";
 		export let makeDeferredNamespaceObject: "__webpack_require__.z";
 		export let makeNamespaceObject: "__webpack_require__.r";
@@ -33253,9 +39037,11 @@ declare namespace exports {
 		export {
 			ModuleDependency,
 			ESMImportDependency,
-			/** The dependency an ESM `import` declaration makes. @deprecated use `dependencies.ESMImportDependency` — TODO in the next major release: remove */ ESMImportDependency as HarmonyImportDependency,
+			/** The dependency an ESM `import` declaration makes. @deprecated use `dependencies.ESMImportDependency` - TODO in the next major release: remove */ ESMImportDependency as HarmonyImportDependency,
 			ConstDependency,
-			NullDependency
+			NullDependency,
+			EntryDependency,
+			StaticExportsDependency
 		};
 	}
 	export namespace ids {
@@ -33272,14 +39058,89 @@ declare namespace exports {
 		};
 	}
 	export namespace javascript {
+		export namespace ChunkHelpers {
+			export let getAllChunks: (
+				entrypoint: Entrypoint,
+				excludedChunk1?: null | Chunk,
+				excludedChunk2?: null | Chunk
+			) => Set<Chunk>;
+			export let createChunkHashHandler: (
+				name: string
+			) => (chunk: Chunk, hash: Hash, __2: ChunkHashContext) => void;
+			export let getChunkInfo: (
+				chunk: Chunk,
+				chunkGraph: ChunkGraph
+			) => {
+				entries: [Module, undefined | Entrypoint][];
+				runtimeChunk: null | Chunk;
+			};
+		}
 		export namespace syntax {
-			export namespace parser {
+			/** exposed as `webpack.javascript.syntax.parser`; unstable API @experimental */ export namespace parser {
 				export let BIND_FUNCTION: 3;
 				export let BIND_LEXICAL: 2;
 				export let BIND_NONE: 0;
 				export let BIND_OUTSIDE: 5;
 				export let BIND_SIMPLE_CATCH: 4;
 				export let BIND_VAR: 1;
+				export let Field: Readonly<{
+					object: 1;
+					property: 2;
+					callee: 3;
+					arguments: 4;
+					expression: 5;
+					id: 6;
+					init: 7;
+					declarations: 8;
+					key: 9;
+					value: 10;
+					left: 11;
+					right: 12;
+					body: 13;
+					argument: 14;
+					elements: 15;
+					properties: 16;
+					params: 17;
+					test: 18;
+					consequent: 19;
+					alternate: 20;
+					expressions: 21;
+					quasis: 22;
+					tag: 23;
+					quasi: 24;
+					discriminant: 25;
+					cases: 26;
+					update: 27;
+					label: 28;
+					block: 29;
+					handler: 30;
+					finalizer: 31;
+					param: 32;
+					superClass: 33;
+					specifiers: 34;
+					source: 35;
+					attributes: 36;
+					imported: 37;
+					local: 38;
+					options: 39;
+					declaration: 40;
+					exported: 41;
+					meta: 42;
+				}>;
+				export let Flag: Readonly<{
+					computed: 1;
+					optional: 2;
+					method: 4;
+					shorthand: 8;
+					delegate: 16;
+					prefix: 32;
+					expression: 64;
+					generator: 128;
+					async: 256;
+					static: 512;
+					tail: 1024;
+					await: 2048;
+				}>;
 				export let SCOPE_ARROW: 16;
 				export let SCOPE_ASYNC: 4;
 				export let SCOPE_CLASS_FIELD_INIT: 512;
@@ -33307,20 +39168,13 @@ declare namespace exports {
 					export let allowHashBang: boolean;
 					export let checkPrivateFields: boolean;
 					export let locations: boolean;
-					export let startLocation: null;
 					export let onToken: null;
 					export let onTokenRead: null;
 					export let onComment: null;
 					export let ranges: boolean;
-					export let program: null;
 					export let sourceFile: null;
-					export let directSourceFile: null;
 					export let preserveParens: boolean;
 				}
-				export let functionFlags: (
-					async: boolean,
-					generator: boolean
-				) => number;
 				export let getLineInfo: (input: string, offset: number) => Position;
 				export let getOptions: (
 					opts?: null | Partial<OptionsSyntaxParser>
@@ -33333,12 +39187,9 @@ declare namespace exports {
 					code: number,
 					astral?: boolean
 				) => boolean;
-				export let isLocalVariableAccess: (node?: any) => boolean;
 				export let isNewLine: (code: number) => boolean;
-				export let isPrivateFieldAccess: (node?: any) => boolean;
 				export let keywordTypes: Record<string, TokenType>;
 				export let lineBreak: RegExp;
-				export let lineBreakG: RegExp;
 				export let nextLineBreak: (
 					code: string,
 					from: number,
@@ -33407,52 +39258,320 @@ declare namespace exports {
 					export let coalesce: TokenType;
 				}
 				export let wordsRegexp: (words: string) => RegExp;
-				export let MAX_MASKED_INDEX: 30;
-				export let buildLineStarts: (source: string) => number[];
+				export let NodeType: Readonly<{
+					Identifier: 1;
+					PrivateIdentifier: 2;
+					Literal: 3;
+					MemberExpression: 4;
+					CallExpression: 5;
+					NewExpression: 6;
+					ExpressionStatement: 7;
+					VariableDeclarator: 8;
+					VariableDeclaration: 9;
+					Property: 10;
+					BinaryExpression: 11;
+					LogicalExpression: 12;
+					AssignmentExpression: 13;
+					AssignmentPattern: 14;
+					BlockStatement: 15;
+					StaticBlock: 16;
+					ClassBody: 17;
+					Program: 18;
+					ReturnStatement: 19;
+					ThrowStatement: 20;
+					AwaitExpression: 21;
+					SpreadElement: 22;
+					RestElement: 23;
+					YieldExpression: 24;
+					UnaryExpression: 25;
+					UpdateExpression: 26;
+					ArrayExpression: 27;
+					ArrayPattern: 28;
+					ObjectExpression: 29;
+					ObjectPattern: 30;
+					ThisExpression: 31;
+					Super: 32;
+					EmptyStatement: 33;
+					DebuggerStatement: 34;
+					FunctionExpression: 35;
+					FunctionDeclaration: 36;
+					ArrowFunctionExpression: 37;
+					IfStatement: 38;
+					ConditionalExpression: 39;
+					ParenthesizedExpression: 40;
+					PropertyDefinition: 41;
+					MethodDefinition: 42;
+					TemplateElement: 43;
+					TemplateLiteral: 44;
+					TaggedTemplateExpression: 45;
+					SequenceExpression: 46;
+					SwitchCase: 47;
+					SwitchStatement: 48;
+					ForStatement: 49;
+					ForInStatement: 50;
+					ForOfStatement: 51;
+					WhileStatement: 52;
+					DoWhileStatement: 53;
+					WithStatement: 54;
+					LabeledStatement: 55;
+					BreakStatement: 56;
+					ContinueStatement: 57;
+					TryStatement: 58;
+					CatchClause: 59;
+					ClassDeclaration: 60;
+					ClassExpression: 61;
+					ChainExpression: 62;
+					ImportDeclaration: 63;
+					ImportSpecifier: 64;
+					ImportDefaultSpecifier: 65;
+					ImportNamespaceSpecifier: 66;
+					ImportAttribute: 67;
+					ImportExpression: 68;
+					ExportNamedDeclaration: 69;
+					ExportDefaultDeclaration: 70;
+					ExportAllDeclaration: 71;
+					ExportSpecifier: 72;
+					MetaProperty: 73;
+				}>;
+				export let Part: Readonly<{
+					raw: 1;
+					directive: 2;
+					kind: 3;
+					operator: 4;
+					sourceType: 5;
+					phase: 6;
+				}>;
 				export let collectCjsRequireSpecifiers: (source: string) => Set<string>;
-				export let declaresIntoBlock: (statement?: any) => boolean;
-				export let overflowFrom: (mask: number, index: number) => number[];
 				export let hasOctalEscape: (raw: string) => boolean;
-				export let parse: (
-					input: string,
-					options: ParserOptionsSyntaxParser
-				) => ProgramImport;
-				export let positionAt: (
-					lineStarts: number[],
-					offset: number
-				) => SourcePosition;
+				export let lazyObjectOfSource: (
+					source: LazySource,
+					node: number
+				) =>
+					| null
+					| ImportDeclaration
+					| ExportNamedDeclaration
+					| ExportAllDeclaration
+					| ImportExpressionImport
+					| UnaryExpression
+					| ArrayExpression
+					| ArrowFunctionExpression
+					| AssignmentExpression
+					| AwaitExpression
+					| BinaryExpression
+					| SimpleCallExpression
+					| NewExpression
+					| ChainExpression
+					| ClassExpression
+					| ConditionalExpression
+					| FunctionExpression
+					| Identifier
+					| SimpleLiteral
+					| RegExpLiteral
+					| BigIntLiteral
+					| LogicalExpression
+					| MemberExpression
+					| MetaProperty
+					| ObjectExpression
+					| SequenceExpression
+					| TaggedTemplateExpression
+					| TemplateLiteral
+					| ThisExpression
+					| UpdateExpression
+					| YieldExpression
+					| SpreadElement
+					| PrivateIdentifier
+					| Super
+					| FunctionDeclaration
+					| VariableDeclaration
+					| ClassDeclaration
+					| ExpressionStatement
+					| BlockStatement
+					| StaticBlock
+					| EmptyStatement
+					| DebuggerStatement
+					| WithStatement
+					| ReturnStatement
+					| LabeledStatement
+					| BreakStatement
+					| ContinueStatement
+					| IfStatement
+					| SwitchStatement
+					| ThrowStatement
+					| TryStatement
+					| WhileStatement
+					| DoWhileStatement
+					| ForStatement
+					| ForInStatement
+					| ForOfStatement
+					| ExportDefaultDeclaration
+					| MethodDefinition
+					| PropertyDefinition
+					| VariableDeclarator
+					| Program
+					| AssignmentProperty
+					| Property
+					| CatchClause
+					| ClassBody
+					| ImportSpecifier
+					| ImportDefaultSpecifier
+					| ImportNamespaceSpecifier
+					| ExportSpecifier
+					| ObjectPattern
+					| ArrayPattern
+					| RestElement
+					| AssignmentPattern
+					| SwitchCase
+					| TemplateElement;
+				export let parseProgram: _functionSyntaxParserFunction_1;
+				export let parsedTree: () => null | ColumnarSyntaxTree;
+				export let takeParsedTree: () => null | ColumnarSyntaxTree;
+				export let readParsedTree: (
+					tree: ColumnarSyntaxTree,
+					input: string
+				) => void;
 				export let releaseParserCaches: () => void;
+				export let toEstreeObject: (
+					node: number,
+					options?: EstreeObjectOptions
+				) =>
+					| null
+					| ImportDeclaration
+					| ExportNamedDeclaration
+					| ExportAllDeclaration
+					| ImportExpressionImport
+					| UnaryExpression
+					| ArrayExpression
+					| ArrowFunctionExpression
+					| AssignmentExpression
+					| AwaitExpression
+					| BinaryExpression
+					| SimpleCallExpression
+					| NewExpression
+					| ChainExpression
+					| ClassExpression
+					| ConditionalExpression
+					| FunctionExpression
+					| Identifier
+					| SimpleLiteral
+					| RegExpLiteral
+					| BigIntLiteral
+					| LogicalExpression
+					| MemberExpression
+					| MetaProperty
+					| ObjectExpression
+					| SequenceExpression
+					| TaggedTemplateExpression
+					| TemplateLiteral
+					| ThisExpression
+					| UpdateExpression
+					| YieldExpression
+					| SpreadElement
+					| PrivateIdentifier
+					| Super
+					| FunctionDeclaration
+					| VariableDeclaration
+					| ClassDeclaration
+					| ExpressionStatement
+					| BlockStatement
+					| StaticBlock
+					| EmptyStatement
+					| DebuggerStatement
+					| WithStatement
+					| ReturnStatement
+					| LabeledStatement
+					| BreakStatement
+					| ContinueStatement
+					| IfStatement
+					| SwitchStatement
+					| ThrowStatement
+					| TryStatement
+					| WhileStatement
+					| DoWhileStatement
+					| ForStatement
+					| ForInStatement
+					| ForOfStatement
+					| ExportDefaultDeclaration
+					| MethodDefinition
+					| PropertyDefinition
+					| VariableDeclarator
+					| Program
+					| AssignmentProperty
+					| Property
+					| CatchClause
+					| ClassBody
+					| ImportSpecifier
+					| ImportDefaultSpecifier
+					| ImportNamespaceSpecifier
+					| ExportSpecifier
+					| ObjectPattern
+					| ArrayPattern
+					| RestElement
+					| AssignmentPattern
+					| SwitchCase
+					| TemplateElement;
+				export let fromEstreeObject: (
+					program: Program,
+					input: string
+				) => number;
+				export let STATEMENT_TYPES_WITHOUT_BINDINGS: Set<string>;
+				export let syntaxTreeOfEstree: (
+					program: NodeEstreeIndex,
+					input: string
+				) => { tree: ColumnarSyntaxTree; program: number };
+				export let A: JavascriptSyntaxPath;
+				export let grammar: (
+					input: string,
+					visitors: CompiledVisitorBucket<JavascriptSyntaxPath>[],
+					writer: undefined | PrintContext<JavascriptSyntaxPath, number>,
+					options: JavascriptProcessOptions
+				) => void;
+				export let isWalkingSyntaxTree: () => boolean;
+				export let walkSyntaxTree: (
+					tree: ColumnarSyntaxTree,
+					program: number,
+					input: string,
+					visitors: CompiledVisitorBucket<JavascriptSyntaxPath>[],
+					writer?: PrintContext<JavascriptSyntaxPath, number>,
+					inlined?: Uint8Array
+				) => void;
+				export let printEarlyIn: (early: Map<number, number>) => void;
 				export {
 					DestructuringErrors,
-					Label,
-					ParserNode,
 					SyntaxParser as Parser,
 					Position,
 					ParserScope as Scope,
 					ParserSourceLocation,
 					TokContext,
-					TokenSyntaxParserClass as Token,
+					Token,
 					TokenType,
-					BLOCK_DECLARATIONS,
-					HOISTED_DECLARATIONS,
-					MODULE_DECLARATIONS,
 					LEGACY_ASSERT_ATTRIBUTES,
 					ParserPosition,
-					WebpackParser
+					WebpackParser,
+					ScopeLog,
+					EstreeView
 				};
 			}
-			export namespace printer {
-				export let NODE_KIND_ANCESTRY: Record<string, string[]>;
-				export let plainIdentifier: (name: string) => string;
-				export let load: () => Promise<Minifier>;
-				export let PHASES: Phase[];
-				export let FORMAT_DEFAULTS: FormatOptions;
+			/** exposed as `webpack.javascript.syntax.printer`; unstable API @experimental */ export namespace printer {
+				export let prepareMinify: (
+					text: string,
+					options: JavascriptProcessOptions
+				) => {
+					tree: ColumnarSyntaxTree;
+					program: number;
+					text: string;
+					options: NodePrintOptions;
+					inlined?: Uint8Array;
+					finish?: () => void;
+				};
+				export let readsMinifyOptions: (
+					options: JavascriptProcessOptions
+				) => boolean;
+				export let printer: (
+					path: JavascriptSyntaxPath,
+					writer: PrintContext<JavascriptSyntaxPath, number>
+				) => string;
+				export let FORMAT_DEFAULTS: any;
 				export let IGNORED_FORMAT_OPTIONS: string[];
-				export let createAst: () => Ast;
-				export let createModules: () => MinifierModules;
-				export let createCompressHelpers: (
-					modules: MinifierModules
-				) => CompressHelpers;
 				export let createUnicode: () => {
 					getFullChar: (str: string, pos: number) => string;
 					getFullCharCode: (str: string, pos: number) => number;
@@ -33468,6 +39587,95 @@ declare namespace exports {
 					) => boolean;
 				};
 			}
+			/** exposed as `webpack.javascript.syntax.toEstreeObject`; unstable API @experimental */ export const toEstreeObject: (
+				node: number,
+				options?: EstreeObjectOptions
+			) =>
+				| null
+				| ImportDeclaration
+				| ExportNamedDeclaration
+				| ExportAllDeclaration
+				| ImportExpressionImport
+				| UnaryExpression
+				| ArrayExpression
+				| ArrowFunctionExpression
+				| AssignmentExpression
+				| AwaitExpression
+				| BinaryExpression
+				| SimpleCallExpression
+				| NewExpression
+				| ChainExpression
+				| ClassExpression
+				| ConditionalExpression
+				| FunctionExpression
+				| Identifier
+				| SimpleLiteral
+				| RegExpLiteral
+				| BigIntLiteral
+				| LogicalExpression
+				| MemberExpression
+				| MetaProperty
+				| ObjectExpression
+				| SequenceExpression
+				| TaggedTemplateExpression
+				| TemplateLiteral
+				| ThisExpression
+				| UpdateExpression
+				| YieldExpression
+				| SpreadElement
+				| PrivateIdentifier
+				| Super
+				| FunctionDeclaration
+				| VariableDeclaration
+				| ClassDeclaration
+				| ExpressionStatement
+				| BlockStatement
+				| StaticBlock
+				| EmptyStatement
+				| DebuggerStatement
+				| WithStatement
+				| ReturnStatement
+				| LabeledStatement
+				| BreakStatement
+				| ContinueStatement
+				| IfStatement
+				| SwitchStatement
+				| ThrowStatement
+				| TryStatement
+				| WhileStatement
+				| DoWhileStatement
+				| ForStatement
+				| ForInStatement
+				| ForOfStatement
+				| ExportDefaultDeclaration
+				| MethodDefinition
+				| PropertyDefinition
+				| VariableDeclarator
+				| Program
+				| AssignmentProperty
+				| Property
+				| CatchClause
+				| ClassBody
+				| ImportSpecifier
+				| ImportDefaultSpecifier
+				| ImportNamespaceSpecifier
+				| ExportSpecifier
+				| ObjectPattern
+				| ArrayPattern
+				| RestElement
+				| AssignmentPattern
+				| SwitchCase
+				| TemplateElement;
+			/** Usage: `const { analyzeScope } = webpack.javascript.syntax.scopes; analyzeScope(parser.parseProgram(code, 0, { scopes: true }))`. @experimental exposed as `webpack.javascript.syntax.scopes`; unstable API */ export namespace scopes {
+				export let analyzeScope: (
+					program: number,
+					recordEveryReference?: boolean
+				) => ScopeAnalysis;
+				export { ScopeLog, Scope, Variable, Reference, ScopeIdentifier };
+			}
+			export {
+				/** exposed as `webpack.javascript.syntax.SourceProcessor`; unstable API @experimental */ JavascriptSourceProcessor as SourceProcessor
+			};
 		}
 		export {
 			EnableChunkLoadingPlugin,
@@ -33495,7 +39703,8 @@ declare namespace exports {
 			export let getInnerGraphUtils: (
 				compilation: Compilation
 			) => InnerGraphUtils;
-			export { TopLevelSymbol, topLevelSymbolTag };
+			export let topLevelSymbolTag: Tag<TopLevelSymbol>;
+			export { TopLevelSymbol };
 		}
 		export {
 			ConcatenationScope,
@@ -33533,6 +39742,7 @@ declare namespace exports {
 			export let currentRemoteGetScope: "__webpack_require__.R";
 			export let deferredModuleAsyncTransitiveDependencies: "__webpack_require__.zT";
 			export let deferredModuleAsyncTransitiveDependenciesSymbol: "__webpack_require__.zS";
+			export let deferredModuleNamespaceCache: "__webpack_require__.zC";
 			export let definePropertyGetters: "__webpack_require__.d";
 			export let definePropertyGettersFromArray: "__webpack_require__.d (array)";
 			export let ensureChunk: "__webpack_require__.e";
@@ -33555,7 +39765,7 @@ declare namespace exports {
 			export let getUpdateManifestFilename: "__webpack_require__.hmrF";
 			export let getWorkletBootstrap: "__webpack_require__.wb";
 			export let global: "__webpack_require__.g";
-			/** esm module decorator @deprecated use `esmModuleDecorator` — TODO in the next major release: remove */ export let harmonyModuleDecorator: "__webpack_require__.hmd";
+			/** esm module decorator @deprecated use `esmModuleDecorator` - TODO in the next major release: remove */ export let harmonyModuleDecorator: "__webpack_require__.hmd";
 			export let hasCssModules: "has css modules";
 			export let hasServerRenderedStylesheets: "has server rendered stylesheets";
 			export let hasFetchPriority: "has fetch priority";
@@ -33563,14 +39773,19 @@ declare namespace exports {
 			export let hasOwnProperty: "__webpack_require__.o";
 			export let hasSealedDeferredNamespace: "has sealed deferred namespace";
 			export let hasSynthesizedDeferredNamespace: "has synthesized deferred namespace";
+			export let hmrChunkGroups: "__webpack_require__.hmrG";
+			export let hmrChunkVersions: "__webpack_require__.hmrV";
+			export let hmrCheckChunkVersions: "__webpack_require__.hmrK";
 			export let hmrDownloadManifest: "__webpack_require__.hmrM";
 			export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
 			export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
+			export let hmrLoadedChunkVersions: "__webpack_require__.hmrL";
 			export let hmrModuleData: "__webpack_require__.hmrD";
 			export let hmrRuntimeStatePrefix: "__webpack_require__.hmrS";
 			export let initializeSharing: "__webpack_require__.I";
 			export let instantiateWasm: "__webpack_require__.v";
 			export let interceptModuleExecution: "__webpack_require__.i";
+			export let liveExportSetters: "__webpack_require__.lE";
 			export let loadScript: "__webpack_require__.l";
 			export let makeDeferredNamespaceObject: "__webpack_require__.z";
 			export let makeNamespaceObject: "__webpack_require__.r";
@@ -33616,7 +39831,8 @@ declare namespace exports {
 		export {
 			RuntimeModule,
 			GetChunkFilenameRuntimeModule,
-			LoadScriptRuntimeModule
+			LoadScriptRuntimeModule,
+			StartupEntrypointRuntimeModule
 		};
 	}
 	export namespace module {
@@ -33638,7 +39854,7 @@ declare namespace exports {
 			FetchCompileAsyncWasmPlugin,
 			JsonpChunkLoadingRuntimeModule,
 			JsonpTemplatePlugin,
-			/** The runtime module that loads a chunk's CSS. @deprecated use `css.CssLoadingRuntimeModule`, the scope this module lives in — TODO in the next major release: remove */ CssLoadingRuntimeModule
+			/** The runtime module that loads a chunk's CSS. @deprecated use `css.CssLoadingRuntimeModule`, the scope this module lives in - TODO in the next major release: remove */ CssLoadingRuntimeModule
 		};
 	}
 	export namespace esm {
@@ -33678,10 +39894,11 @@ declare namespace exports {
 	export namespace css {
 		export function cssMinify(
 			input: { [index: string]: string | Buffer },
-			sourceMap?: object,
+			sourceMap?: Partial<RawSourceMap>,
 			minimizerOptions?: {
-				as?: "stylesheet" | "block-contents";
+				as?: "stylesheet" | "block-contents" | "embedded-stylesheet";
 				environment?: CssEnvironment;
+				charset?: false | "auto";
 				convertLengthUnits?: boolean;
 				convertApproximateColors?: boolean;
 				dropOverriddenDeclarations?: boolean;
@@ -33706,15 +39923,16 @@ declare namespace exports {
 					| string
 					| EmbeddedSourceResult
 					| Promise<undefined | string | EmbeddedSourceResult>;
+				svg?: boolean | OptimizationMinimizeXml;
 			} & CssTransformOptions,
 			extractComments?:
 				| string
 				| boolean
 				| RegExp
-				| ((...args: any[]) => boolean)
+				| ((...args: never[]) => boolean)
 				| {
 						condition?:
-							string | boolean | RegExp | ((...args: any[]) => boolean);
+							string | boolean | RegExp | ((...args: never[]) => boolean);
 				  }
 		): Promise<{
 			code: string;
@@ -33725,337 +39943,166 @@ declare namespace exports {
 		}>;
 		export namespace cssMinify {
 			export let supportsWorkerThreads: () => boolean;
+			export let getBannerPosition: () => "end";
 			export let getTypes: () => string[];
 			export let getEmbeddedTypes: () => string[];
 			export let filter: (name: string) => boolean;
 		}
 		export namespace syntax {
-			export namespace parser {
-				export let A: {
-					get node(): NodeSyntaxParser;
-					get parent(): null | NodeSyntaxParser;
-					get index(): number;
-					/**
-					 * Stop the walk descending into the current node (enter only).
-					 */
-					skipChildren(): void;
-					inValue(): boolean;
-					type(n?: NodeSyntaxParser): number;
-					start(n?: NodeSyntaxParser): number;
-					end(n?: NodeSyntaxParser): number;
-					range(n?: NodeSyntaxParser): [number, number];
-					loc(n?: NodeSyntaxParser): {
-						start: { line: number; column: number };
-						end: { line: number; column: number };
-					};
-					source(n?: NodeSyntaxParser): string;
-					value(n?: NodeSyntaxParser): string;
-					unescaped(n?: NodeSyntaxParser): string;
-					typeFlag(n?: NodeSyntaxParser): string;
-					contentStart(n?: NodeSyntaxParser): number;
-					contentEnd(n?: NodeSyntaxParser): number;
-					name(n?: NodeSyntaxParser): string;
-					nameStart(n?: NodeSyntaxParser): number;
-					nameEnd(n?: NodeSyntaxParser): number;
-					unescapedName(n?: NodeSyntaxParser): string;
-					atKeyword(n?: NodeSyntaxParser): string;
-					children(n?: NodeSyntaxParser): ComponentValue[];
-					prelude(n?: NodeSyntaxParser): ComponentValue[];
-					childCount(n?: NodeSyntaxParser): number;
-					childAt(n: NodeSyntaxParser, i: number): ComponentValue;
-					/**
-					 * A block big enough to stream hands its children to the visitors as each one
-					 * finishes rather than collecting them, so both lists read as an empty block
-					 * on it — `null`, which means no block at all, is still only for the `@…;`
-					 * forms. Read a block's children from the walk, not from here.
-					 */
-					declarations(n?: NodeSyntaxParser): null | DeclarationSyntaxParser[];
-					/**
-					 * Reads as an empty block on a streamed rule; see {@link declarations }.
-					 */
-					childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-					blockStart(n?: NodeSyntaxParser): number;
-					blockEnd(n?: NodeSyntaxParser): number;
-					important(n?: NodeSyntaxParser): boolean;
-					blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
-					setEnd(n: NodeSyntaxParser, v: number): void;
-					setBlockEnd(n: NodeSyntaxParser, v: number): void;
-				};
-				export let CC_0: number;
-				export let CC_APOSTROPHE: number;
-				export let CC_COMMA: number;
-				export let CC_FULL_STOP: number;
-				export let CC_GREATER_THAN_SIGN: number;
-				export let CC_HYPHEN_MINUS: number;
-				export let CC_LEFT_PARENTHESIS: number;
-				export let CC_LEFT_SQUARE: number;
-				export let CC_LOWER_D: number;
-				export let CC_LOW_LINE: number;
-				export let CC_NUMBER_SIGN: number;
-				export let CC_PLUS_SIGN: number;
-				export let CC_QUOTATION_MARK: number;
-				export let CC_REVERSE_SOLIDUS: number;
-				export let CC_RIGHT_PARENTHESIS: number;
-				export let CC_RIGHT_SQUARE: number;
-				export let CC_SPACE: number;
-				export let CC_TILDE: number;
-				export let CC_UPPER_A: number;
-				export let CC_UPPER_Z: number;
+			/** exposed as `webpack.css.syntax.parser`; unstable API @experimental */ export namespace parser {
+				export let A: CssSyntaxPath;
 				export let DARK_PROPERTY: "--webpack-dark";
 				export let KEYFRAMES_AT_RULE_RE: RegExp;
 				export let LIGHT_PROPERTY: "--webpack-light";
-				export let LIST_KIND_KEYFRAME: 1;
-				export let LIST_KIND_NESTED: 2;
-				export let LIST_KIND_SELECTOR: 0;
-				export let LIST_NO: 2;
-				export let LIST_UNKNOWN: 0;
-				export namespace NodeType {
-					export let Ident: number;
-					export let Function: number;
-					export let AtKeyword: number;
-					export let Hash: number;
-					export let String: number;
-					export let BadString: number;
-					export let Url: number;
-					export let BadUrl: number;
-					export let Delim: number;
-					export let Number: number;
-					export let Percentage: number;
-					export let Dimension: number;
-					export let Whitespace: number;
-					export let Colon: number;
-					export let Semicolon: number;
-					export let Comma: number;
-					export let RightParenthesis: number;
-					export let RightSquareBracket: number;
-					export let RightCurlyBracket: number;
-					export let CDO: number;
-					export let CDC: number;
-					export let SimpleBlock: number;
-					export let Declaration: number;
-					export let AtRule: number;
-					export let QualifiedRule: number;
-					export let Stylesheet: number;
-					export let Comment: number;
-					export let Raw: number;
+				export namespace Field {
+					export let prelude: 1;
+					export let value: 2;
+					export let declarations: 3;
+					export let rules: 4;
 				}
-				export let TT_AT_KEYWORD: 16;
-				export let TT_BAD_STRING_TOKEN: 4;
-				export let TT_BAD_URL_TOKEN: 19;
-				export let TT_CDC: 25;
-				export let TT_CDO: 24;
-				export let TT_COLON: 14;
-				export let TT_COMMA: 13;
-				export let TT_COMMENT: 1;
-				export let TT_DELIM: 6;
-				export let TT_DIMENSION: 23;
-				export let TT_EOF: 26;
-				export let TT_FUNCTION: 17;
-				export let TT_HASH: 5;
-				export let TT_IDENTIFIER: 20;
-				export let TT_LEFT_CURLY_BRACKET: 9;
-				export let TT_LEFT_PARENTHESIS: 7;
-				export let TT_LEFT_SQUARE_BRACKET: 8;
-				export let TT_NUMBER: 21;
-				export let TT_PERCENTAGE: 22;
-				export let TT_RIGHT_CURLY_BRACKET: 12;
-				export let TT_RIGHT_PARENTHESIS: 10;
-				export let TT_RIGHT_SQUARE_BRACKET: 11;
-				export let TT_SEMICOLON: 15;
-				export let TT_STRING: 3;
-				export let TT_URL: 18;
-				export let TT_WHITESPACE: 2;
-				export let T_AT_RULE: number;
-				export let T_BAD_STRING: number;
-				export let T_COMMA: number;
-				export let T_COMMENT: number;
-				export let T_DECLARATION: number;
-				export let T_DELIM: number;
-				export let T_DIMENSION: number;
-				export let T_FUNCTION: number;
-				export let T_HASH: number;
-				export let T_IDENT: number;
-				export let T_NUMBER: number;
-				export let T_PERCENTAGE: number;
-				export let T_QUALIFIED_RULE: number;
-				export let T_RAW: number;
-				export let T_SIMPLE_BLOCK: number;
-				export let T_STRING: number;
-				export let T_URL: number;
-				export let T_WHITESPACE: number;
+				export namespace Flag {
+					export let important: 1;
+					export let integer: 2;
+					export let id: 4;
+				}
+				export namespace Part {
+					export let name: 1;
+					export let value: 2;
+					export let block: 3;
+				}
+				export namespace NodeType {
+					export let Ident: 1;
+					export let Function: 2;
+					export let AtKeyword: 3;
+					export let Hash: 4;
+					export let String: 5;
+					export let BadString: 6;
+					export let Url: 7;
+					export let BadUrl: 8;
+					export let Delim: 9;
+					export let Number: 10;
+					export let Percentage: 11;
+					export let Dimension: 12;
+					export let Whitespace: 13;
+					export let Colon: 14;
+					export let Semicolon: 15;
+					export let Comma: 16;
+					export let RightParenthesis: 17;
+					export let RightSquareBracket: 18;
+					export let RightCurlyBracket: 19;
+					export let CDO: 20;
+					export let CDC: 21;
+					export let SimpleBlock: 22;
+					export let Declaration: 23;
+					export let AtRule: 24;
+					export let QualifiedRule: 25;
+					export let Stylesheet: 26;
+					export let Comment: 27;
+					export let Raw: 28;
+				}
+				export namespace TokenType {
+					export let Comment: 1;
+					export let Whitespace: 2;
+					export let String: 3;
+					export let BadString: 4;
+					export let Hash: 5;
+					export let Delim: 6;
+					export let LeftParenthesis: 7;
+					export let LeftSquareBracket: 8;
+					export let LeftCurlyBracket: 9;
+					export let RightParenthesis: 10;
+					export let RightSquareBracket: 11;
+					export let RightCurlyBracket: 12;
+					export let Comma: 13;
+					export let Colon: 14;
+					export let Semicolon: 15;
+					export let AtKeyword: 16;
+					export let Function: 17;
+					export let Url: 18;
+					export let BadUrl: 19;
+					export let Ident: 20;
+					export let Number: 21;
+					export let Percentage: 22;
+					export let Dimension: 23;
+					export let CDO: 24;
+					export let CDC: 25;
+					export let EOF: 26;
+				}
 				export let VENDOR_PREFIX: RegExp;
-				export let asciiLowerCaseName: (s: string) => string;
+				export let containsSubstitutionFunction: (text: string) => boolean;
+				export let isDigit: (cc: number) => boolean;
+				export let isHexDigit: (cc: number) => boolean;
+				export let isIdentCodePoint: (cc: number) => boolean;
+				export let isIdentStartCodePoint: (cc: number) => boolean;
+				export let isLetter: (cc: number) => boolean;
+				export let asciiLowercaseName: (s: string) => string;
 				export let buildSkipSet: (nodeTypes: number[]) => Uint8Array;
 				export let consumeExtraNewline: (
 					cc: number,
 					input: string,
 					pos: number
 				) => number;
-				export let equalsLowerCase: (s: string, lit: string) => boolean;
+				export let asciiCaseInsensitiveMatch: (
+					s: string,
+					lit: string
+				) => boolean;
 				export let escapeIdentifier: MakeCacheableResult<string> & {
 					bindCache: BindCache<string>;
 				};
 				export let escapeName: (name: string) => string;
 				export let grammar: (
 					input: string,
-					visitors: CompiledVisitorBucket<{
-						get node(): NodeSyntaxParser;
-						get parent(): null | NodeSyntaxParser;
-						get index(): number;
-						/**
-						 * Stop the walk descending into the current node (enter only).
-						 */
-						skipChildren(): void;
-						inValue(): boolean;
-						type(n?: NodeSyntaxParser): number;
-						start(n?: NodeSyntaxParser): number;
-						end(n?: NodeSyntaxParser): number;
-						range(n?: NodeSyntaxParser): [number, number];
-						loc(n?: NodeSyntaxParser): {
-							start: { line: number; column: number };
-							end: { line: number; column: number };
-						};
-						source(n?: NodeSyntaxParser): string;
-						value(n?: NodeSyntaxParser): string;
-						unescaped(n?: NodeSyntaxParser): string;
-						typeFlag(n?: NodeSyntaxParser): string;
-						contentStart(n?: NodeSyntaxParser): number;
-						contentEnd(n?: NodeSyntaxParser): number;
-						name(n?: NodeSyntaxParser): string;
-						nameStart(n?: NodeSyntaxParser): number;
-						nameEnd(n?: NodeSyntaxParser): number;
-						unescapedName(n?: NodeSyntaxParser): string;
-						atKeyword(n?: NodeSyntaxParser): string;
-						children(n?: NodeSyntaxParser): ComponentValue[];
-						prelude(n?: NodeSyntaxParser): ComponentValue[];
-						childCount(n?: NodeSyntaxParser): number;
-						childAt(n: NodeSyntaxParser, i: number): ComponentValue;
-						/**
-						 * A block big enough to stream hands its children to the visitors as each one
-						 * finishes rather than collecting them, so both lists read as an empty block
-						 * on it — `null`, which means no block at all, is still only for the `@…;`
-						 * forms. Read a block's children from the walk, not from here.
-						 */
-						declarations(
-							n?: NodeSyntaxParser
-						): null | DeclarationSyntaxParser[];
-						/**
-						 * Reads as an empty block on a streamed rule; see {@link declarations }.
-						 */
-						childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-						blockStart(n?: NodeSyntaxParser): number;
-						blockEnd(n?: NodeSyntaxParser): number;
-						important(n?: NodeSyntaxParser): boolean;
-						blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
-						setEnd(n: NodeSyntaxParser, v: number): void;
-						setBlockEnd(n: NodeSyntaxParser, v: number): void;
-					}>[],
+					visitors: CompiledVisitorBucket<CssSyntaxPath>[],
 					writer:
-						| undefined
-						| PrintContext<
-								{
-									get node(): NodeSyntaxParser;
-									get parent(): null | NodeSyntaxParser;
-									get index(): number;
-									/**
-									 * Stop the walk descending into the current node (enter only).
-									 */
-									skipChildren(): void;
-									inValue(): boolean;
-									type(n?: NodeSyntaxParser): number;
-									start(n?: NodeSyntaxParser): number;
-									end(n?: NodeSyntaxParser): number;
-									range(n?: NodeSyntaxParser): [number, number];
-									loc(n?: NodeSyntaxParser): {
-										start: { line: number; column: number };
-										end: { line: number; column: number };
-									};
-									source(n?: NodeSyntaxParser): string;
-									value(n?: NodeSyntaxParser): string;
-									unescaped(n?: NodeSyntaxParser): string;
-									typeFlag(n?: NodeSyntaxParser): string;
-									contentStart(n?: NodeSyntaxParser): number;
-									contentEnd(n?: NodeSyntaxParser): number;
-									name(n?: NodeSyntaxParser): string;
-									nameStart(n?: NodeSyntaxParser): number;
-									nameEnd(n?: NodeSyntaxParser): number;
-									unescapedName(n?: NodeSyntaxParser): string;
-									atKeyword(n?: NodeSyntaxParser): string;
-									children(n?: NodeSyntaxParser): ComponentValue[];
-									prelude(n?: NodeSyntaxParser): ComponentValue[];
-									childCount(n?: NodeSyntaxParser): number;
-									childAt(n: NodeSyntaxParser, i: number): ComponentValue;
-									/**
-									 * A block big enough to stream hands its children to the visitors as each one
-									 * finishes rather than collecting them, so both lists read as an empty block
-									 * on it — `null`, which means no block at all, is still only for the `@…;`
-									 * forms. Read a block's children from the walk, not from here.
-									 */
-									declarations(
-										n?: NodeSyntaxParser
-									): null | DeclarationSyntaxParser[];
-									/**
-									 * Reads as an empty block on a streamed rule; see {@link declarations }.
-									 */
-									childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-									blockStart(n?: NodeSyntaxParser): number;
-									blockEnd(n?: NodeSyntaxParser): number;
-									important(n?: NodeSyntaxParser): boolean;
-									blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
-									setEnd(n: NodeSyntaxParser, v: number): void;
-									setBlockEnd(n: NodeSyntaxParser, v: number): void;
-								},
-								NodeSyntaxParser,
-								CssPrintOptions
-						  >,
+						undefined | PrintContext<CssSyntaxPath, number, CssPrintOptions>,
 					options: CssProcessOptions
 				) => void;
 				export let isDashedIdentifier: (identifier: string) => boolean;
 				export let isSimpleIdentifier: (value: string) => boolean;
-				export let isWhitespace: (cc: number) => boolean;
+				export let isAsciiWhitespace: (cc: number) => boolean;
 				export let normalizeUrl: (str: string, isString: boolean) => string;
 				export let parseABlocksContents: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
-				) => { decls: DeclarationSyntaxParser[]; rules: RuleSyntaxParser[] };
+					options?: CssParseOptions
+				) => { decls: number[]; rules: number[] };
 				export let parseACommaSeparatedListOfComponentValues: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
-				) => ComponentValue[][];
+					options?: CssParseOptions
+				) => number[][];
 				export let parseAComponentValue: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
-				) => undefined | TokenSyntaxParserObject | FunctionNode | SimpleBlock;
+					options?: CssParseOptions
+				) => undefined | number;
 				export let parseADeclaration: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
-				) => undefined | DeclarationSyntaxParser;
+					options?: CssParseOptions
+				) => undefined | number;
 				export let parseAListOfComponentValues: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
-				) => ComponentValue[];
+					options?: CssParseOptions
+				) => number[];
 				export let parseARule: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
-				) => undefined | AtRule | QualifiedRule;
+					options?: CssParseOptions
+				) => undefined | number;
 				export let parseAStylesheet: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
-				) => Stylesheet;
+					options?: CssParseOptions
+				) => number;
 				export let parseAStylesheetsContents: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
-				) => RuleSyntaxParser[];
+					options?: CssParseOptions
+				) => number[];
 				export let pickTransforms: (
-					options: object
+					options: CssTransformOptions
 				) => undefined | CssTransformOptions;
 				export let rangeEquals: (
 					input: string,
@@ -34063,7 +40110,7 @@ declare namespace exports {
 					end: number,
 					lit: string
 				) => boolean;
-				export let rangeEqualsLowerCase: (
+				export let rangeAsciiCaseInsensitiveMatch: (
 					input: string,
 					start: number,
 					end: number,
@@ -34075,122 +40122,17 @@ declare namespace exports {
 					out: MutableToken
 				) => undefined | MutableToken;
 				export let skipEscape: (input: string, pos: number) => number;
+				export let terminateIdentifier: (identifier: string) => string;
 				export let toLowerCaseIfNeeded: (s: string) => string;
 				export let unescapeIdentifier: MakeCacheableResult<string> & {
 					bindCache: BindCache<string>;
 				};
 				export { TokenStream };
 			}
-			export namespace printer {
+			/** exposed as `webpack.css.syntax.printer`; unstable API @experimental */ export namespace printer {
 				export let printer: (
-					path: {
-						get node(): NodeSyntaxParser;
-						get parent(): null | NodeSyntaxParser;
-						get index(): number;
-						/**
-						 * Stop the walk descending into the current node (enter only).
-						 */
-						skipChildren(): void;
-						inValue(): boolean;
-						type(n?: NodeSyntaxParser): number;
-						start(n?: NodeSyntaxParser): number;
-						end(n?: NodeSyntaxParser): number;
-						range(n?: NodeSyntaxParser): [number, number];
-						loc(n?: NodeSyntaxParser): {
-							start: { line: number; column: number };
-							end: { line: number; column: number };
-						};
-						source(n?: NodeSyntaxParser): string;
-						value(n?: NodeSyntaxParser): string;
-						unescaped(n?: NodeSyntaxParser): string;
-						typeFlag(n?: NodeSyntaxParser): string;
-						contentStart(n?: NodeSyntaxParser): number;
-						contentEnd(n?: NodeSyntaxParser): number;
-						name(n?: NodeSyntaxParser): string;
-						nameStart(n?: NodeSyntaxParser): number;
-						nameEnd(n?: NodeSyntaxParser): number;
-						unescapedName(n?: NodeSyntaxParser): string;
-						atKeyword(n?: NodeSyntaxParser): string;
-						children(n?: NodeSyntaxParser): ComponentValue[];
-						prelude(n?: NodeSyntaxParser): ComponentValue[];
-						childCount(n?: NodeSyntaxParser): number;
-						childAt(n: NodeSyntaxParser, i: number): ComponentValue;
-						/**
-						 * A block big enough to stream hands its children to the visitors as each one
-						 * finishes rather than collecting them, so both lists read as an empty block
-						 * on it — `null`, which means no block at all, is still only for the `@…;`
-						 * forms. Read a block's children from the walk, not from here.
-						 */
-						declarations(
-							n?: NodeSyntaxParser
-						): null | DeclarationSyntaxParser[];
-						/**
-						 * Reads as an empty block on a streamed rule; see {@link declarations }.
-						 */
-						childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-						blockStart(n?: NodeSyntaxParser): number;
-						blockEnd(n?: NodeSyntaxParser): number;
-						important(n?: NodeSyntaxParser): boolean;
-						blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
-						setEnd(n: NodeSyntaxParser, v: number): void;
-						setBlockEnd(n: NodeSyntaxParser, v: number): void;
-					},
-					writer: PrintContext<
-						{
-							get node(): NodeSyntaxParser;
-							get parent(): null | NodeSyntaxParser;
-							get index(): number;
-							/**
-							 * Stop the walk descending into the current node (enter only).
-							 */
-							skipChildren(): void;
-							inValue(): boolean;
-							type(n?: NodeSyntaxParser): number;
-							start(n?: NodeSyntaxParser): number;
-							end(n?: NodeSyntaxParser): number;
-							range(n?: NodeSyntaxParser): [number, number];
-							loc(n?: NodeSyntaxParser): {
-								start: { line: number; column: number };
-								end: { line: number; column: number };
-							};
-							source(n?: NodeSyntaxParser): string;
-							value(n?: NodeSyntaxParser): string;
-							unescaped(n?: NodeSyntaxParser): string;
-							typeFlag(n?: NodeSyntaxParser): string;
-							contentStart(n?: NodeSyntaxParser): number;
-							contentEnd(n?: NodeSyntaxParser): number;
-							name(n?: NodeSyntaxParser): string;
-							nameStart(n?: NodeSyntaxParser): number;
-							nameEnd(n?: NodeSyntaxParser): number;
-							unescapedName(n?: NodeSyntaxParser): string;
-							atKeyword(n?: NodeSyntaxParser): string;
-							children(n?: NodeSyntaxParser): ComponentValue[];
-							prelude(n?: NodeSyntaxParser): ComponentValue[];
-							childCount(n?: NodeSyntaxParser): number;
-							childAt(n: NodeSyntaxParser, i: number): ComponentValue;
-							/**
-							 * A block big enough to stream hands its children to the visitors as each one
-							 * finishes rather than collecting them, so both lists read as an empty block
-							 * on it — `null`, which means no block at all, is still only for the `@…;`
-							 * forms. Read a block's children from the walk, not from here.
-							 */
-							declarations(
-								n?: NodeSyntaxParser
-							): null | DeclarationSyntaxParser[];
-							/**
-							 * Reads as an empty block on a streamed rule; see {@link declarations }.
-							 */
-							childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-							blockStart(n?: NodeSyntaxParser): number;
-							blockEnd(n?: NodeSyntaxParser): number;
-							important(n?: NodeSyntaxParser): boolean;
-							blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
-							setEnd(n: NodeSyntaxParser, v: number): void;
-							setBlockEnd(n: NodeSyntaxParser, v: number): void;
-						},
-						NodeSyntaxParser,
-						CssPrintOptions
-					>
+					path: CssSyntaxPath,
+					writer: PrintContext<CssSyntaxPath, number, CssPrintOptions>
 				) => string;
 			}
 			export { CssSourceProcessor as SourceProcessor };
@@ -34219,7 +40161,7 @@ declare namespace exports {
 					rewriteCustomProperties?: boolean;
 					unusedSymbols?: string[];
 					pseudoClasses?: { [index: string]: string };
-				};
+				} & CssTransformOptions;
 				minifyConditionalComments?: boolean;
 				extractComments?:
 					| string
@@ -34238,15 +40180,16 @@ declare namespace exports {
 					| string
 					| EmbeddedSourceResult
 					| Promise<undefined | string | EmbeddedSourceResult>;
-			},
+				svg?: boolean | OptimizationMinimizeXml;
+			} & HtmlTransformOptions,
 			extractComments?:
 				| string
 				| boolean
 				| RegExp
-				| ((...args: any[]) => boolean)
+				| ((...args: never[]) => boolean)
 				| {
 						condition?:
-							string | boolean | RegExp | ((...args: any[]) => boolean);
+							string | boolean | RegExp | ((...args: never[]) => boolean);
 				  }
 		): Promise<{
 			code: string;
@@ -34263,89 +40206,43 @@ declare namespace exports {
 			export let getBannerPosition: () => "end";
 		}
 		export namespace syntax {
-			export namespace parser {
-				export let A: {
-					get node(): number;
-					get parent(): null | number;
-					/**
-					 * Stop the walk descending into the current node (enter only).
-					 */
-					skipChildren(): void;
-					type(n?: number): number;
-					start(n?: number): number;
-					end(n?: number): number;
-					/**
-					 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-					 * window), before `parseHtml` releases `_htmlSource`.
-					 */
-					source(n?: number): string;
-					sourceSpanAt(from: number, to: number): string;
-					tagName(n?: number): string;
-					namespace(n?: number): number;
-					selfClosing(n?: number): boolean;
-					attributes(n?: number): HtmlAttribute[];
-					attributeCount(n?: number): number;
-					/**
-					 * The i-th attribute of an element, as an id for the `attribute*` reads.
-					 */
-					attributeAt(i: number, n?: number): number;
-					/**
-					 * Linear lookup by (lowercased) name.
-					 */
-					findAttribute(name: string, n?: number): number;
-					attributeName(a: number): string;
-					attributeValue(a: number): string;
-					attributeNameStart(a: number): number;
-					attributeNameEnd(a: number): number;
-					attributeValueStart(a: number): number;
-					attributeValueEnd(a: number): number;
-					tagEnd(n?: number): number;
-					nameEnd(n?: number): number;
-					/**
-					 * Whether the source wrote this element's end tag rather than the parser
-					 * popping it for an implied close. Read back off the range instead of marked
-					 * during the parse: an element's end spans the token that closed it, so its
-					 * own end tag is the last thing in it — and only the few elements around a
-					 * region printed from source ever ask.
-					 */
-					sourceClosed(n?: number): boolean;
-					openTag(n?: number): string;
-					/**
-					 * An element's end tag, generated as `</name>` from the opening tag's own name
-					 * (exact source casing, correct for foreign camelCase elements). Generated, not
-					 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-					 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
-					 * parser inserted the element, as {@link openTag } does — it has no name in the
-					 * source to echo, and slicing one would spell `</>`.
-					 */
-					closeTag(n?: number): string;
-					contentEnd(n?: number): number;
-					templateContent(n?: number): number;
-					data(n?: number): string;
-					piTarget(n?: number): string;
-					doctypeName(n?: number): string;
-					doctypePublicId(_n?: number): null | string;
-					doctypeSystemId(_n?: number): null | string;
-					firstChild(n?: number): number;
-					nextSibling(n?: number): number;
-					parentOf(n?: number): number;
-					children(n?: number): number[];
-				};
+			/** exposed as `webpack.html.syntax.parser`; unstable API @experimental */ export namespace parser {
+				export let A: HtmlSyntaxPath;
 				export let BLOCK_CONTENTS: "block-contents";
-				export let CC_APOSTROPHE: 39;
-				export let CC_LEFT_SQUARE_BRACKET: 91;
-				export let CC_LF: 10;
-				export let CC_NUMBER_SIGN: 35;
-				export let CC_QUOTATION_MARK: 34;
-				export let CC_RIGHT_SQUARE_BRACKET: 93;
-				export let CC_SOLIDUS: 47;
 				export let EMBEDDED_LANGUAGES: string[];
+				export let EMBEDDED_STYLESHEET: "embedded-stylesheet";
 				export let EVENT_HANDLER: "event-handler";
+				export let FOREIGN_ELEMENT: "foreign-element";
 				export let FLAG_FOSTER_REGION: 128;
 				export let JSON_TYPE: "json";
-				export let NS_HTML: 0;
-				export let NS_MATHML: 1;
-				export let NS_SVG: 2;
+				export namespace Field {
+					export let attributes: 1;
+					export let content: 2;
+				}
+				export let declaredEncoding: (
+					input: string
+				) => undefined | "utf8" | "other";
+				export let declaresUtf8: (input: string) => boolean;
+				export namespace Flag {
+					export let mathml: 1;
+					export let svg: 2;
+					export let selfClosing: 4;
+				}
+				export namespace Part {
+					export let name: 1;
+					export let value: 2;
+					export let content: 3;
+					export let startTag: 4;
+					export let endTag: 5;
+					export let publicId: 6;
+					export let systemId: 7;
+				}
+				export namespace Namespace {
+					export let HTML: 0;
+					export let MathML: 1;
+					export let SVG: 2;
+					export let XML: 3;
+				}
 				export namespace NodeType {
 					export let Document: 1;
 					export let DocumentFragment: 2;
@@ -34354,11 +40251,16 @@ declare namespace exports {
 					export let Comment: 5;
 					export let Doctype: 6;
 					export let ProcessingInstruction: 7;
+					export let Attribute: 8;
 				}
-				export let QUOTE_DOUBLE: 1;
-				export let QUOTE_NONE: 0;
-				export let QUOTE_SINGLE: 2;
+				export namespace Quote {
+					export let None: 0;
+					export let Double: 1;
+					export let Single: 2;
+				}
 				export let SVG_TYPE: "svg";
+				export let asciiLowercase: (value: string) => string;
+				export let stripAsciiWhitespace: (value: string) => string;
 				export let baseTag: (
 					base:
 						| string
@@ -34375,160 +40277,28 @@ declare namespace exports {
 				) => string;
 				export let buildHeadTags: (opts: OutputHtmlOptions) => string;
 				export let collapseWhitespaceRuns: (s: string) => string;
-				export let decodeEntities: _functionSyntaxParser;
+				export let decodeEntities: _functionSyntaxParserFunction_2;
+				export let decodeXmlAttribute: (value: string) => string;
+				export let decodeXmlEntities: (value: string) => string;
 				export let escapeAttribute: (
 					s: string,
 					delimiter?: number,
 					minimal?: boolean
 				) => string;
 				export let escapeText: (s: string) => string;
+				export let escapeXmlAttribute: (value: string, quote: string) => string;
+				export let escapeXmlText: (data: string) => string;
 				export let grammar: (
 					input: string,
-					visitors: CompiledVisitorBucket<{
-						get node(): number;
-						get parent(): null | number;
-						/**
-						 * Stop the walk descending into the current node (enter only).
-						 */
-						skipChildren(): void;
-						type(n?: number): number;
-						start(n?: number): number;
-						end(n?: number): number;
-						/**
-						 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-						 * window), before `parseHtml` releases `_htmlSource`.
-						 */
-						source(n?: number): string;
-						sourceSpanAt(from: number, to: number): string;
-						tagName(n?: number): string;
-						namespace(n?: number): number;
-						selfClosing(n?: number): boolean;
-						attributes(n?: number): HtmlAttribute[];
-						attributeCount(n?: number): number;
-						/**
-						 * The i-th attribute of an element, as an id for the `attribute*` reads.
-						 */
-						attributeAt(i: number, n?: number): number;
-						/**
-						 * Linear lookup by (lowercased) name.
-						 */
-						findAttribute(name: string, n?: number): number;
-						attributeName(a: number): string;
-						attributeValue(a: number): string;
-						attributeNameStart(a: number): number;
-						attributeNameEnd(a: number): number;
-						attributeValueStart(a: number): number;
-						attributeValueEnd(a: number): number;
-						tagEnd(n?: number): number;
-						nameEnd(n?: number): number;
-						/**
-						 * Whether the source wrote this element's end tag rather than the parser
-						 * popping it for an implied close. Read back off the range instead of marked
-						 * during the parse: an element's end spans the token that closed it, so its
-						 * own end tag is the last thing in it — and only the few elements around a
-						 * region printed from source ever ask.
-						 */
-						sourceClosed(n?: number): boolean;
-						openTag(n?: number): string;
-						/**
-						 * An element's end tag, generated as `</name>` from the opening tag's own name
-						 * (exact source casing, correct for foreign camelCase elements). Generated, not
-						 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-						 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
-						 * parser inserted the element, as {@link openTag } does — it has no name in the
-						 * source to echo, and slicing one would spell `</>`.
-						 */
-						closeTag(n?: number): string;
-						contentEnd(n?: number): number;
-						templateContent(n?: number): number;
-						data(n?: number): string;
-						piTarget(n?: number): string;
-						doctypeName(n?: number): string;
-						doctypePublicId(_n?: number): null | string;
-						doctypeSystemId(_n?: number): null | string;
-						firstChild(n?: number): number;
-						nextSibling(n?: number): number;
-						parentOf(n?: number): number;
-						children(n?: number): number[];
-					}>[],
+					visitors: CompiledVisitorBucket<HtmlSyntaxPath>[],
 					writer:
-						| undefined
-						| PrintContext<
-								{
-									get node(): number;
-									get parent(): null | number;
-									/**
-									 * Stop the walk descending into the current node (enter only).
-									 */
-									skipChildren(): void;
-									type(n?: number): number;
-									start(n?: number): number;
-									end(n?: number): number;
-									/**
-									 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-									 * window), before `parseHtml` releases `_htmlSource`.
-									 */
-									source(n?: number): string;
-									sourceSpanAt(from: number, to: number): string;
-									tagName(n?: number): string;
-									namespace(n?: number): number;
-									selfClosing(n?: number): boolean;
-									attributes(n?: number): HtmlAttribute[];
-									attributeCount(n?: number): number;
-									/**
-									 * The i-th attribute of an element, as an id for the `attribute*` reads.
-									 */
-									attributeAt(i: number, n?: number): number;
-									/**
-									 * Linear lookup by (lowercased) name.
-									 */
-									findAttribute(name: string, n?: number): number;
-									attributeName(a: number): string;
-									attributeValue(a: number): string;
-									attributeNameStart(a: number): number;
-									attributeNameEnd(a: number): number;
-									attributeValueStart(a: number): number;
-									attributeValueEnd(a: number): number;
-									tagEnd(n?: number): number;
-									nameEnd(n?: number): number;
-									/**
-									 * Whether the source wrote this element's end tag rather than the parser
-									 * popping it for an implied close. Read back off the range instead of marked
-									 * during the parse: an element's end spans the token that closed it, so its
-									 * own end tag is the last thing in it — and only the few elements around a
-									 * region printed from source ever ask.
-									 */
-									sourceClosed(n?: number): boolean;
-									openTag(n?: number): string;
-									/**
-									 * An element's end tag, generated as `</name>` from the opening tag's own name
-									 * (exact source casing, correct for foreign camelCase elements). Generated, not
-									 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-									 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
-									 * parser inserted the element, as {@link openTag } does — it has no name in the
-									 * source to echo, and slicing one would spell `</>`.
-									 */
-									closeTag(n?: number): string;
-									contentEnd(n?: number): number;
-									templateContent(n?: number): number;
-									data(n?: number): string;
-									piTarget(n?: number): string;
-									doctypeName(n?: number): string;
-									doctypePublicId(_n?: number): null | string;
-									doctypeSystemId(_n?: number): null | string;
-									firstChild(n?: number): number;
-									nextSibling(n?: number): number;
-									parentOf(n?: number): number;
-									children(n?: number): number[];
-								},
-								number,
-								HtmlPrintOptions
-						  >,
+						undefined | PrintContext<HtmlSyntaxPath, number, HtmlPrintOptions>,
 					options: HtmlProcessOptions
 				) => void;
-				export let isAllWs: (s: string) => boolean;
+				export let isAllAsciiWhitespace: (s: string) => boolean;
 				export let isAsciiAlphanumeric: (cc: number) => boolean;
 				export let isAsciiWhitespace: (cc: number) => boolean;
+				export let isXmlWellFormedText: (raw: string) => boolean;
 				export let metaTag: (name: string, content: string) => string;
 				export let parseCssUrls: (input: string) => [string, number, number][];
 				export let parseHtml: (
@@ -34542,160 +40312,49 @@ declare namespace exports {
 				export let parseSrc: (input: string) => [string, number, number][];
 				export let parseSrcset: (input: string) => [string, number, number][];
 				export let pickTransforms: (
-					options: object
+					options: HtmlTransformOptions
 				) => undefined | HtmlTransformOptions;
-				export let startsWithWs: (s: string) => boolean;
+				export let startsWithAsciiWhitespace: (s: string) => boolean;
 				export let tokenize: (
 					input: string,
 					pos?: number,
 					callbacks?: HtmlTokenCallbacks
 				) => number;
+				export let tokenizeXml: (
+					input: string,
+					pos?: number,
+					callbacks?: HtmlTokenCallbacks
+				) => number;
 			}
-			export namespace printer {
+			/** exposed as `webpack.html.syntax.printer`; unstable API @experimental */ export namespace printer {
 				export let CLASSIC_SCRIPT: "script";
 				export let MODULE_SCRIPT: "module";
 				export let printer: (
-					path: {
-						get node(): number;
-						get parent(): null | number;
-						/**
-						 * Stop the walk descending into the current node (enter only).
-						 */
-						skipChildren(): void;
-						type(n?: number): number;
-						start(n?: number): number;
-						end(n?: number): number;
-						/**
-						 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-						 * window), before `parseHtml` releases `_htmlSource`.
-						 */
-						source(n?: number): string;
-						sourceSpanAt(from: number, to: number): string;
-						tagName(n?: number): string;
-						namespace(n?: number): number;
-						selfClosing(n?: number): boolean;
-						attributes(n?: number): HtmlAttribute[];
-						attributeCount(n?: number): number;
-						/**
-						 * The i-th attribute of an element, as an id for the `attribute*` reads.
-						 */
-						attributeAt(i: number, n?: number): number;
-						/**
-						 * Linear lookup by (lowercased) name.
-						 */
-						findAttribute(name: string, n?: number): number;
-						attributeName(a: number): string;
-						attributeValue(a: number): string;
-						attributeNameStart(a: number): number;
-						attributeNameEnd(a: number): number;
-						attributeValueStart(a: number): number;
-						attributeValueEnd(a: number): number;
-						tagEnd(n?: number): number;
-						nameEnd(n?: number): number;
-						/**
-						 * Whether the source wrote this element's end tag rather than the parser
-						 * popping it for an implied close. Read back off the range instead of marked
-						 * during the parse: an element's end spans the token that closed it, so its
-						 * own end tag is the last thing in it — and only the few elements around a
-						 * region printed from source ever ask.
-						 */
-						sourceClosed(n?: number): boolean;
-						openTag(n?: number): string;
-						/**
-						 * An element's end tag, generated as `</name>` from the opening tag's own name
-						 * (exact source casing, correct for foreign camelCase elements). Generated, not
-						 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-						 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
-						 * parser inserted the element, as {@link openTag } does — it has no name in the
-						 * source to echo, and slicing one would spell `</>`.
-						 */
-						closeTag(n?: number): string;
-						contentEnd(n?: number): number;
-						templateContent(n?: number): number;
-						data(n?: number): string;
-						piTarget(n?: number): string;
-						doctypeName(n?: number): string;
-						doctypePublicId(_n?: number): null | string;
-						doctypeSystemId(_n?: number): null | string;
-						firstChild(n?: number): number;
-						nextSibling(n?: number): number;
-						parentOf(n?: number): number;
-						children(n?: number): number[];
-					},
-					writer: PrintContext<
-						{
-							get node(): number;
-							get parent(): null | number;
-							/**
-							 * Stop the walk descending into the current node (enter only).
-							 */
-							skipChildren(): void;
-							type(n?: number): number;
-							start(n?: number): number;
-							end(n?: number): number;
-							/**
-							 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-							 * window), before `parseHtml` releases `_htmlSource`.
-							 */
-							source(n?: number): string;
-							sourceSpanAt(from: number, to: number): string;
-							tagName(n?: number): string;
-							namespace(n?: number): number;
-							selfClosing(n?: number): boolean;
-							attributes(n?: number): HtmlAttribute[];
-							attributeCount(n?: number): number;
-							/**
-							 * The i-th attribute of an element, as an id for the `attribute*` reads.
-							 */
-							attributeAt(i: number, n?: number): number;
-							/**
-							 * Linear lookup by (lowercased) name.
-							 */
-							findAttribute(name: string, n?: number): number;
-							attributeName(a: number): string;
-							attributeValue(a: number): string;
-							attributeNameStart(a: number): number;
-							attributeNameEnd(a: number): number;
-							attributeValueStart(a: number): number;
-							attributeValueEnd(a: number): number;
-							tagEnd(n?: number): number;
-							nameEnd(n?: number): number;
-							/**
-							 * Whether the source wrote this element's end tag rather than the parser
-							 * popping it for an implied close. Read back off the range instead of marked
-							 * during the parse: an element's end spans the token that closed it, so its
-							 * own end tag is the last thing in it — and only the few elements around a
-							 * region printed from source ever ask.
-							 */
-							sourceClosed(n?: number): boolean;
-							openTag(n?: number): string;
-							/**
-							 * An element's end tag, generated as `</name>` from the opening tag's own name
-							 * (exact source casing, correct for foreign camelCase elements). Generated, not
-							 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-							 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
-							 * parser inserted the element, as {@link openTag } does — it has no name in the
-							 * source to echo, and slicing one would spell `</>`.
-							 */
-							closeTag(n?: number): string;
-							contentEnd(n?: number): number;
-							templateContent(n?: number): number;
-							data(n?: number): string;
-							piTarget(n?: number): string;
-							doctypeName(n?: number): string;
-							doctypePublicId(_n?: number): null | string;
-							doctypeSystemId(_n?: number): null | string;
-							firstChild(n?: number): number;
-							nextSibling(n?: number): number;
-							parentOf(n?: number): number;
-							children(n?: number): number[];
-						},
-						number,
-						HtmlPrintOptions
-					>
+					path: HtmlSyntaxPath,
+					writer: PrintContext<HtmlSyntaxPath, number, HtmlPrintOptions>
 				) => string;
 			}
 			export { HtmlSourceProcessor as SourceProcessor };
+		}
+		export function xmlMinify(
+			input: { [index: string]: string | Buffer },
+			sourceMap?: RawSourceMap,
+			minimizerOptions?: OptimizationMinimizeXml & {
+				environment?: CssEnvironment;
+				css?: {
+					convertLengthUnits?: boolean;
+					convertApproximateColors?: boolean;
+					dropOverriddenDeclarations?: boolean;
+					rewriteCustomProperties?: boolean;
+					unusedSymbols?: string[];
+					pseudoClasses?: { [index: string]: string };
+				} & CssTransformOptions;
+			}
+		): Promise<{ code: string; warnings?: string[]; errors?: Error[] }>;
+		export namespace xmlMinify {
+			export let supportsWorkerThreads: () => boolean;
+			export let getTypes: () => string[];
+			export let filter: (name: string) => boolean;
 		}
 		export { HtmlModulesPlugin };
 	}
@@ -34715,6 +40374,7 @@ declare namespace exports {
 			scope: string,
 			options: ContainerOptionsFormat<T>
 		) => Record<string, string | string[] | T>;
+		export const extractUrlAndGlobal: (urlAndGlobal: string) => string[];
 		export {
 			ContainerPlugin,
 			ContainerReferencePlugin,
@@ -34726,6 +40386,41 @@ declare namespace exports {
 			scope: string,
 			options: ContainerOptionsFormat<T>
 		) => Record<string, string | string[] | T>;
+		export namespace semver {
+			export let parseVersion: (
+				str: string
+			) => (undefined | string | number | SemVerRangeItem[])[];
+			export let versionLt: (a: string, b: string) => boolean;
+			export let parseRange: (
+				str: string
+			) => (undefined | string | number | SemVerRangeItem[])[];
+			export let rangeToString: (
+				range: (undefined | string | number | SemVerRangeItem[])[]
+			) => string;
+			export let satisfy: (
+				range: (undefined | string | number | SemVerRangeItem[])[],
+				version: string
+			) => boolean;
+			export let stringifyHoley: (
+				json?:
+					| string
+					| number
+					| false
+					| (undefined | string | number | SemVerRangeItem[])[]
+			) => string;
+			export let parseVersionRuntimeCode: (
+				runtimeTemplate: RuntimeTemplate
+			) => string;
+			export let versionLtRuntimeCode: (
+				runtimeTemplate: RuntimeTemplate
+			) => string;
+			export let rangeToStringRuntimeCode: (
+				runtimeTemplate: RuntimeTemplate
+			) => string;
+			export let satisfyRuntimeCode: (
+				runtimeTemplate: RuntimeTemplate
+			) => string;
+		}
 		export { ConsumeSharedPlugin, ProvideSharedPlugin, SharePlugin };
 	}
 	export namespace debug {
@@ -34852,11 +40547,11 @@ declare namespace exports {
 			export { RuntimeSpecMap, RuntimeSpecSet };
 		}
 		export namespace serialization {
-			export const register: (
-				Constructor: Constructor,
+			export const register: <C extends Constructor>(
+				Constructor: C,
 				request: string,
 				name: null | string,
-				serializer: ObjectSerializer
+				serializer: ObjectSerializer<InstanceType<C>>
 			) => void;
 			export const registerLegacyRequest: (
 				Constructor: Constructor,
@@ -34869,14 +40564,20 @@ declare namespace exports {
 			) => void;
 			export const registerNotSerializable: (Constructor: Constructor) => void;
 			export const NOT_SERIALIZABLE: object;
-			export const buffersSerializer: Serializer<any, any, any>;
+			export const buffersSerializer: Serializer<
+				ComplexSerializableType,
+				BufferSerializableType[],
+				BuffersSerializerContext
+			>;
 			export let createFileSerializer: <D, S, C>(
 				fs: IntermediateFileSystem,
 				hashFunction: HashFunction
 			) => Serializer<D, S, C>;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
-		export const makeSerializable: <T extends Constructor>(
+		export const makeSerializable: <
+			T extends { new (...params: never[]): object }
+		>(
 			Constructor: T,
 			request: string | (string | [string, null | string])[],
 			name?: null | string
@@ -34885,6 +40586,21 @@ declare namespace exports {
 			first?: null | T,
 			second?: null | O
 		) => T | O | (T & O);
+		export namespace SetHelpers {
+			export let combine: <T>(a: Set<T>, b: Set<T>) => Set<T>;
+			export let find: <T>(
+				set: Set<T>,
+				fn: (set: T) => boolean
+			) => undefined | T;
+			export let first: <T>(set: Set<T> | ReadonlySet<T>) => undefined | T;
+			export let intersect: <T>(sets: Set<T>[]) => Set<T>;
+			export let isSubset: <T>(bigSet: Set<T>, smallSet: Set<T>) => boolean;
+		}
+		export const getUndoPath: (
+			filename: string,
+			outputPath: string,
+			enforceRelative: boolean
+		) => string;
 		export function compileBooleanMatcher(
 			map: Record<string | number, boolean>
 		): boolean | ((value: string) => string);
@@ -34897,6 +40613,9 @@ declare namespace exports {
 		}
 		export namespace dataURL {
 			export let EMBEDDED_LANGUAGES: string[];
+			export let EMBEDDED_STYLESHEET: "embedded-stylesheet";
+			export let JSON_TYPE: "json";
+			export let SVG_TYPE: "svg";
 			export let URIRegEx: RegExp;
 			export let askEmbeddedRenderer: (
 				render: (
@@ -34939,10 +40658,10 @@ declare namespace exports {
 					| string
 					| boolean
 					| RegExp
-					| ((...args: any[]) => boolean)
+					| ((...args: never[]) => boolean)
 					| {
 							condition?:
-								string | boolean | RegExp | ((...args: any[]) => boolean);
+								string | boolean | RegExp | ((...args: never[]) => boolean);
 					  }
 					| ((comment: {
 							value: string;
@@ -34971,7 +40690,7 @@ declare namespace exports {
 				some: (comment: string) => boolean
 			) => (comment: string) => boolean;
 		}
-		export { LazySet, RequestShortener };
+		export { LazySet, SortableSet, RequestShortener };
 	}
 	export namespace sources {
 		export namespace util {
@@ -34983,6 +40702,9 @@ declare namespace exports {
 					createScopesWriter,
 					encodeScopes
 				};
+			}
+			export namespace sourceMap {
+				export { originalPositionFor };
 			}
 			export namespace stringBufferUtils {
 				export {
@@ -35035,6 +40757,16 @@ declare namespace exports {
 				 * Loader options.
 				 */
 				options?: string | { [index: string]: any };
+				/**
+				 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+				 * @since 5.113.0
+				 */
+				sourceTest?:
+					| string
+					| RegExp
+					| ((value: string) => boolean)
+					| RuleSetLogicalConditions
+					| RuleSetCondition[];
 		  }
 		| (
 				| undefined
@@ -35056,6 +40788,16 @@ declare namespace exports {
 						 * Loader options.
 						 */
 						options?: string | { [index: string]: any };
+						/**
+						 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+						 * @since 5.113.0
+						 */
+						sourceTest?:
+							| string
+							| RegExp
+							| ((value: string) => boolean)
+							| RuleSetLogicalConditions
+							| RuleSetCondition[];
 				  }
 		  )[];
 	export type WebpackPluginFunction = (
@@ -35103,25 +40845,29 @@ declare namespace exports {
 	export type ExternalItemFunctionPromise = (
 		data: ExternalItemFunctionData
 	) => Promise<ExternalItemValue>;
+	export type MultiCompilerPluginFunction = (
+		this: MultiCompiler,
+		compiler: MultiCompiler
+	) => void;
 	export type ConfigurationFactory = (
 		env: Record<string, any>,
 		argv: Record<string, any>
 	) => MaybePromise<Configuration | MultiConfiguration>;
 	export type ObjectSerializerContext =
-		typeof ObjectSerializerContextObjectMiddlewareObject_2;
+		typeof ObjectSerializerContextObjectMiddlewareObject_3;
 	export type ObjectDeserializerContext =
-		typeof ObjectDeserializerContextObjectMiddlewareObject_1;
+		typeof ObjectDeserializerContextObjectMiddlewareObject_2;
 	export {
-		/** Resolves every module of the last build eagerly. @deprecated use `prefetch.AutomaticPrefetchPlugin` — TODO in the next major release: remove */ AutomaticPrefetchPlugin,
+		/** Resolves every module of the last build eagerly. @deprecated use `prefetch.AutomaticPrefetchPlugin` - TODO in the next major release: remove */ AutomaticPrefetchPlugin,
 		AsyncDependenciesBlock,
 		BannerPlugin,
-		/** The cache a compilation stores and restores through. @deprecated use `cache.Cache` — TODO in the next major release: remove */ Cache,
+		/** The cache a compilation stores and restores through. @deprecated use `cache.Cache` - TODO in the next major release: remove */ Cache,
 		Chunk,
 		ChunkGraph,
 		CleanPlugin,
 		Compilation,
 		Compiler,
-		/** The protocol scope hoisting renders through. @deprecated use `optimize.ConcatenationScope` — TODO in the next major release: remove */ ConcatenationScope,
+		/** The protocol scope hoisting renders through. @deprecated use `optimize.ConcatenationScope` - TODO in the next major release: remove */ ConcatenationScope,
 		ContextExclusionPlugin,
 		ContextReplacementPlugin,
 		CopyPlugin,
@@ -35149,16 +40895,17 @@ declare namespace exports {
 		ModuleFactory,
 		ModuleGraph,
 		ModuleGraphConnection,
+		ModuleNotFoundError,
 		NoEmitOnErrorsPlugin,
 		NormalModule,
 		NormalModuleReplacementPlugin,
 		MultiCompiler,
 		Parser,
-		/** Pins the target platform a `target: false` build cannot infer. @deprecated use `config.PlatformPlugin` — TODO in the next major release: remove */ PlatformPlugin,
-		/** Resolves one request eagerly at build time. @deprecated use `prefetch.PrefetchPlugin` — TODO in the next major release: remove */ PrefetchPlugin,
+		/** Pins the target platform a `target: false` build cannot infer. @deprecated use `config.PlatformPlugin` - TODO in the next major release: remove */ PlatformPlugin,
+		/** Resolves one request eagerly at build time. @deprecated use `prefetch.PrefetchPlugin` - TODO in the next major release: remove */ PrefetchPlugin,
 		ProgressPlugin,
 		ProvidePlugin,
-		/** The base class every emitted runtime module extends. @deprecated use `runtime.RuntimeModule` — TODO in the next major release: remove */ RuntimeModule,
+		/** The base class every emitted runtime module extends. @deprecated use `runtime.RuntimeModule` - TODO in the next major release: remove */ RuntimeModule,
 		EntryPlugin as SingleEntryPlugin,
 		SSRManifestPlugin,
 		SourceMapDevToolPlugin,
@@ -35167,7 +40914,7 @@ declare namespace exports {
 		Template,
 		WatchIgnorePlugin,
 		WebpackError,
-		/** Reads a resolved configuration into the plugins it implies. @deprecated use `config.WebpackOptionsApply` — TODO in the next major release: remove */ WebpackOptionsApply,
+		/** Reads a resolved configuration into the plugins it implies. @deprecated use `config.WebpackOptionsApply` - TODO in the next major release: remove */ WebpackOptionsApply,
 		WebpackOptionsDefaulter,
 		ValidationError as WebpackOptionsValidationError,
 		ValidationError,
@@ -35226,11 +40973,13 @@ declare namespace exports {
 		Entrypoint,
 		ExternalItemFunctionData,
 		MultiCompilerOptions,
+		MultiCompilerPluginInstance,
 		MultiConfiguration,
 		MultiStats,
 		StatsOptions as MultiStatsOptions,
 		ResolveData,
 		ParserState,
+		JavascriptParserTag,
 		ResolvePluginInstance,
 		Resolver,
 		RenderManifestEntry,
@@ -35243,6 +40992,7 @@ declare namespace exports {
 		ColorsOptions,
 		DefineConfigInput,
 		StatsAsset,
+		StatsAssetGroup,
 		StatsChunk,
 		StatsChunkGroup,
 		StatsChunkOrigin,
@@ -35251,8 +41001,10 @@ declare namespace exports {
 		StatsLogging,
 		StatsLoggingEntry,
 		StatsModule,
+		StatsModuleGroup,
 		StatsModuleIssuer,
 		StatsModuleReason,
+		StatsModuleReasonGroup,
 		StatsModuleTraceDependency,
 		StatsModuleTraceItem,
 		StatsProfile,
@@ -35267,6 +41019,5 @@ declare namespace exports {
 		LoaderContextLibIndex as LoaderContext
 	};
 }
-declare const topLevelSymbolTag: unique symbol;
 
 export = exports;

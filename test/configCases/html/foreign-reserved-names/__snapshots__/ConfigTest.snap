@@ -3,7 +3,7 @@
 exports[`ConfigTestCases html foreign-reserved-names foreign-reserved-names should compile 1`] = `
 "<!doctype html><head><title>foreign-reserved-names</title></head><body>
 <svg width=10 height=10>
-	<font-face-src><font-face-uri xlink:href=data:, /><font-face-format string=opentype /></font-face-src>
+	<font-face-src><font-face-uri xlink:href=https://example.test/f.svg /><font-face-format string=opentype /></font-face-src>
 	<font-face-name name=Sample />
 	<missing-glyph d=\\"M0 0\\"/>
 	<desc>a description</desc>

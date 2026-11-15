@@ -1,0 +1,12 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 120",
+				"firefox 120",
+				"safari 17"
+			]
+		}
+	}
+]

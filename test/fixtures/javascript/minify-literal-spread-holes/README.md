@@ -1,0 +1,1 @@
+The hole assertions of `configCases/optimization/minify-javascript/minify-literal-spread`, printed without a behavior run: JavaScriptCore reads `[1, , ...[]].length` as 1 where the specification and V8 read 2, so the source runs otherwise there than the folded print.

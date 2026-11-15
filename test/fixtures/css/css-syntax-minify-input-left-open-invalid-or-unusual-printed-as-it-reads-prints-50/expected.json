@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "respelling escape",
+		"contains": "a { b : c } a { ! x } a { ! x } a { b : c }\n      -> \\61 { \\62 : \\63 } \\61 { ! \\78 } \\61 { ! \\78 } \\61 { \\62 : \\63 }",
+		"why": "a declaration, selector or block that is invalid or left open, which the printer writes back as authored, escape included"
+	}
+]

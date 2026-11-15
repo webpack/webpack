@@ -1,0 +1,1 @@
+switch (x) { case 0: let v0; let v1; let v2; let v3; let v4; let v5; let v6; let v7; let v8; let v9; let v10; let v11; let v12; let v13; let v14; let v15; let v16; let v17; let v18; let v19; let v20; let v21; let v22; let v23; let v24; let v25; let v26; let v27; let v28; let v29; let v30; let v31; let v32; let v33; let v34; let v35; let v36; let v37; let v38; let v39; case 1: }

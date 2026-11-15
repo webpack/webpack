@@ -1,0 +1,1 @@
+function f(){g();if(0){var c=5,d=c}if(0){var e}return 1}

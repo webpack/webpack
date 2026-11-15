@@ -1,0 +1,6 @@
+[
+	{
+		"print": "htmlMinify",
+		"minifyConditionalComments": true
+	}
+]

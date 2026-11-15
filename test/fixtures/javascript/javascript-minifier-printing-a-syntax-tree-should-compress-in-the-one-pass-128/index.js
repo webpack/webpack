@@ -1,0 +1,1 @@
+function f(g) { var h = function () { return g.a }; function k() { return g.b } return [h(), k(), (() => ({ a: 1 }))(), (function () { return g.c + 1 })() * 2] }

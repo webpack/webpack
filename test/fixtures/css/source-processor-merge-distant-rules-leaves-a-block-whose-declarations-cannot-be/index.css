@@ -1,0 +1,1 @@
+@layer w{@media print{@supports (color:red){.b{margin:0}}}.c{color:blue}@media print{@supports (color:red){.d{margin:2px}}}}

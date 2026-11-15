@@ -1,0 +1,9 @@
+[
+	{
+		"print": "htmlMinify",
+		"minimizer": {
+			"buffer": true,
+			"asset": "page.html"
+		}
+	}
+]

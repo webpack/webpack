@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <defs>
+        <filter id="a" x="17" y="13" width="12" height="10" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation=".01"/>
+        </filter>
+    </defs>
+    <g filter="url(#a)">
+        <rect x="19" y="12" width="14" height="6" rx="3" transform="rotate(31 19 12.79)"/>
+        <rect x="19" y="12" width="14" height="6" rx="3" transform="rotate(31 19 12.79)"/>
+    </g>
+</svg>

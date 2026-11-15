@@ -1,0 +1,14 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"recurseBlocks": false
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"recurseBlocks": true
+		}
+	}
+]

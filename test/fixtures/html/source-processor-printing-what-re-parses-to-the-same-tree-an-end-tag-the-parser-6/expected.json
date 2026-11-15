@@ -1,0 +1,17 @@
+[
+	{
+		"relation": "respelling quote-double",
+		"contains": "<b id=1>   (only in the page)",
+		"why": "the printer cannot rebuild this tree from its own output, so it writes the source back as authored, spelling included"
+	},
+	{
+		"relation": "respelling quote-single",
+		"contains": "<b id=1>   (only in the page)",
+		"why": "the printer cannot rebuild this tree from its own output, so it writes the source back as authored, spelling included"
+	},
+	{
+		"relation": "respelling references",
+		"contains": "<b id=1>   (only in the page)",
+		"why": "the printer cannot rebuild this tree from its own output, so it writes the source back as authored, spelling included"
+	}
+]

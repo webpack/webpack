@@ -1,0 +1,1 @@
+export function g(){ (function(){ return c ? 1 : 2 })() }

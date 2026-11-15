@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:custom="https://example.com/custom">
+  <svg:a xlink:href="javascript:alert(1)">
+    <text y="10">Prefixed anchor</text>
+  </svg:a>
+  <alias:a xmlns:alias="http://www.w3.org/2000/svg" href="javascript:alert(1)">
+    <text y="20">Locally declared prefix</text>
+  </alias:a>
+  <a href="java&#9;script:alert(1)">
+    <text y="30">Tab</text>
+  </a>
+  <a href="java&#10;script:alert(1)">
+    <text y="40">Line feed</text>
+  </a>
+  <a href="java&#13;script:alert(1)">
+    <text y="50">Carriage return</text>
+  </a>
+  <custom:a href="javascript:alert(1)">
+    <text y="60">Custom anchor</text>
+  </custom:a>
+</svg>

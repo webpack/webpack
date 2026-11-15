@@ -1,0 +1,14 @@
+[
+	{
+		"mode": "minify",
+		"visit": {
+			"types": [
+				"Comment"
+			],
+			"fields": [
+				"source"
+			],
+			"exit": false
+		}
+	}
+]

@@ -185,8 +185,7 @@ function greet(user      )         {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /************************************************************************/
@@ -216,10 +215,10 @@ console.log(__webpack_require__(/*! ./index */ 1));
 ## Unoptimized
 
 ```
-asset output.js 4.03 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 375 bytes (javascript) 614 bytes (runtime) [entry] [rendered]
+asset output.js 3.99 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 375 bytes (javascript) 587 bytes (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 614 bytes 3 modules
+  runtime modules 587 bytes 3 modules
   dependent modules 342 bytes [dependent] 2 modules
   ./example.js 33 bytes [built] [code generated]
     [used exports unknown]

@@ -1,0 +1,1 @@
+function f(n){switch(n){case 0:const x=1;case 1:const a=x;return()=>a}}try{f(1);console.log("no")}catch(e){console.log(e.name)}

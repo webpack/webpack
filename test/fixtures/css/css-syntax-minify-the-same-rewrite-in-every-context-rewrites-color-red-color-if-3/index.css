@@ -1,0 +1,1 @@
+@supports (display:grid){.a{color:red;color:if(style(--x:1):red;else:blue)}}

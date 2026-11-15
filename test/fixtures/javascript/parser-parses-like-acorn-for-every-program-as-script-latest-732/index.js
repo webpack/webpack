@@ -1,0 +1,1 @@
+while (x) a: b;

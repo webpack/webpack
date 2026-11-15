@@ -1,0 +1,1 @@
+import.meta; import('x'); import('x', { with: { type: 'json' } });

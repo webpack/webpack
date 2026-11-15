@@ -1,0 +1,1 @@
+function f(x){if(x){/*#__NO_SIDE_EFFECTS__*/var s=()=>{}}s()}

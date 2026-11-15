@@ -1,0 +1,1 @@
+function f(x,g){return[({ab:1})["a"+"b"]]}

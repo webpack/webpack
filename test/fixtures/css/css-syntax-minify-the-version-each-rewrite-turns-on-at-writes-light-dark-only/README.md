@@ -1,0 +1,3 @@
+The pair needs a rule of no specificity to default it, so a target
+
+reading no `:where()` (Chrome 88) is one this leaves the function for...

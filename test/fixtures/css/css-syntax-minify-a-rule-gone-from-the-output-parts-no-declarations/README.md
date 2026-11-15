@@ -1,0 +1,1 @@
+A nested rule parts the declarations either side of it, unless it is gone from the output: one printing nothing, or one an identical later sibling stands for. The last block holds over 32 items, so it takes the map path rather than the pairwise one.

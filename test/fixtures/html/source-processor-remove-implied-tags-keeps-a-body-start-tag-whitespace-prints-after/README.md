@@ -1,0 +1,1 @@
+A `/>` on `<body>` makes the printer compose it rather than stream it. The space before the table prints as written, since the table is rebuilt from source, so the start tag stays: without it the space would land before the body on re-parsing.

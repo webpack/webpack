@@ -1,0 +1,22 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"skip": {
+				"atRulePrelude": true
+			}
+		},
+		"visit": {
+			"types": [
+				"AtRule",
+				"Ident",
+				"Declaration"
+			],
+			"fields": [
+				"name",
+				"value"
+			],
+			"exit": false
+		}
+	}
+]

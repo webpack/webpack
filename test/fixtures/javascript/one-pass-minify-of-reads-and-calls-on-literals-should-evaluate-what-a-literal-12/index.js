@@ -1,0 +1,1 @@
+Array.prototype[-1]=7,Array.prototype[5]=8,String.prototype[3]=9,console.log([1,2][-1],[1,2][5],void 0,"ab"[3],void 0);

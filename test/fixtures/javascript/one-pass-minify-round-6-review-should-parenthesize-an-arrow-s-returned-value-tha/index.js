@@ -1,0 +1,1 @@
+g(()=>{return[{value:1}][0].missing},()=>{return[{value:1}][0]});

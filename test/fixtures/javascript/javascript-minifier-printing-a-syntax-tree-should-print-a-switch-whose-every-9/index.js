@@ -1,0 +1,1 @@
+switch(x()){default:var v=1;g(v)}

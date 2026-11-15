@@ -1,0 +1,1 @@
+const B=()=>"b"+v;export default B;

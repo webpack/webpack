@@ -1,0 +1,1 @@
+result = (function () { function k() { var longName = 1; try { throw 2 } catch (other) { var inner = other + longName } return inner } return k() })();

@@ -1,0 +1,17 @@
+[
+	{
+		"relation": "respelling quote-double",
+		"contains": "    <a foo=x`y>  ->  <a foo=x`y></a>\n    <a foo=\"x`y\">  ->  <a foo=\"x`y\"></a>",
+		"why": "an unquoted value holding a character the unquoted value state reports as a parse error is written back as authored, so it stays two bytes longer than its quoted spellings print"
+	},
+	{
+		"relation": "respelling quote-single",
+		"contains": "    <a foo=x`y>  ->  <a foo=x`y></a>\n    <a foo='x`y'>  ->  <a foo='x`y'></a>",
+		"why": "an unquoted value holding a character the unquoted value state reports as a parse error is written back as authored, so it stays two bytes longer than its quoted spellings print"
+	},
+	{
+		"relation": "respelling references",
+		"contains": "    <a foo=x`y>  ->  <a foo=x`y></a>\n    <a foo=\"&#x78;&#x60;&#x79;\">  ->  <a foo=\"x`y\"></a>",
+		"why": "an unquoted value holding a character the unquoted value state reports as a parse error is written back as authored, so it stays two bytes longer than its quoted spellings print"
+	}
+]

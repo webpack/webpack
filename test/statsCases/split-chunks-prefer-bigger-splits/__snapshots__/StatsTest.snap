@@ -17,7 +17,7 @@ chunk (runtime: main) default/415.js X bytes <{792}> ={60}= ={869}= [rendered] s
   ./f.js X bytes [built] [code generated]
 chunk (runtime: main) default/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{263}< >{415}< >{869}< [entry] [rendered]
   > ./ main
-  runtime modules X KiB 9 modules
+  runtime modules X KiB 8 modules
   ./index.js X bytes [built] [code generated]
 chunk (runtime: main) default/async-c.js (async-c) X bytes <{792}> ={415}= [rendered]
   > ./c ./index.js 3:0-47

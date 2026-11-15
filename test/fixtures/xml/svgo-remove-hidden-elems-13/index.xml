@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <path d="M15.852 62.452" id="a"/>
+  </defs>
+  <use href="#a"/>
+  <use opacity=".35" href="#a"/>
+</svg>

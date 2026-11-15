@@ -23,15 +23,9 @@ const config = (env = "development") => ({
 			config: [__filename]
 			// By default webpack and loaders are build dependencies
 		}
-	},
-	module: {
-		rules: [
-			{
-				test: /\.css$/,
-				use: ["style-loader", "css-loader"]
-			}
-		]
 	}
+	// No CSS rule: webpack handles `import "./example.css"` itself
+	// (`experiments.css` defaults to "auto"), and its output is cached too.
 });
 
 module.exports = config;

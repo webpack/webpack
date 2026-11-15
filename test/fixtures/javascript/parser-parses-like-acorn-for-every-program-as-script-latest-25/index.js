@@ -1,0 +1,1 @@
+class A { 'constructor'() {} static constructor() {} async *[Symbol.iterator]() {} }

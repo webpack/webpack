@@ -39,6 +39,7 @@ const deprecationTracking = require("../helpers/deprecationTracking");
 const filterInfraStructureErrors = require("../helpers/infrastructureLogErrors");
 const supportsObjectHasOwn = require("../helpers/supportsObjectHasOwn");
 const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
+const testTimeout = require("../helpers/testTimeout");
 
 const testRootDirectory = path.join(__dirname, "..");
 
@@ -101,7 +102,7 @@ const describeCases = (config) => {
 		for (const category of categories) {
 			// eslint-disable-next-line no-loop-func
 			describe(category.name, () => {
-				jest.setTimeout(30000);
+				jest.setTimeout(testTimeout(30000));
 
 				for (const testName of category.tests.filter((test) => {
 					const testDirectory = path.join(casesPath, category.name, test);
@@ -357,7 +358,7 @@ const describeCases = (config) => {
 										done();
 									});
 								},
-								testConfig.timeout || 60000
+								testTimeout(testConfig.timeout || 60000)
 							);
 
 							it(
@@ -403,7 +404,9 @@ const describeCases = (config) => {
 										done();
 									});
 								},
-								testConfig.cachedTimeout || testConfig.timeout || 10000
+								testTimeout(
+									testConfig.cachedTimeout || testConfig.timeout || 10000
+								)
 							);
 						}
 
@@ -420,7 +423,10 @@ const describeCases = (config) => {
 									compiler.run((err, _stats) => {
 										const stats = /** @type {import("../../").Stats} */ (_stats);
 										const deprecations = deprecationTracker();
-										if (err) return done(err);
+										// closed so its cache does not store after the test, see ConfigTestCases
+										if (err) {
+											return compiler.close((closeErr) => done(closeErr || err));
+										}
 										const infrastructureLogErrors = [
 											...filterInfraStructureErrors(infraStructureLog, {
 												run: 3,
@@ -451,11 +457,14 @@ const describeCases = (config) => {
 												reasonsSpace: 1000
 											};
 											fs.mkdirSync(outputDirectory, { recursive: true });
-											fs.writeFileSync(
-												path.join(outputDirectory, "stats.txt"),
-												stats.toString(statOptions),
-												"utf8"
-											);
+											// verbose stats cost as much as the build; WEBPACK_TEST_STATS=1 writes them
+											if (process.env.WEBPACK_TEST_STATS) {
+												fs.writeFileSync(
+													path.join(outputDirectory, "stats.txt"),
+													stats.toString(statOptions),
+													"utf8"
+												);
+											}
 											const jsonStats = stats.toJson({
 												errorDetails: true,
 												modules: false,
@@ -506,7 +515,9 @@ const describeCases = (config) => {
 									const deprecationTracker = deprecationTracking.start();
 									compiler.run((err) => {
 										deprecationTracker();
-										if (err) return done(err);
+										if (err) {
+											return compiler.close((closeErr) => done(closeErr || err));
+										}
 										run();
 									});
 								} else {
@@ -514,8 +525,9 @@ const describeCases = (config) => {
 								}
 							},
 							testConfig.cachedTimeout ||
-								testConfig.timeout ||
-								(config.cache ? 20000 : 60000)
+								testTimeout(
+									testConfig.timeout || (config.cache ? 20000 : 60000)
+								)
 						);
 
 						it(`${testName} should load the compiled tests`, (done) => {
@@ -548,10 +560,10 @@ const describeCases = (config) => {
 								}
 								done();
 							}, done);
-						}, 10000);
+						}, testTimeout(10000));
 
 						const { it: _it, getNumberOfTests } = createLazyTestEnv(
-							testConfig.timeout || 10000
+							testTimeout(testConfig.timeout || 10000)
 						);
 					});
 				}

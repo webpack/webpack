@@ -6,7 +6,7 @@ asset runtime.js X KiB [emitted] (name: runtime)
 asset pages/home.js X KiB [emitted] (name: pages/home)
 asset main.js X KiB [emitted] (name: main)
 Entrypoint main X MiB = runtime.js X KiB common.js X MiB main.js X KiB
-runtime modules X KiB 12 modules
+runtime modules X KiB 11 modules
 built modules X MiB [built]
   modules by path ../../../node_modules/ X MiB
     modules by path ../../../node_modules/react-dom/ X MiB 4 modules

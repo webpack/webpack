@@ -1,0 +1,7 @@
+:import ("./vars.modules.css") {
+	imported: primary-color;
+}
+
+:export {
+	primary-color: imported;
+}

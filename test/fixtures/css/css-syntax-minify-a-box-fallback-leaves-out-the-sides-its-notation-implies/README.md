@@ -1,0 +1,1 @@
+The sRGB fallback written before a wide-gamut box value leaves out the sides its `{1,4}` notation implies, as a second pass would; a hash is written against what stands before it, and a side holding a function is left as it is.

@@ -1,0 +1,1 @@
+[{"mode":"minify","compress":{"toplevel":true,"passes":2},"mangle":{"toplevel":true},"behavior":true},{"mode":"minify","compress":{},"mangle":false}]

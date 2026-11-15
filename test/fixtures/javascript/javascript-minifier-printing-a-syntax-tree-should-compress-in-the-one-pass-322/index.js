@@ -1,0 +1,1 @@
+function f(){function g(a,b){return a}return[g(1,(/*! keep */x)=>y=>2),g(3,4)]}

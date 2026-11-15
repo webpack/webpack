@@ -1,0 +1,1 @@
+a:1;b();if(c)l:2;+(1,2n);-(1,d());function*e(){yield(1,f())}delete(2,x[y]);g(),delete(2,x[z]),h();!delete(2,x[w])

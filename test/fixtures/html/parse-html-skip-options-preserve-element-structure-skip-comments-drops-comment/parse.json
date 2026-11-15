@@ -1,0 +1,16 @@
+[
+	{
+		"options": {
+			"skip": {
+				"comments": true
+			}
+		}
+	},
+	{
+		"options": {
+			"skip": {
+				"doctype": true
+			}
+		}
+	}
+]

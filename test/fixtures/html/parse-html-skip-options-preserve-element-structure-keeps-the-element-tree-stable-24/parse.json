@@ -1,0 +1,130 @@
+[
+	{
+		"fields": [
+			"range",
+			"startOf:content",
+			"endOf:name",
+			"endOf:content",
+			"flag:selfClosing",
+			"rangeOf:name",
+			"rangeOf:value"
+		]
+	},
+	{
+		"options": {
+			"skip": {
+				"text": true
+			}
+		},
+		"fields": [
+			"range",
+			"startOf:content",
+			"endOf:name",
+			"endOf:content",
+			"flag:selfClosing",
+			"rangeOf:name",
+			"rangeOf:value"
+		]
+	},
+	{
+		"options": {
+			"skip": {
+				"comments": true
+			}
+		},
+		"fields": [
+			"range",
+			"startOf:content",
+			"endOf:name",
+			"endOf:content",
+			"flag:selfClosing",
+			"rangeOf:name",
+			"rangeOf:value"
+		]
+	},
+	{
+		"options": {
+			"skip": {
+				"doctype": true
+			}
+		},
+		"fields": [
+			"range",
+			"startOf:content",
+			"endOf:name",
+			"endOf:content",
+			"flag:selfClosing",
+			"rangeOf:name",
+			"rangeOf:value"
+		]
+	},
+	{
+		"options": {
+			"skip": {
+				"text": true,
+				"comments": true
+			}
+		},
+		"fields": [
+			"range",
+			"startOf:content",
+			"endOf:name",
+			"endOf:content",
+			"flag:selfClosing",
+			"rangeOf:name",
+			"rangeOf:value"
+		]
+	},
+	{
+		"options": {
+			"skip": {
+				"text": true,
+				"doctype": true
+			}
+		},
+		"fields": [
+			"range",
+			"startOf:content",
+			"endOf:name",
+			"endOf:content",
+			"flag:selfClosing",
+			"rangeOf:name",
+			"rangeOf:value"
+		]
+	},
+	{
+		"options": {
+			"skip": {
+				"comments": true,
+				"doctype": true
+			}
+		},
+		"fields": [
+			"range",
+			"startOf:content",
+			"endOf:name",
+			"endOf:content",
+			"flag:selfClosing",
+			"rangeOf:name",
+			"rangeOf:value"
+		]
+	},
+	{
+		"options": {
+			"skip": {
+				"text": true,
+				"comments": true,
+				"doctype": true
+			}
+		},
+		"fields": [
+			"range",
+			"startOf:content",
+			"endOf:name",
+			"endOf:content",
+			"flag:selfClosing",
+			"rangeOf:name",
+			"rangeOf:value"
+		]
+	}
+]

@@ -1,0 +1,1 @@
+function f(){function g(x,y=arguments[2]){return[x,y]}return[g(1,2,3),g(5)]}

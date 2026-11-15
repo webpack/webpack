@@ -1,0 +1,1 @@
+function f(a,b){if(a!==b)return;h(a==b?x:!0,a===b?!1:x,!(a==b))}

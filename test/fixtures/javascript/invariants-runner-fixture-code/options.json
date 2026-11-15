@@ -1,0 +1,13 @@
+[
+	{
+		"print": "jsMinify",
+		"compress": {},
+		"format": { "comments": { "fixture": "keepLicense" } },
+		"check": { "fixture": "check" }
+	},
+	{
+		"mode": "minify",
+		"visit": { "fixture": "countIdentifiers" },
+		"check": { "fixture": "check" }
+	}
+]

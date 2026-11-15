@@ -1,0 +1,1 @@
+var a = 1; class C { static { h(a) } x = a } h(); var b = 2; function q(){ return b } h()

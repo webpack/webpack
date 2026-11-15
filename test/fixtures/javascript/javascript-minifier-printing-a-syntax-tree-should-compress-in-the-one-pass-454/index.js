@@ -1,0 +1,1 @@
+function f(){switch(d){case 1:x();break;case 2:y()}}

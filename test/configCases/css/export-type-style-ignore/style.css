@@ -1,0 +1,5 @@
+@import "./ignored.css";
+
+.test {
+	color: green;
+}

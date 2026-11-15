@@ -1,0 +1,1 @@
+String.prototype.concat=f;x="a".concat(b)

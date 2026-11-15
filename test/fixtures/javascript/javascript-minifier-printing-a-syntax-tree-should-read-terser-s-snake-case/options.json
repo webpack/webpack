@@ -1,0 +1,40 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"keepFnames": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"keep_fnames": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"keepFnames": true
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"keep_fnames": true
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"keepFnames": false,
+		"keep_fnames": true
+	}
+]

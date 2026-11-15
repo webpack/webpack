@@ -326,17 +326,16 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset pageA.js 266 bytes [emitted] [minimized] (name: pageA)
-asset vendor2.js 224 bytes [emitted] [minimized] (name: vendor2)
 asset vendor1.js 185 bytes [emitted] [minimized] (name: vendor1)
+asset vendor2.js 185 bytes [emitted] [minimized] (name: vendor2)
 asset pageB.js 183 bytes [emitted] [minimized] (name: pageB)
 asset pageC.js 183 bytes [emitted] [minimized] (name: pageC)
-chunk (runtime: vendor2) vendor2.js (vendor2) 77 bytes [entry] [rendered]
+asset pageA.js 181 bytes [emitted] [minimized] (name: pageA)
+chunk (runtime: vendor2) vendor2.js (vendor2) 50 bytes [entry] [rendered]
   > ./vendor2 vendor2
-  dependent modules 27 bytes [dependent] 1 module
   ./vendor2.js 50 bytes [built] [code generated]
     [used exports unknown]
-    cjs require ./vendor2 ./pageA.js 3:0-20
+    [inactive] cjs require ./vendor2 ./pageA.js 3:0-20
     cjs self exports reference ./vendor2.js 1:0-14
     entry ./vendor2 vendor2
 chunk (runtime: pageB) pageB.js (pageB) 25 bytes [entry] [rendered]
@@ -345,9 +344,8 @@ chunk (runtime: pageB) pageB.js (pageB) 25 bytes [entry] [rendered]
     [used exports unknown]
     cjs self exports reference ./pageB.js 1:0-14
     entry ./pageB pageB
-chunk (runtime: pageA) pageA.js (pageA) 147 bytes [entry] [rendered]
+chunk (runtime: pageA) pageA.js (pageA) 70 bytes [entry] [rendered]
   > ./pageA pageA
-  dependent modules 77 bytes [dependent] 2 modules
   ./pageA.js 70 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageA.js 1:0-14
@@ -356,9 +354,9 @@ chunk (runtime: vendor1) vendor1.js (vendor1) 27 bytes [entry] [rendered]
   > ./vendor1 vendor1
   ./vendor1.js 27 bytes [built] [code generated]
     [used exports unknown]
-    cjs require ./vendor1 ./pageA.js 2:0-20
+    [inactive] cjs require ./vendor1 ./pageA.js 2:0-20
     cjs self exports reference ./vendor1.js 1:0-14
-    cjs require ./vendor1 ./vendor2.js 2:0-20
+    [inactive] cjs require ./vendor1 ./vendor2.js 2:0-20
     entry ./vendor1 vendor1
 chunk (runtime: pageC) pageC.js (pageC) 25 bytes [entry] [rendered]
   > ./pageC pageC

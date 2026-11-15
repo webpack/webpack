@@ -1,0 +1,1 @@
+class A { #a; static m() { class B { n() { this.#a } } } }

@@ -1,0 +1,1 @@
+function f(x,g){return[({a:{b:2}}).a.b*3]}

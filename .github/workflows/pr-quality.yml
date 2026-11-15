@@ -9,6 +9,12 @@ on:
   pull_request_target:
     types: [opened, reopened]
 
+concurrency:
+  # Keyed on the pull request: under `pull_request_target` the ref is the base
+  # branch, which every pull request shares.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   anti-slop:
     uses: webpack/.github/.github/workflows/pr-quality.yml@438fc377cc376d2074ab1c6aaf4c35250b905670

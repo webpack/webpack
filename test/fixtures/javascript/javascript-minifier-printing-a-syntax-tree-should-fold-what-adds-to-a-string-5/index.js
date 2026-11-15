@@ -1,0 +1,1 @@
+const p=Object.prototype;p.valueOf=()=>7;a=[1]+""

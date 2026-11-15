@@ -1,0 +1,20 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"firefox 100",
+				"chrome 140"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"ie 11",
+				"chrome 140"
+			]
+		}
+	}
+]

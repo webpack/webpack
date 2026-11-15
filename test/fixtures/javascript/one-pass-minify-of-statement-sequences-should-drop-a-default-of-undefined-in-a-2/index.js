@@ -1,0 +1,1 @@
+class A{constructor(a=void 0){}m(a=void 0){}}var o={m(a=void 0){},set s(a=void 0){}};console.log(A.length,A.prototype.m.length,o.m.length,Object.getOwnPropertyDescriptor(o,"s").set.length)

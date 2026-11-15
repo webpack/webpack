@@ -1,0 +1,1 @@
+Math.abs=f;Math.abs(1);function g(Date){Date()}Array.isArray=h;Array.isArray(1);Array=k;new Array(1);x=1

@@ -1,0 +1,1 @@
+var a,b;function f(c){if(c){a=true}else{a=false}return a}function g(c){if(c)a=!1;else a=!0;return a}function h(c){if(c<1)a=!0;else a=!1;return a}function k(c){if(b=c,c)a=!0;else a=!1;return a}function m(c){if(c)a=!0;else b=!1;return a}console.log(f(2),g(2),h(2),k(0),m(0))

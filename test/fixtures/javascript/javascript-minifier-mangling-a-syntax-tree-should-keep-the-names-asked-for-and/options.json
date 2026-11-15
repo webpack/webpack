@@ -1,0 +1,14 @@
+[
+	{
+		"mode": "minify",
+		"compress": false,
+		"mangle": {
+			"keep_fnames": {
+				"regexp": "inner|keepFn"
+			},
+			"keep_classnames": {
+				"regexp": "K"
+			}
+		}
+	}
+]

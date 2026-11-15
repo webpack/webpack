@@ -1,0 +1,1 @@
+export default () => 'late-dep'

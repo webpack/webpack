@@ -1,0 +1,11 @@
+[
+	{
+		"transforms": {
+			"shortenNumbers": false,
+			"shortenColors": false,
+			"customMedia": true,
+			"customSelectors": true
+		},
+		"mode": "minify"
+	}
+]

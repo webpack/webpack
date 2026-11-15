@@ -1,0 +1,1 @@
+@custom-selector :--a h1,h2;@custom-selector :--b :--a .x,:--a:hover;:--b{color:red}

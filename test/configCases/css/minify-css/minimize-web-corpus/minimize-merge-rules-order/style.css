@@ -1,0 +1,5 @@
+/* A pair over two blocks with a third rule overriding one of them: joining the
+   pair moves what the third stands beside. */
+.t03-a, .t03-b { position: absolute; display: block }
+.t03-a, .t03-b { transform: scale(0.6) }
+.t03-b { transform: scale(1) }

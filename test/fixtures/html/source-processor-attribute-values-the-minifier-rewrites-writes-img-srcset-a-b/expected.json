@@ -1,0 +1,17 @@
+[
+	{
+		"relation": "respelling quote-double",
+		"contains": "<img srcset=a'\"b.png,,>  ->  <img srcset=a'\"b.png,,>\n    <img srcset=\"a'&#34;b.png,,\">  ->  <img srcset='a&#39;\"b.png'>",
+		"why": "an unquoted value holding a quote is a parse error the printer writes back as authored; quoted, the same `srcset` sheds its empty candidates"
+	},
+	{
+		"relation": "respelling quote-single",
+		"contains": "<img srcset=a'\"b.png,,>  ->  <img srcset=a'\"b.png,,>\n    <img srcset='a&#39;\"b.png,,'>  ->  <img srcset='a&#39;\"b.png'>",
+		"why": "an unquoted value holding a quote is a parse error the printer writes back as authored; quoted, the same `srcset` sheds its empty candidates"
+	},
+	{
+		"relation": "respelling references",
+		"contains": "<img srcset=a'\"b.png,,>  ->  <img srcset=a'\"b.png,,>\n    <img srcset=\"&#x61;&#x27;&#x22;&#x62;&#x2e;&#x70;&#x6e;&#x67;&#x2c;&#x2c;\">  ->  <img srcset='a&#39;\"b.png'>",
+		"why": "an unquoted value holding a quote is a parse error the printer writes back as authored; quoted, the same `srcset` sheds its empty candidates"
+	}
+]

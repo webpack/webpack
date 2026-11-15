@@ -1,0 +1,1 @@
+@supports selector(a:has( > b )){a{color:red}}

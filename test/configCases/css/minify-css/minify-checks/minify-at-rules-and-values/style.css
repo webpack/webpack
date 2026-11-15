@@ -1,0 +1,18 @@
+/* The two at-rules that carry a vendor spelling and still gather. */
+@document url("https://a.test/") {
+	.a { color: red }
+}
+@document url("https://a.test/") {
+	.b { color: blue }
+}
+@-moz-document url-prefix() {
+	.c { color: green }
+}
+
+/* Shorthands whose initial keyword is the whole value. */
+.d { mask-border: initial }
+.e { text-emphasis: initial }
+
+/* The gradient and image functions the tables name but nothing spells. */
+.f { background: repeating-radial-gradient(red 0%, blue 100%) }
+.g { background: cross-fade(url(a.png) 50%, url(b.png)) }

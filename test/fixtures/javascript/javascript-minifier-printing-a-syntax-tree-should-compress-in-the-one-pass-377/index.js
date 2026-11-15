@@ -1,0 +1,1 @@
+function f(a,c){return(a?a:a)&&c}

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <g fill="red" stroke="blue" stroke-width="2"><path d="M0 0h10v10z"/></g>
+  <g fill="red"><path d="M0 0h10" fill="green"/></g>
+  <g fill="red"><path d="M0 0h10" fill="inherit"/></g>
+  <g fill="red"><path d="M0 0h10" style="fill:blue"/></g>
+  <g fill="red" opacity="0.5"><rect width="10" height="10"/></g>
+  <g fill="var(--x)"><circle r="5"/></g>
+  <g fill="red"><path d="M0 0h1"/><path d="M0 2h1"/></g>
+  <g id="named" fill="red"><path d="M0 0h1"/></g>
+  <g><g fill="red"><g stroke="blue"><path d="M1 1h5"/></g></g></g>
+  <g transform="translate(10 10)"><g transform="scale(2)"><path d="M0 0h1"/></g></g>
+  <g fill="red" stroke-linecap="round"><g fill="blue"><path d="M0 0h1"/></g><path d="M0 4h1"/></g>
+  <a href="#x"><g fill="red"><path d="M0 0h1"/></g></a>
+  <switch><g fill="red"><path d="M0 0h1"/></g></switch>
+  <g fill="red" mask="url(#m)"><path d="M0 0h1"/></g>
+  <g class="c" fill="red"><path d="M0 0h1"/></g>
+  <g></g><g> </g><g><g/></g>
+</svg>

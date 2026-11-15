@@ -1,0 +1,1 @@
+function m(){"use asm";function f(a){a=a|0;if(a){a=a+1|0;a=(0,a+2)|0}return a|0}return f}

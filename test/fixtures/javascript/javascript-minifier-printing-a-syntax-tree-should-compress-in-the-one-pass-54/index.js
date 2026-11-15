@@ -1,0 +1,1 @@
+function f(){ var { a, b: [c] } = o; var [d, , e] = o; return a + c + d + e }

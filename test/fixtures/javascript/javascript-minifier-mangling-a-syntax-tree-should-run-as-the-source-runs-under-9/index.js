@@ -1,0 +1,1 @@
+result = (function (a) { var s = 0; for (let a = 0; a < 3; a++) s += a; for (const k of [1, 2]) s += k; for (let p in { x: 1 }) s += p; return s + a })(10);

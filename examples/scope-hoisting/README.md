@@ -249,9 +249,9 @@ var x = "x";
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -259,8 +259,7 @@ var x = "x";
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
@@ -299,7 +298,7 @@ var x = "x";
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -350,7 +349,7 @@ var x = "x";
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -401,7 +400,7 @@ __webpack_require__.e(/*! import() */ "lazy_js").then(() => (__webpack_require__
 # dist/lazy_js.output.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["lazy_js"],[
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["lazy_js"],[
 /* 0 */,
 /* 1 */,
 /* 2 */
@@ -480,7 +479,7 @@ exports.c = "e";
 Minimized
 
 ```javascript
-(self.webpackChunk=self.webpackChunk||[]).push([["lazy_js"],{207(a,e,r){"use strict";r.d(e,{c:()=>C,d:()=>c,x:()=>s.x,y:()=>h.y});var c={};r.r(c),r.d(c,{a:()=>k});var d=r(330),s=r(331),h=r(453),C=String.fromCharCode(d.c.charCodeAt(0)-2),k="d"},330(a,e){e.c="e"}}]);
+(Array.isArray(self.webpackChunk)?self.webpackChunk:self.webpackChunk=[]).push([["lazy_js"],{207(r,a,e){"use strict";e.d(a,{c:()=>k,d:()=>c,x:()=>d.x,y:()=>h.y});var c={};e.r(c),e.d(c,{a:()=>C});var s=e(330),d=e(331),h=e(453),k=String.fromCharCode(s.c.charCodeAt(0)-2),C="d"},330(r,a){a.c="e"}}]);
 ```
 
 # Info
@@ -489,7 +488,7 @@ Minimized
 
 ```
 asset output.js 10.5 KiB [emitted] (name: main)
-asset lazy_js.output.js 2.35 KiB [emitted]
+asset lazy_js.output.js 2.38 KiB [emitted]
 chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
   > ./lazy ./example.js 4:0-16
   dependent modules 42 bytes [dependent] 1 module
@@ -497,9 +496,9 @@ chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
     [exports: c, d, x, y]
     [all exports used]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.29 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.26 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.29 KiB 8 modules
+  runtime modules 5.26 KiB 8 modules
   dependent modules 100 bytes [dependent] 1 module
   ./example.js + 2 modules 267 bytes [built] [code generated]
     [no exports]
@@ -511,8 +510,8 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.07 KiB [emitted] [minimized] (name: main)
-asset lazy_js.output.js 265 bytes [emitted] [minimized]
+asset output.js 2.05 KiB [emitted] [minimized] (name: main)
+asset lazy_js.output.js 297 bytes [emitted] [minimized]
 chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
   > ./lazy ./example.js 4:0-16
   dependent modules 42 bytes [dependent] 1 module
@@ -520,9 +519,9 @@ chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
     [exports: c, d, x, y]
     [all exports used]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.29 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.26 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.29 KiB 8 modules
+  runtime modules 5.26 KiB 8 modules
   dependent modules 100 bytes [dependent] 2 modules
   ./example.js + 2 modules 267 bytes [built] [code generated]
     [no exports]

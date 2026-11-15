@@ -1,0 +1,1 @@
+x = { await: 1, yield: 2, async: 3, let: 4, static: 5 }; x.await; x.yield;

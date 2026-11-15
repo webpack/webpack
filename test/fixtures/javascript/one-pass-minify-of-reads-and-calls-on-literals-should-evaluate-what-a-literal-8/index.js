@@ -1,0 +1,1 @@
+function f(x,y){return+x+1+""+(+y+2)+"z"+(x+"a-"+-y)+("q"+y*2)}function g(x,y){return[x,1].join("")+[!x&&!y].join("")+(x+"a1").length+(+x+"")}function h(x,y){return"Infinity"+y+(x*1+(""+y))+[x+"a",'"'].join("")+[x<y,y].join("")}console.log(f(1,2),g(3,4),h(5,6));

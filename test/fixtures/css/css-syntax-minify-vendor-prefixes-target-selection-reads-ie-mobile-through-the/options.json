@@ -1,0 +1,18 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"ie_mob 10"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"ie_mob 11"
+			]
+		}
+	}
+]
