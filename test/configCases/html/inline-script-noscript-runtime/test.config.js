@@ -27,5 +27,8 @@ module.exports = {
 		const runs = chunkOf("MARK_D");
 		expect(runs.file).not.toBe(noscript.file);
 		expect(runs.content).not.toContain(noscript.file);
+		// With scripting on the first `</noscript>`, even one in a comment, ends
+		// it, so the script after it runs and joins the next one's run.
+		expect(chunkOf("MARK_E").file).toBe(chunkOf("MARK_F").file);
 	}
 };
