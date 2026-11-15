@@ -257,7 +257,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/next/archive-2/pages/hmr/.style-stateful-component-6cd7bdfa37b75acb9d04/input.js",
 			"swc minifier: fixture/projects/next/archive-3/pages/dynamic/chunkfilename-b114cf1d23876beaa712/input.js",
 			"swc minifier: fixture/projects/next/archive-3/pages/dynamic/function-7fe8439c89afccb77983/input.js",
-			"swc minifier: fixture/projects/next/archive-3/pages/dynamic/head-432fc3a9a66c90ce2ec2/input.js",
 			"swc minifier: fixture/projects/next/archive-3/pages/dynamic/multiple-modules-d02ebebcfa5282e50b34/input.js",
 			"swc minifier: fixture/projects/next/archive-3/pages/dynamic/nested-05a7ce04b1f7eb6da341/input.js",
 			"swc minifier: fixture/projects/next/archive-3/pages/dynamic/no-chunk-e2d9573b8d7df68a6cde/input.js",

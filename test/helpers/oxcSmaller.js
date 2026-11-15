@@ -896,7 +896,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"inlining: a function, a call in place or a single-use value written where it is used by one side and kept apart by the other",
 		[
-			"swc minifier: fixture/projects/next/.archive-4/266-aee26c928109d49d6151/input.js",
 			"oxc minifier: peephole/inline_single_use_variable.rs:47",
 			"swc exec: issue_6899_1",
 			"swc exec: issue_6899_2",
