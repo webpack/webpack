@@ -123,6 +123,44 @@ describe("WebpackParser", () => {
 		expect(last(comments)).toEqual(last(acornComments));
 	});
 
+	it("reports the lines and columns of comments on many lines", () => {
+		const source = fixture("javascript", "webpack-parser-reports-the-lines-and-columns-of-comments-on-many-lines");
+		/** @type {{ loc?: object }[]} */
+		const acornComments = [];
+		acorn.parse(source, {
+			ecmaVersion: "latest",
+			locations: true,
+			onComment: /** @type {EXPECTED_ANY} */ (acornComments)
+		});
+		/** @type {{ loc?: object }[]} */
+		const comments = [];
+		// counts the characters read, which grows with the square of the source
+		// when each comment's position is counted from its start
+		const { charCodeAt } = String.prototype;
+		let reads = 0;
+		/**
+		 * @this {string}
+		 * @param {number} index where to read
+		 * @returns {number} the UTF-16 code unit there
+		 */
+		String.prototype.charCodeAt = function charCodeAtCounted(index) {
+			reads++;
+			return charCodeAt.call(this, index);
+		};
+		try {
+			estree(source, {
+				locations: true,
+				onComment: /** @type {EXPECTED_ANY} */ (comments)
+			});
+		} finally {
+			String.prototype.charCodeAt = charCodeAt;
+		}
+		expect(reads).toBeLessThan(source.length * 20);
+		expect(plain(comments.map((comment) => comment.loc))).toEqual(
+			plain(acornComments.map((comment) => comment.loc))
+		);
+	});
+
 	describe("lazy comments", () => {
 		it("should collect hashbang, line, block and html comments lazily", () => {
 			const { comments } = parse(

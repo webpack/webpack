@@ -52661,6 +52661,31 @@ exports[`JavaScript syntax — invariants webpack-parser-regexp-fast-path-should
 
 exports[`JavaScript syntax — invariants webpack-parser-regexp-fast-path-should-respect-the-ecma-version-for-allowed parses 2`] = `""`;
 
+exports[`JavaScript syntax — invariants webpack-parser-reports-the-lines-and-columns-of-comments-on-many-lines parses 1`] = `
+"length 152485, sha256 5c288a34c5a7e5f4
+Program[0,16000](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"a\\")),ExpressionStatement[8,10](expression=Identifier[8,9](name=\\"a\\")),ExpressionStatement[16,18](expression=Identifier[1
+…
+76,15977](name=\\"a\\")),ExpressionStatement[15984,15986](expression=Identifier[15984,15985](name=\\"a\\")),ExpressionStatement[15992,15994](expression=Identifier[15992,15993](name=\\"a\\"))] sourceType=\\"module\\")"
+`;
+
+exports[`JavaScript syntax — invariants webpack-parser-reports-the-lines-and-columns-of-comments-on-many-lines parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants webpack-parser-reports-the-lines-and-columns-of-comments-on-many-lines parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants webpack-parser-reports-the-lines-and-columns-of-comments-on-many-lines prints {"mode":"minify"} 1`] = `
+"length 4000, sha256 8c58bd96200034bb
+a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;
+…
+a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;"
+`;
+
+exports[`JavaScript syntax — invariants webpack-parser-reports-the-lines-and-columns-of-comments-on-many-lines tokenizes 1`] = `
+"length 93680, sha256 09acfe65c216c307
+name[0,1] ;[1,2] line[3,7] name[8,9] ;[9,10] line[11,15] name[16,17] ;[17,18] line[19,23] name[24,25] ;[25,26] line[27,31] name[32,33] ;[33,34] line[35,39] name[40,41] ;[41,42] line[43,47] name[48,49]
+…
+15969,15970] line[15971,15975] name[15976,15977] ;[15977,15978] line[15979,15983] name[15984,15985] ;[15985,15986] line[15987,15991] name[15992,15993] ;[15993,15994] line[15995,15999] eof[16000,16000]"
+`;
+
 exports[`JavaScript syntax — invariants webpack-parser-regexp-fast-path-should-respect-the-ecma-version-for-allowed parses 3`] = `"as the module"`;
 
 exports[`JavaScript syntax — invariants webpack-parser-regexp-fast-path-should-respect-the-ecma-version-for-allowed prints {"mode":"minify"} 1`] = `"x=/a/s;"`;
