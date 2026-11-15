@@ -13430,6 +13430,7 @@ declare interface HtmlEntryInfo {
 		| "modulepreload";
 	css?: boolean;
 	chunkName?: string;
+	noscript?: boolean;
 }
 type HtmlFaviconIcon =
 	| string
