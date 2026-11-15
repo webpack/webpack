@@ -1220,6 +1220,15 @@ const legalNotices = (module, banner) => (code) => {
 // bounded so one that loops is skipped rather than hanging the sweep.
 const BEHAVIOR_MAX_LENGTH = 20000;
 const BEHAVIOR_TIMEOUT = 200;
+// The most wall time a run short of the machine is given: with the tries
+// before it, 17 s, inside the 30 s a test may take.
+const BEHAVIOR_MAX_WAIT = 12800;
+// The CPU time this thread has spent, which a machine busy elsewhere or paused
+// does not add to; Node.js before 23.9 reads only the whole process's.
+const cpuTime =
+	typeof process.threadCpuUsage === "function"
+		? () => process.threadCpuUsage()
+		: () => process.cpuUsage();
 // Every run reads the same clock and random numbers, so a script reading them
 // still answers for its printed form.
 const BEHAVIOR_PRELUDE =
@@ -1235,13 +1244,12 @@ const BEHAVIOR_PRELUDE =
 const importNothing = () => new Promise(() => {});
 
 /**
- * What a script prints and, where it throws, the error's kind and message or the
- * thrown value, run in a fresh context: a function prints as `[function]`, as
- * its text is the printer's.
+ * One run of a script, in a context of its own, for {@link behaviorOf}.
  * @param {string} code the script
+ * @param {number} timeout how long it may run, in milliseconds of wall time
  * @returns {string | null} its transcript, null where it timed out
  */
-const behaviorOf = (code) => {
+const runBehavior = (code, timeout) => {
 	/** @type {string[]} */
 	const lines = [];
 	/**
@@ -1259,7 +1267,7 @@ const behaviorOf = (code) => {
 	vm.runInContext(BEHAVIOR_PRELUDE, context);
 	try {
 		vm.runInContext(code, context, {
-			timeout: BEHAVIOR_TIMEOUT,
+			timeout,
 			importModuleDynamically: importNothing
 		});
 	} catch (error) {
@@ -1297,6 +1305,29 @@ const behaviorOf = (code) => {
 	return lines.join("\n");
 };
 
+/**
+ * What a script prints and, where it throws, the error's kind and message or the
+ * thrown value, run in a fresh context: a function prints as `[function]`, as
+ * its text is the printer's.
+ * @param {string} code the script
+ * @returns {string | null} its transcript, null where it loops
+ */
+const behaviorOf = (code) => {
+	let wait = BEHAVIOR_TIMEOUT;
+	for (;;) {
+		const start = cpuTime();
+		const transcript = runBehavior(code, wait);
+		if (transcript !== null) return transcript;
+		const end = cpuTime();
+		const spent = (end.user - start.user + end.system - start.system) / 1000;
+		// WHY: `timeout` is wall time, which a loaded or paused machine spends on
+		// other work. A run that spent under half of it on its own ran short of
+		// the machine, not of time, so it runs again for longer.
+		if (spent >= BEHAVIOR_TIMEOUT / 2 || wait >= BEHAVIOR_MAX_WAIT) return null;
+		wait *= 4;
+	}
+};
+
 // The last source run and its transcript: every preset asks of the same source.
 /** @type {string | undefined} */
 let lastSource;
@@ -1321,9 +1352,7 @@ const behaviorDifference = (source, printed) => {
 	}
 	const expected = lastExpected;
 	if (expected === null) return null;
-	let got = behaviorOf(printed);
-	// A run times out under a loaded machine too, so one runs again before it counts.
-	if (got === null) got = behaviorOf(printed);
+	const got = behaviorOf(printed);
 	if (got === expected) return [];
 	return [
 		{

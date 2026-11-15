@@ -46,6 +46,7 @@ function o1(f) { var t; return (t = Math.pow(f, 2))`x`; }
 function o2(f) { var t; return (t = (() => Math.pow(f, 2))())`x`; }
 function o3(f) { var t; return (t = Boolean(f < 1))`x`; }
 function o4(f) { var t; return (t = String(f))`x`; }
+function o5(f) { var t; return (t = String(f + "a"))`x`; }
 function tag() {
 	"use strict";
 	return this === undefined ? "unbound" : "bound";
@@ -109,7 +110,8 @@ function reads(run) {
 	reads(o1),
 	reads(o2),
 	reads(o3),
-	reads(o4)
+	reads(o4),
+	reads(o5)
 ].forEach(function (run, i) {
 	try {
 		console.log(i, String(run()));

@@ -2817,7 +2817,7 @@ olon[74168,74169] ident[74169,74180] left-curly-bracket[74180,74181] ident[74181
 `;
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-prefixed-list-a-streamed-block-s-rules-cover-2 parses 1`] = `
-"length 31379, sha256 b6a7d094fb533a8a
+"length 262233, sha256 49fdb429be856a28
 [[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"screen\\"]],[\\".\\",[\\"ident\\",\\"c0\\"],\\">\\",[\\"ident\\",\\"d0\\"],\\":\\",[\\"ident\\",\\"hover\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"],\\";\\",[\\"ident\\",\\"margin\\"],\\":\\",[\\"dimension\\",\\"1\\",1,\\"int
 …
 t\\",\\"b\\"],\\":\\",\\":\\",[\\"ident\\",\\"-moz-placeholder\\"],[\\"{}\\",[\\"ident\\",\\"opacity\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]],\\".\\",[\\"ident\\",\\"a\\"],\\":\\",\\":\\",[\\"ident\\",\\"placeholder\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]]"
@@ -2826,17 +2826,17 @@ t\\",\\"b\\"],\\":\\",\\":\\",[\\"ident\\",\\"-moz-placeholder\\"],[\\"{}\\",[\\
 exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-prefixed-list-a-streamed-block-s-rules-cover-2 parses 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-prefixed-list-a-streamed-block-s-rules-cover-2 prints {"mode":"minify"} 1`] = `
-"length 6965, sha256 2eeec4afae28b67e
+"length 60750, sha256 2eebb110c95ff7d6
 @media screen{.c0>d0:hover{color:red;margin:1px}.c1>d1:hover{color:red;margin:2px}.c2>d2:hover{color:red;margin:3px}.c3>d3:hover{color:red;margin:4px}.c4>d4:hover{color:red;margin:5px}.c5>d5:hover{col
 …
-}.c177>d177:hover{color:red;margin:178px}.c178>d178:hover{color:red;margin:179px}.c179>d179:hover{color:red;margin:180px}.a::-moz-placeholder,.b::-moz-placeholder{opacity:1}.a::placeholder{color:red}}"
+1485:hover{color:red;margin:1486px}.c1486>d1486:hover{color:red;margin:1487px}.c1487>d1487:hover{color:red;margin:1488px}.a::-moz-placeholder,.b::-moz-placeholder{opacity:1}.a::placeholder{color:red}}"
 `;
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-prefixed-list-a-streamed-block-s-rules-cover-2 tokenizes 1`] = `
-"length 53648, sha256 650d4ad4c942bf83
+"length 485470, sha256 fb23c5e591b60af7
 at-keyword[0,6] whitespace[6,7] ident[7,13] left-curly-bracket[13,14] delim[14,15] ident[15,17] delim[17,18] ident[18,20] colon[20,21] ident[21,26] left-curly-bracket[26,27] ident[27,32] colon[32,33] 
 …
-lon[6940,6941] colon[6941,6942] ident[6942,6953] left-curly-bracket[6953,6954] ident[6954,6959] colon[6959,6960] ident[6960,6963] right-curly-bracket[6963,6964] right-curly-bracket[6964,6965] end=6965"
+lon[60726,60727] ident[60727,60738] left-curly-bracket[60738,60739] ident[60739,60744] colon[60744,60745] ident[60745,60748] right-curly-bracket[60748,60749] right-curly-bracket[60749,60750] end=60750"
 `;
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-drops-a-streamed-block-that-prints-to-nothing parses 1`] = `
@@ -3297,7 +3297,7 @@ ace[74109,74110] ident[74110,74111] left-curly-bracket[74111,74112] ident[74112,
 `;
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-4 parses 1`] = `
-"length 39774, sha256 037fb252da69f5aa
+"length 218532, sha256 f3a1c5065441b9af
 [[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"outer\\"]],[\\".\\",[\\"ident\\",\\"f0\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]],\\".\\",[\\"ident\\",\\"f1\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]],\\".\\",[\\"ident\\",\\"f2\\"],[\\"{}\\",[\\"
 …
 ],[\\"{}\\",[\\"ident\\",\\"x\\"],\\":\\",[\\"ident\\",\\"i\\"]],\\".\\",[\\"ident\\",\\"mid\\"],[\\"{}\\",[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]],[\\"at-keyword\\",\\"layer\\"],\\" \\",[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"y\\"],\\":\\",[\\"ident\\",\\"j\\"]]]]]"
@@ -3306,17 +3306,17 @@ exports[`CSS syntax — invariants css-syntax-block-streaming-keeps-the-a-gather
 exports[`CSS syntax — invariants css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-4 parses 2`] = `""`;
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-4 prints {"mode":"minify"} 1`] = `
-"length 3545, sha256 fe87197ff4166c55
-@layer outer{.f0,.f1,.f10,.f100,.f101,.f102,.f103,.f104,.f105,.f106,.f107,.f108,.f109,.f11,.f110,.f111,.f112,.f113,.f114,.f115,.f116,.f117,.f118,.f119,.f12,.f120,.f121,.f122,.f123,.f124,.f125,.f126,.f
+"length 21863, sha256 3d3be64ff8a086fa
+@layer outer{.f0,.f1,.f10,.f100,.f1000,.f1001,.f1002,.f1003,.f1004,.f1005,.f1006,.f1007,.f1008,.f1009,.f101,.f1010,.f1011,.f1012,.f1013,.f1014,.f1015,.f1016,.f1017,.f1018,.f1019,.f102,.f1020,.f1021,.f
 …
-.f70,.f71,.f72,.f73,.f74,.f75,.f76,.f77,.f78,.f79,.f8,.f80,.f81,.f82,.f83,.f84,.f85,.f86,.f87,.f88,.f89,.f9,.f90,.f91,.f92,.f93,.f94,.f95,.f96,.f97,.f98,.f99{color:red}@layer a{x:i;y:j}.mid{margin:0}}"
+975,.f976,.f977,.f978,.f979,.f98,.f980,.f981,.f982,.f983,.f984,.f985,.f986,.f987,.f988,.f989,.f99,.f990,.f991,.f992,.f993,.f994,.f995,.f996,.f997,.f998,.f999{color:red}@layer a{x:i;y:j}.mid{margin:0}}"
 `;
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-4 tokenizes 1`] = `
-"length 87184, sha256 bea5ac1cfc634300
+"length 514638, sha256 4368cab26c2d47b5
 at-keyword[0,6] whitespace[6,7] ident[7,12] left-curly-bracket[12,13] delim[13,14] ident[14,16] left-curly-bracket[16,17] ident[17,22] colon[22,23] ident[23,26] right-curly-bracket[26,27] delim[27,28]
 …
-530,9536] whitespace[9536,9537] ident[9537,9538] left-curly-bracket[9538,9539] ident[9539,9540] colon[9540,9541] ident[9541,9542] right-curly-bracket[9542,9543] right-curly-bracket[9543,9544] end=9544"
+ace[54594,54595] ident[54595,54596] left-curly-bracket[54596,54597] ident[54597,54598] colon[54598,54599] ident[54599,54600] right-curly-bracket[54600,54601] right-curly-bracket[54601,54602] end=54602"
 `;
 
 exports[`CSS syntax — invariants css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-5 parses 1`] = `
@@ -10527,6 +10527,16 @@ exports[`CSS syntax — invariants css-syntax-minify-dir-as-the-attribute-it-app
 exports[`CSS syntax — invariants css-syntax-minify-dir-as-the-attribute-it-approximates-writes-it-where-the prints {"mode":"minify"} 1`] = `"a:dir(rtl){color:red}"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-dir-as-the-attribute-it-approximates-writes-it-where-the tokenizes 1`] = `"ident[0,1] colon[1,2] function[2,6] ident[6,9] right-parenthesis[9,10] left-curly-bracket[10,11] ident[11,16] colon[16,17] ident[17,20] right-curly-bracket[20,21] end=21"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-distant-rules-lend-each-list-only-what-it-lacks-as-written parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\";\\",[\\"ident\\",\\"padding\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"x\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\";\\",[\\"ident\\",\\"padding\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"y\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"px\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"c\\"]],[[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\";\\",[\\"ident\\",\\"padding\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"z\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"dimension\\",\\"3\\",3,\\"integer\\",\\"px\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"],\\",\\",\\".\\",[\\"ident\\",\\"c\\"]],[[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\";\\",[\\"ident\\",\\"padding\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"w\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"dimension\\",\\"4\\",4,\\"integer\\",\\"px\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"b\\"],\\",\\",\\".\\",[\\"ident\\",\\"c\\"]],[[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\";\\",[\\"ident\\",\\"padding\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-distant-rules-lend-each-list-only-what-it-lacks-as-written parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-distant-rules-lend-each-list-only-what-it-lacks-as-written prints {"mergeDistantRules":true,"mode":"minify"} 1`] = `".a,.b,.c{color:red;margin:0;padding:0}.x{top:1px}.y{top:2px}.z{top:3px}.w{top:4px}.b,.c{color:red;margin:0;padding:0}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-distant-rules-lend-each-list-only-what-it-lacks-as-written prints {"mode":"minify"} 1`] = `".a{color:red;margin:0;padding:0}.x{top:1px}.b{color:red;margin:0;padding:0}.y{top:2px}.c{color:red;margin:0;padding:0}.z{top:3px}.a,.c{color:red;margin:0;padding:0}.w{top:4px}.b,.c{color:red;margin:0;padding:0}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-distant-rules-lend-each-list-only-what-it-lacks-as-written tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,9] colon[9,10] number[10,11] semicolon[11,12] ident[12,19] colon[19,20] number[20,21] semicolon[21,22] ident[22,27] colon[27,28] ident[28,31] right-curly-bracket[31,32] delim[32,33] ident[33,34] left-curly-bracket[34,35] ident[35,38] colon[38,39] dimension[39,42|40,42] right-curly-bracket[42,43] delim[43,44] ident[44,45] left-curly-bracket[45,46] ident[46,52] colon[52,53] number[53,54] semicolon[54,55] ident[55,62] colon[62,63] number[63,64] semicolon[64,65] ident[65,70] colon[70,71] ident[71,74] right-curly-bracket[74,75] delim[75,76] ident[76,77] left-curly-bracket[77,78] ident[78,81] colon[81,82] dimension[82,85|83,85] right-curly-bracket[85,86] delim[86,87] ident[87,88] left-curly-bracket[88,89] ident[89,95] colon[95,96] number[96,97] semicolon[97,98] ident[98,105] colon[105,106] number[106,107] semicolon[107,108] ident[108,113] colon[113,114] ident[114,117] right-curly-bracket[117,118] delim[118,119] ident[119,120] left-curly-bracket[120,121] ident[121,124] colon[124,125] dimension[125,128|126,128] right-curly-bracket[128,129] delim[129,130] ident[130,131] comma[131,132] delim[132,133] ident[133,134] left-curly-bracket[134,135] ident[135,141] colon[141,142] number[142,143] semicolon[143,144] ident[144,151] colon[151,152] number[152,153] semicolon[153,154] ident[154,159] colon[159,160] ident[160,163] right-curly-bracket[163,164] delim[164,165] ident[165,166] left-curly-bracket[166,167] ident[167,170] colon[170,171] dimension[171,174|172,174] right-curly-bracket[174,175] delim[175,176] ident[176,177] comma[177,178] delim[178,179] ident[179,180] left-curly-bracket[180,181] ident[181,187] colon[187,188] number[188,189] semicolon[189,190] ident[190,197] colon[197,198] number[198,199] semicolon[199,200] ident[200,205] colon[205,206] ident[206,209] right-curly-bracket[209,210] whitespace[210,211] end=211"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-escapes-and-urls-in-a-value-spaced-for-an-old-tokenizer-keeps parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"x)url\\",[\\"ident\\",\\"y\\"],\\" \\",[\\"string\\",\\".x{color:red}\\"]]]]]"`;
 
