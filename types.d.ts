@@ -1340,6 +1340,7 @@ declare abstract class BranchID {
 	sibling(): BranchID;
 }
 type BufferEncoding =
+	| "binary"
 	| "ascii"
 	| "utf8"
 	| "utf-8"
@@ -1350,7 +1351,6 @@ type BufferEncoding =
 	| "base64"
 	| "base64url"
 	| "latin1"
-	| "binary"
 	| "hex";
 type BufferEncodingOption = "buffer" | { encoding: "buffer" };
 declare interface BufferEntry {
@@ -3426,9 +3426,9 @@ type CodeGenerationResultData = Omit<
 		| string[]
 		| Record<string, string>
 		| Set<string>
+		| { javascript?: string; "asset-url"?: string }
 		| [{ shareScope: string; initStage: number; init: string }]
 		| InitFragment<ChunkRenderContextJavascriptModulesPlugin>[]
-		| { javascript?: string; "asset-url"?: string }
 		| Map<string, string>
 	>,
 	"get" | "set" | "has" | "delete"
@@ -5626,12 +5626,12 @@ declare interface Configuration {
 		| "umd2"
 		| "jsonp"
 		| "system"
+		| "asset"
 		| "amd-async"
 		| "promise"
 		| "module-import"
 		| "script"
 		| "node-commonjs"
-		| "asset"
 		| "asset-url"
 		| "css-import"
 		| "css-url";
@@ -5843,10 +5843,10 @@ declare class ConstDependency extends NullDependency {
 	static ESM_CATEGORY: "esm";
 	static KINDS: Set<
 		| "worker"
+		| "url"
 		| "css-import"
 		| "css-url"
 		| "entry"
-		| "url"
 		| "module-dependency"
 		| "esm-import"
 		| "provided"
@@ -6705,8 +6705,8 @@ declare class CssLoadingRuntimeModule extends RuntimeModule {
 	static KINDS: Set<
 		| "html"
 		| "runtime"
-		| "normal"
 		| "css"
+		| "normal"
 		| "context"
 		| "remote"
 		| "consume-shared"
@@ -7009,8 +7009,8 @@ declare class CssModulesPlugin {
 }
 type CssNodePath<T = number, S = unknown> = Omit<
 	CssSyntaxPath,
-	| "flag"
 	| "node"
+	| "flag"
 	| "fieldCount"
 	| "field"
 	| "textOf"
@@ -7397,7 +7397,7 @@ declare interface CssParseOptions {
 	) => void;
 }
 declare abstract class CssParser extends Parser<BuiltCssModule> {
-	defaultMode: "global" | "auto" | "local" | "pure";
+	defaultMode: "global" | "pure" | "auto" | "local";
 	selectorNames: boolean;
 	options: {
 		/**
@@ -7476,7 +7476,7 @@ declare abstract class CssParser extends Parser<BuiltCssModule> {
 		/**
 		 * default mode
 		 */
-		defaultMode?: "global" | "auto" | "local" | "pure";
+		defaultMode?: "global" | "pure" | "auto" | "local";
 		/**
 		 * keep which names a CSS module declares as something other than a class or an id (a `@keyframes`, a `@counter-style`), which an HTML page's `class` and `id` never name (set when `experiments.html` is on)
 		 */
@@ -8543,10 +8543,10 @@ declare class Dependency {
 	is<
 		K extends
 			| "worker"
+			| "url"
 			| "css-import"
 			| "css-url"
 			| "entry"
-			| "url"
 			| "module-dependency"
 			| "esm-import"
 			| "provided"
@@ -8721,10 +8721,10 @@ declare class Dependency {
 	static ESM_CATEGORY: "esm";
 	static KINDS: Set<
 		| "worker"
+		| "url"
 		| "css-import"
 		| "css-url"
 		| "entry"
-		| "url"
 		| "module-dependency"
 		| "esm-import"
 		| "provided"
@@ -9500,10 +9500,10 @@ declare class ESMImportDependency extends ModuleDependency {
 	) => string[];
 	static KINDS: Set<
 		| "worker"
+		| "url"
 		| "css-import"
 		| "css-url"
 		| "entry"
-		| "url"
 		| "module-dependency"
 		| "esm-import"
 		| "provided"
@@ -9708,7 +9708,24 @@ declare interface EffectBasic {
 	 * the rule's value of the setting the effect is named for
 	 */
 	value?:
-		string | boolean | ResolveOptionsWebpackOptions | { [index: string]: any };
+		| string
+		| boolean
+		| ResolveOptionsWebpackOptions
+		| (AssetInlineGeneratorOptions & { [index: string]: any })
+		| (AssetResourceGeneratorOptions & { [index: string]: any })
+		| (CssGeneratorOptions & { [index: string]: any })
+		| (CssModuleGeneratorOptions & { [index: string]: any })
+		| (HtmlGeneratorOptions & { [index: string]: any })
+		| (JsonGeneratorOptions & { [index: string]: any })
+		| (AssetInlineGeneratorOptions &
+				AssetResourceGeneratorOptions & { [index: string]: any })
+		| (AssetParserOptions & { [index: string]: any })
+		| (CssParserOptions & { [index: string]: any })
+		| (CssAutoOrModuleParserOptions & { [index: string]: any })
+		| (CssModuleParserOptions & { [index: string]: any })
+		| (HtmlParserOptions & { [index: string]: any })
+		| (JavascriptParserOptions & { [index: string]: any })
+		| (JsonParserOptions & { [index: string]: any });
 }
 
 /**
@@ -9766,12 +9783,12 @@ declare class ElectronTargetPlugin {
 			| "umd2"
 			| "jsonp"
 			| "system"
+			| "asset"
 			| "amd-async"
 			| "promise"
 			| "module-import"
 			| "script"
 			| "node-commonjs"
-			| "asset"
 			| "asset-url"
 			| "css-import"
 			| "css-url"
@@ -9918,6 +9935,7 @@ declare class EnableWasmLoadingPlugin {
 type EncodingOptionFs =
 	| undefined
 	| null
+	| "binary"
 	| "ascii"
 	| "utf8"
 	| "utf-8"
@@ -9928,12 +9946,12 @@ type EncodingOptionFs =
 	| "base64"
 	| "base64url"
 	| "latin1"
-	| "binary"
 	| "hex"
 	| ObjectEncodingOptionsFs;
 type EncodingOptionResolver =
 	| undefined
 	| null
+	| "binary"
 	| "ascii"
 	| "utf8"
 	| "utf-8"
@@ -9944,7 +9962,6 @@ type EncodingOptionResolver =
 	| "base64"
 	| "base64url"
 	| "latin1"
-	| "binary"
 	| "hex"
 	| ObjectEncodingOptionsResolver;
 
@@ -9974,10 +9991,10 @@ declare class EntryDependency extends ModuleDependency {
 	constructor(request: string);
 	static KINDS: Set<
 		| "worker"
+		| "url"
 		| "css-import"
 		| "css-url"
 		| "entry"
-		| "url"
 		| "module-dependency"
 		| "esm-import"
 		| "provided"
@@ -11679,7 +11696,7 @@ declare interface ExternalItemValueObjectKnown {
 	 * How an external's exports interoperate with ES module imports, independent of the importing module's strictness (similar to Rollup's `output.interop`). 'default': treat as CommonJS, the default import is the whole exports (Node.js semantics). 'esModule': treat as an ES module namespace, the default import is unboxed to `.default`.
 	 * @since 5.109.0
 	 */
-	interop?: "default" | "esModule";
+	interop?: "esModule" | "default";
 }
 
 /**
@@ -11717,7 +11734,7 @@ declare class ExternalModule extends Module {
 		userRequest: string,
 		dependencyMeta?:
 			ImportDependencyMeta | CssImportDependencyMeta | AssetDependencyMeta,
-		interop?: "default" | "esModule",
+		interop?: "esModule" | "default",
 		sideEffects?: boolean
 	);
 	request: ExternalModuleRequest;
@@ -11725,7 +11742,7 @@ declare class ExternalModule extends Module {
 	userRequest: string;
 	dependencyMeta?:
 		ImportDependencyMeta | CssImportDependencyMeta | AssetDependencyMeta;
-	interop?: "default" | "esModule";
+	interop?: "esModule" | "default";
 	sideEffects?: boolean;
 
 	/**
@@ -11755,8 +11772,8 @@ declare class ExternalModule extends Module {
 	static KINDS: Set<
 		| "html"
 		| "runtime"
-		| "normal"
 		| "css"
+		| "normal"
 		| "context"
 		| "remote"
 		| "consume-shared"
@@ -11915,12 +11932,12 @@ declare class ExternalsPlugin {
 			| "umd2"
 			| "jsonp"
 			| "system"
+			| "asset"
 			| "amd-async"
 			| "promise"
 			| "module-import"
 			| "script"
 			| "node-commonjs"
-			| "asset"
 			| "asset-url"
 			| "css-import"
 			| "css-url"
@@ -11946,12 +11963,12 @@ declare class ExternalsPlugin {
 		| "umd2"
 		| "jsonp"
 		| "system"
+		| "asset"
 		| "amd-async"
 		| "promise"
 		| "module-import"
 		| "script"
 		| "node-commonjs"
-		| "asset"
 		| "asset-url"
 		| "css-import"
 		| "css-url"
@@ -12058,12 +12075,12 @@ type ExternalsType =
 	| "umd2"
 	| "jsonp"
 	| "system"
+	| "asset"
 	| "amd-async"
 	| "promise"
 	| "module-import"
 	| "script"
 	| "node-commonjs"
-	| "asset"
 	| "asset-url"
 	| "css-import"
 	| "css-url";
@@ -12742,8 +12759,8 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 	static KINDS: Set<
 		| "html"
 		| "runtime"
-		| "normal"
 		| "css"
+		| "normal"
 		| "context"
 		| "remote"
 		| "consume-shared"
@@ -13238,6 +13255,7 @@ declare interface HashedModuleIdsPluginOptions {
 	 * The encoding to use when generating the hash, defaults to 'base64'. All encodings from Node.JS' hash.digest are supported.
 	 */
 	hashDigest?:
+		| "binary"
 		| "ascii"
 		| "utf8"
 		| "utf-8"
@@ -13248,7 +13266,6 @@ declare interface HashedModuleIdsPluginOptions {
 		| "base64"
 		| "base64url"
 		| "latin1"
-		| "binary"
 		| "hex";
 
 	/**
@@ -13412,7 +13429,7 @@ declare interface HtmlChunkNameData {
 		| "script-module"
 		| "modulepreload";
 }
-type HtmlCssModulesAttributeKind = "fragment" | "ids" | "url" | "id" | "class";
+type HtmlCssModulesAttributeKind = "url" | "fragment" | "ids" | "id" | "class";
 declare interface HtmlEmittedContext {
 	outputName: string;
 }
@@ -13613,8 +13630,8 @@ declare interface HtmlMutableTag {
 }
 type HtmlNodePath<T = number, S = unknown> = Omit<
 	HtmlSyntaxPath,
-	| "flag"
 	| "node"
+	| "flag"
 	| "fieldCount"
 	| "field"
 	| "textOf"
@@ -15500,6 +15517,7 @@ declare interface IntermediateFileSystemExtras {
 	createWriteStream: (
 		pathLike: PathLikeFs,
 		result?:
+			| "binary"
 			| "ascii"
 			| "utf8"
 			| "utf-8"
@@ -15510,7 +15528,6 @@ declare interface IntermediateFileSystemExtras {
 			| "base64"
 			| "base64url"
 			| "latin1"
-			| "binary"
 			| "hex"
 			| WriteStreamOptions
 	) => NodeJS.WritableStream;
@@ -19476,8 +19493,8 @@ declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	static KINDS: Set<
 		| "html"
 		| "runtime"
-		| "normal"
 		| "css"
+		| "normal"
 		| "context"
 		| "remote"
 		| "consume-shared"
@@ -20770,8 +20787,8 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 	static KINDS: Set<
 		| "html"
 		| "runtime"
-		| "normal"
 		| "css"
+		| "normal"
 		| "context"
 		| "remote"
 		| "consume-shared"
@@ -22194,8 +22211,8 @@ declare class Module extends DependenciesBlock {
 		K extends
 			| "html"
 			| "runtime"
-			| "normal"
 			| "css"
+			| "normal"
 			| "context"
 			| "remote"
 			| "consume-shared"
@@ -22322,8 +22339,8 @@ declare class Module extends DependenciesBlock {
 	static KINDS: Set<
 		| "html"
 		| "runtime"
-		| "normal"
 		| "css"
+		| "normal"
 		| "context"
 		| "remote"
 		| "consume-shared"
@@ -22374,8 +22391,8 @@ declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 	static KINDS: Set<
 		| "html"
 		| "runtime"
-		| "normal"
 		| "css"
+		| "normal"
 		| "context"
 		| "remote"
 		| "consume-shared"
@@ -22412,10 +22429,10 @@ declare class ModuleDependency extends Dependency {
 	static Template: typeof DependencyTemplate;
 	static KINDS: Set<
 		| "worker"
+		| "url"
 		| "css-import"
 		| "css-url"
 		| "entry"
-		| "url"
 		| "module-dependency"
 		| "esm-import"
 		| "provided"
@@ -22687,12 +22704,12 @@ declare interface ModuleFederationPluginOptions {
 		| "umd2"
 		| "jsonp"
 		| "system"
+		| "asset"
 		| "amd-async"
 		| "promise"
 		| "module-import"
 		| "script"
 		| "node-commonjs"
-		| "asset"
 		| "asset-url"
 		| "css-import"
 		| "css-url";
@@ -23621,12 +23638,27 @@ declare interface ModuleSettings {
 	/**
 	 * Options for parsing.
 	 */
-	parser?: { [index: string]: any };
+	parser?:
+		| (AssetParserOptions & { [index: string]: any })
+		| (CssParserOptions & { [index: string]: any })
+		| (CssAutoOrModuleParserOptions & { [index: string]: any })
+		| (CssModuleParserOptions & { [index: string]: any })
+		| (HtmlParserOptions & { [index: string]: any })
+		| (JavascriptParserOptions & { [index: string]: any })
+		| (JsonParserOptions & { [index: string]: any });
 
 	/**
 	 * The options for the module generator.
 	 */
-	generator?: { [index: string]: any };
+	generator?:
+		| (AssetInlineGeneratorOptions & { [index: string]: any })
+		| (AssetResourceGeneratorOptions & { [index: string]: any })
+		| (CssGeneratorOptions & { [index: string]: any })
+		| (CssModuleGeneratorOptions & { [index: string]: any })
+		| (HtmlGeneratorOptions & { [index: string]: any })
+		| (JsonGeneratorOptions & { [index: string]: any })
+		| (AssetInlineGeneratorOptions &
+				AssetResourceGeneratorOptions & { [index: string]: any });
 
 	/**
 	 * Enable/Disable extracting source map.
@@ -24516,8 +24548,8 @@ declare class NormalModule extends Module {
 	static KINDS: Set<
 		| "html"
 		| "runtime"
-		| "normal"
 		| "css"
+		| "normal"
 		| "context"
 		| "remote"
 		| "consume-shared"
@@ -24974,7 +25006,23 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	 */
 	getParser<T extends string>(
 		type: T,
-		parserOptions?: ParserOptions
+		parserOptions?: (Record<"javascript/auto", JavascriptParserOptions> &
+			Record<"javascript/dynamic", JavascriptParserOptions> &
+			Record<"javascript/esm", JavascriptParserOptions> &
+			Record<"json", JsonParserOptions> &
+			Record<"asset", AssetParserOptions> &
+			Record<"asset/inline", EmptyParserOptions> &
+			Record<"asset/resource", EmptyParserOptions> &
+			Record<"asset/source", EmptyParserOptions> &
+			Record<"asset/bytes", EmptyParserOptions> &
+			Record<"webassembly/async", EmptyParserOptions> &
+			Record<"webassembly/sync", EmptyParserOptions> &
+			Record<"css", CssParserOptions> &
+			Record<"css/auto", CssModuleParserOptions> &
+			Record<"css/module", CssModuleParserOptions> &
+			Record<"css/global", CssModuleParserOptions> &
+			Record<"html", EmptyParserOptions> &
+			Record<string, ParserOptions>)[T]
 	): (Record<"javascript/auto", JavascriptParser> &
 		Record<"javascript/dynamic", JavascriptParser> &
 		Record<"javascript/esm", JavascriptParser> &
@@ -24998,7 +25046,23 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	 */
 	createParser<T extends string>(
 		type: T,
-		parserOptions?: ParserOptions
+		parserOptions?: (Record<"javascript/auto", JavascriptParserOptions> &
+			Record<"javascript/dynamic", JavascriptParserOptions> &
+			Record<"javascript/esm", JavascriptParserOptions> &
+			Record<"json", JsonParserOptions> &
+			Record<"asset", AssetParserOptions> &
+			Record<"asset/inline", EmptyParserOptions> &
+			Record<"asset/resource", EmptyParserOptions> &
+			Record<"asset/source", EmptyParserOptions> &
+			Record<"asset/bytes", EmptyParserOptions> &
+			Record<"webassembly/async", EmptyParserOptions> &
+			Record<"webassembly/sync", EmptyParserOptions> &
+			Record<"css", CssParserOptions> &
+			Record<"css/auto", CssModuleParserOptions> &
+			Record<"css/module", CssModuleParserOptions> &
+			Record<"css/global", CssModuleParserOptions> &
+			Record<"html", EmptyParserOptions> &
+			Record<string, ParserOptions>)[T]
 	): (Record<"javascript/auto", JavascriptParser> &
 		Record<"javascript/dynamic", JavascriptParser> &
 		Record<"javascript/esm", JavascriptParser> &
@@ -25022,7 +25086,23 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	 */
 	getGenerator<T extends string>(
 		type: T,
-		generatorOptions?: GeneratorOptions
+		generatorOptions?: (Record<"javascript/auto", EmptyGeneratorOptions> &
+			Record<"javascript/dynamic", EmptyGeneratorOptions> &
+			Record<"javascript/esm", EmptyGeneratorOptions> &
+			Record<"json", JsonGeneratorOptions> &
+			Record<"asset", AssetGeneratorOptions> &
+			Record<"asset/inline", AssetGeneratorOptions> &
+			Record<"asset/resource", AssetGeneratorOptions> &
+			Record<"asset/source", EmptyGeneratorOptions> &
+			Record<"asset/bytes", EmptyGeneratorOptions> &
+			Record<"webassembly/async", EmptyGeneratorOptions> &
+			Record<"webassembly/sync", EmptyGeneratorOptions> &
+			Record<"css", CssGeneratorOptions> &
+			Record<"css/auto", CssModuleGeneratorOptions> &
+			Record<"css/module", CssModuleGeneratorOptions> &
+			Record<"css/global", CssModuleGeneratorOptions> &
+			Record<"html", HtmlGeneratorOptions> &
+			Record<string, GeneratorOptions>)[T]
 	): (Record<"javascript/auto", JavascriptGenerator> &
 		Record<"javascript/dynamic", JavascriptGenerator> &
 		Record<"javascript/esm", JavascriptGenerator> &
@@ -25046,7 +25126,23 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	 */
 	createGenerator<T extends string>(
 		type: T,
-		generatorOptions?: GeneratorOptions
+		generatorOptions?: (Record<"javascript/auto", EmptyGeneratorOptions> &
+			Record<"javascript/dynamic", EmptyGeneratorOptions> &
+			Record<"javascript/esm", EmptyGeneratorOptions> &
+			Record<"json", JsonGeneratorOptions> &
+			Record<"asset", AssetGeneratorOptions> &
+			Record<"asset/inline", AssetGeneratorOptions> &
+			Record<"asset/resource", AssetGeneratorOptions> &
+			Record<"asset/source", EmptyGeneratorOptions> &
+			Record<"asset/bytes", EmptyGeneratorOptions> &
+			Record<"webassembly/async", EmptyGeneratorOptions> &
+			Record<"webassembly/sync", EmptyGeneratorOptions> &
+			Record<"css", CssGeneratorOptions> &
+			Record<"css/auto", CssModuleGeneratorOptions> &
+			Record<"css/module", CssModuleGeneratorOptions> &
+			Record<"css/global", CssModuleGeneratorOptions> &
+			Record<"html", HtmlGeneratorOptions> &
+			Record<string, GeneratorOptions>)[T]
 	): (Record<"javascript/auto", JavascriptGenerator> &
 		Record<"javascript/dynamic", JavascriptGenerator> &
 		Record<"javascript/esm", JavascriptGenerator> &
@@ -25218,10 +25314,10 @@ declare class NullDependency extends Dependency {
 	static ESM_CATEGORY: "esm";
 	static KINDS: Set<
 		| "worker"
+		| "url"
 		| "css-import"
 		| "css-url"
 		| "entry"
-		| "url"
 		| "module-dependency"
 		| "esm-import"
 		| "provided"
@@ -25311,6 +25407,7 @@ declare interface ObjectDeserializerContextObjectMiddlewareObject_4 {
 declare interface ObjectEncodingOptionsFs {
 	encoding?:
 		| null
+		| "binary"
 		| "ascii"
 		| "utf8"
 		| "utf-8"
@@ -25321,7 +25418,6 @@ declare interface ObjectEncodingOptionsFs {
 		| "base64"
 		| "base64url"
 		| "latin1"
-		| "binary"
 		| "hex";
 }
 declare interface ObjectEncodingOptionsResolver {
@@ -25330,6 +25426,7 @@ declare interface ObjectEncodingOptionsResolver {
 	 */
 	encoding?:
 		| null
+		| "binary"
 		| "ascii"
 		| "utf8"
 		| "utf-8"
@@ -25340,7 +25437,6 @@ declare interface ObjectEncodingOptionsResolver {
 		| "base64"
 		| "base64url"
 		| "latin1"
-		| "binary"
 		| "hex";
 }
 
@@ -27244,6 +27340,7 @@ declare interface OutputFileSystem {
 	createReadStream?: (
 		path: PathLikeFs,
 		options?:
+			| "binary"
 			| "ascii"
 			| "utf8"
 			| "utf-8"
@@ -27254,7 +27351,6 @@ declare interface OutputFileSystem {
 			| "base64"
 			| "base64url"
 			| "latin1"
-			| "binary"
 			| "hex"
 			| ReadStreamOptions
 	) => NodeJS.ReadableStream;
@@ -29346,6 +29442,7 @@ declare interface ReadFileFs {
 	(
 		path: PathOrFileDescriptorFs,
 		options:
+			| "binary"
 			| ({ encoding: BufferEncoding; flag?: string } & Abortable)
 			| "ascii"
 			| "utf8"
@@ -29357,7 +29454,6 @@ declare interface ReadFileFs {
 			| "base64"
 			| "base64url"
 			| "latin1"
-			| "binary"
 			| "hex",
 		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
 	): void;
@@ -29366,6 +29462,7 @@ declare interface ReadFileFs {
 		options:
 			| undefined
 			| null
+			| "binary"
 			| "ascii"
 			| "utf8"
 			| "utf-8"
@@ -29376,7 +29473,6 @@ declare interface ReadFileFs {
 			| "base64"
 			| "base64url"
 			| "latin1"
-			| "binary"
 			| "hex"
 			| (ObjectEncodingOptionsFs & { flag?: string } & Abortable),
 		callback: (
@@ -29399,6 +29495,7 @@ declare interface ReadFileResolver {
 	(
 		path: PathOrFileDescriptorResolver,
 		options:
+			| "binary"
 			| "ascii"
 			| "utf8"
 			| "utf-8"
@@ -29409,7 +29506,6 @@ declare interface ReadFileResolver {
 			| "base64"
 			| "base64url"
 			| "latin1"
-			| "binary"
 			| "hex"
 			| ({ encoding: BufferEncoding; flag?: string } & Abortable),
 		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
@@ -29419,6 +29515,7 @@ declare interface ReadFileResolver {
 		options:
 			| undefined
 			| null
+			| "binary"
 			| "ascii"
 			| "utf8"
 			| "utf-8"
@@ -29429,7 +29526,6 @@ declare interface ReadFileResolver {
 			| "base64"
 			| "base64url"
 			| "latin1"
-			| "binary"
 			| "hex"
 			| (ObjectEncodingOptionsResolver & { flag?: string } & Abortable),
 		callback: (
@@ -29454,6 +29550,7 @@ declare interface ReadFileSync {
 	(
 		path: PathOrFileDescriptorFs,
 		options:
+			| "binary"
 			| "ascii"
 			| "utf8"
 			| "utf-8"
@@ -29464,7 +29561,6 @@ declare interface ReadFileSync {
 			| "base64"
 			| "base64url"
 			| "latin1"
-			| "binary"
 			| "hex"
 			| { encoding: BufferEncoding; flag?: string }
 	): string;
@@ -29487,6 +29583,7 @@ declare interface ReaddirFs {
 		options:
 			| undefined
 			| null
+			| "binary"
 			| "ascii"
 			| "utf8"
 			| "utf-8"
@@ -29497,11 +29594,11 @@ declare interface ReaddirFs {
 			| "base64"
 			| "base64url"
 			| "latin1"
-			| "binary"
 			| "hex"
 			| {
 					encoding:
 						| null
+						| "binary"
 						| "ascii"
 						| "utf8"
 						| "utf-8"
@@ -29512,7 +29609,6 @@ declare interface ReaddirFs {
 						| "base64"
 						| "base64url"
 						| "latin1"
-						| "binary"
 						| "hex";
 					withFileTypes?: false;
 					recursive?: boolean;
@@ -29531,6 +29627,7 @@ declare interface ReaddirFs {
 		options:
 			| undefined
 			| null
+			| "binary"
 			| "ascii"
 			| "utf8"
 			| "utf-8"
@@ -29541,7 +29638,6 @@ declare interface ReaddirFs {
 			| "base64"
 			| "base64url"
 			| "latin1"
-			| "binary"
 			| "hex"
 			| (ObjectEncodingOptionsFs & {
 					withFileTypes?: false;
@@ -29582,6 +29678,7 @@ declare interface ReaddirResolver {
 		options:
 			| undefined
 			| null
+			| "binary"
 			| "ascii"
 			| "utf8"
 			| "utf-8"
@@ -29592,11 +29689,11 @@ declare interface ReaddirResolver {
 			| "base64"
 			| "base64url"
 			| "latin1"
-			| "binary"
 			| "hex"
 			| {
 					encoding:
 						| null
+						| "binary"
 						| "ascii"
 						| "utf8"
 						| "utf-8"
@@ -29607,7 +29704,6 @@ declare interface ReaddirResolver {
 						| "base64"
 						| "base64url"
 						| "latin1"
-						| "binary"
 						| "hex";
 					withFileTypes?: false;
 					recursive?: boolean;
@@ -29626,6 +29722,7 @@ declare interface ReaddirResolver {
 		options:
 			| undefined
 			| null
+			| "binary"
 			| "ascii"
 			| "utf8"
 			| "utf-8"
@@ -29636,7 +29733,6 @@ declare interface ReaddirResolver {
 			| "base64"
 			| "base64url"
 			| "latin1"
-			| "binary"
 			| "hex"
 			| (ObjectEncodingOptionsResolver & {
 					withFileTypes?: false;
@@ -29680,6 +29776,7 @@ declare interface ReaddirSync {
 		path: PathLikeFs,
 		options?:
 			| null
+			| "binary"
 			| "ascii"
 			| "utf8"
 			| "utf-8"
@@ -29690,11 +29787,11 @@ declare interface ReaddirSync {
 			| "base64"
 			| "base64url"
 			| "latin1"
-			| "binary"
 			| "hex"
 			| {
 					encoding:
 						| null
+						| "binary"
 						| "ascii"
 						| "utf8"
 						| "utf-8"
@@ -29705,7 +29802,6 @@ declare interface ReaddirSync {
 						| "base64"
 						| "base64url"
 						| "latin1"
-						| "binary"
 						| "hex";
 					withFileTypes?: false;
 					recursive?: boolean;
@@ -29721,6 +29817,7 @@ declare interface ReaddirSync {
 		path: PathLikeFs,
 		options?:
 			| null
+			| "binary"
 			| "ascii"
 			| "utf8"
 			| "utf-8"
@@ -29731,7 +29828,6 @@ declare interface ReaddirSync {
 			| "base64"
 			| "base64url"
 			| "latin1"
-			| "binary"
 			| "hex"
 			| (ObjectEncodingOptionsFs & {
 					withFileTypes?: false;
@@ -31220,7 +31316,15 @@ declare interface RuleSetRule {
 	/**
 	 * The options for the module generator.
 	 */
-	generator?: { [index: string]: any };
+	generator?:
+		| (AssetInlineGeneratorOptions & { [index: string]: any })
+		| (AssetResourceGeneratorOptions & { [index: string]: any })
+		| (CssGeneratorOptions & { [index: string]: any })
+		| (CssModuleGeneratorOptions & { [index: string]: any })
+		| (HtmlGeneratorOptions & { [index: string]: any })
+		| (JsonGeneratorOptions & { [index: string]: any })
+		| (AssetInlineGeneratorOptions &
+				AssetResourceGeneratorOptions & { [index: string]: any });
 
 	/**
 	 * Match the module resource against glob patterns, `!` in front of a pattern excludes it. Combines with `test`, `include` and `exclude`.
@@ -31291,7 +31395,14 @@ declare interface RuleSetRule {
 	/**
 	 * Options for parsing.
 	 */
-	parser?: { [index: string]: any };
+	parser?:
+		| (AssetParserOptions & { [index: string]: any })
+		| (CssParserOptions & { [index: string]: any })
+		| (CssAutoOrModuleParserOptions & { [index: string]: any })
+		| (CssModuleParserOptions & { [index: string]: any })
+		| (HtmlParserOptions & { [index: string]: any })
+		| (JavascriptParserOptions & { [index: string]: any })
+		| (JsonParserOptions & { [index: string]: any });
 
 	/**
 	 * Match the import phase of the dependency.
@@ -31696,8 +31807,8 @@ declare class RuntimeModule extends Module {
 	static KINDS: Set<
 		| "html"
 		| "runtime"
-		| "normal"
 		| "css"
+		| "normal"
 		| "context"
 		| "remote"
 		| "consume-shared"
@@ -34153,8 +34264,8 @@ declare class StartupEntrypointRuntimeModule extends RuntimeModule {
 	static KINDS: Set<
 		| "html"
 		| "runtime"
-		| "normal"
 		| "css"
+		| "normal"
 		| "context"
 		| "remote"
 		| "consume-shared"
@@ -34471,10 +34582,10 @@ declare class StaticExportsDependency extends NullDependency {
 	canMangle: boolean;
 	static KINDS: Set<
 		| "worker"
+		| "url"
 		| "css-import"
 		| "css-url"
 		| "entry"
-		| "url"
 		| "module-dependency"
 		| "esm-import"
 		| "provided"
@@ -35314,6 +35425,7 @@ type StatsValue =
 declare interface StreamOptions {
 	flags?: string;
 	encoding?:
+		| "binary"
 		| "ascii"
 		| "utf8"
 		| "utf-8"
@@ -35324,7 +35436,6 @@ declare interface StreamOptions {
 		| "base64"
 		| "base64url"
 		| "latin1"
-		| "binary"
 		| "hex";
 	fd?: number | FileHandle;
 	mode?: number;
@@ -36311,8 +36422,8 @@ declare class TypeScriptPlugin {
 type TypedNode<TNode, T> = TNode & { readonly __nodeType: T };
 type TypedNodePath<TPath, TNode, P extends NodeParts, T, S = unknown> = Omit<
 	TPath,
-	| "flag"
 	| "node"
+	| "flag"
 	| "fieldCount"
 	| "field"
 	| "textOf"
@@ -37155,12 +37266,12 @@ declare interface WebpackOptionsNormalized {
 		| "umd2"
 		| "jsonp"
 		| "system"
+		| "asset"
 		| "amd-async"
 		| "promise"
 		| "module-import"
 		| "script"
 		| "node-commonjs"
-		| "asset"
 		| "asset-url"
 		| "css-import"
 		| "css-url";
@@ -37329,12 +37440,12 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 		| "umd2"
 		| "jsonp"
 		| "system"
+		| "asset"
 		| "amd-async"
 		| "promise"
 		| "module-import"
 		| "script"
 		| "node-commonjs"
-		| "asset"
 		| "asset-url"
 		| "css-import"
 		| "css-url"
@@ -37771,6 +37882,7 @@ declare interface WriteFile {
 }
 type WriteFileOptions =
 	| null
+	| "binary"
 	| "ascii"
 	| "utf8"
 	| "utf-8"
@@ -37781,7 +37893,6 @@ type WriteFileOptions =
 	| "base64"
 	| "base64url"
 	| "latin1"
-	| "binary"
 	| "hex"
 	| (ObjectEncodingOptionsFs &
 			Abortable & { mode?: string | number; flag?: string; flush?: boolean });

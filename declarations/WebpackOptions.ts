@@ -5412,7 +5412,13 @@ export interface RuleSetRule {
 	/**
 	 * The options for the module generator.
 	 */
-	generator?: { [key: string]: any };
+	generator?: {
+		[T in keyof GeneratorOptionsByModuleTypeKnown]-?: [
+			keyof NonNullable<GeneratorOptionsByModuleTypeKnown[T]>
+		] extends [never]
+			? never
+			: NonNullable<GeneratorOptionsByModuleTypeKnown[T]>;
+	}[keyof GeneratorOptionsByModuleTypeKnown] & { [key: string]: any };
 	/**
 	 * Match the module resource against glob patterns, `!` in front of a pattern excludes it. Combines with `test`, `include` and `exclude`.
 	 * @since 5.110.0
@@ -5455,7 +5461,13 @@ export interface RuleSetRule {
 	 * Options for parsing.
 	 * @additionalProperties
 	 */
-	parser?: { [key: string]: any };
+	parser?: {
+		[T in keyof ParserOptionsByModuleTypeKnown]-?: [
+			keyof NonNullable<ParserOptionsByModuleTypeKnown[T]>
+		] extends [never]
+			? never
+			: NonNullable<ParserOptionsByModuleTypeKnown[T]>;
+	}[keyof ParserOptionsByModuleTypeKnown] & { [key: string]: any };
 	/**
 	 * Match the import phase of the dependency.
 	 */
