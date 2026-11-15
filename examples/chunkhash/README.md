@@ -49,7 +49,7 @@ module.exports = config;
 	<body>
 		<!-- inlined minimized file "runtime~main.[chunkhash].js" -->
 		<script>
-			(()=>{"use strict";var e={};const t={};function o(r){const n=t[r];if(void 0!==n)return n.exports;const s=t[r]={exports:{}};return e[r](s,s.exports,o),s.exports}o.m=e,(()=>{const e=[];o.O=(t,r,n)=>{if(!r){for(var s=0;s<e.length;s++){let[r,n]=e[s],c=!0;for(var i=0;i<r.length;i++)o.O.j(r[i])?r.splice(i--,1):c=!1;if(c){e.splice(s--,1);const o=n();void 0!==o&&(t=o)}}return t}e.push([r,n])}})(),(()=>{const e=Object.getPrototypeOf;let t;o.t=function(r,n){if(1&n&&(r=this(r)),8&n)return r;if("object"==typeof r&&r){if(4&n&&r.__esModule)return r;if(16&n&&"function"==typeof r.then)return r}const s=Object.create(null);o.r(s);const i={};t=t||[null,e({}),e([]),e(e)];for(var c=2&n&&r;("object"==typeof c||"function"==typeof c)&&!~t.indexOf(c);c=e(c))Object.getOwnPropertyNames(c).forEach(e=>i[e]=()=>r[e]);return i.default=()=>r,o.d(s,i),s}})(),o.d=(e,t)=>{for(var r in t)o.o(t,r)&&!o.o(e,r)&&Object.defineProperty(e,r,{enumerable:!0,get:t[r]})},o.f={},o.e=e=>{const t=[];return o.f.j(e,t),Promise.all(t)},o.u=e=>e+".[chunkhash].js",o.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t),(()=>{const e={};o.l=(t,r,n,s)=>{if(e[t])return void e[t].push(r);let i,c;if(void 0!==n){const e=document.getElementsByTagName("script");for(var u=0;u<e.length;u++){const o=e[u];if(o.getAttribute("src")==t){i=o;break}}}i||(c=!0,i=document.createElement("script"),i.charset="utf-8",o.nc&&i.setAttribute("nonce",o.nc),i.src=t),e[t]=[r];const l=(o,r)=>{i.onerror=i.onload=null,clearTimeout(f);const n=e[t];if(delete e[t],i.parentNode?.removeChild(i),n?.forEach(e=>e(r)),o)return o(r)},f=setTimeout(l.bind(0,0,{type:"timeout",target:i}),12e4);i.onerror=l.bind(0,i.onerror),i.onload=l.bind(0,i.onload),c&&document.head.appendChild(i)}})(),o.r=e=>{Object.defineProperties(e,{[Symbol.toStringTag]:{value:"Module"},__esModule:{value:!0}})},o.p="dist/",(()=>{const e={354:0};o.f.j=(t,r)=>{let n=o.o(e,t)?e[t]:void 0;if(0!==n)if(n)r.push(n[2]);else if(354!=t){const s=new Promise((o,r)=>n=e[t]=[o,r]);r.push(n[2]=s);const i=new Error,c=r=>{if(o.o(e,t)&&(n=e[t],0!==n&&(e[t]=void 0),n)){const e=r&&("load"===r.type?"missing":r.type),o=r?.target?.src;i.message="Loading chunk "+t+" failed.\n("+e+": "+o+")",i.name="ChunkLoadError",i.type=e,i.request=o,i.event=r,n[1](i)}};o.l(o.p+o.u(t),c,"chunk-"+t,t)}else e[t]=0},o.O.j=t=>0===e[t];const t=(t,r)=>{let[n,s,i]=r;var c,u,l=0;if(n.some(t=>0!==e[t])){for(c in s)o.o(s,c)&&(o.m[c]=s[c]);if(i)var f=i(o)}for(t&&t(r);l<n.length;l++)u=n[l],o.o(e,u)&&e[u]&&e[u][0](),e[u]=0;return o.O(f)},r=Array.isArray(self.webpackChunk)?self.webpackChunk:self.webpackChunk=[];r.forEach(t.bind(null,0)),r.push=t.bind(null,r.push.bind(r))})()})();
+			(()=>{"use strict";var e={};const t={};function o(r){const n=t[r];if(void 0!==n)return n.exports;const s=t[r]={exports:{}};return e[r](s,s.exports,o),s.exports}o.m=e,(()=>{const e=[];o.O=(t,r,n)=>{if(!r){for(var s=0;s<e.length;s++){let[r,n]=e[s],i=!0;for(var c=0;c<r.length;c++)o.O.j(r[c])?r.splice(c--,1):i=!1;if(i){e.splice(s--,1);const o=n();void 0!==o&&(t=o)}}return t}e.push([r,n])}})(),(()=>{const e=Object.getPrototypeOf;let t;o.t=function(r,n){if(1&n&&(r=this(r)),8&n)return r;if("object"==typeof r&&r){if(4&n&&r.__esModule)return r;if(16&n&&"function"==typeof r.then)return r}const s=Object.create(null);o.r(s);const c=Object.create(null);t=t||[null,e({}),e([]),e(e)];for(var i=2&n&&r;("object"==typeof i||"function"==typeof i)&&!~t.indexOf(i);i=e(i))Object.getOwnPropertyNames(i).forEach(e=>c[e]=()=>r[e]);return c.default=()=>r,o.d(s,c),s}})(),o.d=(e,t)=>{for(var r in t)o.o(t,r)&&!o.o(e,r)&&Object.defineProperty(e,r,{enumerable:!0,get:t[r]})},o.f={},o.e=e=>{const t=[];return o.f.j(e,t),Promise.all(t)},o.u=e=>e+".[chunkhash].js",o.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t),(()=>{const e={};o.l=(t,r,n,s)=>{if(e[t])return void e[t].push(r);let c,i;if(void 0!==n){const e=document.getElementsByTagName("script");for(var u=0;u<e.length;u++){const o=e[u];if(o.getAttribute("src")==t){c=o;break}}}c||(i=!0,c=document.createElement("script"),c.charset="utf-8",o.nc&&c.setAttribute("nonce",o.nc),c.src=t),e[t]=[r];const l=(o,r)=>{c.onerror=c.onload=null,clearTimeout(a);const n=e[t];if(delete e[t],c.parentNode?.removeChild(c),n?.forEach(e=>e(r)),o)return o(r)},a=setTimeout(l.bind(0,0,{type:"timeout",target:c}),12e4);c.onerror=l.bind(0,c.onerror),c.onload=l.bind(0,c.onload),i&&document.head.appendChild(c)}})(),o.r=e=>{Object.defineProperties(e,{[Symbol.toStringTag]:{value:"Module"},__esModule:{value:!0}})},o.p="dist/",(()=>{const e={354:0};o.f.j=(t,r)=>{let n=o.o(e,t)?e[t]:void 0;if(0!==n)if(n)r.push(n[2]);else if(354!=t){const s=new Promise((o,r)=>n=e[t]=[o,r]);r.push(n[2]=s);const c=new Error,i=r=>{if(o.o(e,t)&&(n=e[t],0!==n&&(e[t]=void 0),n)){const e=r&&("load"===r.type?"missing":r.type),o=r?.target?.src;c.message="Loading chunk "+t+" failed.\n("+e+": "+o+")",c.name="ChunkLoadError",c.type=e,c.request=o,c.event=r,n[1](c)}};o.l(o.p+o.u(t),i,"chunk-"+t,t)}else e[t]=0},o.O.j=t=>0===e[t];const t=(t,r)=>{let[n,s,c]=r;var i,u,l=0;if(n.some(t=>0!==e[t])){for(i in s)o.o(s,i)&&(o.m[i]=s[i]);if(c)var a=c(o)}for(t&&t(r);l<n.length;l++)u=n[l],o.o(e,u)&&e[u]&&e[u][0](),e[u]=0;return o.O(a)},r=Array.isArray(self.webpackChunk)?self.webpackChunk:self.webpackChunk=[];r.forEach(t.bind(null,0)),r.push=t.bind(null,r.push.bind(r))})()})();
 		</script>
 
 		<script src="dist/main.[chunkhash].js"></script>
@@ -144,7 +144,7 @@ module.exports = config;
 /******/ 			}
 /******/ 			const ns = Object.create(null);
 /******/ 			__webpack_require__.r(ns);
-/******/ 			const def = {};
+/******/ 			const def = Object.create(null);
 /******/ 			leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
 /******/ 			for(var current = mode & 2 && value; (typeof current == 'object' || typeof current == 'function') && !~leafPrototypes.indexOf(current); current = getProto(current)) {
 /******/ 				Object.getOwnPropertyNames(current).forEach((key) => (def[key] = () => (value[key])));
@@ -378,9 +378,9 @@ chunk (runtime: runtime~main) main.[chunkhash].js (main) 55 bytes [initial] [ren
   ./example.js 55 bytes [built] [code generated]
     [used exports unknown]
     entry ./example main
-chunk (runtime: runtime~main) runtime~main.[chunkhash].js (runtime~main) 6.97 KiB [entry] [rendered]
+chunk (runtime: runtime~main) runtime~main.[chunkhash].js (runtime~main) 6.99 KiB [entry] [rendered]
   > ./example main
-  runtime modules 6.97 KiB 10 modules
+  runtime modules 6.99 KiB 10 modules
 chunk (runtime: runtime~main) 2.[chunkhash].js 28 bytes [rendered]
   > ./async1 ./example.js 2:0-18
   ./async1.js 28 bytes [built] [code generated]
@@ -397,19 +397,19 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset runtime~main.[chunkhash].js 2.58 KiB [emitted] [minimized] (name: runtime~main)
+asset runtime~main.[chunkhash].js 2.59 KiB [emitted] [minimized] (name: runtime~main)
 asset main.[chunkhash].js 174 bytes [emitted] [minimized] (name: main)
 asset 471.[chunkhash].js 98 bytes [emitted] [minimized]
 asset 18.[chunkhash].js 96 bytes [emitted] [minimized]
-Entrypoint main 2.75 KiB = runtime~main.[chunkhash].js 2.58 KiB main.[chunkhash].js 174 bytes
+Entrypoint main 2.76 KiB = runtime~main.[chunkhash].js 2.59 KiB main.[chunkhash].js 174 bytes
 chunk (runtime: runtime~main) 18.[chunkhash].js 28 bytes [rendered]
   > ./async1 ./example.js 2:0-18
   ./async1.js 28 bytes [built] [code generated]
     [used exports unknown]
     import() ./async1 ./example.js 2:0-18
-chunk (runtime: runtime~main) runtime~main.[chunkhash].js (runtime~main) 6.97 KiB [entry] [rendered]
+chunk (runtime: runtime~main) runtime~main.[chunkhash].js (runtime~main) 6.99 KiB [entry] [rendered]
   > ./example main
-  runtime modules 6.97 KiB 10 modules
+  runtime modules 6.99 KiB 10 modules
 chunk (runtime: runtime~main) 471.[chunkhash].js 28 bytes [rendered]
   > ./async2 ./example.js 3:0-18
   ./async2.js 28 bytes [built] [code generated]

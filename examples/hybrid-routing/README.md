@@ -286,7 +286,7 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 			}
 /******/ 			const ns = Object.create(null);
 /******/ 			__webpack_require__.r(ns);
-/******/ 			const def = {};
+/******/ 			const def = Object.create(null);
 /******/ 			leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
 /******/ 			for(var current = mode & 2 && value; (typeof current == 'object' || typeof current == 'function') && !~leafPrototypes.indexOf(current); current = getProto(current)) {
 /******/ 				Object.getOwnPropertyNames(current).forEach((key) => (def[key] = () => (value[key])));
@@ -518,7 +518,7 @@ asset pageB.bundle.js 12 KiB [emitted] (name: pageB)
 asset router_js.bundle.js 2.63 KiB [emitted]
 asset aPage.bundle.js 419 bytes [emitted] (name: aPage)
 asset bPage.bundle.js 419 bytes [emitted] (name: bPage)
-Entrypoint pageA 15 KiB = router_js.bundle.js 2.63 KiB aPage.bundle.js 419 bytes pageA.bundle.js 12 KiB
+Entrypoint pageA 15.1 KiB = router_js.bundle.js 2.63 KiB aPage.bundle.js 419 bytes pageA.bundle.js 12 KiB
 Entrypoint pageB 15 KiB = router_js.bundle.js 2.63 KiB bPage.bundle.js 419 bytes pageB.bundle.js 12 KiB
 chunk (runtime: pageA, pageB) aPage.bundle.js (aPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
   > ./aPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./aPage
@@ -538,17 +538,17 @@ chunk (runtime: pageA, pageB) bPage.bundle.js (bPage) 59 bytes [initial] [render
     cjs require ./bPage ./bEntry.js 3:7-25
     cjs self exports reference ./bPage.js 1:0-14
     import() context element ./bPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./bPage
-chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 6.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 6.97 KiB (runtime) [entry] [rendered]
   > ./aEntry pageA
   > ./router pageA
-  runtime modules 6.95 KiB 10 modules
+  runtime modules 6.97 KiB 10 modules
   ./aEntry.js 87 bytes [built] [code generated]
     [used exports unknown]
     entry ./aEntry pageA
-chunk (runtime: pageB) pageB.bundle.js (pageB) 87 bytes (javascript) 6.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.bundle.js (pageB) 87 bytes (javascript) 6.97 KiB (runtime) [entry] [rendered]
   > ./bEntry pageB
   > ./router pageB
-  runtime modules 6.95 KiB 10 modules
+  runtime modules 6.97 KiB 10 modules
   ./bEntry.js 87 bytes [built] [code generated]
     [used exports unknown]
     entry ./bEntry pageB
@@ -568,13 +568,13 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset pageA.bundle.js 2.67 KiB [emitted] [minimized] (name: pageA)
-asset pageB.bundle.js 2.67 KiB [emitted] [minimized] (name: pageB)
+asset pageA.bundle.js 2.69 KiB [emitted] [minimized] (name: pageA)
+asset pageB.bundle.js 2.69 KiB [emitted] [minimized] (name: pageB)
 asset router_js.bundle.js 614 bytes [emitted] [minimized]
 asset aPage.bundle.js 148 bytes [emitted] [minimized] (name: aPage)
 asset bPage.bundle.js 148 bytes [emitted] [minimized] (name: bPage)
-Entrypoint pageA 3.42 KiB = router_js.bundle.js 614 bytes aPage.bundle.js 148 bytes pageA.bundle.js 2.67 KiB
-Entrypoint pageB 3.42 KiB = router_js.bundle.js 614 bytes bPage.bundle.js 148 bytes pageB.bundle.js 2.67 KiB
+Entrypoint pageA 3.43 KiB = router_js.bundle.js 614 bytes aPage.bundle.js 148 bytes pageA.bundle.js 2.69 KiB
+Entrypoint pageB 3.43 KiB = router_js.bundle.js 614 bytes bPage.bundle.js 148 bytes pageB.bundle.js 2.69 KiB
 chunk (runtime: pageA, pageB) aPage.bundle.js (aPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
   > ./aPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./aPage
   > ./aEntry pageA
@@ -593,17 +593,17 @@ chunk (runtime: pageA, pageB) bPage.bundle.js (bPage) 59 bytes [initial] [render
     cjs require ./bPage ./bEntry.js 3:7-25
     cjs self exports reference ./bPage.js 1:0-14
     import() context element ./bPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./bPage
-chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 6.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 6.97 KiB (runtime) [entry] [rendered]
   > ./aEntry pageA
   > ./router pageA
-  runtime modules 6.95 KiB 10 modules
+  runtime modules 6.97 KiB 10 modules
   ./aEntry.js 87 bytes [built] [code generated]
     [no exports used]
     entry ./aEntry pageA
-chunk (runtime: pageB) pageB.bundle.js (pageB) 87 bytes (javascript) 6.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.bundle.js (pageB) 87 bytes (javascript) 6.97 KiB (runtime) [entry] [rendered]
   > ./bEntry pageB
   > ./router pageB
-  runtime modules 6.95 KiB 10 modules
+  runtime modules 6.97 KiB 10 modules
   ./bEntry.js 87 bytes [built] [code generated]
     [no exports used]
     entry ./bEntry pageB

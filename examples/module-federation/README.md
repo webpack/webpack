@@ -491,7 +491,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 			}
 /******/ 			const ns = Object.create(null);
 /******/ 			__webpack_require__.r(ns);
-/******/ 			const def = {};
+/******/ 			const def = Object.create(null);
 /******/ 			leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
 /******/ 			for(var current = mode & 2 && value; (typeof current == 'object' || typeof current == 'function') && !~leafPrototypes.indexOf(current); current = getProto(current)) {
 /******/ 				Object.getOwnPropertyNames(current).forEach((key) => (def[key] = () => (value[key])));
@@ -2114,7 +2114,7 @@ mfe-c:
 ```
 app:
   asset src_bootstrap_js.js 13.1 KiB [emitted] [minimized] 1 related asset
-  asset app.js 8 KiB [emitted] [minimized] (name: app)
+  asset app.js 8.01 KiB [emitted] [minimized] (name: app)
   asset node_modules_react_index_js.js 7.84 KiB [emitted] [minimized] 1 related asset
   chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.3 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
