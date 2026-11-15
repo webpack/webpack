@@ -204,6 +204,13 @@ describe("decodeDataURIPayload", () => {
 		expect(decode("data:text/css; charset=windows-1252,a")).toBeNull();
 		expect(decode('data:text/css;charset="iso-8859-1",a')).toBeNull();
 		expect(decode("data:text/css;charset=iso-8859-1;charset=utf-8,a")).toBeNull();
+		// A `;` inside a quoted value starts no parameter; a form feed is no space.
+		expect(
+			decode('data:text/css;x=";charset=utf-8;";charset=windows-1252,a')
+		).toBeNull();
+		expect(
+			decode("data:text/css;\fcharset=utf-8;charset=windows-1252,a")
+		).toBeNull();
 		expect(decode('data:text/css; charset="UTF-8" ,a')).toBe("a");
 		expect(decode("data:text/css;charset=utf-8;charset=iso-8859-1,a")).toBe("a");
 		expect(decode("data:text/css;charset=utf-8;base64,YXtjb2xvcjpyZWR9")).toBe(
