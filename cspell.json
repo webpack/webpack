@@ -637,7 +637,8 @@
     "Yann",
     "zizmor",
     "zstd",
-    "viewbox"
+    "viewbox",
+    "vbscript"
   ],
   "ignoreRegExpList": [
     "/Author.+/",

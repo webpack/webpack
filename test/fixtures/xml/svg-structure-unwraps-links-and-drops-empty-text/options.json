@@ -1,0 +1,9 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"cleanupSvgStructure": true,
+		"removeUnusedSvgNamespaces": true
+	}
+]

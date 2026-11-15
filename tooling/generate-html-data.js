@@ -674,6 +674,52 @@ const PARSER_TABLES = [
 		]
 	],
 	[
+		"SVG_INHERITED_INITIAL_VALUES",
+		"object",
+		"Inherited presentation attributes and the spellings of their initial values, which an element no ancestor sets takes anyway.",
+		[
+			["fill", "#000 #000000 black"],
+			["fill-opacity", "1"],
+			["fill-rule", "nonzero"],
+			["clip-rule", "nonzero"],
+			["stroke", "none"],
+			["stroke-opacity", "1"],
+			["stroke-width", "1 1px"],
+			["stroke-linecap", "butt"],
+			["stroke-linejoin", "miter"],
+			["stroke-miterlimit", "4"],
+			["stroke-dasharray", "none"],
+			["stroke-dashoffset", "0"],
+			["marker-start", "none"],
+			["marker-mid", "none"],
+			["marker-end", "none"],
+			["visibility", "visible"],
+			["text-anchor", "start"],
+			["font-style", "normal"],
+			["font-variant", "normal"],
+			["font-weight", "normal 400"]
+		]
+	],
+	[
+		"SVG_TRANSFORM_FOLD_TARGETS",
+		"set",
+		"Elements that take a `transform` attribute in SVG 1.1 too, so a group's can move onto one.",
+		[
+			"a",
+			"circle",
+			"ellipse",
+			"g",
+			"image",
+			"line",
+			"path",
+			"polygon",
+			"polyline",
+			"rect",
+			"text",
+			"use"
+		]
+	],
+	[
 		"SVG_GROUP_INERT_ATTRIBUTES",
 		"set",
 		"Non-inherited presentation attributes that apply to no group, so one on a g paints nothing.",
@@ -706,7 +752,9 @@ const PARSER_TABLES = [
 			"marker",
 			"mask",
 			"clipPath",
-			"symbol"
+			"symbol",
+			"a",
+			"use"
 		]
 	],
 	[
@@ -923,10 +971,11 @@ const PARSER_TABLES = [
 	[
 		"SVG_WHITESPACE_CONTAINERS",
 		"set",
-		"SVG containers with no rendered character data. Text, descriptive, foreign and unknown elements remain opaque to whitespace cleanup.",
+		"SVG containers with no rendered character data; a link counts only where its parent does, so not inside text. Text, descriptive, foreign and unknown elements remain opaque to whitespace cleanup.",
 		[
 			"svg",
 			"g",
+			"a",
 			"defs",
 			"symbol",
 			"clipPath",
