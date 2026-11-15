@@ -570,4 +570,31 @@ describe("a hook with path taps", () => {
 		expect(calls).toBe(1);
 		expect(seen).toEqual(["path 0,2", "object ExpressionStatement"]);
 	});
+
+	it("hands an isPure tap the node object it was asked about outside a parse", () => {
+		const parser = new JavascriptParser("module");
+		/** @type {string[]} */
+		const seen = [];
+		parser.hooks.isPure.for("Literal").tap("object", (expression) => {
+			seen.push(`${expression.type} ${/** @type {import("estree").Literal} */ (expression).value}`);
+			return false;
+		});
+		parser.hooks.isPure.for("CallExpression").tap("object", (expression) => {
+			seen.push(expression.type);
+			return true;
+		});
+		/** @type {import("estree").Literal} */
+		const literal = { type: "Literal", value: 1, raw: "1", range: [0, 1] };
+		expect(parser.isPure(literal, 0)).toBe(false);
+		/** @type {import("estree").CallExpression} */
+		const call = {
+			type: "CallExpression",
+			callee: { type: "Identifier", name: "f", range: [0, 1] },
+			arguments: [],
+			optional: false,
+			range: [0, 3]
+		};
+		expect(parser.isPure(call, 0)).toBe(true);
+		expect(seen).toEqual(["Literal 1", "CallExpression"]);
+	});
 });
