@@ -5,3 +5,7 @@ function sample() {
 }
 sample();
 console.log(undefined);
+// A comparison reads the global as the value `global_defs` gives it.
+(function (missing) {
+	console.log(missing === undefined, undefined === 7);
+})();

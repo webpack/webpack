@@ -72,3 +72,18 @@ var again = function self(value) {
 	return value === 1 ? self(2) : value;
 };
 console.log(again(1));
+// `new.target` hands a constructor out, to be constructed again with arguments.
+var saved;
+new (function (value) {
+	saved = new.target;
+	console.log(value === void 0);
+})();
+new saved(1);
+// A function inside reads a `new.target` of its own.
+new (function (value) {
+	console.log(
+		[1].map(function () {
+			return new.target === void 0 && value === void 0;
+		})[0]
+	);
+})();
