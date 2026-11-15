@@ -31836,6 +31836,11 @@ declare abstract class RuntimeTemplate {
 	supportsLet(): boolean;
 	supportsMethodShorthand(): boolean;
 	supportsLogicalAssignment(): boolean;
+
+	/**
+	 * Computed property keys came with method shorthand (ES2015).
+	 */
+	supportsComputedPropertyKey(): undefined | boolean;
 	supportsArrowFunction(): boolean;
 	supportsAsyncFunction(): boolean;
 	supportsGenerator(): boolean;
