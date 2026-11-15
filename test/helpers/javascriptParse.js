@@ -4,7 +4,6 @@
 /** @typedef {import("../../lib/javascript/syntax-parser").JavascriptParseOptions} JavascriptParseOptions */
 /** @typedef {import("../../lib/javascript/syntax-parser").EcmaVersion} EcmaVersion */
 /** @typedef {import("../../lib/javascript/syntax-parser").Token} Token */
-/** @typedef {import("../../lib/javascript/syntax-parser").Position} Position */
 /** @typedef {import("../../lib/javascript/syntax-parser").ParserSourceLocation} Location */
 /** @typedef {{ type: "Block" | "Line", value: string, start: number, end: number, loc?: Location, range?: [number, number] }} AcornComment */
 /** @typedef {(end: number, loc?: Position) => void} AcornOnPunctuation */
@@ -16,21 +15,56 @@
  */
 /** @typedef {{ ast: import("estree").Program, comments: CollectedComment[] }} ParseResult */
 
-const { ParserSourceLocation, getLineInfo, parseProgram, toEstreeObject } =
-	require("../../lib/javascript/syntax").parser;
+const {
+	ParserSourceLocation,
+	Position,
+	lineBreak,
+	parseProgram,
+	toEstreeObject
+} = require("../../lib/javascript/syntax").parser;
 
 /**
+ * Locates offsets of one source by a table of its line starts, made on the
+ * first call, so many comments and tokens cost one scan of the source.
  * @param {string} code the source
+ * @returns {(offset: number) => Position} the line and column an offset falls on
+ */
+const lineLocator = (code) => {
+	/** @type {number[] | undefined} */
+	let lineStarts;
+	return (offset) => {
+		if (lineStarts === undefined) {
+			lineStarts = [0];
+			const breaks = new RegExp(lineBreak.source, "g");
+			/** @type {RegExpExecArray | null} */
+			let match;
+			while ((match = breaks.exec(code)) !== null) {
+				lineStarts.push(match.index + match[0].length);
+			}
+		}
+		let low = 0;
+		let high = lineStarts.length - 1;
+		while (low < high) {
+			const middle = (low + high + 1) >> 1;
+			if (lineStarts[middle] <= offset) low = middle;
+			else high = middle - 1;
+		}
+		return new Position(low + 1, offset - lineStarts[low]);
+	};
+};
+
+/**
+ * @param {(offset: number) => Position} positionOf locates an offset of the source
  * @param {number} start where it starts
  * @param {number} end where it ends
  * @param {string | undefined} sourceFile what the location names as its source
  * @returns {Location} the lines and columns it spans, as acorn's `loc`
  */
-const locationOf = (code, start, end, sourceFile) =>
+const locationOf = (positionOf, start, end, sourceFile) =>
 	new ParserSourceLocation(
 		{ sourceFile: sourceFile === undefined ? null : sourceFile },
-		getLineInfo(code, start),
-		getLineInfo(code, end)
+		positionOf(start),
+		positionOf(end)
 	);
 
 /**
@@ -56,6 +90,7 @@ const parseEstree = (code, options = {}) => {
 	} = options;
 	/** @type {CollectedComment[]} */
 	const comments = [];
+	const positionOf = lineLocator(code);
 	const edition =
 		ecmaVersion === "latest"
 			? 1e8
@@ -79,8 +114,8 @@ const parseEstree = (code, options = {}) => {
 					text,
 					start,
 					end,
-					locations ? getLineInfo(code, start) : undefined,
-					locations ? getLineInfo(code, end) : undefined
+					locations ? positionOf(start) : undefined,
+					locations ? positionOf(end) : undefined
 				);
 				return;
 			}
@@ -91,7 +126,9 @@ const parseEstree = (code, options = {}) => {
 				start,
 				end
 			};
-			if (locations) reported.loc = locationOf(code, start, end, sourceFile);
+			if (locations) {
+				reported.loc = locationOf(positionOf, start, end, sourceFile);
+			}
 			if (ranges) reported.range = [start, end];
 			onComment.push(reported);
 		};
@@ -103,7 +140,12 @@ const parseEstree = (code, options = {}) => {
 					token
 				);
 			if (locations) {
-				reported.loc = locationOf(code, token.start, token.end, sourceFile);
+				reported.loc = locationOf(
+					positionOf,
+					token.start,
+					token.end,
+					sourceFile
+				);
 			}
 			if (ranges) reported.range = [token.start, token.end];
 			if (typeof onToken === "function") onToken(reported);
@@ -112,11 +154,11 @@ const parseEstree = (code, options = {}) => {
 	}
 	if (onInsertedSemicolon !== undefined) {
 		parseOptions.onInsertedSemicolon = (end) =>
-			onInsertedSemicolon(end, locations ? getLineInfo(code, end) : undefined);
+			onInsertedSemicolon(end, locations ? positionOf(end) : undefined);
 	}
 	if (onTrailingComma !== undefined) {
 		parseOptions.onTrailingComma = (end) =>
-			onTrailingComma(end, locations ? getLineInfo(code, end) : undefined);
+			onTrailingComma(end, locations ? positionOf(end) : undefined);
 	}
 	/** @type {number} */
 	let program;
