@@ -10,9 +10,12 @@ function h() { var t; return (t = (() => () => 1)())`x`; }
 function k(f) { var t; return (t = (() => new f())())`x`; }
 // Read off a member, the tag is called with no `this`.
 function m(o) { var t; return (t = (() => o.f)())`x`; }
+function q(f, i) { var t; return (t = (() => [f][i])())`x`; }
 // What tags as itself stays bare.
 function n(f) { var t; return (t = (() => f)())`x`; }
 function p(f) { var t; return (t = (() => f())())`x`; }
+function r(f) { var t; return (t = (() => [{ f: f }])())`x`; }
+function s(f) { var t; return (t = (() => [f].concat(f)[1]())())`x`; }
 function tag() { return this === undefined || this === globalThis ? "unbound" : "bound"; }
 function C() { return tag; }
 [
@@ -26,7 +29,10 @@ function C() { return tag; }
 	function () { return k(C); },
 	function () { return m({ f: tag }); },
 	function () { return n(tag); },
-	function () { return p(C); }
+	function () { return p(C); },
+	function () { return q(tag, 0); },
+	function () { return r(tag); },
+	function () { return s(C); }
 ].forEach(function (run, i) {
 	try {
 		console.log(i, String(run()));
