@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
+    <title id="title">
+        Title
+    </title>
+    <g aria-label="foo">
+        test
+    </g>
+</svg>

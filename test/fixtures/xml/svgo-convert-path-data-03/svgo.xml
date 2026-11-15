@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 60"/>
+    <path d="m10 50 10 10"/>
+    <path d="m10 50 10-20 20 30"/>
+    <path d="m10 50 10-20 20 30"/>
+    <path d="M10 50c10-20 30 0 50 20-20-30-10-10 10 10"/>
+    <path d="M10 50c10-20 30 0 50 20-20-30-10-10 10 10"/>
+    <path d="M10 50c10-20 30 0 50 20S30 30 40 50s20 20 40 50"/>
+    <path d="M10 50c10-20 30 0 50 20S30 30 40 50s20 20 40 50"/>
+    <path d="M10 50q20 10 20 20 10 0 20 20"/>
+    <path d="M10 50q20 10 20 20 10 0 20 20"/>
+    <path d="M10 50q20 10 20 20t10 0 10 20"/>
+    <path d="M10 50q20 10 20 20t10 0 10 20"/>
+    <path d="M10 50a20 60 45 0 1 30 20 30 50-30 1 1 10 0"/>
+    <path d="M10 50a20 60 45 0 1 30 20 30 50-30 1 1 10 0"/>
+    <style>
+        .marker-mid { marker-mid: url(#); }
+    </style>
+    <path d="M0 0v5 5" class="marker-mid"/>
+    <path d="M0 0v5 5" marker-mid="url(#)"/>
+    <style>
+        .linecap-round { stroke: black; stroke-linecap: round; }
+      .linecap-butt { stroke: black; stroke-linecap: butt; }
+    </style>
+    <path d="M0 0h0" stroke="black" stroke-linecap="round"/>
+    <path d="M0 0h0" class="linecap-round"/>
+    <path d="M0 0" stroke="black" stroke-linecap="butt"/>
+    <path d="M0 0" class="linecap-butt"/>
+</svg>

@@ -1,0 +1,6 @@
+<svg version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        <![CDATA[svg[version="1.1"]{fill:blue;}rect[clip]{fill:green;}]]>
+    </style>
+    <rect x="10" y="10" width="80" height="80" clip="1"/>
+</svg>

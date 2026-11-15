@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 300 300">
+    <style>
+        path.lg{filter:url(#blurMe);}
+    </style>
+    <filter id="blurMe" x=".1">
+        <feGaussianBlur stdDeviation="5"/>
+    </filter>
+    <path filter="url(#blurMe)" fill="red" d="M 0 0 H 100 V 80 H 0 z"/>
+    <path filter="url(#blurMe)" fill="red" d="M 200 0 H 300 V 80 H 200 z"/>
+    <path style="filter:url(#blurMe)" fill="red" d="M 0 100 h 100 v 80 H 0 z"/>
+    <path style="filter:url(#blurMe)" fill="red" d="M 200 100 H 300 v 80 H 200 z"/>
+    <path class="lg" fill="red" d="M 0 200 h 100 v 80 H 0 z"/>
+    <path class="lg" fill="red" d="M 200 200 H 300 v 80 H 200 z"/>
+</svg>

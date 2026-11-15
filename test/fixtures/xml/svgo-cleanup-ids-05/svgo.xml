@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:x="http://www.w3.org/1999/xlink">
+    <defs>
+        <g id="a"/>
+        <g id="d">
+            <use x:href="#a"/>
+            <use x:href="#b"/>
+        </g>
+        <g id="b"/>
+        <g id="e">
+            <use x:href="#a"/>
+        </g>
+    </defs>
+    <path d="M0 0" id="c"/>
+    <use x:href="#c" x="50" y="50"/>
+    <use x:href="#d"/>
+    <use x:href="#e"/>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M 0,0 z" fill="#fff" stroke="#333"/>
+    <path d="M 10,10 z" fill="#fff" stroke="#333"/>
+    <path d="M 20,20" fill="#fff" stroke="#333"/>
+    <path d="M 30,30 z" fill="#fff" stroke="#333"/>
+    <path d="M 30,30 z" fill="#f00"/>
+    <path d="M 40,40 z"/>
+    <path d="m 50,50 z"/>
+    <path d="M 40,40"/>
+    <path d="m 50,50"/>
+    <path d="M 40,40 z" fill="#fff" stroke="#333"/>
+    <path d="m 50,50 z" fill="#fff" stroke="#333"/>
+    <path d="M 40,40" fill="#fff" stroke="#333"/>
+    <path d="m 50,50" fill="#fff" stroke="#333"/>
+    <path d="m 50,50 z" fill="#fff" stroke="#333"/>
+    <path d="M0 0v100h100V0z" fill="red"/>
+    <path d="M200 0v100h100V0z" fill="red"/>
+    <path d="M0 0v100h100V0z" fill="blue"/>
+    <path d="M200 0v100h100V0zM0 200h100v100H0z" fill="blue"/>
+</svg>

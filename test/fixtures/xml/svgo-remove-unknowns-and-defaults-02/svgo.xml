@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:test="http://">
+    <test:test>
+        test
+    </test:test>
+    <g>
+        test
+    </g>
+</svg>

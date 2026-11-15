@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100">
+    <symbol id="a">
+        <path d="M 10 10 H 90" style="stroke:black;stroke-width:2"/>
+    </symbol>
+    <symbol id="b">
+        <path d="M 10 20 H 90"/>
+    </symbol>
+    <use xlink:href="#a"/>
+    <use href="#b" style="stroke:red;stroke-width:2"/>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="65mm" height="45mm" viewBox="0 0 65 45">
+  <rect x="26.614" y="29.232" width="34.268" height="8.1757"/>
+  <line x1="26.6142" y1="29.2322" x2="34.2682" y2="8.1757"/>
+  <polyline points="26.6142,29.2322 34.2682,8.1757"/>
+  <polygon points="26.6142,29.2322 34.2682,8.1757"/>
+  <circle cx="26.6142" cy="29.2322" r="34.2682"/>
+  <ellipse cx="26.6142" cy="29.2322" rx="34.2682" ry="8.1757"/>
+</svg>

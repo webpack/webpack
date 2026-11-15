@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:custom="https://example.com/custom">
+    <text y="10">Prefixed anchor</text>
+    <text y="20">Locally declared prefix</text>
+    <text y="30">Tab</text>
+    <text y="40">Line feed</text>
+    <text y="50">Carriage return</text>
+    <custom:a href="javascript:alert(1)">
+        <text y="60">Custom anchor</text>
+    </custom:a>
+</svg>

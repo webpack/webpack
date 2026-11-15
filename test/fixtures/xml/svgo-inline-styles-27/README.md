@@ -1,0 +1,1 @@
+Pseudo-classes that can be evaluated during optimization should not be toggled through the usePseudos parameter. See: https://github.com/svg/svgo/commit/72b972261d03f0c40315cd6b9325100d7305a5d6#diff-c625ac4b082b2484280f2d83e11189fc2524e9c21946b4cfab3cc3bf2ab3dcc9R185

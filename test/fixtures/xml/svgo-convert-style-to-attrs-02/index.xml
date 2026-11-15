@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g style="    fill:#000; c\olor: #fff; /**/illegal-'declaration/*'; -webkit-blah: 123  ; -webkit-trolo: 'lolo'; illegal2*/"/>
+    <g style="font:15px serif"/>
+</svg>

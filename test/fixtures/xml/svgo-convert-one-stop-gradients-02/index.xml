@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="744.09448" height="1052.3622">
+  <defs>
+    <linearGradient id="a">
+      <stop style="stop-color:#a8c4cc"/>
+    </linearGradient>
+    <linearGradient x1="353.83112" y1="396.85037" x2="496.56262" y2="396.85037" id="b" xlink:href="#a"/>
+  </defs>
+  <rect width="150" height="150" x="350" y="350" style="fill:url(#b)"/>
+</svg>

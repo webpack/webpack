@@ -1,0 +1,1 @@
+Must preserve vertex for markers only path for consistent rendering across clients. Must not add vertices if markers only path did not have commands other than M/m anyway. See: https://github.com/svg/svgo/issues/1493

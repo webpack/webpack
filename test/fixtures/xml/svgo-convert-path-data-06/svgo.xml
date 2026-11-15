@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 50"/>
+    <path d="M10 50h10"/>
+    <path d="M10 50v10"/>
+    <path d="m10 50 10-20H10"/>
+    <path d="m10 50 10-20V20"/>
+    <path d="m10 50 10-20H10l30 20"/>
+    <path d="m10 50 10-20V20l20 30"/>
+    <path d="M10 50h20"/>
+    <path d="M10 50h20"/>
+    <path d="M10 50h30"/>
+    <path d="M10 50v20"/>
+    <path d="M10 50v20"/>
+    <path d="M10 50v30"/>
+</svg>

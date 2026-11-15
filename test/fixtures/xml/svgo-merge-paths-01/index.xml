@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M 0,0 z"/>
+    <path d="M 10,10 z"/>
+    <path d="M 20,20 l 10,10 M 30,0 c 10,0 20,10 20,20"/>
+    <path d="M 30,30 z"/>
+    <path d="M 30,30 z" fill="#f00"/>
+    <path d="M 40,40 z"/>
+    <path d="m 50,50 0,10 20,30 40,0"/>
+</svg>

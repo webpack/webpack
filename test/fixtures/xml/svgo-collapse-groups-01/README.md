@@ -1,0 +1,1 @@
+Collapse groups without attributes

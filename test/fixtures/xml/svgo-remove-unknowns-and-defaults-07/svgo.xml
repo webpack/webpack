@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:test="http://">
+    <foreignObject>
+        <div class="test">
+            fallback test
+        </div>
+    </foreignObject>
+    <test:test>
+        test
+    </test:test>
+    <g>
+        test
+    </g>
+</svg>

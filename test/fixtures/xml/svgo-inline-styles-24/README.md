@@ -1,0 +1,1 @@
+If we're going to inline styles for property that is also a presentation attribute, and that presentation attribute was already defined in the node, we can just drop the presentation attribute as it would be overridden by the style anyway.

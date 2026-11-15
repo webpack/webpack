@@ -1,0 +1,6 @@
+<svg>
+  <g fill="red">
+    <rect fill="blue" />
+    <circle fill="blue" />
+  </g>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:filmmaker="http://teaparty.diy" viewBox="0 0 100 100" version="1.1">
+  <script>
+    alert('uwu');
+  </script>
+  <filmmaker:script>
+    This is not executable JavaScript!
+  </filmmaker:script>
+</svg>

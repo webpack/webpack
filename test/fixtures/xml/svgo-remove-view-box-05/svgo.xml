@@ -1,0 +1,11 @@
+<svg width="480" height="360" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <svg id="svg-sub-root" viewBox="0 0 450 450" width="450" height="450">
+            <rect x="225" y="0" width="220" height="220" style="fill:magenta"/>
+            <rect x="0" y="225" width="220" height="220" style="fill:#f0f"/>
+            <rect x="225" y="225" width="220" height="220" fill="#f0f"/>
+        </svg>
+    </defs>
+    <use x="60" y="50" width="240" height="240" xlink:href="#svg-sub-root"/>
+    <rect x="300" y="170" width="118" height="118" fill="magenta"/>
+</svg>
