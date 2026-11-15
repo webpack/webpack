@@ -277,7 +277,12 @@ describe("SourceProcessor — SVG minification", () => {
 			' d="M-.3.1-.1.4zL.6.7"',
 			' d="M.123.1l.2.1H9"',
 			' d="M.1.123l.1.2V9"',
-			' d="M.5 0H123456789.25"'
+			' d="M.5 0H123456789.25"',
+			// WebKit turns quadratics into cubics with different float steps per case.
+			' d="M.3 0Q.4 1 .5 0"',
+			' d="M10.3 0Q10.4 1 10.5 0T10.9 0"',
+			// WebKit treats a relative arc as zero-length only when its offsets are zero.
+			' d="M123456.7 5A1 1 0 01123456.701 5"'
 		]);
 		expect(new SourceProcessor().process(once, options).code).toBe(once);
 	});
