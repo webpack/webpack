@@ -11,7 +11,7 @@ module.exports = {
 	},
 	output: {
 		filename: (pathData) =>
-			`${/** @type {string} */ (pathData.chunk && pathData.chunk.name).replace("\n", "_")}.js`
+			`${/** @type {string} */ (pathData.chunk && pathData.chunk.name).replace(/\n/g, "_")}.js`
 	},
 	optimization: {
 		minimize: false,
