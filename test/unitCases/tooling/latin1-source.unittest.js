@@ -35,6 +35,22 @@ describe("latin1-source", () => {
 		expect(run(source)).toBeUndefined();
 	});
 
+	it("escapes an astral character of a name by its code point", () => {
+		const source = "(() => { const \ud835\udc9c = 1; return \ud835\udc9c + \"\ud835\udc9c\"; })()";
+		const rewritten = toLatin1Source(source);
+		expect(rewritten).toBe(
+			'(() => { const \\u{1D49C} = 1; return \\u{1D49C} + "\\uD835\\uDC9C"; })()'
+		);
+		expect(run(rewritten)).toBe(run(source));
+	});
+
+	it("refuses a JSDoc type, which reads its text as the code it types does", () => {
+		expect(() =>
+			toLatin1Source('/** @type {"\u2192"} */ const value = "\u2192";')
+		).toThrow(/JSDoc type/);
+		expect(toLatin1Source("/** a \u2192 b */ 1")).toBe("/** a -> b */ 1");
+	});
+
 	it("refuses a tagged template's text, which its tag reads as written", () => {
 		expect(() => toLatin1Source("String.raw`a\u2192b`")).toThrow(
 			/tagged template/

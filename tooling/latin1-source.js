@@ -119,6 +119,7 @@ const inRange = (ranges, position) => {
 /**
  * Rewrites a script's characters above U+00FF: comments get an ASCII spelling
  * (or `U+XXXX`), tokens `\u` escapes, which read back as the same value.
+ * A JSDoc type or a tagged template's text holding one throws instead.
  * Whitespace between tokens becomes a space, a line separator a newline.
  * @param {string} source the script's source
  * @returns {string} the source with every character at most U+00FF
@@ -130,6 +131,8 @@ const toLatin1Source = (source) => {
 
 	/** @type {[number, number][]} */
 	const comments = [];
+	/** @type {[number, number][]} */
+	const jsdocTypes = [];
 	/** @type {import("acorn").Token[]} */
 	const tokens = [];
 	parse(source, {
@@ -139,11 +142,31 @@ const toLatin1Source = (source) => {
 		allowReturnOutsideFunction: true,
 		onComment: (block, text, start, end) => {
 			comments.push([start, end]);
+			// a JSDoc comment's `{...}` types read like code, so they keep no
+			// ASCII spelling: the value they type would read differently
+			if (block && text.startsWith("*")) {
+				let depth = 0;
+				let open = 0;
+				for (let j = 0; j < text.length; j++) {
+					const char = text[j];
+					if (char === "{") {
+						if (depth++ === 0) open = start + 2 + j;
+					} else if (char === "}" && depth > 0 && --depth === 0) {
+						jsdocTypes.push([open, start + 2 + j]);
+					}
+				}
+			}
 		},
 		onToken: tokens
 	});
 	/** @type {[number, number][]} */
 	const tokenRanges = tokens.map((token) => [token.start, token.end]);
+	/** @type {[number, number][]} */
+	const nameRanges = tokens
+		.filter(
+			(token) => token.type.label === "name" || token.type.label === "privateId"
+		)
+		.map((token) => [token.start, token.end]);
 	const taggedText = taggedTemplateText(tokens);
 	let result = "";
 	for (let i = 0; i < source.length; i++) {
@@ -153,6 +176,11 @@ const toLatin1Source = (source) => {
 			continue;
 		}
 		if (inRange(comments, i)) {
+			if (inRange(jsdocTypes, i)) {
+				throw new Error(
+					`A character above U+00FF at ${i} is in a JSDoc type, which reads it as the code it types does`
+				);
+			}
 			const codePoint = /** @type {number} */ (source.codePointAt(i));
 			const spelling = COMMENT_SPELLINGS[source[i]];
 			// a line separator in a block comment still ends a line for ASI
@@ -179,7 +207,14 @@ const toLatin1Source = (source) => {
 					`An escaped character above U+00FF at ${i} has no \\u spelling`
 				);
 			}
-			result += `\\u${hexOf(code)}`;
+			const codePoint = /** @type {number} */ (source.codePointAt(i));
+			if (codePoint > 0xffff && inRange(nameRanges, i)) {
+				// a name takes no surrogate escapes, only the code point's own
+				result += `\\u{${hexOf(codePoint)}}`;
+				i++;
+			} else {
+				result += `\\u${hexOf(code)}`;
+			}
 		}
 	}
 	return result;
