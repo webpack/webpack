@@ -11,3 +11,7 @@
 .alert {
 	background: yellow;
 }
+
+.__proto__ {
+	color: blue;
+}
