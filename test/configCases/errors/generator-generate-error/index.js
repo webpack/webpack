@@ -1,6 +1,7 @@
 it("should generate a custom error content", async () => {
 	expect(__STATS__.modules.filter(m => m.moduleType !== "runtime").length).toEqual(15);
-	expect(__STATS__.assets.length).toEqual(20);
+	// The two errored `.svg` assets are emitted empty, so they share one file.
+	expect(__STATS__.assets.length).toEqual(19);
 	expect(__STATS__.chunks.length).toEqual(13);
 
 	let errored;
