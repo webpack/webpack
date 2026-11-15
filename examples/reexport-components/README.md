@@ -380,7 +380,7 @@ const Login = () => {
 ## Unoptimized
 
 ```
-asset vendors-node_modules_react_jsx-dev-runtime_js.output.js 95.1 KiB [emitted] (id hint: vendors)
+asset vendors-node_modules_react_jsx-dev-runtime_js.output.js 87.2 KiB [emitted] (id hint: vendors)
 asset output.js 11.1 KiB [emitted] (name: main)
 asset pages_Dashboard_js.output.js 7.46 KiB [emitted]
 asset pages_Login_js.output.js 7.43 KiB [emitted]
@@ -414,8 +414,7 @@ chunk (runtime: main) vendors-node_modules_react_jsx-dev-runtime_js.output.js (i
   > ./Login.js ./pages/ lazy ^\.\/.*$ namespace object ./Login.js
   dependent modules 78.3 KiB [dependent] 5 modules
   ../../node_modules/react/jsx-dev-runtime.js 218 bytes [built] [code generated]
-    [exports: Fragment, jsxDEV]
-    [all exports used]
+    [only some exports used: Fragment, jsxDEV]
     from origin ./pages/Dashboard.js 5 reasons
     from origin ./pages/Login.js 5 reasons
     from origin ./components/Button.js
