@@ -5041,6 +5041,16 @@ export interface ResolveOptions {
 		[key: string]: ResolveOptions;
 	};
 	/**
+	 * Extra resolve options per dependency category of the issuer chain, e.g. "worker" for modules imported from a worker.
+	 * @since 5.113.0
+	 */
+	byIssuerDependency?: {
+		/**
+		 * Options object for resolving requests.
+		 */
+		[key: string]: ResolveOptions;
+	};
+	/**
 	 * Enable caching of successfully resolved requests (cache entries are revalidated).
 	 */
 	cache?: boolean;
