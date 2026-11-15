@@ -200,6 +200,12 @@ describe("decodeDataURIPayload", () => {
 			decode("data:text/css;charset=iso-2022-jp;base64,YXtjb2xvcjpyZWR9")
 		).toBeNull();
 		expect(decode("data:text/css;charset=utf-16,a{color:red}")).toBeNull();
+		// Spaces and quotes around the charset are read as Fetch reads them.
+		expect(decode("data:text/css; charset=windows-1252,a")).toBeNull();
+		expect(decode('data:text/css;charset="iso-8859-1",a')).toBeNull();
+		expect(decode("data:text/css;charset=iso-8859-1;charset=utf-8,a")).toBeNull();
+		expect(decode('data:text/css; charset="UTF-8" ,a')).toBe("a");
+		expect(decode("data:text/css;charset=utf-8;charset=iso-8859-1,a")).toBe("a");
 		expect(decode("data:text/css;charset=utf-8;base64,YXtjb2xvcjpyZWR9")).toBe(
 			"a{color:red}"
 		);
