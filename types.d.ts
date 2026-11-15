@@ -5416,7 +5416,7 @@ declare interface Configuration {
 	/**
 	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
-	amd?: false | { [index: string]: any };
+	amd?: false | JsonObjectFs;
 
 	/**
 	 * Report the first error as a hard error instead of tolerating it.
@@ -18804,7 +18804,7 @@ declare interface JavascriptParserOptions {
 	/**
 	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
-	amd?: false | { [index: string]: any };
+	amd?: false | JsonObjectFs;
 
 	/**
 	 * Set .name to "default" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.
@@ -29972,7 +29972,23 @@ declare interface RenderContextJavascriptModulesPlugin {
 	strictMode?: boolean;
 }
 type RenderManifestEntry =
-	RenderManifestEntryTemplated | RenderManifestEntryStatic;
+	| RenderManifestEntryChunkTemplated
+	| RenderManifestEntryStringTemplated
+	| RenderManifestEntryStatic;
+
+/**
+ * A render manifest entry named by a chunk's filename template, which may be a
+ * function of the chunk's path data.
+ */
+declare interface RenderManifestEntryChunkTemplated {
+	render: () => Source;
+	filenameTemplate: ChunkFilenameTemplate;
+	pathOptions?: PathDataChunk;
+	info?: AssetInfo;
+	identifier: string;
+	hash?: string;
+	auxiliary?: boolean;
+}
 
 /**
  * Defines the render manifest entry static type used by this module.
@@ -29987,11 +30003,12 @@ declare interface RenderManifestEntryStatic {
 }
 
 /**
- * Defines the render manifest entry templated type used by this module.
+ * A render manifest entry named by a filename template string, interpolated
+ * with any path data, e.g. a module's.
  */
-declare interface RenderManifestEntryTemplated {
+declare interface RenderManifestEntryStringTemplated {
 	render: () => Source;
-	filenameTemplate: string | TemplatePathFn<any>;
+	filenameTemplate: string;
 	pathOptions?: PathData;
 	info?: AssetInfo;
 	identifier: string;
@@ -37286,7 +37303,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
-	amd?: false | { [index: string]: any };
+	amd?: false | JsonObjectFs;
 
 	/**
 	 * Report the first error as a hard error instead of tolerating it.
