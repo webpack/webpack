@@ -39643,7 +39643,9 @@ declare namespace exports {
 				) => ScopeAnalysis;
 				export { ScopeLog, Scope, Variable, Reference, ScopeIdentifier };
 			}
-			export { JavascriptSourceProcessor as SourceProcessor };
+			export {
+				/** exposed as `webpack.javascript.syntax.SourceProcessor`; unstable API @experimental */ JavascriptSourceProcessor as SourceProcessor
+			};
 		}
 		export {
 			EnableChunkLoadingPlugin,
