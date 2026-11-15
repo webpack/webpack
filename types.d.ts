@@ -14172,7 +14172,7 @@ declare interface HtmlProcessOptions {
 	sortSvgSymbols?: boolean;
 
 	/**
-	 * when minifying XML, remove `script` elements, event handler and `srcdoc` attributes and `javascript:` URLs (default false)
+	 * when minifying XML, remove `script` elements, event handler and `srcdoc` attributes, `javascript:` and `vbscript:` URLs and links to HTML or SVG `data:` documents (default false)
 	 */
 	removeSvgScripts?: boolean;
 
@@ -14192,7 +14192,7 @@ declare interface HtmlProcessOptions {
 	removeSvgRasterImages?: boolean;
 
 	/**
-	 * when minifying XML, spell `xlink:href` as the SVG 2 `href` where an element has no `href` (default false)
+	 * when minifying XML, spell `xlink:href` as the SVG 2 `href` where an element has no `href`, a link's `xlink:show` as `target`, and drop `xlink:type="simple"` (default false)
 	 */
 	removeSvgXlink?: boolean;
 
@@ -14217,7 +14217,7 @@ declare interface HtmlProcessOptions {
 	cleanupSvgIds?: boolean;
 
 	/**
-	 * when minifying XML, remove ID-free SVG content hidden by `display="none"`, zero opacity or size, `visibility` on a leaf, or empty geometry (default false)
+	 * when minifying XML, remove ID-free SVG content hidden by `display="none"`, zero opacity or size, a `visibility` nothing inside sets back, or geometry that draws nothing (default false)
 	 */
 	removeHiddenSvgElements?: boolean;
 
@@ -26191,7 +26191,7 @@ declare interface OptimizationMinimizeXml {
 	removeEmptyElements?: boolean;
 
 	/**
-	 * Remove ID-free SVG content that renders nothing: `display="none"`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, empty paths and point lists, and leaves under `visibility="hidden"`. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a `switch` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.
+	 * Remove ID-free SVG content that renders nothing: `display="none"`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, paths and point lists that draw nothing, and subtrees under `visibility="hidden"` that never set it back. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a `switch` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.
 	 * @since 5.113.0
 	 */
 	removeHiddenElements?: boolean;
@@ -26209,7 +26209,7 @@ declare interface OptimizationMinimizeXml {
 	removeRasterImages?: boolean;
 
 	/**
-	 * Remove `script` elements, event handler and `srcdoc` attributes and `javascript:` URLs, for SVG that must not run code. Off by default because the image loses its behavior.
+	 * Remove `script` elements, event handler and `srcdoc` attributes, `javascript:` and `vbscript:` URLs and links to HTML or SVG `data:` documents, for SVG that must not run code. Off by default because the image loses its behavior.
 	 * @since 5.113.0
 	 */
 	removeScripts?: boolean;
@@ -26233,7 +26233,7 @@ declare interface OptimizationMinimizeXml {
 	removeViewBox?: boolean;
 
 	/**
-	 * Spell `xlink:href` as the SVG 2 `href` where an element has no `href`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only `xlink:href`.
+	 * Spell `xlink:href` as the SVG 2 `href` where an element has no `href`, a link's `xlink:show` as `target`, and drop `xlink:type="simple"`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only `xlink:href`.
 	 * @since 5.113.0
 	 */
 	removeXlink?: boolean;

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:uwu="http://www.w3.org/1999/xlink" xmlns:custom="urn:custom" xmlns:h="http://www.w3.org/1999/xhtml">
+	<svg:a uwu:href="JavaScript:alert(1)"><text y="10">prefixed</text></svg:a>
+	<a href="&#32; vbscript:msgbox(1)"><rect width="1" height="1"/></a>
+	<a href="data:text/html;base64,PHNjcmlwdD4="><rect width="1" height="1"/></a>
+	<a href="DATA:application/xhtml+xml,x"><rect width="1" height="1"/></a>
+	<a href="data:image/svg+xml;base64,PHN2Zz4="><rect width="1" height="1"/></a>
+	<a href="data:image/png;base64,iVBOR"><rect width="1" height="1"/></a>
+	<a xml:href="javascript:kept"><rect width="1" height="1"/></a>
+	<a custom:href="javascript:kept"><rect width="1" height="1"/></a>
+	<image href="data:image/svg+xml;base64,PHN2Zz4=" width="1" height="1"/>
+	<foreignObject width="1" height="1"><h:iframe src="data:text/html,x"/><h:a href="https://example.com">kept</h:a></foreignObject>
+	<text><a> text </a></text>
+</svg>
