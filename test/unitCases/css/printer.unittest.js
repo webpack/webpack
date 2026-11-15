@@ -207,6 +207,7 @@ describe("CssSyntax — block streaming", () => {
 		expect(tail(nested)).toBe("x:i;y:j;z:k}}");
 		// A block written whole, in a parent that streams, folds the same way.
 		const parent = (/** @type {string} */ src) => tail(minify(src));
+		expect(childCount(fixture("css", "css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-4"))).toBe(0);
 		expect(parent(fixture("css", "css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-4"))).toBe(
 			"x:i;y:j}.mid{margin:0}}"
 		);
@@ -231,9 +232,9 @@ describe("CssSyntax — block streaming", () => {
 		);
 		// Nothing writes `.b::placeholder`, so the list is still the only rule
 		// styling those elements and stays whichever way its block is written.
-		expect(
-			minifyFor(fixture("css", "css-syntax-block-streaming-drops-a-prefixed-list-a-streamed-block-s-rules-cover-2"), ["firefox 120"])
-		).toContain("-moz-placeholder");
+		const uncovered = fixture("css", "css-syntax-block-streaming-drops-a-prefixed-list-a-streamed-block-s-rules-cover-2");
+		expect(childCount(uncovered)).toBe(0);
+		expect(minifyFor(uncovered, ["firefox 120"])).toContain("-moz-placeholder");
 	});
 
 	it("drops the second of two prefixed lists a streamed block covers", () => {
