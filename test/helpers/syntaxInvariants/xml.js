@@ -293,6 +293,8 @@ const canonical = (xml, cssOptions = {}) => {
 		},
 		[NodeType.ProcessingInstruction]: {
 			enter: (nodePath) => {
+				// The XML declaration is not an instruction, and the canonical form omits it.
+				if (nodePath.name() === "xml") return;
 				out.push(`<?${nodePath.name()} ${nodePath.value()}?>`);
 			},
 			exit: () => {}

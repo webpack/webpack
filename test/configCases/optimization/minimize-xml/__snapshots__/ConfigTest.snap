@@ -79,7 +79,7 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 `;
 
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: future 1`] = `
-"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
 	<style>.dot{fill:red;-webkit-user-select:none;user-select:none}</style>
 	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\"/>
 </svg>"
@@ -103,7 +103,7 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: numbers 1`] = `"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\"><style>polygon{fill:red}</style><rect x=\\".5px\\" height=\\"7.5\\" width=\\"8\\" y=\\"1.25\\"/><polygon id=\\"shape\\" points=\\"1 2 3.5 4.5\\"/><text x=\\"1\\"> A <tspan> B </tspan> C </text></svg>"`;
 
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: object 1`] = `
-"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
 	<style>.dot{fill:red;-webkit-user-select:none;user-select:none}</style>
 	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\"/>
 </svg>"
@@ -128,7 +128,7 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 `;
 
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: sorted 1`] = `
-"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\">
 	<style>.dot{fill:red;-webkit-user-select:none;user-select:none}</style>
 	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\"/>
 </svg>"
@@ -136,10 +136,10 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: structure 1`] = `
 "<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"120\\" height=\\"100\\">
-<clipPath id=\\"clip\\"><circle r=\\"20\\" cx=\\"20\\" cy=\\"20\\"/></clipPath><linearGradient id=\\"gradient\\"><stop stop-color=\\"red\\"/><stop offset=\\"1\\" stop-color=\\"blue\\"/></linearGradient><marker id=\\"marker\\" markerWidth=\\"2\\" markerHeight=\\"2\\"><path d=\\"M0 0L2 1 0 2z\\"/></marker>
+<clipPath id=\\"clip\\"><circle r=\\"20\\" cx=\\"20\\" cy=\\"20\\"/></clipPath><linearGradient id=\\"gradient\\"><stop stop-color=\\"red\\"/><stop offset=\\"1\\" stop-color=\\"blue\\"/></linearGradient><marker id=\\"marker\\" markerWidth=\\"2\\" markerHeight=\\"2\\"><path d=\\"M0 0l2 1-2 1z\\"/></marker>
 <circle id=\\"ellipse\\" cx=\\"20\\" cy=\\"20\\" r=\\"10\\"/>
-<g fill=\\"red\\"><path d=\\"M0 0l5 10 5-5z\\"/><path d=\\"M10 10L20 30L30 20z\\" fill=\\"blue\\"/></g>
-<g transform=\\"translate(30 30) scale(2) scale(.5)\\"><path id=\\"prototype\\" d=\\"M0 0L10 20L20 10z\\" fill=\\"#fff\\" stroke=\\"none\\"/><path id=\\"copy\\" d=\\"M0 0L10 20L20 10z\\" fill=\\"#fff\\" stroke=\\"none\\"/><use href=\\"#prototype\\"/></g>
+<g fill=\\"red\\"><path d=\\"M0 0l5 10 5-5z\\"/><path d=\\"M10 10l10 20 10-10z\\" fill=\\"blue\\"/></g>
+<g transform=\\"translate(30 30) scale(2) scale(.5)\\"><path id=\\"prototype\\" d=\\"M0 0l10 20 10-10z\\" fill=\\"#fff\\" stroke=\\"none\\"/><path id=\\"copy\\" d=\\"M0 0l10 20 10-10z\\" fill=\\"#fff\\" stroke=\\"none\\"/><use href=\\"#prototype\\"/></g>
 <path d=\\"M10 70h10m30 0h10\\" fill=\\"none\\" stroke=\\"red\\" stroke-width=\\"1\\" stroke-dasharray=\\"none\\" shape-rendering=\\"crispEdges\\" marker-start=\\"none\\" marker-mid=\\"none\\" marker-end=\\"none\\"/>
 <path d=\\"M0 0q2 2 4 4t4 4\\" stroke=\\"blue\\" fill=\\"none\\"/>
 <path d=\\"M0 0s2 2 4 4 4-2 6 0m-10-4q2 2 4 4t4 4 4-4\\" stroke=\\"blue\\" fill=\\"none\\"/>
@@ -148,12 +148,12 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 <path d=\\"M10000 10000C1 1 2 2 3 3\\" stroke=\\"green\\" fill=\\"none\\"/>
 <use href=\\"#copy\\" x=\\"20\\"/>
 <svg width=\\"15\\" height=\\"15\\"><use href=\\"#copy\\"/></svg>
-<g shape-rendering=\\"crispEdges\\"><path d=\\"M1 2 3 4\\"/><rect width=\\"2\\" height=\\"3\\"/></g>
+<g shape-rendering=\\"crispEdges\\"><path d=\\"M1 2l2 2\\"/><rect width=\\"2\\" height=\\"3\\"/></g>
 <text x=\\"10\\" y=\\"95\\" style=\\"font-size:12px;font-size:-1px\\">Fallback</text>
-<path id=\\"context\\" fill=\\"context-fill\\" d=\\"M0 0L10 20L20 10z\\"/><path fill=\\"context-fill\\" d=\\"M0 0L10 20L20 10z\\"/>
+<path id=\\"context\\" fill=\\"context-fill\\" d=\\"M0 0l10 20 10-10z\\"/><path fill=\\"context-fill\\" d=\\"M0 0l10 20 10-10z\\"/>
 </svg>"
 `;
 
-exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: symbols 1`] = `"<svg viewBox=\\"0 0 40 40\\" height=\\"40\\" width=\\"40\\" xmlns=\\"http://www.w3.org/2000/svg\\"><defs><symbol viewBox=\\"0 0 40 40\\" id=\\"a\\"><path d=\\"M5 5H35V35H5z\\" fill=\\"red\\"/></symbol><symbol viewBox=\\"0 0 40 40\\" id=\\"z\\"><path d=\\"M10 10L30 30\\" stroke=\\"black\\" stroke-width=\\"2\\"/></symbol></defs><use href=\\"#a\\"/><use href=\\"#z\\"/></svg>"`;
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: symbols 1`] = `"<svg viewBox=\\"0 0 40 40\\" height=\\"40\\" width=\\"40\\" xmlns=\\"http://www.w3.org/2000/svg\\"><defs><symbol viewBox=\\"0 0 40 40\\" id=\\"a\\"><path d=\\"M5 5H35V35H5z\\" fill=\\"red\\"/></symbol><symbol viewBox=\\"0 0 40 40\\" id=\\"z\\"><path d=\\"M10 10 30 30\\" stroke=\\"black\\" stroke-width=\\"2\\"/></symbol></defs><use href=\\"#a\\"/><use href=\\"#z\\"/></svg>"`;
 
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: whitespace 1`] = `"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:data=\\"urn:application\\" xmlns:e=\\"http://www.inkscape.org/namespaces/inkscape\\"><title>Accessible title</title><desc>Accessible description</desc><metadata><path d=\\"M1 1H3V3Z\\" id=\\"metadata-shape\\"/></metadata><e:view><path d=\\"M4 4H6V6Z\\" id=\\"editor-shape\\"/></e:view><use href=\\"#metadata-shape\\"/><use href=\\"#editor-shape\\"/><defs><path d=\\"M0 0h10v10z\\" id=\\"shape\\"/></defs><use href=\\"#shape\\" data:flag=\\"keep\\" style=\\"fill:red\\"/><text>]]&gt;</text></svg>"`;

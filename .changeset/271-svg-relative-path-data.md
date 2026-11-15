@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Write SVG path data relative where every engine reads the same points.
+Shorten SVG paths, hex colors and XML declarations without changing rendering.
