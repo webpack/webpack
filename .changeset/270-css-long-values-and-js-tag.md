@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Minify long CSS values faster and print an unread write used as a tag bare.
+Minify long CSS values faster and print a reduced call used as a template tag correctly.
