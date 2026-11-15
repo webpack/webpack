@@ -392,14 +392,12 @@ describe("CssSyntax — block streaming", () => {
 			`.root{color:red;${Array.from({ length: n }, (_, i) => `& .n${i}`)
 				.sort()
 				.join(",")}{color:red}}`;
-		expect(
-			minify(
-				fixture(
-					"css",
-					"css-syntax-block-streaming-prints-a-streamed-block-as-the-collected-printer-would"
-				)
-			)
-		).toBe(joined(180));
+		const children = fixture(
+			"css",
+			"css-syntax-block-streaming-prints-a-streamed-block-as-the-collected-printer-would"
+		);
+		expect(childCount(children, NodeType.QualifiedRule)).toBe(0);
+		expect(minify(children)).toBe(joined(2341));
 	});
 
 	it("reads a streamed rule's prelude in terms of what encloses it", () => {
