@@ -760,7 +760,6 @@ declare class AutomaticPrefetchPlugin {
 	apply(compiler: Compiler): void;
 }
 type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
-declare const BLOCK_DECLARATIONS: unique symbol;
 
 /**
  * Defines the backend api type used by this module.
@@ -1018,12 +1017,10 @@ declare abstract class BasicEvaluatedExpression {
 		| PropertyDefinition
 		| VariableDeclarator
 		| Program
+		| AssignmentProperty
 		| Property
 		| CatchClause
 		| ClassBody
-		| SwitchCase
-		| TemplateElement
-		| AssignmentProperty
 		| ImportSpecifier
 		| ImportDefaultSpecifier
 		| ImportNamespaceSpecifier
@@ -1031,7 +1028,9 @@ declare abstract class BasicEvaluatedExpression {
 		| ObjectPattern
 		| ArrayPattern
 		| RestElement
-		| AssignmentPattern;
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
 
 	/**
 	 * The expression's node in the syntax tree, for a reader that walks or
@@ -1277,12 +1276,10 @@ declare abstract class BasicEvaluatedExpression {
 			| PropertyDefinition
 			| VariableDeclarator
 			| Program
+			| AssignmentProperty
 			| Property
 			| CatchClause
 			| ClassBody
-			| SwitchCase
-			| TemplateElement
-			| AssignmentProperty
 			| ImportSpecifier
 			| ImportDefaultSpecifier
 			| ImportNamespaceSpecifier
@@ -1291,6 +1288,8 @@ declare abstract class BasicEvaluatedExpression {
 			| ArrayPattern
 			| RestElement
 			| AssignmentPattern
+			| SwitchCase
+			| TemplateElement
 	): BasicEvaluatedExpression;
 
 	/**
@@ -3319,18 +3318,20 @@ declare interface ClearCacheOptions {
  * Defines the code gen map overloads type used by this module.
  */
 declare interface CodeGenMapOverloads {
-	get: <K extends string>(key: K) => undefined | CodeGenValue<K>;
-	set: <K extends string>(
+	get: <K extends keyof exports.AllCodeGenerationSchemas>(
+		key: K
+	) => undefined | CodeGenValue<K>;
+	set: <K extends keyof exports.AllCodeGenerationSchemas>(
 		key: K,
 		value: CodeGenValue<K>
 	) => CodeGenerationResultData;
-	has: <K extends string>(key: K) => boolean;
-	delete: <K extends string>(key: K) => boolean;
+	has: (key: keyof exports.AllCodeGenerationSchemas) => boolean;
+	delete: (key: keyof exports.AllCodeGenerationSchemas) => boolean;
 }
-type CodeGenValue<K extends string> =
+type CodeGenValue<K extends keyof exports.AllCodeGenerationSchemas> =
 	K extends keyof exports.AllCodeGenerationSchemas
 		? exports.AllCodeGenerationSchemas[K]
-		: any;
+		: never;
 
 /**
  * Defines the code generation context type used by this module.
@@ -3418,7 +3419,18 @@ declare interface CodeGenerationResult {
 	hash?: string;
 }
 type CodeGenerationResultData = Omit<
-	Map<string, any>,
+	Map<
+		keyof exports.AllCodeGenerationSchemas,
+		| string
+		| AssetInfo
+		| string[]
+		| Record<string, string>
+		| Set<string>
+		| [{ shareScope: string; initStage: number; init: string }]
+		| InitFragment<ChunkRenderContextJavascriptModulesPlugin>[]
+		| { javascript?: string; "asset-url"?: string }
+		| Map<string, string>
+	>,
 	"get" | "set" | "has" | "delete"
 > &
 	CodeGenMapOverloads;
@@ -3458,9 +3470,9 @@ declare abstract class CodeGenerationResults {
 	): null | ReadonlySet<string>;
 
 	/**
-	 * Returns an arbitrary metadata entry recorded during code generation.
+	 * Returns a metadata entry recorded during code generation.
 	 */
-	getData<K extends string>(
+	getData<K extends keyof exports.AllCodeGenerationSchemas>(
 		module: Module,
 		runtime: RuntimeSpec,
 		key: K
@@ -3702,12 +3714,12 @@ declare abstract class ColumnarSyntaxTree {
 	reserve(nodes: number, slots: number, lists: number, items: number): void;
 
 	/**
-	 * The ESTree object of a node of this tree, as `toEstreeObject` builds it
-	 * for the last parse's.
+	 * The ESTree object of a node of this tree, the same object each time:
+	 * the lazy one once `lazyEstree` was asked for, else as `toEstreeObject`
+	 * builds it without options.
 	 */
 	estree(
-		node: number,
-		fields?: string[]
+		node: number
 	):
 		| null
 		| ImportDeclaration
@@ -3770,12 +3782,10 @@ declare abstract class ColumnarSyntaxTree {
 		| PropertyDefinition
 		| VariableDeclarator
 		| Program
+		| AssignmentProperty
 		| Property
 		| CatchClause
 		| ClassBody
-		| SwitchCase
-		| TemplateElement
-		| AssignmentProperty
 		| ImportSpecifier
 		| ImportDefaultSpecifier
 		| ImportNamespaceSpecifier
@@ -3783,7 +3793,95 @@ declare abstract class ColumnarSyntaxTree {
 		| ObjectPattern
 		| ArrayPattern
 		| RestElement
-		| AssignmentPattern;
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
+
+	/**
+	 * The ESTree object of a node of this tree as `toEstreeObject` builds it,
+	 * the same object for the same options. A long node reads each child from
+	 * the tree when its field is first read: a release copies what they read.
+	 */
+	estreeObject(
+		node: number,
+		options?: EstreeObjectOptions,
+		input?: string
+	):
+		| null
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| SpreadElement
+		| PrivateIdentifier
+		| Super
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| Program
+		| AssignmentProperty
+		| Property
+		| CatchClause
+		| ClassBody
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
 
 	/**
 	 * A node's ESTree object, as `estree` makes it: a path's way to an object
@@ -3853,12 +3951,10 @@ declare abstract class ColumnarSyntaxTree {
 		| PropertyDefinition
 		| VariableDeclarator
 		| Program
+		| AssignmentProperty
 		| Property
 		| CatchClause
 		| ClassBody
-		| SwitchCase
-		| TemplateElement
-		| AssignmentProperty
 		| ImportSpecifier
 		| ImportDefaultSpecifier
 		| ImportNamespaceSpecifier
@@ -3866,7 +3962,9 @@ declare abstract class ColumnarSyntaxTree {
 		| ObjectPattern
 		| ArrayPattern
 		| RestElement
-		| AssignmentPattern;
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
 
 	/**
 	 * The lazy ESTree object of a node: it builds a child's object the first
@@ -3937,12 +4035,10 @@ declare abstract class ColumnarSyntaxTree {
 		| PropertyDefinition
 		| VariableDeclarator
 		| Program
+		| AssignmentProperty
 		| Property
 		| CatchClause
 		| ClassBody
-		| SwitchCase
-		| TemplateElement
-		| AssignmentProperty
 		| ImportSpecifier
 		| ImportDefaultSpecifier
 		| ImportNamespaceSpecifier
@@ -3950,7 +4046,9 @@ declare abstract class ColumnarSyntaxTree {
 		| ObjectPattern
 		| ArrayPattern
 		| RestElement
-		| AssignmentPattern;
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
 
 	/**
 	 * Records that the legacy `assert` keyword opens a declaration's attributes.
@@ -10429,12 +10527,10 @@ type EstreeInput =
 	| PropertyDefinition
 	| VariableDeclarator
 	| Program
+	| AssignmentProperty
 	| Property
 	| CatchClause
 	| ClassBody
-	| SwitchCase
-	| TemplateElement
-	| AssignmentProperty
 	| ImportSpecifier
 	| ImportDefaultSpecifier
 	| ImportNamespaceSpecifier
@@ -10443,6 +10539,8 @@ type EstreeInput =
 	| ArrayPattern
 	| RestElement
 	| AssignmentPattern
+	| SwitchCase
+	| TemplateElement
 	| EstreeSource;
 
 /**
@@ -10450,6 +10548,59 @@ type EstreeInput =
  * offsets on first access, as the parser's own nodes serve it.
  */
 declare abstract class EstreeObject extends LazyLocNode {}
+
+/**
+ * What the objects `toEstreeObject` builds hold beside ESTree's fields, as
+ * acorn's options of the same names ask for them.
+ */
+declare interface EstreeObjectOptions {
+	/**
+	 * the edition whose fields they hold, by default the one the tree was read at
+	 */
+	ecmaVersion?:
+		| 3
+		| 5
+		| 6
+		| 7
+		| 8
+		| 9
+		| 10
+		| 11
+		| 12
+		| 13
+		| 14
+		| 15
+		| 16
+		| 17
+		| 2015
+		| 2016
+		| 2017
+		| 2018
+		| 2019
+		| 2020
+		| 2021
+		| 2022
+		| 2023
+		| 2024
+		| 2025
+		| 2026
+		| "latest";
+
+	/**
+	 * whether each holds an own `range`, its start and end offsets
+	 */
+	ranges?: boolean;
+
+	/**
+	 * whether each holds a `loc`, the line and column it starts and ends at
+	 */
+	locations?: boolean;
+
+	/**
+	 * the name each `loc` holds as its `source`
+	 */
+	sourceFile?: string;
+}
 
 /**
  * a node the parser made, as `SyntaxTree#addEstree` reads it, its offsets from `start` and `end` or else `range`
@@ -12997,7 +13148,6 @@ declare interface HMRJavascriptParserHooks {
 		void
 	>;
 }
-declare const HOISTED_DECLARATIONS: unique symbol;
 
 /**
  * Defines the handle module creation options type used by this module.
@@ -16122,12 +16272,10 @@ declare interface JavascriptNodeReader {
 		| PropertyDefinition
 		| VariableDeclarator
 		| Program
+		| AssignmentProperty
 		| Property
 		| CatchClause
 		| ClassBody
-		| SwitchCase
-		| TemplateElement
-		| AssignmentProperty
 		| ImportSpecifier
 		| ImportDefaultSpecifier
 		| ImportNamespaceSpecifier
@@ -16135,7 +16283,9 @@ declare interface JavascriptNodeReader {
 		| ObjectPattern
 		| ArrayPattern
 		| RestElement
-		| AssignmentPattern;
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
 	name: (node: number) => string;
 	flag: (flag: number, node: number) => boolean;
 	type: (node: number) => number;
@@ -16316,11 +16466,6 @@ declare interface JavascriptParseOptions {
 	 * called at a trailing comma
 	 */
 	onTrailingComma?: (lastTokEnd: number) => void;
-
-	/**
-	 * whether to build ESTree objects, the program returned, rather than the `SyntaxTree` `A` reads
-	 */
-	estree?: boolean;
 }
 declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	/**
@@ -19078,7 +19223,7 @@ type JavascriptParserState = ParserStateBase<BuiltJavascriptModule> &
 	KnownJavascriptParserState;
 type JavascriptParserTag<T = TagData> = symbol & { readonly __tagData?: T };
 type JavascriptProcessOptions = JavascriptReadOptions &
-	Omit<MinifyOptions, "sourceType" | "format" | "output" | "sourceMap">;
+	Omit<MinifyOptions, "format" | "output" | "sourceMap" | "sourceType">;
 
 /**
  * what the JavaScript `SourceProcessor` reads its source as, and prints it with
@@ -19822,7 +19967,7 @@ declare interface KnownUnsafeCacheData {
 	 * resolve options
 	 */
 	resolveOptions?: ResolveOptionsWebpackOptions;
-	parserOptions?: ParserOptionsNormalModule;
+	parserOptions?: ParserOptions;
 	generatorOptions?: GeneratorOptions;
 }
 declare const LEGACY_ASSERT_ATTRIBUTES: unique symbol;
@@ -19920,16 +20065,6 @@ declare interface LStatSync {
 		path: PathLikeFs,
 		options?: StatSyncOptions
 	): undefined | IStatsFs | IBigIntStatsFs;
-}
-
-/**
- * A label in scope, and what may jump to it.
- */
-declare class Label {
-	constructor(kind: null | string, name?: string, statementStart?: number);
-	kind?: null | string;
-	name?: string;
-	statementStart?: number;
 }
 
 /**
@@ -20190,9 +20325,19 @@ declare interface LazySource {
 	legacyAsserts?: Set<number>;
 
 	/**
-	 * each node's object, once made: empty until the first is
+	 * each node's object, once made: empty until the first short one or second long one is
 	 */
 	objects: (undefined | EstreeObject)[];
+
+	/**
+	 * for `toEstreeObject`'s objects, the long node made while `objects` was empty, `0` for none
+	 */
+	firstNode: number;
+
+	/**
+	 * that node's object
+	 */
+	first?: EstreeObject;
 
 	/**
 	 * the objects an outside parser or a plugin wrote, served for their nodes
@@ -20223,6 +20368,134 @@ declare interface LazySource {
 	 * the source of that tree, once a reader asked for it
 	 */
 	rebuilt?: LazySource;
+
+	/**
+	 * for `toEstreeObject`'s objects, the `ESTREE_RANGES` and `ESTREE_LOCATIONS` they are built with
+	 */
+	variant: number;
+
+	/**
+	 * for `toEstreeObject`'s objects, the edition whose fields they hold
+	 */
+	edition: number;
+
+	/**
+	 * for `toEstreeObject`'s objects, the `source` each `loc` holds
+	 */
+	sourceFile: null | string;
+
+	/**
+	 * for `toEstreeObject`'s objects with `loc`, each line's first offset, once a `loc` needs it
+	 */
+	lineStarts?: number[];
+
+	/**
+	 * for `toEstreeObject`'s objects with `loc`, the source text until `lineStarts` is built from it
+	 */
+	input?: string;
+
+	/**
+	 * for `toEstreeObject`'s objects with `loc`, the offset of each position in `positions`
+	 */
+	positionOffsets?: Int32Array;
+
+	/**
+	 * for `toEstreeObject`'s objects with `loc`, the last positions made, by their offset's low bits
+	 */
+	positions?: (undefined | SourcePosition)[];
+
+	/**
+	 * for `toEstreeObject`'s objects, the function making a node's object once
+	 */
+	factory?: (
+		source: LazySource,
+		node: number
+	) =>
+		| null
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| SpreadElement
+		| PrivateIdentifier
+		| Super
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| Program
+		| AssignmentProperty
+		| Property
+		| CatchClause
+		| ClassBody
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
+
+	/**
+	 * for `toEstreeObject`'s objects, each list's array once read, by list
+	 */
+	lists?: (undefined | (null | EstreeObject)[])[];
+
+	/**
+	 * for `toEstreeObject`'s objects, whether a child field of a long one was assigned
+	 */
+	edited: boolean;
 }
 
 /**
@@ -20976,7 +21249,6 @@ declare abstract class Logger {
 }
 declare const MEASURE_END_OPERATION: unique symbol;
 declare const MEASURE_START_OPERATION: unique symbol;
-declare const MODULE_DECLARATIONS: unique symbol;
 
 /**
  * Magic comment options by name; each value is whatever the user's comment evaluates to.
@@ -23848,12 +24120,10 @@ type NodeEstreeIndex =
 	| PropertyDefinition
 	| VariableDeclarator
 	| Program
+	| AssignmentProperty
 	| Property
 	| CatchClause
 	| ClassBody
-	| SwitchCase
-	| TemplateElement
-	| AssignmentProperty
 	| ImportSpecifier
 	| ImportDefaultSpecifier
 	| ImportNamespaceSpecifier
@@ -23861,7 +24131,9 @@ type NodeEstreeIndex =
 	| ObjectPattern
 	| ArrayPattern
 	| RestElement
-	| AssignmentPattern;
+	| AssignmentPattern
+	| SwitchCase
+	| TemplateElement;
 
 /**
  * a node as this parser builds one, whichever fields the options asked for
@@ -24124,7 +24396,7 @@ declare class NormalModule extends Module {
 	rawRequest: string;
 	binary: boolean;
 	parser?: Parser;
-	parserOptions?: ParserOptionsNormalModule;
+	parserOptions?: ParserOptions;
 	generator?: Generator;
 	generatorOptions?: GeneratorOptions;
 	resource: string;
@@ -24352,7 +24624,7 @@ declare interface NormalModuleCreateData<T extends string = string> {
 		Record<"css/module", CssModuleParserOptions> &
 		Record<"css/global", CssModuleParserOptions> &
 		Record<"html", EmptyParserOptions> &
-		Record<string, ParserOptionsNormalModule>)[T];
+		Record<string, ParserOptions>)[T];
 
 	/**
 	 * the generator used
@@ -24477,7 +24749,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					SyncBailHook<[CssModuleParserOptions], CssParser>
 				> &
 				Record<"html", SyncBailHook<[EmptyParserOptions], HtmlParser>> &
-				Record<string, SyncBailHook<[ParserOptionsNormalModule], Parser>>
+				Record<string, SyncBailHook<[ParserOptions], Parser>>
 		>;
 		parser: TypedHookMap<
 			Record<
@@ -24532,7 +24804,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					SyncBailHook<[CssParser, CssModuleParserOptions], void>
 				> &
 				Record<"html", SyncBailHook<[HtmlParser, EmptyParserOptions], void>> &
-				Record<string, SyncBailHook<[Parser, ParserOptionsNormalModule], void>>
+				Record<string, SyncBailHook<[Parser, ParserOptions], void>>
 		>;
 		createGenerator: TypedHookMap<
 			Record<
@@ -24664,7 +24936,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	ruleSet: RuleSet;
 	context: string;
 	fs: InputFileSystem;
-	parserCache: Map<string, WeakMap<ParserOptionsNormalModule, Parser>>;
+	parserCache: Map<string, WeakMap<ParserOptions, Parser>>;
 	generatorCache: Map<string, WeakMap<GeneratorOptions, Generator>>;
 	cleanupForCache(): void;
 
@@ -24701,7 +24973,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	 */
 	getParser<T extends string>(
 		type: T,
-		parserOptions?: ParserOptionsNormalModule
+		parserOptions?: ParserOptions
 	): (Record<"javascript/auto", JavascriptParser> &
 		Record<"javascript/dynamic", JavascriptParser> &
 		Record<"javascript/esm", JavascriptParser> &
@@ -24725,7 +24997,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	 */
 	createParser<T extends string>(
 		type: T,
-		parserOptions?: ParserOptionsNormalModule
+		parserOptions?: ParserOptions
 	): (Record<"javascript/auto", JavascriptParser> &
 		Record<"javascript/dynamic", JavascriptParser> &
 		Record<"javascript/esm", JavascriptParser> &
@@ -26509,14 +26781,9 @@ declare interface OptionsSyntaxParser {
 	checkPrivateFields?: boolean;
 
 	/**
-	 * whether nodes carry `loc`
+	 * whether tokens carry `loc`
 	 */
 	locations?: boolean;
-
-	/**
-	 * where the first offset falls
-	 */
-	startLocation?: { line: number; column: number };
 
 	/**
 	 * where tokens are reported
@@ -26543,24 +26810,14 @@ declare interface OptionsSyntaxParser {
 		| CollectedComment[];
 
 	/**
-	 * whether nodes carry `range`
+	 * whether tokens carry `range`
 	 */
 	ranges?: boolean;
-
-	/**
-	 * a program node to append to
-	 */
-	program?: NodeLike;
 
 	/**
 	 * the name errors and locations carry
 	 */
 	sourceFile?: string;
-
-	/**
-	 * the name every node carries
-	 */
-	directSourceFile?: string;
 
 	/**
 	 * whether parentheses become nodes
@@ -27571,38 +27828,6 @@ declare interface ParsedDataURI {
 	base64: boolean;
 	payload: string;
 }
-type ParsedExpression =
-	| (ImportExpressionImport & NodeLike)
-	| (UnaryExpression & NodeLike)
-	| (ArrayExpression & NodeLike)
-	| (ArrowFunctionExpression & NodeLike)
-	| (AssignmentExpression & NodeLike)
-	| (AwaitExpression & NodeLike)
-	| (BinaryExpression & NodeLike)
-	| (SimpleCallExpression & NodeLike)
-	| (NewExpression & NodeLike)
-	| (ChainExpression & NodeLike)
-	| (ClassExpression & NodeLike)
-	| (ConditionalExpression & NodeLike)
-	| (FunctionExpression & NodeLike)
-	| (Identifier & NodeLike)
-	| (SimpleLiteral & NodeLike)
-	| (RegExpLiteral & NodeLike)
-	| (BigIntLiteral & NodeLike)
-	| (LogicalExpression & NodeLike)
-	| (MemberExpression & NodeLike)
-	| (MetaProperty & NodeLike)
-	| (ObjectExpression & NodeLike)
-	| (SequenceExpression & NodeLike)
-	| (TaggedTemplateExpression & NodeLike)
-	| (TemplateLiteral & NodeLike)
-	| (ThisExpression & NodeLike)
-	| (UpdateExpression & NodeLike)
-	| (YieldExpression & NodeLike)
-	| (NodeLike & {
-			type: "ParenthesizedExpression";
-			expression: ParsedExpression;
-	  });
 declare interface ParsedIdentifier {
 	/**
 	 * request
@@ -27639,7 +27864,6 @@ declare interface ParsedIdentifier {
 	 */
 	internal: boolean;
 }
-type ParsedProgram = Program & NodeLike;
 
 /**
  * A source `parse.parseTree` read for the tree printer.
@@ -27681,18 +27905,8 @@ declare class Parser<TModule extends NormalModule = NormalModule> {
 		state: ParserState<NormalModule>
 	): ParserState<NormalModule>;
 }
-
-/**
- * An ESTree node, as this parser builds one.
- */
-declare class ParserNode {
-	constructor(parser: SyntaxParser, pos: number, loc?: Position);
-	type: string;
-	start: number;
-	end: number;
-	loc?: ParserSourceLocation;
-	sourceFile?: string;
-	range?: number[];
+declare interface ParserOptions {
+	[index: string]: any;
 }
 type ParserOptionsByModuleType = ParserOptionsByModuleTypeKnown &
 	ParserOptionsByModuleTypeUnknown;
@@ -27783,19 +27997,6 @@ declare interface ParserOptionsByModuleTypeKnown {
 declare interface ParserOptionsByModuleTypeUnknown {
 	[index: string]: { [index: string]: any };
 }
-declare interface ParserOptionsNormalModule {
-	[index: string]: any;
-}
-type ParserOptionsSyntaxParser = Omit<OptionsSyntaxParser, "onComment"> & {
-	onComment?:
-		| CollectedComment[]
-		| ((isBlock: boolean, text: string, start: number, end: number) => void);
-	lazyNodes?: boolean;
-	lazyComments?: CollectedComment[];
-	importPhases?: boolean;
-	moduleFallback?: boolean;
-	syntaxTree?: ColumnarSyntaxTree;
-};
 
 /**
  * Mirror of acorn's `Position` (line/column pair with its `offset` helper),
@@ -30522,11 +30723,6 @@ declare interface ResolvedOptionsSyntaxParser {
 	locations: boolean;
 
 	/**
-	 * where the first offset falls
-	 */
-	startLocation: null | { line: number; column: number };
-
-	/**
 	 * where tokens are reported
 	 */
 	onToken: null | ((token: Token) => void);
@@ -30556,19 +30752,9 @@ declare interface ResolvedOptionsSyntaxParser {
 	ranges: boolean;
 
 	/**
-	 * a program node to append to
-	 */
-	program: null | NodeLike;
-
-	/**
 	 * the name errors and locations carry
 	 */
 	sourceFile: null | string;
-
-	/**
-	 * the name every node carries
-	 */
-	directSourceFile: null | string;
 
 	/**
 	 * whether parentheses become nodes
@@ -35249,17 +35435,6 @@ declare class SyntaxParser {
 	regexpState: null | RegExpValidationState;
 	privateNameStack: any[];
 	inTemplateElement: boolean;
-	get inFunction(): boolean;
-	get inGenerator(): boolean;
-	get inAsync(): boolean;
-	get canAwait(): boolean;
-	get allowReturn(): boolean;
-	get allowSuper(): boolean;
-	get allowDirectSuper(): boolean;
-	get treatFunctionsAsVar(): number | boolean;
-	get allowNewDotTarget(): boolean;
-	get allowUsing(): boolean;
-	get inClassStaticBlock(): boolean;
 
 	/**
 	 * Whether a directive prologue starting at `start` opens with `"use strict"`.
@@ -35269,10 +35444,6 @@ declare class SyntaxParser {
 	unexpected(pos?: number): never;
 	initialContext(): TokContextLike[];
 	enterScope(flags: number): void;
-	treatFunctionsAsVarInScope(scope: { flags: number }): number | boolean;
-	currentScope(): ParserScope;
-	currentVarScope(): ParserScope;
-	currentThisScope(): ParserScope;
 
 	/**
 	 * Report a parse error, naming where in the source it was found.
@@ -35286,202 +35457,6 @@ declare class SyntaxParser {
 	raiseRecoverable(pos: number, message: string): void;
 	curPosition(): undefined | Position;
 	skipLineComment(startSkip: number): void;
-	parse(): any;
-	eat(type: TokenType): boolean;
-	isContextual(name: string): boolean;
-	eatContextual(name: string): boolean;
-
-	/**
-	 * Turn the host's stack overflow into a parse error, since a deeply nested
-	 * expression is an input the caller can act on rather than a crash.
-	 */
-	catchStackOverflow<T>(f: () => T): T;
-	expectContextual(name: string): void;
-	canInsertSemicolon(): boolean;
-	insertSemicolon(): undefined | boolean;
-	semicolon(): void;
-	afterTrailingComma(
-		tokType: TokenType,
-		notNext?: boolean
-	): undefined | boolean;
-	expect(type: TokenType): void;
-	checkPatternErrors(refDestructuringErrors?: any, isAssign?: boolean): void;
-	checkExpressionErrors(
-		refDestructuringErrors?: any,
-		andThrow?: boolean
-	): undefined | boolean;
-	checkYieldAwaitInDefaultParams(): void;
-	isSimpleAssignTarget(expr?: any): boolean;
-
-	/**
-	 * Read statements until the end of input and wrap them in a `Program`.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/statement.js
-	 */
-	parseTopLevel(node?: any): any;
-
-	/**
-	 * Whether a `let` here opens a lexical declaration rather than naming a
-	 * variable, which needs a look-ahead past the keyword.
-	 */
-	isLet(context?: null | string): boolean;
-
-	/**
-	 * Whether `async` here heads a function declaration, which no line break may
-	 * separate from the `function` keyword.
-	 */
-	isAsyncFunction(): boolean;
-
-	/**
-	 * Whether `using` (or `await using`) here heads a declaration rather than
-	 * naming a variable.
-	 */
-	isUsingKeyword(isAwaitUsing: boolean, isFor?: boolean): boolean;
-	isAwaitUsing(isFor?: boolean): boolean;
-	isUsing(isFor?: boolean): boolean;
-
-	/**
-	 * Read one statement. A statement head that is only a keyword by position —
-	 * `let`, `async`, `using` — is settled by the probes above.
-	 */
-	parseStatement(
-		context?: null | string,
-		topLevel?: boolean,
-		exports?: any
-	): any;
-	parseBreakContinueStatement(node: any, keyword: string): any;
-	parseDebuggerStatement(node?: any): any;
-	parseDoStatement(node?: any): any;
-
-	/**
-	 * Read a `for` head, which is only known to be plain, `in` or `of` once its
-	 * init part has been parsed with `in` held back as an operator.
-	 */
-	parseForStatement(node?: any): any;
-	parseForAfterInit(node: any, init: any, awaitAt: number): any;
-	parseFunctionStatement(
-		node: any,
-		isAsync: boolean,
-		declarationPosition: boolean
-	): any;
-	parseIfStatement(node?: any): any;
-	parseReturnStatement(node?: any): any;
-	parseSwitchStatement(node?: any): any;
-	parseThrowStatement(node?: any): any;
-	parseCatchClauseParam(): any;
-	parseTryStatement(node?: any): any;
-	parseVarStatement(
-		node: any,
-		kind: string,
-		allowMissingInitializer?: boolean
-	): any;
-	parseWhileStatement(node?: any): any;
-	parseWithStatement(node?: any): any;
-	parseEmptyStatement(node?: any): any;
-	parseLabeledStatement(
-		node?: any,
-		maybeName?: any,
-		expr?: any,
-		context?: null | string
-	): any;
-	parseExpressionStatement(node?: any, expr?: any): any;
-	parseBlock(
-		createNewLexicalScope?: boolean,
-		node?: any,
-		exitStrict?: boolean
-	): any;
-	parseFor(node?: any, init?: any): any;
-	parseForIn(node?: any, init?: any): any;
-	parseVar(
-		node: any,
-		isFor: boolean,
-		kind: string,
-		allowMissingInitializer?: boolean
-	): any;
-	parseVarId(decl: any, kind: string): void;
-	parseFunction(
-		node: any,
-		statement: number,
-		allowExpressionBody?: boolean,
-		isAsync?: boolean,
-		forInit?: string | boolean
-	): any;
-	parseFunctionParams(node?: any): void;
-	parseClass(node?: any, isStatement?: string | boolean): any;
-	parseClassElement(constructorAllowsSuper: boolean): any;
-	isClassElementNameStart(): boolean;
-	parseClassElementName(element?: any): void;
-	parseClassMethod(
-		method: any,
-		isGenerator: boolean,
-		isAsync: boolean,
-		allowsDirectSuper: boolean
-	): any;
-	parseClassField(field?: any): any;
-	parseClassStaticBlock(node?: any): any;
-	parseClassId(node?: any, isStatement?: string | boolean): void;
-	parseClassSuper(node?: any): void;
-	enterClassBody(): any;
-	exitClassBody(): void;
-	parseExportAllDeclaration(node?: any, exports?: any): any;
-	parseExport(node?: any, exports?: any): any;
-	parseExportDeclaration(node?: any): any;
-	parseExportDefaultDeclaration(): any;
-	checkExport(exports: any, name: any, pos: number): void;
-	checkPatternExport(exports?: any, pat?: any): void;
-	checkVariableExport(exports: any, declarations: any[]): void;
-	shouldParseExportStatement(): boolean;
-	parseExportSpecifier(exports?: any): any;
-	parseExportSpecifiers(exports?: any): any[];
-	parseImport(node?: any): any;
-	parseImportSpecifier(): any;
-	parseImportDefaultSpecifier(): any;
-	parseImportNamespaceSpecifier(): any;
-	parseImportSpecifiers(): any[];
-	parseWithClause(): any[];
-	parseImportAttribute(): any;
-	parseModuleExportName(): any;
-	adaptDirectivePrologue(statements: any[]): void;
-	isDirectiveCandidate(statement: NodeLike & { expression?: any }): boolean;
-
-	/**
-	 * Rewrite an expression as the binding pattern it turns out to be, which is
-	 * only known once the `=` or `of` after it has been read.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/lval.js
-	 */
-	toAssignable(
-		node?: any,
-		isBinding?: boolean,
-		refDestructuringErrors?: any
-	): any;
-	toAssignableList(exprList: any[], isBinding?: boolean): any[];
-	parseSpread(refDestructuringErrors?: any): any;
-	parseRestBinding(): any;
-	parseBindingAtom(): any;
-	parseBindingList(
-		close: TokenType,
-		allowEmpty: boolean,
-		allowTrailingComma: boolean,
-		allowModifiers?: boolean
-	): any[];
-	parseAssignableListItem(allowModifiers?: boolean): any;
-	parseBindingListItem(param?: any): any;
-	parseMaybeDefault(
-		startPos: number,
-		startLoc?: null | PositionLike,
-		left?: any
-	): any;
-
-	/**
-	 * Check a target that may only be an identifier or member expression, and
-	 * record the binding it introduces.
-	 */
-	checkLValSimple(expr?: any, bindingType?: number, checkClashes?: any): void;
-	checkLValPattern(expr?: any, bindingType?: number, checkClashes?: any): void;
-	checkLValInnerPattern(
-		expr?: any,
-		bindingType?: number,
-		checkClashes?: any
-	): void;
 	curContext(): TokContextLike;
 
 	/**
@@ -35497,217 +35472,12 @@ declare class SyntaxParser {
 	 */
 	inGeneratorContext(): boolean;
 	updateContext(prevType: TokenType): void;
-	overrideContext(tokenCtx: TokContextLike): void;
 
 	/**
 	 * A module reads `<!--` as `<`, `!` and `--`, where a script, as webpack
 	 * emits a module into, reads an HTML-style comment.
 	 */
 	readHtmlOpenAsOperators(pos: number): void;
-	exitScope(): void;
-
-	/**
-	 * Record a name in the scope its binding belongs to, and report a name that
-	 * was already declared there.
-	 */
-	declareName(name: string, bindingType: number, pos: number): void;
-	checkLocalExport(id?: any): void;
-	startNode(): any;
-	startNodeAt(pos: number, loc?: null | PositionLike): any;
-	finishNode(node: any, type: string): any;
-	finishNodeAt(
-		node: any,
-		type: string,
-		pos: number,
-		loc?: null | PositionLike
-	): any;
-	copyNode(node?: any): any;
-
-	/**
-	 * Report a property name that may not be repeated: a getter or setter that
-	 * clashes, and under ES5 a repeated `init` in strict mode.
-	 */
-	checkPropClash(
-		prop?: any,
-		propHash?: any,
-		refDestructuringErrors?: any
-	): void;
-
-	/**
-	 * Read a full expression, including the comma operator.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/expression.js
-	 */
-	parseExpression(
-		forInit?: string | boolean,
-		refDestructuringErrors?: any
-	): any;
-	parseMaybeAssign(
-		forInit?: string | boolean,
-		refDestructuringErrors?: any,
-		afterLeftParse?: any
-	): any;
-	parseMaybeConditional(
-		forInit?: string | boolean,
-		refDestructuringErrors?: any
-	): any;
-	parseExprOps(forInit?: string | boolean, refDestructuringErrors?: any): any;
-
-	/**
-	 * Read binary operators by precedence climbing, stopping where an operator
-	 * binds less tightly than the caller is parsing.
-	 */
-	parseExprOp(
-		left: any,
-		leftStartPos: number,
-		leftStartLoc: undefined | null | PositionLike,
-		minPrec: number,
-		forInit?: string | boolean
-	): any;
-	buildBinary(
-		startPos: number,
-		startLoc: undefined | null | PositionLike,
-		left: any,
-		right: any,
-		op: any,
-		logical: boolean
-	): any;
-	parseMaybeUnary(
-		refDestructuringErrors?: any,
-		sawUnary?: boolean,
-		incDec?: boolean,
-		forInit?: string | boolean
-	): any;
-	parseExprSubscripts(
-		refDestructuringErrors?: any,
-		forInit?: string | boolean
-	): any;
-	parseSubscripts(
-		baseExpr: any,
-		startPos: number,
-		startLoc: undefined | null | PositionLike,
-		noCalls: boolean,
-		forInit?: string | boolean
-	): any;
-	shouldParseAsyncArrow(): boolean;
-	parseSubscriptAsyncArrow(
-		startPos: number,
-		startLoc: undefined | null | PositionLike,
-		exprList: any[],
-		forInit?: string | boolean
-	): any;
-	parseSubscript(
-		baseExpr: any,
-		startPos: number,
-		startLoc: undefined | null | PositionLike,
-		noCalls: boolean,
-		maybeAsyncArrow: boolean,
-		optionalChained: boolean,
-		forInit?: string | boolean
-	): any;
-
-	/**
-	 * Read an expression that no operator binds into: a token that is an
-	 * expression on its own, or one that punctuation encloses.
-	 */
-	parseExprAtom(
-		refDestructuringErrors?: any,
-		forInit?: string | boolean,
-		forNew?: boolean
-	): any;
-	parseExprAtomDefault(): never;
-	parseExprImport(forNew?: boolean): any;
-	parseDynamicImport(node?: any): any;
-	parseImportMeta(node?: any): any;
-	parseLiteral(value?: any): any;
-	parseParenExpression(): any;
-	shouldParseArrow(exprList: any[]): boolean;
-
-	/**
-	 * Read a parenthesized expression, which is only known to be an arrow's
-	 * parameter list once the `=>` after the closing paren is seen.
-	 */
-	parseParenAndDistinguishExpression(
-		canBeArrow: boolean,
-		forInit?: string | boolean
-	): any;
-	parseParenItem(item?: any): any;
-	parseParenArrowList(
-		startPos: number,
-		startLoc: undefined | null | PositionLike,
-		exprList: any[],
-		forInit?: string | boolean
-	): any;
-
-	/**
-	 * Read a `new` expression, whose callee takes subscripts but not a call —
-	 * the argument list belongs to the `new` itself.
-	 */
-	parseNew(): any;
-	parseTemplateElement(opts: { isTagged: boolean }): any;
-	parseTemplate(opts?: { isTagged?: boolean }): any;
-	isAsyncProp(prop?: any): boolean;
-	parseObj(isPattern: boolean, refDestructuringErrors?: any): any;
-	parseProperty(isPattern: boolean, refDestructuringErrors?: any): any;
-	parseGetterSetter(prop?: any): void;
-	parsePropertyValue(
-		prop: any,
-		isPattern: boolean,
-		isGenerator: undefined | boolean,
-		isAsync: undefined | boolean,
-		startPos: undefined | number,
-		startLoc: undefined | null | PositionLike,
-		refDestructuringErrors: any,
-		containsEsc: boolean
-	): void;
-	parsePropertyName(prop?: any): any;
-	initFunction(node?: any): void;
-	parseMethod(
-		isGenerator?: boolean,
-		isAsync?: boolean,
-		allowDirectSuper?: boolean
-	): any;
-	parseArrowExpression(
-		node: any,
-		params: any[],
-		isAsync: boolean,
-		forInit?: string | boolean
-	): any;
-	parseFunctionBody(
-		node?: any,
-		isArrowFunction?: boolean,
-		isMethod?: boolean,
-		forInit?: string | boolean
-	): void;
-
-	/**
-	 * The token after a function body is read in the body's scope, so a `yield`
-	 * there is classified again in the enclosing one.
-	 */
-	rereadYieldContext(): void;
-	isSimpleParamList(params: any[]): boolean;
-	checkParams(node: any, allowDuplicates: boolean): void;
-	parseExprList(
-		close: TokenType,
-		allowTrailingComma: boolean,
-		allowEmpty: boolean,
-		refDestructuringErrors?: any
-	): any[];
-
-	/**
-	 * Report a name that the surrounding code may not use as an identifier.
-	 */
-	checkUnreserved(ref?: any): void;
-	parseIdent(liberal?: boolean): any;
-
-	/**
-	 * Whether the token before the current one is a `.` or a `?.`, read from
-	 * the text, as the parser no longer holds the type.
-	 */
-	followsDot(): boolean;
-	parseIdentNode(): any;
-	parsePrivateIdent(): any;
-	parseYield(forInit?: string | boolean): any;
-	parseAwait(forInit?: string | boolean): any;
 
 	/**
 	 * Move past the current token.
@@ -35780,16 +35550,6 @@ declare class SyntaxParser {
 	readWord1(): string;
 	readWord(): void;
 	[Symbol.iterator](): Iterator<Token, Token>;
-	static extend(...plugins: ((parser?: any) => any)[]): any;
-	static parse(
-		input: string,
-		options?: Partial<OptionsSyntaxParser>
-	): ParsedProgram;
-	static parseExpressionAt(
-		input: string,
-		pos: number,
-		options?: Partial<OptionsSyntaxParser>
-	): ParsedExpression;
 	static tokenizer(
 		input: string,
 		options?: Partial<OptionsSyntaxParser>
@@ -37592,7 +37352,6 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 declare class WebpackParser extends SyntaxParser {
 	constructor(
 		options: OptionsSyntaxParser & {
-			lazyNodes?: boolean;
 			lazyComments?: CollectedComment[];
 			importPhases?: boolean;
 			moduleFallback?: boolean;
@@ -37601,23 +37360,354 @@ declare class WebpackParser extends SyntaxParser {
 		input: string,
 		startPos?: number
 	);
-	[Symbol.iterator](): Iterator<Token, Token>;
+	eat(type: TokenType): boolean;
+	expect(type: TokenType): void;
+	semicolon(): void;
+	insertSemicolon(): undefined | boolean;
+	isContextual(name: string): boolean;
+	eatContextual(name: string): boolean;
+	expectContextual(name: string): void;
+	checkPatternErrors(
+		refDestructuringErrors: DestructuringErrors,
+		isAssign?: boolean
+	): void;
+	checkYieldAwaitInDefaultParams(): void;
+	isSimpleAssignTarget(expr?: any): boolean;
+	parseParenExpression(): any;
+	isUsing(isFor?: boolean): boolean;
+	isAwaitUsing(isFor?: boolean): boolean;
+	shouldParseExportStatement(): boolean;
+	parseExportDeclaration(node?: any): any;
+	parseGetterSetter(prop?: any): void;
+	parseFunctionParams(node?: any): void;
+	shouldParseAsyncArrow(): boolean;
+	parseSubscriptAsyncArrow(
+		startPos: number,
+		startLoc: undefined | null | PositionLike,
+		exprList: any[],
+		forInit?: string | boolean
+	): any;
+	shouldParseArrow(exprList: any[]): boolean;
+	parseParenArrowList(
+		startPos: number,
+		startLoc: undefined | null | PositionLike,
+		exprList: any[],
+		forInit?: string | boolean
+	): any;
+	parseParenItem(item?: any): any;
+	parseAssignableListItem(allowModifiers?: boolean): any;
+	parseBindingListItem(param?: any): any;
+	parseCatchClauseParam(): any;
+	isClassElementNameStart(): boolean;
+	overrideContext(tokenCtx: TokContextLike): void;
+	currentScope(): ParserScope;
+	currentVarScope(): ParserScope;
+	currentThisScope(): ParserScope;
+	treatFunctionsAsVarInScope(scope: { flags: number }): number | boolean;
+	get inFunction(): boolean;
+	get inGenerator(): boolean;
+	get inAsync(): boolean;
+	get canAwait(): boolean;
+	get allowReturn(): boolean;
+	get allowSuper(): boolean;
+	get allowDirectSuper(): boolean;
+	get treatFunctionsAsVar(): number | boolean;
+	get allowNewDotTarget(): boolean;
+	get allowUsing(): boolean;
+	get inClassStaticBlock(): boolean;
 
 	/**
-	 * Applies parser plugins, keeping the result typed as this parser.
+	 * Whether a `let` here opens a lexical declaration rather than naming a
+	 * variable, which needs a look-ahead past the keyword.
 	 */
-	static extend(
-		...plugins: ((BaseParser: typeof SyntaxParser) => typeof SyntaxParser)[]
-	): typeof WebpackParser;
-	static parse(
-		input: string,
-		options?: Partial<OptionsSyntaxParser>
-	): ParsedProgram;
-	static parseExpressionAt(
-		input: string,
-		pos: number,
-		options?: Partial<OptionsSyntaxParser>
-	): ParsedExpression;
+	isLet(context?: null | string): boolean;
+
+	/**
+	 * Whether `async` here heads a function declaration, which no line break may
+	 * separate from the `function` keyword.
+	 */
+	isAsyncFunction(): boolean;
+
+	/**
+	 * Whether `using` (or `await using`) here heads a declaration rather than
+	 * naming a variable.
+	 */
+	isUsingKeyword(isAwaitUsing: boolean, isFor?: boolean): boolean;
+
+	/**
+	 * Check a target that may only be an identifier or member expression, and
+	 * record the binding it introduces.
+	 */
+	checkLValSimple(expr?: any, bindingType?: number, checkClashes?: any): void;
+	checkLValPattern(expr?: any, bindingType?: number, checkClashes?: any): void;
+	checkLValInnerPattern(
+		expr?: any,
+		bindingType?: number,
+		checkClashes?: any
+	): void;
+	canInsertSemicolon(): boolean;
+	startNode(): any;
+	startNodeAt(pos: number, loc?: null | PositionLike): any;
+	finishNode(node: any, type: string): any;
+
+	/**
+	 * Whether the token before the current one is a `.` or a `?.`, read from
+	 * the text, as the parser no longer holds the type.
+	 */
+	followsDot(): boolean;
+	parseIdent(liberal?: boolean): any;
+	parseSubscripts(
+		baseExpr: any,
+		startPos: number,
+		startLoc: undefined | null | PositionLike,
+		noCalls: boolean,
+		forInit?: string | boolean
+	): any;
+	parseSubscript(
+		baseExpr: any,
+		startPos: number,
+		startLoc: undefined | null | PositionLike,
+		noCalls: boolean,
+		maybeAsyncArrow: boolean,
+		optionalChained: boolean,
+		forInit?: string | boolean
+	): any;
+	parse(): any;
+
+	/**
+	 * Read statements until the end of input and wrap them in a `Program`.
+	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/statement.js
+	 */
+	parseTopLevel(node?: any): any;
+
+	/**
+	 * Read one statement. A statement head that is only a keyword by position —
+	 * `let`, `async`, `using` — is settled by the probes above.
+	 */
+	parseStatement(
+		context?: null | string,
+		topLevel?: boolean,
+		exports?: any
+	): any;
+	parseBlock(
+		createNewLexicalScope?: boolean,
+		node?: any,
+		exitStrict?: boolean
+	): any;
+	parseLabeledStatement(
+		node?: any,
+		maybeName?: any,
+		expr?: any,
+		context?: null | string
+	): any;
+	parseSpread(refDestructuringErrors?: any): any;
+	parseMaybeConditional(
+		forInit?: string | boolean,
+		refDestructuringErrors?: any
+	): any;
+	parseArrowExpression(
+		node: any,
+		params: any[],
+		isAsync: boolean,
+		forInit?: string | boolean
+	): any;
+	parseFunction(
+		node: any,
+		statement: number,
+		allowExpressionBody?: boolean,
+		isAsync?: boolean,
+		forInit?: string | boolean
+	): any;
+	parseFunctionBody(
+		node?: any,
+		isArrowFunction?: boolean,
+		isMethod?: boolean,
+		forInit?: string | boolean
+	): void;
+	checkParams(node: any, allowDuplicates: boolean): void;
+
+	/**
+	 * Rewrite an expression as the binding pattern it turns out to be, which is
+	 * only known once the `=` or `of` after it has been read.
+	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/lval.js
+	 */
+	toAssignable(
+		node?: any,
+		isBinding?: boolean,
+		refDestructuringErrors?: any
+	): any;
+	toAssignableList(exprList: any[], isBinding?: boolean): any[];
+	parseMaybeDefault(
+		startPos: number,
+		startLoc?: null | PositionLike,
+		left?: any
+	): any;
+	parseRestBinding(): any;
+	parseBindingAtom(): any;
+	parseExprSubscripts(
+		refDestructuringErrors?: any,
+		forInit?: string | boolean
+	): any;
+	parseBindingList(
+		close: TokenType,
+		allowEmpty: boolean,
+		allowTrailingComma: boolean,
+		allowModifiers?: boolean
+	): any[];
+
+	/**
+	 * Read a parenthesized expression, which is only known to be an arrow's
+	 * parameter list once the `=>` after the closing paren is seen.
+	 */
+	parseParenAndDistinguishExpression(
+		canBeArrow: boolean,
+		forInit?: string | boolean
+	): any;
+	afterTrailingComma(
+		tokType: TokenType,
+		notNext?: boolean
+	): undefined | boolean;
+	checkExpressionErrors(
+		refDestructuringErrors?: any,
+		andThrow?: boolean
+	): undefined | boolean;
+
+	/**
+	 * Read a full expression, including the comma operator.
+	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/expression.js
+	 */
+	parseExpression(
+		forInit?: string | boolean,
+		refDestructuringErrors?: any
+	): any;
+
+	/**
+	 * Read a `new` expression, whose callee takes subscripts but not a call —
+	 * the argument list belongs to the `new` itself.
+	 */
+	parseNew(): any;
+	parseTemplateElement(opts: { isTagged: boolean }): any;
+	parseTemplate(opts?: { isTagged?: boolean }): any;
+	parseMaybeUnary(
+		refDestructuringErrors?: any,
+		sawUnary?: boolean,
+		incDec?: boolean,
+		forInit?: string | boolean
+	): any;
+	parseMaybeAssign(
+		forInit?: string | boolean,
+		refDestructuringErrors?: any,
+		afterLeftParse?: any
+	): any;
+	parseExprOps(forInit?: string | boolean, refDestructuringErrors?: any): any;
+
+	/**
+	 * Read binary operators by precedence climbing, stopping where an operator
+	 * binds less tightly than the caller is parsing.
+	 */
+	parseExprOp(
+		left: any,
+		leftStartPos: number,
+		leftStartLoc: undefined | null | PositionLike,
+		minPrec: number,
+		forInit?: string | boolean
+	): any;
+	buildBinary(
+		startPos: number,
+		startLoc: undefined | null | PositionLike,
+		left: any,
+		right: any,
+		op: any,
+		logical: boolean
+	): any;
+
+	/**
+	 * Read an expression that no operator binds into: a token that is an
+	 * expression on its own, or one that punctuation encloses.
+	 */
+	parseExprAtom(
+		refDestructuringErrors?: any,
+		forInit?: string | boolean,
+		forNew?: boolean
+	): any;
+	parseObj(isPattern: boolean, refDestructuringErrors?: any): any;
+	parseProperty(isPattern: boolean, refDestructuringErrors?: any): any;
+	parseClass(node?: any, isStatement?: string | boolean): any;
+	parseClassElement(constructorAllowsSuper: boolean): any;
+	parseClassElementName(element?: any): void;
+	parseClassMethod(
+		method: any,
+		isGenerator: boolean,
+		isAsync: boolean,
+		allowsDirectSuper: boolean
+	): any;
+	parseClassField(field?: any): any;
+	parseClassStaticBlock(start: number): any;
+	parseClassId(node?: any, isStatement?: string | boolean): void;
+	parseClassSuper(node?: any): void;
+	enterClassBody(): any;
+	exitClassBody(): void;
+	parseMethod(
+		isGenerator?: boolean,
+		isAsync?: boolean,
+		allowDirectSuper?: boolean
+	): any;
+	parsePropertyName(prop?: any): any;
+	parsePropertyValue(
+		prop: any,
+		isPattern: boolean,
+		isGenerator: undefined | boolean,
+		isAsync: undefined | boolean,
+		startPos: undefined | number,
+		startLoc: undefined | null | PositionLike,
+		refDestructuringErrors: any,
+		containsEsc: boolean
+	): void;
+	isAsyncProp(prop?: any): boolean;
+
+	/**
+	 * Report a property name that may not be repeated: a getter or setter that
+	 * clashes, and under ES5 a repeated `init` in strict mode.
+	 */
+	checkPropClash(
+		prop?: any,
+		propHash?: any,
+		refDestructuringErrors?: any
+	): void;
+	parseLiteral(value?: any): any;
+	exitScope(): void;
+
+	/**
+	 * Record a name in the scope its binding belongs to, and report a name that
+	 * was already declared there.
+	 */
+	declareName(name: string, bindingType: number, pos: number): void;
+	checkLocalExport(id?: any): void;
+	parseWithClause(): any[];
+	parseImportAttribute(): any;
+	parseModuleExportName(): any;
+	parseImport(node?: any): any;
+	parseImportSpecifier(): any;
+	parseImportDefaultSpecifier(): any;
+	parseImportNamespaceSpecifier(): any;
+	parseExport(node?: any, exports?: any): any;
+	parseExportAllDeclaration(node?: any, exports?: any): any;
+	parseExportDefaultDeclaration(): any;
+	checkExport(exports: any, name: any, pos: number): void;
+	parseExportSpecifier(exports?: any): any;
+	parseExportSpecifiers(exports?: any): any[];
+	parseAwait(forInit?: string | boolean): any;
+	parseYield(forInit?: string | boolean): any;
+
+	/**
+	 * Reads the current token, a private name, as every caller checked.
+	 */
+	parsePrivateIdent(): any;
+	parseImportSpecifiers(): any[];
+	parseDynamicImport(node?: any): any;
+	parseExprImport(forNew?: boolean): any;
+	parseImportMeta(node?: any): any;
+	[Symbol.iterator](): Iterator<Token, Token>;
 	static tokenizer(
 		input: string,
 		options?: Partial<OptionsSyntaxParser>
@@ -37706,26 +37796,12 @@ type WriteStreamOptions = StreamOptions & {
 declare interface _functionSyntaxParserFunction_1 {
 	/**
 	 * Parse a program, ECMA-262 §16.1 or §16.2, into a `SyntaxTree` read through
-	 * `A`, its node ids valid until the next JavaScript parse, or under `estree`
-	 * into ESTree objects.
+	 * `A`, its node ids valid until the next JavaScript parse.
 	 */
 	(
 		input: string,
-		pos: undefined | number,
-		options: JavascriptParseOptions & { estree: true; parseError?: undefined }
-	): Program;
-	(
-		input: string,
-		pos: undefined | number,
-		options: JavascriptParseOptions & { estree: true }
-	): undefined | Program;
-	(
-		input: string,
 		pos?: number,
-		options?: JavascriptParseOptions & {
-			estree?: false;
-			parseError?: undefined;
-		}
+		options?: JavascriptParseOptions & { parseError?: undefined }
 	): number;
 	(
 		input: string,
@@ -37882,6 +37958,26 @@ declare namespace exports {
 		 * share-init for modules federation
 		 */
 		"share-init": [{ shareScope: string; initStage: number; init: string }];
+
+		/**
+		 * the reasons a module's code is not analyzable, kept beside a cached result so they are reapplied when it is restored
+		 */
+		analyzableBailouts: string[];
+
+		/**
+		 * a content hash for asset modules
+		 */
+		contentHash: string;
+
+		/**
+		 * what each class or id name of a CSS module becomes, for an HTML page that names them
+		 */
+		cssLocals: Map<string, string>;
+
+		/**
+		 * the name each import binding prints as, for source map scopes
+		 */
+		importBindings: Map<string, string>;
 	}
 
 	/**
@@ -39058,20 +39154,13 @@ declare namespace exports {
 					export let allowHashBang: boolean;
 					export let checkPrivateFields: boolean;
 					export let locations: boolean;
-					export let startLocation: null;
 					export let onToken: null;
 					export let onTokenRead: null;
 					export let onComment: null;
 					export let ranges: boolean;
-					export let program: null;
 					export let sourceFile: null;
-					export let directSourceFile: null;
 					export let preserveParens: boolean;
 				}
-				export let functionFlags: (
-					async: boolean,
-					generator: boolean
-				) => number;
 				export let getLineInfo: (input: string, offset: number) => Position;
 				export let getOptions: (
 					opts?: null | Partial<OptionsSyntaxParser>
@@ -39084,9 +39173,7 @@ declare namespace exports {
 					code: number,
 					astral?: boolean
 				) => boolean;
-				export let isLocalVariableAccess: (node?: any) => boolean;
 				export let isNewLine: (code: number) => boolean;
-				export let isPrivateFieldAccess: (node?: any) => boolean;
 				export let keywordTypes: Record<string, TokenType>;
 				export let lineBreak: RegExp;
 				export let nextLineBreak: (
@@ -39157,7 +39244,6 @@ declare namespace exports {
 					export let coalesce: TokenType;
 				}
 				export let wordsRegexp: (words: string) => RegExp;
-				export let MAX_MASKED_INDEX: 30;
 				export let NodeType: Readonly<{
 					Identifier: 1;
 					PrivateIdentifier: 2;
@@ -39242,13 +39328,7 @@ declare namespace exports {
 					phase: 6;
 				}>;
 				export let collectCjsRequireSpecifiers: (source: string) => Set<string>;
-				export let declaresIntoBlock: (statement?: any) => boolean;
-				export let overflowFrom: (mask: number, index: number) => number[];
 				export let hasOctalEscape: (raw: string) => boolean;
-				export let parse: (
-					input: string,
-					options: ParserOptionsSyntaxParser
-				) => Program;
 				export let lazyObjectOfSource: (
 					source: LazySource,
 					node: number
@@ -39314,12 +39394,10 @@ declare namespace exports {
 					| PropertyDefinition
 					| VariableDeclarator
 					| Program
+					| AssignmentProperty
 					| Property
 					| CatchClause
 					| ClassBody
-					| SwitchCase
-					| TemplateElement
-					| AssignmentProperty
 					| ImportSpecifier
 					| ImportDefaultSpecifier
 					| ImportNamespaceSpecifier
@@ -39327,7 +39405,9 @@ declare namespace exports {
 					| ObjectPattern
 					| ArrayPattern
 					| RestElement
-					| AssignmentPattern;
+					| AssignmentPattern
+					| SwitchCase
+					| TemplateElement;
 				export let parseProgram: _functionSyntaxParserFunction_1;
 				export let parsedTree: () => null | ColumnarSyntaxTree;
 				export let takeParsedTree: () => null | ColumnarSyntaxTree;
@@ -39338,7 +39418,7 @@ declare namespace exports {
 				export let releaseParserCaches: () => void;
 				export let toEstreeObject: (
 					node: number,
-					fields?: string[]
+					options?: EstreeObjectOptions
 				) =>
 					| null
 					| ImportDeclaration
@@ -39401,12 +39481,10 @@ declare namespace exports {
 					| PropertyDefinition
 					| VariableDeclarator
 					| Program
+					| AssignmentProperty
 					| Property
 					| CatchClause
 					| ClassBody
-					| SwitchCase
-					| TemplateElement
-					| AssignmentProperty
 					| ImportSpecifier
 					| ImportDefaultSpecifier
 					| ImportNamespaceSpecifier
@@ -39414,7 +39492,9 @@ declare namespace exports {
 					| ObjectPattern
 					| ArrayPattern
 					| RestElement
-					| AssignmentPattern;
+					| AssignmentPattern
+					| SwitchCase
+					| TemplateElement;
 				export let fromEstreeObject: (
 					program: Program,
 					input: string
@@ -39443,8 +39523,6 @@ declare namespace exports {
 				export let printEarlyIn: (early: Map<number, number>) => void;
 				export {
 					DestructuringErrors,
-					Label,
-					ParserNode,
 					SyntaxParser as Parser,
 					Position,
 					ParserScope as Scope,
@@ -39452,9 +39530,6 @@ declare namespace exports {
 					TokContext,
 					Token,
 					TokenType,
-					BLOCK_DECLARATIONS,
-					HOISTED_DECLARATIONS,
-					MODULE_DECLARATIONS,
 					LEGACY_ASSERT_ATTRIBUTES,
 					ParserPosition,
 					WebpackParser,
@@ -39500,7 +39575,7 @@ declare namespace exports {
 			}
 			/** exposed as `webpack.javascript.syntax.toEstreeObject`; unstable API @experimental */ export const toEstreeObject: (
 				node: number,
-				fields?: string[]
+				options?: EstreeObjectOptions
 			) =>
 				| null
 				| ImportDeclaration
@@ -39563,12 +39638,10 @@ declare namespace exports {
 				| PropertyDefinition
 				| VariableDeclarator
 				| Program
+				| AssignmentProperty
 				| Property
 				| CatchClause
 				| ClassBody
-				| SwitchCase
-				| TemplateElement
-				| AssignmentProperty
 				| ImportSpecifier
 				| ImportDefaultSpecifier
 				| ImportNamespaceSpecifier
@@ -39576,7 +39649,9 @@ declare namespace exports {
 				| ObjectPattern
 				| ArrayPattern
 				| RestElement
-				| AssignmentPattern;
+				| AssignmentPattern
+				| SwitchCase
+				| TemplateElement;
 			/** Usage: `const { analyzeScope } = webpack.javascript.syntax.scopes; analyzeScope(parser.parseProgram(code, 0, { scopes: true }))`. @experimental exposed as `webpack.javascript.syntax.scopes`; unstable API */ export namespace scopes {
 				export let analyzeScope: (
 					program: number,

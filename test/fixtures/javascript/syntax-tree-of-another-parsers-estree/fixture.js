@@ -1,5 +1,6 @@
 "use strict";
 
+const acorn = require("acorn");
 const { parser } = require("../../../../lib/javascript/syntax");
 
 /**
@@ -7,7 +8,7 @@ const { parser } = require("../../../../lib/javascript/syntax");
  * @returns {EXPECTED_ANY} its ESTree program, as another parser would hand it over
  */
 const estreeOf = (source) =>
-	parser.parse(source, {
+	acorn.parse(source, {
 		ecmaVersion: "latest",
 		sourceType: "module",
 		ranges: true

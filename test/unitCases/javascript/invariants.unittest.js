@@ -158,9 +158,11 @@ const ENTRIES = {
 					plain(
 						parse(
 							source,
-							recording(
-								log === undefined ? options : { ...options, comments: false },
-								log
+							/** @type {import("../../helpers/javascriptParse").EstreeParseOptions} */ (
+								recording(
+									log === undefined ? options : { ...options, comments: false },
+									log
+								)
 							)
 						).ast
 					)
@@ -168,7 +170,7 @@ const ENTRIES = {
 			)
 		]
 	},
-	// `fields` reads the program's node, from a second parse without `estree`.
+	// `fields` reads the program's node, from a second parse.
 	parseProgram: {
 		positions: true,
 		trees: true,
@@ -178,14 +180,13 @@ const ENTRIES = {
 			const tree = answerOf(() => {
 				const program = parser.parseProgram(source, pos, {
 					...options,
-					estree: true,
 					parseError: (input, code, start, end, severity) => {
 						errors.push(errorText(severity, start, end, code));
 					}
 				});
 				return program === undefined
 					? "undefined"
-					: treeText(plain(program));
+					: treeText(plain(parser.toEstreeObject(program)));
 			});
 			const values = [tree, errors.join(" ")];
 			if (fields !== undefined) {
@@ -200,23 +201,6 @@ const ENTRIES = {
 			}
 			return values;
 		}
-	},
-	parseExpressionAt: {
-		records: true,
-		positions: true,
-		read: (source, options, log, { pos }) => [
-			answerOf(() =>
-				treeText(
-					plain(
-						parser.Parser.parseExpressionAt(
-							source,
-							pos,
-							recording({ ecmaVersion: "latest", ...options }, log)
-						)
-					)
-				)
-			)
-		]
 	},
 	tokenizer: { read: (source, options) => [tokenLine(source, options)] },
 	SourceProcessor: {

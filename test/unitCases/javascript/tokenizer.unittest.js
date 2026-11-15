@@ -8,7 +8,7 @@ const { fixture } = require("../../helpers/fixture");
 /** @typedef {Partial<import("../../../lib/javascript/syntax-parser").Options>} PortOptions */
 
 const acorn = require("acorn");
-const { parse, plain } = require("../../helpers/javascriptParse");
+const { parse, parseEstree, plain } = require("../../helpers/javascriptParse");
 const {
 	Parser,
 	Position,
@@ -40,9 +40,6 @@ describe("WebpackParser", () => {
 						'"pattern":"=a"'
 					);
 				}
-				expect(
-					JSON.stringify(Parser.parse(source, { ecmaVersion: "latest" }))
-				).toContain('"pattern":"=a"');
 			}
 			expect(() => parse(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-re-read-a-the-4"))).toThrow(
 				/Unterminated regular expression \(1:5\)/
@@ -133,19 +130,44 @@ const tokenized = (parser, source, options) => {
 /**
  * The tokens a full parse reports through `onToken`, where the parser rather
  * than the tokenizer's guess decides some contexts, or the error it threw.
- * @param {typeof Parser} parser the parser class to run
  * @param {string} source the program text
  * @param {PortOptions} options parse options
  * @returns {unknown} the outcome as plain data
  */
-const parsedTokens = (parser, source, options) => {
+const parsedTokens = (source, options) => {
+	/** @type {import("../../../lib/javascript/syntax-parser").Token[]} */
+	const tokens = [];
+	try {
+		parseEstree(
+			source,
+			/** @type {import("../../helpers/javascriptParse").EstreeParseOptions} */ ({
+				...options,
+				onToken: tokens
+			})
+		);
+		return plain(tokens);
+	} catch (err) {
+		return errorOutcome(err);
+	}
+};
+
+/**
+ * The tokens acorn's full parse reports through `onToken`, or the error it threw.
+ * @param {string} source the program text
+ * @param {PortOptions} options parse options
+ * @returns {unknown} the outcome as plain data
+ */
+const acornTokens = (source, options) => {
 	/** @type {unknown[]} */
 	const tokens = [];
 	try {
-		parser.parse(source, {
-			...options,
-			onToken: /** @type {EXPECTED_ANY} */ (tokens)
-		});
+		acorn.parse(
+			source,
+			/** @type {acorn.Options} */ ({
+				...options,
+				onToken: tokens
+			})
+		);
 		return plain(tokens);
 	} catch (err) {
 		return errorOutcome(err);
@@ -170,7 +192,7 @@ const commentFields = (comments) =>
  * collected lazily as a build does, or not collected at all, so the owned
  * comment skipping runs instead of acorn's.
  * @param {string} source the program text
- * @param {PortOptions & { lazyNodes?: boolean }} options tokenizer options
+ * @param {PortOptions} options tokenizer options
  * @param {boolean} collect whether to collect comments lazily
  * @returns {unknown} the outcome as plain data
  */
@@ -202,16 +224,6 @@ const tokenizedByWebpack = (source, options, collect) => {
  */
 const labels = (source, options = { ecmaVersion: "latest" }) =>
 	Array.from(Parser.tokenizer(source, options), (token) => token.type.label);
-
-/**
- * Both tokenizers measured against acorn: webpack's parser overrides the hot
- * tokenizer methods with inlined copies, taken whenever locations are off.
- * @type {[string, typeof Parser][]}
- */
-const PARSERS = [
-	["Parser", Parser],
-	["WebpackParser", /** @type {typeof Parser} */ (/** @type {unknown} */ (WebpackParser))]
-];
 
 /** @type {[string, PortOptions][]} */
 const TOKENIZER_OPTION_SETS = [
@@ -440,34 +452,31 @@ describe("Parser.tokenizer", () => {
 				for (const source of sources) {
 					for (const [name, options] of TOKENIZER_OPTION_SETS) {
 						const theirs = tokenized(acornPort.Parser, source, options);
-						for (const [parserName, parser] of PARSERS) {
-							const ours = tokenized(parser, source, options);
-							if (JSON.stringify(ours) !== JSON.stringify(theirs)) {
-								differences.push({
-									parser: parserName,
-									source,
-									options: name,
-									ours,
-									theirs
-								});
-							}
+						const ours = tokenized(Parser, source, options);
+						if (JSON.stringify(ours) !== JSON.stringify(theirs)) {
+							differences.push({
+								parser: "Parser",
+								source,
+								options: name,
+								ours,
+								theirs
+							});
 						}
-						// lazy nodes drop ranges and locations, so only the sets
-						// without them can compare
+						// webpack's tokens hold offsets alone, so only the sets
+						// without ranges and locations can compare
 						if (options.locations || options.ranges) continue;
 						const expected =
 							/** @type {{ tokens?: unknown[], comments: unknown[] }} */ (
 								theirs
 							);
-						for (const [variant, lazyNodes, collect] of [
-							["lazy, comments collected", true, true],
-							["lazy, comments skipped", true, false],
-							["comments skipped", false, false]
-						]) {
+						for (const [variant, collect] of /** @type {[string, boolean][]} */ ([
+							["comments collected", true],
+							["comments skipped", false]
+						])) {
 							const ours = tokenizedByWebpack(
 								source,
-								{ ...options, lazyNodes: Boolean(lazyNodes) },
-								Boolean(collect)
+								options,
+								collect
 							);
 							const wanted = expected.tokens
 								? {
@@ -506,19 +515,17 @@ describe("Parser.tokenizer", () => {
 					{ ecmaVersion: "latest", locations: true, ranges: true },
 					{ ecmaVersion: 8 }
 				])) {
-					const theirs = parsedTokens(acornPort.Parser, source, options);
-					for (const [parserName, parser] of PARSERS) {
-						const ours = parsedTokens(parser, source, options);
-						if (JSON.stringify(ours) !== JSON.stringify(theirs)) {
-							differences.push({ parser: parserName, source, options, ours, theirs });
-						}
+					const theirs = acornTokens(source, options);
+					const ours = parsedTokens(source, options);
+					if (JSON.stringify(ours) !== JSON.stringify(theirs)) {
+						differences.push({ source, options, ours, theirs });
 					}
 				}
 			}
 			expect(differences).toEqual([]);
 			// the override is what turns the `/` after `{}` into a division
 			const tokens = /** @type {{ type: { label: string } }[]} */ (
-				parsedTokens(Parser, fixture("javascript", "parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn-5"), { ecmaVersion: "latest" })
+				parsedTokens(fixture("javascript", "parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn-5"), { ecmaVersion: "latest" })
 			);
 			expect(tokens.map((token) => token.type.label)).toEqual([
 				"name",
@@ -541,18 +548,16 @@ describe("Parser.tokenizer", () => {
 			const source = fixture("javascript", "parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn-2");
 			expect(() => new (require("vm").Script)(source)).not.toThrow();
 			expect(() =>
-				acornPort.Parser.parse(source, { ecmaVersion: "latest" })
+				acorn.Parser.parse(source, { ecmaVersion: "latest" })
 			).toThrow(/Unterminated regular expression/);
-			for (const [, parser] of PARSERS) {
-				const tokens = /** @type {{ type: { label: string } }[]} */ (
-					parsedTokens(parser, source, { ecmaVersion: "latest" })
-				);
-				expect(tokens.map((token) => token.type.label)).toEqual([
-					"name", "=", "name", "?", "name", ":", "{", "}", "/", "num", ";",
-					"name", "=", "name", "?", "name", ":", "function", "(", ")", "{",
-					"}", "/", "num", "eof"
-				]);
-			}
+			const tokens = /** @type {{ type: { label: string } }[]} */ (
+				parsedTokens(source, { ecmaVersion: "latest" })
+			);
+			expect(tokens.map((token) => token.type.label)).toEqual([
+				"name", "=", "name", "?", "name", ":", "{", "}", "/", "num", ";",
+				"name", "=", "name", "?", "name", ":", "function", "(", ")", "{",
+				"}", "/", "num", "eof"
+			]);
 		});
 
 		it("should read a regexp after `yield` in a generator method", () => {
@@ -561,11 +566,11 @@ describe("Parser.tokenizer", () => {
 			// pushes, so it reads a division here and rejects the program
 			const source = fixture("javascript", "parser-tokenizer-parser-decided-contexts-should-read-a-regexp-after-yield-in-a");
 			const tokens = /** @type {{ type: { label: string } }[]} */ (
-				parsedTokens(Parser, source, { ecmaVersion: "latest" })
+				parsedTokens(source, { ecmaVersion: "latest" })
 			);
 			expect(tokens.map((token) => token.type.label)).toContain("regexp");
 			expect(
-				parsedTokens(acornPort.Parser, source, { ecmaVersion: "latest" })
+				acornTokens(source, { ecmaVersion: "latest" })
 			).toMatchObject({ error: "Unexpected token (1:23)" });
 		});
 	});
@@ -593,26 +598,33 @@ describe("Parser.tokenizer", () => {
 		it("should hand comments and tokens to callbacks like acorn", () => {
 			const source = fixture("javascript", "parser-tokenizer-token-stream-should-hand-comments-and-tokens-to-callbacks-like");
 			/**
-			 * @param {typeof Parser} parser the parser class to run
+			 * @param {(source: string, options: EXPECTED_ANY) => unknown} parse what parses it, ours or acorn's
 			 * @returns {unknown[]} each callback's arguments, in call order
 			 */
-			const calls = (parser) => {
+			const calls = (parse) => {
 				/** @type {unknown[]} */
 				const seen = [];
-				parser.parse(source, {
+				parse(source, {
 					ecmaVersion: "latest",
 					locations: true,
-					onComment: (block, text, start, end, startLoc, endLoc) => {
+					onComment: (
+						/** @type {boolean} */ block,
+						/** @type {string} */ text,
+						/** @type {number} */ start,
+						/** @type {number} */ end,
+						/** @type {unknown} */ startLoc,
+						/** @type {unknown} */ endLoc
+					) => {
 						seen.push(["comment", block, text, start, end, startLoc, endLoc]);
 					},
-					onToken: (token) => {
+					onToken: (/** @type {unknown} */ token) => {
 						seen.push(["token", token]);
 					}
 				});
 				return /** @type {unknown[]} */ (plain(seen));
 			};
-			expect(calls(Parser)).toEqual(calls(acornPort.Parser));
-			expect(calls(Parser).slice(0, 2)).toEqual([
+			expect(calls(parseEstree)).toEqual(calls(acorn.parse));
+			expect(calls(parseEstree).slice(0, 2)).toEqual([
 				[
 					"comment",
 					true,
@@ -630,23 +642,21 @@ describe("Parser.tokenizer", () => {
 		});
 
 		it("should show onTokenRead the parser at each token", () => {
-			for (const [, parser] of PARSERS) {
-				/** @type {[string, unknown][]} */
-				const seen = [];
-				parser.parse(fixture("javascript", "parser-tokenizer-token-stream-should-show-on-token-read-the-parser-at-each-token"), {
-					ecmaVersion: "latest",
-					onTokenRead: (instance) => {
-						seen.push([instance.type.label, instance.value]);
-					}
-				});
-				expect(seen).toEqual([
-					["name", "x"],
-					["=", "="],
-					["num", 1],
-					[";", undefined],
-					["eof", undefined]
-				]);
-			}
+			/** @type {[string, unknown][]} */
+			const seen = [];
+			parseEstree(fixture("javascript", "parser-tokenizer-token-stream-should-show-on-token-read-the-parser-at-each-token"), {
+				ecmaVersion: "latest",
+				onTokenRead: (instance) => {
+					seen.push([instance.type.label, instance.value]);
+				}
+			});
+			expect(seen).toEqual([
+				["name", "x"],
+				["=", "="],
+				["num", 1],
+				[";", undefined],
+				["eof", undefined]
+			]);
 		});
 
 		it("should report an error's line and column without locations", () => {
@@ -705,43 +715,66 @@ describe("Parser.tokenizer", () => {
 					{ ecmaVersion: "latest" }
 				);
 				expect(theirs).toMatchObject({ tokens: expect.any(Array) });
-				for (const [, parser] of PARSERS) {
-					expect(
-						tokenized(
-							inContext(parser, TokContext, preserveSpace, override),
-							source,
-							{ ecmaVersion: "latest" }
-						)
-					).toEqual(theirs);
-				}
+				expect(
+					tokenized(
+						inContext(Parser, TokContext, preserveSpace, override),
+						source,
+						{ ecmaVersion: "latest" }
+					)
+				).toEqual(theirs);
+			}
+		});
+	});
+
+	describe("directive prologues", () => {
+		it("should read a script strict as acorn does from its prologue", () => {
+			for (const source of [
+				fixture("javascript", "parser-tokenizer-directive-prologues-should-read-a-script-strict-as-acorn-does-from-its-prologue"),
+				fixture("javascript", "parser-tokenizer-directive-prologues-should-read-a-script-strict-as-acorn-does-from-its-prologue-2"),
+				fixture("javascript", "parser-tokenizer-directive-prologues-should-read-a-script-strict-as-acorn-does-from-its-prologue-3"),
+				fixture("javascript", "parser-tokenizer-directive-prologues-should-read-a-script-strict-as-acorn-does-from-its-prologue-4")
+			]) {
+				expect(tokenized(Parser, source, { ecmaVersion: "latest" })).toEqual(
+					tokenized(acornPort.Parser, source, { ecmaVersion: "latest" })
+				);
 			}
 		});
 
-		it("should finish every token through a plugin's finishToken when lazy", () => {
-			const source = fixture("javascript", "parser-tokenizer-plugin-hooks-should-finish-every-token-through-a-plugin-s");
+		it("should report tokens into an array as acorn does", () => {
+			/** @type {unknown[]} */
+			const ours = [];
+			/** @type {unknown[]} */
+			const theirs = [];
+			[
+				...Parser.tokenizer(fixture("javascript", "parser-tokenizer-directive-prologues-should-report-tokens-into-an-array-as-acorn-does"), {
+					ecmaVersion: "latest",
+					onToken: /** @type {EXPECTED_ANY} */ (ours)
+				})
+			];
+			[
+				...acornPort.Parser.tokenizer(fixture("javascript", "parser-tokenizer-directive-prologues-should-report-tokens-into-an-array-as-acorn-does"), {
+					ecmaVersion: "latest",
+					onToken: /** @type {EXPECTED_ANY} */ (theirs)
+				})
+			];
+			expect(plain(ours)).toEqual(plain(theirs));
+			expect(ours).not.toHaveLength(0);
+		});
+
+		it("should show onTokenRead the base tokenizer at each token", () => {
 			/** @type {string[]} */
-			const finished = [];
-			class Recording extends WebpackParser {
-				/**
-				 * @param {import("../../../lib/javascript/syntax-parser").TokenType} type the token's kind
-				 * @param {EXPECTED_ANY=} value what it carries
-				 * @returns {void}
-				 */
-				finishToken(type, value) {
-					finished.push(type.label);
-					return super.finishToken(type, value);
-				}
-			}
-			const ours = tokenized(
-				/** @type {typeof Parser} */ (/** @type {unknown} */ (Recording)),
-				source,
-				/** @type {PortOptions} */ ({ ecmaVersion: "latest", lazyNodes: true })
-			);
-			expect(ours).toEqual(
-				tokenized(acornPort.Parser, source, { ecmaVersion: "latest" })
-			);
-			// the inlined punctuator finish defers to the override
-			expect(finished).toEqual([...labels(source), "eof"]);
+			const seen = [];
+			[
+				...Parser.tokenizer(fixture("javascript", "parser-tokenizer-directive-prologues-should-report-tokens-into-an-array-as-acorn-does"), {
+					ecmaVersion: "latest",
+					onTokenRead: (instance) => {
+						seen.push(instance.type.label);
+					}
+				})
+			];
+			// each token is reported as the next is asked for, the first being the
+			// start of input
+			expect(seen).toEqual(["eof", "name", "=", "num"]);
 		});
 	});
 

@@ -3710,22 +3710,6 @@ describeIfSupported("ScopeAnalyzer matches eslint-scope", () => {
 			}
 		});
 
-		it("logs the same from a parse into ESTree objects as into a tree", () => {
-			const code =
-				"function f(a) { { let b; class K {} function g() {} } } var h = function named(x) {}; var k = function () {}; [p = 1] = q; ({ r = 2 } = s); (class {}); (class N {}); var arrow = (y) => y;";
-			const fromTree = new ScopeLog();
-			parseTree(code, 0, { sourceType: "module", scopes: fromTree });
-			const fromObjects = new ScopeLog();
-			parseTree(code, 0, {
-				sourceType: "module",
-				scopes: fromObjects,
-				estree: true
-			});
-
-			expect(fromObjects.count).toBeGreaterThan(0);
-			expect(logged(fromObjects)).toEqual(logged(fromTree));
-		});
-
 		it("matches the tree walk, from a fresh log and from one reused", () => {
 			const dir = path.resolve(__dirname, "../../../lib/javascript");
 			// largest first, so the reused log is refilled with fewer entries
@@ -3769,13 +3753,16 @@ describeIfSupported("ScopeAnalyzer matches eslint-scope", () => {
 
 				expect(analyzeParse(code, true, sourceType)).toEqual(walked);
 			}
-			// An ESTree parse logs a block's statements as objects.
+			// A program's objects come from the tree a parse with scopes wrote.
 			const program = /** @type {EXPECTED_ANY} */ (
-				parseTree("{ let a; var b; class C {} if (a) {} } x: { function f() {} } (function g() {}); (function () {}); (class {}); (class K {});", 0, {
-					sourceType: "script",
-					estree: true,
-					scopes: true
-				})
+				toEstreeObject(
+					/** @type {number} */ (
+						parseTree("{ let a; var b; class C {} if (a) {} } x: { function f() {} } (function g() {}); (function () {}); (class {}); (class K {});", 0, {
+							sourceType: "script",
+							scopes: true
+						})
+					)
+				)
 			);
 
 			expect(program.body.map((/** @type {{ type: string }} */ statement) => statement.type)).toEqual([
