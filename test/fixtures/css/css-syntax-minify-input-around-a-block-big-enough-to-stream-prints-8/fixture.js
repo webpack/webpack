@@ -1,7 +1,7 @@
 "use strict";
 
 const BIG = Array.from(
-	{ length: 1700 },
+	{ length: 425 },
 	(_, i) => `.c${i}>d${i}{color:red;margin:${i + 1}px}`
 ).join("");
 

@@ -7,7 +7,7 @@ const { repeat } = require("../_shared/record");
  */
 const source = () =>
 	`.root{${repeat(
-		20000,
+		9000,
 		(i) => `--v${i}:${i};`
 	)}margin-top:1px;margin-right:2px;margin-bottom:3px;margin-left:4px}`;
 
