@@ -20,9 +20,20 @@ var log = function (value) {
 (value => (log(value.a), log(value.a)))({ a: 8 });
 // What an unread pure call runs stays in its own parentheses.
 (value => (/*#__PURE__*/ String(log(value.a), log(value.a + 1)), 0))({ a: 10 });
+// So does what an unread comparison or operator runs, its operands.
+((first = log(11)) => (log(12) === log(13), 0))();
+((first = log(14)) => (!(log(15), log(16)), 0))();
+// A `new`, an assignment or an update left alone takes no parentheses.
+var count = 0;
+var Counter = function (value) {
+	count += value;
+};
+((first = log(17)) => (new Counter(1), 0))();
+((first = log(18)) => ((count = count + 1), 0))();
+((first = log(19)) => (count++, 0))();
 // A value read keeps the tail.
 log((value => (log(value), 6))(7));
 // A template may call `toString`: it stays.
 var object = { toString: function () { log("toString"); return "o"; } };
 (value => (log(value), `${value}`))(object);
-console.log(seen.join());
+console.log(seen.join(), count);
