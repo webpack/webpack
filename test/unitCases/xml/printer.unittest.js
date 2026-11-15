@@ -316,6 +316,15 @@ describe("SourceProcessor — SVG minification", () => {
 			const source = fixture("xml", `${name}${suffix}`);
 			expect(new SourceProcessor().process(source, options).code).toBe(source.trim());
 		}
+		// What prints before it decides, so a second print agrees with the first.
+		const late = fixture("xml", `${name}-5`);
+		expect(new SourceProcessor().process(late, options).code).toBe(`<svg xmlns="${svg}"/>`);
+		const kept = { ...options, transforms: { comments: /** @type {const} */ ("all") } };
+		expect(new SourceProcessor().process(late, kept).code).toBe(late.replace(/\n/g, "").trim());
+		for (const suffix of ["-6", "-7"]) {
+			const source = fixture("xml", `${name}${suffix}`);
+			expect(new SourceProcessor().process(source, options).code).toBe(source.trim());
+		}
 	});
 
 	it("should lowercase opaque hex SVG colors at equal length", () => {
