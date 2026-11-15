@@ -55,6 +55,16 @@ module.exports = [
 	// A separate runtime chunk means the entry script gets a cloned sibling
 	// `<script>` — exercises integrity on cloned tags, not just the entry tag.
 	{ ...config("split", true), optimization: { runtimeChunk: "single" } },
+	// A query in the filename leaves the file's type to the path before it.
+	{
+		...config("query", true),
+		output: {
+			filename: "[name].js?v=[contenthash]",
+			htmlFilename: "query.html",
+			crossOriginLoading: "anonymous",
+			html: { integrity: true }
+		}
+	},
 	// An authored `.html` entry whose native `<script>` already carries `integrity` —
 	// the author value must be replaced by the per-chunk one, not left beside it. One
 	// runtime chunk clones that tag, so rewritten and cloned are both exercised.

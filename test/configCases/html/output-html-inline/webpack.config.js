@@ -125,6 +125,15 @@ module.exports = [
 		experiments: { html: true, css: true },
 		plugins: [copyTest]
 	},
+	// a query in the filename leaves the file's type to the path before it
+	{
+		...config("query", true),
+		output: {
+			filename: "[name].js?v=[contenthash]",
+			htmlFilename: "query.html",
+			html: { inline: true }
+		}
+	},
 	// inline: false — explicit opt-out, chunks served normally
 	config("no-inline", false),
 	// inline: [] — empty array, no chunks match, served normally

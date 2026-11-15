@@ -35,6 +35,14 @@ it("integrity: true emits a correct sha384 on the script and the link", () => {
 	}
 });
 
+it("integrity reads a file's type from its path, not its query", () => {
+	const tags = tagsWithIntegrity(readHtml("query.html"));
+	expect(tags.map((tag) => tag.kind).sort()).toEqual(["link", "script"]);
+	for (const tag of tags) {
+		expect(sriMatches(tag.url.replace(/\?.*$/, ""), tag.integrity)).toBe(true);
+	}
+});
+
 it("integrity: array emits every algorithm, each correct", () => {
 	const tags = tagsWithIntegrity(readHtml("array.html"));
 	expect(tags).toHaveLength(2);
