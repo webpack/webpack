@@ -21,6 +21,7 @@ const NAMES = [
 	"compact",
 	"symbols",
 	"constraints",
+	"optional",
 	"structure"
 ];
 

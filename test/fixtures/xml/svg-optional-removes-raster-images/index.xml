@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<image href="photo.PNG" width="1" height="1"/>
+	<image xlink:href="photo.jpeg" width="1" height="1"/>
+	<image href="data:image/gif;base64,R0lGOD" width="1" height="1"/>
+	<image href="drawing.svg" width="1" height="1"/>
+	<image width="1" height="1"/>
+</svg>

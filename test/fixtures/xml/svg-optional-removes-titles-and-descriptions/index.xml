@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:h="http://www.w3.org/1999/xhtml">
+	<title>Name</title>
+	<desc>Description <h:b>bold</h:b></desc>
+	<g><title>Group</title><rect width="1" height="1"/></g>
+	<foreignObject width="10" height="10"><h:title>kept</h:title></foreignObject>
+</svg>

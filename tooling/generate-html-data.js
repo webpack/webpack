@@ -630,6 +630,50 @@ const PARSER_TABLES = [
 		["g", "path", "rect", "circle", "ellipse", "line", "polyline", "polygon"]
 	],
 	[
+		"XML_ID_LIST_ATTRIBUTES",
+		"set",
+		"Attributes holding space-separated element IDs, which renaming an ID rewrites.",
+		[
+			"aria-activedescendant",
+			"aria-controls",
+			"aria-describedby",
+			"aria-details",
+			"aria-errormessage",
+			"aria-flowto",
+			"aria-labelledby",
+			"aria-owns",
+			"for",
+			"form",
+			"headers",
+			"itemref",
+			"list",
+			"popovertarget",
+			"commandfor",
+			"anchor"
+		]
+	],
+	[
+		"SVG_HIDDEN_ELEMENT_TARGETS",
+		"set",
+		"Rendered SVG elements that `display: none` or zero opacity hides together with their content.",
+		[
+			"a",
+			"circle",
+			"ellipse",
+			"foreignObject",
+			"g",
+			"image",
+			"line",
+			"path",
+			"polygon",
+			"polyline",
+			"rect",
+			"svg",
+			"text",
+			"use"
+		]
+	],
+	[
 		"SVG_GROUP_INERT_ATTRIBUTES",
 		"set",
 		"Non-inherited presentation attributes that apply to no group, so one on a g paints nothing.",
