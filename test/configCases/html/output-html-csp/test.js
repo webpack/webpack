@@ -144,3 +144,13 @@ it("places the CSP meta after the doctype when <head> is implied", () => {
 	);
 	expect(cspMeta(html)).toHaveLength(1);
 });
+
+it("leaves the body of a <noscript> as written", () => {
+	const html = readHtml("noscript.html");
+	expect(html).toContain("<noscript><style>");
+	expect(html).toContain('<noscript><script src="noscript.js">');
+	const [policy] = cspMeta(html);
+	expect(policy).toContain("'nonce-__NONCE__'");
+	// the stylesheet a reader with scripting off applies is allowed by its hash
+	expect(policy).toContain(sha("sha256", inlineStyle(html)));
+});

@@ -95,6 +95,8 @@ module.exports = [
 	config("csp-in-noscript", true, "./src/csp-in-noscript.html"),
 	// a page whose `<head>` is implied: the meta follows the doctype
 	config("no-head", true, "./src/no-head.html"),
+	// a `<noscript>` body is text with scripting on: no nonce lands in it
+	config("noscript", { nonce: "__NONCE__" }, "./src/noscript.html"),
 	// an external injected `<script src>` is covered by 'self', not hashed
 	config("external-script", true, "./src/main.js"),
 	// nonce on an injected inline `<script>`
