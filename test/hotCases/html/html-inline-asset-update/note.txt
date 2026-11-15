@@ -1,0 +1,3 @@
+window.__note_value__ = 1;
+---
+window.__note_value__ = 2;
