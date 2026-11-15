@@ -79,6 +79,20 @@ new (function (value) {
 	console.log(value === void 0);
 })();
 new saved(1);
+var passed;
+new (function (value) {
+	passed = new.target;
+	console.log(value === 1);
+})(1);
+new passed(2);
+// A function inside reads a `new.target` of its own.
+new (function (value) {
+	console.log(
+		[1].map(function () {
+			return new.target === void 0 && value === 1;
+		})[0]
+	);
+})(1);
 // An instance hands its constructor out too, as its `constructor`.
 var instance = new (function (value) {
 	this.empty = value === void 0;
