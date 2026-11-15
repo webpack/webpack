@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Minify statements into sequences; fold known `switch`, spread, unary values and names nothing sets.
+Minify statements as sequences; fold known `switch`, spread, unary, unset vars.

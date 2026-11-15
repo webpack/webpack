@@ -56,3 +56,10 @@ function both(value) {
 	return value === void 0;
 }
 console.log(both(), both(1));
+// A computed key reads the value: a name nothing sets keys as `undefined`.
+console.log(
+	(function () {
+		var unsetKey;
+		return [Object.keys({ [unsetKey]: 1 }), { [unsetKey]: 2 }.undefined];
+	})()
+);
