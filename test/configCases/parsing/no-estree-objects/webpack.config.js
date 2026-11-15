@@ -50,11 +50,10 @@ const noEstreeObjects = (compiler) => {
 		(compilation, { normalModuleFactory }) => {
 			// node `0` stands for none: asking for it prepares the source, builds nothing
 			SyntaxTree.prototype.estree = function estree(
-				/** @type {number} */ node,
-				/** @type {string[] | undefined} */ fields
+				/** @type {number} */ node
 			) {
 				if (node !== 0) record("estree");
-				return originalEstree.call(this, node, fields);
+				return originalEstree.call(this, node);
 			};
 			SyntaxTree.prototype.lazyEstree = function lazyEstree(
 				/** @type {number} */ node

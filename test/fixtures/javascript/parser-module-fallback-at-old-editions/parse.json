@@ -1,19 +1,17 @@
 [
-	{ "options": { "ecmaVersion": 3, "sourceType": "module", "moduleFallback": true } },
+	{ "options": { "ecmaVersion": 3, "sourceType": "auto" } },
 	{
 		"options": {
 			"ecmaVersion": 3,
-			"sourceType": "module",
-			"moduleFallback": true,
+			"sourceType": "auto",
 			"allowReserved": false
 		}
 	},
-	{ "options": { "ecmaVersion": 5, "sourceType": "module", "moduleFallback": true } },
+	{ "options": { "ecmaVersion": 5, "sourceType": "auto" } },
 	{
 		"options": {
 			"ecmaVersion": 6,
-			"sourceType": "module",
-			"moduleFallback": true,
+			"sourceType": "auto",
 			"allowReserved": true
 		}
 	}
