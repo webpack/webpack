@@ -4563,6 +4563,11 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "cleanupIds": {
+          "description": "Remove SVG IDs nothing in the document references and rename the rest to the shortest names, rewriting `href`, `url()` and ID-list references. Off by default because a reference from outside the document, such as a sprite's `file.svg#icon` or a page's `getElementById`, stops resolving; skip stylesheets, scripts, animations, duplicate IDs, `xml:id` and DTDs.",
+          "type": "boolean",
+          "added": "5.113.0"
+        },
         "cleanupStructure": {
           "description": "Collapse SVG groups, hoist identical context-free inherited attributes or move them to sole graphics children, inline validated presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.",
           "type": "boolean",
@@ -4583,6 +4588,21 @@
           "type": "boolean",
           "added": "5.113.0"
         },
+        "removeDescriptions": {
+          "description": "Remove SVG `desc` elements. Off by default because they describe the image for assistive technology.",
+          "type": "boolean",
+          "added": "5.113.0"
+        },
+        "removeDimensions": {
+          "description": "Remove the root SVG element's `width` and `height`, moving plain ones into a missing `viewBox`, so the image scales to whatever box it is placed in. Off by default because the image loses its intrinsic size.",
+          "type": "boolean",
+          "added": "5.113.0"
+        },
+        "removeDoctype": {
+          "description": "Remove a DOCTYPE without an internal subset where no entity reference needs one. Off by default because a validating consumer reads the DTD it names.",
+          "type": "boolean",
+          "added": "5.113.0"
+        },
         "removeEditorData": {
           "description": "Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.",
           "type": "boolean",
@@ -4598,13 +4618,43 @@
           "type": "boolean",
           "added": "5.113.0"
         },
+        "removeHiddenElements": {
+          "description": "Remove ID-free SVG content that renders nothing: `display=\"none\"`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, empty paths and point lists, and leaves under `visibility=\"hidden\"`. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a `switch` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.",
+          "type": "boolean",
+          "added": "5.113.0"
+        },
         "removeMetadata": {
           "description": "Remove SVG `metadata` elements and their contents, preserving `title`, `desc` and the document element. Off by default because metadata can carry licensing and application data.",
           "type": "boolean",
           "added": "5.113.0"
         },
+        "removeRasterImages": {
+          "description": "Remove SVG `image` elements referencing JPEG, PNG or GIF images. Off by default because those images disappear from the drawing.",
+          "type": "boolean",
+          "added": "5.113.0"
+        },
+        "removeScripts": {
+          "description": "Remove `script` elements, event handler and `srcdoc` attributes and `javascript:` URLs, for SVG that must not run code. Off by default because the image loses its behavior.",
+          "type": "boolean",
+          "added": "5.113.0"
+        },
+        "removeTitles": {
+          "description": "Remove SVG `title` elements. Off by default because they name the image for assistive technology and tooltips.",
+          "type": "boolean",
+          "added": "5.113.0"
+        },
         "removeUnusedNamespaces": {
           "description": "Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.",
+          "type": "boolean",
+          "added": "5.113.0"
+        },
+        "removeViewBox": {
+          "description": "Remove the root SVG element's `viewBox` where it restates its plain `width` and `height`. Off by default because the image then no longer scales when CSS gives it another size.",
+          "type": "boolean",
+          "added": "5.113.0"
+        },
+        "removeXlink": {
+          "description": "Spell `xlink:href` as the SVG 2 `href` where an element has no `href`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only `xlink:href`.",
           "type": "boolean",
           "added": "5.113.0"
         },

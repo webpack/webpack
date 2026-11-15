@@ -13022,6 +13022,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-cleanup-ids": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove SVG IDs nothing in the document references and rename the rest to the shortest names, rewriting \`href\`, \`url()\` and ID-list references. Off by default because a reference from outside the document, such as a sprite's \`file.svg#icon\` or a page's \`getElementById\`, stops resolving; skip stylesheets, scripts, animations, duplicate IDs, \`xml:id\` and DTDs.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.cleanupIds",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove SVG IDs nothing in the document references and rename the rest to the shortest names, rewriting \`href\`, \`url()\` and ID-list references. Off by default because a reference from outside the document, such as a sprite's \`file.svg#icon\` or a page's \`getElementById\`, stops resolving; skip stylesheets, scripts, animations, duplicate IDs, \`xml:id\` and DTDs.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-xml-cleanup-structure": Object {
     "configs": Array [
       Object {
@@ -13038,13 +13051,13 @@ Object {
   "optimization-minimize-options-xml-collapse-whitespace": Object {
     "configs": Array [
       Object {
-        "description": "Remove whitespace-only text in known SVG containers, preserving text content, foreign content and \`xml:space\`. Off by default because scripts can observe whitespace nodes.",
+        "description": "Remove whitespace-only text in known SVG containers, under \`xml:space\` too since that lays out text alone, preserving text content and foreign content. Off by default because scripts can observe whitespace nodes.",
         "multiple": false,
         "path": "optimization.minimizeOptions.xml.collapseWhitespace",
         "type": "boolean",
       },
     ],
-    "description": "Remove whitespace-only text in known SVG containers, preserving text content, foreign content and \`xml:space\`. Off by default because scripts can observe whitespace nodes.",
+    "description": "Remove whitespace-only text in known SVG containers, under \`xml:space\` too since that lays out text alone, preserving text content and foreign content. Off by default because scripts can observe whitespace nodes.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13071,6 +13084,45 @@ Object {
       },
     ],
     "description": "Merge adjacent disjoint axis-aligned SVG lines with explicit opaque crisp-edge strokes, no fill, dashes or markers. Skip compositing, transformed or ID-bearing ancestors; identical paint remains eligible during color cleanup. Off by default because consumers can observe element boundaries; skip stylesheets, scripts, animations and DTDs.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-remove-descriptions": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove SVG \`desc\` elements. Off by default because they describe the image for assistive technology.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeDescriptions",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove SVG \`desc\` elements. Off by default because they describe the image for assistive technology.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-remove-dimensions": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove the root SVG element's \`width\` and \`height\`, moving plain ones into a missing \`viewBox\`, so the image scales to whatever box it is placed in. Off by default because the image loses its intrinsic size.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeDimensions",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove the root SVG element's \`width\` and \`height\`, moving plain ones into a missing \`viewBox\`, so the image scales to whatever box it is placed in. Off by default because the image loses its intrinsic size.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-remove-doctype": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove a DOCTYPE without an internal subset where no entity reference needs one. Off by default because a validating consumer reads the DTD it names.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeDoctype",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove a DOCTYPE without an internal subset where no entity reference needs one. Off by default because a validating consumer reads the DTD it names.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13113,6 +13165,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-remove-hidden-elements": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove ID-free SVG content that renders nothing: \`display=\\"none\\"\`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, empty paths and point lists, and leaves under \`visibility=\\"hidden\\"\`. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a \`switch\` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeHiddenElements",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove ID-free SVG content that renders nothing: \`display=\\"none\\"\`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, empty paths and point lists, and leaves under \`visibility=\\"hidden\\"\`. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a \`switch\` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-xml-remove-metadata": Object {
     "configs": Array [
       Object {
@@ -13126,6 +13191,45 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-remove-raster-images": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove SVG \`image\` elements referencing JPEG, PNG or GIF images. Off by default because those images disappear from the drawing.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeRasterImages",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove SVG \`image\` elements referencing JPEG, PNG or GIF images. Off by default because those images disappear from the drawing.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-remove-scripts": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove \`script\` elements, event handler and \`srcdoc\` attributes and \`javascript:\` URLs, for SVG that must not run code. Off by default because the image loses its behavior.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeScripts",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove \`script\` elements, event handler and \`srcdoc\` attributes and \`javascript:\` URLs, for SVG that must not run code. Off by default because the image loses its behavior.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-remove-titles": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove SVG \`title\` elements. Off by default because they name the image for assistive technology and tooltips.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeTitles",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove SVG \`title\` elements. Off by default because they name the image for assistive technology and tooltips.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-xml-remove-unused-namespaces": Object {
     "configs": Array [
       Object {
@@ -13136,6 +13240,32 @@ Object {
       },
     ],
     "description": "Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-remove-view-box": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove the root SVG element's \`viewBox\` where it restates its plain \`width\` and \`height\`. Off by default because the image then no longer scales when CSS gives it another size.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeViewBox",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove the root SVG element's \`viewBox\` where it restates its plain \`width\` and \`height\`. Off by default because the image then no longer scales when CSS gives it another size.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-remove-xlink": Object {
+    "configs": Array [
+      Object {
+        "description": "Spell \`xlink:href\` as the SVG 2 \`href\` where an element has no \`href\`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only \`xlink:href\`.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeXlink",
+        "type": "boolean",
+      },
+    ],
+    "description": "Spell \`xlink:href\` as the SVG 2 \`href\` where an element has no \`href\`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only \`xlink:href\`.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13246,6 +13376,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-xml-cleanup-ids": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove SVG IDs nothing in the document references and rename the rest to the shortest names, rewriting \`href\`, \`url()\` and ID-list references. Off by default because a reference from outside the document, such as a sprite's \`file.svg#icon\` or a page's \`getElementById\`, stops resolving; skip stylesheets, scripts, animations, duplicate IDs, \`xml:id\` and DTDs.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.cleanupIds",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove SVG IDs nothing in the document references and rename the rest to the shortest names, rewriting \`href\`, \`url()\` and ID-list references. Off by default because a reference from outside the document, such as a sprite's \`file.svg#icon\` or a page's \`getElementById\`, stops resolving; skip stylesheets, scripts, animations, duplicate IDs, \`xml:id\` and DTDs.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-xml-cleanup-structure": Object {
     "configs": Array [
       Object {
@@ -13262,13 +13405,13 @@ Object {
   "optimization-minimize-xml-collapse-whitespace": Object {
     "configs": Array [
       Object {
-        "description": "Remove whitespace-only text in known SVG containers, preserving text content, foreign content and \`xml:space\`. Off by default because scripts can observe whitespace nodes.",
+        "description": "Remove whitespace-only text in known SVG containers, under \`xml:space\` too since that lays out text alone, preserving text content and foreign content. Off by default because scripts can observe whitespace nodes.",
         "multiple": false,
         "path": "optimization.minimize.xml.collapseWhitespace",
         "type": "boolean",
       },
     ],
-    "description": "Remove whitespace-only text in known SVG containers, preserving text content, foreign content and \`xml:space\`. Off by default because scripts can observe whitespace nodes.",
+    "description": "Remove whitespace-only text in known SVG containers, under \`xml:space\` too since that lays out text alone, preserving text content and foreign content. Off by default because scripts can observe whitespace nodes.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13295,6 +13438,45 @@ Object {
       },
     ],
     "description": "Merge adjacent disjoint axis-aligned SVG lines with explicit opaque crisp-edge strokes, no fill, dashes or markers. Skip compositing, transformed or ID-bearing ancestors; identical paint remains eligible during color cleanup. Off by default because consumers can observe element boundaries; skip stylesheets, scripts, animations and DTDs.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-remove-descriptions": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove SVG \`desc\` elements. Off by default because they describe the image for assistive technology.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeDescriptions",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove SVG \`desc\` elements. Off by default because they describe the image for assistive technology.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-remove-dimensions": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove the root SVG element's \`width\` and \`height\`, moving plain ones into a missing \`viewBox\`, so the image scales to whatever box it is placed in. Off by default because the image loses its intrinsic size.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeDimensions",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove the root SVG element's \`width\` and \`height\`, moving plain ones into a missing \`viewBox\`, so the image scales to whatever box it is placed in. Off by default because the image loses its intrinsic size.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-remove-doctype": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove a DOCTYPE without an internal subset where no entity reference needs one. Off by default because a validating consumer reads the DTD it names.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeDoctype",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove a DOCTYPE without an internal subset where no entity reference needs one. Off by default because a validating consumer reads the DTD it names.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13337,6 +13519,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-xml-remove-hidden-elements": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove ID-free SVG content that renders nothing: \`display=\\"none\\"\`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, empty paths and point lists, and leaves under \`visibility=\\"hidden\\"\`. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a \`switch\` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeHiddenElements",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove ID-free SVG content that renders nothing: \`display=\\"none\\"\`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, empty paths and point lists, and leaves under \`visibility=\\"hidden\\"\`. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a \`switch\` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-xml-remove-metadata": Object {
     "configs": Array [
       Object {
@@ -13350,6 +13545,45 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-xml-remove-raster-images": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove SVG \`image\` elements referencing JPEG, PNG or GIF images. Off by default because those images disappear from the drawing.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeRasterImages",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove SVG \`image\` elements referencing JPEG, PNG or GIF images. Off by default because those images disappear from the drawing.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-remove-scripts": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove \`script\` elements, event handler and \`srcdoc\` attributes and \`javascript:\` URLs, for SVG that must not run code. Off by default because the image loses its behavior.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeScripts",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove \`script\` elements, event handler and \`srcdoc\` attributes and \`javascript:\` URLs, for SVG that must not run code. Off by default because the image loses its behavior.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-remove-titles": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove SVG \`title\` elements. Off by default because they name the image for assistive technology and tooltips.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeTitles",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove SVG \`title\` elements. Off by default because they name the image for assistive technology and tooltips.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-xml-remove-unused-namespaces": Object {
     "configs": Array [
       Object {
@@ -13360,6 +13594,32 @@ Object {
       },
     ],
     "description": "Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-remove-view-box": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove the root SVG element's \`viewBox\` where it restates its plain \`width\` and \`height\`. Off by default because the image then no longer scales when CSS gives it another size.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeViewBox",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove the root SVG element's \`viewBox\` where it restates its plain \`width\` and \`height\`. Off by default because the image then no longer scales when CSS gives it another size.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-remove-xlink": Object {
+    "configs": Array [
+      Object {
+        "description": "Spell \`xlink:href\` as the SVG 2 \`href\` where an element has no \`href\`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only \`xlink:href\`.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeXlink",
+        "type": "boolean",
+      },
+    ],
+    "description": "Spell \`xlink:href\` as the SVG 2 \`href\` where an element has no \`href\`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only \`xlink:href\`.",
     "multiple": false,
     "simpleType": "boolean",
   },

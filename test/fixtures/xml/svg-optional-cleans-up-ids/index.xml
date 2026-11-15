@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:h="http://www.w3.org/1999/xhtml" aria-labelledby="label missing">
+	<defs>
+		<linearGradient id="unused"><stop/></linearGradient>
+		<linearGradient id="gradient"><stop/></linearGradient>
+		<clipPath id="clip"><rect width="1" height="1"/></clipPath>
+		<path id="b" d="M0 0h1"/>
+	</defs>
+	<text id="label">Label</text>
+	<rect width="1" height="1" fill="url( 'gradient' )" style="fill:url(&quot;#gradient&quot;)" clip-path="url(#clip)"/>
+	<use href=" #b "/>
+	<use href="other.svg#unused"/>
+	<foreignObject width="1" height="1"><h:label for="input">x</h:label><h:input id="input"/></foreignObject>
+</svg>

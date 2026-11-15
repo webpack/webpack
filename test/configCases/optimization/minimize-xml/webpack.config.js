@@ -166,6 +166,26 @@ module.exports = [
 			}
 		}
 	}),
+	config("optional", {
+		entry: "./optional.js",
+		optimization: {
+			minimizeOptions: {
+				xml: {
+					removeScripts: true,
+					removeTitles: true,
+					removeDescriptions: true,
+					removeRasterImages: true,
+					removeXlink: true,
+					removeDimensions: true,
+					removeDoctype: true,
+					cleanupIds: true,
+					removeHiddenElements: true,
+					removeUnusedNamespaces: true,
+					collapseWhitespace: true
+				}
+			}
+		}
+	}),
 	config("structure", {
 		entry: "./structure.js",
 		optimization: {
