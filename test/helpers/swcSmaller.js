@@ -80,7 +80,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: harmony/object_spread_of_sequence",
 			"terser compress: harmony/array_literal_with_spread_3b",
 			"terser compress: identity/inline_identity_lose_this",
-			"terser compress: inline/noinline_annotation",
 			"terser compress: issue-973/this_binding_collapse_vars",
 			"terser compress: new/new_statement",
 			"terser compress: new/new_constructor_with_unary_arguments",
@@ -364,10 +363,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: drop-unused/drop_fargs",
 			"terser compress: drop-unused/issue_2136_2",
 			"terser compress: drop-unused/issue_2136_3",
-			"terser compress: drop-unused/issue_t161_top_retain_1",
-			"terser compress: drop-unused/issue_t161_top_retain_3",
-			"terser compress: drop-unused/issue_t161_top_retain_4",
-			"terser compress: drop-unused/issue_t161_top_retain_6",
 			"terser compress: drop-unused/issue_t161_top_retain_8",
 			"terser compress: drop-unused/issue_t161_top_retain_9",
 			"terser compress: drop-unused/issue_t161_top_retain_11",
@@ -760,9 +755,7 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: issue-1750/case_2",
 			"terser compress: switch/issue_441_1",
-			"terser compress: switch/issue_441_2",
-			"swc minifier: fixture/issues/12206/keep-trailing-test-after-default/input.js",
-			"swc minifier: fixture/issues/12206/skip-removed-test-after-dynamic-match/input.js"
+			"terser compress: switch/issue_441_2"
 		]
 	],
 	[
@@ -861,7 +854,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12566/defaults/input.js",
 			"swc minifier: fixture/issues/12566/without-reduce-vars/input.js",
 			"swc minifier: fixture/issues/10178/input.js",
-			"swc minifier: fixture/issues/10425/input.js",
 			"swc minifier: fixture/issues/10981/input.js",
 			"swc minifier: fixture/issues/11684/identifier-side-effects/input.js",
 			"swc minifier: fixture/issues/11684/side-effects/input.js",
