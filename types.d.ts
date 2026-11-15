@@ -13430,6 +13430,7 @@ declare interface HtmlEntryInfo {
 		| "modulepreload";
 	css?: boolean;
 	chunkName?: string;
+	noscript?: boolean;
 }
 type HtmlFaviconIcon =
 	| string
@@ -37979,6 +37980,11 @@ declare namespace exports {
 		 * what each class or id name of a CSS module becomes, for an HTML page that names them
 		 */
 		cssLocals: Map<string, string>;
+
+		/**
+		 * the stand-in for public path placeholder text an HTML module spells itself, put back once its page resolves the placeholders
+		 */
+		htmlPublicPathText: string;
 
 		/**
 		 * the name each import binding prints as, for source map scopes

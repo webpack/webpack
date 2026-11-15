@@ -126,3 +126,31 @@ it("hashes tags as transformTags left them (removed dropped, kept hashed)", () =
 	// only the kept style contributes a hash; the removed one contributes none
 	expect(policy.match(/'sha256-/g)).toHaveLength(1);
 });
+
+for (const name of ["csp-in-body", "csp-without-content", "csp-in-noscript"]) {
+	it(`injects CSP when the page's only CSP meta does not apply (${name})`, () => {
+		const html = readHtml(`${name}.html`);
+		expect(html).toContain(
+			'<meta http-equiv="Content-Security-Policy" content="script-src \'self\';'
+		);
+	});
+}
+
+it("places the CSP meta after the doctype when <head> is implied", () => {
+	const html = readHtml("no-head.html");
+	expect(html.startsWith("<!doctype html>")).toBe(true);
+	expect(html.indexOf("Content-Security-Policy")).toBeLessThan(
+		html.indexOf("<title>")
+	);
+	expect(cspMeta(html)).toHaveLength(1);
+});
+
+it("leaves the body of a <noscript> as written", () => {
+	const html = readHtml("noscript.html");
+	expect(html).toContain("<noscript><style>");
+	expect(html).toContain('<noscript><script src="noscript.js">');
+	const [policy] = cspMeta(html);
+	expect(policy).toContain("'nonce-__NONCE__'");
+	// the stylesheet a reader with scripting off applies is allowed by its hash
+	expect(policy).toContain(sha("sha256", inlineStyle(html)));
+});

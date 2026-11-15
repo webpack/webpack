@@ -11,6 +11,8 @@ module.exports = {
 	output: {
 		filename: "[name].js"
 	},
+	// The page's tag is refused, so the files are emitted despite the error.
+	optimization: { emitOnErrors: true },
 	experiments: {
 		html: true
 	}

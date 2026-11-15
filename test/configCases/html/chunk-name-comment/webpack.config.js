@@ -41,7 +41,7 @@ module.exports = {
 		parser: {
 			html: {
 				// A tag's own comment wins over this, so the pages below show both.
-				chunkName: "option-[index]",
+				chunkName: "[page]-option-[index]",
 				sources: ["...", { tag: "a", attribute: "href", type: "html" }]
 			}
 		}

@@ -27,6 +27,16 @@ it("inline: true inlines CSS chunks as <style> blocks", () => {
 	expect(styles[0]).toMatch(/color/);
 });
 
+it("inline: true reads a chunk file's type from its path, not its query", () => {
+	const html = readHtml("query.html");
+	const styles = inlineStyles(html);
+	expect(styles).toHaveLength(1);
+	expect(styles[0]).toMatch(/color/);
+	for (const script of inlineScripts(html)) {
+		expect(script).not.toMatch(/color/);
+	}
+});
+
 it('inline: "script" inlines JS but serves CSS externally', () => {
 	const html = readHtml("only-script.html");
 	expect(inlineScripts(html).length).toBeGreaterThan(0);

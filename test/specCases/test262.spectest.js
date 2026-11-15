@@ -1593,14 +1593,6 @@ const MINIFIED_FAILURES = [
 	},
 	{
 		reason:
-			"the fixture imported is not parsable JavaScript, so minifying it fails the build",
-		minifiers: ["terser", "printer"],
-		tests: [
-			"import/import-attributes/text-javascript.js (module)"
-		]
-	},
-	{
-		reason:
 			"terser renames a binding or private name that a function takes its name from",
 		minifiers: ["terser"],
 		tests: [
