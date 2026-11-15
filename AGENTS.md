@@ -164,9 +164,9 @@ A list of module, source or dependency types in `lib/` is silently wrong the day
 
 Code that runs outside webpack's own module graph (tests, examples, tooling, a minifier the plugin evaluates as source) loads `require("webpack")`, never `webpack/lib/...`: internal files move between releases, and others copy the pattern.
 
-### Reach the JavaScript syntax through its facade
+### Reach each language's syntax through its facade
 
-Outside the JavaScript syntax layer (`lib/javascript/syntax*.js`, `regexp.js`, `ScopeAnalyzer.js` and the generated tables), require `lib/javascript/syntax.js`, webpack's `javascript.syntax`, and read the parser from its `parser` getter (`const { Field, NodeType } = require("./syntax").parser`), never `syntax-parser.js` or `syntax-printer.js` directly, so the internals can move behind it. Type-only `@import`s may name `syntax-parser.js`. CSS and HTML do not follow this yet.
+Outside a language's syntax layer (`lib/{css,html,javascript}/syntax*.js`, the minifiers, the generated tables, and JavaScript's `regexp.js` and `ScopeAnalyzer.js`), require that language's `syntax.js`, webpack's `css.syntax`, `html.syntax` or `javascript.syntax`, and read the parser from its `parser` getter (`const { Field, NodeType } = require("./syntax").parser`), never `syntax-parser.js` or `syntax-printer.js` directly, so the internals can move behind it. Type-only `@import`s may name `syntax-parser.js`.
 
 **Every language's `syntax` facade and the JavaScript parser's `{ path: true }` taps are experimental**: tag each new public name they expose with `@experimental <where it is exposed>; unstable API` ([convention](docs/options.md)).
 

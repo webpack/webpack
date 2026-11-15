@@ -45,12 +45,12 @@ const sweep = async (script, fixture) => {
 		.spyOn(process.stderr, "write")
 		.mockImplementation(() => true);
 	try {
-		/** @type {(mode?: string) => Promise<unknown>} */
-		let runMode = () => Promise.resolve();
-		jest.isolateModules(() => {
-			({ runMode } = require(`../../../tooling/${script}`));
+		// WHY: the sweep runs inside the isolated registry too, so what the script
+		// loads lazily while it runs, such as a printer, shares its parser's tree.
+		await jest.isolateModulesAsync(async () => {
+			const { runMode } = require(`../../../tooling/${script}`);
+			await runMode("--invariants");
 		});
-		await runMode("--invariants");
 		return { out: written.join(""), exitCode: process.exitCode };
 	} finally {
 		stdout.mockRestore();
