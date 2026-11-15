@@ -17,7 +17,9 @@ module.exports = {
 	entry: {
 		page: "./page.html",
 		rescan: "./rescan.html",
-		fragment: "./fragment.html"
+		fragment: "./fragment.html",
+		index: "./index.html",
+		base: "./base.html"
 	},
 	output: {
 		filename: "[name].js",
