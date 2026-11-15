@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" x="0" y="0">
+    <svg x="10" y="10">
+        <svg x="0" y="0">
+            <path/>
+        </svg>
+        <svg x="0" y="10">
+            <path/>
+        </svg>
+        <svg x="50" y="0">
+            <path/>
+        </svg>
+    </svg>
+    <svg x="100" y="100">
+        <path/>
+    </svg>
+</svg>

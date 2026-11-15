@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300">
+    <rect width="10" height="20" transform="rotate(-45 261.757 -252.243)"/>
+    <rect width="10" height="20" transform="rotate(-45 261.757 -252.243)"/>
+    <rect width="10" height="20" transform="rotate(-45 261.777 -252.28)"/>
+    <rect width="10" height="20" transform="rotate(-45 261.757 -252.243)scale(2)"/>
+    <rect width="10" height="20" transform="rotate(-45 261.757 -252.243)skewX(45)"/>
+    <rect width="10" height="20" transform="rotate(-45 261.757 -252.243)skewY(45)"/>
+    <rect width="10" height="20" transform="skewX(45)"/>
+    <rect width="10" height="20" transform="translate(0 56.26)scale(1.25)"/>
+    <rect width="10" height="20" transform="translate(-39.01 -55.005)scale(.16566)"/>
+    <rect width="10" height="20" transform="scale(1 -1)"/>
+    <rect width="10" height="20" transform="scale(-1 1)"/>
+    <rect width="10" height="20" transform="rotate(90)"/>
+    <rect width="10" height="20" transform="rotate(-90)"/>
+    <rect width="10" height="20" transform="rotate(-45)scale(1 -1)"/>
+    <rect width="10" height="20" transform="rotate(135)scale(1 -1)"/>
+    <rect width="10" height="20" transform="rotate(135)"/>
+    <rect width="10" height="20" transform="rotate(45)"/>
+    <rect width="10" height="20" transform="rotate(-45)scale(.915 -.9112)"/>
+</svg>

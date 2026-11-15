@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g stroke="#000">
+        <g id="star">
+            <path id="bar" d="..."/>
+        </g>
+    </g>
+    <g>
+        <animate id="frame0" attributeName="visibility" values="visible" dur="33ms" begin="0s;frame27.end"/>
+        <path d="..." fill="#272727"/>
+        <path d="..." fill="#404040"/>
+        <path d="..." fill="#2d2d2d"/>
+    </g>
+    <g transform="rotate(-90 25 0)">
+        <circle stroke-dasharray="110" r="20" stroke="#10cfbd" fill="none" stroke-width="3" stroke-linecap="round">
+            <animate attributeName="stroke-dashoffset" values="360;140" dur="2.2s" keyTimes="0;1" calcMode="spline" fill="freeze" keySplines="0.41,0.314,0.8,0.54" repeatCount="indefinite" begin="0"/>
+            <animateTransform attributeName="transform" type="rotate" values="0;274;360" keyTimes="0;0.74;1" calcMode="linear" dur="2.2s" repeatCount="indefinite" begin="0"/>
+        </circle>
+    </g>
+</svg>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <text id="a">
+            referenced text
+        </text>
+        <path id="b" d="M0 0zM10 10zM20 20l10 10M30 0c10 0 20 10 20 20M30 30z"/>
+        <text id="c">
+            referenced text
+        </text>
+        <path id="d" d="M 30,30 z"/>
+        <circle id="e" fill="none" fill-rule="evenodd" cx="60" cy="60" r="50"/>
+        <circle id="f" fill="none" fill-rule="evenodd" cx="60" cy="60" r="50"/>
+    </defs>
+</svg>

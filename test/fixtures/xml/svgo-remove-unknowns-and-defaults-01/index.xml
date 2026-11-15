@@ -1,0 +1,4 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:test="http://" attr="val" x="0" y="10" test:attr="val" xml:space="preserve">
+    <rect fill="#000"/>
+    <rect fill="#000" id="black-rect"/>
+</svg>

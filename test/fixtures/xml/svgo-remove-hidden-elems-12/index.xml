@@ -1,0 +1,14 @@
+<svg width="480" height="360" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .a { visibility: visible; }
+  </style>
+  <rect x="96" y="96" width="96" height="96" fill="lime" />
+  <g visibility="hidden">
+    <rect x="96" y="96" width="96" height="96" fill="red" />
+  </g>
+  <rect x="196.5" y="196.5" width="95" height="95" fill="red"/>
+  <g visibility="hidden">
+    <rect x="196" y="196" width="96" height="96" fill="lime" visibility="visible" />
+  </g>
+  <rect x="96" y="96" width="96" height="96" visibility="hidden" class="a" />
+</svg>

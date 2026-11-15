@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <circle stroke="blue" cx="60" cy="60" r="50"/>
+    <path opacity="1" d="M0 0"/>
+</svg>

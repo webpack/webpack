@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style>
+        …
+    </style>
+    <circle fill="none" fill-rule="evenodd" cx="60" cy="60" r="50"/>
+    <circle fill-opacity="0" fill-rule="evenodd" cx="90" cy="60" r="50"/>
+    <circle fill="red" stroke-width="6" stroke-dashoffset="5" cx="60" cy="60" r="50"/>
+    <circle fill="red" stroke="#000" stroke-width="6" stroke-dashoffset="5" stroke-opacity="0" cx="60" cy="60" r="50"/>
+</svg>

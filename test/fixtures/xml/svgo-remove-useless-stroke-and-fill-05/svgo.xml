@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <g id="test">
+            <rect fill-opacity=".5" width="100" height="100"/>
+        </g>
+    </defs>
+    <circle fill="red" fill-opacity=".5" cx="60" cy="60" r="50"/>
+    <g fill="none"/>
+</svg>

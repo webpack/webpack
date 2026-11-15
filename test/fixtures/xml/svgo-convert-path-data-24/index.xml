@@ -1,0 +1,4 @@
+<svg width="1200" height="1200">
+  <path transform="translate(100) scale(2)" d="m200 200 h-100 a100 100 0 1 0 100 -100 z"/>
+  <path transform="translate(100) scale(2)" d="M400 200 H300 A100 100 0 1 0 400 100 z"/>
+</svg>

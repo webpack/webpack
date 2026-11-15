@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <circle cx="12" cy="12">
+        <animate id="b" fill="freeze" attributeName="r" begin="0;a.end" dur="1.2s" values="0;11"/>
+    </circle>
+    <circle cx="12" cy="12">
+        <animate id="a" fill="freeze" attributeName="r" begin="b.begin+0.2s" dur="1.2s" values="0;11"/>
+    </circle>
+</svg>

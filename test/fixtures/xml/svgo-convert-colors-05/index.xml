@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150">
+    <linearGradient id="Aa">
+        <stop stop-color="ReD" offset="5%"/>
+    </linearGradient>
+    <text x="0" y="32" fill="gold">uwu</text>
+    <text x="0" y="64" fill="GOLD">owo</text>
+    <text x="0" y="96" fill="url(#Aa)">eue</text>
+</svg>

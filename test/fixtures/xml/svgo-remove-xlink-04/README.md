@@ -1,0 +1,1 @@
+Drops other xlink attributes.

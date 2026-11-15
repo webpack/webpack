@@ -1,0 +1,8 @@
+<svg id="test" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 81.285 81.285">
+    <defs>
+        <style>
+            @media only screen and (min-device-width:320px) and (max-device-width:480px) and (-webkit-min-device-pixel-ratio:2){}
+        </style>
+    </defs>
+    <rect width="100" height="100" style="fill:blue"/>
+</svg>

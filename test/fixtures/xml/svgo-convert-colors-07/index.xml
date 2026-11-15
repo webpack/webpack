@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <style>
+        :root {
+            --cssVar: pink;
+        }
+    </style>
+    <text x="50" y="50" text-anchor="middle" fill="var(--cssVar)">•ᴗ•</text>
+</svg>

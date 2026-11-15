@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g fill="red">
+        <g>
+            <g fill="green">
+                <g>
+                    <path fill="red" d="M18.8 86.9l39.2"/>
+                </g>
+            </g>
+            <path d="M118.8 186.9l79.2"/>
+            <path id="red" fill="red" d="M118.8 186.9l79.2"/>
+        </g>
+    </g>
+</svg>

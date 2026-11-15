@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .n{display:none}
+        .i{display:inline}
+    </style>
+    <g class="i" id="a"/>
+    <g id="b" class="n">
+        <g class="i"/>
+    </g>
+</svg>

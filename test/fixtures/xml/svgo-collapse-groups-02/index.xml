@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g>
+        <g attr1="val1">
+            <path d="..."/>
+        </g>
+    </g>
+    <g attr1="val1">
+        <g attr2="val2">
+            <path d="..."/>
+        </g>
+    </g>
+    <g attr1="val1">
+        <g>
+            <path d="..."/>
+        </g>
+        <path d="..."/>
+    </g>
+    <g attr1="val1">
+        <g attr2="val2">
+            <path d="..."/>
+        </g>
+        <path d="..."/>
+    </g>
+</svg>
