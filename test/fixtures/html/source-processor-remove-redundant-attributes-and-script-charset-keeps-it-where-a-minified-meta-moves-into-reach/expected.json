@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "<script charset=utf-8 src=a.js>",
+		"why": "the printer decides `charset` as it writes the `<script>` start tag, before it has written the bytes the encoding prescan reads; here dropping the comment brings the `<meta charset>` into the first 1024 bytes only after the tag went out, so the next pass sees the declaration and drops the restated default, 14 B less in the same meaning. Reaching that in one pass means holding the attribute back until the first 1024 bytes are printed"
+	}
+]
