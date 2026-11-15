@@ -316,18 +316,7 @@ describe("JavaScript syntax — invariants", () => {
 					const { code } = /** @type {{ code: string }} */ (
 						new SourceProcessor().process(source, printOptions(one).options)
 					);
-					let reports = behaviorDifference(source, code);
-					// A run times out under a loaded machine too, so one that did
-					// runs again before it counts.
-					for (
-						let attempt = 0;
-						attempt < 2 &&
-						(reports === null ||
-							reports.some((report) => report.what === "times out"));
-						attempt++
-					) {
-						reports = behaviorDifference(source, code);
-					}
+					const reports = behaviorDifference(source, code);
 					// A marked fixture that is never run would hold nothing.
 					expect(reports).not.toBeNull();
 					expect(
