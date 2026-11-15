@@ -63,3 +63,12 @@ console.log(
 		return [Object.keys({ [unsetKey]: 1 }), { [unsetKey]: 2 }.undefined];
 	})()
 );
+// A function calling itself by name passes it other values: nothing folds.
+var recurse = function self(value) {
+	return value === void 0 ? self(1) : value;
+};
+console.log(recurse());
+var again = function self(value) {
+	return value === 1 ? self(2) : value;
+};
+console.log(again(1));
