@@ -40186,6 +40186,9 @@ declare namespace exports {
 					export let attributes: 1;
 					export let content: 2;
 				}
+				export let declaredEncoding: (
+					input: string
+				) => undefined | "utf8" | "other";
 				export let declaresUtf8: (input: string) => boolean;
 				export namespace Flag {
 					export let mathml: 1;
@@ -40314,7 +40317,7 @@ declare namespace exports {
 					pseudoClasses?: { [index: string]: string };
 				} & CssTransformOptions;
 			}
-		): Promise<{ code: string; errors?: Error[] }>;
+		): Promise<{ code: string; warnings?: string[]; errors?: Error[] }>;
 		export namespace xmlMinify {
 			export let supportsWorkerThreads: () => boolean;
 			export let getTypes: () => string[];
