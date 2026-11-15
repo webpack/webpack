@@ -17,7 +17,10 @@ module.exports = {
 	entry: {
 		page: "./page.html",
 		rescan: "./rescan.html",
-		fragment: "./fragment.html"
+		fragment: "./fragment.html",
+		index: "./index.html",
+		base: "./base.html",
+		"ignored-base": "./ignored-base.html"
 	},
 	output: {
 		filename: "[name].js",
@@ -26,6 +29,16 @@ module.exports = {
 	module: {
 		parser: {
 			html: {
+				// An `<a href>` source no element passes is no extraction.
+				sources: [
+					"...",
+					{
+						tag: "a",
+						attribute: "href",
+						type: "src",
+						filter: (attributes) => attributes.has("data-asset")
+					}
+				],
 				cssModules: {
 					attributes: {
 						"data-target": "id",

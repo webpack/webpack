@@ -1,8 +1,43 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`ConfigCacheTestCases html css-modules-references exported tests should generate the pages: base 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<base href=\\"https://example.com/other/\\">
+<style module>/*!********************************************************************************!*\\\\
+  !*** css data:text/css;base64,I2hlbHAgeyBtYXJnaW46IDA7IH0= (exportType: text) ***!
+  \\\\********************************************************************************/
+#base_html-style-1-help { margin: 0; }</style>
+</head>
+<body>
+<div id=\\"base_html-style-1-help\\">one</div>
+<a href=\\"base.html#help\\">two</a>
+</body>
+</html>
+"
+`;
+
 exports[`ConfigCacheTestCases html css-modules-references exported tests should generate the pages: fragment 1`] = `
 "<link rel=\\"stylesheet\\" href=\\"by-rule.css\\">
 <tr><td class=\\"by-rule_css-ruled\\" data-target=\\"by-rule_css-target\\">one</td></tr>
+"
+`;
+
+exports[`ConfigCacheTestCases html css-modules-references exported tests should generate the pages: index 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<link rel=\\"stylesheet\\" href=\\"by-rule1.css\\">
+</head>
+<body>
+<div id=\\"by-rule_css-target\\">one</div>
+<a href=\\"./#by-rule_css-target\\">two</a>
+<a href=\\"index.html#by-rule_css-target\\">three</a>
+<a href=\\"./index.html#by-rule_css-target\\">four</a>
+<a href=\\"#by-rule_css-target\\">five</a>
+</body>
+</html>
 "
 `;
 
@@ -45,6 +80,16 @@ exports[`ConfigCacheTestCases html css-modules-references exported tests should 
 <rect fill=\\"freeze\\"></rect>
 <animate begin=\\"page_html-style-1-help.click; 2s; page_html-style-1-primary.end+1s; page_html-style-2-field.mouseover\\" end=\\"1.5s; page_html-style-1-help.repeat(2)\\"></animate>
 </svg>
+<a href=\\"page.html#page_html-style-1-help\\">self-1</a>
+<a href=\\"./page.html#page_html-style-2-field\\">self-2</a>
+<a href=\\"page.html#page_html-style-1-help\\">self-3</a>
+<a href='page.html#page_html-style-1-help'>self-4</a>
+<a href=page.html#help>self-5</a>
+<a href=\\"page.html?x=1#help\\">self-6</a>
+<a href=\\"other.html#help\\">self-7</a>
+<a href=\\"https://example.com/page.html#help\\">self-8</a>
+<a href=\\"/page.html#help\\">self-9</a>
+<a href=\\" page.html#page_html-style-1-help\\">self-10</a>
 <div data-target=\\"page_html-style-1-help\\" data-classes=\\"page_html-style-1-btn page_html-style-1-primary page_html-style-1-base\\" data-link=\\"#page_html-style-1-help\\" data-refs=\\"page_html-style-1-help page_html-style-2-field\\" data-paint=\\"url(#page_html-style-1-grad)\\" data-other=\\"help\\">six</div>
 </body>
 </html>
@@ -55,7 +100,7 @@ exports[`ConfigCacheTestCases html css-modules-references exported tests should 
 "<!DOCTYPE html>
 <html>
 <head>
-<link rel=\\"stylesheet\\" href=\\"by-rule1.css\\">
+<link rel=\\"stylesheet\\" href=\\"by-rule2.css\\">
 </head>
 <body>
 <div class=\\"by-rule_css-ruled\\" id=\\"by-rule_css-target\\" data-target=\\"by-rule_css-target\\">one</div>

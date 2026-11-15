@@ -50,6 +50,46 @@ it("should rewrite the ids SMIL timings name", () => {
 	);
 });
 
+it("should rewrite the fragment of a link to the page's own file", () => {
+	expect(body).toContain('<a href="page.html#page_html-style-1-help">self-1</a>');
+	expect(body).toContain(
+		'<a href="./page.html#page_html-style-2-field">self-2</a>'
+	);
+	expect(body).toContain('<a href="page.html#page_html-style-1-help">self-3</a>');
+	expect(body).toContain("<a href='page.html#page_html-style-1-help'>self-4</a>");
+	// An unquoted value, a query, another page, another origin and a
+	// root-relative path stay as written.
+	expect(body).toContain("<a href=page.html#help>self-5</a>");
+	expect(body).toContain('<a href="page.html?x=1#help">self-6</a>');
+	expect(body).toContain('<a href="other.html#help">self-7</a>');
+	expect(body).toContain(
+		'<a href="https://example.com/page.html#help">self-8</a>'
+	);
+	expect(body).toContain('<a href="/page.html#help">self-9</a>');
+	// A URL's leading whitespace is no part of it.
+	expect(body).toContain(
+		'<a href=" page.html#page_html-style-1-help">self-10</a>'
+	);
+});
+
+it("should read ./ as a link to an index.html, on a page that finds its names again", () => {
+	const index = read("index.html");
+	expect(index).toContain('<a href="./#by-rule_css-target">two</a>');
+	expect(index).toContain('<a href="index.html#by-rule_css-target">three</a>');
+	expect(index).toContain('<a href="./index.html#by-rule_css-target">four</a>');
+	expect(index).toContain('<a href="#by-rule_css-target">five</a>');
+});
+
+it("should leave a link to the page's file under a <base> as written", () => {
+	const base = read("base.html");
+	expect(base).toContain('<div id="base_html-style-1-help">one</div>');
+	expect(base).toContain('<a href="base.html#help">two</a>');
+	// A `webpackIgnore`d `<base>` still redirects the link.
+	const ignored = read("ignored-base.html");
+	expect(ignored).toContain('<div id="ignored-base_html-style-1-help">one</div>');
+	expect(ignored).toContain('<a href="ignored-base.html#help">two</a>');
+});
+
 it("should rewrite the attributes an option adds", () => {
 	expect(body).toContain(
 		'<div data-target="page_html-style-1-help" data-classes="page_html-style-1-btn page_html-style-1-primary page_html-style-1-base" data-link="#page_html-style-1-help" data-refs="page_html-style-1-help page_html-style-2-field" data-paint="url(#page_html-style-1-grad)" data-other="help">six</div>'
@@ -79,4 +119,6 @@ it("should generate the pages", () => {
 	expect(page).toMatchSnapshot("page");
 	expect(read("rescan.html")).toMatchSnapshot("rescan");
 	expect(read("fragment.html")).toMatchSnapshot("fragment");
+	expect(read("index.html")).toMatchSnapshot("index");
+	expect(read("base.html")).toMatchSnapshot("base");
 });
