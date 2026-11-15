@@ -132,23 +132,24 @@ it("leaves a css data url whose media type names no language", () => {
 	expect(isolate(sheetText, /\.png\{background:url\([^]*?\)\}/)).toMatchSnapshot();
 });
 
-it("minifies a css module of type asset/source", () => {
+// A text import is data the program reads, so it is not minified.
+it("keeps a css module of type asset/source as written", () => {
 	expect(sourceCss).toMatchSnapshot();
 });
 
-it("minifies an html module of type asset/source", () => {
+it("keeps an html module of type asset/source as written", () => {
 	expect(sourceHtml).toMatchSnapshot();
 });
 
-it("minifies a javascript module of type asset/source", () => {
+it("keeps a javascript module of type asset/source as written", () => {
 	expect(sourceJs).toMatchSnapshot();
 });
 
-it("minifies a json module of type asset/source", () => {
+it("keeps a json module of type asset/source as written", () => {
 	expect(sourceJson).toMatchSnapshot();
 });
 
-it("minifies an svg module of type asset/source", () => {
+it("keeps an svg module of type asset/source as written", () => {
 	expect(sourceSvg).toMatchSnapshot();
 });
 
