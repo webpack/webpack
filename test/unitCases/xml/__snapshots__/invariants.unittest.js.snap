@@ -2477,6 +2477,14 @@ exports[`XML syntax — invariants svg-data-urls-should-minify-the-ones-an-inlin
 
 exports[`XML syntax — invariants svg-data-urls-should-minify-the-ones-an-inline-stylesheet-holds-and-only-those tokenizes 1`] = `"text[0,37] attr[42,47|49,75]' open[37,79|38,41] text[79,81] attr[89,94|96,97]' open[81,101|82,86]/ text[101,103] close[103,109|105,108] text[109,164] end=164"`;
 
+exports[`XML syntax — invariants svg-data-urls-should-minify-the-styles-of-one-a-stylesheet-holds parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"%22http://www.w3.org/2000/svg%22\\",\\"nameStart\\":42,\\"nameEnd\\":47,\\"valueStart\\":48,\\"valueEnd\\":80}],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"style\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\".b { fill : %23ff0000 }\\",\\"start\\":88,\\"end\\":111}],\\"selfClosing\\":false,\\"start\\":81,\\"end\\":119,\\"tagEnd\\":88,\\"nameEnd\\":87,\\"contentEnd\\":111},{\\"type\\":3,\\"tagName\\":\\"rect\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"class\\",\\"value\\":\\"%22b%22/\\",\\"nameStart\\":125,\\"nameEnd\\":130,\\"valueStart\\":131,\\"valueEnd\\":139}],\\"children\\":[],\\"selfClosing\\":false,\\"start\\":119,\\"end\\":140,\\"tagEnd\\":140,\\"nameEnd\\":124,\\"contentEnd\\":140}],\\"selfClosing\\":false,\\"start\\":37,\\"end\\":146,\\"tagEnd\\":81,\\"nameEnd\\":41,\\"contentEnd\\":140}]"`;
+
+exports[`XML syntax — invariants svg-data-urls-should-minify-the-styles-of-one-a-stylesheet-holds parses 2`] = `""`;
+
+exports[`XML syntax — invariants svg-data-urls-should-minify-the-styles-of-one-a-stylesheet-holds prints {"xml":true,"mode":"minify"} 1`] = `"<svg xmlns=\\"%22http://www.w3.org/2000/svg%22\\"><style>.b { fill : %23ff0000 }</style><rect class=\\"%22b%22/\\"/></svg>"`;
+
+exports[`XML syntax — invariants svg-data-urls-should-minify-the-styles-of-one-a-stylesheet-holds tokenizes 1`] = `"text[0,37] attr[42,47|48,80] open[37,81|38,41] open[81,88|82,87] text[88,111] close[111,119|113,118] attr[125,130|131,139] open[119,140|120,124] close[140,146|142,145] text[146,148] end=148"`;
+
 exports[`XML syntax — invariants svg-data-urls-should-print-a-tie-in-unless-asked-otherwise parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"a\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"b\\",\\"value\\":\\"c\\",\\"nameStart\\":4,\\"nameEnd\\":5,\\"valueStart\\":7,\\"valueEnd\\":8}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":0,\\"end\\":12,\\"tagEnd\\":12,\\"nameEnd\\":2,\\"contentEnd\\":12}]"`;
 
 exports[`XML syntax — invariants svg-data-urls-should-print-a-tie-in-unless-asked-otherwise parses 2`] = `""`;

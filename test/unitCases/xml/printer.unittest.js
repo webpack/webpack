@@ -57,6 +57,21 @@ describe("SVG data URLs", () => {
 		);
 	});
 
+	it("should minify the styles of one a stylesheet holds, as a run inside its run", () => {
+		const render = builtinEmbeddedRenderer({ svg: true });
+		expect(
+			render(
+				fixture(
+					"xml",
+					"svg-data-urls-should-minify-the-styles-of-one-a-stylesheet-holds"
+				),
+				{ type: "css", hostType: "html", as: "block-contents" }
+			)
+		).toBe(
+			`background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><style>.b{fill:red}</style><rect class='b'/></svg>")`
+		);
+	});
+
 	it("should decline what it is not asked for, or cannot shorten", () => {
 		const render = builtinEmbeddedRenderer({ svg: true });
 		// An inline `<svg>` is the HTML printer's.
