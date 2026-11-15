@@ -630,6 +630,19 @@ const PARSER_TABLES = [
 		["g", "path", "rect", "circle", "ellipse", "line", "polyline", "polygon"]
 	],
 	[
+		"SVG_GROUP_INERT_ATTRIBUTES",
+		"set",
+		"Non-inherited presentation attributes that apply to no group, so one on a g paints nothing.",
+		[
+			"vector-effect",
+			"stop-color",
+			"stop-opacity",
+			"flood-color",
+			"flood-opacity",
+			"lighting-color"
+		]
+	],
+	[
 		"SVG_UNUSED_DEFINITION_CONTENT",
 		"set",
 		"Known non-textual SVG content removable from an unnamed, unreferenced definition.",
