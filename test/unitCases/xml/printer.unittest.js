@@ -300,7 +300,9 @@ describe("SourceProcessor — SVG minification", () => {
 			' d="M.5.5C1.1 1.2 1.3 1.4 2 2s1 1 2 2"',
 			' d="M.5.5C1.1 1.2 1.3 1.4 2 2s.7.6 1 1 1 1 2 2"',
 			// Twice 207.2 less 192.9 is not 221.5 in float32.
-			' d="M199.8 408.3C193.3 394.1 192.9 390 207.2 385.2 221.5 380.4 232.8 377.2 250 400"'
+			' d="M199.8 408.3C193.3 394.1 192.9 390 207.2 385.2 221.5 380.4 232.8 377.2 250 400"',
+			// Blink rounds 1 - 33554432 before adding 1 back, so it reads another control.
+			' d="M0 0s33554432 10 1 0C-33554430-10 0 20 2 0"'
 		]);
 		expect(new SourceProcessor().process(once, options).code).toBe(once);
 	});
