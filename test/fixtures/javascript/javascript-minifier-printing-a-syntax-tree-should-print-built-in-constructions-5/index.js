@@ -1,0 +1,1 @@
+x=[Array(`a${b}`),Array({}),Array([]),Array(function(){}),Array(()=>1),Array(class{}),Array(null),Array(true),Array(!0),Array(/a/)]

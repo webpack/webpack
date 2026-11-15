@@ -1,0 +1,1 @@
+if(0||function(){console.log(3)}());

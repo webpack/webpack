@@ -1,0 +1,1 @@
+(class{#x;static{#x in 1}});(class{#y;static{#y in {}}});(class{#z;static{#z in o}})

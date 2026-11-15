@@ -1,0 +1,1 @@
+x = () => new.target

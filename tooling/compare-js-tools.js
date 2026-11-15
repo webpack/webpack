@@ -28,20 +28,23 @@
 const { spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
-const vm = require("vm");
 const { parse: acornParse } = require("acorn");
-const { parse: webpackParse } = require("../lib/javascript/syntax-parser");
+const { parseProgram } = require("../lib/javascript/syntax").parser;
+const ACORN_CORPUS = require("../test/fixtures/acorn-corpus.json");
+const { estree: webpackParse } = require("../test/helpers/javascriptParse");
 // Acorn's own suite, recorded case by case: what `javascript/parser.unittest.js`
 // replays, read here for the ranges rather than for the trees.
-const ACORN_CORPUS = require("../test/fixtures/acorn-corpus.json");
 const {
 	JS_CUTS,
 	JS_RESPELLINGS,
 	PRESETS,
+	behaviorDifference,
 	goalFor,
 	jsPurityDigest,
 	jsSlices,
 	jsSpans,
+	legalNotices,
+	meaningReports,
 	minifyOnePass,
 	parsesAsLatest,
 	printerFor,
@@ -67,6 +70,7 @@ const {
 	measure,
 	measureInWorker,
 	missingReport,
+	noticeRelation,
 	oneLine,
 	purityRelation,
 	sweepExitCode,
@@ -162,18 +166,11 @@ const readOxcResult = (result) => {
 /** @type {import("./compare-tools-harness").Tool[]} */
 const TOOLS = [
 	{
-		// The options a build asks for: a node serves its range when something
-		// reads it, which is most of what the eager rows below pay for up front.
+		// What a build asks for: a syntax tree, whose objects are built only
+		// where something reads one, which the eager rows below pay for up front.
 		name: "webpack",
 		stage: "parse",
-		create: () => (code) =>
-			webpackParse(code, {
-				sourceType: sourceType(),
-				ecmaVersion: "latest",
-				lazyNodes: true,
-				locations: false,
-				allowHashBang: true
-			})
+		create: () => (code) => parseProgram(code, 0, { sourceType: sourceType() })
 	},
 	{
 		name: "acorn",
@@ -905,42 +902,6 @@ const EXPECTED = [
 	},
 	{
 		relation: "idempotence",
-		contains: "(e,t,n))?",
-		source: "Vue 3 (production)",
-		presets: ["default"],
-		why: "an `if` printing as `?:` parenthesizes a test opening with a function where the reprint parenthesizes the function alone, the same size"
-	},
-	{
-		relation: "idempotence",
-		contains: "(1)}",
-		source:
-			"test/configCases/concatenate-modules/top-level-declarations-library-conflict/module.js",
-		presets: ["default"],
-		why: "a call printing as what its function returns keeps the parentheses that value takes unfolded, which the reprint reads as the constant it folded to"
-	},
-	{
-		relation: "idempotence",
-		contains: "(t))?",
-		source: "Vue 3 (ESM)",
-		presets: ["default"],
-		why: "an `if` printing as `?:` parenthesizes a test opening with a function where the reprint parenthesizes the function alone, the same size"
-	},
-	{
-		relation: "idempotence",
-		contains: "(e,e.__alignTo))?",
-		source: "ECharts",
-		presets: ["default"],
-		why: "an `if` printing as `?:` parenthesizes a test opening with a function where the reprint parenthesizes the function alone, the same size"
-	},
-	{
-		relation: "idempotence",
-		contains: "(e)>0",
-		source: "D3",
-		presets: ["default"],
-		why: "an `if` printing as `?:` parenthesizes a test opening with a function where the reprint parenthesizes the function alone, the same size"
-	},
-	{
-		relation: "idempotence",
 		contains: "(r.entrySeq()",
 		source: "Swagger UI 5 (bundle)",
 		presets: ["default"],
@@ -951,6 +912,10 @@ const EXPECTED = [
 const wantedPreset = filterFrom("PRESET");
 
 const wantedRelation = filterFrom("RELATION");
+
+// The inputs the unit tests read, one directory each: `javascript/invariants.unittest.js`
+// holds every one of them to these relations, with its own known differences.
+const UNIT_INPUT_RE = /^test\/fixtures\/javascript\/[^/]+\/index\.js$/;
 
 // What the last sweep did not find, read by the report and by the gate.
 /** @type {string[]} */
@@ -970,11 +935,9 @@ const invariantFixtures = () => {
 		".js",
 		SKIPPED_FIXTURE_DIRS
 	)) {
-		out.push([
-			path.relative(ROOT, file).replace(/\\/g, "/"),
-			fs.readFileSync(file, "utf8"),
-			undefined
-		]);
+		const label = path.relative(ROOT, file).replace(/\\/g, "/");
+		if (UNIT_INPUT_RE.test(label)) continue;
+		out.push([label, fs.readFileSync(file, "utf8"), undefined]);
 	}
 	// Every production in every edition, under the options acorn tests it with:
 	// the corpus is recorded from acorn's own suite, so a range the parser gets
@@ -1129,19 +1092,29 @@ const invariants = async (write) => {
 		wantedRespelling(respelling.name)
 	);
 	const wantsBehavior = wantedRelation("behavior");
-	if (wantsIdempotence || wantsRespelling || wantsBehavior) {
+	const wantsMeaning = wantedRelation("meaning");
+	const wantsNotices = wantedRelation("notices");
+	if (
+		wantsIdempotence ||
+		wantsRespelling ||
+		wantsBehavior ||
+		wantsMeaning ||
+		wantsNotices
+	) {
 		// Only what a script does before it returns is compared: a promise it
 		// leaves rejected, such as an `import()` with no loader, is ignored, and
 		// for the rest of the run, as one may settle after the sweep.
 		const ignore = () => {};
 		if (wantsBehavior) process.on("unhandledRejection", ignore);
 		let ran = 0;
-		// Respelling asks the first preset, behavior the ones printing alone.
+		// Respelling asks the first preset, behavior and meaning the ones
+		// printing alone, notices every one.
 		const printing = presets.filter(
 			([name, presetOptions], i) =>
 				wantsIdempotence ||
+				wantsNotices ||
 				(wantsRespelling && i === 0) ||
-				(wantsBehavior && presetOptions.compress === false)
+				((wantsBehavior || wantsMeaning) && presetOptions.compress === false)
 		);
 		let read = 0;
 		for (const [label, source, options] of corpus) {
@@ -1171,6 +1144,21 @@ const invariants = async (write) => {
 					? idempotence({ minify, reprint, source, says })
 					: { printed: minify(source), reports: [] };
 				for (const report of reports) groups.add(report, preset, label);
+				const alone = presetOptions.compress === false;
+				if (printed !== null && wantsNotices) {
+					for (const report of noticeRelation(
+						legalNotices(module, !alone),
+						source,
+						printed
+					)) {
+						groups.add(report, preset, label);
+					}
+				}
+				if (printed !== null && wantsMeaning && alone) {
+					for (const report of meaningReports(source, printed, settled)) {
+						groups.add(report, preset, label);
+					}
+				}
 				// Compressed or renamed, what a script observes may change by
 				// contract; printed alone, nothing it does may.
 				if (
@@ -1207,89 +1195,6 @@ const invariants = async (write) => {
 		}
 	}
 	return groups.write(write);
-};
-
-// The scripts `behavior` runs: short enough that a run costs little, and
-// bounded so one that loops is skipped rather than hanging the sweep.
-const BEHAVIOR_MAX_LENGTH = 20000;
-const BEHAVIOR_TIMEOUT = 200;
-// Every run reads the same clock and random numbers, so a script reading them
-// still answers for its printed form.
-const BEHAVIOR_PRELUDE =
-	"Math.random = () => 0.5;" +
-	"Date = new Proxy(Date, { construct: (D, a) => new D(...(a.length ? a : [0])), apply: (D) => String(new D(0)) });" +
-	"Date.now = () => 0;";
-
-/**
- * What a script prints and, where it throws, the error's kind and message or the
- * thrown value, run in a fresh context: a function prints as `[function]`, as
- * its text is the printer's.
- * @param {string} code the script
- * @returns {string | null} its transcript, null where it timed out
- */
-const behaviorOf = (code) => {
-	/** @type {string[]} */
-	const lines = [];
-	/**
-	 * @param {unknown} value a logged value
-	 * @returns {string} it, as the transcript holds it
-	 */
-	const show = (value) =>
-		typeof value === "function" ? "[function]" : String(value);
-	const context = vm.createContext({
-		console: {
-			log: (/** @type {unknown[]} */ ...values) =>
-				lines.push(values.map(show).join(" "))
-		}
-	});
-	vm.runInContext(BEHAVIOR_PRELUDE, context);
-	try {
-		vm.runInContext(code, context, { timeout: BEHAVIOR_TIMEOUT });
-	} catch (error) {
-		try {
-			const isObject = error !== null && typeof error === "object";
-			const {
-				code: reason,
-				name,
-				message
-			} = /** @type {{ code?: unknown, name?: unknown, message?: unknown }} */ (
-				isObject ? error : {}
-			);
-			if (reason === "ERR_SCRIPT_EXECUTION_TIMEOUT") return null;
-			const kind = typeof name === "string" ? name : typeof error;
-			const value =
-				typeof message === "string" ? message : isObject ? "" : show(error);
-			lines.push(`threw <${kind}>${value ? ` ${value}` : ""}`);
-		} catch (_error) {
-			// A thrown object whose own properties throw when read.
-			lines.push("threw <unreadable>");
-		}
-	}
-	return lines.join("\n");
-};
-
-/**
- * Whether a printed script still prints and throws what its source does.
- * @param {string} source the script
- * @param {string} printed what the printer wrote of it
- * @returns {import("../test/helpers/syntaxInvariants/relations").Report[] | null} what differs, empty where it runs the same, null where it was not run
- */
-const behaviorDifference = (source, printed) => {
-	if (source.length > BEHAVIOR_MAX_LENGTH) return null;
-	const expected = behaviorOf(source);
-	// A script whose two runs differ answers for nothing.
-	if (expected === null || behaviorOf(source) !== expected) return null;
-	const got = behaviorOf(printed);
-	if (got === expected) return [];
-	return [
-		{
-			relation: "behavior",
-			what: got === null ? "times out" : "runs otherwise",
-			repro: `    ${oneLine(expected, 80)}\n      -> ${
-				got === null ? "<timeout>" : oneLine(got, 80)
-			}`
-		}
-	];
 };
 
 /**

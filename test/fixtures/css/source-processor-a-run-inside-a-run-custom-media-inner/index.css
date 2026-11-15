@@ -1,0 +1,2 @@
+@custom-media --other (min-width: 1px);
+@media (--other) { b { top : 0px } }

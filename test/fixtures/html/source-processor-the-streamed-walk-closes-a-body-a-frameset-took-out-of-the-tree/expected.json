@@ -1,0 +1,11 @@
+[
+	{
+		"relation": "meaning",
+		"contains": "<0:frameset >",
+		"presets": [
+			"default",
+			"beautify"
+		],
+		"why": "the `frameset` takes the body out of the tree (§13.2.6.4.7), so the printer rightly writes only the frameset; `meaning` reads the walk, which still visits the body and paragraphs taken out"
+	}
+]

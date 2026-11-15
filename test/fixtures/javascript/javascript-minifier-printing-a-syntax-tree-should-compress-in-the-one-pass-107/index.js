@@ -1,0 +1,1 @@
+function f(a, b){ if (a) return b, 1; return 2 } function g(a){ if (a) { return 1 } return void 0 } function h(a){ if (a) return; return 1 }

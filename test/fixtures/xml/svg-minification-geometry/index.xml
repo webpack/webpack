@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect x="0" y="0" width="10" height="10"/>
+  <rect x="1" y="1" width="10" height="10" rx="2"/>
+  <rect width="10" height="10" rx="2" ry="3"/>
+  <rect width="10" height="10" transform="rotate(45)"/>
+  <circle cx="5" cy="5" r="5"/><circle r="0"/>
+  <ellipse cx="5" cy="5" rx="5" ry="5"/><ellipse cx="5" cy="5" rx="5" ry="2"/>
+  <line x1="0" y1="0" x2="10" y2="10"/><line x2="10"/>
+  <polyline points="0,0 10,10 20,0"/><polyline points="0 0"/>
+  <polygon points="0,0 10,0 10,10"/><polygon points="1 2 3"/>
+  <path d="M 10.500 20.000 C 10 20 30 40 50 60 S 70 80 90 100 Q 1 2 3 4 T 5 6 A 5 5 0 0 1 10 10 a 1 1 0 1 0 2 2 Z m 1 1 l 0 0 h 0 v 0 z"/>
+  <path d="M0 0L0 10L10 10L10 0Z"/><path d="m0 0l1 0l1 0l1 0"/><path d="M0 0 1 1 2 2"/>
+  <path d="M0 0C0 0 0 0 0 0"/><path d="M1e2 1E-1L-.5-.5"/><path d="M0,0 L 1 , 1"/><path d="M0 0H10H20V5V6"/>
+  <path d="M0 0" transform="translate(0)"/><path d="M0 0" transform="translate(5 0) scale(1)"/>
+  <path d="M0 0" transform="scale(2 2)"/><path d="M0 0" transform="rotate(0)"/><path d="M0 0" transform="rotate(90 5 5)"/>
+  <path d="M0 0" transform="skewX(0) skewY(10)"/><path d="M0 0" transform="matrix(1 0 0 1 0 0)"/>
+  <path d="M0 0" transform="matrix(2,0,0,2,10,10)"/><path d="M0 0" transform="translate(1,2)translate(3,4)"/>
+  <g transform="translate(5 5)"><path d="M0 0h1"/></g>
+  <path d="M0 0" fill="#FF0000" stroke="rgb(255, 0, 0)" stop-color="red" color="#ff000080"/>
+  <path d="M0 0" fill="hsl(0, 100%, 50%)" stroke="currentColor" flood-color="transparent"/>
+  <path d="M0 0" stroke-width="001.500" stroke-dasharray="1, 2 ,3" stroke-dashoffset="+0.5" opacity="1.0"/>
+  <path d="M0 0" style="fill: #ff0000; stroke-width: 2.0px"/>
+  <text x="001.0" y="002.0" dx="1, 2" rotate="0 90">t</text>
+</svg>

@@ -1,0 +1,12 @@
+[
+	{
+		"mode": "minify",
+		"transforms": { "comments": { "fixture": "keepLicense" } },
+		"check": { "fixture": "check" }
+	},
+	{
+		"mode": "minify",
+		"visit": { "fixture": "countDeclarations" },
+		"check": { "fixture": "check" }
+	}
+]

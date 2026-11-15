@@ -1,0 +1,1 @@
+export { a as "x\ny", b as "x\ny" }; var a, b

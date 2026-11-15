@@ -1,0 +1,6 @@
+<svg id="test" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <style>
+        <![CDATA[.st0{fill:red;padding:1em;background-image:url('data:image/svg,<svg width="16" height="16"/>')}@media screen and (max-width:200px){.st0{display:none}}]]>
+    </style>
+    <rect width="100" height="100" class="st0" style="stroke-width:3;margin:1em"/>
+</svg>

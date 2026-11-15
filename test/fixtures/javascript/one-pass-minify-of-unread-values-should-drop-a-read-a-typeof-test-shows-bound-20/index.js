@@ -1,0 +1,1 @@
+x;typeof y<"u"&&y;let y

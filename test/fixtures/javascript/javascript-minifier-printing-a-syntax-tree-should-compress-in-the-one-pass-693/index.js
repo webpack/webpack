@@ -1,0 +1,1 @@
+Array.prototype[Symbol.isConcatSpreadable]=!1;x=[1].concat([2])

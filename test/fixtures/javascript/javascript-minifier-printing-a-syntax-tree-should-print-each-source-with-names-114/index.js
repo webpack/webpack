@@ -1,0 +1,1 @@
+class P { #x; m(o) { #x in (a = b); #x in (a ? b : c); #x in (a, b); #x in (() => 1); (#x in o) + 1; !(#x in o); (#x in o).y; (#x in o)(); a < (#x in o); (#x in o) < a; (#x in o) || a; a in (#x in o); (#x in o) in a; (#x in o) ** 2; #x in (#x in o); #x in a + b; #x in (a in b); #x in (a || b); (#x in o) ? 1 : 2; (#x in o)`t`; } *g() { #x in (yield); } }

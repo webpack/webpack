@@ -222,9 +222,7 @@ const NATIVE_PURE_STATIC_SUPPLEMENT = {
  */
 const unexpectedNativeSyntax = (node, expected) =>
 	new Error(
-		`terser's native-objects.js holds a ${node.type} at offset ${
-			node.start
-		} where this generator expects ${expected}`
+		`terser's native-objects.js holds a ${node.type} at offset ${node.start} where this generator expects ${expected}`
 	);
 
 /**
@@ -531,9 +529,7 @@ ${sections
  */
 const unexpectedParserSyntax = (node, expected) =>
 	new Error(
-		`terser's parse.js holds a ${node.type} at offset ${
-			node.start
-		} where this generator expects ${expected}`
+		`terser's parse.js holds a ${node.type} at offset ${node.start} where this generator expects ${expected}`
 	);
 
 /** @typedef {string | string[] | { words: string[] } | { levels: string[][] }} ParserValue */
@@ -806,6 +802,7 @@ const FOLDED_BUILT_INS = {
 		"parseFloat",
 		"parseInt"
 	],
+	"Boolean.prototype": ["toString", "valueOf"],
 	"Number.prototype": [
 		"toExponential",
 		"toFixed",
@@ -993,6 +990,7 @@ const UNFOLDED_BUILT_INS = {
 		"String.prototype.split"
 	],
 	"called as a conversion, which the printer folds by its global name": [
+		"Boolean.Boolean",
 		"Number.Number",
 		"String.String"
 	],
@@ -1067,7 +1065,7 @@ const collectBuiltInMembers = () => {
 	for (const key of Object.keys(builtins)) {
 		if (/^[a-z]/.test(key)) members.set(key, builtins[key].__compat);
 	}
-	for (const owner of ["Math", "Number", "String", "Array"]) {
+	for (const owner of ["Math", "Boolean", "Number", "String", "Array"]) {
 		for (const key of Object.keys(builtins[owner])) {
 			if (key === "__compat") continue;
 			const compat = builtins[owner][key].__compat;
@@ -1599,6 +1597,29 @@ const NODE_TYPES = {
 	MetaProperty: "meta:node property:node"
 };
 
+// before ES2015 acorn sets a function's `expression` once its body is read
+const FUNCTION_EDITIONS = "expression:<6 generator:6 async:8";
+const ATTRIBUTES_EDITION = "attributes:16";
+
+// The edition from which acorn's objects of a type hold a field, as
+// `name:edition`; below it acorn leaves the field out. Unlisted: every edition.
+// `name:<edition` holds it in every edition, after every other field below it.
+/** @type {Record<string, string>} */
+const FIELD_EDITIONS = {
+	MemberExpression: "optional:11",
+	CallExpression: "optional:11",
+	ExpressionStatement: "directive:5",
+	Property: "method:6 shorthand:6 computed:6",
+	FunctionExpression: FUNCTION_EDITIONS,
+	FunctionDeclaration: FUNCTION_EDITIONS,
+	ArrowFunctionExpression: FUNCTION_EDITIONS,
+	ForOfStatement: "await:9",
+	ImportDeclaration: ATTRIBUTES_EDITION,
+	ImportExpression: "options:16",
+	ExportNamedDeclaration: ATTRIBUTES_EDITION,
+	ExportAllDeclaration: `exported:11 ${ATTRIBUTES_EDITION}`
+};
+
 // WHY: the parser turns an expression into a pattern in place (`toAssignable`),
 // so a pattern's slots must be a prefix of its expression's: an assignment's
 // operator goes last, after the `left` and `right` an `AssignmentPattern` keeps.
@@ -1640,7 +1661,8 @@ const collectNodeTables = () => {
 
 /**
  * Each node type's fields as `name:kind:slot`, in the order its objects hold
- * them; a flag's slot is its `Flag` bit, any other field's its place in the record.
+ * them, with `:edition` where `FIELD_EDITIONS` gives the field one and
+ * `:0:edition` where it gives one the field follows the others below.
  * @returns {Record<string, string>} the fields by node type
  */
 const collectNodeFields = () => {
@@ -1664,8 +1686,27 @@ const collectNodeFields = () => {
 		for (const field of fields) {
 			if (field.kind === "flag") field.slot = flags[field.field];
 		}
+		/** @type {Map<string, string>} */
+		const editions = new Map();
+		for (const part of (FIELD_EDITIONS[name] || "").split(" ")) {
+			if (part === "") continue;
+			const [field, edition] = part.split(":");
+			if (!fields.some((item) => item.field === field)) {
+				throw new Error(`FIELD_EDITIONS: ${name} has no field ${field}`);
+			}
+			editions.set(field, edition);
+		}
 		result[name] = fields
-			.map(({ field, kind, slot }) => `${field}:${kind}:${slot}`)
+			.map(({ field, kind, slot }) => {
+				const edition = editions.get(field);
+				const suffix =
+					edition === undefined
+						? ""
+						: edition.startsWith("<")
+							? `:0:${edition.slice(1)}`
+							: `:${edition}`;
+				return `${field}:${kind}:${slot}${suffix}`;
+			})
 			.join(" ");
 	}
 	return result;
@@ -2332,7 +2373,7 @@ const collectParseErrorCodes = () => {
 
 	const babelSource = fs.readFileSync(BABEL_PARSER, "utf8");
 
-	const { parse } = require("../lib/javascript/syntax-parser");
+	const { parseProgram } = require("../lib/javascript/syntax").parser;
 
 	const patterns = PARSE_ERRORS.map((entry) =>
 		parseErrorTemplateRegExp(entry.template)
@@ -2361,8 +2402,7 @@ const collectParseErrorCodes = () => {
 		/** @type {{ message: string, pos: number } | undefined} */
 		let raised;
 		try {
-			parse(probe, {
-				ecmaVersion: "latest",
+			parseProgram(probe, 0, {
 				sourceType,
 				importPhases: entry.importPhases === true
 			});
@@ -2484,8 +2524,9 @@ ${renderNumberTable(
 	"The text fields beyond an identifier's name and a literal's value.",
 	nodeTables.parts
 )}
-// Each node type's fields as \`name:kind:slot\`, in the order its objects hold
-// them; a flag's slot is its \`Flag\` bit, any other field's its place in the record.
+// Each node type's fields as \`name:kind:slot[:from[:last]]\`, in its objects'
+// order: a flag's slot is its \`Flag\` bit, else its place in the record. Acorn's
+// objects hold it from edition \`from\`, after every other field below \`last\`.
 /** @type {Record<string, string>} */
 const NODE_FIELDS = ${JSON.stringify(collectNodeFields(), null, 1)};
 
@@ -2584,9 +2625,10 @@ const writeGenerated = async (target, source) => {
 	// Loaded here, not at the top: tests read this module's tables, and Bun's
 	// worker threads exit when they load prettier.
 	const prettier = require("prettier");
+	const { toLatin1Source } = require("./latin1-source");
 
 	const config = await prettier.resolveConfig(target);
-	const formatted = await prettier.format(source, {
+	const formatted = await prettier.format(toLatin1Source(source), {
 		...config,
 		filepath: target
 	});

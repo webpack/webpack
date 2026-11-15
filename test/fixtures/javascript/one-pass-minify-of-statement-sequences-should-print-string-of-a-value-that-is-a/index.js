@@ -1,0 +1,1 @@
+var x=1,o={toString(){return"t"},valueOf(){return"v"}};var a=String(x+"str"),b=[String("str"+o),String(`a${x}`),String("q")];console.log(a,b,String(x+"s").length,String(x),String(o+"!",2),(function(String){return String(x+"s")})(function(v){return"f"+v}))

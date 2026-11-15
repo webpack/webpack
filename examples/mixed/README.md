@@ -324,7 +324,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -365,7 +365,7 @@ __webpack_require__.e(/*! AMD require */ "require_context_templates_sync_recursi
 # dist/require_context_templates_sync_recursive_js_.output.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["require_context_templates_sync_recursive_js_"],[
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["require_context_templates_sync_recursive_js_"],[
 /* 0 */,
 /* 1 */,
 /* 2 */,
@@ -456,11 +456,11 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 12.5 KiB [emitted] (name: main)
-asset require_context_templates_sync_recursive_js_.output.js 2.29 KiB [emitted]
-chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.22 KiB (runtime) [entry] [rendered]
+asset output.js 12.6 KiB [emitted] (name: main)
+asset require_context_templates_sync_recursive_js_.output.js 2.32 KiB [emitted]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.26 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.22 KiB 8 modules
+  runtime modules 5.26 KiB 8 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [used exports unknown]
@@ -478,11 +478,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.36 KiB [emitted] [minimized] (name: main)
-asset require_context_templates_sync_recursive_js_.output.js 625 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.22 KiB (runtime) [entry] [rendered]
+asset output.js 2.39 KiB [emitted] [minimized] (name: main)
+asset require_context_templates_sync_recursive_js_.output.js 657 bytes [emitted] [minimized]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.26 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.22 KiB 8 modules
+  runtime modules 5.26 KiB 8 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [no exports used]

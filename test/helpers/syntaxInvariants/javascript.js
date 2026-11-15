@@ -5,12 +5,16 @@
 
 "use strict";
 
-const { tokenizer: acornTokenizer } = require("acorn");
-const { parse: webpackParse } = require("../../../lib/javascript/syntax-parser");
+const vm = require("vm");
+const { parse: acornParse } = require("acorn");
+const { isStackOverflow } = require("../fixture");
+const { estree: webpackParse } = require("../javascriptParse");
 const { wantedRespelling } = require("../../../tooling/compare-tools-harness");
 const {
 	cutsAt,
 	hasher,
+	meaningRelation,
+	noticeRelation,
 	oneLine,
 	pathSpanWalk,
 	shrink,
@@ -121,7 +125,7 @@ const goalFor = (source) => {
 	for (const sourceType of GOALS) {
 		// The options a build parses with, so what is held is what ships:
 		// `ranges` is on there, and a range is what this reads.
-		/** @type {import("../../../lib/javascript/syntax-parser").ParserOptions} */
+		/** @type {import("../javascriptParse").EstreeParseOptions} */
 		const options = {
 			sourceType,
 			ecmaVersion: "latest",
@@ -394,6 +398,8 @@ const jsPurityDigest = (source, options, print) => {
 	try {
 		digest.update(print(source));
 	} catch (error) {
+		// Where the stack runs out is the machine's, not the printer's answer.
+		if (isStackOverflow(error)) throw error;
 		digest.update(`print refused: ${/** @type {Error} */ (error).message}`);
 	}
 	return digest.hex();
@@ -477,14 +483,18 @@ const printerFor = (minifySync, options, module) => {
  * @returns {{ label: string, value: string, start: number, end: number }[] | null} its tokens, or null where acorn refuses it
  */
 const tokensOf = (code, module) => {
+	/** @type {import("acorn").Token[]} */
+	const tokens = [];
 	try {
-		return [
-			...acornTokenizer(code, {
-				ecmaVersion: "latest",
-				sourceType: module ? "module" : "script",
-				allowHashBang: true
-			})
-		].map((token) => ({
+		// Read off a parse: the tokenizer alone takes a regexp after `yield`
+		// or a class for a division.
+		acornParse(code, {
+			ecmaVersion: "latest",
+			sourceType: module ? "module" : "script",
+			allowHashBang: true,
+			onToken: tokens
+		});
+		return tokens.map((token) => ({
 			label: token.type.label,
 			// acorn's types leave out the `value` every token carries.
 			value: String(
@@ -513,7 +523,7 @@ const tokenMeaning = (code, module) => {
 };
 
 /**
- * @typedef {{ label: string, text: string, start: number, end: number }} Site
+ * @typedef {{ label: string, text: string, start: number, end: number, directive: boolean }} Site
  */
 
 /**
@@ -578,8 +588,100 @@ const JS_RESPELLINGS = [
 						1
 					)}`
 				: null
+	},
+	{
+		name: "string-escape",
+		// A directive reads its spelling: `'use\x20strict'` is not `use strict`.
+		write: ({ label, text, directive }) =>
+			label === "string" && !directive ? asEscaped(text) : null
+	},
+	{
+		name: "exponent",
+		write: ({ label, text }) => {
+			const match = /^(\d+)\.(\d+)$/.exec(text);
+			if (label !== "num" || match === null) return null;
+			const digits = `${match[1]}${match[2]}`.replace(/^0+(?=\d)/, "");
+			return `${digits}e-${match[2].length}`;
+		}
 	}
 ];
+
+/**
+ * A string with its first ASCII letter outside an escape written as `\xHH`,
+ * which reads as the same character.
+ * @param {string} text a string literal, delimiters included
+ * @returns {string | null} it respelled, or null where it holds no such letter
+ */
+const asEscaped = (text) => {
+	for (let at = 1; at < text.length - 1; at++) {
+		const character = text[at];
+		if (character === "\\") {
+			const next = text[at + 1];
+			if (next === "x") at += 3;
+			else if (next === "u") {
+				at = text[at + 2] === "{" ? text.indexOf("}", at) : at + 5;
+			} else at++;
+			continue;
+		}
+		if (/[A-Za-z]/.test(character)) {
+			const code = character.charCodeAt(0).toString(16);
+			return `${text.slice(0, at)}\\x${code}${text.slice(at + 1)}`;
+		}
+	}
+	return null;
+};
+
+/**
+ * Where each directive of a program starts, read off acorn's tree.
+ * @param {string} code a program
+ * @param {boolean} module whether it is a module
+ * @returns {Set<number>} the start of each directive's string
+ */
+const directiveStarts = (code, module) => {
+	/** @type {Set<number>} */
+	const starts = new Set();
+	if (!/["']/.test(code)) return starts;
+	/** @type {EXPECTED_ANY[]} */
+	const stack = [
+		acornParse(code, {
+			ecmaVersion: "latest",
+			sourceType: module ? "module" : "script",
+			allowHashBang: true
+		})
+	];
+	while (stack.length > 0) {
+		const node = stack.pop();
+		if (node.directive !== undefined) starts.add(node.expression.start);
+		// One at a time: a program's statements can outnumber what a call takes.
+		for (const child of childNodesOf(node)) stack.push(child);
+	}
+	return starts;
+};
+
+/**
+ * The respellings in groups that write no site in common, so one minify of a
+ * program respelled by every member of a group asks them all.
+ * @param {Respelling[]} respellings the respellings asked
+ * @param {Site[]} sites every site of the program
+ * @returns {Respelling[][]} the groups, in the order their first member is asked
+ */
+const disjointGroups = (respellings, sites) => {
+	/** @type {{ members: Respelling[], written: Set<Site> }[]} */
+	const groups = [];
+	for (const respelling of respellings) {
+		const written = sites.filter((site) => respelling.write(site) !== null);
+		let group = groups.find(
+			(one) => !written.some((site) => one.written.has(site))
+		);
+		if (group === undefined) {
+			group = { members: [], written: new Set() };
+			groups.push(group);
+		}
+		group.members.push(respelling);
+		for (const site of written) group.written.add(site);
+	}
+	return groups.map((group) => group.members);
+};
 
 /**
  * @param {string} code a program
@@ -663,33 +765,39 @@ const sweepRespellings = (minify, code, module, minified) => {
 	const reports = [];
 	const tokens = tokensOf(code, module);
 	if (tokens === null) return reports;
+	const directives = directiveStarts(code, module);
 	/** @type {Site[]} */
 	const sites = tokens.map((token) => ({
 		label: token.label,
 		text: code.slice(token.start, token.end),
 		start: token.start,
-		end: token.end
+		end: token.end,
+		directive: directives.has(token.start)
 	}));
-	const respellings = JS_RESPELLINGS.filter((one) =>
-		wantedRespelling(one.name)
-	);
-	// No site is one two respellings write, so all of them at once cost one
-	// minify, and only a program that moves pays one per respelling.
-	/** @type {Respelling} */
-	const every = {
-		name: "every",
-		write: (site) => {
-			for (const respelling of respellings) {
-				const written = respelling.write(site);
-				if (written !== null) return written;
+	// Each group at once costs one minify, and only a program that moves pays
+	// one per respelling of the group.
+	/** @type {Respelling[]} */
+	const moving = [];
+	for (const group of disjointGroups(
+		JS_RESPELLINGS.filter((one) => wantedRespelling(one.name)),
+		sites
+	)) {
+		/** @type {Respelling} */
+		const every = {
+			name: "every",
+			write: (site) => {
+				for (const respelling of group) {
+					const written = respelling.write(site);
+					if (written !== null) return written;
+				}
+				return null;
 			}
-			return null;
+		};
+		if (spellingFinding(minify, code, module, minified, sites, every) !== null) {
+			moving.push(...group);
 		}
-	};
-	if (spellingFinding(minify, code, module, minified, sites, every) === null) {
-		return reports;
 	}
-	for (const respelling of respellings) {
+	for (const respelling of moving) {
 		const touched = sites.filter((site) => respelling.write(site) !== null);
 		if (touched.length === 0) continue;
 		/**
@@ -742,19 +850,544 @@ const isModule = (source) => {
 	return goal === null ? null : goal.sourceType === "module";
 };
 
+// What `jsMeaning` leaves out of a node: its range and how its literal or
+// number was spelled.
+const SPELLING_KEYS = new Set([...NOT_CHILD_KEYS, "raw", "bigint"]);
+
+// The statements whose body a block of one statement means the same as, and
+// the keys that body sits under.
+const BODY_KEYS = new Map([
+	["IfStatement", new Set(["consequent", "alternate"])],
+	["ForStatement", new Set(["body"])],
+	["ForInStatement", new Set(["body"])],
+	["ForOfStatement", new Set(["body"])],
+	["WhileStatement", new Set(["body"])],
+	["DoWhileStatement", new Set(["body"])],
+	["LabeledStatement", new Set(["body"])],
+	["WithStatement", new Set(["body"])]
+]);
+
+// The keys holding a statement list, whose empty statements say nothing.
+const STATEMENT_LISTS = new Set(["body", "consequent"]);
+
+/**
+ * @param {EXPECTED_ANY} statement a statement
+ * @returns {boolean} whether a block around it scopes what it declares
+ */
+const declaresInBlock = (statement) =>
+	statement.type === "FunctionDeclaration" ||
+	statement.type === "ClassDeclaration" ||
+	(statement.type === "VariableDeclaration" && statement.kind !== "var");
+
+/**
+ * @param {EXPECTED_ANY} node a node
+ * @returns {boolean} whether it is `1/0`, the printer's spelling of Infinity
+ */
+const isOneOverZero = (node) =>
+	node.type === "BinaryExpression" &&
+	node.operator === "/" &&
+	node.left.type === "Literal" &&
+	node.left.value === 1 &&
+	node.right.type === "Literal" &&
+	node.right.value === 0;
+
+/**
+ * The name a key or member stands for, where it is a plain name however it is
+ * written: `a`, `"a"` and `["a"]` name the same property.
+ * @param {EXPECTED_ANY} key a key, a member's property or a specifier's name
+ * @returns {string | null} the name, or null where an expression computes it
+ */
+const nameOf = (key) => {
+	if (key.type === "Identifier") return key.name;
+	if (isOneOverZero(key)) return "Infinity";
+	return key.type === "Literal" && key.regex === undefined
+		? String(key.value)
+		: null;
+};
+
+/**
+ * One node as what it means: its type and every value it carries, its range and
+ * spelling set aside, so a source and its print read alike where they mean the
+ * same.
+ *
+ * WHY: the printer writes several trees one way, each meaning what the other
+ * does: a quoted or computed key as a name, `1e500` as `1/0`, `(a,(b,c))` as
+ * `a,b,c`, `() => { return a }` as `() => a`, a lone statement's block as the
+ * statement, a regexp's flags sorted. Each is read here as the form it means.
+ * @param {EXPECTED_ANY} node an ESTree node
+ * @param {EXPECTED_ANY} parent the node holding it, null for the program
+ * @param {string} key the key it sits under
+ * @param {WeakSet<object>} tagged the template literals a tag reads raw
+ * @returns {string} what it means
+ */
+const nodeMeaning = (node, parent, key, tagged) => {
+	if (node === null) return "null";
+	// Read under `preserveParens`, a parenthesis is spelling too.
+	if (node.type === "ParenthesizedExpression") {
+		return nodeMeaning(node.expression, parent, key, tagged);
+	}
+	const bodyKeys = parent === null ? undefined : BODY_KEYS.get(parent.type);
+	if (
+		node.type === "BlockStatement" &&
+		bodyKeys !== undefined &&
+		bodyKeys.has(key)
+	) {
+		const kept = node.body.filter(
+			(/** @type {EXPECTED_ANY} */ one) => one.type !== "EmptyStatement"
+		);
+		if (kept.length === 0) return "(EmptyStatement)";
+		if (kept.length === 1 && !declaresInBlock(kept[0])) {
+			return nodeMeaning(kept[0], parent, key, tagged);
+		}
+	}
+	if (isOneOverZero(node)) return "(Literal value=Infinity)";
+	if (
+		node.type === "BinaryExpression" &&
+		node.operator === "/" &&
+		node.left.type === "UnaryExpression" &&
+		node.left.operator === "-" &&
+		isOneOverZero({ ...node, left: node.left.argument })
+	) {
+		const infinity = { type: "Literal", value: Infinity };
+		return nodeMeaning(
+			{ type: "UnaryExpression", operator: "-", prefix: true, argument: infinity },
+			parent,
+			key,
+			tagged
+		);
+	}
+	if (node.type === "Literal" && node.regex !== undefined) {
+		// The printer escapes a NUL the source wrote raw or as `\<NUL>`, and drops
+		// the escape of a `/` in a class or of a non-ASCII character (Annex B's
+		// identity escape), neither of which needs one.
+		const pattern = node.regex.pattern.replace(
+			/\\([\s\S])|\0(?![0-9])/g,
+			/**
+			 * @param {string} written the escape or NUL as written
+			 * @param {string | undefined} escaped what a backslash escapes
+			 * @returns {string} the spelling the printer gives it
+			 */
+			(written, escaped) =>
+				escaped === undefined || escaped === "\0"
+					? "\\0"
+					: escaped === "/" || escaped.charCodeAt(0) > 0x7f
+						? escaped
+						: written
+		).replace(
+			/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g,
+			/**
+			 * A lone surrogate prints as its `\u` escape, which names the same.
+			 * @param {string} lone the surrogate
+			 * @returns {string} its escape
+			 */
+			(lone) => `\\u${lone.charCodeAt(0).toString(16)}`
+		);
+		const flags = node.regex.flags.split("").sort().join("");
+		return `(Literal regex=${JSON.stringify(pattern)} flags=${flags})`;
+	}
+	if (node.type === "SequenceExpression") {
+		/** @type {EXPECTED_ANY[]} */
+		const flat = [];
+		/**
+		 * @param {EXPECTED_ANY} one an expression of the sequence
+		 * @returns {void}
+		 */
+		const add = (one) => {
+			if (one.type === "SequenceExpression") one.expressions.forEach(add);
+			else flat.push(one);
+		};
+		node.expressions.forEach(add);
+		return `(SequenceExpression ${flat
+			.map((one) => nodeMeaning(one, node, "expressions", tagged))
+			.join(" ")})`;
+	}
+	if (
+		node.type === "ArrowFunctionExpression" &&
+		!node.expression &&
+		node.body.body.length === 1 &&
+		node.body.body[0].type === "ReturnStatement" &&
+		node.body.body[0].argument !== null
+	) {
+		return nodeMeaning(
+			{ ...node, expression: true, body: node.body.body[0].argument },
+			parent,
+			key,
+			tagged
+		);
+	}
+	if (
+		/^(?:Arrow)?Function(?:Declaration|Expression)$/.test(node.type) &&
+		!node.expression
+	) {
+		const list = node.body.body;
+		const last = list[list.length - 1];
+		// A bare `return` ending a function returns what its end would.
+		if (last && last.type === "ReturnStatement" && last.argument === null) {
+			return nodeMeaning(
+				{ ...node, body: { ...node.body, body: list.slice(0, -1) } },
+				parent,
+				key,
+				tagged
+			);
+		}
+	}
+	// An anonymous class exported as the default has the same name either way;
+	// only the declaration of a named one binds its name in the module.
+	if (
+		node.type === "ExportDefaultDeclaration" &&
+		node.declaration.type === "ClassExpression" &&
+		node.declaration.id === null
+	) {
+		return nodeMeaning(
+			{ ...node, declaration: { ...node.declaration, type: "ClassDeclaration" } },
+			parent,
+			key,
+			tagged
+		);
+	}
+	if (node.type === "TaggedTemplateExpression") tagged.add(node.quasi);
+	const keyed =
+		/^(?:Property|MethodDefinition|PropertyDefinition|ImportAttribute)$/.test(
+			node.type
+		);
+	let out = `(${node.type}`;
+	for (const field of Object.keys(node)) {
+		if (SPELLING_KEYS.has(field)) continue;
+		const value = node[field];
+		if (field === "directive") {
+			// Of every directive, only `use strict` does anything.
+			if (value === "use strict") out += " use-strict";
+			continue;
+		}
+		if (keyed && (field === "shorthand" || field === "computed")) continue;
+		if (node.type === "MemberExpression" && field === "computed") continue;
+		if (
+			(keyed && field === "key") ||
+			(node.type === "MemberExpression" && field === "property") ||
+			(/Specifier$/.test(node.type) && value !== null)
+		) {
+			const name =
+				node.computed && value.type !== "Literal" && !isOneOverZero(value)
+					? null
+					: nameOf(value);
+			if (name !== null) {
+				out += ` ${field}=${JSON.stringify(name)}${keyMarker(node, parent, name)}`;
+				continue;
+			}
+		}
+		if (value === null || typeof value !== "object") {
+			out += ` ${field}=${
+				typeof value === "string"
+					? JSON.stringify(value)
+					: `${String(value)}${typeof value === "bigint" ? "n" : ""}`
+			}`;
+		} else if (Array.isArray(value)) {
+			const items = STATEMENT_LISTS.has(field)
+				? value.filter(
+						(/** @type {EXPECTED_ANY} */ one) =>
+							one === null || one.type !== "EmptyStatement"
+					)
+				: value;
+			out += ` ${field}[${items
+				.map((/** @type {EXPECTED_ANY} */ one) =>
+					nodeMeaning(one, node, field, tagged)
+				)
+				.join(" ")}]`;
+		} else if (typeof value.type === "string") {
+			out += ` ${field}:${nodeMeaning(value, node, field, tagged)}`;
+		} else {
+			for (const inner of Object.keys(value)) {
+				// An untagged template's raw text is spelling: only a tag reads it.
+				if (inner === "raw" && !tagged.has(parent)) continue;
+				out += ` ${field}.${inner}=${JSON.stringify(String(value[inner]))}`;
+			}
+		}
+	}
+	return `${out})`;
+};
+
+/**
+ * What a plain key means beyond its name: in an object literal `__proto__: v`
+ * sets the prototype where every other spelling defines a property, and in a
+ * class a computed `constructor` or `prototype` is a member like any other.
+ * @param {EXPECTED_ANY} node the property, method or field
+ * @param {EXPECTED_ANY} parent what holds it
+ * @param {string} name the name its key stands for
+ * @returns {string} the marker, empty where the name says it all
+ */
+const keyMarker = (node, parent, name) => {
+	if (
+		node.type === "Property" &&
+		parent.type === "ObjectExpression" &&
+		name === "__proto__" &&
+		!node.computed &&
+		!node.shorthand &&
+		!node.method &&
+		node.kind === "init"
+	) {
+		return " sets-prototype";
+	}
+	if (
+		node.type !== "Property" &&
+		node.computed &&
+		(name === "constructor" || name === "prototype")
+	) {
+		return " computed";
+	}
+	return "";
+};
+
+/**
+ * What a program means, as webpack's parser reads it under one goal.
+ * @param {string} code a program
+ * @param {EXPECTED_ANY} options what to parse it as
+ * @returns {string | null} its meaning, or null where it does not parse
+ */
+const jsMeaning = (code, options) => {
+	/** @type {EXPECTED_ANY} */
+	let root;
+	try {
+		root = webpackParse(code, options);
+	} catch (_error) {
+		return null;
+	}
+	return nodeMeaning(root, null, "", new WeakSet());
+};
+
+// The last source read for `meaning`, under which options, and what it
+// means: two presets ask it.
+/** @type {string | undefined} */
+let lastMeaningSource;
+/** @type {EXPECTED_ANY} */
+let lastMeaningOptions;
+/** @type {string | null} */
+let lastMeaning = null;
+
+/**
+ * Whether a program printed alone means what its source does (`meaning`): a
+ * compressing print changes the tree by contract, so only `behavior` and
+ * `notices` hold it.
+ * @param {string} source the program
+ * @param {string} printed what the preset printed of it
+ * @param {EXPECTED_ANY} options what both are parsed as
+ * @returns {import("./relations").Report[]} what it means otherwise
+ */
+const meaningReports = (source, printed, options) => {
+	if (source !== lastMeaningSource || options !== lastMeaningOptions) {
+		lastMeaningSource = source;
+		lastMeaningOptions = options;
+		lastMeaning = jsMeaning(source, options);
+	}
+	if (lastMeaning === null) return [];
+	return meaningRelation(lastMeaning, jsMeaning(printed, options));
+};
+
+// The comments terser and webpack's printer both keep: a `/*!` or `//!`
+// notice, and one naming `@license` or `@preserve`.
+const LEGAL_NOTICE = /^\**!|@license|@preserve/i;
+
+/**
+ * The legal notices a program carries, read by acorn. A compressing print
+ * owes only its banner, the notices before its first token: one inside code
+ * the compressor removes goes with that code, as terser drops it too.
+ * @param {boolean} module whether the text is a module
+ * @param {boolean} banner whether only the notices before the first token count
+ * @returns {(code: string) => number | null} how many a program carries, null where acorn refuses it
+ */
+const legalNotices = (module, banner) => (code) => {
+	/** @type {number[]} */
+	const ends = [];
+	let first = Infinity;
+	try {
+		acornParse(code, {
+			ecmaVersion: "latest",
+			sourceType: module ? "module" : "script",
+			allowHashBang: true,
+			onComment: (block, text, start, end) => {
+				if (LEGAL_NOTICE.test(text)) ends.push(end);
+			},
+			onToken: (token) => {
+				if (first === Infinity) first = token.start;
+			}
+		});
+	} catch (_error) {
+		return null;
+	}
+	return banner ? ends.filter((end) => end <= first).length : ends.length;
+};
+
+// The scripts `behavior` runs: short enough that a run costs little, and
+// bounded so one that loops is skipped rather than hanging the sweep.
+const BEHAVIOR_MAX_LENGTH = 20000;
+const BEHAVIOR_TIMEOUT = 200;
+// The most wall time a run short of the machine is given: with the tries
+// before it, 17 s, inside the 30 s a test may take.
+const BEHAVIOR_MAX_WAIT = 12800;
+// The CPU time this thread has spent, which a machine busy elsewhere or paused
+// does not add to; Node.js before 23.9 reads only the whole process's.
+const cpuTime =
+	typeof process.threadCpuUsage === "function"
+		? () => process.threadCpuUsage()
+		: () => process.cpuUsage();
+// Every run reads the same clock and random numbers, so a script reading them
+// still answers for its printed form.
+const BEHAVIOR_PRELUDE =
+	"Math.random = () => 0.5;" +
+	"Date = new Proxy(Date, { construct: (D, a) => new D(...(a.length ? a : [0])), apply: (D) => String(new D(0)) });" +
+	"Date.now = () => 0;";
+
+/**
+ * An `import()` the run makes stays pending: no module can be loaded, and a
+ * rejection nothing handles would end the test worker.
+ * @returns {Promise<never>} a promise that never settles
+ */
+const importNothing = () => new Promise(() => {});
+
+/**
+ * One run of a script, in a context of its own, for {@link behaviorOf}.
+ * @param {string} code the script
+ * @param {number} timeout how long it may run, in milliseconds of wall time
+ * @returns {string | null} its transcript, null where it timed out
+ */
+const runBehavior = (code, timeout) => {
+	/** @type {string[]} */
+	const lines = [];
+	/**
+	 * @param {unknown} value a logged value
+	 * @returns {string} it, as the transcript holds it
+	 */
+	const show = (value) =>
+		typeof value === "function" ? "[function]" : String(value);
+	const context = vm.createContext({
+		console: {
+			log: (/** @type {unknown[]} */ ...values) =>
+				lines.push(values.map(show).join(" "))
+		}
+	});
+	vm.runInContext(BEHAVIOR_PRELUDE, context);
+	try {
+		vm.runInContext(code, context, {
+			timeout,
+			importModuleDynamically: importNothing
+		});
+	} catch (error) {
+		try {
+			const isObject = error !== null && typeof error === "object";
+			const {
+				code: reason,
+				name,
+				message
+			} = /** @type {{ code?: unknown, name?: unknown, message?: unknown }} */ (
+				isObject ? error : {}
+			);
+			if (reason === "ERR_SCRIPT_EXECUTION_TIMEOUT") return null;
+			const kind = typeof name === "string" ? name : typeof error;
+			// JavaScriptCore quotes the failing source text, which a printer may
+			// rewrite, as `(evaluating '…')` and as the operand `in` refuses
+			// (`010 is not an Object.`); V8 writes neither.
+			const value =
+				typeof message === "string"
+					? message
+							.replace(
+								/^[\s\S]* (is not an Object\.) \(evaluating '[\s\S]*'\)$/,
+								"$1"
+							)
+							.replace(/ \(evaluating '[\s\S]*'\)$/, "")
+					: isObject
+						? ""
+						: show(error);
+			lines.push(`threw <${kind}>${value ? ` ${value}` : ""}`);
+		} catch (_error) {
+			// A thrown object whose own properties throw when read.
+			lines.push("threw <unreadable>");
+		}
+	}
+	return lines.join("\n");
+};
+
+/**
+ * What a script prints and, where it throws, the error's kind and message or the
+ * thrown value, run in a fresh context: a function prints as `[function]`, as
+ * its text is the printer's.
+ * @param {string} code the script
+ * @returns {string | null} its transcript, null where it loops
+ */
+const behaviorOf = (code) => {
+	let wait = BEHAVIOR_TIMEOUT;
+	for (;;) {
+		const start = cpuTime();
+		const transcript = runBehavior(code, wait);
+		if (transcript !== null) return transcript;
+		const end = cpuTime();
+		const spent = (end.user - start.user + end.system - start.system) / 1000;
+		// WHY: `timeout` is wall time, which a loaded or paused machine spends on
+		// other work. A run that spent under half of it on its own ran short of
+		// the machine, not of time, so it runs again for longer.
+		if (spent >= BEHAVIOR_TIMEOUT / 2 || wait >= BEHAVIOR_MAX_WAIT) return null;
+		wait *= 4;
+	}
+};
+
+// The last source run and its transcript: every preset asks of the same source.
+/** @type {string | undefined} */
+let lastSource;
+/** @type {string | null} */
+let lastExpected = null;
+
+/**
+ * Whether a printed script still prints and throws what its source does.
+ * @param {string} source the script
+ * @param {string} printed what the printer wrote of it
+ * @returns {import("./relations").Report[] | null} what differs, empty where it runs the same, null where it was not run
+ */
+const behaviorDifference = (source, printed) => {
+	if (source.length > BEHAVIOR_MAX_LENGTH) return null;
+	if (source !== lastSource) {
+		lastSource = source;
+		lastExpected = behaviorOf(source);
+		// A script whose two runs differ answers for nothing.
+		if (lastExpected !== null && behaviorOf(source) !== lastExpected) {
+			lastExpected = null;
+		}
+	}
+	const expected = lastExpected;
+	if (expected === null) return null;
+	const got = behaviorOf(printed);
+	if (got === expected) return [];
+	return [
+		{
+			relation: "behavior",
+			what: got === null ? "times out" : "runs otherwise",
+			repro: `    ${oneLine(expected, 80)}\n      -> ${
+				got === null ? "<timeout>" : oneLine(got, 80)
+			}`
+		}
+	];
+};
+
 /** @type {import("./index").SyntaxInvariants} */
 const invariants = {
 	printers: (source) => {
 		const module = isModule(source);
 		// Read as a build reads it, at the latest edition.
 		if (module === null || !parsesAsLatest(source, module)) return [];
+		const goal = goalFor(source);
 		return PRESETS.map(([name, options]) => {
 			const { minify, reprint } = printerFor(minifyOnePass, options, module);
+			const alone = options.compress === false;
+			const notices = legalNotices(module, !alone);
 			return {
 				name,
 				minify,
 				reprint,
-				says: (text) => tokenMeaning(text, module)
+				says: (text) => tokenMeaning(text, module),
+				// Compressed or renamed, what a script observes may change by
+				// contract; printed alone, nothing it does may.
+				keeps: (text, printed) => [
+					...noticeRelation(notices, text, printed),
+					...(alone ? meaningReports(text, printed, goal) : []),
+					...((!module && alone && behaviorDifference(text, printed)) || [])
+				]
 			};
 		});
 	},
@@ -787,10 +1420,14 @@ module.exports = {
 	JS_CUTS,
 	JS_RESPELLINGS,
 	PRESETS,
+	behaviorDifference,
 	goalFor,
+	jsMeaning,
 	jsPurityDigest,
 	jsSlices,
 	jsSpans,
+	legalNotices,
+	meaningReports,
 	minifyOnePass,
 	parsesAsLatest,
 	printerFor,

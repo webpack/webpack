@@ -1,0 +1,95 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {
+				"cache": {
+					"props": {}
+				}
+			}
+		},
+		"nameCache": {
+			"props": {
+				"props": {
+					"$zFoo": "zQux",
+					"$zQux": "o"
+				}
+			},
+			"vars": {
+				"props": {}
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {
+				"only_cache": true
+			}
+		},
+		"nameCache": {
+			"props": {
+				"props": {
+					"$zFoo": "q"
+				}
+			},
+			"vars": {
+				"props": {}
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {
+				"debug": true,
+				"reserved": [
+					"_$zFoo$_"
+				]
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {
+				"cache": {
+					"props": {}
+				}
+			}
+		},
+		"nameCache": {
+			"props": {
+				"props": {
+					"$zFoo": "o",
+					"$zQux": "l"
+				}
+			},
+			"vars": {
+				"props": {}
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": true
+		},
+		"nameCache": {
+			"vars": {
+				"props": {}
+			},
+			"props": {
+				"props": {
+					"$zFoo": "o",
+					"$zQux": "l"
+				}
+			}
+		}
+	}
+]

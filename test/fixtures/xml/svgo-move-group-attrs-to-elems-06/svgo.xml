@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g transform="translate(0 -140)">
+        <path id="c" transform="scale(.5)" d="M0,0 L10,20"/>
+    </g>
+    <use xlink:href="#c" transform="translate(-140)"/>
+</svg>

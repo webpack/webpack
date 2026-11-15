@@ -1,0 +1,1 @@
+function f(x){var g=()=>C;if(x)return;class C{}return g()}

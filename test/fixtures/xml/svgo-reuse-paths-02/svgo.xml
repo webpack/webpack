@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <path d="M 10,50 l 20,30 L 20,30" id="test0"/>
+        <path stroke="blue" d="M 10,50 l 20,30 L 20,30" id="test2"/>
+    </defs>
+    <use xlink:href="#test0"/>
+    <path id="test1" stroke="red" d="M 10,50 l 20,30 L 20,30"/>
+    <use xlink:href="#test2"/>
+    <use id="test3" xlink:href="#test0"/>
+    <use id="test4" xlink:href="#test2"/>
+    <path id="test1" stroke="red" fill="green" d="M 10,50 l 20,30 L 20,30"/>
+</svg>

@@ -1,0 +1,10 @@
+[
+	{
+		"options": {
+			"fragmentContext": "svg path"
+		},
+		"check": {
+			"fixture": "fragmentTree"
+		}
+	}
+]

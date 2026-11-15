@@ -1,0 +1,1 @@
+class C{static{for(;;)break;g()}}

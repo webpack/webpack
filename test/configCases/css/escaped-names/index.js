@@ -66,3 +66,11 @@ it("should scope an escaped custom property with its use", () => {
 	}
 	expect(css()).toContain(`@property ${styles.four}`);
 });
+
+it("should keep the space after a name ending in an escape", () => {
+	expect(styles["fade\u0001"]).toBe("_fade\u0001");
+	expect(css()).toContain("@keyframes _fade\\1  {");
+	expect(valueOf(styles["escape-at-name-end"], "animation")).toBe(
+		"_fade\\1  linear"
+	);
+});

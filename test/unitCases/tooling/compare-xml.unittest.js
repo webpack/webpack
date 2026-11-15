@@ -90,9 +90,23 @@ describe("the XML tool comparison", () => {
 		}
 		expect(mockOptimize.mock.calls).toEqual([
 			["<svg/>", { multipass: false }],
-			["<svg/>", { multipass: true }]
+			["<svg/>", { multipass: true }],
+			[
+				"<svg/>",
+				{
+					multipass: true,
+					plugins: [
+						{
+							name: "preset-default",
+							params: {
+								overrides: { cleanupIds: false, removeHiddenElems: false }
+							}
+						}
+					]
+				}
+			]
 		]);
-		expect(mockLoad.mock.calls).toEqual([["svgo"], ["svgo"]]);
+		expect(mockLoad.mock.calls).toEqual([["svgo"], ["svgo"], ["svgo"]]);
 	});
 
 	it("should reuse parsed entity-backed attribute values in its canonical form", () => {
@@ -390,5 +404,43 @@ describe("the XML tool comparison — the entities a DTD declares", () => {
 				await agreement("@rgrove/parse-xml", TREE_READERS, xml)("webpack")
 			).toBe(`could not compare: @rgrove/parse-xml rejects it: ${error}`);
 		}
+	});
+});
+
+describe("the XML tool comparison — SVG presets", () => {
+	it("should compare opt-in SVG data removal without removing accessible text", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><title>Keep</title><metadata>Optional</metadata><style>path { fill: #ff0000 }</style></svg>';
+		const [tool] = toolsFor("minify", source).filter((tool) => tool.name === "webpack (SVG data removal)");
+		const minify = await tool.create();
+		const once = await minify(source);
+		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><title>Keep</title><style>path{fill:red}</style></svg>');
+		expect(await minify(once)).toBe(once);
+	});
+
+	it("should compare namespace and empty-attribute cleanup with CSS rendering", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape" e:label="editor"><metadata>Optional</metadata><g class="" style="/* empty */"/></svg>';
+		const [tool] = toolsFor("minify", source).filter((tool) => tool.name === "webpack (SVG attribute cleanup)");
+		const minify = await tool.create();
+		const once = await minify(source);
+		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><g/></svg>');
+		expect(await minify(once)).toBe(once);
+	});
+
+	it("should compare whitespace cleanup without changing SVG text spacing", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg">\n <g> </g><text> A  <tspan> B </tspan> C </text>\n</svg>';
+		const [tool] = toolsFor("minify", source).filter((tool) => tool.name === "webpack (SVG whitespace cleanup)");
+		const minify = await tool.create();
+		const once = await minify(source);
+		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><g/><text> A  <tspan> B </tspan> C </text></svg>');
+		expect(await minify(once)).toBe(once);
+	});
+
+	it("should compare lossless geometry cleanup with embedded CSS rendering", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 0010.000 0020.000">\n<style>polygon { fill: #ff0000 }</style><polygon points="+001.00, 0002.000 003.000, 004.000"/>\n</svg>';
+		const [tool] = toolsFor("minify", source).filter((tool) => tool.name === "webpack (SVG numeric cleanup)");
+		const minify = await tool.create();
+		const once = await minify(source);
+		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 20"><style>polygon{fill:red}</style><polygon points="1 2 3 4"/></svg>');
+		expect(await minify(once)).toBe(once);
 	});
 });

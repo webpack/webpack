@@ -1,0 +1,1 @@
+x=[[1,2].concat(1).concat(2,["a"]),[].concat([],[3],[]),[].concat(1,y),[].concat(1,...y),[].concat(),[1].concat(2).length,[].concat(1).concat([2,3]).join("-")];[1].concat(2)

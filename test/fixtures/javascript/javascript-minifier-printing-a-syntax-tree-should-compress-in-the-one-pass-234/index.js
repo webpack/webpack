@@ -1,0 +1,1 @@
+f(!(a==b||c==d));f(!(a&&b));f(!(a==b||g(c)));f(!(x&&!(a||b)));x=!(a==b||c==d)&&e;x=!(a==b&&c==d)&&e;x=!(a==b&&c==d)||e;x=e??!(a==b||c==d);x=-!(a==b||c==d);x=!(a==b||c==d)?1:2;x=!(a||b)?c:d;f(!(!a||b));while(!(!x&&!y))g();for(;!(a||b);)g();if(!(a==b||c==d))throw x

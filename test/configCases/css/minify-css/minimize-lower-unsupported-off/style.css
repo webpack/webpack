@@ -1,0 +1,28 @@
+/*! a hex alpha, which the target reads only as `rgba()` */
+.t01 { color: #7bffff80 }
+/*! transparent black, which the keyword names in fewer bytes */
+.t02 { color: #0000 }
+/*! a media range, which the target reads only as `min-` / `max-` */
+@media (480px <= width <= 768px) { .t03 { color: red } }
+/*! a shorthand the target does not have, written as its longhands */
+.t04 { place-items: center start }
+.t05 { overflow: hidden auto }
+.t06 { inset: 1px 2px }
+/*! a two-position color stop, written as the two stops it names */
+.t07 { background-image: linear-gradient(green, red 30% 40%, pink) }
+/*! a multi-keyword `display`, written as the one keyword naming the box */
+.t08 { display: inline flex }
+/*! a Lab-family color, with the color it names written before it */
+.t09 { color: oklch(59.686% 0.15619 49.7694) }
+/*! ...and `hwb()`, which shipped before the Lab family */
+.t10 { background-color: hwb(120 20% 30%) }
+/*! a `color()`, which the target reads only as the sRGB it names */
+.t11 { color: color(a98-rgb 0.44091 0.49971 0.37408) }
+/*! `system-ui`, which the target reaches only by each platform's own name */
+.t12 { font-family: system-ui }
+/*! a `text-decoration` naming more than its line, written as longhands */
+.t13 { text-decoration: underline 2px dotted red }
+/*! a `color-mix()`, evaluated where every component is known */
+.t14 { color: color-mix(in hsl, hsl(120deg 10% 20%) 25%, hsl(30deg 30% 40%)) }
+/*! a relative color, resolved against the origin it names */
+.t15 { color: rgb(from rebeccapurple r calc(g * 2) b) }

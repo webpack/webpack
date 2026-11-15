@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html css-modules-loader exported tests should generate the page 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<style module>/*!****************************************************************************************************************************************************************!*\\\\
+  !*** css data:text/css;base64,Ci5jYXJkIHsgY29sb3I6IF9fTU9EVUxFX187IGJhY2tncm91bmQ6IF9fQU5ZX187IH0KX19HRU5FUkFURURfXyB7IGNvbG9yOiByZWQ7IH0K (exportType: text) ***!
+  \\\\****************************************************************************************************************************************************************/
+/* MODULE */
+/* GENERATED */
+/* ANY */
+
+.m_card { color: teal; background: inherit; }
+.m_generated { color: red; }
+</style>
+<style module lang=\\"scss\\">/*!*******************************************************************************************************************************************************************************!*\\\\
+  !*** css data:text/x-scss;base64,CiRzaXplOiA0cHg7IC5iYWRnZSB7IG1hcmdpbjogJHNpemU7IGNvbG9yOiBfX01PRFVMRV9fOyBib3JkZXItY29sb3I6IF9fU0NTU19NT0RVTEVfXzsgfQo= (exportType: text) ***!
+  \\\\*******************************************************************************************************************************************************************************/
+/* MODULE */
+/* GENERATED */
+/* SCSS_MODULE */
+/* ANY */
+
+ .m_badge { margin: 4px; color: teal; border-color: navy; }
+</style>
+<style>/*!************************************************************************************************************************!*\\\\
+  !*** css data:text/css;base64,Ci5wbGFpbiB7IGNvbG9yOiBfX1BMQUlOX187IGJhY2tncm91bmQ6IF9fQU5ZX187IH0K (exportType: text) ***!
+  \\\\************************************************************************************************************************/
+/* PLAIN */
+/* ANY */
+
+.plain { color: gray; background: inherit; }
+</style>
+</head>
+<body>
+<div class=\\"m_card m_generated m_badge plain\\">one</div>
+</body>
+</html>
+"
+`;

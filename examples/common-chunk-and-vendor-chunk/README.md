@@ -78,7 +78,7 @@ module.exports = config;
 # dist/vendor.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["vendor"],{
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["vendor"],{
 
 /***/ 1
 /*!*********************************!*\
@@ -112,7 +112,7 @@ module.exports = "vendor2";
 # dist/commons-utility2_js.js
 
 ``` javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["commons-utility2_js"],{
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["commons-utility2_js"],{
 
 /***/ 3
 /*!*********************!*\
@@ -133,7 +133,7 @@ module.exports = "utility2";
 # dist/commons-utility3_js.js
 
 ``` javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["commons-utility3_js"],{
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["commons-utility3_js"],{
 
 /***/ 6
 /*!*********************!*\
@@ -300,7 +300,7 @@ module.exports = "utility1";
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -460,7 +460,7 @@ module.exports = "pageB";
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -618,7 +618,7 @@ module.exports = "pageC";
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -645,16 +645,16 @@ module.exports = "pageC";
 ## Unoptimized
 
 ```
-assets by chunk 744 bytes (id hint: commons)
-  asset commons-utility2_js.js 372 bytes [emitted] (id hint: commons)
-  asset commons-utility3_js.js 372 bytes [emitted] (id hint: commons)
-asset pageA.js 5.66 KiB [emitted] (name: pageA)
-asset pageB.js 5.38 KiB [emitted] (name: pageB)
-asset pageC.js 5.31 KiB [emitted] (name: pageC)
-asset vendor.js 713 bytes [emitted] (name: vendor) (id hint: vendor)
-Entrypoint pageA 6.72 KiB = vendor.js 713 bytes commons-utility2_js.js 372 bytes pageA.js 5.66 KiB
-Entrypoint pageB 6.8 KiB = vendor.js 713 bytes commons-utility2_js.js 372 bytes commons-utility3_js.js 372 bytes pageB.js 5.38 KiB
-Entrypoint pageC 6.04 KiB = commons-utility2_js.js 372 bytes commons-utility3_js.js 372 bytes pageC.js 5.31 KiB
+assets by chunk 822 bytes (id hint: commons)
+  asset commons-utility2_js.js 411 bytes [emitted] (id hint: commons)
+  asset commons-utility3_js.js 411 bytes [emitted] (id hint: commons)
+asset pageA.js 5.7 KiB [emitted] (name: pageA)
+asset pageB.js 5.41 KiB [emitted] (name: pageB)
+asset pageC.js 5.35 KiB [emitted] (name: pageC)
+asset vendor.js 752 bytes [emitted] (name: vendor) (id hint: vendor)
+Entrypoint pageA 6.83 KiB = vendor.js 752 bytes commons-utility2_js.js 411 bytes pageA.js 5.7 KiB
+Entrypoint pageB 6.95 KiB = vendor.js 752 bytes commons-utility2_js.js 411 bytes commons-utility3_js.js 411 bytes pageB.js 5.41 KiB
+Entrypoint pageC 6.16 KiB = commons-utility2_js.js 411 bytes commons-utility3_js.js 411 bytes pageC.js 5.35 KiB
 chunk (runtime: pageA, pageB, pageC) commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
   > ./pageA pageA
   > ./pageB pageB
@@ -673,24 +673,24 @@ chunk (runtime: pageB, pageC) commons-utility3_js.js (id hint: commons) 28 bytes
     cjs require ./utility3 ./pageB.js 3:15-36
     cjs require ./utility3 ./pageC.js 2:15-36
     cjs self exports reference ./utility3.js 1:0-14
-chunk (runtime: pageA) pageA.js (pageA) 165 bytes (javascript) 2.12 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.js (pageA) 165 bytes (javascript) 2.16 KiB (runtime) [entry] [rendered]
   > ./pageA pageA
-  runtime modules 2.12 KiB 3 modules
+  runtime modules 2.16 KiB 3 modules
   dependent modules 28 bytes [dependent] 1 module
   ./pageA.js 137 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageA.js 5:0-14
     entry ./pageA pageA
-chunk (runtime: pageB) pageB.js (pageB) 137 bytes (javascript) 2.12 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.js (pageB) 137 bytes (javascript) 2.16 KiB (runtime) [entry] [rendered]
   > ./pageB pageB
-  runtime modules 2.12 KiB 3 modules
+  runtime modules 2.16 KiB 3 modules
   ./pageB.js 137 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageB.js 5:0-14
     entry ./pageB pageB
-chunk (runtime: pageC) pageC.js (pageC) 102 bytes (javascript) 2.12 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageC) pageC.js (pageC) 102 bytes (javascript) 2.16 KiB (runtime) [entry] [rendered]
   > ./pageC pageC
-  runtime modules 2.12 KiB 3 modules
+  runtime modules 2.16 KiB 3 modules
   ./pageC.js 102 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageC.js 4:0-14
@@ -712,16 +712,16 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-assets by chunk 210 bytes (id hint: commons)
-  asset commons-utility2_js.js 105 bytes [emitted] [minimized] (id hint: commons)
-  asset commons-utility3_js.js 105 bytes [emitted] [minimized] (id hint: commons)
-asset pageA.js 931 bytes [emitted] [minimized] (name: pageA)
-asset pageB.js 926 bytes [emitted] [minimized] (name: pageB)
-asset pageC.js 910 bytes [emitted] [minimized] (name: pageC)
-asset vendor.js 119 bytes [emitted] [minimized] (name: vendor) (id hint: vendor)
-Entrypoint pageA 1.13 KiB = vendor.js 119 bytes commons-utility2_js.js 105 bytes pageA.js 931 bytes
-Entrypoint pageB 1.23 KiB = vendor.js 119 bytes commons-utility2_js.js 105 bytes commons-utility3_js.js 105 bytes pageB.js 926 bytes
-Entrypoint pageC 1.09 KiB = commons-utility2_js.js 105 bytes commons-utility3_js.js 105 bytes pageC.js 910 bytes
+assets by chunk 274 bytes (id hint: commons)
+  asset commons-utility2_js.js 137 bytes [emitted] [minimized] (id hint: commons)
+  asset commons-utility3_js.js 137 bytes [emitted] [minimized] (id hint: commons)
+asset pageA.js 963 bytes [emitted] [minimized] (name: pageA)
+asset pageB.js 958 bytes [emitted] [minimized] (name: pageB)
+asset pageC.js 942 bytes [emitted] [minimized] (name: pageC)
+asset vendor.js 151 bytes [emitted] [minimized] (name: vendor) (id hint: vendor)
+Entrypoint pageA 1.22 KiB = vendor.js 151 bytes commons-utility2_js.js 137 bytes pageA.js 963 bytes
+Entrypoint pageB 1.35 KiB = vendor.js 151 bytes commons-utility2_js.js 137 bytes commons-utility3_js.js 137 bytes pageB.js 958 bytes
+Entrypoint pageC 1.19 KiB = commons-utility2_js.js 137 bytes commons-utility3_js.js 137 bytes pageC.js 942 bytes
 chunk (runtime: pageA, pageB, pageC) commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
   > ./pageA pageA
   > ./pageB pageB
@@ -740,24 +740,24 @@ chunk (runtime: pageB, pageC) commons-utility3_js.js (id hint: commons) 28 bytes
     cjs require ./utility3 ./pageB.js 3:15-36
     cjs require ./utility3 ./pageC.js 2:15-36
     cjs self exports reference ./utility3.js 1:0-14
-chunk (runtime: pageA) pageA.js (pageA) 165 bytes (javascript) 2.12 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.js (pageA) 165 bytes (javascript) 2.16 KiB (runtime) [entry] [rendered]
   > ./pageA pageA
-  runtime modules 2.12 KiB 3 modules
+  runtime modules 2.16 KiB 3 modules
   dependent modules 28 bytes [dependent] 1 module
   ./pageA.js 137 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageA.js 5:0-14
     entry ./pageA pageA
-chunk (runtime: pageB) pageB.js (pageB) 137 bytes (javascript) 2.12 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.js (pageB) 137 bytes (javascript) 2.16 KiB (runtime) [entry] [rendered]
   > ./pageB pageB
-  runtime modules 2.12 KiB 3 modules
+  runtime modules 2.16 KiB 3 modules
   ./pageB.js 137 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageB.js 5:0-14
     entry ./pageB pageB
-chunk (runtime: pageC) pageC.js (pageC) 102 bytes (javascript) 2.12 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageC) pageC.js (pageC) 102 bytes (javascript) 2.16 KiB (runtime) [entry] [rendered]
   > ./pageC pageC
-  runtime modules 2.12 KiB 3 modules
+  runtime modules 2.16 KiB 3 modules
   ./pageC.js 102 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageC.js 4:0-14

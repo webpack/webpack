@@ -1,0 +1,12 @@
+[
+	{
+		"options": {
+			"ecmaVersion": 6
+		}
+	},
+	{
+		"options": {
+			"ecmaVersion": 2018
+		}
+	}
+]

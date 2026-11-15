@@ -1,0 +1,1 @@
+export const h = (e, t) => { const y = t?.get("type"); y && (o = o.push(1)) };

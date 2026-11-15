@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore ncde nfghi
+// cspell:ignore ncde nfghi nhij
 
 const LocConverter = require("../../lib/util/LocConverter");
 
@@ -17,7 +17,7 @@ describe("LocConverter", () => {
 
 	it("tracks a mixed forward / backward query sequence", () => {
 		// offsets: a=0 b=1 \n=2 c=3 d=4 e=5 \n=6 \n=7 f=8 g=9 h=10 i=11 \n=12
-		const converter = new LocConverter("ab\ncde\n\nfghi\n");
+		const converter = new LocConverter("ab\ncde\n\nfghi\n", "html");
 		// same-line advances (a `\n` is the last column of its line)
 		expect(at(converter, 1)).toEqual([1, 1]);
 		expect(at(converter, 2)).toEqual([1, 2]);
@@ -40,7 +40,7 @@ describe("LocConverter", () => {
 	});
 
 	it("stays on line 1 for newline-free input", () => {
-		const converter = new LocConverter("abcdef");
+		const converter = new LocConverter("abcdef", "html");
 		expect(at(converter, 3)).toEqual([1, 3]);
 		// pos === input.length with no newline anywhere
 		expect(at(converter, 6)).toEqual([1, 6]);
@@ -49,14 +49,79 @@ describe("LocConverter", () => {
 	});
 
 	it("handles input consisting only of newlines", () => {
-		const converter = new LocConverter("\n\n\n");
+		const converter = new LocConverter("\n\n\n", "html");
 		expect(at(converter, 1)).toEqual([2, 0]);
 		expect(at(converter, 3)).toEqual([4, 0]);
 		expect(at(converter, 0)).toEqual([1, 0]);
 	});
 
+	it("stops at line 1 for an offset before the input, read after a later line", () => {
+		const converter = new LocConverter("a\nb\nc", "javascript");
+		expect(at(converter, 4)).toEqual([3, 0]);
+		expect(at(converter, -1)).toEqual([1, -1]);
+		expect(at(converter, 2)).toEqual([2, 0]);
+	});
+
 	it("handles empty input", () => {
-		const converter = new LocConverter("");
+		const converter = new LocConverter("", "html");
 		expect(at(converter, 0)).toEqual([1, 0]);
+	});
+
+	it("ends a line at a lone carriage return, and at CRLF once", () => {
+		// offsets: a=0 \r=1 b=2 \r=3 \n=4 c=5
+		const converter = new LocConverter("a\rb\r\nc", "html");
+		expect(at(converter, 1)).toEqual([1, 1]);
+		expect(at(converter, 2)).toEqual([2, 0]);
+		expect(at(converter, 4)).toEqual([2, 2]);
+		expect(at(converter, 5)).toEqual([3, 0]);
+		expect(at(converter, 0)).toEqual([1, 0]);
+	});
+
+	it("ends a line at each language's own terminators", () => {
+		// offsets: a=0 then the separator at 1, b=2
+		/** @type {[string, import("../../lib/util/LocConverter").LineTerminators, number][]} */
+		const cases = [
+			["\f", "css", 2],
+			["\f", "html", 1],
+			["\f", "javascript", 1],
+			["\u2028", "javascript", 2],
+			["\u2029", "javascript", 2],
+			["\u2028", "css", 1],
+			["\u2029", "html", 1],
+			["\r", "javascript", 2]
+		];
+		for (const [separator, language, line] of cases) {
+			expect(at(new LocConverter(`a${separator}b`, language), 2)).toEqual([
+				line,
+				line === 2 ? 0 : 2
+			]);
+		}
+	});
+
+	it("answers any query order as counting the newlines before the offset", () => {
+		const input = "ab\r\ncd\re\u2028f\fg\n\nhij\nk";
+		for (const terminators of /** @type {const} */ (["javascript", "css", "html"])) {
+			const converter = new LocConverter(input, terminators);
+			const normalized = converter._input;
+			/**
+			 * @param {number} pos position
+			 * @returns {[number, number]} line and column by counting
+			 */
+			const counted = (pos) => {
+				let line = 1;
+				let lineStart = 0;
+				for (let i = 0; i < pos && i < normalized.length; i++) {
+					if (normalized[i] === "\n") {
+						line++;
+						lineStart = i + 1;
+					}
+				}
+				return [line, pos - lineStart];
+			};
+			// forward, same-line, backward, before the input and past its end
+			for (const pos of [5, 6, 7, 1, 0, 14, 13, -2, 3, 22, 30, 9, 10, 2]) {
+				expect(at(converter, pos)).toEqual(counted(pos));
+			}
+		}
 	});
 });

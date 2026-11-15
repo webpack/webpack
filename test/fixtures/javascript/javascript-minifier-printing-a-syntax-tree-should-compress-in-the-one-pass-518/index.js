@@ -1,0 +1,1 @@
+v=1-/*c*/+foo;v=/*d*/void 0!=foo;function*g(){yield/*e*/void 0}

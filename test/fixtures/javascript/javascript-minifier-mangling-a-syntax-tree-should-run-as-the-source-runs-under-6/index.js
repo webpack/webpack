@@ -1,0 +1,1 @@
+result = (function () { try { throw [1, 2] } catch ({ length: n, 0: z }) { return n + z } })();

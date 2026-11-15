@@ -1,0 +1,1 @@
+function f(){if(a)throw b;return c}function g(){if(a)return b;if(c)throw d;return e}function h(){if(a){g();throw b}throw c}function i(){if(a)return b;throw c}

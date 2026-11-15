@@ -1,0 +1,11 @@
+/*! a rule that can only match through a name nothing uses */
+.gone { color: red }
+/*! ...and the selectors of a list that still can */
+.gone, .kept { margin: 0 }
+/*! ...while a name a functional pseudo holds is not one the rule needs */
+a:not(.gone) { color: red }
+/*! an `@keyframes` under an unused name, and one under a used name */
+@keyframes gone-in { from { opacity: 0 } }
+@keyframes stay-in { from { opacity: 0 } }
+/*! a custom property nothing reads, beside one that is read */
+:root { --gone: red; --kept: blue }

@@ -1,0 +1,19 @@
+[
+	{
+		"print": "htmlMinify",
+		"renderEmbeddedSource": "decline"
+	},
+	{
+		"print": "htmlMinify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"print": "htmlMinify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"javascript/event-handler": "f(1)"
+			}
+		}
+	}
+]

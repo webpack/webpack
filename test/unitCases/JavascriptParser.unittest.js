@@ -5,33 +5,19 @@
 // cspell:ignore fghsub notry fghsub notry notry this's ijksub this's ijksub fghsub fghsub notry ijksub ijksub strrring strrring strr strrring strrring strr Sstrrringy strone stronetwo stronetwothree stronetwo stronetwothree stronetwothreefour onetwo onetwo twothree twothree twothree threefour onetwo onetwo threefour threefour fourfive startstrmid igmy igmyi igmya
 const BasicEvaluatedExpression = require("../../lib/javascript/BasicEvaluatedExpression");
 const JavascriptParser = require("../../lib/javascript/JavascriptParser");
-const { parse } = require("../../lib/javascript/syntax").parser;
-const {
-	BLOCK_DECLARATIONS,
-	HOISTED_DECLARATIONS,
-	MODULE_DECLARATIONS
-} = require("../../lib/javascript/syntax-parser");
+const { estree, parseEstree } = require("../helpers/javascriptParse");
 
 /** @typedef {import("../../lib/javascript/syntax-parser").CollectedComment} CollectedComment */
 
 /**
- * Parse through the syntax parser on the lazy-node path a build takes, which
- * alone leaves the declaration records, collecting comments as it goes.
+ * Parse into a syntax tree and build its ESTree objects, as a loader hands a
+ * program another parser built, collecting comments as it goes.
  * @param {string} code source code
  * @param {"module" | "script"} sourceType goal symbol
  * @returns {{ ast: import("estree").Program, comments: CollectedComment[] }} the program and its comments
  */
-const parseWithComments = (code, sourceType) => {
-	/** @type {CollectedComment[]} */
-	const comments = [];
-	const ast = parse(code, {
-		sourceType,
-		ecmaVersion: "latest",
-		lazyNodes: true,
-		lazyComments: comments
-	});
-	return { ast, comments };
-};
+const parseWithComments = (code, sourceType) =>
+	parseEstree(code, { sourceType, ranges: true, comments: true });
 
 describe("JavascriptParser", () => {
 	/* eslint-disable no-unused-vars */
@@ -605,6 +591,8 @@ describe("JavascriptParser", () => {
 			"typeof null": "string=object",
 			"typeof 1": "string=number",
 			"typeof 1n": "string=bigint",
+			"typeof void 0": "string=undefined",
+			"typeof void a": "",
 			"b.Number": "number=123",
 			"b['Number']": "number=123",
 			"b[Number]": "",
@@ -843,7 +831,7 @@ describe("JavascriptParser", () => {
 				const expr = /** @type {Record<string, string>} */ (cases)[name];
 
 				it(name, () => {
-					const actual = parse(expr, { ecmaVersion: "latest" });
+					const actual = estree(expr, { ecmaVersion: "latest" });
 					expect(typeof actual).toBe("object");
 				});
 			}
@@ -1019,7 +1007,7 @@ describe("JavascriptParser", () => {
 
 				it(name, () => {
 					const parser = new JavascriptParser();
-					const ast = parse(expr.code, { ecmaVersion: "latest", ranges: true });
+					const ast = estree(expr.code, { ecmaVersion: "latest", ranges: true });
 					expect(typeof ast).toBe("object");
 					expect(
 						parser.parseCalculatedString(
@@ -1226,9 +1214,7 @@ describe("JavascriptParser", () => {
 			expect(parser.getLocation({ start: 0, end: 1 })).toBeUndefined();
 		});
 
-		// `buildLineStarts` serves LF-only and CRLF sources from a native
-		// `indexOf` search and everything else from the char-code fallback —
-		// both paths must agree with acorn's `lineBreak` semantics.
+		// Every ECMAScript line terminator starts a line, CRLF counting once.
 		const lineBreakCases = /** @type {[string, string, number[]][]} */ ([
 			["lf", "a;\nbb;\nccc;", [0, 3, 7]],
 			["crlf", "a;\r\nbb;\r\nccc;", [0, 4, 9]],
@@ -1251,19 +1237,29 @@ describe("JavascriptParser", () => {
 			});
 		}
 
-		it("should reuse the line table across calls", () => {
+		it("should reuse the location converter across calls", () => {
 			const parser = parserFor("a;\nbb;\n");
 			expect(parser.getLocation({ start: 0, end: 1 })).toEqual({
 				start: { line: 1, column: 0 },
 				end: { line: 1, column: 1 }
 			});
-			const lineStarts = parser._lineStarts;
-			expect(lineStarts).toEqual([0, 3, 7]);
+			const converter = parser._locConverter;
+			expect(converter).toBeDefined();
 			expect(parser.getLocation({ start: 4, end: 5 })).toEqual({
 				start: { line: 2, column: 1 },
 				end: { line: 2, column: 2 }
 			});
-			expect(parser._lineStarts).toBe(lineStarts);
+			expect(parser._locConverter).toBe(converter);
+		});
+
+		it("should count every ECMAScript line terminator", () => {
+			const parser = parserFor("a;\rb;\u2028c;\u2029d;\r\ne;");
+			for (const [start, line] of [[3, 2], [6, 3], [9, 4], [13, 5]]) {
+				expect(parser.getLocation({ start, end: start })).toEqual({
+					start: { line, column: 0 },
+					end: { line, column: 0 }
+				});
+			}
 		});
 	});
 
@@ -1348,12 +1344,6 @@ function outer() { var inOuter = 1; }
 
 		it("collects its own from an AST another parser built", () => {
 			const { ast, comments } = parseWithComments(EVERY_POSITION, "script");
-			// strip the parser's record: what a preparsed AST from a loader looks
-			// like, and the only thing that separates the two paths
-			/** @type {EXPECTED_ANY} */
-			(ast)[HOISTED_DECLARATIONS] = undefined;
-			/** @type {EXPECTED_ANY} */
-			(ast)[MODULE_DECLARATIONS] = undefined;
 			/** @type {EXPECTED_ANY} */
 			(ast).comments = comments;
 			expect(hoistedNames(ast)).toEqual(hoistedNames(EVERY_POSITION));
@@ -1420,20 +1410,6 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 				hoistedNames(sparse)
 			);
 			expect(hoistedNames(sparse)).toContain("fromForOfTarget");
-		});
-
-		it("records the program's imports and re-exports, and nothing else", () => {
-			const { ast } = parseWithComments("import a from './a';\nexport * from './b';\nexport { a };\nexport default 1;\nvar plain = 1;\nif (plain) { var nested = 1; }", "module");
-			expect(
-				/** @type {EXPECTED_ANY} */ (ast)[MODULE_DECLARATIONS].filter(
-					(/** @type {EXPECTED_ANY} */ _entry, /** @type {number} */ index) =>
-						index % 2 === 0
-				).map((/** @type {EXPECTED_ANY} */ declaration) => declaration.type)
-			).toEqual([
-				"ImportDeclaration",
-				"ExportAllDeclaration",
-				"ExportNamedDeclaration"
-			]);
 		});
 
 		it("reports the statement written before each module declaration", () => {
@@ -1521,8 +1497,6 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 			};
 			const { ast, comments } = parseWithComments(source, "module");
 			/** @type {EXPECTED_ANY} */
-			(ast)[MODULE_DECLARATIONS] = undefined;
-			/** @type {EXPECTED_ANY} */
 			(ast).comments = comments;
 			expect(reported(ast)).toEqual(reported(source));
 			expect(reported(source)).toContain("import ./a");
@@ -1538,109 +1512,6 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 			/** @type {EXPECTED_ANY} */
 			(ast).comments = comments;
 			expect(hoistedNames(ast)).toEqual(["first", "second"]);
-		});
-
-		it("keeps no record when a plugin owns a production that records", () => {
-			const source = "class Declared {}\nvar plain = 1;\nfunction named() {}";
-			const { WebpackParser } = require("../../lib/javascript/syntax-parser");
-			const options = {
-				ecmaVersion: 2022,
-				lazyNodes: true,
-				ranges: true,
-				sourceType: "script"
-			};
-			const recorded = /** @type {EXPECTED_ANY} */ (
-				WebpackParser.parse(
-					source,
-					/** @type {EXPECTED_ANY} */ (/** @type {unknown} */ (options))
-				)
-			);
-			expect(recorded[HOISTED_DECLARATIONS]).toBeDefined();
-
-			// a subclass reading a class itself never reaches `_recordHoisted`, so
-			// the record would be short by every class it read
-			const Subclass = /** @type {EXPECTED_ANY} */ (WebpackParser).extend(
-				(/** @type {EXPECTED_ANY} */ Parser) =>
-					class extends Parser {
-						/**
-						 * @param {EXPECTED_ANY} node the class node
-						 * @param {EXPECTED_ANY} isStatement whether it is a declaration
-						 * @returns {EXPECTED_ANY} the finished class
-						 */
-						parseClass(node, isStatement) {
-							return super.parseClass(node, isStatement);
-						}
-					}
-			);
-			const extended = /** @type {EXPECTED_ANY} */ (
-				Subclass.parse(
-					source,
-					/** @type {EXPECTED_ANY} */ (/** @type {unknown} */ (options))
-				)
-			);
-			expect(extended[HOISTED_DECLARATIONS]).toBeUndefined();
-		});
-
-		it("keeps no module record when a plugin reads imports or exports", () => {
-			const source = "import a from './a';\nexport * from './b';";
-			const { WebpackParser } = require("../../lib/javascript/syntax-parser");
-			const options = {
-				ecmaVersion: 2022,
-				lazyNodes: true,
-				ranges: true,
-				sourceType: "module"
-			};
-			// a subclass reading an export itself never reaches the recording
-			// site, so the list would be short by every export it read
-			const Subclass = /** @type {EXPECTED_ANY} */ (WebpackParser).extend(
-				(/** @type {EXPECTED_ANY} */ Parser) =>
-					class extends Parser {
-						/**
-						 * @param {EXPECTED_ANY} node the export node
-						 * @param {EXPECTED_ANY} exports where exports are tracked
-						 * @returns {EXPECTED_ANY} the finished export
-						 */
-						parseExport(node, exports) {
-							return super.parseExport(node, exports);
-						}
-					}
-			);
-			const extended = /** @type {EXPECTED_ANY} */ (
-				Subclass.parse(
-					source,
-					/** @type {EXPECTED_ANY} */ (/** @type {unknown} */ (options))
-				)
-			);
-			expect(extended[MODULE_DECLARATIONS]).toBeUndefined();
-		});
-
-		it("records only the declarations the program itself states", () => {
-			const { WebpackParser } = require("../../lib/javascript/syntax-parser");
-			// the option lets an import stand where no program states it, which
-			// is the one way a declaration reaches the record from a scope below
-			const program = /** @type {EXPECTED_ANY} */ (
-				WebpackParser.parse(
-					"import a from './a';\n{ import b from './b'; }",
-					/** @type {EXPECTED_ANY} */ (
-						/** @type {unknown} */ ({
-							allowImportExportEverywhere: true,
-							ecmaVersion: 2022,
-							lazyNodes: true,
-							ranges: true,
-							sourceType: "module"
-						})
-					)
-				)
-			);
-			expect(
-				program[MODULE_DECLARATIONS].filter(
-					(/** @type {EXPECTED_ANY} */ _entry, /** @type {number} */ index) =>
-						index % 2 === 0
-				).map(
-					(/** @type {EXPECTED_ANY} */ declaration) =>
-						declaration.source.value
-				)
-			).toEqual(["./a"]);
 		});
 
 		it("keeps a declaration under an `export` head out of the scope's list", () => {
@@ -1751,20 +1622,6 @@ class WithStatic { static { const inStaticBlock = 20; } }
 
 		it("collects its own from an AST another parser built", () => {
 			const { ast, comments } = parseWithComments(EVERY_POSITION, "module");
-			// strip the parser's record: what a preparsed AST from a loader looks
-			// like, and the only thing that separates the two paths
-			const strip = (/** @type {EXPECTED_ANY} */ node) => {
-				if (node === null || typeof node !== "object") return;
-				if (Array.isArray(node)) {
-					for (const item of node) strip(item);
-					return;
-				}
-				node[BLOCK_DECLARATIONS] = undefined;
-				node[HOISTED_DECLARATIONS] = undefined;
-				node[MODULE_DECLARATIONS] = undefined;
-				for (const key of Object.keys(node)) strip(node[key]);
-			};
-			strip(ast);
 			/** @type {EXPECTED_ANY} */
 			(ast).comments = comments;
 			expect(blockNames(ast)).toEqual(blockNames(EVERY_POSITION));
@@ -1826,46 +1683,18 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			expect(collected(true)).toBe(collected(false));
 		});
 
-		it("keeps an index too large for the mask in a list of its own", () => {
-			const { BLOCK_DECLARATIONS: SLOT, MAX_MASKED_INDEX } = require(
-				"../../lib/javascript/syntax-parser"
-			);
-			// a mask is one 31-bit number, so an index it cannot hold must reach the
-			// fallback: `1 << 32` is `1 << 0`, which would claim the wrong statement
-			expect(MAX_MASKED_INDEX).toBeLessThan(31);
-			// the filler is fixed rather than derived from the bound above, so a
-			// bound raised past what a mask holds fails this case
+		it("declares a statement past the indices a mask holds", () => {
+			// a mask is one 31-bit number, so a later index must take the list
 			const filler = "void 0;\n".repeat(40);
-			const source = `const early = 1;\n${filler}const late = 2;`;
-			const { ast } = parseWithComments(source, "module");
-			const recorded = /** @type {EXPECTED_ANY} */ (ast)[SLOT];
-			expect(Array.isArray(recorded)).toBe(true);
-			expect(recorded).toEqual([0, 41]);
-			expect(blockNames(source)).toEqual(["early", "late"]);
-		});
-
-		it("keeps a short list's declarations in the slot itself", () => {
-			const { BLOCK_DECLARATIONS: SLOT } = require(
-				"../../lib/javascript/syntax-parser"
-			);
-			const { ast } = parseWithComments("void 0;\nconst only = 1;", "module");
-			// one declaration at index 1 and nothing allocated to say so
-			expect(/** @type {EXPECTED_ANY} */ (ast)[SLOT]).toBe(0b10);
+			expect(blockNames(`const early = 1;\n${filler}const late = 2;`)).toEqual([
+				"early",
+				"late"
+			]);
 		});
 
 		it("rejects a statement written before the first case", () => {
-			const { WebpackParser } = require("../../lib/javascript/syntax-parser");
 			expect(() =>
-				WebpackParser.parse(
-					"switch (1) { notACase(); }",
-					/** @type {EXPECTED_ANY} */ (
-						/** @type {unknown} */ ({
-							ecmaVersion: "latest",
-							sourceType: "module",
-							lazyNodes: true
-						})
-					)
-				)
+				estree("switch (1) { notACase(); }", { sourceType: "module" })
 			).toThrow(/Unexpected token/);
 		});
 
@@ -1988,23 +1817,12 @@ class WithStatic { static { const inStaticBlock = 20; } }
 	});
 
 	describe("WebpackParser fast paths", () => {
-		const { WebpackParser } = require("../../lib/javascript/syntax-parser");
-
-		/**
-		 * @param {string} source source code
-		 * @returns {EXPECTED_ANY} program AST
-		 */
-		// `lazyNodes` is webpack's private extension of the parser's Options
-		const parseOptions =
-			/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
-				/** @type {unknown} */ ({ ecmaVersion: 2022, lazyNodes: true })
-			);
 		/**
 		 * @param {string} source source code
 		 * @returns {EXPECTED_ANY} program AST (loosely typed for node access)
 		 */
 		const parse = (source) =>
-			/** @type {EXPECTED_ANY} */ (WebpackParser.parse(source, parseOptions));
+			/** @type {EXPECTED_ANY} */ (estree(source, { ecmaVersion: 2022 }));
 
 		it("shares one string between an escape-free quasi's raw and cooked", () => {
 			// eslint-disable-next-line no-template-curly-in-string
@@ -2041,7 +1859,6 @@ class WithStatic { static { const inStaticBlock = 20; } }
 		});
 
 		it("reads a regular expression after `yield` in a generator method, as V8 does", () => {
-			const { Parser } = require("../../lib/javascript/syntax-parser");
 			const programs = [
 				"class K { *m() { yield /a/g; } }",
 				"class K { static async *m() { yield /a/g; } }",
@@ -2053,11 +1870,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 				"class K { *m() { function f() {} yield /a/g; } }",
 				"function* g() { var h = () => 1\nyield /a/g; }"
 			];
-			for (const read of [
-				parse,
-				(/** @type {string} */ source) =>
-					/** @type {EXPECTED_ANY} */ (Parser.parse(source, parseOptions))
-			]) {
+			for (const read of [parse]) {
 				for (const source of programs) {
 					let argument;
 					JSON.stringify(read(source), (key, value) => {
@@ -2134,12 +1947,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			const src = "value1 = value2 instanceof Gate;";
 			const modern = parse(src);
 			const legacy = /** @type {EXPECTED_ANY} */ (
-				WebpackParser.parse(
-					src,
-					/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
-						/** @type {unknown} */ ({ ecmaVersion: 5, lazyNodes: true })
-					)
-				)
+				estree(src, { ecmaVersion: 5 })
 			);
 			expect(modern.body[0].expression.right.operator).toBe("instanceof");
 			expect(legacy.body[0].expression.right.operator).toBe("instanceof");
@@ -2168,55 +1976,12 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			expect(ok.body[1].expression.right.type).toBe("ConditionalExpression");
 		});
 
-		it("keeps arrow behavior when a plugin overrides parseArrowExpression", () => {
-			// overriding disables `_arrowFastPath`; the type-based fallback probes
-			// must reproduce the same accepts and rejects
-			const plugin = /** @type {EXPECTED_ANY} */ (
-				(/** @type {EXPECTED_ANY} */ P) =>
-					class extends P {
-						/**
-						 * @param {...EXPECTED_ANY} args acorn args
-						 * @returns {EXPECTED_ANY} arrow node
-						 */
-						parseArrowExpression(...args) {
-							return super.parseArrowExpression(...args);
-						}
-					}
-			);
-			const Extended = WebpackParser.extend(plugin);
-			expect(() => Extended.parse("() => {} ? a : b", parseOptions)).toThrow(
-				/Unexpected token/
-			);
-			const ast = /** @type {EXPECTED_ANY} */ (
-				Extended.parse("f = (x) => x + 1;", parseOptions)
-			);
-			expect(ast.body[0].expression.right.type).toBe("ArrowFunctionExpression");
-		});
-
 		it("rejects `**` with a bare arrow left operand like acorn 8.18", () => {
 			expect(() => parse("x = () => {} ** 2")).toThrow(/Unexpected token/);
 			const ok = parse("x = (() => {}) ** 2").body[0].expression.right;
 			expect(ok.type).toBe("BinaryExpression");
 			expect(ok.operator).toBe("**");
 			expect(() => parse("x = -2 ** 2")).toThrow(/Unexpected token/);
-			// the type-based fallback probe (plugin overriding parseArrowExpression)
-			const Extended = WebpackParser.extend(
-				/** @type {EXPECTED_ANY} */ (
-					(/** @type {EXPECTED_ANY} */ P) =>
-						class extends P {
-							/**
-							 * @param {...EXPECTED_ANY} args acorn args
-							 * @returns {EXPECTED_ANY} arrow node
-							 */
-							parseArrowExpression(...args) {
-								return super.parseArrowExpression(...args);
-							}
-						}
-				)
-			);
-			expect(() => Extended.parse("x = () => {} ** 2", parseOptions)).toThrow(
-				/Unexpected token/
-			);
 		});
 
 		it("preserves LS/PS in cooked template chunks read by the cold reader", () => {
@@ -2252,30 +2017,6 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			);
 		});
 
-		it("delegates var declarations when a plugin overrides parseVarId", () => {
-			let calls = 0;
-			const Extended = WebpackParser.extend(
-				/** @type {EXPECTED_ANY} */ (
-					(/** @type {EXPECTED_ANY} */ P) =>
-						class extends P {
-							/**
-							 * @param {...EXPECTED_ANY} args acorn args
-							 * @returns {EXPECTED_ANY} declarator id
-							 */
-							parseVarId(...args) {
-								calls++;
-								return super.parseVarId(...args);
-							}
-						}
-				)
-			);
-			const ast = /** @type {EXPECTED_ANY} */ (
-				Extended.parse("var a = 1; for (let b = 0; b < 1; b++);", parseOptions)
-			);
-			expect(calls).toBe(2);
-			expect(ast.body[0].declarations[0].id.name).toBe("a");
-		});
-
 		it("keeps scope bindings isolated across pooled sibling scopes", () => {
 			// a pooled scope must not leak names or the simple-catch marker
 			expect(() =>
@@ -2305,40 +2046,13 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			).toThrow(/Unsyntactic break/);
 		});
 
-		it("appends to a `program` continuation node like acorn", () => {
-			const first = parse("a;");
-			const second = /** @type {EXPECTED_ANY} */ (
-				WebpackParser.parse(
-					"b;",
-					/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
-						/** @type {unknown} */ ({
-							ecmaVersion: 2022,
-							lazyNodes: true,
-							program: first
-						})
-					)
-				)
-			);
-			expect(second).toBe(first);
-			expect(second.body).toHaveLength(2);
-		});
-
 		it("reports acorn's error for string names bound without `from`", () => {
 			/**
 			 * @param {string} source module source code
 			 * @returns {() => void} thunk parsing the source as a module
 			 */
 			const parseModule = (source) => () =>
-				WebpackParser.parse(
-					source,
-					/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
-						/** @type {unknown} */ ({
-							ecmaVersion: "latest",
-							sourceType: "module",
-							lazyNodes: true
-						})
-					)
-				);
+				estree(source, { sourceType: "module" });
 			expect(parseModule('export { "x" };')).toThrow(
 				/A string literal cannot be used as an exported binding without `from`/
 			);
@@ -2346,18 +2060,10 @@ class WithStatic { static { const inStaticBlock = 20; } }
 		});
 
 		it("serves comment ranges lazily with a stable memo and writable slot", () => {
-			/** @type {EXPECTED_ANY[]} */
-			const comments = [];
-			WebpackParser.parse(
-				"// hi\nvar x = 1; /* block */",
-				/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
-					/** @type {unknown} */ ({
-						ecmaVersion: 2022,
-						lazyNodes: true,
-						lazyComments: comments
-					})
-				)
-			);
+			const { comments } = parseEstree("// hi\nvar x = 1; /* block */", {
+				ecmaVersion: 2022,
+				comments: true
+			});
 			expect(comments).toHaveLength(2);
 			const line = comments[0];
 			expect(line.range).toEqual([0, 5]);
@@ -2370,29 +2076,6 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			expect(block.range).toEqual([1, 2]);
 		});
 
-		it("serves a direct caller's `ranges` lazily, leaving its options alone", () => {
-			const options = { ecmaVersion: 2022, lazyNodes: true, ranges: true };
-			const program = /** @type {EXPECTED_ANY} */ (
-				WebpackParser.parse(
-					"var x = 1;",
-					/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
-						/** @type {unknown} */ (options)
-					)
-				)
-			);
-			expect(options).toEqual({
-				ecmaVersion: 2022,
-				lazyNodes: true,
-				ranges: true
-			});
-			const declaration = program.body[0];
-			// lazy: `range` comes from the prototype getter, not from the node
-			expect(
-				Object.getOwnPropertyDescriptor(declaration, "range")
-			).toBeUndefined();
-			expect(declaration.range).toEqual([0, 10]);
-			expect(declaration.range).toBe(declaration.range);
-		});
 	});
 
 	describe("write hooks", () => {

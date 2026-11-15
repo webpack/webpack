@@ -476,8 +476,8 @@ div {
 }
 
 div {
-	a160: url(img.09a1a1112c577c279435.png param(--color var(--primary-color)));
-	a161: src(img.09a1a1112c577c279435.png param(--color var(--primary-color)));
+	a160: url(\\"img.09a1a1112c577c279435.png\\" param(--color var(--primary-color)));
+	a161: src(\\"img.09a1a1112c577c279435.png\\" param(--color var(--primary-color)));
 }
 
 div {
@@ -551,7 +551,7 @@ div {
 		url(img.09a1a1112c577c279435.png) 1x
 	);
 	a180: -webkit-image-set(
-		url(img.09a1a1112c577c279435.png var(--foo, \\"test.png\\")) 1x
+		url(\\"img.09a1a1112c577c279435.png\\" var(--foo, \\"test.png\\")) 1x
 	);
 }
 
@@ -559,7 +559,7 @@ div {
 	a181: src(img.09a1a1112c577c279435.png);
 	a181: src(   img.09a1a1112c577c279435.png   );
 	a182: src(img.09a1a1112c577c279435.png);
-	a183: src(img.09a1a1112c577c279435.png var(--foo, \\"test.png\\"));
+	a183: src(\\"img.09a1a1112c577c279435.png\\" var(--foo, \\"test.png\\"));
 	a184: src(var(--foo, \\"test.png\\"));
 	a185: src(img.09a1a1112c577c279435.png);
 }
@@ -580,7 +580,7 @@ div {
 	}
 }
 
-@supports (background-image: url(unknown.09a1a1112c577c279435.png param(--test))) {
+@supports (background-image: url(\\"unknown.09a1a1112c577c279435.png\\" param(--test))) {
 	div {
 		a194: url(img.09a1a1112c577c279435.png);
 	}

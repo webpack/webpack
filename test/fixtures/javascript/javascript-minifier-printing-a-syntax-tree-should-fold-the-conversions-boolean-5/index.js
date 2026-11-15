@@ -1,0 +1,1 @@
+Boolean=f;Number=g;a=[Boolean(b),Number(1)]

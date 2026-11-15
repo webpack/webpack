@@ -1,0 +1,8 @@
+[
+	{
+		"print": "htmlMinify",
+		"sortAttributes": true,
+		"sortTokenLists": true,
+		"removeRedundantAttributes": true
+	}
+]

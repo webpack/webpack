@@ -31,10 +31,13 @@ it("should bundle every executable JavaScript script type", () => {
 
 it("should leave a data block inline", () => {
 	// Bundling one of these would run data as code.
-	for (let i = 0; i < 5; i++) {
+	for (let i = 0; i < 7; i++) {
 		expect(pageContent).toContain(`{"inline${i}":1}`);
 	}
 	expect(pageContent).toContain('<script type="application/ld+json">');
 	expect(pageContent).toContain('<script type="importmap">');
 	expect(pageContent).toContain('<script type="application/wasm">');
+	// Only ASCII whitespace is trimmed off a type, never NBSP.
+	expect(pageContent).toContain('<script type="&nbsp;text/javascript">');
+	expect(pageContent).toContain('<script type="module&#xA0;">');
 });

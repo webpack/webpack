@@ -1,0 +1,1 @@
+function k(a){x=null===a||a===void 0?b:a;x=a!==undefined&&a!==null?a:b;x=void 0!==a&&null!==a?a.b:void 0;x=null===a||undefined===a}

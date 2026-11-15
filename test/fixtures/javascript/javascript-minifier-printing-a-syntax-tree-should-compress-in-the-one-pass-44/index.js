@@ -1,0 +1,1 @@
+function f(){ const t = true; if (!t) g(); return t ? 1 : 2 }

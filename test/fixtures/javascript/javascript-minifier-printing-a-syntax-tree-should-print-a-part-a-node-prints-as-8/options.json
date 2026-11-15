@@ -1,0 +1,7 @@
+[
+	{
+		"mode": "beautify",
+		"compress": false,
+		"mangle": false
+	}
+]

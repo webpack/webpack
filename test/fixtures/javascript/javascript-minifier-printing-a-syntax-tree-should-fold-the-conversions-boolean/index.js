@@ -1,0 +1,1 @@
+a=[Boolean(),Number(),Number(-123),Number(!1),Number(null),String("x"),String(1),Number(" 0x1f "),Number(void 0),Number({})]

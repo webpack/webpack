@@ -1,0 +1,15 @@
+[
+	{
+		"mode": "minify",
+		"skip": {
+			"selectorPrelude": true,
+			"atRulePrelude": true
+		},
+		"visit": {
+			"types": [
+				"Ident"
+			],
+			"exit": false
+		}
+	}
+]

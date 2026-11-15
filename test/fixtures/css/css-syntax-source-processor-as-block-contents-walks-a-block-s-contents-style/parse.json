@@ -1,0 +1,22 @@
+[
+	{
+		"entry": "SourceProcessor"
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents"
+		},
+		"visit": {
+			"types": [
+				"Declaration",
+				"Url"
+			],
+			"fields": [
+				"name",
+				"value"
+			],
+			"exit": false
+		}
+	}
+]

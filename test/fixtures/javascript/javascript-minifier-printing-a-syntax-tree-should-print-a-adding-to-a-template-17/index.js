@@ -1,0 +1,1 @@
+function f(x,y,g){return[`${x}$`+'b'+'{c}']}

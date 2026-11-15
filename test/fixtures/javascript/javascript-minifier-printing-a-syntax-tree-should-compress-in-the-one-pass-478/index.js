@@ -1,0 +1,1 @@
+function g(){var a=[1,2];f(a[0],a[1])}function n(){let a=[1,"s",!0,null];f(a[1]+a[0],a[2],a[3].x,typeof a[0],a[2]?3:4)}function s(){var a=["a long string"];f(a[0],a[0],a[0])}function t(){g();const a=[1];function g(){f(a[0])}}function v(){var a=[1];return function(){return a[0]}}

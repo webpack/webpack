@@ -1,0 +1,32 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "as-written"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"javascript/event-handler": "return!1"
+			}
+		}
+	},
+	{
+		"print": "htmlMinify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"javascript/event-handler": "return!1"
+			}
+		}
+	},
+	{
+		"print": "htmlMinify",
+		"renderEmbeddedSource": "offers"
+	}
+]

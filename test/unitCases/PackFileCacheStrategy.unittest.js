@@ -97,6 +97,82 @@ describe("PackFileCacheStrategy", () => {
 		});
 	});
 
+	describe("PackContent writeLazy", () => {
+		/**
+		 * @param {() => EXPECTED_ANY} lazy the content's lazy value
+		 * @param {string[]} messages collects every logged message
+		 * @returns {EXPECTED_ANY} the pack's content holding items a and b
+		 */
+		const createContent = (lazy, messages) => {
+			const pack = /** @type {EXPECTED_ANY} */ (
+				getSerializer("Pack").deserialize(
+					createContext(
+						["a", "b", null, "etag-a", "etag-b", 1, 2, new Set(["a", "b"]), lazy, null],
+						{ logger: createLogger(messages) }
+					)
+				)
+			);
+			return pack.content[0];
+		};
+
+		it("drops items it cannot restore so the rest of the pack stores", async () => {
+			/** @type {string[]} */
+			const messages = [];
+			const broken = new Error("No deserializer registered for x/null");
+			const content = createContent(() => Promise.reject(broken), messages);
+			// the build replaced a, so the content keeps only b, which it cannot read
+			content.delete("a");
+
+			/** @type {EXPECTED_ANY} */
+			let lazy;
+			content.writeLazy((/** @type {EXPECTED_ANY} */ fn) => (lazy = fn));
+			const items = await lazy();
+
+			expect([...items.map]).toEqual([]);
+			expect([...content.items]).toEqual([]);
+			expect(messages).toContain(
+				`debug: dropped 1 cache items whose content could not be restored: ${broken}`
+			);
+		});
+
+		it("drops items when restoring throws", () => {
+			/** @type {string[]} */
+			const messages = [];
+			const content = createContent(() => {
+				throw new Error("unexpected end");
+			}, messages);
+			content.delete("a");
+
+			/** @type {EXPECTED_ANY} */
+			let lazy;
+			content.writeLazy((/** @type {EXPECTED_ANY} */ fn) => (lazy = fn));
+
+			expect([...lazy().map]).toEqual([]);
+			expect([...content.items]).toEqual([]);
+		});
+
+		it("keeps the items it can restore", async () => {
+			const contentItems = getSerializer("PackContentItems").deserialize(
+				createContext([
+					true,
+					new Map([
+						["a", "value-a"],
+						["b", "value-b"]
+					])
+				])
+			);
+			const content = createContent(() => Promise.resolve(contentItems), []);
+			content.delete("a");
+
+			/** @type {EXPECTED_ANY} */
+			let lazy;
+			content.writeLazy((/** @type {EXPECTED_ANY} */ fn) => (lazy = fn));
+			const items = await lazy();
+
+			expect([...items.map]).toEqual([["b", "value-b"]]);
+		});
+	});
+
 	describe("PackContentItems deserialize", () => {
 		it("reads the map at once", () => {
 			const map = new Map([["a", 1]]);

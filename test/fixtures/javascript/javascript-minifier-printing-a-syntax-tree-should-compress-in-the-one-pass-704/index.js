@@ -1,0 +1,1 @@
+Math.abs?.(1);Math?.abs(1);Math["abs"](1);a.Math.abs(1);Math.abs.call(1);x=1

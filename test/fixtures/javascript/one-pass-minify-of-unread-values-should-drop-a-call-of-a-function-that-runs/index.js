@@ -1,0 +1,1 @@
+((...a)=>{})(),(async()=>{})(),(function*(){f()})(),(async function(){})()

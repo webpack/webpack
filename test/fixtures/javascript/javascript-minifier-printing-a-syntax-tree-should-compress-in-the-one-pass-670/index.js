@@ -1,0 +1,1 @@
+({abs:Math.abs}={abs:f});[...Math.round]=[];({...Math.ceil}=o);x=[Math.abs(-1),Math.round(1.5),Math.ceil(1.5),Math.floor(1.5)]

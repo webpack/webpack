@@ -1,0 +1,16 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"toplevel": false
+		},
+		"mangle": {
+			"toplevel": false
+		},
+		"format": {
+			"comments": {
+				"regexp": "before|after"
+			}
+		}
+	}
+]

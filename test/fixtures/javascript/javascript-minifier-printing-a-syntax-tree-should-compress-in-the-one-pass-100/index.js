@@ -1,0 +1,1 @@
+function f(){ var a = class extends (() => 1) {}, b = class extends null {}, d = class { [k] = 1 }, e = class { static x = 1; m(){} }, g = class extends Object {}, h = class extends (async function(){}) {}, i = class extends {} {}, j = class extends (function*(){}) {}, l = class extends 1 {}, n = class { static {} }, p = class { static { q() } }, r = class { static y = q() }; }

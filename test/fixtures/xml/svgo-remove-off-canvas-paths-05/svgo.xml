@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <path d="M-100-100h50v50h-50z" fill="red" transform="translate(100 100)"/>
+    <g transform="translate(150 150)">
+        <path d="M-100-100h50v50h-50z" fill="blue"/>
+    </g>
+</svg>

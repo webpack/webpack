@@ -1,0 +1,1 @@
+var out = []; function f(a) { try { throw a + 1 } catch (e) { out.push(e); var g = function () { return e } } return g() } var x = 5; out.push(f(x), x); result = out.join();

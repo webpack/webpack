@@ -1,0 +1,1 @@
+Object.getOwnPropertyDescriptor({},"x"),Object.getOwnPropertyNames({}),Object.create({})

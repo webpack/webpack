@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": true,
+		"ie8": true,
+		"behavior": true
+	}
+]

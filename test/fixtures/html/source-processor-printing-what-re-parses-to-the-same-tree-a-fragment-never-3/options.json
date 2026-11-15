@@ -1,0 +1,17 @@
+[
+	{
+		"mode": "beautify",
+		"fragmentContext": "div"
+	},
+	{
+		"mode": "minify",
+		"fragmentContext": "div"
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": true
+		},
+		"fragmentContext": "div"
+	}
+]

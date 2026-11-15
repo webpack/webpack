@@ -1,0 +1,32 @@
+[
+	{
+		"mode": "minify",
+		"ecma": 2022,
+		"compress": {
+			"passes": 2
+		},
+		"mangle": false,
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"ecma": 2022,
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"ecma": 2022,
+		"format": {
+			"keep_quoted_props": true
+		},
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"ecma": 2022,
+		"compress": {
+			"side_effects": false
+		},
+		"behavior": true
+	}
+]

@@ -1,0 +1,9 @@
+[
+	{
+		"entry": "parseProgram",
+		"options": {
+			"sourceType": "auto",
+			"allowReturnOutsideFunction": true
+		}
+	}
+]

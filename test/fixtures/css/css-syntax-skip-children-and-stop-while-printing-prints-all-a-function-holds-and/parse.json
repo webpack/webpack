@@ -1,0 +1,20 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"Function",
+				"Ident",
+				"Hash",
+				"Comment"
+			],
+			"exit": true,
+			"at": [
+				{
+					"type": "Function",
+					"do": "skipChildren"
+				}
+			]
+		}
+	}
+]

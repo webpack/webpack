@@ -1,0 +1,1 @@
+for (async of => 1;;) break;

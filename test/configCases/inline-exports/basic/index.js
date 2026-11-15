@@ -19,6 +19,8 @@ it("should inline constants", () => {
 	expect(constants.REMOVE_b).toBe(true);
 	expect(constants.REMOVE_i).toBe(123456);
 	expect(constants.REMOVE_f).toBe(123.45);
+	expect(Object.is(constants.REMOVE_z, -0)).toBe(true);
+	expect(1 / constants.REMOVE_z).toBe(-Infinity);
 	expect(constants.REMOVE_s).toBe("remove");
 	expect(constants.REMOVE_m).toBe(13);
 	// END:A
@@ -28,7 +30,7 @@ it("should inline constants", () => {
 	).toBe(true);
 	expect(
 		block.includes(
-			`((/* inlined export .REMOVE_u */undefined)).toBe(undefined)`
+			`((/* inlined export .REMOVE_u */void 0)).toBe(undefined)`
 		)
 	).toBe(true);
 	expect(
@@ -39,6 +41,9 @@ it("should inline constants", () => {
 	).toBe(true);
 	expect(
 		block.includes(`((/* inlined export .REMOVE_f */123.45)).toBe(123.45)`)
+	).toBe(true);
+	expect(
+		block.includes(`(/* inlined export .REMOVE_z */-0)`)
 	).toBe(true);
 	expect(
 		block.includes(`((/* inlined export .REMOVE_s */"remove")).toBe("remove")`)
@@ -63,7 +68,7 @@ it("should inline constants with re-export", () => {
 	).toBe(true);
 	expect(
 		block.includes(
-			`((/* inlined export .REMOVE_u */undefined)).toBe(undefined)`
+			`((/* inlined export .REMOVE_u */void 0)).toBe(undefined)`
 		)
 	).toBe(true);
 	expect(

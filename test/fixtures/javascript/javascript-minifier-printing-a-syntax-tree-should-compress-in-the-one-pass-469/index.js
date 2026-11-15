@@ -1,0 +1,1 @@
+x=n?true:true;y=a()?false:false

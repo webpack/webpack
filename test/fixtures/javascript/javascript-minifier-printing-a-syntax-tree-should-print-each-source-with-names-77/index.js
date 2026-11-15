@@ -1,0 +1,1 @@
+x = { __proto__ }; x = { __proto__: __proto__ }; x = { '__proto__': a }; x = { __proto__: a }; x = { ['__proto__']: a }; ({ __proto__ } = a); ({ __proto__: b } = a); x = { __proto__() {} }; x = { get __proto__() {} };

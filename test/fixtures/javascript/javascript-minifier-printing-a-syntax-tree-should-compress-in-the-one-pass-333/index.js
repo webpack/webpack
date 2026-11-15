@@ -1,0 +1,1 @@
+function f(){(function(o){return function(){return o}})([1])}

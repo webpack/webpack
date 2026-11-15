@@ -1,0 +1,17 @@
+[
+	{
+		"print": "jsMinify",
+		"minimizer": {
+			"extractComments": true,
+			"asset": "lines.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"minimizer": {
+			"extractComments": true,
+			"sourceMap": "input.js.map",
+			"asset": "lines.js"
+		}
+	}
+]

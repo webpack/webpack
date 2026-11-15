@@ -1,0 +1,1 @@
+function f() { 'use asm'; return 1.50 } y = 1.50;

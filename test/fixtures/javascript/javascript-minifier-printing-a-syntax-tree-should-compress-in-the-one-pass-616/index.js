@@ -1,0 +1,1 @@
+while(x){if(y)continue;z();w()}g();for(;;){if(y)continue;z();if(q)continue;w();v()}g();for(;;){if(y)continue;z();a={}}g();if(a)for(;;){if(y)continue;z();w()}else q();for(;;){}

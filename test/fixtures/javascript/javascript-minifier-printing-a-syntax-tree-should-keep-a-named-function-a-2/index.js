@@ -1,0 +1,1 @@
+result = (function f() { return new (class { m() { return eval("typeof f") } })().m() })();

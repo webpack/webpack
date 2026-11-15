@@ -1,0 +1,1 @@
+function f(undefined){return delete undefined}console.log(f())

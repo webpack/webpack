@@ -1,0 +1,10 @@
+[
+	{
+		"print": "htmlMinify",
+		"css": {
+			"extractComments": false
+		},
+		"removeEmptyElements": true,
+		"removeEmptyAttributes": true
+	}
+]

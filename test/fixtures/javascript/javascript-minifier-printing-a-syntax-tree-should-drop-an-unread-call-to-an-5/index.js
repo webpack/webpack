@@ -1,0 +1,1 @@
+/*#__NO_SIDE_EFFECTS__*/ export { f }; function f() { g(); } f();

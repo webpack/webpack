@@ -1,0 +1,1 @@
+function f(){return(o=>o)([1,,-1,"s",{b:!0}])}

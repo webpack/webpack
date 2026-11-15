@@ -1,0 +1,1 @@
+function f(n, e) { let A = { negated: false, prefix: "" }; return n(e, A) } function k(n) { let C = [1, ["a"]]; return n.map(() => C) } function m() { let D = {}; return delete D }

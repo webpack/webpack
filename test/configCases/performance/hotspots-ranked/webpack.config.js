@@ -27,7 +27,7 @@ module.exports = {
 		hotspots: true
 	},
 	plugins: [
-		burn("SlowSealPlugin", "afterSeal", 300),
+		burn("SlowSealPlugin", "afterSeal", 600),
 		burn("SlowModulesPlugin", "optimizeModules", 120)
 	]
 };

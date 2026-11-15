@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <mask width="100" height="50" enable-background="new 0 0 100 50">
+        test
+    </mask>
+</svg>

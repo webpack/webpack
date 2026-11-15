@@ -1,0 +1,9 @@
+<svg width="480" height="360" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="testMarker">
+      <rect width="100" height="100" fill="blue" />
+    </marker>
+  </defs>
+  <line x1="150" y1="150" x2="165" y2="150" stroke="red" stroke-width="25" marker-end="url(#testMarker)" />
+  <line x1="250" y1="250" x2="265" y2="250" stroke="red" stroke-width="0" marker-end="url(#testMarker)" />
+</svg>

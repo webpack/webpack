@@ -122,12 +122,12 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 1`] = `
 Object {
-  "btnInfoIsDisabled": "style_module_css_camel-case-only-btnInfoIsDisabled",
-  "btnInfoIsDisabled1": "style_module_css_camel-case-only-btnInfoIsDisabled1",
+  "btnInfoIsDisabled": "style_module_css_camel-case-only-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "style_module_css_camel-case-only-btn--info_is-disabled_1",
   "class": "style_module_css_camel-case-only-class",
   "default": "style_module_css_camel-case-only-default",
   "foo": "bar",
-  "fooBar": "style_module_css_camel-case-only-fooBar",
+  "fooBar": "style_module_css_camel-case-only-foo_bar",
   "myBtnInfoIsDisabled": "value",
   "simple": "style_module_css_camel-case-only-simple",
 }
@@ -135,12 +135,12 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 2`] = `
 Object {
-  "btnInfoIsDisabled": "tWVDJB",
-  "btnInfoIsDisabled1": "XcwArA",
+  "btnInfoIsDisabled": "rr2V3k",
+  "btnInfoIsDisabled1": "ikUaHx",
   "class": "NKUbIN",
   "default": "uj_jzV",
   "foo": "bar",
-  "fooBar": "_1q-K0I",
+  "fooBar": "UPc_7Z",
   "myBtnInfoIsDisabled": "value",
   "simple": "BbWfGD",
 }
@@ -148,12 +148,12 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 3`] = `
 Object {
-  "btnInfoIsDisabled": "style_module_css_camel-case-only-btnInfoIsDisabled",
-  "btnInfoIsDisabled1": "style_module_css_camel-case-only-btnInfoIsDisabled1",
+  "btnInfoIsDisabled": "style_module_css_camel-case-only-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "style_module_css_camel-case-only-btn--info_is-disabled_1",
   "class": "style_module_css_camel-case-only-class",
   "default": "style_module_css_camel-case-only-default",
   "foo": "bar",
-  "fooBar": "style_module_css_camel-case-only-fooBar",
+  "fooBar": "style_module_css_camel-case-only-foo_bar",
   "myBtnInfoIsDisabled": "value",
   "simple": "style_module_css_camel-case-only-simple",
 }
@@ -161,12 +161,12 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 4`] = `
 Object {
-  "btnInfoIsDisabled": "tWVDJB",
-  "btnInfoIsDisabled1": "XcwArA",
+  "btnInfoIsDisabled": "rr2V3k",
+  "btnInfoIsDisabled1": "ikUaHx",
   "class": "NKUbIN",
   "default": "uj_jzV",
   "foo": "bar",
-  "fooBar": "_1q-K0I",
+  "fooBar": "UPc_7Z",
   "myBtnInfoIsDisabled": "value",
   "simple": "BbWfGD",
 }
@@ -238,8 +238,8 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 1`] = `
 Object {
-  "btnInfo_isDisabled": "style_module_css_dashes-only-btnInfo_isDisabled",
-  "btnInfo_isDisabled_1": "style_module_css_dashes-only-btnInfo_isDisabled_1",
+  "btnInfo_isDisabled": "style_module_css_dashes-only-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "style_module_css_dashes-only-btn--info_is-disabled_1",
   "class": "style_module_css_dashes-only-class",
   "default": "style_module_css_dashes-only-default",
   "foo": "bar",
@@ -251,8 +251,8 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 2`] = `
 Object {
-  "btnInfo_isDisabled": "fG7JbK",
-  "btnInfo_isDisabled_1": "tPWB1n",
+  "btnInfo_isDisabled": "_3VwvU_",
+  "btnInfo_isDisabled_1": "ngZgl6",
   "class": "tKttCk",
   "default": "ovH3w9",
   "foo": "bar",
@@ -264,8 +264,8 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 3`] = `
 Object {
-  "btnInfo_isDisabled": "style_module_css_dashes-only-btnInfo_isDisabled",
-  "btnInfo_isDisabled_1": "style_module_css_dashes-only-btnInfo_isDisabled_1",
+  "btnInfo_isDisabled": "style_module_css_dashes-only-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "style_module_css_dashes-only-btn--info_is-disabled_1",
   "class": "style_module_css_dashes-only-class",
   "default": "style_module_css_dashes-only-default",
   "foo": "bar",
@@ -277,8 +277,8 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 4`] = `
 Object {
-  "btnInfo_isDisabled": "fG7JbK",
-  "btnInfo_isDisabled_1": "tPWB1n",
+  "btnInfo_isDisabled": "_3VwvU_",
+  "btnInfo_isDisabled_1": "ngZgl6",
   "class": "tKttCk",
   "default": "ovH3w9",
   "foo": "bar",
@@ -290,104 +290,104 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper 1`] = `
 Object {
-  "BTN--INFO_IS-DISABLED_1": "style_module_css_upper-BTN--INFO_IS-DISABLED_1",
-  "BTN-INFO_IS-DISABLED": "style_module_css_upper-BTN-INFO_IS-DISABLED",
-  "CLASS": "style_module_css_upper-CLASS",
-  "DEFAULT": "style_module_css_upper-DEFAULT",
+  "BTN--INFO_IS-DISABLED_1": "style_module_css_upper-btn--info_is-disabled_1",
+  "BTN-INFO_IS-DISABLED": "style_module_css_upper-btn-info_is-disabled",
+  "CLASS": "style_module_css_upper-class",
+  "DEFAULT": "style_module_css_upper-default",
   "FOO": "bar",
-  "FOO_BAR": "style_module_css_upper-FOO_BAR",
+  "FOO_BAR": "style_module_css_upper-foo_bar",
   "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "style_module_css_upper-SIMPLE",
+  "SIMPLE": "style_module_css_upper-simple",
 }
 `;
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper 2`] = `
 Object {
-  "BTN--INFO_IS-DISABLED_1": "x7XUsO",
-  "BTN-INFO_IS-DISABLED": "mtkl8q",
-  "CLASS": "ZOe2qu",
-  "DEFAULT": "w1lug9",
+  "BTN--INFO_IS-DISABLED_1": "cfm2eH",
+  "BTN-INFO_IS-DISABLED": "_12JMcC",
+  "CLASS": "Cu1Zz_",
+  "DEFAULT": "THLMmw",
   "FOO": "bar",
-  "FOO_BAR": "_5cbScz",
+  "FOO_BAR": "_4V_kEI",
   "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "lZQwR-",
+  "SIMPLE": "mp6qN-",
 }
 `;
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper 3`] = `
 Object {
-  "BTN--INFO_IS-DISABLED_1": "style_module_css_upper-BTN--INFO_IS-DISABLED_1",
-  "BTN-INFO_IS-DISABLED": "style_module_css_upper-BTN-INFO_IS-DISABLED",
-  "CLASS": "style_module_css_upper-CLASS",
-  "DEFAULT": "style_module_css_upper-DEFAULT",
+  "BTN--INFO_IS-DISABLED_1": "style_module_css_upper-btn--info_is-disabled_1",
+  "BTN-INFO_IS-DISABLED": "style_module_css_upper-btn-info_is-disabled",
+  "CLASS": "style_module_css_upper-class",
+  "DEFAULT": "style_module_css_upper-default",
   "FOO": "bar",
-  "FOO_BAR": "style_module_css_upper-FOO_BAR",
+  "FOO_BAR": "style_module_css_upper-foo_bar",
   "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "style_module_css_upper-SIMPLE",
+  "SIMPLE": "style_module_css_upper-simple",
 }
 `;
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper 4`] = `
 Object {
-  "BTN--INFO_IS-DISABLED_1": "x7XUsO",
-  "BTN-INFO_IS-DISABLED": "mtkl8q",
-  "CLASS": "ZOe2qu",
-  "DEFAULT": "w1lug9",
+  "BTN--INFO_IS-DISABLED_1": "cfm2eH",
+  "BTN-INFO_IS-DISABLED": "_12JMcC",
+  "CLASS": "Cu1Zz_",
+  "DEFAULT": "THLMmw",
   "FOO": "bar",
-  "FOO_BAR": "_5cbScz",
+  "FOO_BAR": "_4V_kEI",
   "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "lZQwR-",
+  "SIMPLE": "mp6qN-",
 }
 `;
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper-and-no-named-export 1`] = `
 Object {
-  "BTN--INFO_IS-DISABLED_1": "style_module_css_upper-no-named-exports-BTN--INFO_IS-DISABLED_1",
-  "BTN-INFO_IS-DISABLED": "style_module_css_upper-no-named-exports-BTN-INFO_IS-DISABLED",
-  "CLASS": "style_module_css_upper-no-named-exports-CLASS",
-  "DEFAULT": "style_module_css_upper-no-named-exports-DEFAULT",
+  "BTN--INFO_IS-DISABLED_1": "style_module_css_upper-no-named-exports-btn--info_is-disabled_1",
+  "BTN-INFO_IS-DISABLED": "style_module_css_upper-no-named-exports-btn-info_is-disabled",
+  "CLASS": "style_module_css_upper-no-named-exports-class",
+  "DEFAULT": "style_module_css_upper-no-named-exports-default",
   "FOO": "bar",
-  "FOO_BAR": "style_module_css_upper-no-named-exports-FOO_BAR",
+  "FOO_BAR": "style_module_css_upper-no-named-exports-foo_bar",
   "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "style_module_css_upper-no-named-exports-SIMPLE",
+  "SIMPLE": "style_module_css_upper-no-named-exports-simple",
 }
 `;
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper-and-no-named-export 2`] = `
 Object {
-  "BTN--INFO_IS-DISABLED_1": "qyQTB8",
-  "BTN-INFO_IS-DISABLED": "emVwWp",
-  "CLASS": "lBiVDX",
-  "DEFAULT": "_781BMr",
+  "BTN--INFO_IS-DISABLED_1": "UQMUwM",
+  "BTN-INFO_IS-DISABLED": "GOxKnM",
+  "CLASS": "dqpRO6",
+  "DEFAULT": "KhRR3n",
   "FOO": "bar",
-  "FOO_BAR": "jzFqhs",
+  "FOO_BAR": "f936Ne",
   "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "j11jPT",
+  "SIMPLE": "Tmwxxn",
 }
 `;
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper-and-no-named-export 3`] = `
 Object {
-  "BTN--INFO_IS-DISABLED_1": "style_module_css_upper-no-named-exports-BTN--INFO_IS-DISABLED_1",
-  "BTN-INFO_IS-DISABLED": "style_module_css_upper-no-named-exports-BTN-INFO_IS-DISABLED",
-  "CLASS": "style_module_css_upper-no-named-exports-CLASS",
-  "DEFAULT": "style_module_css_upper-no-named-exports-DEFAULT",
+  "BTN--INFO_IS-DISABLED_1": "style_module_css_upper-no-named-exports-btn--info_is-disabled_1",
+  "BTN-INFO_IS-DISABLED": "style_module_css_upper-no-named-exports-btn-info_is-disabled",
+  "CLASS": "style_module_css_upper-no-named-exports-class",
+  "DEFAULT": "style_module_css_upper-no-named-exports-default",
   "FOO": "bar",
-  "FOO_BAR": "style_module_css_upper-no-named-exports-FOO_BAR",
+  "FOO_BAR": "style_module_css_upper-no-named-exports-foo_bar",
   "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "style_module_css_upper-no-named-exports-SIMPLE",
+  "SIMPLE": "style_module_css_upper-no-named-exports-simple",
 }
 `;
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper-and-no-named-export 4`] = `
 Object {
-  "BTN--INFO_IS-DISABLED_1": "qyQTB8",
-  "BTN-INFO_IS-DISABLED": "emVwWp",
-  "CLASS": "lBiVDX",
-  "DEFAULT": "_781BMr",
+  "BTN--INFO_IS-DISABLED_1": "UQMUwM",
+  "BTN-INFO_IS-DISABLED": "GOxKnM",
+  "CLASS": "dqpRO6",
+  "DEFAULT": "KhRR3n",
   "FOO": "bar",
-  "FOO_BAR": "jzFqhs",
+  "FOO_BAR": "f936Ne",
   "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "j11jPT",
+  "SIMPLE": "Tmwxxn",
 }
 `;

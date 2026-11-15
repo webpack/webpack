@@ -1,0 +1,1 @@
+function f(y){var x;if(y)x=function(){};else x=2;return x}

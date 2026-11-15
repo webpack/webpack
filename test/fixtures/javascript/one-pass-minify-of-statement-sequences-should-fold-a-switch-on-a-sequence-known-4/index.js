@@ -1,0 +1,1 @@
+function s(w,x,y){switch(/*! c */w(),42){case 42:y()}}

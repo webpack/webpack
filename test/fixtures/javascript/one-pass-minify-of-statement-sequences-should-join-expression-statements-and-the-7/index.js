@@ -1,0 +1,1 @@
+function f(){k();(function(){var y=g();h(y,y)})()}

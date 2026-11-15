@@ -1,0 +1,1 @@
+var o={m(){return this===o}};function l(){let a=o.m;return a!=null?a():void 0}function p(){let a=o;return a!=null?a.m():void 0}console.log(l(),p())

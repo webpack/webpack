@@ -1,0 +1,1 @@
+typeof x==="object"&&x

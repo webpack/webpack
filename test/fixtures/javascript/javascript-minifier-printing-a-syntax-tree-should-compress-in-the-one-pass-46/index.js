@@ -1,0 +1,1 @@
+function f(){ var x = 1, y = 2; var u = x || y, v = x ? y : 1, w = !x, q = (x, y); }

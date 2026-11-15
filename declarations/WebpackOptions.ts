@@ -64,13 +64,19 @@ export type NonNegativeNumber = number;
 export type PositiveNumber = number;
 
 /**
+ * Where files may be written, copied and cleaned outside of 'output.path'. 'true' allows anywhere, 'false' nowhere, and a list allows only inside those directories. When unset, assets plugins emit there are still written (refused with 'experiments.futureDefaults'), while 'output.copy' and 'output.clean' stay inside 'output.path'.
+ * @since 5.113.0
+ */
+export type AllowOutside =
+	| Array</** Absolute path of a directory outside of 'output.path' where files may be written, copied and cleaned. */ AbsolutePath>
+	| boolean;
+
+/**
  * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
  */
 export type Amd =
 	| /** You can pass `false` to disable AMD support. */ false
-	| /** You can pass an object to set the value of `require.amd` and `define.amd`. */ {
-			[key: string]: any;
-	  };
+	| /** You can pass an object to set the value of `require.amd` and `define.amd`. */ import("../lib/fs/fs").JsonObject;
 
 /**
  * Add a container for define/require functions in the AMD module.
@@ -1979,6 +1985,13 @@ export type HotUpdateMainFilename = RelativePath;
 export type HtmlChunkFilename = FilenameTemplate;
 
 /**
+ * How an attribute's value names a class or an id: `class` a class list (like `class`), `id` one id (like `id`), `ids` a list of ids (like `aria-labelledby`), `fragment` a same-page link, `#id` (like `href`), `url` `url(#id)` references (like `fill`).
+ * @since 5.113.0
+ */
+export type HtmlCssModulesAttributeKind =
+	"class" | "id" | "ids" | "fragment" | "url";
+
+/**
  * A single favicon `<link>`: either a path string (used as the icon `href`) or an object with the icon `href` plus extra link attributes (`sizes`, `media`, `color`, `type`, `crossorigin`).
  */
 export type HtmlFaviconIcon =
@@ -2033,6 +2046,19 @@ export interface HtmlGeneratorOptions {
 export type HtmlParserAs = "document" | string;
 
 /**
+ * How a page's CSS modules rewrite it.
+ * @since 5.113.0
+ */
+export interface HtmlParserCssModules {
+	/**
+	 * Attributes whose values are rewritten with the page's CSS module names too, each with how its value names a class or an id, besides the built-in ones (`class`, `id`, `for`, `aria-labelledby`, `href="#id"`, `fill="url(#id)"`, `begin="id.click"`, ...); e.g. `{ "data-target": "id" }`.
+	 */
+	attributes?: {
+		[k: string]: HtmlCssModulesAttributeKind;
+	};
+}
+
+/**
  * Parser options for html modules.
  * @publishes plugins/HtmlParserOptions
  */
@@ -2048,12 +2074,17 @@ export interface HtmlParserOptions {
 	 */
 	chunkName?: NonEmptyString | import("../lib/html/HtmlParser").HtmlChunkNameFn;
 	/**
+	 * How a page's CSS modules — `<style module>` bodies and linked stylesheets that are CSS modules — rewrite it.
+	 * @since 5.113.0
+	 */
+	cssModules?: HtmlParserCssModules;
+	/**
 	 * Report each HTML parse error the page holds, by its WHATWG or html5lib name: a build error where end of input cuts a tag, comment or doctype short, a build warning for one the parser reads past. Off by default.
 	 * @since 5.113.0
 	 */
 	parseErrors?: boolean;
 	/**
-	 * Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `"..."` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed; one whose `lang` names another language is a `data:` module typed as that language's files (`<style lang="scss">` as `text/x-scss`, `<script lang="ts">` as `text/typescript`), and any other valid media-type name as `text/x-<lang>`, so a `mimetype` rule runs its loader. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
+	 * Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `"..."` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed; one whose `lang` names another language is a `data:` module typed as that language's files (`<style lang="scss">` as `text/x-scss`, `<script lang="ts">` as `text/typescript`), and any other valid media-type name as `text/x-<lang>`, so a `mimetype` rule runs its loader. A `<style module>` body is a CSS module, and the page's `class` and `id` values, the ids its `for`, `form`, `list`, `headers`, `itemref`, `popovertarget`, `commandfor`, `interestfor` and `aria-*` reference attributes name, its same-page `href="#id"` links, SVG `url(#id)` references and SMIL `id.event` timings are rewritten with the names it and any linked stylesheet that is a CSS module declare (see `cssModules`); `<style module="card">` or `<link rel="stylesheet" module="card">` names a module, read as `card.btn`; a page with neither is left as it is. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
 	 */
 	sources?:
 		| /** Sources to extract as webpack dependencies. Use `"..."` to inline the default source list. @minItems 1 */ Array<
@@ -3488,16 +3519,91 @@ export interface OptimizationMinimizeOptions {
 }
 
 /**
- * What the XML minimizer does. The stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers.
+ * What the XML minimizer does. The stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers. An SVG `data:` URL takes these switches too, and an `<svg>` inline in HTML takes `removeMetadata`, `shortenNumbers` and `shortenPathData`.
  * @since 5.112.0
  * @experimental
  */
 export interface OptimizationMinimizeXml {
 	/**
+	 * Collapse SVG groups, hoist identical context-free inherited attributes or move them to sole graphics children, inline validated presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.
+	 * @since 5.113.0
+	 */
+	cleanupStructure?: boolean;
+	/**
+	 * Remove whitespace-only text in known SVG containers, preserving text content, foreign content and `xml:space`. Off by default because scripts can observe whitespace nodes.
+	 * @since 5.113.0
+	 */
+	collapseWhitespace?: boolean;
+	/**
+	 * Convert leaf SVG lines, polylines and polygons to shorter paths with identical coordinates and vertices, and equal-radius ellipses to circles. Off by default because consumers can observe element types; skip documents with stylesheets, scripts, animations or DTDs.
+	 * @since 5.113.0
+	 */
+	convertShapes?: boolean;
+	/**
+	 * Merge adjacent disjoint axis-aligned SVG lines with explicit opaque crisp-edge strokes, no fill, dashes or markers. Skip compositing, transformed or ID-bearing ancestors; identical paint remains eligible during color cleanup. Off by default because consumers can observe element boundaries; skip stylesheets, scripts, animations and DTDs.
+	 * @since 5.113.0
+	 */
+	mergePaths?: boolean;
+	/**
+	 * Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.
+	 * @since 5.113.0
+	 */
+	removeEditorData?: boolean;
+	/**
+	 * Remove empty `class`, `id` and `style` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.
+	 * @since 5.113.0
+	 */
+	removeEmptyAttributes?: boolean;
+	/**
+	 * Remove empty SVG `g` and `defs` containers having only namespace declarations, preserving other attributes and DTD defaults. Off by default because selectors and scripts can observe document structure.
+	 * @since 5.113.0
+	 */
+	removeEmptyElements?: boolean;
+	/**
+	 * Remove SVG `metadata` elements and their contents, preserving `title`, `desc` and the document element. Off by default because metadata can carry licensing and application data.
+	 * @since 5.113.0
+	 */
+	removeMetadata?: boolean;
+	/**
+	 * Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.
+	 * @since 5.113.0
+	 */
+	removeUnusedNamespaces?: boolean;
+	/**
+	 * Reuse unidentified duplicate leaf SVG paths without transforms through existing IDs and SVG 2 href references, preserving IDs and target element types. Require explicit context-free fill and stroke; compare identical authored paint before color cleanup. Off by default because consumers can observe element types; skip stylesheets, scripts, animations, duplicate IDs and DTDs.
+	 * @since 5.113.0
+	 */
+	reusePaths?: boolean;
+	/**
+	 * Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.
+	 * @since 5.113.0
+	 */
+	shortenColors?: boolean;
+	/**
+	 * Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.
+	 * @since 5.113.0
+	 */
+	shortenNumbers?: boolean;
+	/**
+	 * Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.
+	 * @since 5.113.0
+	 */
+	shortenPathData?: boolean;
+	/**
 	 * Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.
 	 * @since 5.112.0
 	 */
 	sortAttributes?: boolean;
+	/**
+	 * Sort adjacent SVG resource definitions within defs by type and ID, preserving IDs and references. Off by default because consumers can observe order; skip stylesheets, scripts, animations, duplicate IDs and DTDs.
+	 * @since 5.113.0
+	 */
+	sortDefinitions?: boolean;
+	/**
+	 * Sort adjacent SVG symbol definitions by ID, preserving IDs and references. Off by default because consumers can observe definition order; skip documents with stylesheets, scripts, animations, duplicate IDs or DTDs.
+	 * @since 5.113.0
+	 */
+	sortSymbols?: boolean;
 }
 
 /**
@@ -3918,6 +4024,11 @@ export type OptimizationSplitChunksSizes =
  */
 export interface Output {
 	/**
+	 * Where files may be written, copied and cleaned outside of 'output.path'. 'true' allows anywhere, 'false' nowhere, and a list allows only inside those directories. When unset, assets plugins emit there are still written (refused with 'experiments.futureDefaults'), while 'output.copy' and 'output.clean' stay inside 'output.path'.
+	 * @since 5.113.0
+	 */
+	allowOutside?: AllowOutside;
+	/**
 	 * @cliExclude
 	 */
 	amdContainer?: AmdContainer;
@@ -4311,6 +4422,11 @@ export type OutputModule = boolean;
  * @required environment, enabledChunkLoadingTypes, enabledLibraryTypes, enabledWasmLoadingTypes
  */
 export interface OutputNormalized {
+	/**
+	 * Where files may be written, copied and cleaned outside of 'output.path'. 'true' allows anywhere, 'false' nowhere, and a list allows only inside those directories. When unset, assets plugins emit there are still written (refused with 'experiments.futureDefaults'), while 'output.copy' and 'output.clean' stay inside 'output.path'.
+	 * @since 5.113.0
+	 */
+	allowOutside?: AllowOutside;
 	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */

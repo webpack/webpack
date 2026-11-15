@@ -1,0 +1,1 @@
+function f(x,g){return[({["__proto__"]:5}).__proto__]}

@@ -1,0 +1,1 @@
+function f(){use(()=>x);return 1;var x=g()}function k(){g();return;var x=h(),y=k()}function m(){return n;var x=5;function n(){return x}}function p(){return;var [a,b]=g();use(()=>a)}function q(){if(x)return;do{}while(y)}

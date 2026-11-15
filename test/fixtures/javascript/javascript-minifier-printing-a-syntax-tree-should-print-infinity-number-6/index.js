@@ -1,0 +1,1 @@
+var x;x=Number.POSITIVE_INFINITY;for(var k in Number.NEGATIVE_INFINITY);console.log(x)

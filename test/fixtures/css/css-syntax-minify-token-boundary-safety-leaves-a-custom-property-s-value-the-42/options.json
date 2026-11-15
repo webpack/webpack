@@ -1,0 +1,7 @@
+[
+	{
+		"mode": "minify",
+		"source": "s.css",
+		"content": "a{color:red}\nb{--x:f( g)}"
+	}
+]

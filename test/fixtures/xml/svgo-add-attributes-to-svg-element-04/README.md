@@ -1,0 +1,1 @@
+Ignore nested <svg> elements

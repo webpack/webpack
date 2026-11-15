@@ -1,0 +1,17 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"Comment"
+			],
+			"exit": false,
+			"at": [
+				{
+					"type": "Comment",
+					"do": "stop"
+				}
+			]
+		}
+	}
+]

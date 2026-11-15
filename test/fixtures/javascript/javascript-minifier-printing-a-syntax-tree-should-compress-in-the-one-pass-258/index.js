@@ -1,0 +1,1 @@
+function f(a,b){return[a==b?!0:x,!a?!0:x,a<b?x:!1]}

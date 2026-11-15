@@ -1,0 +1,1 @@
+function f(t){function h(t){return !t.x}if(h(t))k()}

@@ -1,0 +1,1 @@
+a();function k(){b();(function(){let x=f();g(x,x)})();return 1}for(;;)(()=>{let y=f();g(y,y)})();async function q(){(function(){let x=f();await=x;g(x)})()}

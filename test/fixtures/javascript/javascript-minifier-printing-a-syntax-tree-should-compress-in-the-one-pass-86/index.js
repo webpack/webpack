@@ -1,0 +1,1 @@
+function f(){ var g = function(){ return 1 }; h(g) + 1 } function i(){ var k = () => {}; h(k) }

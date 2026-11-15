@@ -1,0 +1,1 @@
+function f(){function g(a,b){return a}g=h;return[g(1,2),g(3,4)]}

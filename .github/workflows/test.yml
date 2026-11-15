@@ -103,6 +103,12 @@ jobs:
 
       - run: node tooling/retry.js yarn --frozen-lockfile
 
+      # The syntax tests the coverage step reruns spawn minifiers that load
+      # `webpack` by name, as in `unit`
+      - run: yarn link --frozen-lockfile || true
+
+      - run: yarn link webpack --frozen-lockfile
+
       # The framework stylesheets and documents the comparisons install, which
       # the sweep reads as well: the corpus a contributor builds is 77
       # stylesheets wider than the one a bare checkout holds, and a finding has
@@ -174,6 +180,12 @@ jobs:
       - name: XML parser and printer invariants
         if: ${{ !cancelled() }}
         run: yarn test:invariants:xml --require-corpus
+
+      # Reruns each language's syntax tests with coverage, about five minutes:
+      # here rather than in `unit`, which every costly job waits on.
+      - name: Syntax code its own tests run
+        if: ${{ !cancelled() }}
+        run: yarn test:syntax-coverage
 
   validate-legacy-node:
     runs-on: ubuntu-latest

@@ -1,0 +1,1 @@
+var o = { zAlpha: 1, "zGamma": 3, 4: "four", zNested: { zDeep: 5 } }; o.zDelta = o.zAlpha + 1; o["zEpsilon"] = 6; console.log(o.zAlpha, o.zGamma, o[4], o.zNested.zDeep, o.zDelta, o.zEpsilon, "zDelta" in o, "zZeta" in o);

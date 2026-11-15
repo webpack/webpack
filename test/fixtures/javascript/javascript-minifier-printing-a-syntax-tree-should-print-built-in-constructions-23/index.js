@@ -1,0 +1,1 @@
+var Object;Object(f)(1)

@@ -1,0 +1,1 @@
+function m(){f();var rangeChars="abcdefghijklmnopq";new RegExp("["+rangeChars+"]");new RegExp("["+rangeChars+"0-9]","g")}

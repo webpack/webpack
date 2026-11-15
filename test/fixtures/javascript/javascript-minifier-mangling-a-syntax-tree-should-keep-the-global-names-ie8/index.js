@@ -1,0 +1,1 @@
+x = [undefined, Infinity, o.default, '\v']; if (a) do b(); while (c); else d(); async function f(x) { return !await x }

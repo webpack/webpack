@@ -1,0 +1,1 @@
+x=[Math.abs(-1),parseInt("1")]

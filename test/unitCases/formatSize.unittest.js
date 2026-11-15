@@ -12,6 +12,10 @@ describe("SizeFormatHelpers", () => {
 			expect(formatSize(-1)).toBe("0 bytes");
 		});
 
+		it("should handle fractional bytes", () => {
+			expect(formatSize(0.5)).toBe("0.5 bytes");
+		});
+
 		it("should handle bytes", () => {
 			expect(formatSize(1000)).toBe("1000 bytes");
 		});

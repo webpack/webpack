@@ -1,0 +1,9 @@
+<svg width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .prefixIds_06_svg_txt__test{color:blue}.prefixIds_06_svg_txt__test2{color:green}#prefixIds_06_svg_txt__test{color:red}.prefixIds_06_svg_txt__test3 .prefixIds_06_svg_txt__test4{color:black}.prefixIds_06_svg_txt__test5.prefixIds_06_svg_txt__test6{color:brown}.prefixIds_06_svg_txt__test5.prefixIds_06_svg_txt__test6 #prefixIds_06_svg_txt__test7{color:yellow}
+    </style>
+    <rect class="prefixIds_06_svg_txt__test" x="10" y="10" width="100" height="100"/>
+    <rect class="prefixIds_06_svg_txt__test prefixIds_06_svg_txt__test2" x="10" y="10" width="100" height="100"/>
+    <rect class="prefixIds_06_svg_txt__test prefixIds_06_svg_txt__test2" x="10" y="10" width="100" height="100"/>
+    <rect class="" id="prefixIds_06_svg_txt__test" x="10" y="10" width="100" height="100"/>
+</svg>

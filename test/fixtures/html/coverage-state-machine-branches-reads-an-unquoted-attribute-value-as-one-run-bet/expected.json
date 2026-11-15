@@ -1,0 +1,17 @@
+[
+	{
+		"relation": "respelling quote-double",
+		"contains": "c=1 d=2 e=3 f=4 g=&h i=`></a>",
+		"why": "an unquoted value holding a quote, `<`, a backtick or NUL is a parse error the printer writes back as authored; quoted, or with its backtick a reference, the same value is clean and the printer shortens its `&amp;`, 2 B less in the same meaning"
+	},
+	{
+		"relation": "respelling quote-single",
+		"contains": "c=1 d=2 e=3 f=4 g=&h i=`></a>",
+		"why": "an unquoted value holding a quote, `<`, a backtick or NUL is a parse error the printer writes back as authored; quoted, or with its backtick a reference, the same value is clean and the printer shortens its `&amp;`, 2 B less in the same meaning"
+	},
+	{
+		"relation": "respelling references",
+		"contains": "c=1 d=2 e=3 f=4 g=&h i=`></a>",
+		"why": "an unquoted value holding a quote, `<`, a backtick or NUL is a parse error the printer writes back as authored; quoted, or with its backtick a reference, the same value is clean and the printer shortens its `&amp;`, 2 B less in the same meaning"
+	}
+]

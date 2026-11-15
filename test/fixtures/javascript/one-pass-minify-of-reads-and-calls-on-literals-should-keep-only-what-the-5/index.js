@@ -1,0 +1,1 @@
+(class{[a()](){}static["prototype"](){}}),(class{[a()];static["prototype"]=1}),(class{[a()];static[k()]=1});

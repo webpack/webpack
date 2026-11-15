@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<style>a { b : c }<!-- one -->d { e : f }<!-- two --><![CDATA[ g > h { i : j } ]]></style>
+<style>a { b : c }<!--#include virtual="x" -->d { e : f }</style>
+<style>a { b : c }<g/>d { e : f }</style>
+<style> <!-- blank --> </style>
+<style type="text/less">a { b : c }<!-- not css -->d { e : f }</style>
+</svg>

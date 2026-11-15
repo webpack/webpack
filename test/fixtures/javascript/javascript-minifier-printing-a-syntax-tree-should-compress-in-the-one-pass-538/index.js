@@ -1,0 +1,1 @@
+use("abc"["length"]);use([1,2,3]["length"]);use([,,1]["length"]);use(/a/["source"]);use("a"["x"]);use("a"[0]);use(a?.["length"]);delete"ab"["length"]

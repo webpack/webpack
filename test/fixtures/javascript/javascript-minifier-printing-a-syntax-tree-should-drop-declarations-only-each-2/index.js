@@ -1,0 +1,1 @@
+(function(){class A{static x(){return A}} g()})()

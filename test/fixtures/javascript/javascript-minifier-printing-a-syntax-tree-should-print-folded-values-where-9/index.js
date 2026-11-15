@@ -1,0 +1,1 @@
+f((new Error()).stack);

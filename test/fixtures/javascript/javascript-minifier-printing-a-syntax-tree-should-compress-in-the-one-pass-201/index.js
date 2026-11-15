@@ -1,0 +1,1 @@
+const f=(a,b)=>{;if({}.x)return 1;if(b)return 2;return 3}

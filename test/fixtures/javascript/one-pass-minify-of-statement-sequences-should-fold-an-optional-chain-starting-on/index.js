@@ -1,0 +1,1 @@
+var n=0;function f(){n++;return 1}console.log(null?.[f()],(void 0)?.a.b(f()),(null?.a)?.b,typeof null?.a,(1,null)?.a);null?.[f()];console.log(n)

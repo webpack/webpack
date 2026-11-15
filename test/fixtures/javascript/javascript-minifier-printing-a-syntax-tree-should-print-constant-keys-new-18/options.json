@@ -1,0 +1,19 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"negate_iife": false
+		},
+		"mangle": {},
+		"module": true
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"module": true,
+		"format": {
+			"wrap_iife": true
+		}
+	}
+]

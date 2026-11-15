@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const { decodeUrlPath } = require("../harness/runner/RunnerHelpers");
 
 /** @import { MutableToken } from "../../lib/css/syntax-parser" */
 /** @typedef {Record<string, unknown> & { getPropertyValue: (property: string) => unknown }} StyleDeclaration */
@@ -613,10 +614,12 @@ class FakeSheet {
 		let css = fs.readFileSync(
 			path.resolve(
 				this._basePath,
-				/** @type {string} */ (this._element.href)
-					.replace(/^https:\/\/test\.cases\/path\//, "")
-					.replace(/^https:\/\/example\.com\//, "")
-					.split("?")[0] // Remove query parameters (e.g., ?hmr=timestamp)
+				decodeUrlPath(
+					/** @type {string} */ (this._element.href)
+						.replace(/^https:\/\/test\.cases\/path\//, "")
+						.replace(/^https:\/\/example\.com\//, "")
+						.split("?")[0] // Remove query parameters (e.g., ?hmr=timestamp)
+				)
 			),
 			"utf8"
 		);
@@ -668,10 +671,12 @@ class FakeSheet {
 			? new URL(href)
 			: path.resolve(
 					this._basePath,
-					href
-						.replace(/^https:\/\/test\.cases\/path\//, "")
-						.replace(/^https:\/\/example\.com\/public\/path\//, "")
-						.replace(/^https:\/\/example\.com\//, "")
+					decodeUrlPath(
+						href
+							.replace(/^https:\/\/test\.cases\/path\//, "")
+							.replace(/^https:\/\/example\.com\/public\/path\//, "")
+							.replace(/^https:\/\/example\.com\//, "")
+					)
 				);
 		let css = fs.readFileSync(filepath, "utf8");
 		css = css

@@ -1,0 +1,1 @@
+new(/**/function(){function s(){}}())

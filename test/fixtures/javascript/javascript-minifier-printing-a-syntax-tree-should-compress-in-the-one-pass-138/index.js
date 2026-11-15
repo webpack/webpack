@@ -1,0 +1,1 @@
+function f() { function w() { return b() } function a() { return x() } function b() { return a() } }

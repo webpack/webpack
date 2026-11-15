@@ -1,0 +1,1 @@
+function g(){return 1}var f=console.log;f([][-1],void 0,void 0,void 0,"b",void 0),f([g(),1]["01"],"ab".x,[1,2].foo,[1,2][NaN],2);

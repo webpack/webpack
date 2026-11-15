@@ -1,0 +1,14 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"renderEmbeddedSource": { "fixture": "dropSpaces" },
+		"check": { "fixture": "check" }
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"visit": { "fixture": "countElements" },
+		"check": { "fixture": "check" }
+	}
+]

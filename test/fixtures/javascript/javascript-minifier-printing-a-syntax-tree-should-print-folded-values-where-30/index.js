@@ -1,0 +1,1 @@
+function f(alpha,beta){var delta=alpha+beta;g(delta,delta*7,6,5,4,3,2,1)}g(f)

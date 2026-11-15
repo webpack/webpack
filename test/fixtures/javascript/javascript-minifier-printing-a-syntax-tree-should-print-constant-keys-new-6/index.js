@@ -1,0 +1,1 @@
+export function e(g,l){return [Object.keys([10,,30]),Object.values([10,,30]),Object.entries([10,,30]),Object.keys("ab"),Object.entries("a"),Object.keys([g()]),Object.keys([...l]),Object.keys?.([1])]} export function s(Object){return Object.keys([1])}

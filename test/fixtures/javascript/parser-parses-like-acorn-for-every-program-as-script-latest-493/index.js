@@ -1,0 +1,1 @@
+function f() { using in = 1; }

@@ -1,0 +1,1 @@
+function f() { class Foo {} g(Foo, Foo) }

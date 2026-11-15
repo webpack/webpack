@@ -1,0 +1,1 @@
+function f(){function g(s){return s[0]}return g`x`}console.log(f())

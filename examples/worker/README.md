@@ -357,7 +357,7 @@ export const add = (content, from) => {
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -668,7 +668,7 @@ onmessage = async event => {
 
 ```javascript
 "use strict";
-(self["webpackChunk"] = self["webpackChunk"] || []).push([[129],{
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([[129],{
 
 /***/ 3
 /*!**********************!*\
@@ -700,7 +700,7 @@ function fibonacci(n) {
 asset main.js 11.5 KiB [emitted] (name: main)
 asset workers/fibonacci.js 4.66 KiB [emitted] (name: fibonacci)
 asset chat.js 839 bytes [emitted] (name: chat)
-asset 129.js 729 bytes [emitted]
+asset 129.js 768 bytes [emitted]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
   > ./fibonacci ./example.js 70:30-51
   > ./fibonacci ./fib-worker.js 2:29-50
@@ -721,9 +721,9 @@ chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.3 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.34 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.3 KiB 7 modules
+  runtime modules 5.34 KiB 7 modules
   ./example.js 2.25 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main
@@ -733,10 +733,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset main.js 3.3 KiB [emitted] [minimized] (name: main)
+asset main.js 3.33 KiB [emitted] [minimized] (name: main)
 asset workers/fibonacci.js 778 bytes [emitted] [minimized] (name: fibonacci)
 asset chat.js 270 bytes [emitted] [minimized] (name: chat)
-asset 129.js 156 bytes [emitted] [minimized]
+asset 129.js 188 bytes [emitted] [minimized]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
   > ./fibonacci ./fib-worker.js 2:29-50
   > ./fibonacci ./example.js 70:30-51
@@ -757,9 +757,9 @@ chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.3 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.34 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.3 KiB 7 modules
+  runtime modules 5.34 KiB 7 modules
   ./example.js 2.25 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main

@@ -1,0 +1,1 @@
+function f(a,c){return c?a/*x*/:a}console.log(f(1,1))

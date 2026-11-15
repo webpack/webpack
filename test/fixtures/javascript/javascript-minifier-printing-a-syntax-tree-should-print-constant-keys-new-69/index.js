@@ -1,0 +1,1 @@
+export function f(r){var t;t={d:x=>x*2,e:[function(){return 1}]};r.add(t)}export function g(r){var t={a:()=>1};for(;;)r.add(t)}

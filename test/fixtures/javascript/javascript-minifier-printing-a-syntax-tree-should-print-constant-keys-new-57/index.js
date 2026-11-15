@@ -1,0 +1,1 @@
+export const q=["a",'b"'];g("d'");import("x")

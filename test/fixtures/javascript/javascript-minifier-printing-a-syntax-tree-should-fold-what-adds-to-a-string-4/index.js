@@ -1,0 +1,1 @@
+Object.prototype.valueOf=()=>7;a=[1]+""

@@ -1,0 +1,1 @@
+function f(c){ { if (c) { var x; x = s(); g(x) } let g = q; } } function h(c){ let g = q; if (c) { var x; x = s(); g(x) } } function k(){ class C {} var x; x = s(); new C(x) } function m(){ let g = () => {}; function n(){ var x; x = s(); g(x) } return n }

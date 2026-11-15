@@ -116,6 +116,65 @@ const materialize = (ref) => {
 };
 
 /**
+ * `JSON.stringify` of the materialized nodes, written from a stack of its own,
+ * so a tree deeper than the engine's stack prints as a shallow one does.
+ * @param {HtmlNodeRef[]} refs top-level node refs
+ * @returns {string} the same text as `JSON.stringify(refs.map(materialize))`
+ */
+const materializedJson = (refs) => {
+	/** @type {string[]} */
+	const out = [];
+	/** @type {(string | HtmlNodeRef[])[]} */
+	const work = [refs];
+	while (work.length !== 0) {
+		const item = /** @type {string | HtmlNodeRef[]} */ (work.pop());
+		if (typeof item === "string") {
+			out.push(item);
+			continue;
+		}
+		out.push("[");
+		/** @type {(string | HtmlNodeRef[])[]} */
+		const parts = [];
+		for (let i = 0; i < item.length; i++) {
+			if (i !== 0) parts.push(",");
+			const ref = item[i];
+			if (A.type(ref) !== NodeType.Element) {
+				parts.push(JSON.stringify(materialize(ref)));
+				continue;
+			}
+			const tc = A.field(0, Field.content, ref);
+			const head = JSON.stringify({
+				type: A.type(ref),
+				tagName: A.name(ref),
+				namespace: _namespaceOf(ref),
+				attributes: _attributeList(ref)
+			});
+			const tail = JSON.stringify({
+				selfClosing: A.flag(Flag.selfClosing, ref),
+				start: A.start(ref),
+				end: A.end(ref),
+				tagEnd: A.startOf(Part.content, ref),
+				nameEnd: A.endOf(Part.name, ref),
+				contentEnd: A.endOf(Part.content, ref)
+			});
+			parts.push(`${head.slice(0, -1)},"children":`, childrenOf(ref));
+			parts.push(`,${tail.slice(1, -1)}`);
+			if (tc !== 0) {
+				parts.push(
+					`,"templateContent":{"type":${NodeType.DocumentFragment},"children":`,
+					childrenOf(tc),
+					"}"
+				);
+			}
+			parts.push("}");
+		}
+		parts.push("]");
+		for (let i = parts.length - 1; i >= 0; i--) work.push(parts[i]);
+	}
+	return out.join("");
+};
+
+/**
  * @param {string} src source
  * @param {string=} fragmentContext fragment context
  * @param {import("../../lib/html/syntax-parser").HtmlAstSkip=} skip skip options
@@ -153,4 +212,12 @@ const html = (src) => child(parseHtml(src).children, "html");
 const body = (src) =>
 	/** @type {MatElement[]} */ (child(html(src).children, "body").children);
 
-module.exports = { body, child, childrenOf, html, materialize, parseHtml };
+module.exports = {
+	body,
+	child,
+	childrenOf,
+	html,
+	materialize,
+	materializedJson,
+	parseHtml
+};

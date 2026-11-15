@@ -1,0 +1,1 @@
+(function(){let a=f();g(a,a)})();x()

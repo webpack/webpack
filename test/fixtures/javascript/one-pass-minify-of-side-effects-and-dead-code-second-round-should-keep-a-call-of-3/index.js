@@ -1,0 +1,1 @@
+globalThis.String=function(v){return"S"+v};var x=1;console.log(String("a"+x))

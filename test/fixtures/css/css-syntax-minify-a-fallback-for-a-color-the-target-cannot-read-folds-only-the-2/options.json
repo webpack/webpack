@@ -6,5 +6,21 @@
 				"chrome 105"
 			]
 		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 100"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 101"
+			]
+		}
 	}
 ]

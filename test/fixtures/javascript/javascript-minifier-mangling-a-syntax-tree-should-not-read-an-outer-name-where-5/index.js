@@ -1,0 +1,1 @@
+function k(e) { const f = function () { return e }; try { throw 2 } catch (e) { return f() + e } } result = k(1);

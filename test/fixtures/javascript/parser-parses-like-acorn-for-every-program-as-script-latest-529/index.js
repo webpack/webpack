@@ -1,0 +1,1 @@
+async function f() { async (a = await 1) => a }

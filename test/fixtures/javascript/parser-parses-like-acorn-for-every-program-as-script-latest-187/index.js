@@ -1,0 +1,1 @@
+for await (x of y) {}

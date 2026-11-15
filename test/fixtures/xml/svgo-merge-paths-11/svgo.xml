@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 400 400">
+    <style>
+        path.lg{clip-path:url(#myClip);}
+    </style>
+    <clipPath id="myClip" clipPathUnits="objectBoundingBox">
+        <circle cx=".5" cy=".5" r=".5"/>
+    </clipPath>
+    <path clip-path="url(#myClip)" fill="red" d="M 0 0 H 100 V 80 H 0 z"/>
+    <path clip-path="url(#myClip)" fill="red" d="M 200 0 H 300 V 80 H 200 z"/>
+    <path style="clip-path:url(#myClip)" fill="red" d="M 0 100 h 100 v 80 H 0 z"/>
+    <path style="clip-path:url(#myClip)" fill="red" d="M 200 100 H 300 v 80 H 200 z"/>
+    <path class="lg" fill="red" d="M 0 200 h 100 v 80 H 0 z"/>
+    <path class="lg" fill="red" d="M 200 200 H 300 v 80 H 200 z"/>
+    <path style="clip-path:circle(25%)" fill="red" d="M 0 300 h 100 v 80 H 0 z"/>
+    <path style="clip-path:circle(25%)" fill="red" d="M 200 300 H 300 v 80 H 200 z"/>
+</svg>

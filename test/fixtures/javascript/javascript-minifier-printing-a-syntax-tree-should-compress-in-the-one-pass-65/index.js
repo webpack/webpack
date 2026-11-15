@@ -1,0 +1,1 @@
+function f(){ var m = /*! lic */ function(){}; h(m) } function i(){ function k(){} h(k) } function j(){ var n = function(){}; for (;;) h(n) }

@@ -1,0 +1,1 @@
+(class{[a](){}static["b"]=1;#p;get[c](){}static{}static d=1}),x=(class{[e]},1);

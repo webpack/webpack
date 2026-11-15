@@ -1,0 +1,1 @@
+lbl: using x = y;

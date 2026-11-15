@@ -1,0 +1,13 @@
+[
+	{
+		"fields": [
+			"range",
+			"startOf:content",
+			"endOf:name",
+			"endOf:content",
+			"flag:selfClosing",
+			"rangeOf:name",
+			"rangeOf:value"
+		]
+	}
+]

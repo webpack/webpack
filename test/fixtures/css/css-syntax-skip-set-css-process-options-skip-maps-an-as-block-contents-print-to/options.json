@@ -1,0 +1,8 @@
+[
+	{
+		"mode": "minify",
+		"as": "block-contents",
+		"source": "style",
+		"content": "color:  #ff0000"
+	}
+]

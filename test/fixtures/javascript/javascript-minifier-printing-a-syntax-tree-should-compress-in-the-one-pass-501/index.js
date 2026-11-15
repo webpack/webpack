@@ -1,0 +1,1 @@
+function f(){var t=g();var e,h=0;for(;h<1;++h)e=k(e);return t+e+t}

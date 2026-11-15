@@ -1,0 +1,1 @@
+export function b(r){return [new RegExp(10n), new RegExp(-10n), new RegExp(`x`), new RegExp(), new RegExp(/a/), new RegExp(r)]}

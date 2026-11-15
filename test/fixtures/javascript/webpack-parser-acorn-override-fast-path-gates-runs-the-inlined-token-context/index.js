@@ -1,0 +1,1 @@
+if (a) (b); while (c) { d } (function () {})();

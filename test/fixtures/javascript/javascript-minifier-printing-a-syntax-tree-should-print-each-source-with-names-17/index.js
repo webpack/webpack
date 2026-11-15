@@ -1,0 +1,1 @@
+function* g(){ yield; yield a; yield* b; x = yield c; (yield d) + 1 }

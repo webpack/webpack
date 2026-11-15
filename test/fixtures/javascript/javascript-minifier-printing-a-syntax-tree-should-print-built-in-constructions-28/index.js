@@ -1,0 +1,1 @@
+function k(c){(c?eval:eval)("x");(c?o.f:o.f)("y");(c?o.f:o.f)`y`}(c()?eval:eval)("x");(c?o[f()]:o[f()])(1);(c?o.f:o.f)?.(1)

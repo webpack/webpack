@@ -1,0 +1,1 @@
+String.prototype.trim=f;a=[1]+""

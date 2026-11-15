@@ -1,0 +1,1 @@
+export async function f(){ const r = await g(1); return r.x }

@@ -13,6 +13,7 @@ import "./es6.nominimize/index.js";
 import "./evaluate/index.js";
 import "./filename/index.js";
 import "./hashbang/index.js";
+import "./html-like-comment/index.js";
 import "./import-define/index.js";
 import "./javascript/index.js";
 import "./local-modules/index.js";

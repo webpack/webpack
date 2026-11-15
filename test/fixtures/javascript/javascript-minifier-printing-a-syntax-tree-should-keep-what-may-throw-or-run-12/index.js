@@ -1,0 +1,1 @@
+class C { constructor() { t(() => { this; }); } }

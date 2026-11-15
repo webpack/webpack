@@ -1,0 +1,1 @@
+switch(x){case 0:f();break;case 1:case 2:default:g()}switch(x){case 1:default:g();case 2:h()}switch(x){case 1:default:g();case f():h()}switch(x){case 1:default:g();break;case 1:h()}switch(x){case 1:default:g();break;case y:h()}

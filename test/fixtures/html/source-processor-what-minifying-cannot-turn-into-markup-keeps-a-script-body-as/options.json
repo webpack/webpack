@@ -1,0 +1,15 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"javascript/script": "x=\"<!--<script>\""
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	}
+]

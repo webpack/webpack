@@ -1,0 +1,1 @@
+if (a) return new.target; await = yield = 1; with (a) {}

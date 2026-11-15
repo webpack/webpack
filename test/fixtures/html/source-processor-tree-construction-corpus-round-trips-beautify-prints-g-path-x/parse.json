@@ -1,0 +1,16 @@
+[
+	{
+		"options": {
+			"fragmentContext": "svg path",
+			"scripting": true
+		}
+	},
+	{
+		"options": {
+			"fragmentContext": "svg path"
+		},
+		"check": {
+			"fixture": "fragmentTree"
+		}
+	}
+]

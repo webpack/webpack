@@ -1,0 +1,8 @@
+{
+  "name": "__WEBPACK_CSS_PUBLIC_PATH_AUTO__ marker",
+  "__WEBPACK_CSS_PUBLIC_PATH_AUTO__": "key",
+  "start_url": "/",
+  "icons": [
+    { "src": "./icon.png?v=__WEBPACK_CSS_PUBLIC_PATH_AUTO__", "sizes": "192x192" }
+  ]
+}

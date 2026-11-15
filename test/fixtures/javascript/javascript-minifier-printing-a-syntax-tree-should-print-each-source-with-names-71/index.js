@@ -1,0 +1,1 @@
+for (;;) ; while (a) ; for (x in y) ; for (x of y) ; a: ; b: { break b } c: for (;;) continue c; switch (a) {} switch (a) { case 1: case 2: b(); break; default: }

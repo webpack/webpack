@@ -1,0 +1,17 @@
+[
+	{
+		"mode": "minify",
+		"visit": {
+			"types": [
+				"Comment"
+			],
+			"exit": false,
+			"at": [
+				{
+					"type": "Comment",
+					"do": "stop"
+				}
+			]
+		}
+	}
+]

@@ -7,6 +7,7 @@ const fs = require("fs");
 const path = require("path");
 const acorn = require("acorn");
 const ConcatenatedModule = require("../../lib/optimize/ConcatenatedModule");
+const { decodeUrlPath } = require("../harness/runner/RunnerHelpers");
 
 /** @import Chunk from "../../lib/graph/Chunk" */
 /** @import Compilation from "../../lib/Compilation" */
@@ -167,11 +168,18 @@ const literalSpecifiersOf = (code) => {
  */
 const placeOf = (specifier, fromDirectory) => {
 	const [withoutHash] = specifier.split("#");
-	const [text] = withoutHash.split("?");
-	if (HAS_SCHEME.test(text)) {
-		if (!/^(?:https?:|\/\/)/i.test(text)) return;
-		const { pathname } = new URL(text.startsWith("//") ? `http:${text}` : text);
-		return { place: pathname.replace(/^\/+/, ""), inside: false };
+	const [written] = withoutHash.split("?");
+	// A specifier is read as a URL: the file it names is its path decoded.
+	const text = decodeUrlPath(written);
+	if (HAS_SCHEME.test(written)) {
+		if (!/^(?:https?:|\/\/)/i.test(written)) return;
+		const { pathname } = new URL(
+			written.startsWith("//") ? `http:${written}` : written
+		);
+		return {
+			place: decodeUrlPath(pathname).replace(/^\/+/, ""),
+			inside: false
+		};
 	}
 	// A trailing slash names the directory a runtime resolves against — the
 	// public path itself — rather than a file webpack emitted.

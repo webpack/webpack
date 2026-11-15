@@ -1,0 +1,1 @@
+f(true, false); x = true.toString(); y = true ** b; z = b ** true; w = { a: false }; t = typeof true; new true; true`x`; v = a(true)(false)

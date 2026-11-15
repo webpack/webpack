@@ -1,0 +1,1 @@
+function f(x){switch(x){case typeof q:label:function q(){};return 1}return 2}

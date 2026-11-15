@@ -1,0 +1,1 @@
+Math.abs=f;String.prototype.concat=g;globalThis.parseFloat=h;Math[1]=k;x=[Math.abs(-1),"a".concat("b"),parseFloat("1"),Math.max(1,2),parseInt("1")]

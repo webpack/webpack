@@ -1,0 +1,14 @@
+[
+	{
+		"mode": "minify",
+		"removeRedundantAttributes": "smart",
+		"removeEmptyElements": true,
+		"renderEmbeddedSource": "builtin"
+	},
+	{
+		"mode": "minify",
+		"removeRedundantAttributes": "smart",
+		"removeEmptyElements": true,
+		"deferEmbeddedSource": []
+	}
+]

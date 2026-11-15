@@ -1,0 +1,1 @@
+(()=>{function f(){return [g(1),g(2)]} class K{} it(()=>f())})()

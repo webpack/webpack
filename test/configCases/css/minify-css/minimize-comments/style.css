@@ -1,0 +1,10 @@
+/* an inert comment, which the pattern does not name */
+.t01 { color: red }
+/*! a banner the pattern does not name either, so it goes with the rest */
+.t02 { color: red }
+/* @license which a pattern standing in for the banner rule does not keep */
+.t03 { color: red }
+/* keep: named by the pattern, so this one survives */
+.t04 { color: red }
+/*! keep: a banner the pattern does name */
+.t05 { color: red }

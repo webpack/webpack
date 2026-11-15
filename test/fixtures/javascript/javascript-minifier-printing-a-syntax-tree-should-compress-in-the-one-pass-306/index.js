@@ -1,0 +1,1 @@
+function f(a){return["abc".length,[1,,a].length+1,[g()].length,/a\/b/.source,"ab".length.x,"ab".length(),"ab".length``,delete"ab".length]}

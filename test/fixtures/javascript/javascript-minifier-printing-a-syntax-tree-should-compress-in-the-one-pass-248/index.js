@@ -1,0 +1,1 @@
+function f(){return[typeof function(){},typeof(()=>4)]}

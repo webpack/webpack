@@ -246,7 +246,7 @@ require.ensure(["c"], function(require) {
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -279,7 +279,7 @@ __webpack_require__.e(/*! require.ensure */ "node_modules_c_js-node_modules_d_js
 # dist/node_modules_c_js-node_modules_d_js.output.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["node_modules_c_js-node_modules_d_js"],[
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["node_modules_c_js-node_modules_d_js"],[
 /* 0 */,
 /* 1 */,
 /* 2 */,
@@ -311,7 +311,7 @@ __webpack_require__.e(/*! require.ensure */ "node_modules_c_js-node_modules_d_js
 Minimized
 
 ```javascript
-(self.webpackChunk=self.webpackChunk||[]).push([["node_modules_c_js-node_modules_d_js"],{605(){},576(){}}]);
+(Array.isArray(self.webpackChunk)?self.webpackChunk:self.webpackChunk=[]).push([["node_modules_c_js-node_modules_d_js"],{605(){},576(){}}]);
 ```
 
 # Info
@@ -319,11 +319,11 @@ Minimized
 ## Unoptimized
 
 ```
-asset output.js 9.05 KiB [emitted] (name: main)
-asset node_modules_c_js-node_modules_d_js.output.js 562 bytes [emitted]
-chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.73 KiB (runtime) [entry] [rendered]
+asset output.js 9.09 KiB [emitted] (name: main)
+asset node_modules_c_js-node_modules_d_js.output.js 601 bytes [emitted]
+chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.73 KiB 6 modules
+  runtime modules 4.77 KiB 6 modules
   dependent modules 22 bytes [dependent] 2 modules
   ./example.js 139 bytes [built] [code generated]
     [used exports unknown]
@@ -342,11 +342,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.75 KiB [emitted] [minimized] (name: main)
-asset node_modules_c_js-node_modules_d_js.output.js 108 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.73 KiB (runtime) [entry] [rendered]
+asset output.js 1.79 KiB [emitted] [minimized] (name: main)
+asset node_modules_c_js-node_modules_d_js.output.js 140 bytes [emitted] [minimized]
+chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.73 KiB 6 modules
+  runtime modules 4.77 KiB 6 modules
   dependent modules 22 bytes [dependent] 2 modules
   ./example.js 139 bytes [built] [code generated]
     [no exports used]

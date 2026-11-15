@@ -1,0 +1,12 @@
+[
+	{
+		"print": "htmlMinify",
+		"minimizer": {
+			"asset": "page.html"
+		},
+		"extractComments": {
+			"regexp": "foo"
+		},
+		"comments": "some"
+	}
+]

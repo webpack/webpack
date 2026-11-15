@@ -1,0 +1,1 @@
+function h(){console.log("h")}function f(){return function(){h()}()}function g(){return function(){h();return}()}function k(){return function(){return 1}()}function m(){return(()=>1)()}function n(){return async function(){h()}()}function p(){return function(){h();(function(){return 2})()}()}console.log(f(),g(),k(),m(),typeof n(),p())

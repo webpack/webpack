@@ -1,0 +1,6 @@
+@value pair: blue;
+@value bg from "./sub/values.module.css";
+
+.cycle-b {
+	background-image: bg;
+}

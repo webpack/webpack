@@ -1,0 +1,9 @@
+[
+	{
+		"entry": "tokenize",
+		"options": {
+			"fragmentContext": "noscript",
+			"scripting": true
+		}
+	}
+]

@@ -1,0 +1,1 @@
+[Object.values]=[function(){return ['w']}];console.log(Object.keys({a:1,b:2}).join(), Object.values({a:3}).join(), Object.entries({c:4}).join());

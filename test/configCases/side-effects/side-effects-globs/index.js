@@ -1,4 +1,5 @@
 import "bare-star";
+import "edge-globs";
 import "flag-false";
 import "flag-true";
 import "globs";
@@ -26,6 +27,17 @@ it("should not let a single star cross a path separator", () => {
 
 it("should match a nested path with a bare `*.js`", () => {
 	expect(evaluated()).toContain("bare-star/deep/nested");
+});
+
+it("should read an unbalanced or invalid glob as the characters it holds", () => {
+	expect(evaluated()).toContain("edge-globs/brace/{a,b");
+	expect(evaluated()).toContain("edge-globs/range/[z-a]");
+	expect(evaluated()).not.toContain("edge-globs/brace/a");
+});
+
+it("should check a deep path against many globstars", () => {
+	expect(evaluated()).toContain("edge-globs/index");
+	expect(evaluated()).not.toContain("edge-globs/deep/clean");
 });
 
 it("should understand the boolean forms", () => {

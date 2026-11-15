@@ -1,0 +1,1 @@
+function f(){if(1){"use "+"strict"}return this}

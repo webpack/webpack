@@ -1,0 +1,1 @@
+var x=1,y;console.log(""+(x+="foo"),(y="a")+"",x);console.log((""+(x+="b"))?1:2,1+(""+(x+="c")),x)

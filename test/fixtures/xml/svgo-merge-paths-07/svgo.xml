@@ -1,0 +1,14 @@
+<svg width="100" height="100">
+    <defs>
+        <style>
+            .a {marker-end: url(#arrowhead_end);}
+        </style>
+        <marker id="arrowhead_end" markerWidth="10" markerHeight="10" refX="6" refY="3">
+            <path d="M 0,0 l 6,3 l -6,3" stroke="black"/>
+        </marker>
+    </defs>
+    <path d="M 10,10 h50" stroke="black" marker-end="url(#arrowhead_end)"/>
+    <path d="M 10,50 h50" stroke="black" marker-end="url(#arrowhead_end)"/>
+    <path d="M 10,60 h60" stroke="black" class="a"/>
+    <path d="M 10,70 h60" stroke="black" class="a"/>
+</svg>

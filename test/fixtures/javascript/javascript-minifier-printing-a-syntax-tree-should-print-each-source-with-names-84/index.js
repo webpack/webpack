@@ -1,0 +1,1 @@
+async () => { for await (const a of b); }; async x => x; async (a, b) => a; (async) => 1; async; async(); async(a); x = async function () {}; x = async function* () {};

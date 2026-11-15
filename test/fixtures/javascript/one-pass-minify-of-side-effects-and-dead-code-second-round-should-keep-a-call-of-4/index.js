@@ -1,0 +1,1 @@
+globalThis.Object.keys=function(){console.log("r");return["z"]};console.log(Object.keys({a:1}))

@@ -1,0 +1,35 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"html/srcdoc": "<p a=\"b\">"
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"print": "htmlMinify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"html/srcdoc": "<p a=\"b\">"
+			}
+		}
+	},
+	{
+		"print": "htmlMinify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"print": "htmlMinify",
+		"renderEmbeddedSource": {
+			"name": "decline",
+			"async": true
+		}
+	}
+]

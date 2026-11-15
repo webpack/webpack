@@ -1,0 +1,1 @@
+function g(){const a=[1,2];(a[0])=3;f(a[0],a[1])}function h(){const a=[1,2];(a[0])++;f(a[0])}

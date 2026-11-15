@@ -1,0 +1,1 @@
+x=[+a===0,+a!==-1,typeof a===`number`,`number`!==typeof a,(b=1)===1,(a|1)===2,`a${b}`===`c`]

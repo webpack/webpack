@@ -1,0 +1,1 @@
+f(new (new Error())(1));

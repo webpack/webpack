@@ -1,0 +1,1 @@
+function f(y){var n=0;if((n++,y))g();else g();return n}

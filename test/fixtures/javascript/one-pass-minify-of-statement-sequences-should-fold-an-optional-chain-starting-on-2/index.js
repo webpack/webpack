@@ -1,0 +1,1 @@
+function f(undefined){return undefined?.a}var o={a:{b:1}};console.log(f({a:2}),(void console.log(3))?.a,(null?.a)**2,o?.a.b)

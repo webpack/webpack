@@ -1,0 +1,1 @@
+var a = 5; function reset() { a = 6 } console.log(a);

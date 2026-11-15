@@ -1,0 +1,1 @@
+class A { get = 1; set() {} static get; }

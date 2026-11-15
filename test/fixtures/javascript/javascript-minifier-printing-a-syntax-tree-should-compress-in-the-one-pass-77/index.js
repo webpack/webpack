@@ -1,0 +1,1 @@
+var a=f();function k(){a;return g()}x=k();var b=f();function m(){b;return function(){}}m()()

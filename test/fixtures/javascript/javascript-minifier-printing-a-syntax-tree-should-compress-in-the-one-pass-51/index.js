@@ -1,0 +1,1 @@
+function f(){ return [undefined, function(a = undefined){ return a }, { k: undefined }, { undefined }] } var v = undefined; ({ k: v } = o)

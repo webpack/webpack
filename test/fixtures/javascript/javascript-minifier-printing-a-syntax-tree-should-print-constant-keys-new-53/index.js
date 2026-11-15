@@ -1,0 +1,1 @@
+export function t(r){return(function(y){let a=(function(x){if(x)return 7;r(x)})(y);let c=new function(x){if(x)return{b:9};this.b=0}(y);return[a,c]})(1)}

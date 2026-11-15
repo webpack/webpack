@@ -1,0 +1,1 @@
+var a = 1, b; let c = 2; const d = 3;

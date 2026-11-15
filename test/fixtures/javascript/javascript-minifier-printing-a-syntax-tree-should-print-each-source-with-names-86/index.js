@@ -1,0 +1,1 @@
+export default (a, b); export const x = (a, b), y = 1; export function f() {} export class C {} export let z;

@@ -1,0 +1,1 @@
+/* a */ import b from 'c'; b;

@@ -1,0 +1,1 @@
+var re = /a\/b[/]c/gimsuy, x = /<\/script>/, y = a in /x/; z = 1..toString() + 1.5.toFixed() + 0x10.x + 017.x;

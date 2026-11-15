@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <polygon stroke-dasharray="200.222 200.225" points="413.747 290.952 290.756 343.899 183.407 263.858 199.053 130.871 322.044 77.925 429.391 157.966"/>
+    test
+    <g fill="none" stroke-dasharray="8 8" stroke-width="3">
+        <path d="M83 250c69-18 140-40 197-84 33-23 48-62 62-99 2-6 3-12 7-16"/>
+        <path stroke-dasharray="none" stroke-linejoin="round" d="M83 250c29-34 57-72 97-94 33-13 69-10 104-11 22 1 45 2 65 13"/>
+    </g>
+</svg>

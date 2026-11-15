@@ -1,0 +1,1 @@
+(()=>{function spread(a){h(a);return a}g(()=>spread([]))})()

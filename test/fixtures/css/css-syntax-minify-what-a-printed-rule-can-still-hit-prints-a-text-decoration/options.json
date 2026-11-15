@@ -1,0 +1,10 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"safari 12"
+			]
+		},
+		"mode": "minify"
+	}
+]

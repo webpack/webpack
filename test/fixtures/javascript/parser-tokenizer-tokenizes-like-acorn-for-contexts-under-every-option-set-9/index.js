@@ -1,0 +1,1 @@
+if (a) {} else function f() {} /re/

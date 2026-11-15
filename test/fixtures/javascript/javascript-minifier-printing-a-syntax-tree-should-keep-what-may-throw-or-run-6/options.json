@@ -1,0 +1,14 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {}
+	},
+	{
+		"mode": "minify",
+		"compress": {
+			"pure_conversions": false
+		},
+		"mangle": {}
+	}
+]

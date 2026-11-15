@@ -1,0 +1,1 @@
+g(function(){ g(typeof f); if (1) function f(){} if (0) ; else function h(){} g(f, h) })

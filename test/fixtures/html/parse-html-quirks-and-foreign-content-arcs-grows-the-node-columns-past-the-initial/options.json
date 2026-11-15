@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"removeEmptyElements": true
+	},
+	{
+		"mode": "minify",
+		"removeEmptyElements": true,
+		"renderEmbeddedSource": "builtin"
+	}
+]

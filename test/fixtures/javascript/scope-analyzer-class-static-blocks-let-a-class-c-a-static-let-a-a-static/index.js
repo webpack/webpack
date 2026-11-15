@@ -1,0 +1,1 @@
+let a; class C { [a]; static { let a; } [a]; static { function a(){} } [a]; static { var a; } [a]; }

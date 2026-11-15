@@ -1,0 +1,1 @@
+x=[Math.min(1/3-1,0,0),Math.sqrt(.5),Math.max(1,2).x]

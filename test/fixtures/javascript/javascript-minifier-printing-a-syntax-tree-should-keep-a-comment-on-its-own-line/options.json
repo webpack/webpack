@@ -1,0 +1,15 @@
+[
+	{
+		"mode": "beautify"
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": false
+	},
+	{
+		"mode": "beautify",
+		"compress": false,
+		"mangle": false
+	}
+]

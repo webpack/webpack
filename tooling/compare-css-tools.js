@@ -35,7 +35,7 @@ const { promisify } = require("util");
 const zlib = require("zlib");
 const cssMinify = require("../lib/css/cssMinify");
 const { SourceProcessor } = require("../lib/css/syntax");
-const cssSyntaxParser = require("../lib/css/syntax-parser");
+const cssSyntaxParser = require("../lib/css/syntax").parser;
 
 const { Flag, NodeType, Part, isIdentStartCodePoint, unescapeIdentifier } =
 	cssSyntaxParser;
@@ -52,6 +52,8 @@ const {
 	cssPurityDigest,
 	cssSlices,
 	cssSpans,
+	meaningReports,
+	noticeReports,
 	printerFor,
 	sweepRespellings,
 	tokenStream
@@ -1041,7 +1043,7 @@ const wantedStage = filterFrom("STAGE");
 // thousands of stylesheets are a corpus of their own rather than a default run.
 const SKIPPED_FIXTURE_DIRS = new Set(["js", "node_modules", "wpt"]);
 
-// The inputs the unit tests read, one directory each: `css/fixtures.unittest.js`
+// The inputs the unit tests read, one directory each: `css/invariants.unittest.js`
 // holds every one of them to these relations, with its own known differences.
 const UNIT_INPUT_RE = /^test\/fixtures\/css\/[^/]+\/index\.css$/;
 
@@ -1250,7 +1252,9 @@ const invariants = (write) => {
 	const wantsRespelling = CSS_RESPELLINGS.some((one) =>
 		wantedRespelling(one.name)
 	);
-	if (wantsIdempotence || wantsRespelling) {
+	const wantsNotices = wantedRelation("notices");
+	const wantsMeaning = wantedRelation("meaning");
+	if (wantsIdempotence || wantsRespelling || wantsNotices || wantsMeaning) {
 		log(
 			`sweeping ${corpus.length} stylesheets under ${presets.length} presets …`
 		);
@@ -1261,6 +1265,16 @@ const invariants = (write) => {
 					? idempotence({ minify: print, source: css, says: tokenStream })
 					: { printed: print(css), reports: [] };
 				for (const report of reports) groups.add(report, preset, label);
+				if (printed !== null && wantsNotices) {
+					for (const report of noticeReports(css, printed)) {
+						groups.add(report, preset, label);
+					}
+				}
+				if (printed !== null && wantsMeaning) {
+					for (const report of meaningReports(css, printed, options)) {
+						groups.add(report, preset, label);
+					}
+				}
 				// Under the first preset only: whether a spelling decides the
 				// output is the same question under every option set, and each
 				// asking of it is a full minify of the whole stylesheet.

@@ -1,0 +1,3 @@
+.areas { grid-template-areas: "area" }
+.lines { grid-template-columns: [line-start] 1fr [line-end] }
+.end-only { grid-template-rows: 1fr [tail-end] }

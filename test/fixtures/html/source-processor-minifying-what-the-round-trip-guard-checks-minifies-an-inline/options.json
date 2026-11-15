@@ -1,0 +1,13 @@
+[
+	{
+		"mode": "minify",
+		"collapseWhitespace": "smart",
+		"mergeStyles": true,
+		"removeEmptyAttributes": true,
+		"removeEmptyElements": true,
+		"removeRedundantAttributes": "all",
+		"sortAttributes": true,
+		"sortTokenLists": true,
+		"renderEmbeddedSource": "builtin"
+	}
+]

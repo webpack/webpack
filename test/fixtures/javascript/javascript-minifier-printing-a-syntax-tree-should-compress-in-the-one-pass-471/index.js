@@ -1,0 +1,1 @@
+if(n?1:1)f();while(n?x:x);do;while(n?x:x);switch(n?x:x){case 1:f();break;case 2:g()}

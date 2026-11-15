@@ -1,0 +1,1 @@
+function f(o){g(o);if(1)returnValue(o)}

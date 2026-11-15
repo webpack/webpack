@@ -1,0 +1,1 @@
+function f(a, list) { a = g(a); if (list) { for (const s of list) h(s) } return a }

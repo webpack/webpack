@@ -1,0 +1,1 @@
+function f(v){var x;if(v)x=(class{}).a;else x=(class{}).a;return x}

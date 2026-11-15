@@ -1,0 +1,1 @@
+class A { field; static field2 = 2; ['computed'] = 3 }

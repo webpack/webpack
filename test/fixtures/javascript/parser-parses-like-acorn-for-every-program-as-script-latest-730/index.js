@@ -1,0 +1,1 @@
+async function f() { for await (async o\u0066 => y of z); }

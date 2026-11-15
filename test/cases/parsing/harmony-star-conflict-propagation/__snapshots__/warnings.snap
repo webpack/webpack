@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  "The requested module './d.js' contains conflicting star exports for the name 'x' with the previous requested module './e.js'",
+  "The requested module '../nested/d.js' contains conflicting star exports for the name 'x' with the previous requested module '../nested/c.js'",
+  "export 'x' (imported as 'nestedA') was not found in './nested/a.js' (module has no exports)",
+  "export 'x' (imported as 'cycleC') was not found in './cycle/c.js' (module has no exports)",
+  "export 'x' (imported as 'dynamicA') was not found in './dynamic/a.js' (possible exports: y)",
+  "The requested module './d.js' contains conflicting star exports for the name 'x' with the previous requested module './c.js'",
+]
+`;

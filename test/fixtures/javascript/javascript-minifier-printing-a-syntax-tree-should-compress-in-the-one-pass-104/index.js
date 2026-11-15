@@ -1,0 +1,1 @@
+function f(a, b){ if (a) x(); else y(); if (a = b) x(); else { y() } if (function(){}()) x(); else y(); if (a) x(); else if (b) y(); else (x(), y()); if (a) { if (b) x(); else y() } else z(); }

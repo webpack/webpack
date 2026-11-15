@@ -1,0 +1,4 @@
+[
+	{ "entry": "SourceProcessor", "visit": { "fixture": "countDeclarations" } },
+	{ "entry": "parseAStylesheet", "check": { "fixture": "lengths" } }
+]

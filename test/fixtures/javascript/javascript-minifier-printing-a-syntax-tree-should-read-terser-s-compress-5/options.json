@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"drop_console": [
+				"log"
+			]
+		},
+		"mangle": false
+	}
+]

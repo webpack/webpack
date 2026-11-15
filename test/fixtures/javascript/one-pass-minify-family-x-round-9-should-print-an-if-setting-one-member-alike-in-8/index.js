@@ -1,0 +1,1 @@
+function f(t,o){return(o.a=t)?1:2}

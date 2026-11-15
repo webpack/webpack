@@ -1,0 +1,1 @@
+function f(){for(k in o){{var b=5;while(--b>0)g()}}}

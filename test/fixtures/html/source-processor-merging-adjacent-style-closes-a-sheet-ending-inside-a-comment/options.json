@@ -2,5 +2,10 @@
 	{
 		"mode": "minify",
 		"mergeStyles": true
+	},
+	{
+		"mode": "minify",
+		"mergeStyles": true,
+		"renderEmbeddedSource": "builtin"
 	}
 ]

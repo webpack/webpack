@@ -1,0 +1,1 @@
+'use\x20strict'; "a\\b"; 'x\x20</script>-->'; "y\\<!--"; f()

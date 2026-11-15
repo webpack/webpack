@@ -1,0 +1,4 @@
+[
+	{ "entry": "SourceProcessor", "visit": { "fixture": "countIdentifiers" } },
+	{ "entry": "parseProgram", "check": { "fixture": "lengths" } }
+]

@@ -1,0 +1,59 @@
+/* Same file: a -> b -> c -> d -> e. */
+.e {
+	color: red;
+}
+
+.d {
+	composes: e;
+}
+
+.c {
+	composes: d;
+}
+
+.b {
+	composes: c;
+}
+
+.a {
+	composes: b;
+}
+
+/* Across files: x1 -> x2 -> x3 -> x4 -> x5, each step in a new file. */
+.x1 {
+	composes: x2 from "./x2.module.css";
+}
+
+/* Mixed: m1 -> m2 (file) -> m3 (local) -> m4 (file) -> m5 (local). */
+.m1 {
+	composes: m2 from "./m2.module.css";
+}
+
+/* Several names in one declaration, each with its own chain. */
+.multi {
+	composes: b x1;
+}
+
+/* Several declarations, each with its own chain. */
+.decls {
+	composes: c;
+	composes: m2 from "./m2.module.css";
+}
+
+/* Diamond: both branches reach e. */
+.left {
+	composes: d;
+}
+
+.right {
+	composes: c;
+}
+
+.diamond {
+	composes: left right;
+}
+
+/* Cycle through two files. */
+.loop {
+	composes: loop-other from "./loop.module.css";
+}

@@ -1,0 +1,1 @@
+function g(a,b){var r=a+b;h([r][0]),k({p:[r][0]})}

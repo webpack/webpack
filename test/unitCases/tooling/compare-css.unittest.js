@@ -30,6 +30,10 @@ const {
 	runMode
 } = require("../../../tooling/compare-css-tools");
 const { agreement } = require("../../../tooling/compare-tools-harness");
+const {
+	meaningReports,
+	noticeReports
+} = require("../../helpers/syntaxInvariants/css");
 
 // Read before anything clears the mock: an unguarded script installs while
 // being required, and a `beforeEach` would erase exactly that evidence.
@@ -94,6 +98,72 @@ const KEPT = [
  */
 const minify = (css, options) =>
 	new SourceProcessor().process(css, { mode: "minify", ...options }).code;
+
+describe("compare-css-tools — the notices relation", () => {
+	it("should report a printed stylesheet carrying fewer legal notices", () => {
+		expect(noticeReports("/*! a */b{}", "b{}")).toEqual([
+			{
+				relation: "notices",
+				what: "dropped 1 of 1 notices",
+				repro: "    b{}"
+			}
+		]);
+		expect(noticeReports("/*! a */b{}", "/*! a */b{}")).toEqual([]);
+		expect(noticeReports("/* @license a */b{}", "b{}")).toHaveLength(1);
+	});
+
+	it("should read a `/*!` in a string as no notice, and one after a `url()` as one", () => {
+		expect(noticeReports('a{b:"/*! x */"}', "a{}")).toEqual([]);
+		expect(noticeReports("a{b:url(it's)}/*! x */", "a{}")).toHaveLength(1);
+	});
+});
+
+describe("compare-css-tools — the meaning relation", () => {
+	it("should read the space before a pseudo-class as the combinator it is", () => {
+		const beautify = { mode: /** @type {const} */ ("beautify") };
+		expect(meaningReports(".a :hover{}", ".a:hover{}", beautify)).toHaveLength(1);
+		expect(meaningReports(".a :hover{}", ".a :hover {}", beautify)).toEqual([]);
+		expect(meaningReports(".a > :hover{}", ".a>:hover{}", beautify)).toEqual([]);
+	});
+
+	it("should decode a name once, so an escaped backslash stays a backslash", () => {
+		const beautify = { mode: /** @type {const} */ ("beautify") };
+		expect(meaningReports("a{\\5c 74op:0}", "a{top:0}", beautify)).toHaveLength(1);
+		expect(meaningReports("@\\5c 6d{}", "@m{}", beautify)).toHaveLength(1);
+		expect(meaningReports("a{b:\\5c 63(1px)}", "a{b:c(1px)}", beautify)).toHaveLength(1);
+		expect(meaningReports("a{CO\\4cOR:red}", "a{color:red}", beautify)).toEqual([]);
+	});
+
+	it("should keep an escaped space ending a URL, and drop only the layout around it", () => {
+		const beautify = { mode: /** @type {const} */ ("beautify") };
+		expect(meaningReports("a{b:url(a\\ )}", "a{b:url(a\\20)}", beautify)).toEqual([]);
+		expect(meaningReports("a{b:url( a\\20  )}", "a{b:url(a\\ )}", beautify)).toEqual([]);
+		expect(meaningReports("a{b:url(a\\ )}", "a{b:url(a)}", beautify)).toHaveLength(1);
+	});
+
+	it("should tell a value holding the digest's own separators from two values", () => {
+		const beautify = { mode: /** @type {const} */ ("beautify") };
+		expect(meaningReports('a{--x:"a,String b"}', 'a{--x:"a" "b"}', beautify)).toHaveLength(1);
+	});
+
+	it("should keep the whitespace a sign needs in a value, and drop the rest as layout", () => {
+		const beautify = { mode: /** @type {const} */ ("beautify") };
+		expect(meaningReports("a{b:calc(1px + 2px)}", "a{b:calc(1px+ 2px)}", beautify)).toHaveLength(1);
+		expect(meaningReports("a{b:calc(1px - 2px)}", "a{b:calc(1px -/**/2px)}", beautify)).toHaveLength(1);
+		expect(meaningReports("a{b:calc( 1px  +  2px )}", "a{b:calc(1px + 2px)}", beautify)).toEqual([]);
+		expect(meaningReports("a{b:1px/**/2px}", "a{b: 1px 2px }", beautify)).toEqual([]);
+		expect(
+			meaningReports(
+				"a{--op:+;width:calc(1px var(--op) 2px)}",
+				"a{--op:+;width:calc(1px var(--op)2px)}",
+				beautify
+			)
+		).toHaveLength(1);
+		expect(
+			meaningReports("a{b:calc(1px env(x) 2px)}", "a{b:calc(1px env(x)2px)}", beautify)
+		).toHaveLength(1);
+	});
+});
 
 describe("compare-css-tools — the cold branches fixture", () => {
 	it.each(REDUCED)("carries %s", (_name, written) => {

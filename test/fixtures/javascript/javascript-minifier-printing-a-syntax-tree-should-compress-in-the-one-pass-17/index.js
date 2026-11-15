@@ -1,0 +1,1 @@
+function f(){ const b = 2; var u = 1; return void 0 } f(undefined)

@@ -1,0 +1,1 @@
+console.log("1234"[0]+1,"ab"[1],"ab"[2],"ab"[-1],"ab"[1.5],"ab"[1-1],"ab"[(console.log(0),1)],delete"ab"[0])

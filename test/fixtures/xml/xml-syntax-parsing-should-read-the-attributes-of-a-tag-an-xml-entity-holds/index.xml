@@ -1,0 +1,2 @@
+<!DOCTYPE r [<!ENTITY t "<i k='&amp;v' n='p	q'/>">]><r>&t;<j k='a
+b'/></r>

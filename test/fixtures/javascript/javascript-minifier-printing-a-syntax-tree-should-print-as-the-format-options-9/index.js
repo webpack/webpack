@@ -1,0 +1,1 @@
+f(/* a */); g({ /* b */ }); h([ /* c */ ]); function k() { /* d */ } class C { /* e */ }

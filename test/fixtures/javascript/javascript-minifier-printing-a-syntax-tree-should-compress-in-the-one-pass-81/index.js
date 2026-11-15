@@ -1,0 +1,1 @@
+export function h(e){function M(){return 1/3}return e/M()}

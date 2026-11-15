@@ -1,0 +1,11 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"fixture": "texts"
+		},
+		"check": {
+			"fixture": "merged"
+		}
+	}
+]

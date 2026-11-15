@@ -1,0 +1,1 @@
+x = typeof typeof a; y = - -a; v = a - -b; t = a-- > b; s = !--a; r = a < !--b

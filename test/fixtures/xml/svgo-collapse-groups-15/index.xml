@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<g color="red">
+		<g color="inherit" fill="none" stroke="none">
+			<circle cx="130" cy="80" r="60" fill="currentColor"/>
+			<circle cx="350" cy="80" r="60" stroke="currentColor" stroke-width="4"/>
+		</g>
+	</g>
+</svg>

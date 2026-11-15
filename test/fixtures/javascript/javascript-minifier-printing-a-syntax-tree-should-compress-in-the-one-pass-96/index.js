@@ -1,0 +1,1 @@
+function w(o){ with (o) {} } function f(){ var a = b; }

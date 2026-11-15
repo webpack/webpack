@@ -1,0 +1,20 @@
+[
+	{
+		"mode": "minify",
+		"visit": {
+			"types": [
+				"SimpleBlock",
+				"Ident",
+				"Hash",
+				"Comment"
+			],
+			"exit": true,
+			"at": [
+				{
+					"type": "SimpleBlock",
+					"do": "skipChildren"
+				}
+			]
+		}
+	}
+]

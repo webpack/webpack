@@ -1,0 +1,1 @@
+var g=globalThis;g.Number={MIN_VALUE:1};console.log(Number.MIN_VALUE)

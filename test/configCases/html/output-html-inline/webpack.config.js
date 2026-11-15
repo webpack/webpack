@@ -86,6 +86,18 @@ module.exports = [
 		experiments: { html: true, css: true },
 		plugins: [copyTest]
 	},
+	// an inlined `<script src>` drops the body a browser ignores beside `src`
+	{
+		name: "magic-body",
+		target: "web",
+		entry: { "magic-body": "./src/magic-body.html" },
+		output: {
+			filename: "[name].[contenthash].js",
+			htmlFilename: "magic-body.html"
+		},
+		experiments: { html: true, css: true },
+		plugins: [copyTest]
+	},
 	// a malformed magic comment between `<!-- webpackInline: true -->` and the
 	// script must clear the pending inline, so the script is served normally
 	{

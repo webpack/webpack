@@ -1,0 +1,1 @@
+Preserve groups with classes

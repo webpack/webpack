@@ -1,0 +1,1 @@
+function f(o,p){if(typeof o=="object"&&o!==null)g();return[typeof o==="object"&&null!=o,typeof o!="object"||o===null,typeof o=="object"&&p!==null,typeof o=="function"&&o!==null]}

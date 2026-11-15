@@ -1,0 +1,1 @@
+export const t = [(l, c) => g(l, c)];

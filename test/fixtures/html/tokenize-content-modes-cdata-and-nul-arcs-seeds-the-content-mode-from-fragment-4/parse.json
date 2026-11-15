@@ -1,0 +1,20 @@
+[
+	{
+		"entry": "tokenize",
+		"options": {
+			"fragmentContext": "plaintext"
+		}
+	},
+	{
+		"entry": "tokenize",
+		"options": {
+			"fragmentContext": "td"
+		}
+	},
+	{
+		"entry": "tokenize",
+		"options": {
+			"fragmentContext": "noscript"
+		}
+	}
+]

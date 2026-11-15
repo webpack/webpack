@@ -1,0 +1,13 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"pure_funcs": [
+				"debug"
+			]
+		},
+		"mangle": {
+			"toplevel": false
+		}
+	}
+]

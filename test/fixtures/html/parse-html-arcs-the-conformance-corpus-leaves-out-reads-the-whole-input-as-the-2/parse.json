@@ -1,0 +1,10 @@
+[
+	{
+		"options": {
+			"fragmentContext": "style"
+		},
+		"check": {
+			"fixture": "fragmentTree"
+		}
+	}
+]

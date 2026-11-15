@@ -1,0 +1,1 @@
+class C extends (function(){return B})(){}

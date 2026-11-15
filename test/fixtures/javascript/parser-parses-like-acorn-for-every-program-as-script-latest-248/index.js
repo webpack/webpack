@@ -1,0 +1,1 @@
+for (const a = 1 in b) {}

@@ -1,0 +1,1 @@
+function f(x,g){return[delete ({a:1}).a]}

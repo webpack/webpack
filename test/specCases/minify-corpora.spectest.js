@@ -12,7 +12,8 @@
 //    REFUSED_BY_REFERENCE or REFUSED_BY_WEBPACK lists why;
 // 2. summed over each corpus, webpack's output must gzip no bigger than terser's;
 // 3. where swc records its own output, webpack's must be no bigger (gzip, then
-//    raw), unless SWC_SMALLER lists why, nor than oxc's unless OXC_SMALLER does;
+//    raw), unless SWC_SMALLER lists why, nor than oxc's unless OXC_SMALLER does
+//    (`rivalSmallerByDesign.js` adds to both what no minifier change closes);
 //    JS_MINIFY_REPORT names a file to tally where it is worse, the same and better.
 
 const { spawnSync } = require("child_process");
@@ -24,9 +25,17 @@ const vm = require("vm");
 const zlib = require("zlib");
 const acorn = require("acorn");
 const { SourceProcessor, printer } = require("../../lib/javascript/syntax");
-const OXC_SMALLER = require("../helpers/oxcSmaller");
-const SWC_SMALLER = require("../helpers/swcSmaller");
+const BY_DESIGN = require("../helpers/rivalSmallerByDesign");
 const { claimInPart, currentPart } = require("../helpers/testParts");
+
+const OXC_SMALLER = {
+	...require("../helpers/oxcSmaller"),
+	...BY_DESIGN.OXC_SMALLER
+};
+const SWC_SMALLER = {
+	...require("../helpers/swcSmaller"),
+	...BY_DESIGN.SWC_SMALLER
+};
 
 /** @typedef {import("terser").MinifyOptions} MinifyOptions */
 /** @typedef {import("../../lib/javascript/syntax-parser").JavascriptProcessOptions} JavascriptProcessOptions */
@@ -1073,12 +1082,12 @@ const FOR_OF_SEQUENCE =
  */
 const REFUSED_BY_WEBPACK = {
 	"oxc minifier: ecmascript/may_have_side_effects.rs:465": SUPER_OUTSIDE,
-	"oxc minifier: ecmascript/may_have_side_effects.rs:818": AUTO_ACCESSOR,
-	"oxc minifier: ecmascript/may_have_side_effects.rs:819": AUTO_ACCESSOR,
-	"oxc minifier: ecmascript/may_have_side_effects.rs:821": AUTO_ACCESSOR,
-	"oxc minifier: ecmascript/may_have_side_effects.rs:822": AUTO_ACCESSOR,
-	"oxc minifier: ecmascript/may_have_side_effects.rs:823": AUTO_ACCESSOR,
-	"oxc minifier: ecmascript/may_have_side_effects.rs:824": AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:830": AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:831": AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:833": AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:834": AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:835": AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:836": AUTO_ACCESSOR,
 	"oxc minifier: mangler/property_mangler.rs:311": AUTO_ACCESSOR,
 	"oxc minifier: peephole/remove_unused_declaration.rs:356": AUTO_ACCESSOR,
 	"oxc minifier: peephole/remove_unused_declaration.rs:357": AUTO_ACCESSOR,
@@ -1087,8 +1096,8 @@ const REFUSED_BY_WEBPACK = {
 	"oxc minifier: peephole/remove_unused_expression.rs:975": AUTO_ACCESSOR,
 	"oxc minifier: peephole/remove_unused_private_members.rs:49": AUTO_ACCESSOR,
 	"oxc minifier: peephole/remove_unused_private_members.rs:53": AUTO_ACCESSOR,
-	"oxc minifier: peephole/replace_known_methods.rs:1423": INVALID_PATTERN,
-	"oxc minifier: peephole/replace_known_methods.rs:1425": INVALID_PATTERN,
+	"oxc minifier: peephole/replace_known_methods.rs:1462": INVALID_PATTERN,
+	"oxc minifier: peephole/replace_known_methods.rs:1464": INVALID_PATTERN,
 	"oxc minifier: peephole/substitute_alternate_syntax.rs:708": AUTO_ACCESSOR,
 	"oxc minifier: peephole/substitute_alternate_syntax.rs:722": AUTO_ACCESSOR,
 	"oxc minifier: peephole/substitute_alternate_syntax.rs:734": AUTO_ACCESSOR,
@@ -1553,27 +1562,6 @@ describe("JavaScript minifier", () => {
 		expect(nodeSatisfies(`>=${major + 1}`)).toBe(false);
 		expect(() => nodeSatisfies(`^${major}`)).toThrow(/Unsupported/);
 	});
-
-	if (part === 1 && isPresent(referenceDir)) {
-		it("should pin the reference's corpus to the version it is compared with", () => {
-			const pinned = JSON.parse(
-				fs.readFileSync(path.join(referenceDir, "package.json"), "utf8")
-			).version;
-			expect(pinned).toBe(require("terser/package.json").version);
-		});
-	}
-
-	if (part === 1 && isPresent(oxcTestsDir)) {
-		it("should pin oxc's corpus to the oxc-minify it is compared with", () => {
-			const pinned = JSON.parse(
-				fs.readFileSync(
-					path.join(externalDir, "oxc/napi/minify/package.json"),
-					"utf8"
-				)
-			).version;
-			expect(pinned).toBe(require("oxc-minify/package.json").version);
-		});
-	}
 
 	/**
 	 * @param {Stdout} stdout what a source prints

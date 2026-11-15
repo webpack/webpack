@@ -1,0 +1,19 @@
+<svg width="340" height="120" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="prefixIds_05_svg_txt__gradient_1">
+            <stop offset="5%" stop-color="green"/>
+            <stop offset="95%" stop-color="gold"/>
+        </linearGradient>
+        <linearGradient id="prefixIds_05_svg_txt__gradient_2">
+            <stop offset="5%" stop-color="red"/>
+            <stop offset="95%" stop-color="black"/>
+        </linearGradient>
+        <linearGradient id="prefixIds_05_svg_txt__gradient_3">
+            <stop offset="5%" stop-color="blue"/>
+            <stop offset="95%" stop-color="orange"/>
+        </linearGradient>
+    </defs>
+    <rect fill="url(#prefixIds_05_svg_txt__gradient_1)" x="10" y="10" width="100" height="100"/>
+    <rect fill="url(#prefixIds_05_svg_txt__gradient_2)" x="120" y="10" width="100" height="100"/>
+    <rect fill="url(#prefixIds_05_svg_txt__gradient_3)" x="230" y="10" width="100" height="100"/>
+</svg>

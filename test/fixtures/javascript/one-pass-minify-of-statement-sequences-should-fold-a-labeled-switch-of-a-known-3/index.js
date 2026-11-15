@@ -1,0 +1,1 @@
+function s(x){A:switch(1){case 2:x();break A}}

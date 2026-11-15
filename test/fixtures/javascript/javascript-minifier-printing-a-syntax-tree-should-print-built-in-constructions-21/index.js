@@ -1,0 +1,1 @@
+Object(a.b)?.(x);Object(a?.b)(x);new(Object(a.b))(x);Object(f())(1);Object(...f)(1);Object(f,g)(1);x=Object(f).y;Object(f)

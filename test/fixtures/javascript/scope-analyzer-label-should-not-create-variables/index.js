@@ -1,0 +1,1 @@
+function bar() { q: for(;;) { break q; } }

@@ -1,0 +1,1 @@
+(function(){class A{m(){return new B}} class B{m(){return new A}} g()})()

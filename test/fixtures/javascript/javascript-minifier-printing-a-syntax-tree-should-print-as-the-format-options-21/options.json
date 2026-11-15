@@ -1,0 +1,14 @@
+[
+	{
+		"mode": "minify",
+		"format": {
+			"quote_style": 2
+		}
+	},
+	{
+		"mode": "minify",
+		"format": {
+			"quote_style": 3
+		}
+	}
+]

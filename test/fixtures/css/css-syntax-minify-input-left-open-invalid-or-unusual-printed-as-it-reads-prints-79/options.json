@@ -18,5 +18,8 @@
 	{
 		"mode": "minify",
 		"as": "block-contents"
+	},
+	{
+		"mode": "beautify"
 	}
 ]

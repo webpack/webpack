@@ -1,0 +1,1 @@
+function f(a){return[typeof a=="undefined","undefined"!==typeof a.b,typeof g()!="undefined",typeof c>"u"]}

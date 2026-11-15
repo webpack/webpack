@@ -1,0 +1,1 @@
+function f(l){for(const x of l){const a=x;g(()=>a)}}function c(){const a=b,b=a;return a}h(f,c);

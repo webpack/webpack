@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 9">
+    <marker id="a" stroke="red" viewBox="0 0 5 5">
+        <circle cx="2" cy="2" r="1"/>
+    </marker>
+    <marker id="b" stroke="green" viewBox="0 0 5 5">
+        <circle cx="2" cy="2" r="0.5"/>
+    </marker>
+    <path marker-start="url(#a)" d="M5 5h0"/>
+    <path marker-start="url(#b)" d="M5 5"/>
+</svg>

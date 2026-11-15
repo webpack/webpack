@@ -1,0 +1,1 @@
+var n=0;function c(){if(++n>3)throw n}try{do{c()}while(1)}catch(e){console.log(e)}n=0;try{do{c();c()}while(!0)}catch(e){console.log(e)}n=0;try{if(n<1)do{if(c())c()}while(1);else c()}catch(e){console.log(e)}n=0;do{c();if(n>1)break}while(1);do{c()}while(n<2);console.log(n);function g(){do{}while(1);do{break}while(1);do{c()}while(/*! k */1)}

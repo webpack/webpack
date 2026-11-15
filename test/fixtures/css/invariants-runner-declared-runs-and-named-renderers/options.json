@@ -1,0 +1,61 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "builtin",
+			"options": {
+				"svg": true
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": {
+				"regexp": "k\\d"
+			}
+		}
+	},
+	{
+		"print": "cssMinify",
+		"svg": true,
+		"renderEmbeddedSource": {
+			"name": "offers",
+			"async": true
+		}
+	},
+	{
+		"mode": "minify",
+		"visit": {
+			"types": [
+				"Declaration"
+			],
+			"fields": [
+				"name"
+			],
+			"exit": false,
+			"at": [
+				{
+					"type": "Declaration",
+					"name": "background",
+					"do": "replace",
+					"with": "color:red"
+				}
+			]
+		}
+	},
+	{
+		"print": "cssMinify",
+		"minimizer": {
+			"extractComments": {
+				"regexp": "k\\d"
+			},
+			"sourceMap": "index.css.map",
+			"buffer": true
+		}
+	}
+]

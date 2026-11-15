@@ -1,0 +1,1 @@
+function f(){var t=function(){return 1};++t().a}try{f()}catch(e){console.log(e.name)}

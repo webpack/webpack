@@ -1,0 +1,1 @@
+(function(){if(x){let y=g();h(y)}})()

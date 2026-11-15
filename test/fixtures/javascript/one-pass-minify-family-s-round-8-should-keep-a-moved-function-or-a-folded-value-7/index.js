@@ -1,0 +1,1 @@
+function g(a,b){var r=a+b;throw[r][0]}

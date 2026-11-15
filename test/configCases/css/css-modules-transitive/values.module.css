@@ -1,0 +1,34 @@
+/* Local aliases: v1 -> v2 -> v3 -> v4. */
+@value v1: red;
+@value v2: v1;
+@value v3: v2;
+@value v4: v3;
+
+/* Imports through re-exports: here <- val-b <- val-c <- val-d, renamed on the way. */
+@value tone as imported from "./val-b.module.css";
+@value alias: imported;
+@value anim from "./val-b.module.css";
+@value sel from "./val-b.module.css";
+
+.local {
+	color: v4;
+}
+
+.via-import {
+	color: imported;
+	background: alias;
+}
+
+@keyframes anim {
+	from {
+		opacity: 0;
+	}
+}
+
+.animated {
+	animation: anim 1s;
+}
+
+sel {
+	color: black;
+}

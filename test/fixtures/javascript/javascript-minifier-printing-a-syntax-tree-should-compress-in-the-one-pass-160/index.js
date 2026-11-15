@@ -1,0 +1,1 @@
+g(x => { var u = 1; if ({}.a) return 1; return 2 })

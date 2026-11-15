@@ -1,0 +1,1 @@
+function f(){a();(function(){})().x();return b}

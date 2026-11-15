@@ -1,0 +1,1 @@
+function f(o,t,a){x?y=3:y=4;z=x?b=1:b=2;x?b=1:c=2;t?o.b=1:o.b=2;x?o.b=1:o.b=2;t?a+=1:a+=2;x?a+=1:a+=2;t?b+=1:b+=2;t?o.b+=1:o.b+=2}

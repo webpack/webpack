@@ -1,0 +1,18 @@
+[
+	{
+		"print": "processAsync",
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"css": "a<b{}"
+			},
+			"async": true
+		}
+	},
+	{
+		"print": "processAsync",
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	}
+]

@@ -1,0 +1,1 @@
+function f(){if(x)return;do{for(;;)g();a()}while(0)}function k(){if(x)return;switch(d){case 1:a();default:b()}}function m(){for(;;){if(x)continue;g();switch(d){case 1:a();default:b()}}}function n(){if(x)return;try{for(;;)g();a()}finally{}}l:for(let i=0;i<1;i++){switch(i){case 0:continue l;default:break l}}for(;;){if(x)continue;break}

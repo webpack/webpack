@@ -1,0 +1,1 @@
+function f(x,g){if(x){void function(){0}();g();g()}}

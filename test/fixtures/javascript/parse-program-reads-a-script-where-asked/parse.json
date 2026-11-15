@@ -1,0 +1,12 @@
+[
+	{
+		"entry": "parseProgram",
+		"options": {
+			"sourceType": "script"
+		}
+	},
+	{
+		"entry": "parseProgram",
+		"options": {}
+	}
+]

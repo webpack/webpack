@@ -1,0 +1,1 @@
+x=null??y;(null??f)();(null??x.y)();(1&&f)();(0||x.y)``;(null??eval)("x");typeof(null??q);(0||g)``

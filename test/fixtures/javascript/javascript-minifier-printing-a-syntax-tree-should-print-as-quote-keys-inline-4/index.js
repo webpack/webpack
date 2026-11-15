@@ -1,0 +1,1 @@
+console.log(import.defer('./x'), import.source('./y'))

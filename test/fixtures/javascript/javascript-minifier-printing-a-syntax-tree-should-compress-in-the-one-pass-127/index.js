@@ -1,0 +1,1 @@
+function f(a) { a = 1; return arguments[0] } function k(b) { b = 1; return () => arguments } function m(c) { c = 1; return function () { return arguments } }

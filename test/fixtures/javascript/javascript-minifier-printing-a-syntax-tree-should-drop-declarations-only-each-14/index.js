@@ -1,0 +1,1 @@
+(function(){var B = class {}; B = h(); var C = class extends B{}; g()})()

@@ -1,0 +1,1 @@
+x = a ? b : {} / 2; x = a ? b : function () {} / 2

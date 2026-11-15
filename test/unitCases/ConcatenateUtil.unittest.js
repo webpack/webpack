@@ -5,7 +5,7 @@
 "use strict";
 
 const analyzeScope = require("../../lib/javascript/ScopeAnalyzer");
-const { parse } = require("../../lib/javascript/syntax").parser;
+const { parseProgram } = require("../../lib/javascript/syntax").parser;
 const {
 	getAllReferences,
 	renameIdentifiers
@@ -19,10 +19,8 @@ const {
  * @returns {Scope} the module scope, with references collected at every depth
  */
 const moduleScopeOf = (code) =>
-	analyzeScope(
-		parse(code, { sourceType: "module", ecmaVersion: "latest" }),
-		true
-	).moduleScope;
+	analyzeScope(parseProgram(code, 0, { sourceType: "module" }), true)
+		.moduleScope;
 
 /**
  * @param {Scope} scope a scope

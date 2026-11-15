@@ -190,7 +190,7 @@ const CUSTOM_PROPERTY = "--webpack-probe";
 // exactly, so an entry outlives its defect by one run.
 const FILED_CONFIG_CSS_DEFECTS = new Map([
 	[
-		"test/configCases/css/minimize-corpus/minimize-values/style.css",
+		"test/configCases/css/minify-css/minimize-corpus/minimize-values/style.css",
 		"webkit only: not a printer defect — `shape-image-threshold: 12.5%` prints as `.125`, the number CSS Shapes 1 says the percentage names, but WebKit takes no percentage there, so it drops the source's declaration and reads the printed one"
 	]
 ]);
@@ -226,11 +226,11 @@ const FILED_CONFIG_HTML_OPT_IN_DEFECTS = new Map([
 ]);
 const FILED_CONFIG_CSS_OPT_IN_DEFECTS = new Map([
 	[
-		"test/configCases/css/minimize-corpus/minimize-values/style.css",
+		"test/configCases/css/minify-css/minimize-corpus/minimize-values/style.css",
 		"webkit only: the percentage `shape-image-threshold` again — see `minimize-values` above"
 	],
 	[
-		"test/configCases/css/minimize-vendor-prefixes/style.css",
+		"test/configCases/css/minify-css/minimize-vendor-prefixes/style.css",
 		"webkit only: the element read carries every class, so `.t16`'s `display:-webkit-box` lays out the `-webkit-box-align` the opt-in drops from `.t15`, whose block writes `display:flex`; WebKit centers its child in the original only, where Chrome 156 lays both alike"
 	]
 ]);

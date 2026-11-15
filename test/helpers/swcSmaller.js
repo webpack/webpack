@@ -9,197 +9,11 @@
 /** @type {[string, string[]][]} */
 const SWC_SMALLER_BY_REASON = [
 	[
-		"real-world code, where the gap sums several of the transforms above; split it once those land",
+		"real-world code, where no one transform above accounts for half the gap: several cut opposite ways, or the rival restructures the program too far for a token diff to attribute",
 		[
-			"swc minifier: fixture/issues/6957/exponential/input.js",
-			"swc minifier: fixture/issues/6957/number-tostring/input.js",
 			"swc minifier: fixture/next/wrap-contracts/input.js",
-			"swc minifier: fixture/issues/10178/input.js",
-			"swc minifier: fixture/issues/10425/input.js",
-			"swc minifier: fixture/issues/10721/input.js",
-			"swc minifier: fixture/issues/10816/input.js",
-			"swc minifier: fixture/issues/10981/input.js",
-			"swc minifier: fixture/issues/11082/input.js",
-			"swc minifier: fixture/issues/11108/input.js",
-			"swc minifier: fixture/issues/11257/input.js",
-			"swc minifier: fixture/issues/11320/input.js",
-			"swc minifier: fixture/issues/11321/input.js",
-			"swc minifier: fixture/issues/11684/class-decl/input.js",
-			"swc minifier: fixture/issues/11684/class-expression/input.js",
-			"swc minifier: fixture/issues/11684/constructor-scopes/input.js",
-			"swc minifier: fixture/issues/11684/function-decl/input.js",
-			"swc minifier: fixture/issues/11684/function-expression/input.js",
-			"swc minifier: fixture/issues/11684/identifier-side-effects/input.js",
-			"swc minifier: fixture/issues/11684/identifier-unused-only/input.js",
-			"swc minifier: fixture/issues/11684/input.js",
-			"swc minifier: fixture/issues/11684/reduce-vars-only/input.js",
-			"swc minifier: fixture/issues/11684/side-effects/input.js",
-			"swc minifier: fixture/issues/11684/unused-only/input.js",
-			"swc minifier: fixture/issues/11730/input.js",
-			"swc minifier: fixture/issues/11730_class_expr/input.js",
-			"swc minifier: fixture/issues/11970/input.js",
-			"swc minifier: fixture/issues/12118/export/input.js",
-			"swc minifier: fixture/issues/12118/input.js",
-			"swc minifier: fixture/issues/12185/input.js",
-			"swc minifier: fixture/issues/12196/input.js",
-			"swc minifier: fixture/issues/12197/input.js",
-			"swc minifier: fixture/issues/12199/template/input.js",
-			"swc minifier: fixture/issues/12200/1/input.js",
-			"swc minifier: fixture/issues/12200/2/input.js",
-			"swc minifier: fixture/issues/12204/empty-controls/input.js",
-			"swc minifier: fixture/issues/12204/nullish-arguments/input.js",
-			"swc minifier: fixture/issues/12206/keep-trailing-test-after-default/input.js",
-			"swc minifier: fixture/issues/12206/preserve-selected-test/input.js",
-			"swc minifier: fixture/issues/12206/preserve-visited-nonmatching-test/input.js",
-			"swc minifier: fixture/issues/12206/skip-removed-test-after-dynamic-match/input.js",
-			"swc minifier: fixture/issues/12208/independent-optional-operands/input.js",
-			"swc minifier: fixture/issues/12208/non-optional-continuation/input.js",
-			"swc minifier: fixture/issues/12208/short-circuit/input.js",
 			"swc minifier: fixture/issues/12209/input.js",
-			"swc minifier: fixture/issues/12212/safe-unused-rest/input.js",
-			"swc minifier: fixture/issues/12214/input.js",
-			"swc minifier: fixture/issues/12215/input.js",
-			"swc minifier: fixture/issues/12218/leading-argument/input.js",
-			"swc minifier: fixture/issues/12224/input.js",
-			"swc minifier: fixture/issues/12299/input.js",
-			"swc minifier: fixture/issues/12565/if_plain_cons/input.js",
-			"swc minifier: fixture/issues/2028/input.js",
-			"swc minifier: fixture/issues/2614/1/input.js",
-			"swc minifier: fixture/issues/2807/1/input.js",
-			"swc minifier: fixture/issues/4412/input.js",
-			"swc minifier: fixture/issues/5343/input.js",
-			"swc minifier: fixture/issues/6192/1/input.js",
-			"swc minifier: fixture/issues/6422/1/input.js",
-			"swc minifier: fixture/issues/6864/input.js",
-			"swc minifier: fixture/issues/7472/1/input.js",
-			"swc minifier: fixture/issues/7568/1/input.js",
-			"swc minifier: fixture/issues/7714/1/input.js",
-			"swc minifier: fixture/issues/8465/input.js",
-			"swc minifier: fixture/issues/8626/input.js",
-			"swc minifier: fixture/issues/8670/input.js",
-			"swc minifier: fixture/issues/8704/input.js",
-			"swc minifier: fixture/issues/8705/input.js",
-			"swc minifier: fixture/issues/8706/input.js",
-			"swc minifier: fixture/issues/8718/7/input.js",
-			"swc minifier: fixture/issues/8737/2/input.js",
-			"swc minifier: fixture/issues/8737/input.js",
-			"swc minifier: fixture/issues/8924/input.js",
-			"swc minifier: fixture/issues/8974/input.js",
-			"swc minifier: fixture/issues/9030/input.js",
-			"swc minifier: fixture/issues/9453/input.js",
-			"swc minifier: fixture/issues/9460/alternate-identifiers/input.js",
-			"swc minifier: fixture/issues/9460/partial-used-default/input.js",
-			"swc minifier: fixture/issues/9460/report/input.js",
-			"swc minifier: fixture/issues/9460/safe-initializers/input.js",
-			"swc minifier: fixture/issues/9610/input.js",
-			"swc minifier: fixture/issues/9741_global_objects/input.js",
-			"swc minifier: fixture/issues/9757/input.js",
-			"swc minifier: fixture/issues/9922/1/input.js",
-			"swc minifier: fixture/issues/9922/2/input.js",
-			"swc minifier: fixture/issues/arguments-canonical-index/input.js",
-			"swc minifier: fixture/issues/non-finite-number-method-call/input.js",
-			"swc minifier: fixture/issues/numeric-property-key/input.js",
-			"swc minifier: fixture/issues/pure-callee-call/input.js",
-			"swc minifier: fixture/issues/spread-primitives-void-call/input.js",
-			"swc minifier: fixture/issues/spread-primitives/input.js",
-			"swc minifier: fixture/issues/string-index-utf16/input.js",
-			"swc minifier: fixture/projects/backbone/18/input.js",
-			"swc minifier: fixture/projects/backbone/2/input.js",
-			"swc minifier: fixture/projects/backbone/4/input.js",
-			"swc minifier: fixture/projects/wmr/archive-1/chunks/alias-outside.6e8773c7/input.js",
-			"swc minifier: fixture/projects/wmr/archive-1/chunks/class-fields.43d5f69c/input.js",
-			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.5a544c41/input.js",
-			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.bf24abaa/input.js",
-			"swc minifier: fixture/projects/yui/7/input.js",
-			"swc minifier: full/helpers/1/input.js",
-			"swc minifier: full/size/05f3b568bfaa8ece7f1eb857ea288eb8c696fb04/input.js",
-			"swc minifier: fixture/projects/jquery/5/input.js"
-		]
-	],
-	[
-		"swc runs a transform the case's own options leave off (`evaluate`, `side_effects`, `unused`, `inline` levels, `keep_fargs`, `if_return`, the target `ecma`, or any when the case sets none), so the gap is the options, not a missing transform",
-		[
-			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-arg-unused/input.js",
-			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-default-unused/input.js",
-			"swc minifier: fixture/issues/11684/identifier-reduce-vars-only/input.js",
-			"swc minifier: fixture/issues/12227/input.js",
-			"swc minifier: fixture/issues/2262/1/input.js",
-			"terser compress: arrow/call_args",
-			"terser compress: arrow/call_args_drop_param",
-			"terser compress: collapse_vars/collapse_vars_repeated",
-			"terser compress: collapse_vars/collapse_vars_self_reference",
-			"terser compress: conditionals/cond_8c",
-			"terser compress: conditionals/issue_1645_1",
-			"terser compress: dead-code/dead_code_2_should_warn",
-			"terser compress: dead-code/dead_code_2_should_warn_strict",
-			"terser compress: drop-unused/issue_1715_1",
-			"terser compress: drop-unused/issue_1715_2",
-			"terser compress: drop-unused/issue_1715_4",
-			"terser compress: drop-unused/issue_1968",
-			"terser compress: drop-unused/issue_2136_1",
-			"terser compress: evaluate/Infinity_NaN_undefined_LHS",
-			"terser compress: evaluate/call_args",
-			"terser compress: evaluate/call_args_drop_param",
-			"terser compress: evaluate/issue_2926_1",
-			"terser compress: export/export_default_seq",
-			"terser compress: expression/pow_with_number_constants",
-			"terser compress: expression/pow_with_parentheses",
-			"terser compress: functions/drop_lone_use_strict_arrows_1",
-			"terser compress: functions/duplicate_arg_var",
-			"terser compress: functions/empty_body",
-			"terser compress: functions/inline_1",
-			"terser compress: functions/inline_2",
-			"terser compress: functions/inline_3",
-			"terser compress: functions/inline_true",
-			"terser compress: functions/inner_ref",
-			"terser compress: functions/issue_1841_2",
-			"terser compress: functions/issue_2620_1",
-			"terser compress: functions/issue_2620_4",
-			"terser compress: functions/issue_2842",
-			"terser compress: harmony/issue_2794_4",
-			"terser compress: identity/inline_identity_dont_lose_this_when_arg",
-			"terser compress: issue-1609/chained_evaluation_1",
-			"terser compress: issue-1609/chained_evaluation_2",
-			"terser compress: issue-1656/f7",
-			"terser compress: issue-2001/export_class_2",
-			"terser compress: issue-2001/export_default_class_2",
-			"terser compress: issue-2001/export_default_func_2",
-			"terser compress: issue-2001/export_func_2",
-			"terser compress: issue-281/issue_1254_negate_iife_true",
-			"terser compress: issue-640/iife",
-			"terser compress: loops/issue_2740_4",
-			"terser compress: loops/issue_2740_6",
-			"terser compress: loops/issue_2740_7",
-			"terser compress: loops/issue_2740_8",
-			"terser compress: reduce_vars/duplicate_lambda_defun_name_1",
-			"terser compress: reduce_vars/iife_assign",
-			"terser compress: reduce_vars/issue_1595_2",
-			"terser compress: reduce_vars/issue_1595_3",
-			"terser compress: reduce_vars/issue_1670_2",
-			"terser compress: reduce_vars/issue_1670_4",
-			"terser compress: reduce_vars/issue_1670_5",
-			"terser compress: reduce_vars/issue_1814_2",
-			"terser compress: reduce_vars/issue_2450_4",
-			"terser compress: reduce_vars/issue_2799_1",
-			"terser compress: reduce_vars/issue_3113_2",
-			"terser compress: reduce_vars/issue_3113_5",
-			"terser compress: reduce_vars/issue_3140_5",
-			"terser compress: reduce_vars/multi_def_3",
-			"terser compress: reduce_vars/perf_1",
-			"terser compress: reduce_vars/perf_5",
-			"terser compress: reduce_vars/recursive_inlining_3",
-			"terser compress: reduce_vars/toplevel_on_loops_1",
-			"terser compress: reduce_vars/toplevel_on_loops_2",
-			"terser compress: reduce_vars/unsafe_evaluate_object_1",
-			"terser compress: reduce_vars/var_assign_1",
-			"terser compress: reduce_vars/var_assign_2",
-			"terser compress: reduce_vars/var_assign_3",
-			"terser compress: reduce_vars/var_assign_5",
-			"terser compress: sequences/iife",
-			"terser compress: sequences/unsafe_undefined",
-			"terser compress: switch/if_else7",
-			"terser compress: try-catch/catch_destructuring_with_sequence",
-			"terser compress: typeof/issue_2728_4"
+			"swc minifier: fixture/issues/arguments-canonical-index/input.js"
 		]
 	],
 	[
@@ -224,7 +38,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: destructuring/issue_t111_1",
 			"terser compress: destructuring/issue_t111_3",
 			"terser compress: evaluate/pow_with_number_constants",
-			"terser compress: evaluate/issue_1760_1",
 			"terser compress: functions/issue_2476",
 			"terser compress: global_defs/mixed",
 			"terser compress: loops/keep_collapse_const_in_own_block_scope_2",
@@ -236,12 +49,18 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/8923/input.js",
 			"swc minifier: fixture/issues/drop-console-value-refs/input.js",
 			"swc minifier: fixture/issues/unused-let-initialization/input.js",
-			"swc minifier: fixture/next/react-pdf-renderer/input.js",
 			"swc minifier: fixture/projects/underscore/18/input.js",
 			"swc minifier: full/size/40a586d8ac72ba5686c4b250184acfa11620d814/input.js",
 			"swc minifier: pass-1/issue-6123/1/input.js",
 			"swc minifier: fixture/projects/yui/3/input.js",
-			"swc minifier: projects/files/yui-3.12.0.js"
+			"swc minifier: projects/files/yui-3.12.0.js",
+			"swc minifier: fixture/issues/6957/exponential/input.js",
+			"swc minifier: fixture/issues/6957/number-tostring/input.js",
+			"swc minifier: fixture/issues/8465/input.js",
+			"swc minifier: fixture/issues/non-finite-number-method-call/input.js",
+			"swc minifier: fixture/projects/wmr/archive-1/chunks/alias-outside.6e8773c7/input.js",
+			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.5a544c41/input.js",
+			"swc minifier: full/helpers/1/input.js"
 		]
 	],
 	[
@@ -261,7 +80,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: harmony/object_spread_of_sequence",
 			"terser compress: harmony/array_literal_with_spread_3b",
 			"terser compress: identity/inline_identity_lose_this",
-			"terser compress: inline/noinline_annotation",
 			"terser compress: issue-973/this_binding_collapse_vars",
 			"terser compress: new/new_statement",
 			"terser compress: new/new_constructor_with_unary_arguments",
@@ -271,7 +89,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/issue_3140_1",
 			"terser compress: sandbox/console_log",
 			"terser compress: switch/issue_1083_6",
-			"terser compress: template-string/template_string_with_predefined_constants",
 			"terser compress: template-string/tagged_template_with_invalid_escape",
 			"terser compress: yield/issue_2832",
 			"swc minifier: fixture/issues/11084/input.js",
@@ -290,7 +107,8 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/react/hooks/1/input.js",
 			"swc minifier: fixture/projects/jquery/20/input.js",
 			"swc minifier: fixture/terser/issue-2435-1/2/input.js",
-			"swc minifier: fixture/terser/issue-2535-2/1/input.js"
+			"swc minifier: fixture/terser/issue-2535-2/1/input.js",
+			"swc minifier: fixture/projects/react/15/input.js"
 		]
 	],
 	[
@@ -300,22 +118,15 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/issue_1670_6",
 			"terser compress: reduce_vars/redefine_farg_3",
 			"terser compress: reduce_vars/side_effects_assign",
-			"terser compress: reduce_vars/immutable",
-			"terser compress: reduce_vars/issue_1814_1",
-			"terser compress: reduce_vars/method_2",
 			"terser compress: reduce_vars/obj_arg_1",
 			"terser compress: reduce_vars/func_arg_1",
 			"terser compress: reduce_vars/func_arg_2",
-			"terser compress: reduce_vars/obj_for_1",
-			"terser compress: reduce_vars/array_forof_1",
-			"terser compress: reduce_vars/issue_2406_2",
 			"terser compress: reduce_vars/issue_2420_1",
 			"terser compress: reduce_vars/issue_2420_2",
 			"terser compress: reduce_vars/issue_2420_3",
 			"terser compress: reduce_vars/issue_2423_2",
 			"terser compress: reduce_vars/issue_2423_5",
 			"terser compress: reduce_vars/issue_2423_6",
-			"terser compress: reduce_vars/recursive_inlining_2",
 			"terser compress: reduce_vars/issue_2455",
 			"terser compress: reduce_vars/defun_var_3",
 			"terser compress: reduce_vars/duplicate_lambda_defun_name_2",
@@ -357,7 +168,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: full/issues/8288/input.js",
 			"terser compress: collapse_vars/issue_2436_3",
 			"terser compress: collapse_vars/issue_2436_5",
-			"terser compress: collapse_vars/issue_2453",
 			"terser compress: functions/issue_2604_1",
 			"terser compress: functions/issue_2616",
 			"terser compress: functions/issue_2630_3",
@@ -372,8 +182,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: issue-t292/no_flatten_with_arg_colliding_with_arg_value_inner_scope",
 			"terser compress: issue-t292/no_flatten_with_var_colliding_with_arg_value_inner_scope",
 			"swc minifier: fixture/issues/12538/input.js",
-			"swc minifier: fixture/issues/10054/for/input.js",
-			"swc minifier: fixture/issues/10054/if/input.js",
 			"swc minifier: fixture/issues/10328/input.js",
 			"swc minifier: fixture/issues/10849/input.js",
 			"swc minifier: fixture/issues/11007/input.js",
@@ -415,10 +223,8 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/8844/input.js",
 			"swc minifier: fixture/issues/8919/input.js",
 			"swc minifier: fixture/issues/8953/input.js",
-			"swc minifier: fixture/issues/9176/input.js",
 			"swc minifier: fixture/issues/9628/input.js",
 			"swc minifier: fixture/issues/9756/input.js",
-			"swc minifier: fixture/issues/9785/input.js",
 			"swc minifier: fixture/issues/d3-time-format/3/input.js",
 			"swc minifier: fixture/issues/emotion/react/1/input.js",
 			"swc minifier: fixture/issues/emotion/react/2/input.js",
@@ -438,22 +244,9 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/56408/input.js",
 			"swc minifier: fixture/next/cryptojs/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/266-aee26c928109d49d6151/input.js",
-			"swc minifier: fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/pages/development-logs/link-with-no-prefetch-53313deb99cf94686856/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/pages/development-logs/link-with-prefetch-false-13db3186d6589f014e19/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/polyfills-6437a4964f697e5b0b3e/input.js",
-			"swc minifier: fixture/projects/next/archive-1/pages/about-9ff906d607f52933d473/input.js",
-			"swc minifier: fixture/projects/next/archive-1/pages/hmr/about-f41723bb58a39accd7f5/input.js",
-			"swc minifier: fixture/projects/next/archive-1/pages/hmr/about1-337f4553e7fa4c711971/input.js",
-			"swc minifier: fixture/projects/next/archive-1/pages/hmr/about2-071e285e01649f2eba6d/input.js",
-			"swc minifier: fixture/projects/next/archive-1/pages/hmr/about3-4799682b161140f8d8ca/input.js",
-			"swc minifier: fixture/projects/next/archive-1/pages/hmr/about4-5b76801c16eeaea0c007/input.js",
-			"swc minifier: fixture/projects/next/archive-1/pages/hmr/about5-701a8a2644b1f6251651/input.js",
-			"swc minifier: fixture/projects/next/archive-1/pages/hmr/about6-25feb06f767ae1c20330/input.js",
-			"swc minifier: fixture/projects/next/archive-1/pages/hmr/about7-9df961ea8fb5d2c5b7a2/input.js",
-			"swc minifier: fixture/projects/next/archive-1/pages/hmr/contact-e0ce31ea2cdf538f0cad/input.js",
-			"swc minifier: fixture/projects/next/archive-1/pages/hmr/style-752f74ed22a8a38573be/input.js",
-			"swc minifier: fixture/projects/next/archive-1/pages/process-env-ea448cdafe7e87f74757/input.js",
 			"swc minifier: fixture/projects/next/archive-2/pages/._app-b4bcb0e52cac90b0d2d8/input.js",
 			"swc minifier: fixture/projects/next/archive-2/pages/.development-logs-2ac9e724502f3ba1f1de/input.js",
 			"swc minifier: fixture/projects/next/archive-2/pages/.dynamic-098d0d54bd014f190920/input.js",
@@ -477,33 +270,25 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/react/7/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/.compat.2f7d9500/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/prerender.93c6f601/input.js",
-			"swc minifier: full/size/183435826ca7dac36bdd1f6e603ba738fc710a1b/input.js",
 			"swc minifier: full/size/39ee86af2a2157bccd42915ff69b6d3abff2b725/input.js",
-			"swc minifier: full/size/827a2682618668d02cb6e4ad6e17bd62cdba0dd2/input.js",
 			"swc minifier: full/size/991835278eecab695ad3515447b5747adcdfe1b4/input.js",
-			"swc minifier: full/size/b57e4ca6d118a9480312f6f3ac809245bbed8115/input.js",
-			"swc minifier: full/size/c284f333b99f5a7b22676723103375bc8a307869/input.js",
 			"swc minifier: full/vercel/ms/1/input.js",
 			"swc minifier: projects/files/react-17.0.1.js",
-			"swc minifier: projects/files/react-dom-17.0.2.js"
+			"swc minifier: projects/files/react-dom-17.0.2.js",
+			"swc minifier: fixture/issues/7568/1/input.js",
+			"swc minifier: fixture/issues/pure-callee-call/input.js"
 		]
 	],
 	[
 		"swc goes further than webpack on what terser's `switch` tests cover",
 		[
-			"terser compress: switch/constant_switch_5",
 			"terser compress: switch/issue_1663",
-			"terser compress: switch/if_else5",
-			"terser compress: switch/if_else6",
 			"terser compress: switch/if_else8",
-			"terser compress: switch/issue_376",
-			"terser compress: switch/issue_1679",
 			"terser compress: switch/issue_1680_1",
 			"terser compress: switch/issue_1690_2",
-			"terser compress: switch/if_switch_typeof",
-			"terser compress: switch/gut_entire_switch_2",
 			"terser compress: switch/issue_1083_3",
-			"terser compress: switch/issue_1083_4"
+			"terser compress: switch/issue_1083_4",
+			"swc minifier: fixture/issues/11970/input.js"
 		]
 	],
 	[
@@ -529,7 +314,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: functions/issue_2663_3",
 			"terser compress: harmony/issue_2874_3",
 			"terser compress: hoist_props/issue_851_hoist_to_conflicting_name",
-			"terser compress: hoist_props/name_collision_1",
 			"terser compress: hoist_props/name_collision_2",
 			"terser compress: hoist_props/name_collision_3",
 			"terser compress: issue-1639/issue_1639_3",
@@ -539,22 +323,16 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: pure_getters/issue_2265_2",
 			"terser compress: pure_getters/set_immutable_2",
 			"terser compress: pure_getters/set_immutable_4",
-			"terser compress: reduce_vars/issue_3110_3",
 			"terser compress: reduce_vars/regex_loop",
 			"terser compress: sequences/lift_sequences_2",
 			"terser compress: sequences/lift_sequences_5",
 			"terser compress: sequences/lift_sequences_6",
-			"swc minifier: fixture/issues/12617/input.js",
 			"swc minifier: fixture/issues/10630/input.js",
 			"swc minifier: fixture/issues/10807/input.js",
 			"swc minifier: fixture/issues/12190/input.js",
 			"swc minifier: fixture/issues/12380/input.js",
-			"swc minifier: fixture/issues/2779/1/input.js",
-			"swc minifier: fixture/issues/2779/2/input.js",
 			"swc minifier: fixture/issues/5280/input.js",
 			"swc minifier: fixture/issues/5693/input.js",
-			"swc minifier: fixture/issues/6049/1/input.js",
-			"swc minifier: fixture/issues/6175/1/input.js",
 			"swc minifier: fixture/issues/6492/1/input.js",
 			"swc minifier: fixture/issues/6492/2/input.js",
 			"swc minifier: fixture/issues/6492/3/input.js",
@@ -570,69 +348,21 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/backbone/9/input.js",
 			"swc minifier: fixture/projects/next/extra/if_return/.3/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.ddc4110d/input.js",
-			"swc minifier: full/size/6d52ebcc72a64f1f1ef2594baecb5dcab49b1a32/input.js"
-		]
-	],
-	[
-		"deflate's header: the program is no longer raw, yet gzips 1 to 3 bytes bigger, as the Huffman codes deflate writes for a small program cost more or less with which characters it holds (an operand's side, `let` or `const`, `NaN` or `0/0`); measured corpus-wide, no fixed spelling rule wins, each one making about as many programs bigger as smaller",
-		[
-			"terser compress: issue-368/collapse",
-			"terser compress: issue-597/NaN_and_Infinity_must_have_parens",
-			"swc minifier: fixture/issues/9238/input.js",
-			"swc minifier: fixture/issues/9460/strict-mode/input.js",
-			"swc minifier: fixture/issues/stylis/1/input.js",
-			"swc minifier: fixture/issues/stylis/2/input.js",
-			"swc minifier: fixture/projects/backbone/14/input.js",
-			"swc minifier: fixture/projects/jquery/2/input.js",
-			"swc minifier: fixture/projects/react/15/input.js",
-			"swc minifier: pass-1/4/input.js",
-			"swc minifier: pass-default/math-constant-folding/1/input.js",
-			"terser compress: global_defs/expanded",
-			"terser compress: reduce_vars/issue_2670",
-			"terser compress: assignment/op_equals_left_local_var",
-			"terser compress: collapse_vars/collapse_vars_eval_and_with",
-			"terser compress: collapse_vars/issue_2858",
-			"terser compress: comparing/keep_comparisons",
-			"terser compress: directives/simple_statement_is_not_a_directive",
-			"terser compress: harmony/object_rest_spread",
-			"terser compress: html_comments/html_comment_after_multiline_comment",
-			"terser compress: issue-281/ref_scope",
-			"terser compress: properties/dot_properties_es5",
-			"terser compress: reduce_vars/iife_func_side_effects",
-			"terser compress: sequences/make_sequences_3",
-			"terser compress: template-string/equality",
-			"terser compress: unicode/check_escape_style",
-			"swc minifier: fixture/issues/3173/1/input.js",
-			"swc minifier: fixture/issues/6628/input.js",
-			"swc minifier: fixture/issues/7634/1/input.js",
-			"swc minifier: fixture/issues/8161/input.js",
-			"swc minifier: fixture/issues/9741_multiple_methods/input.js",
-			"swc minifier: fixture/issues/firebase/2/input.js",
-			"swc minifier: fixture/simple/order/fn/1/input.js",
-			"swc minifier: full/next-30498/1/input.js",
-			"terser compress: issue-782/dont_remove_this_binding_sequence",
-			"terser compress: issue-973/this_binding_side_effects",
-			"terser compress: issue-782/remove_redundant_sequence_items",
-			"swc minifier: fixture/issues/12221/input.js",
-			"swc minifier: fixture/projects/mootools/4/input.js",
-			"swc minifier: fixture/projects/react/2/input.js"
+			"swc minifier: full/size/6d52ebcc72a64f1f1ef2594baecb5dcab49b1a32/input.js",
+			"swc minifier: fixture/issues/10816/input.js",
+			"swc minifier: fixture/issues/12118/export/input.js",
+			"swc minifier: fixture/issues/12118/input.js",
+			"swc minifier: fixture/issues/2614/1/input.js",
+			"swc minifier: fixture/issues/6422/1/input.js",
+			"swc minifier: fixture/issues/6864/input.js"
 		]
 	],
 	[
 		"swc goes further than webpack on what terser's `drop-unused` tests cover",
 		[
-			"terser compress: drop-unused/unused_funarg_1",
-			"terser compress: drop-unused/unused_funarg_2",
 			"terser compress: drop-unused/drop_fargs",
-			"terser compress: drop-unused/iife",
-			"terser compress: drop-unused/issue_1656",
-			"terser compress: drop-unused/issue_1709",
 			"terser compress: drop-unused/issue_2136_2",
 			"terser compress: drop-unused/issue_2136_3",
-			"terser compress: drop-unused/issue_t161_top_retain_1",
-			"terser compress: drop-unused/issue_t161_top_retain_3",
-			"terser compress: drop-unused/issue_t161_top_retain_4",
-			"terser compress: drop-unused/issue_t161_top_retain_6",
 			"terser compress: drop-unused/issue_t161_top_retain_8",
 			"terser compress: drop-unused/issue_t161_top_retain_9",
 			"terser compress: drop-unused/issue_t161_top_retain_11",
@@ -643,36 +373,29 @@ const SWC_SMALLER_BY_REASON = [
 		"swc goes further than webpack on what terser's `collapse_vars` tests cover",
 		[
 			"terser compress: collapse_vars/collapse_vars_issue_721",
-			"terser compress: collapse_vars/collapse_vars_while",
 			"terser compress: collapse_vars/collapse_vars_seq",
 			"terser compress: collapse_vars/collapse_vars_throw",
 			"terser compress: collapse_vars/collapse_vars_assignment",
 			"terser compress: collapse_vars/collapse_vars_lvalues_drop_assign",
-			"terser compress: collapse_vars/collapse_vars_closures",
 			"terser compress: collapse_vars/issue_1631_1",
-			"terser compress: collapse_vars/for_init",
-			"terser compress: collapse_vars/conditional_1",
 			"terser compress: collapse_vars/issue_2436_4",
 			"terser compress: collapse_vars/issue_2436_8",
 			"terser compress: collapse_vars/issue_2436_14",
 			"terser compress: collapse_vars/cascade_conditional",
 			"terser compress: collapse_vars/cascade_call",
 			"terser compress: collapse_vars/cascade_forin",
-			"terser compress: collapse_vars/unsafe_builtin",
-			"terser compress: collapse_vars/return_1"
+			"terser compress: collapse_vars/unsafe_builtin"
 		]
 	],
 	[
 		"swc goes further than webpack on what swc's `fixture/next` tests cover",
 		[
+			"swc minifier: fixture/next/target-es2015/static/chunks/main-04b5934c26266542/input.js",
 			"swc minifier: fixture/next/33265/static/chunks/d6e1aeb5-38a8d7ae57119c23/input.js",
 			"swc minifier: fixture/next/33265/static/chunks/pages/index-cb36c1bf7f830e3c/input.js",
-			"swc minifier: fixture/next/33458/static/chunks/pages/no-spread-2db60295b526e113/input.js",
-			"swc minifier: fixture/next/39538/static/chunks/pages/index-1bd068cedc2b5af3/input.js",
 			"swc minifier: fixture/next/43208/static/chunks/pages/index-e1d69965f0f167c9/input.js",
 			"swc minifier: fixture/next/46887-2/input.js",
 			"swc minifier: fixture/next/54192/1/input.js",
-			"swc minifier: fixture/next/54192/2/input.js",
 			"swc minifier: fixture/next/66378/input.js",
 			"swc minifier: fixture/next/chakra/input.js",
 			"swc minifier: fixture/next/feedback-1/reduced/1/input.js",
@@ -680,8 +403,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/joda/input.js",
 			"swc minifier: fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js",
 			"swc minifier: fixture/next/styled-components/1/input.js",
-			"swc minifier: fixture/next/swc-4559/input.js",
-			"swc minifier: fixture/next/target-es2015/static/chunks/main-04b5934c26266542/input.js"
+			"swc minifier: fixture/next/swc-4559/input.js"
 		]
 	],
 	[
@@ -689,7 +411,6 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: evaluate/prop_function",
 			"terser compress: evaluate/unsafe_array",
-			"terser compress: evaluate/unsafe_string",
 			"terser compress: evaluate/unsafe_array_bad_index",
 			"terser compress: evaluate/unsafe_string_bad_index",
 			"terser compress: evaluate/in_boolean_context",
@@ -699,11 +420,9 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: evaluate/delete_binary_2",
 			"terser compress: evaluate/issue_1964_2",
 			"terser compress: evaluate/array_slice_index",
-			"terser compress: evaluate/string_charCodeAt",
 			"terser compress: evaluate/issue_2231_3",
 			"terser compress: evaluate/string_case",
-			"terser compress: evaluate/issue_2919",
-			"terser compress: evaluate/issue_2926_2"
+			"terser compress: evaluate/issue_2919"
 		]
 	],
 	[
@@ -714,19 +433,17 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: functions/issue_1841_1",
 			"terser compress: functions/function_returning_constant_literal",
 			"terser compress: functions/issue_2097",
-			"terser compress: functions/issue_2428",
-			"terser compress: functions/issue_2531_1",
-			"terser compress: functions/issue_2531_2",
-			"terser compress: functions/issue_2531_3",
-			"terser compress: functions/inline_loop_1",
 			"terser compress: functions/inline_loop_2",
-			"terser compress: functions/inline_loop_3",
 			"terser compress: functions/issue_2604_2",
 			"terser compress: functions/issue_2630_1",
 			"terser compress: functions/recursive_inline_2",
 			"terser compress: functions/use_before_init_in_loop",
 			"terser compress: functions/drop_lone_use_strict_arrows_2"
 		]
+	],
+	[
+		"swc drops a `|0` beside a shift unconditionally: `(a|0)>>>b` reads `b` after `a`'s own conversion runs, which `a>>>b` defers past `b`'s read, reordering a conversion with side effects where `a` is not provably already a primitive",
+		["swc minifier: fixture/issues/12186/nested-bitwise/input.js"]
 	],
 	[
 		"swc drops or moves an operation converting a value that may be an object or a symbol, which runs its `valueOf` or `toString` or throws, as oxc keeps it",
@@ -751,7 +468,6 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: conditionals/ifs_1",
 			"terser compress: conditionals/ifs_2",
-			"terser compress: conditionals/cond_1",
 			"terser compress: conditionals/cond_2",
 			"terser compress: conditionals/cond_4",
 			"terser compress: conditionals/cond_5",
@@ -768,14 +484,9 @@ const SWC_SMALLER_BY_REASON = [
 		"swc goes further than webpack on what terser's `destructuring` tests cover",
 		[
 			"terser compress: destructuring/destructuring_with_undefined_as_default_assignment",
-			"terser compress: destructuring/unused_destructuring_decl_1",
-			"terser compress: destructuring/unused_destructuring_decl_5",
 			"terser compress: destructuring/unused_destructuring_function_param",
 			"terser compress: destructuring/unused_destructuring_object_method_param",
 			"terser compress: destructuring/unused_destructuring_class_method_param",
-			"terser compress: destructuring/export_function_containing_destructuring_decl",
-			"terser compress: destructuring/unused_destructuring_declaration_complex_1",
-			"terser compress: destructuring/unused_destructuring_multipass",
 			"terser compress: destructuring/empty_object_destructuring_3",
 			"terser compress: destructuring/empty_object_destructuring_4",
 			"terser compress: destructuring/empty_object_destructuring_misc",
@@ -788,31 +499,24 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: loops/drop_if_break_4",
 			"terser compress: loops/drop_if_else_break_4",
 			"terser compress: loops/issue_1648",
-			"terser compress: loops/issue_2740_1",
-			"terser compress: loops/issue_2740_2"
+			"terser compress: loops/issue_2740_1"
 		]
 	],
 	[
 		"swc goes further than webpack on what terser's `template-string` tests cover",
 		[
 			"terser compress: template-string/escape_dollar_curly",
-			"terser compress: template-string/sequence_2",
-			"terser compress: template-string/tagged_template_function_inline_5",
-			"terser compress: template-string/template_literal_plus",
-			"terser compress: template-string/array_join",
-			"terser compress: template-string/coerce_to_string"
+			"terser compress: template-string/template_literal_plus"
 		]
 	],
 	[
 		"swc goes further than webpack on what swc's `pass-1` tests cover",
 		[
 			"swc minifier: pass-1/1/input.js",
-			"swc minifier: pass-1/3/input.js",
 			"swc minifier: pass-1/7/input.js",
 			"swc minifier: pass-1/8/input.js",
-			"swc minifier: pass-1/9/1/input.js",
-			"swc minifier: pass-1/9/2/input.js",
-			"swc minifier: pass-1/issue-6788/1/input.js"
+			"swc minifier: pass-1/issue-6788/1/input.js",
+			"swc minifier: pass-1/issue-6405/1/input.js"
 		]
 	],
 	[
@@ -824,7 +528,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/5846/input.js",
 			"swc minifier: fixture/issues/7412/input.js",
 			"swc minifier: fixture/issues/7784/3/input.js",
-			"swc minifier: fixture/issues/7984/input.js",
 			"swc minifier: fixture/projects/angular/5/input.js",
 			"swc minifier: fixture/projects/backbone/13/input.js",
 			"swc minifier: fixture/projects/backbone/17/input.js",
@@ -856,19 +559,18 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/yui/13/input.js",
 			"swc minifier: fixture/projects/yui/14/input.js",
 			"swc minifier: fixture/projects/yui/8/input.js",
-			"terser compress: issue-1673/side_effects_else",
 			"terser compress: issue-640/cond_5",
 			"terser compress: issue-640/conditional",
-			"terser compress: reduce_vars/cond_assign"
+			"swc minifier: fixture/projects/backbone/14/input.js",
+			"swc minifier: fixture/projects/jquery/2/input.js",
+			"swc minifier: fixture/issues/7472/1/input.js",
+			"swc minifier: fixture/projects/backbone/2/input.js"
 		]
 	],
 	[
 		"swc goes further than webpack on what swc's `fixture/simple` tests cover",
 		[
 			"swc minifier: fixture/simple/if/var/input.js",
-			"swc minifier: fixture/simple/inline/1/input.js",
-			"swc minifier: fixture/simple/inline/2/input.js",
-			"swc minifier: fixture/simple/inline/3/input.js",
 			"swc minifier: fixture/simple/inline/4/input.js",
 			"swc minifier: fixture/simple/inline/6/input.js",
 			"swc minifier: fixture/simple/switch/const/call/input.js",
@@ -881,7 +583,6 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: hoist_props/issue_2377_2",
 			"terser compress: hoist_props/issue_2377_3",
-			"terser compress: hoist_props/issue_2473_4",
 			"terser compress: hoist_props/issue_2508_1",
 			"terser compress: hoist_props/issue_2508_2",
 			"terser compress: hoist_props/issue_2508_5",
@@ -915,14 +616,8 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `object` tests cover",
 		[
-			"terser compress: object/prop_arrows_to_concise_method_various",
-			"terser compress: object/convert_computed_props_to_regular_ones",
-			"terser compress: object/computed_property_names_side_effects",
 			"terser compress: object/prop_arrow_to_concise_method",
-			"terser compress: object/concise_method_to_prop_arrow",
-			"terser compress: object/issue_2554_1",
-			"terser compress: object/issue_2554_2",
-			"terser compress: object/issue_2554_3"
+			"terser compress: object/concise_method_to_prop_arrow"
 		]
 	],
 	[
@@ -933,8 +628,9 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/collapse_vars_unary",
 			"terser compress: collapse_vars/reduce_vars_assign",
 			"terser compress: comparing/issue_2857_6",
-			"terser compress: harmony/array_literal_with_spread_2a",
-			"terser compress: typeof/issue_2728_3"
+			"terser compress: typeof/issue_2728_3",
+			"swc minifier: fixture/issues/12224/input.js",
+			"swc minifier: fixture/issues/9453/input.js"
 		]
 	],
 	[
@@ -951,17 +647,13 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: issue-281/safe_undefined",
 			"terser compress: issue-281/issue_1254_negate_iife_nested",
-			"terser compress: issue-281/negate_iife_issue_1073",
 			"terser compress: issue-281/issue_1288_side_effects",
-			"terser compress: issue-281/issue_1595_3",
-			"terser compress: issue-281/wrap_iife",
 			"terser compress: issue-281/wrap_iife_in_return_call"
 		]
 	],
 	[
 		"swc goes further than webpack on what terser's `sequences` tests cover",
 		[
-			"terser compress: sequences/lift_sequences_1",
 			"terser compress: sequences/delete_seq_1",
 			"terser compress: sequences/delete_seq_2",
 			"terser compress: sequences/delete_seq_3",
@@ -975,7 +667,8 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: pass-default/compute/1/input.js",
 			"terser compress: evaluate/issue_2207_1",
 			"terser compress: issue-597/beautify_off_1",
-			"terser compress: issue-597/beautify_on_1"
+			"terser compress: issue-597/beautify_on_1",
+			"swc minifier: fixture/issues/12196/input.js"
 		]
 	],
 	[
@@ -985,7 +678,14 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12182/receiver-sensitive/input.js",
 			"swc minifier: fixture/issues/9610-methods/input.js",
 			"swc minifier: fixture/member_expr/callee/input.js",
-			"terser compress: hoist_props/direct_access_2"
+			"terser compress: hoist_props/direct_access_2",
+			"swc minifier: fixture/issues/10721/input.js",
+			"swc minifier: fixture/issues/12208/non-optional-continuation/input.js",
+			"swc minifier: fixture/issues/12215/input.js",
+			"swc minifier: fixture/issues/8737/2/input.js",
+			"swc minifier: fixture/issues/8737/input.js",
+			"swc minifier: fixture/issues/9030/input.js",
+			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.bf24abaa/input.js"
 		]
 	],
 	[
@@ -1003,11 +703,11 @@ const SWC_SMALLER_BY_REASON = [
 		'swc picks shorter spellings for comparisons and coercions: `"u">typeof x`, `null==x`, `==` between operands of one type, `!!x` for `Boolean(x)`, no `|0` on an int32',
 		[
 			"swc minifier: fixture/issues/10281/input.js",
-			"swc minifier: fixture/issues/12186/nested-bitwise/input.js",
 			"swc minifier: fixture/issues/12186/signed-shift/input.js",
 			"swc minifier: fixture/issues/12307/input.js",
 			"terser compress: collapse_vars/collapse_vars_properties",
-			"terser compress: pure_funcs/assign"
+			"terser compress: pure_funcs/assign",
+			"swc minifier: fixture/issues/2028/input.js"
 		]
 	],
 	[
@@ -1022,24 +722,13 @@ const SWC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"swc goes further than webpack on what terser's `export` tests cover",
-		[
-			"terser compress: export/issue_2126",
-			"terser compress: export/async_func",
-			"terser compress: export/issue_2134_1",
-			"terser compress: export/issue_2134_2",
-			"terser compress: export/redirection"
-		]
-	],
-	[
 		"swc goes further than webpack on what terser's `pure_funcs` tests cover",
 		[
 			"terser compress: pure_funcs/unused",
 			"terser compress: pure_funcs/issue_2705_1",
 			"terser compress: pure_funcs/issue_2705_6",
 			"terser compress: pure_funcs/issue_3065_3",
-			"terser compress: pure_funcs/issue_3065_4",
-			"terser compress: pure_funcs/side_effects"
+			"terser compress: pure_funcs/issue_3065_4"
 		]
 	],
 	[
@@ -1049,7 +738,8 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/6279/2/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/main-2953d6142ff4a439dbc0/input.js",
 			"terser compress: functions/loop_init_arg",
-			"terser compress: inline/issue_308"
+			"terser compress: inline/issue_308",
+			"swc minifier: fixture/issues/9610/input.js"
 		]
 	],
 	[
@@ -1057,23 +747,16 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: harmony/object_spread_unsafe",
 			"terser compress: harmony/array_literal_with_spread_3a",
-			"terser compress: harmony/issue_2794_3",
-			"terser compress: harmony/issue_2794_5",
-			"terser compress: harmony/inline_arrow_using_arguments"
+			"terser compress: harmony/issue_2794_3"
 		]
 	],
 	[
 		"swc resolves a `switch` on a known value at build time, and writes a one-case `switch` as an `if`",
 		[
-			"swc minifier: fixture/issues/9619/input.js",
 			"terser compress: issue-1750/case_2",
 			"terser compress: switch/issue_441_1",
 			"terser compress: switch/issue_441_2"
 		]
-	],
-	[
-		"swc goes further than webpack on what terser's `issue-1833` tests cover",
-		[]
 	],
 	[
 		"swc goes further than webpack on what terser's `properties` tests cover",
@@ -1105,20 +788,17 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: conditionals/ternary_boolean_consequent",
 			"swc minifier: fixture/projects/react/13/input.js",
-			"terser compress: conditionals/ternary_boolean_alternative"
+			"terser compress: conditionals/ternary_boolean_alternative",
+			"swc minifier: fixture/issues/12565/if_plain_cons/input.js"
 		]
 	],
 	[
 		'swc folds arithmetic and concatenation of literals (`"1"+"2"`, `1+""`, `5+3`) that terser leaves as written',
-		[
-			"terser compress: concat-strings/concat_7",
-			"terser compress: concat-strings/concat_8",
-			"terser compress: dead-code/collapse_vars_misc1"
-		]
+		["terser compress: dead-code/collapse_vars_misc1"]
 	],
 	[
 		"swc goes further than webpack on what terser's `arrays` tests cover",
-		["terser compress: arrays/constant_join", "terser compress: arrays/length"]
+		["terser compress: arrays/length"]
 	],
 	[
 		"swc goes further than webpack on what terser's `issue-t50` tests cover",
@@ -1137,16 +817,14 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc goes further than webpack on what swc's `fixture/reduced` tests cover",
-		[
-			"swc minifier: fixture/reduced/2/input.js",
-			"swc minifier: fixture/reduced/3/input.js"
-		]
+		["swc minifier: fixture/reduced/2/input.js"]
 	],
 	[
 		"where a declaration goes: a `let`, `var` or function declaration placed earlier or later, or its first value assigned apart",
 		[
 			"swc minifier: fixture/issues/12192/input.js",
-			"swc minifier: fixture/projects/mootools/7/input.js"
+			"swc minifier: fixture/projects/mootools/7/input.js",
+			"swc minifier: fixture/projects/yui/7/input.js"
 		]
 	],
 	[
@@ -1156,7 +834,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/9650/input.js",
 			"swc minifier: fixture/issues/10041/input.js",
 			"swc minifier: fixture/issues/12545/fn_rest_loop/input.js",
-			"swc minifier: fixture/issues/2257/full/input.js",
 			"swc minifier: fixture/issues/4386/2/input.js",
 			"swc minifier: fixture/issues/9504/input.js",
 			"swc minifier: fixture/issues/moment/1/input.js",
@@ -1175,7 +852,19 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/simple/sequences/.0001/input.js",
 			"swc minifier: pass-1/joda/2/input.js",
 			"swc minifier: fixture/issues/12566/defaults/input.js",
-			"swc minifier: fixture/issues/12566/without-reduce-vars/input.js"
+			"swc minifier: fixture/issues/12566/without-reduce-vars/input.js",
+			"swc minifier: fixture/issues/10178/input.js",
+			"swc minifier: fixture/issues/10981/input.js",
+			"swc minifier: fixture/issues/11684/identifier-side-effects/input.js",
+			"swc minifier: fixture/issues/11684/side-effects/input.js",
+			"swc minifier: fixture/issues/11730/input.js",
+			"swc minifier: fixture/issues/11730_class_expr/input.js",
+			"swc minifier: fixture/issues/12204/empty-controls/input.js",
+			"swc minifier: fixture/issues/12204/nullish-arguments/input.js",
+			"swc minifier: fixture/issues/12212/safe-unused-rest/input.js",
+			"swc minifier: fixture/issues/5343/input.js",
+			"swc minifier: fixture/issues/9741_global_objects/input.js",
+			"swc minifier: fixture/projects/jquery/5/input.js"
 		]
 	],
 	[
@@ -1188,10 +877,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc goes further than webpack on what terser's `global_defs` tests cover",
-		[
-			"terser compress: global_defs/issue_2167",
-			"terser compress: global_defs/conditional_chains"
-		]
+		["terser compress: global_defs/issue_2167"]
 	],
 	[
 		"swc goes further than webpack on what terser's `if_return` tests cover",
@@ -1199,28 +885,11 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc goes further than webpack on what terser's `issue-1639` tests cover",
-		[
-			"terser compress: issue-1639/issue_1639_1",
-			"terser compress: issue-1639/issue_1639_2"
-		]
-	],
-	[
-		"swc goes further than webpack on what terser's `issue-2001` tests cover",
-		[
-			"terser compress: issue-2001/export_mangle_3",
-			"terser compress: issue-2001/export_mangle_4"
-		]
+		["terser compress: issue-1639/issue_1639_1"]
 	],
 	[
 		"swc goes further than webpack on what terser's `issue-269` tests cover",
-		[
-			"terser compress: issue-269/issue_269_1",
-			"terser compress: issue-269/strings_concat"
-		]
-	],
-	[
-		"swc goes further than webpack on what terser's `yield` tests cover",
-		["terser compress: yield/issue_2689"]
+		["terser compress: issue-269/issue_269_1"]
 	],
 	[
 		"swc goes further than webpack on what swc's `fixture/member_expr` tests cover",
@@ -1249,7 +918,12 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"method vs arrow: webpack writes an object's function property as the shorter `a:()=>x` where oxc writes the method `a(){return x}`, or keeps a `function` swc writes as an arrow",
-		["swc minifier: fixture/issues/drop-console-es2015/input.js"]
+		[
+			"swc minifier: fixture/issues/drop-console-es2015/input.js",
+			"swc minifier: fixture/issues/8704/input.js",
+			"swc minifier: fixture/issues/8705/input.js",
+			"swc minifier: full/size/05f3b568bfaa8ece7f1eb857ea288eb8c696fb04/input.js"
+		]
 	],
 	[
 		"`if…return` chain vs `?:…void 0`: webpack folds the returns into one `return a?b:c?d:void 0` where the rival keeps `if(a)return b;if(c)return d`",
@@ -1257,7 +931,13 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc merges imports of one module, drops unused specifiers, and folds a declaration into its `export default`",
-		["swc minifier: fixture/check/1/input.js"]
+		[
+			"swc minifier: fixture/check/1/input.js",
+			"swc minifier: fixture/issues/11257/input.js",
+			"swc minifier: fixture/issues/11321/input.js",
+			"swc minifier: fixture/issues/12185/input.js",
+			"swc minifier: fixture/projects/wmr/archive-1/chunks/class-fields.43d5f69c/input.js"
+		]
 	],
 	[
 		"swc's `drop_console` also drops `console.error[\"capture\"](…)`, which throws in the input; terser keeps a call it cannot prove is console's",
@@ -1292,16 +972,20 @@ const SWC_SMALLER_BY_REASON = [
 		["terser compress: pure_funcs/relational"]
 	],
 	[
-		'swc drops a function\'s lone `"use strict"`, so reading its `caller` or `arguments` no longer throws',
-		["terser compress: functions/drop_lone_use_strict"]
-	],
-	[
 		"webpack, as terser, collapses a variable into its one read in a first pass only: from a second pass on, which swc's `passes: 0` asks for, the variable stays",
 		["swc minifier: fixture/issues/5910/1/input.js"]
 	],
 	[
 		"webpack reads the global object a function hands back as one a later write may patch a built-in of, so a value stays bound rather than move past a read of `console`, which swc assumes unpatched",
 		["swc minifier: fixture/issues/8284/input.js"]
+	],
+	[
+		"webpack keeps a call behind a read of a script's global, which a function of another script the call runs may set; swc moves the call past the read",
+		[
+			"terser compress: collapse_vars/var_side_effects_1",
+			"terser compress: collapse_vars/var_side_effects_2",
+			"terser compress: collapse_vars/var_side_effects_3"
+		]
 	],
 	[
 		"swc goes further than webpack on what terser's `class-properties` tests cover",
@@ -1311,7 +995,11 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc goes further than webpack on what terser's `drop-console` tests cover",
-		["terser compress: drop-console/unexpected_side_effects_dropping_console"]
+		[
+			"terser compress: drop-console/unexpected_side_effects_dropping_console",
+			"swc minifier: fixture/issues/2807/1/input.js",
+			"swc minifier: fixture/issues/9757/input.js"
+		]
 	],
 	[
 		"swc goes further than webpack on what terser's `hoist_vars` tests cover",
@@ -1334,20 +1022,8 @@ const SWC_SMALLER_BY_REASON = [
 		["terser compress: issue-2719/warn"]
 	],
 	[
-		"swc goes further than webpack on what terser's `issue-637` tests cover",
-		["terser compress: issue-637/wrongly_optimized"]
-	],
-	[
-		"swc goes further than webpack on what terser's `issue-640` tests cover",
-		["terser compress: issue-640/wrongly_optimized"]
-	],
-	[
 		"swc goes further than webpack on what terser's `issue-973` tests cover",
 		["terser compress: issue-973/this_binding_conditionals"]
-	],
-	[
-		"swc goes further than webpack on what terser's `logical-assignment` tests cover",
-		["terser compress: logical-assignment/assign_in_conditional_part"]
 	],
 	[
 		"swc goes further than webpack on what terser's `nullish` tests cover",
@@ -1358,24 +1034,29 @@ const SWC_SMALLER_BY_REASON = [
 		["terser compress: regexp/regexp_2"]
 	],
 	[
-		"swc goes further than webpack on what terser's `return_undefined` tests cover",
-		["terser compress: return_undefined/return_void"]
-	],
-	[
 		"swc goes further than webpack on what terser's `typeof` tests cover",
 		["terser compress: typeof/typeof_defun_2"]
-	],
-	[
-		"swc goes further than webpack on what terser's `unsafe_symbols` tests cover",
-		["terser compress: unsafe_symbols/unsafe_symbols_2"]
 	],
 	[
 		"swc goes further than webpack on what swc's `fixture/non-finite-number-literals` tests cover",
 		["swc minifier: fixture/non-finite-number-literals/input.js"]
 	],
 	[
-		"swc goes further than webpack on what swc's `fixture/pure-annotations-not-member-pattern` tests cover",
-		["swc minifier: fixture/pure-annotations-not-member-pattern/input.js"]
+		"swc goes further than webpack on what swc's `fixture/issues` tests cover",
+		[
+			"swc minifier: fixture/issues/12587/input.js",
+			"swc minifier: fixture/issues/12587/top-level/input.js",
+			"swc minifier: fixture/issues/12643/input.js",
+			"swc minifier: fixture/issues/12643/runtime/input.js",
+			"swc minifier: fixture/issues/12669/another/input.js",
+			"swc minifier: fixture/issues/12669/class-methods/input.js",
+			"swc minifier: fixture/issues/12669/constructor-default/input.js",
+			"swc minifier: fixture/issues/12669/destructured-array/input.js",
+			"swc minifier: fixture/issues/12669/destructured-object/input.js",
+			"swc minifier: fixture/issues/12669/object-method/input.js",
+			"swc minifier: fixture/issues/12669/parameter-scope/input.js",
+			"swc minifier: fixture/issues/12669/setter-default/input.js"
+		]
 	]
 ];
 

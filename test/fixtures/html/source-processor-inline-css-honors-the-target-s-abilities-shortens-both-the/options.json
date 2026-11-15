@@ -1,0 +1,28 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "builtin",
+			"options": {
+				"environment": {
+					"browsers": [
+						"chrome 62"
+					]
+				}
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "builtin",
+			"options": {
+				"environment": {
+					"browsers": [
+						"chrome 50"
+					]
+				}
+			}
+		}
+	}
+]

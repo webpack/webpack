@@ -1,0 +1,1 @@
+class A { *g() { yield /re/g; } }

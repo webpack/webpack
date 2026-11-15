@@ -1,0 +1,1 @@
+if (a) b; else c; if (a) { if (b) c } else d; if (a) for (;;) if (b) c; else d; if (a) while (b) if (c) d; else e; else f; if (a) label: if (b) c; else d; if (a) do b; while (c); else d; if (a) b; else if (c) d; else e; if (a) if (b) c; else d; if (a) ; else ;

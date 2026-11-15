@@ -1,0 +1,1 @@
+{ async function f() {} async function f() {} }

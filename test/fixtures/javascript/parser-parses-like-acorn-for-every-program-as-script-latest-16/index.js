@@ -1,0 +1,1 @@
+async function h() { await x; for await (const y of z) {} }

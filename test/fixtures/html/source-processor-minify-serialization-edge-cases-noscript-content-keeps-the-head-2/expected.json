@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "meaning",
+		"contains": "PASS x  ->  PASSx",
+		"presets": [
+			"aggressive",
+			"embedded",
+			"embedded+legacy"
+		],
+		"why": "the printer reads with scripting on, where the newline after `</head>` is whitespace between elements and goes; `meaning` reads with scripting off, where the `noscript` text moves into the body and that newline sits between its words"
+	}
+]

@@ -1,0 +1,1 @@
+switch(a){default:b();case 0:break}switch(a){case 0:break;default:b();case 1:}switch(a){default:b();break;case 1:}

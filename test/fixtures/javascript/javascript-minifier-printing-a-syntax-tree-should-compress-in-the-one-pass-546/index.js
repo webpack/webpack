@@ -1,0 +1,1 @@
+switch(a()){}switch(a){default:break}switch(a){case 3:b();case 2:case 1:}switch(a){case 3:b();break;case 2:break}switch(a){case f():}switch(a){default:b()}switch(a){case 1:b();break;case 2:c();case 3:}if(x)switch(y){case 1:}else z();function f(e){switch(e){case 2:}g()}switch(a){case 1:/*! k */}

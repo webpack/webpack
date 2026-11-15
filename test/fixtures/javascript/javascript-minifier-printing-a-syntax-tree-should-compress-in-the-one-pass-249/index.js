@@ -1,0 +1,1 @@
+function f(c){var r=function(){var v;v=c.push(3);return v}();return[r,r]}

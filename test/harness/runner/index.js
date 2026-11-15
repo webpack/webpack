@@ -15,6 +15,7 @@ const {
 	getNodeVersion,
 	getSubPath,
 	isRelativePath,
+	decodeUrlPath,
 	urlToPath,
 	urlToRelativePath
 } = require("./RunnerHelpers");
@@ -765,9 +766,11 @@ class TestRunner {
 										path.dirname(identifier),
 										fileURLToPath(specifier)
 									)}`
-								: specifier.replace(
-										/https:\/\/example.com\/public\/path\//,
-										"./"
+								: decodeUrlPath(
+										specifier.replace(
+											/https:\/\/example.com\/public\/path\//,
+											"./"
+										)
 									);
 
 							const res = await this.require(
@@ -831,7 +834,10 @@ class TestRunner {
 											)
 										)
 								),
-								specifier,
+								// a static import names a URL, so its escapes are decoded
+								isRelativePath(specifier)
+									? decodeUrlPath(specifier)
+									: specifier,
 								{ esmReturnStatus: ESModuleStatus.Unlinked }
 							),
 							referencingModule.context,

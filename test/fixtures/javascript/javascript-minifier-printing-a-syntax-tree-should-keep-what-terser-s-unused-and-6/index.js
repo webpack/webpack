@@ -1,0 +1,1 @@
+h((function(){return 1})())

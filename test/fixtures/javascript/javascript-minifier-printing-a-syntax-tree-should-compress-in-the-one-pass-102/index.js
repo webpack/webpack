@@ -1,0 +1,1 @@
+function f(){let a=g();return a?.b}function h(b){let a=g();return b?.[a]}function k(){let a=g();return a.c?.(d)}

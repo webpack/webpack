@@ -1,0 +1,1 @@
+Sanitizes executable HTML inside foreignObject elements while preserving their visual content. Elements with the same local name in unrelated namespaces do not enable the additional HTML attribute handling.

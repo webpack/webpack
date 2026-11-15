@@ -1,0 +1,1 @@
+function f(Infinity){eval("");return[1e500,-1e500,1e500.x,2*1e500]}

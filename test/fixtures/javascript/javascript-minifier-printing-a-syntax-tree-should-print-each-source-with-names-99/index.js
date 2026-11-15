@@ -1,0 +1,1 @@
+label: function f() {} if (a) function g() {} a: b: c: ;

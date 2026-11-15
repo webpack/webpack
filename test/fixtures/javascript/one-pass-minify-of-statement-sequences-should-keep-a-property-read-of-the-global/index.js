@@ -1,0 +1,1 @@
+console.log(1);undefined.a;console.log(2)

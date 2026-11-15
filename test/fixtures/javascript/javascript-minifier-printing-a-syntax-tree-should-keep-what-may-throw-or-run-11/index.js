@@ -1,0 +1,1 @@
+class C extends B { constructor() { t(() => { this; }); super(); } }

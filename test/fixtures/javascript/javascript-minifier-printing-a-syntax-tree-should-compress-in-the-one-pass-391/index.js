@@ -1,0 +1,1 @@
+function f(a,b){with(b)return a?a:b}

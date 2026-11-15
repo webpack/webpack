@@ -35,12 +35,8 @@ const {
 	builtinEmbeddedRenderer
 } = require("../lib/html/builtinEmbeddedRenderer");
 const { SourceProcessor } = require("../lib/html/syntax");
-const {
-	NodeType,
-	Part,
-	parseHtml,
-	tokenizeXml
-} = require("../lib/html/syntax-parser");
+const { NodeType, Part, parseHtml, tokenizeXml } =
+	require("../lib/html/syntax").parser;
 const {
 	PRESETS,
 	STYLE_ELEMENT,
@@ -49,6 +45,7 @@ const {
 	canonicalCss,
 	decodedAttributes,
 	idempotenceRepro,
+	meaningReports,
 	printXml,
 	printerFor,
 	sweepRespellings,
@@ -77,7 +74,6 @@ const {
 	measure,
 	measureInWorker,
 	missingReport,
-	oneLine,
 	purityRelation,
 	sweepExitCode,
 	sweepMode,
@@ -267,6 +263,20 @@ const fixtures = async () => {
 		]);
 	}
 	out.push(["Editor-exported SVG (DTD entities)", EDITOR_SVG]);
+	out.push([
+		"SVG geometry",
+		await fs.promises.readFile(
+			path.join(ROOT, "test/configCases/optimization/minimize-xml/numbers.svg"),
+			"utf8"
+		)
+	]);
+	out.push([
+		"SVG presentation and paths",
+		await fs.promises.readFile(
+			path.join(ROOT, "test/configCases/optimization/minimize-xml/compact.svg"),
+			"utf8"
+		)
+	]);
 	out.push(["Atom feed (400 entries)", atomFeed(400)]);
 	out.push(["Maven POM", MAVEN_POM]);
 	out.push(["XLIFF translation", XLIFF]);
@@ -426,6 +436,78 @@ const TOOLS = [
 		}
 	},
 	{
+		name: "webpack (SVG data removal)",
+		stage: "minify",
+		create: () => {
+			const renderEmbeddedSource = builtinEmbeddedRenderer();
+			return (xml) =>
+				new SourceProcessor().process(xml, {
+					xml: true,
+					mode: "minify",
+					removeSvgMetadata: true,
+					removeSvgEditorData: true,
+					renderEmbeddedSource
+				}).code;
+		}
+	},
+	...[false, true].map(
+		(collapseWhitespace) =>
+			/** @type {import("./compare-tools-harness").Tool} */ ({
+				name: collapseWhitespace
+					? "webpack (SVG whitespace cleanup)"
+					: "webpack (SVG attribute cleanup)",
+				stage: "minify",
+				create: () => {
+					const renderEmbeddedSource = builtinEmbeddedRenderer();
+					return (xml) =>
+						new SourceProcessor().process(xml, {
+							xml: true,
+							mode: "minify",
+							collapseWhitespace,
+							removeSvgMetadata: true,
+							removeSvgEditorData: true,
+							removeUnusedSvgNamespaces: true,
+							removeEmptyAttributes: true,
+							renderEmbeddedSource
+						}).code;
+				}
+			})
+	),
+
+	{
+		name: "webpack (SVG numeric cleanup)",
+		stage: "minify",
+		create: () => {
+			const renderEmbeddedSource = builtinEmbeddedRenderer();
+			return (xml) =>
+				new SourceProcessor().process(xml, {
+					xml: true,
+					mode: "minify",
+					shortenSvgNumbers: true,
+					collapseWhitespace: true,
+					removeSvgMetadata: true,
+					removeSvgEditorData: true,
+					removeUnusedSvgNamespaces: true,
+					removeEmptyAttributes: true,
+					renderEmbeddedSource
+				}).code;
+		}
+	},
+	...PRESETS.slice(6).map(([name, options]) => ({
+		name: `webpack (SVG ${name.slice(4)} cleanup)`,
+		stage: /** @type {const} */ ("minify"),
+		create: () => {
+			const renderEmbeddedSource = builtinEmbeddedRenderer();
+			return (/** @type {string} */ xml) =>
+				new SourceProcessor().process(xml, {
+					xml: true,
+					mode: "minify",
+					...options,
+					renderEmbeddedSource
+				}).code;
+		}
+	})),
+	{
 		// SVG's own optimizer: it rewrites path data and drops what it deems
 		// editor noise, so it differs by design rather than by mistake.
 		name: "svgo",
@@ -441,6 +523,25 @@ const TOOLS = [
 		create: () => {
 			const { optimize } = load("svgo");
 			return (xml) => optimize(xml, { multipass: true }).data;
+		}
+	},
+	{
+		name: "svgo (preserve IDs)",
+		stage: "minify",
+		create: () => {
+			const { optimize } = load("svgo");
+			return (xml) =>
+				optimize(xml, {
+					multipass: true,
+					plugins: [
+						{
+							name: "preset-default",
+							params: {
+								overrides: { cleanupIds: false, removeHiddenElems: false }
+							}
+						}
+					]
+				}).data;
 		}
 	},
 	{
@@ -475,7 +576,7 @@ const TOOLS = [
 
 // A tool built for one vocabulary, whose output for any other document says
 // nothing about how it reads XML: svgo drops what an SVG renderer ignores.
-const SVG_ONLY = new Set(["svgo", "svgo (multipass)"]);
+const SVG_ONLY = new Set(["svgo", "svgo (multipass)", "svgo (preserve IDs)"]);
 
 /**
  * What a document says, read by a strict XML parser that shares nothing with
@@ -912,7 +1013,7 @@ const TREE_READERS = new Map(
 	])
 );
 
-// The inputs the unit tests read, one directory each: `xml/fixtures.unittest.js`
+// The inputs the unit tests read, one directory each: `xml/invariants.unittest.js`
 // holds every one of them to these relations, with its own known differences.
 const UNIT_INPUT_RE = /^test\/fixtures\/xml\/[^/]+\/index\.xml$/;
 
@@ -1047,19 +1148,15 @@ const invariants = (write, parseXml) => {
 			if (printed === null) continue;
 			// What minifying keeps is what the document says, which a reader other
 			// than the printer's own has to agree with.
-			if (
-				wantedRelation("meaning") &&
-				canonical(printed, cssOptions) !== canonical(xml, cssOptions)
-			) {
-				groups.add(
-					{
-						relation: "meaning",
-						what: "the minified document says something else",
-						repro: `    ${oneLine(xml, 80)}`
-					},
-					preset,
-					label
-				);
+			if (wantedRelation("meaning")) {
+				for (const report of meaningReports(
+					xml,
+					printed,
+					cssOptions,
+					options
+				)) {
+					groups.add(report, preset, label);
+				}
 			}
 			// Under the first preset only, as the other comparisons ask it: whether
 			// a spelling decides the output is the same question under every set.
@@ -1132,7 +1229,10 @@ const main = async () => {
 			)} brotli, ${kb(input.zstd)} zstd)${
 				typeof before === "string"
 					? `, not well-formed: ${before}`
-					: `, ${[...before.elements.values()].reduce((a, b) => a + b, 0)} elements`
+					: `, ${[...before.elements.values()].reduce(
+							(a, b) => a + b,
+							0
+						)} elements`
 			}\n`
 		);
 		for (const stage of STAGES.filter(wantedStage)) {
@@ -1156,7 +1256,9 @@ const main = async () => {
 				if ("error" in result) {
 					// A tool rejecting the document outright is a comparison result too.
 					process.stdout.write(
-						`  ${tool.name.padEnd(40)} ${result.timedOut ? "" : "rejects it: "}${result.error}\n`
+						`  ${tool.name.padEnd(40)} ${
+							result.timedOut ? "" : "rejects it: "
+						}${result.error}\n`
 					);
 					continue;
 				}

@@ -1,0 +1,1 @@
+if(xxx){foo}else if(false){bar};if(xxx){foo}else if(false){bar}else{baz};if(xxx){foo}else if(true){bar}else if(false){baz};if(x)a();else if(0){var q=1}

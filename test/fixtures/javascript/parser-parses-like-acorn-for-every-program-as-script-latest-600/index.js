@@ -1,0 +1,1 @@
+export { a as '\uD83D\uDE00' }; var a;

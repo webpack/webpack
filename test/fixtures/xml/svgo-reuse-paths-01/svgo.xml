@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <path d="M 10,50 l 20,30 L 20,30" id="test0"/>
+        <path d="M 10,50 c 20,30 40,50 60,70 C 20,30 40,50 60,70" id="reuse-0"/>
+    </defs>
+    <use xlink:href="#test0"/>
+    <use transform="translate(10, 10)" xlink:href="#reuse-0"/>
+    <use transform="translate(20, 20)" xlink:href="#reuse-0"/>
+    <use xlink:href="#reuse-0"/>
+    <use id="test1" xlink:href="#test0"/>
+    <path d="M 10,50 a 20,60 45 0,1 40,70 A 20,60 45 0,1 40,70"/>
+    <path d="M 20,30 a 20,60 45 0,1 40,70 A 20,60 45 0,1 40,70"/>
+    <g>
+        <use id="test2" xlink:href="#test0"/>
+    </g>
+    <use xlink:href="#reuse-0"/>
+</svg>

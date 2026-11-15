@@ -45,12 +45,23 @@ module.exports = [
 											}
 										});
 									} else {
-										hook.tap(
-											{ name: "ObserveLogicalChainPlugin", stage: -100 },
-											() => {
-												hookCalls++;
-											}
-										);
+										const options = {
+											name: "ObserveLogicalChainPlugin",
+											stage: -100
+										};
+										const observe = () => {
+											hookCalls++;
+											return undefined;
+										};
+										// each hook's `tap` takes path taps too, so they are tapped apart
+										if (hookType === "walk") {
+											parser.hooks.expressionLogicalOperator.tap(
+												options,
+												observe
+											);
+										} else {
+											parser.hooks.evaluate.for(hookType).tap(options, observe);
+										}
 									}
 									if (!intercept && hookType !== "walk") {
 										parser.hooks.evaluate

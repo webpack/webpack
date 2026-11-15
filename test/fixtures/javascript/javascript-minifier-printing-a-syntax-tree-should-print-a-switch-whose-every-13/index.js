@@ -1,0 +1,1 @@
+function f(x){switch(x/*! c */){default:g()}}

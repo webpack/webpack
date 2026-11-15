@@ -1,0 +1,1 @@
+function f(){ var a = /*#__PURE__*/ g(); }

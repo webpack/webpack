@@ -1,0 +1,1 @@
+function f(){switch(a){case b?1:2:c()}}

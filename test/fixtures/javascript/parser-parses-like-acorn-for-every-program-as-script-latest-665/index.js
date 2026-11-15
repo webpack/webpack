@@ -1,0 +1,1 @@
+async function f() { \u0061wait = 1 }

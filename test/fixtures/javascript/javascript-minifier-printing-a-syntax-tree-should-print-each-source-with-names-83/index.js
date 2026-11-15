@@ -1,0 +1,1 @@
+async function f() { await a; await (a ? b : c); await (a, b); await a.b; await f(); await -a; await 1; await await a; await {}; await (() => 1); await new A(); await this; await (a + b); await `x`; (await a).b; (await a)(); (await a) ** b; -await a; (await a)`x`; await a?.b; await (a = b); await import('x'); }

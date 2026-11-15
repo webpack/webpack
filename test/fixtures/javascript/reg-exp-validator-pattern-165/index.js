@@ -1,0 +1,1 @@
+/\p{Any}\p{ASCII}\p{Assigned}/u;

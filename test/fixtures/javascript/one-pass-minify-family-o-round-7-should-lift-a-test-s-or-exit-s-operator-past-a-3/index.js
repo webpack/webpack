@@ -1,0 +1,1 @@
+function*g(){if(!(a(),yield))c()}

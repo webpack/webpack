@@ -1,0 +1,1 @@
+function h(i){i++;return i}function l(i){var x=i++;return x**2}function f(a){a+=1;a+=2;return a}console.log(h(1),l(3),f(1))

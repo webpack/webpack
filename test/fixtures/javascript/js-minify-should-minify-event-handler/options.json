@@ -1,0 +1,19 @@
+[
+	{
+		"print": "jsMinify",
+		"as": "event-handler",
+		"minimizer": {
+			"extractComments": true,
+			"asset": "handler.js"
+		}
+	},
+	{
+		"print": "jsMinify",
+		"as": "event-handler",
+		"minimizer": {
+			"extractComments": true,
+			"sourceMap": "input.js.map",
+			"asset": "handler.js"
+		}
+	}
+]

@@ -1,0 +1,1 @@
+export class C{#a(){return 1}#b=2;#c=g();get #d(){return 1}set #d(v){}static #e(){}#f;m(){return this.#f}}

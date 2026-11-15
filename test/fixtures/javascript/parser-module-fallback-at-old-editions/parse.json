@@ -1,0 +1,18 @@
+[
+	{ "options": { "ecmaVersion": 3, "sourceType": "auto" } },
+	{
+		"options": {
+			"ecmaVersion": 3,
+			"sourceType": "auto",
+			"allowReserved": false
+		}
+	},
+	{ "options": { "ecmaVersion": 5, "sourceType": "auto" } },
+	{
+		"options": {
+			"ecmaVersion": 6,
+			"sourceType": "auto",
+			"allowReserved": true
+		}
+	}
+]

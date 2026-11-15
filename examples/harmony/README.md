@@ -273,7 +273,7 @@ function add() {
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -316,16 +316,16 @@ __webpack_require__.e(/*! import() */ 655).then(() => (__webpack_require__(/*! .
 
 ```
 asset output.js 11.2 KiB [emitted] (name: main)
-asset 655.output.js 761 bytes [emitted]
+asset 655.output.js 800 bytes [emitted]
 chunk (runtime: main) 655.output.js 24 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24
   ./async-loaded.js 24 bytes [built] [code generated]
     [exports: answer]
     [used exports unknown]
     import() ./async-loaded ./example.js 6:0-24
-chunk (runtime: main) output.js (main) 400 bytes (javascript) 5.22 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 400 bytes (javascript) 5.26 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.22 KiB 8 modules
+  runtime modules 5.26 KiB 8 modules
   dependent modules 225 bytes [dependent] 2 modules
   ./example.js 175 bytes [built] [code generated]
     [no exports]
@@ -337,16 +337,16 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.95 KiB [emitted] [minimized] (name: main)
-asset 655.output.js 121 bytes [emitted] [minimized]
+asset output.js 1.98 KiB [emitted] [minimized] (name: main)
+asset 655.output.js 153 bytes [emitted] [minimized]
 chunk (runtime: main) 655.output.js 24 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24
   ./async-loaded.js 24 bytes [built] [code generated]
     [exports: answer]
     import() ./async-loaded ./example.js + 2 modules ./example.js 6:0-24
-chunk (runtime: main) output.js (main) 400 bytes (javascript) 5.22 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 400 bytes (javascript) 5.26 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.22 KiB 8 modules
+  runtime modules 5.26 KiB 8 modules
   ./example.js + 2 modules 400 bytes [built] [code generated]
     [no exports]
     [no exports used]

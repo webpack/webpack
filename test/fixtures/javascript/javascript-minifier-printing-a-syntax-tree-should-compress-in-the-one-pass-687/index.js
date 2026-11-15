@@ -1,0 +1,1 @@
+Array.prototype.concat=f;x=[1].concat(2)

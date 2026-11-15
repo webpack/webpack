@@ -1,0 +1,1 @@
+new(function(){}, /*c*/ a);

@@ -1,0 +1,21 @@
+[
+	{
+		"mode": "minify",
+		"visit": {
+			"types": [
+				"Declaration"
+			],
+			"fields": [
+				"name"
+			],
+			"exit": false,
+			"at": [
+				{
+					"type": "Declaration",
+					"name": "color",
+					"do": "remove"
+				}
+			]
+		}
+	}
+]

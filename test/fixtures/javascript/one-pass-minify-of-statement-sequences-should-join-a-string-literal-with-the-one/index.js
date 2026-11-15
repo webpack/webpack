@@ -1,0 +1,1 @@
+var x=1,o={valueOf(){return 2}};console.log("a"+("b"+x),"a"+("b"+x+"c"),"a"+("b"+o),"a"+(x+"b"),"a"+(1+x),1+("b"+x),"a"+("b"+ +x))

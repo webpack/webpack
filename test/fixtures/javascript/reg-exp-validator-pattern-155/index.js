@@ -1,0 +1,1 @@
+/\p{Script_Extensions=Latin}/u;

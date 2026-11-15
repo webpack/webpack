@@ -1,0 +1,1 @@
+Merge only intersected paths

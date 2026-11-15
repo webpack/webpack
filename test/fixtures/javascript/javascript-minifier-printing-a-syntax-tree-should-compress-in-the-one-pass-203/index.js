@@ -1,0 +1,1 @@
+function f(a,b){if(!a)throw b;throw 1}function g(){if(a)throw b();else throw c()}function h(){if(a)throw b;if(c)throw d;throw e}function i(){if(a){throw b}throw c}function j(){if(a)throw b,c;throw d}function k(){if(a)throw b;else throw b}f=()=>{if(a)throw b;throw c}

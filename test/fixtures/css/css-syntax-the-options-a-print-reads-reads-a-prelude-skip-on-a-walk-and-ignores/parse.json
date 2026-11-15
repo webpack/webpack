@@ -1,0 +1,17 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"skip": {
+				"selectorPrelude": true,
+				"atRulePrelude": true
+			}
+		},
+		"visit": {
+			"types": [
+				"Ident"
+			],
+			"exit": false
+		}
+	}
+]

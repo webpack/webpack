@@ -1,0 +1,1 @@
+Object.keys=g;Object.keys([])

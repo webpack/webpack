@@ -481,7 +481,7 @@ __webpack_require__.r(module.exports = {
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunkapp"] = self["webpackChunkapp"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunkapp"]) ? self["webpackChunkapp"] : (self["webpackChunkapp"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -654,17 +654,17 @@ app, so scoping would break them): `@layer` and `@page` names,
 ## Unoptimized
 
 ```
-assets by path *.js 14.9 KiB
-  asset output.js 14.6 KiB [emitted] (name: main)
-  asset 1.output.js 332 bytes [emitted]
+assets by path *.js 15 KiB
+  asset output.js 14.7 KiB [emitted] (name: main)
+  asset 1.output.js 374 bytes [emitted]
 assets by path *.css 1.16 KiB
   asset output.css 1.04 KiB [emitted] (name: main)
   asset 1.output.css 125 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-Entrypoint main 15.7 KiB (14.6 KiB) = output.js 14.6 KiB output.css 1.04 KiB 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 259 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.51 KiB (runtime) [entry] [rendered]
+Entrypoint main 15.7 KiB (14.6 KiB) = output.js 14.7 KiB output.css 1.04 KiB 1 auxiliary asset
+chunk (runtime: main) output.js, output.css (main) 259 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.55 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 8.51 KiB 9 modules
+  runtime modules 8.55 KiB 9 modules
   dependent modules 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 78 bytes (javascript) 42 bytes (css-import) [dependent] 6 modules
   ./example.js 181 bytes [built] [code generated]
     [no exports]
@@ -682,20 +682,20 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-assets by path *.js 3.13 KiB
-  asset output.js 3.04 KiB [emitted] [minimized] (name: main)
-  asset 822.output.js 85 bytes [emitted] [minimized]
+assets by path *.js 3.2 KiB
+  asset output.js 3.08 KiB [emitted] [minimized] (name: main)
+  asset 822.output.js 120 bytes [emitted] [minimized]
 assets by path *.css 357 bytes
   asset output.css 341 bytes [emitted] [minimized] (name: main)
   asset 822.output.css 16 bytes [emitted] [minimized]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-Entrypoint main 3.38 KiB (14.6 KiB) = output.js 3.04 KiB output.css 341 bytes 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 467 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.34 KiB (runtime) [entry] [rendered]
+Entrypoint main 3.41 KiB (14.6 KiB) = output.js 3.08 KiB output.css 341 bytes 1 auxiliary asset
+chunk (runtime: main) output.js, output.css (main) 425 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.38 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 8.34 KiB 8 modules
+  runtime modules 8.38 KiB 8 modules
   dependent modules 14.6 KiB (asset) 42 bytes (asset-url) 79 bytes (css) 42 bytes (css-import) [dependent] 3 modules
-  built modules 467 bytes (javascript) 375 bytes (css) [built]
-    ./example.js + 5 modules 408 bytes [not cacheable] [built] [code generated]
+  cacheable modules 425 bytes (javascript) 375 bytes (css)
+    ./example.js + 4 modules 366 bytes [built] [code generated]
       [no exports]
       [no exports used]
       entry ./example.js main
@@ -712,6 +712,6 @@ chunk (runtime: main) 822.output.js, 822.output.css 1 bytes (javascript) 23 byte
   > ./lazy-style.css ./example.js 4:0-26
   css ./lazy-style.css 1 bytes (javascript) 23 bytes (css) [built] [code generated]
     [no exports]
-    import() ./lazy-style.css ./example.js + 5 modules ./example.js 4:0-26
+    import() ./lazy-style.css ./example.js + 4 modules ./example.js 4:0-26
 webpack X.X.X compiled successfully
 ```

@@ -1,0 +1,58 @@
+[
+	{
+		"entry": "parseARule",
+		"visit": true
+	},
+	{
+		"entry": "parseAComponentValue"
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"recurseBlocks": false
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"skip": {
+				"types": [
+					"Whitespace"
+				]
+			}
+		},
+		"visit": {
+			"types": [
+				"QualifiedRule",
+				"Declaration",
+				"Function"
+			],
+			"fields": [
+				"name",
+				"value",
+				"index",
+				"parent",
+				"childCount",
+				"fieldCount:declarations",
+				"flag:important",
+				"sourceOf:block"
+			],
+			"at": [
+				{
+					"type": "Declaration",
+					"do": "skipChildren"
+				}
+			]
+		}
+	},
+	{
+		"entry": "parseAListOfComponentValues",
+		"pos": 2,
+		"fields": [
+			"name",
+			"value",
+			"source",
+			"range"
+		]
+	}
+]

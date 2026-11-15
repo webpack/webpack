@@ -1,0 +1,1 @@
+a.zzLeft = 1; a["zzRight"] = 2

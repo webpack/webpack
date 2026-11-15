@@ -1,0 +1,1 @@
+function f(Math){Math.abs=g;h(Math)}Math.prototype.abs=k;y=1;x=Math.abs(-1)

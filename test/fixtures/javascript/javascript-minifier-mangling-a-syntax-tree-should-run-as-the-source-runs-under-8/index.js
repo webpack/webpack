@@ -1,0 +1,1 @@
+result = (function () { var fns = []; for (let i = 0; i < 3; i++) { const j = i * 2; fns.push(() => i + j) } return fns.map(f => f()).join() })();

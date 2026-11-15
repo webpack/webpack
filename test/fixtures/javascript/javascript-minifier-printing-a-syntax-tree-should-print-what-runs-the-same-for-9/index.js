@@ -1,0 +1,1 @@
+function f(o,t,k){var v,d;if(o.d){d=Object.getOwnPropertyDescriptor(t,k);v=d&&d.value}else v=t[k];return v}console.log(f({d:1},{a:1},'a'),f({},{a:2},'a'))

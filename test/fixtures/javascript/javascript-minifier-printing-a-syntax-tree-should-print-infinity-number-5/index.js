@@ -1,0 +1,1 @@
+console.log(delete Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY)

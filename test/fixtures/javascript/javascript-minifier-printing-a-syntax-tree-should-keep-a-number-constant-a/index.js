@@ -1,0 +1,1 @@
+[Number.POSITIVE_INFINITY]=[7];({v:Number.NEGATIVE_INFINITY}={v:1});[...Number.POSITIVE_INFINITY]=[7];for([Number.POSITIVE_INFINITY] of [[7]]);Number.NaN++;let v;({[Number.POSITIVE_INFINITY]:v=Number.NEGATIVE_INFINITY}={});g(Number.NaN)

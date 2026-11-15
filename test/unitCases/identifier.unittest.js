@@ -272,7 +272,10 @@ describe("util/identifier", () => {
 			[".././../dir/file.js", "../c/d/"],
 			["./.././../dir/file.js", "../c/d/"],
 			["../dir/../file.js", "d/"],
-			["../dir/../file.js", "./d/", true]
+			["../dir/../file.js", "./d/", true],
+			["file.js?v=a/b/c", ""],
+			["dir/file.js?v=a/b", "../"],
+			["dir/file.js#a/b", "../"]
 		];
 		for (const [filename, expected, enforceRelative] of cases) {
 			it(`should handle ${filename} correctly${
@@ -484,6 +487,57 @@ describe("util/identifier", () => {
 				expect(parsed.path).toBe(value);
 				expect(parsed.query).toBe("");
 				expect(parsed.fragment).toBe("");
+			});
+		}
+	});
+
+	describe("escapeFilenameForUrl", () => {
+		it("keeps a filename without a percent sign", () => {
+			const filename = "a b.js?v=1#x";
+			expect(identifierUtil.escapeFilenameForUrl(filename)).toBe(filename);
+		});
+
+		it("escapes each percent sign of the path", () => {
+			expect(identifierUtil.escapeFilenameForUrl("dir%41/a%2F.js")).toBe(
+				"dir%2541/a%252F.js"
+			);
+		});
+
+		it("keeps the query and fragment as written", () => {
+			expect(identifierUtil.escapeFilenameForUrl("a%41.js?v=%2F#%41")).toBe(
+				"a%2541.js?v=%2F#%41"
+			);
+			expect(identifierUtil.escapeFilenameForUrl("a%41.js#%41")).toBe(
+				"a%2541.js#%41"
+			);
+		});
+	});
+
+	describe("getAssetFile", () => {
+		/** @type {[string, string | undefined][]} */
+		const cases = [
+			["main.js", "main.js"],
+			["js/main.js", "js/main.js"],
+			["./js/main.js", "js/main.js"],
+			// the emit's path.join reads a backslash as a separator only on Windows
+			["js\\main.js", path.sep === "\\" ? "js/main.js" : "js\\main.js"],
+			["main.js?v=1", "main.js"],
+			["main.js#top", "main.js"],
+			["..x/../main.js", "main.js"],
+			["a/..b/../main.js", "a/main.js"],
+			["picture.txt?/..a/../../../file.txt", "picture.txt"],
+			["..x/../../main.js", undefined],
+			["../main.js", undefined],
+			["a/..", undefined],
+			["/main.js", "main.js"],
+			["/js/main.js", "js/main.js"],
+			["/../main.js", undefined],
+			["C:/main.js", undefined]
+		];
+
+		for (const [asset, expected] of cases) {
+			it(`should map ${JSON.stringify(asset)} to ${JSON.stringify(expected)}`, () => {
+				expect(identifierUtil.getAssetFile(asset)).toBe(expected);
 			});
 		}
 	});

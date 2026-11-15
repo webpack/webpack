@@ -1,0 +1,1 @@
+a=false.toString();b=NaN.toString();c=(1/0).toString();d=Number(void 0);e=String.fromCharCode(void 0);f=[1,,,]+"";g=`${1n}`

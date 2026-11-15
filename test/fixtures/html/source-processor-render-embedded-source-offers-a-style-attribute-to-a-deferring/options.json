@@ -1,0 +1,22 @@
+[
+	{
+		"print": "processAsync",
+		"mode": "minify",
+		"renderEmbeddedSource": {
+			"name": "decline",
+			"async": true
+		}
+	},
+	{
+		"print": "processAsync",
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"mode": "minify"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "builtin"
+	}
+]

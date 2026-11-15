@@ -1,0 +1,12 @@
+[
+	{
+		"fields": [
+			"name",
+			"textOf:publicId",
+			"textOf:systemId"
+		],
+		"check": {
+			"fixture": "doctype"
+		}
+	}
+]

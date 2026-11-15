@@ -1,0 +1,15 @@
+[
+	{
+		"print": "htmlMinify",
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"css/block-contents": "background:url(data:text/css,.q{color:red})"
+			}
+		}
+	},
+	{
+		"print": "htmlMinify",
+		"renderEmbeddedSource": "offers"
+	}
+]

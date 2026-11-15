@@ -231,7 +231,7 @@ __webpack_require__.e(/*! require.ensure */ "file_js").then((function(require) {
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -262,7 +262,7 @@ __webpack_require__(/*! bundle-loader!./file.js */ 1)(function(fileJsExports) {
 # dist/file_js.output.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["file_js"],{
+(Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = [])).push([["file_js"],{
 
 /***/ 2
 /*!*****************!*\
@@ -285,17 +285,17 @@ module.exports = "It works";
 ## Unoptimized
 
 ```
-asset output.js 9.23 KiB [emitted] (name: main)
-asset file_js.output.js 348 bytes [emitted]
+asset output.js 9.27 KiB [emitted] (name: main)
+asset file_js.output.js 387 bytes [emitted]
 chunk (runtime: main) file_js.output.js 28 bytes [rendered]
   > ../../node_modules/bundle-loader/index.js!./file.js 7:0-14:2
   ./file.js 28 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./file.js 1:0-14
     cjs require !!./file.js ../../node_modules/bundle-loader/index.js!./file.js 8:8-30
-chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.73 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.73 KiB 6 modules
+  runtime modules 4.77 KiB 6 modules
   dependent modules 281 bytes [dependent] 1 module
   ./example.js 94 bytes [built] [code generated]
     [used exports unknown]
@@ -306,17 +306,17 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.84 KiB [emitted] [minimized] (name: main)
-asset file_js.output.js 93 bytes [emitted] [minimized]
+asset output.js 1.87 KiB [emitted] [minimized] (name: main)
+asset file_js.output.js 125 bytes [emitted] [minimized]
 chunk (runtime: main) file_js.output.js 28 bytes [rendered]
   > ../../node_modules/bundle-loader/index.js!./file.js 7:0-14:2
   ./file.js 28 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./file.js 1:0-14
     cjs require !!./file.js ../../node_modules/bundle-loader/index.js!./file.js 8:8-30
-chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.73 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.73 KiB 6 modules
+  runtime modules 4.77 KiB 6 modules
   dependent modules 281 bytes [dependent] 1 module
   ./example.js 94 bytes [built] [code generated]
     [no exports used]

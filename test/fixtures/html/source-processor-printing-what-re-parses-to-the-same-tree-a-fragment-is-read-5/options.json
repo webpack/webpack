@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "beautify",
+		"fragmentContext": "svg path"
+	},
+	{
+		"mode": "minify",
+		"fragmentContext": "svg path"
+	}
+]

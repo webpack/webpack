@@ -18,6 +18,7 @@ const fs = require("fs");
 const path = require("path");
 const prettier = require("prettier");
 const { toJsStringLiteral } = require("../lib/util/identifier");
+const { toLatin1Source } = require("./latin1-source");
 
 const TARGET = path.resolve(__dirname, "../lib/html/data.js");
 const SYNTAX_TARGET = path.resolve(__dirname, "../lib/html/syntax-parser.js");
@@ -527,6 +528,376 @@ const IMPLIED_END_TAG_ELEMENTS = [
 
 /** @type {ParserTable[]} */
 const PARSER_TABLES = [
+	[
+		"SVG_COLOR_ATTRIBUTES",
+		"set",
+		"SVG presentation attributes accepting a color; paint servers and context-dependent values are left untouched.",
+		["color", "fill", "stroke", "stop-color", "flood-color", "lighting-color"]
+	],
+	[
+		"SVG_INHERITED_CLEANUP_ATTRIBUTES",
+		"set",
+		"Inherited presentation values that structural cleanup can compare without resolving CSS.",
+		[
+			"fill",
+			"stroke",
+			"stroke-width",
+			"stroke-linecap",
+			"stroke-linejoin",
+			"stroke-miterlimit",
+			"color",
+			"fill-rule",
+			"fill-opacity",
+			"stroke-opacity",
+			"text-anchor",
+			"font-family",
+			"font-size",
+			"font-style",
+			"font-weight",
+			"letter-spacing",
+			"word-spacing",
+			"clip-rule",
+			"shape-rendering",
+			"color-rendering",
+			"pointer-events",
+			"visibility",
+			"paint-order"
+		]
+	],
+	[
+		"SVG_LOCAL_DEFAULTS",
+		"object",
+		"Non-inherited presentation defaults removable in dependency-free SVG documents.",
+		[
+			["opacity", "1"],
+			["display", "inline"],
+			["vector-effect", "none"],
+			["clip-path", "none"],
+			["filter", "none"],
+			["mask", "none"],
+			["isolation", "auto"],
+			["mix-blend-mode", "normal"]
+		]
+	],
+	[
+		"SVG_SHAPE_ZERO_ATTRIBUTES",
+		"object",
+		"Coordinates whose omitted value is a local zero rather than a text position or inherited value.",
+		[
+			["rect", "x y"],
+			["circle", "cx cy"],
+			["ellipse", "cx cy"],
+			["line", "x1 y1 x2 y2"],
+			["image", "x y"],
+			["use", "x y"],
+			["foreignObject", "x y"],
+			["svg", "x y"]
+		]
+	],
+	[
+		"SVG_ASPECT_RATIO_ELEMENTS",
+		"set",
+		"Elements whose omitted aspect ratio is the non-inherited xMidYMid meet default.",
+		["svg", "image", "feImage", "symbol", "marker"]
+	],
+	[
+		"SVG_STRUCTURAL_PRESENTATION_VALUES",
+		"object",
+		"Context-free presentation values eligible for inherited attribute cleanup.",
+		[
+			["stroke-width", "number"],
+			["stroke-miterlimit", "number"],
+			["fill-opacity", "number"],
+			["stroke-opacity", "number"],
+			["stroke-linecap", "butt round square"],
+			["stroke-linejoin", "miter round bevel"],
+			["fill-rule", "nonzero evenodd"],
+			["clip-rule", "nonzero evenodd"],
+			["shape-rendering", "auto optimizeSpeed crispEdges geometricPrecision"],
+			["color-rendering", "auto optimizeSpeed optimizeQuality"],
+			[
+				"pointer-events",
+				"bounding-box visiblePainted visibleFill visibleStroke visible painted fill stroke all none"
+			],
+			["visibility", "visible hidden collapse"],
+			["paint-order", "normal"]
+		]
+	],
+	[
+		"SVG_GROUP_ATTRIBUTE_TARGETS",
+		"set",
+		"Graphics children eligible to receive a removed group's inherited attributes.",
+		["g", "path", "rect", "circle", "ellipse", "line", "polyline", "polygon"]
+	],
+	[
+		"SVG_UNUSED_DEFINITION_CONTENT",
+		"set",
+		"Known non-textual SVG content removable from an unnamed, unreferenced definition.",
+		[
+			"g",
+			"path",
+			"rect",
+			"circle",
+			"ellipse",
+			"line",
+			"polyline",
+			"polygon",
+			"linearGradient",
+			"radialGradient",
+			"stop",
+			"pattern",
+			"marker",
+			"mask",
+			"clipPath",
+			"symbol"
+		]
+	],
+	[
+		"SVG_DEFINITION_ELEMENTS",
+		"set",
+		"Resource definitions whose order within defs does not affect painting.",
+		[
+			"linearGradient",
+			"radialGradient",
+			"pattern",
+			"marker",
+			"mask",
+			"clipPath",
+			"symbol"
+		]
+	],
+	[
+		"SVG_EMPTY_CONTAINERS",
+		"set",
+		"Empty SVG containers with only namespace declarations can be omitted when structural cleanup is explicitly enabled.",
+		["g", "defs", "symbol", "marker", "pattern", "mask", "clipPath"]
+	],
+	[
+		"SVG_TRANSFORM_ARGUMENTS",
+		"object",
+		"SVG 1.1 transform functions and their allowed argument counts.",
+		[
+			["matrix", "6"],
+			["translate", "1 2"],
+			["scale", "1 2"],
+			["rotate", "1 3"],
+			["skewX", "1"],
+			["skewY", "1"]
+		]
+	],
+	[
+		"SVG_PATH_ARGUMENTS",
+		"object",
+		"SVG path commands and the number of arguments in each repeated segment.",
+		[
+			["M", "2"],
+			["L", "2"],
+			["H", "1"],
+			["V", "1"],
+			["C", "6"],
+			["S", "4"],
+			["Q", "4"],
+			["T", "2"],
+			["A", "7"],
+			["Z", "0"]
+		]
+	],
+	[
+		"SVG_NUMERIC_ATTRIBUTES",
+		"byElement",
+		"Conservative SVG numeric attribute grammars; unknown attributes and unsupported whole values stay untouched.",
+		[
+			...[
+				["svg", "x y width height"],
+				["rect", "x y width height rx ry"],
+				["circle", "cx cy r"],
+				["ellipse", "cx cy rx ry"],
+				["line", "x1 y1 x2 y2"],
+				["image", "x y width height"],
+				["foreignObject", "x y width height"],
+				["text", "textLength"],
+				["tspan", "textLength"],
+				["textPath", "textLength startOffset"],
+				["use", "x y width height"],
+				["marker", "markerWidth markerHeight refX refY"],
+				["linearGradient", "x1 y1 x2 y2"],
+				["radialGradient", "cx cy r fx fy fr"],
+				["mask", "x y width height"],
+				["pattern", "x y width height"],
+				["filter", "x y width height"]
+			].reduce((entries, [tag, names]) => {
+				for (const name of names.split(" ")) {
+					entries.push([`${tag} ${name}`, "length"]);
+				}
+				return entries;
+			}, /** @type {[string, string][]} */ ([])),
+			...[
+				["feOffset", "dx dy"],
+				["feDropShadow", "dx dy"],
+				["feComposite", "k1 k2 k3 k4"],
+				["feConvolveMatrix", "divisor bias"],
+				["feDisplacementMap", "scale"],
+				["feDiffuseLighting", "surfaceScale diffuseConstant"],
+				[
+					"feSpecularLighting",
+					"surfaceScale specularConstant specularExponent"
+				],
+				["feDistantLight", "azimuth elevation"],
+				["fePointLight", "x y z"],
+				[
+					"feSpotLight",
+					"x y z pointsAtX pointsAtY pointsAtZ specularExponent limitingConeAngle"
+				],
+				...["feFuncR", "feFuncG", "feFuncB", "feFuncA"].map((tag) => [
+					tag,
+					"slope intercept amplitude exponent offset"
+				])
+			].reduce((entries, [tag, names]) => {
+				for (const name of names.split(" ")) {
+					entries.push([`${tag} ${name}`, "number"]);
+				}
+				return entries;
+			}, /** @type {[string, string][]} */ ([])),
+			...["text", "tspan", "tref", "altGlyph"].reduce((entries, tag) => {
+				for (const name of ["x", "y", "dx", "dy"]) {
+					entries.push([`${tag} ${name}`, "lengths"]);
+				}
+				entries.push([`${tag} rotate`, "numbers"]);
+				return entries;
+			}, /** @type {[string, string][]} */ ([])),
+			["stop offset", "percentage"],
+			["feConvolveMatrix order", "integerPair"],
+			["feConvolveMatrix targetX", "integer"],
+			["feConvolveMatrix targetY", "integer"],
+			["feTurbulence numOctaves", "integer"],
+			["feTurbulence seed", "number"],
+			["feGaussianBlur stdDeviation", "pair"],
+			["feDropShadow stdDeviation", "pair"],
+			["feTurbulence baseFrequency", "pair"],
+			...["feConvolveMatrix", "feDiffuseLighting", "feSpecularLighting"].map(
+				(tag) =>
+					/** @type {[string, string]} */ ([`${tag} kernelUnitLength`, "pair"])
+			),
+			["feConvolveMatrix kernelMatrix", "numbers"],
+			["feColorMatrix values", "numbers"],
+			...["feFuncR", "feFuncG", "feFuncB", "feFuncA"].map(
+				(tag) =>
+					/** @type {[string, string]} */ ([`${tag} tableValues`, "numbers"])
+			),
+			...[
+				"path",
+				"rect",
+				"circle",
+				"ellipse",
+				"line",
+				"polygon",
+				"polyline"
+			].map(
+				(tag) =>
+					/** @type {[string, string]} */ ([`${tag} pathLength`, "number"])
+			),
+			...["svg", "symbol", "marker", "pattern", "view"].map(
+				(tag) => /** @type {[string, string]} */ ([`${tag} viewBox`, "viewBox"])
+			),
+			["polygon points", "points"],
+			["polyline points", "points"],
+			["path d", "path"],
+			...[
+				"svg",
+				"g",
+				"a",
+				"switch",
+				"defs",
+				"symbol",
+				"use",
+				"rect",
+				"circle",
+				"ellipse",
+				"line",
+				"path",
+				"polygon",
+				"polyline",
+				"text",
+				"image",
+				"foreignObject",
+				"clipPath",
+				"mask",
+				"marker",
+				"pattern"
+			].map(
+				(tag) =>
+					/** @type {[string, string]} */ ([`${tag} transform`, "transform"])
+			),
+			["linearGradient gradientTransform", "transform"],
+			["radialGradient gradientTransform", "transform"],
+			["pattern patternTransform", "transform"]
+		]
+	],
+	[
+		"SVG_PRESENTATION_NUMERIC_ATTRIBUTES",
+		"object",
+		"Numeric SVG presentation attribute grammars; CSS keywords, functions and unsupported whole values stay untouched.",
+		[
+			...[
+				"opacity",
+				"fill-opacity",
+				"stroke-opacity",
+				"stop-opacity",
+				"flood-opacity"
+			].map((name) => /** @type {[string, string]} */ ([name, "percentage"])),
+			...[
+				"stroke-width",
+				"stroke-dashoffset",
+				"font-size",
+				"letter-spacing",
+				"word-spacing",
+				"baseline-shift"
+			].map((name) => /** @type {[string, string]} */ ([name, "length"])),
+			["stroke-miterlimit", "number"],
+			["stroke-dasharray", "lengths"]
+		]
+	],
+	[
+		"SVG_LENGTH_UNITS",
+		"set",
+		"SVG 1.1 length suffixes; unknown CSS extensions are preserved rather than interpreted as geometry.",
+		["", "%", "em", "ex", "px", "in", "cm", "mm", "pt", "pc"]
+	],
+	[
+		"SVG_WHITESPACE_CONTAINERS",
+		"set",
+		"SVG containers with no rendered character data. Text, descriptive, foreign and unknown elements remain opaque to whitespace cleanup.",
+		[
+			"svg",
+			"g",
+			"defs",
+			"symbol",
+			"clipPath",
+			"mask",
+			"marker",
+			"pattern",
+			"linearGradient",
+			"radialGradient",
+			"filter"
+		]
+	],
+	[
+		"SVG_EDITOR_NAMESPACES",
+		"set",
+		"Editor-specific SVG data namespaces, not described by webref. Generic RDF and licensing vocabularies are not editor data.",
+		[
+			"http://www.inkscape.org/namespaces/inkscape",
+			"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd",
+			"http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd",
+			"http://krita.org/namespaces/svg/krita",
+			"http://ns.adobe.com/AdobeIllustrator/10.0/",
+			"http://ns.adobe.com/Extensibility/1.0/",
+			"http://ns.adobe.com/SaveForWeb/1.0/",
+			"http://schemas.microsoft.com/visio/2003/SVGExtensions/",
+			"http://www.bohemiancoding.com/sketch/ns",
+			"http://www.figma.com/figma/ns"
+		]
+	],
 	[
 		"VOID",
 		"set",
@@ -1699,6 +2070,31 @@ const PARSER_TABLES = [
 		]
 	],
 	[
+		"NO_END_TAG",
+		"set",
+		"§13.3's elements serialized with no end tag: the void ones and those tree construction pops as soon as it inserts them, so none holds a child.",
+		[
+			"area",
+			"base",
+			"basefont",
+			"bgsound",
+			"br",
+			"col",
+			"embed",
+			"frame",
+			"hr",
+			"img",
+			"input",
+			"keygen",
+			"link",
+			"meta",
+			"param",
+			"source",
+			"track",
+			"wbr"
+		]
+	],
+	[
 		"ACKNOWLEDGED_NON_VOID",
 		"set",
 		"Start tags besides the void elements whose self-closing flag tree construction acknowledges.",
@@ -1944,7 +2340,9 @@ const source = `/*
 "use strict";
 
 // GENERATED by tooling/generate-html-data.js — do not edit.
-// cspell:ignore ${CSPELL_IGNORE} ${eventHandlers.map(([name]) => name).join(" ")}
+// cspell:ignore ${CSPELL_IGNORE} ${eventHandlers
+	.map(([name]) => name)
+	.join(" ")}
 // Reflected-attribute tables from ${REFLECT_SOURCE}; everything else is the
 // generator's SUPPLEMENT, which carries the spec facts no dataset states.
 
@@ -2219,7 +2617,10 @@ const main = async () => {
 	// Formatted here rather than left to `yarn fmt`, so the comparison is
 	// against what the repo actually checks in.
 	const config = await prettier.resolveConfig(TARGET);
-	const data = await prettier.format(source, { ...config, filepath: TARGET });
+	const data = await prettier.format(toLatin1Source(source), {
+		...config,
+		filepath: TARGET
+	});
 
 	// The vendored WHATWG `entities.json`, keyed by name; only `characters` is read.
 	/** @type {Record<string, { characters: string }>} */
@@ -2234,7 +2635,7 @@ const main = async () => {
 	const eol = syntax.includes("\r\n") ? "\r\n" : "\n";
 	const nextSyntax = syntax.replace(
 		REGION_REGEXP,
-		renderEntities(entities).replace(/\n/g, eol)
+		toLatin1Source(renderEntities(entities)).replace(/\n/g, eol)
 	);
 
 	const ok = [

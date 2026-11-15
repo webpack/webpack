@@ -1,0 +1,20 @@
+<svg width="379px" height="134px" viewBox="0 0 379 134" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <circle id="6" cx="110.5" cy="5.5" r="5.5">
+        <animate begin="2.5s" attributeName="fill" calcMode="discrete" values="#6ebe28;#D8D8D8" dur="5s" keyTimes="0;0.15" repeatCount="indefinite"/>
+    </circle>
+    <circle id="5" cx="89.5" cy="5.5" r="5.5">
+        <animate begin="2s" attributeName="fill" calcMode="discrete" values="#6ebe28;#D8D8D8" dur="5s" keyTimes="0;0.15" repeatCount="indefinite"/>
+    </circle>
+    <circle id="4" cx="68.5" cy="5.5" r="5.5">
+        <animate begin="1.5s" attributeName="fill" calcMode="discrete" values="#6ebe28;#D8D8D8" dur="5s" keyTimes="0;0.15" repeatCount="indefinite"/>
+    </circle>
+    <circle id="3" cx="47.5" cy="5.5" r="5.5">
+        <animate begin="1s" attributeName="fill" calcMode="discrete" values="#6ebe28;#D8D8D8" dur="5s" keyTimes="0;0.15" repeatCount="indefinite"/>
+    </circle>
+    <circle id="2" cx="26.5" cy="5.5" r="5.5">
+        <animate begin="0.5s" attributeName="fill" calcMode="discrete" values="#6ebe28;#D8D8D8" dur="5s" keyTimes="0;0.15" repeatCount="indefinite"/>
+    </circle>
+    <circle id="1" cx="5.5" cy="5.5" r="5.5">
+        <animate attributeName="fill" calcMode="discrete" values="#6ebe28;#D8D8D8" dur="5s" keyTimes="0;0.15" repeatCount="indefinite"/>
+    </circle>
+</svg>

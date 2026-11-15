@@ -1,0 +1,1 @@
+if (a) async function f() {}

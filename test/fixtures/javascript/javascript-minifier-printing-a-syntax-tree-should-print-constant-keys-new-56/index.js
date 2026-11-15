@@ -1,0 +1,1 @@
+export function s(n){if(n)return n;else return}

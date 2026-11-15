@@ -1,0 +1,35 @@
+/* Each selector the support table names, so an entry with no page behind
+   it is read here. Each carries its own declaration, since rules that print
+   alike would gather and the comparison reads them in order. */
+.s0::checkmark{order:1}
+.s1::highlight(x){order:2}
+.s2::selection{order:3}
+.s3:buffering{order:4}
+.s4:defined{order:5}
+.s5:enabled{order:6}
+.s6:has-slotted{order:7}
+.s7:in-range{order:8}
+.s8:muted{order:9}
+.s9:optional{order:10}
+.s10:out-of-range{order:11}
+.s11:paused{order:12}
+.s12:picture-in-picture{order:13}
+.s13:playing{order:14}
+.s14:read-write{order:15}
+.s15:required{order:16}
+.s16:seeking{order:17}
+.s17:stalled{order:18}
+.s18:volume-locked{order:19}
+
+/* A prefixed selector whose unprefixed spelling the table gives. */
+.p:-moz-read-write{color:red}
+
+/* The prefixed properties whose keyword spellings differ from the plain ones. */
+.k0{-webkit-ruby-position:over}
+.k1{-webkit-ruby-position:under}
+.k2{-webkit-text-orientation:mixed}
+.k3{-webkit-text-orientation:upright}
+.k4{-webkit-text-orientation:sideways}
+
+/* The one substitution function nothing spells. */
+.r{width:random-item(--k,1px,2px)}

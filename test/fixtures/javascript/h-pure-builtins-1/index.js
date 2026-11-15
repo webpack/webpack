@@ -1,0 +1,11 @@
+Object.keys(10n);
+Object.create(null);
+Int8Array.of();
+Uint16Array.of(1, "a");
+BigInt64Array.of();
+Math.random(Math, a());
+parseInt(10n);
+Number.parseFloat(10n);
+new RegExp(/a/, "i");
+RegExp(/(?<b>.)\k<b>/);
+x();

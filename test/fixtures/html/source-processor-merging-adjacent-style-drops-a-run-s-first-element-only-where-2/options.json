@@ -1,0 +1,25 @@
+[
+	{
+		"mode": "minify",
+		"mergeStyles": true,
+		"removeEmptyElements": true,
+		"renderEmbeddedSource": "builtin"
+	},
+	{
+		"mode": "minify",
+		"mergeStyles": true,
+		"removeEmptyElements": true,
+		"renderEmbeddedSource": {
+			"name": "answers",
+			"options": {
+				"css": "b{c:\"d"
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"mergeStyles": true,
+		"removeEmptyElements": true,
+		"renderEmbeddedSource": "offers"
+	}
+]

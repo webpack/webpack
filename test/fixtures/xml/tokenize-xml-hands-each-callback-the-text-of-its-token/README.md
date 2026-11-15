@@ -1,0 +1,1 @@
+Exercises `"visit": true` on `tokenizeXml`: beside the token line, each callback logs the text it was handed, read off its own `input` (a name, an attribute value, a comment or CDATA body, the DOCTYPE).

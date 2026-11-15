@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>data: URLs in attributes</title>
+</head>
+<body>
+<object data='data:application/json,{ "a" : 1 }'></object>
+<a href='data:application/json,{ "b" : &quot;&apos;&quot; }'>json</a>
+<iframe src="data:text/html,<p>a<!-- dropped --></p>"></iframe>
+<img src="data:image/png;base64,AAAA" alt="">
+<p title='data:application/json,{ "kept" : 1 }'>text</p>
+</body>
+</html>

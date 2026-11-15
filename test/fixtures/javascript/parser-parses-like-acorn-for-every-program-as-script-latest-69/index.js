@@ -1,0 +1,1 @@
+x = { if: 1, class: 2, function: 3 }; x.if; x.class;

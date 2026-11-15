@@ -1,0 +1,1 @@
+x=[Math.abs(-(1+1)),`ab`.concat(`c`),`a${1}`.concat("b"),Math.max(1.5,2.5).x,Math.min(-1,2)()]

@@ -1,0 +1,1 @@
+function f(){if(x){let a=f(),b=g()}else h();for(;;){let q=f();g(q,q)}}

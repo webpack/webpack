@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <mask id="mask">
+        <path/>
+    </mask>
+    <g transform="rotate(45) scale(2)" fill="red">
+        <g>
+            <path d="..."/>
+        </g>
+        <circle/>
+    </g>
+    <g clip-path="url(#clipPath)">
+        <g transform="translate(10 10)"/>
+        <g transform="translate(10 10)"/>
+    </g>
+    <g mask="url(#mask)">
+        <g transform="translate(10 10)"/>
+        <g transform="translate(10 10)"/>
+    </g>
+</svg>

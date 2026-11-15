@@ -1,0 +1,1 @@
+function c(){return 1}function p(){console.log(c())}p();function u(){return 2}console.log(u(),u())

@@ -11,10 +11,11 @@ const vm = require("vm");
 const acorn = require("acorn");
 const {
 	SourceProcessor,
-	parser: { collectCjsRequireSpecifiers, parse }
+	parser: { collectCjsRequireSpecifiers }
 } = require("../../lib/javascript/syntax");
 const { decodeMappings } = require("../../lib/util/createMappings");
 const { firstDifference } = require("../../tooling/compare-js-tools");
+const { estree } = require("../helpers/javascriptParse");
 const {
 	DEPENDENCY,
 	createProgramGenerator,
@@ -403,17 +404,16 @@ const run = async (code, isModule, functionText = "[function]") => {
 };
 
 /**
- * webpack's parser given what a build gives it: ranges served lazily.
+ * webpack's parser given what a build gives it, its tree's objects with ranges.
  * @param {string} code the source
  * @param {boolean} isModule whether it is a module
  * @returns {import("estree").Program} the program
  */
 const parseOurs = (code, isModule) =>
-	parse(code, {
+	estree(code, {
 		sourceType: isModule ? "module" : "script",
 		ecmaVersion: "latest",
-		ranges: false,
-		lazyNodes: true
+		ranges: true
 	});
 
 /**
@@ -609,8 +609,8 @@ const parserDifference = (code, isModule) => {
 };
 
 /**
- * Where webpack's parser off the lazy path, as a plugin asking for locations
- * gets it, disagrees with acorn on a source's tree or comments.
+ * Where webpack's tree, its objects built with locations, disagrees with
+ * acorn on a source's tree or comments.
  * @param {string} code a source both parsers read
  * @param {boolean} isModule whether it is a module
  * @returns {string | undefined} the disagreement
@@ -628,7 +628,10 @@ const eagerParserDifference = (code, isModule) => {
 	const theirComments = [];
 	let ours;
 	try {
-		ours = parse(code, { ...options, lazyNodes: false, onComment: ourComments });
+		ours = estree(code, {
+			...options,
+			onComment: /** @type {EXPECTED_ANY} */ (ourComments)
+		});
 	} catch (err) {
 		return `rejects it with locations: ${/** @type {Error} */ (err).message}`;
 	}

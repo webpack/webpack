@@ -1,0 +1,1 @@
+try { u() } catch ({ v }) {} finally { w() }

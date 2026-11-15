@@ -1,0 +1,1 @@
+for(;;)break;for(a();;)break;for(;b();)break;for(c();d();)break;for(;;e())break;for(f();;g())break;for(;h();i())break;for(j();k();l())break;while(x())break;while(x()){break}if(a)while(x())break;else y();for(var i=0;x;)break;l:while(x())break;for((a in b);c;)break;for(;function(){}();)break

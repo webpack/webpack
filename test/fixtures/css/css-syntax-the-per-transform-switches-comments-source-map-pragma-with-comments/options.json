@@ -1,0 +1,49 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": "some"
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": "all"
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": true
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": false
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": {
+				"regexp": "nothing-matches"
+			}
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"comments": {
+				"fixture": "keepNone"
+			}
+		},
+		"check": {
+			"fixture": "check"
+		}
+	}
+]

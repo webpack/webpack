@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path transform="translate(100,0)" d="M0,0 V100 L 70,50 z M70,50 L140,0 V100 z"/>
+    <path transform="" d="M0,0 V100 L 70,50 z M70,50 L140,0 V100 z"/>
+    <path fill="red" transform="rotate(15) scale(.5) skewX(5) translate(200,100)" d="M100,200 300,400 H100 V300 C100,100 250,100 250,200 S400,300 400,200 Q400,50 600,300 T1000,300 z"/>
+    <path fill="red" stroke="red" transform="rotate(15) scale(.5) skewX(5) translate(200,100)" d="M100,200 300,400 H100 V300 C100,100 250,100 250,200 S400,300 400,200 Q400,50 600,300 T1000,300 z"/>
+    <path fill="red" stroke="red" transform="rotate(15) scale(.5) skewX(5) translate(200,100)" d="M100,200 300,400 H100 V300 C100,100 250,100 250,200 S400,300 400,200 Q400,50 600,300 T1000,300 a150,150 0 1,0 150,-150 z"/>
+    <path fill="red" stroke="red" transform="rotate(15) scale(.5) translate(200,100)" d="M100,200 300,400 H100 V300 C100,100 250,100 250,200 S400,300 400,200 Q400,50 600,300 T1000,300 z"/>
+    <path fill="red" stroke="red" transform="rotate(15) scale(1.5) translate(200,100)" d="M100,200 300,400 H100 V300 C100,100 250,100 250,200 S400,300 400,200 Q400,50 600,300 T1000,300 z"/>
+    <path fill="red" stroke="red" transform="rotate(15) scale(0.33) translate(200,100)" d="M100,200 300,400 H100 V300 C100,100 250,100 250,200 S400,300 400,200 Q400,50 600,300 T1000,300 z"/>
+    <g stroke="red">
+        <path fill="red" transform="rotate(15) scale(.5) translate(200,100)" d="M100,200 300,400 H100 V300 C100,100 250,100 250,200 S400,300 400,200 Q400,50 600,300 T1000,300 z"/>
+    </g>
+    <g stroke="red" stroke-width="2">
+        <path fill="red" transform="rotate(15) scale(.5) translate(200,100)" d="M100,200 300,400 H100 V300 C100,100 250,100 250,200 S400,300 400,200 Q400,50 600,300 T1000,300 z"/>
+    </g>
+    <path transform="scale(10)" id="a" d="M0,0 V100 L 70,50 z M70,50 L140,0 V100 z"/>
+    <path transform="scale(10)" id="a" d="M0,0 V100 L 70,50 z M70,50 L140,0 V100 z" stroke="#000"/>
+    <path transform="scale(10)" id="a" d="M0,0 V100 L 70,50 z M70,50 L140,0 V100 z" stroke="#000" stroke-width=".5"/>
+    <g stroke="#000" stroke-width="5">
+        <path transform="scale(10)" id="a" d="M0,0 V100 L 70,50 z M70,50 L140,0 V100 z"/>
+    </g>
+    <path fill="url(#gradient)" transform="rotate(15) scale(0.33) translate(200,100)" d="M100,200 300,400 H100 V300 C100,100 250,100 250,200 S400,300 400,200 Q400,50 600,300 T1000,300 z"/>
+    <path clip-path="url(#a)" transform="rotate(15) scale(0.33) translate(200,100)" d="M100,200 300,400 H100 V300 C100,100 250,100 250,200 S400,300 400,200 Q400,50 600,300 T1000,300 z"/>
+    <path d="M5 0a10 10 0 1 0 20 0" transform="matrix(1 0 0 1 5 0)"/>
+    <path d="M5 0a10 10 0 1 0 20 0" transform="rotate(15) scale(.8,1.2) "/>
+    <path d="M5 0a10 10 0 1 0 20 0" transform="rotate(45)"/>
+    <path d="M5 0a10 10 0 1 0 20 0" transform="skewX(45)"/>
+    <path d="M0 300a1 2 0 1 0 200 0a1 2 0 1 0 -200 0" transform="rotate(15 100 300) scale(.8 1.2)"/>
+    <path d="M700 300a1 2 0 1 0 200 0a1 2 0 1 0 -200 0" transform="rotate(-75 700 300) scale(.8 1.2)"/>
+    <path d="M12.6 8.6l-3.1-3.2-3.1 3.2-.8-.7 3.9-3.9 3.9 3.9zM9 5h1v10h-1z" transform="rotate(-90 9.5 9.5)"/>
+    <path d="M637.43 482.753a43.516 94.083 0 1 1-87.033 0 43.516 94.083 0 1 1 87.032 0z" transform="matrix(1.081 .234 -.187 .993 -37.573 -235.766)"/>
+    <path d="m-1.26-1.4a6.53 1.8-15.2 1 1 12.55-3.44" transform="translate(0, 0)"/>
+    <path d="M0 0c.07 1.33.14 2.66.21 3.99.07 1.33.14 2.66.21 3.99"/>
+</svg>

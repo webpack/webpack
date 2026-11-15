@@ -1,0 +1,1 @@
+export function r(){delete Object["entries"];Object.keys.call;return[Object.keys([1]),Object.entries("a")]}

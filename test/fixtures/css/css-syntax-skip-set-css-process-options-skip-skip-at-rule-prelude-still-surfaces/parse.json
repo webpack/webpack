@@ -1,0 +1,19 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"skip": {
+				"atRulePrelude": true
+			}
+		},
+		"visit": {
+			"types": [
+				"Url"
+			],
+			"fields": [
+				"value"
+			],
+			"exit": false
+		}
+	}
+]

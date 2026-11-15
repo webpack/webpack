@@ -1,0 +1,1 @@
+<!DOCTYPE root [<!ATTLIST item z CDATA "default" b CDATA "default">]><root><item a="1" z="explicit"/><item/><item/><other a="2"/></root>

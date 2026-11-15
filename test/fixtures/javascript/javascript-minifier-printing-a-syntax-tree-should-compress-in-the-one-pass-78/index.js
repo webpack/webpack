@@ -1,0 +1,1 @@
+function f(){g();return 1}x=f();function k(){h();return{a:1}}y=k().a;function m(){q();return 2}a(),m(),b()

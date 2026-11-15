@@ -1,0 +1,1 @@
+"use strict"; let { a, b: [c = 1, ...d], ...e } = f; (g) = h, i += 2;

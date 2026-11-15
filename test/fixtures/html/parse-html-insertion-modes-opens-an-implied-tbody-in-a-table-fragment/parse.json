@@ -1,0 +1,10 @@
+[
+	{
+		"options": {
+			"fragmentContext": "table"
+		},
+		"check": {
+			"fixture": "fragmentTree"
+		}
+	}
+]

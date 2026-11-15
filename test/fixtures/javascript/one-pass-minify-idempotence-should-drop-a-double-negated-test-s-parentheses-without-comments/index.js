@@ -1,0 +1,1 @@
+if(!!(obj.y=foo()))use();

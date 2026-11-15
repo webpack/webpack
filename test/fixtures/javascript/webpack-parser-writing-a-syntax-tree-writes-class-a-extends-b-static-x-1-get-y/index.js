@@ -1,0 +1,1 @@
+class A extends B { static #x = 1; get y() { return super.y } static { var z } }

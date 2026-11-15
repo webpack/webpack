@@ -1,0 +1,1 @@
+function f(){if(0){var a=1}else{var b=2}return[a,b]}function g(){if(1)h();else{var c=h(),[d,{e:k=1}]=[2]}return[c,d,k]}

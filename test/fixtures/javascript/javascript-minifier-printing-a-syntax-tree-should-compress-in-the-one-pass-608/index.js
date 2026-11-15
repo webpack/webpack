@@ -1,0 +1,1 @@
+function r(){return null}function q(){return/a/}x=r().filepath;y=q().source;function f(a){var b=g(a);var n={a:a,b:b};return n}f(()=>{if(!1)return;else if(!1){return}else{}g()})

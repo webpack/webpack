@@ -1,0 +1,1 @@
+function f(){switch(foo){case 1:baz();break;}h()}

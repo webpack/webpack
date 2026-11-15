@@ -1,0 +1,1 @@
+console.log(delete undefined,delete void 0,delete Infinity,delete NaN);var x=1;console.log(delete x)

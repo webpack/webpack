@@ -117,10 +117,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset MyLibrary.umd.js 774 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 958 bytes (runtime) [entry] [rendered]
+asset MyLibrary.umd.js 609 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 587 bytes (runtime) [entry] [rendered]
   > ./example main
-  runtime modules 958 bytes 3 modules
+  runtime modules 587 bytes 3 modules
   ./example.js 92 bytes [built] [code generated]
     [exports: default, increment, value]
     entry ./example main

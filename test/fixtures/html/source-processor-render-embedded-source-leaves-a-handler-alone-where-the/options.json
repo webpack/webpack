@@ -1,0 +1,17 @@
+[
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "decline"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "offers"
+	},
+	{
+		"mode": "minify"
+	},
+	{
+		"mode": "minify",
+		"renderEmbeddedSource": "as-written"
+	}
+]

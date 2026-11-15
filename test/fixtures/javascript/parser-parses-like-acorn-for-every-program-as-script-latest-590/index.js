@@ -1,0 +1,1 @@
+export const [a, { b }, ...c] = d; export let { e = 1, ...f } = g;

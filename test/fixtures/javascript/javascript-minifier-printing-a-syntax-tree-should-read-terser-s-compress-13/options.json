@@ -1,0 +1,14 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"global_defs": {
+				"DEBUG": false,
+				"VERSION": "1.2",
+				"@code": "x",
+				"O": {}
+			}
+		},
+		"mangle": false
+	}
+]

@@ -1,0 +1,1 @@
+x = class { static #a; static m() { return this.#a } }

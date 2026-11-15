@@ -1,0 +1,1 @@
+function f(a){if(a)for(;;)break;else g()}

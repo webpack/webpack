@@ -1,0 +1,1 @@
+var o={NaN:1};with(o)console.log(delete NaN)

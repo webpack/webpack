@@ -1,0 +1,1 @@
+function* g() { yield; yield 1; yield* h(); }

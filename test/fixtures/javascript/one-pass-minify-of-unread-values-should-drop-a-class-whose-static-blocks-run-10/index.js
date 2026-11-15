@@ -1,0 +1,1 @@
+(class{static{class D extends f(){}}})

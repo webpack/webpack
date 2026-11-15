@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "respelling references",
+		"contains": "<link href=\"&lt;?php echo 'http://foo/' ?>\">",
+		"why": "a `<?` the source escaped stays escaped, so a template engine reading the page next never runs a delimiter the source kept inert; written literally, it already is one"
+	}
+]

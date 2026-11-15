@@ -1,0 +1,1 @@
+function f() { using x = a; using y = b, z = c; }

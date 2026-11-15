@@ -1,0 +1,12 @@
+[
+	{
+		"options": {
+			"ecmaVersion": "latest",
+			"sourceType": "script",
+			"comments": false,
+			"allowHashBang": false,
+			"allowReturnOutsideFunction": false,
+			"ranges": true
+		}
+	}
+]

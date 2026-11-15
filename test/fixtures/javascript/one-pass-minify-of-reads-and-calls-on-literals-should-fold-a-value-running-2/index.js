@@ -1,0 +1,1 @@
+var foo;function w(a){let x=foo;slot+=x;return a}w();

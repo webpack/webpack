@@ -1,0 +1,1 @@
+Object.create({},null);Object.create({},"ab");Object.create({},void 0);Object.create({},1)

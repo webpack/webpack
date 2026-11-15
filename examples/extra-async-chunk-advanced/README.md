@@ -226,7 +226,7 @@ module.exports = config;
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -268,14 +268,14 @@ Promise.all(/*! require.ensure */[__webpack_require__.e(670), __webpack_require_
 ## Unoptimized
 
 ```
-asset output.js 9.47 KiB [emitted] (name: main)
-asset 670.output.js 344 bytes [emitted]
-asset 210.output.js 326 bytes [emitted]
-asset 425.output.js 326 bytes [emitted]
-asset 888.output.js 326 bytes [emitted]
-asset 899.output.js 326 bytes [emitted]
-asset 935.output.js 326 bytes [emitted]
-asset 964.output.js 326 bytes [emitted]
+asset output.js 9.51 KiB [emitted] (name: main)
+asset 670.output.js 383 bytes [emitted]
+asset 210.output.js 365 bytes [emitted]
+asset 425.output.js 365 bytes [emitted]
+asset 888.output.js 365 bytes [emitted]
+asset 899.output.js 365 bytes [emitted]
+asset 935.output.js 365 bytes [emitted]
+asset 964.output.js 365 bytes [emitted]
 chunk (runtime: main) 210.output.js 21 bytes [rendered]
   > ./example.js 8:0-16:2
   ./e.js 21 bytes [built] [code generated]
@@ -299,9 +299,9 @@ chunk (runtime: main) 670.output.js 21 bytes [rendered] split chunk (cache group
     require.ensure item ./a ./example.js 3:0-6:2
     require.ensure item ./a ./example.js 8:0-16:2
     cjs require ./a ./example.js 9:1-15
-chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.73 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.73 KiB 6 modules
+  runtime modules 4.77 KiB 6 modules
   ./example.js 346 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -341,27 +341,18 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.1 KiB [emitted] [minimized] (name: main)
-asset 210.output.js 80 bytes [emitted] [minimized]
-asset 425.output.js 80 bytes [emitted] [minimized]
-asset 670.output.js 80 bytes [emitted] [minimized]
-asset 888.output.js 80 bytes [emitted] [minimized]
-asset 899.output.js 80 bytes [emitted] [minimized]
-asset 935.output.js 80 bytes [emitted] [minimized]
-asset 964.output.js 80 bytes [emitted] [minimized]
+asset output.js 2.02 KiB [emitted] [minimized] (name: main)
+asset 210.output.js 112 bytes [emitted] [minimized]
+asset 670.output.js 112 bytes [emitted] [minimized]
+asset 899.output.js 112 bytes [emitted] [minimized]
+asset 964.output.js 112 bytes [emitted] [minimized]
 chunk (runtime: main) 210.output.js 21 bytes [rendered]
   > ./example.js 8:0-16:2
   ./e.js 21 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./e.js 1:0-14
     require.ensure item ./e ./example.js 8:0-16:2
-chunk (runtime: main) 425.output.js 21 bytes [rendered]
-  > ./example.js 3:0-6:2
-  ./d.js 21 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./d.js 1:0-14
-    cjs require ./d ./example.js 5:1-15
-chunk (runtime: main) 670.output.js 21 bytes [rendered] split chunk (cache group: default)
+chunk (runtime: main) 670.output.js 21 bytes [rendered] reused as split chunk (cache group: default)
   > ./a ./b ./c ./example.js 1:0-52
   > ./example.js 3:0-6:2
   > ./example.js 8:0-16:2
@@ -371,37 +362,24 @@ chunk (runtime: main) 670.output.js 21 bytes [rendered] split chunk (cache group
     amd require ./a ./example.js 1:0-52
     require.ensure item ./a ./example.js 3:0-6:2
     require.ensure item ./a ./example.js 8:0-16:2
-    cjs require ./a ./example.js 9:1-15
-chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.73 KiB (runtime) [entry] [rendered]
+    [inactive] cjs require ./a ./example.js 9:1-15
+chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.73 KiB 6 modules
+  runtime modules 4.77 KiB 6 modules
   ./example.js 346 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-chunk (runtime: main) 888.output.js 21 bytes [rendered]
-  > ./example.js 13:1-15:3
-  ./g.js 21 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./g ./example.js 14:2-16
-    cjs self exports reference ./g.js 1:0-14
-chunk (runtime: main) 899.output.js 21 bytes [rendered] split chunk (cache group: default)
+chunk (runtime: main) 899.output.js 21 bytes [rendered] reused as split chunk (cache group: default)
   > ./example.js 10:1-12:3
   > ./example.js 13:1-15:3
   > ./a ./b ./c ./example.js 1:0-52
-  > ./example.js 3:0-6:2
   ./b.js 21 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./b.js 1:0-14
     amd require ./b ./example.js 1:0-52
-    cjs require ./b ./example.js 4:1-15
+    [inactive] cjs require ./b ./example.js 4:1-15
     require.ensure item ./b ./example.js 10:1-12:3
     require.ensure item ./b ./example.js 13:1-15:3
-chunk (runtime: main) 935.output.js 21 bytes [rendered]
-  > ./example.js 10:1-12:3
-  ./f.js 21 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./f ./example.js 11:2-16
-    cjs self exports reference ./f.js 1:0-14
 chunk (runtime: main) 964.output.js 21 bytes [rendered]
   > ./a ./b ./c ./example.js 1:0-52
   ./c.js 21 bytes [built] [code generated]

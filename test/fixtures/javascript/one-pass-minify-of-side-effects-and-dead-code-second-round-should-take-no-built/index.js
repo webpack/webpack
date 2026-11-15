@@ -1,0 +1,1 @@
+var g=globalThis;g.RegExp=class{constructor(p){this.p=p}};console.log(new RegExp("a"+g.x).p)

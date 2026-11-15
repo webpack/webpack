@@ -1,0 +1,9 @@
+[
+	{
+		"print": "cssMinify",
+		"extractComments": {
+			"regexp": "foo"
+		},
+		"comments": "some"
+	}
+]

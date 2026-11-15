@@ -1,0 +1,1 @@
+function f(){(function(o){h(function(){});g(o)})([1])}

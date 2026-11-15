@@ -8,6 +8,7 @@
 const {
 	builtinEmbeddedRenderer
 } = require("../../../lib/html/builtinEmbeddedRenderer");
+const { isStackOverflow } = require("../fixture");
 const { SourceProcessor } = require("../../../lib/html/syntax");
 const {
 	Field,
@@ -42,9 +43,13 @@ const printXml = (xml, mode) =>
 		new SourceProcessor().process(xml, { xml: true, mode })
 	).code;
 
-/** @typedef {Pick<import("../../../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "renderEmbeddedSource">} XmlPrintOptions */
+/** @typedef {Pick<import("../../../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "renderEmbeddedSource" | "collapseWhitespace" | "removeEmptyAttributes" | "removeEmptyElements" | "removeSvgMetadata" | "removeSvgEditorData" | "removeUnusedSvgNamespaces" | "shortenSvgNumbers" | "shortenSvgColors" | "shortenSvgPathData" | "sortSvgSymbols" | "convertSvgShapes" | "cleanupSvgStructure" | "mergeSvgPaths" | "reuseSvgPaths" | "sortSvgDefinitions"> & { mode?: "minify" | "beautify" }} XmlPrintOptions */
 
 /** @typedef {import("../../../lib/html/builtinEmbeddedRenderer").BuiltinEmbeddedRendererOptions} CssOptions */
+
+// An XML declaration's data stating only version 1.0 and UTF-8 (XML 1.0 §2.8).
+const XML_DEFAULT_DECLARATION =
+	/^version[\t\n\r ]*=[\t\n\r ]*(["'])1\.0\1(?:[\t\n\r ]+encoding[\t\n\r ]*=[\t\n\r ]*(["'])[Uu][Tt][Ff]-8\2)?[\t\n\r ]*$/;
 
 /** @type {CssOptions} */
 const LEGACY_CSS_OPTIONS = {
@@ -52,8 +57,8 @@ const LEGACY_CSS_OPTIONS = {
 };
 
 // The printer alone, the two the webpack rows run, where an SVG's `<style>` and
-// `style=""` reach the CSS minifier as in a build, and a target it lowers for;
-// each with the CSS options its renderer minifies with, which `meaning` reads.
+// `style=""` reach the CSS minifier as in a build, a target it lowers for, and
+// the readable print; each with the CSS options `meaning` reads its sheets by.
 /** @type {[string, XmlPrintOptions, CssOptions][]} */
 const PRESETS = [
 	["default", {}, {}],
@@ -67,21 +72,104 @@ const PRESETS = [
 		"embedded+legacy",
 		{ renderEmbeddedSource: builtinEmbeddedRenderer(LEGACY_CSS_OPTIONS) },
 		LEGACY_CSS_OPTIONS
-	]
+	],
+	["beautify", { mode: "beautify" }, {}],
+	// The SVG switches, added one group at a time in the order a build stacks them.
+	[
+		"svg-data",
+		{ sortAttributes: true, removeSvgMetadata: true, removeSvgEditorData: true },
+		{}
+	],
+	[
+		"svg-cleanup",
+		{
+			sortAttributes: true,
+			removeSvgMetadata: true,
+			removeSvgEditorData: true,
+			removeUnusedSvgNamespaces: true,
+			removeEmptyAttributes: true
+		},
+		{}
+	],
+	[
+		"svg-whitespace",
+		{
+			sortAttributes: true,
+			removeSvgMetadata: true,
+			removeSvgEditorData: true,
+			removeUnusedSvgNamespaces: true,
+			removeEmptyAttributes: true,
+			collapseWhitespace: true
+		},
+		{}
+	],
+	[
+		"svg-numeric",
+		{
+			sortAttributes: true,
+			removeSvgMetadata: true,
+			removeSvgEditorData: true,
+			removeUnusedSvgNamespaces: true,
+			removeEmptyAttributes: true,
+			collapseWhitespace: true,
+			shortenSvgNumbers: true
+		},
+		{}
+	],
+	...["colors", "paths", "containers", "symbols", "shapes", "structure"].map(
+		(step, index) =>
+			/** @type {[string, XmlPrintOptions, CssOptions]} */ ([
+				`svg-${step}`,
+				{
+					sortAttributes: true,
+					removeSvgMetadata: true,
+					removeSvgEditorData: true,
+					removeUnusedSvgNamespaces: true,
+					removeEmptyAttributes: true,
+					collapseWhitespace: true,
+					shortenSvgNumbers: true,
+					shortenSvgColors: true,
+					shortenSvgPathData: index >= 1,
+					removeEmptyElements: index >= 2,
+					sortSvgSymbols: index >= 3,
+					convertSvgShapes: index >= 4,
+					cleanupSvgStructure: index >= 5,
+					mergeSvgPaths: index >= 5,
+					reuseSvgPaths: index >= 5,
+					sortSvgDefinitions: index >= 5
+				},
+				{}
+			])
+	)
 ];
 
 /**
  * @param {XmlPrintOptions} options one preset's printer options
- * @returns {(xml: string) => string} the minifier those options name
+ * @returns {(xml: string) => string} the printer those options name, a minifier unless they name another mode
  */
 const printerFor = (options) => (xml) =>
 	/** @type {{ code: string }} */ (
 		new SourceProcessor().process(xml, {
+			mode: "minify",
 			...options,
-			xml: true,
-			mode: "minify"
+			xml: true
 		})
 	).code;
+
+/**
+ * Whether a preset keeps every piece of optional SVG data as written.
+ * @param {XmlPrintOptions} options the preset's printer options
+ * @returns {boolean} true when nothing optional is dropped or respelled
+ */
+const retainsSvgData = (options) =>
+	!options.removeSvgMetadata &&
+	!options.removeSvgEditorData &&
+	!options.removeUnusedSvgNamespaces &&
+	!options.removeEmptyAttributes &&
+	!options.shortenSvgNumbers &&
+	!options.shortenSvgColors &&
+	!options.shortenSvgPathData &&
+	!options.removeEmptyElements;
 
 const STYLE_ELEMENT = /(?:^|:)style$/;
 
@@ -209,6 +297,13 @@ const canonical = (xml, cssOptions = {}) => {
 		},
 		[NodeType.ProcessingInstruction]: {
 			enter: (nodePath) => {
+				// One stating XML's defaults says nothing; any other must survive a print.
+				if (
+					nodePath.name() === "xml" &&
+					XML_DEFAULT_DECLARATION.test(nodePath.value())
+				) {
+					return;
+				}
 				out.push(`<?${nodePath.name()} ${nodePath.value()}?>`);
 			},
 			exit: () => {}
@@ -455,9 +550,14 @@ const idempotenceRepro = (minify, minified, at) => {
  */
 const xmlInnerRanges = (nodePath) => {
 	if (nodePath.type() !== NodeType.Element) return undefined;
-	const start = nodePath.start();
 	/** @type {[string, number, number][]} */
-	const inner = [["opening tag", start, nodePath.endOf(Part.startTag)]];
+	const inner = [
+		[
+			"opening tag",
+			nodePath.startOf(Part.startTag),
+			nodePath.endOf(Part.startTag)
+		]
+	];
 	for (const attribute of _attributeList(nodePath.node)) {
 		if (attribute.nameStart === -1) continue;
 		inner.push(["attribute name", attribute.nameStart, attribute.nameEnd]);
@@ -466,10 +566,29 @@ const xmlInnerRanges = (nodePath) => {
 	return inner;
 };
 
+const ENTITY_REFERENCE_STICKY = /&[^#&;\s][^&;\s]*;/y;
+
+/**
+ * @param {string} xml a document
+ * @param {number} start where a range starts
+ * @param {number} end where it ends
+ * @returns {boolean} whether one entity reference holds the whole range
+ */
+const insideReference = (xml, start, end) => {
+	const at = xml.lastIndexOf("&", start);
+	if (at === -1) return false;
+	ENTITY_REFERENCE_STICKY.lastIndex = at;
+	return (
+		ENTITY_REFERENCE_STICKY.test(xml) &&
+		ENTITY_REFERENCE_STICKY.lastIndex >= end
+	);
+};
+
 /**
  * Hold the parser's ranges to what they claim about the document: XML owes all
  * of it — nesting is the grammar, so a node sits inside its parent and after
- * its earlier siblings.
+ * its earlier siblings. Every node one entity reference expands to sits at that
+ * reference, so siblings may share that range and nothing else.
  * @param {string} xml a document
  * @returns {Report[]} what the ranges broke
  */
@@ -478,6 +597,7 @@ const xmlSpans = (xml) =>
 		length: xml.length,
 		contains: true,
 		siblings: true,
+		shared: (start, end) => insideReference(xml, start, end),
 		walk: pathSpanWalk({
 			length: xml.length,
 			run: (enter, exit) => {
@@ -565,9 +685,9 @@ const runDigest = (runs, at, origin) => {
 };
 
 // Where a slice is read back: inside an element, after the document's own
-// DOCTYPE, so what its internal subset declares still resolves.
+// DOCTYPE, so what its internal subset declares still resolves. Nothing follows
+// it, so a slice the input ended inside ends there as the document did.
 const SLICE_WRAPPER_OPEN = "<_>";
-const SLICE_WRAPPER_CLOSE = "</_>";
 
 /**
  * Hold each node's own source to the node it came from: the bytes between its
@@ -609,9 +729,7 @@ const xmlSlices = (xml) => {
 			said,
 			reparse: () => {
 				const prefix = `${doctype}${SLICE_WRAPPER_OPEN}`;
-				const again = xmlNodeRuns(
-					`${prefix}${text}${SLICE_WRAPPER_CLOSE}`
-				).runs;
+				const again = xmlNodeRuns(`${prefix}${text}`).runs;
 				const want = again.findIndex(
 					(one) =>
 						one.what === node.what &&
@@ -662,10 +780,34 @@ const xmlPurityDigest = (xml) => {
 		new SourceProcessor().use(visitors).process(xml, { xml: true });
 		digest.update(printXml(xml, "minify"));
 	} catch (error) {
+		// Where the stack runs out is the machine's, not the parser's answer.
+		if (isStackOverflow(error)) throw error;
 		return `refused: ${/** @type {Error} */ (error).message}`;
 	}
 	return digest.hex();
 };
+
+/**
+ * Whether the printed document reads back to its source's canonical form
+ * (`meaning`), its sheets read as the CSS minifier writes them. A preset that
+ * drops or respells optional SVG data owes no such equality.
+ * @param {string} xml the document
+ * @param {string} printed what a preset printed of it
+ * @param {CssOptions} cssOptions the preset's CSS options
+ * @param {XmlPrintOptions=} options the preset's printer options
+ * @returns {Report[]} one finding where it says something else
+ */
+const meaningReports = (xml, printed, cssOptions, options = {}) =>
+	!retainsSvgData(options) ||
+	canonical(printed, cssOptions) === canonical(xml, cssOptions)
+		? []
+		: [
+				{
+					relation: "meaning",
+					what: "the minified document says something else",
+					repro: `    ${oneLine(xml, 80)}`
+				}
+			];
 
 /** @type {import("./index").SyntaxInvariants} */
 const syntax = {
@@ -676,7 +818,9 @@ const syntax = {
 				name,
 				minify,
 				says: (text) => canonical(text, cssOptions),
-				repro: (printed, at) => idempotenceRepro(minify, printed, at)
+				repro: (printed, at) => idempotenceRepro(minify, printed, at),
+				keeps: (xml, printed) =>
+					meaningReports(xml, printed, cssOptions, options)
 			};
 		}),
 	spans: xmlSpans,
@@ -696,6 +840,7 @@ module.exports = {
 	canonicalCss,
 	decodedAttributes,
 	idempotenceRepro,
+	meaningReports,
 	printXml,
 	printerFor,
 	sweepRespellings,

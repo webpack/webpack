@@ -1,0 +1,26 @@
+<svg>
+    <linearGradient id="linear">
+        <stop/>
+        <stop/>
+    </linearGradient>
+    <radialGradient id="radial">
+        <stop/>
+        <stop/>
+    </radialGradient>
+    <pattern id="pattern">
+        <rect/>
+    </pattern>
+    <clipPath id="clip">
+        <path/>
+    </clipPath>
+    <mask id="mask">
+        <rect/>
+    </mask>
+    <marker id="marker">
+        <path/>
+    </marker>
+    <symbol id="symbol">
+        <rect/>
+    </symbol>
+    <solidColor id="color"/>
+</svg>

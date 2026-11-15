@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!-- drop this comment -->
+	<title>Minify &amp; Test</title>
+</head>
+<body>
+	<!--[if IE]><p>ie only</p><![endif]-->
+	<p>Hello <b>world</b> &amp; friends</p>
+	<ul>
+		<li>one
+		<li>two
+	</ul>
+	<pre>
+  preformatted
+   text
+</pre>
+	<table><tr><td>a<td>b</table>
+	<!-- a CR the parser rewrites to LF unless it stays a character reference -->
+	<p>A&#x0D;B</p>
+	<!-- a `}` in a style attribute is part of a bad declaration, not the end of a
+	     rule, so the declarations after it still apply -->
+	<p id="brace-style" style="background:red;};background:limegreen">green</p>
+	<!-- ...and one inside a string is not a `}` in the declaration list at all -->
+	<p id="quoted-brace-style" style='content:"}";color:red;color:red'>x</p>
+	<!-- a value ending inside a comment would swallow the wrapper's own `}` -->
+	<p id="open-comment-style" style="color:red;/* never closed">x</p>
+	<!-- the engine mirrors the selected option into this; the source does not -->
+	<select id="customizable">
+		<button><selectedcontent></selectedcontent></button>
+		<option>one</option>
+		<option>two</option>
+	</select>
+</body>
+</html>

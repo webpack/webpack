@@ -8,49 +8,73 @@ exports[`ConfigTestCases css grid-area-scoping exported tests should emit the st
    and escapes all included. Each pair below must scope to the same ident or
    the area stops binding. */
 ._hyphen-grid {
-	grid-template-areas: \\"_main-head-main-head _side-bar-side-bar\\";
+	grid-template-areas: \\"_main-head _side-bar\\";
 }
-._hyphen-head { grid-area: _main-head-main-head }
-._hyphen-side { grid-area: _side-bar-side-bar }
+._hyphen-head { grid-area: _main-head }
+._hyphen-side { grid-area: _side-bar }
 
 ._digit-grid {
-	grid-template-areas: \\"_a-1-a-1 _a-2-a-2\\";
+	grid-template-areas: \\"_a-1 _a-2\\";
 }
-._digit-one { grid-area: _a-1-a-1 }
+._digit-one { grid-area: _a-1 }
 
 ._unicode-grid {
-	grid-template-areas: \\"_héad-héad\\";
+	grid-template-areas: \\"_héad\\";
 }
-._unicode-head { grid-area: _héad-héad }
+._unicode-head { grid-area: _héad }
 
 /* \`\\\\68 ead\` and \`head\` are the same ident; the trailing space closes the
    escape and does not separate two cells. */
 ._escaped-grid {
-	grid-template-areas: \\"_head-head _foot-foot\\";
+	grid-template-areas: \\"_head _foot\\";
 }
-._escaped-head { grid-area: _head-head }
-._escaped-foot { grid-area: _foot-foot }
+._escaped-head { grid-area: _head }
+._escaped-foot { grid-area: _foot }
 
 ._escaped-long-grid {
-	grid-template-areas: \\"_head-head\\";
+	grid-template-areas: \\"_head\\";
 }
-._escaped-long-head { grid-area: _head-head }
+._escaped-long-head { grid-area: _head }
 
 /* A run of only \`.\` is a null cell and names nothing. */
 ._null-cell-grid {
-	grid-template-areas: \\"_head-head .\\" \\"... _foot-foot\\";
+	grid-template-areas: \\"_head .\\" \\"... _foot\\";
 }
 
 /* Padding around a cell is not a cell of its own. */
 ._padded-grid {
-	grid-template-areas: \\"  _pad-head-pad-head  \\";
+	grid-template-areas: \\"  _pad-head  \\";
 }
-._padded-head { grid-area: _pad-head-pad-head }
+._padded-head { grid-area: _pad-head }
 
 ._shorthand-grid {
-	grid-template: \\"_nav-bar-nav-bar _main-area-main-area\\" 1fr / auto;
+	grid-template: \\"_nav-bar _main-area\\" 1fr / auto;
 }
-._shorthand-nav { grid-area: _nav-bar-nav-bar }
+._shorthand-nav { grid-area: _nav-bar }
+
+/* An escaped \`.\` stays escaped in the scoped name. */
+._dotted-head { grid-area: _x\\\\.y }
+
+/* An area \`main\` defines the implicit lines \`main-start\` / \`main-end\`, and
+   lines \`y-start\` / \`y-end\` define an implicit area \`y\`. */
+._implicit-grid {
+	grid-template-areas: \\"_side _main\\";
+}
+._implicit-item { grid-column: _main-start / _main-end }
+._implicit-lines { grid-template-columns: [_y-start] 50px [_y-end] }
+._implicit-area { grid-area: _y }
+._implicit-shorthand { grid-template: [_top-start] \\"_top\\" 1fr [_top-end] / auto }
+._implicit-repeat { grid-template-columns: repeat(2, [_col-start] 1fr [_col-end]) }
+._implicit-subgrid { grid-template-rows: subgrid [_row-start] [_row-end] }
+._implicit-placement { grid-area: _top-start / _col-start / _top-end / _col-end }
+
+/* Area \`foo-start\` implies \`foo-start-start\`, so the whole suffix run stays
+   outside the scoped part; a differently cased suffix is another name. */
+._implicit-nested {
+	grid-template-areas: \\"_foo-start\\";
+	grid-column: _foo-start-start / _foo-start-end;
+}
+._implicit-case { grid-column: _main-START }
 
 
 /*# sourceMappingURL=bundle0.css.map*/"

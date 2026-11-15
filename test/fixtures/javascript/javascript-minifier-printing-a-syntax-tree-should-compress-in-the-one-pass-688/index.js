@@ -1,0 +1,1 @@
+Reflect.defineProperty(Array.prototype,"concat",d);Reflect.set(Math,"abs",f);x=[[1].concat(2),Math.abs(-1)]

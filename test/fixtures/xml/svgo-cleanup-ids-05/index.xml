@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:x="http://www.w3.org/1999/xlink">
+    <defs>
+        <g id="mid-line"/>
+        <g id="line-plus">
+            <use x:href="#mid-line"/>
+            <use x:href="#plus"/>
+        </g>
+        <g id="plus"/>
+        <g id="line-circle">
+            <use x:href="#mid-line"/>
+        </g>
+    </defs>
+    <path d="M0 0" id="a"/>
+    <use x:href="#a" x="50" y="50"/>
+    <use x:href="#line-plus"/>
+    <use x:href="#line-circle"/>
+</svg>

@@ -31,12 +31,8 @@ const { pathToFileURL } = require("url");
 
 const htmlMinify = require("../lib/html/htmlMinify");
 const { SourceProcessor } = require("../lib/html/syntax");
-const {
-	Field,
-	NodeType,
-	Part,
-	_namespaceOf
-} = require("../lib/html/syntax-parser");
+const { Field, NodeType, Part, _namespaceOf } =
+	require("../lib/html/syntax").parser;
 const {
 	AGGRESSIVE_OPTIONS,
 	DEFAULT_OPTIONS,
@@ -44,11 +40,15 @@ const {
 	EMBEDDED_OPTIONS,
 	HTML_CUTS,
 	PRESETS,
+	htmlMeaning,
 	htmlPurityDigest,
 	htmlSlices,
 	htmlSpans,
 	idempotenceRepro,
+	meaningReports,
+	noticeReports,
 	printerFor,
+	sameSheets,
 	sweepRespellings,
 	tokenStream
 } = require("../test/helpers/syntaxInvariants/html");
@@ -73,7 +73,6 @@ const {
 	measure,
 	measureInWorker,
 	missingReport,
-	oneLine,
 	purityRelation,
 	sweepExitCode,
 	sweepMode,
@@ -1132,88 +1131,6 @@ const TREE_READERS = new Map([
 ]);
 
 /**
- * What a document says, read by webpack's own parser: the words of its text and
- * each `<style>` sheet in its canonical CSS form, plus, where `tree` is set, every
- * element with its namespace and attribute names, in order. Attribute values,
- * whitespace, comments and `<script>` bodies are left out, as the printer and its
- * renderers respell those by contract (`type=IMAGE` → `image`, a `srcset`'s spaces).
- * @param {string} html a document
- * @param {boolean} tree whether the element tree is read too
- * @param {CssOptions} cssOptions the options the sheets are minified with
- * @returns {{ said: string[], sheets: string[] }} what it says, and each non-empty sheet
- */
-const htmlMeaning = (html, tree, cssOptions) => {
-	/** @type {string[]} */
-	const said = [];
-	/** @type {string[]} */
-	const sheets = [];
-	/** @type {string[]} */
-	const open = [];
-	/** @type {Record<number, { enter: (nodePath: EXPECTED_ANY) => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
-	const visitors = {
-		[NodeType.Element]: {
-			enter: (nodePath) => {
-				open.push(nodePath.name());
-				if (!tree) return;
-				/** @type {string[]} */
-				const names = [];
-				const count = nodePath.fieldCount(Field.attributes);
-				for (let index = 0; index < count; index++) {
-					names.push(nodePath.name(nodePath.field(index, Field.attributes)));
-				}
-				said.push(
-					`<${_namespaceOf(nodePath.node)}:${nodePath.name()} ${names
-						.sort()
-						.join(" ")}>`
-				);
-			},
-			exit: (nodePath) => {
-				open.pop();
-				if (tree) said.push(`</${nodePath.name()}>`);
-			}
-		},
-		[NodeType.Text]: {
-			enter: (nodePath) => {
-				const parent = open[open.length - 1];
-				if (parent === "script") return;
-				const text = nodePath.value();
-				if (parent === "style") {
-					const css = canonicalCss(text, cssOptions);
-					if (css !== "") sheets.push(css);
-					return;
-				}
-				const words = text.replace(/\s+/g, " ").trim();
-				if (words !== "") said.push(...words.split(" "));
-			},
-			exit: () => {}
-		}
-	};
-	new SourceProcessor().use(visitors).process(html, {});
-	return { said, sheets };
-};
-
-/**
- * Whether the output's sheets say what the source's do, in order. An output
- * sheet may stand for several consecutive source sheets merged into one, and is
- * matched against them joined only then, so an open value can't swallow a sheet.
- * @param {string[]} source the source's canonical sheets
- * @param {string[]} output the output's canonical sheets
- * @param {CssOptions} cssOptions the options the sheets are minified with
- * @returns {boolean} true when every source sheet is accounted for
- */
-const sameSheets = (source, output, cssOptions) => {
-	let at = 0;
-	for (const sheet of output) {
-		let joined = "";
-		do {
-			if (at === source.length) return false;
-			joined += source[at++];
-		} while (canonicalCss(joined, cssOptions) !== sheet);
-	}
-	return at === source.length;
-};
-
-/**
  * @param {Map<string, number>} before input counts
  * @param {Map<string, number>} after output counts
  * @param {Set<string>} empty the entries that carried nothing in the input
@@ -1252,7 +1169,7 @@ const wantedStage = filterFrom("STAGE");
 // thousands of documents are a corpus of their own rather than a default run.
 const SKIPPED_FIXTURE_DIRS = new Set(["js", "node_modules", "wpt"]);
 
-// The inputs the unit tests read, one directory each: `html/fixtures.unittest.js`
+// The inputs the unit tests read, one directory each: `html/invariants.unittest.js`
 // holds every one of them to these relations, with its own known differences.
 const UNIT_INPUT_RE = /^test\/fixtures\/html\/[^/]+\/index\.html$/;
 
@@ -1265,9 +1182,10 @@ const wantedPreset = filterFrom("PRESET");
  * @param {string} html the document
  * @param {HtmlPrintOptions} options the preset's printer options
  * @param {CssOptions} cssOptions the preset's CSS options
+ * @param {boolean=} respell whether to ask the respellings, which the sweep asks under its first preset alone
  * @returns {import("../test/helpers/syntaxInvariants/relations").Report[]} what moved, and the smallest repro found for each
  */
-const sweepDocument = (minify, html, options, cssOptions) => {
+const sweepDocument = (minify, html, options, cssOptions, respell = true) => {
 	const { printed, reports } = wantedRelation("idempotence")
 		? idempotence({
 				minify,
@@ -1277,39 +1195,11 @@ const sweepDocument = (minify, html, options, cssOptions) => {
 			})
 		: { printed: minify(html), reports: [] };
 	if (printed === null) return reports;
-	reports.push(...sweepRespellings(minify, html, printed));
+	if (respell) reports.push(...sweepRespellings(minify, html, printed));
 	if (wantedRelation("meaning")) {
-		// The tree is held only where no option removes elements or attributes,
-		// which every other preset's options name.
-		const tree =
-			!options.removeEmptyElements &&
-			!options.removeEmptyAttributes &&
-			!options.removeRedundantAttributes &&
-			!options.mergeStyles;
-		const before = htmlMeaning(html, tree, cssOptions);
-		const after = htmlMeaning(printed, tree, cssOptions);
-		let at = 0;
-		while (at < before.said.length && before.said[at] === after.said[at]) at++;
-		if (at < before.said.length || at < after.said.length) {
-			reports.push({
-				relation: "meaning",
-				what: "the minified document says something else",
-				repro: `    ${oneLine(
-					before.said.slice(at, at + 4).join(" "),
-					76
-				)}  ->  ${oneLine(after.said.slice(at, at + 4).join(" "), 76)}`
-			});
-		} else if (!sameSheets(before.sheets, after.sheets, cssOptions)) {
-			reports.push({
-				relation: "meaning",
-				what: "a minified stylesheet says something else",
-				repro: `    ${oneLine(before.sheets.join(" "), 76)}  ->  ${oneLine(
-					after.sheets.join(" "),
-					76
-				)}`
-			});
-		}
+		reports.push(...meaningReports(html, printed, options, cssOptions));
 	}
+	if (wantedRelation("notices")) reports.push(...noticeReports(html, printed));
 	return reports;
 };
 
@@ -1381,7 +1271,7 @@ const EXPECTED = [
 	{
 		relation: "respelling references",
 		contains: "<link href=\"&lt;?php echo 'http://foo/' ?>\">",
-		source: "test/configCases/html/minimize-attributes/page.html",
+		source: "test/configCases/html/minify-html/minimize-attributes/page.html",
 		why: TEMPLATE_DELIMITER_REFERENCES
 	},
 	{
@@ -1426,13 +1316,6 @@ const EXPECTED = [
 			"select[1]/option[1]: parse5 (scripting) <html:option>, tool <html:noscript>",
 		source: "Noscript",
 		why: "a `noscript` in a `select` is read by the in-body rules since customizable selects took the in-select mode out (§13.2.6.4.7); parse5 8 predates them and drops it"
-	},
-	{
-		relation: "agreement",
-		contains: "p[1]: parse5",
-		source:
-			'Doctype <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "">',
-		why: "a system identifier that is the empty string counts as missing, so this doctype sets quirks mode and the `<table>` stays inside the `<p>` (§13.2.6.4.1); parse5 8 predates that wording and sets limited-quirks mode"
 	},
 	{
 		relation: "respelling quote-double",
@@ -1538,11 +1421,14 @@ const invariants = (write) => {
 	log(`sweeping ${corpus.length} documents under ${presets.length} presets …`);
 	for (const [label, html] of corpus) {
 		for (const [preset, options, cssOptions] of presets) {
+			// Under the first preset only, as the other comparisons ask it: whether
+			// a spelling decides the output is the same question under every set.
 			for (const report of sweepDocument(
 				printerFor(options),
 				html,
 				options,
-				cssOptions
+				cssOptions,
+				preset === presets[0][0]
 			)) {
 				groups.add(report, preset, label);
 			}

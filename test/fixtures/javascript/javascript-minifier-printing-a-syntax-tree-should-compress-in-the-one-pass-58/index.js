@@ -1,0 +1,1 @@
+function f(){ var a = 1; /* keep */ g(a); /* drop */ h(); } // tail

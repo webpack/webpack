@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 120 120">
+    <style>
+        svg .hidden { display: none; }
+        svg .hidden:target { display: inline; }
+    </style>
+    <circle id="circle" class="hidden" fill="red" cx="60" cy="60" r="50"/>
+    <rect id="rect" class="hidden" fill="blue" x="10" y="10" width="100" height="100"/>
+</svg>

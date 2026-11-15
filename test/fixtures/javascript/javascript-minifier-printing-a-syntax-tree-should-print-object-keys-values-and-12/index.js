@@ -1,0 +1,1 @@
+var o={[Object.keys]:1};console.log(Object.keys(o).length);console.log(Object.keys({a:1,b:2}).join(), Object.values({a:3}).join(), Object.entries({c:4}).join());

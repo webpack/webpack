@@ -1,0 +1,1 @@
+var foo;function w(a){let x=foo;a+=x;return a}function v(a){let x=foo;a||=x;return a}function u(a){let x=g();a+=x;return a}w(),v(),u();

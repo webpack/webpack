@@ -1,0 +1,1 @@
+foo: { bar(); } x = { a: { b: 1 } }; { { } } y = function () { return 1; };

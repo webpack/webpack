@@ -1,0 +1,1 @@
+try{Infinity``}catch(e){console.log(e.name)}try{class A extends Infinity{}}catch(e){console.log(e.name)}try{(class extends Number.POSITIVE_INFINITY{})}catch(e){console.log(e.name)}

@@ -1,0 +1,19 @@
+.leading {
+	grid-template-areas: "1 _1 --foo _--foo";
+}
+
+.numeric {
+	grid-area: \31;
+}
+
+.underscore {
+	grid-area: _1;
+}
+
+.dashed {
+	grid-area: --foo;
+}
+
+.protected {
+	grid-area: _--foo;
+}

@@ -1,0 +1,11 @@
+.grid {
+	grid-template-areas: "foo-bar fooBar";
+}
+
+.first {
+	grid-area: foo-bar;
+}
+
+.second {
+	grid-area: fooBar;
+}

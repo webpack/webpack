@@ -1,0 +1,1 @@
+globalThis.Number={MIN_VALUE:1,NaN:2};console.log(Number.MIN_VALUE,Number.NaN)

@@ -1,0 +1,20 @@
+[
+	{
+		"mode": "minify",
+		"visit": {
+			"types": [
+				"Declaration",
+				"Ident",
+				"Hash",
+				"Comment"
+			],
+			"exit": true,
+			"at": [
+				{
+					"type": "Declaration",
+					"do": "skipChildren"
+				}
+			]
+		}
+	}
+]

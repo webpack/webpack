@@ -1,0 +1,8 @@
+[
+	{
+		"mode": "minify",
+		"format": {
+			"ascii_only": true
+		}
+	}
+]

@@ -1,0 +1,1 @@
+function f(x){return[[x+`$`,`{oops}`].join(``),x+`a{b}`]}console.log(f(1));

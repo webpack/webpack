@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs><path d="M0 0h1"/><g fill="red"><circle r="1"/></g><text>t</text><linearGradient><stop/></linearGradient><x:data xmlns:x="urn:x"/><path d="M0 0" data-x="1"/></defs>
+  <path d="L1 1"/><path d="M0 0A1 1 0 2 0 1 1"/><path d="M0 0A-1 1 0 0 0 1 1"/><path d="M0 0 1"/><path d="M0 0Z1"/><path d="M0 0X1 1"/><path d="M1e9 0l1e9 1"/>
+  <path d="M0 0" transform="foo(1)"/><path d="M0 0" transform="translate(1"/><path d="M0 0" transform="scale(a)"/><path d="M0 0" transform="translate(1) junk"/>
+  <path d="M0 0" transform="matrix(2 0 0 2 0 0)"/><path d="M0 0" transform="matrix(2 0 0 3 0 0)"/><path d="M0 0" transform="translate(1e7 1e7)"/><path d="M0 0" transform="scale(1e4 1e4)"/><path d="M0 0" transform=" "/>
+  <ellipse rx="5" ry="5" style="fill:red"/><circle r="5" d="M0 0"/><rect width="5" height="5" style="stroke:red"/><ellipse rx="2" ry="2"/>
+  <path d="M0 0h10" stroke="red" shape-rendering="crispEdges"/><path d="M0 5h10" stroke="url(#x)"/><path d="M0 6h10" stroke="red" stroke-width="0"/><path d="M0 7h10" stroke="red" stroke-width="2"/><path d="M0 8h10" stroke="red" stroke-width="2"/>
+  <path d="M0 0" style="unknown: 1"/><path d="M0 0" style="fill: red !important"/><path d="M0 0" style="stroke: none; color: none"/><path d="M0 0" style="fill: currentColor"/>
+  <g fill="red"><g stroke="blue" style="opacity:0.5"><path d="M0 0h1"/></g></g><g fill="red"><text>a</text></g><g fill="red"><path d="M0 0h1" style="fill:blue"/></g>
+  <path d="M0 0" fill="rgb(1,2)"/><path d="M0 0" fill="rgb(1,2,3"/><path d="M0 0" fill="rgb(300,0,0)"/>
+  <g pointer-events="none"><path d="M0 0h1"/></g><g visibility="hidden"><path d="M0 0h1"/></g>
+  <g fill="red" stroke="blue"><path d="M0 0h1" stroke="green"/><path d="M0 2h1"/></g>
+  <!-- a comment --><g><!-- inside --></g>
+</svg>

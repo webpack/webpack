@@ -1,0 +1,1 @@
+function h(c) { if (c) { var a = f(), b = 2 } return b }

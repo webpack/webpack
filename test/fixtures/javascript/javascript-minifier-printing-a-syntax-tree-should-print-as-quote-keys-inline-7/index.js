@@ -1,0 +1,1 @@
+function f(aaa){return aaa}f(1)

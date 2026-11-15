@@ -1008,7 +1008,7 @@ Object {
   "level-1": "composes-chain_module_css-level-1 composes-chain_module_css-level-2 composes-chain_module_css-level-3",
   "level-2": "composes-chain_module_css-level-2 composes-chain_module_css-level-3",
   "level-3": "composes-chain_module_css-level-3",
-  "target": "composes-chain_module_css-target composes-chain_module_css-level-1 composes-chain_module_css-level-2",
+  "target": "composes-chain_module_css-target composes-chain_module_css-level-1 composes-chain_module_css-level-2 composes-chain_module_css-level-3",
 }
 `;
 
@@ -2100,7 +2100,7 @@ Object {
   "level-1": "composes-chain_module_css-level-1 composes-chain_module_css-level-2 composes-chain_module_css-level-3",
   "level-2": "composes-chain_module_css-level-2 composes-chain_module_css-level-3",
   "level-3": "composes-chain_module_css-level-3",
-  "target": "composes-chain_module_css-target composes-chain_module_css-level-1 composes-chain_module_css-level-2",
+  "target": "composes-chain_module_css-target composes-chain_module_css-level-1 composes-chain_module_css-level-2 composes-chain_module_css-level-3",
 }
 `;
 
@@ -3192,7 +3192,7 @@ Object {
   "level-1": "composes-chain_module_css-level-1 composes-chain_module_css-level-2 composes-chain_module_css-level-3",
   "level-2": "composes-chain_module_css-level-2 composes-chain_module_css-level-3",
   "level-3": "composes-chain_module_css-level-3",
-  "target": "composes-chain_module_css-target composes-chain_module_css-level-1 composes-chain_module_css-level-2",
+  "target": "composes-chain_module_css-target composes-chain_module_css-level-1 composes-chain_module_css-level-2 composes-chain_module_css-level-3",
 }
 `;
 
@@ -4284,7 +4284,7 @@ Object {
   "level-1": "composes-chain_module_css-level-1 composes-chain_module_css-level-2 composes-chain_module_css-level-3",
   "level-2": "composes-chain_module_css-level-2 composes-chain_module_css-level-3",
   "level-3": "composes-chain_module_css-level-3",
-  "target": "composes-chain_module_css-target composes-chain_module_css-level-1 composes-chain_module_css-level-2",
+  "target": "composes-chain_module_css-target composes-chain_module_css-level-1 composes-chain_module_css-level-2 composes-chain_module_css-level-3",
 }
 `;
 

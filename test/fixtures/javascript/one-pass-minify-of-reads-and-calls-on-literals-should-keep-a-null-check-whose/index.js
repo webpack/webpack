@@ -1,0 +1,1 @@
+function f(x){return(x!=null?x.m:void 0)()}function g(x){return delete(x!=null?x.m:void 0)}function h(x){return(x!=null?x.m:void 0)``}function k(x){return x!=null?x.m:void 0}

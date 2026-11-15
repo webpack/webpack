@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g fill="red" data-foo="bar">
+        <path fill="#000" d="M118.8 186.9l79.2" data-bind="smth"/>
+    </g>
+</svg>

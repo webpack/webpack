@@ -1,27 +1,238 @@
 "use strict";
 
+const { createHash } = require("crypto");
 const fs = require("fs");
 const path = require("path");
+const { namedRenderer } = require("./embeddedRenderers");
 
 const FIXTURES = path.join(__dirname, "..", "fixtures");
+
+/** @typedef {"css" | "html" | "javascript" | "xml"} FixtureLanguage */
 
 /** @type {Map<string, string>} */
 const cache = new Map();
 
 /**
- * One unit-test input, kept once under `test/fixtures/<lang>/<name>/index.<lang>`.
- * @param {"css" | "html" | "xml"} lang the language the input is written in
+ * The inputs a `fixture.js` `source()` made, whose snapshot entries
+ * `snapshotOf` cuts to an excerpt.
+ * @type {Set<string>}
+ */
+const generated = new Set();
+
+/**
+ * @param {FixtureLanguage} lang a fixture language
+ * @returns {string} the file name its inputs are kept under
+ */
+const indexFile = (lang) =>
+	lang === "javascript" ? "index.js" : `index.${lang}`;
+
+/**
+ * What a fixture directory's `fixture.js` exports, for what JSON cannot hold:
+ * `source()` makes the input, and any other export is a value the fixture's
+ * JSON names as `{ "fixture": "<export>" }`.
+ * @typedef {{ source?: () => string, [name: string]: unknown }} FixtureCode
+ */
+
+/**
+ * @param {string} dir a fixture directory
+ * @returns {FixtureCode} what its `fixture.js` exports, nothing where it has none
+ */
+const codeOf = (dir) => {
+	const file = path.join(dir, "fixture.js");
+	return fs.existsSync(file) ? require(file) : {};
+};
+
+/**
+ * One unit-test input, kept once under `test/fixtures/<lang>/<name>/`: its
+ * `index.<ext>`, or what its `fixture.js` `source()` returns where it has
+ * none. A fixture with both throws, as it has two inputs.
+ * @param {FixtureLanguage} lang the language the input is written in
  * @param {string} name the fixture directory
  * @returns {string} the input
  */
 const fixture = (lang, name) => {
-	const file = path.join(FIXTURES, lang, name, `index.${lang}`);
+	const dir = path.join(FIXTURES, lang, name);
+	const file = path.join(dir, indexFile(lang));
 	let source = cache.get(file);
 	if (source === undefined) {
-		source = fs.readFileSync(file, "utf8");
+		const { source: make } = codeOf(dir);
+		if (make === undefined) {
+			source = fs.readFileSync(file, "utf8");
+		} else {
+			if (fs.existsSync(file)) {
+				throw new Error(`${name} has both ${indexFile(lang)} and source()`);
+			}
+			source = make();
+			generated.add(source);
+		}
 		cache.set(file, source);
 	}
 	return source;
+};
+
+/**
+ * A `{ "fixture": "<export>" }` value of a fixture's JSON, holding that export
+ * of its `fixture.js`; it writes itself back as that JSON, so titles keep it.
+ */
+class FixtureRef {
+	/**
+	 * @param {string} name the export's name
+	 * @param {unknown} value the export
+	 */
+	constructor(name, value) {
+		this.name = name;
+		this.value = value;
+	}
+
+	/**
+	 * @returns {{ fixture: string }} the JSON it was read from
+	 */
+	toJSON() {
+		return { fixture: this.name };
+	}
+}
+
+/**
+ * @param {unknown} value a JSON value of a fixture's
+ * @param {FixtureCode} code what its `fixture.js` exports
+ * @param {string} what the fixture, for the error
+ * @returns {EXPECTED_ANY} it with each `{ "fixture" }` a `FixtureRef`; an unknown name throws
+ */
+const withRefs = (value, code, what) => {
+	if (Array.isArray(value)) {
+		return value.map((one) => withRefs(one, code, what));
+	}
+	if (value === null || typeof value !== "object") return value;
+	const object = /** @type {Record<string, unknown>} */ (value);
+	const keys = Object.keys(object);
+	if (keys.length === 1 && typeof object.fixture === "string") {
+		const name = object.fixture;
+		if (
+			name === "source" ||
+			!Object.prototype.hasOwnProperty.call(code, name)
+		) {
+			throw new Error(`${what}: fixture.js exports no "${name}"`);
+		}
+		return new FixtureRef(name, code[name]);
+	}
+	/** @type {Record<string, unknown>} */
+	const out = {};
+	for (const key of keys) out[key] = withRefs(object[key], code, what);
+	return out;
+};
+
+/**
+ * @param {unknown} value a fixture's JSON value, `FixtureRef`s in it
+ * @returns {EXPECTED_ANY} it with each `FixtureRef` the export it holds
+ */
+const resolveRefs = (value) => {
+	if (value instanceof FixtureRef) return value.value;
+	if (Array.isArray(value)) return value.map(resolveRefs);
+	if (value === null || typeof value !== "object") return value;
+	/** @type {Record<string, unknown>} */
+	const out = {};
+	for (const [key, one] of Object.entries(value)) out[key] = resolveRefs(one);
+	return out;
+};
+
+/**
+ * @param {unknown} ref what a `check` key holds
+ * @returns {(result: EXPECTED_ANY, context: CheckContext) => unknown} the function it names
+ */
+const checkOf = (ref) => {
+	if (!(ref instanceof FixtureRef) || typeof ref.value !== "function") {
+		throw new Error('"check" names a function of fixture.js');
+	}
+	return /** @type {(result: EXPECTED_ANY, context: CheckContext) => unknown} */ (
+		ref.value
+	);
+};
+
+/**
+ * @typedef {object} CheckContext
+ * @property {string} source the fixture's input
+ * @property {Record<string, unknown>} spec the print set or `parse.json` run it checks
+ */
+
+/**
+ * @param {unknown} summary what a `check` returned
+ * @returns {string} it as JSON, an Error as its text
+ */
+const summaryText = (summary) => {
+	const text = JSON.stringify(summary, errorText);
+	return text === undefined ? "undefined" : text;
+};
+
+/** How many characters of each end an excerpt keeps. */
+const EXCERPT = 200;
+
+/**
+ * A snapshot entry of a fixture's: as it is, but from a `source()` input
+ * longer than an excerpt, its length, a digest and both ends.
+ * @param {string} source the fixture's input
+ * @param {string} text what it would snapshot
+ * @returns {string} the entry
+ */
+const snapshotOf = (source, text) => {
+	if (!generated.has(source)) return text;
+	if (text.length <= EXCERPT * 2) return snapshotText(text);
+	const digest = createHash("sha256").update(text).digest("hex").slice(0, 16);
+	return snapshotText(
+		`length ${text.length}, sha256 ${digest}\n${text.slice(
+			0,
+			EXCERPT
+		)}\n…\n${text.slice(-EXCERPT)}`
+	);
+};
+
+/**
+ * What `snapshotOf` makes of the text a writer writes in pieces, without
+ * joining them where it would only digest them: a tree whose text outgrows
+ * the longest string an engine holds still snapshots.
+ * @param {string} source the fixture's input
+ * @param {(write: (piece: string) => void) => void} writeAll writes the text, piece by piece
+ * @returns {string} the entry
+ */
+const snapshotOfPieces = (source, writeAll) => {
+	/**
+	 * @returns {string} the text, joined
+	 */
+	const joined = () => {
+		/** @type {string[]} */
+		const pieces = [];
+		writeAll((piece) => {
+			pieces.push(piece);
+		});
+		return pieces.join("");
+	};
+	if (!generated.has(source)) return snapshotText(joined());
+	const hash = createHash("sha256");
+	let length = 0;
+	let head = "";
+	let tail = "";
+	let plain = true;
+	writeAll((piece) => {
+		if (!plain) return;
+		if (snapshotText(piece) !== piece) {
+			plain = false;
+			return;
+		}
+		hash.update(piece);
+		length += piece.length;
+		if (head.length < EXCERPT) head += piece.slice(0, EXCERPT - head.length);
+		tail =
+			piece.length >= EXCERPT
+				? piece.slice(-EXCERPT)
+				: (tail + piece).slice(-EXCERPT);
+	});
+	// Escaping moves the digest's bytes, so such a text is joined after all.
+	if (!plain || length <= EXCERPT * 2) {
+		return snapshotOf(source, snapshotText(joined()));
+	}
+	const digest = hash.digest("hex").slice(0, 16);
+	return snapshotText(
+		`length ${length}, sha256 ${digest}\n${head}\n…\n${tail}`
+	);
 };
 
 /**
@@ -29,14 +240,100 @@ const fixture = (lang, name) => {
  * @typedef {object} KnownDifference
  * @property {string} relation the relation, as a finding names it
  * @property {string} contains text the finding's repro holds
+ * @property {string[]=} presets the option sets it shows under, every one where absent, as the comparison scripts' `Expected` narrows one
  * @property {string} why the reason, read by whoever meets the entry later
+ */
+
+/** @typedef {{ mode: "minify" | "beautify", xml?: boolean }} PrintOptionSet */
+
+/**
+ * One call a fixture's `parse.json` asks the runner to make and snapshot, on
+ * top of the tokens and parse every fixture gets.
+ * @typedef {object} ParseRun
+ * @property {string=} entry the public entry point, by the name the language's runner lists it under; its document parse where absent
+ * @property {Record<string, EXPECTED_ANY>=} options the JSON options the entry is called with
+ * @property {(boolean | VisitSpec | FixtureRef)=} visit `true`: the callbacks the entry makes are logged as one more entry of one line; on `SourceProcessor`, what its walk visits, logs and does
+ * @property {number=} pos the offset the entry starts reading at, where it takes one
+ * @property {string[]=} fields reads (see `fieldRead`) made through `A` on every node the entry returns, logged as one more entry
+ * @property {FixtureRef=} check a `fixture.js` function given the values and a `CheckContext`, whose answer is logged as one more entry
+ */
+
+/**
+ * What a walk visits, logs and does, for a `SourceProcessor` run's or a print
+ * set's `visit`.
+ * @typedef {object} VisitSpec
+ * @property {string[]=} types the `NodeType` names visited, every one where absent
+ * @property {string[]=} fields the reads (see `fieldRead`) each enter logs
+ * @property {boolean=} exit whether exits are logged too, as they are by default
+ * @property {VisitAction[]=} at what a visitor does at a node
+ */
+
+/**
+ * @typedef {object} VisitAction
+ * @property {string} type the `NodeType` name it acts at
+ * @property {("enter" | "exit")=} on the call it acts in, enter where absent
+ * @property {string=} name only at a node of this name
+ * @property {string=} source only at a node whose source starts with this
+ * @property {number=} index only at a node at this index among its siblings
+ * @property {"skipChildren" | "stop" | "remove" | "replace"} do the path method it calls
+ * @property {string=} with the text `replace` writes in the node's place
+ */
+
+/**
+ * @typedef {object} ParseContext
+ * @property {number} pos the run's `pos`
+ * @property {string[] | undefined} fields the run's `fields`
+ * @property {VisitSpec | FixtureRef | undefined} visit the run's `visit`, where it is an object
+ */
+
+/**
+ * @typedef {object} ParseEntry
+ * @property {(source: string, options: Record<string, EXPECTED_ANY>, log: string[] | undefined, context: ParseContext) => string[]} read what to snapshot, in order, writing each callback it makes to `log` where it is given one
+ * @property {boolean=} records whether it takes callbacks `visit: true` records
+ * @property {boolean=} walks whether it fires the visitors a `visit` object asks for
+ * @property {boolean=} positions whether it takes `pos`
+ * @property {boolean=} trees whether it returns nodes `fields` reads
+ */
+
+/**
+ * The enums and accessors a language's parser exports, which `visit` and
+ * `fields` name members of.
+ * @typedef {object} SyntaxEnums
+ * @property {Record<string, number>} NodeType node types
+ * @property {Record<string, number>} Flag node flags
+ * @property {Record<string, number>} Field node fields
+ * @property {Record<string, number>} Part node parts
+ * @property {EXPECTED_ANY} A the accessors, each taking the node last
+ */
+
+/**
+ * What a print set's `minimizer` hands the minimizer beside the source.
+ * @typedef {object} MinimizerCall
+ * @property {EXPECTED_ANY=} extractComments its `extractComments` argument, a RegExp written as `{ "regexp" }`
+ * @property {string=} sourceMap a file in the fixture's directory holding the input source map
+ * @property {boolean=} buffer whether the asset is a Buffer rather than a string
+ * @property {string=} asset the asset's name, `index.<ext>` where absent
+ */
+
+/**
+ * The printers a print set's `print` names: `process` (the default),
+ * `processAsync` and the language's minimizer.
+ * @typedef {object} Printers
+ * @property {new () => EXPECTED_ANY} Processor the language's `SourceProcessor`
+ * @property {SyntaxEnums} enums its parser's enums
+ * @property {string} minimizer the minimizer's name
+ * @property {() => (...args: EXPECTED_ANY[]) => Promise<EXPECTED_ANY>} load loads the minimizer, whose arguments and result differ by language
+ * @property {string} asset the asset name it is given the source under
  */
 
 /**
  * @typedef {object} FixtureEntry
  * @property {string} name the fixture directory
+ * @property {string} dir its path
  * @property {string} source its input
- * @property {{ mode: "minify" | "beautify", xml?: boolean }[]} options the option sets it is printed under, minifying with the defaults first
+ * @property {PrintOptionSet[]} options the option sets it is printed under, minifying with the defaults first
+ * @property {PrintOptionSet[]} behavior those of them whose print runs against the source and must do what it does
+ * @property {ParseRun[]} parses the calls its `parse.json` asks for
  * @property {KnownDifference[]} expected what its `expected.json` lets it break
  */
 
@@ -48,8 +345,25 @@ const readList = (file) =>
 	fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, "utf8")) : [];
 
 /**
- * Every fixture of a language with what the runner asks of it.
- * @param {"css" | "html" | "xml"} lang the language
+ * Every fixture of a language with what the runner asks of it. Its
+ * `options.json` lists option sets to print it under as well; a JavaScript one
+ * marked `"behavior": true` (marker left out of what the printer gets) also
+ * runs, and a mark in another language throws.
+ * A print set names a renderer and a RegExp in JSON (see `printOptions`), and
+ * `print`, `visit`, `minimizer` and `check` in one are read by `readPrint`;
+ * `parse.json` lists `ParseRun`s, each read by `readRun`. A `fixture.js`
+ * beside them (CommonJS, Node 10 syntax) holds what JSON cannot:
+ * - `source()` returns the input, in place of `index.<ext>`; each snapshot
+ *   entry longer than two excerpts becomes its length, a digest and both ends.
+ *   An input past `INVARIANT_BUDGET` (`syntaxInvariants/index.js`) skips the
+ *   cuts, respellings and every preset but the first; one deeper than the
+ *   stack snapshots `OVERFLOW` where a stage runs out and holds no relation.
+ * - Any other export is what `{ "fixture": "<export>" }` stands for anywhere
+ *   in either file; an unknown name throws. A `visit` export is called with
+ *   the log and the enums and returns the visitor map; a `check` export is
+ *   called with the printer's result, or a run's values, and `{ source, spec }`,
+ *   and what it returns is snapshotted as JSON.
+ * @param {FixtureLanguage} lang the language
  * @returns {FixtureEntry[]} one entry per fixture, by name
  */
 const fixtures = (lang) => {
@@ -57,20 +371,49 @@ const fixtures = (lang) => {
 	const entries = [];
 	const dir = path.join(FIXTURES, lang);
 	// XML prints through the HTML printer, so its defaults name the dialect.
-	/** @type {{ mode: "minify" | "beautify", xml?: boolean }} */
+	/** @type {PrintOptionSet} */
 	const first =
 		lang === "xml" ? { xml: true, mode: "minify" } : { mode: "minify" };
 	for (const name of fs.readdirSync(dir).sort()) {
-		if (!fs.existsSync(path.join(dir, name, `index.${lang}`))) continue;
-		/** @type {Map<string, { mode: "minify" | "beautify", xml?: boolean }>} */
+		const code = codeOf(path.join(dir, name));
+		if (
+			code.source === undefined &&
+			!fs.existsSync(path.join(dir, name, indexFile(lang)))
+		) {
+			continue;
+		}
+		/** @type {Map<string, PrintOptionSet>} */
 		const options = new Map([[JSON.stringify(first), first]]);
-		for (const one of readList(path.join(dir, name, "options.json"))) {
-			options.set(JSON.stringify(one), one);
+		/** @type {Set<PrintOptionSet>} */
+		const behavior = new Set();
+		for (const { behavior: runs, ...one } of withRefs(
+			readList(path.join(dir, name, "options.json")),
+			code,
+			name
+		)) {
+			const key = JSON.stringify(one);
+			// Only JavaScript runs: a mark elsewhere would hold nothing.
+			if (runs !== undefined && lang !== "javascript") {
+				throw new Error(
+					`${name}: "behavior" runs a print, and ${lang} has no runtime`
+				);
+			}
+			if (!options.has(key)) options.set(key, one);
+			if (runs === true) {
+				behavior.add(/** @type {PrintOptionSet} */ (options.get(key)));
+			}
 		}
 		entries.push({
 			name,
+			dir: path.join(dir, name),
 			source: fixture(lang, name),
 			options: [...options.values()],
+			behavior: [...behavior],
+			parses: withRefs(
+				readList(path.join(dir, name, "parse.json")),
+				code,
+				name
+			),
 			expected: readList(path.join(dir, name, "expected.json"))
 		});
 	}
@@ -79,12 +422,14 @@ const fixtures = (lang) => {
 
 /**
  * What a fixture's findings leave unexplained: each finding no entry names,
- * and each entry no finding needs any more, which has to go.
+ * and each entry no finding needs any more, which has to go. A source past
+ * `INVARIANT_BUDGET` skips relations an entry may answer for, so none is stale.
  * @param {{ preset: string, report: { relation: string, what: string, repro: string } }[]} findings what the relations reported
  * @param {KnownDifference[]} expected the fixture's known differences
+ * @param {string} source the fixture's input
  * @returns {string[]} one line per finding left over or entry gone stale
  */
-const unexplained = (findings, expected) => {
+const unexplained = (findings, expected, source) => {
 	/** @type {Set<KnownDifference>} */
 	const used = new Set();
 	/** @type {string[]} */
@@ -92,7 +437,9 @@ const unexplained = (findings, expected) => {
 	for (const { preset, report } of findings) {
 		const entry = expected.find(
 			(one) =>
-				one.relation === report.relation && report.repro.includes(one.contains)
+				one.relation === report.relation &&
+				report.repro.includes(one.contains) &&
+				(one.presets === undefined || one.presets.includes(preset))
 		);
 		if (entry === undefined) {
 			left.push(
@@ -103,21 +450,666 @@ const unexplained = (findings, expected) => {
 		}
 	}
 	for (const entry of expected) {
-		if (!used.has(entry)) {
+		if (!used.has(entry) && source.length <= INVARIANT_BUDGET) {
 			left.push(`stale: ${entry.relation} ${entry.contains}`);
 		}
 	}
 	return left;
 };
 
+/** A lone surrogate, which a snapshot file, being UTF-8, cannot hold. */
+const LONE_SURROGATE =
+	/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g;
+
 /**
  * A printed text as a snapshot holds it: raw where it reads as text, as a JSON
- * string where a control character would otherwise land in the snapshot file.
+ * string where a control character or lone surrogate would otherwise land in
+ * the snapshot file.
  * @param {string} text what was printed
  * @returns {string} the snapshot's value
  */
-const snapshotText = (text) =>
-	// eslint-disable-next-line no-control-regex
-	/[\u0000-\u0008\u000B-\u001F\u007F]/.test(text) ? JSON.stringify(text) : text;
+const snapshotText = (text) => {
+	LONE_SURROGATE.lastIndex = 0;
+	if (
+		// eslint-disable-next-line no-control-regex
+		!/[\u0000-\u0008\u000B-\u001F\u007F]/.test(text) &&
+		!LONE_SURROGATE.test(text)
+	) {
+		return text;
+	}
+	// WHY: Node before 12 writes a lone surrogate into JSON as it is.
+	return JSON.stringify(text).replace(
+		LONE_SURROGATE,
+		(unit) => `\\u${unit.charCodeAt(0).toString(16)}`
+	);
+};
 
-module.exports = { fixture, fixtures, snapshotText, unexplained };
+/**
+ * The size past which a source is held only to the relations that cost about
+ * its length: spans, idempotence under the first preset with what that preset
+ * keeps, and purity among all the others. The cuts, slices, respellings and
+ * other presets each read or print it again per site or per preset, which a
+ * filler of hundreds of kilobytes turns into minutes. 20000 characters, the
+ * cap on running a script, spares every file fixture but three 40 KB HTML
+ * pages; the generated ones past it are fillers whose point is their size.
+ */
+const INVARIANT_BUDGET = 20000;
+
+/** What a read deeper than the stack answers. */
+const OVERFLOW = "overflows the stack";
+
+/**
+ * @param {unknown} err what a read threw
+ * @returns {boolean} whether it ran out of stack, as the engine or a parser's own refusal says
+ */
+const isStackOverflow = (err) =>
+	(err instanceof RangeError && /call stack/i.test(err.message)) ||
+	(err instanceof Error && err.message.startsWith("Not enough stack space"));
+
+/**
+ * What a read answers, or `OVERFLOW` where it runs out of stack: where that
+ * happens and how the engine words it differ between engines.
+ * @template T
+ * @param {() => T} read the read
+ * @returns {T | string} its answer, or `OVERFLOW`
+ */
+const unlessOverflow = (read) => {
+	try {
+		return read();
+	} catch (err) {
+		if (isStackOverflow(err)) return OVERFLOW;
+		throw err;
+	}
+};
+
+/**
+ * @param {() => string} read what to run
+ * @returns {string} its answer, or the error it throws; `OVERFLOW` for one out of stack
+ */
+const answerOf = (read) => {
+	try {
+		return read();
+	} catch (err) {
+		if (isStackOverflow(err)) return OVERFLOW;
+		return `throws: ${/** @type {Error} */ (err).message}`;
+	}
+};
+
+/**
+ * @param {Record<string, unknown>} object a JSON object a fixture wrote
+ * @param {Set<string>} keys the keys it may hold
+ * @param {string} what what it is, for the error
+ * @returns {void}
+ */
+const checkKeys = (object, keys, what) => {
+	for (const key of Object.keys(object)) {
+		if (!keys.has(key)) throw new Error(`unknown ${what} key "${key}"`);
+	}
+};
+
+/**
+ * @param {Record<string, number>} table a language's `NodeType`, `Flag`, `Field` or `Part`
+ * @param {string} name a member's name
+ * @param {string} what the table's name, for the error
+ * @returns {number} the member
+ */
+const enumValue = (table, name, what) => {
+	if (!Object.prototype.hasOwnProperty.call(table, name)) {
+		throw new Error(`unknown ${what} "${name}"`);
+	}
+	return table[name];
+};
+
+/**
+ * @param {SyntaxEnums} enums the language's enums
+ * @param {number} type a node type
+ * @returns {string} its `NodeType` name
+ */
+const typeName = (enums, type) =>
+	/** @type {string} */ (
+		Object.keys(enums.NodeType).find((name) => enums.NodeType[name] === type)
+	);
+
+/**
+ * @param {unknown} value a read off a node
+ * @returns {string} it as a log line holds it
+ */
+const valueText = (value) => {
+	if (typeof value === "bigint") return `${value}n`;
+	if (value === undefined) return "undefined";
+	return JSON.stringify(value);
+};
+
+/** @type {Set<string>} */
+const PLAIN_FIELDS = new Set([
+	"name",
+	"value",
+	"source",
+	"range",
+	"loc",
+	"childCount"
+]);
+
+/** @type {Set<string>} */
+const PART_FIELDS = new Set([
+	"rangeOf",
+	"startOf",
+	"endOf",
+	"textOf",
+	"sourceOf"
+]);
+
+/**
+ * One read a `fields` list names, made on a path (the node left out) or on
+ * `A` with the node: `name`, `value`, `source`, `range`, `loc`, `childCount`,
+ * on a path `index` and `parent`, and `flag:`, `fieldCount:` or a part read
+ * (`rangeOf:`, `startOf:`, `endOf:`, `textOf:`, `sourceOf:`) with its member.
+ * @param {string} field the read's name
+ * @param {SyntaxEnums} enums the language's enums
+ * @param {boolean} onPath whether it reads a visitor's path rather than `A`
+ * @returns {(reader: EXPECTED_ANY, node: unknown) => unknown} the read
+ */
+const fieldRead = (field, enums, onPath) => {
+	const colon = field.indexOf(":");
+	if (colon === -1) {
+		if (PLAIN_FIELDS.has(field)) return (reader, node) => reader[field](node);
+		if (onPath && field === "index") return (reader) => reader.index;
+		if (onPath && field === "parent") {
+			return (reader) =>
+				reader.parent === null
+					? null
+					: typeName(enums, reader.type(reader.parent));
+		}
+		throw new Error(`unknown field "${field}"`);
+	}
+	const method = field.slice(0, colon);
+	const member = field.slice(colon + 1);
+	if (method === "flag") {
+		const flag = enumValue(enums.Flag, member, "Flag");
+		return (reader, node) => reader.flag(flag, node);
+	}
+	if (method === "fieldCount") {
+		const id = enumValue(enums.Field, member, "Field");
+		return (reader, node) => reader.fieldCount(id, node);
+	}
+	if (!PART_FIELDS.has(method)) throw new Error(`unknown field "${field}"`);
+	const part = enumValue(enums.Part, member, "Part");
+	if (method !== "sourceOf") {
+		return (reader, node) => reader[method](part, node);
+	}
+	return (reader, node) => {
+		const range = reader.rangeOf(part, node);
+		return range === null ? null : reader.source(range[0], range[1]);
+	};
+};
+
+/**
+ * @param {EXPECTED_ANY} reader a path, or `A`
+ * @param {unknown} node the node `A` reads, undefined on a path
+ * @param {string} name the node's type name
+ * @param {[string, (reader: EXPECTED_ANY, node: unknown) => unknown][]} reads the `fields` reads
+ * @returns {string} the node as a log line holds it
+ */
+const nodeLine = (reader, node, name, reads) => {
+	let line = `${name}[${reader.start(node)},${reader.end(node)}]`;
+	for (const [field, read] of reads) {
+		line += ` ${field}=${valueText(read(reader, node))}`;
+	}
+	return line;
+};
+
+/** @type {Set<string>} */
+const VISIT_KEYS = new Set(["types", "fields", "exit", "at"]);
+/** @type {Set<string>} */
+const ACTION_KEYS = new Set([
+	"type",
+	"on",
+	"name",
+	"source",
+	"index",
+	"do",
+	"with"
+]);
+/** @type {Set<string>} */
+const ACTIONS = new Set(["skipChildren", "stop", "remove", "replace"]);
+
+/**
+ * Visitors that log each call `spec` asks for into `log`, one line each:
+ * `Type[start,end]` and its `fields` on enter, `/Type` on exit, then `!` and
+ * each action of `at` the call took. A `fixture.js` export `spec` names is
+ * called with `log` and `enums` and returns the visitor map itself.
+ * @param {VisitSpec | FixtureRef} spec what to visit, log and do
+ * @param {SyntaxEnums} enums the language's enums
+ * @param {string[]} log where each call is written
+ * @returns {Record<number, { enter: (path: EXPECTED_ANY) => void, exit?: (path: EXPECTED_ANY) => void }>} the visitor map
+ */
+const visitorsOf = (spec, enums, log) => {
+	if (spec instanceof FixtureRef) {
+		if (typeof spec.value !== "function") {
+			throw new Error('"visit" names a function of fixture.js');
+		}
+		return spec.value(log, enums);
+	}
+	checkKeys(spec, VISIT_KEYS, "visit");
+	const {
+		types = Object.keys(enums.NodeType),
+		fields = [],
+		exit = true,
+		at = []
+	} = spec;
+	/** @type {[string, (reader: EXPECTED_ANY, node: unknown) => unknown][]} */
+	const reads = fields.map((field) => [field, fieldRead(field, enums, true)]);
+	for (const action of at) {
+		checkKeys(action, ACTION_KEYS, "visit action");
+		enumValue(enums.NodeType, action.type, "NodeType");
+		if (!ACTIONS.has(action.do) || typeof enums.A[action.do] !== "function") {
+			throw new Error(`a path here cannot "${action.do}"`);
+		}
+		const on = action.on || "enter";
+		if (on !== "enter" && on !== "exit") throw new Error(`unknown on "${on}"`);
+		if ((action.do === "replace") !== (typeof action.with === "string")) {
+			throw new Error('"with" is the text "replace" writes, and only that');
+		}
+	}
+	/**
+	 * @param {VisitAction} action an action of `at`
+	 * @param {EXPECTED_ANY} path the path it is offered
+	 * @returns {boolean} whether the node is the one it names
+	 */
+	const matches = (action, path) =>
+		(action.name === undefined || path.name() === action.name) &&
+		(action.source === undefined || path.source().startsWith(action.source)) &&
+		(action.index === undefined || path.index === action.index);
+	/** @type {Record<number, { enter: (path: EXPECTED_ANY) => void, exit?: (path: EXPECTED_ANY) => void }>} */
+	const visitors = {};
+	for (const name of types) {
+		const mine = at.filter((action) => action.type === name);
+		/**
+		 * @param {"enter" | "exit"} on which call this is
+		 * @param {EXPECTED_ANY} path its path
+		 * @param {string} line what it logs before its actions
+		 * @param {boolean} logs whether it logs at all
+		 * @returns {void}
+		 */
+		const call = (on, path, line, logs) => {
+			/** @type {string[]} */
+			const done = [];
+			for (const action of mine) {
+				if ((action.on || "enter") !== on || !matches(action, path)) continue;
+				if (action.do === "replace") path.replace(action.with);
+				else path[action.do]();
+				done.push(`!${action.do}`);
+			}
+			if (logs) log.push([line, ...done].join(" "));
+		};
+		const type = enumValue(enums.NodeType, name, "NodeType");
+		visitors[type] = {
+			enter: (path) =>
+				call("enter", path, nodeLine(path, undefined, name, reads), true)
+		};
+		if (exit || mine.some((action) => action.on === "exit")) {
+			visitors[type].exit = (path) => call("exit", path, `/${name}`, exit);
+		}
+	}
+	return visitors;
+};
+
+/**
+ * The nodes a parse returned and every one under them, each as `nodeLine`
+ * writes it with the `fields` reads made through `A`, indented by depth.
+ * @param {SyntaxEnums} enums the language's enums, `A` among them
+ * @param {number[]} roots what the entry point returned
+ * @param {string[]} fields the reads to log
+ * @returns {string} one line per node
+ */
+const treeLines = (enums, roots, fields) => {
+	const { A } = enums;
+	/** @type {[string, (reader: EXPECTED_ANY, node: unknown) => unknown][]} */
+	const reads = fields.map((field) => [field, fieldRead(field, enums, false)]);
+	const fieldIds = Object.values(enums.Field);
+	/** @type {Set<number>} */
+	const seen = new Set();
+	/** @type {string[]} */
+	const out = [];
+	/**
+	 * @param {number} node a node
+	 * @param {number} depth how far under a root it is
+	 * @returns {void}
+	 */
+	const visit = (node, depth) => {
+		if (seen.has(node)) return;
+		seen.add(node);
+		out.push(
+			"  ".repeat(depth) +
+				nodeLine(A, node, typeName(enums, A.type(node)), reads)
+		);
+		for (const child of A.children(node)) visit(child, depth + 1);
+		for (const id of fieldIds) {
+			for (let i = 0, count = A.fieldCount(id, node); i < count; i++) {
+				visit(A.field(i, id, node), depth + 1);
+			}
+		}
+	};
+	for (const root of roots) visit(root, 0);
+	return out.join("\n");
+};
+
+/** @type {Set<string>} */
+const RUN_KEYS = new Set([
+	"entry",
+	"options",
+	"visit",
+	"pos",
+	"fields",
+	"check"
+]);
+
+/**
+ * What one `parse.json` run snapshots: what its entry answers, then the
+ * callbacks it made where `visit` is `true`, then what its `check` returns
+ * for those values. A name or key the entry does not take throws.
+ * @param {Record<string, ParseEntry>} entries the language's entry points, its document parse first
+ * @param {string} source the fixture's input
+ * @param {ParseRun} run the run
+ * @returns {string[]} the values to snapshot, in order
+ */
+const readRun = (entries, source, run) => {
+	checkKeys(run, RUN_KEYS, "parse.json");
+	const {
+		entry = Object.keys(entries)[0],
+		options = {},
+		visit = false,
+		pos = 0,
+		fields,
+		check
+	} = run;
+	if (!Object.prototype.hasOwnProperty.call(entries, entry)) {
+		throw new Error(
+			`unknown entry "${entry}", not one of ${Object.keys(entries).join(", ")}`
+		);
+	}
+	const {
+		read,
+		records = false,
+		walks = false,
+		positions = false,
+		trees = false
+	} = entries[entry];
+	if (visit === true && !records) {
+		throw new Error(`"${entry}" makes no callbacks to visit`);
+	}
+	if (typeof visit === "object" && !walks) {
+		throw new Error(`"${entry}" fires no visitors`);
+	}
+	if (pos !== 0 && !positions) throw new Error(`"${entry}" takes no pos`);
+	if (fields !== undefined && !trees) {
+		throw new Error(`"${entry}" returns no tree to read fields of`);
+	}
+	/** @type {string[] | undefined} */
+	const log = visit === true ? [] : undefined;
+	const values = read(source, resolveRefs(options), log, {
+		pos,
+		fields,
+		visit: typeof visit === "object" ? visit : undefined
+	});
+	if (log !== undefined) values.push(log.join(" "));
+	if (check !== undefined) {
+		values.push(
+			summaryText(checkOf(check)([...values], { source, spec: run }))
+		);
+	}
+	return values.map((value) =>
+		generated.has(source) ? snapshotOf(source, value) : snapshotText(value)
+	);
+};
+
+/**
+ * Every visitor call a language's `SourceProcessor` makes. Without `spec`, one
+ * line: each node entered as its type, name and range, and each one left as
+ * `/` its type; with it, what `visitorsOf` logs, a line per call.
+ * @param {new () => { use: (visitors: EXPECTED_ANY) => { process: (source: string, options: EXPECTED_ANY) => unknown } }} Processor the language's `SourceProcessor`
+ * @param {SyntaxEnums} enums its enums
+ * @param {string} source what to walk
+ * @param {Record<string, EXPECTED_ANY>} options the process options, which print nothing
+ * @param {(VisitSpec | FixtureRef)=} spec what to visit, log and do
+ * @returns {string} the visit log
+ */
+const walkLine = (Processor, enums, source, options, spec) => {
+	/** @type {string[]} */
+	const out = [];
+	if (spec !== undefined) {
+		new Processor().use(visitorsOf(spec, enums, out)).process(source, options);
+		return out.join("\n");
+	}
+	/** @type {Record<number, { enter: (path: EXPECTED_ANY) => void, exit: (path: EXPECTED_ANY) => void }>} */
+	const visitors = {};
+	for (const [name, type] of Object.entries(enums.NodeType)) {
+		visitors[type] = {
+			enter: (path) => {
+				const nodeName = path.name();
+				out.push(
+					`${name}${
+						nodeName ? `(${nodeName})` : ""
+					}[${path.start()},${path.end()}]`
+				);
+			},
+			exit: () => {
+				out.push(`/${name}`);
+			}
+		};
+	}
+	new Processor().use(visitors).process(source, options);
+	return out.join(" ");
+};
+
+/**
+ * A print set as the printer takes it: a `renderEmbeddedSource` name (or
+ * `{ name, options }`) becomes that renderer of `embeddedRenderers.js`,
+ * `{ "regexp": source, "flags"?: flags }` anywhere becomes a RegExp, and
+ * `{ "fixture": "<export>" }` anywhere that export of `fixture.js`.
+ * @param {PrintOptionSet} given the set as its `options.json` holds it
+ * @returns {{ options: PrintOptionSet, log: string[] | undefined }} the options, and what a recording renderer is offered, to snapshot after the print
+ */
+const printOptions = (given) => {
+	/** @type {string[]} */
+	const log = [];
+	let records = false;
+	/**
+	 * @param {unknown} value a JSON value
+	 * @returns {unknown} it with every RegExp and renderer in place
+	 */
+	const revive = (value) => {
+		if (value instanceof FixtureRef) return value.value;
+		if (Array.isArray(value)) return value.map(revive);
+		if (value === null || typeof value !== "object") return value;
+		const object = /** @type {Record<string, EXPECTED_ANY>} */ (value);
+		const keys = Object.keys(object);
+		if (
+			typeof object.regexp === "string" &&
+			keys.every((key) => key === "regexp" || key === "flags")
+		) {
+			return new RegExp(object.regexp, object.flags);
+		}
+		/** @type {Record<string, unknown>} */
+		const out = {};
+		for (const key of keys) {
+			if (
+				key === "renderEmbeddedSource" &&
+				!(object[key] instanceof FixtureRef)
+			) {
+				const renderer = namedRenderer(object[key], log);
+				records = records || renderer.records;
+				out[key] = renderer.render;
+			} else {
+				out[key] = revive(object[key]);
+			}
+		}
+		return out;
+	};
+	const options = /** @type {PrintOptionSet} */ (revive(given));
+	return { options, log: records ? log : undefined };
+};
+
+/** @type {["warnings", "errors", "extractedComments"]} */
+const REPORTED = ["warnings", "errors", "extractedComments"];
+
+/** @type {Set<string>} */
+const MINIMIZER_KEYS = new Set([
+	"extractComments",
+	"sourceMap",
+	"buffer",
+	"asset"
+]);
+
+/**
+ * @param {PrintOptionSet} set a print set
+ * @returns {boolean} whether `readPrint` prints it, as `print`, `visit`, `minimizer` or `check` asks
+ */
+const declaresPrint = (set) =>
+	"print" in set || "visit" in set || "minimizer" in set || "check" in set;
+
+/**
+ * A reported error as its text, or only its name where the engine throws it,
+ * as V8 and JavaScriptCore word those messages differently.
+ * @param {unknown} value what a minimizer reported
+ * @returns {string} its text
+ */
+const reportText = (value) =>
+	value instanceof TypeError ||
+	value instanceof RangeError ||
+	value instanceof ReferenceError
+		? value.name
+		: String(value);
+
+/**
+ * @param {string} key a key
+ * @param {unknown} value its value
+ * @returns {unknown} an Error as its text, everything else as it is
+ */
+const errorText = (key, value) =>
+	value instanceof Error ? reportText(value) : value;
+
+/**
+ * What a print set with `print`, `visit`, `minimizer` or `check` snapshots:
+ * the code, or what the print throws, then what the minimizer returned beside
+ * it (all of it under `minimizer`, else only non-empty reports), then what
+ * `check` returns for the printer's result, then the `visit` log, then a
+ * recording renderer's offers.
+ * @param {Printers} printers the language's printers
+ * @param {string} dir the fixture's directory, which `minimizer.sourceMap` is read from
+ * @param {string} source the fixture's input
+ * @param {PrintOptionSet & { print?: string, visit?: VisitSpec | FixtureRef, minimizer?: MinimizerCall, check?: FixtureRef }} set the print set
+ * @returns {Promise<string[]>} the values to snapshot, in order
+ */
+const readPrint = async (printers, dir, source, set) => {
+	const { print = "process", visit, minimizer, check, ...rest } = set;
+	const checks = check === undefined ? undefined : checkOf(check);
+	const names = ["process", "processAsync", printers.minimizer];
+	if (!names.includes(print)) {
+		throw new Error(`unknown print "${print}", not one of ${names.join(", ")}`);
+	}
+	const minimizes = print === printers.minimizer;
+	if (visit !== undefined && minimizes) {
+		throw new Error(`"${print}" takes no visitors`);
+	}
+	if (minimizer !== undefined && !minimizes) {
+		throw new Error(`"minimizer" needs print "${printers.minimizer}"`);
+	}
+	const { options, log } = printOptions(rest);
+	/** @type {string[]} */
+	const visits = [];
+	const visitors =
+		visit === undefined ? undefined : visitorsOf(visit, printers.enums, visits);
+	const call = minimizer || {};
+	checkKeys(call, MINIMIZER_KEYS, "minimizer");
+	const map =
+		call.sourceMap === undefined
+			? undefined
+			: JSON.parse(fs.readFileSync(path.join(dir, call.sourceMap), "utf8"));
+	const extractComments =
+		call.extractComments === undefined
+			? undefined
+			: /** @type {{ extractComments: unknown }} */ (
+					/** @type {unknown} */ (
+						printOptions(
+							/** @type {PrintOptionSet} */ (
+								/** @type {unknown} */ ({
+									extractComments: call.extractComments
+								})
+							)
+						).options
+					)
+				).extractComments;
+	/** @type {string[]} */
+	const values = [];
+	try {
+		/** @type {{ code: string, [key: string]: EXPECTED_ANY }} */
+		let result;
+		if (minimizes) {
+			const asset = call.asset || printers.asset;
+			result = await printers.load()(
+				{ [asset]: call.buffer ? Buffer.from(source, "utf8") : source },
+				map,
+				options,
+				extractComments
+			);
+		} else {
+			const processor = new printers.Processor();
+			if (visitors !== undefined) processor.use(visitors);
+			result =
+				print === "process"
+					? processor.process(source, options)
+					: await processor.processAsync(source, options);
+		}
+		values.push(result.code);
+		if (minimizer !== undefined) {
+			const { code, ...returned } = result;
+			values.push(JSON.stringify(returned, errorText));
+		} else {
+			/** @type {string[]} */
+			const reported = [];
+			for (const key of REPORTED) {
+				const list = result[key];
+				if (list !== undefined && list.length > 0) {
+					reported.push(`${key}: ${list.map(reportText).join(" | ")}`);
+				}
+			}
+			if (reported.length > 0) values.push(reported.join("\n"));
+		}
+		if (checks !== undefined) {
+			values.push(summaryText(checks(result, { source, spec: set })));
+		}
+	} catch (err) {
+		values.push(
+			isStackOverflow(err)
+				? OVERFLOW
+				: `throws: ${/** @type {Error} */ (err).message}`
+		);
+	}
+	if (visitors !== undefined) values.push(visits.join("\n"));
+	if (log !== undefined) values.push(log.join(" "));
+	return values.map((value) =>
+		generated.has(source) ? snapshotOf(source, value) : snapshotText(value)
+	);
+};
+
+module.exports = {
+	INVARIANT_BUDGET,
+	OVERFLOW,
+	answerOf,
+	declaresPrint,
+	enumValue,
+	fixture,
+	fixtures,
+	isStackOverflow,
+	printOptions,
+	readPrint,
+	readRun,
+	snapshotOf,
+	snapshotOfPieces,
+	snapshotText,
+	treeLines,
+	unexplained,
+	unlessOverflow,
+	walkLine
+};

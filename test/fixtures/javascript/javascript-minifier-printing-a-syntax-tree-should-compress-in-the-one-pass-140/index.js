@@ -1,0 +1,1 @@
+function f() { function r() { return a() } function a() { return arguments.callee } function s() { return b(1) } function b(n) { return () => n } return [r(), r(), s(), s()] }

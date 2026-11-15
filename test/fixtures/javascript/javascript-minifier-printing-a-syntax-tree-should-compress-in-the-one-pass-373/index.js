@@ -1,0 +1,1 @@
+function f(){try{g()}catch(r){eval("h(r)")}}

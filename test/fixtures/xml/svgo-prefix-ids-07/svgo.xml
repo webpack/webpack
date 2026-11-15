@@ -1,0 +1,7 @@
+<svg width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .prefixIds_07_svg_txt__test{color:blue}#test{color:red}
+    </style>
+    <rect class="prefixIds_07_svg_txt__test" x="10" y="10" width="100" height="100"/>
+    <rect class="" id="test" x="10" y="10" width="100" height="100"/>
+</svg>

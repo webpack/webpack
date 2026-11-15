@@ -1,0 +1,12 @@
+[
+	{
+		"mode": "minify",
+		"compress": {
+			"toplevel": false,
+			"drop_console": true
+		},
+		"mangle": {
+			"toplevel": false
+		}
+	}
+]

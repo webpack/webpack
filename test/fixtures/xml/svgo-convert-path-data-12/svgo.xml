@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 50h30z"/>
+    <path d="M10 50h-30z"/>
+    <path d="M10 50h-80"/>
+    <path d="M10 50h80"/>
+    <path d="M10 50v30z"/>
+    <path d="M10 50V20z"/>
+    <path d="M10 50v-80"/>
+    <path d="M10 50v80"/>
+    <path d="M10 50v30V0"/>
+    <path d="M10 50V10v70"/>
+    <path d="m10 50 10 10 20 20 10 10"/>
+    <path d="M10 50h70H0"/>
+    <path d="M10 50H0h80"/>
+    <path d="M10 50H0m30-40L10 80"/>
+</svg>

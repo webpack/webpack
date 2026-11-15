@@ -1,0 +1,1 @@
+function f(){try{return}catch(e){throw 9}finally{return}}function g(){try{return}finally{h();return}}function k(){try{return}catch(e){var q}finally{return}}for(;;)try{continue}catch(e){h()}finally{g();continue}

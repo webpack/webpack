@@ -1,0 +1,72 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents"
+		},
+		"visit": {
+			"types": [
+				"AtRule",
+				"QualifiedRule",
+				"Declaration",
+				"Function"
+			],
+			"fields": [
+				"name",
+				"source",
+				"childCount"
+			],
+			"exit": false
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents",
+			"skip": {
+				"types": [
+					"Function"
+				]
+			}
+		},
+		"visit": {
+			"types": [
+				"AtRule",
+				"QualifiedRule",
+				"Declaration",
+				"Function"
+			],
+			"fields": [
+				"name",
+				"source",
+				"childCount"
+			],
+			"exit": false
+		}
+	},
+	{
+		"entry": "SourceProcessor",
+		"options": {
+			"as": "block-contents",
+			"skip": {
+				"types": [
+					"SimpleBlock"
+				]
+			}
+		},
+		"visit": {
+			"types": [
+				"AtRule",
+				"QualifiedRule",
+				"Declaration",
+				"Function"
+			],
+			"fields": [
+				"name",
+				"source",
+				"childCount"
+			],
+			"exit": false
+		}
+	}
+]

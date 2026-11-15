@@ -1,0 +1,1 @@
+result = (async function () { var s = []; for (let i = 0; i < 3; i++) { s.push(await Promise.resolve(i)) } for (const v of [4, 5]) { await null; s.push(() => v) } return s.map(x => typeof x === 'function' ? x() : x).join() })();

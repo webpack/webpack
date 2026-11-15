@@ -1,0 +1,1 @@
+(function () { var zAlpha = 1, zBeta = { zAlpha: 2 }; function h({ zAlpha = 3, zBeta: g }) { return zAlpha + g; } var o = { zAlpha, zBeta, zSum() { return this.zAlpha; } }; console.log(o.zAlpha, o.zBeta.zAlpha, o.zSum(), h({ zAlpha: 4, zBeta: 5 }), h({ zBeta: 6 })); })();

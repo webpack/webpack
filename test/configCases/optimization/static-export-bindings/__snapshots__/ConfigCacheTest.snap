@@ -281,6 +281,7 @@ __webpack_require__.r(__webpack_exports__);
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ownConst: () => (/* binding */ ownConst),
 /* harmony export */   reConst: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal),
 /* harmony export */   reCounter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter),
 /* harmony export */   reFn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
@@ -294,10 +295,6 @@ const ownConst = \\"own\\";
 
 
 
-
-/* harmony export */ __webpack_require__.d(__webpack_exports__, [
-/* harmony export */   \\"ownConst\\", 0, /* binding */ ownConst
-/* harmony export */ ]);
 
 
 /***/ },
@@ -575,9 +572,18 @@ it(\\"should use getter for multi-level re-export chain\\", () => {
 	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
 });
 
-it(\\"should bind own const as value in mixed module\\", () => {
-	expectValueDescriptor(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__, \\"ownConst\\");
+it(\\"should bind own const as getter when a re-export key sorts after it\\", () => {
+	// A value descriptor registers at the end of the module, after the re-export
+	// getters at the start, which would break the namespace's sorted key order
+	expectGetterDescriptor(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__, \\"ownConst\\");
 	expect(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__.ownConst).toBe(\\"own\\");
+	expect(Object.keys(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__)).toEqual([
+		\\"ownConst\\",
+		\\"reConst\\",
+		\\"reCounter\\",
+		\\"reFn\\",
+		\\"reIncrement\\"
+	]);
 });
 
 it(\\"should keep re-exported values in mixed module\\", () => {
@@ -966,6 +972,7 @@ __webpack_require__.r(__webpack_exports__);
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ownConst: () => (/* binding */ ownConst),
 /* harmony export */   reConst: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal),
 /* harmony export */   reCounter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter),
 /* harmony export */   reFn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
@@ -979,10 +986,6 @@ const ownConst = \\"own\\";
 
 
 
-
-/* harmony export */ __webpack_require__.d(__webpack_exports__, [
-/* harmony export */   \\"ownConst\\", 0, /* binding */ ownConst
-/* harmony export */ ]);
 
 
 /***/ },
@@ -1260,9 +1263,18 @@ it(\\"should use getter for multi-level re-export chain\\", () => {
 	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
 });
 
-it(\\"should bind own const as value in mixed module\\", () => {
-	expectValueDescriptor(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__, \\"ownConst\\");
+it(\\"should bind own const as getter when a re-export key sorts after it\\", () => {
+	// A value descriptor registers at the end of the module, after the re-export
+	// getters at the start, which would break the namespace's sorted key order
+	expectGetterDescriptor(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__, \\"ownConst\\");
 	expect(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__.ownConst).toBe(\\"own\\");
+	expect(Object.keys(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__)).toEqual([
+		\\"ownConst\\",
+		\\"reConst\\",
+		\\"reCounter\\",
+		\\"reFn\\",
+		\\"reIncrement\\"
+	]);
 });
 
 it(\\"should keep re-exported values in mixed module\\", () => {
@@ -1651,6 +1663,7 @@ __webpack_require__.r(__webpack_exports__);
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ownConst: () => (/* binding */ ownConst),
 /* harmony export */   reConst: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal),
 /* harmony export */   reCounter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter),
 /* harmony export */   reFn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
@@ -1664,10 +1677,6 @@ const ownConst = \\"own\\";
 
 
 
-
-/* harmony export */ __webpack_require__.d(__webpack_exports__, [
-/* harmony export */   \\"ownConst\\", 0, /* binding */ ownConst
-/* harmony export */ ]);
 
 
 /***/ },
@@ -1945,9 +1954,18 @@ it(\\"should use getter for multi-level re-export chain\\", () => {
 	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
 });
 
-it(\\"should bind own const as value in mixed module\\", () => {
-	expectValueDescriptor(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__, \\"ownConst\\");
+it(\\"should bind own const as getter when a re-export key sorts after it\\", () => {
+	// A value descriptor registers at the end of the module, after the re-export
+	// getters at the start, which would break the namespace's sorted key order
+	expectGetterDescriptor(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__, \\"ownConst\\");
 	expect(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__.ownConst).toBe(\\"own\\");
+	expect(Object.keys(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__)).toEqual([
+		\\"ownConst\\",
+		\\"reConst\\",
+		\\"reCounter\\",
+		\\"reFn\\",
+		\\"reIncrement\\"
+	]);
 });
 
 it(\\"should keep re-exported values in mixed module\\", () => {
@@ -2336,6 +2354,7 @@ __webpack_require__.r(__webpack_exports__);
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ownConst: () => (/* binding */ ownConst),
 /* harmony export */   reConst: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal),
 /* harmony export */   reCounter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter),
 /* harmony export */   reFn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
@@ -2349,10 +2368,6 @@ const ownConst = \\"own\\";
 
 
 
-
-/* harmony export */ __webpack_require__.d(__webpack_exports__, [
-/* harmony export */   \\"ownConst\\", 0, /* binding */ ownConst
-/* harmony export */ ]);
 
 
 /***/ },
@@ -2630,9 +2645,18 @@ it(\\"should use getter for multi-level re-export chain\\", () => {
 	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
 });
 
-it(\\"should bind own const as value in mixed module\\", () => {
-	expectValueDescriptor(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__, \\"ownConst\\");
+it(\\"should bind own const as getter when a re-export key sorts after it\\", () => {
+	// A value descriptor registers at the end of the module, after the re-export
+	// getters at the start, which would break the namespace's sorted key order
+	expectGetterDescriptor(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__, \\"ownConst\\");
 	expect(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__.ownConst).toBe(\\"own\\");
+	expect(Object.keys(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__)).toEqual([
+		\\"ownConst\\",
+		\\"reConst\\",
+		\\"reCounter\\",
+		\\"reFn\\",
+		\\"reIncrement\\"
+	]);
 });
 
 it(\\"should keep re-exported values in mixed module\\", () => {

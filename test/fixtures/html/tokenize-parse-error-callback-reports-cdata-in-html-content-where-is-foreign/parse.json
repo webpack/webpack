@@ -1,0 +1,9 @@
+[
+	{
+		"entry": "tokenize",
+		"options": {
+			"isForeign": false
+		},
+		"visit": true
+	}
+]

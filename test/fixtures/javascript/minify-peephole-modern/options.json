@@ -1,0 +1,13 @@
+[
+	{
+		"mode": "minify",
+		"ecma": 2022,
+		"compress": {
+			"passes": 2
+		},
+		"mangle": false,
+		"keep_fnames": true,
+		"keep_classnames": true,
+		"behavior": true
+	}
+]

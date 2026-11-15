@@ -1,0 +1,15 @@
+<svg id="test" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <style>
+	  .a { fill: blue; }
+	</style>
+	<style type="">
+	  .b { fill: green; }
+	</style>
+    <style type="text/css">
+	  .c { fill: red; }
+	</style>
+	<style type="text/invalid">
+	  .d { fill: blue; }
+	</style>
+    <rect width="100" height="100" class="st0" style="stroke-width:3;margin-top:1em;margin-right:1em;margin-bottom:1em;margin-left:1em"/>
+</svg>

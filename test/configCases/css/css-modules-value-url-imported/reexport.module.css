@@ -1,0 +1,5 @@
+@value aliasBg from "./style.module.css";
+
+.uses-reexported-bg {
+	background-image: aliasBg;
+}

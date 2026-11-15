@@ -1,0 +1,1 @@
+function f(e, t, s){ var i; i = e.indexOf("x", t); if (i === -1 || i > s) return 1; let n = g(e); r(n); let o = {a: 1}; o.a; i = 2; while (i) i--; var p = h(); q += p; var u = h(); w(u); w = 1; let m = h(); return [m, 2] } function r(){} var q, w

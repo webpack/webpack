@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <polyline points="10,10 20"/>
+    <polyline points="10,80 20,50 50,20 80,10"/>
+    <polyline points="20 ,10  50    40 30.5-1e-1 , 20 10"/>
+    <polyline stroke="#000" points="10,10 20,20 10,20"/>
+    <polygon points="10,10 20"/>
+    <polygon points="10,80 20,50 50,20 80,10"/>
+    <polygon points="20 10  50 40 30,20"/>
+    <polygon stroke="#000" points="10,10 20,20 10,20"/>
+    <polygon stroke="none" points="10,10 20,20 10,20"/>
+</svg>

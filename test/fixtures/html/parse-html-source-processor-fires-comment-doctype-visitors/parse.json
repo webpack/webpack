@@ -1,0 +1,15 @@
+[
+	{
+		"entry": "SourceProcessor",
+		"visit": {
+			"types": [
+				"Comment",
+				"Doctype"
+			],
+			"fields": [
+				"value"
+			],
+			"exit": false
+		}
+	}
+]

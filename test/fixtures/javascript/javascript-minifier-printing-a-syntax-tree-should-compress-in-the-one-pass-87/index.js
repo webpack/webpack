@@ -1,0 +1,1 @@
+function f(){ var g = () => a; h(g) } function i(){ var k = async () => 1; h(k) }

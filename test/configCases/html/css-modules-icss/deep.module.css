@@ -1,0 +1,1 @@
+.deep { composes: base from "./base.module.css"; margin: 3px; }
