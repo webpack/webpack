@@ -229,6 +229,24 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(unbraced.code).toBe("function f(){for(;;)if(!xx)yy(),zz()}");
 		// cspell:disable-next-line
 		expect(unbraced.map.mappings).toBe("AAAA,SAASA,IAAI,OAAQ,IAAGC,GAAYC");
+		// A case falling into the next keeps its test's place, its body mapping nothing.
+		const merged = /** @type {{ code: string, map: { names: string[], mappings: string } }} */ (
+			new SourceProcessor().process(
+				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-751"),
+				{
+					mode: "minify",
+					compress: { toplevel: false },
+					mangle: false,
+					source: "a.js"
+				}
+			)
+		);
+		expect(merged.code).toBe(
+			"function f(x){switch(x){case zero:case one:return g();case two:h()}}"
+		);
+		expect(merged.map.names).toEqual(["f", "x", "zero", "one", "g", "two", "h"]);
+		// cspell:disable-next-line
+		expect(merged.map.mappings).toBe("AAAA,SAASA,EAAEC,GAAG,OAAOA,GAAG,KAAKC,KAAgB,KAAKC,IAAI,OAAOC,IAAI,KAAKC,IAAIC");
 	});
 
 	it("should refuse an option it does not know, and a module statement off the top level", () => {
@@ -371,6 +389,18 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				drop_console: true
 			})
 		).toBe("g();");
+		// As terser walks a chain to its root, one on a `console` member goes too, but `bind` makes a function.
+		expect(
+			print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-24"), {
+				drop_console: true
+			})
+		).toBe("x=console.log.bind(console),console.a.b.c(),y=void 0,console.log.bind(console);");
+		// A list names the member of `console` the chain starts at.
+		expect(
+			print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-25"), {
+				drop_console: ["log"]
+			})
+		).toBe("console.a.b.c();function run(log){console[log].b.c()}");
 		// `pure_funcs` marks the calls it names pure, by how the callee is written.
 		expect(
 			print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-11"), {
@@ -693,6 +723,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-as-quote-keys-inline-5"), { format: { inline_script: false } }, "'\\x75se strict';console.log(1);"],
 			// An escaped `\\<` gives its backslash up to the `\\x3c` replacing it.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-as-quote-keys-inline-6"), {}, "'\\x3c!--';console.log(1);"],
+			// A `join` keeps apart only pieces that meet as `</script`, `<!--` or `-->`.
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-as-quote-keys-inline-10"), {}, "f(`<D s={${p.s}} />\\nOnly ${m}.\\n\\nEnd.`),f([`a<`,`/script>${x}`].join(\"\")),f([`a<!`,`-- ${x}`].join(\"\")),f([`a--`,`> ${x}`].join(\"\")),f(`a<${x}/script>`),f([`a${x}<`,\"/script \"].join(\"\")),f(`\\x3c!-- ${x}b`),f(`a${x}\\x3c!-- b`),f(`a<!${--x}${y}`),f(`a\\x3c!--${x}`),f([`a--!`,`> ${x}`].join(\"\")),f([\"</scr\",`ipt>${x}!`,`${y}`].join(\"\")),f([x+\"</script\",\"/\"].join(\"\"));"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-as-quote-keys-inline-10"), { format: { inline_script: false } }, "f(`<D s={${p.s}} />\\nOnly ${m}.\\n\\nEnd.`),f(`a<${`/script>${x}`}`),f(`a<!${`-- ${x}`}`),f(`a--> ${x}`),f(`a<${x}/script>`),f(`${`a${x}<`}/script `),f(`<!-- ${x}b`),f(`a${x}<!-- b`),f(`a<!${--x}${y}`),f(`a<!--${x}`),f(`a--!> ${x}`),f(`</script>${x}!${y}`),f(x+\"</script/\");"],
 			// A reserved list may be a set, as terser reads it; anything else reserves nothing.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-as-quote-keys-inline-7"), { mangle: { reserved: new Set(["a"]) } }, "function f(f){return f}f(1);"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-as-quote-keys-inline-7"), { mangle: { reserved: "a" } }, "function f(a){return a}f(1);"],
