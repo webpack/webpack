@@ -17,16 +17,8 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/replace_known_methods.rs:207",
 			"oxc minifier: peephole/replace_known_methods.rs:209",
 			"oxc minifier: peephole/replace_known_methods.rs:210",
-			"oxc minifier: peephole/replace_known_methods.rs:405",
-			"oxc minifier: peephole/replace_known_methods.rs:406",
 			"oxc minifier: peephole/replace_known_methods.rs:407",
-			"oxc minifier: peephole/replace_known_methods.rs:408",
-			"oxc minifier: peephole/replace_known_methods.rs:410",
-			"oxc minifier: peephole/replace_known_methods.rs:411",
-			"oxc minifier: peephole/replace_known_methods.rs:438",
-			"oxc minifier: peephole/replace_known_methods.rs:439",
 			"oxc minifier: peephole/replace_known_methods.rs:440",
-			"oxc minifier: peephole/replace_known_methods.rs:441",
 			"oxc minifier: peephole/replace_known_methods.rs:443",
 			"oxc minifier: peephole/replace_known_methods.rs:444",
 			"oxc minifier: peephole/replace_known_methods.rs:944",
@@ -123,9 +115,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: ecmascript/may_have_side_effects.rs:796",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:803",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:804",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1048",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1059",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1158",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1413",
 			"swc minifier: fixture/issues/9460/side-effects/input.js",
 			"swc minifier: fixture/issues/12566/defaults/input.js",
@@ -1199,10 +1188,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc drops an unused `Symbol.for`, which webpack keeps: running it at build time would keep its key in the build's own symbol registry",
-		[
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1271",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1416"
-		]
+		[]
 	],
 	[
 		"oxc's output is wrong: it drops a write in a `for…of` or `for…in` right side to the loop's own `let`, which throws a ReferenceError there, as its own test keeps it",
