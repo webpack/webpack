@@ -14008,6 +14008,7 @@ declare interface HtmlPrintOptions {
 	removeXmlDoctype?: boolean;
 	cleanupSvgIds?: boolean;
 	removeHiddenSvgElements?: boolean;
+	svgPrecision?: number;
 	mergeSvgPaths?: boolean;
 	reuseSvgPaths?: boolean;
 	sortSvgDefinitions?: boolean;
@@ -14220,6 +14221,11 @@ declare interface HtmlProcessOptions {
 	 * when minifying XML, remove ID-free SVG content hidden by `display="none"`, zero opacity or size, a `visibility` nothing inside sets back, or geometry that draws nothing (default false)
 	 */
 	removeHiddenSvgElements?: boolean;
+
+	/**
+	 * when minifying XML, round the SVG numbers and path data the shortening switches shorten to this many decimal places, a whole number from 0 to 15 (default: exact)
+	 */
+	svgPrecision?: number;
 
 	/**
 	 * drop an attribute whose value is the element's own default; `true` is `"smart"`, and `"all"` also drops the spec defaults a selector can match, and with them a value naming no keyword where that says the same (default false)
@@ -26153,6 +26159,12 @@ declare interface OptimizationMinimizeXml {
 	 * @since 5.113.0
 	 */
 	mergePaths?: boolean;
+
+	/**
+	 * Round SVG geometry, path data, transforms and presentation numbers to this many decimal places, a whole number from 0 to 15, wherever `shortenNumbers` and `shortenPathData` shorten them. Path points round where they land, so error never accumulates, and curves and arcs that draw straight lines become lines. Off by default because rounding moves geometry; svgo rounds to 3.
+	 * @since 5.113.0
+	 */
+	precision?: number;
 
 	/**
 	 * Remove SVG `desc` elements. Off by default because they describe the image for assistive technology.

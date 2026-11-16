@@ -3538,6 +3538,11 @@ export interface OptimizationMinimizeXml {
 	 */
 	mergePaths?: boolean;
 	/**
+	 * Round SVG geometry, path data, transforms and presentation numbers to this many decimal places, a whole number from 0 to 15, wherever `shortenNumbers` and `shortenPathData` shorten them. Path points round where they land, so error never accumulates, and curves and arcs that draw straight lines become lines. Off by default because rounding moves geometry; svgo rounds to 3.
+	 * @since 5.113.0
+	 */
+	precision?: number;
+	/**
 	 * Remove SVG `desc` elements. Off by default because they describe the image for assistive technology.
 	 * @since 5.113.0
 	 */
