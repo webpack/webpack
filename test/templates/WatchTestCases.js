@@ -187,7 +187,7 @@ const describeCases = (config) => {
 							}
 							return closing;
 						};
-						/** @type {{ name: string, done?: boolean, stats?: import("../../").Stats | import("../../").MultiStats, it?: EXPECTED_ANY, getNumberOfTests?: () => number }[]} */
+						/** @type {{ name: string, done?: boolean, comparing?: boolean, lateHash?: string, stats?: import("../../").Stats | import("../../").MultiStats, it?: EXPECTED_ANY, getNumberOfTests?: () => number }[]} */
 						const runs = fs
 							.readdirSync(testDirectory)
 							.sort()
@@ -757,6 +757,12 @@ const describeCases = (config) => {
 												}
 												if (unseenChanges.size > 0) return;
 												clearTimeout(retouchTimer);
+												// a late event can rebuild what the build being compared left stale:
+												// that build's comparison, or the recovery it fails into, decides
+												if (run.comparing) {
+													run.lateHash = hash;
+													return;
+												}
 												if (run.done && hash === lastHash) return;
 												if (run.done && lastHash !== hash) {
 													throw new Error(
@@ -766,11 +772,21 @@ const describeCases = (config) => {
 												}
 												lastHash = hash;
 												run.done = true;
+												run.comparing = true;
+												run.lateHash = undefined;
 												try {
 													await compare(stats);
 												} catch (error) {
+													run.comparing = false;
 													run.done = false;
 													return handleWatchError(/** @type {Error} */ (error));
+												}
+												run.comparing = false;
+												if (run.lateHash !== undefined && run.lateHash !== hash) {
+													throw new Error(
+														`Compilation changed but no change was issued ${hash} != ${run.lateHash} (run ${runIdx})\n` +
+															`Triggering change: ${triggeringFilename}`
+													);
 												}
 												if (failed) return;
 												run.stats = stats;
