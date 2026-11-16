@@ -14,5 +14,6 @@ module.exports = [
 	warning,
 	warning,
 	hashWarning,
-	hashWarning
+	hashWarning,
+	warning
 ];

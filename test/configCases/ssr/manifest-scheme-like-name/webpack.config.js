@@ -105,5 +105,16 @@ module.exports = [
 	// a `#` in the name, and a function filename for the static url path
 	{ ...config(() => "[name].js", {}, 9), entry: "./only-query.js" },
 	{ ...config("[name].js", {}, 10), entry: "./only-hash.js" },
-	{ ...config(() => "[name].js", {}, 11), entry: "./only-hash.js" }
+	{ ...config(() => "[name].js", {}, 11), entry: "./only-hash.js" },
+	// a parameterized id, written whole as `[name:3]` is
+	config(
+		"[id:5].js",
+		{
+			"x:y": "./x:y.js",
+			plain: "plain.js",
+			"/z:w": "./z:w.js",
+			"q_r:s": "./q_r:s.js"
+		},
+		12
+	)
 ];
