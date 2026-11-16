@@ -11,6 +11,7 @@
 	<g pointer-events="all"><rect width="10" height="10" fill="none" fill-rule="evenodd"/><rect width="1" height="1"/></g>
 	<g fill="none"><circle r="5" fill-opacity=".5"/></g>
 	<text stroke-dasharray="2">text</text>
+	<path d="M0 0h10" stroke-width="10" stroke-linecap="round" style="STROKE:red"/>
 	<use href="#lent" stroke="red"/>
 	<use href="#lentGroup" stroke="red"/>
 </svg>

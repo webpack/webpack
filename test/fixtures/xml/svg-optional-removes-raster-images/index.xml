@@ -4,4 +4,9 @@
 	<image href="data:image/gif;base64,R0lGOD" width="1" height="1"/>
 	<image href="drawing.svg" width="1" height="1"/>
 	<image width="1" height="1"/>
+	<image href="data:image/svg+xml,%3Csvg%3E%3Cdesc%3Elogo.png%3C/desc%3E%3C/svg%3E" width="1" height="1"/>
+	<image href="icon.svg?v=a.png" width="1" height="1"/>
+	<image href="photo.PNG?v=1" width="1" height="1"/>
+	<image href="data:image/jpeg;base64,AA" width="1" height="1"/>
+	<image href="a.png#x" width="1" height="1"/>
 </svg>

@@ -21,6 +21,57 @@ const { toJsStringLiteral } = require("../lib/util/identifier");
 const { toLatin1Source } = require("./latin1-source");
 
 const TARGET = path.resolve(__dirname, "../lib/html/data.js");
+
+/**
+ * Read each inherited presentation property's initial value from `mdn-data`,
+ * adding the spellings that equal it.
+ * @returns {[string, string][]} each property and the spellings of its initial value
+ */
+const svgInheritedInitialValues = () => {
+	/** @type {Record<string, { initial: string | string[], inherited: boolean }>} */
+	const properties = require("mdn-data/css/properties.json");
+
+	/** @type {Record<string, string>} */
+	const supplement = {
+		// mdn-data reads `stroke` as a shorthand of its longhands; the SVG paint's
+		// initial value is `none` (SVG 2, §13.6).
+		stroke: "none",
+		// Every spelling of black, and `normal` as its numeric weight (CSS Fonts 4).
+		fill: "#000 #000000",
+		"font-weight": "400",
+		// A unitless length is in user units, which are CSS pixels.
+		"stroke-width": "1"
+	};
+	return [
+		"fill",
+		"fill-opacity",
+		"fill-rule",
+		"clip-rule",
+		"stroke",
+		"stroke-opacity",
+		"stroke-width",
+		"stroke-linecap",
+		"stroke-linejoin",
+		"stroke-miterlimit",
+		"stroke-dasharray",
+		"stroke-dashoffset",
+		"marker-start",
+		"marker-mid",
+		"marker-end",
+		"visibility",
+		"text-anchor",
+		"font-style",
+		"font-variant",
+		"font-weight"
+	].map((name) => {
+		const property = properties[name];
+		if (!property || property.inherited !== true) {
+			throw new Error(`${name} is no inherited property in mdn-data`);
+		}
+		const initial = name === "stroke" ? "" : String(property.initial);
+		return [name, [initial, supplement[name] || ""].filter(Boolean).join(" ")];
+	});
+};
 const SYNTAX_TARGET = path.resolve(__dirname, "../lib/html/syntax-parser.js");
 // Vendored because the table is frozen — the spec says it "will not be expanded
 // or changed in the future" — and no package carries it faithfully: the ones
@@ -677,28 +728,7 @@ const PARSER_TABLES = [
 		"SVG_INHERITED_INITIAL_VALUES",
 		"object",
 		"Inherited presentation attributes and the spellings of their initial values, which an element no ancestor sets takes anyway.",
-		[
-			["fill", "#000 #000000 black"],
-			["fill-opacity", "1"],
-			["fill-rule", "nonzero"],
-			["clip-rule", "nonzero"],
-			["stroke", "none"],
-			["stroke-opacity", "1"],
-			["stroke-width", "1 1px"],
-			["stroke-linecap", "butt"],
-			["stroke-linejoin", "miter"],
-			["stroke-miterlimit", "4"],
-			["stroke-dasharray", "none"],
-			["stroke-dashoffset", "0"],
-			["marker-start", "none"],
-			["marker-mid", "none"],
-			["marker-end", "none"],
-			["visibility", "visible"],
-			["text-anchor", "start"],
-			["font-style", "normal"],
-			["font-variant", "normal"],
-			["font-weight", "normal 400"]
-		]
+		svgInheritedInitialValues()
 	],
 	[
 		"SVG_TRANSFORM_FOLD_TARGETS",
