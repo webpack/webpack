@@ -920,7 +920,7 @@ const EXPECTED = [
 		relation: "idempotence",
 		contains: "rename-only",
 		presets: ["default"],
-		why: "known bug: the mangler ranks the characters it names from by how often the source holds them, the names it renames and the code compressing drops included, so its output ranks them otherwise and a second pass renames (the `expected.json` of 323 fixtures, `hz-1` among them)"
+		why: "known bug: the mangler ranks the characters it names from by how often the source holds them, counted before the one pass prints, so the code compressing rewrites or drops still counts: its output ranks them otherwise and a second pass renames (the `expected.json` of every fixture it renames, `hz-1` among them)"
 	},
 	{
 		relation: "idempotence",
@@ -928,13 +928,6 @@ const EXPECTED = [
 		source: "test/cases/parsing/issue-7519/index.js",
 		presets: ["default"],
 		why: 'known bug: an import compressing leaves unread is renamed all the same, and a second pass leaves it as imported: `import {mult} from "a"; f(() => { (x() || x()) && false && mult(); }); f(() => { if (x() && false) mult(); });` prints `import{mult as l}from"a";…`'
-	},
-	{
-		relation: "residue",
-		contains: "1;",
-		source: "acorn corpus: tests.js",
-		presets: ["default"],
-		why: "known bug: a loop its first statement breaks out of keeps its test as a statement: `while (true) { break }` prints `1;`, which a second pass drops"
 	},
 	{
 		relation: "residue",

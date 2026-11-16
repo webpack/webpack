@@ -10735,7 +10735,7 @@ exports[`XML syntax — invariants svgo-remove-comments-02 parses 1`] = `"[{\\"t
 exports[`XML syntax — invariants svgo-remove-comments-02 parses 2`] = `""`;
 
 exports[`XML syntax — invariants svgo-remove-comments-02 prints {"print":"xmlMinify","minimizer":{"asset":"index.svg"},"collapseWhitespace":true,"sortAttributes":true,"removeMetadata":true,"removeEditorData":true,"removeEmptyAttributes":true,"removeEmptyElements":true,"shortenColors":true,"shortenNumbers":true,"shortenPathData":true,"sortSymbols":true,"convertShapes":true,"cleanupStructure":true,"mergePaths":true,"reusePaths":true,"sortDefinitions":true,"removeUnusedNamespaces":true} 1`] = `
-"<svg xmlns=\\"http://www.w3.org/2000/svg\\">
+"<!--!Icon Font v1 by @iconfont - Copyright 2023 Icon Font CIC.--><svg xmlns=\\"http://www.w3.org/2000/svg\\">
     test
 </svg>"
 `;
@@ -10755,7 +10755,7 @@ exports[`XML syntax — invariants svgo-remove-comments-03 parses 1`] = `"[{\\"t
 exports[`XML syntax — invariants svgo-remove-comments-03 parses 2`] = `""`;
 
 exports[`XML syntax — invariants svgo-remove-comments-03 prints {"print":"xmlMinify","minimizer":{"asset":"index.svg"},"collapseWhitespace":true,"sortAttributes":true,"removeMetadata":true,"removeEditorData":true,"removeEmptyAttributes":true,"removeEmptyElements":true,"shortenColors":true,"shortenNumbers":true,"shortenPathData":true,"sortSymbols":true,"convertShapes":true,"cleanupStructure":true,"mergePaths":true,"reusePaths":true,"sortDefinitions":true,"removeUnusedNamespaces":true} 1`] = `
-"<svg xmlns=\\"http://www.w3.org/2000/svg\\">
+"<!--!Icon Font v1 by @iconfont - Copyright 2023 Icon Font CIC.--><svg xmlns=\\"http://www.w3.org/2000/svg\\">
     test
 </svg>"
 `;
