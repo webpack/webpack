@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:x="urn:x" xmlns:y="urn:y" xmlns:z="urn:z">
+	<linearGradient id="a"><stop stop-color="#a8c4cc"/></linearGradient>
+	<linearGradient id="b" xlink:href="#a" x:note="1" y:note="2" z:note="3"/>
+	<path id="p" d="M0 0h10v10z"/>
+	<rect width="150" height="150" fill="url(#b)" data-note="x:y"/>
+	<use xlink:href="#p"/>
+	<y:data/>
+	<text>z:label</text>
+</svg>

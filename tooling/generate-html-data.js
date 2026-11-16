@@ -21,6 +21,57 @@ const { toJsStringLiteral } = require("../lib/util/identifier");
 const { toLatin1Source } = require("./latin1-source");
 
 const TARGET = path.resolve(__dirname, "../lib/html/data.js");
+
+/**
+ * Read each inherited presentation property's initial value from `mdn-data`,
+ * adding the spellings that equal it.
+ * @returns {[string, string][]} each property and the spellings of its initial value
+ */
+const svgInheritedInitialValues = () => {
+	/** @type {Record<string, { initial: string | string[], inherited: boolean }>} */
+	const properties = require("mdn-data/css/properties.json");
+
+	/** @type {Record<string, string>} */
+	const supplement = {
+		// mdn-data reads `stroke` as a shorthand of its longhands; the SVG paint's
+		// initial value is `none` (SVG 2, §13.6).
+		stroke: "none",
+		// Every spelling of black, and `normal` as its numeric weight (CSS Fonts 4).
+		fill: "#000 #000000",
+		"font-weight": "400",
+		// A unitless length is in user units, which are CSS pixels.
+		"stroke-width": "1"
+	};
+	return [
+		"fill",
+		"fill-opacity",
+		"fill-rule",
+		"clip-rule",
+		"stroke",
+		"stroke-opacity",
+		"stroke-width",
+		"stroke-linecap",
+		"stroke-linejoin",
+		"stroke-miterlimit",
+		"stroke-dasharray",
+		"stroke-dashoffset",
+		"marker-start",
+		"marker-mid",
+		"marker-end",
+		"visibility",
+		"text-anchor",
+		"font-style",
+		"font-variant",
+		"font-weight"
+	].map((name) => {
+		const property = properties[name];
+		if (!property || property.inherited !== true) {
+			throw new Error(`${name} is no inherited property in mdn-data`);
+		}
+		const initial = name === "stroke" ? "" : String(property.initial);
+		return [name, [initial, supplement[name] || ""].filter(Boolean).join(" ")];
+	});
+};
 const SYNTAX_TARGET = path.resolve(__dirname, "../lib/html/syntax-parser.js");
 // Vendored because the table is frozen — the spec says it "will not be expanded
 // or changed in the future" — and no package carries it faithfully: the ones
@@ -630,6 +681,88 @@ const PARSER_TABLES = [
 		["g", "path", "rect", "circle", "ellipse", "line", "polyline", "polygon"]
 	],
 	[
+		"XML_ID_LIST_ATTRIBUTES",
+		"set",
+		"Attributes holding space-separated element IDs, which renaming an ID rewrites.",
+		[
+			"aria-activedescendant",
+			"aria-controls",
+			"aria-describedby",
+			"aria-details",
+			"aria-errormessage",
+			"aria-flowto",
+			"aria-labelledby",
+			"aria-owns",
+			"for",
+			"form",
+			"headers",
+			"itemref",
+			"list",
+			"popovertarget",
+			"commandfor",
+			"anchor"
+		]
+	],
+	[
+		"SVG_HIDDEN_ELEMENT_TARGETS",
+		"set",
+		"Rendered SVG elements that `display: none` or zero opacity hides together with their content.",
+		[
+			"a",
+			"circle",
+			"ellipse",
+			"foreignObject",
+			"g",
+			"image",
+			"line",
+			"path",
+			"polygon",
+			"polyline",
+			"rect",
+			"svg",
+			"text",
+			"use"
+		]
+	],
+	[
+		"SVG_INHERITED_INITIAL_VALUES",
+		"object",
+		"Inherited presentation attributes and the spellings of their initial values, which an element no ancestor sets takes anyway.",
+		svgInheritedInitialValues()
+	],
+	[
+		"SVG_TRANSFORM_FOLD_TARGETS",
+		"set",
+		"Elements that take a `transform` attribute in SVG 1.1 too, so a group's can move onto one.",
+		[
+			"a",
+			"circle",
+			"ellipse",
+			"g",
+			"image",
+			"line",
+			"path",
+			"polygon",
+			"polyline",
+			"rect",
+			"text",
+			"use"
+		]
+	],
+	[
+		"SVG_GROUP_INERT_ATTRIBUTES",
+		"set",
+		"Non-inherited presentation attributes that apply to no group, so one on a g paints nothing.",
+		[
+			"vector-effect",
+			"stop-color",
+			"stop-opacity",
+			"flood-color",
+			"flood-opacity",
+			"lighting-color"
+		]
+	],
+	[
 		"SVG_UNUSED_DEFINITION_CONTENT",
 		"set",
 		"Known non-textual SVG content removable from an unnamed, unreferenced definition.",
@@ -649,7 +782,9 @@ const PARSER_TABLES = [
 			"marker",
 			"mask",
 			"clipPath",
-			"symbol"
+			"symbol",
+			"a",
+			"use"
 		]
 	],
 	[
@@ -866,10 +1001,11 @@ const PARSER_TABLES = [
 	[
 		"SVG_WHITESPACE_CONTAINERS",
 		"set",
-		"SVG containers with no rendered character data. Text, descriptive, foreign and unknown elements remain opaque to whitespace cleanup.",
+		"SVG containers with no rendered character data; a link counts only where its parent does, so not inside text. Text, descriptive, foreign and unknown elements remain opaque to whitespace cleanup.",
 		[
 			"svg",
 			"g",
+			"a",
 			"defs",
 			"symbol",
 			"clipPath",

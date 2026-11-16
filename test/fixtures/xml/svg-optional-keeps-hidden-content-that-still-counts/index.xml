@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<filter id="f" filterUnits="userSpaceOnUse" x="0" y="0" width="100" height="100"><feFlood flood-color="red"/></filter>
+	<text x="10" y="50"><a opacity="0">XX</a><tspan><a visibility="hidden">XX</a></tspan>Y</text>
+	<path d="M10 10" filter="url(#f)"/>
+	<polyline points="10 10" filter="url(#f)"/>
+	<rect width="10" height="10" visibility="hidden" filter="url(#f)"/>
+	<switch><a><circle r="30" visibility="hidden"/><text>A</text></a></switch>
+	<polyline points="10 10" marker-end="none"/>
+	<path d="M10 10" marker-start="none"/>
+	<g visibility="hidden"><rect width="5" height="5" visibility="hidden"/></g>
+</svg>

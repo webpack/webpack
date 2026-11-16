@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<path id="p" d="M0 0h1"/>
+	<use href="#p"/>
+	<g id="unused"><rect width="0" height="1"/></g>
+</svg>

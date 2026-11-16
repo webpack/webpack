@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<linearGradient><stop offset="0" stop-color="red"/><stop offset="1"/></linearGradient>
+	<radialGradient><stop/></radialGradient>
+	<pattern><rect width="1" height="1"/></pattern>
+	<clipPath><path d="M0 0h1v1z"/></clipPath>
+	<mask><rect width="1" height="1"/></mask>
+	<marker><path d="M0 0h1"/></marker>
+	<symbol><rect width="1" height="1"/></symbol>
+	<g><clipPath><path d="M0 0h1"/></clipPath></g>
+	<pattern><rect id="named" width="1" height="1"/></pattern>
+	<mask id="mask"><rect width="1" height="1"/></mask>
+	<symbol><text>label</text></symbol>
+	<linearGradient><desc>kept</desc></linearGradient>
+	<use href="#named"/>
+	<path d="M0 0h1v1z"/>
+</svg>
