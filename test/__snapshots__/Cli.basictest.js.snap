@@ -1105,6 +1105,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-threads": Object {
+    "configs": Array [
+      Object {
+        "description": "Run CPU-heavy plugin work, such as minimization, on worker threads webpack keeps for the whole compiler.",
+        "multiple": false,
+        "path": "experiments.threads",
+        "type": "boolean",
+      },
+    ],
+    "description": "Run CPU-heavy plugin work, such as minimization, on worker threads webpack keeps for the whole compiler.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "experiments-threads-max": Object {
+    "configs": Array [
+      Object {
+        "description": "Number of worker threads. Defaults to one less than the number of CPUs; \`0\` runs the work on the main thread.",
+        "multiple": false,
+        "path": "experiments.threads.max",
+        "type": "number",
+      },
+    ],
+    "description": "Number of worker threads. Defaults to one less than the number of CPUs; \`0\` runs the work on the main thread.",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "experiments-typescript": Object {
     "configs": Array [
       Object {
