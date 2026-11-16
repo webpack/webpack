@@ -1295,6 +1295,14 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(minifyOnePass(source, { compress: { pure_conversions: false }, mangle: false }).code).toBe("a==b,c()!=d,a()<b;");
 	});
 
+	it("should print a number constant where a member reads it, as a name would print", () => {
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-print-a-number");
+		const { code } = minifyOnePass(source, { compress: { toplevel: true }, mangle: false });
+		// A number opening with `0` would print parenthesized there: its name stays.
+		expect(code).toBe('var zero=0,early=0,log=[];1..foo+="",log.push(1..foo,1..bar,"0.5","0.0",0,1e21.foo,early.toFixed(1)),log.push((1..foo,1)),console.log(log.join());');
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should keep only what the computed keys and values of an unread object run", () => {
 		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the");
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("a,x(),b(),c(),f();");
