@@ -610,16 +610,21 @@ const describeCases = (config) => {
 											{ name: "WatchTestCasesTest", stage: Infinity },
 											assertModuleGraph
 										);
-										if (testConfig.watchError) recordReceivedChanges(child);
+										if (testConfig.watchError) {
+											recordReceivedChanges(child);
+											// The failed build took the step's changes, and the recovery build
+											// reads none when the watcher delivered them all to the failed one;
+											// read here, before a MultiCompiler's close clears them.
+											child.hooks.failed.tap("WatchTestCasesTest", () =>
+												recordStepReports(child)
+											);
+										}
 									}
 									/**
 									 * @param {Error} error watch or comparison failure
 									 * @returns {Promise<void>} error handling and optional recovery
 									 */
 									const handleWatchError = async (error) => {
-										// The failed build took the step's changes, and the recovery build
-										// reads none when the watcher delivered them all to the failed one.
-										for (const child of compilers) recordStepReports(child);
 										try {
 											if (!testConfig.watchError) throw error;
 											await testConfig.watchError(error, compiler);
