@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore defun dont fargs funs
+// cspell:ignore defun dont fargs funs nonmatching
 
 // Sources a rival prints smaller for a reason no change to webpack's minifier
 // closes: deflate's Huffman header, or swc running a transform the case's own
@@ -14,6 +14,7 @@ const BY_DESIGN = [
 		"deflate's header: the program is no longer raw, yet gzips 1 to 3 bytes bigger, as the Huffman codes deflate writes for a small program cost more or less with which characters it holds (an operand's side, `let` or `const`, `NaN` or `0/0`, a backtick or a quote); measured corpus-wide, no fixed spelling rule wins, each one making about as many programs bigger as smaller",
 		[
 			"swc minifier: fixture/issues/12298/input.js",
+			"swc minifier: fixture/issues/12206/preserve-nonmatching-test-before-dynamic-case/input.js",
 			"terser compress: issue-597/beautify_off_1",
 			"terser compress: issue-597/beautify_on_1",
 			"terser compress: harmony/array_literal_with_spread_3b",
