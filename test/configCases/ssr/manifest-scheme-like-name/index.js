@@ -11,7 +11,8 @@ const manifest = JSON.parse(
 export const load = () => [
 	import(/* webpackChunkName: "x:y" */ "./value"),
 	import(/* webpackChunkName: "plain" */ "./other"),
-	import(/* webpackChunkName: "/z:w" */ "./third")
+	import(/* webpackChunkName: "/z:w" */ "./third"),
+	import(/* webpackChunkName: "q?r:s" */ "./fourth")
 ];
 
 it("starts the relative url of a chunk whose filename reads like a scheme with ./", () => {
@@ -23,4 +24,6 @@ it("starts the relative url of a chunk whose filename reads like a scheme with .
 	expect(manifest["./value.js"]).toEqual([EXPECTED_URLS["x:y"]]);
 	expect(manifest["./other.js"]).toEqual([EXPECTED_URLS.plain]);
 	expect(manifest["./third.js"]).toEqual([EXPECTED_URLS["/z:w"]]);
+	// `?` and `#` of a name are written as `_` in its filename
+	expect(manifest["./fourth.js"]).toEqual([EXPECTED_URLS["q_r:s"]]);
 });

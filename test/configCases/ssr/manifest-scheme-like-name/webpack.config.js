@@ -35,7 +35,8 @@ module.exports = [
 		{
 			"x:y": "./x:y.js",
 			plain: "plain.js",
-			"/z:w": "./z:w.js"
+			"/z:w": "./z:w.js",
+			"q_r:s": "./q_r:s.js"
 		},
 		0
 	),
@@ -44,7 +45,8 @@ module.exports = [
 		{
 			"x:y": "./chunk-x:y.js",
 			plain: "chunk-plain.js",
-			"/z:w": "chunk-/z:w.js"
+			"/z:w": "chunk-/z:w.js",
+			"q_r:s": "./chunk-q_r:s.js"
 		},
 		1
 	),
@@ -53,13 +55,19 @@ module.exports = [
 		{
 			"x:y": "./x:y:part.js",
 			plain: "./plain:part.js",
-			"/z:w": "./z:w:part.js"
+			"/z:w": "./z:w:part.js",
+			"q_r:s": "./q_r:s:part.js"
 		},
 		2
 	),
 	config(
 		"[name:3].js",
-		{ "x:y": "./x:y.js", plain: "plain.js", "/z:w": "./z:w.js" },
+		{
+			"x:y": "./x:y.js",
+			plain: "plain.js",
+			"/z:w": "./z:w.js",
+			"q_r:s": "./q_r:s.js"
+		},
 		3
 	),
 	// a public path in front: the url is not relative to the page
@@ -68,7 +76,8 @@ module.exports = [
 		{
 			"x:y": "?file=x:y.js",
 			plain: "?file=plain.js",
-			"/z:w": "?file=z:w.js"
+			"/z:w": "?file=z:w.js",
+			"q_r:s": "?file=q_r:s.js"
 		},
 		4,
 		"?file="
