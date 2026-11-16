@@ -3621,8 +3621,8 @@ declare abstract class ColumnarSyntaxTree {
 	 * Writes a node from its record, each slot a child node, a list from
 	 * `addList` or a value from `addValue`, `0` or left out for none.
 	 */
-	addNode(
-		type: number,
+	addNode<T extends string = string>(
+		type: number | TreeTypeCode<T>,
 		start: number,
 		end: number,
 		flags: number,
@@ -3630,25 +3630,30 @@ declare abstract class ColumnarSyntaxTree {
 		slot1?: null | number,
 		slot2?: null | number,
 		slot3?: null | number
-	): number;
+	): TreeNode<T>;
 
 	/**
 	 * `addNode` for a node whose record holds no slot, as `this`.
 	 */
-	addNode0(type: number, start: number, end: number, flags: number): number;
+	addNode0<T extends string = string>(
+		type: number | TreeTypeCode<T>,
+		start: number,
+		end: number,
+		flags: number
+	): TreeNode<T>;
 
 	/**
 	 * `addNode` for a node whose record holds two slots, as a member
 	 * expression or a call does, written without reading its slot count.
 	 */
-	addNode2(
-		type: number,
+	addNode2<T extends string = string>(
+		type: number | TreeTypeCode<T>,
 		start: number,
 		end: number,
 		flags: number,
 		slot0: number,
 		slot1: number
-	): number;
+	): TreeNode<T>;
 
 	/**
 	 * `addNode` for a literal, its value and raw text written in place, as a
@@ -3659,17 +3664,17 @@ declare abstract class ColumnarSyntaxTree {
 		end: number,
 		value: TreeValue,
 		raw: string
-	): number;
+	): TreeNode<"Literal">;
 
 	/**
 	 * `addNode` for a node whose record is one value, as an identifier's name.
 	 */
-	addValueNode(
-		type: number,
+	addValueNode<T extends string = string>(
+		type: number | TreeTypeCode<T>,
 		start: number,
 		end: number,
 		value: TreeValue
-	): number;
+	): TreeNode<T>;
 	addValue(
 		value?:
 			| null
@@ -36358,6 +36363,7 @@ declare interface TreeNames {
 	 */
 	propertyStrings: null | Set<number>;
 }
+type TreeNode<T extends string> = number & { readonly treeNode?: T };
 
 /**
  * Where each node of a `SyntaxTree` starts and ends among its parse's tokens,
@@ -36389,6 +36395,7 @@ declare interface TreeTokens {
 	 */
 	first: number;
 }
+type TreeTypeCode<T extends string> = number & { readonly treeType?: T };
 type TreeValue =
 	| null
 	| string
