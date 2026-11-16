@@ -66,3 +66,6 @@ module.exports.rpcHold = (context) => {
 	context.callMain("never", []).catch(() => {});
 	return new Promise(() => {});
 };
+
+module.exports.rpcTwo = (context) =>
+	Promise.all([context.callMain("fast", []), context.callMain("nested", [])]);
