@@ -400,7 +400,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-25"), {
 				drop_console: ["log"]
 			})
-		).toBe("console.a.b.c();");
+		).toBe("console.a.b.c();function run(log){console[log].b.c()}");
 		// `pure_funcs` marks the calls it names pure, by how the callee is written.
 		expect(
 			print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-11"), {
