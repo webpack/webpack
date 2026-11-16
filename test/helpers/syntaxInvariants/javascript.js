@@ -1223,6 +1223,10 @@ const BEHAVIOR_TIMEOUT = 200;
 // The most wall time a run short of the machine is given: with the tries
 // before it, 17 s, inside the 30 s a test may take.
 const BEHAVIOR_MAX_WAIT = 12800;
+// WHY: once a run times out, Deno's `timeout` may end a later run early with
+// no error, so under Deno a run that prints nothing and a print's difference
+// are each read twice.
+const STRAY_TERMINATIONS = process.versions.deno !== undefined;
 // The timer callbacks a run fires once its own code returns: enough for a
 // chain of timeouts, short of an interval nothing clears.
 const BEHAVIOR_MAX_TIMERS = 100;
@@ -1766,7 +1770,7 @@ const behaviorDifference = (source, printed, run = {}) => {
 		lastExpected =
 			typeof first.transcript === "string" &&
 			(asScript || !first.transcript.startsWith("refused ")) &&
-			(first.transcript === "" ||
+			((first.transcript === "" && !STRAY_TERMINATIONS) ||
 				behaviorOf(source, module).transcript === first.transcript)
 				? first.transcript
 				: null;
@@ -1787,11 +1791,20 @@ const behaviorDifference = (source, printed, run = {}) => {
 	const answered = behaviorOf(printed, module).transcript;
 	// A print that cannot run here, as it imports, answers for nothing either.
 	if (answered === undefined) return null;
-	const got =
-		typeof answered === "string" && run.compressed
-			? contractual(answered, source)
-			: answered;
+	/**
+	 * @param {string | null | undefined} transcript what a run of the print answers
+	 * @returns {string | null | undefined} it as the print owes it
+	 */
+	const owed = (transcript) =>
+		typeof transcript === "string" && run.compressed
+			? contractual(transcript, source)
+			: transcript;
+	let got = owed(answered);
 	if (got === expected) return [];
+	if (STRAY_TERMINATIONS) {
+		got = owed(behaviorOf(printed, module).transcript);
+		if (got === expected) return [];
+	}
 	if (typeof got !== "string") {
 		return [
 			{
