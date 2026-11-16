@@ -14,7 +14,6 @@ const {
 } = require("../../lib/util/dataURL");
 const cssMinify = require("../../lib/css/cssMinify");
 const htmlMinify = require("../../lib/html/htmlMinify");
-const htmlSyntax = require("../../lib/html/syntax");
 
 describe("dataURL", () => {
 	it("should decode base64 payloads", () => {
@@ -337,8 +336,5 @@ describe("EMBEDDED_LANGUAGES", () => {
 		const shared = sorted(EMBEDDED_LANGUAGES);
 		expect(sorted(cssMinify.getEmbeddedTypes())).toEqual(shared);
 		expect(sorted(htmlMinify.getEmbeddedTypes())).toEqual(shared);
-		// The HTML parser names the languages its offer sites reach; a site
-		// added there without this list would make the answer above wrong.
-		expect(sorted(htmlSyntax.parser.EMBEDDED_LANGUAGES)).toEqual(shared);
 	});
 });

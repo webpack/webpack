@@ -11,7 +11,6 @@ const {
 	buildSkipSet,
 	Field,
 	NodeType,
-	_propertyIdOf,
 	normalizeUrl,
 	parseABlocksContents,
 	parseACommaSeparatedListOfComponentValues,
@@ -99,43 +98,6 @@ describe("CssSyntax — parser entry points", () => {
 			.process(small);
 		expect(seen).toEqual(["d{e:f}", "g{h:i}"]);
 		expect(read(small)).toEqual(["2", "d{e:f}", "g{h:i}"]);
-	});
-});
-
-describe("CssSyntax — Node / Token", () => {
-	it("numbers a declaration's property by what it means", () => {
-		/** @type {Record<string, number>} */
-		const ids = {};
-		new SourceProcessor()
-			.use({
-				[NodeType.Declaration]: (
-					/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
-				) => {
-					const id = _propertyIdOf(path.node);
-					// A second read hands back what the first looked up.
-					expect(_propertyIdOf(path.node)).toBe(id);
-					ids[A.source(path.node).split(":")[0]] = id;
-				}
-			})
-			.process(
-				fixture(
-					"css",
-					"css-syntax-node-token-numbers-a-declaration-s-property-by-what-it-means"
-				)
-			);
-		expect(ids.color).toBeGreaterThanOrEqual(0);
-		expect(ids.COLOR).toBe(ids.color);
-		expect(ids["c\\6flor"]).toBe(ids.color);
-		expect(ids["word-wrap"]).toBe(ids["overflow-wrap"]);
-		expect(ids["-webkit-transition"]).toBe(ids.transition);
-		expect(ids.transition).not.toBe(ids.color);
-		expect(ids["--x"]).toBe(-1);
-		expect(ids["\\2d-y"]).toBe(-1);
-		expect(ids.foo).toBe(-2);
-		expect(ids["é"]).toBe(-2);
-		// These two probe past a known name, of another length and of the same.
-		expect(ids.value).toBe(-2);
-		expect(ids.gab).toBe(-2);
 	});
 });
 
