@@ -721,6 +721,7 @@ const PARSER_TABLES = [
 			"rect",
 			"svg",
 			"text",
+			"tref",
 			"use"
 		]
 	],
@@ -782,6 +783,7 @@ const PARSER_TABLES = [
 			"marker",
 			"mask",
 			"clipPath",
+			"solidColor",
 			"symbol",
 			"a",
 			"use"
@@ -798,7 +800,8 @@ const PARSER_TABLES = [
 			"marker",
 			"mask",
 			"clipPath",
-			"symbol"
+			"symbol",
+			"solidColor"
 		]
 	],
 	[

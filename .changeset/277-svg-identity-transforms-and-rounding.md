@@ -1,5 +1,5 @@
 ---
-"webpack": patch
+"webpack": minor
 ---
 
-Drop identity transforms and zero-width strokes from SVG, and round SVG path data without growing or moving it.
+Add SVG minification options to inline stylesheets and remove chosen elements and attributes, drop identity transforms and zero-width strokes, and round path data without growing or moving it.

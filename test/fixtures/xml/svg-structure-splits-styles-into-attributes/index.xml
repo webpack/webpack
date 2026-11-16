@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<g style="    fill:#000; c\olor: #fff; /**/illegal-'declaration/*'; -webkit-blah: 123  ; -webkit-trolo: 'lolo'; illegal2*/"/>
+	<rect style="fill:blue;fill:red!important;fill:green;stroke:red"/>
+	<rect style="font:1px serif;font-size:2px;-x-y:1"/>
+	<rect style="fill:red/* a;b */;stroke:blue;-x:1"/>
+</svg>

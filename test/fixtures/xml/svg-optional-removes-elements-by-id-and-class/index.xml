@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<rect id="remove" width="1" height="1"/>
+	<g class="keep drop"><rect width="2" height="1"/></g>
+	<rect class="dropped" width="3" height="1"/>
+	<rect id="kept" class="other" width="4" height="1"/>
+</svg>

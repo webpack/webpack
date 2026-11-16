@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<symbol id="empty"/>
+		<symbol id="full"><rect width="1" height="1"/></symbol>
+		<path id="dot" d="M1 1"/>
+	</defs>
+	<circle r="5" fill="none"/>
+	<circle r="5" fill="red" fill-opacity="0" stroke="#000" stroke-width="0"/>
+	<g fill="none">
+		<rect width="1" height="1"/>
+		<rect width="1" height="1" stroke="red"/>
+		<rect width="1" height="1" style="fill:red"/>
+		<path d="M0 0h1" marker-end="url(#m)"/>
+	</g>
+	<g fill="none" color="red"><circle r="1" fill="currentColor"/></g>
+	<rect width="1" height="1" fill="none" pointer-events="all"/>
+	<use href="#empty"/>
+	<use href="#full"/>
+	<use href="#dot"/>
+	<use href="#dot" marker-start="url(#m)"/>
+	<text><tref/>a</text>
+	<tref href="#t"/>
+</svg>
