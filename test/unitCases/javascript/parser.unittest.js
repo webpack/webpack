@@ -4302,7 +4302,9 @@ describe("JavaScript SourceProcessor", () => {
 			fixture("javascript", "javascript-source-processor-reads-a-node-as-the-css-and-html-paths-read-theirs");
 		/** @type {Record<string, unknown>} */
 		const read = {};
-		new SourceProcessor()
+		/** @type {import("../../../lib/javascript/syntax").SourceProcessor<string>} */
+		const processor = new SourceProcessor();
+		processor
 			.use({
 				[NodeType.Program]: (path) => {
 					read.programParent = path.parent;

@@ -2199,7 +2199,7 @@ describe("SourceProcessor — a run inside a run", () => {
 		const inside = fixture("css", "source-processor-a-run-inside-a-run-same-processor-inner");
 		/**
 		 * @param {"skip" | "stop"} halt how the outer run holds its visitors back
-		 * @returns {ReturnType<InstanceType<typeof SourceProcessor>["use"]>} a processor that nests a run on itself once halted
+		 * @returns {ReturnType<import("../../../lib/css/syntax").SourceProcessor["use"]>} a processor that nests a run on itself once halted
 		 */
 		const make = (halt) => {
 			const processor = new SourceProcessor().use(

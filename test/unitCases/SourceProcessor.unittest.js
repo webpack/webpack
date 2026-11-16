@@ -440,7 +440,7 @@ describe("SourceProcessor", () => {
 
 		/**
 		 * Reads a node through `NodePath` members only, as a language-agnostic visitor would.
-		 * @param {import("../../lib/util/SourceProcessor").NodePath<EXPECTED_ANY>} path path
+		 * @param {import("../../lib/util/SourceProcessor").NodePath<EXPECTED_ANY, EXPECTED_ANY>} path path
 		 * @param {string} input the parsed source
 		 * @returns {Record<string, unknown>} what a shared visitor sees
 		 */
@@ -1231,12 +1231,16 @@ describe("SourceProcessor", () => {
 			expect(outer.paragraphs).toBe(2);
 			const { A } = require("../../lib/html/syntax-parser");
 
-			expect(A.state).toBeUndefined();
-			const throwing = new HtmlSourceProcessor().use([HtmlNodeType.Element], () => {
+			// The run's state lives on the processor's own path; the language's
+			// path, which every processor reads through, never holds one.
+			expect(Object.prototype.hasOwnProperty.call(A, "state")).toBe(false);
+			/** @type {import("../../lib/html/syntax").SourceProcessor<{ paragraphs: number }>} */
+			const throwing = new HtmlSourceProcessor();
+			throwing.use([HtmlNodeType.Element], () => {
 				throw new Error("visitor");
 			});
 			expect(() => throwing.process(fixture("html", "source-processor-node-path-hands-every-visitor-the-run-s-state-typed-by-the-2"), { state: outer })).toThrow("visitor");
-			expect(A.state).toBeUndefined();
+			expect(Object.prototype.hasOwnProperty.call(A, "state")).toBe(false);
 		});
 
 		it("knows a streamed block's ancestors until it closes", () => {
