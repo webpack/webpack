@@ -81,5 +81,7 @@ module.exports = [
 		},
 		4,
 		"?file="
-	)
+	),
+	// the only chunk needing `./` is the one whose name holds a `?`
+	{ ...config("[name].js", {}, 5), entry: "./only-query.js" }
 ];
