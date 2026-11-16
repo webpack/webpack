@@ -6,6 +6,25 @@ const webpack = require("../../../../");
 const { DefinePlugin } = webpack;
 
 /** @typedef {import("../../../../lib/worker/Worker")<{ threadId: () => number }>} ThreadIdWorker */
+/** @typedef {import("../../../../lib/worker/WorkerPool")} WorkerPool */
+
+const WORKER = path.resolve(__dirname, "worker.js");
+
+/**
+ * A retired thread counts until its `exit` event, so wait for it.
+ * @param {WorkerPool} pool the pool
+ * @param {number} count threads to reach
+ * @returns {Promise<boolean>} whether the pool reached `count` within 2 s
+ */
+const waitForWorkers = async (pool, count) => {
+	for (let i = 0; i < 200; i++) {
+		if (pool.stats.workers === count) return true;
+		await new Promise((resolve) => {
+			setTimeout(resolve, 10);
+		});
+	}
+	return false;
+};
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -19,24 +38,26 @@ module.exports = {
 				/** @type {number[]} */
 				const threadIds = [];
 				let trimmed = true;
+				let warmed = true;
 				let inline = false;
 				compiler.hooks.beforeCompile.tapPromise(
 					"compiler-worker-reuse",
 					async () => {
 						const worker = /** @type {ThreadIdWorker} */ (
-							compiler.worker(path.resolve(__dirname, "worker.js"))
+							compiler.worker(WORKER)
 						);
 						const pool = worker._pool;
 						inline = pool.options.max === 0;
-						// only watch mode can keep a thread between steps now
-						pool.options.idleTimeout = 1;
-						if (threadIds.length > 0 && pool.options.max > 0) {
+						if (threadIds.length === 0) {
+							await pool.warmup([WORKER], 2);
+							warmed = inline || pool.stats.workers === 2;
+						} else if (!inline) {
 							// the first build warmed two threads but used one
-							trimmed = pool.stats.workers === 1;
-						} else {
-							await pool.warmup([path.resolve(__dirname, "worker.js")], 2);
+							trimmed = warmed && (await waitForWorkers(pool, 1));
 						}
 						threadIds.push(await worker.run("threadId"));
+						// from here only watch mode can keep a thread between steps
+						pool.options.idleTimeout = 1;
 					}
 				);
 				new DefinePlugin({
