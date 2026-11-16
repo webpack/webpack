@@ -35928,6 +35928,11 @@ declare interface TerserCompressAliases {
 	pure_conversions?: boolean;
 
 	/**
+	 * terser's name for `pureGetters`
+	 */
+	pure_getters?: boolean | "strict";
+
+	/**
 	 * terser's name for `pureFuncs`
 	 */
 	pure_funcs?: null | string[];
