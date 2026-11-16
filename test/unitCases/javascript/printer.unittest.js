@@ -1321,6 +1321,11 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(minifyOnePass(nullish, { compress: { pure_getters: true, toplevel: true }, mangle: false }).code).toBe('var log=[],other;try{null.x}catch(e){log.push(e.name)}try{other.y}catch(e){log.push(e.name)}(function(){log.push("factory")})();console.log(log.join());');
 		// A name printing as the value folded into it keeps the read of that value.
 		expect(minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-drop-only-the-reads-5"), { compress: { pure_getters: true, toplevel: true }, mangle: false }).code).toBe("null.x,(void 0).y;");
+		// So does one a sequence, a branch, a logical side or an assignment gives.
+		const given = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-drop-only-the-reads-6");
+		const throwing = minifyOnePass(given, { compress: { pure_getters: true, toplevel: true }, mangle: false }).code;
+		expect(throwing).toBe('var log=[],unset,held,flag=log.length>5;function record(){log.push("record")}try{(record(),null).a}catch(e){log.push(e.name)}try{(flag?record():null).b}catch(e){log.push(e.name)}try{(flag||null).c}catch(e){log.push(e.name)}try{(record(),unset).d}catch(e){log.push(e.name)}try{(held=null).e}catch(e){log.push(e.name)}console.log(log.join());');
+		expect(runProgram(throwing)).toBe(runProgram(given));
 	});
 
 	it("should keep only what the computed keys and values of an unread object run", () => {
