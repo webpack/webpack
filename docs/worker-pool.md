@@ -173,6 +173,7 @@ Ordering rules:
 - A thread runs at most one plain call and up to the pool's `loaderParallelJobs` (20) loader jobs at once; blocked jobs do not count against either limit.
 - Among idle threads, the pool takes the last from its idle list (LIFO). If none can take the call and fewer than `max` threads live, it spawns one.
 - When every call on a thread waits on the main thread, that thread takes the next queued job of any type before a new one spawns: it cannot make progress itself. A plain call taken this way avoids a deadlock when an RPC handler calls back into the pool, and runs beside the loader jobs once they resume.
+- That rule assumes a thread whose jobs are not all waiting makes progress. So a loader job must not await work owned by another job on the same thread, and an RPC handler that calls `run()` must not depend on another loader job in flight: the pool cannot see such a wait, and every job on the thread would stall.
 - At `max`, a loader job goes to the thread with the fewest running loader jobs, up to its `parallelJobs`. These two loader-aware hooks (`blocked` and `parallelJobs`) are the deliberate price of one queue: split queues would lose the deterministic order above.
 - A queued plain call keeps the head of the queue: when every thread is busy, later loader jobs wait even if a thread still has loader capacity. This is head-of-line blocking; one FIFO queue trades loader throughput for strict call order.
 - When a call settles, its thread goes idle and dispatch continues.

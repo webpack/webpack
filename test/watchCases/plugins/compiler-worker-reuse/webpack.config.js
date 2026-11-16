@@ -17,6 +17,7 @@ module.exports = {
 				/** @type {number[]} */
 				const threadIds = [];
 				let trimmed = true;
+				let inline = false;
 				compiler.hooks.beforeCompile.tapPromise(
 					"compiler-worker-reuse",
 					async () => {
@@ -24,6 +25,7 @@ module.exports = {
 							compiler.worker(path.resolve(__dirname, "worker.js"))
 						);
 						const pool = worker._pool;
+						inline = pool.options.max === 0;
 						// only watch mode can keep a thread between steps now
 						pool.options.idleTimeout = 1;
 						if (threadIds.length > 0 && pool.options.max > 0) {
@@ -37,7 +39,13 @@ module.exports = {
 				);
 				new DefinePlugin({
 					SAME_THREAD: DefinePlugin.runtimeValue(
-						() => JSON.stringify(threadIds.every((id) => id === threadIds[0])),
+						() =>
+							JSON.stringify(
+								threadIds.every(
+									// threads on: a main-thread id (0) would mean inline
+									(id) => id === threadIds[0] && (inline || id > 0)
+								)
+							),
 						true
 					),
 					TRIMMED: DefinePlugin.runtimeValue(

@@ -35,6 +35,21 @@ const waitFor = async (condition) => {
 	throw new Error("condition not met");
 };
 
+/**
+ * What `info` in the fixture reports on the calling thread.
+ * @returns {{ threadId: number, isMainThread: boolean }} the calling thread
+ */
+const callerThread = () => {
+	try {
+		const { threadId, isMainThread } = require("worker_threads");
+
+		return { threadId, isMainThread };
+	} catch (_err) {
+		// Node 10 without --experimental-worker; the fixture reports the same
+		return { threadId: 0, isMainThread: true };
+	}
+};
+
 const describeThreads = WorkerPool.isThreadingAvailable()
 	? describe
 	: describe.skip;
@@ -45,11 +60,10 @@ describe("WorkerPool", () => {
 			const pool = createPool({ max: 0 });
 
 			expect(await pool.run(TARGET, "add", [1, 2])).toBe(3);
-			const { threadId, isMainThread } = require("worker_threads");
 			const info = await pool.run(TARGET, "info", []);
 			// inline work runs on the caller's thread; under the Bun test
 			// runner that thread is a jest worker, so compare, do not assume 0.
-			expect(info).toEqual({ threadId, isMainThread });
+			expect(info).toEqual(callerThread());
 
 			await expect(pool.run(TARGET, "missing", [])).rejects.toThrow(
 				`${TARGET} has no export named missing`
@@ -167,7 +181,7 @@ describe("WorkerPool", () => {
 	describe("compiler.worker", () => {
 		it("runs calls directly on the main thread while experiments.threads is off", async () => {
 			const webpack = require("../../lib/webpack");
-			const { threadId } = require("worker_threads");
+			const { threadId } = callerThread();
 			const compiler = webpack({ entry: "data:text/javascript,1" });
 			const worker =
 				/** @type {import("../../lib/worker/Worker")<{ add: (a: number, b: number) => number, info: () => { threadId: number }, echo: <T>(...args: T[]) => T[] }>} */ (
@@ -228,8 +242,7 @@ describe("WorkerPool", () => {
 			await two._pool.end();
 
 			const inline = workerFor({ max: 0 });
-			const { threadId, isMainThread } = require("worker_threads");
-			expect(await inline.run("info")).toEqual({ threadId, isMainThread });
+			expect(await inline.run("info")).toEqual(callerThread());
 			await inline.release();
 		});
 

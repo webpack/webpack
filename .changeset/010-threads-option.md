@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `experiments.threads` and `compiler.worker()` to run plugin work on shared threads.
+Add `experiments.threads` and `compiler.worker()` for shared plugin threads.
