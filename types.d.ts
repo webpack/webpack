@@ -24975,7 +24975,23 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	 */
 	getParser<T extends string>(
 		type: T,
-		parserOptions?: ParserOptions
+		parserOptions?: (Record<"javascript/auto", JavascriptParserOptions> &
+			Record<"javascript/dynamic", JavascriptParserOptions> &
+			Record<"javascript/esm", JavascriptParserOptions> &
+			Record<"json", JsonParserOptions> &
+			Record<"asset", AssetParserOptions> &
+			Record<"asset/inline", EmptyParserOptions> &
+			Record<"asset/resource", EmptyParserOptions> &
+			Record<"asset/source", EmptyParserOptions> &
+			Record<"asset/bytes", EmptyParserOptions> &
+			Record<"webassembly/async", EmptyParserOptions> &
+			Record<"webassembly/sync", EmptyParserOptions> &
+			Record<"css", CssParserOptions> &
+			Record<"css/auto", CssModuleParserOptions> &
+			Record<"css/module", CssModuleParserOptions> &
+			Record<"css/global", CssModuleParserOptions> &
+			Record<"html", EmptyParserOptions> &
+			Record<string, ParserOptions>)[T]
 	): (Record<"javascript/auto", JavascriptParser> &
 		Record<"javascript/dynamic", JavascriptParser> &
 		Record<"javascript/esm", JavascriptParser> &
@@ -24999,7 +25015,23 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	 */
 	createParser<T extends string>(
 		type: T,
-		parserOptions?: ParserOptions
+		parserOptions?: (Record<"javascript/auto", JavascriptParserOptions> &
+			Record<"javascript/dynamic", JavascriptParserOptions> &
+			Record<"javascript/esm", JavascriptParserOptions> &
+			Record<"json", JsonParserOptions> &
+			Record<"asset", AssetParserOptions> &
+			Record<"asset/inline", EmptyParserOptions> &
+			Record<"asset/resource", EmptyParserOptions> &
+			Record<"asset/source", EmptyParserOptions> &
+			Record<"asset/bytes", EmptyParserOptions> &
+			Record<"webassembly/async", EmptyParserOptions> &
+			Record<"webassembly/sync", EmptyParserOptions> &
+			Record<"css", CssParserOptions> &
+			Record<"css/auto", CssModuleParserOptions> &
+			Record<"css/module", CssModuleParserOptions> &
+			Record<"css/global", CssModuleParserOptions> &
+			Record<"html", EmptyParserOptions> &
+			Record<string, ParserOptions>)[T]
 	): (Record<"javascript/auto", JavascriptParser> &
 		Record<"javascript/dynamic", JavascriptParser> &
 		Record<"javascript/esm", JavascriptParser> &
@@ -25023,7 +25055,23 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	 */
 	getGenerator<T extends string>(
 		type: T,
-		generatorOptions?: GeneratorOptions
+		generatorOptions?: (Record<"javascript/auto", EmptyGeneratorOptions> &
+			Record<"javascript/dynamic", EmptyGeneratorOptions> &
+			Record<"javascript/esm", EmptyGeneratorOptions> &
+			Record<"json", JsonGeneratorOptions> &
+			Record<"asset", AssetGeneratorOptions> &
+			Record<"asset/inline", AssetGeneratorOptions> &
+			Record<"asset/resource", AssetGeneratorOptions> &
+			Record<"asset/source", EmptyGeneratorOptions> &
+			Record<"asset/bytes", EmptyGeneratorOptions> &
+			Record<"webassembly/async", EmptyGeneratorOptions> &
+			Record<"webassembly/sync", EmptyGeneratorOptions> &
+			Record<"css", CssGeneratorOptions> &
+			Record<"css/auto", CssModuleGeneratorOptions> &
+			Record<"css/module", CssModuleGeneratorOptions> &
+			Record<"css/global", CssModuleGeneratorOptions> &
+			Record<"html", HtmlGeneratorOptions> &
+			Record<string, GeneratorOptions>)[T]
 	): (Record<"javascript/auto", JavascriptGenerator> &
 		Record<"javascript/dynamic", JavascriptGenerator> &
 		Record<"javascript/esm", JavascriptGenerator> &
@@ -25047,7 +25095,23 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	 */
 	createGenerator<T extends string>(
 		type: T,
-		generatorOptions?: GeneratorOptions
+		generatorOptions?: (Record<"javascript/auto", EmptyGeneratorOptions> &
+			Record<"javascript/dynamic", EmptyGeneratorOptions> &
+			Record<"javascript/esm", EmptyGeneratorOptions> &
+			Record<"json", JsonGeneratorOptions> &
+			Record<"asset", AssetGeneratorOptions> &
+			Record<"asset/inline", AssetGeneratorOptions> &
+			Record<"asset/resource", AssetGeneratorOptions> &
+			Record<"asset/source", EmptyGeneratorOptions> &
+			Record<"asset/bytes", EmptyGeneratorOptions> &
+			Record<"webassembly/async", EmptyGeneratorOptions> &
+			Record<"webassembly/sync", EmptyGeneratorOptions> &
+			Record<"css", CssGeneratorOptions> &
+			Record<"css/auto", CssModuleGeneratorOptions> &
+			Record<"css/module", CssModuleGeneratorOptions> &
+			Record<"css/global", CssModuleGeneratorOptions> &
+			Record<"html", HtmlGeneratorOptions> &
+			Record<string, GeneratorOptions>)[T]
 	): (Record<"javascript/auto", JavascriptGenerator> &
 		Record<"javascript/dynamic", JavascriptGenerator> &
 		Record<"javascript/esm", JavascriptGenerator> &
