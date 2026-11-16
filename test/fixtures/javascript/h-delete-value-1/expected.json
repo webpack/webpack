@@ -1,0 +1,10 @@
+[
+	{
+		"relation": "residue",
+		"contains": "(0,b,!0)",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: `delete (0, a)` taken as a value prints that sequence, then `!0`, and keeps the `0` only `delete` needed to read no reference"
+	}
+]

@@ -1799,6 +1799,114 @@ const behaviorDifference = (source, printed, run = {}) => {
 	];
 };
 
+/**
+ * Whether an expression does nothing where its value goes unread: a literal, a
+ * function or an arrow, and a collection, `void`, `!` or sign of only those.
+ * @param {EXPECTED_ANY} node an ESTree expression
+ * @returns {boolean} whether dropping it changes nothing
+ */
+const doesNothing = (node) => {
+	switch (node.type) {
+		case "Literal":
+		case "FunctionExpression":
+		case "ArrowFunctionExpression":
+			return true;
+		case "TemplateLiteral":
+			return node.expressions.length === 0;
+		case "ArrayExpression":
+			return node.elements.every(
+				(/** @type {EXPECTED_ANY} */ one) => one === null || doesNothing(one)
+			);
+		case "ObjectExpression":
+			return node.properties.every(
+				(/** @type {EXPECTED_ANY} */ one) =>
+					one.type === "Property" &&
+					!one.computed &&
+					(one.kind !== "init" || one.method || doesNothing(one.value))
+			);
+		case "SequenceExpression":
+			return node.expressions.every(doesNothing);
+		case "UnaryExpression":
+			if (node.operator === "void" || node.operator === "!") {
+				return doesNothing(node.argument);
+			}
+			// A sign converts a BigInt or an object, which may throw or run code.
+			return (
+				(node.operator === "-" || node.operator === "~") &&
+				node.argument.type === "Literal" &&
+				typeof node.argument.value === "number"
+			);
+		default:
+			return false;
+	}
+};
+
+/**
+ * Whether a sequence is spelled for what reading it does rather than its value:
+ * `(0, a.b)()` calls without a receiver, `(0, eval)(x)` evaluates globally, and
+ * `typeof (0, a)` and `delete (0, a.b)` read and drop as the bare operand would not.
+ * @param {EXPECTED_ANY} parent what holds the sequence
+ * @param {EXPECTED_ANY} node the sequence
+ * @returns {boolean} whether its items before the last are part of what it does
+ */
+const readsAsOperand = (parent, node) =>
+	((parent.type === "CallExpression" || parent.type === "NewExpression") &&
+		parent.callee === node) ||
+	(parent.type === "TaggedTemplateExpression" && parent.tag === node) ||
+	(parent.type === "UnaryExpression" &&
+		(parent.operator === "typeof" || parent.operator === "delete"));
+
+/**
+ * The statements and sequence items of a program that do nothing: an
+ * expression statement or an unread sequence item {@link doesNothing} holds,
+ * a directive and `"use strict"` aside.
+ * @param {string} code a program
+ * @param {boolean} module whether it is a module
+ * @returns {EXPECTED_ANY[]} each such expression, empty where it does not parse
+ */
+const residues = (code, module) => {
+	/** @type {EXPECTED_ANY} */
+	let root;
+	try {
+		root = webpackParse(code, {
+			sourceType: module ? "module" : "script",
+			ecmaVersion: "latest",
+			ranges: true,
+			allowHashBang: true
+		});
+	} catch (_error) {
+		return [];
+	}
+	/** @type {EXPECTED_ANY[]} */
+	const found = [];
+	/** @type {[EXPECTED_ANY, EXPECTED_ANY][]} */
+	const stack = [[root, null]];
+	while (stack.length > 0) {
+		const [node, parent] = /** @type {[EXPECTED_ANY, EXPECTED_ANY]} */ (
+			stack.pop()
+		);
+		if (
+			node.type === "ExpressionStatement" &&
+			node.directive === undefined &&
+			node.expression.value !== "use strict" &&
+			doesNothing(node.expression)
+		) {
+			found.push(node.expression);
+			continue;
+		}
+		if (node.type === "SequenceExpression" && !readsAsOperand(parent, node)) {
+			// The last item is the value, unread only as a statement.
+			const unread =
+				parent.type === "ExpressionStatement"
+					? node.expressions
+					: node.expressions.slice(0, -1);
+			for (const item of unread) if (doesNothing(item)) found.push(item);
+		}
+		for (const child of childNodesOf(node)) stack.push([child, node]);
+	}
+	return found;
+};
+
 // The tokens mangling renames: a binding's name and a private name.
 const RENAMED_LABELS = new Set(["name", "privateId"]);
 
@@ -1851,13 +1959,14 @@ const renameReport = (printed, again, module) => {
 
 /**
  * What a compressing preset's output owes a second pass of it: the same names
- * under mangling.
+ * under mangling, and no item that does nothing the preset itself drops.
+ * @param {(code: string) => string} minify the preset
  * @param {(code: string) => string} mangle the preset's mangling alone
  * @param {string} printed its output
  * @param {boolean} module whether it is a module
  * @returns {import("./relations").Report[]} what a second pass moves
  */
-const secondPassReports = (mangle, printed, module) => {
+const secondPassReports = (minify, mangle, printed, module) => {
 	/** @type {import("./relations").Report[]} */
 	const reports = [];
 	/**
@@ -1881,6 +1990,21 @@ const secondPassReports = (mangle, printed, module) => {
 	if (renamed !== null && renamed !== printed) {
 		reports.push(renameReport(printed, renamed, module));
 	}
+	const left = residues(printed, module);
+	if (left.length === 0) return reports;
+	const shrunk = again(minify);
+	if (shrunk === null || residues(shrunk, module).length >= left.length) {
+		return reports;
+	}
+	const [first] = left;
+	reports.push({
+		relation: "residue",
+		what: `keeps ${left.length === 1 ? "an item" : `${left.length} items`} doing nothing`,
+		repro: `    ${oneLine(
+			printed.slice(Math.max(0, first.start - 30), first.end + 30),
+			80
+		)}`
+	});
 	return reports;
 };
 
@@ -1920,7 +2044,7 @@ const invariants = {
 						module,
 						compressed: !alone
 					}) || []),
-					...(alone ? [] : secondPassReports(mangle, printed, module))
+					...(alone ? [] : secondPassReports(minify, mangle, printed, module))
 				]
 			};
 		});
