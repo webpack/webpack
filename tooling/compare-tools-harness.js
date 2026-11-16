@@ -1117,9 +1117,14 @@ const findingGroups = (expected = []) => {
 					if (matched.has(entry)) out(`    ${entry.relation}: ${entry.why}\n`);
 				}
 			}
-			// An entry matching nothing is the divergence it named being gone: the
-			// list has to lose it, or it stops saying anything true.
-			const stale = expected.filter((entry) => !matched.has(entry));
+			// An entry matching nothing is the divergence it named being gone, except
+			// one naming no fixture on a run `FIXTURE` narrows: it answers for the
+			// whole corpus. Otherwise the list loses it, or it stops saying anything true.
+			const narrowed = Boolean(process.env.FIXTURE);
+			const stale = expected.filter(
+				(entry) =>
+					!matched.has(entry) && !(narrowed && entry.source === undefined)
+			);
 			if (stale.length !== 0) {
 				out(`\nstale — ${stale.length} expectation(s) matched nothing\n`);
 				for (const entry of stale) {

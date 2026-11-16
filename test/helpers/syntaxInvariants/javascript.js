@@ -2039,6 +2039,29 @@ const secondPassReports = (minify, mangle, printed, module) => {
 	return reports;
 };
 
+/**
+ * {@link secondPassReports} under one preset: what its output owes a second
+ * pass of it, nothing where the preset prints alone.
+ * @param {EXPECTED_ANY} options one preset's options
+ * @param {boolean} module whether the source is a module
+ * @returns {(printed: string) => import("./relations").Report[]} what a second pass moves in an output
+ */
+const secondPassRelation = (options, module) => {
+	if (options.compress === false) return () => [];
+	const { minify } = printerFor(minifyOnePass, options, module);
+	// The preset's mangling alone, which its output must already be.
+	const mangle = printerFor(
+		minifyOnePass,
+		{
+			compress: false,
+			mangle: options.mangle === undefined ? true : options.mangle,
+			format: options.format
+		},
+		module
+	).minify;
+	return (printed) => secondPassReports(minify, mangle, printed, module);
+};
+
 /** @type {import("./index").SyntaxInvariants} */
 const invariants = {
 	printers: (source) => {
@@ -2050,16 +2073,7 @@ const invariants = {
 			const { minify, reprint } = printerFor(minifyOnePass, options, module);
 			const alone = options.compress === false;
 			const notices = legalNotices(module, !alone);
-			// The preset's mangling alone, which its output must already be.
-			const mangle = printerFor(
-				minifyOnePass,
-				{
-					compress: false,
-					mangle: options.mangle === undefined ? true : options.mangle,
-					format: options.format
-				},
-				module
-			).minify;
+			const secondPass = secondPassRelation(options, module);
 			return {
 				name,
 				minify,
@@ -2075,7 +2089,7 @@ const invariants = {
 						module,
 						compressed: !alone
 					}) || []),
-					...(alone ? [] : secondPassReports(minify, mangle, printed, module))
+					...secondPass(printed)
 				]
 			};
 		});
@@ -2121,6 +2135,8 @@ module.exports = {
 	minifyOnePass,
 	parsesAsLatest,
 	printerFor,
+	runsModules,
+	secondPassRelation,
 	spansEitherGoal,
 	sweepRespellings,
 	tokenMeaning
