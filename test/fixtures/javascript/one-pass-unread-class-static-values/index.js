@@ -21,3 +21,15 @@ var side = function (name) {
 	static foo = (log.written = 1);
 });
 console.log(log.join());
+// A key reading a private name stays in the class declaring it.
+function privateKey(object) {
+	(class {
+		#x = 1;
+		[+object.#x]() {}
+	});
+}
+try {
+	privateKey({});
+} catch (e) {
+	console.log(e.name);
+}

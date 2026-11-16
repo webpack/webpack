@@ -37,3 +37,17 @@ try {
 	return 1;
 })(log.push(9));
 console.log(log.join());
+// A spread may pass an object converting by running code.
+var spreadLog = [];
++((a, b) => b)(
+	...[
+		1,
+		{
+			valueOf() {
+				spreadLog.push("valueOf");
+				return 2;
+			}
+		}
+	]
+);
+console.log(spreadLog.join());
