@@ -15,10 +15,11 @@ const writeModule = (root, marker, name) => {
 	const directory = path.join(root, `${name}*${marker}`);
 	fs.mkdirSync(directory, { recursive: true });
 	const file = path.join(directory, `${name}.js`);
-	fs.writeFileSync(
-		file,
-		`(global.markerDirectories = global.markerDirectories || []).push(${JSON.stringify(name)});\n`
-	);
+	const content = `(global.markerDirectories = global.markerDirectories || []).push(${JSON.stringify(name)});\n`;
+	// A rewrite bumps the mtime, so the cached build would rebuild the module.
+	if (!fs.existsSync(file) || fs.readFileSync(file, "utf8") !== content) {
+		fs.writeFileSync(file, content);
+	}
 	return file;
 };
 
