@@ -319,6 +319,37 @@ describe("WorkerPool", () => {
 			expect(compiler._getWorkerPool()).toBeUndefined();
 		});
 
+		it("keeps a worker created in a plugin's apply on the compiler's farm", async () => {
+			const webpack = require("../../lib/webpack");
+			/** @type {import("../../lib/worker/Worker") | undefined} */
+			let early;
+			const compiler = webpack({
+				entry: "data:text/javascript,1",
+				experiments: { threads: { max: 1 } },
+				plugins: [
+					{
+						apply(compiler) {
+							early = compiler.worker(TARGET);
+						}
+					}
+				]
+			});
+			const farm = /** @type {import("../../lib/worker/WorkerFarm")} */ (
+				compiler._workerFarm
+			);
+
+			expect(compiler.worker(TARGET)).toBe(early);
+			farm.setKeepAlive(true);
+			expect(/** @type {import("../../lib/worker/Worker")} */ (early)._pool._keepAlive).toBe(true);
+			farm.setKeepAlive(false);
+			await new Promise((resolve, reject) => {
+				compiler.close((err) => (err ? reject(err) : resolve(undefined)));
+			});
+			await expect(
+				/** @type {import("../../lib/worker/Worker")} */ (early).run("add", 1, 2)
+			).rejects.toThrow("The worker pool is ending");
+		});
+
 		it("does not end the root pool when a child compiler closes", async () => {
 			const webpack = require("../../lib/webpack");
 			const compiler = webpack({
