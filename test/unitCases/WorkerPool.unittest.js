@@ -262,6 +262,30 @@ describe("WorkerPool", () => {
 			await worker._pool.end();
 		});
 
+		it("runs shutdown again on close after a failed close", async () => {
+			const webpack = require("../../lib/webpack");
+			const compiler = webpack({
+				entry: "data:text/javascript,1",
+				experiments: { threads: true }
+			});
+			let shutdowns = 0;
+			compiler.hooks.shutdown.tap("test", () => {
+				shutdowns++;
+				if (shutdowns === 1) throw new Error("shutdown failed");
+			});
+			/**
+			 * @returns {Promise<void>} settled with what close reported
+			 */
+			const close = () =>
+				new Promise((resolve, reject) => {
+					compiler.close((err) => (err ? reject(err) : resolve()));
+				});
+
+			await expect(close()).rejects.toThrow("shutdown failed");
+			await close();
+			expect(shutdowns).toBe(2);
+		});
+
 		it("runs shutdown once when close is called twice", async () => {
 			const webpack = require("../../lib/webpack");
 			const compiler = webpack({
