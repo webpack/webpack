@@ -38,3 +38,17 @@ function f(x) {
 }
 a(0); a(1); b(0); b(1); c(0, 0); c(0, 1); c(1, 0);
 d(0); d(1); e(0); e(1); f(0); f(1);
+// A block the known test picks keeps its braces, so the `if` stays.
+function pick(value, found, text) {
+	if (typeof value === "object") {
+		if (value.type) {
+			found = value;
+		} else {
+			if ("development" !== "production") {
+				console.log("unsupported");
+			}
+		}
+	} else text = value;
+	return [found, text];
+}
+console.log(pick({ type: 1 }), pick({}), pick(2));
