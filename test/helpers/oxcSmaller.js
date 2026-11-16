@@ -103,7 +103,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc knows more expressions have no side effects and drops them when their value is unused, as oxc's `ecmascript/may_have_side_effects.rs` tests show",
 		[
-			"oxc minifier: ecmascript/may_have_side_effects.rs:755",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1312",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1377",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:795",
