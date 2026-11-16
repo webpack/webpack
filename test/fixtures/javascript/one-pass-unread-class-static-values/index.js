@@ -33,3 +33,16 @@ try {
 } catch (e) {
 	console.log(e.name);
 }
+// So does one a strict declaration holds.
+function declaredPrivateKey(object) {
+	"use strict";
+	class Unread {
+		#x = 1;
+		[+object.#x]() {}
+	}
+}
+try {
+	declaredPrivateKey({});
+} catch (e) {
+	console.log(e.name);
+}
