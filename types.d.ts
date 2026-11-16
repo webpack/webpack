@@ -37888,16 +37888,6 @@ declare abstract class Worker<M extends WorkerModule = WorkerDefaultModule> {
 		method: K,
 		...args: Parameters<Extract<M[K], (...args: never[]) => void>>
 	): Promise<Awaited<ReturnType<Extract<M[K], (...args: never[]) => void>>>>;
-
-	/**
-	 * Spawns up to `workers` threads and preloads this module in each.
-	 */
-	warmup(workers?: number): Promise<void>;
-
-	/**
-	 * Releases the shared pool's idle threads. Calls in flight finish; the pool stays usable.
-	 */
-	release(): Promise<void>;
 }
 
 /**

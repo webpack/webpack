@@ -34,7 +34,7 @@ module.exports = {
 							// the first build warmed two threads but used one
 							trimmed = pool.stats.workers === 1;
 						} else {
-							await worker.warmup(2);
+							await pool.warmup([path.resolve(__dirname, "worker.js")], 2);
 						}
 						threadIds.push(await worker.run("threadId"));
 					}
