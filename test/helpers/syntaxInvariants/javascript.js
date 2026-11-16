@@ -1799,6 +1799,91 @@ const behaviorDifference = (source, printed, run = {}) => {
 	];
 };
 
+// The tokens mangling renames: a binding's name and a private name.
+const RENAMED_LABELS = new Set(["name", "privateId"]);
+
+/**
+ * Where a second mangling pass names otherwise, as an idempotence finding: a
+ * rename alone says so and which names moved, as the rest of what it prints
+ * is the same.
+ * @param {string} printed the preset's output
+ * @param {string} again it mangled once more
+ * @param {boolean} module whether it is a module
+ * @returns {import("./relations").Report} the finding
+ */
+const renameReport = (printed, again, module) => {
+	const before = tokensOf(printed, module);
+	const after = tokensOf(again, module);
+	let at = 0;
+	while (at < printed.length && printed[at] === again[at]) at++;
+	const where = `    ${oneLine(printed.slice(at, at + 70), 70)}\n      -> ${oneLine(again.slice(at, at + 70), 70)}`;
+	if (
+		before === null ||
+		after === null ||
+		before.length !== after.length ||
+		before.some(
+			(one, i) =>
+				one.label !== after[i].label ||
+				(!RENAMED_LABELS.has(one.label) && one.value !== after[i].value)
+		)
+	) {
+		return {
+			relation: "idempotence",
+			what: `differs under mangling, ${signed(again.length - printed.length)}`,
+			repro: where
+		};
+	}
+	/** @type {Set<string>} */
+	const moved = new Set();
+	for (let i = 0; i < before.length; i++) {
+		if (before[i].value !== after[i].value) {
+			moved.add(`${before[i].value} -> ${after[i].value}`);
+		}
+	}
+	return {
+		relation: "idempotence",
+		what: `renames only, under mangling, ${moved.size} name${moved.size === 1 ? "" : "s"}`,
+		repro: `    rename-only: ${[...moved].slice(0, 3).join(", ")}${
+			moved.size > 3 ? ", …" : ""
+		}\n${where}`
+	};
+};
+
+/**
+ * What a compressing preset's output owes a second pass of it: the same names
+ * under mangling.
+ * @param {(code: string) => string} mangle the preset's mangling alone
+ * @param {string} printed its output
+ * @param {boolean} module whether it is a module
+ * @returns {import("./relations").Report[]} what a second pass moves
+ */
+const secondPassReports = (mangle, printed, module) => {
+	/** @type {import("./relations").Report[]} */
+	const reports = [];
+	/**
+	 * @param {(code: string) => string} pass a pass
+	 * @returns {string | null} what it prints of the output, null where it threw
+	 */
+	const again = (pass) => {
+		try {
+			return pass(printed);
+		} catch (error) {
+			if (isStackOverflow(error)) throw error;
+			reports.push({
+				relation: "idempotence",
+				what: "threw on a second pass",
+				repro: `    ${thrownText(error)}`
+			});
+			return null;
+		}
+	};
+	const renamed = again(mangle);
+	if (renamed !== null && renamed !== printed) {
+		reports.push(renameReport(printed, renamed, module));
+	}
+	return reports;
+};
+
 /** @type {import("./index").SyntaxInvariants} */
 const invariants = {
 	printers: (source) => {
@@ -1810,6 +1895,16 @@ const invariants = {
 			const { minify, reprint } = printerFor(minifyOnePass, options, module);
 			const alone = options.compress === false;
 			const notices = legalNotices(module, !alone);
+			// The preset's mangling alone, which its output must already be.
+			const mangle = printerFor(
+				minifyOnePass,
+				{
+					compress: false,
+					mangle: options.mangle === undefined ? true : options.mangle,
+					format: options.format
+				},
+				module
+			).minify;
 			return {
 				name,
 				minify,
@@ -1824,7 +1919,8 @@ const invariants = {
 					...(behaviorDifference(text, printed, {
 						module,
 						compressed: !alone
-					}) || [])
+					}) || []),
+					...(alone ? [] : secondPassReports(mangle, printed, module))
 				]
 			};
 		});
