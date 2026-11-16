@@ -10068,7 +10068,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-683 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-683 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"x=[[1,2,1,2,\\"a\\"],[3],[1].concat(y),[1].concat(...y),[],[1,2].length,\\"1-2-3\\"],[1,2];"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-683 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"x=[[1,2,1,2,\\"a\\"],[3],[1].concat(y),[1].concat(...y),[],[1,2].length,\\"1-2-3\\"];"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-683 prints {"mode":"minify"} 1`] = `"x=[[1,2].concat(1).concat(2,[\\"a\\"]),[].concat([],[3],[]),[].concat(1,y),[].concat(1,...y),[].concat(),[1].concat(2).length,[].concat(1).concat([2,3]).join(\\"-\\")];[1].concat(2);"`;
 
