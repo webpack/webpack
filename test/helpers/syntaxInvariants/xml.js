@@ -43,7 +43,7 @@ const printXml = (xml, mode) =>
 		new SourceProcessor().process(xml, { xml: true, mode })
 	).code;
 
-/** @typedef {Pick<import("../../../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "renderEmbeddedSource" | "collapseWhitespace" | "removeEmptyAttributes" | "removeEmptyElements" | "removeSvgMetadata" | "removeSvgEditorData" | "removeUnusedSvgNamespaces" | "shortenSvgNumbers" | "shortenSvgColors" | "shortenSvgPathData" | "sortSvgSymbols" | "convertSvgShapes" | "cleanupSvgStructure" | "removeSvgScripts" | "removeSvgTitles" | "removeSvgDescriptions" | "removeSvgRasterImages" | "removeSvgXlink" | "removeSvgDimensions" | "removeSvgViewBox" | "removeXmlDoctype" | "cleanupSvgIds" | "removeHiddenSvgElements" | "mergeSvgPaths" | "reuseSvgPaths" | "sortSvgDefinitions"> & { mode?: "minify" | "beautify" }} XmlPrintOptions */
+/** @typedef {Pick<import("../../../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "renderEmbeddedSource" | "collapseWhitespace" | "removeEmptyAttributes" | "removeEmptyElements" | "removeSvgMetadata" | "removeSvgEditorData" | "removeUnusedSvgNamespaces" | "shortenSvgNumbers" | "shortenSvgColors" | "shortenSvgPathData" | "sortSvgSymbols" | "convertSvgShapes" | "cleanupSvgStructure" | "removeSvgScripts" | "removeSvgTitles" | "removeSvgDescriptions" | "removeSvgRasterImages" | "removeSvgXlink" | "removeSvgDimensions" | "removeSvgViewBox" | "removeXmlDoctype" | "cleanupSvgIds" | "removeHiddenSvgElements" | "svgPrecision" | "mergeSvgPaths" | "reuseSvgPaths" | "sortSvgDefinitions"> & { mode?: "minify" | "beautify" }} XmlPrintOptions */
 
 /** @typedef {import("../../../lib/html/builtinEmbeddedRenderer").BuiltinEmbeddedRendererOptions} CssOptions */
 
