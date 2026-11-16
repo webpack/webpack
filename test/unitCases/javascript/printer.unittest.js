@@ -705,6 +705,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-as-quote-keys-inline-5"), { format: { inline_script: false } }, "'\\x75se strict';console.log(1);"],
 			// An escaped `\\<` gives its backslash up to the `\\x3c` replacing it.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-as-quote-keys-inline-6"), {}, "'\\x3c!--';console.log(1);"],
+			// A `join` keeps apart only pieces that meet as `</script`, `<!--` or `-->`.
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-as-quote-keys-inline-10"), {}, "f(`<D s={${p.s}} />\\nOnly ${m}.\\n\\nEnd.`),f([`a<`,`/script>${x}`].join(\"\")),f([`a<!`,`-- ${x}`].join(\"\")),f([`a--`,`> ${x}`].join(\"\")),f(`a<${x}/script>`),f([`a${x}<`,\"/script \"].join(\"\")),f(`\\x3c!-- ${x}b`),f(`a${x}\\x3c!-- b`),f(`a<!${--x}${y}`),f(`a\\x3c!--${x}`);"],
+			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-as-quote-keys-inline-10"), { format: { inline_script: false } }, "f(`<D s={${p.s}} />\\nOnly ${m}.\\n\\nEnd.`),f(`a<${`/script>${x}`}`),f(`a<!${`-- ${x}`}`),f(`a--> ${x}`),f(`a<${x}/script>`),f(`${`a${x}<`}/script `),f(`<!-- ${x}b`),f(`a${x}<!-- b`),f(`a<!${--x}${y}`),f(`a<!--${x}`);"],
 			// A reserved list may be a set, as terser reads it; anything else reserves nothing.
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-as-quote-keys-inline-7"), { mangle: { reserved: new Set(["a"]) } }, "function f(f){return f}f(1);"],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-as-quote-keys-inline-7"), { mangle: { reserved: "a" } }, "function f(a){return a}f(1);"],
