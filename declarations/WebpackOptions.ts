@@ -6274,7 +6274,7 @@ export type Target =
  */
 export interface ThreadsOptions {
 	/**
-	 * Number of worker threads. Defaults to one less than the number of CPUs; `0` runs the work on the main thread.
+	 * Number of worker threads, at most one less than the number of CPUs, which is also the default; `0` runs the work on the main thread.
 	 * @since 5.113.0
 	 */
 	max?: NonNegativeNumber;
