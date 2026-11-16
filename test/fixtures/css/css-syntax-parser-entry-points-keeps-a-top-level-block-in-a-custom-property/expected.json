@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/--x:[1]: css-tree rule --x:, tool nothing",
+		"why": "a top-level rule whose prelude opens with a `--` name and a `:` is a parse error the spec drops (§5.4.3); css-tree keeps the rule"
+	}
+]

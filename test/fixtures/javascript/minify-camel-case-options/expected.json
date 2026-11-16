@@ -1,7 +1,23 @@
 [
 	{
 		"relation": "behavior",
-		"contains": "it should keep function and class names, as `keepFnames`",
+		"contains": "toMatch \"() => \\\"café\\\"\"",
 		"why": "the fixture logs a function's source text, which `format.asciiOnly` rewrites by contract"
+	},
+	{
+		"relation": "behavior",
+		"contains": "toMatch \"() => \\\"café\\\"\"",
+		"presets": [
+			"format"
+		],
+		"why": "the fixture logs a function's source text, which the printer writes as its own"
+	},
+	{
+		"relation": "idempotence",
+		"contains": "rename-only",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: the mangler ranks the characters it names from by how often the source holds them, the names it renames and the code compressing drops included, so its output ranks them otherwise and a second pass renames"
 	}
 ]

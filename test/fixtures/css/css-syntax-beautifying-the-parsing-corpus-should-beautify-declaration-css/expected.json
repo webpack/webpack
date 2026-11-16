@@ -3,5 +3,10 @@
 		"relation": "respelling escape",
 		"contains": "value\n      -> \\76 alue",
 		"why": "`prop: {value}{value}` is no declaration: it reparses as a rule whose selector `prop:` is invalid, which the printer writes back as authored"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/div[1]: css-tree prop: { value; } { value; } prop: [value][value], tool rule prop:",
+		"why": "a value holding a `{}` block beside anything else is no declaration but a rule (§5.4.5); css-tree keeps the declaration"
 	}
 ]

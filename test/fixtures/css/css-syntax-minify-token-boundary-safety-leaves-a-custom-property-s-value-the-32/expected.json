@@ -3,5 +3,10 @@
 		"relation": "respelling escape",
 		"contains": "a\n      -> \\61",
 		"why": "a declaration, selector or block that is invalid or left open, which the printer writes back as authored, escape included"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/.f[1]: css-tree unparsed &:is(a, tool nothing",
+		"why": "a statement opening no `{}` block is a parse error the spec drops, whether the input ends in it or a block's `;` or `}` ends it (§5.4.3); css-tree keeps it as raw text"
 	}
 ]

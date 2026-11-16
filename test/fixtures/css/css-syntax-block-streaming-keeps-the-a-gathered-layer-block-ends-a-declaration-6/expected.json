@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/@layer[1]/@layer[1]/x:i;.p[1]: css-tree rule x:i;.p, tool x: i",
+		"why": "a `;` in a block ends a statement (§5.4.5): what precedes it is a declaration or a rule the spec drops (§5.4.3), never part of the next rule's selector, which css-tree reads it into"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/@layer[1]/@layer[2]: css-tree unparsed y:j, tool y: j",
+		"why": "an at-rule's block holds declarations and rules, as any block does (§5.4.5); css-tree reads it as rules alone and keeps the declarations as raw text"
+	}
+]

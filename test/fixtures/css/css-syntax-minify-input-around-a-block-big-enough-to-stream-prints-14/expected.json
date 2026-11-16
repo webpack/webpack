@@ -3,5 +3,15 @@
 		"relation": "respelling escape",
 		"contains": "a\n      -> \\61",
 		"why": "a declaration, selector or block that is invalid or left open, which the printer writes back as authored, escape included"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/@layer[1]: css-tree unparsed op:auto;left:auto, tool op: auto",
+		"why": "an at-rule's block holds declarations and rules, as any block does (§5.4.5); css-tree reads it as rules alone and keeps the declarations as raw text"
+	},
+	{
+		"relation": "agreement",
+		"contains": "…o}op:auto;left:auto}op:auto;right:0;bottom:0;left:auto}a[1]: css-tree unparsed b(:1}a{b:c}.c0>d0{color:red;margin:1px…, tool nothing",
+		"why": "a statement opening no `{}` block is a parse error the spec drops, whether the input ends in it or a block's `;` or `}` ends it (§5.4.3); css-tree keeps it as raw text"
 	}
 ]

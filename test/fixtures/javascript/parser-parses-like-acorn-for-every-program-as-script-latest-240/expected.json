@@ -1,0 +1,10 @@
+[
+	{
+		"relation": "residue",
+		"contains": "async a=>1;",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: a `for` whose body breaks at once prints its init as a statement, here an arrow nothing calls"
+	}
+]

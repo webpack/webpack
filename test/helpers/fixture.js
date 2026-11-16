@@ -28,9 +28,10 @@ const indexFile = (lang) =>
 
 /**
  * What a fixture directory's `fixture.js` exports, for what JSON cannot hold:
- * `source()` makes the input, and any other export is a value the fixture's
- * JSON names as `{ "fixture": "<export>" }`.
- * @typedef {{ source?: () => string, [name: string]: unknown }} FixtureCode
+ * `source()` makes the input, `source(n)` where it declares the parameter the
+ * input at size `n`, and any other export is a value the fixture's JSON names
+ * as `{ "fixture": "<export>" }`.
+ * @typedef {{ source?: (n?: number) => string, [name: string]: unknown }} FixtureCode
  */
 
 /**
@@ -334,7 +335,9 @@ const snapshotOfPieces = (source, writeAll) => {
  * @property {PrintOptionSet[]} options the option sets it is printed under, minifying with the defaults first
  * @property {PrintOptionSet[]} behavior those of them whose print runs against the source and must do what it does
  * @property {ParseRun[]} parses the calls its `parse.json` asks for
- * @property {KnownDifference[]} expected what its `expected.json` lets it break
+ * @property {KnownDifference[]} expected what its `expected.json` lets it break, but for `scaling`
+ * @property {((n?: number) => string) | undefined} sized its `fixture.js` `source(n)`, where that declares the size it builds the input at
+ * @property {KnownDifference[]} expectedScaling what its `expected.json` lets the `scaling` relation report
  */
 
 /**
@@ -355,6 +358,8 @@ const readList = (file) =>
  * beside them (CommonJS, Node 10 syntax) holds what JSON cannot:
  * - `source()` returns the input, in place of `index.<ext>`; each snapshot
  *   entry longer than two excerpts becomes its length, a digest and both ends.
+ *   One declaring a parameter, `source(n)`, builds it at size `n` too, which
+ *   `scalingFindings` (`syntaxInvariants/index.js`) holds to the `scaling` relation.
  *   An input past `INVARIANT_BUDGET` (`syntaxInvariants/index.js`) skips the
  *   cuts, respellings and every preset but the first; one deeper than the
  *   stack snapshots `OVERFLOW` where a stage runs out and holds no relation.
@@ -403,6 +408,8 @@ const fixtures = (lang) => {
 				behavior.add(/** @type {PrintOptionSet} */ (options.get(key)));
 			}
 		}
+		/** @type {KnownDifference[]} */
+		const known = readList(path.join(dir, name, "expected.json"));
 		entries.push({
 			name,
 			dir: path.join(dir, name),
@@ -414,7 +421,12 @@ const fixtures = (lang) => {
 				code,
 				name
 			),
-			expected: readList(path.join(dir, name, "expected.json"))
+			expected: known.filter(({ relation }) => relation !== "scaling"),
+			sized:
+				code.source !== undefined && code.source.length > 0
+					? code.source
+					: undefined,
+			expectedScaling: known.filter(({ relation }) => relation === "scaling")
 		});
 	}
 	return entries;

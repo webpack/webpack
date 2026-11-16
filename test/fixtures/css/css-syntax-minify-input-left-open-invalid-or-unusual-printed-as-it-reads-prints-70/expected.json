@@ -8,5 +8,15 @@
 		"relation": "respelling leading-zero",
 		"contains": ".5px\n      -> 0.5px",
 		"why": "`width&:` is no declaration and `.a+.5m` no selector, so the number in either is written back as authored"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/a[1]: css-tree unparsed width&:.5px, tool nothing",
+		"why": "a statement opening no `{}` block is a parse error the spec drops, whether the input ends in it or a block's `;` or `}` ends it (§5.4.3); css-tree keeps it as raw text"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/a[3]: css-tree unparsed width&:.5px, tool nothing",
+		"why": "a statement opening no `{}` block is a parse error the spec drops, whether the input ends in it or a block's `;` or `}` ends it (§5.4.3); css-tree keeps it as raw text"
 	}
 ]
