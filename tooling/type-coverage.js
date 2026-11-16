@@ -204,12 +204,22 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 		 * @param {ts.Type} type the type
 		 * @returns {string} the printed type
 		 */
-		const printType = (type) =>
-			typeChecker.typeToString(
-				type,
-				undefined,
-				ts.TypeFormatFlags.NoTruncation
-			);
+		// A type is printed and walked once: TypeScript interns types, and an
+		// identifier's large union is shared by every other identifier of it.
+		/** @type {Map<ts.Type, string>} */
+		const printedTypes = new Map();
+		const printType = (type) => {
+			let text = printedTypes.get(type);
+			if (text === undefined) {
+				text = typeChecker.typeToString(
+					type,
+					undefined,
+					ts.TypeFormatFlags.NoTruncation
+				);
+				printedTypes.set(type, text);
+			}
+			return text;
+		};
 
 		/**
 		 * @param {ts.Node} node the node to be walked
@@ -506,6 +516,10 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 			);
 		};
 
+		// What `hasOwnAny` answered for a type at each depth, as unions repeat.
+		/** @type {Map<ts.Type, boolean[]>} */
+		const ownAnyByDepth = new Map();
+
 		/**
 		 * Tells whether a type holds an `any` of this project's, walking what its
 		 * printed form shows: the arguments of a named type and the members of an
@@ -516,6 +530,26 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 		 */
 		const hasOwnAny = (type, depth) => {
 			if (type.flags & ts.TypeFlags.Any) return true;
+			let byDepth = ownAnyByDepth.get(type);
+			if (byDepth === undefined) {
+				byDepth = [];
+				ownAnyByDepth.set(type, byDepth);
+			}
+			let result = byDepth[depth];
+			if (result === undefined) {
+				result = walkOwnAny(type, depth);
+				byDepth[depth] = result;
+			}
+			return result;
+		};
+
+		/**
+		 * `hasOwnAny`'s walk, once per type and depth.
+		 * @param {ts.Type} type the type
+		 * @param {number} depth how deep the walk is
+		 * @returns {boolean} true when it does
+		 */
+		const walkOwnAny = (type, depth) => {
 			if (depth > 8) return mentionsAny(printType(type));
 			// A built-in alias before its union: `IteratorResult<T, TReturn = any>` defaults its own `any`.
 			if (type.aliasSymbol && isBuiltinSymbol(type.aliasSymbol)) {
