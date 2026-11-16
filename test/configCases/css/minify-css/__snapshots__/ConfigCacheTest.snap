@@ -1065,7 +1065,7 @@ Array [
 
 exports[`ConfigCacheTestCases css minify-css minify-css should compile: minimize-esbuild 1`] = `
 Array [
-  "@import url(http://example.test/foo.css);",
+  "@import url(http://example.test/foo.css);@import url(http://example.test/foo.css) (a<1);@import url(http://example.test/foo.css) supports(foo) (a<1);@import url(http://example.test/foo.css) layer;@import url(http://example.test/foo.css) layer (a<1);@import url(http://example.test/foo.css) layer supports(foo);@import url(http://example.test/foo.css) layer supports(foo) (a<1);",
   "/*! esbuild: @import\\"foo.css\\"; */",
   "/*! esbuild: @import \\"foo.css\\"; */",
   "/*! esbuild: @import url(foo.css); */",

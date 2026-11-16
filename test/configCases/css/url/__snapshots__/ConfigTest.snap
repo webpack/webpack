@@ -621,7 +621,7 @@ div {
 	a205: url(img.09a1a1112c577c279435.png);
 	a206: url(data:,);
 	a208: url(./img.png);
-	a208: url(data:,);
+	a208: url(external-url-2.png);
 	a209: url(data:,);
 	a210: url(data:,);
 	a211: url(\\\\'img.png\\\\');

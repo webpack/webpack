@@ -1,0 +1,6 @@
+@value quote: "a from b";
+@value font: format(x from y);
+
+.text {
+	content: quote;
+}
