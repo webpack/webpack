@@ -1,6 +1,6 @@
 # Worker pool
 
-`lib/worker/` runs CPU-heavy plugin work on `worker_threads`. One pool per compiler root owns the threads, and `compiler.worker(workerPath, options)` binds a module to the pool. A thread is not tied to one module or one call.
+`lib/worker/` runs CPU-heavy plugin work on `worker_threads`. One pool per process owns the threads, shared by every compiler that turns `experiments.threads` on, and `compiler.worker(workerPath, options)` binds a module to it. A thread is not tied to one module, one call or one compiler.
 
 This file is the spec. When code and spec disagree, fix one of them in the same commit.
 
@@ -66,8 +66,9 @@ When `options` fields ship, they reuse the `jest-worker` or `thread-loader` name
 
 - the farm is created once per `compiler.root` when `experiments.threads` is on;
 - child compilers return the root's facade;
-- each compiler of a `MultiCompiler` is its own root, so every config gets its own pool;
-- `compiler.close()` sets a closed flag immediately and ends the pool before `shutdown`; an existing facade can still run calls until the pool ends;
+- every threaded compiler of the process, the compilers of a `MultiCompiler` included, shares one pool: cores are a process-wide budget, so a `MultiCompiler` that builds its configs at once still runs on at most `max` threads. The pool's `max` is the largest any of them asks for; it stays alive while any of them builds or watches, and ends when the last of them closes;
+- a compiler with `max: 0`, threads off or no `worker_threads` keeps its own inline pool;
+- `compiler.close()` sets a closed flag immediately and, if it is the pool's last compiler, ends the pool before `shutdown`; an existing facade can still run calls until the pool ends;
 - the farm is created on first use, so a plugin calls `compiler.worker` the same way whether threads are on or off, as it calls `getCache` whether caching is on or off;
 - after `compiler.close()` starts, a farm whose pool was never created throws; otherwise the same facade is returned, and its calls reject because the pool ended.
 
