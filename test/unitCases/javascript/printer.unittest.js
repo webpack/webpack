@@ -229,6 +229,24 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(unbraced.code).toBe("function f(){for(;;)if(!xx)yy(),zz()}");
 		// cspell:disable-next-line
 		expect(unbraced.map.mappings).toBe("AAAA,SAASA,IAAI,OAAQ,IAAGC,GAAYC");
+		// A case falling into the next keeps its test's place, its body mapping nothing.
+		const merged = /** @type {{ code: string, map: { names: string[], mappings: string } }} */ (
+			new SourceProcessor().process(
+				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-751"),
+				{
+					mode: "minify",
+					compress: { toplevel: false },
+					mangle: false,
+					source: "a.js"
+				}
+			)
+		);
+		expect(merged.code).toBe(
+			"function f(x){switch(x){case zero:case one:return g();case two:h()}}"
+		);
+		expect(merged.map.names).toEqual(["f", "x", "zero", "one", "g", "two", "h"]);
+		// cspell:disable-next-line
+		expect(merged.map.mappings).toBe("AAAA,SAASA,EAAEC,GAAG,OAAOA,GAAG,KAAKC,KAAgB,KAAKC,IAAI,OAAOC,IAAI,KAAKC,IAAIC");
 	});
 
 	it("should refuse an option it does not know, and a module statement off the top level", () => {
