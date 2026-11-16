@@ -179,7 +179,7 @@ Ordering rules:
 
 - Spawn lazily from dispatch or `warmup`.
 - While `setKeepAlive(true)` is on, idle threads start no idle timer; `setKeepAlive(false)` starts the timers again. `WorkerPlugin` turns it on at `compile`, off at `done` and `failed` outside watch mode, and off at `watchClose`.
-- `markUnused()` starts a round; `releaseUnused()` retires idle threads that ran no call in it, unless none ran one. `WorkerPlugin` calls `releaseUnused()` then `markUnused()` at the end of each watch build.
+- `markUnused()` starts a round; `releaseUnused()` retires idle threads that ran no call in it, unless none ran one. `WorkerPlugin` calls `releaseUnused()` then `markUnused()` when the last build of a round ends: with a shared pool, an earlier compiler's build end would retire threads a sibling used before it.
 - An idle thread is released with `unref()` at once, so an idle pool never keeps the process alive, and starts an `idleTimeout` timer (itself released with `unref()`). A pending preload keeps the thread referenced and delays that timer.
 - When it fires and the thread is still idle, the thread is terminated.
 - Posting a call clears the timer and `ref()`s the thread.

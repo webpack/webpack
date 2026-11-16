@@ -544,11 +544,17 @@ describe("WorkerPool", () => {
 		});
 
 		it("warms up a target count, retires idle workers and releases", async () => {
-			const pool = createThreadPool({ idleTimeout: 20 });
+			// a short timeout would let the first warm thread retire before the
+			// second is ready, so shorten it only once both are idle
+			const pool = createThreadPool({ idleTimeout: 1000 });
 			await pool.warmup([TARGET], 2);
 			expect(pool.stats.workers).toBe(2);
 			expect(pool.stats.idle).toBe(2);
 
+			// restart the idle timers with the short timeout
+			pool.setKeepAlive(true);
+			pool.options.idleTimeout = 20;
+			pool.setKeepAlive(false);
 			await waitFor(() => pool.stats.workers === 0);
 
 			await pool.warmup([TARGET], 1);
@@ -1146,7 +1152,7 @@ describe("WorkerPool", () => {
 
 	describeThreads("shared pool", () => {
 		/**
-		 * @param {import("../../declarations/WebpackOptions").Configuration=} options extra options
+		 * @param {import("../../declarations/WebpackOptions").WebpackOptions=} options extra options
 		 * @returns {import("../../lib/Compiler")} the compiler
 		 */
 		const createThreaded = (options) => {
@@ -1230,7 +1236,7 @@ describe("WorkerPool", () => {
 			const webpack = require("../../lib/webpack");
 			/**
 			 * @param {string} name the config name
-			 * @returns {import("../../declarations/WebpackOptions").Configuration} the config
+			 * @returns {import("../../declarations/WebpackOptions").WebpackOptions} the config
 			 */
 			const config = (name) => ({
 				name,
