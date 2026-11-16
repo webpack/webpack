@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases control-characters-in-module-not-found-error should print correct stats for control-characters-in-module-not-found-error 1`] = `
+"ERROR in ./index.js 1:0-37
+Module not found: Error: Can't resolve './missing/x1b[31mRED/x0d.js' in 'Xdir/control-characters-in-module-not-found-error'
+resolve './missing/x1b[31mRED/x0d.js' in 'Xdir/control-characters-in-module-not-found-error'
+  No description file found in Xdir/control-characters-in-module-not-found-error or above
+  No description file found in Xdir/control-characters-in-module-not-found-error or above
+  no extension
+    Xdir/control-characters-in-module-not-found-error/missing/x1b[31mRED/x0d.js doesn't exist
+  as directory
+    Xdir/control-characters-in-module-not-found-error/missing/x1b[31mRED/x0d.js doesn't exist
+"
+`;
