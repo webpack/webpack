@@ -530,6 +530,31 @@ describe("WorkerPool", () => {
 			await expect(result).resolves.toBe(5);
 		});
 
+		it("keeps a job blocked until every awaited rpc settles", async () => {
+			const pool = createThreadPool({ max: 1, loaderParallelJobs: 1 });
+			const result = pool.runJob(TARGET, "rpcTwo", [], {
+				rpc: async (method) => {
+					// both are in flight before "fast" settles; "nested" then
+					// calls back into the full pool
+					await new Promise((resolve) =>
+						setTimeout(resolve, method === "fast" ? 10 : 50)
+					);
+					if (method === "fast") return 1;
+					return pool.run(TARGET, "add", [1, 2]);
+				}
+			});
+			/** @type {NodeJS.Timeout | undefined} */
+			let timer;
+			const stalled = new Promise((_resolve, reject) => {
+				timer = setTimeout(() => reject(new Error("stalled")), 2000);
+			});
+			try {
+				await expect(Promise.race([result, stalled])).resolves.toEqual([1, 3]);
+			} finally {
+				clearTimeout(timer);
+			}
+		});
+
 		it("dispatches a call queued while warming up", async () => {
 			const pool = createThreadPool({ max: 1 });
 			const warming = pool.warmup([SLOW], 1);
