@@ -9,4 +9,5 @@
 	<image href="photo.PNG?v=1" width="1" height="1"/>
 	<image href="data:image/jpeg;base64,AA" width="1" height="1"/>
 	<image href="a.png#x" width="1" height="1"/>
+	<image href="vector.svg" xlink:href="fallback.png" width="1" height="1"/>
 </svg>
