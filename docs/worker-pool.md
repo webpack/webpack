@@ -210,13 +210,13 @@ module.exports = {
 };
 ```
 
-| Value             | Effect                                       |
-| ----------------- | -------------------------------------------- |
-| `false` (default) | Every call runs directly on the main thread. |
-| `true`            | `{ max: cores - 1 }`.                        |
-| `max: n`          | `Math.floor(n)`; `0` runs every call inline. |
+| Value             | Effect                                                  |
+| ----------------- | ------------------------------------------------------- |
+| `false` (default) | Every call runs directly on the main thread.            |
+| `true`            | `{ max: cores - 1 }`.                                   |
+| `max: n`          | `min(floor(n), cores - 1)`; `0` runs every call inline. |
 
-`cores` is `os.availableParallelism()` when available, else `os.cpus().length`; the result is clamped to at least 0. Plain calls keep an idle thread for 30 seconds; RPC jobs use the pool's `loaderPoolTimeout` (500 ms). When `worker_threads` is unavailable, the compiler emits a warning on each compilation and `compiler.worker()` calls run directly on the main thread.
+`cores` is `os.availableParallelism()` when available (Node 18.14+), else `os.cpus().length`, and `1` when `os.cpus()` returns nothing; the result is clamped to at least 0. This is how minimizer-webpack-plugin counts its `parallel` workers, so `max` never exceeds the cores either. Plain calls keep an idle thread for 30 seconds; RPC jobs use the pool's `loaderPoolTimeout` (500 ms). When `worker_threads` is unavailable, the compiler emits a warning on each compilation and `compiler.worker()` calls run directly on the main thread.
 
 ## First consumer
 

@@ -8181,7 +8181,7 @@
       "additionalProperties": false,
       "properties": {
         "max": {
-          "description": "Number of worker threads. Defaults to one less than the number of CPUs; `0` runs the work on the main thread.",
+          "description": "Number of worker threads, at most one less than the number of CPUs, which is also the default; `0` runs the work on the main thread.",
           "type": "number",
           "minimum": 0,
           "added": "5.113.0"

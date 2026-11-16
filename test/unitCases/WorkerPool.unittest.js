@@ -245,8 +245,15 @@ describe("WorkerPool", () => {
 			await defaults._pool.end();
 
 			const two = workerFor({ max: 2.5 });
-			expect(two._pool.options.max).toBe(threaded ? 2 : 0);
+			expect(two._pool.options.max).toBe(
+				threaded ? Math.min(2, Math.max(cpus - 1, 0)) : 0
+			);
 			await two._pool.end();
+
+			// like minimizer-webpack-plugin's `parallel`: never above cores - 1
+			const many = workerFor({ max: cpus + 8 });
+			expect(many._pool.options.max).toBe(threaded ? Math.max(cpus - 1, 0) : 0);
+			await many._pool.end();
 
 			const inline = workerFor({ max: 0 });
 			expect(await inline.run("info")).toEqual(callerThread());
