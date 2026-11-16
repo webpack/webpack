@@ -64,6 +64,13 @@ describe("mergeImportConditions", () => {
 		);
 		expect(merge("not screen", "(color)")).toBe("print and (color)");
 		expect(merge("not all", "screen")).toBe("not all");
+		expect(
+			mergeImportConditions(undefined, undefined, "screen", [
+				[undefined, undefined, "print"],
+				[undefined, undefined, "screen"]
+			]).media
+		).toBe("not all");
+		expect(merge("screen, print", "print")).toBe("print");
 		expect(merge("not screen and (color)", "print")).toBe(
 			"print, print and (not ((color)))"
 		);
