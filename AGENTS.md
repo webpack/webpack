@@ -234,7 +234,7 @@ A local failure is yours only if it doesn't reproduce on `main` (check in a work
 
 > [!REQUIRED]
 
-Read [docs/performance.md](docs/performance.md) before claiming or measuring a performance, memory or emitted-size change. In short: prefer counting over CPU-profile attribution over retained heap over wall timing, inside a real build, never a micro-benchmark; for size, gzip decides and a re-encoding must show a compressed win; `readWord`, `readString` and `finishToken` in `lib/javascript/syntax-parser.js` sit just under V8's inlining budget: check their bytecode size before and after touching them.
+Read [docs/performance.md](docs/performance.md) before claiming or measuring a performance, memory or emitted-size change. In short: prefer counting over CPU-profile attribution over retained heap over wall timing, inside a real build, never a micro-benchmark; for size, gzip decides and a re-encoding must show a compressed win; `readString` and `finishToken` in `lib/javascript/syntax-parser.js` sit just under V8's inlining budget: check their bytecode size before and after touching them.
 
 ## Git & PR rules
 

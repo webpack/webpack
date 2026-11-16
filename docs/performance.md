@@ -13,11 +13,11 @@ Perf/memory claims need evidence, and the cheap kinds are the trustworthy ones; 
 
 `FILTER="<case-name>" yarn benchmark` drives the repo's cases; fixtures are in `test/benchmarkCases/`.
 
-**Some hot methods are sized to V8's inlining budget.** TurboFan won't inline a callee over its bytecode limit (460 at the time of writing), so adding anything to a method just under it silently loses the inlining. `lib/javascript/syntax-parser.js` keeps `readWord`, `readString` and `finishToken` under it deliberately, with rare arms split into `_readWordIntoCache`, `_readWordUncacheable`, `_readStringCold` and `_updateContext`; `readWord` has ~6 bytes of headroom and once cost 1.4% from one added argument. Check the size before and after touching them:
+**Some hot methods are sized to V8's inlining budget.** TurboFan won't inline a callee over its bytecode limit (460 at the time of writing), so adding anything to a method just under it silently loses the inlining. `lib/javascript/syntax-parser.js` keeps `readString` and `finishToken` under it deliberately, with rare arms split into `_readStringCold` and `_updateContext`; `readWord`, then under it too, once cost 1.4% from one added argument, before `nextToken` took its word scan in. Check the size before and after touching them:
 
 ```sh
 # replace path/to/parse-script.js with any script that runs the parser
-node --print-bytecode --print-bytecode-filter=readWord path/to/parse-script.js
+node --print-bytecode --print-bytecode-filter=finishToken path/to/parse-script.js
 ```
 
 `node --trace-turbo-inlining` shows what was inlined where and reports `Cannot consider <name> for inlining (reason: 5)` for a too-large callee.
