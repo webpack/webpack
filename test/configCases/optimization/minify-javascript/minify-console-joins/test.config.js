@@ -13,7 +13,7 @@ module.exports = {
 		expect(code).not.toContain("optional");
 		expect(code).toContain("expect(`<Grid size={3} />\\nBelow 4.\\n\\nEnd.`)");
 		expect(code).toContain("expect(`a<!`+`-- 1`)");
-		expect(code).not.toContain("a< /script>");
-		expect(code).not.toContain("a<! --");
+		expect(code).not.toMatch(/<\/script/i);
+		expect(code).not.toContain("<!--");
 	}
 };
