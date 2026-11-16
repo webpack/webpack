@@ -45,7 +45,8 @@ const { idempotence, purityRelation } = require("./relations");
 /**
  * Every relation one syntax breaks over a set of sources: spans, slices and
  * purity for the parser; idempotence, what each preset keeps, respelling and
- * cut inputs for the printer. A source past `INVARIANT_BUDGET` skips the cuts,
+ * cut inputs for the printer, a cut's spans and slices reported as `cut spans`
+ * and `cut slices`. A source past `INVARIANT_BUDGET` skips the cuts,
  * slices, respellings, per-source purity and all presets but the first; one
  * deeper than the stack, every relation.
  * @param {SyntaxInvariants} syntax the syntax's answers
@@ -64,6 +65,18 @@ const invariantFindings = (syntax, sources) => {
 	const add = (label, preset, reports) => {
 		if (reports === null) return;
 		for (const report of reports) findings.push({ label, preset, report });
+	};
+	/**
+	 * @param {string} label the cut source
+	 * @param {Report[] | null} reports what its parse broke
+	 * @returns {void}
+	 */
+	const addCut = (label, reports) => {
+		if (reports === null) return;
+		for (const report of reports) {
+			const relation = `cut ${report.relation}`;
+			findings.push({ label, preset: "parse", report: { ...report, relation } });
+		}
 	};
 	/**
 	 * @param {string} label the source
@@ -121,7 +134,10 @@ const invariantFindings = (syntax, sources) => {
 				);
 			}
 			for (const [where, cut] of syntax.cuts(source)) {
-				print(`${label}, cut ${where}`, cut);
+				const at = `${label}, cut ${where}`;
+				addCut(at, syntax.spans(cut));
+				addCut(at, syntax.slices(cut));
+				print(at, cut);
 			}
 			return true;
 		});
