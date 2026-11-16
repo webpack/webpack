@@ -3,7 +3,7 @@
 const { DefinePlugin, SSRManifestPlugin } = require("../../../../");
 
 /**
- * @param {string} chunkFilename the chunk filename template
+ * @param {string | (() => string)} chunkFilename the chunk filename template
  * @param {Record<string, string>} expected the url each chunk gets
  * @param {number} index the configuration's index
  * @param {string=} publicPath the public path
@@ -101,5 +101,9 @@ module.exports = [
 			entry: "./unique-name.js",
 			output: { ...options.output, uniqueName: "x:y" }
 		};
-	})()
+	})(),
+	// a `#` in the name, and a function filename for the static url path
+	{ ...config(() => "[name].js", {}, 9), entry: "./only-query.js" },
+	{ ...config("[name].js", {}, 10), entry: "./only-hash.js" },
+	{ ...config(() => "[name].js", {}, 11), entry: "./only-hash.js" }
 ];
