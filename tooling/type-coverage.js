@@ -198,16 +198,16 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 			);
 		};
 
+		// A type is printed and walked once: TypeScript interns types, and an
+		// identifier's large union is shared by every other identifier of it.
+		/** @type {Map<ts.Type, string>} */
+		const printedTypes = new Map();
 		/**
 		 * Prints a type in full: a shortened union, such as `A | ... 14 more ... | B`,
 		 * could hide the member that holds an `any`.
 		 * @param {ts.Type} type the type
 		 * @returns {string} the printed type
 		 */
-		// A type is printed and walked once: TypeScript interns types, and an
-		// identifier's large union is shared by every other identifier of it.
-		/** @type {Map<ts.Type, string>} */
-		const printedTypes = new Map();
 		const printType = (type) => {
 			let text = printedTypes.get(type);
 			if (text === undefined) {
