@@ -83,5 +83,23 @@ module.exports = [
 		"?file="
 	),
 	// the only chunk needing `./` is the one whose name holds a `?`
-	{ ...config("[name].js", {}, 5), entry: "./only-query.js" }
+	{ ...config("[name].js", {}, 5), entry: "./only-query.js" },
+	// the entry's public path is used over the output's
+	{
+		...config("[name].js", { "x:y": "?file=x:y.js" }, 6),
+		entry: { main: { import: "./entry-public-path.js", publicPath: "?file=" } }
+	},
+	{
+		...config("[name].js", { "x:y": "./x:y.js" }, 7, "?file="),
+		entry: { main: { import: "./entry-public-path.js", publicPath: "" } }
+	},
+	// the only `:` is in the unique name
+	(() => {
+		const options = config("[uniqueName].[id].js", {}, 8);
+		return {
+			...options,
+			entry: "./unique-name.js",
+			output: { ...options.output, uniqueName: "x:y" }
+		};
+	})()
 ];
