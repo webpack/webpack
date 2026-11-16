@@ -43957,6 +43957,46 @@ exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-
 
 exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-21 tokenizes 1`] = `"\\"name[0,1] throws: Unexpected character '\\\\udc00' (1:1)\\""`;
 
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-22 parses 1`] = `"Program[0,94](body=[ExpressionStatement[0,93](expression=AssignmentExpression[0,92](operator=\\"=\\" left=Identifier[0,13](name=\\"abcdefghijklm\\") right=BinaryExpression[16,92](left=Identifier[16,30](name=\\"abcdefghijklmn\\") operator=\\"+\\" right=Identifier[33,92](name=\\"__WEBPACK_MODULE_REFERENCE__0_5b2264656661756c74225d_call__\\"))))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-22 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-22 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-22 prints {"mode":"minify"} 1`] = `"abcdefghijklm=abcdefghijklmn+__WEBPACK_MODULE_REFERENCE__0_5b2264656661756c74225d_call__;"`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-22 tokenizes 1`] = `"name[0,13] =[14,15] name[16,30] +/-[31,32] name[33,92] ;[92,93] eof[94,94]"`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-23 parses 1`] = `"Program[0,29](body=[ExpressionStatement[0,28](expression=AssignmentExpression[0,27](operator=\\"=\\" left=Identifier[0,23](name=\\"abcdefghijklmnopaq\\") right=Literal[26,27](value=1 raw=\\"1\\")))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-23 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-23 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-23 prints {"mode":"minify"} 1`] = `"abcdefghijklmnopaq=1;"`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-23 tokenizes 1`] = `"name[0,23]=\\"abcdefghijklmnopaq\\" =[24,25] num[26,27] ;[27,28] eof[29,29]"`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-24 parses 1`] = `"Program[0,38](body=[ExpressionStatement[0,37](expression=AssignmentExpression[0,36](operator=\\"=\\" left=Identifier[0,17](name=\\"abcdefghijklmnopé\\") right=Identifier[20,36](name=\\"abcdefghijklmnop\\")))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-24 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-24 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-24 prints {"mode":"minify"} 1`] = `"abcdefghijklmnopé=abcdefghijklmnop;"`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-24 tokenizes 1`] = `"name[0,17] =[18,19] name[20,36] ;[36,37] eof[38,38]"`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-25 parses 1`] = `"Program[0,40](body=[ExpressionStatement[0,14](expression=Identifier[0,13](name=\\"abcdefghijklm\\")),ExpressionStatement[14,40](expression=Identifier[14,40](name=\\"abcdefghijklmnopqrstuvwxyz\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-25 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-25 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-25 prints {"mode":"minify"} 1`] = `"abcdefghijklm;abcdefghijklmnopqrstuvwxyz;"`;
+
+exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-25 tokenizes 1`] = `"name[0,13] ;[13,14] name[14,40] eof[40,40]"`;
+
 exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-keywords-under-every-option-set parses 1`] = `"throws: Unexpected token (1:3)"`;
 
 exports[`JavaScript syntax — invariants parser-tokenizer-tokenizes-like-acorn-for-keywords-under-every-option-set parses 2`] = `"error[3,7]:unexpected-token"`;
