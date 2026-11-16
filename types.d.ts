@@ -3318,6 +3318,23 @@ declare interface ClearCacheOptions {
 	 */
 	parsedMap?: boolean;
 }
+declare interface CloneableObject {
+	[index: string]: CloneableValue;
+}
+type CloneableValue =
+	| undefined
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| RegExp
+	| ArrayBuffer
+	| Error
+	| Date
+	| ArrayBufferView
+	| CloneableValue[]
+	| CloneableObject;
 
 /**
  * Defines the code gen map overloads type used by this module.
@@ -38911,8 +38928,8 @@ declare abstract class Worker<M extends WorkerModule = WorkerDefaultModule> {
 	 */
 	run<K extends string>(
 		method: K,
-		...args: Parameters<Extract<M[K], (...args: never[]) => unknown>>
-	): Promise<Awaited<ReturnType<Extract<M[K], (...args: never[]) => unknown>>>>;
+		...args: Parameters<Extract<M[K], (...args: never[]) => void>>
+	): Promise<Awaited<ReturnType<Extract<M[K], (...args: never[]) => void>>>>;
 
 	/**
 	 * Spawns up to `workers` threads and preloads this module in each.
@@ -38926,10 +38943,26 @@ declare abstract class Worker<M extends WorkerModule = WorkerDefaultModule> {
 }
 
 /**
- * Untyped facade: every method takes and returns `unknown`.
+ * Untyped facade: every method takes and returns cloneable values.
  */
 declare interface WorkerDefaultModule {
-	[index: string]: (...args: unknown[]) => unknown;
+	[index: string]: (
+		...args: CloneableValue[]
+	) =>
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| ArrayBuffer
+		| Error
+		| Date
+		| ArrayBufferView
+		| CloneableValue[]
+		| CloneableObject
+		| Promise<CloneableValue>;
 }
 
 /**

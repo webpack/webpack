@@ -68,6 +68,7 @@ describe("WorkerPool", () => {
 			await expect(pool.run(TARGET, "missing", [])).rejects.toThrow(
 				`${TARGET} has no export named missing`
 			);
+			// @ts-expect-error a function cannot be cloned
 			await expect(pool.run(TARGET, "add", [() => {}, 1])).rejects.toThrow(
 				/could not be cloned|can not be cloned/
 			);
@@ -97,6 +98,7 @@ describe("WorkerPool", () => {
 		it("passes values through without strictClone", async () => {
 			const pool = createPool({ max: 0, strictClone: false });
 			const fn = () => 1;
+			// @ts-expect-error without strictClone a function passes through
 			expect(await pool.run(TARGET, "echo", [fn])).toEqual([fn]);
 		});
 
@@ -164,6 +166,7 @@ describe("WorkerPool", () => {
 			const pool = createPool({ max: 0 });
 
 			const argsError = await pool
+				// @ts-expect-error a function cannot be cloned
 				.run(TARGET, "add", [() => {}, 1])
 				.catch((/** @type {ThrownValue} */ error) => error);
 			expect(argsError).toBeInstanceOf(WorkerJobCloneError);
@@ -516,6 +519,7 @@ describe("WorkerPool", () => {
 			await expect(pool.run(TARGET, "returnFunction", [])).rejects.toThrow(
 				/could not be cloned|can not be cloned/
 			);
+			// @ts-expect-error a function cannot be cloned
 			await expect(pool.run(TARGET, "add", [() => {}, 1])).rejects.toThrow(
 				/could not be cloned|can not be cloned/
 			);
