@@ -36105,6 +36105,24 @@ at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] delim[9,10] i
 9] left-curly-bracket[469,470] delim[470,471] ident[471,472] left-curly-bracket[472,473] ident[473,476] colon[476,477] number[477,478] right-curly-bracket[478,479] right-curly-bracket[479,480] end=480"
 `;
 
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-a-nested-block-grows-once parses 1`] = `
+"length 3828, sha256 a387f14b42e49bba
+[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a\\"]],[[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"print\\"],[\\"{}\\",\\".\\",[\\"ident\\",\\"a10\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"b\\"]],[
+…
+-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"screen\\"],[\\"{}\\",[\\"at-keyword\\",\\"supports\\"],\\" \\",[\\"()\\",[\\"ident\\",\\"display\\"],\\":\\",[\\"ident\\",\\"grid\\"]],[\\"{}\\",\\".\\",[\\"ident\\",\\"d1\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-a-nested-block-grows-once parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-a-nested-block-grows-once prints {"mode":"minify"} 1`] = `"@layer a{@media print{.a10,.a7,.a8,.a9{color:red}.x{top:0}.c1,.c2,.c3,.e,.f{color:red}.c1,.c2{color:blue}}}@layer b{@media print{@supports (display:grid){.b10,.b7,.b8,.b9{color:red}}}@media screen{.b9,.d1,.d2,.d3,.d4{color:red}@supports (display:grid){.d1{color:red}}}}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-a-nested-block-grows-once tokenizes 1`] = `
+"length 8483, sha256 6157d17301373795
+at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] at-keyword[9,15] whitespace[15,16] ident[16,21] left-curly-bracket[21,22] delim[22,23] ident[23,26] left-curly-bracket[26,27] ident[2
+…
+29] left-curly-bracket[929,930] ident[930,935] colon[935,936] ident[936,939] right-curly-bracket[939,940] right-curly-bracket[940,941] right-curly-bracket[941,942] right-curly-bracket[942,943] end=943"
+`;
+
 exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-they-grow-once parses 1`] = `
 "length 2118, sha256 f72013fd14318712
 [[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a\\"]],[\\".\\",[\\"ident\\",\\"a10\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"b\\"]],[\\".\\",[\\"ident\\",\\"b10\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"id
