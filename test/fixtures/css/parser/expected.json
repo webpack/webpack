@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/: css-tree unparsed p: foo 10 10px 50% #fff / \"s\" : , bar(…, tool nothing",
+		"why": "a statement opening no `{}` block is a parse error the spec drops, whether the input ends in it or a block's `;` or `}` ends it (§5.4.3); css-tree keeps it as raw text"
+	}
+]

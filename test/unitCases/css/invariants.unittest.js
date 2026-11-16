@@ -323,13 +323,17 @@ describe("CSS syntax — invariants", () => {
 			}
 
 			it("holds its invariants", () => {
-				expect(
-					unexplained(
-						invariantFindings(syntax, [[name, source]]),
-						expected,
-						source
-					)
-				).toEqual([]);
+				const findings = invariantFindings(syntax, [[name, source]]);
+				const agreed = syntax.agreementReports(source);
+				for (const report of agreed || []) {
+					findings.push({ label: name, preset: "parse", report });
+				}
+				// Without css-tree nothing is compared, so no difference is excused.
+				const reachable =
+					agreed === null
+						? expected.filter((entry) => entry.relation !== "agreement")
+						: expected;
+				expect(unexplained(findings, reachable, source)).toEqual([]);
 			});
 		});
 	}

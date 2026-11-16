@@ -3,5 +3,10 @@
 		"relation": "respelling escape",
 		"contains": "zoom\n      -> \\7a oom",
 		"why": "`*zoom: 1` is no declaration but the star hack an engine drops, which the printer writes back as authored, escape included"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/.a[1]: css-tree unparsed -1x:4;, tool nothing",
+		"why": "a statement opening no `{}` block is a parse error the spec drops, whether the input ends in it or a block's `;` or `}` ends it (§5.4.3); css-tree keeps it as raw text"
 	}
 ]

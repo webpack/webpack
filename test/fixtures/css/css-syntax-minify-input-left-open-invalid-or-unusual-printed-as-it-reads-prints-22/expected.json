@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/@custom-media[1]: css-tree …tor :--h h1;;, tool …tor :--h h1;",
+		"why": "the `;` lies inside the `(` the input ends in, so it is the prelude's own (§5.4.9) rather than the at-rule's end; the comparison's reader of webpack's tree drops a trailing `;` all the same"
+	}
+]

@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/a[1]: css-tree grid-row: 1 !important, tool grid-row: 1 !imptant",
+		"why": "only a `!` and an identifier matching `important` make a declaration important (§5.4.6); css-tree reads any `!` and identifier as `!important`"
+	}
+]

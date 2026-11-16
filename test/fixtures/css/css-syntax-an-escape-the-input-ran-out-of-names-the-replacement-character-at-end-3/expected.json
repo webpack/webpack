@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/@ab[1]: css-tree @ab \\;, tool @ab�;",
+		"why": "a `\\` the input ends after is a valid escape (§4.3.8) of EOF, U+FFFD in the at-rule's name (§4.3.7); css-tree reads it as its prelude"
+	}
+]

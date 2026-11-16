@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/a[href=\"ab\\\\\"][1]: css-tree b: ca{b:c}, tool rule b:ca",
+		"why": "a value holding a `{}` block beside anything else is no declaration but a rule (§5.4.5); css-tree keeps the declaration"
+	}
+]

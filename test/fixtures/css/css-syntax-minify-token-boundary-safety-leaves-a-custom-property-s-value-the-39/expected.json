@@ -3,5 +3,10 @@
 		"relation": "respelling escape",
 		"contains": "a\n      -> \\61",
 		"why": "a declaration, selector or block that is invalid or left open, which the printer writes back as authored, escape included"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/.f[1]: css-tree unparsed &:is(a);color:red, tool color: red",
+		"why": "`&:is(a);` in a block is a rule the `;` ends, which the spec drops (§5.4.3), and `color:red` after it a declaration (§5.4.5); css-tree keeps the two as one raw text"
 	}
 ]

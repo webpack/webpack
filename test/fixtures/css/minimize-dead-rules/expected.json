@@ -3,5 +3,10 @@
 		"relation": "respelling escape",
 		"contains": "zoom\n      -> \\7a oom",
 		"why": "`*zoom: 1` is no declaration but the star hack an engine drops, which the printer writes back as authored, escape included"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/@media[8]/*zoom: 1; .t11[1]: css-tree rule *zoom: 1; .t11, tool rule .t11",
+		"why": "a `;` in a block ends a statement (§5.4.5): what precedes it is a declaration or a rule the spec drops (§5.4.3), never part of the next rule's selector, which css-tree reads it into"
 	}
 ]

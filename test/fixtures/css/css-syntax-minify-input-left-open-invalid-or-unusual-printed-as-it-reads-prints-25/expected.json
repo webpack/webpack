@@ -3,5 +3,15 @@
 		"relation": "respelling escape",
 		"contains": "@media print { a { b : c } a { ! x } a { ! x } a { b : c } }\n      -> @media \\70 rint { \\61 { \\62 : \\63 } \\61 { ! \\78 } \\61 { ! \\78 } \\61 { \\62 :…",
 		"why": "a declaration, selector or block that is invalid or left open, which the printer writes back as authored, escape included"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/@media[1]/a[2]: css-tree unparsed !x, tool nothing",
+		"why": "a statement opening no `{}` block is a parse error the spec drops, whether the input ends in it or a block's `;` or `}` ends it (§5.4.3); css-tree keeps it as raw text"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/@media[1]/a[3]: css-tree unparsed !x, tool nothing",
+		"why": "a statement opening no `{}` block is a parse error the spec drops, whether the input ends in it or a block's `;` or `}` ends it (§5.4.3); css-tree keeps it as raw text"
 	}
 ]
