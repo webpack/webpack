@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:h="http://www.w3.org/1999/xhtml">
+	<rect width="1" height="1" fill="#000" fill-opacity="1" stroke="none" stroke-width="1.0" stroke-linecap="butt" visibility="visible" font-weight="400"/>
+	<g fill="red"><g><rect width="1" height="1" fill="black"/></g><rect width="1" height="1"/></g>
+	<g id="lent"><rect width="1" height="1" fill="#000000"/></g>
+	<g style="stroke:var(--x)"><rect width="1" height="1" stroke="none"/><rect width="2" height="1"/></g>
+	<rect width="1" height="1" fill="#000" style="fill:var(--y)"/>
+	<use href="#lent" fill="red"/>
+	<foreignObject width="1" height="1"><h:div fill="#000"/></foreignObject>
+</svg>

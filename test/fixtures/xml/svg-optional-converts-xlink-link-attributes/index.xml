@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<a href="a.html" xlink:show="new" xlink:type="simple"><rect width="1" height="1"/></a>
+	<a href="b.html" xlink:show="replace"><rect width="1" height="1"/></a>
+	<a href="c.html" xlink:show="embed" xlink:type="extended"><rect width="1" height="1"/></a>
+	<a href="d.html" xlink:show="new" target="frame"><rect width="1" height="1"/></a>
+	<use href="#x" xlink:show="new"/>
+</svg>

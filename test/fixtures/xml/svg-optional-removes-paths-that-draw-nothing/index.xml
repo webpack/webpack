@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<path d="z"/><path d="M"/><path d="M x"/><path d="M50 50"/><path d="m0 0 m1 1"/><path d="M 50 50 L 0"/><path d="M0 0 x 1"/><path d="M0 0 1"/>
+	<path d="M0 0 C1 1 2 2"/><path d="M0 0 S1 1"/><path d="M0 0 Q1"/><path d="M0 0 T"/><path d="M0 0 H"/><path d="M0 0 V"/>
+	<path d="M50 50 20 20"/><path d="M0 0H1"/><path d="M0 0v1"/><path d="M0 0l1 1"/><path d="M0 0t1 1"/><path d="M0 0c1 1 2 2 3 3"/><path d="M0 0s1 1 2 2"/><path d="M0 0q1 1 2 2"/><path d="M0 0z"/><path d="M0 0a1 1 0 00 1 1"/>
+	<path d="M50 50" marker-start="url(#m)"/><path d="" marker-end="url(#m)"/>
+	<g marker-mid="url(#m)"><path d="M1 1"/></g><g style="marker:url(#m)"><path d="M1 1"/></g>
+	<polyline points="10,10 20"/><polyline points="0 0 1 1"/><polyline marker-end="url(#m)" points="1 1"/><polygon points="1 1"/><polygon/>
+	<g visibility="hidden"><rect width="1" height="1"/><text>t</text></g>
+	<g visibility="hidden"><rect width="1" height="1" visibility="visible"/></g>
+	<g visibility="collapse"><rect width="1" height="1" style="visibility:visible"/></g>
+	<use visibility="hidden" href="#r"/>
+	<marker id="m"><rect id="r" width="1" height="1"/></marker>
+</svg>

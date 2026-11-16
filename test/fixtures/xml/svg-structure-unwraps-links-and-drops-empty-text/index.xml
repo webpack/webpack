@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:k="http://www.w3.org/2000/svg">
+	<a> <rect width="1" height="1"/> </a>
+	<svg:a><svg:rect width="1" height="1"/></svg:a>
+	<k:g><rect width="1" height="1"/></k:g>
+	<a href="page.html"><rect width="1" height="1"/></a>
+	<text>a<tspan/>b<tspan x="1"/></text>
+	<tspan/>
+</svg>

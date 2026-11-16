@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<style>#unused { fill: red }</style>
+	<path id="unused" d="M0 0h1"/>
+	<rect width="0" height="1"/>
+</svg>

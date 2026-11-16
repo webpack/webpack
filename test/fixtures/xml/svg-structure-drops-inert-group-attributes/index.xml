@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<g vector-effect="non-scaling-stroke" stop-color="red" stop-opacity=".5" flood-color="red" flood-opacity=".5" lighting-color="red" stroke="blue">
+		<path d="M0 0h10"/>
+	</g>
+	<g lighting-color="red" fill="blue"><text>label</text><text>other</text></g>
+	<g flood-color="red">
+		<filter id="inherits" flood-color="inherit"><feFlood flood-color="inherit"/></filter>
+	</g>
+	<g stop-color="red">
+		<linearGradient id="styled"><stop style="stop-color:inherit"/></linearGradient>
+	</g>
+	<rect width="1" height="1" filter="url(#inherits)" fill="url(#styled)"/>
+</svg>

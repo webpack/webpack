@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<g transform="translate(66)"><path d="M0 0h1" transform="translate(3 15) scale(.7)"/></g>
+	<g transform="rotate(45)"><!-- c --><rect width="1" height="1"/></g>
+	<g transform="scale(2)"><svg width="1" height="1"/></g>
+	<g transform="scale(2)"><rect width="1" height="1" style="transform:none"/></g>
+	<g transform="scale(2)"><rect width="1" height="1"/><rect width="1" height="1"/></g>
+	<g transform="scale(2)"><path id="p" d="M0 0h1"/></g>
+	<g transform="scale(2)"/>
+	<use href="#p"/>
+</svg>

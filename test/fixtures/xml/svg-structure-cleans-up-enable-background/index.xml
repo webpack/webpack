@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="50" enable-background="new 0 0 100 50">
+	<g enable-background="accumulate"><rect width="10" height="10"/></g>
+	<mask id="m" width="100" height="50" enable-background="new 0 0 100 50"><rect width="1" height="1"/></mask>
+	<rect width="10" height="10" mask="url(#m)"/>
+</svg>

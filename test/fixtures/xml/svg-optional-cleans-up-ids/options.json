@@ -1,0 +1,10 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"cleanupSvgIds": true,
+		"sortSvgDefinitions": true,
+		"renderEmbeddedSource": "builtin"
+	}
+]
