@@ -1615,9 +1615,9 @@ describe("one-pass minify, family J round 6", () => {
 		const options = { compress: { ecma: 2020 }, ecma: 2020, mangle: false };
 		const source = fixture("javascript", "one-pass-j3-2");
 		const { code } = minifyOnePass(source, options);
-		// Only tests dropping a `!` or flipping an equality join, `false||!a` among them; a run whose tests add a `!`, guarding an `if` or several statements, or ending its function stays.
+		// Any tests join, `false||!a` among them, as a second pass guards `if(a||b)return;x` alike, an `if` after the run joining with `&&`; a run guarding several statements, or ending its function, stays.
 		expect(code).toBe(
-			"function log(value){console.log(value)}function guards(a,b,c){if(a!=1&&b&&c===a)log(`guards`)}function folds(a,b){if(a&&b!==2)log(`folds`)}function keepsName(a,b){if(a||!b)return;log(`keepsName`)}function keepsCompare(a,b){if(!a||b<2)return;log(`keepsCompare`)}function keepsIf(a,b){if(!a||!b)return;if(a>b)log(`keepsIf`)}function keepsSeveral(a,b){if(!a||!b)return;log(`keepsSeveral`),log(a+b)}function tests(a,b){!a||!b}function loops(list){for(var i=0;i<list.length;i++)if(list[i]&&list[i]==3)log(i)}for(var a=0;a<4;a++)for(var b=0;b<4;b++)guards(a,b,a),folds(a,b),keepsName(a,b),keepsCompare(a,b),keepsIf(a,b),keepsSeveral(a,b),tests(a,b);loops([0,3,1,3]);"
+			"function log(value){console.log(value)}function guards(a,b,c){if(a!=1&&b&&c===a)log(`guards`)}function folds(a,b){if(a&&b!==2)log(`folds`)}function keepsName(a,b){if(!a&&b)log(`keepsName`)}function keepsCompare(a,b){if(a&&!(b<2))log(`keepsCompare`)}function keepsIf(a,b){if(a&&b&&a>b)log(`keepsIf`)}function keepsSeveral(a,b){if(!a||!b)return;log(`keepsSeveral`),log(a+b)}function tests(a,b){!a||!b}function loops(list){for(var i=0;i<list.length;i++)if(list[i]&&list[i]==3)log(i)}for(var a=0;a<4;a++)for(var b=0;b<4;b++)guards(a,b,a),folds(a,b),keepsName(a,b),keepsCompare(a,b),keepsIf(a,b),keepsSeveral(a,b),tests(a,b);loops([0,3,1,3]);"
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 		// A test folding to a `!` drops it where what it negates needs no parentheses, as a comparison before `&&`; an assignment keeps it.
