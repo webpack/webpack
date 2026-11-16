@@ -13074,6 +13074,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-inline-styles": Object {
+    "configs": Array [
+      Object {
+        "description": "Move the rules of SVG stylesheets into the style attributes of the elements they match, in cascade order before each element's own, then drop the stylesheets and the classes they named, where every selector uses types, classes, IDs, attributes, tree-structural pseudo-classes or \`:not()\` and the result is no larger. Off by default because scripts and external CSS can observe classes and stylesheets.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.inlineStyles",
+        "type": "boolean",
+      },
+    ],
+    "description": "Move the rules of SVG stylesheets into the style attributes of the elements they match, in cascade order before each element's own, then drop the stylesheets and the classes they named, where every selector uses types, classes, IDs, attributes, tree-structural pseudo-classes or \`:not()\` and the result is no larger. Off by default because scripts and external CSS can observe classes and stylesheets.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-xml-merge-paths": Object {
     "configs": Array [
       Object {
@@ -13099,6 +13112,32 @@ Object {
     "description": "Round SVG geometry, path data, transforms and presentation numbers to this many decimal places, a whole number from 0 to 15, wherever \`shortenNumbers\` and \`shortenPathData\` shorten them. Path points round where they land, so error never accumulates, and curves and arcs that draw straight lines become lines. Off by default because rounding moves geometry; svgo rounds to 3.",
     "multiple": false,
     "simpleType": "number",
+  },
+  "optimization-minimize-options-xml-remove-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "An \`element:attribute:value\` pattern of attributes to remove.",
+        "multiple": true,
+        "path": "optimization.minimizeOptions.xml.removeAttributes[]",
+        "type": "string",
+      },
+    ],
+    "description": "An \`element:attribute:value\` pattern of attributes to remove.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "optimization-minimize-options-xml-remove-attributes-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'optimization.minimizeOptions.xml.removeAttributes' configuration. Remove attributes matching \`element:attribute:value\` patterns, each part a case-insensitive regular expression matched whole, \`*\` matching anything; a missing element or value part matches any. Off by default because only the author knows which attributes the image can lose.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeAttributes",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'optimization.minimizeOptions.xml.removeAttributes' configuration. Remove attributes matching \`element:attribute:value\` patterns, each part a case-insensitive regular expression matched whole, \`*\` matching anything; a missing element or value part matches any. Off by default because only the author knows which attributes the image can lose.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "optimization-minimize-options-xml-remove-descriptions": Object {
     "configs": Array [
@@ -13152,6 +13191,58 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-remove-elements-class": Object {
+    "configs": Array [
+      Object {
+        "description": "A class whose elements are removed.",
+        "multiple": true,
+        "path": "optimization.minimizeOptions.xml.removeElements.class[]",
+        "type": "string",
+      },
+    ],
+    "description": "A class whose elements are removed.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "optimization-minimize-options-xml-remove-elements-class-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'optimization.minimizeOptions.xml.removeElements.class' configuration. Classes whose elements are removed.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeElements.class",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'optimization.minimizeOptions.xml.removeElements.class' configuration. Classes whose elements are removed.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-remove-elements-id": Object {
+    "configs": Array [
+      Object {
+        "description": "An ID whose element is removed.",
+        "multiple": true,
+        "path": "optimization.minimizeOptions.xml.removeElements.id[]",
+        "type": "string",
+      },
+    ],
+    "description": "An ID whose element is removed.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "optimization-minimize-options-xml-remove-elements-id-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'optimization.minimizeOptions.xml.removeElements.id' configuration. IDs whose elements are removed.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeElements.id",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'optimization.minimizeOptions.xml.removeElements.id' configuration. IDs whose elements are removed.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-xml-remove-empty-attributes": Object {
     "configs": Array [
       Object {
@@ -13181,13 +13272,13 @@ Object {
   "optimization-minimize-options-xml-remove-hidden-elements": Object {
     "configs": Array [
       Object {
-        "description": "Remove ID-free SVG content that renders nothing: \`display=\\"none\\"\`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, paths and point lists that draw nothing, and subtrees under \`visibility=\\"hidden\\"\` that never set it back. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a \`switch\` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.",
+        "description": "Remove ID-free SVG content that renders nothing: \`display=\\"none\\"\`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, paths and point lists that draw nothing, shapes that paint neither fill nor stroke, uses of what draws nothing, \`tref\` elements without a reference, and subtrees under \`visibility=\\"hidden\\"\` that never set it back. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a \`switch\` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.",
         "multiple": false,
         "path": "optimization.minimizeOptions.xml.removeHiddenElements",
         "type": "boolean",
       },
     ],
-    "description": "Remove ID-free SVG content that renders nothing: \`display=\\"none\\"\`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, paths and point lists that draw nothing, and subtrees under \`visibility=\\"hidden\\"\` that never set it back. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a \`switch\` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.",
+    "description": "Remove ID-free SVG content that renders nothing: \`display=\\"none\\"\`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, paths and point lists that draw nothing, shapes that paint neither fill nor stroke, uses of what draws nothing, \`tref\` elements without a reference, and subtrees under \`visibility=\\"hidden\\"\` that never set it back. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a \`switch\` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13441,6 +13532,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-xml-inline-styles": Object {
+    "configs": Array [
+      Object {
+        "description": "Move the rules of SVG stylesheets into the style attributes of the elements they match, in cascade order before each element's own, then drop the stylesheets and the classes they named, where every selector uses types, classes, IDs, attributes, tree-structural pseudo-classes or \`:not()\` and the result is no larger. Off by default because scripts and external CSS can observe classes and stylesheets.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.inlineStyles",
+        "type": "boolean",
+      },
+    ],
+    "description": "Move the rules of SVG stylesheets into the style attributes of the elements they match, in cascade order before each element's own, then drop the stylesheets and the classes they named, where every selector uses types, classes, IDs, attributes, tree-structural pseudo-classes or \`:not()\` and the result is no larger. Off by default because scripts and external CSS can observe classes and stylesheets.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-xml-merge-paths": Object {
     "configs": Array [
       Object {
@@ -13466,6 +13570,32 @@ Object {
     "description": "Round SVG geometry, path data, transforms and presentation numbers to this many decimal places, a whole number from 0 to 15, wherever \`shortenNumbers\` and \`shortenPathData\` shorten them. Path points round where they land, so error never accumulates, and curves and arcs that draw straight lines become lines. Off by default because rounding moves geometry; svgo rounds to 3.",
     "multiple": false,
     "simpleType": "number",
+  },
+  "optimization-minimize-xml-remove-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "An \`element:attribute:value\` pattern of attributes to remove.",
+        "multiple": true,
+        "path": "optimization.minimize.xml.removeAttributes[]",
+        "type": "string",
+      },
+    ],
+    "description": "An \`element:attribute:value\` pattern of attributes to remove.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "optimization-minimize-xml-remove-attributes-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'optimization.minimize.xml.removeAttributes' configuration. Remove attributes matching \`element:attribute:value\` patterns, each part a case-insensitive regular expression matched whole, \`*\` matching anything; a missing element or value part matches any. Off by default because only the author knows which attributes the image can lose.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeAttributes",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'optimization.minimize.xml.removeAttributes' configuration. Remove attributes matching \`element:attribute:value\` patterns, each part a case-insensitive regular expression matched whole, \`*\` matching anything; a missing element or value part matches any. Off by default because only the author knows which attributes the image can lose.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "optimization-minimize-xml-remove-descriptions": Object {
     "configs": Array [
@@ -13519,6 +13649,58 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-xml-remove-elements-class": Object {
+    "configs": Array [
+      Object {
+        "description": "A class whose elements are removed.",
+        "multiple": true,
+        "path": "optimization.minimize.xml.removeElements.class[]",
+        "type": "string",
+      },
+    ],
+    "description": "A class whose elements are removed.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "optimization-minimize-xml-remove-elements-class-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'optimization.minimize.xml.removeElements.class' configuration. Classes whose elements are removed.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeElements.class",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'optimization.minimize.xml.removeElements.class' configuration. Classes whose elements are removed.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-remove-elements-id": Object {
+    "configs": Array [
+      Object {
+        "description": "An ID whose element is removed.",
+        "multiple": true,
+        "path": "optimization.minimize.xml.removeElements.id[]",
+        "type": "string",
+      },
+    ],
+    "description": "An ID whose element is removed.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "optimization-minimize-xml-remove-elements-id-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'optimization.minimize.xml.removeElements.id' configuration. IDs whose elements are removed.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeElements.id",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'optimization.minimize.xml.removeElements.id' configuration. IDs whose elements are removed.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-xml-remove-empty-attributes": Object {
     "configs": Array [
       Object {
@@ -13548,13 +13730,13 @@ Object {
   "optimization-minimize-xml-remove-hidden-elements": Object {
     "configs": Array [
       Object {
-        "description": "Remove ID-free SVG content that renders nothing: \`display=\\"none\\"\`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, paths and point lists that draw nothing, and subtrees under \`visibility=\\"hidden\\"\` that never set it back. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a \`switch\` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.",
+        "description": "Remove ID-free SVG content that renders nothing: \`display=\\"none\\"\`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, paths and point lists that draw nothing, shapes that paint neither fill nor stroke, uses of what draws nothing, \`tref\` elements without a reference, and subtrees under \`visibility=\\"hidden\\"\` that never set it back. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a \`switch\` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.",
         "multiple": false,
         "path": "optimization.minimize.xml.removeHiddenElements",
         "type": "boolean",
       },
     ],
-    "description": "Remove ID-free SVG content that renders nothing: \`display=\\"none\\"\`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, paths and point lists that draw nothing, and subtrees under \`visibility=\\"hidden\\"\` that never set it back. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a \`switch\` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.",
+    "description": "Remove ID-free SVG content that renders nothing: \`display=\\"none\\"\`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, paths and point lists that draw nothing, shapes that paint neither fill nor stroke, uses of what draws nothing, \`tref\` elements without a reference, and subtrees under \`visibility=\\"hidden\\"\` that never set it back. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a \`switch\` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.",
     "multiple": false,
     "simpleType": "boolean",
   },
