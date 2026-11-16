@@ -42433,6 +42433,41 @@ exports[`HTML syntax — invariants source-processor-remove-redundant-attributes
 
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-a-minified-meta-moves-into-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,36|32,35] attr[44,51|53,58]\\" attr[60,63|65,69]\\" open[36,71|37,43] close[71,80|73,79] close[80,86|82,85] comment[86,1193|90,1190] attr[1199,1206|1208,1213]\\" open[1193,1215|1194,1198] end=1215"`;
 
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-holds-a-nul parses 1`] = `
+"length 1368, sha256 04c73b8f0295d71d
+\\"| <!DOCTYPE html>\\\\n| <html>\\\\n|   <head>\\\\n|     <title>\\\\n|       \\\\\\"t\\\\\\"\\\\n|   <body>\\\\n|     <pre>\\\\n|       <script>\\\\n|         charset=\\\\\\"utf-8\\\\\\"\\\\n|         data-x=\\\\\\"\\\\u0000\\\\\\"\\\\n|         src=\\\\\\"a.js\\\\\\"\\\\n|  
+…
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->\\\\n|     <meta>\\\\n|       charset=\\\\\\"utf-8\\\\\\"\\\\n|     \\\\\\"\\\\n\\\\\\"\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-holds-a-nul parses 2`] = `"warning[79,80]:unexpected-null-character"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-holds-a-nul prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `"\\"<!doctype html><title>t</title><pre><script src=a.js data-x=\\\\u0000></script></pre><meta charset=utf-8>\\\\n\\""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-holds-a-nul prints {"mode":"minify"} 1`] = `"\\"<!doctype html><title>t</title><pre><script charset=utf-8 src=a.js data-x=\\\\u0000></script></pre><meta charset=utf-8>\\\\n\\""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-holds-a-nul tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,36|32,35] attr[44,51|53,58]\\" attr[60,63|65,69]\\" warning[79,80]:unexpected-null-character attr[71,77|79,80]\\" open[36,82|37,43] close[82,91|84,90] close[91,97|93,96] comment[97,1204|101,1201] attr[1210,1217|1219,1224]\\" open[1204,1226|1205,1209] text[1226,1227] end=1227"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-spells-a-mark parses 1`] = `
+"length 1424, sha256 7b52252dcedb2dc3
+\\"| <!DOCTYPE html>\\\\n| <html>\\\\n|   <head>\\\\n|     <title>\\\\n|       \\\\\\"t\\\\\\"\\\\n|   <body>\\\\n|     <pre>\\\\n|       \\\\\\"charset0\\\\\\"\\\\n|       <script>\\\\n|         charset=\\\\\\"utf-8\\\\\\"\\\\n|         src=\\\\\\"a.js\\\\\\"\\\\n|         
+…
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->\\\\n|     <meta>\\\\n|       charset=\\\\\\"utf-8\\\\\\"\\\\n|     \\\\\\"\\\\n\\\\\\"\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-spells-a-mark parses 2`] = `"warning[36,37]:unexpected-null-character warning[45,46]:unexpected-null-character warning[36,37]:invalid-codepoint warning[45,46]:invalid-codepoint warning[88,89]:unexpected-null-character warning[97,98]:unexpected-null-character warning[109,110]:unexpected-null-character warning[117,118]:unexpected-null-character warning[109,110]:invalid-codepoint warning[117,118]:invalid-codepoint"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-spells-a-mark prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `"\\"<!doctype html><title>t</title><pre>charset0<script src=a.js title=\\\\u0000charset0\\\\u0000></script>charset</pre><meta charset=utf-8>\\\\n\\""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-spells-a-mark prints {"mode":"minify"} 1`] = `"\\"<!doctype html><title>t</title><pre>charset0<script charset=utf-8 src=a.js title=\\\\u0000charset0\\\\u0000></script>charset</pre><meta charset=utf-8>\\\\n\\""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-spells-a-mark tokenizes 1`] = `
+"length 601, sha256 042a99d6f40fb98a
+doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,36|32,35] warning[36,37]:unexpected-null-character warning[45,46]:unexpected-null-character text[36,46] attr[54
+…
+-null-character warning[117,118]:unexpected-null-character text[109,118] close[118,124|120,123] comment[124,1231|128,1228] attr[1237,1244|1246,1251]\\" open[1231,1253|1232,1236] text[1253,1254] end=1254"
+`;
+
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-template-where-a-minified-meta-moves-into-reach parses 1`] = `
 "| <!DOCTYPE html>
 | <html>
@@ -42460,7 +42495,7 @@ exports[`HTML syntax — invariants source-processor-remove-redundant-attributes
 
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-template-where-a-minified-meta-moves-into-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,41|32,40] attr[49,56|58,63]\\" attr[65,68|70,74]\\" open[41,76|42,48] close[76,85|78,84] close[85,96|87,95] comment[96,1203|100,1200] attr[1209,1216|1218,1223]\\" open[1203,1225|1204,1208] text[1225,1226] end=1226"`;
 
-exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-an-svg-foreign-object-no-renderer-is-offered-whole-where-a-minified-meta-moves-into-reach parses 1`] = `
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-an-svg-foreign-object-where-a-minified-meta-moves-into-reach parses 1`] = `
 "| <!DOCTYPE html>
 | <html>
 |   <head>
@@ -42479,19 +42514,19 @@ exports[`HTML syntax — invariants source-processor-remove-redundant-attributes
 \\""
 `;
 
-exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-an-svg-foreign-object-no-renderer-is-offered-whole-where-a-minified-meta-moves-into-reach parses 2`] = `""`;
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-an-svg-foreign-object-where-a-minified-meta-moves-into-reach parses 2`] = `""`;
 
-exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-an-svg-foreign-object-no-renderer-is-offered-whole-where-a-minified-meta-moves-into-reach prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-an-svg-foreign-object-where-a-minified-meta-moves-into-reach prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `
 "<!doctype html><title>t</title><svg><foreignObject><script src=a.js></script></foreignObject></svg><meta charset=utf-8>
 "
 `;
 
-exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-an-svg-foreign-object-no-renderer-is-offered-whole-where-a-minified-meta-moves-into-reach prints {"mode":"minify"} 1`] = `
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-an-svg-foreign-object-where-a-minified-meta-moves-into-reach prints {"mode":"minify"} 1`] = `
 "<!doctype html><title>t</title><svg><foreignObject><script charset=utf-8 src=a.js></script></foreignObject></svg><meta charset=utf-8>
 "
 `;
 
-exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-an-svg-foreign-object-no-renderer-is-offered-whole-where-a-minified-meta-moves-into-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,36|32,35] open[36,51|37,50] attr[59,66|68,73]\\" attr[75,78|80,84]\\" open[51,86|52,58] close[86,95|88,94] close[95,111|97,110] close[111,117|113,116] comment[117,1224|121,1221] attr[1230,1237|1239,1244]\\" open[1224,1246|1225,1229] text[1246,1247] end=1247"`;
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-an-svg-foreign-object-where-a-minified-meta-moves-into-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,36|32,35] open[36,51|37,50] attr[59,66|68,73]\\" attr[75,78|80,84]\\" open[51,86|52,58] close[86,95|88,94] close[95,111|97,110] close[111,117|113,116] comment[117,1224|121,1221] attr[1230,1237|1239,1244]\\" open[1224,1246|1225,1229] text[1246,1247] end=1247"`;
 
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-on-a parses 1`] = `
 "| <!DOCTYPE html>
@@ -42992,20 +43027,43 @@ exports[`HTML syntax — invariants source-processor-remove-redundant-attributes
 
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-a-pre-that-prints-whole-where-the-minified-meta-still-lies-past-1024-bytes tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,20|16,19] attr[28,35|37,42]\\" attr[44,47|49,53]\\" open[20,55|21,27] close[55,64|57,63] close[64,70|66,69] open[70,77|71,76] text[77,1177] close[1177,1185|1179,1184] attr[1191,1198|1200,1205]\\" open[1185,1207|1186,1190] text[1207,1208] end=1208"`;
 
-exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-a-pre-that-prints-whole-where-the-source-holds-a-nul parses 1`] = `
-"length 1368, sha256 04c73b8f0295d71d
-\\"| <!DOCTYPE html>\\\\n| <html>\\\\n|   <head>\\\\n|     <title>\\\\n|       \\\\\\"t\\\\\\"\\\\n|   <body>\\\\n|     <pre>\\\\n|       <script>\\\\n|         charset=\\\\\\"utf-8\\\\\\"\\\\n|         data-x=\\\\\\"\\\\u0000\\\\\\"\\\\n|         src=\\\\\\"a.js\\\\\\"\\\\n|  
-…
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->\\\\n|     <meta>\\\\n|       charset=\\\\\\"utf-8\\\\\\"\\\\n|     \\\\\\"\\\\n\\\\\\"\\""
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-an-svg-foreign-object-where-a-minified-meta-moving-into-reach-names-another-encoding parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       \\"t\\"
+|   <body>
+|     <svg svg>
+|       <svg foreignObject>
+|         <script>
+|           charset=\\"utf-8\\"
+|           src=\\"a.js\\"
+|         <p>
+|           \\"x\\"
+|         <script>
+|           charset=\\"utf-8\\"
+|           src=\\"b.js\\"
+|     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+|     <meta>
+|       charset=\\"iso-8859-1\\"
+|     \\"
+\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-a-pre-that-prints-whole-where-the-source-holds-a-nul parses 2`] = `"warning[79,80]:unexpected-null-character"`;
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-an-svg-foreign-object-where-a-minified-meta-moving-into-reach-names-another-encoding parses 2`] = `""`;
 
-exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-a-pre-that-prints-whole-where-the-source-holds-a-nul prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `"\\"<!doctype html><title>t</title><pre><script charset=utf-8 src=a.js data-x=\\\\u0000></script></pre><meta charset=utf-8>\\\\n\\""`;
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-an-svg-foreign-object-where-a-minified-meta-moving-into-reach-names-another-encoding prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `
+"<!doctype html><title>t</title><svg><foreignObject><script charset=utf-8 src=a.js></script><p>x</p><script charset=utf-8 src=b.js></script></foreignObject></svg><meta charset=iso-8859-1>
+"
+`;
 
-exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-a-pre-that-prints-whole-where-the-source-holds-a-nul prints {"mode":"minify"} 1`] = `"\\"<!doctype html><title>t</title><pre><script charset=utf-8 src=a.js data-x=\\\\u0000></script></pre><meta charset=utf-8>\\\\n\\""`;
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-an-svg-foreign-object-where-a-minified-meta-moving-into-reach-names-another-encoding prints {"mode":"minify"} 1`] = `
+"<!doctype html><title>t</title><svg><foreignObject><script charset=utf-8 src=a.js></script><p>x</p><script charset=utf-8 src=b.js></script></foreignObject></svg><meta charset=iso-8859-1>
+"
+`;
 
-exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-a-pre-that-prints-whole-where-the-source-holds-a-nul tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,36|32,35] attr[44,51|53,58]\\" attr[60,63|65,69]\\" warning[79,80]:unexpected-null-character attr[71,77|79,80]\\" open[36,82|37,43] close[82,91|84,90] close[91,97|93,96] comment[97,1204|101,1201] attr[1210,1217|1219,1224]\\" open[1204,1226|1205,1209] text[1226,1227] end=1227"`;
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-an-svg-foreign-object-where-a-minified-meta-moving-into-reach-names-another-encoding tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,36|32,35] open[36,51|37,50] attr[59,66|68,73]\\" attr[75,78|80,84]\\" open[51,86|52,58] close[86,95|88,94] open[95,98|96,97] text[98,99] close[99,103|101,102] attr[111,118|120,125]\\" attr[127,130|132,136]\\" open[103,138|104,110] close[138,147|140,146] close[147,163|149,162] close[163,169|165,168] comment[169,1276|173,1273] attr[1282,1289|1291,1301]\\" open[1276,1303|1277,1281] text[1303,1304] end=1304"`;
 
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-on-a-script-printed-in-pieces-where-a-meta-stays-out-of-reach parses 1`] = `
 "| <!DOCTYPE html>
