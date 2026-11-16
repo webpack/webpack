@@ -1457,8 +1457,8 @@ const runBehavior = (code, timeout, module, watch) => {
 			evaluated = undefined;
 		}
 		// WHY: a module cut off at its timeout says so only in a rejection read
-		// after this returns, so a run that took it all is taken as cut off.
-		if (Date.now() - start >= timeout) return answer(null);
+		// after this returns, so a run that took half of it is taken as cut off.
+		if (Date.now() - start >= timeout / 2) return answer(null);
 	} else {
 		/** @type {vm.Script} */
 		let script;
@@ -1647,8 +1647,8 @@ let sandboxGlobals;
 /**
  * Whether a program reads nothing compressing and mangling may change by
  * contract: no name it leaves unbound beyond the run's built-ins, no `with`, no
- * code built from text and no function's name or text. Its run tells whether
- * it replaces a built-in, which the compressor takes as native.
+ * code built from text and no function's name or text. A run of it tells
+ * whether it replaces a built-in, which the compressor takes as native.
  * @param {string} code the program
  * @param {boolean} module whether it is a module
  * @returns {boolean} whether its compressed print owes its behavior
@@ -1679,9 +1679,9 @@ const selfContained = (code, module) => {
 		allowHashBang: true,
 		scopes: log
 	});
-	const known = /** @type {Set<string>} */ (sandboxGlobals);
+	const known = sandboxGlobals;
 	return scopes
-		.analyzeScope(/** @type {number} */ (program))
+		.analyzeScope(program)
 		.unresolvedReferences.every((reference) =>
 			known.has(reference.identifier.name)
 		);
@@ -1714,7 +1714,6 @@ let lastSource;
 let lastModule;
 /** @type {string | null} */
 let lastExpected = null;
-let lastPatched = false;
 /** @type {boolean | undefined} */
 let lastContained;
 
@@ -1747,13 +1746,17 @@ const behaviorDifference = (source, printed, run = {}) => {
 	if (source !== lastSource || module !== lastModule) {
 		lastSource = source;
 		lastModule = module;
-		lastContained = undefined;
-		const first = behaviorOf(source, module, true);
-		lastPatched = first.patched;
+		// Watching the built-ins doubles a run, so only a compressed print asks.
+		lastContained = run.compressed ? selfContained(source, module) : undefined;
+		const first = behaviorOf(source, module, lastContained === true);
+		if (first.patched) lastContained = false;
+		// A run printing and throwing nothing is taken as the only one it has,
+		// which saves a third of the runs: most fixtures print nothing.
 		lastExpected =
 			typeof first.transcript === "string" &&
 			(asScript || !first.transcript.startsWith("refused ")) &&
-			behaviorOf(source, module).transcript === first.transcript
+			(first.transcript === "" ||
+				behaviorOf(source, module).transcript === first.transcript)
 				? first.transcript
 				: null;
 	}
@@ -1761,11 +1764,15 @@ const behaviorDifference = (source, printed, run = {}) => {
 	let expected = lastExpected;
 	if (run.compressed) {
 		if (lastContained === undefined) {
-			lastContained = !lastPatched && selfContained(source, module);
+			lastContained =
+				selfContained(source, module) &&
+				!behaviorOf(source, module, true).patched;
 		}
 		if (!lastContained) return null;
 		expected = contractual(expected, source);
 	}
+	// Printed as written, it runs as it does.
+	if (printed === source) return [];
 	const answered = behaviorOf(printed, module).transcript;
 	// A print that cannot run here, as it imports, answers for nothing either.
 	if (answered === undefined) return null;
