@@ -90,4 +90,35 @@ describe("mergeImportConditions", () => {
 			"(width: calc(1px, 2px)) and (c)"
 		);
 	});
+
+	it.each([
+		["screen/**/", "screen"],
+		["scr\\65 en", "screen"],
+		["only/**/screen", "only screen"],
+		["n\\6f t/**/print", "screen"],
+		["screen/* , print */", "screen"],
+		["screen/**/, print", "screen"],
+		["not\\a0 print", "screen and not\u00a0print"],
+		["\\a0 screen", "screen and \u00a0screen"],
+		["screen\\a0 ", "screen and screen\u00a0"],
+		["only\\a0 screen", "screen and only\u00a0screen"],
+		["screen\\a0 and (color)", "screen and screen\u00a0and (color)"],
+		["screen and (feature: [1, 2])", "screen and (feature: [1, 2])"],
+		["screen and future({a,b})", "screen and future({a,b})"],
+		['screen and (feature: "), print")', 'screen and (feature: "), print")']
+	])("should read CSS tokens in %s", (media, expected) => {
+		expect(
+			mergeImportConditions(undefined, undefined, media, [
+				[undefined, undefined, "screen"]
+			]).media
+		).toBe(expected);
+	});
+
+	it("should keep conditions on queries after an unmatched closing bracket", () => {
+		expect(
+			mergeImportConditions(undefined, undefined, "], screen", [
+				[undefined, undefined, "(width < 0px)"]
+			]).media
+		).toBe("(width < 0px) and ], screen and (width < 0px)");
+	});
 });

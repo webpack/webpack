@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep CSS imports in their layer and media, and CSS urls out of externals.
+Preserve CSS import layers and media syntax, and keep urls out of externals.
