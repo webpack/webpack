@@ -518,6 +518,7 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc restructures conditionals: an `if` as `&&` or `?:`, a shared tail or call factored out, `continue` and `break` folded into the condition",
 		[
+			"swc minifier: fixture/issues/10885/input.js",
 			"swc minifier: fixture/issues/10986/input.js",
 			"swc minifier: fixture/issues/11829/input.js",
 			"swc minifier: fixture/issues/2926/1/input.js",
