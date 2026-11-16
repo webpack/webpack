@@ -1,5 +1,5 @@
 ---
-"webpack": patch
+"webpack": minor
 ---
 
-Shorten SVG colors, smooth cubics and XML declarations, keeping rendering.
+Close SVG minification gaps with svgo and add opt-in removals and precision.
