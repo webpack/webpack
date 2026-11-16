@@ -3,6 +3,7 @@
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: absent 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?>
 <!-- An editor's comment the minified output drops. -->
+<!--! A legal notice the minified output keeps. -->
 <svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
 	<style>
 		.dot {
@@ -66,6 +67,7 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: disabled 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?>
 <!-- An editor's comment the minified output drops. -->
+<!--! A legal notice the minified output keeps. -->
 <svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
 	<style>
 		.dot {
@@ -79,7 +81,7 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 `;
 
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: future 1`] = `
-"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
+"<!--! A legal notice the minified output keeps. --><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
 	<style>.dot{fill:red;-webkit-user-select:none;user-select:none}</style>
 	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\"/>
 </svg>"
@@ -88,6 +90,7 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: none 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?>
 <!-- An editor's comment the minified output drops. -->
+<!--! A legal notice the minified output keeps. -->
 <svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
 	<style>
 		.dot {
@@ -103,7 +106,7 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: numbers 1`] = `"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\"><style>polygon{fill:red}</style><rect x=\\".5\\" height=\\"7.5\\" width=\\"8\\" y=\\"1.25\\"/><polygon id=\\"shape\\" points=\\"1 2 3.5 4.5\\"/><text x=\\"1\\"> A <tspan> B </tspan> C </text></svg>"`;
 
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: object 1`] = `
-"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
+"<!--! A legal notice the minified output keeps. --><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
 	<style>.dot{fill:red;-webkit-user-select:none;user-select:none}</style>
 	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\"/>
 </svg>"
@@ -130,7 +133,7 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 `;
 
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: sorted 1`] = `
-"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+"<!--! A legal notice the minified output keeps. --><svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\">
 	<style>.dot{fill:red;-webkit-user-select:none;user-select:none}</style>
 	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\"/>
 </svg>"
