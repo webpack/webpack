@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep SVG `metadata` that links a stylesheet when removing metadata.
+Keep SVG metadata, editor data, titles and descriptions holding a stylesheet.

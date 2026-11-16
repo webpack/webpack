@@ -1,0 +1,1 @@
+<svg xmlns="http://www.w3.org/2000/svg"><defs><rect id="r" width="1" height="1" visibility="visible"/></defs><g visibility="hidden"><use href="#r"/></g><g id="g"><rect width="1" height="1" opacity="0"/><rect width="0" height="1"/></g><use href="#g" filter="url(#f)"/><filter id="f"/></svg>

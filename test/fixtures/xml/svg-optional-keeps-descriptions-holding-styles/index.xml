@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:h="http://www.w3.org/1999/xhtml">
+	<title><style>rect{fill:red}</style></title>
+	<desc><h:style>rect{fill:red}</h:style></desc>
+	<title><h:link rel="stylesheet" href="a.css"/></title>
+	<metadata><style>rect{fill:red}</style></metadata>
+	<title>Gone</title>
+	<rect width="50" height="50"/>
+</svg>

@@ -764,8 +764,14 @@ describe("SourceProcessor — SVG minification", () => {
 		const rendered = [];
 		const source = fixture("xml", "source-processor-svg-minification-should-preserve-comment-options-and-render-only");
 		const once = new SourceProcessor().process(source, { xml: true, mode: "minify", removeSvgMetadata: true, transforms: { comments: "all" }, renderEmbeddedSource: (css) => { rendered.push(css); return "g{fill:red}"; } }).code;
-		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><!--keep--><style>g{fill:red}</style></svg>');
-		expect(rendered).toEqual(["g { fill: red }"]);
+		// A style inside metadata still applies, so that metadata stays.
+		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><metadata><style>g{fill:red}</style></metadata><!--keep--><style>g{fill:red}</style></svg>');
+		expect(rendered).toEqual(["drop{}", "g { fill: red }"]);
+		/** @type {string[]} */
+		const dropped = [];
+		const linked = fixture("xml", "source-processor-svg-minification-should-preserve-comment-options-and-render-only-2");
+		expect(new SourceProcessor().process(linked, { xml: true, mode: "minify", removeSvgMetadata: true, transforms: { comments: "all" }, renderEmbeddedSource: (css) => { dropped.push(css); return "g{fill:red}"; } }).code).toBe('<svg xmlns="http://www.w3.org/2000/svg"><!--keep--><style>g{fill:red}</style></svg>');
+		expect(dropped).toEqual(["g { fill: red }"]);
 	});
 
 	it("should remove data from deeply nested SVG without recursive traversal", () => {
