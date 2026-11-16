@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/a[2]: css-tree width: 0.50pa{b:c}a{b:c}a{width:0.50px}a{b:c}, tool rule width:0.50pa",
+		"why": "a value holding a `{}` block beside anything else is no declaration but a rule (§5.4.5); css-tree keeps the declaration"
+	}
+]

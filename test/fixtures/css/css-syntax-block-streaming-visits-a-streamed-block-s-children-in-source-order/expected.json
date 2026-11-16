@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/@media[1]/p0:v0;.c0>d0:hover[1]: css-tree rule p0:v0;.c0>d0:hover, tool p0: v0, and too many more to align",
+		"why": "a `;` in a block ends a statement (§5.4.5): what precedes it is a declaration or a rule the spec drops (§5.4.3), never part of the next rule's selector, which css-tree reads it into"
+	}
+]

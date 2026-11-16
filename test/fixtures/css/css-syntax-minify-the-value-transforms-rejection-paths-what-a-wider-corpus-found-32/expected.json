@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/@media[2]/@media[1]: css-tree unparsed top:0;left:0, tool top: 0",
+		"why": "an at-rule's block holds declarations and rules, as any block does (§5.4.5); css-tree reads it as rules alone and keeps the declarations as raw text"
+	}
+]

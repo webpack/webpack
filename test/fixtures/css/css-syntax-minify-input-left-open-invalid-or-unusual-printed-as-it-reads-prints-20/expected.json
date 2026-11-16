@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/@layer[1]: css-tree unparsed transition:all-webkit- 500ms, tool transition: all-webkit- 500ms",
+		"why": "an at-rule's block holds declarations and rules, as any block does (§5.4.5); css-tree reads it as rules alone and keeps the declarations as raw text"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/: css-tree unparsed }, tool nothing",
+		"why": "a statement opening no `{}` block is a parse error the spec drops, whether the input ends in it or a block's `;` or `}` ends it (§5.4.3); css-tree keeps it as raw text"
+	}
+]

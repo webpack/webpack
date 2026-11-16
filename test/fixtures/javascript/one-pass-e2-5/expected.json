@@ -1,0 +1,10 @@
+[
+	{
+		"relation": "residue",
+		"contains": "e(\"c\"),1;",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: a `switch` on a constant whose matched case breaks prints that case's test as a statement, its constant too, where another case declares with `let` and the block stays"
+	}
+]

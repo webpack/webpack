@@ -1,0 +1,1 @@
+x().y = 1; x().y++; delete x().y; x().y(); for (x().y in o); (a &&= b()).c; (a ? null : b()).c; (a = null).b; x()[y()]; x()?.y; class A { #p; m() { super.x; this.#p; x().y.z; #p in [f()]; } } (class { static { f() } }).u; ({ x: f() }).u; ({ ...w }).v; (i || j).k; !(i || j).k; f(x().y);

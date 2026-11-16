@@ -22,6 +22,7 @@ const { wantedRespelling } = require("../../../tooling/compare-tools-harness");
 const {
 	cutsAt,
 	hasher,
+	noticeRelation,
 	oneLine,
 	pathSpanWalk,
 	shrink,
@@ -810,6 +811,43 @@ const meaningReports = (xml, printed, cssOptions, options = {}) =>
 				}
 			];
 
+// A comment's data that is code rather than a comment, which the minifier keeps
+// at every level: a downlevel conditional comment drives IE's branching and `#`
+// opens a server-side include.
+const KEPT_COMMENT = /^\s*(?:\[if|\[endif|<!\[|#)/;
+
+/**
+ * The comments a document carries that no minifier may drop, read by webpack's
+ * own parser: each conditional comment or server-side include. A processing
+ * instruction is one too, which `meaning`'s canonical form already holds.
+ * @param {string} xml a document
+ * @returns {number} how many it carries
+ */
+const keptComments = (xml) => {
+	let count = 0;
+	new SourceProcessor()
+		.use({
+			[NodeType.Comment]: {
+				enter: (nodePath) => {
+					if (KEPT_COMMENT.test(nodePath.value())) count++;
+				},
+				exit: () => {}
+			}
+		})
+		.process(xml, { xml: true });
+	return count;
+};
+
+/**
+ * Whether the printed document keeps every comment its source carries that
+ * is code rather than a comment (`notices`).
+ * @param {string} xml the document
+ * @param {string} printed what a preset printed of it
+ * @returns {Report[]} one finding where it carries fewer
+ */
+const noticeReports = (xml, printed) =>
+	noticeRelation(keptComments, xml, printed);
+
 /** @type {import("./index").SyntaxInvariants} */
 const syntax = {
 	printers: () =>
@@ -820,8 +858,10 @@ const syntax = {
 				minify,
 				says: (text) => canonical(text, cssOptions),
 				repro: (printed, at) => idempotenceRepro(minify, printed, at),
-				keeps: (xml, printed) =>
-					meaningReports(xml, printed, cssOptions, options)
+				keeps: (xml, printed) => [
+					...meaningReports(xml, printed, cssOptions, options),
+					...noticeReports(xml, printed)
+				]
 			};
 		}),
 	spans: xmlSpans,
@@ -842,6 +882,7 @@ module.exports = {
 	decodedAttributes,
 	idempotenceRepro,
 	meaningReports,
+	noticeReports,
 	printXml,
 	printerFor,
 	sweepRespellings,

@@ -1,0 +1,7 @@
+<!--#include virtual="/header.svg" -->
+<svg xmlns="http://www.w3.org/2000/svg">
+<!--[if IE]><text>old</text><![endif]-->
+<!-- inert, so dropped -->
+<!--<![endif]-->
+<rect width="1" height="1"/>
+</svg>

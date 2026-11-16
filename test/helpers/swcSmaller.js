@@ -390,8 +390,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/feedback-3/579-dcac359116b2707c/input.js",
 			"swc minifier: fixture/next/joda/input.js",
 			"swc minifier: fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js",
-			"swc minifier: fixture/next/styled-components/1/input.js",
-			"swc minifier: fixture/next/swc-4559/input.js"
+			"swc minifier: fixture/next/styled-components/1/input.js"
 		]
 	],
 	[
@@ -958,11 +957,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc goes further than webpack on what terser's `drop-console` tests cover",
-		[
-			"terser compress: drop-console/unexpected_side_effects_dropping_console",
-			"swc minifier: fixture/issues/2807/1/input.js",
-			"swc minifier: fixture/issues/9757/input.js"
-		]
+		["terser compress: drop-console/unexpected_side_effects_dropping_console"]
 	],
 	[
 		"swc goes further than webpack on what terser's `hoist_vars` tests cover",

@@ -3621,8 +3621,8 @@ declare abstract class ColumnarSyntaxTree {
 	 * Writes a node from its record, each slot a child node, a list from
 	 * `addList` or a value from `addValue`, `0` or left out for none.
 	 */
-	addNode(
-		type: number,
+	addNode<T extends string = string>(
+		type: number | TreeTypeCode<T>,
 		start: number,
 		end: number,
 		flags: number,
@@ -3630,25 +3630,30 @@ declare abstract class ColumnarSyntaxTree {
 		slot1?: null | number,
 		slot2?: null | number,
 		slot3?: null | number
-	): number;
+	): TreeNode<T>;
 
 	/**
 	 * `addNode` for a node whose record holds no slot, as `this`.
 	 */
-	addNode0(type: number, start: number, end: number, flags: number): number;
+	addNode0<T extends string = string>(
+		type: number | TreeTypeCode<T>,
+		start: number,
+		end: number,
+		flags: number
+	): TreeNode<T>;
 
 	/**
 	 * `addNode` for a node whose record holds two slots, as a member
 	 * expression or a call does, written without reading its slot count.
 	 */
-	addNode2(
-		type: number,
+	addNode2<T extends string = string>(
+		type: number | TreeTypeCode<T>,
 		start: number,
 		end: number,
 		flags: number,
 		slot0: number,
 		slot1: number
-	): number;
+	): TreeNode<T>;
 
 	/**
 	 * `addNode` for a literal, its value and raw text written in place, as a
@@ -3659,17 +3664,17 @@ declare abstract class ColumnarSyntaxTree {
 		end: number,
 		value: TreeValue,
 		raw: string
-	): number;
+	): TreeNode<"Literal">;
 
 	/**
 	 * `addNode` for a node whose record is one value, as an identifier's name.
 	 */
-	addValueNode(
-		type: number,
+	addValueNode<T extends string = string>(
+		type: number | TreeTypeCode<T>,
 		start: number,
 		end: number,
 		value: TreeValue
-	): number;
+	): TreeNode<T>;
 	addValue(
 		value?:
 			| null
@@ -7007,7 +7012,7 @@ declare class CssModulesPlugin {
 		>;
 	};
 }
-type CssNodePath<T = number, S = unknown> = Omit<
+type CssNodePath<T = number, S = undefined> = Omit<
 	CssSyntaxPath,
 	| "flag"
 	| "node"
@@ -7904,9 +7909,10 @@ declare interface CssProcessOptions {
  * ```
  * @experimental exposed as `webpack.css.syntax.SourceProcessor`; unstable API
  */
-declare class CssSourceProcessor<TState = unknown> extends SourceProcessor<
+declare class CssSourceProcessor<TState = undefined> extends SourceProcessor<
 	CssSyntaxPath,
 	number,
+	string | number,
 	CssProcessOptions,
 	CssPrintOptions,
 	CssParts,
@@ -7929,7 +7935,6 @@ declare class CssSourceProcessor<TState = unknown> extends SourceProcessor<
  * it, with `n` an integer node id into the columns, so the storage stays behind it.
  */
 declare abstract class CssSyntaxPath {
-	state: unknown;
 	get node(): number;
 	get parent(): null | number;
 	get index(): number;
@@ -8115,7 +8120,7 @@ declare interface CssTransformOptions {
 	 */
 	shortenValues?: boolean;
 }
-declare interface CssVisitorMap<S = unknown> {
+declare interface CssVisitorMap<S = undefined> {
 	"1"?:
 		| VisitorFn<CssNodePath<1, S>>
 		| {
@@ -13556,7 +13561,7 @@ declare interface HtmlMutableTag {
 	 */
 	remove?: boolean;
 }
-type HtmlNodePath<T = number, S = unknown> = Omit<
+type HtmlNodePath<T = number, S = undefined> = Omit<
 	HtmlSyntaxPath,
 	| "flag"
 	| "node"
@@ -14326,9 +14331,10 @@ declare interface HtmlResourceHintWebpackOptions {
  * ```
  * @experimental exposed as `webpack.html.syntax.SourceProcessor`; unstable API
  */
-declare class HtmlSourceProcessor<TState = unknown> extends SourceProcessor<
+declare class HtmlSourceProcessor<TState = undefined> extends SourceProcessor<
 	HtmlSyntaxPath,
 	number,
+	string,
 	HtmlProcessOptions,
 	HtmlPrintOptions,
 	HtmlParts,
@@ -14352,7 +14358,6 @@ declare class HtmlSourceProcessor<TState = unknown> extends SourceProcessor<
  * valid until the next `parseHtml`.
  */
 declare abstract class HtmlSyntaxPath {
-	state: unknown;
 	get node(): number;
 	get parent(): null | number;
 
@@ -14647,7 +14652,7 @@ declare interface HtmlTransformTagsContext {
 	outputName: string;
 	html: string;
 }
-declare interface HtmlVisitorMap<S = unknown> {
+declare interface HtmlVisitorMap<S = undefined> {
 	"1"?:
 		| VisitorFn<HtmlNodePath<1, S>>
 		| {
@@ -19263,15 +19268,25 @@ declare interface JavascriptReadOptions {
  * @experimental exposed as `webpack.javascript.syntax.SourceProcessor`; unstable API
  */
 declare class JavascriptSourceProcessor<
-	TState = unknown
+	TState = undefined
 > extends SourceProcessor<
 	JavascriptSyntaxPath,
 	number,
+	| undefined
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| RegExp
+	| { cooked?: null | string; raw: string },
 	JavascriptProcessOptions,
 	PrintOptions,
 	AnyParts,
 	TState,
-	VisitorMapSourceProcessorObject_2<JavascriptSyntaxPath>
+	VisitorMapSourceProcessorObject_2<
+		JavascriptSyntaxPath & { readonly state: TState }
+	>
 > {
 	constructor();
 	static PrintContext: typeof PrintContext;
@@ -19289,7 +19304,6 @@ declare class JavascriptSourceProcessor<
  * @experimental exposed through `webpack.javascript.syntax.SourceProcessor`; unstable API
  */
 declare abstract class JavascriptSyntaxPath {
-	state: unknown;
 	get node(): number;
 	get parent(): null | number;
 	get index(): number;
@@ -24240,7 +24254,7 @@ declare interface NodeParts {
 	 */
 	items: Record<number, number>;
 }
-type NodePath<TNode, TValue = unknown> = NodePathReads<TNode, TValue> &
+type NodePath<TNode, TValue> = NodePathReads<TNode, TValue> &
 	NodePathFields<TNode>;
 
 /**
@@ -24258,7 +24272,7 @@ declare interface NodePathFields<TNode> {
 	textOf(part: number, n?: TNode): null | string;
 	within(type: number): boolean;
 }
-declare interface NodePathReads<TNode, TValue = unknown> {
+declare interface NodePathReads<TNode, TValue> {
 	/**
 	 * the current node
 	 */
@@ -24283,11 +24297,6 @@ declare interface NodePathReads<TNode, TValue = unknown> {
 	 * end the walk: no visitor fires after the current one returns, and a print still completes
 	 */
 	stop: () => void;
-
-	/**
-	 * the run's state, as `process` was given it
-	 */
-	state: unknown;
 
 	/**
 	 * the node's `NodeType`
@@ -33904,12 +33913,13 @@ declare interface SourcePosition {
  * ```
  */
 declare abstract class SourceProcessor<
-	TPath extends NodePath<TNode, unknown>,
+	TPath extends NodePath<TNode, TValue>,
 	TNode,
+	TValue,
 	TProcessOptions = Record<never, never>,
 	TPrintOptions = PrintOptions,
 	TParts extends NodeParts = AnyParts,
-	TState = unknown,
+	TState = undefined,
 	TVisitors = VisitorMapSourceProcessorObject_1<TPath>
 > {
 	/**
@@ -33922,6 +33932,7 @@ declare abstract class SourceProcessor<
 	): SourceProcessor<
 		TPath,
 		TNode,
+		TValue,
 		TProcessOptions,
 		TPrintOptions,
 		TParts,
@@ -33939,6 +33950,7 @@ declare abstract class SourceProcessor<
 	): SourceProcessor<
 		TPath,
 		TNode,
+		TValue,
 		TProcessOptions,
 		TPrintOptions,
 		TParts,
@@ -33954,6 +33966,7 @@ declare abstract class SourceProcessor<
 	): SourceProcessor<
 		TPath,
 		TNode,
+		TValue,
 		TProcessOptions,
 		TPrintOptions,
 		TParts,
@@ -35923,6 +35936,11 @@ declare interface TerserCompressAliases {
 	pure_conversions?: boolean;
 
 	/**
+	 * terser's name for `pureGetters`
+	 */
+	pure_getters?: boolean | "strict";
+
+	/**
 	 * terser's name for `pureFuncs`
 	 */
 	pure_funcs?: null | string[];
@@ -36358,6 +36376,7 @@ declare interface TreeNames {
 	 */
 	propertyStrings: null | Set<number>;
 }
+type TreeNode<T extends string> = number & { readonly treeNode?: T };
 
 /**
  * Where each node of a `SyntaxTree` starts and ends among its parse's tokens,
@@ -36389,6 +36408,7 @@ declare interface TreeTokens {
 	 */
 	first: number;
 }
+type TreeTypeCode<T extends string> = number & { readonly treeType?: T };
 type TreeValue =
 	| null
 	| string
@@ -36461,7 +36481,7 @@ declare class TypeScriptPlugin {
 	apply(compiler: Compiler): void;
 }
 type TypedNode<TNode, T> = TNode & { readonly __nodeType: T };
-type TypedNodePath<TPath, TNode, P extends NodeParts, T, S = unknown> = Omit<
+type TypedNodePath<TPath, TNode, P extends NodeParts, T, S = undefined> = Omit<
 	TPath,
 	| "flag"
 	| "node"
@@ -39648,7 +39668,8 @@ declare namespace exports {
 					input: string,
 					visitors: CompiledVisitorBucket<JavascriptSyntaxPath>[],
 					writer: undefined | PrintContext<JavascriptSyntaxPath, number>,
-					options: JavascriptProcessOptions
+					options: JavascriptProcessOptions,
+					path?: JavascriptSyntaxPath
 				) => void;
 				export let isWalkingSyntaxTree: () => boolean;
 				export let walkSyntaxTree: (
@@ -39657,7 +39678,8 @@ declare namespace exports {
 					input: string,
 					visitors: CompiledVisitorBucket<JavascriptSyntaxPath>[],
 					writer?: PrintContext<JavascriptSyntaxPath, number>,
-					inlined?: Uint8Array
+					inlined?: Uint8Array,
+					path?: JavascriptSyntaxPath
 				) => void;
 				export let printEarlyIn: (early: Map<number, number>) => void;
 				export {
@@ -40176,7 +40198,8 @@ declare namespace exports {
 					visitors: CompiledVisitorBucket<CssSyntaxPath>[],
 					writer:
 						undefined | PrintContext<CssSyntaxPath, number, CssPrintOptions>,
-					options: CssProcessOptions
+					options: CssProcessOptions,
+					path?: CssSyntaxPath
 				) => void;
 				export let isDashedIdentifier: (identifier: string) => boolean;
 				export let isSimpleIdentifier: (value: string) => boolean;
@@ -40409,7 +40432,8 @@ declare namespace exports {
 					visitors: CompiledVisitorBucket<HtmlSyntaxPath>[],
 					writer:
 						undefined | PrintContext<HtmlSyntaxPath, number, HtmlPrintOptions>,
-					options: HtmlProcessOptions
+					options: HtmlProcessOptions,
+					path?: HtmlSyntaxPath
 				) => void;
 				export let isAllAsciiWhitespace: (s: string) => boolean;
 				export let isAsciiAlphanumeric: (cc: number) => boolean;

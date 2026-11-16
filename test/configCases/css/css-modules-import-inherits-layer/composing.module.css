@@ -1,0 +1,6 @@
+@value tone from "./values.module.css";
+
+.composing {
+	composes: composed from "./composed.module.css";
+	color: tone;
+}

@@ -1212,13 +1212,70 @@ const reportInvariants = async () => {
 	return found;
 };
 
+// `precompile-schemas.js` in check mode, with `webpack` resolved to this
+// checkout: schema-utils minifies through `require("webpack")`, which a linked
+// or symlinked install would otherwise answer with another checkout's printer.
+const PRECOMPILE_HERE = `const Module = require("module");
+const resolve = Module._resolveFilename;
+Module._resolveFilename = function (request, ...rest) {
+	return resolve.call(this, request === "webpack" ? ${JSON.stringify(path.join(__dirname, ".."))} : request, ...rest);
+};
+require(${JSON.stringify(path.join(__dirname, "precompile-schemas.js"))});`;
+
 /**
- * `--invariants`: the relations alone, which need no install.
+ * Which generated files webpack's own JavaScript minifier writes and the
+ * printer as it stands would write differently: the schema checks, which only
+ * `lint:special` would otherwise catch.
+ * @returns {Promise<string[]>} each stale file, relative to the repository
+ */
+const staleMinifiedFiles = () =>
+	new Promise((resolve, reject) => {
+		const root = path.join(__dirname, "..");
+		const child = spawn(process.execPath, ["-e", PRECOMPILE_HERE], {
+			cwd: root,
+			stdio: ["ignore", "ignore", "pipe"]
+		});
+		let said = "";
+		child.stderr.setEncoding("utf8");
+		child.stderr.on("data", (chunk) => {
+			said += chunk;
+		});
+		child.on("error", reject);
+		child.on("close", (code) => {
+			/** @type {string[]} */
+			const stale = [];
+			const pattern = /^(.+) need to be updated$/gm;
+			for (let match = pattern.exec(said); match; match = pattern.exec(said)) {
+				stale.push(path.relative(root, match[1]));
+			}
+			if (code !== 0 && stale.length === 0) {
+				reject(new Error(`precompile-schemas.js failed:\n${said}`));
+			} else {
+				resolve(stale);
+			}
+		});
+	});
+
+/**
+ * `--invariants`: the relations alone, which need no install, and whether the
+ * files the minifier generates are current, checked meanwhile.
  * @returns {Promise<void>} resolves once the exit code is set
  */
 const reportInvariantsOnly = async () => {
+	const checking = staleMinifiedFiles();
 	const found = await reportInvariants();
+	const stale = await checking;
 	process.exitCode = sweepExitCode(found, _missingFixtures, process.argv);
+	if (stale.length === 0) {
+		process.stdout.write("\ngenerated files the minifier writes are current\n");
+		return;
+	}
+	process.stdout.write(
+		`\n${stale.length} generated file${stale.length === 1 ? "" : "s"} the minifier writes ${
+			stale.length === 1 ? "is" : "are"
+		} stale; run \`yarn fix:special\`:\n${stale.map((file) => `  ${file}\n`).join("")}`
+	);
+	process.exitCode = 1;
 };
 
 /**

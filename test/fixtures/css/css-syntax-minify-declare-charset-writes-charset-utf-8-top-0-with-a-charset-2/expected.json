@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/@charset[1]: css-tree @charset \"utf-8\";, tool rule @charset \"utf-8\";.中",
+		"why": "a stylesheet read as a string is not decoded, so its leading U+FEFF is a non-ASCII ident code point (§4.2) opening a rule's prelude; css-tree drops it as decoding bytes would (§3.2)"
+	}
+]

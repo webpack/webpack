@@ -1,0 +1,19 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "rename-only",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: the mangler ranks the characters it names from by how often the source holds them, the names it renames and the code compressing drops included, so its output ranks them otherwise and a second pass renames"
+	},
+	{
+		"relation": "behavior",
+		"contains": "Cannot assign to read only property 'length' of function",
+		"presets": [
+			"format",
+			"beautify"
+		],
+		"why": "V8 quotes the function's source text in the message, which the printer respaces"
+	}
+]

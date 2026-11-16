@@ -3,5 +3,20 @@
 		"relation": "respelling escape",
 		"contains": "a\n      -> \\61",
 		"why": "a declaration, selector or block that is invalid or left open, which the printer writes back as authored, escape included"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/@layer[1]/;a,b[1]: css-tree rule ;a,b, tool rule a,b",
+		"why": "a `;` in a block ends a statement (§5.4.5): what precedes it is a declaration or a rule the spec drops (§5.4.3), never part of the next rule's selector, which css-tree reads it into"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/@layer[1]/;b,b[1]: css-tree rule ;b,b, tool rule b,b",
+		"why": "a `;` in a block ends a statement (§5.4.5): what precedes it is a declaration or a rule the spec drops (§5.4.3), never part of the next rule's selector, which css-tree reads it into"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/@layer[1]/a[3]: css-tree unparsed b(:1}a{b:c}a{b:c}.c0>d0{color:red;marg…, tool nothing",
+		"why": "a statement opening no `{}` block is a parse error the spec drops, whether the input ends in it or a block's `;` or `}` ends it (§5.4.3); css-tree keeps it as raw text"
 	}
 ]
