@@ -627,7 +627,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-6"), "g(),h();"],
 			[
 				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-7"),
-				"export function t(){return[new function(){return{b:9}},new F(g()),2]}",
+				"export function t(){return[new function(x){if(x)return{b:9}}(1),new F(g()),2]}",
 				{ sourceType: "module" }
 			],
 			[fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-part-a-node-prints-as-8"), "{\nf();\n}", { mode: "beautify", compress: false }]
@@ -1371,10 +1371,10 @@ describe("one-pass minify of reads and calls on literals", () => {
 	it("should keep only what the computed keys of an unread class run", () => {
 		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the-2");
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("a,c,x=(e,1);");
-		// A static value, block, `extends` or key that may name `prototype`, or a key reading the class's own name, keeps it.
+		// A static block, `extends` or key that may name `prototype`, or a key reading the class's own name, keeps it; a static value prints after the keys.
 		expect(
 			minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the-3"), { compress: {}, mangle: false }).code
-		).toBe('(class{[a];static b=f()}),class{[a];static{f()}},class extends B{[a]},class{static[f()]=1},class{static["prototype"](){}},class C{[r(()=>C)](){}};');
+		).toBe('a,f(),class{[a];static{f()}},class extends B{[a]},class{static[f()]=1},class{static["prototype"](){}},class C{[r(()=>C)](){}};');
 		// A direct `eval` in a key may read the class's name too.
 		expect(minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the-4"), { compress: {}, mangle: false }).code).toBe('(class C{[r(()=>eval("C"))](){}});');
 		// Beside a key that runs code, a static `prototype` keeps the class too, as making it throws.
@@ -1405,7 +1405,7 @@ describe("one-pass minify of reads and calls on literals", () => {
 		const constant =
 			fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-read-only-by-3");
 		const constantCode = minifyOnePass(constant, { compress: {}, mangle: false, ecma: 2020 }).code;
-		expect(constantCode).toBe("function i(){return`a`.y}function j(){return{p:-1}.p?.y}function q(){return(-1)?.y}function r(){return`1`.y}");
+		expect(constantCode).toBe("function i(){return`a`.y}function j(){return(-1)?.y}function q(){return(-1)?.y}function r(){return`1`.y}");
 		const program = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-read-only-by-4");
 		const code = minifyOnePass(program, { compress: {}, mangle: false, ecma: 2020 }).code;
 		// What an engine without `?.` cannot parse runs only where it can.
@@ -1833,8 +1833,8 @@ describe("one-pass minify, family W round 8", () => {
 	it("should print the expressions opening an arrow body before its `return` chain as one sequence", () => {
 		const source = fixture("javascript", "one-pass-w5-2");
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
-		// A statement opening with `{` keeps the braces.
-		expect(code).toBe("const log=value=>console.log(\"log\",value),sequence=value=>(log(value),value?1:2),several=value=>(log(value),log(value>1?value:-value),value?1:value===0?0:2),ambiguous=value=>{({}).a=value;return value?1:2};console.log(sequence(1),sequence(0),several(2),several(0),ambiguous(1));");
+		// Setting a property of a fresh object runs only its value, here nothing.
+		expect(code).toBe("const log=value=>console.log(\"log\",value),sequence=value=>(log(value),value?1:2),several=value=>(log(value),log(value>1?value:-value),value?1:value===0?0:2),ambiguous=value=>value?1:2;console.log(sequence(1),sequence(0),several(2),several(0),ambiguous(1));");
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
