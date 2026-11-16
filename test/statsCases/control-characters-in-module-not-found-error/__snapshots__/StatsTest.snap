@@ -5,13 +5,6 @@ exports[`StatsTestCases control-characters-in-module-not-found-error should prin
 Module not found: Error: Can't resolve './missing/x1b[31mRED/x0d.js' in 'Xdir/control-characters-in-module-not-found-error'
 resolve './missing/x1b[31mRED/x0d.js' in 'Xdir/control-characters-in-module-not-found-error'
   No description file found in Xdir/control-characters-in-module-not-found-error or above
-  aliased from extension alias with mapping '.js' to '.js'
-    No description file found in Xdir/control-characters-in-module-not-found-error or above
-    Xdir/control-characters-in-module-not-found-error/missing/x1b[31mRED/x0d.js doesn't exist
-  Failed to alias from extension alias with mapping '.js' to '.js' for './missing/x1b[31mRED/x0d.js': undefined
-  aliased from extension alias with mapping '.js' to '.ts'
-    No description file found in Xdir/control-characters-in-module-not-found-error or above
-    Xdir/control-characters-in-module-not-found-error/missing/x1b[31mRED/x0d.ts doesn't exist
   No description file found in Xdir/control-characters-in-module-not-found-error or above
   no extension
     Xdir/control-characters-in-module-not-found-error/missing/x1b[31mRED/x0d.js doesn't exist
