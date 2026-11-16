@@ -2,7 +2,7 @@
 
 module.exports = {
 	moduleScope(scope) {
-		scope.define = (factory) => {
+		scope.define = (deps, factory) => {
 			scope.module.exports = factory();
 		};
 	},

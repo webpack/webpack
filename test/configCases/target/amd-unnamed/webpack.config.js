@@ -14,7 +14,7 @@ module.exports = {
 	plugins: [
 		new webpack.BannerPlugin({
 			raw: true,
-			banner: "function define(fn) { fn(); }\n"
+			banner: "function define(deps, fn) { fn(); }\n"
 		})
 	]
 };
