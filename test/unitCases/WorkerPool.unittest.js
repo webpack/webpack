@@ -218,6 +218,8 @@ describe("WorkerPool", () => {
 				typeof os.availableParallelism === "function"
 					? os.availableParallelism()
 					: (os.cpus() || { length: 1 }).length;
+			// without worker_threads every pool runs inline
+			const threaded = WorkerPool.isThreadingAvailable();
 
 			/**
 			 * @param {import("../../declarations/WebpackOptions").Experiments["threads"]} threads options
@@ -233,12 +235,14 @@ describe("WorkerPool", () => {
 
 			const defaults = workerFor(true);
 			expect(defaults).toBeInstanceOf(Worker);
-			expect(defaults._pool.options.max).toBe(Math.max(cpus - 1, 0));
+			expect(defaults._pool.options.max).toBe(
+				threaded ? Math.max(cpus - 1, 0) : 0
+			);
 			await defaults.warmup(1);
 			await defaults._pool.end();
 
 			const two = workerFor({ max: 2.5 });
-			expect(two._pool.options.max).toBe(2);
+			expect(two._pool.options.max).toBe(threaded ? 2 : 0);
 			await two._pool.end();
 
 			const inline = workerFor({ max: 0 });
