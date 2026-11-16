@@ -6897,6 +6897,24 @@ at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] delim[9,10] i
  ident[410,412] left-curly-bracket[412,413] ident[413,416] colon[416,417] number[417,418] right-curly-bracket[418,419] ident[419,424] colon[424,425] ident[425,428] right-curly-bracket[428,429] end=429"
 `;
 
+exports[`CSS syntax — invariants css-syntax-minify-a-run-of-nested-layer-blocks-grows-the-block-each-join-nests-in-place parses 1`] = `
+"length 2208, sha256 e25afc89f2541797
+[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a\\"]],[[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"print\\"],[\\"{}\\",\\".\\",[\\"ident\\",\\"c0\\"],[\\"{}\\",[\\"ident\\",\\"z-index\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"id
+…
+\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a\\"]],[[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"print\\"],[\\"{}\\",\\".\\",[\\"ident\\",\\"f1\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-run-of-nested-layer-blocks-grows-the-block-each-join-nests-in-place parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-run-of-nested-layer-blocks-grows-the-block-each-join-nests-in-place prints {"mode":"minify"} 1`] = `"@layer a{@media print{.c0{z-index:0}.c2{z-index:2}.c3{z-index:3}.c1{z-index:1}@supports (display:grid){.s0{top:0}.s1{top:1px}.s2{top:2px}}.d{top:0}}.e{top:0}@media print{.f0,.f1{top:0}}}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-run-of-nested-layer-blocks-grows-the-block-each-join-nests-in-place tokenizes 1`] = `
+"length 4589, sha256 bfae7cf0317101ac
+at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] at-keyword[9,15] whitespace[15,16] ident[16,21] left-curly-bracket[21,22] delim[22,23] ident[23,25] left-curly-bracket[25,26] ident[2
+…
+] delim[474,475] ident[475,477] left-curly-bracket[477,478] ident[478,481] colon[481,482] number[482,483] right-curly-bracket[483,484] right-curly-bracket[484,485] right-curly-bracket[485,486] end=486"
+`;
+
 exports[`CSS syntax — invariants css-syntax-minify-a-selector-list-a-pseudo-does-not-take-writes-a-lang-list-as parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\":\\",[\\"function\\",\\"lang\\",[\\"ident\\",\\"en\\"]]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-a-selector-list-a-pseudo-does-not-take-writes-a-lang-list-as parses 2`] = `""`;
@@ -36068,6 +36086,60 @@ exports[`CSS syntax — invariants css-syntax-minify-transforms-in-process-write
 exports[`CSS syntax — invariants css-syntax-minify-transforms-in-process-writes-the-named-function-a-matrix-says-13 prints {"mode":"minify"} 1`] = `"a{transform:matrix(1,0,0,1,0)}"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-transforms-in-process-writes-the-named-function-a-matrix-says-13 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,11] colon[11,12] function[12,19] number[19,20] comma[20,21] number[21,22] comma[22,23] number[23,24] comma[24,25] number[25,26] comma[26,27] number[27,28] right-parenthesis[28,29] right-curly-bracket[29,30] end=30"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-read-only-the-children-each-join-adds parses 1`] = `
+"length 2393, sha256 2fb326a68f10d757
+[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a\\"]],[\\".\\",[\\"ident\\",\\"a0\\"],[\\"{}\\",[\\"ident\\",\\"z-index\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"b\\"]],[\\".\\",[\\"ident\\",\\"b0\\"],[\\"{}\\",[\\"ident\\",\\"z-ind
+…
+ent\\",\\"c\\"]],[\\".\\",[\\"ident\\",\\"x\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"c\\"]],[\\".\\",[\\"ident\\",\\"y\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-read-only-the-children-each-join-adds parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-read-only-the-children-each-join-adds prints {"mode":"minify"} 1`] = `"@layer a{.a0{z-index:0}.a2{z-index:2}.a3{z-index:3}.a1{z-index:1}@media print{.m0{top:0}.m1{top:1px}.m2{top:2px}}}@layer b{.b0{z-index:0}.b1{z-index:1}.b2{z-index:2}.b3{z-index:3}@media print{.n0{top:0}.n1{top:1px}.n2{top:2px}}}@layer c{.x,.y{top:0}}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-read-only-the-children-each-join-adds tokenizes 1`] = `
+"length 4916, sha256 132afdede3f3ceb9
+at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] delim[9,10] ident[10,12] left-curly-bracket[12,13] ident[13,20] colon[20,21] number[21,22] right-curly-bracket[22,23] right-curly-bra
+…
+9] left-curly-bracket[469,470] delim[470,471] ident[471,472] left-curly-bracket[472,473] ident[473,476] colon[476,477] number[477,478] right-curly-bracket[478,479] right-curly-bracket[479,480] end=480"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-a-nested-block-grows-once parses 1`] = `
+"length 3828, sha256 a387f14b42e49bba
+[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a\\"]],[[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"print\\"],[\\"{}\\",\\".\\",[\\"ident\\",\\"a10\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"b\\"]],[
+…
+-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"screen\\"],[\\"{}\\",[\\"at-keyword\\",\\"supports\\"],\\" \\",[\\"()\\",[\\"ident\\",\\"display\\"],\\":\\",[\\"ident\\",\\"grid\\"]],[\\"{}\\",\\".\\",[\\"ident\\",\\"d1\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-a-nested-block-grows-once parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-a-nested-block-grows-once prints {"mode":"minify"} 1`] = `"@layer a{@media print{.a10,.a7,.a8,.a9{color:red}.x{top:0}.c1,.c2,.c3,.e,.f{color:red}.c1,.c2{color:blue}}}@layer b{@media print{@supports (display:grid){.b10,.b7,.b8,.b9{color:red}}}@media screen{.b9,.d1,.d2,.d3,.d4{color:red}@supports (display:grid){.d1{color:red}}}}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-a-nested-block-grows-once tokenizes 1`] = `
+"length 8483, sha256 6157d17301373795
+at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] at-keyword[9,15] whitespace[15,16] ident[16,21] left-curly-bracket[21,22] delim[22,23] ident[23,26] left-curly-bracket[26,27] ident[2
+…
+29] left-curly-bracket[929,930] ident[930,935] colon[935,936] ident[936,939] right-curly-bracket[939,940] right-curly-bracket[940,941] right-curly-bracket[941,942] right-curly-bracket[942,943] end=943"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-they-grow-once parses 1`] = `
+"length 2118, sha256 f72013fd14318712
+[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a\\"]],[\\".\\",[\\"ident\\",\\"a10\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"b\\"]],[\\".\\",[\\"ident\\",\\"b10\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"id
+…
+,[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"c\\"]],[]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"c\\"]],[\\".\\",[\\"ident\\",\\"y\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-they-grow-once parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-they-grow-once prints {"mode":"minify"} 1`] = `"@layer a{.a10,.a7,.a8,.a9{color:red}.x{top:0}.c1,.c2,.c3{color:red}.c1,.c2{color:blue}}@layer b{.b10,.b7,.b8,.b9{color:red}.b9,.d1,.d2,.d3{top:0}}@layer c{.y{top:0}}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-they-grow-once tokenizes 1`] = `
+"length 4633, sha256 07a7ae33e452bb61
+at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] delim[9,10] ident[10,13] left-curly-bracket[13,14] ident[14,19] colon[19,20] ident[20,23] right-curly-bracket[23,24] right-curly-brac
+…
+1] left-curly-bracket[431,432] delim[432,433] ident[433,434] left-curly-bracket[434,435] ident[435,438] colon[438,439] number[439,440] right-curly-bracket[440,441] right-curly-bracket[441,442] end=442"
+`;
 
 exports[`CSS syntax — invariants css-syntax-minify-unused-symbols-keeps-the-selectors-of-a-list-that-can-still parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"gone\\"],\\",\\",\\".\\",[\\"ident\\",\\"kept\\"]],[[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
 

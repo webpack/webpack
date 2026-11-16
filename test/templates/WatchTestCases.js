@@ -893,7 +893,11 @@ const describeCases = (config) => {
 														if (runIdx < runs.length) {
 															run = runs[runIdx];
 															waitMode = true;
-															timer = setTimeout(async () => {
+															/**
+															 * Writes the next step once no build of the last one is running.
+															 * @returns {Promise<void>} the step written, or its retry scheduled
+															 */
+															const writeStep = async () => {
 																try {
 																	if (restartCompiler) {
 																		// closing stores the pack, so the next compiler
@@ -902,7 +906,6 @@ const describeCases = (config) => {
 																		if (error) throw error;
 																		closing = undefined;
 																	}
-																	waitMode = false;
 																	// a fatal error stops watching, so no late event rebuilds a failed
 																	// build that missed it: such a case builds a step only once the
 																	// watchers received all of it
@@ -919,6 +922,15 @@ const describeCases = (config) => {
 																			if (child.watching) suspended.push(child.watching);
 																		}
 																	}
+																	// a late event of the last step can start a build of its files, whose
+																	// hooks would already see the new step: write it once that build ended
+																	if (
+																		suspended.some((watching) => watching.running || watching.invalid)
+																	) {
+																		timer = setTimeout(writeStep, RECEIVE_INTERVAL);
+																		return;
+																	}
+																	waitMode = false;
 																	for (const watching of suspended) watching.suspend();
 																	receivedChanges = new Set();
 																	/** @type {{ step: string | undefined }} */ (
@@ -1012,7 +1024,8 @@ const describeCases = (config) => {
 																} catch (error) {
 																	fail(/** @type {Error} */ (error));
 																}
-															}, STEP_DELAY);
+															};
+															timer = setTimeout(writeStep, STEP_DELAY);
 														} else {
 															const deprecations =
 																/** @type {NonNullable<typeof deprecationTracker>} */ (
