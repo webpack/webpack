@@ -4,4 +4,5 @@
 	<rect style="font:1px serif;font-size:2px;-x-y:1"/>
 	<rect style="fill:red/* a;b */;stroke:blue;-x:1"/>
 	<path d="M0 0h1" fill="blue" style="all:initial;fill:red"/>
+	<path d="M0 0h2" fill="blue" style="\61 ll:initial;fill:red"/>
 </svg>
