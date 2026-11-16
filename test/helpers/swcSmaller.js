@@ -11,7 +11,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"real-world code, where no one transform above accounts for half the gap: several cut opposite ways, or the rival restructures the program too far for a token diff to attribute",
 		[
-			"swc minifier: fixture/next/wrap-contracts/input.js",
 			"swc minifier: fixture/issues/12209/input.js",
 			"swc minifier: fixture/issues/arguments-canonical-index/input.js"
 		]
