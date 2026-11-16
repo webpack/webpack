@@ -1017,6 +1017,54 @@ describe("WorkerPool", () => {
 			}
 		});
 
+		it("releases only the idle threads that ran nothing since the mark", async () => {
+			const pool = createPool({ max: 2 });
+			try {
+				await pool.warmup([TARGET], 2);
+				expect(pool.stats.workers).toBe(2);
+				// nothing ran: no thread is known to be surplus
+				pool.releaseUnused();
+				expect(pool.stats.workers).toBe(2);
+				await pool.run(TARGET, "add", [1, 2]);
+				pool.releaseUnused();
+				await waitFor(() => pool.stats.workers === 1);
+				pool.markUnused();
+				pool.releaseUnused();
+				expect(pool.stats.workers).toBe(1);
+				expect(pool.stats.spawned).toBe(2);
+			} finally {
+				await pool.end({ force: true });
+			}
+		});
+
+		it("stops keeping threads alive once watching closes", async () => {
+			const compiler = createCompiler(async (compiler) => {
+				await compiler.worker(TARGET).run("add", 1, 2);
+			});
+			const farm = /** @type {import("../../lib/worker/WorkerFarm")} */ (
+				compiler._workerFarm
+			);
+			try {
+				/** @type {import("../../lib/watch/Watching") | undefined} */
+				let watching;
+				await new Promise((resolve, reject) => {
+					watching = compiler.watch({}, (err) =>
+						err ? reject(err) : resolve(undefined)
+					);
+				});
+				// still watching: kept alive for the next rebuild
+				expect(farm._keepAlive).toBe(true);
+				await new Promise((resolve) =>
+					/** @type {import("../../lib/watch/Watching")} */ (watching).close(
+						() => resolve(undefined)
+					)
+				);
+				expect(farm._keepAlive).toBe(false);
+			} finally {
+				await close(compiler);
+			}
+		});
+
 		it("gives every task of a build the same threads, whatever the gaps", async () => {
 			/** @type {number[]} */
 			const threadIds = [];

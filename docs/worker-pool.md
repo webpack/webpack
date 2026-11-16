@@ -135,7 +135,9 @@ Reuse:
 
 - One pool serves every module bound through `compiler.worker`, and any thread runs any module's task.
 - From `compile` to `done` (or `failed`) idle threads stay alive. Tasks of one build reuse the same threads, whatever the gap between them (for example loaders in `make`, a minimizer in `processAssets`).
-- After `done`, idle threads retire after their idle timeout, so a watch rebuild within that time reuses them too.
+- In watch mode, threads stay alive between rebuilds however long the gap: spawning a thread and loading its modules costs far more than a call.
+- To keep memory in check, each watch build ends by terminating the idle threads that ran nothing since the previous build ended. A rebuild that minifies one changed asset keeps one thread, not all of them. When no thread ran anything (every result came from cache), all stay: that build says nothing about how many are needed.
+- Outside watch mode, and once watching closes, idle threads retire after their idle timeout. Idle threads never keep the process alive.
 
 ## Worker module contract
 
@@ -180,7 +182,8 @@ Ordering rules:
 ## Lifecycle
 
 - Spawn lazily from dispatch or `warmup`.
-- While `setKeepAlive(true)` is on, idle threads start no idle timer; `setKeepAlive(false)` starts the timers again. `WorkerPlugin` turns it on at `compile` and off at `done` and `failed`.
+- While `setKeepAlive(true)` is on, idle threads start no idle timer; `setKeepAlive(false)` starts the timers again. `WorkerPlugin` turns it on at `compile`, off at `done` and `failed` outside watch mode, and off at `watchClose`.
+- `markUnused()` starts a round; `releaseUnused()` retires idle threads that ran no call in it, unless none ran one. `WorkerPlugin` calls `releaseUnused()` then `markUnused()` at the end of each watch build.
 - An idle thread is released with `unref()` at once, so an idle pool never keeps the process alive, and starts an `idleTimeout` timer (itself released with `unref()`). A pending preload keeps the thread referenced and delays that timer.
 - When it fires and the thread is still idle, the thread is terminated.
 - Posting a call clears the timer and `ref()`s the thread.
