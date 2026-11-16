@@ -1305,10 +1305,10 @@ describe("one-pass minify of reads and calls on literals", () => {
 	it("should keep only what the computed keys of an unread class run", () => {
 		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the-2");
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("a,c,x=(e,1);");
-		// A static value, block, `extends` or key that may name `prototype`, or a key reading the class's own name, keeps it.
+		// A static block, `extends` or key that may name `prototype`, or a key reading the class's own name, keeps it; a static value prints after the keys.
 		expect(
 			minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the-3"), { compress: {}, mangle: false }).code
-		).toBe('(class{[a];static b=f()}),class{[a];static{f()}},class extends B{[a]},class{static[f()]=1},class{static["prototype"](){}},class C{[r(()=>C)](){}};');
+		).toBe('a,f(),class{[a];static{f()}},class extends B{[a]},class{static[f()]=1},class{static["prototype"](){}},class C{[r(()=>C)](){}};');
 		// A direct `eval` in a key may read the class's name too.
 		expect(minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the-4"), { compress: {}, mangle: false }).code).toBe('(class C{[r(()=>eval("C"))](){}});');
 		// Beside a key that runs code, a static `prototype` keeps the class too, as making it throws.

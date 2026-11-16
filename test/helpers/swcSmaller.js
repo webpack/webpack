@@ -277,7 +277,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `switch` tests cover",
 		[
-			"terser compress: switch/issue_1663",
 			"terser compress: switch/if_else8",
 			"terser compress: switch/issue_1680_1",
 			"terser compress: switch/issue_1690_2",
@@ -300,7 +299,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: dead-code/issue_2233_2",
 			"terser compress: drop-unused/cascade_drop_assign",
 			"terser compress: drop-unused/issue_2768",
-			"terser compress: drop-unused/issue_t161_top_retain_10",
 			"terser compress: drop-unused/issue_t161_top_retain_13",
 			"terser compress: functions/duplicate_argnames",
 			"terser compress: functions/issue_2601_1",
@@ -357,9 +355,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: drop-unused/drop_fargs",
 			"terser compress: drop-unused/issue_2136_2",
 			"terser compress: drop-unused/issue_2136_3",
-			"terser compress: drop-unused/issue_t161_top_retain_8",
-			"terser compress: drop-unused/issue_t161_top_retain_9",
-			"terser compress: drop-unused/issue_t161_top_retain_11",
 			"terser compress: drop-unused/issue_t161_top_retain_14"
 		]
 	],
@@ -964,9 +959,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc goes further than webpack on what terser's `class-properties` tests cover",
-		[
-			"terser compress: class-properties/class_expression_properties_side_effects"
-		]
+		[]
 	],
 	[
 		"swc goes further than webpack on what terser's `drop-console` tests cover",

@@ -348,7 +348,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_properties_join_object_assignments_return_2",
 			"swc exec: terser_issue_1639_issue_1639_1",
 			"swc exec: terser_arrays_for_loop",
-			"swc exec: terser_switch_issue_1663",
 			"swc exec: terser_functions_issue_2898",
 			"swc exec: terser_functions_issue_3016_2",
 			"swc exec: terser_functions_issue_2783",
@@ -409,12 +408,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/dead_code_elimination.rs:749",
 			"oxc minifier: peephole/dead_code_elimination.rs:754",
 			"oxc minifier: peephole/dead_code_elimination.rs:126",
-			"oxc minifier: peephole/dead_code_elimination.rs:127",
 			"oxc minifier: peephole/dead_code_elimination.rs:128",
-			"oxc minifier: peephole/dead_code_elimination.rs:129",
-			"oxc minifier: peephole/dead_code_elimination.rs:133",
-			"oxc minifier: peephole/dead_code_elimination.rs:137",
-			"oxc minifier: peephole/dead_code_elimination.rs:141",
 			"oxc minifier: peephole/dead_code_elimination.rs:153",
 			"oxc minifier: peephole/dead_code_elimination.rs:158",
 			"oxc minifier: peephole/dead_code_elimination.rs:438",
@@ -627,7 +621,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: switch/drop_default_1",
 			"terser compress: switch/drop_default_2",
 			"terser compress: switch/remove_switch_9",
-			"terser compress: switch/issue_1663",
 			"terser compress: switch/drop_case",
 			"terser compress: switch/issue_445",
 			"terser compress: switch/collapse_same_branches_not_in_a_row_ensure_no_evaluate_elad",
@@ -639,8 +632,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc goes further than webpack on what oxc's `peephole/merge_assignments_to_declarations.rs` tests cover",
 		[
 			"oxc minifier: peephole/merge_assignments_to_declarations.rs:40",
-			"oxc minifier: peephole/merge_assignments_to_declarations.rs:52",
-			"oxc minifier: peephole/merge_assignments_to_declarations.rs:53",
 			"oxc minifier: peephole/merge_assignments_to_declarations.rs:64",
 			"oxc minifier: peephole/merge_assignments_to_declarations.rs:65"
 		]
