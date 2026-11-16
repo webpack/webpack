@@ -5,14 +5,22 @@
 
 "use strict";
 
+const path = require("path");
 const {
 	INVARIANT_BUDGET,
 	OVERFLOW,
 	isStackOverflow,
+	unexplained,
 	unlessOverflow
 } = require("../fixture");
-const { idempotence, purityRelation } = require("./relations");
+const {
+	blockCounter,
+	idempotence,
+	purityRelation,
+	scalingRelation
+} = require("./relations");
 
+/** @typedef {import("../fixture").FixtureEntry} FixtureEntry */
 /** @typedef {import("./relations").Report} Report */
 
 /**
@@ -157,4 +165,77 @@ const invariantFindings = (syntax, sources) => {
 	return findings;
 };
 
-module.exports = { invariantFindings };
+/** The scripts whose blocks the scaling relation counts. */
+const LIB = path.join(__dirname, "..", "..", "..", "lib");
+
+// Large enough that a block looping over the input outgrows the constant work
+// around it: the CSS fixtures before #23377 grow 3.9-12.6× here, 2.0× after.
+const SCALING_SIZE = 64;
+
+/**
+ * How the work of minifying each source under its first preset grows with its
+ * size: each is built at `SCALING_SIZE` and twice that, and every block of
+ * `lib/` entered more than three times as often for the larger is a finding.
+ * The work is counted, not timed, so it answers alike on every machine.
+ * @param {() => SyntaxInvariants} load loads the syntax afresh, as only code compiled once counting has started is counted
+ * @param {readonly [string, (n?: number) => string][]} sources `[label, build]` pairs, `build()` giving the source at its own size
+ * @returns {InvariantFinding[] | null} what grew faster than its input, null where the runtime cannot count
+ */
+const scalingFindings = (load, sources) => {
+	if (sources.length === 0) return [];
+	const counter = blockCounter(LIB);
+	if (counter === null) return null;
+	/** @type {InvariantFinding[]} */
+	const findings = [];
+	try {
+		const syntax = load();
+		for (const [label, build] of sources) {
+			// The source at its own size first, so what the first use of the
+			// printer sets up lands in no count.
+			const warm = build();
+			const [first] = syntax.printers(warm);
+			if (first === undefined) continue;
+			first.minify(warm);
+			const reports = scalingRelation((size) => {
+				const source = build(size);
+				const [printer] = syntax.printers(source);
+				return counter.count(() => printer.minify(source));
+			}, SCALING_SIZE);
+			for (const report of reports) {
+				findings.push({ label, preset: first.name, report });
+			}
+		}
+	} finally {
+		counter.stop();
+	}
+	return findings;
+};
+
+/**
+ * What `scalingFindings` leaves unexplained over the fixtures whose
+ * `fixture.js` builds the input at a size, each line led by the fixture's name.
+ * @param {() => SyntaxInvariants} load loads the syntax afresh
+ * @param {readonly FixtureEntry[]} entries a runner's fixtures
+ * @returns {string[] | null} each finding no `scaling` entry names and each such entry gone stale, null where the runtime cannot count
+ */
+const unexplainedScaling = (load, entries) => {
+	/** @type {[string, (n?: number) => string][]} */
+	const sources = [];
+	for (const { name, sized } of entries) {
+		if (sized !== undefined) sources.push([name, sized]);
+	}
+	const findings = scalingFindings(load, sources);
+	if (findings === null) return null;
+	/** @type {string[]} */
+	const left = [];
+	for (const { name, sized, source, expectedScaling } of entries) {
+		if (sized === undefined) continue;
+		const own = findings.filter(({ label }) => label === name);
+		for (const line of unexplained(own, expectedScaling, source)) {
+			left.push(`${name}: ${line}`);
+		}
+	}
+	return left;
+};
+
+module.exports = { invariantFindings, scalingFindings, unexplainedScaling };

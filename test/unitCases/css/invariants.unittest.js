@@ -33,7 +33,10 @@ const {
 	serializeRules,
 	serializeStylesheet
 } = require("../../helpers/serializeCssTree");
-const { invariantFindings } = require("../../helpers/syntaxInvariants");
+const {
+	invariantFindings,
+	unexplainedScaling
+} = require("../../helpers/syntaxInvariants");
 const { purityRelation } = require("../../helpers/syntaxInvariants/relations");
 const syntax = require("../../helpers/syntaxInvariants/css");
 
@@ -348,5 +351,20 @@ describe("CSS syntax — invariants", () => {
 			}))
 		);
 		expect(reports.map((report) => report.repro)).toEqual([]);
+	});
+
+	// Only code compiled once counting starts is counted, so the fixtures a
+	// `source(n)` builds are minified by a copy of the syntax loaded for them.
+	it("does work in proportion to each fixture's size", () => {
+		const left = unexplainedScaling(() => {
+			/** @type {typeof syntax | undefined} */
+			let fresh;
+			jest.isolateModules(() => {
+				fresh = require("../../helpers/syntaxInvariants/css");
+			});
+			return /** @type {typeof syntax} */ (fresh);
+		}, all);
+		// A runtime without V8's inspector has nothing to count with.
+		if (left !== null) expect(left).toEqual([]);
 	});
 });
