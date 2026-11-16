@@ -45,7 +45,7 @@ function q() { var t; return (t = () => {})(missing); }
 	function () { return h()(); },
 	function () { return k()(); },
 	m,
-	function () { return n(); },
+	function () { return n(1); },
 	function () { return p(1); },
 	q
 ].forEach(function (run, i) {
