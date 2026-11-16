@@ -40014,6 +40014,7 @@ declare namespace exports {
 					export let EOF: 26;
 				}
 				export let VENDOR_PREFIX: RegExp;
+				export let closeAtEndOfInput: (text: string) => string;
 				export let containsSubstitutionFunction: (text: string) => boolean;
 				export let isDigit: (cc: number) => boolean;
 				export let isHexDigit: (cc: number) => boolean;
