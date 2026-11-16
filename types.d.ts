@@ -39190,10 +39190,6 @@ declare namespace exports {
 					end?: number
 				) => number;
 				export let nonASCIIwhitespace: RegExp;
-				export let stringToNumber: (
-					str: string,
-					isLegacyOctalNumericLiteral: boolean
-				) => number;
 				export namespace tokContexts {
 					export let b_stat: TokContext;
 					export let b_expr: TokContext;

@@ -1998,7 +1998,6 @@ const {
 	isIdentifierStart,
 	isNewLine,
 	keywordTypes,
-	stringToNumber,
 	tokContexts,
 	tokTypes
 } = require("../../../lib/javascript/syntax-parser");
@@ -3132,10 +3131,24 @@ describe("Parser", () => {
 		});
 
 		it("reads numbers like acorn", () => {
-			expect(stringToNumber("010", true)).toBe(8);
-			expect(stringToNumber("0777", true)).toBe(511);
-			expect(stringToNumber("1e3", false)).toBe(1000);
-			expect(stringToNumber("1_000.5", false)).toBe(1000.5);
+			const { parser, toEstreeObject } = require("../../../lib/javascript/syntax");
+			for (const [source, value] of /** @type {[string, number][]} */ ([
+				["010", 8],
+				["0777", 511],
+				["1e3", 1000],
+				["1_000.5", 1000.5]
+			])) {
+				const program = /** @type {import("estree").Program} */ (
+					toEstreeObject(parser.parseProgram(source, 0, { sourceType: "script" }))
+				);
+				const statement = /** @type {import("estree").ExpressionStatement} */ (
+					program.body[0]
+				);
+				expect(/** @type {import("estree").Literal} */ (statement.expression).value).toBe(value);
+				expect(
+					acorn.parse(source, { ecmaVersion: "latest" }).body[0]
+				).toMatchObject({ expression: { value } });
+			}
 		});
 
 		it("exposes acorn's token tables", () => {
