@@ -87,7 +87,6 @@ const BY_DESIGN = [
 			"terser compress: expression/pow_with_parentheses",
 			"terser compress: functions/drop_lone_use_strict_arrows_1",
 			"terser compress: functions/empty_body",
-			"terser compress: functions/inner_ref",
 			"terser compress: functions/issue_1841_2",
 			"terser compress: functions/issue_2620_1",
 			"terser compress: functions/issue_2620_4",

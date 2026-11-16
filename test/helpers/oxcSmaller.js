@@ -221,7 +221,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc drops more unused expressions, as oxc's `peephole/remove_unused_expression.rs` tests show",
 		[
-			"oxc minifier: peephole/remove_unused_expression.rs:449",
 			"oxc minifier: peephole/remove_unused_expression.rs:31",
 			"oxc minifier: peephole/remove_unused_expression.rs:62",
 			"oxc minifier: peephole/remove_unused_expression.rs:63",
@@ -566,8 +565,6 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"oxc minifier: ecmascript/is_literal_value.rs:159",
 			"oxc minifier: ecmascript/is_literal_value.rs:167",
-			"oxc minifier: ecmascript/is_literal_value.rs:259",
-			"oxc minifier: ecmascript/is_literal_value.rs:261",
 			"oxc minifier: ecmascript/is_literal_value.rs:276"
 		]
 	],
