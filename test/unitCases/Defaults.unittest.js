@@ -156,6 +156,7 @@ describe("snapshots", () => {
 		    "lazyCompilation": undefined,
 		    "sourceImport": false,
 		    "syncWebAssembly": false,
+		    "threads": false,
 		    "typescript": true,
 		  },
 		  "externals": undefined,

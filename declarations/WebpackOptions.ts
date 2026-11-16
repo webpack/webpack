@@ -1387,6 +1387,12 @@ export interface Experiments {
 	 */
 	syncWebAssembly?: boolean;
 	/**
+	 * Run CPU-heavy plugin work, such as minimization, on worker threads webpack keeps for the whole compiler.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	threads?: boolean | ThreadsOptions;
+	/**
 	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when no loader is registered for TypeScript files.
 	 * @since 5.107.0
 	 * @experimental
@@ -1472,6 +1478,12 @@ export interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	syncWebAssembly?: boolean;
+	/**
+	 * Run CPU-heavy plugin work, such as minimization, on worker threads webpack keeps for the whole compiler.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	threads?: false | ThreadsOptions;
 	/**
 	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when no loader is registered for TypeScript files.
 	 * @since 5.107.0
@@ -6256,6 +6268,17 @@ export type Target =
 	| /** @minItems 1 */ Array</** Specific environment, runtime, or syntax. */ NonEmptyString>
 	| false
 	| NonEmptyString;
+
+/**
+ * Options for running CPU-heavy plugin work on the worker threads webpack keeps for a compiler.
+ */
+export interface ThreadsOptions {
+	/**
+	 * Number of worker threads. Defaults to one less than the number of CPUs; `0` runs the work on the main thread.
+	 * @since 5.113.0
+	 */
+	max?: NonNegativeNumber;
+}
 
 /**
  * Use a Trusted Types policy to create urls for chunks.

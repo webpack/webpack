@@ -15,6 +15,9 @@ module.exports = [
 	/Critical dependency: the request of a dependency is an expression/,
 	/Critical dependency: the request of a dependency is an expression/,
 	/Critical dependency: the request of a dependency is an expression/,
+	// WorkerPool and WorkerChild load their target module by a dynamic require
+	/Critical dependency: the request of a dependency is an expression/,
+	/Critical dependency: the request of a dependency is an expression/,
 	// minimizer-webpack-plugin/minify.js
 	/Critical dependency: require function is used in a way in which dependencies cannot be statically extracted/,
 	// Optional dependencies of minimizer-webpack-plugin
