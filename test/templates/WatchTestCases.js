@@ -760,7 +760,10 @@ const describeCases = (config) => {
 												// a late event can rebuild what the build being compared left stale:
 												// that build's comparison, or the recovery it fails into, decides
 												if (run.comparing) {
-													run.lateHash = hash;
+													// the first that differs stays, so a later one cannot hide it
+													if (hash !== lastHash && run.lateHash === undefined) {
+														run.lateHash = hash;
+													}
 													return;
 												}
 												if (run.done && hash === lastHash) return;
@@ -782,7 +785,7 @@ const describeCases = (config) => {
 													return handleWatchError(/** @type {Error} */ (error));
 												}
 												run.comparing = false;
-												if (run.lateHash !== undefined && run.lateHash !== hash) {
+												if (run.lateHash !== undefined) {
 													throw new Error(
 														`Compilation changed but no change was issued ${hash} != ${run.lateHash} (run ${runIdx})\n` +
 															`Triggering change: ${triggeringFilename}`
