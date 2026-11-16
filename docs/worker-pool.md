@@ -47,22 +47,18 @@ This file is the spec. When code and spec disagree, fix one of them in the same 
 const worker = compiler.worker(require.resolve("./worker"));
 
 await worker.run("minify", options);
-await worker.warmup(4);
-await worker.release();
 ```
 
 | Member                                  | Behavior                                                                                                                                                  |
 | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `compiler.worker(workerPath, options?)` | Absolute path or `file:` URL, required. Returns the facade; without `experiments.threads` or `worker_threads`, its calls run directly on the main thread. |
 | `worker.run(method, ...args)`           | One call.                                                                                                                                                 |
-| `worker.warmup(workers?)`               | Spawns up to `workers` threads and preloads this module; defaults to the pool's `max`. Existing threads are preloaded too.                                |
-| `worker.release()`                      | Terminates idle threads in the shared pool. Calls in flight finish, then their threads retire; the pool stays usable.                                     |
 
 `workerPath` may be followed by a reserved `options` argument: no field is used yet, so passing one is accepted and ignored.
 
-No `bind`, no `end`, no handles, no shared references. `release()` affects the shared pool, including threads another consumer warmed up.
+No `bind`, no `end`, no `warmup`, no `release`, no handles, no shared references: webpack owns the threads, so a plugin only runs calls. The pool's own `warmup()` and `release()` stay internal.
 
-Coming from jest-worker: `threads.max` is its `numWorkers`. The facade has no `end()`: `release()` retires idle threads and leaves the pool usable, while `compiler.close()` is what ends it.
+Coming from jest-worker: `threads.max` is its `numWorkers`. The facade has no `end()`: `compiler.close()` is what ends the pool.
 
 When `options` fields ship, they reuse the `jest-worker` or `thread-loader` name for the same purpose; pool-wide settings stay in `experiments.threads`.
 
@@ -104,8 +100,6 @@ class MinifyPlugin {
 					const names = Object.keys(assets).filter((name) =>
 						name.endsWith(".js")
 					);
-					// optional: spawn only as many threads as there is work
-					await worker.warmup(names.length);
 					await Promise.all(
 						names.map(async (name) => {
 							const code = await worker.run(

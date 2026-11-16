@@ -241,7 +241,7 @@ describe("WorkerPool", () => {
 			expect(defaults._pool.options.max).toBe(
 				threaded ? Math.max(cpus - 1, 0) : 0
 			);
-			await defaults.warmup(1);
+			await defaults._pool.warmup([TARGET], 1);
 			await defaults._pool.end();
 
 			const two = workerFor({ max: 2.5 });
@@ -250,7 +250,7 @@ describe("WorkerPool", () => {
 
 			const inline = workerFor({ max: 0 });
 			expect(await inline.run("info")).toEqual(callerThread());
-			await inline.release();
+			await inline._pool.release();
 		});
 
 		it("accepts the reserved options argument and types the module exports", async () => {
