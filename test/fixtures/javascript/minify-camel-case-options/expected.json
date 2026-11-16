@@ -1,7 +1,15 @@
 [
 	{
 		"relation": "behavior",
-		"contains": "it should keep function and class names, as `keepFnames`",
+		"contains": "toMatch \"() => \\\"café\\\"\"",
 		"why": "the fixture logs a function's source text, which `format.asciiOnly` rewrites by contract"
+	},
+	{
+		"relation": "behavior",
+		"contains": "toMatch \"() => \\\"café\\\"\"",
+		"presets": [
+			"format"
+		],
+		"why": "the fixture logs a function's source text, which the printer writes as its own"
 	}
 ]

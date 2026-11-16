@@ -1,7 +1,7 @@
 [
 	{
 		"relation": "behavior",
-		"contains": "it should drop an unread call to a function `#__NO_SIDE_EFFECTS__` marks",
+		"contains": "toEqual [\"declared\",\"expression\",\"statement\"",
 		"why": "a `#__NO_SIDE_EFFECTS__` annotation states the calls it marks may be dropped, so the calls the fixture logs are dropped by contract"
 	}
 ]
