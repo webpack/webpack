@@ -1403,8 +1403,8 @@ const runBehavior = (code, timeout, module, watch) => {
 			if (reason === "ERR_SCRIPT_EXECUTION_TIMEOUT") return false;
 			const kind = typeof name === "string" ? name : typeof error;
 			// JavaScriptCore quotes the failing source text, which a printer may
-			// rewrite, as `(evaluating '…')` and as the operand `in` refuses
-			// (`010 is not an Object.`); V8 quotes a class's heritage as its text.
+			// rewrite: `(evaluating '…')`, `(near '…')`, `(In '…')` after the value
+			// it names, the operand `in` refuses; V8 quotes a class's heritage.
 			const value =
 				typeof message === "string"
 					? message
@@ -1413,6 +1413,8 @@ const runBehavior = (code, timeout, module, watch) => {
 								"$1"
 							)
 							.replace(/ \(evaluating '[\s\S]*'\)$/, "")
+							.replace(/ \(near '[\s\S]*'\)$/, "")
+							.replace(/^[\s\S]*? (is [^']*?\.) \(In '[\s\S]*\)$/, "$1")
 							.replace(
 								/^(Class extends value) [\s\S]* (is not a constructor or null)$/,
 								"$1 $2"
@@ -1599,6 +1601,9 @@ const moduleBehavior = (code, watch) => {
 		: /** @type {BehaviorAnswer} */ (reply.message);
 };
 
+// A word naming what makes a promise: an async function, `await`, `Promise` or `import()`.
+const MAKES_PROMISES = /\b(?:async|await|Promise|import)\b/;
+
 /**
  * What a program prints and, where it throws, the error's kind and message or
  * the thrown value, run in a fresh context with the promise reactions and timers
@@ -1610,6 +1615,12 @@ const moduleBehavior = (code, watch) => {
  * @returns {BehaviorAnswer} what it answers
  */
 const behaviorOf = (code, module, watch = false) => {
+	// WHY: under Bun a promise left rejected in a context ends a worker thread
+	// before any listener there hears of it, so code that may make one runs
+	// only where Node.js runs it.
+	if (process.versions.bun !== undefined && MAKES_PROMISES.test(code)) {
+		return { transcript: undefined, patched: false };
+	}
 	if (!module || !require("worker_threads").isMainThread) {
 		return behaviorHere(code, module, watch);
 	}
