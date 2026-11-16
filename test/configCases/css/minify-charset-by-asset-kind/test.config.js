@@ -25,10 +25,10 @@ module.exports = {
 		// A `<style>` inside a `data:` URL document is read in that document's
 		// encoding; a `data:text/css` URL is a stylesheet of its own.
 		const css = read("bundle1.css");
-		const charsets = css.split('@charset \\"UTF-8\\";').length - 1;
+		const charsets = css.split('@charset "UTF-8";').length - 1;
 		expect(css.startsWith('@charset "UTF-8";')).toBe(true);
-		expect(css).toContain('url("data:text/css,@charset \\"UTF-8\\";.g');
-		expect(charsets).toBe(1);
+		expect(css).toContain('url(\'data:text/css,@charset "UTF-8";.g');
+		expect(charsets).toBe(2);
 		expect(css).toMatchSnapshot();
 	}
 };

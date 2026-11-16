@@ -57,6 +57,21 @@ describe("SVG data URLs", () => {
 		);
 	});
 
+	it("should minify the styles of one a stylesheet holds, as a run inside its run", () => {
+		const render = builtinEmbeddedRenderer({ svg: true });
+		expect(
+			render(
+				fixture(
+					"xml",
+					"svg-data-urls-should-minify-the-styles-of-one-a-stylesheet-holds"
+				),
+				{ type: "css", hostType: "html", as: "block-contents" }
+			)
+		).toBe(
+			"background:url('data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\'><style>.b{fill:red}</style><rect class=\\'b\\'/></svg>')"
+		);
+	});
+
 	it("should decline what it is not asked for, or cannot shorten", () => {
 		const render = builtinEmbeddedRenderer({ svg: true });
 		// An inline `<svg>` is the HTML printer's.
@@ -103,6 +118,22 @@ describe("SVG data URLs", () => {
 			renderEmbeddedSource: () => "<svg/>"
 		});
 		expect(own.code).toContain("url(data:image/svg+xml,<svg/>)");
+	});
+
+	it("should spell one a style attribute holds alike on a second pass", async () => {
+		const page = fixture(
+			"xml",
+			"svg-data-urls-should-spell-one-a-style-attribute-holds-alike-on-a-second-pass"
+		);
+		const once = (await htmlMinify({ "a.html": page }, undefined, { svg: true }))
+			.code;
+		// `\'` costs less than the `&quot;` a `"` costs in a `"`-quoted attribute.
+		expect(once).toBe(
+			"<p style=\"background:url('data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\'>  <rect class=\\'b\\'/>  </svg>')\">x"
+		);
+		expect(
+			(await htmlMinify({ "a.html": once }, undefined, { svg: true })).code
+		).toBe(once);
 	});
 
 	it("should minify the ones a page holds only when asked", async () => {
