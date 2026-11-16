@@ -1243,6 +1243,52 @@ describe("SourceProcessor", () => {
 			expect(Object.prototype.hasOwnProperty.call(A, "state")).toBe(false);
 		});
 
+		it("hands every printer the path its visitors get, state and all", () => {
+			const JavascriptSourceProcessor = require("../../lib/javascript/JavascriptSourceProcessor");
+			const { NodeType: JavascriptNodeType } = require("../../lib/javascript/syntax-parser");
+			const JS = "const a = f(b, [c]);";
+
+			/** @type {[EXPECTED_ANY, string, number | undefined][]} processor, source, visited node type */
+			const runs = [
+				[new CssSourceProcessor(), CSS, CssNodeType.Ident],
+				[new HtmlSourceProcessor(), HTML, HtmlNodeType.Element],
+				[new JavascriptSourceProcessor(), JS, JavascriptNodeType.Identifier],
+				// No visitors: the JavaScript walk takes its print-only branch.
+				[new JavascriptSourceProcessor(), JS, undefined]
+			];
+			for (const [processor, source, type] of runs) {
+				/** @type {Set<unknown>} */
+				const visitorPaths = new Set();
+				/** @type {Set<unknown>} */
+				const printerPaths = new Set();
+				/** @type {unknown[]} */
+				const printerStates = [];
+				const printer = processor._printer || processor._loadPrinter();
+				processor._printer = (
+					/** @type {{ state: unknown }} */ path,
+					/** @type {unknown} */ writer
+				) => {
+					printerPaths.add(path);
+					printerStates.push(path.state);
+					return printer(path, writer);
+				};
+				if (type !== undefined) {
+					processor.use([type], (/** @type {unknown} */ path) => {
+						visitorPaths.add(path);
+					});
+				}
+				const state = { run: 1 };
+				processor.process(source, { mode: "minify", state });
+				expect(printerStates.length).toBeGreaterThan(0);
+				expect(printerStates.every((s) => s === state)).toBe(true);
+				expect(printerPaths.size).toBe(1);
+				if (type !== undefined) {
+					expect(visitorPaths.size).toBe(1);
+					expect([...visitorPaths][0]).toBe([...printerPaths][0]);
+				}
+			}
+		});
+
 		it("knows a streamed block's ancestors until it closes", () => {
 			let rules = "";
 			for (let i = 0; i < 1800; i++) {
