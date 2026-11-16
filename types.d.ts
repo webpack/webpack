@@ -21253,11 +21253,23 @@ declare const MEASURE_END_OPERATION: unique symbol;
 declare const MEASURE_START_OPERATION: unique symbol;
 
 /**
- * Magic comment options by name; each value is whatever the user's comment evaluates to.
+ * Magic comment options by name; each value is what the user's comment evaluates to.
  */
 declare interface MagicCommentOptions {
-	[index: string]: unknown;
+	[index: string]: MagicCommentValue;
 }
+type MagicCommentValue =
+	| undefined
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| symbol
+	| RegExp
+	| JsonObjectFs
+	| JsonValueFs[]
+	| ((...args: never[]) => void);
 
 /**
  * Defines the main render context type used by this module.
