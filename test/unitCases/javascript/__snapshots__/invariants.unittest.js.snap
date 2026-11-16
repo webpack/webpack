@@ -542,7 +542,7 @@ exports[`JavaScript syntax — invariants h-delete-value-1 parses 2`] = `""`;
 
 exports[`JavaScript syntax — invariants h-delete-value-1 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants h-delete-value-1 prints {"mode":"minify","compress":{"ecma":2020},"ecma":2020,"mangle":false} 1`] = `"var a;f((a=1,!0)),x=(a=2,!0)+1,y=[(0,b,!0)];function g(){return a=3,!0}z=delete a.b,w=(delete(a=4)).c;"`;
+exports[`JavaScript syntax — invariants h-delete-value-1 prints {"mode":"minify","compress":{"ecma":2020},"ecma":2020,"mangle":false} 1`] = `"var a;f((a=1,!0)),x=(a=2,!0)+1,y=[(b,!0)];function g(){return a=3,!0}z=delete a.b,w=(delete(a=4)).c;"`;
 
 exports[`JavaScript syntax — invariants h-delete-value-1 prints {"mode":"minify"} 1`] = `"var a;f(delete(a=1));x=delete(a=2)+1;y=[delete(a,b)];function g(){return delete(a=3)}z=delete a.b;w=(delete(a=4)).c;"`;
 
@@ -9010,7 +9010,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-595 parses 2`] = `""`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-595 prints {"mode":"minify","compress":{"toplevel":true},"mangle":{"toplevel":false}} 1`] = `"x=!1,x=!1,x=!0,x=!0,x=!1,x=![f()],x=!0,x=!0,x=!1,x=!1,x=(0,a,!0),x=!0,x=delete a.b,x=delete a,x=delete a?.b,x=delete f();g();x=!0;"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-595 prints {"mode":"minify","compress":{"toplevel":true},"mangle":{"toplevel":false}} 1`] = `"x=!1,x=!1,x=!0,x=!0,x=!1,x=![f()],x=!0,x=!0,x=!1,x=!1,x=(a,!0),x=!0,x=delete a.b,x=delete a,x=delete a?.b,x=delete f();g();x=!0;"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-595 prints {"mode":"minify"} 1`] = `"throws: Deleting local variable in strict mode (1:76)"`;
 
