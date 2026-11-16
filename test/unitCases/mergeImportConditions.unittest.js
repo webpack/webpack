@@ -37,6 +37,11 @@ describe("mergeImportConditions", () => {
 	});
 
 	it("should match where both media query lists match", () => {
+		/**
+		 * @param {string} outer the outer media query list
+		 * @param {string} inner the inner media query list
+		 * @returns {string | undefined} the merged list
+		 */
 		const merge = (outer, inner) =>
 			mergeImportConditions(undefined, undefined, inner, [
 				[undefined, undefined, outer]
@@ -57,7 +62,19 @@ describe("mergeImportConditions", () => {
 		expect(merge("screen and (color)", "screen and (grid)")).toBe(
 			"screen and (color) and (grid)"
 		);
-		expect(merge("not screen", "(color)")).toBe("(color)");
+		expect(merge("not screen", "(color)")).toBe("print and (color)");
+		expect(merge("not all", "screen")).toBe("not all");
+		expect(merge("not screen and (color)", "print")).toBe(
+			"print, print and (not ((color)))"
+		);
+		expect(merge("not (color)", "(hover)")).toBe("(not (color)) and (hover)");
+		expect(merge("(color) or (hover)", "(width > 1px)")).toBe(
+			"((color) or (hover)) and (width > 1px)"
+		);
+		expect(merge("screen", "(a) or (b)")).toBe("screen and ((a) or (b))");
+		expect(merge("screen and (a)", "screen and (b) or (c)")).toBe(
+			"screen and (a) and ((b) or (c))"
+		);
 		expect(merge("screen, print", "(color)")).toBe(
 			"screen and (color), print and (color)"
 		);
