@@ -422,7 +422,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: functions/issue_2097",
 			"terser compress: functions/issue_2630_1",
 			"terser compress: functions/recursive_inline_2",
-			"terser compress: functions/use_before_init_in_loop",
 			"terser compress: functions/drop_lone_use_strict_arrows_2"
 		]
 	],
@@ -836,10 +835,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/9741_global_objects/input.js",
 			"swc minifier: fixture/projects/jquery/5/input.js"
 		]
-	],
-	[
-		"swc writes `const` as `let`, a byte shorter and mergeable with its neighbors, and moves leading `var`s into a later declaration",
-		["terser compress: dead-code/dead_code_const_declaration"]
 	],
 	[
 		"swc goes further than webpack on what terser's `block-scope` tests cover",

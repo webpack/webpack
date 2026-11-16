@@ -23,7 +23,6 @@ const BY_DESIGN = [
 			"terser compress: conditionals/equality_conditionals_false",
 			"terser compress: conditionals/equality_conditionals_true",
 			"terser compress: const/regexp_literal_not_const",
-			"terser compress: dead-code/dead_code_constant_boolean_should_warn_more",
 			"terser compress: drop-unused/issue_3146_1",
 			"terser compress: drop-unused/issue_3146_2",
 			"terser compress: evaluate/unsafe_integer_key",
@@ -70,7 +69,6 @@ const BY_DESIGN = [
 		[
 			"swc minifier: fixture/issues/12227/input.js",
 			"swc minifier: fixture/issues/2262/1/input.js",
-			"terser compress: arrow/call_args_drop_param",
 			"terser compress: collapse_vars/collapse_vars_repeated",
 			"terser compress: collapse_vars/collapse_vars_self_reference",
 			"terser compress: conditionals/cond_8c",
@@ -81,7 +79,6 @@ const BY_DESIGN = [
 			"terser compress: drop-unused/issue_1968",
 			"terser compress: drop-unused/issue_2136_1",
 			"terser compress: evaluate/Infinity_NaN_undefined_LHS",
-			"terser compress: evaluate/call_args_drop_param",
 			"terser compress: evaluate/issue_2926_1",
 			"terser compress: expression/pow_with_number_constants",
 			"terser compress: expression/pow_with_parentheses",
@@ -116,8 +113,7 @@ const BY_DESIGN = [
 			"terser compress: reduce_vars/var_assign_5",
 			"terser compress: sequences/unsafe_undefined",
 			"terser compress: switch/if_else7",
-			"terser compress: try-catch/catch_destructuring_with_sequence",
-			"terser compress: typeof/issue_2728_4"
+			"terser compress: try-catch/catch_destructuring_with_sequence"
 		]
 	],
 	[
