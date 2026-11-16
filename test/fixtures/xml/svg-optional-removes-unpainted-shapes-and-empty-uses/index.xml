@@ -23,4 +23,5 @@
 	<use href="#filtered"/>
 	<text><tref/>a</text>
 	<tref href="#t"/>
+	<g fill="none" style="all:initial;-x:1"><path d="M0 0h1"/></g>
 </svg>
