@@ -1328,6 +1328,39 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(minifyOnePass(source, { compress: { pure_conversions: false }, mangle: false }).code).toBe("a==b,c()!=d,a()<b;");
 	});
 
+	it("should drop only the reads `pure_getters` takes as running nothing", () => {
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-drop-only-the-reads");
+		// "strict", the default: a read of what may be nullish or hold a getter stays whole.
+		const strict = "a.b,c().d,null.e,(void 0).f,(void 0).g,x()[y()],{get h(){console.log(1)}}.h,(i||j).k,(l?m:n).o,(p,q()).r,s?.t,(a=f()).b,(x()?.y).z,{...w}.v;";
+		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(strict);
+		expect(minifyOnePass(source, { compress: { pure_getters: "strict" }, mangle: false }).code).toBe(strict);
+		// true: only a read of what may be nullish stays, as its object alone, without the member's parentheses.
+		expect(minifyOnePass(source, { compress: { pureGetters: true }, mangle: false }).code).toBe("a,c(),null.e,(void 0).f,(void 0).g,x()[y()],i||j,l?m:n,p,q(),s?.t,a=f(),x()?.y,{...w};");
+		// false: every read but an optional one stays; a literal's `length` folds to a constant first.
+		expect(minifyOnePass(source, { compress: { pure_getters: false }, mangle: false }).code).toBe("a.b,c().d,null.e,(void 0).f,(void 0).g,x()[y()],{get h(){console.log(1)}}.h,(i||j).k,(l?m:n).o,(p,q()).r,s?.t,function(){}.name,{}.u,(a=f()).b,(x()?.y).z,{...w}.v;");
+		// A write target, a callee, `super`, a logical assignment, a nullish branch, a key running code and an optional read keep the member; what opens ambiguously keeps its parentheses.
+		const kept = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-drop-only-the-reads-2");
+		expect(minifyOnePass(kept, { compress: { pure_getters: true }, mangle: false }).code).toBe("x().y=1,x().y++,delete x().y,x().y();for(x().y in o);(a&&=b()).c,(a?null:b()).c,(a=null).b,x()[y()],x()?.y;class A{#p;m(){super.x,x(),#p in[f()]}}(class{static{f()}});f(),{...w},i||j,(i||j),f(x().y);");
+		expect(minifyOnePass(kept, { compress: { pure_getters: true, side_effects: false }, mangle: false }).code).toBe(minifyOnePass(kept, { compress: { side_effects: false }, mangle: false }).code);
+		const program = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-drop-only-the-reads-3");
+		const { code } = minifyOnePass(program, { compress: { pure_getters: true }, mangle: false });
+		expect(code).toBe('var log=[],o={p:{}};function f(){return log.push("f"),o}f(),f(),(log.length>1?f():null).p,console.log(log.join());');
+		expect(runProgram(code)).toBe(runProgram(program));
+		// A name known to hold `null` or `undefined` keeps its read, and a key converting by running code keeps its member where conversions run code.
+		const nullish = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-drop-only-the-reads-4");
+		const converted = minifyOnePass(nullish, { compress: { pure_getters: true, pure_conversions: false, toplevel: true }, mangle: false }).code;
+		expect(converted).toBe('var log=[],other;try{null.x}catch(e){log.push(e.name)}try{other.y}catch(e){log.push(e.name)}(log.push("factory"),{})[{toString:function(){log.push("key");return"k"}}],console.log(log.join());');
+		expect(runProgram(converted)).toBe(runProgram(nullish));
+		expect(minifyOnePass(nullish, { compress: { pure_getters: true, toplevel: true }, mangle: false }).code).toBe('var log=[],other;try{null.x}catch(e){log.push(e.name)}try{other.y}catch(e){log.push(e.name)}(function(){log.push("factory")})();console.log(log.join());');
+		// A name printing as the value folded into it keeps the read of that value.
+		expect(minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-drop-only-the-reads-5"), { compress: { pure_getters: true, toplevel: true }, mangle: false }).code).toBe("null.x,(void 0).y;");
+		// So does one a sequence, a branch, a logical side or an assignment gives.
+		const given = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-drop-only-the-reads-6");
+		const throwing = minifyOnePass(given, { compress: { pure_getters: true, toplevel: true }, mangle: false }).code;
+		expect(throwing).toBe('var log=[],unset,held,flag=log.length>5;function record(){log.push("record")}try{(record(),null).a}catch(e){log.push(e.name)}try{(flag?record():null).b}catch(e){log.push(e.name)}try{(flag||null).c}catch(e){log.push(e.name)}try{(record(),unset).d}catch(e){log.push(e.name)}try{(held=null).e}catch(e){log.push(e.name)}console.log(log.join());');
+		expect(runProgram(throwing)).toBe(runProgram(given));
+	});
+
 	it("should keep only what the computed keys and values of an unread object run", () => {
 		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the");
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe("a,x(),b(),c(),f();");
