@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<clipPath id="c"><g transform="translate(10)"><rect width="50" height="50"/></g><a><rect width="50" height="50"/></a><g><rect width="50" height="50"/></g><g fill="red"><rect width="5" height="5"/></g></clipPath>
+	<rect width="100" height="100" clip-path="url(#c)"/>
+</svg>

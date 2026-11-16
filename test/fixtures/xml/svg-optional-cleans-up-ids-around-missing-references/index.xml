@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<use href="#a" y="50"/><rect id="r" width="50" height="50"/><use href="#r" x="50"/>
+	<linearGradient id="g"/><marker><circle fill="url(#g)"/></marker>
+	<g id="p" transform="translate(10 10)"><circle r="0"/><rect width="50" height="50"/></g><g display="none"><use href="#p"/></g>
+	<use href="#q" opacity="0"/><path id="q" d="M10 10"/>
+	<path d="M10 10" style="enable-background:new"/>
+</svg>
