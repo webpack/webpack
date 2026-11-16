@@ -1408,7 +1408,7 @@ const runBehavior = (code, timeout, module, watch) => {
 			const kind = typeof name === "string" ? name : typeof error;
 			// JavaScriptCore quotes the failing source text, which a printer may
 			// rewrite: `(evaluating '…')`, `(near '…')`, `(In '…')` after the value
-			// it names, the operand `in` refuses; V8 quotes a class's heritage.
+			// it names, the operand `in` refuses; V8 a class's heritage and a function.
 			const value =
 				typeof message === "string"
 					? message
@@ -1423,6 +1423,7 @@ const runBehavior = (code, timeout, module, watch) => {
 								/^(Class extends value) [\s\S]* (is not a constructor or null)$/,
 								"$1 $2"
 							)
+							.replace(/ of function '[\s\S]*'$/, " of a function")
 					: isObject
 						? ""
 						: show(error);
