@@ -36105,6 +36105,24 @@ at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] delim[9,10] i
 9] left-curly-bracket[469,470] delim[470,471] ident[471,472] left-curly-bracket[472,473] ident[473,476] colon[476,477] number[477,478] right-curly-bracket[478,479] right-curly-bracket[479,480] end=480"
 `;
 
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-they-grow-once parses 1`] = `
+"length 2118, sha256 f72013fd14318712
+[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a\\"]],[\\".\\",[\\"ident\\",\\"a10\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"b\\"]],[\\".\\",[\\"ident\\",\\"b10\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"id
+…
+,[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"c\\"]],[]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"c\\"]],[\\".\\",[\\"ident\\",\\"y\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-they-grow-once parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-they-grow-once prints {"mode":"minify"} 1`] = `"@layer a{.a10,.a7,.a8,.a9{color:red}.x{top:0}.c1,.c2,.c3{color:red}.c1,.c2{color:blue}}@layer b{.b10,.b7,.b8,.b9{color:red}.b9,.d1,.d2,.d3{top:0}}@layer c{.y{top:0}}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-they-grow-once tokenizes 1`] = `
+"length 4633, sha256 07a7ae33e452bb61
+at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] delim[9,10] ident[10,13] left-curly-bracket[13,14] ident[14,19] colon[19,20] ident[20,23] right-curly-bracket[23,24] right-curly-brac
+…
+1] left-curly-bracket[431,432] delim[432,433] ident[433,434] left-curly-bracket[434,435] ident[435,438] colon[438,439] number[439,440] right-curly-bracket[440,441] right-curly-bracket[441,442] end=442"
+`;
+
 exports[`CSS syntax — invariants css-syntax-minify-unused-symbols-keeps-the-selectors-of-a-list-that-can-still parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"gone\\"],\\",\\",\\".\\",[\\"ident\\",\\"kept\\"]],[[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-unused-symbols-keeps-the-selectors-of-a-list-that-can-still parses 2`] = `""`;
