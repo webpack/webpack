@@ -1143,4 +1143,137 @@ describe("WorkerPool", () => {
 			}
 		});
 	});
+
+	describeThreads("shared pool", () => {
+		/**
+		 * @param {import("../../declarations/WebpackOptions").Configuration=} options extra options
+		 * @returns {import("../../lib/Compiler")} the compiler
+		 */
+		const createThreaded = (options) => {
+			const webpack = require("../../lib/webpack");
+			return /** @type {import("../../lib/Compiler")} */ (
+				webpack({
+					entry: "data:text/javascript,1",
+					experiments: { threads: { max: 1 } },
+					...options
+				})
+			);
+		};
+
+		/**
+		 * @param {import("../../lib/Compiler")} compiler the compiler
+		 * @returns {Promise<void>} settled when it closed
+		 */
+		const close = (compiler) =>
+			new Promise((resolve, reject) => {
+				compiler.close((err) => (err ? reject(err) : resolve()));
+			});
+
+		it("gives every compiler of the process one pool, ended by the last close", async () => {
+			const a = createThreaded();
+			const b = createThreaded();
+			const pool = a.worker(TARGET)._pool;
+
+			expect(b.worker(TARGET)._pool).toBe(pool);
+			await close(a);
+			// the other compiler still runs on the shared threads
+			expect(pool.ending).toBe(false);
+			expect(await b.worker(TARGET).run("add", 1, 2)).toBe(3);
+			await close(b);
+			expect(pool.ending).toBe(true);
+			// a new compiler starts a fresh pool
+			const c = createThreaded();
+			expect(c.worker(TARGET)._pool).not.toBe(pool);
+			await close(c);
+		});
+
+		it("grows the shared max to the largest compiler's and keeps threads while any builds", async () => {
+			const a = createThreaded();
+			const b = createThreaded({ experiments: { threads: { max: 2 } } });
+			const pool = a.worker(TARGET)._pool;
+			b.worker(TARGET);
+			const cores = Math.max(
+				(typeof require("os").availableParallelism === "function"
+					? require("os").availableParallelism()
+					: (require("os").cpus() || { length: 1 }).length) - 1,
+				0
+			);
+
+			expect(pool.options.max).toBe(Math.min(2, cores));
+			const farmA = /** @type {import("../../lib/worker/WorkerFarm")} */ (
+				a._workerFarm
+			);
+			const farmB = /** @type {import("../../lib/worker/WorkerFarm")} */ (
+				b._workerFarm
+			);
+			farmA.setKeepAlive(true);
+			farmB.setKeepAlive(false);
+			expect(pool._keepAlive).toBe(true);
+			farmA.setKeepAlive(false);
+			expect(pool._keepAlive).toBe(false);
+			await close(a);
+			await close(b);
+		});
+
+		it("keeps an inline compiler (max: 0) off the shared threads", async () => {
+			const a = createThreaded();
+			const inline = createThreaded({ experiments: { threads: { max: 0 } } });
+
+			expect(inline.worker(TARGET)._pool).not.toBe(a.worker(TARGET)._pool);
+			expect(inline.worker(TARGET)._pool.options.max).toBe(0);
+			await close(a);
+			await close(inline);
+		});
+
+		it("runs a MultiCompiler on at most max threads in total", async () => {
+			const { createFsFromVolume, Volume } = require("memfs");
+			const webpack = require("../../lib/webpack");
+			/**
+			 * @param {string} name the config name
+			 * @returns {import("../../declarations/WebpackOptions").Configuration} the config
+			 */
+			const config = (name) => ({
+				name,
+				entry: "data:text/javascript,1",
+				experiments: { threads: { max: 2 } },
+				plugins: [
+					{
+						/**
+						 * @param {import("../../lib/Compiler")} compiler the compiler
+						 */
+						apply(compiler) {
+							compiler.hooks.thisCompilation.tap("test", (compilation) => {
+								compilation.hooks.processAssets.tapPromise("test", async () => {
+									const worker = compiler.worker(TARGET);
+									await Promise.all(
+										[1, 2, 3, 4].map((n) => worker.run("sleep", n * 5))
+									);
+								});
+							});
+						}
+					}
+				]
+			});
+			const multi = webpack([config("a"), config("b"), config("c")]);
+			for (const compiler of multi.compilers) {
+				compiler.outputFileSystem =
+					/** @type {import("../../").OutputFileSystem} */ (
+						/** @type {unknown} */ (createFsFromVolume(new Volume()))
+					);
+			}
+			const pool = multi.compilers[0].worker(TARGET)._pool;
+			await new Promise((resolve, reject) => {
+				multi.run((err) => (err ? reject(err) : resolve(undefined)));
+			});
+
+			for (const compiler of multi.compilers) {
+				expect(compiler.worker(TARGET)._pool).toBe(pool);
+			}
+			expect(pool.stats.spawned).toBeLessThanOrEqual(pool.options.max);
+			await new Promise((resolve, reject) => {
+				multi.close((err) => (err ? reject(err) : resolve(undefined)));
+			});
+			expect(pool.ending).toBe(true);
+		});
+	});
 });
