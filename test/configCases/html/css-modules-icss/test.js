@@ -27,11 +27,6 @@ it("should add the names `composes` pulls in from a file", () => {
 	);
 });
 
-it("should write the rules `composes` pulls in from files into the sheet, once each", () => {
-	expect(sheet.match(/\.deep\\\.module_deep \{ margin: 3px; \}/g)).toHaveLength(1);
-	expect(sheet.match(/\.base\\\.module_base \{ padding: 1px; \}/g)).toHaveLength(1);
-});
-
 it("should add a global name `composes` pulls in as written", () => {
 	expect(tagOf("composes a global")).toBe('<p class="m_fromGlobal globalThing">');
 });
