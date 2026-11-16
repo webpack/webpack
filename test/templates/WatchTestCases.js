@@ -385,6 +385,28 @@ const describeCases = (config) => {
 							/** @type {Map<import("../../").Compiler, Set<string>>} */
 							let stepReports = new Map();
 
+							/**
+							 * Adds what a child's last build reported to the current step's reports.
+							 * @param {import("../../").Compiler} child child compiler
+							 * @returns {void}
+							 */
+							const recordStepReports = (child) => {
+								// a child yet to rebuild still shows its last build's reports
+								if (
+									(childBuilds.get(child) || 0) <=
+									(childBuildsBeforeStep.get(child) || 0)
+								) {
+									return;
+								}
+								let reported = stepReports.get(child);
+								if (reported === undefined) {
+									reported = new Set();
+									stepReports.set(child, reported);
+								}
+								for (const file of child.modifiedFiles || []) reported.add(file);
+								for (const file of child.removedFiles || []) reported.add(file);
+							};
+
 							const currentWatchStepModule = require("../helpers/currentWatchStep");
 
 							/** @type {((err?: Error | null) => void) | undefined} */
@@ -595,6 +617,9 @@ const describeCases = (config) => {
 									 * @returns {Promise<void>} error handling and optional recovery
 									 */
 									const handleWatchError = async (error) => {
+										// The failed build took the step's changes, and the recovery build
+										// reads none when the watcher delivered them all to the failed one.
+										for (const child of compilers) recordStepReports(child);
 										try {
 											if (!testConfig.watchError) throw error;
 											await testConfig.watchError(error, compiler);
@@ -659,17 +684,7 @@ const describeCases = (config) => {
 												const builtThisStep = (child) =>
 													(childBuilds.get(child) || 0) >
 													(childBuildsBeforeStep.get(child) || 0);
-												for (const child of compilers) {
-													// a child yet to rebuild still shows its last build's reports
-													if (!builtThisStep(child)) continue;
-													let reported = stepReports.get(child);
-													if (reported === undefined) {
-														reported = new Set();
-														stepReports.set(child, reported);
-													}
-													for (const file of child.modifiedFiles || []) reported.add(file);
-													for (const file of child.removedFiles || []) reported.add(file);
-												}
+												for (const child of compilers) recordStepReports(child);
 												/**
 												 * @param {import("../../").Compiler} child child compiler
 												 * @param {string} file a file the step changed
