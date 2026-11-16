@@ -10,6 +10,8 @@ const { DefinePlugin } = webpack;
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	experiments: { threads: { max: 2 } },
+	// Node 10 has no worker_threads: the case still runs, inline
+	ignoreWarnings: [/worker_threads is unavailable/],
 	plugins: [
 		{
 			apply(compiler) {
