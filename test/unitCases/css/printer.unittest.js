@@ -1448,26 +1448,6 @@ describe("CssSyntax — the identifier and url helpers", () => {
 describe("CssSyntax — the node accessors a print reads", () => {
 	const syntaxParser = require("../../../lib/css/syntax-parser");
 
-	it("numbers a declaration's property with its aliases resolved", () => {
-		/** @type {number[]} */
-		const ids = [];
-		new SourceProcessor()
-			.use({
-				[NodeType.Declaration]: (
-					/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
-				) => {
-					// Asked twice: the second read is the one remembered.
-					const id = syntaxParser._propertyIdOf(path.node);
-					expect(syntaxParser._propertyIdOf(path.node)).toBe(id);
-					ids.push(id);
-				}
-			})
-			.process(fixture("css", "css-syntax-the-node-accessors-a-print-reads-numbers-a-declaration-s-property"));
-		expect(ids.slice(1, 3)).toEqual([-1, -2]);
-		expect(ids[0]).toBeGreaterThanOrEqual(0);
-		expect(ids[3]).toBe(ids[4]);
-	});
-
 	it("reads an at-rule without a block as having no rules and no bracket", () => {
 		/** @type {unknown[]} */
 		const seen = [];

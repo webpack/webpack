@@ -3430,7 +3430,6 @@ describe("SyntaxTree", () => {
 
 	it("reads children, legacy assert and pinned nodes of a tree and a view", () => {
 		const {
-			EstreeView,
 			LEGACY_ASSERT_ATTRIBUTES,
 			lazyObjectOfSource,
 			parseProgram,
@@ -3474,25 +3473,6 @@ describe("SyntaxTree", () => {
 				lazyObjectOfSource(pinned, first)
 			).source.value
 		).toBe("./a");
-
-		const view = new EstreeView();
-		const root = view.add(
-			/** @type {EXPECTED_ANY} */ (
-				toEstreeObject(parseProgram(source, 0, { sourceType: "module" }))
-			)
-		);
-		const viewFirst = view.field(0, Field.body, root);
-		const viewSecond = view.field(1, Field.body, root);
-		expect([view.legacyAssert(viewFirst), view.legacyAssert(viewSecond)]).toEqual(
-			[true, false]
-		);
-		/** @type {number[]} */
-		const viewChildren = [];
-		view.pushChildren(root, viewChildren);
-		expect(viewChildren.map((child) => view.object(child))).toEqual([
-			view.object(viewFirst),
-			view.object(viewSecond)
-		]);
 	});
 
 	it("marks legacy assert on an export-all declaration", () => {
@@ -3622,7 +3602,6 @@ describe("SyntaxTree", () => {
 
 	it("skips holes and empty fields when pushing children", () => {
 		const {
-			EstreeView,
 			fromEstreeObject,
 			parseProgram,
 			takeParsedTree,
@@ -3652,18 +3631,6 @@ describe("SyntaxTree", () => {
 		tree.pushChildren(children[0], none);
 		expect(none).toEqual([]);
 		tree.release();
-
-		const view = new EstreeView();
-		const estree = /** @type {EXPECTED_ANY} */ (
-			toEstreeObject(parseProgram(code, 0, { sourceType: "module" }))
-		);
-		/** @type {number[]} */
-		const viewChildren = [];
-		view.pushChildren(view.add(estree.body[0].expression), viewChildren);
-		expect(viewChildren.map((child) => view.object(child).type)).toEqual([
-			"Identifier",
-			"MemberExpression"
-		]);
 
 		// legacy `assert` is kept on each export an ESTree program is written with
 		const source =
@@ -4298,76 +4265,6 @@ describe("SyntaxTree", () => {
 		const values = large._values;
 		large.release();
 		expect(new SyntaxTree()._values).not.toBe(values);
-	});
-
-	it("reads ESTree objects the way a SyntaxTree is read", () => {
-		const { EstreeView } = require("../../../lib/javascript/syntax-parser");
-		const view = new EstreeView();
-		const program = view.add(
-			/** @type {EXPECTED_ANY} */ (
-				acorn.parse(fixture("javascript", "syntax-tree-reads-estree-objects-the-way-a-syntax-tree-is-read"), {
-					ecmaVersion: "latest"
-				})
-			)
-		);
-		expect(view.type(program)).toBe(NodeType.Program);
-		expect(view.fieldCount(Field.body, program)).toBe(2);
-		const statement = view.field(0, Field.body, program);
-		expect(view.object(statement).type).toBe("ExpressionStatement");
-		const assignment = view.field(0, Field.expression, statement);
-		expect(view.start(assignment)).toBe(0);
-		expect(view.textOf(Part.operator, assignment)).toBe("=");
-		expect(view.textOf(Part.kind, assignment)).toBeNull();
-		const target = view.field(0, Field.left, assignment);
-		expect(view.name(target)).toBe("x");
-		expect(view.fieldCount(Field.left, assignment)).toBe(1);
-		expect(view.fieldCount(Field.argument, assignment)).toBe(0);
-		expect(view.field(1, Field.left, assignment)).toBe(0);
-		const array = view.field(0, Field.right, assignment);
-		expect(view.field(0, Field.elements, array)).toBe(0);
-		const literal = view.field(2, Field.elements, array);
-		expect(view.value(literal)).toBe("b");
-		expect(view.name(literal)).toBe("");
-		const arrow = view.field(
-			0,
-			Field.expression,
-			view.field(1, Field.body, program)
-		);
-		expect(view.flag(Flag.async, arrow)).toBe(true);
-		expect(view.flag(Flag.generator, arrow)).toBe(false);
-		// A node placed by its range, as some parsers write it, and one of no known type.
-		const ranged = view.add(
-			/** @type {EXPECTED_ANY} */ ({ type: "Identifier", name: "r", range: [4, 5] })
-		);
-		expect(view.start(ranged)).toBe(4);
-		expect(view.end(ranged)).toBe(5);
-		expect(view.range(ranged)).toEqual([4, 5]);
-		expect(view.range(assignment)).toEqual([0, 14]);
-		expect(
-			view.type(view.add(/** @type {EXPECTED_ANY} */ ({ type: "Unknown" })))
-		).toBe(0);
-		// A directive another parser leaves unmarked reads as marked, until a reset.
-		const unmarked = /** @type {EXPECTED_ANY} */ ({
-			type: "ExpressionStatement",
-			start: 0,
-			end: 12,
-			expression: { type: "Literal", value: "use strict" }
-		});
-		expect(view.textOf(Part.directive, view.add(unmarked))).toBeNull();
-		view.markDirective(unmarked, "use strict");
-		expect(view.textOf(Part.directive, view.add(unmarked))).toBe(
-			"use strict"
-		);
-		expect(view.textOf(Part.operator, view.add(unmarked))).toBeNull();
-		view.reset();
-		expect(view.textOf(Part.directive, view.add(unmarked))).toBeNull();
-		view.reset();
-		expect(view.add(/** @type {EXPECTED_ANY} */ ({ type: "Super" }))).toBe(1);
-		// A view after the first reads the same names.
-		const other = new EstreeView();
-		expect(
-			other.type(other.add(/** @type {EXPECTED_ANY} */ ({ type: "Super" })))
-		).toBe(NodeType.Super);
 	});
 });
 

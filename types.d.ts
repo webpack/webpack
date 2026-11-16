@@ -3885,7 +3885,7 @@ declare abstract class ColumnarSyntaxTree {
 
 	/**
 	 * A node's ESTree object, as `estree` makes it: a path's way to an object
-	 * for code that still reads one, as `EstreeView#object` is the view's.
+	 * for code that still reads one.
 	 */
 	object(
 		node: number
@@ -7798,14 +7798,9 @@ declare interface CssProcessOptions {
 	as?: "stylesheet" | "block-contents";
 
 	/**
-	 * what the grammar may leave un-materialized to go faster - safe only for parts nothing reads in the active parse; default skip nothing. Ignored while printing (`minimize`), which needs every node
+	 * what the grammar may leave un-materialized to go faster - safe only for parts nothing reads in the active parse; default skip nothing. Ignored while printing (`mode`), which needs every node
 	 */
 	skip?: SkipOptions;
-
-	/**
-	 * print the safely-minified serialization (collapsed whitespace, dropped redundant separators, the `printer`'s value transforms) as `process` walks and return `{ code, map }` (default false = walk only, return `undefined`)
-	 */
-	minimize?: boolean;
 
 	/**
 	 * name of the input in the emitted source map (`sources[0]` / `file`); only read while printing
@@ -7900,9 +7895,9 @@ declare interface CssProcessOptions {
 
 /**
  * The generic visitor coordinator (`util/SourceProcessor`) bound to the CSS
- * `grammar`. All configuration is per `process` call. `process(src, { minimize:
- * true })` returns `{ code, map }` - the safely-minified serialization (built by
- * the same walk that fires visitors) and its source map; without `minimize` it
+ * `grammar`. All configuration is per `process` call. `process(src, { mode:
+ * "minify" })` returns `{ code, map }` - the safely-minified serialization (built
+ * by the same walk that fires visitors) and its source map; without `mode` it
  * just walks and returns `undefined`. Usage:
  * ```
  * new CssSourceProcessor().use({ [NodeType.AtRule]: (path) => {} }).process(source, { skip });
@@ -8901,8 +8896,7 @@ declare interface DestructuringAssignmentProperty {
  * seen, so the expression parser can raise once it knows whether it is
  * parsing an expression or a binding pattern.
  */
-declare class DestructuringErrors {
-	constructor();
+declare abstract class DestructuringErrors {
 	shorthandAssign: number;
 	trailingComma: number;
 	parenthesizedAssign: number;
@@ -10623,56 +10617,6 @@ declare interface EstreeSource {
 	range?: [number, number];
 }
 type EstreeSourceItem = null | number | EstreeSource;
-
-/**
- * ESTree objects read the way a `SyntaxTree` is, `toEstreeObject`'s way back:
- * an object takes an id when a read first reaches it, and nothing is copied.
- * @experimental exposed through `webpack.javascript.syntax.parser`; unstable API
- */
-declare class EstreeView {
-	constructor();
-	add(object: NodeEstreeIndex): number;
-	object(node: number): NodeEstreeIndex;
-
-	/**
-	 * Forgets every id, for the next read.
-	 */
-	reset(): void;
-
-	/**
-	 * Reads a statement as holding a directive its object does not mark, as
-	 * the tree's `setPart` does: another parser may leave `directive` off.
-	 */
-	markDirective(statement: NodeEstreeIndex, directive: string): void;
-	type(node: number): number;
-	start(node: number): number;
-	end(node: number): number;
-	range(node: number): [number, number];
-	name(node: number): string;
-	value(
-		node: number
-	):
-		| undefined
-		| null
-		| string
-		| number
-		| bigint
-		| boolean
-		| RegExp
-		| { cooked?: null | string; raw: string };
-	fieldCount(field: number, node: number): number;
-	field(i: number, field: number, node: number): number;
-	flag(flag: number, node: number): boolean;
-	textOf(part: number, node: number): null | string;
-	legacyAssert(node: number): boolean;
-
-	/**
-	 * Pushes a node's children, holes left out, for a walk that reaches every
-	 * node without naming each type's fields: every property holding a node,
-	 * so a node type the tree has none for is walked into too.
-	 */
-	pushChildren(node: number, out: number[]): void;
-}
 
 /**
  * Cache validation token whose string representation identifies the build
@@ -14088,11 +14032,6 @@ declare interface HtmlProcessOptions {
 	skip?: HtmlAstSkip;
 
 	/**
-	 * print the safely-minified serialization (nodes rebuilt from source, inert comments dropped, opening-tag whitespace collapsed) as `process` walks, and return it (default false = walk only, return `""`)
-	 */
-	minimize?: boolean;
-
-	/**
 	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
 	 */
 	transforms?: HtmlTransformOptions;
@@ -16207,7 +16146,7 @@ declare class JavascriptModulesPlugin {
 declare interface JavascriptNodeReader {
 	/**
 	 * A node's ESTree object, as `estree` makes it: a path's way to an object
-	 * for code that still reads one, as `EstreeView#object` is the view's.
+	 * for code that still reads one.
 	 */
 	object: (
 		node: number
@@ -28092,8 +28031,7 @@ declare class ParserPosition {
  * One lexical scope, holding the names declared directly in it. Each set is
  * built only once a name goes into it, which most scopes never do.
  */
-declare class ParserScope {
-	constructor(flags: number);
+declare abstract class ParserScope {
 	flags: number;
 	var?: Set<string>;
 	lexical?: Set<string>;
@@ -39151,12 +39089,6 @@ declare namespace exports {
 		}
 		export namespace syntax {
 			/** exposed as `webpack.javascript.syntax.parser`; unstable API @experimental */ export namespace parser {
-				export let BIND_FUNCTION: 3;
-				export let BIND_LEXICAL: 2;
-				export let BIND_NONE: 0;
-				export let BIND_OUTSIDE: 5;
-				export let BIND_SIMPLE_CATCH: 4;
-				export let BIND_VAR: 1;
 				export let Field: Readonly<{
 					object: 1;
 					property: 2;
@@ -39215,18 +39147,6 @@ declare namespace exports {
 					tail: 1024;
 					await: 2048;
 				}>;
-				export let SCOPE_ARROW: 16;
-				export let SCOPE_ASYNC: 4;
-				export let SCOPE_CLASS_FIELD_INIT: 512;
-				export let SCOPE_CLASS_STATIC_BLOCK: 256;
-				export let SCOPE_DIRECT_SUPER: 128;
-				export let SCOPE_FUNCTION: 2;
-				export let SCOPE_GENERATOR: 8;
-				export let SCOPE_SIMPLE_CATCH: 32;
-				export let SCOPE_SUPER: 64;
-				export let SCOPE_SWITCH: 1024;
-				export let SCOPE_TOP: 1;
-				export let SCOPE_VAR: number;
 				export let codePointToString: (code: number) => string;
 				export namespace defaultOptions {
 					export let ecmaVersion: null;
@@ -39270,7 +39190,6 @@ declare namespace exports {
 					end?: number
 				) => number;
 				export let nonASCIIwhitespace: RegExp;
-				export let skipWhiteSpace: RegExp;
 				export let stringToNumber: (
 					str: string,
 					isLegacyOctalNumericLiteral: boolean
@@ -39610,10 +39529,8 @@ declare namespace exports {
 				) => void;
 				export let printEarlyIn: (early: Map<number, number>) => void;
 				export {
-					DestructuringErrors,
 					SyntaxParser as Parser,
 					Position,
-					ParserScope as Scope,
 					ParserSourceLocation,
 					TokContext,
 					Token,
@@ -39621,8 +39538,7 @@ declare namespace exports {
 					LEGACY_ASSERT_ATTRIBUTES,
 					ParserPosition,
 					WebpackParser,
-					ScopeLog,
-					EstreeView
+					ScopeLog
 				};
 			}
 			/** exposed as `webpack.javascript.syntax.printer`; unstable API @experimental */ export namespace printer {
@@ -39644,7 +39560,6 @@ declare namespace exports {
 					path: JavascriptSyntaxPath,
 					writer: PrintContext<JavascriptSyntaxPath, number>
 				) => string;
-				export let FORMAT_DEFAULTS: any;
 				export let IGNORED_FORMAT_OPTIONS: string[];
 				export let createUnicode: () => {
 					getFullChar: (str: string, pos: number) => string;
@@ -40282,13 +40197,9 @@ declare namespace exports {
 		export namespace syntax {
 			/** exposed as `webpack.html.syntax.parser`; unstable API @experimental */ export namespace parser {
 				export let A: HtmlSyntaxPath;
-				export let BLOCK_CONTENTS: "block-contents";
-				export let EMBEDDED_LANGUAGES: string[];
 				export let EMBEDDED_STYLESHEET: "embedded-stylesheet";
-				export let EVENT_HANDLER: "event-handler";
 				export let FOREIGN_ELEMENT: "foreign-element";
 				export let FLAG_FOSTER_REGION: 128;
-				export let JSON_TYPE: "json";
 				export namespace Field {
 					export let attributes: 1;
 					export let content: 2;
@@ -40332,7 +40243,6 @@ declare namespace exports {
 					export let Double: 1;
 					export let Single: 2;
 				}
-				export let SVG_TYPE: "svg";
 				export let asciiLowercase: (value: string) => string;
 				export let stripAsciiWhitespace: (value: string) => string;
 				export let baseTag: (
@@ -40401,8 +40311,6 @@ declare namespace exports {
 				) => number;
 			}
 			/** exposed as `webpack.html.syntax.printer`; unstable API @experimental */ export namespace printer {
-				export let CLASSIC_SCRIPT: "script";
-				export let MODULE_SCRIPT: "module";
 				export let printer: (
 					path: HtmlSyntaxPath,
 					writer: PrintContext<HtmlSyntaxPath, number, HtmlPrintOptions>

@@ -385,25 +385,6 @@ var { p, q } = r;
 		expect(parser.getMemberExpressionRoot(member)).toBe(member);
 	});
 
-	it("should push a view node's single and listed children", () => {
-		const { EstreeView } = require("../../../lib/javascript/syntax-parser");
-
-		const view = new EstreeView();
-		const node = view.add(
-			/** @type {import("estree").Node} */ ({
-				type: "ExpressionStatement",
-				expression: { type: "Identifier", name: "x" }
-			})
-		);
-		/** @type {number[]} */
-		const children = [];
-		view.pushChildren(node, children);
-		expect(children).toHaveLength(1);
-		expect(
-			/** @type {import("estree").Identifier} */ (view.object(children[0])).name
-		).toBe("x");
-	});
-
 	it("should skip a node type the tree has no layout for", () => {
 		const parser = new JavascriptParser("module");
 		const code = "a;";
