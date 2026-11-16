@@ -91,13 +91,13 @@ svgo-convert-path-data-16: webpack 232, svgo 112, gap 120
 svgo-convert-path-data-17: webpack 288, svgo 271, gap 17
 svgo-convert-path-data-18: webpack 194, svgo 160, gap 34
 svgo-convert-path-data-19: webpack 252, svgo 186, gap 66
-svgo-convert-path-data-20: webpack 144, svgo 148, gap -4
+svgo-convert-path-data-20: webpack 143, svgo 148, gap -5
 svgo-convert-path-data-21: webpack 157, svgo 157, gap 0
 svgo-convert-path-data-22: webpack 746, svgo 652, gap 94
 svgo-convert-path-data-23: webpack 204, svgo 182, gap 22
 svgo-convert-path-data-24: webpack 219, svgo 143, gap 76
 svgo-convert-path-data-25: webpack 165, svgo 129, gap 36
-svgo-convert-path-data-26: webpack 146, svgo 113, gap 33
+svgo-convert-path-data-26: webpack 121, svgo 113, gap 8
 svgo-convert-path-data-27: webpack 283, svgo 283, gap 0
 svgo-convert-path-data-28: webpack 104, svgo 98, gap 6
 svgo-convert-path-data-29: webpack 129, svgo 133, gap -4
@@ -128,7 +128,7 @@ svgo-convert-style-to-attrs-05: webpack 154, svgo 154, gap 0
 svgo-convert-transform-01: webpack 1528, svgo 1251, gap 277
 svgo-convert-transform-02: webpack 467, svgo 370, gap 97
 svgo-convert-transform-03: webpack 342, svgo 283, gap 59
-svgo-convert-transform-04: webpack 378, svgo 145, gap 233
+svgo-convert-transform-04: webpack 139, svgo 145, gap -6
 svgo-convert-transform-05: webpack 146, svgo 146, gap 0
 svgo-convert-transform-06: webpack 364, svgo 161, gap 203
 svgo-convert-transform-07: webpack 133, svgo 133, gap 0
@@ -233,12 +233,12 @@ svgo-remove-attributes-by-selector-02: webpack 136, svgo 122, gap 14
 svgo-remove-attributes-by-selector-03: webpack 148, svgo 122, gap 26
 svgo-remove-attributes-by-selector-04: webpack 136, svgo 154, gap -18
 svgo-remove-attributes-by-selector-05: webpack 112, svgo 119, gap -7
-svgo-remove-attrs-01: webpack 444, svgo 285, gap 159
-svgo-remove-attrs-02: webpack 444, svgo 405, gap 39
-svgo-remove-attrs-03: webpack 461, svgo 447, gap 14
-svgo-remove-attrs-04: webpack 548, svgo 537, gap 11
-svgo-remove-attrs-05: webpack 548, svgo 509, gap 39
-svgo-remove-attrs-06: webpack 548, svgo 583, gap -35
+svgo-remove-attrs-01: webpack 427, svgo 285, gap 142
+svgo-remove-attrs-02: webpack 427, svgo 405, gap 22
+svgo-remove-attrs-03: webpack 444, svgo 447, gap -3
+svgo-remove-attrs-04: webpack 531, svgo 537, gap -6
+svgo-remove-attrs-05: webpack 531, svgo 509, gap 22
+svgo-remove-attrs-06: webpack 531, svgo 583, gap -52
 svgo-remove-attrs-07: webpack 206, svgo 271, gap -65
 svgo-remove-attrs-08: webpack 157, svgo 120, gap 37
 svgo-remove-attrs-09: webpack 87, svgo 76, gap 11
@@ -354,7 +354,7 @@ svgo-remove-useless-defs-02: webpack 489, svgo 489, gap 0
 svgo-remove-useless-defs-03: webpack 409, svgo 24, gap 385
 svgo-remove-useless-defs-04: webpack 88, svgo 185, gap -97
 svgo-remove-useless-defs-05: webpack 88, svgo 175, gap -87
-svgo-remove-useless-stroke-and-fill-01: webpack 855, svgo 650, gap 205
+svgo-remove-useless-stroke-and-fill-01: webpack 658, svgo 650, gap 8
 svgo-remove-useless-stroke-and-fill-02: webpack 404, svgo 370, gap 34
 svgo-remove-useless-stroke-and-fill-03: webpack 384, svgo 406, gap -22
 svgo-remove-useless-stroke-and-fill-04: webpack 315, svgo 338, gap -23
@@ -382,5 +382,5 @@ svgo-sort-attrs-02: webpack 63, svgo 63, gap 0
 svgo-sort-attrs-03: webpack 158, svgo 160, gap -2
 svgo-sort-attrs-04: webpack 232, svgo 261, gap -29
 svgo-sort-defs-children-01: webpack 413, svgo 415, gap -2
-total: webpack 107805, svgo 104003"
+total: webpack 107241, svgo 104003"
 `;

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<linearGradient id="base" gradientTransform="rotate(30)"><stop offset="0"/></linearGradient>
+		<linearGradient id="own" gradientTransform="translate(0, 0)"><stop offset="1"/></linearGradient>
+		<linearGradient id="templated" xlink:href="#base" gradientTransform="scale(1)"/>
+		<pattern id="tile" width="1" height="1" patternTransform="matrix(1 0 0 1 0 0)"><rect width="1" height="1"/></pattern>
+	</defs>
+	<rect width="1" height="1" transform=""/>
+	<rect width="2" height="1" transform="translate(0) scale(1 1)"/>
+	<rect width="3" height="1" transform="rotate(0 100 100)"/>
+	<rect width="4" height="1" transform="rotate(0 100 100) translate(5)"/>
+	<rect width="5" height="1" transform="skewX(0)"/>
+	<g transform="translate(0)"><foreignObject width="1" height="1"/></g>
+	<foreignObject width="2" height="1" transform="scale(1)"/>
+	<rect width="6" height="1" transform="translate(1 0)" fill="url(#own)"/>
+	<rect width="7" height="1" fill="url(#templated)" stroke="url(#tile)"/>
+</svg>
