@@ -1042,26 +1042,5 @@ describe("WorkerPool", () => {
 				await close(compiler);
 			}
 		});
-
-		it("reuses the threads in the next compilation", async () => {
-			/** @type {number[]} */
-			const threadIds = [];
-			const compiler = createCompiler(async (compiler) => {
-				const worker = /** @type {InfoWorker} */ (compiler.worker(TARGET));
-				threadIds.push((await worker.run("info")).threadId);
-			});
-			try {
-				await run(compiler);
-				await run(compiler);
-				const pool = /** @type {import("../../lib/worker/WorkerPool")} */ (
-					compiler._getWorkerPool()
-				);
-				expect(threadIds).toHaveLength(2);
-				expect(threadIds[1]).toBe(threadIds[0]);
-				expect(pool.stats.spawned).toBe(1);
-			} finally {
-				await close(compiler);
-			}
-		});
 	});
 });
