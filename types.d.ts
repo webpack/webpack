@@ -6654,6 +6654,7 @@ declare interface CssImportDependencyMeta {
 	layer?: string;
 	supports?: string;
 	media?: string;
+	inline?: boolean;
 }
 type CssLayer = undefined | string;
 type CssListField = 1 | 2 | 3 | 4;
