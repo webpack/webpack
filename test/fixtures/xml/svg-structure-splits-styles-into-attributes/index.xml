@@ -3,4 +3,5 @@
 	<rect style="fill:blue;fill:red!important;fill:green;stroke:red"/>
 	<rect style="font:1px serif;font-size:2px;-x-y:1"/>
 	<rect style="fill:red/* a;b */;stroke:blue;-x:1"/>
+	<path d="M0 0h1" fill="blue" style="all:initial;fill:red"/>
 </svg>

@@ -3,6 +3,8 @@
 		<symbol id="empty"/>
 		<symbol id="full"><rect width="1" height="1"/></symbol>
 		<path id="dot" d="M1 1"/>
+		<filter id="flood" filterUnits="userSpaceOnUse"><feFlood/></filter>
+		<g id="filtered" filter="url(#flood)"/>
 	</defs>
 	<circle r="5" fill="none"/>
 	<circle r="5" fill="red" fill-opacity="0" stroke="#000" stroke-width="0"/>
@@ -18,6 +20,7 @@
 	<use href="#full"/>
 	<use href="#dot"/>
 	<use href="#dot" marker-start="url(#m)"/>
+	<use href="#filtered"/>
 	<text><tref/>a</text>
 	<tref href="#t"/>
 </svg>

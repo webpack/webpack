@@ -732,6 +732,18 @@ const PARSER_TABLES = [
 		svgInheritedInitialValues()
 	],
 	[
+		"SVG_GEOMETRY_ELEMENTS",
+		"set",
+		"SVG geometry elements, a path and the basic shapes, which paint only their own fill and stroke.",
+		["circle", "ellipse", "line", "path", "polygon", "polyline", "rect"]
+	],
+	[
+		"SVG_EMPTY_DRAWING_CONTAINERS",
+		"set",
+		"Containers a use can name that draw nothing while they hold no elements.",
+		["defs", "g", "svg", "symbol"]
+	],
+	[
 		"SVG_TRANSFORM_FOLD_TARGETS",
 		"set",
 		"Elements that take a `transform` attribute in SVG 1.1 too, so a group's can move onto one.",
