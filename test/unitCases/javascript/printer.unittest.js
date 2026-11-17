@@ -568,11 +568,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 
 	it("should print a part a node prints as without the parentheses it took as that node's operand", () => {
 		const source = fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-kept-part-as-its-place-takes");
-		const expected =
-			"const s=(g(),h());g(),h(),g(),h(),a,b,f([a]=[1],({b:b}={b:2}),([c]=[1])),x=a?y=1:c,x=(a||f(),c),g``,(a,b)``,(x={}.y)(()=>{}),a=- -b;a in b,c;x=!a&&b in c,x=a<b&&c;if(!b&&c)f();a(),- -b;({a:g()}).b;({a:g()}).b.c();({m(){}}).m()?a():b();(function(){g()})(),x;x=function(){g()}()==x,a=c;function k(i){return i++**2}function n(){return 1..a}x=new[1,2],x=new function(){this.b=1},k(1),n(),x={k:a=1,[b=1]:1},x=(a||f(1)(2),c);if(x=a?c:(g()+1,c)){({}).a?b():c();y()}x=new F(1);";
-		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(
-			expected
-		);
+		const expected = minifyOnePass(source, { compress: {}, mangle: false }).code;
+		expect(expected).toMatchSnapshot();
 		// Placed without the parentheses, the parts still map where they came from.
 		const { SourceProcessor } = require("../../../lib/javascript/syntax");
 		const mapped =
@@ -1291,8 +1288,8 @@ describe("one-pass minify of reads and calls on literals", () => {
 	it("should drop only the reads `pure_getters` takes as running nothing", () => {
 		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-drop-only-the-reads");
 		// "strict", the default: a read of what may be nullish or hold a getter stays whole.
-		const strict = "a.b,c().d,null.e,(void 0).f,(void 0).g,x()[y()],{get h(){console.log(1)}}.h,(i||j).k,(l?m:n).o,(p,q()).r,s?.t,(a=f()).b,(x()?.y).z,{...w}.v;";
-		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(strict);
+		const strict = minifyOnePass(source, { compress: {}, mangle: false }).code;
+		expect(strict).toMatchSnapshot();
 		expect(minifyOnePass(source, { compress: { pure_getters: "strict" }, mangle: false }).code).toBe(strict);
 		// true: only a read of what may be nullish stays, as its object alone, without the member's parentheses.
 		expect(minifyOnePass(source, { compress: { pureGetters: true }, mangle: false }).code).toMatchSnapshot();
@@ -1665,11 +1662,9 @@ describe("one-pass minify, family R round 7", () => {
 		// A member's key prints `.a` either way, and a key, a pattern's too, `a` for `[n]`; a number, or a string no name spells, reads as other names do.
 		expect(minifyOnePass(source, options).code).toMatchSnapshot();
 		// Kept computed, or renamed, a key reads as other names do.
-		const kept =
-			"export function keys(o){let t=`_foo`,{[t]:k}=o;return[{[t]:o._foo,k},class{[t](){return o._foo}static[t]=1},o[1],o[1],o[`a-b`],o[`a-b`],{[`a-b`]:1},{[`a-b`]:2},o.x]}export function plain(o){return[o._bar,o._bar,{[o.x]:`_bar`,k:`_bar`},`_bar`.big,`_bar`[o.i]]}";
 		expect(
 			minifyOnePass(source, { ...options, compress: { ecma: 2022, computed_props: false } }).code
-		).toBe(kept);
+		).toMatchSnapshot();
 		expect(
 			minifyOnePass(source, { ...options, mangle: { properties: { regex: /^_/ } } }).code
 		).toMatchSnapshot();

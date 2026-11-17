@@ -2082,6 +2082,8 @@ a24: \\\\123456 B;
 }"
 `;
 
+exports[`CssSyntax — block streaming cuts a dead rule where it stands after an earlier cut in the piece 1`] = `".victim{opacity:1;background:red;border-radius:0;align-items:flex-start}"`;
+
 exports[`CssSyntax — block streaming keeps the \`;\` a gathered layer block ends a declaration on 1`] = `"x:i;.q{top:0}}.w{color:red}"`;
 
 exports[`CssSyntax — block streaming keeps the \`;\` a gathered layer block ends a declaration on 2`] = `"x:i;y:j;z:k}}"`;
@@ -2107,6 +2109,8 @@ exports[`CssSyntax — block streaming leaves the pair at a gathered seam alone 
 exports[`CssSyntax — declaration ranks orders a block alike when a pair of its properties is asked of again 1`] = `"a{color:red;display:block;top:0}c{color:red;display:block;left:0}"`;
 
 exports[`CssSyntax — declaration ranks orders a block alike when a pair of its properties is asked of again 2`] = `"d{color:red;display:block;top:0}"`;
+
+exports[`CssSyntax — declaration ranks orders a block alike when a pair of its properties is asked of again 3`] = `"e{margin-top:1px;margin:0;display:block;top:0}"`;
 
 exports[`CssSyntax — minify comment preservation ignores \`skip\` while printing (every node is needed for serialization) 1`] = `".a .b{color:red}"`;
 

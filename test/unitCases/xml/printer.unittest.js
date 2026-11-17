@@ -31,13 +31,12 @@ describe("SVG data URLs", () => {
 	const { cssMinify } = webpack.css;
 	const SVG =
 		fixture("xml", "svg-data-urls-should-minify-one-with-the-xml-minifier-quoting-with-on-a-tie");
-	const MINIFIED =
-		"<svg xmlns='http://www.w3.org/2000/svg'>  <rect width='1'/>  </svg>";
 	const OFFER = { type: "svg", hostType: "css" };
+	const MINIFIED = builtinEmbeddedRenderer({ svg: true })(SVG, OFFER);
 
 	it("should minify one with the XML minifier, quoting with `'` on a tie", () => {
 		const render = builtinEmbeddedRenderer({ svg: true });
-		expect(render(SVG, OFFER)).toBe(MINIFIED);
+		expect(render(SVG, OFFER)).toMatchSnapshot();
 		// A value holding `'` still takes the quote that costs nothing.
 		expect(render(fixture("xml", "svg-data-urls-should-minify-one-with-the-xml-minifier-quoting-with-on-a-tie-2"), OFFER)).toMatchSnapshot();
 	});
@@ -576,8 +575,8 @@ describe("SourceProcessor — SVG minification", () => {
 		const source = fixture("xml", "source-processor-svg-minification-should-combine-numeric-cleanup-with-synchronous");
 		const render = builtinEmbeddedRenderer();
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true, removeUnusedSvgNamespaces: true, renderEmbeddedSource: render };
-		const expected = '<svg xmlns="http://www.w3.org/2000/svg" width="1"><style>rect{fill:red}</style><rect x=".5" style="fill:red"/></svg>';
-		expect(new SourceProcessor().process(source, options).code).toBe(expected);
+		const expected = new SourceProcessor().process(source, options).code;
+		expect(expected).toMatchSnapshot();
 		expect((await new SourceProcessor().processAsync(source, { ...options, renderEmbeddedSource: async (css, offer) => render(css, offer) })).code).toBe(expected);
 		expect(new SourceProcessor().process(source, { ...options, xml: false }).code).toContain("width=1>");
 	});

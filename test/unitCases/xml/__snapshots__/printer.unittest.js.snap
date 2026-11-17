@@ -1,10 +1,14 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`SVG data URLs should minify one with the XML minifier, quoting with \`'\` on a tie 1`] = `"<svg a=\\"'\\" b='x'/>"`;
+exports[`SVG data URLs should minify one with the XML minifier, quoting with \`'\` on a tie 1`] = `"<svg xmlns='http://www.w3.org/2000/svg'>  <rect width='1'/>  </svg>"`;
+
+exports[`SVG data URLs should minify one with the XML minifier, quoting with \`'\` on a tie 2`] = `"<svg a=\\"'\\" b='x'/>"`;
 
 exports[`SVG data URLs should minify the styles of one a stylesheet holds, as a run inside its run 1`] = `"background:url('data:image/svg+xml,<svg xmlns=\\\\'http://www.w3.org/2000/svg\\\\'><style>.b{fill:red}</style><rect class=\\\\'b\\\\'/></svg>')"`;
 
 exports[`SVG data URLs should spell one a style attribute holds alike on a second pass 1`] = `"<p style=\\"background:url('data:image/svg+xml,<svg xmlns=\\\\'http://www.w3.org/2000/svg\\\\'>  <rect class=\\\\'b\\\\'/>  </svg>')\\">x"`;
+
+exports[`SourceProcessor — SVG minification should combine numeric cleanup with synchronous and deferred CSS rendering 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"1\\"><style>rect{fill:red}</style><rect x=\\".5\\" style=\\"fill:red\\"/></svg>"`;
 
 exports[`SourceProcessor — SVG minification should combine whitespace cleanup with data removal and retained comments 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><!--! keep --><g/><text>]]&gt;</text></svg>"`;
 
