@@ -253,7 +253,7 @@ Read [docs/performance.md](docs/performance.md) before claiming or measuring a p
 - **Resolve CodeRabbit threads yourself** ([how](docs/pull-requests.md#after-opening-the-pr--wait-for-the-automated-reviews)).
 - **Don't rebase or merge the base branch into an open PR unasked.**
 - **A question is not a go-ahead**: asked what happened, why, or whether you changed something, answer and propose the change, then push only once the requester agrees, even to fix your own mistake. A request phrased as a question ("could you…?") is still a request.
-- **Every check ends green**; read coverage only once every uploading suite has reported.
+- **Every check ends green**; read coverage only once every uploading suite has reported. **A missing wake is not a green check**: read the check runs and commit statuses of every open PR you own before other work, before stacking on it and before ending a turn.
 - **A wake that changes nothing ends with no message**: PR events, check-ins, background-task and subagent notifications alike, even when the harness asks for visible output or says the user hasn't heard from you.
 
 ## Do not touch
