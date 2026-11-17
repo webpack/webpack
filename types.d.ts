@@ -13973,6 +13973,7 @@ declare interface HtmlPrintOptions {
 	cleanupSvgIds?: boolean;
 	removeHiddenSvgElements?: boolean;
 	svgPrecision?: number;
+	convertSvgTransforms?: boolean;
 	mergeSvgPaths?: boolean;
 	reuseSvgPaths?: boolean;
 	sortSvgDefinitions?: boolean;
@@ -14195,6 +14196,11 @@ declare interface HtmlProcessOptions {
 	 * when minifying XML, remove ID-free SVG content hidden by `display="none"`, zero opacity or size, a `visibility` nothing inside sets back, or geometry that draws nothing (default false)
 	 */
 	removeHiddenSvgElements?: boolean;
+
+	/**
+	 * with `shortenSvgNumbers`, recompose each SVG transform list as the shortest list whose matrix matches it within `svgPrecision` decimals (3 when unset), so a matrix can become a rotation about a point; lossy (default false)
+	 */
+	convertSvgTransforms?: boolean;
 
 	/**
 	 * when minifying XML, round the SVG numbers and path data the shortening switches shorten to this many decimal places, a whole number from 0 to 15 (default: exact)
@@ -26229,6 +26235,12 @@ declare interface OptimizationMinimizeXml {
 	 * @since 5.113.0
 	 */
 	convertShapes?: boolean;
+
+	/**
+	 * With `shortenNumbers`, recompose each SVG transform list as the shortest list whose matrix matches it within `precision` decimals (3 when unset), such as a `matrix()` becoming `rotate(-45 261.757 -252.243)`. Off by default because the result is rounded, not exact.
+	 * @since 5.113.0
+	 */
+	convertTransforms?: boolean;
 
 	/**
 	 * Move the rules of SVG stylesheets into the style attributes of the elements they match, in cascade order before each element's own, then drop the stylesheets and the classes they named, where every selector uses types, classes, IDs, attributes, tree-structural pseudo-classes or `:not()` and the result is no larger. Off by default because scripts and external CSS can observe classes and stylesheets.

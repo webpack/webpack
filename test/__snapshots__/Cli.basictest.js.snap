@@ -13109,6 +13109,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-convert-transforms": Object {
+    "configs": Array [
+      Object {
+        "description": "With \`shortenNumbers\`, recompose each SVG transform list as the shortest list whose matrix matches it within \`precision\` decimals (3 when unset), such as a \`matrix()\` becoming \`rotate(-45 261.757 -252.243)\`. Off by default because the result is rounded, not exact.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.convertTransforms",
+        "type": "boolean",
+      },
+    ],
+    "description": "With \`shortenNumbers\`, recompose each SVG transform list as the shortest list whose matrix matches it within \`precision\` decimals (3 when unset), such as a \`matrix()\` becoming \`rotate(-45 261.757 -252.243)\`. Off by default because the result is rounded, not exact.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-xml-inline-styles": Object {
     "configs": Array [
       Object {
@@ -13599,6 +13612,19 @@ Object {
       },
     ],
     "description": "Convert leaf SVG lines, polylines and polygons to shorter paths with identical coordinates and vertices, and equal-radius ellipses to circles. Off by default because consumers can observe element types; skip documents with stylesheets, scripts, animations or DTDs.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-convert-transforms": Object {
+    "configs": Array [
+      Object {
+        "description": "With \`shortenNumbers\`, recompose each SVG transform list as the shortest list whose matrix matches it within \`precision\` decimals (3 when unset), such as a \`matrix()\` becoming \`rotate(-45 261.757 -252.243)\`. Off by default because the result is rounded, not exact.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.convertTransforms",
+        "type": "boolean",
+      },
+    ],
+    "description": "With \`shortenNumbers\`, recompose each SVG transform list as the shortest list whose matrix matches it within \`precision\` decimals (3 when unset), such as a \`matrix()\` becoming \`rotate(-45 261.757 -252.243)\`. Off by default because the result is rounded, not exact.",
     "multiple": false,
     "simpleType": "boolean",
   },

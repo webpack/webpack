@@ -168,6 +168,13 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: symbols 1`] = `"<svg viewBox=\\"0 0 40 40\\" height=\\"40\\" width=\\"40\\" xmlns=\\"http://www.w3.org/2000/svg\\"><defs><symbol viewBox=\\"0 0 40 40\\" id=\\"a\\"><path d=\\"M5 5H35V35H5z\\" fill=\\"red\\"/></symbol><symbol viewBox=\\"0 0 40 40\\" id=\\"z\\"><path d=\\"M10 10 30 30\\" stroke=\\"black\\" stroke-width=\\"2\\"/></symbol></defs><use href=\\"#a\\"/><use href=\\"#z\\"/></svg>"`;
 
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: transforms 1`] = `
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"300\\" height=\\"300\\">
+	<rect width=\\"10\\" height=\\"20\\" transform=\\"rotate(-45 261.757 -252.243)\\"/>
+	<rect width=\\"10\\" height=\\"20\\" transform=\\"skewX(45)\\"/>
+</svg>"
+`;
+
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: uncommented 1`] = `
 "<svg xmlns=\\"http://www.w3.org/2000/svg\\">
 	

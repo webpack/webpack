@@ -196,6 +196,15 @@ module.exports = [
 			optimization: { minimizeOptions: { xml: { comments } } }
 		})
 	),
+	// Recomposed within the precision, a matrix becomes a rotation about a point.
+	config("transforms", {
+		entry: "./transforms.js",
+		optimization: {
+			minimizeOptions: {
+				xml: { shortenNumbers: true, convertTransforms: true }
+			}
+		}
+	}),
 	config("structure", {
 		entry: "./structure.js",
 		optimization: {
