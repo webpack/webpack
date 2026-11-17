@@ -1,0 +1,1 @@
+require("\x2z/a"); require("./c");

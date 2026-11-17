@@ -1,0 +1,1 @@
+fn([1, 2], [...a], {}.x, a?.b, a?.b.c(), new Array(1), this, import.meta.url, 1n);

@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`HtmlSyntax — the facade holds no printer until something prints 1`] = `"<p>x"`;

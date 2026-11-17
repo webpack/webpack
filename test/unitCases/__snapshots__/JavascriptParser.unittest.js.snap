@@ -1,0 +1,301 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`JavascriptParser expression evaluation should eval !'' 1`] = `"!'' bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval !'a' 1`] = `"!'a' bool=false"`;
+
+exports[`JavascriptParser expression evaluation should eval !+0 1`] = `"!+0 bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval !+100.25 1`] = `"!+100.25 bool=false"`;
+
+exports[`JavascriptParser expression evaluation should eval !-0 1`] = `"!-0 bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval !-100.25 1`] = `"!-100.25 bool=false"`;
+
+exports[`JavascriptParser expression evaluation should eval !0 1`] = `"!0 bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval !100.25 1`] = `"!100.25 bool=false"`;
+
+exports[`JavascriptParser expression evaluation should eval !false 1`] = `"!false bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval !null 1`] = `"!null bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval !true 1`] = `"!true bool=false"`;
+
+exports[`JavascriptParser expression evaluation should eval "s" + ("trr" + "rin") + "g" 1`] = `"\\"s\\" + (\\"trr\\" + \\"rin\\") + \\"g\\" string=strrring"`;
+
+exports[`JavascriptParser expression evaluation should eval "strr" + "ring" 1`] = `"\\"strr\\" + \\"ring\\" string=strrring"`;
+
+exports[`JavascriptParser expression evaluation should eval "strrring" 1`] = `"\\"strrring\\" string=strrring"`;
+
+exports[`JavascriptParser expression evaluation should eval '' + 1 + a + (2 + 3) 1`] = `"'' + 1 + a + (2 + 3) wrapped=['' + 1 string=1]+[2 + 3 string=5]"`;
+
+exports[`JavascriptParser expression evaluation should eval '' + 1 + a + 2 + 3 1`] = `"'' + 1 + a + 2 + 3 wrapped=['' + 1 string=1]+[2 + 3 string=23]"`;
+
+exports[`JavascriptParser expression evaluation should eval '' + 1 + a + 2 1`] = `"'' + 1 + a + 2 wrapped=['' + 1 string=1]+[2 string=2]"`;
+
+exports[`JavascriptParser expression evaluation should eval '1,2+3'.split(/[,+]/) 1`] = `"'1,2+3'.split(/[,+]/) array=[1],[2],[3]"`;
+
+exports[`JavascriptParser expression evaluation should eval '1,2+3'.split(expr) 1`] = `"'1,2+3'.split(expr)"`;
+
+exports[`JavascriptParser expression evaluation should eval 'S' + ("strr" + "ring") + 'y' 1`] = `"'S' + (\\"strr\\" + \\"ring\\") + 'y' string=Sstrrringy"`;
+
+exports[`JavascriptParser expression evaluation should eval 'a' + (expr + 'c') 1`] = `"'a' + (expr + 'c') wrapped=['a' string=a]+['c' string=c]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'a' + 1 1`] = `"'a' + 1 string=a1"`;
+
+exports[`JavascriptParser expression evaluation should eval 'a' + expr + 1 1`] = `"'a' + expr + 1 wrapped=['a' string=a]+[1 string=1]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'abc'.slice(1) 1`] = `"'abc'.slice(1) string=bc"`;
+
+exports[`JavascriptParser expression evaluation should eval 'abc'["slice"](1) 1`] = `"'abc'[\\"slice\\"](1) string=bc"`;
+
+exports[`JavascriptParser expression evaluation should eval 'abc'[slice](1) 1`] = `"'abc'[slice](1)"`;
+
+exports[`JavascriptParser expression evaluation should eval 'abcdef'.slice(2, 5) 1`] = `"'abcdef'.slice(2, 5) string=cde"`;
+
+exports[`JavascriptParser expression evaluation should eval 'abcdef'.substring(2, 3) 1`] = `"'abcdef'.substring(2, 3) string=c"`;
+
+exports[`JavascriptParser expression evaluation should eval 'abcdef'.substring(2, 3, 4) 1`] = `"'abcdef'.substring(2, 3, 4)"`;
+
+exports[`JavascriptParser expression evaluation should eval 'pre' + (1 + a) + (2 + 3) 1`] = `"'pre' + (1 + a) + (2 + 3) wrapped=['pre' string=pre]+[2 + 3 string=5]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'pre' + a + 'post' 1`] = `"'pre' + a + 'post' wrapped=['pre' string=pre]+['post' string=post]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'pre' + a 1`] = `"'pre' + a wrapped=['pre' string=pre]+[null]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat('one') 1`] = `"'str'.concat('one') string=strone"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat('one').concat('two') 1`] = `"'str'.concat('one').concat('two') string=stronetwo"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat('one').concat('two', 'three') 1`] = `"'str'.concat('one').concat('two', 'three') string=stronetwothree"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat('one', 'two') 1`] = `"'str'.concat('one', 'two') string=stronetwo"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat('one', 'two').concat('three') 1`] = `"'str'.concat('one', 'two').concat('three') string=stronetwothree"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat('one', 'two').concat('three', 'four') 1`] = `"'str'.concat('one', 'two').concat('three', 'four') string=stronetwothreefour"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat('one', obj) 1`] = `"'str'.concat('one', obj) wrapped=['str' string=str]+[null]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat('one', obj).concat() 1`] = `"'str'.concat('one', obj).concat() wrapped=['str' string=str]+[null]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat('one', obj, 'two') 1`] = `"'str'.concat('one', obj, 'two') wrapped=['str' string=str]+['two' string=two]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat('one', obj, 'two').concat('three') 1`] = `"'str'.concat('one', obj, 'two').concat('three') wrapped=['str' string=str]+['three' string=three]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat('one', obj, 'two').concat() 1`] = `"'str'.concat('one', obj, 'two').concat() wrapped=['str' string=str]+['two' string=two]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat() 1`] = `"'str'.concat() string=str"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj) 1`] = `"'str'.concat(obj) wrapped=['str' string=str]+[null]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj).concat('one', 'two') 1`] = `"'str'.concat(obj).concat('one', 'two') wrapped=['str' string=str]+['one', 'two' string=onetwo]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj).concat('one', obj, 'one') 1`] = `"'str'.concat(obj).concat('one', obj, 'one') wrapped=['str' string=str]+['one' string=one]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj).concat('one', obj, 'two', 'three') 1`] = `"'str'.concat(obj).concat('one', obj, 'two', 'three') wrapped=['str' string=str]+['two', 'three' string=twothree]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj).concat() 1`] = `"'str'.concat(obj).concat() wrapped=['str' string=str]+[null]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj).concat(obj, 'one') 1`] = `"'str'.concat(obj).concat(obj, 'one') wrapped=['str' string=str]+['one' string=one]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj).concat(obj, 'one', 'two') 1`] = `"'str'.concat(obj).concat(obj, 'one', 'two') wrapped=['str' string=str]+['one', 'two' string=onetwo]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj, 'one') 1`] = `"'str'.concat(obj, 'one') wrapped=['str' string=str]+['one' string=one]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj, 'one').concat('two', 'three') 1`] = `"'str'.concat(obj, 'one').concat('two', 'three') wrapped=['str' string=str]+['two', 'three' string=twothree]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj, 'one').concat('two', obj, 'three') 1`] = `"'str'.concat(obj, 'one').concat('two', obj, 'three') wrapped=['str' string=str]+['three' string=three]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj, 'one').concat('two', obj, 'three', 'four') 1`] = `"'str'.concat(obj, 'one').concat('two', obj, 'three', 'four') wrapped=['str' string=str]+['three', 'four' string=threefour]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj, 'one').concat() 1`] = `"'str'.concat(obj, 'one').concat() wrapped=['str' string=str]+['one' string=one]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj, 'one').concat(obj, 'two', 'three') 1`] = `"'str'.concat(obj, 'one').concat(obj, 'two', 'three') wrapped=['str' string=str]+['two', 'three' string=twothree]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj, 'one', 'two') 1`] = `"'str'.concat(obj, 'one', 'two') wrapped=['str' string=str]+['one', 'two' string=onetwo]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj, 'one', 'two').concat('three', 'four') 1`] = `"'str'.concat(obj, 'one', 'two').concat('three', 'four') wrapped=['str' string=str]+['three', 'four' string=threefour]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj, 'one', 'two').concat('three', obj, 'four') 1`] = `"'str'.concat(obj, 'one', 'two').concat('three', obj, 'four') wrapped=['str' string=str]+['four' string=four]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj, 'one', 'two').concat('three', obj, 'four', 'five') 1`] = `"'str'.concat(obj, 'one', 'two').concat('three', obj, 'four', 'five') wrapped=['str' string=str]+['four', 'five' string=fourfive]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj, 'one', 'two').concat() 1`] = `"'str'.concat(obj, 'one', 'two').concat() wrapped=['str' string=str]+['one', 'two' string=onetwo]"`;
+
+exports[`JavascriptParser expression evaluation should eval 'str'.concat(obj, 'one', 'two').concat(obj, 'three', 'four') 1`] = `"'str'.concat(obj, 'one', 'two').concat(obj, 'three', 'four') wrapped=['str' string=str]+['three', 'four' string=threefour]"`;
+
+exports[`JavascriptParser expression evaluation should eval +1n 1`] = `"+1n"`;
+
+exports[`JavascriptParser expression evaluation should eval /abc/ 1`] = `"/abc/ regExp=/abc/"`;
+
+exports[`JavascriptParser expression evaluation should eval ['i1', 'i2', 3, a, b ? 4 : 5] 1`] = `"['i1', 'i2', 3, a, b ? 4 : 5] items=['i1' string=i1],['i2' string=i2],[3 number=3],[a],[b ? 4 : 5 options=[4 number=4],[5 number=5]]"`;
+
+exports[`JavascriptParser expression evaluation should eval \`\${a}\${b}\` === \`\${a}b\` 1`] = `"\`\${a}\${b}\` === \`\${a}b\`"`;
+
+exports[`JavascriptParser expression evaluation should eval \`\${a}\${b}\` === \`a\${b}\` 1`] = `"\`\${a}\${b}\` === \`a\${b}\`"`;
+
+exports[`JavascriptParser expression evaluation should eval \`\${x}a\` === \`\${x}b\` 1`] = `"\`\${x}a\` === \`\${x}b\` bool=false"`;
+
+exports[`JavascriptParser expression evaluation should eval \`a\${x}\` === \`b\${x}\` 1`] = `"\`a\${x}\` === \`b\${x}\` bool=false"`;
+
+exports[`JavascriptParser expression evaluation should eval \`start\${'str'}mid\${obj2}end\` 1`] = `"\`start\${'str'}mid\${obj2}end\` template=[start\${'str'}mid string=startstrmid],[end string=end]"`;
+
+exports[`JavascriptParser expression evaluation should eval \`start\${obj}mid\${obj2}end\` 1`] = `"\`start\${obj}mid\${obj2}end\` template=[start string=start],[mid string=mid],[end string=end]"`;
+
+exports[`JavascriptParser expression evaluation should eval ~1n 1`] = `"~1n bigint=-2"`;
+
+exports[`JavascriptParser expression evaluation should eval ~3 1`] = `"~3 number=-4"`;
+
+exports[`JavascriptParser expression evaluation should eval 0 1`] = `"0 number=0"`;
+
+exports[`JavascriptParser expression evaluation should eval 1 != 1 1`] = `"1 != 1 bool=false"`;
+
+exports[`JavascriptParser expression evaluation should eval 1 !== 1 1`] = `"1 !== 1 bool=false"`;
+
+exports[`JavascriptParser expression evaluation should eval 1 + 'a' 1`] = `"1 + 'a' string=1a"`;
+
+exports[`JavascriptParser expression evaluation should eval 1 + 3 1`] = `"1 + 3 number=4"`;
+
+exports[`JavascriptParser expression evaluation should eval 1 + a + 'post' 1`] = `"1 + a + 'post' wrapped=[null]+['post' string=post]"`;
+
+exports[`JavascriptParser expression evaluation should eval 1 + a + 2 1`] = `"1 + a + 2"`;
+
+exports[`JavascriptParser expression evaluation should eval 1 == 1 1`] = `"1 == 1 bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval 1 === 1 1`] = `"1 === 1 bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval 1 1`] = `"1 number=1"`;
+
+exports[`JavascriptParser expression evaluation should eval 1n & 1 1`] = `"1n & 1"`;
+
+exports[`JavascriptParser expression evaluation should eval 1n / 0n 1`] = `"1n / 0n"`;
+
+exports[`JavascriptParser expression evaluation should eval 1n - 1 1`] = `"1n - 1"`;
+
+exports[`JavascriptParser expression evaluation should eval 2 * 3 1`] = `"2 * 3 number=6"`;
+
+exports[`JavascriptParser expression evaluation should eval 2 ** 3 1`] = `"2 ** 3 number=8"`;
+
+exports[`JavascriptParser expression evaluation should eval 3 != 1 1`] = `"3 != 1 bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval 3 !== 1 1`] = `"3 !== 1 bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval 3 == 1 1`] = `"3 == 1 bool=false"`;
+
+exports[`JavascriptParser expression evaluation should eval 3 === 1 1`] = `"3 === 1 bool=false"`;
+
+exports[`JavascriptParser expression evaluation should eval 3 - 1 1`] = `"3 - 1 number=2"`;
+
+exports[`JavascriptParser expression evaluation should eval 5n != 1n 1`] = `"5n != 1n bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval 5n != 5n 1`] = `"5n != 5n bool=false"`;
+
+exports[`JavascriptParser expression evaluation should eval 5n !== 1n 1`] = `"5n !== 1n bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval 5n !== 5n 1`] = `"5n !== 5n bool=false"`;
+
+exports[`JavascriptParser expression evaluation should eval 5n & 3n 1`] = `"5n & 3n bigint=1"`;
+
+exports[`JavascriptParser expression evaluation should eval 5n ** 2n 1`] = `"5n ** 2n bigint=25"`;
+
+exports[`JavascriptParser expression evaluation should eval 5n << 2n 1`] = `"5n << 2n bigint=20"`;
+
+exports[`JavascriptParser expression evaluation should eval 5n == 5n 1`] = `"5n == 5n bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval 5n === 5n 1`] = `"5n === 5n bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval 5n >> 2n 1`] = `"5n >> 2n bigint=1"`;
+
+exports[`JavascriptParser expression evaluation should eval 5n ^ 2n 1`] = `"5n ^ 2n bigint=7"`;
+
+exports[`JavascriptParser expression evaluation should eval 5n | 2n 1`] = `"5n | 2n bigint=7"`;
+
+exports[`JavascriptParser expression evaluation should eval 8 / 2 1`] = `"8 / 2 number=4"`;
+
+exports[`JavascriptParser expression evaluation should eval 9 << 2 1`] = `"9 << 2 number=36"`;
+
+exports[`JavascriptParser expression evaluation should eval 9 >> 2 1`] = `"9 >> 2 number=2"`;
+
+exports[`JavascriptParser expression evaluation should eval 9 >>> 2 1`] = `"9 >>> 2 number=2"`;
+
+exports[`JavascriptParser expression evaluation should eval 10n * 5n 1`] = `"10n * 5n bigint=50"`;
+
+exports[`JavascriptParser expression evaluation should eval 10n + 10n 1`] = `"10n + 10n bigint=20"`;
+
+exports[`JavascriptParser expression evaluation should eval 10n / 5n 1`] = `"10n / 5n bigint=2"`;
+
+exports[`JavascriptParser expression evaluation should eval 10n - 5n 1`] = `"10n - 5n bigint=5"`;
+
+exports[`JavascriptParser expression evaluation should eval 12 & 5 1`] = `"12 & 5 number=4"`;
+
+exports[`JavascriptParser expression evaluation should eval 12 ^ 5 1`] = `"12 ^ 5 number=9"`;
+
+exports[`JavascriptParser expression evaluation should eval 12 | 5 1`] = `"12 | 5 number=13"`;
+
+exports[`JavascriptParser expression evaluation should eval 20n 1`] = `"20n bigint=20"`;
+
+exports[`JavascriptParser expression evaluation should eval 100.25 1`] = `"100.25 number=100.25"`;
+
+exports[`JavascriptParser expression evaluation should eval a + 'post' 1`] = `"a + 'post' wrapped=[null]+['post' string=post]"`;
+
+exports[`JavascriptParser expression evaluation should eval a ? 'o1' : 'o2' 1`] = `"a ? 'o1' : 'o2' options=['o1' string=o1],['o2' string=o2]"`;
+
+exports[`JavascriptParser expression evaluation should eval a ? 'o1' : b ? 'o2' : 'o3' 1`] = `"a ? 'o1' : b ? 'o2' : 'o3' options=['o1' string=o1],['o2' string=o2],['o3' string=o3]"`;
+
+exports[`JavascriptParser expression evaluation should eval a ? 'o1' : b ? 'o2' : c ? 'o3' : 'o4' 1`] = `"a ? 'o1' : b ? 'o2' : c ? 'o3' : 'o4' options=['o1' string=o1],['o2' string=o2],['o3' string=o3],['o4' string=o4]"`;
+
+exports[`JavascriptParser expression evaluation should eval a ? 'o1' : b ? b : c ? 'o3' : c 1`] = `"a ? 'o1' : b ? b : c ? 'o3' : c options=['o1' string=o1],[b],['o3' string=o3],[c]"`;
+
+exports[`JavascriptParser expression evaluation should eval a ? (b ? 'o1' : 'o2') : 'o3' 1`] = `"a ? (b ? 'o1' : 'o2') : 'o3' options=['o1' string=o1],['o2' string=o2],['o3' string=o3]"`;
+
+exports[`JavascriptParser expression evaluation should eval a ? (b ? 'o1' : 'o2') : c ? 'o3' : 'o4' 1`] = `"a ? (b ? 'o1' : 'o2') : c ? 'o3' : 'o4' options=['o1' string=o1],['o2' string=o2],['o3' string=o3],['o4' string=o4]"`;
+
+exports[`JavascriptParser expression evaluation should eval b.Number 1`] = `"b.Number number=123"`;
+
+exports[`JavascriptParser expression evaluation should eval b['Number'] 1`] = `"b['Number'] number=123"`;
+
+exports[`JavascriptParser expression evaluation should eval b[Number] 1`] = `"b[Number]"`;
+
+exports[`JavascriptParser expression evaluation should eval false != true 1`] = `"false != true bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval false !== false 1`] = `"false !== false bool=false"`;
+
+exports[`JavascriptParser expression evaluation should eval false 1`] = `"false bool=false"`;
+
+exports[`JavascriptParser expression evaluation should eval null != null 1`] = `"null != null bool=false"`;
+
+exports[`JavascriptParser expression evaluation should eval null !== null 1`] = `"null !== null bool=false"`;
+
+exports[`JavascriptParser expression evaluation should eval null == null 1`] = `"null == null bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval null === null 1`] = `"null === null bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval true == true 1`] = `"true == true bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval true === false 1`] = `"true === false bool=false"`;
+
+exports[`JavascriptParser expression evaluation should eval true 1`] = `"true bool=true"`;
+
+exports[`JavascriptParser expression evaluation should eval typeof 'str' 1`] = `"typeof 'str' string=string"`;
+
+exports[`JavascriptParser expression evaluation should eval typeof 1 1`] = `"typeof 1 string=number"`;
+
+exports[`JavascriptParser expression evaluation should eval typeof 1n 1`] = `"typeof 1n string=bigint"`;
+
+exports[`JavascriptParser expression evaluation should eval typeof aString 1`] = `"typeof aString string=string"`;
+
+exports[`JavascriptParser expression evaluation should eval typeof b.Number 1`] = `"typeof b.Number string=number"`;
+
+exports[`JavascriptParser expression evaluation should eval typeof b['Number'] 1`] = `"typeof b['Number'] string=number"`;
+
+exports[`JavascriptParser expression evaluation should eval typeof b[Number] 1`] = `"typeof b[Number]"`;
+
+exports[`JavascriptParser expression evaluation should eval typeof null 1`] = `"typeof null string=object"`;
+
+exports[`JavascriptParser expression evaluation should eval typeof true 1`] = `"typeof true string=boolean"`;
+
+exports[`JavascriptParser expression evaluation should eval typeof void 0 1`] = `"typeof void 0 string=undefined"`;
+
+exports[`JavascriptParser expression evaluation should eval typeof void a 1`] = `"typeof void a"`;

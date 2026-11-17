@@ -1,0 +1,1 @@
+function f(a){var b=arguments.length>1&&arguments[1]!==undefined?arguments[1]:g();var c=arguments.length>2&&void 0!==arguments[2]?arguments[2]:a+b;return[a,b,c]}

@@ -1,0 +1,1 @@
+init();var A=4;function f(){return A}export{f};console.log(f(),f())

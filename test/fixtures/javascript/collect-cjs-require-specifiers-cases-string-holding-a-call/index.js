@@ -1,0 +1,1 @@
+const s = "require('./nope')"; require("./a");

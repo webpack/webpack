@@ -1,5 +1,7 @@
 "use strict";
 
+const { fixture } = require("../../helpers/fixture");
+
 const fs = require("fs");
 const path = require("path");
 const { HookMap } = require("tapable");
@@ -304,37 +306,37 @@ const evaluations = (source, preparsed, strictOutput) => {
 
 // expressions the evaluation reads by id, each passed to a tapped call
 const SNIPPETS = [
-	'fn("a".concat("b", 1, x), "ab".substr(1), "abc".substring(1, 2), "abc".slice(-1));',
-	'fn("a,b".split(","), "abc".replace("b", "c"), "a".indexOf("a"), `t${1}`.concat(x));',
-	"fn(`a${b}c`, String.raw`x${1}`, a ? 1 : 2, true ? x : b, a || b, a && 1, a ?? 2);",
-	'fn(typeof a, typeof require, typeof x.y, typeof (() => 1), void 0, void a, !0, ~1);',
-	'fn(-1, +"2", 1 + 2, "a" + x, x + "a", 1 - 2, 2 ** 3, 1 << 2, 5 % 2, 1 === 1, a == b);',
-	'fn([1, 2], [...a], {}.x, a?.b, a?.b.c(), new Array(1), this, import.meta.url, 1n);',
-	"if (typeof a === 'undefined') x(); if (!a) fn(1); if (a instanceof b) fn(2);",
-	"if (`${a}` === 'a') fn(); if (1 > 2 || a) fn(); if ((a, 1)) fn(); if (/x/) fn();",
-	'var { p, q: [r] } = a, s = (b, c); let { t = 1, ...u } = x; const [v, , w] = b;',
-	"function f({ a = 1 }, [b], ...c) { return a; } function g() { 'use strict'; } class K { #x; static { fn(1); } }",
-	"label: for (const k in a) { if (k) continue label; } for (;;) break; do fn(); while (0);",
-	'try { fn(); } catch ({ message }) { fn(message); } finally { fn(0); } switch (a) { case 1: fn(); }',
-	'export const e1 = 1; export function e2() {} export default class {} var ea; export { ea as "b" };',
-	'import d, { n as m } from "x"; import * as ns from "y"; export * from "z"; fn(d, m, ns.k);',
-	"(function () { fn(this); })(); (() => fn(arguments))(); (function (a) { fn(a); }).call(x, 1);",
-	"require('a').b.c(); module.exports.x = 1; exports.y = require; define(['a'], (a) => a);",
-	"var g = function* () { yield* a; }; async function h() { await a; for await (const z of b); }",
-	"using res = fn(); fn(a = 1, a += 2, a.b = 3, [a, b] = [b, a], ({ a } = x));",
-	"const { o1, o2: { o3 }, [k]: o4, ...o5 } = fn(); const [l1, [l2], { l3 }] = require('x');",
-	"var { d1 = 2, d2: d3 } = await fn(); ({ d4, d5 } = fn()); ({ d6 } = { d7 } = fn());",
-	'fn("a" + 1, 1 + "a", "a" + ("b" + x + "c"), ("p" + x + "s") + 1, ("p" + x) + ("q" + y));',
-	'fn(x + ("p" + y + "s"), ("p" + x + "s") + y, "a".concat(`${x}b`), `${x}b`.concat("c"));',
-	'fn(typeof function () {}, typeof "s", typeof `${x}`, typeof undefined, typeof 1, typeof 1n);',
-	'fn(typeof true, typeof [1], typeof null, typeof /r/, typeof [x], typeof a.b.c, typeof a?.b);',
-	'fn("abc".substr(...[1]), "abc".substr(1, ...[1]), "abc".slice(...[1]));',
-	'fn("a-b".split("-"), "a-b".split(/-/), "ab".substr(1, 1), "ab".slice(0, 1), "ab".substring(x));',
-	"if (a in b) fn(1); else fn(2); x = a in b ? fn(3) : fn(4); var bb = b; bb = b; fn(b);",
-	"if (true) fn(1); else fn(2); if (false) fn(3); else fn(4); fn(1 ? a : b, 0 || a, 1 && a);",
-	"try { try { fn(); } catch { fn(); } } catch (e) { fn(e); } fn(1 && 2, 0 ?? 3, null ?? x);",
-	'import j from "./j.json" with { type: "json" }; export { k } from "./k" with { type: "x" };',
-	"/* a */ // b\nfn(1); /*c*/ export /* d */ function ef() {} label2: /* e */ fn(2);"
+	fixture("javascript", "walk-syntax-tree-snippets"),
+	fixture("javascript", "walk-syntax-tree-snippets-2"),
+	fixture("javascript", "walk-syntax-tree-snippets-3"),
+	fixture("javascript", "walk-syntax-tree-snippets-4"),
+	fixture("javascript", "walk-syntax-tree-snippets-5"),
+	fixture("javascript", "walk-syntax-tree-snippets-6"),
+	fixture("javascript", "walk-syntax-tree-snippets-7"),
+	fixture("javascript", "walk-syntax-tree-snippets-8"),
+	fixture("javascript", "walk-syntax-tree-snippets-9"),
+	fixture("javascript", "walk-syntax-tree-snippets-10"),
+	fixture("javascript", "walk-syntax-tree-snippets-11"),
+	fixture("javascript", "walk-syntax-tree-snippets-12"),
+	fixture("javascript", "walk-syntax-tree-snippets-13"),
+	fixture("javascript", "walk-syntax-tree-snippets-14"),
+	fixture("javascript", "walk-syntax-tree-snippets-15"),
+	fixture("javascript", "walk-syntax-tree-snippets-16"),
+	fixture("javascript", "walk-syntax-tree-snippets-17"),
+	fixture("javascript", "walk-syntax-tree-snippets-18"),
+	fixture("javascript", "walk-syntax-tree-snippets-19"),
+	fixture("javascript", "walk-syntax-tree-snippets-20"),
+	fixture("javascript", "walk-syntax-tree-snippets-21"),
+	fixture("javascript", "walk-syntax-tree-snippets-22"),
+	fixture("javascript", "walk-syntax-tree-snippets-23"),
+	fixture("javascript", "walk-syntax-tree-snippets-24"),
+	fixture("javascript", "walk-syntax-tree-snippets-25"),
+	fixture("javascript", "walk-syntax-tree-snippets-26"),
+	fixture("javascript", "walk-syntax-tree-snippets-27"),
+	fixture("javascript", "walk-syntax-tree-snippets-28"),
+	fixture("javascript", "walk-syntax-tree-snippets-29"),
+	fixture("javascript", "walk-syntax-tree-snippets-30"),
+	fixture("javascript", "walk-syntax-tree-snippets-31")
 ];
 
 /**
@@ -421,7 +423,7 @@ describe("a syntax tree written from ESTree objects", () => {
 	it("serves each node's object until the tree is released", () => {
 		const program = /** @type {import("estree").Program} */ (
 			/** @type {unknown} */ (
-				acorn.parse("f(a, [b]);", { ecmaVersion: "latest", ranges: true })
+				acorn.parse(fixture("javascript", "a-syntax-tree-written-from-es-tree-objects-serves-each-node-s-object-until-the"), { ecmaVersion: "latest", ranges: true })
 			)
 		);
 		const call = /** @type {import("estree").CallExpression} */ (
@@ -541,7 +543,7 @@ describe("a hook with path taps", () => {
 		parser.hooks.statement.tap("object", (statement) => {
 			seen.push(`object ${statement.type}`);
 		});
-		parse(parser, "a;\nb;");
+		parse(parser, fixture("javascript", "a-hook-with-path-taps-gives-a-path-tap-ids-from-a-node-object-outside-a-parse"));
 		expect(seen).toEqual([
 			"path 0,2",
 			"object ExpressionStatement",
@@ -566,7 +568,7 @@ describe("a hook with path taps", () => {
 				calls++;
 			}
 		});
-		parse(parser, "d;");
+		parse(parser, fixture("javascript", "a-hook-with-path-taps-gives-a-path-tap-ids-from-a-node-object-outside-a-parse-2"));
 		expect(calls).toBe(1);
 		expect(seen).toEqual(["path 0,2", "object ExpressionStatement"]);
 	});

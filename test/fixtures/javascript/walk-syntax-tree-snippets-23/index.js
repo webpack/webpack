@@ -1,0 +1,1 @@
+fn(typeof function () {}, typeof "s", typeof `${x}`, typeof undefined, typeof 1, typeof 1n);

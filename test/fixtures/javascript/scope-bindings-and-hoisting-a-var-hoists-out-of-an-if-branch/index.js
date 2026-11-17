@@ -1,0 +1,1 @@
+function f() { if (x) { let a; var b = 1; } return b; }

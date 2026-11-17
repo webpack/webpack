@@ -125,15 +125,13 @@ describe("CssSyntax — block streaming", () => {
 	it("cuts a dead rule where it stands after an earlier cut in the piece", () => {
 		// Sibling `@layer a` blocks fold into one piece, so a batch cuts twice in
 		// it — and its own second span must name where the first cut left it.
-		const victim =
-			".victim{opacity:1;background:red;border-radius:0;align-items:flex-start}";
 		const src = fixture("css", "css-syntax-block-streaming-cuts-a-dead-rule-where-it-stands-after-an-earlier-cut");
 		// The outer block has to stream for the fold to be the one under test.
 		expect(childCount(src)).toBe(0);
 		const out = minify(src);
 		// Sliced, so a wrong cut reads as the mangled rule and not as the sheet.
 		const at = out.indexOf(".victim");
-		expect(out.slice(at, at + victim.length)).toBe(victim);
+		expect(out.slice(at, out.indexOf("}", at) + 1)).toMatchSnapshot();
 	});
 
 	it("folds no block of a layer over a streamed block of that layer", () => {
@@ -170,28 +168,20 @@ describe("CssSyntax — block streaming", () => {
 		};
 		// A control, so a case that stopped gathering reads apart from one that
 		// stopped joining.
-		expect(gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it"))).toBe(
-			"@layer a{.p,.q{color:teal}}.mid{margin:0}}"
-		);
+		expect(gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it"))).toMatchSnapshot();
 		// Only a qualified rule lends its selectors.
-		expect(gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-2"))).toBe(
-			"@layer a{.p{color:teal}@media print{.q{color:teal}}}.mid{margin:0}}"
-		);
+		expect(gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-2"))).toMatchSnapshot();
 		// One selector an engine cannot parse invalidates the list it joins.
-		expect(gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-3"))).toBe(
-			"@layer a{.p{color:teal}.q:not(.r){color:teal}}.mid{margin:0}}"
-		);
+		expect(gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-3"))).toMatchSnapshot();
 		expect(
 			gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-4"))
-		).toBe("@layer a{.p:not(.r){color:teal}.q{color:teal}}.mid{margin:0}}");
+		).toMatchSnapshot();
 		// Two rules join on the block they share, which these do not.
-		expect(gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-5"))).toBe(
-			"@layer a{.p{color:teal}.q{color:lime}}.mid{margin:0}}"
-		);
+		expect(gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-5"))).toMatchSnapshot();
 		// A rule whose selectors the grown list already carries says nothing more.
 		expect(
 			gathered(fixture("css", "css-syntax-block-streaming-leaves-the-pair-at-a-gathered-seam-alone-where-it-6"))
-		).toBe("@layer a{.p,.q{color:teal}}.mid{margin:0}}");
+		).toMatchSnapshot();
 	});
 
 	it("keeps the `;` a gathered layer block ends a declaration on", () => {
@@ -201,21 +191,17 @@ describe("CssSyntax — block streaming", () => {
 		expect(childCount(streamed)).toBe(0);
 		const tail = (/** @type {string} */ out) => out.slice(out.indexOf("x:i"));
 		const top = minify(fixture("css", "css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-2"));
-		expect(tail(top)).toBe("x:i;.q{top:0}}.w{color:red}");
+		expect(tail(top)).toMatchSnapshot();
 		expect(minify(top)).toBe(top);
 		const nested = minify(fixture("css", "css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-3"));
-		expect(tail(nested)).toBe("x:i;y:j;z:k}}");
+		expect(tail(nested)).toMatchSnapshot();
 		// A block written whole, in a parent that streams, folds the same way.
 		const parent = (/** @type {string} */ src) => tail(minify(src));
 		expect(childCount(fixture("css", "css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-4"))).toBe(0);
-		expect(parent(fixture("css", "css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-4"))).toBe(
-			"x:i;y:j}.mid{margin:0}}"
-		);
-		expect(parent(fixture("css", "css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-5"))).toBe(
-			"x:i;.q{top:0}}.mid{margin:0}}"
-		);
+		expect(parent(fixture("css", "css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-4"))).toMatchSnapshot();
+		expect(parent(fixture("css", "css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-5"))).toMatchSnapshot();
 		// A rule ends in its own `}`, and a `;` after it would start a selector.
-		expect(parent(fixture("css", "css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-6"))).toBe("x:i;.p{top:0}y:j}.mid{margin:0}}");
+		expect(parent(fixture("css", "css-syntax-block-streaming-keeps-the-a-gathered-layer-block-ends-a-declaration-6"))).toMatchSnapshot();
 	});
 
 	it("drops a prefixed list a streamed block's rules cover between them", () => {
@@ -526,7 +512,7 @@ describe("CssSyntax — minify comment preservation", () => {
 				types: buildSkipSet([NodeType.Ident])
 			}
 		}).code;
-		expect(out).toBe(".a .b{color:red}");
+		expect(out).toMatchSnapshot();
 	});
 });
 
@@ -601,7 +587,7 @@ describe("CssSyntax — minify token-boundary safety", () => {
 				content: sheet
 			});
 		const open = mapped(fixture("css", "css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-41"));
-		expect(open.code).toBe("a{color:red}b{--x:f(g");
+		expect(open.code).toMatchSnapshot();
 		expect(open.map.mappings).toBe(
 			mapped(fixture("css", "css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-42")).map.mappings
 		);
@@ -1001,13 +987,7 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 		);
 
 		// Being offered a payload is only half of minifying it.
-		expect(minify(sheet, (source, { type }) => `/*${type}*/`)).toBe(
-			"@import url(data:text/css,/*css*/);" +
-				".svg{background:url(data:image/svg+xml,/*svg*/)}" +
-				".html{background:url(data:text/html,/*html*/)}" +
-				".json{background:url(data:application/json,/*json*/)}" +
-				".js{background:url(data:text/javascript,/*javascript*/)}"
-		);
+		expect(minify(sheet, (source, { type }) => `/*${type}*/`)).toMatchSnapshot();
 	});
 
 	it("keeps the stylesheet's own map coherent when the payload changes size", () => {
@@ -1201,7 +1181,7 @@ describe("SourceProcessor — mergeDistantRules", () => {
 			source: "in.css",
 			content: sheet
 		});
-		expect(code).toBe(".a,.c{color:red}.b{margin:0}");
+		expect(code).toMatchSnapshot();
 		expect(map).toBeDefined();
 	});
 
@@ -1214,7 +1194,7 @@ describe("SourceProcessor — mergeDistantRules", () => {
 			mode: "minify",
 			mergeDistantRules: true
 		});
-		expect(code).toBe("b,c{color:red}");
+		expect(code).toMatchSnapshot();
 	});
 });
 
@@ -1375,21 +1355,17 @@ describe("CssSyntax minify — merged and joined text keeps its boundaries", () 
 					"css-syntax-minify-a-merged-slash-shorthand-parts-a-slot-that-starts-with-an-asterisk"
 				)
 			)
-		).toBe(
-			'.a{grid-row:1/ *}.b{grid-template:1px/ *}.c{grid-template:"a"1px/ *}.d{color:red}'
-		);
+		).toMatchSnapshot();
 	});
 
 	it("closes a bad url the input ran out in", () => {
 		const name = "css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed";
 		const nested = fixture("css", name);
-		expect(min(nested)).toBe('.p{.q{content:")}.x{color:red}"}url(x")}');
+		expect(min(nested)).toMatchSnapshot();
 		// Lowered, the rule hoisted out of `.p` comes after the bad url.
-		expect(min(nested, { environment: { browsers: ["chrome 100"] } })).toBe(
-			'.p{url(x")}.p .q{content:")}.x{color:red}"}'
-		);
-		expect(min(fixture("css", `${name}-2`))).toBe('@media url(x");');
-		expect(min(fixture("css", `${name}-3`))).toBe('.a{b:url(x")}');
+		expect(min(nested, { environment: { browsers: ["chrome 100"] } })).toMatchSnapshot();
+		expect(min(fixture("css", `${name}-2`))).toMatchSnapshot();
+		expect(min(fixture("css", `${name}-3`))).toMatchSnapshot();
 	});
 
 	it("cuts a dead copy out of a nested joined block where it now stands", () => {
@@ -1400,9 +1376,7 @@ describe("CssSyntax minify — merged and joined text keeps its boundaries", () 
 					"css-syntax-minify-a-nested-joined-block-is-cut-where-its-rules-now-stand"
 				)
 			)
-		).toBe(
-			'@supports (display:grid){@media print{.s{content:"}}}}.y{color:red}"}.x{color:red}}.sep{color:blue}@media print{.q{color:green}}}.app{color:#000}'
-		);
+		).toMatchSnapshot();
 	});
 });
 
@@ -1855,13 +1829,11 @@ describe("CssSyntax — declaration ranks", () => {
 		// `top` leads a pair for the first time, then `left` does, then `top` again.
 		expect(
 			min(fixture("css", "css-syntax-declaration-ranks-orders-a-block-alike-when-a-pair-of-its-properties"))
-		).toBe("a{color:red;display:block;top:0}c{color:red;display:block;left:0}");
-		expect(min(fixture("css", "css-syntax-declaration-ranks-orders-a-block-alike-when-a-pair-of-its-properties-2"))).toBe(
-			"d{color:red;display:block;top:0}"
-		);
+		).toMatchSnapshot();
+		expect(min(fixture("css", "css-syntax-declaration-ranks-orders-a-block-alike-when-a-pair-of-its-properties-2"))).toMatchSnapshot();
 		// A shorthand and its longhand keep their order, the first time and the next.
-		const kept = "e{margin-top:1px;margin:0;display:block;top:0}";
-		expect(min(fixture("css", "css-syntax-declaration-ranks-orders-a-block-alike-when-a-pair-of-its-properties-3"))).toBe(kept);
+		const kept = min(fixture("css", "css-syntax-declaration-ranks-orders-a-block-alike-when-a-pair-of-its-properties-3"));
+		expect(kept).toMatchSnapshot();
 		expect(min(fixture("css", "css-syntax-declaration-ranks-orders-a-block-alike-when-a-pair-of-its-properties-4"))).toBe(kept);
 	});
 });
@@ -1910,9 +1882,7 @@ describe("SourceProcessor.processAsync — `declareCharset` over embedded answer
 			renderEmbeddedSource: async (source) =>
 				source.includes("<g/>") ? source.replace("<g/>", "<g>é</g>") : source
 		});
-		expect(code).toBe(
-			'@charset "UTF-8";.a{background:url(data:image/svg+xml,<svg></svg>)}.b{background:url(data:image/svg+xml,<svg><g>é</g></svg>)}'
-		);
+		expect(code).toMatchSnapshot();
 	});
 });
 
@@ -1965,7 +1935,7 @@ describe("CssSyntax minify — a color fallback reads only the value's own calls
 	it("leaves a relative hue that reduces to no degrees as written", () => {
 		expect(
 			minifyFor(fixture("css", "css-syntax-minify-a-color-fallback-reads-only-the-value-s-own-calls-leaves-a"), ["ie 11"])
-		).toBe(".a{color:hsl(from red calc(h*1turn) s l)}");
+		).toMatchSnapshot();
 	});
 
 	it("keeps a string as written in the wide-gamut fallback", () => {
@@ -1973,9 +1943,7 @@ describe("CssSyntax minify — a color fallback reads only the value's own calls
 			minifyFor(fixture("css", "css-syntax-minify-a-color-fallback-reads-only-the-value-s-own-calls-keeps-a"), [
 				"safari 15.0"
 			])
-		).toBe(
-			'.a{background:"oklch(.7 .2 150)"#00bf54;background:"oklch(.7 .2 150)"color(display-p3 .317813 .736696 .379141);background:"oklch(.7 .2 150)"oklch(.7 .2 150)}'
-		);
+		).toMatchSnapshot();
 	});
 });
 
@@ -2043,38 +2011,32 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-15"))).toBe(
 			`:is(.a)url(/*){color:red}${after}`
 		);
-		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse"))).toBe("b:is(a){color:red}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse"))).toMatchSnapshot();
 		// A type selector after `&` leads the compound the parent joins.
-		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-2"))).toBe("-x.a{color:red}");
-		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-3"))).toBe("--x.a{color:red}");
-		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-4"))).toBe(":is(.a)-1{color:red}");
-		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-5"))).toBe("div.a{color:red}");
-		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-6"))).toBe(".a{color:red}");
-		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-7"))).toBe("svg|rect.a{color:red}");
-		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-8"))).toBe("div:is(p){color:red}");
-		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-9"))).toBe("div[x]{color:red}");
-		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-10"))).toBe("\\31x.a{color:red}");
-		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-11"))).toBe("x.a|.b{color:red}");
-		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-12"))).toBe(".a||b{color:red}");
-		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-13"))).toBe(".c a,a.b{color:red}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-2"))).toMatchSnapshot();
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-3"))).toMatchSnapshot();
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-4"))).toMatchSnapshot();
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-5"))).toMatchSnapshot();
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-6"))).toMatchSnapshot();
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-7"))).toMatchSnapshot();
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-8"))).toMatchSnapshot();
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-9"))).toMatchSnapshot();
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-10"))).toMatchSnapshot();
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-11"))).toMatchSnapshot();
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-12"))).toMatchSnapshot();
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-13"))).toMatchSnapshot();
 		// A parent leading with a type selector cannot follow a simple selector bare.
-		expect(lower(fixture("css", "css-syntax-minify-lowering-nesting-keeps-a-type-led-parent-inside-is-after-a-compound"))).toBe(
-			"[x]:is(div){color:red}:not(.a):is(p){color:red}b>[y]:is(a){color:red}"
-		);
+		expect(lower(fixture("css", "css-syntax-minify-lowering-nesting-keeps-a-type-led-parent-inside-is-after-a-compound"))).toMatchSnapshot();
 		// A `*` keeps to the default namespace, which a namespaced parent reaches past.
-		expect(lower(fixture("css", "css-syntax-minify-lowering-nesting-keeps-a-namespaced-parent-in-is-for-the-universal"))).toBe(
-			"@namespace url(urn:html);@namespace s url(urn:svg);s|a{}:is(s|a){color:red}:is(*|a){color:red}.b :is(|a){color:red}a{color:blue}"
-		);
+		expect(lower(fixture("css", "css-syntax-minify-lowering-nesting-keeps-a-namespaced-parent-in-is-for-the-universal"))).toMatchSnapshot();
 	});
 
 	it("keeps the escaped space a lowered nested selector ends in", () => {
 		const lower = (/** @type {string} */ css) =>
 			minifyFor(css, ["chrome 100"]);
-		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-the"))).toBe(
-			".a{color:red}.a .b\\ {color:blue}"
-		);
-		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-the-2"))).toBe(".s.t\\ {color:gray}");
-		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-the-3"))).toBe(".s.t\\\\{color:gray}");
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-the"))).toMatchSnapshot();
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-the-2"))).toMatchSnapshot();
+		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-the-3"))).toMatchSnapshot();
 	});
 
 	it("splits a gradient's double-position stops outside its strings", () => {
@@ -2102,16 +2064,12 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 			minifyFor(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-splits-a"), [
 				"chrome 60"
 			])
-		).toBe('.b{background:linear-gradient(red,"x\\\\," 10%,"x\\\\," 20%)}');
+		).toMatchSnapshot();
 	});
 
 	it("drops no zero length unit inside a string a length-only call holds", () => {
-		expect(minifyFor(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-drops-no-zero"))).toBe(
-			'.b{transform:translate("a 0px b")}'
-		);
-		expect(minifyFor(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-drops-no-zero-2"))).toBe(
-			".b{transform:translate3d(1px,0,2px)}"
-		);
+		expect(minifyFor(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-drops-no-zero"))).toMatchSnapshot();
+		expect(minifyFor(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-drops-no-zero-2"))).toMatchSnapshot();
 	});
 
 	it("renders a data url whose escapes spell a comment as that comment", () => {
@@ -2123,7 +2081,7 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 				return "";
 			}
 		});
-		expect(code).toBe("@import url(data:text/css,);");
+		expect(code).toMatchSnapshot();
 	});
 });
 
@@ -2143,8 +2101,8 @@ describe("CssSyntax minify — a fallback before a negative amount the property 
 		expect(minifyFor(output)).toBe(output);
 	});
 	it('should still drop a positive fallback when the property accepts negative amounts', () => {
-		expect(minifyFor(fixture("css", "css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-7"))).toBe('a{margin-left:-1px}');
-		expect(minifyFor(fixture("css", "css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-8"))).toBe('a{margin-left:-1px}');
+		expect(minifyFor(fixture("css", "css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-7"))).toMatchSnapshot();
+		expect(minifyFor(fixture("css", "css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-8"))).toMatchSnapshot();
 	});
 });
 
@@ -2166,9 +2124,7 @@ describe("SourceProcessor — a run inside a run", () => {
 			}
 		});
 		expect(inner).toEqual(["x{color:red}"]);
-		expect(alone).toBe(
-			`a{background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>")}b{color:#fff;margin:0}.c{padding:10px}`
-		);
+		expect(alone).toMatchSnapshot();
 		expect(code).toBe(alone);
 	});
 
@@ -2186,7 +2142,7 @@ describe("SourceProcessor — a run inside a run", () => {
 				return source;
 			}
 		});
-		expect(innerAlone).toBe("@media print{x{color:red}y{color:blue}}z{margin:0}");
+		expect(innerAlone).toMatchSnapshot();
 		expect(inner).toEqual([innerAlone]);
 		expect(code).toBe(alone);
 	});

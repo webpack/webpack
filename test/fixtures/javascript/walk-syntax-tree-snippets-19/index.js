@@ -1,0 +1,1 @@
+const { o1, o2: { o3 }, [k]: o4, ...o5 } = fn(); const [l1, [l2], { l3 }] = require('x');

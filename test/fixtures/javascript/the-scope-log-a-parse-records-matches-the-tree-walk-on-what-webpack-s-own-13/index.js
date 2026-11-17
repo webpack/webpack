@@ -1,0 +1,1 @@
+export const e = 1; export function g() {} export class H {}

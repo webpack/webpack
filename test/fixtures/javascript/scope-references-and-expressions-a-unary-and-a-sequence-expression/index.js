@@ -1,0 +1,1 @@
+delete a.b; typeof c; void d; (a, b, c);

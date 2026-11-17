@@ -1,0 +1,1 @@
+fn(typeof a, typeof require, typeof x.y, typeof (() => 1), void 0, void a, !0, ~1);

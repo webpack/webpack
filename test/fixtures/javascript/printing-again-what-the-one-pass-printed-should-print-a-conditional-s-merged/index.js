@@ -1,0 +1,1 @@
+function f(e,t){t&&(e?console.error("a",e):console.error("b",e))}

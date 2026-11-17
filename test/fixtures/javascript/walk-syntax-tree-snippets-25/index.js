@@ -1,0 +1,1 @@
+fn("abc".substr(...[1]), "abc".substr(1, ...[1]), "abc".slice(...[1]));

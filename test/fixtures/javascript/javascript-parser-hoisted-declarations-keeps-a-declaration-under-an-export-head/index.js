@@ -1,0 +1,1 @@
+export var exported = 1; export function exportedFunction() {} var plain = 1;

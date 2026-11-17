@@ -1,0 +1,1 @@
+function f({ a = 1 }, [b], ...c) { return a; } function g() { 'use strict'; } class K { #x; static { fn(1); } }

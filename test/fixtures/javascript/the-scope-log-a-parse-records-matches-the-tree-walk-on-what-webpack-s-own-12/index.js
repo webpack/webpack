@@ -1,0 +1,1 @@
+for (var a of b); for (var [c] in d); class E { f; }

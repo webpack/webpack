@@ -1,0 +1,1 @@
+export function f() {} export class C {} export let l; export var v2; export const c2 = 1;

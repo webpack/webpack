@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`SVG data URLs should minify one with the XML minifier, quoting with \`'\` on a tie 1`] = `"<svg xmlns='http://www.w3.org/2000/svg'>  <rect width='1'/>  </svg>"`;
+
+exports[`SVG data URLs should minify one with the XML minifier, quoting with \`'\` on a tie 2`] = `"<svg a=\\"'\\" b='x'/>"`;
+
+exports[`SVG data URLs should minify the styles of one a stylesheet holds, as a run inside its run 1`] = `"background:url('data:image/svg+xml,<svg xmlns=\\\\'http://www.w3.org/2000/svg\\\\'><style>.b{fill:red}</style><rect class=\\\\'b\\\\'/></svg>')"`;
+
+exports[`SVG data URLs should spell one a style attribute holds alike on a second pass 1`] = `"<p style=\\"background:url('data:image/svg+xml,<svg xmlns=\\\\'http://www.w3.org/2000/svg\\\\'>  <rect class=\\\\'b\\\\'/>  </svg>')\\">x"`;
+
+exports[`SourceProcessor — SVG minification should combine numeric cleanup with synchronous and deferred CSS rendering 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"1\\"><style>rect{fill:red}</style><rect x=\\".5\\" style=\\"fill:red\\"/></svg>"`;
+
+exports[`SourceProcessor — SVG minification should combine whitespace cleanup with data removal and retained comments 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><!--! keep --><g/><text>]]&gt;</text></svg>"`;
+
+exports[`SourceProcessor — SVG minification should drop container whitespace under xml:space but never collapse SVG text 1`] = `"<root xml:space=\\"preserve\\"><svg xmlns=\\"http://www.w3.org/2000/svg\\"><g/><g xml:space=\\"default\\"><g/><text> A  <tspan xml:space=\\"default\\"> B  </tspan> C </text></g></svg></root>"`;
+
+exports[`SourceProcessor — SVG minification should keep joined XML character data well formed after removal 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\">]]&gt;</svg>"`;
+
+exports[`SourceProcessor — SVG minification should preserve DTD constraints and reinitialize cleanup after unread DTDs 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"1\\"/>"`;
+
+exports[`SourceProcessor — SVG minification should preserve a long unsupported numeric value without changing later parses 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"1\\"/>"`;
+
+exports[`SourceProcessor — SVG minification should preserve comment options and render only surviving SVG styles 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><metadata><style>g{fill:red}</style></metadata><!--keep--><style>g{fill:red}</style></svg>"`;
+
+exports[`SourceProcessor — SVG minification should preserve comment options and render only surviving SVG styles 2`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><!--keep--><style>g{fill:red}</style></svg>"`;
+
+exports[`SourceProcessor — SVG minification should rank only surviving attributes when removing SVG data 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:e=\\"http://ns.adobe.com/AdobeIllustrator/10.0/\\"><g z=\\"1\\" a=\\"1\\"/><g z=\\"2\\"/></svg>"`;
+
+exports[`SourceProcessor — SVG minification should remove default-namespace editor elements within SVG 1`] = `"<s:svg xmlns:s=\\"http://www.w3.org/2000/svg\\"><s:path/></s:svg>"`;
+
+exports[`SourceProcessor — SVG minification should remove empty-ID metadata and preserve IDs supplied by the DTD 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"/>"`;
+
+exports[`SourceProcessor — SVG minification should remove namespace references only after removing optional SVG data 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><g/></svg>"`;
+
+exports[`SourceProcessor — SVG minification should remove only SVG metadata when requested 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><title>Title</title><desc>Description</desc><g/><foreignObject><metadata xmlns=\\"urn:data\\">keep</metadata></foreignObject><Metadata>case</Metadata></svg>"`;
+
+exports[`SourceProcessor — SVG minification should remove only SVG metadata when requested 2`] = `"<metadata xmlns=\\"http://www.w3.org/2000/svg\\">root</metadata>"`;
+
+exports[`SourceProcessor — SVG minification should remove only unused prefixed namespace declarations within SVG 1`] = `"<root xmlns:outer=\\"urn:outer\\"><svg xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:x=\\"urn:used\\"><x:item/><g/><g xmlns=\\"\\"/><use x:href=\\"#shape\\"/></svg></root>"`;
+
+exports[`SourceProcessor — SVG minification should resolve editor namespaces by URI and respect local declarations 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:e=\\"http://www.inkscape.org/namespaces/inkscape\\" xmlns:inkscape=\\"urn:data\\" inkscape:version=\\"keep\\"><g label=\\"keep\\"><e:view xmlns:e=\\"urn:data\\">keep</e:view></g><e:view xmlns:e=\\"urn:data\\" e:flag=\\"keep\\"/><metadata>keep</metadata></svg>"`;
+
+exports[`SourceProcessor — SVG minification should resolve namespace aliases and preserve generic and foreign XML 1`] = `"<root xmlns:s=\\"http://www.w3.org/2000/svg\\"> <s:svg><s:g/><s:g xmlns:s=\\"urn:foreign\\"> <svg xmlns=\\"http://www.w3.org/2000/svg\\"> <g> </g> </svg> </s:g><g> </g><s:g> </s:g></s:svg> </root>"`;
+
+exports[`SourceProcessor — SVG minification should retain precision, negative zero, units and exponent spellings 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><rect x=\\"9007199254740993\\" y=\\"-0\\" width=\\".123456789123456789\\" height=\\"+000.00e+03\\"/><path pathLength=\\"001px\\" d=\\"M000.00 000.00L001.00 002.00\\"/><polyline points=\\"001e+02 +002.00E-02\\"/></svg>"`;
+
+exports[`SourceProcessor — SVG minification should reuse empty-attribute removal without HTML entity decoding or SVG defaults 1`] = `"<root class=\\"\\" id=\\"\\" style=\\"\\"/>"`;
+
+exports[`SourceProcessor — SVG minification should shorten SVG numbers inside HTML only under the switch for their kind 1`] = `"<svg><path d=\\"M0.50 0\\" stroke-width=2 /><path d=\\"M0.50 0\\" stroke-width=2 /></svg>"`;
+
+exports[`SourceProcessor — SVG minification should shorten SVG numbers inside HTML only under the switch for their kind 2`] = `"<svg><path d=\\"M.5 0\\" stroke-width=2.0 /><path d=\\"M.5 0\\" stroke-width=2.0 /></svg>"`;
+
+exports[`SourceProcessor — SVG minification should shorten SVG numbers inside HTML only under the switch for their kind 3`] = `"<svg><path d=\\"M0 0 X\\" stroke-width=x /><path d=\\"M0 0 X\\" stroke-width=x. /></svg>"`;
+
+exports[`SourceProcessor — SVG minification should shorten inline SVG geometry in HTML and leave other namespaces alone 1`] = `"<!doctype html><p><svg viewBox=\\"0 0 24 24\\"><path d=\\"M0 0v80h-112\\" transform=\\"translate(1 2)\\"/><rect width=1.5 height=2></rect></svg><math><mi width=001.00>x</mi></math><div d=M000,000 width=001.00></div>"`;
+
+exports[`xmlMinify takes the minimizer options as optional 1`] = `"<svg/>"`;
+
+exports[`xmlMinify — SVG switches should combine structural cleanup with equal-radius ellipse conversion 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><circle id=\\"shape\\" r=\\"10\\"/><circle r=\\"5\\"/></svg>"`;
+
+exports[`xmlMinify — what it reads as written leaves a document in another encoding as written 1`] = `"<?xml version=\\"1.0\\" encoding=\\"ISO-2022-JP\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\"><g/></svg>"`;

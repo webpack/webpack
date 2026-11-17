@@ -1,0 +1,1 @@
+fn(typeof true, typeof [1], typeof null, typeof /r/, typeof [x], typeof a.b.c, typeof a?.b);

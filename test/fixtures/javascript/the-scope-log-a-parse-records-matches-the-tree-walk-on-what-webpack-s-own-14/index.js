@@ -1,0 +1,1 @@
+{ let a; var b; class C {} if (a) {} } x: { function f() {} } (function g() {}); (function () {}); (class {}); (class K {});

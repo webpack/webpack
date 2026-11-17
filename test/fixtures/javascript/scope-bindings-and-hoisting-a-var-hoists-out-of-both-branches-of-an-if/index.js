@@ -1,0 +1,1 @@
+if (a) { var b; } else { var c; } b; c;

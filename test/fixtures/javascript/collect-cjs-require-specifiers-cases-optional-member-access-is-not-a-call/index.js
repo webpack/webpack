@@ -1,0 +1,1 @@
+foo?.require("./nope"); require("./a");

@@ -1,0 +1,1 @@
+require("\u{}/a"); require("./c");

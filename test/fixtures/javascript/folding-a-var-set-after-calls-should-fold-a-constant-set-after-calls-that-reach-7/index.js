@@ -1,0 +1,1 @@
+(function(){if(init()){function g(){return A}}init(g);var A=4;console.log(g(),g())})()

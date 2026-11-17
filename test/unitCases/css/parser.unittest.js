@@ -299,9 +299,7 @@ describe("CssSyntax — the facade", () => {
 		const processor = new SourceProcessor();
 		processor.process(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"));
 		expect(processor._printer).toBeUndefined();
-		expect(processor.process(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"), { mode: "minify" }).code).toBe(
-			"a{color:red}"
-		);
+		expect(processor.process(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"), { mode: "minify" }).code).toMatchSnapshot();
 		expect(typeof processor._printer).toBe("function");
 	});
 });
@@ -469,10 +467,10 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 			})
 		);
 
-		expect(code).toBe("color:red");
+		expect(code).toMatchSnapshot();
 		// The list prints as one piece, so it anchors as one.
 		expect(map.sources).toEqual(["style"]);
-		expect(map.mappings).toBe("AAAA");
+		expect(map.mappings).toMatchSnapshot();
 	});
 });
 
@@ -688,6 +686,6 @@ describe("CssSyntax — what a minifying print reads off the parse", () => {
 
 	it("collects a block of declarations alone for the longhand merge", () => {
 		const css = fixture("css", "css-syntax-what-a-minifying-print-reads-off-the-parse-collects-a-block-of");
-		expect(minify(css)).toBe("a{margin:1px 2px 3px 4px}");
+		expect(minify(css)).toMatchSnapshot();
 	});
 });

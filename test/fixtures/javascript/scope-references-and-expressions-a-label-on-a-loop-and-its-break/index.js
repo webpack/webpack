@@ -1,0 +1,1 @@
+q: for (;;) { break q; } r: while (1) { continue r; }

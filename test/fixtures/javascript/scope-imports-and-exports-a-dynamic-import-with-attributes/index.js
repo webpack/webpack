@@ -1,0 +1,1 @@
+const p = import('m', { with: { type: 'json' } });

@@ -1,0 +1,1 @@
+import d, { n as m } from "x"; import * as ns from "y"; export * from "z"; fn(d, m, ns.k);

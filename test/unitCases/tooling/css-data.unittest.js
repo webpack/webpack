@@ -1,5 +1,7 @@
 "use strict";
 
+const { fixture } = require("../../helpers/fixture");
+
 const {
 	acceptedValues,
 	assertClassesArePrintable,
@@ -336,35 +338,35 @@ describe("CssValueSyntax", () => {
 			const { SourceProcessor } = require("../../../lib/css/syntax");
 			const { MATH_FUNCTION_FOLD } = require("../../../lib/css/data");
 
-			/** @type {{ [name: string]: [string, string] }} */
-			const folds = {
-				abs: ["width:abs(-5px)", "width:5px"],
-				acos: ["rotate:acos(0)", "rotate:90deg"],
-				asin: ["rotate:asin(1)", "rotate:90deg"],
-				atan: ["rotate:atan(1)", "rotate:45deg"],
-				atan2: ["rotate:atan2(1px,-1px)", "rotate:135deg"],
-				clamp: ["width:clamp(1px,5px,3px)", "width:3px"],
-				cos: ["width:calc(cos(0)*1px)", "width:1px"],
-				exp: ["width:calc(exp(0)*1px)", "width:1px"],
-				hypot: ["width:hypot(3px,4px)", "width:5px"],
-				log: ["width:calc(log(8,2)*1px)", "width:3px"],
-				max: ["width:max(1px,2px)", "width:2px"],
-				min: ["width:min(1px,2px)", "width:1px"],
-				mod: ["margin-left:mod(-7px,3px)", "margin-left:2px"],
-				pow: ["width:calc(pow(2,3)*1px)", "width:8px"],
-				rem: ["margin-left:rem(7px,3px)", "margin-left:1px"],
-				round: ["margin-left:round(5px,2px)", "margin-left:6px"],
-				sign: ["z-index:sign(5px)", "z-index:1"],
-				sin: ["width:calc(sin(90deg)*1px)", "width:1px"],
-				sqrt: ["width:calc(sqrt(4)*1px)", "width:2px"],
-				tan: ["width:calc(tan(45deg)*1px)", "width:1px"]
-			};
-			expect(Object.keys(folds).sort()).toEqual([...MATH_FUNCTION_FOLD.keys()]);
-			for (const [name, [input, expected]] of Object.entries(folds)) {
-				const { code } = new SourceProcessor().process(`a{${input}}`, {
+			// One stylesheet per fold, in `test/fixtures/css/css-data-the-math-folds-fold-<name>/`.
+			const folds = [
+				"abs",
+				"acos",
+				"asin",
+				"atan",
+				"atan2",
+				"clamp",
+				"cos",
+				"exp",
+				"hypot",
+				"log",
+				"max",
+				"min",
+				"mod",
+				"pow",
+				"rem",
+				"round",
+				"sign",
+				"sin",
+				"sqrt",
+				"tan"
+			];
+			expect([...folds].sort()).toEqual([...MATH_FUNCTION_FOLD.keys()]);
+			for (const name of folds) {
+				const { code } = new SourceProcessor().process(fixture("css", `css-data-the-math-folds-fold-${name}`), {
 					mode: "minify"
 				});
-				expect(`${name}: ${code}`).toBe(`${name}: a{${expected}}`);
+				expect(`${name}: ${code}`).toMatchSnapshot();
 			}
 		});
 

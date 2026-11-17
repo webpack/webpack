@@ -7,7 +7,7 @@ const { namedRenderer } = require("./embeddedRenderers");
 
 const FIXTURES = path.join(__dirname, "..", "fixtures");
 
-/** @typedef {"css" | "html" | "javascript" | "xml"} FixtureLanguage */
+/** @typedef {"css" | "html" | "javascript" | "json" | "xml"} FixtureLanguage */
 
 /** @type {Map<string, string>} */
 const cache = new Map();

@@ -1,0 +1,1 @@
+function f() { new.target; } import.meta.url;

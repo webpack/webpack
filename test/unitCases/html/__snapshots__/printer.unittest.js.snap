@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`SourceProcessor — a print inside a print minifies an embedded document with a print of its own 1`] = `"<p> x </p><iframe srcdoc=\\"<p> y \\"></iframe>"`;
+
+exports[`SourceProcessor — a print inside a print prints a document a visitor starts while the outer print runs 1`] = `"<p> a <b>b</b> "`;
+
+exports[`SourceProcessor — a print inside a print prints a document a visitor starts while the outer print runs 2`] = `"<p> a <b>b</b> "`;
+
+exports[`SourceProcessor — a print inside a print prints a document a visitor starts while the outer print runs 3`] = `"<p> a <b>b</b> "`;
+
+exports[`SourceProcessor — a print inside a print prints a document a visitor starts while the outer print runs 4`] = `"<p> a <b>b</b> "`;
+
+exports[`SourceProcessor — inline CSS honors the target's abilities does not carry one print's target into the next 1`] = `"<p style=color:rgba(255,0,0,.5)>x</p><style>.a{color:rgba(255,0,0,.5)}</style>"`;
+
+exports[`SourceProcessor — merging adjacent <style> minifies a joined run as one sheet on the asynchronous path too 1`] = `"<style>a,b{color:red}</style>"`;
+
+exports[`SourceProcessor — parseError while printing reports the source's errors, not the printed form's 1`] = `"x<table><tr><td>a</table>"`;
+
+exports[`SourceProcessor — printing what re-parses to the same tree prints as written where a noscript body leaves a comment open 1`] = `"<body><noscript><iframe src=\\"a.html\\" height=\\"0\\"></iframe></noscript> <p>x</body>"`;
+
+exports[`SourceProcessor — printing what re-parses to the same tree prints as written where the doctype mode depends on the reader 1`] = `"<!doctype html PUBLIC \\"-//W3C//DTD HTML 4.01 Transitional//EN\\" \\"http://www.w3.org/TR/html4/loose.dtd\\"><p>a<table></table>"`;
+
+exports[`SourceProcessor — renderEmbeddedSource is usable again after a deferred print throws 1`] = `"<p>y"`;
+
+exports[`SourceProcessor — renderEmbeddedSource prints again where an answer overturns a choice made on the source 1`] = `"<p>x</p><style>.a{--x:f(</style><style>.b{color:red}</style><script>1</script>"`;
+
+exports[`SourceProcessor — reusing work across a print does not carry a style attribute's result into a renderer with other options 1`] = `"<p style=width:16px>"`;
+
+exports[`SourceProcessor — reusing work across a print does not carry a style attribute's result into a renderer with other options 2`] = `"<p style=width:1pc>"`;
+
+exports[`SourceProcessor — reusing work across a print does not carry a style attribute's result into a renderer with other options 3`] = `"<p style=width:16px>"`;
+
+exports[`htmlMinify — embedded code a minifier fails on keeps a body the caller's minifier answers with errors beside code 1`] = `"<style>a { b : c }</style>"`;
+
+exports[`htmlMinify — embedded code a minifier fails on keeps a body the caller's minifier fails on, reported once 1`] = `"<style>a { b : c }</style><p style=\\"b : c\\">x</p><script type=application/json>{\\"a\\":1}</script>"`;
+
+exports[`htmlMinify — embedded code a minifier fails on keeps a style element whose CSS answer would close it early 1`] = `"<style>a { b : c }</style><p style=\\"a{b:'</style><b>x</b>'}\\">x"`;
+
+exports[`htmlMinify — what it reads as written leaves a document in another encoding as written 1`] = `"<!doctype html><meta charset=iso-2022-jp><b>x</b>"`;
