@@ -21,22 +21,22 @@ The three parsers store a tree the same way, so the same concept has the same na
 | Concept                                               | Name                                                                                                                                    |
 | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | node type, offsets and flags columns                  | `_types`, `_starts`, `_ends`, `_flags`                                                                                                  |
-| nodes written, column capacity, growth                | `_nodeCount`, `_nodeCapacity`, `_growNodeColumns`                                                                                       |
+| nodes written, column capacity, growth                | `_nodeCount`, `_nodeCapacity`, `growNodeColumns`                                                                                        |
 | a node's list of children, as a span                  | `_listStarts`, `_listLengths` into `_listItems`, filled up to `_listItemTop`                                                            |
 | the empty column a released one shares                | `EMPTY_U8`, `EMPTY_U16`, `EMPTY_I32`, one per typed-array kind                                                                          |
 | the path object and its class                         | `A`, `<Language>SyntaxPath`                                                                                                             |
 | regrow hint and peak from a parse                     | `_nodeGrowHint`, `_listItemGrowHint`, `_nodePeak`, `_listItemPeak`                                                                      |
-| capacity above which columns are freed                | `_SHRINK_CAPACITY`                                                                                                                      |
-| reset before a parse, free after it                   | `_resetColumns`, `_releaseColumns`                                                                                                      |
-| write a node                                          | `_makeNode` (`_makeLeaf`/`_makeContainer` in CSS), `_makeAttr`                                                                          |
+| capacity above which columns are freed                | `SHRINK_CAPACITY`                                                                                                                       |
+| reset before a parse, free after it                   | `resetColumns`, `releaseColumns`                                                                                                        |
+| write a node                                          | `makeNode` (`makeLeaf`/`makeContainer` in CSS), `makeAttr`                                                                              |
 | line and column converter                             | `_locConverter`, a `LocConverter` given its language's line terminators (JavaScript's `getLineInfo` keeps acorn's answer inside a CRLF) |
-| the caller's `parseError` and the reporter calling it | `_parseError`, `_reportParseError`                                                                                                      |
+| the caller's `parseError` and the reporter calling it | `_parseError`, `reportParseError`                                                                                                       |
 | walk position                                         | `_walkNode`, `_walkIndex`, `_walkParent`                                                                                                |
 | walk control and visitors                             | `_walkSkipped`, `_walkStopped`, `_walkVisitors`, `_walkHalted`                                                                          |
-| character-class table                                 | `_CHAR_CLASS`                                                                                                                           |
-| the parse input, cleared on release                   | `_S._input` (CSS keeps the caller's string before NUL replacement as `_originalInput`)                                                  |
+| character-class table                                 | `CHAR_CLASS`                                                                                                                            |
+| the parse input, cleared on release                   | `S._input` (CSS keeps the caller's string before NUL replacement as `_originalInput`)                                                   |
 
-The `_` marks a module-private name in CSS and HTML; JavaScript's module-level names carry none (`nodeGrowHint`, `SHRINK_CAPACITY`, `CHAR_CLASS`), and the rest of the name is the same. The walk state is a field of one object, `_S` in CSS and HTML (their tree) and `S` in JavaScript, so `S._walkNode` reads the same in every language.
+No module-level name carries a `_` (`nodeGrowHint`, `SHRINK_CAPACITY`, `CHAR_CLASS`, `S`); a field keeps it (`_types`, `S._walkNode`), and so does the key of an export only tests reach (`module.exports._S = S`). The walk state is a field of one object, `S`: the tree in CSS and HTML, `JavascriptWalkState` in JavaScript, so `S._walkNode` reads the same in every language.
 
 ## The node path
 
