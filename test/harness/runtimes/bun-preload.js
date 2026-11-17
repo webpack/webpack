@@ -158,17 +158,17 @@ if (nodeVm.SourceTextModule) {
 	};
 }
 
-// In a vm context Bun ignores `Error.prepareStackTrace`, leaving `stack` a
-// string where `depd` (which express loads) reads V8 call sites. Capture through
-// the main realm's `Error`, which honors it, with the context's hook and limit.
+// WHY: in a vm context Bun's `captureStackTrace` ignores `Error.prepareStackTrace`,
+// leaving `stack` a string where `depd` (which express loads) reads V8 call sites,
+// and drops the `Name: message` line jest reads a failure's message from. Capture
+// through the main realm's `Error`, which does both, with the context's hook and limit.
+const ANONYMOUS_FRAME = /^(\s+at (?:async )?)<anonymous> \((.+:\d+:\d+)\)$/gm;
 const originalCreateContext = nodeVm.createContext;
 nodeVm.createContext = function createContext(...args) {
 	const context = originalCreateContext.apply(this, args);
 	const ContextError = nodeVm.runInContext("Error", context);
-	const capture = ContextError.captureStackTrace;
 	ContextError.captureStackTrace = function captureStackTrace(object, fn) {
 		const prepare = ContextError.prepareStackTrace;
-		if (typeof prepare !== "function") return capture.call(this, object, fn);
 		const outerPrepare = Error.prepareStackTrace;
 		const outerLimit = Error.stackTraceLimit;
 		Error.prepareStackTrace = prepare;
@@ -178,6 +178,11 @@ nodeVm.createContext = function createContext(...args) {
 		} finally {
 			Error.prepareStackTrace = outerPrepare;
 			Error.stackTraceLimit = outerLimit;
+		}
+		// Bun names an anonymous function's frame `<anonymous>`, which jest drops
+		// as location-less; V8 writes the location alone.
+		if (typeof prepare !== "function" && typeof object.stack === "string") {
+			object.stack = object.stack.replace(ANONYMOUS_FRAME, "$1$2");
 		}
 	};
 	return context;

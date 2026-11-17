@@ -243,8 +243,8 @@ svgo-remove-attrs-07: webpack 206, svgo 271, gap -65
 svgo-remove-attrs-08: webpack 157, svgo 120, gap 37
 svgo-remove-attrs-09: webpack 87, svgo 76, gap 11
 svgo-remove-comments-01: webpack 41, svgo 50, gap -9
-svgo-remove-comments-02: webpack 56, svgo 56, gap 0
-svgo-remove-comments-03: webpack 56, svgo 56, gap 0
+svgo-remove-comments-02: webpack 121, svgo 121, gap 0
+svgo-remove-comments-03: webpack 121, svgo 56, gap 65
 svgo-remove-deprecated-attrs-01: webpack 112, svgo 112, gap 0
 svgo-remove-deprecated-attrs-02: webpack 106, svgo 120, gap -14
 svgo-remove-deprecated-attrs-03: webpack 106, svgo 106, gap 0
@@ -382,5 +382,5 @@ svgo-sort-attrs-02: webpack 63, svgo 63, gap 0
 svgo-sort-attrs-03: webpack 158, svgo 160, gap -2
 svgo-sort-attrs-04: webpack 232, svgo 261, gap -29
 svgo-sort-defs-children-01: webpack 413, svgo 415, gap -2
-total: webpack 107098, svgo 104003"
+total: webpack 107228, svgo 104068"
 `;

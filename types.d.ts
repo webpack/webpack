@@ -4106,6 +4106,11 @@ declare abstract class ColumnarSyntaxTree {
 		| RegExp
 		| { cooked?: null | string; raw: string };
 	fieldCount(field: number, node: number): number;
+
+	/**
+	 * Walks a node and what it holds, each before its children in field order.
+	 */
+	findNode(node: number, test: (node: number) => undefined | boolean): boolean;
 	field(i: number, field: number, node: number): number;
 	flag(flag: number, node: number): boolean;
 
@@ -19363,6 +19368,11 @@ declare abstract class JavascriptSyntaxPath {
 	child(i: number, n?: number): number;
 	children(n?: number): number[];
 	fieldCount(field: number, n?: number): number;
+
+	/**
+	 * Walks a node and what it holds, each before its children in field order.
+	 */
+	findNode(node: number, test: (node: number) => undefined | boolean): boolean;
 	field(i: number, field: number, n?: number): number;
 	fieldNamed(field: number, name: string, n?: number): number;
 	flag(flag: number, n?: number): boolean;

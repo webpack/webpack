@@ -5,14 +5,6 @@
 		"presets": [
 			"default"
 		],
-		"why": "known bug: the mangler ranks the characters it names from by how often the source holds them, the names it renames and the code compressing drops included, so its output ranks them otherwise and a second pass renames"
-	},
-	{
-		"relation": "residue",
-		"contains": "for(;f;)1",
-		"presets": [
-			"default"
-		],
-		"why": "known bug: `for(;;)if(a)1;else break` takes the `if` for the loop's test and prints the branch left, `1`, as the body, where an empty one does alike"
+		"why": "known bug: the mangler ranks the characters it names from by how often the source holds them, counted before the one pass prints, so the code compressing rewrites or drops still counts: its output ranks them otherwise and a second pass renames"
 	}
 ]

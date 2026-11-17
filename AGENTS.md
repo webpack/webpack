@@ -224,7 +224,7 @@ A local failure is yours only if it doesn't reproduce on `main` (check in a work
 
 > [!REQUIRED]
 
-**When CI is red, read its log instead of reproducing the whole job**, then reproduce **only the named case**. Save logs and large reports to a file and grep them, never inline; re-fetch check runs only when a push, re-run or CI event changed them. Commands and traps (a step is not a job; `yarn lint` stops at its first failing stage): [docs/verifying.md](docs/verifying.md#read-ci-rather-than-re-running-it).
+**When CI is red, read the failing job's log first, before any local run**: it names the failing case and why (an assertion diff, a size over a reference, a crashed worker). Then reproduce **only the named case**; never run a long suite locally (a spec corpus, the integration matrix, the full unit run) to find a failure CI already names. Save logs and large reports to a file and grep them, never inline; re-fetch check runs only when a push, re-run or CI event changed them. Commands and traps (a step is not a job; `yarn lint` stops at its first failing stage): [docs/verifying.md](docs/verifying.md#read-ci-rather-than-re-running-it).
 
 **A red check on the PR's head is the PR's until a base run of the same job shows it too**: never assume a flake and wait for a re-run.
 
