@@ -1534,7 +1534,7 @@ describe("one-pass minify, family J round 6", () => {
 		const options = { compress: { ecma: 2020 }, ecma: 2020, mangle: false };
 		const source = fixture("javascript", "one-pass-j3-2");
 		const { code } = minifyOnePass(source, options);
-		// Only tests dropping a `!` or flipping an equality join, `false||!a` among them; a run whose tests add a `!`, guarding an `if` or several statements, or ending its function stays.
+		// Tests join negated where a second pass would push the `!` into them, `false||!a` and `b<2` among them; a run guarding several statements, or ending its function, stays.
 		expect(code).toMatchSnapshot();
 		expect(runProgram(code)).toBe(runProgram(source));
 		// A test folding to a `!` drops it where what it negates needs no parentheses, as a comparison before `&&`; an assignment keeps it.
