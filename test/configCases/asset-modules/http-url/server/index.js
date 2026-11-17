@@ -115,6 +115,8 @@ class ServerPlugin {
 		this.port = port;
 		this.refs = 0;
 		this.server = undefined;
+		/** @type {Promise<void> | undefined} */
+		this.listening = undefined;
 	}
 
 	/**
@@ -126,22 +128,33 @@ class ServerPlugin {
 			async () => {
 				this.refs++;
 				if (!this.server) {
-					this.server = createServer();
-					await new Promise(
+					const server = createServer();
+					this.server = server;
+					// the cache suite runs this case at the same time on the same port, so
+					// a busy port is waited for until the other run closes its server
+					this.listening = new Promise(
 						/**
 						 * @param {(value: void) => void} resolve resolve
-						 * @param {(reason?: Error) => void} _reject reject
+						 * @param {(reason?: Error) => void} reject reject
 						 */
-						(resolve, _reject) => {
-							/** @type {import("http").Server} */
-							(this.server).listen(
-								this.port,
-								() => {
-									resolve();
+						(resolve, reject) => {
+							let attempts = 0;
+							server.on("error", (err) => {
+								if (
+									/** @type {NodeJS.ErrnoException} */ (err).code ===
+										"EADDRINUSE" &&
+									attempts++ < 600
+								) {
+									setTimeout(() => server.listen(this.port), 50);
+									return;
 								}
-							);
-					});
+								reject(err);
+							});
+							server.listen(this.port, () => resolve());
+						}
+					);
 				}
+				await this.listening;
 			}
 		);
 
