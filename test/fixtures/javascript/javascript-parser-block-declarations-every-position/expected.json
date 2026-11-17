@@ -6,13 +6,5 @@
 			"default"
 		],
 		"why": "known bug: the mangler ranks the characters it names from by how often the source holds them, the names it renames and the code compressing drops included, so its output ranks them otherwise and a second pass renames"
-	},
-	{
-		"relation": "residue",
-		"contains": ");for(;;);for(;;);1;",
-		"presets": [
-			"default"
-		],
-		"why": "known bug: the `1;` a folded statement leaves after the loops the compressor keeps is not dropped"
 	}
 ]
