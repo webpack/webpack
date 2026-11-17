@@ -207,7 +207,12 @@ describe("lazyCompilationBackend", () => {
 		["options without a host", { port: 8080 }, { host: "localhost", port: 8080 }],
 		["an undefined host", { host: undefined }, { host: "localhost", port: undefined }],
 		["an empty host", { host: "" }, { host: "localhost", port: undefined }],
-		["an explicit host", { host: "0.0.0.0" }, { host: "0.0.0.0", port: undefined }]
+		["an explicit host", { host: "0.0.0.0" }, { host: "0.0.0.0", port: undefined }],
+		[
+			"a host and a port",
+			{ host: "0.0.0.0", port: 8080 },
+			{ host: "0.0.0.0", port: 8080 }
+		]
 	])("listens on localhost by default given %s", (_name, listen, expected) => {
 		const server = makeServer();
 		const listenSpy = jest.fn();
