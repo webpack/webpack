@@ -36,7 +36,7 @@ The three parsers store a tree the same way, so the same concept has the same na
 | character-class table                                 | `_CHAR_CLASS`                                                                                                                           |
 | the parse input, cleared on release                   | `_S._input` (CSS keeps the caller's string before NUL replacement as `_originalInput`)                                                  |
 
-The `_` marks a module-private name in CSS and HTML; JavaScript's module-level names carry none (`walkNode`, `nodeGrowHint`, `SHRINK_CAPACITY`, `CHAR_CLASS`), and the rest of the name is the same.
+The `_` marks a module-private name in CSS and HTML; JavaScript's module-level names carry none (`nodeGrowHint`, `SHRINK_CAPACITY`, `CHAR_CLASS`), and the rest of the name is the same. The walk state is a field of one object, `_S` in CSS and HTML (their tree) and `S` in JavaScript, so `S._walkNode` reads the same in every language.
 
 ## The node path
 
