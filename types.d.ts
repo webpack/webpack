@@ -3497,8 +3497,9 @@ type CodeValue =
 	| number
 	| bigint
 	| boolean
-	| Function
 	| RegExp
+	| ((...args: never[]) => void)
+	| (abstract new (...args: never[]) => void)
 	| RuntimeValue
 	| {
 			[index: string]: RecursiveArrayOrRecord<
@@ -3508,8 +3509,9 @@ type CodeValue =
 				| number
 				| bigint
 				| boolean
-				| Function
 				| RegExp
+				| ((...args: never[]) => void)
+				| (abstract new (...args: never[]) => void)
 				| RuntimeValue
 			>;
 	  }
@@ -3520,12 +3522,21 @@ type CodeValue =
 			| number
 			| bigint
 			| boolean
-			| Function
 			| RegExp
+			| ((...args: never[]) => void)
+			| (abstract new (...args: never[]) => void)
 			| RuntimeValue
 	  >[];
 type CodeValuePrimitive =
-	undefined | null | string | number | bigint | boolean | Function | RegExp;
+	| undefined
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| RegExp
+	| ((...args: never[]) => void)
+	| (abstract new (...args: never[]) => void);
 type CollectedComment = CommentImport & { start: number; end: number };
 declare interface Colors {
 	reset: (value?: unknown) => string;
@@ -12498,8 +12509,9 @@ type GeneratedValue =
 	| number
 	| bigint
 	| boolean
-	| Function
 	| RegExp
+	| ((...args: never[]) => void)
+	| (abstract new (...args: never[]) => void)
 	| PromiseLike<CodeValuePrimitive>;
 declare class Generator<TModule extends NormalModule = NormalModule> {
 	constructor();
@@ -21708,8 +21720,9 @@ type MergedDefinitionNode =
 	| number
 	| bigint
 	| boolean
-	| Function
 	| RegExp
+	| ((...args: never[]) => void)
+	| (abstract new (...args: never[]) => void)
 	| RuntimeValue
 	| {
 			[index: string]: RecursiveArrayOrRecord<
@@ -21719,8 +21732,9 @@ type MergedDefinitionNode =
 				| number
 				| bigint
 				| boolean
-				| Function
 				| RegExp
+				| ((...args: never[]) => void)
+				| (abstract new (...args: never[]) => void)
 				| RuntimeValue
 			>;
 	  }
@@ -21731,8 +21745,9 @@ type MergedDefinitionNode =
 			| number
 			| bigint
 			| boolean
-			| Function
 			| RegExp
+			| ((...args: never[]) => void)
+			| (abstract new (...args: never[]) => void)
 			| RuntimeValue
 	  >[]
 	| Map<string, MergedDefinitionNode>;
