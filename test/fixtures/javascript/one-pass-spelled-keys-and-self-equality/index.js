@@ -7,3 +7,6 @@ function self(value) {
 	return [value === value, value !== value];
 }
 console.log(self(NaN).join(), self("1").join());
+// A script's global may be a getter, which answers anew each read.
+var global = 1;
+console.log(global === global);
