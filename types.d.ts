@@ -4119,6 +4119,12 @@ declare abstract class ColumnarSyntaxTree {
 	 * walk that reaches every node without naming each type's fields.
 	 */
 	pushChildren(node: number, out: number[]): void;
+
+	/**
+	 * Writes a node's children as `pushChildren` pushes them, from `at` on, so
+	 * a walk can reuse one list as its stack without resizing it.
+	 */
+	writeChildren(node: number, out: number[], at: number): number;
 	textOf(part: number, node: number): null | string;
 }
 type CommentJavascriptParser = CommentImport & {
