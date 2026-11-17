@@ -1,0 +1,1 @@
+const { a, ...rest } = obj; const [b, ...others] = arr;

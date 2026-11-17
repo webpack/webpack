@@ -1,0 +1,1 @@
+new import.defer("x").prop;

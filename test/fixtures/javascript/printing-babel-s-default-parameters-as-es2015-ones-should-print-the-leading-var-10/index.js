@@ -1,0 +1,1 @@
+var o={set v(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;this.x=b}};function f(a){return o.v=a,o.x}

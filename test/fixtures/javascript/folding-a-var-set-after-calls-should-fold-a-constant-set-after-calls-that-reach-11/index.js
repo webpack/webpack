@@ -1,0 +1,1 @@
+init();var A=4;export default function(){return A}function g(){return A}console.log(g(),g())

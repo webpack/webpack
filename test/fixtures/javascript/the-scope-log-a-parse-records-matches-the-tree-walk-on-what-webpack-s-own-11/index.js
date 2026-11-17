@@ -1,0 +1,1 @@
+{ ; let x; } { x; class D {} } switch (y) { case 1: ; case 2: let z; }

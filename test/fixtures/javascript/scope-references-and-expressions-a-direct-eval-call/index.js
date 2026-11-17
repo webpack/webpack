@@ -1,0 +1,1 @@
+const a = 1; function f() { eval('a'); return a; }

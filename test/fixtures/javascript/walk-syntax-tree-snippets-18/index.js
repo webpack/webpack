@@ -1,0 +1,1 @@
+using res = fn(); fn(a = 1, a += 2, a.b = 3, [a, b] = [b, a], ({ a } = x));

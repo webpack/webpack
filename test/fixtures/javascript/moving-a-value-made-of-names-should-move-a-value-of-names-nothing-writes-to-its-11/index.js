@@ -1,0 +1,1 @@
+function f(){var a=read();var b=!a;middle();return b}function read(){console.log("read");return 1}function middle(){console.log("middle")}console.log(f())

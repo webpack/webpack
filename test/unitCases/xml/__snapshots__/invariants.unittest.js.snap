@@ -14412,6 +14412,24 @@ exports[`XML syntax — invariants xml-syntax-parsing-should-end-the-name-of-an-
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-end-the-name-of-an-entity-reference-in-every-code-unit tokenizes 1`] = `"doctype[0,1113889|10,11|-1,-1|-1,-1|13,1113887] open[1113889,1113893|1113890,1113891]/ end=1113893"`;
 
+exports[`XML syntax — invariants xml-syntax-parsing-should-end-the-name-of-an-entity-reference-in-every-code-unit-references parses 1`] = `
+"length 337904, sha256 dda7db9ff03624e8
+[{\\"type\\":3,\\"tagName\\":\\"m;&n\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"m;&n\\",\\"value\\":\\"\\",\\"nameStart\\":308,\\"nameEnd\\":312,\\"valueStart\\":-1,\\"valueEnd\\":-1}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"m;&n?m;&n@m;&nAm;&nBm;&nCm
+…
+￰m;&n￱m;&n￲m;&n￳m;&n￴m;&n￵m;&n￶m;&n￷m;&n￸m;&n￹m;&n￺m;&n￻m;&n￼m;&n�m;&n￾m;&n￿m;\\",\\"start\\":313,\\"end\\":327680}],\\"selfClosing\\":false,\\"start\\":302,\\"end\\":327680,\\"tagEnd\\":313,\\"nameEnd\\":307,\\"contentEnd\\":327680}]"
+`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-end-the-name-of-an-entity-reference-in-every-code-unit-references parses 2`] = `"warning[0,0]:unexpected-null-character"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-end-the-name-of-an-entity-reference-in-every-code-unit-references prints {"xml":true,"mode":"minify"} 1`] = `
+"length 337645, sha256 c63f242a23b3a5f8
+\\"<m;&n m;&n=\\\\\\"\\\\\\"><![CDATA[m;&n?m;&n@m;&nAm;&nBm;&nCm;&nDm;&nEm;&nFm;&nGm;&nHm;&nIm;&nJm;&nKm;&nLm;&nMm;&nNm;&nOm;&nPm;&nQm;&nRm;&nSm;&nTm;&nUm;&nVm;&nWm;&nXm;&nYm;&nZm;&n[m;&n\\\\\\\\m;&n]m;&n^m;&n_m;&n\`m;&
+…
+nￚm;&nￛm;&nￜm;&n￝m;&n￞m;&n￟m;&n￠m;&n￡m;&n￢m;&n￣m;&n￤m;&n￥m;&n￦m;&n￧m;&n￨m;&n￩m;&n￪m;&n￫m;&n￬m;&n￭m;&n￮m;&n￯m;&n￰m;&n￱m;&n￲m;&n￳m;&n￴m;&n￵m;&n￶m;&n￷m;&n￸m;&n￹m;&n￺m;&n￻m;&n￼m;&n�m;&n￾m;&n￿m;]]></m;&n>\\""
+`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-end-the-name-of-an-entity-reference-in-every-code-unit-references tokenizes 1`] = `"warning[0,0]:unexpected-null-character text[0,302] attr[308,312|-1,-1] open[302,313|303,307] text[313,327680] end=327680"`;
+
 exports[`XML syntax — invariants xml-syntax-parsing-should-expand-the-internal-entities-the-dtd-declares parses {"check":{"fixture":"decodedAttributes"}} 1`] = `"[{\\"type\\":6,\\"name\\":\\"svg\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":123},{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"&ns;\\",\\"nameStart\\":128,\\"nameEnd\\":133,\\"valueStart\\":135,\\"valueEnd\\":139}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"http://www.w3.org/2000/svg & &undeclared;\\",\\"start\\":141,\\"end\\":147}],\\"selfClosing\\":false,\\"start\\":123,\\"end\\":153,\\"tagEnd\\":141,\\"nameEnd\\":127,\\"contentEnd\\":147}]"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-expand-the-internal-entities-the-dtd-declares parses {"check":{"fixture":"decodedAttributes"}} 2`] = `""`;
@@ -15145,6 +15163,70 @@ exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-attr
 exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-attribute-s-references-as-its-start-tag prints {"xml":true,"mode":"minify"} 1`] = `"<r><a v=\\"&e;\\" w=\\"x y\\"/><b v=\\"&e;\\" w=\\"1&#10;2\\" x=\\"p q\\"/></r><!DOCTYPE r [<!ENTITY e \\"late\\">]>"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-attribute-s-references-as-its-start-tag tokenizes 1`] = `"open[0,3|1,2] attr[6,7|9,12]\\" attr[14,15|17,20]\\" open[3,23|4,5]/ doctype[23,56|33,34|-1,-1|-1,-1|36,54] attr[59,60|62,65]\\" attr[67,68|70,77]\\" attr[79,80|82,86]\\" open[56,89|57,58]/ close[89,93|91,92] end=93"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any parses 1`] = `"[]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any prints {"xml":true,"mode":"minify"} 1`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any tokenizes 1`] = `"text[0,25] end=25"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-2 parses 1`] = `"[]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-2 parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-2 prints {"xml":true,"mode":"minify"} 1`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-2 tokenizes 1`] = `"text[0,84] end=84"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-3 parses 1`] = `"[]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-3 parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-3 prints {"xml":true,"mode":"minify"} 1`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-3 tokenizes 1`] = `"text[0,30] end=30"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-4 parses 1`] = `"[]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-4 parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-4 prints {"xml":true,"mode":"minify"} 1`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-4 tokenizes 1`] = `"text[0,53] end=53"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-5 parses 1`] = `"[]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-5 parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-5 prints {"xml":true,"mode":"minify"} 1`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-5 tokenizes 1`] = `"text[0,94] end=94"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-6 parses 1`] = `"[]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-6 parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-6 prints {"xml":true,"mode":"minify"} 1`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-6 tokenizes 1`] = `"text[0,20] end=20"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-7 parses 1`] = `"[]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-7 parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-7 prints {"xml":true,"mode":"minify"} 1`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-7 tokenizes 1`] = `"text[0,12] end=12"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-8 parses 1`] = `"[]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-8 parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-8 prints {"xml":true,"mode":"minify"} 1`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-8 tokenizes 1`] = `"text[0,14] end=14"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-ot parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"r\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":56},{\\"type\\":3,\\"tagName\\":\\"r\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":56,\\"end\\":60,\\"tagEnd\\":60,\\"nameEnd\\":58,\\"contentEnd\\":60}]"`;
 

@@ -1,0 +1,1 @@
+switch (a) { case b: let c = 1; c; break; default: d; }

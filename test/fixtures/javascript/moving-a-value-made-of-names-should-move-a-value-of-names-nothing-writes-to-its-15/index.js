@@ -1,0 +1,1 @@
+function*o(g,a){g(function(){var n=!r;a();return n});yield 0;var r=1}let i,t=o(function(f){i=f},function(){t.next()});t.next();console.log(i())

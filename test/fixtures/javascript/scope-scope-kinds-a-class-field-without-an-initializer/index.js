@@ -1,0 +1,1 @@
+class C { f; [g]; static s; }

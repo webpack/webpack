@@ -1,0 +1,1 @@
+f(require("./a"), require("./b"));

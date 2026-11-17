@@ -34793,6 +34793,22 @@ exports[`HTML syntax — invariants source-processor-node-path-answers-null-for-
 
 exports[`HTML syntax — invariants source-processor-node-path-answers-null-for-a-part-a-node-does-not-have tokenizes 1`] = `"doctype[0,26|10,14|23,24|-1,-1] open[26,29|27,28] text[29,30] open[30,33|31,32] text[33,34] close[34,38|36,37] text[38,39] close[39,43|41,42] end=43"`;
 
+exports[`HTML syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-cr parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <i>\\\\n|     \\\\\\"\\\\n\\\\\\"\\\\n|     <i>\\\\n|     \\\\\\"\\\\n\\\\f\\\\\\"\\\\n|     <i>\\""`;
+
+exports[`HTML syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-cr parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-cr prints {"mode":"minify"} 1`] = `"\\"<i></i>\\\\n<i></i>\\\\n\\\\f<i></i>\\""`;
+
+exports[`HTML syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-cr tokenizes 1`] = `"open[0,3|1,2] close[3,7|5,6] text[7,8] open[8,11|9,10] close[11,15|13,14] text[15,17] open[17,20|18,19] close[20,24|22,23] end=24"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <i>\\\\n|     \\\\\\"\\\\n\\\\\\"\\\\n|     <i>\\\\n|     \\\\\\"\\\\n\\\\f\\\\\\"\\\\n|     <i>\\""`;
+
+exports[`HTML syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf prints {"mode":"minify"} 1`] = `"\\"<i></i>\\\\n<i></i>\\\\n\\\\f<i></i>\\""`;
+
+exports[`HTML syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf tokenizes 1`] = `"open[0,3|1,2] close[3,7|5,6] text[7,9] open[9,12|10,11] close[12,16|14,15] text[16,19] open[19,22|20,21] close[22,26|24,25] end=26"`;
+
 exports[`HTML syntax — invariants source-processor-node-path-ends-a-foreign-element-with-the-end-tag-naming-it parses 1`] = `
 "| <html>
 |   <head>
@@ -45982,6 +45998,58 @@ exports[`HTML syntax — invariants source-processor-sort-attributes-writes-a-me
 exports[`HTML syntax — invariants source-processor-sort-attributes-writes-a-merged-html-tag-in-sorted-order prints {"mode":"minify"} 1`] = `"<html c=3 b=2 a=1><p>x<b id=2 class=1></b><table><tr></table></html>"`;
 
 exports[`HTML syntax — invariants source-processor-sort-attributes-writes-a-merged-html-tag-in-sorted-order tokenizes 1`] = `"open[0,3|1,2] text[3,4] attr[10,11|12,13] attr[14,15|16,17] attr[18,19|20,21] open[4,22|5,9] open[22,29|23,28] attr[32,34|35,36] attr[37,42|43,44] open[29,45|30,31] open[45,49|46,48] end=49"`;
+
+exports[`HTML syntax — invariants source-processor-stop-ends-a-streamed-html-walk-mid-parse parses 1`] = `
+"length 1080041, sha256 755e445f72cb919c
+| <html>
+|   <head>
+|   <body>
+|     <ul>
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         
+…
+        \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-stop-ends-a-streamed-html-walk-mid-parse parses 2`] = `"warning[0,4]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-stop-ends-a-streamed-html-walk-mid-parse prints {"mode":"minify"} 1`] = `
+"length 200009, sha256 54d606a331211b01
+<ul><li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<
+…
+<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x</ul>"
+`;
+
+exports[`HTML syntax — invariants source-processor-stop-ends-a-streamed-html-walk-mid-parse tokenizes 1`] = `
+"length 3448964, sha256 33e448ac1aa7b703
+open[0,4|1,3] open[4,8|5,7] text[8,9] close[9,14|11,13] open[14,18|15,17] text[18,19] close[19,24|21,23] open[24,28|25,27] text[28,29] close[29,34|31,33] open[34,38|35,37] text[38,39] close[39,44|41,4
+…
+85,399987] text[399988,399989] close[399989,399994|399991,399993] open[399994,399998|399995,399997] text[399998,399999] close[399999,400004|400001,400003] close[400004,400009|400006,400008] end=400009"
+`;
 
 exports[`HTML syntax — invariants source-processor-stop-ends-an-html-walk-and-the-next-parse-starts-afresh parses 1`] = `
 "| <html>

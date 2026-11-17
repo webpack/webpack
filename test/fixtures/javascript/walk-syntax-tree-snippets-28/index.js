@@ -1,0 +1,1 @@
+if (true) fn(1); else fn(2); if (false) fn(3); else fn(4); fn(1 ? a : b, 0 || a, 1 && a);

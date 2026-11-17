@@ -1,0 +1,10 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": ";try{}catch(r){}for(;r;);for(r in{});for",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: the `;` a declaration the compressor drops leaves at the start of the program is dropped only by a second pass"
+	}
+]

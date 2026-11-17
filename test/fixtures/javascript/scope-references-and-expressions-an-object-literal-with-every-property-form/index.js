@@ -1,0 +1,1 @@
+obj = { a, b: c, [d]: e, f() {}, get g() {}, set h(i) {}, ...j };

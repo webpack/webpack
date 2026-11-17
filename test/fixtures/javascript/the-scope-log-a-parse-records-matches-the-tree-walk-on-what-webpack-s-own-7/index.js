@@ -1,0 +1,1 @@
+import j from "./a.json" assert { type: "json" }; export { k } from "./b.json" assert { type: "json" }; j;

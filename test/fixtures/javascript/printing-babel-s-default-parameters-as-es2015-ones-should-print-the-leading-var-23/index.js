@@ -1,0 +1,1 @@
+function o(value){return function(a=value){var value=arguments.length>1&&arguments[1]!==void 0?arguments[1]:1;return[a,value]}}var f=o(7);

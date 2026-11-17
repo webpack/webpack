@@ -2073,16 +2073,16 @@ describe("printing again what the one pass printed", () => {
 		const options = { compress: {}, mangle: false };
 		for (const [source, expected, sourceType] of [
 			// A conditional printing as one call takes back the `(` it opened with, but as `new`'s callee, an `await`'s argument or a tag.
-			["function f(e,t){t&&(e?console.error(\"a\",e):console.error(\"b\",e))}", "function f(e,t){t&&console.error(e?\"a\":\"b\",e)}"],
-			["function f(i,a){return 3*(0!==i?Math.abs(i):Math.abs(a))}", "function f(i,a){return 3*Math.abs(0!==i?i:a)}"],
-			["function f(e,t,g){x=new (e?g(\"aaaa\",e,t,1):g(\"bbbb\",e,t,1))}", "function f(e,t,g){x=new(e?g(\"aaaa\",e,t,1):g(\"bbbb\",e,t,1))}"],
+			[fixture("javascript", "printing-again-what-the-one-pass-printed-should-print-a-conditional-s-merged"), "function f(e,t){t&&console.error(e?\"a\":\"b\",e)}"],
+			[fixture("javascript", "printing-again-what-the-one-pass-printed-should-print-a-conditional-s-merged-2"), "function f(i,a){return 3*Math.abs(0!==i?i:a)}"],
+			[fixture("javascript", "printing-again-what-the-one-pass-printed-should-print-a-conditional-s-merged-3"), "function f(e,t,g){x=new(e?g(\"aaaa\",e,t,1):g(\"bbbb\",e,t,1))}"],
 			// A merged assignment keeps them: `t&&x=a` sets an rvalue.
-			["function f(t,s){t&&(s?this.v=g(1,t,s,\"aa\"):this.v=g(2,t,s,\"aa\"))}", "function f(t,s){t&&(s?this.v=g(1,t,s,\"aa\"):this.v=g(2,t,s,\"aa\"))}"],
-			["function f(e,t,g){x=(e?g(\"aaaa\",e,t,1):g(\"bbbb\",e,t,1))`q`}", "function f(e,t,g){x=(e?g(\"aaaa\",e,t,1):g(\"bbbb\",e,t,1))`q`}"],
-			["const flag=typeof Promise===\"function\";export const picked=await(flag?Promise.resolve(4):Promise.resolve(5));", "let flag=\"function\"==typeof Promise;export const picked=await(flag?Promise.resolve(4):Promise.resolve(5));", "module"],
+			[fixture("javascript", "printing-again-what-the-one-pass-printed-should-print-a-conditional-s-merged-4"), "function f(t,s){t&&(s?this.v=g(1,t,s,\"aa\"):this.v=g(2,t,s,\"aa\"))}"],
+			[fixture("javascript", "printing-again-what-the-one-pass-printed-should-print-a-conditional-s-merged-5"), "function f(e,t,g){x=(e?g(\"aaaa\",e,t,1):g(\"bbbb\",e,t,1))`q`}"],
+			[fixture("javascript", "printing-again-what-the-one-pass-printed-should-print-a-conditional-s-merged-6"), "let flag=\"function\"==typeof Promise;export const picked=await(flag?Promise.resolve(4):Promise.resolve(5));", "module"],
 			// A call printing as the argument its parameter's one read evaluates parenthesizes it as that argument.
-			["function w(a){x=(function(b){return b})(a||g())}", "function w(a){x=a||g()}"],
-			["function w(a){x=y*(function(b){return b})(a||g())}", "function w(a){x=y*(a||g())}"]
+			[fixture("javascript", "printing-again-what-the-one-pass-printed-should-print-a-conditional-s-merged-7"), "function w(a){x=a||g()}"],
+			[fixture("javascript", "printing-again-what-the-one-pass-printed-should-print-a-conditional-s-merged-8"), "function w(a){x=y*(a||g())}"]
 		]) {
 			const settled = sourceType === "module" ? { sourceType: /** @type {const} */ ("module") } : {};
 			const once = minifyOnePass(source, { ...options, ...settled }).code;
@@ -2097,27 +2097,27 @@ describe("folding a `var` set after calls", () => {
 		const options = { compress: {}, mangle: false };
 		for (const [source, expected, sourceType] of [
 			// Calls before it reach no function of the body: its reads fold, and fold on.
-			["(function(){init();var A=4,B=5;function f(x){return x&(A|B)}window.f=f})()", "init(),window.f=function(x){return x&5};"],
+			[fixture("javascript", "folding-a-var-set-after-calls-should-fold-a-constant-set-after-calls-that-reach"), "init(),window.f=function(x){return x&5};"],
 			// A function handed out, named or called before it reads the name as it is then.
-			["(function(){h();var A=4;function h(){g()}function g(){console.log(A)}h()})()", "!function(){h();var A=4;function h(){console.log(A)}h()}();"],
+			[fixture("javascript", "folding-a-var-set-after-calls-should-fold-a-constant-set-after-calls-that-reach-2"), "!function(){h();var A=4;function h(){console.log(A)}h()}();"],
 			// A name of a function read later names it there, made once the name is set.
-			["(function(){var k=g;init();var A=4;function g(){return A}console.log(k())})()", "!function(){init();var A=4;console.log(function(){return A}())}();"],
-			["(function(){var k=g;init(k);var A=4;function g(){return A}console.log(k())})()", "!function(){var k=function(){return A};init(k);var A=4;console.log(k())}();"],
-			["(function(){class C{m(){return A}}init(C);var A=4;console.log(new C().m())})()", "!function(){class C{m(){return A}}init(C);var A=4;console.log((new C).m())}();"],
+			[fixture("javascript", "folding-a-var-set-after-calls-should-fold-a-constant-set-after-calls-that-reach-3"), "!function(){init();var A=4;console.log(function(){return A}())}();"],
+			[fixture("javascript", "folding-a-var-set-after-calls-should-fold-a-constant-set-after-calls-that-reach-4"), "!function(){var k=function(){return A};init(k);var A=4;console.log(k())}();"],
+			[fixture("javascript", "folding-a-var-set-after-calls-should-fold-a-constant-set-after-calls-that-reach-5"), "!function(){class C{m(){return A}}init(C);var A=4;console.log((new C).m())}();"],
 			// `eval` and a function no statement of the body declares may run anything.
-			['(function(){eval("g()");var A=4;function g(){return A}console.log(g(),g())})()', '!function(){eval("g()");var A=4;function g(){return A}console.log(g(),g())}();'],
-			["(function(){if(init()){function g(){return A}}init(g);var A=4;console.log(g(),g())})()", "!function(){if(init()){function g(){return A}}init(g);var A=4;console.log(g(),g())}();"],
+			[fixture("javascript", "folding-a-var-set-after-calls-should-fold-a-constant-set-after-calls-that-reach-6"), '!function(){eval("g()");var A=4;function g(){return A}console.log(g(),g())}();'],
+			[fixture("javascript", "folding-a-var-set-after-calls-should-fold-a-constant-set-after-calls-that-reach-7"), "!function(){if(init()){function g(){return A}}init(g);var A=4;console.log(g(),g())}();"],
 			// A default runs before the body; one naming nothing of it leaves the fold.
-			["(function(x=init()){var A=4;function g(){return A}console.log(g(),g())})()", "!function(x=init()){function g(){return 4}console.log(g(),g())}();"],
+			[fixture("javascript", "folding-a-var-set-after-calls-should-fold-a-constant-set-after-calls-that-reach-8"), "!function(x=init()){function g(){return 4}console.log(g(),g())}();"],
 			// What a module exports an import cycle may call before its body runs.
-			["init();var A=4;export function f(){return A}function g(){return A}console.log(g(),g())", "init();var A=4;export function f(){return A}function g(){return A}console.log(g(),g());", "module"],
-			["init();var A=4;function f(){return A}export{f};console.log(f(),f())", "init();var A=4;function f(){return A}export{f};console.log(f(),f());", "module"],
-			["init();var A=4;export default function(){return A}function g(){return A}console.log(g(),g())", "init();var A=4;export default function(){return A}function g(){return A}console.log(g(),g());", "module"],
+			[fixture("javascript", "folding-a-var-set-after-calls-should-fold-a-constant-set-after-calls-that-reach-9"), "init();var A=4;export function f(){return A}function g(){return A}console.log(g(),g());", "module"],
+			[fixture("javascript", "folding-a-var-set-after-calls-should-fold-a-constant-set-after-calls-that-reach-10"), "init();var A=4;function f(){return A}export{f};console.log(f(),f());", "module"],
+			[fixture("javascript", "folding-a-var-set-after-calls-should-fold-a-constant-set-after-calls-that-reach-11"), "init();var A=4;export default function(){return A}function g(){return A}console.log(g(),g());", "module"],
 			// A static block runs as its class is made, before the `var` after it is set.
-			['function f(report){class C{static{report(value)}}var value=1;report(C)}f(function(v){console.log(typeof v==="function"?"fn":v)})', 'function f(report){class C{static{report(value)}}var value=1;report(C)}f(function(v){console.log("function"==typeof v?"fn":v)});'],
+			[fixture("javascript", "folding-a-var-set-after-calls-should-fold-a-constant-set-after-calls-that-reach-12"), 'function f(report){class C{static{report(value)}}var value=1;report(C)}f(function(v){console.log("function"==typeof v?"fn":v)});'],
 			// Unmangled, a value folds where it prints shorter than the name read.
-			['(function(){init(function(){});var LONG_NAME="transition";function g(a){return a===LONG_NAME?1:a===LONG_NAME+1?2:LONG_NAME}window.g=g;window.h=g})()', '!function(){init(function(){});function g(a){return a==="transition"?1:a==="transition1"?2:"transition"}window.g=g,window.h=g}();'],
-			['(function(){init(function(){});var N="transition";function g(a){return a===N?1:a===N+1?2:N}window.g=g;window.h=g})()', '!function(){init(function(){});var N="transition";function g(a){return a===N?1:a===N+1?2:N}window.g=g,window.h=g}();']
+			[fixture("javascript", "folding-a-var-set-after-calls-should-fold-a-constant-set-after-calls-that-reach-13"), '!function(){init(function(){});function g(a){return a==="transition"?1:a==="transition1"?2:"transition"}window.g=g,window.h=g}();'],
+			[fixture("javascript", "folding-a-var-set-after-calls-should-fold-a-constant-set-after-calls-that-reach-14"), '!function(){init(function(){});var N="transition";function g(a){return a===N?1:a===N+1?2:N}window.g=g,window.h=g}();']
 		]) {
 			const settled = sourceType === "module" ? { sourceType: /** @type {const} */ ("module") } : {};
 			expect(minifyOnePass(source, { ...options, ...settled }).code).toBe(expected);
@@ -2141,28 +2141,28 @@ describe("moving a value made of names", () => {
 		const CALL_F = 'function g(){}console.log(JSON.stringify([f({w:3,p:1},{}),f({},{}),f(0,{}),f("s",{})]))';
 		for (const [source, expected, call = ""] of [
 			// Read before its declarator, the `var` is `undefined` there, not where the value is read later.
-			["function h(){var n=[r],r=4;return[n,function(){return r}]}console.log(JSON.stringify(h()))", "function h(){var n=[r],r=4;return[n,function(){return r}]}console.log(JSON.stringify(h()));"],
+			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its"), "function h(){var n=[r],r=4;return[n,function(){return r}]}console.log(JSON.stringify(h()));"],
 			// Its function's declarator cannot run between the value and its read.
-			["function o(){function i(){var n=[r];g();return n}var r=g();return[i(),i()]}function g(){return{}}console.log(JSON.stringify(o()))", "function o(){function i(){g();return[r]}var r=g();return[i(),i()]}function g(){return{}}console.log(JSON.stringify(o()));"],
+			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-2"), "function o(){function i(){g();return[r]}var r=g();return[i(),i()]}function g(){return{}}console.log(JSON.stringify(o()));"],
 			// Names nothing writes under operators that convert nothing give the same value later.
-			["function f(o,t){var a=o.w,w=a!==void 0&&a;t.x=1,g(),t.w=w;return t}", "function f(o,t){var a=o.w;return t.x=1,g(),t.w=a!==void 0&&a,t}", CALL_F],
-			['function f(o,t){var w=typeof o==="string"?!o:void 0;g();t.w=w;return t}', 'function f(o,t){return g(),t.w="string"==typeof o?!o:void 0,t}', CALL_F],
-			['function f(o,t){var w=o||"x";g();t.w=w;return t}', 'function f(o,t){return g(),t.w=o||"x",t}', CALL_F],
+			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-3"), "function f(o,t){var a=o.w;return t.x=1,g(),t.w=a!==void 0&&a,t}", CALL_F],
+			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-4"), 'function f(o,t){return g(),t.w="string"==typeof o?!o:void 0,t}', CALL_F],
+			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-5"), 'function f(o,t){return g(),t.w=o||"x",t}', CALL_F],
 			// A conversion, a member read or a name written between may run code or read another value.
-			["function f(o,t){var w=o+1;g();t.w=w;return t}", "function f(o,t){var w=o+1;return g(),t.w=w,t}", CALL_F],
-			["function f(o,t){var w=o==1;g();t.w=w;return t}", "function f(o,t){var w=o==1;return g(),t.w=w,t}", CALL_F],
-			["function f(o,t){var w=-o;g();t.w=w;return t}", "function f(o,t){var w=-o;return g(),t.w=w,t}", CALL_F],
-			["function f(o,t){var w=o.p;g();t.w=w;return t}", "function f(o,t){var w=o.p;return g(),t.w=w,t}", CALL_F],
-			["function f(o,t){var w=o;o=2;t.w=w;return t}", "function f(o,t){var w=o;return o=2,t.w=w,t}", CALL_F],
+			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-6"), "function f(o,t){var w=o+1;return g(),t.w=w,t}", CALL_F],
+			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-7"), "function f(o,t){var w=o==1;return g(),t.w=w,t}", CALL_F],
+			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-8"), "function f(o,t){var w=-o;return g(),t.w=w,t}", CALL_F],
+			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-9"), "function f(o,t){var w=o.p;return g(),t.w=w,t}", CALL_F],
+			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-10"), "function f(o,t){var w=o;return o=2,t.w=w,t}", CALL_F],
 			// A name a value moved into already prints that value, run where it is read; a boolean prints as `!0`, which a member read would take in.
-			['function f(){var a=read();var b=!a;middle();return b}function read(){console.log("read");return 1}function middle(){console.log("middle")}console.log(f())', 'function f(){var b=!read();return middle(),b}function read(){return console.log("read"),1}function middle(){console.log("middle")}console.log(f());'],
-			["function f(){var value=true;middle();return value.toString()}function middle(){}console.log(f())", "function f(){return middle(),true.toString()}function middle(){}console.log(f());"],
+			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-11"), 'function f(){var b=!read();return middle(),b}function read(){return console.log("read"),1}function middle(){console.log("middle")}console.log(f());'],
+			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-12"), "function f(){return middle(),true.toString()}function middle(){}console.log(f());"],
 			// An outer `var` read before an `await` or a `yield` may be set while the function, or the generator owning it, waits.
-			["function f(p){async function i(){var n=!r;await p;return n}var t=i(),r=1;return t}f(0)", "function f(p){var t=async function(){var n=!r;return await p,n}(),r=1;return t}f(0);"],
-			["function f(){function*i(){var n=!r;yield;return n}var t=i();t.next();var r=1;return t.next().value}console.log(f())", "function f(){var t=function*(){var n=!r;return yield,n}();t.next();var r=1;return t.next().value}console.log(f());"],
-			["function*o(g,a){g(function(){var n=!r;a();return n});yield 0;var r=1}let i,t=o(function(f){i=f},function(){t.next()});t.next();console.log(i())", "function*o(g,a){g(function(){var n=!r;return a(),n}),yield 0;var r=1}let i,t=o(function(f){i=f},function(){t.next()});t.next(),console.log(i());"],
+			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-13"), "function f(p){var t=async function(){var n=!r;return await p,n}(),r=1;return t}f(0);"],
+			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-14"), "function f(){var t=function*(){var n=!r;return yield,n}();t.next();var r=1;return t.next().value}console.log(f());"],
+			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-15"), "function*o(g,a){g(function(){var n=!r;return a(),n}),yield 0;var r=1}let i,t=o(function(f){i=f},function(){t.next()});t.next(),console.log(i());"],
 			// Set by then, it holds its value wherever later the value is made.
-			["function h(){var r=4,n=[r];return[n,function(){return r}]}console.log(JSON.stringify(h()))", "function h(){return[[4],function(){return 4}]}console.log(JSON.stringify(h()));"]
+			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-16"), "function h(){return[[4],function(){return 4}]}console.log(JSON.stringify(h()));"]
 		]) {
 			const { code } = minifyOnePass(source, options);
 			expect(code).toBe(expected);
@@ -2178,50 +2178,50 @@ describe("printing Babel's default parameters as ES2015 ones", () => {
 		const CALL_F = 'var r=[];function g(){r.push("g");return 7}console.log(JSON.stringify([f(1),f(1,void 0),f(1,2),f(1,2,3),f.length,r]))';
 		for (const [source, expected] of [
 			// Each default may read the parameters and defaults before it, and runs only where the argument is missing.
-			["function f(a){var b=arguments.length>1&&arguments[1]!==undefined?arguments[1]:g();var c=arguments.length>2&&void 0!==arguments[2]?arguments[2]:a+b;return[a,b,c]}", "function f(a,b=g(),c=a+b){return[a,b,c]}"],
-			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:{x:a},c=a;return[b,c]}", "function f(a,b={x:a}){return[b,a]}"],
-			["var o={m(a){var b=arguments.length>1&&arguments[1]!==undefined?arguments[1]:5;return a+b}};function f(a,b){return o.m(a,b)}", "var o={m(a,b=5){return a+b}};function f(a,b){return o.m(a,b)}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var"), "function f(a,b=g(),c=a+b){return[a,b,c]}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-2"), "function f(a,b={x:a}){return[b,a]}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-3"), "var o={m(a,b=5){return a+b}};function f(a,b){return o.m(a,b)}"],
 			// Another read of `arguments`, a name the body binds, the wrong index or a generator keep the `var`.
-			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;return[b,arguments.length]}", "function f(a){return[arguments.length>1&&arguments[1]!==void 0?arguments[1]:5,arguments.length]}"],
-			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:x;var x=1;return[b,x]}", "function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:x,x=1;return[b,x]}"],
-			["function f(a){var b=arguments.length>2&&arguments[2]!==void 0?arguments[2]:5;return[b]}", "function f(a){return[arguments.length>2&&arguments[2]!==void 0?arguments[2]:5]}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-4"), "function f(a){return[arguments.length>1&&arguments[1]!==void 0?arguments[1]:5,arguments.length]}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-5"), "function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:x,x=1;return[b,x]}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-6"), "function f(a){return[arguments.length>2&&arguments[2]!==void 0?arguments[2]:5]}"],
 			// A default may not wait, read `eval` or make a function; an accessor, a rest or a repeated parameter, a function of the name or a value nothing reads keep them.
-			["async function h(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:await a;return b}function f(a){return 0}", "async function h(a){return arguments.length>1&&arguments[1]!==void 0?arguments[1]:await a}function f(a){return 0}"],
-			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:eval(\"a\");return b}", "function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:eval(`a`);return b}"],
-			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:function(){return a};return typeof b}", "function f(a){return typeof(arguments.length>1&&arguments[1]!==void 0?arguments[1]:function(){return a})}"],
-			["var o={set v(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;this.x=b}};function f(a){return o.v=a,o.x}", "var o={set v(a){this.x=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5}};function f(a){return o.v=a,o.x}"],
-			["function f(...a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;return b}", "function f(...a){return arguments.length>1&&arguments[1]!==void 0?arguments[1]:5}"],
-			["function f(a,a){var b=arguments.length>2&&arguments[2]!==void 0?arguments[2]:5;return b}", "function f(a,a){return arguments.length>2&&arguments[2]!==void 0?arguments[2]:5}"],
-			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;function b(){}return typeof b}", "function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;function b(){}return typeof b}"],
-			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:g();return a}", "function f(a){arguments.length>1&&arguments[1]!==void 0?arguments[1]:g();return a}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-7"), "async function h(a){return arguments.length>1&&arguments[1]!==void 0?arguments[1]:await a}function f(a){return 0}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-8"), "function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:eval(`a`);return b}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-9"), "function f(a){return typeof(arguments.length>1&&arguments[1]!==void 0?arguments[1]:function(){return a})}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-10"), "var o={set v(a){this.x=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5}};function f(a){return o.v=a,o.x}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-11"), "function f(...a){return arguments.length>1&&arguments[1]!==void 0?arguments[1]:5}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-12"), "function f(a,a){return arguments.length>2&&arguments[2]!==void 0?arguments[2]:5}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-13"), "function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;function b(){}return typeof b}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-14"), "function f(a){arguments.length>1&&arguments[1]!==void 0?arguments[1]:g();return a}"],
 			// A function inside reads its own `arguments`; a value not written as Babel writes defaults stays.
-			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;function k(){return arguments.length}return[b,k(1)]}", "function f(a,b=5){return[b,function(){return arguments.length}(1)]}"],
-			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;var k=function(){return arguments.length};return[b,k(1)]}", "function f(a,b=5){return[b,function(){return arguments.length}(1)]}"],
-			["function f(){var a=arguments.length>0&&arguments[0]!==void 0?arguments[0]:g();return[a]}", "function f(a=g()){return[a]}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-15"), "function f(a,b=5){return[b,function(){return arguments.length}(1)]}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-16"), "function f(a,b=5){return[b,function(){return arguments.length}(1)]}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-17"), "function f(a=g()){return[a]}"],
 			// After a default, the `var` Babel writes for a parameter with none prints as one: the function's `length` stays.
-			["function f(){var a=arguments.length>0&&arguments[0]!==undefined?arguments[0]:g();var b=arguments.length>1?arguments[1]:undefined,c=arguments.length>2&&arguments[2]!==void 0?arguments[2]:b;return[a,b,c]}", "function f(a=g(),b,c=b){return[a,b,c]}"],
-			["function f(){var b=arguments.length>0?arguments[0]:undefined;return[b]}", "function f(){return[arguments.length>0?arguments[0]:void 0]}"],
-			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;var c=arguments.length>2?arguments[2]:void 0;return[b,c,arguments.length]}", "function f(a){return[arguments.length>1&&arguments[1]!==void 0?arguments[1]:5,arguments.length>2?arguments[2]:void 0,arguments.length]}"],
-			["function f(){var a=arguments.length>0&&arguments[0]!==undefined?arguments[0]:1;var b=arguments.length>1?arguments[1]:undefined;return[b]}", "function f(){arguments.length>0&&arguments[0]!==void 0?arguments[0]:1;var b=arguments.length>1?arguments[1]:void 0;return[b]}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-18"), "function f(a=g(),b,c=b){return[a,b,c]}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-19"), "function f(){return[arguments.length>0?arguments[0]:void 0]}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-20"), "function f(a){return[arguments.length>1&&arguments[1]!==void 0?arguments[1]:5,arguments.length>2?arguments[2]:void 0,arguments.length]}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-21"), "function f(){arguments.length>0&&arguments[0]!==void 0?arguments[0]:1;var b=arguments.length>1?arguments[1]:void 0;return[b]}"],
 			// Parameters other than names, one named `arguments` or a `var` of that name keep them.
-			["function f({a}){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;return[a,b]}", "function f({a}){return[a,arguments.length>1&&arguments[1]!==void 0?arguments[1]:5]}"],
-			["function o(value){return function(a=value){var value=arguments.length>1&&arguments[1]!==void 0?arguments[1]:1;return[a,value]}}var f=o(7);", "function o(value){return function(a=value){return[a,arguments.length>1&&arguments[1]!==void 0?arguments[1]:1]}}var f=o(7);"],
-			["function f(arguments){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:9;return b}", "function f(arguments){return arguments.length>1&&arguments[1]!==void 0?arguments[1]:9}"],
-			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:9;var arguments;return b}", "function f(a){var arguments;return arguments.length>1&&arguments[1]!==void 0?arguments[1]:9}"],
-			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;var c=arguments.length>2&&arguments[2]!==void 0?arguments[2]:x;var x=b;return[b,c,x]}", "function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5,c=arguments.length>2&&arguments[2]!==void 0?arguments[2]:x,x=b;return[b,c,x]}"],
-			["function f(a){var b=a?arguments[1]:5;return b}", "function f(a){return a?arguments[1]:5}"],
-			["function f(a){var b=arguments.length>1||arguments[1]!==void 0?arguments[1]:5;return b}", "function f(a){return arguments.length>1||arguments[1]!==void 0?arguments[1]:5}"],
-			["function f(a){var b=arguments.length>=1&&arguments[1]!==void 0?arguments[1]:5;return b}", "function f(a){return arguments.length>=1&&arguments[1]!==void 0?arguments[1]:5}"],
-			["function f(a){var b=arguments.length>1&&arguments[1]!=null?arguments[1]:5;return b}", "function f(a){return arguments.length>1&&arguments[1]!=null?arguments[1]:5}"],
-			["function f(a){var b=arguments.length>1&&arguments[1]!==null?arguments[1]:5;return b}", "function f(a){return arguments.length>1&&arguments[1]!==null?arguments[1]:5}"],
-			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[2]:5;return b}", "function f(a){return arguments.length>1&&arguments[1]!==void 0?arguments[2]:5}"],
-			["function f(a){var b=arguments.length>1&&a!==void 0?arguments[1]:5;return b}", "function f(a){return arguments.length>1&&a!==void 0?arguments[1]:5}"],
-			["function f(a){var b=a.length>1&&arguments[1]!==void 0?arguments[1]:5;return b}", "function f(a){return a.length>1&&arguments[1]!==void 0?arguments[1]:5}"],
-			["function f(a){var b=arguments.size>1&&arguments[1]!==void 0?arguments[1]:5;return b}", "function f(a){return arguments.size>1&&arguments[1]!==void 0?arguments[1]:5}"],
-			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5,c=a;return[b,c]}", "function f(a,b=5){return[b,a]}"],
-			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;var c=arguments.length>2&&arguments[2]!==void 0?arguments[2]:b,d=c;return[b,c,d]}", "function f(a,b=5,c=b){return[b,c,c]}"],
-			["function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;let c=b;return[c]}", "function f(a,b=5){return[b]}"],
-			["function f(a){return[...h(a)]}function*h(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:g();yield a+b}", "function f(a){return[...h(a)]}function*h(a){yield a+(arguments.length>1&&arguments[1]!==void 0?arguments[1]:g())}"]
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-22"), "function f({a}){return[a,arguments.length>1&&arguments[1]!==void 0?arguments[1]:5]}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-23"), "function o(value){return function(a=value){return[a,arguments.length>1&&arguments[1]!==void 0?arguments[1]:1]}}var f=o(7);"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-24"), "function f(arguments){return arguments.length>1&&arguments[1]!==void 0?arguments[1]:9}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-25"), "function f(a){var arguments;return arguments.length>1&&arguments[1]!==void 0?arguments[1]:9}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-26"), "function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5,c=arguments.length>2&&arguments[2]!==void 0?arguments[2]:x,x=b;return[b,c,x]}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-27"), "function f(a){return a?arguments[1]:5}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-28"), "function f(a){return arguments.length>1||arguments[1]!==void 0?arguments[1]:5}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-29"), "function f(a){return arguments.length>=1&&arguments[1]!==void 0?arguments[1]:5}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-30"), "function f(a){return arguments.length>1&&arguments[1]!=null?arguments[1]:5}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-31"), "function f(a){return arguments.length>1&&arguments[1]!==null?arguments[1]:5}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-32"), "function f(a){return arguments.length>1&&arguments[1]!==void 0?arguments[2]:5}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-33"), "function f(a){return arguments.length>1&&a!==void 0?arguments[1]:5}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-34"), "function f(a){return a.length>1&&arguments[1]!==void 0?arguments[1]:5}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-35"), "function f(a){return arguments.size>1&&arguments[1]!==void 0?arguments[1]:5}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-36"), "function f(a,b=5){return[b,a]}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-37"), "function f(a,b=5,c=b){return[b,c,c]}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-38"), "function f(a,b=5){return[b]}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-39"), "function f(a){return[...h(a)]}function*h(a){yield a+(arguments.length>1&&arguments[1]!==void 0?arguments[1]:g())}"]
 		]) {
 			const { code } = minifyOnePass(source, options);
 			expect(code).toBe(expected);
@@ -2231,7 +2231,7 @@ describe("printing Babel's default parameters as ES2015 ones", () => {
 
 	it("should keep the `var`s where the output may not use default parameters", () => {
 		for (const [source, expected] of [
-			["export function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;return a+b}", "export function f(a){return a+(arguments.length>1&&arguments[1]!==void 0?arguments[1]:5)}"]
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-keep-the-var-s-where"), "export function f(a){return a+(arguments.length>1&&arguments[1]!==void 0?arguments[1]:5)}"]
 		]) {
 			expect(minifyOnePass(source, { compress: {}, mangle: false, module: true }).code).toBe(expected);
 		}

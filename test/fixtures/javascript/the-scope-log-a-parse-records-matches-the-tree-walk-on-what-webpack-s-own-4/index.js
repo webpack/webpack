@@ -1,0 +1,1 @@
+(async function () { await x; }); f(async (x) => x, async function named() {});

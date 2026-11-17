@@ -1,0 +1,1 @@
+var arrow = (a, b, c, d) => {}

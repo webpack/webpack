@@ -24,7 +24,8 @@ describe("check-syntax-test-inputs", () => {
 					'tokenize("<i>".repeat(5000));',
 					'parse(fixture("javascript", "x") + ";");',
 					'cssMinify({ "a.css": "a{}" });',
-					'new WebpackParser({}, "a;");'
+					'new WebpackParser({}, "a;");',
+					'parse("a; ".trim());'
 				].join("\n")
 			)
 		).toEqual([
@@ -33,7 +34,8 @@ describe("check-syntax-test-inputs", () => {
 			"3 tokenize",
 			"4 parse",
 			"5 cssMinify",
-			"6 WebpackParser"
+			"6 WebpackParser",
+			"7 parse"
 		]);
 	});
 
@@ -72,6 +74,7 @@ describe("check-syntax-test-inputs", () => {
 					'escapeText("a & b");',
 					'const all = fixtures("javascript").map(({ source }) => source);',
 					"for (const one of all) parseProgram(one);",
+					'for (const line of fixture("javascript", "d").split("\\n")) parse(line);',
 					'it.each([["", "name"]])("%s", (_, name) => parse(fixture("css", name)));'
 				].join("\n")
 			)

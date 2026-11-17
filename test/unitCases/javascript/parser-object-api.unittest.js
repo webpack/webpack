@@ -1,26 +1,14 @@
 "use strict";
 
+const { fixture } = require("../../helpers/fixture");
+
 const JavascriptParser = require("../../../lib/javascript/JavascriptParser");
 
 /** @typedef {import("estree").Node} Node */
 /** @typedef {import("estree").Program} Program */
 /** @typedef {import("../../../lib/module/Parser").ParserState} ParserState */
 
-const SOURCE = `"use asm";
-label: if (a) b(); else c();
-switch (a) { case 1: var s = 1; }
-try { t(); } catch ({ message }) { m(); }
-var { x } = y;
-let z;
-({ x } = y);
-a + b;
-(class C {});
-a?.b;
-import("./m");
-f().g;
-f().g.h;
-function fd() {}
-`;
+const SOURCE = fixture("javascript", "parser-object-api-source");
 
 /**
  * Parses SOURCE, calling the parser's object-taking methods on its nodes.
@@ -152,13 +140,7 @@ describe("JavascriptParser object API", () => {
 	});
 
 	it("should walk and read the statement and pattern objects a plugin hands it", () => {
-		const code = `"use strict";
-function t() { return 1; foo(); function g() {} }
-f().g;
-o.a["b"].c;
-o[k].c;
-var { p, q } = r;
-`;
+		const code = fixture("javascript", "javascript-parser-object-api-should-walk-and-read-the-statement-and-pattern");
 		const parser = new JavascriptParser("script");
 		parser.hooks.terminate.tap("test", () => true);
 		/** @type {string[]} */
@@ -279,7 +261,7 @@ var { p, q } = r;
 	});
 
 	it("should run the object taps and helpers a plugin outside webpack calls", () => {
-		const code = "class K { m() {} }\no.a;\nnew RegExp();\nnull?.b;\n";
+		const code = fixture("javascript", "javascript-parser-object-api-should-run-the-object-taps-and-helpers-a-plugin");
 		const parser = new JavascriptParser("script");
 		/** @type {string[]} */
 		const elements = [];
@@ -387,7 +369,7 @@ var { p, q } = r;
 
 	it("should skip a node type the tree has no layout for", () => {
 		const parser = new JavascriptParser("module");
-		const code = "a;";
+		const code = fixture("javascript", "javascript-parser-object-api-should-skip-a-node-type-the-tree-has-no-layout-for");
 		/** @type {import("../../../lib/javascript/JavascriptParser").StatementPathItem[]} */
 		const statements = [];
 		parser.hooks.statement.tap("test", (statement) => {

@@ -1,0 +1,1 @@
+function f(i,a){return 3*(0!==i?Math.abs(i):Math.abs(a))}

@@ -1,0 +1,1 @@
+class A { x = 1; #p = this.x; static y = A; static { z; let w = 1; } }
