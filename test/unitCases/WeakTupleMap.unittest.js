@@ -174,4 +174,44 @@ describe("WeakTupleMap", () => {
 		expect(map.get(objA)).toBe(1);
 		expect(map.get(objB)).toBe(2);
 	});
+
+	it("types a module memo cache by its keys, undefined included", () => {
+		/** @type {import("../../lib/Compiler").MemCache} */
+		const memCache = new WeakTupleMap();
+		/** @type {import("../../lib/Compiler").MemCacheKey<string>} */
+		const stringKey = "string";
+		/** @type {import("../../lib/Compiler").MemCacheKey<string | undefined>} */
+		const maybeKey = "maybe";
+		/** @type {import("../../lib/Compiler").MemCacheKey<undefined>} */
+		const undefinedKey = "undefined";
+
+		memCache.set(stringKey, "a");
+		memCache.set(maybeKey, undefined);
+		memCache.set(undefinedKey, undefined);
+		/** @type {string | undefined} */
+		const read = memCache.get(stringKey);
+		expect(read).toBe("a");
+		expect(memCache.provide(maybeKey, () => undefined)).toBeUndefined();
+
+		// Only type-checked: a value the key does not allow is refused.
+		const refused = () => {
+			// @ts-expect-error a typed key takes only its value type
+			memCache.set(stringKey, 1);
+			// @ts-expect-error nor an undefined it does not allow
+			memCache.set(stringKey, undefined);
+			// @ts-expect-error a key that holds undefined takes nothing else
+			memCache.set(undefinedKey, "a");
+			// @ts-expect-error provide checks the function against the key's type
+			memCache.provide(stringKey, () => 1);
+		};
+		expect(typeof refused).toBe("function");
+
+		// A plain key holds whatever a plugin stored, and provide answers with
+		// what its function returns.
+		memCache.set("plain", { count: 1 });
+		expect(memCache.get("plain").count).toBe(1);
+		/** @type {number} */
+		const provided = memCache.provide("other", () => 2);
+		expect(provided).toBe(2);
+	});
 });
