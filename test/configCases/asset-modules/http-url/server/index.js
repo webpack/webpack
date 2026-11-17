@@ -160,7 +160,13 @@ class ServerPlugin {
 				);
 			}
 			// Every compiler sharing the plugin waits until the server listens.
-			await this.listening;
+			try {
+				await this.listening;
+			} catch (err) {
+				// A failed beforeRun skips done, so release this run's reference here.
+				this.refs--;
+				throw err;
+			}
 		});
 
 		compiler.hooks.done.tapAsync("ServerPlugin", (stats, callback) => {
