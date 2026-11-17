@@ -210,6 +210,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				}
 			)
 		);
+		expect(mapped.code).toMatchSnapshot();
 		expect(mapped.map.names).toEqual(
 			expect.arrayContaining(["a", "b", "c", "g", "x"])
 		);
@@ -225,6 +226,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				}
 			)
 		);
+		expect(unbraced.code).toMatchSnapshot();
 		// cspell:disable-next-line
 		expect(unbraced.map.mappings).toMatchSnapshot();
 		// A case falling into the next keeps its test's place, its body mapping nothing.
@@ -277,6 +279,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			mangle: {}
 		});
 		expect(unmangled()).toBe(first);
+		expect(first).toMatchSnapshot();
 	});
 
 	it("should keep the parentheses a binary takes under a `!` of `!!`", () => {
@@ -318,6 +321,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-a-adding-to-a-template"),
 			{ mode: "minify", compress: {}, mangle: false, source: "in.js" }
 		);
+		expect(mapped.code).toMatchSnapshot();
 		expect(mapped.map).toEqual(
 			expect.objectContaining({
 				mappings: "AAAAA,EAAE,IAAIC,CAAI,IAAIC,IAAK,CAAI,IAAIC"
@@ -331,6 +335,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 					{ mode: "minify", compress: {}, mangle: false, source: "a.js" }
 				)
 			);
+		expect(alike.code).toMatchSnapshot();
 		expect(alike.map.names).toEqual(expect.arrayContaining(["g", "h"]));
 	});
 
@@ -339,7 +344,45 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			/** @type {string} */ source,
 			/** @type {Record<string, unknown>} */ compress = {}
 		) => minifyOnePass(source, { compress, mangle: false }).code;
+		// `drop_debugger` drops them unless turned off, where no list holds one too.
+		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress"))).toMatchSnapshot();
+		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-2"))).toMatchSnapshot();
+		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress"), { drop_debugger: false })).toMatchSnapshot();
 		// `drop_console` drops a call whole, what its arguments run with it.
+		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-3"), { drop_console: true })).toMatchSnapshot();
+		expect(
+			print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-4"), {
+				drop_console: true
+			})
+		).toMatchSnapshot();
+		expect(
+			print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-5"), { drop_console: ["log"] })
+		).toMatchSnapshot();
+		expect(
+			print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-6"), { drop_console: true })
+		).toMatchSnapshot();
+		expect(
+			print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-7"), { drop_console: true })
+		).toMatchSnapshot();
+		// Where no list holds it, it prints as the `undefined` it returns.
+		expect(
+			print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-8"), {
+				drop_console: true
+			})
+		).toMatchSnapshot();
+		// Where a unary cannot stand, it is grouped.
+		expect(
+			print(
+				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-9"),
+				{ drop_console: true }
+			)
+		).toMatchSnapshot();
+		// So is one called through `call` or `apply`.
+		expect(
+			print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-10"), {
+				drop_console: true
+			})
+		).toMatchSnapshot();
 		// As terser walks a chain to its root, one on a `console` member goes too, but `bind` makes a function.
 		expect(
 			print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-24"), {
@@ -352,11 +395,49 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				drop_console: ["log"]
 			})
 		).toMatchSnapshot();
+		// `pure_funcs` marks the calls it names pure, by how the callee is written.
+		expect(
+			print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-11"), {
+				pure_funcs: ["foo", "a.b.c"]
+			})
+		).toMatchSnapshot();
+		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-12"), { pure_funcs: ["foo"] })).toMatchSnapshot();
+		// `global_defs` replaces a global nothing sets with a primitive value.
+		const defs = {
+			global_defs: { DEBUG: false, VERSION: "1.2", "@code": "x", O: {} }
+		};
+		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-13"), defs)).toMatchSnapshot();
+		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-14"), defs)).toMatchSnapshot();
+		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-15"), defs)).toMatchSnapshot();
+		// A shorthand prints its key and the value.
+		expect(
+			minifyOnePass(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-16"), {
+				compress: defs,
+				mangle: false,
+				ecma: 2015
+			}).code
+		).toMatchSnapshot();
+		// A key with dots names what is read off a global.
+		const nested = {
+			global_defs: { "process.env.NODE_ENV": "production", "env.DEBUG": 0 }
+		};
+		expect(
+			print(
+				fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-17"),
+				nested
+			)
+		).toMatchSnapshot();
+		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-18"), nested)).toMatchSnapshot();
 		// A number a sign or point would join to what is around it is grouped.
+		expect(
+			print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-19"), { global_defs: { V: -1 } })
+		).toMatchSnapshot();
 		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-20"), { global_defs: { V: -0 } })).toMatchSnapshot();
 		// `top_retain` keeps the top-level names it lists, a pattern or a test keeps.
 		const top = fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-21");
 		expect(print(top, { toplevel: true })).toMatchSnapshot();
+		expect(print(top, { toplevel: true, top_retain: "foo, bar" })).toMatchSnapshot();
+		expect(print(top, { toplevel: true, top_retain: ["bar"] })).toMatchSnapshot();
 		expect(print(top, { toplevel: true, top_retain: /^f/g })).toMatchSnapshot();
 		expect(
 			print(top, {
@@ -365,6 +446,15 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 					definition.name === "bar"
 			})
 		).toMatchSnapshot();
+		// It implies `toplevel` where that is not given, and keeps a name inlined.
+		expect(print(top, { top_retain: "foo" })).toMatchSnapshot();
+		expect(print(top, { top_retain: "foo", toplevel: false })).toMatchSnapshot();
+		expect(
+			print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-22"), { toplevel: true, top_retain: "foo" })
+		).toMatchSnapshot();
+		// `keep_infinity` prints `Infinity` as written.
+		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-23"))).toMatchSnapshot();
+		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-read-terser-s-compress-23"), { keep_infinity: true })).toMatchSnapshot();
 	});
 
 	it("should keep a named function a direct eval in a class or function it returns reads", () => {
@@ -393,19 +483,51 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{ mode: "minify", ...options, wrap: "lib", source: "a.js" }
 			)
 		);
+		expect(wrapped.code).toMatchSnapshot();
 		// Only the source's own names map, from its second line.
 		expect(wrapped.map.names).toEqual(["exports", "longName", "g"]);
 		expect(wrapped.map.mappings).toMatchSnapshot();
+		expect(
+			minifyOnePass(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-wrap-or-enclose-the-source-2"), {
+				...options,
+				enclose: "y:7"
+			}).code
+		).toMatchSnapshot();
+		expect(
+			minifyOnePass(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-wrap-or-enclose-the-source-3"), { ...options, enclose: true }).code
+		).toMatchSnapshot();
 		// `enclose` goes around `wrap`; a hashbang, no longer first, goes.
 		const bare = { compress: false, mangle: false };
+		expect(
+			minifyOnePass(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-wrap-or-enclose-the-source-4"), {
+				...bare,
+				wrap: "lib",
+				enclose: "window,undefined:window"
+			}).code
+		).toMatchSnapshot();
+		expect(
+			minifyOnePass(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-wrap-or-enclose-the-source-5"), { ...bare, enclose: true })
+				.code
+		).toMatchSnapshot();
+		expect(
+			minifyOnePass(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-111"), { ...bare, wrap: "lib" }).code
+		).toMatchSnapshot();
 	});
 
 	it("should print alone the comments it keeps, however they are chosen", () => {
 		const bare = { compress: false, mangle: false };
 		const print = (/** @type {string} */ source, /** @type {EXPECTED_OBJECT} */ format) =>
 			minifyOnePass(source, { ...bare, format }).code;
+		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-alone-the-comments-it"), {})).toMatchSnapshot();
+		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-alone-the-comments-it-2"), {})).toMatchSnapshot();
 		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-alone-the-comments-it-3"), {})).toMatchSnapshot();
 		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-alone-the-comments-it-4"), { comments: false })).toMatchSnapshot();
+		expect(
+			print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-alone-the-comments-it-5"), {
+				comments: false,
+				preserve_annotations: true
+			})
+		).toMatchSnapshot();
 		// A callback is asked only as each comment prints.
 		/** @type {string[]} */
 		const asked = [];
@@ -427,6 +549,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(
 			print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-alone-the-comments-it-7"), { comments: /keep/y })
 		).toMatchSnapshot();
+		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-alone-the-comments-it-8"), {})).toMatchSnapshot();
+		expect(print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-alone-the-comments-it-9"), { comments: "/keep/g" })).toMatchSnapshot();
 		expect(() => print(fixture("javascript", "javascript-minifier-printing-a-syntax-tree-should-print-alone-the-comments-it-10"), { nonsense: 1 })).toThrow(
 			"`nonsense` is not a supported option"
 		);
@@ -765,9 +889,13 @@ describe("JavaScript SourceProcessor printing", () => {
 
 	it("should print one source after another, and a source anew after a parse error", () => {
 		const processor = new SourceProcessor();
+		expect(processor.process(fixture("javascript", "javascript-source-processor-printing-should-print-one-source-after-another-and"), { mode: "minify" }).code).toMatchSnapshot();
 		expect(() => processor.process(fixture("javascript", "javascript-source-processor-printing-should-print-one-source-after-another-and-a"), { mode: "minify" })).toThrow(
 			/Unexpected token/
 		);
+		expect(
+			processor.process(fixture("javascript", "javascript-source-processor-printing-should-print-one-source-after-another-and-2"), { mode: "minify" }).code
+		).toMatchSnapshot();
 	});
 
 	it("should map each node's output to the source's", () => {
@@ -775,6 +903,7 @@ describe("JavaScript SourceProcessor printing", () => {
 			mode: "minify",
 			source: "in.js"
 		});
+		expect(result.code).toMatchSnapshot();
 		// `a` at 0:0, named, and `1` from column 4 to column 2.
 		expect(result.map).toEqual(
 			expect.objectContaining({
@@ -1120,15 +1249,22 @@ describe("one-pass minify of statement sequences", () => {
 		const source =
 			fixture("javascript", "one-pass-minify-of-statement-sequences-should-print-a-binary-expression-folding");
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toMatchSnapshot();
 		expect(runProgram(`function f(){return 1}${code}`)).toBe(
 			runProgram(`function f(){return 1}${source}`)
 		);
+		// Where a scope binds `NaN`, it prints as the division.
+		const shadowed = fixture("javascript", "one-pass-minify-of-statement-sequences-should-print-a-binary-expression-folding-2");
+		expect(
+			minifyOnePass(shadowed, { compress: {}, mangle: false }).code
+		).toMatchSnapshot();
 	});
 
 	it("should parenthesize a fold or element read keeping an infinity, which prints as a division", () => {
 		const source =
 			fixture("javascript", "one-pass-minify-of-statement-sequences-should-parenthesize-a-fold-or-element");
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toMatchSnapshot();
 		expect(() => acorn.parse(code, { ecmaVersion: "latest" })).not.toThrow();
 		expect(runProgram(`var a;${code}`)).toBe(runProgram(`var a;${source}`));
 	});
@@ -1343,6 +1479,8 @@ describe("one-pass minify, family K round 6", () => {
 	it("should read a name a null check assigns as its optional chain", () => {
 		const source = fixture("javascript", "one-pass-K3-1");
 		const { code } = minifyOnePass(source, options);
+		// Babel's `(n=a.x)==null?void 0:n.y`, `===null||n===void 0` too; a `??` would leave `n` set and unread.
+		expect(code).toMatchSnapshot();
 		// Node 10 cannot parse the `?.` the output prints.
 		if (supportsOptionalChaining()) expect(runProgram(code)).toBe(runProgram(source));
 		// Before ES2020 there is no `?.`.
@@ -1352,10 +1490,22 @@ describe("one-pass minify, family K round 6", () => {
 		).toContain("return(n=a.x)==null?void 0:n.y()");
 	});
 
+	it("should keep a null check whose chain reads another name, a global, a `with`'s or `eval`", () => {
+		const source = fixture("javascript", "one-pass-K3-2");
+		expect(minifyOnePass(source, options).code).toMatchSnapshot();
+	});
+
+	it("should drop the `!!` of a boolean `&&` or `||` where its parentheses go too", () => {
+		const source = fixture("javascript", "one-pass-K3-3");
+		// Beside a `,`, under another `&&` or an operator, the parentheses stay and so does `!!`.
+		expect(minifyOnePass(source, options).code).toMatchSnapshot();
+	});
+
 	it("should merge the calls of a built-in's member a pure test picks between", () => {
 		const source = fixture("javascript", "one-pass-K3-4");
 		const { code } = minifyOnePass(source, options);
 		// A local object's member may be a getter, a test may run code, and a computed key stays.
+		expect(code).toMatchSnapshot();
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
@@ -1377,11 +1527,18 @@ describe("one-pass minify, family L round 6", () => {
 });
 
 describe("one-pass minify, family J round 6", () => {
+	it("should drop an unread `pure_funcs` call, keeping what its arguments run", () => {
+		const options = { compress: { ecma: 2020, pure_funcs: ["debug"] }, ecma: 2020, mangle: false };
+		// terser's `pure_funcs`: the call goes, a call or a member read in its arguments stays; a returned one stays whole.
+		expect(minifyOnePass(fixture("javascript", "one-pass-j3-1"), options).code).toMatchSnapshot();
+	});
+
 	it("should guard what follows a run of `if`s leaving alike by their negated tests", () => {
 		const options = { compress: { ecma: 2020 }, ecma: 2020, mangle: false };
 		const source = fixture("javascript", "one-pass-j3-2");
 		const { code } = minifyOnePass(source, options);
 		// Only tests dropping a `!` or flipping an equality join, `false||!a` among them; a run whose tests add a `!`, guarding an `if` or several statements, or ending its function stays.
+		expect(code).toMatchSnapshot();
 		expect(runProgram(code)).toBe(runProgram(source));
 		// A test folding to a `!` drops it where what it negates needs no parentheses, as a comparison before `&&`; an assignment keeps it.
 		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-j-round-6-should-guard-what-follows-a-run-of-if-s-leaving"), options).code).toMatchSnapshot();

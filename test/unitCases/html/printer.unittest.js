@@ -450,6 +450,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 		explode = false;
 
+		expect(processor.process(fixture("html", "source-processor-render-embedded-source-is-usable-again-after-a-deferred-print"), { mode: "minify" }).code).toMatchSnapshot();
 	});
 
 
@@ -934,6 +935,9 @@ describe("SourceProcessor — printing what re-parses to the same tree", () => {
 		// whose value the print would spell another way.
 		const source = fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-a-noscript-body-leaves-a-comment-open");
 		expect(print(source, { mode: "minify" })).toBe(source);
+		// Markup that reads alike either way is still minified.
+		const plain = fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-a-noscript-body-leaves-a-comment-open-2");
+		expect(print(plain, { mode: "minify" })).toMatchSnapshot();
 	});
 
 	it("prints as written where the doctype mode depends on the reader", () => {
@@ -941,6 +945,8 @@ describe("SourceProcessor — printing what re-parses to the same tree", () => {
 		// and the mode it picks decides whether `<table>` closes the `<p>`.
 		const disputed = fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-the-doctype-mode-depends-on-the-reader");
 		expect(print(disputed, { mode: "minify" })).toBe(disputed);
+		const named = fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-the-doctype-mode-depends-on-the-reader-2");
+		expect(print(named, { mode: "minify" })).toMatchSnapshot();
 	});
 
 

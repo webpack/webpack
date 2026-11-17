@@ -68,7 +68,7 @@ describe("HtmlSyntax — the facade", () => {
 		const processor = new syntax.SourceProcessor();
 		processor.process(fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints"));
 		expect(processor._printer).toBeUndefined();
-		processor.process(fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints"), { mode: "minify" });
+		expect(processor.process(fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints"), { mode: "minify" }).code).toMatchSnapshot();
 		expect(typeof processor._printer).toBe("function");
 	});
 });

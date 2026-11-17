@@ -299,7 +299,7 @@ describe("CssSyntax — the facade", () => {
 		const processor = new SourceProcessor();
 		processor.process(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"));
 		expect(processor._printer).toBeUndefined();
-		processor.process(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"), { mode: "minify" });
+		expect(processor.process(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"), { mode: "minify" }).code).toMatchSnapshot();
 		expect(typeof processor._printer).toBe("function");
 	});
 });
@@ -467,6 +467,7 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 			})
 		);
 
+		expect(code).toMatchSnapshot();
 		// The list prints as one piece, so it anchors as one.
 		expect(map.sources).toEqual(["style"]);
 		expect(map.mappings).toMatchSnapshot();
@@ -669,5 +670,22 @@ describe("CssSyntax — block streaming reads the same tree", () => {
 		expect(log).toHaveLength(MANY * 2 + 2);
 		expect(log.slice(0, 2)).toEqual(["rule:a", "rule:b"]);
 		expect(log[log.length - 1]).toBe("d");
+	});
+});
+
+describe("CssSyntax — what a minifying print reads off the parse", () => {
+	/**
+	 * @param {string} css source
+	 * @param {object=} options more process options
+	 * @returns {string} minified
+	 */
+	const minify = (css, options) =>
+		/** @type {{ code: string }} */ (
+			new SourceProcessor().process(css, { mode: "minify", ...options })
+		).code;
+
+	it("collects a block of declarations alone for the longhand merge", () => {
+		const css = fixture("css", "css-syntax-what-a-minifying-print-reads-off-the-parse-collects-a-block-of");
+		expect(minify(css)).toMatchSnapshot();
 	});
 });

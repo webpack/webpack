@@ -1,14 +1,26 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`JavaScript SourceProcessor printing should map each node's output to the source's 1`] = `"a(1);"`;
+
+exports[`JavaScript SourceProcessor printing should print one source after another, and a source anew after a parse error 1`] = `"a(1);"`;
+
+exports[`JavaScript SourceProcessor printing should print one source after another, and a source anew after a parse error 2`] = `"let x=[1,2];"`;
+
 exports[`JavaScript minifier mangling a SyntaxTree should name every private name after a name source starts another parse 1`] = `"class K{#a=1;#b=2;get(){return this.#a+this.#b}}console.log((new K).get());"`;
 
 exports[`JavaScript minifier mangling a SyntaxTree should read its own tree after a name counter starts another parse 1`] = `"class K{#a=1;#b=2;get(){return this.#a+this.#b}}console.log((new K).get());"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should compress in the one pass what a long input, the engine or the map decides 1`] = `"AAAA,SAASA,IAAI,OAAQ,IAAGC,GAAYC"`;
+exports[`JavaScript minifier printing a SyntaxTree should compress in the one pass what a long input, the engine or the map decides 1`] = `"function f(a,b){if(a!=b)g(c?2:1,a!==b||x)}"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should compress in the one pass what a long input, the engine or the map decides 2`] = `"function f(x){switch(x){case zero:case one:return g();case two:h()}}"`;
+exports[`JavaScript minifier printing a SyntaxTree should compress in the one pass what a long input, the engine or the map decides 2`] = `"function f(){for(;;)if(!xx)yy(),zz()}"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should compress in the one pass what a long input, the engine or the map decides 3`] = `"AAAA,SAASA,EAAEC,GAAG,OAAOA,GAAG,KAAKC,KAAgB,KAAKC,IAAI,OAAOC,IAAI,KAAKC,IAAIC"`;
+exports[`JavaScript minifier printing a SyntaxTree should compress in the one pass what a long input, the engine or the map decides 3`] = `"AAAA,SAASA,IAAI,OAAQ,IAAGC,GAAYC"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should compress in the one pass what a long input, the engine or the map decides 4`] = `"function f(x){switch(x){case zero:case one:return g();case two:h()}}"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should compress in the one pass what a long input, the engine or the map decides 5`] = `"AAAA,SAASA,EAAEC,GAAG,OAAOA,GAAG,KAAKC,KAAgB,KAAKC,IAAI,OAAOC,IAAI,KAAKC,IAAIC"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should forget what the last one-pass print found 1`] = `"it(()=>[g(1),g(2)]);"`;
 
 exports[`JavaScript minifier printing a SyntaxTree should keep a case's \`break\` where no \`;\` before it prints 1`] = `
 "function a(c){if(c===E){let{data:a}=c
@@ -25,29 +37,109 @@ default:m()}}"
 
 exports[`JavaScript minifier printing a SyntaxTree should keep the names a global pattern keeps, however often it is asked 1`] = `"function keepMe(){}function keepToo(){}function e(){}g(keepMe,keepToo,e),g(keepMe,keepToo,e);"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should print alone the comments it keeps, however they are chosen 1`] = `"f();"`;
+exports[`JavaScript minifier printing a SyntaxTree should map what the one pass joins of templates and of alike branches 1`] = `"f(\`a\${x}b\${y}\`,\`cd\${z}e\`);"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should print alone the comments it keeps, however they are chosen 2`] = `"f();"`;
+exports[`JavaScript minifier printing a SyntaxTree should map what the one pass joins of templates and of alike branches 2`] = `"function f(c){g(),h()}"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should print alone the comments it keeps, however they are chosen 3`] = `"/* keep */f();g();/* keep2 */h();"`;
+exports[`JavaScript minifier printing a SyntaxTree should print alone the comments it keeps, however they are chosen 1`] = `"/*! a */f();g();"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should print alone the comments it keeps, however they are chosen 4`] = `"f();/* keep */g();"`;
+exports[`JavaScript minifier printing a SyntaxTree should print alone the comments it keeps, however they are chosen 2`] = `"f();/*! late */g();"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should print alone the comments it keeps, however they are chosen 5`] = `"f();g();"`;
+exports[`JavaScript minifier printing a SyntaxTree should print alone the comments it keeps, however they are chosen 3`] = `"f();"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 1`] = `"x=console.log.bind(console),console.a.b.c(),y=void 0,console.log.bind(console);"`;
+exports[`JavaScript minifier printing a SyntaxTree should print alone the comments it keeps, however they are chosen 4`] = `"f();"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 2`] = `"console.a.b.c();function run(log){console[log].b.c()}"`;
+exports[`JavaScript minifier printing a SyntaxTree should print alone the comments it keeps, however they are chosen 5`] = `"/*#__PURE__*/f();g();"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 3`] = `"g(a/(-0));"`;
+exports[`JavaScript minifier printing a SyntaxTree should print alone the comments it keeps, however they are chosen 6`] = `"/* keep */f();g();/* keep2 */h();"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 4`] = `""`;
+exports[`JavaScript minifier printing a SyntaxTree should print alone the comments it keeps, however they are chosen 7`] = `"f();/* keep */g();"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 5`] = `"var foo=1;"`;
+exports[`JavaScript minifier printing a SyntaxTree should print alone the comments it keeps, however they are chosen 8`] = `"f();g();"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 6`] = `"var bar=2;"`;
+exports[`JavaScript minifier printing a SyntaxTree should print alone the comments it keeps, however they are chosen 9`] = `"/*! a */ /*! b */"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should wrap or enclose the source, mapping what it printed of it 1`] = `"aACAA,IAAYC,EAAWC"`;
+exports[`JavaScript minifier printing a SyntaxTree should print alone the comments it keeps, however they are chosen 10`] = `"/* keep */f();g();"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 1`] = `"f();"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 2`] = `"a;f();"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 3`] = `"debugger;f();"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 4`] = `"g();"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 5`] = `"f();g();"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 6`] = `"console.warn(2),g();"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 7`] = `"console[m](1),c.console.log(1);"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 8`] = `"var console=k;console.log(1);"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 9`] = `"if(a);for(;;);x=void 0;"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 10`] = `"x=(void 0)**2,y=(void 0).a,z=(void 0)(),w=new(void 0);"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 11`] = `"g();"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 12`] = `"x=console.log.bind(console),console.a.b.c(),y=void 0,console.log.bind(console);"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 13`] = `"console.a.b.c();function run(log){console[log].b.c()}"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 14`] = `"a.b.d(3),a[b].c(4),foo(5);"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 15`] = `"var x=foo(1);h(x);"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 16`] = `"g(\\"1.2\\",O);"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 17`] = `"DEBUG=1,g(DEBUG);"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 18`] = `"!function(DEBUG){g(DEBUG)}(h);"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 19`] = `"g({DEBUG:!1,VERSION:\\"1.2\\"});"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 20`] = `"g(0,a.env.DEBUG,delete env.DEBUG);"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 21`] = `"var env={};g(env.DEBUG);"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 22`] = `"g((-1).toLocaleString(),1,\\"number\\");"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 23`] = `"g(a/(-0));"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 24`] = `""`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 25`] = `"var foo=1,bar=2;"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 26`] = `"var bar=2;"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 27`] = `"var foo=1;"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 28`] = `"var bar=2;"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 29`] = `"var foo=1;"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 30`] = `"var foo=1,bar=2;"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 31`] = `"var foo=1;g(foo);"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 32`] = `"x(1/0);"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 33`] = `"x(Infinity);"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should wrap or enclose the source, mapping what it printed of it 1`] = `"!function(e){e.a=1+g()}(typeof lib>\\"u\\"?lib={}:lib);"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should wrap or enclose the source, mapping what it printed of it 2`] = `"aACAA,IAAYC,EAAWC"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should wrap or enclose the source, mapping what it printed of it 3`] = `"window.v=8;"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should wrap or enclose the source, mapping what it printed of it 4`] = `"!function(){window.v=y}();"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should wrap or enclose the source, mapping what it printed of it 5`] = `"(function(window,undefined){(function(exports){exports.x=undefined})(typeof lib==\\"undefined\\"?lib={}:lib)})(window);"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should wrap or enclose the source, mapping what it printed of it 6`] = `"(function(){foo()})();"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should wrap or enclose the source, mapping what it printed of it 7`] = `"(function(exports){})(typeof lib==\\"undefined\\"?lib={}:lib);"`;
 
 exports[`folding a \`var\` set after calls should fold a constant set after calls that reach none of the functions reading it, and keep one a function run first reads 1`] = `"!function(){init(function(){});var n=\\"transition\\";function i(i){return i===n?1:i===n+1?2:n}window.g=i,window.h=i}();"`;
 
@@ -127,17 +219,35 @@ exports[`one-pass minify of reads and calls on literals should print a kept glob
 
 exports[`one-pass minify of reads and calls on literals should print a number constant where a member reads it, as a name would print 1`] = `"var zero=0,early=0,log=[];1..foo+=\\"\\",log.push(1..foo,1..bar,\\"0.5\\",\\"0.0\\",0,1e21.foo,early.toFixed(1)),log.push((1..foo,1)),console.log(log.join());"`;
 
+exports[`one-pass minify of statement sequences should parenthesize a fold or element read keeping an infinity, which prints as a division 1`] = `"console.log((1/0).toString(),(1/0).toFixed(),(-1/0).toString(),new(1/0),(1/0).x,[1/0][0].toFixed(),{a:1/0}.a.toFixed(),\\"number\\",0,1/0);"`;
+
+exports[`one-pass minify of statement sequences should print a binary expression folding to an infinity or \`NaN\` as \`1/0\`, \`-1/0\` or \`NaN\` 1`] = `"var a=2;console.log(1/0,2/0,1/0,-1/0,NaN,NaN,a/(2/0),a- -2/0,-(2/0),(2/0).toLocaleString(),2**2e3,a**(2/0),f()/0,a/(1/0),a- -1/0,-(1/0),(1/0).toLocaleString(),a**(1/0));"`;
+
+exports[`one-pass minify of statement sequences should print a binary expression folding to an infinity or \`NaN\` as \`1/0\`, \`-1/0\` or \`NaN\` 2`] = `"!function(NaN){eval(\\"\\"),console.log(0/0,NaN)}(5);"`;
+
 exports[`one-pass minify, family B round 9 should join string literals where the joined one prints shorter in the quotes it takes 1`] = `"function warn(name,ref){console.log('Component \\"%s\\" contains the string ref \\"%s\\". Support for string refs will be removed in a future major release.',name,ref)}function quoted(){return'Say \\"hi\\" or \\"bye\\"'}function escaped(){return\\"tab\\\\tnew\\\\nline\\"}warn(\\"a\\",\\"b\\"),console.log(quoted(),escaped());function mixed(){return\\"''''\\"+'\\"\\"\\"\\"'}console.log(mixed());"`;
 
 exports[`one-pass minify, family I round 6 should fold a value past an array literal of constants and names nothing writes 1`] = `"function nested(x){return[[3],[g(x),x]]}function holes(x){return[[,1],g(x)]}function spread(x){var y=g(x);return[[...x],y]}function call(x){var y=g(x);return[[h()],y]}function g(v){return v+1}function h(){return g(0)}console.log(nested(1),holes(2),spread([3]),call(4));"`;
 
 exports[`one-pass minify, family I round 6 should read a parameter for a \`var\` alias a function made after it reads 1`] = `"function made(x){return function(){return x}}function arrow(x){return()=>x}function declared(x){var outer=x;function g(){return outer}return[g,g]}function before(x){var f=function(){return outer},outer=x;return[f,f]}console.log(made(1)(),arrow(2)(),declared(3)[0](),before(4)[1]());"`;
 
-exports[`one-pass minify, family J round 6 should guard what follows a run of \`if\`s leaving alike by their negated tests 1`] = `"for(;a&&b<c;)d();!(b=c)?a():d();"`;
+exports[`one-pass minify, family J round 6 should drop an unread \`pure_funcs\` call, keeping what its arguments run 1`] = `"function log(value){return console.log(value),value}function f(a,b){return log(a),b.length,debug(log(b))}f(1,[2,3]);"`;
+
+exports[`one-pass minify, family J round 6 should guard what follows a run of \`if\`s leaving alike by their negated tests 1`] = `"function log(value){console.log(value)}function guards(a,b,c){if(a!=1&&b&&c===a)log(\`guards\`)}function folds(a,b){if(a&&b!==2)log(\`folds\`)}function keepsName(a,b){if(a||!b)return;log(\`keepsName\`)}function keepsCompare(a,b){if(!a||b<2)return;log(\`keepsCompare\`)}function keepsIf(a,b){if(!a||!b)return;if(a>b)log(\`keepsIf\`)}function keepsSeveral(a,b){if(!a||!b)return;log(\`keepsSeveral\`),log(a+b)}function tests(a,b){!a||!b}function loops(list){for(var i=0;i<list.length;i++)if(list[i]&&list[i]==3)log(i)}for(var a=0;a<4;a++)for(var b=0;b<4;b++)guards(a,b,a),folds(a,b),keepsName(a,b),keepsCompare(a,b),keepsIf(a,b),keepsSeveral(a,b),tests(a,b);loops([0,3,1,3]);"`;
+
+exports[`one-pass minify, family J round 6 should guard what follows a run of \`if\`s leaving alike by their negated tests 2`] = `"for(;a&&b<c;)d();!(b=c)?a():d();"`;
 
 exports[`one-pass minify, family J round 6 should keep the arguments of an unread pure call in a loop head together 1`] = `"for(g(),h();a;);"`;
 
+exports[`one-pass minify, family K round 6 should drop the \`!!\` of a boolean \`&&\` or \`||\` where its parentheses go too 1`] = `"var v=a==b||c==d,w=a==b&&(c<d||e in f),x=a==b?c==d:!e,y=!!(a==b||c),z=[!!(g(a,b)==b||c==d)],u=p&&!!(a==b||c==d),t=a==b||c==d,s=!!(a==b||c==d)+1;console.log(v,w,x,y,z,u,t,s);"`;
+
+exports[`one-pass minify, family K round 6 should keep a null check whose chain reads another name, a global, a \`with\`'s or \`eval\` 1`] = `"function f(a){var m;return a.x==null?void 0:m.y}function g(a){return(x=a.x)==null?void 0:x.y}function h(a){return a.x!=null?m:7}function k(a){var n;return(n+=a.x)==null?void 0:n.y}function l(a){var n;with(a)return(n=a.x)==null?void 0:n.y}function r(a){var eval;return(eval=a.x)==null?void 0:eval(1)}function s(a,b){var n;return(n=a.x)==b?void 0:n.y}function t(a,b){var n;return(n=a.x)===null||b?void 0:n.y}function u(a){var n;return(n=a.x)==null?void 0:n.y}"`;
+
 exports[`one-pass minify, family K round 6 should keep a script's global a null check assigns, which may be an accessor 1`] = `"var name;g((name=a.x)?.y);"`;
+
+exports[`one-pass minify, family K round 6 should merge the calls of a built-in's member a pure test picks between 1`] = `"function f(e,o){console.log(e||JSON.stringify(o))}function g(e){return Math.max(e?1:2,e)}function h(e,o){e?o.log(1):o.log(2)}function k(e){e()?console.log(1):console.log(2)}function l(e){e?console[e](1):console[e](2)}f(0,{a:1}),f(\`x\`),console.log(g(5),g(0));"`;
+
+exports[`one-pass minify, family K round 6 should read a name a null check assigns as its optional chain 1`] = `"function f(a){var n;return(n=a.x)?.y()}function g(a){var n;return(n=a.x)?.y}function h(a){var n;return(n=a.x)?.[0]}function k(a){var n;return(n=a.x)?.(1)}function l(a){var n;return(n=a.x)?.y}function m(a){var n;return(n=a.x)!=null?n:7}function p(a){var n;(n=a.x)?.y()}function q(a){var n;(n=a.x)?.y()}console.log(f({x:{y:()=>1}}),f({}),g({x:{y:2}}),h({x:[3]}),k({x:v=>v}),l({}),m({x:0})),p({x:{y:()=>console.log(\`p\`)}}),q({x:{y:()=>console.log(\`q\`)}}),p({}),q({});"`;
 
 exports[`one-pass minify, family L round 6 should fold a \`var\` set after calls that reach no function of the body reading it 1`] = `"function early(){read()?console.log(\\"set\\"):console.log(\\"unset\\");var value=1;function read(){return value}return[read,read]}console.log(early()[1]());function builtIn(){console.log(\\"built-in\\");function read(){return 2}return[read,read]}console.log(builtIn()[1]());function handed(run){run(function(){return read()});var value=3;function read(){return value}return[read,read]}console.log(handed(function(f){console.log(f())})[1]());function arrow(run){run(()=>read());var value=4;function read(){return value}return[read,read]}console.log(arrow(function(f){console.log(f())})[1]());function named(run){run(read);var value=5;function read(){return value}return[read,read]}console.log(named(function(f){console.log(f())})[1]());function classes(run){class Reader{get(){return read()}}run(new Reader);var value=6;function read(){return value}return[read,read]}console.log(classes(function(r){console.log(r.get())})[1]());function expressed(run){run(new class{get(){return read()}});var value=7;function read(){return value}return[read,read]}console.log(expressed(function(r){console.log(r.get())})[1]());function passed(run){run(run);function read(){return 8}return[read,read]}console.log(passed(function(){})[1]());function evaluated(run){run(eval);var value=9;function read(){return value}return[read,read]}console.log(evaluated(function(){})[1]());function kept(target){var size=target.size(1),key=\\"orientationchange\\";function fire(){target.trigger(key)}target.bind(\\"resize\\",fire),target.bind(\\"scroll\\",fire),target.on[key]=function(handler){return handler?target.bind(key,handler):target.trigger(key)};if(target.flags)target.flags[key]=size}var target={size:function(n){return n},trigger:function(name){console.log(\\"trigger\\",name)},bind:function(name,f){console.log(\\"bind\\",name);if(\\"function\\"==typeof f)f()},on:{},flags:{}};kept(target),console.log(Object.keys(target.on).join(),target.flags.orientationchange);"`;
 

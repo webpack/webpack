@@ -4,6 +4,22 @@ exports[`CssSyntax minify — a color fallback reads only the value's own calls 
 
 exports[`CssSyntax minify — a color fallback reads only the value's own calls leaves a relative hue that reduces to no degrees as written 1`] = `".a{color:hsl(from red calc(h*1turn) s l)}"`;
 
+exports[`CssSyntax minify — a fallback before a negative amount the property refuses should still drop a positive fallback when the property accepts negative amounts 1`] = `"a{margin-left:-1px}"`;
+
+exports[`CssSyntax minify — a fallback before a negative amount the property refuses should still drop a positive fallback when the property accepts negative amounts 2`] = `"a{margin-left:-1px}"`;
+
+exports[`CssSyntax minify — merged and joined text keeps its boundaries closes a bad url the input ran out in 1`] = `".p{.q{content:\\")}.x{color:red}\\"}url(x\\")}"`;
+
+exports[`CssSyntax minify — merged and joined text keeps its boundaries closes a bad url the input ran out in 2`] = `".p{url(x\\")}.p .q{content:\\")}.x{color:red}\\"}"`;
+
+exports[`CssSyntax minify — merged and joined text keeps its boundaries closes a bad url the input ran out in 3`] = `"@media url(x\\");"`;
+
+exports[`CssSyntax minify — merged and joined text keeps its boundaries closes a bad url the input ran out in 4`] = `".a{b:url(x\\")}"`;
+
+exports[`CssSyntax minify — merged and joined text keeps its boundaries cuts a dead copy out of a nested joined block where it now stands 1`] = `"@supports (display:grid){@media print{.s{content:\\"}}}}.y{color:red}\\"}.x{color:red}}.sep{color:blue}@media print{.q{color:green}}}.app{color:#000}"`;
+
+exports[`CssSyntax minify — merged and joined text keeps its boundaries parts a slash shorthand's \`/\` from a slot that starts with \`*\` 1`] = `".a{grid-row:1/ *}.b{grid-template:1px/ *}.c{grid-template:\\"a\\"1px/ *}.d{color:red}"`;
+
 exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 1`] = `"b:is(a){color:red}"`;
 
 exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 2`] = `"-x.a{color:red}"`;
@@ -31,6 +47,12 @@ exports[`CssSyntax minify — text a rewrite keeps inside its string or url does
 exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 13`] = `".c a,a.b{color:red}"`;
 
 exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 14`] = `"[x]:is(div){color:red}:not(.a):is(p){color:red}b>[y]:is(a){color:red}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 15`] = `"@namespace url(urn:html);@namespace s url(urn:svg);s|a{}:is(s|a){color:red}:is(*|a){color:red}.b :is(|a){color:red}a{color:blue}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url drops no zero length unit inside a string a length-only call holds 1`] = `".b{transform:translate(\\"a 0px b\\")}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url drops no zero length unit inside a string a length-only call holds 2`] = `".b{transform:translate3d(1px,0,2px)}"`;
 
 exports[`CssSyntax minify — text a rewrite keeps inside its string or url keeps the escaped space a lowered nested selector ends in 1`] = `".a{color:red}.a .b\\\\ {color:blue}"`;
 
@@ -2082,9 +2104,21 @@ exports[`CssSyntax — block streaming leaves the pair at a gathered seam alone 
 
 exports[`CssSyntax — block streaming leaves the pair at a gathered seam alone where it cannot join 6`] = `"@layer a{.p,.q{color:teal}}.mid{margin:0}}"`;
 
+exports[`CssSyntax — declaration ranks orders a block alike when a pair of its properties is asked of again 1`] = `"a{color:red;display:block;top:0}c{color:red;display:block;left:0}"`;
+
+exports[`CssSyntax — declaration ranks orders a block alike when a pair of its properties is asked of again 2`] = `"d{color:red;display:block;top:0}"`;
+
 exports[`CssSyntax — minify comment preservation ignores \`skip\` while printing (every node is needed for serialization) 1`] = `".a .b{color:red}"`;
 
+exports[`CssSyntax — minify token-boundary safety leaves a custom property's value the input ran out in as written 1`] = `"a{color:red}b{--x:f(g"`;
+
 exports[`SourceProcessor — a run inside a run prints a stylesheet a renderer starts while the outer print runs 1`] = `"a{background:url(\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>\\")}b{color:#fff;margin:0}.c{padding:10px}"`;
+
+exports[`SourceProcessor — a run inside a run prints the blocks of a stylesheet a renderer starts inside an outer block 1`] = `"@media print{x{color:red}y{color:blue}}z{margin:0}"`;
+
+exports[`SourceProcessor — mergeDistantRules leaves the source map pointing at what each rule came from 1`] = `".a,.c{color:red}.b{margin:0}"`;
+
+exports[`SourceProcessor — mergeDistantRules orders a list whose block a neighbor folded into changed 1`] = `"b,c{color:red}"`;
 
 exports[`SourceProcessor — renderEmbeddedSource over a data: url offers every language \`EMBEDDED_LANGUAGES\` names, and prints each answer 1`] = `"@import url(data:text/css,/*css*/);.svg{background:url(data:image/svg+xml,/*svg*/)}.html{background:url(data:text/html,/*html*/)}.json{background:url(data:application/json,/*json*/)}.js{background:url(data:text/javascript,/*javascript*/)}"`;
 

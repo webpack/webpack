@@ -589,6 +589,7 @@ describe("CssSyntax — minify token-boundary safety", () => {
 				content: sheet
 			});
 		const open = mapped(fixture("css", "css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-41"));
+		expect(open.code).toMatchSnapshot();
 		expect(open.map.mappings).toBe(
 			mapped(fixture("css", "css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-42")).map.mappings
 		);
@@ -1176,13 +1177,26 @@ describe("cssMinify export", () => {
 describe("SourceProcessor — mergeDistantRules", () => {
 	it("leaves the source map pointing at what each rule came from", () => {
 		const sheet = fixture("css", "source-processor-merge-distant-rules-leaves-the-source-map-pointing-at-what-each");
-		const { map } = new SourceProcessor().process(sheet, {
+		const { code, map } = new SourceProcessor().process(sheet, {
 			mode: "minify",
 			mergeDistantRules: true,
 			source: "in.css",
 			content: sheet
 		});
+		expect(code).toMatchSnapshot();
 		expect(map).toBeDefined();
+	});
+
+	it("orders a list whose block a neighbor folded into changed", () => {
+		const sheet = fixture(
+			"css",
+			"source-processor-merge-distant-rules-orders-a-list-whose-block-a-neighbor-changed"
+		);
+		const { code } = new SourceProcessor().process(sheet, {
+			mode: "minify",
+			mergeDistantRules: true
+		});
+		expect(code).toMatchSnapshot();
 	});
 });
 
@@ -1323,6 +1337,48 @@ describe("CssSyntax minify — joining rules whose values hold escapes", () => {
 			).code;
 		expect(pieces(minify(false))).toEqual(pieces(css));
 		expect(pieces(minify(true))).toEqual(pieces(css));
+	});
+});
+
+describe("CssSyntax minify — merged and joined text keeps its boundaries", () => {
+	/**
+	 * @param {string} css source text
+	 * @param {import("../../../lib/css/syntax-parser").CssProcessOptions=} options more process options
+	 * @returns {string} the minified output
+	 */
+	const min = (css, options) =>
+		new SourceProcessor().process(css, { mode: "minify", ...options }).code;
+
+	it("parts a slash shorthand's `/` from a slot that starts with `*`", () => {
+		expect(
+			min(
+				fixture(
+					"css",
+					"css-syntax-minify-a-merged-slash-shorthand-parts-a-slot-that-starts-with-an-asterisk"
+				)
+			)
+		).toMatchSnapshot();
+	});
+
+	it("closes a bad url the input ran out in", () => {
+		const name = "css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed";
+		const nested = fixture("css", name);
+		expect(min(nested)).toMatchSnapshot();
+		// Lowered, the rule hoisted out of `.p` comes after the bad url.
+		expect(min(nested, { environment: { browsers: ["chrome 100"] } })).toMatchSnapshot();
+		expect(min(fixture("css", `${name}-2`))).toMatchSnapshot();
+		expect(min(fixture("css", `${name}-3`))).toMatchSnapshot();
+	});
+
+	it("cuts a dead copy out of a nested joined block where it now stands", () => {
+		expect(
+			min(
+				fixture(
+					"css",
+					"css-syntax-minify-a-nested-joined-block-is-cut-where-its-rules-now-stand"
+				)
+			)
+		).toMatchSnapshot();
 	});
 });
 
@@ -1772,6 +1828,11 @@ describe("CssSyntax — declaration ranks", () => {
 		 */
 		const min = (src) =>
 			new SourceProcessor().process(src, { mode: "minify" }).code;
+		// `top` leads a pair for the first time, then `left` does, then `top` again.
+		expect(
+			min(fixture("css", "css-syntax-declaration-ranks-orders-a-block-alike-when-a-pair-of-its-properties"))
+		).toMatchSnapshot();
+		expect(min(fixture("css", "css-syntax-declaration-ranks-orders-a-block-alike-when-a-pair-of-its-properties-2"))).toMatchSnapshot();
 		// A shorthand and its longhand keep their order, the first time and the next.
 		const kept = "e{margin-top:1px;margin:0;display:block;top:0}";
 		expect(min(fixture("css", "css-syntax-declaration-ranks-orders-a-block-alike-when-a-pair-of-its-properties-3"))).toBe(kept);
@@ -1968,6 +2029,8 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 		expect(lower(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-does-not-fuse-13"))).toMatchSnapshot();
 		// A parent leading with a type selector cannot follow a simple selector bare.
 		expect(lower(fixture("css", "css-syntax-minify-lowering-nesting-keeps-a-type-led-parent-inside-is-after-a-compound"))).toMatchSnapshot();
+		// A `*` keeps to the default namespace, which a namespaced parent reaches past.
+		expect(lower(fixture("css", "css-syntax-minify-lowering-nesting-keeps-a-namespaced-parent-in-is-for-the-universal"))).toMatchSnapshot();
 	});
 
 	it("keeps the escaped space a lowered nested selector ends in", () => {
@@ -2006,6 +2069,11 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 		).toMatchSnapshot();
 	});
 
+	it("drops no zero length unit inside a string a length-only call holds", () => {
+		expect(minifyFor(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-drops-no-zero"))).toMatchSnapshot();
+		expect(minifyFor(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-drops-no-zero-2"))).toMatchSnapshot();
+	});
+
 	it("renders a data url whose escapes spell a comment as that comment", () => {
 		const processor = new SourceProcessor();
 		const { code } = processor.process(fixture("css", "css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-renders-a-data"), {
@@ -2033,6 +2101,10 @@ describe("CssSyntax minify — a fallback before a negative amount the property 
 		expect(output).toContain(css.includes('font-size') ? 'font-size:12px' : css.includes('stroke-width') ? 'stroke-width:2' : 'width:12px');
 		expect(output).toContain(css.includes('font-size') ? 'font-size:-1px' : css.includes('stroke-width') ? 'stroke-width:-1' : 'width:-1px');
 		expect(minifyFor(output)).toBe(output);
+	});
+	it('should still drop a positive fallback when the property accepts negative amounts', () => {
+		expect(minifyFor(fixture("css", "css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-7"))).toMatchSnapshot();
+		expect(minifyFor(fixture("css", "css-syntax-minify-a-fallback-before-a-negative-amount-the-property-refuses-should-8"))).toMatchSnapshot();
 	});
 });
 
@@ -2072,6 +2144,7 @@ describe("SourceProcessor — a run inside a run", () => {
 				return source;
 			}
 		});
+		expect(innerAlone).toMatchSnapshot();
 		expect(inner).toEqual([innerAlone]);
 		expect(code).toBe(alone);
 	});
