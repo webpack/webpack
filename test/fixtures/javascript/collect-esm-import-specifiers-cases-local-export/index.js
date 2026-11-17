@@ -1,0 +1,1 @@
+export { a }; const a = 1; import "./b";

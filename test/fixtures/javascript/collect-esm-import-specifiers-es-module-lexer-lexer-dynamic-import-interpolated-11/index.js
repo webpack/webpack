@@ -1,0 +1,1 @@
+import(`a${ /x/g }b`)

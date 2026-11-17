@@ -1,0 +1,1 @@
+const x = f() / 2 / "1"; import "./a";

@@ -1,0 +1,1 @@
+const s = `${import.meta.url}`; import "./a";

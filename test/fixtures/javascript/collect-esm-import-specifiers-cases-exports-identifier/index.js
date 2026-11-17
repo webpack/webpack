@@ -1,0 +1,1 @@
+const exports = {}; exports.a = "./nope"; import "./a";

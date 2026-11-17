@@ -1,0 +1,1 @@
+import((() => { return "foo" })() /* comment */)

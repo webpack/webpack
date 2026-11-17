@@ -1,0 +1,1 @@
+function variance(){return s/(a-1)}

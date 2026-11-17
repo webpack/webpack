@@ -1,0 +1,1 @@
+import( `${(globalThis.__templateGlobEvalRan = true, "x")}.js`)

@@ -1,0 +1,1 @@
+const o = { import(x) { return x; } };

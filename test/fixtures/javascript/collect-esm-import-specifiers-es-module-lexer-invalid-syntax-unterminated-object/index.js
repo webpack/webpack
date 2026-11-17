@@ -1,0 +1,4 @@
+
+      const foo = };
+      const bar = {};
+    

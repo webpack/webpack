@@ -1,0 +1,1 @@
+const o = { import: 1, export: 2 }; o.import; o.export; import "./a";

@@ -1,0 +1,1 @@
+let a = 1 + +/"/.source.length; import "./a";

@@ -1,0 +1,1 @@
+export let from = 1; import "./a";

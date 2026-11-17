@@ -1,0 +1,1 @@
+import(`./x.js`, { with: { type: 'json' } })

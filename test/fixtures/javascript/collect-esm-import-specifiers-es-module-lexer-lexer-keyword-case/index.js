@@ -1,0 +1,1 @@
+const of=1;console.log(1+of/1)

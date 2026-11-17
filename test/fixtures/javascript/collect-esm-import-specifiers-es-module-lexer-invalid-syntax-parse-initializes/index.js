@@ -1,0 +1,1 @@
+import 'a'; export var p = 5

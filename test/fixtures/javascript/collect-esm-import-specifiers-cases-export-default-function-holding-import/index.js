@@ -1,0 +1,1 @@
+export default function () { return import("./a"); }

@@ -1,0 +1,1 @@
+importScripts("./nope"); import "./a";

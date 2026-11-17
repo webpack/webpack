@@ -39542,6 +39542,9 @@ declare namespace exports {
 					phase: 6;
 				}>;
 				export let collectCjsRequireSpecifiers: (source: string) => Set<string>;
+				export let collectEsmImportSpecifiers: (
+					source: string
+				) => Map<string, boolean>;
 				export let hasOctalEscape: (raw: string) => boolean;
 				export let lazyObjectOfSource: (
 					source: LazySource,

@@ -1,0 +1,1 @@
+const s = `x${{ a: () => { return 1; } }}y import("./nope")`; import "./a";

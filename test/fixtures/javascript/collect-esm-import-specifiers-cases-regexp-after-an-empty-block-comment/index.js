@@ -1,0 +1,1 @@
+const r = /**/ /"/; import "./a";

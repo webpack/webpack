@@ -1,0 +1,1 @@
+import a from "./a.json" with { type: "json" };

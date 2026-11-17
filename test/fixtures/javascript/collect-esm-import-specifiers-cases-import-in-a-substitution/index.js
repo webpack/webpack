@@ -1,0 +1,1 @@
+const s = `${await import("./a")}`;

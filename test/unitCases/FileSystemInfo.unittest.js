@@ -1590,6 +1590,67 @@ ${details(snapshot)}`)
 			);
 		});
 
+		it("skips Node.js built-ins and tracks a dynamic import that doesn't resolve", (done) => {
+			const fs = createFsFromVolume(new Volume());
+			fs.mkdirSync("/proj", { recursive: true });
+			fs.writeFileSync(
+				"/proj/entry.mjs",
+				[
+					'import fs from "node:fs";',
+					'import path from "path";',
+					'import("./lib.mjs");',
+					'import "./lib.mjs";',
+					'import("./optional.mjs");'
+				].join("\n")
+			);
+			fs.writeFileSync("/proj/lib.mjs", "export const a = 1;\n");
+			const fsInfo = createProjectFsInfo(fs);
+			fsInfo.resolveBuildDependencies(
+				"/proj",
+				["/proj/entry.mjs"],
+				undefined,
+				(err, result_) => {
+					if (err) return done(err);
+					const result =
+						/** @type {import("../../lib/fs/FileSystemInfo").ResolveBuildDependenciesResult} */ (
+							result_
+						);
+					expect(result.files).toContain("/proj/lib.mjs");
+					expect(
+						[...result.resolveResults]
+							.filter(([key]) => key.startsWith("e\n"))
+							.sort()
+					).toEqual([
+						["e\n/proj\n./lib.mjs", "/proj/lib.mjs"],
+						["e\n/proj\n./optional.mjs", false]
+					]);
+					done();
+				}
+			);
+		});
+
+		it("fails on a static import that doesn't resolve, even when import() names it too", (done) => {
+			const fs = createFsFromVolume(new Volume());
+			fs.mkdirSync("/proj", { recursive: true });
+			fs.writeFileSync(
+				"/proj/entry.mjs",
+				'import("./missing.mjs");\nimport "./missing.mjs";\n'
+			);
+			const fsInfo = createProjectFsInfo(fs);
+			fsInfo.resolveBuildDependencies(
+				"/proj",
+				["/proj/entry.mjs"],
+				undefined,
+				(err) => {
+					expect(err).toBeInstanceOf(Error);
+					expect(/** @type {Error} */ (err).message).toContain(
+						"./missing.mjs"
+					);
+					done();
+				}
+			);
+		});
+
 		it("parses ESM specifiers covering every string-escape form", (done) => {
 			const fs = createFsFromVolume(new Volume());
 			fs.mkdirSync("/proj", { recursive: true });
@@ -1597,8 +1658,8 @@ ${details(snapshot)}`)
 			const LF = "\n";
 			const LS = "\u2028";
 			const PS = "\u2029";
-			// Template literals keep es-module-lexer's `n` unset, so the specifier
-			// flows through `parseString`; the bad ones throw and are caught.
+			// Each template is cooked as the engine would; one with a malformed or
+			// octal escape, and an argument that isn't a literal, name nothing.
 			const source = `${[
 				"import(``);",
 				"import(`./plain.mjs`);",
@@ -1607,12 +1668,12 @@ ${details(snapshot)}`)
 				"import(`./codepoint\\u{1F600}.mjs`);",
 				"import(`./named\\n\\t\\r\\b\\f\\v.mjs`);",
 				"import(`./nul\\0.mjs`);",
-				"import(`./other\\q\\$.mjs`);",
-				`import(\`./cont\\${LF}lf.mjs\`);`,
-				`import(\`./cont\\${CR}cr.mjs\`);`,
-				`import(\`./cont\\${CR}${LF}crlf.mjs\`);`,
-				`import(\`./cont\\${LS}ls.mjs\`);`,
-				`import(\`./cont\\${PS}ps.mjs\`);`,
+				"import(`./other-\\q\\$.mjs`);",
+				`import(\`./cont-\\${LF}lf.mjs\`);`,
+				`import(\`./cont-\\${CR}cr.mjs\`);`,
+				`import(\`./cont-\\${CR}${LF}crlf.mjs\`);`,
+				`import(\`./cont-\\${LS}ls.mjs\`);`,
+				`import(\`./cont-\\${PS}ps.mjs\`);`,
 				`import(\`./raw${CR}cr.mjs\`);`,
 				"import(`./bad-hex\\xZZ.mjs`);",
 				"import(`./bad-unicode\\uZZZZ.mjs`);",
@@ -1620,8 +1681,6 @@ ${details(snapshot)}`)
 				"import(`./empty-codepoint\\u{}.mjs`);",
 				"import(`./octal\\101.mjs`);",
 				"import(`./decimal\\8.mjs`);",
-				// Non-analyzable args keep `n` unset and feed a string literal to
-				// parseString: legacy octal, \\8, and a non-literal (returns null).
 				'import("\\101" + x);',
 				'import("\\8" + x);',
 				'import(x + "\\u0041");'
@@ -1632,9 +1691,37 @@ ${details(snapshot)}`)
 				"/proj",
 				["/proj/entry.mjs"],
 				undefined,
-				(err, result) => {
+				(err, result_) => {
 					if (err) return done(err);
-					expect(result).toBeDefined();
+					const result =
+						/** @type {import("../../lib/fs/FileSystemInfo").ResolveBuildDependenciesResult} */ (
+							result_
+						);
+					/** @type {string[]} */
+					const requests = [];
+					for (const [key, resolved] of result.resolveResults) {
+						if (!key.startsWith("e\n/proj\n")) continue;
+						// a dynamic import is tracked even where it doesn't resolve
+						expect(resolved).toBe(false);
+						requests.push(key.slice("e\n/proj\n".length));
+					}
+					expect(requests.sort()).toEqual(
+						[
+							"./plain.mjs",
+							"./hexA.mjs",
+							"./unicodeA.mjs",
+							"./codepoint\u{1F600}.mjs",
+							"./named\n\t\r\b\f\v.mjs",
+							"./nul\0.mjs",
+							"./other-q$.mjs",
+							"./cont-lf.mjs",
+							"./cont-cr.mjs",
+							"./cont-crlf.mjs",
+							"./cont-ls.mjs",
+							"./cont-ps.mjs",
+							"./raw\ncr.mjs"
+						].sort()
+					);
 					done();
 				}
 			);

@@ -1,0 +1,1 @@
+const s = `x${import("./a")}y`; import "./b";

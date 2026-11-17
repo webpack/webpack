@@ -1,0 +1,1 @@
+import(`./p/${x}.js`, { with: { type: "json" } })

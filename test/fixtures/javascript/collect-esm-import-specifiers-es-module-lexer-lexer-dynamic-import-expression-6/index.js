@@ -1,0 +1,1 @@
+import(/* comment */ `asdf` /* comment */ /* comment 2 */)

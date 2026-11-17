@@ -1,0 +1,1 @@
+const r = /import "\.\/nope"/; import "./a";

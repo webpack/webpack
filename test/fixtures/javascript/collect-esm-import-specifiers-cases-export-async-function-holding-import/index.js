@@ -1,0 +1,1 @@
+export async function f() { await import("./a"); }
