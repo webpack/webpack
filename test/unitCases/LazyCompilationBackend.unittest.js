@@ -205,6 +205,8 @@ describe("lazyCompilationBackend", () => {
 		["no listen option", undefined, { host: "localhost", port: undefined }],
 		["a port", 8080, { host: "localhost", port: 8080 }],
 		["options without a host", { port: 8080 }, { host: "localhost", port: 8080 }],
+		["an undefined host", { host: undefined }, { host: "localhost", port: undefined }],
+		["an empty host", { host: "" }, { host: "localhost", port: undefined }],
 		["an explicit host", { host: "0.0.0.0" }, { host: "0.0.0.0", port: undefined }]
 	])("listens on localhost by default given %s", (_name, listen, expected) => {
 		const server = makeServer();
