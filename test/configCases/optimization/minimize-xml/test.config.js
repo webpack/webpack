@@ -25,6 +25,7 @@ const NAMES = [
 	"uncommented",
 	"commented",
 	"transforms",
+	"offcanvas",
 	"structure"
 ];
 

@@ -205,6 +205,11 @@ module.exports = [
 			}
 		}
 	}),
+	// A path wholly outside the root `viewBox` goes.
+	config("offcanvas", {
+		entry: "./offcanvas.js",
+		optimization: { minimizeOptions: { xml: { removeOffCanvasPaths: true } } }
+	}),
 	config("structure", {
 		entry: "./structure.js",
 		optimization: {

@@ -1,0 +1,32 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 10 h 80 v 80 h -80 z"/>
+<path d="M10 -90 h 80 v 80 h -80 z"/>
+<path d="M110 10 h 80 v 80 h -80 z"/>
+<path d="M10 110 h 80 v 80 h -80 z"/>
+<path d="M-90 10 h 80 v 80 h -80 z"/>
+<path d="M-10 50h5" stroke="red" stroke-width="20"/>
+<path d="M-10 50h5" stroke="red"/>
+<path id="a" d="M-90 10h1"/>
+<g transform="translate(200)"><path d="M-150 10h1"/></g>
+<g filter="url(#f)"><path d="M-150 10h1"/></g>
+<g stroke="red" stroke-width="40"><path d="M-30 50h5"/></g>
+<path d="M-50 50A30 30 0 0 1 -45 55"/>
+<path d="M-50 50a30 30 0 0110 0"/>
+<path d="M-30 50s 1 1 2 2t3 3q1 1 2 2"/>
+<path d="M-30 50S-29 51-28 52T-25 55Q-24 56-23 57C-22 58-21 59-20 60Z"/>
+<path d="M-30 50s 1 1 2 2" marker-end="url(#m)"/>
+<path d="M-30 50s 1 1 2 2" style="transform:none"/>
+<path d="M-30 50 x"/>
+<path d="z"/>
+<path d="M-30 50z m1 1l1 1z"/>
+<path d="M-30 50l-1 -1e400"/>
+<path d="M-30 50 a1 1 0 2 0 1 1"/>
+<path d="M-30 50 h"/>
+<path d=""/>
+<path/>
+<a><path d="M-150 10h1"/></a>
+<path d="10 10"/>
+<path d="M-30 50z 5 5"/>
+<path d="M-30 50h5" stroke="red" stroke-miterlimit="10" stroke-width="8"/>
+<path d="M-30 50h5" stroke="red" stroke-width="1em"/>
+</svg>

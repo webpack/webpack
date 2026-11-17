@@ -3622,6 +3622,11 @@ export interface OptimizationMinimizeXml {
 	 */
 	removeMetadata?: boolean;
 	/**
+	 * Remove unnamed SVG paths whose bounds, stroke included, lie wholly outside the root `viewBox`, outside transforms, filters, markers and styles. Off by default because a viewport of another aspect ratio letterboxes the `viewBox` and shows what lies past it.
+	 * @since 5.113.0
+	 */
+	removeOffCanvasPaths?: boolean;
+	/**
 	 * Remove SVG `image` elements referencing JPEG, PNG or GIF images. Off by default because those images disappear from the drawing.
 	 * @since 5.113.0
 	 */
