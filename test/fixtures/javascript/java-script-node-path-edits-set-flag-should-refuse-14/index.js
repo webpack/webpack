@@ -1,0 +1,1 @@
+function f(){for(a of b);}

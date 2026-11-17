@@ -6092,6 +6092,1582 @@ exports[`JavaScript syntax — invariants j-spellings-15 prints {"mode":"minify"
 
 exports[`JavaScript syntax — invariants j-spellings-15 tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] name[11,12] ,[12,13] name[14,15] )[15,16] {[17,18] ([20,21] name[21,22] =[23,24] name[25,26] ([26,27] )[27,28] ,[28,29] name[30,31] )[31,32] +/-[33,34] num[35,36] ;[36,37] ([39,40] name[40,41] =[42,43] name[44,45] ([45,46] )[46,47] ,[47,48] name[49,50] )[50,51] ?[52,53] name[54,61] .[61,62] name[62,65] ([65,66] name[66,67] )[67,68] :[69,70] name[71,72] ([72,73] )[73,74] ;[74,75] }[76,77] name[78,79] ([79,80] num[80,81] ,[81,82] ([83,84] )[84,85] =>[86,88] num[89,90] )[90,91] ;[91,92] eof[93,93]"`;
 
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a parses 1`] = `"Program[0,6](body=[IfStatement[0,6](test=Identifier[3,4](name=\\"a\\") consequent=EmptyStatement[5,6]() alternate=null)] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a prints {"mode":"minify"} 1`] = `"if(a);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a tokenizes 1`] = `"if[0,2] ([2,3] name[3,4] )[4,5] ;[5,6] eof[6,6]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-2 parses 1`] = `"Program[0,6](body=[IfStatement[0,6](test=Identifier[3,4](name=\\"a\\") consequent=EmptyStatement[5,6]() alternate=null)] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-2 prints {"mode":"minify"} 1`] = `"if(a);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-2 tokenizes 1`] = `"if[0,2] ([2,3] name[3,4] )[4,5] ;[5,6] eof[6,6]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-3 parses 1`] = `"Program[0,6](body=[IfStatement[0,6](test=Identifier[3,4](name=\\"a\\") consequent=EmptyStatement[5,6]() alternate=null)] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-3 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-3 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-3 prints {"mode":"minify"} 1`] = `"if(a);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-3 tokenizes 1`] = `"if[0,2] ([2,3] name[3,4] )[4,5] ;[5,6] eof[6,6]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-4 parses 1`] = `"Program[0,6](body=[IfStatement[0,6](test=Identifier[3,4](name=\\"a\\") consequent=EmptyStatement[5,6]() alternate=null)] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-4 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-4 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-4 prints {"mode":"minify"} 1`] = `"if(a);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-4 tokenizes 1`] = `"if[0,2] ([2,3] name[3,4] )[4,5] ;[5,6] eof[6,6]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-5 parses 1`] = `"Program[0,7](body=[IfStatement[0,7](test=Identifier[3,4](name=\\"a\\") consequent=ExpressionStatement[5,7](expression=Identifier[5,6](name=\\"b\\")) alternate=null)] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-5 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-5 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-5 prints {"mode":"minify"} 1`] = `"if(a)b;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-insert-into-a-5 tokenizes 1`] = `"if[0,2] ([2,3] name[3,4] )[4,5] name[5,6] ;[6,7] eof[7,7]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node parses 1`] = `"Program[0,7](body=[ExpressionStatement[0,7](expression=CallExpression[0,6](callee=Identifier[0,1](name=\\"f\\") arguments=[Identifier[2,3](name=\\"a\\"),Identifier[4,5](name=\\"b\\")] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node prints {"mode":"minify"} 1`] = `"f(a,b);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node tokenizes 1`] = `"name[0,1] ([1,2] name[2,3] ,[3,4] name[4,5] )[5,6] ;[6,7] eof[7,7]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-2 parses 1`] = `"Program[0,9](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"a\\")),IfStatement[2,9](test=Identifier[5,6](name=\\"b\\") consequent=ExpressionStatement[7,9](expression=Identifier[7,8](name=\\"c\\")) alternate=null)] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-2 prints {"mode":"minify"} 1`] = `"a;if(b)c;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-2 tokenizes 1`] = `"name[0,1] ;[1,2] if[2,4] ([4,5] name[5,6] )[6,7] name[7,8] ;[8,9] eof[9,9]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-3 parses 1`] = `"Program[0,14](body=[IfStatement[0,14](test=Identifier[3,4](name=\\"a\\") consequent=ExpressionStatement[5,7](expression=Identifier[5,6](name=\\"b\\")) alternate=ExpressionStatement[12,14](expression=Identifier[12,13](name=\\"c\\")))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-3 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-3 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-3 prints {"mode":"minify"} 1`] = `"if(a)b;else c;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-3 tokenizes 1`] = `"if[0,2] ([2,3] name[3,4] )[4,5] name[5,6] ;[6,7] else[7,11] name[12,13] ;[13,14] eof[14,14]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-4 parses 1`] = `"Program[0,7](body=[ExpressionStatement[0,7](expression=CallExpression[0,6](callee=Identifier[0,1](name=\\"f\\") arguments=[Identifier[2,3](name=\\"a\\"),Identifier[4,5](name=\\"b\\")] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-4 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-4 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-4 prints {"mode":"minify"} 1`] = `"f(a,b);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-4 tokenizes 1`] = `"name[0,1] ([1,2] name[2,3] ,[3,4] name[4,5] )[5,6] ;[6,7] eof[7,7]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-5 parses 1`] = `"Program[0,10](body=[VariableDeclaration[0,10](declarations=[VariableDeclarator[4,9](id=Identifier[4,5](name=\\"a\\") init=Literal[8,9](value=1 raw=\\"1\\"))] kind=\\"let\\")] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-5 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-5 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-5 prints {"mode":"minify"} 1`] = `"let a=1;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-move-a-node-5 tokenizes 1`] = `"name[0,3] name[4,5] =[6,7] num[8,9] ;[9,10] eof[10,10]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-place-a parses 1`] = `"Program[0,5](body=[ExpressionStatement[0,5](expression=CallExpression[0,4](callee=Identifier[0,1](name=\\"f\\") arguments=[Identifier[2,3](name=\\"a\\")] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-place-a parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-place-a parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-place-a prints {"mode":"minify"} 1`] = `"f(a);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-place-a tokenizes 1`] = `"name[0,1] ([1,2] name[2,3] )[3,4] ;[4,5] eof[5,5]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move parses 1`] = `"Program[0,12](body=[ExpressionStatement[0,8](expression=CallExpression[0,7](callee=Identifier[0,1](name=\\"f\\") arguments=[CallExpression[2,6](callee=Identifier[2,3](name=\\"g\\") arguments=[Identifier[4,5](name=\\"a\\")] optional=false)] optional=false)),ExpressionStatement[8,12](expression=CallExpression[8,11](callee=Identifier[8,9](name=\\"h\\") arguments=[] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move prints {"mode":"minify"} 1`] = `"f(g(a));h();"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move tokenizes 1`] = `"name[0,1] ([1,2] name[2,3] ([3,4] name[4,5] )[5,6] )[6,7] ;[7,8] name[8,9] ([9,10] )[10,11] ;[11,12] eof[12,12]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-2 parses 1`] = `"Program[0,8](body=[ExpressionStatement[0,8](expression=CallExpression[0,7](callee=Identifier[0,1](name=\\"f\\") arguments=[CallExpression[2,6](callee=Identifier[2,3](name=\\"g\\") arguments=[Identifier[4,5](name=\\"a\\")] optional=false)] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-2 prints {"mode":"minify"} 1`] = `"f(g(a));"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-2 tokenizes 1`] = `"name[0,1] ([1,2] name[2,3] ([3,4] name[4,5] )[5,6] )[6,7] ;[7,8] eof[8,8]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-3 parses 1`] = `"Program[0,9](body=[ExpressionStatement[0,5](expression=CallExpression[0,4](callee=Identifier[0,1](name=\\"f\\") arguments=[Identifier[2,3](name=\\"a\\")] optional=false)),ExpressionStatement[5,9](expression=CallExpression[5,8](callee=Identifier[5,6](name=\\"g\\") arguments=[] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-3 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-3 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-3 prints {"mode":"minify"} 1`] = `"f(a);g();"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-3 tokenizes 1`] = `"name[0,1] ([1,2] name[2,3] )[3,4] ;[4,5] name[5,6] ([6,7] )[7,8] ;[8,9] eof[9,9]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-4 parses 1`] = `"Program[0,4](body=[ExpressionStatement[0,4](expression=CallExpression[0,3](callee=Identifier[0,1](name=\\"f\\") arguments=[] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-4 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-4 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-4 prints {"mode":"minify"} 1`] = `"f();"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-4 tokenizes 1`] = `"name[0,1] ([1,2] )[2,3] ;[3,4] eof[4,4]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-5 parses 1`] = `"Program[0,4](body=[ExpressionStatement[0,4](expression=CallExpression[0,3](callee=Identifier[0,1](name=\\"f\\") arguments=[] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-5 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-5 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-5 prints {"mode":"minify"} 1`] = `"f();"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-a-move-5 tokenizes 1`] = `"name[0,1] ([1,2] )[2,3] ;[3,4] eof[4,4]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to parses 1`] = `"Program[0,5](body=[ExpressionStatement[0,5](expression=CallExpression[0,4](callee=Identifier[0,1](name=\\"f\\") arguments=[Identifier[2,3](name=\\"a\\")] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to prints {"mode":"minify"} 1`] = `"f(a);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to tokenizes 1`] = `"name[0,1] ([1,2] name[2,3] )[3,4] ;[4,5] eof[5,5]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-2 parses 1`] = `"Program[0,7](body=[ExpressionStatement[0,7](expression=SequenceExpression[1,5](expressions=[Identifier[1,2](name=\\"a\\"),Identifier[4,5](name=\\"b\\")]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-2 prints {"mode":"minify"} 1`] = `"a,b;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-2 tokenizes 1`] = `"([0,1] name[1,2] ,[2,3] name[4,5] )[5,6] ;[6,7] eof[7,7]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-3 parses 1`] = `"Program[0,9](body=[ExpressionStatement[0,9](expression=TemplateLiteral[0,8](expressions=[Identifier[4,5](name=\\"b\\")] quasis=[TemplateElement[1,2](value={\\"raw\\":\\"a\\",\\"cooked\\":\\"a\\"} tail=false),TemplateElement[6,7](value={\\"raw\\":\\"c\\",\\"cooked\\":\\"c\\"} tail=true)]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-3 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-3 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-3 prints {"mode":"minify"} 1`] = `"\`a\${b}c\`;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-3 tokenizes 1`] = `"\`[0,1] template[1,2] \${[2,4] name[4,5] }[5,6] template[6,7] \`[7,8] ;[8,9] eof[9,9]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-4 parses 1`] = `"Program[0,12](body=[VariableDeclaration[0,12](declarations=[VariableDeclarator[6,11](id=Identifier[6,7](name=\\"a\\") init=Literal[10,11](value=1 raw=\\"1\\"))] kind=\\"const\\")] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-4 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-4 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-4 prints {"mode":"minify"} 1`] = `"const a=1;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-4 tokenizes 1`] = `"const[0,5] name[6,7] =[8,9] num[10,11] ;[11,12] eof[12,12]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-5 parses 1`] = `"Program[0,12](body=[VariableDeclaration[0,12](declarations=[VariableDeclarator[6,11](id=Identifier[6,7](name=\\"a\\") init=Literal[10,11](value=1 raw=\\"1\\"))] kind=\\"const\\")] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-5 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-5 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-5 prints {"mode":"minify"} 1`] = `"const a=1;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-5 tokenizes 1`] = `"const[0,5] name[6,7] =[8,9] num[10,11] ;[11,12] eof[12,12]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-6 parses 1`] = `"Program[0,2](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"a\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-6 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-6 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-6 prints {"mode":"minify"} 1`] = `"a;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-refuse-to-6 tokenizes 1`] = `"name[0,1] ;[1,2] eof[2,2]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-remove-a parses 1`] = `"Program[0,19](body=[ExpressionStatement[0,15](expression=CallExpression[0,14](callee=MemberExpression[0,11](object=Identifier[0,7](name=\\"console\\") property=Identifier[8,11](name=\\"log\\") computed=false optional=false) arguments=[Literal[12,13](value=1 raw=\\"1\\")] optional=false)),ExpressionStatement[15,19](expression=CallExpression[15,18](callee=Identifier[15,16](name=\\"a\\") arguments=[] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-remove-a parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-remove-a parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-remove-a prints {"mode":"minify"} 1`] = `"console.log(1);a();"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-remove-a tokenizes 1`] = `"name[0,7] .[7,8] name[8,11] ([11,12] num[12,13] )[13,14] ;[14,15] name[15,16] ([16,17] )[17,18] ;[18,19] eof[19,19]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-remove-a-2 parses 1`] = `"Program[0,14](body=[IfStatement[0,14](test=Identifier[3,4](name=\\"a\\") consequent=ExpressionStatement[5,7](expression=Identifier[5,6](name=\\"b\\")) alternate=ExpressionStatement[12,14](expression=Identifier[12,13](name=\\"c\\")))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-remove-a-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-remove-a-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-remove-a-2 prints {"mode":"minify"} 1`] = `"if(a)b;else c;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-remove-a-2 tokenizes 1`] = `"if[0,2] ([2,3] name[3,4] )[4,5] name[5,6] ;[6,7] else[7,11] name[12,13] ;[13,14] eof[14,14]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-replace-with parses 1`] = `"Program[0,4](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"a\\")),ExpressionStatement[2,4](expression=Identifier[2,3](name=\\"b\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-replace-with parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-replace-with parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-replace-with prints {"mode":"minify"} 1`] = `"a;b;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-replace-with tokenizes 1`] = `"name[0,1] ;[1,2] name[2,3] ;[3,4] eof[4,4]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-replace-with-2 parses 1`] = `"Program[0,7](body=[ExpressionStatement[0,7](expression=CallExpression[0,6](callee=Identifier[0,1](name=\\"f\\") arguments=[Identifier[2,3](name=\\"a\\"),Identifier[4,5](name=\\"b\\")] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-replace-with-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-replace-with-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-replace-with-2 prints {"mode":"minify"} 1`] = `"f(a,b);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-replace-with-2 tokenizes 1`] = `"name[0,1] ([1,2] name[2,3] ,[3,4] name[4,5] )[5,6] ;[6,7] eof[7,7]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-replace-with-3 parses 1`] = `"Program[0,6](body=[IfStatement[0,6](test=Identifier[3,4](name=\\"a\\") consequent=EmptyStatement[5,6]() alternate=null)] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-replace-with-3 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-replace-with-3 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-replace-with-3 prints {"mode":"minify"} 1`] = `"if(a);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-replace-with-insert-and-remove-should-replace-with-3 tokenizes 1`] = `"if[0,2] ([2,3] name[3,4] )[4,5] ;[5,6] eof[6,6]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own parses 1`] = `"Program[0,27](body=[FunctionDeclaration[0,27](id=Identifier[15,16](name=\\"f\\") expression=false generator=false async=true params=[] body=BlockStatement[18,27](body=[ExpressionStatement[19,26](expression=AwaitExpression[19,26](argument=Identifier[25,26](name=\\"a\\")))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own prints {"mode":"minify"} 1`] = `"async function f(){await a}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own tokenizes 1`] = `"name[0,5] function[6,14] name[15,16] ([16,17] )[17,18] {[18,19] name[19,24] name[25,26] }[26,27] eof[27,27]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-2 parses 1`] = `"Program[0,38](body=[FunctionDeclaration[0,38](id=Identifier[15,16](name=\\"f\\") expression=false generator=false async=true params=[] body=BlockStatement[18,38](body=[ForOfStatement[19,37](await=true left=Identifier[29,30](name=\\"a\\") right=Identifier[34,35](name=\\"b\\") body=EmptyStatement[36,37]())]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-2 prints {"mode":"minify"} 1`] = `"async function f(){for await(a of b);}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-2 tokenizes 1`] = `"name[0,5] function[6,14] name[15,16] ([16,17] )[17,18] {[18,19] for[19,22] name[23,28] ([28,29] name[29,30] name[31,33] name[34,35] )[35,36] ;[36,37] }[37,38] eof[38,38]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-3 parses 1`] = `"Program[0,19](body=[FunctionDeclaration[0,19](id=Identifier[9,10](name=\\"f\\") expression=false generator=true async=false params=[] body=BlockStatement[12,19](body=[ExpressionStatement[13,18](expression=YieldExpression[13,18](delegate=false argument=null))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-3 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-3 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-3 prints {"mode":"minify"} 1`] = `"function*f(){yield}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-3 tokenizes 1`] = `"function[0,8] *[8,9] name[9,10] ([10,11] )[11,12] {[12,13] name[13,18] }[18,19] eof[19,19]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-4 parses 1`] = `"Program[0,35](body=[FunctionDeclaration[0,35](id=Identifier[9,10](name=\\"f\\") expression=false generator=false async=false params=[] body=BlockStatement[12,35](body=[VariableDeclaration[13,23](declarations=[VariableDeclarator[17,22](id=Identifier[17,22](name=\\"await\\") init=null)] kind=\\"var\\"),ExpressionStatement[23,34](expression=ArrowFunctionExpression[24,33](id=null expression=true generator=false async=false params=[] body=Identifier[28,33](name=\\"await\\")))]))] sourceType=\\"script\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-4 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-4 prints {"mode":"minify"} 1`] = `"throws: Cannot use keyword 'await' outside an async function (1:17)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-4 tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] )[11,12] {[12,13] var[13,16] name[17,22] ;[22,23] ([23,24] ([24,25] )[25,26] =>[26,28] name[28,33] )[33,34] }[34,35] eof[35,35]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-5 parses 1`] = `"Program[0,38](body=[FunctionDeclaration[0,38](id=Identifier[15,16](name=\\"f\\") expression=false generator=false async=true params=[] body=BlockStatement[18,38](body=[ExpressionStatement[19,37](expression=ArrowFunctionExpression[20,36](id=null expression=true generator=false async=true params=[] body=AwaitExpression[29,36](argument=Identifier[35,36](name=\\"a\\"))))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-5 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-5 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-5 prints {"mode":"minify"} 1`] = `"async function f(){async()=>await a}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-5 tokenizes 1`] = `"name[0,5] function[6,14] name[15,16] ([16,17] )[17,18] {[18,19] ([19,20] name[20,25] ([25,26] )[26,27] =>[27,29] name[29,34] name[35,36] )[36,37] }[37,38] eof[38,38]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-6 parses 1`] = `"Program[0,29](body=[FunctionDeclaration[0,29](id=Identifier[9,10](name=\\"f\\") expression=false generator=false async=false params=[] body=BlockStatement[12,29](body=[ExpressionStatement[13,21](expression=MemberExpression[13,20](object=Identifier[13,14](name=\\"a\\") property=Identifier[15,20](name=\\"await\\") computed=false optional=false)),LabeledStatement[21,28](body=EmptyStatement[27,28]() label=Identifier[21,26](name=\\"yield\\"))]))] sourceType=\\"script\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-6 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-6 prints {"mode":"minify"} 1`] = `"throws: The keyword 'yield' is reserved (1:21)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-keep-a-function-s-kind-as-its-own-6 tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] )[11,12] {[12,13] name[13,14] .[14,15] name[15,20] ;[20,21] name[21,26] :[26,27] ;[27,28] }[28,29] eof[29,29]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-read-a-chain-through-the-members parses 1`] = `"Program[0,9](body=[ExpressionStatement[0,9](expression=ChainExpression[0,8](expression=MemberExpression[0,8](object=MemberExpression[0,6](object=MemberExpression[0,4](object=Identifier[0,1](name=\\"a\\") property=Identifier[3,4](name=\\"b\\") computed=false optional=true) property=Identifier[5,6](name=\\"c\\") computed=false optional=false) property=Identifier[7,8](name=\\"d\\") computed=false optional=false)))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-read-a-chain-through-the-members parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-read-a-chain-through-the-members parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-read-a-chain-through-the-members prints {"mode":"minify"} 1`] = `"a?.b.c.d;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-read-a-chain-through-the-members tokenizes 1`] = `"name[0,1] ?.[1,3] name[3,4] .[4,5] name[5,6] .[6,7] name[7,8] ;[8,9] eof[9,9]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse parses 1`] = `"Program[0,4](body=[ExpressionStatement[0,4](expression=MemberExpression[0,3](object=Identifier[0,1](name=\\"a\\") property=Identifier[2,3](name=\\"b\\") computed=false optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse prints {"mode":"minify"} 1`] = `"a.b;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse tokenizes 1`] = `"name[0,1] .[1,2] name[2,3] ;[3,4] eof[4,4]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-2 parses 1`] = `"Program[0,24](body=[ClassDeclaration[0,24](id=Identifier[6,7](name=\\"A\\") superClass=null body=ClassBody[7,24](body=[PropertyDefinition[8,11](static=false computed=false key=PrivateIdentifier[8,10](name=\\"a\\") value=null),MethodDefinition[11,23](static=false computed=false key=Identifier[11,12](name=\\"m\\") kind=\\"method\\" value=FunctionExpression[12,23](id=null expression=false generator=false async=false params=[] body=BlockStatement[14,23](body=[ExpressionStatement[15,22](expression=MemberExpression[15,22](object=ThisExpression[15,19]() property=PrivateIdentifier[20,22](name=\\"a\\") computed=false optional=false))])))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-2 prints {"mode":"minify"} 1`] = `"class A{#a;m(){this.#a}}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-2 tokenizes 1`] = `"class[0,5] name[6,7] {[7,8] privateId[8,10]=\\"a\\" ;[10,11] name[11,12] ([12,13] )[13,14] {[14,15] this[15,19] .[19,20] privateId[20,22]=\\"a\\" }[22,23] }[23,24] eof[24,24]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-3 parses 1`] = `"Program[0,6](body=[ExpressionStatement[0,6](expression=ObjectExpression[1,4](properties=[Property[2,3](method=false shorthand=true computed=false key=Identifier[2,3](name=\\"a\\") value=Identifier[2,3](name=\\"a\\") kind=\\"init\\")]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-3 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-3 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-3 prints {"mode":"minify"} 1`] = `"({a:a});"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-3 tokenizes 1`] = `"([0,1] {[1,2] name[2,3] }[3,4] )[4,5] ;[5,6] eof[6,6]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-4 parses 1`] = `"Program[0,7](body=[ExpressionStatement[0,7](expression=MemberExpression[0,6](object=Identifier[0,1](name=\\"a\\") property=BinaryExpression[2,5](left=Literal[2,3](value=1 raw=\\"1\\") operator=\\"+\\" right=Literal[4,5](value=1 raw=\\"1\\")) computed=true optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-4 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-4 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-4 prints {"mode":"minify"} 1`] = `"a[1+1];"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-4 tokenizes 1`] = `"name[0,1] [[1,2] num[2,3] +/-[3,4] num[4,5] ][5,6] ;[6,7] eof[7,7]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-5 parses 1`] = `"Program[0,4](body=[ExpressionStatement[0,4](expression=MemberExpression[0,3](object=Identifier[0,1](name=\\"a\\") property=Identifier[2,3](name=\\"b\\") computed=false optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-5 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-5 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-5 prints {"mode":"minify"} 1`] = `"a.b;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-5 tokenizes 1`] = `"name[0,1] .[1,2] name[2,3] ;[3,4] eof[4,4]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-6 parses 1`] = `"Program[0,8](body=[ExpressionStatement[0,8](expression=ObjectExpression[1,6](properties=[Property[2,5](method=false shorthand=false computed=false key=Identifier[2,3](name=\\"a\\") value=Literal[4,5](value=1 raw=\\"1\\") kind=\\"init\\")]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-6 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-6 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-6 prints {"mode":"minify"} 1`] = `"({a:1});"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-6 tokenizes 1`] = `"([0,1] {[1,2] name[2,3] :[3,4] num[4,5] }[5,6] )[6,7] ;[7,8] eof[8,8]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-7 parses 1`] = `"Program[0,8](body=[ExpressionStatement[0,8](expression=ObjectExpression[1,6](properties=[Property[2,5](method=false shorthand=false computed=false key=Identifier[2,3](name=\\"a\\") value=Identifier[4,5](name=\\"b\\") kind=\\"init\\")]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-7 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-7 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-7 prints {"mode":"minify"} 1`] = `"({a:b});"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-7 tokenizes 1`] = `"([0,1] {[1,2] name[2,3] :[3,4] name[4,5] }[5,6] )[6,7] ;[7,8] eof[8,8]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-8 parses 1`] = `"Program[0,19](body=[FunctionDeclaration[0,19](id=Identifier[9,10](name=\\"f\\") expression=false generator=true async=false params=[] body=BlockStatement[12,19](body=[ExpressionStatement[13,18](expression=YieldExpression[13,18](delegate=false argument=null))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-8 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-8 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-8 prints {"mode":"minify"} 1`] = `"function*f(){yield}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-8 tokenizes 1`] = `"function[0,8] *[8,9] name[9,10] ([10,11] )[11,12] {[12,13] name[13,18] }[18,19] eof[19,19]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-9 parses 1`] = `"Program[0,3](body=[ExpressionStatement[0,3](expression=UnaryExpression[0,2](operator=\\"!\\" prefix=true argument=Identifier[1,2](name=\\"a\\")))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-9 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-9 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-9 prints {"mode":"minify"} 1`] = `"!a;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-9 tokenizes 1`] = `"!/~[0,1] name[1,2] ;[2,3] eof[3,3]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-10 parses 1`] = `"Program[0,8](body=[ExpressionStatement[0,8](expression=ArrowFunctionExpression[1,6](id=null expression=true generator=false async=false params=[] body=Literal[5,6](value=1 raw=\\"1\\")))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-10 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-10 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-10 prints {"mode":"minify"} 1`] = `"()=>1;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-10 tokenizes 1`] = `"([0,1] ([1,2] )[2,3] =>[3,5] num[5,6] )[6,7] ;[7,8] eof[8,8]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-11 parses 1`] = `"Program[0,8](body=[ExpressionStatement[0,8](expression=ArrowFunctionExpression[1,6](id=null expression=true generator=false async=false params=[] body=Literal[5,6](value=1 raw=\\"1\\")))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-11 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-11 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-11 prints {"mode":"minify"} 1`] = `"()=>1;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-11 tokenizes 1`] = `"([0,1] ([1,2] )[2,3] =>[3,5] num[5,6] )[6,7] ;[7,8] eof[8,8]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-12 parses 1`] = `"Program[0,14](body=[ExpressionStatement[0,14](expression=ObjectExpression[1,12](properties=[Property[2,11](method=false shorthand=false computed=false key=Identifier[6,7](name=\\"a\\") value=FunctionExpression[7,11](id=null expression=false generator=false async=false params=[] body=BlockStatement[9,11](body=[])) kind=\\"get\\")]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-12 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-12 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-12 prints {"mode":"minify"} 1`] = `"({get a(){}});"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-12 tokenizes 1`] = `"([0,1] {[1,2] name[2,5] name[6,7] ([7,8] )[8,9] {[9,10] }[10,11] }[11,12] )[12,13] ;[13,14] eof[14,14]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-13 parses 1`] = `"Program[0,24](body=[ClassDeclaration[0,24](id=Identifier[6,7](name=\\"A\\") superClass=null body=ClassBody[7,24](body=[MethodDefinition[8,23](static=false computed=false key=Identifier[8,19](name=\\"constructor\\") kind=\\"constructor\\" value=FunctionExpression[19,23](id=null expression=false generator=false async=false params=[] body=BlockStatement[21,23](body=[])))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-13 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-13 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-13 prints {"mode":"minify"} 1`] = `"class A{constructor(){}}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-13 tokenizes 1`] = `"class[0,5] name[6,7] {[7,8] name[8,19] ([19,20] )[20,21] {[21,22] }[22,23] }[23,24] eof[24,24]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-14 parses 1`] = `"Program[0,26](body=[FunctionDeclaration[0,26](id=Identifier[9,10](name=\\"f\\") expression=false generator=false async=false params=[] body=BlockStatement[12,26](body=[ForOfStatement[13,25](await=false left=Identifier[17,18](name=\\"a\\") right=Identifier[22,23](name=\\"b\\") body=EmptyStatement[24,25]())]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-14 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-14 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-14 prints {"mode":"minify"} 1`] = `"function f(){for(a of b);}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-refuse-14 tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] )[11,12] {[12,13] for[13,16] ([16,17] name[17,18] name[19,21] name[22,23] )[23,24] ;[24,25] }[25,26] eof[26,26]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-set-a-function-s-kind-and-a-loop-s parses 1`] = `"Program[0,55](body=[FunctionDeclaration[0,14](id=Identifier[9,10](name=\\"f\\") expression=false generator=false async=false params=[] body=BlockStatement[12,14](body=[])),ExpressionStatement[14,22](expression=ArrowFunctionExpression[15,20](id=null expression=true generator=false async=false params=[] body=Literal[19,20](value=1 raw=\\"1\\"))),ClassDeclaration[22,43](id=Identifier[28,29](name=\\"A\\") superClass=null body=ClassBody[29,43](body=[MethodDefinition[30,42](static=true computed=false key=Identifier[37,38](name=\\"m\\") kind=\\"method\\" value=FunctionExpression[38,42](id=null expression=false generator=false async=false params=[] body=BlockStatement[40,42](body=[])))])),ForOfStatement[43,55](await=false left=Identifier[47,48](name=\\"a\\") right=Identifier[52,53](name=\\"b\\") body=EmptyStatement[54,55]())] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-set-a-function-s-kind-and-a-loop-s parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-set-a-function-s-kind-and-a-loop-s parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-set-a-function-s-kind-and-a-loop-s prints {"mode":"minify"} 1`] = `"function f(){}()=>1;class A{static m(){}}for(a of b);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-set-a-function-s-kind-and-a-loop-s tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] )[11,12] {[12,13] }[13,14] ([14,15] ([15,16] )[16,17] =>[17,19] num[19,20] )[20,21] ;[21,22] class[22,27] name[28,29] {[29,30] name[30,36] name[37,38] ([38,39] )[39,40] {[40,41] }[41,42] }[42,43] for[43,46] ([46,47] name[47,48] name[49,51] name[52,53] )[53,54] ;[54,55] eof[55,55]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-set-and-clear-what-the-fields-allow parses 1`] = `"Program[0,58](body=[ExpressionStatement[0,7](expression=ChainExpression[0,6](expression=MemberExpression[0,6](object=MemberExpression[0,4](object=Identifier[0,1](name=\\"a\\") property=Identifier[3,4](name=\\"b\\") computed=false optional=true) property=Identifier[5,6](name=\\"c\\") computed=false optional=false))),ExpressionStatement[7,15](expression=ObjectExpression[8,13](properties=[Property[9,12](method=false shorthand=false computed=false key=Identifier[9,10](name=\\"d\\") value=Literal[11,12](value=1 raw=\\"1\\") kind=\\"init\\")])),ExpressionStatement[15,25](expression=AssignmentExpression[15,24](operator=\\"=\\" left=Identifier[15,16](name=\\"x\\") right=ObjectExpression[17,24](properties=[Property[18,23](method=true shorthand=false computed=false key=Identifier[18,19](name=\\"e\\") value=FunctionExpression[19,23](id=null expression=false generator=false async=false params=[] body=BlockStatement[21,23](body=[])) kind=\\"init\\")]))),FunctionDeclaration[25,46](id=Identifier[34,35](name=\\"f\\") expression=false generator=true async=false params=[] body=BlockStatement[37,46](body=[ExpressionStatement[38,45](expression=YieldExpression[38,45](delegate=false argument=Identifier[44,45](name=\\"g\\")))])),ExpressionStatement[46,50](expression=UpdateExpression[46,49](operator=\\"++\\" prefix=false argument=Identifier[46,47](name=\\"a\\"))),ExpressionStatement[50,58](expression=AssignmentExpression[50,57](operator=\\"=\\" left=Identifier[50,51](name=\\"h\\") right=ObjectExpression[52,57](properties=[Property[53,56](method=false shorthand=false computed=false key=Identifier[53,54](name=\\"i\\") value=Identifier[55,56](name=\\"i\\") kind=\\"init\\")])))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-set-and-clear-what-the-fields-allow parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-set-and-clear-what-the-fields-allow parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-set-and-clear-what-the-fields-allow prints {"mode":"minify"} 1`] = `"a?.b.c;({d:1});x={e(){}};function*f(){yield g}a++;h={i:i};"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-set-and-clear-what-the-fields-allow tokenizes 1`] = `"name[0,1] ?.[1,3] name[3,4] .[4,5] name[5,6] ;[6,7] ([7,8] {[8,9] name[9,10] :[10,11] num[11,12] }[12,13] )[13,14] ;[14,15] name[15,16] =[16,17] {[17,18] name[18,19] ([19,20] )[20,21] {[21,22] }[22,23] }[23,24] ;[24,25] function[25,33] *[33,34] name[34,35] ([35,36] )[36,37] {[37,38] name[38,43] name[44,45] }[45,46] name[46,47] ++/--[47,49] ;[49,50] name[50,51] =[51,52] {[52,53] name[53,54] :[54,55] name[55,56] }[56,57] ;[57,58] eof[58,58]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-write-shorthand-where-it-reads-and parses 1`] = `"Program[0,22](body=[ExpressionStatement[0,6](expression=ObjectExpression[1,4](properties=[Property[2,3](method=false shorthand=true computed=false key=Identifier[2,3](name=\\"a\\") value=Identifier[2,3](name=\\"a\\") kind=\\"init\\")])),ExpressionStatement[6,18](expression=AssignmentExpression[7,16](operator=\\"=\\" left=ObjectPattern[7,14](properties=[Property[8,13](method=false shorthand=false computed=false key=Identifier[8,9](name=\\"b\\") value=AssignmentPattern[10,13](left=Identifier[10,11](name=\\"b\\") right=Literal[12,13](value=1 raw=\\"1\\")) kind=\\"init\\")]) right=Identifier[15,16](name=\\"c\\"))),ExpressionStatement[18,22](expression=MemberExpression[18,21](object=Identifier[18,19](name=\\"x\\") property=Identifier[20,21](name=\\"y\\") computed=false optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-write-shorthand-where-it-reads-and parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-write-shorthand-where-it-reads-and parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-write-shorthand-where-it-reads-and prints {"mode":"minify"} 1`] = `"({a:a});({b:b=1}=c);x.y;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-flag-should-write-shorthand-where-it-reads-and tokenizes 1`] = `"([0,1] {[1,2] name[2,3] }[3,4] )[4,5] ;[5,6] ([6,7] {[7,8] name[8,9] :[9,10] name[10,11] =[11,12] num[12,13] }[13,14] =[14,15] name[15,16] )[16,17] ;[17,18] name[18,19] .[19,20] name[20,21] ;[21,22] eof[22,22]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read parses 1`] = `"Program[0,2](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"x\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read prints {"mode":"minify"} 1`] = `"x;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read tokenizes 1`] = `"name[0,1] ;[1,2] eof[2,2]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-2 parses 1`] = `"Program[0,2](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"x\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-2 prints {"mode":"minify"} 1`] = `"x;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-2 tokenizes 1`] = `"name[0,1] ;[1,2] eof[2,2]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-3 parses 1`] = `"Program[0,2](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"x\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-3 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-3 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-3 prints {"mode":"minify"} 1`] = `"x;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-3 tokenizes 1`] = `"name[0,1] ;[1,2] eof[2,2]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-4 parses 1`] = `"Program[0,2](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"x\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-4 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-4 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-4 prints {"mode":"minify"} 1`] = `"x;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-4 tokenizes 1`] = `"name[0,1] ;[1,2] eof[2,2]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-5 parses 1`] = `"Program[0,24](body=[FunctionDeclaration[0,24](id=Identifier[9,10](name=\\"f\\") expression=false generator=false async=false params=[] body=BlockStatement[12,24](body=[ExpressionStatement[13,23](expression=MetaProperty[13,23](meta=Identifier[13,16](name=\\"new\\") property=Identifier[17,23](name=\\"target\\")))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-5 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-5 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-5 prints {"mode":"minify"} 1`] = `"function f(){new.target}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-refuse-a-name-that-does-not-read-5 tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] )[11,12] {[12,13] new[13,16] .[16,17] name[17,23] }[23,24] eof[24,24]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-rename-a-re-exported-name-to-any parses 1`] = `"Program[0,25](body=[ExportNamedDeclaration[0,25](declaration=null specifiers=[ExportSpecifier[8,14](local=Identifier[8,9](name=\\"a\\") exported=Identifier[13,14](name=\\"b\\"))] source=Literal[21,24](value=\\"x\\" raw=\\"\\\\\\"x\\\\\\"\\") attributes=[])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-rename-a-re-exported-name-to-any parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-rename-a-re-exported-name-to-any parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-rename-a-re-exported-name-to-any prints {"mode":"minify"} 1`] = `"export{a as b}from\\"x\\";"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-rename-a-re-exported-name-to-any tokenizes 1`] = `"export[0,6] {[7,8] name[8,9] name[10,12] name[13,14] }[14,15] name[16,20] string[21,24]=\\"x\\" ;[24,25] eof[25,25]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-rename-a-reference-a-key-and-a parses 1`] = `"Program[0,36](body=[ExpressionStatement[0,4](expression=MemberExpression[0,3](object=Identifier[0,1](name=\\"a\\") property=Identifier[2,3](name=\\"b\\") computed=false optional=false)),ExpressionStatement[4,12](expression=ObjectExpression[5,10](properties=[Property[6,9](method=false shorthand=false computed=false key=Identifier[6,7](name=\\"c\\") value=Literal[8,9](value=1 raw=\\"1\\") kind=\\"init\\")])),ClassDeclaration[12,36](id=Identifier[18,19](name=\\"A\\") superClass=null body=ClassBody[19,36](body=[PropertyDefinition[20,23](static=false computed=false key=PrivateIdentifier[20,22](name=\\"d\\") value=null),MethodDefinition[23,35](static=false computed=false key=Identifier[23,24](name=\\"m\\") kind=\\"method\\" value=FunctionExpression[24,35](id=null expression=false generator=false async=false params=[] body=BlockStatement[26,35](body=[ExpressionStatement[27,34](expression=MemberExpression[27,34](object=ThisExpression[27,31]() property=PrivateIdentifier[32,34](name=\\"d\\") computed=false optional=false))])))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-rename-a-reference-a-key-and-a parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-rename-a-reference-a-key-and-a parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-rename-a-reference-a-key-and-a prints {"mode":"minify"} 1`] = `"a.b;({c:1});class A{#d;m(){this.#d}}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-rename-a-reference-a-key-and-a tokenizes 1`] = `"name[0,1] .[1,2] name[2,3] ;[3,4] ([4,5] {[5,6] name[6,7] :[7,8] num[8,9] }[9,10] )[10,11] ;[11,12] class[12,17] name[18,19] {[19,20] privateId[20,22]=\\"d\\" ;[22,23] name[23,24] ([24,25] )[25,26] {[26,27] this[27,31] .[31,32] privateId[32,34]=\\"d\\" }[34,35] }[35,36] eof[36,36]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-write-a-shorthand-property-out parses 1`] = `"Program[0,16](body=[ExpressionStatement[0,6](expression=ObjectExpression[1,4](properties=[Property[2,3](method=false shorthand=true computed=false key=Identifier[2,3](name=\\"a\\") value=Identifier[2,3](name=\\"a\\") kind=\\"init\\")])),ExpressionStatement[6,16](expression=AssignmentExpression[7,14](operator=\\"=\\" left=ObjectPattern[7,12](properties=[Property[8,11](method=false shorthand=true computed=false key=Identifier[8,9](name=\\"b\\") value=AssignmentPattern[8,11](left=Identifier[8,9](name=\\"b\\") right=Literal[10,11](value=1 raw=\\"1\\")) kind=\\"init\\")]) right=Identifier[13,14](name=\\"c\\")))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-write-a-shorthand-property-out parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-write-a-shorthand-property-out parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-write-a-shorthand-property-out prints {"mode":"minify"} 1`] = `"({a:a});({b:b=1}=c);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-name-should-write-a-shorthand-property-out tokenizes 1`] = `"([0,1] {[1,2] name[2,3] }[3,4] )[4,5] ;[5,6] ([6,7] {[7,8] name[8,9] =[9,10] num[10,11] }[11,12] =[12,13] name[13,14] )[14,15] ;[15,16] eof[16,16]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-leave-an-optional-part-out-for-an parses 1`] = `"throws: Unexpected token (1:13)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-leave-an-optional-part-out-for-an parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-leave-an-optional-part-out-for-an parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-leave-an-optional-part-out-for-an prints {"mode":"minify"} 1`] = `"import defer*as a from\\"b\\";"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-leave-an-optional-part-out-for-an tokenizes 1`] = `"import[0,6] name[7,12] *[13,14] name[15,17] name[18,19] name[20,24] string[25,28]=\\"b\\" ;[28,29] eof[29,29]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-make-a-constructor-of-a-method parses 1`] = `"Program[0,24](body=[ClassDeclaration[0,24](id=Identifier[6,7](name=\\"A\\") superClass=null body=ClassBody[7,24](body=[MethodDefinition[8,23](static=false computed=false key=Identifier[8,19](name=\\"constructor\\") kind=\\"constructor\\" value=FunctionExpression[19,23](id=null expression=false generator=false async=false params=[] body=BlockStatement[21,23](body=[])))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-make-a-constructor-of-a-method parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-make-a-constructor-of-a-method parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-make-a-constructor-of-a-method prints {"mode":"minify"} 1`] = `"class A{constructor(){}}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-make-a-constructor-of-a-method tokenizes 1`] = `"class[0,5] name[6,7] {[7,8] name[8,19] ([19,20] )[20,21] {[21,22] }[22,23] }[23,24] eof[24,24]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse parses 1`] = `"Program[0,2](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"a\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse prints {"mode":"minify"} 1`] = `"a;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse tokenizes 1`] = `"name[0,1] ;[1,2] eof[2,2]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-2 parses 1`] = `"Program[0,13](body=[ExpressionStatement[0,13](expression=Literal[0,12](value=\\"use strict\\" raw=\\"\\\\\\"use strict\\\\\\"\\") directive=\\"use strict\\")] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-2 prints {"mode":"minify"} 1`] = `"\\"use strict\\";"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-2 tokenizes 1`] = `"string[0,12]=\\"use strict\\" ;[12,13] eof[13,13]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-3 parses 1`] = `"Program[0,4](body=[ExpressionStatement[0,4](expression=BinaryExpression[0,3](left=Identifier[0,1](name=\\"a\\") operator=\\"+\\" right=Identifier[2,3](name=\\"b\\")))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-3 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-3 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-3 prints {"mode":"minify"} 1`] = `"a+b;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-3 tokenizes 1`] = `"name[0,1] +/-[1,2] name[2,3] ;[3,4] eof[4,4]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-4 parses 1`] = `"Program[0,6](body=[ExpressionStatement[0,6](expression=AssignmentExpression[0,5](operator=\\"=\\" left=ArrayPattern[0,3](elements=[Identifier[1,2](name=\\"a\\")]) right=Identifier[4,5](name=\\"b\\")))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-4 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-4 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-4 prints {"mode":"minify"} 1`] = `"[a]=b;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-4 tokenizes 1`] = `"[[0,1] name[1,2] ][2,3] =[3,4] name[4,5] ;[5,6] eof[6,6]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-5 parses 1`] = `"Program[0,8](body=[VariableDeclaration[0,8](declarations=[VariableDeclarator[4,7](id=Identifier[4,5](name=\\"a\\") init=Literal[6,7](value=1 raw=\\"1\\"))] kind=\\"let\\")] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-5 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-5 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-5 prints {"mode":"minify"} 1`] = `"let a=1;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-5 tokenizes 1`] = `"name[0,3] name[4,5] =[5,6] num[6,7] ;[7,8] eof[8,8]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-6 parses 1`] = `"Program[0,6](body=[VariableDeclaration[0,6](declarations=[VariableDeclarator[4,5](id=Identifier[4,5](name=\\"a\\") init=null)] kind=\\"let\\")] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-6 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-6 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-6 prints {"mode":"minify"} 1`] = `"let a;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-6 tokenizes 1`] = `"name[0,3] name[4,5] ;[5,6] eof[6,6]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-7 parses 1`] = `"Program[0,24](body=[FunctionDeclaration[0,24](id=Identifier[9,10](name=\\"f\\") expression=false generator=false async=false params=[] body=BlockStatement[12,24](body=[VariableDeclaration[13,23](declarations=[VariableDeclarator[17,22](id=ArrayPattern[17,20](elements=[Identifier[18,19](name=\\"a\\")]) init=Identifier[21,22](name=\\"b\\"))] kind=\\"let\\")]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-7 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-7 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-7 prints {"mode":"minify"} 1`] = `"function f(){let[a]=b}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-7 tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] )[11,12] {[12,13] name[13,16] [[17,18] name[18,19] ][19,20] =[20,21] name[21,22] ;[22,23] }[23,24] eof[24,24]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-8 parses 1`] = `"Program[0,11](body=[ExpressionStatement[0,11](expression=ObjectExpression[1,9](properties=[Property[2,8](method=true shorthand=false computed=false key=Identifier[2,3](name=\\"a\\") value=FunctionExpression[3,8](id=null expression=false generator=false async=false params=[Identifier[4,5](name=\\"b\\")] body=BlockStatement[6,8](body=[])) kind=\\"init\\")]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-8 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-8 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-8 prints {"mode":"minify"} 1`] = `"({a(b){}});"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-8 tokenizes 1`] = `"([0,1] {[1,2] name[2,3] ([3,4] name[4,5] )[5,6] {[6,7] }[7,8] }[8,9] )[9,10] ;[10,11] eof[11,11]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-9 parses 1`] = `"Program[0,14](body=[ClassDeclaration[0,14](id=Identifier[6,7](name=\\"A\\") superClass=null body=ClassBody[7,14](body=[MethodDefinition[8,13](static=false computed=false key=Identifier[8,9](name=\\"a\\") kind=\\"method\\" value=FunctionExpression[9,13](id=null expression=false generator=false async=false params=[] body=BlockStatement[11,13](body=[])))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-9 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-9 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-9 prints {"mode":"minify"} 1`] = `"class A{a(){}}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-9 tokenizes 1`] = `"class[0,5] name[6,7] {[7,8] name[8,9] ([9,10] )[10,11] {[11,12] }[12,13] }[13,14] eof[14,14]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-10 parses 1`] = `"Program[0,8](body=[ExpressionStatement[0,8](expression=ObjectExpression[1,6](properties=[Property[2,5](method=false shorthand=false computed=false key=Identifier[2,3](name=\\"a\\") value=Literal[4,5](value=1 raw=\\"1\\") kind=\\"init\\")]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-10 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-10 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-10 prints {"mode":"minify"} 1`] = `"({a:1});"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-10 tokenizes 1`] = `"([0,1] {[1,2] name[2,3] :[3,4] num[4,5] }[5,6] )[6,7] ;[7,8] eof[8,8]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-11 parses 1`] = `"Program[0,10](body=[ExpressionStatement[0,10](expression=ObjectExpression[1,8](properties=[Property[2,7](method=true shorthand=false computed=false key=Identifier[2,3](name=\\"a\\") value=FunctionExpression[3,7](id=null expression=false generator=false async=false params=[] body=BlockStatement[5,7](body=[])) kind=\\"init\\")]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-11 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-11 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-11 prints {"mode":"minify"} 1`] = `"({a(){}});"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-11 tokenizes 1`] = `"([0,1] {[1,2] name[2,3] ([3,4] )[4,5] {[5,6] }[6,7] }[7,8] )[8,9] ;[9,10] eof[10,10]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-12 parses 1`] = `"Program[0,14](body=[ClassDeclaration[0,14](id=Identifier[6,7](name=\\"A\\") superClass=null body=ClassBody[7,14](body=[MethodDefinition[8,13](static=false computed=false key=Identifier[8,9](name=\\"a\\") kind=\\"method\\" value=FunctionExpression[9,13](id=null expression=false generator=false async=false params=[] body=BlockStatement[11,13](body=[])))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-12 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-12 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-12 prints {"mode":"minify"} 1`] = `"class A{a(){}}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-12 tokenizes 1`] = `"class[0,5] name[6,7] {[7,8] name[8,9] ([9,10] )[10,11] {[11,12] }[12,13] }[13,14] eof[14,14]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-13 parses 1`] = `"Program[0,14](body=[ClassDeclaration[0,14](id=Identifier[6,7](name=\\"A\\") superClass=null body=ClassBody[7,14](body=[MethodDefinition[8,13](static=false computed=false key=Identifier[8,9](name=\\"a\\") kind=\\"method\\" value=FunctionExpression[9,13](id=null expression=false generator=false async=false params=[] body=BlockStatement[11,13](body=[])))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-13 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-13 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-13 prints {"mode":"minify"} 1`] = `"class A{a(){}}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-13 tokenizes 1`] = `"class[0,5] name[6,7] {[7,8] name[8,9] ([9,10] )[10,11] {[11,12] }[12,13] }[13,14] eof[14,14]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-14 parses 1`] = `"Program[0,18](body=[ImportDeclaration[0,18](specifiers=[ImportDefaultSpecifier[7,8](local=Identifier[7,8](name=\\"a\\"))] source=Literal[14,17](value=\\"b\\" raw=\\"\\\\\\"b\\\\\\"\\") attributes=[])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-14 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-14 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-14 prints {"mode":"minify"} 1`] = `"import a from\\"b\\";"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-14 tokenizes 1`] = `"import[0,6] name[7,8] name[9,13] string[14,17]=\\"b\\" ;[17,18] eof[18,18]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-15 parses 1`] = `"Program[0,18](body=[ImportDeclaration[0,18](specifiers=[ImportDefaultSpecifier[7,8](local=Identifier[7,8](name=\\"a\\"))] source=Literal[14,17](value=\\"b\\" raw=\\"\\\\\\"b\\\\\\"\\") attributes=[])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-15 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-15 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-15 prints {"mode":"minify"} 1`] = `"import a from\\"b\\";"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-15 tokenizes 1`] = `"import[0,6] name[7,8] name[9,13] string[14,17]=\\"b\\" ;[17,18] eof[18,18]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-16 parses 1`] = `"Program[0,23](body=[ImportDeclaration[0,23](specifiers=[ImportNamespaceSpecifier[7,13](local=Identifier[12,13](name=\\"a\\"))] source=Literal[19,22](value=\\"b\\" raw=\\"\\\\\\"b\\\\\\"\\") attributes=[])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-16 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-16 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-16 prints {"mode":"minify"} 1`] = `"import*as a from\\"b\\";"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-16 tokenizes 1`] = `"import[0,6] *[7,8] name[9,11] name[12,13] name[14,18] string[19,22]=\\"b\\" ;[22,23] eof[23,23]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-17 parses 1`] = `"Program[0,2](body=[ExpressionStatement[0,2](expression=Literal[0,1](value=1 raw=\\"1\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-17 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-17 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-17 prints {"mode":"minify"} 1`] = `"1;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-17 tokenizes 1`] = `"num[0,1] ;[1,2] eof[2,2]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-text-that-is-no-string parses 1`] = `"Program[0,4](body=[ExpressionStatement[0,4](expression=BinaryExpression[0,3](left=Identifier[0,1](name=\\"a\\") operator=\\"+\\" right=Identifier[2,3](name=\\"b\\")))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-text-that-is-no-string parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-text-that-is-no-string parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-text-that-is-no-string prints {"mode":"minify"} 1`] = `"a+b;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-refuse-text-that-is-no-string tokenizes 1`] = `"name[0,1] +/-[1,2] name[2,3] ;[3,4] eof[4,4]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-set-operators-kinds-a-raw-spelling parses 1`] = `"Program[0,97](body=[VariableDeclaration[0,8](declarations=[VariableDeclarator[4,7](id=Identifier[4,5](name=\\"a\\") init=Literal[6,7](value=1 raw=\\"1\\"))] kind=\\"let\\"),IfStatement[8,21](test=BinaryExpression[11,15](left=Identifier[11,12](name=\\"a\\") operator=\\"==\\" right=Literal[14,15](value=2 raw=\\"2\\")) consequent=ExpressionStatement[16,21](expression=LogicalExpression[16,20](left=Identifier[16,17](name=\\"b\\") operator=\\"&&\\" right=Identifier[19,20](name=\\"c\\"))) alternate=null),ExpressionStatement[21,26](expression=AssignmentExpression[21,25](operator=\\"+=\\" left=Identifier[21,22](name=\\"d\\") right=Literal[24,25](value=1 raw=\\"1\\"))),ExpressionStatement[26,29](expression=UnaryExpression[26,28](operator=\\"!\\" prefix=true argument=Identifier[27,28](name=\\"e\\"))),ExpressionStatement[29,33](expression=UpdateExpression[29,32](operator=\\"++\\" prefix=false argument=Identifier[29,30](name=\\"f\\"))),ExpressionStatement[33,37](expression=AssignmentExpression[33,36](operator=\\"=\\" left=Identifier[33,34](name=\\"g\\") right=Literal[35,36](value=0 raw=\\"0\\"))),ExpressionStatement[37,59](expression=ObjectExpression[38,57](properties=[Property[39,56](method=false shorthand=false computed=false key=Identifier[43,44](name=\\"h\\") value=FunctionExpression[44,56](id=null expression=false generator=false async=false params=[] body=BlockStatement[46,56](body=[ReturnStatement[47,55](argument=Literal[54,55](value=1 raw=\\"1\\"))])) kind=\\"get\\")])),ClassDeclaration[59,74](id=Identifier[65,66](name=\\"I\\") superClass=null body=ClassBody[66,74](body=[MethodDefinition[67,73](static=false computed=false key=Identifier[67,68](name=\\"j\\") kind=\\"method\\" value=FunctionExpression[68,73](id=null expression=false generator=false async=false params=[Identifier[69,70](name=\\"k\\")] body=BlockStatement[71,73](body=[])))])),ImportDeclaration[74,97](specifiers=[ImportNamespaceSpecifier[81,87](local=Identifier[86,87](name=\\"l\\"))] source=Literal[93,96](value=\\"m\\" raw=\\"\\\\\\"m\\\\\\"\\") attributes=[])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-set-operators-kinds-a-raw-spelling parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-set-operators-kinds-a-raw-spelling parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:74)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-set-operators-kinds-a-raw-spelling prints {"mode":"minify"} 1`] = `"let a=1;if(a==2)b&&c;d+=1;!e;f++;g=0;({get h(){return 1}});class I{j(k){}}import*as l from\\"m\\";"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-text-should-set-operators-kinds-a-raw-spelling tokenizes 1`] = `"name[0,3] name[4,5] =[5,6] num[6,7] ;[7,8] if[8,10] ([10,11] name[11,12] ==/!=/===/!==[12,14] num[14,15] )[15,16] name[16,17] &&[17,19] name[19,20] ;[20,21] name[21,22] _=[22,24] num[24,25] ;[25,26] !/~[26,27] name[27,28] ;[28,29] name[29,30] ++/--[30,32] ;[32,33] name[33,34] =[34,35] num[35,36] ;[36,37] ([37,38] {[38,39] name[39,42] name[43,44] ([44,45] )[45,46] {[46,47] return[47,53] num[54,55] }[55,56] }[56,57] )[57,58] ;[58,59] class[59,64] name[65,66] {[66,67] name[67,68] ([68,69] name[69,70] )[70,71] {[71,72] }[72,73] }[73,74] import[74,80] *[81,82] name[83,85] name[86,87] name[88,92] string[93,96]=\\"m\\" ;[96,97] eof[97,97]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-keep-a-directive-s-string-a parses 1`] = `"Program[0,15](body=[ExpressionStatement[0,13](expression=Literal[0,12](value=\\"use strict\\" raw=\\"\\\\\\"use strict\\\\\\"\\") directive=\\"use strict\\"),ExpressionStatement[13,15](expression=Identifier[13,14](name=\\"a\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-keep-a-directive-s-string-a parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-keep-a-directive-s-string-a parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-keep-a-directive-s-string-a prints {"mode":"minify"} 1`] = `"\\"use strict\\";a;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-keep-a-directive-s-string-a tokenizes 1`] = `"string[0,12]=\\"use strict\\" ;[12,13] name[13,14] ;[14,15] eof[15,15]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-keep-a-directive-s-string-a-2 parses 1`] = `"Program[0,15](body=[ExpressionStatement[0,13](expression=Literal[0,12](value=\\"use strict\\" raw=\\"\\\\\\"use strict\\\\\\"\\") directive=\\"use strict\\"),ExpressionStatement[13,15](expression=Identifier[13,14](name=\\"a\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-keep-a-directive-s-string-a-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-keep-a-directive-s-string-a-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-keep-a-directive-s-string-a-2 prints {"mode":"minify"} 1`] = `"\\"use strict\\";a;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-keep-a-directive-s-string-a-2 tokenizes 1`] = `"string[0,12]=\\"use strict\\" ;[12,13] name[13,14] ;[14,15] eof[15,15]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds parses 1`] = `"Program[0,2](body=[ExpressionStatement[0,2](expression=Literal[0,1](value=1 raw=\\"1\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds prints {"mode":"minify"} 1`] = `"1;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds tokenizes 1`] = `"num[0,1] ;[1,2] eof[2,2]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-2 parses 1`] = `"Program[0,2](body=[ExpressionStatement[0,2](expression=Literal[0,1](value=1 raw=\\"1\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-2 prints {"mode":"minify"} 1`] = `"1;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-2 tokenizes 1`] = `"num[0,1] ;[1,2] eof[2,2]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-3 parses 1`] = `"Program[0,2](body=[ExpressionStatement[0,2](expression=Literal[0,1](value=1 raw=\\"1\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-3 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-3 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-3 prints {"mode":"minify"} 1`] = `"1;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-3 tokenizes 1`] = `"num[0,1] ;[1,2] eof[2,2]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-4 parses 1`] = `"Program[0,2](body=[ExpressionStatement[0,2](expression=Literal[0,1](value=1 raw=\\"1\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-4 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-4 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-4 prints {"mode":"minify"} 1`] = `"1;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-4 tokenizes 1`] = `"num[0,1] ;[1,2] eof[2,2]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-5 parses 1`] = `"Program[0,2](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"x\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-5 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-5 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-5 prints {"mode":"minify"} 1`] = `"x;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-no-literal-holds-5 tokenizes 1`] = `"name[0,1] ;[1,2] eof[2,2]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-the-field-holding parses 1`] = `"Program[0,18](body=[ImportDeclaration[0,18](specifiers=[ImportDefaultSpecifier[7,8](local=Identifier[7,8](name=\\"a\\"))] source=Literal[14,17](value=\\"x\\" raw=\\"\\\\\\"x\\\\\\"\\") attributes=[])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-the-field-holding parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-the-field-holding parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-the-field-holding prints {"mode":"minify"} 1`] = `"import a from\\"x\\";"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-the-field-holding tokenizes 1`] = `"import[0,6] name[7,8] name[9,13] string[14,17]=\\"x\\" ;[17,18] eof[18,18]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-the-field-holding-2 parses 1`] = `"Program[0,10](body=[ExpressionStatement[0,10](expression=ObjectExpression[1,8](properties=[Property[2,7](method=false shorthand=false computed=false key=Literal[2,5](value=\\"a\\" raw=\\"\\\\\\"a\\\\\\"\\") value=Literal[6,7](value=1 raw=\\"1\\") kind=\\"init\\")]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-the-field-holding-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-the-field-holding-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-the-field-holding-2 prints {"mode":"minify"} 1`] = `"({a:1});"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-the-field-holding-2 tokenizes 1`] = `"([0,1] {[1,2] string[2,5]=\\"a\\" :[5,6] num[6,7] }[7,8] )[8,9] ;[9,10] eof[10,10]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-the-field-holding-3 parses 1`] = `"Program[0,10](body=[ExpressionStatement[0,10](expression=ObjectExpression[1,8](properties=[Property[2,7](method=false shorthand=false computed=false key=Literal[2,5](value=\\"a\\" raw=\\"\\\\\\"a\\\\\\"\\") value=Literal[6,7](value=1 raw=\\"1\\") kind=\\"init\\")]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-the-field-holding-3 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-the-field-holding-3 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-the-field-holding-3 prints {"mode":"minify"} 1`] = `"({a:1});"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-refuse-a-value-the-field-holding-3 tokenizes 1`] = `"([0,1] {[1,2] string[2,5]=\\"a\\" :[5,6] num[6,7] }[7,8] )[8,9] ;[9,10] eof[10,10]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write parses 1`] = `"Program[0,8](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"x\\")),ExpressionStatement[2,8](expression=Literal[2,7](value=\\"dev\\" raw=\\"\\\\\\"dev\\\\\\"\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write prints {"mode":"minify"} 1`] = `"x;\\"dev\\";"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write tokenizes 1`] = `"name[0,1] ;[1,2] string[2,7]=\\"dev\\" ;[7,8] eof[8,8]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text parses 1`] = `"Program[0,9](body=[ExpressionStatement[0,9](expression=TemplateLiteral[0,8](expressions=[Identifier[4,5](name=\\"b\\")] quasis=[TemplateElement[1,2](value={\\"raw\\":\\"a\\",\\"cooked\\":\\"a\\"} tail=false),TemplateElement[6,7](value={\\"raw\\":\\"c\\",\\"cooked\\":\\"c\\"} tail=true)]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text prints {"mode":"minify"} 1`] = `"\`a\${b}c\`;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text tokenizes 1`] = `"\`[0,1] template[1,2] \${[2,4] name[4,5] }[5,6] template[6,7] \`[7,8] ;[8,9] eof[9,9]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text-2 parses 1`] = `"Program[0,4](body=[ExpressionStatement[0,4](expression=TemplateLiteral[0,3](expressions=[] quasis=[TemplateElement[1,2](value={\\"raw\\":\\"a\\",\\"cooked\\":\\"a\\"} tail=true)]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text-2 prints {"mode":"minify"} 1`] = `"\`a\`;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text-2 tokenizes 1`] = `"\`[0,1] template[1,2] \`[2,3] ;[3,4] eof[4,4]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text-3 parses 1`] = `"Program[0,4](body=[ExpressionStatement[0,4](expression=TemplateLiteral[0,3](expressions=[] quasis=[TemplateElement[1,2](value={\\"raw\\":\\"a\\",\\"cooked\\":\\"a\\"} tail=true)]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text-3 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text-3 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text-3 prints {"mode":"minify"} 1`] = `"\`a\`;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text-3 tokenizes 1`] = `"\`[0,1] template[1,2] \`[2,3] ;[3,4] eof[4,4]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text-4 parses 1`] = `"Program[0,4](body=[ExpressionStatement[0,4](expression=TemplateLiteral[0,3](expressions=[] quasis=[TemplateElement[1,2](value={\\"raw\\":\\"a\\",\\"cooked\\":\\"a\\"} tail=true)]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text-4 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text-4 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text-4 prints {"mode":"minify"} 1`] = `"\`a\`;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-set-value-should-write-a-template-element-s-text-4 tokenizes 1`] = `"\`[0,1] template[1,2] \`[2,3] ;[3,4] eof[4,4]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read parses 1`] = `"Program[0,4](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"a\\")),ExpressionStatement[2,4](expression=Identifier[2,3](name=\\"b\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read prints {"mode":"minify"} 1`] = `"a;b;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read tokenizes 1`] = `"name[0,1] ;[1,2] name[2,3] ;[3,4] eof[4,4]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-2 parses 1`] = `"Program[0,6](body=[ExpressionStatement[0,6](expression=AssignmentExpression[0,5](operator=\\"=\\" left=Identifier[0,1](name=\\"x\\") right=BinaryExpression[2,5](left=Literal[2,3](value=2 raw=\\"2\\") operator=\\"*\\" right=Identifier[4,5](name=\\"y\\"))))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-2 prints {"mode":"minify"} 1`] = `"x=2*y;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-2 tokenizes 1`] = `"name[0,1] =[1,2] num[2,3] *[3,4] name[4,5] ;[5,6] eof[6,6]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-3 parses 1`] = `"Program[0,5](body=[ExpressionStatement[0,5](expression=CallExpression[0,4](callee=Identifier[0,1](name=\\"f\\") arguments=[Identifier[2,3](name=\\"a\\")] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-3 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-3 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-3 prints {"mode":"minify"} 1`] = `"f(a);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-3 tokenizes 1`] = `"name[0,1] ([1,2] name[2,3] )[3,4] ;[4,5] eof[5,5]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-4 parses 1`] = `"Program[0,4](body=[ExpressionStatement[0,4](expression=ArrayExpression[0,3](elements=[Identifier[1,2](name=\\"a\\")]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-4 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-4 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-4 prints {"mode":"minify"} 1`] = `"[a];"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-4 tokenizes 1`] = `"[[0,1] name[1,2] ][2,3] ;[3,4] eof[4,4]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-5 parses 1`] = `"Program[0,15](body=[FunctionDeclaration[0,15](id=Identifier[9,10](name=\\"f\\") expression=false generator=false async=false params=[] body=BlockStatement[12,15](body=[ExpressionStatement[13,14](expression=Identifier[13,14](name=\\"a\\"))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-5 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-5 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-5 prints {"mode":"minify"} 1`] = `"function f(){a}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-5 tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] )[11,12] {[12,13] name[13,14] }[14,15] eof[15,15]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-6 parses 1`] = `"Program[0,8](body=[ExpressionStatement[0,8](expression=ArrowFunctionExpression[1,6](id=null expression=true generator=false async=false params=[] body=Identifier[5,6](name=\\"a\\")))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-6 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-6 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-6 prints {"mode":"minify"} 1`] = `"()=>a;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-6 tokenizes 1`] = `"([0,1] ([1,2] )[2,3] =>[3,5] name[5,6] )[6,7] ;[7,8] eof[8,8]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-7 parses 1`] = `"Program[0,15](body=[FunctionDeclaration[0,15](id=Identifier[9,10](name=\\"f\\") expression=false generator=false async=false params=[Identifier[11,12](name=\\"a\\")] body=BlockStatement[13,15](body=[]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-7 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-7 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-7 prints {"mode":"minify"} 1`] = `"function f(a){}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-7 tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] name[11,12] )[12,13] {[13,14] }[14,15] eof[15,15]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-8 parses 1`] = `"Program[0,12](body=[VariableDeclaration[0,12](declarations=[VariableDeclarator[4,11](id=ArrayPattern[4,7](elements=[Identifier[5,6](name=\\"a\\")]) init=Identifier[10,11](name=\\"d\\"))] kind=\\"var\\")] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-8 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-8 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-8 prints {"mode":"minify"} 1`] = `"var[a]=d;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-8 tokenizes 1`] = `"var[0,3] [[4,5] name[5,6] ][6,7] =[8,9] name[10,11] ;[11,12] eof[12,12]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-9 parses 1`] = `"Program[0,8](body=[ExpressionStatement[0,8](expression=AssignmentExpression[0,7](operator=\\"=\\" left=ArrayPattern[0,3](elements=[Identifier[1,2](name=\\"a\\")]) right=Identifier[6,7](name=\\"d\\")))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-9 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-9 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-9 prints {"mode":"minify"} 1`] = `"[a]=d;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-9 tokenizes 1`] = `"[[0,1] name[1,2] ][2,3] =[4,5] name[6,7] ;[7,8] eof[8,8]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-10 parses 1`] = `"Program[0,12](body=[VariableDeclaration[0,12](declarations=[VariableDeclarator[4,11](id=ObjectPattern[4,7](properties=[Property[5,6](method=false shorthand=true computed=false key=Identifier[5,6](name=\\"a\\") value=Identifier[5,6](name=\\"a\\") kind=\\"init\\")]) init=Identifier[10,11](name=\\"d\\"))] kind=\\"var\\")] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-10 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-10 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-10 prints {"mode":"minify"} 1`] = `"var{a:a}=d;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-10 tokenizes 1`] = `"var[0,3] {[4,5] name[5,6] }[6,7] =[8,9] name[10,11] ;[11,12] eof[12,12]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-11 parses 1`] = `"Program[0,10](body=[ExpressionStatement[0,10](expression=AssignmentExpression[1,8](operator=\\"=\\" left=ObjectPattern[1,4](properties=[Property[2,3](method=false shorthand=true computed=false key=Identifier[2,3](name=\\"a\\") value=Identifier[2,3](name=\\"a\\") kind=\\"init\\")]) right=Identifier[7,8](name=\\"d\\")))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-11 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-11 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-11 prints {"mode":"minify"} 1`] = `"({a:a}=d);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-11 tokenizes 1`] = `"([0,1] {[1,2] name[2,3] }[3,4] =[5,6] name[7,8] )[8,9] ;[9,10] eof[10,10]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-12 parses 1`] = `"Program[0,6](body=[ExpressionStatement[0,6](expression=ObjectExpression[1,4](properties=[Property[2,3](method=false shorthand=true computed=false key=Identifier[2,3](name=\\"a\\") value=Identifier[2,3](name=\\"a\\") kind=\\"init\\")]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-12 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-12 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-12 prints {"mode":"minify"} 1`] = `"({a:a});"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-12 tokenizes 1`] = `"([0,1] {[1,2] name[2,3] }[3,4] )[4,5] ;[5,6] eof[6,6]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-13 parses 1`] = `"Program[0,9](body=[ClassDeclaration[0,9](id=Identifier[6,7](name=\\"A\\") superClass=null body=ClassBody[7,9](body=[]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-13 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-13 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-13 prints {"mode":"minify"} 1`] = `"class A{}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-13 tokenizes 1`] = `"class[0,5] name[6,7] {[7,8] }[8,9] eof[9,9]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-14 parses 1`] = `"Program[0,18](body=[SwitchStatement[0,18](discriminant=Identifier[7,8](name=\\"a\\") cases=[SwitchCase[10,17](consequent=[] test=Literal[15,16](value=1 raw=\\"1\\"))])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-14 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-14 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-14 prints {"mode":"minify"} 1`] = `"switch(a){case 1:}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-14 tokenizes 1`] = `"switch[0,6] ([6,7] name[7,8] )[8,9] {[9,10] case[10,14] num[15,16] :[16,17] }[17,18] eof[18,18]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-15 parses 1`] = `"Program[0,6](body=[VariableDeclaration[0,6](declarations=[VariableDeclarator[4,5](id=Identifier[4,5](name=\\"a\\") init=null)] kind=\\"let\\")] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-15 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-15 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-15 prints {"mode":"minify"} 1`] = `"let a;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-15 tokenizes 1`] = `"name[0,3] name[4,5] ;[5,6] eof[6,6]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-16 parses 1`] = `"Program[0,8](body=[ForStatement[0,8](init=null test=null update=null body=EmptyStatement[7,8]())] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-16 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-16 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-16 prints {"mode":"minify"} 1`] = `"for(;;);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-16 tokenizes 1`] = `"for[0,3] ([3,4] ;[4,5] ;[5,6] )[6,7] ;[7,8] eof[8,8]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-17 parses 1`] = `"Program[0,12](body=[ForOfStatement[0,12](await=false left=Identifier[4,5](name=\\"a\\") right=Identifier[9,10](name=\\"b\\") body=EmptyStatement[11,12]())] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-17 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-17 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-17 prints {"mode":"minify"} 1`] = `"for(a of b);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-17 tokenizes 1`] = `"for[0,3] ([3,4] name[4,5] name[6,8] name[9,10] )[10,11] ;[11,12] eof[12,12]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-18 parses 1`] = `"Program[0,14](body=[TryStatement[0,14](block=BlockStatement[3,5](body=[]) handler=null finalizer=BlockStatement[12,14](body=[]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-18 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-18 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-18 prints {"mode":"minify"} 1`] = `"try{}finally{}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-18 tokenizes 1`] = `"try[0,3] {[3,4] }[4,5] finally[5,12] {[12,13] }[13,14] eof[14,14]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-19 parses 1`] = `"Program[0,11](body=[ImportDeclaration[0,11](specifiers=[] source=Literal[7,10](value=\\"x\\" raw=\\"\\\\\\"x\\\\\\"\\") attributes=[])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-19 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-19 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-19 prints {"mode":"minify"} 1`] = `"import\\"x\\";"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-19 tokenizes 1`] = `"import[0,6] string[7,10]=\\"x\\" ;[10,11] eof[11,11]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-20 parses 1`] = `"Program[0,20](body=[ImportDeclaration[0,20](specifiers=[ImportSpecifier[8,9](imported=Identifier[8,9](name=\\"a\\") local=Identifier[8,9](name=\\"a\\"))] source=Literal[16,19](value=\\"x\\" raw=\\"\\\\\\"x\\\\\\"\\") attributes=[])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-20 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-20 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-20 prints {"mode":"minify"} 1`] = `"import{a}from\\"x\\";"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-20 tokenizes 1`] = `"import[0,6] {[7,8] name[8,9] }[9,10] name[11,15] string[16,19]=\\"x\\" ;[19,20] eof[20,20]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-21 parses 1`] = `"Program[0,18](body=[ImportDeclaration[0,18](specifiers=[ImportDefaultSpecifier[7,8](local=Identifier[7,8](name=\\"a\\"))] source=Literal[14,17](value=\\"x\\" raw=\\"\\\\\\"x\\\\\\"\\") attributes=[])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-21 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-21 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-21 prints {"mode":"minify"} 1`] = `"import a from\\"x\\";"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-21 tokenizes 1`] = `"import[0,6] name[7,8] name[9,13] string[14,17]=\\"x\\" ;[17,18] eof[18,18]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-22 parses 1`] = `"Program[0,18](body=[ImportDeclaration[0,18](specifiers=[ImportDefaultSpecifier[7,8](local=Identifier[7,8](name=\\"a\\"))] source=Literal[14,17](value=\\"x\\" raw=\\"\\\\\\"x\\\\\\"\\") attributes=[])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-22 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-22 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-22 prints {"mode":"minify"} 1`] = `"import a from\\"x\\";"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-22 tokenizes 1`] = `"import[0,6] name[7,8] name[9,13] string[14,17]=\\"x\\" ;[17,18] eof[18,18]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-23 parses 1`] = `"Program[0,19](body=[ExportNamedDeclaration[0,19](declaration=null specifiers=[] source=Literal[15,18](value=\\"x\\" raw=\\"\\\\\\"x\\\\\\"\\") attributes=[])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-23 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-23 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-23 prints {"mode":"minify"} 1`] = `"export{}from\\"x\\";"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-23 tokenizes 1`] = `"export[0,6] {[7,8] }[8,9] name[10,14] string[15,18]=\\"x\\" ;[18,19] eof[19,19]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-24 parses 1`] = `"Program[0,19](body=[ExportNamedDeclaration[0,19](declaration=VariableDeclaration[7,19](declarations=[VariableDeclarator[13,18](id=Identifier[13,14](name=\\"a\\") init=Literal[17,18](value=1 raw=\\"1\\"))] kind=\\"const\\") specifiers=[] source=null attributes=[])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-24 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-24 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-24 prints {"mode":"minify"} 1`] = `"export const a=1;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-24 tokenizes 1`] = `"export[0,6] const[7,12] name[13,14] =[15,16] num[17,18] ;[18,19] eof[19,19]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-25 parses 1`] = `"Program[0,17](body=[ExportDefaultDeclaration[0,17](declaration=Literal[15,16](value=1 raw=\\"1\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-25 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-25 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-25 prints {"mode":"minify"} 1`] = `"export default 1;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-25 tokenizes 1`] = `"export[0,6] default[7,14] num[15,16] ;[16,17] eof[17,17]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-26 parses 1`] = `"Program[0,5](body=[ExpressionStatement[0,5](expression=TaggedTemplateExpression[0,4](tag=Identifier[0,1](name=\\"t\\") quasi=TemplateLiteral[1,4](expressions=[] quasis=[TemplateElement[2,3](value={\\"raw\\":\\"a\\",\\"cooked\\":\\"a\\"} tail=true)])))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-26 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-26 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-26 prints {"mode":"minify"} 1`] = `"t\`a\`;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-26 tokenizes 1`] = `"name[0,1] \`[1,2] template[2,3] \`[3,4] ;[4,5] eof[5,5]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-27 parses 1`] = `"Program[0,17](body=[LabeledStatement[0,17](body=ForStatement[2,17](init=null test=null update=null body=BreakStatement[9,17](label=Identifier[15,16](name=\\"a\\"))) label=Identifier[0,1](name=\\"a\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-27 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-27 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-27 prints {"mode":"minify"} 1`] = `"a:for(;;)break a;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-27 tokenizes 1`] = `"name[0,1] :[1,2] for[2,5] ([5,6] ;[6,7] ;[7,8] )[8,9] break[9,14] name[15,16] ;[16,17] eof[17,17]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-28 parses 1`] = `"Program[0,29](body=[FunctionDeclaration[0,29](id=Identifier[9,10](name=\\"f\\") expression=false generator=false async=false params=[] body=BlockStatement[12,29](body=[ExpressionStatement[13,26](expression=Literal[13,25](value=\\"use strict\\" raw=\\"\\\\\\"use strict\\\\\\"\\") directive=\\"use strict\\"),ExpressionStatement[26,28](expression=Identifier[26,27](name=\\"a\\"))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-28 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-28 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-28 prints {"mode":"minify"} 1`] = `"function f(){\\"use strict\\";a}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-28 tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] )[11,12] {[12,13] string[13,25]=\\"use strict\\" ;[25,26] name[26,27] ;[27,28] }[28,29] eof[29,29]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-29 parses 1`] = `"Program[0,16](body=[ClassDeclaration[0,16](id=Identifier[6,7](name=\\"A\\") superClass=null body=ClassBody[7,16](body=[MethodDefinition[8,15](static=false computed=false key=Identifier[8,9](name=\\"m\\") kind=\\"method\\" value=FunctionExpression[9,15](id=null expression=false generator=false async=false params=[] body=BlockStatement[11,15](body=[ExpressionStatement[12,14](expression=Identifier[12,13](name=\\"a\\"))])))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-29 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-29 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-29 prints {"mode":"minify"} 1`] = `"class A{m(){a}}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-29 tokenizes 1`] = `"class[0,5] name[6,7] {[7,8] name[8,9] ([9,10] )[10,11] {[11,12] name[12,13] ;[13,14] }[14,15] }[15,16] eof[16,16]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-30 parses 1`] = `"Program[0,29](body=[ExpressionStatement[0,13](expression=Literal[0,12](value=\\"use strict\\" raw=\\"\\\\\\"use strict\\\\\\"\\") directive=\\"use strict\\"),FunctionDeclaration[13,29](id=Identifier[22,23](name=\\"f\\") expression=false generator=false async=false params=[] body=BlockStatement[25,29](body=[ExpressionStatement[26,28](expression=Identifier[26,27](name=\\"a\\"))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-30 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-30 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-30 prints {"mode":"minify"} 1`] = `"\\"use strict\\";function f(){a}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-30 tokenizes 1`] = `"string[0,12]=\\"use strict\\" ;[12,13] function[13,21] name[22,23] ([23,24] )[24,25] {[25,26] name[26,27] ;[27,28] }[28,29] eof[29,29]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-31 parses 1`] = `"Program[0,29](body=[FunctionDeclaration[0,29](id=Identifier[9,10](name=\\"f\\") expression=false generator=false async=false params=[] body=BlockStatement[12,29](body=[ExpressionStatement[13,26](expression=Literal[13,25](value=\\"use strict\\" raw=\\"\\\\\\"use strict\\\\\\"\\") directive=\\"use strict\\"),ExpressionStatement[26,28](expression=Identifier[26,27](name=\\"a\\"))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-31 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-31 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-31 prints {"mode":"minify"} 1`] = `"function f(){\\"use strict\\";a}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-31 tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] )[11,12] {[12,13] string[13,25]=\\"use strict\\" ;[25,26] name[26,27] ;[27,28] }[28,29] eof[29,29]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-32 parses 1`] = `"Program[0,15](body=[ExpressionStatement[0,13](expression=Literal[0,12](value=\\"use strict\\" raw=\\"\\\\\\"use strict\\\\\\"\\") directive=\\"use strict\\"),ExpressionStatement[13,15](expression=Identifier[13,14](name=\\"a\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-32 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-32 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-32 prints {"mode":"minify"} 1`] = `"\\"use strict\\";a;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-32 tokenizes 1`] = `"string[0,12]=\\"use strict\\" ;[12,13] name[13,14] ;[14,15] eof[15,15]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-33 parses 1`] = `"Program[0,19](body=[ClassDeclaration[0,19](id=Identifier[6,7](name=\\"A\\") superClass=null body=ClassBody[7,19](body=[StaticBlock[8,18](body=[ExpressionStatement[15,17](expression=Identifier[15,16](name=\\"a\\"))])]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-33 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-33 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-33 prints {"mode":"minify"} 1`] = `"class A{static{a}}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-33 tokenizes 1`] = `"class[0,5] name[6,7] {[7,8] name[8,14] {[14,15] name[15,16] ;[16,17] }[17,18] }[18,19] eof[19,19]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-34 parses 1`] = `"Program[0,12](body=[ClassDeclaration[0,12](id=Identifier[6,7](name=\\"A\\") superClass=null body=ClassBody[7,12](body=[PropertyDefinition[8,11](static=false computed=false key=Identifier[8,9](name=\\"x\\") value=Identifier[10,11](name=\\"a\\"))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-34 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-34 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-34 prints {"mode":"minify"} 1`] = `"class A{x=a}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-34 tokenizes 1`] = `"class[0,5] name[6,7] {[7,8] name[8,9] =[9,10] name[10,11] }[11,12] eof[12,12]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a parses 1`] = `"Program[0,21](body=[FunctionDeclaration[0,21](id=Identifier[15,16](name=\\"f\\") expression=false generator=true async=true params=[] body=BlockStatement[18,21](body=[ExpressionStatement[19,20](expression=Identifier[19,20](name=\\"a\\"))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a prints {"mode":"minify"} 1`] = `"async function*f(){a}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a tokenizes 1`] = `"name[0,5] function[6,14] *[14,15] name[15,16] ([16,17] )[17,18] {[18,19] name[19,20] }[20,21] eof[21,21]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-2 parses 1`] = `"Program[0,41](body=[ClassDeclaration[0,41](id=Identifier[6,7](name=\\"A\\") superClass=Identifier[16,17](name=\\"B\\") body=ClassBody[17,41](body=[MethodDefinition[18,34](static=false computed=false key=Identifier[18,29](name=\\"constructor\\") kind=\\"constructor\\" value=FunctionExpression[29,34](id=null expression=false generator=false async=false params=[] body=BlockStatement[31,34](body=[ExpressionStatement[32,33](expression=Identifier[32,33](name=\\"a\\"))]))),MethodDefinition[34,40](static=false computed=false key=Identifier[34,35](name=\\"m\\") kind=\\"method\\" value=FunctionExpression[35,40](id=null expression=false generator=false async=false params=[] body=BlockStatement[37,40](body=[ExpressionStatement[38,39](expression=Identifier[38,39](name=\\"a\\"))])))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-2 prints {"mode":"minify"} 1`] = `"class A extends B{constructor(){a}m(){a}}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-2 tokenizes 1`] = `"class[0,5] name[6,7] extends[8,15] name[16,17] {[17,18] name[18,29] ([29,30] )[30,31] {[31,32] name[32,33] }[33,34] name[34,35] ([35,36] )[36,37] {[37,38] name[38,39] }[39,40] }[40,41] eof[41,41]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-3 parses 1`] = `"Program[0,15](body=[ExpressionStatement[0,15](expression=ObjectExpression[1,13](properties=[Property[2,12](method=false shorthand=false computed=false key=Identifier[6,7](name=\\"m\\") value=FunctionExpression[7,12](id=null expression=false generator=false async=false params=[] body=BlockStatement[9,12](body=[ExpressionStatement[10,11](expression=Identifier[10,11](name=\\"a\\"))])) kind=\\"get\\")]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-3 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-3 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-3 prints {"mode":"minify"} 1`] = `"({get m(){a}});"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-3 tokenizes 1`] = `"([0,1] {[1,2] name[2,5] name[6,7] ([7,8] )[8,9] {[9,10] name[10,11] }[11,12] }[12,13] )[13,14] ;[14,15] eof[15,15]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-4 parses 1`] = `"Program[0,2](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"a\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-4 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-4 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-4 prints {"mode":"minify"} 1`] = `"a;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-4 tokenizes 1`] = `"name[0,1] ;[1,2] eof[2,2]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-5 parses 1`] = `"Program[0,15](body=[LabeledStatement[0,15](body=BlockStatement[2,15](body=[ForStatement[3,14](init=null test=null update=null body=BlockStatement[10,14](body=[ExpressionStatement[11,13](expression=Identifier[11,12](name=\\"x\\"))]))]) label=Identifier[0,1](name=\\"a\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-5 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-5 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-5 prints {"mode":"minify"} 1`] = `"a:{for(;;){x}}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-5 tokenizes 1`] = `"name[0,1] :[1,2] {[2,3] for[3,6] ([6,7] ;[7,8] ;[8,9] )[9,10] {[10,11] name[11,12] ;[12,13] }[13,14] }[14,15] eof[15,15]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-6 parses 1`] = `"Program[0,15](body=[LabeledStatement[0,15](body=LabeledStatement[2,15](body=ForStatement[4,15](init=null test=null update=null body=BlockStatement[11,15](body=[ExpressionStatement[12,14](expression=Identifier[12,13](name=\\"x\\"))])) label=Identifier[2,3](name=\\"b\\")) label=Identifier[0,1](name=\\"a\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-6 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-6 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-6 prints {"mode":"minify"} 1`] = `"a:b:for(;;){x}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-6 tokenizes 1`] = `"name[0,1] :[1,2] name[2,3] :[3,4] for[4,7] ([7,8] ;[8,9] ;[9,10] )[10,11] {[11,12] name[12,13] ;[13,14] }[14,15] eof[15,15]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-7 parses 1`] = `"Program[0,20](body=[SwitchStatement[0,20](discriminant=Literal[7,8](value=0 raw=\\"0\\") cases=[SwitchCase[10,19](consequent=[ExpressionStatement[17,19](expression=Identifier[17,18](name=\\"x\\"))] test=Literal[15,16](value=1 raw=\\"1\\"))])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-7 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-7 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-7 prints {"mode":"minify"} 1`] = `"switch(0){case 1:x}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-7 tokenizes 1`] = `"switch[0,6] ([6,7] num[7,8] )[8,9] {[9,10] case[10,14] num[15,16] :[16,17] name[17,18] ;[18,19] }[19,20] eof[20,20]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-8 parses 1`] = `"Program[0,6](body=[LabeledStatement[0,6](body=BlockStatement[2,6](body=[ExpressionStatement[3,5](expression=Identifier[3,4](name=\\"x\\"))]) label=Identifier[0,1](name=\\"a\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-8 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-8 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-8 prints {"mode":"minify"} 1`] = `"a:{x}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-8 tokenizes 1`] = `"name[0,1] :[1,2] {[2,3] name[3,4] ;[4,5] }[5,6] eof[6,6]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-9 parses 1`] = `"Program[0,15](body=[FunctionDeclaration[0,15](id=Identifier[9,10](name=\\"f\\") expression=false generator=false async=false params=[] body=BlockStatement[12,15](body=[ExpressionStatement[13,14](expression=Identifier[13,14](name=\\"x\\"))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-9 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-9 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-9 prints {"mode":"minify"} 1`] = `"function f(){x}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-9 tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] )[11,12] {[12,13] name[13,14] }[14,15] eof[15,15]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-10 parses 1`] = `"Program[0,4](body=[ExpressionStatement[0,4](expression=Literal[0,3](value=\\"a\\" raw=\\"\\\\\\"a\\\\\\"\\") directive=\\"a\\")] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-10 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-10 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-10 prints {"mode":"minify"} 1`] = `"\\"a\\";"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-read-a-10 tokenizes 1`] = `"string[0,3]=\\"a\\" ;[3,4] eof[4,4]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse parses 1`] = `"Program[0,15](body=[FunctionDeclaration[0,15](id=Identifier[9,10](name=\\"f\\") expression=false generator=false async=false params=[] body=BlockStatement[12,15](body=[ExpressionStatement[13,14](expression=Identifier[13,14](name=\\"a\\"))]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse prints {"mode":"minify"} 1`] = `"function f(){a}"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] )[11,12] {[12,13] name[13,14] }[14,15] eof[15,15]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-2 parses 1`] = `"Program[0,15](body=[ExpressionStatement[0,13](expression=Literal[0,12](value=\\"use strict\\" raw=\\"\\\\\\"use strict\\\\\\"\\") directive=\\"use strict\\"),ExpressionStatement[13,15](expression=Identifier[13,14](name=\\"a\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-2 prints {"mode":"minify"} 1`] = `"\\"use strict\\";a;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-2 tokenizes 1`] = `"string[0,12]=\\"use strict\\" ;[12,13] name[13,14] ;[14,15] eof[15,15]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-3 parses 1`] = `"Program[0,12](body=[VariableDeclaration[0,12](declarations=[VariableDeclarator[4,11](id=ArrayPattern[4,7](elements=[Identifier[5,6](name=\\"a\\")]) init=Identifier[10,11](name=\\"d\\"))] kind=\\"var\\")] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-3 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-3 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-3 prints {"mode":"minify"} 1`] = `"var[a]=d;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-3 tokenizes 1`] = `"var[0,3] [[4,5] name[5,6] ][6,7] =[8,9] name[10,11] ;[11,12] eof[12,12]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-4 parses 1`] = `"Program[0,8](body=[ExpressionStatement[0,8](expression=TemplateLiteral[0,7](expressions=[Identifier[4,5](name=\\"b\\")] quasis=[TemplateElement[1,2](value={\\"raw\\":\\"a\\",\\"cooked\\":\\"a\\"} tail=false),TemplateElement[6,6](value={\\"raw\\":\\"\\",\\"cooked\\":\\"\\"} tail=true)]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-4 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-4 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-4 prints {"mode":"minify"} 1`] = `"\`a\${b}\`;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-4 tokenizes 1`] = `"\`[0,1] template[1,2] \${[2,4] name[4,5] }[5,6] template[6,6] \`[6,7] ;[7,8] eof[8,8]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-5 parses 1`] = `"Program[0,6](body=[IfStatement[0,6](test=Identifier[3,4](name=\\"a\\") consequent=EmptyStatement[5,6]() alternate=null)] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-5 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-5 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-5 prints {"mode":"minify"} 1`] = `"if(a);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-5 tokenizes 1`] = `"if[0,2] ([2,3] name[3,4] )[4,5] ;[5,6] eof[6,6]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-6 parses 1`] = `"Program[0,18](body=[ImportDeclaration[0,18](specifiers=[ImportDefaultSpecifier[7,8](local=Identifier[7,8](name=\\"a\\"))] source=Literal[14,17](value=\\"x\\" raw=\\"\\\\\\"x\\\\\\"\\") attributes=[])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-6 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-6 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-6 prints {"mode":"minify"} 1`] = `"import a from\\"x\\";"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-6 tokenizes 1`] = `"import[0,6] name[7,8] name[9,13] string[14,17]=\\"x\\" ;[17,18] eof[18,18]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-7 parses 1`] = `"Program[0,10](body=[ExportNamedDeclaration[0,10](declaration=null specifiers=[] source=null attributes=[])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-7 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-7 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-7 prints {"mode":"minify"} 1`] = `"export{};"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-7 tokenizes 1`] = `"export[0,6] {[7,8] }[8,9] ;[9,10] eof[10,10]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-8 parses 1`] = `"Program[0,26](body=[ExportNamedDeclaration[0,26](declaration=null specifiers=[ExportSpecifier[8,15](local=Identifier[8,15](name=\\"default\\") exported=Identifier[8,15](name=\\"default\\"))] source=Literal[22,25](value=\\"x\\" raw=\\"\\\\\\"x\\\\\\"\\") attributes=[])] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-8 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-8 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-8 prints {"mode":"minify"} 1`] = `"export{default}from\\"x\\";"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-8 tokenizes 1`] = `"export[0,6] {[7,8] default[8,15] }[15,16] name[17,21] string[22,25]=\\"x\\" ;[25,26] eof[26,26]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-9 parses 1`] = `"Program[0,6](body=[IfStatement[0,6](test=Identifier[3,4](name=\\"a\\") consequent=EmptyStatement[5,6]() alternate=null)] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-9 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-9 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-9 prints {"mode":"minify"} 1`] = `"if(a);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-text-parsed-for-the-field-it-goes-in-should-refuse-9 tokenizes 1`] = `"if[0,2] ([2,3] name[3,4] )[4,5] ;[5,6] eof[6,6]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-edit-only parses 1`] = `"Program[0,2](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"a\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-edit-only parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-edit-only parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-edit-only prints {"mode":"minify"} 1`] = `"a;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-edit-only tokenizes 1`] = `"name[0,1] ;[1,2] eof[2,2]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-edit-only-2 parses 1`] = `"Program[0,5](body=[ExpressionStatement[0,5](expression=CallExpression[0,4](callee=Identifier[0,1](name=\\"f\\") arguments=[Identifier[2,3](name=\\"a\\")] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-edit-only-2 parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-edit-only-2 parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-edit-only-2 prints {"mode":"minify"} 1`] = `"f(a);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-edit-only-2 tokenizes 1`] = `"name[0,1] ([1,2] name[2,3] )[3,4] ;[4,5] eof[5,5]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-end-the-walk parses 1`] = `"Program[0,4](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"a\\")),ExpressionStatement[2,4](expression=Identifier[2,3](name=\\"b\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-end-the-walk parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-end-the-walk parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-end-the-walk prints {"mode":"minify"} 1`] = `"a;b;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-end-the-walk tokenizes 1`] = `"name[0,1] ;[1,2] name[2,3] ;[3,4] eof[4,4]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-print-nothing parses 1`] = `"Program[0,4](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"a\\")),ExpressionStatement[2,4](expression=Identifier[2,3](name=\\"b\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-print-nothing parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-print-nothing parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-print-nothing prints {"mode":"minify"} 1`] = `"a;b;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-print-nothing tokenizes 1`] = `"name[0,1] ;[1,2] name[2,3] ;[3,4] eof[4,4]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-print-what-an parses 1`] = `"Program[0,5](body=[ExpressionStatement[0,5](expression=CallExpression[0,4](callee=Identifier[0,1](name=\\"f\\") arguments=[Identifier[2,3](name=\\"a\\")] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-print-what-an parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-print-what-an parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-print-what-an prints {"mode":"minify"} 1`] = `"f(a);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-print-what-an tokenizes 1`] = `"name[0,1] ([1,2] name[2,3] )[3,4] ;[4,5] eof[5,5]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-refuse-an-edit parses 1`] = `"Program[0,8](body=[ExpressionStatement[0,8](expression=CallExpression[0,7](callee=Identifier[0,1](name=\\"f\\") arguments=[CallExpression[2,6](callee=Identifier[2,3](name=\\"g\\") arguments=[Identifier[4,5](name=\\"a\\")] optional=false)] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-refuse-an-edit parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-refuse-an-edit parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-refuse-an-edit prints {"mode":"minify"} 1`] = `"f(g(a));"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-refuse-an-edit tokenizes 1`] = `"name[0,1] ([1,2] name[2,3] ([3,4] name[4,5] )[5,6] )[6,7] ;[7,8] eof[8,8]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-a parses 1`] = `"Program[0,10](body=[ExpressionStatement[0,5](expression=CallExpression[0,4](callee=Identifier[0,1](name=\\"f\\") arguments=[Identifier[2,3](name=\\"a\\")] optional=false)),ExpressionStatement[5,10](expression=CallExpression[5,9](callee=Identifier[5,6](name=\\"g\\") arguments=[Identifier[7,8](name=\\"h\\")] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-a parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-a parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-a prints {"mode":"minify"} 1`] = `"f(a);g(h);"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-a tokenizes 1`] = `"name[0,1] ([1,2] name[2,3] )[3,4] ;[4,5] name[5,6] ([6,7] name[7,8] )[8,9] ;[9,10] eof[10,10]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-a-moved parses 1`] = `"Program[0,11](body=[ExpressionStatement[0,6](expression=AssignmentExpression[0,5](operator=\\"=\\" left=Identifier[0,1](name=\\"x\\") right=Identifier[4,5](name=\\"y\\"))),ExpressionStatement[7,11](expression=ArrayExpression[7,10](elements=[Identifier[8,9](name=\\"z\\")]))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-a-moved parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-a-moved parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-a-moved prints {"mode":"minify"} 1`] = `"x=y;[z];"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-a-moved tokenizes 1`] = `"name[0,1] =[2,3] name[4,5] ;[5,6] [[7,8] name[8,9] ][9,10] ;[10,11] eof[11,11]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-every parses 1`] = `"Program[0,4](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"a\\")),ExpressionStatement[2,4](expression=Identifier[2,3](name=\\"b\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-every parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-every parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-every prints {"mode":"minify"} 1`] = `"a;b;"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-every tokenizes 1`] = `"name[0,1] ;[1,2] name[2,3] ;[3,4] eof[4,4]"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-on-a-walk parses 1`] = `"Program[0,8](body=[ExpressionStatement[0,8](expression=CallExpression[0,7](callee=Identifier[0,1](name=\\"f\\") arguments=[CallExpression[2,6](callee=Identifier[2,3](name=\\"g\\") arguments=[Identifier[4,5](name=\\"a\\")] optional=false)] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-on-a-walk parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-on-a-walk parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-on-a-walk prints {"mode":"minify"} 1`] = `"f(g(a));"`;
+
+exports[`JavaScript syntax — invariants java-script-node-path-edits-the-walk-over-an-edited-tree-should-visit-on-a-walk tokenizes 1`] = `"name[0,1] ([1,2] name[2,3] ([3,4] name[4,5] )[5,6] )[6,7] ;[7,8] eof[8,8]"`;
+
 exports[`JavaScript syntax — invariants javascript-minifier-calls-an-unread-write-s-reduced-optional-member-as-a-tag-with-no-this parses 1`] = `"Program[0,285](body=[ExportNamedDeclaration[156,219](declaration=FunctionDeclaration[163,219](id=Identifier[172,173](name=\\"a\\") expression=false generator=false async=false params=[Identifier[174,175](name=\\"o\\")] body=BlockStatement[177,219](body=[VariableDeclaration[179,185](declarations=[VariableDeclarator[183,184](id=Identifier[183,184](name=\\"t\\") init=null)] kind=\\"var\\"),ReturnStatement[186,217](argument=TaggedTemplateExpression[193,216](tag=AssignmentExpression[194,212](operator=\\"=\\" left=Identifier[194,195](name=\\"t\\") right=CallExpression[198,212](callee=ArrowFunctionExpression[199,209](id=null expression=true generator=false async=false params=[] body=ChainExpression[205,209](expression=MemberExpression[205,209](object=Identifier[205,206](name=\\"o\\") property=Identifier[208,209](name=\\"f\\") computed=false optional=true))) arguments=[] optional=false)) quasi=TemplateLiteral[213,216](expressions=[] quasis=[TemplateElement[214,215](value={\\"raw\\":\\"x\\",\\"cooked\\":\\"x\\"} tail=true)])))])) specifiers=[] source=null attributes=[]),ExportNamedDeclaration[220,284](declaration=FunctionDeclaration[227,284](id=Identifier[236,237](name=\\"b\\") expression=false generator=false async=false params=[Identifier[238,239](name=\\"f\\")] body=BlockStatement[241,284](body=[VariableDeclaration[243,249](declarations=[VariableDeclarator[247,248](id=Identifier[247,248](name=\\"t\\") init=null)] kind=\\"var\\"),ReturnStatement[250,282](argument=TaggedTemplateExpression[257,281](tag=AssignmentExpression[258,277](operator=\\"=\\" left=Identifier[258,259](name=\\"t\\") right=CallExpression[262,277](callee=ArrowFunctionExpression[263,274](id=null expression=true generator=false async=false params=[] body=ChainExpression[269,274](expression=CallExpression[269,274](callee=Identifier[269,270](name=\\"f\\") arguments=[] optional=true))) arguments=[] optional=false)) quasi=TemplateLiteral[278,281](expressions=[] quasis=[TemplateElement[279,280](value={\\"raw\\":\\"x\\",\\"cooked\\":\\"x\\"} tail=true)])))])) specifiers=[] source=null attributes=[])] sourceType=\\"module\\")"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-calls-an-unread-write-s-reduced-optional-member-as-a-tag-with-no-this parses 2`] = `""`;

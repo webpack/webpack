@@ -1,0 +1,1 @@
+function f(){}(()=>1);class A{static m(){}}for(a of b);

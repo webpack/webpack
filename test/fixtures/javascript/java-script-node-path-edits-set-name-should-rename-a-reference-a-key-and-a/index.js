@@ -1,0 +1,1 @@
+a.b;({c:1});class A{#d;m(){this.#d}}

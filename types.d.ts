@@ -3688,6 +3688,25 @@ declare abstract class ColumnarSyntaxTree {
 	addList(items: number[], count: number): number;
 
 	/**
+	 * Replaces `removeCount` items of a node's list field from `index` with
+	 * `items`, in place where the list shrinks or ends the item column.
+	 */
+	spliceList(
+		node: number,
+		field: number,
+		index: number,
+		removeCount: number,
+		items: number[]
+	): void;
+
+	/**
+	 * Places nodes the editor parsed at one offset of the input, so a node
+	 * written nowhere in it starts and ends where it was put.
+	 */
+	place(first: number, last: number, offset: number): void;
+	get size(): number;
+
+	/**
 	 * Retypes a node whose record the new type reads the same, as an
 	 * expression the parser then reads as a pattern.
 	 */
@@ -7937,6 +7956,7 @@ declare class CssSourceProcessor<TState = undefined> extends SourceProcessor<
 		writes: DeferredWrite[]
 	) => string;
 	static deferredWrite: (id: number) => string;
+	static EditContext: typeof EditContext;
 }
 
 /**
@@ -7961,16 +7981,52 @@ declare abstract class CssSyntaxPath {
 	stop(): void;
 
 	/**
-	 * Print the current node as `text` in place of what the printer writes; on a
-	 * walk that prints nothing, or on a comment, it does nothing. What holds the
-	 * node then prints its children's text as they printed, without the rewrites.
+	 * Sets a declaration's, at-rule's or function's name, or a dimension's
+	 * unit, which later reads return and the print writes.
 	 */
-	replace(text: string): void;
+	setName(name: string, n?: number): void;
 
 	/**
-	 * Print nothing for the current node, as `replace("")`.
+	 * Sets a token's value, as `value` reads it: text for an ident, string,
+	 * hash, url or delim, a number for a number, percentage or dimension.
 	 */
-	remove(): void;
+	setValue(value: string | number, n?: number): void;
+
+	/**
+	 * Sets or clears a declaration's `important`; a token's type flags follow
+	 * from its text.
+	 */
+	setFlag(flag: number, on: boolean, n?: number): void;
+
+	/**
+	 * CSS nodes have no text beyond their name and value, so this throws.
+	 */
+	setText(part: number, text: string, n?: number): void;
+
+	/**
+	 * Puts nodes where the node is, text parsed as what the field holding it
+	 * takes; the walk visits them, and the node leaves the tree.
+	 */
+	replaceWith(
+		replacement: string | number | (string | number)[],
+		n?: number
+	): number[];
+
+	/**
+	 * Inserts nodes just before or after the node, or at the end of one of its
+	 * fields; the walk visits them.
+	 */
+	insert(
+		where: number | "before" | "after",
+		nodes: string | number | (string | number)[],
+		n?: number
+	): number[];
+
+	/**
+	 * Takes the node out of the tree; it reads as before until its top-level
+	 * node is printed.
+	 */
+	remove(n?: number): void;
 
 	/**
 	 * A top-level rule and a comment have none; a hash within a declaration is
@@ -9706,6 +9762,277 @@ type EcmaVersion =
 	| 2025
 	| 2026
 	| "latest";
+
+/**
+ * The edits a language's `path` makes, alike in every language: nodes put in
+ * place of one, beside it or at the end of a field, or taken out, and the walk
+ * taking each edit up as Babel's does. The language gives the tree's reads and
+ * writes and its walk's steps as an {@link EditableTree}.
+ */
+declare class EditContext {
+	constructor(tree: EditableTree, parents: number[]);
+	tree: EditableTree;
+	parents: number[];
+	marks: null | Uint8Array;
+	holders: null | Int32Array;
+
+	/**
+	 * Forgets the walk's edits, at its start and end.
+	 */
+	reset(): void;
+	error(message: string): Error;
+	describe(node: number): string;
+
+	/**
+	 * Reads where the walk is with every node, on its first edit: the nodes it
+	 * left behind are done, the ones it is inside entered, and each node's
+	 * holder read off the tree.
+	 */
+	start(): void;
+	holderOf(node: number): number;
+	isPrinted(node: number): boolean;
+	isWalking(node: number): boolean;
+	isLeft(node: number): boolean;
+
+	/**
+	 * Reads the nodes a parse added, ids `first` to `last`: the columns grow
+	 * to hold them, and each one's children are its.
+	 */
+	added(first: number, last: number): void;
+	checkNode(node: number): void;
+
+	/**
+	 * Throws where the output holds the node, or some of it, already.
+	 */
+	checkWritable(node: number, own?: boolean): void;
+	locate(node: number): { container: number; field: number; index: number };
+	replaceWith(
+		replacement: string | number | (string | number)[],
+		node: number
+	): number[];
+	insert(
+		where: number | "before" | "after",
+		nodes: string | number | (string | number)[],
+		node: number
+	): number[];
+	remove(node: number): void;
+
+	/**
+	 * Walks the items an edit left in a field that the walk has not reached,
+	 * for a language whose own walk goes on once edits begin, reading the
+	 * marks: the items are read again where an edit adds to the node meanwhile.
+	 */
+	walkRest(
+		node: number,
+		field: number,
+		walk: (item: number, index: number) => void
+	): void;
+
+	/**
+	 * Marks a node the walk enters, or with `done` leaves, once edits begin.
+	 */
+	mark(node: number, done: boolean): void;
+
+	/**
+	 * Where the first edit leaves the walk, thrown to unwind it so that
+	 * {@link resume} takes it up again.
+	 */
+	unwind(
+		node: number,
+		exiting: boolean,
+		descends: boolean
+	): { node: number; exiting: boolean; descends: boolean };
+	isUnwind(thrown: unknown): boolean;
+
+	/**
+	 * Takes the walk up again from the root, after {@link unwind}: the nodes it
+	 * was inside are resumed past their `enter` visitors, as the marks read.
+	 */
+	resume(): void;
+}
+type EditPlace = "end" | "before" | "after" | "replace";
+
+/**
+ * What a language's tree and walk give the edits {@link EditContext} makes:
+ * where a node stands, its fields written, text parsed into nodes, and the
+ * walk's steps, which the context takes over once a visitor edits.
+ */
+declare interface EditableTree {
+	/**
+	 * the language, which opens every error
+	 */
+	language: string;
+
+	/**
+	 * whether the print writes children out as the walk reaches them, so nodes added just behind it are walked before it goes on
+	 */
+	ordered?: boolean;
+
+	/**
+	 * the node the walk started at
+	 */
+	root: () => number;
+
+	/**
+	 * the highest node id, nodes counting from `1`
+	 */
+	size: () => number;
+
+	/**
+	 * whether an id names a node of the tree
+	 */
+	isNode: (node: number) => boolean;
+
+	/**
+	 * the node's children in walk order, as edits left them
+	 */
+	childrenOf: (node: number) => number[];
+
+	/**
+	 * the node's type, for an error
+	 */
+	typeName: (node: number) => string;
+
+	/**
+	 * a `Field`'s name, for an error
+	 */
+	fieldName: (field: number) => string;
+
+	/**
+	 * whether the node's field holds a list, throwing where its type has no such field
+	 */
+	isList: (container: number, field: number) => boolean;
+
+	/**
+	 * whether the field may hold no node
+	 */
+	isOptional: (container: number, field: number) => boolean;
+
+	/**
+	 * where the node stands in the container: its field and index, `-1` in a single-node field
+	 */
+	locate: (
+		container: number,
+		node: number
+	) => undefined | { field: number; index: number };
+
+	/**
+	 * the field's items, `0` for a hole
+	 */
+	itemsOf: (container: number, field: number) => number[];
+
+	/**
+	 * writes nodes in place of `removeCount` items from `index`, `-1` for a single-node field
+	 */
+	write: (
+		container: number,
+		field: number,
+		index: number,
+		removeCount: number,
+		items: number[]
+	) => void;
+
+	/**
+	 * parses text into nodes added to the tree, as what the field takes
+	 */
+	parse: (
+		container: number,
+		field: number,
+		text: string,
+		offset: number
+	) => number[];
+
+	/**
+	 * throws where the field would not hold `after`, `added` being the nodes the edit brings in
+	 */
+	check: (
+		container: number,
+		field: number,
+		added: number[],
+		after: number[],
+		emptied: boolean
+	) => void;
+
+	/**
+	 * where nodes an edit puts in a field stand in the input, for a language that orders children by it
+	 */
+	offsetOf?: (
+		container: number,
+		field: number,
+		near: number,
+		place: EditPlace
+	) => number;
+
+	/**
+	 * the moved nodes now stand at `offset`
+	 */
+	moved?: (nodes: number[], offset: number) => void;
+
+	/**
+	 * the node holding one the walk never visits, such as an HTML attribute
+	 */
+	holderOf?: (node: number) => number;
+
+	/**
+	 * once the output holds the node, or with `own` some of its own text, until when it could be edited
+	 */
+	written?: (node: number, own: boolean) => null | string;
+
+	/**
+	 * the node whose visitors fire
+	 */
+	current: () => number;
+
+	/**
+	 * whether they are `exit` visitors
+	 */
+	exiting: () => boolean;
+
+	/**
+	 * whether the walk prints
+	 */
+	printing: () => boolean;
+
+	/**
+	 * whether the walk stopped and prints nothing
+	 */
+	halted: () => boolean;
+
+	/**
+	 * the first edit: the walk hands over to {@link EditContext.resume}
+	 */
+	began: () => void;
+
+	/**
+	 * fires the node's `enter` visitors where it `visits`, returning whether the walk descends
+	 */
+	enter: (node: number, index: number, visits: boolean) => boolean;
+
+	/**
+	 * the node's `enter` visitors are done and it is still in the tree
+	 */
+	entered?: (node: number, descends: boolean) => void;
+
+	/**
+	 * whether a print walks what the node holds where its visitors do not descend into it
+	 */
+	opens?: (node: number) => boolean;
+
+	/**
+	 * fires the node's `exit` visitors where it `visits`
+	 */
+	exit: (node: number, index: number, visits: boolean) => void;
+
+	/**
+	 * prints the node, once the walk is done with it
+	 */
+	print: (node: number, index: number) => void;
+
+	/**
+	 * keeps where the walk is for a nested walk of added nodes, returning what puts it back
+	 */
+	suspend: () => () => void;
+}
 type Effect = EffectUse | EffectBasic;
 
 /**
@@ -13595,16 +13922,16 @@ type HtmlNodePath<T = number, S = undefined> = Omit<
 			PartOf<
 				R,
 				{
-					"1": never;
-					"2": never;
-					"3": 1 | 2;
+					"1": 3;
+					"2": 3;
+					"3": 1 | 2 | 3;
 					"4": never;
 					"5": never;
 					"6": never;
 					"7": never;
 					"8": never;
 				},
-				1 | 2
+				1 | 2 | 3
 			>,
 		n?: R
 	): TypedNode<number, { [index: number]: number; "1": 8; "2": 2 }[F]>;
@@ -13612,16 +13939,16 @@ type HtmlNodePath<T = number, S = undefined> = Omit<
 		field: PartOf<
 			R,
 			{
-				"1": never;
-				"2": never;
-				"3": 1 | 2;
+				"1": 3;
+				"2": 3;
+				"3": 1 | 2 | 3;
 				"4": never;
 				"5": never;
 				"6": never;
 				"7": never;
 				"8": never;
 			},
-			1 | 2
+			1 | 2 | 3
 		>,
 		n?: R
 	): number;
@@ -13633,16 +13960,16 @@ type HtmlNodePath<T = number, S = undefined> = Omit<
 			PartOf<
 				R,
 				{
-					"1": never;
-					"2": never;
-					"3": 1 | 2;
+					"1": 3;
+					"2": 3;
+					"3": 1 | 2 | 3;
 					"4": never;
 					"5": never;
 					"6": never;
 					"7": never;
 					"8": never;
 				},
-				1 | 2
+				1 | 2 | 3
 			>,
 		name: string,
 		n?: R
@@ -13888,14 +14215,14 @@ declare interface HtmlParserOptions {
  */
 declare interface HtmlParts {
 	types: HtmlNodeType;
-	field: 1 | 2;
+	field: 1 | 2 | 3;
 	flag: 1 | 2 | 4;
 	part: 1 | 2 | 3 | 4 | 5 | 6 | 7;
 	text: 6 | 7;
 	fields: {
-		"1": never;
-		"2": never;
-		"3": 1 | 2;
+		"1": 3;
+		"2": 3;
+		"3": 1 | 2 | 3;
 		"4": never;
 		"5": never;
 		"6": never;
@@ -14377,6 +14704,7 @@ declare class HtmlSourceProcessor<TState = undefined> extends SourceProcessor<
 		writes: DeferredWrite[]
 	) => string;
 	static deferredWrite: (id: number) => string;
+	static EditContext: typeof EditContext;
 }
 
 /**
@@ -14477,6 +14805,53 @@ declare abstract class HtmlSyntaxPath {
 	 * Every child as a new array, for a reader that keeps or searches them.
 	 */
 	children(n?: number): number[];
+
+	/**
+	 * Sets an element's, attribute's, doctype's or processing instruction's
+	 * name, which later reads return and the print writes.
+	 */
+	setName(name: string, n?: number): void;
+
+	/**
+	 * Sets a text's, comment's, processing instruction's or attribute's value,
+	 * decoded, which later reads return and the print writes escaped.
+	 */
+	setValue(value: string, n?: number): void;
+
+	/**
+	 * An element's flags follow from its name and where it stands, so this
+	 * throws: rename or replace the element instead.
+	 */
+	setFlag(flag: number, on: boolean, n?: number): void;
+
+	/**
+	 * Sets a doctype's public or system identifier, `""` leaving it out.
+	 */
+	setText(part: number, text: string, n?: number): void;
+
+	/**
+	 * Puts nodes where the node is, markup parsed as the content of the node
+	 * holding it; the walk visits them, and the node leaves the tree.
+	 */
+	replaceWith(
+		replacement: string | number | (string | number)[],
+		n?: number
+	): number[];
+
+	/**
+	 * Inserts nodes just before or after the node, or at the end of its
+	 * `childNodes` or `attributes`; the walk visits them.
+	 */
+	insert(
+		where: number | "before" | "after",
+		nodes: string | number | (string | number)[],
+		n?: number
+	): number[];
+
+	/**
+	 * Takes the node out of the tree; it reads as before until the next parse.
+	 */
+	remove(n?: number): void;
 }
 
 /**
@@ -19324,6 +19699,7 @@ declare class JavascriptSourceProcessor<
 		writes: DeferredWrite[]
 	) => string;
 	static deferredWrite: (id: number) => string;
+	static EditContext: typeof EditContext;
 }
 
 /**
@@ -19390,6 +19766,51 @@ declare abstract class JavascriptSyntaxPath {
 	startOf(part: number, n?: number): number;
 	endOf(part: number, n?: number): number;
 	textOf(part: number, n?: number): null | string;
+
+	/**
+	 * Sets an identifier's name, which later reads return.
+	 */
+	setName(name: string, n?: number): void;
+
+	/**
+	 * Sets a literal's or template element's value, which later reads return;
+	 * a literal's `raw` is written to match.
+	 */
+	setValue(value: TreeValue, n?: number): void;
+
+	/**
+	 * Sets or clears a `Flag` the node's type has.
+	 */
+	setFlag(flag: number, on: boolean, n?: number): void;
+
+	/**
+	 * Sets a `Part`'s text, as `textOf` reads it; `""` leaves an optional part out.
+	 */
+	setText(part: number, text: string, n?: number): void;
+
+	/**
+	 * Puts nodes where the node is, text parsed as what the field holding it
+	 * takes; the walk visits them, and the node leaves the tree.
+	 */
+	replaceWith(
+		replacement: string | number | (string | number)[],
+		n?: number
+	): number[];
+
+	/**
+	 * Inserts nodes just before or after the node, or at the end of one of its
+	 * fields; the walk visits them.
+	 */
+	insert(
+		where: number | "before" | "after",
+		nodes: string | number | (string | number)[],
+		n?: number
+	): number[];
+
+	/**
+	 * Takes the node out of the tree; it reads as before until the next parse.
+	 */
+	remove(n?: number): void;
 }
 declare interface JoinCacheEntry {
 	/**
@@ -40412,6 +40833,7 @@ declare namespace exports {
 				export namespace Field {
 					export let attributes: 1;
 					export let content: 2;
+					export let childNodes: 3;
 				}
 				export let declaredEncoding: (
 					input: string

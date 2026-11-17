@@ -1,0 +1,1 @@
+a?.b.c;({d:1});x={e(){}};function*f(){yield g}a++;h={i:i};

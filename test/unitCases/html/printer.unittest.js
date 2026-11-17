@@ -7,7 +7,7 @@ const { fixture } = require("../../helpers/fixture");
 // cspell:ignore contenteditable enterkeyhint formenctype formmethod formtarget
 // cspell:ignore inputmode writingsuggestions
 // cspell:ignore noembed noframes optgroup
-// cspell:ignore bgsound doctypehtml iewport abcb axxb
+// cspell:ignore bgsound doctypehtml iewport abcb axxb viewbox
 
 /** @import { HtmlNodeRef, HtmlAttribute } from "../../../lib/html/syntax-parser" */
 
@@ -1208,5 +1208,386 @@ describe("htmlMinify — what it reads as written", () => {
 		const { code } = await htmlMinify({ "a.html": source });
 		// The page around it is minified; the nested page keeps its comments.
 		expect(code).toBe(`<!doctype html>${source.slice(15, source.indexOf("<!-- c -->"))}\n`);
+	});
+});
+
+describe("SourceProcessor — node path edits", () => {
+	const { SourceProcessor } = require("../../../lib/html/syntax");
+	const { Flag, Part } = require("../../../lib/html/syntax-parser");
+
+	/** @typedef {import("../../../lib/html/syntax-parser").HtmlPath} HtmlPath */
+
+	/**
+	 * @param {string} source the markup
+	 * @param {Record<number, ((path: HtmlPath) => void) | { enter?: (path: HtmlPath) => void, exit?: (path: HtmlPath) => void }>} visitors the visitors
+	 * @param {"minify" | "beautify"=} mode the print
+	 * @param {{ xml?: boolean }=} options process options
+	 * @returns {string} what it prints as
+	 */
+	const edited = (source, visitors, mode = "beautify", options = {}) =>
+		new SourceProcessor()
+			.use(/** @type {EXPECTED_ANY} */ (visitors))
+			.process(source, { mode, ...options }).code;
+
+	/**
+	 * @param {HtmlPath} path the path
+	 * @param {string} name an element's name
+	 * @returns {boolean} whether the path is on such an element
+	 */
+	const on = (path, name) =>
+		path.type() === NodeType.Element && path.name() === name;
+
+	it("puts markup in a node's place, beside it and at the end of its children", () => {
+		/** @type {string[]} */
+		const seen = [];
+		const code = edited(fixture("html", "source-processor-node-path-edits-puts-markup-in-a-node-s-place-beside-it-and-at"), {
+			[NodeType.Element]: (path) => {
+				seen.push(path.name());
+				if (on(path, "p")) path.insert("after", "<b>new</b>");
+				if (on(path, "span")) path.replaceWith("<i>x</i>");
+				if (on(path, "div")) path.insert(Field.childNodes, "<hr>");
+			}
+		});
+		expect(code).toBe("<div><p>a</p><b>new</b><i>x</i><hr></div>");
+		// The walk visits each node an edit adds, the replacement in its place.
+		expect(seen).toEqual(["html", "head", "body", "div", "p", "b", "span", "i", "hr"]);
+	});
+
+	it("parses markup as the content of where it goes", () => {
+		expect(
+			edited(fixture("html", "source-processor-node-path-edits-parses-markup-as-the-content-of-where-it-goes"), {
+				[NodeType.Element]: (path) => {
+					if (on(path, "tr")) path.insert(Field.childNodes, "<td>b</td>");
+				}
+			})
+		).toBe("<table><tr><td>a</td><td>b</td></tr></table>");
+		expect(
+			edited(fixture("html", "source-processor-node-path-edits-parses-markup-as-the-content-of-where-it-goes-2"), {
+				[NodeType.Element]: (path) => {
+					if (on(path, "script")) path.insert(Field.childNodes, ";<b>");
+				}
+			})
+		).toBe("<script>var a;<b></script>");
+	});
+
+	it("prints a node inserted before the one the walk is at before it", () => {
+		expect(
+			edited(fixture("html", "source-processor-node-path-edits-prints-a-node-inserted-before-the-one-the-walk"), {
+				[NodeType.Element]: (path) => {
+					if (on(path, "p")) path.insert("before", "<hr>");
+				}
+			})
+		).toBe("<hr><p>x</p><hr><p>y</p>");
+	});
+
+	it("moves nodes, and takes them out", () => {
+		expect(
+			edited(fixture("html", "source-processor-node-path-edits-moves-nodes-and-takes-them-out"), {
+				[NodeType.Element]: (path) => {
+					if (on(path, "div")) {
+						const [first, second] = path.children();
+						path.insert("before", second, first);
+					}
+				}
+			})
+		).toBe("<div><p>b</p><p>a</p></div>");
+		expect(
+			edited(fixture("html", "source-processor-node-path-edits-moves-nodes-and-takes-them-out-2"), {
+				[NodeType.Element]: {
+					exit: (path) => {
+						if (on(path, "p")) path.remove();
+					}
+				}
+			})
+		).toBe("<div><i>b</i></div>");
+	});
+
+	it("edits from exit visitors, whose element prints once they return", () => {
+		/** @type {string[]} */
+		const seen = [];
+		const code = edited(fixture("html", "source-processor-node-path-edits-edits-from-exit-visitors-whose-element-prints"), {
+			[NodeType.Element]: {
+				exit: (path) => {
+					seen.push(path.name());
+					if (on(path, "p")) path.replaceWith("<div>y</div>");
+				}
+			}
+		});
+		expect(code).toBe("<div>y</div>");
+		expect(seen).toEqual(["head", "p", "div", "body", "html"]);
+	});
+
+	it("sets names, values and identifiers, which the print writes", () => {
+		expect(
+			edited(fixture("html", "source-processor-node-path-edits-sets-names-values-and-identifiers-which-the"), {
+				[NodeType.Element]: (path) => {
+					if (on(path, "i")) path.setName("EM");
+					if (on(path, "a")) {
+						const href = path.fieldNamed(Field.attributes, "href");
+						path.setValue("y&z", href);
+						path.setName("data-href", href);
+						expect(path.name(href)).toBe("data-href");
+						expect(path.value(href)).toBe("y&z");
+					}
+				},
+				[NodeType.Comment]: (path) => path.setValue("new"),
+				[NodeType.Text]: (path) => {
+					if (path.value() === "t") path.setValue("<T>");
+				}
+			})
+		).toBe('<em>a</em><a data-href="y&amp;z">&lt;T&gt;</a><!--new-->');
+		expect(
+			edited(fixture("html", "source-processor-node-path-edits-sets-names-values-and-identifiers-which-the-2"), {
+				[NodeType.Doctype]: (path) => {
+					path.setText(Part.publicId, "-//W3C//DTD");
+					expect(path.textOf(Part.publicId)).toBe("-//W3C//DTD");
+				}
+			})
+		).toBe('<!DOCTYPE html PUBLIC "-//W3C//DTD"><p>x</p>');
+	});
+
+	it("edits attributes, which keep their ids", () => {
+		expect(
+			edited(
+				fixture("html", "source-processor-node-path-edits-edits-attributes-which-keep-their-ids"),
+				{
+					[NodeType.Element]: (path) => {
+						if (!on(path, "p")) return;
+						const id = path.fieldNamed(Field.attributes, "id");
+						const kept = path.fieldNamed(Field.attributes, "class");
+						path.remove(id);
+						const [added] = path.insert(Field.attributes, "title=t");
+						expect(path.fieldCount(Field.attributes)).toBe(2);
+						expect(path.field(0, Field.attributes)).toBe(kept);
+						expect(path.name(added)).toBe("title");
+						path.insert("before", added, kept);
+					}
+				},
+				"minify"
+			)
+		).toBe("<p title=t class=b>x");
+		expect(
+			edited(fixture("html", "source-processor-node-path-edits-edits-attributes-which-keep-their-ids-2"), {
+				[NodeType.Element]: (path) => {
+					if (on(path, "path")) {
+						path.insert(Field.attributes, 'viewbox="0 0 1 1"');
+					}
+				}
+			})
+		).toBe(edited(fixture("html", "source-processor-node-path-edits-edits-attributes-which-keep-their-ids-3"), {}));
+	});
+
+	it("prints an edited start tag as the source it spells", () => {
+		/** @type {[string, Record<number, (path: HtmlPath) => void>, string][]} */
+		const cases = [
+			[
+				fixture("html", "html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells"),
+				{
+					[NodeType.Element]: (path) => {
+						if (on(path, "div")) path.setName("section");
+					}
+				},
+				fixture("html", "html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled")
+			],
+			[
+				fixture("html", "html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-2"),
+				{
+					[NodeType.Element]: (path) => {
+						if (on(path, "div")) {
+							path.setValue('z"q', path.fieldNamed(Field.attributes, "id"));
+						}
+					}
+				},
+				fixture("html", "html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled-2")
+			],
+			[
+				fixture("html", "html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-3"),
+				{
+					[NodeType.Element]: (path) => {
+						if (on(path, "p")) {
+							path.setName("alt", path.fieldNamed(Field.attributes, "title"));
+						}
+					}
+				},
+				fixture("html", "html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled-3")
+			],
+			[
+				fixture("html", "html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-4"),
+				{
+					[NodeType.Element]: (path) => {
+						if (on(path, "input")) path.insert(Field.attributes, "name=n");
+					}
+				},
+				fixture("html", "html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled-4")
+			]
+		];
+		for (const mode of /** @type {const} */ (["beautify", "minify"])) {
+			for (const [source, visitors, spelled] of cases) {
+				expect(edited(source, visitors, mode)).toBe(
+					edited(spelled, {}, mode)
+				);
+			}
+		}
+	});
+
+	it("reads an edited tag's source and place", () => {
+		/** @type {unknown[]} */
+		const seen = [];
+		edited(fixture("html", "source-processor-node-path-edits-reads-an-edited-tag-s-source-and-place"), {
+			[NodeType.Element]: {
+				enter: (path) => {
+					if (on(path, "b")) path.setValue("y", path.field(0, Field.attributes));
+				},
+				exit: (path) => {
+					if (on(path, "b")) seen.push(path.loc(), path.source());
+				}
+			}
+		});
+		expect(seen).toEqual([[2, 0, 2, 13], '<b id="y">t</b>']);
+	});
+
+	it("refuses a tree its print reads back as another", () => {
+		expect(() =>
+			edited(fixture("html", "source-processor-node-path-edits-refuses-a-tree-its-print-reads-back-as-another"), {
+				[NodeType.Element]: (path) => {
+					if (on(path, "td")) path.insert("after", "<p>q</p>");
+				}
+			})
+		).toThrow("the tree the visitors edited prints as markup that reads back as another");
+	});
+
+	it("edits a template's content and an XML document", () => {
+		expect(
+			edited(fixture("html", "source-processor-node-path-edits-edits-a-template-s-content-and-an-xml-document"), {
+				[NodeType.Element]: (path) => {
+					if (on(path, "p")) path.insert("after", "<i>b</i>");
+				}
+			})
+		).toBe("<template><p>a</p><i>b</i></template>");
+		expect(
+			edited(
+				fixture("xml", "source-processor-node-path-edits-edits-a-template-s-content-and-an-xml-document"),
+				{
+					[NodeType.Element]: (path) => {
+						if (on(path, "b")) {
+							path.insert("after", "<c x='1'/>");
+							path.setName("d");
+						}
+					}
+				},
+				"minify",
+				{ xml: true }
+			)
+		).toBe('<a><d/><c x="1"/></a>');
+	});
+
+	it("reads the edited tree in a walk that prints nothing", () => {
+		/** @type {string[]} */
+		const seen = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.Element]: (path) => {
+					seen.push(path.name());
+					if (path.name() === "p") path.insert("after", "<q></q>");
+				},
+				[NodeType.Document]: {
+					exit: (path) => {
+						seen.push(String(path.childCount(path.child(0))));
+					}
+				}
+			})
+			.process(fixture("html", "source-processor-node-path-edits-reads-the-edited-tree-in-a-walk-that-prints"));
+		expect(seen).toEqual(["html", "head", "body", "div", "p", "q", "2"]);
+	});
+
+	it("refuses what the markup cannot hold", () => {
+		/**
+		 * @param {string} source the markup
+		 * @param {(path: HtmlPath) => void} edit the edit, on the first element named as the path's
+		 * @param {string} name the element
+		 * @returns {() => void} the print
+		 */
+		const editing = (source, edit, name) => () =>
+			edited(source, {
+				[NodeType.Element]: (path) => {
+					if (on(path, name)) edit(path);
+				}
+			});
+		expect(
+			editing(fixture("html", "source-processor-node-path-edits-refuses-what-the-markup-cannot-hold"), (path) => path.setName("br"), "div")
+		).toThrow("a <div> cannot be renamed to \"br\", whose content reads otherwise");
+		expect(
+			editing(fixture("html", "source-processor-node-path-edits-refuses-what-the-markup-cannot-hold"), (path) => path.setName("a b"), "div")
+		).toThrow('"a b" is no element name');
+		expect(
+			editing(
+				fixture("html", "source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-3"),
+				(path) => path.insert(Field.attributes, "a=1><b"),
+				"p"
+			)
+		).toThrow('"a=1><b" does not read as attributes');
+		expect(
+			editing(
+				fixture("html", "source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-4"),
+				(path) => path.setName("a", path.insert(Field.attributes, "b=2")[0]),
+				"p"
+			)
+		).toThrow("an Element holds one attribute named a");
+		expect(
+			editing(fixture("html", "source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-5"), (path) => path.insert(Field.childNodes, path.parent || 0), "p")
+		).toThrow("an Element cannot be put inside itself");
+		expect(
+			editing(fixture("html", "source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-6"), (path) => path.insert(Field.childNodes, "x"), "br")
+		).toThrow("an Element <br> holds no children");
+		expect(
+			editing(fixture("html", "source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-7"), (path) => path.insert(Field.childNodes, path.parent || 0), "script")
+		).toThrow("an Element cannot be put inside itself");
+		expect(
+			editing(fixture("html", "source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-3"), (path) => path.setFlag(Flag.svg, true), "p")
+		).toThrow("an Element's flags follow from its name and where it stands");
+		expect(
+			editing(fixture("html", "source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-3"), (path) => path.setValue("x"), "p")
+		).toThrow("an Element has no value");
+		expect(() =>
+			edited(fixture("html", "source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-10"), {
+				[NodeType.Text]: (path) => path.setValue("b</style>")
+			})
+		).toThrow('a <style>\'s text cannot hold "</style"');
+		expect(() =>
+			edited(fixture("html", "source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-11"), {
+				[NodeType.Comment]: (path) => path.setValue("b-->")
+			})
+		).toThrow('"b-->" cannot stand in a comment');
+	});
+
+	it("refuses an edit to what the print wrote already", () => {
+		expect(() =>
+			edited(fixture("html", "source-processor-node-path-edits-refuses-an-edit-to-what-the-print-wrote-already"), {
+				[NodeType.Element]: (path) => {
+					if (on(path, "i")) path.remove(path.parent || 0);
+				}
+			})
+		).toThrow(
+			"an Element the walk printed already can no longer be edited; edit it before its enter visitors return"
+		);
+		expect(() =>
+			edited(fixture("html", "source-processor-node-path-edits-refuses-an-edit-to-what-the-print-wrote-already"), {
+				[NodeType.Element]: (path) => {
+					if (on(path, "i")) path.insert("before", "<b>c</b>", path.child(0, path.parent || 0));
+				}
+			})
+		).toThrow("an Element the walk printed already can no longer be edited");
+	});
+
+	it("refuses an edit outside a walk of a parsed tree", () => {
+		// The HTML path is held to the members every editing path shares.
+		/** @type {import("../../../lib/util/SourceProcessor").NodePathEdits<number, string>} */
+		const editing = A;
+		expect(() =>
+			new SourceProcessor()
+				.use({ [NodeType.Document]: (path) => path.insert(Field.childNodes, "<!--a-->") })
+				.process(fixture("html", "source-processor-node-path-edits-refuses-an-edit-outside-a-walk-of-a-parsed-tree"))
+		).toThrow("html syntax: path.insert() edits only a tree a SourceProcessor run walks, once it is parsed");
+		expect(() => editing.remove(1)).toThrow("html syntax: path.remove() edits only");
 	});
 });

@@ -1,0 +1,1 @@
+let a=1;if(a==2)b&&c;d+=1;!e;f++;g=0;({get h(){return 1}});class I{j(k){}}import * as l from "m";
