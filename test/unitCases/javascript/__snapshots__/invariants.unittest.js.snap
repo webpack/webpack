@@ -3259,7 +3259,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-113 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-113 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(t){\\"use strict\\";t.b;g;/*! c */3;try{window}catch(t){}}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-113 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(t){\\"use strict\\";t.b;g;/*! c */try{window}catch(t){}}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-113 prints {"mode":"minify"} 1`] = `"function f(a){\\"use strict\\";1,2;Math.PI;a;\\"x\\"+1;a.b;g;3;try{window}catch(e){}}"`;
 
@@ -10068,7 +10068,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-683 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-683 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"x=[[1,2,1,2,\\"a\\"],[3],[1].concat(y),[1].concat(...y),[],[1,2].length,\\"1-2-3\\"],[1,2];"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-683 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"x=[[1,2,1,2,\\"a\\"],[3],[1].concat(y),[1].concat(...y),[],[1,2].length,\\"1-2-3\\"];"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-683 prints {"mode":"minify"} 1`] = `"x=[[1,2].concat(1).concat(2,[\\"a\\"]),[].concat([],[3],[]),[].concat(1,y),[].concat(1,...y),[].concat(),[1].concat(2).length,[].concat(1).concat([2,3]).join(\\"-\\")];[1].concat(2);"`;
 
@@ -14767,7 +14767,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-7 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-7 prints {"mode":"minify","compress":{},"mangle":{"toplevel":false}} 1`] = `"foo(),a=b(),x(),c(),y(),d(),0,{}.e();"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-7 prints {"mode":"minify","compress":{},"mangle":{"toplevel":false}} 1`] = `"foo(),a=b(),x(),c(),y(),d(),{}.e();"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-an-unread-value-bare-7 prints {"mode":"minify"} 1`] = `"(1,foo())?1:2;(a=b())?1:2;x(),(1,c())?1:2,y();!((1,d())?1:2);(0,{}.e())?1:2;"`;
 
@@ -16644,17 +16644,17 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-5 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-5 prints {"mode":"minify","compress":{},"mangle":false,"ecma":2015,"format":{"comments":"all","quote_style":3,"keep_quoted_props":true,"keep_numbers":true,"ascii_only":true},"sourceType":"script"} 1`] = `"function f(){/*a*/;;'x'}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-5 prints {"mode":"minify","compress":{},"mangle":false,"ecma":2015,"format":{"comments":"all","quote_style":3,"keep_quoted_props":true,"keep_numbers":true,"ascii_only":true},"sourceType":"script"} 1`] = `"function f(){}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-5 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/","ecma":2020},"sourceType":"script"} 1`] = `"function f(){}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-5 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/"},"sourceType":"script"} 1`] = `"function f(){}"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-5 prints {"mode":"minify","compress":{},"mangle":true,"format":{"comments":"all"},"sourceType":"script"} 1`] = `"function f(){/*a*/;;\\"x\\"}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-5 prints {"mode":"minify","compress":{},"mangle":true,"format":{"comments":"all"},"sourceType":"script"} 1`] = `"function f(){}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-5 prints {"mode":"minify","mangle":true,"format":{"comments":"all","wrap_iife":true,"wrap_func_args":true,"webkit":true,"semicolons":false,"preserve_annotations":true,"ie8":true,"safari10":true,"preamble":"/* p */"},"sourceType":"script"} 1`] = `
 "/* p */
-function f(){/*a*/;;\\"x\\"}"
+function f(){}"
 `;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-5 prints {"mode":"minify","mangle":true,"sourceType":"script"} 1`] = `"function f(){}"`;
@@ -18009,20 +18009,20 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-53 parses 2`] = `""`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-53 prints {"mode":"minify","compress":{},"mangle":false,"ecma":2015,"format":{"comments":"all","quote_style":3,"keep_quoted_props":true,"keep_numbers":true,"ascii_only":true},"sourceType":"script"} 1`] = `
-"/*! a */'\\\\x01';function f(){/*! b */}//! c;
-'\\\\x01';"
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-53 prints {"mode":"minify","compress":{},"mangle":false,"ecma":2015,"format":{"comments":"all","quote_style":3,"keep_quoted_props":true,"keep_numbers":true,"ascii_only":true},"sourceType":"script"} 1`] = `"/*! a */function f(){/*! b */}//! c;"`;
+
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-53 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/","ecma":2020},"sourceType":"script"} 1`] = `"/*! a */function f(){/*! b */}//! c;"`;
+
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-53 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/"},"sourceType":"script"} 1`] = `"/*! a */function f(){/*! b */}//! c;"`;
+
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-53 prints {"mode":"minify","compress":{},"mangle":true,"format":{"comments":"all"},"sourceType":"script"} 1`] = `"/*! a */function f(){/*! b */}//! c;"`;
+
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-53 prints {"mode":"minify","mangle":true,"format":{"comments":"all","wrap_iife":true,"wrap_func_args":true,"webkit":true,"semicolons":false,"preserve_annotations":true,"ie8":true,"safari10":true,"preamble":"/* p */"},"sourceType":"script"} 1`] = `
+"/* p */
+/*! a */function f(){/*! b */}//! c;"
 `;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-53 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/","ecma":2020},"sourceType":"script"} 1`] = `"\\"/*! a */;;\\\\\\"\\\\u0001\\\\\\";function f(){/*! b */}//! c;\\\\n\`\\\\u0001\`;\\""`;
-
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-53 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/"},"sourceType":"script"} 1`] = `"\\"/*! a */;;\\\\\\"\\\\u0001\\\\\\";function f(){/*! b */}//! c;\\\\n\`\\\\u0001\`;\\""`;
-
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-53 prints {"mode":"minify","compress":{},"mangle":true,"format":{"comments":"all"},"sourceType":"script"} 1`] = `"\\"/*! a */;;\\\\\\"\\\\u0001\\\\\\";function f(){/*! b */}//! c;\\\\n\\\\\\"\\\\u0001\\\\\\";\\""`;
-
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-53 prints {"mode":"minify","mangle":true,"format":{"comments":"all","wrap_iife":true,"wrap_func_args":true,"webkit":true,"semicolons":false,"preserve_annotations":true,"ie8":true,"safari10":true,"preamble":"/* p */"},"sourceType":"script"} 1`] = `"\\"/* p */\\\\n/*! a */;;\\\\\\"\\\\u0001\\\\\\"\\\\nfunction f(){/*! b */}//! c;\\\\n\\\\\\"\\\\u0001\\\\\\"\\\\n\\""`;
-
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-53 prints {"mode":"minify","mangle":true,"sourceType":"script"} 1`] = `"\\"/*! a */;;\\\\\\"\\\\u0001\\\\\\";function f(){/*! b */}//! c;\\\\n\\\\\\"\\\\u0001\\\\\\";\\""`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-53 prints {"mode":"minify","mangle":true,"sourceType":"script"} 1`] = `"/*! a */function f(){/*! b */}//! c;"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-53 prints {"mode":"minify"} 1`] = `"throws: Octal literal in strict mode (1:11)"`;
 
@@ -18032,17 +18032,20 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-54 parses 2`] = `""`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-54 prints {"mode":"minify","compress":{},"mangle":false,"ecma":2015,"format":{"comments":"all","quote_style":3,"keep_quoted_props":true,"keep_numbers":true,"ascii_only":true},"sourceType":"script"} 1`] = `"/*! a */'\\\\x01';"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-54 prints {"mode":"minify","compress":{},"mangle":false,"ecma":2015,"format":{"comments":"all","quote_style":3,"keep_quoted_props":true,"keep_numbers":true,"ascii_only":true},"sourceType":"script"} 1`] = `"/*! a */"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-54 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/","ecma":2020},"sourceType":"script"} 1`] = `"\\"/*! a */;;\\\\\\"\\\\u0001\\\\\\";\\""`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-54 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/","ecma":2020},"sourceType":"script"} 1`] = `"/*! a */"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-54 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/"},"sourceType":"script"} 1`] = `"\\"/*! a */;;\\\\\\"\\\\u0001\\\\\\";\\""`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-54 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/"},"sourceType":"script"} 1`] = `"/*! a */"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-54 prints {"mode":"minify","compress":{},"mangle":true,"format":{"comments":"all"},"sourceType":"script"} 1`] = `"\\"/*! a */;;\\\\\\"\\\\u0001\\\\\\";\\""`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-54 prints {"mode":"minify","compress":{},"mangle":true,"format":{"comments":"all"},"sourceType":"script"} 1`] = `"/*! a */"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-54 prints {"mode":"minify","mangle":true,"format":{"comments":"all","wrap_iife":true,"wrap_func_args":true,"webkit":true,"semicolons":false,"preserve_annotations":true,"ie8":true,"safari10":true,"preamble":"/* p */"},"sourceType":"script"} 1`] = `"\\"/* p */\\\\n/*! a */;;\\\\\\"\\\\u0001\\\\\\"\\\\n\\""`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-54 prints {"mode":"minify","mangle":true,"format":{"comments":"all","wrap_iife":true,"wrap_func_args":true,"webkit":true,"semicolons":false,"preserve_annotations":true,"ie8":true,"safari10":true,"preamble":"/* p */"},"sourceType":"script"} 1`] = `
+"/* p */
+/*! a */"
+`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-54 prints {"mode":"minify","mangle":true,"sourceType":"script"} 1`] = `"\\"/*! a */;;\\\\\\"\\\\u0001\\\\\\";\\""`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-54 prints {"mode":"minify","mangle":true,"sourceType":"script"} 1`] = `"/*! a */"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-54 prints {"mode":"minify"} 1`] = `"throws: Octal literal in strict mode (1:11)"`;
 
@@ -18054,18 +18057,34 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-55 prints {"mode":"minify","compress":{},"mangle":false,"ecma":2015,"format":{"comments":"all","quote_style":3,"keep_quoted_props":true,"keep_numbers":true,"ascii_only":true},"sourceType":"script"} 1`] = `
 "//! a;
-/* b */'\\\\x01';"
+/* b */"
 `;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-55 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/","ecma":2020},"sourceType":"script"} 1`] = `"\\"//! a;\\\\n;\\\\\\"\\\\u0001\\\\\\";\\""`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-55 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/","ecma":2020},"sourceType":"script"} 1`] = `
+"//! a;
+"
+`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-55 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/"},"sourceType":"script"} 1`] = `"\\"//! a;\\\\n;\\\\\\"\\\\u0001\\\\\\";\\""`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-55 prints {"mode":"minify","compress":{},"mangle":true,"ecma":2020,"format":{"comments":"/!/"},"sourceType":"script"} 1`] = `
+"//! a;
+"
+`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-55 prints {"mode":"minify","compress":{},"mangle":true,"format":{"comments":"all"},"sourceType":"script"} 1`] = `"\\"//! a;\\\\n/* b */;;\\\\\\"\\\\u0001\\\\\\";\\""`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-55 prints {"mode":"minify","compress":{},"mangle":true,"format":{"comments":"all"},"sourceType":"script"} 1`] = `
+"//! a;
+/* b */"
+`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-55 prints {"mode":"minify","mangle":true,"format":{"comments":"all","wrap_iife":true,"wrap_func_args":true,"webkit":true,"semicolons":false,"preserve_annotations":true,"ie8":true,"safari10":true,"preamble":"/* p */"},"sourceType":"script"} 1`] = `"\\"/* p */\\\\n//! a;\\\\n/* b */;;\\\\\\"\\\\u0001\\\\\\"\\\\n\\""`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-55 prints {"mode":"minify","mangle":true,"format":{"comments":"all","wrap_iife":true,"wrap_func_args":true,"webkit":true,"semicolons":false,"preserve_annotations":true,"ie8":true,"safari10":true,"preamble":"/* p */"},"sourceType":"script"} 1`] = `
+"/* p */
+//! a;
+/* b */"
+`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-55 prints {"mode":"minify","mangle":true,"sourceType":"script"} 1`] = `"\\"//! a;\\\\n;\\\\\\"\\\\u0001\\\\\\";\\""`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-55 prints {"mode":"minify","mangle":true,"sourceType":"script"} 1`] = `
+"//! a;
+"
+`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-each-source-with-names-55 prints {"mode":"minify"} 1`] = `"throws: Octal literal in strict mode (2:10)"`;
 
@@ -27351,7 +27370,7 @@ exports[`JavaScript syntax — invariants one-pass-e2-5 parses 2`] = `""`;
 
 exports[`JavaScript syntax — invariants one-pass-e2-5 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants one-pass-e2-5 prints {"mode":"minify","compress":{"ecma":2020},"ecma":2020,"mangle":false} 1`] = `"function log(name){console.log(name)}var k=1;switch(1){case log(\`a\`),k:log(\`one\`)}function f(q){if(q)switch(3){case log(\`b\`),1:break;var v}}log(\`c\`),1;log(f(1));"`;
+exports[`JavaScript syntax — invariants one-pass-e2-5 prints {"mode":"minify","compress":{"ecma":2020},"ecma":2020,"mangle":false} 1`] = `"function log(name){console.log(name)}var k=1;switch(1){case log(\`a\`),k:log(\`one\`)}function f(q){if(q)switch(3){case log(\`b\`),1:break;var v}}log(\`c\`);log(f(1));"`;
 
 exports[`JavaScript syntax — invariants one-pass-e2-5 prints {"mode":"minify"} 1`] = `"function log(name){console.log(name)}var k=1;switch(1){case log(\\"a\\"),k:log(\\"one\\")}function f(q){if(q)switch(3){case log(\\"b\\"),1:break;case 2:var v}return v}switch(3){case log(\\"c\\"),1:break;case 2:let w=1}switch(1){case 1:break;case 2:let x=1;class C{}}log(f(1));"`;
 
@@ -29233,6 +29252,16 @@ exports[`JavaScript syntax — invariants one-pass-minify-keeps-parentheses-arou
 
 exports[`JavaScript syntax — invariants one-pass-minify-keeps-parentheses-around-an-operator-word-called-inline tokenizes 1`] = `"function[0,8] name[9,10] ([10,11] name[11,12] ,[12,13] name[14,15] )[15,16] {[17,18] return[20,26] ([27,28] ([28,29] )[29,30] =>[31,33] typeof[34,40] ([41,42] name[42,43] +/-[44,45] name[46,47] )[47,48] )[48,49] ([49,50] )[50,51] .[51,52] name[52,58] ;[58,59] }[60,61] function[62,70] name[71,72] ([72,73] name[73,74] )[74,75] {[76,77] return[79,85] ([86,87] ([87,88] )[88,89] =>[90,92] new[93,96] ([97,98] name[98,99] .[99,100] name[100,101] ([101,102] )[102,103] )[103,104] ([104,105] )[105,106] )[106,107] ([107,108] )[108,109] .[109,110] name[110,116] ;[116,117] }[118,119] name[120,127] .[127,128] name[128,131] ([131,132] name[132,133] ([133,134] num[134,135] ,[135,136] num[137,138] )[138,139] )[139,140] ;[140,141] name[142,149] .[149,150] name[150,153] ([153,154] name[154,155] ([155,156] {[156,157] name[158,159] :[159,160] ([161,162] )[162,163] =>[164,166] name[167,172] }[173,174] )[174,175] )[175,176] ;[176,177] eof[178,178]"`;
 
+exports[`JavaScript syntax — invariants one-pass-minify-of-dead-code-should-drop-a-labeled-loop-breaking-at-once parses 1`] = `"Program[0,72](body=[LabeledStatement[0,35](body=WhileStatement[6,35](test=Literal[13,17](value=true raw=\\"true\\") body=BlockStatement[19,35](body=[BreakStatement[22,33](label=Identifier[28,32](name=\\"done\\"))])) label=Identifier[0,4](name=\\"done\\")),LabeledStatement[36,71](body=LabeledStatement[43,71](body=ForStatement[50,71](init=null test=null update=null body=BreakStatement[59,71](label=Identifier[65,70](name=\\"inner\\"))) label=Identifier[43,48](name=\\"inner\\")) label=Identifier[36,41](name=\\"outer\\"))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-of-dead-code-should-drop-a-labeled-loop-breaking-at-once parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-of-dead-code-should-drop-a-labeled-loop-breaking-at-once parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-of-dead-code-should-drop-a-labeled-loop-breaking-at-once prints {"mode":"minify"} 1`] = `"done:while(true){break done}outer:inner:for(;;)break inner;"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-of-dead-code-should-drop-a-labeled-loop-breaking-at-once tokenizes 1`] = `"name[0,4] :[4,5] while[6,11] ([12,13] true[13,17] )[17,18] {[19,20] break[22,27] name[28,32] ;[32,33] }[34,35] name[36,41] :[41,42] name[43,48] :[48,49] for[50,53] ([54,55] ;[55,56] ;[56,57] )[57,58] break[59,64] name[65,70] ;[70,71] eof[72,72]"`;
+
 exports[`JavaScript syntax — invariants one-pass-minify-of-dead-code-should-drop-what-never-runs parses 1`] = `"Program[0,49](body=[TryStatement[0,48](block=BlockStatement[4,12](body=[ExpressionStatement[6,10](expression=Literal[6,10](value=true raw=\\"true\\"))]) handler=CatchClause[13,31](param=Identifier[20,21](name=\\"e\\") body=BlockStatement[23,31](body=[ExpressionStatement[25,29](expression=Literal[25,29](value=true raw=\\"true\\"))])) finalizer=BlockStatement[40,48](body=[ExpressionStatement[42,46](expression=Literal[42,46](value=true raw=\\"true\\"))]))] sourceType=\\"module\\")"`;
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-dead-code-should-drop-what-never-runs parses 2`] = `""`;
@@ -30669,7 +30698,7 @@ exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-drop-an-if-branch-that-is-a parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-drop-an-if-branch-that-is-a prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"function b(){return console.log(\\"b\\"),1}function c(){console.log(\\"c\\")}function k(a){b();if(!a)c();for(;a;)1}k(0);"`;
+exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-drop-an-if-branch-that-is-a prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"function b(){return console.log(\\"b\\"),1}function c(){console.log(\\"c\\")}function k(a){b();if(!a)c();for(;a;);}k(0);"`;
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-drop-an-if-branch-that-is-a prints {"mode":"minify"} 1`] = `"function b(){console.log(\\"b\\");return 1}function c(){console.log(\\"c\\")}function k(a){if(a)typeof x;if(b())1;else 2;if(a)1;else c();for(;;)if(a)1;else break}k(0);"`;
 
@@ -33130,6 +33159,18 @@ exports[`JavaScript syntax — invariants one-pass-minify-of-unread-values-shoul
 exports[`JavaScript syntax — invariants one-pass-minify-of-unread-values-should-drop-a-spread-of-a-literal-that-runs-no-27 prints {"mode":"minify"} 1`] = `"String.prototype[Symbol.iterator]=f;[...\\"s\\"];"`;
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-unread-values-should-drop-a-spread-of-a-literal-that-runs-no-27 tokenizes 1`] = `"name[0,6] .[6,7] name[7,16] [[16,17] name[17,23] .[23,24] name[24,32] ][32,33] =[33,34] name[34,35] ;[35,36] [[36,37] ...[37,40] string[40,43]=\\"s\\" ][43,44] eof[44,44]"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-of-unread-values-should-drop-an-optional-call-of-an-empty-function-in-one-pass parses 1`] = `"Program[0,135](body=[VariableDeclaration[0,10](declarations=[VariableDeclarator[4,9](id=Identifier[4,5](name=\\"x\\") init=Literal[8,9](value=1 raw=\\"1\\"))] kind=\\"var\\"),ExpressionStatement[11,27](expression=ChainExpression[11,26](expression=CallExpression[11,26](callee=ArrowFunctionExpression[12,20](id=null expression=false generator=false async=false params=[] body=BlockStatement[18,20](body=[])) arguments=[Identifier[24,25](name=\\"x\\")] optional=true))),ExpressionStatement[28,80](expression=ChainExpression[28,79](expression=CallExpression[28,79](callee=ArrowFunctionExpression[29,37](id=null expression=false generator=false async=false params=[] body=BlockStatement[35,37](body=[])) arguments=[Identifier[41,42](name=\\"x\\"),CallExpression[44,60](callee=MemberExpression[44,55](object=Identifier[44,51](name=\\"console\\") property=Identifier[52,55](name=\\"log\\") computed=false optional=false) arguments=[Literal[56,59](value=\\"a\\" raw=\\"\\\\\\"a\\\\\\"\\")] optional=false),CallExpression[62,78](callee=MemberExpression[62,73](object=Identifier[62,69](name=\\"console\\") property=Identifier[70,73](name=\\"log\\") computed=false optional=false) arguments=[Literal[74,77](value=\\"b\\" raw=\\"\\\\\\"b\\\\\\"\\")] optional=false)] optional=true))),ExpressionStatement[81,118](expression=ChainExpression[81,117](expression=CallExpression[81,117](callee=FunctionExpression[82,96](id=null expression=false generator=false async=false params=[] body=BlockStatement[94,96](body=[])) arguments=[CallExpression[100,116](callee=MemberExpression[100,111](object=Identifier[100,107](name=\\"console\\") property=Identifier[108,111](name=\\"log\\") computed=false optional=false) arguments=[Literal[112,115](value=\\"c\\" raw=\\"\\\\\\"c\\\\\\"\\")] optional=false)] optional=true))),ExpressionStatement[119,134](expression=CallExpression[119,133](callee=MemberExpression[119,130](object=Identifier[119,126](name=\\"console\\") property=Identifier[127,130](name=\\"log\\") computed=false optional=false) arguments=[Identifier[131,132](name=\\"x\\")] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-of-unread-values-should-drop-an-optional-call-of-an-empty-function-in-one-pass parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-of-unread-values-should-drop-an-optional-call-of-an-empty-function-in-one-pass parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-of-unread-values-should-drop-an-optional-call-of-an-empty-function-in-one-pass prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"var x=1;console.log(\\"a\\"),console.log(\\"b\\"),console.log(\\"c\\"),console.log(x);"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-of-unread-values-should-drop-an-optional-call-of-an-empty-function-in-one-pass prints {"mode":"minify"} 1`] = `"var x=1;(()=>{})?.(x);(()=>{})?.(x,console.log(\\"a\\"),console.log(\\"b\\"));(function(){})?.(console.log(\\"c\\"));console.log(x);"`;
+
+exports[`JavaScript syntax — invariants one-pass-minify-of-unread-values-should-drop-an-optional-call-of-an-empty-function-in-one-pass tokenizes 1`] = `"var[0,3] name[4,5] =[6,7] num[8,9] ;[9,10] ([11,12] ([12,13] )[13,14] =>[15,17] {[18,19] }[19,20] )[20,21] ?.[21,23] ([23,24] name[24,25] )[25,26] ;[26,27] ([28,29] ([29,30] )[30,31] =>[32,34] {[35,36] }[36,37] )[37,38] ?.[38,40] ([40,41] name[41,42] ,[42,43] name[44,51] .[51,52] name[52,55] ([55,56] string[56,59]=\\"a\\" )[59,60] ,[60,61] name[62,69] .[69,70] name[70,73] ([73,74] string[74,77]=\\"b\\" )[77,78] )[78,79] ;[79,80] ([81,82] function[82,90] ([91,92] )[92,93] {[94,95] }[95,96] )[96,97] ?.[97,99] ([99,100] name[100,107] .[107,108] name[108,111] ([111,112] string[112,115]=\\"c\\" )[115,116] )[116,117] ;[117,118] name[119,126] .[126,127] name[127,130] ([130,131] name[131,132] )[132,133] ;[133,134] eof[135,135]"`;
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-unread-values-should-drop-built-in-calls-and-reads-that-run parses 1`] = `"Program[0,53](body=[ExpressionStatement[0,53](expression=SequenceExpression[0,53](expressions=[CallExpression[0,8](callee=Identifier[0,6](name=\\"Object\\") arguments=[] optional=false),NewExpression[9,19](callee=Identifier[13,19](name=\\"Object\\") arguments=[]),NewExpression[20,34](callee=Identifier[24,30](name=\\"Object\\") arguments=[ObjectExpression[31,33](properties=[])]),NewExpression[35,53](callee=Identifier[39,45](name=\\"Object\\") arguments=[SpreadElement[46,52](argument=ArrayExpression[49,52](elements=[Literal[50,51](value=1 raw=\\"1\\")]))])]))] sourceType=\\"module\\")"`;
 

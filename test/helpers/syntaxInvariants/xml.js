@@ -811,15 +811,15 @@ const meaningReports = (xml, printed, cssOptions, options = {}) =>
 				}
 			];
 
-// A comment's data that is code rather than a comment, which the minifier keeps
-// at every level: a downlevel conditional comment drives IE's branching and `#`
-// opens a server-side include.
-const KEPT_COMMENT = /^\s*(?:\[if|\[endif|<!\[|#)/;
+// A comment's data the minifier keeps by default: a downlevel conditional comment
+// drives IE's branching, `#` opens a server-side include, and a `!` banner or a
+// `@license` / `@preserve` annotation is a legal notice.
+const KEPT_COMMENT = /^\s*(?:\[if|\[endif|<!\[|#)|^!|@(?:license|preserve)/i;
 
 /**
  * The comments a document carries that no minifier may drop, read by webpack's
- * own parser: each conditional comment or server-side include. A processing
- * instruction is one too, which `meaning`'s canonical form already holds.
+ * own parser: each conditional comment, server-side include or legal notice. A
+ * processing instruction is one too, which `meaning`'s canonical form holds.
  * @param {string} xml a document
  * @returns {number} how many it carries
  */

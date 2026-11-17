@@ -1,7 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": "<script charset=utf-8 data-x=\\x00 src=a.js>",
-		"why": "a `<script>` inside an element printed whole is held by a NUL mark in that element's text, which a NUL the source carried could spell, so with one in the source the printer keeps `charset`; the next pass, reading the `<meta charset>` that dropping the comment brought into reach, drops the restated default, 14 B less in the same meaning"
-	}
-]

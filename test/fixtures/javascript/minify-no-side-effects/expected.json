@@ -10,6 +10,6 @@
 		"presets": [
 			"default"
 		],
-		"why": "known bug: the mangler ranks the characters it names from by how often the source holds them, the names it renames and the code compressing drops included, so its output ranks them otherwise and a second pass renames"
+		"why": "known bug: the mangler ranks the characters it names from by how often the source holds them, counted before the one pass prints, so the code compressing rewrites or drops still counts: its output ranks them otherwise and a second pass renames"
 	}
 ]
