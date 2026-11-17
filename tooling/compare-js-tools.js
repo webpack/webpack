@@ -928,13 +928,6 @@ const EXPECTED = [
 		source: "test/cases/parsing/issue-7519/index.js",
 		presets: ["default"],
 		why: 'known bug: an import compressing leaves unread is renamed all the same, and a second pass leaves it as imported: `import {mult} from "a"; f(() => { (x() || x()) && false && mult(); }); f(() => { if (x() && false) mult(); });` prints `import{mult as l}from"a";…`'
-	},
-	{
-		relation: "residue",
-		contains: "/x/;",
-		source: "acorn corpus: tests.js",
-		presets: ["default"],
-		why: "known bug: a `do … while (false)` unwrapped to its body keeps a body doing nothing: `do /x/; while (false);` prints `/x/;`, which a second pass drops"
 	}
 ];
 
