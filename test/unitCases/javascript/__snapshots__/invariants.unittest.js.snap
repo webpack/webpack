@@ -37791,6 +37791,16 @@ exports[`JavaScript syntax — invariants parser-from-the-objects-to-estree-obje
 
 exports[`JavaScript syntax — invariants parser-from-the-objects-to-estree-object-built-should-write-the-tree-its-objects-hold-once-it-was-let-go tokenizes 1`] = `"num[0,1] eof[1,1]"`;
 
+exports[`JavaScript syntax — invariants parser-helpers-reads-numbers-like-acorn parses 1`] = `"Program[0,25](body=[ExpressionStatement[0,4](expression=Literal[0,3](value=8 raw=\\"010\\")),ExpressionStatement[5,10](expression=Literal[5,9](value=511 raw=\\"0777\\")),ExpressionStatement[11,15](expression=Literal[11,14](value=1000 raw=\\"1e3\\")),ExpressionStatement[16,24](expression=Literal[16,23](value=1000.5 raw=\\"1_000.5\\"))] sourceType=\\"script\\")"`;
+
+exports[`JavaScript syntax — invariants parser-helpers-reads-numbers-like-acorn parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants parser-helpers-reads-numbers-like-acorn prints {"mode":"minify","sourceType":"script"} 1`] = `"8;511;1e3;1000.5;"`;
+
+exports[`JavaScript syntax — invariants parser-helpers-reads-numbers-like-acorn prints {"mode":"minify"} 1`] = `"throws: Invalid number (1:0)"`;
+
+exports[`JavaScript syntax — invariants parser-helpers-reads-numbers-like-acorn tokenizes 1`] = `"num[0,3]=8 ;[3,4] num[5,9]=511 ;[9,10] num[11,14]=1000 ;[14,15] num[16,23]=1000.5 ;[23,24] eof[25,25]"`;
+
 exports[`JavaScript syntax — invariants parser-module-fallback-at-old-editions parses {"options":{"ecmaVersion":3,"sourceType":"auto","allowReserved":false}} 1`] = `"Program[0,13](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"x\\")),ReturnStatement[3,12](argument=Literal[10,11](value=1 raw=\\"1\\"))] sourceType=\\"script\\")"`;
 
 exports[`JavaScript syntax — invariants parser-module-fallback-at-old-editions parses {"options":{"ecmaVersion":3,"sourceType":"auto"}} 1`] = `"Program[0,13](body=[ExpressionStatement[0,2](expression=Identifier[0,1](name=\\"x\\")),ReturnStatement[3,12](argument=Literal[10,11](value=1 raw=\\"1\\"))] sourceType=\\"script\\")"`;

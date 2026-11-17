@@ -3130,27 +3130,6 @@ describe("Parser", () => {
 			}
 		});
 
-		it("reads numbers like acorn", () => {
-			const { parser, toEstreeObject } = require("../../../lib/javascript/syntax");
-			for (const [source, value] of /** @type {[string, number][]} */ ([
-				["010", 8],
-				["0777", 511],
-				["1e3", 1000],
-				["1_000.5", 1000.5]
-			])) {
-				const program = /** @type {import("estree").Program} */ (
-					toEstreeObject(parser.parseProgram(source, 0, { sourceType: "script" }))
-				);
-				const statement = /** @type {import("estree").ExpressionStatement} */ (
-					program.body[0]
-				);
-				expect(/** @type {import("estree").Literal} */ (statement.expression).value).toBe(value);
-				expect(
-					acorn.parse(source, { ecmaVersion: "latest" }).body[0]
-				).toMatchObject({ expression: { value } });
-			}
-		});
-
 		it("exposes acorn's token tables", () => {
 			expect(Object.keys(tokTypes).sort()).toEqual(
 				Object.keys(acornPort.tokTypes).sort()
