@@ -3,5 +3,10 @@
 		"relation": "respelling escape",
 		"contains": "foo\n      -> \\66 oo",
 		"why": "a declaration, selector or block that is invalid or left open, which the printer writes back as authored, escape included"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/a[1]: css-tree b: {x:1} foo, tool rule b:",
+		"why": "a value holding a `{}` block beside anything else is no declaration but a rule (§5.4.5); css-tree keeps the declaration"
 	}
 ]

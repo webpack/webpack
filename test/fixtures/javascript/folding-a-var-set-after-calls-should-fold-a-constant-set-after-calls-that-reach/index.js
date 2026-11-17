@@ -1,0 +1,1 @@
+(function(){init();var A=4,B=5;function f(x){return x&(A|B)}window.f=f})()

@@ -1,0 +1,1 @@
+function w(a){x=(function(b){return b})(a||g())}

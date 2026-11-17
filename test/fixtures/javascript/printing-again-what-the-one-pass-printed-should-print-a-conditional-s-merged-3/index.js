@@ -1,0 +1,1 @@
+function f(e,t,g){x=new (e?g("aaaa",e,t,1):g("bbbb",e,t,1))}

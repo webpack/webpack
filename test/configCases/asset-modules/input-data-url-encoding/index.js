@@ -31,3 +31,13 @@ it("should work with 'image/svg+xml'", () => {
 		"data:IMAGE/SVG+XML;param=123,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2017%2017%27%3E%3Cpath%20fill%3D%27none%27%20stroke%3D%27%23343a40%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20stroke-width%3D%272%27%20d%3D%27M2%205l6%206%206-6%27%2F%3E%3C%2Fsvg%3E"
 	);
 });
+
+it("should keep the original encoding next to a bare %", () => {
+	const url = new URL(
+		"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%25'/%3e",
+		import.meta.url
+	);
+	expect(url.href).toBe(
+		"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%25'/%3e"
+	);
+});

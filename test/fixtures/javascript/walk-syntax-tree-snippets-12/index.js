@@ -1,0 +1,1 @@
+try { fn(); } catch ({ message }) { fn(message); } finally { fn(0); } switch (a) { case 1: fn(); }

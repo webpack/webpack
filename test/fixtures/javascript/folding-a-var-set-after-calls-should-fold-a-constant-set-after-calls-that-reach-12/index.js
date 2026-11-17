@@ -1,0 +1,1 @@
+function f(report){class C{static{report(value)}}var value=1;report(C)}f(function(v){console.log(typeof v==="function"?"fn":v)})

@@ -1,0 +1,15 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"removeSvgAttributes": [
+			"circle:stroke.*",
+			"path:fill",
+			"*:(stroke|fill):((?!#fff).)*",
+			"svg:version",
+			"image:href:data:image/png;.*",
+			"*:opacity:0\\.5"
+		]
+	}
+]

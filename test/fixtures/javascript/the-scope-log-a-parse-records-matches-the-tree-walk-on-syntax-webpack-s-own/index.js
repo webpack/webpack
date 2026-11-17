@@ -1,0 +1,1 @@
+var f = async function () { return a; }; var g = async x => x + b; class C { x = c; static { let q = d; } } switch (e) { case 1: let h = i; } let a; export { a };

@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`compare-css-tools — the cold branches fixture writes matrix to a quarter turn as the shorter call 1`] = `"a{transform:rotate(90deg)}"`;
+
+exports[`compare-css-tools — the cold branches fixture writes matrix to a scale as the shorter call 1`] = `"a{transform:scale(2,3)}"`;
+
+exports[`compare-css-tools — the cold branches fixture writes matrix to a translate as the shorter call 1`] = `"a{transform:translate(10px,20px)}"`;
+
+exports[`compare-css-tools — the cold branches fixture writes matrix to three quarters as the shorter call 1`] = `"a{transform:rotate(270deg)}"`;
+
+exports[`compare-css-tools — the cold branches fixture writes matrix3d to a 2D matrix as the shorter call 1`] = `"a{transform:translate(10px,20px)}"`;
+
+exports[`compare-css-tools — the cold branches fixture writes matrix3d to a scale3d as the shorter call 1`] = `"a{transform:scale3d(2,3,4)}"`;
+
+exports[`compare-css-tools — the cold branches fixture writes matrix3d to a translate3d as the shorter call 1`] = `"a{transform:translate3d(10px,20px,30px)}"`;
+
+exports[`compare-css-tools — the cold branches fixture writes scale3d to a scaleZ as the shorter call 1`] = `"a{transform:scaleZ(2)}"`;

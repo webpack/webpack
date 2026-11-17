@@ -1,0 +1,9 @@
+{
+	"id": 9007199254740993,
+	"precise": 1.50,
+	"huge": -1E+400,
+	"list": [ 1,
+	2 ],
+	"text": "keep  \"these\"  spaces\\",
+	"unicode": "\u0020 \n"
+}

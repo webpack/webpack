@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<g stroke="red"><rect width="10" height="10" fill="none" stroke="revert"/></g>
+	<g stroke="red"><rect width="10" height="10" fill="none" stroke="Inherit"/></g>
+	<g stroke="red"><rect width="10" height="10" fill="none" stroke="initial"/></g>
+</svg>

@@ -1,0 +1,1 @@
+outer: for (const a of b) { inner: for (const c of d) { continue outer; break inner; } }

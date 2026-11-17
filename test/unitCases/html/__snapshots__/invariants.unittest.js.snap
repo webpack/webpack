@@ -34793,6 +34793,22 @@ exports[`HTML syntax — invariants source-processor-node-path-answers-null-for-
 
 exports[`HTML syntax — invariants source-processor-node-path-answers-null-for-a-part-a-node-does-not-have tokenizes 1`] = `"doctype[0,26|10,14|23,24|-1,-1] open[26,29|27,28] text[29,30] open[30,33|31,32] text[33,34] close[34,38|36,37] text[38,39] close[39,43|41,42] end=43"`;
 
+exports[`HTML syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-cr parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <i>\\\\n|     \\\\\\"\\\\n\\\\\\"\\\\n|     <i>\\\\n|     \\\\\\"\\\\n\\\\f\\\\\\"\\\\n|     <i>\\""`;
+
+exports[`HTML syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-cr parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-cr prints {"mode":"minify"} 1`] = `"\\"<i></i>\\\\n<i></i>\\\\n\\\\f<i></i>\\""`;
+
+exports[`HTML syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-cr tokenizes 1`] = `"open[0,3|1,2] close[3,7|5,6] text[7,8] open[8,11|9,10] close[11,15|13,14] text[15,17] open[17,20|18,19] close[20,24|22,23] end=24"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <i>\\\\n|     \\\\\\"\\\\n\\\\\\"\\\\n|     <i>\\\\n|     \\\\\\"\\\\n\\\\f\\\\\\"\\\\n|     <i>\\""`;
+
+exports[`HTML syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf prints {"mode":"minify"} 1`] = `"\\"<i></i>\\\\n<i></i>\\\\n\\\\f<i></i>\\""`;
+
+exports[`HTML syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf tokenizes 1`] = `"open[0,3|1,2] close[3,7|5,6] text[7,9] open[9,12|10,11] close[12,16|14,15] text[16,19] open[19,22|20,21] close[22,26|24,25] end=26"`;
+
 exports[`HTML syntax — invariants source-processor-node-path-ends-a-foreign-element-with-the-end-tag-naming-it parses 1`] = `
 "| <html>
 |   <head>
@@ -42245,6 +42261,289 @@ exports[`HTML syntax — invariants source-processor-remove-implied-tags-materia
 
 exports[`HTML syntax — invariants source-processor-remove-implied-tags-materializes-an-implied-tag-whose-content-3 tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] text[21,22] open[22,25|23,24] text[25,26] end=26"`;
 
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-every-script-s-before-a-minified-meta-moving-into-reach parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       charset=\\"utf-8\\"
+|       src=\\"a.js\\"
+|     <script>
+|       async=\\"\\"
+|       charset=\\"UTF-8\\"
+|       src=\\"b.js\\"
+|     <script>
+|       charset=\\"utf8\\"
+|       src=\\"c.js\\"
+|     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+|     <title>
+|       \\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\\"
+|     <meta>
+|       charset=\\"utf-8\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-every-script-s-before-a-minified-meta-moving-into-reach parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-every-script-s-before-a-minified-meta-moving-into-reach prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `"<!doctype html><head><script src=a.js></script><script src=b.js async></script><script src=c.js></script><title>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</title><meta charset=utf-8></head>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-every-script-s-before-a-minified-meta-moving-into-reach prints {"mode":"minify"} 1`] = `"<!doctype html><head><script charset=utf-8 src=a.js></script><script charset=UTF-8 src=b.js async></script><script src=c.js charset=utf8></script><title>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</title><meta charset=utf-8></head>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-every-script-s-before-a-minified-meta-moving-into-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] attr[29,36|38,43]\\" attr[45,48|50,54]\\" open[21,56|22,28] close[56,65|58,64] attr[73,80|82,87]\\" attr[89,92|94,98]\\" attr[100,105|-1,-1] open[65,106|66,72] close[106,115|108,114] attr[123,126|128,132]\\" attr[134,141|142,146] open[115,147|116,122] close[147,156|149,155] comment[156,1263|160,1260] open[1263,1270|1264,1269] text[1270,2143] close[2143,2151|2145,2150] attr[2157,2164|2166,2171]\\" open[2151,2173|2152,2156] end=2173"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-every-script-s-in-a-pre-that-prints-whole-before-a-minified-meta-moves-into-reach parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       \\"t\\"
+|   <body>
+|     <pre>
+|       <script>
+|         charset=\\"utf-8\\"
+|         src=\\"a.js\\"
+|       \\"a\\"
+|       <b>
+|         <script>
+|           async=\\"\\"
+|           charset=\\"UTF-8\\"
+|           src=\\"b.js\\"
+|       <script>
+|         charset=\\"utf8\\"
+|         src=\\"c.js\\"
+|     <script>
+|       charset=\\"utf-8\\"
+|       src=\\"d.js\\"
+|     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+|     <meta>
+|       charset=\\"utf-8\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-every-script-s-in-a-pre-that-prints-whole-before-a-minified-meta-moves-into-reach parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-every-script-s-in-a-pre-that-prints-whole-before-a-minified-meta-moves-into-reach prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `
+"<!doctype html><title>t</title><pre><script src=a.js></script>a<b><script src=b.js async></script></b><script src=c.js></script></pre><script src=d.js></script><meta charset=utf-8>
+"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-every-script-s-in-a-pre-that-prints-whole-before-a-minified-meta-moves-into-reach prints {"mode":"minify"} 1`] = `
+"<!doctype html><title>t</title><pre><script charset=utf-8 src=a.js></script>a<b><script charset=UTF-8 src=b.js async></script></b><script src=c.js charset=utf8></script></pre><script charset=utf-8 src=d.js></script><meta charset=utf-8>
+"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-every-script-s-in-a-pre-that-prints-whole-before-a-minified-meta-moves-into-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,36|32,35] attr[44,51|53,58]\\" attr[60,63|65,69]\\" open[36,71|37,43] close[71,80|73,79] text[80,81] open[81,84|82,83] attr[92,99|101,106]\\" attr[108,111|113,117]\\" attr[119,124|-1,-1] open[84,125|85,91] close[125,134|127,133] close[134,138|136,137] attr[146,149|151,155]\\" attr[157,164|165,169] open[138,170|139,145] close[170,179|172,178] close[179,185|181,184] attr[193,200|202,207]\\" attr[209,212|214,218]\\" open[185,220|186,192] close[220,229|222,228] comment[229,1336|233,1333] attr[1342,1349|1351,1356]\\" open[1336,1358|1337,1341] text[1358,1359] end=1359"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-from-a-script-printed-in-pieces-before-a-minified-meta-moves-into-reach parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       charset=\\"utf-8\\"
+|       \\"f()\\"
+|     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+|     <meta>
+|       charset=\\"utf-8\\"
+|     <title>
+|       \\"t\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-from-a-script-printed-in-pieces-before-a-minified-meta-moves-into-reach parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-from-a-script-printed-in-pieces-before-a-minified-meta-moves-into-reach prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `"<!doctype html><head><script>f()</script><meta charset=utf-8><title>t</title></head>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-from-a-script-printed-in-pieces-before-a-minified-meta-moves-into-reach prints {"mode":"minify"} 1`] = `"<!doctype html><head><script charset=utf-8>f()</script><meta charset=utf-8><title>t</title></head>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-from-a-script-printed-in-pieces-before-a-minified-meta-moves-into-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] attr[29,36|38,43]\\" open[21,45|22,28] text[45,48] close[48,57|50,56] comment[57,1164|61,1161] attr[1170,1177|1179,1184]\\" open[1164,1186|1165,1169] open[1186,1193|1187,1192] text[1193,1194] close[1194,1202|1196,1201] end=1202"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-form-that-prints-whole-for-its-pointer-reset-where-a-minified-meta-moves-into-reach parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       \\"t\\"
+|   <body>
+|     <form>
+|       <div>
+|         <form>
+|           <script>
+|             charset=\\"utf-8\\"
+|             src=\\"a.js\\"
+|     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+|     <meta>
+|       charset=\\"utf-8\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-form-that-prints-whole-for-its-pointer-reset-where-a-minified-meta-moves-into-reach parses 2`] = `"warning[42,49]:end-tag-too-early-ignored"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-form-that-prints-whole-for-its-pointer-reset-where-a-minified-meta-moves-into-reach prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `
+"<!doctype html><title>t</title><form><div></form><form><script src=a.js></script></form></div></form><meta charset=utf-8>
+"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-form-that-prints-whole-for-its-pointer-reset-where-a-minified-meta-moves-into-reach prints {"mode":"minify"} 1`] = `
+"<!doctype html><title>t</title><form><div></form><form><script charset=utf-8 src=a.js></script></form></div></form><meta charset=utf-8>
+"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-form-that-prints-whole-for-its-pointer-reset-where-a-minified-meta-moves-into-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,37|32,36] open[37,42|38,41] close[42,49|44,48] open[49,55|50,54] attr[63,70|72,77]\\" attr[79,82|84,88]\\" open[55,90|56,62] close[90,99|92,98] close[99,106|101,105] close[106,112|108,111] comment[112,1219|116,1216] attr[1225,1232|1234,1239]\\" open[1219,1241|1220,1224] text[1241,1242] end=1242"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-on-a-script-whose-handler-is-deferred-where-a-minified-meta-moves-into-reach parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       \\"t\\"
+|   <body>
+|     <pre>
+|       <script>
+|         charset=\\"utf-8\\"
+|         onload=\\"f()\\"
+|         src=\\"a.js\\"
+|     <p>
+|       onclick=\\"g()\\"
+|       \\"x\\"
+|     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+|     <meta>
+|       charset=\\"utf-8\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-on-a-script-whose-handler-is-deferred-where-a-minified-meta-moves-into-reach parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-on-a-script-whose-handler-is-deferred-where-a-minified-meta-moves-into-reach prints {"mode":"minify","removeRedundantAttributes":"smart","deferEmbeddedSource":[]} 1`] = `"\\"<!doctype html><title>t</title><pre><script src=a.js\\\\u00000:0\\\\u0000></script></pre><p\\\\u00000:1\\\\u0000>x</p><meta charset=utf-8>\\\\n\\""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-on-a-script-whose-handler-is-deferred-where-a-minified-meta-moves-into-reach prints {"mode":"minify"} 1`] = `
+"<!doctype html><title>t</title><pre><script charset=utf-8 src=a.js onload=f()></script></pre><p onclick=g()>x</p><meta charset=utf-8>
+"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-on-a-script-whose-handler-is-deferred-where-a-minified-meta-moves-into-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,36|32,35] attr[44,51|53,58]\\" attr[60,63|65,69]\\" attr[71,77|79,82]\\" open[36,84|37,43] close[84,93|86,92] close[93,99|95,98] attr[102,109|111,114]\\" open[99,116|100,101] text[116,117] close[117,121|119,120] comment[121,1228|125,1225] attr[1234,1241|1243,1248]\\" open[1228,1250|1229,1233] text[1250,1251] end=1251"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-a-minified-meta-moves-into-reach parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       \\"t\\"
+|   <body>
+|     <pre>
+|       <script>
+|         charset=\\"utf-8\\"
+|         src=\\"a.js\\"
+|     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+|     <meta>
+|       charset=\\"utf-8\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-a-minified-meta-moves-into-reach parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-a-minified-meta-moves-into-reach prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `"<!doctype html><title>t</title><pre><script src=a.js></script></pre><meta charset=utf-8>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-a-minified-meta-moves-into-reach prints {"mode":"minify"} 1`] = `"<!doctype html><title>t</title><pre><script charset=utf-8 src=a.js></script></pre><meta charset=utf-8>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-a-minified-meta-moves-into-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,36|32,35] attr[44,51|53,58]\\" attr[60,63|65,69]\\" open[36,71|37,43] close[71,80|73,79] close[80,86|82,85] comment[86,1193|90,1190] attr[1199,1206|1208,1213]\\" open[1193,1215|1194,1198] end=1215"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-holds-a-nul parses 1`] = `
+"length 1368, sha256 04c73b8f0295d71d
+\\"| <!DOCTYPE html>\\\\n| <html>\\\\n|   <head>\\\\n|     <title>\\\\n|       \\\\\\"t\\\\\\"\\\\n|   <body>\\\\n|     <pre>\\\\n|       <script>\\\\n|         charset=\\\\\\"utf-8\\\\\\"\\\\n|         data-x=\\\\\\"\\\\u0000\\\\\\"\\\\n|         src=\\\\\\"a.js\\\\\\"\\\\n|  
+…
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->\\\\n|     <meta>\\\\n|       charset=\\\\\\"utf-8\\\\\\"\\\\n|     \\\\\\"\\\\n\\\\\\"\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-holds-a-nul parses 2`] = `"warning[79,80]:unexpected-null-character"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-holds-a-nul prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `"\\"<!doctype html><title>t</title><pre><script src=a.js data-x=\\\\u0000></script></pre><meta charset=utf-8>\\\\n\\""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-holds-a-nul prints {"mode":"minify"} 1`] = `"\\"<!doctype html><title>t</title><pre><script charset=utf-8 src=a.js data-x=\\\\u0000></script></pre><meta charset=utf-8>\\\\n\\""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-holds-a-nul tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,36|32,35] attr[44,51|53,58]\\" attr[60,63|65,69]\\" warning[79,80]:unexpected-null-character attr[71,77|79,80]\\" open[36,82|37,43] close[82,91|84,90] close[91,97|93,96] comment[97,1204|101,1201] attr[1210,1217|1219,1224]\\" open[1204,1226|1205,1209] text[1226,1227] end=1227"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-spells-a-mark parses 1`] = `
+"length 1424, sha256 7b52252dcedb2dc3
+\\"| <!DOCTYPE html>\\\\n| <html>\\\\n|   <head>\\\\n|     <title>\\\\n|       \\\\\\"t\\\\\\"\\\\n|   <body>\\\\n|     <pre>\\\\n|       \\\\\\"charset0\\\\\\"\\\\n|       <script>\\\\n|         charset=\\\\\\"utf-8\\\\\\"\\\\n|         src=\\\\\\"a.js\\\\\\"\\\\n|         
+…
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->\\\\n|     <meta>\\\\n|       charset=\\\\\\"utf-8\\\\\\"\\\\n|     \\\\\\"\\\\n\\\\\\"\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-spells-a-mark parses 2`] = `"warning[36,37]:unexpected-null-character warning[45,46]:unexpected-null-character warning[36,37]:invalid-codepoint warning[45,46]:invalid-codepoint warning[88,89]:unexpected-null-character warning[97,98]:unexpected-null-character warning[109,110]:unexpected-null-character warning[117,118]:unexpected-null-character warning[109,110]:invalid-codepoint warning[117,118]:invalid-codepoint"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-spells-a-mark prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `"\\"<!doctype html><title>t</title><pre>charset0<script src=a.js title=\\\\u0000charset0\\\\u0000></script>charset</pre><meta charset=utf-8>\\\\n\\""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-spells-a-mark prints {"mode":"minify"} 1`] = `"\\"<!doctype html><title>t</title><pre>charset0<script charset=utf-8 src=a.js title=\\\\u0000charset0\\\\u0000></script>charset</pre><meta charset=utf-8>\\\\n\\""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-pre-that-prints-whole-where-the-source-spells-a-mark tokenizes 1`] = `
+"length 601, sha256 042a99d6f40fb98a
+doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,36|32,35] warning[36,37]:unexpected-null-character warning[45,46]:unexpected-null-character text[36,46] attr[54
+…
+-null-character warning[117,118]:unexpected-null-character text[109,118] close[118,124|120,123] comment[124,1231|128,1228] attr[1237,1244|1246,1251]\\" open[1231,1253|1232,1236] text[1253,1254] end=1254"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-template-where-a-minified-meta-moves-into-reach parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       \\"t\\"
+|     <template>
+|       content
+|         <script>
+|           charset=\\"utf-8\\"
+|           src=\\"a.js\\"
+|     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+|     <meta>
+|       charset=\\"utf-8\\"
+|     \\"
+\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-template-where-a-minified-meta-moves-into-reach parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-template-where-a-minified-meta-moves-into-reach prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `"<!doctype html><title>t</title><template><script src=a.js></script></template><meta charset=utf-8>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-template-where-a-minified-meta-moves-into-reach prints {"mode":"minify"} 1`] = `"<!doctype html><title>t</title><template><script charset=utf-8 src=a.js></script></template><meta charset=utf-8>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-a-template-where-a-minified-meta-moves-into-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,41|32,40] attr[49,56|58,63]\\" attr[65,68|70,74]\\" open[41,76|42,48] close[76,85|78,84] close[85,96|87,95] comment[96,1203|100,1200] attr[1209,1216|1218,1223]\\" open[1203,1225|1204,1208] text[1225,1226] end=1226"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-an-svg-foreign-object-where-a-minified-meta-moves-into-reach parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       \\"t\\"
+|   <body>
+|     <svg svg>
+|       <svg foreignObject>
+|         <script>
+|           charset=\\"utf-8\\"
+|           src=\\"a.js\\"
+|     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+|     <meta>
+|       charset=\\"utf-8\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-an-svg-foreign-object-where-a-minified-meta-moves-into-reach parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-an-svg-foreign-object-where-a-minified-meta-moves-into-reach prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `
+"<!doctype html><title>t</title><svg><foreignObject><script src=a.js></script></foreignObject></svg><meta charset=utf-8>
+"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-an-svg-foreign-object-where-a-minified-meta-moves-into-reach prints {"mode":"minify"} 1`] = `
+"<!doctype html><title>t</title><svg><foreignObject><script charset=utf-8 src=a.js></script></foreignObject></svg><meta charset=utf-8>
+"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-in-an-svg-foreign-object-where-a-minified-meta-moves-into-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,36|32,35] open[36,51|37,50] attr[59,66|68,73]\\" attr[75,78|80,84]\\" open[51,86|52,58] close[86,95|88,94] close[95,111|97,110] close[111,117|113,116] comment[117,1224|121,1221] attr[1230,1237|1239,1244]\\" open[1224,1246|1225,1229] text[1246,1247] end=1247"`;
+
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-on-a parses 1`] = `
 "| <!DOCTYPE html>
 | <html>
@@ -42565,6 +42864,75 @@ exports[`HTML syntax — invariants source-processor-remove-redundant-attributes
 
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-on-a-14 tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,422] close[422,430|424,429] attr[436,443|445,450]\\" open[430,452|431,435] attr[460,467|469,474]\\" attr[476,479|481,485]\\" open[452,487|453,459] close[487,496|489,495] end=496"`;
 
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-on-a-script-whose-handler-is-deferred-where-a-minified-meta-moves-into-reach parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       charset=\\"utf-8\\"
+|       onload=\\"f()\\"
+|       src=\\"a.js\\"
+|     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+|     <meta>
+|       charset=\\"utf-8\\"
+|     <title>
+|       \\"t\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-on-a-script-whose-handler-is-deferred-where-a-minified-meta-moves-into-reach parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-on-a-script-whose-handler-is-deferred-where-a-minified-meta-moves-into-reach prints {"mode":"minify","removeRedundantAttributes":"smart","deferEmbeddedSource":[]} 1`] = `"\\"<!doctype html><head><script src=a.js\\\\u00000:0\\\\u0000></script><meta charset=utf-8><title>t</title></head>\\""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-on-a-script-whose-handler-is-deferred-where-a-minified-meta-moves-into-reach prints {"mode":"minify"} 1`] = `"<!doctype html><head><script charset=utf-8 src=a.js onload=f()></script><meta charset=utf-8><title>t</title></head>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-on-a-script-whose-handler-is-deferred-where-a-minified-meta-moves-into-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] attr[29,36|38,43]\\" attr[45,48|50,54]\\" attr[56,62|64,67]\\" open[21,69|22,28] close[69,78|71,77] comment[78,1185|82,1182] attr[1191,1198|1200,1205]\\" open[1185,1207|1186,1190] open[1207,1214|1208,1213] text[1214,1215] close[1215,1223|1217,1222] end=1223"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-where-a-minified-meta-moves-into-reach parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       charset=\\"utf-8\\"
+|       src=\\"a.js\\"
+|     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+|     <meta>
+|       charset=\\"utf-8\\"
+|     <title>
+|       \\"t\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-where-a-minified-meta-moves-into-reach parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-where-a-minified-meta-moves-into-reach prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `"<!doctype html><head><script src=a.js></script><meta charset=utf-8><title>t</title></head>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-where-a-minified-meta-moves-into-reach prints {"mode":"minify"} 1`] = `"<!doctype html><head><script charset=utf-8 src=a.js></script><meta charset=utf-8><title>t</title></head>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-where-a-minified-meta-moves-into-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] attr[29,36|38,43]\\" attr[45,48|50,54]\\" open[21,56|22,28] close[56,65|58,64] comment[65,1096|69,1093] attr[1102,1109|1111,1116]\\" open[1096,1118|1097,1101] open[1118,1125|1119,1124] text[1125,1126] close[1126,1134|1128,1133] end=1134"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-where-only-its-own-removal-keeps-the-meta-in-reach parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       charset=\\"utf-8\\"
+|       src=\\"a.js\\"
+|     <title>
+|       \\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\\"
+|     <meta>
+|       charset=\\"utf-8\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-where-only-its-own-removal-keeps-the-meta-in-reach parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-where-only-its-own-removal-keeps-the-meta-in-reach prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `"<!doctype html><head><script src=a.js></script><title>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</title><meta charset=utf-8></head>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-where-only-its-own-removal-keeps-the-meta-in-reach prints {"mode":"minify"} 1`] = `"<!doctype html><head><script charset=utf-8 src=a.js></script><title>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</title><meta charset=utf-8></head>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-drops-it-where-only-its-own-removal-keeps-the-meta-in-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] attr[29,36|38,43]\\" attr[45,48|50,54]\\" open[21,56|22,28] close[56,65|58,64] open[65,72|66,71] text[72,1005] close[1005,1013|1007,1012] attr[1019,1026|1028,1033]\\" open[1013,1035|1014,1018] end=1035"`;
+
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-a-charset parses 1`] = `
 "| <!DOCTYPE html>
 | <html>
@@ -42584,6 +42952,156 @@ exports[`HTML syntax — invariants source-processor-remove-redundant-attributes
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-a-charset prints {"mode":"minify"} 1`] = `"<!doctype html><meta charset=utf-8><script charset=gbk src=a.js></script>"`;
 
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-a-charset tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] attr[21,28|30,35]\\" open[15,37|16,20] attr[45,52|54,57]\\" attr[59,62|64,68]\\" open[37,70|38,44] close[70,79|72,78] end=79"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-after-a-deferred-stylesheet-where-a-minified-meta-moves-into-reach parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <style>
+|       \\"a{color:red}\\"
+|     <script>
+|       charset=\\"utf-8\\"
+|       src=\\"a.js\\"
+|     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+|     <meta>
+|       charset=\\"utf-8\\"
+|     <title>
+|       \\"t\\"
+|     \\"
+\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-after-a-deferred-stylesheet-where-a-minified-meta-moves-into-reach parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-after-a-deferred-stylesheet-where-a-minified-meta-moves-into-reach prints {"mode":"minify","removeRedundantAttributes":"smart","deferEmbeddedSource":[]} 1`] = `"\\"<!doctype html><head><style>\\\\u00000:0\\\\u0000</style><script charset=utf-8 src=a.js></script><meta charset=utf-8><title>t</title></head>\\""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-after-a-deferred-stylesheet-where-a-minified-meta-moves-into-reach prints {"mode":"minify"} 1`] = `"<!doctype html><head><style>a{color:red}</style><script charset=utf-8 src=a.js></script><meta charset=utf-8><title>t</title></head>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-after-a-deferred-stylesheet-where-a-minified-meta-moves-into-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] open[21,28|22,27] text[28,40] close[40,48|42,47] attr[56,63|65,70]\\" attr[72,75|77,81]\\" open[48,83|49,55] close[83,92|85,91] comment[92,1199|96,1196] attr[1205,1212|1214,1219]\\" open[1199,1221|1200,1204] open[1221,1228|1222,1227] text[1228,1229] close[1229,1237|1231,1236] text[1237,1238] end=1238"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-a-pre-that-prints-whole-where-a-minified-meta-moving-into-reach-names-another-encoding parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       \\"t\\"
+|   <body>
+|     <pre>
+|       <script>
+|         charset=\\"utf-8\\"
+|         src=\\"a.js\\"
+|     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+|     <meta>
+|       charset=\\"iso-8859-1\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-a-pre-that-prints-whole-where-a-minified-meta-moving-into-reach-names-another-encoding parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-a-pre-that-prints-whole-where-a-minified-meta-moving-into-reach-names-another-encoding prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `
+"<!doctype html><title>t</title><pre><script charset=utf-8 src=a.js></script></pre><meta charset=iso-8859-1>
+"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-a-pre-that-prints-whole-where-a-minified-meta-moving-into-reach-names-another-encoding prints {"mode":"minify"} 1`] = `
+"<!doctype html><title>t</title><pre><script charset=utf-8 src=a.js></script></pre><meta charset=iso-8859-1>
+"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-a-pre-that-prints-whole-where-a-minified-meta-moving-into-reach-names-another-encoding tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,36|32,35] attr[44,51|53,58]\\" attr[60,63|65,69]\\" open[36,71|37,43] close[71,80|73,79] close[80,86|82,85] comment[86,1193|90,1190] attr[1199,1206|1208,1218]\\" open[1193,1220|1194,1198] text[1220,1221] end=1221"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-a-pre-that-prints-whole-where-the-minified-meta-still-lies-past-1024-bytes parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <pre>
+|       <script>
+|         charset=\\"utf-8\\"
+|         src=\\"a.js\\"
+|     <title>
+|       \\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\\"
+|     <meta>
+|       charset=\\"utf-8\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-a-pre-that-prints-whole-where-the-minified-meta-still-lies-past-1024-bytes parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-a-pre-that-prints-whole-where-the-minified-meta-still-lies-past-1024-bytes prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `
+"<!doctype html><pre><script charset=utf-8 src=a.js></script></pre><title>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</title><meta charset=utf-8>
+"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-a-pre-that-prints-whole-where-the-minified-meta-still-lies-past-1024-bytes prints {"mode":"minify"} 1`] = `
+"<!doctype html><pre><script charset=utf-8 src=a.js></script></pre><title>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</title><meta charset=utf-8>
+"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-a-pre-that-prints-whole-where-the-minified-meta-still-lies-past-1024-bytes tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,20|16,19] attr[28,35|37,42]\\" attr[44,47|49,53]\\" open[20,55|21,27] close[55,64|57,63] close[64,70|66,69] open[70,77|71,76] text[77,1177] close[1177,1185|1179,1184] attr[1191,1198|1200,1205]\\" open[1185,1207|1186,1190] text[1207,1208] end=1208"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-an-svg-foreign-object-where-a-minified-meta-moving-into-reach-names-another-encoding parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       \\"t\\"
+|   <body>
+|     <svg svg>
+|       <svg foreignObject>
+|         <script>
+|           charset=\\"utf-8\\"
+|           src=\\"a.js\\"
+|         <p>
+|           \\"x\\"
+|         <script>
+|           charset=\\"utf-8\\"
+|           src=\\"b.js\\"
+|     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+|     <meta>
+|       charset=\\"iso-8859-1\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-an-svg-foreign-object-where-a-minified-meta-moving-into-reach-names-another-encoding parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-an-svg-foreign-object-where-a-minified-meta-moving-into-reach-names-another-encoding prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `
+"<!doctype html><title>t</title><svg><foreignObject><script charset=utf-8 src=a.js></script><p>x</p><script charset=utf-8 src=b.js></script></foreignObject></svg><meta charset=iso-8859-1>
+"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-an-svg-foreign-object-where-a-minified-meta-moving-into-reach-names-another-encoding prints {"mode":"minify"} 1`] = `
+"<!doctype html><title>t</title><svg><foreignObject><script charset=utf-8 src=a.js></script><p>x</p><script charset=utf-8 src=b.js></script></foreignObject></svg><meta charset=iso-8859-1>
+"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-in-an-svg-foreign-object-where-a-minified-meta-moving-into-reach-names-another-encoding tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,36|32,35] open[36,51|37,50] attr[59,66|68,73]\\" attr[75,78|80,84]\\" open[51,86|52,58] close[86,95|88,94] open[95,98|96,97] text[98,99] close[99,103|101,102] attr[111,118|120,125]\\" attr[127,130|132,136]\\" open[103,138|104,110] close[138,147|140,146] close[147,163|149,162] close[163,169|165,168] comment[169,1276|173,1273] attr[1282,1289|1291,1301]\\" open[1276,1303|1277,1281] text[1303,1304] end=1304"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-on-a-script-printed-in-pieces-where-a-meta-stays-out-of-reach parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       charset=\\"utf-8\\"
+|       \\"f()\\"
+|     <title>
+|       \\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\\"
+|     <meta>
+|       charset=\\"utf-8\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-on-a-script-printed-in-pieces-where-a-meta-stays-out-of-reach parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-on-a-script-printed-in-pieces-where-a-meta-stays-out-of-reach prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `"<!doctype html><head><script charset=utf-8>f()</script><title>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</title><meta charset=utf-8></head>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-on-a-script-printed-in-pieces-where-a-meta-stays-out-of-reach prints {"mode":"minify"} 1`] = `"<!doctype html><head><script charset=utf-8>f()</script><title>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</title><meta charset=utf-8></head>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-on-a-script-printed-in-pieces-where-a-meta-stays-out-of-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] attr[29,36|38,43]\\" open[21,45|22,28] text[45,48] close[48,57|50,56] open[57,64|58,63] text[64,1164] close[1164,1172|1166,1171] attr[1178,1185|1187,1192]\\" open[1172,1194|1173,1177] end=1194"`;
 
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where parses 1`] = `
 "| <!DOCTYPE html>
@@ -42898,14 +43416,63 @@ exports[`HTML syntax — invariants source-processor-remove-redundant-attributes
 
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-14 tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,22|16,21] text[22,23] close[23,31|25,30] open[31,38|32,37] text[38,1238] close[1238,1246|1240,1245] attr[1252,1259|1261,1266]\\" open[1246,1268|1247,1251] attr[1276,1283|1285,1290]\\" attr[1292,1295|1297,1301]\\" open[1268,1303|1269,1275] close[1303,1312|1305,1311] end=1312"`;
 
-exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-a-minified-meta-moves-into-reach parses 1`] = `
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-a-minified-meta-moving-into-reach-names-another-encoding parses 1`] = `
 "| <!DOCTYPE html>
 | <html>
 |   <head>
 |     <script>
 |       charset=\\"utf-8\\"
 |       src=\\"a.js\\"
-|     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+|     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+|     <meta>
+|       charset=\\"iso-8859-1\\"
+|     <title>
+|       \\"t\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-a-minified-meta-moving-into-reach-names-another-encoding parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-a-minified-meta-moving-into-reach-names-another-encoding prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `"<!doctype html><head><script charset=utf-8 src=a.js></script><meta charset=iso-8859-1><title>t</title></head>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-a-minified-meta-moving-into-reach-names-another-encoding prints {"mode":"minify"} 1`] = `"<!doctype html><head><script charset=utf-8 src=a.js></script><meta charset=iso-8859-1><title>t</title></head>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-a-minified-meta-moving-into-reach-names-another-encoding tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] attr[29,36|38,43]\\" attr[45,48|50,54]\\" open[21,56|22,28] close[56,65|58,64] comment[65,1172|69,1169] attr[1178,1185|1187,1197]\\" open[1172,1199|1173,1177] open[1199,1206|1200,1205] text[1206,1207] close[1207,1215|1209,1214] end=1215"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-the-minified-meta-still-lies-past-1024-bytes parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       charset=\\"utf-8\\"
+|       src=\\"a.js\\"
+|     <title>
+|       \\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\\"
+|     <meta>
+|       charset=\\"utf-8\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-the-minified-meta-still-lies-past-1024-bytes parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-the-minified-meta-still-lies-past-1024-bytes prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `"<!doctype html><head><script charset=utf-8 src=a.js></script><title>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</title><meta charset=utf-8></head>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-the-minified-meta-still-lies-past-1024-bytes prints {"mode":"minify"} 1`] = `"<!doctype html><head><script charset=utf-8 src=a.js></script><title>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</title><meta charset=utf-8></head>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-the-minified-meta-still-lies-past-1024-bytes tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] attr[29,36|38,43]\\" attr[45,48|50,54]\\" open[21,56|22,28] close[56,65|58,64] open[65,72|66,71] text[72,1172] close[1172,1180|1174,1179] attr[1186,1193|1195,1200]\\" open[1180,1202|1181,1185] end=1202"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-merges-and-empties-inline-scripts-before-a-minified-meta-moves-into-reach parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       \\"a()\\"
+|     <script>
+|       charset=\\"utf-8\\"
+|       \\"b()\\"
+|     <script>
+|       charset=\\"utf-8\\"
+|     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 |     <meta>
 |       charset=\\"utf-8\\"
 |     <title>
@@ -42913,13 +43480,45 @@ exports[`HTML syntax — invariants source-processor-remove-redundant-attributes
 |   <body>"
 `;
 
-exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-a-minified-meta-moves-into-reach parses 2`] = `""`;
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-merges-and-empties-inline-scripts-before-a-minified-meta-moves-into-reach parses 2`] = `""`;
 
-exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-a-minified-meta-moves-into-reach prints {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `"<!doctype html><head><script charset=utf-8 src=a.js></script><meta charset=utf-8><title>t</title></head>"`;
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-merges-and-empties-inline-scripts-before-a-minified-meta-moves-into-reach prints {"mode":"minify","removeRedundantAttributes":"smart","mergeScripts":true,"removeEmptyElements":true} 1`] = `
+"<!doctype html><head><script>a()
+;b()</script><meta charset=utf-8><title>t</title></head>"
+`;
 
-exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-a-minified-meta-moves-into-reach prints {"mode":"minify"} 1`] = `"<!doctype html><head><script charset=utf-8 src=a.js></script><meta charset=utf-8><title>t</title></head>"`;
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-merges-and-empties-inline-scripts-before-a-minified-meta-moves-into-reach prints {"mode":"minify"} 1`] = `"<!doctype html><head><script>a()</script><script charset=utf-8>b()</script><script charset=utf-8></script><meta charset=utf-8><title>t</title></head>"`;
 
-exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-keeps-it-where-a-minified-meta-moves-into-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] attr[29,36|38,43]\\" attr[45,48|50,54]\\" open[21,56|22,28] close[56,65|58,64] comment[65,1096|69,1093] attr[1102,1109|1111,1116]\\" open[1096,1118|1097,1101] open[1118,1125|1119,1124] text[1125,1126] close[1126,1134|1128,1133] end=1134"`;
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-merges-and-empties-inline-scripts-before-a-minified-meta-moves-into-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] open[21,29|22,28] text[29,32] close[32,41|34,40] attr[49,56|58,63]\\" open[41,65|42,48] text[65,68] close[68,77|70,76] attr[85,92|94,99]\\" open[77,101|78,84] close[101,110|103,109] comment[110,1217|114,1214] attr[1223,1230|1232,1237]\\" open[1217,1239|1218,1222] open[1239,1246|1240,1245] text[1246,1247] close[1247,1255|1249,1254] end=1255"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-merges-and-empties-inline-scripts-where-a-meta-stays-out-of-reach parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       \\"a()\\"
+|     <script>
+|       charset=\\"utf-8\\"
+|       \\"b()\\"
+|     <script>
+|       charset=\\"utf-8\\"
+|     <title>
+|       \\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\\"
+|     <meta>
+|       charset=\\"utf-8\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-merges-and-empties-inline-scripts-where-a-meta-stays-out-of-reach parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-merges-and-empties-inline-scripts-where-a-meta-stays-out-of-reach prints {"mode":"minify","removeRedundantAttributes":"smart","mergeScripts":true,"removeEmptyElements":true} 1`] = `
+"<!doctype html><head><script>a()
+;b()</script><title>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</title><meta charset=utf-8></head>"
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-merges-and-empties-inline-scripts-where-a-meta-stays-out-of-reach prints {"mode":"minify"} 1`] = `"<!doctype html><head><script>a()</script><script charset=utf-8>b()</script><script charset=utf-8></script><title>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</title><meta charset=utf-8></head>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-merges-and-empties-inline-scripts-where-a-meta-stays-out-of-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] open[21,29|22,28] text[29,32] close[32,41|34,40] attr[49,56|58,63]\\" open[41,65|42,48] text[65,68] close[68,77|70,76] attr[85,92|94,99]\\" open[77,101|78,84] close[101,110|103,109] open[110,117|111,116] text[117,1217] close[1217,1225|1219,1224] attr[1231,1238|1240,1245]\\" open[1225,1247|1226,1230] end=1247"`;
 
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing parses 1`] = `
 "| <html>
@@ -43026,6 +43625,85 @@ exports[`HTML syntax — invariants source-processor-remove-redundant-attributes
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-8 prints {"mode":"minify"} 1`] = `"<meta charset=utf-8>"`;
 
 exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-8 tokenizes 1`] = `"warning[2,3]:invalid-first-character-of-tag-name comment[0,5|2,4] attr[11,18|20,25]\\" open[5,27|6,10] end=27"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-sorts-attributes-the-same-where-a-meta-stays-out-of-reach parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       async=\\"\\"
+|       charset=\\"utf-8\\"
+|       src=\\"a.js\\"
+|     <script>
+|       charset=\\"utf-8\\"
+|       defer=\\"\\"
+|       src=\\"b.js\\"
+|     <link>
+|       charset=\\"utf-8\\"
+|       href=\\"b\\"
+|       rel=\\"a\\"
+|     <title>
+|       \\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\\"
+|     <meta>
+|       charset=\\"utf-8\\"
+|   <body>
+|     <script>
+|       async=\\"\\"
+|       charset=\\"utf-8\\"
+|       src=\\"c.js\\"
+|     <p>
+|       class=\\"a\\"
+|       id=\\"b\\"
+|       \\"p\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-sorts-attributes-the-same-where-a-meta-stays-out-of-reach parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-sorts-attributes-the-same-where-a-meta-stays-out-of-reach prints {"mode":"minify","removeRedundantAttributes":"smart","sortAttributes":true} 1`] = `"<!doctype html><head><script src=a.js async charset=utf-8></script><script src=b.js charset=utf-8 defer></script><link charset=utf-8 href=b rel=a><title>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</title><meta charset=utf-8></head><body><script src=c.js async charset=utf-8></script><p class=a id=b>p</body>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-sorts-attributes-the-same-where-a-meta-stays-out-of-reach prints {"mode":"minify"} 1`] = `"<!doctype html><head><script async charset=utf-8 src=a.js></script><script src=b.js charset=utf-8 defer></script><link rel=a href=b charset=utf-8><title>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</title><meta charset=utf-8></head><body><script charset=utf-8 src=c.js async></script><p class=a id=b>p</body>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-sorts-attributes-the-same-where-a-meta-stays-out-of-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] attr[29,34|-1,-1] attr[35,42|44,49]\\" attr[51,54|56,60]\\" open[21,62|22,28] close[62,71|64,70] attr[79,82|84,88]\\" attr[90,97|99,104]\\" attr[106,111|-1,-1] open[71,112|72,78] close[112,121|114,120] attr[127,130|132,133]\\" attr[135,139|141,142]\\" attr[144,151|153,158]\\" open[121,160|122,126] open[160,167|161,166] text[167,1267] close[1267,1275|1269,1274] attr[1281,1288|1290,1295]\\" open[1275,1297|1276,1280] close[1297,1304|1299,1303] open[1304,1310|1305,1309] attr[1318,1325|1327,1332]\\" attr[1334,1337|1339,1343]\\" attr[1345,1350|-1,-1] open[1310,1351|1311,1317] close[1351,1360|1353,1359] attr[1363,1368|1370,1371]\\" attr[1373,1375|1377,1378]\\" open[1360,1380|1361,1362] text[1380,1381] end=1381"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-sorts-attributes-the-same-whether-a-minified-meta-moves-into-reach parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       async=\\"\\"
+|       charset=\\"utf-8\\"
+|       src=\\"a.js\\"
+|     <script>
+|       charset=\\"utf-8\\"
+|       defer=\\"\\"
+|       src=\\"b.js\\"
+|     <link>
+|       charset=\\"utf-8\\"
+|       href=\\"b\\"
+|       rel=\\"a\\"
+|     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+|     <meta>
+|       charset=\\"utf-8\\"
+|     <title>
+|       \\"t\\"
+|   <body>
+|     <script>
+|       async=\\"\\"
+|       charset=\\"utf-8\\"
+|       src=\\"c.js\\"
+|     <p>
+|       class=\\"a\\"
+|       id=\\"b\\"
+|       \\"p\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-sorts-attributes-the-same-whether-a-minified-meta-moves-into-reach parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-sorts-attributes-the-same-whether-a-minified-meta-moves-into-reach prints {"mode":"minify","removeRedundantAttributes":"smart","sortAttributes":true} 1`] = `"<!doctype html><head><script src=a.js async></script><script src=b.js defer></script><link charset=utf-8 href=b rel=a><meta charset=utf-8><title>t</title></head><body><script src=c.js async></script><p class=a id=b>p</body>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-sorts-attributes-the-same-whether-a-minified-meta-moves-into-reach prints {"mode":"minify"} 1`] = `"<!doctype html><head><script async charset=utf-8 src=a.js></script><script src=b.js charset=utf-8 defer></script><link rel=a href=b charset=utf-8><meta charset=utf-8><title>t</title></head><body><script charset=utf-8 src=c.js async></script><p class=a id=b>p</body>"`;
+
+exports[`HTML syntax — invariants source-processor-remove-redundant-attributes-and-script-charset-sorts-attributes-the-same-whether-a-minified-meta-moves-into-reach tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] attr[29,34|-1,-1] attr[35,42|44,49]\\" attr[51,54|56,60]\\" open[21,62|22,28] close[62,71|64,70] attr[79,82|84,88]\\" attr[90,97|99,104]\\" attr[106,111|-1,-1] open[71,112|72,78] close[112,121|114,120] attr[127,130|132,133]\\" attr[135,139|141,142]\\" attr[144,151|153,158]\\" open[121,160|122,126] comment[160,1267|164,1264] attr[1273,1280|1282,1287]\\" open[1267,1289|1268,1272] open[1289,1296|1290,1295] text[1296,1297] close[1297,1305|1299,1304] close[1305,1312|1307,1311] open[1312,1318|1313,1317] attr[1326,1333|1335,1340]\\" attr[1342,1345|1347,1351]\\" attr[1353,1358|-1,-1] open[1318,1359|1319,1325] close[1359,1368|1361,1367] attr[1371,1376|1378,1379]\\" attr[1381,1383|1385,1386]\\" open[1368,1388|1369,1370] text[1388,1389] end=1389"`;
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-answers-a-data-payload-on-a-deferred parses 1`] = `
 "| <html>
@@ -45378,6 +46056,58 @@ exports[`HTML syntax — invariants source-processor-sort-attributes-writes-a-me
 exports[`HTML syntax — invariants source-processor-sort-attributes-writes-a-merged-html-tag-in-sorted-order prints {"mode":"minify"} 1`] = `"<html c=3 b=2 a=1><p>x<b id=2 class=1></b><table><tr></table></html>"`;
 
 exports[`HTML syntax — invariants source-processor-sort-attributes-writes-a-merged-html-tag-in-sorted-order tokenizes 1`] = `"open[0,3|1,2] text[3,4] attr[10,11|12,13] attr[14,15|16,17] attr[18,19|20,21] open[4,22|5,9] open[22,29|23,28] attr[32,34|35,36] attr[37,42|43,44] open[29,45|30,31] open[45,49|46,48] end=49"`;
+
+exports[`HTML syntax — invariants source-processor-stop-ends-a-streamed-html-walk-mid-parse parses 1`] = `
+"length 1080041, sha256 755e445f72cb919c
+| <html>
+|   <head>
+|   <body>
+|     <ul>
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         
+…
+        \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\"
+|       <li>
+|         \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-stop-ends-a-streamed-html-walk-mid-parse parses 2`] = `"warning[0,4]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-stop-ends-a-streamed-html-walk-mid-parse prints {"mode":"minify"} 1`] = `
+"length 200009, sha256 54d606a331211b01
+<ul><li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<
+…
+<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x<li>x</ul>"
+`;
+
+exports[`HTML syntax — invariants source-processor-stop-ends-a-streamed-html-walk-mid-parse tokenizes 1`] = `
+"length 3448964, sha256 33e448ac1aa7b703
+open[0,4|1,3] open[4,8|5,7] text[8,9] close[9,14|11,13] open[14,18|15,17] text[18,19] close[19,24|21,23] open[24,28|25,27] text[28,29] close[29,34|31,33] open[34,38|35,37] text[38,39] close[39,44|41,4
+…
+85,399987] text[399988,399989] close[399989,399994|399991,399993] open[399994,399998|399995,399997] text[399998,399999] close[399999,400004|400001,400003] close[400004,400009|400006,400008] end=400009"
+`;
 
 exports[`HTML syntax — invariants source-processor-stop-ends-an-html-walk-and-the-next-parse-starts-afresh parses 1`] = `
 "| <html>

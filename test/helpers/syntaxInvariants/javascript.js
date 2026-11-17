@@ -1216,25 +1216,65 @@ const legalNotices = (module, banner) => (code) => {
 	return banner ? ends.filter((end) => end <= first).length : ends.length;
 };
 
-// The scripts `behavior` runs: short enough that a run costs little, and
+// The programs `behavior` runs: short enough that a run costs little, and
 // bounded so one that loops is skipped rather than hanging the sweep.
 const BEHAVIOR_MAX_LENGTH = 20000;
 const BEHAVIOR_TIMEOUT = 200;
 // The most wall time a run short of the machine is given: with the tries
 // before it, 17 s, inside the 30 s a test may take.
 const BEHAVIOR_MAX_WAIT = 12800;
+// WHY: once a run times out, Deno's `timeout` may end a later run early with
+// no error, so under Deno a run that prints nothing and a print's difference
+// are each read twice.
+const STRAY_TERMINATIONS = process.versions.deno !== undefined;
+// The timer callbacks a run fires once its own code returns: enough for a
+// chain of timeouts, short of an interval nothing clears.
+const BEHAVIOR_MAX_TIMERS = 100;
 // The CPU time this thread has spent, which a machine busy elsewhere or paused
 // does not add to; Node.js before 23.9 reads only the whole process's.
 const cpuTime =
 	typeof process.threadCpuUsage === "function"
 		? () => process.threadCpuUsage()
 		: () => process.cpuUsage();
-// Every run reads the same clock and random numbers, so a script reading them
-// still answers for its printed form.
+// The global a run fires its next due timer through, from a script of its own,
+// so the callback runs under the run's timeout and its reactions drain after;
+// and the one the prelude takes the host's word that a timer is due through.
+const TIMER_STEP = "__webpackBehaviorTimer";
+const TIMER_HOOK = "__webpackBehaviorTimed";
+// Every run reads the same clock and random numbers, so a program reading them
+// still answers for its print, and fake timers firing in their delays' order;
+// the prelude ends on the context's `Promise.prototype`.
 const BEHAVIOR_PRELUDE =
 	"Math.random = () => 0.5;" +
 	"Date = new Proxy(Date, { construct: (D, a) => new D(...(a.length ? a : [0])), apply: (D) => String(new D(0)) });" +
-	"Date.now = () => 0;";
+	"Date.now = () => 0;" +
+	"(() => {" +
+	`const timed = globalThis.${TIMER_HOOK}; delete globalThis.${TIMER_HOOK};` +
+	"const resolved = Promise.resolve(), due = []; let clock = 0, last = 0;" +
+	"const add = (f, ms, args, every) => { const id = ++last; const wait = Math.max(0, Number(ms) || 0);" +
+	"if (typeof f === 'function') { timed(); due.push({ id, at: clock + wait, f, args, every: every ? Math.max(1, wait) : 0 }); } return id; };" +
+	"const clear = (id) => { const at = due.findIndex((one) => one.id === id); if (at !== -1) due.splice(at, 1); };" +
+	"setTimeout = (f, ms, ...args) => add(f, ms, args, false);" +
+	"setInterval = (f, ms, ...args) => add(f, ms, args, true);" +
+	"setImmediate = (f, ...args) => add(f, 0, args, false);" +
+	"clearTimeout = clearInterval = clearImmediate = clear;" +
+	"queueMicrotask = (f) => { resolved.then(() => f()); };" +
+	`Object.defineProperty(globalThis, "${TIMER_STEP}", { value: () => {` +
+	"if (due.length === 0) return false; let next = 0;" +
+	"for (let i = 1; i < due.length; i++) if (due[i].at < due[next].at || (due[i].at === due[next].at && due[i].id < due[next].id)) next = i;" +
+	"const timer = due[next]; clock = timer.at;" +
+	"if (timer.every) timer.at += timer.every; else due.splice(next, 1);" +
+	"timer.f(...timer.args); return true; } });" +
+	"})();" +
+	"Promise.prototype;";
+
+// Each compiled once, on the first run that needs it.
+/** @type {vm.Script | undefined} */
+let prelude;
+/** @type {vm.Script | undefined} */
+let timerStep;
+/** @type {vm.Script | undefined} */
+let builtInWatch;
 
 /**
  * An `import()` the run makes stays pending: no module can be loaded, and a
@@ -1243,13 +1283,68 @@ const BEHAVIOR_PRELUDE =
  */
 const importNothing = () => new Promise(() => {});
 
+// The `Promise.prototype` of each context a run made, so a rejection one leaves
+// unhandled is told from the process's own.
+/** @type {WeakSet<EXPECTED_OBJECT>} */
+const runPromises = new WeakSet();
+let rejectionsHeard = false;
+
 /**
- * One run of a script, in a context of its own, for {@link behaviorOf}.
- * @param {string} code the script
- * @param {number} timeout how long it may run, in milliseconds of wall time
- * @returns {string | null} its transcript, null where it timed out
+ * A rejection a run leaves unhandled, reported after the run has returned: one
+ * of the run's is the program's own business, any other the process's.
+ * @param {unknown} reason why it was rejected
+ * @param {Promise<unknown>} promise the promise
+ * @returns {void}
  */
-const runBehavior = (code, timeout) => {
+const onRejection = (reason, promise) => {
+	if (runPromises.has(Object.getPrototypeOf(promise))) return;
+	// Alone, this listener stands where Node.js would throw.
+	if (process.listenerCount("unhandledRejection") === 1) throw reason;
+};
+
+// Run in a context after the prelude, before the program: what the program
+// replaces of the built-ins, every global's own properties and its prototype's,
+// is answered by the function it ends on. A binding it adds is its own.
+const BUILT_IN_WATCH =
+	"(() => {" +
+	"const own = (o) => Reflect.ownKeys(o).map((k) => [k, Reflect.getOwnPropertyDescriptor(o, k)]);" +
+	"const same = (a, b) => a !== undefined && Object.is(a.value, b.value) && a.get === b.get && a.set === b.set;" +
+	"const owners = [];" +
+	"for (const [, d] of own(globalThis)) { const v = d.value;" +
+	"if (v !== globalThis && ((typeof v === 'object' && v !== null) || typeof v === 'function')) { owners.push(v);" +
+	"const p = typeof v === 'function' && Reflect.getOwnPropertyDescriptor(v, 'prototype');" +
+	"if (p && typeof p.value === 'object' && p.value !== null) owners.push(p.value); } }" +
+	"const globals = own(globalThis), before = owners.map(own);" +
+	"const kept = (o, list, grows) => (grows || Reflect.ownKeys(o).length === list.length) && list.every(([k, d]) => same(Reflect.getOwnPropertyDescriptor(o, k), d));" +
+	"return () => !kept(globalThis, globals, true) || owners.some((o, i) => !kept(o, before[i], false));" +
+	"})()";
+
+/**
+ * What one run of a program answers.
+ * @typedef {object} BehaviorAnswer
+ * @property {string | null | undefined} transcript what it printed and threw, null where it timed out, undefined where it cannot run here
+ * @property {boolean} patched whether it replaced or added to a built-in, read only where the run watches them
+ */
+
+/**
+ * Whether this Node.js runs a module in a context and links it synchronously:
+ * `--experimental-vm-modules`, and `linkRequests` from Node.js 22.21 and 24.8.
+ * @returns {boolean} whether it does
+ */
+const runsModules = () =>
+	typeof vm.SourceTextModule === "function" &&
+	typeof vm.SourceTextModule.prototype.linkRequests === "function";
+
+/**
+ * One run of a program, in a context of its own, for {@link behaviorOf}: its
+ * own code, then the promise reactions and timers it leaves, in their order.
+ * @param {string} code the program
+ * @param {number} timeout how long each step may run, in milliseconds of wall time
+ * @param {boolean} module whether it is a module
+ * @param {boolean} watch whether to read what it replaces of the built-ins
+ * @returns {BehaviorAnswer} what it answers
+ */
+const runBehavior = (code, timeout, module, watch) => {
 	/** @type {string[]} */
 	const lines = [];
 	/**
@@ -1258,19 +1353,48 @@ const runBehavior = (code, timeout) => {
 	 */
 	const show = (value) =>
 		typeof value === "function" ? "[function]" : String(value);
-	const context = vm.createContext({
-		console: {
-			log: (/** @type {unknown[]} */ ...values) =>
-				lines.push(values.map(show).join(" "))
-		}
+	let timed = false;
+	const context = vm.createContext(
+		{
+			console: {
+				log: (/** @type {unknown[]} */ ...values) =>
+					lines.push(values.map(show).join(" "))
+			},
+			[TIMER_HOOK]: () => {
+				timed = true;
+			}
+		},
+		// Its own microtask queue, drained after each step and inside its timeout.
+		{ microtaskMode: "afterEvaluate" }
+	);
+	if (prelude === undefined) prelude = new vm.Script(BEHAVIOR_PRELUDE);
+	runPromises.add(prelude.runInContext(context));
+	if (!rejectionsHeard) {
+		rejectionsHeard = true;
+		process.on("unhandledRejection", onRejection);
+	}
+	if (watch && builtInWatch === undefined) {
+		builtInWatch = new vm.Script(BUILT_IN_WATCH);
+	}
+	const patched = watch
+		? /** @type {() => boolean} */ (
+				/** @type {vm.Script} */ (builtInWatch).runInContext(context)
+			)
+		: () => false;
+	/**
+	 * @param {string | null | undefined} transcript what the run answers
+	 * @returns {BehaviorAnswer} it, with whether the program patched a built-in
+	 */
+	const answer = (transcript) => ({
+		transcript,
+		patched: typeof transcript === "string" && patched()
 	});
-	vm.runInContext(BEHAVIOR_PRELUDE, context);
-	try {
-		vm.runInContext(code, context, {
-			timeout,
-			importModuleDynamically: importNothing
-		});
-	} catch (error) {
+	/**
+	 * @param {unknown} error what a step threw
+	 * @param {string=} verb how the transcript notes it
+	 * @returns {boolean} false where it timed out, after noting anything else in the transcript
+	 */
+	const threw = (error, verb = "threw") => {
 		try {
 			const isObject = error !== null && typeof error === "object";
 			const {
@@ -1280,11 +1404,11 @@ const runBehavior = (code, timeout) => {
 			} = /** @type {{ code?: unknown, name?: unknown, message?: unknown }} */ (
 				isObject ? error : {}
 			);
-			if (reason === "ERR_SCRIPT_EXECUTION_TIMEOUT") return null;
+			if (reason === "ERR_SCRIPT_EXECUTION_TIMEOUT") return false;
 			const kind = typeof name === "string" ? name : typeof error;
 			// JavaScriptCore quotes the failing source text, which a printer may
-			// rewrite, as `(evaluating '…')` and as the operand `in` refuses
-			// (`010 is not an Object.`); V8 writes neither.
+			// rewrite: `(evaluating '…')`, `(near '…')`, `(In '…')` after the value
+			// it names, the operand `in` refuses; V8 a class's heritage and a function.
 			const value =
 				typeof message === "string"
 					? message
@@ -1293,76 +1417,650 @@ const runBehavior = (code, timeout) => {
 								"$1"
 							)
 							.replace(/ \(evaluating '[\s\S]*'\)$/, "")
+							.replace(/ \(near '[\s\S]*'\)$/, "")
+							.replace(/^[\s\S]*? (is [^']*?\.) \(In '[\s\S]*\)$/, "$1")
+							.replace(
+								/^(Class extends value) [\s\S]* (is not a constructor or null)$/,
+								"$1 $2"
+							)
+							.replace(/ of function '[\s\S]*'$/, " of a function")
 					: isObject
 						? ""
 						: show(error);
-			lines.push(`threw <${kind}>${value ? ` ${value}` : ""}`);
+			lines.push(`${verb} <${kind}>${value ? ` ${value}` : ""}`);
 		} catch (_error) {
 			// A thrown object whose own properties throw when read.
-			lines.push("threw <unreadable>");
+			lines.push(`${verb} <unreadable>`);
+		}
+		return true;
+	};
+	/** @type {vm.SourceTextModule | undefined} */
+	let evaluated;
+	if (module) {
+		if (!runsModules()) return answer(undefined);
+		/** @type {vm.SourceTextModule} */
+		let linked;
+		try {
+			linked = new vm.SourceTextModule(code, {
+				context,
+				importModuleDynamically: importNothing
+			});
+		} catch (error) {
+			threw(error, "refused");
+			return answer(lines.join("\n"));
+		}
+		// A module importing another is not run: no fixture is its dependency.
+		if (linked.moduleRequests.length > 0) return answer(undefined);
+		linked.linkRequests([]);
+		linked.instantiate();
+		evaluated = linked;
+		const start = Date.now();
+		try {
+			// What it awaits at the top level drains inside `evaluate`, and how it
+			// fails is read off `status`.
+			linked.evaluate({ timeout }).catch(() => {});
+		} catch (error) {
+			if (!threw(error)) return answer(null);
+			evaluated = undefined;
+		}
+		// WHY: a module cut off at its timeout says so only in a rejection read
+		// after this returns, so a run that took half of it is taken as cut off.
+		if (Date.now() - start >= timeout / 2) return answer(null);
+	} else {
+		/** @type {vm.Script} */
+		let script;
+		try {
+			script = new vm.Script(code, { importModuleDynamically: importNothing });
+		} catch (error) {
+			threw(error, "refused");
+			return answer(lines.join("\n"));
+		}
+		try {
+			script.runInContext(context, { timeout });
+		} catch (error) {
+			if (!threw(error)) return answer(null);
 		}
 	}
-	return lines.join("\n");
+	/**
+	 * @returns {boolean} false where the module's evaluation timed out, after noting how it failed
+	 */
+	const moduleFailed = () => {
+		if (evaluated === undefined || evaluated.status !== "errored") return true;
+		const { error } = evaluated;
+		evaluated = undefined;
+		return threw(error);
+	};
+	if (!moduleFailed()) return answer(null);
+	if (timed) {
+		if (timerStep === undefined) timerStep = new vm.Script(`${TIMER_STEP}()`);
+		for (let fired = 0; fired < BEHAVIOR_MAX_TIMERS; fired++) {
+			try {
+				if (!timerStep.runInContext(context, { timeout })) break;
+			} catch (error) {
+				if (!threw(error)) return answer(null);
+			}
+		}
+	}
+	// A top-level `await` a timer settles fails only once it has fired.
+	if (!moduleFailed()) return answer(null);
+	return answer(lines.join("\n"));
 };
 
 /**
- * What a script prints and, where it throws, the error's kind and message or the
- * thrown value, run in a fresh context: a function prints as `[function]`, as
- * its text is the printer's.
- * @param {string} code the script
- * @returns {string | null} its transcript, null where it loops
+ * {@link behaviorOf} on this thread.
+ * @param {string} code the program
+ * @param {boolean} module whether it is a module
+ * @param {boolean} watch whether to read what it replaces of the built-ins
+ * @returns {BehaviorAnswer} what it answers
  */
-const behaviorOf = (code) => {
+const behaviorHere = (code, module, watch) => {
 	let wait = BEHAVIOR_TIMEOUT;
 	for (;;) {
 		const start = cpuTime();
-		const transcript = runBehavior(code, wait);
-		if (transcript !== null) return transcript;
+		const answered = runBehavior(code, wait, module, watch);
+		if (answered.transcript !== null) return answered;
 		const end = cpuTime();
 		const spent = (end.user - start.user + end.system - start.system) / 1000;
 		// WHY: `timeout` is wall time, which a loaded or paused machine spends on
 		// other work. A run that spent under half of it on its own ran short of
 		// the machine, not of time, so it runs again for longer.
-		if (spent >= BEHAVIOR_TIMEOUT / 2 || wait >= BEHAVIOR_MAX_WAIT) return null;
+		if (spent >= BEHAVIOR_TIMEOUT / 2 || wait >= BEHAVIOR_MAX_WAIT) {
+			return answered;
+		}
 		wait *= 4;
 	}
 };
 
-// The last source run and its transcript: every preset asks of the same source.
-/** @type {string | undefined} */
-let lastSource;
-/** @type {string | null} */
-let lastExpected = null;
+// Module runs a worker makes before it is replaced: V8 never collects a context
+// a module was compiled in, about 150 KB each, so they go with their thread.
+const MODULE_RUNS_PER_WORKER = 500;
+// How long a worker's answer is waited for: past every retry `behaviorHere` makes.
+const MODULE_RUN_WAIT = 60000;
 
 /**
- * Whether a printed script still prints and throws what its source does.
- * @param {string} source the script
+ * The thread modules run on, with the port it answers on, the word it flips once
+ * it has, and how many runs it has made.
+ * @typedef {object} ModuleRunner
+ * @property {import("worker_threads").Worker} worker the thread
+ * @property {import("worker_threads").MessagePort} port where it answers
+ * @property {Int32Array} answered 1 once it has answered the last run
+ * @property {number} runs how many runs it has made
+ */
+
+/** @type {ModuleRunner | undefined} */
+let moduleRunner;
+
+/**
+ * The code a module runner's thread runs: each message is a module and whether
+ * to watch the built-ins, answered once the word is flipped.
+ * @returns {string} the worker's source
+ */
+const moduleRunnerSource = () =>
+	"const { workerData } = require('worker_threads');" +
+	`const { behaviorOf } = require(${JSON.stringify(__filename)});` +
+	"const { port, answered } = workerData;" +
+	"port.on('message', ([code, watch]) => {" +
+	"let reply; try { reply = behaviorOf(code, true, watch); } catch (_error) { reply = { transcript: undefined, patched: false }; }" +
+	"port.postMessage(reply); Atomics.store(answered, 0, 1); Atomics.notify(answered, 0); });";
+
+/**
+ * {@link behaviorOf} of a module, on a thread of its own that is replaced
+ * every {@link MODULE_RUNS_PER_WORKER} runs, waited for synchronously.
+ * @param {string} code the module
+ * @param {boolean} watch whether to read what it replaces of the built-ins
+ * @returns {BehaviorAnswer} what it answers
+ */
+const moduleBehavior = (code, watch) => {
+	const { MessageChannel, Worker, receiveMessageOnPort } = require("worker_threads");
+
+	if (moduleRunner !== undefined && moduleRunner.runs >= MODULE_RUNS_PER_WORKER) {
+		moduleRunner.worker.terminate();
+		moduleRunner = undefined;
+	}
+	if (moduleRunner === undefined) {
+		const { port1, port2 } = new MessageChannel();
+		const answered = new Int32Array(new SharedArrayBuffer(4));
+		const worker = new Worker(moduleRunnerSource(), {
+			eval: true,
+			// Without the flag's warning on every new thread.
+			execArgv: ["--experimental-vm-modules", "--no-warnings"],
+			workerData: { port: port2, answered },
+			transferList: [port2]
+		});
+		worker.unref();
+		port1.unref();
+		moduleRunner = { worker, port: port1, answered, runs: 0 };
+	}
+	const runner = moduleRunner;
+	runner.runs++;
+	Atomics.store(runner.answered, 0, 0);
+	runner.port.postMessage([code, watch]);
+	if (Atomics.wait(runner.answered, 0, 0, MODULE_RUN_WAIT) === "timed-out") {
+		runner.worker.terminate();
+		moduleRunner = undefined;
+		return { transcript: null, patched: false };
+	}
+	const reply = receiveMessageOnPort(runner.port);
+	return reply === undefined
+		? { transcript: undefined, patched: false }
+		: /** @type {BehaviorAnswer} */ (reply.message);
+};
+
+// A word naming what makes a promise: an async function, `await`, `Promise` or `import()`.
+const MAKES_PROMISES = /\b(?:async|await|Promise|import)\b/;
+
+/**
+ * What a program prints and, where it throws, the error's kind and message or
+ * the thrown value, run in a fresh context with the promise reactions and timers
+ * it leaves: a function prints as `[function]`, as its text is the printer's.
+ * A program V8 refuses to compile answers `refused` and its error.
+ * @param {string} code the program
+ * @param {boolean} module whether it is a module
+ * @param {boolean=} watch whether to read what it replaces of the built-ins
+ * @returns {BehaviorAnswer} what it answers
+ */
+const behaviorOf = (code, module, watch = false) => {
+	// WHY: under Bun a promise left rejected in a context ends a worker thread
+	// before any listener there hears of it, so code that may make one runs
+	// only where Node.js runs it.
+	if (process.versions.bun !== undefined && MAKES_PROMISES.test(code)) {
+		return { transcript: undefined, patched: false };
+	}
+	if (!module || !require("worker_threads").isMainThread) {
+		return behaviorHere(code, module, watch);
+	}
+	// Run without the flag, or by a runtime without `vm` modules, no thread is started.
+	return runsModules()
+		? moduleBehavior(code, watch)
+		: { transcript: undefined, patched: false };
+};
+
+// Built-ins a self-contained program may not read, as what they answer is not
+// the program's: code it builds from text, the global object's own keys, and
+// what the collector decides.
+const UNCONTAINED_GLOBALS = new Set([
+	"eval",
+	"Function",
+	"globalThis",
+	"WeakRef",
+	"FinalizationRegistry",
+	TIMER_STEP
+]);
+// Names reading what compressing and mangling change by contract: a function's
+// name and text, the call stack, and the calls an error records.
+const CONTRACT_NAMES = new Set([
+	"name",
+	"toString",
+	"toSource",
+	"stack",
+	"caller",
+	"callee"
+]);
+
+/** @type {Set<string> | undefined} */
+let sandboxGlobals;
+
+/**
+ * Whether a program reads nothing compressing and mangling may change by
+ * contract: no name it leaves unbound beyond the run's built-ins, no `with`, no
+ * code built from text and no function's name or text. A run of it tells
+ * whether it replaces a built-in, which the compressor takes as native.
+ * @param {string} code the program
+ * @param {boolean} module whether it is a module
+ * @returns {boolean} whether its compressed print owes its behavior
+ */
+const selfContained = (code, module) => {
+	const tokens = tokensOf(code, module);
+	if (tokens === null) return false;
+	for (const { label, value } of tokens) {
+		if (label === "with") return false;
+		if (label === "name" && CONTRACT_NAMES.has(value)) return false;
+	}
+	if (sandboxGlobals === undefined) {
+		const context = vm.createContext({ console: {}, [TIMER_HOOK]: () => {} });
+		vm.runInContext(BEHAVIOR_PRELUDE, context);
+		sandboxGlobals = new Set(
+			/** @type {string[]} */ (
+				vm.runInContext("Object.getOwnPropertyNames(globalThis)", context)
+			).filter((name) => !UNCONTAINED_GLOBALS.has(name))
+		);
+	}
+
+	const { parser, scopes } = require("../../../lib/javascript/syntax");
+
+	const log = new scopes.ScopeLog();
+	const program = parser.parseProgram(code, 0, {
+		sourceType: module ? "module" : "script",
+		ecmaVersion: "latest",
+		allowHashBang: true,
+		scopes: log
+	});
+	const known = sandboxGlobals;
+	return scopes
+		.analyzeScope(program)
+		.unresolvedReferences.every((reference) =>
+			known.has(reference.identifier.name)
+		);
+};
+
+/**
+ * A transcript as a compressed print owes it: an error's message only where the
+ * program wrote it, as the engine's own names what mangling renames.
+ * @param {string} transcript what a run printed
+ * @param {string} source the program run
+ * @returns {string} what its compressed print must print too
+ */
+const contractual = (transcript, source) =>
+	transcript.replace(
+		/^(threw <[^>\n]*>) ([^\n]*)$/gm,
+		/**
+		 * @param {string} line the line
+		 * @param {string} kind its error's kind
+		 * @param {string} message its message
+		 * @returns {string} the line as owed
+		 */
+		(line, kind, message) => (source.includes(message) ? line : kind)
+	);
+
+// The last source run, as which goal, its transcript, whether it patches a
+// built-in and whether it is self-contained: every preset asks of the same one.
+/** @type {string | undefined} */
+let lastSource;
+/** @type {boolean | undefined} */
+let lastModule;
+/** @type {string | null} */
+let lastExpected = null;
+/** @type {boolean | undefined} */
+let lastContained;
+
+/**
+ * How {@link behaviorDifference} runs a print.
+ * @typedef {object} BehaviorRun
+ * @property {boolean=} module whether the source is a module; where absent, only one no script parses as, as the minifier reads a print given no `sourceType` as a script
+ * @property {boolean=} compressed whether the print is compressed, which owes only what a self-contained source does
+ */
+
+/**
+ * Whether a printed program still prints and throws what its source does, its
+ * promise reactions and timers included. A source V8 refuses, one that loops
+ * and one whose two runs differ answer for nothing.
+ * @param {string} source the program
  * @param {string} printed what the printer wrote of it
+ * @param {BehaviorRun=} run how to run it
  * @returns {import("./relations").Report[] | null} what differs, empty where it runs the same, null where it was not run
  */
-const behaviorDifference = (source, printed) => {
+const behaviorDifference = (source, printed, run = {}) => {
 	if (source.length > BEHAVIOR_MAX_LENGTH) return null;
-	if (source !== lastSource) {
+	const asModule =
+		run.module === undefined ? !parsesAsLatest(source, false) : run.module;
+	// WHY: a runtime running no module here, Bun's or Deno's, runs one as a
+	// script, as before modules ran: V8 refuses it alike both ways, which says
+	// nothing of what it does, but a set `options.json` marks still answers.
+	const asScript = asModule && !runsModules();
+	if (asScript && run.compressed) return null;
+	const module = asModule && !asScript;
+	if (source !== lastSource || module !== lastModule) {
 		lastSource = source;
-		lastExpected = behaviorOf(source);
-		// A script whose two runs differ answers for nothing.
-		if (lastExpected !== null && behaviorOf(source) !== lastExpected) {
-			lastExpected = null;
-		}
+		lastModule = module;
+		// Watching the built-ins doubles a run, so only a compressed print asks.
+		lastContained = run.compressed ? selfContained(source, module) : undefined;
+		const first = behaviorOf(source, module, lastContained === true);
+		if (first.patched) lastContained = false;
+		// A run printing and throwing nothing is taken as the only one it has,
+		// which saves a third of the runs: most fixtures print nothing.
+		lastExpected =
+			typeof first.transcript === "string" &&
+			(asScript || !first.transcript.startsWith("refused ")) &&
+			((first.transcript === "" && !STRAY_TERMINATIONS) ||
+				behaviorOf(source, module).transcript === first.transcript)
+				? first.transcript
+				: null;
 	}
-	const expected = lastExpected;
-	if (expected === null) return null;
-	const got = behaviorOf(printed);
+	if (lastExpected === null) return null;
+	let expected = lastExpected;
+	if (run.compressed) {
+		if (lastContained === undefined) {
+			lastContained =
+				selfContained(source, module) &&
+				!behaviorOf(source, module, true).patched;
+		}
+		if (!lastContained) return null;
+		expected = contractual(expected, source);
+	}
+	// Printed as written, it runs as it does.
+	if (printed === source) return [];
+	const answered = behaviorOf(printed, module).transcript;
+	// A print that cannot run here, as it imports, answers for nothing either.
+	if (answered === undefined) return null;
+	/**
+	 * @param {string | null | undefined} transcript what a run of the print answers
+	 * @returns {string | null | undefined} it as the print owes it
+	 */
+	const owed = (transcript) =>
+		typeof transcript === "string" && run.compressed
+			? contractual(transcript, source)
+			: transcript;
+	let got = owed(answered);
 	if (got === expected) return [];
+	if (STRAY_TERMINATIONS) {
+		got = owed(behaviorOf(printed, module).transcript);
+		if (got === expected) return [];
+	}
+	if (typeof got !== "string") {
+		return [
+			{
+				relation: "behavior",
+				what: "times out",
+				repro: `    ${oneLine(expected, 80)}\n      -> <timeout>`
+			}
+		];
+	}
+	// Each side from the first line they part at, so a difference late in a
+	// long transcript shows.
+	const said = expected.split("\n");
+	const ran = got.split("\n");
+	let at = 0;
+	while (at < said.length && said[at] === ran[at]) at++;
+	const from = at > 0 ? "… " : "";
 	return [
 		{
 			relation: "behavior",
-			what: got === null ? "times out" : "runs otherwise",
-			repro: `    ${oneLine(expected, 80)}\n      -> ${
-				got === null ? "<timeout>" : oneLine(got, 80)
-			}`
+			what: "runs otherwise",
+			repro: `    ${from}${oneLine(said.slice(at).join("\n"), 80)}\n      -> ${from}${oneLine(ran.slice(at).join("\n"), 80)}`
 		}
 	];
+};
+
+/**
+ * Whether an expression does nothing where its value goes unread: a literal, a
+ * function or an arrow, and a collection, `void`, `!` or sign of only those.
+ * @param {EXPECTED_ANY} node an ESTree expression
+ * @returns {boolean} whether dropping it changes nothing
+ */
+const doesNothing = (node) => {
+	switch (node.type) {
+		case "Literal":
+		case "FunctionExpression":
+		case "ArrowFunctionExpression":
+			return true;
+		case "TemplateLiteral":
+			return node.expressions.length === 0;
+		case "ArrayExpression":
+			return node.elements.every(
+				(/** @type {EXPECTED_ANY} */ one) => one === null || doesNothing(one)
+			);
+		case "ObjectExpression":
+			return node.properties.every(
+				(/** @type {EXPECTED_ANY} */ one) =>
+					one.type === "Property" &&
+					!one.computed &&
+					(one.kind !== "init" || one.method || doesNothing(one.value))
+			);
+		case "SequenceExpression":
+			return node.expressions.every(doesNothing);
+		case "UnaryExpression":
+			if (node.operator === "void" || node.operator === "!") {
+				return doesNothing(node.argument);
+			}
+			// A sign converts a BigInt or an object, which may throw or run code.
+			return (
+				(node.operator === "-" || node.operator === "~") &&
+				node.argument.type === "Literal" &&
+				typeof node.argument.value === "number"
+			);
+		default:
+			return false;
+	}
+};
+
+/**
+ * Whether a sequence is spelled for what reading it does rather than its value:
+ * `(0, a.b)()` calls without a receiver, `(0, eval)(x)` evaluates globally, and
+ * `typeof (0, a)` and `delete (0, a.b)` read and drop as the bare operand would not.
+ * @param {EXPECTED_ANY} parent what holds the sequence
+ * @param {EXPECTED_ANY} node the sequence
+ * @returns {boolean} whether its items before the last are part of what it does
+ */
+const readsAsOperand = (parent, node) =>
+	((parent.type === "CallExpression" || parent.type === "NewExpression") &&
+		parent.callee === node) ||
+	(parent.type === "TaggedTemplateExpression" && parent.tag === node) ||
+	(parent.type === "UnaryExpression" &&
+		(parent.operator === "typeof" || parent.operator === "delete"));
+
+/**
+ * The statements and sequence items of a program that do nothing: an
+ * expression statement or an unread sequence item {@link doesNothing} holds,
+ * a directive and `"use strict"` aside.
+ * @param {string} code a program
+ * @param {boolean} module whether it is a module
+ * @returns {EXPECTED_ANY[]} each such expression, empty where it does not parse
+ */
+const residues = (code, module) => {
+	/** @type {EXPECTED_ANY} */
+	let root;
+	try {
+		root = webpackParse(code, {
+			sourceType: module ? "module" : "script",
+			ecmaVersion: "latest",
+			ranges: true,
+			allowHashBang: true
+		});
+	} catch (_error) {
+		return [];
+	}
+	/** @type {EXPECTED_ANY[]} */
+	const found = [];
+	/** @type {[EXPECTED_ANY, EXPECTED_ANY][]} */
+	const stack = [[root, null]];
+	while (stack.length > 0) {
+		const [node, parent] = /** @type {[EXPECTED_ANY, EXPECTED_ANY]} */ (
+			stack.pop()
+		);
+		if (
+			node.type === "ExpressionStatement" &&
+			node.directive === undefined &&
+			node.expression.value !== "use strict" &&
+			doesNothing(node.expression)
+		) {
+			found.push(node.expression);
+			continue;
+		}
+		if (node.type === "SequenceExpression" && !readsAsOperand(parent, node)) {
+			// The last item is the value, unread only as a statement.
+			const unread =
+				parent.type === "ExpressionStatement"
+					? node.expressions
+					: node.expressions.slice(0, -1);
+			for (const item of unread) if (doesNothing(item)) found.push(item);
+		}
+		for (const child of childNodesOf(node)) stack.push([child, node]);
+	}
+	return found;
+};
+
+// The tokens mangling renames: a binding's name and a private name.
+const RENAMED_LABELS = new Set(["name", "privateId"]);
+
+/**
+ * Where a second mangling pass names otherwise, as an idempotence finding: a
+ * rename alone says so and which names moved, as the rest of what it prints
+ * is the same.
+ * @param {string} printed the preset's output
+ * @param {string} again it mangled once more
+ * @param {boolean} module whether it is a module
+ * @returns {import("./relations").Report} the finding
+ */
+const renameReport = (printed, again, module) => {
+	const before = tokensOf(printed, module);
+	const after = tokensOf(again, module);
+	let at = 0;
+	while (at < printed.length && printed[at] === again[at]) at++;
+	const where = `    ${oneLine(printed.slice(at, at + 70), 70)}\n      -> ${oneLine(again.slice(at, at + 70), 70)}`;
+	if (
+		before === null ||
+		after === null ||
+		before.length !== after.length ||
+		before.some(
+			(one, i) =>
+				one.label !== after[i].label ||
+				(!RENAMED_LABELS.has(one.label) && one.value !== after[i].value)
+		)
+	) {
+		return {
+			relation: "idempotence",
+			what: `differs under mangling, ${signed(again.length - printed.length)}`,
+			repro: where
+		};
+	}
+	/** @type {Set<string>} */
+	const moved = new Set();
+	for (let i = 0; i < before.length; i++) {
+		if (before[i].value !== after[i].value) {
+			moved.add(`${before[i].value} -> ${after[i].value}`);
+		}
+	}
+	return {
+		relation: "idempotence",
+		what: `renames only, under mangling, ${moved.size} name${moved.size === 1 ? "" : "s"}`,
+		repro: `    rename-only: ${[...moved].slice(0, 3).join(", ")}${
+			moved.size > 3 ? ", …" : ""
+		}\n${where}`
+	};
+};
+
+/**
+ * What a compressing preset's output owes a second pass of it: the same names
+ * under mangling, and no item that does nothing the preset itself drops.
+ * @param {(code: string) => string} minify the preset
+ * @param {(code: string) => string} mangle the preset's mangling alone
+ * @param {string} printed its output
+ * @param {boolean} module whether it is a module
+ * @returns {import("./relations").Report[]} what a second pass moves
+ */
+const secondPassReports = (minify, mangle, printed, module) => {
+	/** @type {import("./relations").Report[]} */
+	const reports = [];
+	/**
+	 * @param {(code: string) => string} pass a pass
+	 * @returns {string | null} what it prints of the output, null where it threw
+	 */
+	const again = (pass) => {
+		try {
+			return pass(printed);
+		} catch (error) {
+			if (isStackOverflow(error)) throw error;
+			reports.push({
+				relation: "idempotence",
+				what: "threw on a second pass",
+				repro: `    ${thrownText(error)}`
+			});
+			return null;
+		}
+	};
+	const renamed = again(mangle);
+	if (renamed !== null && renamed !== printed) {
+		reports.push(renameReport(printed, renamed, module));
+	}
+	const left = residues(printed, module);
+	if (left.length === 0) return reports;
+	const shrunk = again(minify);
+	if (shrunk === null || residues(shrunk, module).length >= left.length) {
+		return reports;
+	}
+	const [first] = left;
+	reports.push({
+		relation: "residue",
+		what: `keeps ${left.length === 1 ? "an item" : `${left.length} items`} doing nothing`,
+		repro: `    ${oneLine(
+			printed.slice(Math.max(0, first.start - 30), first.end + 30),
+			80
+		)}`
+	});
+	return reports;
+};
+
+/**
+ * {@link secondPassReports} under one preset: what its output owes a second
+ * pass of it, nothing where the preset prints alone.
+ * @param {EXPECTED_ANY} options one preset's options
+ * @param {boolean} module whether the source is a module
+ * @returns {(printed: string) => import("./relations").Report[]} what a second pass moves in an output
+ */
+const secondPassRelation = (options, module) => {
+	if (options.compress === false) return () => [];
+	const { minify } = printerFor(minifyOnePass, options, module);
+	// The preset's mangling alone, which its output must already be.
+	const mangle = printerFor(
+		minifyOnePass,
+		{
+			compress: false,
+			mangle: options.mangle === undefined ? true : options.mangle,
+			format: options.format
+		},
+		module
+	).minify;
+	return (printed) => secondPassReports(minify, mangle, printed, module);
 };
 
 /** @type {import("./index").SyntaxInvariants} */
@@ -1376,17 +2074,23 @@ const invariants = {
 			const { minify, reprint } = printerFor(minifyOnePass, options, module);
 			const alone = options.compress === false;
 			const notices = legalNotices(module, !alone);
+			const secondPass = secondPassRelation(options, module);
 			return {
 				name,
 				minify,
 				reprint,
 				says: (text) => tokenMeaning(text, module),
-				// Compressed or renamed, what a script observes may change by
-				// contract; printed alone, nothing it does may.
+				// Compressed or renamed, a program may change what it observes by
+				// contract, so only a self-contained one is held to what it does;
+				// printed alone, nothing it does may change.
 				keeps: (text, printed) => [
 					...noticeRelation(notices, text, printed),
 					...(alone ? meaningReports(text, printed, goal) : []),
-					...((!module && alone && behaviorDifference(text, printed)) || [])
+					...(behaviorDifference(text, printed, {
+						module,
+						compressed: !alone
+					}) || []),
+					...secondPass(printed)
 				]
 			};
 		});
@@ -1421,6 +2125,7 @@ module.exports = {
 	JS_RESPELLINGS,
 	PRESETS,
 	behaviorDifference,
+	behaviorOf,
 	goalFor,
 	jsMeaning,
 	jsPurityDigest,
@@ -1431,6 +2136,8 @@ module.exports = {
 	minifyOnePass,
 	parsesAsLatest,
 	printerFor,
+	runsModules,
+	secondPassRelation,
 	spansEitherGoal,
 	sweepRespellings,
 	tokenMeaning

@@ -1,0 +1,100 @@
+// A `var` no declarator sets reads `undefined` wherever it is read.
+!function () {
+	console.log(unset === void 0 ? "PASS" : "FAIL");
+	var unset;
+}();
+console.log(
+	(function (missing) {
+		return missing === void 0;
+	})()
+);
+console.log(
+	(function (present, missing) {
+		return [present === void 0, missing === void 0, missing?.length];
+	})(1)
+);
+(function (callback) {
+	callback && callback();
+})();
+console.log((function (missing) {
+	return missing.length;
+})({ length: 2 }));
+// Written, looped over or declared twice, a name keeps its reads.
+console.log(
+	(function (object) {
+		var key;
+		for (key in object);
+		return key === void 0;
+	})({ a: 1 })
+);
+console.log(
+	(function (list) {
+		for (var item of list);
+		var item;
+		return item === void 0;
+	})([1])
+);
+console.log(
+	(function () {
+		var twice;
+		var twice = 1;
+		return twice === void 0;
+	})()
+);
+console.log(
+	(function (written) {
+		written = 2;
+		return written === void 0;
+	})()
+);
+console.log(
+	(function (evaluated) {
+		return eval("evaluated") === void 0;
+	})()
+);
+function both(value) {
+	return value === void 0;
+}
+console.log(both(), both(1));
+// A computed key reads the value: a name nothing sets keys as `undefined`.
+console.log(
+	(function () {
+		var unsetKey;
+		return [Object.keys({ [unsetKey]: 1 }), { [unsetKey]: 2 }.undefined];
+	})()
+);
+// A function calling itself by name passes it other values: nothing folds.
+var recurse = function self(value) {
+	return value === void 0 ? self(1) : value;
+};
+console.log(recurse());
+var again = function self(value) {
+	return value === 1 ? self(2) : value;
+};
+console.log(again(1));
+// `new.target` hands a constructor out, to be constructed again with arguments.
+var saved;
+new (function (value) {
+	saved = new.target;
+	console.log(value === void 0);
+})();
+new saved(1);
+var passed;
+new (function (value) {
+	passed = new.target;
+	console.log(value === 1);
+})(1);
+new passed(2);
+// A function inside reads a `new.target` of its own.
+new (function (value) {
+	console.log(
+		[1].map(function () {
+			return new.target === void 0 && value === 1;
+		})[0]
+	);
+})(1);
+// An instance hands its constructor out too, as its `constructor`.
+var instance = new (function (value) {
+	this.empty = value === void 0;
+})();
+console.log(instance.empty, new instance.constructor(1).empty);

@@ -1,0 +1,1 @@
+(function(){class C{m(){return A}}init(C);var A=4;console.log(new C().m())})()

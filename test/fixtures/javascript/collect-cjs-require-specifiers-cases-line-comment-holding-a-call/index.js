@@ -1,0 +1,2 @@
+// require("./nope")
+require("./a");

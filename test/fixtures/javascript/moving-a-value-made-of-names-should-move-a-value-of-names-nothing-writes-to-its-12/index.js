@@ -1,0 +1,1 @@
+function f(){var value=true;middle();return value.toString()}function middle(){}console.log(f())

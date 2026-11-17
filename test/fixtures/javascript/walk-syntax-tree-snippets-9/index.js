@@ -1,0 +1,1 @@
+var { p, q: [r] } = a, s = (b, c); let { t = 1, ...u } = x; const [v, , w] = b;

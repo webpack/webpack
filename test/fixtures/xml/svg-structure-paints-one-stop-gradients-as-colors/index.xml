@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100">
+	<defs>
+		<linearGradient id="fill"><stop offset="0" stop-color="#ff0000"/></linearGradient>
+		<linearGradient id="styled"><stop style="stop-color:#00ff00;stop-opacity:1"/></linearGradient>
+		<radialGradient id="user" gradientUnits="userSpaceOnUse"><stop stop-color="blue"/></radialGradient>
+		<linearGradient id="source"><!-- one --><stop stop-color="rgb(10,20,30)"/></linearGradient>
+		<linearGradient id="inherits" xlink:href="#source" x1="0" x2="1"/>
+		<linearGradient id="inheritsUnits" href="#user"/>
+		<linearGradient id="black"><stop/></linearGradient>
+		<linearGradient id="stroke"><stop stop-color="red"/></linearGradient>
+		<linearGradient id="translucent"><stop stop-color="red" stop-opacity=".5"/></linearGradient>
+		<linearGradient id="context"><stop stop-color="currentColor"/></linearGradient>
+		<linearGradient id="two"><stop stop-color="red"/><stop offset="1" stop-color="blue"/></linearGradient>
+		<linearGradient id="used"><stop stop-color="red"/></linearGradient>
+		<linearGradient id="kept"><stop stop-color="olive"/></linearGradient>
+		<linearGradient id="keptInherits" href="#kept"/>
+		<linearGradient id="chained" href="#inherits"/>
+		<linearGradient id="external" href="other.svg#two"/>
+		<linearGradient id="classed"><stop class="c" stop-color="red"/></linearGradient>
+		<linearGradient id="mixed"><stop style="stop-color:red;fill:blue"/></linearGradient>
+		<linearGradient id="both" href="#translucent" xlink:href="#translucent"/>
+		<linearGradient id="ownUnits" href="#stroke" gradientUnits="userSpaceOnUse"/>
+		<linearGradient id="styledStroke"><stop stop-color="red"/></linearGradient>
+		<linearGradient id="spaced">
+			<stop stop-color="teal"/>
+		</linearGradient>
+		<linearGradient id="filtered"><stop stop-color="red"/></linearGradient>
+		<filter id="blur"><feGaussianBlur stdDeviation="2"/></filter>
+		<linearGradient id="extra"><stop stop-color="red"/><title>extra</title></linearGradient>
+	</defs>
+	<rect width="10" height="10" fill="url(#fill)"/>
+	<rect width="10" height="10" fill=" url( '#fill' ) "/>
+	<rect width="10" height="10" style="fill:url(#styled);stroke:url(#user)"/>
+	<path d="M0 0h10" stroke="url(#user)"/>
+	<rect width="10" height="10" fill="url(#inherits)"/>
+	<path d="M0 0h10" stroke="url(#inheritsUnits)"/>
+	<rect width="10" height="10" fill="url(#black)"/>
+	<path d="M0 0h10" stroke="url(#stroke)"/>
+	<rect width="10" height="10" fill="url(#stroke)"/>
+	<rect width="10" height="10" fill="url(#translucent)"/>
+	<rect width="10" height="10" fill="url(#context)" color="red"/>
+	<rect width="10" height="10" fill="url(#two)"/>
+	<rect width="10" height="10" fill="url(#used)"/>
+	<use href="#used"/>
+	<rect width="10" height="10" fill="url(#kept) red"/>
+	<rect width="10" height="10" fill="url(#keptInherits)"/>
+	<rect width="10" height="10" fill="url(#chained)"/>
+	<rect width="10" height="10" fill="url(#external)"/>
+	<rect width="10" height="10" fill="url(#extra)"/>
+	<rect width="10" height="10" fill="url(#classed)"/>
+	<rect width="10" height="10" fill="url(#mixed)"/>
+	<rect width="10" height="10" fill="url(#both)"/>
+	<path d="M0 0h10" stroke="url(#ownUnits)"/>
+	<rect width="10" height="10" style="stroke:url(#styledStroke)"/>
+	<rect width="10" height="10" fill="url(#spaced)"/>
+	<g style="filter:url(#blur)"><rect width="10" height="10" fill="url(#filtered)"/></g>
+</svg>

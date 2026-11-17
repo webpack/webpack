@@ -1,0 +1,1 @@
+function f(p){async function i(){var n=!r;await p;return n}var t=i(),r=1;return t}f(0)

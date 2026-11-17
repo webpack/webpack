@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/@property[1]/syntax:\"*\";inherits:false;.c0>d0:hover[1]: css-tree rule syntax:\"*\";inherits:false;.c0>d0:hover, tool syntax: \"*\"",
+		"why": "a `;` in a block ends a statement (§5.4.5): what precedes it is a declaration or a rule the spec drops (§5.4.3), never part of the next rule's selector, which css-tree reads it into"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/@property[1]: css-tree unparsed initial-value:rgb(255,0,0)0.50px, tool initial-value: rgb(255,0,0)0.50px",
+		"why": "an at-rule's block holds declarations and rules, as any block does (§5.4.5); css-tree reads it as rules alone and keeps the declarations as raw text"
+	}
+]

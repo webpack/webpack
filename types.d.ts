@@ -3638,8 +3638,8 @@ declare abstract class ColumnarSyntaxTree {
 	 * Writes a node from its record, each slot a child node, a list from
 	 * `addList` or a value from `addValue`, `0` or left out for none.
 	 */
-	addNode(
-		type: number,
+	addNode<T extends string = string>(
+		type: number | TreeTypeCode<T>,
 		start: number,
 		end: number,
 		flags: number,
@@ -3647,25 +3647,30 @@ declare abstract class ColumnarSyntaxTree {
 		slot1?: null | number,
 		slot2?: null | number,
 		slot3?: null | number
-	): number;
+	): TreeNode<T>;
 
 	/**
 	 * `addNode` for a node whose record holds no slot, as `this`.
 	 */
-	addNode0(type: number, start: number, end: number, flags: number): number;
+	addNode0<T extends string = string>(
+		type: number | TreeTypeCode<T>,
+		start: number,
+		end: number,
+		flags: number
+	): TreeNode<T>;
 
 	/**
 	 * `addNode` for a node whose record holds two slots, as a member
 	 * expression or a call does, written without reading its slot count.
 	 */
-	addNode2(
-		type: number,
+	addNode2<T extends string = string>(
+		type: number | TreeTypeCode<T>,
 		start: number,
 		end: number,
 		flags: number,
 		slot0: number,
 		slot1: number
-	): number;
+	): TreeNode<T>;
 
 	/**
 	 * `addNode` for a literal, its value and raw text written in place, as a
@@ -3676,17 +3681,17 @@ declare abstract class ColumnarSyntaxTree {
 		end: number,
 		value: TreeValue,
 		raw: string
-	): number;
+	): TreeNode<"Literal">;
 
 	/**
 	 * `addNode` for a node whose record is one value, as an identifier's name.
 	 */
-	addValueNode(
-		type: number,
+	addValueNode<T extends string = string>(
+		type: number | TreeTypeCode<T>,
 		start: number,
 		end: number,
 		value: TreeValue
-	): number;
+	): TreeNode<T>;
 	addValue(
 		value?:
 			| null
@@ -3902,7 +3907,7 @@ declare abstract class ColumnarSyntaxTree {
 
 	/**
 	 * A node's ESTree object, as `estree` makes it: a path's way to an object
-	 * for code that still reads one, as `EstreeView#object` is the view's.
+	 * for code that still reads one.
 	 */
 	object(
 		node: number
@@ -4118,6 +4123,11 @@ declare abstract class ColumnarSyntaxTree {
 		| RegExp
 		| { cooked?: null | string; raw: string };
 	fieldCount(field: number, node: number): number;
+
+	/**
+	 * Walks a node and what it holds, each before its children in field order.
+	 */
+	findNode(node: number, test: (node: number) => undefined | boolean): boolean;
 	field(i: number, field: number, node: number): number;
 	flag(flag: number, node: number): boolean;
 
@@ -4126,6 +4136,12 @@ declare abstract class ColumnarSyntaxTree {
 	 * walk that reaches every node without naming each type's fields.
 	 */
 	pushChildren(node: number, out: number[]): void;
+
+	/**
+	 * Writes a node's children as `pushChildren` pushes them, from `at` on, so
+	 * a walk can reuse one list as its stack without resizing it.
+	 */
+	writeChildren(node: number, out: number[], at: number): number;
 	textOf(part: number, node: number): null | string;
 }
 type CommentJavascriptParser = CommentImport & {
@@ -7034,7 +7050,7 @@ declare class CssModulesPlugin {
 		>;
 	};
 }
-type CssNodePath<T = number, S = unknown> = Omit<
+type CssNodePath<T = number, S = undefined> = Omit<
 	CssSyntaxPath,
 	| "flag"
 	| "node"
@@ -7825,14 +7841,9 @@ declare interface CssProcessOptions {
 	as?: "stylesheet" | "block-contents";
 
 	/**
-	 * what the grammar may leave un-materialized to go faster - safe only for parts nothing reads in the active parse; default skip nothing. Ignored while printing (`minimize`), which needs every node
+	 * what the grammar may leave un-materialized to go faster - safe only for parts nothing reads in the active parse; default skip nothing. Ignored while printing (`mode`), which needs every node
 	 */
 	skip?: SkipOptions;
-
-	/**
-	 * print the safely-minified serialization (collapsed whitespace, dropped redundant separators, the `printer`'s value transforms) as `process` walks and return `{ code, map }` (default false = walk only, return `undefined`)
-	 */
-	minimize?: boolean;
 
 	/**
 	 * name of the input in the emitted source map (`sources[0]` / `file`); only read while printing
@@ -7927,18 +7938,19 @@ declare interface CssProcessOptions {
 
 /**
  * The generic visitor coordinator (`util/SourceProcessor`) bound to the CSS
- * `grammar`. All configuration is per `process` call. `process(src, { minimize:
- * true })` returns `{ code, map }` - the safely-minified serialization (built by
- * the same walk that fires visitors) and its source map; without `minimize` it
+ * `grammar`. All configuration is per `process` call. `process(src, { mode:
+ * "minify" })` returns `{ code, map }` - the safely-minified serialization (built
+ * by the same walk that fires visitors) and its source map; without `mode` it
  * just walks and returns `undefined`. Usage:
  * ```
  * new CssSourceProcessor().use({ [NodeType.AtRule]: (path) => {} }).process(source, { skip });
  * ```
  * @experimental exposed as `webpack.css.syntax.SourceProcessor`; unstable API
  */
-declare class CssSourceProcessor<TState = unknown> extends SourceProcessor<
+declare class CssSourceProcessor<TState = undefined> extends SourceProcessor<
 	CssSyntaxPath,
 	number,
+	string | number,
 	CssProcessOptions,
 	CssPrintOptions,
 	CssParts,
@@ -7961,7 +7973,6 @@ declare class CssSourceProcessor<TState = unknown> extends SourceProcessor<
  * it, with `n` an integer node id into the columns, so the storage stays behind it.
  */
 declare abstract class CssSyntaxPath {
-	state: unknown;
 	get node(): number;
 	get parent(): null | number;
 	get index(): number;
@@ -8147,7 +8158,7 @@ declare interface CssTransformOptions {
 	 */
 	shortenValues?: boolean;
 }
-declare interface CssVisitorMap<S = unknown> {
+declare interface CssVisitorMap<S = undefined> {
 	"1"?:
 		| VisitorFn<CssNodePath<1, S>>
 		| {
@@ -8928,8 +8939,7 @@ declare interface DestructuringAssignmentProperty {
  * seen, so the expression parser can raise once it knows whether it is
  * parsing an expression or a binding pattern.
  */
-declare class DestructuringErrors {
-	constructor();
+declare abstract class DestructuringErrors {
 	shorthandAssign: number;
 	trailingComma: number;
 	parenthesizedAssign: number;
@@ -10650,56 +10660,6 @@ declare interface EstreeSource {
 	range?: [number, number];
 }
 type EstreeSourceItem = null | number | EstreeSource;
-
-/**
- * ESTree objects read the way a `SyntaxTree` is, `toEstreeObject`'s way back:
- * an object takes an id when a read first reaches it, and nothing is copied.
- * @experimental exposed through `webpack.javascript.syntax.parser`; unstable API
- */
-declare class EstreeView {
-	constructor();
-	add(object: NodeEstreeIndex): number;
-	object(node: number): NodeEstreeIndex;
-
-	/**
-	 * Forgets every id, for the next read.
-	 */
-	reset(): void;
-
-	/**
-	 * Reads a statement as holding a directive its object does not mark, as
-	 * the tree's `setPart` does: another parser may leave `directive` off.
-	 */
-	markDirective(statement: NodeEstreeIndex, directive: string): void;
-	type(node: number): number;
-	start(node: number): number;
-	end(node: number): number;
-	range(node: number): [number, number];
-	name(node: number): string;
-	value(
-		node: number
-	):
-		| undefined
-		| null
-		| string
-		| number
-		| bigint
-		| boolean
-		| RegExp
-		| { cooked?: null | string; raw: string };
-	fieldCount(field: number, node: number): number;
-	field(i: number, field: number, node: number): number;
-	flag(flag: number, node: number): boolean;
-	textOf(part: number, node: number): null | string;
-	legacyAssert(node: number): boolean;
-
-	/**
-	 * Pushes a node's children, holes left out, for a walk that reaches every
-	 * node without naming each type's fields: every property holding a node,
-	 * so a node type the tree has none for is walked into too.
-	 */
-	pushChildren(node: number, out: number[]): void;
-}
 
 /**
  * Cache validation token whose string representation identifies the build
@@ -13653,7 +13613,7 @@ declare interface HtmlMutableTag {
 	 */
 	remove?: boolean;
 }
-type HtmlNodePath<T = number, S = unknown> = Omit<
+type HtmlNodePath<T = number, S = undefined> = Omit<
 	HtmlSyntaxPath,
 	| "flag"
 	| "node"
@@ -14040,6 +14000,20 @@ declare interface HtmlPrintOptions {
 	sortTokenLists?: boolean;
 	sortSvgSymbols?: boolean;
 	cleanupSvgStructure?: boolean;
+	removeSvgScripts?: boolean;
+	removeSvgTitles?: boolean;
+	removeSvgAttributes?: string[];
+	inlineSvgStyles?: boolean;
+	removeSvgElements?: { id?: string[]; class?: string[] };
+	removeSvgDescriptions?: boolean;
+	removeSvgRasterImages?: boolean;
+	removeSvgXlink?: boolean;
+	removeSvgDimensions?: boolean;
+	removeSvgViewBox?: boolean;
+	removeXmlDoctype?: boolean;
+	cleanupSvgIds?: boolean;
+	removeHiddenSvgElements?: boolean;
+	svgPrecision?: number;
 	mergeSvgPaths?: boolean;
 	reuseSvgPaths?: boolean;
 	sortSvgDefinitions?: boolean;
@@ -14129,17 +14103,12 @@ declare interface HtmlProcessOptions {
 	skip?: HtmlAstSkip;
 
 	/**
-	 * print the safely-minified serialization (nodes rebuilt from source, inert comments dropped, opening-tag whitespace collapsed) as `process` walks, and return it (default false = walk only, return `""`)
-	 */
-	minimize?: boolean;
-
-	/**
 	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
 	 */
 	transforms?: HtmlTransformOptions;
 
 	/**
-	 * collapse each run of HTML whitespace in text to a single space, except where an ancestor renders it verbatim; `"smart"` also drops what sits against a block edge and `"all"` drops every edge. In XML, remove only whitespace-only text in known SVG containers, preserving text, foreign content and `xml:space` (default false)
+	 * collapse each run of HTML whitespace in text to a single space, except where an ancestor renders it verbatim; `"smart"` also drops what sits against a block edge and `"all"` drops every edge. In XML, remove only whitespace-only text in known SVG containers, under `xml:space` too since that lays out text alone, preserving text and foreign content (default false)
 	 */
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
 
@@ -14202,6 +14171,76 @@ declare interface HtmlProcessOptions {
 	 * when minifying XML, sort adjacent SVG symbol definitions by ID, preserving IDs and references unless document dependencies can observe order (default false)
 	 */
 	sortSvgSymbols?: boolean;
+
+	/**
+	 * when minifying XML, remove `script` elements, event handler and `srcdoc` attributes, `javascript:` and `vbscript:` URLs and links to HTML or SVG `data:` documents (default false)
+	 */
+	removeSvgScripts?: boolean;
+
+	/**
+	 * when minifying XML, move simple SVG stylesheet rules into the style attributes of the elements they match and drop the stylesheets and their classes (default false)
+	 */
+	inlineSvgStyles?: boolean;
+
+	/**
+	 * when minifying XML, remove attributes matching these `element:attribute:value` patterns of case-insensitive regular expressions, each matched whole (default none)
+	 */
+	removeSvgAttributes?: string[];
+
+	/**
+	 * when minifying XML, remove elements with these IDs or classes and their content (default none)
+	 */
+	removeSvgElements?: { id?: string[]; class?: string[] };
+
+	/**
+	 * when minifying XML, remove SVG `title` elements, which name the image for assistive technology and tooltips (default false)
+	 */
+	removeSvgTitles?: boolean;
+
+	/**
+	 * when minifying XML, remove SVG `desc` elements, which describe the image for assistive technology (default false)
+	 */
+	removeSvgDescriptions?: boolean;
+
+	/**
+	 * when minifying XML, remove SVG `image` elements referencing JPEG, PNG or GIF images (default false)
+	 */
+	removeSvgRasterImages?: boolean;
+
+	/**
+	 * when minifying XML, spell `xlink:href` as the SVG 2 `href` where an element has no `href`, a link's `xlink:show` as `target`, and drop `xlink:type="simple"` (default false)
+	 */
+	removeSvgXlink?: boolean;
+
+	/**
+	 * when minifying XML, remove the root `svg` element's `width` and `height`, moving plain ones into a missing `viewBox` (default false)
+	 */
+	removeSvgDimensions?: boolean;
+
+	/**
+	 * when minifying XML, remove a root `svg` element's `viewBox` that restates its plain `width` and `height` (default false)
+	 */
+	removeSvgViewBox?: boolean;
+
+	/**
+	 * when minifying XML, remove a DOCTYPE without an internal subset where no entity reference needs one (default false)
+	 */
+	removeXmlDoctype?: boolean;
+
+	/**
+	 * when minifying XML, remove IDs nothing in the document references and shorten the rest, unless document dependencies can read them (default false)
+	 */
+	cleanupSvgIds?: boolean;
+
+	/**
+	 * when minifying XML, remove ID-free SVG content hidden by `display="none"`, zero opacity or size, a `visibility` nothing inside sets back, or geometry that draws nothing (default false)
+	 */
+	removeHiddenSvgElements?: boolean;
+
+	/**
+	 * when minifying XML, round the SVG numbers and path data the shortening switches shorten to this many decimal places, a whole number from 0 to 15 (default: exact)
+	 */
+	svgPrecision?: number;
 
 	/**
 	 * drop an attribute whose value is the element's own default; `true` is `"smart"`, and `"all"` also drops the spec defaults a selector can match, and with them a value naming no keyword where that says the same (default false)
@@ -14362,9 +14401,10 @@ declare interface HtmlResourceHintWebpackOptions {
  * ```
  * @experimental exposed as `webpack.html.syntax.SourceProcessor`; unstable API
  */
-declare class HtmlSourceProcessor<TState = unknown> extends SourceProcessor<
+declare class HtmlSourceProcessor<TState = undefined> extends SourceProcessor<
 	HtmlSyntaxPath,
 	number,
+	string,
 	HtmlProcessOptions,
 	HtmlPrintOptions,
 	HtmlParts,
@@ -14388,7 +14428,6 @@ declare class HtmlSourceProcessor<TState = unknown> extends SourceProcessor<
  * valid until the next `parseHtml`.
  */
 declare abstract class HtmlSyntaxPath {
-	state: unknown;
 	get node(): number;
 	get parent(): null | number;
 
@@ -14683,7 +14722,7 @@ declare interface HtmlTransformTagsContext {
 	outputName: string;
 	html: string;
 }
-declare interface HtmlVisitorMap<S = unknown> {
+declare interface HtmlVisitorMap<S = undefined> {
 	"1"?:
 		| VisitorFn<HtmlNodePath<1, S>>
 		| {
@@ -16248,7 +16287,7 @@ declare class JavascriptModulesPlugin {
 declare interface JavascriptNodeReader {
 	/**
 	 * A node's ESTree object, as `estree` makes it: a path's way to an object
-	 * for code that still reads one, as `EstreeView#object` is the view's.
+	 * for code that still reads one.
 	 */
 	object: (
 		node: number
@@ -19299,15 +19338,25 @@ declare interface JavascriptReadOptions {
  * @experimental exposed as `webpack.javascript.syntax.SourceProcessor`; unstable API
  */
 declare class JavascriptSourceProcessor<
-	TState = unknown
+	TState = undefined
 > extends SourceProcessor<
 	JavascriptSyntaxPath,
 	number,
+	| undefined
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| RegExp
+	| { cooked?: null | string; raw: string },
 	JavascriptProcessOptions,
 	PrintOptions,
 	AnyParts,
 	TState,
-	VisitorMapSourceProcessorObject_2<JavascriptSyntaxPath>
+	VisitorMapSourceProcessorObject_2<
+		JavascriptSyntaxPath & { readonly state: TState }
+	>
 > {
 	constructor();
 	static PrintContext: typeof PrintContext;
@@ -19325,7 +19374,6 @@ declare class JavascriptSourceProcessor<
  * @experimental exposed through `webpack.javascript.syntax.SourceProcessor`; unstable API
  */
 declare abstract class JavascriptSyntaxPath {
-	state: unknown;
 	get node(): number;
 	get parent(): null | number;
 	get index(): number;
@@ -19367,6 +19415,11 @@ declare abstract class JavascriptSyntaxPath {
 	child(i: number, n?: number): number;
 	children(n?: number): number[];
 	fieldCount(field: number, n?: number): number;
+
+	/**
+	 * Walks a node and what it holds, each before its children in field order.
+	 */
+	findNode(node: number, test: (node: number) => undefined | boolean): boolean;
 	field(i: number, field: number, n?: number): number;
 	fieldNamed(field: number, name: string, n?: number): number;
 	flag(flag: number, n?: number): boolean;
@@ -21294,11 +21347,23 @@ declare const MEASURE_END_OPERATION: unique symbol;
 declare const MEASURE_START_OPERATION: unique symbol;
 
 /**
- * Magic comment options by name; each value is whatever the user's comment evaluates to.
+ * Magic comment options by name; each value is what the user's comment evaluates to.
  */
 declare interface MagicCommentOptions {
-	[index: string]: unknown;
+	[index: string]: MagicCommentValue;
 }
+type MagicCommentValue =
+	| undefined
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| symbol
+	| RegExp
+	| JsonObjectFs
+	| JsonValueFs[]
+	| ((...args: never[]) => void);
 
 /**
  * Defines the main render context type used by this module.
@@ -21626,17 +21691,11 @@ type MemCache = {
 		thisArg: This,
 		args: A
 	): V;
-} & Omit<
-	WeakTupleMap<TupleElement[], unknown>,
-	"get" | "set" | "provide" | "cachedProvide"
->;
-type MemCacheKeyValue<K> = K extends { readonly __memCacheValue?: infer V }
-	? V
-	: unknown;
+} & Pick<WeakTupleMap<TupleElement[], never>, "has" | "delete" | "clear">;
 type MemCacheProvided<K, V> =
-	unknown extends MemCacheKeyValue<K> ? V : MemCacheKeyValue<K>;
+	Required<K> extends { readonly __memCacheValue: [infer W] } ? W : V;
 type MemCacheValue<K> =
-	unknown extends MemCacheKeyValue<K> ? any : MemCacheKeyValue<K>;
+	Required<K> extends { readonly __memCacheValue: [infer V] } ? V : any;
 
 /**
  * Options object for in-memory caching.
@@ -24264,7 +24323,7 @@ declare interface NodeParts {
 	 */
 	items: Record<number, number>;
 }
-type NodePath<TNode, TValue = unknown> = NodePathReads<TNode, TValue> &
+type NodePath<TNode, TValue> = NodePathReads<TNode, TValue> &
 	NodePathFields<TNode>;
 
 /**
@@ -24282,7 +24341,7 @@ declare interface NodePathFields<TNode> {
 	textOf(part: number, n?: TNode): null | string;
 	within(type: number): boolean;
 }
-declare interface NodePathReads<TNode, TValue = unknown> {
+declare interface NodePathReads<TNode, TValue> {
 	/**
 	 * the current node
 	 */
@@ -24307,11 +24366,6 @@ declare interface NodePathReads<TNode, TValue = unknown> {
 	 * end the walk: no visitor fires after the current one returns, and a print still completes
 	 */
 	stop: () => void;
-
-	/**
-	 * the run's state, as `process` was given it
-	 */
-	state: unknown;
 
 	/**
 	 * the node's `NodeType`
@@ -26171,13 +26225,19 @@ declare interface OptimizationMinimizeOptions {
  */
 declare interface OptimizationMinimizeXml {
 	/**
+	 * Remove SVG IDs nothing in the document references and rename the rest to the shortest names, rewriting `href`, `url()` and ID-list references. Off by default because a reference from outside the document, such as a sprite's `file.svg#icon` or a page's `getElementById`, stops resolving; skip stylesheets, scripts, animations, duplicate IDs, `xml:id` and DTDs.
+	 * @since 5.113.0
+	 */
+	cleanupIds?: boolean;
+
+	/**
 	 * Collapse SVG groups, hoist identical context-free inherited attributes or move them to sole graphics children, inline validated presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.
 	 * @since 5.113.0
 	 */
 	cleanupStructure?: boolean;
 
 	/**
-	 * Remove whitespace-only text in known SVG containers, preserving text content, foreign content and `xml:space`. Off by default because scripts can observe whitespace nodes.
+	 * Remove whitespace-only text in known SVG containers, under `xml:space` too since that lays out text alone, preserving text content and foreign content. Off by default because scripts can observe whitespace nodes.
 	 * @since 5.113.0
 	 */
 	collapseWhitespace?: boolean;
@@ -26189,16 +26249,67 @@ declare interface OptimizationMinimizeXml {
 	convertShapes?: boolean;
 
 	/**
+	 * Move the rules of SVG stylesheets into the style attributes of the elements they match, in cascade order before each element's own, then drop the stylesheets and the classes they named, where every selector uses types, classes, IDs, attributes, tree-structural pseudo-classes or `:not()` and the result is no larger. Off by default because scripts and external CSS can observe classes and stylesheets.
+	 * @since 5.113.0
+	 */
+	inlineStyles?: boolean;
+
+	/**
 	 * Merge adjacent disjoint axis-aligned SVG lines with explicit opaque crisp-edge strokes, no fill, dashes or markers. Skip compositing, transformed or ID-bearing ancestors; identical paint remains eligible during color cleanup. Off by default because consumers can observe element boundaries; skip stylesheets, scripts, animations and DTDs.
 	 * @since 5.113.0
 	 */
 	mergePaths?: boolean;
 
 	/**
+	 * Round SVG geometry, path data, transforms and presentation numbers to this many decimal places, a whole number from 0 to 15, wherever `shortenNumbers` and `shortenPathData` shorten them. Path points round where they land, so error never accumulates, and curves and arcs that draw straight lines become lines. Off by default because rounding moves geometry; svgo rounds to 3.
+	 * @since 5.113.0
+	 */
+	precision?: number;
+
+	/**
+	 * Remove attributes matching `element:attribute:value` patterns, each part a case-insensitive regular expression matched whole, `*` matching anything; a missing element or value part matches any. Off by default because only the author knows which attributes the image can lose.
+	 * @since 5.113.0
+	 */
+	removeAttributes?: string[];
+
+	/**
+	 * Remove SVG `desc` elements. Off by default because they describe the image for assistive technology.
+	 * @since 5.113.0
+	 */
+	removeDescriptions?: boolean;
+
+	/**
+	 * Remove the root SVG element's `width` and `height`, moving plain ones into a missing `viewBox`, so the image scales to whatever box it is placed in. Off by default because the image loses its intrinsic size.
+	 * @since 5.113.0
+	 */
+	removeDimensions?: boolean;
+
+	/**
+	 * Remove a DOCTYPE without an internal subset where no entity reference needs one. Off by default because a validating consumer reads the DTD it names.
+	 * @since 5.113.0
+	 */
+	removeDoctype?: boolean;
+
+	/**
 	 * Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.
 	 * @since 5.113.0
 	 */
 	removeEditorData?: boolean;
+
+	/**
+	 * Remove elements with one of these IDs or classes, with their content. Off by default because only the author knows which elements the image can lose.
+	 * @since 5.113.0
+	 */
+	removeElements?: {
+		/**
+		 * Classes whose elements are removed.
+		 */
+		class?: string[];
+		/**
+		 * IDs whose elements are removed.
+		 */
+		id?: string[];
+	};
 
 	/**
 	 * Remove empty `class`, `id` and `style` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.
@@ -26213,16 +26324,52 @@ declare interface OptimizationMinimizeXml {
 	removeEmptyElements?: boolean;
 
 	/**
+	 * Remove ID-free SVG content that renders nothing: `display="none"`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, paths and point lists that draw nothing, shapes that paint neither fill nor stroke, uses of what draws nothing, `tref` elements without a reference, and subtrees under `visibility="hidden"` that never set it back. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a `switch` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.
+	 * @since 5.113.0
+	 */
+	removeHiddenElements?: boolean;
+
+	/**
 	 * Remove SVG `metadata` elements and their contents, preserving `title`, `desc` and the document element. Off by default because metadata can carry licensing and application data.
 	 * @since 5.113.0
 	 */
 	removeMetadata?: boolean;
 
 	/**
+	 * Remove SVG `image` elements referencing JPEG, PNG or GIF images. Off by default because those images disappear from the drawing.
+	 * @since 5.113.0
+	 */
+	removeRasterImages?: boolean;
+
+	/**
+	 * Remove `script` elements, event handler and `srcdoc` attributes, `javascript:` and `vbscript:` URLs and links to HTML or SVG `data:` documents, for SVG that must not run code. Off by default because the image loses its behavior.
+	 * @since 5.113.0
+	 */
+	removeScripts?: boolean;
+
+	/**
+	 * Remove SVG `title` elements. Off by default because they name the image for assistive technology and tooltips.
+	 * @since 5.113.0
+	 */
+	removeTitles?: boolean;
+
+	/**
 	 * Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.
 	 * @since 5.113.0
 	 */
 	removeUnusedNamespaces?: boolean;
+
+	/**
+	 * Remove the root SVG element's `viewBox` where it restates its plain `width` and `height`. Off by default because the image then no longer scales when CSS gives it another size.
+	 * @since 5.113.0
+	 */
+	removeViewBox?: boolean;
+
+	/**
+	 * Spell `xlink:href` as the SVG 2 `href` where an element has no `href`, a link's `xlink:show` as `target`, and drop `xlink:type="simple"`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only `xlink:href`.
+	 * @since 5.113.0
+	 */
+	removeXlink?: boolean;
 
 	/**
 	 * Reuse unidentified duplicate leaf SVG paths without transforms through existing IDs and SVG 2 href references, preserving IDs and target element types. Require explicit context-free fill and stroke; compare identical authored paint before color cleanup. Off by default because consumers can observe element types; skip stylesheets, scripts, animations, duplicate IDs and DTDs.
@@ -28121,8 +28268,7 @@ declare class ParserPosition {
  * One lexical scope, holding the names declared directly in it. Each set is
  * built only once a name goes into it, which most scopes never do.
  */
-declare class ParserScope {
-	constructor(flags: number);
+declare abstract class ParserScope {
 	flags: number;
 	var?: Set<string>;
 	lexical?: Set<string>;
@@ -33863,12 +34009,13 @@ declare interface SourcePosition {
  * ```
  */
 declare abstract class SourceProcessor<
-	TPath extends NodePath<TNode, unknown>,
+	TPath extends NodePath<TNode, TValue>,
 	TNode,
+	TValue,
 	TProcessOptions = Record<never, never>,
 	TPrintOptions = PrintOptions,
 	TParts extends NodeParts = AnyParts,
-	TState = unknown,
+	TState = undefined,
 	TVisitors = VisitorMapSourceProcessorObject_1<TPath>
 > {
 	/**
@@ -33881,6 +34028,7 @@ declare abstract class SourceProcessor<
 	): SourceProcessor<
 		TPath,
 		TNode,
+		TValue,
 		TProcessOptions,
 		TPrintOptions,
 		TParts,
@@ -33898,6 +34046,7 @@ declare abstract class SourceProcessor<
 	): SourceProcessor<
 		TPath,
 		TNode,
+		TValue,
 		TProcessOptions,
 		TPrintOptions,
 		TParts,
@@ -33913,6 +34062,7 @@ declare abstract class SourceProcessor<
 	): SourceProcessor<
 		TPath,
 		TNode,
+		TValue,
 		TProcessOptions,
 		TPrintOptions,
 		TParts,
@@ -35882,6 +36032,11 @@ declare interface TerserCompressAliases {
 	pure_conversions?: boolean;
 
 	/**
+	 * terser's name for `pureGetters`
+	 */
+	pure_getters?: boolean | "strict";
+
+	/**
 	 * terser's name for `pureFuncs`
 	 */
 	pure_funcs?: null | string[];
@@ -36328,6 +36483,7 @@ declare interface TreeNames {
 	 */
 	propertyStrings: null | Set<number>;
 }
+type TreeNode<T extends string> = number & { readonly treeNode?: T };
 
 /**
  * Where each node of a `SyntaxTree` starts and ends among its parse's tokens,
@@ -36359,6 +36515,7 @@ declare interface TreeTokens {
 	 */
 	first: number;
 }
+type TreeTypeCode<T extends string> = number & { readonly treeType?: T };
 type TreeValue =
 	| null
 	| string
@@ -36431,7 +36588,7 @@ declare class TypeScriptPlugin {
 	apply(compiler: Compiler): void;
 }
 type TypedNode<TNode, T> = TNode & { readonly __nodeType: T };
-type TypedNodePath<TPath, TNode, P extends NodeParts, T, S = unknown> = Omit<
+type TypedNodePath<TPath, TNode, P extends NodeParts, T, S = undefined> = Omit<
 	TPath,
 	| "flag"
 	| "node"
@@ -39244,12 +39401,6 @@ declare namespace exports {
 		}
 		export namespace syntax {
 			/** exposed as `webpack.javascript.syntax.parser`; unstable API @experimental */ export namespace parser {
-				export let BIND_FUNCTION: 3;
-				export let BIND_LEXICAL: 2;
-				export let BIND_NONE: 0;
-				export let BIND_OUTSIDE: 5;
-				export let BIND_SIMPLE_CATCH: 4;
-				export let BIND_VAR: 1;
 				export let Field: Readonly<{
 					object: 1;
 					property: 2;
@@ -39308,18 +39459,6 @@ declare namespace exports {
 					tail: 1024;
 					await: 2048;
 				}>;
-				export let SCOPE_ARROW: 16;
-				export let SCOPE_ASYNC: 4;
-				export let SCOPE_CLASS_FIELD_INIT: 512;
-				export let SCOPE_CLASS_STATIC_BLOCK: 256;
-				export let SCOPE_DIRECT_SUPER: 128;
-				export let SCOPE_FUNCTION: 2;
-				export let SCOPE_GENERATOR: 8;
-				export let SCOPE_SIMPLE_CATCH: 32;
-				export let SCOPE_SUPER: 64;
-				export let SCOPE_SWITCH: 1024;
-				export let SCOPE_TOP: 1;
-				export let SCOPE_VAR: number;
 				export let codePointToString: (code: number) => string;
 				export namespace defaultOptions {
 					export let ecmaVersion: null;
@@ -39363,7 +39502,6 @@ declare namespace exports {
 					end?: number
 				) => number;
 				export let nonASCIIwhitespace: RegExp;
-				export let skipWhiteSpace: RegExp;
 				export let stringToNumber: (
 					str: string,
 					isLegacyOctalNumericLiteral: boolean
@@ -39690,7 +39828,8 @@ declare namespace exports {
 					input: string,
 					visitors: CompiledVisitorBucket<JavascriptSyntaxPath>[],
 					writer: undefined | PrintContext<JavascriptSyntaxPath, number>,
-					options: JavascriptProcessOptions
+					options: JavascriptProcessOptions,
+					path?: JavascriptSyntaxPath
 				) => void;
 				export let isWalkingSyntaxTree: () => boolean;
 				export let walkSyntaxTree: (
@@ -39699,14 +39838,13 @@ declare namespace exports {
 					input: string,
 					visitors: CompiledVisitorBucket<JavascriptSyntaxPath>[],
 					writer?: PrintContext<JavascriptSyntaxPath, number>,
-					inlined?: Uint8Array
+					inlined?: Uint8Array,
+					path?: JavascriptSyntaxPath
 				) => void;
 				export let printEarlyIn: (early: Map<number, number>) => void;
 				export {
-					DestructuringErrors,
 					SyntaxParser as Parser,
 					Position,
-					ParserScope as Scope,
 					ParserSourceLocation,
 					TokContext,
 					Token,
@@ -39714,8 +39852,7 @@ declare namespace exports {
 					LEGACY_ASSERT_ATTRIBUTES,
 					ParserPosition,
 					WebpackParser,
-					ScopeLog,
-					EstreeView
+					ScopeLog
 				};
 			}
 			/** exposed as `webpack.javascript.syntax.printer`; unstable API @experimental */ export namespace printer {
@@ -39737,7 +39874,6 @@ declare namespace exports {
 					path: JavascriptSyntaxPath,
 					writer: PrintContext<JavascriptSyntaxPath, number>
 				) => string;
-				export let FORMAT_DEFAULTS: any;
 				export let IGNORED_FORMAT_OPTIONS: string[];
 				export let createUnicode: () => {
 					getFullChar: (str: string, pos: number) => string;
@@ -40222,7 +40358,8 @@ declare namespace exports {
 					visitors: CompiledVisitorBucket<CssSyntaxPath>[],
 					writer:
 						undefined | PrintContext<CssSyntaxPath, number, CssPrintOptions>,
-					options: CssProcessOptions
+					options: CssProcessOptions,
+					path?: CssSyntaxPath
 				) => void;
 				export let isDashedIdentifier: (identifier: string) => boolean;
 				export let isSimpleIdentifier: (value: string) => boolean;
@@ -40375,13 +40512,9 @@ declare namespace exports {
 		export namespace syntax {
 			/** exposed as `webpack.html.syntax.parser`; unstable API @experimental */ export namespace parser {
 				export let A: HtmlSyntaxPath;
-				export let BLOCK_CONTENTS: "block-contents";
-				export let EMBEDDED_LANGUAGES: string[];
 				export let EMBEDDED_STYLESHEET: "embedded-stylesheet";
-				export let EVENT_HANDLER: "event-handler";
 				export let FOREIGN_ELEMENT: "foreign-element";
 				export let FLAG_FOSTER_REGION: 128;
-				export let JSON_TYPE: "json";
 				export namespace Field {
 					export let attributes: 1;
 					export let content: 2;
@@ -40425,7 +40558,6 @@ declare namespace exports {
 					export let Double: 1;
 					export let Single: 2;
 				}
-				export let SVG_TYPE: "svg";
 				export let asciiLowercase: (value: string) => string;
 				export let stripAsciiWhitespace: (value: string) => string;
 				export let baseTag: (
@@ -40460,7 +40592,8 @@ declare namespace exports {
 					visitors: CompiledVisitorBucket<HtmlSyntaxPath>[],
 					writer:
 						undefined | PrintContext<HtmlSyntaxPath, number, HtmlPrintOptions>,
-					options: HtmlProcessOptions
+					options: HtmlProcessOptions,
+					path?: HtmlSyntaxPath
 				) => void;
 				export let isAllAsciiWhitespace: (s: string) => boolean;
 				export let isAsciiAlphanumeric: (cc: number) => boolean;
@@ -40494,8 +40627,6 @@ declare namespace exports {
 				) => number;
 			}
 			/** exposed as `webpack.html.syntax.printer`; unstable API @experimental */ export namespace printer {
-				export let CLASSIC_SCRIPT: "script";
-				export let MODULE_SCRIPT: "module";
 				export let printer: (
 					path: HtmlSyntaxPath,
 					writer: PrintContext<HtmlSyntaxPath, number, HtmlPrintOptions>
@@ -40814,6 +40945,7 @@ declare namespace exports {
 			) => undefined | string;
 			export let languageOfMediaType: (mediaType: string) => undefined | string;
 			export let parseDataURI: (uri: string) => null | ParsedDataURI;
+			export let percentDecode: (payload: string) => Buffer;
 			export let readEmbeddedDataURI: (
 				uri: string
 			) => null | { parsed: ParsedDataURI; type: string; payload: string };

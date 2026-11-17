@@ -525,6 +525,7 @@
     "svmax",
     "svmin",
     "symlinked",
+    "syncbase",
     "syncloader",
     "systemjs",
     "tabatkins",
@@ -604,6 +605,7 @@
     "visiblestroke",
     "vmax",
     "vmin",
+    "wallclock",
     "walltime",
     "wasi",
     "wasm",
@@ -638,7 +640,8 @@
     "Yann",
     "zizmor",
     "zstd",
-    "viewbox"
+    "viewbox",
+    "vbscript"
   ],
   "ignoreRegExpList": [
     "/Author.+/",

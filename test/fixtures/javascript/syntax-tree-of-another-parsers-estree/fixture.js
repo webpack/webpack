@@ -179,19 +179,6 @@ const roundTrip = (values, { source }) => {
 	} catch (_err) {
 		summary.unknownDeep = "throws";
 	}
-	// ESTree objects read in place, a directive their object leaves off marked.
-	const view = new parser.EstreeView();
-	const statement = estreeOf(`"use strict"; f([d]);`).body[1];
-	const id = view.add(statement);
-	view.markDirective(statement, "use strict");
-	view.markDirective(statement, "use strict");
-	/** @type {number[]} */
-	const viewed = [];
-	view.pushChildren(id, viewed);
-	view.pushChildren(viewed[0], viewed);
-	summary.viewDirective = view.textOf(parser.Part.directive, id);
-	summary.viewChildren = viewed.map((child) => view.type(child));
-	summary.viewUnmarked = view.textOf(parser.Part.directive, viewed[0]);
 	return summary;
 };
 

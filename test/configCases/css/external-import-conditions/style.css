@@ -1,0 +1,6 @@
+@import url("./nested.css") layer(base) supports(display: grid) screen;
+@import url("./media.css") screen/**/;
+@import url("https://test.cases/print.css") print;
+@import url("https://test.cases/print.css") layer(theme) screen;
+@import url("https://test.cases/print.css") layer;
+.style { color: red; }

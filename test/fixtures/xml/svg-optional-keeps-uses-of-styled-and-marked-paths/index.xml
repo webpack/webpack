@@ -1,0 +1,1 @@
+<svg xmlns="http://www.w3.org/2000/svg"><defs><path id="p" d="M1 1" style="stroke:red"/><path id="q" d="M1 1" marker-end="url(#m)"/></defs><use href="#p"/><use href="#q"/></svg>

@@ -46,7 +46,7 @@ describe("SourceProcessor", () => {
 			}
 		);
 
-		processor.process("", options);
+		processor.process(fixture("css", "source-processor-reuses-the-caller-s-print-options"), options);
 		expect(received).toBe(options);
 	});
 
@@ -83,22 +83,22 @@ describe("SourceProcessor", () => {
 
 		it("is not asked for by a walk", () => {
 			const { processor, loads } = counting();
-			expect(processor.process("x")).toBeUndefined();
+			expect(processor.process(fixture("css", "source-processor-deferred-printer-is-not-asked-for-by-a-walk-2"))).toBeUndefined();
 			expect(loads()).toBe(0);
 		});
 
 		it("is asked for once, by the first print", () => {
 			const { processor, loads } = counting();
-			processor.process("x");
-			processor.process("x", { mode: "minify" });
+			processor.process(fixture("css", "source-processor-deferred-printer-is-asked-for-once-by-the-first-print"));
+			processor.process(fixture("css", "source-processor-deferred-printer-is-asked-for-once-by-the-first-print-2"), { mode: "minify" });
 			expect(loads()).toBe(1);
 		});
 
 		it("is reused by every print after it", () => {
 			const { processor, loads } = counting();
-			processor.process("x", { mode: "minify" });
+			processor.process(fixture("css", "source-processor-deferred-printer-is-reused-by-every-print-after-it"), { mode: "minify" });
 			const first = processor._printer;
-			processor.process("x", { mode: "beautify" });
+			processor.process(fixture("css", "source-processor-deferred-printer-is-reused-by-every-print-after-it-2"), { mode: "beautify" });
 			expect(loads()).toBe(1);
 			expect(processor._printer).toBe(first);
 		});
@@ -110,7 +110,7 @@ describe("SourceProcessor", () => {
 				loads++;
 				return () => "";
 			});
-			processor.process("x", { mode: "minify" });
+			processor.process(fixture("css", "source-processor-deferred-printer-stays-out-of-a-processor-that-was-handed-its"), { mode: "minify" });
 			expect(processor._printer).toBe(printer);
 			expect(loads).toBe(0);
 		});
@@ -305,7 +305,7 @@ describe("SourceProcessor", () => {
 				it("carries no state between calls", () => {
 					const processor = new Processor();
 					const first = processor.process(source, { mode: "minify" }).code;
-					processor.process("", { mode: "minify" });
+					processor.process(fixture("css", "source-processor-mode-carries-no-state-between-calls"), { mode: "minify" });
 					processor.process(source, { mode: "beautify" });
 					expect(processor.process(source, { mode: "minify" }).code).toBe(
 						first
@@ -440,7 +440,7 @@ describe("SourceProcessor", () => {
 
 		/**
 		 * Reads a node through `NodePath` members only, as a language-agnostic visitor would.
-		 * @param {import("../../lib/util/SourceProcessor").NodePath<EXPECTED_ANY>} path path
+		 * @param {import("../../lib/util/SourceProcessor").NodePath<EXPECTED_ANY, EXPECTED_ANY>} path path
 		 * @param {string} input the parsed source
 		 * @returns {Record<string, unknown>} what a shared visitor sees
 		 */
@@ -467,39 +467,39 @@ describe("SourceProcessor", () => {
 
 		it("counts each language's line terminators in loc", () => {
 			/**
-			 * @param {string} separator what ends each rule's line
+			 * @param {string} source two rules, a line terminator between them
 			 * @returns {number[]} the start line of every CSS identifier
 			 */
-			const cssLines = (separator) => {
+			const cssLines = (source) => {
 				/** @type {number[]} */
 				const lines = [];
 				new CssSourceProcessor()
 					.use([CssNodeType.Ident], (path) => {
 						lines.push(path.loc()[0]);
 					})
-					.process(`a{color:red}${separator}b{color:blue}`);
+					.process(source);
 				return lines;
 			};
-			expect(cssLines("\r")).toEqual([1, 1, 2, 2]);
-			expect(cssLines("\f")).toEqual([1, 1, 2, 2]);
-			expect(cssLines("\r\n")).toEqual([1, 1, 2, 2]);
+			expect(cssLines(fixture("css", "source-processor-node-path-counts-each-language-s-line-terminators-in-loc-cr"))).toEqual([1, 1, 2, 2]);
+			expect(cssLines(fixture("css", "source-processor-node-path-counts-each-language-s-line-terminators-in-loc-ff"))).toEqual([1, 1, 2, 2]);
+			expect(cssLines(fixture("css", "source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf"))).toEqual([1, 1, 2, 2]);
 			/**
-			 * @param {string} separator what ends each element's line
+			 * @param {string} source three elements, a line terminator between each
 			 * @returns {number[]} the start line of every `<i>`
 			 */
-			const htmlLines = (separator) => {
+			const htmlLines = (source) => {
 				/** @type {number[]} */
 				const lines = [];
 				new HtmlSourceProcessor()
 					.use([HtmlNodeType.Element], (path) => {
 						if (path.name() === "i") lines.push(path.loc()[0]);
 					})
-					.process(`<i></i>${separator}<i></i>${separator}\f<i></i>`);
+					.process(source);
 				return lines;
 			};
 			// HTML ends a line at a lone CR, but a form feed is only whitespace.
-			expect(htmlLines("\r")).toEqual([1, 2, 3]);
-			expect(htmlLines("\r\n")).toEqual([1, 2, 3]);
+			expect(htmlLines(fixture("html", "source-processor-node-path-counts-each-language-s-line-terminators-in-loc-cr"))).toEqual([1, 2, 3]);
+			expect(htmlLines(fixture("html", "source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf"))).toEqual([1, 2, 3]);
 		});
 
 		it("reads html nodes through the shared members", () => {
@@ -761,9 +761,7 @@ describe("SourceProcessor", () => {
 		});
 
 		it("reads a streamed block's start in its rule's enter", () => {
-			let rules = "";
-			for (let i = 0; i < 1800; i++) rules += `.c${i}{color:red}`;
-			const css = `@media screen{${rules}}`;
+			const css = fixture("css", "source-processor-node-path-reads-a-streamed-block-s-start-in-its-rule-s-enter");
 			/** @type {number[]} */
 			const starts = [];
 			new CssSourceProcessor()
@@ -1231,19 +1229,65 @@ describe("SourceProcessor", () => {
 			expect(outer.paragraphs).toBe(2);
 			const { A } = require("../../lib/html/syntax-parser");
 
-			expect(A.state).toBeUndefined();
-			const throwing = new HtmlSourceProcessor().use([HtmlNodeType.Element], () => {
+			// The run's state lives on the processor's own path; the language's
+			// path, which every processor reads through, never holds one.
+			expect(Object.prototype.hasOwnProperty.call(A, "state")).toBe(false);
+			/** @type {import("../../lib/html/syntax").SourceProcessor<{ paragraphs: number }>} */
+			const throwing = new HtmlSourceProcessor();
+			throwing.use([HtmlNodeType.Element], () => {
 				throw new Error("visitor");
 			});
 			expect(() => throwing.process(fixture("html", "source-processor-node-path-hands-every-visitor-the-run-s-state-typed-by-the-2"), { state: outer })).toThrow("visitor");
-			expect(A.state).toBeUndefined();
+			expect(Object.prototype.hasOwnProperty.call(A, "state")).toBe(false);
+		});
+
+		it("hands every printer the path its visitors get, state and all", () => {
+			const JavascriptSourceProcessor = require("../../lib/javascript/JavascriptSourceProcessor");
+			const { NodeType: JavascriptNodeType } = require("../../lib/javascript/syntax-parser");
+			const JS = fixture("javascript", "source-processor-node-path-hands-every-printer-the-path-its-visitors-get");
+
+			/** @type {[EXPECTED_ANY, string, number | undefined][]} processor, source, visited node type */
+			const runs = [
+				[new CssSourceProcessor(), CSS, CssNodeType.Ident],
+				[new HtmlSourceProcessor(), HTML, HtmlNodeType.Element],
+				[new JavascriptSourceProcessor(), JS, JavascriptNodeType.Identifier],
+				// No visitors: the JavaScript walk takes its print-only branch.
+				[new JavascriptSourceProcessor(), JS, undefined]
+			];
+			for (const [processor, source, type] of runs) {
+				/** @type {Set<unknown>} */
+				const visitorPaths = new Set();
+				/** @type {Set<unknown>} */
+				const printerPaths = new Set();
+				/** @type {unknown[]} */
+				const printerStates = [];
+				const printer = processor._printer || processor._loadPrinter();
+				processor._printer = (
+					/** @type {{ state: unknown }} */ path,
+					/** @type {unknown} */ writer
+				) => {
+					printerPaths.add(path);
+					printerStates.push(path.state);
+					return printer(path, writer);
+				};
+				if (type !== undefined) {
+					processor.use([type], (/** @type {unknown} */ path) => {
+						visitorPaths.add(path);
+					});
+				}
+				const state = { run: 1 };
+				processor.process(source, { mode: "minify", state });
+				expect(printerStates.length).toBeGreaterThan(0);
+				expect(printerStates.every((s) => s === state)).toBe(true);
+				expect(printerPaths.size).toBe(1);
+				if (type !== undefined) {
+					expect(visitorPaths.size).toBe(1);
+					expect([...visitorPaths][0]).toBe([...printerPaths][0]);
+				}
+			}
 		});
 
 		it("knows a streamed block's ancestors until it closes", () => {
-			let rules = "";
-			for (let i = 0; i < 1800; i++) {
-				rules += `.c${i}>d${i}:hover{color:red;margin:${i + 1}px}`;
-			}
 			let inside = 0;
 			/** @type {boolean[]} */
 			const after = [];
@@ -1259,7 +1303,7 @@ describe("SourceProcessor", () => {
 						inside++;
 					}
 				})
-				.process(`@media screen{${rules}}x{y:0px}`);
+				.process(fixture("css", "source-processor-node-path-knows-a-streamed-block-s-ancestors-until-it-closes"));
 			expect(inside).toBe(1800);
 			expect(after).toEqual([false]);
 		});
@@ -1346,7 +1390,7 @@ describe("SourceProcessor", () => {
 			const input = fixture("css", "source-processor-node-path-reads-css-nodes-through-the-shared-members-2");
 			// Leaves reuse ids that held lists in this parse, so a leaf reading
 			// its id's leftover list slots would report children.
-			new CssSourceProcessor().process(`a{b:${"f(".repeat(40)}${")".repeat(40)}}`);
+			new CssSourceProcessor().process(fixture("css", "source-processor-node-path-reads-css-nodes-through-the-shared-members"));
 			/** @type {Record<string, unknown>[]} */
 			const seen = [];
 			/** @type {string[]} */
@@ -1449,7 +1493,7 @@ describe("SourceProcessor", () => {
 
 		it("ends a streamed html walk mid-parse", () => {
 			// Past the node count where the walk streams during tree construction.
-			const html = `<ul>${"<li>x</li>".repeat(40000)}</ul>`;
+			const html = fixture("html", "source-processor-stop-ends-a-streamed-html-walk-mid-parse");
 			let seen = 0;
 			new HtmlSourceProcessor()
 				.use([HtmlNodeType.Element], (path) => {
@@ -1567,7 +1611,7 @@ describe("SourceProcessor", () => {
 	describe("empty and degenerate input", () => {
 		for (const [language, Processor] of LANGUAGES) {
 			it(`${language} prints empty input without failing`, () => {
-				const { code } = new Processor().process("", { mode: "minify" });
+				const { code } = new Processor().process(fixture("css", "source-processor-empty-and-degenerate-input-prints-empty-input-without-failing"), { mode: "minify" });
 				expect(typeof code).toBe("string");
 			});
 		}

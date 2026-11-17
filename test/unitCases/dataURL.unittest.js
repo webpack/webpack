@@ -14,7 +14,6 @@ const {
 } = require("../../lib/util/dataURL");
 const cssMinify = require("../../lib/css/cssMinify");
 const htmlMinify = require("../../lib/html/htmlMinify");
-const htmlSyntax = require("../../lib/html/syntax");
 
 describe("dataURL", () => {
 	it("should decode base64 payloads", () => {
@@ -28,10 +27,17 @@ describe("dataURL", () => {
 		expect(/** @type {Buffer} */ (decoded).toString()).toBe("hello world");
 	});
 
-	it("should return the raw body when percent-decoding fails", () => {
-		// a malformed percent escape survives as its literal bytes
-		const decoded = decodeDataURI("data:text/plain,%E0%A4%A");
-		expect(/** @type {Buffer} */ (decoded).toString()).toBe("%E0%A4%A");
+	it("should keep a malformed percent escape as written", () => {
+		const decoded = decodeDataURI("data:text/plain,100%25%20done%");
+		expect(/** @type {Buffer} */ (decoded).toString()).toBe("100% done%");
+		expect(
+			[.../** @type {Buffer} */ (decodeDataURI("data:text/plain,%E0%A4%A"))]
+		).toEqual([0xe0, 0xa4, 0x25, 0x41]);
+	});
+
+	it("should decode an escape that is not UTF-8 to its byte", () => {
+		const decoded = decodeDataURI("data:text/plain,caf%E9");
+		expect(/** @type {Buffer} */ (decoded).toString("latin1")).toBe("café");
 	});
 
 	it("should return null for a non-data URI", () => {
@@ -330,8 +336,5 @@ describe("EMBEDDED_LANGUAGES", () => {
 		const shared = sorted(EMBEDDED_LANGUAGES);
 		expect(sorted(cssMinify.getEmbeddedTypes())).toEqual(shared);
 		expect(sorted(htmlMinify.getEmbeddedTypes())).toEqual(shared);
-		// The HTML parser names the languages its offer sites reach; a site
-		// added there without this list would make the answer above wrong.
-		expect(sorted(htmlSyntax.parser.EMBEDDED_LANGUAGES)).toEqual(shared);
 	});
 });

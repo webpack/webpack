@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10.12345 9.99999">
+	<rect x="1.23456" width="2.0004" height="1e-5" transform="translate(1.23456 7.00049) matrix(-.026464 -1.45383 -1.28883 .029854 1465.123456 3284.4)"/>
+	<rect x="1e40" width="-0.00049" height="0.9999951" stroke-width="99.99999"/>
+	<rect width="2e3" height="1"/>
+	<text x="1.23456 2.34567px" y="-.00001">t</text>
+</svg>

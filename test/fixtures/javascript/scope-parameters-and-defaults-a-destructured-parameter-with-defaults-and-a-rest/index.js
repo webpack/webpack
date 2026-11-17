@@ -1,0 +1,1 @@
+function f(a, b = a, [c, d = c] = a, ...rest) { var a2; return a + c; }

@@ -1,0 +1,1 @@
+(function () { var { shorthand, key: [a, b, c], hello: { world } } = object; }());

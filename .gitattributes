@@ -56,7 +56,9 @@ bin/* eol=lf
 *.html eol=lf
 **/*webpack.lock.data/** -text
 test/fixtures/css/*/index.css -text
+test/fixtures/html/*/index.html -text
 test/fixtures/javascript/*/index.js -text
+test/fixtures/json/*/index.json -text
 test/fixtures/xml/*/index.xml -text
 test/configCases/css/parse-errors/line-terminators.css -text
 test/configCases/html/parse-errors/line-terminators.html -text

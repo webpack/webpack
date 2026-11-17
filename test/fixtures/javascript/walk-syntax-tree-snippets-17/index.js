@@ -1,0 +1,1 @@
+var g = function* () { yield* a; }; async function h() { await a; for await (const z of b); }

@@ -1,0 +1,1 @@
+for (const i of x) { let k; var j; } j;

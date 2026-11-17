@@ -112,6 +112,46 @@ exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-k
 
 exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-keeps-a-matrix3d-that-is-a-shear tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,11] colon[11,12] function[12,21] number[21,22] comma[22,23] number[23,24] comma[24,25] number[25,26] comma[26,27] number[27,28] comma[28,29] number[29,30] comma[30,31] number[31,32] comma[32,33] number[33,34] comma[34,35] number[35,36] comma[36,37] number[37,38] comma[38,39] number[39,41] comma[41,42] number[42,44] comma[44,45] number[45,47] comma[47,48] number[48,50] comma[50,51] number[51,53] comma[53,54] number[54,56] comma[56,57] number[57,59] right-parenthesis[59,60] right-curly-bracket[60,61] end=61"`;
 
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-keeps-a-rotation-about-no-axis parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"transform\\"],\\":\\",[\\"function\\",\\"rotate3d\\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\",\\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"dimension\\",\\"45\\",45,\\"integer\\",\\"deg\\"]]]]]"`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-keeps-a-rotation-about-no-axis parses 2`] = `""`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-keeps-a-rotation-about-no-axis prints {"mode":"minify"} 1`] = `"a{transform:rotate3d(1,1,0,45deg)}"`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-keeps-a-rotation-about-no-axis tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,11] colon[11,12] function[12,21] number[21,22] comma[22,23] number[23,24] comma[24,25] number[25,26] comma[26,27] dimension[27,32|29,32] right-parenthesis[32,33] right-curly-bracket[33,34] end=34"`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-a-quarter-turn parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"transform\\"],\\":\\",[\\"function\\",\\"matrix\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\",\\",[\\"number\\",\\"-1\\",-1,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]"`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-a-quarter-turn parses 2`] = `""`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-a-quarter-turn prints {"mode":"minify"} 1`] = `"a{transform:rotate(90deg)}"`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-a-quarter-turn tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,11] colon[11,12] function[12,19] number[19,20] comma[20,21] number[21,22] comma[22,23] number[23,25] comma[25,26] number[26,27] comma[27,28] number[28,29] comma[29,30] number[30,31] right-parenthesis[31,32] right-curly-bracket[32,33] end=33"`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-a-scale parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"transform\\"],\\":\\",[\\"function\\",\\"matrix\\",[\\"number\\",\\"2\\",2,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"3\\",3,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]"`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-a-scale parses 2`] = `""`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-a-scale prints {"mode":"minify"} 1`] = `"a{transform:scale(2,3)}"`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-a-scale tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,11] colon[11,12] function[12,19] number[19,20] comma[20,21] number[21,22] comma[22,23] number[23,24] comma[24,25] number[25,26] comma[26,27] number[27,28] comma[28,29] number[29,30] right-parenthesis[30,31] right-curly-bracket[31,32] end=32"`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-three-quarters parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"transform\\"],\\":\\",[\\"function\\",\\"matrix\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"-1\\",-1,\\"integer\\"],\\",\\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]"`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-three-quarters parses 2`] = `""`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-three-quarters prints {"mode":"minify"} 1`] = `"a{transform:rotate(270deg)}"`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-three-quarters tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,11] colon[11,12] function[12,19] number[19,20] comma[20,21] number[21,23] comma[23,24] number[24,25] comma[25,26] number[26,27] comma[27,28] number[28,29] comma[29,30] number[30,31] right-parenthesis[31,32] right-curly-bracket[32,33] end=33"`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-reduces-matrix3d-to-a-scale3d parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"transform\\"],\\":\\",[\\"function\\",\\"matrix3d\\",[\\"number\\",\\"2\\",2,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"3\\",3,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"4\\",4,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]]]]"`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-reduces-matrix3d-to-a-scale3d parses 2`] = `""`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-reduces-matrix3d-to-a-scale3d prints {"mode":"minify"} 1`] = `"a{transform:scale3d(2,3,4)}"`;
+
+exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-reduces-matrix3d-to-a-scale3d tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,11] colon[11,12] function[12,21] number[21,22] comma[22,23] number[23,24] comma[24,25] number[25,26] comma[26,27] number[27,28] comma[28,29] number[29,30] comma[30,31] number[31,32] comma[32,33] number[33,34] comma[34,35] number[35,36] comma[36,37] number[37,38] comma[38,39] number[39,40] comma[40,41] number[41,42] comma[42,43] number[43,44] comma[44,45] number[45,46] comma[46,47] number[47,48] comma[48,49] number[49,50] comma[50,51] number[51,52] right-parenthesis[52,53] right-curly-bracket[53,54] end=54"`;
+
 exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-writes-matrix-to-a-translate-as-the parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"transform\\"],\\":\\",[\\"function\\",\\"matrix\\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\",\\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\",\\",[\\"number\\",\\"10\\",10,\\"integer\\"],\\",\\",[\\"number\\",\\"20\\",20,\\"integer\\"]]]]]"`;
 
 exports[`CSS syntax — invariants compare-css-tools-the-cold-branches-fixture-writes-matrix-to-a-translate-as-the parses 2`] = `""`;
@@ -199,6 +239,166 @@ exports[`CSS syntax — invariants compare-html-tools-what-a-document-says-repor
 exports[`CSS syntax — invariants compare-html-tools-what-a-document-says-reports-a-printer-that-drops-a-word-an prints {"mode":"minify"} 1`] = `".a{color:blue}"`;
 
 exports[`CSS syntax — invariants compare-html-tools-what-a-document-says-reports-a-printer-that-drops-a-word-an tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,8] colon[8,9] ident[9,13] right-curly-bracket[13,14] end=14"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-abs parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"abs\\",[\\"dimension\\",\\"-5\\",-5,\\"integer\\",\\"px\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-abs parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-abs prints {"mode":"minify"} 1`] = `"a{width:5px}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-abs tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,12] dimension[12,16|14,16] right-parenthesis[16,17] right-curly-bracket[17,18] end=18"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-acos parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"rotate\\"],\\":\\",[\\"function\\",\\"acos\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-acos parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-acos prints {"mode":"minify"} 1`] = `"a{rotate:90deg}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-acos tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,8] colon[8,9] function[9,14] number[14,15] right-parenthesis[15,16] right-curly-bracket[16,17] end=17"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-asin parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"rotate\\"],\\":\\",[\\"function\\",\\"asin\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-asin parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-asin prints {"mode":"minify"} 1`] = `"a{rotate:90deg}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-asin tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,8] colon[8,9] function[9,14] number[14,15] right-parenthesis[15,16] right-curly-bracket[16,17] end=17"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-atan parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"rotate\\"],\\":\\",[\\"function\\",\\"atan\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-atan parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-atan prints {"mode":"minify"} 1`] = `"a{rotate:45deg}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-atan tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,8] colon[8,9] function[9,14] number[14,15] right-parenthesis[15,16] right-curly-bracket[16,17] end=17"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-atan2 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"rotate\\"],\\":\\",[\\"function\\",\\"atan2\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"],\\",\\",[\\"dimension\\",\\"-1\\",-1,\\"integer\\",\\"px\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-atan2 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-atan2 prints {"mode":"minify"} 1`] = `"a{rotate:135deg}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-atan2 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,8] colon[8,9] function[9,15] dimension[15,18|16,18] comma[18,19] dimension[19,23|21,23] right-parenthesis[23,24] right-curly-bracket[24,25] end=25"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-clamp parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"clamp\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"],\\",\\",[\\"dimension\\",\\"5\\",5,\\"integer\\",\\"px\\"],\\",\\",[\\"dimension\\",\\"3\\",3,\\"integer\\",\\"px\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-clamp parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-clamp prints {"mode":"minify"} 1`] = `"a{width:3px}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-clamp tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,14] dimension[14,17|15,17] comma[17,18] dimension[18,21|19,21] comma[21,22] dimension[22,25|23,25] right-parenthesis[25,26] right-curly-bracket[26,27] end=27"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-cos parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"function\\",\\"cos\\",[\\"number\\",\\"0\\",0,\\"integer\\"]],\\"*\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-cos parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-cos prints {"mode":"minify"} 1`] = `"a{width:1px}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-cos tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,13] function[13,17] number[17,18] right-parenthesis[18,19] delim[19,20] dimension[20,23|21,23] right-parenthesis[23,24] right-curly-bracket[24,25] end=25"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-exp parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"function\\",\\"exp\\",[\\"number\\",\\"0\\",0,\\"integer\\"]],\\"*\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-exp parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-exp prints {"mode":"minify"} 1`] = `"a{width:1px}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-exp tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,13] function[13,17] number[17,18] right-parenthesis[18,19] delim[19,20] dimension[20,23|21,23] right-parenthesis[23,24] right-curly-bracket[24,25] end=25"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-hypot parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"hypot\\",[\\"dimension\\",\\"3\\",3,\\"integer\\",\\"px\\"],\\",\\",[\\"dimension\\",\\"4\\",4,\\"integer\\",\\"px\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-hypot parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-hypot prints {"mode":"minify"} 1`] = `"a{width:5px}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-hypot tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,14] dimension[14,17|15,17] comma[17,18] dimension[18,21|19,21] right-parenthesis[21,22] right-curly-bracket[22,23] end=23"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-log parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"function\\",\\"log\\",[\\"number\\",\\"8\\",8,\\"integer\\"],\\",\\",[\\"number\\",\\"2\\",2,\\"integer\\"]],\\"*\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-log parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-log prints {"mode":"minify"} 1`] = `"a{width:3px}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-log tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,13] function[13,17] number[17,18] comma[18,19] number[19,20] right-parenthesis[20,21] delim[21,22] dimension[22,25|23,25] right-parenthesis[25,26] right-curly-bracket[26,27] end=27"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-max parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"max\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"],\\",\\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"px\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-max parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-max prints {"mode":"minify"} 1`] = `"a{width:2px}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-max tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,12] dimension[12,15|13,15] comma[15,16] dimension[16,19|17,19] right-parenthesis[19,20] right-curly-bracket[20,21] end=21"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-min parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"min\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"],\\",\\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"px\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-min parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-min prints {"mode":"minify"} 1`] = `"a{width:1px}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-min tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,12] dimension[12,15|13,15] comma[15,16] dimension[16,19|17,19] right-parenthesis[19,20] right-curly-bracket[20,21] end=21"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-mod parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"margin-left\\"],\\":\\",[\\"function\\",\\"mod\\",[\\"dimension\\",\\"-7\\",-7,\\"integer\\",\\"px\\"],\\",\\",[\\"dimension\\",\\"3\\",3,\\"integer\\",\\"px\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-mod parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-mod prints {"mode":"minify"} 1`] = `"a{margin-left:2px}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-mod tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,13] colon[13,14] function[14,18] dimension[18,22|20,22] comma[22,23] dimension[23,26|24,26] right-parenthesis[26,27] right-curly-bracket[27,28] end=28"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-pow parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"function\\",\\"pow\\",[\\"number\\",\\"2\\",2,\\"integer\\"],\\",\\",[\\"number\\",\\"3\\",3,\\"integer\\"]],\\"*\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-pow parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-pow prints {"mode":"minify"} 1`] = `"a{width:8px}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-pow tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,13] function[13,17] number[17,18] comma[18,19] number[19,20] right-parenthesis[20,21] delim[21,22] dimension[22,25|23,25] right-parenthesis[25,26] right-curly-bracket[26,27] end=27"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-rem parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"margin-left\\"],\\":\\",[\\"function\\",\\"rem\\",[\\"dimension\\",\\"7\\",7,\\"integer\\",\\"px\\"],\\",\\",[\\"dimension\\",\\"3\\",3,\\"integer\\",\\"px\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-rem parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-rem prints {"mode":"minify"} 1`] = `"a{margin-left:1px}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-rem tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,13] colon[13,14] function[14,18] dimension[18,21|19,21] comma[21,22] dimension[22,25|23,25] right-parenthesis[25,26] right-curly-bracket[26,27] end=27"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-round parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"margin-left\\"],\\":\\",[\\"function\\",\\"round\\",[\\"dimension\\",\\"5\\",5,\\"integer\\",\\"px\\"],\\",\\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"px\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-round parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-round prints {"mode":"minify"} 1`] = `"a{margin-left:6px}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-round tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,13] colon[13,14] function[14,20] dimension[20,23|21,23] comma[23,24] dimension[24,27|25,27] right-parenthesis[27,28] right-curly-bracket[28,29] end=29"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-sign parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"z-index\\"],\\":\\",[\\"function\\",\\"sign\\",[\\"dimension\\",\\"5\\",5,\\"integer\\",\\"px\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-sign parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-sign prints {"mode":"minify"} 1`] = `"a{z-index:1}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-sign tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,9] colon[9,10] function[10,15] dimension[15,18|16,18] right-parenthesis[18,19] right-curly-bracket[19,20] end=20"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-sin parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"function\\",\\"sin\\",[\\"dimension\\",\\"90\\",90,\\"integer\\",\\"deg\\"]],\\"*\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-sin parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-sin prints {"mode":"minify"} 1`] = `"a{width:1px}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-sin tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,13] function[13,17] dimension[17,22|19,22] right-parenthesis[22,23] delim[23,24] dimension[24,27|25,27] right-parenthesis[27,28] right-curly-bracket[28,29] end=29"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-sqrt parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"function\\",\\"sqrt\\",[\\"number\\",\\"4\\",4,\\"integer\\"]],\\"*\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-sqrt parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-sqrt prints {"mode":"minify"} 1`] = `"a{width:2px}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-sqrt tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,13] function[13,18] number[18,19] right-parenthesis[19,20] delim[20,21] dimension[21,24|22,24] right-parenthesis[24,25] right-curly-bracket[25,26] end=26"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-tan parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"function\\",\\"tan\\",[\\"dimension\\",\\"45\\",45,\\"integer\\",\\"deg\\"]],\\"*\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-tan parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-tan prints {"mode":"minify"} 1`] = `"a{width:1px}"`;
+
+exports[`CSS syntax — invariants css-data-the-math-folds-fold-tan tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,13] function[13,17] dimension[17,22|19,22] right-parenthesis[22,23] delim[23,24] dimension[24,27|25,27] right-parenthesis[27,28] right-curly-bracket[28,29] end=29"`;
 
 exports[`CSS syntax — invariants css-data-the-names-the-printer-s-shape-tables-hold-leave-a-name-longer-than-any parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"abcdefghijklmnopqrstuvwxyzabcdefgh\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\";\\",[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
 
@@ -6879,6 +7079,42 @@ exports[`CSS syntax — invariants css-syntax-minify-a-rule-gone-from-the-output
 
 exports[`CSS syntax — invariants css-syntax-minify-a-rule-gone-from-the-output-parts-no-declarations tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,8] colon[8,9] ident[9,12] semicolon[12,13] delim[13,14] ident[14,15] left-curly-bracket[15,16] right-curly-bracket[16,17] ident[17,22] colon[22,23] ident[23,28] right-curly-bracket[28,29] whitespace[29,30] delim[30,31] ident[31,32] left-curly-bracket[32,33] ident[33,38] colon[38,39] ident[39,42] semicolon[42,43] delim[43,44] ident[44,45] left-curly-bracket[45,46] ident[46,51] colon[51,52] ident[52,56] right-curly-bracket[56,57] ident[57,62] colon[62,63] ident[63,68] semicolon[68,69] delim[69,70] ident[70,71] left-curly-bracket[71,72] ident[72,77] colon[77,78] ident[78,82] right-curly-bracket[82,83] right-curly-bracket[83,84] whitespace[84,85] delim[85,86] ident[86,87] left-curly-bracket[87,88] ident[88,90] colon[90,91] number[91,92] semicolon[92,93] ident[93,95] colon[95,96] number[96,97] semicolon[97,98] ident[98,100] colon[100,101] number[101,102] semicolon[102,103] ident[103,105] colon[105,106] number[106,107] semicolon[107,108] ident[108,110] colon[110,111] number[111,112] semicolon[112,113] ident[113,115] colon[115,116] number[116,117] semicolon[117,118] ident[118,120] colon[120,121] number[121,122] semicolon[122,123] ident[123,125] colon[125,126] number[126,127] semicolon[127,128] ident[128,130] colon[130,131] number[131,132] semicolon[132,133] ident[133,135] colon[135,136] number[136,137] semicolon[137,138] ident[138,141] colon[141,142] number[142,143] semicolon[143,144] ident[144,147] colon[147,148] number[148,149] semicolon[149,150] ident[150,153] colon[153,154] number[154,155] semicolon[155,156] ident[156,159] colon[159,160] number[160,161] semicolon[161,162] ident[162,165] colon[165,166] number[166,167] semicolon[167,168] ident[168,171] colon[171,172] number[172,173] semicolon[173,174] ident[174,177] colon[177,178] number[178,179] semicolon[179,180] ident[180,183] colon[183,184] number[184,185] semicolon[185,186] ident[186,189] colon[189,190] number[190,191] semicolon[191,192] ident[192,195] colon[195,196] number[196,197] semicolon[197,198] ident[198,201] colon[201,202] number[202,203] semicolon[203,204] ident[204,207] colon[207,208] number[208,209] semicolon[209,210] ident[210,213] colon[213,214] number[214,215] semicolon[215,216] ident[216,219] colon[219,220] number[220,221] semicolon[221,222] ident[222,225] colon[225,226] number[226,227] semicolon[227,228] ident[228,231] colon[231,232] number[232,233] semicolon[233,234] ident[234,237] colon[237,238] number[238,239] semicolon[239,240] ident[240,243] colon[243,244] number[244,245] semicolon[245,246] ident[246,249] colon[249,250] number[250,251] semicolon[251,252] ident[252,255] colon[255,256] number[256,257] semicolon[257,258] ident[258,261] colon[261,262] number[262,263] semicolon[263,264] ident[264,267] colon[267,268] number[268,269] semicolon[269,270] ident[270,273] colon[273,274] number[274,275] semicolon[275,276] ident[276,279] colon[279,280] number[280,281] semicolon[281,282] ident[282,285] colon[285,286] number[286,287] semicolon[287,288] ident[288,291] colon[291,292] number[292,293] semicolon[293,294] ident[294,297] colon[297,298] number[298,299] semicolon[299,300] ident[300,303] colon[303,304] number[304,305] semicolon[305,306] ident[306,309] colon[309,310] number[310,311] semicolon[311,312] ident[312,315] colon[315,316] number[316,317] semicolon[317,318] ident[318,323] colon[323,324] ident[324,327] semicolon[327,328] delim[328,329] ident[329,330] left-curly-bracket[330,331] ident[331,336] colon[336,337] ident[337,341] right-curly-bracket[341,342] ident[342,347] colon[347,348] ident[348,353] semicolon[353,354] delim[354,355] ident[355,356] left-curly-bracket[356,357] ident[357,362] colon[362,363] ident[363,367] right-curly-bracket[367,368] right-curly-bracket[368,369] whitespace[369,370] end=370"`;
 
+exports[`CSS syntax — invariants css-syntax-minify-a-run-of-joined-layer-blocks-reads-only-the-children-each-join-adds parses 1`] = `
+"length 2109, sha256 53968352c90a2d09
+[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a\\"]],[\\".\\",[\\"ident\\",\\"c0\\"],[\\"{}\\",[\\"ident\\",\\"z-index\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]],[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"print\\"],[\\"{}\\",\\".\\",[\\"ident\\",\\"m0\\"],[\\"{}\\",[\\"iden
+…
+]],[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"print\\"]],[\\".\\",[\\"ident\\",\\"x2\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]],[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-run-of-joined-layer-blocks-reads-only-the-children-each-join-adds parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-run-of-joined-layer-blocks-reads-only-the-children-each-join-adds prints {"mode":"minify"} 1`] = `"@layer a{.c0{z-index:0}@media print{.m0{left:0}}.c1{z-index:1}@media print{.m1{left:1px}.m2{left:2px}}.c3{z-index:3}@media print{.m3{left:3px}}.c4{z-index:4}@media print{.m4{left:4px}}.c5{z-index:5}@media print{.m5{left:5px}}.c2{z-index:2}}@media print{.x0,.x1,.x2{top:0}color:red}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-run-of-joined-layer-blocks-reads-only-the-children-each-join-adds tokenizes 1`] = `
+"length 4024, sha256 77b6181195781929
+at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] delim[9,10] ident[10,12] left-curly-bracket[12,13] ident[13,20] colon[20,21] number[21,22] right-curly-bracket[22,23] at-keyword[23,2
+…
+ ident[410,412] left-curly-bracket[412,413] ident[413,416] colon[416,417] number[417,418] right-curly-bracket[418,419] ident[419,424] colon[424,425] ident[425,428] right-curly-bracket[428,429] end=429"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-run-of-nested-layer-blocks-grows-the-block-each-join-nests-in-place parses 1`] = `
+"length 2208, sha256 e25afc89f2541797
+[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a\\"]],[[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"print\\"],[\\"{}\\",\\".\\",[\\"ident\\",\\"c0\\"],[\\"{}\\",[\\"ident\\",\\"z-index\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"id
+…
+\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a\\"]],[[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"print\\"],[\\"{}\\",\\".\\",[\\"ident\\",\\"f1\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-run-of-nested-layer-blocks-grows-the-block-each-join-nests-in-place parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-run-of-nested-layer-blocks-grows-the-block-each-join-nests-in-place prints {"mode":"minify"} 1`] = `"@layer a{@media print{.c0{z-index:0}.c2{z-index:2}.c3{z-index:3}.c1{z-index:1}@supports (display:grid){.s0{top:0}.s1{top:1px}.s2{top:2px}}.d{top:0}}.e{top:0}@media print{.f0,.f1{top:0}}}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-run-of-nested-layer-blocks-grows-the-block-each-join-nests-in-place tokenizes 1`] = `
+"length 4589, sha256 bfae7cf0317101ac
+at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] at-keyword[9,15] whitespace[15,16] ident[16,21] left-curly-bracket[21,22] delim[22,23] ident[23,25] left-curly-bracket[25,26] ident[2
+…
+] delim[474,475] ident[475,477] left-curly-bracket[477,478] ident[478,481] colon[481,482] number[482,483] right-curly-bracket[483,484] right-curly-bracket[484,485] right-curly-bracket[485,486] end=486"
+`;
+
 exports[`CSS syntax — invariants css-syntax-minify-a-selector-list-a-pseudo-does-not-take-writes-a-lang-list-as parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\":\\",[\\"function\\",\\"lang\\",[\\"ident\\",\\"en\\"]]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-a-selector-list-a-pseudo-does-not-take-writes-a-lang-list-as parses 2`] = `""`;
@@ -13098,6 +13334,26 @@ exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-keeps-the-
 exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-keeps-the-universal-before-a-pseudo-class-naming-host prints {"mode":"minify"} 1`] = `":is(:host,.a){*&{color:red}}:where(:host){&*{color:red}}:not(.a){*&{color:red}}*:is(:host,.b){color:red}:not(.b){color:red}:hover.c{color:red}:hover::host{color:red}*:hover:host{color:red}"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-keeps-the-universal-before-a-pseudo-class-naming-host tokenizes 1`] = `"colon[0,1] function[1,4] colon[4,5] ident[5,9] comma[9,10] delim[10,11] ident[11,12] right-parenthesis[12,13] left-curly-bracket[13,14] delim[14,15] delim[15,16] left-curly-bracket[16,17] ident[17,22] colon[22,23] ident[23,26] right-curly-bracket[26,27] right-curly-bracket[27,28] colon[28,29] function[29,35] colon[35,36] ident[36,40] right-parenthesis[40,41] left-curly-bracket[41,42] delim[42,43] delim[43,44] left-curly-bracket[44,45] ident[45,50] colon[50,51] ident[51,54] right-curly-bracket[54,55] right-curly-bracket[55,56] colon[56,57] function[57,61] delim[61,62] ident[62,63] right-parenthesis[63,64] left-curly-bracket[64,65] delim[65,66] delim[66,67] left-curly-bracket[67,68] ident[68,73] colon[73,74] ident[74,77] right-curly-bracket[77,78] right-curly-bracket[78,79] delim[79,80] colon[80,81] function[81,84] colon[84,85] ident[85,89] comma[89,90] delim[90,91] ident[91,92] right-parenthesis[92,93] left-curly-bracket[93,94] ident[94,99] colon[99,100] ident[100,103] right-curly-bracket[103,104] delim[104,105] colon[105,106] function[106,110] delim[110,111] ident[111,112] right-parenthesis[112,113] left-curly-bracket[113,114] ident[114,119] colon[119,120] ident[120,123] right-curly-bracket[123,124] delim[124,125] colon[125,126] ident[126,131] colon[131,132] function[132,135] delim[135,136] ident[136,137] right-parenthesis[137,138] left-curly-bracket[138,139] ident[139,144] colon[144,145] ident[145,148] right-curly-bracket[148,149] delim[149,150] colon[150,151] ident[151,156] colon[156,157] colon[157,158] ident[158,162] left-curly-bracket[162,163] ident[163,168] colon[168,169] ident[169,172] right-curly-bracket[172,173] delim[173,174] colon[174,175] ident[175,180] colon[180,181] ident[181,185] left-curly-bracket[185,186] ident[186,191] colon[191,192] ident[192,195] right-curly-bracket[195,196] end=196"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-reads-a-block-s-order-once-for-every-rule-nested-in-it parses 1`] = `
+"length 1245, sha256 799498a23df6b703
+[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"p\\"]],[\\".\\",[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]],\\".\\",[\\"ident\\",\\"c0\\"],[\\"{}\\",[\\"ident\\",\\"z-index\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]],\\".\\",[\\"ident
+…
+dimension\\",\\"0\\",0,\\"integer\\",\\"px\\"]],\\".\\",[\\"ident\\",\\"d1\\"],[\\"{}\\",[\\"ident\\",\\"left\\"],\\":\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]],\\".\\",[\\"ident\\",\\"d2\\"],[\\"{}\\",[\\"ident\\",\\"left\\"],\\":\\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"px\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-reads-a-block-s-order-once-for-every-rule-nested-in-it parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-reads-a-block-s-order-once-for-every-rule-nested-in-it prints {"mode":"minify","environment":{"browsers":["chrome 100","firefox 100","safari 15.4"]}} 1`] = `".p{color:red}.p .c0{z-index:0}.p .c1{z-index:1}.p .c2{z-index:2}.p .c3{z-index:3}.p .a{top:0}.q{.b{top:0}color:red;.d0{left:0}.d1{left:1px}.d2{left:2px}}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-reads-a-block-s-order-once-for-every-rule-nested-in-it prints {"mode":"minify"} 1`] = `".p{color:red;.c0{z-index:0}.c1{z-index:1}.c2{z-index:2}.c3{z-index:3}.a{top:0}}.q{.b{top:0}color:red;.d0{left:0}.d1{left:1px}.d2{left:2px}}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-reads-a-block-s-order-once-for-every-rule-nested-in-it tokenizes 1`] = `
+"length 2084, sha256 df5335b24ac96f60
+delim[0,1] ident[1,2] left-curly-bracket[2,3] delim[3,4] ident[4,5] left-curly-bracket[5,6] ident[6,9] colon[9,10] number[10,11] right-curly-bracket[11,12] delim[12,13] ident[13,15] left-curly-bracket
+…
+ly-bracket[191,192] delim[192,193] ident[193,195] left-curly-bracket[195,196] ident[196,200] colon[200,201] dimension[201,204|202,204] right-curly-bracket[204,205] right-curly-bracket[205,206] end=206"
+`;
 
 exports[`CSS syntax — invariants css-syntax-minify-math-and-numbers-past-what-a-double-says-exactly-clamps-a parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"function\\",\\"color-mix\\",[\\"ident\\",\\"in\\"],\\" \\",[\\"ident\\",\\"srgb\\"],\\",\\",[\\"function\\",\\"rgb\\",[\\"number\\",\\"300\\",300,\\"integer\\"],\\" \\",[\\"number\\",\\"-5\\",-5,\\"integer\\"],\\" \\",[\\"number\\",\\"0\\",0,\\"integer\\"]],\\",\\",[\\"ident\\",\\"blue\\"]]]]]"`;
 
@@ -36031,6 +36287,60 @@ exports[`CSS syntax — invariants css-syntax-minify-transforms-in-process-write
 
 exports[`CSS syntax — invariants css-syntax-minify-transforms-in-process-writes-the-named-function-a-matrix-says-13 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,11] colon[11,12] function[12,19] number[19,20] comma[20,21] number[21,22] comma[22,23] number[23,24] comma[24,25] number[25,26] comma[26,27] number[27,28] right-parenthesis[28,29] right-curly-bracket[29,30] end=30"`;
 
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-read-only-the-children-each-join-adds parses 1`] = `
+"length 2393, sha256 2fb326a68f10d757
+[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a\\"]],[\\".\\",[\\"ident\\",\\"a0\\"],[\\"{}\\",[\\"ident\\",\\"z-index\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"b\\"]],[\\".\\",[\\"ident\\",\\"b0\\"],[\\"{}\\",[\\"ident\\",\\"z-ind
+…
+ent\\",\\"c\\"]],[\\".\\",[\\"ident\\",\\"x\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"c\\"]],[\\".\\",[\\"ident\\",\\"y\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-read-only-the-children-each-join-adds parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-read-only-the-children-each-join-adds prints {"mode":"minify"} 1`] = `"@layer a{.a0{z-index:0}.a2{z-index:2}.a3{z-index:3}.a1{z-index:1}@media print{.m0{top:0}.m1{top:1px}.m2{top:2px}}}@layer b{.b0{z-index:0}.b1{z-index:1}.b2{z-index:2}.b3{z-index:3}@media print{.n0{top:0}.n1{top:1px}.n2{top:2px}}}@layer c{.x,.y{top:0}}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-read-only-the-children-each-join-adds tokenizes 1`] = `
+"length 4916, sha256 132afdede3f3ceb9
+at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] delim[9,10] ident[10,12] left-curly-bracket[12,13] ident[13,20] colon[20,21] number[21,22] right-curly-bracket[22,23] right-curly-bra
+…
+9] left-curly-bracket[469,470] delim[470,471] ident[471,472] left-curly-bracket[472,473] ident[473,476] colon[476,477] number[477,478] right-curly-bracket[478,479] right-curly-bracket[479,480] end=480"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-a-nested-block-grows-once parses 1`] = `
+"length 3828, sha256 a387f14b42e49bba
+[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a\\"]],[[\\"at-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"print\\"],[\\"{}\\",\\".\\",[\\"ident\\",\\"a10\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"b\\"]],[
+…
+-keyword\\",\\"media\\"],\\" \\",[\\"ident\\",\\"screen\\"],[\\"{}\\",[\\"at-keyword\\",\\"supports\\"],\\" \\",[\\"()\\",[\\"ident\\",\\"display\\"],\\":\\",[\\"ident\\",\\"grid\\"]],[\\"{}\\",\\".\\",[\\"ident\\",\\"d1\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-a-nested-block-grows-once parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-a-nested-block-grows-once prints {"mode":"minify"} 1`] = `"@layer a{@media print{.a10,.a7,.a8,.a9{color:red}.x{top:0}.c1,.c2,.c3,.e,.f{color:red}.c1,.c2{color:blue}}}@layer b{@media print{@supports (display:grid){.b10,.b7,.b8,.b9{color:red}}}@media screen{.b9,.d1,.d2,.d3,.d4{color:red}@supports (display:grid){.d1{color:red}}}}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-a-nested-block-grows-once tokenizes 1`] = `
+"length 8483, sha256 6157d17301373795
+at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] at-keyword[9,15] whitespace[15,16] ident[16,21] left-curly-bracket[21,22] delim[22,23] ident[23,26] left-curly-bracket[26,27] ident[2
+…
+29] left-curly-bracket[929,930] ident[930,935] colon[935,936] ident[936,939] right-curly-bracket[939,940] right-curly-bracket[940,941] right-curly-bracket[941,942] right-curly-bracket[942,943] end=943"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-they-grow-once parses 1`] = `
+"length 2118, sha256 f72013fd14318712
+[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a\\"]],[\\".\\",[\\"ident\\",\\"a10\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"b\\"]],[\\".\\",[\\"ident\\",\\"b10\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"id
+…
+,[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"c\\"]],[]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"c\\"]],[\\".\\",[\\"ident\\",\\"y\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-they-grow-once parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-they-grow-once prints {"mode":"minify"} 1`] = `"@layer a{.a10,.a7,.a8,.a9{color:red}.x{top:0}.c1,.c2,.c3{color:red}.c1,.c2{color:blue}}@layer b{.b10,.b7,.b8,.b9{color:red}.b9,.d1,.d2,.d3{top:0}}@layer c{.y{top:0}}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-two-layers-gathered-in-turn-settle-the-list-they-grow-once tokenizes 1`] = `
+"length 4633, sha256 07a7ae33e452bb61
+at-keyword[0,6] whitespace[6,7] ident[7,8] left-curly-bracket[8,9] delim[9,10] ident[10,13] left-curly-bracket[13,14] ident[14,19] colon[19,20] ident[20,23] right-curly-bracket[23,24] right-curly-brac
+…
+1] left-curly-bracket[431,432] delim[432,433] ident[433,434] left-curly-bracket[434,435] ident[435,438] colon[438,439] number[439,440] right-curly-bracket[440,441] right-curly-bracket[441,442] end=442"
+`;
+
 exports[`CSS syntax — invariants css-syntax-minify-unused-symbols-keeps-the-selectors-of-a-list-that-can-still parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"gone\\"],\\",\\",\\".\\",[\\"ident\\",\\"kept\\"]],[[\\"ident\\",\\"margin\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-unused-symbols-keeps-the-selectors-of-a-list-that-can-still parses 2`] = `""`;
@@ -45066,158 +45376,6 @@ exports[`CSS syntax — invariants css-syntax-what-a-minifying-print-reads-off-t
 
 exports[`CSS syntax — invariants css-syntax-what-a-minifying-print-reads-off-the-parse-seeds-the-walk-with-the tokenizes 1`] = `"at-keyword[0,6] whitespace[6,7] left-parenthesis[7,8] ident[8,11] right-parenthesis[11,12] left-curly-bracket[12,13] colon[13,14] ident[14,17] left-curly-bracket[17,18] ident[18,19] colon[19,20] ident[20,21] right-curly-bracket[21,22] right-curly-bracket[22,23] at-keyword[23,36] whitespace[36,37] ident[37,40] whitespace[40,41] left-parenthesis[41,42] ident[42,51] colon[51,52] dimension[52,55|53,55] right-parenthesis[55,56] semicolon[56,57] at-keyword[57,73] whitespace[73,74] colon[74,75] ident[75,78] whitespace[78,79] ident[79,81] semicolon[81,82] end=82"`;
 
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"abs\\",[\\"dimension\\",\\"-5\\",-5,\\"integer\\",\\"px\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a prints {"mode":"minify"} 1`] = `"a{width:5px}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,12] dimension[12,16|14,16] right-parenthesis[16,17] right-curly-bracket[17,18] end=18"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-2 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"rotate\\"],\\":\\",[\\"function\\",\\"acos\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-2 parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-2 prints {"mode":"minify"} 1`] = `"a{rotate:90deg}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-2 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,8] colon[8,9] function[9,14] number[14,15] right-parenthesis[15,16] right-curly-bracket[16,17] end=17"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-3 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"rotate\\"],\\":\\",[\\"function\\",\\"asin\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-3 parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-3 prints {"mode":"minify"} 1`] = `"a{rotate:90deg}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-3 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,8] colon[8,9] function[9,14] number[14,15] right-parenthesis[15,16] right-curly-bracket[16,17] end=17"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-4 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"rotate\\"],\\":\\",[\\"function\\",\\"atan\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-4 parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-4 prints {"mode":"minify"} 1`] = `"a{rotate:45deg}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-4 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,8] colon[8,9] function[9,14] number[14,15] right-parenthesis[15,16] right-curly-bracket[16,17] end=17"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-5 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"rotate\\"],\\":\\",[\\"function\\",\\"atan2\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"],\\",\\",[\\"dimension\\",\\"-1\\",-1,\\"integer\\",\\"px\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-5 parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-5 prints {"mode":"minify"} 1`] = `"a{rotate:135deg}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-5 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,8] colon[8,9] function[9,15] dimension[15,18|16,18] comma[18,19] dimension[19,23|21,23] right-parenthesis[23,24] right-curly-bracket[24,25] end=25"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-6 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"clamp\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"],\\",\\",[\\"dimension\\",\\"5\\",5,\\"integer\\",\\"px\\"],\\",\\",[\\"dimension\\",\\"3\\",3,\\"integer\\",\\"px\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-6 parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-6 prints {"mode":"minify"} 1`] = `"a{width:3px}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-6 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,14] dimension[14,17|15,17] comma[17,18] dimension[18,21|19,21] comma[21,22] dimension[22,25|23,25] right-parenthesis[25,26] right-curly-bracket[26,27] end=27"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-7 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"function\\",\\"cos\\",[\\"number\\",\\"0\\",0,\\"integer\\"]],\\"*\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-7 parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-7 prints {"mode":"minify"} 1`] = `"a{width:1px}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-7 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,13] function[13,17] number[17,18] right-parenthesis[18,19] delim[19,20] dimension[20,23|21,23] right-parenthesis[23,24] right-curly-bracket[24,25] end=25"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-8 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"function\\",\\"exp\\",[\\"number\\",\\"0\\",0,\\"integer\\"]],\\"*\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-8 parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-8 prints {"mode":"minify"} 1`] = `"a{width:1px}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-8 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,13] function[13,17] number[17,18] right-parenthesis[18,19] delim[19,20] dimension[20,23|21,23] right-parenthesis[23,24] right-curly-bracket[24,25] end=25"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-9 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"hypot\\",[\\"dimension\\",\\"3\\",3,\\"integer\\",\\"px\\"],\\",\\",[\\"dimension\\",\\"4\\",4,\\"integer\\",\\"px\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-9 parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-9 prints {"mode":"minify"} 1`] = `"a{width:5px}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-9 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,14] dimension[14,17|15,17] comma[17,18] dimension[18,21|19,21] right-parenthesis[21,22] right-curly-bracket[22,23] end=23"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-10 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"function\\",\\"log\\",[\\"number\\",\\"8\\",8,\\"integer\\"],\\",\\",[\\"number\\",\\"2\\",2,\\"integer\\"]],\\"*\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-10 parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-10 prints {"mode":"minify"} 1`] = `"a{width:3px}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-10 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,13] function[13,17] number[17,18] comma[18,19] number[19,20] right-parenthesis[20,21] delim[21,22] dimension[22,25|23,25] right-parenthesis[25,26] right-curly-bracket[26,27] end=27"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-11 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"max\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"],\\",\\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"px\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-11 parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-11 prints {"mode":"minify"} 1`] = `"a{width:2px}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-11 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,12] dimension[12,15|13,15] comma[15,16] dimension[16,19|17,19] right-parenthesis[19,20] right-curly-bracket[20,21] end=21"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-12 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"min\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"],\\",\\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"px\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-12 parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-12 prints {"mode":"minify"} 1`] = `"a{width:1px}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-12 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,12] dimension[12,15|13,15] comma[15,16] dimension[16,19|17,19] right-parenthesis[19,20] right-curly-bracket[20,21] end=21"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-13 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"margin-left\\"],\\":\\",[\\"function\\",\\"mod\\",[\\"dimension\\",\\"-7\\",-7,\\"integer\\",\\"px\\"],\\",\\",[\\"dimension\\",\\"3\\",3,\\"integer\\",\\"px\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-13 parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-13 prints {"mode":"minify"} 1`] = `"a{margin-left:2px}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-13 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,13] colon[13,14] function[14,18] dimension[18,22|20,22] comma[22,23] dimension[23,26|24,26] right-parenthesis[26,27] right-curly-bracket[27,28] end=28"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-14 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"function\\",\\"pow\\",[\\"number\\",\\"2\\",2,\\"integer\\"],\\",\\",[\\"number\\",\\"3\\",3,\\"integer\\"]],\\"*\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-14 parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-14 prints {"mode":"minify"} 1`] = `"a{width:8px}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-14 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,13] function[13,17] number[17,18] comma[18,19] number[19,20] right-parenthesis[20,21] delim[21,22] dimension[22,25|23,25] right-parenthesis[25,26] right-curly-bracket[26,27] end=27"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-15 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"margin-left\\"],\\":\\",[\\"function\\",\\"rem\\",[\\"dimension\\",\\"7\\",7,\\"integer\\",\\"px\\"],\\",\\",[\\"dimension\\",\\"3\\",3,\\"integer\\",\\"px\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-15 parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-15 prints {"mode":"minify"} 1`] = `"a{margin-left:1px}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-15 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,13] colon[13,14] function[14,18] dimension[18,21|19,21] comma[21,22] dimension[22,25|23,25] right-parenthesis[25,26] right-curly-bracket[26,27] end=27"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-16 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"margin-left\\"],\\":\\",[\\"function\\",\\"round\\",[\\"dimension\\",\\"5\\",5,\\"integer\\",\\"px\\"],\\",\\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"px\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-16 parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-16 prints {"mode":"minify"} 1`] = `"a{margin-left:6px}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-16 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,13] colon[13,14] function[14,20] dimension[20,23|21,23] comma[23,24] dimension[24,27|25,27] right-parenthesis[27,28] right-curly-bracket[28,29] end=29"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-17 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"function\\",\\"sin\\",[\\"dimension\\",\\"90\\",90,\\"integer\\",\\"deg\\"]],\\"*\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-17 parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-17 prints {"mode":"minify"} 1`] = `"a{width:1px}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-17 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,13] function[13,17] dimension[17,22|19,22] right-parenthesis[22,23] delim[23,24] dimension[24,27|25,27] right-parenthesis[27,28] right-curly-bracket[28,29] end=29"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-18 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"function\\",\\"sqrt\\",[\\"number\\",\\"4\\",4,\\"integer\\"]],\\"*\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-18 parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-18 prints {"mode":"minify"} 1`] = `"a{width:2px}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-18 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,13] function[13,18] number[18,19] right-parenthesis[19,20] delim[20,21] dimension[21,24|22,24] right-parenthesis[24,25] right-curly-bracket[25,26] end=26"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-19 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"width\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"function\\",\\"tan\\",[\\"dimension\\",\\"45\\",45,\\"integer\\",\\"deg\\"]],\\"*\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]]]]"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-19 parses 2`] = `""`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-19 prints {"mode":"minify"} 1`] = `"a{width:1px}"`;
-
-exports[`CSS syntax — invariants css-value-syntax-the-arity-read-off-those-grammars-gives-every-folded-function-a-19 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,13] function[13,17] dimension[17,22|19,22] right-parenthesis[22,23] delim[23,24] dimension[24,27|25,27] right-parenthesis[27,28] right-curly-bracket[28,29] end=29"`;
-
 exports[`CSS syntax — invariants escaped-property-names parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"t01\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"font-weight\\"],\\":\\",\\" \\",[\\"ident\\",\\"bold\\"],\\" \\"]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"t02\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"font-weight\\"],\\":\\",\\" \\",[\\"ident\\",\\"bold\\"],\\" \\"]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"t03\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"margin\\"],\\":\\",\\" \\",[\\"dimension\\",\\"0\\",0,\\"integer\\",\\"px\\"],\\" \\",[\\"dimension\\",\\"0\\",0,\\"integer\\",\\"px\\"],\\" \\",[\\"dimension\\",\\"0\\",0,\\"integer\\",\\"px\\"],\\" \\",[\\"dimension\\",\\"0\\",0,\\"integer\\",\\"px\\"],\\" \\"]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"t04\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"margin\\"],\\":\\",\\" \\",[\\"dimension\\",\\"0\\",0,\\"integer\\",\\"px\\"],\\" \\",[\\"dimension\\",\\"0\\",0,\\"integer\\",\\"px\\"],\\" \\",[\\"dimension\\",\\"0\\",0,\\"integer\\",\\"px\\"],\\" \\",[\\"dimension\\",\\"0\\",0,\\"integer\\",\\"px\\"],\\" \\"]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"t05\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"--kept\\"],\\":\\",\\" \\",[\\"dimension\\",\\"0\\",0,\\"integer\\",\\"px\\"],\\" \\",[\\"dimension\\",\\"0\\",0,\\"integer\\",\\"px\\"],\\" \\",[\\"dimension\\",\\"0\\",0,\\"integer\\",\\"px\\"],\\" \\",[\\"dimension\\",\\"0\\",0,\\"integer\\",\\"px\\"],\\" \\"]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"t06\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"--kept\\"],\\":\\",\\" \\",[\\"dimension\\",\\"0\\",0,\\"integer\\",\\"px\\"],\\" \\",[\\"dimension\\",\\"0\\",0,\\"integer\\",\\"px\\"],\\" \\",[\\"dimension\\",\\"0\\",0,\\"integer\\",\\"px\\"],\\" \\",[\\"dimension\\",\\"0\\",0,\\"integer\\",\\"px\\"],\\" \\"]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"t07\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"-webkit-box-flex\\"],\\":\\",\\" \\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\" \\"]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"t08\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"-webkit-box-flex\\"],\\":\\",\\" \\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\" \\"]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"t09\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"z-index\\"],\\":\\",\\" \\",[\\"number\\",\\"1.0\\",1,\\"number\\"],\\" \\"]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"t10\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"z-index\\"],\\":\\",\\" \\",[\\"number\\",\\"1.0\\",1,\\"number\\"],\\" \\"]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"t11\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"font-family\\"],\\":\\",\\" \\",[\\"ident\\",\\"A\\"],\\" \\",[\\"ident\\",\\"B\\"],\\" \\"]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"t12\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"font-family\\"],\\":\\",\\" \\",[\\"ident\\",\\"A\\"],\\" \\",[\\"ident\\",\\"B\\"],\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants escaped-property-names parses 2`] = `""`;
@@ -47548,6 +47706,22 @@ exports[`CSS syntax — invariants source-processor-attribute-values-the-minifie
 
 exports[`CSS syntax — invariants source-processor-attribute-values-the-minifier-rewrites-leaves-a-body-as-written tokenizes 1`] = `"ident[0,1] whitespace[1,2] colon[2,3] whitespace[3,4] ident[4,5] end=5"`;
 
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-asked-for-once-by-the-first-print parses 1`] = `"[]"`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-asked-for-once-by-the-first-print parses 2`] = `"error[1,1]:eof-in-qualified-rule"`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-asked-for-once-by-the-first-print prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-asked-for-once-by-the-first-print tokenizes 1`] = `"ident[0,1] end=1"`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-asked-for-once-by-the-first-print-2 parses 1`] = `"[]"`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-asked-for-once-by-the-first-print-2 parses 2`] = `"error[1,1]:eof-in-qualified-rule"`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-asked-for-once-by-the-first-print-2 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-asked-for-once-by-the-first-print-2 tokenizes 1`] = `"ident[0,1] end=1"`;
+
 exports[`CSS syntax — invariants source-processor-deferred-printer-is-not-asked-for-by-a-walk parses 1`] = `"[]"`;
 
 exports[`CSS syntax — invariants source-processor-deferred-printer-is-not-asked-for-by-a-walk parses 2`] = `"error[1,1]:eof-in-qualified-rule"`;
@@ -47556,6 +47730,38 @@ exports[`CSS syntax — invariants source-processor-deferred-printer-is-not-aske
 
 exports[`CSS syntax — invariants source-processor-deferred-printer-is-not-asked-for-by-a-walk tokenizes 1`] = `"ident[0,1] end=1"`;
 
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-not-asked-for-by-a-walk-2 parses 1`] = `"[]"`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-not-asked-for-by-a-walk-2 parses 2`] = `"error[1,1]:eof-in-qualified-rule"`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-not-asked-for-by-a-walk-2 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-not-asked-for-by-a-walk-2 tokenizes 1`] = `"ident[0,1] end=1"`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-reused-by-every-print-after-it parses 1`] = `"[]"`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-reused-by-every-print-after-it parses 2`] = `"error[1,1]:eof-in-qualified-rule"`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-reused-by-every-print-after-it prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-reused-by-every-print-after-it tokenizes 1`] = `"ident[0,1] end=1"`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-reused-by-every-print-after-it-2 parses 1`] = `"[]"`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-reused-by-every-print-after-it-2 parses 2`] = `"error[1,1]:eof-in-qualified-rule"`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-reused-by-every-print-after-it-2 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-is-reused-by-every-print-after-it-2 tokenizes 1`] = `"ident[0,1] end=1"`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-stays-out-of-a-processor-that-was-handed-its parses 1`] = `"[]"`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-stays-out-of-a-processor-that-was-handed-its parses 2`] = `"error[1,1]:eof-in-qualified-rule"`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-stays-out-of-a-processor-that-was-handed-its prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-deferred-printer-stays-out-of-a-processor-that-was-handed-its tokenizes 1`] = `"ident[0,1] end=1"`;
+
 exports[`CSS syntax — invariants source-processor-empty-and-degenerate-input-css-keeps-a-license-comment parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]]]"`;
 
 exports[`CSS syntax — invariants source-processor-empty-and-degenerate-input-css-keeps-a-license-comment parses 2`] = `""`;
@@ -47563,6 +47769,14 @@ exports[`CSS syntax — invariants source-processor-empty-and-degenerate-input-c
 exports[`CSS syntax — invariants source-processor-empty-and-degenerate-input-css-keeps-a-license-comment prints {"mode":"minify"} 1`] = `"/*! keep */a{b:c}"`;
 
 exports[`CSS syntax — invariants source-processor-empty-and-degenerate-input-css-keeps-a-license-comment tokenizes 1`] = `"comment[0,11] ident[11,12] left-curly-bracket[12,13] ident[13,14] colon[14,15] ident[15,16] right-curly-bracket[16,17] end=17"`;
+
+exports[`CSS syntax — invariants source-processor-empty-and-degenerate-input-prints-empty-input-without-failing parses 1`] = `"[]"`;
+
+exports[`CSS syntax — invariants source-processor-empty-and-degenerate-input-prints-empty-input-without-failing parses 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-empty-and-degenerate-input-prints-empty-input-without-failing prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-empty-and-degenerate-input-prints-empty-input-without-failing tokenizes 1`] = `"end=0"`;
 
 exports[`CSS syntax — invariants source-processor-inline-css-honors-the-target-s-abilities-keeps-a-lowered-list parses 1`] = `"[]"`;
 
@@ -48803,6 +49017,14 @@ exports[`CSS syntax — invariants source-processor-minifying-what-the-round-tri
 
 exports[`CSS syntax — invariants source-processor-minifying-what-the-round-trip-guard-checks-minifies-an-inline tokenizes 1`] = `"whitespace[0,2] ident[2,3] whitespace[3,4] left-curly-bracket[4,5] whitespace[5,6] ident[6,11] whitespace[11,12] colon[12,13] whitespace[13,14] hash[14,21]# whitespace[21,22] right-curly-bracket[22,23] whitespace[23,25] end=25"`;
 
+exports[`CSS syntax — invariants source-processor-mode-carries-no-state-between-calls parses 1`] = `"[]"`;
+
+exports[`CSS syntax — invariants source-processor-mode-carries-no-state-between-calls parses 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-mode-carries-no-state-between-calls prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-mode-carries-no-state-between-calls tokenizes 1`] = `"end=0"`;
+
 exports[`CSS syntax — invariants source-processor-mode-css-prints-what-it-already-printed-unchanged-in-either parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"color\\"],\\":\\",\\" \\",[\\"hash\\",\\"ff0000\\",\\"id\\"],\\";\\",\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants source-processor-mode-css-prints-what-it-already-printed-unchanged-in-either parses 2`] = `""`;
@@ -48845,6 +49067,30 @@ exports[`CSS syntax — invariants source-processor-node-path-answers-fields-and
 
 exports[`CSS syntax — invariants source-processor-node-path-answers-fields-and-flags-only-for-the-node-that-owns-2 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,3] colon[3,4] ident[4,5] semicolon[5,6] ident[6,7] colon[7,8] ident[8,9] right-curly-bracket[9,10] end=10"`;
 
+exports[`CSS syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-cr parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]]]]"`;
+
+exports[`CSS syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-cr parses 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-cr prints {"mode":"minify"} 1`] = `"a{color:red}b{color:blue}"`;
+
+exports[`CSS syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-cr tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] ident[8,11] right-curly-bracket[11,12] whitespace[12,13] ident[13,14] left-curly-bracket[14,15] ident[15,20] colon[20,21] ident[21,25] right-curly-bracket[25,26] end=26"`;
+
+exports[`CSS syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]]]]"`;
+
+exports[`CSS syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf parses 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf prints {"mode":"minify"} 1`] = `"a{color:red}b{color:blue}"`;
+
+exports[`CSS syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] ident[8,11] right-curly-bracket[11,12] whitespace[12,14] ident[14,15] left-curly-bracket[15,16] ident[16,21] colon[21,22] ident[22,26] right-curly-bracket[26,27] end=27"`;
+
+exports[`CSS syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-ff parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]]]]"`;
+
+exports[`CSS syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-ff parses 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-ff prints {"mode":"minify"} 1`] = `"a{color:red}b{color:blue}"`;
+
+exports[`CSS syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-ff tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] ident[8,11] right-curly-bracket[11,12] whitespace[12,13] ident[13,14] left-curly-bracket[14,15] ident[15,20] colon[20,21] ident[21,25] right-curly-bracket[25,26] end=26"`;
+
 exports[`CSS syntax — invariants source-processor-node-path-hands-every-visitor-the-run-s-state-typed-by-the parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"],\\" \\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]]]"`;
 
 exports[`CSS syntax — invariants source-processor-node-path-hands-every-visitor-the-run-s-state-typed-by-the parses 2`] = `""`;
@@ -48860,6 +49106,52 @@ exports[`CSS syntax — invariants source-processor-node-path-hands-every-visito
 exports[`CSS syntax — invariants source-processor-node-path-hands-every-visitor-the-run-s-state-typed-by-the-2 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants source-processor-node-path-hands-every-visitor-the-run-s-state-typed-by-the-2 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] right-curly-bracket[2,3] end=3"`;
+
+exports[`CSS syntax — invariants source-processor-node-path-knows-a-streamed-block-s-ancestors-until-it-closes parses 1`] = `
+"length 317904, sha256 de14d478136dcd05
+[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"screen\\"]],[\\".\\",[\\"ident\\",\\"c0\\"],\\">\\",[\\"ident\\",\\"d0\\"],\\":\\",[\\"ident\\",\\"hover\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"],\\";\\",[\\"ident\\",\\"margin\\"],\\":\\",[\\"dimension\\",\\"1\\",1,\\"int
+…
+,[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"],\\";\\",[\\"ident\\",\\"margin\\"],\\":\\",[\\"dimension\\",\\"1800\\",1800,\\"integer\\",\\"px\\"]]]],[\\"qualified rule\\",[[\\"ident\\",\\"x\\"]],[[\\"ident\\",\\"y\\"],\\":\\",[\\"dimension\\",\\"0\\",0,\\"integer\\",\\"px\\"]]]]"
+`;
+
+exports[`CSS syntax — invariants source-processor-node-path-knows-a-streamed-block-s-ancestors-until-it-closes parses 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-node-path-knows-a-streamed-block-s-ancestors-until-it-closes prints {"mode":"minify"} 1`] = `
+"length 74094, sha256 fd3ed4ddfdca7005
+@media screen{.c0>d0:hover{color:red;margin:1px}.c1>d1:hover{color:red;margin:2px}.c2>d2:hover{color:red;margin:3px}.c3>d3:hover{color:red;margin:4px}.c4>d4:hover{color:red;margin:5px}.c5>d5:hover{col
+…
+or:red;margin:1796px}.c1796>d1796:hover{color:red;margin:1797px}.c1797>d1797:hover{color:red;margin:1798px}.c1798>d1798:hover{color:red;margin:1799px}.c1799>d1799:hover{color:red;margin:1800px}}x{y:0}"
+`;
+
+exports[`CSS syntax — invariants source-processor-node-path-knows-a-streamed-block-s-ancestors-until-it-closes tokenizes 1`] = `
+"length 588662, sha256 bdc2cac9a35afb0c
+at-keyword[0,6] whitespace[6,7] ident[7,13] left-curly-bracket[13,14] delim[14,15] ident[15,17] delim[17,18] ident[18,20] colon[20,21] ident[21,26] left-curly-bracket[26,27] ident[27,32] colon[32,33] 
+…
+ right-curly-bracket[74087,74088] ident[74088,74089] left-curly-bracket[74089,74090] ident[74090,74091] colon[74091,74092] dimension[74092,74095|74093,74095] right-curly-bracket[74095,74096] end=74096"
+`;
+
+exports[`CSS syntax — invariants source-processor-node-path-reads-a-streamed-block-s-start-in-its-rule-s-enter parses 1`] = `
+"length 119538, sha256 3c03b417e17ed598
+[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"screen\\"]],[\\".\\",[\\"ident\\",\\"c0\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]],\\".\\",[\\"ident\\",\\"c1\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]],\\".\\",[\\"ident\\",\\"c2\\"],[\\"{}\\",[
+…
+,[\\"ident\\",\\"c1797\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]],\\".\\",[\\"ident\\",\\"c1798\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]],\\".\\",[\\"ident\\",\\"c1799\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants source-processor-node-path-reads-a-streamed-block-s-start-in-its-rule-s-enter parses 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-node-path-reads-a-streamed-block-s-start-in-its-rule-s-enter prints {"mode":"minify"} 1`] = `
+"length 11515, sha256 3d4fbcfae3400c4a
+@media screen{.c0,.c1,.c10,.c100,.c1000,.c1001,.c1002,.c1003,.c1004,.c1005,.c1006,.c1007,.c1008,.c1009,.c101,.c1010,.c1011,.c1012,.c1013,.c1014,.c1015,.c1016,.c1017,.c1018,.c1019,.c102,.c1020,.c1021,.
+…
+c970,.c971,.c972,.c973,.c974,.c975,.c976,.c977,.c978,.c979,.c98,.c980,.c981,.c982,.c983,.c984,.c985,.c986,.c987,.c988,.c989,.c99,.c990,.c991,.c992,.c993,.c994,.c995,.c996,.c997,.c998,.c999{color:red}}"
+`;
+
+exports[`CSS syntax — invariants source-processor-node-path-reads-a-streamed-block-s-start-in-its-rule-s-enter tokenizes 1`] = `
+"length 278261, sha256 f67b1a867f3b7183
+at-keyword[0,6] whitespace[6,7] ident[7,13] left-curly-bracket[13,14] delim[14,15] ident[15,17] left-curly-bracket[17,18] ident[18,23] colon[23,24] ident[24,27] right-curly-bracket[27,28] delim[28,29]
+…
+lim[29487,29488] ident[29488,29493] left-curly-bracket[29493,29494] ident[29494,29499] colon[29499,29500] ident[29500,29503] right-curly-bracket[29503,29504] right-curly-bracket[29504,29505] end=29505"
+`;
 
 exports[`CSS syntax — invariants source-processor-node-path-reads-css-nodes-through-the-shared-members parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"b\\"],\\":\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\",[\\"function\\",\\"f\\"]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]"`;
 
@@ -49210,6 +49502,14 @@ exports[`CSS syntax — invariants source-processor-render-embedded-source-print
 exports[`CSS syntax — invariants source-processor-render-embedded-source-prints-again-where-an-answer-overturns-a-3 prints {"mode":"minify"} 1`] = `".b{color:red}"`;
 
 exports[`CSS syntax — invariants source-processor-render-embedded-source-prints-again-where-an-answer-overturns-a-3 tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,8] colon[8,9] ident[9,12] right-curly-bracket[12,13] end=13"`;
+
+exports[`CSS syntax — invariants source-processor-reuses-the-caller-s-print-options parses 1`] = `"[]"`;
+
+exports[`CSS syntax — invariants source-processor-reuses-the-caller-s-print-options parses 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-reuses-the-caller-s-print-options prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-reuses-the-caller-s-print-options tokenizes 1`] = `"end=0"`;
 
 exports[`CSS syntax — invariants source-processor-reusing-work-across-a-print-does-not-carry-a-style-attribute-s parses 1`] = `"[]"`;
 

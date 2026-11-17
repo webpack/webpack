@@ -1,0 +1,1 @@
+class C { [k] = v; static [k2]() {} get a() {} set a(v2) {} }

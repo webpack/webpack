@@ -1,0 +1,10 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"cleanupSvgIds": true,
+		"removeHiddenSvgElements": true,
+		"cleanupSvgStructure": true
+	}
+]

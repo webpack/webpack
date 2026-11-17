@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<animate id="a.b" attributeName="r" dur="1s"/>
+	<animate id="unused" attributeName="r" begin="a\.b.end" dur="1s"/>
+</svg>

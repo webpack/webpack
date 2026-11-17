@@ -1,0 +1,1 @@
+({ ...require("./a"), x: foo.require("./nope") });

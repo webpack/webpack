@@ -5,9 +5,9 @@
 
 "use strict";
 
-// Fails `yarn lint` when a syntax unit test writes the source it reads inline:
-// every input of the tokenizer, parser and printer tests is a fixture under
-// `test/fixtures/<lang>/`, which the invariants runner holds to its relations.
+// Fails `yarn lint` when a unit test writes the source a syntax entry point
+// reads inline: every such input is a fixture under `test/fixtures/<lang>/`,
+// which the invariants runner holds to its relations.
 //
 //   node tooling/check-syntax-test-inputs.js [file…]
 
@@ -17,21 +17,34 @@ const acorn = require("acorn");
 
 const ROOT = path.resolve(__dirname, "..");
 
-/** The test files held to fixtures, relative to the repository root. */
-/** @type {string[]} */
-const FILES = [];
-for (const lang of ["css", "html", "xml", "javascript"]) {
-	for (const name of ["tokenizer", "parser", "printer"]) {
-		FILES.push(`test/unitCases/${lang}/${name}.unittest.js`);
+/**
+ * @param {string} dir a directory, relative to the repository root
+ * @returns {string[]} every unit test under it, relative to the root, sorted
+ */
+const unitTests = (dir) => {
+	/** @type {string[]} */
+	const out = [];
+	for (const entry of fs.readdirSync(path.join(ROOT, dir), {
+		withFileTypes: true
+	})) {
+		const file = `${dir}/${entry.name}`;
+		if (entry.isDirectory()) out.push(...unitTests(file));
+		else if (entry.name.endsWith(".unittest.js")) out.push(file);
 	}
-}
+	return out.sort();
+};
+
+/** The test files held to fixtures: every unit test, relative to the root. */
+const FILES = unitTests("test/unitCases");
 
 /**
  * The entry points whose first argument is a source, called by their own name
  * or as a method; a minimizer's first argument maps asset names to sources.
  */
 const ENTRIES = new Set([
+	"collectCjsRequireSpecifiers",
 	"decodeEntities",
+	"decodeXmlEntities",
 	"minifyOnePass",
 	"parse",
 	"parseExpressionAt",
@@ -51,6 +64,7 @@ const MINIMIZERS = new Set([
 	"cssMinify",
 	"htmlMinify",
 	"jsMinify",
+	"jsonMinify",
 	"xmlMinify"
 ]);
 
@@ -59,6 +73,23 @@ const SOURCE_SECOND = new Set(["CacheParser", "Parser", "WebpackParser"]);
 
 /** Objects whose `parse` reads something other than a syntax source. */
 const NOT_SYNTAX = new Set(["JSON", "path", "url", "Date", "Number"]);
+
+/** Modules whose calls answer paths or file contents, never inline text. */
+const OPAQUE_MODULES = new Set(["fs", "os", "path", "url"]);
+
+/** String methods that only read their receiver, whatever they are passed. */
+const READ_ONLY_METHODS = new Set([
+	"at",
+	"charAt",
+	"slice",
+	"split",
+	"substring",
+	"toLowerCase",
+	"toUpperCase",
+	"trim",
+	"trimEnd",
+	"trimStart"
+]);
 
 /** Calls whose answer is read from elsewhere, however they are spelled. */
 const OPAQUE_CALLS = new Set([
@@ -77,7 +108,7 @@ const OPAQUE_CALLS = new Set([
 
 /**
  * What a name is bound to.
- * @typedef {{ kind: "value", init: Node | null | undefined } | { kind: "param", fn: FunctionNode, index: number, init: Node | undefined } | { kind: "each", right: Node } | { kind: "import", name: string } | { kind: "opaque" }} Binding
+ * @typedef {{ kind: "value", init: Node | null | undefined } | { kind: "param", fn: FunctionNode, index: number, init: Node | undefined } | { kind: "each", right: Node, path: (number | string)[] } | { kind: "import", name: string } | { kind: "opaque" }} Binding
  */
 
 /**
@@ -135,11 +166,47 @@ const bindPattern = (pattern, bind, binding) => {
 		bind(pattern.name, binding);
 		return;
 	}
+	// A destructured loop row binds each name to its column of every row.
+	if (binding.kind === "each") {
+		/**
+		 * @param {Pattern} inner the pattern at one column
+		 * @param {number | string} step the column
+		 * @returns {void}
+		 */
+		const column = (inner, step) =>
+			bindPattern(inner, bind, { ...binding, path: [...binding.path, step] });
+		if (pattern.type === "ArrayPattern") {
+			for (const [index, element] of pattern.elements.entries()) {
+				if (element !== null && element.type !== "RestElement") {
+					column(element, index);
+				}
+			}
+			return;
+		}
+		if (pattern.type === "ObjectPattern") {
+			for (const property of pattern.properties) {
+				if (property.type === "RestElement" || property.computed) continue;
+				const key =
+					property.key.type === "Identifier"
+						? property.key.name
+						: String(
+								/** @type {import("estree").Literal} */ (property.key).value
+							);
+				column(property.value, key);
+			}
+			return;
+		}
+		if (pattern.type === "AssignmentPattern") {
+			bindPattern(pattern.left, bind, binding);
+		}
+		return;
+	}
 	// A destructured name is opaque, unless it renames an import.
 	const fromRequire =
 		binding.kind === "value" &&
 		isNode(binding.init) &&
-		binding.init.type === "CallExpression";
+		(binding.init.type === "CallExpression" ||
+			(binding.init.type === "MemberExpression" && !binding.init.computed));
 	if (pattern.type === "ObjectPattern") {
 		for (const property of pattern.properties) {
 			if (property.type === "RestElement") {
@@ -244,7 +311,7 @@ const scopeAt = (node, scope) => {
 			bindPattern(
 				declarator.id,
 				bind,
-				right === null ? { kind: "opaque" } : { kind: "each", right }
+				right === null ? { kind: "opaque" } : { kind: "each", right, path: [] }
 			);
 		}
 		return inner;
@@ -396,7 +463,157 @@ const inlineInputs = (code) => {
 	 * @param {Set<Binding>} seen the bindings already followed
 	 * @returns {boolean} whether it writes a string out
 	 */
-	const writesText = (node, seen) => {
+	const writesText = (node, seen) => writesTextOf(node, seen);
+
+	/**
+	 * @param {Node} node an expression
+	 * @param {Set<Binding>} seen the bindings already followed
+	 * @returns {Node[]} the expressions it may stand for, followed through plain names
+	 */
+	const valuesOf = (node, seen) => {
+		if (node.type !== "Identifier") return [node];
+		const binding = resolve(node);
+		if (binding === undefined || seen.has(binding)) return [];
+		if (binding.kind === "value" && isNode(binding.init)) {
+			return valuesOf(binding.init, new Set([...seen, binding]));
+		}
+		if (binding.kind === "each") {
+			const inner = new Set([...seen, binding]);
+			const picked = columnOf(rowsOf(binding.right, inner), binding.path);
+			return picked === undefined
+				? []
+				: picked.flatMap((one) => valuesOf(one, inner));
+		}
+		return [];
+	};
+
+	/**
+	 * @param {Node} right what a `for…of` loop reads
+	 * @param {Set<Binding>} seen the bindings already followed
+	 * @returns {Node[] | undefined} its rows, where they can be read; an `Object.entries` row is an array of key and value
+	 */
+	const rowsOf = (right, seen) => {
+		if (
+			right.type === "CallExpression" &&
+			right.callee.type === "MemberExpression" &&
+			right.callee.object.type === "Identifier" &&
+			right.callee.object.name === "Object" &&
+			right.callee.property.type === "Identifier" &&
+			right.arguments.length === 1
+		) {
+			const method = right.callee.property.name;
+			/** @type {Node[]} */
+			const rows = [];
+			for (const object of valuesOf(
+				/** @type {Node} */ (right.arguments[0]),
+				seen
+			)) {
+				if (object.type !== "ObjectExpression") return undefined;
+				for (const property of object.properties) {
+					if (property.type !== "Property") return undefined;
+					const key = /** @type {Node} */ (
+						property.computed || property.key.type !== "Identifier"
+							? property.key
+							: { type: "Literal", value: property.key.name }
+					);
+					const value = /** @type {Node} */ (property.value);
+					if (method === "entries") {
+						rows.push(
+							/** @type {Node} */ ({
+								type: "ArrayExpression",
+								elements: [key, value]
+							})
+						);
+					} else if (method === "values") {
+						rows.push(value);
+					} else if (method === "keys") {
+						rows.push(key);
+					} else {
+						return undefined;
+					}
+				}
+			}
+			return rows;
+		}
+		/** @type {Node[]} */
+		const rows = [];
+		for (const list of valuesOf(right, seen)) {
+			if (list.type !== "ArrayExpression") return undefined;
+			for (const element of list.elements) {
+				if (element !== null) rows.push(element);
+			}
+		}
+		return rows;
+	};
+
+	/**
+	 * @param {Node[] | undefined} rows the rows a loop or a lookup reads
+	 * @param {(number | string)[]} path the column, one step per level
+	 * @param {boolean=} anyStep whether the first step is any element or property
+	 * @returns {Node[] | undefined} what each row holds there, where it can be read
+	 */
+	const columnOf = (rows, path, anyStep = false) => {
+		if (rows === undefined) return undefined;
+		let current = rows;
+		if (anyStep) {
+			/** @type {Node[]} */
+			const next = [];
+			for (const row of current) {
+				if (row.type === "ArrayExpression") {
+					for (const element of row.elements) {
+						if (element !== null) next.push(element);
+					}
+				} else if (row.type === "ObjectExpression") {
+					for (const property of row.properties) {
+						next.push(
+							/** @type {Node} */ (
+								property.type === "Property"
+									? property.value
+									: property.argument
+							)
+						);
+					}
+				} else {
+					return undefined;
+				}
+			}
+			current = next;
+		}
+		for (const step of path) {
+			/** @type {Node[]} */
+			const next = [];
+			for (const row of current) {
+				if (row.type === "ArrayExpression" && typeof step === "number") {
+					const element = row.elements[step];
+					if (element) next.push(element);
+				} else if (row.type === "ObjectExpression") {
+					for (const property of row.properties) {
+						if (
+							property.type === "Property" &&
+							!property.computed &&
+							((property.key.type === "Identifier" &&
+								property.key.name === String(step)) ||
+								(property.key.type === "Literal" &&
+									String(property.key.value) === String(step)))
+						) {
+							next.push(/** @type {Node} */ (property.value));
+						}
+					}
+				} else {
+					return undefined;
+				}
+			}
+			current = next;
+		}
+		return current;
+	};
+
+	/**
+	 * @param {Node} node an expression
+	 * @param {Set<Binding>} seen the bindings already followed
+	 * @returns {boolean} whether it writes text
+	 */
+	const writesTextOf = (node, seen) => {
 		switch (node.type) {
 			case "Literal":
 				return typeof node.value === "string";
@@ -414,15 +631,31 @@ const inlineInputs = (code) => {
 					return binding.init !== undefined && writesText(binding.init, seen);
 				}
 				if (binding.kind === "each") {
-					const { right } = binding;
-					const list = right.type === "Identifier" ? right : right;
-					return list.type === "ArrayExpression"
-						? list.elements.some(
-								(element) => element !== null && writesText(element, seen)
-							)
-						: writesText(list, seen);
+					const picked = columnOf(rowsOf(binding.right, seen), binding.path);
+					if (picked === undefined) {
+						// Rows read from elsewhere: a column of one is as opaque as it is.
+						return binding.path.length === 0 && writesText(binding.right, seen);
+					}
+					return picked.some((one) => writesText(one, seen));
 				}
 				return false;
+			}
+			case "MemberExpression": {
+				if (!node.computed) return false;
+				const step =
+					node.property.type === "Literal" &&
+					(typeof node.property.value === "number" ||
+						typeof node.property.value === "string")
+						? node.property.value
+						: undefined;
+				const picked = columnOf(
+					valuesOf(/** @type {Node} */ (node.object), seen),
+					step === undefined ? [] : [step],
+					step === undefined
+				);
+				return (
+					picked !== undefined && picked.some((one) => writesText(one, seen))
+				);
 			}
 			case "CallExpression":
 			case "NewExpression": {
@@ -435,6 +668,13 @@ const inlineInputs = (code) => {
 							? callee.property.name
 							: "";
 				if (OPAQUE_CALLS.has(name)) return false;
+				if (
+					callee.type === "MemberExpression" &&
+					callee.object.type === "Identifier" &&
+					OPAQUE_MODULES.has(callee.object.name)
+				) {
+					return false;
+				}
 				const fn = localFunction(callee);
 				if (fn !== undefined) {
 					const indices = flows.get(/** @type {FunctionNode} */ (fn));
@@ -448,6 +688,9 @@ const inlineInputs = (code) => {
 				}
 				const object =
 					callee.type === "MemberExpression" ? [callee.object] : [];
+				if (object.length > 0 && READ_ONLY_METHODS.has(name)) {
+					return writesText(object[0], seen);
+				}
 				return [...object, ...node.arguments].some((one) =>
 					writesText(one, seen)
 				);
@@ -513,7 +756,12 @@ const inlineInputs = (code) => {
 				/** @type {import("estree").CallExpression} */ (call);
 			for (const { index, values } of sourceArguments(call)) {
 				const argument = args[index];
-				if (argument === undefined || argument.type === "SpreadElement") {
+				// An object written where a source goes is a preparsed tree, not text.
+				if (
+					argument === undefined ||
+					argument.type === "SpreadElement" ||
+					(!values && argument.type === "ObjectExpression")
+				) {
 					continue;
 				}
 				const param = values ? undefined : paramOf(argument);
@@ -610,7 +858,7 @@ if (require.main === module) {
 		process.exitCode = 1;
 	} else {
 		console.log(
-			`${files.length} syntax test files read every source from fixtures`
+			`${files.length} unit test files read every syntax source from fixtures`
 		);
 	}
 }

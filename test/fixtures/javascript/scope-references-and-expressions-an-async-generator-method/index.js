@@ -1,0 +1,1 @@
+const o = { async *m() { await a; yield b; } };

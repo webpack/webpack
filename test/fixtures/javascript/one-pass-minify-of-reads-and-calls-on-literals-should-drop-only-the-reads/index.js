@@ -1,0 +1,1 @@
+a.b; c().d; null.e; (void 0).f; undefined.g; x()[y()]; ({ get h() { console.log(1) } }).h; (i || j).k; (l ? m : n).o; (p, q()).r; s?.t; [].length; (function () {}).name; ({}).u; "v".length; (a = f()).b; (x()?.y).z; ({ ...w }).v;

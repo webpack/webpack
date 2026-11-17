@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+	<circle cx="12" cy="12" id="unused">
+		<animate id="first" attributeName="r" begin="0;second.end" dur="1.2s" values="0;11"/>
+	</circle>
+	<circle cx="12" cy="12">
+		<animate id="second" attributeName="r" begin="first.begin+0.2s; first.repeat(1) ; click; 1.5s; wallclock(2003-01-01T10:00:00.5Z)" dur="1.2s" values="0;11"/>
+	</circle>
+</svg>

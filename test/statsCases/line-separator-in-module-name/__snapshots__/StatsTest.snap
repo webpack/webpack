@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases line-separator-in-module-name should print correct stats for line-separator-in-module-name 1`] = `
+"runtime modules X bytes 3 modules
+cacheable modules X bytes
+  ./index.js X bytes [built] [code generated]
+    entry ./index.js main
+  ./loader.js?a/u2028b!./a.js X bytes [built] [code generated]
+    harmony side effect evaluation ./loader.js?a/u2028b!./a.js ./index.js 1:0-2:10
+    harmony import specifier ./loader.js?a/u2028b!./a.js ./index.js 6:12-13
+  ./loader.js?c/u2029d!./a.js X bytes [built] [code generated]
+    harmony side effect evaluation ./loader.js?c/u2029d!./a.js ./index.js 3:0-4:10
+    harmony import specifier ./loader.js?c/u2029d!./a.js ./index.js 6:15-16
+webpack x.x.x compiled successfully in X ms"
+`;

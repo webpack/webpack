@@ -23,6 +23,8 @@ const path = require("path");
 const {
 	commonGlobBaseDir,
 	createPathGlobMatcher,
+	createPathGlobPrefixRegExp,
+	createPathGlobRegExp,
 	extractGlobBaseDir,
 	globMatchWithExplicitDot,
 	globMatchWithOptions,
@@ -882,6 +884,22 @@ describe("globUtils", () => {
 
 		it("returns null for an un-compilable pattern", () => {
 			expect(createPathGlobMatcher("**/[z-a].js")).toBeNull();
+		});
+
+		it("treats a pattern whose braces expand to too many globs as un-compilable", () => {
+			const pattern = `src/${"{a,b}".repeat(24)}.js`;
+			expect(createPathGlobMatcher(pattern)).toBeNull();
+			expect(globMatchWithOptions(pattern, `src/${"a".repeat(24)}.js`)).toBe(
+				false
+			);
+			expect(() => createPathGlobRegExp(pattern)).toThrow(
+				"Invalid glob pattern"
+			);
+			expect(() => createPathGlobPrefixRegExp(pattern, "/project")).toThrow(
+				"Invalid glob pattern"
+			);
+			const match = createPathGlobMatcher(`src/${"{a,b}".repeat(10)}.js`);
+			expect(match && match(`src/${"b".repeat(10)}.js`)).toBe(true);
 		});
 	});
 });

@@ -1,0 +1,1 @@
+function o(){function i(){var n=[r];g();return n}var r=g();return[i(),i()]}function g(){return{}}console.log(JSON.stringify(o()))

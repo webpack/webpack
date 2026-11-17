@@ -3525,12 +3525,17 @@ export interface OptimizationMinimizeOptions {
  */
 export interface OptimizationMinimizeXml {
 	/**
+	 * Remove SVG IDs nothing in the document references and rename the rest to the shortest names, rewriting `href`, `url()` and ID-list references. Off by default because a reference from outside the document, such as a sprite's `file.svg#icon` or a page's `getElementById`, stops resolving; skip stylesheets, scripts, animations, duplicate IDs, `xml:id` and DTDs.
+	 * @since 5.113.0
+	 */
+	cleanupIds?: boolean;
+	/**
 	 * Collapse SVG groups, hoist identical context-free inherited attributes or move them to sole graphics children, inline validated presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.
 	 * @since 5.113.0
 	 */
 	cleanupStructure?: boolean;
 	/**
-	 * Remove whitespace-only text in known SVG containers, preserving text content, foreign content and `xml:space`. Off by default because scripts can observe whitespace nodes.
+	 * Remove whitespace-only text in known SVG containers, under `xml:space` too since that lays out text alone, preserving text content and foreign content. Off by default because scripts can observe whitespace nodes.
 	 * @since 5.113.0
 	 */
 	collapseWhitespace?: boolean;
@@ -3540,15 +3545,59 @@ export interface OptimizationMinimizeXml {
 	 */
 	convertShapes?: boolean;
 	/**
+	 * Move the rules of SVG stylesheets into the style attributes of the elements they match, in cascade order before each element's own, then drop the stylesheets and the classes they named, where every selector uses types, classes, IDs, attributes, tree-structural pseudo-classes or `:not()` and the result is no larger. Off by default because scripts and external CSS can observe classes and stylesheets.
+	 * @since 5.113.0
+	 */
+	inlineStyles?: boolean;
+	/**
 	 * Merge adjacent disjoint axis-aligned SVG lines with explicit opaque crisp-edge strokes, no fill, dashes or markers. Skip compositing, transformed or ID-bearing ancestors; identical paint remains eligible during color cleanup. Off by default because consumers can observe element boundaries; skip stylesheets, scripts, animations and DTDs.
 	 * @since 5.113.0
 	 */
 	mergePaths?: boolean;
 	/**
+	 * Round SVG geometry, path data, transforms and presentation numbers to this many decimal places, a whole number from 0 to 15, wherever `shortenNumbers` and `shortenPathData` shorten them. Path points round where they land, so error never accumulates, and curves and arcs that draw straight lines become lines. Off by default because rounding moves geometry; svgo rounds to 3.
+	 * @since 5.113.0
+	 */
+	precision?: number;
+	/**
+	 * Remove attributes matching `element:attribute:value` patterns, each part a case-insensitive regular expression matched whole, `*` matching anything; a missing element or value part matches any. Off by default because only the author knows which attributes the image can lose.
+	 * @since 5.113.0
+	 */
+	removeAttributes?: Array</** An `element:attribute:value` pattern of attributes to remove. */ string>;
+	/**
+	 * Remove SVG `desc` elements. Off by default because they describe the image for assistive technology.
+	 * @since 5.113.0
+	 */
+	removeDescriptions?: boolean;
+	/**
+	 * Remove the root SVG element's `width` and `height`, moving plain ones into a missing `viewBox`, so the image scales to whatever box it is placed in. Off by default because the image loses its intrinsic size.
+	 * @since 5.113.0
+	 */
+	removeDimensions?: boolean;
+	/**
+	 * Remove a DOCTYPE without an internal subset where no entity reference needs one. Off by default because a validating consumer reads the DTD it names.
+	 * @since 5.113.0
+	 */
+	removeDoctype?: boolean;
+	/**
 	 * Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.
 	 * @since 5.113.0
 	 */
 	removeEditorData?: boolean;
+	/**
+	 * Remove elements with one of these IDs or classes, with their content. Off by default because only the author knows which elements the image can lose.
+	 * @since 5.113.0
+	 */
+	removeElements?: {
+		/**
+		 * Classes whose elements are removed.
+		 */
+		class?: Array</** A class whose elements are removed. */ string>;
+		/**
+		 * IDs whose elements are removed.
+		 */
+		id?: Array</** An ID whose element is removed. */ string>;
+	};
 	/**
 	 * Remove empty `class`, `id` and `style` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.
 	 * @since 5.113.0
@@ -3560,15 +3609,45 @@ export interface OptimizationMinimizeXml {
 	 */
 	removeEmptyElements?: boolean;
 	/**
+	 * Remove ID-free SVG content that renders nothing: `display="none"`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, paths and point lists that draw nothing, shapes that paint neither fill nor stroke, uses of what draws nothing, `tref` elements without a reference, and subtrees under `visibility="hidden"` that never set it back. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a `switch` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.
+	 * @since 5.113.0
+	 */
+	removeHiddenElements?: boolean;
+	/**
 	 * Remove SVG `metadata` elements and their contents, preserving `title`, `desc` and the document element. Off by default because metadata can carry licensing and application data.
 	 * @since 5.113.0
 	 */
 	removeMetadata?: boolean;
 	/**
+	 * Remove SVG `image` elements referencing JPEG, PNG or GIF images. Off by default because those images disappear from the drawing.
+	 * @since 5.113.0
+	 */
+	removeRasterImages?: boolean;
+	/**
+	 * Remove `script` elements, event handler and `srcdoc` attributes, `javascript:` and `vbscript:` URLs and links to HTML or SVG `data:` documents, for SVG that must not run code. Off by default because the image loses its behavior.
+	 * @since 5.113.0
+	 */
+	removeScripts?: boolean;
+	/**
+	 * Remove SVG `title` elements. Off by default because they name the image for assistive technology and tooltips.
+	 * @since 5.113.0
+	 */
+	removeTitles?: boolean;
+	/**
 	 * Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.
 	 * @since 5.113.0
 	 */
 	removeUnusedNamespaces?: boolean;
+	/**
+	 * Remove the root SVG element's `viewBox` where it restates its plain `width` and `height`. Off by default because the image then no longer scales when CSS gives it another size.
+	 * @since 5.113.0
+	 */
+	removeViewBox?: boolean;
+	/**
+	 * Spell `xlink:href` as the SVG 2 `href` where an element has no `href`, a link's `xlink:show` as `target`, and drop `xlink:type="simple"`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only `xlink:href`.
+	 * @since 5.113.0
+	 */
+	removeXlink?: boolean;
 	/**
 	 * Reuse unidentified duplicate leaf SVG paths without transforms through existing IDs and SVG 2 href references, preserving IDs and target element types. Require explicit context-free fill and stroke; compare identical authored paint before color cleanup. Off by default because consumers can observe element types; skip stylesheets, scripts, animations, duplicate IDs and DTDs.
 	 * @since 5.113.0

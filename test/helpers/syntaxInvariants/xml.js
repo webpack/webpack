@@ -22,6 +22,7 @@ const { wantedRespelling } = require("../../../tooling/compare-tools-harness");
 const {
 	cutsAt,
 	hasher,
+	noticeRelation,
 	oneLine,
 	pathSpanWalk,
 	shrink,
@@ -43,13 +44,14 @@ const printXml = (xml, mode) =>
 		new SourceProcessor().process(xml, { xml: true, mode })
 	).code;
 
-/** @typedef {Pick<import("../../../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "renderEmbeddedSource" | "collapseWhitespace" | "removeEmptyAttributes" | "removeEmptyElements" | "removeSvgMetadata" | "removeSvgEditorData" | "removeUnusedSvgNamespaces" | "shortenSvgNumbers" | "shortenSvgColors" | "shortenSvgPathData" | "sortSvgSymbols" | "convertSvgShapes" | "cleanupSvgStructure" | "mergeSvgPaths" | "reuseSvgPaths" | "sortSvgDefinitions"> & { mode?: "minify" | "beautify" }} XmlPrintOptions */
+/** @typedef {Pick<import("../../../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "renderEmbeddedSource" | "collapseWhitespace" | "removeEmptyAttributes" | "removeEmptyElements" | "removeSvgMetadata" | "removeSvgEditorData" | "removeUnusedSvgNamespaces" | "shortenSvgNumbers" | "shortenSvgColors" | "shortenSvgPathData" | "sortSvgSymbols" | "convertSvgShapes" | "cleanupSvgStructure" | "removeSvgScripts" | "removeSvgTitles" | "removeSvgDescriptions" | "removeSvgRasterImages" | "removeSvgXlink" | "removeSvgDimensions" | "removeSvgViewBox" | "removeXmlDoctype" | "cleanupSvgIds" | "removeHiddenSvgElements" | "removeSvgAttributes" | "removeSvgElements" | "inlineSvgStyles" | "svgPrecision" | "mergeSvgPaths" | "reuseSvgPaths" | "sortSvgDefinitions"> & { mode?: "minify" | "beautify" }} XmlPrintOptions */
 
 /** @typedef {import("../../../lib/html/builtinEmbeddedRenderer").BuiltinEmbeddedRendererOptions} CssOptions */
 
-// An XML declaration's data stating only version 1.0 and UTF-8 (XML 1.0 §2.8).
+// An XML declaration's data stating only version 1.0, UTF-8 and standalone
+// "no", what a parser assumes without one (XML 1.0 §2.8 and §2.9).
 const XML_DEFAULT_DECLARATION =
-	/^version[\t\n\r ]*=[\t\n\r ]*(["'])1\.0\1(?:[\t\n\r ]+encoding[\t\n\r ]*=[\t\n\r ]*(["'])[Uu][Tt][Ff]-8\2)?[\t\n\r ]*$/;
+	/^version[\t\n\r ]*=[\t\n\r ]*(["'])1\.0\1(?:[\t\n\r ]+encoding[\t\n\r ]*=[\t\n\r ]*(["'])[Uu][Tt][Ff]-8\2)?(?:[\t\n\r ]+standalone[\t\n\r ]*=[\t\n\r ]*(["'])no\3)?[\t\n\r ]*$/;
 
 /** @type {CssOptions} */
 const LEGACY_CSS_OPTIONS = {
@@ -809,6 +811,43 @@ const meaningReports = (xml, printed, cssOptions, options = {}) =>
 				}
 			];
 
+// A comment's data the minifier keeps by default: a downlevel conditional comment
+// drives IE's branching, `#` opens a server-side include, and a `!` banner or a
+// `@license` / `@preserve` annotation is a legal notice.
+const KEPT_COMMENT = /^\s*(?:\[if|\[endif|<!\[|#)|^!|@(?:license|preserve)/i;
+
+/**
+ * The comments a document carries that no minifier may drop, read by webpack's
+ * own parser: each conditional comment, server-side include or legal notice. A
+ * processing instruction is one too, which `meaning`'s canonical form holds.
+ * @param {string} xml a document
+ * @returns {number} how many it carries
+ */
+const keptComments = (xml) => {
+	let count = 0;
+	new SourceProcessor()
+		.use({
+			[NodeType.Comment]: {
+				enter: (nodePath) => {
+					if (KEPT_COMMENT.test(nodePath.value())) count++;
+				},
+				exit: () => {}
+			}
+		})
+		.process(xml, { xml: true });
+	return count;
+};
+
+/**
+ * Whether the printed document keeps every comment its source carries that
+ * is code rather than a comment (`notices`).
+ * @param {string} xml the document
+ * @param {string} printed what a preset printed of it
+ * @returns {Report[]} one finding where it carries fewer
+ */
+const noticeReports = (xml, printed) =>
+	noticeRelation(keptComments, xml, printed);
+
 /** @type {import("./index").SyntaxInvariants} */
 const syntax = {
 	printers: () =>
@@ -819,8 +858,10 @@ const syntax = {
 				minify,
 				says: (text) => canonical(text, cssOptions),
 				repro: (printed, at) => idempotenceRepro(minify, printed, at),
-				keeps: (xml, printed) =>
-					meaningReports(xml, printed, cssOptions, options)
+				keeps: (xml, printed) => [
+					...meaningReports(xml, printed, cssOptions, options),
+					...noticeReports(xml, printed)
+				]
 			};
 		}),
 	spans: xmlSpans,
@@ -841,6 +882,7 @@ module.exports = {
 	decodedAttributes,
 	idempotenceRepro,
 	meaningReports,
+	noticeReports,
 	printXml,
 	printerFor,
 	sweepRespellings,

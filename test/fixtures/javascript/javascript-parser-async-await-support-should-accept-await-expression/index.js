@@ -1,0 +1,1 @@
+async function x(y) { await y }

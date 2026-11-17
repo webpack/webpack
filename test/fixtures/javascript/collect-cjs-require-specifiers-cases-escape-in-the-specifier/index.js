@@ -1,0 +1,1 @@
+require("./a\tb"); require("./c");

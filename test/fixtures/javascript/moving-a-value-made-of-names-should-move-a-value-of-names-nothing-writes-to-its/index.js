@@ -1,0 +1,1 @@
+function h(){var n=[r],r=4;return[n,function(){return r}]}console.log(JSON.stringify(h()))

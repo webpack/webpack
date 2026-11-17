@@ -1,0 +1,1 @@
+var log = [], value = null, other; function factory() { log.push("factory"); return {}; } try { value.x; } catch (e) { log.push(e.name); } try { other.y; } catch (e) { log.push(e.name); } factory()[{ toString: function () { log.push("key"); return "k"; } }]; console.log(log.join());

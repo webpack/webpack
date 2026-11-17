@@ -1,0 +1,1 @@
+function f() { { let a; var a2; { let b; var b2; } } return a2 + b2; }

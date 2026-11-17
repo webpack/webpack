@@ -963,6 +963,18 @@ describe("compare-tools-harness", () => {
 			expect(text).toContain("idempotence: gone");
 		});
 
+		it("holds an entry naming no fixture stale only on a run reading every fixture", () => {
+			const entry = { relation: "idempotence", contains: "gone", why: "…" };
+			const scoped = { ...entry, source: "one" };
+			process.env.FIXTURE = "one";
+			try {
+				expect(written(findingGroups([entry])).count).toBe(0);
+				expect(written(findingGroups([scoped])).count).toBe(1);
+			} finally {
+				delete process.env.FIXTURE;
+			}
+		});
+
 		it("lets a source-scoped entry cover the fixture it names", () => {
 			const groups = findingGroups([
 				{

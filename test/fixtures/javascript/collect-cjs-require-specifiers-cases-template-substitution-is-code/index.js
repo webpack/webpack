@@ -1,0 +1,1 @@
+const s = `x${require('./a')}y`; require('./b');

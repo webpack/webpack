@@ -1,0 +1,1 @@
+const flag=typeof Promise==="function";export const picked=await(flag?Promise.resolve(4):Promise.resolve(5));

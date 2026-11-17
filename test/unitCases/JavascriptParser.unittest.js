@@ -1,5 +1,7 @@
 "use strict";
 
+const { fixture } = require("../helpers/fixture");
+
 /* eslint-disable no-unused-expressions, no-unassigned-vars, func-names */
 
 // cspell:ignore fghsub notry fghsub notry notry this's ijksub this's ijksub fghsub fghsub notry ijksub ijksub strrring strrring strr strrring strrring strr Sstrrringy strone stronetwo stronetwothree stronetwo stronetwothree stronetwothreefour onetwo onetwo twothree twothree twothree threefour onetwo onetwo threefour threefour fourfive startstrmid igmy igmyi igmya
@@ -20,282 +22,136 @@ const parseWithComments = (code, sourceType) =>
 	parseEstree(code, { sourceType, ranges: true, comments: true });
 
 describe("JavascriptParser", () => {
-	/* eslint-disable no-unused-vars */
-	/** @type {EXPECTED_ANY} */ let abc;
-	/** @type {EXPECTED_ANY} */ let cde;
-	/** @type {EXPECTED_ANY} */ let fgh;
-	/** @type {EXPECTED_ANY} */ let memberExpr;
-	/** @type {EXPECTED_ANY} */ let ijk;
-	/** @type {EXPECTED_ANY} */ let xyz;
 	const testCases = /** @type {EXPECTED_ANY} */ ({
 		"call ident": [
-			function () {
-				abc("test");
-			},
+			fixture("javascript", "javascript-parser-should-parse-call-ident"),
 			{
 				abc: ["test"]
 			}
 		],
 		"call member": [
-			function () {
-				cde.abc("membertest");
-			},
+			fixture("javascript", "javascript-parser-should-parse-call-member"),
 			{
 				cdeabc: ["membertest"]
 			}
 		],
 		"call member using bracket notation": [
-			function () {
-				// eslint-disable-next-line dot-notation
-				cde["abc"]("membertest");
-			},
+			fixture("javascript", "javascript-parser-should-parse-call-member-using-bracket-notation"),
 			{
 				cdeabc: ["membertest"]
 			}
 		],
 		"call inner member": [
-			function () {
-				cde.ddd.abc("inner");
-			},
+			fixture("javascript", "javascript-parser-should-parse-call-inner-member"),
 			{
 				cdedddabc: ["inner"]
 			}
 		],
 		"call inner member using bracket notation": [
-			function () {
-				// eslint-disable-next-line dot-notation
-				cde.ddd["abc"]("inner");
-			},
+			fixture("javascript", "javascript-parser-should-parse-call-inner-member-using-bracket-notation"),
 			{
 				cdedddabc: ["inner"]
 			}
 		],
 		expression: [
-			function () {
-				fgh;
-			},
+			fixture("javascript", "javascript-parser-should-parse-expression"),
 			{
 				fgh: [""]
 			}
 		],
 		"expression sub": [
-			function () {
-				fgh.sub;
-			},
+			fixture("javascript", "javascript-parser-should-parse-expression-sub"),
 			{
 				fghsub: ["notry"]
 			}
 		],
 		"member expression": [
-			function () {
-				// @ts-expect-error
-				test[memberExpr];
-
-				// @ts-expect-error
-				test[+memberExpr]; // eslint-disable-line no-implicit-coercion
-			},
+			fixture("javascript", "javascript-parser-should-parse-member-expression"),
 			{
 				expressions: ["memberExpr", "memberExpr"]
 			}
 		],
 		"in function definition": [
-			function () {
-				(function (abc, cde, fgh) {
-					// @ts-expect-error
-					abc("test");
-					// @ts-expect-error
-					cde.abc("test");
-					// @ts-expect-error
-					cde.ddd.abc("test");
-					fgh;
-					// @ts-expect-error
-					fgh.sub;
-				})();
-			},
+			fixture("javascript", "javascript-parser-should-parse-in-function-definition"),
 			{}
 		],
 		"const definition": [
-			function () {
-				// eslint-disable-next-line one-var
-				let abc, cde, fgh;
-				// @ts-expect-error
-				abc("test");
-				// @ts-expect-error
-				cde.abc("test");
-				// @ts-expect-error
-				cde.ddd.abc("test");
-				fgh;
-				// @ts-expect-error
-				fgh.sub;
-			},
+			fixture("javascript", "javascript-parser-should-parse-const-definition"),
 			{}
 		],
 		"var definition": [
-			function () {
-				// eslint-disable-next-line one-var
-				let abc, cde, fgh;
-				// @ts-expect-error
-				abc("test");
-				// @ts-expect-error
-				cde.abc("test");
-				// @ts-expect-error
-				cde.ddd.abc("test");
-				fgh;
-				// @ts-expect-error
-				fgh.sub;
-			},
+			fixture("javascript", "javascript-parser-should-parse-var-definition"),
 			{}
 		],
 		"function definition": [
-			function () {
-				function abc() {}
-
-				function cde() {}
-
-				function fgh() {}
-				// @ts-expect-error
-				abc("test");
-				// @ts-expect-error
-				cde.abc("test");
-				// @ts-expect-error
-				cde.ddd.abc("test");
-				fgh;
-				// @ts-expect-error
-				fgh.sub;
-			},
+			fixture("javascript", "javascript-parser-should-parse-function-definition"),
 			{}
 		],
 		"class definition": [
-			function () {
-				class memberExpr {
-					cde() {
-						abc("cde");
-					}
-
-					static fgh() {
-						abc("fgh");
-						fgh();
-					}
-				}
-			},
+			fixture("javascript", "javascript-parser-should-parse-class-definition"),
 			{
 				abc: ["cde", "fgh"],
 				fgh: ["memberExpr"]
 			}
 		],
 		"in try": [
-			function () {
-				try {
-					fgh.sub;
-					fgh;
-
-					// @ts-expect-error
-					function test(ttt) {
-						fgh.sub;
-						fgh;
-					}
-				} catch (err) {
-					fgh.sub;
-					fgh;
-				}
-			},
+			fixture("javascript", "javascript-parser-should-parse-in-try"),
 			{
 				fghsub: ["try", "notry", "notry"],
 				fgh: ["test", "test ttt", "test err"]
 			}
 		],
 		"renaming with const": [
-			function () {
-				const xyz = abc;
-				xyz("test");
-			},
+			fixture("javascript", "javascript-parser-should-parse-renaming-with-const"),
 			{
 				abc: ["test"]
 			}
 		],
 		"renaming with var": [
-			function () {
-				const xyz = abc;
-				xyz("test");
-			},
+			fixture("javascript", "javascript-parser-should-parse-renaming-with-var"),
 			{
 				abc: ["test"]
 			}
 		],
 		"renaming with assignment": [
-			function () {
-				const xyz = abc;
-				xyz("test");
-			},
+			fixture("javascript", "javascript-parser-should-parse-renaming-with-assignment"),
 			{
 				abc: ["test"]
 			}
 		],
 		"renaming with IIFE": [
-			function () {
-				// @ts-expect-error
-				!(function (xyz) {
-					xyz("test");
-				})(abc);
-			},
+			fixture("javascript", "javascript-parser-should-parse-renaming-with-iife"),
 			{
 				abc: ["test"]
 			}
 		],
 		"renaming arguments with IIFE (called)": [
-			function () {
-				// @ts-expect-error
-				!function (xyz) {
-					xyz("test");
-				}.call(fgh, abc);
-			},
+			fixture("javascript", "javascript-parser-should-parse-renaming-arguments-with-iife-called"),
 			{
 				abc: ["test"],
 				fgh: [""]
 			}
 		],
 		"renaming this's properties with IIFE (called)": [
-			function () {
-				// @ts-expect-error
-				!function () {
-					// @ts-expect-error
-					this.sub;
-				}.call(ijk);
-			},
+			fixture("javascript", "javascript-parser-should-parse-renaming-this-s-properties-with-iife-called"),
 			{
 				ijksub: ["test"]
 			}
 		],
 		"renaming this's properties with nested IIFE (called)": [
-			function () {
-				// @ts-expect-error
-				!function () {
-					// @ts-expect-error
-					!function () {
-						// @ts-expect-error
-						this.sub;
-						// @ts-expect-error
-					}.call(this);
-				}.call(ijk);
-			},
+			fixture("javascript", "javascript-parser-should-parse-renaming-this-s-properties-with-nested-iife-called"),
 			{
 				ijksub: ["test"]
 			}
 		],
 		"new Foo(...)": [
-			function () {
-				// eslint-disable-next-line new-cap, no-new
-				new xyz("membertest");
-			},
+			fixture("javascript", "javascript-parser-should-parse-new-foo"),
 			{
 				xyz: ["membertest"]
 			}
 		],
 		"spread calls/literals": [
-			function () {
-				const xyz = [...abc("xyz"), cde];
-				Math.max(...fgh);
-			},
+			fixture("javascript", "javascript-parser-should-parse-spread-calls-literals"),
 			{
 				abc: ["xyz"],
 				fgh: ["xyz"]
@@ -303,14 +159,12 @@ describe("JavascriptParser", () => {
 		]
 	});
 
-	/* eslint-enable no-unused-vars */
 
 	for (const name of Object.keys(testCases)) {
 		it(`should parse ${name}`, () => {
-			let source = /** @type {Record<string, EXPECTED_ANY[]>} */ (testCases)[
+			const source = /** @type {Record<string, EXPECTED_ANY[]>} */ (testCases)[
 				name
-			][0].toString();
-			source = source.slice(13, -1).trim();
+			][0];
 			const state = /** @type {Record<string, EXPECTED_ANY[]>} */ (testCases)[
 				name
 			][1];
@@ -410,7 +264,7 @@ describe("JavascriptParser", () => {
 	}
 
 	it("should parse comments", () => {
-		const source = "//comment1\n/*comment2*/";
+		const source = fixture("javascript", "javascript-parser-should-parse-comments-source");
 		const state = [
 			{
 				type: "Line",
@@ -449,7 +303,7 @@ describe("JavascriptParser", () => {
 
 	describe("expression evaluation", () => {
 		/**
-		 * @param {string} source source
+		 * @param {string} source a `test(<expression>);` statement
 		 * @returns {import("../../lib/javascript/BasicEvaluatedExpression")} the evaluated expression
 		 */
 		function evaluateInParser(source) {
@@ -480,204 +334,20 @@ describe("JavascriptParser", () => {
 						)
 				);
 			return parser.parse(
-				`test(${source});`,
+				source,
 				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			).result;
 		}
 
-		const testCases = {
-			true: "bool=true",
-			false: "bool=false",
-			"!true": "bool=false",
-			"!false": "bool=true",
-			'"strrring"': "string=strrring",
-			'"strr" + "ring"': "string=strrring",
-			'"s" + ("trr" + "rin") + "g"': "string=strrring",
-			"'S' + (\"strr\" + \"ring\") + 'y'": "string=Sstrrringy",
-			"/abc/": "regExp=/abc/",
-			1: "number=1",
-			"1 + 3": "number=4",
-			"3 - 1": "number=2",
-			"2 * 3": "number=6",
-			"8 / 2": "number=4",
-			"2 ** 3": "number=8",
-			"12 & 5": "number=4",
-			"12 | 5": "number=13",
-			"12 ^ 5": "number=9",
-			"9 >>> 2": "number=2",
-			"9 >> 2": "number=2",
-			"9 << 2": "number=36",
-			"~3": "number=-4",
-			"1 == 1": "bool=true",
-			"1 === 1": "bool=true",
-			"3 != 1": "bool=true",
-			"3 !== 1": "bool=true",
-			"3 == 1": "bool=false",
-			"3 === 1": "bool=false",
-			"1 != 1": "bool=false",
-			"1 !== 1": "bool=false",
-			100.25: "number=100.25",
-			"!100.25": "bool=false",
-			"!+100.25": "bool=false",
-			"!-100.25": "bool=false",
-			0: "number=0",
-			"!0": "bool=true",
-			"!-0": "bool=true",
-			"!+0": "bool=true",
-			"20n": "bigint=20",
-			"10n + 10n": "bigint=20",
-			"10n - 5n": "bigint=5",
-			"10n * 5n": "bigint=50",
-			"10n / 5n": "bigint=2",
-			"5n ** 2n": "bigint=25",
-			"5n == 5n": "bool=true",
-			"5n === 5n": "bool=true",
-			"5n != 5n": "bool=false",
-			"5n !== 5n": "bool=false",
-			"5n != 1n": "bool=true",
-			"5n !== 1n": "bool=true",
-			"5n & 3n": "bigint=1",
-			"5n | 2n": "bigint=7",
-			"5n ^ 2n": "bigint=7",
-			"5n >> 2n": "bigint=1",
-			"5n << 2n": "bigint=20",
-			"1n - 1": "",
-			"1n & 1": "",
-			"+1n": "",
-			"1n / 0n": "",
-			"~1n": "bigint=-2",
-			"null == null": "bool=true",
-			"null === null": "bool=true",
-			"null != null": "bool=false",
-			"null !== null": "bool=false",
-			"true === false": "bool=false",
-			"false !== false": "bool=false",
-			"true == true": "bool=true",
-			"false != true": "bool=true",
-			"!'a'": "bool=false",
-			"!''": "bool=true",
-			"!null": "bool=true",
-			"'pre' + a": "wrapped=['pre' string=pre]+[null]",
-			"a + 'post'": "wrapped=[null]+['post' string=post]",
-			"'pre' + a + 'post'": "wrapped=['pre' string=pre]+['post' string=post]",
-			"1 + a + 2": "",
-			"1 + a + 'post'": "wrapped=[null]+['post' string=post]",
-			"'' + 1 + a + 2": "wrapped=['' + 1 string=1]+[2 string=2]",
-			"'' + 1 + a + 2 + 3": "wrapped=['' + 1 string=1]+[2 + 3 string=23]",
-			"'' + 1 + a + (2 + 3)": "wrapped=['' + 1 string=1]+[2 + 3 string=5]",
-			"'pre' + (1 + a) + (2 + 3)":
-				"wrapped=['pre' string=pre]+[2 + 3 string=5]",
-			"a ? 'o1' : 'o2'": "options=['o1' string=o1],['o2' string=o2]",
-			"a ? 'o1' : b ? 'o2' : 'o3'":
-				"options=['o1' string=o1],['o2' string=o2],['o3' string=o3]",
-			"a ? (b ? 'o1' : 'o2') : 'o3'":
-				"options=['o1' string=o1],['o2' string=o2],['o3' string=o3]",
-			"a ? (b ? 'o1' : 'o2') : c ? 'o3' : 'o4'":
-				"options=['o1' string=o1],['o2' string=o2],['o3' string=o3],['o4' string=o4]",
-			"a ? 'o1' : b ? 'o2' : c ? 'o3' : 'o4'":
-				"options=['o1' string=o1],['o2' string=o2],['o3' string=o3],['o4' string=o4]",
-			"a ? 'o1' : b ? b : c ? 'o3' : c":
-				"options=['o1' string=o1],[b],['o3' string=o3],[c]",
-			"['i1', 'i2', 3, a, b ? 4 : 5]":
-				"items=['i1' string=i1],['i2' string=i2],[3 number=3],[a],[b ? 4 : 5 options=[4 number=4],[5 number=5]]",
-			"typeof 'str'": "string=string",
-			"typeof aString": "string=string",
-			"typeof b.Number": "string=number",
-			"typeof b['Number']": "string=number",
-			"typeof b[Number]": "",
-			"typeof true": "string=boolean",
-			"typeof null": "string=object",
-			"typeof 1": "string=number",
-			"typeof 1n": "string=bigint",
-			"typeof void 0": "string=undefined",
-			"typeof void a": "",
-			"b.Number": "number=123",
-			"b['Number']": "number=123",
-			"b[Number]": "",
-			"'str'.concat()": "string=str",
-			"'str'.concat('one')": "string=strone",
-			"'str'.concat('one').concat('two')": "string=stronetwo",
-			"'str'.concat('one').concat('two', 'three')": "string=stronetwothree",
-			"'str'.concat('one', 'two')": "string=stronetwo",
-			"'str'.concat('one', 'two').concat('three')": "string=stronetwothree",
-			"'str'.concat('one', 'two').concat('three', 'four')":
-				"string=stronetwothreefour",
-			"'str'.concat('one', obj)": "wrapped=['str' string=str]+[null]",
-			"'str'.concat('one', obj).concat()": "wrapped=['str' string=str]+[null]",
-			"'str'.concat('one', obj, 'two')":
-				"wrapped=['str' string=str]+['two' string=two]",
-			"'str'.concat('one', obj, 'two').concat()":
-				"wrapped=['str' string=str]+['two' string=two]",
-			"'str'.concat('one', obj, 'two').concat('three')":
-				"wrapped=['str' string=str]+['three' string=three]",
-			"'str'.concat(obj)": "wrapped=['str' string=str]+[null]",
-			"'str'.concat(obj).concat()": "wrapped=['str' string=str]+[null]",
-			"'str'.concat(obj).concat('one', 'two')":
-				"wrapped=['str' string=str]+['one', 'two' string=onetwo]",
-			"'str'.concat(obj).concat(obj, 'one')":
-				"wrapped=['str' string=str]+['one' string=one]",
-			"'str'.concat(obj).concat(obj, 'one', 'two')":
-				"wrapped=['str' string=str]+['one', 'two' string=onetwo]",
-			"'str'.concat(obj).concat('one', obj, 'one')":
-				"wrapped=['str' string=str]+['one' string=one]",
-			"'str'.concat(obj).concat('one', obj, 'two', 'three')":
-				"wrapped=['str' string=str]+['two', 'three' string=twothree]",
-			"'str'.concat(obj, 'one')":
-				"wrapped=['str' string=str]+['one' string=one]",
-			"'str'.concat(obj, 'one').concat()":
-				"wrapped=['str' string=str]+['one' string=one]",
-			"'str'.concat(obj, 'one').concat('two', 'three')":
-				"wrapped=['str' string=str]+['two', 'three' string=twothree]",
-			"'str'.concat(obj, 'one').concat(obj, 'two', 'three')":
-				"wrapped=['str' string=str]+['two', 'three' string=twothree]",
-			"'str'.concat(obj, 'one').concat('two', obj, 'three')":
-				"wrapped=['str' string=str]+['three' string=three]",
-			"'str'.concat(obj, 'one').concat('two', obj, 'three', 'four')":
-				"wrapped=['str' string=str]+['three', 'four' string=threefour]",
-			"'str'.concat(obj, 'one', 'two')":
-				"wrapped=['str' string=str]+['one', 'two' string=onetwo]",
-			"'str'.concat(obj, 'one', 'two').concat()":
-				"wrapped=['str' string=str]+['one', 'two' string=onetwo]",
-			"'str'.concat(obj, 'one', 'two').concat('three', 'four')":
-				"wrapped=['str' string=str]+['three', 'four' string=threefour]",
-			"'str'.concat(obj, 'one', 'two').concat(obj, 'three', 'four')":
-				"wrapped=['str' string=str]+['three', 'four' string=threefour]",
-			"'str'.concat(obj, 'one', 'two').concat('three', obj, 'four')":
-				"wrapped=['str' string=str]+['four' string=four]",
-			"'str'.concat(obj, 'one', 'two').concat('three', obj, 'four', 'five')":
-				"wrapped=['str' string=str]+['four', 'five' string=fourfive]",
-			// eslint-disable-next-line no-template-curly-in-string
-			"`start${obj}mid${obj2}end`":
-				"template=[start string=start],[mid string=mid],[end string=end]",
-			// eslint-disable-next-line no-template-curly-in-string
-			"`start${'str'}mid${obj2}end`":
-				// eslint-disable-next-line no-template-curly-in-string
-				"template=[start${'str'}mid string=startstrmid],[end string=end]",
-			// eslint-disable-next-line no-template-curly-in-string
-			"`a${x}` === `b${x}`": "bool=false",
-			// eslint-disable-next-line no-template-curly-in-string
-			"`${x}a` === `${x}b`": "bool=false",
-			// eslint-disable-next-line no-template-curly-in-string
-			"`${a}${b}` === `a${b}`": "",
-			// eslint-disable-next-line no-template-curly-in-string
-			"`${a}${b}` === `${a}b`": "",
-			"'abc'.slice(1)": "string=bc",
-			"'abcdef'.slice(2, 5)": "string=cde",
-			"'abcdef'.substring(2, 3)": "string=c",
-			"'abcdef'.substring(2, 3, 4)": "",
-			"'abc'[\"slice\"](1)": "string=bc",
-			"'abc'[slice](1)": "",
-			"'1,2+3'.split(/[,+]/)": "array=[1],[2],[3]",
-			"'1,2+3'.split(expr)": "",
-			"'a' + (expr + 'c')": "wrapped=['a' string=a]+['c' string=c]",
-			"1 + 'a'": "string=1a",
-			"'a' + 1": "string=a1",
-			"'a' + expr + 1": "wrapped=['a' string=a]+[1 string=1]"
-		};
+		const statements = fixture(
+			"javascript",
+			"javascript-parser-expression-evaluation"
+		).split("\n");
 
-		for (const key of Object.keys(testCases)) {
+		for (const statement of statements) {
+			const key = statement.slice(5, -2);
 			/**
 			 * @param {import("../../lib/javascript/BasicEvaluatedExpression")} evalExpr eval expr
 			 * @returns {string} result
@@ -733,20 +403,18 @@ describe("JavascriptParser", () => {
 			}
 
 			it(`should eval ${key}`, () => {
-				const evalExpr = evaluateInParser(key);
-				expect(evalExprToString(evalExpr)).toBe(
-					/** @type {Record<string, string>} */ (testCases)[key]
-						? `${key} ${/** @type {Record<string, string>} */ (testCases)[key]}`
-						: key
-				);
+				expect(evalExprToString(evaluateInParser(statement))).toMatchSnapshot();
 			});
 		}
 
 		it("should not warn when a const operation throws at runtime", () => {
 			const spy = jest.spyOn(console, "warn").mockImplementation(() => {});
 			try {
-				for (const source of ["1n - 1", "1n & 1", "1n / 0n", "+1n"]) {
-					evaluateInParser(source);
+				for (const statement of fixture(
+					"javascript",
+					"javascript-parser-const-operations-that-throw"
+				).split("\n")) {
+					evaluateInParser(statement);
 				}
 				expect(spy).not.toHaveBeenCalled();
 			} finally {
@@ -758,10 +426,10 @@ describe("JavascriptParser", () => {
 	describe("async/await support", () => {
 		describe("should accept", () => {
 			const cases = {
-				"async function": "async function x() {}",
-				"async arrow function": "async () => {}",
-				"await expression": "async function x(y) { await y }",
-				"await iteration": "async function f() { for await (x of xs); }"
+				"async function": fixture("javascript", "javascript-parser-async-await-support-should-accept-async-function"),
+				"async arrow function": fixture("javascript", "javascript-parser-async-await-support-should-accept-async-arrow-function"),
+				"await expression": fixture("javascript", "javascript-parser-async-await-support-should-accept-await-expression"),
+				"await iteration": fixture("javascript", "javascript-parser-async-await-support-should-accept-await-iteration")
 			};
 			const parser = new JavascriptParser();
 			for (const name of Object.keys(cases)) {
@@ -849,7 +517,7 @@ describe("JavascriptParser", () => {
 			});
 
 			parser.parse(
-				"const { a, ...rest } = { a: 1, b: 2 };",
+				fixture("javascript", "javascript-parser-object-rest-spread-support-should-collect-definitions-from"),
 				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
@@ -889,7 +557,7 @@ describe("JavascriptParser", () => {
 			});
 
 			parser.parse(
-				"",
+				fixture("javascript", "javascript-parser-in-block-scope-should-isolate-definitions-and-propagate"),
 				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
@@ -1061,7 +729,7 @@ describe("JavascriptParser", () => {
 				seen.push("marker");
 				return true;
 			});
-			parser.parse("function f(a){} f(marker);", state);
+			parser.parse(fixture("javascript", "javascript-parser-defined-identifier-evaluation-fast-path-still-walks-callee"), state);
 			expect(seen).toEqual(["marker"]);
 		});
 
@@ -1088,7 +756,7 @@ describe("JavascriptParser", () => {
 				calls.push(1);
 				return true;
 			});
-			parser.parse("function f(){} f();", state);
+			parser.parse(fixture("javascript", "javascript-parser-defined-identifier-evaluation-fast-path-honors-plugin"), state);
 			expect(calls).toEqual([1]);
 		});
 
@@ -1107,7 +775,7 @@ describe("JavascriptParser", () => {
 				evaluated.push(/** @type {[number, number]} */ (expr.range)[0]);
 				return undefined;
 			});
-			parser.parse("function f(){} f();", state);
+			parser.parse(fixture("javascript", "javascript-parser-defined-identifier-evaluation-fast-path-does-not-treat-tagged"), state);
 			// the tagged callee took the full evaluation path
 			expect(evaluated).toHaveLength(1);
 		});
@@ -1134,12 +802,13 @@ describe("JavascriptParser", () => {
 
 		// `import.defer(...)`/`import.source(...)` are CallExpressions, so they
 		// cannot be the operand of `new`, including with member access (#21212).
-		for (const source of [
-			'new import.defer("x");',
-			'new import.defer("x").prop;',
-			'new import.defer("x").a.b;',
-			'new import.source("x").prop;'
+		for (const name of [
+			"javascript-parser-import-phases-rejects-new-of-an-import-call",
+			"javascript-parser-import-phases-rejects-new-of-an-import-call-2",
+			"javascript-parser-import-phases-rejects-new-of-an-import-call-3",
+			"javascript-parser-import-phases-rejects-new-of-an-import-call-4"
 		]) {
+			const source = fixture("javascript", name);
 			it(`rejects ${JSON.stringify(source)}`, () => {
 				const err = parse(source);
 				expect(err).toBeInstanceOf(SyntaxError);
@@ -1150,10 +819,11 @@ describe("JavascriptParser", () => {
 		}
 
 		// Parenthesized forms and non-`new` member access stay valid.
-		for (const source of [
-			'new (import.defer("x")).prop;',
-			'import.defer("x").then(() => {});'
+		for (const name of [
+			"javascript-parser-import-phases-accepts-a-parenthesized-or-member-import-call",
+			"javascript-parser-import-phases-accepts-a-parenthesized-or-member-import-call-2"
 		]) {
+			const source = fixture("javascript", name);
 			it(`accepts ${JSON.stringify(source)}`, () => {
 				expect(parse(source)).toBeNull();
 			});
@@ -1264,25 +934,7 @@ describe("JavascriptParser", () => {
 	});
 
 	describe("hoisted declarations", () => {
-		const EVERY_POSITION = `
-var top = 1;
-function topFunction() {}
-class TopClass {}
-if (top) { var fromIf = 1; } else { var fromElse = 2; }
-for (var fromFor = 0; fromFor < 1; fromFor++) { var fromForBody = 1; }
-for (var fromForIn in top) { var fromForInBody = 1; }
-for (var fromForOf of [top]) { var fromForOfBody = 1; }
-while (top) { var fromWhile = 1; }
-do { var fromDoWhile = 1; } while (top);
-label: { var fromLabeled = 1; }
-with (top) { var fromWith = 1; }
-try { var fromTry = 1; } catch (error) { var fromCatch = 1; } finally { var fromFinally = 1; }
-switch (top) { case 1: var fromCase = 1; break; default: var fromDefault = 1; }
-{ var fromBlock = 1; function blockFunction() {} }
-let lexical = 1;
-const alsoLexical = 1;
-function outer() { var inOuter = 1; }
-`;
+		const EVERY_POSITION = fixture("javascript", "javascript-parser-hoisted-declarations-every-position");
 
 		/**
 		 * @param {string | object} source what to parse
@@ -1351,7 +1003,7 @@ function outer() { var inOuter = 1; }
 
 		it("walks every statement again for a tap that expects them", () => {
 			const source =
-				"debugger;\nfunction outer() { if (outer) { debugger; } }";
+				fixture("javascript", "javascript-parser-hoisted-declarations-walks-every-statement-again-for-a-tap");
 			/**
 			 * @param {(parser: EXPECTED_ANY) => void} tap what to tap with
 			 * @returns {string[]} the statement types the pre-walk reported
@@ -1398,14 +1050,7 @@ function outer() { var inOuter = 1; }
 			);
 			// the positions `EVERY_POSITION` fills: a `try` missing one of its
 			// two tails, and a loop head declaring nothing
-			const sparse = `
-var target;
-try { var fromTryOnly = 1; } finally { }
-try { var fromTryCaught = 1; } catch (error) { }
-for (; target; ) { var fromBareFor = 1; }
-for (target in { }) { var fromForInTarget = 1; }
-for (target of [ ]) { var fromForOfTarget = 1; }
-`;
+			const sparse = fixture("javascript", "javascript-parser-hoisted-declarations-declares-the-same-names-through-the-walk");
 			expect(hoistedNames(sparse, "script", true)).toEqual(
 				hoistedNames(sparse)
 			);
@@ -1416,7 +1061,7 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 			// removing a module declaration can join the statements around it
 			// through ASI, so what precedes it decides whether a `;` is needed
 			const source =
-				"const num = 1\n\nexport { a } from './a';\nimport b from './b';";
+				fixture("javascript", "javascript-parser-hoisted-declarations-reports-the-statement-written-before");
 			const parser = new JavascriptParser("module");
 			/** @type {(string | undefined)[]} */
 			const before = [];
@@ -1443,7 +1088,7 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 
 		it("scans a statement list when a plugin drives the walk itself", () => {
 			const source =
-				"import a from './a';\nvar plain = 1;\nexport * from './b';";
+				fixture("javascript", "javascript-parser-hoisted-declarations-scans-a-statement-list-when-a-plugin");
 			const parser = new JavascriptParser("module");
 			/** @type {string[]} */
 			const reported = [];
@@ -1469,7 +1114,7 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 
 		it("scans its own module declarations from an AST another parser built", () => {
 			const source =
-				"import a from './a';\nexport * from './b';\nexport { a };\nexport default 1;";
+				fixture("javascript", "javascript-parser-hoisted-declarations-scans-its-own-module-declarations-from");
 			/**
 			 * @param {string | object} parsed what to parse
 			 * @returns {string[]} the sources reported, in order
@@ -1519,7 +1164,7 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 			// again would declare it twice
 			expect(
 				hoistedNames(
-					"export var exported = 1; export function exportedFunction() {} var plain = 1;",
+					fixture("javascript", "javascript-parser-hoisted-declarations-keeps-a-declaration-under-an-export-head"),
 					"module"
 				)
 			).toEqual(["plain", "exported", "exportedFunction"]);
@@ -1527,27 +1172,7 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 	});
 
 	describe("block declarations", () => {
-		const EVERY_POSITION = `
-const top = 1;
-let alsoTop = 2;
-({ top: alsoTop } = { top: 1 });
-using alsoUsing = { [Symbol.dispose]() {} };
-class TopClass {}
-export const exported = 3;
-export default class DefaultClass {}
-{ const inBlock = 4; class InBlock {} }
-if (top) { let inIf = 5; } else { const inElse = 6; }
-for (const inFor of [top]) { let inForOfBody = 7; }
-for (let index = 0; index < 1; index++) { const inForBody = 8; }
-for (const key in {}) { let inForInBody = 9; }
-while (top) { const inWhile = 10; }
-do { let inDoWhile = 11; } while (top);
-label: { const inLabeled = 12; }
-try { const inTry = 13; } catch (error) { let inCatch = 14; } finally { const inFinally = 15; }
-switch (top) { case 1: { const inCaseBlock = 16; } case 2: let inCase = 17; break; default: const inDefault = 18; }
-function fn() { const inFunction = 19; }
-class WithStatic { static { const inStaticBlock = 20; } }
-`;
+		const EVERY_POSITION = fixture("javascript", "javascript-parser-block-declarations-every-position");
 
 		/**
 		 * @param {string | object} source what to parse
@@ -1631,7 +1256,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			// removing an `export` can join the statements around it through ASI,
 			// so what precedes it decides whether a `;` is needed
 			const source =
-				"const num = 1\nfunction gap() {}\ndebugger;\nexport { num };";
+				fixture("javascript", "javascript-parser-block-declarations-reports-the-statement-written-before-each");
 			const parser = new JavascriptParser("module");
 			/** @type {(string | undefined)[]} */
 			const before = [];
@@ -1655,7 +1280,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 		});
 
 		it("reads the properties a destructuring assignment names", () => {
-			const source = "const obj = { a: 1, b: 2 };\nlet a, b;\n({ a, b } = obj);";
+			const source = fixture("javascript", "javascript-parser-block-declarations-reads-the-properties-a-destructuring");
 			/**
 			 * @param {boolean} legacy whether to tap the hook that walks them all
 			 * @returns {number} how many times the collect hook was asked
@@ -1685,8 +1310,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 
 		it("declares a statement past the indices a mask holds", () => {
 			// a mask is one 31-bit number, so a later index must take the list
-			const filler = "void 0;\n".repeat(40);
-			expect(blockNames(`const early = 1;\n${filler}const late = 2;`)).toEqual([
+			expect(blockNames(fixture("javascript", "javascript-parser-block-declarations-declares-a-statement-past-the-indices-a-mask"))).toEqual([
 				"early",
 				"late"
 			]);
@@ -1699,7 +1323,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 		});
 
 		it("walks every statement again for a tap that expects them", () => {
-			const source = "debugger;\nconst kept = 1;";
+			const source = fixture("javascript", "javascript-parser-block-declarations-walks-every-statement-again-for-a-tap-that");
 			/** @type {string[]} */
 			const typed = [];
 			const parser = new JavascriptParser("module");
@@ -2109,13 +1733,13 @@ class WithStatic { static { const inStaticBlock = 20; } }
 		};
 
 		it("reports an update and still walks the target it reads", () => {
-			expect(readsWith("x++;", "write", false)).toEqual(["x"]);
-			expect(readsWith("x.y++;", "writeMemberChain", false)).toEqual(["x"]);
+			expect(readsWith(fixture("javascript", "javascript-parser-write-hooks-reports-an-update-and-still-walks-the-target-it"), "write", false)).toEqual(["x"]);
+			expect(readsWith(fixture("javascript", "javascript-parser-write-hooks-reports-an-update-and-still-walks-the-target-it-2"), "writeMemberChain", false)).toEqual(["x"]);
 		});
 
 		it("lets a tap that rendered the whole update stop the walk", () => {
-			expect(readsWith("x++;", "write", true)).toEqual([]);
-			expect(readsWith("x.y++;", "writeMemberChain", true)).toEqual([]);
+			expect(readsWith(fixture("javascript", "javascript-parser-write-hooks-lets-a-tap-that-rendered-the-whole-update-stop"), "write", true)).toEqual([]);
+			expect(readsWith(fixture("javascript", "javascript-parser-write-hooks-lets-a-tap-that-rendered-the-whole-update-stop-2"), "writeMemberChain", true)).toEqual([]);
 		});
 	});
 });

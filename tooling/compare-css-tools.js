@@ -94,6 +94,33 @@ const CACHE_NAME = "css-tool-comparison";
 const CACHE = path.join(ROOT, "node_modules/.cache", CACHE_NAME);
 const MODULES = path.join(CACHE, "node_modules");
 const load = loaderFor(CACHE);
+
+/**
+ * Whether a block-less at-rule's prelude ends at a `;` of its own: one inside
+ * an unclosed `(` or `[` is part of the prelude (CSS Syntax §5.4.9).
+ * @param {string} prelude the prelude's source, up to the at-rule's end
+ * @returns {boolean} true when the trailing `;` closes the at-rule
+ */
+const endsOwnStatement = (prelude) => {
+	let depth = 0;
+	let quote = "";
+	for (let i = 0; i < prelude.length; i++) {
+		const char = prelude[i];
+		if (char === "\\") {
+			i++;
+		} else if (quote !== "") {
+			if (char === quote) quote = "";
+		} else if (char === '"' || char === "'") {
+			quote = char;
+		} else if (char === "(" || char === "[") {
+			depth++;
+		} else if ((char === ")" || char === "]") && depth > 0) {
+			depth--;
+		}
+	}
+	return depth === 0;
+};
+
 const execFile = promisify(execFileCallback);
 
 // Enough of Tailwind's utility surface to look like a real build. `@source
@@ -916,7 +943,9 @@ const webpackTree = (css) => {
 					`@${written}`,
 					atRuleOf(
 						written,
-						block ? prelude : prelude.replace(/;\s*$/, ""),
+						block || !endsOwnStatement(prelude)
+							? prelude
+							: prelude.replace(/;\s*$/, ""),
 						block !== null,
 						unescapeIdentifier
 					),

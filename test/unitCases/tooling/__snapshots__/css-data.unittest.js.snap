@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 1`] = `"abs: a{width:5px}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 2`] = `"acos: a{rotate:90deg}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 3`] = `"asin: a{rotate:90deg}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 4`] = `"atan: a{rotate:45deg}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 5`] = `"atan2: a{rotate:135deg}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 6`] = `"clamp: a{width:3px}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 7`] = `"cos: a{width:1px}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 8`] = `"exp: a{width:1px}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 9`] = `"hypot: a{width:5px}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 10`] = `"log: a{width:3px}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 11`] = `"max: a{width:2px}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 12`] = `"min: a{width:1px}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 13`] = `"mod: a{margin-left:2px}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 14`] = `"pow: a{width:8px}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 15`] = `"rem: a{margin-left:1px}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 16`] = `"round: a{margin-left:6px}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 17`] = `"sign: a{z-index:1}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 18`] = `"sin: a{width:1px}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 19`] = `"sqrt: a{width:2px}"`;
+
+exports[`CssValueSyntax the arity read off those grammars gives every folded function a descriptor the engine can drive 20`] = `"tan: a{width:1px}"`;

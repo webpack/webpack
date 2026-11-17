@@ -1,0 +1,1 @@
+import a, { b as c } from 'm'; import * as ns from 'n'; a; c; ns;

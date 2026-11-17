@@ -1,0 +1,1 @@
+label: for (const k in a) { if (k) continue label; } for (;;) break; do fn(); while (0);

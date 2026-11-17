@@ -1,0 +1,1 @@
+fn("a-b".split("-"), "a-b".split(/-/), "ab".substr(1, 1), "ab".slice(0, 1), "ab".substring(x));

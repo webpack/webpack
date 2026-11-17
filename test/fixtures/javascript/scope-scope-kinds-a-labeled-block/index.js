@@ -1,0 +1,1 @@
+label: { let a; break label; }
