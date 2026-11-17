@@ -30,6 +30,13 @@ try {
 } catch (error) {
 	log.push(error.name);
 }
+// An `eval` may read what the store sets.
+function evaluated() {
+	class Read {}
+	Read.x = "evaluated";
+	return eval("Read.x");
+}
+log.push(evaluated());
 // A setter `Function.prototype` holds runs for a class lacking the key.
 Object.defineProperty(Function.prototype, "inherited", {
 	set(value) {

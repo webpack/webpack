@@ -13,6 +13,11 @@ function shorthand() {
 	return { none };
 }
 console.log("none" in shorthand());
+function deletesNamed() {
+	var named;
+	return delete (named);
+}
+console.log(deletesNamed());
 // One a `delete` reads, a loop's head declares, a pattern sets or read
 // more often stays.
 function kept() {

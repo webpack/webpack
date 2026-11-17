@@ -35,6 +35,11 @@ var result = "FAIL";
 	unused(result);
 })();
 console.log(result);
+(function () {
+	log.push("live");
+	return;
+	return log.push("dead");
+})();
 !(function () {
 	log.push("ran");
 	return;
