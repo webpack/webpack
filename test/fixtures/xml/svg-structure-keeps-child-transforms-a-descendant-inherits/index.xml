@@ -1,1 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg"><g opacity=".8"><g opacity=".5" transform="translate(10)"><rect width="10" height="10" style="transform:inherit"/></g><g opacity=".6" transform="translate(10)"><circle r="5"/></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg"><g opacity=".8"><g opacity=".5" transform="translate(10)"><rect width="10" height="10" style="transform:inherit"/></g><g opacity=".6" transform="translate(10)"><circle r="5"/></g></g>
+<g opacity=".8"><g opacity=".5" transform="translate(10)"><g style="all:inherit"><rect width="10" height="10"/></g></g><g opacity=".6" transform="translate(10)"><circle r="5"/></g></g>
+<g opacity=".8"><g opacity=".5" transform="translate(10)"><rect width="10" height="10" style="tr\61nsform:inherit"/></g><g opacity=".6" transform="translate(10)"><circle r="5"/></g></g>
+<g opacity=".8"><g opacity=".5" transform="translate(10)"><rect width="10" height="10" style="fill:red"/></g><g opacity=".6" transform="translate(10)"><circle r="5"/></g></g>
+</svg>
