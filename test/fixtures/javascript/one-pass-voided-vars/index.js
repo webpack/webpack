@@ -8,6 +8,11 @@ function read() {
 	return [typeof none, { none }];
 }
 console.log(JSON.stringify(read()));
+function shorthand() {
+	var none;
+	return { none };
+}
+console.log("none" in shorthand());
 // One a `delete` reads, a loop's head declares, a pattern sets or read
 // more often stays.
 function kept() {

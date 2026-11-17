@@ -24,7 +24,7 @@ function hoisting() {
 		case "production":
 			return later;
 	}
-	var later;
+	var later = 1;
 }
 function labeled(flag) {
 	label: switch (mode) {

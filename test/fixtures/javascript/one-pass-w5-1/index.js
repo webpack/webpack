@@ -22,7 +22,7 @@ const object = (value) => {
 const hoisted = (value) => {
 	if (value) return later;
 	else return 2;
-	var later;
+	var later = 1;
 };
 const folded = (value) => {
 	if ([{ a: value }][0].a()) return 1;

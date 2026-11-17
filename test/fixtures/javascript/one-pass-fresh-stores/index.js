@@ -25,6 +25,11 @@ try {
 } catch (error) {
 	console.log(error instanceof TypeError);
 }
+try {
+	[].length = -1;
+} catch (error) {
+	console.log(error instanceof RangeError);
+}
 var proto = {};
 ({}).__proto__ = proto;
 console.log(typeof proto);

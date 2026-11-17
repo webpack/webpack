@@ -5,6 +5,15 @@ function empty() {}
 empty();
 empty(log.push("argument"));
 console.log((empty(), !0), log.join());
+function replaced(replacement) {
+	function call() {}
+	call = replacement;
+	call("replaced");
+}
+replaced(function (value) {
+	log.push(value);
+});
+console.log(log.join());
 function recurse(n) {
 	return n > 0 ? recurse(n - 1) : n;
 }
