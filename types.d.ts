@@ -21650,17 +21650,11 @@ type MemCache = {
 		thisArg: This,
 		args: A
 	): V;
-} & Omit<
-	WeakTupleMap<TupleElement[], unknown>,
-	"get" | "set" | "provide" | "cachedProvide"
->;
-type MemCacheKeyValue<K> = K extends { readonly __memCacheValue?: infer V }
-	? V
-	: unknown;
+} & Pick<WeakTupleMap<TupleElement[], never>, "has" | "delete" | "clear">;
 type MemCacheProvided<K, V> =
-	unknown extends MemCacheKeyValue<K> ? V : MemCacheKeyValue<K>;
+	Required<K> extends { readonly __memCacheValue: [infer W] } ? W : V;
 type MemCacheValue<K> =
-	unknown extends MemCacheKeyValue<K> ? any : MemCacheKeyValue<K>;
+	Required<K> extends { readonly __memCacheValue: [infer V] } ? V : any;
 
 /**
  * Options object for in-memory caching.

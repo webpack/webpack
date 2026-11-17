@@ -77,13 +77,13 @@ svgo-convert-path-data-02: webpack 253, svgo 254, gap -1
 svgo-convert-path-data-03: webpack 1067, svgo 1121, gap -54
 svgo-convert-path-data-04: webpack 353, svgo 344, gap 9
 svgo-convert-path-data-05: webpack 194, svgo 185, gap 9
-svgo-convert-path-data-06: webpack 382, svgo 352, gap 30
+svgo-convert-path-data-06: webpack 358, svgo 352, gap 6
 svgo-convert-path-data-07: webpack 203, svgo 158, gap 45
 svgo-convert-path-data-08: webpack 629, svgo 511, gap 118
 svgo-convert-path-data-09: webpack 266, svgo 266, gap 0
 svgo-convert-path-data-10: webpack 87, svgo 87, gap 0
 svgo-convert-path-data-11: webpack 3128, svgo 3197, gap -69
-svgo-convert-path-data-12: webpack 411, svgo 382, gap 29
+svgo-convert-path-data-12: webpack 399, svgo 382, gap 17
 svgo-convert-path-data-13: webpack 132, svgo 123, gap 9
 svgo-convert-path-data-14: webpack 801, svgo 470, gap 331
 svgo-convert-path-data-15: webpack 232, svgo 180, gap 52
@@ -382,5 +382,5 @@ svgo-sort-attrs-02: webpack 63, svgo 63, gap 0
 svgo-sort-attrs-03: webpack 158, svgo 160, gap -2
 svgo-sort-attrs-04: webpack 232, svgo 261, gap -29
 svgo-sort-defs-children-01: webpack 413, svgo 415, gap -2
-total: webpack 107228, svgo 104068"
+total: webpack 107192, svgo 104068"
 `;
