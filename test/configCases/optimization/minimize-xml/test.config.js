@@ -26,6 +26,7 @@ const NAMES = [
 	"commented",
 	"transforms",
 	"offcanvas",
+	"disjoint",
 	"structure"
 ];
 

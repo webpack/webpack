@@ -87,6 +87,13 @@ exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should comp
 "
 `;
 
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: disjoint 1`] = `
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\">
+	<path d=\\"M0 0v100h100V0z\\" fill=\\"red\\"/>
+	<path d=\\"m200 0v100h100V0z\\" fill=\\"red\\"/>
+</svg>"
+`;
+
 exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: future 1`] = `
 "<!--! A legal notice the minified output keeps. --><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
 	<style>.dot{fill:red;-webkit-user-select:none;user-select:none}</style>

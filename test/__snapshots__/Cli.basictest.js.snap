@@ -13135,6 +13135,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-merge-disjoint-paths": Object {
+    "configs": Array [
+      Object {
+        "description": "Merge adjacent SVG paths of any shape with the same attributes whose bounds, stroke included, do not overlap, outside IDs, styles, markers, dashes, clips, masks, filters and \`url()\` paint. Off by default because anti-aliasing can blend a pixel both paths reach differently once merged.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.mergeDisjointPaths",
+        "type": "boolean",
+      },
+    ],
+    "description": "Merge adjacent SVG paths of any shape with the same attributes whose bounds, stroke included, do not overlap, outside IDs, styles, markers, dashes, clips, masks, filters and \`url()\` paint. Off by default because anti-aliasing can blend a pixel both paths reach differently once merged.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-xml-merge-paths": Object {
     "configs": Array [
       Object {
@@ -13651,6 +13664,19 @@ Object {
       },
     ],
     "description": "Move the rules of SVG stylesheets into the style attributes of the elements they match, in cascade order before each element's own, then drop the stylesheets and the classes they named, where every selector uses types, classes, IDs, attributes, tree-structural pseudo-classes or \`:not()\` and the result is no larger. Off by default because scripts and external CSS can observe classes and stylesheets.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-merge-disjoint-paths": Object {
+    "configs": Array [
+      Object {
+        "description": "Merge adjacent SVG paths of any shape with the same attributes whose bounds, stroke included, do not overlap, outside IDs, styles, markers, dashes, clips, masks, filters and \`url()\` paint. Off by default because anti-aliasing can blend a pixel both paths reach differently once merged.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.mergeDisjointPaths",
+        "type": "boolean",
+      },
+    ],
+    "description": "Merge adjacent SVG paths of any shape with the same attributes whose bounds, stroke included, do not overlap, outside IDs, styles, markers, dashes, clips, masks, filters and \`url()\` paint. Off by default because anti-aliasing can blend a pixel both paths reach differently once merged.",
     "multiple": false,
     "simpleType": "boolean",
   },
