@@ -7,9 +7,13 @@
 
 // The relations every syntax's parser and printer are held to with no other
 // tool to compare against: idempotence, spans, slices, purity, cut inputs,
-// notices and meaning. The unit tests and the comparison sweeps read them here.
+// notices, meaning and scaling. The unit tests and the comparison sweeps
+// read them here.
 
 const { createHash } = require("crypto");
+const fs = require("fs");
+const path = require("path");
+const { pathToFileURL } = require("url");
 
 /**
  * @param {EXPECTED_ANY} error what a tool threw, which can be any value
@@ -552,7 +556,165 @@ const cutsAt = (source, patterns) => {
 };
 
 
+/**
+ * One block of code as precise coverage counts it: how often it was entered,
+ * where it is, and the function holding it.
+ * @typedef {{ count: number, where: string, owner: string }} BlockCount
+ */
+
+/**
+ * What `blockCounter` returns: `count` runs a function and answers how often
+ * each block was entered meanwhile, by block; `stop` ends the counting.
+ * @typedef {{ count: (run: () => void) => Map<string, BlockCount>, stop: () => void }} BlockCounter
+ */
+
+/**
+ * Counts the blocks inside the functions under one directory a run enters,
+ * through V8's precise coverage, which unlike time are alike on every machine.
+ * Native work (a RegExp, `indexOf`), calls (an inlined one goes uncounted) and
+ * code compiled before it starts are not counted, so what it measures loads after.
+ * @param {string} dir the directory whose scripts count
+ * @returns {BlockCounter | null} the counter, null where the runtime cannot count
+ */
+const blockCounter = (dir) => {
+	const prefixes = [
+		path.join(dir, path.sep),
+		pathToFileURL(path.join(dir, path.sep)).href
+	];
+	/** @type {import("inspector").Session} */
+	let session;
+	/** @type {Map<string, number[]>} */
+	const lineStarts = new Map();
+	/**
+	 * @param {string} file a script's path
+	 * @param {number} offset an offset into it
+	 * @returns {number} the line the offset is on
+	 */
+	const lineOf = (file, offset) => {
+		let starts = lineStarts.get(file);
+		if (starts === undefined) {
+			starts = [0];
+			const text = fs.readFileSync(file, "utf8");
+			for (let i = 0; i < text.length; i++) {
+				if (text.charCodeAt(i) === 10) starts.push(i + 1);
+			}
+			lineStarts.set(file, starts);
+		}
+		let line = 0;
+		while (line + 1 < starts.length && starts[line + 1] <= offset) line++;
+		return line + 1;
+	};
+	/**
+	 * @returns {import("inspector").Profiler.ScriptCoverage[]} every count since the last take, which resets them
+	 */
+	const take = () => {
+		/** @type {import("inspector").Profiler.ScriptCoverage[] | undefined} */
+		let scripts;
+		/** @type {Error | null} */
+		let failure = null;
+		session.post("Profiler.takePreciseCoverage", (error, answer) => {
+			failure = error;
+			scripts = answer && answer.result;
+		});
+		if (failure !== null) throw failure;
+		// An inspector that answers later than the call cannot count a run.
+		if (scripts === undefined) throw new Error("no coverage answered");
+		return scripts;
+	};
+	try {
+		const { Session } = require("inspector");
+		session = new Session();
+		session.connect();
+		session.post("Profiler.enable");
+		session.post("Profiler.startPreciseCoverage", {
+			callCount: true,
+			detailed: true
+		});
+		take();
+	} catch (_err) {
+		return null;
+	}
+	return {
+		count: (run) => {
+			take();
+			run();
+			/** @type {Map<string, BlockCount>} */
+			const blocks = new Map();
+			for (const { url, functions } of take()) {
+				const prefix = prefixes.find((one) => url.startsWith(one));
+				if (prefix === undefined) continue;
+				const file = path.join(dir, url.slice(prefix.length));
+				const name = path.relative(path.dirname(dir), file);
+				for (const { functionName, ranges } of functions) {
+					// The first range counts calls, which a call V8 inlined skips.
+					for (let i = 1; i < ranges.length; i++) {
+						const { startOffset, endOffset, count } = ranges[i];
+						const key = `${name}:${startOffset}:${endOffset}`;
+						const known = blocks.get(key);
+						if (known !== undefined) {
+							known.count += count;
+						} else if (count > 0) {
+							const owner = `${name} ${functionName || "(anonymous)"}`;
+							blocks.set(key, {
+								count,
+								where: `${owner}, line ${lineOf(file, startOffset)}`,
+								owner
+							});
+						}
+					}
+				}
+			}
+			return blocks;
+		},
+		stop: () => {
+			session.post("Profiler.stopPreciseCoverage");
+			session.post("Profiler.disable");
+			session.disconnect();
+		}
+	};
+};
+
+// A block entered once per unit of input is entered twice as often when the
+// input doubles, and one inside a loop over the input four times as often.
+const SCALING_GROWTH = 3;
+// Below 16 entries per unit of input a block is not the work's bulk, only a
+// spelling the larger input happens to have more of, such as a longer number.
+const SCALING_FLOOR = 16;
+
+/**
+ * Whether the work grows in proportion to the input: every block entered at
+ * least `SCALING_FLOOR` times per unit of the doubled input, and more than
+ * `SCALING_GROWTH` times as often as at the size itself, is a finding.
+ * @param {(size: number) => Map<string, BlockCount>} blocks how often each block is entered for the input at a size
+ * @param {number} size the smaller size
+ * @returns {Report[]} one per function holding such a block, its fastest growing first
+ */
+const scalingRelation = (blocks, size) => {
+	const small = blocks(size);
+	const large = blocks(2 * size);
+	/** @type {Map<string, Report & { growth: number }>} */
+	const worst = new Map();
+	for (const [key, { count, where, owner }] of large) {
+		const before = small.get(key);
+		if (count < SCALING_FLOOR * 2 * size) continue;
+		const growth = before === undefined ? Infinity : count / before.count;
+		if (growth <= SCALING_GROWTH) continue;
+		const known = worst.get(owner);
+		if (known !== undefined && known.growth >= growth) continue;
+		worst.set(owner, {
+			relation: "scaling",
+			what: `a block is entered ${growth.toFixed(1)}× as often for twice the input`,
+			repro: `    ${where}: ${before === undefined ? 0 : before.count} at ${size}, ${count} at ${2 * size}`,
+			growth
+		});
+	}
+	return [...worst.values()]
+		.sort((a, b) => b.growth - a.growth)
+		.map(({ relation, what, repro }) => ({ relation, what, repro }));
+};
+
 module.exports = {
+	blockCounter,
 	cutsAt,
 	firstDifference,
 	hasher,
@@ -562,6 +724,7 @@ module.exports = {
 	oneLine,
 	pathSpanWalk,
 	purityRelation,
+	scalingRelation,
 	shrink,
 	signed,
 	sliceRelation,

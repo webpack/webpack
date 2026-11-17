@@ -48,6 +48,8 @@ const {
 	minifyOnePass,
 	parsesAsLatest,
 	printerFor,
+	runsModules,
+	secondPassRelation,
 	spansEitherGoal,
 	sweepRespellings,
 	tokenMeaning
@@ -906,6 +908,33 @@ const EXPECTED = [
 		source: "Swagger UI 5 (bundle)",
 		presets: ["default"],
 		why: "`a?(b,c):c` printing as `a&&(b),c` parenthesizes a call left of `,`: an unread call may print as its arguments' sequence or what its function returns, which the printed text no longer tells apart"
+	},
+	{
+		relation: "idempotence",
+		contains: "3*(s+o)/4-o",
+		source: "Swagger UI 5 (bundle)",
+		presets: ["default"],
+		why: "the `(r.entrySeq()` parentheses above, read by a second mangling pass: past its renames, only those parentheses move"
+	},
+	{
+		relation: "idempotence",
+		contains: "rename-only",
+		presets: ["default"],
+		why: "known bug: the mangler ranks the characters it names from by how often the source holds them, counted before the one pass prints, so the code compressing rewrites or drops still counts: its output ranks them otherwise and a second pass renames (the `expected.json` of every fixture it renames, `hz-1` among them)"
+	},
+	{
+		relation: "idempotence",
+		contains: "multUsed as l}from",
+		source: "test/cases/parsing/issue-7519/index.js",
+		presets: ["default"],
+		why: 'known bug: an import compressing leaves unread is renamed all the same, and a second pass leaves it as imported: `import {mult} from "a"; f(() => { (x() || x()) && false && mult(); }); f(() => { if (x() && false) mult(); });` prints `import{mult as l}from"a";…`'
+	},
+	{
+		relation: "residue",
+		contains: "/x/;",
+		source: "acorn corpus: tests.js",
+		presets: ["default"],
+		why: "known bug: a `do … while (false)` unwrapped to its body keeps a body doing nothing: `do /x/; while (false);` prints `/x/;`, which a second pass drops"
 	}
 ];
 
@@ -1094,12 +1123,14 @@ const invariants = async (write) => {
 	const wantsBehavior = wantedRelation("behavior");
 	const wantsMeaning = wantedRelation("meaning");
 	const wantsNotices = wantedRelation("notices");
+	const wantsResidue = wantedRelation("residue");
 	if (
 		wantsIdempotence ||
 		wantsRespelling ||
 		wantsBehavior ||
 		wantsMeaning ||
-		wantsNotices
+		wantsNotices ||
+		wantsResidue
 	) {
 		// Only what a script does before it returns is compared: a promise it
 		// leaves rejected, such as an `import()` with no loader, is ignored, and
@@ -1107,14 +1138,17 @@ const invariants = async (write) => {
 		const ignore = () => {};
 		if (wantsBehavior) process.on("unhandledRejection", ignore);
 		let ran = 0;
-		// Respelling asks the first preset, behavior and meaning the ones
-		// printing alone, notices every one.
+		let ranModules = 0;
+		// Respelling asks the first preset, meaning the ones printing alone,
+		// residue the compressing ones, the rest every one.
 		const printing = presets.filter(
 			([name, presetOptions], i) =>
 				wantsIdempotence ||
 				wantsNotices ||
+				wantsBehavior ||
 				(wantsRespelling && i === 0) ||
-				((wantsBehavior || wantsMeaning) && presetOptions.compress === false)
+				(wantsMeaning && presetOptions.compress === false) ||
+				(wantsResidue && presetOptions.compress !== false)
 		);
 		let read = 0;
 		for (const [label, source, options] of corpus) {
@@ -1159,18 +1193,30 @@ const invariants = async (write) => {
 						groups.add(report, preset, label);
 					}
 				}
-				// Compressed or renamed, what a script observes may change by
-				// contract; printed alone, nothing it does may.
-				if (
-					printed !== null &&
-					wantsBehavior &&
-					!module &&
-					presetOptions.compress === false
-				) {
-					const reports = behaviorDifference(source, printed);
-					if (reports !== null) ran++;
+				// Compressed or renamed, a program may change what it observes by
+				// contract, so only a self-contained one is held to what it does;
+				// printed alone, nothing it does may.
+				if (printed !== null && wantsBehavior) {
+					const reports = behaviorDifference(source, printed, {
+						module,
+						compressed: !alone
+					});
+					if (reports !== null) {
+						if (module) ranModules++;
+						else ran++;
+					}
 					for (const report of reports || []) {
 						groups.add(report, preset, label);
+					}
+				}
+				if (printed !== null && (wantsIdempotence || wantsResidue)) {
+					for (const report of secondPassRelation(
+						presetOptions,
+						module
+					)(printed)) {
+						if (wantedRelation(report.relation)) {
+							groups.add(report, preset, label);
+						}
 					}
 				}
 				// Under the first preset only: whether a spelling decides the
@@ -1191,7 +1237,14 @@ const invariants = async (write) => {
 		}
 		log(`printed ${read} sources under ${printing.length} presets …`);
 		if (wantsBehavior) {
-			log(`ran ${ran} printed scripts against their sources …`);
+			log(
+				`ran ${ran} printed scripts and ${ranModules} printed modules against their sources …`
+			);
+			if (!runsModules()) {
+				log(
+					"… and no module: start Node.js with --experimental-vm-modules to run them"
+				);
+			}
 		}
 	}
 	return groups.write(write);
@@ -1212,13 +1265,70 @@ const reportInvariants = async () => {
 	return found;
 };
 
+// `precompile-schemas.js` in check mode, with `webpack` resolved to this
+// checkout: schema-utils minifies through `require("webpack")`, which a linked
+// or symlinked install would otherwise answer with another checkout's printer.
+const PRECOMPILE_HERE = `const Module = require("module");
+const resolve = Module._resolveFilename;
+Module._resolveFilename = function (request, ...rest) {
+	return resolve.call(this, request === "webpack" ? ${JSON.stringify(path.join(__dirname, ".."))} : request, ...rest);
+};
+require(${JSON.stringify(path.join(__dirname, "precompile-schemas.js"))});`;
+
 /**
- * `--invariants`: the relations alone, which need no install.
+ * Which generated files webpack's own JavaScript minifier writes and the
+ * printer as it stands would write differently: the schema checks, which only
+ * `lint:special` would otherwise catch.
+ * @returns {Promise<string[]>} each stale file, relative to the repository
+ */
+const staleMinifiedFiles = () =>
+	new Promise((resolve, reject) => {
+		const root = path.join(__dirname, "..");
+		const child = spawn(process.execPath, ["-e", PRECOMPILE_HERE], {
+			cwd: root,
+			stdio: ["ignore", "ignore", "pipe"]
+		});
+		let said = "";
+		child.stderr.setEncoding("utf8");
+		child.stderr.on("data", (chunk) => {
+			said += chunk;
+		});
+		child.on("error", reject);
+		child.on("close", (code) => {
+			/** @type {string[]} */
+			const stale = [];
+			const pattern = /^(.+) need to be updated$/gm;
+			for (let match = pattern.exec(said); match; match = pattern.exec(said)) {
+				stale.push(path.relative(root, match[1]));
+			}
+			if (code !== 0 && stale.length === 0) {
+				reject(new Error(`precompile-schemas.js failed:\n${said}`));
+			} else {
+				resolve(stale);
+			}
+		});
+	});
+
+/**
+ * `--invariants`: the relations alone, which need no install, and whether the
+ * files the minifier generates are current, checked meanwhile.
  * @returns {Promise<void>} resolves once the exit code is set
  */
 const reportInvariantsOnly = async () => {
+	const checking = staleMinifiedFiles();
 	const found = await reportInvariants();
+	const stale = await checking;
 	process.exitCode = sweepExitCode(found, _missingFixtures, process.argv);
+	if (stale.length === 0) {
+		process.stdout.write("\ngenerated files the minifier writes are current\n");
+		return;
+	}
+	process.stdout.write(
+		`\n${stale.length} generated file${stale.length === 1 ? "" : "s"} the minifier writes ${
+			stale.length === 1 ? "is" : "are"
+		} stale; run \`yarn fix:special\`:\n${stale.map((file) => `  ${file}\n`).join("")}`
+	);
+	process.exitCode = 1;
 };
 
 /**

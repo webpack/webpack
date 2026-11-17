@@ -3,5 +3,25 @@
 		"relation": "respelling escape",
 		"contains": "@supports ( a : b ) { B , ; A , B { C : } B , ; B { C : 1 } ",
 		"why": "a declaration, selector or block that is invalid or left open, which the printer writes back as authored, escape included"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/@supports[1]/B,;A,B[1]: css-tree rule B,;A,B, tool rule A,B",
+		"why": "a `;` in a block ends a statement (§5.4.5): what precedes it is a declaration or a rule the spec drops (§5.4.3), never part of the next rule's selector, which css-tree reads it into"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/@supports[1]/B,;B[1]: css-tree rule B,;B, tool rule B",
+		"why": "a `;` in a block ends a statement (§5.4.5): what precedes it is a declaration or a rule the spec drops (§5.4.3), never part of the next rule's selector, which css-tree reads it into"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/@supports[1]/B,;A,B[2]: css-tree rule B,;A,B, tool rule A,B",
+		"why": "a `;` in a block ends a statement (§5.4.5): what precedes it is a declaration or a rule the spec drops (§5.4.3), never part of the next rule's selector, which css-tree reads it into"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/@supports[1]/B,;B[2]: css-tree rule B,;B, tool rule B",
+		"why": "a `;` in a block ends a statement (§5.4.5): what precedes it is a declaration or a rule the spec drops (§5.4.3), never part of the next rule's selector, which css-tree reads it into"
 	}
 ]

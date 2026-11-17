@@ -1,8 +1,0 @@
-[
-	{
-		"relation": "idempotence",
-		"contains": "<script charset=utf-8 src=a.js>",
-		"presets": ["embedded", "embedded+legacy"],
-		"why": "with a renderer, the `<svg>` holding the `<script>` is offered to it whole, and a mark standing for the undecided `charset` would reach the renderer as part of the SVG; the printer keeps it, and the next pass, reading the `<meta charset>` that dropping the comment brought into reach, drops the restated default, 14 B less in the same meaning. Without a renderer the `<svg>` prints in pieces and the charset goes in one pass"
-	}
-]

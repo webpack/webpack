@@ -4106,6 +4106,11 @@ declare abstract class ColumnarSyntaxTree {
 		| RegExp
 		| { cooked?: null | string; raw: string };
 	fieldCount(field: number, node: number): number;
+
+	/**
+	 * Walks a node and what it holds, each before its children in field order.
+	 */
+	findNode(node: number, test: (node: number) => undefined | boolean): boolean;
 	field(i: number, field: number, node: number): number;
 	flag(flag: number, node: number): boolean;
 
@@ -13950,6 +13955,9 @@ declare interface HtmlPrintOptions {
 	cleanupSvgStructure?: boolean;
 	removeSvgScripts?: boolean;
 	removeSvgTitles?: boolean;
+	removeSvgAttributes?: string[];
+	inlineSvgStyles?: boolean;
+	removeSvgElements?: { id?: string[]; class?: string[] };
 	removeSvgDescriptions?: boolean;
 	removeSvgRasterImages?: boolean;
 	removeSvgXlink?: boolean;
@@ -14121,6 +14129,21 @@ declare interface HtmlProcessOptions {
 	 * when minifying XML, remove `script` elements, event handler and `srcdoc` attributes, `javascript:` and `vbscript:` URLs and links to HTML or SVG `data:` documents (default false)
 	 */
 	removeSvgScripts?: boolean;
+
+	/**
+	 * when minifying XML, move simple SVG stylesheet rules into the style attributes of the elements they match and drop the stylesheets and their classes (default false)
+	 */
+	inlineSvgStyles?: boolean;
+
+	/**
+	 * when minifying XML, remove attributes matching these `element:attribute:value` patterns of case-insensitive regular expressions, each matched whole (default none)
+	 */
+	removeSvgAttributes?: string[];
+
+	/**
+	 * when minifying XML, remove elements with these IDs or classes and their content (default none)
+	 */
+	removeSvgElements?: { id?: string[]; class?: string[] };
 
 	/**
 	 * when minifying XML, remove SVG `title` elements, which name the image for assistive technology and tooltips (default false)
@@ -19345,6 +19368,11 @@ declare abstract class JavascriptSyntaxPath {
 	child(i: number, n?: number): number;
 	children(n?: number): number[];
 	fieldCount(field: number, n?: number): number;
+
+	/**
+	 * Walks a node and what it holds, each before its children in field order.
+	 */
+	findNode(node: number, test: (node: number) => undefined | boolean): boolean;
 	field(i: number, field: number, n?: number): number;
 	fieldNamed(field: number, name: string, n?: number): number;
 	flag(flag: number, n?: number): boolean;
@@ -26174,6 +26202,12 @@ declare interface OptimizationMinimizeXml {
 	convertShapes?: boolean;
 
 	/**
+	 * Move the rules of SVG stylesheets into the style attributes of the elements they match, in cascade order before each element's own, then drop the stylesheets and the classes they named, where every selector uses types, classes, IDs, attributes, tree-structural pseudo-classes or `:not()` and the result is no larger. Off by default because scripts and external CSS can observe classes and stylesheets.
+	 * @since 5.113.0
+	 */
+	inlineStyles?: boolean;
+
+	/**
 	 * Merge adjacent disjoint axis-aligned SVG lines with explicit opaque crisp-edge strokes, no fill, dashes or markers. Skip compositing, transformed or ID-bearing ancestors; identical paint remains eligible during color cleanup. Off by default because consumers can observe element boundaries; skip stylesheets, scripts, animations and DTDs.
 	 * @since 5.113.0
 	 */
@@ -26184,6 +26218,12 @@ declare interface OptimizationMinimizeXml {
 	 * @since 5.113.0
 	 */
 	precision?: number;
+
+	/**
+	 * Remove attributes matching `element:attribute:value` patterns, each part a case-insensitive regular expression matched whole, `*` matching anything; a missing element or value part matches any. Off by default because only the author knows which attributes the image can lose.
+	 * @since 5.113.0
+	 */
+	removeAttributes?: string[];
 
 	/**
 	 * Remove SVG `desc` elements. Off by default because they describe the image for assistive technology.
@@ -26210,6 +26250,21 @@ declare interface OptimizationMinimizeXml {
 	removeEditorData?: boolean;
 
 	/**
+	 * Remove elements with one of these IDs or classes, with their content. Off by default because only the author knows which elements the image can lose.
+	 * @since 5.113.0
+	 */
+	removeElements?: {
+		/**
+		 * Classes whose elements are removed.
+		 */
+		class?: string[];
+		/**
+		 * IDs whose elements are removed.
+		 */
+		id?: string[];
+	};
+
+	/**
 	 * Remove empty `class`, `id` and `style` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.
 	 * @since 5.113.0
 	 */
@@ -26222,7 +26277,7 @@ declare interface OptimizationMinimizeXml {
 	removeEmptyElements?: boolean;
 
 	/**
-	 * Remove ID-free SVG content that renders nothing: `display="none"`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, paths and point lists that draw nothing, and subtrees under `visibility="hidden"` that never set it back. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a `switch` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.
+	 * Remove ID-free SVG content that renders nothing: `display="none"`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, paths and point lists that draw nothing, shapes that paint neither fill nor stroke, uses of what draws nothing, `tref` elements without a reference, and subtrees under `visibility="hidden"` that never set it back. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a `switch` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.
 	 * @since 5.113.0
 	 */
 	removeHiddenElements?: boolean;

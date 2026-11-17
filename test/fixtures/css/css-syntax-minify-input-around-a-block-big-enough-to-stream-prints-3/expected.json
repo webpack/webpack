@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "…]/@laye[1]/@layer[2]/@laye[1]/@media[1]/@custom-selector[1]: css-tree …argin:1700px;, tool …argin:1700px}};",
+		"why": "the input ends inside the prelude's `(`, so each `}` after it is a token of that block (§5.4.9) and the prelude runs to the end; css-tree ends it at a `}`"
+	}
+]

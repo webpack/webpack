@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<circle r="0"/>
+	<set href="#missing" attributeName="r" to="1"/>
+</svg>

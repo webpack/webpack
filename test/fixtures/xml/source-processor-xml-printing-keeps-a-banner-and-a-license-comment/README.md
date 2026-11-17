@@ -1,0 +1,1 @@
+A comment opening with `!`, svgo's `preservePatterns` default, and one annotated `@license` or `@preserve`, the notices the CSS minifier keeps, survive every preset (`notices`); an inert comment beside them goes, a `!` after a space included.

@@ -4583,6 +4583,11 @@
           "type": "boolean",
           "added": "5.113.0"
         },
+        "inlineStyles": {
+          "description": "Move the rules of SVG stylesheets into the style attributes of the elements they match, in cascade order before each element's own, then drop the stylesheets and the classes they named, where every selector uses types, classes, IDs, attributes, tree-structural pseudo-classes or `:not()` and the result is no larger. Off by default because scripts and external CSS can observe classes and stylesheets.",
+          "type": "boolean",
+          "added": "5.113.0"
+        },
         "mergePaths": {
           "description": "Merge adjacent disjoint axis-aligned SVG lines with explicit opaque crisp-edge strokes, no fill, dashes or markers. Skip compositing, transformed or ID-bearing ancestors; identical paint remains eligible during color cleanup. Off by default because consumers can observe element boundaries; skip stylesheets, scripts, animations and DTDs.",
           "type": "boolean",
@@ -4591,6 +4596,15 @@
         "precision": {
           "description": "Round SVG geometry, path data, transforms and presentation numbers to this many decimal places, a whole number from 0 to 15, wherever `shortenNumbers` and `shortenPathData` shorten them. Path points round where they land, so error never accumulates, and curves and arcs that draw straight lines become lines. Off by default because rounding moves geometry; svgo rounds to 3.",
           "type": "number",
+          "added": "5.113.0"
+        },
+        "removeAttributes": {
+          "description": "Remove attributes matching `element:attribute:value` patterns, each part a case-insensitive regular expression matched whole, `*` matching anything; a missing element or value part matches any. Off by default because only the author knows which attributes the image can lose.",
+          "type": "array",
+          "items": {
+            "description": "An `element:attribute:value` pattern of attributes to remove.",
+            "type": "string"
+          },
           "added": "5.113.0"
         },
         "removeDescriptions": {
@@ -4613,6 +4627,30 @@
           "type": "boolean",
           "added": "5.113.0"
         },
+        "removeElements": {
+          "description": "Remove elements with one of these IDs or classes, with their content. Off by default because only the author knows which elements the image can lose.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "class": {
+              "description": "Classes whose elements are removed.",
+              "type": "array",
+              "items": {
+                "description": "A class whose elements are removed.",
+                "type": "string"
+              }
+            },
+            "id": {
+              "description": "IDs whose elements are removed.",
+              "type": "array",
+              "items": {
+                "description": "An ID whose element is removed.",
+                "type": "string"
+              }
+            }
+          },
+          "added": "5.113.0"
+        },
         "removeEmptyAttributes": {
           "description": "Remove empty `class`, `id` and `style` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.",
           "type": "boolean",
@@ -4624,7 +4662,7 @@
           "added": "5.113.0"
         },
         "removeHiddenElements": {
-          "description": "Remove ID-free SVG content that renders nothing: `display=\"none\"`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, paths and point lists that draw nothing, and subtrees under `visibility=\"hidden\"` that never set it back. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a `switch` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.",
+          "description": "Remove ID-free SVG content that renders nothing: `display=\"none\"`, zero opacity outside clip paths, zero-size rectangles, circles, ellipses and images, paths and point lists that draw nothing, shapes that paint neither fill nor stroke, uses of what draws nothing, `tref` elements without a reference, and subtrees under `visibility=\"hidden\"` that never set it back. Off by default because such content can still be read, and zero opacity still receives pointer events; skip what a style, a `switch` or (for opacity and sizes) an ancestor's filter, mask or clip path can observe, and documents with stylesheets, scripts, animations or DTDs.",
           "type": "boolean",
           "added": "5.113.0"
         },

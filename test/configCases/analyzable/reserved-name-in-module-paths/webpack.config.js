@@ -15,10 +15,15 @@ const writeModule = (root, directoryName, name) => {
 	const directory = path.join(root, directoryName);
 	fs.mkdirSync(directory, { recursive: true });
 	const file = path.join(directory, `${name}.js`);
-	fs.writeFileSync(
-		file,
-		`(global.reservedNameDirectories = global.reservedNameDirectories || []).push(${JSON.stringify(name)});\n`
-	);
+	const content = `(global.reservedNameDirectories = global.reservedNameDirectories || []).push(${JSON.stringify(name)});\n`;
+	// A rewrite bumps the mtime, so the cached build would rebuild the module.
+	if (!fs.existsSync(file) || fs.readFileSync(file, "utf8") !== content) {
+		fs.writeFileSync(file, content);
+		// a file this fresh is within the timestamp accuracy the cache allows,
+		// so the build right after could not trust it and would build it again
+		const written = Date.now() / 1000 - 60;
+		fs.utimesSync(file, written, written);
+	}
 	return file;
 };
 

@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/a[1]: css-tree b: foo {x:1}, tool rule b: foo",
+		"why": "a value holding a `{}` block beside anything else is no declaration but a rule (§5.4.5); css-tree keeps the declaration"
+	}
+]

@@ -107,6 +107,41 @@ function createServer() {
 	return server;
 }
 
+// The other config suite serves this case on the same port from its own
+// process: wait for it to close rather than fail, within the compile timeout.
+const LISTEN_RETRY_TIMEOUT = 20000;
+const LISTEN_RETRY_INTERVAL = 100;
+
+/**
+ * @param {import("http").Server} server server to start
+ * @param {number} port port to listen on
+ * @param {number} deadline time after which a busy port is an error
+ * @returns {Promise<void>} resolves once the server listens
+ */
+const listen = (server, port, deadline) =>
+	new Promise((resolve, reject) => {
+		/**
+		 * @param {NodeJS.ErrnoException} error listen error
+		 */
+		const onError = (error) => {
+			server.removeListener("listening", onListening);
+			if (error.code === "EADDRINUSE" && Date.now() < deadline) {
+				setTimeout(() => {
+					listen(server, port, deadline).then(resolve, reject);
+				}, LISTEN_RETRY_INTERVAL);
+				return;
+			}
+			reject(error);
+		};
+		const onListening = () => {
+			server.removeListener("error", onError);
+			resolve();
+		};
+		server.once("error", onError);
+		server.once("listening", onListening);
+		server.listen(port);
+	});
+
 class ServerPlugin {
 	/**
 	 * @param {number} port
@@ -114,6 +149,7 @@ class ServerPlugin {
 	constructor(port) {
 		this.port = port;
 		this.refs = 0;
+		/** @type {import("http").Server | undefined} */
 		this.server = undefined;
 		/** @type {Promise<void> | undefined} */
 		this.listening = undefined;
@@ -123,62 +159,43 @@ class ServerPlugin {
 	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
-		compiler.hooks.beforeRun.tapPromise("ServerPlugin", async () => {
+		// `failed` can follow this compiler's `done` when a later `done` tap throws
+		let holding = false;
+		compiler.hooks.beforeRun.tapPromise("ServerPlugin", () => {
+			holding = true;
 			this.refs++;
-			if (!this.listening) {
-				const server = createServer();
-				this.server = server;
-				// The lockfiles name this port, so every suite that runs this case
-				// uses it. Suites run in parallel workers: while another one's server
-				// holds the port, wait for it to close rather than fail.
-				const deadline = Date.now() + 20000;
-				this.listening = new Promise(
-					/**
-					 * @param {(value: void) => void} resolve resolve
-					 * @param {(reason?: Error) => void} reject reject
-					 */
-					(resolve, reject) => {
-						/**
-						 * @param {NodeJS.ErrnoException} err the listen error
-						 */
-						const onError = (err) => {
-							if (err.code === "EADDRINUSE" && Date.now() < deadline) {
-								setTimeout(() => server.listen(this.port), 100);
-								return;
-							}
-							server.off("error", onError);
-							this.server = undefined;
-							this.listening = undefined;
-							reject(err);
-						};
-						server.on("error", onError);
-						server.listen(this.port, () => {
-							server.off("error", onError);
-							resolve();
-						});
-					}
+			if (!this.server) {
+				this.server = createServer();
+				this.listening = listen(
+					this.server,
+					this.port,
+					Date.now() + LISTEN_RETRY_TIMEOUT
 				);
 			}
-			// Every compiler sharing the plugin waits until the server listens.
-			try {
-				await this.listening;
-			} catch (err) {
-				// A failed beforeRun skips done, so release this run's reference here.
-				this.refs--;
-				throw err;
-			}
+			// every compiler of the run fetches only once the server listens
+			return /** @type {Promise<void>} */ (this.listening);
 		});
 
-		compiler.hooks.done.tapAsync("ServerPlugin", (stats, callback) => {
-			const s = this.server;
-			if (s && --this.refs === 0) {
+		/**
+		 * @param {() => void} callback called once the last compiler let go
+		 */
+		const release = (callback) => {
+			if (!holding) return callback();
+			holding = false;
+			const server = this.server;
+			if (server && --this.refs === 0) {
 				this.server = undefined;
 				this.listening = undefined;
-				s.close(callback);
+				server.close(() => callback());
 			} else {
 				callback();
 			}
-		});
+		};
+		compiler.hooks.done.tapAsync("ServerPlugin", (_stats, callback) =>
+			release(callback)
+		);
+		// a build that failed reaches no `done`, and would keep the port
+		compiler.hooks.failed.tap("ServerPlugin", () => release(() => {}));
 	}
 }
 

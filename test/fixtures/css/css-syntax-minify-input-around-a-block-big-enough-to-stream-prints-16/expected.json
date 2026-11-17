@@ -3,5 +3,20 @@
 		"relation": "respelling escape",
 		"contains": "co\n      -> \\63 o",
 		"why": "a declaration, selector or block that is invalid or left open, which the printer writes back as authored, escape included"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/.p[1]/@media[1]/a[1]: css-tree unparsed co, tool nothing",
+		"why": "a statement opening no `{}` block is a parse error the spec drops, whether the input ends in it or a block's `;` or `}` ends it (§5.4.3); css-tree keeps it as raw text"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/.p[1]/a[2]: css-tree unparsed co, tool nothing",
+		"why": "a statement opening no `{}` block is a parse error the spec drops, whether the input ends in it or a block's `;` or `}` ends it (§5.4.3); css-tree keeps it as raw text"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/: css-tree unparsed }}, tool nothing",
+		"why": "a statement opening no `{}` block is a parse error the spec drops, whether the input ends in it or a block's `;` or `}` ends it (§5.4.3); css-tree keeps it as raw text"
 	}
 ]
