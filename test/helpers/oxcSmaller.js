@@ -411,7 +411,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/dead_code_elimination.rs:841",
 			"oxc minifier: peephole/dead_code_elimination.rs:842",
 			"oxc minifier: peephole/dead_code_elimination.rs:843",
-			"oxc minifier: peephole/dead_code_elimination.rs:867",
 			"oxc minifier: peephole/dead_code_elimination.rs:908",
 			"oxc minifier: peephole/dead_code_elimination.rs:1068",
 			"oxc minifier: peephole/dead_code_elimination.rs:560",
@@ -840,8 +839,7 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/collapse_vars_array",
 			"terser compress: collapse_vars/collapse_vars_object",
 			"terser compress: inline/dont_inline_funcs_into_default_param_2",
-			"swc minifier: fixture/issues/12223/nested-function-control/input.js",
-			"swc minifier: full/size/991835278eecab695ad3515447b5747adcdfe1b4/input.js"
+			"swc minifier: fixture/issues/12223/nested-function-control/input.js"
 		]
 	],
 	[
@@ -924,10 +922,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what swc's `mangle` tests cover",
-		[
-			"swc minifier: mangle/issue-5766/hoisted-in-correct-scope/5/input.js",
-			"swc minifier: mangle/reuse/2/input.js"
-		]
+		["swc minifier: mangle/issue-5766/hoisted-in-correct-scope/5/input.js"]
 	],
 	[
 		"oxc goes further than webpack on what terser's `destructuring` tests cover",

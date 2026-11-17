@@ -264,7 +264,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/.compat.2f7d9500/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/prerender.93c6f601/input.js",
 			"swc minifier: full/size/39ee86af2a2157bccd42915ff69b6d3abff2b725/input.js",
-			"swc minifier: full/size/991835278eecab695ad3515447b5747adcdfe1b4/input.js",
 			"swc minifier: full/vercel/ms/1/input.js",
 			"swc minifier: projects/files/react-17.0.1.js",
 			"swc minifier: projects/files/react-dom-17.0.2.js",
