@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<marker id="m"><circle r="1"/></marker>
+	<path d="M10 50 h10 10"/>
+</svg>
