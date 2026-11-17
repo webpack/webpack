@@ -1,0 +1,1 @@
+const x = a[0] / 2; const y = "/"; import "./a";

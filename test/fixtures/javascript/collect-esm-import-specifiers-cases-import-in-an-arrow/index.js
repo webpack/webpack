@@ -1,0 +1,1 @@
+const f = () => import("./a");

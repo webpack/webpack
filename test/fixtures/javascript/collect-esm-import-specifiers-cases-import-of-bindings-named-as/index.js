@@ -1,0 +1,1 @@
+import { as, b as as2 } from "./a";

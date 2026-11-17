@@ -1,0 +1,1 @@
+const x = a / b / c; import "./a";

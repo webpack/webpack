@@ -1,0 +1,4 @@
+export {
+	a,
+	b as c
+} from "./a";

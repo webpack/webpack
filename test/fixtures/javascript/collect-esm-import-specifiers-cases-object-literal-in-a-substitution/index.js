@@ -1,0 +1,1 @@
+const s = `${{ a: "}" }.a}`; import "./a";

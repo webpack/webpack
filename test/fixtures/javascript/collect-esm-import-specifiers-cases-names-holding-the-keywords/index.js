@@ -1,0 +1,1 @@
+const reimport = 1, exported = 2, importer = 3; import "./a";

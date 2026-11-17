@@ -1,0 +1,1 @@
+const o = { a: /"/ }; import "./a";

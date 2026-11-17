@@ -1,0 +1,1 @@
+class a{friendlyName;import}n();

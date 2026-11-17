@@ -1,0 +1,1 @@
+import.meta.resolve("./nope"); import "./a";

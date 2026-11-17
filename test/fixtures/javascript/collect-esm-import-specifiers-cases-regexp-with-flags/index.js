@@ -1,0 +1,1 @@
+const r = /"/gi; import "./a";

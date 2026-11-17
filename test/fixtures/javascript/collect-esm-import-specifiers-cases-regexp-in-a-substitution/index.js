@@ -1,0 +1,1 @@
+const s = `${/"/.source}`; import "./a";

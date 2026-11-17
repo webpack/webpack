@@ -1,0 +1,1 @@
+import((() => { return "foo" })(x, y), attributes)

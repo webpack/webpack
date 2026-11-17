@@ -1,0 +1,1 @@
+const s = `$a $ { $`; import "./a";

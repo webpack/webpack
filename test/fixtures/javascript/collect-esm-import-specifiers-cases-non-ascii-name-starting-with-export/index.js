@@ -1,0 +1,1 @@
+const exporté = 1; import "./a";

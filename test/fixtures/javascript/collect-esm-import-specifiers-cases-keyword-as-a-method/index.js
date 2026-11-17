@@ -1,0 +1,1 @@
+const o = { export() {} }; import "./a";

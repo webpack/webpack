@@ -1,0 +1,1 @@
+const x = /a/ / 2; const y = "/"; import "./a";

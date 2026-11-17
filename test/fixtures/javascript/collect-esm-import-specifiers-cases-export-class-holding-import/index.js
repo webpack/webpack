@@ -1,0 +1,1 @@
+export class A { m() { return import("./a"); } }

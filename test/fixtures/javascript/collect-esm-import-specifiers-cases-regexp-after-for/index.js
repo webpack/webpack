@@ -1,0 +1,1 @@
+for (;;) /"/.test(a); import "./a";

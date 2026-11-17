@@ -1,0 +1,1 @@
+const s = `${a / 2}"`; import "./a";

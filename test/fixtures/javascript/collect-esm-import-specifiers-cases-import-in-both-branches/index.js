@@ -1,0 +1,1 @@
+if (a) import("./a"); else import("./b");

@@ -1,0 +1,1 @@
+for(let t of/[0-9]+/g.exec(e)){}

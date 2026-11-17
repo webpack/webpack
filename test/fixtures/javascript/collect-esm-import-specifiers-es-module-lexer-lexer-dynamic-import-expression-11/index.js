@@ -1,0 +1,1 @@
+import(foo, /*c*/ { type: 'json' })

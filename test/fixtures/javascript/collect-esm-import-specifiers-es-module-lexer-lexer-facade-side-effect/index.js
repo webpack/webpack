@@ -1,0 +1,1 @@
+console.log('any non esm syntax')

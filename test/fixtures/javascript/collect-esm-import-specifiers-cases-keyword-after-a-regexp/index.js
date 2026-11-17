@@ -1,0 +1,1 @@
+const r = /a/g; import "./a";

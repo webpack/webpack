@@ -1,0 +1,1 @@
+import defer * as a from "./a"; import source b from "./b"; import.defer("./c"); import.source("./d");

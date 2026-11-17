@@ -1,0 +1,1 @@
+const s = "import './nope'"; import "./a";

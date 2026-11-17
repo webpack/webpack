@@ -1,0 +1,1 @@
+const s = `${(() => { return "}"; })()}`; import "./a";

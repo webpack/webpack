@@ -13,44 +13,6 @@ const { decodeUrlPath } = require("../harness/runner/RunnerHelpers");
 /** @import Compilation from "../../lib/Compilation" */
 /** @import Module from "../../lib/module/Module" */
 
-/** @type {typeof import("es-module-lexer") | null | undefined} */
-let lexer;
-
-/**
- * The lexer reads what acorn is behind on, but its wasm needs a newer engine
- * than the oldest one the suite runs on, so it is asked for only as a fallback.
- * @param {string} code the emitted source
- * @returns {string[] | undefined} literal import specifiers, where it could read
- */
-const lexerSpecifiersOf = (code) => {
-	if (lexer === undefined) {
-		lexer = null;
-		try {
-			// Loading it compiles its wasm right there, and an engine too old to
-			// decode that rejects a promise nothing else would ever read.
-			const loaded = require("es-module-lexer");
-
-			loaded.init.catch(() => {});
-			loaded.initSync();
-			lexer = loaded;
-		} catch (_error) {
-			lexer = null;
-		}
-	}
-	if (!lexer) return;
-	try {
-		const [imports] = lexer.parse(code);
-		/** @type {string[]} */
-		const found = [];
-		for (const entry of imports) {
-			if (entry.n !== undefined) found.push(entry.n);
-		}
-		return found;
-	} catch (_error) {
-		return undefined;
-	}
-};
-
 const JS_ASSET = /\.[cm]?js$/;
 // A specifier naming a place rather than a package: what webpack emitted is
 // spelled relative to the importer or rooted at the server, never bare.
@@ -143,9 +105,12 @@ const literalSpecifiersOf = (code) => {
 			allowHashBang: true
 		});
 	} catch (_error) {
-		// Syntax acorn is behind on, which a lexer still reads; a url needs the
-		// tree, so only the imports come back here.
-		return lexerSpecifiersOf(code);
+		// Syntax acorn is behind on, which webpack's import scan still reads; a
+		// url needs the tree, so only the imports come back here.
+		const { collectEsmImportSpecifiers } =
+			require("../../lib/javascript/syntax").parser;
+
+		return [...collectEsmImportSpecifiers(code).keys()];
 	}
 	/** @type {string[]} */
 	const found = [];

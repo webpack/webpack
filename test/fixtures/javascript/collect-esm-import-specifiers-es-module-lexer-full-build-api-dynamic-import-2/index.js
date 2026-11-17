@@ -1,0 +1,1 @@
+import(`./locales/${locale}.js`)

@@ -1,0 +1,1 @@
+const t = typeof /"/; import "./a";

@@ -43,6 +43,7 @@ const FILES = unitTests("test/unitCases");
  */
 const ENTRIES = new Set([
 	"collectCjsRequireSpecifiers",
+	"collectEsmImportSpecifiers",
 	"decodeEntities",
 	"decodeXmlEntities",
 	"minifyOnePass",

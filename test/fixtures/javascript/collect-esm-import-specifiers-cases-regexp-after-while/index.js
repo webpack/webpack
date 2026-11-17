@@ -1,0 +1,1 @@
+while (f(a)) /"/.test(a); import "./a";

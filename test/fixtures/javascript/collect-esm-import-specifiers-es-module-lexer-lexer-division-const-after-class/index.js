@@ -1,0 +1,1 @@
+class a{}const Ti=a/yi;
