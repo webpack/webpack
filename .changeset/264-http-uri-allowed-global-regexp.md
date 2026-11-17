@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fix `HttpUriPlugin` rejecting every other URI when `allowedUris` contains a global regexp.
+Fix `HttpUriPlugin` `allowedUris` handling of global regexps and URLs with credentials.

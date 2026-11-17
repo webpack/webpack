@@ -27,6 +27,28 @@ function createServer() {
 			res.end();
 			return;
 		}
+		// redirect whose userinfo repeats the request host, to exercise the
+		// allowedUris check after a redirect
+		if (query === "redirect-userinfo") {
+			const { localPort } = /** @type {import("net").Socket} */ (req.socket);
+			res.statusCode = 301;
+			res.setHeader(
+				"Location",
+				`http://${req.headers.host}@127.0.0.1:${localPort}/resolve.js`
+			);
+			res.end();
+			return;
+		}
+		// basic auth from the URL's userinfo, to check credentials still reach the server
+		if (
+			query === "auth" &&
+			req.headers.authorization !==
+				`Basic ${Buffer.from("user:tok").toString("base64")}`
+		) {
+			res.statusCode = 401;
+			res.end();
+			return;
+		}
 		// a truncated body under a compressed content-encoding, to exercise the
 		// decompression error path
 		const invalidEncoding = /^invalid-(gzip|br|deflate)$/.exec(query);
