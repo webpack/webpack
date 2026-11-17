@@ -31,7 +31,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: issue-1704/mangle_catch_redef_3",
 			"terser compress: loops/issue_186_beautify_braces",
 			"terser compress: loops/issue_186_braces",
-			"terser compress: properties/join_object_assignments_NaN_1",
 			"terser compress: pure_getters/set_immutable_5",
 			"terser compress: dead-code/collapse_vars_lvalues_drop_assign",
 			"terser compress: destructuring/issue_t111_1",
@@ -736,8 +735,7 @@ const SWC_SMALLER_BY_REASON = [
 		"swc goes further than webpack on what terser's `properties` tests cover",
 		[
 			"terser compress: properties/evaluate_array_length",
-			"terser compress: properties/evaluate_string_length",
-			"terser compress: properties/lhs_prop_2"
+			"terser compress: properties/evaluate_string_length"
 		]
 	],
 	[

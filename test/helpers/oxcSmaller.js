@@ -123,6 +123,8 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than oxc's",
 		[
+			"swc exec: terser_reduce_vars_delay_def",
+			"terser compress: reduce_vars/delay_def",
 			"oxc minifier: ecmascript/is_int32_or_uint32.rs:77",
 			"oxc minifier: ecmascript/is_int32_or_uint32.rs:79",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:639",
@@ -158,8 +160,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: export/name_cache_do_not_mangle_export_let_name",
 			"terser compress: issue-1656/f7",
 			"terser compress: loops/keep_collapse_const_in_own_block_scope_2",
-			"terser compress: properties/join_object_assignments_NaN_1",
-			"terser compress: properties/join_object_assignments_NaN_2",
 			"terser compress: reduce_vars/inner_var_for_2",
 			"terser compress: reduce_vars/toplevel_on_loops_3",
 			"terser compress: reduce_vars/toplevel_off_loops_3",
@@ -191,7 +191,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_reduce_vars_inner_var_for_2",
 			"swc exec: terser_collapse_vars_issue_2914_2",
 			"swc exec: terser_collapse_vars_cond_branch_2",
-			"swc exec: terser_properties_join_object_assignments_nan_2",
 			"oxc minifier: peephole/dead_code_elimination.rs:664",
 			"oxc minifier: peephole/esbuild.rs:202",
 			"oxc minifier: peephole/esbuild.rs:222",
@@ -795,7 +794,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what terser's `functions` tests cover",
 		[
-			"terser compress: functions/empty_body",
 			"terser compress: functions/recursive_inline_1",
 			"terser compress: functions/issue_2783",
 			"terser compress: functions/issue_2898",
