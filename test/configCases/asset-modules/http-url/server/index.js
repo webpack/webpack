@@ -115,40 +115,59 @@ class ServerPlugin {
 		this.port = port;
 		this.refs = 0;
 		this.server = undefined;
+		/** @type {Promise<void> | undefined} */
+		this.listening = undefined;
 	}
 
 	/**
 	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
-		compiler.hooks.beforeRun.tapPromise(
-			"ServerPlugin",
-			async () => {
-				this.refs++;
-				if (!this.server) {
-					this.server = createServer();
-					await new Promise(
+		compiler.hooks.beforeRun.tapPromise("ServerPlugin", async () => {
+			this.refs++;
+			if (!this.listening) {
+				const server = createServer();
+				this.server = server;
+				// The lockfiles name this port, so every suite that runs this case
+				// uses it. Suites run in parallel workers: while another one's server
+				// holds the port, wait for it to close rather than fail.
+				const deadline = Date.now() + 20000;
+				this.listening = new Promise(
+					/**
+					 * @param {(value: void) => void} resolve resolve
+					 * @param {(reason?: Error) => void} reject reject
+					 */
+					(resolve, reject) => {
 						/**
-						 * @param {(value: void) => void} resolve resolve
-						 * @param {(reason?: Error) => void} _reject reject
+						 * @param {NodeJS.ErrnoException} err the listen error
 						 */
-						(resolve, _reject) => {
-							/** @type {import("http").Server} */
-							(this.server).listen(
-								this.port,
-								() => {
-									resolve();
-								}
-							);
-					});
-				}
+						const onError = (err) => {
+							if (err.code === "EADDRINUSE" && Date.now() < deadline) {
+								setTimeout(() => server.listen(this.port), 100);
+								return;
+							}
+							server.off("error", onError);
+							this.server = undefined;
+							this.listening = undefined;
+							reject(err);
+						};
+						server.on("error", onError);
+						server.listen(this.port, () => {
+							server.off("error", onError);
+							resolve();
+						});
+					}
+				);
 			}
-		);
+			// Every compiler sharing the plugin waits until the server listens.
+			await this.listening;
+		});
 
 		compiler.hooks.done.tapAsync("ServerPlugin", (stats, callback) => {
 			const s = this.server;
 			if (s && --this.refs === 0) {
 				this.server = undefined;
+				this.listening = undefined;
 				s.close(callback);
 			} else {
 				callback();
