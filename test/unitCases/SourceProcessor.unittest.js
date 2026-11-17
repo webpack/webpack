@@ -1087,20 +1087,19 @@ describe("SourceProcessor", () => {
 					css.push([path.source(), path.value()]);
 				})
 				.use([CssNodeType.Declaration], (path) => {
-					// @ts-expect-error CSS has no text beyond a name and value
 					css.push(path.textOf(CssPart.name));
 				})
 				.process(fixture("css", "source-processor-node-path-reads-what-one-grammar-has-through-the-generic"));
 			expect(css).toEqual([
 				["#a", true, false],
 				["[b]", "["],
-				null,
+				"width",
 				["10px", "px", "px", true],
-				null,
+				"margin",
 				["1.5em", "em", "em", false],
-				null,
+				"z-index",
 				["2", "", null, true],
-				null,
+				"color",
 				["#123", false, true]
 			]);
 
@@ -1306,6 +1305,94 @@ describe("SourceProcessor", () => {
 				.process(fixture("css", "source-processor-node-path-knows-a-streamed-block-s-ancestors-until-it-closes"));
 			expect(inside).toBe(1800);
 			expect(after).toEqual([false]);
+		});
+
+		it("reads a css part's source text, escapes as written", () => {
+			/** @type {(string | null)[]} */
+			const seen = [];
+			new CssSourceProcessor()
+				.use([CssNodeType.Declaration, CssNodeType.QualifiedRule], (path) => {
+					seen.push(
+						path.textOf(CssPart.name),
+						path.textOf(CssPart.value),
+						path.textOf(CssPart.block)
+					);
+				})
+				.process(
+					fixture("css", "source-processor-node-path-reads-a-css-part-s-source-text-escapes-as-written")
+				);
+			expect(seen).toEqual([
+				null,
+				null,
+				"{c\\6flor:rgb(1 2 3) !important}",
+				"c\\6flor",
+				"rgb(1 2 3)",
+				null
+			]);
+		});
+
+		it("reads an html node's ancestors along its parent links", () => {
+			/** @type {string[][]} */
+			const chains = [];
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Element], (path) => {
+					if (path.name() !== "b") return;
+					const chain = [];
+					for (let level = 0; path.ancestor(level) !== 0; level++) {
+						chain.push(path.name(path.ancestor(level)));
+					}
+					expect(path.ancestor(0)).toBe(path.parent);
+					chains.push(chain);
+				})
+				.process(
+					fixture("html", "source-processor-node-path-reads-an-html-node-s-ancestors-along-its-parent-links")
+				);
+			expect(chains).toEqual([["p", "div", "body", "html", ""]]);
+		});
+
+		it("prints what an html visitor replaced or removed", () => {
+			/**
+			 * @param {string} html the source
+			 * @param {"enter" | "exit"} event when the visitor runs
+			 * @param {(path: import("../../lib/html/syntax-parser").HtmlPath) => void} visit the visitor
+			 * @returns {string} the minified print
+			 */
+			const print = (html, event, visit) =>
+				/** @type {{ code: string }} */ (
+					new HtmlSourceProcessor()
+						.use({
+							[HtmlNodeType.Element]: { [event]: visit },
+							[HtmlNodeType.Text]: { [event]: visit }
+						})
+						.process(html, { mode: "minify" })
+				).code;
+			const html = fixture("html", "source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed");
+			expect(
+				print(html, "enter", (path) => {
+					if (path.name() === "p") path.replace("<q>Q</q>");
+					if (path.name() === "div") return;
+					if (path.name() === "i") path.remove();
+				})
+			).toBe("<div><q>Q</q>b<br></div>");
+			expect(
+				print(html, "exit", (path) => {
+					if (path.value() === "b") path.replace("B");
+					if (path.name() === "br") path.remove();
+					// Printed in pieces already, it keeps what it printed.
+					if (path.name() === "div") path.replace("<span></span>");
+				})
+			).toBe("<div><p>a</p>B<i>c</i></div>");
+			expect(
+				print(fixture("html", "source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-2"), "enter", (path) => {
+					if (path.name() === "div") path.replace("<span></span>");
+				})
+			).toBe("<span></span>");
+			// A walk that prints nothing has nothing to replace.
+			expect(
+				new HtmlSourceProcessor()
+					.use([HtmlNodeType.Element], (path) => path.remove())
+					.process(fixture("html", "source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-3"))
+			).toBeUndefined();
 		});
 
 		it("reads html attributes as nodes through the shared members", () => {

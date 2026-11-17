@@ -41306,7 +41306,7 @@ exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-recover
 exports[`CSS syntax — invariants css-syntax-nesting-and-error-recovery-rethrows-what-else-fails-a-parse-as-it-is parses {"entry":"SourceProcessor","visit":{"fixture":"empty"}} 1`] = `
 "[\\"visitors\\",\\"Declaration\\",\\"Ident\\"]
 [\\"Ident\\",[\\"name\\",[],\\"\\"],[\\"value\\",[],\\"a\\"],[\\"childCount\\",[],0],[\\"children\\",[],[]],[\\"flag\\",[2],false],[\\"flag\\",[1],false],[\\"flag\\",[4],false],[\\"rangeOf\\",[2],null],[\\"rangeOf\\",[3],null],[\\"textOf\\",[1],null]]
-[\\"Declaration\\",[\\"name\\",[],\\"b\\"],[\\"value\\",[],\\"\\"],[\\"childCount\\",[],1],[\\"children\\",[],[{\\"@\\":1}]],[\\"flag\\",[2],false],[\\"flag\\",[1],false],[\\"flag\\",[4],false],[\\"rangeOf\\",[2],[4,5]],[\\"rangeOf\\",[3],null],[\\"textOf\\",[1],null]]
+[\\"Declaration\\",[\\"name\\",[],\\"b\\"],[\\"value\\",[],\\"\\"],[\\"childCount\\",[],1],[\\"children\\",[],[{\\"@\\":1}]],[\\"flag\\",[2],false],[\\"flag\\",[1],false],[\\"flag\\",[4],false],[\\"rangeOf\\",[2],[4,5]],[\\"rangeOf\\",[3],null],[\\"textOf\\",[1],\\"b\\"]]
 [\\"Ident\\",[\\"name\\",[],\\"\\"],[\\"value\\",[],\\"c\\"],[\\"childCount\\",[],0],[\\"children\\",[],[]],[\\"flag\\",[2],false],[\\"flag\\",[1],false],[\\"flag\\",[4],false],[\\"rangeOf\\",[2],null],[\\"rangeOf\\",[3],null],[\\"textOf\\",[1],null]]"
 `;
 
@@ -49129,6 +49129,14 @@ at-keyword[0,6] whitespace[6,7] ident[7,13] left-curly-bracket[13,14] delim[14,1
 …
  right-curly-bracket[74087,74088] ident[74088,74089] left-curly-bracket[74089,74090] ident[74090,74091] colon[74091,74092] dimension[74092,74095|74093,74095] right-curly-bracket[74095,74096] end=74096"
 `;
+
+exports[`CSS syntax — invariants source-processor-node-path-reads-a-css-part-s-source-text-escapes-as-written parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"function\\",\\"rgb\\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\" \\",[\\"number\\",\\"2\\",2,\\"integer\\"],\\" \\",[\\"number\\",\\"3\\",3,\\"integer\\"]],\\" \\",\\"!\\",[\\"ident\\",\\"important\\"]]]]"`;
+
+exports[`CSS syntax — invariants source-processor-node-path-reads-a-css-part-s-source-text-escapes-as-written parses 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-node-path-reads-a-css-part-s-source-text-escapes-as-written prints {"mode":"minify"} 1`] = `"a{color:#010203!important}"`;
+
+exports[`CSS syntax — invariants source-processor-node-path-reads-a-css-part-s-source-text-escapes-as-written tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,9] colon[9,10] function[10,14] number[14,15] whitespace[15,16] number[16,17] whitespace[17,18] number[18,19] right-parenthesis[19,20] whitespace[20,21] delim[21,22] ident[22,31] right-curly-bracket[31,32] end=32"`;
 
 exports[`CSS syntax — invariants source-processor-node-path-reads-a-streamed-block-s-start-in-its-rule-s-enter parses 1`] = `
 "length 119538, sha256 3c03b417e17ed598

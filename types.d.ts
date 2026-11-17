@@ -7329,17 +7329,17 @@ type CssNodePath<T = number, S = undefined> = Omit<
 			R,
 			{
 				"1": never;
-				"2": never;
+				"2": 1;
 				"3": never;
 				"4": never;
 				"5": never;
 				"6": never;
-				"7": never;
+				"7": 2;
 				"8": never;
 				"9": never;
 				"10": never;
 				"11": never;
-				"12": never;
+				"12": 1;
 				"13": never;
 				"14": never;
 				"15": never;
@@ -7350,14 +7350,14 @@ type CssNodePath<T = number, S = undefined> = Omit<
 				"20": never;
 				"21": never;
 				"22": never;
-				"23": never;
-				"24": never;
-				"25": never;
+				"23": 1 | 2;
+				"24": 1 | 3;
+				"25": 3;
 				"26": never;
 				"27": never;
 				"28": never;
 			},
-			never
+			1 | 2 | 3
 		>,
 		n?: R
 	): null | string;
@@ -7570,7 +7570,7 @@ declare interface CssParts {
 	field: CssListField;
 	flag: 1 | 2 | 4;
 	part: 1 | 2 | 3;
-	text: never;
+	text: 1 | 2 | 3;
 	fields: {
 		"1": never;
 		"2": 2;
@@ -7663,17 +7663,17 @@ declare interface CssParts {
 	};
 	texts: {
 		"1": never;
-		"2": never;
+		"2": 1;
 		"3": never;
 		"4": never;
 		"5": never;
 		"6": never;
-		"7": never;
+		"7": 2;
 		"8": never;
 		"9": never;
 		"10": never;
 		"11": never;
-		"12": never;
+		"12": 1;
 		"13": never;
 		"14": never;
 		"15": never;
@@ -7684,9 +7684,9 @@ declare interface CssParts {
 		"20": never;
 		"21": never;
 		"22": never;
-		"23": never;
-		"24": never;
-		"25": never;
+		"23": 1 | 2;
+		"24": 1 | 3;
+		"25": 3;
 		"26": never;
 		"27": never;
 		"28": never;
@@ -8026,9 +8026,9 @@ declare abstract class CssSyntaxPath {
 	endOf(part: number, n?: number): number;
 
 	/**
-	 * CSS has no text beyond a node's name and value, read with `name` and `value`.
+	 * Escapes stay as written; `name` and `value` read them resolved.
 	 */
-	textOf(_part: number, _n?: number): null;
+	textOf(part: number, n?: number): null | string;
 }
 
 /**
@@ -14404,6 +14404,23 @@ declare abstract class HtmlSyntaxPath {
 	 * Stop the walk: no visitor fires after the current one returns.
 	 */
 	stop(): void;
+
+	/**
+	 * Print the current node as `text` in place of what the printer writes; on a
+	 * walk that prints nothing it does nothing. Replaced from `exit`, an element
+	 * already printed in pieces keeps what it printed.
+	 */
+	replace(text: string): void;
+
+	/**
+	 * Print nothing for the current node, as `replace("")`.
+	 */
+	remove(): void;
+
+	/**
+	 * Walks the parent links, so a `<template>`'s content ends at its fragment.
+	 */
+	ancestor(level: number): number;
 
 	/**
 	 * Walks the parent links, so a `<template>`'s content ends at its fragment.
@@ -24253,7 +24270,7 @@ declare interface NodeParts {
 	part: number;
 
 	/**
-	 * every `Part` with text beyond the name and value
+	 * every `Part` `textOf` reads
 	 */
 	text: number;
 
@@ -24273,7 +24290,7 @@ declare interface NodeParts {
 	parts: Record<number, number>;
 
 	/**
-	 * the `Part`s with text, by node type
+	 * the `Part`s `textOf` reads, by node type
 	 */
 	texts: Record<number, number>;
 
