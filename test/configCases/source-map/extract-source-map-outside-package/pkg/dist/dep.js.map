@@ -1,1 +1,1 @@
-{"version":3,"file":"dep.js","sources":["../src/dep.ts","../../outside.txt"],"sourcesContent":[null,null],"names":[],"mappings":"AAAA;;ACAA"}
+{"version":3,"file":"dep.js","sources":["../src/dep.ts","../../outside.txt","/outside-absolute.ts","file:///C:/outside-embedded.ts"],"sourcesContent":[null,null,null,"embedded content"],"names":[],"mappings":"AAAA;;ACAA;AEAA"}

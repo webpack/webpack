@@ -1,3 +1,10 @@
 "use strict";
 
-module.exports = [[/outside\.txt/, /their content is not included/]];
+module.exports = [
+	[
+		/their content is not included/,
+		/outside\.txt/,
+		/outside-absolute\.ts/,
+		{ message: /^(?![^]*outside-embedded)/ }
+	]
+];

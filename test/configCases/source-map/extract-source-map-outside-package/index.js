@@ -10,6 +10,8 @@ it("includes only the sources inside the module's package", () => {
 	const content = (name) =>
 		sourcesContent[sources.findIndex((source) => source.endsWith(name))];
 	expect(content("pkg/src/dep.ts")).toBe("export const value: number = 1;\n");
+	// the map already holds it, so nothing is read
+	expect(content("outside-embedded.ts")).toBe("embedded content");
 	// joined here, so this file's own source does not hold it
 	expect(sourcesContent.join("")).not.toContain(
 		["outside", "of", "the", "package"].join("-")
