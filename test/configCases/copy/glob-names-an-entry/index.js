@@ -16,3 +16,10 @@ it("should glob a 'from' that also names an entry matching it", () => {
 it("should copy a 'from' naming an entry its glob does not match", () => {
 	expect(read("id/index.html")).toBe("id");
 });
+
+it("should glob a 'from' naming a link that matches it", () => {
+	expect(read("links/dog.png")).toBe("dog");
+	expect(fs.lstatSync(path.resolve(__dirname, "links/*.png")).isSymbolicLink()).toBe(
+		true
+	);
+});
