@@ -1340,6 +1340,20 @@ describe("SourceProcessor", () => {
 				);
 			// The source as given, before the parse reads a NUL as U+FFFD.
 			expect(names).toEqual(["co\u0000lor"]);
+			// A direct parse reads it as given too.
+			const { A, Field, parseAStylesheet } = require("../../lib/css/syntax").parser;
+			const rule = A.field(
+				0,
+				Field.rules,
+				parseAStylesheet(
+					fixture("css", "source-processor-node-path-reads-a-css-part-s-source-text-escapes-as-written-2")
+				)
+			);
+			const declaration = A.field(0, Field.declarations, rule);
+			expect([A.textOf(CssPart.name, declaration), A.source(declaration)]).toEqual([
+				"co\u0000lor",
+				"co\u0000lor:red"
+			]);
 		});
 
 		it("reads an html node's ancestors along its parent links", () => {
