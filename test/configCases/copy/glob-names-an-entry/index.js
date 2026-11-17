@@ -11,6 +11,8 @@ it("should glob a 'from' that also names an entry matching it", () => {
 	expect(read("img/cat.png")).toBe("cat");
 	expect(exists("img/page.html")).toBe(false);
 	expect(exists("img/*.png/page.html")).toBe(false);
+	expect(read("img-dot/cat.png")).toBe("cat");
+	expect(exists("img-dot/page.html")).toBe(false);
 });
 
 it("should copy a 'from' naming an entry its glob does not match", () => {

@@ -53,6 +53,8 @@ module.exports = (env, { testPath }) => {
 		output: {
 			copy: [
 				{ from: path.join(source, "images/*.png"), to: "img" },
+				// the same pattern, written with a `./` segment
+				{ from: `${source}/./images/*.png`, to: "img-dot" },
 				{ from: path.join(source, "pages/[id]"), to: "id" },
 				{
 					from: path.join(source, "links/*.png"),
