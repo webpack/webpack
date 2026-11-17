@@ -1381,16 +1381,16 @@ describe("SourceProcessor — node path edits", () => {
 		/** @type {[string, Record<number, (path: HtmlPath) => void>, string][]} */
 		const cases = [
 			[
-				"<div  id='a'   class=\"b\">x</div>",
+				fixture("html", "html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells"),
 				{
 					[NodeType.Element]: (path) => {
 						if (on(path, "div")) path.setName("section");
 					}
 				},
-				"<section  id='a'   class=\"b\">x</section>"
+				fixture("html", "html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled")
 			],
 			[
-				"<div  id='a'   class=\"b\">x</div>",
+				fixture("html", "html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-2"),
 				{
 					[NodeType.Element]: (path) => {
 						if (on(path, "div")) {
@@ -1398,10 +1398,10 @@ describe("SourceProcessor — node path edits", () => {
 						}
 					}
 				},
-				'<div  id="z&quot;q"   class="b">x</div>'
+				fixture("html", "html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled-2")
 			],
 			[
-				"<p title='x' hidden>y</p>",
+				fixture("html", "html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-3"),
 				{
 					[NodeType.Element]: (path) => {
 						if (on(path, "p")) {
@@ -1409,16 +1409,16 @@ describe("SourceProcessor — node path edits", () => {
 						}
 					}
 				},
-				"<p alt='x' hidden>y</p>"
+				fixture("html", "html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled-3")
 			],
 			[
-				"<input type=text   disabled>",
+				fixture("html", "html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-4"),
 				{
 					[NodeType.Element]: (path) => {
 						if (on(path, "input")) path.insert(Field.attributes, "name=n");
 					}
 				},
-				"<input type=text   disabled name=n>"
+				fixture("html", "html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled-4")
 			]
 		];
 		for (const mode of /** @type {const} */ (["beautify", "minify"])) {

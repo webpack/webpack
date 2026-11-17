@@ -1,0 +1,1 @@
+import defer * as a from "b";

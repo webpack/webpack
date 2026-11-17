@@ -2703,6 +2703,133 @@ exports[`HTML syntax — invariants html-syntax-invariants-holds-every-relation-
 
 exports[`HTML syntax — invariants html-syntax-invariants-holds-every-relation-over-its-sources tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] open[21,27|22,26] open[27,34|28,33] text[34,35] close[35,43|37,42] open[43,50|44,49] text[50,62] close[62,70|64,69] close[70,77|72,76] open[77,83|78,82] attr[86,91|93,97]\\" open[83,99|84,85] text[99,102] open[102,105|103,104] text[105,110] close[110,114|112,113] close[114,118|116,117] open[118,126|119,125] text[126,136] close[136,145|138,144] close[145,152|147,151] close[152,159|154,158] end=159"`;
 
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       class=\\"b\\"
+|       id=\\"a\\"
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells parses 2`] = `"warning[0,25]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells prints {"mode":"minify"} 1`] = `"<div id=a class=b>x</div>"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells tokenizes 1`] = `"attr[6,8|10,11]' attr[15,20|22,23]\\" open[0,25|1,4] text[25,26] close[26,32|28,31] end=32"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       class=\\"b\\"
+|       id=\\"a\\"
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-2 parses 2`] = `"warning[0,25]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-2 prints {"mode":"minify"} 1`] = `"<div id=a class=b>x</div>"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-2 tokenizes 1`] = `"attr[6,8|10,11]' attr[15,20|22,23]\\" open[0,25|1,4] text[25,26] close[26,32|28,31] end=32"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-3 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       hidden=\\"\\"
+|       title=\\"x\\"
+|       \\"y\\""
+`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-3 parses 2`] = `"warning[0,20]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-3 prints {"mode":"minify"} 1`] = `"<p title=x hidden>y"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-3 tokenizes 1`] = `"attr[3,8|10,11]' attr[13,19|-1,-1] open[0,20|1,2] text[20,21] close[21,25|23,24] end=25"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-4 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <input>
+|       disabled=\\"\\"
+|       type=\\"text\\""
+`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-4 parses 2`] = `"warning[0,28]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-4 prints {"mode":"minify"} 1`] = `"<input type=text disabled>"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-4 tokenizes 1`] = `"attr[7,11|12,16] attr[19,27|-1,-1] open[0,28|1,6] end=28"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <section>
+|       class=\\"b\\"
+|       id=\\"a\\"
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled parses 2`] = `"warning[0,29]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled prints {"mode":"minify"} 1`] = `"<section id=a class=b>x</section>"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled tokenizes 1`] = `"attr[10,12|14,15]' attr[19,24|26,27]\\" open[0,29|1,8] text[29,30] close[30,40|32,39] end=40"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       class=\\"b\\"
+|       id=\\"z\\"q\\"
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled-2 parses 2`] = `"warning[0,32]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled-2 prints {"mode":"minify"} 1`] = `"<div id='z\\"q' class=b>x</div>"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled-2 tokenizes 1`] = `"attr[6,8|10,18]\\" attr[22,27|29,30]\\" open[0,32|1,4] text[32,33] close[33,39|35,38] end=39"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled-3 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       alt=\\"x\\"
+|       hidden=\\"\\"
+|       \\"y\\""
+`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled-3 parses 2`] = `"warning[0,18]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled-3 prints {"mode":"minify"} 1`] = `"<p alt=x hidden>y"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled-3 tokenizes 1`] = `"attr[3,6|8,9]' attr[11,17|-1,-1] open[0,18|1,2] text[18,19] close[19,23|21,22] end=23"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled-4 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <input>
+|       disabled=\\"\\"
+|       name=\\"n\\"
+|       type=\\"text\\""
+`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled-4 parses 2`] = `"warning[0,35]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled-4 prints {"mode":"minify"} 1`] = `"<input type=text disabled name=n>"`;
+
+exports[`HTML syntax — invariants html-syntax-node-path-edits-prints-an-edited-start-tag-as-the-source-it-spells-spelled-4 tokenizes 1`] = `"attr[7,11|12,16] attr[19,27|-1,-1] attr[28,32|33,34] open[0,35|1,6] end=35"`;
+
 exports[`HTML syntax — invariants html-syntax-the-facade-holds-no-printer-until-something-prints parses {"entry":"SourceProcessor","visit":{"fixture":"rootOnly"},"check":{"fixture":"logged"}} 1`] = `
 "enter
 exit"
@@ -34808,6 +34935,410 @@ exports[`HTML syntax — invariants source-processor-node-path-counts-each-langu
 exports[`HTML syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf prints {"mode":"minify"} 1`] = `"\\"<i></i>\\\\n<i></i>\\\\n\\\\f<i></i>\\""`;
 
 exports[`HTML syntax — invariants source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf tokenizes 1`] = `"open[0,3|1,2] close[3,7|5,6] text[7,9] open[9,12|10,11] close[12,16|14,15] text[16,19] open[19,22|20,21] close[22,26|24,25] end=26"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-a-template-s-content-and-an-xml-document parses 1`] = `
+"| <html>
+|   <head>
+|     <template>
+|       content
+|         <p>
+|           \\"a\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-a-template-s-content-and-an-xml-document parses 2`] = `"warning[0,10]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-a-template-s-content-and-an-xml-document prints {"mode":"minify"} 1`] = `"<template><p>a</template>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-a-template-s-content-and-an-xml-document tokenizes 1`] = `"open[0,10|1,9] open[10,13|11,12] text[13,14] close[14,18|16,17] close[18,29|20,28] end=29"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-attributes-which-keep-their-ids parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       class=\\"b\\"
+|       id=\\"a\\"
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-attributes-which-keep-their-ids parses 2`] = `"warning[0,16]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-attributes-which-keep-their-ids prints {"mode":"minify"} 1`] = `"<p id=a class=b>x"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-attributes-which-keep-their-ids tokenizes 1`] = `"attr[3,5|6,7] attr[8,13|14,15] open[0,16|1,2] text[16,17] close[17,21|19,20] end=21"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-attributes-which-keep-their-ids-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg path>
+|         d=\\"m\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-attributes-which-keep-their-ids-2 parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-attributes-which-keep-their-ids-2 prints {"mode":"minify"} 1`] = `"<svg><path d=m /></svg>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-attributes-which-keep-their-ids-2 tokenizes 1`] = `"open[0,5|1,4] attr[11,12|13,14] open[5,17|6,10]/ close[17,23|19,22] end=23"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-attributes-which-keep-their-ids-3 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg path>
+|         d=\\"m\\"
+|         viewBox=\\"0 0 1 1\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-attributes-which-keep-their-ids-3 parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-attributes-which-keep-their-ids-3 prints {"mode":"minify"} 1`] = `"<svg><path d=m viewbox=\\"0 0 1 1\\"/></svg>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-attributes-which-keep-their-ids-3 tokenizes 1`] = `"open[0,5|1,4] attr[11,12|13,14] attr[15,22|24,31]\\" open[5,34|6,10]/ close[34,40|36,39] end=40"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-from-exit-visitors-whose-element-prints parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-from-exit-visitors-whose-element-prints parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-from-exit-visitors-whose-element-prints prints {"mode":"minify"} 1`] = `"<p>x"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-edits-from-exit-visitors-whose-element-prints tokenizes 1`] = `"open[0,3|1,2] text[3,4] close[4,8|6,7] end=8"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-moves-nodes-and-takes-them-out parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <p>
+|         \\"a\\"
+|       <p>
+|         \\"b\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-moves-nodes-and-takes-them-out parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-moves-nodes-and-takes-them-out prints {"mode":"minify"} 1`] = `"<div><p>a<p>b</div>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-moves-nodes-and-takes-them-out tokenizes 1`] = `"open[0,5|1,4] open[5,8|6,7] text[8,9] close[9,13|11,12] open[13,16|14,15] text[16,17] close[17,21|19,20] close[21,27|23,26] end=27"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-moves-nodes-and-takes-them-out-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <p>
+|         \\"a\\"
+|       <i>
+|         \\"b\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-moves-nodes-and-takes-them-out-2 parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-moves-nodes-and-takes-them-out-2 prints {"mode":"minify"} 1`] = `"<div><p>a</p><i>b</i></div>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-moves-nodes-and-takes-them-out-2 tokenizes 1`] = `"open[0,5|1,4] open[5,8|6,7] text[8,9] close[9,13|11,12] open[13,16|14,15] text[16,17] close[17,21|19,20] close[21,27|23,26] end=27"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-parses-markup-as-the-content-of-where-it-goes parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             \\"a\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-parses-markup-as-the-content-of-where-it-goes parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-parses-markup-as-the-content-of-where-it-goes prints {"mode":"minify"} 1`] = `"<table><tr><td>a</table>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-parses-markup-as-the-content-of-where-it-goes tokenizes 1`] = `"open[0,7|1,6] open[7,11|8,10] open[11,15|12,14] text[15,16] close[16,21|18,20] close[21,26|23,25] close[26,34|28,33] end=34"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-parses-markup-as-the-content-of-where-it-goes-2 parses 1`] = `
+"| <html>
+|   <head>
+|     <script>
+|       \\"var a\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-parses-markup-as-the-content-of-where-it-goes-2 parses 2`] = `"warning[0,8]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-parses-markup-as-the-content-of-where-it-goes-2 prints {"mode":"minify"} 1`] = `"<script>var a</script>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-parses-markup-as-the-content-of-where-it-goes-2 tokenizes 1`] = `"open[0,8|1,7] text[8,13] close[13,22|15,21] end=22"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-prints-a-node-inserted-before-the-one-the-walk parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"x\\"
+|     <p>
+|       \\"y\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-prints-a-node-inserted-before-the-one-the-walk parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-prints-a-node-inserted-before-the-one-the-walk prints {"mode":"minify"} 1`] = `"<p>x<p>y"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-prints-a-node-inserted-before-the-one-the-walk tokenizes 1`] = `"open[0,3|1,2] text[3,4] close[4,8|6,7] open[8,11|9,10] text[11,12] close[12,16|14,15] end=16"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-puts-markup-in-a-node-s-place-beside-it-and-at parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <p>
+|         \\"a\\"
+|       <span>
+|         \\"b\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-puts-markup-in-a-node-s-place-beside-it-and-at parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-puts-markup-in-a-node-s-place-beside-it-and-at prints {"mode":"minify"} 1`] = `"<div><p>a</p><span>b</span></div>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-puts-markup-in-a-node-s-place-beside-it-and-at tokenizes 1`] = `"open[0,5|1,4] open[5,8|6,7] text[8,9] close[9,13|11,12] open[13,19|14,18] text[19,20] close[20,27|22,26] close[27,33|29,32] end=33"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-reads-an-edited-tag-s-source-and-place parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"
+\\"
+|       <b>
+|         id=\\"x\\"
+|         \\"t\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-reads-an-edited-tag-s-source-and-place parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-reads-an-edited-tag-s-source-and-place prints {"mode":"minify"} 1`] = `
+"<p>
+<b id=x>t</b>"
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-reads-an-edited-tag-s-source-and-place tokenizes 1`] = `"open[0,3|1,2] text[3,4] attr[7,9|10,11] open[4,12|5,6] text[12,13] close[13,17|15,16] close[17,21|19,20] end=21"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-reads-the-edited-tree-in-a-walk-that-prints parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <p>
+|         \\"a\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-reads-the-edited-tree-in-a-walk-that-prints parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-reads-the-edited-tree-in-a-walk-that-prints prints {"mode":"minify"} 1`] = `"<div><p>a</div>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-reads-the-edited-tree-in-a-walk-that-prints tokenizes 1`] = `"open[0,5|1,4] open[5,8|6,7] text[8,9] close[9,13|11,12] close[13,19|15,18] end=19"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-a-tree-its-print-reads-back-as-another parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             \\"a\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-a-tree-its-print-reads-back-as-another parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-a-tree-its-print-reads-back-as-another prints {"mode":"minify"} 1`] = `"<table><tr><td>a</table>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-a-tree-its-print-reads-back-as-another tokenizes 1`] = `"open[0,7|1,6] open[7,11|8,10] open[11,15|12,14] text[15,16] close[16,21|18,20] close[21,26|23,25] close[26,34|28,33] end=34"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-an-edit-outside-a-walk-of-a-parsed-tree parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-an-edit-outside-a-walk-of-a-parsed-tree parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-an-edit-outside-a-walk-of-a-parsed-tree prints {"mode":"minify"} 1`] = `"<p>x"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-an-edit-outside-a-walk-of-a-parsed-tree tokenizes 1`] = `"open[0,3|1,2] text[3,4] end=4"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-an-edit-to-what-the-print-wrote-already parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <p>
+|         \\"a\\"
+|       <i>
+|         \\"b\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-an-edit-to-what-the-print-wrote-already parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-an-edit-to-what-the-print-wrote-already prints {"mode":"minify"} 1`] = `"<div><p>a</p><i>b</i></div>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-an-edit-to-what-the-print-wrote-already tokenizes 1`] = `"open[0,5|1,4] open[5,8|6,7] text[8,9] close[9,13|11,12] open[13,16|14,15] text[16,17] close[17,21|19,20] close[21,27|23,26] end=27"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       \\"a\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold prints {"mode":"minify"} 1`] = `"<div>a</div>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold tokenizes 1`] = `"open[0,5|1,4] text[5,6] close[6,12|8,11] end=12"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-3 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-3 parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-3 prints {"mode":"minify"} 1`] = `"<p>x"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-3 tokenizes 1`] = `"open[0,3|1,2] text[3,4] close[4,8|6,7] end=8"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-4 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       a=\\"1\\"
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-4 parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-4 prints {"mode":"minify"} 1`] = `"<p a=1>x"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-4 tokenizes 1`] = `"attr[3,4|5,6] open[0,7|1,2] text[7,8] close[8,12|10,11] end=12"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-5 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <p>
+|         \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-5 parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-5 prints {"mode":"minify"} 1`] = `"<div><p>x</div>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-5 tokenizes 1`] = `"open[0,5|1,4] open[5,8|6,7] text[8,9] close[9,13|11,12] close[13,19|15,18] end=19"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-6 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <br>"
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-6 parses 2`] = `"warning[0,4]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-6 prints {"mode":"minify"} 1`] = `"<br>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-6 tokenizes 1`] = `"open[0,4|1,3] end=4"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-7 parses 1`] = `
+"| <html>
+|   <head>
+|     <script>
+|       \\"a\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-7 parses 2`] = `"warning[0,8]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-7 prints {"mode":"minify"} 1`] = `"<script>a</script>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-7 tokenizes 1`] = `"open[0,8|1,7] text[8,9] close[9,18|11,17] end=18"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-10 parses 1`] = `
+"| <html>
+|   <head>
+|     <style>
+|       \\"a\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-10 parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-10 prints {"mode":"minify"} 1`] = `"<style>a</style>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-10 tokenizes 1`] = `"open[0,7|1,6] text[7,8] close[8,16|10,15] end=16"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-11 parses 1`] = `
+"| <!-- a -->
+| <html>
+|   <head>
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-11 parses 2`] = `"warning[8,8]:expected-doctype-but-got-eof"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-11 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-refuses-what-the-markup-cannot-hold-11 tokenizes 1`] = `"comment[0,8|4,5] end=8"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-sets-names-values-and-identifiers-which-the parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <i>
+|       \\"a\\"
+|     <a>
+|       href=\\"x\\"
+|       \\"t\\"
+|     <!-- c -->"
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-sets-names-values-and-identifiers-which-the parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-sets-names-values-and-identifiers-which-the prints {"mode":"minify"} 1`] = `"<i>a</i><a href=x>t</a>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-sets-names-values-and-identifiers-which-the tokenizes 1`] = `"open[0,3|1,2] text[3,4] close[4,8|6,7] attr[11,15|16,17] open[8,18|9,10] text[18,19] close[19,23|21,22] comment[23,31|27,28] end=31"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-sets-names-values-and-identifiers-which-the-2 parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-sets-names-values-and-identifiers-which-the-2 parses 2`] = `""`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-sets-names-values-and-identifiers-which-the-2 prints {"mode":"minify"} 1`] = `"<!doctype html><p>x"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-edits-sets-names-values-and-identifiers-which-the-2 tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,18|16,17] text[18,19] end=19"`;
 
 exports[`HTML syntax — invariants source-processor-node-path-ends-a-foreign-element-with-the-end-tag-naming-it parses 1`] = `
 "| <html>

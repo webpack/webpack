@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/: css-tree unparsed margin-top:1px",
+		"why": "a style attribute's declarations read as a stylesheet are a statement opening no `{}` block, a parse error the spec drops (§5.4.3); css-tree keeps it as raw text"
+	}
+]

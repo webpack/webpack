@@ -2193,12 +2193,12 @@ describe("CssSyntax — node path edits", () => {
 		/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
 		const hash = { [NodeType.Hash]: (path) => path.replaceWith("blue") };
 		for (const [css, spelled] of [
-			["@media x{@layer y;b:#f00}", "@media x{@layer y;b:blue}"],
-			["a{--b:[#f00] {#f00}}", "a{--b:[blue] {blue}}"],
-			["@media(x:#f00){a{b:c}}", "@media (x:blue){a{b:c}}"],
-			["a{--y:[#f00", "a{--y:[blue"],
-			["a{--y:{#f00", "a{--y:{blue"],
-			["a{b:c}@media x{d{e:#f00", "a{b:c}@media x{d{e:blue"]
+			[fixture("css", "css-syntax-node-path-edits-writes-an-edited-block-prelude-and-rule-list-as-their"), fixture("css", "css-syntax-node-path-edits-writes-an-edited-block-prelude-and-rule-list-as-their-spelled")],
+			[fixture("css", "css-syntax-node-path-edits-writes-an-edited-block-prelude-and-rule-list-as-their-2"), fixture("css", "css-syntax-node-path-edits-writes-an-edited-block-prelude-and-rule-list-as-their-spelled-2")],
+			[fixture("css", "css-syntax-node-path-edits-writes-an-edited-block-prelude-and-rule-list-as-their-3"), fixture("css", "css-syntax-node-path-edits-writes-an-edited-block-prelude-and-rule-list-as-their-spelled-3")],
+			[fixture("css", "css-syntax-node-path-edits-writes-an-edited-block-prelude-and-rule-list-as-their-4"), fixture("css", "css-syntax-node-path-edits-writes-an-edited-block-prelude-and-rule-list-as-their-spelled-4")],
+			[fixture("css", "css-syntax-node-path-edits-writes-an-edited-block-prelude-and-rule-list-as-their-5"), fixture("css", "css-syntax-node-path-edits-writes-an-edited-block-prelude-and-rule-list-as-their-spelled-5")],
+			[fixture("css", "css-syntax-node-path-edits-writes-an-edited-block-prelude-and-rule-list-as-their-6"), fixture("css", "css-syntax-node-path-edits-writes-an-edited-block-prelude-and-rule-list-as-their-spelled-6")]
 		]) {
 			expect(print(css, hash)).toBe(print(spelled, {}));
 		}
