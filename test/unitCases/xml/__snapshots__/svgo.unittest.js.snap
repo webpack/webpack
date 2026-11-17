@@ -126,7 +126,7 @@ svgo-convert-style-to-attrs-03: webpack 160, svgo 154, gap 6
 svgo-convert-style-to-attrs-04: webpack 138, svgo 138, gap 0
 svgo-convert-style-to-attrs-05: webpack 138, svgo 154, gap -16
 svgo-convert-transform-01: webpack 1528, svgo 1251, gap 277
-svgo-convert-transform-02: webpack 467, svgo 370, gap 97
+svgo-convert-transform-02: webpack 380, svgo 370, gap 10
 svgo-convert-transform-03: webpack 342, svgo 283, gap 59
 svgo-convert-transform-04: webpack 139, svgo 145, gap -6
 svgo-convert-transform-05: webpack 146, svgo 146, gap 0
@@ -382,5 +382,5 @@ svgo-sort-attrs-02: webpack 63, svgo 63, gap 0
 svgo-sort-attrs-03: webpack 158, svgo 160, gap -2
 svgo-sort-attrs-04: webpack 232, svgo 261, gap -29
 svgo-sort-defs-children-01: webpack 413, svgo 415, gap -2
-total: webpack 106861, svgo 104068"
+total: webpack 106774, svgo 104068"
 `;
