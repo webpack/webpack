@@ -21,8 +21,13 @@ if (process.versions.deno) {
 	const RealWorker = workerThreads.Worker;
 
 	let seq = 0;
+	// Jest's worker threads share the pid and each counts from 0, so the thread
+	// id keeps one thread's exit from unlinking another's file.
 	const tempCjs = () =>
-		path.join(os.tmpdir(), `webpack-deno-worker-${process.pid}-${seq++}.cjs`);
+		path.join(
+			os.tmpdir(),
+			`webpack-deno-worker-${process.pid}-${workerThreads.threadId}-${seq++}.cjs`
+		);
 	const toPath = (resource) => {
 		if (resource instanceof URL) return fileURLToPath(resource);
 		if (typeof resource !== "string") return undefined;
