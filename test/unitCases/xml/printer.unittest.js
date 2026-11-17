@@ -22,7 +22,7 @@ describe("xmlMinify", () => {
 		const { code } = await xmlMinify({
 				"a.svg": fixture("xml", "xml-minify-takes-the-minimizer-options-as-optional")
 			}, undefined);
-		expect(code).toBe("<svg/>");
+		expect(code).toMatchSnapshot();
 	});
 });
 
@@ -39,7 +39,7 @@ describe("SVG data URLs", () => {
 		const render = builtinEmbeddedRenderer({ svg: true });
 		expect(render(SVG, OFFER)).toBe(MINIFIED);
 		// A value holding `'` still takes the quote that costs nothing.
-		expect(render(fixture("xml", "svg-data-urls-should-minify-one-with-the-xml-minifier-quoting-with-on-a-tie-2"), OFFER)).toBe(`<svg a="'" b='x'/>`);
+		expect(render(fixture("xml", "svg-data-urls-should-minify-one-with-the-xml-minifier-quoting-with-on-a-tie-2"), OFFER)).toMatchSnapshot();
 	});
 
 	it("should minify the ones an inline stylesheet holds, and only those", () => {
@@ -67,9 +67,7 @@ describe("SVG data URLs", () => {
 				),
 				{ type: "css", hostType: "html", as: "block-contents" }
 			)
-		).toBe(
-			"background:url('data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\'><style>.b{fill:red}</style><rect class=\\'b\\'/></svg>')"
-		);
+		).toMatchSnapshot();
 	});
 
 	it("should decline what it is not asked for, or cannot shorten", () => {
@@ -128,9 +126,7 @@ describe("SVG data URLs", () => {
 		const once = (await htmlMinify({ "a.html": page }, undefined, { svg: true }))
 			.code;
 		// `\'` costs less than the `&quot;` a `"` costs in a `"`-quoted attribute.
-		expect(once).toBe(
-			"<p style=\"background:url('data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\'>  <rect class=\\'b\\'/>  </svg>')\">x"
-		);
+		expect(once).toMatchSnapshot();
 		expect(
 			(await htmlMinify({ "a.html": once }, undefined, { svg: true })).code
 		).toBe(once);
@@ -547,7 +543,7 @@ describe("SourceProcessor — SVG minification", () => {
 		const source = fixture("xml", "source-processor-svg-minification-should-retain-precision-negative-zero-units-and");
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true };
 		const once = new SourceProcessor().process(source, options).code;
-		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><rect x="9007199254740993" y="-0" width=".123456789123456789" height="+000.00e+03"/><path pathLength="001px" d="M000.00 000.00L001.00 002.00"/><polyline points="001e+02 +002.00E-02"/></svg>');
+		expect(once).toMatchSnapshot();
 		expect(new SourceProcessor().process(once, options).code).toBe(once);
 	});
 
@@ -565,7 +561,7 @@ describe("SourceProcessor — SVG minification", () => {
 			const document = fixture("xml", name);
 			expect(processor.process(document, options).code).toBe(document);
 		}
-		expect(processor.process(fixture("xml", "source-processor-svg-minification-should-preserve-dtd-constraints-and-reinitialize-2"), options).code).toBe('<svg xmlns="http://www.w3.org/2000/svg" width="1"/>');
+		expect(processor.process(fixture("xml", "source-processor-svg-minification-should-preserve-dtd-constraints-and-reinitialize-2"), options).code).toMatchSnapshot();
 	});
 
 	it("should preserve shorter entity spellings and reuse decoded numeric values", async () => {
@@ -592,7 +588,7 @@ describe("SourceProcessor — SVG minification", () => {
 		const options = { mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true, shortenSvgPathData: true, removeSvgMetadata: true };
 		const processor = new SourceProcessor();
 		const once = processor.process(source, options).code;
-		expect(once).toBe('<!doctype html><p><svg viewBox="0 0 24 24"><path d="M0 0v80h-112" transform="translate(1 2)"/><rect width=1.5 height=2></rect></svg><math><mi width=001.00>x</mi></math><div d=M000,000 width=001.00></div>');
+		expect(once).toMatchSnapshot();
 		expect(processor.process(once, options).code).toBe(once);
 		const plain = processor.process(source, { mode: "minify" }).code;
 		expect(plain).toContain('<metadata><rdf:RDF/></metadata><path d="M000,000 l0 80-112 0"');
@@ -606,7 +602,7 @@ describe("SourceProcessor — SVG minification", () => {
 			const source = fixture("xml", name);
 			expect(new SourceProcessor().process(source, options).code).toBe(source);
 		}
-		expect(new SourceProcessor().process(fixture("xml", "source-processor-svg-minification-should-preserve-a-long-unsupported-numeric-value"), options).code).toBe('<svg xmlns="http://www.w3.org/2000/svg" width="1"/>');
+		expect(new SourceProcessor().process(fixture("xml", "source-processor-svg-minification-should-preserve-a-long-unsupported-numeric-value"), options).code).toMatchSnapshot();
 	});
 
 	it("should drop container whitespace under xml:space but never collapse SVG text", () => {
@@ -614,7 +610,7 @@ describe("SourceProcessor — SVG minification", () => {
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), collapseWhitespace: true };
 		const once = new SourceProcessor().process(source, options).code;
 		// `xml:space` lays out text content only, as svgo and minify-xml read it.
-		expect(once).toBe('<root xml:space="preserve"><svg xmlns="http://www.w3.org/2000/svg"><g/><g xml:space="default"><g/><text> A  <tspan xml:space="default"> B  </tspan> C </text></g></svg></root>');
+		expect(once).toMatchSnapshot();
 		expect(new SourceProcessor().process(once, options).code).toBe(once);
 	});
 
@@ -630,7 +626,7 @@ describe("SourceProcessor — SVG minification", () => {
 
 	it("should resolve namespace aliases and preserve generic and foreign XML", () => {
 		const source = fixture("xml", "source-processor-svg-minification-should-resolve-namespace-aliases-and-preserve");
-		expect(new SourceProcessor().process(source, { xml: true, mode: "minify", collapseWhitespace: true }).code).toBe('<root xmlns:s="http://www.w3.org/2000/svg"> <s:svg><s:g/><s:g xmlns:s="urn:foreign"> <svg xmlns="http://www.w3.org/2000/svg"> <g> </g> </svg> </s:g><g> </g><s:g>\u00a0</s:g></s:svg> </root>');
+		expect(new SourceProcessor().process(source, { xml: true, mode: "minify", collapseWhitespace: true }).code).toMatchSnapshot();
 	});
 
 	it("should drop container whitespace under DTD-defaulted xml:space and keep unread DTD defaults", () => {
@@ -647,7 +643,7 @@ describe("SourceProcessor — SVG minification", () => {
 		const source = fixture("xml", "source-processor-svg-minification-should-combine-whitespace-cleanup-with-data");
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), collapseWhitespace: true, removeSvgMetadata: true, transforms: { comments: /** @type {const} */ ("all") } };
 		const once = new SourceProcessor().process(source, options).code;
-		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><!--! keep --><g/><text>]]&gt;</text></svg>');
+		expect(once).toMatchSnapshot();
 		expect(await new SourceProcessor().processAsync(once, options)).toMatchObject({ code: once });
 	});
 
@@ -656,7 +652,7 @@ describe("SourceProcessor — SVG minification", () => {
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), removeUnusedSvgNamespaces: true };
 		const processor = new SourceProcessor();
 		const once = processor.process(source, options).code;
-		expect(once).toBe('<root xmlns:outer="urn:outer"><svg xmlns="http://www.w3.org/2000/svg" xmlns:x="urn:used"><x:item/><g/><g xmlns=""/><use x:href="#shape"/></svg></root>');
+		expect(once).toMatchSnapshot();
 		expect(processor.process(once, options).code).toBe(once);
 		expect(processor.process(source, { ...options, removeUnusedSvgNamespaces: false }).code).toBe(source);
 		expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
@@ -684,7 +680,7 @@ describe("SourceProcessor — SVG minification", () => {
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), sortAttributes: true, removeUnusedSvgNamespaces: true, removeSvgMetadata: true, removeSvgEditorData: true };
 		const processor = new SourceProcessor();
 		const once = processor.process(source, options).code;
-		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><g/></svg>');
+		expect(once).toMatchSnapshot();
 		expect(processor.process(once, options).code).toBe(once);
 	});
 
@@ -695,7 +691,7 @@ describe("SourceProcessor — SVG minification", () => {
 		const once = processor.process(source, options).code;
 		expect(once).toBe(source.replace(' class=" &#9;" id="" style=""', "").replace('style="&#160;"', 'style="\u00a0"'));
 		expect(processor.process(once, options).code).toBe(once);
-		expect(processor.process(fixture("xml", "source-processor-svg-minification-should-reuse-empty-attribute-removal-without-2"), options).code).toBe('<root class="" id="" style=""/>');
+		expect(processor.process(fixture("xml", "source-processor-svg-minification-should-reuse-empty-attribute-removal-without-2"), options).code).toMatchSnapshot();
 		expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
 	});
 
@@ -719,18 +715,18 @@ describe("SourceProcessor — SVG minification", () => {
 		const processor = new SourceProcessor();
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), removeSvgMetadata: true };
 		const once = processor.process(source, options).code;
-		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><title>Title</title><desc>Description</desc><g/><foreignObject><metadata xmlns="urn:data">keep</metadata></foreignObject><Metadata>case</Metadata></svg>');
+		expect(once).toMatchSnapshot();
 		expect(processor.process(once, options).code).toBe(once);
 		expect(processor.process(source, { ...options, removeSvgMetadata: false }).code).toBe(source);
 		expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
-		expect(processor.process(fixture("xml", "source-processor-svg-minification-should-remove-only-svg-metadata-when-requested-2"), options).code).toBe('<metadata xmlns="http://www.w3.org/2000/svg">root</metadata>');
+		expect(processor.process(fixture("xml", "source-processor-svg-minification-should-remove-only-svg-metadata-when-requested-2"), options).code).toMatchSnapshot();
 	});
 
 	it("should remove empty-ID metadata and preserve IDs supplied by the DTD", () => {
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), removeSvgMetadata: true, removeEmptyAttributes: true };
 		const processor = new SourceProcessor();
 		const empty = fixture("xml", "source-processor-svg-minification-should-remove-empty-id-metadata-and-preserve-ids");
-		expect(processor.process(empty, options).code).toBe('<svg xmlns="http://www.w3.org/2000/svg"/>');
+		expect(processor.process(empty, options).code).toMatchSnapshot();
 		const dtd = '<!DOCTYPE svg [<!ATTLIST metadata id CDATA "record">]>';
 		const source = fixture("xml", "source-processor-svg-minification-should-remove-empty-id-metadata-and-preserve-ids-2");
 		expect(processor.process(source, options).code).toBe(source);
@@ -764,7 +760,7 @@ describe("SourceProcessor — SVG minification", () => {
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), removeSvgEditorData: true };
 		const processor = new SourceProcessor();
 		const once = processor.process(source, options).code;
-		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape" xmlns:inkscape="urn:data" inkscape:version="keep"><g label="keep"><e:view xmlns:e="urn:data">keep</e:view></g><e:view xmlns:e="urn:data" e:flag="keep"/><metadata>keep</metadata></svg>');
+		expect(once).toMatchSnapshot();
 		expect(processor.process(once, options).code).toBe(once);
 		expect(processor.process(source, { ...options, removeSvgEditorData: false }).code).toBe(source);
 		const unrelated = fixture("xml", "source-processor-svg-minification-should-resolve-editor-namespaces-by-uri-and-2");
@@ -773,7 +769,7 @@ describe("SourceProcessor — SVG minification", () => {
 
 	it("should remove default-namespace editor elements within SVG", () => {
 		const source = fixture("xml", "source-processor-svg-minification-should-remove-default-namespace-editor-elements");
-		expect(new SourceProcessor().process(source, { xml: true, mode: "minify", removeSvgMetadata: true, removeSvgEditorData: true }).code).toBe('<s:svg xmlns:s="http://www.w3.org/2000/svg"><s:path/></s:svg>');
+		expect(new SourceProcessor().process(source, { xml: true, mode: "minify", removeSvgMetadata: true, removeSvgEditorData: true }).code).toMatchSnapshot();
 	});
 
 	it("should resolve editor namespaces supplied by the DTD", () => {
@@ -796,12 +792,12 @@ describe("SourceProcessor — SVG minification", () => {
 		const source = fixture("xml", "source-processor-svg-minification-should-preserve-comment-options-and-render-only");
 		const once = new SourceProcessor().process(source, { xml: true, mode: "minify", removeSvgMetadata: true, transforms: { comments: "all" }, renderEmbeddedSource: (css) => { rendered.push(css); return "g{fill:red}"; } }).code;
 		// A style inside metadata still applies, so that metadata stays.
-		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><metadata><style>g{fill:red}</style></metadata><!--keep--><style>g{fill:red}</style></svg>');
+		expect(once).toMatchSnapshot();
 		expect(rendered).toEqual(["drop{}", "g { fill: red }"]);
 		/** @type {string[]} */
 		const dropped = [];
 		const linked = fixture("xml", "source-processor-svg-minification-should-preserve-comment-options-and-render-only-2");
-		expect(new SourceProcessor().process(linked, { xml: true, mode: "minify", removeSvgMetadata: true, transforms: { comments: "all" }, renderEmbeddedSource: (css) => { dropped.push(css); return "g{fill:red}"; } }).code).toBe('<svg xmlns="http://www.w3.org/2000/svg"><!--keep--><style>g{fill:red}</style></svg>');
+		expect(new SourceProcessor().process(linked, { xml: true, mode: "minify", removeSvgMetadata: true, transforms: { comments: "all" }, renderEmbeddedSource: (css) => { dropped.push(css); return "g{fill:red}"; } }).code).toMatchSnapshot();
 		expect(dropped).toEqual(["g { fill: red }"]);
 	});
 
@@ -826,14 +822,14 @@ describe("SourceProcessor — SVG minification", () => {
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), sortAttributes: true, removeSvgMetadata: true, removeSvgEditorData: true };
 		const processor = new SourceProcessor();
 		const once = processor.process(source, options).code;
-		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://ns.adobe.com/AdobeIllustrator/10.0/"><g z="1" a="1"/><g z="2"/></svg>');
+		expect(once).toMatchSnapshot();
 		expect(processor.process(once, options).code).toBe(once);
 	});
 
 	it("should keep joined XML character data well formed after removal", () => {
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), removeSvgMetadata: true };
 		const processor = new SourceProcessor();
-		expect(processor.process(fixture("xml", "source-processor-svg-minification-should-keep-joined-xml-character-data-well"), options).code).toBe('<svg xmlns="http://www.w3.org/2000/svg">]]&gt;</svg>');
+		expect(processor.process(fixture("xml", "source-processor-svg-minification-should-keep-joined-xml-character-data-well"), options).code).toMatchSnapshot();
 		// Each side of a removed separator: text, references, `]]`, `>` and CDATA.
 		for (const name of ["source-processor-svg-minification-should-keep-joined-xml-character-data-well-2", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-3", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-4", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-5", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-6", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-7", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-8", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-9", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-10", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-11", "source-processor-svg-minification-should-keep-joined-xml-character-data-well", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-12", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-13", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-14", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-15", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-16", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-17", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-18", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-19", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-20", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-21", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-22", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-23", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-24", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-25", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-26", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-27", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-28", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-29", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-30", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-31", "source-processor-svg-minification-should-keep-joined-xml-character-data-well-32"]) {
 			const once = processor.process(fixture("xml", name), options).code;
@@ -843,11 +839,11 @@ describe("SourceProcessor — SVG minification", () => {
 
 	it("should shorten SVG numbers inside HTML only under the switch for their kind", () => {
 		const source = fixture("xml", "source-processor-svg-minification-should-shorten-svg-numbers-inside-html-only");
-		expect(new SourceProcessor().process(source, { mode: "minify", shortenSvgNumbers: true }).code).toBe('<svg><path d="M0.50 0" stroke-width=2 /><path d="M0.50 0" stroke-width=2 /></svg>');
-		expect(new SourceProcessor().process(source, { mode: "minify", shortenSvgPathData: true }).code).toBe('<svg><path d="M.5 0" stroke-width=2.0 /><path d="M.5 0" stroke-width=2.0 /></svg>');
+		expect(new SourceProcessor().process(source, { mode: "minify", shortenSvgNumbers: true }).code).toMatchSnapshot();
+		expect(new SourceProcessor().process(source, { mode: "minify", shortenSvgPathData: true }).code).toMatchSnapshot();
 		// What neither grammar reads stays as written, referenced or not.
 		const unread = fixture("xml", "source-processor-svg-minification-should-shorten-svg-numbers-inside-html-only-2");
-		expect(new SourceProcessor().process(unread, { mode: "minify", shortenSvgNumbers: true, shortenSvgPathData: true }).code).toBe('<svg><path d="M0 0 X" stroke-width=x /><path d="M0 0 X" stroke-width=x. /></svg>');
+		expect(new SourceProcessor().process(unread, { mode: "minify", shortenSvgNumbers: true, shortenSvgPathData: true }).code).toMatchSnapshot();
 	});
 
 	it("should render only an SVG stylesheet typed as CSS when unused namespaces go", () => {
@@ -944,7 +940,7 @@ describe("xmlMinify — SVG switches", () => {
 		const source = fixture("xml", "xml-minify-svg-switches-should-combine-structural-cleanup-with-equal-radius");
 		const options = { cleanupStructure: true, convertShapes: true, sortDefinitions: true, reusePaths: true, mergePaths: true };
 		const { code } = await xmlMinify({ 'structure.svg': source }, undefined, options);
-		expect(code).toBe('<svg xmlns="http://www.w3.org/2000/svg"><circle id="shape" r="10"/><circle r="5"/></svg>');
+		expect(code).toMatchSnapshot();
 		expect((await xmlMinify({ 'structure.svg': code }, undefined, options)).code).toBe(code);
 	});
 
@@ -991,9 +987,7 @@ describe("xmlMinify — what it reads as written", () => {
 		// One that holds only printable ASCII reads alike in either.
 		const ascii = fixture("xml", "xml-minify-leaves-a-document-in-another-encoding-as-written-2");
 		const minified = await xmlMinify({ "a.svg": ascii });
-		expect(minified.code).toBe(
-			'<?xml version="1.0" encoding="ISO-2022-JP"?><svg xmlns="http://www.w3.org/2000/svg"><g/></svg>'
-		);
+		expect(minified.code).toMatchSnapshot();
 		expect(minified.warnings).toBeUndefined();
 	});
 

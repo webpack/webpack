@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`CssSyntax — skip set (CssProcessOptions.skip) maps an as: "block-contents" print to where the list starts 1`] = `"AAAA"`;

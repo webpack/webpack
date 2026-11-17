@@ -1,5 +1,47 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`CssSyntax minify — a color fallback reads only the value's own calls keeps a string as written in the wide-gamut fallback 1`] = `".a{background:\\"oklch(.7 .2 150)\\"#00bf54;background:\\"oklch(.7 .2 150)\\"color(display-p3 .317813 .736696 .379141);background:\\"oklch(.7 .2 150)\\"oklch(.7 .2 150)}"`;
+
+exports[`CssSyntax minify — a color fallback reads only the value's own calls leaves a relative hue that reduces to no degrees as written 1`] = `".a{color:hsl(from red calc(h*1turn) s l)}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 1`] = `"b:is(a){color:red}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 2`] = `"-x.a{color:red}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 3`] = `"--x.a{color:red}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 4`] = `":is(.a)-1{color:red}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 5`] = `"div.a{color:red}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 6`] = `".a{color:red}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 7`] = `"svg|rect.a{color:red}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 8`] = `"div:is(p){color:red}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 9`] = `"div[x]{color:red}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 10`] = `"\\\\31x.a{color:red}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 11`] = `"x.a|.b{color:red}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 12`] = `".a||b{color:red}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 13`] = `".c a,a.b{color:red}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url does not fuse the parent written for \`&\` with the text around it 14`] = `"[x]:is(div){color:red}:not(.a):is(p){color:red}b>[y]:is(a){color:red}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url keeps the escaped space a lowered nested selector ends in 1`] = `".a{color:red}.a .b\\\\ {color:blue}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url keeps the escaped space a lowered nested selector ends in 2`] = `".s.t\\\\ {color:gray}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url keeps the escaped space a lowered nested selector ends in 3`] = `".s.t\\\\\\\\{color:gray}"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url renders a data url whose escapes spell a comment as that comment 1`] = `"@import url(data:text/css,);"`;
+
+exports[`CssSyntax minify — text a rewrite keeps inside its string or url splits a gradient's double-position stops outside its strings 1`] = `".b{background:linear-gradient(red,\\"x\\\\\\\\,\\" 10%,\\"x\\\\\\\\,\\" 20%)}"`;
+
 exports[`CssSyntax — beautifying the parsing corpus should beautify "at-rule.css" 1`] = `
 "@unknown;@unknown x y;@unknown \\"blah\\";@unknown \\\\\\"blah\\\\\\";@unknown;@unknown x y;@unknown;@unknown x y;@unknown {
 }@\\\\unknown {
@@ -2017,3 +2059,33 @@ a23: \\\\00000AB;
 a24: \\\\123456 B;
 }"
 `;
+
+exports[`CssSyntax — block streaming keeps the \`;\` a gathered layer block ends a declaration on 1`] = `"x:i;.q{top:0}}.w{color:red}"`;
+
+exports[`CssSyntax — block streaming keeps the \`;\` a gathered layer block ends a declaration on 2`] = `"x:i;y:j;z:k}}"`;
+
+exports[`CssSyntax — block streaming keeps the \`;\` a gathered layer block ends a declaration on 3`] = `"x:i;y:j}.mid{margin:0}}"`;
+
+exports[`CssSyntax — block streaming keeps the \`;\` a gathered layer block ends a declaration on 4`] = `"x:i;.q{top:0}}.mid{margin:0}}"`;
+
+exports[`CssSyntax — block streaming keeps the \`;\` a gathered layer block ends a declaration on 5`] = `"x:i;.p{top:0}y:j}.mid{margin:0}}"`;
+
+exports[`CssSyntax — block streaming leaves the pair at a gathered seam alone where it cannot join 1`] = `"@layer a{.p,.q{color:teal}}.mid{margin:0}}"`;
+
+exports[`CssSyntax — block streaming leaves the pair at a gathered seam alone where it cannot join 2`] = `"@layer a{.p{color:teal}@media print{.q{color:teal}}}.mid{margin:0}}"`;
+
+exports[`CssSyntax — block streaming leaves the pair at a gathered seam alone where it cannot join 3`] = `"@layer a{.p{color:teal}.q:not(.r){color:teal}}.mid{margin:0}}"`;
+
+exports[`CssSyntax — block streaming leaves the pair at a gathered seam alone where it cannot join 4`] = `"@layer a{.p:not(.r){color:teal}.q{color:teal}}.mid{margin:0}}"`;
+
+exports[`CssSyntax — block streaming leaves the pair at a gathered seam alone where it cannot join 5`] = `"@layer a{.p{color:teal}.q{color:lime}}.mid{margin:0}}"`;
+
+exports[`CssSyntax — block streaming leaves the pair at a gathered seam alone where it cannot join 6`] = `"@layer a{.p,.q{color:teal}}.mid{margin:0}}"`;
+
+exports[`CssSyntax — minify comment preservation ignores \`skip\` while printing (every node is needed for serialization) 1`] = `".a .b{color:red}"`;
+
+exports[`SourceProcessor — a run inside a run prints a stylesheet a renderer starts while the outer print runs 1`] = `"a{background:url(\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>\\")}b{color:#fff;margin:0}.c{padding:10px}"`;
+
+exports[`SourceProcessor — renderEmbeddedSource over a data: url offers every language \`EMBEDDED_LANGUAGES\` names, and prints each answer 1`] = `"@import url(data:text/css,/*css*/);.svg{background:url(data:image/svg+xml,/*svg*/)}.html{background:url(data:text/html,/*html*/)}.json{background:url(data:application/json,/*json*/)}.js{background:url(data:text/javascript,/*javascript*/)}"`;
+
+exports[`SourceProcessor.processAsync — \`declareCharset\` over embedded answers writes \`@charset\` when a later answer, not the first, is outside ASCII 1`] = `"@charset \\"UTF-8\\";.a{background:url(data:image/svg+xml,<svg></svg>)}.b{background:url(data:image/svg+xml,<svg><g>é</g></svg>)}"`;
