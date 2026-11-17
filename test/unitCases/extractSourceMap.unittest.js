@@ -1,5 +1,7 @@
 "use strict";
 
+const path = require("path");
+
 const { getSourceMappingURL } = require("../../lib/module/extractSourceMap");
 
 describe("getSourceMappingURL", () => {
@@ -143,4 +145,62 @@ describe("getSourceMappingURL", () => {
 			expect(getSourceMappingURL(code).sourceMappingURL).toBe("source.map");
 		}
 	);
+});
+
+describe("extractSourceMap read boundary", () => {
+	const extractSourceMap = require("../../lib/module/extractSourceMap");
+
+	const root = path.resolve("/pkg");
+	const files = {
+		[path.join(root, "dist/a.js.map")]: JSON.stringify({
+			version: 3,
+			sources: ["../src/a.ts"],
+			mappings: "AAAA"
+		}),
+		[path.join(root, "src/a.ts")]: "inside"
+	};
+	const code = "a();\n//# sourceMappingURL=a.js.map";
+	const readResource = async (file) => {
+		if (file in files) return files[file];
+		throw new Error(`no ${file}`);
+	};
+
+	it("should not read a source whose link target cannot be resolved", async () => {
+		const { sourceMap, outsideSources } = await extractSourceMap(
+			code,
+			path.join(root, "dist/a.js"),
+			readResource,
+			root,
+			async (file) => {
+				if (file === path.join(root, "src/a.ts")) {
+					throw new Error("cannot resolve");
+				}
+				return file;
+			}
+		);
+		expect(outsideSources).toEqual([path.join(root, "src/a.ts")]);
+		expect(sourceMap.sourcesContent).toBeUndefined();
+	});
+
+	it("should read a source inside the root at its link target", async () => {
+		const { sourceMap, outsideSources } = await extractSourceMap(
+			code,
+			path.join(root, "dist/a.js"),
+			readResource,
+			root,
+			async (file) => file
+		);
+		expect(outsideSources).toEqual([]);
+		expect(sourceMap.sourcesContent).toEqual(["inside"]);
+	});
+
+	it("should check the path as written without realpath", async () => {
+		const { sourceMap } = await extractSourceMap(
+			code,
+			path.join(root, "dist/a.js"),
+			readResource,
+			root
+		);
+		expect(sourceMap.sourcesContent).toEqual(["inside"]);
+	});
 });
