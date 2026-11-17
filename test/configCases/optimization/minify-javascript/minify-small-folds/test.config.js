@@ -29,7 +29,7 @@ module.exports = {
 		);
 		expect(code).toContain("var first,named,last,rest,key;return");
 		expect(code).not.toContain("unread");
-		expect(code).toContain("if(0)var withFunction;");
+		expect(code).toContain('var withFunction;flag.push("kept")');
 		expect(code).toContain('flag.push("kept");var picked;');
 		expect(code).toContain('flag.push("else");else var fromElse;');
 		expect(code).toContain("var commented}");

@@ -220,7 +220,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc drops more unused expressions, as oxc's `peephole/remove_unused_expression.rs` tests show",
 		[
-			"oxc minifier: peephole/remove_unused_expression.rs:31",
 			"oxc minifier: peephole/remove_unused_expression.rs:62",
 			"oxc minifier: peephole/remove_unused_expression.rs:63",
 			"oxc minifier: peephole/remove_unused_expression.rs:64",
@@ -591,8 +590,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: drop-unused/unused_class_which_might_throw_2",
 			"terser compress: drop-unused/unused_class_which_might_throw_3",
 			"terser compress: drop-unused/unused_class_which_might_throw_4",
-			"terser compress: drop-unused/unused_null_conditional_chain_2",
-			"terser compress: drop-unused/unused_null_conditional_chain_3",
 			"terser compress: drop-unused/class_used_within_itself_3_var_expname"
 		]
 	],
@@ -814,7 +811,6 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"terser compress: dead-code/dead_code_2_should_warn",
 			"terser compress: dead-code/dead_code_2_should_warn_strict",
-			"terser compress: dead-code/dead_code_const_declaration",
 			"terser compress: dead-code/dead_code_const_annotation_regex",
 			"terser compress: dead-code/dead_code_const_annotation_complex_scope",
 			"terser compress: dead-code/return_assignment",
@@ -1202,10 +1198,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what swc's `fixture/collapse-vars` tests cover",
 		["swc minifier: fixture/collapse-vars/cascade-statement/bailouts/input.js"]
-	],
-	[
-		"oxc goes further than webpack on what swc's `fixture/member_expr` tests cover",
-		["swc minifier: fixture/member_expr/callee/input.js"]
 	],
 	[
 		"a shorter operator oxc writes: `**` for `Math.pow` of numbers",

@@ -1,0 +1,1 @@
+function before() { return early.toFixed(1); } var one = 1, half = 0.5, zero = 0, early = 0, big = 1e21, log = []; one.foo += ""; log.push(one.foo, one.bar, half.toFixed(1), zero.toFixed(1), zero.valueOf(), big.foo, before()); function count(n) { n.foo; return n; } log.push(count(one)); console.log(log.join());
