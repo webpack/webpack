@@ -160,6 +160,10 @@ describe("extractSourceMap read boundary", () => {
 		[path.join(root, "src/a.ts")]: "inside"
 	};
 	const code = "a();\n//# sourceMappingURL=a.js.map";
+	/**
+	 * @param {string} file the file
+	 * @returns {Promise<string>} its content
+	 */
 	const readResource = async (file) => {
 		if (file in files) return files[file];
 		throw new Error(`no ${file}`);
@@ -179,7 +183,7 @@ describe("extractSourceMap read boundary", () => {
 			}
 		);
 		expect(outsideSources).toEqual([path.join(root, "src/a.ts")]);
-		expect(sourceMap.sourcesContent).toBeUndefined();
+		expect(/** @type {import("webpack-sources").RawSourceMap} */ (sourceMap).sourcesContent).toBeUndefined();
 	});
 
 	it("should read a source inside the root at its link target", async () => {
@@ -191,7 +195,7 @@ describe("extractSourceMap read boundary", () => {
 			async (file) => file
 		);
 		expect(outsideSources).toEqual([]);
-		expect(sourceMap.sourcesContent).toEqual(["inside"]);
+		expect(/** @type {import("webpack-sources").RawSourceMap} */ (sourceMap).sourcesContent).toEqual(["inside"]);
 	});
 
 	it("should check the path as written without realpath", async () => {
@@ -201,6 +205,6 @@ describe("extractSourceMap read boundary", () => {
 			readResource,
 			root
 		);
-		expect(sourceMap.sourcesContent).toEqual(["inside"]);
+		expect(/** @type {import("webpack-sources").RawSourceMap} */ (sourceMap).sourcesContent).toEqual(["inside"]);
 	});
 });
