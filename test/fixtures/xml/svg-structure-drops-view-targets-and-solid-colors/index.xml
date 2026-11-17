@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<view id="one" viewBox="0 0 10 10" viewTarget="a"/>
+	<solidColor solid-color="red"/>
+	<defs><solidColor id="named"/></defs>
+	<g viewTarget="kept"/>
+</svg>

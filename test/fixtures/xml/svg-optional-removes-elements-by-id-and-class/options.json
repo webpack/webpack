@@ -1,0 +1,8 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"removeSvgElements": { "id": ["remove"], "class": ["drop"] }
+	}
+]

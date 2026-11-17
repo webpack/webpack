@@ -721,6 +721,7 @@ const PARSER_TABLES = [
 			"rect",
 			"svg",
 			"text",
+			"tref",
 			"use"
 		]
 	],
@@ -729,6 +730,18 @@ const PARSER_TABLES = [
 		"object",
 		"Inherited presentation attributes and the spellings of their initial values, which an element no ancestor sets takes anyway.",
 		svgInheritedInitialValues()
+	],
+	[
+		"SVG_GEOMETRY_ELEMENTS",
+		"set",
+		"SVG geometry elements, a path and the basic shapes, which paint only their own fill and stroke.",
+		["circle", "ellipse", "line", "path", "polygon", "polyline", "rect"]
+	],
+	[
+		"SVG_EMPTY_DRAWING_CONTAINERS",
+		"set",
+		"Containers a use can name that draw nothing while they hold no elements.",
+		["defs", "g", "svg", "symbol"]
 	],
 	[
 		"SVG_TRANSFORM_FOLD_TARGETS",
@@ -782,6 +795,7 @@ const PARSER_TABLES = [
 			"marker",
 			"mask",
 			"clipPath",
+			"solidColor",
 			"symbol",
 			"a",
 			"use"
@@ -798,7 +812,8 @@ const PARSER_TABLES = [
 			"marker",
 			"mask",
 			"clipPath",
-			"symbol"
+			"symbol",
+			"solidColor"
 		]
 	],
 	[

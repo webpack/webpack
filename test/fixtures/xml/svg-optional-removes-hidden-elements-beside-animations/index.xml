@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<g><circle r="0"/></g>
+	<circle cx="16" cy="3" r="0">
+		<animate attributeName="r" values="0;3;0" dur="1s" repeatCount="indefinite"/>
+	</circle>
+	<g fill="none">
+		<animate attributeName="fill" to="red" dur="1s"/>
+		<rect width="1" height="1"/>
+	</g>
+	<rect id="target" width="0" height="1"/>
+	<set href="#target" attributeName="width" to="1"/>
+	<g id="empty"><path d=""><animate attributeName="d" to="M0 0h1" dur="1s"/></path></g>
+	<use href="#empty"/>
+	<path d=""/>
+</svg>

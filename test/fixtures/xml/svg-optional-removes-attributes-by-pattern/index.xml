@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+	<circle r="1" stroke="red" stroke-width="2" fill="blue"/>
+	<path d="M0 0h1" fill="red" stroke="#FFF"/>
+	<image href="data:image/png;base64,AA" opacity=".5"/>
+	<rect width="1" height="1" FILL="red" opacity="0.5"/>
+</svg>

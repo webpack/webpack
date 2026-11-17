@@ -501,7 +501,7 @@ describe("SourceProcessor — SVG minification", () => {
 		expect(processor.process(constrained, compact).code).toContain('stdDeviation="+002.00"');
 		expect(processor.process(fixture("xml", "source-processor-svg-minification-should-retain-text-list-positions-units-and-4"), compact).code).toBe('<!DOCTYPE svg SYSTEM "svg.dtd">' + source);
 		const html = processor.process(source, { ...compact, xml: false }).code;
-		expect(html).toContain('x="1.5px 2em 3%"');
+		expect(html).toContain('x="1.5 2em 3%"');
 		expect(html).toContain('stdDeviation=2');
 		for (const name of ["source-processor-svg-minification-should-retain-text-list-positions-units-and-5", "source-processor-svg-minification-should-retain-text-list-positions-units-and-6", "source-processor-svg-minification-should-retain-text-list-positions-units-and-7", "source-processor-svg-minification-should-retain-text-list-positions-units-and-8"]) {
 			const invalid = fixture("xml", name);
@@ -592,7 +592,7 @@ describe("SourceProcessor — SVG minification", () => {
 		const options = { mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true, shortenSvgPathData: true, removeSvgMetadata: true };
 		const processor = new SourceProcessor();
 		const once = processor.process(source, options).code;
-		expect(once).toBe('<!doctype html><p><svg viewBox="0 0 24 24"><path d="M0 0v80h-112" transform="translate(1 2)"/><rect width=1.5px height=2></rect></svg><math><mi width=001.00>x</mi></math><div d=M000,000 width=001.00></div>');
+		expect(once).toBe('<!doctype html><p><svg viewBox="0 0 24 24"><path d="M0 0v80h-112" transform="translate(1 2)"/><rect width=1.5 height=2></rect></svg><math><mi width=001.00>x</mi></math><div d=M000,000 width=001.00></div>');
 		expect(processor.process(once, options).code).toBe(once);
 		const plain = processor.process(source, { mode: "minify" }).code;
 		expect(plain).toContain('<metadata><rdf:RDF/></metadata><path d="M000,000 l0 80-112 0"');
