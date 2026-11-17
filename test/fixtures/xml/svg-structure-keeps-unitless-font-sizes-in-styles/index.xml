@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<text style="font-size:24">a</text>
+	<text style="letter-spacing:2;word-spacing:3">b</text>
+	<text style="font-size:24px">c</text>
+	<text style="letter-spacing:0">d</text>
+</svg>
