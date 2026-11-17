@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#c)"><path transform="scale(2)" d="M0 0h1"/><path transform="scale(2)" d="M0 0h2"/></g>
+<g><path transform="scale(2)" d="M0 0h1"/><svg transform="scale(2)"/></g>
+<g><path transform="scale(2)" d="M0 0h1"/><path transform="scale(2)" transform-origin="1 1" d="M0 0h2"/></g>
+<g><path transform="scale(2)" d="M0 0h1"/><path transform="scale(2)" transform-box="view-box" d="M0 0h2"/></g>
+<g><path transform="scale(2)" d="M0 0h1"/><path transform="scale(3)" d="M0 0h2"/></g>
+<g><path d="M0 0h1"/><path transform="scale(2)" d="M0 0h2"/></g>
+<g transform="rotate(45)"><path transform="bogus(2)" d="M0 0h1"/><path transform="bogus(2)" d="M0 0h2"/></g>
+<g transform="bogus(45)"><path transform="scale(2)" d="M0 0h1"/><path transform="scale(2)" d="M0 0h2"/></g>
+</svg>
