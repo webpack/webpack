@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep file reads within resolve restrictions and module packages.
+Keep file: urls, contexts and copy globs within what the config names.
