@@ -1272,10 +1272,6 @@ const OXC_SMALLER_BY_REASON = [
 		["terser compress: pure_globals/globals_whose_access_is_pure"]
 	],
 	[
-		"oxc goes further than webpack on what swc's `fixture/check` tests cover",
-		["swc minifier: fixture/check/1/input.js"]
-	],
-	[
 		"oxc goes further than webpack on what swc's `fixture/reduced` tests cover",
 		["swc minifier: fixture/reduced/2/input.js"]
 	],
