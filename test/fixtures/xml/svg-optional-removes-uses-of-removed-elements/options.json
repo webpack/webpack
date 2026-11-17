@@ -1,0 +1,14 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"removeHiddenSvgElements": true,
+		"removeSvgElements": {
+			"id": [
+				"x",
+				"y"
+			]
+		}
+	}
+]

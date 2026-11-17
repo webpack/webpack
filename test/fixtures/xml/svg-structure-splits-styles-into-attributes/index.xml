@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<g style="    fill:#000; c\olor: #fff; /**/illegal-'declaration/*'; -webkit-blah: 123  ; -webkit-trolo: 'lolo'; illegal2*/"/>
+	<rect style="fill:blue;fill:red!important;fill:green;stroke:red"/>
+	<rect style="font:1px serif;font-size:2px;-x-y:1"/>
+	<rect style="fill:red/* a;b */;stroke:blue;-x:1"/>
+	<path d="M0 0h1" fill="blue" style="all:initial;fill:red"/>
+	<path d="M0 0h2" fill="blue" style="\61 ll:initial;fill:red"/>
+	<rect width="1" height="1" fill="red" style="FILL:red;fill:blue;-x:1"/>
+	<g style="\110000:0;fill:red"/>
+</svg>

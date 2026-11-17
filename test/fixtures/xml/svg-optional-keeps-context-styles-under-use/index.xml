@@ -1,0 +1,2 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="300" height="100"><style>.c{fill:green} #r{stroke:blue} rect[data-x]{stroke-width:9} g.k rect{fill:red} g > rect{opacity:.5}</style><defs><g class="k"><rect id="r" class="c" data-x="1" width="50" height="50"/></g></defs><use xlink:href="#r" x="10" y="10"/><use xlink:href="#r" x="110" y="10"/>
+</svg>

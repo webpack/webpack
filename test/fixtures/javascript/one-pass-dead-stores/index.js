@@ -113,7 +113,11 @@ console.log(
 			log.push(error.name);
 		}
 		var fn = function () {};
-		fn.length = 5;
+		try {
+			fn.length = 5;
+		} catch (error) {
+			log.push(error.name);
+		}
 		log.push(fn.length);
 		return log.join();
 	})()

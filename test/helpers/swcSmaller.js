@@ -11,7 +11,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"real-world code, where no one transform above accounts for half the gap: several cut opposite ways, or the rival restructures the program too far for a token diff to attribute",
 		[
-			"swc minifier: fixture/next/wrap-contracts/input.js",
 			"swc minifier: fixture/issues/12209/input.js",
 			"swc minifier: fixture/issues/arguments-canonical-index/input.js"
 		]
@@ -314,8 +313,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: issue-t120/issue_t120_2",
 			"terser compress: loops/dead_code_condition",
 			"terser compress: pure_getters/issue_2265_2",
-			"terser compress: pure_getters/set_immutable_2",
-			"terser compress: pure_getters/set_immutable_4",
 			"terser compress: reduce_vars/regex_loop",
 			"terser compress: sequences/lift_sequences_2",
 			"terser compress: sequences/lift_sequences_5",
@@ -421,7 +418,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: functions/issue_2097",
 			"terser compress: functions/issue_2630_1",
 			"terser compress: functions/recursive_inline_2",
-			"terser compress: functions/use_before_init_in_loop",
 			"terser compress: functions/drop_lone_use_strict_arrows_2"
 		]
 	],
@@ -835,10 +831,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/9741_global_objects/input.js",
 			"swc minifier: fixture/projects/jquery/5/input.js"
 		]
-	],
-	[
-		"swc writes `const` as `let`, a byte shorter and mergeable with its neighbors, and moves leading `var`s into a later declaration",
-		["terser compress: dead-code/dead_code_const_declaration"]
 	],
 	[
 		"swc goes further than webpack on what terser's `block-scope` tests cover",

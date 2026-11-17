@@ -405,7 +405,12 @@ const TOKENIZER_SOURCES = {
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-17"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-14"),
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-18"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-15")
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-15"),
+		// words past the 12 chars WORD_CACHE holds, which `readWord` hands on
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-22"),
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-23"),
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-24"),
+		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-25")
 	],
 	keywords: [
 		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-keywords-under-every-option-set"),

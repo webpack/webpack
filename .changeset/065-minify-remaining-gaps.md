@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Fold `switch`es, literals, trims; inline more; drop unread classes, dead code.
+Fold `switch`es, literals, trims, `typeof`, number members; inline more; drop unread classes, dead code, `?.`.

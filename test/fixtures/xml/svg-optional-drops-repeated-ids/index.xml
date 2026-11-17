@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<linearGradient id="paint"><stop stop-color="red"/></linearGradient>
+	<linearGradient id="paint"><stop stop-color="blue"/></linearGradient>
+	<rect width="1" height="1" fill="url(#paint)"/>
+</svg>
