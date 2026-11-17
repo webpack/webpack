@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/a[1]: css-tree unparsed co\\x00lor:red, tool co\\x00lor: red",
+		"why": "input preprocessing reads the NUL as U+FFFD, so the spec parses `co\\0lor: red` as a declaration (§3.3); css-tree keeps it as raw text"
+	}
+]

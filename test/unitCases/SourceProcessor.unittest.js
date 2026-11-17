@@ -1329,6 +1329,17 @@ describe("SourceProcessor", () => {
 				"rgb(1 2 3)",
 				null
 			]);
+			/** @type {(string | null)[]} */
+			const names = [];
+			new CssSourceProcessor()
+				.use([CssNodeType.Declaration], (path) => {
+					names.push(path.textOf(CssPart.name));
+				})
+				.process(
+					fixture("css", "source-processor-node-path-reads-a-css-part-s-source-text-escapes-as-written-2")
+				);
+			// The source as given, before the parse reads a NUL as U+FFFD.
+			expect(names).toEqual(["co\u0000lor"]);
 		});
 
 		it("reads an html node's ancestors along its parent links", () => {
@@ -1387,6 +1398,41 @@ describe("SourceProcessor", () => {
 					if (path.name() === "div") path.replace("<span></span>");
 				})
 			).toBe("<span></span>");
+			// The document composes whole, so the replacement is all it prints.
+			expect(
+				/** @type {{ code: string }} */ (
+					new HtmlSourceProcessor()
+						.use({
+							[HtmlNodeType.Document]: {
+								enter: (path) => path.replace("<main>b</main>")
+							}
+						})
+						.process(
+							fixture("html", "source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-2"),
+							{ mode: "minify" }
+						)
+				).code
+			).toBe("<main>b</main>");
+			// A print the read-back check would hand back as the source keeps its edits.
+			expect(
+				print(
+					fixture("html", "source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-4"),
+					"enter",
+					(path) => {
+						if (path.name() === "div") path.replace("<span>b</span>");
+					}
+				)
+			).toBe("x<table></table><span>b</span>");
+			expect(
+				/** @type {{ code: string }} */ (
+					new HtmlSourceProcessor()
+						.use([HtmlNodeType.Text], (path) => path.replace("b"))
+						.process(
+							fixture("html", "source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-5"),
+							{ mode: "minify", fragmentContext: "select" }
+						)
+				).code
+			).toBe("<option>b");
 			// A walk that prints nothing has nothing to replace.
 			expect(
 				new HtmlSourceProcessor()

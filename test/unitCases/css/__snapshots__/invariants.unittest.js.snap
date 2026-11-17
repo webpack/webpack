@@ -49138,6 +49138,14 @@ exports[`CSS syntax — invariants source-processor-node-path-reads-a-css-part-s
 
 exports[`CSS syntax — invariants source-processor-node-path-reads-a-css-part-s-source-text-escapes-as-written tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,9] colon[9,10] function[10,14] number[14,15] whitespace[15,16] number[16,17] whitespace[17,18] number[18,19] right-parenthesis[19,20] whitespace[20,21] delim[21,22] ident[22,31] right-curly-bracket[31,32] end=32"`;
 
+exports[`CSS syntax — invariants source-processor-node-path-reads-a-css-part-s-source-text-escapes-as-written-2 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"co�lor\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]"`;
+
+exports[`CSS syntax — invariants source-processor-node-path-reads-a-css-part-s-source-text-escapes-as-written-2 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-node-path-reads-a-css-part-s-source-text-escapes-as-written-2 prints {"mode":"minify"} 1`] = `"a{co�lor:red}"`;
+
+exports[`CSS syntax — invariants source-processor-node-path-reads-a-css-part-s-source-text-escapes-as-written-2 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,4] delim[4,5] ident[5,8] colon[8,9] ident[9,12] right-curly-bracket[12,13] end=13"`;
+
 exports[`CSS syntax — invariants source-processor-node-path-reads-a-streamed-block-s-start-in-its-rule-s-enter parses 1`] = `
 "length 119538, sha256 3c03b417e17ed598
 [[\\"at-rule\\",\\"media\\",[\\" \\",[\\"ident\\",\\"screen\\"]],[\\".\\",[\\"ident\\",\\"c0\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]],\\".\\",[\\"ident\\",\\"c1\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]],\\".\\",[\\"ident\\",\\"c2\\"],[\\"{}\\",[
