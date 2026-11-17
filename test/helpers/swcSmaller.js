@@ -592,13 +592,6 @@ const SWC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"swc goes further than webpack on what terser's `object` tests cover",
-		[
-			"terser compress: object/prop_arrow_to_concise_method",
-			"terser compress: object/concise_method_to_prop_arrow"
-		]
-	],
-	[
 		"swc evaluates reads on literals at build time: an index into an array or string, a missing property as `void 0`, `typeof` a class, `delete` of a binding",
 		[
 			"swc minifier: fixture/member_expr/array_side_effects/input.js",
