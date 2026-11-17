@@ -159,7 +159,10 @@ class ServerPlugin {
 	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
+		// `failed` can follow this compiler's `done` when a later `done` tap throws
+		let holding = false;
 		compiler.hooks.beforeRun.tapPromise("ServerPlugin", () => {
+			holding = true;
 			this.refs++;
 			if (!this.server) {
 				this.server = createServer();
@@ -177,6 +180,8 @@ class ServerPlugin {
 		 * @param {() => void} callback called once the last compiler let go
 		 */
 		const release = (callback) => {
+			if (!holding) return callback();
+			holding = false;
 			const server = this.server;
 			if (server && --this.refs === 0) {
 				this.server = undefined;
