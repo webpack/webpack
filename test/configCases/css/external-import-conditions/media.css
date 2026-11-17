@@ -1,0 +1,4 @@
+@import url("https://test.cases/comment.css") screen/**/;
+@import url("https://test.cases/escaped.css") scr\65 en;
+@import url("https://test.cases/only.css") only/**/screen and (color);
+@import url("https://test.cases/negated.css") n\6f t/**/print;
