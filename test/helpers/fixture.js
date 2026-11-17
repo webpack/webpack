@@ -7,7 +7,7 @@ const { namedRenderer } = require("./embeddedRenderers");
 
 const FIXTURES = path.join(__dirname, "..", "fixtures");
 
-/** @typedef {"css" | "html" | "javascript" | "json" | "xml"} FixtureLanguage */
+/** @typedef {"css" | "html" | "javascript" | "json" | "typescript" | "xml"} FixtureLanguage */
 
 /** @type {Map<string, string>} */
 const cache = new Map();
@@ -24,7 +24,11 @@ const generated = new Set();
  * @returns {string} the file name its inputs are kept under
  */
 const indexFile = (lang) =>
-	lang === "javascript" ? "index.js" : `index.${lang}`;
+	lang === "javascript"
+		? "index.js"
+		: lang === "typescript"
+			? "index.ts"
+			: `index.${lang}`;
 
 /**
  * What a fixture directory's `fixture.js` exports, for what JSON cannot hold:

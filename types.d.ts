@@ -16464,6 +16464,11 @@ declare interface JavascriptParseOptions {
 	importPhases?: boolean;
 
 	/**
+	 * whether TypeScript's erasable syntax is read and skipped, as Node.js's type stripping removes it; the tree holds the JavaScript alone
+	 */
+	typescript?: boolean;
+
+	/**
 	 * whether to record the names and scopes a scope analysis reads, on the tree; a log given is emptied and refilled, so one can serve every parse
 	 */
 	scopes?: boolean | ScopeLog;
@@ -37643,6 +37648,7 @@ declare class WebpackParser extends SyntaxParser {
 			importPhases?: boolean;
 			moduleFallback?: boolean;
 			syntaxTree?: ColumnarSyntaxTree;
+			typescript?: boolean;
 		},
 		input: string,
 		startPos?: number

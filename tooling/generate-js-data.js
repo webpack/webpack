@@ -2280,6 +2280,29 @@ const PARSE_ERRORS = [
 		template: "super() call outside constructor of a subclass",
 		probe: "class A extends B { m() { super() } }",
 		sourceType: "script"
+	},
+	// TypeScript's, raised only with `typescript: true`, which Babel's probes
+	// here cannot read; Node.js strips none of the first, so Babel has no name
+	{
+		template: "TypeScript * is not supported in strip-only mode",
+		own: "unsupported-typescript-syntax"
+	},
+	{
+		template: "Abstract methods can only appear within an abstract class",
+		babel: "NonAbstractClassHasAbstractMethod"
+	},
+	{
+		template: "Abstract property cannot have an initializer",
+		babel: "AbstractPropertyHasInitializer"
+	},
+	{
+		template: "'*' modifier must precede 'static' modifier",
+		babel: "InvalidModifiersOrder"
+	},
+	{
+		template:
+			"This member cannot have an 'override' modifier because its containing class does not extend another class",
+		babel: "OverrideNotInSubClass"
 	}
 ];
 
