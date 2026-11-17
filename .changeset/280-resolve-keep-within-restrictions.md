@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep file: urls, contexts and copy globs within what the config names.
+Keep context requests and copy globs to what the config names.
