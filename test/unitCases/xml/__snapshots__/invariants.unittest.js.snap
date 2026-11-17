@@ -4518,6 +4518,22 @@ exports[`XML syntax — invariants svg-structure-joins-compact-line-runs prints 
 
 exports[`XML syntax — invariants svg-structure-joins-compact-line-runs tokenizes 1`] = `"attr[5,10|12,38]\\" open[0,40|1,4] attr[46,47|49,61]\\" open[40,64|41,45]/ close[64,70|66,69] text[70,71] end=71"`;
 
+exports[`XML syntax — invariants svg-structure-joins-line-runs-after-implicit-lines parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":5,\\"nameEnd\\":10,\\"valueStart\\":12,\\"valueEnd\\":38}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"\\\\n\\\\t\\",\\"start\\":40,\\"end\\":42},{\\"type\\":3,\\"tagName\\":\\"path\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"d\\",\\"value\\":\\"M16777216 0 10 10h1 1zh1 1\\",\\"nameStart\\":48,\\"nameEnd\\":49,\\"valueStart\\":51,\\"valueEnd\\":77}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":42,\\"end\\":80,\\"tagEnd\\":80,\\"nameEnd\\":47,\\"contentEnd\\":80},{\\"type\\":4,\\"data\\":\\"\\\\n\\\\t\\",\\"start\\":80,\\"end\\":82},{\\"type\\":3,\\"tagName\\":\\"path\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"d\\",\\"value\\":\\"M0 0 10 10h1 1zh1 1\\",\\"nameStart\\":88,\\"nameEnd\\":89,\\"valueStart\\":91,\\"valueEnd\\":110}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":82,\\"end\\":113,\\"tagEnd\\":113,\\"nameEnd\\":87,\\"contentEnd\\":113},{\\"type\\":4,\\"data\\":\\"\\\\n\\\\t\\",\\"start\\":113,\\"end\\":115},{\\"type\\":3,\\"tagName\\":\\"path\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"d\\",\\"value\\":\\"m0 0 10 10h1 1zh1 1\\",\\"nameStart\\":121,\\"nameEnd\\":122,\\"valueStart\\":124,\\"valueEnd\\":143}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":115,\\"end\\":146,\\"tagEnd\\":146,\\"nameEnd\\":120,\\"contentEnd\\":146},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":146,\\"end\\":147}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":153,\\"tagEnd\\":40,\\"nameEnd\\":4,\\"contentEnd\\":147}]"`;
+
+exports[`XML syntax — invariants svg-structure-joins-line-runs-after-implicit-lines parses 2`] = `""`;
+
+exports[`XML syntax — invariants svg-structure-joins-line-runs-after-implicit-lines prints {"xml":true,"mode":"minify","collapseWhitespace":true,"shortenSvgPathData":true,"cleanupSvgStructure":true} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><path d=\\"M16777216 0 10 10h2zh1 1\\"/><path d=\\"M0 0l10 10h2zh2\\"/><path d=\\"m0 0 10 10h2zh2\\"/></svg>"`;
+
+exports[`XML syntax — invariants svg-structure-joins-line-runs-after-implicit-lines prints {"xml":true,"mode":"minify"} 1`] = `
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\">
+	<path d=\\"M16777216 0 10 10h1 1zh1 1\\"/>
+	<path d=\\"M0 0 10 10h1 1zh1 1\\"/>
+	<path d=\\"m0 0 10 10h1 1zh1 1\\"/>
+</svg>"
+`;
+
+exports[`XML syntax — invariants svg-structure-joins-line-runs-after-implicit-lines tokenizes 1`] = `"attr[5,10|12,38]\\" open[0,40|1,4] text[40,42] attr[48,49|51,77]\\" open[42,80|43,47]/ text[80,82] attr[88,89|91,110]\\" open[82,113|83,87]/ text[113,115] attr[121,122|124,143]\\" open[115,146|116,120]/ text[146,147] close[147,153|149,152] text[153,154] end=154"`;
+
 exports[`XML syntax — invariants svg-structure-joins-line-runs-of-converted-shapes parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":5,\\"nameEnd\\":10,\\"valueStart\\":12,\\"valueEnd\\":38}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"\\\\n\\\\t\\",\\"start\\":40,\\"end\\":42},{\\"type\\":3,\\"tagName\\":\\"polyline\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"points\\",\\"value\\":\\"3 6 5 6 21 6\\",\\"nameStart\\":52,\\"nameEnd\\":58,\\"valueStart\\":60,\\"valueEnd\\":72}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":42,\\"end\\":75,\\"tagEnd\\":75,\\"nameEnd\\":51,\\"contentEnd\\":75},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":75,\\"end\\":76}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":82,\\"tagEnd\\":40,\\"nameEnd\\":4,\\"contentEnd\\":76}]"`;
 
 exports[`XML syntax — invariants svg-structure-joins-line-runs-of-converted-shapes parses 2`] = `""`;
