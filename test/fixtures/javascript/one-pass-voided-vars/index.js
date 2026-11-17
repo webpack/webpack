@@ -18,6 +18,16 @@ function deletesNamed() {
 	return delete (named);
 }
 console.log(deletesNamed());
+// One a nested function reads, inlined where it is called, stays.
+var outer = "outer";
+function nested() {
+	function read() {
+		return outer;
+	}
+	return read();
+	var outer;
+}
+console.log(nested());
 // One a `delete` reads, a loop's head declares, a pattern sets or read
 // more often stays.
 function kept() {
