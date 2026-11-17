@@ -201,6 +201,25 @@ describe("lazyCompilationBackend", () => {
 		expect(timerCount()).toBe(0);
 	});
 
+	it.each([
+		["no listen option", undefined, { host: "localhost", port: undefined }],
+		["a port", 8080, { host: "localhost", port: 8080 }],
+		["options without a host", { port: 8080 }, { host: "localhost", port: 8080 }],
+		["an explicit host", { host: "0.0.0.0" }, { host: "0.0.0.0", port: undefined }]
+	])("listens on localhost by default given %s", (_name, listen, expected) => {
+		const server = makeServer();
+		const listenSpy = jest.fn();
+		Object.assign(server, { listen: listenSpy });
+		const compiler = /** @type {import("../../lib/Compiler")} */ (
+			/** @type {unknown} */ ({ getInfrastructureLogger: () => ({}) })
+		);
+		createBackend({ client: "client", server: () => server, listen })(
+			compiler,
+			() => {}
+		);
+		expect(listenSpy).toHaveBeenCalledWith(expected);
+	});
+
 	it("does not schedule idle timers or hang after dispose", () => {
 		const { api, server } = setup();
 		const mod = makeModule("mod-a");
