@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<polygon points="1 2+03 4 5 1"/>
+<polygon points="1.0 2-3 4 5 1"/>
+<polyline points="1.0+2 3 4"/>
+<polyline points="20 ,10 50 40 30.5-10 , 20 10"/>
+</svg>
