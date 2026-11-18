@@ -540,4 +540,70 @@ export default VALUE;
 		}
 	}, 120000);
 
+	// A restored module's source is read when its chunk is rendered and then
+	// cleared after emit. The next build on the same compiler must still be able
+	// to measure it: here the size limit warning reports the largest modules of
+	// an async chunk that only grows over the limit in that build.
+	// https://github.com/webpack/webpack-sources/issues/321
+	it("should measure restored modules after their rendered sources were released", async () => {
+		const webpack = require("../../");
+
+		const configAdditions = {
+			mode: "production",
+			entry: "./src/main.js",
+			optimization: { minimize: false },
+			performance: { hints: "warning", maxAssetSize: 5000 }
+		};
+		const padding = "x".repeat(3000);
+		await updateSrc({
+			"main.js": 'export default import("./lazy.js").then((m) => m.default);',
+			"lazy.js": `import data from "./data.json";
+import { helper } from "./helper.js";
+export default [data, helper(), "${padding}"];
+`,
+			"helper.js": "export const helper = () => 42;\n",
+			"data.json": JSON.stringify({ value: 1, padding: "" })
+		});
+		// fill the persistent cache
+		await compile(configAdditions);
+
+		const compiler = webpack(
+			/** @type {import("../../").Configuration} */ (
+				/** @type {unknown} */ ({ ...config, ...configAdditions })
+			)
+		);
+		const run = () =>
+			new Promise((resolve, reject) => {
+				compiler.run((err, stats) => {
+					if (err) return reject(err);
+					resolve(/** @type {import("../../").Stats} */ (stats));
+				});
+			});
+		try {
+			// restores every module from the cache, the async chunk is below the limit
+			const first = /** @type {import("../../").Stats} */ (await run());
+			expect(first.hasErrors()).toBe(false);
+
+			await updateSrc({
+				"data.json": JSON.stringify({ value: 2, padding })
+			});
+			const second = /** @type {import("../../").Stats} */ (await run());
+			expect(second.toString({ preset: "errors-only" })).toBe("");
+			const { warnings } = second.toJson({ all: false, warnings: true });
+			expect(
+				/** @type {import("../../").StatsError[]} */ (warnings).map(
+					(warning) => warning.message
+				)
+			).toContainEqual(
+				expect.stringMatching(/Largest modules: \.\/src\/lazy\.js \+ \d+ modules/)
+			);
+		} finally {
+			await new Promise((resolve) => {
+				compiler.close(resolve);
+			});
+		}
+		const result = /** @type {EXPECTED_ANY[]} */ (await execute());
+		expect(result[0]).toEqual({ value: 2, padding });
+		expect(result[1]).toBe(42);
+	}, 20000);
 });
