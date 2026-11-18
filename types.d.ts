@@ -3497,9 +3497,9 @@ type CodeValue =
 	| number
 	| bigint
 	| boolean
+	| CallableFunction
+	| NewableFunction
 	| RegExp
-	| ((...args: never[]) => void)
-	| (abstract new (...args: never[]) => void)
 	| RuntimeValue
 	| {
 			[index: string]: RecursiveArrayOrRecord<
@@ -3509,9 +3509,9 @@ type CodeValue =
 				| number
 				| bigint
 				| boolean
+				| CallableFunction
+				| NewableFunction
 				| RegExp
-				| ((...args: never[]) => void)
-				| (abstract new (...args: never[]) => void)
 				| RuntimeValue
 			>;
 	  }
@@ -3522,9 +3522,9 @@ type CodeValue =
 			| number
 			| bigint
 			| boolean
+			| CallableFunction
+			| NewableFunction
 			| RegExp
-			| ((...args: never[]) => void)
-			| (abstract new (...args: never[]) => void)
 			| RuntimeValue
 	  >[];
 type CodeValuePrimitive =
@@ -3534,9 +3534,9 @@ type CodeValuePrimitive =
 	| number
 	| bigint
 	| boolean
-	| RegExp
-	| ((...args: never[]) => void)
-	| (abstract new (...args: never[]) => void);
+	| CallableFunction
+	| NewableFunction
+	| RegExp;
 type CollectedComment = CommentImport & { start: number; end: number };
 declare interface Colors {
 	reset: (value?: unknown) => string;
@@ -12509,9 +12509,9 @@ type GeneratedValue =
 	| number
 	| bigint
 	| boolean
+	| CallableFunction
+	| NewableFunction
 	| RegExp
-	| ((...args: never[]) => void)
-	| (abstract new (...args: never[]) => void)
 	| PromiseLike<CodeValuePrimitive>;
 declare class Generator<TModule extends NormalModule = NormalModule> {
 	constructor();
@@ -21818,9 +21818,9 @@ type MergedDefinitionNode =
 	| number
 	| bigint
 	| boolean
+	| CallableFunction
+	| NewableFunction
 	| RegExp
-	| ((...args: never[]) => void)
-	| (abstract new (...args: never[]) => void)
 	| RuntimeValue
 	| {
 			[index: string]: RecursiveArrayOrRecord<
@@ -21830,9 +21830,9 @@ type MergedDefinitionNode =
 				| number
 				| bigint
 				| boolean
+				| CallableFunction
+				| NewableFunction
 				| RegExp
-				| ((...args: never[]) => void)
-				| (abstract new (...args: never[]) => void)
 				| RuntimeValue
 			>;
 	  }
@@ -21843,9 +21843,9 @@ type MergedDefinitionNode =
 			| number
 			| bigint
 			| boolean
+			| CallableFunction
+			| NewableFunction
 			| RegExp
-			| ((...args: never[]) => void)
-			| (abstract new (...args: never[]) => void)
 			| RuntimeValue
 	  >[]
 	| Map<string, MergedDefinitionNode>;

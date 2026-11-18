@@ -865,11 +865,14 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 			const type = typeChecker.getTypeAtLocation(node);
 			const { target } =
 				/** @type {ts.Signature & { target?: ts.Signature }} */ (signature);
+			// A type argument written in the call is counted where it is written.
+			const written = node.typeArguments ? node.typeArguments.length : 0;
 			if (target) {
 				return Boolean(
 					target.typeParameters &&
+					target.typeParameters.length > written &&
 					setsParameterToAny(
-						new Set(target.typeParameters),
+						new Set(target.typeParameters.slice(written)),
 						typeChecker.getReturnTypeOfSignature(target),
 						type,
 						0
@@ -880,6 +883,7 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 			const { declaration } = signature;
 			return (
 				ts.isNewExpression(node) &&
+				written === 0 &&
 				declaration !== undefined &&
 				declaration.getSourceFile().isDeclarationFile &&
 				isTypeReference(type) &&
@@ -1372,7 +1376,7 @@ for (const column of COLUMNS) {
 	}
 }
 report +=
-	"\n`any` counts `EXPECTED_ANY` and a written `any`. `unknown` counts a written `unknown`; `ThrownValue`, the `unknown` a `throw` or a rejected promise hands on, is left out. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the `any` TypeScript infers where no type is written, such as `const map = new Map()` or `const list = []`; an identifier that only holds an `any` written elsewhere is not counted again, as the `any` row counts it where it is written.\n";
+	"\n`any` counts `EXPECTED_ANY`, a written `any` and JSDoc's `*` and `?` for any type. `unknown` counts a written `unknown`; `ThrownValue`, the `unknown` a `throw` or a rejected promise hands on, is left out. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the `any` TypeScript infers where no type is written, such as `const map = new Map()` or `const list = []`; an identifier that only holds an `any` written elsewhere is not counted again, as the `any` row counts it where it is written.\n";
 if (base && !baseCountsFile) {
 	report +=
 		"\nThe base's untyped identifiers were not counted, as `--base-counts` was not given.\n";
