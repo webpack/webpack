@@ -669,126 +669,6 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 		};
 
 		/**
-		 * Tells whether a declaration states a type in this project's own source.
-		 * @param {ts.Declaration} declaration the declaration
-		 * @returns {boolean} true when it does
-		 */
-		const declaresOwnType = (declaration) =>
-			!declaration.getSourceFile().isDeclarationFile &&
-			declaresType(declaration);
-
-		/**
-		 * Tells whether an unannotated parameter or destructured binding takes its
-		 * type from one this project declares: a callback's parameter from the
-		 * signature it is passed to, a binding from the property it reads.
-		 * @param {ts.Declaration} declaration the declaration
-		 * @returns {boolean} true when the type it takes is declared
-		 */
-		const takesDeclaredType = (declaration) => {
-			if (ts.isParameter(declaration)) {
-				const fn = declaration.parent;
-				if (!ts.isArrowFunction(fn) && !ts.isFunctionExpression(fn)) {
-					return false;
-				}
-				const contextualType = typeChecker.getContextualType(fn);
-				if (!contextualType) return false;
-				const index = fn.parameters.indexOf(declaration);
-				const signatures = contextualType.getCallSignatures();
-				return (
-					signatures.length > 0 &&
-					signatures.every((signature) => {
-						const { parameters } = signature;
-						const parameter =
-							parameters[Math.min(index, parameters.length - 1)];
-						const declarations = parameter && parameter.getDeclarations();
-						return Boolean(
-							declarations &&
-							declarations.length > 0 &&
-							declarations.every(declaresOwnType)
-						);
-					})
-				);
-			}
-			if (ts.isBindingElement(declaration) && !declaration.initializer) {
-				const key = declaration.propertyName || declaration.name;
-				if (!ts.isIdentifier(key)) return false;
-				const property = typeChecker
-					.getTypeAtLocation(declaration.parent)
-					.getProperty(key.text);
-				const declarations = property && property.getDeclarations();
-				return Boolean(
-					declarations &&
-					declarations.length > 0 &&
-					declarations.every(declaresOwnType)
-				);
-			}
-			return false;
-		};
-
-		/**
-		 * Tells whether an identifier's `any` is stated by a declaration, such as
-		 * an `EXPECTED_ANY` the escape-hatch rows already count, not inferred.
-		 * @param {ts.Node} node the identifier
-		 * @returns {boolean} true when every declaration of its symbol states a type
-		 */
-		const isDeclaredAny = (node) => {
-			const symbol =
-				declaredProperty(node) ||
-				(ts.isShorthandPropertyAssignment(node.parent)
-					? typeChecker.getShorthandAssignmentValueSymbol(node.parent)
-					: typeChecker.getSymbolAtLocation(node)) ||
-				(ts.isPropertyAccessExpression(node.parent) && node.parent.name === node
-					? typeChecker.getSymbolAtLocation(node.parent)
-					: undefined);
-			const declarations = symbol && symbol.getDeclarations();
-			return Boolean(
-				declarations &&
-				declarations.length > 0 &&
-				declarations.every(
-					(declaration) =>
-						declaresType(declaration) || takesDeclaredType(declaration)
-				)
-			);
-		};
-
-		/**
-		 * Tells whether an identifier reads a variable TypeScript types by itself,
-		 * one declared without a type and with no initializer, `null`,
-		 * `undefined` or `[]`: the `any` it may read is inferred, not written.
-		 * @param {ts.Node} node the identifier
-		 * @returns {boolean} true when every declaration of its symbol is one
-		 */
-		const isAutoTyped = (node) => {
-			const symbol = typeChecker.getSymbolAtLocation(node);
-			const declarations = symbol && symbol.getDeclarations();
-			return Boolean(
-				declarations &&
-				declarations.length > 0 &&
-				declarations.every((declaration) => {
-					if (
-						!ts.isVariableDeclaration(declaration) ||
-						declaresType(declaration)
-					) {
-						return false;
-					}
-					let { initializer } = declaration;
-					while (initializer && ts.isParenthesizedExpression(initializer)) {
-						initializer = initializer.expression;
-					}
-					return (
-						initializer === undefined ||
-						initializer.kind === ts.SyntaxKind.NullKeyword ||
-						(ts.isIdentifier(initializer) &&
-							initializer.text === "undefined") ||
-						ts.isVoidExpression(initializer) ||
-						(ts.isArrayLiteralExpression(initializer) &&
-							initializer.elements.length === 0)
-					);
-				})
-			);
-		};
-
-		/**
 		 * Tells whether a type names one of a signature's own type parameters,
 		 * other than one this project's source defaults to `any` on purpose;
 		 * lib's `new <T = any>()` of `Set` still counts.
@@ -918,11 +798,13 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 			}
 			// `new Map()` takes lib's `new (): Map<any, any>`, which has no type parameter.
 			const { declaration } = signature;
-			// `Array(5)` takes lib's `(arrayLength?: number): any[]` alike.
+			// `Array(5)` takes lib's `(arrayLength?: number): any[]` alike, however
+			// the call names `Array`.
 			return (
 				(ts.isNewExpression(node) ||
-					(ts.isIdentifier(node.expression) &&
-						node.expression.text === "Array")) &&
+					(declaration !== undefined &&
+						ts.isInterfaceDeclaration(declaration.parent) &&
+						declaration.parent.name.text === "ArrayConstructor")) &&
 				written === 0 &&
 				declaration !== undefined &&
 				declaration.getSourceFile().isDeclarationFile &&
@@ -1071,10 +953,9 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 				if (
 					!isTyped &&
 					untyped &&
-					((type.flags & ts.TypeFlags.Any &&
-						!isDeclaredAny(node) &&
-						isAutoTyped(node)) ||
-						isUntypedEmptyArray(node))
+					// Under `noImplicitAny`, TypeScript itself refuses an identifier whose
+					// `any` no one wrote, so one holding `any` holds a written one.
+					isUntypedEmptyArray(node)
 				) {
 					untyped.push({
 						line: line + 1,
