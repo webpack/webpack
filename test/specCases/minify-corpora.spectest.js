@@ -17,6 +17,7 @@
 //    JS_MINIFY_REPORT names a file to tally where it is worse, the same and better.
 
 const { spawnSync } = require("child_process");
+const { createHash } = require("crypto");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
@@ -769,18 +770,29 @@ const callEnd = (text, at) => {
 
 /**
  * The tests oxc writes inline in its minifier's Rust tests: the source each
- * `test…(` helper call passes first, once per distinct source in a file.
+ * `test…(` helper call passes first, once per distinct source in a file. Each
+ * is named by its file, the Rust test holding it and a hash of the source, so
+ * an upstream edit elsewhere in the file renames none of them.
  * @param {string} file one of the test files
  * @returns {Source[]} one source per distinct source
  */
 const readOxcTests = (file) => {
 	const text = fs.readFileSync(file, "utf8");
+	const relative = path.relative(oxcTestsDir, file).split(path.sep).join("/");
+	const functions = [...text.matchAll(/\bfn\s+(\w+)/g)];
+	let enclosing = -1;
 	/** @type {Set<string>} */
 	const seen = new Set();
 	/** @type {Source[]} */
 	const sources = [];
 	for (const call of text.matchAll(/\b(test\w*)\(/g)) {
 		const index = /** @type {number} */ (call.index);
+		while (
+			enclosing + 1 < functions.length &&
+			/** @type {number} */ (functions[enclosing + 1].index) < index
+		) {
+			enclosing++;
+		}
 		// A helper's own definition, not a call to it.
 		if (/\bfn\s+$/.test(text.slice(Math.max(0, index - 8), index))) continue;
 		let at = index + call[0].length;
@@ -792,9 +804,13 @@ const readOxcTests = (file) => {
 		const rest = text.slice(literal.end, callEnd(text, literal.end));
 		if (/SourceType::(ts|tsx|d_ts)\(/.test(rest)) continue;
 		seen.add(literal.value);
-		const line = text.slice(0, index).split("\n").length;
+		const hash = createHash("sha256")
+			.update(literal.value)
+			.digest("hex")
+			.slice(0, 8);
+		const test = enclosing < 0 ? "" : `${functions[enclosing][1]}:`;
 		sources.push({
-			name: `${path.relative(oxcTestsDir, file).split(path.sep).join("/")}:${line}`,
+			name: `${relative}:${test}${hash}`,
 			input: literal.value,
 			module: readsAsModule(literal.value)
 		});
@@ -990,6 +1006,8 @@ const TERSER_TOTAL_BUDGET = {
  * @type {Record<string, string>}
  */
 const REFUSED_BY_REFERENCE = {
+	"Label a defined twice":
+		"a class static block starts a new label set, as a function body does, so a label may be declared again inside one",
 	"Escaped characters are not allowed in keywords":
 		"an escape is allowed anywhere in an identifier name; only a keyword read as one may not hold it",
 	"Unexpected token: punc ())":
@@ -1083,34 +1101,34 @@ const FOR_OF_SEQUENCE =
  * @type {Record<string, string>}
  */
 const REFUSED_BY_WEBPACK = {
-	"oxc minifier: ecmascript/may_have_side_effects.rs:465": SUPER_OUTSIDE,
-	"oxc minifier: ecmascript/may_have_side_effects.rs:830": AUTO_ACCESSOR,
-	"oxc minifier: ecmascript/may_have_side_effects.rs:831": AUTO_ACCESSOR,
-	"oxc minifier: ecmascript/may_have_side_effects.rs:833": AUTO_ACCESSOR,
-	"oxc minifier: ecmascript/may_have_side_effects.rs:834": AUTO_ACCESSOR,
-	"oxc minifier: ecmascript/may_have_side_effects.rs:835": AUTO_ACCESSOR,
-	"oxc minifier: ecmascript/may_have_side_effects.rs:836": AUTO_ACCESSOR,
-	"oxc minifier: mangler/property_mangler.rs:311": AUTO_ACCESSOR,
-	"oxc minifier: peephole/remove_unused_declaration.rs:356": AUTO_ACCESSOR,
-	"oxc minifier: peephole/remove_unused_declaration.rs:357": AUTO_ACCESSOR,
-	"oxc minifier: peephole/remove_unused_expression.rs:868": AUTO_ACCESSOR,
-	"oxc minifier: peephole/remove_unused_expression.rs:869": AUTO_ACCESSOR,
-	"oxc minifier: peephole/remove_unused_expression.rs:975": AUTO_ACCESSOR,
-	"oxc minifier: peephole/remove_unused_private_members.rs:49": AUTO_ACCESSOR,
-	"oxc minifier: peephole/remove_unused_private_members.rs:53": AUTO_ACCESSOR,
-	"oxc minifier: peephole/replace_known_methods.rs:1462": INVALID_PATTERN,
-	"oxc minifier: peephole/replace_known_methods.rs:1464": INVALID_PATTERN,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:708": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:722": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:734": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:736": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:750": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:767": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:772": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:774": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:776": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:787": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:790": AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:closure_compiler_tests:356c6931": SUPER_OUTSIDE,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:307b737b": AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:65c76813": AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:d13726c2": AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:c25bcaeb": AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:861375ff": AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:e5e35fde": AUTO_ACCESSOR,
+	"oxc minifier: mangler/property_mangler.rs:rewrites_defaults_class_fields_and_accessors:924d5604": AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_declaration.rs:remove_unused_class_declaration:2afd40bb": AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_declaration.rs:remove_unused_class_declaration:e5017813": AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_expression.rs:remove_unused_class_expression:f6f9d41d": AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_expression.rs:remove_unused_class_expression:58ff03dc": AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_expression.rs:test_property_write_side_effects:5af693d4": AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_private_members.rs:test_remove_unused_private_accessors:d782c9b2": AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_private_members.rs:test_remove_unused_private_accessors:ad77658e": AUTO_ACCESSOR,
+	"oxc minifier: peephole/replace_known_methods.rs:test_fold_regex_source:a1e7aaf5": INVALID_PATTERN,
+	"oxc minifier: peephole/replace_known_methods.rs:test_fold_regex_source:b15dc347": INVALID_PATTERN,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:8fd646b7": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:853a086e": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:d04aa03a": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:d339968e": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:0cb88d8f": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:6755e2dd": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:33c3ebc8": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:0cdfae5d": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:698b1c42": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:31e75e2c": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:9cb323d3": AUTO_ACCESSOR,
 	"swc minifier: fixture/issues/11133/input.js": REDECLARED,
 	"terser compress: class-properties/parens_in": PRIVATE_UNDECLARED,
 	"terser compress: class-properties/parens_in_10": PRIVATE_UNDECLARED,
