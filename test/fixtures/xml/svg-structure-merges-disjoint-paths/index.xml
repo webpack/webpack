@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0v100h100V0z" fill="red"/>
+<path d="M200 0v100h100V0z" fill="red"/>
+<path d="m400 0 0 10 10 0z" fill="red"/>
+<path d="m600 0" fill="red"/>
+<path d="M0 0v100h100V0z" fill="blue"/>
+<path d="M50 50h10v10z" fill="blue"/>
+<path d="M0 300h5" stroke="red" stroke-width="2" stroke-miterlimit="1"/>
+<path d="M100 300h5" stroke="red" stroke-width="2" stroke-miterlimit="1"/>
+<path d="M0 500h5" stroke="none"/>
+<path d="M100 500h5" stroke="none"/>
+<path d="M0 600h5" fill="url(#g)"/>
+<path d="M100 600h5" fill="url(#g)"/>
+<path d="M0 700h5" style="fill:red"/>
+<path d="M0 800h5" marker-end="url(#m)"/>
+<path d="M0 900h5" stroke-dasharray="1"/>
+<g><path d="M0 1100h5" id="a"/><path d="M100 1100h5"/></g>
+<path d="M0 1200 x"/>
+<path d="m"/>
+<path d="M0 1300h5" stroke="red" stroke-width="1em"/>
+<path/>
+</svg>

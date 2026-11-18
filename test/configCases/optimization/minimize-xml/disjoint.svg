@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<path d="M0 0v100h100V0z" fill="red"/>
+	<path d="m200 0v100h100V0z" fill="red"/>
+</svg>

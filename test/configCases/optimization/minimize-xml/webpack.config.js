@@ -210,6 +210,11 @@ module.exports = [
 		entry: "./offcanvas.js",
 		optimization: { minimizeOptions: { xml: { removeOffCanvasPaths: true } } }
 	}),
+	// Paths whose bounds do not overlap merge into one.
+	config("disjoint", {
+		entry: "./disjoint.js",
+		optimization: { minimizeOptions: { xml: { mergeDisjointPaths: true } } }
+	}),
 	config("structure", {
 		entry: "./structure.js",
 		optimization: {

@@ -13975,6 +13975,7 @@ declare interface HtmlPrintOptions {
 	svgPrecision?: number;
 	convertSvgTransforms?: boolean;
 	removeOffCanvasSvgPaths?: boolean;
+	mergeDisjointSvgPaths?: boolean;
 	mergeSvgPaths?: boolean;
 	reuseSvgPaths?: boolean;
 	sortSvgDefinitions?: boolean;
@@ -14197,6 +14198,11 @@ declare interface HtmlProcessOptions {
 	 * when minifying XML, remove ID-free SVG content hidden by `display="none"`, zero opacity or size, a `visibility` nothing inside sets back, or geometry that draws nothing (default false)
 	 */
 	removeHiddenSvgElements?: boolean;
+
+	/**
+	 * when minifying XML, merge adjacent paths of any shape with the same attributes whose bounds, stroke included, do not overlap; lossy, since anti-aliasing can blend a pixel both reach differently once merged (default false)
+	 */
+	mergeDisjointSvgPaths?: boolean;
 
 	/**
 	 * when minifying XML, remove unnamed paths whose bounds, stroke included, lie wholly outside the root `viewBox`, outside transforms, filters, markers and styles; lossy, since a viewport of another aspect ratio shows past the `viewBox` (default false)
@@ -26253,6 +26259,12 @@ declare interface OptimizationMinimizeXml {
 	 * @since 5.113.0
 	 */
 	inlineStyles?: boolean;
+
+	/**
+	 * Merge adjacent SVG paths of any shape with the same attributes whose bounds, stroke included, do not overlap, outside IDs, styles, markers, dashes, clips, masks, filters and `url()` paint. Off by default because anti-aliasing can blend a pixel both paths reach differently once merged.
+	 * @since 5.113.0
+	 */
+	mergeDisjointPaths?: boolean;
 
 	/**
 	 * Merge adjacent disjoint axis-aligned SVG lines with explicit opaque crisp-edge strokes, no fill, dashes or markers. Skip compositing, transformed or ID-bearing ancestors; identical paint remains eligible during color cleanup. Off by default because consumers can observe element boundaries; skip stylesheets, scripts, animations and DTDs.
