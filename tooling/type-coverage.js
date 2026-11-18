@@ -110,11 +110,9 @@ const ESCAPE_HATCH_DIRECTORIES = ["lib/", "hot/", "declarations/", "bin/"];
  * @typedef {object} Spot
  * @property {number} line the line, from 1
  * @property {string} name the identifier, call or type written there
- * @property {string=} type the type that makes an untyped identifier untyped
  */
 
-/** @type {Record<string, Spot[]>} */
-const inferredAnyByFile = {};
+// Where TypeScript infers `any` because no type is written: the untyped spots.
 /** @type {Record<string, Spot[]>} */
 const untypedByFile = {};
 
@@ -140,10 +138,6 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 		const counted = ESCAPE_HATCH_DIRECTORIES.some((directory) =>
 			relativeFile.startsWith(directory)
 		);
-		/** @type {Spot[] | undefined} */
-		const inferredAny = counted
-			? (inferredAnyByFile[relativeFile] = [])
-			: undefined;
 		/** @type {Spot[] | undefined} */
 		const untyped = counted ? (untypedByFile[relativeFile] = []) : undefined;
 
@@ -1028,20 +1022,15 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 					}
 				};
 				rep.s[statementIndex] = isTyped ? typeText.length : 0;
-				if (!isTyped && untyped) {
-					untyped.push({
-						line: line + 1,
-						name: node.getText(sourceFile),
-						type: typeText
-					});
-				}
+				// An identifier that only holds an `any` written elsewhere is not
+				// untyped: the `any` row counts that `any` where it is written.
 				if (
 					!isTyped &&
-					inferredAny &&
+					untyped &&
 					((type.flags & ts.TypeFlags.Any && !isDeclaredAny(node)) ||
 						isUntypedEmptyArray(node))
 				) {
-					inferredAny.push({
+					untyped.push({
 						line: line + 1,
 						name: node.getText(sourceFile)
 					});
@@ -1050,7 +1039,7 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 			}
 
 			if (
-				inferredAny &&
+				untyped &&
 				(ts.isNewExpression(node) || ts.isCallExpression(node)) &&
 				fillsTypeArgumentWithAny(node)
 			) {
@@ -1059,7 +1048,7 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 					node.getStart()
 				);
 				const callee = node.expression.getText(sourceFile);
-				inferredAny.push({
+				untyped.push({
 					line: line + 1,
 					name: ts.isNewExpression(node) ? `new ${callee}()` : `${callee}()`
 				});
@@ -1261,9 +1250,6 @@ const addCount = (byFile, file, column, count) => {
 	const counts = (byFile[file] = byFile[file] || {});
 	counts[column] = (counts[column] || 0) + count;
 };
-for (const [file, spots] of Object.entries(inferredAnyByFile)) {
-	addCount(headCounts, file, "any", spots.length);
-}
 for (const [file, spots] of Object.entries(untypedByFile)) {
 	addCount(headCounts, file, "untyped", spots.length);
 }
@@ -1386,10 +1372,10 @@ for (const column of COLUMNS) {
 	}
 }
 report +=
-	"\n`any` counts `EXPECTED_ANY`, a written `any` and the `any` TypeScript infers where no type is written, such as `const map = new Map()` or `const list = []`. `unknown` counts a written `unknown`; `ThrownValue`, the `unknown` a `throw` or a rejected promise hands on, is left out. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the identifiers whose type is or holds `any`, wherever it comes from; the `any` TypeScript's built-in lib and Node.js's `@types/node` write in their own signatures, such as the replacer of `String#replace` or a stream's `chunk`, is left out, and so is the open fallback beside declared fields, such as `KnownBuildInfo & Record<string, any>`, though reading a key no field declares is counted.\n";
+	"\n`any` counts `EXPECTED_ANY` and a written `any`. `unknown` counts a written `unknown`; `ThrownValue`, the `unknown` a `throw` or a rejected promise hands on, is left out. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the `any` TypeScript infers where no type is written, such as `const map = new Map()` or `const list = []`; an identifier that only holds an `any` written elsewhere is not counted again, as the `any` row counts it where it is written.\n";
 if (base && !baseCountsFile) {
 	report +=
-		"\nThe base's inferred `any` and untyped identifiers were not counted, as `--base-counts` was not given.\n";
+		"\nThe base's untyped identifiers were not counted, as `--base-counts` was not given.\n";
 }
 
 const header = `| File | Typed lines | ${COLUMNS.map((column) =>
@@ -1428,17 +1414,10 @@ const spotsOf = (file, wanted = () => true) => {
 			`\`${kind}\`${spelling === kind ? "" : ` (\`${spelling}\`)`}`
 		]);
 	}
-	for (const { line, name } of wanted("any")
-		? inferredAnyByFile[file] || []
-		: []) {
-		items.push([line, `\`any\` (inferred) \`${name}\``]);
-	}
-	for (const { line, name, type } of wanted("untyped")
+	for (const { line, name } of wanted("untyped")
 		? untypedByFile[file] || []
 		: []) {
-		const shown =
-			type && type.length > 100 ? `${type.slice(0, 100)}…` : type || "";
-		items.push([line, `untyped \`${name}\`: \`${shown.replace(/`/g, "'")}\``]);
+		items.push([line, `untyped \`${name}\``]);
 	}
 	return items
 		.sort((a, b) => a[0] - b[0])
