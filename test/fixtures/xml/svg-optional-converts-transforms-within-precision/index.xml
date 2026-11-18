@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<g transform="matrix(0.707 -0.707 0.707 0.707 255.03 111.21)"/>
+<g transform="matrix(0.707 -0.707 0.707 0.707 255.03 111.21) scale(2)"/>
+<g transform="matrix(0.707 -0.707 -0.707 -0.707 0 0)"/>
+<g transform="matrix(.647 -.647 -.6443 -.6443 0 0)"/>
+<g transform="matrix(1 0 1 1 0 0)"/>
+<g transform="matrix(1 1 0 1 0 0)"/>
+<g transform="matrix(0 1-1 0 0 0)"/>
+<g transform="matrix(1.25,0,0,-1.25,0,56.26) matrix(0.1325312,0,0,-0.1325312,-31.207631,89.011662)"/>
+<g transform="matrix(1 2 3 4 5 6)"/>
+<g transform="scale(2 1) rotate(15)"/>
+<g transform="matrix(1e20 0 0 1e20 0 0)"/>
+<g transform="rotate(30)"/>
+<g transform="translate(5) rotate(30)"/>
+<g transform="translate(1e400) rotate(30)"/>
+<g transform="matrix(2 0 0 3 5 0)"/>
+<g transform="scale(2) scale(3 1)"/>
+</svg>

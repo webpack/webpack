@@ -24,6 +24,7 @@ const NAMES = [
 	"optional",
 	"uncommented",
 	"commented",
+	"transforms",
 	"structure"
 ];
 
