@@ -435,16 +435,22 @@ describe("lazyCompilationBackend on a shared server", () => {
 			})
 	);
 
-	it("starts at once on a server not yet listening when given a urlBase", async () => {
-		const server = http.createServer();
-		const api =
-			/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
-				startShared(server, { urlBase: "https://localhost:8080" }).started()
+	it.each(["https://localhost:8080", "https://localhost:8080/"])(
+		"starts at once on a server not yet listening when given the urlBase %s",
+		async (urlBase) => {
+			const server = http.createServer();
+			const api =
+				/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
+					startShared(server, { urlBase }).started()
+				);
+			prefixOf(
+				api.module(makeModule("mod-a")).client,
+				"https://localhost:8080"
 			);
-		prefixOf(api.module(makeModule("mod-a")).client, "https://localhost:8080");
-		await dispose(api);
-		expect(server.listenerCount("request")).toBe(0);
-	});
+			await dispose(api);
+			expect(server.listenerCount("request")).toBe(0);
+		}
+	);
 
 	it("waits for a server not yet listening without a urlBase", () => {
 		const server = new EventEmitter();
@@ -534,4 +540,28 @@ describe("lazyCompilationBackend on a shared server", () => {
 			expect(once).toHaveBeenCalledTimes(1);
 			expect(appCalls()).toBe(3);
 		}));
+
+	it("closes a server it created when the address gives no url", () => {
+		const server = new EventEmitter();
+		const close = jest.fn();
+		Object.assign(server, { address: () => "/tmp/backend.sock", close });
+		/** @type {Error | null | undefined} */
+		let error;
+		createBackend({
+			client: "client",
+			server: () => /** @type {Server} */ (/** @type {unknown} */ (server)),
+			listen: (/** @type {Server} */ s) => s.emit("listening")
+		})(
+			/** @type {import("../../lib/Compiler")} */ (
+				/** @type {unknown} */ ({
+					getInfrastructureLogger: () => ({ log() {}, warn() {} })
+				})
+			),
+			(err) => {
+				error = err;
+			}
+		);
+		expect(error).toEqual(new Error("addr must not be a string"));
+		expect(close).toHaveBeenCalledTimes(1);
+	});
 });

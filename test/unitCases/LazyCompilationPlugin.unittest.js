@@ -107,7 +107,9 @@ describe("LazyCompilationPlugin.getCompilerHooks", () => {
 			compiler.close((err) => (err ? reject(err) : resolve(undefined)));
 		});
 		release();
-		await started;
+		await expect(started).rejects.toThrow(
+			"Lazy compilation backend started after the compiler was closed"
+		);
 		expect(close).toHaveBeenCalledTimes(1);
 	});
 });
