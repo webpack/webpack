@@ -34895,6 +34895,99 @@ exports[`HTML syntax — invariants source-processor-node-path-hands-every-visit
 
 exports[`HTML syntax — invariants source-processor-node-path-hands-every-visitor-the-run-s-state-typed-by-the-2 tokenizes 1`] = `"open[0,3|1,2] close[3,7|5,6] end=7"`;
 
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <p>
+|         \\"a\\"
+|       \\"b\\"
+|       <i>
+|         \\"c\\"
+|       <br>"
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed prints {"mode":"minify"} 1`] = `"<div><p>a</p>b<i>c</i><br></div>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed tokenizes 1`] = `"open[0,5|1,4] open[5,8|6,7] text[8,9] close[9,13|11,12] text[13,14] open[14,17|15,16] text[17,18] close[18,22|20,21] open[22,26|23,25] close[26,32|28,31] end=32"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       \\"a\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-2 parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-2 prints {"mode":"minify"} 1`] = `"<div>a</div>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-2 tokenizes 1`] = `"open[0,5|1,4] text[5,6] close[6,12|8,11] end=12"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-3 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"a\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-3 parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-3 prints {"mode":"minify"} 1`] = `"<p>a"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-3 tokenizes 1`] = `"open[0,3|1,2] text[3,4] close[4,8|6,7] end=8"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-4 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"x\\"
+|     <table>
+|     <div>
+|       \\"a\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-4 parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag warning[7,8]:unexpected-character-implies-table-voodoo"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-4 prints {"mode":"minify"} 1`] = `"x<table></table><div>a</div>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-4 tokenizes 1`] = `"open[0,7|1,6] text[7,8] close[8,16|10,15] open[16,21|17,20] text[21,22] close[22,28|24,27] end=28"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-5 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <option>
+|       \\"a\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-5 parses 2`] = `"warning[0,8]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-5 prints {"mode":"minify"} 1`] = `"<option>a"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-5 tokenizes 1`] = `"open[0,8|1,7] text[8,9] close[9,18|11,17] end=18"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-reads-an-html-node-s-ancestors-along-its-parent-links parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <p>
+|         <b>
+|           \\"x\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-node-path-reads-an-html-node-s-ancestors-along-its-parent-links parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-reads-an-html-node-s-ancestors-along-its-parent-links prints {"mode":"minify"} 1`] = `"<div><p><b>x</b></div>"`;
+
+exports[`HTML syntax — invariants source-processor-node-path-reads-an-html-node-s-ancestors-along-its-parent-links tokenizes 1`] = `"open[0,5|1,4] open[5,8|6,7] open[8,11|9,10] text[11,12] close[12,16|14,15] close[16,20|18,19] close[20,26|22,25] end=26"`;
+
 exports[`HTML syntax — invariants source-processor-node-path-reads-every-part-of-a-node-as-a-start-end-range parses 1`] = `
 "| <html>
 |   <head>
