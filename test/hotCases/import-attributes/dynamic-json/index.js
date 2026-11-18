@@ -1,7 +1,7 @@
 import update from "../../update.esm.js";
 
-// accepted before the only, dynamic, import of the file
-import.meta.webpackHot.accept(["./data.json"]);
+// accepted with the attributes of the only, dynamic, import of the file
+import.meta.webpackHot.accept(["./data.json"], { with: { type: "json" } });
 
 const load = () => import("./data.json", { with: { type: "json" } });
 
