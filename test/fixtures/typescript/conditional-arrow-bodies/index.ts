@@ -4,3 +4,5 @@ const c = flag ? (x: number): string => `${x}${pick<A, B>(x)}` : null;
 const d = flag ? (x: number): boolean => x < 1 : null;
 const e = flag ? (x: number): boolean => x < 1 && x > 0 : null;
 const f = flag ? (x: number): number[] => [x, x] : null;
+const g = flag ? (): unknown => <T extends string, U>(x: U) => x : null;
+const h = flag ? (x: number): number => (x, <T,>(y: T) => y)(x) : null;
