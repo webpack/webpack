@@ -1334,6 +1334,14 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should fold a value read once into a spread, which evaluates it before spreading", () => {
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-into-a-spread");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// A value running code, or a spread copying getters, before it keeps the name in place.
+		expect(code).toBe('var log=[];function f(){return{...{get b(){return log.push("getter"),1}}}.b}function g(){return[0,...[log.push(1),log.push(2)]]}function h(){return{y:1,...{x:log.push("x")}}}function k(){var copy={x:log.push("k")};return{y:log.push("y"),...copy}}function m(){var parts=[log.push(3)];return Math.max(...parts)}function n(before){var after={x:log.push("after")};return{...before,...after}}console.log(f(),g().join(),JSON.stringify(h()),JSON.stringify(k()),m(),JSON.stringify(n({get z(){return log.push("z"),0}})),log.join());');
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should keep only what the computed keys and values of an unread object run", () => {
 		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the");
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toMatchSnapshot();

@@ -309,7 +309,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: issue-t120/issue_t120_1",
 			"terser compress: issue-t120/issue_t120_2",
 			"terser compress: loops/dead_code_condition",
-			"terser compress: pure_getters/issue_2265_2",
 			"terser compress: reduce_vars/regex_loop",
 			"terser compress: sequences/lift_sequences_2",
 			"terser compress: sequences/lift_sequences_5",
