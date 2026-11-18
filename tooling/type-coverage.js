@@ -784,28 +784,36 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 			}
 			const signature = typeChecker.getResolvedSignature(node);
 			if (!signature) return false;
-			const type = typeChecker.getTypeAtLocation(node);
+			// An optional call adds `undefined` to what the call returns.
+			const type = typeChecker.getNonNullableType(
+				typeChecker.getTypeAtLocation(node)
+			);
+			const { declaration } = signature;
 			const { target } =
 				/** @type {ts.Signature & { target?: ts.Signature }} */ (signature);
 			// A type argument written in the call is counted where it is written.
 			const written = node.typeArguments ? node.typeArguments.length : 0;
 			if (target) {
+				// An optional call's target has its type parameters instantiated, so
+				// read them, and the return type naming them, off the declaration.
+				const generic =
+					declaration !== undefined && ts.isFunctionLike(declaration)
+						? typeChecker.getSignatureFromDeclaration(declaration) || target
+						: target;
 				return Boolean(
-					target.typeParameters &&
-					target.typeParameters.length > written &&
+					generic.typeParameters &&
+					generic.typeParameters.length > written &&
 					setsParameterToAny(
-						new Set(target.typeParameters.slice(written)),
-						typeChecker.getReturnTypeOfSignature(target),
+						new Set(generic.typeParameters.slice(written)),
+						typeChecker.getReturnTypeOfSignature(generic),
 						type,
 						0
 					)
 				);
 			}
 			// `new Map()` takes lib's `new (): Map<any, any>`, which has no type parameter.
-			const { declaration } = signature;
 			// `Array(5)` takes lib's `(arrayLength?: number): any[]` alike, however
-			// the call names `Array`; an optional call adds `undefined` to it.
-			const result = typeChecker.getNonNullableType(type);
+			// the call names `Array`.
 			return (
 				(ts.isNewExpression(node) ||
 					(declaration !== undefined &&
@@ -815,9 +823,9 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 				written === 0 &&
 				declaration !== undefined &&
 				declaration.getSourceFile().isDeclarationFile &&
-				isTypeReference(result) &&
+				isTypeReference(type) &&
 				typeChecker
-					.getTypeArguments(result)
+					.getTypeArguments(type)
 					.some((argument) => Boolean(argument.flags & ts.TypeFlags.Any))
 			);
 		};
@@ -1307,7 +1315,7 @@ for (const column of COLUMNS) {
 	}
 }
 report +=
-	"\n`any` counts `EXPECTED_ANY`, a written `any` and JSDoc's `*` and `?` for any type. `unknown` counts a written `unknown`; `ThrownValue`, the `unknown` a `throw` or a rejected promise hands on, is left out. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the `any` TypeScript infers where no type is written: the type arguments TypeScript's lib fills with `any`, such as `const map = new Map()` or `Array(5)`, and `const list = []`. An identifier that only holds an `any` written in the project's files is not counted again, as the `any` row counts it where it is written; an `any` a lib signature returns, such as `JSON.parse`'s, is counted in neither row.\n";
+	"\n`any` counts `EXPECTED_ANY`, a written `any` and JSDoc's `*` and `?` for any type. `unknown` counts a written `unknown`; `ThrownValue`, the `unknown` a `throw` or a rejected promise hands on, is left out. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the `any` TypeScript infers where no type is written: a type argument a call leaves to inference that comes out `any`, whether a lib signature defaults it, as in `const map = new Map()` and `Array(5)`, or a generic call infers it from an `any` argument; and `const list = []`. An identifier that only holds an `any` written in the project's files is not counted again, as the `any` row counts it where it is written; an `any` a lib signature returns, such as `JSON.parse`'s, is counted in neither row.\n";
 if (base && !baseCountsFile) {
 	report +=
 		"\nThe base's untyped identifiers were not counted, as `--base-counts` was not given.\n";
