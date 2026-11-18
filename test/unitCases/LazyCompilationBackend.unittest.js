@@ -257,3 +257,84 @@ describe("lazyCompilationBackend", () => {
 		expect(timerCount()).toBe(0);
 	});
 });
+
+describe("lazyCompilationBackend on a shared server", () => {
+	const http = require("http");
+
+	/**
+	 * @param {Server} server listening server
+	 * @param {string} path request path
+	 * @returns {Promise<{ status: number | undefined, type: string | undefined, body: string }>} the first chunk of the response
+	 */
+	const get = (server, path) =>
+		new Promise((resolve, reject) => {
+			const { port } = /** @type {import("net").AddressInfo} */ (
+				server.address()
+			);
+			const req = http.get({ host: "127.0.0.1", port, path }, (res) => {
+				res.once("data", (chunk) => {
+					resolve({
+						status: res.statusCode,
+						type: res.headers["content-type"],
+						body: String(chunk)
+					});
+					res.destroy();
+				});
+			});
+			req.on("error", reject);
+		});
+
+	it("serves lazy urls on it, hands it every other url and leaves it open", async () => {
+		/** @type {Server} */
+		const server = http.createServer((req, res) => {
+			res.end("app");
+		});
+		await new Promise((resolve) => {
+			server.listen(0, "127.0.0.1", () => resolve(undefined));
+		});
+		try {
+			const compiler = /** @type {import("../../lib/Compiler")} */ (
+				/** @type {unknown} */ ({
+					getInfrastructureLogger: () => ({ log() {}, warn() {} }),
+					watching: { invalidate() {} }
+				})
+			);
+			const api = await new Promise((resolve, reject) => {
+				createBackend({ client: "client", server: () => server })(
+					compiler,
+					(err, result) => (err ? reject(err) : resolve(result))
+				);
+			});
+			const { client, data: key } = api.module(makeModule("mod-a"));
+			const { port } = /** @type {import("net").AddressInfo} */ (
+				server.address()
+			);
+			expect(client).toBe(
+				`client?${encodeURIComponent(`http://127.0.0.1:${port}${PREFIX}`)}`
+			);
+
+			expect(await get(server, PREFIX + key)).toEqual(
+				expect.objectContaining({ status: 200, type: "text/event-stream" })
+			);
+			expect(await get(server, "/other")).toEqual(
+				expect.objectContaining({ status: 200, body: "app" })
+			);
+
+			await new Promise((resolve, reject) => {
+				api.dispose((/** @type {Error | null} */ err) =>
+					err ? reject(err) : resolve(undefined)
+				);
+			});
+			expect(server.listening).toBe(true);
+			expect(server.listenerCount("request")).toBe(1);
+			expect(await get(server, PREFIX + key)).toEqual(
+				expect.objectContaining({ body: "app" })
+			);
+		} finally {
+			if (server.closeAllConnections) server.closeAllConnections();
+			await new Promise((resolve) => {
+				server.close(() => resolve(undefined));
+			});
+		}
+	});
+});

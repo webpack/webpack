@@ -1,0 +1,71 @@
+"use strict";
+
+const { EventEmitter } = require("events");
+const webpack = require("webpack");
+
+const { LazyCompilationPlugin } = webpack.experiments.hmr;
+
+/**
+ * @param {(options: import("../../lib/hmr/LazyCompilationPlugin").LazyCompilationBackendOptions) => Promise<import("../../lib/hmr/LazyCompilationPlugin").LazyCompilationBackendOptions>} backendOptions what the tap returns
+ * @returns {Promise<void>} settles once the backend started or failed
+ */
+const startBackend = (backendOptions) => {
+	const compiler = webpack({
+		mode: "development",
+		context: __dirname,
+		entry: "./entry-is-never-built",
+		experiments: { lazyCompilation: true },
+		infrastructureLogging: { level: "none" }
+	});
+	LazyCompilationPlugin.getCompilerHooks(compiler).backendOptions.tapPromise(
+		"test",
+		backendOptions
+	);
+	return new Promise((resolve, reject) => {
+		compiler.hooks.beforeCompile.callAsync(
+			/** @type {EXPECTED_ANY} */ ({}),
+			(err) => (err ? reject(err) : resolve())
+		);
+	});
+};
+
+describe("LazyCompilationPlugin.getCompilerHooks", () => {
+	it("returns the same hooks for a compiler", () => {
+		const compiler = webpack({ infrastructureLogging: { level: "none" } });
+		expect(LazyCompilationPlugin.getCompilerHooks(compiler)).toBe(
+			LazyCompilationPlugin.getCompilerHooks(compiler)
+		);
+	});
+
+	it("starts the built-in backend with the options its taps return", async () => {
+		const server = new EventEmitter();
+		Object.assign(server, {
+			address: () => ({ address: "127.0.0.1", family: "IPv4", port: 1234 })
+		});
+		const listen = jest.fn((/** @type {EventEmitter} */ s) =>
+			s.emit("listening")
+		);
+		/** @type {import("../../lib/hmr/LazyCompilationPlugin").LazyCompilationBackendOptions | undefined} */
+		let received;
+		await startBackend(async (options) => {
+			received = options;
+			return {
+				...options,
+				server: () => /** @type {EXPECTED_ANY} */ (server),
+				listen
+			};
+		});
+		expect(received).toEqual({
+			client: expect.stringMatching(/lazy-compilation-web\.js$/)
+		});
+		expect(listen).toHaveBeenCalledWith(server);
+	});
+
+	it("fails the compile when a tap fails", async () => {
+		await expect(
+			startBackend(async () => {
+				throw new Error("no server");
+			})
+		).rejects.toThrow("no server");
+	});
+});

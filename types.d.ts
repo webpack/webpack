@@ -760,6 +760,12 @@ declare class AutomaticPrefetchPlugin {
 	apply(compiler: Compiler): void;
 }
 type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
+type BackEnd =
+	| ((
+			compiler: Compiler,
+			callback: (err: null | Error, backendApi?: BackendApi) => void
+	  ) => void)
+	| ((compiler: Compiler) => Promise<BackendApi>);
 
 /**
  * Defines the backend api type used by this module.
@@ -20146,6 +20152,10 @@ declare interface LabelLike {
 	name?: string;
 	statementStart?: number;
 }
+type LazyCompilationBackendOptions = Omit<
+	LazyCompilationDefaultBackendOptions,
+	"client"
+> & { client: string };
 
 /**
  * Options for the default backend.
@@ -20205,6 +20215,36 @@ declare interface LazyCompilationOptions {
 	 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
 	 */
 	test?: string | RegExp | GlobCondition | ((module: Module) => boolean);
+}
+declare class LazyCompilationPlugin {
+	/**
+	 * Creates an instance of LazyCompilationPlugin.
+	 */
+	constructor(__0: OptionsLazyCompilationPlugin);
+	backend: BackEnd;
+	entries?: boolean;
+	imports?: boolean;
+	test?: string | RegExp | GlobCondition | ((module: Module) => boolean);
+
+	/**
+	 * Applies the plugin by registering its hooks on the compiler.
+	 */
+	apply(compiler: Compiler): void;
+
+	/**
+	 * Returns the hooks a development server taps to keep the lazy compilation backend in step with its own server.
+	 * @experimental exposed as `webpack.experiments.hmr.LazyCompilationPlugin`; unstable API
+	 */
+	static getCompilerHooks(compiler: Compiler): LazyCompilationPluginHooks;
+}
+declare interface LazyCompilationPluginHooks {
+	/**
+	 * change the built-in backend's options before it starts, e.g. to serve it from a development server's own server; not called for a custom `backend` function
+	 */
+	backendOptions: AsyncSeriesWaterfallHook<
+		[LazyCompilationBackendOptions],
+		LazyCompilationBackendOptions
+	>;
 }
 type LazyFunction<
 	InputValue,
@@ -26932,6 +26972,23 @@ declare interface OptionsDelegatedModuleFactoryPlugin {
 	 * object for caching
 	 */
 	associatedObjectForCache?: object;
+}
+
+/**
+ * Defines the options type used by this module.
+ */
+declare interface OptionsLazyCompilationPlugin {
+	/**
+	 * the backend
+	 */
+	backend: BackEnd;
+	entries?: boolean;
+	imports?: boolean;
+
+	/**
+	 * additional filter for lazy compiled entrypoint modules
+	 */
+	test?: string | RegExp | GlobCondition | ((module: Module) => boolean);
 }
 declare interface OptionsStreamChunks {
 	source?: boolean;
@@ -40941,6 +40998,9 @@ declare namespace exports {
 		};
 	}
 	export namespace experiments {
+		export namespace hmr {
+			export { LazyCompilationPlugin };
+		}
 		export namespace schemes {
 			export { HttpUriPlugin, VirtualUrlPlugin };
 		}
