@@ -16,6 +16,13 @@ exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should comp
 "
 `;
 
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: applied 1`] = `
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 100 100\\">
+	<path d=\\"m10 20h20v20H10\\"/>
+	<path d=\\"m0 0h20\\" stroke=\\"red\\" stroke-width=\\"2\\"/>
+</svg>"
+`;
+
 exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: attributes 1`] = `
 "<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:data=\\"urn:application\\" xmlns:e=\\"http://www.inkscape.org/namespaces/inkscape\\">
 	<title>Accessible title</title>

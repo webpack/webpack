@@ -13022,6 +13022,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-apply-transforms": Object {
+    "configs": Array [
+      Object {
+        "description": "Bake each SVG path's \`transform\` into its path data, rounded to \`precision\` decimals (3 when unset), scaling a stroke the transform scales. Off by default because rounding moves points; skip paths with IDs, styles, markers, clip paths, masks, filters or \`url()\` paints, arcs under a skew, and documents with stylesheets, scripts or animations.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.applyTransforms",
+        "type": "boolean",
+      },
+    ],
+    "description": "Bake each SVG path's \`transform\` into its path data, rounded to \`precision\` decimals (3 when unset), scaling a stroke the transform scales. Off by default because rounding moves points; skip paths with IDs, styles, markers, clip paths, masks, filters or \`url()\` paints, arcs under a skew, and documents with stylesheets, scripts or animations.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-xml-cleanup-ids": Object {
     "configs": Array [
       Object {
@@ -13551,6 +13564,19 @@ Object {
       },
     ],
     "description": "Minimize \`.svg\` and \`.xml\` assets: \`false\` disables it, an object enables it. Absent means off unless \`experiments.futureDefaults\` is set.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-apply-transforms": Object {
+    "configs": Array [
+      Object {
+        "description": "Bake each SVG path's \`transform\` into its path data, rounded to \`precision\` decimals (3 when unset), scaling a stroke the transform scales. Off by default because rounding moves points; skip paths with IDs, styles, markers, clip paths, masks, filters or \`url()\` paints, arcs under a skew, and documents with stylesheets, scripts or animations.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.applyTransforms",
+        "type": "boolean",
+      },
+    ],
+    "description": "Bake each SVG path's \`transform\` into its path data, rounded to \`precision\` decimals (3 when unset), scaling a stroke the transform scales. Off by default because rounding moves points; skip paths with IDs, styles, markers, clip paths, masks, filters or \`url()\` paints, arcs under a skew, and documents with stylesheets, scripts or animations.",
     "multiple": false,
     "simpleType": "boolean",
   },

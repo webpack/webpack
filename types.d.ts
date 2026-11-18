@@ -13974,6 +13974,7 @@ declare interface HtmlPrintOptions {
 	removeHiddenSvgElements?: boolean;
 	svgPrecision?: number;
 	convertSvgTransforms?: boolean;
+	applySvgTransforms?: boolean;
 	removeOffCanvasSvgPaths?: boolean;
 	mergeDisjointSvgPaths?: boolean;
 	mergeSvgPaths?: boolean;
@@ -14203,6 +14204,11 @@ declare interface HtmlProcessOptions {
 	 * when minifying XML, merge adjacent paths of any shape with the same attributes whose bounds, stroke included, do not overlap; lossy, since anti-aliasing can blend a pixel both reach differently once merged (default false)
 	 */
 	mergeDisjointSvgPaths?: boolean;
+
+	/**
+	 * with `shortenSvgPathData`, bake each SVG path's `transform` into its points at `svgPrecision` decimals (3 when unset), scaling a stroke it scales; lossy (default false)
+	 */
+	applySvgTransforms?: boolean;
 
 	/**
 	 * when minifying XML, remove unnamed paths whose bounds, stroke included, lie wholly outside the root `viewBox`, outside transforms, filters, markers and styles; lossy, since a viewport of another aspect ratio shows past the `viewBox` (default false)
@@ -26218,6 +26224,12 @@ declare interface OptimizationMinimizeOptions {
  * @experimental
  */
 declare interface OptimizationMinimizeXml {
+	/**
+	 * Bake each SVG path's `transform` into its path data, rounded to `precision` decimals (3 when unset), scaling a stroke the transform scales. Off by default because rounding moves points; skip paths with IDs, styles, markers, clip paths, masks, filters or `url()` paints, arcs under a skew, and documents with stylesheets, scripts or animations.
+	 * @since 5.113.0
+	 */
+	applyTransforms?: boolean;
+
 	/**
 	 * Remove SVG IDs nothing in the document references and rename the rest to the shortest names, rewriting `href`, `url()` and ID-list references. Off by default because a reference from outside the document, such as a sprite's `file.svg#icon` or a page's `getElementById`, stops resolving; skip stylesheets, scripts, animations, duplicate IDs, `xml:id` and DTDs.
 	 * @since 5.113.0

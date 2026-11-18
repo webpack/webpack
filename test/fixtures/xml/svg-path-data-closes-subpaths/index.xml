@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<path d="M10 50h30-30"/>
+<path d="M10 50v-30 30"/>
+<path d="M0 0h10v10H0z"/>
+<path d="M0 0h10v10H0zm20 0h10v10z"/>
+<path d="M0 0h10v10zl5 5 5-5"/>
+<path d="M0 0h10l0 0v10q0 0 0 0c0 0 0 0 0 0a5 5 0 0 1 0 0z"/>
+<path d="M0 0m10 10h5m5 5"/>
+<path d="M0 0h10v10L0 0M20 0h5v5"/>
+<path d="M0 0h10v10H0z" stroke="red"/>
+<path d="M0 0h10v10H0z" stroke="red" stroke-width="2"/>
+<path d="M0 0h10v10l0 0" stroke="red"/>
+<path d="M0 0m10 10h5" stroke="red"/>
+<g stroke="red"><path d="M0 0h10v10H0z"/></g>
+<path d="M0 0h10v10H0z" stroke="none"/>
+<path d="M0 0h10v10H0z" pointer-events="stroke"/>
+<path d="M0 0h10v10H0z" pointer-events="visiblePainted"/>
+<path d="M0 0m10 10h5" fill="url(#paint)"/>
+<path d="M0 0h10v10H0z" id="named"/>
+<path d="M0 0h10v10H0z" pathLength="10"/>
+<path d="M0 0h10v10H0z" marker-start="url(#m)"/>
+<path d="M0 0h10v10H0z" style="stroke:red"/>
+<path d="M0 0h10v10H0z" style="stroke:var(--s)"/>
+<path d="M0 0h10v10H0 x"/>
+<path d="M.1.2h.3v.3H.1z"/>
+</svg>

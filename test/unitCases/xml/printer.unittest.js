@@ -290,8 +290,8 @@ describe("SourceProcessor — SVG minification", () => {
 			// Gecko's correctly rounded sum differs here, and Blink's digit sum below.
 			' d="M.001 0H.015"',
 			' d="M.001 0H.036"',
-			' d="M.3.1l.2.1h.2"',
-			' d="M.3.1l.1.2v.2"',
+			' d="m.3.1.2.1h.2"',
+			' d="m.3.1.1.2v.2"',
 			' d="M.3.1A1 1 0 01.7.4"',
 			' d="M.3.1A1 1 0 01.3.1"',
 			' d="M.3.1a1 1 0 010 0"',
@@ -301,8 +301,8 @@ describe("SourceProcessor — SVG minification", () => {
 			' d="M1.000000059604645 0H.3"',
 			' d="M0 0H999999999999999999999999999999999999999 .3"',
 			' d="M-.3.1-.1.4zL.6.7"',
-			' d="M.123.1l.2.1H9"',
-			' d="M.1.123l.1.2V9"',
+			' d="m.123.1.2.1H9"',
+			' d="m.1.123.1.2V9"',
 			' d="M.5 0h123456788.75"',
 			// WebKit turns quadratics into cubics with different float steps per case.
 			' d="M.3 0Q.4 1 .5 0"',

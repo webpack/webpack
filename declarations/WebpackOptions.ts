@@ -3513,6 +3513,11 @@ export interface OptimizationMinimizeOptions {
  */
 export interface OptimizationMinimizeXml {
 	/**
+	 * Bake each SVG path's `transform` into its path data, rounded to `precision` decimals (3 when unset), scaling a stroke the transform scales. Off by default because rounding moves points; skip paths with IDs, styles, markers, clip paths, masks, filters or `url()` paints, arcs under a skew, and documents with stylesheets, scripts or animations.
+	 * @since 5.113.0
+	 */
+	applyTransforms?: boolean;
+	/**
 	 * Remove SVG IDs nothing in the document references and rename the rest to the shortest names, rewriting `href`, `url()` and ID-list references. Off by default because a reference from outside the document, such as a sprite's `file.svg#icon` or a page's `getElementById`, stops resolving; skip stylesheets, scripts, animations, duplicate IDs, `xml:id` and DTDs.
 	 * @since 5.113.0
 	 */

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h10v10H0zM100 100h10v10h-10z" fill="red"/>
+<path d="M50 50h10v10H50z" fill="red"/>
+<path d="M0 200h10M30 200" stroke="red"/>
+<path d="M30 200h10" stroke="red"/>
+<path d="M0 300h10M30 300" stroke="red" stroke-linecap="round"/>
+<path d="M30 300h10" stroke="red" stroke-linecap="round"/>
+<g stroke-linecap="square"><path d="M0 400h10M30 400" stroke="red"/><path d="M30 400h10" stroke="red"/></g>
+<g style="stroke-linecap:round"><path d="M0 500h10M30 500" stroke="red"/><path d="M30 500h10" stroke="red"/></g>
+<path d="M0 600h10M100 600h10" fill="red"/>
+<path d="M5 600h10" fill="red"/>
+</svg>

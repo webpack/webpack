@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0V100L70 50z" transform="translate(100,0)"/>
+<path d="m10 10 h20 v20 s10 10 20 0 t 20 10 q5 5 10 0 c1 1 2 2 3 3 S 5 5 6 6 T 1 1 z l 5 5 H 9 V 9" transform="matrix(2 .5 -.3 1.5 10 20)"/>
+<path d="M10 10C20 20 30 20 40 10S60 0 70 10Q80 20 90 10T110 10" transform="scale(2)"/>
+<path d="M5 0a10 10 0 1 0 20 0" transform="rotate(15) scale(.8,1.2)"/>
+<path d="M5 0a10 10 0 1 0 20 0" transform="skewX(45)"/>
+<path d="M5 0a10 10 0 1 0 20 0" transform="rotate(45)"/>
+<path d="M10 10a30 20 30 0 1 40 20" transform="scale(-1 1)"/>
+<path d="M0 0h10" stroke="red" transform="scale(2)"/>
+<path d="M0 0h10" stroke="red" stroke-width="3" stroke-dasharray="1 2" stroke-dashoffset=".5" transform="rotate(30) scale(2)"/>
+<g stroke="red" stroke-width="2"><path d="M0 0h10" transform="scale(.5)"/></g>
+<path d="M0 0h10" stroke="red" transform="scale(2 1)"/>
+<path d="M0 0h10" stroke="red" vector-effect="non-scaling-stroke" transform="scale(2 1)"/>
+<path d="M0 0h10" stroke="red" stroke-width="2px" transform="scale(2)"/>
+<path d="M0 0h10" stroke="red" stroke-dasharray="none" transform="scale(2)"/>
+<path d="M0 0h10" stroke="none" transform="scale(2 1)"/>
+<g style="stroke:red"><path d="M0 0h10" transform="scale(2)"/></g>
+<g style="stroke:var(--s)"><path d="M0 0h10" transform="scale(2)"/></g>
+<g style="stroke-width:var(--w)"><path d="M0 0h10" stroke="red" transform="scale(2)"/></g>
+<path d="M0 0h10" stroke="red" stroke-width="1em" transform="scale(2)"/>
+<path d="M0 0h10" id="named" transform="scale(2)"/>
+<path d="M0 0h10" style="fill:red" transform="scale(2)"/>
+<path d="M0 0h10" fill="url(#paint)" transform="scale(2)"/>
+<path d="M0 0h10" clip-path="url(#clip)" transform="scale(2)"/>
+<path d="M0 0h10" xlink:title="x" xmlns:xlink="http://www.w3.org/1999/xlink" transform="scale(2)"/>
+<path d="M0 0h10" transform-origin="center" transform="scale(2)"/>
+<path d="M0 0h10" transform="scale(2) bogus(1)"/>
+<path d="M0 0h10 x" transform="scale(2)"/>
+<path d="5 5" transform="scale(2)"/>
+<path d="M0 0 1" transform="scale(2)"/>
+<path d="M0 0z1" transform="scale(2)"/>
+<path d="M0 0a1 1 0 2 0 1 1" transform="scale(2)"/>
+<path d="M0 0h1e999" transform="scale(2)"/>
+<path transform="scale(2)"/>
+<path d="M0 0h10" transform="scale(2)"><title>kept</title></path>
+</svg>

@@ -27,6 +27,7 @@ const NAMES = [
 	"transforms",
 	"offcanvas",
 	"disjoint",
+	"applied",
 	"structure"
 ];
 

@@ -215,6 +215,19 @@ module.exports = [
 		entry: "./disjoint.js",
 		optimization: { minimizeOptions: { xml: { mergeDisjointPaths: true } } }
 	}),
+	// A path's transform goes into its points, its stroke widened to match.
+	config("applied", {
+		entry: "./applied.js",
+		optimization: {
+			minimizeOptions: {
+				xml: {
+					shortenNumbers: true,
+					shortenPathData: true,
+					applyTransforms: true
+				}
+			}
+		}
+	}),
 	config("structure", {
 		entry: "./structure.js",
 		optimization: {

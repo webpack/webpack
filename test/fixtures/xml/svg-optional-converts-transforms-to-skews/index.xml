@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<g transform="matrix(1 0 0.466 1 0 0)"/>
+<g transform="matrix(1 0.466 0 1 0 0)"/>
+<g transform="matrix(2 0 0.932 2 0 0)"/>
+<g transform="matrix(.707-.707.707.707 0 0)"/>
+<g transform="matrix(.70710678 -.70710678 .70710678 .70710678 10 0)"/>
+<g transform="matrix(-1 0 0 -1 20 10)"/>
+<g transform="matrix(1 0 0 1 0 0)"/>
+<g transform="matrix(.647 -.647 -.6443 -.6443 0 0)"/>
+<g transform="rotate(30) skewX(10) scale(2 3)"/>
+<g transform="translate(1 2) rotate(-30) skewY(20)"/>
+</svg>
