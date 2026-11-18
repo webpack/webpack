@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<ellipse rx="auto" ry="5"/>
+<ellipse rx="5" ry="AUTO"/>
+<ellipse rx="auto" ry="auto"/>
+<ellipse rx="auto" ry="5%"/>
+<ellipse rx="auto" ry="0"/>
+</svg>

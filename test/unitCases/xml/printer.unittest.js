@@ -688,7 +688,15 @@ describe("SourceProcessor — SVG minification", () => {
 		const processor = new SourceProcessor();
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), removeEmptyAttributes: true };
 		const once = processor.process(source, options).code;
-		expect(once).toBe(source.replace(' class=" &#9;" id="" style=""', "").replace('style="&#160;"', 'style="\u00a0"'));
+		// An empty presentation value is invalid, so it reads as absent; an empty link and data stay.
+		expect(once).toBe(
+			source
+				.replace(' class=" &#9;" id="" style=""', "")
+				.replace('style="&#160;"', 'style="\u00a0"')
+				.replace(' fill="" stroke="" transform="" viewBox=""', "")
+				.replace(' dir=""', "")
+				.replace('<g CLASS=""/>', "<g/>")
+		);
 		expect(processor.process(once, options).code).toBe(once);
 		expect(processor.process(fixture("xml", "source-processor-svg-minification-should-reuse-empty-attribute-removal-without-2"), options).code).toMatchSnapshot();
 		expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);

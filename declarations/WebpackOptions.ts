@@ -3617,7 +3617,7 @@ export interface OptimizationMinimizeXml {
 		id?: Array</** An ID whose element is removed. */ string>;
 	};
 	/**
-	 * Remove empty `class`, `id` and `style` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.
+	 * Remove empty `class`, `id` and `style` attributes on SVG elements unless the DTD declares them, and other unprefixed empty SVG attributes that read as absent, keeping links, languages, conditional tests, ARIA, data and event attributes. Off by default because selectors and scripts can observe attribute presence.
 	 * @since 5.113.0
 	 */
 	removeEmptyAttributes?: boolean;
@@ -3667,7 +3667,7 @@ export interface OptimizationMinimizeXml {
 	 */
 	removeViewBox?: boolean;
 	/**
-	 * Spell `xlink:href` as the SVG 2 `href` where an element has no `href`, a link's `xlink:show` as `target`, and drop `xlink:type="simple"`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only `xlink:href`.
+	 * Spell `xlink:href` as the SVG 2 `href` where an element has no `href`, a link's `xlink:show` as `target` and an `xlink:title` as a `title` child, and drop `xlink:type="simple"`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only `xlink:href`.
 	 * @since 5.113.0
 	 */
 	removeXlink?: boolean;

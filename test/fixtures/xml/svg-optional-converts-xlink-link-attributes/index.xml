@@ -4,4 +4,8 @@
 	<a href="c.html" xlink:show="embed" xlink:type="extended"><rect width="1" height="1"/></a>
 	<a href="d.html" xlink:show="new" target="frame"><rect width="1" height="1"/></a>
 	<use href="#x" xlink:show="new"/>
+	<a href="e.html" xlink:title="Duck &amp; &lt;Go&gt;"><rect width="1" height="1"/></a>
+	<a href="f.html" xlink:title="kept"><title>own</title></a>
+	<a href="g.html" xlink:title=" "/>
+	<s:a xmlns:s="http://www.w3.org/2000/svg" xlink:title="prefixed"/>
 </svg>
