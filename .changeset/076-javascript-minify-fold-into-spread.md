@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fold values into spreads and logical sides, and print numbers before a member, when minifying.
+Fold values into spreads and logical sides; print number members correctly.
