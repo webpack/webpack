@@ -294,7 +294,9 @@ describe("lazyCompilationBackend on a shared server", () => {
 		const url = decodeURIComponent(client.slice("client?".length));
 		expect(url).toMatch(/\/lazy-compilation-using-\d+-$/);
 		expect(url.startsWith(`${urlBase}/`)).toBe(true);
-		return url.slice(urlBase.length);
+		const prefix = url.slice(urlBase.length);
+		expect(prefix).toMatch(/^\/lazy-compilation-using-\d+-$/);
+		return prefix;
 	};
 
 	/**

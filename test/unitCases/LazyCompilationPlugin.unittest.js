@@ -83,24 +83,14 @@ describe("LazyCompilationPlugin.getCompilerHooks", () => {
 		await expect(started).rejects.toThrow("no server");
 	});
 
-	it("disposes a backend that starts after the compiler closed", async () => {
-		const server = new EventEmitter();
-		const close = jest.fn((/** @type {() => void} */ callback) => callback());
-		Object.assign(server, {
-			address: () => ({ address: "127.0.0.1", family: "IPv4", port: 1234 }),
-			close
-		});
+	it("does not start the backend when a tap finishes after the compiler closed", async () => {
+		const listen = jest.fn();
 		/** @type {() => void} */
 		let release = () => {};
 		const { compiler, started } = startBackend(
 			(options) =>
 				new Promise((resolve) => {
-					release = () =>
-						resolve({
-							...options,
-							server: () => /** @type {EXPECTED_ANY} */ (server),
-							listen: (s) => s.emit("listening")
-						});
+					release = () => resolve({ ...options, listen });
 				})
 		);
 		await new Promise((resolve, reject) => {
@@ -110,6 +100,43 @@ describe("LazyCompilationPlugin.getCompilerHooks", () => {
 		await expect(started).rejects.toThrow(
 			"Lazy compilation backend started after the compiler was closed"
 		);
-		expect(close).toHaveBeenCalledTimes(1);
+		expect(listen).not.toHaveBeenCalled();
+	});
+
+	it("disposes a custom backend that starts after the compiler closed", async () => {
+		/** @type {((err: Error | null, api?: EXPECTED_ANY) => void) | undefined} */
+		let finish;
+		const compiler = webpack({
+			mode: "development",
+			context: __dirname,
+			entry: "./entry-is-never-built",
+			experiments: {
+				lazyCompilation: {
+					backend: (_compiler, callback) => {
+						finish = callback;
+					}
+				}
+			},
+			infrastructureLogging: { level: "none" }
+		});
+		/** @type {Promise<void>} */
+		const started = new Promise((resolve, reject) => {
+			compiler.hooks.beforeCompile.callAsync(
+				/** @type {EXPECTED_ANY} */ ({}),
+				(err) => (err ? reject(err) : resolve())
+			);
+		});
+		await new Promise((resolve, reject) => {
+			compiler.close((err) => (err ? reject(err) : resolve(undefined)));
+		});
+		const dispose = jest.fn((/** @type {() => void} */ callback) => callback());
+		/** @type {NonNullable<typeof finish>} */ (finish)(null, {
+			dispose,
+			module: () => ({ client: "", data: "", active: false })
+		});
+		await expect(started).rejects.toThrow(
+			"Lazy compilation backend started after the compiler was closed"
+		);
+		expect(dispose).toHaveBeenCalledTimes(1);
 	});
 });
