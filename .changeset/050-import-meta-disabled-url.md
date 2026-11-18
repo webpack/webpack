@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Emit URL assets and workers when `importMeta` is disabled.
+Fix `new URL(…, import.meta.url)` assets, workers and base URI edge cases.
