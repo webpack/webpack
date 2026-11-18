@@ -72,4 +72,42 @@ describe("LazyCompilationPlugin.getCompilerHooks", () => {
 			compiler.close((err) => (err ? reject(err) : resolve(undefined)));
 		});
 	});
+
+	it("fails the compile when the backend throws after a tap", async () => {
+		const { started } = startBackend(async (options) => ({
+			...options,
+			server: () => {
+				throw new Error("no server");
+			}
+		}));
+		await expect(started).rejects.toThrow("no server");
+	});
+
+	it("disposes a backend that starts after the compiler closed", async () => {
+		const server = new EventEmitter();
+		const close = jest.fn((/** @type {() => void} */ callback) => callback());
+		Object.assign(server, {
+			address: () => ({ address: "127.0.0.1", family: "IPv4", port: 1234 }),
+			close
+		});
+		/** @type {() => void} */
+		let release = () => {};
+		const { compiler, started } = startBackend(
+			(options) =>
+				new Promise((resolve) => {
+					release = () =>
+						resolve({
+							...options,
+							server: () => /** @type {EXPECTED_ANY} */ (server),
+							listen: (s) => s.emit("listening")
+						});
+				})
+		);
+		await new Promise((resolve, reject) => {
+			compiler.close((err) => (err ? reject(err) : resolve(undefined)));
+		});
+		release();
+		await started;
+		expect(close).toHaveBeenCalledTimes(1);
+	});
 });

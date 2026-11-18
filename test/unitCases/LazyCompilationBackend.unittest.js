@@ -290,6 +290,7 @@ describe("lazyCompilationBackend on a shared server", () => {
 	 * @returns {string} the backend's url prefix on the server
 	 */
 	const prefixOf = (client, urlBase) => {
+		expect(client.startsWith("client?")).toBe(true);
 		const url = decodeURIComponent(client.slice("client?".length));
 		expect(url).toMatch(/\/lazy-compilation-using-\d+-$/);
 		expect(url.startsWith(`${urlBase}/`)).toBe(true);
@@ -299,11 +300,13 @@ describe("lazyCompilationBackend on a shared server", () => {
 	/**
 	 * @param {Server} server a shared server
 	 * @param {{ urlBase?: string, invalidate?: () => void }=} options the url clients reach the backend at, and the watcher it invalidates
-	 * @returns {{ started: () => import("../../lib/hmr/LazyCompilationPlugin").BackendApi | undefined }} what the backend handed over so far
+	 * @returns {{ started: () => import("../../lib/hmr/LazyCompilationPlugin").BackendApi | undefined, failed: () => Error | null | undefined }} what the backend handed over so far
 	 */
 	const startShared = (server, { urlBase, invalidate } = {}) => {
 		/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi | undefined} */
 		let api;
+		/** @type {Error | null | undefined} */
+		let error;
 		createBackend({ client: "client", server, urlBase })(
 			/** @type {import("../../lib/Compiler")} */ (
 				/** @type {unknown} */ ({
@@ -312,11 +315,11 @@ describe("lazyCompilationBackend on a shared server", () => {
 				})
 			),
 			(err, result) => {
-				if (err) throw err;
+				error = err;
 				api = result;
 			}
 		);
-		return { started: () => api };
+		return { started: () => api, failed: () => error };
 	};
 
 	/**
@@ -485,4 +488,50 @@ describe("lazyCompilationBackend on a shared server", () => {
 			});
 		}
 	});
+
+	it("fails to start and detaches when a shared server fails to listen", () => {
+		const server = new EventEmitter();
+		Object.assign(server, { listening: false, listen() {} });
+		const shared = /** @type {Server} */ (/** @type {unknown} */ (server));
+		const { started, failed } = startShared(shared);
+		const error = new Error("EADDRINUSE");
+		server.emit("error", error);
+		expect(failed()).toBe(error);
+		expect(started()).toBeUndefined();
+		expect(server.listenerCount("request")).toBe(0);
+		expect(server.listenerCount("listening")).toBe(0);
+	});
+
+	it("fails to start and detaches when the address gives no url", () => {
+		const server = new EventEmitter();
+		Object.assign(server, {
+			listening: true,
+			listen() {},
+			address: () => "/tmp/dev-server.sock"
+		});
+		const { started, failed } = startShared(
+			/** @type {Server} */ (/** @type {unknown} */ (server))
+		);
+		expect(failed()).toEqual(new Error("addr must not be a string"));
+		expect(started()).toBeUndefined();
+		expect(server.listenerCount("request")).toBe(0);
+	});
+
+	it("keeps a once request listener one-shot and allows disposing twice", () =>
+		withServer(async (server, appCalls) => {
+			const once = jest.fn();
+			server.once("request", once);
+			const api =
+				/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
+					startShared(server).started()
+				);
+			await get(server, "/first");
+			await get(server, "/second");
+			expect(once).toHaveBeenCalledTimes(1);
+			await dispose(api);
+			await dispose(api);
+			await get(server, "/third");
+			expect(once).toHaveBeenCalledTimes(1);
+			expect(appCalls()).toBe(3);
+		}));
 });
