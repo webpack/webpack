@@ -43,6 +43,41 @@ const POLICED_PAGE = `<!doctype html><html><head><meta http-equiv="Content-Secur
 // A narrow viewport and a wide one, since media queries switch between them.
 const RENDER_WIDTHS = [360, 1400];
 
+// Every option off by default, with a target current engines meet. What each
+// rewrites on purpose is set aside where it would read as a difference.
+const CSS_OPT_INS = {
+	convertLengthUnits: true,
+	convertApproximateColors: true,
+	dropOverriddenDeclarations: true,
+	rewriteCustomProperties: true,
+	environment: { browsers: ["chrome 140", "firefox 140", "safari 26.2"] }
+};
+/** @type {Relaxation[]} */
+const CSS_OPT_IN_RELAX = [
+	"custom-properties",
+	"length-units",
+	"approximate-colors",
+	"prefixes"
+];
+
+// The same for HTML; `removeImpliedTags` has variants of its own.
+const HTML_OPT_INS = {
+	collapseWhitespace: "conservative",
+	mergeStyles: true,
+	removeEmptyAttributes: true,
+	removeEmptyElements: true,
+	removeRedundantAttributes: "all",
+	sortAttributes: true,
+	sortTokenLists: true
+};
+/** @type {Relaxation[]} */
+const HTML_OPT_IN_RELAX = [
+	"whitespace",
+	"redundant-attributes",
+	"empty-elements",
+	"merged-styles"
+];
+
 /**
  * Every fixture of one extension under a directory. Synchronous: jest needs one
  * test name per fixture while it collects, which is before it can await.
@@ -932,7 +967,7 @@ const installHelpers = (generics) => {
 							/* not JSON after all — compare it as written */
 						}
 					}
-					facets.scripts.push(`${type}:${body}`);
+					if (!dropped) facets.scripts.push(`${type}:${body}`);
 				} else if (name === "template") {
 					const content = /** @type {HTMLTemplateElement} */ (element).content;
 					facets.templates.push(spaced(element, renderedTextOf(content)));
@@ -1235,6 +1270,41 @@ const numericallyEqual = (one, other) => {
 		if (Math.abs(a - b) > scale * NUMERIC_TOLERANCE) return false;
 	}
 	return true;
+};
+
+/**
+ * The first facet two pages' DOMs differ in, as `htmlFacets` reports them.
+ * A comment renders nothing, so the minifier may drop one; the ones it keeps
+ * must be unchanged and still in order.
+ * @param {Facets} before what the source's DOM is made of
+ * @param {Facets} after what the printed page's DOM is made of
+ * @returns {string} what differs first, "" when nothing does
+ */
+const facetDifference = (before, after) => {
+	for (const facet of Object.keys(before.facets)) {
+		const a = before.facets[facet];
+		const b = after.facets[facet];
+		if (facet === "comments") {
+			let from = 0;
+			for (const comment of b) {
+				const found = a.indexOf(comment, from);
+				if (found === -1) {
+					return `comment is not one of the source's: ${comment}`;
+				}
+				from = found + 1;
+			}
+			continue;
+		}
+		if (a.length !== b.length) return `${facet}: ${a.length} vs ${b.length}`;
+		// Only an element's own shape carries a number the printer rounds;
+		// everything else is text, compared exactly as it is written.
+		const rounded = facet === "elements";
+		const found = a.findIndex((entry, i) =>
+			rounded ? !numericallyEqual(entry, b[i]) : entry !== b[i]
+		);
+		if (found !== -1) return `${facet} ${found}: ${a[found]} vs ${b[found]}`;
+	}
+	return "";
 };
 
 /**
@@ -3071,6 +3141,10 @@ const cascadeLines = (report) => {
 module.exports = {
 	POLICED_PAGE,
 	RENDER_WIDTHS,
+	CSS_OPT_INS,
+	CSS_OPT_IN_RELAX,
+	HTML_OPT_INS,
+	HTML_OPT_IN_RELAX,
 	benchmarkDocuments,
 	benchmarkStylesheets,
 	buildCorpus,
@@ -3078,6 +3152,7 @@ module.exports = {
 	collectFixtures,
 	compareRenders,
 	compareStyles,
+	facetDifference,
 	installHelpers,
 	numericallyEqual
 };

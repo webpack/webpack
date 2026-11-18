@@ -1,0 +1,21 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "      -> <u inert></u>",
+		"presets": [
+			"default",
+			"aggressive",
+			"embedded",
+			"embedded+legacy"
+		],
+		"why": "known bug: `inert=\"INERT\"` prints as `inert` on the `u` the source writes but as `inert=INERT` on the one the tree builder reconstructs, so a second print changes it"
+	},
+	{
+		"relation": "respelling references",
+		"contains": "    <u inert=\"INERT\">   (only in the page)",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: `inert=\"INERT\"` prints as `inert` on the `u` the source writes but as `inert=INERT` on the one the tree builder reconstructs, so a second print changes it"
+	}
+]

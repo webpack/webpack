@@ -95,12 +95,17 @@ const EMULATIONS = EMULATES_MEDIA
 const {
 	POLICED_PAGE,
 	RENDER_WIDTHS,
+	CSS_OPT_INS,
+	CSS_OPT_IN_RELAX,
+	HTML_OPT_INS,
+	HTML_OPT_IN_RELAX,
 	benchmarkDocuments,
 	benchmarkStylesheets,
 	buildCorpus,
 	cascadeLines,
 	compareRenders,
 	compareStyles,
+	facetDifference,
 	installHelpers,
 	numericallyEqual
 } = require("../helpers/syntaxEquivalence");
@@ -402,41 +407,6 @@ const minifyDeclaration = (property, value) => {
 	return colon === -1 ? "" : body.slice(colon + 1);
 };
 
-// Every option off by default, with a target current engines meet. What each
-// rewrites on purpose is set aside where it would read as a difference.
-const CSS_OPT_INS = {
-	convertLengthUnits: true,
-	convertApproximateColors: true,
-	dropOverriddenDeclarations: true,
-	rewriteCustomProperties: true,
-	environment: { browsers: ["chrome 140", "firefox 140", "safari 26.2"] }
-};
-/** @type {Relaxation[]} */
-const CSS_OPT_IN_RELAX = [
-	"custom-properties",
-	"length-units",
-	"approximate-colors",
-	"prefixes"
-];
-
-// The same for HTML; `removeImpliedTags` has variants of its own.
-const HTML_OPT_INS = {
-	collapseWhitespace: "conservative",
-	mergeStyles: true,
-	removeEmptyAttributes: true,
-	removeEmptyElements: true,
-	removeRedundantAttributes: "all",
-	sortAttributes: true,
-	sortTokenLists: true
-};
-/** @type {Relaxation[]} */
-const HTML_OPT_IN_RELAX = [
-	"whitespace",
-	"redundant-attributes",
-	"empty-elements",
-	"merged-styles"
-];
-
 /**
  * @typedef {object} Corpus
  * @property {string} label what to call it in a test name
@@ -735,40 +705,7 @@ describe(`printer output in real ${ENGINE}`, () => {
 				cases.slice(at, at + BATCH)
 			);
 			for (const { name, relax, before, after } of collected) {
-				let why = "";
-				for (const facet of Object.keys(before.facets)) {
-					const a = before.facets[facet];
-					const b = after.facets[facet];
-					// A comment renders nothing, so the minifier may drop one; the ones
-					// it keeps must be unchanged and still in order.
-					if (facet === "comments") {
-						let from = 0;
-						for (const comment of b) {
-							const found = a.indexOf(comment, from);
-							if (found === -1) {
-								why = `comment is not one of the source's: ${comment}`;
-								break;
-							}
-							from = found + 1;
-						}
-						if (why !== "") break;
-						continue;
-					}
-					if (a.length !== b.length) {
-						why = `${facet}: ${a.length} vs ${b.length}`;
-						break;
-					}
-					// Only an element's own shape carries a number the printer rounds;
-					// everything else is text, compared exactly as it is written.
-					const rounded = facet === "elements";
-					const found = a.findIndex((entry, i) =>
-						rounded ? !numericallyEqual(entry, b[i]) : entry !== b[i]
-					);
-					if (found !== -1) {
-						why = `${facet} ${found}: ${a[found]} vs ${b[found]}`;
-						break;
-					}
-				}
+				let why = facetDifference(before, after);
 				if (why === "" && withStyles) {
 					if (before.styles.length === after.styles.length) {
 						for (const [i, sheet] of before.styles.entries()) {

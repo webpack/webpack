@@ -1,0 +1,34 @@
+[
+	{
+		"relation": "respelling quote-double",
+		"contains": "    <a a=\"&amp;#\">  ->  <a a=&amp;#></a>",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: an attribute value holding `&#` minifies to other bytes depending on whether the source quotes it or spells it with references"
+	},
+	{
+		"relation": "respelling quote-single",
+		"contains": "    <a a='&amp;#'>  ->  <a a=&amp;#></a>",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: an attribute value holding `&#` minifies to other bytes depending on whether the source quotes it or spells it with references"
+	},
+	{
+		"relation": "respelling unquote",
+		"contains": "    <a a=&amp;#>  ->  <a a=&amp;#></a>",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: an attribute value holding `&#` minifies to other bytes depending on whether the source quotes it or spells it with references"
+	},
+	{
+		"relation": "respelling references",
+		"contains": "    <a a=\"&#x26;&#x23;\">  ->  <a a=&amp;#></a>",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: an attribute value holding `&#` minifies to other bytes depending on whether the source quotes it or spells it with references"
+	}
+]

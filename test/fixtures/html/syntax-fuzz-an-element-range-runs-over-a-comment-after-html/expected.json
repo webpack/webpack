@@ -1,0 +1,10 @@
+[
+	{
+		"relation": "slices",
+		"contains": "      -> Comment[10,12) Element:a[0,12)",
+		"presets": [
+			"parse"
+		],
+		"why": "known bug: the element's range runs over `</html><!`, whose comment the tree builder puts after `html`, not inside the element"
+	}
+]

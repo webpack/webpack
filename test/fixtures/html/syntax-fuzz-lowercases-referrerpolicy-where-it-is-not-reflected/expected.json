@@ -1,0 +1,14 @@
+[
+	{
+		"relation": "facets",
+		"contains": "elements 3: 2|http://www.w3.org/1999/xhtml|e[referrerpolicy=SaME-ORIGIN] vs 2|http://www.w3.org/1999/xhtml|e[referrerpolicy=same-origin]",
+		"presets": [
+			"default",
+			"implied-tags",
+			"smart-tags",
+			"opt-ins",
+			"embedded"
+		],
+		"why": "known bug: `lib/html/data.js` lists `referrerpolicy` as enumerated on every element, so its value is lowercased on elements that do not reflect it, where the DOM keeps the case"
+	}
+]

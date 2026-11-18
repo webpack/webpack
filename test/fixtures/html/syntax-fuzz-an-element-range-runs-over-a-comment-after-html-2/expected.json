@@ -1,0 +1,18 @@
+[
+	{
+		"relation": "slices",
+		"contains": "      -> Comment[10,16) Element:a[0,16)",
+		"presets": [
+			"parse"
+		],
+		"why": "known bug: the element's range runs over `</html><!-- a`, whose comment the tree builder puts after `html`, not inside the element"
+	},
+	{
+		"relation": "cut slices",
+		"contains": "      -> Comment[10,15) Element:a[0,15)",
+		"presets": [
+			"parse"
+		],
+		"why": "known bug: the element's range runs over `</html><!-- a`, whose comment the tree builder puts after `html`, not inside the element"
+	}
+]

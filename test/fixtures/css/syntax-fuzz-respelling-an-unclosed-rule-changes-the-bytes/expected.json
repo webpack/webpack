@@ -1,0 +1,23 @@
+[
+	{
+		"relation": "respelling escape",
+		"contains": "      -> \\61",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: an unclosed rule's identifier spelled with an escape, or its number with a leading zero, minifies to other bytes than the plain spelling"
+	},
+	{
+		"relation": "respelling leading-zero",
+		"contains": "      -> 0.0",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: an unclosed rule's identifier spelled with an escape, or its number with a leading zero, minifies to other bytes than the plain spelling"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/.0[1]: css-tree unparsed a, tool nothing",
+		"why": "a statement opening no `{}` block is a parse error the spec drops, whether the input ends in it or a block's `;` or `}` ends it (§5.4.3); css-tree keeps it as raw text"
+	}
+]

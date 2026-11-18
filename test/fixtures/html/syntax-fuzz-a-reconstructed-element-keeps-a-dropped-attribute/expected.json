@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "      -> <nobr></nobr>",
+		"presets": [
+			"aggressive",
+			"embedded",
+			"embedded+legacy"
+		],
+		"why": "known bug: the aggressive presets drop `class` from the `nobr` the source writes but keep it on the one the tree builder reconstructs, so a second print drops it there too"
+	}
+]

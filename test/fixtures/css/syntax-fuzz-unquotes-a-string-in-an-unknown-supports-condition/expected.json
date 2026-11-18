@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "styles",
+		"contains": "rules no element computes : @supports ([=\"a\"])@view-transition{} -> @supports ([=a])@view-transition{}",
+		"presets": [
+			"default",
+			"opt-ins",
+			"legacy"
+		],
+		"why": "known bug: `@supports ([=\"a\"])` prints as `@supports ([=a])`, while the CSSOM keeps an unknown condition's text as written"
+	}
+]

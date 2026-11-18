@@ -1,0 +1,10 @@
+[
+	{
+		"relation": "cssom",
+		"contains": "}",
+		"presets": [
+			"beautify"
+		],
+		"why": "known bug: `beautify` prints `@media (( ))` as `@media (())`, while the CSSOM keeps the space in the condition's text"
+	}
+]

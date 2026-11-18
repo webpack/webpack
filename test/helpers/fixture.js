@@ -339,10 +339,16 @@ const snapshotOfPieces = (source, writeAll) => {
  * @property {PrintOptionSet[]} options the option sets it is printed under, minifying with the defaults first
  * @property {PrintOptionSet[]} behavior those of them whose print runs against the source and must do what it does
  * @property {ParseRun[]} parses the calls its `parse.json` asks for
- * @property {KnownDifference[]} expected what its `expected.json` lets it break, but for `scaling`
+ * @property {KnownDifference[]} expected what its `expected.json` lets it break, but for `scaling` and `BROWSER_RELATIONS`
  * @property {((n?: number) => string) | undefined} sized its `fixture.js` `source(n)`, where that declares the size it builds the input at
  * @property {KnownDifference[]} expectedScaling what its `expected.json` lets the `scaling` relation report
+ * @property {KnownDifference[]} expectedBrowser what its `expected.json` lets `syntax-fuzz.spectest.js` find in a browser
  */
+
+// The relations only a browser can break, held by `syntax-fuzz.spectest.js`:
+// a print's computed styles and DOM facets, a beautified sheet's CSSOM, and
+// the parser's tree against the browser's.
+const BROWSER_RELATIONS = new Set(["styles", "facets", "cssom", "dom"]);
 
 /**
  * @param {string} file a JSON file
@@ -433,12 +439,18 @@ const fixtures = (lang) => {
 				code,
 				name
 			),
-			expected: known.filter(({ relation }) => relation !== "scaling"),
+			expected: known.filter(
+				({ relation }) =>
+					relation !== "scaling" && !BROWSER_RELATIONS.has(relation)
+			),
 			sized:
 				code.source !== undefined && code.source.length > 0
 					? code.source
 					: undefined,
-			expectedScaling: known.filter(({ relation }) => relation === "scaling")
+			expectedScaling: known.filter(({ relation }) => relation === "scaling"),
+			expectedBrowser: known.filter(({ relation }) =>
+				BROWSER_RELATIONS.has(relation)
+			)
 		});
 	}
 	return entries;
@@ -1118,6 +1130,7 @@ const readPrint = async (printers, dir, source, set) => {
 };
 
 module.exports = {
+	BROWSER_RELATIONS,
 	INVARIANT_BUDGET,
 	OVERFLOW,
 	answerOf,
