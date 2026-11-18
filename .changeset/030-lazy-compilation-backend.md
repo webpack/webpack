@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add a lazy compilation backend options hook, bind it to `localhost` and ignore unknown keys.
+Harden the lazy compilation backend and add a hook to configure it.

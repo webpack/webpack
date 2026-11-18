@@ -7,7 +7,7 @@ const { LazyCompilationPlugin } = webpack.experiments.hmr;
 
 /**
  * @param {(options: import("../../lib/hmr/LazyCompilationPlugin").LazyCompilationBackendOptions) => Promise<import("../../lib/hmr/LazyCompilationPlugin").LazyCompilationBackendOptions>} backendOptions what the tap returns
- * @returns {Promise<void>} settles once the backend started or failed
+ * @returns {{ compiler: import("webpack").Compiler, started: Promise<void> }} the compiler, and a promise settling once the backend started or failed
  */
 const startBackend = (backendOptions) => {
 	const compiler = webpack({
@@ -21,12 +21,14 @@ const startBackend = (backendOptions) => {
 		"test",
 		backendOptions
 	);
-	return new Promise((resolve, reject) => {
+	/** @type {Promise<void>} */
+	const started = new Promise((resolve, reject) => {
 		compiler.hooks.beforeCompile.callAsync(
 			/** @type {EXPECTED_ANY} */ ({}),
 			(err) => (err ? reject(err) : resolve())
 		);
 	});
+	return { compiler, started };
 };
 
 describe("LazyCompilationPlugin.getCompilerHooks", () => {
@@ -54,18 +56,20 @@ describe("LazyCompilationPlugin.getCompilerHooks", () => {
 				server: () => /** @type {EXPECTED_ANY} */ (server),
 				listen
 			};
-		});
+		}).started;
 		expect(received).toEqual({
 			client: expect.stringMatching(/lazy-compilation-web\.js$/)
 		});
 		expect(listen).toHaveBeenCalledWith(server);
 	});
 
-	it("fails the compile when a tap fails", async () => {
-		await expect(
-			startBackend(async () => {
-				throw new Error("no server");
-			})
-		).rejects.toThrow("no server");
+	it("fails the compile when a tap fails, and still closes", async () => {
+		const { compiler, started } = startBackend(async () => {
+			throw new Error("no server");
+		});
+		await expect(started).rejects.toThrow("no server");
+		await new Promise((resolve, reject) => {
+			compiler.close((err) => (err ? reject(err) : resolve(undefined)));
+		});
 	});
 });

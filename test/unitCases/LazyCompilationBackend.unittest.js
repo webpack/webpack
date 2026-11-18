@@ -284,72 +284,31 @@ describe("lazyCompilationBackend on a shared server", () => {
 			req.on("error", reject);
 		});
 
-	it("serves lazy urls on it, hands it every other url and leaves it open", async () => {
-		/** @type {Server} */
-		const server = http.createServer((req, res) => {
-			res.end("app");
-		});
-		await new Promise((resolve) => {
-			server.listen(0, "127.0.0.1", () => resolve(undefined));
-		});
-		try {
-			const compiler = /** @type {import("../../lib/Compiler")} */ (
-				/** @type {unknown} */ ({
-					getInfrastructureLogger: () => ({ log() {}, warn() {} }),
-					watching: { invalidate() {} }
-				})
-			);
-			const api = await new Promise((resolve, reject) => {
-				createBackend({ client: "client", server })(
-					compiler,
-					(err, result) => (err ? reject(err) : resolve(result))
-				);
-			});
-			const { client, data: key } = api.module(makeModule("mod-a"));
-			const { port } = /** @type {import("net").AddressInfo} */ (
-				server.address()
-			);
-			expect(client).toBe(
-				`client?${encodeURIComponent(`http://127.0.0.1:${port}${PREFIX}`)}`
-			);
-
-			expect(await get(server, PREFIX + key)).toEqual(
-				expect.objectContaining({ status: 200, type: "text/event-stream" })
-			);
-			expect(await get(server, "/other")).toEqual(
-				expect.objectContaining({ status: 200, body: "app" })
-			);
-
-			await new Promise((resolve, reject) => {
-				api.dispose((/** @type {Error | null} */ err) =>
-					err ? reject(err) : resolve(undefined)
-				);
-			});
-			expect(server.listening).toBe(true);
-			expect(server.listenerCount("request")).toBe(1);
-			expect(await get(server, PREFIX + key)).toEqual(
-				expect.objectContaining({ body: "app" })
-			);
-		} finally {
-			if (server.closeAllConnections) server.closeAllConnections();
-			await new Promise((resolve) => {
-				server.close(() => resolve(undefined));
-			});
-		}
-	});
+	/**
+	 * @param {string} client the client request a proxy module loads
+	 * @param {string} urlBase the url clients reach the backend at
+	 * @returns {string} the backend's url prefix on the server
+	 */
+	const prefixOf = (client, urlBase) => {
+		const url = decodeURIComponent(client.slice("client?".length));
+		expect(url).toMatch(/\/lazy-compilation-using-\d+-$/);
+		expect(url.startsWith(`${urlBase}/`)).toBe(true);
+		return url.slice(urlBase.length);
+	};
 
 	/**
 	 * @param {Server} server a shared server
-	 * @param {string=} urlBase the url clients reach the backend at
+	 * @param {{ urlBase?: string, invalidate?: () => void }=} options the url clients reach the backend at, and the watcher it invalidates
 	 * @returns {{ started: () => import("../../lib/hmr/LazyCompilationPlugin").BackendApi | undefined }} what the backend handed over so far
 	 */
-	const startShared = (server, urlBase) => {
+	const startShared = (server, { urlBase, invalidate } = {}) => {
 		/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi | undefined} */
 		let api;
 		createBackend({ client: "client", server, urlBase })(
 			/** @type {import("../../lib/Compiler")} */ (
 				/** @type {unknown} */ ({
-					getInfrastructureLogger: () => ({ log() {}, warn() {} })
+					getInfrastructureLogger: () => ({ log() {}, warn() {} }),
+					watching: { invalidate: invalidate || (() => {}) }
 				})
 			),
 			(err, result) => {
@@ -360,16 +319,127 @@ describe("lazyCompilationBackend on a shared server", () => {
 		return { started: () => api };
 	};
 
-	it("starts at once on a server not yet listening when given a urlBase", () => {
+	/**
+	 * @param {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} api a started backend
+	 * @returns {Promise<void>} settles once it is disposed
+	 */
+	const dispose = (api) =>
+		new Promise((resolve, reject) => {
+			api.dispose((err) => (err ? reject(err) : resolve()));
+		});
+
+	/**
+	 * @param {(server: Server, appCalls: () => number) => Promise<void>} fn the test body
+	 * @returns {Promise<void>} settles once the server is closed again
+	 */
+	const withServer = async (fn) => {
+		let calls = 0;
+		/** @type {Server} */
+		const server = http.createServer((req, res) => {
+			calls++;
+			res.end("app");
+		});
+		await new Promise((resolve) => {
+			server.listen(0, "127.0.0.1", () => resolve(undefined));
+		});
+		try {
+			await fn(server, () => calls);
+		} finally {
+			if (server.closeAllConnections) server.closeAllConnections();
+			await new Promise((resolve) => {
+				server.close(() => resolve(undefined));
+			});
+		}
+	};
+
+	/**
+	 * @param {Server} server a listening server
+	 * @returns {string} the url clients reach it at
+	 */
+	const urlOf = (server) =>
+		`http://127.0.0.1:${
+			/** @type {import("net").AddressInfo} */ (server.address()).port
+		}`;
+
+	it("serves lazy urls on it, hands it every other url and leaves it open", () =>
+		withServer(async (server, appCalls) => {
+			const api =
+				/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
+					startShared(server).started()
+				);
+			const { client, data: key } = api.module(makeModule("mod-a"));
+			const prefix = prefixOf(client, urlOf(server));
+
+			expect(await get(server, prefix + key)).toEqual(
+				expect.objectContaining({ status: 200, type: "text/event-stream" })
+			);
+			expect(await get(server, "/other")).toEqual(
+				expect.objectContaining({ status: 200, body: "app" })
+			);
+			expect(appCalls()).toBe(1);
+
+			await dispose(api);
+			expect(server.listening).toBe(true);
+			expect(server.listenerCount("request")).toBe(1);
+			expect(await get(server, prefix + key)).toEqual(
+				expect.objectContaining({ body: "app" })
+			);
+		}));
+
+	it.each([
+		["first to last", [0, 1]],
+		["last to first", [1, 0]]
+	])(
+		"routes each backend's urls to it and restores the server disposed %s",
+		(_name, order) =>
+			withServer(async (server, appCalls) => {
+				const invalidated = [jest.fn(), jest.fn()];
+				const apis = invalidated.map(
+					(invalidate) =>
+						/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
+							startShared(server, { invalidate }).started()
+						)
+				);
+				const modules = apis.map((api, index) =>
+					api.module(makeModule(`mod-${index}`))
+				);
+				const prefixes = modules.map(({ client }) =>
+					prefixOf(client, urlOf(server))
+				);
+				expect(prefixes[0]).not.toBe(prefixes[1]);
+
+				await get(server, prefixes[0] + modules[0].data);
+				expect(invalidated[0]).toHaveBeenCalledTimes(1);
+				expect(invalidated[1]).not.toHaveBeenCalled();
+				await get(server, prefixes[1] + modules[1].data);
+				expect(invalidated[1]).toHaveBeenCalledTimes(1);
+
+				await dispose(apis[order[0]]);
+				expect(await get(server, "/other")).toEqual(
+					expect.objectContaining({ body: "app" })
+				);
+				expect(appCalls()).toBe(1);
+				expect(
+					await get(server, prefixes[order[1]] + modules[order[1]].data)
+				).toEqual(expect.objectContaining({ type: "text/event-stream" }));
+
+				await dispose(apis[order[1]]);
+				expect(server.listenerCount("request")).toBe(1);
+				expect(await get(server, "/other")).toEqual(
+					expect.objectContaining({ body: "app" })
+				);
+				expect(appCalls()).toBe(2);
+			})
+	);
+
+	it("starts at once on a server not yet listening when given a urlBase", async () => {
 		const server = http.createServer();
-		const { started } = startShared(server, "https://localhost:8080");
-		const api = /** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
-			started()
-		);
-		expect(api.module(makeModule("mod-a")).client).toBe(
-			`client?${encodeURIComponent(`https://localhost:8080${PREFIX}`)}`
-		);
-		api.dispose(() => {});
+		const api =
+			/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
+				startShared(server, { urlBase: "https://localhost:8080" }).started()
+			);
+		prefixOf(api.module(makeModule("mod-a")).client, "https://localhost:8080");
+		await dispose(api);
 		expect(server.listenerCount("request")).toBe(0);
 	});
 
@@ -380,15 +450,16 @@ describe("lazyCompilationBackend on a shared server", () => {
 			listen() {},
 			address: () => ({ address: "::", family: "IPv6", port: 4321 })
 		});
-		const { started } = startShared(/** @type {Server} */ (/** @type {unknown} */ (server)));
+		const { started } = startShared(
+			/** @type {Server} */ (/** @type {unknown} */ (server))
+		);
 		expect(started()).toBeUndefined();
 		server.emit("listening");
-		const api = /** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
-			started()
-		);
-		expect(api.module(makeModule("mod-a")).client).toBe(
-			`client?${encodeURIComponent(`http://localhost:4321${PREFIX}`)}`
-		);
+		const api =
+			/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
+				started()
+			);
+		prefixOf(api.module(makeModule("mod-a")).client, "http://localhost:4321");
 	});
 
 	it("reads https from a shared https server", async () => {
@@ -397,16 +468,16 @@ describe("lazyCompilationBackend on a shared server", () => {
 			server.listen(0, "127.0.0.1", () => resolve(undefined));
 		});
 		try {
-			const { started } = startShared(server);
 			const api =
 				/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
-					started()
+					startShared(server).started()
 				);
 			const { port } = /** @type {import("net").AddressInfo} */ (
 				server.address()
 			);
-			expect(api.module(makeModule("mod-a")).client).toBe(
-				`client?${encodeURIComponent(`https://127.0.0.1:${port}${PREFIX}`)}`
+			prefixOf(
+				api.module(makeModule("mod-a")).client,
+				`https://127.0.0.1:${port}`
 			);
 		} finally {
 			await new Promise((resolve) => {
