@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "node",
+		"contains": "Node.js writes no JavaScript (unexpected-token)",
+		"why": "Node.js blanks `m(): void` and writes no `;`, so its `x = 1` reads on into `[1]() {}`, which no JavaScript parser reads; TypeScript ends the field there, as this tree does"
+	}
+]

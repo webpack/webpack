@@ -1,0 +1,11 @@
+let single: 'a';
+let double: "b";
+let negative: -1;
+let big: 100n;
+let truthy: true;
+let falsy: false;
+let empty: null;
+let missing: undefined;
+let nothing: void;
+let thisType: this;
+let template: `a${"b"}c`;

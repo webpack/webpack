@@ -11,7 +11,9 @@ module.exports = (env, { testPath, srcPath }) => {
 		{
 			name: "main",
 			target: "node",
-			entry: "./index.js"
+			entry: "./index.js",
+			// `style` writes inside this output path while both compilers run
+			output: { clean: { keep: /^style(?:[/\\]|$)/ } }
 		},
 		{
 			name: "style",

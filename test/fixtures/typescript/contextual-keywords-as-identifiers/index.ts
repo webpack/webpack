@@ -1,0 +1,13 @@
+const type = 1;
+const declare = 2;
+const namespace = 3;
+const abstract = 4;
+const as = 5;
+const satisfies = 6;
+const module = 7;
+type;
+declare;
+namespace;
+abstract;
+type = declare + namespace;
+let result = as as any;

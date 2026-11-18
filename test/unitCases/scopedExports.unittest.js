@@ -15,7 +15,6 @@ const SCOPED = [
 	{ name: "config.validateSchema", read: () => webpack.config.validateSchema },
 	{ name: "css.CssLoadingRuntimeModule", read: () => webpack.css.CssLoadingRuntimeModule },
 	{ name: "deno.DenoTargetPlugin", read: () => webpack.deno.DenoTargetPlugin },
-	{ name: "experiments.typescript.TypeScriptPlugin", read: () => webpack.experiments.typescript.TypeScriptPlugin },
 	{ name: "json.JsonModulesPlugin", read: () => webpack.json.JsonModulesPlugin },
 	{ name: "optimize.ConcatenationScope", read: () => webpack.optimize.ConcatenationScope },
 	{ name: "optimize.OptimizationStages", read: () => webpack.optimize.OptimizationStages },

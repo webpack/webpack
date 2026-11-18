@@ -1,0 +1,12 @@
+const id = (x: number): number => x;
+const optional = (a?: string, b = 1, ...rest: number[]) => rest;
+const typed = ({ a }: { a: number }): void => {};
+const predicate = (x: unknown): x is string => typeof x === "string";
+const nested = (a: number): ((b: number) => number) => (b) => a + b;
+const asyncArrow = async (url: string): Promise<void> => {};
+const asyncOptional = async (a?) => a;
+const plain = (a, b) => a + b;
+const parenthesized = (a);
+const generic = <T,>(x: T): T => x;
+const genericTwo = <T, U extends T>(x: T, y: U) => [x, y];
+const asyncGeneric = async <T>(x: T): Promise<T> => x;

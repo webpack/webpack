@@ -1366,12 +1366,12 @@ export interface Experiments {
 	 */
 	syncWebAssembly?: boolean;
 	/**
-	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
+	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when no loader is registered for TypeScript files.
 	 * @since 5.107.0
 	 * @experimental
 	 */
 	typescript?:
-		| /** Enable the built-in TypeScript support only when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files. */ "auto"
+		| /** Enable the built-in TypeScript support only when no loader is registered for TypeScript files. */ "auto"
 		| /** Enable/disable the built-in TypeScript support. */ boolean;
 	[key: string]: any;
 }
@@ -1453,12 +1453,12 @@ export interface ExperimentsNormalized {
 	 */
 	syncWebAssembly?: boolean;
 	/**
-	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
+	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when no loader is registered for TypeScript files.
 	 * @since 5.107.0
 	 * @experimental
 	 */
 	typescript?:
-		| /** Enable the built-in TypeScript support only when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files. */ "auto"
+		| /** Enable the built-in TypeScript support only when no loader is registered for TypeScript files. */ "auto"
 		| /** Enable/disable the built-in TypeScript support. */ boolean;
 }
 

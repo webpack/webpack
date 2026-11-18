@@ -1,0 +1,13 @@
+import type { A, B } from "./types";
+import type Default from "./default";
+import type * as Namespace from "./namespace";
+import type Required = require("./required");
+import { type C, d } from "./mixed";
+import { e, type F } from "./mixed";
+import { type G, type H } from "./only-types";
+import I, { type J } from "./default-and-type";
+import { type as } from "./named-type";
+import { type as as K } from "./type-named-as";
+import type from "./default-named-type";
+import "./side-effect";
+console.log(d, e, I, as, type);

@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "node",
+		"contains": "Node.js writes no JavaScript (unexpected-token)",
+		"why": "Node.js blanks the labeled interface and writes no `;`, leaving a label before nothing; this tree labels an empty statement, as it does where Node.js writes `;` after `if (x)`"
+	}
+]
