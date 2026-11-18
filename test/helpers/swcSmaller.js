@@ -31,7 +31,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: issue-1704/mangle_catch_redef_3",
 			"terser compress: loops/issue_186_beautify_braces",
 			"terser compress: loops/issue_186_braces",
-			"terser compress: properties/join_object_assignments_NaN_1",
 			"terser compress: pure_getters/set_immutable_5",
 			"terser compress: dead-code/collapse_vars_lvalues_drop_assign",
 			"terser compress: destructuring/issue_t111_1",
@@ -219,7 +218,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/8919/input.js",
 			"swc minifier: fixture/issues/8953/input.js",
 			"swc minifier: fixture/issues/9628/input.js",
-			"swc minifier: fixture/issues/9756/input.js",
 			"swc minifier: fixture/issues/d3-time-format/3/input.js",
 			"swc minifier: fixture/issues/emotion/react/1/input.js",
 			"swc minifier: fixture/issues/emotion/react/2/input.js",
@@ -265,7 +263,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/.compat.2f7d9500/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/prerender.93c6f601/input.js",
 			"swc minifier: full/size/39ee86af2a2157bccd42915ff69b6d3abff2b725/input.js",
-			"swc minifier: full/size/991835278eecab695ad3515447b5747adcdfe1b4/input.js",
 			"swc minifier: full/vercel/ms/1/input.js",
 			"swc minifier: projects/files/react-17.0.1.js",
 			"swc minifier: projects/files/react-dom-17.0.2.js",
@@ -593,13 +590,6 @@ const SWC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"swc goes further than webpack on what terser's `object` tests cover",
-		[
-			"terser compress: object/prop_arrow_to_concise_method",
-			"terser compress: object/concise_method_to_prop_arrow"
-		]
-	],
-	[
 		"swc evaluates reads on literals at build time: an index into an array or string, a missing property as `void 0`, `typeof` a class, `delete` of a binding",
 		[
 			"swc minifier: fixture/member_expr/array_side_effects/input.js",
@@ -736,8 +726,7 @@ const SWC_SMALLER_BY_REASON = [
 		"swc goes further than webpack on what terser's `properties` tests cover",
 		[
 			"terser compress: properties/evaluate_array_length",
-			"terser compress: properties/evaluate_string_length",
-			"terser compress: properties/lhs_prop_2"
+			"terser compress: properties/evaluate_string_length"
 		]
 	],
 	[

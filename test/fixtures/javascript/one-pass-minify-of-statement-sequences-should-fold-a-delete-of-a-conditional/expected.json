@@ -1,0 +1,10 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "(function(){console.log(",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: under `toplevel`, a call printing as the value its moved function returns keeps parentheses the value took where it was written, which a second pass leaves out"
+	}
+]

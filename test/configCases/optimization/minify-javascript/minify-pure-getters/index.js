@@ -8,6 +8,8 @@ function readsProperty(value) {
 }
 
 it("should drop a property read nothing reads, as `pure_getters` asks", () => {
-	// Kept, the read of `null` would throw.
+	// Kept, the read of `null` would throw. A second call keeps the function
+	// from inlining, where the read would name `null` and so stay.
 	expect(readsProperty(null)).toBe(1);
+	expect(readsProperty({ property: 2 })).toBe(1);
 });
