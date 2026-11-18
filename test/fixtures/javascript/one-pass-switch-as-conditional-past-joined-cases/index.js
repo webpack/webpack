@@ -30,9 +30,18 @@ function written(value, other) {
 			console.log("differs", value);
 	}
 }
+function runsNothing(value) {
+	switch (value) {
+		default:
+		case console.log("tested", value):
+		case 2:
+	}
+}
 joined(true, false);
 joined(true, true);
 unlabeled(true, false);
 unlabeled(true, true);
 written(2);
 written(true);
+runsNothing(1);
+runsNothing(2);
