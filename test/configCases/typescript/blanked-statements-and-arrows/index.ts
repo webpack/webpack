@@ -39,5 +39,6 @@ it("blanks the types in the emitted code, keeping every line", () => {
 	expect(code).not.toContain(["interface", "Shape"].join(" "));
 	expect(code).not.toContain(["type", "Alias"].join(" "));
 	expect(code).not.toContain(['"third"', "as", "string"].join(" "));
-	expect(code).toContain(['let first = "first"', ";"].join("\n"));
+	// a Windows checkout ends the lines with CRLF
+	expect(code).toMatch(new RegExp(['let first = "first"', ";"].join("\\r?\\n")));
 });
