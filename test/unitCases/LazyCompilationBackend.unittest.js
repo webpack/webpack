@@ -301,15 +301,15 @@ describe("lazyCompilationBackend on a shared server", () => {
 
 	/**
 	 * @param {Server} server a shared server
-	 * @param {{ urlBase?: string, protocol?: "http" | "https", invalidate?: () => void }=} options the url clients reach the backend at, its protocol, and the watcher it invalidates
+	 * @param {{ urlBase?: string, invalidate?: () => void }=} options the url clients reach the backend at, and the watcher it invalidates
 	 * @returns {{ started: () => import("../../lib/hmr/LazyCompilationPlugin").BackendApi | undefined, failed: () => Error | null | undefined }} what the backend handed over so far
 	 */
-	const startShared = (server, { urlBase, protocol, invalidate } = {}) => {
+	const startShared = (server, { urlBase, invalidate } = {}) => {
 		/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi | undefined} */
 		let api;
 		/** @type {Error | null | undefined} */
 		let error;
-		createBackend({ client: "client", server, urlBase, protocol })(
+		createBackend({ client: "client", server, urlBase })(
 			/** @type {import("../../lib/Compiler")} */ (
 				/** @type {unknown} */ ({
 					getInfrastructureLogger: () => ({ log() {}, warn() {} }),
@@ -370,7 +370,7 @@ describe("lazyCompilationBackend on a shared server", () => {
 		withServer(async (server, appCalls) => {
 			const api =
 				/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
-					startShared(server).started()
+					startShared(server, { urlBase: urlOf(server) }).started()
 				);
 			const { client, data: key } = api.module(makeModule("mod-a"));
 			const prefix = prefixOf(client, urlOf(server));
@@ -391,251 +391,50 @@ describe("lazyCompilationBackend on a shared server", () => {
 			);
 		}));
 
-	it.each([
-		["first to last", [0, 1]],
-		["last to first", [1, 0]]
-	])(
-		"routes each backend's urls to it and restores the server disposed %s",
-		(_name, order) =>
-			withServer(async (server, appCalls) => {
-				const invalidated = [jest.fn(), jest.fn()];
-				const apis = invalidated.map(
-					(invalidate) =>
-						/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
-							startShared(server, { invalidate }).started()
-						)
-				);
-				const modules = apis.map((api, index) =>
-					api.module(makeModule(`mod-${index}`))
-				);
-				const prefixes = modules.map(({ client }) =>
-					prefixOf(client, urlOf(server))
-				);
-				expect(prefixes[0]).not.toBe(prefixes[1]);
-
-				await get(server, prefixes[0] + modules[0].data);
-				expect(invalidated[0]).toHaveBeenCalledTimes(1);
-				expect(invalidated[1]).not.toHaveBeenCalled();
-				await get(server, prefixes[1] + modules[1].data);
-				expect(invalidated[1]).toHaveBeenCalledTimes(1);
-
-				await dispose(apis[order[0]]);
-				expect(await get(server, "/other")).toEqual(
-					expect.objectContaining({ body: "app" })
-				);
-				expect(appCalls()).toBe(1);
-				expect(
-					await get(server, prefixes[order[1]] + modules[order[1]].data)
-				).toEqual(expect.objectContaining({ type: "text/event-stream" }));
-
-				await dispose(apis[order[1]]);
-				expect(server.listenerCount("request")).toBe(1);
-				expect(await get(server, "/other")).toEqual(
-					expect.objectContaining({ body: "app" })
-				);
-				expect(appCalls()).toBe(2);
-			})
-	);
-
-	it.each(["", "/"])(
-		"serves lazy urls on a server not yet listening given a urlBase ending in %j",
-		(slash) =>
-			withServer(async (server) => {
-				const urlBase = urlOf(server);
-				const api =
+	it("routes each backend's urls to it", () =>
+		withServer(async (server, appCalls) => {
+			const invalidated = [jest.fn(), jest.fn()];
+			const apis = invalidated.map(
+				(invalidate) =>
 					/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
-						startShared(server, { urlBase: urlBase + slash }).started()
-					);
-				const { client, data: key } = api.module(makeModule("mod-a"));
-				expect(await get(server, prefixOf(client, urlBase) + key)).toEqual(
-					expect.objectContaining({ status: 200, type: "text/event-stream" })
-				);
-				await dispose(api);
-				expect(server.listenerCount("request")).toBe(1);
-			})
-	);
-
-	it("waits for a server not yet listening without a urlBase", () => {
-		const server = new EventEmitter();
-		Object.assign(server, {
-			listening: false,
-			listen() {},
-			address: () => ({ address: "::", family: "IPv6", port: 4321 })
-		});
-		const { started } = startShared(
-			/** @type {Server} */ (/** @type {unknown} */ (server))
-		);
-		expect(started()).toBeUndefined();
-		server.emit("listening");
-		const api =
-			/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
-				started()
+						startShared(server, { urlBase: urlOf(server), invalidate }).started()
+					)
 			);
-		prefixOf(api.module(makeModule("mod-a")).client, "http://localhost:4321");
-	});
-
-	it("uses https on a shared https server given protocol https", async () => {
-		const server = require("https").createServer();
-		await new Promise((resolve) => {
-			server.listen(0, "127.0.0.1", () => resolve(undefined));
-		});
-		try {
-			const api =
-				/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
-					startShared(server, { protocol: "https" }).started()
-				);
-			const { port } = /** @type {import("net").AddressInfo} */ (
-				server.address()
+			const modules = apis.map((api, index) =>
+				api.module(makeModule(`mod-${index}`))
 			);
-			prefixOf(
-				api.module(makeModule("mod-a")).client,
-				`https://127.0.0.1:${port}`
+			const prefixes = modules.map(({ client }) =>
+				prefixOf(client, urlOf(server))
 			);
-		} finally {
-			await new Promise((resolve) => {
-				server.close(() => resolve(undefined));
-			});
-		}
-	});
+			expect(prefixes[0]).not.toBe(prefixes[1]);
 
-	it("fails to start and detaches when a shared server fails to listen", () => {
-		const server = new EventEmitter();
-		Object.assign(server, { listening: false, listen() {} });
-		const shared = /** @type {Server} */ (/** @type {unknown} */ (server));
-		const { started, failed } = startShared(shared);
-		const error = new Error("EADDRINUSE");
-		server.emit("error", error);
-		expect(failed()).toBe(error);
-		expect(started()).toBeUndefined();
-		expect(server.listenerCount("request")).toBe(0);
-		expect(server.listenerCount("listening")).toBe(0);
-	});
+			await get(server, prefixes[0] + modules[0].data);
+			expect(invalidated[0]).toHaveBeenCalledTimes(1);
+			expect(invalidated[1]).not.toHaveBeenCalled();
+			await get(server, prefixes[1] + modules[1].data);
+			expect(invalidated[1]).toHaveBeenCalledTimes(1);
 
-	it("fails to start and detaches when the address gives no url", () => {
-		const server = new EventEmitter();
-		Object.assign(server, {
-			listening: true,
-			listen() {},
-			address: () => "/tmp/dev-server.sock"
-		});
-		const { started, failed } = startShared(
-			/** @type {Server} */ (/** @type {unknown} */ (server))
-		);
-		expect(failed()).toEqual(new Error("addr must not be a string"));
-		expect(started()).toBeUndefined();
-		expect(server.listenerCount("request")).toBe(0);
-	});
-
-	it("keeps a once request listener one-shot and allows disposing twice", () =>
-		withServer(async (server, appCalls) => {
-			const once = jest.fn();
-			server.once("request", once);
-			const api =
-				/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
-					startShared(server).started()
-				);
-			await get(server, "/first");
-			await get(server, "/second");
-			expect(once).toHaveBeenCalledTimes(1);
-			await dispose(api);
-			await dispose(api);
+			await dispose(apis[0]);
+			expect(await get(server, prefixes[1] + modules[1].data)).toEqual(
+				expect.objectContaining({ type: "text/event-stream" })
+			);
+			await dispose(apis[1]);
 			expect(server.listenerCount("request")).toBe(1);
-			await get(server, "/third");
-			expect(once).toHaveBeenCalledTimes(1);
-			expect(appCalls()).toBe(3);
+			expect(await get(server, "/other")).toEqual(
+				expect.objectContaining({ body: "app" })
+			);
+			expect(appCalls()).toBe(1);
 		}));
 
-	it("closes a server it created when the address gives no url", () => {
-		const server = new EventEmitter();
-		const close = jest.fn();
-		Object.assign(server, { address: () => "/tmp/backend.sock", close });
-		/** @type {Error | null | undefined} */
-		let error;
-		createBackend({
-			client: "client",
-			server: () => /** @type {Server} */ (/** @type {unknown} */ (server)),
-			listen: (/** @type {Server} */ s) => s.emit("listening")
-		})(
-			/** @type {import("../../lib/Compiler")} */ (
-				/** @type {unknown} */ ({
-					getInfrastructureLogger: () => ({ log() {}, warn() {} })
-				})
-			),
-			(err) => {
-				error = err;
-			}
-		);
-		expect(error).toEqual(new Error("addr must not be a string"));
-		expect(close).toHaveBeenCalledTimes(1);
-	});
-
-	it("does not put back a once listener that detaches the last backend", () =>
-		withServer(async (server, appCalls) => {
-			/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi | undefined} */
-			let api;
-			server.once("request", () => {
-				/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
-					api
-				).dispose(() => {});
-			});
-			api = startShared(server).started();
-			await get(server, "/first");
+	it("fails to start without a urlBase", () =>
+		withServer(async (server) => {
+			const { started, failed } = startShared(server);
+			expect(failed()).toEqual(
+				new Error(
+					"A lazy compilation backend on a shared server needs a `urlBase`"
+				)
+			);
+			expect(started()).toBeUndefined();
 			expect(server.listenerCount("request")).toBe(1);
-			await get(server, "/second");
-			expect(appCalls()).toBe(2);
 		}));
-
-	it("keeps a later once listener when an earlier listener throws", () => {
-		const server = new EventEmitter();
-		Object.assign(server, { listening: true, listen() {}, address() {} });
-		const later = jest.fn();
-		server.on("request", () => {
-			throw new Error("app failed");
-		});
-		server.once("request", later);
-		const shared = /** @type {Server} */ (/** @type {unknown} */ (server));
-		const api =
-			/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
-				startShared(shared, { urlBase: "http://localhost:1" }).started()
-			);
-		expect(() => server.emit("request", { url: "/first" }, {})).toThrow(
-			"app failed"
-		);
-		expect(later).not.toHaveBeenCalled();
-		api.dispose(() => {});
-		expect(server.listenerCount("request")).toBe(2);
-	});
-
-	it("keeps persistent listeners when a listener sends a nested request", () => {
-		const server = new EventEmitter();
-		Object.assign(server, { listening: true, listen() {}, address() {} });
-		/** @type {string[]} */
-		const calls = [];
-		let nested = false;
-		server.on("request", () => {
-			calls.push("first");
-			if (!nested) {
-				nested = true;
-				server.emit("request", { url: "/nested" }, {});
-			}
-		});
-		server.once("request", () => calls.push("once"));
-		server.on("request", () => calls.push("last"));
-		const api =
-			/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
-				startShared(/** @type {Server} */ (/** @type {unknown} */ (server)), {
-					urlBase: "http://localhost:1"
-				}).started()
-			);
-		server.emit("request", { url: "/outer" }, {});
-		expect(calls).toEqual(["first", "first", "once", "last", "last"]);
-		calls.length = 0;
-		server.emit("request", { url: "/next" }, {});
-		expect(calls).toEqual(["first", "last"]);
-		api.dispose(() => {});
-		expect(server.listenerCount("request")).toBe(2);
-		calls.length = 0;
-		server.emit("request", { url: "/after" }, {});
-		expect(calls).toEqual(["first", "last"]);
-	});
 });

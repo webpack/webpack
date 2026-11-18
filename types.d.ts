@@ -20157,7 +20157,7 @@ declare interface LazyCompilationBackendHookOptions {
 	client: string;
 
 	/**
-	 * a server instance is shared: the backend serves its own urls on it, hands every other request to the server's request listeners, and neither listens on it nor closes it; for a TLS server, pass `protocol: "https"` or an `https:` `urlBase`
+	 * a server instance is shared: the backend serves its own urls on it, hands every other request to the server's request listeners, and neither listens on it nor closes it; needs a `urlBase`
 	 */
 	server?:
 		| ServerOptionsImportHttps
@@ -20167,7 +20167,7 @@ declare interface LazyCompilationBackendHookOptions {
 		| ServerImportHttps;
 
 	/**
-	 * the url clients reach the backend at, e.g. a development server's own; defaults to the server's address once it is listening
+	 * the url clients reach a shared server at, e.g. `https://localhost:8080`
 	 */
 	urlBase?: string;
 }
@@ -20258,8 +20258,7 @@ declare class LazyCompilationPlugin {
 	apply(compiler: Compiler): void;
 
 	/**
-	 * Returns the hooks a development server taps to keep the lazy compilation backend in step with its own server.
-	 * @experimental exposed as `webpack.experiments.hmr.LazyCompilationPlugin`; unstable API
+	 * Returns the hooks a development server taps to serve the lazy compilation backend from its own server.
 	 */
 	static getCompilerHooks(compiler: Compiler): LazyCompilationPluginHooks;
 }
@@ -41029,10 +41028,10 @@ declare namespace exports {
 			CompatSource
 		};
 	}
+	export namespace hmr {
+		export { LazyCompilationPlugin };
+	}
 	export namespace experiments {
-		export namespace hmr {
-			export { LazyCompilationPlugin };
-		}
 		export namespace schemes {
 			export { HttpUriPlugin, VirtualUrlPlugin };
 		}

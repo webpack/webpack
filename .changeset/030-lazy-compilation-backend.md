@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Harden the lazy compilation backend and add a hook to configure it.
+Add a `backendOptions` hook to `webpack.hmr.LazyCompilationPlugin`, so a development server can serve the lazy compilation backend from its own server.

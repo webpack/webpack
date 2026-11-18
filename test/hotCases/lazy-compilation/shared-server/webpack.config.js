@@ -2,9 +2,7 @@
 
 const http = require("http");
 const {
-	experiments: {
-		hmr: { LazyCompilationPlugin }
-	}
+	hmr: { LazyCompilationPlugin }
 } = require("../../../../");
 
 /**
@@ -26,7 +24,14 @@ class SharedServerPlugin {
 				new Promise((resolve, reject) => {
 					server.once("error", reject);
 					server.listen(0, "127.0.0.1", () => {
-						resolve({ ...options, server });
+						const { port } = /** @type {import("net").AddressInfo} */ (
+							server.address()
+						);
+						resolve({
+							...options,
+							server,
+							urlBase: `http://127.0.0.1:${port}`
+						});
 					});
 				})
 		);
