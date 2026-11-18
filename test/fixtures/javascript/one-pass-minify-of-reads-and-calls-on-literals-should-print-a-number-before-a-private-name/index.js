@@ -1,0 +1,1 @@
+var log = []; class C { #x = 1; static once() { var one = 1; try { return one.#x; } catch (e) { return e.name; } } static twice() { var twelve = 12; try { return [twelve.#x, twelve.#x]; } catch (e) { return e.name; } } static has() { var one = 1; return #x in [one]; } } log.push(C.once(), C.twice(), C.has()); console.log(log.join());
