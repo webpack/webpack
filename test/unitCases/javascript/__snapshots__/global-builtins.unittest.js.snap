@@ -144,9 +144,9 @@ exports[`minifying built-in mutations through the global object shadowed globalT
 
 exports[`minifying built-in mutations through the global object shadowed globalThis (ecma 2020, mangle true) 1`] = `"!function(a){a.Math.abs=function(){return 99},console.log(1,a.Math.abs(-1))}({Math:{}});"`;
 
-exports[`minifying built-in mutations through the global object should preserve an optional global owner: (globalThis?.['Math']).abs = patched; console.log(Math.abs(-1)); 1`] = `"(globalThis?.Math).abs=patched,console.log(Math.abs(-1));"`;
+exports[`minifying built-in mutations through the global object should preserve an optional global owner: global-builtins-optional-owner-1 1`] = `"(globalThis?.Math).abs=patched,console.log(Math.abs(-1));"`;
 
-exports[`minifying built-in mutations through the global object should preserve an optional global owner: (globalThis?.Math).abs = patched; console.log(Math.abs(-1)); 1`] = `"(globalThis?.Math).abs=patched,console.log(Math.abs(-1));"`;
+exports[`minifying built-in mutations through the global object should preserve an optional global owner: global-builtins-optional-owner-2 1`] = `"(globalThis?.Math).abs=patched,console.log(Math.abs(-1));"`;
 
 exports[`minifying built-in mutations through the global object unmodified built-in (ecma 5, mangle false) 1`] = `"console.log(1);"`;
 
