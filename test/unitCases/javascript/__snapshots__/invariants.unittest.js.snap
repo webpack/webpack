@@ -308,6 +308,28 @@ exports[`JavaScript syntax — invariants basic-evaluated-expression-after-its-p
 
 exports[`JavaScript syntax — invariants basic-evaluated-expression-after-its-parse-should-read-ranges-and-expressions tokenizes 1`] = `"name[0,5] ([5,6] num[6,7] ,[7,8] num[9,10] ,[10,11] num[12,13] ,[13,14] num[15,16] ,[16,17] num[18,19] ,[19,20] num[21,22] ,[22,23] num[24,25] ,[25,26] num[27,28] ,[28,29] num[30,31] )[31,32] ;[32,33] eof[33,33]"`;
 
+exports[`JavaScript syntax — invariants beautify-keeps-a-block-before-return-apart parses 1`] = `"Program[0,104](body=[FunctionDeclaration[0,41](id=Identifier[9,13](name=\\"work\\") expression=false generator=false async=false params=[] body=BlockStatement[16,41](body=[ExpressionStatement[19,39](expression=CallExpression[19,38](callee=MemberExpression[19,30](object=Identifier[19,26](name=\\"console\\") property=Identifier[27,30](name=\\"log\\") computed=false optional=false) arguments=[Literal[31,37](value=\\"work\\" raw=\\"\\\\\\"work\\\\\\"\\")] optional=false))])),FunctionDeclaration[42,85](id=Identifier[51,52](name=\\"f\\") expression=false generator=false async=false params=[] body=BlockStatement[55,85](body=[BlockStatement[58,72](body=[ExpressionStatement[62,69](expression=CallExpression[62,68](callee=Identifier[62,66](name=\\"work\\") arguments=[] optional=false))]),ReturnStatement[74,83](argument=Literal[81,82](value=1 raw=\\"1\\"))])),ExpressionStatement[86,103](expression=CallExpression[86,102](callee=MemberExpression[86,97](object=Identifier[86,93](name=\\"console\\") property=Identifier[94,97](name=\\"log\\") computed=false optional=false) arguments=[CallExpression[98,101](callee=Identifier[98,99](name=\\"f\\") arguments=[] optional=false)] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants beautify-keeps-a-block-before-return-apart parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants beautify-keeps-a-block-before-return-apart parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants beautify-keeps-a-block-before-return-apart prints {"mode":"beautify","compress":{}} 1`] = `
+"function work() {
+console.log(\\"work\\");
+}
+function f() {
+
+work();
+return 1;
+}
+console.log(f());"
+`;
+
+exports[`JavaScript syntax — invariants beautify-keeps-a-block-before-return-apart prints {"mode":"minify"} 1`] = `"function work(){console.log(\\"work\\")}function f(){{work()}return 1}console.log(f());"`;
+
+exports[`JavaScript syntax — invariants beautify-keeps-a-block-before-return-apart tokenizes 1`] = `"function[0,8] name[9,13] ([13,14] )[14,15] {[16,17] name[19,26] .[26,27] name[27,30] ([30,31] string[31,37]=\\"work\\" )[37,38] ;[38,39] }[40,41] function[42,50] name[51,52] ([52,53] )[53,54] {[55,56] {[58,59] name[62,66] ([66,67] )[67,68] ;[68,69] }[71,72] return[74,80] num[81,82] ;[82,83] }[84,85] name[86,93] .[93,94] name[94,97] ([97,98] name[98,99] ([99,100] )[100,101] )[101,102] ;[102,103] eof[104,104]"`;
+
 exports[`JavaScript syntax — invariants collect-cjs-require-specifiers-cases-a-longer-name-is-not-a-call parses 1`] = `"Program[0,35](body=[ExpressionStatement[0,19](expression=CallExpression[0,18](callee=Identifier[0,8](name=\\"$require\\") arguments=[Literal[9,17](value=\\"./nope\\" raw=\\"\\\\\\"./nope\\\\\\"\\")] optional=false)),ExpressionStatement[20,35](expression=CallExpression[20,34](callee=Identifier[20,27](name=\\"require\\") arguments=[Literal[28,33](value=\\"./a\\" raw=\\"\\\\\\"./a\\\\\\"\\")] optional=false))] sourceType=\\"module\\")"`;
 
 exports[`JavaScript syntax — invariants collect-cjs-require-specifiers-cases-a-longer-name-is-not-a-call parses 2`] = `""`;
