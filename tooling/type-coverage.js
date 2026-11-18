@@ -752,6 +752,43 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 		};
 
 		/**
+		 * Tells whether an identifier reads a variable TypeScript types by itself,
+		 * one declared without a type and with no initializer, `null`,
+		 * `undefined` or `[]`: the `any` it may read is inferred, not written.
+		 * @param {ts.Node} node the identifier
+		 * @returns {boolean} true when every declaration of its symbol is one
+		 */
+		const isAutoTyped = (node) => {
+			const symbol = typeChecker.getSymbolAtLocation(node);
+			const declarations = symbol && symbol.getDeclarations();
+			return Boolean(
+				declarations &&
+				declarations.length > 0 &&
+				declarations.every((declaration) => {
+					if (
+						!ts.isVariableDeclaration(declaration) ||
+						declaresType(declaration)
+					) {
+						return false;
+					}
+					let { initializer } = declaration;
+					while (initializer && ts.isParenthesizedExpression(initializer)) {
+						initializer = initializer.expression;
+					}
+					return (
+						initializer === undefined ||
+						initializer.kind === ts.SyntaxKind.NullKeyword ||
+						(ts.isIdentifier(initializer) &&
+							initializer.text === "undefined") ||
+						ts.isVoidExpression(initializer) ||
+						(ts.isArrayLiteralExpression(initializer) &&
+							initializer.elements.length === 0)
+					);
+				})
+			);
+		};
+
+		/**
 		 * Tells whether a type names one of a signature's own type parameters,
 		 * other than one this project's source defaults to `any` on purpose;
 		 * lib's `new <T = any>()` of `Set` still counts.
@@ -881,8 +918,11 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 			}
 			// `new Map()` takes lib's `new (): Map<any, any>`, which has no type parameter.
 			const { declaration } = signature;
+			// `Array(5)` takes lib's `(arrayLength?: number): any[]` alike.
 			return (
-				ts.isNewExpression(node) &&
+				(ts.isNewExpression(node) ||
+					(ts.isIdentifier(node.expression) &&
+						node.expression.text === "Array")) &&
 				written === 0 &&
 				declaration !== undefined &&
 				declaration.getSourceFile().isDeclarationFile &&
@@ -1031,7 +1071,9 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 				if (
 					!isTyped &&
 					untyped &&
-					((type.flags & ts.TypeFlags.Any && !isDeclaredAny(node)) ||
+					((type.flags & ts.TypeFlags.Any &&
+						!isDeclaredAny(node) &&
+						isAutoTyped(node)) ||
 						isUntypedEmptyArray(node))
 				) {
 					untyped.push({
