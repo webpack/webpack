@@ -22,5 +22,12 @@
 		"collapseWhitespace": true,
 		"shortenSvgNumbers": true,
 		"applySvgTransforms": true
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"shortenSvgPathData": true,
+		"applySvgTransforms": true
 	}
 ]

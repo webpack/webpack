@@ -50,6 +50,7 @@
 <path d="M0 0z1" transform="scale(2)"/>
 <path d="M0 0a1 1 0 2 0 1 1" transform="scale(2)"/>
 <path d="M0 0h1e999" transform="scale(2)"/>
+<path d="M1 1h1" stroke="red" transform="scale(1e160)"/>
 <path transform="scale(2)"/>
 <path d="M0 0h10" transform="scale(2)"><title>kept</title></path>
 </svg>
