@@ -760,12 +760,6 @@ declare class AutomaticPrefetchPlugin {
 	apply(compiler: Compiler): void;
 }
 type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
-type BackEnd =
-	| ((
-			compiler: Compiler,
-			callback: (err: null | Error, backendApi?: BackendApi) => void
-	  ) => void)
-	| ((compiler: Compiler) => Promise<BackendApi>);
 
 /**
  * Defines the backend api type used by this module.
@@ -20221,7 +20215,13 @@ declare class LazyCompilationPlugin {
 	 * Creates an instance of LazyCompilationPlugin.
 	 */
 	constructor(__0: OptionsLazyCompilationPlugin);
-	backend: BackEnd;
+	backend:
+		| ((
+				compiler: Compiler,
+				callback: (err: null | Error, backendApi?: BackendApi) => void
+		  ) => void)
+		| ((compiler: Compiler) => Promise<BackendApi>)
+		| LazyCompilationBackendOptions;
 	entries?: boolean;
 	imports?: boolean;
 	test?: string | RegExp | GlobCondition | ((module: Module) => boolean);
@@ -26979,9 +26979,15 @@ declare interface OptionsDelegatedModuleFactoryPlugin {
  */
 declare interface OptionsLazyCompilationPlugin {
 	/**
-	 * the backend
+	 * the backend, or the built-in backend's options
 	 */
-	backend: BackEnd;
+	backend:
+		| ((
+				compiler: Compiler,
+				callback: (err: null | Error, backendApi?: BackendApi) => void
+		  ) => void)
+		| ((compiler: Compiler) => Promise<BackendApi>)
+		| LazyCompilationBackendOptions;
 	entries?: boolean;
 	imports?: boolean;
 
