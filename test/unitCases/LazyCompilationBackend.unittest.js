@@ -536,6 +536,7 @@ describe("lazyCompilationBackend on a shared server", () => {
 			expect(once).toHaveBeenCalledTimes(1);
 			await dispose(api);
 			await dispose(api);
+			expect(server.listenerCount("request")).toBe(1);
 			await get(server, "/third");
 			expect(once).toHaveBeenCalledTimes(1);
 			expect(appCalls()).toBe(3);
