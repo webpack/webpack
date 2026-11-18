@@ -346,9 +346,15 @@ const snapshotOfPieces = (source, writeAll) => {
  */
 
 // The relations only a browser can break, held by `syntax-fuzz.spectest.js`:
-// a print's computed styles and DOM facets, a beautified sheet's CSSOM, and
-// the parser's tree against the browser's.
-const BROWSER_RELATIONS = new Set(["styles", "facets", "cssom", "dom"]);
+// a print's computed styles, render and DOM facets, a beautified sheet's
+// CSSOM, and the parser's tree against the browser's.
+const BROWSER_RELATIONS = new Set([
+	"styles",
+	"renders",
+	"facets",
+	"cssom",
+	"dom"
+]);
 
 /**
  * @param {string} file a JSON file

@@ -1,7 +1,7 @@
 [
 	{
 		"relation": "cssom",
-		"contains": "}",
+		"contains": "rule 0: @media (( )) {",
 		"presets": [
 			"beautify"
 		],

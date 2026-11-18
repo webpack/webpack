@@ -1,0 +1,10 @@
+[
+	{
+		"relation": "renders",
+		"contains": "text at 6: \"STYLE=\\na\" -> \"STYLE=\"",
+		"presets": [
+			"embedded"
+		],
+		"why": "known bug: a `<style>` inside `<option>` is part of the label the option shows, so minifying its sheet to nothing changes that text"
+	}
+]

@@ -31,7 +31,11 @@ const {
 	createStylesheetGenerator,
 	unwrittenTypes
 } = require("../helpers/cssFuzzStylesheet");
-const { fixtures, unexplained } = require("../helpers/fixture");
+const {
+	BROWSER_RELATIONS,
+	fixtures,
+	unexplained
+} = require("../helpers/fixture");
 const { createDocumentGenerator } = require("../helpers/htmlFuzzDocument");
 const { createRandom } = require("../helpers/jsFuzzProgram");
 const launchBrowser = require("../helpers/launchBrowser");
@@ -43,6 +47,7 @@ const {
 	HTML_OPT_IN_RELAX,
 	POLICED_PAGE,
 	cascadeLines,
+	compareRenders,
 	compareStyles,
 	facetDifference,
 	installHelpers,
@@ -62,6 +67,7 @@ const UNREACHED = JSON.parse(fs.readFileSync(UNREACHED_FILE, "utf8"));
 /** @typedef {import("../helpers/syntaxEquivalence").Facets} Facets */
 /** @typedef {import("../helpers/syntaxEquivalence").PageHelpers} PageHelpers */
 /** @typedef {import("../helpers/syntaxEquivalence").Relaxation} Relaxation */
+/** @typedef {import("../helpers/syntaxEquivalence").RenderReport} RenderReport */
 /** @typedef {import("../helpers/syntaxEquivalence").StyleReport} StyleReport */
 
 /** @typedef {import("../helpers/fixture").KnownDifference} KnownDifference */
@@ -87,6 +93,9 @@ const INPUTS_PER_SEED = Number(process.env.SYNTAX_FUZZ_INPUTS) || 100;
 const SEED_TIMEOUT = 600000;
 // How many times a finding's input is tried smaller before it stands as found.
 const SHRINK_BUDGET = 400;
+
+// The narrower of the widths the equivalence suite renders at.
+const RENDER_WIDTH = 360;
 
 // The pre-nesting target the lowerings run for, as the CSS invariants name it.
 const LEGACY_BROWSERS = ["chrome 100", "firefox 100", "safari 15.4"];
@@ -223,7 +232,12 @@ const unknown = (findings, known, lang) => {
 		/** @type {KnownDifference[]} */
 		const entries = [];
 		for (const { relation, preset, what } of finding.broken) {
-			const contains = what.split("\n").pop() || what;
+			// A browser's report names the difference first; a relation's repro
+			// ends with the printed text it reads.
+			const lines = what.split("\n");
+			const contains = BROWSER_RELATIONS.has(relation)
+				? lines[0]
+				: lines[lines.length - 1];
 			const same = entries.find(
 				(one) => one.relation === relation && one.contains === contains
 			);
@@ -656,7 +670,11 @@ describe("syntax fuzz in real chrome", () => {
 			{ source, relax: [] },
 			...printed.map(({ after, relax }) => ({ source: after, relax }))
 		]);
-		for (const [i, { name, relax }] of printed.entries()) {
+		/** @type {{ name: string, before: string, after: string, relax: Relaxation[] }[]} */
+		const sheets = [];
+		/** @type {{ name: string, before: string, after: string }[]} */
+		const renders = [];
+		for (const [i, { name, relax, after }] of printed.entries()) {
 			const before =
 				relax.length === 0
 					? facets[0]
@@ -664,7 +682,58 @@ describe("syntax fuzz in real chrome", () => {
 							await page.evaluate(browserFacets, [{ source, relax }])
 						)[0];
 			const what = facetDifference(before, facets[i + 1]);
-			if (what !== "") out.push({ relation: "facets", preset: name, what });
+			if (what !== "") {
+				out.push({ relation: "facets", preset: name, what });
+				continue;
+			}
+			// A merge joins sheets, so where it may, both sides are one sheet.
+			const [mine, theirs] = [before.styles, facets[i + 1].styles].map(
+				(styles) =>
+					relax.includes("merged-styles") ? [styles.join("\n")] : styles
+			);
+			if (mine.length !== theirs.length) {
+				out.push({
+					relation: "facets",
+					preset: name,
+					what: `styles: ${mine.length} vs ${theirs.length}`
+				});
+				continue;
+			}
+			for (const [at, sheet] of mine.entries()) {
+				if (sheet !== theirs[at]) {
+					sheets.push({ name, before: sheet, after: theirs[at], relax });
+				}
+			}
+			// The facets leave a `style` attribute to what it computes in a render,
+			// which cannot set aside what a relaxed set rewrites on purpose.
+			if (relax.length === 0 && /\sstyle\s*=/i.test(source)) {
+				renders.push({ name, before: source, after });
+			}
+		}
+		if (sheets.length > 0) {
+			/** @type {StyleReport[]} */
+			const reports = await page.evaluate(compareStyles, {
+				pairs: sheets,
+				types: []
+			});
+			for (const report of reports) {
+				const lines = cascadeLines(report);
+				if (lines.length > 0) {
+					out.push({ relation: "styles", preset: report.name, what: lines[0] });
+				}
+			}
+		}
+		if (renders.length > 0) {
+			/** @type {RenderReport[]} */
+			const reports = await page.evaluate(compareRenders, {
+				pairs: renders,
+				width: RENDER_WIDTH
+			});
+			for (const { name, differences } of reports) {
+				if (differences.length > 0) {
+					out.push({ relation: "renders", preset: name, what: differences[0] });
+				}
+			}
 		}
 		return out;
 	};
