@@ -1,0 +1,25 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"shortenSvgNumbers": true,
+		"convertSvgTransforms": true,
+		"svgAnglePrecision": 1
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"shortenSvgNumbers": true,
+		"convertSvgTransforms": true,
+		"svgAnglePrecision": 1.5
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"shortenSvgNumbers": true,
+		"convertSvgTransforms": true
+	}
+]

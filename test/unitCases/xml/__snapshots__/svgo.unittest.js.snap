@@ -325,7 +325,7 @@ svgo-remove-scripts-10: webpack 889, svgo 720, gap 169
 svgo-remove-scripts-11: webpack 675, svgo 430, gap 245
 svgo-remove-style-element-01: webpack 302, svgo 301, gap 1
 svgo-remove-title-01: webpack 64, svgo 50, gap 14
-svgo-remove-unknowns-and-defaults-01: webpack 196, svgo 153, gap 43
+svgo-remove-unknowns-and-defaults-01: webpack 164, svgo 153, gap 11
 svgo-remove-unknowns-and-defaults-02: webpack 157, svgo 133, gap 24
 svgo-remove-unknowns-and-defaults-03: webpack 75, svgo 105, gap -30
 svgo-remove-unknowns-and-defaults-04: webpack 86, svgo 113, gap -27
@@ -382,5 +382,5 @@ svgo-sort-attrs-02: webpack 63, svgo 63, gap 0
 svgo-sort-attrs-03: webpack 158, svgo 160, gap -2
 svgo-sort-attrs-04: webpack 227, svgo 261, gap -34
 svgo-sort-defs-children-01: webpack 413, svgo 415, gap -2
-total: webpack 105351, svgo 104068"
+total: webpack 105319, svgo 104068"
 `;

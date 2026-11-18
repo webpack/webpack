@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:test="http://example.com/test" attr="val" test:attr="val" data-kept="1" role="img" aria-label="Kept">
+	<rect width="1" height="1" fill="red" bogus="1" stroke-width="2" vector-effect="non-scaling-stroke"/>
+	<unknown made-up="1"/>
+	<animate attributeName="x" from="0" to="1" dur="1s" fill="freeze" whatever="1"/>
+	<foreignObject width="1" height="1"><div xmlns="http://www.w3.org/1999/xhtml" made-up="1">kept</div></foreignObject>
+</svg>

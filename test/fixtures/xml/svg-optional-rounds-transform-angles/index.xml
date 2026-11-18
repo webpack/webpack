@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+	<text y="96" transform="matrix(0.9999999847691 1.745329243133368e-4 -1.745329243133368e-4 0.9999999847691 0 0)">tiny</text>
+	<text y="96" transform="rotate(30.4567)">kept to a place</text>
+	<text y="96" transform="rotate(30.04) scale(2)">scaled</text>
+</svg>

@@ -246,6 +246,26 @@ module.exports = [
 		entry: "./unknown.js",
 		optimization: { minimizeOptions: { xml: { removeUnknownElements: true } } }
 	}),
+	// What svgo's lossier switches do, each opted into.
+	config("lossy", {
+		entry: "./lossy.js",
+		optimization: {
+			minimizeOptions: {
+				xml: {
+					shortenNumbers: true,
+					shortenPathData: true,
+					convertTransforms: true,
+					anglePrecision: 1,
+					convertCurvesToArcs: "loose",
+					inlineStyles: true,
+					inlineStylePseudoClasses: [":hover"],
+					removeUnknownAttributes: true,
+					removeDeprecatedAttributes: true,
+					collapseAttributeWhitespace: true
+				}
+			}
+		}
+	}),
 	config("structure", {
 		entry: "./structure.js",
 		optimization: {

@@ -114,6 +114,14 @@ exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should comp
 </svg>"
 `;
 
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: lossy 1`] = `
+"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\" class=\\"b\\" style=\\"stroke:red\\">
+	
+	<text lang=\\"en-CA\\" transform=\\"rotate(30)\\">text</text>
+	<path d=\\"m0 0a5 5 0 015 5\\"/>
+</svg>"
+`;
+
 exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: none 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?>
 <!-- An editor's comment the minified output drops. -->

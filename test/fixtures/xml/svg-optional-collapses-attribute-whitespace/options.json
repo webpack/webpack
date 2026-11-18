@@ -1,0 +1,13 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"collapseSvgAttributeWhitespace": true
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true
+	}
+]
