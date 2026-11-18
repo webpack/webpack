@@ -605,4 +605,37 @@ describe("lazyCompilationBackend on a shared server", () => {
 		api.dispose(() => {});
 		expect(server.listenerCount("request")).toBe(2);
 	});
+
+	it("keeps persistent listeners when a listener sends a nested request", () => {
+		const server = new EventEmitter();
+		Object.assign(server, { listening: true, listen() {}, address() {} });
+		/** @type {string[]} */
+		const calls = [];
+		let nested = false;
+		server.on("request", () => {
+			calls.push("first");
+			if (!nested) {
+				nested = true;
+				server.emit("request", { url: "/nested" }, {});
+			}
+		});
+		server.once("request", () => calls.push("once"));
+		server.on("request", () => calls.push("last"));
+		const api =
+			/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
+				startShared(/** @type {Server} */ (/** @type {unknown} */ (server)), {
+					urlBase: "http://localhost:1"
+				}).started()
+			);
+		server.emit("request", { url: "/outer" }, {});
+		expect(calls).toEqual(["first", "first", "once", "last", "last"]);
+		calls.length = 0;
+		server.emit("request", { url: "/next" }, {});
+		expect(calls).toEqual(["first", "last"]);
+		api.dispose(() => {});
+		expect(server.listenerCount("request")).toBe(2);
+		calls.length = 0;
+		server.emit("request", { url: "/after" }, {});
+		expect(calls).toEqual(["first", "last"]);
+	});
 });
