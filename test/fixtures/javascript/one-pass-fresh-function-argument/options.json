@@ -1,0 +1,1 @@
+[{"mode":"minify","compress":{"toplevel":true},"mangle":false,"behavior":true},{"mode":"minify","compress":{},"mangle":false},{"mode":"minify","compress":{"keep_fnames":true},"mangle":{"keep_fnames":true},"behavior":true}]
