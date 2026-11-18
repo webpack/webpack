@@ -12,3 +12,10 @@ function commented() {
 	return o.p();
 }
 console.log(commented());
+function computedKey() {
+	let key = "p";
+	key;
+	var o = { [key]: function () { return 3; } };
+	return o.p();
+}
+console.log(computedKey());
