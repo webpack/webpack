@@ -13112,13 +13112,13 @@ Object {
   "optimization-minimize-options-xml-convert-curves-to-arcs": Object {
     "configs": Array [
       Object {
-        "description": "Write SVG path cubic curves that stay within \`precision\` decimals (3 when unset) of one circle as arcs of it, joining neighbors on the same circle, other cubics as quadratics within that error, and nearly flat circular arcs as lines. Off by default because the arc is a true circle, not the curve; skip documents with markers, stylesheets, scripts or animations.",
+        "description": "With \`shortenPathData\`, write SVG path cubic curves that stay within \`precision\` decimals (3 when unset) of one circle as arcs of it, joining neighbors on the same circle, other cubics as quadratics within that error, and nearly flat circular arcs as lines. Off by default because the arc is a true circle, not the curve; skip documents with markers, stylesheets, scripts or animations.",
         "multiple": false,
         "path": "optimization.minimizeOptions.xml.convertCurvesToArcs",
         "type": "boolean",
       },
     ],
-    "description": "Write SVG path cubic curves that stay within \`precision\` decimals (3 when unset) of one circle as arcs of it, joining neighbors on the same circle, other cubics as quadratics within that error, and nearly flat circular arcs as lines. Off by default because the arc is a true circle, not the curve; skip documents with markers, stylesheets, scripts or animations.",
+    "description": "With \`shortenPathData\`, write SVG path cubic curves that stay within \`precision\` decimals (3 when unset) of one circle as arcs of it, joining neighbors on the same circle, other cubics as quadratics within that error, and nearly flat circular arcs as lines. Off by default because the arc is a true circle, not the curve; skip documents with markers, stylesheets, scripts or animations.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13670,13 +13670,13 @@ Object {
   "optimization-minimize-xml-convert-curves-to-arcs": Object {
     "configs": Array [
       Object {
-        "description": "Write SVG path cubic curves that stay within \`precision\` decimals (3 when unset) of one circle as arcs of it, joining neighbors on the same circle, other cubics as quadratics within that error, and nearly flat circular arcs as lines. Off by default because the arc is a true circle, not the curve; skip documents with markers, stylesheets, scripts or animations.",
+        "description": "With \`shortenPathData\`, write SVG path cubic curves that stay within \`precision\` decimals (3 when unset) of one circle as arcs of it, joining neighbors on the same circle, other cubics as quadratics within that error, and nearly flat circular arcs as lines. Off by default because the arc is a true circle, not the curve; skip documents with markers, stylesheets, scripts or animations.",
         "multiple": false,
         "path": "optimization.minimize.xml.convertCurvesToArcs",
         "type": "boolean",
       },
     ],
-    "description": "Write SVG path cubic curves that stay within \`precision\` decimals (3 when unset) of one circle as arcs of it, joining neighbors on the same circle, other cubics as quadratics within that error, and nearly flat circular arcs as lines. Off by default because the arc is a true circle, not the curve; skip documents with markers, stylesheets, scripts or animations.",
+    "description": "With \`shortenPathData\`, write SVG path cubic curves that stay within \`precision\` decimals (3 when unset) of one circle as arcs of it, joining neighbors on the same circle, other cubics as quadratics within that error, and nearly flat circular arcs as lines. Off by default because the arc is a true circle, not the curve; skip documents with markers, stylesheets, scripts or animations.",
     "multiple": false,
     "simpleType": "boolean",
   },

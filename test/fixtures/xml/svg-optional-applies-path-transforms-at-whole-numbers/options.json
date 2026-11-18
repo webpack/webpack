@@ -1,0 +1,11 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"shortenSvgNumbers": true,
+		"shortenSvgPathData": true,
+		"applySvgTransforms": true,
+		"svgPrecision": 0
+	}
+]

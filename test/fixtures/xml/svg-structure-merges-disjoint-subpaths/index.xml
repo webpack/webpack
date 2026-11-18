@@ -81,4 +81,8 @@
 <path d="M201 800h1" fill="red"/>
 <path d="M204 800h1" fill="red"/>
 <path d="M207 800h1" fill="red"/>
+<g stroke="red" stroke-width="100"><path d="M0 1000v10M100 1000v10"/><path d="M50 1000v10"/></g>
+<path d="M0 1100A100 1 0 0 1 0 1120ZM1200 1100h1" fill="red"/>
+<path d="M500 1110h1v1z" fill="red"/>
+<path d="M0 1200A0 5 0 0 1 10 1200" fill="red"/>
 </svg>

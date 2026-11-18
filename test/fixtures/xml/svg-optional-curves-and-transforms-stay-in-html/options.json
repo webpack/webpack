@@ -1,0 +1,8 @@
+[
+	{
+		"mode": "minify",
+		"shortenSvgPathData": true,
+		"convertSvgCurvesToArcs": true,
+		"applySvgTransforms": true
+	}
+]

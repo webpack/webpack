@@ -19,6 +19,7 @@
 <path d="M0 0m10 10h5" fill="url(#paint)"/>
 <g stroke="red"><path d="M10 10H30V30Z" stroke=""/></g>
 <g id="icon"><path d="M0 0h10v10H0z"/></g>
+<path d="M16777216 0h1 1v10zm0 0m0 0m0 0m0 0m0 0"/>
 <path d="M0 0h10v10H0z" id="named"/>
 <path d="M0 0h10v10H0z" pathLength="10"/>
 <path d="M0 0h10v10H0z" marker-start="url(#m)"/>
