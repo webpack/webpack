@@ -5,11 +5,12 @@ const webpack = require("webpack");
 
 const { LazyCompilationPlugin } = webpack.hmr;
 
+/** @typedef {import("../../lib/hmr/LazyCompilationPlugin").LazyCompilationBackendOptions} BackendOptions */
 /**
- * @param {(options: import("../../lib/hmr/LazyCompilationPlugin").LazyCompilationBackendOptions) => Promise<import("../../lib/hmr/LazyCompilationPlugin").LazyCompilationBackendOptions>} backendOptions what the tap returns
+ * @param {(transport: BackendOptions) => Promise<EXPECTED_ANY>} transport what the tap returns for the built-in backend's options
  * @returns {{ compiler: import("webpack").Compiler, started: Promise<void> }} the compiler, and a promise settling once the backend started or failed
  */
-const startBackend = (backendOptions) => {
+const startBackend = (transport) => {
 	const compiler = webpack({
 		mode: "development",
 		context: __dirname,
@@ -17,9 +18,9 @@ const startBackend = (backendOptions) => {
 		experiments: { lazyCompilation: true },
 		infrastructureLogging: { level: "none" }
 	});
-	LazyCompilationPlugin.getCompilerHooks(compiler).backendOptions.tapPromise(
+	LazyCompilationPlugin.getCompilerHooks(compiler).transport.tapPromise(
 		"test",
-		backendOptions
+		(value) => transport(/** @type {BackendOptions} */ (value))
 	);
 	/** @type {Promise<void>} */
 	const started = new Promise((resolve, reject) => {
@@ -81,5 +82,51 @@ describe("LazyCompilationPlugin.getCompilerHooks", () => {
 			}
 		}));
 		await expect(started).rejects.toThrow("no server");
+	});
+
+	it("starts a backend function a tap returns in place of the options", async () => {
+		const api = {
+			dispose: jest.fn((/** @type {() => void} */ callback) => callback()),
+			module: () => ({ client: "./ws-client.js?ws://localhost:1", data: "", active: false })
+		};
+		const ws = jest.fn(async () => api);
+		const { compiler, started } = startBackend(async () => ws);
+		await started;
+		expect(ws).toHaveBeenCalledWith(compiler, expect.any(Function));
+		await new Promise((resolve, reject) => {
+			compiler.close((err) => (err ? reject(err) : resolve(undefined)));
+		});
+		expect(api.dispose).toHaveBeenCalledTimes(1);
+	});
+
+	it("hands a custom backend function to the taps", async () => {
+		/** @type {EXPECTED_ANY} */
+		const custom = async () => ({
+			dispose: (/** @type {() => void} */ callback) => callback(),
+			module: () => ({ client: "", data: "", active: false })
+		});
+		const compiler = webpack({
+			mode: "development",
+			context: __dirname,
+			entry: "./entry-is-never-built",
+			experiments: { lazyCompilation: { backend: custom } },
+			infrastructureLogging: { level: "none" }
+		});
+		/** @type {unknown} */
+		let received;
+		LazyCompilationPlugin.getCompilerHooks(compiler).transport.tap(
+			"test",
+			(transport) => {
+				received = transport;
+				return transport;
+			}
+		);
+		await new Promise((resolve, reject) => {
+			compiler.hooks.beforeCompile.callAsync(
+				/** @type {EXPECTED_ANY} */ ({}),
+				(err) => (err ? reject(err) : resolve(undefined))
+			);
+		});
+		expect(received).toBe(custom);
 	});
 });

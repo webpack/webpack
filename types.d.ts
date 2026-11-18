@@ -20148,7 +20148,7 @@ declare interface LabelLike {
 }
 
 /**
- * The built-in backend's options as the `backendOptions` hook sees them.
+ * The built-in backend's options as the `transport` hook sees them.
  */
 declare interface LazyCompilationBackendHookOptions {
 	/**
@@ -20264,11 +20264,23 @@ declare class LazyCompilationPlugin {
 }
 declare interface LazyCompilationPluginHooks {
 	/**
-	 * change the built-in backend's options before it starts, e.g. to serve it from a development server's own server; not called for a custom `backend` function
+	 * how the browser and the compiler talk, before the backend starts: the built-in backend's options, e.g. to serve it from a development server's own server, or a backend function that brings its own `client` module, e.g. over a WebSocket
 	 */
-	backendOptions: AsyncSeriesWaterfallHook<
-		[LazyCompilationBackendOptions],
-		LazyCompilationBackendOptions
+	transport: AsyncSeriesWaterfallHook<
+		[
+			| ((
+					compiler: Compiler,
+					callback: (err: null | Error, backendApi?: BackendApi) => void
+			  ) => void)
+			| ((compiler: Compiler) => Promise<BackendApi>)
+			| LazyCompilationBackendOptions
+		],
+		| ((
+				compiler: Compiler,
+				callback: (err: null | Error, backendApi?: BackendApi) => void
+		  ) => void)
+		| ((compiler: Compiler) => Promise<BackendApi>)
+		| LazyCompilationBackendOptions
 	>;
 }
 type LazyFunction<

@@ -18,9 +18,9 @@ class SharedServerPlugin {
 		const server = http.createServer((req, res) => {
 			res.end("shared");
 		});
-		LazyCompilationPlugin.getCompilerHooks(compiler).backendOptions.tapPromise(
+		LazyCompilationPlugin.getCompilerHooks(compiler).transport.tapPromise(
 			"SharedServerPlugin",
-			(options) =>
+			(transport) =>
 				new Promise((resolve, reject) => {
 					server.once("error", reject);
 					server.listen(0, "127.0.0.1", () => {
@@ -28,7 +28,9 @@ class SharedServerPlugin {
 							server.address()
 						);
 						resolve({
-							...options,
+							.../** @type {import("../../../../lib/hmr/LazyCompilationPlugin").LazyCompilationBackendOptions} */ (
+								transport
+							),
 							server,
 							urlBase: `http://127.0.0.1:${port}`
 						});
