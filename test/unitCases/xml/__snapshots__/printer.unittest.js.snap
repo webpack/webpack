@@ -54,6 +54,10 @@ exports[`SourceProcessor — SVG minification should shorten SVG numbers inside 
 
 exports[`SourceProcessor — SVG minification should shorten inline SVG geometry in HTML and leave other namespaces alone 1`] = `"<!doctype html><p><svg viewBox=\\"0 0 24 24\\"><path d=\\"M0 0v80h-112\\" transform=\\"translate(1 2)\\"/><rect width=1.5 height=2></rect></svg><math><mi width=001.00>x</mi></math><div d=M000,000 width=001.00></div>"`;
 
+exports[`XML scripts and event handlers should offer JavaScript bodies an SVG or XHTML document runs, as HTML does 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:svg=\\"http://www.w3.org/2000/svg\\" onload=\\"JS\\" onclick=\\"x\\"><script type=\\"text/plain\\"> data ( ) </script><script type=\\"module\\">JS</script><svg:script>JS</svg:script><script xlink:href=\\"external.js\\" xmlns:xlink=\\"http://www.w3.org/1999/xlink\\"> kept ( ) </script><script>  </script><animate onbegin=\\"JS\\" onfoo=\\" not ( a , handler ) \\"/><rect onclick=\\"JS\\"/><data xmlns=\\"urn:data\\" onload=\\" not ( svg ) \\"><script> other ( ) </script></data></svg>"`;
+
+exports[`xmlMinify should offer scripts and event handlers to the caller's renderer first 1`] = `"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\" onload=\\"go()\\"><style>rect{fill:red}/*! a legal comment */</style><script>run()</script><script>run()</script><script href=\\"external.js\\"> kept ( ) </script><rect width=\\"10\\" height=\\"10\\" style=\\"fill:blue\\" onclick=\\"go()\\"/></svg>"`;
+
 exports[`xmlMinify takes the minimizer options as optional 1`] = `"<svg/>"`;
 
 exports[`xmlMinify — SVG switches should combine structural cleanup with equal-radius ellipse conversion 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><circle id=\\"shape\\" r=\\"10\\"/><circle r=\\"5\\"/></svg>"`;

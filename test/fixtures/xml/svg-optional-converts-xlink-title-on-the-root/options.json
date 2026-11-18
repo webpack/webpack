@@ -1,0 +1,8 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"removeSvgXlink": true,
+		"removeSvgDimensions": true
+	}
+]

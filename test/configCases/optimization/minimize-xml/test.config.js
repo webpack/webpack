@@ -27,6 +27,11 @@ const NAMES = [
 	"transforms",
 	"offcanvas",
 	"disjoint",
+	"applied",
+	"arcs",
+	"unknown",
+	"scripts",
+	"lossy",
 	"structure"
 ];
 

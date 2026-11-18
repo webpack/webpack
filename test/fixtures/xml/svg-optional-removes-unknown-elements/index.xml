@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:test="http://example.com/test">
+	<test>text</test>
+	<test:test>text</test:test>
+	<unknown><rect width="1" height="1"/></unknown>
+	<g><widget/><rect width="1" height="1"/></g>
+	<switch><unknown/><rect width="1" height="1"/></switch>
+	<foreignObject width="1" height="1"><div xmlns="http://www.w3.org/1999/xhtml">kept</div></foreignObject>
+	<font><glyph/></font>
+	<feDropShadow/>
+</svg>

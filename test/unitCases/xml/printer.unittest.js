@@ -16,6 +16,46 @@ describe("xmlMinify", () => {
 		expect(xmlMinify.filter("image.svg.map")).toBe(false);
 		expect(xmlMinify.filter("image.svg.gz")).toBe(false);
 		expect(xmlMinify.filter("page.html")).toBe(false);
+		expect(xmlMinify.getEmbeddedTypes()).toContain("javascript");
+	});
+
+	it("should offer scripts and event handlers to the caller's renderer first", async () => {
+		const source = fixture("xml", "xml-minify-offers-scripts-and-handlers");
+		/** @type {string[]} */
+		const offered = [];
+		const { code, warnings } = await xmlMinify({ "a.svg": source }, undefined, {
+			collapseWhitespace: true,
+			renderEmbeddedSource: async (body, info) => {
+				offered.push(`${info.type} ${info.as}`);
+				if (info.type !== "javascript") return undefined;
+				return info.as === "event-handler"
+					? { code: "go()", warnings: ["heard"] }
+					: "run()";
+			}
+		});
+		expect(offered).toEqual([
+			"javascript event-handler",
+			"css embedded-stylesheet",
+			"javascript script",
+			"javascript script",
+			"css block-contents",
+			"javascript event-handler"
+		]);
+		// The built-in renderer answers the styles the caller declines.
+		expect(code).toMatchSnapshot();
+		expect(warnings).toEqual(["heard", "heard"]);
+	});
+
+	it("should leave a body as written where the caller's renderer fails on it", async () => {
+		const source = fixture("xml", "xml-minify-offers-scripts-and-handlers");
+		const { code, errors } = await xmlMinify({ "a.svg": source }, undefined, {
+			renderEmbeddedSource: (body, info) => {
+				if (info.type === "javascript") throw new Error("failing");
+				return undefined;
+			}
+		});
+		expect(code).toContain("greet ( name )");
+		expect(errors).toHaveLength(4);
 	});
 
 	it("takes the minimizer options as optional", async () => {
@@ -23,6 +63,54 @@ describe("xmlMinify", () => {
 				"a.svg": fixture("xml", "xml-minify-takes-the-minimizer-options-as-optional")
 			}, undefined);
 		expect(code).toMatchSnapshot();
+	});
+});
+
+describe("XML scripts and event handlers", () => {
+	it("should offer JavaScript bodies an SVG or XHTML document runs, as HTML does", () => {
+		/** @type {string[]} */
+		const offered = [];
+		const { SourceProcessor } = webpack.html.syntax;
+		const { code } = new SourceProcessor().process(
+			fixture("xml", "xml-printer-offers-scripts-and-handlers"),
+			{
+				xml: true,
+				mode: "minify",
+				collapseWhitespace: true,
+				renderEmbeddedSource: (body, info) => {
+					offered.push(`${info.as} ${body.trim()}`);
+					// Longer than the source, so a handler stays as written.
+					return body.trim() === "x" ? "x;" : "JS";
+				}
+			}
+		);
+		expect(offered).toEqual([
+			"event-handler long ( )",
+			"event-handler x",
+			"module import ( \"a\" )",
+			"script prefixed ( )",
+			"event-handler begun ( )",
+			"event-handler pick ( 'a' , \"b\" )"
+		]);
+		expect(code).toMatchSnapshot();
+	});
+
+	it("should keep a handler whose spelling a DTD declares", () => {
+		const { SourceProcessor } = webpack.html.syntax;
+		/** @type {string[]} */
+		const offered = [];
+		new SourceProcessor().process(
+			fixture("xml", "xml-printer-keeps-declared-handlers"),
+			{
+				xml: true,
+				mode: "minify",
+				renderEmbeddedSource: (body) => {
+					offered.push(body.trim());
+					return "JS";
+				}
+			}
+		);
+		expect(offered).toEqual(["offered ( )"]);
 	});
 });
 
@@ -290,8 +378,8 @@ describe("SourceProcessor — SVG minification", () => {
 			// Gecko's correctly rounded sum differs here, and Blink's digit sum below.
 			' d="M.001 0H.015"',
 			' d="M.001 0H.036"',
-			' d="M.3.1l.2.1h.2"',
-			' d="M.3.1l.1.2v.2"',
+			' d="m.3.1.2.1h.2"',
+			' d="m.3.1.1.2v.2"',
 			' d="M.3.1A1 1 0 01.7.4"',
 			' d="M.3.1A1 1 0 01.3.1"',
 			' d="M.3.1a1 1 0 010 0"',
@@ -301,8 +389,8 @@ describe("SourceProcessor — SVG minification", () => {
 			' d="M1.000000059604645 0H.3"',
 			' d="M0 0H999999999999999999999999999999999999999 .3"',
 			' d="M-.3.1-.1.4zL.6.7"',
-			' d="M.123.1l.2.1H9"',
-			' d="M.1.123l.1.2V9"',
+			' d="m.123.1.2.1H9"',
+			' d="m.1.123.1.2V9"',
 			' d="M.5 0h123456788.75"',
 			// WebKit turns quadratics into cubics with different float steps per case.
 			' d="M.3 0Q.4 1 .5 0"',
@@ -471,7 +559,7 @@ describe("SourceProcessor — SVG minification", () => {
 		const options = { ...compact, renderEmbeddedSource: builtinEmbeddedRenderer() };
 		expect(processor.process(fixture("xml", "source-processor-svg-minification-should-preserve-dtd-constraints-and-reset-every"), options).code).toBe(dtd + body);
 		for (const name of ["source-processor-svg-minification-should-preserve-dtd-constraints-and-reset-every-3", "source-processor-svg-minification-should-preserve-dtd-constraints-and-reset-every-4"]) expect(processor.process(fixture("xml", name), options).code).toBe(fixture("xml", name));
-		expect(processor.process(body, options).code).toBe(`<svg xmlns="${svg}" fill="red"><path d="M0 0l1 2" transform="scale(1)"/></svg>`);
+		expect(processor.process(body, options).code).toBe(`<svg xmlns="${svg}" fill="red"><path d="M0 0" transform="scale(1)"/></svg>`);
 	});
 
 	it("should leave foreign XML, HTML and beautified attributes unchanged", () => {
@@ -688,7 +776,15 @@ describe("SourceProcessor — SVG minification", () => {
 		const processor = new SourceProcessor();
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), removeEmptyAttributes: true };
 		const once = processor.process(source, options).code;
-		expect(once).toBe(source.replace(' class=" &#9;" id="" style=""', "").replace('style="&#160;"', 'style="\u00a0"'));
+		// An empty presentation value is invalid, so it reads as absent; an empty link and data stay.
+		expect(once).toBe(
+			source
+				.replace(' class=" &#9;" id="" style=""', "")
+				.replace('style="&#160;"', 'style="\u00a0"')
+				.replace(' fill="" stroke="" transform="" viewBox=""', "")
+				.replace(' dir=""', "")
+				.replace('<g CLASS=""/>', "<g/>")
+		);
 		expect(processor.process(once, options).code).toBe(once);
 		expect(processor.process(fixture("xml", "source-processor-svg-minification-should-reuse-empty-attribute-removal-without-2"), options).code).toMatchSnapshot();
 		expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);

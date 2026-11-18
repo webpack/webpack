@@ -1,0 +1,15 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"mergeDisjointSvgPaths": true
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"mergeDisjointSvgPaths": true,
+		"shortenSvgPathData": true
+	}
+]

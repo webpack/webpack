@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0c2.761 0 5 2.239 5 5"/>
+<path d="M60 0c-2.761 0-5 2.239-5 5s2.239 5 5 5s5-2.239 5-5S62.761 0 60 0z"/>
+<path d="M41.008 0.102c1.891 0.387 3.393 1.841 3.849 3.705"/>
+<path d="M.49 8.8c-.3-.75-.44-1.55-.44-2.35 0-3.54 2.88-6.43 6.43-6.43 3.53 0 6.42 2.88 6.42 6.43 0 .8-.15 1.6-.43 2.35"/>
+<path d="M0 0c2.761 0 5 2.239 5 5" stroke="red"/>
+<path d="M0 0c2.761 0 5 2.239 5 5l5 5c2.761 0 5 2.239 5 5"/>
+<path d="M0 0c3 3 6 -3 9 0"/>
+<path d="M0 0c1 1 2 1 3 0"/>
+<path d="M0 0c1 0 2 0 3 0"/>
+<path d="M0 0c0 0 0 0 0 0"/>
+<path d="M0 0c1 2 3 4 5 6"/>
+<path d="M0 0c1 -1 2 2 3 0"/>
+<path d="M0 0c2.761 0 5 2.239 5 5" marker-end="url(#m)"/>
+<path d="M0 0c2.761 0 5 2.239 5 5 x"/>
+<path d="M-1 0C-.907334 1.333333 .907334 1.333333 1 0"/>
+<path d="M0 0C4 17.5 8 0 12 0"/>
+<path d="M10 10A2 2 0 0 1 14 10" fill="none" stroke="black" stroke-width="20"/>
+<path d="M10 10A2 2 0 0 1 14 10"/>
+<path d="M0 0C33 .0008 67 .0008 100 0C67-.0008 34-.0008 1 0"/>
+<g marker-mid="url(m.svg#dot)"><path d="M0 0c2.761 0 5 2.239 5 5s-2.239 5-5 5"/></g>
+<path d="M.707 -.707C1.098 -.317 1.098 .317 .707 .707C.317 1.098 -.317 1.098 -.707 .707"/>
+<path d="M0 0C1e307 0 0 1 1 1"/>
+<path d="M0 0C3 6 6 -6 9 0h.1234"/>
+<path d="M0 0c.00082845 0 .0015 .00067155 .0015 .0015"/>
+<path d="M0 0A5 5 30 0 1 10 0" stroke="red"/>
+<g style="marker-mid:url(#m)"><path d="M0 0c2.761 0 5 2.239 5 5"/></g>
+<path d="M0 0h1"/>
+<path d="M1 1a10.567 10.567 0 0 0 1 0"/>
+<path d="M1 1a10000 10000 0 0 0 8 0"/>
+<path d="M10 10a30 30 0 1 1 40 20"/>
+<path d="M10 10a30 30 0 1 0 40 20"/>
+<path d="M40 30a30 30 0 0 0 -30 -20"/>
+<path d="M10 10a30 20 0 1 1 40 20"/>
+<path d="M0 0c3 3 6 3 9 0"/>
+<path d="M0 0c3 6 6 6 9 0c3-6 6-6 9 0"/>
+<path d="M.49 8.8c-.3-.75-.44-1.55-.44-2.35 0-3.54 2.88-6.43 6.43-6.43"/>
+<path d="M0 0c.1381 0 .25 .1119 .25 .25"/>
+<path d="M0 0c.3313 0 .6 .2687 .6 .6"/>
+<path d="M9.25 0C9.25 5.10863394 5.10863394 9.25 0 9.25"/>
+<path d="m1 1a10000 10000 0 008 0" stroke="black"/>
+<path d="m1 1a10000 10000 0 008 0" stroke="black" stroke-width="2px"/>
+<path d="m1 1a10000 10000 0 008 0" stroke="black" stroke-width="20"/>
+<path d="m1 1a10000 10000 0 008 0" stroke="black" stroke-width="1em"/>
+<path d="m1 1a10000 10000 0 008 0l1 1" stroke="black"/>
+<path d="m1 1a10000 10000 0 008 0" stroke="url(#g)"/>
+<path d="m1 1a10000 10000 0 008 0" stroke="black" vector-effect="non-scaling-stroke"/>
+<g filter="url(#f)"><path d="m1 1a10000 10000 0 008 0" stroke="black"/></g>
+<path d="m1 1a10.567 10.567 0 001 0" stroke="black"/>
+<path d="m1 1a10.567 10.567 0 001 0" stroke="black" stroke-width="5"/>
+<path d="m1 1a10.567 10.567 0 001 0" fill="red"/>
+<path d="m1 1a10.567 10.567 0 101 0" stroke="black"/>
+<path d="m1 1a.4 .4 0 001 0" stroke="black"/>
+<g style="stroke-width:var(--w)"><path d="m1 1a10000 10000 0 008 0" stroke="black"/></g>
+<path/>
+</svg>

@@ -1,0 +1,15 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"convertSvgShapes": true,
+		"shortenSvgPathData": true
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"convertSvgShapes": true
+	}
+]

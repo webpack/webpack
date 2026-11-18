@@ -1,0 +1,7 @@
+<svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" onload="  var  answer = 40 + 2 ;  /* a comment */ console.log( answer )  ">
+	<style>/* a comment */ rect { fill : red ; } /*! a legal comment */</style>
+	<script>/* a comment */ function  greet ( name ) { return  "hi " + name ; } /*! a legal comment */</script>
+	<script><![CDATA[ if ( 1 < 2 ) { greet ( "x" ) ; } ]]></script>
+	<script href="external.js"> kept ( ) </script>
+	<rect width="10" height="10" style=" fill : blue ; " onclick=" greet ( 'rect' ) ; "/>
+</svg>

@@ -16,6 +16,19 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 "
 `;
 
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: applied 1`] = `
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 100 100\\">
+	<path d=\\"M10 20H30V40H10\\"/>
+	<path d=\\"m0 0h20\\" stroke=\\"red\\" stroke-width=\\"2\\"/>
+</svg>"
+`;
+
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: arcs 1`] = `
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 20 20\\">
+	<path d=\\"M10 0a5 5 0 105 5 5 5 0 00-5-5\\"/>
+</svg>"
+`;
+
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: attributes 1`] = `
 "<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:data=\\"urn:application\\" xmlns:e=\\"http://www.inkscape.org/namespaces/inkscape\\">
 	<title>Accessible title</title>
@@ -101,6 +114,14 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 </svg>"
 `;
 
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: lossy 1`] = `
+"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\" class=\\"b\\" style=\\"stroke:red\\">
+	
+	<text lang=\\"en-CA\\" transform=\\"rotate(30)\\">text</text>
+	<path d=\\"m0 0a5 5 0 015 5\\"/>
+</svg>"
+`;
+
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: none 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?>
 <!-- An editor's comment the minified output drops. -->
@@ -153,6 +174,8 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 </svg>"
 `;
 
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: scripts 1`] = `"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\" onload=\\"console.log(42)\\"><style>rect{fill:red}/*! a legal comment */</style><script>function greet(e){return\\"hi \\"+e}/*! a legal comment */</script><script>greet(\\"x\\");</script><script href=\\"external.js\\"> kept ( ) </script><rect width=\\"10\\" height=\\"10\\" style=\\"fill:blue\\" onclick='greet(\\"rect\\")'/></svg>"`;
+
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: sorted 1`] = `
 "<!--! A legal notice the minified output keeps. --><svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\">
 	<style>.dot{fill:red;-webkit-user-select:none;user-select:none}</style>
@@ -193,6 +216,13 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 "<svg xmlns=\\"http://www.w3.org/2000/svg\\">
 	
 	<rect width=\\"1\\" height=\\"1\\"/>
+</svg>"
+`;
+
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: unknown 1`] = `
+"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+	
+	<rect width=\\"10\\" height=\\"10\\"/>
 </svg>"
 `;
 

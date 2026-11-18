@@ -13022,6 +13022,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-angle-precision": Object {
+    "configs": Array [
+      Object {
+        "description": "With \`convertTransforms\`, round the angle each SVG transform turns by to this many decimal places, a whole number from 0 to 15, as svgo's \`degPrecision\` does, and recompose what remains within \`precision\`. Off by default because the drawing turns by what the rounding drops.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.anglePrecision",
+        "type": "number",
+      },
+    ],
+    "description": "With \`convertTransforms\`, round the angle each SVG transform turns by to this many decimal places, a whole number from 0 to 15, as svgo's \`degPrecision\` does, and recompose what remains within \`precision\`. Off by default because the drawing turns by what the rounding drops.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "optimization-minimize-options-xml-apply-transforms": Object {
+    "configs": Array [
+      Object {
+        "description": "Bake each SVG path's \`transform\` into its path data, rounded to \`precision\` decimals (3 when unset), scaling a stroke the transform scales. Off by default because rounding moves points; skip paths with IDs, styles, markers, clip paths, masks, filters or \`url()\` paints, arcs under a skew, and documents with stylesheets, scripts or animations.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.applyTransforms",
+        "type": "boolean",
+      },
+    ],
+    "description": "Bake each SVG path's \`transform\` into its path data, rounded to \`precision\` decimals (3 when unset), scaling a stroke the transform scales. Off by default because rounding moves points; skip paths with IDs, styles, markers, clip paths, masks, filters or \`url()\` paints, arcs under a skew, and documents with stylesheets, scripts or animations.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-xml-cleanup-ids": Object {
     "configs": Array [
       Object {
@@ -13045,6 +13071,19 @@ Object {
       },
     ],
     "description": "Collapse SVG groups, hoist identical context-free inherited attributes or move them to sole graphics children, inline validated presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-collapse-attribute-whitespace": Object {
+    "configs": Array [
+      Object {
+        "description": "Trim every SVG attribute value and collapse each run of whitespace in it to one space, as svgo's \`cleanupAttrs\` does, \`xmlns\` included. Off by default because a value whose spaces mean something, such as a \`data-\` attribute or a namespace name, changes.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.collapseAttributeWhitespace",
+        "type": "boolean",
+      },
+    ],
+    "description": "Trim every SVG attribute value and collapse each run of whitespace in it to one space, as svgo's \`cleanupAttrs\` does, \`xmlns\` included. Off by default because a value whose spaces mean something, such as a \`data-\` attribute or a namespace name, changes.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13096,6 +13135,28 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-minimize-options-xml-convert-curves-to-arcs": Object {
+    "configs": Array [
+      Object {
+        "description": "With \`shortenPathData\`, write SVG path cubic curves that stay within \`precision\` decimals (3 when unset) of one circle as arcs of it, joining neighbors on the same circle, other cubics as quadratics within that error, and nearly flat circular arcs as lines. \`\\"loose\\"\` fits as svgo's \`makeArcs\` does instead: at a curve's quarter points, against its unrounded ends, writing the rounded radius unchecked, so arcs can stray past the precision. Off by default because the arc is a true circle, not the curve; skip documents with markers, stylesheets, scripts or animations.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.convertCurvesToArcs",
+        "type": "enum",
+        "values": Array [
+          "loose",
+        ],
+      },
+      Object {
+        "description": "With \`shortenPathData\`, write SVG path cubic curves that stay within \`precision\` decimals (3 when unset) of one circle as arcs of it, joining neighbors on the same circle, other cubics as quadratics within that error, and nearly flat circular arcs as lines. \`\\"loose\\"\` fits as svgo's \`makeArcs\` does instead: at a curve's quarter points, against its unrounded ends, writing the rounded radius unchecked, so arcs can stray past the precision. Off by default because the arc is a true circle, not the curve; skip documents with markers, stylesheets, scripts or animations.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.convertCurvesToArcs",
+        "type": "boolean",
+      },
+    ],
+    "description": "With \`shortenPathData\`, write SVG path cubic curves that stay within \`precision\` decimals (3 when unset) of one circle as arcs of it, joining neighbors on the same circle, other cubics as quadratics within that error, and nearly flat circular arcs as lines. \`\\"loose\\"\` fits as svgo's \`makeArcs\` does instead: at a curve's quarter points, against its unrounded ends, writing the rounded radius unchecked, so arcs can stray past the precision. Off by default because the arc is a true circle, not the curve; skip documents with markers, stylesheets, scripts or animations.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "optimization-minimize-options-xml-convert-shapes": Object {
     "configs": Array [
       Object {
@@ -13119,6 +13180,32 @@ Object {
       },
     ],
     "description": "With \`shortenNumbers\`, recompose each SVG transform list as the shortest list whose matrix matches it within \`precision\` decimals (3 when unset), such as a \`matrix()\` becoming \`rotate(-45 261.757 -252.243)\`. Off by default because the result is rounded, not exact.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-inline-style-pseudo-classes": Object {
+    "configs": Array [
+      Object {
+        "description": "A pseudo-class, with or without its colon.",
+        "multiple": true,
+        "path": "optimization.minimizeOptions.xml.inlineStylePseudoClasses[]",
+        "type": "string",
+      },
+    ],
+    "description": "A pseudo-class, with or without its colon.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "optimization-minimize-options-xml-inline-style-pseudo-classes-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'optimization.minimizeOptions.xml.inlineStylePseudoClasses' configuration. With \`inlineStyles\`, inline rules whose selectors use these pseudo-classes, such as \`:hover\`, as if they always held, as svgo's \`usePseudos\` does. Off by default because a style meant for a state then always applies.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.inlineStylePseudoClasses",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'optimization.minimizeOptions.xml.inlineStylePseudoClasses' configuration. With \`inlineStyles\`, inline rules whose selectors use these pseudo-classes, such as \`:hover\`, as if they always held, as svgo's \`usePseudos\` does. Off by default because a style meant for a state then always applies.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13199,6 +13286,28 @@ Object {
     "description": "Clear all items provided in 'optimization.minimizeOptions.xml.removeAttributes' configuration. Remove attributes matching \`element:attribute:value\` patterns, each part a case-insensitive regular expression matched whole, \`*\` matching anything; a missing element or value part matches any. Off by default because only the author knows which attributes the image can lose.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-remove-deprecated-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Write an SVG element's \`xml:lang\` as \`lang\` in place of a \`lang\` it overrides; \`\\"unsafe\\"\` drops \`xml:lang\` instead, as svgo's \`removeUnsafe\` does, losing the language it names. Off by default because SVG 1.1 readers know only \`xml:lang\`.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeDeprecatedAttributes",
+        "type": "enum",
+        "values": Array [
+          "unsafe",
+        ],
+      },
+      Object {
+        "description": "Write an SVG element's \`xml:lang\` as \`lang\` in place of a \`lang\` it overrides; \`\\"unsafe\\"\` drops \`xml:lang\` instead, as svgo's \`removeUnsafe\` does, losing the language it names. Off by default because SVG 1.1 readers know only \`xml:lang\`.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeDeprecatedAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write an SVG element's \`xml:lang\` as \`lang\` in place of a \`lang\` it overrides; \`\\"unsafe\\"\` drops \`xml:lang\` instead, as svgo's \`removeUnsafe\` does, losing the language it names. Off by default because SVG 1.1 readers know only \`xml:lang\`.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "optimization-minimize-options-xml-remove-descriptions": Object {
     "configs": Array [
@@ -13307,13 +13416,13 @@ Object {
   "optimization-minimize-options-xml-remove-empty-attributes": Object {
     "configs": Array [
       Object {
-        "description": "Remove empty \`class\`, \`id\` and \`style\` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.",
+        "description": "Remove empty \`class\`, \`id\` and \`style\` attributes on SVG elements unless the DTD declares them, and other unprefixed empty SVG attributes that read as absent, keeping links, languages, conditional tests, ARIA, data and event attributes. Off by default because selectors and scripts can observe attribute presence.",
         "multiple": false,
         "path": "optimization.minimizeOptions.xml.removeEmptyAttributes",
         "type": "boolean",
       },
     ],
-    "description": "Remove empty \`class\`, \`id\` and \`style\` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.",
+    "description": "Remove empty \`class\`, \`id\` and \`style\` attributes on SVG elements unless the DTD declares them, and other unprefixed empty SVG attributes that read as absent, keeping links, languages, conditional tests, ARIA, data and event attributes. Off by default because selectors and scripts can observe attribute presence.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13408,6 +13517,41 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-remove-unknown-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping \`data-\`, \`aria-\`, \`role\` and event handler attributes; \`\\"unsafe\\"\` drops \`role\` too, as svgo does by default, though assistive technology reads it. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeUnknownAttributes",
+        "type": "enum",
+        "values": Array [
+          "unsafe",
+        ],
+      },
+      Object {
+        "description": "Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping \`data-\`, \`aria-\`, \`role\` and event handler attributes; \`\\"unsafe\\"\` drops \`role\` too, as svgo does by default, though assistive technology reads it. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeUnknownAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping \`data-\`, \`aria-\`, \`role\` and event handler attributes; \`\\"unsafe\\"\` drops \`role\` too, as svgo does by default, though assistive technology reads it. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "optimization-minimize-options-xml-remove-unknown-elements": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove SVG-namespace elements that no SVG specification defines, with their content, which renders nothing; a \`switch\` child stays. Off by default because scripts and CSS selectors outside the document can still find them.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeUnknownElements",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove SVG-namespace elements that no SVG specification defines, with their content, which renders nothing; a \`switch\` child stays. Off by default because scripts and CSS selectors outside the document can still find them.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-xml-remove-unused-namespaces": Object {
     "configs": Array [
       Object {
@@ -13437,13 +13581,13 @@ Object {
   "optimization-minimize-options-xml-remove-xlink": Object {
     "configs": Array [
       Object {
-        "description": "Spell \`xlink:href\` as the SVG 2 \`href\` where an element has no \`href\`, a link's \`xlink:show\` as \`target\`, and drop \`xlink:type=\\"simple\\"\`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only \`xlink:href\`.",
+        "description": "Spell \`xlink:href\` as the SVG 2 \`href\` where an element has no \`href\`, a link's \`xlink:show\` as \`target\` and an \`xlink:title\` as a \`title\` child, and drop \`xlink:type=\\"simple\\"\`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only \`xlink:href\`.",
         "multiple": false,
         "path": "optimization.minimizeOptions.xml.removeXlink",
         "type": "boolean",
       },
     ],
-    "description": "Spell \`xlink:href\` as the SVG 2 \`href\` where an element has no \`href\`, a link's \`xlink:show\` as \`target\`, and drop \`xlink:type=\\"simple\\"\`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only \`xlink:href\`.",
+    "description": "Spell \`xlink:href\` as the SVG 2 \`href\` where an element has no \`href\`, a link's \`xlink:show\` as \`target\` and an \`xlink:title\` as a \`title\` child, and drop \`xlink:type=\\"simple\\"\`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only \`xlink:href\`.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13554,6 +13698,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-xml-angle-precision": Object {
+    "configs": Array [
+      Object {
+        "description": "With \`convertTransforms\`, round the angle each SVG transform turns by to this many decimal places, a whole number from 0 to 15, as svgo's \`degPrecision\` does, and recompose what remains within \`precision\`. Off by default because the drawing turns by what the rounding drops.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.anglePrecision",
+        "type": "number",
+      },
+    ],
+    "description": "With \`convertTransforms\`, round the angle each SVG transform turns by to this many decimal places, a whole number from 0 to 15, as svgo's \`degPrecision\` does, and recompose what remains within \`precision\`. Off by default because the drawing turns by what the rounding drops.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "optimization-minimize-xml-apply-transforms": Object {
+    "configs": Array [
+      Object {
+        "description": "Bake each SVG path's \`transform\` into its path data, rounded to \`precision\` decimals (3 when unset), scaling a stroke the transform scales. Off by default because rounding moves points; skip paths with IDs, styles, markers, clip paths, masks, filters or \`url()\` paints, arcs under a skew, and documents with stylesheets, scripts or animations.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.applyTransforms",
+        "type": "boolean",
+      },
+    ],
+    "description": "Bake each SVG path's \`transform\` into its path data, rounded to \`precision\` decimals (3 when unset), scaling a stroke the transform scales. Off by default because rounding moves points; skip paths with IDs, styles, markers, clip paths, masks, filters or \`url()\` paints, arcs under a skew, and documents with stylesheets, scripts or animations.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-xml-cleanup-ids": Object {
     "configs": Array [
       Object {
@@ -13577,6 +13747,19 @@ Object {
       },
     ],
     "description": "Collapse SVG groups, hoist identical context-free inherited attributes or move them to sole graphics children, inline validated presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-collapse-attribute-whitespace": Object {
+    "configs": Array [
+      Object {
+        "description": "Trim every SVG attribute value and collapse each run of whitespace in it to one space, as svgo's \`cleanupAttrs\` does, \`xmlns\` included. Off by default because a value whose spaces mean something, such as a \`data-\` attribute or a namespace name, changes.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.collapseAttributeWhitespace",
+        "type": "boolean",
+      },
+    ],
+    "description": "Trim every SVG attribute value and collapse each run of whitespace in it to one space, as svgo's \`cleanupAttrs\` does, \`xmlns\` included. Off by default because a value whose spaces mean something, such as a \`data-\` attribute or a namespace name, changes.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13628,6 +13811,28 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-minimize-xml-convert-curves-to-arcs": Object {
+    "configs": Array [
+      Object {
+        "description": "With \`shortenPathData\`, write SVG path cubic curves that stay within \`precision\` decimals (3 when unset) of one circle as arcs of it, joining neighbors on the same circle, other cubics as quadratics within that error, and nearly flat circular arcs as lines. \`\\"loose\\"\` fits as svgo's \`makeArcs\` does instead: at a curve's quarter points, against its unrounded ends, writing the rounded radius unchecked, so arcs can stray past the precision. Off by default because the arc is a true circle, not the curve; skip documents with markers, stylesheets, scripts or animations.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.convertCurvesToArcs",
+        "type": "enum",
+        "values": Array [
+          "loose",
+        ],
+      },
+      Object {
+        "description": "With \`shortenPathData\`, write SVG path cubic curves that stay within \`precision\` decimals (3 when unset) of one circle as arcs of it, joining neighbors on the same circle, other cubics as quadratics within that error, and nearly flat circular arcs as lines. \`\\"loose\\"\` fits as svgo's \`makeArcs\` does instead: at a curve's quarter points, against its unrounded ends, writing the rounded radius unchecked, so arcs can stray past the precision. Off by default because the arc is a true circle, not the curve; skip documents with markers, stylesheets, scripts or animations.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.convertCurvesToArcs",
+        "type": "boolean",
+      },
+    ],
+    "description": "With \`shortenPathData\`, write SVG path cubic curves that stay within \`precision\` decimals (3 when unset) of one circle as arcs of it, joining neighbors on the same circle, other cubics as quadratics within that error, and nearly flat circular arcs as lines. \`\\"loose\\"\` fits as svgo's \`makeArcs\` does instead: at a curve's quarter points, against its unrounded ends, writing the rounded radius unchecked, so arcs can stray past the precision. Off by default because the arc is a true circle, not the curve; skip documents with markers, stylesheets, scripts or animations.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "optimization-minimize-xml-convert-shapes": Object {
     "configs": Array [
       Object {
@@ -13651,6 +13856,32 @@ Object {
       },
     ],
     "description": "With \`shortenNumbers\`, recompose each SVG transform list as the shortest list whose matrix matches it within \`precision\` decimals (3 when unset), such as a \`matrix()\` becoming \`rotate(-45 261.757 -252.243)\`. Off by default because the result is rounded, not exact.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-inline-style-pseudo-classes": Object {
+    "configs": Array [
+      Object {
+        "description": "A pseudo-class, with or without its colon.",
+        "multiple": true,
+        "path": "optimization.minimize.xml.inlineStylePseudoClasses[]",
+        "type": "string",
+      },
+    ],
+    "description": "A pseudo-class, with or without its colon.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "optimization-minimize-xml-inline-style-pseudo-classes-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'optimization.minimize.xml.inlineStylePseudoClasses' configuration. With \`inlineStyles\`, inline rules whose selectors use these pseudo-classes, such as \`:hover\`, as if they always held, as svgo's \`usePseudos\` does. Off by default because a style meant for a state then always applies.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.inlineStylePseudoClasses",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'optimization.minimize.xml.inlineStylePseudoClasses' configuration. With \`inlineStyles\`, inline rules whose selectors use these pseudo-classes, such as \`:hover\`, as if they always held, as svgo's \`usePseudos\` does. Off by default because a style meant for a state then always applies.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13731,6 +13962,28 @@ Object {
     "description": "Clear all items provided in 'optimization.minimize.xml.removeAttributes' configuration. Remove attributes matching \`element:attribute:value\` patterns, each part a case-insensitive regular expression matched whole, \`*\` matching anything; a missing element or value part matches any. Off by default because only the author knows which attributes the image can lose.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-remove-deprecated-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Write an SVG element's \`xml:lang\` as \`lang\` in place of a \`lang\` it overrides; \`\\"unsafe\\"\` drops \`xml:lang\` instead, as svgo's \`removeUnsafe\` does, losing the language it names. Off by default because SVG 1.1 readers know only \`xml:lang\`.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeDeprecatedAttributes",
+        "type": "enum",
+        "values": Array [
+          "unsafe",
+        ],
+      },
+      Object {
+        "description": "Write an SVG element's \`xml:lang\` as \`lang\` in place of a \`lang\` it overrides; \`\\"unsafe\\"\` drops \`xml:lang\` instead, as svgo's \`removeUnsafe\` does, losing the language it names. Off by default because SVG 1.1 readers know only \`xml:lang\`.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeDeprecatedAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write an SVG element's \`xml:lang\` as \`lang\` in place of a \`lang\` it overrides; \`\\"unsafe\\"\` drops \`xml:lang\` instead, as svgo's \`removeUnsafe\` does, losing the language it names. Off by default because SVG 1.1 readers know only \`xml:lang\`.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "optimization-minimize-xml-remove-descriptions": Object {
     "configs": Array [
@@ -13839,13 +14092,13 @@ Object {
   "optimization-minimize-xml-remove-empty-attributes": Object {
     "configs": Array [
       Object {
-        "description": "Remove empty \`class\`, \`id\` and \`style\` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.",
+        "description": "Remove empty \`class\`, \`id\` and \`style\` attributes on SVG elements unless the DTD declares them, and other unprefixed empty SVG attributes that read as absent, keeping links, languages, conditional tests, ARIA, data and event attributes. Off by default because selectors and scripts can observe attribute presence.",
         "multiple": false,
         "path": "optimization.minimize.xml.removeEmptyAttributes",
         "type": "boolean",
       },
     ],
-    "description": "Remove empty \`class\`, \`id\` and \`style\` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.",
+    "description": "Remove empty \`class\`, \`id\` and \`style\` attributes on SVG elements unless the DTD declares them, and other unprefixed empty SVG attributes that read as absent, keeping links, languages, conditional tests, ARIA, data and event attributes. Off by default because selectors and scripts can observe attribute presence.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13940,6 +14193,41 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-xml-remove-unknown-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping \`data-\`, \`aria-\`, \`role\` and event handler attributes; \`\\"unsafe\\"\` drops \`role\` too, as svgo does by default, though assistive technology reads it. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeUnknownAttributes",
+        "type": "enum",
+        "values": Array [
+          "unsafe",
+        ],
+      },
+      Object {
+        "description": "Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping \`data-\`, \`aria-\`, \`role\` and event handler attributes; \`\\"unsafe\\"\` drops \`role\` too, as svgo does by default, though assistive technology reads it. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeUnknownAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping \`data-\`, \`aria-\`, \`role\` and event handler attributes; \`\\"unsafe\\"\` drops \`role\` too, as svgo does by default, though assistive technology reads it. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "optimization-minimize-xml-remove-unknown-elements": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove SVG-namespace elements that no SVG specification defines, with their content, which renders nothing; a \`switch\` child stays. Off by default because scripts and CSS selectors outside the document can still find them.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeUnknownElements",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove SVG-namespace elements that no SVG specification defines, with their content, which renders nothing; a \`switch\` child stays. Off by default because scripts and CSS selectors outside the document can still find them.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-xml-remove-unused-namespaces": Object {
     "configs": Array [
       Object {
@@ -13969,13 +14257,13 @@ Object {
   "optimization-minimize-xml-remove-xlink": Object {
     "configs": Array [
       Object {
-        "description": "Spell \`xlink:href\` as the SVG 2 \`href\` where an element has no \`href\`, a link's \`xlink:show\` as \`target\`, and drop \`xlink:type=\\"simple\\"\`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only \`xlink:href\`.",
+        "description": "Spell \`xlink:href\` as the SVG 2 \`href\` where an element has no \`href\`, a link's \`xlink:show\` as \`target\` and an \`xlink:title\` as a \`title\` child, and drop \`xlink:type=\\"simple\\"\`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only \`xlink:href\`.",
         "multiple": false,
         "path": "optimization.minimize.xml.removeXlink",
         "type": "boolean",
       },
     ],
-    "description": "Spell \`xlink:href\` as the SVG 2 \`href\` where an element has no \`href\`, a link's \`xlink:show\` as \`target\`, and drop \`xlink:type=\\"simple\\"\`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only \`xlink:href\`.",
+    "description": "Spell \`xlink:href\` as the SVG 2 \`href\` where an element has no \`href\`, a link's \`xlink:show\` as \`target\` and an \`xlink:title\` as a \`title\` child, and drop \`xlink:type=\\"simple\\"\`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only \`xlink:href\`.",
     "multiple": false,
     "simpleType": "boolean",
   },

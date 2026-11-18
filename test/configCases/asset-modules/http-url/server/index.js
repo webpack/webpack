@@ -130,7 +130,12 @@ function createServer() {
 }
 
 // The other config suite serves this case on the same port from its own
-// process: wait for it to close rather than fail, within the compile timeout.
+// process. Both servers answer alike, so on Linux they share the port: a
+// slow build of one suite, which holds it past the retry window below, then
+// keeps the other waiting no longer. Where the runtime can't share it
+// (Bun, older Node.js), wait for it to close rather than fail, within the
+// compile timeout.
+const REUSE_PORT = process.platform === "linux";
 const LISTEN_RETRY_TIMEOUT = 20000;
 const LISTEN_RETRY_INTERVAL = 100;
 
@@ -161,7 +166,7 @@ const listen = (server, port, deadline) =>
 		};
 		server.once("error", onError);
 		server.once("listening", onListening);
-		server.listen(port);
+		server.listen({ port, reusePort: REUSE_PORT });
 	});
 
 class ServerPlugin {

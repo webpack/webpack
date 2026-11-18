@@ -1,0 +1,33 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"shortenSvgNumbers": true,
+		"shortenSvgPathData": true,
+		"applySvgTransforms": true
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"shortenSvgNumbers": true,
+		"shortenSvgPathData": true,
+		"applySvgTransforms": true,
+		"svgPrecision": 1
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"shortenSvgNumbers": true,
+		"applySvgTransforms": true
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"shortenSvgPathData": true,
+		"applySvgTransforms": true
+	}
+]

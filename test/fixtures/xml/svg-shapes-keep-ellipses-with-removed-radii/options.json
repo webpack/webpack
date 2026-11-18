@@ -1,0 +1,11 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"convertSvgShapes": true,
+		"removeSvgAttributes": [
+			"ellipse:ry"
+		]
+	}
+]

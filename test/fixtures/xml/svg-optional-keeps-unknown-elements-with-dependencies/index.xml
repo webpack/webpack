@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<style>test + rect { fill: red }</style>
+	<test/>
+	<rect width="1" height="1"/>
+</svg>

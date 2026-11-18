@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<style>[made-up] { fill: red }</style>
+	<rect width="1" height="1" made-up="1"/>
+	<rect width="1" height="1" onclick="go()"/>
+</svg>

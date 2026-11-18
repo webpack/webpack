@@ -1,0 +1,20 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"removeDeprecatedSvgAttributes": true
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"removeDeprecatedSvgAttributes": "unsafe"
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"removeDeprecatedSvgAttributes": false
+	}
+]

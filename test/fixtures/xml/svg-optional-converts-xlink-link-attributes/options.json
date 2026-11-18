@@ -5,5 +5,13 @@
 		"collapseWhitespace": true,
 		"removeSvgXlink": true,
 		"removeUnusedSvgNamespaces": true
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"removeSvgXlink": true,
+		"removeUnusedSvgNamespaces": true,
+		"removeSvgTitles": true
 	}
 ]

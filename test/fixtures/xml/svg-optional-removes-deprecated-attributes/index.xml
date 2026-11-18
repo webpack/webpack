@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">
+	<text xml:lang="en-CA" lang="en-US">both</text>
+	<text xml:lang="en-US">alone</text>
+	<text lang="fr">lang only</text>
+	<g xmlns:x="http://example.com/x" x:lang="kept"><text>other prefix</text></g>
+</svg>

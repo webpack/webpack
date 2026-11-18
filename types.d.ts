@@ -13974,7 +13974,15 @@ declare interface HtmlPrintOptions {
 	removeHiddenSvgElements?: boolean;
 	svgPrecision?: number;
 	convertSvgTransforms?: boolean;
+	applySvgTransforms?: boolean;
+	convertSvgCurvesToArcs?: boolean | "loose";
 	removeOffCanvasSvgPaths?: boolean;
+	removeUnknownSvgElements?: boolean;
+	removeUnknownSvgAttributes?: boolean | "unsafe";
+	removeDeprecatedSvgAttributes?: boolean | "unsafe";
+	collapseSvgAttributeWhitespace?: boolean;
+	svgAnglePrecision?: number;
+	inlineSvgStylePseudoClasses?: string[];
 	mergeDisjointSvgPaths?: boolean;
 	mergeSvgPaths?: boolean;
 	reuseSvgPaths?: boolean;
@@ -14203,6 +14211,46 @@ declare interface HtmlProcessOptions {
 	 * when minifying XML, merge adjacent paths of any shape with the same attributes whose bounds, stroke included, do not overlap; lossy, since anti-aliasing can blend a pixel both reach differently once merged (default false)
 	 */
 	mergeDisjointSvgPaths?: boolean;
+
+	/**
+	 * with `shortenSvgPathData`, bake each SVG path's `transform` into its points at `svgPrecision` decimals (3 when unset), scaling a stroke it scales; lossy (default false)
+	 */
+	applySvgTransforms?: boolean;
+
+	/**
+	 * with `shortenSvgPathData`, write SVG path cubic curves within `svgPrecision` decimals (3 when unset) of one circle as arcs of it, or with `"loose"` as svgo fits them, at quarter points and unrounded; lossy (default false)
+	 */
+	convertSvgCurvesToArcs?: boolean | "loose";
+
+	/**
+	 * when minifying XML, remove unprefixed attributes no SVG, ARIA or animation specification defines from SVG elements, keeping `data-`, `aria-`, `role` and event handlers, `role` too with `"unsafe"`; off where scripts or stylesheets depend on the document (default false)
+	 */
+	removeUnknownSvgAttributes?: boolean | "unsafe";
+
+	/**
+	 * when minifying XML, write `xml:lang` as `lang` in place of a `lang` it overrides, or with `"unsafe"` drop it (default false)
+	 */
+	removeDeprecatedSvgAttributes?: boolean | "unsafe";
+
+	/**
+	 * when minifying XML, trim every attribute value and collapse each run of whitespace in it to one space, `xmlns` included (default false)
+	 */
+	collapseSvgAttributeWhitespace?: boolean;
+
+	/**
+	 * with `convertSvgTransforms`, round the angle each transform turns by to this many decimal places, 0 to 15, before recomposing it (default unset)
+	 */
+	svgAnglePrecision?: number;
+
+	/**
+	 * with `inlineSvgStyles`, pseudo-classes, with or without their colon, to inline as if they always held (default none)
+	 */
+	inlineSvgStylePseudoClasses?: string[];
+
+	/**
+	 * when minifying XML, remove SVG-namespace elements no SVG specification defines, with their content, outside `switch`; off where scripts or stylesheets depend on the document (default false)
+	 */
+	removeUnknownSvgElements?: boolean;
 
 	/**
 	 * when minifying XML, remove unnamed paths whose bounds, stroke included, lie wholly outside the root `viewBox`, outside transforms, filters, markers and styles; lossy, since a viewport of another aspect ratio shows past the `viewBox` (default false)
@@ -26234,6 +26282,18 @@ declare interface OptimizationMinimizeOptions {
  */
 declare interface OptimizationMinimizeXml {
 	/**
+	 * With `convertTransforms`, round the angle each SVG transform turns by to this many decimal places, a whole number from 0 to 15, as svgo's `degPrecision` does, and recompose what remains within `precision`. Off by default because the drawing turns by what the rounding drops.
+	 * @since 5.113.0
+	 */
+	anglePrecision?: number;
+
+	/**
+	 * Bake each SVG path's `transform` into its path data, rounded to `precision` decimals (3 when unset), scaling a stroke the transform scales. Off by default because rounding moves points; skip paths with IDs, styles, markers, clip paths, masks, filters or `url()` paints, arcs under a skew, and documents with stylesheets, scripts or animations.
+	 * @since 5.113.0
+	 */
+	applyTransforms?: boolean;
+
+	/**
 	 * Remove SVG IDs nothing in the document references and rename the rest to the shortest names, rewriting `href`, `url()` and ID-list references. Off by default because a reference from outside the document, such as a sprite's `file.svg#icon` or a page's `getElementById`, stops resolving; skip stylesheets, scripts, animations, duplicate IDs, `xml:id` and DTDs.
 	 * @since 5.113.0
 	 */
@@ -26244,6 +26304,12 @@ declare interface OptimizationMinimizeXml {
 	 * @since 5.113.0
 	 */
 	cleanupStructure?: boolean;
+
+	/**
+	 * Trim every SVG attribute value and collapse each run of whitespace in it to one space, as svgo's `cleanupAttrs` does, `xmlns` included. Off by default because a value whose spaces mean something, such as a `data-` attribute or a namespace name, changes.
+	 * @since 5.113.0
+	 */
+	collapseAttributeWhitespace?: boolean;
 
 	/**
 	 * Remove whitespace-only text in known SVG containers, under `xml:space` too since that lays out text alone, preserving text content and foreign content. Off by default because scripts can observe whitespace nodes.
@@ -26258,6 +26324,12 @@ declare interface OptimizationMinimizeXml {
 	comments?: string | boolean | RegExp | ((comment: string) => boolean);
 
 	/**
+	 * With `shortenPathData`, write SVG path cubic curves that stay within `precision` decimals (3 when unset) of one circle as arcs of it, joining neighbors on the same circle, other cubics as quadratics within that error, and nearly flat circular arcs as lines. `"loose"` fits as svgo's `makeArcs` does instead: at a curve's quarter points, against its unrounded ends, writing the rounded radius unchecked, so arcs can stray past the precision. Off by default because the arc is a true circle, not the curve; skip documents with markers, stylesheets, scripts or animations.
+	 * @since 5.113.0
+	 */
+	convertCurvesToArcs?: boolean | "loose";
+
+	/**
 	 * Convert leaf SVG lines, polylines and polygons to shorter paths with identical coordinates and vertices, and equal-radius ellipses to circles. Off by default because consumers can observe element types; skip documents with stylesheets, scripts, animations or DTDs.
 	 * @since 5.113.0
 	 */
@@ -26268,6 +26340,12 @@ declare interface OptimizationMinimizeXml {
 	 * @since 5.113.0
 	 */
 	convertTransforms?: boolean;
+
+	/**
+	 * With `inlineStyles`, inline rules whose selectors use these pseudo-classes, such as `:hover`, as if they always held, as svgo's `usePseudos` does. Off by default because a style meant for a state then always applies.
+	 * @since 5.113.0
+	 */
+	inlineStylePseudoClasses?: string[];
 
 	/**
 	 * Move the rules of SVG stylesheets into the style attributes of the elements they match, in cascade order before each element's own, then drop the stylesheets and the classes they named, where every selector uses types, classes, IDs, attributes, tree-structural pseudo-classes or `:not()` and the result is no larger. Off by default because scripts and external CSS can observe classes and stylesheets.
@@ -26298,6 +26376,12 @@ declare interface OptimizationMinimizeXml {
 	 * @since 5.113.0
 	 */
 	removeAttributes?: string[];
+
+	/**
+	 * Write an SVG element's `xml:lang` as `lang` in place of a `lang` it overrides; `"unsafe"` drops `xml:lang` instead, as svgo's `removeUnsafe` does, losing the language it names. Off by default because SVG 1.1 readers know only `xml:lang`.
+	 * @since 5.113.0
+	 */
+	removeDeprecatedAttributes?: boolean | "unsafe";
 
 	/**
 	 * Remove SVG `desc` elements. Off by default because they describe the image for assistive technology.
@@ -26339,7 +26423,7 @@ declare interface OptimizationMinimizeXml {
 	};
 
 	/**
-	 * Remove empty `class`, `id` and `style` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.
+	 * Remove empty `class`, `id` and `style` attributes on SVG elements unless the DTD declares them, and other unprefixed empty SVG attributes that read as absent, keeping links, languages, conditional tests, ARIA, data and event attributes. Off by default because selectors and scripts can observe attribute presence.
 	 * @since 5.113.0
 	 */
 	removeEmptyAttributes?: boolean;
@@ -26387,6 +26471,18 @@ declare interface OptimizationMinimizeXml {
 	removeTitles?: boolean;
 
 	/**
+	 * Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping `data-`, `aria-`, `role` and event handler attributes; `"unsafe"` drops `role` too, as svgo does by default, though assistive technology reads it. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.
+	 * @since 5.113.0
+	 */
+	removeUnknownAttributes?: boolean | "unsafe";
+
+	/**
+	 * Remove SVG-namespace elements that no SVG specification defines, with their content, which renders nothing; a `switch` child stays. Off by default because scripts and CSS selectors outside the document can still find them.
+	 * @since 5.113.0
+	 */
+	removeUnknownElements?: boolean;
+
+	/**
 	 * Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.
 	 * @since 5.113.0
 	 */
@@ -26399,7 +26495,7 @@ declare interface OptimizationMinimizeXml {
 	removeViewBox?: boolean;
 
 	/**
-	 * Spell `xlink:href` as the SVG 2 `href` where an element has no `href`, a link's `xlink:show` as `target`, and drop `xlink:type="simple"`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only `xlink:href`.
+	 * Spell `xlink:href` as the SVG 2 `href` where an element has no `href`, a link's `xlink:show` as `target` and an `xlink:title` as a `title` child, and drop `xlink:type="simple"`, so the XLink namespace declaration can go. Off by default because browsers before SVG 2 read only `xlink:href`.
 	 * @since 5.113.0
 	 */
 	removeXlink?: boolean;
@@ -40613,11 +40709,24 @@ declare namespace exports {
 					unusedSymbols?: string[];
 					pseudoClasses?: { [index: string]: string };
 				} & CssTransformOptions;
+				renderEmbeddedSource?: (
+					source: string,
+					info: { type: string; hostType: string; as?: string }
+				) =>
+					| undefined
+					| string
+					| EmbeddedSourceResult
+					| Promise<undefined | string | EmbeddedSourceResult>;
 			}
-		): Promise<{ code: string; warnings?: string[]; errors?: Error[] }>;
+		): Promise<{
+			code: string;
+			warnings?: (string | Error)[];
+			errors?: (string | Error)[];
+		}>;
 		export namespace xmlMinify {
 			export let supportsWorkerThreads: () => boolean;
 			export let getTypes: () => string[];
+			export let getEmbeddedTypes: () => string[];
 			export let filter: (name: string) => boolean;
 		}
 		export { HtmlModulesPlugin };

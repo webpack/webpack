@@ -1,0 +1,2 @@
+<!DOCTYPE svg [<!ATTLIST rect onclick CDATA #IMPLIED>]>
+<svg xmlns="http://www.w3.org/2000/svg"><rect onclick=" declared ( ) " onmouseover=" offered ( ) "/></svg>

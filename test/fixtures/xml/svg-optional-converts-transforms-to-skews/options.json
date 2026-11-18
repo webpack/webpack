@@ -1,0 +1,15 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"shortenSvgNumbers": true,
+		"convertSvgTransforms": true
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"shortenSvgNumbers": true,
+		"convertSvgTransforms": true,
+		"svgPrecision": 1
+	}
+]

@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h10v10H0zM100 100h10v10h-10z" fill="red"/>
+<path d="M50 50h10v10H50z" fill="red"/>
+<path d="M0 200h10M30 200" stroke="red"/>
+<path d="M30 200h10" stroke="red"/>
+<path d="M0 300h10M30 300" stroke="red" stroke-linecap="round"/>
+<path d="M30 300h10" stroke="red" stroke-linecap="round"/>
+<g stroke-linecap="square"><path d="M0 400h10M30 400" stroke="red"/><path d="M30 400h10" stroke="red"/></g>
+<g style="stroke-linecap:round"><path d="M0 500h10M30 500" stroke="red"/><path d="M30 500h10" stroke="red"/></g>
+<path d="M0 600h10M100 600h10" fill="red"/>
+<path d="M5 600h10" fill="red"/>
+<path d="M0 700h10" stroke="red" vector-effect="non-scaling-stroke"/>
+<path d="M30 700h10" stroke="red" vector-effect="non-scaling-stroke"/>
+<path d="M0 800h1" fill="red"/>
+<path d="M3 800h1" fill="red"/>
+<path d="M6 800h1" fill="red"/>
+<path d="M9 800h1" fill="red"/>
+<path d="M12 800h1" fill="red"/>
+<path d="M15 800h1" fill="red"/>
+<path d="M18 800h1" fill="red"/>
+<path d="M21 800h1" fill="red"/>
+<path d="M24 800h1" fill="red"/>
+<path d="M27 800h1" fill="red"/>
+<path d="M30 800h1" fill="red"/>
+<path d="M33 800h1" fill="red"/>
+<path d="M36 800h1" fill="red"/>
+<path d="M39 800h1" fill="red"/>
+<path d="M42 800h1" fill="red"/>
+<path d="M45 800h1" fill="red"/>
+<path d="M48 800h1" fill="red"/>
+<path d="M51 800h1" fill="red"/>
+<path d="M54 800h1" fill="red"/>
+<path d="M57 800h1" fill="red"/>
+<path d="M60 800h1" fill="red"/>
+<path d="M63 800h1" fill="red"/>
+<path d="M66 800h1" fill="red"/>
+<path d="M69 800h1" fill="red"/>
+<path d="M72 800h1" fill="red"/>
+<path d="M75 800h1" fill="red"/>
+<path d="M78 800h1" fill="red"/>
+<path d="M81 800h1" fill="red"/>
+<path d="M84 800h1" fill="red"/>
+<path d="M87 800h1" fill="red"/>
+<path d="M90 800h1" fill="red"/>
+<path d="M93 800h1" fill="red"/>
+<path d="M96 800h1" fill="red"/>
+<path d="M99 800h1" fill="red"/>
+<path d="M102 800h1" fill="red"/>
+<path d="M105 800h1" fill="red"/>
+<path d="M108 800h1" fill="red"/>
+<path d="M111 800h1" fill="red"/>
+<path d="M114 800h1" fill="red"/>
+<path d="M117 800h1" fill="red"/>
+<path d="M120 800h1" fill="red"/>
+<path d="M123 800h1" fill="red"/>
+<path d="M126 800h1" fill="red"/>
+<path d="M129 800h1" fill="red"/>
+<path d="M132 800h1" fill="red"/>
+<path d="M135 800h1" fill="red"/>
+<path d="M138 800h1" fill="red"/>
+<path d="M141 800h1" fill="red"/>
+<path d="M144 800h1" fill="red"/>
+<path d="M147 800h1" fill="red"/>
+<path d="M150 800h1" fill="red"/>
+<path d="M153 800h1" fill="red"/>
+<path d="M156 800h1" fill="red"/>
+<path d="M159 800h1" fill="red"/>
+<path d="M162 800h1" fill="red"/>
+<path d="M165 800h1" fill="red"/>
+<path d="M168 800h1" fill="red"/>
+<path d="M171 800h1" fill="red"/>
+<path d="M174 800h1" fill="red"/>
+<path d="M177 800h1" fill="red"/>
+<path d="M180 800h1" fill="red"/>
+<path d="M183 800h1" fill="red"/>
+<path d="M186 800h1" fill="red"/>
+<path d="M189 800h1" fill="red"/>
+<path d="M192 800h1" fill="red"/>
+<path d="M195 800h1" fill="red"/>
+<path d="M198 800h1" fill="red"/>
+<path d="M201 800h1" fill="red"/>
+<path d="M204 800h1" fill="red"/>
+<path d="M207 800h1" fill="red"/>
+<g stroke="red" stroke-width="100"><path d="M0 1000v10M100 1000v10"/><path d="M50 1000v10"/></g>
+<path d="M0 1100A100 1 0 0 1 0 1120ZM1200 1100h1" fill="red"/>
+<path d="M500 1110h1v1z" fill="red"/>
+<path d="M0 1200A0 5 0 0 1 10 1200" fill="red"/>
+</svg>

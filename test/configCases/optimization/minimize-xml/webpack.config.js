@@ -215,6 +215,62 @@ module.exports = [
 		entry: "./disjoint.js",
 		optimization: { minimizeOptions: { xml: { mergeDisjointPaths: true } } }
 	}),
+	// A path's transform goes into its points, its stroke widened to match.
+	config("applied", {
+		entry: "./applied.js",
+		optimization: {
+			minimizeOptions: {
+				xml: {
+					shortenNumbers: true,
+					shortenPathData: true,
+					applyTransforms: true
+				}
+			}
+		}
+	}),
+	// A curve that keeps to one circle becomes an arc of it.
+	config("arcs", {
+		entry: "./arcs.js",
+		optimization: {
+			minimizeOptions: {
+				xml: {
+					shortenNumbers: true,
+					shortenPathData: true,
+					convertCurvesToArcs: true
+				}
+			}
+		}
+	}),
+	// An element no SVG specification defines goes with its content.
+	config("unknown", {
+		entry: "./unknown.js",
+		optimization: { minimizeOptions: { xml: { removeUnknownElements: true } } }
+	}),
+	// Scripts and event handlers reach the JavaScript minifier, styles the CSS one.
+	config("scripts", {
+		entry: "./scripts.js",
+		optimization: { minimizeOptions: { xml: { collapseWhitespace: true } } }
+	}),
+	// What svgo's lossier switches do, each opted into.
+	config("lossy", {
+		entry: "./lossy.js",
+		optimization: {
+			minimizeOptions: {
+				xml: {
+					shortenNumbers: true,
+					shortenPathData: true,
+					convertTransforms: true,
+					anglePrecision: 1,
+					convertCurvesToArcs: "loose",
+					inlineStyles: true,
+					inlineStylePseudoClasses: [":hover"],
+					removeUnknownAttributes: true,
+					removeDeprecatedAttributes: true,
+					collapseAttributeWhitespace: true
+				}
+			}
+		}
+	}),
 	config("structure", {
 		entry: "./structure.js",
 		optimization: {

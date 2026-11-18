@@ -1,0 +1,19 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"removeUnknownSvgAttributes": true
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"removeUnknownSvgAttributes": "unsafe"
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true
+	}
+]
