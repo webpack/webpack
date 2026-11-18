@@ -36600,22 +36600,6 @@ declare interface TsconfigPathsMap {
 }
 type TupleElement =
 	undefined | null | string | number | bigint | boolean | symbol | object;
-
-/**
- * Kept for `webpack.experiments.typescript.TypeScriptPlugin`. It does nothing:
- * with the JavaScript parser's `typescript` option on, which
- * `experiments.typescript` sets, the parser reads a TypeScript module's types
- * and skips them, and its code generation blanks them.
- * @deprecated the JavaScript parser's `typescript` option reads TypeScript itself
- */
-declare class TypeScriptPlugin {
-	constructor();
-
-	/**
-	 * Applies the plugin by registering its hooks on the compiler.
-	 */
-	apply(compiler: Compiler): void;
-}
 type TypedNode<TNode, T> = TNode & { readonly __nodeType: T };
 type TypedNodePath<TPath, TNode, P extends NodeParts, T, S = undefined> = Omit<
 	TPath,
@@ -41012,9 +40996,6 @@ declare namespace exports {
 		}
 		export namespace ids {
 			export { SyncModuleIdsPlugin };
-		}
-		export namespace typescript {
-			export { TypeScriptPlugin };
 		}
 	}
 	export type RuleSetUseFunction = (data: EffectData) =>
