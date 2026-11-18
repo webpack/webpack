@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add a `typescript` option to the JavaScript syntax parser that skips TypeScript's erasable syntax, as Node.js's type stripping does.
+Read TypeScript in the JavaScript parser, so `experiments.typescript` parses once and no longer needs Node.js's type stripping.

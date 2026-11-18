@@ -10868,7 +10868,7 @@ declare interface Experiments {
 	syncWebAssembly?: boolean;
 
 	/**
-	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
+	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when no loader is registered for TypeScript files.
 	 * @since 5.107.0
 	 * @experimental
 	 */
@@ -10957,7 +10957,7 @@ declare interface ExperimentsNormalized {
 	syncWebAssembly?: boolean;
 
 	/**
-	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
+	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when no loader is registered for TypeScript files.
 	 * @since 5.107.0
 	 * @experimental
 	 */
@@ -16467,6 +16467,11 @@ declare interface JavascriptParseOptions {
 	 * whether TypeScript's erasable syntax is read and skipped, as Node.js's type stripping removes it; the tree holds the JavaScript alone
 	 */
 	typescript?: boolean;
+
+	/**
+	 * with `typescript`, where to collect what was skipped, three numbers a range: its start, its end and the character its blanking writes at its start (0 for none), so blanking each range keeps the text the JavaScript the tree reads
+	 */
+	typeRanges?: number[];
 
 	/**
 	 * whether to record the names and scopes a scope analysis reads, on the tree; a log given is emptied and refilled, so one can serve every parse
@@ -36595,8 +36600,20 @@ declare interface TsconfigPathsMap {
 }
 type TupleElement =
 	undefined | null | string | number | bigint | boolean | symbol | object;
+
+/**
+ * Kept for `webpack.experiments.typescript.TypeScriptPlugin`. It does nothing:
+ * with the JavaScript parser's `typescript` option on, which
+ * `experiments.typescript` sets, the parser reads a TypeScript module's types
+ * and skips them, and its code generation blanks them.
+ * @deprecated the JavaScript parser's `typescript` option reads TypeScript itself
+ */
 declare class TypeScriptPlugin {
 	constructor();
+
+	/**
+	 * Applies the plugin by registering its hooks on the compiler.
+	 */
 	apply(compiler: Compiler): void;
 }
 type TypedNode<TNode, T> = TNode & { readonly __nodeType: T };
@@ -37649,6 +37666,7 @@ declare class WebpackParser extends SyntaxParser {
 			moduleFallback?: boolean;
 			syntaxTree?: ColumnarSyntaxTree;
 			typescript?: boolean;
+			typeRanges?: number[];
 		},
 		input: string,
 		startPos?: number

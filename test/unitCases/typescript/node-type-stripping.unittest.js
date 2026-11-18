@@ -3,6 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const { parser } = require("../../../lib/javascript/syntax");
+const TypeScriptTypesDependency = require("../../../lib/typescript/TypeScriptTypesDependency");
 const { fixture } = require("../../helpers/fixture");
 const { plain } = require("../../helpers/javascriptParse");
 
@@ -31,13 +32,15 @@ const stripTypeScriptTypes =
 /**
  * @param {string} source what to parse, as a module
  * @param {boolean} typescript whether TypeScript's syntax is skipped
+ * @param {number[]=} typeRanges where the skipped syntax is collected
  * @returns {Read} the tree, or the code of the first error
  */
-const read = (source, typescript) => {
+const read = (source, typescript, typeRanges) => {
 	/** @type {string | undefined} */
 	let code;
 	const program = parser.parseProgram(source, 0, {
 		typescript,
+		typeRanges,
 		parseError: (input, errorCode) => {
 			if (code === undefined) code = errorCode;
 		}
@@ -153,6 +156,33 @@ describe("TypeScript fixtures", () => {
 	for (const name of NAMES) {
 		describe(name, () => {
 			const source = fixture("typescript", name);
+
+			it("blanks into the JavaScript its tree reads", () => {
+				/** @type {number[]} */
+				const typeRanges = [];
+				const actual = read(source, true, typeRanges);
+				if (actual.tree === undefined) return;
+				let blanked = "";
+				let at = 0;
+				for (const [start, end, text] of TypeScriptTypesDependency.blanks(
+					source,
+					typeRanges
+				)) {
+					blanked += source.slice(at, start) + text;
+					at = end;
+				}
+				blanked += source.slice(at);
+				expect(blanked).toHaveLength(source.length);
+				const expected = read(blanked, false);
+				expect(expected.code).toBeUndefined();
+				const [left, right] = comparable(
+					source,
+					blanked,
+					/** @type {Record<string, unknown>} */ (expected.tree),
+					actual.tree
+				);
+				expect(treeText(right)).toBe(treeText(left));
+			});
 
 			it("parses into the tree the snapshot holds", () => {
 				const { tree, code } = read(source, true);
