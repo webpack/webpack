@@ -584,4 +584,25 @@ describe("lazyCompilationBackend on a shared server", () => {
 			await get(server, "/second");
 			expect(appCalls()).toBe(2);
 		}));
+
+	it("keeps a later once listener when an earlier listener throws", () => {
+		const server = new EventEmitter();
+		Object.assign(server, { listening: true, listen() {}, address() {} });
+		const later = jest.fn();
+		server.on("request", () => {
+			throw new Error("app failed");
+		});
+		server.once("request", later);
+		const shared = /** @type {Server} */ (/** @type {unknown} */ (server));
+		const api =
+			/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
+				startShared(shared, { urlBase: "http://localhost:1" }).started()
+			);
+		expect(() => server.emit("request", { url: "/first" }, {})).toThrow(
+			"app failed"
+		);
+		expect(later).not.toHaveBeenCalled();
+		api.dispose(() => {});
+		expect(server.listenerCount("request")).toBe(2);
+	});
 });
