@@ -37,6 +37,18 @@ function runsNothing(value) {
 		case 2:
 	}
 }
+function order(read) {
+	switch (1) {
+		case read():
+			console.log(111);
+			break;
+		case 1:
+			console.log(222);
+			break;
+		case 2:
+			console.log(333);
+	}
+}
 joined(true, false);
 joined(true, true);
 unlabeled(true, false);
@@ -45,3 +57,9 @@ written(2);
 written(true);
 runsNothing(1);
 runsNothing(2);
+order(function () {
+	return 1;
+});
+order(function () {
+	return 2;
+});
