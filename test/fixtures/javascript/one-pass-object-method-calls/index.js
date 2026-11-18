@@ -7,6 +7,23 @@ console.log({ q: 1, p: () => 42 }.p());
 console.log({ p: function (x) { return x * 2; } }.p(21));
 ({ p: function () { log.push("statement"); } }).p();
 console.log(log.join());
+// So does one read off a name the literal moves to, read once.
+function moved(x) {
+	var o = { p: function (y) { return y * 2; } };
+	return o.p(x);
+}
+console.log(moved(21));
+function movedStatement() {
+	var o = { p: function () { log.push("moved"); } };
+	o.p();
+}
+movedStatement();
+function movedObject() {
+	var o = { p: function () { return { a: 1 }; } };
+	return o.p().a;
+}
+console.log(movedObject());
+console.log(log.join());
 // A function reading `this`, a value that runs, a getter, a method or the
 // prototype a literal sets keeps the call.
 console.log({ p: function () { return this.q; }, q: 1 }.p());
