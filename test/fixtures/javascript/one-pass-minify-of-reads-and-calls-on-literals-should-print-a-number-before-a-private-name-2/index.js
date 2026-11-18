@@ -1,0 +1,1 @@
+var log = []; class C { #x = 1; static read() { try { return 123/*! kept */.#x; } catch (e) { return e.name; } } } log.push(C.read(), 123/*! kept */.toFixed(1), 1.5/*! kept */.toFixed(2)); console.log(log.join());
