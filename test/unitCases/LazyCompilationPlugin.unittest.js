@@ -103,6 +103,39 @@ describe("LazyCompilationPlugin.getCompilerHooks", () => {
 		expect(listen).not.toHaveBeenCalled();
 	});
 
+	it("stops compile() before make when a tap finishes after the compiler closed", async () => {
+		const compiler = webpack({
+			mode: "development",
+			context: __dirname,
+			entry: "./entry-is-never-built",
+			experiments: { lazyCompilation: true },
+			infrastructureLogging: { level: "none" }
+		});
+		const make = jest.fn();
+		compiler.hooks.make.tap("test", make);
+		/** @type {() => void} */
+		let release = () => {};
+		LazyCompilationPlugin.getCompilerHooks(compiler).backendOptions.tapPromise(
+			"test",
+			(options) =>
+				new Promise((resolve) => {
+					release = () => resolve(options);
+				})
+		);
+		/** @type {Promise<void>} */
+		const compiled = new Promise((resolve, reject) => {
+			compiler.compile((err) => (err ? reject(err) : resolve()));
+		});
+		await new Promise((resolve, reject) => {
+			compiler.close((err) => (err ? reject(err) : resolve(undefined)));
+		});
+		release();
+		await expect(compiled).rejects.toThrow(
+			"Lazy compilation backend started after the compiler was closed"
+		);
+		expect(make).not.toHaveBeenCalled();
+	});
+
 	it("disposes a custom backend that starts after the compiler closed", async () => {
 		/** @type {((err: Error | null, api?: EXPECTED_ANY) => void) | undefined} */
 		let finish;

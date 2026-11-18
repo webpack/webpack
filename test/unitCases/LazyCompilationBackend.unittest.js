@@ -437,21 +437,22 @@ describe("lazyCompilationBackend on a shared server", () => {
 			})
 	);
 
-	it.each(["https://localhost:8080", "https://localhost:8080/"])(
-		"starts at once on a server not yet listening when given the urlBase %s",
-		async (urlBase) => {
-			const server = http.createServer();
-			const api =
-				/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
-					startShared(server, { urlBase }).started()
+	it.each(["", "/"])(
+		"serves lazy urls on a server not yet listening given a urlBase ending in %j",
+		(slash) =>
+			withServer(async (server) => {
+				const urlBase = urlOf(server);
+				const api =
+					/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
+						startShared(server, { urlBase: urlBase + slash }).started()
+					);
+				const { client, data: key } = api.module(makeModule("mod-a"));
+				expect(await get(server, prefixOf(client, urlBase) + key)).toEqual(
+					expect.objectContaining({ status: 200, type: "text/event-stream" })
 				);
-			prefixOf(
-				api.module(makeModule("mod-a")).client,
-				"https://localhost:8080"
-			);
-			await dispose(api);
-			expect(server.listenerCount("request")).toBe(0);
-		}
+				await dispose(api);
+				expect(server.listenerCount("request")).toBe(1);
+			})
 	);
 
 	it("waits for a server not yet listening without a urlBase", () => {
