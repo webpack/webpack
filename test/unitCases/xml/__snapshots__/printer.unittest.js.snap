@@ -42,7 +42,7 @@ exports[`SourceProcessor — SVG minification should resolve editor namespaces b
 
 exports[`SourceProcessor — SVG minification should resolve namespace aliases and preserve generic and foreign XML 1`] = `"<root xmlns:s=\\"http://www.w3.org/2000/svg\\"> <s:svg><s:g/><s:g xmlns:s=\\"urn:foreign\\"> <svg xmlns=\\"http://www.w3.org/2000/svg\\"> <g> </g> </svg> </s:g><g> </g><s:g> </s:g></s:svg> </root>"`;
 
-exports[`SourceProcessor — SVG minification should retain precision, negative zero, units and exponent spellings 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><rect x=\\"9007199254740993\\" y=\\"-0\\" width=\\".123456789123456789\\" height=\\"+000.00e+03\\"/><path pathLength=\\"001px\\" d=\\"M000.00 000.00L001.00 002.00\\"/><polyline points=\\"001e+02 +002.00E-02\\"/></svg>"`;
+exports[`SourceProcessor — SVG minification should retain precision, negative zero, units and inexact exponent spellings 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><rect x=\\"9007199254740993\\" y=\\"-0\\" width=\\".123456789123456789\\" height=\\"0\\"/><path pathLength=\\"001px\\" d=\\"M000.00 000.00L001.00 002.00\\"/><polyline points=\\"100 +002.00E-02\\"/></svg>"`;
 
 exports[`SourceProcessor — SVG minification should reuse empty-attribute removal without HTML entity decoding or SVG defaults 1`] = `"<root class=\\"\\" id=\\"\\" style=\\"\\"/>"`;
 

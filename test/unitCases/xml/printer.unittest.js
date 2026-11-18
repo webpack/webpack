@@ -265,11 +265,11 @@ describe("SourceProcessor — SVG minification", () => {
 		expect((await new SourceProcessor().processAsync(source, { ...options, renderEmbeddedSource: async (source, info) => render(source, info) })).code).toBe(once);
 	});
 
-	it("should shorten full transform lists without folding or changing exponent notation", () => {
+	it("should shorten full transform lists and fold integer exponents every engine reads exactly", () => {
 		const value = ' matrix(+001.00, 000.00, 000.00, 001.00, 010.00, -000.00), translate(+001.00e+02, 002.00) scale(001.00) rotate(090.00, 000, 000) skewX(001.00)skewY(-001.00) ';
 		const source = fixture("xml", "source-processor-svg-minification-should-shorten-full-transform-lists-without");
 		const once = new SourceProcessor().process(source, compact).code;
-		expect(once).toBe(`<svg xmlns="${svg}"><g transform="translate(10) translate(+001.00e+02 2) rotate(90) skewX(1) skewY(-1)"/></svg>`);
+		expect(once).toBe(`<svg xmlns="${svg}"><g transform="translate(110 2) rotate(90) skewX(1) skewY(-1)"/></svg>`);
 		expect(new SourceProcessor().process(once, compact).code).toBe(once);
 	});
 
@@ -295,8 +295,8 @@ describe("SourceProcessor — SVG minification", () => {
 			' d="M.3.1A1 1 0 01.7.4"',
 			' d="M.3.1A1 1 0 01.3.1"',
 			' d="M.3.1a1 1 0 010 0"',
-			' d="M.3.1l1e1.2"',
-			' d="M1e1.1.3.2"',
+			' d="M.3.1l10 .2"',
+			' d="M10 .1.3.2"',
 			' d="M.1 0H12345678901234567.5"',
 			' d="M1.000000059604645 0H.3"',
 			' d="M0 0H999999999999999999999999999999999999999 .3"',
@@ -538,7 +538,7 @@ describe("SourceProcessor — SVG minification", () => {
 		expect(processor.process(fixture("xml", "source-processor-svg-minification-should-preserve-unsupported-presentation-values-5"), { ...compact, xml: false }).code).toContain('opacity=+000.50');
 	});
 
-	it("should retain precision, negative zero, units and exponent spellings", () => {
+	it("should retain precision, negative zero, units and inexact exponent spellings", () => {
 		const source = fixture("xml", "source-processor-svg-minification-should-retain-precision-negative-zero-units-and");
 		const options = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true };
 		const once = new SourceProcessor().process(source, options).code;

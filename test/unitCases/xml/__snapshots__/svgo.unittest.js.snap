@@ -117,7 +117,7 @@ svgo-convert-path-data-42: webpack 99, svgo 99, gap 0
 svgo-convert-path-data-43: webpack 118, svgo 118, gap 0
 svgo-convert-shape-to-path-01: webpack 418, svgo 393, gap 25
 svgo-convert-shape-to-path-02: webpack 157, svgo 157, gap 0
-svgo-convert-shape-to-path-03: webpack 376, svgo 322, gap 54
+svgo-convert-shape-to-path-03: webpack 370, svgo 322, gap 48
 svgo-convert-shape-to-path-04: webpack 108, svgo 144, gap -36
 svgo-convert-shape-to-path-05: webpack 406, svgo 443, gap -37
 svgo-convert-style-to-attrs-01: webpack 102, svgo 124, gap -22
@@ -171,7 +171,7 @@ svgo-merge-paths-02: webpack 725, svgo 355, gap 370
 svgo-merge-paths-03: webpack 438, svgo 412, gap 26
 svgo-merge-paths-04: webpack 1242, svgo 1248, gap -6
 svgo-merge-paths-05: webpack 676, svgo 683, gap -7
-svgo-merge-paths-06: webpack 885, svgo 808, gap 77
+svgo-merge-paths-06: webpack 625, svgo 808, gap -183
 svgo-merge-paths-07: webpack 526, svgo 566, gap -40
 svgo-merge-paths-08: webpack 530, svgo 597, gap -67
 svgo-merge-paths-09: webpack 650, svgo 717, gap -67
@@ -205,8 +205,8 @@ svgo-minify-styles-11: webpack 205, svgo 84, gap 121
 svgo-move-elems-attrs-to-group-01: webpack 249, svgo 184, gap 65
 svgo-move-elems-attrs-to-group-02: webpack 86, svgo 75, gap 11
 svgo-move-elems-attrs-to-group-03: webpack 162, svgo 162, gap 0
-svgo-move-elems-attrs-to-group-04: webpack 392, svgo 348, gap 44
-svgo-move-elems-attrs-to-group-06: webpack 133, svgo 142, gap -9
+svgo-move-elems-attrs-to-group-04: webpack 341, svgo 348, gap -7
+svgo-move-elems-attrs-to-group-06: webpack 119, svgo 142, gap -23
 svgo-move-elems-attrs-to-group-07: webpack 351, svgo 365, gap -14
 svgo-move-elems-attrs-to-group-08: webpack 380, svgo 393, gap -13
 svgo-move-group-attrs-to-elems-01: webpack 171, svgo 171, gap 0
@@ -382,5 +382,5 @@ svgo-sort-attrs-02: webpack 63, svgo 63, gap 0
 svgo-sort-attrs-03: webpack 158, svgo 160, gap -2
 svgo-sort-attrs-04: webpack 232, svgo 261, gap -29
 svgo-sort-defs-children-01: webpack 413, svgo 415, gap -2
-total: webpack 107192, svgo 104068"
+total: webpack 106861, svgo 104068"
 `;

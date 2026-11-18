@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<g opacity=".5" filter="url(#f)" data-x="1"><path fill="red" d="M0 0h1"/><path fill="red" d="M0 0v1"/></g>
+<defs><filter id="f"><feFlood flood-color="red"/></filter></defs>
+<g filter="url(#f)" opacity=".5"><path fill="red" stroke="blue" d="M0 0h1"/><path fill="red" stroke="blue" stroke-width="2" d="M0 0v1"/></g>
+<g style="fill:url(#p)"><path fill="red" d="M0 0h1"/><path fill="red" d="M0 0v1"/></g>
+<g opacity=".5"><path fill="red" d="M0 0h1"/><path fill="red" d="M0 0v1"/></g>
+</svg>

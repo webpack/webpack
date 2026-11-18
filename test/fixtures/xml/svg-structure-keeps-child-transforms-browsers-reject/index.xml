@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<g transform="translate(10)"><path transform="translate(0e999)" d="M0 0h1"/><path transform="translate(0e999)" d="M0 0h2"/></g>
+<g transform="translate(4e38)"><path transform="translate(1)" d="M0 0h1"/><path transform="translate(1)" d="M0 0h2"/></g>
+<g transform="translate(10)"><path transform="translate(1e38)" d="M0 0h1"/><path transform="translate(1e38)" d="M0 0h2"/></g>
+<g transform="translate(10)"><path transform="translate(0e999)" d="M0 0h1"/></g>
+<g transform="translate(0e999)"><path transform="translate(1)" d="M0 0h1"/></g>
+<g transform="translate(10)"><path transform="translate(1e38)" d="M0 0h1"/></g>
+</svg>
