@@ -54,3 +54,11 @@ function folds(x) {
 	return typeof missingCallee == "function" ? missingCallee(a) : a;
 }
 console.log(folds(1), folds(2));
+// A known global's read throws nothing: a value folds past it as before.
+function every(step) {
+	step = Math.floor(step);
+	return !isFinite(step) ? null : function (n) {
+		return n * step;
+	};
+}
+console.log(every(2.5)(3), every(Infinity));
