@@ -13978,7 +13978,7 @@ declare interface HtmlPrintOptions {
 	convertSvgCurvesToArcs?: boolean | "loose";
 	removeOffCanvasSvgPaths?: boolean;
 	removeUnknownSvgElements?: boolean;
-	removeUnknownSvgAttributes?: boolean;
+	removeUnknownSvgAttributes?: boolean | "unsafe";
 	removeDeprecatedSvgAttributes?: boolean | "unsafe";
 	collapseSvgAttributeWhitespace?: boolean;
 	svgAnglePrecision?: number;
@@ -14223,9 +14223,9 @@ declare interface HtmlProcessOptions {
 	convertSvgCurvesToArcs?: boolean | "loose";
 
 	/**
-	 * when minifying XML, remove unprefixed attributes no SVG, ARIA or animation specification defines from SVG elements, keeping `data-`, `aria-`, `role` and event handlers; off where scripts or stylesheets depend on the document (default false)
+	 * when minifying XML, remove unprefixed attributes no SVG, ARIA or animation specification defines from SVG elements, keeping `data-`, `aria-`, `role` and event handlers, `role` too with `"unsafe"`; off where scripts or stylesheets depend on the document (default false)
 	 */
-	removeUnknownSvgAttributes?: boolean;
+	removeUnknownSvgAttributes?: boolean | "unsafe";
 
 	/**
 	 * when minifying XML, write `xml:lang` as `lang` in place of a `lang` it overrides, or with `"unsafe"` drop it (default false)
@@ -26456,10 +26456,10 @@ declare interface OptimizationMinimizeXml {
 	removeTitles?: boolean;
 
 	/**
-	 * Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping `data-`, `aria-`, `role` and event handler attributes. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.
+	 * Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping `data-`, `aria-`, `role` and event handler attributes; `"unsafe"` drops `role` too, as svgo does by default, though assistive technology reads it. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.
 	 * @since 5.113.0
 	 */
-	removeUnknownAttributes?: boolean;
+	removeUnknownAttributes?: boolean | "unsafe";
 
 	/**
 	 * Remove SVG-namespace elements that no SVG specification defines, with their content, which renders nothing; a `switch` child stays. Off by default because scripts and CSS selectors outside the document can still find them.
@@ -40696,11 +40696,24 @@ declare namespace exports {
 					unusedSymbols?: string[];
 					pseudoClasses?: { [index: string]: string };
 				} & CssTransformOptions;
+				renderEmbeddedSource?: (
+					source: string,
+					info: { type: string; hostType: string; as?: string }
+				) =>
+					| undefined
+					| string
+					| EmbeddedSourceResult
+					| Promise<undefined | string | EmbeddedSourceResult>;
 			}
-		): Promise<{ code: string; warnings?: string[]; errors?: Error[] }>;
+		): Promise<{
+			code: string;
+			warnings?: (string | Error)[];
+			errors?: (string | Error)[];
+		}>;
 		export namespace xmlMinify {
 			export let supportsWorkerThreads: () => boolean;
 			export let getTypes: () => string[];
+			export let getEmbeddedTypes: () => string[];
 			export let filter: (name: string) => boolean;
 		}
 		export { HtmlModulesPlugin };

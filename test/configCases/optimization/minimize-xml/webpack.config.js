@@ -246,6 +246,11 @@ module.exports = [
 		entry: "./unknown.js",
 		optimization: { minimizeOptions: { xml: { removeUnknownElements: true } } }
 	}),
+	// Scripts and event handlers reach the JavaScript minifier, styles the CSS one.
+	config("scripts", {
+		entry: "./scripts.js",
+		optimization: { minimizeOptions: { xml: { collapseWhitespace: true } } }
+	}),
 	// What svgo's lossier switches do, each opted into.
 	config("lossy", {
 		entry: "./lossy.js",

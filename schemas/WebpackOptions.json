@@ -4773,8 +4773,15 @@
           "added": "5.113.0"
         },
         "removeUnknownAttributes": {
-          "description": "Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping `data-`, `aria-`, `role` and event handler attributes. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.",
-          "type": "boolean",
+          "description": "Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping `data-`, `aria-`, `role` and event handler attributes; `\"unsafe\"` drops `role` too, as svgo does by default, though assistive technology reads it. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.",
+          "anyOf": [
+            {
+              "enum": ["unsafe"]
+            },
+            {
+              "type": "boolean"
+            }
+          ],
           "added": "5.113.0"
         },
         "removeUnknownElements": {

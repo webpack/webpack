@@ -3677,10 +3677,10 @@ export interface OptimizationMinimizeXml {
 	 */
 	removeTitles?: boolean;
 	/**
-	 * Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping `data-`, `aria-`, `role` and event handler attributes. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.
+	 * Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping `data-`, `aria-`, `role` and event handler attributes; `"unsafe"` drops `role` too, as svgo does by default, though assistive technology reads it. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.
 	 * @since 5.113.0
 	 */
-	removeUnknownAttributes?: boolean;
+	removeUnknownAttributes?: "unsafe" | boolean;
 	/**
 	 * Remove SVG-namespace elements that no SVG specification defines, with their content, which renders nothing; a `switch` child stays. Off by default because scripts and CSS selectors outside the document can still find them.
 	 * @since 5.113.0

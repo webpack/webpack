@@ -16,6 +16,46 @@ describe("xmlMinify", () => {
 		expect(xmlMinify.filter("image.svg.map")).toBe(false);
 		expect(xmlMinify.filter("image.svg.gz")).toBe(false);
 		expect(xmlMinify.filter("page.html")).toBe(false);
+		expect(xmlMinify.getEmbeddedTypes()).toContain("javascript");
+	});
+
+	it("should offer scripts and event handlers to the caller's renderer first", async () => {
+		const source = fixture("xml", "xml-minify-offers-scripts-and-handlers");
+		/** @type {string[]} */
+		const offered = [];
+		const { code, warnings } = await xmlMinify({ "a.svg": source }, undefined, {
+			collapseWhitespace: true,
+			renderEmbeddedSource: async (body, info) => {
+				offered.push(`${info.type} ${info.as}`);
+				if (info.type !== "javascript") return undefined;
+				return info.as === "event-handler"
+					? { code: "go()", warnings: ["heard"] }
+					: "run()";
+			}
+		});
+		expect(offered).toEqual([
+			"javascript event-handler",
+			"css embedded-stylesheet",
+			"javascript script",
+			"javascript script",
+			"css block-contents",
+			"javascript event-handler"
+		]);
+		// The built-in renderer answers the styles the caller declines.
+		expect(code).toMatchSnapshot();
+		expect(warnings).toEqual(["heard", "heard"]);
+	});
+
+	it("should leave a body as written where the caller's renderer fails on it", async () => {
+		const source = fixture("xml", "xml-minify-offers-scripts-and-handlers");
+		const { code, errors } = await xmlMinify({ "a.svg": source }, undefined, {
+			renderEmbeddedSource: (body, info) => {
+				if (info.type === "javascript") throw new Error("failing");
+				return undefined;
+			}
+		});
+		expect(code).toContain("greet ( name )");
+		expect(errors).toHaveLength(4);
 	});
 
 	it("takes the minimizer options as optional", async () => {
@@ -23,6 +63,54 @@ describe("xmlMinify", () => {
 				"a.svg": fixture("xml", "xml-minify-takes-the-minimizer-options-as-optional")
 			}, undefined);
 		expect(code).toMatchSnapshot();
+	});
+});
+
+describe("XML scripts and event handlers", () => {
+	it("should offer JavaScript bodies an SVG or XHTML document runs, as HTML does", () => {
+		/** @type {string[]} */
+		const offered = [];
+		const { SourceProcessor } = webpack.html.syntax;
+		const { code } = new SourceProcessor().process(
+			fixture("xml", "xml-printer-offers-scripts-and-handlers"),
+			{
+				xml: true,
+				mode: "minify",
+				collapseWhitespace: true,
+				renderEmbeddedSource: (body, info) => {
+					offered.push(`${info.as} ${body.trim()}`);
+					// Longer than the source, so a handler stays as written.
+					return body.trim() === "x" ? "x;" : "JS";
+				}
+			}
+		);
+		expect(offered).toEqual([
+			"event-handler long ( )",
+			"event-handler x",
+			"module import ( \"a\" )",
+			"script prefixed ( )",
+			"event-handler begun ( )",
+			"event-handler pick ( 'a' , \"b\" )"
+		]);
+		expect(code).toMatchSnapshot();
+	});
+
+	it("should keep a handler whose spelling a DTD declares", () => {
+		const { SourceProcessor } = webpack.html.syntax;
+		/** @type {string[]} */
+		const offered = [];
+		new SourceProcessor().process(
+			fixture("xml", "xml-printer-keeps-declared-handlers"),
+			{
+				xml: true,
+				mode: "minify",
+				renderEmbeddedSource: (body) => {
+					offered.push(body.trim());
+					return "JS";
+				}
+			}
+		);
+		expect(offered).toEqual(["offered ( )"]);
 	});
 });
 

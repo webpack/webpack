@@ -30,6 +30,7 @@ const NAMES = [
 	"applied",
 	"arcs",
 	"unknown",
+	"scripts",
 	"lossy",
 	"structure"
 ];

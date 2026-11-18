@@ -13520,15 +13520,24 @@ Object {
   "optimization-minimize-options-xml-remove-unknown-attributes": Object {
     "configs": Array [
       Object {
-        "description": "Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping \`data-\`, \`aria-\`, \`role\` and event handler attributes. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.",
+        "description": "Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping \`data-\`, \`aria-\`, \`role\` and event handler attributes; \`\\"unsafe\\"\` drops \`role\` too, as svgo does by default, though assistive technology reads it. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeUnknownAttributes",
+        "type": "enum",
+        "values": Array [
+          "unsafe",
+        ],
+      },
+      Object {
+        "description": "Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping \`data-\`, \`aria-\`, \`role\` and event handler attributes; \`\\"unsafe\\"\` drops \`role\` too, as svgo does by default, though assistive technology reads it. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.",
         "multiple": false,
         "path": "optimization.minimizeOptions.xml.removeUnknownAttributes",
         "type": "boolean",
       },
     ],
-    "description": "Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping \`data-\`, \`aria-\`, \`role\` and event handler attributes. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.",
+    "description": "Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping \`data-\`, \`aria-\`, \`role\` and event handler attributes; \`\\"unsafe\\"\` drops \`role\` too, as svgo does by default, though assistive technology reads it. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "optimization-minimize-options-xml-remove-unknown-elements": Object {
     "configs": Array [
@@ -14187,15 +14196,24 @@ Object {
   "optimization-minimize-xml-remove-unknown-attributes": Object {
     "configs": Array [
       Object {
-        "description": "Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping \`data-\`, \`aria-\`, \`role\` and event handler attributes. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.",
+        "description": "Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping \`data-\`, \`aria-\`, \`role\` and event handler attributes; \`\\"unsafe\\"\` drops \`role\` too, as svgo does by default, though assistive technology reads it. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeUnknownAttributes",
+        "type": "enum",
+        "values": Array [
+          "unsafe",
+        ],
+      },
+      Object {
+        "description": "Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping \`data-\`, \`aria-\`, \`role\` and event handler attributes; \`\\"unsafe\\"\` drops \`role\` too, as svgo does by default, though assistive technology reads it. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.",
         "multiple": false,
         "path": "optimization.minimize.xml.removeUnknownAttributes",
         "type": "boolean",
       },
     ],
-    "description": "Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping \`data-\`, \`aria-\`, \`role\` and event handler attributes. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.",
+    "description": "Remove unprefixed attributes that no SVG, ARIA or animation specification defines from the SVG elements, keeping \`data-\`, \`aria-\`, \`role\` and event handler attributes; \`\\"unsafe\\"\` drops \`role\` too, as svgo does by default, though assistive technology reads it. Off by default because scripts and CSS outside the document can read them; skip documents with stylesheets or scripts.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "optimization-minimize-xml-remove-unknown-elements": Object {
     "configs": Array [
