@@ -29,6 +29,7 @@ module.exports = {
 					ast: /** @type {ParseResult["ast"]} */ (
 						acorn.parse(code, {
 							sourceType: options.sourceType,
+							allowReturnOutsideFunction: options.allowReturnOutsideFunction,
 							ecmaVersion: "latest",
 							ranges: true
 						})
