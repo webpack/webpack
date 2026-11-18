@@ -1,0 +1,12 @@
+var object = {};
+object[1 / 0] = "infinity";
+object[-1 / 0] = "negative infinity";
+object[void 0] = "undefined";
+object[3.14] = "pi";
+object[-0.5] = "negative half";
+object[1e21] = "large";
+console.log(object.Infinity, object["Infinity"], object["-Infinity"]);
+console.log(object.undefined, object["undefined"]);
+console.log(object["3.14"], object["-0.5"], object["1e+21"], object["1e21"]);
+console.log(object["0.50"], object["-0"], object["01"]);
+console.log("text"["undefined"], "text"["3.14"]);
