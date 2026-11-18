@@ -27,5 +27,9 @@ module.exports = [
 	// The XML minimizer futureDefaults turns on minifies them.
 	config("future", {}),
 	// Turned off, they are left as written.
-	config("disabled", { optimization: { minimizeOptions: { xml: false } } })
+	config("disabled", { optimization: { minimizeOptions: { xml: false } } }),
+	// Their comments follow `minimize.xml.comments`, as a `.svg` asset's do.
+	config("comments", {
+		optimization: { minimizeOptions: { xml: { comments: "all" } } }
+	})
 ];

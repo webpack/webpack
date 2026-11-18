@@ -22,6 +22,8 @@ const NAMES = [
 	"symbols",
 	"constraints",
 	"optional",
+	"uncommented",
+	"commented",
 	"structure"
 ];
 

@@ -186,6 +186,16 @@ module.exports = [
 			}
 		}
 	}),
+	// `false` drops the legal notice "some" keeps, and "all" keeps every comment.
+	...[
+		{ name: "uncommented", comments: false },
+		{ name: "commented", comments: "all" }
+	].map(({ name, comments }) =>
+		config(name, {
+			entry: "./comments.js",
+			optimization: { minimizeOptions: { xml: { comments } } }
+		})
+	),
 	config("structure", {
 		entry: "./structure.js",
 		optimization: {

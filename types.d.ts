@@ -26219,6 +26219,12 @@ declare interface OptimizationMinimizeXml {
 	collapseWhitespace?: boolean;
 
 	/**
+	 * Which comments survive. `"some"`, the default, keeps an XML legal notice: a comment opening with `!` or annotated `@license` or `@preserve`; `true` (or `"all"`) keeps every comment and `false` keeps none; a string is read as a regular expression source, and it, a `RegExp` or a `(comment) => boolean` predicate is asked about each comment's own text and keeps the ones it accepts, standing in for the default rule rather than beside it. A `<?…?>` processing instruction is no comment and stays whatever this says. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.
+	 * @since 5.113.0
+	 */
+	comments?: string | boolean | RegExp | ((comment: string) => boolean);
+
+	/**
 	 * Convert leaf SVG lines, polylines and polygons to shorter paths with identical coordinates and vertices, and equal-radius ellipses to circles. Off by default because consumers can observe element types; skip documents with stylesheets, scripts, animations or DTDs.
 	 * @since 5.113.0
 	 */
