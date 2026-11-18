@@ -1342,6 +1342,14 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should keep a derived constructor's `this` before `super()` ahead of a folded value", () => {
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-into-a-spread-2");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// The read throws before `super()`, so the value it would fold past runs first.
+		expect(code).toBe('var log=[];function make(){log.push("make");return[1]}for(let C of[class extends Object{constructor(){let items=make();return[this,...items]}},class extends Object{constructor(){let items=make();return{a:this,...items}}},class extends Object{constructor(){let item=make();return[this,item]}}])try{new C}catch(e){log.push(e.name)}console.log(log.join());');
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should keep only what the computed keys and values of an unread object run", () => {
 		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the");
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toMatchSnapshot();
