@@ -4,6 +4,7 @@
 <path d="M0 0h10v10H0z"/>
 <path d="M0 0h10v10H0zm20 0h10v10z"/>
 <path d="M0 0h10v10zl5 5 5-5"/>
+<path d="M0 0h10v10L0 0zl5 5 5-5"/>
 <path d="M0 0h10l0 0v10q0 0 0 0c0 0 0 0 0 0a5 5 0 0 1 0 0z"/>
 <path d="M0 0m10 10h5m5 5"/>
 <path d="M0 0h10v10L0 0M20 0h5v5"/>
@@ -16,6 +17,8 @@
 <path d="M0 0h10v10H0z" pointer-events="stroke"/>
 <path d="M0 0h10v10H0z" pointer-events="visiblePainted"/>
 <path d="M0 0m10 10h5" fill="url(#paint)"/>
+<g stroke="red"><path d="M10 10H30V30Z" stroke=""/></g>
+<g id="icon"><path d="M0 0h10v10H0z"/></g>
 <path d="M0 0h10v10H0z" id="named"/>
 <path d="M0 0h10v10H0z" pathLength="10"/>
 <path d="M0 0h10v10H0z" marker-start="url(#m)"/>

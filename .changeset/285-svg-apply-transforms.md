@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `optimization.minimizeOptions.xml.applyTransforms` to bake path transforms.
+Add the XML `applyTransforms` option and drop path segments a close repeats.

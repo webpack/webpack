@@ -1,0 +1,4 @@
+<!DOCTYPE svg [<!ATTLIST path d CDATA #FIXED "M0-1l-1-1">]>
+<svg xmlns="http://www.w3.org/2000/svg">
+<path d="M0-1l-1-1"/>
+</svg>
