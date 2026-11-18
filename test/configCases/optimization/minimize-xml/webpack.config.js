@@ -241,6 +241,11 @@ module.exports = [
 			}
 		}
 	}),
+	// An element no SVG specification defines goes with its content.
+	config("unknown", {
+		entry: "./unknown.js",
+		optimization: { minimizeOptions: { xml: { removeUnknownElements: true } } }
+	}),
 	config("structure", {
 		entry: "./structure.js",
 		optimization: {

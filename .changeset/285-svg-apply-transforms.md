@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add XML `applyTransforms` and `convertCurvesToArcs` and shrink SVG paths.
+Add XML `applyTransforms`, `convertCurvesToArcs` and `removeUnknownElements`, and shrink SVG paths.

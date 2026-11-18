@@ -209,4 +209,11 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 </svg>"
 `;
 
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: unknown 1`] = `
+"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+	
+	<rect width=\\"10\\" height=\\"10\\"/>
+</svg>"
+`;
+
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: whitespace 1`] = `"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:data=\\"urn:application\\" xmlns:e=\\"http://www.inkscape.org/namespaces/inkscape\\"><title>Accessible title</title><desc>Accessible description</desc><metadata><path d=\\"M1 1H3V3Z\\" id=\\"metadata-shape\\"/></metadata><e:view><path d=\\"M4 4H6V6Z\\" id=\\"editor-shape\\"/></e:view><use href=\\"#metadata-shape\\"/><use href=\\"#editor-shape\\"/><defs><path d=\\"M0 0h10v10z\\" id=\\"shape\\"/></defs><use href=\\"#shape\\" data:flag=\\"keep\\" style=\\"fill:red\\"/><text>]]&gt;</text></svg>"`;

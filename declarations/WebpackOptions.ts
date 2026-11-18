@@ -3657,6 +3657,11 @@ export interface OptimizationMinimizeXml {
 	 */
 	removeTitles?: boolean;
 	/**
+	 * Remove SVG-namespace elements that no SVG specification defines, with their content, which renders nothing; a `switch` child stays. Off by default because scripts and CSS selectors outside the document can still find them.
+	 * @since 5.113.0
+	 */
+	removeUnknownElements?: boolean;
+	/**
 	 * Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.
 	 * @since 5.113.0
 	 */

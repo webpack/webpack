@@ -13977,6 +13977,7 @@ declare interface HtmlPrintOptions {
 	applySvgTransforms?: boolean;
 	convertSvgCurvesToArcs?: boolean;
 	removeOffCanvasSvgPaths?: boolean;
+	removeUnknownSvgElements?: boolean;
 	mergeDisjointSvgPaths?: boolean;
 	mergeSvgPaths?: boolean;
 	reuseSvgPaths?: boolean;
@@ -14215,6 +14216,11 @@ declare interface HtmlProcessOptions {
 	 * with `shortenSvgPathData`, write SVG path cubic curves within `svgPrecision` decimals (3 when unset) of one circle as arcs of it; lossy (default false)
 	 */
 	convertSvgCurvesToArcs?: boolean;
+
+	/**
+	 * when minifying XML, remove SVG-namespace elements no SVG specification defines, with their content, outside `switch`; off where scripts or stylesheets depend on the document (default false)
+	 */
+	removeUnknownSvgElements?: boolean;
 
 	/**
 	 * when minifying XML, remove unnamed paths whose bounds, stroke included, lie wholly outside the root `viewBox`, outside transforms, filters, markers and styles; lossy, since a viewport of another aspect ratio shows past the `viewBox` (default false)
@@ -26394,6 +26400,12 @@ declare interface OptimizationMinimizeXml {
 	 * @since 5.113.0
 	 */
 	removeTitles?: boolean;
+
+	/**
+	 * Remove SVG-namespace elements that no SVG specification defines, with their content, which renders nothing; a `switch` child stays. Off by default because scripts and CSS selectors outside the document can still find them.
+	 * @since 5.113.0
+	 */
+	removeUnknownElements?: boolean;
 
 	/**
 	 * Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.

@@ -1,0 +1,8 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"removeUnknownSvgElements": true
+	}
+]

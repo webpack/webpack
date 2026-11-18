@@ -29,6 +29,7 @@ const NAMES = [
 	"disjoint",
 	"applied",
 	"arcs",
+	"unknown",
 	"structure"
 ];
 
