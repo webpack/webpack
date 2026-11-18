@@ -152,12 +152,11 @@ describe("LazyCompilationPlugin.getCompilerHooks", () => {
 			},
 			infrastructureLogging: { level: "none" }
 		});
+		const make = jest.fn();
+		compiler.hooks.make.tap("test", make);
 		/** @type {Promise<void>} */
 		const started = new Promise((resolve, reject) => {
-			compiler.hooks.beforeCompile.callAsync(
-				/** @type {EXPECTED_ANY} */ ({}),
-				(err) => (err ? reject(err) : resolve())
-			);
+			compiler.compile((err) => (err ? reject(err) : resolve()));
 		});
 		await new Promise((resolve, reject) => {
 			compiler.close((err) => (err ? reject(err) : resolve(undefined)));
@@ -171,5 +170,6 @@ describe("LazyCompilationPlugin.getCompilerHooks", () => {
 			"Lazy compilation backend started after the compiler was closed"
 		);
 		expect(dispose).toHaveBeenCalledTimes(1);
+		expect(make).not.toHaveBeenCalled();
 	});
 });
