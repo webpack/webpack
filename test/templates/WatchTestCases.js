@@ -51,6 +51,30 @@ const RETOUCH_LIMIT = 5;
 // how often a suspended watching checks whether its watcher received the step
 const RECEIVE_INTERVAL = 10;
 
+// A step's file lands whole: written in place, a watcher could read it truncated, or
+// see the truncation and the write as two changes and rebuild once more. Staged
+// beside the suites' sources, on their file system and outside what they watch.
+const STAGING_DIRECTORY = path.join(testRootDirectory, "js", ".watch-staging");
+let staged = 0;
+
+/**
+ * Replace a file with its next content in one rename, or write it in place where the
+ * file system refuses, as Windows does while the file is open.
+ * @param {string} file the file
+ * @param {Buffer} content its next content
+ */
+function writeWhole(file, content) {
+	fs.mkdirSync(STAGING_DIRECTORY, { recursive: true });
+	const staging = path.join(STAGING_DIRECTORY, `${process.pid}-${staged++}`);
+	fs.writeFileSync(staging, content);
+	try {
+		fs.renameSync(staging, file);
+	} catch (_err) {
+		fs.unlinkSync(staging);
+		fs.writeFileSync(file, content);
+	}
+}
+
 /**
  * @param {string} src src
  * @param {string} dest dest
@@ -73,16 +97,16 @@ function copyDiff(src, dest, initial, changed) {
 				fs.unlinkSync(destFile);
 			} else if (/^DELETE_DIRECTORY\s*$/.test(content.toString("utf8"))) {
 				rimraf.sync(destFile);
-			} else {
+			} else if (initial) {
 				fs.writeFileSync(destFile, content);
-				if (initial) {
-					const longTimeAgo = Date.now() - 1000 * 60 * 60 * 24;
-					fs.utimesSync(
-						destFile,
-						Date.now() - longTimeAgo,
-						Date.now() - longTimeAgo
-					);
-				}
+				const longTimeAgo = Date.now() - 1000 * 60 * 60 * 24;
+				fs.utimesSync(
+					destFile,
+					Date.now() - longTimeAgo,
+					Date.now() - longTimeAgo
+				);
+			} else {
+				writeWhole(destFile, content);
 			}
 		}
 	}
