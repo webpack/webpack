@@ -799,18 +799,20 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 			// `new Map()` takes lib's `new (): Map<any, any>`, which has no type parameter.
 			const { declaration } = signature;
 			// `Array(5)` takes lib's `(arrayLength?: number): any[]` alike, however
-			// the call names `Array`.
+			// the call names `Array`; an optional call adds `undefined` to it.
+			const result = typeChecker.getNonNullableType(type);
 			return (
 				(ts.isNewExpression(node) ||
 					(declaration !== undefined &&
+						program.isSourceFileDefaultLibrary(declaration.getSourceFile()) &&
 						ts.isInterfaceDeclaration(declaration.parent) &&
 						declaration.parent.name.text === "ArrayConstructor")) &&
 				written === 0 &&
 				declaration !== undefined &&
 				declaration.getSourceFile().isDeclarationFile &&
-				isTypeReference(type) &&
+				isTypeReference(result) &&
 				typeChecker
-					.getTypeArguments(type)
+					.getTypeArguments(result)
 					.some((argument) => Boolean(argument.flags & ts.TypeFlags.Any))
 			);
 		};
@@ -954,7 +956,8 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 					!isTyped &&
 					untyped &&
 					// Under `noImplicitAny`, TypeScript itself refuses an identifier whose
-					// `any` no one wrote, so one holding `any` holds a written one.
+					// `any` no one wrote, so one holding `any` holds a written one. This
+					// relies on the tree passing `yarn lint:types`, which CI's lint job checks.
 					isUntypedEmptyArray(node)
 				) {
 					untyped.push({
@@ -1299,7 +1302,7 @@ for (const column of COLUMNS) {
 	}
 }
 report +=
-	"\n`any` counts `EXPECTED_ANY`, a written `any` and JSDoc's `*` and `?` for any type. `unknown` counts a written `unknown`; `ThrownValue`, the `unknown` a `throw` or a rejected promise hands on, is left out. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the `any` TypeScript infers where no type is written, such as `const map = new Map()` or `const list = []`; an identifier that only holds an `any` written elsewhere is not counted again, as the `any` row counts it where it is written.\n";
+	"\n`any` counts `EXPECTED_ANY`, a written `any` and JSDoc's `*` and `?` for any type. `unknown` counts a written `unknown`; `ThrownValue`, the `unknown` a `throw` or a rejected promise hands on, is left out. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the `any` TypeScript infers where no type is written: the type arguments TypeScript's lib fills with `any`, such as `const map = new Map()` or `Array(5)`, and `const list = []`. An identifier that only holds an `any` written in the project's files is not counted again, as the `any` row counts it where it is written; an `any` a lib signature returns, such as `JSON.parse`'s, is counted in neither row.\n";
 if (base && !baseCountsFile) {
 	report +=
 		"\nThe base's untyped identifiers were not counted, as `--base-counts` was not given.\n";
