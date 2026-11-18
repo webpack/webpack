@@ -657,7 +657,12 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 				return false;
 			}
 			let { initializer } = parent;
-			while (initializer && ts.isParenthesizedExpression(initializer)) {
+			// A JSDoc `@type` cast on the parentheses types the array; plain ones do not.
+			while (
+				initializer &&
+				ts.isParenthesizedExpression(initializer) &&
+				!ts.getJSDocTypeTag(initializer)
+			) {
 				initializer = initializer.expression;
 			}
 			return Boolean(
