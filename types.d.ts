@@ -20157,7 +20157,7 @@ declare interface LazyCompilationBackendHookOptions {
 	client: string;
 
 	/**
-	 * a server instance is shared: the backend serves its own urls on it, hands every other request to the server's request listeners, and neither listens on it nor closes it
+	 * a server instance is shared: the backend serves its own urls on it, hands every other request to the server's request listeners, and neither listens on it nor closes it; for a TLS server, pass `protocol: "https"` or an `https:` `urlBase`
 	 */
 	server?:
 		| ServerOptionsImportHttps

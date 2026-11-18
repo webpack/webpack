@@ -301,15 +301,15 @@ describe("lazyCompilationBackend on a shared server", () => {
 
 	/**
 	 * @param {Server} server a shared server
-	 * @param {{ urlBase?: string, invalidate?: () => void }=} options the url clients reach the backend at, and the watcher it invalidates
+	 * @param {{ urlBase?: string, protocol?: "http" | "https", invalidate?: () => void }=} options the url clients reach the backend at, its protocol, and the watcher it invalidates
 	 * @returns {{ started: () => import("../../lib/hmr/LazyCompilationPlugin").BackendApi | undefined, failed: () => Error | null | undefined }} what the backend handed over so far
 	 */
-	const startShared = (server, { urlBase, invalidate } = {}) => {
+	const startShared = (server, { urlBase, protocol, invalidate } = {}) => {
 		/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi | undefined} */
 		let api;
 		/** @type {Error | null | undefined} */
 		let error;
-		createBackend({ client: "client", server, urlBase })(
+		createBackend({ client: "client", server, urlBase, protocol })(
 			/** @type {import("../../lib/Compiler")} */ (
 				/** @type {unknown} */ ({
 					getInfrastructureLogger: () => ({ log() {}, warn() {} }),
@@ -474,7 +474,7 @@ describe("lazyCompilationBackend on a shared server", () => {
 		prefixOf(api.module(makeModule("mod-a")).client, "http://localhost:4321");
 	});
 
-	it("reads https from a shared https server", async () => {
+	it("uses https on a shared https server given protocol https", async () => {
 		const server = require("https").createServer();
 		await new Promise((resolve) => {
 			server.listen(0, "127.0.0.1", () => resolve(undefined));
@@ -482,7 +482,7 @@ describe("lazyCompilationBackend on a shared server", () => {
 		try {
 			const api =
 				/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
-					startShared(server).started()
+					startShared(server, { protocol: "https" }).started()
 				);
 			const { port } = /** @type {import("net").AddressInfo} */ (
 				server.address()
