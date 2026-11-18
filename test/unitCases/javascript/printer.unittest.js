@@ -1334,6 +1334,14 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should print a second `.` after an integer a private name is read off", () => {
+		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-print-a-number-before-a-private-name");
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		// `1.#x` reads `1.` as the number and fails to parse.
+		expect(code).toBe('var log=[];class C{#x=1;static once(){try{return 1..#x}catch(e){return e.name}}static twice(){try{return[12..#x,12..#x]}catch(e){return e.name}}static has(){return#x in[1]}}log.push(C.once(),C.twice(),C.has()),console.log(log.join());');
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should keep only what the computed keys and values of an unread object run", () => {
 		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the");
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toMatchSnapshot();
