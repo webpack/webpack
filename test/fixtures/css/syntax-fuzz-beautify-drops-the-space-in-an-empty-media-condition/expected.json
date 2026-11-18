@@ -1,7 +1,7 @@
 [
 	{
 		"relation": "cssom",
-		"contains": "rule 0: @media (( )) {",
+		"contains": "rule 0: \"@media (( )) {\\n}\" vs \"@media (()) {\\n}\"",
 		"presets": [
 			"beautify"
 		],

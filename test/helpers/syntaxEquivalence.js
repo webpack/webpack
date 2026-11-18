@@ -1499,7 +1499,9 @@ const compareRenders = async ({ pairs, width }) => {
 			),
 			styled: elements.map(styledBy),
 			withoutAlt: withoutAlt.join(" "),
-			text: root.innerText,
+			// WHY: `innerText` of a root that renders nothing, as `<html popover>`,
+			// falls back to its text content, a `<style>` body included.
+			text: root.checkVisibility() ? root.innerText : "",
 			title: doc.title,
 			size: `${root.scrollWidth}x${root.scrollHeight}`
 		};

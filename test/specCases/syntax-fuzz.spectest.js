@@ -373,6 +373,20 @@ const browserFacets = (documents) => {
 };
 
 /**
+ * Runs in the page: each document's `style` attributes as the browser
+ * serializes their declarations, the empty ones left out, sorted.
+ * @param {string[]} documents the documents
+ * @returns {string[][]} one sorted list per document
+ */
+const inlineStyles = (documents) =>
+	documents.map((html) =>
+		[...new DOMParser().parseFromString(html, "text/html").querySelectorAll("[style]")]
+			.map((element) => /** @type {HTMLElement} */ (element).style.cssText)
+			.filter((text) => text !== "")
+			.sort()
+	);
+
+/**
  * @param {string[]} before one sheet's rules
  * @param {string[]} after another's
  * @returns {string} the first rule they differ in, "" when none does
@@ -382,7 +396,9 @@ const ruleDifference = (before, after) => {
 		return `rules: ${before.length} vs ${after.length}`;
 	}
 	const at = before.findIndex((rule, i) => !numericallyEqual(rule, after[i]));
-	return at === -1 ? "" : `rule ${at}: ${before[at]} vs ${after[at]}`;
+	return at === -1
+		? ""
+		: `rule ${at}: ${JSON.stringify(before[at])} vs ${JSON.stringify(after[at])}`;
 };
 
 // The files the generated inputs have to reach every line of.
@@ -704,10 +720,26 @@ describe("syntax fuzz in real chrome", () => {
 					sheets.push({ name, before: sheet, after: theirs[at], relax });
 				}
 			}
-			// The facets leave a `style` attribute to what it computes in a render,
-			// which cannot set aside what a relaxed set rewrites on purpose.
-			if (relax.length === 0 && /\sstyle\s*=/i.test(source)) {
+			// The facets leave a `style` attribute to a render, and a sheet's text
+			// can be part of what a page shows, as an option's label.
+			if (relax.length === 0 && /\sstyle\s*=|<style/i.test(source)) {
 				renders.push({ name, before: source, after });
+			} else if (relax.length > 0) {
+				// A render cannot set aside what a relaxed set rewrites on purpose.
+				const [own, printedOwn] = await page.evaluate(inlineStyles, [
+					source,
+					after
+				]);
+				const at = own.findIndex(
+					(style, i) => !numericallyEqual(style, printedOwn[i] || "")
+				);
+				if (own.length !== printedOwn.length || at !== -1) {
+					out.push({
+						relation: "styles",
+						preset: name,
+						what: `inline styles: ${JSON.stringify(own)} vs ${JSON.stringify(printedOwn)}`
+					});
+				}
 			}
 		}
 		if (sheets.length > 0) {

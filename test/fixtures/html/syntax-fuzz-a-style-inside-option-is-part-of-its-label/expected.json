@@ -1,7 +1,7 @@
 [
 	{
 		"relation": "renders",
-		"contains": "text at 6: \"STYLE=\\na\" -> \"STYLE=\"",
+		"contains": "text at 0: \"@\" -> \"\"",
 		"presets": [
 			"embedded"
 		],
