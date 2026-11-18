@@ -14,7 +14,7 @@
 		"shortenSvgNumbers": true,
 		"shortenSvgPathData": true,
 		"convertSvgCurvesToArcs": true,
-		"svgPrecision": 1
+		"svgPrecision": 2
 	},
 	{
 		"xml": true,

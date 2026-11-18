@@ -3543,7 +3543,7 @@ export interface OptimizationMinimizeXml {
 		| string
 		| ((comment: string) => boolean);
 	/**
-	 * Write SVG path cubic curves that stay within `precision` decimals (3 when unset) of one circle as arcs of it, joining neighbors on the same circle. Off by default because the arc is a true circle, not the curve; skip documents with markers, stylesheets, scripts or animations.
+	 * Write SVG path cubic curves that stay within `precision` decimals (3 when unset) of one circle as arcs of it, joining neighbors on the same circle, other cubics as quadratics within that error, and nearly flat circular arcs as lines. Off by default because the arc is a true circle, not the curve; skip documents with markers, stylesheets, scripts or animations.
 	 * @since 5.113.0
 	 */
 	convertCurvesToArcs?: boolean;
