@@ -382,7 +382,8 @@ jobs:
     needs: [lint, basic, unit]
     runs-on: ubuntu-latest
     # Bounded: a hung browser would otherwise hold a runner for the 6h default.
-    timeout-minutes: 60
+    # The suite takes 25-35 minutes, and a slow runner has passed the hour.
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -510,7 +511,10 @@ jobs:
 
       # One engine per part (`--parts`, TESTING_DOCS.md), all three at once on
       # the runner's cores, where each took a runner and one core of its own.
+      # WHY: a job that runs out of time is cancelled and keeps no log, so the
+      # step stops first, failing the job with a log of where it stood.
       - run: yarn cover:syntax-equivalence --parts=3 --ci --cacheDirectory .jest-cache
+        timeout-minutes: 80
         env:
           EQUIVALENCE_BROWSER: chrome,firefox,webkit
 
