@@ -20146,10 +20146,36 @@ declare interface LabelLike {
 	name?: string;
 	statementStart?: number;
 }
+
+/**
+ * The built-in backend's options as the `backendOptions` hook sees them.
+ */
+declare interface LazyCompilationBackendHookOptions {
+	/**
+	 * the client module the proxy modules load
+	 */
+	client: string;
+
+	/**
+	 * a server instance is shared: the backend serves its own urls on it, hands every other request to the server's request listeners, and neither listens on it nor closes it
+	 */
+	server?:
+		| ServerOptionsImportHttps
+		| ServerOptionsImportHttp
+		| (() => ServerLazyCompilationBackend)
+		| ServerImportHttp
+		| ServerImportHttps;
+
+	/**
+	 * the url clients reach the backend at, e.g. a development server's own; defaults to the server's address once it is listening
+	 */
+	urlBase?: string;
+}
 type LazyCompilationBackendOptions = Omit<
 	LazyCompilationDefaultBackendOptions,
-	"client"
-> & { client: string };
+	"client" | "server"
+> &
+	LazyCompilationBackendHookOptions;
 
 /**
  * Options for the default backend.

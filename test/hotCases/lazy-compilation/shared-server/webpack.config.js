@@ -26,7 +26,7 @@ class SharedServerPlugin {
 				new Promise((resolve, reject) => {
 					server.once("error", reject);
 					server.listen(0, "127.0.0.1", () => {
-						resolve({ ...options, server: () => server });
+						resolve({ ...options, server });
 					});
 				})
 		);

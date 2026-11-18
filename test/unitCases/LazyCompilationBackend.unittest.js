@@ -300,7 +300,7 @@ describe("lazyCompilationBackend on a shared server", () => {
 				})
 			);
 			const api = await new Promise((resolve, reject) => {
-				createBackend({ client: "client", server: () => server })(
+				createBackend({ client: "client", server })(
 					compiler,
 					(err, result) => (err ? reject(err) : resolve(result))
 				);
@@ -332,6 +332,83 @@ describe("lazyCompilationBackend on a shared server", () => {
 			);
 		} finally {
 			if (server.closeAllConnections) server.closeAllConnections();
+			await new Promise((resolve) => {
+				server.close(() => resolve(undefined));
+			});
+		}
+	});
+
+	/**
+	 * @param {Server} server a shared server
+	 * @param {string=} urlBase the url clients reach the backend at
+	 * @returns {{ started: () => import("../../lib/hmr/LazyCompilationPlugin").BackendApi | undefined }} what the backend handed over so far
+	 */
+	const startShared = (server, urlBase) => {
+		/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi | undefined} */
+		let api;
+		createBackend({ client: "client", server, urlBase })(
+			/** @type {import("../../lib/Compiler")} */ (
+				/** @type {unknown} */ ({
+					getInfrastructureLogger: () => ({ log() {}, warn() {} })
+				})
+			),
+			(err, result) => {
+				if (err) throw err;
+				api = result;
+			}
+		);
+		return { started: () => api };
+	};
+
+	it("starts at once on a server not yet listening when given a urlBase", () => {
+		const server = http.createServer();
+		const { started } = startShared(server, "https://localhost:8080");
+		const api = /** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
+			started()
+		);
+		expect(api.module(makeModule("mod-a")).client).toBe(
+			`client?${encodeURIComponent(`https://localhost:8080${PREFIX}`)}`
+		);
+		api.dispose(() => {});
+		expect(server.listenerCount("request")).toBe(0);
+	});
+
+	it("waits for a server not yet listening without a urlBase", () => {
+		const server = new EventEmitter();
+		Object.assign(server, {
+			listening: false,
+			listen() {},
+			address: () => ({ address: "::", family: "IPv6", port: 4321 })
+		});
+		const { started } = startShared(/** @type {Server} */ (/** @type {unknown} */ (server)));
+		expect(started()).toBeUndefined();
+		server.emit("listening");
+		const api = /** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
+			started()
+		);
+		expect(api.module(makeModule("mod-a")).client).toBe(
+			`client?${encodeURIComponent(`http://localhost:4321${PREFIX}`)}`
+		);
+	});
+
+	it("reads https from a shared https server", async () => {
+		const server = require("https").createServer();
+		await new Promise((resolve) => {
+			server.listen(0, "127.0.0.1", () => resolve(undefined));
+		});
+		try {
+			const { started } = startShared(server);
+			const api =
+				/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
+					started()
+				);
+			const { port } = /** @type {import("net").AddressInfo} */ (
+				server.address()
+			);
+			expect(api.module(makeModule("mod-a")).client).toBe(
+				`client?${encodeURIComponent(`https://127.0.0.1:${port}${PREFIX}`)}`
+			);
+		} finally {
 			await new Promise((resolve) => {
 				server.close(() => resolve(undefined));
 			});
