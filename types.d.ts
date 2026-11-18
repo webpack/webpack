@@ -13974,6 +13974,7 @@ declare interface HtmlPrintOptions {
 	removeHiddenSvgElements?: boolean;
 	svgPrecision?: number;
 	convertSvgTransforms?: boolean;
+	removeOffCanvasSvgPaths?: boolean;
 	mergeSvgPaths?: boolean;
 	reuseSvgPaths?: boolean;
 	sortSvgDefinitions?: boolean;
@@ -14196,6 +14197,11 @@ declare interface HtmlProcessOptions {
 	 * when minifying XML, remove ID-free SVG content hidden by `display="none"`, zero opacity or size, a `visibility` nothing inside sets back, or geometry that draws nothing (default false)
 	 */
 	removeHiddenSvgElements?: boolean;
+
+	/**
+	 * when minifying XML, remove unnamed paths whose bounds, stroke included, lie wholly outside the root `viewBox`, outside transforms, filters, markers and styles; lossy, since a viewport of another aspect ratio shows past the `viewBox` (default false)
+	 */
+	removeOffCanvasSvgPaths?: boolean;
 
 	/**
 	 * with `shortenSvgNumbers`, recompose each SVG transform list as the shortest list whose matrix matches it within `svgPrecision` decimals (3 when unset), so a matrix can become a rotation about a point; lossy (default false)
@@ -26328,6 +26334,12 @@ declare interface OptimizationMinimizeXml {
 	 * @since 5.113.0
 	 */
 	removeMetadata?: boolean;
+
+	/**
+	 * Remove unnamed SVG paths whose bounds, stroke included, lie wholly outside the root `viewBox`, outside transforms, filters, markers and styles. Off by default because a viewport of another aspect ratio letterboxes the `viewBox` and shows what lies past it.
+	 * @since 5.113.0
+	 */
+	removeOffCanvasPaths?: boolean;
 
 	/**
 	 * Remove SVG `image` elements referencing JPEG, PNG or GIF images. Off by default because those images disappear from the drawing.

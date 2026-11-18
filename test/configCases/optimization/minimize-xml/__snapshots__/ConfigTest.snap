@@ -119,6 +119,13 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 </svg>"
 `;
 
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: offcanvas 1`] = `
+"<svg viewBox=\\"0 0 100 100\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+	<path d=\\"M10 10h80v80h-80z\\"/>
+	
+</svg>"
+`;
+
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: optional 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 100 50\\"><defs><linearGradient><stop offset=\\"0\\" stop-color=\\"red\\"/><stop offset=\\"1\\" stop-color=\\"blue\\"/></linearGradient><linearGradient id=\\"a\\"><stop offset=\\"0\\" stop-color=\\"red\\"/><stop offset=\\"1\\" stop-color=\\"blue\\"/></linearGradient><path id=\\"b\\" d=\\"M0 0h10v10z\\"/></defs><a><rect width=\\"10\\" height=\\"10\\" fill=\\"url(#a)\\"/></a><use href=\\"#b\\" x=\\"20\\"/></svg>"`;
 
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: paths 1`] = `
