@@ -21823,7 +21823,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-constant-keys-new-64 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-constant-keys-new-64 prints {"mode":"minify","compress":{},"mangle":{},"module":true} 1`] = `"export function f(e){var o;e.a(),(o=e.test)()}export class C extends B{#e;#o(){}}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-constant-keys-new-64 prints {"mode":"minify","compress":{},"mangle":{},"module":true} 1`] = `"export function f(e){e.a(),(0,e.test)()}export class C extends B{#e;#o(){}}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-constant-keys-new-64 prints {"mode":"minify"} 1`] = `"export function f(o){var e;o.a();e=o.test;e()}export class C extends B{#x;#m(){}}"`;
 
@@ -21859,7 +21859,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-constant-keys-new-67 parses 3`] = `"throws: 'import' and 'export' may appear only with 'sourceType: module' (1:0)"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-constant-keys-new-67 prints {"mode":"minify","compress":{},"mangle":false,"module":true} 1`] = `"export function run(f){return(f=eval)(\\"this\\")}export function t(f){return g(),typeof(f=missing)}export function d(){return g(),x=1;let x}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-constant-keys-new-67 prints {"mode":"minify","compress":{},"mangle":false,"module":true} 1`] = `"export function run(f){return(0,eval)(\\"this\\")}export function t(f){return g(),typeof(0,missing)}export function d(){return g(),x=1;let x}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-constant-keys-new-67 prints {"mode":"minify"} 1`] = `"export function run(f){\\"use strict\\";f=eval;return f(\\"this\\")}export function t(f){g();f=missing;return typeof f}export function d(){g();x=1;return x;let x}"`;
 
