@@ -129,4 +129,23 @@ describe("LazyCompilationPlugin.getCompilerHooks", () => {
 		});
 		expect(received).toBe(custom);
 	});
+
+	it("starts the backend through the hook again once watching closed", async () => {
+		const disposed = jest.fn((/** @type {() => void} */ callback) => callback());
+		const transport = jest.fn(async () => async () => ({
+			dispose: disposed,
+			module: () => ({ client: "", data: "", active: false })
+		}));
+		const { compiler, started } = startBackend(transport);
+		await started;
+		compiler.hooks.watchClose.call();
+		expect(disposed).toHaveBeenCalledTimes(1);
+		await new Promise((resolve, reject) => {
+			compiler.hooks.beforeCompile.callAsync(
+				/** @type {EXPECTED_ANY} */ ({}),
+				(err) => (err ? reject(err) : resolve(undefined))
+			);
+		});
+		expect(transport).toHaveBeenCalledTimes(2);
+	});
 });

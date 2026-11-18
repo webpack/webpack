@@ -437,4 +437,36 @@ describe("lazyCompilationBackend on a shared server", () => {
 			expect(started()).toBeUndefined();
 			expect(server.listenerCount("request")).toBe(1);
 		}));
+
+	it("keeps a compiler's urls when its backend restarts", () =>
+		withServer(async (server) => {
+			const compiler = /** @type {import("../../lib/Compiler")} */ (
+				/** @type {unknown} */ ({
+					getInfrastructureLogger: () => ({ log() {}, warn() {} })
+				})
+			);
+			const start = () =>
+				new Promise((resolve, reject) => {
+					createBackend({ client: "client", server, urlBase: urlOf(server) })(
+						compiler,
+						(err, api) => (err ? reject(err) : resolve(api))
+					);
+				});
+			const first =
+				/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
+					await start()
+				);
+			const { client } = first.module(makeModule("mod-a"));
+			await dispose(first);
+			const second =
+				/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
+					await start()
+				);
+			const restarted = second.module(makeModule("mod-a"));
+			expect(restarted.client).toBe(client);
+			expect(
+				await get(server, prefixOf(client, urlOf(server)) + restarted.data)
+			).toEqual(expect.objectContaining({ type: "text/event-stream" }));
+			await dispose(second);
+		}));
 });
