@@ -1,4 +1,3 @@
-import { Worker } from "worker_threads";
 import fs from "fs";
 import path from "path";
 
