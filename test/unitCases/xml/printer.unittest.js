@@ -471,7 +471,7 @@ describe("SourceProcessor — SVG minification", () => {
 		const options = { ...compact, renderEmbeddedSource: builtinEmbeddedRenderer() };
 		expect(processor.process(fixture("xml", "source-processor-svg-minification-should-preserve-dtd-constraints-and-reset-every"), options).code).toBe(dtd + body);
 		for (const name of ["source-processor-svg-minification-should-preserve-dtd-constraints-and-reset-every-3", "source-processor-svg-minification-should-preserve-dtd-constraints-and-reset-every-4"]) expect(processor.process(fixture("xml", name), options).code).toBe(fixture("xml", name));
-		expect(processor.process(body, options).code).toBe(`<svg xmlns="${svg}" fill="red"><path d="M0 0l1 2" transform="scale(1)"/></svg>`);
+		expect(processor.process(body, options).code).toBe(`<svg xmlns="${svg}" fill="red"><path d="M0 0" transform="scale(1)"/></svg>`);
 	});
 
 	it("should leave foreign XML, HTML and beautified attributes unchanged", () => {

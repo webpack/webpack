@@ -38,5 +38,19 @@
 <path d="M0 0c.1381 0 .25 .1119 .25 .25"/>
 <path d="M0 0c.3313 0 .6 .2687 .6 .6"/>
 <path d="M9.25 0C9.25 5.10863394 5.10863394 9.25 0 9.25"/>
+<path d="m1 1a10000 10000 0 008 0" stroke="black"/>
+<path d="m1 1a10000 10000 0 008 0" stroke="black" stroke-width="2px"/>
+<path d="m1 1a10000 10000 0 008 0" stroke="black" stroke-width="20"/>
+<path d="m1 1a10000 10000 0 008 0" stroke="black" stroke-width="1em"/>
+<path d="m1 1a10000 10000 0 008 0l1 1" stroke="black"/>
+<path d="m1 1a10000 10000 0 008 0" stroke="url(#g)"/>
+<path d="m1 1a10000 10000 0 008 0" stroke="black" vector-effect="non-scaling-stroke"/>
+<g filter="url(#f)"><path d="m1 1a10000 10000 0 008 0" stroke="black"/></g>
+<path d="m1 1a10.567 10.567 0 001 0" stroke="black"/>
+<path d="m1 1a10.567 10.567 0 001 0" stroke="black" stroke-width="5"/>
+<path d="m1 1a10.567 10.567 0 001 0" fill="red"/>
+<path d="m1 1a10.567 10.567 0 101 0" stroke="black"/>
+<path d="m1 1a.4 .4 0 001 0" stroke="black"/>
+<g style="stroke-width:var(--w)"><path d="m1 1a10000 10000 0 008 0" stroke="black"/></g>
 <path/>
 </svg>

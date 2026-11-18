@@ -577,8 +577,59 @@ const IMPLIED_END_TAG_ELEMENTS = [
 	"rtc"
 ];
 
+// Every element an SVG specification defines, from webref's SVG element lists;
+// any other name in the SVG namespace renders nothing, nor does its content.
+// webref leaves out SVG 1.1 fonts, `tref`, `cursor` and Tiny's `discard`, which some engines still run.
+/** @type {string[]} */
+const SVG_SPEC_ELEMENT_NAMES = [];
+for (const file of [
+	"SVG11",
+	"SVG2",
+	"css-masking-1",
+	"filter-effects-1",
+	"svg-animations",
+	"svg-paths"
+]) {
+	for (const element of /** @type {{ elements: { name: string }[] }} */ (
+		JSON.parse(
+			fs.readFileSync(webref("@webref/elements", `${file}.json`), "utf8")
+		)
+	).elements) {
+		SVG_SPEC_ELEMENT_NAMES.push(element.name);
+	}
+}
+const SVG_ELEMENT_NAMES = [
+	...new Set([
+		...SVG_SPEC_ELEMENT_NAMES,
+		"altGlyph",
+		"altGlyphDef",
+		"altGlyphItem",
+		"color-profile",
+		"cursor",
+		"discard",
+		"font",
+		"font-face",
+		"font-face-format",
+		"font-face-name",
+		"font-face-src",
+		"font-face-uri",
+		"glyph",
+		"glyphRef",
+		"hkern",
+		"missing-glyph",
+		"tref",
+		"vkern"
+	])
+].sort();
+
 /** @type {ParserTable[]} */
 const PARSER_TABLES = [
+	[
+		"SVG_ELEMENTS",
+		"set",
+		"Elements an SVG specification defines; another SVG-namespace element renders nothing.",
+		SVG_ELEMENT_NAMES
+	],
 	[
 		"SVG_COLOR_ATTRIBUTES",
 		"set",

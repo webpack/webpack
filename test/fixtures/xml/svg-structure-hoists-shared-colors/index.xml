@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<g><rect color="red" fill="currentColor" width="1" height="1"/><circle color="red" fill="currentColor" r="1"/></g>
+<g><rect color="red" width="1" height="1"/><unknown color="red"/></g>
+<g><rect color="red" width="1" height="1"/><unknown/></g>
+<g filter="drop-shadow(1px 1px)"><rect color="red" width="1" height="1"/><circle color="red" r="1"/></g>
+<g text-decoration="underline"><text color="red">a</text><text color="red">b</text></g>
+<g><rect color="currentColor" width="1" height="1"/><circle color="currentColor" r="1"/></g>
+<g><rect color="red" width="1" height="1"/><circle color="blue" r="1"/></g>
+<g><rect color="red" width="1" height="1"/><title color="red">t</title></g>
+</svg>

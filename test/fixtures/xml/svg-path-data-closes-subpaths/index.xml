@@ -27,4 +27,12 @@
 <path d="M0 0h10v10H0z" style="stroke:var(--s)"/>
 <path d="M0 0h10v10H0 x"/>
 <path d="M.1.2h.3v.3H.1z"/>
+<path d="M6 6h.5"/>
+<path d="M6 6h.5M8 8l1 1v1"/>
+<path d="M6 6h.5" stroke="red"/>
+<path d="M6 6h.5z" stroke="red"/>
+<g filter="url(#f)"><path d="M6 6h.5"/></g>
+<g mask="url(#m)"><path d="M6 6h.5"/></g>
+<g clip-path="url(#c)"><path d="M6 6h.5"/></g>
+<g style="opacity:.5"><path d="M6 6h.5"/></g>
 </svg>
