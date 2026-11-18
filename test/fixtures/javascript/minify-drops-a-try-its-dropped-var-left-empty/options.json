@@ -1,0 +1,7 @@
+[
+	{
+		"mode": "minify",
+		"mangle": false,
+		"behavior": true
+	}
+]

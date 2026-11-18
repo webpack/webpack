@@ -41,7 +41,7 @@ exports[`JavaScript minifier printing a SyntaxTree should map what the one pass 
 
 exports[`JavaScript minifier printing a SyntaxTree should map what the one pass joins of templates and of alike branches 2`] = `"function f(c){g(),h()}"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should print a part a node prints as without the parentheses it took as that node's operand 1`] = `"const s=(g(),h());g(),h(),g(),h(),a,b,f([a]=[1],({b:b}={b:2}),([c]=[1])),x=a?y=1:c,x=(a||f(),c),g\`\`,(a,b)\`\`,(x={}.y)(()=>{}),a=- -b;a in b,c;x=!a&&b in c,x=a<b&&c;if(!b&&c)f();a(),- -b;({a:g()}).b;({a:g()}).b.c();({m(){}}).m()?a():b();(function(){g()})(),x;x=function(){g()}()==x,a=c;function k(i){return i++**2}function n(){return 1..a}x=new[1,2],x=new function(){this.b=1},k(1),n(),x={k:a=1,[b=1]:1},x=(a||f(1)(2),c);if(x=a?c:(g()+1,c)){({}).a?b():c();y()}x=new F(1);"`;
+exports[`JavaScript minifier printing a SyntaxTree should print a part a node prints as without the parentheses it took as that node's operand 1`] = `"const s=(g(),h());g(),h(),g(),h(),a,b,f([a]=[1],({b:b}={b:2}),([c]=[1])),x=a?y=1:c,x=(a||f(),c),g\`\`,(a,b)\`\`,(x={}.y)(()=>{}),a=- -b,a in b,c,x=!a&&b in c,x=a<b&&c;if(!b&&c)f();a(),- -b;({a:g()}).b;({a:g()}).b.c();({m(){}}).m()?a():b();(function(){g()})(),x;x=function(){g()}()==x,a=c;function k(i){return i++**2}function n(){return 1..a}x=new[1,2],x=new function(){this.b=1},k(1),n(),x={k:a=1,[b=1]:1},x=(a||f(1)(2),c);if(x=a?c:(g()+1,c)){({}).a?b():c();y()}x=new F(1);"`;
 
 exports[`JavaScript minifier printing a SyntaxTree should print alone the comments it keeps, however they are chosen 1`] = `"/*! a */f();g();"`;
 
