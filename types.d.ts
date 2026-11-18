@@ -19807,6 +19807,11 @@ declare interface KnownJavascriptModuleBuildInfo {
 	 * whether this module was parsed with `optimization.inlineExports` enabled (gates inlining of its exports)
 	 */
 	inlineExports?: boolean;
+
+	/**
+	 * what a TypeScript module's parse skipped, as the syntax parser's `typeRanges`, which its generated code blanks
+	 */
+	typeScriptRanges?: number[];
 }
 
 /**

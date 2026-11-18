@@ -3,7 +3,9 @@
 const fs = require("fs");
 const path = require("path");
 const { parser } = require("../../../lib/javascript/syntax");
-const blankTypeScript = require("../../helpers/blankTypeScript");
+const {
+	blankTypeScript
+} = require("../../../lib/typescript/blankTypeScript");
 const { fixture } = require("../../helpers/fixture");
 const { plain } = require("../../helpers/javascriptParse");
 
@@ -23,9 +25,12 @@ const NAMES = fs
  * @type {((code: string) => string) | undefined}
  */
 const stripTypeScriptTypes =
-	/** @type {{ stripTypeScriptTypes?: (code: string) => string }} */ (
-		require("module")
-	).stripTypeScriptTypes;
+	// Deno and Bun have the API too, with errors of their own
+	process.versions.deno === undefined && process.versions.bun === undefined
+		? /** @type {{ stripTypeScriptTypes?: (code: string) => string }} */ (
+				require("module")
+			).stripTypeScriptTypes
+		: undefined;
 
 /**
  * @typedef {object} Read
@@ -143,17 +148,18 @@ const comparable = (source, stripped, expected, actual) => {
 	];
 };
 
+/** @typedef {{ relation: string, contains: string, why: string }} KnownDifference a difference from Node.js a fixture's `expected.json` names */
+
 /**
  * @param {string} name a fixture
- * @returns {string | undefined} why it is known to differ from Node.js, from its `expected.json`
+ * @returns {KnownDifference | undefined} how it is known to differ from Node.js, from its `expected.json`
  */
 const knownDifference = (name) => {
 	const file = path.join(DIR, name, "expected.json");
 	if (!fs.existsSync(file)) return undefined;
-	/** @type {{ relation: string, why: string }[]} */
+	/** @type {KnownDifference[]} */
 	const entries = JSON.parse(fs.readFileSync(file, "utf8"));
-	const entry = entries.find((item) => item.relation === "node");
-	return entry && entry.why;
+	return entries.find((item) => item.relation === "node");
 };
 
 describe("TypeScript fixtures", () => {
@@ -241,10 +247,8 @@ describe("TypeScript fixtures", () => {
 						expect(difference).toBeUndefined();
 					} else {
 						// a difference that went away leaves its entry stale
-						expect({ difference, known }).toEqual({
-							difference: expect.any(String),
-							known
-						});
+						// the difference it names, which a stale entry no longer shows
+						expect(difference).toContain(known.contains);
 					}
 				}
 			);
