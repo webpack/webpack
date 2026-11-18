@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add the XML `applyTransforms` option and drop path segments a close repeats.
+Add XML `applyTransforms` and `convertCurvesToArcs`, and shrink SVG paths further.
