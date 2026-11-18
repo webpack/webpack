@@ -567,4 +567,20 @@ describe("lazyCompilationBackend on a shared server", () => {
 		expect(error).toEqual(new Error("addr must not be a string"));
 		expect(close).toHaveBeenCalledTimes(1);
 	});
+
+	it("does not put back a once listener that detaches the last backend", () =>
+		withServer(async (server, appCalls) => {
+			/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi | undefined} */
+			let api;
+			server.once("request", () => {
+				/** @type {import("../../lib/hmr/LazyCompilationPlugin").BackendApi} */ (
+					api
+				).dispose(() => {});
+			});
+			api = startShared(server).started();
+			await get(server, "/first");
+			expect(server.listenerCount("request")).toBe(1);
+			await get(server, "/second");
+			expect(appCalls()).toBe(2);
+		}));
 });
