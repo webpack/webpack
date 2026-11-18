@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fold a value read once into a spread, and print `1..#x`, when minifying.
+Fold values into spreads and logical sides, and print numbers before a member, when minifying.
