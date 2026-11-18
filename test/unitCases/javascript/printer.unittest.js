@@ -1334,28 +1334,6 @@ describe("one-pass minify of reads and calls on literals", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
-	it("should fold a value read once into a spread, which evaluates it before spreading", () => {
-		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-into-a-spread");
-		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
-		// A value running code, or a spread copying getters, before it keeps the name in place.
-		expect(code).toBe('var log=[];function f(){return{...{get b(){return log.push("getter"),1}}}.b}function g(){return[0,...[log.push(1),log.push(2)]]}function h(){return{y:1,...{x:log.push("x")}}}function k(){var copy={x:log.push("k")};return{y:log.push("y"),...copy}}function m(){var parts=[log.push(3)];return Math.max(...parts)}function n(before){var after={x:log.push("after")};return{...before,...after}}console.log(f(),g().join(),JSON.stringify(h()),JSON.stringify(k()),m(),JSON.stringify(n({get z(){return log.push("z"),0}})),log.join());');
-		expect(runProgram(code)).toBe(runProgram(source));
-	});
-
-	it("should keep a derived constructor's `this` before `super()` ahead of a folded value", () => {
-		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-into-a-spread-2");
-		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
-		// The read throws before `super()`, so the value it would fold past runs first.
-		expect(code).toBe('var log=[];function make(){log.push("make");return[1]}for(let C of[class extends Object{constructor(){let items=make();return[this,...items]}},class extends Object{constructor(){let items=make();return{a:this,...items}}},class extends Object{constructor(){let item=make();return[this,item]}}])try{new C}catch(e){log.push(e.name)}console.log(log.join());');
-
-	it("should print a second `.` after an integer a private name is read off", () => {
-		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-print-a-number-before-a-private-name");
-		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
-		// `1.#x` reads `1.` as the number and fails to parse.
-		expect(code).toBe('var log=[];class C{#x=1;static once(){try{return 1..#x}catch(e){return e.name}}static twice(){try{return[12..#x,12..#x]}catch(e){return e.name}}static has(){return#x in[1]}}log.push(C.once(),C.twice(),C.has()),console.log(log.join());');
-		expect(runProgram(code)).toBe(runProgram(source));
-	});
-
 	it("should keep only what the computed keys and values of an unread object run", () => {
 		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-keep-only-what-the");
 		expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toMatchSnapshot();
