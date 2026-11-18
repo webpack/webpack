@@ -228,6 +228,19 @@ module.exports = [
 			}
 		}
 	}),
+	// A curve that keeps to one circle becomes an arc of it.
+	config("arcs", {
+		entry: "./arcs.js",
+		optimization: {
+			minimizeOptions: {
+				xml: {
+					shortenNumbers: true,
+					shortenPathData: true,
+					convertCurvesToArcs: true
+				}
+			}
+		}
+	}),
 	config("structure", {
 		entry: "./structure.js",
 		optimization: {

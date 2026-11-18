@@ -28,6 +28,7 @@ const NAMES = [
 	"offcanvas",
 	"disjoint",
 	"applied",
+	"arcs",
 	"structure"
 ];
 

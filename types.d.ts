@@ -13975,6 +13975,7 @@ declare interface HtmlPrintOptions {
 	svgPrecision?: number;
 	convertSvgTransforms?: boolean;
 	applySvgTransforms?: boolean;
+	convertSvgCurvesToArcs?: boolean;
 	removeOffCanvasSvgPaths?: boolean;
 	mergeDisjointSvgPaths?: boolean;
 	mergeSvgPaths?: boolean;
@@ -14209,6 +14210,11 @@ declare interface HtmlProcessOptions {
 	 * with `shortenSvgPathData`, bake each SVG path's `transform` into its points at `svgPrecision` decimals (3 when unset), scaling a stroke it scales; lossy (default false)
 	 */
 	applySvgTransforms?: boolean;
+
+	/**
+	 * with `shortenSvgPathData`, write SVG path cubic curves within `svgPrecision` decimals (3 when unset) of one circle as arcs of it; lossy (default false)
+	 */
+	convertSvgCurvesToArcs?: boolean;
 
 	/**
 	 * when minifying XML, remove unnamed paths whose bounds, stroke included, lie wholly outside the root `viewBox`, outside transforms, filters, markers and styles; lossy, since a viewport of another aspect ratio shows past the `viewBox` (default false)
@@ -26253,6 +26259,12 @@ declare interface OptimizationMinimizeXml {
 	 * @since 5.113.0
 	 */
 	comments?: string | boolean | RegExp | ((comment: string) => boolean);
+
+	/**
+	 * Write SVG path cubic curves that stay within `precision` decimals (3 when unset) of one circle as arcs of it, joining neighbors on the same circle. Off by default because the arc is a true circle, not the curve; skip documents with markers, stylesheets, scripts or animations.
+	 * @since 5.113.0
+	 */
+	convertCurvesToArcs?: boolean;
 
 	/**
 	 * Convert leaf SVG lines, polylines and polygons to shorter paths with identical coordinates and vertices, and equal-radius ellipses to circles. Off by default because consumers can observe element types; skip documents with stylesheets, scripts, animations or DTDs.

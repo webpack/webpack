@@ -1,0 +1,26 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"shortenSvgNumbers": true,
+		"shortenSvgPathData": true,
+		"convertSvgCurvesToArcs": true
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"shortenSvgNumbers": true,
+		"shortenSvgPathData": true,
+		"convertSvgCurvesToArcs": true,
+		"svgPrecision": 1
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"shortenSvgPathData": true,
+		"convertSvgCurvesToArcs": true
+	}
+]
