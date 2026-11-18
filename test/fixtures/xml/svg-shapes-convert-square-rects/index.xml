@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<rect width="32" height="32"/>
+<rect x="20" y="10" width="50" height="40"/>
+<rect x="10" y="10" width="10" height="10" fill="#666"/>
+<rect x="20" y="10" width="150" height="100" fill="none" stroke="red" stroke-dasharray="37 11"/>
+<rect x="-.5" y="1.25" width="150.125" height="100"/>
+<rect width="1.1" height="2"/>
+<rect width="100%" height="5"/>
+<rect width="5px" height="5"/>
+<rect width="5" height="5" rx="1"/>
+<rect width="5" height="5" style="fill:red"/>
+<rect width="0" height="5"/>
+<rect width="5"/>
+<rect width="1" height="1"/>
+<rect x="1e7" width="5" height="5"/>
+<rect x="-123456.5" y="-123456.5" width="1" height="1"/>
+<s:rect xmlns:s="http://www.w3.org/2000/svg" width="32" height="32"/>
+</svg>
