@@ -34,13 +34,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/replace_known_methods.rs:test_fold_string_replace_all_empty_search_utf16:efa535b2",
 			"oxc minifier: peephole/replace_known_methods.rs:test_fold_string_replace_all_empty_search_utf16:8dd4465c",
 			"oxc minifier: peephole/replace_known_methods.rs:test_fold_string_replace_all_empty_search_utf16:da69683e",
-			"oxc minifier: peephole/replace_known_methods.rs:test_fold_string_replace_all_empty_search_utf16:8c70120c",
-			"oxc minifier: peephole/replace_known_methods.rs:test_fold_concat_chaining:ce8b6398",
-			"oxc minifier: peephole/replace_known_methods.rs:test_fold_concat_chaining:ad3ed5a8",
-			"oxc minifier: peephole/replace_known_methods.rs:test_fold_concat_chaining:8f1b6a16",
-			"oxc minifier: peephole/replace_known_methods.rs:test_fold_concat_chaining:a7b4f487",
-			"oxc minifier: peephole/replace_known_methods.rs:test_fold_concat_chaining:76e1c4ec",
-			"oxc minifier: peephole/replace_known_methods.rs:test_fold_concat_chaining:b798d59a",
 			"oxc minifier: peephole/replace_known_methods.rs:test_fold_concat_chaining:efc18e6d",
 			"oxc minifier: peephole/replace_known_methods.rs:string_concat_chains_preserve_call_boundaries:381d0bbf"
 		]
@@ -118,8 +111,7 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/9460/side-effects/input.js",
 			"swc minifier: fixture/issues/12566/defaults/input.js",
 			"swc minifier: fixture/issues/12566/without-reduce-vars/input.js",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:test_new_expressions:86ca76d7",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:test_new_expressions:f65f5656"
+			"oxc minifier: ecmascript/may_have_side_effects.rs:test_new_expressions:86ca76d7"
 		]
 	],
 	[
@@ -274,8 +266,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/normalize.rs:preserve_legal_comment_above_removed_use_strict:03ea0595",
 			"oxc minifier: peephole/normalize.rs:preserve_legal_comment_above_removed_use_strict:174a0bb9",
 			"oxc minifier: peephole/normalize.rs:preserve_legal_comment_above_removed_inner_function_use_strict:857ff5b5",
-			"oxc minifier: peephole/normalize.rs:builtin_purity_preserves_argument_evaluation:86ca76d7",
-			"oxc minifier: peephole/normalize.rs:builtin_purity_preserves_argument_evaluation:f65f5656"
+			"oxc minifier: peephole/normalize.rs:builtin_purity_preserves_argument_evaluation:86ca76d7"
 		]
 	],
 	[
@@ -876,8 +867,7 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"oxc minifier: peephole/fold_constants.rs:test_fold_unary:68957583",
 			"oxc minifier: peephole/fold_constants.rs:test_fold_object_spread_drop_walks_argument_refs:2dfff3ce",
-			"oxc minifier: peephole/fold_constants.rs:test_fold_object_spread_drop_walks_argument_refs:f3c4025e",
-			"oxc minifier: peephole/fold_constants.rs:test_instance_of_preserves_left_side_effects:0e8b038e"
+			"oxc minifier: peephole/fold_constants.rs:test_fold_object_spread_drop_walks_argument_refs:f3c4025e"
 		]
 	],
 	[

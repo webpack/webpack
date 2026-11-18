@@ -38094,7 +38094,7 @@ exports[`CSS syntax — invariants css-syntax-minify-vendor-prefixes-properties-
 
 exports[`CSS syntax — invariants css-syntax-minify-vendor-prefixes-properties-adds-the-prefix-a-browser-below-the prints {"mode":"minify","environment":{"browsers":["safari 17"]}} 1`] = `"a{-webkit-user-select:none;user-select:none}"`;
 
-exports[`CSS syntax — invariants css-syntax-minify-vendor-prefixes-properties-adds-the-prefix-a-browser-below-the prints {"mode":"minify","environment":{"browsers":["safari TP"]}} 1`] = `"a{-webkit-user-select:none;user-select:none}"`;
+exports[`CSS syntax — invariants css-syntax-minify-vendor-prefixes-properties-adds-the-prefix-a-browser-below-the prints {"mode":"minify","environment":{"browsers":["safari TP"]}} 1`] = `"a{user-select:none}"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-vendor-prefixes-properties-adds-the-prefix-a-browser-below-the prints {"mode":"minify"} 1`] = `"a{user-select:none}"`;
 
