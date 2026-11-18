@@ -3,14 +3,18 @@
 const fs = require("fs");
 const path = require("path");
 const { parser } = require("../../../lib/javascript/syntax");
-const TypeScriptTypesDependency = require("../../../lib/typescript/TypeScriptTypesDependency");
+const blankTypeScript = require("../../helpers/blankTypeScript");
 const { fixture } = require("../../helpers/fixture");
 const { plain } = require("../../helpers/javascriptParse");
 
 const DIR = path.join(__dirname, "../../fixtures/typescript");
 const NAMES = fs
 	.readdirSync(DIR)
-	.filter((name) => fs.existsSync(path.join(DIR, name, "index.ts")))
+	.filter(
+		(name) =>
+			fs.existsSync(path.join(DIR, name, "index.ts")) ||
+			fs.existsSync(path.join(DIR, name, "fixture.js"))
+	)
 	.sort();
 
 /**
@@ -162,16 +166,7 @@ describe("TypeScript fixtures", () => {
 				const typeRanges = [];
 				const actual = read(source, true, typeRanges);
 				if (actual.tree === undefined) return;
-				let blanked = "";
-				let at = 0;
-				for (const [start, end, text] of TypeScriptTypesDependency.blanks(
-					source,
-					typeRanges
-				)) {
-					blanked += source.slice(at, start) + text;
-					at = end;
-				}
-				blanked += source.slice(at);
+				const blanked = blankTypeScript(source, typeRanges);
 				expect(blanked).toHaveLength(source.length);
 				const expected = read(blanked, false);
 				expect(expected.code).toBeUndefined();
