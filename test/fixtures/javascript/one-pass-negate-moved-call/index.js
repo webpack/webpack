@@ -28,3 +28,17 @@ var o = { a: "PASS" };
 	}
 	named();
 })();
+// A call printing in the place of an unread call opens no statement of its own.
+(function (A) {
+	(function () {
+		doPrint();
+	})();
+	function doPrint() {
+		print(A);
+	}
+})("Hello World!");
+function print(A) {
+	if (!A.x) {
+		console.log(A);
+	}
+}
