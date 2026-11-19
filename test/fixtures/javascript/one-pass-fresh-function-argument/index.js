@@ -53,3 +53,16 @@ function shadowed(shadow) {
 }
 show(shadowed("R"));
 console.log(log.join());
+// A call printing as the object or class its function returns takes it bare.
+var out = {};
+(function (make) {
+	const o = make();
+	out.a = o;
+	out.b = o;
+})(() => ({ fake: true }));
+(function (make) {
+	const C = make();
+	out.c = C;
+	out.d = C;
+})(() => class { m() { return 7; } });
+console.log(out.a === out.b, out.a.fake, out.c === out.d, new out.d().m());
