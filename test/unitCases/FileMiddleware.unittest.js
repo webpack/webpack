@@ -93,7 +93,7 @@ describe("FileMiddleware deserialize", () => {
 		const { fs, state } = truncatedFs(content, content.length + 1);
 
 		await expect(
-			new FileMiddleware(fs).deserialize(true, { filename: "cache.pack" })
+			new FileMiddleware(fs, "xxhash64").deserialize(true, { filename: "cache.pack" })
 		).rejects.toThrow(/Unexpected end of file/);
 		// the read that returns 0 bytes ends it; without the guard it loops
 		expect(state.reads).toBe(2);
@@ -108,7 +108,7 @@ describe("FileMiddleware deserialize", () => {
 		);
 
 		await expect(
-			new FileMiddleware(fs).deserialize(true, { filename: "cache.pack" })
+			new FileMiddleware(fs, "xxhash64").deserialize(true, { filename: "cache.pack" })
 		).rejects.toThrow(/Unexpected end of file/);
 		expect(state.reads).toBeLessThan(32);
 	});
@@ -122,7 +122,7 @@ describe("FileMiddleware deserialize", () => {
 		);
 
 		await expect(
-			new FileMiddleware(fs).deserialize(true, { filename: "cache.pack" })
+			new FileMiddleware(fs, "xxhash64").deserialize(true, { filename: "cache.pack" })
 		).rejects.toThrow(/close failed/);
 	});
 });
@@ -153,7 +153,7 @@ describe("FileMiddleware serialize", () => {
 			})
 		});
 
-		await new FileMiddleware(fs).serialize(
+		await new FileMiddleware(fs, "xxhash64").serialize(
 			[Buffer.from("content".repeat(64))],
 			{
 				filename
@@ -203,7 +203,7 @@ describe("FileMiddleware serialize", () => {
 		});
 
 		await expect(
-			new FileMiddleware(fs).serialize([Buffer.from("content")], {
+			new FileMiddleware(fs, "xxhash64").serialize([Buffer.from("content")], {
 				filename: "/cache/index.pack.gz"
 			})
 		).rejects.toThrow(/disk full/);

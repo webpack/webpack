@@ -37,12 +37,14 @@ describe("mergeImportConditions", () => {
 	});
 
 	it("should name an anonymous layer that nests with a named one", () => {
+		const hashOptions = { hashFunction: "xxhash64", hashDigest: "hex" };
 		const inner = mergeImportConditions(
 			"",
 			undefined,
 			undefined,
 			[["outer", undefined, undefined]],
-			"https://example.com/a.css"
+			"https://example.com/a.css",
+			hashOptions
 		);
 		expect(inner.layer).toMatch(/^outer\.webpack-anonymous-[0-9a-f]{8}$/);
 		// the same in every build, and apart for another import's own layer
@@ -52,7 +54,8 @@ describe("mergeImportConditions", () => {
 				undefined,
 				undefined,
 				[["outer", undefined, undefined]],
-				"https://example.com/a.css"
+				"https://example.com/a.css",
+				hashOptions
 			).layer
 		).toBe(inner.layer);
 		expect(
@@ -61,7 +64,8 @@ describe("mergeImportConditions", () => {
 				undefined,
 				undefined,
 				[["outer", undefined, undefined]],
-				"https://example.com/b.css"
+				"https://example.com/b.css",
+				hashOptions
 			).layer
 		).not.toBe(inner.layer);
 		// a second import of one url in a stylesheet is a layer of its own
@@ -71,7 +75,8 @@ describe("mergeImportConditions", () => {
 				undefined,
 				undefined,
 				[["outer", undefined, undefined]],
-				JSON.stringify(["https://example.com/a.css", [40, 80]])
+				JSON.stringify(["https://example.com/a.css", [40, 80]]),
+				hashOptions
 			).layer
 		).not.toBe(
 			mergeImportConditions(
@@ -79,12 +84,18 @@ describe("mergeImportConditions", () => {
 				undefined,
 				undefined,
 				[["outer", undefined, undefined]],
-				JSON.stringify(["https://example.com/a.css", [0, 40]])
+				JSON.stringify(["https://example.com/a.css", [0, 40]]),
+				hashOptions
 			).layer
 		);
-		const outer = mergeImportConditions("inner", undefined, undefined, [
-			["", undefined, undefined]
-		]);
+		const outer = mergeImportConditions(
+			"inner",
+			undefined,
+			undefined,
+			[["", undefined, undefined]],
+			undefined,
+			hashOptions
+		);
 		expect(outer.layer).toMatch(/^webpack-anonymous-[0-9a-f]{8}\.inner$/);
 	});
 
