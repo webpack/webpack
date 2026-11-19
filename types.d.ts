@@ -20246,6 +20246,31 @@ declare interface LabelLike {
 }
 
 /**
+ * The built-in backend's options as the `transport` hook sees them.
+ */
+declare interface LazyCompilationBackendHookOptions {
+	/**
+	 * the client module the proxy modules load
+	 */
+	client: string;
+
+	/**
+	 * a server instance is shared: the backend serves its own urls on it, hands every other request to the server's request listeners, and neither listens on it nor closes it; needs a `urlBase`
+	 */
+	server?:
+		| ServerOptionsImportHttps
+		| ServerOptionsImportHttp
+		| (() => ServerLazyCompilationBackend)
+		| ServerImportHttp
+		| ServerImportHttps;
+
+	/**
+	 * the url clients reach a shared server at, e.g. `https://localhost:8080`
+	 */
+	urlBase?: string;
+}
+
+/**
  * Options for the default backend.
  */
 declare interface LazyCompilationDefaultBackendOptions {
@@ -20284,9 +20309,14 @@ declare interface LazyCompilationOptions {
 	backend?:
 		| ((
 				compiler: Compiler,
-				callback: (err: null | Error, backendApi?: BackendApi) => void
+				callback: (err: null | Error, backendApi?: BackendApi) => void,
+				transport?: LazyCompilationTransport
 		  ) => void)
-		| ((compiler: Compiler) => Promise<BackendApi>)
+		| ((
+				compiler: Compiler,
+				callback?: (err: null | Error, backendApi?: BackendApi) => void,
+				transport?: LazyCompilationTransport
+		  ) => Promise<BackendApi>)
 		| LazyCompilationDefaultBackendOptions;
 
 	/**
@@ -20304,6 +20334,52 @@ declare interface LazyCompilationOptions {
 	 */
 	test?: string | RegExp | GlobCondition | ((module: Module) => boolean);
 }
+declare class LazyCompilationPlugin {
+	/**
+	 * Creates an instance of LazyCompilationPlugin.
+	 */
+	constructor(__0: OptionsLazyCompilationPlugin);
+	backend: LazyCompilationTransport;
+	entries?: boolean;
+	imports?: boolean;
+	test?: string | RegExp | GlobCondition | ((module: Module) => boolean);
+
+	/**
+	 * Applies the plugin by registering its hooks on the compiler.
+	 */
+	apply(compiler: Compiler): void;
+
+	/**
+	 * Returns the hooks a development server taps to serve the lazy compilation backend from its own server.
+	 */
+	static getCompilerHooks(compiler: Compiler): LazyCompilationPluginHooks;
+}
+declare interface LazyCompilationPluginHooks {
+	/**
+	 * how the browser and the compiler talk, before the backend starts: options such as a development server's own `server` and `urlBase`, which a custom `backend` gets too, or a `backend` that brings its own `client` module, e.g. over a WebSocket
+	 */
+	transport: AsyncSeriesWaterfallHook<
+		[LazyCompilationTransport],
+		LazyCompilationTransport
+	>;
+}
+type LazyCompilationTransport = Omit<
+	LazyCompilationDefaultBackendOptions,
+	"client" | "server"
+> &
+	LazyCompilationBackendHookOptions & {
+		backend?:
+			| ((
+					compiler: Compiler,
+					callback: (err: null | Error, backendApi?: BackendApi) => void,
+					transport?: LazyCompilationTransport
+			  ) => void)
+			| ((
+					compiler: Compiler,
+					callback?: (err: null | Error, backendApi?: BackendApi) => void,
+					transport?: LazyCompilationTransport
+			  ) => Promise<BackendApi>);
+	};
 type LazyFunction<
 	InputValue,
 	OutputValue,
@@ -27105,6 +27181,23 @@ declare interface OptionsDelegatedModuleFactoryPlugin {
 	 * object for caching
 	 */
 	associatedObjectForCache?: object;
+}
+
+/**
+ * Defines the options type used by this module.
+ */
+declare interface OptionsLazyCompilationPlugin {
+	/**
+	 * how the browser and the compiler talk
+	 */
+	backend: LazyCompilationTransport;
+	entries?: boolean;
+	imports?: boolean;
+
+	/**
+	 * additional filter for lazy compiled entrypoint modules
+	 */
+	test?: string | RegExp | GlobCondition | ((module: Module) => boolean);
 }
 declare interface OptionsStreamChunks {
 	source?: boolean;
@@ -41124,6 +41217,9 @@ declare namespace exports {
 			SizeOnlySource,
 			CompatSource
 		};
+	}
+	export namespace hmr {
+		export { LazyCompilationPlugin };
 	}
 	export namespace experiments {
 		export namespace schemes {
