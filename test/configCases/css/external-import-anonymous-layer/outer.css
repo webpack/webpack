@@ -1,2 +1,5 @@
 @import url("https://test.cases/theme.css") layer;
+@import url("https://test.cases/repeat.css") layer;
+@import url("https://test.cases/between.css") layer;
+@import url("https://test.cases/repeat.css") layer;
 .outer { color: red; }

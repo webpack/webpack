@@ -27,6 +27,17 @@ it("should name an anonymous layer a kept @import nests with a named one", () =>
 	);
 });
 
+it("should name each import of one url apart", () => {
+	const css = readCss(name);
+	const layers = [];
+	const regexp =
+		/@import url\("https:\/\/test\.cases\/(?:repeat|between)\.css"\) layer\(([^)]+)\);/g;
+	let match;
+	while ((match = regexp.exec(css))) layers.push(match[1]);
+	expect(layers).toHaveLength(3);
+	expect(new Set(layers).size).toBe(3);
+});
+
 it("should keep a lone anonymous layer as `layer`", () => {
 	expect(readCss(name)).toContain(
 		'@import url("https://test.cases/lone.css") layer;'

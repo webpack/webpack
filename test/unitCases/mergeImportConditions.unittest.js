@@ -64,6 +64,24 @@ describe("mergeImportConditions", () => {
 				"https://example.com/b.css"
 			).layer
 		).not.toBe(inner.layer);
+		// a second import of one url in a stylesheet is a layer of its own
+		expect(
+			mergeImportConditions(
+				"",
+				undefined,
+				undefined,
+				[["outer", undefined, undefined]],
+				JSON.stringify(["https://example.com/a.css", [40, 80]])
+			).layer
+		).not.toBe(
+			mergeImportConditions(
+				"",
+				undefined,
+				undefined,
+				[["outer", undefined, undefined]],
+				JSON.stringify(["https://example.com/a.css", [0, 40]])
+			).layer
+		);
 		const outer = mergeImportConditions("inner", undefined, undefined, [
 			["", undefined, undefined]
 		]);
