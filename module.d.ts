@@ -110,10 +110,25 @@ declare namespace webpack {
 		fail = "fail"
 	}
 
+	/** the import attributes of the accepted or declined modules, as `import()` takes them */
+	interface HotOptions {
+		with?: Record<string, string>;
+		assert?: Record<string, string>;
+	}
+
 	interface Hot {
 		accept: {
 			(
 				modules: string | string[],
+				callback?: (outdatedDependencies: string[]) => void,
+				errorHandler?: (
+					err: Error,
+					context: { moduleId: string | number; dependencyId: string | number }
+				) => void
+			): void;
+			(
+				modules: string | string[],
+				options: HotOptions,
 				callback?: (outdatedDependencies: string[]) => void,
 				errorHandler?: (
 					err: Error,
@@ -128,7 +143,7 @@ declare namespace webpack {
 			): void;
 		};
 		status(): HotUpdateStatus;
-		decline(module?: string | string[]): void;
+		decline(module?: string | string[], options?: HotOptions): void;
 		dispose(callback: (data: object) => void): void;
 		addDisposeHandler(callback: (data: object) => void): void;
 		removeDisposeHandler(callback: (data: object) => void): void;

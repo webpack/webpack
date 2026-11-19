@@ -3,7 +3,7 @@ import text from "./payload.txt" with { type: "text" };
 import bytes from "./payload.txt" with { type: "bytes" };
 import update from "../../update.esm.js";
 
-import.meta.webpackHot.accept(["./data.json"]);
+import.meta.webpackHot.accept(["./data.json"], { with: { type: "json" } });
 
 it("should support typed imports (json/text/bytes) in a universal target", (done) => {
 	expect(data.value).toBe("attr-1");

@@ -13096,7 +13096,7 @@ declare interface HMRJavascriptParserHooks {
 	 * `hotAcceptCallback` for a tap reading the callback by id
 	 */
 	hotAcceptCallbackByPath: SyncBailHook<
-		[JavascriptNodeReader, number, string[]],
+		[JavascriptNodeReader, number, string[], undefined | ImportAttributes],
 		void
 	>;
 
@@ -13104,7 +13104,7 @@ declare interface HMRJavascriptParserHooks {
 	 * `hotAcceptWithoutCallback` for a tap reading the call by id
 	 */
 	hotAcceptWithoutCallbackByPath: SyncBailHook<
-		[JavascriptNodeReader, number, string[]],
+		[JavascriptNodeReader, number, string[], undefined | ImportAttributes],
 		void
 	>;
 }
