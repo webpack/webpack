@@ -1124,38 +1124,6 @@ exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-throu
 
 exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-drops-the-comments-some-names-as tokenizes 1`] = `"comment[0,13|4,10] open[13,16|14,15] text[16,17] close[17,21|19,20] comment[21,33|25,30] end=33"`;
 
-exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-escapes-a-character-reference parses 1`] = `
-"| <html>
-|   <head>
-|   <body>
-|     <p>
-|       \\"a &\\""
-`;
-
-exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-escapes-a-character-reference parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
-
-exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-escapes-a-character-reference prints {"mode":"minify"} 1`] = `"<p>a &amp;"`;
-
-exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-escapes-a-character-reference prints {"print":"htmlMinify"} 1`] = `"<p>a &amp;"`;
-
-exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-escapes-a-character-reference tokenizes 1`] = `"open[0,3|1,2] text[3,6] close[6,10|8,9] end=10"`;
-
-exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-escapes-a-character-reference-2 parses 1`] = `
-"| <html>
-|   <head>
-|   <body>
-|     <p>
-|       \\"a &am\\""
-`;
-
-exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-escapes-a-character-reference-2 parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
-
-exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-escapes-a-character-reference-2 prints {"mode":"minify"} 1`] = `"<p>a &amp;am"`;
-
-exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-escapes-a-character-reference-2 prints {"print":"htmlMinify"} 1`] = `"<p>a &amp;am"`;
-
-exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-escapes-a-character-reference-2 tokenizes 1`] = `"open[0,3|1,2] text[3,8] close[8,12|10,11] end=12"`;
-
 exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-escapes-a-character-reference-3 parses 1`] = `
 "| <html>
 |   <head>
@@ -1335,6 +1303,38 @@ exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-throu
 exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-keeps-the-body-of-literal-text-2 prints {"print":"htmlMinify"} 1`] = `"<style>.a[x=\\"<\\"]{color:red}</style>"`;
 
 exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-keeps-the-body-of-literal-text-2 tokenizes 1`] = `"open[0,7|1,6] text[7,31] close[31,39|33,38] end=39"`;
+
+exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-leaves-a-reference-open-at-the-end-bare parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"a &\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-leaves-a-reference-open-at-the-end-bare parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-leaves-a-reference-open-at-the-end-bare prints {"mode":"minify"} 1`] = `"<p>a &"`;
+
+exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-leaves-a-reference-open-at-the-end-bare prints {"print":"htmlMinify"} 1`] = `"<p>a &"`;
+
+exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-leaves-a-reference-open-at-the-end-bare tokenizes 1`] = `"open[0,3|1,2] text[3,6] close[6,10|8,9] end=10"`;
+
+exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-leaves-a-reference-open-at-the-end-bare-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"a &am\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-leaves-a-reference-open-at-the-end-bare-2 parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-leaves-a-reference-open-at-the-end-bare-2 prints {"mode":"minify"} 1`] = `"<p>a &am"`;
+
+exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-leaves-a-reference-open-at-the-end-bare-2 prints {"print":"htmlMinify"} 1`] = `"<p>a &am"`;
+
+exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-leaves-a-reference-open-at-the-end-bare-2 tokenizes 1`] = `"open[0,3|1,2] text[3,8] close[8,12|10,11] end=12"`;
 
 exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-minifies-an-html-data-url-an parses 1`] = `
 "| <html>
@@ -1943,9 +1943,9 @@ exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-throu
 
 exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-still-escapes-text-that-would-re-2 parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-still-escapes-text-that-would-re-2 prints {"mode":"minify"} 1`] = `"<p>a&amp;b"`;
+exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-still-escapes-text-that-would-re-2 prints {"mode":"minify"} 1`] = `"<p>a&b"`;
 
-exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-still-escapes-text-that-would-re-2 prints {"print":"htmlMinify"} 1`] = `"<p>a&amp;b"`;
+exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-still-escapes-text-that-would-re-2 prints {"print":"htmlMinify"} 1`] = `"<p>a&b"`;
 
 exports[`HTML syntax — invariants html-minify-assets-webpack-only-passes-through-still-escapes-text-that-would-re-2 tokenizes 1`] = `"open[0,3|1,2] text[3,10] end=10"`;
 
@@ -8323,7 +8323,7 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer parses 2`] = `"warning[0,19]:expected-doctype-but-got-chars"`;
 
-exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer prints {"mode":"minify"} 1`] = `"&&<&amp;"`;
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer prints {"mode":"minify"} 1`] = `"&&<&"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer tokenizes 1`] = `"text[0,19] end=19"`;
 
@@ -8336,7 +8336,7 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-2 parses 2`] = `"warning[9,10]:missing-semicolon-after-character-reference warning[14,15]:missing-semicolon-after-character-reference warning[0,14]:expected-doctype-but-got-chars"`;
 
-exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-2 prints {"mode":"minify"} 1`] = `"&&=&amp;"`;
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-2 prints {"mode":"minify"} 1`] = `"&&=&"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-2 tokenizes 1`] = `"warning[9,10]:missing-semicolon-after-character-reference warning[14,15]:missing-semicolon-after-character-reference text[0,14] end=14"`;
 
@@ -8939,7 +8939,7 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the parses 2`] = `"warning[1,2]:unexpected-null-character warning[0,2]:expected-doctype-but-got-chars warning[1,2]:invalid-codepoint warning[2,13]:unexpected-end-tag warning[13,14]:unexpected-null-character warning[13,14]:invalid-codepoint warning[22,22]:expected-closing-tag-but-got-eof"`;
 
-exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the prints {"mode":"minify"} 1`] = `"a<b>&amp;</b>"`;
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the prints {"mode":"minify"} 1`] = `"a<b>&</b>"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-the-whole-input-as-the tokenizes 1`] = `"warning[1,2]:unexpected-null-character text[0,2] close[2,13|4,12] warning[13,14]:unexpected-null-character text[13,14] open[14,17|15,16] text[17,22] end=22"`;
 
@@ -11484,7 +11484,7 @@ exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-er
 
 exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-div-amp-u0000 parses 2`] = `"warning[25,26]:unexpected-null-character warning[20,26]:invalid-codepoint warning[26,26]:expected-closing-tag-but-got-eof"`;
 
-exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-div-amp-u0000 prints {"mode":"minify"} 1`] = `"<!doctype html><div>&amp;</div>"`;
+exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-div-amp-u0000 prints {"mode":"minify"} 1`] = `"<!doctype html><div>&</div>"`;
 
 exports[`HTML syntax — invariants parse-html-parse-error-reports-the-tree-s-errors-in-doctype-html-div-amp-u0000 tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,20|16,19] warning[25,26]:unexpected-null-character text[20,26] end=26"`;
 
@@ -22543,7 +22543,7 @@ exports[`HTML syntax — invariants source-processor-attribute-quote-spelling-re
 
 exports[`HTML syntax — invariants source-processor-attribute-quote-spelling-reads-a-value-s-last-run-as-the-whole parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-attribute-quote-spelling-reads-a-value-s-last-run-as-the-whole prints {"mode":"minify"} 1`] = `"<p>a &amp;am"`;
+exports[`HTML syntax — invariants source-processor-attribute-quote-spelling-reads-a-value-s-last-run-as-the-whole prints {"mode":"minify"} 1`] = `"<p>a &am"`;
 
 exports[`HTML syntax — invariants source-processor-attribute-quote-spelling-reads-a-value-s-last-run-as-the-whole tokenizes 1`] = `"open[0,3|1,2] text[3,12] close[12,16|14,15] end=16"`;
 
@@ -47040,10 +47040,10 @@ ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba
 exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-merges-adjacent-text-across-a-flush parses 2`] = `""`;
 
 exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-merges-adjacent-text-across-a-flush prints {"mode":"minify"} 1`] = `
-"length 166050, sha256 41941596558b7308
+"length 166046, sha256 5883d0bd173c049e
 <!doctype html><body><p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>x<p>
 …
-&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&amp;b</body></html>"
+a&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&ba&b</body></html>"
 `;
 
 exports[`HTML syntax — invariants source-processor-streamed-walk-recycling-merges-adjacent-text-across-a-flush tokenizes 1`] = `
@@ -54549,7 +54549,7 @@ exports[`HTML syntax — invariants source-processor-tree-construction-the-print
 
 exports[`HTML syntax — invariants source-processor-tree-construction-the-printer-reads-back-walks-a-document-whose prints {"mode":"minify"} 1`] = `
 "<p>a</p>
-<pre>x</pre><p> é&amp;</p>b<textarea>
+<pre>x</pre><p> é&</p>b<textarea>
 
 </textarea>"
 `;
@@ -55585,7 +55585,7 @@ exports[`HTML syntax — invariants syntax-fuzz-an-ampersand-and-hash-stays-esca
 
 exports[`HTML syntax — invariants syntax-fuzz-an-ampersand-and-hash-stays-escaped-only-before-a-digit parses 2`] = `"warning[0,77]:expected-doctype-but-got-start-tag warning[109,109]:expected-closing-tag-but-got-eof"`;
 
-exports[`HTML syntax — invariants syntax-fuzz-an-ampersand-and-hash-stays-escaped-only-before-a-digit prints {"mode":"minify"} 1`] = `"<a a=&amp;#1 b=&amp;#xa c=&#x d=&#a e=&amp;#x; f=&#;>&# &amp;#1 &amp;#X; &amp;#xg</a>"`;
+exports[`HTML syntax — invariants syntax-fuzz-an-ampersand-and-hash-stays-escaped-only-before-a-digit prints {"mode":"minify"} 1`] = `"<a a=&amp;#1 b=&amp;#xa c=&#x d=&#a e=&amp;#x; f=&#;>&# &amp;#1 &amp;#X; &#xg</a>"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-an-ampersand-and-hash-stays-escaped-only-before-a-digit tokenizes 1`] = `"attr[3,4|6,13]\\" attr[15,16|18,26]\\" attr[28,29|31,38]\\" attr[40,41|43,50]\\" attr[52,53|55,63]\\" attr[65,66|68,75]\\" open[0,77|1,2] text[77,109] end=109"`;
 
@@ -55692,6 +55692,70 @@ exports[`HTML syntax — invariants syntax-fuzz-an-end-tag-past-an-open-select-i
 exports[`HTML syntax — invariants syntax-fuzz-an-end-tag-past-an-open-select-is-out-of-scope-3 prints {"mode":"minify"} 1`] = `"<div><select><option>aa</select></div>"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-an-end-tag-past-an-open-select-is-out-of-scope-3 tokenizes 1`] = `"open[0,5|1,4] open[5,13|6,12] open[13,21|14,20] text[21,22] close[22,28|24,27] text[28,29] end=29"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-prints-the-same-twice parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"&#X\\"
+|       <!--  -->
+|       \\"<\\"
+|     <p>
+|       \\"&\\"
+|       <!--  -->
+|       \\"
+\\"
+|     <p>
+|       \\"a&am\\"
+|       <!--  -->
+|       \\"<\\"
+|     <p>
+|       \\"a&#\\"
+|       <!--  -->
+|       \\"#\\""
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-prints-the-same-twice parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[6,7]:absence-of-digits-in-numeric-character-reference warning[6,8]:incorrectly-opened-comment warning[10,11]:invalid-first-character-of-tag-name warning[14,16]:incorrectly-opened-comment warning[25,27]:incorrectly-opened-comment warning[29,30]:invalid-first-character-of-tag-name warning[35,36]:absence-of-digits-in-numeric-character-reference warning[35,37]:incorrectly-opened-comment"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-prints-the-same-twice prints {"mode":"minify"} 1`] = `
+"<p>&#X&lt;<p>&
+<p>a&am&lt;<p>a&##"
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-prints-the-same-twice tokenizes 1`] = `"open[0,3|1,2] warning[6,7]:absence-of-digits-in-numeric-character-reference text[3,6] warning[6,8]:incorrectly-opened-comment comment[6,9|8,8] warning[10,11]:invalid-first-character-of-tag-name text[9,10] open[10,13|11,12] text[13,14] warning[14,16]:incorrectly-opened-comment comment[14,17|16,16] text[17,18] open[18,21|19,20] text[21,25] warning[25,27]:incorrectly-opened-comment comment[25,28|27,27] warning[29,30]:invalid-first-character-of-tag-name text[28,29] open[29,32|30,31] warning[35,36]:absence-of-digits-in-numeric-character-reference text[32,35] warning[35,37]:incorrectly-opened-comment comment[35,38|37,37] text[38,39] end=39"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-stays-escaped-where-text-continues-it parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"a&am\\"
+|       <!--  -->
+|       \\"p;\\"
+|     <p>
+|       \\"a&#\\"
+|       <!--  -->
+|       \\"1\\"
+|     <p>
+|       \\"a&#x\\"
+|       <!--  -->
+|       \\"a\\"
+|     <p>
+|       \\"a&\\"
+|       <!--  -->
+|       \\"#1\\"
+|     <p>
+|       \\"a&#\\"
+|       <!--  -->
+|       \\"x1\\""
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-stays-escaped-where-text-continues-it parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[7,9]:incorrectly-opened-comment warning[18,19]:absence-of-digits-in-numeric-character-reference warning[18,20]:incorrectly-opened-comment warning[29,30]:absence-of-digits-in-numeric-character-reference warning[29,31]:incorrectly-opened-comment warning[38,40]:incorrectly-opened-comment warning[49,50]:absence-of-digits-in-numeric-character-reference warning[49,51]:incorrectly-opened-comment"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-stays-escaped-where-text-continues-it prints {"mode":"minify"} 1`] = `"<p>a&amp;amp;<p>a&amp;#1<p>a&amp;#xa<p>a&amp;#1<p>a&amp;#x1"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-stays-escaped-where-text-continues-it tokenizes 1`] = `"open[0,3|1,2] text[3,7] warning[7,9]:incorrectly-opened-comment comment[7,10|9,9] text[10,12] open[12,15|13,14] warning[18,19]:absence-of-digits-in-numeric-character-reference text[15,18] warning[18,20]:incorrectly-opened-comment comment[18,21|20,20] text[21,22] open[22,25|23,24] warning[29,30]:absence-of-digits-in-numeric-character-reference text[25,29] warning[29,31]:incorrectly-opened-comment comment[29,32|31,31] text[32,33] open[33,36|34,35] text[36,38] warning[38,40]:incorrectly-opened-comment comment[38,41|40,40] text[41,43] open[43,46|44,45] warning[49,50]:absence-of-digits-in-numeric-character-reference text[46,49] warning[49,51]:incorrectly-opened-comment comment[49,52|51,51] text[52,54] end=54"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-dropping-a-bogus-comment-keeps-the-space-between-the-text parses 1`] = `
 "| <html>
@@ -58336,7 +58400,7 @@ exports[`HTML syntax — invariants tokenize-coverage-state-machine-branches-nam
 
 exports[`HTML syntax — invariants tokenize-coverage-state-machine-branches-named-character-reference-caps-the parses 2`] = `"warning[0,51]:expected-doctype-but-got-chars"`;
 
-exports[`HTML syntax — invariants tokenize-coverage-state-machine-branches-named-character-reference-caps-the prints {"mode":"minify"} 1`] = `"&amp;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"`;
+exports[`HTML syntax — invariants tokenize-coverage-state-machine-branches-named-character-reference-caps-the prints {"mode":"minify"} 1`] = `"&aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"`;
 
 exports[`HTML syntax — invariants tokenize-coverage-state-machine-branches-named-character-reference-caps-the tokenizes 1`] = `"text[0,51] end=51"`;
 
@@ -59143,7 +59207,7 @@ exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-the-co
 
 exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule-3 parses 2`] = `"warning[4,5]:missing-semicolon-after-character-reference warning[0,5]:expected-doctype-but-got-chars"`;
 
-exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule-3 prints {"mode":"minify"} 1`] = `"&amp;X"`;
+exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule-3 prints {"mode":"minify"} 1`] = `"&X"`;
 
 exports[`HTML syntax — invariants tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule-3 tokenizes 1`] = `"warning[4,5]:missing-semicolon-after-character-reference text[0,5] end=5"`;
 
@@ -59195,7 +59259,7 @@ exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-legac
 
 exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-legacy-named-entities-without-trailing parses 2`] = `"warning[4,5]:missing-semicolon-after-character-reference warning[0,4]:expected-doctype-but-got-chars"`;
 
-exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-legacy-named-entities-without-trailing prints {"mode":"minify"} 1`] = `"&amp;"`;
+exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-legacy-named-entities-without-trailing prints {"mode":"minify"} 1`] = `"&"`;
 
 exports[`HTML syntax — invariants tokenize-decode-entities-should-decode-legacy-named-entities-without-trailing tokenizes 1`] = `"warning[4,5]:missing-semicolon-after-character-reference text[0,4] end=4"`;
 
@@ -59554,7 +59618,7 @@ exports[`HTML syntax — invariants tokenize-decode-entities-should-stay-linear-
 
 exports[`HTML syntax — invariants tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after parses 2`] = `"warning[0,1001]:expected-doctype-but-got-chars"`;
 
-exports[`HTML syntax — invariants tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after prints {"mode":"minify"} 1`] = `"&amp;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"`;
+exports[`HTML syntax — invariants tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after prints {"mode":"minify"} 1`] = `"&aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"`;
 
 exports[`HTML syntax — invariants tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after tokenizes 1`] = `"text[0,1001] end=1001"`;
 
@@ -59567,7 +59631,7 @@ exports[`HTML syntax — invariants tokenize-decode-entities-should-stay-linear-
 
 exports[`HTML syntax — invariants tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after-2 parses 2`] = `"warning[4,5]:missing-semicolon-after-character-reference warning[0,1004]:expected-doctype-but-got-chars"`;
 
-exports[`HTML syntax — invariants tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after-2 prints {"mode":"minify"} 1`] = `"&amp;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"`;
+exports[`HTML syntax — invariants tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after-2 prints {"mode":"minify"} 1`] = `"&aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"`;
 
 exports[`HTML syntax — invariants tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after-2 tokenizes 1`] = `"warning[4,5]:missing-semicolon-after-character-reference text[0,1004] end=1004"`;
 
@@ -59702,7 +59766,7 @@ exports[`HTML syntax — invariants tokenize-fused-state-transitions-entity-then
 
 exports[`HTML syntax — invariants tokenize-fused-state-transitions-entity-then-fused-tag parses 2`] = `"warning[0,7]:expected-doctype-but-got-chars warning[10,10]:expected-closing-tag-but-got-eof"`;
 
-exports[`HTML syntax — invariants tokenize-fused-state-transitions-entity-then-fused-tag prints {"mode":"minify"} 1`] = `"a&amp;b<i></i>"`;
+exports[`HTML syntax — invariants tokenize-fused-state-transitions-entity-then-fused-tag prints {"mode":"minify"} 1`] = `"a&b<i></i>"`;
 
 exports[`HTML syntax — invariants tokenize-fused-state-transitions-entity-then-fused-tag tokenizes 1`] = `"text[0,7] open[7,10|8,9] end=10"`;
 
@@ -60045,7 +60109,7 @@ exports[`HTML syntax — invariants tokenize-parse-error-callback-does-not-repor
 
 exports[`HTML syntax — invariants tokenize-parse-error-callback-does-not-report-missing-semicolon-for-a-named parses 2`] = `"warning[0,7]:expected-doctype-but-got-chars"`;
 
-exports[`HTML syntax — invariants tokenize-parse-error-callback-does-not-report-missing-semicolon-for-a-named prints {"mode":"minify"} 1`] = `"a&amp;b"`;
+exports[`HTML syntax — invariants tokenize-parse-error-callback-does-not-report-missing-semicolon-for-a-named prints {"mode":"minify"} 1`] = `"a&b"`;
 
 exports[`HTML syntax — invariants tokenize-parse-error-callback-does-not-report-missing-semicolon-for-a-named tokenizes 1`] = `"text[0,7] end=7"`;
 
@@ -60927,7 +60991,7 @@ exports[`HTML syntax — invariants tokenize-parse-error-callback-validates-nume
 
 exports[`HTML syntax — invariants tokenize-parse-error-callback-validates-numeric-references-that-end-exactly-at-5 parses 2`] = `"warning[2,2]:absence-of-digits-in-numeric-character-reference warning[0,2]:expected-doctype-but-got-chars"`;
 
-exports[`HTML syntax — invariants tokenize-parse-error-callback-validates-numeric-references-that-end-exactly-at-5 prints {"mode":"minify"} 1`] = `"&amp;#"`;
+exports[`HTML syntax — invariants tokenize-parse-error-callback-validates-numeric-references-that-end-exactly-at-5 prints {"mode":"minify"} 1`] = `"&#"`;
 
 exports[`HTML syntax — invariants tokenize-parse-error-callback-validates-numeric-references-that-end-exactly-at-5 tokenizes 1`] = `"warning[2,2]:absence-of-digits-in-numeric-character-reference text[0,2] end=2"`;
 
@@ -60942,7 +61006,7 @@ exports[`HTML syntax — invariants tokenize-reads-a-named-reference-the-same-wh
 
 exports[`HTML syntax — invariants tokenize-reads-a-named-reference-the-same-wherever-the-input-repeats-it parses 2`] = `"warning[19,20]:unknown-named-character-reference warning[25,26]:unknown-named-character-reference warning[31,32]:unknown-named-character-reference warning[35,36]:missing-semicolon-after-character-reference warning[0,41]:expected-doctype-but-got-chars warning[54,55]:unknown-named-character-reference warning[65,65]:expected-closing-tag-but-got-eof"`;
 
-exports[`HTML syntax — invariants tokenize-reads-a-named-reference-the-same-wherever-the-input-repeats-it prints {"mode":"minify"} 1`] = `"<<≤<&lx;&nope;&nope;< &amp;<a b=\\"<&lx;&lt=&ltx\\"></a>"`;
+exports[`HTML syntax — invariants tokenize-reads-a-named-reference-the-same-wherever-the-input-repeats-it prints {"mode":"minify"} 1`] = `"<<≤<&lx;&nope;&nope;< &<a b=\\"<&lx;&lt=&ltx\\"></a>"`;
 
 exports[`HTML syntax — invariants tokenize-reads-a-named-reference-the-same-wherever-the-input-repeats-it tokenizes 1`] = `"warning[19,20]:unknown-named-character-reference warning[25,26]:unknown-named-character-reference warning[31,32]:unknown-named-character-reference warning[35,36]:missing-semicolon-after-character-reference text[0,41] warning[54,55]:unknown-named-character-reference attr[44,45|47,63]\\" open[41,65|42,43] end=65"`;
 
