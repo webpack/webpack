@@ -12,7 +12,7 @@ const name = path.basename(__filename, ".js");
 
 const layerOf = (css, url) => {
 	const match = new RegExp(
-		`@import url\\("${url.replace(/\./g, "\\.")}"\\) layer\\(([^)]+)\\);`
+		`@import url\\("${url.replace(/[\\^$.*+?()[\]{}|/]/g, "\\$&")}"\\) layer\\(([^)]+)\\);`
 	).exec(css);
 	return match && match[1];
 };
