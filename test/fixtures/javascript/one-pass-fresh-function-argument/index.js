@@ -41,4 +41,15 @@ function run() {
 }
 run();
 run();
+function opaque() {
+	return "W";
+}
+function shadowed(shadow) {
+	return (function (f, shadow) {
+		return f() + shadow;
+	})(function () {
+		return eval("shadow");
+	}, opaque());
+}
+show(shadowed("R"));
 console.log(log.join());
