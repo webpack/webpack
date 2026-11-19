@@ -55824,17 +55824,29 @@ exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropp
 |     <p>
 |       \\"&#X;\\"
 |       <!--  -->
-|       \\"<\\""
+|       \\"<\\"
+|     <p>
+|       \\"&\\"
+|       <!--  -->
+|       \\"#\\"
+|     <p>
+|       \\"&\\"
+|       <!--  -->
+|       \\"zz\\"
+|     <p>
+|       \\"&#\\"
+|       <!--  -->
+|       \\"x\\""
 `;
 
-exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-prints-the-same-twice parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[6,7]:absence-of-digits-in-numeric-character-reference warning[6,8]:incorrectly-opened-comment warning[10,11]:invalid-first-character-of-tag-name warning[14,16]:incorrectly-opened-comment warning[25,27]:incorrectly-opened-comment warning[29,30]:invalid-first-character-of-tag-name warning[35,36]:absence-of-digits-in-numeric-character-reference warning[35,37]:incorrectly-opened-comment warning[45,46]:absence-of-digits-in-numeric-character-reference warning[46,48]:incorrectly-opened-comment warning[50,50]:eof-before-tag-name"`;
+exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-prints-the-same-twice parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[6,7]:absence-of-digits-in-numeric-character-reference warning[6,8]:incorrectly-opened-comment warning[10,11]:invalid-first-character-of-tag-name warning[14,16]:incorrectly-opened-comment warning[25,27]:incorrectly-opened-comment warning[29,30]:invalid-first-character-of-tag-name warning[35,36]:absence-of-digits-in-numeric-character-reference warning[35,37]:incorrectly-opened-comment warning[45,46]:absence-of-digits-in-numeric-character-reference warning[46,48]:incorrectly-opened-comment warning[50,51]:invalid-first-character-of-tag-name warning[54,56]:incorrectly-opened-comment warning[62,64]:incorrectly-opened-comment warning[72,73]:absence-of-digits-in-numeric-character-reference warning[72,74]:incorrectly-opened-comment"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-prints-the-same-twice prints {"mode":"minify"} 1`] = `
 "<p>&#X<<p>&
-<p>a&am<<p>a&##<p>&amp;#X;<"
+<p>a&am<<p>a&##<p>&amp;#X;<<p>&#<p>&zz<p>&#x"
 `;
 
-exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-prints-the-same-twice tokenizes 1`] = `"open[0,3|1,2] warning[6,7]:absence-of-digits-in-numeric-character-reference text[3,6] warning[6,8]:incorrectly-opened-comment comment[6,9|8,8] warning[10,11]:invalid-first-character-of-tag-name text[9,10] open[10,13|11,12] text[13,14] warning[14,16]:incorrectly-opened-comment comment[14,17|16,16] text[17,18] open[18,21|19,20] text[21,25] warning[25,27]:incorrectly-opened-comment comment[25,28|27,27] warning[29,30]:invalid-first-character-of-tag-name text[28,29] open[29,32|30,31] warning[35,36]:absence-of-digits-in-numeric-character-reference text[32,35] warning[35,37]:incorrectly-opened-comment comment[35,38|37,37] text[38,39] open[39,42|40,41] warning[45,46]:absence-of-digits-in-numeric-character-reference text[42,46] warning[46,48]:incorrectly-opened-comment comment[46,49|48,48] warning[50,50]:eof-before-tag-name text[49,50] end=50"`;
+exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-prints-the-same-twice tokenizes 1`] = `"open[0,3|1,2] warning[6,7]:absence-of-digits-in-numeric-character-reference text[3,6] warning[6,8]:incorrectly-opened-comment comment[6,9|8,8] warning[10,11]:invalid-first-character-of-tag-name text[9,10] open[10,13|11,12] text[13,14] warning[14,16]:incorrectly-opened-comment comment[14,17|16,16] text[17,18] open[18,21|19,20] text[21,25] warning[25,27]:incorrectly-opened-comment comment[25,28|27,27] warning[29,30]:invalid-first-character-of-tag-name text[28,29] open[29,32|30,31] warning[35,36]:absence-of-digits-in-numeric-character-reference text[32,35] warning[35,37]:incorrectly-opened-comment comment[35,38|37,37] text[38,39] open[39,42|40,41] warning[45,46]:absence-of-digits-in-numeric-character-reference text[42,46] warning[46,48]:incorrectly-opened-comment comment[46,49|48,48] warning[50,51]:invalid-first-character-of-tag-name text[49,50] open[50,53|51,52] text[53,54] warning[54,56]:incorrectly-opened-comment comment[54,57|56,56] text[57,58] open[58,61|59,60] text[61,62] warning[62,64]:incorrectly-opened-comment comment[62,65|64,64] text[65,67] open[67,70|68,69] warning[72,73]:absence-of-digits-in-numeric-character-reference text[70,72] warning[72,74]:incorrectly-opened-comment comment[72,75|74,74] text[75,76] end=76"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-stays-escaped-where-text-continues-it parses 1`] = `
 "| <html>
@@ -55859,14 +55871,26 @@ exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropp
 |     <p>
 |       \\"a&#\\"
 |       <!--  -->
-|       \\"x1\\""
+|       \\"x1\\"
+|     <p>
+|       \\"&\\"
+|       <!--  -->
+|       \\"#\\"
+|       <!--  -->
+|       \\"1\\"
+|     <p>
+|       \\"a&am\\"
+|       <!--  -->
+|       \\"p\\"
+|       <!--  -->
+|       \\";\\""
 `;
 
-exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-stays-escaped-where-text-continues-it parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[7,9]:incorrectly-opened-comment warning[18,19]:absence-of-digits-in-numeric-character-reference warning[18,20]:incorrectly-opened-comment warning[29,30]:absence-of-digits-in-numeric-character-reference warning[29,31]:incorrectly-opened-comment warning[38,40]:incorrectly-opened-comment warning[49,50]:absence-of-digits-in-numeric-character-reference warning[49,51]:incorrectly-opened-comment"`;
+exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-stays-escaped-where-text-continues-it parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[7,9]:incorrectly-opened-comment warning[18,19]:absence-of-digits-in-numeric-character-reference warning[18,20]:incorrectly-opened-comment warning[29,30]:absence-of-digits-in-numeric-character-reference warning[29,31]:incorrectly-opened-comment warning[38,40]:incorrectly-opened-comment warning[49,50]:absence-of-digits-in-numeric-character-reference warning[49,51]:incorrectly-opened-comment warning[58,60]:incorrectly-opened-comment warning[62,64]:incorrectly-opened-comment warning[73,75]:incorrectly-opened-comment warning[77,79]:incorrectly-opened-comment"`;
 
-exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-stays-escaped-where-text-continues-it prints {"mode":"minify"} 1`] = `"<p>a&amp;amp;<p>a&amp;#1<p>a&amp;#xa<p>a&amp;#1<p>a&amp;#x1"`;
+exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-stays-escaped-where-text-continues-it prints {"mode":"minify"} 1`] = `"<p>a&amp;amp;<p>a&amp;#1<p>a&amp;#xa<p>a&amp;#1<p>a&amp;#x1<p>&amp;#1<p>a&amp;amp;"`;
 
-exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-stays-escaped-where-text-continues-it tokenizes 1`] = `"open[0,3|1,2] text[3,7] warning[7,9]:incorrectly-opened-comment comment[7,10|9,9] text[10,12] open[12,15|13,14] warning[18,19]:absence-of-digits-in-numeric-character-reference text[15,18] warning[18,20]:incorrectly-opened-comment comment[18,21|20,20] text[21,22] open[22,25|23,24] warning[29,30]:absence-of-digits-in-numeric-character-reference text[25,29] warning[29,31]:incorrectly-opened-comment comment[29,32|31,31] text[32,33] open[33,36|34,35] text[36,38] warning[38,40]:incorrectly-opened-comment comment[38,41|40,40] text[41,43] open[43,46|44,45] warning[49,50]:absence-of-digits-in-numeric-character-reference text[46,49] warning[49,51]:incorrectly-opened-comment comment[49,52|51,51] text[52,54] end=54"`;
+exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-stays-escaped-where-text-continues-it tokenizes 1`] = `"open[0,3|1,2] text[3,7] warning[7,9]:incorrectly-opened-comment comment[7,10|9,9] text[10,12] open[12,15|13,14] warning[18,19]:absence-of-digits-in-numeric-character-reference text[15,18] warning[18,20]:incorrectly-opened-comment comment[18,21|20,20] text[21,22] open[22,25|23,24] warning[29,30]:absence-of-digits-in-numeric-character-reference text[25,29] warning[29,31]:incorrectly-opened-comment comment[29,32|31,31] text[32,33] open[33,36|34,35] text[36,38] warning[38,40]:incorrectly-opened-comment comment[38,41|40,40] text[41,43] open[43,46|44,45] warning[49,50]:absence-of-digits-in-numeric-character-reference text[46,49] warning[49,51]:incorrectly-opened-comment comment[49,52|51,51] text[52,54] open[54,57|55,56] text[57,58] warning[58,60]:incorrectly-opened-comment comment[58,61|60,60] text[61,62] warning[62,64]:incorrectly-opened-comment comment[62,65|64,64] text[65,66] open[66,69|67,68] text[69,73] warning[73,75]:incorrectly-opened-comment comment[73,76|75,75] text[76,77] warning[77,79]:incorrectly-opened-comment comment[77,80|79,79] text[80,81] end=81"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-dropping-a-bogus-comment-keeps-the-space-between-the-text parses 1`] = `
 "| <html>
