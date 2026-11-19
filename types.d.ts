@@ -20216,7 +20216,7 @@ declare interface LazyCompilationOptions {
 		  ) => void)
 		| ((
 				compiler: Compiler,
-				callback?: any,
+				callback?: (err: null | Error, backendApi?: BackendApi) => void,
 				transport?: LazyCompilationTransport
 		  ) => Promise<BackendApi>)
 		| LazyCompilationDefaultBackendOptions;
@@ -20278,7 +20278,7 @@ type LazyCompilationTransport = Omit<
 			  ) => void)
 			| ((
 					compiler: Compiler,
-					callback?: any,
+					callback?: (err: null | Error, backendApi?: BackendApi) => void,
 					transport?: LazyCompilationTransport
 			  ) => Promise<BackendApi>);
 	};
