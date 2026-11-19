@@ -26332,7 +26332,7 @@ declare interface OptimizationMinimizeXml {
 	collapseAttributeWhitespace?: boolean;
 
 	/**
-	 * Remove whitespace-only text in known SVG containers, under `xml:space` too since that lays out text alone, preserving text content and foreign content. Off by default because scripts can observe whitespace nodes.
+	 * Remove whitespace-only text in known SVG containers, under `xml:space` too since that lays out text alone, preserving text content and foreign content, and kept where a stylesheet reads `:empty` or is unread. On by default, since that text renders nothing; `false` keeps it for scripts that read whitespace nodes.
 	 * @since 5.113.0
 	 */
 	collapseWhitespace?: boolean;
@@ -26503,7 +26503,7 @@ declare interface OptimizationMinimizeXml {
 	removeUnknownElements?: boolean;
 
 	/**
-	 * Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.
+	 * Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. On by default, since no name uses them; `false` keeps them for scripts that read namespace declarations.
 	 * @since 5.113.0
 	 */
 	removeUnusedNamespaces?: boolean;

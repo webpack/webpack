@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
+	<style>g:empty + path { fill: red }</style>
+	<g inkscape:label="Layer"> </g>
+	<path d="M0 0h10v10z"/>
+</svg>

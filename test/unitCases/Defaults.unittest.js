@@ -6409,7 +6409,7 @@ describe("optimization.minimize", () => {
 		).toEqual(DEFAULT_MINIMIZE_OPTIONS);
 	});
 
-	it("should shorten SVG spellings wherever XML is minified", () => {
+	it("should apply the rendering-neutral SVG defaults wherever XML is minified", () => {
 		const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
 			require("../..").config;
 
@@ -6430,7 +6430,9 @@ describe("optimization.minimize", () => {
 		const SHORTEN = {
 			shortenNumbers: true,
 			shortenColors: true,
-			shortenPathData: true
+			shortenPathData: true,
+			collapseWhitespace: true,
+			removeUnusedNamespaces: true
 		};
 
 		expect(
