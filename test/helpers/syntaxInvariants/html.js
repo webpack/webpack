@@ -839,7 +839,8 @@ const sweepRespellings = (minify, html, minified) => {
 	return reports;
 };
 
-// Inline elements an empty one of which renders nothing, so it splits no word.
+// Inline elements an empty, attribute-less one of which renders nothing, so it
+// splits no word; one with attributes is kept, and its edges are edges.
 const EMPTY_INLINE_ELEMENTS = new Set(
 	"a abbr b bdi bdo cite code data del dfn em i ins kbd label mark s samp small span strong sub sup time u var".split(
 		" "
@@ -885,7 +886,11 @@ const htmlMeaning = (html, tree, cssOptions) => {
 		[NodeType.Element]: {
 			enter: (nodePath) => {
 				settle();
-				if (!tree && EMPTY_INLINE_ELEMENTS.has(nodePath.name())) {
+				if (
+					!tree &&
+					EMPTY_INLINE_ELEMENTS.has(nodePath.name()) &&
+					nodePath.fieldCount(Field.attributes) === 0
+				) {
 					pending = true;
 				} else {
 					flush();
