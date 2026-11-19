@@ -243,7 +243,7 @@ const PRINTERS = {
 describe("HTML syntax — invariants", () => {
 	const all = fixtures("html");
 	// Launched by the first marked set only, so a run marking none opens none.
-	const renders = renderBehavior();
+	const renders = renderBehavior("html");
 
 	afterAll(() => renders.close());
 
