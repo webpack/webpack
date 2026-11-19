@@ -94,13 +94,24 @@ describe("Profiling Plugin", () => {
 		const webpack = require("../../");
 
 		const finalPath = path.join(testDirectory, "js/profilingRunTwice.json");
+		let runs = 0;
 		const compiler = webpack({
 			context: testDirectory,
 			entry: "./fixtures/a.js",
 			output: {
 				path: path.join(testDirectory, "js/profilingRunTwiceOut")
 			},
-			plugins: [new webpack.debug.ProfilingPlugin({ outputPath: finalPath })]
+			plugins: [
+				new webpack.debug.ProfilingPlugin({ outputPath: finalPath }),
+				{
+					// a tap the plugin intercepts, so the second run traces past the end
+					apply(compiler) {
+						compiler.hooks.beforeRun.tap("RunProbePlugin", () => {
+							runs++;
+						});
+					}
+				}
+			]
 		});
 		compiler.run((err) => {
 			if (err) return done(err);
@@ -113,6 +124,7 @@ describe("Profiling Plugin", () => {
 						(/** @type {EXPECTED_ANY} */ entry) => entry.name === "CpuProfile"
 					)
 				).toHaveLength(1);
+				expect(runs).toBe(2);
 				compiler.close(done);
 			});
 		});
