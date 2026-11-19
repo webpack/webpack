@@ -3717,7 +3717,7 @@ export interface OptimizationMinimizeXml {
 	 */
 	shortenNumbers?: boolean;
 	/**
-	 * Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. On by default, as `minimize.html` normalizes attribute spellings; `false` keeps the source spelling where a selector or script reads it.
+	 * Compact SVG path numbers, repeated commands and separators without rounding, preserving arc flags and DTD-declared values; drop segments that draw nothing, such as a line back to the start before `z`, where no marker, stylesheet, script, animation or ID can observe them. On by default, as `minimize.html` normalizes attribute spellings; `false` keeps the source spelling where a selector or script reads it.
 	 * @since 5.113.0
 	 */
 	shortenPathData?: boolean;
