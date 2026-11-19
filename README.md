@@ -87,7 +87,7 @@ Check out webpack's quick [**Get Started**](https://webpack.js.org/guides/gettin
 
 ### Browser Compatibility
 
-Webpack supports all browsers that are [ES5-compliant](https://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
+Webpack supports all browsers that are [ES5-compliant](https://compat-table.github.io/compat-table/es5/) (IE8 and below are not supported).
 Webpack also needs `Promise` for `import()` and `require.ensure()`. If you want to support older browsers, you will need to [load a polyfill](https://webpack.js.org/guides/shimming/) before using these expressions.
 
 ## Concepts
@@ -277,7 +277,7 @@ Contributions go far beyond pull requests and commits. Although we love giving y
 - [Searching #webpack on twitter](https://twitter.com/search?q=webpack) and helping someone else who needs help
 - Teaching others how to contribute to one of the many webpack's repos!
 - [Blogging, speaking about, or creating tutorials](https://github.com/webpack-contrib/awesome-webpack) about one of webpack's many features.
-- Helping others in our webpack [gitter channel](https://gitter.im/webpack/webpack).
+- Helping others in our webpack [Discord server](https://discord.gg/webpack).
 - [The Contributor's Guide to webpack](https://medium.com/webpack/contributors-guide/home)
 
 To get started have a look at our [documentation on contributing](https://github.com/webpack/webpack/blob/main/CONTRIBUTING.md).
