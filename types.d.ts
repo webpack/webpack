@@ -40049,6 +40049,10 @@ declare namespace exports {
 					path: JavascriptSyntaxPath,
 					writer: PrintContext<JavascriptSyntaxPath, number>
 				) => string;
+				export let getNodePrinter: () => (
+					path: JavascriptSyntaxPath,
+					writer: PrintContext<JavascriptSyntaxPath, number>
+				) => string;
 				export let IGNORED_FORMAT_OPTIONS: string[];
 				export let createUnicode: () => {
 					getFullChar: (str: string, pos: number) => string;
