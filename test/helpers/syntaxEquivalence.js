@@ -79,7 +79,12 @@ const collectFixtures = (dir, extension) => {
 const buildCorpus = (dir, extension, minify) => {
 	const files = collectFixtures(dir, extension);
 	return files.map((file) => {
-		const raw = fs.readFileSync(file, "utf8");
+		const bytes = fs.readFileSync(file);
+		// read as a browser reads it: a UTF-16 byte order mark decides the encoding
+		const raw =
+			bytes[0] === 0xff && bytes[1] === 0xfe
+				? bytes.toString("utf16le", 2)
+				: bytes.toString("utf8");
 		return {
 			name: path
 				.relative(path.join(__dirname, "../.."), file)
