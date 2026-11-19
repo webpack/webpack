@@ -3,7 +3,8 @@
 		"xml": true,
 		"mode": "minify",
 		"collapseWhitespace": true,
-		"shortenSvgPathData": true
+		"shortenSvgPathData": true,
+		"behavior": true
 	},
 	{
 		"xml": true,
@@ -11,6 +12,7 @@
 		"collapseWhitespace": true,
 		"shortenSvgNumbers": true,
 		"shortenSvgPathData": true,
-		"svgPrecision": 1
+		"svgPrecision": 1,
+		"behavior": true
 	}
 ]
