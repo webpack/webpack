@@ -44,3 +44,29 @@ function m(n, p) {
 	return n ? n++ : ((p = f), p(n));
 }
 console.log(m(1), m(0));
+function thrown(s, a) {
+	if (a) throw Error("a");
+	throw ((s = Object.keys(s).join(",")), Error(s));
+}
+function returned(a, h, x) {
+	if (a) return 1;
+	return (x = h()), [x];
+}
+function branch(a, h, x) {
+	return a ? 2 : ((x = h()), [x]);
+}
+var arrow = (a, h, x) => (a ? 3 : ((x = h()), [x]));
+[0, 1].forEach(function (a) {
+	try {
+		thrown({ p: 1, q: 2 }, a);
+	} catch (e) {
+		console.log(e.message);
+	}
+	console.log(returned(a, f), branch(a, f), arrow(a, f));
+});
+console.log(returned(0, f), branch(0, f), arrow(0, f));
+try {
+	thrown({}, 1);
+} catch (e) {
+	console.log(e.message);
+}
