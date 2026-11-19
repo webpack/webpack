@@ -247,8 +247,10 @@ Jest runs each file in one worker, so a long suite in one file leaves the runner
 
 ### Suites that drive a real browser
 
-`unitCases/ProfilingPlugin.unittest.js`, `specCases/syntaxEquivalence.spectest.js` and
-`WebpackDevServer.longtest.js` launch a browser through `test/helpers/launchBrowser.js`,
+`unitCases/ProfilingPlugin.unittest.js`, `unitCases/html/behavior.unittest.js`,
+`unitCases/html/invariants.unittest.js` (on a fixture marking `"behavior": true`),
+`specCases/syntaxEquivalence.spectest.js` and `WebpackDevServer.longtest.js`
+launch a browser through `test/helpers/launchBrowser.js`,
 which drives all three engines with `playwright-core`.
 **A browser that will not launch fails the suite — it is never skipped**, so no
 environment can report these checks as passing without having run them. The
@@ -286,8 +288,8 @@ Every engine is the build the lockfile pins: the ones the installed
 a new engine arrives in one pull request, and a defect or quirk it fixes fails
 there rather than under unrelated changes.
 
-`test:bun` and `test:deno` run the Chrome-driven `ProfilingPlugin.unittest.js`
-and `WebpackDevServer.longtest.js` too, on the same pinned Chrome.
+`test:bun` and `test:deno` run the Chrome-driven unit suites and
+`WebpackDevServer.longtest.js` too, on the same pinned Chrome.
 
 ### Generated code is held to `output.environment`
 
