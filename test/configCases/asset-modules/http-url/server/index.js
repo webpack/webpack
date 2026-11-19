@@ -63,6 +63,12 @@ function createServer() {
 			return;
 		}
 		const pathname = "." + url.replace(/\?.*$/, "");
+		// serve only this directory: a `../` in the request would read any file
+		if (!path.resolve(__dirname, pathname).startsWith(__dirname + path.sep)) {
+			res.statusCode = 403;
+			res.end();
+			return;
+		}
 		if (url.endsWith("?no-cache")) {
 			res.setHeader("Cache-Control", "no-cache, max-age=60");
 		} else if (url.endsWith("?no-store")) {
