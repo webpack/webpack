@@ -8,11 +8,6 @@ updates:
     labels:
       - dependencies
     versioning-strategy: widen
-    ignore:
-      # 2.7.1 calls `Array.prototype.flat`, which Node.js 10 lacks, and the
-      # coffee-loader cases run on the Node.js 10 integration job.
-      - dependency-name: "coffeescript"
-        versions: [">2.7.0"]
     groups:
       # The engines the browser suites compare against: playwright-core pins the
       # Chrome, Firefox and WebKit builds CI installs.

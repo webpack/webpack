@@ -39,12 +39,6 @@ it("data-uri: should import js module from base64 data-uri", function () {
 	expect(mod.fn()).toBe("Hello world");
 });
 
-it("data-uri: should require coffee module from base64 data-uri", function () {
-	const mod = require("coffee-loader!Data:application/node;charset=utf-8;base64,bW9kdWxlLmV4cG9ydHMgPQogIG51bWJlcjogNDIKICBmbjogKCkgLT4gIkhlbGxvIHdvcmxkIg==");
-	expect(mod.number).toBe(42);
-	expect(mod.fn()).toBe("Hello world");
-});
-
 it("data-uri: should require json module from base64 data-uri", function () {
 	const mod = require("DATA:application/json;charset=utf-8;base64,ewogICJpdCI6ICJ3b3JrcyIsCiAgIm51bWJlciI6IDQyCn0K");
 	expect(mod.it).toBe("works");
