@@ -270,8 +270,8 @@ const createDocumentGenerator = (seed, createRandom) => {
 		const way = below(10);
 		if (way < 3 && /^[^\s"'=<>`]+$/.test(value)) return `=${value}`;
 		if (way < 5 && !value.includes("'")) return `='${value}'`;
-		if (way === 5) return ` = "${value}"`;
-		return `="${value.replace(/"/g, "&quot;")}"`;
+		const escaped = value.replace(/"/g, "&quot;");
+		return way === 5 ? ` = "${escaped}"` : `="${escaped}"`;
 	};
 
 	/**

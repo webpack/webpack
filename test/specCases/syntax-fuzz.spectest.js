@@ -90,7 +90,19 @@ const SEEDS = process.env.SYNTAX_FUZZ_SEED
 				: Number(process.env.SYNTAX_FUZZ_SEED)
 		]
 	: [1, 2, 3, 4, 5, 6, 7, 8];
-const INPUTS_PER_SEED = Number(process.env.SYNTAX_FUZZ_INPUTS) || 100;
+/**
+ * @param {string | undefined} raw what `SYNTAX_FUZZ_INPUTS` is set to
+ * @returns {number} the inputs each seed generates
+ */
+const inputsPerSeed = (raw) => {
+	if (raw === undefined || raw === "") return 100;
+	const count = Number(raw);
+	if (!Number.isSafeInteger(count) || count < 1) {
+		throw new Error(`SYNTAX_FUZZ_INPUTS must be a positive integer, not ${raw}`);
+	}
+	return count;
+};
+const INPUTS_PER_SEED = inputsPerSeed(process.env.SYNTAX_FUZZ_INPUTS);
 const SEED_TIMEOUT = 600000;
 // How many times a finding's input is tried smaller before it stands as found.
 const SHRINK_BUDGET = 400;
@@ -255,8 +267,9 @@ const unknown = (findings, known, lang) => {
 };
 
 /**
- * Every difference this suite's fixtures file as known; another fixture's
- * entry answers for that fixture alone, not for a whole relation.
+ * Every difference this suite's fixtures file, each known for its relation
+ * under its presets in every seed (`knownEntry`). A fixture outside this suite
+ * answers only for its own input, so its entries are left out.
  * @param {"css" | "html"} lang the language
  * @returns {KnownDifference[]} their `expected.json` entries
  */
@@ -347,15 +360,21 @@ const browserTrees = (documents) => {
 
 /**
  * Runs in the page: each stylesheet's top-level rules as the browser
- * serializes them.
+ * serializes them, read from a `<style>`, which keeps the `@import` rules
+ * `replaceSync` drops; the page's policy keeps them from loading.
  * @param {string[]} sheets the stylesheets
  * @returns {string[][]} one list of rules per sheet
  */
 const browserRules = (sheets) =>
 	sheets.map((text) => {
-		const sheet = new CSSStyleSheet();
-		sheet.replaceSync(text);
-		return [...sheet.cssRules].map((rule) => rule.cssText);
+		const element = document.createElement("style");
+		element.textContent = text;
+		document.head.append(element);
+		const rules = [
+			.../** @type {CSSStyleSheet} */ (element.sheet).cssRules
+		].map((rule) => rule.cssText);
+		element.remove();
+		return rules;
 	});
 
 /**
@@ -372,21 +391,70 @@ const browserFacets = (documents) => {
 
 /**
  * Runs in the page: each declared `style` attribute as the browser serializes
- * it, with its element's name, in document order. A relaxed set never drops
- * or reorders an element holding declarations, since such an element is not empty.
+ * it, with its element's name, in document order, template contents included.
+ * A relaxed set never drops or reorders an element holding declarations.
  * @param {string[]} documents the documents
  * @returns {string[][]} one list per document
  */
 const inlineStyles = (documents) =>
-	documents.map((html) =>
-		[...new DOMParser().parseFromString(html, "text/html").querySelectorAll("[style]")]
-			.map((element) => [
-				element.localName,
-				/** @type {HTMLElement} */ (element).style.cssText
-			])
-			.filter(([, text]) => text !== "")
-			.map(([name, text]) => `${name}{${text}}`)
-	);
+	documents.map((html) => {
+		/** @type {string[]} */
+		const out = [];
+		/**
+		 * @param {ParentNode} parent where to look
+		 * @returns {void}
+		 */
+		const walk = (parent) => {
+			for (const child of parent.children) {
+				const text = child.hasAttribute("style")
+					? /** @type {HTMLElement} */ (child).style.cssText
+					: "";
+				if (text !== "") out.push(`${child.localName}{${text}}`);
+				if (child instanceof HTMLTemplateElement) walk(child.content);
+				walk(child);
+			}
+		};
+		walk(new DOMParser().parseFromString(html, "text/html"));
+		return out;
+	});
+
+/**
+ * Runs in the page: whether each document holds a `style` attribute or a
+ * `<style>`, template contents included, as the browser parses it.
+ * @param {string[]} documents the documents
+ * @returns {boolean[]} one answer per document
+ */
+const holdsStyles = (documents) =>
+	documents.map((html) => {
+		/**
+		 * @param {ParentNode} parent where to look
+		 * @returns {boolean} whether it holds one
+		 */
+		const holds = (parent) =>
+			[...parent.children].some(
+				(child) =>
+					child.hasAttribute("style") ||
+					child.localName === "style" ||
+					(child instanceof HTMLTemplateElement && holds(child.content)) ||
+					holds(child)
+			);
+		return holds(new DOMParser().parseFromString(html, "text/html"));
+	});
+
+// A string the CSSOM serializes, always double-quoted.
+const CSS_STRING = /"(?:[^"\\]|\\.)*"/g;
+
+/**
+ * Two serialized rules alike: their strings exactly, the rest within the
+ * printer's numeric rounding.
+ * @param {string} one a rule
+ * @param {string} other another
+ * @returns {boolean} whether they are alike
+ */
+const sameRule = (one, other) =>
+	(one.match(CSS_STRING) || []).join("\n") ===
+		(other.match(CSS_STRING) || []).join("\n") &&
+	numericallyEqual(one.replace(CSS_STRING, '""'), other.replace(CSS_STRING, '""'));
 
 /**
  * @param {string[]} before one sheet's rules
@@ -397,7 +465,7 @@ const ruleDifference = (before, after) => {
 	if (before.length !== after.length) {
 		return `rules: ${before.length} vs ${after.length}`;
 	}
-	const at = before.findIndex((rule, i) => !numericallyEqual(rule, after[i]));
+	const at = before.findIndex((rule, i) => !sameRule(rule, after[i]));
 	return at === -1
 		? ""
 		: `rule ${at}: ${JSON.stringify(before[at])} vs ${JSON.stringify(after[at])}`;
@@ -466,10 +534,11 @@ const takeCoverage = (keep) => {
 };
 
 /**
- * Each offset's innermost named function, read off the source: V8 lists only
- * the functions it compiled, which depends on what ran.
+ * Each offset's innermost named function, qualified by the classes and
+ * functions holding it, read off the source: V8 lists only the functions it
+ * compiled, which depends on what ran.
  * @param {string} text a script's source
- * @returns {string[]} the function name per offset, "" outside every function
+ * @returns {string[]} the qualified name per offset, "" outside every function
  */
 const functionNames = (text) => {
 	/** @type {{ start: number, end: number, name: string }[]} */
@@ -477,15 +546,26 @@ const functionNames = (text) => {
 	/**
 	 * @param {EXPECTED_ANY} node an ESTree node
 	 * @param {string} name what its parent calls it
+	 * @param {string} scope the qualified name of what holds it
 	 */
-	const walk = (node, name) => {
-		if (
+	const walk = (node, name, scope) => {
+		let inner = scope;
+		const isFunction =
 			node.type === "FunctionDeclaration" ||
 			node.type === "FunctionExpression" ||
-			node.type === "ArrowFunctionExpression"
+			node.type === "ArrowFunctionExpression";
+		if (
+			isFunction ||
+			node.type === "ClassDeclaration" ||
+			node.type === "ClassExpression"
 		) {
 			const own = node.id ? node.id.name : name;
-			if (own !== "") named.push({ start: node.start, end: node.end, name: own });
+			if (own !== "") {
+				inner = scope === "" ? own : `${scope}.${own}`;
+				if (isFunction) {
+					named.push({ start: node.start, end: node.end, name: inner });
+				}
+			}
 		}
 		for (const key of Object.keys(node)) {
 			const value = node[key];
@@ -504,11 +584,11 @@ const functionNames = (text) => {
 				} else if (node.type === "AssignmentExpression" && key === "right") {
 					childName = node.left.property ? node.left.property.name || "" : "";
 				}
-				walk(child, childName);
+				walk(child, childName, inner);
 			}
 		}
 	};
-	walk(acorn.parse(text, { ecmaVersion: "latest", sourceType: "script" }), "");
+	walk(acorn.parse(text, { ecmaVersion: "latest", sourceType: "script" }), "", "");
 	named.sort((a, b) => a.start - b.start || b.end - a.end);
 	/** @type {string[]} */
 	const names = Array.from({ length: text.length }, () => "");
@@ -592,6 +672,20 @@ const lineChanges = (recorded, found) => {
 	return out;
 };
 
+describe("syntax fuzz generators", () => {
+	it("write the same inputs for a seed every time", () => {
+		const one = createStylesheetGenerator(7, createRandom);
+		const other = createStylesheetGenerator(7, createRandom);
+		const page = createDocumentGenerator(7, createRandom);
+		const samePage = createDocumentGenerator(7, createRandom);
+		for (let i = 0; i < 5; i++) {
+			expect(other.stylesheet()).toBe(one.stylesheet());
+			expect(other.declarations()).toBe(one.declarations());
+			expect(samePage()).toBe(page());
+		}
+	});
+});
+
 describe("syntax fuzz in real chrome", () => {
 	/** @type {import("playwright-core").Browser} */
 	let browser;
@@ -599,6 +693,10 @@ describe("syntax fuzz in real chrome", () => {
 	let page;
 	const knownCss = knownOf("css");
 	const knownHtml = knownOf("html");
+	// WHY: a shrink warms caches a later generated input would have filled, and
+	// leaves them filled, so only a run that cut nothing down counts lines.
+	let shrank = false;
+	let seedsDone = 0;
 
 	beforeAll(async () => {
 		browser = await launchBrowser({ browser: "chrome" });
@@ -684,6 +782,10 @@ describe("syntax fuzz in real chrome", () => {
 		}));
 		/** @type {{ relation: string, preset: string, what: string }[]} */
 		const out = [];
+		const holds = await page.evaluate(holdsStyles, [
+			source,
+			...printed.map(({ after }) => after)
+		]);
 		const facets = await page.evaluate(browserFacets, [
 			{ source, relax: [] },
 			...printed.map(({ after, relax }) => ({ source: after, relax }))
@@ -724,7 +826,7 @@ describe("syntax fuzz in real chrome", () => {
 			}
 			// The facets leave a `style` attribute to a render, and a sheet's text
 			// can be part of what a page shows, as an option's label.
-			if (relax.length === 0 && /\sstyle\s*=|<style/i.test(source)) {
+			if (relax.length === 0 && (holds[0] || holds[i + 1])) {
 				renders.push({ name, before: source, after });
 			} else if (relax.length > 0) {
 				// A render cannot set aside what a relaxed set rewrites on purpose.
@@ -806,17 +908,25 @@ describe("syntax fuzz in real chrome", () => {
 				if (seen.has(key) || knownEntry(found, known) !== undefined) continue;
 				seen.add(key);
 				takeCoverage(true);
+				shrank = true;
 				/**
 				 * @param {{ relation: string, preset: string }} one a relation broken
 				 * @returns {boolean} whether it is the one found
 				 */
 				const same = (one) =>
 					one.relation === found.relation && one.preset === found.preset;
-				const cut = await shrink(source, async (smaller) =>
-					(await broken(smaller)).some(same)
-				);
-				const all = await broken(cut);
-				takeCoverage(false);
+				/** @type {string} */
+				let cut;
+				/** @type {{ relation: string, preset: string, what: string }[]} */
+				let all;
+				try {
+					cut = await shrink(source, async (smaller) =>
+						(await broken(smaller)).some(same)
+					);
+					all = await broken(cut);
+				} finally {
+					takeCoverage(false);
+				}
 				out.push({
 					.../** @type {{ relation: string, preset: string, what: string }} */ (
 						all.find(same)
@@ -827,6 +937,7 @@ describe("syntax fuzz in real chrome", () => {
 			}
 		}
 		takeCoverage(true);
+		seedsDone++;
 		return out;
 	};
 
@@ -870,6 +981,11 @@ describe("syntax fuzz in real chrome", () => {
 
 	it("reaches every line of the CSS and HTML parsers and printers", () => {
 		if (process.env.SYNTAX_FUZZ_SEED || process.env.SYNTAX_FUZZ_INPUTS) return;
+		if (shrank || seedsDone !== SEEDS.length * 2) {
+			throw new Error(
+				"lines are counted only over a run whose every seed finished and cut no finding down; fix or file the findings, then run again"
+			);
+		}
 		/** @type {Record<string, string[]>} */
 		const reached = {};
 		for (const file of COVERED_FILES) {

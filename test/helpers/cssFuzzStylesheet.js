@@ -550,6 +550,8 @@ const createStylesheetGenerator = (seed, createRandom) => {
 		}
 		const base = BASE_TYPES[name];
 		if (base !== undefined) return base(random);
+		// A compound selector takes no combinator, as `::slotted()` holds one.
+		if (name === "compound-selector") return compound(context);
 		if (SELECTOR_TYPES.has(name)) return selectorList(context, 1);
 		if (BLOCK_TYPES.has(name)) return block(name, context);
 		const deeper = { ...context, depth: context.depth + 1 };
