@@ -78,3 +78,8 @@ console.log(
 		b = 4;
 	})()
 );
+function power(n) {
+	var x = 0;
+	return (x /= "-1") ** n;
+}
+console.log(1 / power(3));
