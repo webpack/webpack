@@ -24,6 +24,11 @@ const config = (name, options) => ({
 				test: /animated\.svg$/,
 				type: "asset/resource",
 				generator: { filename: "animated.svg" }
+			},
+			{
+				test: /(?:editor-selector|whitespace-empty)\.svg$/,
+				type: "asset/resource",
+				generator: { filename: `${name}-[name][ext]` }
 			}
 		]
 	},
