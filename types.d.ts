@@ -26507,19 +26507,19 @@ declare interface OptimizationMinimizeXml {
 	reusePaths?: boolean;
 
 	/**
-	 * Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.
+	 * Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. On by default, as `minimize.html` normalizes attribute spellings; `false` keeps the source spelling where a selector or script reads it.
 	 * @since 5.113.0
 	 */
 	shortenColors?: boolean;
 
 	/**
-	 * Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.
+	 * Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values. On by default, as `minimize.html` normalizes attribute spellings; `false` keeps the source spelling where a selector or script reads it.
 	 * @since 5.113.0
 	 */
 	shortenNumbers?: boolean;
 
 	/**
-	 * Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.
+	 * Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. On by default, as `minimize.html` normalizes attribute spellings; `false` keeps the source spelling where a selector or script reads it.
 	 * @since 5.113.0
 	 */
 	shortenPathData?: boolean;
