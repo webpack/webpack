@@ -47,6 +47,38 @@ const runProgram = (code) => {
 	return lines.join("\n");
 };
 
+const BASE64 =
+	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+/**
+ * Decodes the first generated line of a source map's mappings.
+ * @param {string} mappings the map's `mappings`
+ * @returns {Map<number, [number, number]>} by generated column, the zero-based source line and column it maps to
+ */
+const decodeLine = (mappings) => {
+	/** @type {Map<number, [number, number]>} */
+	const segments = new Map();
+	const fields = [0, 0, 0, 0, 0];
+	for (const segment of mappings.split(";")[0].split(",")) {
+		let field = 0;
+		let value = 0;
+		let shift = 0;
+		for (const character of segment) {
+			const digit = BASE64.indexOf(character);
+			value |= (digit & 31) << shift;
+			if ((digit & 32) !== 0) {
+				shift += 5;
+				continue;
+			}
+			fields[field++] += (value & 1) !== 0 ? -(value >> 1) : value >> 1;
+			value = 0;
+			shift = 0;
+		}
+		if (field >= 4) segments.set(fields[0], [fields[2], fields[3]]);
+	}
+	return segments;
+};
+
 describe("syntax-printer", () => {
 	it("should read characters as terser's unicode helpers do", async () => {
 		const terserUnicode = await import(
@@ -263,6 +295,22 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(joined.code).toMatchSnapshot();
 		// What the function the head joins without its `!` reads keeps its names.
 		expect(joined.map.names).toEqual(["f", "o", "h", "a", "arguments", "k"]);
+		const segments = decodeLine(joined.map.mappings);
+		// Each part maps where it was written, the loop to its own `for`.
+		expect(
+			["for(", "h()", "function", "a(", "k()", "o.x", "o.y"].map((part) => [
+				part,
+				segments.get(joined.code.indexOf(part, joined.code.indexOf("for(")))
+			])
+		).toEqual([
+			["for(", [6, 1]],
+			["h()", [1, 1]],
+			["function", [2, 2]],
+			["a(", [3, 2]],
+			["k()", [5, 1]],
+			["o.x", [6, 8]],
+			["o.y", [6, 15]]
+		]);
 		// cspell:disable-next-line
 		expect(joined.map.mappings).toMatchSnapshot();
 	});
