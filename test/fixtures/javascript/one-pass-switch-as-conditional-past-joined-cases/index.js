@@ -63,3 +63,19 @@ order(function () {
 order(function () {
 	return 2;
 });
+function deadZone(o) {
+	switch (x) {
+		case 1:
+			o.run(1);
+			break;
+		default:
+			o.run(2);
+	}
+	let x = 3;
+	return x;
+}
+try {
+	deadZone(null);
+} catch (e) {
+	console.log(e.name);
+}
