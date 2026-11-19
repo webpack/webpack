@@ -49,3 +49,18 @@ function closed(n) {
 	return a;
 }
 console.log([5, 6].map(closed));
+// A first item opening with a moved function keeps its own statement.
+function wrap(o) {
+	var i = {};
+	verb("next");
+	return i;
+	function verb(n) {
+		i[n] = function (v) {
+			v = o[n](v), settle(v.done, v.value);
+		};
+	}
+	function settle(d, v) {
+		console.log(d, v);
+	}
+}
+wrap({ next: function (v) { return { done: false, value: v }; } }).next(1);
