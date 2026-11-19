@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Track called members when determining which imported exports to retain.
+Track called imported members and avoid repeated namespace usage analysis.
