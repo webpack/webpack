@@ -2566,7 +2566,13 @@ exports[`XML syntax — invariants svg-metadata-keeps-a-linked-stylesheet parses
 
 exports[`XML syntax — invariants svg-metadata-keeps-a-linked-stylesheet parses 2`] = `""`;
 
-exports[`XML syntax — invariants svg-metadata-keeps-a-linked-stylesheet prints {"xml":true,"mode":"minify","collapseWhitespace":true,"removeSvgMetadata":true} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:h=\\"http://www.w3.org/1999/xhtml\\"><metadata><h:link rel=\\"author stylesheet\\" href=\\"a.css\\"/></metadata></svg>"`;
+exports[`XML syntax — invariants svg-metadata-keeps-a-linked-stylesheet prints {"xml":true,"mode":"minify","collapseWhitespace":true,"removeSvgMetadata":true} 1`] = `
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:h=\\"http://www.w3.org/1999/xhtml\\">
+	
+	<metadata><h:link rel=\\"author stylesheet\\" href=\\"a.css\\"/></metadata>
+	
+</svg>"
+`;
 
 exports[`XML syntax — invariants svg-metadata-keeps-a-linked-stylesheet prints {"xml":true,"mode":"minify"} 1`] = `
 "<svg xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:h=\\"http://www.w3.org/1999/xhtml\\">
@@ -3615,7 +3621,16 @@ exports[`XML syntax — invariants svg-optional-keeps-descriptions-holding-style
 
 exports[`XML syntax — invariants svg-optional-keeps-descriptions-holding-styles parses 2`] = `""`;
 
-exports[`XML syntax — invariants svg-optional-keeps-descriptions-holding-styles prints {"xml":true,"mode":"minify","collapseWhitespace":true,"removeSvgTitles":true,"removeSvgDescriptions":true,"removeSvgMetadata":true} 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:h=\\"http://www.w3.org/1999/xhtml\\"><title><style>rect{fill:red}</style></title><desc><h:style>rect{fill:red}</h:style></desc><title><h:link rel=\\"stylesheet\\" href=\\"a.css\\"/></title><metadata><style>rect{fill:red}</style></metadata><rect width=\\"50\\" height=\\"50\\"/></svg>"`;
+exports[`XML syntax — invariants svg-optional-keeps-descriptions-holding-styles prints {"xml":true,"mode":"minify","collapseWhitespace":true,"removeSvgTitles":true,"removeSvgDescriptions":true,"removeSvgMetadata":true} 1`] = `
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:h=\\"http://www.w3.org/1999/xhtml\\">
+	<title><style>rect{fill:red}</style></title>
+	<desc><h:style>rect{fill:red}</h:style></desc>
+	<title><h:link rel=\\"stylesheet\\" href=\\"a.css\\"/></title>
+	<metadata><style>rect{fill:red}</style></metadata>
+	
+	<rect width=\\"50\\" height=\\"50\\"/>
+</svg>"
+`;
 
 exports[`XML syntax — invariants svg-optional-keeps-descriptions-holding-styles prints {"xml":true,"mode":"minify"} 1`] = `
 "<svg xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:h=\\"http://www.w3.org/1999/xhtml\\">
@@ -9904,7 +9919,14 @@ exports[`XML syntax — invariants svgo-inline-styles-13 parses 1`] = `"[{\\"typ
 
 exports[`XML syntax — invariants svgo-inline-styles-13 parses 2`] = `""`;
 
-exports[`XML syntax — invariants svgo-inline-styles-13 prints {"print":"xmlMinify","minimizer":{"asset":"index.svg"},"collapseWhitespace":true,"sortAttributes":true,"removeMetadata":true,"removeEditorData":true,"removeEmptyAttributes":true,"removeEmptyElements":true,"shortenColors":true,"shortenNumbers":true,"shortenPathData":true,"sortSymbols":true,"convertShapes":true,"cleanupStructure":true,"mergePaths":true,"reusePaths":true,"sortDefinitions":true,"removeUnusedNamespaces":true} 1`] = `"<svg id=\\"test\\" viewBox=\\"0 0 81.285 81.285\\" xmlns=\\"http://www.w3.org/2000/svg\\"><defs><style>@namespace svg url(http://www.w3.org/2000/svg);@import url(https://fonts.googleapis.com/css?family=Roboto);@font-face{font-family:SomeFont;src:local(\\"Some Font\\"),local(\\"SomeFont\\"),url(SomeFont.ttf);font-weight:700}@viewport{zoom:.8;min-zoom:.4;max-zoom:.9}@keyframes identifier{0%{top:0}50%{left:20px;top:10px}to{top:0}}@page :first{margin:1in}@supports (display:flex){.module{display:flex}}@document url(http://example.com/test.html){rect{stroke:red}}.blue{fill:blue}</style></defs><rect class=\\"blue\\" height=\\"100\\" width=\\"100\\"/></svg>"`;
+exports[`XML syntax — invariants svgo-inline-styles-13 prints {"print":"xmlMinify","minimizer":{"asset":"index.svg"},"collapseWhitespace":true,"sortAttributes":true,"removeMetadata":true,"removeEditorData":true,"removeEmptyAttributes":true,"removeEmptyElements":true,"shortenColors":true,"shortenNumbers":true,"shortenPathData":true,"sortSymbols":true,"convertShapes":true,"cleanupStructure":true,"mergePaths":true,"reusePaths":true,"sortDefinitions":true,"removeUnusedNamespaces":true} 1`] = `
+"<svg id=\\"test\\" viewBox=\\"0 0 81.285 81.285\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+    <defs>
+        <style>@namespace svg url(http://www.w3.org/2000/svg);@import url(https://fonts.googleapis.com/css?family=Roboto);@font-face{font-family:SomeFont;src:local(\\"Some Font\\"),local(\\"SomeFont\\"),url(SomeFont.ttf);font-weight:700}@viewport{zoom:.8;min-zoom:.4;max-zoom:.9}@keyframes identifier{0%{top:0}50%{left:20px;top:10px}to{top:0}}@page :first{margin:1in}@supports (display:flex){.module{display:flex}}@document url(http://example.com/test.html){rect{stroke:red}}.blue{fill:blue}</style>
+    </defs>
+    <rect class=\\"blue\\" height=\\"100\\" width=\\"100\\"/>
+</svg>"
+`;
 
 exports[`XML syntax — invariants svgo-inline-styles-13 prints {"print":"xmlMinify","minimizer":{"asset":"index.svg"},"collapseWhitespace":true,"sortAttributes":true,"removeMetadata":true,"removeEditorData":true,"removeEmptyAttributes":true,"removeEmptyElements":true,"shortenColors":true,"shortenNumbers":true,"shortenPathData":true,"sortSymbols":true,"convertShapes":true,"cleanupStructure":true,"mergePaths":true,"reusePaths":true,"sortDefinitions":true,"removeUnusedNamespaces":true} 2`] = `"{}"`;
 

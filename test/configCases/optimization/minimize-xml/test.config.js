@@ -63,6 +63,18 @@ module.exports = {
 				expect(dependent).toContain('d="M000.00 000.00L010.00 000.00"');
 				expect(dependent).toContain('transform="translate(00 00)"');
 			}
+			if (name === "whitespace") {
+				const read = (file) =>
+					fs.readFileSync(path.join(options[i].output.path, file), "utf8");
+				// An attribute selector reads the editor attribute.
+				const selector = read("whitespace-editor-selector.svg");
+				expect(selector).toContain('inkscape:label="Layer"');
+				expect(selector).toContain('<g inkscape:label="Layer"><path');
+				// `:empty` reads whitespace-only text.
+				const empty = read("whitespace-whitespace-empty.svg");
+				expect(empty).toContain("<g> </g>");
+				expect(empty).not.toContain("inkscape:label");
+			}
 			if (["colors", "paths", "containers", "compact"].includes(name)) {
 				const animated = fs.readFileSync(
 					path.join(options[i].output.path, "animated.svg"),
