@@ -36,6 +36,58 @@ describe("mergeImportConditions", () => {
 		).toEqual({ layer: "", supports: undefined, media: undefined });
 	});
 
+	it("should name an anonymous layer that nests with a named one", () => {
+		const inner = mergeImportConditions(
+			"",
+			undefined,
+			undefined,
+			[["outer", undefined, undefined]],
+			"https://example.com/a.css"
+		);
+		expect(inner.layer).toMatch(/^outer\.webpack-anonymous-[0-9a-f]{8}$/);
+		// the same in every build, and apart for another import's own layer
+		expect(
+			mergeImportConditions(
+				"",
+				undefined,
+				undefined,
+				[["outer", undefined, undefined]],
+				"https://example.com/a.css"
+			).layer
+		).toBe(inner.layer);
+		expect(
+			mergeImportConditions(
+				"",
+				undefined,
+				undefined,
+				[["outer", undefined, undefined]],
+				"https://example.com/b.css"
+			).layer
+		).not.toBe(inner.layer);
+		// a second import of one url in a stylesheet is a layer of its own
+		expect(
+			mergeImportConditions(
+				"",
+				undefined,
+				undefined,
+				[["outer", undefined, undefined]],
+				JSON.stringify(["https://example.com/a.css", [40, 80]])
+			).layer
+		).not.toBe(
+			mergeImportConditions(
+				"",
+				undefined,
+				undefined,
+				[["outer", undefined, undefined]],
+				JSON.stringify(["https://example.com/a.css", [0, 40]])
+			).layer
+		);
+		const outer = mergeImportConditions("inner", undefined, undefined, [
+			["", undefined, undefined]
+		]);
+		expect(outer.layer).toMatch(/^webpack-anonymous-[0-9a-f]{8}\.inner$/);
+	});
+
 	it("should match where both media query lists match", () => {
 		/**
 		 * @param {string} outer the outer media query list

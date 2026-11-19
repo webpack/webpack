@@ -39381,6 +39381,8 @@ declare namespace exports {
 				requestShortener: RequestShortener;
 				chunkGraph: ChunkGraph;
 				hashFunction?: string | typeof Hash;
+				hashDigest?: string;
+				hashSalt?: string;
 			}
 		) => string;
 		export let replaceDuplicates: <T>(

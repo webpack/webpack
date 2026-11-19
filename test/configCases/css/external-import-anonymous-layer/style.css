@@ -1,0 +1,4 @@
+@import url("./outer.css") layer(outer);
+@import url("./anonymous.css") layer;
+@import url("https://test.cases/lone.css") layer;
+.style { color: red; }

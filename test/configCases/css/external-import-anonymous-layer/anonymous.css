@@ -1,0 +1,2 @@
+@import url("https://test.cases/base.css") layer(inner);
+.anonymous { color: red; }
