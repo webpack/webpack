@@ -116,8 +116,12 @@ module.exports = [
 		}
 	}),
 	...[
-		{ name: "colors", xml: { shortenColors: true } },
-		{ name: "paths", xml: { shortenPathData: true } },
+		// Each spelling switch on its own, the other two off.
+		{
+			name: "colors",
+			xml: { shortenNumbers: false, shortenPathData: false }
+		},
+		{ name: "paths", xml: { shortenNumbers: false, shortenColors: false } },
 		{
 			name: "containers",
 			xml: { removeEmptyElements: true, collapseWhitespace: true }

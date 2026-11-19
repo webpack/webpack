@@ -13607,39 +13607,39 @@ Object {
   "optimization-minimize-options-xml-shorten-colors": Object {
     "configs": Array [
       Object {
-        "description": "Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+        "description": "Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. On by default, as \`minimize.html\` normalizes attribute spellings; \`false\` keeps the source spelling where a selector or script reads it.",
         "multiple": false,
         "path": "optimization.minimizeOptions.xml.shortenColors",
         "type": "boolean",
       },
     ],
-    "description": "Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+    "description": "Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. On by default, as \`minimize.html\` normalizes attribute spellings; \`false\` keeps the source spelling where a selector or script reads it.",
     "multiple": false,
     "simpleType": "boolean",
   },
   "optimization-minimize-options-xml-shorten-numbers": Object {
     "configs": Array [
       Object {
-        "description": "Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+        "description": "Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values. On by default, as \`minimize.html\` normalizes attribute spellings; \`false\` keeps the source spelling where a selector or script reads it.",
         "multiple": false,
         "path": "optimization.minimizeOptions.xml.shortenNumbers",
         "type": "boolean",
       },
     ],
-    "description": "Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+    "description": "Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values. On by default, as \`minimize.html\` normalizes attribute spellings; \`false\` keeps the source spelling where a selector or script reads it.",
     "multiple": false,
     "simpleType": "boolean",
   },
   "optimization-minimize-options-xml-shorten-path-data": Object {
     "configs": Array [
       Object {
-        "description": "Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+        "description": "Compact SVG path numbers, repeated commands and separators without rounding, preserving arc flags and DTD-declared values; drop segments that draw nothing, such as a line back to the start before \`z\`, where no marker, stylesheet, script, animation or ID can observe them. On by default, as \`minimize.html\` normalizes attribute spellings; \`false\` keeps the source spelling where a selector or script reads it.",
         "multiple": false,
         "path": "optimization.minimizeOptions.xml.shortenPathData",
         "type": "boolean",
       },
     ],
-    "description": "Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+    "description": "Compact SVG path numbers, repeated commands and separators without rounding, preserving arc flags and DTD-declared values; drop segments that draw nothing, such as a line back to the start before \`z\`, where no marker, stylesheet, script, animation or ID can observe them. On by default, as \`minimize.html\` normalizes attribute spellings; \`false\` keeps the source spelling where a selector or script reads it.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -14283,39 +14283,39 @@ Object {
   "optimization-minimize-xml-shorten-colors": Object {
     "configs": Array [
       Object {
-        "description": "Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+        "description": "Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. On by default, as \`minimize.html\` normalizes attribute spellings; \`false\` keeps the source spelling where a selector or script reads it.",
         "multiple": false,
         "path": "optimization.minimize.xml.shortenColors",
         "type": "boolean",
       },
     ],
-    "description": "Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+    "description": "Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. On by default, as \`minimize.html\` normalizes attribute spellings; \`false\` keeps the source spelling where a selector or script reads it.",
     "multiple": false,
     "simpleType": "boolean",
   },
   "optimization-minimize-xml-shorten-numbers": Object {
     "configs": Array [
       Object {
-        "description": "Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+        "description": "Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values. On by default, as \`minimize.html\` normalizes attribute spellings; \`false\` keeps the source spelling where a selector or script reads it.",
         "multiple": false,
         "path": "optimization.minimize.xml.shortenNumbers",
         "type": "boolean",
       },
     ],
-    "description": "Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+    "description": "Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values. On by default, as \`minimize.html\` normalizes attribute spellings; \`false\` keeps the source spelling where a selector or script reads it.",
     "multiple": false,
     "simpleType": "boolean",
   },
   "optimization-minimize-xml-shorten-path-data": Object {
     "configs": Array [
       Object {
-        "description": "Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+        "description": "Compact SVG path numbers, repeated commands and separators without rounding, preserving arc flags and DTD-declared values; drop segments that draw nothing, such as a line back to the start before \`z\`, where no marker, stylesheet, script, animation or ID can observe them. On by default, as \`minimize.html\` normalizes attribute spellings; \`false\` keeps the source spelling where a selector or script reads it.",
         "multiple": false,
         "path": "optimization.minimize.xml.shortenPathData",
         "type": "boolean",
       },
     ],
-    "description": "Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+    "description": "Compact SVG path numbers, repeated commands and separators without rounding, preserving arc flags and DTD-declared values; drop segments that draw nothing, such as a line back to the start before \`z\`, where no marker, stylesheet, script, animation or ID can observe them. On by default, as \`minimize.html\` normalizes attribute spellings; \`false\` keeps the source spelling where a selector or script reads it.",
     "multiple": false,
     "simpleType": "boolean",
   },
