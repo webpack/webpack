@@ -6409,6 +6409,44 @@ describe("optimization.minimize", () => {
 		).toEqual(DEFAULT_MINIMIZE_OPTIONS);
 	});
 
+	it("should shorten SVG spellings wherever XML is minified", () => {
+		const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
+			require("../..").config;
+
+		/**
+		 * @param {import("../..").Configuration} config the configuration
+		 * @returns {NonNullable<import("../..").WebpackOptionsNormalized["optimization"]["minimizeOptions"]>} the defaulted minimize options
+		 */
+		const resolveConfig = (config) => {
+			const normalized = getNormalizedWebpackOptions({
+				mode: "production",
+				...config
+			});
+			applyWebpackOptionsDefaults(normalized);
+			return /** @type {NonNullable<import("../..").WebpackOptionsNormalized["optimization"]["minimizeOptions"]>} */ (
+				normalized.optimization.minimizeOptions
+			);
+		};
+		const SHORTEN = {
+			shortenNumbers: true,
+			shortenColors: true,
+			shortenPathData: true
+		};
+
+		expect(
+			resolveConfig({ experiments: { futureDefaults: true } })
+		).toMatchObject({ xml: SHORTEN });
+		expect(
+			resolveConfig({
+				optimization: { minimizeOptions: { xml: { shortenColors: false } } }
+			})
+		).toMatchObject({ xml: { ...SHORTEN, shortenColors: false } });
+		expect(resolveConfig({}).xml).toBeUndefined();
+		expect(
+			resolveConfig({ optimization: { minimizeOptions: { xml: false } } }).xml
+		).toBe(false);
+	});
+
 	it("should minify JavaScript through webpack's printer under futureDefaults only", () => {
 		const MinimizerPlugin = require("minimizer-webpack-plugin");
 		const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =

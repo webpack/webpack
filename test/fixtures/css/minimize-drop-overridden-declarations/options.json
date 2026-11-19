@@ -7,5 +7,10 @@
 		"svg": false,
 		"extractComments": false,
 		"dropOverriddenDeclarations": true
+	},
+	{
+		"mode": "minify",
+		"dropOverriddenDeclarations": true,
+		"behavior": true
 	}
 ]

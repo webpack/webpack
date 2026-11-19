@@ -110,11 +110,9 @@ const ESCAPE_HATCH_DIRECTORIES = ["lib/", "hot/", "declarations/", "bin/"];
  * @typedef {object} Spot
  * @property {number} line the line, from 1
  * @property {string} name the identifier, call or type written there
- * @property {string=} type the type that makes an untyped identifier untyped
  */
 
-/** @type {Record<string, Spot[]>} */
-const inferredAnyByFile = {};
+// Where TypeScript infers `any` because no type is written: the untyped spots.
 /** @type {Record<string, Spot[]>} */
 const untypedByFile = {};
 
@@ -140,10 +138,6 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 		const counted = ESCAPE_HATCH_DIRECTORIES.some((directory) =>
 			relativeFile.startsWith(directory)
 		);
-		/** @type {Spot[] | undefined} */
-		const inferredAny = counted
-			? (inferredAnyByFile[relativeFile] = [])
-			: undefined;
 		/** @type {Spot[] | undefined} */
 		const untyped = counted ? (untypedByFile[relativeFile] = []) : undefined;
 
@@ -663,7 +657,12 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 				return false;
 			}
 			let { initializer } = parent;
-			while (initializer && ts.isParenthesizedExpression(initializer)) {
+			// A JSDoc `@type` cast on the parentheses types the array; plain ones do not.
+			while (
+				initializer &&
+				ts.isParenthesizedExpression(initializer) &&
+				!ts.getJSDocTypeTag(initializer)
+			) {
 				initializer = initializer.expression;
 			}
 			return Boolean(
@@ -671,89 +670,6 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 				ts.isArrayLiteralExpression(initializer) &&
 				initializer.elements.length === 0 &&
 				!declaresType(parent)
-			);
-		};
-
-		/**
-		 * Tells whether a declaration states a type in this project's own source.
-		 * @param {ts.Declaration} declaration the declaration
-		 * @returns {boolean} true when it does
-		 */
-		const declaresOwnType = (declaration) =>
-			!declaration.getSourceFile().isDeclarationFile &&
-			declaresType(declaration);
-
-		/**
-		 * Tells whether an unannotated parameter or destructured binding takes its
-		 * type from one this project declares: a callback's parameter from the
-		 * signature it is passed to, a binding from the property it reads.
-		 * @param {ts.Declaration} declaration the declaration
-		 * @returns {boolean} true when the type it takes is declared
-		 */
-		const takesDeclaredType = (declaration) => {
-			if (ts.isParameter(declaration)) {
-				const fn = declaration.parent;
-				if (!ts.isArrowFunction(fn) && !ts.isFunctionExpression(fn)) {
-					return false;
-				}
-				const contextualType = typeChecker.getContextualType(fn);
-				if (!contextualType) return false;
-				const index = fn.parameters.indexOf(declaration);
-				const signatures = contextualType.getCallSignatures();
-				return (
-					signatures.length > 0 &&
-					signatures.every((signature) => {
-						const { parameters } = signature;
-						const parameter =
-							parameters[Math.min(index, parameters.length - 1)];
-						const declarations = parameter && parameter.getDeclarations();
-						return Boolean(
-							declarations &&
-							declarations.length > 0 &&
-							declarations.every(declaresOwnType)
-						);
-					})
-				);
-			}
-			if (ts.isBindingElement(declaration) && !declaration.initializer) {
-				const key = declaration.propertyName || declaration.name;
-				if (!ts.isIdentifier(key)) return false;
-				const property = typeChecker
-					.getTypeAtLocation(declaration.parent)
-					.getProperty(key.text);
-				const declarations = property && property.getDeclarations();
-				return Boolean(
-					declarations &&
-					declarations.length > 0 &&
-					declarations.every(declaresOwnType)
-				);
-			}
-			return false;
-		};
-
-		/**
-		 * Tells whether an identifier's `any` is stated by a declaration, such as
-		 * an `EXPECTED_ANY` the escape-hatch rows already count, not inferred.
-		 * @param {ts.Node} node the identifier
-		 * @returns {boolean} true when every declaration of its symbol states a type
-		 */
-		const isDeclaredAny = (node) => {
-			const symbol =
-				declaredProperty(node) ||
-				(ts.isShorthandPropertyAssignment(node.parent)
-					? typeChecker.getShorthandAssignmentValueSymbol(node.parent)
-					: typeChecker.getSymbolAtLocation(node)) ||
-				(ts.isPropertyAccessExpression(node.parent) && node.parent.name === node
-					? typeChecker.getSymbolAtLocation(node.parent)
-					: undefined);
-			const declarations = symbol && symbol.getDeclarations();
-			return Boolean(
-				declarations &&
-				declarations.length > 0 &&
-				declarations.every(
-					(declaration) =>
-						declaresType(declaration) || takesDeclaredType(declaration)
-				)
 			);
 		};
 
@@ -868,24 +784,43 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 			}
 			const signature = typeChecker.getResolvedSignature(node);
 			if (!signature) return false;
-			const type = typeChecker.getTypeAtLocation(node);
+			// An optional call adds `undefined` to what the call returns.
+			const type = typeChecker.getNonNullableType(
+				typeChecker.getTypeAtLocation(node)
+			);
+			const { declaration } = signature;
 			const { target } =
 				/** @type {ts.Signature & { target?: ts.Signature }} */ (signature);
+			// A type argument written in the call is counted where it is written.
+			const written = node.typeArguments ? node.typeArguments.length : 0;
 			if (target) {
+				// An optional call's target has its type parameters instantiated, so
+				// read them, and the return type naming them, off the declaration.
+				const generic =
+					declaration !== undefined && ts.isFunctionLike(declaration)
+						? typeChecker.getSignatureFromDeclaration(declaration) || target
+						: target;
 				return Boolean(
-					target.typeParameters &&
+					generic.typeParameters &&
+					generic.typeParameters.length > written &&
 					setsParameterToAny(
-						new Set(target.typeParameters),
-						typeChecker.getReturnTypeOfSignature(target),
+						new Set(generic.typeParameters.slice(written)),
+						typeChecker.getReturnTypeOfSignature(generic),
 						type,
 						0
 					)
 				);
 			}
 			// `new Map()` takes lib's `new (): Map<any, any>`, which has no type parameter.
-			const { declaration } = signature;
+			// `Array(5)` takes lib's `(arrayLength?: number): any[]` alike, however
+			// the call names `Array`.
 			return (
-				ts.isNewExpression(node) &&
+				(ts.isNewExpression(node) ||
+					(declaration !== undefined &&
+						program.isSourceFileDefaultLibrary(declaration.getSourceFile()) &&
+						ts.isInterfaceDeclaration(declaration.parent) &&
+						declaration.parent.name.text === "ArrayConstructor")) &&
+				written === 0 &&
 				declaration !== undefined &&
 				declaration.getSourceFile().isDeclarationFile &&
 				isTypeReference(type) &&
@@ -1028,20 +963,17 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 					}
 				};
 				rep.s[statementIndex] = isTyped ? typeText.length : 0;
-				if (!isTyped && untyped) {
-					untyped.push({
-						line: line + 1,
-						name: node.getText(sourceFile),
-						type: typeText
-					});
-				}
+				// An identifier that only holds an `any` written elsewhere is not
+				// untyped: the `any` row counts that `any` where it is written.
 				if (
 					!isTyped &&
-					inferredAny &&
-					((type.flags & ts.TypeFlags.Any && !isDeclaredAny(node)) ||
-						isUntypedEmptyArray(node))
+					untyped &&
+					// Under `noImplicitAny`, TypeScript itself refuses an identifier whose
+					// `any` no one wrote, so one holding `any` holds a written one. This
+					// relies on the tree passing `yarn lint:types`, which CI's lint job checks.
+					isUntypedEmptyArray(node)
 				) {
-					inferredAny.push({
+					untyped.push({
 						line: line + 1,
 						name: node.getText(sourceFile)
 					});
@@ -1050,7 +982,7 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 			}
 
 			if (
-				inferredAny &&
+				untyped &&
 				(ts.isNewExpression(node) || ts.isCallExpression(node)) &&
 				fillsTypeArgumentWithAny(node)
 			) {
@@ -1059,7 +991,7 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 					node.getStart()
 				);
 				const callee = node.expression.getText(sourceFile);
-				inferredAny.push({
+				untyped.push({
 					line: line + 1,
 					name: ts.isNewExpression(node) ? `new ${callee}()` : `${callee}()`
 				});
@@ -1261,9 +1193,6 @@ const addCount = (byFile, file, column, count) => {
 	const counts = (byFile[file] = byFile[file] || {});
 	counts[column] = (counts[column] || 0) + count;
 };
-for (const [file, spots] of Object.entries(inferredAnyByFile)) {
-	addCount(headCounts, file, "any", spots.length);
-}
 for (const [file, spots] of Object.entries(untypedByFile)) {
 	addCount(headCounts, file, "untyped", spots.length);
 }
@@ -1386,10 +1315,10 @@ for (const column of COLUMNS) {
 	}
 }
 report +=
-	"\n`any` counts `EXPECTED_ANY`, a written `any` and the `any` TypeScript infers where no type is written, such as `const map = new Map()` or `const list = []`. `unknown` counts a written `unknown`; `ThrownValue`, the `unknown` a `throw` or a rejected promise hands on, is left out. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the identifiers whose type is or holds `any`, wherever it comes from; the `any` TypeScript's built-in lib and Node.js's `@types/node` write in their own signatures, such as the replacer of `String#replace` or a stream's `chunk`, is left out, and so is the open fallback beside declared fields, such as `KnownBuildInfo & Record<string, any>`, though reading a key no field declares is counted.\n";
+	"\n`any` counts `EXPECTED_ANY`, a written `any` and JSDoc's `*` and `?` for any type. `unknown` counts a written `unknown`; `ThrownValue`, the `unknown` a `throw` or a rejected promise hands on, is left out. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the `any` TypeScript infers where no type is written: a type argument a call leaves to inference that comes out `any`, whether a lib signature defaults it, as in `const map = new Map()` and `Array(5)`, or a generic call infers it from an `any` argument; and `const list = []`. An identifier that only holds an `any` written in the project's files is not counted again, as the `any` row counts it where it is written; an `any` a lib signature returns, such as `JSON.parse`'s, is counted in neither row.\n";
 if (base && !baseCountsFile) {
 	report +=
-		"\nThe base's inferred `any` and untyped identifiers were not counted, as `--base-counts` was not given.\n";
+		"\nThe base's untyped identifiers were not counted, as `--base-counts` was not given.\n";
 }
 
 const header = `| File | Typed lines | ${COLUMNS.map((column) =>
@@ -1428,17 +1357,10 @@ const spotsOf = (file, wanted = () => true) => {
 			`\`${kind}\`${spelling === kind ? "" : ` (\`${spelling}\`)`}`
 		]);
 	}
-	for (const { line, name } of wanted("any")
-		? inferredAnyByFile[file] || []
-		: []) {
-		items.push([line, `\`any\` (inferred) \`${name}\``]);
-	}
-	for (const { line, name, type } of wanted("untyped")
+	for (const { line, name } of wanted("untyped")
 		? untypedByFile[file] || []
 		: []) {
-		const shown =
-			type && type.length > 100 ? `${type.slice(0, 100)}…` : type || "";
-		items.push([line, `untyped \`${name}\`: \`${shown.replace(/`/g, "'")}\``]);
+		items.push([line, `untyped \`${name}\``]);
 	}
 	return items
 		.sort((a, b) => a[0] - b[0])

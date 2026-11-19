@@ -1,5 +1,9 @@
 [
 	{
 		"print": "cssMinify"
+	},
+	{
+		"mode": "minify",
+		"behavior": true
 	}
 ]

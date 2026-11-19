@@ -2,5 +2,19 @@
 	{
 		"print": "htmlMinify",
 		"collapseWhitespace": true
+	},
+	{
+		"mode": "minify",
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"collapseWhitespace": true,
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"collapseWhitespace": "smart",
+		"behavior": true
 	}
 ]

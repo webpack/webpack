@@ -3497,7 +3497,8 @@ type CodeValue =
 	| number
 	| bigint
 	| boolean
-	| Function
+	| CallableFunction
+	| NewableFunction
 	| RegExp
 	| RuntimeValue
 	| {
@@ -3508,7 +3509,8 @@ type CodeValue =
 				| number
 				| bigint
 				| boolean
-				| Function
+				| CallableFunction
+				| NewableFunction
 				| RegExp
 				| RuntimeValue
 			>;
@@ -3520,12 +3522,21 @@ type CodeValue =
 			| number
 			| bigint
 			| boolean
-			| Function
+			| CallableFunction
+			| NewableFunction
 			| RegExp
 			| RuntimeValue
 	  >[];
 type CodeValuePrimitive =
-	undefined | null | string | number | bigint | boolean | Function | RegExp;
+	| undefined
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| CallableFunction
+	| NewableFunction
+	| RegExp;
 type CollectedComment = CommentImport & { start: number; end: number };
 declare interface Colors {
 	reset: (value?: unknown) => string;
@@ -12498,7 +12509,8 @@ type GeneratedValue =
 	| number
 	| bigint
 	| boolean
-	| Function
+	| CallableFunction
+	| NewableFunction
 	| RegExp
 	| PromiseLike<CodeValuePrimitive>;
 declare class Generator<TModule extends NormalModule = NormalModule> {
@@ -19817,6 +19829,11 @@ declare interface KnownHtmlModuleBuildInfo {
 	htmlEntries?: Record<string, HtmlEntryInfo[]>;
 
 	/**
+	 * the page's encoding when not UTF-8, which its emitted file is written in (see `documentEncoding`)
+	 */
+	encoding?: string;
+
+	/**
 	 * `../` per `<base href>` path segment, prepended to the auto-public-path undo path so a relative base doesn't misdirect bundled URLs
 	 */
 	baseUrlPrefix?: string;
@@ -20229,6 +20246,31 @@ declare interface LabelLike {
 }
 
 /**
+ * The built-in backend's options as the `transport` hook sees them.
+ */
+declare interface LazyCompilationBackendHookOptions {
+	/**
+	 * the client module the proxy modules load
+	 */
+	client: string;
+
+	/**
+	 * a server instance is shared: the backend serves its own urls on it, hands every other request to the server's request listeners, and neither listens on it nor closes it; needs a `urlBase`
+	 */
+	server?:
+		| ServerOptionsImportHttps
+		| ServerOptionsImportHttp
+		| (() => ServerLazyCompilationBackend)
+		| ServerImportHttp
+		| ServerImportHttps;
+
+	/**
+	 * the url clients reach a shared server at, e.g. `https://localhost:8080`
+	 */
+	urlBase?: string;
+}
+
+/**
  * Options for the default backend.
  */
 declare interface LazyCompilationDefaultBackendOptions {
@@ -20267,9 +20309,14 @@ declare interface LazyCompilationOptions {
 	backend?:
 		| ((
 				compiler: Compiler,
-				callback: (err: null | Error, backendApi?: BackendApi) => void
+				callback: (err: null | Error, backendApi?: BackendApi) => void,
+				transport?: LazyCompilationTransport
 		  ) => void)
-		| ((compiler: Compiler) => Promise<BackendApi>)
+		| ((
+				compiler: Compiler,
+				callback?: (err: null | Error, backendApi?: BackendApi) => void,
+				transport?: LazyCompilationTransport
+		  ) => Promise<BackendApi>)
 		| LazyCompilationDefaultBackendOptions;
 
 	/**
@@ -20287,6 +20334,52 @@ declare interface LazyCompilationOptions {
 	 */
 	test?: string | RegExp | GlobCondition | ((module: Module) => boolean);
 }
+declare class LazyCompilationPlugin {
+	/**
+	 * Creates an instance of LazyCompilationPlugin.
+	 */
+	constructor(__0: OptionsLazyCompilationPlugin);
+	backend: LazyCompilationTransport;
+	entries?: boolean;
+	imports?: boolean;
+	test?: string | RegExp | GlobCondition | ((module: Module) => boolean);
+
+	/**
+	 * Applies the plugin by registering its hooks on the compiler.
+	 */
+	apply(compiler: Compiler): void;
+
+	/**
+	 * Returns the hooks a development server taps to serve the lazy compilation backend from its own server.
+	 */
+	static getCompilerHooks(compiler: Compiler): LazyCompilationPluginHooks;
+}
+declare interface LazyCompilationPluginHooks {
+	/**
+	 * how the browser and the compiler talk, before the backend starts: options such as a development server's own `server` and `urlBase`, which a custom `backend` gets too, or a `backend` that brings its own `client` module, e.g. over a WebSocket
+	 */
+	transport: AsyncSeriesWaterfallHook<
+		[LazyCompilationTransport],
+		LazyCompilationTransport
+	>;
+}
+type LazyCompilationTransport = Omit<
+	LazyCompilationDefaultBackendOptions,
+	"client" | "server"
+> &
+	LazyCompilationBackendHookOptions & {
+		backend?:
+			| ((
+					compiler: Compiler,
+					callback: (err: null | Error, backendApi?: BackendApi) => void,
+					transport?: LazyCompilationTransport
+			  ) => void)
+			| ((
+					compiler: Compiler,
+					callback?: (err: null | Error, backendApi?: BackendApi) => void,
+					transport?: LazyCompilationTransport
+			  ) => Promise<BackendApi>);
+	};
 type LazyFunction<
 	InputValue,
 	OutputValue,
@@ -21806,7 +21899,8 @@ type MergedDefinitionNode =
 	| number
 	| bigint
 	| boolean
-	| Function
+	| CallableFunction
+	| NewableFunction
 	| RegExp
 	| RuntimeValue
 	| {
@@ -21817,7 +21911,8 @@ type MergedDefinitionNode =
 				| number
 				| bigint
 				| boolean
-				| Function
+				| CallableFunction
+				| NewableFunction
 				| RegExp
 				| RuntimeValue
 			>;
@@ -21829,7 +21924,8 @@ type MergedDefinitionNode =
 			| number
 			| bigint
 			| boolean
-			| Function
+			| CallableFunction
+			| NewableFunction
 			| RegExp
 			| RuntimeValue
 	  >[]
@@ -26507,19 +26603,19 @@ declare interface OptimizationMinimizeXml {
 	reusePaths?: boolean;
 
 	/**
-	 * Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.
+	 * Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. On by default, as `minimize.html` normalizes attribute spellings; `false` keeps the source spelling where a selector or script reads it.
 	 * @since 5.113.0
 	 */
 	shortenColors?: boolean;
 
 	/**
-	 * Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.
+	 * Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values. On by default, as `minimize.html` normalizes attribute spellings; `false` keeps the source spelling where a selector or script reads it.
 	 * @since 5.113.0
 	 */
 	shortenNumbers?: boolean;
 
 	/**
-	 * Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.
+	 * Compact SVG path numbers, repeated commands and separators without rounding, preserving arc flags and DTD-declared values; drop segments that draw nothing, such as a line back to the start before `z`, where no marker, stylesheet, script, animation or ID can observe them. On by default, as `minimize.html` normalizes attribute spellings; `false` keeps the source spelling where a selector or script reads it.
 	 * @since 5.113.0
 	 */
 	shortenPathData?: boolean;
@@ -27085,6 +27181,23 @@ declare interface OptionsDelegatedModuleFactoryPlugin {
 	 * object for caching
 	 */
 	associatedObjectForCache?: object;
+}
+
+/**
+ * Defines the options type used by this module.
+ */
+declare interface OptionsLazyCompilationPlugin {
+	/**
+	 * how the browser and the compiler talk
+	 */
+	backend: LazyCompilationTransport;
+	entries?: boolean;
+	imports?: boolean;
+
+	/**
+	 * additional filter for lazy compiled entrypoint modules
+	 */
+	test?: string | RegExp | GlobCondition | ((module: Module) => boolean);
 }
 declare interface OptionsStreamChunks {
 	source?: boolean;
@@ -40581,6 +40694,7 @@ declare namespace exports {
 					export let attributes: 1;
 					export let content: 2;
 				}
+				export let declaredCharset: (input: string) => undefined | string;
 				export let declaredEncoding: (
 					input: string
 				) => undefined | "utf8" | "other";
@@ -41103,6 +41217,9 @@ declare namespace exports {
 			SizeOnlySource,
 			CompatSource
 		};
+	}
+	export namespace hmr {
+		export { LazyCompilationPlugin };
 	}
 	export namespace experiments {
 		export namespace schemes {
