@@ -10,3 +10,9 @@ it("should handle literate coffee script correctly", function() {
 it("should generate valid code with cheap-source-map", function() {
 	require("!coffee-loader!./module-only.coffee");
 });
+
+it("should require a coffee module from a base64 data URI", function () {
+	const mod = require("coffee-loader!Data:application/node;charset=utf-8;base64,bW9kdWxlLmV4cG9ydHMgPQogIG51bWJlcjogNDIKICBmbjogKCkgLT4gIkhlbGxvIHdvcmxkIg==");
+	expect(mod.number).toBe(42);
+	expect(mod.fn()).toBe("Hello world");
+});
