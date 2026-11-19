@@ -856,7 +856,7 @@ const EMPTY_INLINE_ELEMENTS = new Set(
  * @param {string} html a document
  * @param {boolean} tree whether the element tree is read too
  * @param {CssOptions} cssOptions the options the sheets are minified with
- * @param {boolean} edgesDrop whether whitespace at every element's edge may go, as `collapseWhitespace: "all"` drops it
+ * @param {boolean=} edgesDrop whether whitespace at every element's edge may go, as `collapseWhitespace: "all"` drops it
  * @returns {{ said: string[], sheets: string[] }} what it says, and each non-empty sheet
  */
 const htmlMeaning = (html, tree, cssOptions, edgesDrop) => {
