@@ -2261,7 +2261,7 @@ describe("printing Babel's default parameters as ES2015 ones", () => {
 			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-11"), "function f(...a){return arguments.length>1&&arguments[1]!==void 0?arguments[1]:5}"],
 			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-12"), "function f(a,a){return arguments.length>2&&arguments[2]!==void 0?arguments[2]:5}"],
 			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-13"), "function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;function b(){}return typeof b}"],
-			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-14"), "function f(a){arguments.length>1&&arguments[1]!==void 0?arguments[1]:g();return a}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-14"), "function f(a){return arguments.length>1&&arguments[1]!==void 0?arguments[1]:g(),a}"],
 			// A function inside reads its own `arguments`; a value not written as Babel writes defaults stays.
 			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-15"), "function f(a,b=5){return[b,function(){return arguments.length}(1)]}"],
 			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-16"), "function f(a,b=5){return[b,function(){return arguments.length}(1)]}"],
@@ -2270,7 +2270,7 @@ describe("printing Babel's default parameters as ES2015 ones", () => {
 			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-18"), "function f(a=g(),b,c=b){return[a,b,c]}"],
 			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-19"), "function f(){return[arguments.length>0?arguments[0]:void 0]}"],
 			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-20"), "function f(a){return[arguments.length>1&&arguments[1]!==void 0?arguments[1]:5,arguments.length>2?arguments[2]:void 0,arguments.length]}"],
-			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-21"), "function f(){arguments.length>0&&arguments[0]!==void 0?arguments[0]:1;var b=arguments.length>1?arguments[1]:void 0;return[b]}"],
+			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-21"), "function f(){arguments.length>0&&arguments[0]!==void 0&&arguments[0];var b=arguments.length>1?arguments[1]:void 0;return[b]}"],
 			// Parameters other than names, one named `arguments` or a `var` of that name keep them.
 			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-22"), "function f({a}){return[a,arguments.length>1&&arguments[1]!==void 0?arguments[1]:5]}"],
 			[fixture("javascript", "printing-babel-s-default-parameters-as-es2015-ones-should-print-the-leading-var-23"), "function o(value){return function(a=value){return[a,arguments.length>1&&arguments[1]!==void 0?arguments[1]:1]}}var f=o(7);"],
