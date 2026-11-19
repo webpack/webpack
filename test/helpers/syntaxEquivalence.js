@@ -2065,8 +2065,11 @@ const compareStyles = async ({ pairs, types }) => {
 					}
 					for (const key of lengths) addAll(out.atLength, key, own);
 					const style = /** @type {CSSStyleDeclaration} */ (any.style);
+					// A list's order is no part of what it matches, and the printer sorts it.
 					const where = `${context}\u0001${
-						kind === "CSSStyleRule" ? any.selectorText : "&"
+						kind === "CSSStyleRule"
+							? splitList(any.selectorText).sort().join(", ")
+							: "&"
 					}`;
 					// A shorthand holding a `var()` leaves each longhand empty until it is
 					// substituted, so what the rule says there is its whole text.

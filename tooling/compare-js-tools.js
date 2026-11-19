@@ -904,17 +904,17 @@ const EXPECTED = [
 	},
 	{
 		relation: "idempotence",
-		contains: "(r.entrySeq()",
+		contains: ".entrySeq().forEach(",
 		source: "Swagger UI 5 (bundle)",
 		presets: ["default"],
 		why: "`a?(b,c):c` printing as `a&&(b),c` parenthesizes a call left of `,`: an unread call may print as its arguments' sequence or what its function returns, which the printed text no longer tells apart"
 	},
 	{
 		relation: "idempotence",
-		contains: "3*(s+o)/4-o",
+		contains: "return 3*(",
 		source: "Swagger UI 5 (bundle)",
 		presets: ["default"],
-		why: "the `(r.entrySeq()` parentheses above, read by a second mangling pass: past its renames, only those parentheses move"
+		why: "the `.entrySeq()` parentheses above, read by a second mangling pass: past its renames, only those parentheses move"
 	},
 	{
 		relation: "idempotence",
