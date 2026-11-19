@@ -150,7 +150,8 @@ const describeCases = (config) => {
 						};
 						const testConfigPath = path.join(testDirectory, "test.config.js");
 						if (fs.existsSync(testConfigPath)) {
-							testConfig = require(testConfigPath);
+							// a case's own config sets what it needs on top of the defaults
+							testConfig = { ...testConfig, ...require(testConfigPath) };
 						}
 
 						const TerserPlugin = require("minimizer-webpack-plugin");
