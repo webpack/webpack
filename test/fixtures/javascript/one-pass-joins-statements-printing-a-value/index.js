@@ -28,5 +28,14 @@ function kept(x) {
 	f(13);
 	return x;
 }
+// A value joined after another's comma opens no statement.
+function values(B) {
+	var a = f(14);
+	var b = class extends B {},
+		c = function () {
+			f(15);
+		}();
+	return 16;
+}
 console.log(declared(o), declared(0), heads(), heads(), classes(), classes());
-console.log(kept(1), kept(2));
+console.log(kept(1), kept(2), values(Object));
