@@ -53,6 +53,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: full/size/40a586d8ac72ba5686c4b250184acfa11620d814/input.js",
 			"swc minifier: pass-1/issue-6123/1/input.js",
 			"swc minifier: fixture/projects/yui/3/input.js",
+			"swc minifier: projects/files/yui-3.12.0.js",
 			"swc minifier: fixture/issues/6957/exponential/input.js",
 			"swc minifier: fixture/issues/6957/number-tostring/input.js",
 			"swc minifier: fixture/issues/8465/input.js",
