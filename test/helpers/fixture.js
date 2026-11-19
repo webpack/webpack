@@ -355,7 +355,7 @@ const readList = (file) =>
  * Every fixture of a language with what the runner asks of it. Its
  * `options.json` lists option sets to print it under as well; a JavaScript one
  * marked `"behavior": true` (marker left out of what the printer gets) also
- * runs, an HTML one also renders, and a mark in another language throws.
+ * runs, a CSS or HTML one also renders, and a mark in another language throws.
  * A print set names a renderer and a RegExp in JSON (see `printOptions`), and
  * `print`, `visit`, `minimizer` and `check` in one are read by `readPrint`;
  * `parse.json` lists `ParseRun`s, each read by `readRun`. A `fixture.js`
@@ -401,9 +401,14 @@ const fixtures = (lang) => {
 			name
 		)) {
 			const key = JSON.stringify(one);
-			// JavaScript runs in Node.js and HTML renders in a browser: a mark
+			// JavaScript runs in Node.js, CSS and HTML render in a browser: a mark
 			// elsewhere would hold nothing.
-			if (runs !== undefined && lang !== "javascript" && lang !== "html") {
+			if (
+				runs !== undefined &&
+				lang !== "javascript" &&
+				lang !== "css" &&
+				lang !== "html"
+			) {
 				throw new Error(
 					`${name}: "behavior" runs a print, and ${lang} has no runtime`
 				);

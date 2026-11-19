@@ -37,6 +37,7 @@ const {
 	invariantFindings,
 	unexplainedScaling
 } = require("../../helpers/syntaxInvariants");
+const { renderBehavior } = require("../../helpers/syntaxInvariants/behavior");
 const { purityRelation } = require("../../helpers/syntaxInvariants/relations");
 const syntax = require("../../helpers/syntaxInvariants/css");
 
@@ -44,6 +45,7 @@ const syntax = require("../../helpers/syntaxInvariants/css");
 /** @typedef {import("../../../lib/css/syntax-parser").CssParseOptions} CssParseOptions */
 /** @typedef {import("../../helpers/fixture").ParseEntry} ParseEntry */
 /** @typedef {import("../../helpers/fixture").Printers} Printers */
+/** @typedef {import("../../helpers/syntaxInvariants/relations").Report} Report */
 
 /**
  * @param {string} kind the token kind, or the severity of a parse error
@@ -267,7 +269,20 @@ const PRINTERS = {
 // held to the parser's and printer's own relations; a new fixture needs no code.
 describe("CSS syntax — invariants", () => {
 	const all = fixtures("css");
-	for (const { name, dir, source, options, parses, expected } of all) {
+	// Launched by the first marked set only, so a run marking none opens none.
+	const renders = renderBehavior("css");
+
+	afterAll(() => renders.close());
+
+	for (const {
+		name,
+		dir,
+		source,
+		options,
+		behavior,
+		parses,
+		expected
+	} of all) {
 		describe(name, () => {
 			it("tokenizes", () => {
 				expect(
@@ -325,17 +340,47 @@ describe("CSS syntax — invariants", () => {
 				});
 			}
 
+			// Opt-in, as each set styles the elements its sheet reaches in a browser.
+			// One test answers every marked set, so an entry naming one set is not
+			// stale for the others.
+			if (behavior.length > 0) {
+				it("styles as its source when printed", async () => {
+					/** @type {{ preset: string, report: Report }[]} */
+					const findings = [];
+					for (const one of behavior) {
+						const { code } = /** @type {{ code: string }} */ (
+							new SourceProcessor().process(source, printOptions(one).options)
+						);
+						const reports = await renders.difference(source, code);
+						// A marked source past the budget would hold nothing.
+						expect(reports).not.toBeNull();
+						for (const report of /** @type {Report[]} */ (reports)) {
+							findings.push({ preset: JSON.stringify(one), report });
+						}
+					}
+					expect(
+						unexplained(
+							findings,
+							expected.filter((entry) => entry.relation === "behavior"),
+							source
+						)
+					).toEqual([]);
+				}, 60000);
+			}
+
 			it("holds its invariants", () => {
 				const findings = invariantFindings(syntax, [[name, source]]);
 				const agreed = syntax.agreementReports(source);
 				for (const report of agreed || []) {
 					findings.push({ label: name, preset: "parse", report });
 				}
-				// Without css-tree nothing is compared, so no difference is excused.
-				const reachable =
-					agreed === null
-						? expected.filter((entry) => entry.relation !== "agreement")
-						: expected;
+				// Without css-tree nothing is compared, so no difference is excused; a
+				// fixture marking no set answers no `behavior` entry, so it is stale here.
+				const reachable = expected.filter(
+					(entry) =>
+						(agreed !== null || entry.relation !== "agreement") &&
+						(behavior.length === 0 || entry.relation !== "behavior")
+				);
 				expect(unexplained(findings, reachable, source)).toEqual([]);
 			});
 		});

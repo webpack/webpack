@@ -6,7 +6,7 @@ const { renderBehavior } = require("../../helpers/syntaxInvariants/behavior");
 // The `behavior` relation passes a print only where the browser renders it as
 // the source, so it is held here to prints that render otherwise.
 describe("HTML behavior relation", () => {
-	const renders = renderBehavior();
+	const renders = renderBehavior("html");
 	const source = fixture("html", "minimize-collapse-whitespace");
 
 	afterAll(() => renders.close());

@@ -18,12 +18,15 @@ const { INVARIANT_BUDGET } = require("../fixture");
  */
 
 /**
- * One pinned Chrome per suite, launched on the first print it renders. Each
- * page is rendered at every width of `RENDER_WIDTHS` by `compareRenders`,
- * which compares every element's boxes, its `style` attribute and the text.
+ * One pinned Chrome per suite, launched on the first print it renders. An HTML
+ * page is rendered at every width of `RENDER_WIDTHS` by `compareRenders`, which
+ * compares every element's boxes, its `style` attribute and the text; a CSS
+ * sheet styles the elements its selectors reach, and `compareStyles` compares
+ * each one's computed style at every breakpoint either sheet's queries name.
+ * @param {"css" | "html"} lang what the sources are
  * @returns {RenderBehavior} the runner
  */
-const renderBehavior = () => {
+const renderBehavior = (lang) => {
 	/** @type {import("playwright-core").Browser | undefined} */
 	let browser;
 	/** @type {import("playwright-core").Page | undefined} */
@@ -46,11 +49,30 @@ const renderBehavior = () => {
 		difference: async (source, printed) => {
 			if (source.length > INVARIANT_BUDGET) return null;
 			if (printed === source) return [];
-			const { RENDER_WIDTHS, compareRenders } = require("../syntaxEquivalence");
+			const {
+				RENDER_WIDTHS,
+				cascadeLines,
+				compareRenders,
+				compareStyles
+			} = require("../syntaxEquivalence");
 
 			const opened = await open();
 			/** @type {Report[]} */
 			const reports = [];
+			if (lang === "css") {
+				const [report] = await opened.evaluate(compareStyles, {
+					pairs: [{ name: "print", before: source, after: printed }],
+					types: []
+				});
+				for (const line of cascadeLines(report)) {
+					reports.push({
+						relation: "behavior",
+						what: "styles otherwise",
+						repro: `    ${line}`
+					});
+				}
+				return reports;
+			}
 			for (const width of RENDER_WIDTHS) {
 				const [report] = await opened.evaluate(compareRenders, {
 					pairs: [{ name: "print", before: source, after: printed }],
