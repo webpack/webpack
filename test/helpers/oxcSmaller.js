@@ -858,8 +858,7 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"terser compress: sequences/delete_seq_4",
 			"terser compress: sequences/delete_seq_5",
-			"terser compress: sequences/side_effects_cascade_3",
-			"terser compress: sequences/make_sequences_4"
+			"terser compress: sequences/side_effects_cascade_3"
 		]
 	],
 	[

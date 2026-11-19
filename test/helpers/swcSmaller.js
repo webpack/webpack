@@ -794,7 +794,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/vercel/006/input.js",
 			"swc minifier: fixture/next/31077/static/chunks/1606726a.10299989c08cb523/input.js",
 			"swc minifier: fixture/projects/jquery/1/input.js",
-			"swc minifier: fixture/projects/jquery/25/input.js",
 			"swc minifier: fixture/projects/mootools/6/input.js",
 			"swc minifier: projects/files/jquery-1.9.1.js"
 		]
