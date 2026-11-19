@@ -89,7 +89,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:test_remove_dead_expr:145b43a1",
 			"oxc minifier: peephole/esbuild.rs:test_inline_single_use_variable:dc03519f",
 			"oxc minifier: peephole/esbuild.rs:test_inline_single_use_variable:f8b9d952",
-			"oxc minifier: peephole/esbuild.rs:test_inline_single_use_variable:ff7ddd2d",
 			"oxc minifier: peephole/esbuild.rs:prune_empty_case_before_default:7699a257"
 		]
 	],
@@ -202,7 +201,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_exit_points.rs:test_function_return_optimization:83d430dd",
 			"oxc minifier: peephole/minimize_exit_points.rs:test_function_return_optimization:0fdbf8eb",
 			"oxc minifier: peephole/minimize_if_statement.rs:test_minimize_if:d8680617",
-			"oxc minifier: peephole/obscure_edge_cases.rs:test_advanced_esm_patterns:981aefda",
 			"oxc minifier: peephole/statement_fusion.rs:no_fuse_into_while:cc28643d",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:test_fold_literal_array_constructors:4a916cd2",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:test_fold_is_object_and_not_null:bf30ca6e",
@@ -354,8 +352,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc drops a redundant last `return`, `break` or `continue`, as oxc's `peephole/minimize_exit_points.rs` tests show",
 		[
 			"oxc minifier: peephole/minimize_exit_points.rs:test_while_continue_optimization:16326839",
-			"oxc minifier: peephole/minimize_exit_points.rs:test_function_return_optimization:d1455905",
-			"oxc minifier: peephole/minimize_exit_points.rs:test_function_return_optimization:77497e76",
 			"oxc minifier: peephole/minimize_exit_points.rs:test_function_return_optimization:655d338f",
 			"oxc minifier: peephole/minimize_exit_points.rs:test_function_return_optimization:1716ec00",
 			"oxc minifier: peephole/minimize_exit_points.rs:test_function_return_optimization:ffab34ae",
@@ -822,7 +818,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"inlining: a function, a call in place or a single-use value written where it is used by one side and kept apart by the other",
 		[
-			"oxc minifier: peephole/inline_single_use_variable.rs:test_inline_single_use_variable:58429cc3",
 			"swc exec: issue_6899_1",
 			"swc exec: issue_6899_2",
 			"terser compress: blocks/issue_1664",
@@ -891,7 +886,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/chakra/input.js",
 			"swc minifier: fixture/next/47005/input.js",
 			"swc minifier: fixture/next/66378/input.js",
-			"swc minifier: fixture/next/cryptojs/input.js",
 			"swc minifier: fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js",
 			"swc minifier: fixture/next/react-chartjs/input.js"
 		]
@@ -1134,7 +1128,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/underscore/9/input.js",
 			"swc minifier: fixture/projects/yui/10/input.js",
 			"swc minifier: fixture/projects/yui/14/input.js",
-			"swc minifier: fixture/projects/yui/8/input.js",
 			"oxc minifier: peephole/inline_single_use_variable.rs:integration:f6a7c302",
 			"swc minifier: full/size/bfb48fed563e5fb468b88b6a6670972c3ca7ee38/input.js"
 		]
