@@ -3,6 +3,7 @@ import utf16 from "./utf-16.html";
 
 const fs = require("fs");
 const path = require("path");
+const { TextDecoder } = require("util");
 
 const IMAGE = /<img src="[^"]+\.svg" alt="([^"]+)">/;
 
