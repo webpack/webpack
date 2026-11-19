@@ -55522,6 +55522,39 @@ exports[`HTML syntax — invariants syntax-fuzz-a-reconstructed-element-drops-an
 
 exports[`HTML syntax — invariants syntax-fuzz-a-reconstructed-element-drops-an-empty-attribute-like-the-written-one tokenizes 1`] = `"attr[6,11|-1,-1] open[0,13|1,5] open[13,22|14,21] open[22,28|23,27] end=28"`;
 
+exports[`HTML syntax — invariants syntax-fuzz-a-style-inside-option-is-part-of-its-label parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <option>
+|       <style>
+|         \\"@\\""
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-style-inside-option-is-part-of-its-label parses 2`] = `"warning[0,8]:expected-doctype-but-got-start-tag warning[16,16]:expected-named-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-style-inside-option-is-part-of-its-label prints {"mode":"minify"} 1`] = `"<option><style>@</style>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-style-inside-option-is-part-of-its-label tokenizes 1`] = `"open[0,8|1,7] open[8,15|9,14] text[15,16] end=16"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-style-inside-option-is-part-of-its-label-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <option>
+|         <span>
+|           <style>
+|             \\"/*a*/\\"
+|         \\"a\\""
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-style-inside-option-is-part-of-its-label-2 parses 2`] = `"warning[0,8]:expected-doctype-but-got-start-tag warning[50,50]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-style-inside-option-is-part-of-its-label-2 prints {"mode":"minify"} 1`] = `"<select><option><span><style>/*a*/</style></span>a</select>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-style-inside-option-is-part-of-its-label-2 tokenizes 1`] = `"open[0,8|1,7] open[8,16|9,15] open[16,22|17,21] open[22,29|23,28] text[29,34] close[34,42|36,41] close[42,49|44,48] text[49,50] end=50"`;
+
 exports[`HTML syntax — invariants syntax-fuzz-a-value-holding-an-ampersand-and-hash-prints-the-same-whatever-its-spelling parses 1`] = `
 "| <html>
 |   <head>
