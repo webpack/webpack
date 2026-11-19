@@ -26332,7 +26332,7 @@ declare interface OptimizationMinimizeXml {
 	collapseAttributeWhitespace?: boolean;
 
 	/**
-	 * Remove whitespace-only text in known SVG containers, under `xml:space` too since that lays out text alone, preserving text content and foreign content, and kept where a stylesheet reads `:empty` or is unread. On by default, since that text renders nothing; `false` keeps it for scripts that read whitespace nodes.
+	 * Remove whitespace-only text in known SVG containers, under `xml:space` too since that lays out text alone, preserving text content and foreign content, and kept where a stylesheet reads `:empty` or is unread. On by default, since that text renders nothing; `false` keeps it for scripts, and for the stylesheets of a page that inlines the SVG, which read whitespace nodes.
 	 * @since 5.113.0
 	 */
 	collapseWhitespace?: boolean;

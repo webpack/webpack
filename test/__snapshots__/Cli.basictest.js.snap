@@ -13090,13 +13090,13 @@ Object {
   "optimization-minimize-options-xml-collapse-whitespace": Object {
     "configs": Array [
       Object {
-        "description": "Remove whitespace-only text in known SVG containers, under \`xml:space\` too since that lays out text alone, preserving text content and foreign content, and kept where a stylesheet reads \`:empty\` or is unread. On by default, since that text renders nothing; \`false\` keeps it for scripts that read whitespace nodes.",
+        "description": "Remove whitespace-only text in known SVG containers, under \`xml:space\` too since that lays out text alone, preserving text content and foreign content, and kept where a stylesheet reads \`:empty\` or is unread. On by default, since that text renders nothing; \`false\` keeps it for scripts, and for the stylesheets of a page that inlines the SVG, which read whitespace nodes.",
         "multiple": false,
         "path": "optimization.minimizeOptions.xml.collapseWhitespace",
         "type": "boolean",
       },
     ],
-    "description": "Remove whitespace-only text in known SVG containers, under \`xml:space\` too since that lays out text alone, preserving text content and foreign content, and kept where a stylesheet reads \`:empty\` or is unread. On by default, since that text renders nothing; \`false\` keeps it for scripts that read whitespace nodes.",
+    "description": "Remove whitespace-only text in known SVG containers, under \`xml:space\` too since that lays out text alone, preserving text content and foreign content, and kept where a stylesheet reads \`:empty\` or is unread. On by default, since that text renders nothing; \`false\` keeps it for scripts, and for the stylesheets of a page that inlines the SVG, which read whitespace nodes.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13766,13 +13766,13 @@ Object {
   "optimization-minimize-xml-collapse-whitespace": Object {
     "configs": Array [
       Object {
-        "description": "Remove whitespace-only text in known SVG containers, under \`xml:space\` too since that lays out text alone, preserving text content and foreign content, and kept where a stylesheet reads \`:empty\` or is unread. On by default, since that text renders nothing; \`false\` keeps it for scripts that read whitespace nodes.",
+        "description": "Remove whitespace-only text in known SVG containers, under \`xml:space\` too since that lays out text alone, preserving text content and foreign content, and kept where a stylesheet reads \`:empty\` or is unread. On by default, since that text renders nothing; \`false\` keeps it for scripts, and for the stylesheets of a page that inlines the SVG, which read whitespace nodes.",
         "multiple": false,
         "path": "optimization.minimize.xml.collapseWhitespace",
         "type": "boolean",
       },
     ],
-    "description": "Remove whitespace-only text in known SVG containers, under \`xml:space\` too since that lays out text alone, preserving text content and foreign content, and kept where a stylesheet reads \`:empty\` or is unread. On by default, since that text renders nothing; \`false\` keeps it for scripts that read whitespace nodes.",
+    "description": "Remove whitespace-only text in known SVG containers, under \`xml:space\` too since that lays out text alone, preserving text content and foreign content, and kept where a stylesheet reads \`:empty\` or is unread. On by default, since that text renders nothing; \`false\` keeps it for scripts, and for the stylesheets of a page that inlines the SVG, which read whitespace nodes.",
     "multiple": false,
     "simpleType": "boolean",
   },
