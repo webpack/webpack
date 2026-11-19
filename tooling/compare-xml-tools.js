@@ -1194,10 +1194,10 @@ const invariants = async (write, parseXml) => {
 		}
 		log(`… and ${cut} of them cut short inside a construct …`);
 	}
-	// Under the first preset only: a browser rendering each source is the
+	// Under the first preset asked only: a browser rendering each source is the
 	// costliest relation, and what a print draws is asked the same way by each.
-	if (wantedRelation("behavior")) {
-		const [preset, options] = presets[0] || PRESETS[0];
+	if (wantedRelation("behavior") && presets.length > 0) {
+		const [preset, options] = presets[0];
 		await behaviorSweep({
 			lang: "xml",
 			corpus,

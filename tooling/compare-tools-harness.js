@@ -1239,6 +1239,7 @@ const sweepExitCode = (found, missing, argv) =>
  * @returns {Promise<void>} resolves once every source is rendered and the browser closed
  */
 const behaviorSweep = async ({ lang, corpus, print, preset, groups }) => {
+	const { INVARIANT_BUDGET } = require("../test/helpers/fixture");
 	const {
 		renderBehavior
 	} = require("../test/helpers/syntaxInvariants/behavior");
@@ -1249,6 +1250,11 @@ const behaviorSweep = async ({ lang, corpus, print, preset, groups }) => {
 	let skipped = 0;
 	try {
 		for (const [label, source] of corpus) {
+			// The runner answers nothing past the budget, so it is not printed.
+			if (source.length > INVARIANT_BUDGET) {
+				skipped++;
+				continue;
+			}
 			const printed = print(source);
 			const reports =
 				printed === null ? null : await renders.difference(source, printed);

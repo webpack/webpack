@@ -47,6 +47,18 @@ describe("XML behavior relation", () => {
 		expect(reports).toHaveLength(1);
 	}, 60000);
 
+	it("reports a print drawn at another size", async () => {
+		const reports = /** @type {Report[]} */ (
+			await renders.difference(
+				source,
+				source.replace("<svg", '<svg width="32" height="16"')
+			)
+		);
+		expect(reports.map(({ repro }) => repro.trim())).toEqual([
+			"draws at 300x150 -> 32x16"
+		]);
+	}, 60000);
+
 	it("reports a print that parses as no SVG document", async () => {
 		const reports = /** @type {Report[]} */ (
 			await renders.difference(source, source.replace("<svg", "<svg<"))

@@ -42,7 +42,7 @@ const compareSvgRenders = async ({ before, after, size, tolerance }) => {
 	};
 	/**
 	 * @param {string} text a document
-	 * @returns {Promise<Uint8ClampedArray | null>} its pixels, null where it draws nothing
+	 * @returns {Promise<{ width: number, height: number, data: Uint8ClampedArray } | null>} its natural size and its pixels scaled onto the canvas, null where it draws nothing
 	 */
 	const pixelsOf = async (text) => {
 		const image = new Image();
@@ -59,7 +59,11 @@ const compareSvgRenders = async ({ before, after, size, tolerance }) => {
 			canvas.getContext("2d")
 		);
 		context.drawImage(image, 0, 0, size, size);
-		return context.getImageData(0, 0, size, size).data;
+		return {
+			width: image.naturalWidth,
+			height: image.naturalHeight,
+			data: context.getImageData(0, 0, size, size).data
+		};
 	};
 	const source = rootOf(before);
 	if (source === null) return null;
@@ -68,10 +72,23 @@ const compareSvgRenders = async ({ before, after, size, tolerance }) => {
 	if (after === before) return [];
 	/** @type {string[]} */
 	const out = [];
-	const [mine, theirs] = await Promise.all([pixelsOf(before), pixelsOf(after)]);
-	if (mine === null || theirs === null) {
-		if (mine !== theirs) out.push("one of the two draws nothing");
+	const [drawn, redrawn] = await Promise.all([
+		pixelsOf(before),
+		pixelsOf(after)
+	]);
+	if (drawn === null || redrawn === null) {
+		if (drawn !== redrawn) out.push("one of the two draws nothing");
+	} else if (
+		drawn.width !== redrawn.width ||
+		drawn.height !== redrawn.height
+	) {
+		// Both are scaled onto one canvas, so a size moved alone draws alike there.
+		out.push(
+			`draws at ${drawn.width}x${drawn.height} -> ${redrawn.width}x${redrawn.height}`
+		);
 	} else {
+		const mine = drawn.data;
+		const theirs = redrawn.data;
 		let moved = 0;
 		let first = -1;
 		for (let at = 0; at < mine.length; at += 4) {
