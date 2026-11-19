@@ -541,7 +541,7 @@ const describeCases = (config) => {
 									if (retries === 0) {
 										return fail(
 											new Error(
-												`No build reported the change to ${[...unseenChanges].join(", ")}\n${describeUnseenChanges(compilers)}`
+												`No build reported the change to ${[...unseenChanges].join(", ")} in step ${run.name}\n${describeUnseenChanges(compilers)}`
 											)
 										);
 									}

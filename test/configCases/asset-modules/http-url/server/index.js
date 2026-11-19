@@ -133,6 +133,50 @@ const PORTS = [9990, 9991, 9992];
 
 /** @type {import("http").Server[]} */
 const servers = [];
+let stopped = false;
+// how often a port another Jest run holds is tried again
+const RETRY_INTERVAL = 100;
+
+/**
+ * Serves one port, or takes it over once another Jest run on this machine frees it.
+ * @param {number} port the port
+ * @returns {Promise<void>} resolves once the port is served, by this run or the other
+ */
+const serve = (port) =>
+	new Promise((resolve, reject) => {
+		const server = createServer();
+		servers.push(server);
+		/**
+		 * @param {NodeJS.ErrnoException} error listen error
+		 * @returns {void}
+		 */
+		const onError = (error) => {
+			server.removeListener("listening", onListening);
+			if (error.code !== "EADDRINUSE") return reject(error);
+			// the other run answers alike until it exits, so setup goes on meanwhile
+			resolve();
+			setTimeout(listen, RETRY_INTERVAL).unref();
+		};
+		/**
+		 * Listens on the port, unless the run has ended.
+		 * @returns {void}
+		 */
+		const listen = () => {
+			if (stopped) return;
+			server.once("error", onError);
+			server.once("listening", onListening);
+			server.listen(port);
+		};
+		/**
+		 * Settles setup once this run serves the port.
+		 * @returns {void}
+		 */
+		const onListening = () => {
+			server.removeListener("error", onError);
+			resolve();
+		};
+		listen();
+	});
 
 /**
  * Starts one server per port in Jest's global setup. Each config suite runs in
@@ -141,26 +185,7 @@ const servers = [];
  * on the other's socket when that one closes.
  * @returns {Promise<void>} resolves once every port is served
  */
-const start = () =>
-	Promise.all(
-		PORTS.map(
-			(port) =>
-				new Promise((resolve, reject) => {
-					const server = createServer();
-					server.once("error", (error) => {
-						// another Jest run on this machine already serves the same files
-						if (/** @type {NodeJS.ErrnoException} */ (error).code === "EADDRINUSE") {
-							return resolve(undefined);
-						}
-						reject(error);
-					});
-					server.listen(port, () => {
-						servers.push(server);
-						resolve(undefined);
-					});
-				})
-		)
-	).then(() => {});
+const start = () => Promise.all(PORTS.map(serve)).then(() => {});
 
 /**
  * Closes the servers again, once every test file has run. Not awaited: the
@@ -168,7 +193,10 @@ const start = () =>
  * @returns {void}
  */
 const stop = () => {
-	for (const server of servers.splice(0)) server.close();
+	stopped = true;
+	for (const server of servers.splice(0)) {
+		if (server.listening) server.close();
+	}
 };
 
 module.exports = { start, stop };
