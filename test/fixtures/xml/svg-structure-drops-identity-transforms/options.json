@@ -4,6 +4,7 @@
 		"mode": "minify",
 		"collapseWhitespace": true,
 		"shortenSvgNumbers": true,
-		"cleanupSvgStructure": true
+		"cleanupSvgStructure": true,
+		"behavior": true
 	}
 ]

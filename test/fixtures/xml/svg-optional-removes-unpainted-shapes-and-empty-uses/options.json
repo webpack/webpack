@@ -3,6 +3,7 @@
 		"xml": true,
 		"mode": "minify",
 		"collapseWhitespace": true,
-		"removeHiddenSvgElements": true
+		"removeHiddenSvgElements": true,
+		"behavior": true
 	}
 ]

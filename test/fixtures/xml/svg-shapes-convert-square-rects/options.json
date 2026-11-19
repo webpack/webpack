@@ -4,12 +4,14 @@
 		"mode": "minify",
 		"collapseWhitespace": true,
 		"convertSvgShapes": true,
-		"shortenSvgPathData": true
+		"shortenSvgPathData": true,
+		"behavior": true
 	},
 	{
 		"xml": true,
 		"mode": "minify",
 		"collapseWhitespace": true,
-		"convertSvgShapes": true
+		"convertSvgShapes": true,
+		"behavior": true
 	}
 ]
