@@ -34,6 +34,33 @@ function dead(x) {
 	console.log(b);
 }
 dead(5);
+// A `var` declared again with no value sets nothing; a `for`-`in` sets it.
+function declaredAgain(x) {
+	var b = 2;
+	if (x) var b;
+	else var b;
+	for (var b; x; ) x--;
+	console.log(b + 1);
+}
+declaredAgain(2);
+function forIn(o) {
+	var k = 2;
+	k++;
+	for (var k in o);
+	console.log(k);
+}
+forIn({ key: 1 });
+// A string a loop's head sets once reads as itself in the loop.
+function matches(r) {
+	for (var m, s = "abcabc"; (m = r.exec(s)); ) console.log(m.index);
+}
+matches(/b/g);
+function suffixed() {
+	var s = "a";
+	s += "b";
+	console.log(s);
+}
+suffixed();
 // What another function, a loop or a branch may set keeps the name.
 function kept(x) {
 	var a = 1, b = 1, c = 1, d = 1;
