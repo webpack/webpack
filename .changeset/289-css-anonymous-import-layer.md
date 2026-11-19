@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Name an anonymous layer that a kept `@import` nests with another layer.
+Name a nested anonymous `@import` layer, and follow the output hash options.
