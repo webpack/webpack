@@ -10123,10 +10123,10 @@ webpack-merge@^6.0.1:
     flat "^5.0.2"
     wildcard "^2.0.1"
 
-webpack-sources@^3.7.0:
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.7.0.tgz#6c145ac83f8220ef20d4b01b9e7d5c15b1598b09"
-  integrity sha512-PdUhbCycwEgiS1hB/FBDksWKg/ashAIuJKqwdbPn8/dFVgU5LxQiBvG0js6VRRIzPujMrStYCczywp82P0KWng==
+webpack-sources@^3.7.1:
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.7.1.tgz#f8d91f5ae9f5d4940c67333283044a7d80100480"
+  integrity sha512-mcxs7A2LsEdwsNqQburqS4QHPR2Ca3NGplUakn6J5GPQvnVZ4oD4IM4FJcT3f8AVN2e2EsjuIVxKj4rorHvyuQ==
 
 which-boxed-primitive@^1.1.0, which-boxed-primitive@^1.1.1:
   version "1.1.1"

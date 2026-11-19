@@ -153,7 +153,7 @@
     "schema-utils": "^4.8.2",
     "tapable": "^2.3.4",
     "watchpack": "^2.6.4",
-    "webpack-sources": "^3.7.0"
+    "webpack-sources": "^3.7.1"
   },
   "devDependencies": {
     "@babel/core": "^8.0.1",
