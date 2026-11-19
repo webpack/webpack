@@ -3141,12 +3141,12 @@ const cascadeLines = (report) => {
 };
 
 module.exports = {
-	POLICED_PAGE,
-	RENDER_WIDTHS,
 	CSS_OPT_INS,
 	CSS_OPT_IN_RELAX,
 	HTML_OPT_INS,
 	HTML_OPT_IN_RELAX,
+	POLICED_PAGE,
+	RENDER_WIDTHS,
 	benchmarkDocuments,
 	benchmarkStylesheets,
 	buildCorpus,

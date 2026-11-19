@@ -46,6 +46,7 @@ const {
 	HTML_OPT_INS,
 	HTML_OPT_IN_RELAX,
 	POLICED_PAGE,
+	RENDER_WIDTHS,
 	cascadeLines,
 	compareRenders,
 	compareStyles,
@@ -93,9 +94,6 @@ const INPUTS_PER_SEED = Number(process.env.SYNTAX_FUZZ_INPUTS) || 100;
 const SEED_TIMEOUT = 600000;
 // How many times a finding's input is tried smaller before it stands as found.
 const SHRINK_BUDGET = 400;
-
-// The narrower of the widths the equivalence suite renders at.
-const RENDER_WIDTH = 360;
 
 // The pre-nesting target the lowerings run for, as the CSS invariants name it.
 const LEGACY_BROWSERS = ["chrome 100", "firefox 100", "safari 15.4"];
@@ -761,7 +759,8 @@ describe("syntax fuzz in real chrome", () => {
 			/** @type {RenderReport[]} */
 			const reports = await page.evaluate(compareRenders, {
 				pairs: renders,
-				width: RENDER_WIDTH
+				// The narrower of the widths the equivalence suite renders at.
+				width: RENDER_WIDTHS[0]
 			});
 			for (const { name, differences } of reports) {
 				if (differences.length > 0) {
