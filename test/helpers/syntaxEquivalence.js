@@ -2040,6 +2040,8 @@ const compareStyles = async ({ pairs, types }) => {
 				const any = /** @type {EXPECTED_ANY} */ (rule);
 				if (kind === "CSSStyleRule" || kind === "CSSNestedDeclarations") {
 					let own = parents || [""];
+					// A list's order is no part of what it matches, and the printer sorts it.
+					let listed = "&";
 					if (kind === "CSSStyleRule") {
 						const mapped = any.selectorText
 							.replace(STATES, "$1[data-eq-$2]")
@@ -2051,7 +2053,12 @@ const compareStyles = async ({ pairs, types }) => {
 							.replace(/:root(?![\w-])/gi, ":is([data-eq-root], :root)");
 						if (mapped !== any.selectorText) any.selectorText = mapped;
 						own = [];
-						for (const one of splitList(any.selectorText)) {
+						const selectors = splitList(any.selectorText);
+						listed =
+							selectors.length > 1
+								? [...selectors].sort().join(", ")
+								: any.selectorText;
+						for (const one of selectors) {
 							for (const parent of parents || [scope]) {
 								if (parent === "") {
 									own.push(one.replace(/:scope|&/g, "").trim() || "*");
@@ -2065,12 +2072,7 @@ const compareStyles = async ({ pairs, types }) => {
 					}
 					for (const key of lengths) addAll(out.atLength, key, own);
 					const style = /** @type {CSSStyleDeclaration} */ (any.style);
-					// A list's order is no part of what it matches, and the printer sorts it.
-					const where = `${context}\u0001${
-						kind === "CSSStyleRule"
-							? splitList(any.selectorText).sort().join(", ")
-							: "&"
-					}`;
+					const where = `${context}\u0001${listed}`;
 					// A shorthand holding a `var()` leaves each longhand empty until it is
 					// substituted, so what the rule says there is its whole text.
 					const text = style.cssText;

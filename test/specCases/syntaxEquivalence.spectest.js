@@ -176,6 +176,14 @@ const PAGE_DOCUMENTS = 500;
 // in milliseconds, so this is orders above what any needs — generous enough never
 // to fail a slow runner, small enough that every hanging file is named in one run.
 const FILE_TIMEOUT = 180000;
+/**
+ * What one stylesheet's CSSOM comparison gets: a file's timeout per megabyte it
+ * holds, since a framework-sized sheet compares rule by rule in each engine.
+ * @param {{ raw: string }} fixture the stylesheet
+ * @returns {number} its timeout in milliseconds
+ */
+const sheetTimeout = (fixture) =>
+	FILE_TIMEOUT * Math.max(1, Math.ceil(fixture.raw.length / 1e6));
 // One declaration, bounded here rather than by jest — which is what lets the
 // page be replaced before the next one runs. A declaration costs a
 // millisecond, so this is three orders above what it needs.
@@ -890,7 +898,7 @@ describe(`printer output in real ${ENGINE}`, () => {
 							expected(one.filedCssOptIns, fixture.name)
 						);
 					},
-					FILE_TIMEOUT
+					sheetTimeout(fixture)
 				);
 			}
 
@@ -905,7 +913,7 @@ describe(`printer output in real ${ENGINE}`, () => {
 							expected(one.filedCss, fixture.name)
 						);
 					},
-					FILE_TIMEOUT
+					sheetTimeout(fixture)
 				);
 			}
 
