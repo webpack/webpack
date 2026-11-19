@@ -97,24 +97,24 @@ describe("PackFileCacheStrategy", () => {
 		});
 	});
 
-	describe("PackContent writeLazy", () => {
-		/**
-		 * @param {() => EXPECTED_ANY} lazy the content's lazy value
-		 * @param {string[]} messages collects every logged message
-		 * @returns {EXPECTED_ANY} the pack's content holding items a and b
-		 */
-		const createContent = (lazy, messages) => {
-			const pack = /** @type {EXPECTED_ANY} */ (
-				getSerializer("Pack").deserialize(
-					createContext(
-						["a", "b", null, "etag-a", "etag-b", 1, 2, new Set(["a", "b"]), lazy, null],
-						{ logger: createLogger(messages) }
-					)
+	/**
+	 * @param {() => EXPECTED_ANY} lazy the content's lazy value
+	 * @param {string[]} messages collects every logged message
+	 * @returns {EXPECTED_ANY} the pack's content holding items a and b
+	 */
+	const createContent = (lazy, messages) => {
+		const pack = /** @type {EXPECTED_ANY} */ (
+			getSerializer("Pack").deserialize(
+				createContext(
+					["a", "b", null, "etag-a", "etag-b", 1, 2, new Set(["a", "b"]), lazy, null],
+					{ logger: createLogger(messages) }
 				)
-			);
-			return pack.content[0];
-		};
+			)
+		);
+		return pack.content[0];
+	};
 
+	describe("PackContent writeLazy", () => {
 		it("drops items it cannot restore so the rest of the pack stores", async () => {
 			/** @type {string[]} */
 			const messages = [];
@@ -171,6 +171,49 @@ describe("PackFileCacheStrategy", () => {
 
 			expect([...items.map]).toEqual([["b", "value-b"]]);
 		});
+	});
+
+	describe("PackContent unpack", () => {
+		/**
+		 * @param {boolean} async whether the lazy value resolves later
+		 * @returns {EXPECTED_ANY} the content, restored from a memoized lazy
+		 */
+		const createRestoredContent = (async) => {
+			const SerializerMiddleware = require("../../lib/serialization/SerializerMiddleware");
+			const contentItems = getSerializer("PackContentItems").deserialize(
+				createContext([
+					true,
+					new Map([
+						["a", "value-a"],
+						["b", "value-b"]
+					])
+				])
+			);
+			const lazy = SerializerMiddleware.createLazy(
+				() => (async ? Promise.resolve(contentItems) : contentItems),
+				/** @type {EXPECTED_ANY} */ ({}),
+				{ size: 42 }
+			);
+			return createContent(lazy, []);
+		};
+
+		it.each([false, true])(
+			"releases the restored lazy value (async: %s)",
+			async (async) => {
+				const content = createRestoredContent(async);
+
+				await content.unpack("a test needs it");
+
+				expect([...content.content]).toEqual([
+					["a", "value-a"],
+					["b", "value-b"]
+				]);
+				expect(() => content.lazy()).toThrow(
+					"A lazy value that has been unmemorized can't be called again"
+				);
+				expect(content.getSize()).toBe(42);
+			}
+		);
 	});
 
 	describe("PackContentItems deserialize", () => {
