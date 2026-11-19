@@ -1011,7 +1011,13 @@ describe("syntax fuzz in real chrome", () => {
 			/** @type {string[]} */
 			const left = [];
 			for (const entry of fixtures(lang)) {
-				if (entry.expectedBrowser.length === 0) continue;
+				// A fixed finding keeps its fixture, which holds the fix to the browser.
+				if (
+					entry.expectedBrowser.length === 0 &&
+					!entry.name.startsWith("syntax-fuzz-")
+				) {
+					continue;
+				}
 				const found = (await inBrowser(entry.source)).map(
 					({ relation, preset, what }) => ({
 						preset,
