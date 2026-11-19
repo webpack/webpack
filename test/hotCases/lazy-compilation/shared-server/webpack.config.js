@@ -1,9 +1,12 @@
 "use strict";
 
 const http = require("http");
+// eslint-disable-next-line import/no-extraneous-dependencies -- webpack self-reference
+const webpack = require("webpack");
+
 const {
 	hmr: { LazyCompilationPlugin }
-} = require("../../../../");
+} = webpack;
 
 /**
  * Hands the lazy compilation backend a server that is already listening, as a
@@ -32,7 +35,7 @@ class SharedServerPlugin {
 								transport
 							),
 							server,
-							urlBase: `http://127.0.0.1:${port}`
+							urlBase: `http://127.0.0.1:${port}/`
 						});
 					});
 				})
@@ -51,12 +54,12 @@ class SharedServerPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
-module.exports = {
+/** @returns {import("webpack").Configuration} configuration with a shared server */
+module.exports = () => ({
 	experiments: {
 		lazyCompilation: {
 			entries: false
 		}
 	},
 	plugins: [new SharedServerPlugin()]
-};
+});
