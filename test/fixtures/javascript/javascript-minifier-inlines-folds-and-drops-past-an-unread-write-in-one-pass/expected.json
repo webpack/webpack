@@ -1,7 +1,7 @@
 [
 	{
 		"relation": "idempotence",
-		"contains": "({}.a)`x`)},function(){(",
+		"contains": "(function(){t(this===void 0?",
 		"presets": [
 			"default"
 		],

@@ -10,7 +10,7 @@ module.exports = {
 			"utf8"
 		);
 		expect(code).toContain("flag=!!c");
-		expect(code).toContain("named=function(){var named=1;return named}");
+		expect(code).toContain("named=function(){return 1}");
 		expect(code).toContain("function keptName(read=keptName)");
 		expect(code).toContain('log.push("test")');
 		expect(code).not.toContain("typeof missing");

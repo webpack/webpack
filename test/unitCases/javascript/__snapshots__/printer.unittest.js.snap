@@ -69,13 +69,13 @@ exports[`JavaScript minifier printing a SyntaxTree should print alone the commen
 
 exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 1`] = `"f();"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 2`] = `"a;f();"`;
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 2`] = `"a,f();"`;
 
 exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 3`] = `"debugger;f();"`;
 
 exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 4`] = `"g();"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 5`] = `"f();g();"`;
+exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 5`] = `"f(),g();"`;
 
 exports[`JavaScript minifier printing a SyntaxTree should read terser's compress options that name calls, globals and names 6`] = `"console.warn(2),g();"`;
 
@@ -229,7 +229,7 @@ exports[`one-pass minify of reads and calls on literals should print a number co
 
 exports[`one-pass minify of statement sequences should parenthesize a fold or element read keeping an infinity, which prints as a division 1`] = `"console.log((1/0).toString(),(1/0).toFixed(),(-1/0).toString(),new(1/0),(1/0).x,[1/0][0].toFixed(),{a:1/0}.a.toFixed(),\\"number\\",0,1/0);"`;
 
-exports[`one-pass minify of statement sequences should print a binary expression folding to an infinity or \`NaN\` as \`1/0\`, \`-1/0\` or \`NaN\` 1`] = `"var a=2;console.log(1/0,2/0,1/0,-1/0,NaN,NaN,a/(2/0),a- -2/0,-(2/0),(2/0).toLocaleString(),2**2e3,a**(2/0),f()/0,a/(1/0),a- -1/0,-(1/0),(1/0).toLocaleString(),a**(1/0));"`;
+exports[`one-pass minify of statement sequences should print a binary expression folding to an infinity or \`NaN\` as \`1/0\`, \`-1/0\` or \`NaN\` 1`] = `"var a=2;console.log(1/0,2/0,1/0,-1/0,NaN,NaN,a/(2/0),a- -2/0,-(2/0),(2/0).toLocaleString(),1/0,a**(2/0),f()/0,a/(1/0),a- -1/0,-(1/0),(1/0).toLocaleString(),a**(1/0));"`;
 
 exports[`one-pass minify of statement sequences should print a binary expression folding to an infinity or \`NaN\` as \`1/0\`, \`-1/0\` or \`NaN\` 2`] = `"!function(NaN){eval(\\"\\"),console.log(0/0,NaN)}(5);"`;
 

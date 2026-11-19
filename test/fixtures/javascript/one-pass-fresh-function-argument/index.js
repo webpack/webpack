@@ -1,0 +1,82 @@
+var log = [];
+function show(x) {
+	log.push(x);
+	return x;
+}
+function run() {
+	(function (f) {
+		f();
+	})(function () {
+		show("called");
+	});
+	(function (f) {
+		show(f(2));
+	})(function (n) {
+		return n + 1;
+	});
+	(function (f) {
+		for (var i = 0; i < 2; i++) show(f());
+	})(function () {
+		return "loop";
+	});
+	(function (f) {
+		show(f(), f());
+	})(function () {
+		return "twice";
+	});
+	(function (f) {
+		"use strict";
+		show(f());
+	})(function () {
+		return typeof this;
+	});
+	(function (f) {
+		var o = {};
+		o[f()] = 42;
+		show(o.foo);
+	})(function () {
+		show("foo");
+		return "foo";
+	});
+}
+run();
+run();
+function opaque() {
+	return "W";
+}
+function shadowed(shadow) {
+	return (function (f, shadow) {
+		return f() + shadow;
+	})(function () {
+		return eval("shadow");
+	}, opaque());
+}
+show(shadowed("R"));
+console.log(log.join());
+// A call printing as the object or class its function returns takes it bare.
+var out = {};
+(function (make) {
+	const o = make();
+	out.a = o;
+	out.b = o;
+})(() => ({ fake: true }));
+(function (make) {
+	const C = make();
+	out.c = C;
+	out.d = C;
+})(() => class { m() { return 7; } });
+console.log(out.a === out.b, out.a.fake, out.c === out.d, new out.d().m());
+// A passed function reading names around it stays where mangling names them.
+function outerReads() {
+	var outerValue = Math.floor(10);
+	var other = Math.floor(11);
+	return (function (cb) {
+		var s = 0;
+		for (var i = 0; i < 3; i++) s += i;
+		console.log(s);
+		return cb();
+	})(function () {
+		return outerValue * other;
+	});
+}
+console.log(outerReads());
