@@ -839,6 +839,13 @@ const sweepRespellings = (minify, html, minified) => {
 	return reports;
 };
 
+// Inline elements an empty one of which renders nothing, so it splits no word.
+const EMPTY_INLINE_ELEMENTS = new Set(
+	"a abbr b bdi bdo cite code data del dfn em i ins kbd label mark s samp small span strong sub sup time u var".split(
+		" "
+	)
+);
+
 /**
  * What a document says, read by webpack's own parser: the words of its text and
  * each `<style>` sheet in its canonical CSS form, plus, where `tree` is set, every
@@ -867,11 +874,22 @@ const htmlMeaning = (html, tree, cssOptions) => {
 		if (words !== "") for (const word of words.split(" ")) said.push(word);
 		run = "";
 	};
+	// An inline element splits the run only once something is found inside it.
+	let pending = false;
+	const settle = () => {
+		if (pending) flush();
+		pending = false;
+	};
 	/** @type {Record<number, { enter: (nodePath: EXPECTED_ANY) => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
 	const visitors = {
 		[NodeType.Element]: {
 			enter: (nodePath) => {
-				flush();
+				settle();
+				if (!tree && EMPTY_INLINE_ELEMENTS.has(nodePath.name())) {
+					pending = true;
+				} else {
+					flush();
+				}
 				open.push(nodePath.name());
 				if (!tree) return;
 				/** @type {string[]} */
@@ -887,13 +905,15 @@ const htmlMeaning = (html, tree, cssOptions) => {
 				);
 			},
 			exit: (nodePath) => {
-				flush();
+				if (pending) pending = false;
+				else flush();
 				open.pop();
 				if (tree) said.push(`</${nodePath.name()}>`);
 			}
 		},
 		[NodeType.Text]: {
 			enter: (nodePath) => {
+				settle();
 				const parent = open[open.length - 1];
 				if (parent === "script") return;
 				const text = nodePath.value();
