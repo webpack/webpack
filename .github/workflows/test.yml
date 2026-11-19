@@ -109,6 +109,21 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
+      # The CSS, HTML and XML sweeps render each print beside its source in the
+      # Chrome playwright-core pins, as the `behavior` fixtures in `unit` do.
+      - name: Read the pinned browser build
+        id: browser-build
+        run: echo "id=$(node -p "require('playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache the pinned browser
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chrome-${{ steps.browser-build.outputs.id }}-${{ runner.os }}
+
+      - name: Install the pinned browser
+        run: node tooling/retry.js yarn setup:browsers chrome
+
       # The framework stylesheets and documents the comparisons install, which
       # the sweep reads as well: the corpus a contributor builds is 77
       # stylesheets wider than the one a bare checkout holds, and a finding has

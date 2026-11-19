@@ -1226,11 +1226,53 @@ const sweepExitCode = (found, missing, argv) =>
 		? 1
 		: 0;
 
+/**
+ * The `behavior` relation over a corpus: each source within the invariants'
+ * budget is printed under one preset and rendered beside its print in the
+ * pinned Chrome, by the runner the fixtures use (`syntaxInvariants/behavior.js`).
+ * @param {object} input what to render
+ * @param {"css" | "html" | "xml"} input.lang what the sources are
+ * @param {readonly [string, string][]} input.corpus `[label, source]` pairs
+ * @param {(source: string) => string | null} input.print the preset's printer, null where the source does not print
+ * @param {string} input.preset the preset's name, for the findings
+ * @param {{ add: (report: Report, preset: string, label: string) => void }} input.groups where findings go
+ * @returns {Promise<void>} resolves once every source is rendered and the browser closed
+ */
+const behaviorSweep = async ({ lang, corpus, print, preset, groups }) => {
+	const {
+		renderBehavior
+	} = require("../test/helpers/syntaxInvariants/behavior");
+
+	const renders = renderBehavior(lang);
+	const started = Date.now();
+	let rendered = 0;
+	let skipped = 0;
+	try {
+		for (const [label, source] of corpus) {
+			const printed = print(source);
+			const reports =
+				printed === null ? null : await renders.difference(source, printed);
+			if (reports === null) {
+				skipped++;
+				continue;
+			}
+			rendered++;
+			for (const report of reports) groups.add(report, preset, label);
+		}
+	} finally {
+		await renders.close();
+	}
+	log(
+		`rendered ${rendered} sources beside their print under ${preset} (${skipped} past the budget or not drawn) in ${((Date.now() - started) / 1000).toFixed(1)} s …`
+	);
+};
+
 module.exports = {
 	STAGES,
 	TreeEvents,
 	agreement,
 	agreementInvariant,
+	behaviorSweep,
 	collectFiles,
 	compress,
 	cutsAt,
