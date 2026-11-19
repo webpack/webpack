@@ -1,7 +1,13 @@
 "use strict";
 
 module.exports = {
-	findBundle() {
-		return ["./first.js", "./second.js", "./mixed.js", "./dependent.js"];
+	/**
+	 * @param {number} index configuration index
+	 * @returns {string[]} entry bundles
+	 */
+	findBundle(index) {
+		return ["first", "second", "mixed", "dependent"].map(
+			(name) => `./${name}.${index}.js`
+		);
 	}
 };

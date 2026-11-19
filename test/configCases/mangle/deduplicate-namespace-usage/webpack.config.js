@@ -1,11 +1,12 @@
 "use strict";
 
 /**
+ * @param {number} index configuration index
  * @param {true | "global"} usedExports scope of the export usage analysis
  * @param {boolean} concatenateModules whether to concatenate modules
  * @returns {import("../../../../").Configuration} configuration
  */
-const config = (usedExports, concatenateModules) => ({
+const config = (index, usedExports, concatenateModules) => ({
 	mode: "production",
 	target: "web",
 	entry: {
@@ -17,7 +18,7 @@ const config = (usedExports, concatenateModules) => ({
 			dependOn: ["first", "second"]
 		}
 	},
-	output: { filename: "[name].js" },
+	output: { filename: `[name].${index}.js` },
 	optimization: {
 		usedExports,
 		concatenateModules,
@@ -65,8 +66,8 @@ const config = (usedExports, concatenateModules) => ({
 });
 
 module.exports = [
-	config(true, false),
-	config(true, true),
-	config("global", false),
-	config("global", true)
+	config(0, true, false),
+	config(1, true, true),
+	config(2, "global", false),
+	config(3, "global", true)
 ];
