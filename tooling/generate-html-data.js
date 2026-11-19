@@ -450,6 +450,11 @@ const SRCSET_ATTRIBUTES = ["srcset", "imagesrcset"];
 
 const COMMA_LIST_ATTRIBUTES = ["accept", "coords", "sizes"];
 
+// Only the elements whose `referrerPolicy` reflects "limited to only known
+// values" get these; elsewhere the attribute is an unknown one kept as written.
+const REFERRER_POLICY_KEYWORDS =
+	"no-referrer no-referrer-when-downgrade same-origin origin strict-origin origin-when-cross-origin strict-origin-when-cross-origin unsafe-url";
+
 // Everything the IDL cannot state, each with why. The generator asserts that no
 // entry here is also derivable, so one becoming so is a signal to delete it.
 const SUPPLEMENT = {
@@ -2406,13 +2411,11 @@ const PARSER_TABLES = [
 			["* hidden", "hidden until-found"],
 			["* inputmode", "none text tel url email numeric decimal search"],
 			["* popover", "auto manual hint"],
-			[
-				"* referrerpolicy",
-				"no-referrer no-referrer-when-downgrade same-origin origin strict-origin origin-when-cross-origin strict-origin-when-cross-origin unsafe-url"
-			],
 			["* spellcheck", "true false"],
 			["* translate", "yes no"],
 			["* writingsuggestions", "true false"],
+			["a referrerpolicy", REFERRER_POLICY_KEYWORDS],
+			["area referrerpolicy", REFERRER_POLICY_KEYWORDS],
 			["audio crossorigin", "anonymous use-credentials"],
 			["audio preload", "none metadata auto"],
 			[
@@ -2430,10 +2433,12 @@ const PARSER_TABLES = [
 			],
 			["form method", "get post dialog"],
 			["iframe loading", "lazy eager"],
+			["iframe referrerpolicy", REFERRER_POLICY_KEYWORDS],
 			["img crossorigin", "anonymous use-credentials"],
 			["img decoding", "sync async auto"],
 			["img fetchpriority", "high low auto"],
 			["img loading", "lazy eager"],
+			["img referrerpolicy", REFERRER_POLICY_KEYWORDS],
 			[
 				"input formenctype",
 				"application/x-www-form-urlencoded multipart/form-data text/plain"
@@ -2446,8 +2451,10 @@ const PARSER_TABLES = [
 			],
 			["link crossorigin", "anonymous use-credentials"],
 			["link fetchpriority", "high low auto"],
+			["link referrerpolicy", REFERRER_POLICY_KEYWORDS],
 			["script crossorigin", "anonymous use-credentials"],
 			["script fetchpriority", "high low auto"],
+			["script referrerpolicy", REFERRER_POLICY_KEYWORDS],
 			["td scope", "row col rowgroup colgroup"],
 			["template shadowrootmode", "open closed"],
 			["th scope", "row col rowgroup colgroup"],

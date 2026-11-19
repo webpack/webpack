@@ -25143,13 +25143,13 @@ exports[`HTML syntax — invariants source-processor-enumerated-attribute-values
 "| <html>
 |   <head>
 |   <body>
-|     <div>
+|     <img>
 |       referrerpolicy=\\"NO-REFERRER\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-77 parses 2`] = `"warning[0,34]:expected-doctype-but-got-start-tag warning[34,34]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-77 parses 2`] = `"warning[0,34]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-77 prints {"mode":"minify"} 1`] = `"<div referrerpolicy=no-referrer></div>"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-77 prints {"mode":"minify"} 1`] = `"<img referrerpolicy=no-referrer>"`;
 
 exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-77 tokenizes 1`] = `"attr[5,19|21,32]\\" open[0,34|1,4] end=34"`;
 
@@ -25157,13 +25157,13 @@ exports[`HTML syntax — invariants source-processor-enumerated-attribute-values
 "| <html>
 |   <head>
 |   <body>
-|     <div>
+|     <img>
 |       referrerpolicy=\\"no-referrer\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-78 parses 2`] = `"warning[0,34]:expected-doctype-but-got-start-tag warning[34,34]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-78 parses 2`] = `"warning[0,34]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-78 prints {"mode":"minify"} 1`] = `"<div referrerpolicy=no-referrer></div>"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-78 prints {"mode":"minify"} 1`] = `"<img referrerpolicy=no-referrer>"`;
 
 exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-78 tokenizes 1`] = `"attr[5,19|21,32]\\" open[0,34|1,4] end=34"`;
 
@@ -25171,13 +25171,13 @@ exports[`HTML syntax — invariants source-processor-enumerated-attribute-values
 "| <html>
 |   <head>
 |   <body>
-|     <div>
+|     <img>
 |       referrerpolicy=\\"NO-REFERRER-WHEN-DOWNGRADE\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-79 parses 2`] = `"warning[0,49]:expected-doctype-but-got-start-tag warning[49,49]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-79 parses 2`] = `"warning[0,49]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-79 prints {"mode":"minify"} 1`] = `"<div referrerpolicy=no-referrer-when-downgrade></div>"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-79 prints {"mode":"minify"} 1`] = `"<img referrerpolicy=no-referrer-when-downgrade>"`;
 
 exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-79 tokenizes 1`] = `"attr[5,19|21,47]\\" open[0,49|1,4] end=49"`;
 
@@ -25185,13 +25185,13 @@ exports[`HTML syntax — invariants source-processor-enumerated-attribute-values
 "| <html>
 |   <head>
 |   <body>
-|     <div>
+|     <img>
 |       referrerpolicy=\\"no-referrer-when-downgrade\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-80 parses 2`] = `"warning[0,49]:expected-doctype-but-got-start-tag warning[49,49]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-80 parses 2`] = `"warning[0,49]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-80 prints {"mode":"minify"} 1`] = `"<div referrerpolicy=no-referrer-when-downgrade></div>"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-80 prints {"mode":"minify"} 1`] = `"<img referrerpolicy=no-referrer-when-downgrade>"`;
 
 exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-80 tokenizes 1`] = `"attr[5,19|21,47]\\" open[0,49|1,4] end=49"`;
 
@@ -25199,13 +25199,13 @@ exports[`HTML syntax — invariants source-processor-enumerated-attribute-values
 "| <html>
 |   <head>
 |   <body>
-|     <div>
+|     <img>
 |       referrerpolicy=\\"SAME-ORIGIN\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-81 parses 2`] = `"warning[0,34]:expected-doctype-but-got-start-tag warning[34,34]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-81 parses 2`] = `"warning[0,34]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-81 prints {"mode":"minify"} 1`] = `"<div referrerpolicy=same-origin></div>"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-81 prints {"mode":"minify"} 1`] = `"<img referrerpolicy=same-origin>"`;
 
 exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-81 tokenizes 1`] = `"attr[5,19|21,32]\\" open[0,34|1,4] end=34"`;
 
@@ -25213,13 +25213,13 @@ exports[`HTML syntax — invariants source-processor-enumerated-attribute-values
 "| <html>
 |   <head>
 |   <body>
-|     <div>
+|     <img>
 |       referrerpolicy=\\"same-origin\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-82 parses 2`] = `"warning[0,34]:expected-doctype-but-got-start-tag warning[34,34]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-82 parses 2`] = `"warning[0,34]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-82 prints {"mode":"minify"} 1`] = `"<div referrerpolicy=same-origin></div>"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-82 prints {"mode":"minify"} 1`] = `"<img referrerpolicy=same-origin>"`;
 
 exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-82 tokenizes 1`] = `"attr[5,19|21,32]\\" open[0,34|1,4] end=34"`;
 
@@ -25227,13 +25227,13 @@ exports[`HTML syntax — invariants source-processor-enumerated-attribute-values
 "| <html>
 |   <head>
 |   <body>
-|     <div>
+|     <img>
 |       referrerpolicy=\\"ORIGIN\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-83 parses 2`] = `"warning[0,29]:expected-doctype-but-got-start-tag warning[29,29]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-83 parses 2`] = `"warning[0,29]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-83 prints {"mode":"minify"} 1`] = `"<div referrerpolicy=origin></div>"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-83 prints {"mode":"minify"} 1`] = `"<img referrerpolicy=origin>"`;
 
 exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-83 tokenizes 1`] = `"attr[5,19|21,27]\\" open[0,29|1,4] end=29"`;
 
@@ -25241,13 +25241,13 @@ exports[`HTML syntax — invariants source-processor-enumerated-attribute-values
 "| <html>
 |   <head>
 |   <body>
-|     <div>
+|     <img>
 |       referrerpolicy=\\"origin\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-84 parses 2`] = `"warning[0,29]:expected-doctype-but-got-start-tag warning[29,29]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-84 parses 2`] = `"warning[0,29]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-84 prints {"mode":"minify"} 1`] = `"<div referrerpolicy=origin></div>"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-84 prints {"mode":"minify"} 1`] = `"<img referrerpolicy=origin>"`;
 
 exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-84 tokenizes 1`] = `"attr[5,19|21,27]\\" open[0,29|1,4] end=29"`;
 
@@ -25255,13 +25255,13 @@ exports[`HTML syntax — invariants source-processor-enumerated-attribute-values
 "| <html>
 |   <head>
 |   <body>
-|     <div>
+|     <img>
 |       referrerpolicy=\\"STRICT-ORIGIN\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-85 parses 2`] = `"warning[0,36]:expected-doctype-but-got-start-tag warning[36,36]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-85 parses 2`] = `"warning[0,36]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-85 prints {"mode":"minify"} 1`] = `"<div referrerpolicy=strict-origin></div>"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-85 prints {"mode":"minify"} 1`] = `"<img referrerpolicy=strict-origin>"`;
 
 exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-85 tokenizes 1`] = `"attr[5,19|21,34]\\" open[0,36|1,4] end=36"`;
 
@@ -25269,13 +25269,13 @@ exports[`HTML syntax — invariants source-processor-enumerated-attribute-values
 "| <html>
 |   <head>
 |   <body>
-|     <div>
+|     <img>
 |       referrerpolicy=\\"strict-origin\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-86 parses 2`] = `"warning[0,36]:expected-doctype-but-got-start-tag warning[36,36]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-86 parses 2`] = `"warning[0,36]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-86 prints {"mode":"minify"} 1`] = `"<div referrerpolicy=strict-origin></div>"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-86 prints {"mode":"minify"} 1`] = `"<img referrerpolicy=strict-origin>"`;
 
 exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-86 tokenizes 1`] = `"attr[5,19|21,34]\\" open[0,36|1,4] end=36"`;
 
@@ -25283,13 +25283,13 @@ exports[`HTML syntax — invariants source-processor-enumerated-attribute-values
 "| <html>
 |   <head>
 |   <body>
-|     <div>
+|     <img>
 |       referrerpolicy=\\"ORIGIN-WHEN-CROSS-ORIGIN\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-87 parses 2`] = `"warning[0,47]:expected-doctype-but-got-start-tag warning[47,47]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-87 parses 2`] = `"warning[0,47]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-87 prints {"mode":"minify"} 1`] = `"<div referrerpolicy=origin-when-cross-origin></div>"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-87 prints {"mode":"minify"} 1`] = `"<img referrerpolicy=origin-when-cross-origin>"`;
 
 exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-87 tokenizes 1`] = `"attr[5,19|21,45]\\" open[0,47|1,4] end=47"`;
 
@@ -25297,13 +25297,13 @@ exports[`HTML syntax — invariants source-processor-enumerated-attribute-values
 "| <html>
 |   <head>
 |   <body>
-|     <div>
+|     <img>
 |       referrerpolicy=\\"origin-when-cross-origin\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-88 parses 2`] = `"warning[0,47]:expected-doctype-but-got-start-tag warning[47,47]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-88 parses 2`] = `"warning[0,47]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-88 prints {"mode":"minify"} 1`] = `"<div referrerpolicy=origin-when-cross-origin></div>"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-88 prints {"mode":"minify"} 1`] = `"<img referrerpolicy=origin-when-cross-origin>"`;
 
 exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-88 tokenizes 1`] = `"attr[5,19|21,45]\\" open[0,47|1,4] end=47"`;
 
@@ -25311,13 +25311,13 @@ exports[`HTML syntax — invariants source-processor-enumerated-attribute-values
 "| <html>
 |   <head>
 |   <body>
-|     <div>
+|     <img>
 |       referrerpolicy=\\"STRICT-ORIGIN-WHEN-CROSS-ORIGIN\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-89 parses 2`] = `"warning[0,54]:expected-doctype-but-got-start-tag warning[54,54]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-89 parses 2`] = `"warning[0,54]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-89 prints {"mode":"minify"} 1`] = `"<div referrerpolicy=strict-origin-when-cross-origin></div>"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-89 prints {"mode":"minify"} 1`] = `"<img referrerpolicy=strict-origin-when-cross-origin>"`;
 
 exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-89 tokenizes 1`] = `"attr[5,19|21,52]\\" open[0,54|1,4] end=54"`;
 
@@ -25325,13 +25325,13 @@ exports[`HTML syntax — invariants source-processor-enumerated-attribute-values
 "| <html>
 |   <head>
 |   <body>
-|     <div>
+|     <img>
 |       referrerpolicy=\\"strict-origin-when-cross-origin\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-90 parses 2`] = `"warning[0,54]:expected-doctype-but-got-start-tag warning[54,54]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-90 parses 2`] = `"warning[0,54]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-90 prints {"mode":"minify"} 1`] = `"<div referrerpolicy=strict-origin-when-cross-origin></div>"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-90 prints {"mode":"minify"} 1`] = `"<img referrerpolicy=strict-origin-when-cross-origin>"`;
 
 exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-90 tokenizes 1`] = `"attr[5,19|21,52]\\" open[0,54|1,4] end=54"`;
 
@@ -25339,13 +25339,13 @@ exports[`HTML syntax — invariants source-processor-enumerated-attribute-values
 "| <html>
 |   <head>
 |   <body>
-|     <div>
+|     <img>
 |       referrerpolicy=\\"UNSAFE-URL\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-91 parses 2`] = `"warning[0,33]:expected-doctype-but-got-start-tag warning[33,33]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-91 parses 2`] = `"warning[0,33]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-91 prints {"mode":"minify"} 1`] = `"<div referrerpolicy=unsafe-url></div>"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-91 prints {"mode":"minify"} 1`] = `"<img referrerpolicy=unsafe-url>"`;
 
 exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-91 tokenizes 1`] = `"attr[5,19|21,31]\\" open[0,33|1,4] end=33"`;
 
@@ -25353,13 +25353,13 @@ exports[`HTML syntax — invariants source-processor-enumerated-attribute-values
 "| <html>
 |   <head>
 |   <body>
-|     <div>
+|     <img>
 |       referrerpolicy=\\"unsafe-url\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-92 parses 2`] = `"warning[0,33]:expected-doctype-but-got-start-tag warning[33,33]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-92 parses 2`] = `"warning[0,33]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-92 prints {"mode":"minify"} 1`] = `"<div referrerpolicy=unsafe-url></div>"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-92 prints {"mode":"minify"} 1`] = `"<img referrerpolicy=unsafe-url>"`;
 
 exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-92 tokenizes 1`] = `"attr[5,19|21,31]\\" open[0,33|1,4] end=33"`;
 
@@ -25367,13 +25367,13 @@ exports[`HTML syntax — invariants source-processor-enumerated-attribute-values
 "| <html>
 |   <head>
 |   <body>
-|     <div>
+|     <img>
 |       referrerpolicy=\\"ZzCustomZz\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-93 parses 2`] = `"warning[0,33]:expected-doctype-but-got-start-tag warning[33,33]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-93 parses 2`] = `"warning[0,33]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-93 prints {"mode":"minify"} 1`] = `"<div referrerpolicy=ZzCustomZz></div>"`;
+exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-93 prints {"mode":"minify"} 1`] = `"<img referrerpolicy=ZzCustomZz>"`;
 
 exports[`HTML syntax — invariants source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-93 tokenizes 1`] = `"attr[5,19|21,31]\\" open[0,33|1,4] end=33"`;
 
@@ -55484,6 +55484,22 @@ exports[`HTML syntax — invariants svg-data-urls-should-minify-the-ones-a-page-
 exports[`HTML syntax — invariants svg-data-urls-should-minify-the-ones-a-page-holds-only-when-asked prints {"mode":"minify"} 1`] = `"<img src=\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'  >  <rect   width='1' />  </svg>\\">"`;
 
 exports[`HTML syntax — invariants svg-data-urls-should-minify-the-ones-a-page-holds-only-when-asked tokenizes 1`] = `"attr[5,8|10,101]\\" open[0,103|1,4] end=103"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-keeps-the-case-of-referrerpolicy-where-it-is-not-reflected parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <e>
+|       referrerpolicy=\\"SaME-ORIGIN\\"
+|       <img>
+|         referrerpolicy=\\"SaME-ORIGIN\\""
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-keeps-the-case-of-referrerpolicy-where-it-is-not-reflected parses 2`] = `"warning[0,32]:expected-doctype-but-got-start-tag warning[66,66]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-keeps-the-case-of-referrerpolicy-where-it-is-not-reflected prints {"mode":"minify"} 1`] = `"<e referrerpolicy=SaME-ORIGIN><img referrerpolicy=same-origin></e>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-keeps-the-case-of-referrerpolicy-where-it-is-not-reflected tokenizes 1`] = `"attr[3,17|19,30]\\" open[0,32|1,2] attr[37,51|53,64]\\" open[32,66|33,36] end=66"`;
 
 exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-folds-only-ascii-upper-alpha-in-a-doctype parses 1`] = `
 "| <!DOCTYPE html>
