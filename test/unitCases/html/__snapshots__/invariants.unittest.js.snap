@@ -55485,6 +55485,49 @@ exports[`HTML syntax — invariants svg-data-urls-should-minify-the-ones-a-page-
 
 exports[`HTML syntax — invariants svg-data-urls-should-minify-the-ones-a-page-holds-only-when-asked tokenizes 1`] = `"attr[5,8|10,101]\\" open[0,103|1,4] end=103"`;
 
+exports[`HTML syntax — invariants syntax-fuzz-a-document-with-plaintext-prints-a-quoted-value-as-written parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <nextid>\\\\n|       <nobr>\\\\n|     <h6>\\\\n|       a=\\\\\\"a\\\\\\"\\\\n|     <h6>\\\\n|       <plaintext>\\\\n|         <nobr>\\\\n|           \\\\\\"\\\\f\\\\\\"\\""`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-document-with-plaintext-prints-a-quoted-value-as-written parses 2`] = `"warning[0,8]:expected-doctype-but-got-start-tag warning[14,23]:unexpected-end-tag warning[25,26]:missing-end-tag-name warning[36,40]:unexpected-start-tag warning[52,52]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-document-with-plaintext-prints-a-quoted-value-as-written prints {"mode":"minify"} 1`] = `"\\"<nextid><NOBR></nextid></><h6\\\\na=\\\\\\"a\\\\\\"><h6><plaintext>\\\\f\\""`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-document-with-plaintext-prints-a-quoted-value-as-written tokenizes 1`] = `"open[0,8|1,7] open[8,14|9,13] close[14,23|16,22] warning[25,26]:missing-end-tag-name attr[30,31|33,34]\\" open[26,36|27,29] open[36,40|37,39] open[40,51|41,50] text[51,52] end=52"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-fostered-list-prints-an-empty-value-by-its-spelling parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <li>
+|       <ul>
+|         <li>
+|     <table>
+|       <tfoot>
+|         a=\\"\\""
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-fostered-list-prints-an-empty-value-by-its-spelling parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag warning[16,20]:unexpected-start-tag-implies-table-voodoo warning[20,24]:unexpected-start-tag-implies-table-voodoo warning[24,28]:unexpected-start-tag-implies-table-voodoo warning[28,28]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-fostered-list-prints-an-empty-value-by-its-spelling prints {"mode":"minify"} 1`] = `"<table><tfoot a><li><ul><li>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-fostered-list-prints-an-empty-value-by-its-spelling tokenizes 1`] = `"open[0,7|1,6] attr[14,15|-1,-1] open[7,16|8,13] open[16,20|17,19] open[20,24|21,23] open[24,28|25,27] end=28"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-numeric-default-is-dropped-only-on-a-second-print parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\">\\"
+|     <table>
+|       <colgroup>
+|         <col>
+|           span=\\"01\\""
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-numeric-default-is-dropped-only-on-a-second-print parses 2`] = `"warning[0,1]:expected-doctype-but-got-chars warning[13,14]:unexpected-solidus-in-tag warning[23,23]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-numeric-default-is-dropped-only-on-a-second-print prints {"mode":"minify"} 1`] = `"><table><col/span=1></table>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-numeric-default-is-dropped-only-on-a-second-print tokenizes 1`] = `"text[0,1] open[1,8|2,7] warning[13,14]:unexpected-solidus-in-tag attr[13,17|19,21]' open[8,23|9,12] end=23"`;
+
 exports[`HTML syntax — invariants syntax-fuzz-a-reconstructed-element-collapses-a-boolean-value-like-the-written-one parses 1`] = `
 "| <html>
 |   <head>
@@ -55554,6 +55597,21 @@ exports[`HTML syntax — invariants syntax-fuzz-a-style-inside-option-is-part-of
 exports[`HTML syntax — invariants syntax-fuzz-a-style-inside-option-is-part-of-its-label-2 prints {"mode":"minify"} 1`] = `"<select><option><span><style>/*a*/</style></span>a</select>"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-a-style-inside-option-is-part-of-its-label-2 tokenizes 1`] = `"open[0,8|1,7] open[8,16|9,15] open[16,22|17,21] open[22,29|23,28] text[29,34] close[34,42|36,41] close[42,49|44,48] text[49,50] end=50"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-value-holding-a-backtick-prints-by-its-spelling parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <aaaaa>
+|       a=\\"\`\\"
+|     <table>"
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-value-holding-a-backtick-prints-by-its-spelling parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag warning[16,17]:unexpected-character-in-unquoted-attribute-value warning[7,18]:unexpected-start-tag-implies-table-voodoo warning[18,18]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-value-holding-a-backtick-prints-by-its-spelling prints {"mode":"minify"} 1`] = `"<aaaaa a=\`></aaaaa><table></table>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-value-holding-a-backtick-prints-by-its-spelling tokenizes 1`] = `"open[0,7|1,6] warning[16,17]:unexpected-character-in-unquoted-attribute-value attr[14,15|16,17] open[7,18|8,13] end=18"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-a-value-holding-an-ampersand-and-hash-prints-the-same-whatever-its-spelling parses 1`] = `
 "| <html>
@@ -55645,6 +55703,26 @@ exports[`HTML syntax — invariants syntax-fuzz-an-element-range-holds-a-comment
 exports[`HTML syntax — invariants syntax-fuzz-an-element-range-holds-a-comment-after-html-where-text-goes-back prints {"mode":"minify"} 1`] = `"<a> x</a></html>"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-an-element-range-holds-a-comment-after-html-where-text-goes-back tokenizes 1`] = `"open[0,3|1,2] close[3,10|5,9] comment[10,18|14,15] text[18,20] end=20"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-runs-over-a-table-inside-a-template parses 1`] = `
+"| <html>
+|   <head>
+|     <template>
+|       content
+|         <thead>
+|           <template>
+|             content
+|         <a>
+|           <t>
+|             \\"&a;\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-runs-over-a-table-inside-a-template parses 2`] = `"warning[0,11]:expected-doctype-but-got-start-tag warning[40,43]:unexpected-start-tag-implies-table-voodoo warning[43,46]:unexpected-start-tag-implies-table-voodoo warning[46,53]:unexpected-start-tag-implies-end-tag warning[55,56]:unknown-named-character-reference warning[53,54]:unexpected-character-implies-table-voodoo warning[54,55]:unexpected-character-implies-table-voodoo warning[55,56]:unexpected-character-implies-table-voodoo warning[56,56]:eof-in-template"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-runs-over-a-table-inside-a-template prints {"mode":"minify"} 1`] = `"<template><thead><template></template></thead><a><t>&a;</t></a></template>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-runs-over-a-table-inside-a-template tokenizes 1`] = `"open[0,11|1,9] open[11,18|12,17] open[18,29|19,27] close[29,40|31,39] open[40,43|41,42] open[43,46|44,45] open[46,53|47,52] warning[55,56]:unknown-named-character-reference text[53,56] end=56"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-an-end-tag-past-an-open-select-is-out-of-scope parses 1`] = `
 "| <html>
@@ -55863,6 +55941,22 @@ exports[`HTML syntax — invariants syntax-fuzz-keeps-the-case-of-referrerpolicy
 exports[`HTML syntax — invariants syntax-fuzz-keeps-the-case-of-referrerpolicy-where-it-is-not-reflected prints {"mode":"minify"} 1`] = `"<e referrerpolicy=SaME-ORIGIN><img referrerpolicy=same-origin></e>"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-keeps-the-case-of-referrerpolicy-where-it-is-not-reflected tokenizes 1`] = `"attr[3,17|19,30]\\" open[0,32|1,2] attr[37,51|53,64]\\" open[32,66|33,36] end=66"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-merging-a-sheet-left-inside-light-dark-joins-the-next parses 1`] = `
+"| <html>
+|   <head>
+|     <style>
+|       \\"{a:light-dark(,\\"
+|     <style>
+|       \\"{a\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-merging-a-sheet-left-inside-light-dark-joins-the-next parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag warning[39,39]:expected-named-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-merging-a-sheet-left-inside-light-dark-joins-the-next prints {"mode":"minify"} 1`] = `"<style>{a:light-dark(,</style><style>{a</style>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-merging-a-sheet-left-inside-light-dark-joins-the-next tokenizes 1`] = `"open[0,7|1,6] text[7,22] close[22,30|24,29] open[30,37|31,36] text[37,39] end=39"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-prints-no-noscript-end-tag-inside-an-open-bogus-comment parses 1`] = `
 "| <html>

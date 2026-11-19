@@ -1,0 +1,10 @@
+[
+	{
+		"relation": "meaning",
+		"contains": "    {a:var(--webpack-light,)var(--webpack-dark,)}:where(:root){--webpack-light:…  ->  {a:var(--webpack-light,)var(--webpack-dark,);a}:where(:root){--webpack-ligh…",
+		"presets": [
+			"embedded+legacy"
+		],
+		"why": "known bug: merging a sheet the input left inside `light-dark(` onto the next one reads the next sheet's `{a` inside the first rule once the legacy target lowers `light-dark()`"
+	}
+]
