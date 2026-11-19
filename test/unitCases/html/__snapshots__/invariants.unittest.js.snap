@@ -55556,6 +55556,63 @@ exports[`HTML syntax — invariants syntax-fuzz-an-ampersand-and-hash-stays-esca
 
 exports[`HTML syntax — invariants syntax-fuzz-an-ampersand-and-hash-stays-escaped-only-before-a-digit tokenizes 1`] = `"attr[3,4|6,13]\\" attr[15,16|18,26]\\" attr[28,29|31,38]\\" attr[40,41|43,50]\\" attr[52,53|55,63]\\" attr[65,66|68,75]\\" open[0,77|1,2] text[77,109] end=109"`;
 
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-ends-before-a-comment-after-body parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <a>
+|   <!-- c -->"
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-ends-before-a-comment-after-body parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[3,10]:expected-one-end-tag-but-got-another"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-ends-before-a-comment-after-body prints {"mode":"minify"} 1`] = `"<a></a></body>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-ends-before-a-comment-after-body tokenizes 1`] = `"open[0,3|1,2] close[3,10|5,9] comment[10,18|14,15] end=18"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-ends-before-a-comment-after-html parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <a>
+| <!--  -->"
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-ends-before-a-comment-after-html parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[3,10]:expected-one-end-tag-but-got-another warning[10,12]:incorrectly-opened-comment"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-ends-before-a-comment-after-html prints {"mode":"minify"} 1`] = `"<a></a></html>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-ends-before-a-comment-after-html tokenizes 1`] = `"open[0,3|1,2] close[3,10|5,9] warning[10,12]:incorrectly-opened-comment comment[10,12|12,12] end=12"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-ends-before-a-comment-after-html-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <a>
+| <!--  a -->"
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-ends-before-a-comment-after-html-2 parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[3,10]:expected-one-end-tag-but-got-another error[16,16]:eof-in-comment"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-ends-before-a-comment-after-html-2 prints {"mode":"minify"} 1`] = `"<a></a></html>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-ends-before-a-comment-after-html-2 tokenizes 1`] = `"open[0,3|1,2] close[3,10|5,9] error[16,16]:eof-in-comment comment[10,16|14,16] end=16"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-holds-a-comment-after-html-where-text-goes-back parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <a>
+|       \\" x\\"
+| <!-- c -->"
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-holds-a-comment-after-html-where-text-goes-back parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[3,10]:expected-one-end-tag-but-got-another warning[18,20]:expected-eof-but-got-char warning[20,20]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-holds-a-comment-after-html-where-text-goes-back prints {"mode":"minify"} 1`] = `"<a> x</a></html>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-element-range-holds-a-comment-after-html-where-text-goes-back tokenizes 1`] = `"open[0,3|1,2] close[3,10|5,9] comment[10,18|14,15] text[18,20] end=20"`;
+
 exports[`HTML syntax — invariants syntax-fuzz-dropping-a-bogus-comment-keeps-the-space-between-the-text parses 1`] = `
 "| <html>
 |   <head>

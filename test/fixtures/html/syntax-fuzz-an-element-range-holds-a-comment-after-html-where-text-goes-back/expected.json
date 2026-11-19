@@ -1,0 +1,8 @@
+[
+	{
+		"relation": "slices",
+		"contains": "      -> Comment[10,18) Text[18,20) Element:a[0,20)",
+		"presets": ["parse"],
+		"why": "the tree puts the comment after `html`, between `<a>` and the text the in-body rules give back to it, so no one range holds the element without the comment"
+	}
+]
