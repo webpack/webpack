@@ -84,32 +84,47 @@ describe("LazyCompilationPlugin.getCompilerHooks", () => {
 		await expect(started).rejects.toThrow("no server");
 	});
 
-	it("starts a backend function a tap returns in place of the options", async () => {
+	it("starts the backend a tap sets, with the options the taps settled on", async () => {
 		const api = {
 			dispose: jest.fn((/** @type {() => void} */ callback) => callback()),
 			module: () => ({ client: "./ws-client.js?ws://localhost:1", data: "", active: false })
 		};
 		const ws = jest.fn(async () => api);
-		const { compiler, started } = startBackend(async () => ws);
+		const { compiler, started } = startBackend(async (transport) => ({
+			...transport,
+			backend: ws,
+			listen: { port: 8081 }
+		}));
 		await started;
-		expect(ws).toHaveBeenCalledWith(compiler, expect.any(Function));
+		expect(ws).toHaveBeenCalledWith(
+			compiler,
+			expect.any(Function),
+			expect.objectContaining({ backend: ws, listen: { port: 8081 } })
+		);
 		await new Promise((resolve, reject) => {
 			compiler.close((err) => (err ? reject(err) : resolve(undefined)));
 		});
 		expect(api.dispose).toHaveBeenCalledTimes(1);
 	});
 
-	it("hands a custom backend function to the taps", async () => {
-		/** @type {EXPECTED_ANY} */
-		const custom = async () => ({
-			dispose: (/** @type {() => void} */ callback) => callback(),
-			module: () => ({ client: "", data: "", active: false })
-		});
+	it("hands a custom backend to the taps and their options to it", async () => {
+		/** @type {unknown[][]} */
+		const calls = [];
+		// A plain function: the schema checks for a `Function` of this realm.
+		const custom = async (/** @type {unknown[]} */ ...args) => {
+			calls.push(args);
+			return {
+				dispose: (/** @type {() => void} */ callback) => callback(),
+				module: () => ({ client: "", data: "", active: false })
+			};
+		};
 		const compiler = webpack({
 			mode: "development",
 			context: __dirname,
 			entry: "./entry-is-never-built",
-			experiments: { lazyCompilation: { backend: custom } },
+			experiments: {
+				lazyCompilation: { backend: /** @type {EXPECTED_ANY} */ (custom) }
+			},
 			infrastructureLogging: { level: "none" }
 		});
 		/** @type {unknown} */
@@ -118,7 +133,7 @@ describe("LazyCompilationPlugin.getCompilerHooks", () => {
 			"test",
 			(transport) => {
 				received = transport;
-				return transport;
+				return { ...transport, urlBase: "https://localhost:8080" };
 			}
 		);
 		await new Promise((resolve, reject) => {
@@ -127,14 +142,27 @@ describe("LazyCompilationPlugin.getCompilerHooks", () => {
 				(err) => (err ? reject(err) : resolve(undefined))
 			);
 		});
-		expect(received).toBe(custom);
+		expect(received).toEqual({
+			client: expect.stringMatching(/lazy-compilation-web\.js$/),
+			backend: custom
+		});
+		expect(calls).toEqual([
+			[
+				compiler,
+				expect.any(Function),
+				expect.objectContaining({ urlBase: "https://localhost:8080" })
+			]
+		]);
 	});
 
 	it("starts the backend through the hook again once watching closed", async () => {
 		const disposed = jest.fn((/** @type {() => void} */ callback) => callback());
-		const transport = jest.fn(async () => async () => ({
-			dispose: disposed,
-			module: () => ({ client: "", data: "", active: false })
+		const transport = jest.fn(async (/** @type {BackendOptions} */ value) => ({
+			...value,
+			backend: async () => ({
+				dispose: disposed,
+				module: () => ({ client: "", data: "", active: false })
+			})
 		}));
 		const { compiler, started } = startBackend(transport);
 		await started;

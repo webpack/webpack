@@ -20171,11 +20171,6 @@ declare interface LazyCompilationBackendHookOptions {
 	 */
 	urlBase?: string;
 }
-type LazyCompilationBackendOptions = Omit<
-	LazyCompilationDefaultBackendOptions,
-	"client" | "server"
-> &
-	LazyCompilationBackendHookOptions;
 
 /**
  * Options for the default backend.
@@ -20216,9 +20211,14 @@ declare interface LazyCompilationOptions {
 	backend?:
 		| ((
 				compiler: Compiler,
-				callback: (err: null | Error, backendApi?: BackendApi) => void
+				callback: (err: null | Error, backendApi?: BackendApi) => void,
+				transport?: LazyCompilationTransport
 		  ) => void)
-		| ((compiler: Compiler) => Promise<BackendApi>)
+		| ((
+				compiler: Compiler,
+				callback?: any,
+				transport?: LazyCompilationTransport
+		  ) => Promise<BackendApi>)
 		| LazyCompilationDefaultBackendOptions;
 
 	/**
@@ -20241,13 +20241,7 @@ declare class LazyCompilationPlugin {
 	 * Creates an instance of LazyCompilationPlugin.
 	 */
 	constructor(__0: OptionsLazyCompilationPlugin);
-	backend:
-		| ((
-				compiler: Compiler,
-				callback: (err: null | Error, backendApi?: BackendApi) => void
-		  ) => void)
-		| ((compiler: Compiler) => Promise<BackendApi>)
-		| LazyCompilationBackendOptions;
+	backend: LazyCompilationTransport;
 	entries?: boolean;
 	imports?: boolean;
 	test?: string | RegExp | GlobCondition | ((module: Module) => boolean);
@@ -20264,25 +20258,30 @@ declare class LazyCompilationPlugin {
 }
 declare interface LazyCompilationPluginHooks {
 	/**
-	 * how the browser and the compiler talk, before the backend starts: the built-in backend's options, e.g. to serve it from a development server's own server, or a backend function that brings its own `client` module, e.g. over a WebSocket
+	 * how the browser and the compiler talk, before the backend starts: options such as a development server's own `server` and `urlBase`, which a custom `backend` gets too, or a `backend` that brings its own `client` module, e.g. over a WebSocket
 	 */
 	transport: AsyncSeriesWaterfallHook<
-		[
-			| ((
-					compiler: Compiler,
-					callback: (err: null | Error, backendApi?: BackendApi) => void
-			  ) => void)
-			| ((compiler: Compiler) => Promise<BackendApi>)
-			| LazyCompilationBackendOptions
-		],
-		| ((
-				compiler: Compiler,
-				callback: (err: null | Error, backendApi?: BackendApi) => void
-		  ) => void)
-		| ((compiler: Compiler) => Promise<BackendApi>)
-		| LazyCompilationBackendOptions
+		[LazyCompilationTransport],
+		LazyCompilationTransport
 	>;
 }
+type LazyCompilationTransport = Omit<
+	LazyCompilationDefaultBackendOptions,
+	"client" | "server"
+> &
+	LazyCompilationBackendHookOptions & {
+		backend?:
+			| ((
+					compiler: Compiler,
+					callback: (err: null | Error, backendApi?: BackendApi) => void,
+					transport?: LazyCompilationTransport
+			  ) => void)
+			| ((
+					compiler: Compiler,
+					callback?: any,
+					transport?: LazyCompilationTransport
+			  ) => Promise<BackendApi>);
+	};
 type LazyFunction<
 	InputValue,
 	OutputValue,
@@ -27016,15 +27015,9 @@ declare interface OptionsDelegatedModuleFactoryPlugin {
  */
 declare interface OptionsLazyCompilationPlugin {
 	/**
-	 * the backend, or the built-in backend's options
+	 * how the browser and the compiler talk
 	 */
-	backend:
-		| ((
-				compiler: Compiler,
-				callback: (err: null | Error, backendApi?: BackendApi) => void
-		  ) => void)
-		| ((compiler: Compiler) => Promise<BackendApi>)
-		| LazyCompilationBackendOptions;
+	backend: LazyCompilationTransport;
 	entries?: boolean;
 	imports?: boolean;
 
