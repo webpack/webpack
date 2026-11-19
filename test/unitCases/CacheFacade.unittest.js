@@ -207,4 +207,32 @@ describe("ItemCacheFacade", () => {
 		);
 		expect(data.get("item")).toBe("computed");
 	});
+
+	describe("getLazyHashedEtag", () => {
+		/** @type {import("../../lib/cache/getLazyHashedEtag").HashableObject} */
+		const obj = { updateHash: (hash) => hash.update("a") };
+
+		it("hashes with what a resolver gives once it is known", () => {
+			const { cache } = createCache();
+			/** @type {string | undefined} */
+			let hashFunction;
+			const facade = new CacheFacade(cache, "facade", {
+				getHashFunction: () => hashFunction
+			});
+			hashFunction = "sha256";
+			expect(String(facade.getLazyHashedEtag(obj))).toBe(
+				String(new CacheFacade(cache, "facade", "sha256").getLazyHashedEtag(obj))
+			);
+		});
+
+		it("throws while the resolver does not know the hash function", () => {
+			const { cache } = createCache();
+			const facade = new CacheFacade(cache, "facade", {
+				getHashFunction: () => undefined
+			});
+			expect(() => facade.getLazyHashedEtag(obj)).toThrow(
+				/not known before the plugins are applied/
+			);
+		});
+	});
 });
