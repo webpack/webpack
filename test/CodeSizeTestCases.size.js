@@ -15,6 +15,7 @@ const webpack = require("..");
 const { DEFAULTS } = require("../lib/config/defaults");
 const ConcatenatedModule = require("../lib/optimize/ConcatenatedModule");
 const { makePathsRelative } = require("../lib/util/identifier");
+const httpUrlServers = require("./configCases/asset-modules/http-url/server");
 const browserslistConfigPackages = require("./helpers/browserslistConfigPackages");
 const codeSizeBaselineDrift = require("./helpers/codeSizeBaselineDrift");
 const codeSizeCommitLink = require("./helpers/codeSizeCommitLink");
@@ -1641,6 +1642,8 @@ const run = async () => {
 	// Outside jest, so the globalSetup that writes them for the test suites is
 	// not what puts the `ecmaVersion` cases' browserslist packages in place.
 	browserslistConfigPackages.create();
+	// nor what serves the `http-url` cases' fetches
+	await httpUrlServers.start();
 	console.log(`Measuring ${cases.length} case(s)…`);
 
 	/** @type {Record<string, CaseResult>} */
@@ -1674,6 +1677,7 @@ const run = async () => {
 	}
 
 	browserslistConfigPackages.remove();
+	httpUrlServers.stop();
 
 	const totals = createMetrics();
 	/** @type {Record<string, CaseResult>} */
