@@ -23545,7 +23545,7 @@ exports[`HTML syntax — invariants source-processor-attribute-values-the-minifi
 
 exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-writes-p-amp-x-p-a-title parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-writes-p-amp-x-p-a-title prints {"mode":"minify"} 1`] = `"<p>&amp;#;x</p><a title=&amp;#;x>t</a>"`;
+exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-writes-p-amp-x-p-a-title prints {"mode":"minify"} 1`] = `"<p>&#;x</p><a title=&#;x>t</a>"`;
 
 exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-writes-p-amp-x-p-a-title tokenizes 1`] = `"open[0,3|1,2] text[3,11] close[11,15|13,14] attr[18,23|25,33]' open[15,35|16,17] text[35,36] close[36,40|38,39] end=40"`;
 
@@ -23562,7 +23562,7 @@ exports[`HTML syntax — invariants source-processor-attribute-values-the-minifi
 
 exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-writes-p-amp-x-p-a-title-2 parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-writes-p-amp-x-p-a-title-2 prints {"mode":"minify"} 1`] = `"<p>&amp;#;x</p><a title=&amp;#;x>t</a>"`;
+exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-writes-p-amp-x-p-a-title-2 prints {"mode":"minify"} 1`] = `"<p>&#;x</p><a title=&#;x>t</a>"`;
 
 exports[`HTML syntax — invariants source-processor-attribute-values-the-minifier-rewrites-writes-p-amp-x-p-a-title-2 tokenizes 1`] = `"open[0,3|1,2] text[3,11] close[11,15|13,14] attr[18,23|24,32] open[15,33|16,17] text[33,34] close[34,38|36,37] end=38"`;
 
@@ -55521,6 +55521,40 @@ exports[`HTML syntax — invariants syntax-fuzz-a-reconstructed-element-drops-an
 exports[`HTML syntax — invariants syntax-fuzz-a-reconstructed-element-drops-an-empty-attribute-like-the-written-one prints {"mode":"minify"} 1`] = `"<nobr class></nobr><article><nobr class></nobr><nobr></nobr></article>"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-a-reconstructed-element-drops-an-empty-attribute-like-the-written-one tokenizes 1`] = `"attr[6,11|-1,-1] open[0,13|1,5] open[13,22|14,21] open[22,28|23,27] end=28"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-value-holding-an-ampersand-and-hash-prints-the-same-whatever-its-spelling parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <a>
+|       a=\\"&#\\""
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-value-holding-an-ampersand-and-hash-prints-the-same-whatever-its-spelling parses 2`] = `"warning[7,8]:absence-of-digits-in-numeric-character-reference warning[0,8]:expected-doctype-but-got-start-tag warning[8,8]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-value-holding-an-ampersand-and-hash-prints-the-same-whatever-its-spelling prints {"mode":"minify"} 1`] = `"<a a=&#></a>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-value-holding-an-ampersand-and-hash-prints-the-same-whatever-its-spelling tokenizes 1`] = `"warning[7,8]:absence-of-digits-in-numeric-character-reference attr[3,4|5,7] open[0,8|1,2] end=8"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-ampersand-and-hash-stays-escaped-only-before-a-digit parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <a>
+|       a=\\"&#1\\"
+|       b=\\"&#xa\\"
+|       c=\\"&#x\\"
+|       d=\\"&#a\\"
+|       e=\\"&#x;\\"
+|       f=\\"&#;\\"
+|       \\"&# &#1 &#X; &#xg\\""
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-ampersand-and-hash-stays-escaped-only-before-a-digit parses 2`] = `"warning[0,77]:expected-doctype-but-got-start-tag warning[109,109]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-ampersand-and-hash-stays-escaped-only-before-a-digit prints {"mode":"minify"} 1`] = `"<a a=&amp;#1 b=&amp;#xa c=&#x d=&#a e=&amp;#x; f=&#;>&# &amp;#1 &amp;#X; &amp;#xg</a>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-ampersand-and-hash-stays-escaped-only-before-a-digit tokenizes 1`] = `"attr[3,4|6,13]\\" attr[15,16|18,26]\\" attr[28,29|31,38]\\" attr[40,41|43,50]\\" attr[52,53|55,63]\\" attr[65,66|68,75]\\" open[0,77|1,2] text[77,109] end=109"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-dropping-a-bogus-comment-keeps-the-space-between-the-text parses 1`] = `
 "| <html>
