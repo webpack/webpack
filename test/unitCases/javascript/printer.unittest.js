@@ -247,6 +247,26 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(merged.map.mappings).toMatchSnapshot();
 	});
 
+	it("should map the expressions a for head joins, one printed past a cut `!` too", () => {
+		const { SourceProcessor } = require("../../../lib/javascript/syntax");
+		const joined = /** @type {{ code: string, map: { names: string[], mappings: string } }} */ (
+			new SourceProcessor().process(
+				fixture("javascript", "minify-maps-expressions-joined-into-a-for-head"),
+				{
+					mode: "minify",
+					compress: { toplevel: false },
+					mangle: false,
+					source: "a.js"
+				}
+			)
+		);
+		expect(joined.code).toMatchSnapshot();
+		// What the function the head joins without its `!` reads keeps its names.
+		expect(joined.map.names).toEqual(["f", "o", "h", "a", "arguments", "k"]);
+		// cspell:disable-next-line
+		expect(joined.map.mappings).toMatchSnapshot();
+	});
+
 	it("should refuse an option it does not know, and a module statement off the top level", () => {
 		expect(() => minifyOnePass(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"), { mangle: /** @type {EXPECTED_ANY} */ ({ nope: 1 }) })).toThrow(
 			"`nope` is not a supported option"
