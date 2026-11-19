@@ -1,0 +1,14 @@
+console.log({ p() { return 42; } }.p());
+console.log({ a(x) { return x * 2; }, b: 1 }.a(3));
+var x = { a() { console.log("side"); return "effect"; } }.a();
+console.log(x);
+({ run() { console.log("statements"); } }).run();
+var moved = { twice(n) { return n + n; } };
+console.log(moved.twice(4));
+console.log({ a() { return typeof this; } }.a());
+console.log({ a() { return arguments.length; } }.a(1, 2));
+var base = { x: "base" };
+var child = { __proto__: base, a() { return super.x; } };
+console.log(child.a());
+var kept = { a() { return 1; } };
+console.log(kept.a(), kept.a());
