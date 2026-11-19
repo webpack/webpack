@@ -176,4 +176,90 @@ describe("LazyCompilationPlugin.getCompilerHooks", () => {
 		});
 		expect(transport).toHaveBeenCalledTimes(2);
 	});
+
+	it.each([undefined, new Error("backend close failed")])(
+		"waits for a pending backend disposal and reports %s on shutdown",
+		async (error) => {
+			/** @type {((error?: Error) => void) | undefined} */
+			let finishDispose;
+			const dispose = jest.fn((/** @type {(error?: Error) => void} */ done) => {
+				finishDispose = done;
+			});
+			const { compiler, started } = startBackend(async (transport) => ({
+				...transport,
+				backend: async () => ({
+					dispose,
+					module: () => ({ client: "", data: "", active: false })
+				})
+			}));
+			await started;
+			compiler.hooks.watchClose.call();
+			let closed = false;
+			/** @type {Promise<Error | null | undefined>} */
+			const closing = new Promise((resolve) => {
+				compiler.close((result) => {
+					closed = true;
+					resolve(result);
+				});
+			});
+			await new Promise((resolve) => setImmediate(resolve));
+			try {
+				expect(closed).toBe(false);
+				expect(dispose).toHaveBeenCalledTimes(1);
+			} finally {
+				/** @type {(error?: Error) => void} */ (finishDispose)(error);
+			}
+			expect(await closing).toBe(error || null);
+		}
+	);
+
+	it("reports an error thrown while disposing a watched backend", async () => {
+		const error = new Error("backend disposal threw");
+		const { compiler, started } = startBackend(async (transport) => ({
+			...transport,
+			backend: async () => ({
+				dispose: () => {
+					throw error;
+				},
+				module: () => ({ client: "", data: "", active: false })
+			})
+		}));
+		await started;
+		compiler.hooks.watchClose.call();
+		/** @type {Promise<Error | null | undefined>} */
+		const closing = new Promise((resolve) => compiler.close(resolve));
+		expect(await closing).toBe(error);
+	});
+
+	it.each([undefined, new Error("backend close failed")])(
+		"waits for a pending backend disposal and reports %s before restarting",
+		async (error) => {
+			/** @type {((error?: Error) => void) | undefined} */
+			let finishDispose;
+			const transport = jest.fn(async (/** @type {BackendOptions} */ options) => ({
+				...options,
+				backend: async () => ({
+					dispose: (/** @type {(error?: Error) => void} */ done) => {
+						finishDispose = done;
+					},
+					module: () => ({ client: "", data: "", active: false })
+				})
+			}));
+			const { compiler, started } = startBackend(transport);
+			await started;
+			compiler.hooks.watchClose.call();
+			/** @type {Promise<Error | null | undefined>} */
+			const restarting = new Promise((resolve) => {
+				compiler.hooks.beforeCompile.callAsync(compiler.newCompilationParams(), resolve);
+			});
+			await new Promise((resolve) => setImmediate(resolve));
+			try {
+				expect(transport).toHaveBeenCalledTimes(1);
+			} finally {
+				/** @type {(error?: Error) => void} */ (finishDispose)(error);
+			}
+			expect(await restarting).toBe(error);
+			expect(transport).toHaveBeenCalledTimes(error ? 1 : 2);
+		}
+	);
 });
