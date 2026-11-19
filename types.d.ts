@@ -36544,6 +36544,11 @@ declare interface TokenTable {
 	commentStart: (comment: number) => number;
 
 	/**
+	 * where it ends
+	 */
+	commentEnd: (comment: number) => number;
+
+	/**
 	 * whether a line break comes before it
 	 */
 	commentBreaks: (comment: number) => boolean;
