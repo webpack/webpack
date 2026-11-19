@@ -55791,17 +55791,21 @@ exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropp
 |     <p>
 |       \\"a&#\\"
 |       <!--  -->
-|       \\"#\\""
+|       \\"#\\"
+|     <p>
+|       \\"&#X;\\"
+|       <!--  -->
+|       \\"<\\""
 `;
 
-exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-prints-the-same-twice parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[6,7]:absence-of-digits-in-numeric-character-reference warning[6,8]:incorrectly-opened-comment warning[10,11]:invalid-first-character-of-tag-name warning[14,16]:incorrectly-opened-comment warning[25,27]:incorrectly-opened-comment warning[29,30]:invalid-first-character-of-tag-name warning[35,36]:absence-of-digits-in-numeric-character-reference warning[35,37]:incorrectly-opened-comment"`;
+exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-prints-the-same-twice parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[6,7]:absence-of-digits-in-numeric-character-reference warning[6,8]:incorrectly-opened-comment warning[10,11]:invalid-first-character-of-tag-name warning[14,16]:incorrectly-opened-comment warning[25,27]:incorrectly-opened-comment warning[29,30]:invalid-first-character-of-tag-name warning[35,36]:absence-of-digits-in-numeric-character-reference warning[35,37]:incorrectly-opened-comment warning[45,46]:absence-of-digits-in-numeric-character-reference warning[46,48]:incorrectly-opened-comment warning[50,50]:eof-before-tag-name"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-prints-the-same-twice prints {"mode":"minify"} 1`] = `
 "<p>&#X&lt;<p>&
-<p>a&am&lt;<p>a&##"
+<p>a&am&lt;<p>a&##<p>&amp;#X;&lt;"
 `;
 
-exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-prints-the-same-twice tokenizes 1`] = `"open[0,3|1,2] warning[6,7]:absence-of-digits-in-numeric-character-reference text[3,6] warning[6,8]:incorrectly-opened-comment comment[6,9|8,8] warning[10,11]:invalid-first-character-of-tag-name text[9,10] open[10,13|11,12] text[13,14] warning[14,16]:incorrectly-opened-comment comment[14,17|16,16] text[17,18] open[18,21|19,20] text[21,25] warning[25,27]:incorrectly-opened-comment comment[25,28|27,27] warning[29,30]:invalid-first-character-of-tag-name text[28,29] open[29,32|30,31] warning[35,36]:absence-of-digits-in-numeric-character-reference text[32,35] warning[35,37]:incorrectly-opened-comment comment[35,38|37,37] text[38,39] end=39"`;
+exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-prints-the-same-twice tokenizes 1`] = `"open[0,3|1,2] warning[6,7]:absence-of-digits-in-numeric-character-reference text[3,6] warning[6,8]:incorrectly-opened-comment comment[6,9|8,8] warning[10,11]:invalid-first-character-of-tag-name text[9,10] open[10,13|11,12] text[13,14] warning[14,16]:incorrectly-opened-comment comment[14,17|16,16] text[17,18] open[18,21|19,20] text[21,25] warning[25,27]:incorrectly-opened-comment comment[25,28|27,27] warning[29,30]:invalid-first-character-of-tag-name text[28,29] open[29,32|30,31] warning[35,36]:absence-of-digits-in-numeric-character-reference text[32,35] warning[35,37]:incorrectly-opened-comment comment[35,38|37,37] text[38,39] open[39,42|40,41] warning[45,46]:absence-of-digits-in-numeric-character-reference text[42,46] warning[46,48]:incorrectly-opened-comment comment[46,49|48,48] warning[50,50]:eof-before-tag-name text[49,50] end=50"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-an-open-reference-before-a-dropped-comment-stays-escaped-where-text-continues-it parses 1`] = `
 "| <html>
@@ -59496,7 +59500,7 @@ exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknow
 
 exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-3 parses 2`] = `"warning[3,4]:absence-of-digits-in-numeric-character-reference warning[0,4]:expected-doctype-but-got-chars"`;
 
-exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-3 prints {"mode":"minify"} 1`] = `"&#x;"`;
+exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-3 prints {"mode":"minify"} 1`] = `"&amp;#x;"`;
 
 exports[`HTML syntax — invariants tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-3 tokenizes 1`] = `"warning[3,4]:absence-of-digits-in-numeric-character-reference text[0,4] end=4"`;
 
@@ -60257,7 +60261,7 @@ exports[`HTML syntax — invariants tokenize-parse-error-callback-reports-absenc
 
 exports[`HTML syntax — invariants tokenize-parse-error-callback-reports-absence-of-digits-in-numeric-character parses 2`] = `"warning[4,5]:absence-of-digits-in-numeric-character-reference warning[0,6]:expected-doctype-but-got-chars"`;
 
-exports[`HTML syntax — invariants tokenize-parse-error-callback-reports-absence-of-digits-in-numeric-character prints {"mode":"minify"} 1`] = `"a&#x;b"`;
+exports[`HTML syntax — invariants tokenize-parse-error-callback-reports-absence-of-digits-in-numeric-character prints {"mode":"minify"} 1`] = `"a&amp;#x;b"`;
 
 exports[`HTML syntax — invariants tokenize-parse-error-callback-reports-absence-of-digits-in-numeric-character tokenizes 1`] = `"warning[4,5]:absence-of-digits-in-numeric-character-reference text[0,6] end=6"`;
 
@@ -61220,7 +61224,7 @@ exports[`HTML syntax — invariants tokenize-should-handle-empty-numeric-charact
 
 exports[`HTML syntax — invariants tokenize-should-handle-empty-numeric-character-references-and-x parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[5,6]:absence-of-digits-in-numeric-character-reference warning[9,10]:absence-of-digits-in-numeric-character-reference"`;
 
-exports[`HTML syntax — invariants tokenize-should-handle-empty-numeric-character-references-and-x prints {"mode":"minify"} 1`] = `"<p>&#;&#x;"`;
+exports[`HTML syntax — invariants tokenize-should-handle-empty-numeric-character-references-and-x prints {"mode":"minify"} 1`] = `"<p>&#;&amp;#x;"`;
 
 exports[`HTML syntax — invariants tokenize-should-handle-empty-numeric-character-references-and-x tokenizes 1`] = `"open[0,3|1,2] warning[5,6]:absence-of-digits-in-numeric-character-reference warning[9,10]:absence-of-digits-in-numeric-character-reference text[3,10] close[10,14|12,13] end=14"`;
 
@@ -61826,7 +61830,7 @@ exports[`HTML syntax — invariants tokenize-should-tokenize-and-roundtrip-chara
 <p>&unknown;</p>
 <p>& without semicolon</p>
 <p>&#;</p>
-<p>&#x;</p>
+<p>&amp;#x;</p>
 <p>ϧ</p>
 "
 `;
