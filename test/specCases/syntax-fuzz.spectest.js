@@ -373,17 +373,21 @@ const browserFacets = (documents) => {
 };
 
 /**
- * Runs in the page: each document's `style` attributes as the browser
- * serializes their declarations, the empty ones left out, sorted.
+ * Runs in the page: each declared `style` attribute as the browser serializes
+ * it, with its element's name, in document order. A relaxed set never drops
+ * or reorders an element holding declarations, since such an element is not empty.
  * @param {string[]} documents the documents
- * @returns {string[][]} one sorted list per document
+ * @returns {string[][]} one list per document
  */
 const inlineStyles = (documents) =>
 	documents.map((html) =>
 		[...new DOMParser().parseFromString(html, "text/html").querySelectorAll("[style]")]
-			.map((element) => /** @type {HTMLElement} */ (element).style.cssText)
-			.filter((text) => text !== "")
-			.sort()
+			.map((element) => [
+				element.localName,
+				/** @type {HTMLElement} */ (element).style.cssText
+			])
+			.filter(([, text]) => text !== "")
+			.map(([name, text]) => `${name}{${text}}`)
 	);
 
 /**
@@ -730,10 +734,8 @@ describe("syntax fuzz in real chrome", () => {
 					source,
 					after
 				]);
-				const at = own.findIndex(
-					(style, i) => !numericallyEqual(style, printedOwn[i] || "")
-				);
-				if (own.length !== printedOwn.length || at !== -1) {
+				// No relaxed set minifies CSS, so nothing may round a declaration.
+				if (own.join("\n") !== printedOwn.join("\n")) {
 					out.push({
 						relation: "styles",
 						preset: name,
