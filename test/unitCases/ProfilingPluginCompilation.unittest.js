@@ -90,6 +90,34 @@ describe("Profiling Plugin", () => {
 		});
 	});
 
+	itSkipBun("should finish a second run of the same compiler", (done) => {
+		const webpack = require("../../");
+
+		const finalPath = path.join(testDirectory, "js/profilingRunTwice.json");
+		const compiler = webpack({
+			context: testDirectory,
+			entry: "./fixtures/a.js",
+			output: {
+				path: path.join(testDirectory, "js/profilingRunTwiceOut")
+			},
+			plugins: [new webpack.debug.ProfilingPlugin({ outputPath: finalPath })]
+		});
+		compiler.run((err) => {
+			if (err) return done(err);
+			compiler.run((err) => {
+				if (err) return done(err);
+				// the trace is the first run's, written once
+				const data = JSON.parse(fs.readFileSync(finalPath, "utf8"));
+				expect(
+					data.filter(
+						(/** @type {EXPECTED_ANY} */ entry) => entry.name === "CpuProfile"
+					)
+				).toHaveLength(1);
+				compiler.close(done);
+			});
+		});
+	});
+
 	itSkipBun.each(["before", "after"])(
 		"should profile the taps of hook maps accessed %s installation",
 		(timing, done) => {
