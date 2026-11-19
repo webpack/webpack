@@ -35,3 +35,19 @@ differs(1);
 differs(2);
 fallsThrough(1);
 fallsThrough(2);
+var seen = [];
+function tag(strings) {
+	seen.push(strings);
+}
+function tagged(foo) {
+	switch (foo) {
+		case 0:
+			tag`x`;
+			break;
+		default:
+			tag`x`;
+	}
+}
+tagged(0);
+tagged(1);
+console.log(seen[0] === seen[1]);
