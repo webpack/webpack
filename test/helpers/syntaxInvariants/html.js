@@ -856,9 +856,10 @@ const EMPTY_INLINE_ELEMENTS = new Set(
  * @param {string} html a document
  * @param {boolean} tree whether the element tree is read too
  * @param {CssOptions} cssOptions the options the sheets are minified with
+ * @param {boolean} edgesDrop whether whitespace at every element's edge may go, as `collapseWhitespace: "all"` drops it
  * @returns {{ said: string[], sheets: string[] }} what it says, and each non-empty sheet
  */
-const htmlMeaning = (html, tree, cssOptions) => {
+const htmlMeaning = (html, tree, cssOptions, edgesDrop) => {
 	/** @type {string[]} */
 	const said = [];
 	/** @type {string[]} */
@@ -918,6 +919,8 @@ const htmlMeaning = (html, tree, cssOptions) => {
 		},
 		[NodeType.Text]: {
 			enter: (nodePath) => {
+				// Whitespace an empty inline element holds sits at both its edges.
+				if (pending && edgesDrop && /^\s*$/.test(nodePath.value())) return;
 				settle();
 				const parent = open[open.length - 1];
 				if (parent === "script") return;
@@ -977,8 +980,9 @@ const meaningReports = (html, printed, options, cssOptions) => {
 		!options.removeEmptyAttributes &&
 		!options.removeRedundantAttributes &&
 		!options.mergeStyles;
-	const before = htmlMeaning(html, tree, cssOptions);
-	const after = htmlMeaning(printed, tree, cssOptions);
+	const edgesDrop = options.collapseWhitespace === "all";
+	const before = htmlMeaning(html, tree, cssOptions, edgesDrop);
+	const after = htmlMeaning(printed, tree, cssOptions, edgesDrop);
 	let at = 0;
 	while (at < before.said.length && before.said[at] === after.said[at]) at++;
 	if (at < before.said.length || at < after.said.length) {
