@@ -1776,6 +1776,7 @@ const PARSER_TABLES = [
 			"th",
 			"marquee",
 			"object",
+			"select",
 			"template"
 		]
 	],

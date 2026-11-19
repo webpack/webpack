@@ -39692,14 +39692,14 @@ exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tr
 |     <dt>
 |       <p>
 |         <select>
-|       <dd>"
+|           <dd>"
 `;
 
-exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-a-list-item-a-select-held parses 2`] = `"warning[0,4]:expected-doctype-but-got-start-tag warning[15,19]:unexpected-end-tag"`;
+exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-a-list-item-a-select-held parses 2`] = `"warning[0,4]:expected-doctype-but-got-start-tag warning[19,19]:expected-closing-tag-but-got-eof"`;
 
-exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-a-list-item-a-select-held prints {"mode":"beautify"} 1`] = `"<dt><p><select><dd>"`;
+exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-a-list-item-a-select-held prints {"mode":"beautify"} 1`] = `"<dt><p><select><dd></dd></select></p></dt>"`;
 
-exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-a-list-item-a-select-held prints {"mode":"minify"} 1`] = `"<dt><p><select><dd>"`;
+exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-a-list-item-a-select-held prints {"mode":"minify"} 1`] = `"<dt><p><select><dd></select></dt>"`;
 
 exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-a-list-item-a-select-held tokenizes 1`] = `"open[0,4|1,3] open[4,7|5,6] open[7,15|8,14] open[15,19|16,18] end=19"`;
 
@@ -40654,14 +40654,14 @@ exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tr
 |     <marquee>
 |       <b>
 |         <select>
-|     \\"x\\""
+|           \\"x\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-formatting-a-marquee parses 2`] = `"warning[0,9]:expected-doctype-but-got-start-tag warning[20,30]:end-tag-too-early"`;
+exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-formatting-a-marquee parses 2`] = `"warning[0,9]:expected-doctype-but-got-start-tag warning[20,30]:unexpected-end-tag warning[31,31]:expected-closing-tag-but-got-eof"`;
 
-exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-formatting-a-marquee prints {"mode":"beautify"} 1`] = `"<marquee><b><select></select></b></marquee>x"`;
+exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-formatting-a-marquee prints {"mode":"beautify"} 1`] = `"<marquee><b><select>x</select></b></marquee>"`;
 
-exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-formatting-a-marquee prints {"mode":"minify"} 1`] = `"<marquee><b><select></select></b></marquee>x"`;
+exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-formatting-a-marquee prints {"mode":"minify"} 1`] = `"<marquee><b><select>x</select></b></marquee>"`;
 
 exports[`HTML syntax — invariants source-processor-re-serializing-keeps-the-tree-keeps-formatting-a-marquee tokenizes 1`] = `"open[0,9|1,8] open[9,12|10,11] open[12,20|13,19] close[20,30|22,29] text[30,31] end=31"`;
 
@@ -51900,7 +51900,7 @@ exports[`HTML syntax — invariants source-processor-tree-construction-corpus-ro
 |           \\"G\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-select-2 parses {"options":{"scripting":true}} 2`] = `"warning[0,8]:expected-doctype-but-got-start-tag warning[17,25]:unexpected-select-in-select warning[42,50]:unexpected-start-tag-implies-end-tag warning[51,59]:unexpected-select-in-select warning[76,84]:unexpected-start-tag-implies-end-tag warning[85,93]:unexpected-select-in-select warning[110,118]:unexpected-start-tag-implies-end-tag warning[119,127]:unexpected-select-in-select"`;
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-select-2 parses {"options":{"scripting":true}} 2`] = `"warning[0,8]:expected-doctype-but-got-start-tag warning[17,25]:unexpected-select-in-select warning[51,59]:unexpected-select-in-select warning[85,93]:unexpected-select-in-select warning[119,127]:unexpected-select-in-select"`;
 
 exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-select-2 parses 1`] = `
 "| <html>
@@ -51926,7 +51926,7 @@ exports[`HTML syntax — invariants source-processor-tree-construction-corpus-ro
 |           \\"G\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-select-2 parses 2`] = `"warning[0,8]:expected-doctype-but-got-start-tag warning[17,25]:unexpected-select-in-select warning[42,50]:unexpected-start-tag-implies-end-tag warning[51,59]:unexpected-select-in-select warning[76,84]:unexpected-start-tag-implies-end-tag warning[85,93]:unexpected-select-in-select warning[110,118]:unexpected-start-tag-implies-end-tag warning[119,127]:unexpected-select-in-select"`;
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-select-2 parses 2`] = `"warning[0,8]:expected-doctype-but-got-start-tag warning[17,25]:unexpected-select-in-select warning[51,59]:unexpected-select-in-select warning[85,93]:unexpected-select-in-select warning[119,127]:unexpected-select-in-select"`;
 
 exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-select-2 prints {"mode":"beautify"} 1`] = `"<select><option>A</option></select><option>B<select><option>C</option></select></option><option>D<select><option>E</option></select></option><option>F<select><option>G</option></select></option>"`;
 
@@ -51958,7 +51958,7 @@ exports[`HTML syntax — invariants source-processor-tree-construction-corpus-ro
 |           \\"G\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-select-3 parses {"options":{"scripting":true}} 2`] = `"warning[0,8]:expected-doctype-but-got-start-tag warning[52,60]:unexpected-start-tag-implies-end-tag warning[105,113]:unexpected-start-tag-implies-end-tag warning[158,166]:unexpected-start-tag-implies-end-tag"`;
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-select-3 parses {"options":{"scripting":true}} 2`] = `"warning[0,8]:expected-doctype-but-got-start-tag"`;
 
 exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-select-3 parses 1`] = `
 "| <html>
@@ -51984,7 +51984,7 @@ exports[`HTML syntax — invariants source-processor-tree-construction-corpus-ro
 |           \\"G\\""
 `;
 
-exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-select-3 parses 2`] = `"warning[0,8]:expected-doctype-but-got-start-tag warning[52,60]:unexpected-start-tag-implies-end-tag warning[105,113]:unexpected-start-tag-implies-end-tag warning[158,166]:unexpected-start-tag-implies-end-tag"`;
+exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-select-3 parses 2`] = `"warning[0,8]:expected-doctype-but-got-start-tag"`;
 
 exports[`HTML syntax — invariants source-processor-tree-construction-corpus-round-trips-beautify-prints-select-3 prints {"mode":"minify"} 1`] = `"<select><option>A</select><option>B<select><option>C</select><option>D<select><option>E</select><option>F<select><option>G</select>"`;
 
@@ -55645,6 +55645,53 @@ exports[`HTML syntax — invariants syntax-fuzz-an-element-range-holds-a-comment
 exports[`HTML syntax — invariants syntax-fuzz-an-element-range-holds-a-comment-after-html-where-text-goes-back prints {"mode":"minify"} 1`] = `"<a> x</a></html>"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-an-element-range-holds-a-comment-after-html-where-text-goes-back tokenizes 1`] = `"open[0,3|1,2] close[3,10|5,9] comment[10,18|14,15] text[18,20] end=20"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-end-tag-past-an-open-select-is-out-of-scope parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <dir>
+|       <select>
+|         \\"a\\""
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-end-tag-past-an-open-select-is-out-of-scope parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag warning[14,21]:end-tag-with-trailing-solidus warning[14,21]:unexpected-end-tag warning[22,22]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-end-tag-past-an-open-select-is-out-of-scope prints {"mode":"minify"} 1`] = `"<dir><select>a</select></dir>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-end-tag-past-an-open-select-is-out-of-scope tokenizes 1`] = `"open[0,5|1,4] open[5,14|6,12] warning[14,21]:end-tag-with-trailing-solidus close[14,21|16,19] text[21,22] end=22"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-end-tag-past-an-open-select-is-out-of-scope-2 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <select>
+|         <p>
+|         \\"a\\""
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-end-tag-past-an-open-select-is-out-of-scope-2 parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[11,15]:unexpected-end-tag warning[16,16]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-end-tag-past-an-open-select-is-out-of-scope-2 prints {"mode":"minify"} 1`] = `"<p><select><p></p>a</select>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-end-tag-past-an-open-select-is-out-of-scope-2 tokenizes 1`] = `"open[0,3|1,2] open[3,11|4,10] close[11,15|13,14] text[15,16] end=16"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-end-tag-past-an-open-select-is-out-of-scope-3 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <select>
+|         <option>
+|           \\"aa\\""
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-end-tag-past-an-open-select-is-out-of-scope-3 parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag warning[22,28]:unexpected-end-tag warning[29,29]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-end-tag-past-an-open-select-is-out-of-scope-3 prints {"mode":"minify"} 1`] = `"<div><select><option>aa</select></div>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-end-tag-past-an-open-select-is-out-of-scope-3 tokenizes 1`] = `"open[0,5|1,4] open[5,13|6,12] open[13,21|14,20] text[21,22] close[22,28|24,27] text[28,29] end=29"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-dropping-a-bogus-comment-keeps-the-space-between-the-text parses 1`] = `
 "| <html>
