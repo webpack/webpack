@@ -31,4 +31,10 @@ console.log(
 (function (a, ...b) {
 	show(b[0]);
 })(1, 8, show(9));
+function power(n) {
+	return (function (...r) {
+		return r[0] ** n;
+	})(-2);
+}
+show(power(3));
 console.log(log.join());
