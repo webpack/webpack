@@ -13742,7 +13742,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-540 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-540 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"for(;;)a();while(x)b();x;for(;;)var v;a();"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-540 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"for(;;)a();while(x)b();for(x;;)var v;a();"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-540 prints {"mode":"minify"} 1`] = `"for(;;)if(1)a();while(x)if(0)a();else b();if(x)if(0)a();for(;;)if(0)var v=1;label:if(1)a();"`;
 
@@ -31763,7 +31763,7 @@ exports[`JavaScript syntax — invariants k-conditions-10 parses 2`] = `""`;
 
 exports[`JavaScript syntax — invariants k-conditions-10 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants k-conditions-10 prints {"mode":"minify","compress":{"toplevel":false},"mangle":false} 1`] = `"x(),y(),x(),foo();for(;;)x(),y();function f(){return g(),a(),b(),1}a(),b();if(x()||1)if(u)v();if(x()||1)use(1);for(;;)x(),a(),b();x(),y(),x(),a(),b();if(x()&&0)y();else if(u)v();"`;
+exports[`JavaScript syntax — invariants k-conditions-10 prints {"mode":"minify","compress":{"toplevel":false},"mangle":false} 1`] = `"for(x(),y(),x(),foo();;)x(),y();function f(){return g(),a(),b(),1}a(),b();if(x()||1)if(u)v();if(x()||1)use(1);for(;;)x(),a(),b();x(),y(),x(),a(),b();if(x()&&0)y();else if(u)v();"`;
 
 exports[`JavaScript syntax — invariants k-conditions-10 prints {"mode":"minify"} 1`] = `"if(x()||true)y();if(x()&&false)y();if(foo()&&false)z();for(;;)if(x()||1)y();function f(){if(g()||1){a();b()}return 1}if(a(),1)b();if(x()||1)if(u)v();if(x()||1){let w=1;use(w)}for(;;)if(x()||1){a();b()}if(x()||1)y();else z();if(x()&&0)y();else{a();b()}if(x()&&0)y();else if(u)v();"`;
 

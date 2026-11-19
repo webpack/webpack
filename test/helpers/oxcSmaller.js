@@ -837,9 +837,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `sequences` tests cover",
-		[
-			"terser compress: sequences/side_effects_cascade_3"
-		]
+		["terser compress: sequences/side_effects_cascade_3"]
 	],
 	[
 		"oxc goes further than webpack on what oxc's `peephole/fold_constants.rs` tests cover",
