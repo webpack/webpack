@@ -19817,6 +19817,11 @@ declare interface KnownHtmlModuleBuildInfo {
 	htmlEntries?: Record<string, HtmlEntryInfo[]>;
 
 	/**
+	 * the page's encoding when not UTF-8, which its emitted file is written in (see `documentEncoding`)
+	 */
+	encoding?: string;
+
+	/**
 	 * `../` per `<base href>` path segment, prepended to the auto-public-path undo path so a relative base doesn't misdirect bundled URLs
 	 */
 	baseUrlPrefix?: string;
@@ -40581,6 +40586,7 @@ declare namespace exports {
 					export let attributes: 1;
 					export let content: 2;
 				}
+				export let declaredCharset: (input: string) => undefined | string;
 				export let declaredEncoding: (
 					input: string
 				) => undefined | "utf8" | "other";
