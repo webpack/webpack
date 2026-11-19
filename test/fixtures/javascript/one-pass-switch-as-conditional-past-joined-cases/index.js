@@ -79,3 +79,24 @@ try {
 } catch (e) {
 	console.log(e.name);
 }
+// A direct `eval` may set the switch's name while the callee is read.
+function pinned(n, o, sink) {
+	Object.defineProperty(o, "f", {
+		get: function () {
+			eval("n = 2");
+			return sink;
+		}
+	});
+	switch (n) {
+		case 1:
+			o.f("A");
+			break;
+		default:
+			o.f("B");
+	}
+}
+var picked = [];
+pinned(1, {}, function (v) {
+	picked.push(v);
+});
+console.log(picked.join());

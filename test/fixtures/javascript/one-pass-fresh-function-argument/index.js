@@ -66,3 +66,17 @@ var out = {};
 	out.d = C;
 })(() => class { m() { return 7; } });
 console.log(out.a === out.b, out.a.fake, out.c === out.d, new out.d().m());
+// A passed function reading names around it stays where mangling names them.
+function outerReads() {
+	var outerValue = Math.floor(10);
+	var other = Math.floor(11);
+	return (function (cb) {
+		var s = 0;
+		for (var i = 0; i < 3; i++) s += i;
+		console.log(s);
+		return cb();
+	})(function () {
+		return outerValue * other;
+	});
+}
+console.log(outerReads());

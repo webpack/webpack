@@ -40,8 +40,6 @@ function nested(n) {
 	}
 	return log.push(n);
 }
-console.log(thrown(), assigned(), kept(), nested(1), log.join());
-console.log(thrown(), assigned(), nested(2), log.join());
 // A class body is strict: setting a read-only global there throws.
 var NaN;
 try {
@@ -52,3 +50,5 @@ try {
 	console.log(e.name);
 }
 console.log(NaN);
+console.log(thrown(), assigned(), kept(), nested(1), log.join());
+console.log(thrown(), assigned(), nested(2), log.join());
