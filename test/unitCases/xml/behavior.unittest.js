@@ -13,7 +13,7 @@ describe("XML behavior relation", () => {
 
 	afterAll(() => renders.close());
 
-	it("passes the source itself without drawing", async () => {
+	it("passes the source itself", async () => {
 		expect(await renders.difference(source, source)).toEqual([]);
 	});
 
@@ -62,6 +62,7 @@ describe("XML behavior relation", () => {
 			"source-processor-svg-minification-should-preserve-foreign-namespaces-unknown"
 		);
 		expect(await renders.difference(plain, `${plain}\n`)).toBeNull();
+		expect(await renders.difference(plain, plain)).toBeNull();
 	}, 60000);
 
 	it("answers nothing for a source past the budget", async () => {

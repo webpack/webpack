@@ -65,6 +65,7 @@ const compareSvgRenders = async ({ before, after, size, tolerance }) => {
 	if (source === null) return null;
 	const printed = rootOf(after);
 	if (printed === null) return ["the print parses as no SVG document"];
+	if (after === before) return [];
 	/** @type {string[]} */
 	const out = [];
 	const [mine, theirs] = await Promise.all([pixelsOf(before), pixelsOf(after)]);
@@ -124,7 +125,9 @@ const renderBehavior = (lang) => {
 	return {
 		difference: async (source, printed) => {
 			if (source.length > INVARIANT_BUDGET) return null;
-			if (printed === source) return [];
+			// An XML source owes an SVG root first, so a marked document no browser
+			// draws fails even where its print is unchanged.
+			if (printed === source && lang !== "xml") return [];
 			const {
 				RENDER_WIDTHS,
 				cascadeLines,
