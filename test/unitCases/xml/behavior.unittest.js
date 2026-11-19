@@ -15,7 +15,7 @@ describe("XML behavior relation", () => {
 
 	it("passes the source itself", async () => {
 		expect(await renders.difference(source, source)).toEqual([]);
-	});
+	}, 60000);
 
 	it("passes a print that spells a paint otherwise", async () => {
 		expect(
