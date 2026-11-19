@@ -2430,18 +2430,24 @@ const compareStyles = async ({ pairs, types }) => {
 			if (whole.test(rawA) && whole.test(rawB)) {
 				return withinOneStep(clippedAs(rawA), paintedAs(rawB));
 			}
-			// A value holding several colors, each read on its own and the rest as is.
+			// A value holding several colors, each read on its own and the rest as is:
+			// as serialized too, since painting them first leaves none to clip.
 			const parted = new RegExp(`(${COLOR_LITERAL.source})`, "gi");
-			const [xs, ys] = [x, y].map((text) => text.split(parted));
-			return (
-				xs.length > 1 &&
-				xs.length === ys.length &&
-				xs.every((part, i) =>
-					i % 2 === 0
-						? part === ys[i]
-						: withinOneStep(clippedAs(part), paintedAs(ys[i]))
-				)
-			);
+			return [
+				[x, y],
+				[rawA, rawB]
+			].some((pair) => {
+				const [xs, ys] = pair.map((text) => text.split(parted));
+				return (
+					xs.length > 1 &&
+					xs.length === ys.length &&
+					xs.every((part, i) =>
+						i % 2 === 0
+							? part === ys[i]
+							: withinOneStep(clippedAs(part), paintedAs(ys[i]))
+					)
+				);
+			});
 		}
 		return x === y;
 	};
