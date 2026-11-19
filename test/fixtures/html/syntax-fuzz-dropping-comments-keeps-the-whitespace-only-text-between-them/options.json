@@ -1,0 +1,7 @@
+[
+	{
+		"mode": "minify",
+		"collapseWhitespace": "all",
+		"removeEmptyElements": true
+	}
+]
