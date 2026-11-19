@@ -89,7 +89,9 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:test_remove_dead_expr:145b43a1",
 			"oxc minifier: peephole/esbuild.rs:test_inline_single_use_variable:dc03519f",
 			"oxc minifier: peephole/esbuild.rs:test_inline_single_use_variable:f8b9d952",
-			"oxc minifier: peephole/esbuild.rs:prune_empty_case_before_default:7699a257"
+			"oxc minifier: peephole/esbuild.rs:prune_empty_case_before_default:7699a257",
+			"oxc minifier: peephole/esbuild.rs:js_parser_test:abbe30c3",
+			"oxc minifier: peephole/esbuild.rs:js_parser_test:b462afec"
 		]
 	],
 	[
@@ -236,7 +238,9 @@ const OXC_SMALLER_BY_REASON = [
 		"real-world code, where no one transform above accounts for half the gap: several cut opposite ways, or the rival restructures the program too far for a token diff to attribute",
 		[
 			"swc minifier: fixture/issues/emotion/react/2/input.js",
-			"swc minifier: fixture/issues/vercel/004/input.js"
+			"swc minifier: fixture/issues/vercel/004/input.js",
+			"swc minifier: benches-full/d3.js",
+			"swc minifier: benches-full/terser.js"
 		]
 	],
 	[
@@ -345,7 +349,9 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: issue_6903_2",
 			"swc exec: issue_6903_3",
 			"swc exec: issue_11517_continue",
-			"swc exec: issue_11078_math_constant_folding"
+			"swc exec: issue_11078_math_constant_folding",
+			"swc exec: terser_labels_labels_4",
+			"swc exec: terser_loops_issue_2740_5"
 		]
 	],
 	[
@@ -366,7 +372,10 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_exit_points.rs:test_for_continue_optimization:34ac02f3",
 			"oxc minifier: peephole/minimize_exit_points.rs:test_switch_exit_points1:ebe0a496",
 			"oxc minifier: peephole/minimize_exit_points.rs:test_test_block_scoped_variables:bc33072e",
-			"swc minifier: fixture/issues/4841/1/input.js"
+			"swc minifier: fixture/issues/4841/1/input.js",
+			"oxc minifier: peephole/minimize_exit_points.rs:test_break_optimization:1ba6d27d",
+			"oxc minifier: peephole/minimize_exit_points.rs:test_break_optimization:cb295b49",
+			"oxc minifier: peephole/minimize_exit_points.rs:test_function_return_optimization:2cf28c4c"
 		]
 	],
 	[
@@ -379,7 +388,15 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_dead_code.rs:test_fold_useless_for:166b57e4",
 			"oxc minifier: peephole/remove_dead_code.rs:remove_unused_expressions_in_for:5b3fb43b",
 			"swc minifier: fixture/issues/12299/input.js",
-			"swc minifier: fixture/issues/9619/input.js"
+			"swc minifier: fixture/issues/9619/input.js",
+			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:097786dc",
+			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:1e8b08b2",
+			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:29660a03",
+			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:48e1a076",
+			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:4c0bc61c",
+			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:a7334b0d",
+			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:bd15f134",
+			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:ee9ac22d"
 		]
 	],
 	[
@@ -405,7 +422,8 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/dead_code_elimination.rs:fold_coalesce_on_tracked_non_nullish_binding:0015b511",
 			"oxc minifier: peephole/dead_code_elimination.rs:dce_keeps_inferred_class_name_for_executing_class:e77b52b7",
 			"oxc minifier: peephole/dead_code_elimination.rs:block_unwrap_needs_no_extra_pass:199cfb09",
-			"oxc minifier: peephole/dead_code_elimination.rs:block_unwrap_needs_no_extra_pass:067258dd"
+			"oxc minifier: peephole/dead_code_elimination.rs:block_unwrap_needs_no_extra_pass:067258dd",
+			"oxc minifier: peephole/dead_code_elimination.rs:drop_labels_with_vars:d1cda6a6"
 		]
 	],
 	[
@@ -431,7 +449,9 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_statements.rs:test_handle_switch_statement:5464b165",
 			"oxc minifier: peephole/minimize_statements.rs:test_handle_switch_statement:76b7c300",
 			"oxc minifier: peephole/minimize_statements.rs:test_handle_switch_statement:22ed18bd",
-			"oxc minifier: peephole/minimize_statements.rs:test_handle_switch_statement:14732ddb"
+			"oxc minifier: peephole/minimize_statements.rs:test_handle_switch_statement:14732ddb",
+			"oxc minifier: peephole/minimize_statements.rs:test_handle_switch_statement:d019732a",
+			"oxc minifier: peephole/minimize_statements.rs:test_inline_single_use_function_declaration:0f3efe27"
 		]
 	],
 	[
@@ -567,7 +587,8 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: drop-unused/unused_class_which_might_throw_2",
 			"terser compress: drop-unused/unused_class_which_might_throw_3",
 			"terser compress: drop-unused/unused_class_which_might_throw_4",
-			"terser compress: drop-unused/class_used_within_itself_3_var_expname"
+			"terser compress: drop-unused/class_used_within_itself_3_var_expname",
+			"terser compress: drop-unused/issue_1715_3"
 		]
 	],
 	[
@@ -598,7 +619,8 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: switch/issue_445",
 			"terser compress: switch/collapse_same_branches_not_in_a_row_ensure_no_evaluate_elad",
 			"terser compress: switch/trim_empty_last_branches",
-			"terser compress: switch/trim_empty_last_branches_3"
+			"terser compress: switch/trim_empty_last_branches_3",
+			"terser compress: switch/collapse_same_branches_as_default_not_in_a_row"
 		]
 	],
 	[
@@ -645,7 +667,12 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline_single_use_variable.rs:test_inline_single_use_variable:56aac854",
 			"oxc minifier: peephole/inline_single_use_variable.rs:test_within_same_variable_declarations:191c71de",
 			"oxc minifier: peephole/inline_single_use_variable.rs:test_within_same_variable_declarations:ff938d95",
-			"oxc minifier: peephole/inline_single_use_variable.rs:integration:4454b44c"
+			"oxc minifier: peephole/inline_single_use_variable.rs:integration:4454b44c",
+			"oxc minifier: peephole/inline_single_use_variable.rs:test_inline_into_callee_keeps_this:f8121b21",
+			"oxc minifier: peephole/inline_single_use_variable.rs:test_inline_single_use_variable:596dbb37",
+			"oxc minifier: peephole/inline_single_use_variable.rs:test_inline_single_use_variable:59bac7af",
+			"oxc minifier: peephole/inline_single_use_variable.rs:test_inline_single_use_variable:68b616b6",
+			"oxc minifier: peephole/inline_single_use_variable.rs:test_inline_single_use_variable:eb8e3c06"
 		]
 	],
 	[
@@ -736,7 +763,8 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: loops/issue_1532",
 			"terser compress: loops/issue_1648",
 			"terser compress: loops/in_parenthesis_3",
-			"terser compress: loops/dead_code_condition"
+			"terser compress: loops/dead_code_condition",
+			"terser compress: loops/issue_2740_5"
 		]
 	],
 	[
@@ -1039,7 +1067,11 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `labels` tests cover",
-		["terser compress: labels/labels_3"]
+		[
+			"terser compress: labels/labels_3",
+			"terser compress: labels/labels_4",
+			"terser compress: labels/labels_5"
+		]
 	],
 	[
 		"oxc goes further than webpack on what terser's `nullish` tests cover",
@@ -1157,7 +1189,10 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `issue-1833` tests cover",
-		["terser compress: issue-1833/iife_do"]
+		[
+			"terser compress: issue-1833/iife_do",
+			"terser compress: issue-1833/iife_for_in"
+		]
 	],
 	[
 		"oxc goes further than webpack on what terser's `try-catch` tests cover",
@@ -1197,12 +1232,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc's output is wrong: it renames a `#private` name a direct `eval` reads, so the `eval` throws a SyntaxError",
 		[
 			"oxc minifier: peephole/remove_unused_private_members.rs:test_remove_unused_private_fields:b5575e50"
-		]
-	],
-	[
-		"oxc's output is wrong: it reads a `var` that a `catch` body declares under the parameter's name as the named function expression it shadows, so `typeof` reads `function` where the input reads `undefined`",
-		[
-			"oxc minifier: peephole/remove_unused_declaration.rs:catch_var_shadows_named_function_expression:adedcf7b"
 		]
 	],
 	[
@@ -1306,7 +1335,34 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12643/runtime/input.js",
 			"swc minifier: fixture/issues/12669/class-methods/input.js",
 			"swc minifier: fixture/issues/12669/function-kinds/input.js",
-			"swc minifier: fixture/issues/12669/object-method/input.js"
+			"swc minifier: fixture/issues/12669/object-method/input.js",
+			"swc minifier: fixture/issues/do-while-false-control-flow/input.js",
+			"swc minifier: fixture/issues/do-while-false-terminal-jump/defaults-mangle/input.js",
+			"swc minifier: fixture/issues/do-while-false-terminal-jump/downstream-repro/input.js",
+			"swc minifier: fixture/issues/do-while-false-terminal-jump/labels-preserved/input.js"
+		]
+	],
+	[
+		"oxc goes further than webpack on what oxc's `mangler/mod.rs` tests cover",
+		["oxc minifier: mangler/mod.rs:labels:87859be1"]
+	],
+	[
+		"oxc goes further than webpack on what oxc's `peephole/collapse_variable_declarations.rs` tests cover",
+		[
+			"oxc minifier: peephole/collapse_variable_declarations.rs:test_for:6e2e98b1",
+			"oxc minifier: peephole/collapse_variable_declarations.rs:test_for:c653ed6a",
+			"oxc minifier: peephole/collapse_variable_declarations.rs:test_for_in:857ae255",
+			"oxc minifier: peephole/collapse_variable_declarations.rs:test_for_in:cb19c11b",
+			"oxc minifier: peephole/collapse_variable_declarations.rs:test_for_of:6b88309d",
+			"oxc minifier: peephole/collapse_variable_declarations.rs:test_for_of:7ce2fe6a"
+		]
+	],
+	[
+		"oxc goes further than webpack on what oxc's `peephole/statement_fusion.rs` tests cover",
+		[
+			"oxc minifier: peephole/statement_fusion.rs:fuse_into_label:032248f2",
+			"oxc minifier: peephole/statement_fusion.rs:fuse_into_label:0b9d916c",
+			"oxc minifier: peephole/statement_fusion.rs:fuse_into_label:55fd2a60"
 		]
 	]
 ];

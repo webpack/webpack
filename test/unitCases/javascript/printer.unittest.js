@@ -1263,8 +1263,8 @@ describe("one-pass minify of statement sequences", () => {
 				"function s(a,c){a:{a();for(;;)if(c())break a;c();a();c()}}"
 			],
 			[fixture("javascript", "one-pass-minify-of-statement-sequences-should-fold-a-labeled-switch-of-a-known-2"), "function s(c,s){c(),s()}"],
-			// A label needs a statement, and an unlabeled `break` its `switch`.
-			[fixture("javascript", "one-pass-minify-of-statement-sequences-should-fold-a-labeled-switch-of-a-known-3"), "function s(c){c:switch(1){case 2:c()}}"],
+			// The `switch` prints before its label goes with its last `break`.
+			[fixture("javascript", "one-pass-minify-of-statement-sequences-should-fold-a-labeled-switch-of-a-known-3"), "function s(c){switch(1){case 2:c()}}"],
 			[fixture("javascript", "one-pass-minify-of-statement-sequences-should-fold-a-labeled-switch-of-a-known-4"), "function s(i,a){i:switch(1){case 1:i();if(a())break;if(i())break i;a()}}"]
 		];
 		for (const [source, expected] of cases) {
