@@ -18,6 +18,7 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than swc's: `,` where swc keeps `;` between statements, operand order, `{0}` for an empty body",
 		[
+			"terser compress: reduce_vars/escaped_prop_3",
 			"terser compress: destructuring/issue_t111_2a",
 			"terser compress: destructuring/issue_t111_2b",
 			"terser compress: properties/accessor_null_undefined",
@@ -297,7 +298,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: issue-t120/issue_t120_1",
 			"terser compress: issue-t120/issue_t120_2",
 			"terser compress: loops/dead_code_condition",
-			"terser compress: reduce_vars/regex_loop",
 			"terser compress: sequences/lift_sequences_2",
 			"terser compress: sequences/lift_sequences_5",
 			"terser compress: sequences/lift_sequences_6",
@@ -345,9 +345,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/issue_2436_4",
 			"terser compress: collapse_vars/issue_2436_8",
 			"terser compress: collapse_vars/issue_2436_14",
-			"terser compress: collapse_vars/cascade_conditional",
-			"terser compress: collapse_vars/cascade_call",
-			"terser compress: collapse_vars/cascade_forin",
 			"terser compress: collapse_vars/unsafe_builtin"
 		]
 	],
@@ -391,7 +388,6 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: functions/issue_1841_1",
 			"terser compress: functions/function_returning_constant_literal",
-			"terser compress: functions/issue_2097",
 			"terser compress: functions/issue_2630_1",
 			"terser compress: functions/recursive_inline_2",
 			"terser compress: functions/drop_lone_use_strict_arrows_2"
@@ -544,7 +540,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `identity` tests cover",
 		[
-			"terser compress: identity/inline_identity",
 			"terser compress: identity/inline_identity_undefined",
 			"terser compress: identity/inline_identity_extra_params",
 			"terser compress: identity/inline_identity_inline_function",
