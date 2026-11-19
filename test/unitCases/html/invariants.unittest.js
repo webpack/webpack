@@ -42,12 +42,14 @@ const {
 	invariantFindings,
 	unexplainedScaling
 } = require("../../helpers/syntaxInvariants");
+const { renderBehavior } = require("../../helpers/syntaxInvariants/behavior");
 const { purityRelation } = require("../../helpers/syntaxInvariants/relations");
 const syntax = require("../../helpers/syntaxInvariants/html");
 
 /** @typedef {import("../../../lib/html/syntax-parser").HtmlTokenCallbacks} HtmlTokenCallbacks */
 /** @typedef {import("../../helpers/fixture").ParseEntry} ParseEntry */
 /** @typedef {import("../../helpers/fixture").Printers} Printers */
+/** @typedef {import("../../helpers/syntaxInvariants/relations").Report} Report */
 
 /**
  * @param {string} kind the token kind, or the severity of a parse error
@@ -240,7 +242,20 @@ const PRINTERS = {
 // code.
 describe("HTML syntax — invariants", () => {
 	const all = fixtures("html");
-	for (const { name, dir, source, options, parses, expected } of all) {
+	// Launched by the first marked set only, so a run marking none opens none.
+	const renders = renderBehavior();
+
+	afterAll(() => renders.close());
+
+	for (const {
+		name,
+		dir,
+		source,
+		options,
+		behavior,
+		parses,
+		expected
+	} of all) {
 		describe(name, () => {
 			it("tokenizes", () => {
 				expect(snapshotOf(source, tokenLine(source))).toMatchSnapshot();
@@ -297,11 +312,39 @@ describe("HTML syntax — invariants", () => {
 				});
 			}
 
+			// Opt-in, as each set renders the page twice per width in a browser.
+			if (behavior.length > 0) {
+				const marked = expected.filter(
+					(entry) => entry.relation === "behavior"
+				);
+				it.each(behavior.map((one) => [JSON.stringify(one), one]))(
+					"renders as its source when printed %s",
+					async (title, one) => {
+						const { code } = /** @type {{ code: string }} */ (
+							new SourceProcessor().process(source, printOptions(one).options)
+						);
+						const reports = await renders.difference(source, code);
+						expect(reports).not.toBeNull();
+						expect(
+							unexplained(
+								/** @type {Report[]} */ (reports).map((report) => ({
+									preset: title,
+									report
+								})),
+								marked,
+								source
+							)
+						).toEqual([]);
+					},
+					60000
+				);
+			}
+
 			it("holds its invariants", () => {
 				expect(
 					unexplained(
 						invariantFindings(syntax, [[name, source]]),
-						expected,
+						expected.filter((entry) => entry.relation !== "behavior"),
 						source
 					)
 				).toEqual([]);

@@ -3702,6 +3702,16 @@ exports[`HTML syntax — invariants minimize-collapse-whitespace parses 1`] = `
 
 exports[`HTML syntax — invariants minimize-collapse-whitespace parses 2`] = `"warning[246,247]:invalid-first-character-of-tag-name"`;
 
+exports[`HTML syntax — invariants minimize-collapse-whitespace prints {"mode":"minify","collapseWhitespace":"smart"} 1`] = `
+"<!doctype html><html lang=en><head><title>Collapse test</title></head><body><p>Hello <b>world</b> & friends<pre>  kept
+   verbatim</pre><pre><span>also     kept</span></pre> <textarea>  kept  too  </textarea><p><%=   template   %><p>one tab<p>already spaced</p> <svg><text>foreign text</text></svg></body></html>"
+`;
+
+exports[`HTML syntax — invariants minimize-collapse-whitespace prints {"mode":"minify","collapseWhitespace":true} 1`] = `
+"<!doctype html><html lang=en><head><title>Collapse test</title></head><body> <p>Hello <b>world</b> & friends</p> <pre>  kept
+   verbatim</pre> <pre><span>also     kept</span></pre> <textarea>  kept  too  </textarea> <p><%=   template   %></p> <p>one tab</p> <p>already spaced</p> <svg><text>foreign text</text></svg> </body></html>"
+`;
+
 exports[`HTML syntax — invariants minimize-collapse-whitespace prints {"mode":"minify"} 1`] = `
 "<!doctype html><html lang=en><head><title>Collapse   test</title></head><body>
 	<p>Hello     <b>world</b>	 &   friends</p>
@@ -3772,6 +3782,8 @@ exports[`HTML syntax — invariants minimize-comments-and-whitespace parses 1`] 
 `;
 
 exports[`HTML syntax — invariants minimize-comments-and-whitespace parses 2`] = `""`;
+
+exports[`HTML syntax — invariants minimize-comments-and-whitespace prints {"mode":"minify","collapseWhitespace":"smart"} 1`] = `"<!doctype html><head><title>Comments and whitespace</title></head><body><div>a b</div><div>c</div> <span> d </span><span> e </span>   <!--[if IE 8]><p  class=\\"a\\" >ie</p><![endif]--><pre>  verbatim   here  </pre></body></html>"`;
 
 exports[`HTML syntax — invariants minimize-comments-and-whitespace prints {"mode":"minify"} 1`] = `
 "<!doctype html><head><title>Comments and whitespace</title></head><body>
@@ -4660,6 +4672,12 @@ exports[`HTML syntax — invariants minimize-implied-tags-page parses 1`] = `
 `;
 
 exports[`HTML syntax — invariants minimize-implied-tags-page parses 2`] = `""`;
+
+exports[`HTML syntax — invariants minimize-implied-tags-page prints {"mode":"minify","removeImpliedTags":true} 1`] = `
+"<!doctype html><meta charset=utf-8><title>Catalog</title><p>page<ul><li>one<li>two</ul>
+
+"
+`;
 
 exports[`HTML syntax — invariants minimize-implied-tags-page prints {"mode":"minify"} 1`] = `
 "<!doctype html><head><meta charset=utf-8><title>Catalog</title></head><body><p>page<ul><li>one<li>two</ul>

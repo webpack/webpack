@@ -2,5 +2,10 @@
 	{
 		"print": "htmlMinify",
 		"removeImpliedTags": true
+	},
+	{
+		"mode": "minify",
+		"removeImpliedTags": true,
+		"behavior": true
 	}
 ]
