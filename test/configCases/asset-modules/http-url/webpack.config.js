@@ -1,13 +1,12 @@
 "use strict";
 
+const path = require("path");
 const {
 	experiments: {
 		schemes: { HttpUriPlugin }
 	}
 } = require("../../../../");
-const ServerPlugin = require("./server");
 
-const serverPlugin = new ServerPlugin(9990);
 /** @type {import("../../../../").Configuration} */
 const base = {
 	mode: "development",
@@ -38,12 +37,12 @@ const base = {
 const frozen = true;
 const allowedUris = ["http://localhost:9990/"];
 
-module.exports = [
+/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration[]} */
+module.exports = (env, { testPath }) => [
 	{
 		name: "frozen-verify",
 		...base,
 		plugins: [
-			serverPlugin,
 			new HttpUriPlugin({
 				allowedUris,
 				upgrade: true,
@@ -55,9 +54,11 @@ module.exports = [
 		name: "dev-defaults",
 		...base,
 		plugins: [
-			serverPlugin,
 			new HttpUriPlugin({
 				allowedUris,
+				// written at run time, so each config suite keeps its own
+				lockfileLocation: path.join(testPath, "dev-defaults.webpack.lock"),
+				cacheLocation: path.join(__dirname, "dev-defaults.webpack.lock.data"),
 				upgrade: false,
 				frozen: false
 			})
@@ -67,7 +68,6 @@ module.exports = [
 		name: "prod-defaults",
 		...base,
 		plugins: [
-			serverPlugin,
 			new HttpUriPlugin({
 				allowedUris,
 				upgrade: false,
@@ -79,7 +79,6 @@ module.exports = [
 		name: "no-cache",
 		...base,
 		plugins: [
-			serverPlugin,
 			new HttpUriPlugin({
 				allowedUris,
 				cacheLocation: false,
@@ -92,7 +91,6 @@ module.exports = [
 		...base,
 		entry: "./index.errors.js",
 		plugins: [
-			serverPlugin,
 			new HttpUriPlugin({
 				allowedUris,
 				upgrade: true,
@@ -105,7 +103,6 @@ module.exports = [
 		...base,
 		entry: "./index.security.js",
 		plugins: [
-			serverPlugin,
 			new HttpUriPlugin({
 				allowedUris,
 				upgrade: false,
@@ -118,9 +115,9 @@ module.exports = [
 		...base,
 		entry: "./index.encoding-case.js",
 		plugins: [
-			serverPlugin,
 			new HttpUriPlugin({
 				allowedUris,
+				lockfileLocation: path.join(testPath, "encoding-case.webpack.lock"),
 				cacheLocation: false,
 				upgrade: false,
 				frozen: false
@@ -132,9 +129,12 @@ module.exports = [
 		...base,
 		entry: "./index.decompression-errors.js",
 		plugins: [
-			serverPlugin,
 			new HttpUriPlugin({
 				allowedUris,
+				lockfileLocation: path.join(
+					testPath,
+					"decompression-errors.webpack.lock"
+				),
 				cacheLocation: false,
 				upgrade: false,
 				frozen: false

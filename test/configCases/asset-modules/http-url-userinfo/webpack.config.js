@@ -1,22 +1,21 @@
 "use strict";
 
+const path = require("path");
 const {
 	experiments: {
 		schemes: { HttpUriPlugin }
 	}
 } = require("../../../../");
-const ServerPlugin = require("../http-url/server");
 
-const serverPlugin = new ServerPlugin(9992);
-
-/** @type {import("../../../../").Configuration[]} */
-module.exports = [
+/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration[]} */
+module.exports = (env, { testPath }) => [
 	{
 		name: "regexp",
 		mode: "development",
 		plugins: [
-			serverPlugin,
 			new HttpUriPlugin({
+				// written at run time, so each config suite keeps its own
+				lockfileLocation: path.join(testPath, "regexp.webpack.lock"),
 				allowedUris: [/^http:\/\/localhost:9992/],
 				upgrade: false,
 				frozen: false,
@@ -28,8 +27,9 @@ module.exports = [
 		name: "function",
 		mode: "development",
 		plugins: [
-			serverPlugin,
 			new HttpUriPlugin({
+				// written at run time, so each config suite keeps its own
+				lockfileLocation: path.join(testPath, "function.webpack.lock"),
 				allowedUris: [(uri) => uri.startsWith("http://localhost:9992")],
 				upgrade: false,
 				frozen: false,

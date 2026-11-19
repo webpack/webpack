@@ -6,10 +6,11 @@
 "use strict";
 
 const path = require("path");
+const { start } = require("../configCases/asset-modules/http-url/server");
 const { create } = require("../helpers/browserslistConfigPackages");
 const { createClaims } = require("../helpers/testParts");
 
-module.exports = () => {
+module.exports = async () => {
 	// Trust the self-signed certificate of the lazy-compilation https case, so
 	// its client verifies it rather than turning verification off. Read when a
 	// worker starts, so it has to be set here, before Jest spawns them.
@@ -19,6 +20,9 @@ module.exports = () => {
 	);
 
 	createClaims();
+
+	// The `http-url` cases fetch from these: one process, alive for the whole run.
+	await start();
 
 	return create();
 };
