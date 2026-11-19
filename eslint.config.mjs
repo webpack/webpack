@@ -144,7 +144,12 @@ export default defineConfig([
 	},
 	{
 		files: ["lib/**/*.js"],
-		extends: [getSharedConfig("webpack/special")]
+		extends: [getSharedConfig("webpack/special")],
+		rules: {
+			// WORKAROUND(eslint-config-webpack): the released rule rejects https
+			// headers; turn it back on after bumping to a release with #228.
+			"webpack/require-license-comment": "off"
+		}
 	},
 	getSharedConfig("webpack/schemas"),
 	getSharedConfig("webpack/types"),

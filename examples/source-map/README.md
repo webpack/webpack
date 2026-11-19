@@ -3,7 +3,7 @@ This example demonstrates various types of source-maps.
 # example.coffee
 
 ```coffeescript
-# Taken from http://coffeescript.org/
+# Taken from https://coffeescript.org/
 
 # Objects:
 math =
@@ -71,7 +71,7 @@ module.exports = config;
 /*! runtime requirements:  */
 /***/ (() => {
 
-// Taken from http://coffeescript.org/
+// Taken from https://coffeescript.org/
 
 // Objects:
 var math, race;
@@ -101,7 +101,7 @@ race = function(winner, ...runners) {
 ```
 
 ```json
-{"version":3,"file":"./bundle-source-map.js","mappings":";;;;;;;;;AAEU;;;AAAA;;AACV,OACE;EAAA,MAAQ,IAAI,CAAC,IAAb;EACA,QAAQ,MADR;EAEA,MAAQ,SAAC,CAAD;WAAO,IAAI,OAAO,CAAP;EAAX;AAFR,EAFQ;;;AAOV,OAAO,SAAC,MAAD,KAAS,OAAT;SACL,MAAM,MAAN,EAAc,OAAd;AADK","sources":["webpack:///./example.coffee"],"sourcesContent":["# Taken from http://coffeescript.org/\n\n# Objects:\nmath =\n  root:   Math.sqrt\n  square: square\n  cube:   (x) -> x * square x\n\n# Splats:\nrace = (winner, runners...) ->\n  print winner, runners\n"],"names":[],"sourceRoot":""}
+{"version":3,"file":"./bundle-source-map.js","mappings":";;;;;;;;;AAEU;;;AAAA;;AACV,OACE;EAAA,MAAQ,IAAI,CAAC,IAAb;EACA,QAAQ,MADR;EAEA,MAAQ,SAAC,CAAD;WAAO,IAAI,OAAO,CAAP;EAAX;AAFR,EAFQ;;;AAOV,OAAO,SAAC,MAAD,KAAS,OAAT;SACL,MAAM,MAAN,EAAc,OAAd;AADK","sources":["webpack:///./example.coffee"],"sourcesContent":["# Taken from https://coffeescript.org/\n\n# Objects:\nmath =\n  root:   Math.sqrt\n  square: square\n  cube:   (x) -> x * square x\n\n# Splats:\nrace = (winner, runners...) ->\n  print winner, runners\n"],"names":[],"sourceRoot":""}
 ```
 
 ## hidden-source-map.js and hidden-source-map.js.map
@@ -116,7 +116,7 @@ race = function(winner, ...runners) {
 /*! runtime requirements:  */
 /***/ (() => {
 
-// Taken from http://coffeescript.org/
+// Taken from https://coffeescript.org/
 
 // Objects:
 var math, race;
@@ -145,7 +145,7 @@ race = function(winner, ...runners) {
 ```
 
 ```json
-{"version":3,"file":"./bundle-hidden-source-map.js","mappings":";;;;;;;;;AAEU;;;AAAA;;AACV,OACE;EAAA,MAAQ,IAAI,CAAC,IAAb;EACA,QAAQ,MADR;EAEA,MAAQ,SAAC,CAAD;WAAO,IAAI,OAAO,CAAP;EAAX;AAFR,EAFQ;;;AAOV,OAAO,SAAC,MAAD,KAAS,OAAT;SACL,MAAM,MAAN,EAAc,OAAd;AADK","sources":["webpack:///./example.coffee"],"sourcesContent":["# Taken from http://coffeescript.org/\n\n# Objects:\nmath =\n  root:   Math.sqrt\n  square: square\n  cube:   (x) -> x * square x\n\n# Splats:\nrace = (winner, runners...) ->\n  print winner, runners\n"],"names":[],"sourceRoot":""}
+{"version":3,"file":"./bundle-hidden-source-map.js","mappings":";;;;;;;;;AAEU;;;AAAA;;AACV,OACE;EAAA,MAAQ,IAAI,CAAC,IAAb;EACA,QAAQ,MADR;EAEA,MAAQ,SAAC,CAAD;WAAO,IAAI,OAAO,CAAP;EAAX;AAFR,EAFQ;;;AAOV,OAAO,SAAC,MAAD,KAAS,OAAT;SACL,MAAM,MAAN,EAAc,OAAd;AADK","sources":["webpack:///./example.coffee"],"sourcesContent":["# Taken from https://coffeescript.org/\n\n# Objects:\nmath =\n  root:   Math.sqrt\n  square: square\n  cube:   (x) -> x * square x\n\n# Splats:\nrace = (winner, runners...) ->\n  print winner, runners\n"],"names":[],"sourceRoot":""}
 ```
 
 ## inline-source-map.js
@@ -160,7 +160,7 @@ race = function(winner, ...runners) {
 /*! runtime requirements:  */
 /***/ (() => {
 
-// Taken from http://coffeescript.org/
+// Taken from https://coffeescript.org/
 
 // Objects:
 var math, race;
@@ -186,7 +186,7 @@ race = function(winner, ...runners) {
 /******/ var __webpack_exports__ = (__webpack_exec__(0));
 /******/ }
 ]);
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9idW5kbGUtaW5saW5lLXNvdXJjZS1tYXAuanMiLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7O0FBRVU7OztBQUFBOztBQUNWLE9BQ0U7RUFBQSxNQUFRLElBQUksQ0FBQyxJQUFiO0VBQ0EsUUFBUSxNQURSO0VBRUEsTUFBUSxTQUFDLENBQUQ7V0FBTyxJQUFJLE9BQU8sQ0FBUDtFQUFYO0FBRlIsRUFGUTs7O0FBT1YsT0FBTyxTQUFDLE1BQUQsS0FBUyxPQUFUO1NBQ0wsTUFBTSxNQUFOLEVBQWMsT0FBZDtBQURLIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vZXhhbXBsZS5jb2ZmZWUiXSwic291cmNlc0NvbnRlbnQiOlsiIyBUYWtlbiBmcm9tIGh0dHA6Ly9jb2ZmZWVzY3JpcHQub3JnL1xuXG4jIE9iamVjdHM6XG5tYXRoID1cbiAgcm9vdDogICBNYXRoLnNxcnRcbiAgc3F1YXJlOiBzcXVhcmVcbiAgY3ViZTogICAoeCkgLT4geCAqIHNxdWFyZSB4XG5cbiMgU3BsYXRzOlxucmFjZSA9ICh3aW5uZXIsIHJ1bm5lcnMuLi4pIC0+XG4gIHByaW50IHdpbm5lciwgcnVubmVyc1xuIl0sIm5hbWVzIjpbXSwic291cmNlUm9vdCI6IiJ9
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9idW5kbGUtaW5saW5lLXNvdXJjZS1tYXAuanMiLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7O0FBRVU7OztBQUFBOztBQUNWLE9BQ0U7RUFBQSxNQUFRLElBQUksQ0FBQyxJQUFiO0VBQ0EsUUFBUSxNQURSO0VBRUEsTUFBUSxTQUFDLENBQUQ7V0FBTyxJQUFJLE9BQU8sQ0FBUDtFQUFYO0FBRlIsRUFGUTs7O0FBT1YsT0FBTyxTQUFDLE1BQUQsS0FBUyxPQUFUO1NBQ0wsTUFBTSxNQUFOLEVBQWMsT0FBZDtBQURLIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vZXhhbXBsZS5jb2ZmZWUiXSwic291cmNlc0NvbnRlbnQiOlsiIyBUYWtlbiBmcm9tIGh0dHBzOi8vY29mZmVlc2NyaXB0Lm9yZy9cblxuIyBPYmplY3RzOlxubWF0aCA9XG4gIHJvb3Q6ICAgTWF0aC5zcXJ0XG4gIHNxdWFyZTogc3F1YXJlXG4gIGN1YmU6ICAgKHgpIC0+IHggKiBzcXVhcmUgeFxuXG4jIFNwbGF0czpcbnJhY2UgPSAod2lubmVyLCBydW5uZXJzLi4uKSAtPlxuICBwcmludCB3aW5uZXIsIHJ1bm5lcnNcbiJdLCJuYW1lcyI6W10sInNvdXJjZVJvb3QiOiIifQ==
 ```
 
 ## nosources-source-map.js.map
@@ -215,7 +215,7 @@ race = function(winner, ...runners) {
 /*! runtime requirements:  */
 /***/ (() => {
 
-eval("{// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vZXhhbXBsZS5jb2ZmZWU/MjQxNiJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFFVTs7O0FBQUEsSUFBQSxJQUFBLEVBQUE7O0FBQ1YsSUFBQSxHQUNFO0VBQUEsSUFBQSxFQUFRLElBQUksQ0FBQyxJQUFiO0VBQ0EsTUFBQSxFQUFRLE1BRFI7RUFFQSxJQUFBLEVBQVEsUUFBQSxDQUFDLENBQUQsQ0FBQTtXQUFPLENBQUEsR0FBSSxNQUFBLENBQU8sQ0FBUDtFQUFYO0FBRlIsRUFGUTs7O0FBT1YsSUFBQSxHQUFPLFFBQUEsQ0FBQyxNQUFELEVBQUEsR0FBUyxPQUFULENBQUE7U0FDTCxLQUFBLENBQU0sTUFBTixFQUFjLE9BQWQ7QUFESyIsInNvdXJjZXNDb250ZW50IjpbIiMgVGFrZW4gZnJvbSBodHRwOi8vY29mZmVlc2NyaXB0Lm9yZy9cblxuIyBPYmplY3RzOlxubWF0aCA9XG4gIHJvb3Q6ICAgTWF0aC5zcXJ0XG4gIHNxdWFyZTogc3F1YXJlXG4gIGN1YmU6ICAgKHgpIC0+IHggKiBzcXVhcmUgeFxuXG4jIFNwbGF0czpcbnJhY2UgPSAod2lubmVyLCBydW5uZXJzLi4uKSAtPlxuICBwcmludCB3aW5uZXIsIHJ1bm5lcnNcbiJdLCJmaWxlIjoiMC5qcyJ9\n//# sourceURL=webpack-internal:///0\n\n}");
+eval("{// Taken from https://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vZXhhbXBsZS5jb2ZmZWU/MjQxNiJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFFVTs7O0FBQUEsSUFBQSxJQUFBLEVBQUE7O0FBQ1YsSUFBQSxHQUNFO0VBQUEsSUFBQSxFQUFRLElBQUksQ0FBQyxJQUFiO0VBQ0EsTUFBQSxFQUFRLE1BRFI7RUFFQSxJQUFBLEVBQVEsUUFBQSxDQUFDLENBQUQsQ0FBQTtXQUFPLENBQUEsR0FBSSxNQUFBLENBQU8sQ0FBUDtFQUFYO0FBRlIsRUFGUTs7O0FBT1YsSUFBQSxHQUFPLFFBQUEsQ0FBQyxNQUFELEVBQUEsR0FBUyxPQUFULENBQUE7U0FDTCxLQUFBLENBQU0sTUFBTixFQUFjLE9BQWQ7QUFESyIsInNvdXJjZXNDb250ZW50IjpbIiMgVGFrZW4gZnJvbSBodHRwczovL2NvZmZlZXNjcmlwdC5vcmcvXG5cbiMgT2JqZWN0czpcbm1hdGggPVxuICByb290OiAgIE1hdGguc3FydFxuICBzcXVhcmU6IHNxdWFyZVxuICBjdWJlOiAgICh4KSAtPiB4ICogc3F1YXJlIHhcblxuIyBTcGxhdHM6XG5yYWNlID0gKHdpbm5lciwgcnVubmVycy4uLikgLT5cbiAgcHJpbnQgd2lubmVyLCBydW5uZXJzXG4iXSwiZmlsZSI6IjAuanMifQ==\n//# sourceURL=webpack-internal:///0\n\n}");
 
 /***/ })
 ],
@@ -246,7 +246,7 @@ eval("{// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\
 /*! runtime requirements:  */
 /***/ (() => {
 
-eval("{// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n\n\n//# sourceURL=webpack:///./example.coffee?../../node_modules/coffee-loader/dist/cjs.js\n}");
+eval("{// Taken from https://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n\n\n//# sourceURL=webpack:///./example.coffee?../../node_modules/coffee-loader/dist/cjs.js\n}");
 
 /***/ })
 ],
@@ -277,7 +277,7 @@ eval("{// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\
 /*! runtime requirements:  */
 /***/ (() => {
 
-eval("{// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vZXhhbXBsZS5jb2ZmZWU/ZWU1OCJdLCJzb3VyY2VzQ29udGVudCI6WyIvLyBUYWtlbiBmcm9tIGh0dHA6Ly9jb2ZmZWVzY3JpcHQub3JnL1xuXG4vLyBPYmplY3RzOlxudmFyIG1hdGgsIHJhY2U7XG5cbm1hdGggPSB7XG4gIHJvb3Q6IE1hdGguc3FydCxcbiAgc3F1YXJlOiBzcXVhcmUsXG4gIGN1YmU6IGZ1bmN0aW9uKHgpIHtcbiAgICByZXR1cm4geCAqIHNxdWFyZSh4KTtcbiAgfVxufTtcblxuLy8gU3BsYXRzOlxucmFjZSA9IGZ1bmN0aW9uKHdpbm5lciwgLi4ucnVubmVycykge1xuICByZXR1cm4gcHJpbnQod2lubmVyLCBydW5uZXJzKTtcbn07XG4iXSwibmFtZXMiOltdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///0\n\n}");
+eval("{// Taken from https://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vZXhhbXBsZS5jb2ZmZWU/ZWU1OCJdLCJzb3VyY2VzQ29udGVudCI6WyIvLyBUYWtlbiBmcm9tIGh0dHBzOi8vY29mZmVlc2NyaXB0Lm9yZy9cblxuLy8gT2JqZWN0czpcbnZhciBtYXRoLCByYWNlO1xuXG5tYXRoID0ge1xuICByb290OiBNYXRoLnNxcnQsXG4gIHNxdWFyZTogc3F1YXJlLFxuICBjdWJlOiBmdW5jdGlvbih4KSB7XG4gICAgcmV0dXJuIHggKiBzcXVhcmUoeCk7XG4gIH1cbn07XG5cbi8vIFNwbGF0czpcbnJhY2UgPSBmdW5jdGlvbih3aW5uZXIsIC4uLnJ1bm5lcnMpIHtcbiAgcmV0dXJuIHByaW50KHdpbm5lciwgcnVubmVycyk7XG59O1xuIl0sIm5hbWVzIjpbXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///0\n\n}");
 
 /***/ })
 ],
@@ -308,7 +308,7 @@ eval("{// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\
 /*! runtime requirements:  */
 /***/ (() => {
 
-eval("{// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vZXhhbXBsZS5jb2ZmZWU/MjQxNiJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFFVTs7O0FBQUEsSUFBQSxJQUFBLEVBQUE7O0FBQ1YsSUFBQSxHQUNFO0VBQUEsSUFBQSxFQUFRLElBQUksQ0FBQyxJQUFiO0VBQ0EsTUFBQSxFQUFRLE1BRFI7RUFFQSxJQUFBLEVBQVEsUUFBQSxDQUFDLENBQUQsQ0FBQTtXQUFPLENBQUEsR0FBSSxNQUFBLENBQU8sQ0FBUDtFQUFYO0FBRlIsRUFGUTs7O0FBT1YsSUFBQSxHQUFPLFFBQUEsQ0FBQyxNQUFELEVBQUEsR0FBUyxPQUFULENBQUE7U0FDTCxLQUFBLENBQU0sTUFBTixFQUFjLE9BQWQ7QUFESyIsInNvdXJjZXNDb250ZW50IjpbIiMgVGFrZW4gZnJvbSBodHRwOi8vY29mZmVlc2NyaXB0Lm9yZy9cblxuIyBPYmplY3RzOlxubWF0aCA9XG4gIHJvb3Q6ICAgTWF0aC5zcXJ0XG4gIHNxdWFyZTogc3F1YXJlXG4gIGN1YmU6ICAgKHgpIC0+IHggKiBzcXVhcmUgeFxuXG4jIFNwbGF0czpcbnJhY2UgPSAod2lubmVyLCBydW5uZXJzLi4uKSAtPlxuICBwcmludCB3aW5uZXIsIHJ1bm5lcnNcbiJdLCJmaWxlIjoiMC5qcyJ9\n//# sourceURL=webpack-internal:///0\n\n}");
+eval("{// Taken from https://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vZXhhbXBsZS5jb2ZmZWU/MjQxNiJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFFVTs7O0FBQUEsSUFBQSxJQUFBLEVBQUE7O0FBQ1YsSUFBQSxHQUNFO0VBQUEsSUFBQSxFQUFRLElBQUksQ0FBQyxJQUFiO0VBQ0EsTUFBQSxFQUFRLE1BRFI7RUFFQSxJQUFBLEVBQVEsUUFBQSxDQUFDLENBQUQsQ0FBQTtXQUFPLENBQUEsR0FBSSxNQUFBLENBQU8sQ0FBUDtFQUFYO0FBRlIsRUFGUTs7O0FBT1YsSUFBQSxHQUFPLFFBQUEsQ0FBQyxNQUFELEVBQUEsR0FBUyxPQUFULENBQUE7U0FDTCxLQUFBLENBQU0sTUFBTixFQUFjLE9BQWQ7QUFESyIsInNvdXJjZXNDb250ZW50IjpbIiMgVGFrZW4gZnJvbSBodHRwczovL2NvZmZlZXNjcmlwdC5vcmcvXG5cbiMgT2JqZWN0czpcbm1hdGggPVxuICByb290OiAgIE1hdGguc3FydFxuICBzcXVhcmU6IHNxdWFyZVxuICBjdWJlOiAgICh4KSAtPiB4ICogc3F1YXJlIHhcblxuIyBTcGxhdHM6XG5yYWNlID0gKHdpbm5lciwgcnVubmVycy4uLikgLT5cbiAgcHJpbnQgd2lubmVyLCBydW5uZXJzXG4iXSwiZmlsZSI6IjAuanMifQ==\n//# sourceURL=webpack-internal:///0\n\n}");
 
 /***/ })
 ],
@@ -322,13 +322,13 @@ eval("{// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\
 ## cheap-module-source-map.js.map
 
 ```json
-{"version":3,"file":"./bundle-cheap-module-source-map.js","mappings":";;;;;;;;;AAEA;;;AAAA;;AACA;AACA;AACA;AACA;AAAA;AAAA;AAFA;;;AAKA;AACA;AADA","sources":["webpack:///./example.coffee"],"sourcesContent":["# Taken from http://coffeescript.org/\n\n# Objects:\nmath =\n  root:   Math.sqrt\n  square: square\n  cube:   (x) -> x * square x\n\n# Splats:\nrace = (winner, runners...) ->\n  print winner, runners\n"],"names":[],"sourceRoot":""}
+{"version":3,"file":"./bundle-cheap-module-source-map.js","mappings":";;;;;;;;;AAEA;;;AAAA;;AACA;AACA;AACA;AACA;AAAA;AAAA;AAFA;;;AAKA;AACA;AADA","sources":["webpack:///./example.coffee"],"sourcesContent":["# Taken from https://coffeescript.org/\n\n# Objects:\nmath =\n  root:   Math.sqrt\n  square: square\n  cube:   (x) -> x * square x\n\n# Splats:\nrace = (winner, runners...) ->\n  print winner, runners\n"],"names":[],"sourceRoot":""}
 ```
 
 ## cheap-source-map.js.map
 
 ```json
-{"version":3,"file":"./bundle-cheap-source-map.js","mappings":";;;;;;;;;AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA","sources":["webpack:///./example.coffee"],"sourcesContent":["// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n"],"names":[],"sourceRoot":""}
+{"version":3,"file":"./bundle-cheap-source-map.js","mappings":";;;;;;;;;AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA","sources":["webpack:///./example.coffee"],"sourcesContent":["// Taken from https://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n"],"names":[],"sourceRoot":""}
 ```
 
 # webpack output
@@ -337,9 +337,9 @@ eval("{// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\
 asset ./runtime~bundle-eval.js 5.08 KiB [emitted] (name: runtime~bundle)
 asset ./bundle-eval.js 1.55 KiB [emitted] (name: bundle)
 Entrypoint bundle 6.63 KiB = ./runtime~bundle-eval.js 5.08 KiB ./bundle-eval.js 1.55 KiB
-chunk (runtime: runtime~bundle) ./bundle-eval.js (bundle) 256 bytes [initial] [rendered]
+chunk (runtime: runtime~bundle) ./bundle-eval.js (bundle) 257 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
-  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 257 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
 chunk (runtime: runtime~bundle) ./runtime~bundle-eval.js (runtime~bundle) 2.15 KiB [entry] [rendered]
@@ -350,9 +350,9 @@ webpack X.X.X compiled successfully
 asset ./runtime~bundle-eval-cheap-source-map.js 5.08 KiB [emitted] (name: runtime~bundle)
 asset ./bundle-eval-cheap-source-map.js 2.22 KiB [emitted] (name: bundle)
 Entrypoint bundle 7.3 KiB = ./runtime~bundle-eval-cheap-source-map.js 5.08 KiB ./bundle-eval-cheap-source-map.js 2.22 KiB
-chunk (runtime: runtime~bundle) ./bundle-eval-cheap-source-map.js (bundle) 256 bytes [initial] [rendered]
+chunk (runtime: runtime~bundle) ./bundle-eval-cheap-source-map.js (bundle) 257 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
-  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 257 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
 chunk (runtime: runtime~bundle) ./runtime~bundle-eval-cheap-source-map.js (runtime~bundle) 2.15 KiB [entry] [rendered]
@@ -361,11 +361,11 @@ chunk (runtime: runtime~bundle) ./runtime~bundle-eval-cheap-source-map.js (runti
 webpack X.X.X compiled successfully
 
 asset ./runtime~bundle-eval-cheap-module-source-map.js 5.08 KiB [emitted] (name: runtime~bundle)
-asset ./bundle-eval-cheap-module-source-map.js 2.35 KiB [emitted] (name: bundle)
-Entrypoint bundle 7.43 KiB = ./runtime~bundle-eval-cheap-module-source-map.js 5.08 KiB ./bundle-eval-cheap-module-source-map.js 2.35 KiB
-chunk (runtime: runtime~bundle) ./bundle-eval-cheap-module-source-map.js (bundle) 256 bytes [initial] [rendered]
+asset ./bundle-eval-cheap-module-source-map.js 2.36 KiB [emitted] (name: bundle)
+Entrypoint bundle 7.44 KiB = ./runtime~bundle-eval-cheap-module-source-map.js 5.08 KiB ./bundle-eval-cheap-module-source-map.js 2.36 KiB
+chunk (runtime: runtime~bundle) ./bundle-eval-cheap-module-source-map.js (bundle) 257 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
-  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 257 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
 chunk (runtime: runtime~bundle) ./runtime~bundle-eval-cheap-module-source-map.js (runtime~bundle) 2.15 KiB [entry] [rendered]
@@ -374,11 +374,11 @@ chunk (runtime: runtime~bundle) ./runtime~bundle-eval-cheap-module-source-map.js
 webpack X.X.X compiled successfully
 
 asset ./runtime~bundle-eval-source-map.js 5.08 KiB [emitted] (name: runtime~bundle)
-asset ./bundle-eval-source-map.js 2.35 KiB [emitted] (name: bundle)
-Entrypoint bundle 7.43 KiB = ./runtime~bundle-eval-source-map.js 5.08 KiB ./bundle-eval-source-map.js 2.35 KiB
-chunk (runtime: runtime~bundle) ./bundle-eval-source-map.js (bundle) 256 bytes [initial] [rendered]
+asset ./bundle-eval-source-map.js 2.36 KiB [emitted] (name: bundle)
+Entrypoint bundle 7.44 KiB = ./runtime~bundle-eval-source-map.js 5.08 KiB ./bundle-eval-source-map.js 2.36 KiB
+chunk (runtime: runtime~bundle) ./bundle-eval-source-map.js (bundle) 257 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
-  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 257 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
 chunk (runtime: runtime~bundle) ./runtime~bundle-eval-source-map.js (runtime~bundle) 2.15 KiB [entry] [rendered]
@@ -387,11 +387,11 @@ chunk (runtime: runtime~bundle) ./runtime~bundle-eval-source-map.js (runtime~bun
 webpack X.X.X compiled successfully
 
 asset ./runtime~bundle-cheap-source-map.js 4.59 KiB [emitted] (name: runtime~bundle) 1 related asset
-asset ./bundle-cheap-source-map.js 953 bytes [emitted] (name: bundle) 1 related asset
-Entrypoint bundle 5.52 KiB (4.51 KiB) = ./runtime~bundle-cheap-source-map.js 4.59 KiB ./bundle-cheap-source-map.js 953 bytes 2 auxiliary assets
-chunk (runtime: runtime~bundle) ./bundle-cheap-source-map.js (bundle) 256 bytes [initial] [rendered]
+asset ./bundle-cheap-source-map.js 954 bytes [emitted] (name: bundle) 1 related asset
+Entrypoint bundle 5.52 KiB (4.51 KiB) = ./runtime~bundle-cheap-source-map.js 4.59 KiB ./bundle-cheap-source-map.js 954 bytes 2 auxiliary assets
+chunk (runtime: runtime~bundle) ./bundle-cheap-source-map.js (bundle) 257 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
-  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 257 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
 chunk (runtime: runtime~bundle) ./runtime~bundle-cheap-source-map.js (runtime~bundle) 2.15 KiB [entry] [rendered]
@@ -400,11 +400,11 @@ chunk (runtime: runtime~bundle) ./runtime~bundle-cheap-source-map.js (runtime~bu
 webpack X.X.X compiled successfully
 
 asset ./runtime~bundle-cheap-module-source-map.js 4.6 KiB [emitted] (name: runtime~bundle) 1 related asset
-asset ./bundle-cheap-module-source-map.js 960 bytes [emitted] (name: bundle) 1 related asset
-Entrypoint bundle 5.54 KiB (4.43 KiB) = ./runtime~bundle-cheap-module-source-map.js 4.6 KiB ./bundle-cheap-module-source-map.js 960 bytes 2 auxiliary assets
-chunk (runtime: runtime~bundle) ./bundle-cheap-module-source-map.js (bundle) 256 bytes [initial] [rendered]
+asset ./bundle-cheap-module-source-map.js 961 bytes [emitted] (name: bundle) 1 related asset
+Entrypoint bundle 5.54 KiB (4.43 KiB) = ./runtime~bundle-cheap-module-source-map.js 4.6 KiB ./bundle-cheap-module-source-map.js 961 bytes 2 auxiliary assets
+chunk (runtime: runtime~bundle) ./bundle-cheap-module-source-map.js (bundle) 257 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
-  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 257 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
 chunk (runtime: runtime~bundle) ./runtime~bundle-cheap-module-source-map.js (runtime~bundle) 2.15 KiB [entry] [rendered]
@@ -413,11 +413,11 @@ chunk (runtime: runtime~bundle) ./runtime~bundle-cheap-module-source-map.js (run
 webpack X.X.X compiled successfully
 
 asset ./runtime~bundle-inline-cheap-source-map.js 9.94 KiB [emitted] (name: runtime~bundle)
-asset ./bundle-inline-cheap-source-map.js 1.63 KiB [emitted] (name: bundle)
-Entrypoint bundle 11.6 KiB = ./runtime~bundle-inline-cheap-source-map.js 9.94 KiB ./bundle-inline-cheap-source-map.js 1.63 KiB
-chunk (runtime: runtime~bundle) ./bundle-inline-cheap-source-map.js (bundle) 256 bytes [initial] [rendered]
+asset ./bundle-inline-cheap-source-map.js 1.64 KiB [emitted] (name: bundle)
+Entrypoint bundle 11.6 KiB = ./runtime~bundle-inline-cheap-source-map.js 9.94 KiB ./bundle-inline-cheap-source-map.js 1.64 KiB
+chunk (runtime: runtime~bundle) ./bundle-inline-cheap-source-map.js (bundle) 257 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
-  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 257 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
 chunk (runtime: runtime~bundle) ./runtime~bundle-inline-cheap-source-map.js (runtime~bundle) 2.15 KiB [entry] [rendered]
@@ -426,11 +426,11 @@ chunk (runtime: runtime~bundle) ./runtime~bundle-inline-cheap-source-map.js (run
 webpack X.X.X compiled successfully
 
 asset ./runtime~bundle-inline-cheap-module-source-map.js 9.95 KiB [emitted] (name: runtime~bundle)
-asset ./bundle-inline-cheap-module-source-map.js 1.52 KiB [emitted] (name: bundle)
-Entrypoint bundle 11.5 KiB = ./runtime~bundle-inline-cheap-module-source-map.js 9.95 KiB ./bundle-inline-cheap-module-source-map.js 1.52 KiB
-chunk (runtime: runtime~bundle) ./bundle-inline-cheap-module-source-map.js (bundle) 256 bytes [initial] [rendered]
+asset ./bundle-inline-cheap-module-source-map.js 1.53 KiB [emitted] (name: bundle)
+Entrypoint bundle 11.5 KiB = ./runtime~bundle-inline-cheap-module-source-map.js 9.95 KiB ./bundle-inline-cheap-module-source-map.js 1.53 KiB
+chunk (runtime: runtime~bundle) ./bundle-inline-cheap-module-source-map.js (bundle) 257 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
-  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 257 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
 chunk (runtime: runtime~bundle) ./runtime~bundle-inline-cheap-module-source-map.js (runtime~bundle) 2.15 KiB [entry] [rendered]
@@ -439,11 +439,11 @@ chunk (runtime: runtime~bundle) ./runtime~bundle-inline-cheap-module-source-map.
 webpack X.X.X compiled successfully
 
 asset ./runtime~bundle-source-map.js 4.59 KiB [emitted] (name: runtime~bundle) 1 related asset
-asset ./bundle-source-map.js 947 bytes [emitted] (name: bundle) 1 related asset
-Entrypoint bundle 5.51 KiB (4.52 KiB) = ./runtime~bundle-source-map.js 4.59 KiB ./bundle-source-map.js 947 bytes 2 auxiliary assets
-chunk (runtime: runtime~bundle) ./bundle-source-map.js (bundle) 256 bytes [initial] [rendered]
+asset ./bundle-source-map.js 948 bytes [emitted] (name: bundle) 1 related asset
+Entrypoint bundle 5.51 KiB (4.52 KiB) = ./runtime~bundle-source-map.js 4.59 KiB ./bundle-source-map.js 948 bytes 2 auxiliary assets
+chunk (runtime: runtime~bundle) ./bundle-source-map.js (bundle) 257 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
-  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 257 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
 chunk (runtime: runtime~bundle) ./runtime~bundle-source-map.js (runtime~bundle) 2.15 KiB [entry] [rendered]
@@ -452,11 +452,11 @@ chunk (runtime: runtime~bundle) ./runtime~bundle-source-map.js (runtime~bundle) 
 webpack X.X.X compiled successfully
 
 asset ./runtime~bundle-inline-source-map.js 9.93 KiB [emitted] (name: runtime~bundle)
-asset ./bundle-inline-source-map.js 1.65 KiB [emitted] (name: bundle)
-Entrypoint bundle 11.6 KiB = ./runtime~bundle-inline-source-map.js 9.93 KiB ./bundle-inline-source-map.js 1.65 KiB
-chunk (runtime: runtime~bundle) ./bundle-inline-source-map.js (bundle) 256 bytes [initial] [rendered]
+asset ./bundle-inline-source-map.js 1.66 KiB [emitted] (name: bundle)
+Entrypoint bundle 11.6 KiB = ./runtime~bundle-inline-source-map.js 9.93 KiB ./bundle-inline-source-map.js 1.66 KiB
+chunk (runtime: runtime~bundle) ./bundle-inline-source-map.js (bundle) 257 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
-  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 257 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
 chunk (runtime: runtime~bundle) ./runtime~bundle-inline-source-map.js (runtime~bundle) 2.15 KiB [entry] [rendered]
@@ -465,11 +465,11 @@ chunk (runtime: runtime~bundle) ./runtime~bundle-inline-source-map.js (runtime~b
 webpack X.X.X compiled successfully
 
 asset ./runtime~bundle-hidden-source-map.js 4.53 KiB [emitted] (name: runtime~bundle) 1 related asset
-asset ./bundle-hidden-source-map.js 901 bytes [emitted] (name: bundle) 1 related asset
-Entrypoint bundle 5.41 KiB (4.53 KiB) = ./runtime~bundle-hidden-source-map.js 4.53 KiB ./bundle-hidden-source-map.js 901 bytes 2 auxiliary assets
-chunk (runtime: runtime~bundle) ./bundle-hidden-source-map.js (bundle) 256 bytes [initial] [rendered]
+asset ./bundle-hidden-source-map.js 902 bytes [emitted] (name: bundle) 1 related asset
+Entrypoint bundle 5.42 KiB (4.53 KiB) = ./runtime~bundle-hidden-source-map.js 4.53 KiB ./bundle-hidden-source-map.js 902 bytes 2 auxiliary assets
+chunk (runtime: runtime~bundle) ./bundle-hidden-source-map.js (bundle) 257 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
-  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 257 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
 chunk (runtime: runtime~bundle) ./runtime~bundle-hidden-source-map.js (runtime~bundle) 2.15 KiB [entry] [rendered]
@@ -478,11 +478,11 @@ chunk (runtime: runtime~bundle) ./runtime~bundle-hidden-source-map.js (runtime~b
 webpack X.X.X compiled successfully
 
 asset ./runtime~bundle-nosources-source-map.js 4.6 KiB [emitted] (name: runtime~bundle) 1 related asset
-asset ./bundle-nosources-source-map.js 957 bytes [emitted] (name: bundle) 1 related asset
-Entrypoint bundle 5.53 KiB (1.21 KiB) = ./runtime~bundle-nosources-source-map.js 4.6 KiB ./bundle-nosources-source-map.js 957 bytes 2 auxiliary assets
-chunk (runtime: runtime~bundle) ./bundle-nosources-source-map.js (bundle) 256 bytes [initial] [rendered]
+asset ./bundle-nosources-source-map.js 958 bytes [emitted] (name: bundle) 1 related asset
+Entrypoint bundle 5.53 KiB (1.21 KiB) = ./runtime~bundle-nosources-source-map.js 4.6 KiB ./bundle-nosources-source-map.js 958 bytes 2 auxiliary assets
+chunk (runtime: runtime~bundle) ./bundle-nosources-source-map.js (bundle) 257 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
-  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 257 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
 chunk (runtime: runtime~bundle) ./runtime~bundle-nosources-source-map.js (runtime~bundle) 2.15 KiB [entry] [rendered]

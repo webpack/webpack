@@ -1,6 +1,6 @@
 This example demonstrates how webpack tracks the usage of ES6 imports and exports. Only used exports are emitted to the resulting bundle. The minimizing step then removes the declarations because they are unused.
 
-Excluding unused exports from bundles is known as "[tree-shaking](http://www.2ality.com/2015/12/webpack-tree-shaking.html)".
+Excluding unused exports from bundles is known as "[tree-shaking](https://www.2ality.com/2015/12/webpack-tree-shaking.html)".
 
 In this example, only `add` and `multiply` in `./math.js` are used by the app. `list` is unused and is not included in the minimized bundle (Look for `Array.from` in the minimized bundle).
 

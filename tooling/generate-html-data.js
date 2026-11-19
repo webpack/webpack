@@ -1,5 +1,5 @@
 /*
-	MIT License http://www.opensource.org/licenses/mit-license.php
+	MIT License https://www.opensource.org/licenses/mit-license.php
 	Author sheo13666q @sheo13666q
 */
 
@@ -2868,7 +2868,7 @@ const EXPORT_NAMES = [
 ].sort();
 
 const source = `/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
+	MIT License https://www.opensource.org/licenses/mit-license.php
 	Author sheo13666q @sheo13666q
 */
 
