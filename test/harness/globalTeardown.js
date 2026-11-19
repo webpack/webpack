@@ -5,11 +5,13 @@
 
 "use strict";
 
+const { stop } = require("../configCases/asset-modules/http-url/server");
 const { remove } = require("../helpers/browserslistConfigPackages");
 const { removeClaims } = require("../helpers/testParts");
 
 module.exports = () => {
 	removeClaims();
+	stop();
 
 	return remove();
 };

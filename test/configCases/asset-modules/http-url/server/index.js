@@ -3,8 +3,6 @@ const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
 
-/** @import { Compiler } from "../../../../../" */
-
 /**
  * @returns {import("http").Server} server instance
  */
@@ -129,101 +127,48 @@ function createServer() {
 	return server;
 }
 
-// The other config suite serves this case on the same port from its own
-// process. Both servers answer alike, so on Linux they share the port: a
-// slow build of one suite, which holds it past the retry window below, then
-// keeps the other waiting no longer. Where the runtime can't share it
-// (Bun, older Node.js), wait for it to close rather than fail, within the
-// compile timeout.
-const REUSE_PORT = process.platform === "linux";
-const LISTEN_RETRY_TIMEOUT = 20000;
-const LISTEN_RETRY_INTERVAL = 100;
+// Ports of the cases this server answers for: `http-url`, `http-url-global-regexp`
+// and `http-url-userinfo`, whose lockfiles name them.
+const PORTS = [9990, 9991, 9992];
+
+/** @type {import("http").Server[]} */
+const servers = [];
 
 /**
- * @param {import("http").Server} server server to start
- * @param {number} port port to listen on
- * @param {number} deadline time after which a busy port is an error
- * @returns {Promise<void>} resolves once the server listens
+ * Starts one server per port in Jest's global setup. Each config suite runs in
+ * its own worker, so a server per worker would make them share the port: one
+ * then waits for the other to free it, or loses connections the kernel queued
+ * on the other's socket when that one closes.
+ * @returns {Promise<void>} resolves once every port is served
  */
-const listen = (server, port, deadline) =>
-	new Promise((resolve, reject) => {
-		/**
-		 * @param {NodeJS.ErrnoException} error listen error
-		 */
-		const onError = (error) => {
-			server.removeListener("listening", onListening);
-			if (error.code === "EADDRINUSE" && Date.now() < deadline) {
-				setTimeout(() => {
-					listen(server, port, deadline).then(resolve, reject);
-				}, LISTEN_RETRY_INTERVAL);
-				return;
-			}
-			reject(error);
-		};
-		const onListening = () => {
-			server.removeListener("error", onError);
-			resolve();
-		};
-		server.once("error", onError);
-		server.once("listening", onListening);
-		server.listen({ port, reusePort: REUSE_PORT });
-	});
+const start = () =>
+	Promise.all(
+		PORTS.map(
+			(port) =>
+				new Promise((resolve, reject) => {
+					const server = createServer();
+					server.once("error", (error) => {
+						// another Jest run on this machine already serves the same files
+						if (/** @type {NodeJS.ErrnoException} */ (error).code === "EADDRINUSE") {
+							return resolve(undefined);
+						}
+						reject(error);
+					});
+					server.listen(port, () => {
+						servers.push(server);
+						resolve(undefined);
+					});
+				})
+		)
+	).then(() => {});
 
-class ServerPlugin {
-	/**
-	 * @param {number} port
-	 */
-	constructor(port) {
-		this.port = port;
-		this.refs = 0;
-		/** @type {import("http").Server | undefined} */
-		this.server = undefined;
-		/** @type {Promise<void> | undefined} */
-		this.listening = undefined;
-	}
+/**
+ * Closes the servers again, once every test file has run. Not awaited: the
+ * servers are unref'd, and a keep-alive connection would delay the callback.
+ * @returns {void}
+ */
+const stop = () => {
+	for (const server of servers.splice(0)) server.close();
+};
 
-	/**
-	 * @param {Compiler} compiler compiler
-	 */
-	apply(compiler) {
-		// `failed` can follow this compiler's `done` when a later `done` tap throws
-		let holding = false;
-		compiler.hooks.beforeRun.tapPromise("ServerPlugin", () => {
-			holding = true;
-			this.refs++;
-			if (!this.server) {
-				this.server = createServer();
-				this.listening = listen(
-					this.server,
-					this.port,
-					Date.now() + LISTEN_RETRY_TIMEOUT
-				);
-			}
-			// every compiler of the run fetches only once the server listens
-			return /** @type {Promise<void>} */ (this.listening);
-		});
-
-		/**
-		 * @param {() => void} callback called once the last compiler let go
-		 */
-		const release = (callback) => {
-			if (!holding) return callback();
-			holding = false;
-			const server = this.server;
-			if (server && --this.refs === 0) {
-				this.server = undefined;
-				this.listening = undefined;
-				server.close(() => callback());
-			} else {
-				callback();
-			}
-		};
-		compiler.hooks.done.tapAsync("ServerPlugin", (_stats, callback) =>
-			release(callback)
-		);
-		// a build that failed reaches no `done`, and would keep the port
-		compiler.hooks.failed.tap("ServerPlugin", () => release(() => {}));
-	}
-}
-
-module.exports = ServerPlugin;
+module.exports = { start, stop };
