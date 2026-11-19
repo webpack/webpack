@@ -1,5 +1,5 @@
 /*
-	MIT License http://www.opensource.org/licenses/mit-license.php
+	MIT License https://www.opensource.org/licenses/mit-license.php
 	Author Alexander Akait @alexander-akait
 */
 
@@ -1501,7 +1501,7 @@ const renderTable = (name, description, ranges, base) =>
  * @returns {string} its source
  */
 const renderHeader = (sources) => `/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
+	MIT License https://www.opensource.org/licenses/mit-license.php
 	Author Alexander Akait @alexander-akait
 */
 

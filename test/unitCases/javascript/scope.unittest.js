@@ -3,7 +3,7 @@
 const { fixture } = require("../../helpers/fixture");
 
 /*
-	MIT License http://www.opensource.org/licenses/mit-license.php
+	MIT License https://www.opensource.org/licenses/mit-license.php
 */
 
 // cspell:ignore Yusuke
@@ -3125,7 +3125,7 @@ describe("ScopeAnalyzer", () => {
 });
 
 /*
-	MIT License http://www.opensource.org/licenses/mit-license.php
+	MIT License https://www.opensource.org/licenses/mit-license.php
 */
 
 "use strict";
