@@ -16,7 +16,7 @@ module.exports = {
 			'if(u)log.push("or");if(u)log.push("and");if(u)log.push("nullish")'
 		);
 		expect(code).toContain("return[1/0,-1/0,{[1/0]:1}[Infinity],Infinity]");
-		expect(code).toContain("return[1/0,-1/0,NaN,a/(1/0),2**2e3]");
+		expect(code).toContain("return[1/0,-1/0,NaN,a/(1/0),1/0]");
 		expect(code).toContain("expect([void 0,void 0]).toEqual");
 		expect(code).toContain("expect([1,3,5])");
 		expect(code).toContain("[f(),f(),(0,o.f)()]");
