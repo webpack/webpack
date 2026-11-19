@@ -1,4 +1,4 @@
-# Taken from http://coffeescript.org/
+# Taken from https://coffeescript.org/
 
 # Objects:
 math =
