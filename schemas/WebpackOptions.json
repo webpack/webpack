@@ -4497,7 +4497,8 @@
       "description": "Options handed as-is to the JavaScript minimizer (terser-compatible). Defaults to `{ compress: { passes: 2 } }`.",
       "type": "object",
       "additionalProperties": true,
-      "added": "5.110.0"
+      "added": "5.110.0",
+      "tsType": "import('../lib/javascript/syntax-printer').MinifyOptions"
     },
     "OptimizationMinimizeOptions": {
       "description": "Enable minimizing the output, configured per asset type. An absent type is minimized with the defaults; `false` disables minimizing it.",
@@ -4562,6 +4563,7 @@
       "description": "What the XML minimizer does. The stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers. An SVG `data:` URL takes these switches too, and an `<svg>` inline in HTML takes `removeMetadata`, `shortenNumbers` and `shortenPathData`.",
       "type": "object",
       "additionalProperties": false,
+      "experimental": true,
       "properties": {
         "anglePrecision": {
           "description": "With `convertTransforms`, round the angle each SVG transform turns by to this many decimal places, a whole number from 0 to 15, as svgo's `degPrecision` does, and recompose what remains within `precision`. Off by default because the drawing turns by what the rounding drops.",
@@ -4840,7 +4842,6 @@
           "added": "5.113.0"
         }
       },
-      "experimental": true,
       "added": "5.112.0"
     },
     "OptimizationNormalized": {

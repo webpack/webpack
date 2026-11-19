@@ -1373,7 +1373,6 @@ export interface Experiments {
 	typescript?:
 		| /** Enable the built-in TypeScript support only when no loader is registered for TypeScript files. */ "auto"
 		| /** Enable/disable the built-in TypeScript support. */ boolean;
-	[key: string]: any;
 }
 
 /**
@@ -3474,7 +3473,8 @@ export interface OptimizationMinimizeHtml {
  * @since 5.110.0
  * @additionalProperties
  */
-export type OptimizationMinimizeJavascript = { [key: string]: any };
+export type OptimizationMinimizeJavascript =
+	import("../lib/javascript/syntax-printer").MinifyOptions;
 
 /**
  * Enable minimizing the output, configured per asset type. An absent type is minimized with the defaults; `false` disables minimizing it.
@@ -5336,7 +5336,6 @@ export type ResolvePluginInstance =
 			 * The run point of the plugin, required method.
 			 */
 			apply: (arg0: import("enhanced-resolve").Resolver) => void;
-			[key: string]: any;
 	  }
 	| ((
 			this: import("enhanced-resolve").Resolver,
@@ -6554,7 +6553,6 @@ export interface WebpackPluginInstance {
 	 * The run point of the plugin, required method.
 	 */
 	apply: import("../lib/webpack").WebpackPluginInstanceApplyFunction;
-	[key: string]: any;
 }
 
 /**

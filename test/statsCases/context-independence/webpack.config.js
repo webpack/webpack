@@ -21,9 +21,6 @@ const base = (name, devtool) => ({
 	stats: {
 		relatedAssets: true
 	},
-	experiments: {
-		layers: true
-	},
 	entry: {
 		main: {
 			import: "./index",

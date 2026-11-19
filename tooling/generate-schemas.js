@@ -910,13 +910,19 @@ const fromTypeNode = (node, known, spoken = 0) => {
 			);
 			const stated = fromDocumentationTags(tags);
 			const carries = description !== "" || Object.keys(stated).length > 0;
+			const body = wrapReference(described, carries);
 			return carries
 				? {
 						...(description ? { description } : {}),
 						...stated,
 						...(tagsAreWholeType(stated)
 							? {}
-							: wrapReference(described, carries))
+							: // WHY: the branch's `@additionalProperties` keeps it open
+								// though the type names only the keys webpack reads.
+								stated.additionalProperties === true &&
+								  body.additionalProperties === false
+								? omit(body, ["additionalProperties"])
+								: body)
 					}
 				: described;
 		});
@@ -1054,8 +1060,11 @@ const fromMembers = (members, known, head) => {
 	const required = [];
 	// WHY: an index signature says nothing a schema keyword does not, so what it
 	// holds is read from the `@additionalProperties` tag rather than from it.
+	// The tag alone keeps the object open, as a typedef's does, so the type can
+	// name only the keys webpack reads while validation still admits the rest.
 	/** @type {Schema | boolean | undefined} */
-	let additionalProperties = false;
+	let additionalProperties =
+		head.additionalProperties === true ? undefined : false;
 	for (const member of members) {
 		if (ts.isIndexSignatureDeclaration(member)) {
 			const valueType = /** @type {ts.TypeNode} */ (member.type);

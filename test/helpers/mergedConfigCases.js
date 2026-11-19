@@ -94,7 +94,10 @@ const webpackConfigOf = (caseDir) => async (env, argv) => {
 			if (!options.output.path) options.output.path = testPath;
 			if (!options.output.filename) {
 				options.output.filename = `bundle${index}${
-					options.output.module || (options.experiments || {}).outputModule
+					options.output.module ||
+					// a configuration written before `output.module` replaced it
+					/** @type {{ outputModule?: boolean }} */ (options.experiments || {})
+						.outputModule
 						? ".mjs"
 						: ".js"
 				}`;

@@ -1501,7 +1501,13 @@ const collectTypes = ({ program, checker, options }) => {
 			};
 		}
 
-		const typeNode = /** @type {TypeWithTypeNode} */ (type)._typeNode;
+		// WHY: `any` is one type shared by every place that resolves to it, so the
+		// node stamped on it last is some other place's, such as a generic
+		// `Head<T>` that came out `any`, and would print there in its stead.
+		const typeNode =
+			type.getFlags() & ts.TypeFlags.Any
+				? undefined
+				: /** @type {TypeWithTypeNode} */ (type)._typeNode;
 		if (type.aliasSymbol) {
 			const fullEscapedName = getFullEscapedName(type.aliasSymbol);
 			if (fullEscapedName.includes("NodeJS.")) {

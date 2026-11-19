@@ -10799,8 +10799,6 @@ declare interface ExistenceOnlyTimeEntryTypesIndex {}
  * Enables/Disables experiments (experimental features with relax SemVer compatibility).
  */
 declare interface Experiments {
-	[index: string]: any;
-
 	/**
 	 * Support WebAssembly as asynchronous EcmaScript Module. `"auto"` (the default) enables it unless a loader is registered for WebAssembly files.
 	 * @since 5.0.0
@@ -12752,7 +12750,8 @@ declare interface GetOptionsMethod<OptionsType> {
 }
 type GivenCompressOptions = Omit<Partial<any>, "globalDefs"> & {
 	globalDefs?: false | object;
-} & TerserCompressAliases;
+} & TerserCompressAliases &
+	TerserOnlyCompressOptions;
 
 /**
  * terser's `format` options as a caller gives them; `sourceMap` is left out,
@@ -12814,11 +12813,6 @@ declare interface GivenFormatOptions {
 	width?: number;
 
 	/**
-	 * whether properties are written in shorthand, undefined until read from `ecma`
-	 */
-	shorthand?: boolean;
-
-	/**
 	 * whether only ASCII is written
 	 */
 	asciiOnly?: boolean;
@@ -12867,6 +12861,11 @@ declare interface GivenFormatOptions {
 	 * whether a shebang is kept
 	 */
 	shebang?: boolean;
+
+	/**
+	 * whether properties are written in shorthand, undefined until read from `ecma`
+	 */
+	shorthand?: boolean;
 
 	/**
 	 * whether the output works around that engine
@@ -26249,14 +26248,6 @@ declare interface OptimizationMinimizeHtml {
 }
 
 /**
- * Options handed as-is to the JavaScript minimizer (terser-compatible). Defaults to `{ compress: { passes: 2 } }`.
- * @since 5.110.0
- */
-declare interface OptimizationMinimizeJavascript {
-	[index: string]: any;
-}
-
-/**
  * Enable minimizing the output, configured per asset type. An absent type is minimized with the defaults; `false` disables minimizing it.
  * @since 5.110.0
  */
@@ -26274,7 +26265,7 @@ declare interface OptimizationMinimizeOptions {
 	/**
 	 * Minimize JavaScript assets: `false` disables it, an object is handed as-is to the JavaScript minimizer.
 	 */
-	javascript?: false | OptimizationMinimizeJavascript;
+	javascript?: false | MinifyOptions;
 
 	/**
 	 * Minimize JSON assets by re-serializing them without whitespace (defaults to `true` with `experiments.futureDefaults`, otherwise `false`).
@@ -30939,7 +30930,6 @@ declare interface ResolveOptionsWebpackOptions {
 		| ""
 		| 0
 		| {
-				[index: string]: any;
 				/**
 				 * The run point of the plugin, required method.
 				 */
@@ -31012,7 +31002,6 @@ type ResolveOptionsWithDependencyType = ResolveOptionsWebpackOptions & {
 };
 type ResolvePluginInstance =
 	| {
-			[index: string]: any;
 			/**
 			 * The run point of the plugin, required method.
 			 */
@@ -36228,6 +36217,177 @@ declare interface TerserMangleAliases {
 }
 
 /**
+ * terser's `compress` options webpack's printer does not read: terser runs
+ * them outside `futureDefaults`, and the printer passes them by.
+ */
+declare interface TerserOnlyCompressOptions {
+	/**
+	 * replace `arguments[index]` with the parameter it names
+	 */
+	arguments?: boolean;
+
+	/**
+	 * write a function as an arrow where it reads the same
+	 */
+	arrows?: boolean;
+
+	/**
+	 * write `true` and `false` as `1` and `0`
+	 */
+	booleans_as_integers?: boolean;
+
+	/**
+	 * simplify expressions read as booleans
+	 */
+	booleans?: boolean;
+
+	/**
+	 * fold a variable used once into its use
+	 */
+	collapse_vars?: boolean;
+
+	/**
+	 * shorten comparisons
+	 */
+	comparisons?: boolean;
+
+	/**
+	 * whether the options left out are on
+	 */
+	defaults?: boolean;
+
+	/**
+	 * drop redundant directives
+	 */
+	directives?: boolean;
+
+	/**
+	 * treat built-in calls as side-effect free
+	 */
+	builtins_pure?: boolean;
+
+	/**
+	 * fold constant expressions
+	 */
+	evaluate?: boolean;
+
+	/**
+	 * keep the completion value of the last statement
+	 */
+	expression?: boolean;
+
+	/**
+	 * hoist function declarations
+	 */
+	hoist_funs?: boolean;
+
+	/**
+	 * hoist properties of a constant object into variables
+	 */
+	hoist_props?: boolean;
+
+	/**
+	 * hoist `var` declarations
+	 */
+	hoist_vars?: boolean;
+
+	/**
+	 * shorten `if` and `return` together
+	 */
+	if_return?: boolean;
+
+	/**
+	 * move a constant to the left of a comparison
+	 */
+	lhs_constants?: boolean;
+
+	/**
+	 * shorten loops whose condition is constant
+	 */
+	loops?: boolean;
+
+	/**
+	 * how many times the compressor runs
+	 */
+	passes?: number;
+
+	/**
+	 * write a computed member with a constant key as a dot member
+	 */
+	properties?: boolean;
+
+	/**
+	 * treat `new` of a built-in as side-effect free
+	 */
+	pure_new?: boolean;
+
+	/**
+	 * inline a function used once
+	 */
+	reduce_funcs?: boolean;
+
+	/**
+	 * inline a variable assigned a constant
+	 */
+	reduce_vars?: boolean;
+
+	/**
+	 * join statements into sequences, at most this many
+	 */
+	sequences?: number | boolean;
+
+	/**
+	 * drop duplicate and unreachable `switch` branches
+	 */
+	switches?: boolean;
+
+	/**
+	 * shorten `typeof` comparisons with `"undefined"`
+	 */
+	typeofs?: boolean;
+
+	/**
+	 * write a function as an arrow even where `this` may differ
+	 */
+	unsafe_arrows?: boolean;
+
+	/**
+	 * reverse comparisons that may read differently for `NaN`
+	 */
+	unsafe_comps?: boolean;
+
+	/**
+	 * compress `Function` calls with constant arguments
+	 */
+	unsafe_Function?: boolean;
+
+	/**
+	 * fold arithmetic that may round differently
+	 */
+	unsafe_math?: boolean;
+
+	/**
+	 * write a method as a shorthand even where it is called as a constructor
+	 */
+	unsafe_methods?: boolean;
+
+	/**
+	 * shorten built-in prototype reads
+	 */
+	unsafe_proto?: boolean;
+
+	/**
+	 * fold regular expressions held by a constant
+	 */
+	unsafe_regexp?: boolean;
+
+	/**
+	 * read `undefined` from a variable
+	 */
+	unsafe_undefined?: boolean;
+}
+
+/**
  * Defines the timestamp and hash type used by this module.
  */
 declare interface TimestampAndHash {
@@ -38129,8 +38289,6 @@ declare class WebpackParser extends SyntaxParser {
  * Plugin instance.
  */
 declare interface WebpackPluginInstance {
-	[index: string]: any;
-
 	/**
 	 * The run point of the plugin, required method.
 	 */
