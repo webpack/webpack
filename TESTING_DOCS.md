@@ -83,7 +83,7 @@ Directories come first, in alphabetical order, then the individual files worth t
 - **Purpose**: Stores sample/mock data used in tests.
 - **Usage**: Helps in creating consistent test cases with predefined inputs.
 - **Syntax fixtures**: `fixtures/<css|html|xml|javascript>/<name>/index.<ext>` is one input to `unitCases/<lang>/invariants.unittest.js`, which snapshots its tokens, parse, errors and prints, and holds it to the relations in `helpers/syntaxInvariants/`: `spans`, `slices` and `purity` for the parser, each cut short inside a construct held to `spans` and `slices` as well (reported as `cut spans` and `cut slices`); idempotence (cuts included), respellings, `notices` and `meaning` for the printer; `behavior` for JavaScript, with a compressing preset's output held to a second pass (`idempotence` under mangling, and `residue`), as `yarn test:invariants:js` holds the corpus; and `scaling` for a fixture built at a size. `notices` asks that the comments a minifier must keep survive (CSS and JavaScript legal notices, HTML conditional comments, server-side includes and `<?…?>`); `meaning` that the output reparses to what its source says (HTML and XML under every preset, CSS under `beautify`, JavaScript under the presets printing alone). XML's notices are the comments its minifier keeps (conditional comments, server-side includes, `<![` and legal notices: a comment opening with `!` or annotated `@license` or `@preserve`), and a compressing JavaScript preset owes only the banner's. Each CSS fixture is also held to `agreement` with css-tree. Which relation holds where, and why: [COMPARE_TOOLS.md](tooling/COMPARE_TOOLS.md). Beside it, read by `helpers/fixture.js`:
-  - `options.json` — print option sets. In JavaScript, `"behavior": true` on a set also runs its print against the source, which must print and throw the same (every script is run that way already under the presets printing alone); any other language throws on the key, having no runtime. `"renderEmbeddedSource": "<name>"` (or `{ "name", "options"?, "async"? }`, `async` answering through a Promise) picks a renderer from `helpers/embeddedRenderers.js`, and `{ "regexp": "<source>", "flags"?: "<flags>" }` stands for a RegExp anywhere in a set. Three keys send a set through `readPrint`:
+  - `options.json` — print option sets. In JavaScript, `"behavior": true` on a set also runs its print against the source, which must print and throw the same (every script is run that way already under the presets printing alone). In HTML it renders the print and the source in the pinned Chrome (`helpers/syntaxInvariants/behavior.js`), at each width of `RENDER_WIDTHS`, and every element's boxes, its `style` attribute and the text a reader sees must match; it marks only a `SourceProcessor` set, and its `expected.json` entries answer for the marked sets alone. CSS and XML throw on the key, having no runtime yet. `"renderEmbeddedSource": "<name>"` (or `{ "name", "options"?, "async"? }`, `async` answering through a Promise) picks a renderer from `helpers/embeddedRenderers.js`, and `{ "regexp": "<source>", "flags"?: "<flags>" }` stands for a RegExp anywhere in a set. Three keys send a set through `readPrint`:
     - `"print": "<name>"` picks the printer: `process` (the default), `processAsync` or the language's minimizer (`cssMinify`, `htmlMinify`, `xmlMinify`, `jsMinify`).
     - `"visit"` takes a visit spec (below) and fires its visitors during a `process` or `processAsync` print.
     - `"minimizer": { "extractComments"?, "sourceMap"?, "buffer"?, "asset"? }` sets the minimizer's other arguments: its `extractComments` argument, an input source map read from a file in the fixture's directory, a `Buffer` asset, and the asset's name (`index.<ext>` by default).
@@ -247,8 +247,10 @@ Jest runs each file in one worker, so a long suite in one file leaves the runner
 
 ### Suites that drive a real browser
 
-`unitCases/ProfilingPlugin.unittest.js`, `specCases/syntaxEquivalence.spectest.js` and
-`WebpackDevServer.longtest.js` launch a browser through `test/helpers/launchBrowser.js`,
+`unitCases/ProfilingPlugin.unittest.js`, `unitCases/html/behavior.unittest.js`,
+`unitCases/html/invariants.unittest.js` (on a fixture marking `"behavior": true`),
+`specCases/syntaxEquivalence.spectest.js` and `WebpackDevServer.longtest.js`
+launch a browser through `test/helpers/launchBrowser.js`,
 which drives all three engines with `playwright-core`.
 **A browser that will not launch fails the suite — it is never skipped**, so no
 environment can report these checks as passing without having run them. The
@@ -286,8 +288,8 @@ Every engine is the build the lockfile pins: the ones the installed
 a new engine arrives in one pull request, and a defect or quirk it fixes fails
 there rather than under unrelated changes.
 
-`test:bun` and `test:deno` run the Chrome-driven `ProfilingPlugin.unittest.js`
-and `WebpackDevServer.longtest.js` too, on the same pinned Chrome.
+`test:bun` and `test:deno` run the Chrome-driven unit suites and
+`WebpackDevServer.longtest.js` too, on the same pinned Chrome.
 
 ### Generated code is held to `output.environment`
 

@@ -34,6 +34,15 @@ const {
  */
 /** @typedef {{ name: string, raw: string, min: string, relax?: Relaxation[] }} Fixture */
 
+// No script runs in a frame and nothing reaches the network, so a page renders
+// the same every time it is loaded; eval is for the suite's own page functions.
+const PAGE_POLICY =
+	"default-src 'none'; script-src 'unsafe-eval'; style-src 'unsafe-inline' data:; img-src data:; font-src data:; media-src data:";
+const POLICED_PAGE = `<!doctype html><html><head><meta http-equiv="Content-Security-Policy" content="${PAGE_POLICY}"></head><body></body></html>`;
+
+// A narrow viewport and a wide one, since media queries switch between them.
+const RENDER_WIDTHS = [360, 1400];
+
 /**
  * Every fixture of one extension under a directory. Synchronous: jest needs one
  * test name per fixture while it collects, which is before it can await.
@@ -3043,6 +3052,8 @@ const cascadeLines = (report) => {
 };
 
 module.exports = {
+	POLICED_PAGE,
+	RENDER_WIDTHS,
 	benchmarkDocuments,
 	benchmarkStylesheets,
 	buildCorpus,

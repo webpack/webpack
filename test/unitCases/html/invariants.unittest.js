@@ -42,12 +42,14 @@ const {
 	invariantFindings,
 	unexplainedScaling
 } = require("../../helpers/syntaxInvariants");
+const { renderBehavior } = require("../../helpers/syntaxInvariants/behavior");
 const { purityRelation } = require("../../helpers/syntaxInvariants/relations");
 const syntax = require("../../helpers/syntaxInvariants/html");
 
 /** @typedef {import("../../../lib/html/syntax-parser").HtmlTokenCallbacks} HtmlTokenCallbacks */
 /** @typedef {import("../../helpers/fixture").ParseEntry} ParseEntry */
 /** @typedef {import("../../helpers/fixture").Printers} Printers */
+/** @typedef {import("../../helpers/syntaxInvariants/relations").Report} Report */
 
 /**
  * @param {string} kind the token kind, or the severity of a parse error
@@ -240,7 +242,20 @@ const PRINTERS = {
 // code.
 describe("HTML syntax — invariants", () => {
 	const all = fixtures("html");
-	for (const { name, dir, source, options, parses, expected } of all) {
+	// Launched by the first marked set only, so a run marking none opens none.
+	const renders = renderBehavior();
+
+	afterAll(() => renders.close());
+
+	for (const {
+		name,
+		dir,
+		source,
+		options,
+		behavior,
+		parses,
+		expected
+	} of all) {
 		describe(name, () => {
 			it("tokenizes", () => {
 				expect(snapshotOf(source, tokenLine(source))).toMatchSnapshot();
@@ -297,11 +312,43 @@ describe("HTML syntax — invariants", () => {
 				});
 			}
 
+			// Opt-in, as each set renders the page twice per width in a browser. One
+			// test answers every marked set, so an entry naming one set is not stale
+			// for the others.
+			if (behavior.length > 0) {
+				it("renders as its source when printed", async () => {
+					/** @type {{ preset: string, report: Report }[]} */
+					const findings = [];
+					for (const one of behavior) {
+						const { code } = /** @type {{ code: string }} */ (
+							new SourceProcessor().process(source, printOptions(one).options)
+						);
+						const reports = await renders.difference(source, code);
+						// A marked source past the budget would hold nothing.
+						expect(reports).not.toBeNull();
+						for (const report of /** @type {Report[]} */ (reports)) {
+							findings.push({ preset: JSON.stringify(one), report });
+						}
+					}
+					expect(
+						unexplained(
+							findings,
+							expected.filter((entry) => entry.relation === "behavior"),
+							source
+						)
+					).toEqual([]);
+				}, 60000);
+			}
+
 			it("holds its invariants", () => {
 				expect(
 					unexplained(
 						invariantFindings(syntax, [[name, source]]),
-						expected,
+						// A fixture marking no set answers no `behavior` entry, so its
+						// entries are stale here.
+						behavior.length > 0
+							? expected.filter((entry) => entry.relation !== "behavior")
+							: expected,
 						source
 					)
 				).toEqual([]);

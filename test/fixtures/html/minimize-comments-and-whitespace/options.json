@@ -5,5 +5,10 @@
 		"extractComments": false,
 		"comments": "@license",
 		"minifyConditionalComments": true
+	},
+	{
+		"mode": "minify",
+		"collapseWhitespace": "smart",
+		"behavior": true
 	}
 ]

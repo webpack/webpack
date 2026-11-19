@@ -79,12 +79,6 @@ const forEngine = (filed) =>
 		})
 	);
 
-// No script runs in a frame and nothing reaches the network, so a page renders
-// the same every time it is loaded; eval is for the suite's own page functions.
-const PAGE_POLICY =
-	"default-src 'none'; script-src 'unsafe-eval'; style-src 'unsafe-inline' data:; img-src data:; font-src data:; media-src data:";
-const POLICED_PAGE = `<!doctype html><html><head><meta http-equiv="Content-Security-Policy" content="${PAGE_POLICY}"></head><body></body></html>`;
-
 // What neither a width nor a frame's color scheme reaches, set by media
 // emulation where the engine offers it; each runs only over the pairs naming it.
 /** @type {{ label: string, named: RegExp, apply: (page: import("playwright-core").Page, on: boolean) => Promise<void> }[]} */
@@ -99,6 +93,8 @@ const EMULATIONS = EMULATES_MEDIA
 	: [];
 
 const {
+	POLICED_PAGE,
+	RENDER_WIDTHS,
 	benchmarkDocuments,
 	benchmarkStylesheets,
 	buildCorpus,
@@ -2831,9 +2827,6 @@ describe("a distant merge keeps every element's cascade", () => {
 	);
 
 });
-
-// A narrow viewport and a wide one, since media queries switch between them.
-const RENDER_WIDTHS = [360, 1400];
 
 // WHY: Chrome 155 lays out no box for an iframe the adoption agency moved —
 // measured: `<b><p><iframe></iframe></b>` gives it 0x0, where Chromium 141
