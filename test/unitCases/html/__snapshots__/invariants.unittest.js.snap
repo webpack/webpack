@@ -55501,6 +55501,50 @@ exports[`HTML syntax — invariants syntax-fuzz-keeps-the-case-of-referrerpolicy
 
 exports[`HTML syntax — invariants syntax-fuzz-keeps-the-case-of-referrerpolicy-where-it-is-not-reflected tokenizes 1`] = `"attr[3,17|19,30]\\" open[0,32|1,2] attr[37,51|53,64]\\" open[32,66|33,36] end=66"`;
 
+exports[`HTML syntax — invariants syntax-fuzz-prints-no-noscript-end-tag-inside-an-open-bogus-comment parses 1`] = `
+"| <html>
+|   <head>
+|     <noscript>
+|       <!--  -->
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-prints-no-noscript-end-tag-inside-an-open-bogus-comment parses 2`] = `"warning[0,10]:expected-doctype-but-got-start-tag warning[10,12]:incorrectly-opened-comment warning[12,12]:eof-in-head-noscript"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-prints-no-noscript-end-tag-inside-an-open-bogus-comment prints {"mode":"minify"} 1`] = `"<noscript><!"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-prints-no-noscript-end-tag-inside-an-open-bogus-comment tokenizes 1`] = `"open[0,10|1,9] warning[10,12]:incorrectly-opened-comment comment[10,12|12,12] end=12"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-prints-no-noscript-end-tag-inside-an-open-comment parses 1`] = `
+"| <html>
+|   <head>
+|     <noscript>
+|       <!-- a -->
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-prints-no-noscript-end-tag-inside-an-open-comment parses 2`] = `"warning[0,10]:expected-doctype-but-got-start-tag error[15,15]:eof-in-comment warning[15,15]:eof-in-head-noscript"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-prints-no-noscript-end-tag-inside-an-open-comment prints {"mode":"minify"} 1`] = `"<noscript><!--a"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-prints-no-noscript-end-tag-inside-an-open-comment tokenizes 1`] = `"open[0,10|1,9] error[15,15]:eof-in-comment comment[10,15|14,15] end=15"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-prints-no-noscript-end-tag-inside-an-open-style parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <noscript>
+|         <style>
+|           \\"p{color:red\\""
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-prints-no-noscript-end-tag-inside-an-open-style parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag warning[31,31]:expected-named-closing-tag-but-got-eof warning[31,31]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-prints-no-noscript-end-tag-inside-an-open-style prints {"mode":"minify"} 1`] = `"<p><noscript><style>p{color:red"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-prints-no-noscript-end-tag-inside-an-open-style tokenizes 1`] = `"open[0,3|1,2] open[3,13|4,12] open[13,20|14,19] text[20,31] end=31"`;
+
 exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-folds-only-ascii-upper-alpha-in-a-doctype parses 1`] = `
 "| <!DOCTYPE html>
 | <html>
