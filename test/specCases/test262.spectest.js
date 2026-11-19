@@ -1904,9 +1904,14 @@ const createRequire = (currentDir, context) =>
 		return module.exports;
 	};
 
+// WHY: a case looping forever blocks its worker, where jest's timeout cannot
+// fire, and the job then runs out of time with no word of which case it was.
+// Bounded, it fails as that case.
+const RUN_TIMEOUT = 10000;
+
 const create262Host = (context) => ({
 	evalScript(code, options = {}) {
-		return vm.runInContext(code, context, options);
+		return vm.runInContext(code, context, { timeout: RUN_TIMEOUT, ...options });
 	},
 	createRealm() {
 		const newSandbox = vm.runInNewContext("this");
@@ -1948,7 +1953,7 @@ const createImportModuleDynamically =
 		// Evaluate here so `import()` resolves to a fully evaluated module (the
 		// Node.js contract for `importModuleDynamically`); otherwise a top-level
 		// `await import(...)` never settles.
-		await module.evaluate();
+		await module.evaluate({ timeout: RUN_TIMEOUT });
 
 		return module;
 	};
@@ -1968,7 +1973,7 @@ const runModule = async (context, code, identifier, testFile, moduleCache) => {
 	});
 
 	await module.link(async () => {});
-	await module.evaluate();
+	await module.evaluate({ timeout: RUN_TIMEOUT });
 
 	return module;
 };
@@ -1993,7 +1998,8 @@ const runScript = async (
 	});
 
 	script.runInContext(context, {
-		displayErrors: true
+		displayErrors: true,
+		timeout: RUN_TIMEOUT
 	});
 
 	await new Promise((resolve) => {

@@ -3497,7 +3497,8 @@ type CodeValue =
 	| number
 	| bigint
 	| boolean
-	| Function
+	| CallableFunction
+	| NewableFunction
 	| RegExp
 	| RuntimeValue
 	| {
@@ -3508,7 +3509,8 @@ type CodeValue =
 				| number
 				| bigint
 				| boolean
-				| Function
+				| CallableFunction
+				| NewableFunction
 				| RegExp
 				| RuntimeValue
 			>;
@@ -3520,12 +3522,21 @@ type CodeValue =
 			| number
 			| bigint
 			| boolean
-			| Function
+			| CallableFunction
+			| NewableFunction
 			| RegExp
 			| RuntimeValue
 	  >[];
 type CodeValuePrimitive =
-	undefined | null | string | number | bigint | boolean | Function | RegExp;
+	| undefined
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| CallableFunction
+	| NewableFunction
+	| RegExp;
 type CollectedComment = CommentImport & { start: number; end: number };
 declare interface Colors {
 	reset: (value?: unknown) => string;
@@ -12498,7 +12509,8 @@ type GeneratedValue =
 	| number
 	| bigint
 	| boolean
-	| Function
+	| CallableFunction
+	| NewableFunction
 	| RegExp
 	| PromiseLike<CodeValuePrimitive>;
 declare class Generator<TModule extends NormalModule = NormalModule> {
@@ -21806,7 +21818,8 @@ type MergedDefinitionNode =
 	| number
 	| bigint
 	| boolean
-	| Function
+	| CallableFunction
+	| NewableFunction
 	| RegExp
 	| RuntimeValue
 	| {
@@ -21817,7 +21830,8 @@ type MergedDefinitionNode =
 				| number
 				| bigint
 				| boolean
-				| Function
+				| CallableFunction
+				| NewableFunction
 				| RegExp
 				| RuntimeValue
 			>;
@@ -21829,7 +21843,8 @@ type MergedDefinitionNode =
 			| number
 			| bigint
 			| boolean
-			| Function
+			| CallableFunction
+			| NewableFunction
 			| RegExp
 			| RuntimeValue
 	  >[]

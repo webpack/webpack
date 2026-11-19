@@ -13,6 +13,7 @@ require("../helpers/warmup-webpack");
  * @typedef {object} TestConfig
  * @property {((i: number, options: import("../../").Configuration) => string | undefined)=} findBundle
  * @property {number=} timeout
+ * @property {number=} compileTimeout the least time each compile of the case gets, for a case a slow runtime takes past the defaults
  * @property {boolean=} noTests
  * @property {boolean=} ecmaConformance hold every emitted asset to `output.environment`, not only webpack's runtime modules — the case's own sources must then stay within it too
  * @property {RegExp[]=} ecmaConformanceExpected findings the case declares deliberate, each with the reason next to it; an entry that stops matching fails the case
@@ -124,6 +125,22 @@ const describeCases = (config) => {
 
 							return;
 						}
+						// Read now, as the compile tests take their timeouts when defined.
+						/** @type {number | undefined} */
+						let compileTimeout;
+						try {
+							compileTimeout = /** @type {TestConfig} */ (
+								require(path.join(testDirectory, "test.config.js"))
+							).compileTimeout;
+						} catch (_err) {
+							// no test config
+						}
+						/**
+						 * @param {number} ms the default time of a compile
+						 * @returns {number} the time this case's compile gets
+						 */
+						const compileTime = (ms) =>
+							testTimeout(Math.max(ms, compileTimeout || 0));
 						/** @type {string[]} */
 						const infraStructureLog = [];
 						/** @type {string[]} */
@@ -406,7 +423,7 @@ const describeCases = (config) => {
 										done();
 									});
 								});
-							}, testTimeout(60000));
+							}, compileTime(60000));
 
 							it(`${testName} should pre-compile to fill disk cache (2nd)`, (done) => {
 								rimraf.sync(outputDirectory);
@@ -504,7 +521,7 @@ const describeCases = (config) => {
 										done();
 									});
 								});
-							}, testTimeout(40000));
+							}, compileTime(40000));
 						}
 
 						it(`${testName} should compile`, (done) => {
@@ -745,7 +762,7 @@ const describeCases = (config) => {
 									/** @type {EXPECTED_ANY} */ (onCompiled)
 								);
 							}
-						}, testTimeout(30000));
+						}, compileTime(30000));
 
 						const {
 							it: _it,

@@ -42,8 +42,8 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
 
-      # The same script, run on the base commit's tree, counts its inferred `any` and untyped identifiers.
-      - name: Collect the base commit's inferred `any` and untyped identifiers
+      # The same script, run on the base commit's tree, counts its untyped identifiers.
+      - name: Collect the base commit's untyped identifiers
         run: |
           git worktree add --detach "$RUNNER_TEMP/base" "$BASE_SHA"
           ln -s "$GITHUB_WORKSPACE/node_modules" "$RUNNER_TEMP/base/node_modules"
