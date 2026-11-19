@@ -483,6 +483,46 @@ const describeCases = (config) => {
 							}
 
 							/**
+							 * Describes where the step's unreported changes went, for the failure message.
+							 * @param {import("../../").Compiler[]} compilers watched compilers
+							 * @returns {string} each child's builds, reports and watcher state
+							 */
+							const describeUnseenChanges = (compilers) =>
+								[
+									...compilers.map((child, index) => {
+										const { watching } = child;
+										const watcher =
+											watching && (watching.watcher || watching.pausedWatcher);
+										const info = watcher && watcher.getInfo && watcher.getInfo();
+										return `child ${index}: ${JSON.stringify({
+											builds:
+												(childBuilds.get(child) || 0) -
+												(childBuildsBeforeStep.get(child) || 0),
+											reported: [...(stepReports.get(child) || [])],
+											watching: watching && {
+												running: watching.running,
+												invalid: watching.invalid,
+												suspended: watching.suspended,
+												blocked: watching.blocked,
+												watcher: watching.watcher
+													? "active"
+													: watching.pausedWatcher
+														? "paused"
+														: "none"
+											},
+											pending: info && {
+												changes: [...(info.changes || [])],
+												removals: [...(info.removals || [])]
+											}
+										})}`;
+									}),
+									// only a case that recovers from errors records what was delivered
+									...(testConfig.watchError
+										? [`delivered: ${JSON.stringify([...receivedChanges])}`]
+										: [])
+								].join("\n");
+
+							/**
 							 * Gives the watcher a new mtime for each change no build reported while idle.
 							 * @param {import("../../").Compiler[]} compilers watched compilers
 							 * @param {number} retries re-touches left before the step fails
@@ -501,7 +541,7 @@ const describeCases = (config) => {
 									if (retries === 0) {
 										return fail(
 											new Error(
-												`No build reported the change to ${[...unseenChanges].join(", ")}`
+												`No build reported the change to ${[...unseenChanges].join(", ")}\n${describeUnseenChanges(compilers)}`
 											)
 										);
 									}
