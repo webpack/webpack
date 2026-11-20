@@ -41,3 +41,11 @@ function afterCall(run) {
 	return read();
 }
 console.log(afterCall(function () {}));
+
+function passed(value) {
+	function read() {
+		return value;
+	}
+	return read();
+}
+console.log(passed("Hello"));
