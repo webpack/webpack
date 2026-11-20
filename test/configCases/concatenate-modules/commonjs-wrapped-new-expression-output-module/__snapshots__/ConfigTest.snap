@@ -2,13 +2,13 @@
 
 exports[`ConfigTestCases concatenate-modules commonjs-wrapped-new-expression-output-module commonjs-wrapped-new-expression-output-module should compile 1`] = `
 "/******/ // The require scope
-/******/ const __webpack_require__ = {};
+/******/ var __webpack_require__ = {};
 /******/ 
 /************************************************************************/
 /******/ /* webpack/runtime/compat get default export */
 /******/ // getDefaultExport function for compatibility with non-harmony modules
 /******/ __webpack_require__.n = (module) => {
-/******/ 	const getter = module?.__esModule ?
+/******/ 	var getter = module?.__esModule ?
 /******/ 		() => (module['default']) :
 /******/ 		() => (module);
 /******/ 	__webpack_require__.d(getter, { a: getter });

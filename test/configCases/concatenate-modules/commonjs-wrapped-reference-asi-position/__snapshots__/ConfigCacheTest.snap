@@ -4,13 +4,13 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-reference-asi
 "/******/ (() => { // webpackBootstrap
 /******/ 	\\"use strict\\";
 /******/ 	// The require scope
-/******/ 	const __webpack_require__ = {};
+/******/ 	var __webpack_require__ = {};
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = (module) => {
-/******/ 		const getter = module && module.__esModule ?
+/******/ 		var getter = module?.__esModule ?
 /******/ 			() => (module['default']) :
 /******/ 			() => (module);
 /******/ 		__webpack_require__.d(getter, { a: getter });
@@ -116,13 +116,13 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-reference-asi
 "/******/ (() => { // webpackBootstrap
 /******/ 	\\"use strict\\";
 /******/ 	// The require scope
-/******/ 	const __webpack_require__ = {};
+/******/ 	var __webpack_require__ = {};
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = (module) => {
-/******/ 		const getter = module && module.__esModule ?
+/******/ 		var getter = module?.__esModule ?
 /******/ 			() => (module['default']) :
 /******/ 			() => (module);
 /******/ 		__webpack_require__.d(getter, { a: getter });
@@ -228,13 +228,13 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-reference-asi
 "/******/ (() => { // webpackBootstrap
 /******/ 	\\"use strict\\";
 /******/ 	// The require scope
-/******/ 	const __webpack_require__ = {};
+/******/ 	var __webpack_require__ = {};
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = (module) => {
-/******/ 		const getter = module && module.__esModule ?
+/******/ 		var getter = module?.__esModule ?
 /******/ 			() => (module['default']) :
 /******/ 			() => (module);
 /******/ 		__webpack_require__.d(getter, { a: getter });
@@ -340,13 +340,13 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-reference-asi
 "/******/ (() => { // webpackBootstrap
 /******/ 	\\"use strict\\";
 /******/ 	// The require scope
-/******/ 	const __webpack_require__ = {};
+/******/ 	var __webpack_require__ = {};
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = (module) => {
-/******/ 		const getter = module && module.__esModule ?
+/******/ 		var getter = module?.__esModule ?
 /******/ 			() => (module['default']) :
 /******/ 			() => (module);
 /******/ 		__webpack_require__.d(getter, { a: getter });

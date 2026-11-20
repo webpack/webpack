@@ -4,7 +4,7 @@ exports[`ConfigTestCases concatenate-modules commonjs-wrapped-assignment-asi-pos
 "/******/ (() => { // webpackBootstrap
 /******/ 	\\"use strict\\";
 /******/ 	// The require scope
-/******/ 	const __webpack_require__ = {};
+/******/ 	var __webpack_require__ = {};
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/concatenation wrap */

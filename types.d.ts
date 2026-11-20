@@ -32479,6 +32479,13 @@ declare abstract class RuntimeTemplate {
 	supportNodePrefixForCoreModules(): boolean;
 
 	/**
+	 * The keyword the runtime declares its variables with: always `var`, which
+	 * ES5 targets show the runtime is correct with, and which lets a minifier
+	 * hoist them and drop the function each runtime module is wrapped in.
+	 */
+	renderRuntimeDeclaration(): "var";
+
+	/**
 	 * Renders node prefix for core module.
 	 */
 	renderNodePrefixForCoreModule(mod: string): string;
