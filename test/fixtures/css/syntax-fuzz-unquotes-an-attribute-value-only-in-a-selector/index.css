@@ -1,0 +1,1 @@
+@scope ([b="c"]){d{e:f}}a[b="c"]{d:e}@media ([="a"]){a[b="c"]{d:e}}

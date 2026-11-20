@@ -33129,7 +33129,7 @@ exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps
 
 exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps-an-attribute-value-the-tokenizer parses 2`] = `"error[18,18]:eof-in-string"`;
 
-exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps-an-attribute-value-the-tokenizer prints {"mode":"minify"} 1`] = `"@unknown [foo=bar];"`;
+exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps-an-attribute-value-the-tokenizer prints {"mode":"minify"} 1`] = `"@unknown [foo=\\"bar\\"];"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps-an-attribute-value-the-tokenizer tokenizes 1`] = `"at-keyword[0,8] whitespace[8,9] left-square-bracket[9,10] ident[10,13] delim[13,14] string[14,18] end=18"`;
 
@@ -33137,7 +33137,7 @@ exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps
 
 exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps-an-attribute-value-the-tokenizer-2 parses 2`] = `"error[18,18]:eof-in-string"`;
 
-exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps-an-attribute-value-the-tokenizer-2 prints {"mode":"minify"} 1`] = `"@unknown [foo=bar];"`;
+exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps-an-attribute-value-the-tokenizer-2 prints {"mode":"minify"} 1`] = `"@unknown [foo=\\"bar\\"];"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps-an-attribute-value-the-tokenizer-2 tokenizes 1`] = `"at-keyword[0,8] whitespace[8,9] left-square-bracket[9,10] ident[10,13] delim[13,14] string[14,18] end=18"`;
 
@@ -33153,7 +33153,7 @@ exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps
 
 exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps-an-attribute-value-the-tokenizer-4 parses 2`] = `"error[19,19]:eof-in-string"`;
 
-exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps-an-attribute-value-the-tokenizer-4 prints {"mode":"minify"} 1`] = `"@unknown [foo=bar];"`;
+exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps-an-attribute-value-the-tokenizer-4 prints {"mode":"minify"} 1`] = `"@unknown [foo=\\"bar\\"];"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps-an-attribute-value-the-tokenizer-4 tokenizes 1`] = `"at-keyword[0,8] whitespace[8,9] left-square-bracket[9,10] ident[10,13] delim[13,14] string[14,19] end=19"`;
 
@@ -33161,7 +33161,7 @@ exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps
 
 exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps-an-attribute-value-the-tokenizer-5 parses 2`] = `""`;
 
-exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps-an-attribute-value-the-tokenizer-5 prints {"mode":"minify"} 1`] = `"@unknown [foo=bar];"`;
+exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps-an-attribute-value-the-tokenizer-5 prints {"mode":"minify"} 1`] = `"@unknown [foo=\\"bar\\"];"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-keeps-an-attribute-value-the-tokenizer-5 tokenizes 1`] = `"at-keyword[0,8] whitespace[8,9] left-square-bracket[9,10] ident[10,13] delim[13,14] string[14,19] end=19"`;
 
@@ -49764,6 +49764,21 @@ exports[`CSS syntax — invariants syntax-fuzz-unquotes-a-string-in-an-unknown-s
 exports[`CSS syntax — invariants syntax-fuzz-unquotes-a-string-in-an-unknown-supports-condition prints {"mode":"minify"} 1`] = `"@supports ([=a]){@view-transition{}}"`;
 
 exports[`CSS syntax — invariants syntax-fuzz-unquotes-a-string-in-an-unknown-supports-condition tokenizes 1`] = `"at-keyword[0,9] whitespace[9,10] left-parenthesis[10,11] left-square-bracket[11,12] delim[12,13] string[13,16] right-square-bracket[16,17] right-parenthesis[17,18] left-curly-bracket[18,19] at-keyword[19,35] comment[35,39] left-curly-bracket[39,40] end=40"`;
+exports[`CSS syntax — invariants syntax-fuzz-keeps-a-string-in-an-unknown-supports-condition parses 1`] = `"[[\\"at-rule\\",\\"supports\\",[\\" \\",[\\"()\\",[\\"[]\\",\\"=\\",[\\"string\\",\\"a\\"]]]],[[\\"at-keyword\\",\\"view-transition\\"],[\\"{}\\"]]]]"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-keeps-a-string-in-an-unknown-supports-condition parses 2`] = `""`;
+
+exports[`CSS syntax — invariants syntax-fuzz-keeps-a-string-in-an-unknown-supports-condition prints {"mode":"minify"} 1`] = `"@supports ([=\\"a\\"]){@view-transition{}}"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-keeps-a-string-in-an-unknown-supports-condition tokenizes 1`] = `"at-keyword[0,9] whitespace[9,10] left-parenthesis[10,11] left-square-bracket[11,12] delim[12,13] string[13,16] right-square-bracket[16,17] right-parenthesis[17,18] left-curly-bracket[18,19] at-keyword[19,35] comment[35,39] left-curly-bracket[39,40] end=40"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-unquotes-an-attribute-value-only-in-a-selector parses 1`] = `"[[\\"at-rule\\",\\"scope\\",[\\" \\",[\\"()\\",[\\"[]\\",[\\"ident\\",\\"b\\"],\\"=\\",[\\"string\\",\\"c\\"]]]],[[\\"ident\\",\\"d\\"],[\\"{}\\",[\\"ident\\",\\"e\\"],\\":\\",[\\"ident\\",\\"f\\"]]]],[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],[\\"[]\\",[\\"ident\\",\\"b\\"],\\"=\\",[\\"string\\",\\"c\\"]]],[[\\"ident\\",\\"d\\"],\\":\\",[\\"ident\\",\\"e\\"]]],[\\"at-rule\\",\\"media\\",[\\" \\",[\\"()\\",[\\"[]\\",\\"=\\",[\\"string\\",\\"a\\"]]]],[[\\"ident\\",\\"a\\"],[\\"[]\\",[\\"ident\\",\\"b\\"],\\"=\\",[\\"string\\",\\"c\\"]],[\\"{}\\",[\\"ident\\",\\"d\\"],\\":\\",[\\"ident\\",\\"e\\"]]]]]"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-unquotes-an-attribute-value-only-in-a-selector parses 2`] = `""`;
+
+exports[`CSS syntax — invariants syntax-fuzz-unquotes-an-attribute-value-only-in-a-selector prints {"mode":"minify"} 1`] = `"@scope([b=c]){d{e:f}}a[b=c]{d:e}@media ([=\\"a\\"]){a[b=c]{d:e}}"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-unquotes-an-attribute-value-only-in-a-selector tokenizes 1`] = `"at-keyword[0,6] whitespace[6,7] left-parenthesis[7,8] left-square-bracket[8,9] ident[9,10] delim[10,11] string[11,14] right-square-bracket[14,15] right-parenthesis[15,16] left-curly-bracket[16,17] ident[17,18] left-curly-bracket[18,19] ident[19,20] colon[20,21] ident[21,22] right-curly-bracket[22,23] right-curly-bracket[23,24] ident[24,25] left-square-bracket[25,26] ident[26,27] delim[27,28] string[28,31] right-square-bracket[31,32] left-curly-bracket[32,33] ident[33,34] colon[34,35] ident[35,36] right-curly-bracket[36,37] at-keyword[37,43] whitespace[43,44] left-parenthesis[44,45] left-square-bracket[45,46] delim[46,47] string[47,50] right-square-bracket[50,51] right-parenthesis[51,52] left-curly-bracket[52,53] ident[53,54] left-square-bracket[54,55] ident[55,56] delim[56,57] string[57,60] right-square-bracket[60,61] left-curly-bracket[61,62] ident[62,63] colon[63,64] ident[64,65] right-curly-bracket[65,66] right-curly-bracket[66,67] end=67"`;
 
 exports[`CSS syntax — invariants the-xml-tool-comparison-should-compare-sorted-attributes-with-embedded parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"path\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"fill\\"],\\":\\",\\" \\",[\\"hash\\",\\"ff0000\\",\\"id\\"],\\" \\"]]]"`;
 
