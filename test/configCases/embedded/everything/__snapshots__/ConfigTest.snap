@@ -27,13 +27,6 @@ exports[`ConfigTestCases embedded everything exported tests keeps an html module
 "
 `;
 
-exports[`ConfigTestCases embedded everything exported tests keeps an svg module of type asset/source as written 1`] = `
-"<svg xmlns=\\"http://www.w3.org/2000/svg\\"   viewBox=\\"0 0 10 10\\">
-	<rect  width=\\"10\\"   height=\\"10\\"  />
-</svg>
-"
-`;
-
 exports[`ConfigTestCases embedded everything exported tests leaves a css data url whose media type names no language 1`] = `".png{background:url(data:image/png;base64,AAAA)}"`;
 
 exports[`ConfigTestCases embedded everything exported tests minifies a css module of type asset/inline 1`] = `
@@ -115,6 +108,8 @@ Object {
   "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMCAxMCI+IDxyZWN0IHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgLz4gPC9zdmc+",
 }
 `;
+
+exports[`ConfigTestCases embedded everything exported tests minifies an svg module of type asset/source 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\"> <rect width=\\"10\\" height=\\"10\\" /> </svg>"`;
 
 exports[`ConfigTestCases embedded everything exported tests minifies an svg subtree in html 1`] = `"<svg viewBox=\\"0 0 2 2\\"> <rect fill=red /> </svg>"`;
 
