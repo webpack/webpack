@@ -12,6 +12,22 @@ it("should resolve a url with a character of the page's encoding", () => {
 	expect(page()).toMatch(/<img src="[^"]+\.svg" alt="€">/);
 });
 
+it("should resolve a url whose query names no character reference", () => {
+	expect(page()).toMatch(/<img src="[^"]+\.svg\?x=1&y=2" alt="query">/);
+});
+
+it("should write an injected attribute a character the encoding lacks", () => {
+	expect(page()).toContain('<meta name="word" content="&#x65e5;">');
+});
+
+it("should hash an injected script as the page holds it", () => {
+	const html = page();
+	const body = /<script>(window\.__word[^<]*)<\/script>/.exec(html)[1];
+	expect(body).toBe('window.__word = "\\u65e5";');
+	const hash = crypto.createHash("sha256").update(body, "utf8").digest("base64");
+	expect(html).toContain(`'sha256-${hash}'`);
+});
+
 it("should keep the characters of an inline stylesheet", () => {
 	expect(page()).toMatch(/content: "€"/);
 });

@@ -64,6 +64,14 @@ describeIf("documentEncoding", () => {
 		});
 	});
 
+	it("should decode a page whose ASCII bytes switch to Japanese", () => {
+		// "日本" in ISO-2022-JP: an escape, then each character as two ASCII bytes
+		const text = "\u001B$BF|K\\\u001B(B";
+		expect(fromDocument(text, "iso-2022-jp")).toBe("日本");
+		expect(fromDocumentWithMap(text, "iso-2022-jp").text).toBe("日本");
+		expect(fromDocument("plain", "iso-2022-jp")).toBe("plain");
+	});
+
 	it("should leave a UTF-16 page's characters as they are", () => {
 		expect(fromDocument("日", "utf-16le")).toBe("日");
 		expect(toDocument("日", "utf-16le", escapeHtmlCodePoint)).toBe("日");
