@@ -34,3 +34,16 @@ function effect(a) {
 	return 7;
 }
 console.log(before(), parameter(), deadParameter(0), setAgain(0), mapped(0), later(0), effect(0));
+
+var updated = [];
+(function () {
+	var counted = 1;
+	var counted = {
+		valueOf: function () {
+			updated.push("valueOf");
+			return 1;
+		}
+	};
+	counted++;
+})();
+console.log(updated);
