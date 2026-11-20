@@ -7,6 +7,7 @@ import { getUrl } from "./shared/url.js";
 import { dup } from "./dup/dup.js";
 import { effect } from "./shared/effect.js";
 import * as namespace from "./shared/namespace.js";
+import * as context from "./shared/context.js";
 
 export const bailouts = () => ({
 	publicPath: getPublicPath(),
@@ -17,5 +18,6 @@ export const bailouts = () => ({
 	url: getUrl(),
 	dup: dup(),
 	effect,
-	keys: Object.keys(namespace).sort()
+	keys: Object.keys(namespace).sort(),
+	context: context.read()
 });
