@@ -15,6 +15,6 @@ module.exports = {
 		expect(code).not.toContain('"two"');
 		expect(code).toContain('if(1===at())log.push("at");else log.push("one")');
 		expect(code).toContain("if(flag)break");
-		expect(code).toContain("log.push(typeof held);var held;");
+		expect(code).toContain('function(log){log.push("undefined");return log}');
 	}
 };

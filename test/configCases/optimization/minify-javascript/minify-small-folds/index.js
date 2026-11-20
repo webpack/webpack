@@ -287,7 +287,7 @@ it("should print a `do` loop forever as `for(;;)` with its body unbraced", () =>
 	var thrown = [];
 	expect(loops(3, thrown)).toBe(7);
 	expect(thrown).toEqual([4, 5, 6]);
-	expect(typeof neverCalled).toBe("function");
+	expect(neverCalled.length).toBe(0);
 });
 
 it("should print a folded `switch` bare in a block keeping its braces", () => {
