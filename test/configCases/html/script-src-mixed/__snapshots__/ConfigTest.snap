@@ -79,7 +79,7 @@ globalThis.__moduleA = moduleA;
 /******/ 		while(i < definition.length) {
 /******/ 			var key = definition[i++];
 /******/ 			var binding = definition[i++];
-/******/ 			var descriptor = binding ? { enumerable: true, get: binding } : { enumerable: true, value: definition[i++] };
+/******/ 			var descriptor = { enumerable: true, [binding ? \\"get\\" : \\"value\\"]: binding || definition[i++] };
 /******/ 			if(!__webpack_require__.o(exports, key)) Object.defineProperty(exports, key, descriptor);
 /******/ 		}
 /******/ 	} else {
@@ -154,8 +154,8 @@ globalThis.__moduleA = moduleA;
 `;
 
 exports[`ConfigTestCases html script-src-mixed exported tests should chain multiple <script type=module src> via dependOn and share modules across them 2`] = `
-"export const __webpack_esm_ids__ = [\\"page-3\\"];
-export const __webpack_esm_modules__ = {
+"export const __webpack_esm_ids__ = [\\"page-3\\"],
+__webpack_esm_modules__ = {
 
 /***/ 942
 /*!*********************!*\\\\
@@ -284,8 +284,8 @@ globalThis.__classicA = \\"classic-a value\\";
 `;
 
 exports[`ConfigTestCases html script-src-mixed exported tests should chain multiple classic <script src> via dependOn 2`] = `
-"export const __webpack_esm_ids__ = [\\"page-2\\"];
-export const __webpack_esm_modules__ = {
+"export const __webpack_esm_ids__ = [\\"page-2\\"],
+__webpack_esm_modules__ = {
 
 /***/ 702
 /*!**********************!*\\\\

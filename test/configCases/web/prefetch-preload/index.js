@@ -12,7 +12,7 @@ it("should prefetch and preload child chunks on chunk load", async () => {
 	expect(link._type).toBe("link");
 	expect(link.rel).toBe("prefetch");
 	expect(link.as).toBe("script");
-	expect(link.charset).toBe("utf-8");
+	expect(link.charset).toBeUndefined();
 	expect(link.href).toBe("https://example.com/public/path/chunk1.js");
 
 	link = document.head._children[1];
@@ -47,7 +47,7 @@ it("should prefetch and preload child chunks on chunk load", async () => {
 	expect(link.rel).toBe("preload");
 	expect(link.as).toBe("script");
 	expect(link.href).toBe("https://example.com/public/path/chunk1-b.js");
-	expect(link.charset).toBe("utf-8");
+	expect(link.charset).toBeUndefined();
 	expect(link.getAttribute("nonce")).toBe("nonce");
 	expect(link.crossOrigin).toBe("anonymous");
 
@@ -63,7 +63,7 @@ it("should prefetch and preload child chunks on chunk load", async () => {
 	expect(link.rel).toBe("preload");
 	expect(link.as).toBe("script");
 	expect(link.href).toBe("https://example.com/public/path/chunk1-a-css.js");
-	expect(link.charset).toBe("utf-8");
+	expect(link.charset).toBeUndefined();
 	expect(link.getAttribute("nonce")).toBe("nonce");
 	expect(link.crossOrigin).toBe("anonymous");
 
@@ -82,7 +82,7 @@ it("should prefetch and preload child chunks on chunk load", async () => {
 	expect(link.rel).toBe("prefetch");
 	expect(link.as).toBe("script");
 	expect(link.href).toBe("https://example.com/public/path/chunk1-c.js");
-	expect(link.charset).toBe("utf-8");
+	expect(link.charset).toBeUndefined();
 	expect(link.crossOrigin).toBe("anonymous");
 
 	link = document.head._children[7];
