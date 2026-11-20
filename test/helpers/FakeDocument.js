@@ -391,6 +391,22 @@ class FakeElement {
 	}
 
 	/**
+	 * @param {...FakeElement} nodes nodes to append, as `ParentNode.append()` does
+	 * @returns {void}
+	 */
+	append(...nodes) {
+		for (const node of nodes) this.appendChild(node);
+	}
+
+	/**
+	 * Detaches the element from its parent, as `ChildNode.remove()` does.
+	 * @returns {void}
+	 */
+	remove() {
+		if (this.parentNode) this.parentNode.removeChild(this);
+	}
+
+	/**
 	 * @param {FakeElement} node node to remove
 	 * @returns {void}
 	 */

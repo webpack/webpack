@@ -185,6 +185,8 @@ describe("snapshots", () => {
 		      "deferImport": false,
 		      "destructuring": true,
 		      "document": true,
+		      "domAppendRemove": false,
+		      "domIterable": false,
 		      "dynamicImport": undefined,
 		      "dynamicImportInWorker": undefined,
 		      "forOf": true,
@@ -199,6 +201,7 @@ describe("snapshots", () => {
 		      "modulePreload": true,
 		      "nodeBuiltinModuleGetter": undefined,
 		      "nodePrefixForCoreModules": true,
+		      "objectAssign": true,
 		      "optionalChaining": true,
 		      "sourceImport": false,
 		      "spread": true,
@@ -754,6 +757,8 @@ describe("snapshots", () => {
 		      "deferImport": false,
 		      "destructuring": true,
 		      "document": true,
+		      "domAppendRemove": false,
+		      "domIterable": false,
 		      "dynamicImport": undefined,
 		      "dynamicImportInWorker": undefined,
 		      "forOf": true,
@@ -768,6 +773,7 @@ describe("snapshots", () => {
 		      "modulePreload": true,
 		      "nodeBuiltinModuleGetter": undefined,
 		      "nodePrefixForCoreModules": true,
+		      "objectAssign": true,
 		      "optionalChaining": true,
 		      "sourceImport": false,
 		      "spread": true,
@@ -2579,9 +2585,10 @@ describe("snapshots", () => {
 		+   "externalsType": "module-import",
 		@@ ... @@
 		-       "document": true,
+		+       "document": false,
+		@@ ... @@
 		-       "dynamicImport": undefined,
 		-       "dynamicImportInWorker": undefined,
-		+       "document": false,
 		+       "dynamicImport": true,
 		+       "dynamicImportInWorker": true,
 		@@ ... @@
@@ -2626,9 +2633,10 @@ describe("snapshots", () => {
 		+       "import",
 		@@ ... @@
 		-       "document": true,
+		+       "document": false,
+		@@ ... @@
 		-       "dynamicImport": undefined,
 		-       "dynamicImportInWorker": undefined,
-		+       "document": false,
 		+       "dynamicImport": true,
 		+       "dynamicImportInWorker": true,
 		@@ ... @@
@@ -2758,9 +2766,10 @@ describe("snapshots", () => {
 		+   "externalsType": "module-import",
 		@@ ... @@
 		-       "document": true,
+		+       "document": false,
+		@@ ... @@
 		-       "dynamicImport": undefined,
 		-       "dynamicImportInWorker": undefined,
-		+       "document": false,
 		+       "dynamicImport": true,
 		+       "dynamicImportInWorker": true,
 		@@ ... @@
@@ -2810,9 +2819,10 @@ describe("snapshots", () => {
 		+       "import",
 		@@ ... @@
 		-       "document": true,
+		+       "document": false,
+		@@ ... @@
 		-       "dynamicImport": undefined,
 		-       "dynamicImportInWorker": undefined,
-		+       "document": false,
 		+       "dynamicImport": true,
 		+       "dynamicImportInWorker": true,
 		@@ ... @@
@@ -2950,9 +2960,10 @@ describe("snapshots", () => {
 		+   "externalsType": "module-import",
 		@@ ... @@
 		-       "document": true,
+		+       "document": false,
+		@@ ... @@
 		-       "dynamicImport": undefined,
 		-       "dynamicImportInWorker": undefined,
-		+       "document": false,
 		+       "dynamicImport": true,
 		+       "dynamicImportInWorker": true,
 		@@ ... @@
@@ -3002,9 +3013,10 @@ describe("snapshots", () => {
 		+       "import",
 		@@ ... @@
 		-       "document": true,
+		+       "document": false,
+		@@ ... @@
 		-       "dynamicImport": undefined,
 		-       "dynamicImportInWorker": undefined,
-		+       "document": false,
 		+       "dynamicImport": true,
 		+       "dynamicImportInWorker": true,
 		@@ ... @@
@@ -3143,9 +3155,10 @@ describe("snapshots", () => {
 		+   "externalsType": "module-import",
 		@@ ... @@
 		-       "document": true,
+		+       "document": false,
+		@@ ... @@
 		-       "dynamicImport": undefined,
 		-       "dynamicImportInWorker": undefined,
-		+       "document": false,
 		+       "dynamicImport": true,
 		+       "dynamicImportInWorker": true,
 		@@ ... @@
@@ -3195,9 +3208,10 @@ describe("snapshots", () => {
 		+       "import",
 		@@ ... @@
 		-       "document": true,
+		+       "document": false,
+		@@ ... @@
 		-       "dynamicImport": undefined,
 		-       "dynamicImportInWorker": undefined,
-		+       "document": false,
 		+       "dynamicImport": true,
 		+       "dynamicImportInWorker": true,
 		@@ ... @@
@@ -3642,9 +3656,10 @@ describe("snapshots", () => {
 			+   "externalsType": "module-import",
 			@@ ... @@
 			-       "document": true,
+			+       "document": false,
+			@@ ... @@
 			-       "dynamicImport": undefined,
 			-       "dynamicImportInWorker": undefined,
-			+       "document": false,
 			+       "dynamicImport": true,
 			+       "dynamicImportInWorker": true,
 			@@ ... @@
@@ -3678,9 +3693,10 @@ describe("snapshots", () => {
 			+       "universal",
 			@@ ... @@
 			-       "document": true,
+			+       "document": false,
+			@@ ... @@
 			-       "dynamicImport": undefined,
 			-       "dynamicImportInWorker": undefined,
-			+       "document": false,
 			+       "dynamicImport": true,
 			+       "dynamicImportInWorker": true,
 			@@ ... @@
@@ -3827,9 +3843,10 @@ describe("snapshots", () => {
 			+   "externalsType": "module-import",
 			@@ ... @@
 			-       "document": true,
+			+       "document": false,
+			@@ ... @@
 			-       "dynamicImport": undefined,
 			-       "dynamicImportInWorker": undefined,
-			+       "document": false,
 			+       "dynamicImport": true,
 			+       "dynamicImportInWorker": true,
 			@@ ... @@
@@ -3863,9 +3880,10 @@ describe("snapshots", () => {
 			+       "universal",
 			@@ ... @@
 			-       "document": true,
+			+       "document": false,
+			@@ ... @@
 			-       "dynamicImport": undefined,
 			-       "dynamicImportInWorker": undefined,
-			+       "document": false,
 			+       "dynamicImport": true,
 			+       "dynamicImportInWorker": true,
 			@@ ... @@
@@ -4000,9 +4018,10 @@ describe("snapshots", () => {
 			+       "bigIntLiteral": false,
 			@@ ... @@
 			-       "document": true,
+			+       "document": false,
+			@@ ... @@
 			-       "dynamicImport": undefined,
 			-       "dynamicImportInWorker": undefined,
-			+       "document": false,
 			+       "dynamicImport": false,
 			+       "dynamicImportInWorker": false,
 			@@ ... @@
@@ -4021,9 +4040,10 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
-			-       "optionalChaining": true,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
+			@@ ... @@
+			-       "optionalChaining": true,
 			+       "optionalChaining": false,
 			@@ ... @@
 			-       "topLevelAwait": true,
@@ -4050,9 +4070,10 @@ describe("snapshots", () => {
 			+       "bigIntLiteral": false,
 			@@ ... @@
 			-       "document": true,
+			+       "document": false,
+			@@ ... @@
 			-       "dynamicImport": undefined,
 			-       "dynamicImportInWorker": undefined,
-			+       "document": false,
 			+       "dynamicImport": false,
 			+       "dynamicImportInWorker": false,
 			@@ ... @@
@@ -4071,9 +4092,10 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
-			-       "optionalChaining": true,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
+			@@ ... @@
+			-       "optionalChaining": true,
 			+       "optionalChaining": false,
 			@@ ... @@
 			-       "topLevelAwait": true,
@@ -4189,9 +4211,10 @@ describe("snapshots", () => {
 			+       "bigIntLiteral": false,
 			@@ ... @@
 			-       "document": true,
+			+       "document": false,
+			@@ ... @@
 			-       "dynamicImport": undefined,
 			-       "dynamicImportInWorker": undefined,
-			+       "document": false,
 			+       "dynamicImport": false,
 			+       "dynamicImportInWorker": false,
 			@@ ... @@
@@ -4210,9 +4233,10 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
-			-       "optionalChaining": true,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
+			@@ ... @@
+			-       "optionalChaining": true,
 			+       "optionalChaining": false,
 			@@ ... @@
 			-       "topLevelAwait": true,
@@ -4239,9 +4263,10 @@ describe("snapshots", () => {
 			+       "bigIntLiteral": false,
 			@@ ... @@
 			-       "document": true,
+			+       "document": false,
+			@@ ... @@
 			-       "dynamicImport": undefined,
 			-       "dynamicImportInWorker": undefined,
-			+       "document": false,
 			+       "dynamicImport": false,
 			+       "dynamicImportInWorker": false,
 			@@ ... @@
@@ -4260,9 +4285,10 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
-			-       "optionalChaining": true,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
+			@@ ... @@
+			-       "optionalChaining": true,
 			+       "optionalChaining": false,
 			@@ ... @@
 			-       "topLevelAwait": true,
@@ -4974,6 +5000,7 @@ describe("snapshots", () => {
 			-       "modulePreload": true,
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
+			-       "objectAssign": true,
 			-       "optionalChaining": true,
 			+       "dynamicImport": false,
 			+       "dynamicImportInWorker": false,
@@ -4989,6 +5016,7 @@ describe("snapshots", () => {
 			+       "modulePreload": false,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
+			+       "objectAssign": false,
 			+       "optionalChaining": false,
 			@@ ... @@
 			-       "spread": true,
@@ -5032,6 +5060,7 @@ describe("snapshots", () => {
 			-       "modulePreload": true,
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
+			-       "objectAssign": true,
 			-       "optionalChaining": true,
 			+       "dynamicImport": false,
 			+       "dynamicImportInWorker": false,
@@ -5047,6 +5076,7 @@ describe("snapshots", () => {
 			+       "modulePreload": false,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
+			+       "objectAssign": false,
 			+       "optionalChaining": false,
 			@@ ... @@
 			-       "spread": true,
@@ -5746,9 +5776,10 @@ describe("snapshots", () => {
 			+   "externalsType": "module-import",
 			@@ ... @@
 			-       "document": true,
+			+       "document": false,
+			@@ ... @@
 			-       "dynamicImport": undefined,
 			-       "dynamicImportInWorker": undefined,
-			+       "document": false,
 			+       "dynamicImport": true,
 			+       "dynamicImportInWorker": true,
 			@@ ... @@
@@ -5808,9 +5839,10 @@ describe("snapshots", () => {
 			+       "async-node",
 			@@ ... @@
 			-       "document": true,
+			+       "document": false,
+			@@ ... @@
 			-       "dynamicImport": undefined,
 			-       "dynamicImportInWorker": undefined,
-			+       "document": false,
 			+       "dynamicImport": true,
 			+       "dynamicImportInWorker": true,
 			@@ ... @@

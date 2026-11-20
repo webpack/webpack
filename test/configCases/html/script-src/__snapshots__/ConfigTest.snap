@@ -83,11 +83,7 @@ module.exports = \\"first entry\\";
 /******/ 		// add \\"modules\\" to the modules object,
 /******/ 		// then flag all \\"ids\\" as loaded and fire callback
 /******/ 		var moduleId, chunkId, i = 0;
-/******/ 		for(moduleId in __webpack_esm_modules__) {
-/******/ 			if(__webpack_require__.o(__webpack_esm_modules__, moduleId)) {
-/******/ 				__webpack_require__.m[moduleId] = __webpack_esm_modules__[moduleId];
-/******/ 			}
-/******/ 		}
+/******/ 		Object.assign(__webpack_require__.m, __webpack_esm_modules__);
 /******/ 		if(__webpack_esm_runtime__) __webpack_esm_runtime__(__webpack_require__);
 /******/ 		for(;i < __webpack_esm_ids__.length; i++) {
 /******/ 			chunkId = __webpack_esm_ids__[i];

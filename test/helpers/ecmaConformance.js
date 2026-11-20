@@ -119,6 +119,7 @@ const NON_SYNTAX = new Set([
 	"dynamicImportInWorker",
 	"globalThis",
 	"hasOwn",
+	"objectAssign",
 	"symbol"
 ]);
 

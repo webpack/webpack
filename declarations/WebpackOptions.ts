@@ -1202,6 +1202,16 @@ export interface Environment {
 	 */
 	document?: boolean;
 	/**
+	 * The environment supports `ChildNode.remove()` and `ParentNode.append()`.
+	 * @since 5.114.0
+	 */
+	domAppendRemove?: boolean;
+	/**
+	 * The environment supports iterating `HTMLCollection` and `NodeList` with 'for of'.
+	 * @since 5.114.0
+	 */
+	domIterable?: boolean;
+	/**
 	 * The environment supports an async import() function to import EcmaScript modules.
 	 */
 	dynamicImport?: boolean;
@@ -1259,6 +1269,11 @@ export interface Environment {
 	 * The environment supports `node:` prefix for Node.js core modules.
 	 */
 	nodePrefixForCoreModules?: boolean;
+	/**
+	 * The environment supports `Object.assign`.
+	 * @since 5.114.0
+	 */
+	objectAssign?: boolean;
 	/**
 	 * The environment supports optional chaining ('obj?.a' or 'obj?.()').
 	 */
