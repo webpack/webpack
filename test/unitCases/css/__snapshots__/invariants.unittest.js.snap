@@ -49764,6 +49764,14 @@ exports[`CSS syntax — invariants syntax-fuzz-unquotes-a-string-in-an-unknown-s
 exports[`CSS syntax — invariants syntax-fuzz-unquotes-a-string-in-an-unknown-supports-condition prints {"mode":"minify"} 1`] = `"@supports ([=a]){@view-transition{}}"`;
 
 exports[`CSS syntax — invariants syntax-fuzz-unquotes-a-string-in-an-unknown-supports-condition tokenizes 1`] = `"at-keyword[0,9] whitespace[9,10] left-parenthesis[10,11] left-square-bracket[11,12] delim[12,13] string[13,16] right-square-bracket[16,17] right-parenthesis[17,18] left-curly-bracket[18,19] at-keyword[19,35] comment[35,39] left-curly-bracket[39,40] end=40"`;
+exports[`CSS syntax — invariants syntax-fuzz-a-supports-condition-drops-a-repeat-its-doubled-parentheses-hid parses 1`] = `"[[\\"at-rule\\",\\"supports\\",[[\\"()\\"],[\\"ident\\",\\"or\\"],\\" \\",[\\"()\\",[\\"()\\",[\\"()\\",[\\"()\\",[\\"()\\"]]]]],[\\"ident\\",\\"or\\"],\\" \\",[\\"()\\",[\\"()\\"]]],[[\\"at-keyword\\",\\"font-feature-values\\"],[\\"string\\",\\"\\"],\\",\\",[\\"ident\\",\\"a\\"],[\\"{}\\"]]]]"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-a-supports-condition-drops-a-repeat-its-doubled-parentheses-hid parses 2`] = `""`;
+
+exports[`CSS syntax — invariants syntax-fuzz-a-supports-condition-drops-a-repeat-its-doubled-parentheses-hid prints {"mode":"minify"} 1`] = `"@supports (){@font-feature-values\\"\\",a{}}"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-a-supports-condition-drops-a-repeat-its-doubled-parentheses-hid tokenizes 1`] = `"at-keyword[0,9] left-parenthesis[9,10] right-parenthesis[10,11] ident[11,13] whitespace[13,14] left-parenthesis[14,15] left-parenthesis[15,16] left-parenthesis[16,17] left-parenthesis[17,18] left-parenthesis[18,19] right-parenthesis[19,20] right-parenthesis[20,21] right-parenthesis[21,22] right-parenthesis[22,23] right-parenthesis[23,24] ident[24,26] whitespace[26,27] left-parenthesis[27,28] left-parenthesis[28,29] right-parenthesis[29,30] right-parenthesis[30,31] left-curly-bracket[31,32] at-keyword[32,52] string[52,54] comma[54,55] ident[55,56] left-curly-bracket[56,57] end=57"`;
+
 exports[`CSS syntax — invariants syntax-fuzz-keeps-a-string-in-an-unknown-supports-condition parses 1`] = `"[[\\"at-rule\\",\\"supports\\",[\\" \\",[\\"()\\",[\\"[]\\",\\"=\\",[\\"string\\",\\"a\\"]]]],[[\\"at-keyword\\",\\"view-transition\\"],[\\"{}\\"]]]]"`;
 
 exports[`CSS syntax — invariants syntax-fuzz-keeps-a-string-in-an-unknown-supports-condition parses 2`] = `""`;
