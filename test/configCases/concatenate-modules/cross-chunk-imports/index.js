@@ -16,7 +16,7 @@ it("should run pages whose shared modules are linked across chunks", async () =>
 	expect(a.run()).toEqual({ html: "[<a>X</a>]", count: 1, ...bailouts });
 	// `count` is a live binding both pages share
 	expect(b.run()).toEqual({ html: "[<b>RANK: 5</b>]", count: 2, ...bailouts });
-	expect(globalThis.linkChunksEffectRuns).toBe(1);
+	expect(globalThis.crossChunkImportsEffectRuns).toBe(1);
 });
 
 it("should hoist the linkable shared modules into one scope with native exports", () => {
@@ -42,7 +42,7 @@ it("should hoist the linkable shared modules into one scope with native exports"
 
 	// each bailout keeps its module in the registry
 	for (const bailout of [
-		"globalThis.linkChunksEffectRuns",
+		"globalThis.crossChunkImportsEffectRuns",
 		"const one = 1;",
 		"typeof __webpack_require__.p",
 		"const dashed = () => ",

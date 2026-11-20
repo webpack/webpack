@@ -12,7 +12,7 @@ const base = (config) => ({
 	...config,
 	optimization: {
 		minimize: false,
-		concatenateModules: { linkChunks: true },
+		concatenateModules: { crossChunkImports: true },
 		splitChunks: {
 			cacheGroups: {
 				shared: {
