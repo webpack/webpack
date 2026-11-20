@@ -130,8 +130,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_issue_1321_issue_1321_debug",
 			"terser compress: properties/accessor_null_undefined",
 			"terser compress: properties/unsafe_methods_regex",
-			"swc exec: terser_reduce_vars_delay_def",
-			"terser compress: reduce_vars/delay_def",
 			"oxc minifier: ecmascript/is_int32_or_uint32.rs:binary_tests:058afa31",
 			"oxc minifier: ecmascript/is_int32_or_uint32.rs:binary_tests:7bd2777e",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:test_binary_expressions:05b9c5f0",
@@ -161,7 +159,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/issue_2914_1",
 			"terser compress: collapse_vars/issue_2914_2",
 			"terser compress: drop-unused/issue_1838",
-			"terser compress: evaluate/unsafe_constant",
 			"terser compress: export/name_cache_do_not_mangle_export_let_name",
 			"terser compress: issue-1656/f7",
 			"terser compress: loops/keep_collapse_const_in_own_block_scope_2",
@@ -347,7 +344,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_issue_1639_issue_1639_1",
 			"swc exec: terser_arrays_for_loop",
 			"swc exec: terser_functions_issue_2898",
-			"swc exec: terser_functions_issue_3016_2",
 			"swc exec: terser_functions_issue_2783",
 			"swc exec: terser_try_catch_catch_destructuring_with_sequence",
 			"swc exec: issue_6903_1",
@@ -808,10 +804,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: functions/recursive_inline_1",
 			"terser compress: functions/issue_2783",
 			"terser compress: functions/issue_2898",
-			"terser compress: functions/issue_3016_2",
-			"terser compress: functions/issue_3016_2_ie8",
-			"terser compress: functions/issue_3016_3",
-			"terser compress: functions/issue_3016_3_ie8",
 			"terser compress: functions/issue_3076"
 		]
 	],
@@ -822,8 +814,7 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: dead-code/dead_code_2_should_warn_strict",
 			"terser compress: dead-code/dead_code_const_annotation_regex",
 			"terser compress: dead-code/dead_code_const_annotation_complex_scope",
-			"terser compress: dead-code/return_assignment",
-			"terser compress: dead-code/issue_2749"
+			"terser compress: dead-code/return_assignment"
 		]
 	],
 	[
@@ -1241,14 +1232,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what terser's `arrays` tests cover",
 		["terser compress: arrays/for_loop"]
-	],
-	[
-		"oxc goes further than webpack on what terser's `big_int` tests cover",
-		["terser compress: big_int/big_int_math"]
-	],
-	[
-		"oxc goes further than webpack on what terser's `comparing` tests cover",
-		["terser compress: comparing/bigint_vs_number"]
 	],
 	[
 		"oxc goes further than webpack on what terser's `issue-1006` tests cover",

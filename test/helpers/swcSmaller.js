@@ -120,7 +120,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/side_effects_assign",
 			"terser compress: reduce_vars/obj_arg_1",
 			"terser compress: reduce_vars/func_arg_1",
-			"terser compress: reduce_vars/func_arg_2",
 			"terser compress: reduce_vars/issue_2423_2",
 			"terser compress: reduce_vars/issue_2423_5",
 			"terser compress: reduce_vars/issue_2423_6",
@@ -161,7 +160,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/pr/7690/input.js",
 			"swc minifier: full/issues/8288/input.js",
 			"terser compress: collapse_vars/issue_2436_3",
-			"terser compress: collapse_vars/issue_2436_5",
 			"terser compress: functions/issue_2616",
 			"terser compress: functions/issue_2630_3",
 			"terser compress: functions/issue_2630_4",
@@ -268,7 +266,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `switch` tests cover",
 		[
-			"terser compress: switch/if_else8",
 			"terser compress: switch/issue_1680_1",
 			"terser compress: switch/issue_1690_2"
 		]
@@ -331,10 +328,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc goes further than webpack on what terser's `drop-unused` tests cover",
-		[
-			"terser compress: drop-unused/drop_fargs",
-			"terser compress: drop-unused/issue_t161_top_retain_14"
-		]
+		["terser compress: drop-unused/issue_t161_top_retain_14"]
 	],
 	[
 		"swc goes further than webpack on what terser's `collapse_vars` tests cover",
@@ -543,7 +537,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: identity/inline_identity_undefined",
 			"terser compress: identity/inline_identity_extra_params",
 			"terser compress: identity/inline_identity_inline_function",
-			"terser compress: identity/inline_identity_duplicate_arg_var",
 			"terser compress: identity/inline_identity_inner_ref",
 			"terser compress: identity/inline_identity_async"
 		]
