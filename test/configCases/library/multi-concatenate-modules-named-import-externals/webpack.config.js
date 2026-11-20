@@ -22,7 +22,7 @@ module.exports = {
 	externalsType: "module",
 	externals: {
 		"externals-1/foo": "fs",
-		"externals-2/foo": "fs-extra"
+		"externals-2/foo": "graceful-fs"
 	},
 	optimization: {
 		concatenateModules: true,
