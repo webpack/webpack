@@ -3175,6 +3175,11 @@ declare interface ChunkRenderContextJavascriptModulesPlugin {
 	 * rendered body of the inlined entry module
 	 */
 	inlinedEntrySource?: Source;
+
+	/**
+	 * rendered bodies of the linked scopes, which an ESM chunk declares at its top level with native exports
+	 */
+	linkedScopeSources?: Source[];
 }
 declare interface ChunkRetainedDependencyIds {
 	[index: number]: ModuleId[];
@@ -5309,6 +5314,13 @@ declare interface ConcatenateModulesOptions {
 	 * Also concatenate CommonJS modules with statically analyzable exports. Defaults to 'true'.
 	 */
 	commonjs?: boolean;
+
+	/**
+	 * Link side-effect-free ES modules that only other chunks import across async chunks with native 'import'/'export', instead of the module registry. Applies to 'output.module' builds only. Defaults to 'false'.
+	 * @since 5.114.0
+	 * @experimental
+	 */
+	crossChunkImports?: boolean;
 }
 type ConcatenatedModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
@@ -11840,6 +11852,11 @@ declare interface ExternalModuleInfo {
 	 */
 	exportsTypeNonStrict?:
 		"namespace" | "dynamic" | "default-only" | "default-with-named";
+
+	/**
+	 * the exported name of each binding referenced from a module linked across chunks, which the chunk imports natively
+	 */
+	linkedImports?: Map<string, string>;
 }
 type ExternalModuleRequest = string | string[] | RequestRecord;
 type Externals =
@@ -20957,6 +20974,21 @@ declare interface LimitChunkCountPluginOptions {
 	 * Limit the maximum number of chunks using a value greater than or equal to 1.
 	 */
 	maxChunks: number;
+}
+
+/**
+ * Where a module linked across chunks lives: the scope it is hoisted into and its position there.
+ */
+declare interface LinkedBinding {
+	/**
+	 * the module whose top-level scope declares the linked module's bindings
+	 */
+	scope: Module;
+
+	/**
+	 * the linked module's position among the modules the scope exposes
+	 */
+	index: number;
 }
 
 /**
@@ -32964,6 +32996,10 @@ declare abstract class RuntimeTemplate {
 		 * true, when a whole-namespace value may use a decoupled namespace object that keeps the original export names
 		 */
 		mangleableNamespace?: boolean;
+		/**
+		 * chunk init fragments, which import the export of a module linked across chunks
+		 */
+		chunkInitFragments?: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
 	}): string;
 
 	/**
@@ -38839,6 +38875,16 @@ declare namespace exports {
 		 * module-level names a module keeps declared and mirrors to the chunk's scope on each write
 		 */
 		liveSetters?: Map<string, LiveBinding>;
+
+		/**
+		 * where a module linked across chunks is hoisted (see `optimization.concatenateModules.crossChunkImports`)
+		 */
+		linkedBinding?: LinkedBinding;
+
+		/**
+		 * the module is rendered at its chunk's top level with native exports instead of in the registry
+		 */
+		linkedScope?: boolean;
 	}
 
 	/**
