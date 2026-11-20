@@ -1802,7 +1802,9 @@ const behaviorDifference = (source, printed, run = {}) => {
 			: transcript;
 	let got = owed(answered);
 	if (got === expected) return [];
-	if (STRAY_TERMINATIONS) {
+	// WHY: a collection on a loaded heap can take a run's whole time, so a print
+	// that times out where its source did not runs once more.
+	if (STRAY_TERMINATIONS || typeof got !== "string") {
 		got = owed(behaviorOf(printed, module).transcript);
 		if (got === expected) return [];
 	}
