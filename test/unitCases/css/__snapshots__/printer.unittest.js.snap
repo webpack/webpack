@@ -1986,7 +1986,7 @@ content: '\\\\'\\"\\\\\\\\';
 }@media print and (min-resolution: 300x) {
 }div {
 prop: [];
-prop: [];
+prop: [ ];
 prop: [row1-start];
 prop: [row1-start-with-spaces-around];
 prop: [red #fff 12px];

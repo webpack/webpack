@@ -49788,6 +49788,32 @@ exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-style-query-keeps-its
 
 exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-style-query-keeps-its-parenthesis tokenizes 1`] = `"at-keyword[0,10] whitespace[10,11] function[11,17] left-parenthesis[17,18] right-parenthesis[18,19] end=19"`;
 
+exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-a-comment-between-two-tokens parses 1`] = `"[[\\"qualified rule\\",[[\\"()\\",[\\"ident\\",\\"a\\"],[\\"ident\\",\\"a\\"]]],[]]]"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-a-comment-between-two-tokens parses 2`] = `""`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-a-comment-between-two-tokens prints {"mode":"beautify"} 1`] = `
+"(a/**/a) {
+}"
+`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-a-comment-between-two-tokens prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-a-comment-between-two-tokens tokenizes 1`] = `"left-parenthesis[0,1] ident[1,2] comment[2,6] ident[6,7] right-parenthesis[7,8] left-curly-bracket[8,9] end=9"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-the-space-in-an-empty-media-condition parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"()\\",[\\"()\\",\\" \\"]]],[]]]"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-the-space-in-an-empty-media-condition parses 2`] = `""`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-the-space-in-an-empty-media-condition prints {"mode":"beautify"} 1`] = `
+"@media (( )) {
+}"
+`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-the-space-in-an-empty-media-condition prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-the-space-in-an-empty-media-condition tokenizes 1`] = `"at-keyword[0,6] whitespace[6,7] left-parenthesis[7,8] left-parenthesis[8,9] whitespace[9,10] right-parenthesis[10,11] right-parenthesis[11,12] left-curly-bracket[12,13] end=13"`;
+
 exports[`CSS syntax — invariants syntax-fuzz-keeps-a-string-in-an-unknown-supports-condition parses 1`] = `"[[\\"at-rule\\",\\"supports\\",[\\" \\",[\\"()\\",[\\"[]\\",\\"=\\",[\\"string\\",\\"a\\"]]]],[[\\"at-keyword\\",\\"view-transition\\"],[\\"{}\\"]]]]"`;
 
 exports[`CSS syntax — invariants syntax-fuzz-keeps-a-string-in-an-unknown-supports-condition parses 2`] = `""`;
