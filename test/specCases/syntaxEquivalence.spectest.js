@@ -3024,11 +3024,24 @@ describe("a minified page renders as the page it came from", () => {
 	let unrecovered;
 	let skipAdoptedIframes = false;
 
-	// WHY: a WebKit run never returned from one wpt/css batch, and every later
-	// test then waited behind it on the same page. Past a deadline the batch is
-	// rendered again a pair at a time, on a fresh page, to name what never ends.
+	// WHY: a WebKit run never returned from one wpt/css batch, and a Firefox one
+	// stalled on fresh pages too. Past a deadline a new browser renders the batch
+	// again, then a pair at a time, to name what never ends.
 	const BATCH_DEADLINE = 40000;
 	const PAIR_DEADLINE = 20000;
+	// closing a stalled browser and launching a new one, which a render's
+	// deadline leaves room for so the test reports before Jest's timeout
+	const RELAUNCH_ALLOWANCE = 30000;
+	// what a failed relaunch leaves the test to report it in
+	const REPORT_ALLOWANCE = 5000;
+	let testStart = 0;
+
+	/** @returns {number} milliseconds the running test has before Jest's timeout */
+	const timeLeft = () => testStart + FILE_TIMEOUT - Date.now();
+
+	beforeEach(() => {
+		testStart = Date.now();
+	});
 
 	/** @returns {Promise<import("playwright-core").Page>} a page ready to render in */
 	const openPage = async () => {
@@ -3081,10 +3094,21 @@ describe("a minified page renders as the page it came from", () => {
 		const reports = await within(pending, deadline);
 		if (reports === undefined) {
 			pending.catch(() => {});
-			const stuck = page;
-			await within(stuck.close(), PAIR_DEADLINE).catch(() => {});
+			const stuck = browser;
+			await within(
+				stuck.close(),
+				Math.min(PAIR_DEADLINE, timeLeft() - REPORT_ALLOWANCE)
+			).catch(() => {});
 			try {
-				page = await openPage();
+				const relaunched = await within(
+					(async () => {
+						browser = await launchBrowser({ browser: ENGINE });
+						page = await openPage();
+						return true;
+					})(),
+					timeLeft() - REPORT_ALLOWANCE
+				);
+				if (!relaunched) throw new Error("no time left to relaunch the browser");
 			} catch (error) {
 				unrecovered = new Error(
 					`no page to render in once ${batch.map(({ name }) => name).join(", ")} ran past ${deadline}ms`,
@@ -3103,17 +3127,34 @@ describe("a minified page renders as the page it came from", () => {
 	const differing = async (pairs) => {
 		/** @type {string[]} */
 		const out = [];
+		/**
+		 * @param {number} deadline how long a render may take, in milliseconds
+		 * @returns {number} that deadline, cut to what the test has left after a relaunch
+		 */
+		const fitting = (deadline) =>
+			Math.min(deadline, timeLeft() - RELAUNCH_ALLOWANCE);
 		for (const width of RENDER_WIDTHS) {
 			for (let at = 0; at < pairs.length; at += 20) {
 				const batch = pairs.slice(at, at + 20);
-				let reports = await renderWithin(batch, width, BATCH_DEADLINE);
+				/** @type {import("../helpers/syntaxEquivalence").RenderReport[] | undefined} */
+				let reports;
+				for (let attempt = 0; attempt < 2 && reports === undefined; attempt++) {
+					const deadline = fitting(BATCH_DEADLINE);
+					if (deadline <= 0) break;
+					reports = await renderWithin(batch, width, deadline);
+				}
 				if (reports === undefined) {
 					reports = [];
 					for (const pair of batch) {
-						const one = await renderWithin([pair], width, PAIR_DEADLINE);
+						const deadline = fitting(PAIR_DEADLINE);
+						if (deadline <= 0) {
+							out.push(`${width}px ${pair.name}: no time left to render it`);
+							continue;
+						}
+						const one = await renderWithin([pair], width, deadline);
 						if (one === undefined) {
 							out.push(
-								`${width}px ${pair.name}: no render within ${PAIR_DEADLINE}ms`
+								`${width}px ${pair.name}: no render within ${deadline}ms`
 							);
 						} else {
 							reports.push(...one);
