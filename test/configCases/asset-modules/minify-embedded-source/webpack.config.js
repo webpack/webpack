@@ -26,7 +26,11 @@ module.exports = {
 						(source, { type }) => {
 							if (type !== "svg") return source;
 							const text = /** @type {string} */ (source.source());
-							return new RawSource(text.replace(/\s+/g, " ").trim());
+							// Handed back Buffer-backed, as a tap may: the export must still be
+							// the text, not the Buffer.
+							return new RawSource(
+								Buffer.from(text.replace(/\s+/g, " ").trim())
+							);
 						}
 					);
 					compilation.hooks.embeddedSourceHash.tap("Minify", (_m, hash) =>
