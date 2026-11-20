@@ -28,6 +28,14 @@ it("should hash an injected script as the page holds it", () => {
 	expect(html).toContain(`'sha256-${hash}'`);
 });
 
+it("should hash a tag a plugin turned into a script as it is written", () => {
+	const html = page();
+	const body = /<script>(window\.__late[^<]*)<\/script>/.exec(html)[1];
+	expect(body).toBe('window.__late = "\\u65e5";');
+	const hash = crypto.createHash("sha256").update(body, "utf8").digest("base64");
+	expect(html).toContain(`'sha256-${hash}'`);
+});
+
 it("should keep the characters of an inline stylesheet", () => {
 	expect(page()).toMatch(/content: "€"/);
 });

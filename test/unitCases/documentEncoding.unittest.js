@@ -77,3 +77,14 @@ describeIf("documentEncoding", () => {
 		expect(toDocument("日", "utf-16le", escapeHtmlCodePoint)).toBe("日");
 	});
 });
+
+describe("HtmlGenerator.getFileUrlForms", () => {
+	const HtmlGenerator = require("../../lib/html/HtmlGenerator");
+
+	it("should list the url a page not in UTF-8 writes", () => {
+		const forms = HtmlGenerator.getFileUrlForms("café[1] a.js");
+		expect(forms).toContain("café[1] a.js");
+		expect(forms).toContain("café[1]%20a.js");
+		expect(forms).toContain("caf%C3%A9[1]%20a.js");
+	});
+});

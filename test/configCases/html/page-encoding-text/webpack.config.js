@@ -26,8 +26,17 @@ module.exports = {
 						...tags,
 						// "日" is no character of windows-1252
 						{ tag: "meta", attrs: { name: "word", content: "日" } },
-						{ tag: "script", children: 'window.__word = "日";' }
+						{ tag: "script", children: 'window.__word = "日";' },
+						{ tag: "template", children: 'window.__late = "日";' }
 					]
+				);
+				HtmlModulesPlugin.getCompilationHooks(compilation).transformTags.tap(
+					"InjectUnicode",
+					(tags) => {
+						for (const tag of tags) {
+							if (tag.tag === "template") tag.tag = "script";
+						}
+					}
 				);
 			});
 		}
