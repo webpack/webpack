@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add the `objectAssign`, `domIterable` and `domAppendRemove` environment flags.
+Shrink the runtime and add `objectAssign`, `domIterable` and `domAppendRemove`.

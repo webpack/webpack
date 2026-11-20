@@ -201,7 +201,7 @@ describe("snapshots", () => {
 		      "modulePreload": true,
 		      "nodeBuiltinModuleGetter": undefined,
 		      "nodePrefixForCoreModules": true,
-		      "objectAssign": true,
+		      "objectAssign": undefined,
 		      "optionalChaining": true,
 		      "sourceImport": false,
 		      "spread": true,
@@ -773,7 +773,7 @@ describe("snapshots", () => {
 		      "modulePreload": true,
 		      "nodeBuiltinModuleGetter": undefined,
 		      "nodePrefixForCoreModules": true,
-		      "objectAssign": true,
+		      "objectAssign": undefined,
 		      "optionalChaining": true,
 		      "sourceImport": false,
 		      "spread": true,
@@ -2603,6 +2603,9 @@ describe("snapshots", () => {
 		-       "module": undefined,
 		+       "module": true,
 		@@ ... @@
+		-       "objectAssign": undefined,
+		+       "objectAssign": true,
+		@@ ... @@
 		-     "target": "web",
 		+     "target": "deno",
 		@@ ... @@
@@ -2650,6 +2653,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "module": undefined,
 		+       "module": true,
+		@@ ... @@
+		-       "objectAssign": undefined,
+		+       "objectAssign": true,
 		@@ ... @@
 		-     "filename": "[name].js",
 		-     "globalObject": "self",
@@ -2789,6 +2795,9 @@ describe("snapshots", () => {
 		-       "nodeBuiltinModuleGetter": undefined,
 		+       "nodeBuiltinModuleGetter": false,
 		@@ ... @@
+		-       "objectAssign": undefined,
+		+       "objectAssign": true,
+		@@ ... @@
 		-     "target": "web",
 		+     "target": "deno",
 		@@ ... @@
@@ -2841,6 +2850,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "nodeBuiltinModuleGetter": undefined,
 		+       "nodeBuiltinModuleGetter": false,
+		@@ ... @@
+		-       "objectAssign": undefined,
+		+       "objectAssign": true,
 		@@ ... @@
 		-     "filename": "[name].js",
 		-     "globalObject": "self",
@@ -2983,6 +2995,9 @@ describe("snapshots", () => {
 		-       "nodeBuiltinModuleGetter": undefined,
 		+       "nodeBuiltinModuleGetter": true,
 		@@ ... @@
+		-       "objectAssign": undefined,
+		+       "objectAssign": true,
+		@@ ... @@
 		-     "target": "web",
 		+     "target": "bun",
 		@@ ... @@
@@ -3035,6 +3050,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "nodeBuiltinModuleGetter": undefined,
 		+       "nodeBuiltinModuleGetter": true,
+		@@ ... @@
+		-       "objectAssign": undefined,
+		+       "objectAssign": true,
 		@@ ... @@
 		-     "filename": "[name].js",
 		-     "globalObject": "self",
@@ -3178,6 +3196,9 @@ describe("snapshots", () => {
 		-       "nodeBuiltinModuleGetter": undefined,
 		+       "nodeBuiltinModuleGetter": true,
 		@@ ... @@
+		-       "objectAssign": undefined,
+		+       "objectAssign": true,
+		@@ ... @@
 		-     "target": "web",
 		+     "target": "bun",
 		@@ ... @@
@@ -3230,6 +3251,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "nodeBuiltinModuleGetter": undefined,
 		+       "nodeBuiltinModuleGetter": true,
+		@@ ... @@
+		-       "objectAssign": undefined,
+		+       "objectAssign": true,
 		@@ ... @@
 		-     "filename": "[name].js",
 		-     "globalObject": "self",
@@ -4040,10 +4064,11 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
+			-       "objectAssign": undefined,
+			-       "optionalChaining": true,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
-			@@ ... @@
-			-       "optionalChaining": true,
+			+       "objectAssign": true,
 			+       "optionalChaining": false,
 			@@ ... @@
 			-       "topLevelAwait": true,
@@ -4092,10 +4117,11 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
+			-       "objectAssign": undefined,
+			-       "optionalChaining": true,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
-			@@ ... @@
-			-       "optionalChaining": true,
+			+       "objectAssign": true,
 			+       "optionalChaining": false,
 			@@ ... @@
 			-       "topLevelAwait": true,
@@ -4233,10 +4259,11 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
+			-       "objectAssign": undefined,
+			-       "optionalChaining": true,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
-			@@ ... @@
-			-       "optionalChaining": true,
+			+       "objectAssign": true,
 			+       "optionalChaining": false,
 			@@ ... @@
 			-       "topLevelAwait": true,
@@ -4285,10 +4312,11 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
+			-       "objectAssign": undefined,
+			-       "optionalChaining": true,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
-			@@ ... @@
-			-       "optionalChaining": true,
+			+       "objectAssign": true,
 			+       "optionalChaining": false,
 			@@ ... @@
 			-       "topLevelAwait": true,
@@ -5000,7 +5028,7 @@ describe("snapshots", () => {
 			-       "modulePreload": true,
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
-			-       "objectAssign": true,
+			-       "objectAssign": undefined,
 			-       "optionalChaining": true,
 			+       "dynamicImport": false,
 			+       "dynamicImportInWorker": false,
@@ -5060,7 +5088,7 @@ describe("snapshots", () => {
 			-       "modulePreload": true,
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
-			-       "objectAssign": true,
+			-       "objectAssign": undefined,
 			-       "optionalChaining": true,
 			+       "dynamicImport": false,
 			+       "dynamicImportInWorker": false,
@@ -5798,8 +5826,10 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
+			-       "objectAssign": undefined,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
+			+       "objectAssign": true,
 			@@ ... @@
 			-       "topLevelAwait": true,
 			+       "topLevelAwait": false,
@@ -5861,8 +5891,10 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
+			-       "objectAssign": undefined,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
+			+       "objectAssign": true,
 			@@ ... @@
 			-       "topLevelAwait": true,
 			+       "topLevelAwait": false,
