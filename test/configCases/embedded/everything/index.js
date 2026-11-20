@@ -149,7 +149,8 @@ it("keeps a json module of type asset/source as written", () => {
 	expect(sourceJson).toMatchSnapshot();
 });
 
-it("keeps an svg module of type asset/source as written", () => {
+// SVG is markup to render rather than data, so it is minified.
+it("minifies an svg module of type asset/source", () => {
 	expect(sourceSvg).toMatchSnapshot();
 });
 
