@@ -993,7 +993,6 @@ const INHERITED = {
  * @type {Record<string, number>}
  */
 const TERSER_TOTAL_BUDGET = {
-	"terser compress": 1.0593,
 	"swc exec": 1.053
 };
 

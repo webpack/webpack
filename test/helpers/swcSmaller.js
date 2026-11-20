@@ -18,6 +18,7 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than swc's: `,` where swc keeps `;` between statements, operand order, `{0}` for an empty body",
 		[
+			"swc minifier: fixture/issues/do-while-false-control-flow/input.js",
 			"terser compress: reduce_vars/escaped_prop_3",
 			"terser compress: destructuring/issue_t111_2a",
 			"terser compress: destructuring/issue_t111_2b",
@@ -93,7 +94,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: template-string/tagged_template_with_invalid_escape",
 			"terser compress: yield/issue_2832",
 			"swc minifier: fixture/issues/11084/input.js",
-			"swc minifier: fixture/issues/11089/input.js",
 			"swc minifier: fixture/issues/11684/identifier-aliases/input.js",
 			"swc minifier: fixture/issues/12182/callee-safety/direct-eval/input.js",
 			"swc minifier: fixture/issues/12305/input.js",
@@ -322,8 +322,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/10816/input.js",
 			"swc minifier: fixture/issues/12118/input.js",
 			"swc minifier: fixture/issues/2614/1/input.js",
-			"swc minifier: fixture/issues/6422/1/input.js",
-			"swc minifier: fixture/issues/6864/input.js"
+			"swc minifier: fixture/issues/6422/1/input.js"
 		]
 	],
 	[
@@ -741,13 +740,11 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/react/9/input.js",
 			"swc minifier: fixture/issues/9650/input.js",
 			"swc minifier: fixture/issues/10041/input.js",
-			"swc minifier: fixture/issues/12545/fn_rest_loop/input.js",
 			"swc minifier: fixture/issues/4386/2/input.js",
 			"swc minifier: fixture/issues/9504/input.js",
 			"swc minifier: fixture/issues/moment/1/input.js",
 			"swc minifier: fixture/issues/object-accessor-function-boundary/input.js",
 			"swc minifier: fixture/issues/vercel/006/input.js",
-			"swc minifier: fixture/next/31077/static/chunks/1606726a.10299989c08cb523/input.js",
 			"swc minifier: fixture/projects/jquery/1/input.js",
 			"swc minifier: fixture/projects/mootools/6/input.js",
 			"swc minifier: projects/files/jquery-1.9.1.js"
@@ -767,7 +764,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/11730_class_expr/input.js",
 			"swc minifier: fixture/issues/12204/empty-controls/input.js",
 			"swc minifier: fixture/issues/12204/nullish-arguments/input.js",
-			"swc minifier: fixture/issues/12212/safe-unused-rest/input.js",
 			"swc minifier: fixture/issues/9741_global_objects/input.js",
 			"swc minifier: fixture/projects/jquery/5/input.js"
 		]
@@ -939,7 +935,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what swc's `fixture/issues` tests cover",
 		[
-			"swc minifier: fixture/issues/12587/input.js",
 			"swc minifier: fixture/issues/12643/input.js",
 			"swc minifier: fixture/issues/12643/runtime/input.js",
 			"swc minifier: fixture/issues/12669/another/input.js",
