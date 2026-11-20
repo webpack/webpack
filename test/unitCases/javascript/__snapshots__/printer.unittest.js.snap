@@ -37,7 +37,7 @@ default:m()}}"
 
 exports[`JavaScript minifier printing a SyntaxTree should keep the names a global pattern keeps, however often it is asked 1`] = `"function keepMe(){}function keepToo(){}function e(){}g(keepMe,keepToo,e),g(keepMe,keepToo,e);"`;
 
-exports[`JavaScript minifier printing a SyntaxTree should map every statement a sequence joins, into a \`return\` too 1`] = `"function f(o){return g(o),function(){h(arguments)}(),k(o.x),m(o.y),n(o)}a(),b(),f();"`;
+exports[`JavaScript minifier printing a SyntaxTree should map every statement a sequence joins, into a \`return\` too 1`] = `"function f(o){return g(o),function(){h(arguments)}(),k(o.x),m(o.y),n(o)}a(),b(),work(),f();"`;
 
 exports[`JavaScript minifier printing a SyntaxTree should map the expressions a for head joins, one printed past a cut \`!\` too 1`] = `"function f(o){for(h(),function(){a(arguments)}(),k();o.x;)o.y()}f();"`;
 

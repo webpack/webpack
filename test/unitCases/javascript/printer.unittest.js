@@ -330,7 +330,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		);
 		expect(joined.code).toMatchSnapshot();
 		const segments = decodeLine(joined.map.mappings);
-		// Each part maps where it was written.
+		// Each part maps where it was written, past a cut `0,` guard too.
 		expect(
 			[
 				"g(o)",
@@ -340,6 +340,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"m(",
 				"n(o)}",
 				"b()",
+				"work()",
 				"f()"
 			].map((part) => [
 				part,
@@ -353,7 +354,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["m(", [9, 2]],
 			["n(o)}", [11, 8]],
 			["b()", [14, 0]],
-			["f()", [15, 0]]
+			["work()", [16, 1]],
+			["f()", [18, 0]]
 		]);
 	});
 

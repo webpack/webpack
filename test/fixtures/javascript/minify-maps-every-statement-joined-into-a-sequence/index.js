@@ -13,4 +13,7 @@ function f(o) {
 }
 a();
 b();
+(0, function () {
+	work();
+}());
 f();
