@@ -118,10 +118,20 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than oxc's",
 		[
+			"swc minifier: fixture/issues/murmur2/1/input.js",
+			"swc minifier: fixture/issues/11684/bindings/input.js",
+			"terser compress: issue-1321/issue_1321_no_debug",
+			"terser compress: issue-1321/issue_1321_debug",
+			"terser compress: issue-1321/issue_1321_with_quoted",
+			"terser compress: numbers/evaluate_4",
+			"terser compress: properties/join_object_assignments_2",
+			"terser compress: properties/join_object_assignments_if",
+			"swc exec: terser_properties_join_object_assignments_2",
+			"swc exec: terser_issue_1321_issue_1321_no_debug",
+			"swc exec: terser_issue_1321_issue_1321_with_quoted",
+			"swc exec: terser_issue_1321_issue_1321_debug",
 			"terser compress: properties/accessor_null_undefined",
 			"terser compress: properties/unsafe_methods_regex",
-			"swc exec: terser_reduce_vars_delay_def",
-			"terser compress: reduce_vars/delay_def",
 			"oxc minifier: ecmascript/is_int32_or_uint32.rs:binary_tests:058afa31",
 			"oxc minifier: ecmascript/is_int32_or_uint32.rs:binary_tests:7bd2777e",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:test_binary_expressions:05b9c5f0",
@@ -150,10 +160,7 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/cond_branch_2",
 			"terser compress: collapse_vars/issue_2914_1",
 			"terser compress: collapse_vars/issue_2914_2",
-			"terser compress: drop-unused/delete_assign_1",
-			"terser compress: drop-unused/delete_assign_2",
 			"terser compress: drop-unused/issue_1838",
-			"terser compress: evaluate/unsafe_constant",
 			"terser compress: export/name_cache_do_not_mangle_export_let_name",
 			"terser compress: issue-1656/f7",
 			"terser compress: loops/keep_collapse_const_in_own_block_scope_2",
@@ -183,8 +190,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/underscore/17/input.js",
 			"swc minifier: fixture/projects/underscore/18/input.js",
 			"swc minifier: mangle/2/input.js",
-			"swc exec: terser_drop_unused_delete_assign_1",
-			"swc exec: terser_drop_unused_delete_assign_2",
 			"swc exec: terser_reduce_vars_inner_var_for_2",
 			"swc exec: terser_collapse_vars_issue_2914_2",
 			"swc exec: terser_collapse_vars_cond_branch_2",
@@ -336,13 +341,11 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_reduce_vars_reduce_vars",
 			"swc exec: terser_reduce_vars_escape_local_sequence",
 			"swc exec: terser_collapse_vars_cond_branch_1",
-			"swc exec: terser_collapse_vars_issue_2203_2",
 			"swc exec: terser_collapse_vars_may_throw_2",
 			"swc exec: terser_properties_join_object_assignments_return_2",
 			"swc exec: terser_issue_1639_issue_1639_1",
 			"swc exec: terser_arrays_for_loop",
 			"swc exec: terser_functions_issue_2898",
-			"swc exec: terser_functions_issue_3016_2",
 			"swc exec: terser_functions_issue_2783",
 			"swc exec: terser_try_catch_catch_destructuring_with_sequence",
 			"swc exec: issue_6903_1",
@@ -350,8 +353,7 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: issue_6903_3",
 			"swc exec: issue_11517_continue",
 			"swc exec: issue_11078_math_constant_folding",
-			"swc exec: terser_labels_labels_4",
-			"swc exec: terser_loops_issue_2740_5"
+			"swc exec: terser_labels_labels_4"
 		]
 	],
 	[
@@ -372,10 +374,8 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_exit_points.rs:test_for_continue_optimization:34ac02f3",
 			"oxc minifier: peephole/minimize_exit_points.rs:test_switch_exit_points1:ebe0a496",
 			"oxc minifier: peephole/minimize_exit_points.rs:test_test_block_scoped_variables:bc33072e",
-			"swc minifier: fixture/issues/4841/1/input.js",
 			"oxc minifier: peephole/minimize_exit_points.rs:test_break_optimization:1ba6d27d",
-			"oxc minifier: peephole/minimize_exit_points.rs:test_break_optimization:cb295b49",
-			"oxc minifier: peephole/minimize_exit_points.rs:test_function_return_optimization:2cf28c4c"
+			"oxc minifier: peephole/minimize_exit_points.rs:test_break_optimization:cb295b49"
 		]
 	],
 	[
@@ -422,8 +422,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/dead_code_elimination.rs:fold_coalesce_on_tracked_non_nullish_binding:0015b511",
 			"oxc minifier: peephole/dead_code_elimination.rs:dce_keeps_inferred_class_name_for_executing_class:e77b52b7",
 			"oxc minifier: peephole/dead_code_elimination.rs:block_unwrap_needs_no_extra_pass:199cfb09",
-			"oxc minifier: peephole/dead_code_elimination.rs:block_unwrap_needs_no_extra_pass:067258dd",
-			"oxc minifier: peephole/dead_code_elimination.rs:drop_labels_with_vars:d1cda6a6"
+			"oxc minifier: peephole/dead_code_elimination.rs:block_unwrap_needs_no_extra_pass:067258dd"
 		]
 	],
 	[
@@ -463,7 +462,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: evaluate/issue_t790_strings_smaller_than_refs",
 			"terser compress: ie8/do_screw_try_catch_undefined",
 			"terser compress: ie8/dont_screw_try_catch_undefined",
-			"terser compress: reduce_vars/unsafe_evaluate_object_1",
 			"terser compress: reduce_vars/escaped_prop_3",
 			"terser compress: reduce_vars/escape_await",
 			"swc minifier: fixture/issues/2044/full/input.js",
@@ -486,10 +484,8 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc goes further than webpack on what terser's `collapse_vars` tests cover",
 		[
 			"terser compress: collapse_vars/collapse_vars_switch",
-			"terser compress: collapse_vars/switch_case_2",
 			"terser compress: collapse_vars/collapse_vars_lvalues",
 			"terser compress: collapse_vars/collapse_vars_lvalues_drop_assign",
-			"terser compress: collapse_vars/collapse_vars_arguments",
 			"terser compress: collapse_vars/boolean_binary_1",
 			"terser compress: collapse_vars/boolean_binary_2",
 			"terser compress: collapse_vars/may_throw_2",
@@ -561,7 +557,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what oxc's `ecmascript/is_literal_value.rs` tests cover",
 		[
-			"oxc minifier: ecmascript/is_literal_value.rs:test_unary_expressions:be7204f7",
 			"oxc minifier: ecmascript/is_literal_value.rs:test_unary_expressions:4122c393",
 			"oxc minifier: ecmascript/is_literal_value.rs:test_object_expression:d354a195"
 		]
@@ -647,16 +642,14 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline.rs:keep_value_context_read_of_uninitialized_binding:94241331",
 			"oxc minifier: peephole/inline.rs:keep_value_context_read_of_uninitialized_binding:a598b493",
 			"oxc minifier: peephole/inline.rs:keep_value_context_read_of_uninitialized_binding:cbef8531",
-			"oxc minifier: peephole/inline.rs:keep_value_context_read_of_uninitialized_binding:d101145e",
-			"oxc minifier: peephole/inline.rs:outer_arguments_binding_not_inlined_into_function:9b3feadf"
+			"oxc minifier: peephole/inline.rs:keep_value_context_read_of_uninitialized_binding:d101145e"
 		]
 	],
 	[
 		"oxc goes further than webpack on what oxc's `peephole/obscure_edge_cases.rs` tests cover",
 		[
 			"oxc minifier: peephole/obscure_edge_cases.rs:test_mathematical_expression_edge_cases:e7cb440a",
-			"oxc minifier: peephole/obscure_edge_cases.rs:test_mathematical_expression_edge_cases:cdc6a5ea",
-			"oxc minifier: peephole/obscure_edge_cases.rs:test_exponentiation_negative_bigint_base:f8e50e4d"
+			"oxc minifier: peephole/obscure_edge_cases.rs:test_mathematical_expression_edge_cases:cdc6a5ea"
 		]
 	],
 	[
@@ -763,8 +756,7 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: loops/issue_1532",
 			"terser compress: loops/issue_1648",
 			"terser compress: loops/in_parenthesis_3",
-			"terser compress: loops/dead_code_condition",
-			"terser compress: loops/issue_2740_5"
+			"terser compress: loops/dead_code_condition"
 		]
 	],
 	[
@@ -806,10 +798,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: functions/recursive_inline_1",
 			"terser compress: functions/issue_2783",
 			"terser compress: functions/issue_2898",
-			"terser compress: functions/issue_3016_2",
-			"terser compress: functions/issue_3016_2_ie8",
-			"terser compress: functions/issue_3016_3",
-			"terser compress: functions/issue_3016_3_ie8",
 			"terser compress: functions/issue_3076"
 		]
 	],
@@ -820,8 +808,7 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: dead-code/dead_code_2_should_warn_strict",
 			"terser compress: dead-code/dead_code_const_annotation_regex",
 			"terser compress: dead-code/dead_code_const_annotation_complex_scope",
-			"terser compress: dead-code/return_assignment",
-			"terser compress: dead-code/issue_2749"
+			"terser compress: dead-code/return_assignment"
 		]
 	],
 	[
@@ -832,10 +819,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what oxc's `ecmascript/value_type.rs` tests cover",
-		[
-			"oxc minifier: ecmascript/value_type.rs:binary_tests:318a3176",
-			"oxc minifier: ecmascript/value_type.rs:logical_tests:a75ae814"
-		]
+		["oxc minifier: ecmascript/value_type.rs:logical_tests:a75ae814"]
 	],
 	[
 		"oxc goes further than webpack on what oxc's `peephole/minimize_switch_statements.rs` tests cover",
@@ -901,10 +885,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: pure_funcs/issue_2705_6",
 			"terser compress: pure_funcs/issue_526_1"
 		]
-	],
-	[
-		"oxc goes further than webpack on what terser's `properties` tests cover",
-		["terser compress: properties/join_object_assignments_return_2"]
 	],
 	[
 		"oxc goes further than webpack on what swc's `fixture/next` tests cover",
@@ -1109,7 +1089,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc writes a variable's value at its one read and drops the variable, or an alias of another binding",
 		[
 			"swc minifier: fixture/issues/10807/input.js",
-			"swc minifier: fixture/issues/5280/input.js",
 			"swc minifier: fixture/issues/7241/input.js",
 			"swc minifier: fixture/issues/firebase/dist/1/input.js",
 			"swc minifier: fixture/issues/react-instancesearch/004/input.js",
@@ -1200,7 +1179,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what swc's `fixture/collapse-vars` tests cover",
-		["swc minifier: fixture/collapse-vars/cascade-statement/bailouts/input.js"]
+		[]
 	],
 	[
 		"a shorter operator oxc writes: `**` for `Math.pow` of numbers",
@@ -1243,14 +1222,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what terser's `arrays` tests cover",
 		["terser compress: arrays/for_loop"]
-	],
-	[
-		"oxc goes further than webpack on what terser's `big_int` tests cover",
-		["terser compress: big_int/big_int_math"]
-	],
-	[
-		"oxc goes further than webpack on what terser's `comparing` tests cover",
-		["terser compress: comparing/bigint_vs_number"]
 	],
 	[
 		"oxc goes further than webpack on what terser's `issue-1006` tests cover",

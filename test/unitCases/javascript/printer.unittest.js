@@ -2281,7 +2281,7 @@ describe("moving a value made of names", () => {
 			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-10"), "function f(o,t){var w=o;return o=2,t.w=w,t}", CALL_F],
 			// A name a value moved into already prints that value, run where it is read; a boolean prints as `!0`, which a member read would take in.
 			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-11"), 'function f(){var b=!read();return middle(),b}function read(){return console.log("read"),1}function middle(){console.log("middle")}console.log(f());'],
-			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-12"), "function f(){return middle(),true.toString()}function middle(){}console.log(f());"],
+			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-12"), "function f(){middle();return(!0).toString()}function middle(){}console.log(f());"],
 			// An outer `var` read before an `await` or a `yield` may be set while the function, or the generator owning it, waits.
 			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-13"), "function f(p){var t=async function(){var n=!r;return await p,n}(),r=1;return t}f(0);"],
 			[fixture("javascript", "moving-a-value-made-of-names-should-move-a-value-of-names-nothing-writes-to-its-14"), "function f(){var t=function*(){var n=!r;return yield,n}();t.next();var r=1;return t.next().value}console.log(f());"],

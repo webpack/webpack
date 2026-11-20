@@ -47,7 +47,7 @@ module.exports = {
 			(file) => file !== "bundle0.js" && file.endsWith(".js")
 		);
 		expect(read(/** @type {string} */ (chunk))).toContain(
-			'function pick(log){log.push("kept");return log}'
+			'function pick(log){return log.push("kept"),log}'
 		);
 	}
 };
