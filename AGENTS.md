@@ -46,6 +46,7 @@ Applies to everything you write: replies, docs, code comments, commit messages a
 - **No greetings, politeness, empathy or closing summaries.** Don't restate what the reader can see.
 - **Only what the reader needs to act**: facts, code, schemas, steps. Lead with what couldn't be verified, a failed test or a skipped step; never round partial work up to done.
 - **Lists, tables and short paragraphs**, never walls of text. Show rather than describe: before/after code blocks for changes (as the PR body's [Summary](docs/pull-requests.md#pull-request-body) asks), a table or code block for what moved, what a run printed or where a regression sits. Cite code as `path:line`, one per sentence.
+- **Summarize a change by example**, in replies and PR bodies alike: per change, one sentence on what was wrong, the real input (code or configuration), then what it produced before and after, from actual runs. End with a short note on limits, what wasn't verified and what waits on a decision. Group related changes under one heading, number them, skip ones with nothing to show. Shape and example: [Summary](docs/pull-requests.md#summary-by-example).
 
 ### Model and effort
 

@@ -160,12 +160,45 @@ Make sure to read our AI policy (https://github.com/webpack/governance/blob/main
 
 Answers (one sentence is often enough):
 
-- **Summary**: motivation and the problem solved; link the issue (`Closes #…` / `Fixes #…` when the PR resolves it, `Refs #…` when it only relates). **For a fix or improvement, show a real before/after** where one exists: the input and what changed (output, gzip size, memory or CPU) as a short code block or two-row table from an actual run, never invented.
+- **Summary**: motivation and the problem solved; link the issue (`Closes #…` / `Fixes #…` when the PR resolves it, `Refs #…` when it only relates). **For a fix or improvement, show a real before/after** where one exists: the input and what changed (output, gzip size, memory or CPU) as a short code block or two-row table from an actual run, never invented ([shape](#summary-by-example)).
 - **What kind of change…**: one of fix, feat, refactor, perf, test, chore, ci, build, style, revert, docs.
 - **Did you add tests…**: yes/no + which files.
 - **Breaking change**: yes/no + migration path if yes.
 - **Documentation**: doc updates, or `n/a`.
 - **Use of AI**: that AI was used and how; omitting or misrepresenting it can get the PR closed per the AI policy.
+
+### Summary by example
+
+A **Summary** for a fix or improvement, and a reply that reports one, shows each change instead of describing it. Per change:
+
+1. **Heading**: what was wrong, in plain words, numbered when there are several.
+2. **Input**: the real code or configuration that hits it, as small as still shows it.
+3. **Before → after**: what each side produced, from actual runs (output, error, size); never invented.
+4. **Note** (only when needed): limits, what wasn't verified, what waits on a decision.
+
+Merge changes that share an input, and leave out a change with nothing to show (say so in one line instead). For example:
+
+````markdown
+**1. A URL with a non-ASCII character in a windows-1252 page**
+
+```html
+<img src="./€.svg" />
+```
+
+- Before: the build failed; the `€` byte was read as another character, so the file wasn't found.
+- After: `<img src="0e15be1ea86afc9b4529.svg">`
+
+**2. A tag a plugin adds with a character the page's encoding lacks**
+
+```json
+{ "tag": "meta", "attrs": { "content": "日" } }
+```
+
+- Before: `<meta content="å">`
+- After: `<meta content="&#x65e5;">`
+
+Note: on Node.js 20 the new test is skipped, as its windows-1252 decoder reads byte 0x80 as U+0080.
+````
 
 ## After push — verify PR body
 
