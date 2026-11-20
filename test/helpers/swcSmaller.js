@@ -18,6 +18,10 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than swc's: `,` where swc keeps `;` between statements, operand order, `{0}` for an empty body",
 		[
+			"swc minifier: fixture/terser/issue-2535-2/4/input.js",
+			"swc minifier: fixture/issues/react-instancesearch/001/input.js",
+			"swc minifier: fixture/issues/12213/shadowed-object/input.js",
+			"swc minifier: fixture/issues/12187/input.js",
 			"terser compress: harmony/export_default_object_expression",
 			"swc minifier: fixture/issues/do-while-false-control-flow/input.js",
 			"terser compress: reduce_vars/escaped_prop_3",
@@ -44,15 +48,12 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: global_defs/mixed",
 			"terser compress: loops/keep_collapse_const_in_own_block_scope_2",
 			"swc minifier: fixture/issues/10938/input.js",
-			"swc minifier: fixture/issues/12195/nested-spread/input.js",
-			"swc minifier: fixture/issues/12195/spread/input.js",
 			"swc minifier: fixture/issues/12565/while_body/input.js",
 			"swc minifier: fixture/issues/8228/input.js",
 			"swc minifier: fixture/issues/8923/input.js",
 			"swc minifier: fixture/issues/drop-console-value-refs/input.js",
 			"swc minifier: fixture/issues/unused-let-initialization/input.js",
 			"swc minifier: fixture/projects/underscore/18/input.js",
-			"swc minifier: full/size/40a586d8ac72ba5686c4b250184acfa11620d814/input.js",
 			"swc minifier: pass-1/issue-6123/1/input.js",
 			"swc minifier: fixture/projects/yui/3/input.js",
 			"swc minifier: projects/files/yui-3.12.0.js",
@@ -100,7 +101,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/side-effects/input.js",
 			"swc minifier: fixture/projects/mootools/.11/input.js",
 			"swc minifier: fixture/terser/issue-2535-2/2-1/input.js",
-			"swc minifier: fixture/terser/issue-2535-2/3-1/input.js",
 			"swc minifier: fixture/issues/11368/input.js",
 			"swc minifier: fixture/issues/6957/2/input.js",
 			"swc minifier: fixture/issues/react/hooks/1/input.js",
@@ -184,7 +184,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/11983/input.js",
 			"swc minifier: fixture/issues/12032/input.js",
 			"swc minifier: fixture/issues/12177/input.js",
-			"swc minifier: fixture/issues/12206/hoist-var-from-retained-test/input.js",
 			"swc minifier: fixture/issues/12222/input.js",
 			"swc minifier: fixture/issues/12298/input.js",
 			"swc minifier: fixture/issues/12311/input.js",
@@ -196,7 +195,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/7004/input.js",
 			"swc minifier: fixture/issues/7241/input.js",
 			"swc minifier: fixture/issues/7287/1/input.js",
-			"swc minifier: fixture/issues/7331/1/input.js",
 			"swc minifier: fixture/issues/7331/2/input.js",
 			"swc minifier: fixture/issues/7575/1/input.js",
 			"swc minifier: fixture/issues/7784/1/input.js",
@@ -595,12 +593,10 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"swc minifier: fixture/issues/12182/hoist-props/input.js",
 			"swc minifier: fixture/issues/12182/receiver-sensitive/input.js",
-			"swc minifier: fixture/issues/9610-methods/input.js",
 			"swc minifier: fixture/member_expr/callee/input.js",
 			"terser compress: hoist_props/direct_access_2",
 			"swc minifier: fixture/issues/10721/input.js",
 			"swc minifier: fixture/issues/12208/non-optional-continuation/input.js",
-			"swc minifier: fixture/issues/12215/input.js",
 			"swc minifier: fixture/issues/8737/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.bf24abaa/input.js"
 		]
@@ -681,8 +677,7 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"swc minifier: fixture/terser/issue-2435-1/1/input.js",
 			"swc minifier: fixture/terser/issue-2435-1/3/input.js",
-			"swc minifier: fixture/terser/issue-2435-1/4/input.js",
-			"swc minifier: fixture/terser/issue-2535-2/3/input.js"
+			"swc minifier: fixture/terser/issue-2435-1/4/input.js"
 		]
 	],
 	[
@@ -728,7 +723,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/9650/input.js",
 			"swc minifier: fixture/issues/10041/input.js",
 			"swc minifier: fixture/issues/4386/2/input.js",
-			"swc minifier: fixture/issues/9504/input.js",
 			"swc minifier: fixture/issues/moment/1/input.js",
 			"swc minifier: fixture/issues/object-accessor-function-boundary/input.js",
 			"swc minifier: fixture/issues/vercel/006/input.js",
@@ -802,12 +796,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"method vs arrow: webpack writes an object's function property as the shorter `a:()=>x` where oxc writes the method `a(){return x}`, or keeps a `function` swc writes as an arrow",
-		[
-			"swc minifier: fixture/issues/drop-console-es2015/input.js",
-			"swc minifier: fixture/issues/8704/input.js",
-			"swc minifier: fixture/issues/8705/input.js",
-			"swc minifier: full/size/05f3b568bfaa8ece7f1eb857ea288eb8c696fb04/input.js"
-		]
+		["swc minifier: fixture/issues/drop-console-es2015/input.js"]
 	],
 	[
 		"`if…return` chain vs `?:…void 0`: webpack folds the returns into one `return a?b:c?d:void 0` where the rival keeps `if(a)return b;if(c)return d`",
