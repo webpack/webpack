@@ -1,0 +1,1 @@
+export const lonely = () => "lonely";
