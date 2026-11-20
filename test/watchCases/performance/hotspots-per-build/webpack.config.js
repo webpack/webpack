@@ -4,7 +4,7 @@ const holdMainThread = require("../../../helpers/holdMainThread");
 
 /**
  * Holds the main thread for the same stretch on every build, keeping how long it really took.
- * @type {import("../../../../").WebpackPluginInstance}
+ * @type {import("../../../../").WebpackPluginInstance & { burned: number }}
  */
 const burn = {
 	burned: 0,

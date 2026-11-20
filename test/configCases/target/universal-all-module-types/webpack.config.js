@@ -28,7 +28,6 @@ const rules = [
 /** @type {NonNullable<import("../../../../").Configuration["experiments"]>} */
 const experiments = {
 	asyncWebAssembly: true,
-	topLevelAwait: true,
 	deferImport: true,
 	sourceImport: true,
 	css: true,

@@ -4497,6 +4497,7 @@
       "description": "Options handed as-is to the JavaScript minimizer (terser-compatible). Defaults to `{ compress: { passes: 2 } }`.",
       "type": "object",
       "additionalProperties": true,
+      "tsType": "import('../lib/javascript/syntax-printer').MinifyOptions",
       "added": "5.110.0"
     },
     "OptimizationMinimizeOptions": {

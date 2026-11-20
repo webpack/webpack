@@ -27,7 +27,6 @@ const script = (type, name) => ({
 const esm = (type) => ({
 	entry: ["./a.js", "./b.js"],
 	target: "node14",
-	experiments: { outputModule: true },
 	output: {
 		uniqueName: type,
 		filename: `${type}.mjs`,

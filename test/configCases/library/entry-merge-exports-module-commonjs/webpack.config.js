@@ -46,7 +46,6 @@ const config = (entry, synthetic) => ({
 		module: true,
 		library: { entryExports: "all", type: "module" }
 	},
-	experiments: { outputModule: true },
 	optimization: { concatenateModules: false },
 	plugins: [expectOneDefaultExport(synthetic)]
 });

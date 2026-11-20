@@ -19,8 +19,7 @@ const config = {
 		chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
 	},
 	experiments: {
-		asyncWebAssembly: true,
-		topLevelAwait: true
+		asyncWebAssembly: true
 	}
 };
 

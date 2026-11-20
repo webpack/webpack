@@ -8,7 +8,7 @@ const currentWatchStep = require("../../../helpers/currentWatchStep");
 module.exports = () => ({
 	output: { copy: [{ from: "static", to: "copied" }] },
 	plugins: [
-		{
+		/** @type {import("../../../..").WebpackPluginInstance & { reported: boolean }} */ ({
 			reported: false,
 			/**
 			 * @this {{ reported: boolean }}
@@ -57,6 +57,6 @@ module.exports = () => ({
 						callbackUndelayed
 					);
 			}
-		}
+		})
 	]
 });
