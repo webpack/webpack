@@ -63,6 +63,7 @@ const {
 	TreeEvents,
 	agreement,
 	agreementInvariant,
+	behaviorSweep,
 	collectFiles,
 	compress,
 	exists,
@@ -1201,9 +1202,9 @@ const invariantFixtures = () => {
  * Nothing is installed and nothing is compared to, so this is the cheap half of
  * the script and the one a check can be gated on.
  * @param {(text: string) => void} write receives the report
- * @returns {number} how many distinct findings it named
+ * @returns {Promise<number>} how many distinct findings it named
  */
-const invariants = (write) => {
+const invariants = async (write) => {
 	const built = invariantFixtures();
 	// Filtered the same way the corpus is: a run narrowed to one fixture is not
 	// short of the ones it was never going to read, and the gate answers for the
@@ -1335,17 +1336,29 @@ const invariants = (write) => {
 		}
 		log(`… and ${cut} of them cut short inside a token …`);
 	}
+	// Under the first preset asked only: a browser rendering each source is the
+	// costliest relation, and what a print draws is asked the same way by each.
+	if (wantedRelation("behavior") && presets.length > 0) {
+		const [preset, options] = presets[0];
+		await behaviorSweep({
+			lang: "css",
+			corpus,
+			print: printerFor(options),
+			preset,
+			groups
+		});
+	}
 	return groups.write(write);
 };
 
 /**
  * The sweep as a section of the comparison's own report, so a run that asks
  * what the output costs is told what it owes as well.
- * @returns {number} how many distinct findings it named
+ * @returns {Promise<number>} how many distinct findings it named
  */
-const reportInvariants = () => {
+const reportInvariants = async () => {
 	process.stdout.write("\ninvariants — what the printer owes its own output\n");
-	const found = invariants((text) => process.stdout.write(text));
+	const found = await invariants((text) => process.stdout.write(text));
 	process.stdout.write(missingReport(_missingFixtures));
 	process.stdout.write(`\n${found} finding${found === 1 ? "" : "s"}\n`);
 	return found;
@@ -1354,7 +1367,7 @@ const reportInvariants = () => {
 const main = async () => {
 	// Before the install: the relations are webpack's own, so they answer in
 	// seconds whether or not there is anything to compare against yet.
-	reportInvariants();
+	await reportInvariants();
 	await setup();
 	const postcss = load("postcss");
 	const selectorParser = load("postcss-selector-parser");
@@ -1449,7 +1462,7 @@ const main = async () => {
  */
 const reportInvariantsOnly = async () => {
 	process.exitCode = sweepExitCode(
-		reportInvariants(),
+		await reportInvariants(),
 		_missingFixtures,
 		process.argv
 	);

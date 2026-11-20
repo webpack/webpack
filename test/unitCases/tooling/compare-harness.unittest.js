@@ -10,6 +10,7 @@ const {
 	TreeEvents,
 	agreement,
 	agreementInvariant,
+	behaviorSweep,
 	collectFiles,
 	compress,
 	cutsAt,
@@ -1106,6 +1107,66 @@ describe("compare-tools-harness", () => {
 			process.env.RELATION = "respelling quote-double";
 			expect(kept(["one.html"], ["legacy"])).toEqual(["b"]);
 		});
+
+		it("keeps a `behavior` entry only for the one preset the sweep renders", () => {
+			/** @type {import("../../../tooling/compare-tools-harness").Expected[]} */
+			const behavior = [
+				{ relation: "behavior", contains: "any", why: "…" },
+				{ relation: "behavior", contains: "first", presets: ["a"], why: "…" },
+				{ relation: "behavior", contains: "later", presets: ["b"], why: "…" }
+			];
+			const kept = (/** @type {string[]} */ presets) =>
+				wantedExpectations(behavior, ["one"], presets).map(
+					(entry) => entry.contains
+				);
+			expect(kept(["a", "b"])).toEqual(["any", "first"]);
+			expect(kept([])).toEqual([]);
+		});
+	});
+
+	describe("behaviorSweep", () => {
+		const { INVARIANT_BUDGET, fixture } = require("../../helpers/fixture");
+
+		it("adds what each print renders otherwise, skipping what it cannot render", async () => {
+			const source = fixture("css", "minimize");
+			const moved = source.replace("margin : 0  auto ;", "margin : 1px auto ;");
+			const large = source + " ".repeat(INVARIANT_BUDGET);
+			const unprinted = `${source}\n`;
+			const print = jest.fn((/** @type {string} */ text) =>
+				text === unprinted ? null : text === moved ? source : text
+			);
+			/** @type {[string, string][]} */
+			const added = [];
+			const written = jest.spyOn(process.stderr, "write").mockReturnValue(true);
+			try {
+				await behaviorSweep({
+					lang: "css",
+					corpus: [
+						["large", large],
+						["unprinted", unprinted],
+						["same", source],
+						["moved", moved]
+					],
+					print,
+					preset: "default",
+					groups: {
+						add: (report, preset, label) => added.push([preset, label])
+					}
+				});
+				expect(written).toHaveBeenCalledWith(
+					expect.stringMatching(
+						/^rendered 2 sources beside their print under default \(2 past the budget or not drawn\)/
+					)
+				);
+			} finally {
+				written.mockRestore();
+			}
+			expect(print).not.toHaveBeenCalledWith(large);
+			expect(added.length).toBeGreaterThan(0);
+			expect(new Set(added.map(([, label]) => label))).toEqual(
+				new Set(["moved"])
+			);
+		}, 60000);
 	});
 });
 

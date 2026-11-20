@@ -1415,7 +1415,7 @@ const compareRenders = async ({ pairs, width }) => {
 		if (breaking.length > 0) await settled(Promise.all(breaking));
 		// A transition or animation would be read part way through.
 		for (const running of doc.getAnimations()) running.cancel();
-		const root = /** @type {HTMLElement} */ (doc.documentElement);
+		const root = doc.documentElement;
 		const elements = [...doc.querySelectorAll("*")];
 		return {
 			tags: elements.map((element) => element.localName),
@@ -2307,7 +2307,7 @@ const compareStyles = async ({ pairs, types }) => {
 			)
 		);
 		for (const doc of docs) {
-			/** @type {HTMLElement} */ (doc.documentElement).getBoundingClientRect();
+			doc.documentElement.getBoundingClientRect();
 			for (const running of doc.getAnimations()) running.cancel();
 		}
 	};
@@ -2359,7 +2359,7 @@ const compareStyles = async ({ pairs, types }) => {
 	const clippedAs = (color) => {
 		if (clipProbe === null) {
 			clipProbe = document.createElement("div");
-			/** @type {HTMLElement} */ (document.body).append(clipProbe);
+			document.body.append(clipProbe);
 		}
 		clipProbe.style.color = "";
 		clipProbe.style.color = `color(from ${color} srgb r g b / alpha)`;
@@ -2480,7 +2480,7 @@ const compareStyles = async ({ pairs, types }) => {
 		if (names.size !== one.registered.size) return false;
 		const probes = docs.map((doc) => {
 			const probe = doc.createElement("div");
-			/** @type {HTMLElement} */ (doc.body).append(probe);
+			doc.body.append(probe);
 			return probe;
 		});
 		try {
@@ -2772,9 +2772,10 @@ const compareStyles = async ({ pairs, types }) => {
 					// the color scheme its embedding element is used with, and an
 					// element's `light-dark()` the color scheme it is used with itself.
 					frame.style.colorScheme = sample.dark ? "dark" : "";
-					/** @type {HTMLElement} */ (
-						docs[at].documentElement
-					).style.setProperty("color-scheme", sample.dark ? "dark" : "");
+					docs[at].documentElement.style.setProperty(
+						"color-scheme",
+						sample.dark ? "dark" : ""
+					);
 					const holder = /** @type {HTMLElement} */ (
 						docs[at].getElementById("eq-holder")
 					);
@@ -2959,7 +2960,7 @@ const compareStyles = async ({ pairs, types }) => {
 			}
 		}
 		for (const doc of docs) {
-			/** @type {HTMLElement} */ (doc.documentElement).style.cssText = unset
+			doc.documentElement.style.cssText = unset
 				.map((name) => `${name}:1px`)
 				.join(";");
 		}

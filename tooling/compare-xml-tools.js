@@ -59,6 +59,7 @@ const {
 	TreeEvents,
 	agreement,
 	agreementInvariant,
+	behaviorSweep,
 	collectFiles,
 	compress,
 	cutsAt,
@@ -1068,9 +1069,9 @@ const EXPECTED = [];
  * reference where the corpus brought it.
  * @param {(text: string) => void} write receives the report
  * @param {EXPECTED_ANY=} parseXml the reference's `parseXml`, when installed
- * @returns {number} how many distinct findings it named
+ * @returns {Promise<number>} how many distinct findings it named
  */
-const invariants = (write, parseXml) => {
+const invariants = async (write, parseXml) => {
 	const built = invariantFixtures();
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
@@ -1193,6 +1194,18 @@ const invariants = (write, parseXml) => {
 		}
 		log(`… and ${cut} of them cut short inside a construct …`);
 	}
+	// Under the first preset asked only: a browser rendering each source is the
+	// costliest relation, and what a print draws is asked the same way by each.
+	if (wantedRelation("behavior") && presets.length > 0) {
+		const [preset, options] = presets[0];
+		await behaviorSweep({
+			lang: "xml",
+			corpus,
+			print: printerFor(options),
+			preset,
+			groups
+		});
+	}
 	return groups.write(write);
 };
 
@@ -1211,7 +1224,10 @@ const reportInvariants = async () => {
 	} catch (_error) {
 		// Not installed yet: the sweep names it among what it did not find.
 	}
-	const found = invariants((text) => process.stdout.write(text), parseXml);
+	const found = await invariants(
+		(text) => process.stdout.write(text),
+		parseXml
+	);
 	process.stdout.write(missingReport(_missingFixtures));
 	process.stdout.write(`\n${found} finding${found === 1 ? "" : "s"}\n`);
 	return found;

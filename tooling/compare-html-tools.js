@@ -57,6 +57,7 @@ const {
 	TreeEvents,
 	agreement,
 	agreementInvariant,
+	behaviorSweep,
 	collectFiles,
 	compress,
 	cutsAt,
@@ -1269,6 +1270,12 @@ const TEMPLATE_DELIMITER_REFERENCES =
  */
 const EXPECTED = [
 	{
+		relation: "behavior",
+		contains: "px ",
+		source: "test/configCases/html/page-encoding/utf-16.html",
+		why: "the sweep reads every file as UTF-8, so a UTF-16 page arrives as its bytes misread, NUL characters among them; what a browser makes of those stray bytes is no print of the page a build decodes first"
+	},
+	{
 		relation: "respelling references",
 		contains: "<link href=\"&lt;?php echo 'http://foo/' ?>\">",
 		source: "test/configCases/html/minify-html/minimize-attributes/page.html",
@@ -1330,9 +1337,9 @@ const EXPECTED = [
  * Nothing is installed and nothing is compared to, so this is the cheap half of
  * the script and the one a check can be gated on.
  * @param {(text: string) => void} write receives the report
- * @returns {number} how many distinct findings it named
+ * @returns {Promise<number>} how many distinct findings it named
  */
-const invariants = (write) => {
+const invariants = async (write) => {
 	const built = invariantFixtures();
 	// Filtered the same way the corpus is: a run narrowed to one fixture is not
 	// short of the ones it was never going to read, and the gate answers for the
@@ -1455,17 +1462,29 @@ const invariants = (write) => {
 		}
 		log(`… and ${cut} of them cut short inside a construct …`);
 	}
+	// Under the first preset asked only: a browser rendering each source is the
+	// costliest relation, and what a print draws is asked the same way by each.
+	if (wantedRelation("behavior") && presets.length > 0) {
+		const [preset, options] = presets[0];
+		await behaviorSweep({
+			lang: "html",
+			corpus,
+			print: printerFor(options),
+			preset,
+			groups
+		});
+	}
 	return groups.write(write);
 };
 
 /**
  * The sweep as a section of the comparison's own report, so a run that asks
  * what the output costs is told what it owes as well.
- * @returns {number} how many distinct findings it named
+ * @returns {Promise<number>} how many distinct findings it named
  */
-const reportInvariants = () => {
+const reportInvariants = async () => {
 	process.stdout.write("\ninvariants — what the printer owes its own output\n");
-	const found = invariants((text) => process.stdout.write(text));
+	const found = await invariants((text) => process.stdout.write(text));
 	process.stdout.write(missingReport(_missingFixtures));
 	process.stdout.write(`\n${found} finding${found === 1 ? "" : "s"}\n`);
 	return found;
@@ -1474,7 +1493,7 @@ const reportInvariants = () => {
 const main = async () => {
 	// Before the install: the relations are webpack's own, so they answer in
 	// seconds whether or not there is anything to compare against yet.
-	reportInvariants();
+	await reportInvariants();
 	await setup();
 	const parse5 = /** @type {Parse5} */ (load("parse5"));
 	for (const [label, html] of (await fixtures()).filter(([name]) =>
@@ -1572,7 +1591,7 @@ const main = async () => {
  */
 const reportInvariantsOnly = async () => {
 	process.exitCode = sweepExitCode(
-		reportInvariants(),
+		await reportInvariants(),
 		_missingFixtures,
 		process.argv
 	);
