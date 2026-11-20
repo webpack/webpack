@@ -118,6 +118,14 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than oxc's",
 		[
+			"terser compress: properties/issue_2208_8",
+			"terser compress: object/concise_methods_with_various_property_names",
+			"terser compress: object/getter_setter",
+			"terser compress: mangleprops-mangleprop-annotation/mangleprop_annotation",
+			"terser compress: harmony/export_default_object_expression",
+			"terser compress: arrow/issue_3092b",
+			"terser compress: arrow/async_object_literal",
+			"terser compress: arrow/export_default_object_expression",
 			"swc minifier: fixture/issues/murmur2/1/input.js",
 			"swc minifier: fixture/issues/11684/bindings/input.js",
 			"terser compress: issue-1321/issue_1321_no_debug",
@@ -130,8 +138,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_issue_1321_issue_1321_no_debug",
 			"swc exec: terser_issue_1321_issue_1321_with_quoted",
 			"swc exec: terser_issue_1321_issue_1321_debug",
-			"terser compress: properties/accessor_null_undefined",
-			"terser compress: properties/unsafe_methods_regex",
 			"oxc minifier: ecmascript/is_int32_or_uint32.rs:binary_tests:058afa31",
 			"oxc minifier: ecmascript/is_int32_or_uint32.rs:binary_tests:7bd2777e",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:test_binary_expressions:05b9c5f0",
@@ -164,7 +170,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: export/name_cache_do_not_mangle_export_let_name",
 			"terser compress: issue-1656/f7",
 			"terser compress: loops/keep_collapse_const_in_own_block_scope_2",
-			"terser compress: reduce_vars/inner_var_for_2",
 			"terser compress: reduce_vars/toplevel_on_loops_3",
 			"terser compress: reduce_vars/toplevel_off_loops_3",
 			"terser compress: reduce_vars/variables_collision_in_immediately_invoked_func",
@@ -190,7 +195,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/underscore/17/input.js",
 			"swc minifier: fixture/projects/underscore/18/input.js",
 			"swc minifier: mangle/2/input.js",
-			"swc exec: terser_reduce_vars_inner_var_for_2",
 			"swc exec: terser_collapse_vars_issue_2914_2",
 			"swc exec: terser_collapse_vars_cond_branch_2",
 			"oxc minifier: peephole/dead_code_elimination.rs:preserve_legal_comment_when_dce_removes_anchor:f30f12bc",
@@ -331,7 +335,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: next_feedback_1_capture_1",
 			"swc exec: emotion_react_1",
 			"swc exec: terser_drop_unused_issue_t161_top_retain_15",
-			"swc exec: terser_drop_unused_issue_1968",
 			"swc exec: terser_pure_getters_impure_getter_2",
 			"swc exec: terser_destructuring_destructuring_assign_of_computed_key",
 			"swc exec: terser_issue_1447_conditional_false_stray_else_in_loop",
@@ -352,8 +355,7 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: issue_6903_2",
 			"swc exec: issue_6903_3",
 			"swc exec: issue_11517_continue",
-			"swc exec: issue_11078_math_constant_folding",
-			"swc exec: terser_labels_labels_4"
+			"swc exec: issue_11078_math_constant_folding"
 		]
 	],
 	[
@@ -457,7 +459,6 @@ const OXC_SMALLER_BY_REASON = [
 		"`,` vs `;` statements: the same statements joined into one sequence where the rival writes them apart, or a sequence's expressions lifted out or kept in another order",
 		[
 			"terser compress: conditionals/issue_2560",
-			"terser compress: evaluate/regexp_property_eval",
 			"terser compress: evaluate/issue_t790_strings_larger_than_refs",
 			"terser compress: evaluate/issue_t790_strings_smaller_than_refs",
 			"terser compress: ie8/do_screw_try_catch_undefined",
@@ -490,7 +491,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/boolean_binary_2",
 			"terser compress: collapse_vars/may_throw_2",
 			"terser compress: collapse_vars/cascade_if_1",
-			"terser compress: collapse_vars/unsafe_builtin",
 			"terser compress: collapse_vars/cond_branch_1",
 			"terser compress: collapse_vars/issue_2873_1",
 			"terser compress: collapse_vars/issue_1562"
@@ -575,15 +575,13 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what terser's `drop-unused` tests cover",
 		[
-			"terser compress: drop-unused/issue_1968",
 			"terser compress: drop-unused/issue_t161_top_retain_14",
 			"terser compress: drop-unused/issue_t161_top_retain_15",
 			"terser compress: drop-unused/unused_class_which_extends_might_throw",
 			"terser compress: drop-unused/unused_class_which_might_throw_2",
 			"terser compress: drop-unused/unused_class_which_might_throw_3",
 			"terser compress: drop-unused/unused_class_which_might_throw_4",
-			"terser compress: drop-unused/class_used_within_itself_3_var_expname",
-			"terser compress: drop-unused/issue_1715_3"
+			"terser compress: drop-unused/class_used_within_itself_3_var_expname"
 		]
 	],
 	[
@@ -614,8 +612,7 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: switch/issue_445",
 			"terser compress: switch/collapse_same_branches_not_in_a_row_ensure_no_evaluate_elad",
 			"terser compress: switch/trim_empty_last_branches",
-			"terser compress: switch/trim_empty_last_branches_3",
-			"terser compress: switch/collapse_same_branches_as_default_not_in_a_row"
+			"terser compress: switch/trim_empty_last_branches_3"
 		]
 	],
 	[
@@ -672,7 +669,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc goes further than webpack on what terser's `mangleprops-computed` tests cover",
 		[
 			"terser compress: mangleprops-computed/computed_props_keep_quoted_inlined_sub_1",
-			"terser compress: mangleprops-computed/computed_props_keep_quoted_inlined_sub_2",
 			"terser compress: mangleprops-computed/computed_props_keep_quoted_inlined_sub_3",
 			"terser compress: mangleprops-computed/computed_props_keep_quoted_inlined_sub_4",
 			"terser compress: mangleprops-computed/computed_props_keep_quoted_inlined_sub_5",
@@ -682,7 +678,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: mangleprops-computed/computed_props_keep_quoted_inlined_sub_9",
 			"terser compress: mangleprops-computed/computed_props_keep_quoted_inlined_sub_10",
 			"terser compress: mangleprops-computed/no_computed_props_keep_quoted_inlined_sub_1",
-			"terser compress: mangleprops-computed/no_computed_props_keep_quoted_inlined_sub_2",
 			"terser compress: mangleprops-computed/no_computed_props_keep_quoted_inlined_sub_3",
 			"terser compress: mangleprops-computed/no_computed_props_keep_quoted_inlined_sub_4",
 			"terser compress: mangleprops-computed/no_computed_props_keep_quoted_inlined_sub_5",
@@ -701,7 +696,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc goes further than webpack on what terser's `mangleprops-strict-computed` tests cover",
 		[
 			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_inlined_sub_1",
-			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_inlined_sub_2",
 			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_inlined_sub_3",
 			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_inlined_sub_4",
 			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_inlined_sub_5",
@@ -711,7 +705,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_inlined_sub_9",
 			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_inlined_sub_10",
 			"terser compress: mangleprops-strict-computed/no_computed_props_keep_quoted_inlined_sub_1",
-			"terser compress: mangleprops-strict-computed/no_computed_props_keep_quoted_inlined_sub_2",
 			"terser compress: mangleprops-strict-computed/no_computed_props_keep_quoted_inlined_sub_3",
 			"terser compress: mangleprops-strict-computed/no_computed_props_keep_quoted_inlined_sub_4",
 			"terser compress: mangleprops-strict-computed/no_computed_props_keep_quoted_inlined_sub_5",
@@ -744,7 +737,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: conditionals/cond_7_1",
 			"terser compress: conditionals/issue_1154",
 			"terser compress: conditionals/issue_2535_1",
-			"terser compress: conditionals/issue_2535_2",
 			"terser compress: conditionals/ifs_same_consequent"
 		]
 	],
@@ -804,8 +796,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what terser's `dead-code` tests cover",
 		[
-			"terser compress: dead-code/dead_code_2_should_warn",
-			"terser compress: dead-code/dead_code_2_should_warn_strict",
 			"terser compress: dead-code/dead_code_const_annotation_regex",
 			"terser compress: dead-code/dead_code_const_annotation_complex_scope",
 			"terser compress: dead-code/return_assignment"
@@ -972,10 +962,6 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"oxc goes further than webpack on what terser's `typeof` tests cover",
-		["terser compress: typeof/issue_250_1"]
-	],
-	[
 		"boolean and conditional forms: `!a&&b` vs `a?!1:b`, `!!a` vs `a&&!0`, `x||void 0` vs `if(x)`, an `if` with or without braces, a test's branches swapped",
 		[
 			"swc minifier: fixture/projects/jquery/2/input.js",
@@ -1047,11 +1033,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `labels` tests cover",
-		[
-			"terser compress: labels/labels_3",
-			"terser compress: labels/labels_4",
-			"terser compress: labels/labels_5"
-		]
+		["terser compress: labels/labels_3"]
 	],
 	[
 		"oxc goes further than webpack on what terser's `nullish` tests cover",
@@ -1168,10 +1150,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `issue-1833` tests cover",
-		[
-			"terser compress: issue-1833/iife_do",
-			"terser compress: issue-1833/iife_for_in"
-		]
+		["terser compress: issue-1833/iife_do"]
 	],
 	[
 		"oxc goes further than webpack on what terser's `try-catch` tests cover",

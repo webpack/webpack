@@ -18,11 +18,11 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than swc's: `,` where swc keeps `;` between statements, operand order, `{0}` for an empty body",
 		[
+			"terser compress: harmony/export_default_object_expression",
 			"swc minifier: fixture/issues/do-while-false-control-flow/input.js",
 			"terser compress: reduce_vars/escaped_prop_3",
 			"terser compress: destructuring/issue_t111_2a",
 			"terser compress: destructuring/issue_t111_2b",
-			"terser compress: properties/accessor_null_undefined",
 			"swc minifier: fixture/projects/mootools/3/input.js",
 			"swc minifier: fixture/projects/yui/12/input.js",
 			"swc minifier: fixture/projects/yui/9/input.js",
@@ -81,7 +81,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: harmony/array_spread_of_sequence",
 			"terser compress: harmony/object_spread_of_sequence",
 			"terser compress: harmony/array_literal_with_spread_3b",
-			"terser compress: identity/inline_identity_lose_this",
 			"terser compress: issue-973/this_binding_collapse_vars",
 			"terser compress: new/new_statement",
 			"terser compress: new/new_constructor_with_unary_arguments",
@@ -337,8 +336,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/issue_1631_1",
 			"terser compress: collapse_vars/issue_2436_4",
 			"terser compress: collapse_vars/issue_2436_8",
-			"terser compress: collapse_vars/issue_2436_14",
-			"terser compress: collapse_vars/unsafe_builtin"
+			"terser compress: collapse_vars/issue_2436_14"
 		]
 	],
 	[
@@ -382,8 +380,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: functions/issue_1841_1",
 			"terser compress: functions/function_returning_constant_literal",
 			"terser compress: functions/issue_2630_1",
-			"terser compress: functions/recursive_inline_2",
-			"terser compress: functions/drop_lone_use_strict_arrows_2"
+			"terser compress: functions/recursive_inline_2"
 		]
 	],
 	[
@@ -434,7 +431,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: destructuring/unused_destructuring_class_method_param",
 			"terser compress: destructuring/empty_object_destructuring_3",
 			"terser compress: destructuring/empty_object_destructuring_4",
-			"terser compress: destructuring/empty_object_destructuring_misc",
 			"terser compress: destructuring/destructure_empty_array_3"
 		]
 	],
@@ -533,7 +529,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `identity` tests cover",
 		[
-			"terser compress: identity/inline_identity_undefined",
 			"terser compress: identity/inline_identity_extra_params",
 			"terser compress: identity/inline_identity_inline_function",
 			"terser compress: identity/inline_identity_inner_ref",
@@ -544,10 +539,8 @@ const SWC_SMALLER_BY_REASON = [
 		"swc goes further than webpack on what terser's `labels` tests cover",
 		[
 			"terser compress: labels/labels_1",
-			"terser compress: labels/labels_2",
 			"terser compress: labels/labels_3",
-			"terser compress: labels/labels_4",
-			"terser compress: labels/labels_5"
+			"terser compress: labels/labels_4"
 		]
 	],
 	[
@@ -614,11 +607,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc follows a variable's value through its reassignments and folds the result to a constant",
-		[
-			"terser compress: reduce_vars/issue_1670_1",
-			"terser compress: reduce_vars/issue_1670_3",
-			"terser compress: reduce_vars/redefine_farg_2"
-		]
+		["terser compress: reduce_vars/redefine_farg_2"]
 	],
 	[
 		'swc picks shorter spellings for comparisons and coercions: `"u">typeof x`, `null==x`, `==` between operands of one type, `!!x` for `Boolean(x)`, no `|0` on an int32',
@@ -636,7 +625,6 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: arrow/async_identifiers",
 			"terser compress: arrow/issue_27",
-			"terser compress: arrow/concise_methods_with_computed_property2",
 			"terser compress: arrow/async_object_literal"
 		]
 	],
@@ -662,8 +650,7 @@ const SWC_SMALLER_BY_REASON = [
 		"swc goes further than webpack on what terser's `harmony` tests cover",
 		[
 			"terser compress: harmony/object_spread_unsafe",
-			"terser compress: harmony/array_literal_with_spread_3a",
-			"terser compress: harmony/issue_2794_3"
+			"terser compress: harmony/array_literal_with_spread_3a"
 		]
 	],
 	[
@@ -893,10 +880,6 @@ const SWC_SMALLER_BY_REASON = [
 		["terser compress: drop-console/unexpected_side_effects_dropping_console"]
 	],
 	[
-		"swc goes further than webpack on what terser's `hoist_vars` tests cover",
-		["terser compress: hoist_vars/issue_2295"]
-	],
-	[
 		"swc goes further than webpack on what terser's `inline` tests cover",
 		["terser compress: inline/inline_annotation_2"]
 	],
@@ -919,14 +902,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `nullish` tests cover",
 		["terser compress: nullish/nullish_coalescing_boolean_context"]
-	],
-	[
-		"swc goes further than webpack on what terser's `regexp` tests cover",
-		["terser compress: regexp/regexp_2"]
-	],
-	[
-		"swc goes further than webpack on what terser's `typeof` tests cover",
-		["terser compress: typeof/typeof_defun_2"]
 	],
 	[
 		"swc goes further than webpack on what swc's `fixture/non-finite-number-literals` tests cover",
