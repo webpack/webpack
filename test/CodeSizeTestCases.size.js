@@ -12,7 +12,6 @@ const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
 const webpack = require("..");
-const { DEFAULTS } = require("../lib/config/defaults");
 const ConcatenatedModule = require("../lib/optimize/ConcatenatedModule");
 const { makePathsRelative } = require("../lib/util/identifier");
 const httpUrlServers = require("./configCases/asset-modules/http-url/server");
@@ -459,11 +458,6 @@ const measureCase = async ({ category, name, directory: testDirectory }) => {
 	// webpack itself has created it.
 	fs.mkdirSync(outputDirectory, { recursive: true });
 
-	// `experiments.futureDefaults` flips this process-wide default, so every later
-	// case in the same worker hashes its module ids differently and changes size for
-	// no reason. Restored after the build, so a case is measured as if built alone.
-	const hashFunction = DEFAULTS.HASH_FUNCTION;
-
 	/** @type {CaseResult} */
 	const result = {
 		metrics: createMetrics(),
@@ -602,7 +596,6 @@ const measureCase = async ({ category, name, directory: testDirectory }) => {
 		result.compilers = {};
 		result.metrics = createMetrics();
 	} finally {
-		DEFAULTS.HASH_FUNCTION = hashFunction;
 		// Also on the error path: an unclosed compiler holds its caches for the
 		// rest of the worker's life, and a case that set a fixture up has to be
 		// given the chance to remove it again.

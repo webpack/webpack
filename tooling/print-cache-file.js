@@ -11,9 +11,13 @@ const SerializerMiddleware = require("../lib/serialization/SerializerMiddleware"
 
 const binaryMiddleware = new BinaryMiddleware();
 
-const serializer = new Serializer([binaryMiddleware, new FileMiddleware(fs)]);
+// reading a cache hashes nothing, so the hash function is never used
+const serializer = new Serializer([
+	binaryMiddleware,
+	new FileMiddleware(fs, "xxhash64")
+]);
 
-const rawSerializer = new Serializer([new FileMiddleware(fs)]);
+const rawSerializer = new Serializer([new FileMiddleware(fs, "xxhash64")]);
 
 /** @type {(SizeInfo | undefined)[]} */
 const lazySizes = [];

@@ -59,7 +59,7 @@ const countVisits = (entrypoint) => {
 describe("ChunkGraph", () => {
 	describe("getRuntimeChunkDependentChunksIterable", () => {
 		it("visits a shared dependent entrypoint only once", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 			const root = createEntrypoint("root", true);
 			const left = createEntrypoint("left");
 			const right = createEntrypoint("right");
@@ -86,7 +86,7 @@ describe("ChunkGraph", () => {
 		});
 
 		it("visits each entrypoint of a diamond chain once", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 			const root = createEntrypoint("root", true);
 			// without deduplication every diamond doubles the work, so a chain of
 			// `depth` diamonds costs 2 ** depth visits of the final entrypoint
@@ -123,7 +123,7 @@ describe("ChunkGraph", () => {
 		// chunk set is built only where a chunk is added. Every reader has to
 		// answer without one.
 		it("answers every accessor without a chunk set", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 			const module = new RawModule("", "no-chunk");
 			expect(chunkGraph.getNumberOfModuleChunks(module)).toBe(0);
 			expect([...chunkGraph.getModuleChunksIterable(module)]).toEqual([]);
@@ -138,7 +138,7 @@ describe("ChunkGraph", () => {
 		});
 
 		it("refuses to have the shared answer modified", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 			const module = new RawModule("", "frozen");
 			const chunks = /** @type {EXPECTED_ANY} */ (
 				chunkGraph.getModuleChunksIterable(module)
@@ -149,7 +149,7 @@ describe("ChunkGraph", () => {
 		});
 
 		it("takes its chunks back when disconnected", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 			const module = new RawModule("", "connected");
 			const chunk = new Chunk("a", false);
 			chunkGraph.connectChunkAndModule(chunk, module);
@@ -161,7 +161,7 @@ describe("ChunkGraph", () => {
 		});
 
 		it("can be disconnected although it holds no chunk set", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 			const module = new RawModule("", "never-connected");
 			const chunk = new Chunk("a", false);
 			// Nothing to delete from, which must not throw.
@@ -170,7 +170,7 @@ describe("ChunkGraph", () => {
 		});
 
 		it("grows into a set once a second chunk contains it", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 			const module = new RawModule("", "two-chunks");
 			const first = new Chunk("a", false);
 			first.runtime = "a";
@@ -195,7 +195,7 @@ describe("ChunkGraph", () => {
 		});
 
 		it("reads the runtime of the one chunk it is in", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 			const module = new RawModule("", "one-runtime");
 			const chunk = new Chunk("a", false);
 			chunk.runtime = "a";
@@ -211,7 +211,7 @@ describe("ChunkGraph", () => {
 		});
 
 		it("forgets the runtime it cached when its chunk changes", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 			const module = new RawModule("", "moved");
 			const first = new Chunk("a", false);
 			first.runtime = "a";
@@ -232,7 +232,7 @@ describe("ChunkGraph", () => {
 		});
 
 		it("takes a third chunk into the set it already has", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 			const module = new RawModule("", "three-chunks");
 			const chunks = ["a", "b", "c"].map((name) => {
 				const chunk = new Chunk(name, false);
@@ -251,7 +251,7 @@ describe("ChunkGraph", () => {
 		});
 
 		it("lets go of a chunk that disconnects every module at once", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 			const first = new RawModule("", "first");
 			const second = new RawModule("", "second");
 			const chunk = new Chunk("a", false);
@@ -264,7 +264,7 @@ describe("ChunkGraph", () => {
 		});
 
 		it("keeps the one chunk it has when another disconnects", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 			const module = new RawModule("", "other-chunk");
 			const held = new Chunk("a", false);
 			const other = new Chunk("b", false);
@@ -275,7 +275,7 @@ describe("ChunkGraph", () => {
 		});
 
 		it("orders one chunk without asking the comparer", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 			const module = new RawModule("", "ordered-one");
 			const chunk = new Chunk("a", false);
 			chunkGraph.connectChunkAndModule(chunk, module);
@@ -291,7 +291,7 @@ describe("ChunkGraph", () => {
 		});
 
 		it("orders the chunks of a module in several", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 			const module = new RawModule("", "ordered-many");
 			const first = new Chunk("a", false);
 			const second = new Chunk("b", false);
@@ -310,7 +310,7 @@ describe("ChunkGraph", () => {
 		});
 
 		it("moves a replaced module's chunks onto one holding no set", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 			const oldModule = new RawModule("", "old");
 			const newModule = new RawModule("", "new");
 			const chunk = new Chunk("a", false);
@@ -322,7 +322,7 @@ describe("ChunkGraph", () => {
 		});
 
 		it("forgets the runtimes of a module it replaced", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 			const oldModule = new RawModule("", "old-runtimes");
 			const newModule = new RawModule("", "new-runtimes");
 			const chunk = new Chunk("a", false);
@@ -336,7 +336,7 @@ describe("ChunkGraph", () => {
 		});
 
 		it("replaces a module that is in no chunk", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 			const oldModule = new RawModule("", "old-loose");
 			const newModule = new RawModule("", "new-loose");
 			chunkGraph.replaceModule(oldModule, newModule);

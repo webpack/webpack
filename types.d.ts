@@ -2166,7 +2166,7 @@ declare class ChunkGraph {
 	/**
 	 * Creates an instance of ChunkGraph.
 	 */
-	constructor(moduleGraph: ModuleGraph, hashFunction?: HashFunction);
+	constructor(moduleGraph: ModuleGraph, hashFunction: HashFunction);
 	moduleGraph: ModuleGraph;
 	buildTimeExecution: boolean;
 
@@ -13229,7 +13229,7 @@ declare interface HashedModuleIdsPluginOptions {
 	hashDigestLength?: number;
 
 	/**
-	 * The hashing algorithm to use, defaults to 'md4'. All functions from Node.JS' crypto.createHash are supported.
+	 * The hashing algorithm to use, defaults to `output.hashFunction`. All functions from Node.JS' crypto.createHash are supported.
 	 */
 	hashFunction?: string | typeof Hash;
 }
@@ -39380,7 +39380,7 @@ declare namespace exports {
 			__2: {
 				requestShortener: RequestShortener;
 				chunkGraph: ChunkGraph;
-				hashFunction?: string | typeof Hash;
+				hashFunction: HashFunction;
 				hashDigest?: string;
 				hashSalt?: string;
 			}

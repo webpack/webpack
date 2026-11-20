@@ -53,7 +53,7 @@ const createChain = () => {
 describe("Module.isAccessibleInChunk", () => {
 	it("is accessible when an ancestor group's chunk holds the module", () => {
 		const { entryChunk, nested } = createChain();
-		const chunkGraph = new ChunkGraph(new ModuleGraph());
+		const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 		const module = new RawModule("", "m", "m");
 		chunkGraph.connectChunkAndModule(entryChunk, module);
 
@@ -62,7 +62,7 @@ describe("Module.isAccessibleInChunk", () => {
 
 	it("walks up to the initial group when no ancestor holds the module", () => {
 		const { asyncChunk, nested } = createChain();
-		const chunkGraph = new ChunkGraph(new ModuleGraph());
+		const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 		const module = new RawModule("", "m", "m");
 		chunkGraph.connectChunkAndModule(asyncChunk, new RawModule("", "o", "o"));
 
@@ -71,7 +71,7 @@ describe("Module.isAccessibleInChunk", () => {
 
 	it("ignores the given chunk", () => {
 		const { asyncChunk, nestedChunk } = createChain();
-		const chunkGraph = new ChunkGraph(new ModuleGraph());
+		const chunkGraph = new ChunkGraph(new ModuleGraph(), "xxhash64");
 		const module = new RawModule("", "m", "m");
 		chunkGraph.connectChunkAndModule(asyncChunk, module);
 

@@ -44,13 +44,13 @@ describe("CacheFacade", () => {
 		it("resolves the stored value", async () => {
 			const { cache, data } = createCache();
 			data.set("facade|id", "value");
-			const facade = new CacheFacade(cache, "facade");
+			const facade = new CacheFacade(cache, "facade", "xxhash64");
 			await expect(facade.getPromise("id", null)).resolves.toBe("value");
 		});
 
 		it("rejects when the cache errors", async () => {
 			const { cache } = createCache({ getError: new Error("get failed") });
-			const facade = new CacheFacade(cache, "facade");
+			const facade = new CacheFacade(cache, "facade", "xxhash64");
 			await expect(facade.getPromise("id", null)).rejects.toThrow(
 				"get failed"
 			);
@@ -61,7 +61,7 @@ describe("CacheFacade", () => {
 		it("calls back with the cached value on a hit", (done) => {
 			const { cache, data } = createCache();
 			data.set("facade|id", "cached");
-			const facade = new CacheFacade(cache, "facade");
+			const facade = new CacheFacade(cache, "facade", "xxhash64");
 			const computer = jest.fn();
 			facade.provide("id", null, computer, (err, result) => {
 				expect(err).toBeNull();
@@ -73,7 +73,7 @@ describe("CacheFacade", () => {
 
 		it("computes and stores the value on a miss", (done) => {
 			const { cache, data } = createCache();
-			const facade = new CacheFacade(cache, "facade");
+			const facade = new CacheFacade(cache, "facade", "xxhash64");
 			facade.provide(
 				"id",
 				null,
@@ -89,7 +89,7 @@ describe("CacheFacade", () => {
 
 		it("passes on an error of the cache", (done) => {
 			const { cache } = createCache({ getError: new Error("get failed") });
-			const facade = new CacheFacade(cache, "facade");
+			const facade = new CacheFacade(cache, "facade", "xxhash64");
 			facade.provide(
 				"id",
 				null,
@@ -103,7 +103,7 @@ describe("CacheFacade", () => {
 
 		it("passes on an error of the computer", (done) => {
 			const { cache, data } = createCache();
-			const facade = new CacheFacade(cache, "facade");
+			const facade = new CacheFacade(cache, "facade", "xxhash64");
 			facade.provide(
 				"id",
 				null,
@@ -120,7 +120,7 @@ describe("CacheFacade", () => {
 			const { cache } = createCache({
 				storeError: new Error("store failed")
 			});
-			const facade = new CacheFacade(cache, "facade");
+			const facade = new CacheFacade(cache, "facade", "xxhash64");
 			facade.provide(
 				"id",
 				null,
@@ -137,7 +137,7 @@ describe("CacheFacade", () => {
 		it("returns a cached value without computing", async () => {
 			const { cache, data } = createCache();
 			data.set("facade|id", "cached");
-			const facade = new CacheFacade(cache, "facade");
+			const facade = new CacheFacade(cache, "facade", "xxhash64");
 			const computer = jest.fn(() => "computed");
 			await expect(facade.providePromise("id", null, computer)).resolves.toBe(
 				"cached"
@@ -147,7 +147,7 @@ describe("CacheFacade", () => {
 
 		it("computes and stores the value on a miss", async () => {
 			const { cache, data } = createCache();
-			const facade = new CacheFacade(cache, "facade");
+			const facade = new CacheFacade(cache, "facade", "xxhash64");
 			await expect(
 				facade.providePromise("id", null, async () => "computed")
 			).resolves.toBe("computed");
@@ -206,5 +206,33 @@ describe("ItemCacheFacade", () => {
 			"computed"
 		);
 		expect(data.get("item")).toBe("computed");
+	});
+
+	describe("getLazyHashedEtag", () => {
+		/** @type {import("../../lib/cache/getLazyHashedEtag").HashableObject} */
+		const obj = { updateHash: (hash) => hash.update("a") };
+
+		it("hashes with what a resolver gives once it is known", () => {
+			const { cache } = createCache();
+			/** @type {string | undefined} */
+			let hashFunction;
+			const facade = new CacheFacade(cache, "facade", {
+				getHashFunction: () => hashFunction
+			});
+			hashFunction = "sha256";
+			expect(String(facade.getLazyHashedEtag(obj))).toBe(
+				String(new CacheFacade(cache, "facade", "sha256").getLazyHashedEtag(obj))
+			);
+		});
+
+		it("throws while the resolver does not know the hash function", () => {
+			const { cache } = createCache();
+			const facade = new CacheFacade(cache, "facade", {
+				getHashFunction: () => undefined
+			});
+			expect(() => facade.getLazyHashedEtag(obj)).toThrow(
+				/not known before the plugins are applied/
+			);
+		});
 	});
 });
