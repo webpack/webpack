@@ -545,6 +545,18 @@ const describeCases = (config) => {
 											)
 										);
 									}
+									for (const child of compilers) {
+										const { watching } = child;
+										const compilation = lastChildCompilations.get(child);
+										if (!watching || !watching.suspended || !compilation) continue;
+										// a watch the OS dropped under load reports no re-touch either: a new
+										// watcher from the last start time reports every change since then
+										watching.watch(
+											compilation.fileDependencies,
+											compilation.contextDependencies,
+											compilation.missingDependencies
+										);
+									}
 									// macOS can drop a change event entirely
 									const now = new Date();
 									for (const file of unseenChanges) {
