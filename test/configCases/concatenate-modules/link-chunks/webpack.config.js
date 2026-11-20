@@ -12,6 +12,8 @@ module.exports = {
 	},
 	optimization: {
 		minimize: false,
+		// a named id escapes into the binding names
+		moduleIds: "named",
 		concatenateModules: { linkChunks: true },
 		splitChunks: {
 			cacheGroups: {
