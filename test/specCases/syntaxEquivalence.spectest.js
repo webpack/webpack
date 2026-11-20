@@ -3104,16 +3104,36 @@ describe("a minified page renders as the page it came from", () => {
 	const differing = async (pairs) => {
 		/** @type {string[]} */
 		const out = [];
+		// a stall's recovery costs its deadline and a relaunch: past this point
+		// what is left is reported, so the test's timeout never hides its names
+		const recoverUntil = Date.now() + FILE_TIMEOUT - 2 * BATCH_DEADLINE;
+		/**
+		 * @param {number} deadline how long a render may take, in milliseconds
+		 * @returns {boolean} true, when the render and its recovery fit the test
+		 */
+		const canRecover = (deadline) => Date.now() + deadline < recoverUntil;
+		let stalled = false;
 		for (const width of RENDER_WIDTHS) {
 			for (let at = 0; at < pairs.length; at += 20) {
 				const batch = pairs.slice(at, at + 20);
+				if (stalled && !canRecover(BATCH_DEADLINE)) {
+					for (const pair of batch) {
+						out.push(`${width}px ${pair.name}: no time left to render it`);
+					}
+					continue;
+				}
 				let reports = await renderWithin(batch, width, BATCH_DEADLINE);
-				if (reports === undefined) {
+				stalled = stalled || reports === undefined;
+				if (reports === undefined && canRecover(BATCH_DEADLINE)) {
 					reports = await renderWithin(batch, width, BATCH_DEADLINE);
 				}
 				if (reports === undefined) {
 					reports = [];
 					for (const pair of batch) {
+						if (!canRecover(PAIR_DEADLINE)) {
+							out.push(`${width}px ${pair.name}: no time left to render it`);
+							continue;
+						}
 						const one = await renderWithin([pair], width, PAIR_DEADLINE);
 						if (one === undefined) {
 							out.push(
