@@ -80,13 +80,13 @@ p: v;
 p: v;
 }@unknown x y {
 p: v;
-}@unknown x,y x(1+/**/2) {
+}@unknown x,y x(/*test*/1/*test*/+/*test*/2/*test*/) {
 p: v;
 }@unknown {
 p: v;
 }@unknown x y {
 p: v;
-}@unknown x , y x(1 + 2) {
+}@unknown x , y x(  1  +  2  ) {
 p: v;
 }@unknown {
 s {
@@ -119,7 +119,7 @@ p: v;
 s {
 p: v;
 }
-}@unknown x,y f(1+/**/2) {
+}@unknown x,y f(/*test*/1/*test*/+/*test*/2/*test*/) {
 s {
 p: v;
 }
@@ -131,11 +131,11 @@ p: v;
 s {
 p: v;
 }
-}@unknown x , y f(1) {
+}@unknown x , y f(  1  ) {
 s {
 p: v;
 }
-}@unknown x , y f(1 2) {
+}@unknown x , y f(  1    2  ) {
 s {
 p: v;
 }
@@ -164,11 +164,11 @@ p: v;
 }
 }
 color: red;
-}@unknown x (a , b);@unknown x (a , b) {
+}@unknown x ( a , b );@unknown x ( a , b ) {
 foo: bar;
-}@unknown x(a, b) {
+}@unknown x( a, b ) {
 foo: bar;
-}@unknown x (a + b);@unknown x (a - b);@unknown x (a * b);@unknown x (a / b);@unknown {
+}@unknown x ( a + b );@unknown x ( a - b );@unknown x ( a * b );@unknown x ( a / b );@unknown {
 }"
 `;
 
@@ -1986,7 +1986,7 @@ content: '\\\\'\\"\\\\\\\\';
 }@media print and (min-resolution: 300x) {
 }div {
 prop: [];
-prop: [ ];
+prop: [];
 prop: [row1-start];
 prop: [row1-start-with-spaces-around];
 prop: [red #fff 12px];

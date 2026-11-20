@@ -49801,6 +49801,23 @@ exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-a-comment-between-
 
 exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-a-comment-between-two-tokens tokenizes 1`] = `"left-parenthesis[0,1] ident[1,2] comment[2,6] ident[6,7] right-parenthesis[7,8] left-curly-bracket[8,9] end=9"`;
 
+exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-an-at-rule-condition-as-written parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"()\\",[\\"()\\",[\\"ident\\",\\"a\\"],\\" \\"]]],[]],[\\"at-rule\\",\\"container\\",[[\\"()\\"]],[]],[\\"at-rule\\",\\"supports\\",[[\\"()\\"],[\\"ident\\",\\"or\\"],\\" \\",[\\"function\\",\\"é\\",\\" \\"],[\\"ident\\",\\"or\\"],\\" \\",[\\"()\\"]],[]],[\\"at-rule\\",\\"media\\",[\\" \\",[\\"()\\",[\\"function\\",\\"é\\",\\" \\"]]],[]],[\\"qualified rule\\",[[\\"function\\",\\"a\\",[\\"ident\\",\\"a\\"],[\\"ident\\",\\"a\\"]]],[]]]"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-an-at-rule-condition-as-written parses 2`] = `""`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-an-at-rule-condition-as-written prints {"mode":"beautify"} 1`] = `
+"@media ((a )) {
+}@container (/**/) {
+}@supports ()or é( )or () {
+}@media (é( )) {
+}a(a/**/a) {
+}"
+`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-an-at-rule-condition-as-written prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-an-at-rule-condition-as-written tokenizes 1`] = `"at-keyword[0,6] whitespace[6,7] left-parenthesis[7,8] left-parenthesis[8,9] ident[9,10] whitespace[10,11] right-parenthesis[11,12] right-parenthesis[12,13] left-curly-bracket[13,14] right-curly-bracket[14,15] at-keyword[15,25] left-parenthesis[25,26] comment[26,30] right-parenthesis[30,31] left-curly-bracket[31,32] right-curly-bracket[32,33] at-keyword[33,42] left-parenthesis[42,43] right-parenthesis[43,44] ident[44,46] whitespace[46,47] function[47,49] whitespace[49,50] right-parenthesis[50,51] ident[51,53] whitespace[53,54] left-parenthesis[54,55] right-parenthesis[55,56] left-curly-bracket[56,57] right-curly-bracket[57,58] at-keyword[58,64] whitespace[64,65] left-parenthesis[65,66] function[66,68] whitespace[68,69] right-parenthesis[69,70] right-parenthesis[70,71] left-curly-bracket[71,72] right-curly-bracket[72,73] function[73,75] ident[75,76] comment[76,80] ident[80,81] right-parenthesis[81,82] left-curly-bracket[82,83] right-curly-bracket[83,84] end=84"`;
+
 exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-the-space-in-an-empty-media-condition parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"()\\",[\\"()\\",\\" \\"]]],[]]]"`;
 
 exports[`CSS syntax — invariants syntax-fuzz-beautify-keeps-the-space-in-an-empty-media-condition parses 2`] = `""`;
