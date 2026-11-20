@@ -5320,7 +5320,7 @@ declare interface ConcatenateModulesOptions {
 	 * @since 5.114.0
 	 * @experimental
 	 */
-	linkChunks?: boolean;
+	crossChunkImports?: boolean;
 }
 type ConcatenatedModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
@@ -38877,7 +38877,7 @@ declare namespace exports {
 		liveSetters?: Map<string, LiveBinding>;
 
 		/**
-		 * where a module linked across chunks is hoisted (see `optimization.concatenateModules.linkChunks`)
+		 * where a module linked across chunks is hoisted (see `optimization.concatenateModules.crossChunkImports`)
 		 */
 		linkedBinding?: LinkedBinding;
 

@@ -342,7 +342,7 @@ export interface ConcatenateModulesOptions {
 	 * @since 5.114.0
 	 * @experimental
 	 */
-	linkChunks?: boolean;
+	crossChunkImports?: boolean;
 }
 
 /**
