@@ -70,3 +70,26 @@ try {
 } catch (e) {
 	console.log(e.message);
 }
+function chained(a, g, u) {
+	if (a) return "a";
+	if (((u = g(a)), u >= 0)) return u;
+	return "none";
+}
+function folded(a, g, u) {
+	if (a) return "a";
+	if (((u = g(a)), u)) return "b";
+	return "none";
+}
+function elsed(a, g, u) {
+	if (((u = g(a)), u >= 0)) console.log("then", u);
+	else console.log("else");
+}
+function measure(a) {
+	return a.length - 2;
+}
+[0, "a", "abc"].forEach(function (a) {
+	console.log(chained(a === 0, measure, 0), folded(a === 0, measure, 0));
+	elsed(a, measure, 0);
+});
+console.log(chained(true, measure, 0), folded(true, measure, 0));
+elsed("abcd", measure, 0);
