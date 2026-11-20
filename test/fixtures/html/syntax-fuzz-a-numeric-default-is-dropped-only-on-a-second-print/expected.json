@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "      -> ",
+		"presets": [
+			"aggressive",
+			"embedded",
+			"embedded+legacy"
+		],
+		"why": "known bug: the redundant default check reads `span='01'` as written, before the numeric rewrite prints it `1`, so only a second print drops it"
+	}
+]

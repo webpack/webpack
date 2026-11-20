@@ -839,6 +839,14 @@ const sweepRespellings = (minify, html, minified) => {
 	return reports;
 };
 
+// Inline elements an empty, attribute-less one of which renders nothing, so it
+// splits no word; one with attributes is kept, and its edges are edges.
+const EMPTY_INLINE_ELEMENTS = new Set(
+	"a abbr b bdi bdo cite code data del dfn em i ins kbd label mark s samp small span strong sub sup time u var".split(
+		" "
+	)
+);
+
 /**
  * What a document says, read by webpack's own parser: the words of its text and
  * each `<style>` sheet in its canonical CSS form, plus, where `tree` is set, every
@@ -848,9 +856,10 @@ const sweepRespellings = (minify, html, minified) => {
  * @param {string} html a document
  * @param {boolean} tree whether the element tree is read too
  * @param {CssOptions} cssOptions the options the sheets are minified with
+ * @param {boolean=} edgesDrop whether whitespace at every element's edge may go, as `collapseWhitespace: "all"` drops it
  * @returns {{ said: string[], sheets: string[] }} what it says, and each non-empty sheet
  */
-const htmlMeaning = (html, tree, cssOptions) => {
+const htmlMeaning = (html, tree, cssOptions, edgesDrop) => {
 	/** @type {string[]} */
 	const said = [];
 	/** @type {string[]} */
@@ -867,11 +876,26 @@ const htmlMeaning = (html, tree, cssOptions) => {
 		if (words !== "") for (const word of words.split(" ")) said.push(word);
 		run = "";
 	};
+	// An inline element splits the run only once something is found inside it.
+	let pending = false;
+	const settle = () => {
+		if (pending) flush();
+		pending = false;
+	};
 	/** @type {Record<number, { enter: (nodePath: EXPECTED_ANY) => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
 	const visitors = {
 		[NodeType.Element]: {
 			enter: (nodePath) => {
-				flush();
+				settle();
+				if (
+					!tree &&
+					EMPTY_INLINE_ELEMENTS.has(nodePath.name()) &&
+					nodePath.fieldCount(Field.attributes) === 0
+				) {
+					pending = true;
+				} else {
+					flush();
+				}
 				open.push(nodePath.name());
 				if (!tree) return;
 				/** @type {string[]} */
@@ -887,13 +911,17 @@ const htmlMeaning = (html, tree, cssOptions) => {
 				);
 			},
 			exit: (nodePath) => {
-				flush();
+				if (pending) pending = false;
+				else flush();
 				open.pop();
 				if (tree) said.push(`</${nodePath.name()}>`);
 			}
 		},
 		[NodeType.Text]: {
 			enter: (nodePath) => {
+				// Whitespace an empty inline element holds sits at both its edges.
+				if (pending && edgesDrop && /^\s*$/.test(nodePath.value())) return;
+				settle();
 				const parent = open[open.length - 1];
 				if (parent === "script") return;
 				const text = nodePath.value();
@@ -952,8 +980,9 @@ const meaningReports = (html, printed, options, cssOptions) => {
 		!options.removeEmptyAttributes &&
 		!options.removeRedundantAttributes &&
 		!options.mergeStyles;
-	const before = htmlMeaning(html, tree, cssOptions);
-	const after = htmlMeaning(printed, tree, cssOptions);
+	const edgesDrop = options.collapseWhitespace === "all";
+	const before = htmlMeaning(html, tree, cssOptions, edgesDrop);
+	const after = htmlMeaning(printed, tree, cssOptions, edgesDrop);
 	let at = 0;
 	while (at < before.said.length && before.said[at] === after.said[at]) at++;
 	if (at < before.said.length || at < after.said.length) {

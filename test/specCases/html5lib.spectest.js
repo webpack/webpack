@@ -231,11 +231,7 @@ describe("html5lib-tests webpack build", () => {
 const treeDir = path.resolve(__dirname, "../external/wpt/html/syntax/parsing/resources");
 
 /** @type {Set<string>} intentional, documented exceptions */
-const KNOWN_DIVERGENCES = new Set([
-	// Expects `</font>` ignored, which is the deleted "in select" mode; `select`
-	// is in the special category, so the adoption agency moves it instead.
-	"webkit02.dat #48"
-]);
+const KNOWN_DIVERGENCES = new Set();
 
 /**
  * @typedef {object} TreeCase

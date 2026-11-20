@@ -1,0 +1,26 @@
+[
+	{
+		"relation": "respelling quote-double",
+		"contains": "    <aaaaa a=\"`\">  ->  <aaaaa a=\"`\"></aaaaa>",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: a value holding a backtick on a fostered element prints bare where the source leaves it bare and quoted where the source quotes it, so the spellings print other bytes"
+	},
+	{
+		"relation": "respelling quote-single",
+		"contains": "    <aaaaa a='`'>  ->  <aaaaa a='`'></aaaaa>",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: a value holding a backtick on a fostered element prints bare where the source leaves it bare and quoted where the source quotes it, so the spellings print other bytes"
+	},
+	{
+		"relation": "respelling references",
+		"contains": "    <aaaaa a=\"&#x60;\">  ->  <aaaaa a=\"`\"></aaaaa>",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: a value holding a backtick on a fostered element prints bare where the source leaves it bare and quoted where the source quotes it, so the spellings print other bytes"
+	}
+]

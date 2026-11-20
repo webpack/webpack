@@ -1,0 +1,18 @@
+[
+	{
+		"relation": "slices",
+		"contains": "      -> Text[10,13) Element:table[3,13) Element:t[0,13)",
+		"presets": [
+			"parse"
+		],
+		"why": "known bug: inside a template, `t`'s range runs over a `<table>` the tree does not put inside it, so its own bytes reparse with one"
+	},
+	{
+		"relation": "cut slices",
+		"contains": "      -> Text[10,12) Element:table[3,12) Element:t[0,12)",
+		"presets": [
+			"parse"
+		],
+		"why": "known bug: inside a template, `t`'s range runs over a `<table>` the tree does not put inside it, so its own bytes reparse with one"
+	}
+]
