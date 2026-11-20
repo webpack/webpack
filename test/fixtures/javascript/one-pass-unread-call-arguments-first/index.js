@@ -23,3 +23,8 @@ console.log(c);
 for (var i = 0; i < 2; (function () {
 	i++;
 })(log(i)));
+log("before");
+(function () {
+	log("body");
+})((log("first"), log("second")), 1);
+log("after");
