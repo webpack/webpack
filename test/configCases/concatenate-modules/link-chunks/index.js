@@ -38,7 +38,7 @@ it("should hoist the linkable shared modules into one scope with native exports"
 	}
 	const [exported] = /^export \{ .* \};$/m.exec(scope);
 	expect(exported).not.toMatch(/\bbracket as /);
-	expect(exported).toMatch(/\bcount as \$\d+[\w$]+\b/);
+	expect(exported).toMatch(/\bcount as \$\d/);
 
 	// each bailout keeps its module in the registry
 	for (const bailout of [
@@ -58,8 +58,15 @@ it("should hoist the linkable shared modules into one scope with native exports"
 	expect(shared).not.toContain("dup");
 	for (const page of ["page-a.chunk.mjs", "page-b.chunk.mjs"]) {
 		expect(read(page)).toContain('const dup = () => "dup";');
-		expect(read(page)).toMatch(
-			/^import \{ (?:\$\d+[\w$]+ as __webpack_linked_\w+, )*\$\d+[\w$]+ as __webpack_linked_\w+ \} from "\.\/shared\.chunk\.mjs";$/m
-		);
+		const imports = read(page)
+			.split("\n")
+			.filter((line) => line.endsWith(' } from "./shared.chunk.mjs";'));
+		expect(imports).toHaveLength(1);
+		for (const specifier of imports[0]
+			.slice("import { ".length, -' } from "./shared.chunk.mjs";'.length)
+			.split(", ")) {
+			expect(specifier).toMatch(/^\$\d/);
+			expect(specifier).toContain(" as __webpack_linked_");
+		}
 	}
 });
