@@ -3032,7 +3032,12 @@ describe("a minified page renders as the page it came from", () => {
 	// closing a stalled browser and launching a new one, which a render's
 	// deadline leaves room for so the test reports before Jest's timeout
 	const RELAUNCH_ALLOWANCE = 30000;
+	// what a failed relaunch leaves the test to report it in
+	const REPORT_ALLOWANCE = 5000;
 	let testStart = 0;
+
+	/** @returns {number} milliseconds the running test has before Jest's timeout */
+	const timeLeft = () => testStart + FILE_TIMEOUT - Date.now();
 
 	beforeEach(() => {
 		testStart = Date.now();
@@ -3090,10 +3095,20 @@ describe("a minified page renders as the page it came from", () => {
 		if (reports === undefined) {
 			pending.catch(() => {});
 			const stuck = browser;
-			await within(stuck.close(), PAIR_DEADLINE).catch(() => {});
+			await within(
+				stuck.close(),
+				Math.min(PAIR_DEADLINE, timeLeft() - REPORT_ALLOWANCE)
+			).catch(() => {});
 			try {
-				browser = await launchBrowser({ browser: ENGINE });
-				page = await openPage();
+				const relaunched = await within(
+					(async () => {
+						browser = await launchBrowser({ browser: ENGINE });
+						page = await openPage();
+						return true;
+					})(),
+					timeLeft() - REPORT_ALLOWANCE
+				);
+				if (!relaunched) throw new Error("no time left to relaunch the browser");
 			} catch (error) {
 				unrecovered = new Error(
 					`no page to render in once ${batch.map(({ name }) => name).join(", ")} ran past ${deadline}ms`,
@@ -3117,10 +3132,7 @@ describe("a minified page renders as the page it came from", () => {
 		 * @returns {number} that deadline, cut to what the test has left after a relaunch
 		 */
 		const fitting = (deadline) =>
-			Math.min(
-				deadline,
-				testStart + FILE_TIMEOUT - RELAUNCH_ALLOWANCE - Date.now()
-			);
+			Math.min(deadline, timeLeft() - RELAUNCH_ALLOWANCE);
 		for (const width of RENDER_WIDTHS) {
 			for (let at = 0; at < pairs.length; at += 20) {
 				const batch = pairs.slice(at, at + 20);
