@@ -3029,6 +3029,14 @@ describe("a minified page renders as the page it came from", () => {
 	// again, then a pair at a time, to name what never ends.
 	const BATCH_DEADLINE = 40000;
 	const PAIR_DEADLINE = 20000;
+	// closing a stalled browser and launching a new one, which a render's
+	// deadline leaves room for so the test reports before Jest's timeout
+	const RELAUNCH_ALLOWANCE = 30000;
+	let testStart = 0;
+
+	beforeEach(() => {
+		testStart = Date.now();
+	});
 
 	/** @returns {Promise<import("playwright-core").Page>} a page ready to render in */
 	const openPage = async () => {
@@ -3104,40 +3112,37 @@ describe("a minified page renders as the page it came from", () => {
 	const differing = async (pairs) => {
 		/** @type {string[]} */
 		const out = [];
-		// a stall's recovery costs its deadline and a relaunch: past this point
-		// what is left is reported, so the test's timeout never hides its names
-		const recoverUntil = Date.now() + FILE_TIMEOUT - 2 * BATCH_DEADLINE;
 		/**
 		 * @param {number} deadline how long a render may take, in milliseconds
-		 * @returns {boolean} true, when the render and its recovery fit the test
+		 * @returns {number} that deadline, cut to what the test has left after a relaunch
 		 */
-		const canRecover = (deadline) => Date.now() + deadline < recoverUntil;
-		let stalled = false;
+		const fitting = (deadline) =>
+			Math.min(
+				deadline,
+				testStart + FILE_TIMEOUT - RELAUNCH_ALLOWANCE - Date.now()
+			);
 		for (const width of RENDER_WIDTHS) {
 			for (let at = 0; at < pairs.length; at += 20) {
 				const batch = pairs.slice(at, at + 20);
-				if (stalled && !canRecover(BATCH_DEADLINE)) {
-					for (const pair of batch) {
-						out.push(`${width}px ${pair.name}: no time left to render it`);
-					}
-					continue;
-				}
-				let reports = await renderWithin(batch, width, BATCH_DEADLINE);
-				stalled = stalled || reports === undefined;
-				if (reports === undefined && canRecover(BATCH_DEADLINE)) {
-					reports = await renderWithin(batch, width, BATCH_DEADLINE);
+				/** @type {import("../helpers/syntaxEquivalence").RenderReport[] | undefined} */
+				let reports;
+				for (let attempt = 0; attempt < 2 && reports === undefined; attempt++) {
+					const deadline = fitting(BATCH_DEADLINE);
+					if (deadline <= 0) break;
+					reports = await renderWithin(batch, width, deadline);
 				}
 				if (reports === undefined) {
 					reports = [];
 					for (const pair of batch) {
-						if (!canRecover(PAIR_DEADLINE)) {
+						const deadline = fitting(PAIR_DEADLINE);
+						if (deadline <= 0) {
 							out.push(`${width}px ${pair.name}: no time left to render it`);
 							continue;
 						}
-						const one = await renderWithin([pair], width, PAIR_DEADLINE);
+						const one = await renderWithin([pair], width, deadline);
 						if (one === undefined) {
 							out.push(
-								`${width}px ${pair.name}: no render within ${PAIR_DEADLINE}ms`
+								`${width}px ${pair.name}: no render within ${deadline}ms`
 							);
 						} else {
 							reports.push(...one);
