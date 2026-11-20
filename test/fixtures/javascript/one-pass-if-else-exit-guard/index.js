@@ -8,3 +8,5 @@ function*h(t){if(t)yield 1;else return;yield 2}console.log([...h(0)],[...h(1)]);
 function q(t){if(t){console.log("q1");console.log("q2")}else return;console.log("q3");console.log("q4")}q(1);q(0);
 var r=function(t){if(t)console.log("r");else return void 0;console.log("s")};r(0);r(1);
 p:{switch(1){case 1:if(i)console.log("sw");else break p;console.log("sw2")}console.log("after")}
+function pure(){return Math.random()>2}
+function dropped(){if(pure()){pure()}else{pure();return}console.log("dropped")}dropped();
