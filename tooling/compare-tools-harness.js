@@ -1044,6 +1044,8 @@ const wantedExpectations = (expected, labels, presets) => {
 				? wantedRespelling(entry.relation.slice(RESPELLING.length))
 				: wantedRelation(entry.relation)) &&
 			labels.some((label) => _names(entry, label)) &&
+			// Only a print renders, so `behavior` runs under a preset or not at all.
+			(entry.relation !== "behavior" || presets.length > 0) &&
 			(entry.presets === undefined ||
 				entry.presets.some((preset) => presets.includes(preset)))
 	);
