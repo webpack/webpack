@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<linearGradient id="grad">
+		<stop offset="0%" stop-color="#fff"/>
+		<stop offset="100%" stop-color="#000"/>
+	</linearGradient>
+	<filter id="blur"><feGaussianBlur stdDeviation="2"/></filter>
+	<mask id="m"><rect width="100" height="100" fill="#fff"/></mask>
+</svg>
