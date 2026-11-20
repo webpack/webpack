@@ -905,10 +905,6 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"oxc goes further than webpack on what terser's `properties` tests cover",
-		["terser compress: properties/join_object_assignments_return_2"]
-	],
-	[
 		"oxc goes further than webpack on what swc's `fixture/next` tests cover",
 		[
 			"swc minifier: fixture/next/chakra/input.js",
