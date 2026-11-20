@@ -7,7 +7,8 @@ const bailouts = {
 	url: true,
 	dup: "dup",
 	effect: "lonely effect",
-	keys: ["one", "two"]
+	keys: ["one", "two"],
+	context: "context"
 };
 
 it("should run pages whose shared modules are linked across chunks", async () => {
@@ -44,6 +45,7 @@ it("should hoist the linkable shared modules into one scope with native exports"
 	for (const bailout of [
 		"globalThis.crossChunkImportsEffectRuns",
 		"const one = 1;",
+		"return this.value;",
 		"typeof __webpack_require__.p",
 		"const dashed = () => ",
 		"module.exports = {",
