@@ -669,6 +669,7 @@
     "yarn.lock",
     "**/package-lock.json",
     "tooling/deep-webpack-imports.json",
+    "test/specCases/syntax-fuzz.unreached.json",
     "tooling/comparison/css-tool-comparison/stylesheets.json",
     "types.d.ts",
     "**/**/*.snap",

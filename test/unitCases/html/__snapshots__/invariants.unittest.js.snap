@@ -55753,6 +55753,20 @@ exports[`HTML syntax — invariants syntax-fuzz-an-element-range-runs-over-a-tab
 
 exports[`HTML syntax — invariants syntax-fuzz-an-element-range-runs-over-a-table-inside-a-template tokenizes 1`] = `"open[0,11|1,9] open[11,18|12,17] open[18,29|19,27] close[29,40|31,39] open[40,43|41,42] open[43,46|44,45] open[46,53|47,52] warning[55,56]:unknown-named-character-reference text[53,56] end=56"`;
 
+exports[`HTML syntax — invariants syntax-fuzz-an-embedded-supports-condition-loses-parentheses parses 1`] = `
+"| <html>
+|   <head>
+|     <style>
+|       \\"@supports()or ((((()))))or (()){@font-feature-values\\"\\",a{\\"
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-embedded-supports-condition-loses-parentheses parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag warning[64,64]:expected-named-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-embedded-supports-condition-loses-parentheses prints {"mode":"minify"} 1`] = `"<style>@supports()or ((((()))))or (()){@font-feature-values\\"\\",a{</style>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-an-embedded-supports-condition-loses-parentheses tokenizes 1`] = `"open[0,7|1,6] text[7,64] end=64"`;
+
 exports[`HTML syntax — invariants syntax-fuzz-an-end-tag-past-an-open-select-is-out-of-scope parses 1`] = `
 "| <html>
 |   <head>

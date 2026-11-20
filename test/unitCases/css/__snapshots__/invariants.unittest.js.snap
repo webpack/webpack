@@ -49717,6 +49717,54 @@ exports[`CSS syntax — invariants svg-data-urls-should-minify-the-ones-an-inlin
 
 exports[`CSS syntax — invariants svg-data-urls-should-minify-the-ones-an-inline-stylesheet-holds-and-only-those tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,12] colon[12,13] function[13,17] string[17,110] right-parenthesis[110,111] right-curly-bracket[111,112] ident[112,113] left-curly-bracket[113,114] ident[114,124] colon[124,125] function[125,129] string[129,162] right-parenthesis[162,163] right-curly-bracket[163,164] end=164"`;
 
+exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-legal-comment-prints-twice parses 1`] = `"[[\\"qualified rule\\",[],[\\"&\\"]]]"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-legal-comment-prints-twice parses 2`] = `"error[5,5]:eof-in-comment error[5,5]:eof-in-qualified-rule"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-legal-comment-prints-twice prints {"mode":"minify"} 1`] = `"{&/*!*/}/*!"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-legal-comment-prints-twice tokenizes 1`] = `"left-curly-bracket[0,1] delim[1,2] comment[2,5] end=5"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-style-query-loses-its-parenthesis parses 1`] = `"[[\\"at-rule\\",\\"container\\",[\\" \\",[\\"function\\",\\"style\\",[\\"()\\"]]],null]]"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-style-query-loses-its-parenthesis parses 2`] = `""`;
+
+exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-style-query-loses-its-parenthesis prints {"mode":"minify"} 1`] = `"@container style(();"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-style-query-loses-its-parenthesis tokenizes 1`] = `"at-keyword[0,10] whitespace[10,11] function[11,17] left-parenthesis[17,18] right-parenthesis[18,19] end=19"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-drops-the-space-in-an-empty-media-condition parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"()\\",[\\"()\\",\\" \\"]]],[]]]"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-drops-the-space-in-an-empty-media-condition parses 2`] = `""`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-drops-the-space-in-an-empty-media-condition prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-drops-the-space-in-an-empty-media-condition tokenizes 1`] = `"at-keyword[0,6] whitespace[6,7] left-parenthesis[7,8] left-parenthesis[8,9] whitespace[9,10] right-parenthesis[10,11] right-parenthesis[11,12] left-curly-bracket[12,13] end=13"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-writes-a-space-for-a-comment parses 1`] = `"[[\\"qualified rule\\",[[\\"()\\",[\\"ident\\",\\"a\\"],[\\"ident\\",\\"a\\"]]],[]]]"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-writes-a-space-for-a-comment parses 2`] = `""`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-writes-a-space-for-a-comment prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants syntax-fuzz-beautify-writes-a-space-for-a-comment tokenizes 1`] = `"left-parenthesis[0,1] ident[1,2] comment[2,6] ident[6,7] right-parenthesis[7,8] left-curly-bracket[8,9] end=9"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-respelling-an-unclosed-rule-changes-the-bytes parses 1`] = `"[[\\"qualified rule\\",[[\\"number\\",\\".0\\",0,\\"number\\"]],[[\\"ident\\",\\"a\\"]]]]"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-respelling-an-unclosed-rule-changes-the-bytes parses 2`] = `"error[4,4]:eof-in-qualified-rule"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-respelling-an-unclosed-rule-changes-the-bytes prints {"mode":"minify"} 1`] = `".0{a}"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-respelling-an-unclosed-rule-changes-the-bytes tokenizes 1`] = `"number[0,2] left-curly-bracket[2,3] ident[3,4] end=4"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-unquotes-a-string-in-an-unknown-supports-condition parses 1`] = `"[[\\"at-rule\\",\\"supports\\",[\\" \\",[\\"()\\",[\\"[]\\",\\"=\\",[\\"string\\",\\"a\\"]]]],[[\\"at-keyword\\",\\"view-transition\\"],[\\"{}\\"]]]]"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-unquotes-a-string-in-an-unknown-supports-condition parses 2`] = `""`;
+
+exports[`CSS syntax — invariants syntax-fuzz-unquotes-a-string-in-an-unknown-supports-condition prints {"mode":"minify"} 1`] = `"@supports ([=a]){@view-transition{}}"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-unquotes-a-string-in-an-unknown-supports-condition tokenizes 1`] = `"at-keyword[0,9] whitespace[9,10] left-parenthesis[10,11] left-square-bracket[11,12] delim[12,13] string[13,16] right-square-bracket[16,17] right-parenthesis[17,18] left-curly-bracket[18,19] at-keyword[19,35] comment[35,39] left-curly-bracket[39,40] end=40"`;
+
 exports[`CSS syntax — invariants the-xml-tool-comparison-should-compare-sorted-attributes-with-embedded parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"path\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"fill\\"],\\":\\",\\" \\",[\\"hash\\",\\"ff0000\\",\\"id\\"],\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants the-xml-tool-comparison-should-compare-sorted-attributes-with-embedded parses 2`] = `""`;
