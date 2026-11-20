@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "beautify",
+		"visit": {
+			"types": ["Dimension"],
+			"at": [{ "type": "Dimension", "source": "1px", "do": "replace", "with": "2px" }]
+		}
+	}
+]

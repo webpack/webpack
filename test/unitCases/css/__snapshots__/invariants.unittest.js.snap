@@ -1895,6 +1895,33 @@ exports[`CSS syntax — invariants css-syntax-beautifying-keeps-a-bad-string-s-n
 
 exports[`CSS syntax — invariants css-syntax-beautifying-keeps-a-bad-string-s-newline-after-an-edit tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] ident[8,11] semicolon[11,12] ident[12,15] colon[15,16] bad-string[16,20] whitespace[20,21] semicolon[21,22] ident[22,23] colon[23,24] ident[24,25] right-curly-bracket[25,26] whitespace[26,27] end=27"`;
 
+exports[`CSS syntax — invariants css-syntax-beautifying-keeps-a-replacement-in-an-at-rule-prelude parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"()\\",[\\"ident\\",\\"width\\"],\\":\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]],[[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]],[\\"at-rule\\",\\"container\\",[\\" \\",[\\"function\\",\\"style\\",[\\"ident\\",\\"--a\\"],\\":\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]]],[[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-beautifying-keeps-a-replacement-in-an-at-rule-prelude parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-beautifying-keeps-a-replacement-in-an-at-rule-prelude prints {"mode":"beautify","visit":{"types":["Dimension"],"at":[{"type":"Dimension","source":"1px","do":"replace","with":"2px"}]}} 1`] = `
+"@media (width:2px) {
+a {
+color: red;
+}
+}@container style(--a:2px) {
+a {
+color: red;
+}
+}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-beautifying-keeps-a-replacement-in-an-at-rule-prelude prints {"mode":"beautify","visit":{"types":["Dimension"],"at":[{"type":"Dimension","source":"1px","do":"replace","with":"2px"}]}} 2`] = `
+"Dimension[14,17] !replace
+/Dimension
+Dimension[53,56] !replace
+/Dimension"
+`;
+
+exports[`CSS syntax — invariants css-syntax-beautifying-keeps-a-replacement-in-an-at-rule-prelude prints {"mode":"minify"} 1`] = `"@media (width:1px){a{color:red}}@container style(--a:1px){a{color:red}}"`;
+
+exports[`CSS syntax — invariants css-syntax-beautifying-keeps-a-replacement-in-an-at-rule-prelude tokenizes 1`] = `"at-keyword[0,6] whitespace[6,7] left-parenthesis[7,8] ident[8,13] colon[13,14] dimension[14,17|15,17] right-parenthesis[17,18] left-curly-bracket[18,19] ident[19,20] left-curly-bracket[20,21] ident[21,26] colon[26,27] ident[27,30] right-curly-bracket[30,31] right-curly-bracket[31,32] at-keyword[32,42] whitespace[42,43] function[43,49] ident[49,52] colon[52,53] dimension[53,56|54,56] right-parenthesis[56,57] left-curly-bracket[57,58] ident[58,59] left-curly-bracket[59,60] ident[60,65] colon[65,66] ident[66,69] right-curly-bracket[69,70] right-curly-bracket[70,71] end=71"`;
+
 exports[`CSS syntax — invariants css-syntax-beautifying-keeps-the-newline-that-ends-a-custom-property-s-bad-string parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"--x\\"],\\":\\",[\\"error\\",\\"bad-string\\"],\\" \\",\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-beautifying-keeps-the-newline-that-ends-a-custom-property-s-bad-string parses 2`] = `"warning[10,11]:newline-in-string"`;
