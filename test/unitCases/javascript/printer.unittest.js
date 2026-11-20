@@ -359,6 +359,19 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		]);
 	});
 
+	it("should map a statement joined past a guard longer than the text before it", () => {
+		const { SourceProcessor } = require("../../../lib/javascript/syntax");
+		const joined = /** @type {{ code: string, map: { mappings: string } }} */ (
+			new SourceProcessor().process(
+				fixture("javascript", "minify-maps-a-statement-joined-past-a-long-guard"),
+				{ mode: "minify", mangle: false, source: "a.js" }
+			)
+		);
+		expect(joined.code).toBe("a(),work();");
+		// The guard's cut puts its sequence at -1, which still places what it holds.
+		expect(decodeLine(joined.map.mappings).get(4)).toEqual([2, 1]);
+	});
+
 	it("should refuse an option it does not know, and a module statement off the top level", () => {
 		expect(() => minifyOnePass(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"), { mangle: /** @type {EXPECTED_ANY} */ ({ nope: 1 }) })).toThrow(
 			"`nope` is not a supported option"
