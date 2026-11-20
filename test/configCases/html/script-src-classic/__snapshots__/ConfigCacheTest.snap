@@ -32,17 +32,17 @@ module.exports = \\"first entry\\";
 /******/ 	});
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -51,7 +51,7 @@ module.exports = \\"first entry\\";
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 			var e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
@@ -67,7 +67,7 @@ module.exports = \\"first entry\\";
 /************************************************************************/
 /******/ 	/* webpack/runtime/chunk loaded */
 /******/ 	(() => {
-/******/ 		const deferred = [];
+/******/ 		var deferred = [];
 /******/ 		__webpack_require__.O = (result, chunkIds, fn) => {
 /******/ 			if(chunkIds) {
 /******/ 				deferred.push([chunkIds, fn]);
@@ -75,7 +75,7 @@ module.exports = \\"first entry\\";
 /******/ 			}
 /******/ 			for (var i = 0; i < deferred.length; i++) {
 /******/ 				let [chunkIds, fn] = deferred[i];
-/******/ 				let fulfilled = true;
+/******/ 				var fulfilled = true;
 /******/ 				for (var j = 0; j < chunkIds.length; j++) {
 /******/ 					if (__webpack_require__.O.j(chunkIds[j])) {
 /******/ 						chunkIds.splice(j--, 1);
@@ -85,7 +85,7 @@ module.exports = \\"first entry\\";
 /******/ 				}
 /******/ 				if(fulfilled) {
 /******/ 					deferred.splice(i--, 1)
-/******/ 					const r = fn();
+/******/ 					var r = fn();
 /******/ 					if (r !== undefined) result = r;
 /******/ 				}
 /******/ 			}
@@ -103,7 +103,7 @@ module.exports = \\"first entry\\";
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
-/******/ 		const installedChunks = {
+/******/ 		var installedChunks = {
 /******/ 			\\"page-0\\": 0
 /******/ 		};
 /******/ 		
@@ -120,11 +120,11 @@ module.exports = \\"first entry\\";
 /******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		const webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			let [chunkIds, moreModules, runtime] = data;
 /******/ 			// add \\"moreModules\\" to the modules object,
 /******/ 			// then flag all \\"chunkIds\\" as loaded and fire callback
-/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			var moduleId, chunkId;
 /******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
 /******/ 				for(moduleId in moreModules) {
 /******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
@@ -134,8 +134,7 @@ module.exports = \\"first entry\\";
 /******/ 				if(runtime) var result = runtime(__webpack_require__);
 /******/ 			}
 /******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
-/******/ 			for(;i < chunkIds.length; i++) {
-/******/ 				chunkId = chunkIds[i];
+/******/ 			for(chunkId of chunkIds) {
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
@@ -144,9 +143,10 @@ module.exports = \\"first entry\\";
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = Array.isArray(self[\\"webpackChunk\\"]) ? self[\\"webpackChunk\\"] : (self[\\"webpackChunk\\"] = []);
-/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 		var chunkLoadingGlobal = self[\\"webpackChunk\\"];
+/******/ 		if(!Array.isArray(chunkLoadingGlobal)) chunkLoadingGlobal = self[\\"webpackChunk\\"] = [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(0, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(0, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
 /******/ 	
 /************************************************************************/

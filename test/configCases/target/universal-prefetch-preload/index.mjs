@@ -13,7 +13,7 @@ it("should prefetch and preload child chunks on chunk load", () => {
 		expect(link.rel).toBe("prefetch");
 		expect(link.as).toBe("script");
 		expect(link.href).toBe("https://example.com/public/path/chunk1.mjs");
-		expect(link.charset).toBe("utf-8");
+		expect(link.charset).toBeUndefined();
 		expect(link.crossOrigin).toBe("anonymous");
 	}
 
@@ -29,7 +29,7 @@ it("should prefetch and preload child chunks on chunk load", () => {
 		expect(link._type).toBe("link");
 		expect(link.rel).toBe("modulepreload");
 		expect(link.href).toBe("https://example.com/public/path/chunk1-b.mjs");
-		expect(link.charset).toBe("utf-8");
+		expect(link.charset).toBeUndefined();
 		expect(link.crossOrigin).toBe("anonymous");
 	}
 

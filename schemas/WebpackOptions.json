@@ -1458,6 +1458,16 @@
           "description": "The environment supports 'document'.",
           "type": "boolean"
         },
+        "domAppendRemove": {
+          "description": "The environment supports `ChildNode.remove()` and `ParentNode.append()`.",
+          "type": "boolean",
+          "added": "5.114.0"
+        },
+        "domIterable": {
+          "description": "The environment supports iterating `HTMLCollection` and `NodeList` with 'for of'.",
+          "type": "boolean",
+          "added": "5.114.0"
+        },
         "dynamicImport": {
           "description": "The environment supports an async import() function to import EcmaScript modules.",
           "type": "boolean"
@@ -1515,6 +1525,11 @@
         "nodePrefixForCoreModules": {
           "description": "The environment supports `node:` prefix for Node.js core modules.",
           "type": "boolean"
+        },
+        "objectAssign": {
+          "description": "The environment supports `Object.assign`.",
+          "type": "boolean",
+          "added": "5.114.0"
         },
         "optionalChaining": {
           "description": "The environment supports optional chaining ('obj?.a' or 'obj?.()').",

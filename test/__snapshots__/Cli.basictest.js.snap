@@ -15655,6 +15655,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-dom-append-remove": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports \`ChildNode.remove()\` and \`ParentNode.append()\`.",
+        "multiple": false,
+        "path": "output.environment.domAppendRemove",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports \`ChildNode.remove()\` and \`ParentNode.append()\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-dom-iterable": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports iterating \`HTMLCollection\` and \`NodeList\` with 'for of'.",
+        "multiple": false,
+        "path": "output.environment.domIterable",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports iterating \`HTMLCollection\` and \`NodeList\` with 'for of'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-dynamic-import": Object {
     "configs": Array [
       Object {
@@ -15834,6 +15860,19 @@ Object {
       },
     ],
     "description": "The environment supports \`node:\` prefix for Node.js core modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-object-assign": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports \`Object.assign\`.",
+        "multiple": false,
+        "path": "output.environment.objectAssign",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports \`Object.assign\`.",
     "multiple": false,
     "simpleType": "boolean",
   },

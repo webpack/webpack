@@ -10369,6 +10369,18 @@ declare interface Environment {
 	document?: boolean;
 
 	/**
+	 * The environment supports `ChildNode.remove()` and `ParentNode.append()`.
+	 * @since 5.114.0
+	 */
+	domAppendRemove?: boolean;
+
+	/**
+	 * The environment supports iterating `HTMLCollection` and `NodeList` with 'for of'.
+	 * @since 5.114.0
+	 */
+	domIterable?: boolean;
+
+	/**
 	 * The environment supports an async import() function to import EcmaScript modules.
 	 */
 	dynamicImport?: boolean;
@@ -10439,6 +10451,12 @@ declare interface Environment {
 	 * The environment supports `node:` prefix for Node.js core modules.
 	 */
 	nodePrefixForCoreModules?: boolean;
+
+	/**
+	 * The environment supports `Object.assign`.
+	 * @since 5.114.0
+	 */
+	objectAssign?: boolean;
 
 	/**
 	 * The environment supports optional chaining ('obj?.a' or 'obj?.()').
@@ -32332,6 +32350,9 @@ declare abstract class RuntimeTemplate {
 	supportsSpread(): boolean;
 	supportsObjectHasOwn(): boolean;
 	supportsSymbol(): boolean;
+	supportsObjectAssign(): boolean;
+	supportsDomIterable(): boolean;
+	supportsDomAppendRemove(): boolean;
 	supportsForOf(): boolean;
 	supportsDestructuring(): boolean;
 	supportsBigIntLiteral(): boolean;
@@ -32456,6 +32477,13 @@ declare abstract class RuntimeTemplate {
 	constantPublicPath(): undefined | string;
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
+
+	/**
+	 * The keyword the runtime declares its variables with: always `var`, which
+	 * ES5 targets show the runtime is correct with, and which lets a minifier
+	 * hoist them and drop the function each runtime module is wrapped in.
+	 */
+	renderRuntimeDeclaration(): "var";
 
 	/**
 	 * Renders node prefix for core module.

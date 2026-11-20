@@ -75,7 +75,7 @@ it("should write a url out for every id a trigger can hand a handler", () => {
 		dispatched.add(match[1]);
 	}
 
-	const block = source.match(find(`const ${"chunk"}Urls = \\{([\\s\\S]*?)\\n\\t\\};`));
+	const block = source.match(find(`var ${"chunk"}Urls = \\{([\\s\\S]*?)\\n\\t\\};`));
 	const baked = new Set(
 		[...block[0].matchAll(find('"([^"]+)": \\(\\) =>'))].map((m) => m[1])
 	);
