@@ -3024,9 +3024,9 @@ describe("a minified page renders as the page it came from", () => {
 	let unrecovered;
 	let skipAdoptedIframes = false;
 
-	// WHY: a WebKit run never returned from one wpt/css batch, and every later
-	// test then waited behind it on the same page. Past a deadline the batch is
-	// rendered again a pair at a time, on a fresh page, to name what never ends.
+	// WHY: a WebKit run never returned from one wpt/css batch, and a Firefox one
+	// stalled on fresh pages too. Past a deadline a new browser renders the batch
+	// again, then a pair at a time, to name what never ends.
 	const BATCH_DEADLINE = 40000;
 	const PAIR_DEADLINE = 20000;
 
@@ -3081,9 +3081,10 @@ describe("a minified page renders as the page it came from", () => {
 		const reports = await within(pending, deadline);
 		if (reports === undefined) {
 			pending.catch(() => {});
-			const stuck = page;
+			const stuck = browser;
 			await within(stuck.close(), PAIR_DEADLINE).catch(() => {});
 			try {
+				browser = await launchBrowser({ browser: ENGINE });
 				page = await openPage();
 			} catch (error) {
 				unrecovered = new Error(
@@ -3107,6 +3108,9 @@ describe("a minified page renders as the page it came from", () => {
 			for (let at = 0; at < pairs.length; at += 20) {
 				const batch = pairs.slice(at, at + 20);
 				let reports = await renderWithin(batch, width, BATCH_DEADLINE);
+				if (reports === undefined) {
+					reports = await renderWithin(batch, width, BATCH_DEADLINE);
+				}
 				if (reports === undefined) {
 					reports = [];
 					for (const pair of batch) {
