@@ -1,0 +1,11 @@
+@container (width > 30rem) {
+  .layout > .item {
+    padding-inline: clamp(0.5rem, 2cqw, 1rem);
+  }
+}
+
+@scope (.dialog) to (.dialog__content) {
+  :scope > .dialog__title {
+    font-variation-settings: "wght" 600, "opsz" 14;
+  }
+}

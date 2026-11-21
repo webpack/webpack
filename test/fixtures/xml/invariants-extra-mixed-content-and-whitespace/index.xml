@@ -1,0 +1,7 @@
+<root>
+  Leading text
+  <a id="x">inside</a>
+  middle
+  <b><![CDATA[<raw>&text;</raw>]]></b>
+  trailing
+</root>

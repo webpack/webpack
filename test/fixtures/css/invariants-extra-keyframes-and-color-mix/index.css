@@ -1,0 +1,16 @@
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.badge {
+  animation: pulse 1.5s infinite ease-in-out;
+  border-color: color-mix(in srgb, #f00 30%, #00f);
+}

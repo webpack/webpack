@@ -1,0 +1,2 @@
+:root{--v-100:3;}
+.x100{margin:9px;padding:calc(3px * 2);border-radius:1px;color:rgb(100 45 190);}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg [
+  <!ENTITY brand "webpack">
+]>
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 10 10">
+  <text x="1" y="5">&brand;  test</text>
+</svg>

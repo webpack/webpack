@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="style.css"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <script><![CDATA[
+    const a = 1 < 2 && 3 > 1;
+  ]]></script>
+</svg>

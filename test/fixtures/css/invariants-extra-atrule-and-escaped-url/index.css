@@ -1,0 +1,12 @@
+@media screen and (min-width: 37.5rem) {
+  .card:is(.primary, .secondary):not([hidden]) {
+    border-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 1 1'%3E%3C/svg%3E") 1;
+    transform: translate3d(0, 0, 0) scale(1.25);
+  }
+}
+
+@property --spin {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}

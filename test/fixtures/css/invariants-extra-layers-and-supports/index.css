@@ -1,0 +1,13 @@
+@layer base, theme;
+
+@layer base {
+  article > :where(h1, h2) {
+    margin-block: 0.5em;
+  }
+}
+
+@supports (selector(:is(.a, .b))) {
+  .u\+2d::after {
+    content: "A\00000aB";
+  }
+}

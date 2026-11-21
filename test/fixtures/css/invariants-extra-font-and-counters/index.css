@@ -1,0 +1,14 @@
+@font-face {
+  font-family: "Invariant Sans";
+  src: url("./font.woff2") format("woff2");
+  unicode-range: U+00-7F, U+4??;
+}
+
+ol {
+  counter-reset: item 7;
+}
+
+ol > li::before {
+  counter-increment: item 1;
+  content: attr(data-label) " — " counter(item, decimal-leading-zero);
+}
