@@ -370,7 +370,7 @@ describe("CssSyntax — block streaming", () => {
 		// every child in source order, closer — and no `;` before the `}`.
 		expect(minify(fixture("css", "css-syntax-block-streaming-streams-a-block-past-the-threshold-and-collects-one-2"))).toBe(`@media screen{${BIG}}`);
 		expect(minify(fixture("css", "css-syntax-block-streaming-enters-nested-streamed-blocks-outermost-first"))).toBe(
-			`@media screen{@supports (display:grid){${BIG}}}`
+			`@media screen{@supports(display:grid){${BIG}}}`
 		);
 		// Children printing one block join into a selector list, so the streamed
 		// path has to reach the list a collected one does rather than the input.
@@ -1610,16 +1610,16 @@ describe("CssSyntax minify — input around a block big enough to stream", () =>
 
 	// The whole output is pinned by its length, its digest and how it opens.
 	it.each([
-		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints", {"environment":{"browsers":["ie 9"]}}, 22859, "035ba9d2a5116b63", "@supports (a:b){.p{@media print{display:-ms-flexbox;display:"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints", {"environment":{"browsers":["ie 9"]}}, 22858, "35834b30ccf1792a", "@supports(a:b){.p{@media print{display:-ms-flexbox;display:f"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-2", {"environment":{"browsers":["chrome 100"]}}, 59668, "de61e70d773e560c", "@layer x{@media print{@layer X{A{color:#88111a;color:color-m"],
-		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-3", {"environment":{"browsers":["safari 15"]},"transforms":{"reduceFunctions":false},"convertApproximateColors":true}, 59802, "f700edac3df38205", ".p{@supports (display:grid){@laye x{@layer x{@layer x,{}@lay"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-3", {"environment":{"browsers":["safari 15"]},"transforms":{"reduceFunctions":false},"convertApproximateColors":true}, 59801, "ca9d4f2460d0b1c1", ".p{@supports(display:grid){@laye x{@layer x{@layer x,{}@laye"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-4", {"environment":{"browsers":["chrome 100"]},"convertLengthUnits":true}, 59638, "716f750a890312f9", ".p{@st (arting-style{y:2}.a{x:1}@starting-style{y:2}.c0>d0{c"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-5", {"environment":{"browsers":["firefox 120"]},"transforms":{"removeDeadRules":false,"lowerUnsupported":false,"customMedia":true,"customSelectors":true},"rewriteCustomProperties":true}, 59654, "9236b96792fcc74d", "@layer x{@media print{@scope(.x){A{border-radius:1px;BORDER-"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-6", {}, 22802, "55da0f68af98b205", "@layer x{.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-7", {"environment":{"browsers":["chrome 60"]}}, 19936, "85f2a5f13b619134", ".p{)}}.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2p"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-8", {"environment":{"browsers":["safari 9"]}}, 14127, "af8d534aa5958af0", ".p{a.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2px}"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-9", {"environment":{"browsers":["firefox 40"]},"convertApproximateColors":true}, 22835, "ede9f3b96a8b4eb2", "@media print{a{color:light-dark(red,blue)}.c0>d0{color:red;m"],
-		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-10", {}, 28598, "7b8956195d4c4545", ".q .r{.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2p"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-10", {}, 28597, "d641820df18a64eb", ".q .r{.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2p"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-11", {"environment":{"browsers":["safari 15"]}}, 15418, "d9f8d0d042c8eb21", ".p .c0>d0{color:red;margin:1px}.p .c1>d1{color:red;margin:2p"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-12", {"environment":{"browsers":["safari 17"]}}, 66490, "c81f51de8c22ae4b", "@layer x{A{border-radius:1px;BORDER-RAD}A A{-webkit-border-r"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-13", {}, 59596, "3563243b1b3ccadb", "@scope(.x){a{b:c;mara.c0>d0{color:red;margin:1px}.c1>d1{colo"],
@@ -1695,8 +1695,8 @@ describe("CssSyntax minify — blocks that stream inside another", () => {
 		["css-syntax-minify-blocks-that-stream-inside-another-prints-4", {}, 141360, "a089ae02f8eafbb9"],
 		["css-syntax-minify-blocks-that-stream-inside-another-prints-5", {}, 100682, "241410dcdbe389ae"],
 		["css-syntax-minify-blocks-that-stream-inside-another-prints-6", {"environment":{"browsers":["firefox 120"]}}, 70716, "23e9c118d25836bf"],
-		["css-syntax-minify-blocks-that-stream-inside-another-prints-7", {"environment":{"browsers":["ie 9"]},"convertApproximateColors":true}, 70734, "d713dd6a37772dac"],
-		["css-syntax-minify-blocks-that-stream-inside-another-prints-8", {"environment":{"browsers":["opera 12"]},"mergeDistantRules":true}, 70705, "83e27d48ed40e29c"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-7", {"environment":{"browsers":["ie 9"]},"convertApproximateColors":true}, 70733, "ee0f5fed3441ecea"],
+		["css-syntax-minify-blocks-that-stream-inside-another-prints-8", {"environment":{"browsers":["opera 12"]},"mergeDistantRules":true}, 70704, "40a77ab4ef26de22"],
 		["css-syntax-minify-blocks-that-stream-inside-another-prints-9", {"environment":{"browsers":["safari 9"]},"transforms":{"removeDeadRules":false,"mergeLonghands":false,"foldCase":false,"customMedia":true,"customSelectors":true}}, 70727, "398adc8dd61a785e"],
 		["css-syntax-minify-blocks-that-stream-inside-another-prints-10", {}, 70713, "33ded935deca4604"],
 		["css-syntax-minify-blocks-that-stream-inside-another-prints-11", {}, 70701, "52b4e6d997e84910"],

@@ -16,7 +16,7 @@ exports[`CssSyntax minify — merged and joined text keeps its boundaries closes
 
 exports[`CssSyntax minify — merged and joined text keeps its boundaries closes a bad url the input ran out in 4`] = `".a{b:url(x\\")}"`;
 
-exports[`CssSyntax minify — merged and joined text keeps its boundaries cuts a dead copy out of a nested joined block where it now stands 1`] = `"@supports (display:grid){@media print{.s{content:\\"}}}}.y{color:red}\\"}.x{color:red}}.sep{color:blue}@media print{.q{color:green}}}.app{color:#000}"`;
+exports[`CssSyntax minify — merged and joined text keeps its boundaries cuts a dead copy out of a nested joined block where it now stands 1`] = `"@supports(display:grid){@media print{.s{content:\\"}}}}.y{color:red}\\"}.x{color:red}}.sep{color:blue}@media print{.q{color:green}}}.app{color:#000}"`;
 
 exports[`CssSyntax minify — merged and joined text keeps its boundaries parts a slash shorthand's \`/\` from a slot that starts with \`*\` 1`] = `".a{grid-row:1/ *}.b{grid-template:1px/ *}.c{grid-template:\\"a\\"1px/ *}.d{color:red}"`;
 

@@ -294,7 +294,7 @@ Array [
   "/*! webpack: a \`\\\\\`-newline continuation stays (dropping it can fuse a hex escape) */.t28:after{content:\\"\\\\61\\\\
 b\\"}",
   "/*! webpack: a custom property's value is opaque, quotes included */.t29{--quoted:'kept'}",
-  "/*! webpack: a string in an at-rule prelude normalizes too */@supports (content:\\"x\\"){.t30{color:red}}",
+  "/*! webpack: a string in an at-rule prelude normalizes too */@supports(content:\\"x\\"){.t30{color:red}}",
   "/*! webpack: an EOF escape swallowing the final quote leaves the string alone */.t32:after{content:\\"x\\\\\\"
 }",
 ]
@@ -452,7 +452,7 @@ Array [
 ]
 `;
 
-exports[`ConfigCacheTestCases css minify-css minify-css should compile: minify-at-rule-seam-order 1`] = `"@media print{.a,.b{color:red}}@supports (color:red){.c,.d{top:0}}@layer named{.e,.f{left:0}}@starting-style{.g,.h{opacity:0}}@container (width>0px){.s1,.s2,.s3,.s4{right:0}}@media screen{.keep-first{color:red}.keep-second{color:blue}}"`;
+exports[`ConfigCacheTestCases css minify-css minify-css should compile: minify-at-rule-seam-order 1`] = `"@media print{.a,.b{color:red}}@supports(color:red){.c,.d{top:0}}@layer named{.e,.f{left:0}}@starting-style{.g,.h{opacity:0}}@container(width>0px){.s1,.s2,.s3,.s4{right:0}}@media screen{.keep-first{color:red}.keep-second{color:blue}}"`;
 
 exports[`ConfigCacheTestCases css minify-css minify-css should compile: minify-at-rules-and-values 1`] = `"@document url(https://a.test/){.a{color:red}.b{color:blue}}@-moz-document url-prefix(){.c{color:green}}.d{mask-border:initial}.e{text-emphasis:initial}.f{background:repeating-radial-gradient(red 0%,blue)}.g{background:cross-fade(url(51b834b7c1ef0b59ea50.png) 50%,url(51b834b7c1ef0b59ea50.png))}"`;
 
@@ -538,7 +538,7 @@ Array [
    is dropped, \`calc(1.5)\` rounds to 2 columns */.u10{columns:calc(1.5)}",
   "/*! ...beside the other value it sets */.u11{columns:calc(1.5)20em}",
   "/*! unwrap: an integer through that same longhand is still an integer */.u12{columns:2}",
-  "/*! declined: a \`@supports\` condition is the syntax being tested */@supports (width:calc(1px + 2px)){.s01{color:red}}",
+  "/*! declined: a \`@supports\` condition is the syntax being tested */@supports(width:calc(1px + 2px)){.s01{color:red}}",
   "/*! declined: a custom property hands its text back through getPropertyValue() */.s02{--gap:calc(1px + 2px)}",
   "/*! declined: ...and the whitespace CSS Values 4 §10.1 requires on both sides of
    a \`+\` or \`-\` stands even where a block edge is beside it */.s03{--inner:calc(var(--radius) - var(--width))}",
@@ -714,7 +714,7 @@ Array [
   "/*! rotate: calc(1turn / 3) — lightningcss: .333333turn — ours keeps the digits that land on the same 1/64px step */.k076{rotate:calc(1turn/3)}",
   "/*! rotate: calc(90deg / 7) — lightningcss: 12.8571deg — ours keeps the digits that land on the same 1/64px step */.k077{rotate:calc(90deg/7)}",
   "/*! rotate: calc(1rad + 1deg) — lightningcss: 58.2958deg — ours keeps the digits that land on the same 1/64px step */.k078{rotate:58.2957795deg}",
-  "/*! rotate: calc(100grad) — same as lightningcss: 100grad */.k079{rotate:100grad}",
+  "/*! rotate: calc(100grad) — same as lightningcss: 100grad */.k079{rotate:90deg}",
   "/*! transition-duration: calc(1s + 1ms) — lightningcss: 1.001s — the same length either way */.k080{transition-duration:1001ms}",
   "/*! transition-duration: calc(1s / 3) — lightningcss: .333333s — ours keeps the digits that land on the same 1/64px step */.k081{transition-duration:calc(1s/3)}",
   "/*! transition-duration: calc(100ms * 3) — same as lightningcss: .3s */.k082{transition-duration:.3s}",
@@ -856,7 +856,7 @@ Array [
   "/*! webpack: a hash inside a gradient is a color */.t35{background:linear-gradient(#abc,red)}",
   "/*! webpack: -webkit-tap-highlight-color does not leak to the next declaration */.t36{-webkit-tap-highlight-color:rgba(0,0,0,0);color:#0000}",
   "/*! webpack: a \`@supports\` condition is the declaration being tested, so its
-   color keeps the spelling the test asked about */@supports (color:rgba(0,0,0,0)){.t37{color:red}}",
+   color keeps the spelling the test asked about */@supports(color:rgba(0,0,0,0)){.t37{color:red}}",
   "/*! data: a name shorter than its 6-hex */.t38{color:sienna}",
   "/*! data: the same, from rgb() */.t39{color:orchid}",
   "/*! data: a 3-hex beats every name for that value */.t40{color:#000;background:#00f;border-color:#fff}",
@@ -924,9 +924,9 @@ Array [
   "/*! whitespace: a var() whose name is not a custom property */.w10{border-radius:var(border-rad,)}",
   "/*! whitespace: a lone token keeps neither surrounding space */:root{--foo:bar}",
   "/*! whitespace: an escaped tab ends the value it is written in */.w11{--x:1;--y:red\\\\	}",
-  "/*! params: a custom property in a @supports condition */@supports (--foo:green){.p1{color:red}}",
-  "/*! params: an empty value in one */@supports (--foo:){.p2{background:green}}",
-  "/*! params: two of them across \`or\` */@supports (--foo:) or (--bar:green){.p3{background:green}}",
+  "/*! params: a custom property in a @supports condition */@supports(--foo:green){.p1{color:red}}",
+  "/*! params: an empty value in one */@supports(--foo:){.p2{background:green}}",
+  "/*! params: two of them across \`or\` */@supports(--foo:) or (--bar:green){.p3{background:green}}",
 ]
 `;
 
@@ -1024,7 +1024,7 @@ Array [
   "/*! declined: a \`@supports\` condition is the declaration being tested, so
    rewriting its value asks a different question — the engines that read
    \`#0000\` are not the ones that read \`rgba(0,0,0,0)\` (esbuild, clean-css and
-   lightningcss leave it alone too; csso rewrites it) */@supports (color:rgba(0,0,0,0)){.t27{color:red}}",
+   lightningcss leave it alone too; csso rewrites it) */@supports(color:rgba(0,0,0,0)){.t27{color:red}}",
   "/*! declined: ...at any nesting depth, and under \`not\` */@supports not ((color:rgb(0,0,0)) and (color:hsl(0,100%,50%))){.t28{color:red}}",
   "/*! declined: the two blocks join, but the rules meeting at their seam print
    different blocks — the seam pair is held to the same rules as any adjacency */@media (width>=500px){.t29{top:0}.t30{color:red}}",
@@ -1144,13 +1144,13 @@ Array [
   "/*! esbuild: * { --x: {y}; } */",
   "/*! esbuild: * { --x:{y }; } */",
   "/*! esbuild: * { --x:{ y}; } */*{--x:{y}}",
-  "/*! esbuild: @supports ( --x : y , z ) { a { color: red; } } */@supports (--x:y,z){a{color:red}}",
+  "/*! esbuild: @supports ( --x : y , z ) { a { color: red; } } */@supports(--x:y,z){a{color:red}}",
   "/*! esbuild: @supports ( --x : ) { a { color: red; } } */",
-  "/*! esbuild: @supports (--x: ) { a { color: red; } } */@supports (--x:){a{color:red}}",
-  "/*! esbuild: @supports ( --x y , z ) { a { color: red; } } */@supports (--x y,z){a{color:red}}",
-  "/*! esbuild: @supports ( --x ) { a { color: red; } } */@supports (--x){a{color:red}}",
-  "/*! esbuild: @supports ( ) { a { color: red; } } */@supports (){a{color:red}}",
-  "/*! esbuild: @supports ( . --x : y , z ) { a { color: red; } } */@supports (. --x:y,z){a{color:red}}",
+  "/*! esbuild: @supports (--x: ) { a { color: red; } } */@supports(--x:){a{color:red}}",
+  "/*! esbuild: @supports ( --x y , z ) { a { color: red; } } */@supports(--x y,z){a{color:red}}",
+  "/*! esbuild: @supports ( --x ) { a { color: red; } } */@supports(--x){a{color:red}}",
+  "/*! esbuild: @supports ( ) { a { color: red; } } */@supports(){a{color:red}}",
+  "/*! esbuild: @supports ( . --x : y , z ) { a { color: red; } } */@supports(. --x:y,z){a{color:red}}",
   "/*! esbuild: @unknown; */@unknown;",
   "/*! esbuild: @unknown x; */@unknown x;",
   "/*! esbuild: @unknown{} */@unknown{color:red}",
@@ -1506,8 +1506,8 @@ Array [
   "/*! corpora: .foo { font: normal normal normal 24px/1 \\"Material Design Icons\\" } */.foo{font:24px/1 Material Design Icons}",
   "/*! corpora: .foo { scale: 95% } */.foo{scale:.95}",
   "/*! corpora: .foo { transition-duration: 416.667ms } */.foo{transition-duration:.416667s}",
-  "/*! corpora: @keyframes w { 50% { width: 6px; @supports (x: y) { color: red } } } */@keyframes w{50%{width:6px;@supports (x:y){color:red}}}",
-  "/*! corpora: @supports (-webkit-touch-callout: none) or (-moz-appearance: none) { .foo { color: red } } */@supports (-webkit-touch-callout:none) or (-moz-appearance:none){.foo{color:red}}",
+  "/*! corpora: @keyframes w { 50% { width: 6px; @supports (x: y) { color: red } } } */@keyframes w{50%{width:6px;@supports(x:y){color:red}}}",
+  "/*! corpora: @supports (-webkit-touch-callout: none) or (-moz-appearance: none) { .foo { color: red } } */@supports(-webkit-touch-callout:none) or (-moz-appearance:none){.foo{color:red}}",
   "/*! corpora: .foo { transition: transform .15s linear, -webkit-transform .15s linear } */.foo{transition:transform.15s linear,-webkit-transform.15s linear}",
   "/*! corpora: .foo { background-position: 0% 0% } */.foo{background-position:0%0%}",
   "/*! corpora: .foo { -webkit-mask-position: 0% 0% } */.foo{-webkit-mask-position:0%0%}",
@@ -1525,7 +1525,7 @@ Array [
   "/*! dropped: a comment before the keyword */@media (hover)and (pointer:fine){.m05{color:red}}",
   "/*! dropped: a comment beside whitespace */@media (hover) and (pointer:fine){.m06{color:red}}",
   "/*! kept: nested */@media ((hover) and/**/(pointer:fine)){.m07{color:red}}",
-  "/*! kept: a container query */.c01{container-type:inline-size}@container (width>1px) and/**/(height>1px){.c02{color:red}}",
+  "/*! kept: a container query */.c01{container-type:inline-size}@container(width>1px) and/**/(height>1px){.c02{color:red}}",
 ]
 `;
 
@@ -1555,7 +1555,7 @@ Array [
   "/*! at-rule: two adjacent blocks of the same condition are the one block it opens,
    whose own rules then meet at the seam and join like any other pair */@media (width>=200px){.p1,.p2{top:0}}",
   "/*! at-rule: ...and where both name one selector, the seam joins its blocks too */@media (width>=250px){.p3{top:0;left:0}}",
-  "/*! at-rule: ...at any depth, and \`@supports\` the same way */.q{@supports (top:0){.q1,.q2{top:0}}}",
+  "/*! at-rule: ...at any depth, and \`@supports\` the same way */.q{@supports(top:0){.q1,.q2{top:0}}}",
   "/*! declined: CSS Cascade 5 §6.4.1 opens a layer of its own per \`@layer {\`, so a
    later one beats an earlier whatever the selectors say */@layer{#s2a{color:red}}@layer{.s2b{color:blue}}",
   "/*! declined: the conditions differ, so the two blocks are not one */@media (width>=300px){.r1{top:0}}@media (width>=400px){.r2{top:0}}",
@@ -1564,8 +1564,8 @@ Array [
   "/*! at-rule: a rule nested in one, holding a nested rule of its own */@media (width>=500px){.t1{top:0;& .t2{top:1px}}}",
   "/*! declined: a rule stands between the two blocks */@media (width>=600px){.u1{top:0}}.u2{top:0}@media (width>=600px){.u3{top:0}}",
   "/*! at-rule: ...and one condition is one however it is spelled, which \`@supports\`
-   is the at-rule to say so — the engine hands its prelude back as written */@supports (top:0){.z1{top:0;left:0}}",
-  "/*! declined: the whitespace between two conditions is the author's */@supports (top:0) and (left:0){.z2{top:0}}@supports (top:0)and (left:0){.z2{left:0}}",
+   is the at-rule to say so — the engine hands its prelude back as written */@supports(top:0){.z1{top:0;left:0}}",
+  "/*! declined: the whitespace between two conditions is the author's */@supports(top:0) and (left:0){.z2{top:0}}@supports(top:0)and (left:0){.z2{left:0}}",
   "/*! nested declarations: dropping an empty rule ahead of them leaves them the
    parent's own, which is what \`&\` alone already named */.v{top:0}",
   "/*! declined: a rule between the two keeps the declarations a rule of their own */.w{.n25{top:1px}top:0}",
@@ -1630,7 +1630,7 @@ Array [
   "/*! webpack: ...and in a scope limit */@scope(.a .b) to (.c :where(.d)){.t52{color:red}}",
   "/*! webpack: a combinator's own whitespace still goes */@scope(div>p) to (span+em){.t53{color:red}}",
   "/*! webpack: a query condition still loses the whitespace around its \`:\` */@media (width>=100px){.t54{color:red}}",
-  "/*! webpack: ...and \`@supports\` keeps behaving as a condition */@supports (color:red){.t55{color:red}}",
+  "/*! webpack: ...and \`@supports\` keeps behaving as a condition */@supports(color:red){.t55{color:red}}",
   "/*! lightningcss: .t56:before — Selectors 4 §3.3 keeps the one-colon spelling */.t56:before{color:red}",
   "/*! lightningcss: .t57:after */.t57:after{color:red}",
   "/*! lightningcss: .t58:first-line */.t58:first-line{color:red}",
@@ -1806,23 +1806,23 @@ Array [
 
 exports[`ConfigCacheTestCases css minify-css minify-css should compile: minimize-supports 1`] = `
 Array [
-  "/*! supports: whitespace inside the parentheses */@supports (display:grid){.s01{color:red}}",
-  "/*! supports: comments around the condition */@supports (display:grid){.s02{color:red}}",
-  "/*! supports: whitespace between the conditions */@supports (display:grid) and (gap:1px){.s03{color:red}}",
-  "/*! supports: nested conditions */@supports (display:grid) or (not (display:inline-grid)){.s04{color:red}}",
-  "/*! supports: a tested !important */@supports (display:grid!important){.s05{color:red}}",
-  "/*! supports: a function's arguments */@supports (transform:translate(1px,2px)){.s06{color:red}}",
+  "/*! supports: whitespace inside the parentheses */@supports(display:grid){.s01{color:red}}",
+  "/*! supports: comments around the condition */@supports(display:grid){.s02{color:red}}",
+  "/*! supports: whitespace between the conditions */@supports(display:grid) and (gap:1px){.s03{color:red}}",
+  "/*! supports: nested conditions */@supports(display:grid) or (not (display:inline-grid)){.s04{color:red}}",
+  "/*! supports: a tested !important */@supports(display:grid!important){.s05{color:red}}",
+  "/*! supports: a function's arguments */@supports(transform:translate(1px,2px)){.s06{color:red}}",
   "/*! supports: font-tech() and font-format() */@supports font-tech(color-COLRv1) and font-format(woff2){.s07{color:red}}",
   "/*! supports: a selector's combinators */@supports selector(.a>.b+.c~.d){.s08{color:red}}",
   "/*! supports: a combinator nested in :is() and :has() */@supports selector(:is(.a>.b)) and selector(a:has(>b)){.s09{color:red}}",
   "/*! supports: a comment beside a combinator */@supports selector(.a>.b){.s10{color:red}}",
-  "/*! supports: an escaped name */@supports (color:red){.s11{color:red}}",
+  "/*! supports: an escaped name */@supports(color:red){.s11{color:red}}",
   "/*! kept: the space \`not\` needs before its parenthesis */@supports not (display:grid){.k01{color:red}}",
   "/*! kept: a descendant combinator */@supports selector(.a .b){.k02{color:red}}",
   "/*! kept: the selector under test */@supports selector(*.a:HOVER){.k03{color:red}}",
-  "/*! kept: calc() needs its spaces */@supports (width:calc(1px + 2px)){.k04{color:red}}",
-  "/*! kept: a value that is newer when shortened */@supports (color:rgba(0,0,0,.5)){.k05{color:red}}",
-  "/*! kept: the comment WebKit needs between a keyword and its condition */@supports (display:grid)and/**/(gap:1px){.s12{color:red}}@supports not/**/(display:flex){.s13{color:red}}",
+  "/*! kept: calc() needs its spaces */@supports(width:calc(1px + 2px)){.k04{color:red}}",
+  "/*! kept: a value that is newer when shortened */@supports(color:rgba(0,0,0,.5)){.k05{color:red}}",
+  "/*! kept: the comment WebKit needs between a keyword and its condition */@supports(display:grid)and/**/(gap:1px){.s12{color:red}}@supports not/**/(display:flex){.s13{color:red}}",
   "/*! kept: An+B, case and quotes of the selector under test */@supports selector(a:NTH-CHILD(2n+1)) and selector([data-x=\\"y\\"]){.k06{color:red}}",
 ]
 `;
@@ -1935,7 +1935,7 @@ Array [
   "/*! a lone string in a later slot still unquotes */.o{font-family:serif,My Font,monospace}@property --len{syntax:\\"<length>\\";initial-value:0px;inherits:false}@property --tint{syntax:\\"<color>\\";initial-value:#ff0000;inherits:false}.property-descriptors{color:var(--tint);background:red;width:var(--len);margin:0}",
   "/*! a literal past \`oblique\`'s ±90deg is rejected where the \`calc()\` is clamped */.p{font-style:oblique calc(100deg)}",
   "/*! the same in the other direction */.q{font-style:oblique calc(-95deg)}",
-  "/*! Chrome takes \`100grad\` off though it is the \`90deg\` the range allows */.r{font-style:oblique calc(100grad)}",
+  "/*! Chrome takes \`100grad\` off though it is the \`90deg\` the range allows */.r{font-style:oblique 90deg}",
   "/*! and takes \`2rad\` at face value though it clamps the same \`calc()\` to 90deg */.s{font-style:oblique calc(2rad)}",
   "/*! inside the range there is nothing to clamp, so the \`calc()\` still folds */.t{font-style:oblique 45deg}",
   "/*! and nothing bounds a rotation, so the same angle folds there */.u{rotate:100deg}",
@@ -2004,15 +2004,15 @@ Array [
    is six bytes saying nothing */@media (width>=100px){.t47a{color:red}}",
   "/*! declined: \`all\` on its own is the whole query, and \`only\` before it is there
    to hide the rule from an engine reading CSS 2's grammar */@media all{.t47b{color:red}}@media only all and (width>=100px){.t47c{color:red}}@media not all and (width>=100px){.t47d{color:red}}",
-  "/*! webpack: an operand a condition already states, whichever rule states it */@media (monochrome){.t47e{color:red}}@supports (display:grid){.t47f{color:red}}@supports (display:grid) or (display:flex){.t47g{color:red}}",
+  "/*! webpack: an operand a condition already states, whichever rule states it */@media (monochrome){.t47e{color:red}}@supports(display:grid){.t47f{color:red}}@supports(display:grid) or (display:flex){.t47g{color:red}}",
   "/*! declined: a chain mixing the two operators is no flat list of either's, and
-   two queries are not two operands of anything */@supports (display:grid) and (display:flex) or (display:table){.t47h{color:red}}@media (monochrome),(monochrome){.t47i{color:red}}",
+   two queries are not two operands of anything */@supports(display:grid) and (display:flex) or (display:table){.t47h{color:red}}@media (monochrome),(monochrome){.t47i{color:red}}",
   "/*! webpack: a media feature is a length, a ratio or an integer and nothing
    else, so the number in one is written the way a value's number is */@media (480px<=width<=768.5px){.t47j{color:red}}",
   "/*! declined: a style query compares the tokens as they were written */@container style(--x: 0480.0px){.t47k{color:red}}",
   "/*! webpack: a container query */@container card (width>400px){.t48{color:red}}",
-  "/*! webpack: an @supports condition */@supports (display:grid){.t49{color:red}}",
-  "/*! webpack: ...on a custom property */@supports (--x:1){.t50{color:red}}",
+  "/*! webpack: an @supports condition */@supports(display:grid){.t49{color:red}}",
+  "/*! webpack: ...on a custom property */@supports(--x:1){.t50{color:red}}",
   "/*! webpack: a ratio keeps its slash spacing */@media (aspect-ratio:16 / 9){.t51{color:red}}",
   "/*! webpack: a pseudo-class \`:\` is not a condition separator */.t52 :hover{color:red}",
   "/*! webpack: a \`(…)\` inside a value is a calc sub-expression, not a condition */.t53{width:calc(10px - (100px/var(--x)))}",
@@ -2054,7 +2054,7 @@ Array [
   "/*! webpack: every range-type feature, and nested conditions */@media (resolution>=2dppx){.t67{color:red}}@media ((width>=1px) and (height<=2px)){.t68{color:red}}",
   "/*! webpack: \`@container\` carries media features too, name and all */@container card (width>=1px){.t69{color:red}}",
   "/*! declined: a plain feature has no range spelling to reach for */@media (width:100px){.t70{color:red}}",
-  "/*! declined: a \`@supports\` condition is a declaration, not a media feature */@supports (min-width:1px){.t71{color:red}}",
+  "/*! declined: a \`@supports\` condition is a declaration, not a media feature */@supports(min-width:1px){.t71{color:red}}",
   "/*! webpack: a percentage keeps the digits of the float Firefox parses */.t72{width:33.3333333%}",
   "/*! webpack: ...but not where its error could tip a sum over a step */.t73{width:1.0000001px}",
   "/*! webpack: ...for a unitless number too */.t74{opacity:.12345679}",
@@ -2064,8 +2064,8 @@ Array [
   "/*! webpack: the units CSS Values 4 fixes against each other convert */.t78{width:16px}.t79{width:12pt}.t80{width:10mm}.t81{transition-duration:.4s}",
   "/*! webpack: ...only when the ratio divides exactly */.t82{width:1.3px}",
   "/*! webpack: declined: \`q\` is a source only — Safari read it first in 15 */.t83{width:10mm;height:40q}",
-  "/*! webpack: declined: a \`@supports\` condition tests the unit itself */@supports (width:16px){.t84{color:red}}",
-  "/*! webpack: ...and the value it is tested with */@supports (color:rgba(0,0,0,.5)){.t85{color:red}}",
+  "/*! webpack: declined: a \`@supports\` condition tests the unit itself */@supports(width:16px){.t84{color:red}}",
+  "/*! webpack: ...and the value it is tested with */@supports(color:rgba(0,0,0,.5)){.t85{color:red}}",
   "/*! webpack: a media feature is evaluated, not tested, so it converts */@media (width>=1200px){.t86{color:red}}",
   "/*! webpack: an alpha is the byte the engine already quantizes it to */.t87{color:#00000080}.t88{color:#f003}",
   "/*! webpack: ...collapsing to 4 digits when every pair repeats */.t89{color:#f00c}",
@@ -2086,7 +2086,7 @@ Array [
   "/*! webpack: declined: \`border\` writes every border-color longhand */.t105{border-top-color:red;border:1px solid;border-right-color:red;border-bottom-color:red;border-left-color:red}",
   "/*! webpack: ...but an unrelated property between them does not */.t106{color:red;border-color:red}",
   "/*! webpack: a child rule outside the family is nothing the merge steps over */.t106a{margin:1px 2px;&:hover{color:red}}",
-  "/*! webpack: declined: one between them may write the family itself */.t106b{margin-top:1px;margin-right:2px;@supports (color:red){margin-top:9px}margin-bottom:1px;margin-left:2px}",
+  "/*! webpack: declined: one between them may write the family itself */.t106b{margin-top:1px;margin-right:2px;@supports(color:red){margin-top:9px}margin-bottom:1px;margin-left:2px}",
   "/*! webpack: the four corners merge too, clockwise from the top left */.t107{border-radius:1px 2px 3px 4px}",
   "/*! webpack: declined: a corner set to two radii needs the shorthand's \`/\` form */.t108{border-top-left-radius:1px 2px;border-top-right-radius:1px 2px;border-bottom-right-radius:1px 2px;border-bottom-left-radius:1px 2px}",
   "/*! webpack: declined: a logical corner writes the same corners */.t109{border-top-left-radius:1px;border-start-start-radius:9px;border-top-right-radius:2px;border-bottom-right-radius:3px;border-bottom-left-radius:4px}",

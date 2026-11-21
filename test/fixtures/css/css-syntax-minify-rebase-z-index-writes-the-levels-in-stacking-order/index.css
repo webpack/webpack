@@ -1,0 +1,7 @@
+.a { z-index: 1000 }
+.b { z-index: 10 !important }
+.c { z-index: -1 }
+.d { z-index: auto }
+.e { z-index: 0 }
+.f { z-index: 1000 }
+@supports (z-index: 5) { .g { z-index: 5 } }

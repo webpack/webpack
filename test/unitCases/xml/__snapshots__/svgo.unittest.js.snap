@@ -150,7 +150,7 @@ svgo-inline-styles-09: webpack 210, svgo 140, gap 70
 svgo-inline-styles-10: webpack 152, svgo 128, gap 24
 svgo-inline-styles-11: webpack 174, svgo 179, gap -5
 svgo-inline-styles-12: webpack 159, svgo 129, gap 30
-svgo-inline-styles-13: webpack 650, svgo 699, gap -49
+svgo-inline-styles-13: webpack 649, svgo 699, gap -50
 svgo-inline-styles-14: webpack 277, svgo 301, gap -24
 svgo-inline-styles-15: webpack 2497, svgo 2685, gap -188
 svgo-inline-styles-16: webpack 750, svgo 712, gap 38
@@ -382,5 +382,5 @@ svgo-sort-attrs-02: webpack 63, svgo 63, gap 0
 svgo-sort-attrs-03: webpack 158, svgo 160, gap -2
 svgo-sort-attrs-04: webpack 227, svgo 261, gap -34
 svgo-sort-defs-children-01: webpack 413, svgo 415, gap -2
-total: webpack 105344, svgo 104093"
+total: webpack 105343, svgo 104093"
 `;

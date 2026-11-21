@@ -14015,7 +14015,7 @@ exports[`XML syntax — invariants svgo-inline-styles-13 parses 2`] = `""`;
 exports[`XML syntax — invariants svgo-inline-styles-13 prints {"print":"xmlMinify","minimizer":{"asset":"index.svg"},"collapseWhitespace":true,"sortAttributes":true,"removeMetadata":true,"removeEditorData":true,"removeEmptyAttributes":true,"removeEmptyElements":true,"shortenColors":true,"shortenNumbers":true,"shortenPathData":true,"sortSymbols":true,"convertShapes":true,"cleanupStructure":true,"mergePaths":true,"reusePaths":true,"sortDefinitions":true,"removeUnusedNamespaces":true} 1`] = `
 "<svg id=\\"test\\" viewBox=\\"0 0 81.285 81.285\\" xmlns=\\"http://www.w3.org/2000/svg\\">
     <defs>
-        <style>@namespace svg url(http://www.w3.org/2000/svg);@import url(https://fonts.googleapis.com/css?family=Roboto);@font-face{font-family:SomeFont;src:local(\\"Some Font\\"),local(\\"SomeFont\\"),url(SomeFont.ttf);font-weight:700}@viewport{zoom:.8;min-zoom:.4;max-zoom:.9}@keyframes identifier{0%{top:0}50%{left:20px;top:10px}to{top:0}}@page :first{margin:1in}@supports (display:flex){.module{display:flex}}@document url(http://example.com/test.html){rect{stroke:red}}.blue{fill:blue}</style>
+        <style>@namespace svg url(http://www.w3.org/2000/svg);@import url(https://fonts.googleapis.com/css?family=Roboto);@font-face{font-family:SomeFont;src:local(\\"Some Font\\"),local(\\"SomeFont\\"),url(SomeFont.ttf);font-weight:700}@viewport{zoom:.8;min-zoom:.4;max-zoom:.9}@keyframes identifier{0%{top:0}50%{left:20px;top:10px}to{top:0}}@page :first{margin:1in}@supports(display:flex){.module{display:flex}}@document url(http://example.com/test.html){rect{stroke:red}}.blue{fill:blue}</style>
     </defs>
     <rect class=\\"blue\\" height=\\"100\\" width=\\"100\\"/>
 </svg>"
