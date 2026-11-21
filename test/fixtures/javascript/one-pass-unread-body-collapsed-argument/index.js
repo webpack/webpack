@@ -20,6 +20,12 @@ function twice(y) {
 		}(c);
 	return 1;
 }
+function unread(y) {
+	var c = y ? y.c : 1;
+	!function (x, z) {
+		console.log(z);
+	}(c, 2);
+}
 var given = {},
 	other = 2;
 !function (x, y) {
@@ -28,3 +34,4 @@ var given = {},
 fresh();
 moved();
 twice(1);
+unread(0);
