@@ -11,5 +11,19 @@ function kept() {
 	}
 	console.log("kept");
 }
+function joined() {
+	block: {
+		console.log("first");
+		for (;;) break block;
+	}
+}
+function declared() {
+	block: {
+		for (var i = console.log("declared"); ; ) break block;
+	}
+	return [i, i];
+}
 ended();
 kept();
+joined();
+declared();

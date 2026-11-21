@@ -2216,6 +2216,14 @@ describe("printing again what the one pass printed", () => {
 			expect(minifyOnePass(once, { ...options, ...settled }).code).toBe(once);
 		}
 	});
+	it("should drop a loop breaking the labeled block it ends, its head holding what joined it or a `var`", () => {
+		const options = { compress: {}, mangle: false };
+		const once = minifyOnePass(fixture("javascript", "minify-drops-a-loop-breaking-the-labeled-block-it-ends"), options).code;
+		// `break block` leaves the loop where it leaves the block, so the loop runs its head once.
+		expect(once).toContain('function joined(){console.log("first")}');
+		expect(once).toContain('function declared(){var i=console.log("declared");return[i,i]}');
+		expect(minifyOnePass(once, options).code).toBe(once);
+	});
 });
 
 describe("folding a `var` set after calls", () => {
