@@ -15,7 +15,7 @@ log.push(g());
 console.log(log.join("|"));
 function f(){var b=typeof inner;{function inner(){}}return b+" "+typeof inner}
 console.log(f());
-function g(){var b=inner;{function inner(){}}return [b,typeof inner].join()}
-console.log(g());
+function k(){var b=inner;{function inner(){}}return [b,typeof inner].join()}
+console.log(k());
 function h(c){var b=typeof inner;if(c){function inner(){}}return b+" "+typeof inner}
 console.log(h(1),h(0));
