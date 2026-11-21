@@ -60581,6 +60581,15 @@ exports[`HTML syntax — invariants source-processor-render-embedded-source-keep
 
 exports[`HTML syntax — invariants source-processor-render-embedded-source-keeps-a-map-the-renderer-attached-to-an prints {"mode":"minify","renderEmbeddedSource":"offers"} 2`] = `"css/embedded-stylesheet:\\"  .a { color : red }  \\" javascript/script:\\"  var a = 1  \\""`;
 
+exports[`HTML syntax — invariants source-processor-render-embedded-source-keeps-a-map-the-renderer-attached-to-an prints {"mode":"minify","renderEmbeddedSource":{"name":"answers","options":{"css":".a{color:red}\\n/*# sourceMappingURL=data:application/json;base64,e30= */","javascript/script":"var a=1\\n//# sourceMappingURL=data:application/json;base64,e30="}}} 1`] = `
+"<div>
+  <style>.a{color:red}
+/*# sourceMappingURL=data:application/json;base64,e30= */</style>
+  <script>var a=1
+//# sourceMappingURL=data:application/json;base64,e30=</script>
+</div>"
+`;
+
 exports[`HTML syntax — invariants source-processor-render-embedded-source-keeps-a-map-the-renderer-attached-to-an prints {"mode":"minify"} 1`] = `
 "<div>
   <style>  .a { color : red }  </style>

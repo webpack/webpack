@@ -33590,6 +33590,8 @@ exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-leave
 
 exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-41 parses 2`] = `""`;
 
+exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-41 prints {"mode":"minify","source":"s.css","content":"a{color:red}\\nb{--x:f( g"} 1`] = `"a{color:red}b{--x:f(g"`;
+
 exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-41 prints {"mode":"minify"} 1`] = `"a{color:red}b{--x:f(g"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-41 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] ident[8,11] right-curly-bracket[11,12] whitespace[12,13] ident[13,14] left-curly-bracket[14,15] ident[15,18] colon[18,19] function[19,21] whitespace[21,22] ident[22,23] end=23"`;
@@ -33597,6 +33599,8 @@ exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-leave
 exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-42 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"--x\\"],\\":\\",[\\"function\\",\\"f\\",\\" \\",[\\"ident\\",\\"g\\"]]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-42 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-42 prints {"mode":"minify","source":"s.css","content":"a{color:red}\\nb{--x:f( g)}"} 1`] = `"a{color:red}b{--x:f(g)}"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-token-boundary-safety-leaves-a-custom-property-s-value-the-42 prints {"mode":"minify"} 1`] = `"a{color:red}b{--x:f(g)}"`;
 
@@ -52483,6 +52487,8 @@ exports[`CSS syntax — invariants source-processor-merge-distant-rules-leaves-t
 
 exports[`CSS syntax — invariants source-processor-merge-distant-rules-leaves-the-source-map-pointing-at-what-each parses 2`] = `""`;
 
+exports[`CSS syntax — invariants source-processor-merge-distant-rules-leaves-the-source-map-pointing-at-what-each prints {"mode":"minify","mergeDistantRules":true,"source":"in.css","content":".a{color:red}\\n.b{margin:0}\\n.c{color:red}\\n"} 1`] = `".a,.c{color:red}.b{margin:0}"`;
+
 exports[`CSS syntax — invariants source-processor-merge-distant-rules-leaves-the-source-map-pointing-at-what-each prints {"mode":"minify"} 1`] = `".a{color:red}.b{margin:0}.c{color:red}"`;
 
 exports[`CSS syntax — invariants source-processor-merge-distant-rules-leaves-the-source-map-pointing-at-what-each tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,8] colon[8,9] ident[9,12] right-curly-bracket[12,13] whitespace[13,14] delim[14,15] ident[15,16] left-curly-bracket[16,17] ident[17,23] colon[23,24] number[24,25] right-curly-bracket[25,26] whitespace[26,27] delim[27,28] ident[28,29] left-curly-bracket[29,30] ident[30,35] colon[35,36] ident[36,39] right-curly-bracket[39,40] whitespace[40,41] end=41"`;
@@ -53475,6 +53481,8 @@ exports[`CSS syntax — invariants source-processor-render-embedded-source-offer
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-keeps-the-stylesheet-s parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"color\\"],\\" \\",\\":\\",\\" \\",[\\"ident\\",\\"red\\"],\\" \\",\\";\\",\\" \\"]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"b\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"background\\"],\\" \\",\\":\\",\\" \\",[\\"function\\",\\"url\\",[\\"string\\",\\"data:image/svg+xml,<svg>    <rect/>    </svg>\\"]],\\" \\",\\";\\",\\" \\"]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"c\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"color\\"],\\" \\",\\":\\",\\" \\",[\\"ident\\",\\"blue\\"],\\" \\",\\";\\",\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-keeps-the-stylesheet-s parses 2`] = `""`;
+
+exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-keeps-the-stylesheet-s prints {"mode":"minify","source":"s.css","content":".a {\\n\\tcolor : red ;\\n}\\n.b {\\n\\tbackground : url(\\"data:image/svg+xml,<svg>    <rect/>    </svg>\\") ;\\n}\\n.c {\\n\\tcolor : blue ;\\n}\\n"} 1`] = `".a{color:red}.b{background:url(\\"data:image/svg+xml,<svg>    <rect/>    </svg>\\")}.c{color:blue}"`;
 
 exports[`CSS syntax — invariants source-processor-render-embedded-source-over-a-data-url-keeps-the-stylesheet-s prints {"mode":"minify"} 1`] = `".a{color:red}.b{background:url(\\"data:image/svg+xml,<svg>    <rect/>    </svg>\\")}.c{color:blue}"`;
 
