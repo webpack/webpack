@@ -38138,7 +38138,7 @@ exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-fold-a-labeled-switch-of-a-known-3 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-fold-a-labeled-switch-of-a-known-3 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function s(c){1}"`;
+exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-fold-a-labeled-switch-of-a-known-3 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function s(c){}"`;
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-fold-a-labeled-switch-of-a-known-3 prints {"mode":"minify"} 1`] = `"function s(x){A:switch(1){case 2:x();break A}}"`;
 
