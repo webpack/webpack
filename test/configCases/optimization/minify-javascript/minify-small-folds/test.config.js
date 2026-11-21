@@ -29,9 +29,12 @@ module.exports = {
 		);
 		expect(code).toContain("var first,named,last,rest,key;return");
 		expect(code).not.toContain("unread");
-		expect(code).toContain('var withFunction;flag.push("kept")');
-		expect(code).toContain('flag.push("kept");var picked;');
-		expect(code).toContain('flag.push("else");else var fromElse;');
+		expect(code).toContain(
+			'flag.push("kept"),flag.push("on");if(flag.length)flag.push("else");if(0){'
+		);
+		expect(code).toContain(
+			'return["undefined","undefined","undefined","undefined"]'
+		);
 		expect(code).toContain("var commented}");
 		expect(code).toContain("try{for(;;)step()}");
 		expect(code).toContain("try{for(;;)step(),step()}");

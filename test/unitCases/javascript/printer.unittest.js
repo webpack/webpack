@@ -1320,8 +1320,8 @@ describe("one-pass minify of statement sequences", () => {
 				"function s(a,c){a:{a();for(;;)if(c())break a;c();a();c()}}"
 			],
 			[fixture("javascript", "one-pass-minify-of-statement-sequences-should-fold-a-labeled-switch-of-a-known-2"), "function s(c,s){c(),s()}"],
-			// The `switch` prints before its label goes with its last `break`.
-			[fixture("javascript", "one-pass-minify-of-statement-sequences-should-fold-a-labeled-switch-of-a-known-3"), "function s(c){switch(1){case 2:c()}}"],
+			// A `switch` whose cases never run goes with its label.
+			[fixture("javascript", "one-pass-minify-of-statement-sequences-should-fold-a-labeled-switch-of-a-known-3"), "function s(c){}"],
 			[fixture("javascript", "one-pass-minify-of-statement-sequences-should-fold-a-labeled-switch-of-a-known-4"), "function s(i,a){i:switch(1){case 1:i();if(a())break;if(i())break i;a()}}"]
 		];
 		for (const [source, expected] of cases) {
@@ -1537,7 +1537,8 @@ describe("one-pass minify of reads and calls on literals", () => {
 
 	it("should fold a value running nothing into the compound assignment after it", () => {
 		const source = fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-running");
-		// A value running code would run after the target is read.
+		// A value running code folds too where the target is a parameter no
+		// closure reads, which nothing it runs can write.
 		expect(minifyOnePass(source, { compress: {}, mangle: false, ecma: 2021 }).code).toMatchSnapshot();
 		// A global's read may run a getter, which could set the value first.
 		expect(minifyOnePass(fixture("javascript", "one-pass-minify-of-reads-and-calls-on-literals-should-fold-a-value-running-2"), { compress: {}, mangle: false }).code).toMatchSnapshot();

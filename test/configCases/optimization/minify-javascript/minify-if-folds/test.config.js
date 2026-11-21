@@ -14,6 +14,6 @@ module.exports = {
 		expect(code).toContain("function keptName(read=keptName)");
 		expect(code).toContain('log.push("test")');
 		expect(code).not.toContain("typeof missing");
-		expect(code).toContain("return 2+3");
+		expect(code).toContain("function bare(c){if(c)return 5}");
 	}
 };

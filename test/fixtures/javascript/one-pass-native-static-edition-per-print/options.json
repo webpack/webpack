@@ -1,0 +1,1 @@
+[{"mode":"minify","compress":{"builtinsEcma":2024},"mangle":false,"behavior":true},{"mode":"minify","compress":{"builtinsEcma":5},"mangle":false,"behavior":true},{"mode":"minify","compress":{"builtinsEcma":2024,"toplevel":true},"mangle":{"toplevel":true},"behavior":true},{"mode":"minify","compress":{"builtinsEcma":5,"toplevel":true},"mangle":{"toplevel":true},"behavior":true}]

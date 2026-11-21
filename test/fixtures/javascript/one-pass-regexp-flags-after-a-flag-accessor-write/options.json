@@ -1,0 +1,21 @@
+[
+	{
+		"mode": "minify",
+		"compress": { "unsafe": true },
+		"mangle": false,
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"compress": { "unsafe": true, "toplevel": true },
+		"mangle": { "toplevel": true },
+		"behavior": true
+	},
+	{ "mode": "minify", "compress": {}, "mangle": false, "behavior": true },
+	{
+		"mode": "minify",
+		"compress": { "toplevel": true },
+		"mangle": { "toplevel": true },
+		"behavior": true
+	}
+]
