@@ -1,7 +1,9 @@
 [
 	{
 		"mode": "minify",
-		"renameKeyframes": true
+		"transforms": {
+			"renameKeyframes": true
+		}
 	},
 	{
 		"print": "cssMinify",

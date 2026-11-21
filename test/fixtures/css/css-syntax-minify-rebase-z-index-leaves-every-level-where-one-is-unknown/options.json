@@ -1,7 +1,9 @@
 [
 	{
 		"mode": "minify",
-		"rebaseZIndex": true
+		"transforms": {
+			"rebaseZIndex": true
+		}
 	},
 	{
 		"print": "cssMinify",
