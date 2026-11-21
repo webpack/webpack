@@ -7,14 +7,15 @@ const currentWatchStep = require("../../../helpers/currentWatchStep");
 
 const PLUGIN_NAME = "AllowOutsideHotUpdatePlugin";
 
-// the hot update each step writes outside of output.path, step 1 writes none
+// the hot update each step writes outside of output.path, steps 1 and 3 write none
 /** @type {string[][]} */
-const WRITTEN = [["0.hot-update.json"], [], ["2.hot-update.json"]];
-// what stays: the last hot update until a newer one is written
+const WRITTEN = [["0.hot-update.json"], [], ["2.hot-update.json"], []];
+// what stays: the last hot update until a build after a newer one is written
 /** @type {string[][]} */
 const EXPECTED = [
 	["0.hot-update.json"],
 	["0.hot-update.json"],
+	["0.hot-update.json", "2.hot-update.json"],
 	["2.hot-update.json"]
 ];
 
