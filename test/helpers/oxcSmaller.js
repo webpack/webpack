@@ -400,8 +400,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:1e8b08b2",
 			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:29660a03",
 			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:48e1a076",
-			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:4c0bc61c",
-			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:a7334b0d",
 			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:bd15f134",
 			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:ee9ac22d"
 		]
@@ -902,10 +900,6 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"oxc goes further than webpack on what swc's `mangle` tests cover",
-		["swc minifier: mangle/issue-5766/hoisted-in-correct-scope/5/input.js"]
-	],
-	[
 		"oxc goes further than webpack on what terser's `destructuring` tests cover",
 		[
 			"terser compress: destructuring/destructuring_remove_unused_2",
@@ -1038,11 +1032,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `labels` tests cover",
-		[
-			"terser compress: labels/labels_3",
-			"terser compress: labels/labels_4",
-			"terser compress: labels/labels_5"
-		]
+		["terser compress: labels/labels_3", "terser compress: labels/labels_4"]
 	],
 	[
 		"oxc goes further than webpack on what terser's `nullish` tests cover",
