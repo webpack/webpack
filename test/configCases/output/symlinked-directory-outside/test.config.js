@@ -2,6 +2,16 @@
 
 module.exports = {
 	findBundle(index) {
-		return `./${["unset", "allowed", "denied", "allowed-link"][index]}/dist/bundle${index}.js`;
+		const mode = [
+			"unset",
+			"allowed",
+			"denied",
+			"allowed-link",
+			"future-defaults",
+			"emitted-link"
+		][index];
+		return mode === "future-defaults"
+			? `./${mode}/dist/main.mjs`
+			: `./${mode}/dist/bundle${index}.js`;
 	}
 };

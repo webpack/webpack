@@ -7,10 +7,18 @@ const { RawSource } = require("webpack-sources");
 
 const PLUGIN_NAME = "SymlinkedDirectoryOutsidePlugin";
 
-/** @typedef {"unset" | "allowed" | "denied" | "allowed-link"} Mode */
+/** @typedef {"unset" | "allowed" | "denied" | "allowed-link" | "future-defaults" | "emitted-link"} Mode */
 
 /** @type {Mode[]} */
-const MODES = ["unset", "allowed", "denied", "allowed-link"];
+const MODES = [
+	"unset",
+	"allowed",
+	"denied",
+	"allowed-link",
+	"future-defaults",
+	// the link is an asset of the build, created before the file below it
+	"emitted-link"
+];
 
 /** @type {(env: unknown, options: { testPath: string }) => import("../../../../").Configuration[]} */
 module.exports = (env, { testPath }) =>
@@ -20,12 +28,17 @@ module.exports = (env, { testPath }) =>
 		const elsewhere = path.join(testPath, mode, "elsewhere");
 		return {
 			name: mode,
+			// experiments.futureDefaults emits ECMAScript modules
+			...(mode === "future-defaults"
+				? { experiments: { futureDefaults: true } }
+				: {}),
 			output: {
+				...(mode === "future-defaults" ? { filename: "[name].mjs" } : {}),
 				path: outputPath,
 				...(mode === "allowed" || mode === "allowed-link"
 					? // with "allowed-link", the link "elsewhere" holds leads out of it
 						{ allowOutside: [elsewhere] }
-					: mode === "denied"
+					: mode === "denied" || mode === "emitted-link"
 						? { allowOutside: false }
 						: {})
 			},
@@ -38,11 +51,13 @@ module.exports = (env, { testPath }) =>
 						rimraf.sync(path.join(testPath, mode));
 						fs.mkdirSync(elsewhere, { recursive: true });
 						fs.mkdirSync(outputPath, { recursive: true });
-						fs.symlinkSync(
-							elsewhere,
-							path.join(outputPath, "linked"),
-							"junction"
-						);
+						if (mode !== "emitted-link") {
+							fs.symlinkSync(
+								elsewhere,
+								path.join(outputPath, "linked"),
+								"junction"
+							);
+						}
 						if (mode === "allowed-link") {
 							fs.mkdirSync(path.join(testPath, mode, "private"));
 							fs.symlinkSync(
@@ -52,6 +67,23 @@ module.exports = (env, { testPath }) =>
 							);
 						}
 					});
+					if (mode === "emitted-link") {
+						// a slow link: a file below it must still wait for it
+						compiler.hooks.emit.tap(PLUGIN_NAME, () => {
+							const fs = /** @type {EXPECTED_ANY} */ (
+								compiler.outputFileSystem
+							);
+							if (fs.slowSymlink) return;
+							const { symlink } = fs;
+							fs.slowSymlink = true;
+							/**
+							 * @param {...EXPECTED_ANY} args arguments of fs.symlink
+							 */
+							fs.symlink = (...args) => {
+								setTimeout(() => symlink.apply(fs, args), 50);
+							};
+						});
+					}
 					compiler.hooks.thisCompilation.tap(PLUGIN_NAME, (compilation) => {
 						compilation.hooks.processAssets.tap(PLUGIN_NAME, () => {
 							compilation.emitAsset(
@@ -61,6 +93,12 @@ module.exports = (env, { testPath }) =>
 								new RawSource("linked")
 							);
 							compilation.emitAsset("inside/file.txt", new RawSource("inside"));
+							// emitted after the file below it, as a plugin may
+							if (mode === "emitted-link") {
+								compilation.emitAsset("linked", new RawSource(""), {
+									symlink: { target: elsewhere, isDirectory: true }
+								});
+							}
 						});
 					});
 					compiler.hooks.afterEmit.tap(PLUGIN_NAME, (compilation) => {
@@ -72,7 +110,7 @@ module.exports = (env, { testPath }) =>
 						const inside = fs.existsSync(
 							path.join(outputPath, "inside", "file.txt")
 						);
-						const refused = mode === "denied" || mode === "allowed-link";
+						const refused = mode !== "unset" && mode !== "allowed";
 						if (written === refused || !inside) {
 							compilation.errors.push(
 								new compiler.webpack.WebpackError(
