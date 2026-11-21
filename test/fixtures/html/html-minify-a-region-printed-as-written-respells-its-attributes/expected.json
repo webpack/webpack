@@ -1,0 +1,26 @@
+[
+	{
+		"relation": "respelling quote-double",
+		"contains": "    <tfoot a=\"\" b='x' c=\"z\"/ d=\"&#x7a;\" e=\"\"f=g h=\"&lt;%x\" i=\"x y\">   (only in the page)",
+		"presets": [
+			"default"
+		],
+		"why": "a value with a `/` or the next attribute right after it, or a template opener spelled by a reference, is kept as written where the region respells the rest, since another spelling could change what the tag says"
+	},
+	{
+		"relation": "respelling quote-single",
+		"contains": "    <tfoot a=\"\" b='x' c=\"z\"/ d=\"&#x7a;\" e=\"\"f=g h=\"&lt;%x\" i=\"x y\">   (only in the page)",
+		"presets": [
+			"default"
+		],
+		"why": "a value with a `/` or the next attribute right after it, or a template opener spelled by a reference, is kept as written where the region respells the rest, since another spelling could change what the tag says"
+	},
+	{
+		"relation": "respelling references",
+		"contains": "    <tfoot a=\"\" b='x' c=\"z\"/ d=\"&#x7a;\" e=\"\"f=g h=\"&lt;%x\" i=\"x y\">   (only in the page)",
+		"presets": [
+			"default"
+		],
+		"why": "a value with a `/` or the next attribute right after it, or a template opener spelled by a reference, is kept as written where the region respells the rest, since another spelling could change what the tag says"
+	}
+]

@@ -5,6 +5,6 @@
 		"presets": [
 			"embedded+legacy"
 		],
-		"why": "known bug: merging a sheet the input left inside `light-dark(` onto the next one reads the next sheet's `{a` inside the first rule once the legacy target lowers `light-dark()`"
+		"why": "both sheets hold a rule with an empty prelude, which no engine keeps, so the minifier folding the second one into the first changes bytes only"
 	}
 ]

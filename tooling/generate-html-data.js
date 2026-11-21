@@ -2385,6 +2385,31 @@ const PARSER_TABLES = [
 			"xmp"
 		]
 	],
+	// WHY: §15.3.1 "Hidden elements" gives these `display: none`, read from the
+	// rendering section's stylesheet like the set above; a hidden element lays out
+	// nothing, so it neither ends nor starts a line of inline content.
+	[
+		"HIDDEN_ELEMENTS",
+		"set",
+		"Elements §15.3.1 gives `display: none` whatever their attributes, so none of them lays out a box.",
+		[
+			"area",
+			"base",
+			"basefont",
+			"datalist",
+			"head",
+			"link",
+			"meta",
+			"noembed",
+			"noframes",
+			"param",
+			"rp",
+			"script",
+			"style",
+			"template",
+			"title"
+		]
+	],
 	// WHY: The enumerated attributes, each with the keywords the spec gives it. Spec
 	// prose: nothing in the IDL marks an attribute as enumerated, and no dataset
 	// states a keyword set, so this is written out — but only a value that *is*

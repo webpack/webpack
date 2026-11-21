@@ -5,7 +5,7 @@
 		"presets": [
 			"default"
 		],
-		"why": "known bug: a value holding a backtick on a fostered element prints bare where the source leaves it bare and quoted where the source quotes it, so the spellings print other bytes"
+		"why": "an unquoted value holding a backtick is a parse error the printer writes back as authored, as `coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet` files, so each quoted spelling prints two bytes longer"
 	},
 	{
 		"relation": "respelling quote-single",
@@ -13,7 +13,7 @@
 		"presets": [
 			"default"
 		],
-		"why": "known bug: a value holding a backtick on a fostered element prints bare where the source leaves it bare and quoted where the source quotes it, so the spellings print other bytes"
+		"why": "an unquoted value holding a backtick is a parse error the printer writes back as authored, as `coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet` files, so each quoted spelling prints two bytes longer"
 	},
 	{
 		"relation": "respelling references",
@@ -21,6 +21,6 @@
 		"presets": [
 			"default"
 		],
-		"why": "known bug: a value holding a backtick on a fostered element prints bare where the source leaves it bare and quoted where the source quotes it, so the spellings print other bytes"
+		"why": "an unquoted value holding a backtick is a parse error the printer writes back as authored, as `coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet` files, so each quoted spelling prints two bytes longer"
 	}
 ]
