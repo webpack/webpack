@@ -1905,9 +1905,9 @@ const createRequire = (currentDir, context) =>
 	};
 
 // WHY: a case looping forever blocks its worker, where jest's timeout cannot
-// fire, and the job then runs out of time with no word of which case it was.
-// Bounded, it fails as that case.
-const RUN_TIMEOUT = 10000;
+// fire. Bounded, it fails as that case; the bound leaves a loaded runner time
+// for heavy cases (a regexp per code unit) inside jest's 30 s for the build too.
+const RUN_TIMEOUT = 20000;
 
 const create262Host = (context) => ({
 	evalScript(code, options = {}) {
