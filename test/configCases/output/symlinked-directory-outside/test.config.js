@@ -8,7 +8,8 @@ module.exports = {
 			"denied",
 			"allowed-link",
 			"future-defaults",
-			"emitted-link"
+			"emitted-link",
+			"nested-link"
 		][index];
 		return mode === "future-defaults"
 			? `./${mode}/dist/main.mjs`

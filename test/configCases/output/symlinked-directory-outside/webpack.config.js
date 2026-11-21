@@ -7,7 +7,7 @@ const { RawSource } = require("webpack-sources");
 
 const PLUGIN_NAME = "SymlinkedDirectoryOutsidePlugin";
 
-/** @typedef {"unset" | "allowed" | "denied" | "allowed-link" | "future-defaults" | "emitted-link"} Mode */
+/** @typedef {"unset" | "allowed" | "denied" | "allowed-link" | "future-defaults" | "emitted-link" | "nested-link"} Mode */
 
 /** @type {Mode[]} */
 const MODES = [
@@ -17,7 +17,9 @@ const MODES = [
 	"allowed-link",
 	"future-defaults",
 	// the link is an asset of the build, created before the file below it
-	"emitted-link"
+	"emitted-link",
+	// a link below an emitted link, created after it
+	"nested-link"
 ];
 
 /** @type {(env: unknown, options: { testPath: string }) => import("../../../../").Configuration[]} */
@@ -38,7 +40,9 @@ module.exports = (env, { testPath }) =>
 				...(mode === "allowed" || mode === "allowed-link"
 					? // with "allowed-link", the link "elsewhere" holds leads out of it
 						{ allowOutside: [elsewhere] }
-					: mode === "denied" || mode === "emitted-link"
+					: mode === "denied" ||
+						  mode === "emitted-link" ||
+						  mode === "nested-link"
 						? { allowOutside: false }
 						: {})
 			},
@@ -51,7 +55,7 @@ module.exports = (env, { testPath }) =>
 						rimraf.sync(path.join(testPath, mode));
 						fs.mkdirSync(elsewhere, { recursive: true });
 						fs.mkdirSync(outputPath, { recursive: true });
-						if (mode !== "emitted-link") {
+						if (mode !== "emitted-link" && mode !== "nested-link") {
 							fs.symlinkSync(
 								elsewhere,
 								path.join(outputPath, "linked"),
@@ -67,7 +71,7 @@ module.exports = (env, { testPath }) =>
 							);
 						}
 					});
-					if (mode === "emitted-link") {
+					if (mode === "emitted-link" || mode === "nested-link") {
 						// a slow link: a file below it must still wait for it
 						compiler.hooks.emit.tap(PLUGIN_NAME, () => {
 							const fs = /** @type {EXPECTED_ANY} */ (
@@ -93,8 +97,14 @@ module.exports = (env, { testPath }) =>
 								new RawSource("linked")
 							);
 							compilation.emitAsset("inside/file.txt", new RawSource("inside"));
+							// below the link emitted next, which leads out of output.path
+							if (mode === "nested-link") {
+								compilation.emitAsset("linked/inner", new RawSource(""), {
+									symlink: { target: outputPath, isDirectory: true }
+								});
+							}
 							// emitted after the file below it, as a plugin may
-							if (mode === "emitted-link") {
+							if (mode === "emitted-link" || mode === "nested-link") {
 								compilation.emitAsset("linked", new RawSource(""), {
 									symlink: { target: elsewhere, isDirectory: true }
 								});
@@ -111,10 +121,14 @@ module.exports = (env, { testPath }) =>
 							path.join(outputPath, "inside", "file.txt")
 						);
 						const refused = mode !== "unset" && mode !== "allowed";
-						if (written === refused || !inside) {
+						// no link is created outside of output.path either
+						const linkedOut =
+							mode === "nested-link" &&
+							fs.existsSync(path.join(elsewhere, "inner"));
+						if (written === refused || !inside || linkedOut) {
 							compilation.errors.push(
 								new compiler.webpack.WebpackError(
-									`${mode}: written through the link ${written}, inside ${inside}`
+									`${mode}: written through the link ${written}, inside ${inside}, link outside ${linkedOut}`
 								)
 							);
 						}
