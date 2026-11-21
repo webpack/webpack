@@ -55511,6 +55511,28 @@ exports[`HTML syntax — invariants syntax-fuzz-a-fostered-list-prints-an-empty-
 
 exports[`HTML syntax — invariants syntax-fuzz-a-fostered-list-prints-an-empty-value-by-its-spelling tokenizes 1`] = `"open[0,7|1,6] attr[14,15|-1,-1] open[7,16|8,13] open[16,20|17,19] open[20,24|21,23] open[24,28|25,27] end=28"`;
 
+exports[`HTML syntax — invariants syntax-fuzz-a-holder-printing-from-source-adds-no-end-tag-a-later-table-wrote parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <big>
+|       <li>
+|         <ul>
+|           <li>
+|       <table>
+|         <tbody>
+|           <tr>
+|       <table>
+|         <=\\"\\"
+|         big=\\"\\""
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-holder-printing-from-source-adds-no-end-tag-a-later-table-wrote parses 2`] = `"warning[0,6]:expected-doctype-but-got-start-tag warning[13,18]:non-void-html-element-start-tag-with-trailing-solidus warning[18,22]:unexpected-start-tag-implies-table-voodoo warning[22,26]:unexpected-start-tag-implies-table-voodoo warning[26,30]:unexpected-start-tag-implies-table-voodoo warning[37,38]:unexpected-solidus-in-tag warning[37,38]:unexpected-character-in-attribute-name warning[39,40]:unexpected-solidus-in-tag warning[30,43]:unexpected-start-tag-implies-end-tag warning[43,43]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-holder-printing-from-source-adds-no-end-tag-a-later-table-wrote prints {"mode":"minify"} 1`] = `"<big><table><tr/><li><ul><li><table/</big>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-holder-printing-from-source-adds-no-end-tag-a-later-table-wrote tokenizes 1`] = `"open[0,6|1,4] open[6,13|7,12] open[13,18|14,16]/ open[18,22|19,21] open[22,26|23,25] open[26,30|27,29] warning[37,38]:unexpected-solidus-in-tag warning[37,38]:unexpected-character-in-attribute-name attr[37,38|-1,-1] warning[39,40]:unexpected-solidus-in-tag attr[39,42|-1,-1] open[30,43|31,36] end=43"`;
+
 exports[`HTML syntax — invariants syntax-fuzz-a-numeric-default-is-dropped-on-the-first-print parses 1`] = `
 "| <html>
 |   <head>
