@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg [
+  <!ENTITY ns "http://www.w3.org/2000/svg">
+  <!ENTITY label "ok">
+]>
+<svg xmlns="&ns;" viewBox="0 0 8 8">
+  <text x="1" y="6">&label;</text>
+</svg>

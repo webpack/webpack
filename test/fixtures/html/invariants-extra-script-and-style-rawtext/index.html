@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      .x::before {
+        content: "</style> stays text";
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      const s = "</script> stays text";
+      console.log(s.length);
+    </script>
+  </body>
+</html>

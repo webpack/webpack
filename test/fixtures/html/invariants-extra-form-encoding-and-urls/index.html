@@ -1,0 +1,10 @@
+<!doctype html>
+<html>
+  <body>
+    <form action="/search?q=a%2Bb&amp;lang=en" method="get" accept-charset="utf-8">
+      <input name="q" value="a+b &amp; c" />
+      <input type="hidden" name="meta" value='{"a":1,"b":"x"}' />
+      <button type="submit">Go</button>
+    </form>
+  </body>
+</html>

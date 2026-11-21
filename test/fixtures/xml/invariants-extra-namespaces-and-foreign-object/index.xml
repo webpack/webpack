@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <path id="p" d="M0 0 L10 0" />
+  </defs>
+  <use xlink:href="#p" />
+  <foreignObject width="10" height="10">
+    <xhtml:div xmlns:xhtml="http://www.w3.org/1999/xhtml">hello</xhtml:div>
+  </foreignObject>
+</svg>

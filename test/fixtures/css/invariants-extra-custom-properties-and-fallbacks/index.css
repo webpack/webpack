@@ -1,0 +1,15 @@
+:root {
+  --gap: calc(1rem + 2px);
+  --accent: rgb(10 20 30 / 80%);
+}
+
+.grid {
+  display: grid;
+  gap: var(--gap, 8px);
+  margin: calc(var(--gap) * -1);
+}
+
+.button {
+  color: var(--missing, var(--accent, #123));
+  background: linear-gradient(90deg, #fff, #0000);
+}

@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+  <head>
+    <script type="application/json" id="state">
+      {"title":"hello","list":[1,2,3],"nested":{"ok":true}}
+    </script>
+  </head>
+  <body>
+    <noscript><p>Enable JavaScript.</p></noscript>
+    <script>
+      const state = JSON.parse(document.getElementById("state").textContent);
+      console.log(state.title);
+    </script>
+  </body>
+</html>

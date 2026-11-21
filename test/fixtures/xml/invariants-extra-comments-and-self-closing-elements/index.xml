@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12">
+  <!-- keep this comment shape -->
+  <g id="layer-1">
+    <path d="M1 1 L11 11" />
+    <path d="M11 1 L1 11"></path>
+  </g>
+</svg>
