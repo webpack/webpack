@@ -117,7 +117,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/issue_1670_6",
 			"terser compress: reduce_vars/redefine_farg_3",
 			"terser compress: reduce_vars/side_effects_assign",
-			"terser compress: reduce_vars/obj_arg_1",
 			"terser compress: reduce_vars/func_arg_1",
 			"terser compress: reduce_vars/issue_2423_2",
 			"terser compress: reduce_vars/issue_2423_5",
@@ -158,14 +157,11 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/cycle-2/input.js",
 			"swc minifier: fixture/pr/7690/input.js",
 			"swc minifier: full/issues/8288/input.js",
-			"terser compress: collapse_vars/issue_2436_3",
-			"terser compress: functions/issue_2616",
 			"terser compress: functions/issue_2630_3",
 			"terser compress: functions/issue_2630_4",
 			"terser compress: functions/issue_2657",
 			"terser compress: functions/issue_2663_2",
 			"terser compress: functions/issue_2737_1",
-			"terser compress: functions/issue_2737_2",
 			"terser compress: functions/issue_2783",
 			"terser compress: identity/inline_identity_higher_order",
 			"terser compress: issue-t292/no_flatten_with_arg_colliding_with_arg_value_inner_scope",
@@ -278,7 +274,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: classes/class_duplication_2",
 			"terser compress: collapse_vars/collapse_vars_array",
 			"terser compress: dead-code/issue_2233_2",
-			"terser compress: drop-unused/cascade_drop_assign",
 			"terser compress: drop-unused/issue_2768",
 			"terser compress: drop-unused/issue_t161_top_retain_13",
 			"terser compress: functions/duplicate_argnames",
@@ -692,10 +687,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		'swc folds arithmetic and concatenation of literals (`"1"+"2"`, `1+""`, `5+3`) that terser leaves as written',
 		["terser compress: dead-code/collapse_vars_misc1"]
-	],
-	[
-		"swc goes further than webpack on what terser's `arrays` tests cover",
-		["terser compress: arrays/length"]
 	],
 	[
 		"swc goes further than webpack on what terser's `transform` tests cover",
