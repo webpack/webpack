@@ -11,6 +11,7 @@ module.exports = [
 		target: "async-node",
 		entry,
 		output: {
+			allowOutside: true,
 			filename: "[name]-async-node.js",
 			chunkFilename: "chunks/[name]-async-node.js"
 		}
@@ -19,6 +20,7 @@ module.exports = [
 		target: "node",
 		entry,
 		output: {
+			allowOutside: true,
 			filename: "[name]-node.js",
 			chunkFilename: "chunks/[name]-node.js"
 		}
@@ -27,6 +29,7 @@ module.exports = [
 		target: "webworker",
 		entry,
 		output: {
+			allowOutside: true,
 			filename: "[name]-webworker.js",
 			chunkFilename: "chunks/[name]-webworker.js"
 		}
