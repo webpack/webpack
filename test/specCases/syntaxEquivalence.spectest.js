@@ -109,6 +109,7 @@ const {
 	installHelpers,
 	numericallyEqual
 } = require("../helpers/syntaxEquivalence");
+const { claimInPart, isInPart } = require("../helpers/testParts");
 const {
 	WPT,
 	browserCorpus,
@@ -1396,6 +1397,8 @@ describe("wpt tree stability", () => {
 	}
 	/** @type {Set<string>} every document that moved, filled as the groups run */
 	const diverging = new Set();
+	/** @type {Set<string>} every document this part held, by mode and name */
+	const checked = new Set();
 
 	if (!hasCorpus()) {
 		it(NO_CORPUS, () => {
@@ -1414,6 +1417,9 @@ describe("wpt tree stability", () => {
 	// one is named by its own timing rather than hidden in a corpus-wide pass.
 	for (const [group, files] of byGroup) {
 		it(`should build the same tree from ${group} and its printed forms`, () => {
+			// No engine reads this tier, so of the parts `--parts` runs one per
+			// engine, the first to arrive holds each area and the others skip it.
+			if (!claimInPart(`wpt tree stability ${group}`)) return;
 			/** @type {{ name: string, why: string }[]} */
 			const differences = [];
 			for (const file of files) {
@@ -1421,11 +1427,12 @@ describe("wpt tree stability", () => {
 				if (source === null) continue;
 				const before = domShapeOf(source);
 				for (const [mode, print] of PRINT_MODES) {
-					const why = whatMoved(before, domShapeOf(print(source)));
-					if (why === "") continue;
 					// Keyed by mode too: a file filed for one says nothing about the
 					// other, and exempting both hides half of what this tier catches.
 					const name = `${mode} ${nameOf(file)}`;
+					checked.add(name);
+					const why = whatMoved(before, domShapeOf(print(source)));
+					if (why === "") continue;
 					diverging.add(name);
 					if (!FILED_WPT_TREE_DEFECTS.has(name)) {
 						differences.push({ name, why });
@@ -1436,10 +1443,23 @@ describe("wpt tree stability", () => {
 		}, 600000);
 	}
 
-	// Runs last, so every group has reported what moved.
+	// Runs last, so every group this part held has reported what moved. One part
+	// also reports the filed documents the corpus no longer has.
 	it("should still diverge on every filed defect", () => {
+		/** @type {Set<string>} */
+		const corpus = new Set();
+		for (const files of byGroup.values()) {
+			for (const file of files) {
+				for (const [mode] of PRINT_MODES) corpus.add(`${mode} ${nameOf(file)}`);
+			}
+		}
+		const reportsMissing = isInPart("wpt tree stability filed defects");
 		expect(
-			[...FILED_WPT_TREE_DEFECTS.keys()].filter((name) => !diverging.has(name))
+			[...FILED_WPT_TREE_DEFECTS.keys()].filter((name) =>
+				corpus.has(name)
+					? checked.has(name) && !diverging.has(name)
+					: reportsMissing
+			)
 		).toEqual([]);
 	});
 });
