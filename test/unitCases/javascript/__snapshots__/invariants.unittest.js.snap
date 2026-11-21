@@ -18528,7 +18528,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-517 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-517 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"a?.b?.c,(a?.b).c,a?.b?.(),a?.b?.[0],(a?.b)(),v=1-foo,v=foo-1,v=1e3*d,v=5|b,v=xs-6,v=a-+b,v=1+ +b,v=1-+-b,v=1-(a+b),v=(+a)**2,v=1-x++,v=null!=foo,v=null==foo,v=1==y,v=0!=y;function*g(){yield,yield*void 0,x=yield,yield void f()}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-517 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"a?.b?.c,(a?.b).c,a?.b?.(),a?.b?.[0],(a?.b)(),v=1-foo,v=foo-1,v=1e3*d,v=5|b,v=xs-6,v=a-+b,v=+b+1,v=1-+-b,v=1-(a+b),v=(+a)**2,v=1-x++,v=null!=foo,v=null==foo,v=1==y,v=0!=y;function*g(){yield,yield*void 0,x=yield,yield void f()}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-517 prints {"mode":"minify"} 1`] = `"(a?.b)?.c;(a?.b).c;(a?.b)?.();(a?.b)?.[0];(a?.b)();v=1-+foo;v=+foo-1;v=1e3*+d;v=5|+b;v=+xs-2*3;v=a-+b;v=1+ +b;v=1-+-b;v=1-+(a+b);v=(+a)**2;v=1-+x++;v=undefined!=foo;v=void 0==foo;v=!0==y;v=false!=y;function*g(){yield void 0;yield*void 0;x=yield undefined;yield void f()}"`;
 
@@ -34719,7 +34719,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-what-runs-the-same-for-13 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-what-runs-the-same-for-13 prints {"mode":"minify","compress":{},"mangle":true,"module":false} 1`] = `"console.log(8),function(x){console.log(x,[1,2].length)}([3]);"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-what-runs-the-same-for-13 prints {"mode":"minify","compress":{},"mangle":true,"module":false} 1`] = `"console.log(8),function(x){console.log(x,2)}([3]);"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-what-runs-the-same-for-13 prints {"mode":"minify"} 1`] = `"!function(){var x=1;x=x+2;x=x<<1;x=x-(1-3);console.log(x);(function(o,p){console.log(p,o.length)})([1,2],[3])}();"`;
 
@@ -44388,7 +44388,7 @@ exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-print-a-binary-expression-folding parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-print-a-binary-expression-folding prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"var a=2;console.log(1/0,2/0,1/0,-1/0,NaN,NaN,a/(2/0),a- -2/0,-(2/0),(2/0).toLocaleString(),1/0,a**(2/0),f()/0,a/(1/0),a- -1/0,-(1/0),(1/0).toLocaleString(),a**(1/0));"`;
+exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-print-a-binary-expression-folding prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"var a=2;console.log(1/0,2/0,1/0,-1/0,NaN,NaN,a/(2/0),a- -2/0,-2/0,(2/0).toLocaleString(),1/0,a**(2/0),f()/0,a/(1/0),a- -1/0,-(1/0),(1/0).toLocaleString(),a**(1/0));"`;
 
 exports[`JavaScript syntax — invariants one-pass-minify-of-statement-sequences-should-print-a-binary-expression-folding prints {"mode":"minify"} 1`] = `"var a=2;console.log(123456789/0,2/0,3/0*2,-1e300*1e10,1*\\"a\\",\\"a\\"*2+1,a/(2/0),a- -2/0,-(2/0),(2/0).toLocaleString(),2**2e3,a**(2/0),f()/0,a/(3/0*2),a- -3/0*2,-(3/0*2),(3/0*2).toLocaleString(),a**(3/0*2));"`;
 
