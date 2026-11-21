@@ -5,3 +5,5 @@
 .e { z-index: 0 }
 .f { z-index: 1000 }
 @supports (z-index: 5) { .g { z-index: 5 } }
+.h { z-index: 3000; transition: opacity 1s }
+@supports (z-index: 1) { .i { z-index: 4000 } }
