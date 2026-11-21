@@ -1,0 +1,9 @@
+[
+	{
+		"mode": "minify",
+		"dropOverriddenDeclarations": true
+	},
+	{
+		"mode": "minify"
+	}
+]

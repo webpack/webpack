@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"renameKeyframes": true
+	},
+	{
+		"print": "cssMinify",
+		"renameKeyframes": true
+	}
+]

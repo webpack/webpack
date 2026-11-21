@@ -1,0 +1,2 @@
+.a { z-index: 1000 }
+.b { z-index: var(--z) }

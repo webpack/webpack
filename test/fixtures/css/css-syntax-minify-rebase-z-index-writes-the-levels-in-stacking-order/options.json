@@ -1,0 +1,10 @@
+[
+	{
+		"mode": "minify",
+		"rebaseZIndex": true
+	},
+	{
+		"print": "cssMinify",
+		"rebaseZIndex": true
+	}
+]
