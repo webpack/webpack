@@ -468,7 +468,7 @@ exports[`one-pass minify, family X round 9 should print the \`!!x\` a call in pl
 
 exports[`one-pass minify, family X round 9 should print the \`!!x\` a call in place returns as \`x\` where only its truth is read 7`] = `"function f(t){if(!t.x)k()}"`;
 
-exports[`one-pass minify, family X round 9 should print the \`!!x\` a call in place returns as \`x\` where only its truth is read 8`] = `"function f(t){if((g(),!!t.x))k()}"`;
+exports[`one-pass minify, family X round 9 should print the \`!!x\` a call in place returns as \`x\` where only its truth is read 8`] = `"function f(t){if(g(),!!t.x)k()}"`;
 
 exports[`one-pass minify, family X round 9 should print the \`!!x\` a call in place returns as \`x\` where only its truth is read 9`] = `"function f(t,u){if((t===u))k()}"`;
 
