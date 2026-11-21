@@ -1,0 +1,1 @@
+self.postMessage(1);
