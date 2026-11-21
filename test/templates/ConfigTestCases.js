@@ -114,8 +114,19 @@ const describeCases = (config) => {
 		for (const category of categories) {
 			// eslint-disable-next-line no-loop-func
 			describe(category.name, () => {
+				// Numbered cases build on one another's output, which their siblings
+				// may read too, so such a category stays in one part.
+				const keptTogether = category.tests.some((testName) =>
+					/^\d+-/.test(testName)
+				);
 				for (const testName of category.tests) {
-					if (config.part && !isInPart(`${category.name}/${testName}`, config.part)) {
+					if (
+						config.part &&
+						!isInPart(
+							keptTogether ? category.name : `${category.name}/${testName}`,
+							config.part
+						)
+					) {
 						continue;
 					}
 
