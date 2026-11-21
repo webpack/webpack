@@ -2541,6 +2541,50 @@ exports[`HTML syntax — invariants html-minify-reads-a-spaced-base64-flag-in-a-
 
 exports[`HTML syntax — invariants html-minify-reads-a-spaced-base64-flag-in-a-data-url-as-base64 tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] attr[23,26|28,73]\\" open[15,75|16,22] close[75,84|77,83] end=84"`;
 
+exports[`HTML syntax — invariants html-minify-remove-empty-elements-keeps-a-block-between-inline-content parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <section>
+|       \\"a\\"
+|       <div>
+|       \\"b\\"
+|     <section>
+|       <div>
+|       \\"b\\"
+|     <section>
+|       \\"a\\"
+|       <div>
+|     <section>
+|       \\"a\\"
+|       <div>
+|       <p>
+|         \\"b\\"
+|     <section>
+|       \\"a\\"
+|       <!-- c -->
+|       <div>
+|       \\" b\\"
+|     <section>
+|       \\"a\\"
+|       <style>
+|       <div>
+|       <script>
+|       \\"b\\"
+|     <section>
+|       \\"a\\"
+|       <span>
+|       \\"b\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-remove-empty-elements-keeps-a-block-between-inline-content parses 2`] = `"warning[0,9]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-minify-remove-empty-elements-keeps-a-block-between-inline-content prints {"mode":"minify","removeEmptyElements":true} 1`] = `"<section>a<div></div>b</section><section>b</section><section>a</section><section>a<p>b</section><section>a<div></div> b</section><section>a<div></div>b</section><section>ab</section>"`;
+
+exports[`HTML syntax — invariants html-minify-remove-empty-elements-keeps-a-block-between-inline-content prints {"mode":"minify"} 1`] = `"<section>a<div></div>b</section><section><div></div>b</section><section>a<div></div></section><section>a<div></div><p>b</section><section>a<div></div> b</section><section>a<style></style><div></div><script></script>b</section><section>a<span></span>b</section>"`;
+
+exports[`HTML syntax — invariants html-minify-remove-empty-elements-keeps-a-block-between-inline-content tokenizes 1`] = `"open[0,9|1,8] text[9,10] open[10,15|11,14] close[15,21|17,20] text[21,22] close[22,32|24,31] open[32,41|33,40] open[41,46|42,45] close[46,52|48,51] text[52,53] close[53,63|55,62] open[63,72|64,71] text[72,73] open[73,78|74,77] close[78,84|80,83] close[84,94|86,93] open[94,103|95,102] text[103,104] open[104,109|105,108] close[109,115|111,114] open[115,118|116,117] text[118,119] close[119,129|121,128] open[129,138|130,137] text[138,139] comment[139,147|143,144] open[147,152|148,151] close[152,158|154,157] text[158,160] close[160,170|162,169] open[170,179|171,178] text[179,180] open[180,187|181,186] close[187,195|189,194] open[195,200|196,199] close[200,206|202,205] open[206,214|207,213] close[214,223|216,222] text[223,224] close[224,234|226,233] open[234,243|235,242] text[243,244] open[244,250|245,249] close[250,257|252,256] text[257,258] close[258,268|260,267] end=268"`;
+
 exports[`HTML syntax — invariants html-minify-the-delimiter-an-answered-srcdoc-is-written-with-keeps-the-source-s parses 1`] = `
 "| <html>
 |   <head>
@@ -56038,6 +56082,23 @@ exports[`HTML syntax — invariants syntax-fuzz-dropping-comments-keeps-the-whit
 exports[`HTML syntax — invariants syntax-fuzz-dropping-comments-keeps-the-whitespace-only-text-between-them prints {"mode":"minify"} 1`] = `"a 0"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-dropping-comments-keeps-the-whitespace-only-text-between-them tokenizes 1`] = `"text[0,1] warning[1,3]:incorrectly-opened-comment comment[1,4|3,3] text[4,5] warning[5,7]:incorrectly-opened-comment comment[5,8|7,7] text[8,9] end=9"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-keeps-an-empty-block-between-inline-content parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"a\\"
+|     <aside>
+|     \\"<\\""
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-keeps-an-empty-block-between-inline-content parses 2`] = `"warning[0,1]:expected-doctype-but-got-chars warning[17,17]:eof-before-tag-name"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-keeps-an-empty-block-between-inline-content prints {"mode":"minify","removeEmptyElements":true} 1`] = `"a<aside></aside><"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-keeps-an-empty-block-between-inline-content prints {"mode":"minify"} 1`] = `"a<aside></aside><"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-keeps-an-empty-block-between-inline-content tokenizes 1`] = `"text[0,1] open[1,8|2,7] close[8,16|10,15] warning[17,17]:eof-before-tag-name text[16,17] end=17"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-keeps-the-case-of-referrerpolicy-where-it-is-not-reflected parses 1`] = `
 "| <html>
