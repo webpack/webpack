@@ -1,5 +1,43 @@
 # webpack
 
+## 5.114.0
+
+### Minor Changes
+
+- Shrink the runtime and add `objectAssign`, `domIterable` and `domAppendRemove`. (by [@alexander-akait](https://github.com/alexander-akait) in [#23494](https://github.com/webpack/webpack/pull/23494))
+
+### Patch Changes
+
+- Free restored cache buffers after the persistent cache unpacks pack content. (by [@alexander-akait](https://github.com/alexander-akait) in [#23485](https://github.com/webpack/webpack/pull/23485))
+
+- Fix CSS and HTML parser and minifier bugs the syntax fuzzer found. (by [@aryanraj45](https://github.com/aryanraj45) in [#23489](https://github.com/webpack/webpack/pull/23489))
+
+- Map every statement the JavaScript minifier joins into a sequence. (by [@alexander-akait](https://github.com/alexander-akait) in [#23498](https://github.com/webpack/webpack/pull/23498))
+
+- Restore minification for SVG files imported with `asset/source`. (by [@alexander-akait](https://github.com/alexander-akait) in [#23500](https://github.com/webpack/webpack/pull/23500))
+
+- Speed up JavaScript minification. (by [@alexander-akait](https://github.com/alexander-akait) in [#23492](https://github.com/webpack/webpack/pull/23492))
+
+- Speed up JavaScript parsing. (by [@alexander-akait](https://github.com/alexander-akait) in [#23493](https://github.com/webpack/webpack/pull/23493))
+
+- Fold more known values, calls, object assignments and dead code when minifying. (by [@alexander-akait](https://github.com/alexander-akait) in [#23495](https://github.com/webpack/webpack/pull/23495))
+
+- Keep each compiler's hash function its own, and hash module ids with it. (by [@alexander-akait](https://github.com/alexander-akait) in [#23486](https://github.com/webpack/webpack/pull/23486))
+
+- Read and write text in the encoding of an HTML page not in UTF-8. (by [@alexander-akait](https://github.com/alexander-akait) in [#23501](https://github.com/webpack/webpack/pull/23501))
+
+- Warn when a file is emitted, copied or cleaned outside of output.path. (by [@alexander-akait](https://github.com/alexander-akait) in [#23504](https://github.com/webpack/webpack/pull/23504))
+
+- Keep the latest hot update outside of output.path until a newer one replaces it. (by [@alexander-akait](https://github.com/alexander-akait) in [#23507](https://github.com/webpack/webpack/pull/23507))
+
+- Warn when a base64 hash digest is used in an output filename. (by [@alexander-akait](https://github.com/alexander-akait) in [#23508](https://github.com/webpack/webpack/pull/23508))
+
+- Type JavaScript minimizer options, experiments and plugin instances. (by [@alexander-akait](https://github.com/alexander-akait) in [#23487](https://github.com/webpack/webpack/pull/23487))
+
+- Reuse decoded module references when concatenating modules. (by [@bjohansebas](https://github.com/bjohansebas) in [#23482](https://github.com/webpack/webpack/pull/23482))
+
+- Type the JavaScript minimizer's compress, mangle and source map options. (by [@alexander-akait](https://github.com/alexander-akait) in [#23505](https://github.com/webpack/webpack/pull/23505))
+
 ## 5.113.0
 
 ### Minor Changes
