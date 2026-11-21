@@ -3,8 +3,6 @@
 const { describeCases } = require("./templates/WatchTestCases");
 
 describeCases({
-	name: "WatchCacheUnaffectedTestCases",
-	experiments: {
-		cacheUnaffected: true
-	}
+	name: "WatchTestCases",
+	part: [2, 2]
 });

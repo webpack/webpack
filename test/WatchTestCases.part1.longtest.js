@@ -3,5 +3,6 @@
 const { describeCases } = require("./templates/WatchTestCases");
 
 describeCases({
-	name: "WatchTestCases"
+	name: "WatchTestCases",
+	part: [1, 2]
 });

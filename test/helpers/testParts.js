@@ -22,10 +22,11 @@ const currentPart = () =>
  * Tells whether this part runs the work named `key`, by a hash of the name, so
  * a key keeps its part however the others around it change.
  * @param {string} key a name unique to one piece of work
+ * @param {[number, number]=} of the part to ask about, as `[part, parts]` from 1; this run's part by default
  * @returns {boolean} true when this part runs it
  */
-const isInPart = (key) => {
-	const [part, parts] = currentPart();
+const isInPart = (key, of = currentPart()) => {
+	const [part, parts] = of;
 	if (parts === 1) return true;
 	// FNV-1a
 	let hash = 0x811c9dc5;

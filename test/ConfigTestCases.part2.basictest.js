@@ -3,5 +3,6 @@
 const { describeCases } = require("./templates/ConfigTestCases");
 
 describeCases({
-	name: "ConfigTestCases"
+	name: "ConfigTestCases",
+	part: [2, 2]
 });

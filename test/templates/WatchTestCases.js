@@ -9,6 +9,7 @@ require("../helpers/warmup-webpack");
  * @property {string} name suite name
  * @property {EXPECTED_ANY=} experiments experiments overrides
  * @property {EXPECTED_ANY=} optimization optimization overrides
+ * @property {[number, number]=} part the share of the cases this file runs, as `[part, parts]` from 1, so one suite spreads over several Jest workers
  */
 /**
  * @typedef {object} WatchTestConfig
@@ -38,6 +39,7 @@ const prepareOptions = require("../helpers/prepareOptions");
 const { remove } = require("../helpers/remove");
 const supportsObjectHasOwn = require("../helpers/supportsObjectHasOwn");
 const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
+const { isInPart } = require("../helpers/testParts");
 const testTimeout = require("../helpers/testTimeout");
 
 const testRootDirectory = path.join(__dirname, "..");
@@ -149,6 +151,10 @@ const describeCases = (config) => {
 			tests: fs
 				.readdirSync(path.join(casesPath, cat))
 				.filter((folder) => !folder.includes("_"))
+				.filter(
+					(testName) =>
+						!config.part || isInPart(`${cat}/${testName}`, config.part)
+				)
 				.filter((testName) => {
 					const testDirectory = path.join(casesPath, cat, testName);
 					const filterPath = path.join(testDirectory, "test.filter.js");
