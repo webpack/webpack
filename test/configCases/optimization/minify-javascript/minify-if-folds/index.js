@@ -52,4 +52,5 @@ it("should drop an `if` branch running nothing, and print an unread number bare"
 	expect(branches(1)).toBe(1);
 	expect(log).toEqual(["test"]);
 	expect(bare(1)).toBe(5);
+	expect(bare(0)).toBe(undefined);
 });

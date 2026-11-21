@@ -22260,6 +22260,7 @@ declare abstract class MinifierVariable extends Variable {
 	referenceCount: number;
 	written: boolean;
 	writes: number;
+	unreachedWrites: number;
 }
 
 /**
@@ -27634,7 +27635,7 @@ declare class OriginalSource extends Source {
  */
 declare interface Output {
 	/**
-	 * Where files may be written, copied and cleaned outside of 'output.path'. 'true' allows anywhere, 'false' nowhere, and a list allows only inside those directories. When unset, assets plugins emit there are still written (refused with 'experiments.futureDefaults'), while 'output.copy' and 'output.clean' stay inside 'output.path'.
+	 * Where files may be written, copied and cleaned outside of 'output.path'. 'true' allows anywhere, 'false' nowhere, and a list allows only inside those directories. When unset, assets plugins emit and 'output.copy' copies there are still written, and 'output.clean' removes them once stale, each with a warning (refused with 'experiments.futureDefaults').
 	 * @since 5.113.0
 	 */
 	allowOutside?: boolean | string[];
@@ -28201,7 +28202,7 @@ declare interface OutputHtmlOptions {
  */
 declare interface OutputNormalized {
 	/**
-	 * Where files may be written, copied and cleaned outside of 'output.path'. 'true' allows anywhere, 'false' nowhere, and a list allows only inside those directories. When unset, assets plugins emit there are still written (refused with 'experiments.futureDefaults'), while 'output.copy' and 'output.clean' stay inside 'output.path'.
+	 * Where files may be written, copied and cleaned outside of 'output.path'. 'true' allows anywhere, 'false' nowhere, and a list allows only inside those directories. When unset, assets plugins emit and 'output.copy' copies there are still written, and 'output.clean' removes them once stale, each with a warning (refused with 'experiments.futureDefaults').
 	 * @since 5.113.0
 	 */
 	allowOutside?: boolean | string[];

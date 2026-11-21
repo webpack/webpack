@@ -992,9 +992,7 @@ const INHERITED = {
  * may grow it, and one no longer bigger retires it. Lower it as a run shrinks it.
  * @type {Record<string, number>}
  */
-const TERSER_TOTAL_BUDGET = {
-	"swc exec": 1.053
-};
+const TERSER_TOTAL_BUDGET = {};
 
 /* cspell:disable */
 /**

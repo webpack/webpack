@@ -1,0 +1,6 @@
+[
+	{ "mode": "minify", "compress": { "computedProps": false }, "mangle": false, "behavior": true },
+	{ "mode": "minify", "compress": { "computedProps": false, "deadCode": false }, "mangle": true, "behavior": true },
+	{ "mode": "minify", "compress": {}, "mangle": false, "behavior": true },
+	{ "mode": "minify", "compress": { "toplevel": true }, "mangle": { "toplevel": true }, "behavior": true }
+]
