@@ -25421,12 +25421,6 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-as-the-format-options tokenizes 1`] = `"block[0,10] name[11,12] ([12,13] )[13,14] ;[14,15] block[16,26] name[27,28] ([28,29] )[29,30] eof[30,30]"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-as-the-format-options-13 prints {"mode":"minify","compress":{},"format":{"comments":"all","preamble":"/* pre */\\r\\nline"}} 1`] = `
-"/* pre */
-line
-/* a */x();"
-`;
-
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-as-the-format-options-2 parses 1`] = `"Program[0,47](body=[ExpressionStatement[11,15](expression=CallExpression[11,14](callee=Identifier[11,12](name=\\"a\\") arguments=[] optional=false)),ExpressionStatement[30,34](expression=CallExpression[30,33](callee=Identifier[30,31](name=\\"b\\") arguments=[] optional=false)),ExpressionStatement[44,47](expression=CallExpression[44,47](callee=Identifier[44,45](name=\\"c\\") arguments=[] optional=false))] sourceType=\\"module\\")"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-print-as-the-format-options-2 parses 2`] = `""`;
