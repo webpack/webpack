@@ -28017,6 +28017,7 @@ declare interface OutputFileSystem {
 	) => void;
 	stat: StatFs;
 	lstat?: LStatFs;
+	realpath?: RealPathFs;
 	readFile: ReadFileFs;
 	createReadStream?: (
 		path: PathLikeFs,
