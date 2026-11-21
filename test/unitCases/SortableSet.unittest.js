@@ -232,5 +232,76 @@ describe("util/SortableSet", () => {
 			expect(sortableSet.getFromUnorderedCache(sizeUnordered)).toBe(3);
 			expect(calls).toEqual({ ordered: 2, unordered: 1 });
 		});
+
+		it("keeps what it cached across an add or a delete that changes nothing", () => {
+			const sortableSet = new SortableSet([3, 1, 2]);
+			let calls = 0;
+			/**
+			 * @param {SortableSet<number>} set the set asked
+			 * @returns {number[]} its items
+			 */
+			const items = (set) => {
+				calls++;
+				return [...set];
+			};
+			expect(sortableSet.getFromCache(items)).toEqual([3, 1, 2]);
+			expect(sortableSet.getFromUnorderedCache(items)).toEqual([3, 1, 2]);
+			sortableSet.add(1);
+			sortableSet.delete(4);
+			expect(sortableSet.getFromCache(items)).toEqual([3, 1, 2]);
+			expect(sortableSet.getFromUnorderedCache(items)).toEqual([3, 1, 2]);
+			expect(calls).toBe(2);
+			sortableSet.add(4);
+			expect(sortableSet.getFromCache(items)).toEqual([3, 1, 2, 4]);
+			sortableSet.delete(4);
+			expect(sortableSet.getFromUnorderedCache(items)).toEqual([3, 1, 2]);
+			expect(calls).toBe(4);
+		});
+	});
+
+	it("stays sorted across an add of an item it holds", () => {
+		let compared = 0;
+		const sortableSet = new SortableSet(
+			[3, 1, 2],
+			/**
+			 * @param {number} a an item
+			 * @param {number} b another item
+			 * @returns {number} their order
+			 */
+			(a, b) => {
+				compared++;
+				return a - b;
+			}
+		);
+		sortableSet.sort();
+		const sorted = compared;
+		sortableSet.add(2);
+		sortableSet.sort();
+		expect(compared).toBe(sorted);
+		sortableSet.add(0);
+		sortableSet.sort();
+		expect(compared).toBeGreaterThan(sorted);
+		expect([...sortableSet]).toEqual([0, 1, 2, 3]);
+	});
+
+	it("adds the items it is constructed with through `add`, as a Set does", () => {
+		/** @type {number[]} */
+		const added = [];
+		/**
+		 * @extends {SortableSet<number>}
+		 */
+		class Recording extends SortableSet {
+			/**
+			 * @param {number} value value to add
+			 * @returns {this} itself
+			 */
+			add(value) {
+				added.push(value);
+				return super.add(value);
+			}
+		}
+		const recording = new Recording([1, 2, 2]);
+		expect(added).toEqual([1, 2, 2]);
+		expect([...recording]).toEqual([1, 2]);
 	});
 });
