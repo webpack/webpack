@@ -2,5 +2,5 @@
 
 module.exports = {
 	skipFreshWarnings:
-		"The fresh build's output.path is one level deeper, so only there the asset lands outside it and warns."
+		"Only a watch build removes what its earlier build wrote outside of output.path, and warns about it."
 };

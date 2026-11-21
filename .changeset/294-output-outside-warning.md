@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Warn when an asset is written outside of output.path and allowOutside is unset.
+Warn when a file is emitted, copied or cleaned outside of output.path.
