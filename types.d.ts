@@ -5268,7 +5268,7 @@ declare class Compiler {
 	compile(callback: CallbackWebpackFunction_2<Compilation, void>): void;
 
 	/**
-	 * Returns a worker bound to `workerPath`. The pool behind it is shared by the compiler and ended on close; without `experiments.threads` or `worker_threads`, calls run directly on the main thread.
+	 * Returns a worker bound to `workerPath`. The pool behind it is shared by the compiler and ended on close. Without `experiments.threads`, calls run directly on the main thread unless `options.numWorkers` asks for threads; without `worker_threads`, they always do.
 	 * @since 5.113.0
 	 * @experimental
 	 */
@@ -38964,10 +38964,13 @@ declare interface WorkerModule {
 }
 
 /**
- * Options for `compiler.worker()`. No fields are supported yet; future fields reuse the jest-worker or thread-loader name when the purpose matches.
+ * Options for `compiler.worker()`. Fields reuse the jest-worker or thread-loader name when the purpose matches.
  */
 declare interface WorkerOptions {
-	[index: string]: never;
+	/**
+	 * without `experiments.threads`, run on up to this many threads (at most one less than the CPUs) instead of inline; `0` runs inline. Ignored when `experiments.threads` is set, which configures the threads.
+	 */
+	numWorkers?: number;
 }
 
 /**

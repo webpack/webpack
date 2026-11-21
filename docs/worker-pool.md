@@ -54,20 +54,36 @@ await worker.run("minify", options);
 | `compiler.worker(workerPath, options?)` | Absolute path or `file:` URL, required. Returns the facade; without `experiments.threads` or `worker_threads`, its calls run directly on the main thread. |
 | `worker.run(method, ...args)`           | One call.                                                                                                                                                 |
 
-`workerPath` may be followed by a reserved `options` argument: no field is used yet, so passing one is accepted and ignored.
+`options.numWorkers` asks for threads without `experiments.threads`, for work that ran on `jest-worker` before, such as minification:
+
+```js
+const worker = compiler.worker(require.resolve("./minify"), {
+	numWorkers: os.availableParallelism() - 1
+});
+
+await worker.run("minify", options);
+```
+
+| `experiments.threads` | `numWorkers`   | Calls run on                                                      |
+| --------------------- | -------------- | ----------------------------------------------------------------- |
+| off                   | not set or `0` | the main thread, a plain call                                     |
+| off                   | `n > 0`        | the shared pool, with up to `n` threads (capped at cores − 1)     |
+| on                    | ignored        | the shared pool, with `threads.max` threads; `max: 0` runs inline |
+
+Without `worker_threads`, every call runs on the main thread. A compiler can hold facades for both: with threads off, a facade made without `numWorkers` stays inline while one made with it runs on threads.
 
 No `bind`, no `end`, no `warmup`, no `release`, no handles, no shared references: webpack owns the threads, so a plugin only runs calls. The pool's own `warmup()` and `release()` stay internal.
 
-Coming from jest-worker: `threads.max` is its `numWorkers`. The facade has no `end()`: `compiler.close()` is what ends the pool.
+Coming from jest-worker: `numWorkers` and `threads.max` are its `numWorkers`. The facade has no `end()`: `compiler.close()` is what ends the pool.
 
-When `options` fields ship, they reuse the `jest-worker` or `thread-loader` name for the same purpose; pool-wide settings stay in `experiments.threads`.
+New `options` fields reuse the `jest-worker` or `thread-loader` name for the same purpose; pool-wide settings stay in `experiments.threads`.
 
 `compiler.worker` is a `Compiler` method:
 
-- the farm is created once per `compiler.root` when `experiments.threads` is on;
+- the farm is created once per `compiler.root`: when `experiments.threads` is on, or on the first `compiler.worker` call. It taps `compile`, `done`, `failed` and `watchClose` itself, so threads asked for with `numWorkers` follow the same lifecycle;
 - child compilers return the root's facade;
-- every threaded compiler of the process, the compilers of a `MultiCompiler` included, shares one pool: cores are a process-wide budget, so a `MultiCompiler` that builds its configs at once still runs on at most `max` threads. The pool's `max` is the largest any of them asks for; it stays alive while any of them builds or watches, and ends when the last of them closes;
-- a compiler with `max: 0`, threads off or no `worker_threads` keeps its own inline pool;
+- every threaded compiler of the process, `numWorkers` facades included, the compilers of a `MultiCompiler` included, shares one pool: cores are a process-wide budget, so a `MultiCompiler` that builds its configs at once still runs on at most `max` threads. The pool's `max` is the largest any of them asks for; it stays alive while any of them builds or watches, and ends when the last of them closes;
+- a compiler with `max: 0`, threads off without `numWorkers`, or no `worker_threads` keeps its own inline pool;
 - `compiler.close()` sets a closed flag immediately and, if it is the pool's last compiler, ends the pool before `shutdown`; an existing facade can still run calls until the pool ends;
 - the farm is created on first use, so a plugin calls `compiler.worker` the same way whether threads are on or off, as it calls `getCache` whether caching is on or off;
 - after `compiler.close()` starts, a farm whose pool was never created throws; otherwise the same facade is returned, and its calls reject because the pool ended.
