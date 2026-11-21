@@ -850,6 +850,33 @@ exports[`HTML syntax — invariants coverage-state-machine-branches-reads-an-unq
 
 exports[`HTML syntax — invariants coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet tokenizes 1`] = `"warning[6,7]:unexpected-character-in-unquoted-attribute-value warning[8,9]:unexpected-character-in-unquoted-attribute-value warning[10,11]:unexpected-character-in-unquoted-attribute-value warning[12,13]:unexpected-character-in-unquoted-attribute-value warning[14,15]:unexpected-character-in-unquoted-attribute-value warning[16,17]:unexpected-null-character attr[3,4|5,24] attr[25,26|27,28] attr[29,30|31,32] attr[33,34|35,36] attr[37,38|39,40] attr[41,42|43,45] warning[48,49]:unexpected-character-in-unquoted-attribute-value attr[46,47|48,49] open[0,50|1,2] end=50"`;
 
+exports[`HTML syntax — invariants html-minify-a-region-printed-as-written-respells-its-attributes parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <b>
+|       x=\\"1\\"
+|       <li>
+|         <ul>
+|           <li>
+|       <table>
+|         <tfoot>
+|           a=\\"\\"
+|           b=\\"x\\"
+|           c=\\"z\\"
+|           d=\\"z\\"
+|           e=\\"\\"
+|           f=\\"g\\"
+|           h=\\"<%x\\"
+|           i=\\"x y\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-a-region-printed-as-written-respells-its-attributes parses 2`] = `"warning[0,9]:expected-doctype-but-got-start-tag warning[40,41]:unexpected-solidus-in-tag warning[56,57]:missing-whitespace-between-attributes warning[79,83]:unexpected-start-tag-implies-table-voodoo warning[83,87]:unexpected-start-tag-implies-table-voodoo warning[87,91]:unexpected-start-tag-implies-table-voodoo"`;
+
+exports[`HTML syntax — invariants html-minify-a-region-printed-as-written-respells-its-attributes prints {"mode":"minify"} 1`] = `"<b x=1><table><tfoot a b=x c=\\"z\\"/ d=z e=\\"\\"f=g h=\\"&lt;%x\\" i=\\"x y\\"><li><ul><li></table></b>"`;
+
+exports[`HTML syntax — invariants html-minify-a-region-printed-as-written-respells-its-attributes tokenizes 1`] = `"attr[3,4|6,7]\\" open[0,9|1,2] open[9,16|10,15] attr[23,24|26,26]\\" attr[28,29|31,32]' attr[34,35|37,38]\\" warning[40,41]:unexpected-solidus-in-tag attr[41,42|44,50]\\" attr[52,53|55,55]\\" warning[56,57]:missing-whitespace-between-attributes attr[56,57|58,59] attr[60,61|63,69]\\" attr[71,72|74,77]\\" open[16,79|17,22] open[79,83|80,82] open[83,87|84,86] open[87,91|88,90] close[91,99|93,98] close[99,103|101,102] end=103"`;
+
 exports[`HTML syntax — invariants html-minify-an-answered-style-attribute-that-changes-its-quoting-declines-an parses 1`] = `
 "| <html>
 |   <head>
@@ -55529,13 +55556,13 @@ exports[`HTML syntax — invariants svg-data-urls-should-minify-the-ones-a-page-
 
 exports[`HTML syntax — invariants svg-data-urls-should-minify-the-ones-a-page-holds-only-when-asked tokenizes 1`] = `"attr[5,8|10,101]\\" open[0,103|1,4] end=103"`;
 
-exports[`HTML syntax — invariants syntax-fuzz-a-document-with-plaintext-prints-a-quoted-value-as-written parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <nextid>\\\\n|       <nobr>\\\\n|     <h6>\\\\n|       a=\\\\\\"a\\\\\\"\\\\n|     <h6>\\\\n|       <plaintext>\\\\n|         <nobr>\\\\n|           \\\\\\"\\\\f\\\\\\"\\""`;
+exports[`HTML syntax — invariants syntax-fuzz-a-document-printed-as-written-still-respells-a-quoted-value parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <nextid>\\\\n|       <nobr>\\\\n|     <h6>\\\\n|       a=\\\\\\"a\\\\\\"\\\\n|     <h6>\\\\n|       <plaintext>\\\\n|         <nobr>\\\\n|           \\\\\\"\\\\f\\\\\\"\\""`;
 
-exports[`HTML syntax — invariants syntax-fuzz-a-document-with-plaintext-prints-a-quoted-value-as-written parses 2`] = `"warning[0,8]:expected-doctype-but-got-start-tag warning[14,23]:unexpected-end-tag warning[25,26]:missing-end-tag-name warning[36,40]:unexpected-start-tag warning[52,52]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants syntax-fuzz-a-document-printed-as-written-still-respells-a-quoted-value parses 2`] = `"warning[0,8]:expected-doctype-but-got-start-tag warning[14,23]:unexpected-end-tag warning[25,26]:missing-end-tag-name warning[36,40]:unexpected-start-tag warning[52,52]:expected-closing-tag-but-got-eof"`;
 
-exports[`HTML syntax — invariants syntax-fuzz-a-document-with-plaintext-prints-a-quoted-value-as-written prints {"mode":"minify"} 1`] = `"\\"<nextid><NOBR></nextid></><h6\\\\na=\\\\\\"a\\\\\\"><h6><plaintext>\\\\f\\""`;
+exports[`HTML syntax — invariants syntax-fuzz-a-document-printed-as-written-still-respells-a-quoted-value prints {"mode":"minify"} 1`] = `"\\"<nextid><NOBR></nextid></><h6\\\\na=a><h6><plaintext>\\\\f\\""`;
 
-exports[`HTML syntax — invariants syntax-fuzz-a-document-with-plaintext-prints-a-quoted-value-as-written tokenizes 1`] = `"open[0,8|1,7] open[8,14|9,13] close[14,23|16,22] warning[25,26]:missing-end-tag-name attr[30,31|33,34]\\" open[26,36|27,29] open[36,40|37,39] open[40,51|41,50] text[51,52] end=52"`;
+exports[`HTML syntax — invariants syntax-fuzz-a-document-printed-as-written-still-respells-a-quoted-value tokenizes 1`] = `"open[0,8|1,7] open[8,14|9,13] close[14,23|16,22] warning[25,26]:missing-end-tag-name attr[30,31|33,34]\\" open[26,36|27,29] open[36,40|37,39] open[40,51|41,50] text[51,52] end=52"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-a-fostered-element-range-holds-a-form-the-table-mode-popped parses 1`] = `
 "| <html>
@@ -55552,7 +55579,7 @@ exports[`HTML syntax — invariants syntax-fuzz-a-fostered-element-range-holds-a
 
 exports[`HTML syntax — invariants syntax-fuzz-a-fostered-element-range-holds-a-form-the-table-mode-popped tokenizes 1`] = `"open[0,8|1,6] open[8,11|9,10] open[11,18|12,16] close[18,22|20,21] end=22"`;
 
-exports[`HTML syntax — invariants syntax-fuzz-a-fostered-list-prints-an-empty-value-by-its-spelling parses 1`] = `
+exports[`HTML syntax — invariants syntax-fuzz-a-fostered-list-prints-an-empty-value-as-the-bare-name parses 1`] = `
 "| <html>
 |   <head>
 |   <body>
@@ -55564,11 +55591,11 @@ exports[`HTML syntax — invariants syntax-fuzz-a-fostered-list-prints-an-empty-
 |         a=\\"\\""
 `;
 
-exports[`HTML syntax — invariants syntax-fuzz-a-fostered-list-prints-an-empty-value-by-its-spelling parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag warning[16,20]:unexpected-start-tag-implies-table-voodoo warning[20,24]:unexpected-start-tag-implies-table-voodoo warning[24,28]:unexpected-start-tag-implies-table-voodoo warning[28,28]:expected-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants syntax-fuzz-a-fostered-list-prints-an-empty-value-as-the-bare-name parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag warning[16,20]:unexpected-start-tag-implies-table-voodoo warning[20,24]:unexpected-start-tag-implies-table-voodoo warning[24,28]:unexpected-start-tag-implies-table-voodoo warning[28,28]:expected-closing-tag-but-got-eof"`;
 
-exports[`HTML syntax — invariants syntax-fuzz-a-fostered-list-prints-an-empty-value-by-its-spelling prints {"mode":"minify"} 1`] = `"<table><tfoot a><li><ul><li>"`;
+exports[`HTML syntax — invariants syntax-fuzz-a-fostered-list-prints-an-empty-value-as-the-bare-name prints {"mode":"minify"} 1`] = `"<table><tfoot a><li><ul><li>"`;
 
-exports[`HTML syntax — invariants syntax-fuzz-a-fostered-list-prints-an-empty-value-by-its-spelling tokenizes 1`] = `"open[0,7|1,6] attr[14,15|-1,-1] open[7,16|8,13] open[16,20|17,19] open[20,24|21,23] open[24,28|25,27] end=28"`;
+exports[`HTML syntax — invariants syntax-fuzz-a-fostered-list-prints-an-empty-value-as-the-bare-name tokenizes 1`] = `"open[0,7|1,6] attr[14,15|-1,-1] open[7,16|8,13] open[16,20|17,19] open[20,24|21,23] open[24,28|25,27] end=28"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-a-holder-printing-from-source-adds-no-end-tag-a-later-table-wrote parses 1`] = `
 "| <html>
