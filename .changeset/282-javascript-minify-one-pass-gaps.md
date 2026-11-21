@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fold known values, object assignments and unread parameters when minifying.
+Fold more known values, calls, object assignments and dead code when minifying.
