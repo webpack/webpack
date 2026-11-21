@@ -178,7 +178,8 @@ const describeCases = (config) => {
 					`${config.name}-src`,
 					category.name
 				);
-				if (!fs.existsSync(dest)) fs.mkdirSync(dest);
+				// The other part of this suite creates it at the same time.
+				fs.mkdirSync(dest, { recursive: true });
 			});
 
 			describe(category.name, () => {
