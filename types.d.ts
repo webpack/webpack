@@ -5280,6 +5280,11 @@ type ComplexSerializableType =
  */
 declare interface CompressOptions {
 	/**
+	 * whether an object's method returning a value prints as an arrow
+	 */
+	arrows: boolean;
+
+	/**
 	 * whether constant computed keys become plain
 	 */
 	computedProps: boolean;
