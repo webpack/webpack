@@ -1,0 +1,23 @@
+[
+	{
+		"mode": "minify",
+		"compress": { "unsafe": true },
+		"mangle": false,
+		"ecma": 2015,
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"compress": { "unsafe": true, "toplevel": true },
+		"mangle": { "toplevel": true },
+		"ecma": 2015,
+		"behavior": true
+	},
+	{ "mode": "minify", "compress": {}, "mangle": false, "behavior": true },
+	{
+		"mode": "minify",
+		"compress": { "toplevel": true },
+		"mangle": { "toplevel": true },
+		"behavior": true
+	}
+]
