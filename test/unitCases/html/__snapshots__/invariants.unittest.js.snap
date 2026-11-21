@@ -56188,6 +56188,19 @@ exports[`HTML syntax — invariants syntax-fuzz-merging-a-sheet-left-inside-ligh
 
 exports[`HTML syntax — invariants syntax-fuzz-merging-a-sheet-left-inside-light-dark-joins-the-next tokenizes 1`] = `"open[0,7|1,6] text[7,22] close[22,30|24,29] open[30,37|31,36] text[37,39] end=39"`;
 
+exports[`HTML syntax — invariants syntax-fuzz-omits-an-html-start-tag-whose-attributes-the-print-drops parses 1`] = `
+"| <html>
+|   dir=\\"\\"
+|   <head>
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-omits-an-html-start-tag-whose-attributes-the-print-drops parses 2`] = `"warning[6,7]:unexpected-solidus-in-tag warning[0,10]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-omits-an-html-start-tag-whose-attributes-the-print-drops prints {"mode":"minify"} 1`] = `"<html/dir></html>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-omits-an-html-start-tag-whose-attributes-the-print-drops tokenizes 1`] = `"warning[6,7]:unexpected-solidus-in-tag attr[6,9|-1,-1] open[0,10|1,5] end=10"`;
+
 exports[`HTML syntax — invariants syntax-fuzz-prints-no-noscript-end-tag-inside-an-open-bogus-comment parses 1`] = `
 "| <html>
 |   <head>
@@ -56231,6 +56244,28 @@ exports[`HTML syntax — invariants syntax-fuzz-prints-no-noscript-end-tag-insid
 exports[`HTML syntax — invariants syntax-fuzz-prints-no-noscript-end-tag-inside-an-open-style prints {"mode":"minify"} 1`] = `"<p><noscript><style>p{color:red"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-prints-no-noscript-end-tag-inside-an-open-style tokenizes 1`] = `"open[0,3|1,2] open[3,13|4,12] open[13,20|14,19] text[20,31] end=31"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-sorts-attributes-by-the-ones-the-print-keeps parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <a>
+|       a=\\"\\"
+|       style=\\"%\\"
+|     <a>
+|       style=\\";\\"
+|     <a>
+|       a=\\"\\"
+|       style=\\"a\\"
+|     <a>
+|       style=\\";\\""
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-sorts-attributes-by-the-ones-the-print-keeps parses 2`] = `"warning[0,13]:expected-doctype-but-got-start-tag warning[13,26]:unexpected-start-tag-implies-end-tag warning[38,39]:missing-whitespace-between-attributes warning[26,40]:unexpected-start-tag-implies-end-tag warning[40,53]:unexpected-start-tag-implies-end-tag warning[53,53]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-sorts-attributes-by-the-ones-the-print-keeps prints {"mode":"minify"} 1`] = `"<a a style=%></a><a style=;></a><a style=a a></a><a style=;></a>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-sorts-attributes-by-the-ones-the-print-keeps tokenizes 1`] = `"attr[3,4|-1,-1] attr[5,10|11,12] open[0,13|1,2] attr[16,21|23,24]\\" open[13,26|14,15] attr[29,34|36,37]' warning[38,39]:missing-whitespace-between-attributes attr[38,39|-1,-1] open[26,40|27,28] attr[43,48|50,51]' open[40,53|41,42] end=53"`;
 
 exports[`HTML syntax — invariants token-parts-reported-by-the-tokenizer-folds-only-ascii-upper-alpha-in-a-doctype parses 1`] = `
 "| <!DOCTYPE html>
