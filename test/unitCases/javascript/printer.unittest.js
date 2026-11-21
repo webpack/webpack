@@ -2040,7 +2040,8 @@ describe("one-pass minify, family S round 8, switches", () => {
 	});
 
 	it("should keep the `if` a `switch` prints as where `?:` would read otherwise or grow", () => {
-		// A call of one callee, a part one side repeats, a sequence, or a test opening as a declaration.
+		// A part one side repeats or a test opening as a declaration keeps it; a
+		// call of one callee reading the test first, or a sequence, prints `?:`.
 		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-switches-should-keep-the-if-a-switch-prints-as"), options).code).toMatchSnapshot();
 		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-switches-should-keep-the-if-a-switch-prints-as-2"), options).code).toMatchSnapshot();
 		expect(minifyOnePass(fixture("javascript", "one-pass-minify-family-s-round-8-switches-should-keep-the-if-a-switch-prints-as-3"), options).code).toMatchSnapshot();

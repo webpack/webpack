@@ -363,11 +363,11 @@ exports[`one-pass minify, family S round 8 should print the value of an assignme
 
 exports[`one-pass minify, family S round 8, switches should keep the \`if\` a \`switch\` prints as where \`?:\` would read otherwise or grow 1`] = `"a===1?f():g();"`;
 
-exports[`one-pass minify, family S round 8, switches should keep the \`if\` a \`switch\` prints as where \`?:\` would read otherwise or grow 2`] = `"if(a===1)f(1);else f(2);"`;
+exports[`one-pass minify, family S round 8, switches should keep the \`if\` a \`switch\` prints as where \`?:\` would read otherwise or grow 2`] = `"a===1?f(1):f(2);"`;
 
 exports[`one-pass minify, family S round 8, switches should keep the \`if\` a \`switch\` prints as where \`?:\` would read otherwise or grow 3`] = `"if(a===1)f(b);else b;"`;
 
-exports[`one-pass minify, family S round 8, switches should keep the \`if\` a \`switch\` prints as where \`?:\` would read otherwise or grow 4`] = `"if(a===1)f(),g();else h();"`;
+exports[`one-pass minify, family S round 8, switches should keep the \`if\` a \`switch\` prints as where \`?:\` would read otherwise or grow 4`] = `"a===1?(f(),g()):h();"`;
 
 exports[`one-pass minify, family S round 8, switches should keep the \`if\` a \`switch\` prints as where \`?:\` would read otherwise or grow 5`] = `"if(function(){}.x===1)f();else g();"`;
 
