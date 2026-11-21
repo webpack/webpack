@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fix HTML parser and minifier bugs the syntax fuzzer found.
+Fix CSS and HTML parser and minifier bugs the syntax fuzzer found.

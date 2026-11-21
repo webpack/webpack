@@ -25,5 +25,5 @@
 .l .m { left: 0 }
 @media print { .k .l { left: 0 } }
 
-/* An empty selector in a list the printer keeps has no descendant to part. */
+/* An empty selector makes the list invalid, so lowering drops its rule. */
 .e { f: (1) [2], { g: h }; .i { top: 0 } }

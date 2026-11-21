@@ -1,1 +1,1 @@
-A rule whose prelude is empty names no parent, so a rule lowered out of it is written with no space in front of its selector.
+A rule whose prelude is empty is invalid, and so is every rule written in it, so lowering drops them rather than hoisting them where they would apply.
