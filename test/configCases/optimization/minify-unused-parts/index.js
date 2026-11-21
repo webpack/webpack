@@ -47,6 +47,7 @@ function extra() {
 it("should drop the unread parts and arguments as written", () => {
 	expect(parts()).toEqual([1, 4]);
 	expect(rest({ a: 1, b: 2, c: 3 })).toEqual([1, { c: 3 }]);
+	expect(rest({ a: 4, b: 5 })).toEqual([4, {}]);
 	expect(self(8)).toBe(8);
 	expect(dead()).toEqual([7, undefined]);
 	expect(unreadRest(9, 10)).toBe(9);

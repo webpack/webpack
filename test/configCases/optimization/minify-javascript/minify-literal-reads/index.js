@@ -36,6 +36,7 @@ it("should fold literal reads and unread conversions as written", () => {
 	expect(negated(1, 0)).toBe(1);
 	expect(negated(-1, 0)).toBe(0);
 	expect(() => bigint(1n)).toThrow(TypeError);
+	expect(() => bigint(2n)).toThrow(TypeError);
 	expect(picked()).toEqual({ b: 1 });
 	unread();
 	expect(log).toEqual(["tilde", "minus", "again", "void"]);
