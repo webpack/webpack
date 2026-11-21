@@ -7,10 +7,13 @@ const path = require("path");
  * @type {Record<string, string>}
  */
 const suiteNameToTestFile = {
-	ConfigTest: path.resolve(__dirname, "../../ConfigTestCases.basictest.js"),
+	ConfigTest: path.resolve(
+		__dirname,
+		"../../ConfigTestCases.part1.basictest.js"
+	),
 	ConfigCacheTest: path.resolve(
 		__dirname,
-		"../../ConfigCacheTestCases.basictest.js"
+		"../../ConfigCacheTestCases.part1.basictest.js"
 	),
 	StatsTest: path.resolve(__dirname, "../../StatsTestCases.basictest.js")
 };
@@ -71,7 +74,10 @@ module.exports = {
 				return path.resolve(__dirname, "../../TestCasesNormal.basictest.js");
 			}
 			if (snapshotPath.startsWith(configCasesDir + path.sep)) {
-				return path.resolve(__dirname, "../../ConfigTestCases.basictest.js");
+				return path.resolve(
+					__dirname,
+					"../../ConfigTestCases.part1.basictest.js"
+				);
 			}
 		}
 

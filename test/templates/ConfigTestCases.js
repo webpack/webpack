@@ -8,6 +8,7 @@ require("../helpers/warmup-webpack");
  * @typedef {object} SuiteConfig
  * @property {string} name suite name
  * @property {import("../../").FileCacheOptions=} cache filesystem cache options
+ * @property {[number, number]=} part the share of the cases this file runs, as `[part, parts]` from 1, so one suite spreads over several Jest workers
  */
 /**
  * @typedef {object} TestConfig
@@ -47,6 +48,7 @@ const filterInfraStructureErrors = require("../helpers/infrastructureLogErrors")
 const prepareOptions = require("../helpers/prepareOptions");
 const supportsObjectHasOwn = require("../helpers/supportsObjectHasOwn");
 const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
+const { isInPart } = require("../helpers/testParts");
 const testTimeout = require("../helpers/testTimeout");
 
 const testRootDirectory = path.join(__dirname, "..");
@@ -113,6 +115,10 @@ const describeCases = (config) => {
 			// eslint-disable-next-line no-loop-func
 			describe(category.name, () => {
 				for (const testName of category.tests) {
+					if (config.part && !isInPart(`${category.name}/${testName}`, config.part)) {
+						continue;
+					}
+
 					// eslint-disable-next-line no-loop-func
 					describe(testName, () => {
 						const testDirectory = path.join(casesPath, category.name, testName);

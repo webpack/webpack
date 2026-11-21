@@ -6,6 +6,7 @@ const fs = require("fs");
 const path = require("path");
 const url = require("url");
 const vm = require("vm");
+const { CachedInputFileSystem } = require("enhanced-resolve");
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const webpack = require("../..");
 const jsMinify = require("../../lib/javascript/jsMinify");
@@ -24,8 +25,32 @@ const outputFileSystem = needDebug
 			return createFsFromVolume(new Volume());
 		})();
 
+// One cache for every build: the corpus never changes during a run, and each
+// build would otherwise stat the same directories up to the root again.
+const inputFileSystem = new CachedInputFileSystem(fs, 60000);
+
 const test262Dir = path.resolve(__dirname, "../external/test262-cases/");
 const test262HarnessDir = path.resolve(test262Dir, "./harness");
+
+/** @type {Map<string, Promise<string>>} */
+const harnessFiles = new Map();
+
+/**
+ * Reads a harness file once for every case that includes it.
+ * @param {string} include its name in the harness directory
+ * @returns {Promise<string>} its contents
+ */
+const readHarnessFile = (include) => {
+	let content = harnessFiles.get(include);
+	if (content === undefined) {
+		content = fs.promises.readFile(
+			path.resolve(test262HarnessDir, include),
+			"utf8"
+		);
+		harnessFiles.set(include, content);
+	}
+	return content;
+};
 const strictModeLoader = path.resolve(
 	__dirname,
 	"../helpers/test262StrictModeLoader.js"
@@ -1824,6 +1849,7 @@ const compile = async (entry, scenario, options = {}) =>
 			]
 		});
 
+		compiler.inputFileSystem = inputFileSystem;
 		compiler.outputFileSystem = outputFileSystem;
 		compiler.run((err, stats) => {
 			if (err) {
@@ -2234,12 +2260,7 @@ describe("test262", () => {
 									...meta.includes.filter((item) => item !== "tcoHelper.js")
 								];
 						const includesCode = await Promise.all(
-							includes.map((include) =>
-								fs.promises.readFile(
-									path.resolve(test262HarnessDir, include),
-									"utf8"
-								)
-							)
+							includes.map(readHarnessFile)
 						);
 
 						const bundledCode = await outputFileSystem.promises.readFile(
@@ -2465,16 +2486,30 @@ describe("test262", () => {
 							process.stdout.write(`Finished ${name} ("${scenario}")\n`);
 						}
 					};
+					// A bundle is read only while its case runs, and every one kept
+					// would stay on the heap until the part ends.
+					const runCaseAndFree = async () => {
+						try {
+							await runCase();
+						} finally {
+							if (!needDebug) {
+								outputFileSystem.rmSync(outputPath, {
+									recursive: true,
+									force: true
+								});
+							}
+						}
+					};
 					const expected =
 						minify === undefined
 							? undefined
 							: minifiedFailures[minify].get(`${name} (${scenario})`);
 
 					it(`${name} ("${scenario}")`, async () => {
-						if (expected === undefined) return runCase();
+						if (expected === undefined) return runCaseAndFree();
 						let failed = false;
 						try {
-							await runCase();
+							await runCaseAndFree();
 						} catch (_err) {
 							failed = true;
 						}
