@@ -7,10 +7,10 @@ const { RawSource } = require("webpack-sources");
 
 const PLUGIN_NAME = "SymlinkedDirectoryOutsidePlugin";
 
-/** @typedef {"unset" | "allowed" | "denied"} Mode */
+/** @typedef {"unset" | "allowed" | "denied" | "allowed-link"} Mode */
 
 /** @type {Mode[]} */
-const MODES = ["unset", "allowed", "denied"];
+const MODES = ["unset", "allowed", "denied", "allowed-link"];
 
 /** @type {(env: unknown, options: { testPath: string }) => import("../../../../").Configuration[]} */
 module.exports = (env, { testPath }) =>
@@ -22,8 +22,9 @@ module.exports = (env, { testPath }) =>
 			name: mode,
 			output: {
 				path: outputPath,
-				...(mode === "allowed"
-					? { allowOutside: [elsewhere] }
+				...(mode === "allowed" || mode === "allowed-link"
+					? // with "allowed-link", the link "elsewhere" holds leads out of it
+						{ allowOutside: [elsewhere] }
 					: mode === "denied"
 						? { allowOutside: false }
 						: {})
@@ -42,19 +43,37 @@ module.exports = (env, { testPath }) =>
 							path.join(outputPath, "linked"),
 							"junction"
 						);
+						if (mode === "allowed-link") {
+							fs.mkdirSync(path.join(testPath, mode, "private"));
+							fs.symlinkSync(
+								path.join(testPath, mode, "private"),
+								path.join(elsewhere, "link"),
+								"junction"
+							);
+						}
 					});
 					compiler.hooks.thisCompilation.tap(PLUGIN_NAME, (compilation) => {
 						compilation.hooks.processAssets.tap(PLUGIN_NAME, () => {
-							compilation.emitAsset("linked/file.txt", new RawSource("linked"));
+							compilation.emitAsset(
+								mode === "allowed-link"
+									? "../elsewhere/link/file.txt"
+									: "linked/file.txt",
+								new RawSource("linked")
+							);
 							compilation.emitAsset("inside/file.txt", new RawSource("inside"));
 						});
 					});
 					compiler.hooks.afterEmit.tap(PLUGIN_NAME, (compilation) => {
-						const written = fs.existsSync(path.join(elsewhere, "file.txt"));
+						const written = fs.existsSync(
+							mode === "allowed-link"
+								? path.join(testPath, mode, "private", "file.txt")
+								: path.join(elsewhere, "file.txt")
+						);
 						const inside = fs.existsSync(
 							path.join(outputPath, "inside", "file.txt")
 						);
-						if (written !== (mode !== "denied") || !inside) {
+						const refused = mode === "denied" || mode === "allowed-link";
+						if (written === refused || !inside) {
 							compilation.errors.push(
 								new compiler.webpack.WebpackError(
 									`${mode}: written through the link ${written}, inside ${inside}`

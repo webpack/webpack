@@ -2,6 +2,6 @@
 
 module.exports = {
 	findBundle(index) {
-		return `./${["unset", "allowed", "denied"][index]}/dist/bundle${index}.js`;
+		return `./${["unset", "allowed", "denied", "allowed-link"][index]}/dist/bundle${index}.js`;
 	}
 };
