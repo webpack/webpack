@@ -1,0 +1,1 @@
+function f(x = y) { function y() {} return x; }

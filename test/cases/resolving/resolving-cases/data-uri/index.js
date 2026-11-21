@@ -19,9 +19,18 @@ it("data-uri: should require js module from utf-8 percent-encoded data-uri", fun
 });
 
 it("data-uri: should keep the raw body of a non-percent-encoded data-uri", function () {
-	// A bare `%` is invalid percent-encoding, so decoding falls back to the raw body.
+	// A bare `%` starts no escape, so it is kept as written.
 	const mod = require('data:application/node,module.exports={pct:"100%"}');
 	expect(mod.pct).toBe("100%");
+});
+
+it("data-uri: should decode the valid escapes next to a bare %", function () {
+	const mod = require(
+		'data:application/node,module.exports={text:%22a%20b%22,pct:7%5,done:"100%25%20done%"}'
+	);
+	expect(mod.text).toBe("a b");
+	expect(mod.pct).toBe(2);
+	expect(mod.done).toBe("100% done%");
 });
 
 it("data-uri: should import js module from base64 data-uri", function () {

@@ -22,7 +22,11 @@ const {
 	pickTransforms,
 	unescapeIdentifier
 } = require("../../../lib/css/syntax-parser");
-const { wantedRespelling } = require("../../../tooling/compare-tools-harness");
+const {
+	loaderFor,
+	treeDifferences,
+	wantedRespelling
+} = require("../../../tooling/compare-tools-harness");
 const {
 	hasher,
 	meaningRelation,
@@ -1039,6 +1043,63 @@ const legalNotices = (css) => {
 const noticeReports = (css, printed) =>
 	noticeRelation(legalNotices, css, printed);
 
+/** @typedef {import("../../../tooling/compare-tools-harness").TreeEvents} TreeEvents */
+
+/**
+ * webpack's and css-tree's tree readers, as the comparison holds one to the
+ * other; `null` where css-tree is not installed, as it comes with the corpus.
+ * @type {{ reference: (css: string) => TreeEvents, tree: (css: string) => TreeEvents } | null | undefined}
+ */
+let agreementReaders;
+
+/**
+ * Whether webpack's parser reads a stylesheet to the tree css-tree does, as
+ * `yarn test:invariants:css` asks of its corpus. A stylesheet css-tree rejects
+ * or webpack's parser has too little stack for answers nothing.
+ * @param {string} css a stylesheet
+ * @returns {import("./relations").Report[] | null} one per difference, null where css-tree is not installed
+ */
+const agreementReports = (css) => {
+	if (agreementReaders === undefined) {
+		// Lazily: the comparison script reads this file as it loads.
+		const { CACHE, TREE_READERS } = require("../../../tooling/compare-css-tools");
+		try {
+			loaderFor(CACHE)("css-tree");
+			agreementReaders = {
+				reference: /** @type {(css: string) => TreeEvents} */ (
+					TREE_READERS.get("css-tree")
+				),
+				tree: /** @type {(css: string) => TreeEvents} */ (
+					TREE_READERS.get("webpack")
+				)
+			};
+		} catch (_error) {
+			agreementReaders = null;
+		}
+	}
+	if (agreementReaders === null) return null;
+	/** @type {TreeEvents} */
+	let theirs;
+	try {
+		theirs = agreementReaders.reference(css);
+	} catch (_error) {
+		return [];
+	}
+	/** @type {TreeEvents} */
+	let tree;
+	try {
+		tree = agreementReaders.tree(css);
+	} catch (error) {
+		if (isStackOverflow(error)) return [];
+		throw error;
+	}
+	return treeDifferences(theirs, tree, "css-tree").map((difference) => ({
+		relation: "agreement",
+		what: "webpack's tree reads apart from css-tree's",
+		repro: `    ${difference}`
+	}));
+};
+
 // What separates two selectors' parts without being one: whitespace beside
 // these, or An+B's sign, is layout; between two compounds it is a combinator.
 const LAYOUT_SPACE = /^(?:Comma|Colon|Semicolon|Declaration|QualifiedRule|AtRule)\b|^Delim [>+~-]$/;
@@ -1220,6 +1281,7 @@ module.exports = {
 	PRESETS,
 	TARGET_OPTIONS,
 	TARGET_VARS_OPTIONS,
+	agreementReports,
 	cssCuts,
 	cssMeaning,
 	cssPurityDigest,

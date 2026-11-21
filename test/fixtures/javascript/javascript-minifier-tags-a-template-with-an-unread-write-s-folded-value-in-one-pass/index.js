@@ -12,6 +12,19 @@ function k(f, g) { var t; return (t = (f(), g))`x`; }
 function m() { var t, r; (t = function () { r = "called"; })`x`; return r; }
 function n() { var t; (t = {})`x`; }
 function p() { var t; return (t = true)`x`; }
+// A member folding to a name is called bare, which binds no `this` either; an
+// object or class opening nothing tags bare, a member read off one wrapped.
+function q(f) { var t; return (t = { a: f }.a)`x`; }
+function r(f) { var t; return (t = { a: f }.a)(); }
+function u() { var t; return (t = {})`x`; }
+function v() { var t; return (t = class {})`x`; }
+function w() { var t; return (t = class {}.x)`x`; }
+function x() { var t; return (t = { a: tag }).a`x`; }
+// A call of the function an unread write sets prints as what it returns.
+function y() { var t; return (t = function () { return 1; })(); }
+function z() { var t; return (t = function () {})(); }
+function aa() { var t; return (t = function () {})() + 1; }
+function bb() { var t; (t = function () {})(); return 2; }
 function tag() {
 	"use strict";
 	return this === undefined ? "unbound" : "bound";
@@ -27,7 +40,17 @@ function tag() {
 	function () { return k(tag, tag); },
 	m,
 	n,
-	p
+	p,
+	function () { return q(tag); },
+	function () { return r(tag); },
+	u,
+	v,
+	w,
+	x,
+	y,
+	z,
+	aa,
+	bb
 ].forEach(function (run, i) {
 	try {
 		console.log(i, String(run()));

@@ -53,6 +53,12 @@ it("should leave a <style lang> no media type can name in CSS", () => {
 	expect(sheet).not.toContain("by-");
 });
 
+it("should build a <style> whose lang names a script language as CSS", () => {
+	const sheet = sheetOf(".ts-lang");
+	expect(sheet).toContain("css data:text/x-ts;base64,");
+	expect(sheet).toContain(".ts-lang { color: maroon; }");
+});
+
 it("should type a <script lang> body as its language's files", () => {
 	// `exec` in a loop: `String.prototype.matchAll` is newer than Node 10.
 	const scriptSrcRegExp = /<script src="([^"]+)"/g;

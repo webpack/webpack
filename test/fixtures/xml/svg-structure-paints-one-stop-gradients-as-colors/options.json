@@ -1,0 +1,28 @@
+[
+	{
+		"xml": true,
+		"mode": "minify",
+		"sortAttributes": true,
+		"removeUnusedSvgNamespaces": true,
+		"collapseWhitespace": true,
+		"shortenSvgColors": true,
+		"removeEmptyElements": true,
+		"cleanupSvgStructure": true
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"collapseWhitespace": false,
+		"cleanupSvgStructure": true
+	},
+	{
+		"xml": true,
+		"mode": "minify",
+		"sortAttributes": true,
+		"removeUnusedSvgNamespaces": true,
+		"collapseWhitespace": true,
+		"shortenSvgColors": true,
+		"cleanupSvgStructure": true,
+		"renderEmbeddedSource": "builtin"
+	}
+]

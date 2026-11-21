@@ -1,0 +1,1 @@
+require("\u{110000}/a"); require("./c");

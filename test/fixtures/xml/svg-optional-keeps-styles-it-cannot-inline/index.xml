@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<style>.a:hover { fill: red } .b { fill: blue }</style>
+	<rect class="a b"/>
+	<svg>
+		<style>@media print { .c { fill: red } }</style>
+		<rect class="c"/>
+	</svg>
+</svg>

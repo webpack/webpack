@@ -1,0 +1,8 @@
+[
+	{
+		"mode": "minify",
+		"removeRedundantAttributes": "smart",
+		"mergeScripts": true,
+		"removeEmptyElements": true
+	}
+]

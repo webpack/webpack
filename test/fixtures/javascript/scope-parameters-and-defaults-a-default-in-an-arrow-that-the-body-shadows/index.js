@@ -1,0 +1,1 @@
+const g = (a = b) => { let b; return a; };

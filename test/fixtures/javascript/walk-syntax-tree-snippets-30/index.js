@@ -1,0 +1,1 @@
+import j from "./j.json" with { type: "json" }; export { k } from "./k" with { type: "x" };

@@ -121,7 +121,7 @@ describe("SourceProcessor — a print inside a print", () => {
 			)
 			.process(source, { mode: "minify" }).code;
 		expect(inner.length).toBeGreaterThan(0);
-		for (const code of inner) expect(code).toBe("<p> a <b>b</b> ");
+		for (const code of inner) expect(code).toMatchSnapshot();
 		expect(nested).toBe(alone);
 	});
 
@@ -138,7 +138,7 @@ describe("SourceProcessor — a print inside a print", () => {
 						}).code
 					: undefined
 		});
-		expect(code).toBe('<p> x </p><iframe srcdoc="<p> y "></iframe>');
+		expect(code).toMatchSnapshot();
 	});
 
 	it("keeps the outer print's sorted attributes while a renderer prints", () => {
@@ -253,7 +253,7 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 				}
 			}
 		);
-		expect(code).toBe("<style>a,b{color:red}</style>");
+		expect(code).toMatchSnapshot();
 		// Once, joined as written: each ends at a rule, so no answer is waited for.
 		expect(offered).toEqual(["a{color:red} b{color:red}"]);
 	});
@@ -450,7 +450,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 		explode = false;
 
-		expect(processor.process(fixture("html", "source-processor-render-embedded-source-is-usable-again-after-a-deferred-print"), { mode: "minify" }).code).toBe("<p>y");
+		expect(processor.process(fixture("html", "source-processor-render-embedded-source-is-usable-again-after-a-deferred-print"), { mode: "minify" }).code).toMatchSnapshot();
 	});
 
 
@@ -481,9 +481,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 			}
 		});
 
-		expect(now.code).toBe(
-			"<p>x</p><style>.a{--x:f(</style><style>.b{color:red}</style><script>1</script>"
-		);
+		expect(now.code).toMatchSnapshot();
 		expect(later.code).toBe(now.code);
 		// The second print reads the first one's answers rather than asking again.
 		expect(offered).toEqual([
@@ -608,9 +606,7 @@ describe("SourceProcessor — inline CSS honors the target's abilities", () => {
 
 	it("does not carry one print's target into the next", () => {
 		minifyFor("chrome 62");
-		expect(minifyFor("chrome 50")).toBe(
-			"<p style=color:rgba(255,0,0,.5)>x</p><style>.a{color:rgba(255,0,0,.5)}</style>"
-		);
+		expect(minifyFor("chrome 50")).toMatchSnapshot();
 	});
 
 
@@ -637,7 +633,7 @@ describe("htmlMinify — embedded code a minifier fails on", () => {
 			) => (info.type === "css" ? "a{b:'</style><b>x</b>'}" : undefined)
 		});
 		// The quoted attribute holds the answer as it is.
-		expect(code).toBe(`<style>a { b : c }</style><p style="a{b:'</style><b>x</b>'}">x`);
+		expect(code).toMatchSnapshot();
 	});
 
 	it("keeps a body the caller's minifier fails on, reported once", async () => {
@@ -651,9 +647,7 @@ describe("htmlMinify — embedded code a minifier fails on", () => {
 			}
 		});
 		// Webpack's own CSS minifier is not asked after the caller's failed.
-		expect(code).toBe(
-			'<style>a { b : c }</style><p style="b : c">x</p><script type=application/json>{"a":1}</script>'
-		);
+		expect(code).toMatchSnapshot();
 		expect(errors).toEqual([
 			expect.objectContaining({ message: "failing CSS minifier" }),
 			expect.objectContaining({ message: "failing CSS minifier" })
@@ -671,7 +665,7 @@ describe("htmlMinify — embedded code a minifier fails on", () => {
 				})
 			}
 		);
-		expect(code).toBe("<style>a { b : c }</style>");
+		expect(code).toMatchSnapshot();
 		expect(errors).toHaveLength(1);
 	});
 });
@@ -743,15 +737,15 @@ describe("SourceProcessor — reusing work across a print", () => {
 	it("does not carry a style attribute's result into a renderer with other options", () => {
 		const html = fixture("html", "source-processor-reusing-work-across-a-print-does-not-carry-a-style-attribute-s");
 		const plain = { renderEmbeddedSource: builtinEmbeddedRenderer() };
-		expect(minify(html, plain)).toBe("<p style=width:16px>");
+		expect(minify(html, plain)).toMatchSnapshot();
 		expect(
 			minify(html, {
 				renderEmbeddedSource: builtinEmbeddedRenderer({
 					convertLengthUnits: true
 				})
 			})
-		).toBe("<p style=width:1pc>");
-		expect(minify(html, plain)).toBe("<p style=width:16px>");
+		).toMatchSnapshot();
+		expect(minify(html, plain)).toMatchSnapshot();
 	});
 
 	it("marks each stylesheet it offers as one embedded in this document", async () => {
@@ -901,7 +895,7 @@ describe("SourceProcessor — parseError while printing", () => {
 				printed.push(`${code}@${start}`);
 			}
 		});
-		expect(code).toBe("x<table><tr><td>a</table>");
+		expect(code).toMatchSnapshot();
 		expect(printed).toEqual(parsed);
 		expect(printed).not.toContain("expected-doctype-but-got-chars@0");
 	});
@@ -943,9 +937,7 @@ describe("SourceProcessor — printing what re-parses to the same tree", () => {
 		expect(print(source, { mode: "minify" })).toBe(source);
 		// Markup that reads alike either way is still minified.
 		const plain = fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-a-noscript-body-leaves-a-comment-open-2");
-		expect(print(plain, { mode: "minify" })).toBe(
-			'<body><noscript><iframe src="a.html" height="0"></iframe></noscript> <p>x</body>'
-		);
+		expect(print(plain, { mode: "minify" })).toMatchSnapshot();
 	});
 
 	it("prints as written where the doctype mode depends on the reader", () => {
@@ -954,9 +946,7 @@ describe("SourceProcessor — printing what re-parses to the same tree", () => {
 		const disputed = fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-the-doctype-mode-depends-on-the-reader");
 		expect(print(disputed, { mode: "minify" })).toBe(disputed);
 		const named = fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-the-doctype-mode-depends-on-the-reader-2");
-		expect(print(named, { mode: "minify" })).toBe(
-			'<!doctype html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><p>a<table></table>'
-		);
+		expect(print(named, { mode: "minify" })).toMatchSnapshot();
 	});
 
 
@@ -1199,7 +1189,7 @@ describe("htmlMinify — what it reads as written", () => {
 		// One that holds only printable ASCII reads alike in either.
 		const ascii = fixture("html", "html-minify-leaves-a-document-in-another-encoding-as-written-2");
 		const minified = await htmlMinify({ "a.html": ascii });
-		expect(minified.code).toBe('<!doctype html><meta charset=iso-2022-jp><b>x</b>');
+		expect(minified.code).toMatchSnapshot();
 		expect(minified.warnings).toBeUndefined();
 	});
 

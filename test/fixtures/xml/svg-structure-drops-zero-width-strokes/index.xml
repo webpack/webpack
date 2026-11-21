@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<circle r="5" fill="red" stroke="#000" stroke-width="0" stroke-dashoffset="5"/>
+	<rect width="5" height="5" stroke="#000" stroke-width=".0px"/>
+	<ellipse rx="5" ry="2" stroke-width="6" stroke-linecap="round"/>
+	<g stroke="#000" stroke-width="6">
+		<circle r="4" stroke="red" stroke-width="0"/>
+		<circle r="3" stroke-width="0%"/>
+		<path d="M0 0h5" stroke-width="0"/>
+	</g>
+	<g stroke="#000" pointer-events="stroke">
+		<circle r="2" stroke-width="0"/>
+	</g>
+	<circle r="1" stroke="#000" stroke-width="-0"/>
+</svg>

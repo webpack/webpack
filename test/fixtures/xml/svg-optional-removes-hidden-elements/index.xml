@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<g display="none"><rect width="1" height="1"/></g>
+	<rect width="1" height="1" opacity="0"/>
+	<rect width="0" height="1"/>
+	<rect width="1" height=".0px"/>
+	<circle r="0"/>
+	<ellipse rx="0" ry="1"/>
+	<ellipse rx="1" ry="0"/>
+	<image width="0" height="1" href="a.svg"/>
+	<image width="1" height="0" href="a.svg"/>
+	<path/>
+	<path d=""/>
+	<polyline/>
+	<polygon points=""/>
+	<rect width="1" height="1" visibility="hidden"/>
+	<path d="M0 0h1" visibility="collapse"/>
+	<rect width="1" height="1" style="visibility:hidden"/>
+	<g visibility="hidden"><rect width="1" height="1" visibility="visible"/></g>
+	<rect width="1" height="1" style="opacity:0"/>
+	<path style="d:path('M0 0h1')"/>
+	<rect id="named" width="0" height="1"/>
+	<g display="none"><rect id="inner" width="1" height="1"/></g>
+	<use href="#inner"/>
+	<switch><rect width="0" height="1"/><rect width="1" height="1"/></switch>
+	<g filter="url(#f)"><rect width="1" height="1" opacity="0"/><g display="none"/></g>
+	<g style="mask:url(#m)"><rect width="0" height="1"/></g>
+	<clipPath id="c"><rect width="1" height="1" opacity="0"/><rect width="1" height="1" display="none"/></clipPath>
+	<linearGradient display="none"><stop/></linearGradient>
+	<rect width="1" height="1" clip-path="url(#c)"/>
+	<filter id="f"><feGaussianBlur stdDeviation="1"/></filter>
+	<mask id="m"><rect width="1" height="1" fill="#fff"/></mask>
+</svg>

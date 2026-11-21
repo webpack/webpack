@@ -4,6 +4,8 @@
 
 "use strict";
 
+const { fixture } = require("../helpers/fixture");
+
 const analyzeScope = require("../../lib/javascript/ScopeAnalyzer");
 const { parseProgram } = require("../../lib/javascript/syntax").parser;
 const {
@@ -45,7 +47,7 @@ describe("getAllReferences", () => {
 	it("includes the references of a name its own scope binds twice", () => {
 		// the class name binds outside and inside, and renaming moves both
 		const moduleScope = moduleScopeOf(
-			"class C { m() { return C; } }\nC;\nnew C();"
+			fixture("javascript", "get-all-references-includes-the-references-of-a-name-its-own-scope-binds-twice")
 		);
 		const outer = binding(moduleScope, "C");
 
@@ -59,7 +61,7 @@ describe("getAllReferences", () => {
 
 	it("returns the same references when the index is already built", () => {
 		const moduleScope = moduleScopeOf(
-			"class C { m() { return C; } }\nC;\nclass D { n() { return D; } }\nD;"
+			fixture("javascript", "get-all-references-returns-the-same-references-when-the-index-is-already-built")
 		);
 		const first = at(getAllReferences(binding(moduleScope, "C")));
 		const second = at(getAllReferences(binding(moduleScope, "C")));
@@ -72,7 +74,7 @@ describe("getAllReferences", () => {
 	});
 
 	it("hands back the binding's own list when nothing is bound twice", () => {
-		const moduleScope = moduleScopeOf("let a = 1;\na;\na;");
+		const moduleScope = moduleScopeOf(fixture("javascript", "get-all-references-hands-back-the-binding-s-own-list-when-nothing-is-bound-twice"));
 		const a = binding(moduleScope, "a");
 
 		// no copy is made when no inner binding contributes

@@ -1,0 +1,1 @@
+export * as p from 'q';

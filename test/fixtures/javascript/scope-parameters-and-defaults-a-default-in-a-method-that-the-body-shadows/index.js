@@ -1,0 +1,1 @@
+class C { m(a = x) { let x; } }

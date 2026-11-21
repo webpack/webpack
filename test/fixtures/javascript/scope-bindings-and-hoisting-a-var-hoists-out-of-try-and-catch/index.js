@@ -1,0 +1,1 @@
+try { let a; var b; } catch { let c; var d; } b; d;

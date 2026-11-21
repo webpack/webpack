@@ -1,0 +1,1 @@
+try { a } catch (e) { e } finally { c }

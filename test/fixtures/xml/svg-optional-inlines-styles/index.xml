@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<style type="text/css"><![CDATA[
+		.a { fill: red; }
+		#b rect, [data-x='1'] { stroke: blue }
+		.a.c { fill: green !important }
+		path:not([fill=blue]) { stroke-width: 2 }
+		rect:first-child { opacity: .5 }
+		.unused { fill: black }
+	]]></style>
+	<style type="text/invalid">.a{fill:pink}</style>
+	<g id="b">
+		<rect class="a keep" style="fill:yellow"/>
+		<rect class="a c" width="2"/>
+	</g>
+	<path d="M0 0h1" fill="red"/>
+	<path d="M0 0h2" fill="blue" data-x="1"/>
+</svg>

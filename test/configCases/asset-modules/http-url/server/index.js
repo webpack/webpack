@@ -107,6 +107,41 @@ function createServer() {
 	return server;
 }
 
+// The other config suite serves this case on the same port from its own
+// process: wait for it to close rather than fail, within the compile timeout.
+const LISTEN_RETRY_TIMEOUT = 20000;
+const LISTEN_RETRY_INTERVAL = 100;
+
+/**
+ * @param {import("http").Server} server server to start
+ * @param {number} port port to listen on
+ * @param {number} deadline time after which a busy port is an error
+ * @returns {Promise<void>} resolves once the server listens
+ */
+const listen = (server, port, deadline) =>
+	new Promise((resolve, reject) => {
+		/**
+		 * @param {NodeJS.ErrnoException} error listen error
+		 */
+		const onError = (error) => {
+			server.removeListener("listening", onListening);
+			if (error.code === "EADDRINUSE" && Date.now() < deadline) {
+				setTimeout(() => {
+					listen(server, port, deadline).then(resolve, reject);
+				}, LISTEN_RETRY_INTERVAL);
+				return;
+			}
+			reject(error);
+		};
+		const onListening = () => {
+			server.removeListener("error", onError);
+			resolve();
+		};
+		server.once("error", onError);
+		server.once("listening", onListening);
+		server.listen(port);
+	});
+
 class ServerPlugin {
 	/**
 	 * @param {number} port
@@ -114,46 +149,53 @@ class ServerPlugin {
 	constructor(port) {
 		this.port = port;
 		this.refs = 0;
+		/** @type {import("http").Server | undefined} */
 		this.server = undefined;
+		/** @type {Promise<void> | undefined} */
+		this.listening = undefined;
 	}
 
 	/**
 	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
-		compiler.hooks.beforeRun.tapPromise(
-			"ServerPlugin",
-			async () => {
-				this.refs++;
-				if (!this.server) {
-					this.server = createServer();
-					await new Promise(
-						/**
-						 * @param {(value: void) => void} resolve resolve
-						 * @param {(reason?: Error) => void} _reject reject
-						 */
-						(resolve, _reject) => {
-							/** @type {import("http").Server} */
-							(this.server).listen(
-								this.port,
-								() => {
-									resolve();
-								}
-							);
-					});
-				}
+		// `failed` can follow this compiler's `done` when a later `done` tap throws
+		let holding = false;
+		compiler.hooks.beforeRun.tapPromise("ServerPlugin", () => {
+			holding = true;
+			this.refs++;
+			if (!this.server) {
+				this.server = createServer();
+				this.listening = listen(
+					this.server,
+					this.port,
+					Date.now() + LISTEN_RETRY_TIMEOUT
+				);
 			}
-		);
+			// every compiler of the run fetches only once the server listens
+			return /** @type {Promise<void>} */ (this.listening);
+		});
 
-		compiler.hooks.done.tapAsync("ServerPlugin", (stats, callback) => {
-			const s = this.server;
-			if (s && --this.refs === 0) {
+		/**
+		 * @param {() => void} callback called once the last compiler let go
+		 */
+		const release = (callback) => {
+			if (!holding) return callback();
+			holding = false;
+			const server = this.server;
+			if (server && --this.refs === 0) {
 				this.server = undefined;
-				s.close(callback);
+				this.listening = undefined;
+				server.close(() => callback());
 			} else {
 				callback();
 			}
-		});
+		};
+		compiler.hooks.done.tapAsync("ServerPlugin", (_stats, callback) =>
+			release(callback)
+		);
+		// a build that failed reaches no `done`, and would keep the port
+		compiler.hooks.failed.tap("ServerPlugin", () => release(() => {}));
 	}
 }
 

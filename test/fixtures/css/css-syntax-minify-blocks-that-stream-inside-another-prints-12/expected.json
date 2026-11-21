@@ -3,5 +3,15 @@
 		"relation": "respelling escape",
 		"contains": "b\n      -> \\62",
 		"why": "a declaration, selector or block that is invalid or left open, which the printer writes back as authored, escape included"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/@layer[1]/b,;a,b[1]: css-tree rule b,;a,b, tool rule a,b",
+		"why": "a `;` in a block ends a statement (§5.4.5): what precedes it is a declaration or a rule the spec drops (§5.4.3), never part of the next rule's selector, which css-tree reads it into"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/@layer[1]/b,;b[1]: css-tree rule b,;b, tool rule b",
+		"why": "a `;` in a block ends a statement (§5.4.5): what precedes it is a declaration or a rule the spec drops (§5.4.3), never part of the next rule's selector, which css-tree reads it into"
 	}
 ]

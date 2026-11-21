@@ -1,0 +1,1 @@
+require('a').b.c(); module.exports.x = 1; exports.y = require; define(['a'], (a) => a);

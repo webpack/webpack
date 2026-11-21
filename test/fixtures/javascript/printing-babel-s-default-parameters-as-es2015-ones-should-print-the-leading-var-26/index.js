@@ -1,0 +1,1 @@
+function f(a){var b=arguments.length>1&&arguments[1]!==void 0?arguments[1]:5;var c=arguments.length>2&&arguments[2]!==void 0?arguments[2]:x;var x=b;return[b,c,x]}

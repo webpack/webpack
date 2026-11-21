@@ -84,9 +84,13 @@ describe("XmlSyntax — parsing", () => {
 		);
 		/** @type {number[]} */
 		const unexpected = [];
+		const references = fixture(
+			"xml",
+			"xml-syntax-parsing-should-end-the-name-of-an-entity-reference-in-every-code-unit-references"
+		);
 		for (let unit = 0; unit < 0x10000; unit++) {
 			const character = String.fromCharCode(unit);
-			const reference = `&n${character}m;`;
+			const reference = references.slice(unit * 5, unit * 5 + 5);
 			const resolves = !undeclared.test(character) && !ends.test(character);
 			if (decodeXmlEntities(reference) !== (resolves ? "1" : reference)) {
 				unexpected.push(unit);
@@ -200,25 +204,25 @@ describe("XmlSyntax — parsing", () => {
 	});
 
 	it("should resolve an XML reference of each form and leave any other `&` as written", () => {
-		expect(decodeXmlEntities("&lt;&gt;&amp;&quot;&apos;")).toBe("<>&\"'");
+		expect(decodeXmlEntities(fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any"))).toBe("<>&\"'");
 		// A name a code unit away from a predefined one is the DTD's to resolve.
 		const others =
-			"&xt; &lx; &gx; &amq; &xmp; &quo1; &1uot; &apo1; &1pos; &LT; &Amp; &amp2; &l; &quot2;";
+			fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-2");
 		expect(decodeXmlEntities(others)).toBe(others);
-		expect(decodeXmlEntities("&#65;&#x41;&#x6a;&#x6A;&#0065;")).toBe("AAjjA");
-		const malformed = "&#X41; &#x; &#; &#65 &#x41 &#xG; &#6x; & &; &a b; &a&";
+		expect(decodeXmlEntities(fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-3"))).toBe("AAjjA");
+		const malformed = fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-4");
 		expect(decodeXmlEntities(malformed)).toBe(malformed);
 		// Past U+10FFFF, however many digits, and what §2.2 `Char` leaves out.
 		expect(
 			decodeXmlEntities(
-				"&#x110000;&#1114112;&#xFFFFFFFFFFFFFFFFFFFFFFFF;&#99999999999999999999999;&#0;&#xD800;&#65534;"
+				fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-5")
 			)
 		).toBe("\uFFFD".repeat(7));
-		expect(decodeXmlEntities("&#x10FFFF;&#1114111;")).toBe("\u{10FFFF}\u{10FFFF}");
-		expect(decodeXmlEntities("a&b&amp;c&lt")).toBe("a&b&c&lt");
+		expect(decodeXmlEntities(fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-6"))).toBe("\u{10FFFF}\u{10FFFF}");
+		expect(decodeXmlEntities(fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-7"))).toBe("a&b&c&lt");
 		// A declaration may extend a predefined name, and cannot take one over.
 		parseHtmlRefs(fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-ot"), 0, { xml: true });
-		expect(decodeXmlEntities("&lt2;&amp;&lt;")).toBe("two&<");
+		expect(decodeXmlEntities(fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-8"))).toBe("two&<");
 	});
 
 	it("should return an XML attribute value holding nothing to escape as it came", () => {

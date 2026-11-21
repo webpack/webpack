@@ -1,0 +1,1 @@
+let a, b; export { a, b as c };

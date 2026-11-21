@@ -1,0 +1,1 @@
+fn("a,b".split(","), "abc".replace("b", "c"), "a".indexOf("a"), `t${1}`.concat(x));

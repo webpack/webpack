@@ -1,0 +1,1 @@
+{ class C {} var v; } v; C;

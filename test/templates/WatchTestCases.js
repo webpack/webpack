@@ -187,7 +187,7 @@ const describeCases = (config) => {
 							}
 							return closing;
 						};
-						/** @type {{ name: string, done?: boolean, stats?: import("../../").Stats | import("../../").MultiStats, it?: EXPECTED_ANY, getNumberOfTests?: () => number }[]} */
+						/** @type {{ name: string, done?: boolean, comparing?: boolean, lateHash?: string, stats?: import("../../").Stats | import("../../").MultiStats, it?: EXPECTED_ANY, getNumberOfTests?: () => number }[]} */
 						const runs = fs
 							.readdirSync(testDirectory)
 							.sort()
@@ -384,6 +384,28 @@ const describeCases = (config) => {
 							// each child's changed and removed files over the builds of the current step
 							/** @type {Map<import("../../").Compiler, Set<string>>} */
 							let stepReports = new Map();
+
+							/**
+							 * Adds what a child's last build reported to the current step's reports.
+							 * @param {import("../../").Compiler} child child compiler
+							 * @returns {void}
+							 */
+							const recordStepReports = (child) => {
+								// a child yet to rebuild still shows its last build's reports
+								if (
+									(childBuilds.get(child) || 0) <=
+									(childBuildsBeforeStep.get(child) || 0)
+								) {
+									return;
+								}
+								let reported = stepReports.get(child);
+								if (reported === undefined) {
+									reported = new Set();
+									stepReports.set(child, reported);
+								}
+								for (const file of child.modifiedFiles || []) reported.add(file);
+								for (const file of child.removedFiles || []) reported.add(file);
+							};
 
 							const currentWatchStepModule = require("../helpers/currentWatchStep");
 
@@ -588,7 +610,15 @@ const describeCases = (config) => {
 											{ name: "WatchTestCasesTest", stage: Infinity },
 											assertModuleGraph
 										);
-										if (testConfig.watchError) recordReceivedChanges(child);
+										if (testConfig.watchError) {
+											recordReceivedChanges(child);
+											// The failed build took the step's changes, and the recovery build
+											// reads none when the watcher delivered them all to the failed one;
+											// read here, before a MultiCompiler's close clears them.
+											child.hooks.failed.tap("WatchTestCasesTest", () =>
+												recordStepReports(child)
+											);
+										}
 									}
 									/**
 									 * @param {Error} error watch or comparison failure
@@ -659,17 +689,7 @@ const describeCases = (config) => {
 												const builtThisStep = (child) =>
 													(childBuilds.get(child) || 0) >
 													(childBuildsBeforeStep.get(child) || 0);
-												for (const child of compilers) {
-													// a child yet to rebuild still shows its last build's reports
-													if (!builtThisStep(child)) continue;
-													let reported = stepReports.get(child);
-													if (reported === undefined) {
-														reported = new Set();
-														stepReports.set(child, reported);
-													}
-													for (const file of child.modifiedFiles || []) reported.add(file);
-													for (const file of child.removedFiles || []) reported.add(file);
-												}
+												for (const child of compilers) recordStepReports(child);
 												/**
 												 * @param {import("../../").Compiler} child child compiler
 												 * @param {string} file a file the step changed
@@ -757,6 +777,15 @@ const describeCases = (config) => {
 												}
 												if (unseenChanges.size > 0) return;
 												clearTimeout(retouchTimer);
+												// a late event can rebuild what the build being compared left stale:
+												// that build's comparison, or the recovery it fails into, decides
+												if (run.comparing) {
+													// the first that differs stays, so a later one cannot hide it
+													if (hash !== lastHash && run.lateHash === undefined) {
+														run.lateHash = hash;
+													}
+													return;
+												}
 												if (run.done && hash === lastHash) return;
 												if (run.done && lastHash !== hash) {
 													throw new Error(
@@ -766,11 +795,21 @@ const describeCases = (config) => {
 												}
 												lastHash = hash;
 												run.done = true;
+												run.comparing = true;
+												run.lateHash = undefined;
 												try {
 													await compare(stats);
 												} catch (error) {
+													run.comparing = false;
 													run.done = false;
 													return handleWatchError(/** @type {Error} */ (error));
+												}
+												run.comparing = false;
+												if (run.lateHash !== undefined) {
+													throw new Error(
+														`Compilation changed but no change was issued ${hash} != ${run.lateHash} (run ${runIdx})\n` +
+															`Triggering change: ${triggeringFilename}`
+													);
 												}
 												if (failed) return;
 												run.stats = stats;
@@ -893,7 +932,11 @@ const describeCases = (config) => {
 														if (runIdx < runs.length) {
 															run = runs[runIdx];
 															waitMode = true;
-															timer = setTimeout(async () => {
+															/**
+															 * Writes the next step once no build of the last one is running.
+															 * @returns {Promise<void>} the step written, or its retry scheduled
+															 */
+															const writeStep = async () => {
 																try {
 																	if (restartCompiler) {
 																		// closing stores the pack, so the next compiler
@@ -902,7 +945,6 @@ const describeCases = (config) => {
 																		if (error) throw error;
 																		closing = undefined;
 																	}
-																	waitMode = false;
 																	// a fatal error stops watching, so no late event rebuilds a failed
 																	// build that missed it: such a case builds a step only once the
 																	// watchers received all of it
@@ -919,6 +961,15 @@ const describeCases = (config) => {
 																			if (child.watching) suspended.push(child.watching);
 																		}
 																	}
+																	// a late event of the last step can start a build of its files, whose
+																	// hooks would already see the new step: write it once that build ended
+																	if (
+																		suspended.some((watching) => watching.running || watching.invalid)
+																	) {
+																		timer = setTimeout(writeStep, RECEIVE_INTERVAL);
+																		return;
+																	}
+																	waitMode = false;
 																	for (const watching of suspended) watching.suspend();
 																	receivedChanges = new Set();
 																	/** @type {{ step: string | undefined }} */ (
@@ -1012,7 +1063,8 @@ const describeCases = (config) => {
 																} catch (error) {
 																	fail(/** @type {Error} */ (error));
 																}
-															}, STEP_DELAY);
+															};
+															timer = setTimeout(writeStep, STEP_DELAY);
 														} else {
 															const deprecations =
 																/** @type {NonNullable<typeof deprecationTracker>} */ (

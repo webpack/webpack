@@ -203,10 +203,13 @@ const NATIVE_OBJECT_TABLES = new Map([
 ]);
 
 // Statics terser's tables leave out that a call of runs nothing observable,
-// by why, added to `NATIVE_PURE_STATIC_FUNCTIONS`.
+// by why, added to `NATIVE_PURE_STATIC_FUNCTIONS`, each with the editions it needs.
+/** @type {Record<string, (string | { name: string, when: number[] })[]>} */
 const NATIVE_PURE_STATIC_SUPPLEMENT = {
 	"no program can seed or read the generator, so a call nothing reads is unobservable":
-		["Math.random"]
+		["Math.random"],
+	"only the symbol it answers reads its registry entry, so one nothing reads is unobservable":
+		[{ name: "Symbol.for", when: [2015] }]
 };
 
 /** @typedef {"sloppy" | number} NativeCondition */
@@ -465,8 +468,11 @@ const collectNativeObjects = () => {
 		tables.NATIVE_PURE_STATIC_FUNCTIONS
 	);
 	for (const names of Object.values(NATIVE_PURE_STATIC_SUPPLEMENT)) {
-		for (const qualified of names) {
+		for (const supplement of names) {
+			const qualified =
+				typeof supplement === "string" ? supplement : supplement.name;
 			const [owner, name] = qualified.split(".");
+			if (statics[owner] === undefined) statics[owner] = { names: [] };
 			const listed = statics[owner].names;
 			if (
 				listed.some((entry) =>
@@ -477,7 +483,9 @@ const collectNativeObjects = () => {
 					`terser's native-objects.js lists ${qualified} now: remove it from NATIVE_PURE_STATIC_SUPPLEMENT`
 				);
 			}
-			listed.push(name);
+			listed.push(
+				typeof supplement === "string" ? name : { name, when: supplement.when }
+			);
 		}
 	}
 	return tables;

@@ -1,0 +1,1 @@
+(function () { fn(this); })(); (() => fn(arguments))(); (function (a) { fn(a); }).call(x, 1);

@@ -1,5 +1,7 @@
 "use strict";
 
+const { fixture } = require("../../helpers/fixture");
+
 const JavascriptParser = require("../../../lib/javascript/JavascriptParser");
 
 /** @typedef {import("estree").ImportExpression} ImportExpression */
@@ -172,7 +174,7 @@ describe("JavascriptParser object forms", () => {
 				);
 			});
 			parser.parse(
-				"if (a) { b(); }",
+				fixture("javascript", "javascript-parser-object-forms-statement-path-should-give-an-object-tap-the"),
 				/** @type {import("../../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)

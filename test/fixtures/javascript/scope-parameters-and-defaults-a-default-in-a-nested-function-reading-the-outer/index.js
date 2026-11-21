@@ -1,0 +1,1 @@
+function outer() { function inner(p = q) { var q; } var q; }

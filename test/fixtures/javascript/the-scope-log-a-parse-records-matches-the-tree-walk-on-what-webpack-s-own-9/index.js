@@ -1,0 +1,1 @@
+f(async x => x, async y => { await y; }); (class {}); (class K { m() { K; } });

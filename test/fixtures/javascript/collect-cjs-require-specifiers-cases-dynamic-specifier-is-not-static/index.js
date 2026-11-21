@@ -1,0 +1,1 @@
+require(name); require("./a");

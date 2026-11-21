@@ -1,0 +1,1 @@
+function f(a = b, b = 1) { let c; return a; }

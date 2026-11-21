@@ -46,6 +46,7 @@ const {
 	decodedAttributes,
 	idempotenceRepro,
 	meaningReports,
+	noticeReports,
 	printXml,
 	printerFor,
 	sweepRespellings,
@@ -1155,6 +1156,11 @@ const invariants = (write, parseXml) => {
 					cssOptions,
 					options
 				)) {
+					groups.add(report, preset, label);
+				}
+			}
+			if (wantedRelation("notices")) {
+				for (const report of noticeReports(xml, printed)) {
 					groups.add(report, preset, label);
 				}
 			}

@@ -1,0 +1,1 @@
+try { try { fn(); } catch { fn(); } } catch (e) { fn(e); } fn(1 && 2, 0 ?? 3, null ?? x);

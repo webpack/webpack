@@ -1,0 +1,1 @@
+switch (x) { case 1: let y = 1; y; function z() {} } z;

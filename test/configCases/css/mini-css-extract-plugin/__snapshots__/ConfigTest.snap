@@ -243,9 +243,9 @@ exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work 
 	}
 }
 
-/*!***************************************!*\\\\
-  !*** css ./layer-at-rule-unnamed.css ***!
-  \\\\***************************************/
+/*!***********************************************!*\\\\
+  !*** css ./layer-at-rule-unnamed.css (layer) ***!
+  \\\\***********************************************/
 @layer {
 	.color {
 	  color: red;
@@ -561,7 +561,7 @@ exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work 
 /*!***********************************************!*\\\\
   !*** external \\"http://some/path/to/css5.css\\" ***!
   \\\\***********************************************/
-@import url(\\"http://some/path/to/css5.css\\") layer();
+@import url(\\"http://some/path/to/css5.css\\") layer;
 /*!***********************************************!*\\\\
   !*** external \\"http://some/path/to/css6.css\\" ***!
   \\\\***********************************************/

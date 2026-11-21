@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<g style="font:italic 30px serif"><text font-style="normal">AW</text></g>
+	<g style="font:bold 30px serif"><text font-weight="normal">AW</text></g>
+	<marker id="m"><rect width="10" height="10"/></marker>
+	<g style="marker:url(#m)"><path d="M10 10h80v80" stroke="#000" marker-start="none"/></g>
+	<g font-weight="normal" fill="red"><path d="M10 10h50v50z"/></g>
+	<linearGradient id="s" gradientTransform="scale(0)"><stop stop-color="red"/></linearGradient>
+	<linearGradient id="t" href="#s"/>
+	<rect width="50" height="50" fill="url(#s)"/><rect width="50" height="50" fill="url(#t)"/>
+</svg>

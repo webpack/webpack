@@ -23,6 +23,7 @@ jest.mock("../../../tooling/compare-tools-harness", () => ({
 		name === "css-tree" ? mockCssTree : require(name)
 }));
 
+const { fixture } = require("../../helpers/fixture");
 const { SourceProcessor } = require("../../../lib/css/syntax");
 const {
 	COLD_BRANCHES,
@@ -58,37 +59,28 @@ describe("the CSS tool comparison", () => {
 // zero over every stylesheet on disk before the fixture was written, so an edit
 // dropping one would take a branch out of reach with it.
 const REDUCED = [
-	["matrix to a scale", "matrix(2,0,0,3,0,0)", "scale(2,3)"],
-	["matrix to a translate", "matrix(1,0,0,1,10,20)", "translate(10px,20px)"],
-	["matrix to a quarter turn", "matrix(0,1,-1,0,0,0)", "rotate(90deg)"],
-	["matrix to three quarters", "matrix(0,-1,1,0,0,0)", "rotate(270deg)"],
-	[
-		"matrix3d to a 2D matrix",
-		"matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,10,20,0,1)",
-		"translate(10px,20px)"
-	],
-	[
-		"matrix3d to a translate3d",
-		"matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,10,20,30,1)",
-		"translate3d(10px,20px,30px)"
-	],
-	[
-		"matrix3d to a scale3d",
-		"matrix3d(2,0,0,0,0,3,0,0,0,0,4,0,0,0,0,1)",
-		"scale3d(2,3,4)"
-	],
-	["scale3d to a scaleZ", "scale3d(1,1,2)", "scaleZ(2)"]
+	["matrix to a scale", "compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-a-scale"],
+	["matrix to a translate", "compare-css-tools-the-cold-branches-fixture-writes-matrix-to-a-translate-as-the"],
+	["matrix to a quarter turn", "compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-a-quarter-turn"],
+	["matrix to three quarters", "compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-three-quarters"],
+	["matrix3d to a 2D matrix", "compare-css-tools-the-cold-branches-fixture-writes-matrix3d-to-a-2-d-matrix-as"],
+	["matrix3d to a translate3d", "compare-css-tools-the-cold-branches-fixture-writes-matrix3d-to-a-translate3d-as"],
+	["matrix3d to a scale3d", "compare-css-tools-the-cold-branches-fixture-reduces-matrix3d-to-a-scale3d"],
+	["scale3d to a scaleZ", "compare-css-tools-the-cold-branches-fixture-writes-scale3d-to-a-scale-z-as-the"]
 ];
+
+/**
+ * @param {string} css a fixture's `a{transform:…}` rule
+ * @returns {string} the transform it writes
+ */
+const transformOf = (css) => css.slice("a{transform:".length, -1);
 
 // The value each rewrite must decline, which is what says the guard is read
 // rather than the branch alone.
 const KEPT = [
-	["a matrix of no named shape", "matrix(1,2,3,4,5,6)"],
-	[
-		"a matrix3d that is a shear",
-		"matrix3d(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)"
-	],
-	["a rotation about no axis", "rotate3d(1,1,0,45deg)"]
+	["a matrix of no named shape", "compare-css-tools-the-cold-branches-fixture-keeps-a-matrix-of-no-named-shape"],
+	["a matrix3d that is a shear", "compare-css-tools-the-cold-branches-fixture-keeps-a-matrix3d-that-is-a-shear"],
+	["a rotation about no axis", "compare-css-tools-the-cold-branches-fixture-keeps-a-rotation-about-no-axis"]
 ];
 
 /**
@@ -166,22 +158,21 @@ describe("compare-css-tools — the meaning relation", () => {
 });
 
 describe("compare-css-tools — the cold branches fixture", () => {
-	it.each(REDUCED)("carries %s", (_name, written) => {
-		expect(COLD_BRANCHES).toContain(written);
+	it.each(REDUCED)("carries %s", (_name, name) => {
+		expect(COLD_BRANCHES).toContain(transformOf(fixture("css", name)));
 	});
 
-	it.each(KEPT)("carries %s", (_name, written) => {
-		expect(COLD_BRANCHES).toContain(written);
+	it.each(KEPT)("carries %s", (_name, name) => {
+		expect(COLD_BRANCHES).toContain(transformOf(fixture("css", name)));
 	});
 
-	it.each(REDUCED)("writes %s as the shorter call", (_name, written, into) => {
-		expect(minify(`a{transform:${written}}`, {})).toBe(`a{transform:${into}}`);
+	it.each(REDUCED)("writes %s as the shorter call", (_name, name) => {
+		expect(minify(fixture("css", name), {})).toMatchSnapshot();
 	});
 
-	it.each(KEPT)("keeps %s", (_name, written) => {
-		expect(minify(`a{transform:${written}}`, {})).toBe(
-			`a{transform:${written}}`
-		);
+	it.each(KEPT)("keeps %s", (_name, name) => {
+		const css = fixture("css", name);
+		expect(minify(css, {})).toBe(css);
 	});
 
 	it.each([

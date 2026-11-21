@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:x="urn:x" onload="init()">
+	<script>function init() {}</script>
+	<h:script>alert(1)</h:script>
+	<x:script>kept</x:script>
+	<a href=" java&#10;script:alert(1)"><rect width="1" height="1" onclick="go()"/></a>
+	<a href="page.html"><rect width="1" height="1" x:onclick="kept"/></a>
+	<foreignObject width="10" height="10"><h:iframe srcdoc="&lt;b&gt;x&lt;/b&gt;"/><h:form action="JavaScript:run()"/></foreignObject>
+</svg>

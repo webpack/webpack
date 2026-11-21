@@ -91,7 +91,7 @@ exports[`ConfigCacheTestCases css export-type exported tests should handle @impo
 @layer framework {
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
-			.foo_css_32b6-foo {
+			.foo_css_e3a5-foo {
 			    color: rebeccapurple;
 			}}
 	}
@@ -123,7 +123,7 @@ exports[`ConfigCacheTestCases css export-type exported tests should handle @impo
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
 			@layer utilities {
-				.imported-layer_css_9f81-imported-layer {
+				.imported-layer_css_ab93-imported-layer {
 					padding: 10px;
 					margin: 5px;
 				}
@@ -140,7 +140,7 @@ exports[`ConfigCacheTestCases css export-type exported tests should handle @impo
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
 			@supports (display: grid) {
-				.imported-base_css_0700-imported-base {
+				.imported-base_css_1e3a-imported-base {
 					color: blue;
 					font-size: 14px;
 				}
@@ -157,7 +157,7 @@ exports[`ConfigCacheTestCases css export-type exported tests should handle @impo
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
 			@media screen and (min-width: 768px) {
-				.imported-base_css_90bc-imported-base {
+				.imported-base_css_3c0f-imported-base {
 					color: blue;
 					font-size: 14px;
 				}
@@ -176,7 +176,7 @@ exports[`ConfigCacheTestCases css export-type exported tests should handle @impo
 			@layer components {
 				@supports (display: flex) {
 					@media screen and (max-width: 1024px) {
-						.imported-layer_css_b04f-imported-layer {
+						.imported-layer_css_ead5-imported-layer {
 							padding: 10px;
 							margin: 5px;
 						}
@@ -196,26 +196,26 @@ exports[`ConfigCacheTestCases css export-type exported tests should handle @impo
 		@media screen and (min-width: 1024px) {
 			
 			
-			.module-with-imports_css_5263-main-class {
+			.module-with-imports_css_e43f-main-class {
 				color: purple;
 				display: flex;
 				background-image: url(09a1a1112c577c279435.png);
 			}
 			
 			@layer base {
-				.module-with-imports_css_5263-base-class {
+				.module-with-imports_css_e43f-base-class {
 					font-family: sans-serif;
 				}
 			}
 			
 			@supports (display: grid) {
-				.module-with-imports_css_5263-grid-class {
+				.module-with-imports_css_e43f-grid-class {
 					display: grid;
 				}
 			}
 			
 			@media (min-width: 600px) {
-				.module-with-imports_css_5263-responsive-class {
+				.module-with-imports_css_e43f-responsive-class {
 					width: 100%;
 				}
 			}
@@ -239,7 +239,7 @@ exports[`ConfigCacheTestCases css export-type exported tests should handle @impo
 @layer framework {
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
-			.foo_css_32b6-foo {
+			.foo_css_e3a5-foo {
 			    color: rebeccapurple;
 			}}
 	}
@@ -271,7 +271,7 @@ exports[`ConfigCacheTestCases css export-type exported tests should handle @impo
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
 			@layer utilities {
-				.imported-layer_css_9f81-imported-layer {
+				.imported-layer_css_ab93-imported-layer {
 					padding: 10px;
 					margin: 5px;
 				}
@@ -288,7 +288,7 @@ exports[`ConfigCacheTestCases css export-type exported tests should handle @impo
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
 			@supports (display: grid) {
-				.imported-base_css_0700-imported-base {
+				.imported-base_css_1e3a-imported-base {
 					color: blue;
 					font-size: 14px;
 				}
@@ -305,7 +305,7 @@ exports[`ConfigCacheTestCases css export-type exported tests should handle @impo
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
 			@media screen and (min-width: 768px) {
-				.imported-base_css_90bc-imported-base {
+				.imported-base_css_3c0f-imported-base {
 					color: blue;
 					font-size: 14px;
 				}
@@ -324,7 +324,7 @@ exports[`ConfigCacheTestCases css export-type exported tests should handle @impo
 			@layer components {
 				@supports (display: flex) {
 					@media screen and (max-width: 1024px) {
-						.imported-layer_css_b04f-imported-layer {
+						.imported-layer_css_ead5-imported-layer {
 							padding: 10px;
 							margin: 5px;
 						}
@@ -344,26 +344,26 @@ exports[`ConfigCacheTestCases css export-type exported tests should handle @impo
 		@media screen and (min-width: 1024px) {
 			
 			
-			.module-with-imports_css_5263-main-class {
+			.module-with-imports_css_e43f-main-class {
 				color: purple;
 				display: flex;
 				background-image: url(09a1a1112c577c279435.png);
 			}
 			
 			@layer base {
-				.module-with-imports_css_5263-base-class {
+				.module-with-imports_css_e43f-base-class {
 					font-family: sans-serif;
 				}
 			}
 			
 			@supports (display: grid) {
-				.module-with-imports_css_5263-grid-class {
+				.module-with-imports_css_e43f-grid-class {
 					display: grid;
 				}
 			}
 			
 			@media (min-width: 600px) {
-				.module-with-imports_css_5263-responsive-class {
+				.module-with-imports_css_e43f-responsive-class {
 					width: 100%;
 				}
 			}

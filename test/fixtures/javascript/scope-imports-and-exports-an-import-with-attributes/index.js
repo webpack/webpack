@@ -1,0 +1,1 @@
+import x from 'm' with { type: 'json' }; x;

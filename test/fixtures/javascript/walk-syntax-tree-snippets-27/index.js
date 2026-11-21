@@ -1,0 +1,1 @@
+if (a in b) fn(1); else fn(2); x = a in b ? fn(3) : fn(4); var bb = b; bb = b; fn(b);

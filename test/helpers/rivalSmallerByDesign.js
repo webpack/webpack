@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore defun dont fargs funs
+// cspell:ignore defun dont fargs funs nonmatching
 
 // Sources a rival prints smaller for a reason no change to webpack's minifier
 // closes: deflate's Huffman header, or swc running a transform the case's own
@@ -14,6 +14,7 @@ const BY_DESIGN = [
 		"deflate's header: the program is no longer raw, yet gzips 1 to 3 bytes bigger, as the Huffman codes deflate writes for a small program cost more or less with which characters it holds (an operand's side, `let` or `const`, `NaN` or `0/0`, a backtick or a quote); measured corpus-wide, no fixed spelling rule wins, each one making about as many programs bigger as smaller",
 		[
 			"swc minifier: fixture/issues/12298/input.js",
+			"swc minifier: fixture/issues/12206/preserve-nonmatching-test-before-dynamic-case/input.js",
 			"terser compress: issue-597/beautify_off_1",
 			"terser compress: issue-597/beautify_on_1",
 			"terser compress: harmony/array_literal_with_spread_3b",
@@ -22,7 +23,6 @@ const BY_DESIGN = [
 			"terser compress: conditionals/equality_conditionals_false",
 			"terser compress: conditionals/equality_conditionals_true",
 			"terser compress: const/regexp_literal_not_const",
-			"terser compress: dead-code/dead_code_constant_boolean_should_warn_more",
 			"terser compress: drop-unused/issue_3146_1",
 			"terser compress: drop-unused/issue_3146_2",
 			"terser compress: evaluate/unsafe_integer_key",
@@ -37,7 +37,6 @@ const BY_DESIGN = [
 			"swc minifier: fixture/issues/8161/input.js",
 			"swc minifier: fixture/issues/9238/input.js",
 			"swc minifier: fixture/next/30498/1/input.js",
-			"swc minifier: fixture/next/swc-4559/input.js",
 			"swc minifier: fixture/projects/react/12/input.js",
 			"swc minifier: fixture/projects/underscore/22/input.js",
 			"swc minifier: fixture/projects/underscore/6/input.js",
@@ -58,7 +57,6 @@ const BY_DESIGN = [
 			"oxc minifier: peephole/obscure_edge_cases.rs:457",
 			"oxc minifier: peephole/remove_dead_code.rs:35",
 			"swc minifier: fixture/projects/jquery/5/input.js",
-			"swc minifier: fixture/issues/12222/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/completion/guard-after-expression/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/guarded-jump/input.js",
 			"swc minifier: fixture/issues/string-from-char-code-uint16/input.js"
@@ -68,31 +66,23 @@ const BY_DESIGN = [
 		"SWC_SMALLER",
 		"swc runs a transform the case's own options leave off (`evaluate`, `side_effects`, `unused`, `inline` levels, `keep_fargs`, `if_return`, the target `ecma`, or any when the case sets none), so the gap is the options, not a missing transform",
 		[
-			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-arg-unused/input.js",
-			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-default-unused/input.js",
 			"swc minifier: fixture/issues/12227/input.js",
 			"swc minifier: fixture/issues/2262/1/input.js",
-			"terser compress: arrow/call_args_drop_param",
 			"terser compress: collapse_vars/collapse_vars_repeated",
 			"terser compress: collapse_vars/collapse_vars_self_reference",
 			"terser compress: conditionals/cond_8c",
 			"terser compress: conditionals/issue_1645_1",
 			"terser compress: dead-code/dead_code_2_should_warn",
 			"terser compress: dead-code/dead_code_2_should_warn_strict",
-			"terser compress: drop-unused/issue_1715_1",
-			"terser compress: drop-unused/issue_1715_2",
 			"terser compress: drop-unused/issue_1715_4",
 			"terser compress: drop-unused/issue_1968",
 			"terser compress: drop-unused/issue_2136_1",
 			"terser compress: evaluate/Infinity_NaN_undefined_LHS",
-			"terser compress: evaluate/call_args_drop_param",
 			"terser compress: evaluate/issue_2926_1",
 			"terser compress: expression/pow_with_number_constants",
 			"terser compress: expression/pow_with_parentheses",
 			"terser compress: functions/drop_lone_use_strict_arrows_1",
-			"terser compress: functions/duplicate_arg_var",
 			"terser compress: functions/empty_body",
-			"terser compress: functions/inner_ref",
 			"terser compress: functions/issue_1841_2",
 			"terser compress: functions/issue_2620_1",
 			"terser compress: functions/issue_2620_4",
@@ -116,16 +106,13 @@ const BY_DESIGN = [
 			"terser compress: reduce_vars/perf_1",
 			"terser compress: reduce_vars/perf_5",
 			"terser compress: reduce_vars/recursive_inlining_3",
-			"terser compress: reduce_vars/toplevel_on_loops_1",
-			"terser compress: reduce_vars/toplevel_on_loops_2",
 			"terser compress: reduce_vars/unsafe_evaluate_object_1",
 			"terser compress: reduce_vars/var_assign_2",
 			"terser compress: reduce_vars/var_assign_3",
 			"terser compress: reduce_vars/var_assign_5",
 			"terser compress: sequences/unsafe_undefined",
 			"terser compress: switch/if_else7",
-			"terser compress: try-catch/catch_destructuring_with_sequence",
-			"terser compress: typeof/issue_2728_4"
+			"terser compress: try-catch/catch_destructuring_with_sequence"
 		]
 	],
 	[

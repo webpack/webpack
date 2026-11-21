@@ -1,0 +1,1 @@
+for (let [a, b = c] of d);

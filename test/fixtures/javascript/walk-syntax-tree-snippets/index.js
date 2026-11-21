@@ -1,0 +1,1 @@
+fn("a".concat("b", 1, x), "ab".substr(1), "abc".substring(1, 2), "abc".slice(-1));

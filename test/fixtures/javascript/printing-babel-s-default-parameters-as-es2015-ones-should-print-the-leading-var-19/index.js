@@ -1,0 +1,1 @@
+function f(){var b=arguments.length>0?arguments[0]:undefined;return[b]}

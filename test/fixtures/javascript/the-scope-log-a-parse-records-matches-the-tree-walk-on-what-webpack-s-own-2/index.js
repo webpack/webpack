@@ -1,0 +1,1 @@
+with (o) { x; var y; } y;

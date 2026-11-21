@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<a><a><rect width="50" height="50"/></a></a>
+	<text><a><a>X</a></a>Y</text>
+	<switch><a><g/><text>A</text></a></switch>
+	<switch><g><a><g/><rect width="1" height="1"/></a></g></switch>
+	<a><g fill="red"><rect width="1" height="1"/></g></a>
+</svg>

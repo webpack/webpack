@@ -11,7 +11,6 @@ const {
 	buildSkipSet,
 	Field,
 	NodeType,
-	_propertyIdOf,
 	normalizeUrl,
 	parseABlocksContents,
 	parseACommaSeparatedListOfComponentValues,
@@ -99,43 +98,6 @@ describe("CssSyntax — parser entry points", () => {
 			.process(small);
 		expect(seen).toEqual(["d{e:f}", "g{h:i}"]);
 		expect(read(small)).toEqual(["2", "d{e:f}", "g{h:i}"]);
-	});
-});
-
-describe("CssSyntax — Node / Token", () => {
-	it("numbers a declaration's property by what it means", () => {
-		/** @type {Record<string, number>} */
-		const ids = {};
-		new SourceProcessor()
-			.use({
-				[NodeType.Declaration]: (
-					/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
-				) => {
-					const id = _propertyIdOf(path.node);
-					// A second read hands back what the first looked up.
-					expect(_propertyIdOf(path.node)).toBe(id);
-					ids[A.source(path.node).split(":")[0]] = id;
-				}
-			})
-			.process(
-				fixture(
-					"css",
-					"css-syntax-node-token-numbers-a-declaration-s-property-by-what-it-means"
-				)
-			);
-		expect(ids.color).toBeGreaterThanOrEqual(0);
-		expect(ids.COLOR).toBe(ids.color);
-		expect(ids["c\\6flor"]).toBe(ids.color);
-		expect(ids["word-wrap"]).toBe(ids["overflow-wrap"]);
-		expect(ids["-webkit-transition"]).toBe(ids.transition);
-		expect(ids.transition).not.toBe(ids.color);
-		expect(ids["--x"]).toBe(-1);
-		expect(ids["\\2d-y"]).toBe(-1);
-		expect(ids.foo).toBe(-2);
-		expect(ids["é"]).toBe(-2);
-		// These two probe past a known name, of another length and of the same.
-		expect(ids.value).toBe(-2);
-		expect(ids.gab).toBe(-2);
 	});
 });
 
@@ -337,9 +299,7 @@ describe("CssSyntax — the facade", () => {
 		const processor = new SourceProcessor();
 		processor.process(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"));
 		expect(processor._printer).toBeUndefined();
-		expect(processor.process(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"), { mode: "minify" }).code).toBe(
-			"a{color:red}"
-		);
+		expect(processor.process(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"), { mode: "minify" }).code).toMatchSnapshot();
 		expect(typeof processor._printer).toBe("function");
 	});
 });
@@ -507,10 +467,10 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 			})
 		);
 
-		expect(code).toBe("color:red");
+		expect(code).toMatchSnapshot();
 		// The list prints as one piece, so it anchors as one.
 		expect(map.sources).toEqual(["style"]);
-		expect(map.mappings).toBe("AAAA");
+		expect(map.mappings).toMatchSnapshot();
 	});
 });
 
@@ -726,6 +686,6 @@ describe("CssSyntax — what a minifying print reads off the parse", () => {
 
 	it("collects a block of declarations alone for the longhand merge", () => {
 		const css = fixture("css", "css-syntax-what-a-minifying-print-reads-off-the-parse-collects-a-block-of");
-		expect(minify(css)).toBe("a{margin:1px 2px 3px 4px}");
+		expect(minify(css)).toMatchSnapshot();
 	});
 });

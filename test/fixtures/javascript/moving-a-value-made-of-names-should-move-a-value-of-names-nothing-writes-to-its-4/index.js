@@ -1,0 +1,1 @@
+function f(o,t){var w=typeof o==="string"?!o:void 0;g();t.w=w;return t}

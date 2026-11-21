@@ -964,6 +964,8 @@ const CORPORA = [
  * @type {Record<string, string>}
  */
 const INHERITED = {
+	"swc exec: terser_pure_getters_impure_getter_2 (its own options)":
+		"the case's own `pure_getters: true` takes a getter as running nothing, so its `console.log` goes, as terser's own test expects",
 	"swc minifier: fixture/issues/12606/runtime/input.js (the default minimizer's options)":
 		"the case keeps class names through its mangle options alone, which this set does not read, so `.name` reads the mangled name"
 };

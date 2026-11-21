@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/.p[1]: css-tree b: hover{color:red;outline:1px solid blue}, tool rule b:hover",
+		"why": "a value holding a `{}` block beside anything else is no declaration but a rule (§5.4.5); css-tree keeps the declaration"
+	}
+]

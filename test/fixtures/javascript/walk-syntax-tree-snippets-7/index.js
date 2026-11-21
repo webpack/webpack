@@ -1,0 +1,1 @@
+if (typeof a === 'undefined') x(); if (!a) fn(1); if (a instanceof b) fn(2);

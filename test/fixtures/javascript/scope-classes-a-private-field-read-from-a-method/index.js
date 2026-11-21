@@ -1,0 +1,1 @@
+class C { #p = 1; m() { return this.#p } }
