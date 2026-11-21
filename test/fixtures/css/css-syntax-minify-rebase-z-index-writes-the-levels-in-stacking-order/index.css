@@ -7,3 +7,4 @@
 @supports (z-index: 5) { .g { z-index: 5 } }
 .h { z-index: 3000; transition: opacity 1s }
 @supports (z-index: 1) { .i { z-index: 4000 } }
+.j { z-index: 5000 !\69mportant }
