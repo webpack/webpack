@@ -56055,6 +56055,20 @@ exports[`HTML syntax — invariants syntax-fuzz-keeps-the-case-of-referrerpolicy
 
 exports[`HTML syntax — invariants syntax-fuzz-keeps-the-case-of-referrerpolicy-where-it-is-not-reflected tokenizes 1`] = `"attr[3,17|19,30]\\" open[0,32|1,2] attr[37,51|53,64]\\" open[32,66|33,36] end=66"`;
 
+exports[`HTML syntax — invariants syntax-fuzz-keeps-the-text-of-a-comment-a-noscript-opens parses 1`] = `
+"| <html>
+|   <head>
+|     <noscript>
+|       <!-- </noscript></ -->
+|   <body>"
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-keeps-the-text-of-a-comment-a-noscript-opens parses 2`] = `"warning[0,10]:expected-doctype-but-got-start-tag error[27,27]:eof-in-comment warning[27,27]:eof-in-head-noscript"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-keeps-the-text-of-a-comment-a-noscript-opens prints {"mode":"minify"} 1`] = `"<noscript><!--</noscript></"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-keeps-the-text-of-a-comment-a-noscript-opens tokenizes 1`] = `"open[0,10|1,9] error[27,27]:eof-in-comment comment[10,27|14,27] end=27"`;
+
 exports[`HTML syntax — invariants syntax-fuzz-merging-a-sheet-left-inside-light-dark-joins-the-next parses 1`] = `
 "| <html>
 |   <head>
