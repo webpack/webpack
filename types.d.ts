@@ -22001,6 +22001,7 @@ declare abstract class MinifierVariable extends Variable {
 	referenceCount: number;
 	written: boolean;
 	writes: number;
+	unreachedWrites: number;
 }
 
 /**
